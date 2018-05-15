@@ -1,60 +1,58 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v6 4/4] dt-bindings: drm/panel: Document Innolux
- TV123WAM panel bindings
-Date: Tue, 15 May 2018 11:22:44 +0530
-Message-ID: <1526363564-13823-5-git-send-email-spanda@codeaurora.org>
-References: <1526363564-13823-1-git-send-email-spanda@codeaurora.org>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH 1/3] ARM: dra762: hwmod: Add MCAN support
+Date: Tue, 15 May 2018 11:34:16 +0530
+Message-ID: <b4d95a08-82fd-9f39-53e7-977351788c88@ti.com>
+References: <1523181542-3770-1-git-send-email-faiz_abbas@ti.com>
+ <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
+ <20180501152615.GB98604@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1526363564-13823-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180501152615.GB98604@atomide.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, paul@pwsan.com, lokeshvutla@ti.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-SW5ub2x1eCBUVjEyM1dBTSBpcyBhIDEyLjMiIGVEUCBkaXNwbGF5IHBhbmVsIHdpdGgKMjE2MHgx
-NDQwIHJlc29sdXRpb24sIHdoaWNoIGNhbiBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCnBhbmVsIGRy
-aXZlci4KCkNoYW5nZXMgaW4gdjE6CiAtIE1ha2UgdXNlIG9mIHNpbXBsZSBwYW5lbCBkcml2ZXIg
-aW5zdGVhZCBvZiBjcmVhdGluZwogICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNlYW4g
-UGF1bCkuCiAtIENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUg
-cGF0Y2gKICAgYXMgZG9uZSBieSBvdGhlciBleGlzdGluZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMu
-CgpDaGFuZ2VzIGluIHYyOgogLSBTZXBhcmF0ZSBkcml2ZXIgY2hhbmdlIGZyb20gZHQtYmluZGlu
-ZyBkb2N1bWVudGF0aW9uIChSb2IgSGVycmluZykuCiAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9t
-IHNpbXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KICAgdGhpcyBwYW5l
-bCAoUm9iIEhlcnJpbmcpLgoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
-ZGVhdXJvcmEub3JnPgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4K
-LS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCAgICAg
-IHwgMjAgKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2Ft
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lu
-bm9sdXgsdHYxMjN3YW0udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmE5
-YjM1MjYKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dApAQCAtMCwwICsxLDIwIEBACitJ
-bm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5jaCBlRFAgMksgZGlzcGxheSBwYW5lbAorCitUaGlzIGJp
-bmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2gg
-aXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgorCitS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImlubm9sdXgsdHYx
-MjN3YW0iCistIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2
-b2x0YWdlCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGVuYWJsZS1ncGlvczogR1BJTyBwaW4g
-dG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCistIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0
-aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworRXhhbXBsZToKKwlw
-YW5lbF9lZHA6IHBhbmVsLWVkcCB7CisJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCx0djEyM3dhbSI7
-CisJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElPX0FDVElWRV9MT1c+OworCQlwb3dl
-ci1zdXBwbHkgPSA8JnBtODkxNl9sMj47CisJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwl9
-OwotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9m
-IHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUg
-UHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-RnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+Hi Tony,
+
+On Tuesday 01 May 2018 08:56 PM, Tony Lindgren wrote:
+> Hi,
+> 
+> * Faiz Abbas <faiz_abbas@ti.com> [180408 09:59]:
+>> From: Lokesh Vutla <lokeshvutla@ti.com>
+>>
+>> Add MCAN hwmod data and register it for dra762 silicons.
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 32 +++++++++++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> index 62352d1..a2cd7f8 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> @@ -1356,6 +1356,29 @@ static struct omap_hwmod dra7xx_mailbox13_hwmod = {
+>>  };
+>>  
+>>  /*
+>> + * 'mcan' class
+>> + *
+>> + */
+>> +static struct omap_hwmod_class dra76x_mcan_hwmod_class = {
+>> +	.name	= "mcan",
+>> +};
+> 
+> Looks like you're missing the related struct omap_hwmod_class_sysconfig
+> entry for this with the rev and sysconfig registers.
+> 
+
+Sorry, I missed this email earlier. The MCAN module doesn't have
+sysconfig registers.
+
+Thanks,
+Faiz
