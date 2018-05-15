@@ -1,450 +1,147 @@
-Return-Path: <SRS0=QbTR=HV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:64684 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752030AbeEBPpu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 11:45:50 -0400
-From: Andy Yeh <andy.yeh@intel.com>
-Subject: [RESEND PATCH v9 2/2] media: dw9807: Add dw9807 vcm driver
-Date: Wed,  2 May 2018 23:53:48 +0800
-Message-Id: <1525276428-17379-3-git-send-email-andy.yeh@intel.com>
-In-Reply-To: <1525276428-17379-1-git-send-email-andy.yeh@intel.com>
-References: <1525276428-17379-1-git-send-email-andy.yeh@intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: sakari.ailus@linux.intel.com, andy.yeh@intel.com, devicetree@vger.kernel.org, tfiga@chromium.org, jacopo@jmondi.org, Alan Chiang <alanx.chiang@intel.com>
+Return-Path: <SRS0=7rgC=IC=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH/RFC v3 1/4] base: devcon: add a new API to find the graph
+Date: Tue, 15 May 2018 11:02:57 +0000
+Message-ID: <OSBPR01MB2293D83364ADD5467D7A20AAD8930@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+References: <1526289360-3997-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1526289360-3997-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20180514132740.GE21435@kuha.fi.intel.com>
+ <OSBPR01MB22932EC3210BC8097E0B7F0FD8930@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+ <20180515082911.GH21435@kuha.fi.intel.com>
+In-Reply-To: <20180515082911.GH21435@kuha.fi.intel.com>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Alan Chiang <alanx.chiang@intel.com>
+Hi Heikki,
 
-DW9807 is a 10 bit DAC from Dongwoon, designed for linear
-control of voice coil motor.
+Thank you for the reply!
 
-This driver creates a V4L2 subdevice and
-provides control to set the desired focus.
+> From: Heikki Krogerus, Sent: Tuesday, May 15, 2018 5:29 PM
+>=20
+> On Tue, May 15, 2018 at 02:19:14AM +0000, Yoshihiro Shimoda wrote:
+> > Hi Heikki,
+> >
+> > > From: Heikki Krogerus, Sent: Monday, May 14, 2018 10:28 PM
+> > >
+> > > On Mon, May 14, 2018 at 06:15:57PM +0900, Yoshihiro Shimoda wrote:
+<snip>
+> > > > +struct device *device_connection_find_by_graph(struct device *dev,=
+ u32 port,
+> > > > +					       u32 endpoint)
+> > > > +{
+> > > > +	struct bus_type *bus;
+> > > > +	struct fwnode_handle *remote;
+> > > > +	struct device *conn;
+> > > > +
+> > > > +	remote =3D fwnode_graph_get_remote_node(dev_fwnode(dev), port, en=
+dpoint);
+> > > > +	if (!remote)
+> > > > +		return NULL;
+> > > > +
+> > > > +	for (bus =3D generic_match_buses[0]; bus; bus++) {
+> > > > +		conn =3D bus_find_device(bus, NULL, remote, generic_graph_match)=
+;
+> > > > +		if (conn)
+> > > > +			return conn;
+> > > > +	}
+> > > > +
+> > > > +	/*
+> > > > +	 * We only get called if a connection was found, tell the caller =
+to
+> > > > +	 * wait for the other device to show up.
+> > > > +	 */
+> > > > +	return ERR_PTR(-EPROBE_DEFER);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(device_connection_find_by_graph);
+> > >
+> > > Why do we need more API for walking through the graph?
+> >
+> > I thought there is difficult to find if a device has multiple ports or =
+endpoints.
+> > So, I'd like to use port and endpoint number for finding a device.
+> >
+> > > I'm not sure exactly sure what is going on here, I'll try to study
+> > > your patches more when I have time, but the approach looks wrong. Tha=
+t
+> > > function looks like a helper, but just not that useful one.
+> > >
+> > > We really should be able to use the existing functions. In practice
+> > > device_connection_find_match() should eventually parse the graph, the=
+n
+> > > fallback to build-in connections if no graph is found. Otherwise
+> > > parsing graph here is not really useful at all.
+> >
+> > I think using device_connection_find_match() for finding the graph beco=
+mes complicated.
+> > The current arguments of the function is the below:
+> >
+> > void *device_connection_find_match(struct device *dev, const char *con_=
+id,
+> > 			       void *data,
+> > 			       void *(*match)(struct device_connection *con,
+> > 					      int ep, void *data))
+> >
+> > If finding the graph, the following arguments will be not used.
+> >  - con_id
+> >  - *con and ep of "match" arguments.
+> >
+> > This is because these arguments are for the build-in connections.
+>=20
+> No they're not. You do realize that we can build a temporary struct
+> device_connection there and then (in stack) to be supplied for the
+> ->match callback.
 
-Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Acked-by: Rob Herring <robh@kernel.org>
+I understood it.
 
----
-since v1:
-- changed author.
-since v2:
-- addressed outstanding comments.
-- enabled sequential write to update 2 registers in a single transaction.
-since v3:
-- addressed comments for v3.
-- Remove redundant codes and declare some variables as constant variable.
-- separate DT binding to another patch
-since v4:
-- sent patchset included DT binding with cover page
-since v6:
-- change the return code of i2c_check
-- fix long cols exceed 80 chars
-- remove #define DW9807_NAME since only used once
-since v7:
-- Remove some redundant type cast
-- Modify to meet the coding style
-- Replace a while loop by readx_poll_timeout function
-- Return the i2c error directly.
-since v8:
-- Added Reviewed-by and Acked-by
+> > So, should I modify the arguments of the function for finding both
+> > the graph and built-in connections somehow?
+>=20
+> I don't see any need for that. We may need to modify struct
+> device_connection, but there should not be any need to touch the API.
+>=20
+> Your plan to use port and endpoint number is wrong, as they are just
+> indexes, and therefore not reliable. Luckily it should be completely
+> unnecessary to use them.
+>=20
+> The way I see this working is that we parse all the endpoints the
+> caller device has. If we can't take advantage of the con_id for
+> identification (though ideally we can), we just need to call ->match
+> with every one of them. The implementation for the ->match callback is
+> then responsible of figuring out if the endpoint is the one we are
+> looking for or not in that case.
 
- MAINTAINERS                |   7 +
- drivers/media/i2c/Kconfig  |  10 ++
- drivers/media/i2c/Makefile |   1 +
- drivers/media/i2c/dw9807.c | 329 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 347 insertions(+)
- create mode 100644 drivers/media/i2c/dw9807.c
+I understood it. But, I need to investigate how to find a device.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 845fc25..a339bb5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4385,6 +4385,13 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/dw9714.c
- 
-+DONGWOON DW9807 LENS VOICE COIL DRIVER
-+M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/dw9807.c
-+
- DOUBLETALK DRIVER
- M:	"James R. Van Zandt" <jrv@vanzandt.mv.com>
- L:	blinux-list@redhat.com
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index cb5d7ff..fd01842 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -325,6 +325,16 @@ config VIDEO_DW9714
- 	  capability. This is designed for linear control of
- 	  voice coil motors, controlled via I2C serial interface.
- 
-+config VIDEO_DW9807
-+	tristate "DW9807 lens voice coil support"
-+	depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
-+	depends on VIDEO_V4L2_SUBDEV_API
-+	---help---
-+	  This is a driver for the DW9807 camera lens voice coil.
-+	  DW9807 is a 10 bit DAC with 100mA output current sink
-+	  capability. This is designed for linear control of
-+	  voice coil motors, controlled via I2C serial interface.
-+
- config VIDEO_SAA7110
- 	tristate "Philips SAA7110 video decoder"
- 	depends on VIDEO_V4L2 && I2C
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 548a9ef..1b62639 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_VIDEO_SAA7185) += saa7185.o
- obj-$(CONFIG_VIDEO_SAA6752HS) += saa6752hs.o
- obj-$(CONFIG_VIDEO_AD5820)  += ad5820.o
- obj-$(CONFIG_VIDEO_DW9714)  += dw9714.o
-+obj-$(CONFIG_VIDEO_DW9807)  += dw9807.o
- obj-$(CONFIG_VIDEO_ADV7170) += adv7170.o
- obj-$(CONFIG_VIDEO_ADV7175) += adv7175.o
- obj-$(CONFIG_VIDEO_ADV7180) += adv7180.o
-diff --git a/drivers/media/i2c/dw9807.c b/drivers/media/i2c/dw9807.c
-new file mode 100644
-index 0000000..28ede2b
---- /dev/null
-+++ b/drivers/media/i2c/dw9807.c
-@@ -0,0 +1,329 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Intel Corporation
-+
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+
-+#define DW9807_MAX_FOCUS_POS	1023
-+/*
-+ * This sets the minimum granularity for the focus positions.
-+ * A value of 1 gives maximum accuracy for a desired focus position.
-+ */
-+#define DW9807_FOCUS_STEPS	1
-+/*
-+ * This acts as the minimum granularity of lens movement.
-+ * Keep this value power of 2, so the control steps can be
-+ * uniformly adjusted for gradual lens movement, with desired
-+ * number of control steps.
-+ */
-+#define DW9807_CTRL_STEPS	16
-+#define DW9807_CTRL_DELAY_US	1000
-+
-+#define DW9807_CTL_ADDR		0x02
-+/*
-+ * DW9807 separates two registers to control the VCM position.
-+ * One for MSB value, another is LSB value.
-+ */
-+#define DW9807_MSB_ADDR		0x03
-+#define DW9807_LSB_ADDR		0x04
-+#define DW9807_STATUS_ADDR	0x05
-+#define DW9807_MODE_ADDR	0x06
-+#define DW9807_RESONANCE_ADDR	0x07
-+
-+#define MAX_RETRY		10
-+
-+struct dw9807_device {
-+	struct v4l2_ctrl_handler ctrls_vcm;
-+	struct v4l2_subdev sd;
-+	u16 current_val;
-+};
-+
-+static inline struct dw9807_device *sd_to_dw9807_vcm(
-+					struct v4l2_subdev *subdev)
-+{
-+	return container_of(subdev, struct dw9807_device, sd);
-+}
-+
-+static int dw9807_i2c_check(struct i2c_client *client)
-+{
-+	const char status_addr = DW9807_STATUS_ADDR;
-+	char status_result;
-+	int ret;
-+
-+	ret = i2c_master_send(client, &status_addr, sizeof(status_addr));
-+	if (ret < 0) {
-+		dev_err(&client->dev, "I2C write STATUS address fail ret = %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	ret = i2c_master_recv(client, &status_result, sizeof(status_result));
-+	if (ret < 0) {
-+		dev_err(&client->dev, "I2C read STATUS value fail ret = %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	return status_result;
-+}
-+
-+static int dw9807_set_dac(struct i2c_client *client, u16 data)
-+{
-+	const char tx_data[3] = {
-+		DW9807_MSB_ADDR, ((data >> 8) & 0x03), (data & 0xff)
-+	};
-+	int val, ret, retry = 0;
-+
-+	/*
-+	 * According to the datasheet, need to check the bus status before we
-+	 * write VCM position. This ensure that we really write the value
-+	 * into the register
-+	 */
-+	ret = readx_poll_timeout(dw9807_i2c_check, client, val, val <= 0,
-+			DW9807_CTRL_DELAY_US, MAX_RETRY * DW9807_CTRL_DELAY_US);
-+
-+	if (ret || val < 0) {
-+		if (ret) {
-+			dev_warn(&client->dev,
-+				"Cannot do the write operation because VCM is busy\n");
-+		}
-+
-+		return ret ? -EBUSY : val;
-+	}
-+
-+	/* Write VCM position to registers */
-+	ret = i2c_master_send(client, tx_data, sizeof(tx_data));
-+	if (ret < 0) {
-+		dev_err(&client->dev,
-+			"I2C write MSB fail ret=%d\n", ret);
-+
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dw9807_set_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct dw9807_device *dev_vcm = container_of(ctrl->handler,
-+		struct dw9807_device, ctrls_vcm);
-+
-+	if (ctrl->id == V4L2_CID_FOCUS_ABSOLUTE) {
-+		struct i2c_client *client = v4l2_get_subdevdata(&dev_vcm->sd);
-+
-+		dev_vcm->current_val = ctrl->val;
-+		return dw9807_set_dac(client, ctrl->val);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct v4l2_ctrl_ops dw9807_vcm_ctrl_ops = {
-+	.s_ctrl = dw9807_set_ctrl,
-+};
-+
-+static int dw9807_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	int rval;
-+
-+	rval = pm_runtime_get_sync(sd->dev);
-+	if (rval < 0) {
-+		pm_runtime_put_noidle(sd->dev);
-+		return rval;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dw9807_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	pm_runtime_put(sd->dev);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_internal_ops dw9807_int_ops = {
-+	.open = dw9807_open,
-+	.close = dw9807_close,
-+};
-+
-+static const struct v4l2_subdev_ops dw9807_ops = { };
-+
-+static void dw9807_subdev_cleanup(struct dw9807_device *dw9807_dev)
-+{
-+	v4l2_async_unregister_subdev(&dw9807_dev->sd);
-+	v4l2_ctrl_handler_free(&dw9807_dev->ctrls_vcm);
-+	media_entity_cleanup(&dw9807_dev->sd.entity);
-+}
-+
-+static int dw9807_init_controls(struct dw9807_device *dev_vcm)
-+{
-+	struct v4l2_ctrl_handler *hdl = &dev_vcm->ctrls_vcm;
-+	const struct v4l2_ctrl_ops *ops = &dw9807_vcm_ctrl_ops;
-+	struct i2c_client *client = v4l2_get_subdevdata(&dev_vcm->sd);
-+
-+	v4l2_ctrl_handler_init(hdl, 1);
-+
-+	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_FOCUS_ABSOLUTE,
-+			  0, DW9807_MAX_FOCUS_POS, DW9807_FOCUS_STEPS, 0);
-+
-+	dev_vcm->sd.ctrl_handler = hdl;
-+	if (hdl->error) {
-+		dev_err(&client->dev, "%s fail error: 0x%x\n",
-+			__func__, hdl->error);
-+		return hdl->error;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dw9807_probe(struct i2c_client *client)
-+{
-+	struct dw9807_device *dw9807_dev;
-+	int rval;
-+
-+	dw9807_dev = devm_kzalloc(&client->dev, sizeof(*dw9807_dev),
-+				  GFP_KERNEL);
-+	if (dw9807_dev == NULL)
-+		return -ENOMEM;
-+
-+	v4l2_i2c_subdev_init(&dw9807_dev->sd, client, &dw9807_ops);
-+	dw9807_dev->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	dw9807_dev->sd.internal_ops = &dw9807_int_ops;
-+
-+	rval = dw9807_init_controls(dw9807_dev);
-+	if (rval)
-+		goto err_cleanup;
-+
-+	rval = media_entity_pads_init(&dw9807_dev->sd.entity, 0, NULL);
-+	if (rval < 0)
-+		goto err_cleanup;
-+
-+	dw9807_dev->sd.entity.function = MEDIA_ENT_F_LENS;
-+
-+	rval = v4l2_async_register_subdev(&dw9807_dev->sd);
-+	if (rval < 0)
-+		goto err_cleanup;
-+
-+	pm_runtime_set_active(&client->dev);
-+	pm_runtime_enable(&client->dev);
-+	pm_runtime_idle(&client->dev);
-+
-+	return 0;
-+
-+err_cleanup:
-+	dw9807_subdev_cleanup(dw9807_dev);
-+
-+	return rval;
-+}
-+
-+static int dw9807_remove(struct i2c_client *client)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct dw9807_device *dw9807_dev = sd_to_dw9807_vcm(sd);
-+
-+	pm_runtime_disable(&client->dev);
-+	pm_runtime_set_suspended(&client->dev);
-+
-+	dw9807_subdev_cleanup(dw9807_dev);
-+
-+	return 0;
-+}
-+
-+/*
-+ * This function sets the vcm position, so it consumes least current
-+ * The lens position is gradually moved in units of DW9807_CTRL_STEPS,
-+ * to make the movements smoothly.
-+ */
-+static int __maybe_unused dw9807_vcm_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct dw9807_device *dw9807_dev = sd_to_dw9807_vcm(sd);
-+	const char tx_data[2] = { DW9807_CTL_ADDR, 0x01 };
-+	int ret, val;
-+
-+	for (val = dw9807_dev->current_val & ~(DW9807_CTRL_STEPS - 1);
-+	     val >= 0; val -= DW9807_CTRL_STEPS) {
-+		ret = dw9807_set_dac(client, val);
-+		if (ret)
-+			dev_err_once(dev, "%s I2C failure: %d", __func__, ret);
-+		usleep_range(DW9807_CTRL_DELAY_US, DW9807_CTRL_DELAY_US + 10);
-+	}
-+
-+	/* Power down */
-+	ret = i2c_master_send(client, tx_data, sizeof(tx_data));
-+	if (ret < 0) {
-+		dev_err(&client->dev, "I2C write CTL fail ret = %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * This function sets the vcm position to the value set by the user
-+ * through v4l2_ctrl_ops s_ctrl handler
-+ * The lens position is gradually moved in units of DW9807_CTRL_STEPS,
-+ * to make the movements smoothly.
-+ */
-+static int  __maybe_unused dw9807_vcm_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct dw9807_device *dw9807_dev = sd_to_dw9807_vcm(sd);
-+	const char tx_data[2] = { DW9807_CTL_ADDR, 0x00 };
-+	int ret, val;
-+
-+	/* Power on */
-+	ret = i2c_master_send(client, tx_data, sizeof(tx_data));
-+	if (ret < 0) {
-+		dev_err(&client->dev, "I2C write CTL fail ret = %d\n", ret);
-+		return ret;
-+	}
-+
-+	for (val = dw9807_dev->current_val % DW9807_CTRL_STEPS;
-+	     val < dw9807_dev->current_val + DW9807_CTRL_STEPS - 1;
-+	     val += DW9807_CTRL_STEPS) {
-+		ret = dw9807_set_dac(client, val);
-+		if (ret)
-+			dev_err_ratelimited(dev, "%s I2C failure: %d",
-+						__func__, ret);
-+		usleep_range(DW9807_CTRL_DELAY_US, DW9807_CTRL_DELAY_US + 10);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id dw9807_of_table[] = {
-+	{ .compatible = "dongwoon,dw9807" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, dw9807_of_table);
-+
-+static const struct dev_pm_ops dw9807_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(dw9807_vcm_suspend, dw9807_vcm_resume)
-+	SET_RUNTIME_PM_OPS(dw9807_vcm_suspend, dw9807_vcm_resume, NULL)
-+};
-+
-+static struct i2c_driver dw9807_i2c_driver = {
-+	.driver = {
-+		.name = "dw9807",
-+		.pm = &dw9807_pm_ops,
-+		.of_match_table = dw9807_of_table,
-+	},
-+	.probe_new = dw9807_probe,
-+	.remove = dw9807_remove,
-+};
-+
-+module_i2c_driver(dw9807_i2c_driver);
-+
-+MODULE_AUTHOR("Chiang, Alan <alanx.chiang@intel.com>");
-+MODULE_DESCRIPTION("DW9807 VCM driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+> The only problem I see with that is that we may not have a reliable
+> way to convert the fwnode pointing to the remote-endpoint parent into
+> struct device (if one has already been enumerated) in order to get the
+> device name and use it as the second endpoint name in struct
+> device_connection. To solve that, we could consider for example just
+> adding a new member, fwnode pointer perhaps, to the structure. Or
+> perhaps use the endpoint members for something else than device names
+> when graph is used, and add a member defining the type of match:
+> graph, build-in, etc. There are many things we can consider.
 
+I don't understand why adding such new member(s) can solve that.
+Anyway, I will investigate this more...
+
+> I don't know if I'm able to explain what I'm after with this, so if
+> you like, I can propose something for this myself. Though that will
+> have to wait for few weeks. Right now I'm too busy with other stuff.
+
+Thank you for your proposal! However, I'd like to try to investigate
+once more while you are too busy.
+
+Best regards,
+Yoshihiro Shimoda
+
+>=20
+> Thanks,
+>=20
+> --
+> heikki
