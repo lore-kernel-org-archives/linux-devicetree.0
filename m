@@ -1,70 +1,82 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] ARM: dra762: hwmod: Add MCAN support
-Date: Tue, 15 May 2018 10:18:08 -0700
-Message-ID: <20180515171808.GR98604@atomide.com>
-References: <1523181542-3770-1-git-send-email-faiz_abbas@ti.com>
- <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
- <20180501152615.GB98604@atomide.com>
- <b4d95a08-82fd-9f39-53e7-977351788c88@ti.com>
- <20180515171459.GP98604@atomide.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V3] Input: pm8941-pwrkey: add resin key capabilities
+Date: Tue, 15 May 2018 10:20:55 -0700
+Message-ID: <20180515172055.GB205769@dtor-ws>
+References: <1521786192-19487-1-git-send-email-tirupath@codeaurora.org>
+ <20180505001039.GA112416@dtor-ws>
+ <20180507184659.GG2259@tuxbook-pro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180515171459.GP98604@atomide.com>
+In-Reply-To: <20180507184659.GG2259@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, paul@pwsan.com, lokeshvutla@ti.com, linux@armlinux.org.uk
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Tirupathi Reddy <tirupath@codeaurora.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [180515 17:17]:
-> * Faiz Abbas <faiz_abbas@ti.com> [180515 06:05]:
-> > Hi Tony,
-> > 
-> > On Tuesday 01 May 2018 08:56 PM, Tony Lindgren wrote:
-> > > Hi,
-> > > 
-> > > * Faiz Abbas <faiz_abbas@ti.com> [180408 09:59]:
-> > >> From: Lokesh Vutla <lokeshvutla@ti.com>
-> > >>
-> > >> Add MCAN hwmod data and register it for dra762 silicons.
-> > >>
-> > >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> > >> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> > >> ---
-> > >>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 32 +++++++++++++++++++++++++++++++
-> > >>  1 file changed, 32 insertions(+)
-> > >>
-> > >> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> > >> index 62352d1..a2cd7f8 100644
-> > >> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> > >> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> > >> @@ -1356,6 +1356,29 @@ static struct omap_hwmod dra7xx_mailbox13_hwmod = {
-> > >>  };
-> > >>  
-> > >>  /*
-> > >> + * 'mcan' class
-> > >> + *
-> > >> + */
-> > >> +static struct omap_hwmod_class dra76x_mcan_hwmod_class = {
-> > >> +	.name	= "mcan",
-> > >> +};
-> > > 
-> > > Looks like you're missing the related struct omap_hwmod_class_sysconfig
-> > > entry for this with the rev and sysconfig registers.
-> > > 
-> > 
-> > Sorry, I missed this email earlier. The MCAN module doesn't have
-> > sysconfig registers.
+On Mon, May 07, 2018 at 11:46:59AM -0700, Bjorn Andersson wrote:
+> On Fri 04 May 17:10 PDT 2018, Dmitry Torokhov wrote:
 > 
-> If there's no sysconfig register you should have no need for adding
-> anything to omap_hwmod_7xx_data.c. We now have the dts clkctrl
-> clocks, you can just add that to the dts node for the device.
+> > Hi Tirupathi,
+> > 
+> > On Fri, Mar 23, 2018 at 11:53:12AM +0530, Tirupathi Reddy wrote:
+> > > Add resin key support to handle different types of key events
+> > > defined in different platforms.
+> > > 
+> > > Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+> > > ---
+> > >  .../bindings/input/qcom,pm8941-pwrkey.txt          | 32 +++++++++
+> > >  drivers/input/misc/pm8941-pwrkey.c                 | 81 ++++++++++++++++++++++
+> > >  2 files changed, 113 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+> [..]
+> > >  EXAMPLE
+> > >  
+> > >  	pwrkey@800 {
+> > > @@ -40,4 +66,10 @@ EXAMPLE
+> > >  		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
+> > >  		debounce = <15625>;
+> > >  		bias-pull-up;
+> > > +
+> > > +		resin {
+> > > +			interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+> > > +			linux,code = <KEY_VOLUMEDOWN>;
+> > > +			bias-pull-up;
+> > > +		};
+> > >  	};
+> > 
+> > The new key and power key bindings are very similar, I would prefer if
+> > we shared the parsing code and our new DTS looked like:
+> > 
+> > 		power {
+> > 			...
+> > 		};
+> >  
+> > 		resin {
+> > 			...
+> > 		};
+> > 
+> > (we can easily keep backward compatibility with power properties being
+> > in device node).
+> > 
+> 
+> As discussed here https://patchwork.kernel.org/patch/9751627/ the PON
+> block does, in addition to providing power and resin key support also
+> handle the restart reason ("reboot bootloader" in Android).
+> 
+> My interpretation of our conclusion was to come up with a new binding
+> for the "pon" and a driver for this block that instantiates the power
+> key device.
+> 
+> It seems reasonable for such binding to describe the two keys, as you
+> propose here Dmitry, and instantiates the two input devices based on
+> this.
 
-However.. My guess is there is somewhere a top level interconnect
-target module that uses DRA7XX_CM_WKUPAON_ADC_CLKCTRL. And that
-module may have multiple child devices.
+OK, I'll wait for the new driver and binding then.
 
-Regards,
+Thanks.
 
-Tony
+-- 
+Dmitry
