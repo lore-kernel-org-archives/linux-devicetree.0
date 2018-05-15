@@ -1,44 +1,28 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 1/1] clk: npcm750: fix base address and of_clk_get_by_name
- error handling. Also update error messages to be more informative
-Date: Tue, 15 May 2018 15:15:11 -0700
-Message-ID: <152642251190.237094.2880285895652897578@swboyd.mtv.corp.google.com>
-References: <1525159407-31708-1-git-send-email-tali.perry1@gmail.com>
- <1525159407-31708-2-git-send-email-tali.perry1@gmail.com>
+Subject: Re: [PATCH v2 2/6] dt-bindings: clock: mediatek: add g3dsys bindings
+Date: Tue, 15 May 2018 15:22:17 -0700
+Message-ID: <152642293705.237094.16380764823129381223@swboyd.mtv.corp.google.com>
+References: <cover.1524816502.git.sean.wang@mediatek.com>
+ <665c38d5803573aa9a01471253f406301b1123a1.1524816502.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525159407-31708-2-git-send-email-tali.perry1@gmail.com>
+In-Reply-To: <665c38d5803573aa9a01471253f406301b1123a1.1524816502.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: avifishman70@gmail.com, brendanhiggins@google.com, linux@armlinux.org.uk, mark.rutland@arm.com, raltherr@google.com, robh+dt@kernel.org, tmaimon77@gmail.com, weiyongjunl@huawei.com
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-arm-kernel@lists.infradead.org
+To: mark.rutland@arm.com, matthias.bgg@gmail.com, mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tali Perry (2018-05-01 00:23:27)
+Quoting sean.wang@mediatek.com (2018-04-27 01:14:43)
+> From: Sean Wang <sean.wang@mediatek.com>
 > =
 
-> Nuvoton NPCM7XX Clock Controller
-> fix base address and of_clk_get_by_name error handling.
->     Also update error messages to be more informative.
->     =
-
->     In case clk_base allocation is erronoeous the return value is null.
->     Also fix handling of of_clk_get_by_name returns an error. =
-
->     Print a better error message pointing to the dt-binding documention.
+> Add bindings to g3dsys providing necessary clock and reset control to
+> Mali-450.
 > =
 
-> =
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
 
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> =
-
-> Tali Perry (2):
->  =
-
-
-This doesn't apply to clk-next so I'm not sure what's going on. Please
-resend if something needs to be fixed.
+Applied to clk-next
