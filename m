@@ -1,103 +1,43 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 1/1] net: phy: micrel: add 125MHz reference clock workaround
-Date: Tue, 15 May 2018 09:47:55 +0200
-Message-ID: <20180515074755.26160-2-m.felsch@pengutronix.de>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, niebelm@tqsc.de
+From: Banajit Goswami <bgoswami@codeaurora.org>
+Subject: Re: [PATCH v8 23/24] ASoC: qcom: apq8096: Add db820c
+	machine driver
+Date: Tue, 15 May 2018 01:00:27 -0700
+Message-ID: <253c8a76-9aaa-d4f2-f503-db8c6518d047@codeaurora.org>
+References: <20180509125635.5653-1-srinivas.kandagatla@linaro.org>
+ <20180509125635.5653-24-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180509125635.5653-24-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel@tqs.de>
 
-The micrel KSZ9031 phy has a optional clock pin (CLK125_NDO) which can be
-used as reference clock for the MAC unit. The clock signal must meet the
-RGMII requirements to ensure the correct data transmission between the
-MAC and the PHY. The KSZ9031 phy does not fulfill the duty cycle
-requirement if the phy is configured as slave. For a complete
-describtion look at the errata sheets: DS80000691D or DS80000692D.
+On 5/9/2018 5:56 AM, Srinivas Kandagatla wrote:
+> This patch adds support to DB820c machine driver.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   sound/soc/qcom/Kconfig   |   9 ++
+>   sound/soc/qcom/Makefile  |   2 +
+>   sound/soc/qcom/apq8096.c | 255 +++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 266 insertions(+)
+>   create mode 100644 sound/soc/qcom/apq8096.c
+>
+Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
 
-The errata sheet recommends to force the phy into master mode whenever
-there is a 1000Base-T link-up as work around. Only set the
-"micrel,force-master" property if you use the phy reference clock provided
-by CLK125_NDO pin as MAC reference clock in your application.
-
-Attenation, this workaround is only usable if the link partner can
-be configured to slave mode for 1000Base-T.
-
-Signed-off-by: Markus Niebel <Markus.Niebel@tqs.de>
-[m.felsch@pengutronix.de: fix dt-binding documentation]
-[m.felsch@pengutronix.de: use already existing result var for read/write]
-[m.felsch@pengutronix.de: add error handling]
-[m.felsch@pengutronix.de: add more comments]
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- .../bindings/net/micrel-ksz90x1.txt           |  7 +++++
- drivers/net/phy/micrel.c                      | 31 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index 42a248301615..e22d8cfea687 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -57,6 +57,13 @@ KSZ9031:
-       - txd2-skew-ps : Skew control of TX data 2 pad
-       - txd3-skew-ps : Skew control of TX data 3 pad
- 
-+    - micrel,force-master:
-+        Boolean, force phy to master mode. Only set this option if the phy
-+        reference clock provided at CLK125_NDO pin is used as MAC reference
-+        clock because the clock jitter in slave mode is to high (errata#2).
-+        Attention: The link partner must be configurable as slave otherwise
-+        no link will be established.
-+
- Examples:
- 
- 	mdio {
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index f41b224a9cdb..ab195f0916d6 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -573,9 +573,40 @@ static int ksz9031_config_init(struct phy_device *phydev)
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
- 				tx_data_skews, 4);
-+
-+		/* Silicon Errata Sheet (DS80000691D or DS80000692D):
-+		 * When the device links in the 1000BASE-T slave mode only,
-+		 * the optional 125MHz reference output clock (CLK125_NDO)
-+		 * has wide duty cycle variation.
-+		 *
-+		 * The optional CLK125_NDO clock does not meet the RGMII
-+		 * 45/55 percent (min/max) duty cycle requirement and therefore
-+		 * cannot be used directly by the MAC side for clocking
-+		 * applications that have setup/hold time requirements on
-+		 * rising and falling clock edges.
-+		 *
-+		 * Workaround:
-+		 * Force the phy to be the master to receive a stable clock
-+		 * which meets the duty cycle requirement.
-+		 */
-+		if (of_property_read_bool(of_node, "micrel,force-master")) {
-+			result = phy_read(phydev, MII_CTRL1000);
-+			if (result < 0)
-+				goto err_force_master;
-+
-+			/* enable master mode, config & prefer master */
-+			result |= CTL1000_ENABLE_MASTER | CTL1000_AS_MASTER;
-+			result = phy_write(phydev, MII_CTRL1000, result);
-+			if (result < 0)
-+				goto err_force_master;
-+		}
- 	}
- 
- 	return ksz9031_center_flp_timing(phydev);
-+
-+err_force_master:
-+	phydev_err(phydev, "failed to force the phy to master mode\n");
-+	return result;
- }
- 
- #define KSZ8873MLL_GLOBAL_CONTROL_4	0x06
 -- 
-2.17.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
