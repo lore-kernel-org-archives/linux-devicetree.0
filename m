@@ -1,65 +1,59 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH] iio: adc: stm32-dfsdm: Add support for stm32mp1
-Date: Tue, 15 May 2018 17:23:35 +0200
-Message-ID: <781b346a-e457-9c67-2e11-6f6edba88d63@st.com>
-References: <1525266323-4922-1-git-send-email-fabrice.gasnier@st.com>
- <20180507205151.GA25321@rob-hp-laptop> <20180512103324.5068c893@archlinux>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v10 02/27] clk: davinci: da850-pll: change PLL0 to
+ CLK_OF_DECLARE
+Date: Tue, 15 May 2018 10:42:54 -0500
+Message-ID: <88dec9b1-5f4d-a1ac-2b63-b30ae7665851@lechnology.com>
+References: <20180509172606.29387-1-david@lechnology.com>
+ <20180509172606.29387-3-david@lechnology.com>
+ <9203489d-0a5a-103a-67ea-d3e89bb7ebc4@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180512103324.5068c893@archlinux>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9203489d-0a5a-103a-67ea-d3e89bb7ebc4@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2018 11:33 AM, Jonathan Cameron wrote:
-> On Mon, 7 May 2018 15:51:51 -0500
-> Rob Herring <robh@kernel.org> wrote:
-> 
->> On Wed, May 02, 2018 at 03:05:23PM +0200, Fabrice Gasnier wrote:
->>> Add support for DFSDM (Digital Filter For Sigma Delta Modulators)
->>> to STM32MP1. This variant is close to STM32H7 DFSDM, it implements
->>> 6 filter instances. Registers map is also increased.
->>>
->>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>> ---
->>>  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt         |  7 +++++--
->>>  drivers/iio/adc/stm32-dfsdm-core.c                  | 21 +++++++++++++++++++++
->>>  2 files changed, 26 insertions(+), 2 deletions(-)  
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> Applied.   Whilst doing this I note that I'm getting a few sparse
-> warnings for this driver that would be nice to clean up...
-> 
->   CHECK   drivers/iio/adc/stm32-dfsdm-adc.c
-> drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
-> drivers/iio/adc/stm32-dfsdm-adc.c:503:21: warning: expression using sizeof(void)
-> 
-> Which is mystifying at first glance... Something deep and dirty in the min macro
-> but I can't see what..
+On 05/15/2018 08:31 AM, Sekhar Nori wrote:
+> On Wednesday 09 May 2018 10:55 PM, David Lechner wrote:
+>> +void of_da850_pll0_init(struct device_node *node)
+>>   {
+>> -	return of_davinci_pll_init(dev, dev->of_node, &da850_pll0_info,
+>> -				   &da850_pll0_obsclk_info,
+>> -				   da850_pll0_sysclk_info, 7, base, cfgchip);
+>> +	void __iomem *base;
+>> +	struct regmap *cfgchip;
+>> +
+>> +	base = of_iomap(node, 0);
+>> +	if (!base) {
+>> +		pr_err("%s: ioremap failed\n", __func__);
+>> +		return;
+>> +	}
+>> +
+>> +	cfgchip = syscon_regmap_lookup_by_compatible("ti,da830-cfgchip");
 
-Hi Jonathan,
+In your previous review, you pointed out that the error did not need to
+be handled here because it is handled later in davinci_pll_clk_register().
 
-I just sent a patch to clean bellow warning. But this is more obscure
-regarding min macro...
-
-Many thanks,
-Fabrice
+We get a warning there because cfgchip is only needed for unlocking the
+PLL for CPU frequency scaling and is not critical for operation of the
+clocks.
 
 > 
-> drivers/iio/adc/stm32-dfsdm-adc.c:680:5: warning: symbol 'stm32_dfsdm_get_buff_cb' was not declared. Should it be static?
-> drivers/iio/adc/stm32-dfsdm-adc.c:703:5: warning: symbol 'stm32_dfsdm_release_buff_cb' was not declared. Should it be static?
+> It will be nice to handle the error case here.
 > 
-> Are rather more obvious
+>> +
+>> +	of_davinci_pll_init(NULL, node, &da850_pll0_info,
+>> +			    &da850_pll0_obsclk_info,
+>> +			    da850_pll0_sysclk_info, 7, base, cfgchip);
+> 
+> Apart from that, it looks good to me.
+> 
+> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+> 
+> Thanks,
+> Sekhar
 > 
