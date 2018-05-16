@@ -1,53 +1,76 @@
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: [PATCH] ARM: dts: vf610-zii-dev: enable vf610 builtin temp sensor
-Date: Wed, 16 May 2018 09:39:21 +0300
-Message-ID: <20180516063921.10406-1-nikita.yoush@cogentembedded.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7"
+ S070WV20-CT16 panel
+Date: Tue, 15 May 2018 23:42:01 -0700
+Message-ID: <CAGb2v64CASge22O0CviNmgEV0CSFgipkKu86F-6hiaLChPh_EA@mail.gmail.com>
+References: <20180419093225.614-1-wens@csie.org>
+ <20180419093225.614-5-wens@csie.org>
+ <CAMty3ZD7MbvX5eJ9U4QZRSPTXKD3Ps=hQF2hJSsF17YosXFmmg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMty3ZD7MbvX5eJ9U4QZRSPTXKD3Ps=hQF2hJSsF17YosXFmmg@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jonathan Liu <net147@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Vybrid has single internal temperature sensor connected to both internal
-ADC modules.
-
-vf610-zii-dev already has ADC0 enabled. Now, to get temperature sensor
-captured by iio_hwmon driver, need to configure iio_hwmon node to use
-that ADC.
-
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
----
- arch/arm/boot/dts/vf610-zii-dev.dtsi | 4 ++++
- arch/arm/boot/dts/vfxxx.dtsi         | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-index 4890b8a5aa44..5ae5abfe1d55 100644
---- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
-+++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-@@ -222,6 +222,10 @@
- 	status = "okay";
- };
- 
-+&tempsensor {
-+	io-channels = <&adc0 16>;
-+};
-+
- &iomuxc {
- 	pinctrl_adc0_ad5: adc0ad5grp {
- 		fsl,pins = <
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index c3f09b737924..d392794d9c13 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -84,7 +84,7 @@
- 		mask = <0x1000>;
- 	};
- 
--	iio-hwmon {
-+	tempsensor: iio-hwmon {
- 		compatible = "iio-hwmon";
- 		io-channels = <&adc0 16>, <&adc1 16>;
- 	};
--- 
-2.11.0
+T24gTW9uLCBNYXkgMTQsIDIwMTggYXQgMTE6MDMgQU0sIEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1
+bGFzb2x1dGlvbnMuY29tPiB3cm90ZToKPiBPbiBUaHUsIEFwciAxOSwgMjAxOCBhdCAzOjAyIFBN
+LCBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+IHdyb3RlOgo+PiBUaGlzIHBhbmVsIGlzIG1h
+cmtldGVkIGFzIEJhbmFuYSBQaSA3IiBMQ0QgZGlzcGxheS4gT24gdGhlIGJhY2sgaXMKPj4gYSBz
+dGlja2VyIGRlbm90aW5nIHRoZSBtb2RlbCBuYW1lIFMwNzBXVjIwLUNUMTYuCj4+Cj4+IFRoaXMg
+aXMgYSA3IiA4MDB4NDgwIHBhbmVsIGNvbm5lY3RlZCB0aHJvdWdoIGEgMjQtYml0IFJHQiBpbnRl
+cmZhY2UuCj4+IEhvd2V2ZXIgdGhlIHBhbmVsIG9ubHkgZG9lcyAyNjJrIGNvbG9ycy4KPj4KPj4g
+U2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgo+PiAtLS0KPj4gIC4u
+Li9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0ICB8ICA3ICsrKysrKwo+
+PiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMjUgKysr
+KysrKysrKysrKysrKysrKwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspCj4+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2MjAtY3QxNi50eHQKPj4KPj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBp
+LHMwNzB3djIwLWN0MTYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2MjAtY3QxNi50eHQKPj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi4yZWMzNWNlMzZlOWEKPj4gLS0tIC9kZXYvbnVs
+bAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dAo+PiBAQCAtMCwwICsxLDcgQEAKPj4gK0JhbmFu
+YSBQaSA3IiAoUzA3MFdWMjAtQ1QxNikgVEZUIExDRCBQYW5lbAo+PiArCj4+ICtSZXF1aXJlZCBw
+cm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImJhbmFuYXBpLHMwNzB3djIw
+LWN0MTYiCj4+ICsKPj4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBs
+ZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKPj4gK2luIHNpbXBsZS1wYW5lbC50
+eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMK
+Pj4gaW5kZXggY2JmMWFiNDA0ZWU3Li45YmMwMzdmNzRkNmMgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtc2ltcGxlLmMKPj4gQEAgLTc0NSw2ICs3NDUsMjggQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBwYW5lbF9kZXNjIGF2aWNfdG0wNzBkZGgwMyA9IHsKPj4gICAgICAgICB9LAo+PiAg
+fTsKPj4KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBiYW5hbmFwaV9z
+MDcwd3YyMF9jdDE2X21vZGUgPSB7Cj4+ICsgICAgICAgLmNsb2NrID0gMzAwMDAsCj4+ICsgICAg
+ICAgLmhkaXNwbGF5ID0gODAwLAo+PiArICAgICAgIC5oc3luY19zdGFydCA9IDgwMCArIDQwLAo+
+PiArICAgICAgIC5oc3luY19lbmQgPSA4MDAgKyA0MCArIDQ4LAo+PiArICAgICAgIC5odG90YWwg
+PSA4MDAgKyA0MCArIDQ4ICsgNDAsCj4+ICsgICAgICAgLnZkaXNwbGF5ID0gNDgwLAo+PiArICAg
+ICAgIC52c3luY19zdGFydCA9IDQ4MCArIDEzLAo+PiArICAgICAgIC52c3luY19lbmQgPSA0ODAg
+KyAxMyArIDMsCj4+ICsgICAgICAgLnZ0b3RhbCA9IDQ4MCArIDEzICsgMyArIDI5LAo+PiArfTsK
+Pj4gKwo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGJhbmFuYXBpX3MwNzB3djIw
+X2N0MTYgPSB7Cj4+ICsgICAgICAgLm1vZGVzID0gJmJhbmFuYXBpX3MwNzB3djIwX2N0MTZfbW9k
+ZSwKPj4gKyAgICAgICAubnVtX21vZGVzID0gMSwKPj4gKyAgICAgICAuYnBjID0gNiwKPj4gKyAg
+ICAgICAuc2l6ZSA9IHsKPj4gKyAgICAgICAgICAgICAgIC53aWR0aCA9IDE1NCwKPj4gKyAgICAg
+ICAgICAgICAgIC5oZWlnaHQgPSA4NiwKPj4gKyAgICAgICB9LAo+PiArfTsKPgo+IEkgdGhpbmsg
+dGhpcyBwYXJhbGxlbCBSR0IgaW50ZXJmYWNlIHJpZ2h0PyBJIHRvbyBoYXZlIHNhbWUgZGlzcGxh
+eQo+IHdpdGggRFNJIEknbSBzdXJlIHRoZXNlIHNldHRpbmcgd2lsbCBub3QgdXNlZnVsIHJpZ2h0
+PyBkbyB3ZSBuZWVkIHRvCj4gd3JpdGUgc2VwYXJhdGUgcGFuZWwgZHJpdmVyIGZvciB0aGF0PwoK
+QUZBSUsgdGhlIERTSSBtb2RlbCBpcyBhbiBSR0IgcGFuZWwgd2l0aCBhIE1JUEkgRFNJIGJyaWRn
+ZSBvbiB0aGUKY29ubmVjdG9yIGJvYXJkLiBUaGUgbW9kZWwgSSBoYXZlIGlzIGR1YWwgaW50ZXJm
+YWNlLgoKQ2hlbll1Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
