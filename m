@@ -1,61 +1,46 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
-Date: Wed, 16 May 2018 17:13:44 +0300
-Message-ID: <CAP245DVO8mG--ZvUitLkEwvUP_YkQe0cz2qmpXg+uyZD_cT9+g@mail.gmail.com>
-References: <1526375616-16904-1-git-send-email-ilialin@codeaurora.org>
- <1526375616-16904-13-git-send-email-ilialin@codeaurora.org>
- <CAHLCerOYq4q2GE+m3MQAbMfxM4azPr95XiLKVtoPVG1Kv2Db=A@mail.gmail.com> <20180516141132.aqjif7d5motmmnlo@vireshk-i7>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl bindings
+Date: Wed, 16 May 2018 16:20:35 +0200
+Message-ID: <CACRpkda2VGo0FOdR09tKiTpg66NgoWjubaHp_J3372y=a772Zg@mail.gmail.com>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
+ <20180416181940.4b5z4svbde3ompij@rob-hp-laptop> <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
+ <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516141132.aqjif7d5motmmnlo@vireshk-i7>
+In-Reply-To: <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Ilia Lin <ilialin@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Menon, Nishanth" <nm@ti.com>, lgirdwood@gmail.com, Mark Brown <broonie@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Rajendra Nayak <rnay>
+To: Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 5:11 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 16-05-18, 16:12, Amit Kucheria wrote:
->> > +       ret = PTR_ERR_OR_ZERO(opp_temp =
->> > +                             dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
->> > +       if (0 > ret)
->>
->> Any particular reason to prefer this over (ret < 0) that is generally
->> used? I've seen it used to avoid the == vs. = typos, but not for other
->> comparisons.
->>
->> Suggest sticking to what is commonly used i.e. ret < 0.
->>
->> > +               goto free_opp;
->> > +
->> > +       cpu_dev = get_cpu_device(GOLD_LEAD);
->>
->> Error check cpu_dev here?
->>
->> > +       ret = PTR_ERR_OR_ZERO(opp_temp =
->> > +                             dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
->> > +       if (0 > ret)
->> > +               goto free_opp;
->
-> The goto here is wrong
->
->> > +
->> > +
->> > +       ret = PTR_ERR_OR_ZERO(platform_device_register_simple("cpufreq-dt",
->> > +                                                             -1, NULL, 0));
->> > +
->> > +       if (0 == ret)
->> > +               return 0;
->> > +
->> > +free_opp:
->> > +       dev_pm_opp_put_supported_hw(opp_temp);
->>
->> This is not needed because dev_pm_opp_set_supported_hw will free
->> memory in case of failure. This call in only needed in case of a
->> successful get.
->
-> But this is still required for the case where platform device
-> registration fails.
+On Wed, May 9, 2018 at 9:56 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
 
-Agreed. The overall error path needs to be re-written with proper
-check of return values.
+> Indeed, stmfx has other functions than GPIO. But, after comments done
+> here: [1] and there: [2], it has been decided to move MFD parent/GPIO
+> child drivers into a single PINCTRL/GPIO driver because of the following
+> reasons:
+> - Other stmfx functions (IDD measurement and TouchScreen controller) are
+> not used on any of the boards using an stmfx and supported by Linux, so
+> no way to test these functions, and no need to maintain them while they
+> are not being used.
+> - But, in the case a new board will use more than GPIO function on
+> stmfx, the actual implementation allow to easily extract common init
+> part of stmfx and put it in an MFD driver.
+>
+> So I could remove gpio sub-node and put its contents in stmfx node and
+> keep single PINCTRL/GPIO driver for the time being.
+> Please advise,
+
+I would normally advice to use the right modeling from the start, create
+the MFD driver and spawn the devices from there. It is confusing
+if the layout of the driver(s) doesn't really match the layout of the
+hardware.
+
+I understand that it is a pain to write new MFD drivers to get your
+things going and it would be "nice to get this working really quick
+now" but in my experience it is better to do it right from the start.
+
+Yours,
+Linus Walleij
