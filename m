@@ -1,77 +1,89 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 4/4] rtc: ds1307: add frequency_test_enable sysfs
- attribute to check tick on m41txx
-Date: Wed, 16 May 2018 23:22:24 +0300
-Message-ID: <CAHp75VdC74jW+Vox2ogDVzG17Z3kD0Vg-1du4SeK30WajT7N-Q@mail.gmail.com>
-References: <20180516103251.74707-1-giulio.benetti@micronovasrl.com> <20180516103251.74707-4-giulio.benetti@micronovasrl.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 1/3] rtc: stm32: rework register management to prepare
+ other version of RTC
+Date: Wed, 16 May 2018 22:25:52 +0200
+Message-ID: <20180516202552.GA24496@piout.net>
+References: <1525880770-22263-1-git-send-email-amelie.delaunay@st.com>
+ <1525880770-22263-2-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516103251.74707-4-giulio.benetti@micronovasrl.com>
+Content-Disposition: inline
+In-Reply-To: <1525880770-22263-2-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, alexandre.belloni@bootlin.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 1:32 PM, Giulio Benetti
-<giulio.benetti@micronovasrl.com> wrote:
-> On m41txx you can enable open-drain OUT pin to check if offset is ok.
-> Enabling OUT pin with frequency_test_enable attribute, OUT pin will tick
-> 512 times faster than 1s tick base.
->
-> Enable or Disable FT bit on CONTROL register if freq_test is 1 or 0.
->
-> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Hi,
 
-> +static ssize_t frequency_test_enable_store(struct device *dev,
-> +                                          struct device_attribute *attr,
-> +                                          const char *buf, size_t count)
-> +{
-> +       struct ds1307 *ds1307 = dev_get_drvdata(dev);
-> +       unsigned long freq_test = 0;
-> +       int retval;
+On 09/05/2018 17:46:08+0200, Amelie Delaunay wrote:
+>  static void stm32_rtc_wpr_unlock(struct stm32_rtc *rtc)
+>  {
+> -	writel_relaxed(RTC_WPR_1ST_KEY, rtc->base + STM32_RTC_WPR);
+> -	writel_relaxed(RTC_WPR_2ND_KEY, rtc->base + STM32_RTC_WPR);
+> +	struct stm32_rtc_registers regs = rtc->data->regs;
+
+regs should probably be a pointer to ensure that no copy is made. I've
+actually checked and it doesn't make a difference because gcc is smart
+enough to not make the copy.
+
 > +
-> +       retval = kstrtoul(buf, 10, &freq_test);
-> +       if ((retval < 0) || (retval > 1)) {
+> +	writel_relaxed(RTC_WPR_1ST_KEY, rtc->base + regs.wpr);
+> +	writel_relaxed(RTC_WPR_2ND_KEY, rtc->base + regs.wpr);
+>  }
+>  
 
-kstrtobool() then?
+...
 
-> +               dev_err(dev, "Failed to store RTC Frequency Test attribute\n");
+>  static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
+>  {
+>  	struct stm32_rtc *rtc = (struct stm32_rtc *)dev_id;
+> -	unsigned int isr, cr;
+> +	struct stm32_rtc_registers regs = rtc->data->regs;
+> +	struct stm32_rtc_events evts = rtc->data->events;
 
-> +               return -EINVAL;
+Ditto for evts.
 
-...and do not shadow actual error code.
+> +	unsigned int status, cr;
+>  
+>  	mutex_lock(&rtc->rtc_dev->ops_lock);
+>  
+> -	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+> -	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+> +	status = readl_relaxed(rtc->base + regs.isr);
+> +	cr = readl_relaxed(rtc->base + regs.cr);
+>  
+> -	if ((isr & STM32_RTC_ISR_ALRAF) &&
+> +	if ((status & evts.alra) &&
+>  	    (cr & STM32_RTC_CR_ALRAIE)) {
+>  		/* Alarm A flag - Alarm interrupt */
+>  		dev_dbg(&rtc->rtc_dev->dev, "Alarm occurred\n");
 
-> +       }
-> +
-> +       regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL, M41TXX_BIT_FT,
-> +                          freq_test ? M41TXX_BIT_FT : 0);
-> +
+...
 
-> +       return retval ? retval : count;
+> @@ -641,7 +710,7 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+>  
+>  	/*
+>  	 * After a system reset, RTC_ISR.INITS flag can be read to check if
+> -	 * the calendar has been initalized or not. INITS flag is reset by a
+> +	 * the calendar has been initialized or not. INITS flag is reset by a
+>  	 * power-on reset (no vbat, no power-supply). It is not reset if
+>  	 * rtc_ck parent clock has changed (so RTC prescalers need to be
+>  	 * changed). That's why we cannot rely on this flag to know if RTC
+> @@ -666,7 +735,7 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+>  			 "alarm won't be able to wake up the system");
+>  
+>  	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
+> -			&stm32_rtc_ops, THIS_MODULE);
+> +						&stm32_rtc_ops, THIS_MODULE);
+>  	if (IS_ERR(rtc->rtc_dev)) {
+>  		ret = PTR_ERR(rtc->rtc_dev);
+>  		dev_err(&pdev->dev, "rtc device registration failed, err=%d\n",
 
-Does the condition make any sense?
-
-> +}
-
-> +static ssize_t frequency_test_enable_show(struct device *dev,
-> +                                         struct device_attribute *attr,
-> +                                         char *buf)
-> +{
-
-> +       int freq_test_en = 0;
-
-> +       if (ctrl_reg & M41TXX_BIT_FT)
-> +               freq_test_en = true;
-> +       else
-> +               freq_test_en = false;
-> +
-> +       return sprintf(buf, "%d\n", freq_test_en);
-
-So, is it boolean or integer? This code makes it confusing a lot.
-
-> +}
+Those two changes should go into a separate cleanup patch.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
