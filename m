@@ -1,104 +1,108 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 3/3] sh_eth: add R8A77980 support
-Date: Wed, 16 May 2018 23:00:29 +0300
-Message-ID: <d3fe7c8e-3356-4f3a-d550-bc813f3f72cd@cogentembedded.com>
-References: <087c91a3-a451-6de7-5e0f-a835f8cc98f1@cogentembedded.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v6 1/2] dt: bindings: lm3601x: Introduce the lm3601x
+ driver
+Date: Wed, 16 May 2018 22:10:14 +0200
+Message-ID: <03934462-13ef-59c0-aa27-01a003bf7baa@gmail.com>
+References: <20180515154352.20263-1-dmurphy@ti.com>
+ <98319f30-2abe-158c-1b51-33d1df80e185@gmail.com>
+ <c72494c9-e513-f3d0-3098-83f47aa9367c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <087c91a3-a451-6de7-5e0f-a835f8cc98f1@cogentembedded.com>
-Content-Language: en-MW
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c72494c9-e513-f3d0-3098-83f47aa9367c@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Finally, add support for the DT probing of the R-Car V3H (AKA R8A77980) --
-it's the only R-Car gen3 SoC having the GEther controller -- others have
-only EtherAVB...
+Dan,
 
-Based on the original (and large) patch by Vladimir Barinov.
+On 05/15/2018 11:29 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 05/15/2018 04:13 PM, Jacek Anaszewski wrote:
+>> Hi Dan,
+>>
+>> Thanks for the update.
+>>
+>> On 05/15/2018 05:43 PM, Dan Murphy wrote:
+>>> Introduce the device tree bindings for the lm3601x
+>>> family of LED torch, flash and IR drivers.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>
+>>> v6 - Removed multiple led child nodes, fixed example to display micro ranges
+>>> for corresponding child nodes and added led-sources to define the current driver -
+>>> https://patchwork.kernel.org/patch/10392121/
+>>>
+>>> v5 - No changes - https://patchwork.kernel.org/patch/10391743/
+>>> v4 - Added " " around "=", changed strobe to flash on label, removed "support and
+>>> register" comment and change ir lable to ir:torch - See v2 patchworks for comments
+>>> v3 - Removed wildcard compatible - https://patchwork.kernel.org/patch/10386241/
+>>> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+>>>
+>>>    .../devicetree/bindings/leds/leds-lm3601x.txt | 47 +++++++++++++++++++
+>>>    1 file changed, 47 insertions(+)
+>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+>>> new file mode 100644
+>>> index 000000000000..27930a89e9a5
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+>>> @@ -0,0 +1,47 @@
+>>> +* Texas Instruments - lm3601x Single-LED Flash Driver
+>>> +
+>>> +The LM3601X are ultra-small LED flash drivers that
+>>> +provide a high level of adjustability.
+>>> +
+>>> +Required properties:
+>>> +    - compatible : Can be one of the following
+>>> +        "ti,lm36010"
+>>> +        "ti,lm36011"
+>>> +    - reg : I2C slave address
+>>> +    - #address-cells : 1
+>>> +    - #size-cells : 0
+>>> +
+>>> +Required child properties:
+>>> +    - reg : 0
+>>> +    - led-sources:    0 - Indicates a IR mode
+>>> +            1 - Indicates a Torch (white LED) mode
+>>
+>> You don't need led-sources at all. Please use reg as in
+>> the previous version. led-sources is useful for describing
+>> more complex arrangements. Here reg will do.
+> 
+> OK.  Thought we would keep consistent with the max IC.
+> 
+>>
+>>> +
+>>> +Required properties for flash LED child nodes:
+>>> +    See Documentation/devicetree/bindings/leds/common.txt
+>>> +    - flash-max-microamp : Range from 11mA -> 1.5A
+>>> +    - flash-max-timeout-us : Range from 40ms -> 1600ms
+>>> +    - led-max-microamp : Range from 2.4mA -> 376mA
+>>
+>> Please give also a step in the format like below
+>> (taken from max77693):
+>>
+>>      Valid values: 62500 - 1000000, step by 62500 (rounded down)
+> 
+> I would do this but the step is not linear.  The step is 40ms from 40 -> 400.
+> after that the step goes to 200ms from 400->1600.
+> 
+> same with the current ranges.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+If you're going to apply Andy's formula in the driver, then you can
+present it also here. Anyway, please avoid using non-standard "->"
+symbol in favor of "to" if you're using "from".
 
----
- Documentation/devicetree/bindings/net/sh_eth.txt |    1 
- drivers/net/ethernet/renesas/sh_eth.c            |   44 +++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+Or even better I propose to list allowed values - there are not
+so many of them.
 
-Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-===================================================================
---- net-next.orig/Documentation/devicetree/bindings/net/sh_eth.txt
-+++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-@@ -14,6 +14,7 @@ Required properties:
- 	      "renesas,ether-r8a7791"  if the device is a part of R8A7791 SoC.
- 	      "renesas,ether-r8a7793"  if the device is a part of R8A7793 SoC.
- 	      "renesas,ether-r8a7794"  if the device is a part of R8A7794 SoC.
-+	      "renesas,gether-r8a77980" if the device is a part of R8A77980 SoC.
- 	      "renesas,ether-r7s72100" if the device is a part of R7S72100 SoC.
- 	      "renesas,rcar-gen1-ether" for a generic R-Car Gen1 device.
- 	      "renesas,rcar-gen2-ether" for a generic R-Car Gen2 or RZ/G1
-Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
-===================================================================
---- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
-+++ net-next/drivers/net/ethernet/renesas/sh_eth.c
-@@ -753,6 +753,49 @@ static struct sh_eth_cpu_data rcar_gen2_
- 	.rmiimode	= 1,
- 	.magic		= 1,
- };
-+
-+/* R8A77980 */
-+static struct sh_eth_cpu_data r8a77980_data = {
-+	.soft_reset	= sh_eth_soft_reset_gether,
-+
-+	.set_duplex	= sh_eth_set_duplex,
-+	.set_rate	= sh_eth_set_rate_gether,
-+
-+	.register_type  = SH_ETH_REG_GIGABIT,
-+
-+	.edtrr_trns	= EDTRR_TRNS_GETHER,
-+	.ecsr_value	= ECSR_PSRTO | ECSR_LCHNG | ECSR_ICD | ECSR_MPD,
-+	.ecsipr_value	= ECSIPR_PSRTOIP | ECSIPR_LCHNGIP | ECSIPR_ICDIP |
-+			  ECSIPR_MPDIP,
-+	.eesipr_value	= EESIPR_RFCOFIP | EESIPR_ECIIP |
-+			  EESIPR_FTCIP | EESIPR_TDEIP | EESIPR_TFUFIP |
-+			  EESIPR_FRIP | EESIPR_RDEIP | EESIPR_RFOFIP |
-+			  EESIPR_RMAFIP | EESIPR_RRFIP |
-+			  EESIPR_RTLFIP | EESIPR_RTSFIP |
-+			  EESIPR_PREIP | EESIPR_CERFIP,
-+
-+	.tx_check       = EESR_FTC | EESR_CD | EESR_RTO,
-+	.eesr_err_check = EESR_TWB1 | EESR_TWB | EESR_TABT | EESR_RABT |
-+			  EESR_RFE | EESR_RDE | EESR_RFRMER |
-+			  EESR_TFE | EESR_TDE | EESR_ECI,
-+	.fdr_value	= 0x0000070f,
-+
-+	.apr		= 1,
-+	.mpr		= 1,
-+	.tpauser	= 1,
-+	.bculr		= 1,
-+	.hw_swap	= 1,
-+	.nbst		= 1,
-+	.rpadir		= 1,
-+	.rpadir_value   = 2 << 16,
-+	.no_trimd	= 1,
-+	.no_ade		= 1,
-+	.xdfar_rw	= 1,
-+	.hw_checksum	= 1,
-+	.select_mii	= 1,
-+	.magic		= 1,
-+	.cexcr		= 1,
-+};
- #endif /* CONFIG_OF */
- 
- static void sh_eth_set_rate_sh7724(struct net_device *ndev)
-@@ -3134,6 +3177,7 @@ static const struct of_device_id sh_eth_
- 	{ .compatible = "renesas,ether-r8a7791", .data = &rcar_gen2_data },
- 	{ .compatible = "renesas,ether-r8a7793", .data = &rcar_gen2_data },
- 	{ .compatible = "renesas,ether-r8a7794", .data = &rcar_gen2_data },
-+	{ .compatible = "renesas,gether-r8a77980", .data = &r8a77980_data },
- 	{ .compatible = "renesas,ether-r7s72100", .data = &r7s72100_data },
- 	{ .compatible = "renesas,rcar-gen1-ether", .data = &rcar_gen1_data },
- 	{ .compatible = "renesas,rcar-gen2-ether", .data = &rcar_gen2_data },
+-- 
+Best regards,
+Jacek Anaszewski
