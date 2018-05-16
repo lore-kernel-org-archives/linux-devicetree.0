@@ -1,110 +1,268 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH net-next v2 15/15] arm64: dts: allwinner: a64: add SRAM
- controller device tree node
-Date: Tue, 15 May 2018 23:47:16 -0700
-Message-ID: <CAGb2v65uZeueE=2FfsxWen9zNvCtMsJ+b=KgMfSh-ZKmO+S=cQ@mail.gmail.com>
-References: <20180501161227.2110-1-wens@csie.org> <20180501161227.2110-16-wens@csie.org>
- <20180502095118.rqnfwy576xh6ercm@flea> <CAGb2v67pvL58Pes1ZFDZtPu_nL2+m6dgf_XOOymG9nVAkXVpEw@mail.gmail.com>
- <29E5670C-9D17-4EC1-AAAC-0CF33DD0534C@aosc.io> <20180502115437.zlu2rafrguufutvp@flea>
- <CAGb2v64xTNqQQSppw2NZoLn+ViQNQLytn1EukLqw+HJzf1=5ig@mail.gmail.com> <20180514080310.ngev5h6cqe4taedl@flea>
+From: Antoine Tenart <antoine.tenart@bootlin.com>
+Subject: Re: [PATCH net-next v2 2/2] drivers: net: Remove device_node checks
+ with of_mdiobus_register()
+Date: Wed, 16 May 2018 08:49:45 +0200
+Message-ID: <20180516064945.GB32746@kwain>
+References: <20180515235619.27773-1-f.fainelli@gmail.com>
+ <20180515235619.27773-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180514080310.ngev5h6cqe4taedl@flea>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Icenowy Zheng <icenowy@aosc.io>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, netdev <netdev@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Mark Brown <broonie@kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180515235619.27773-3-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>, Russell King <rmk+kernel@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 14, 2018 at 1:03 AM, Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
-> 1;5201;0c
-> On Sun, May 13, 2018 at 12:37:49PM -0700, Chen-Yu Tsai wrote:
->> On Wed, May 2, 2018 at 4:54 AM, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->> > On Wed, May 02, 2018 at 06:19:51PM +0800, Icenowy Zheng wrote:
->> >>
->> >>
->> >> 于 2018年5月2日 GMT+08:00 下午5:53:21, Chen-Yu Tsai <wens@csie.org> 写到:
->> >> >On Wed, May 2, 2018 at 5:51 PM, Maxime Ripard
->> >> ><maxime.ripard@bootlin.com> wrote:
->> >> >> Hi,
->> >> >>
->> >> >> On Wed, May 02, 2018 at 12:12:27AM +0800, Chen-Yu Tsai wrote:
->> >> >>> From: Icenowy Zheng <icenowy@aosc.io>
->> >> >>>
->> >> >>> Allwinner A64 has a SRAM controller, and in the device tree
->> >> >currently
->> >> >>> we have a syscon node to enable EMAC driver to access the EMAC clock
->> >> >>> register. As SRAM controller driver can now export regmap for this
->> >> >>> register, replace the syscon node to the SRAM controller device
->> >> >node,
->> >> >>> and let EMAC driver to acquire its EMAC clock regmap.
->> >> >>>
->> >> >>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> >> >>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> >> >>> ---
->> >> >>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23
->> >> >+++++++++++++++----
->> >> >>>  1 file changed, 19 insertions(+), 4 deletions(-)
->> >> >>>
->> >> >>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> >> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> >> >>> index 1b2ef28c42bd..1c37659d9d41 100644
->> >> >>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> >> >>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> >> >>> @@ -168,10 +168,25 @@
->> >> >>>               #size-cells = <1>;
->> >> >>>               ranges;
->> >> >>>
->> >> >>> -             syscon: syscon@1c00000 {
->> >> >>> -                     compatible =
->> >> >"allwinner,sun50i-a64-system-controller",
->> >> >>> -                             "syscon";
->> >> >>> +             sram_controller: sram-controller@1c00000 {
->> >> >>> +                     compatible =
->> >> >"allwinner,sun50i-a64-sram-controller";
->> >> >>
->> >> >> I don't think there's anything preventing us from keeping the
->> >> >> -system-controller compatible. It's what was in the DT before, and
->> >> >> it's how it's called in the datasheet.
->> >> >
->> >> >I actually meant to ask you about this. The -system-controller
->> >> >compatible matches the datasheet better. Maybe we should just
->> >> >switch to that one?
->> >>
->> >> No, if we do the switch the system-controller compatible,
->> >> the device will be probed on the same memory region with
->> >> a syscon on old DTs.
->> >
->> > The device hasn't magically changed either. Maybe we just need to add
->> > a check to make sure we don't have the syscon compatible in the SRAM
->> > driver probe so that the double driver issue doesn't happen?
->>
->> The syscon interface (which is not even a full blown device driver)
->> only looks at the "syscon" compatible. Either way we're removing that
->> part from the device tree so things should be ok for new device trees.
->> As Maxime mentioned we can do a check for the syscon compatible and
->> either give a warning to the user asking them to update their device
->> tree, or not register our custom regmap, or not probe the SRAM driver.
->> Personally I prefer the first option. The system controller block is
->> probed before any syscon users, so we should be fine, given the dwmac
->> driver goes the custom regmap path first.
->>
->> BTW, I still might end up changing the compatible. The manual uses
->> "system control", not "system controller", which I think makes sense,
->> since it is just a bunch of register files, kind of like the GRF
->> (General Register Files) block found in Rockchip SoCs [1], and not an
->> actual "controller".
->
-> I'm not really fond of that, but we should at least make it consistent
-> on the other patches Paul sent then.
+Hi Florian,
 
-For the A10s / A13 right?
+On Tue, May 15, 2018 at 04:56:19PM -0700, Florian Fainelli wrote:
+> A number of drivers have the following pattern:
+> 
+> if (np)
+> 	of_mdiobus_register()
+> else
+> 	mdiobus_register()
+> 
+> which the implementation of of_mdiobus_register() now takes care of.
+> Remove that pattern in drivers that strictly adhere to it.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/net/dsa/bcm_sf2.c                         |  8 ++------
+>  drivers/net/dsa/mv88e6xxx/chip.c                  |  5 +----
+>  drivers/net/ethernet/cadence/macb_main.c          | 12 +++---------
+>  drivers/net/ethernet/freescale/fec_main.c         |  8 ++------
+>  drivers/net/ethernet/marvell/mvmdio.c             |  5 +----
 
-I think my naming is slightly better, but it's just a minor detail.
-While we're still debating this, can I merge the R40 stuff first?
-The driver bits are already in.
+For mvmdio,
+Reviewed-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-Thanks
-ChenYu
+Thanks!
+Antoine
+
+>  drivers/net/ethernet/renesas/sh_eth.c             | 11 +++--------
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |  5 +----
+>  drivers/net/ethernet/ti/davinci_mdio.c            |  8 +++-----
+>  drivers/net/phy/mdio-gpio.c                       |  6 +-----
+>  drivers/net/phy/mdio-mscc-miim.c                  |  6 +-----
+>  drivers/net/usb/lan78xx.c                         |  7 ++-----
+>  11 files changed, 20 insertions(+), 61 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+> index ac621f44237a..02e8982519ce 100644
+> --- a/drivers/net/dsa/bcm_sf2.c
+> +++ b/drivers/net/dsa/bcm_sf2.c
+> @@ -450,12 +450,8 @@ static int bcm_sf2_mdio_register(struct dsa_switch *ds)
+>  	priv->slave_mii_bus->parent = ds->dev->parent;
+>  	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
+>  
+> -	if (dn)
+> -		err = of_mdiobus_register(priv->slave_mii_bus, dn);
+> -	else
+> -		err = mdiobus_register(priv->slave_mii_bus);
+> -
+> -	if (err)
+> +	err = of_mdiobus_register(priv->slave_mii_bus, dn);
+> +	if (err && dn)
+>  		of_node_put(dn);
+>  
+>  	return err;
+> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+> index b23c11d9f4b2..2bb3f03ee1cb 100644
+> --- a/drivers/net/dsa/mv88e6xxx/chip.c
+> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
+> @@ -2454,10 +2454,7 @@ static int mv88e6xxx_mdio_register(struct mv88e6xxx_chip *chip,
+>  			return err;
+>  	}
+>  
+> -	if (np)
+> -		err = of_mdiobus_register(bus, np);
+> -	else
+> -		err = mdiobus_register(bus);
+> +	err = of_mdiobus_register(bus, np);
+>  	if (err) {
+>  		dev_err(chip->dev, "Cannot register MDIO bus (%d)\n", err);
+>  		mv88e6xxx_g2_irq_mdio_free(chip, bus);
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index b4c9268100bb..3e93df5d4e3b 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -591,16 +591,10 @@ static int macb_mii_init(struct macb *bp)
+>  	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+>  
+>  	np = bp->pdev->dev.of_node;
+> +	if (pdata)
+> +		bp->mii_bus->phy_mask = pdata->phy_mask;
+>  
+> -	if (np) {
+> -		err = of_mdiobus_register(bp->mii_bus, np);
+> -	} else {
+> -		if (pdata)
+> -			bp->mii_bus->phy_mask = pdata->phy_mask;
+> -
+> -		err = mdiobus_register(bp->mii_bus);
+> -	}
+> -
+> +	err = of_mdiobus_register(bp->mii_bus, np);
+>  	if (err)
+>  		goto err_out_free_mdiobus;
+>  
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> index d4604bc8eb5b..f3e43db0d6cb 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -2052,13 +2052,9 @@ static int fec_enet_mii_init(struct platform_device *pdev)
+>  	fep->mii_bus->parent = &pdev->dev;
+>  
+>  	node = of_get_child_by_name(pdev->dev.of_node, "mdio");
+> -	if (node) {
+> -		err = of_mdiobus_register(fep->mii_bus, node);
+> +	err = of_mdiobus_register(fep->mii_bus, node);
+> +	if (node)
+>  		of_node_put(node);
+> -	} else {
+> -		err = mdiobus_register(fep->mii_bus);
+> -	}
+> -
+>  	if (err)
+>  		goto err_out_free_mdiobus;
+>  
+> diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
+> index 0495487f7b42..c5dac6bd2be4 100644
+> --- a/drivers/net/ethernet/marvell/mvmdio.c
+> +++ b/drivers/net/ethernet/marvell/mvmdio.c
+> @@ -348,10 +348,7 @@ static int orion_mdio_probe(struct platform_device *pdev)
+>  		goto out_mdio;
+>  	}
+>  
+> -	if (pdev->dev.of_node)
+> -		ret = of_mdiobus_register(bus, pdev->dev.of_node);
+> -	else
+> -		ret = mdiobus_register(bus);
+> +	ret = of_mdiobus_register(bus, pdev->dev.of_node);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "Cannot register MDIO bus (%d)\n", ret);
+>  		goto out_mdio;
+> diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+> index 5970d9e5ddf1..8dd41e08a6c6 100644
+> --- a/drivers/net/ethernet/renesas/sh_eth.c
+> +++ b/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -3025,15 +3025,10 @@ static int sh_mdio_init(struct sh_eth_private *mdp,
+>  		 pdev->name, pdev->id);
+>  
+>  	/* register MDIO bus */
+> -	if (dev->of_node) {
+> -		ret = of_mdiobus_register(mdp->mii_bus, dev->of_node);
+> -	} else {
+> -		if (pd->phy_irq > 0)
+> -			mdp->mii_bus->irq[pd->phy] = pd->phy_irq;
+> -
+> -		ret = mdiobus_register(mdp->mii_bus);
+> -	}
+> +	if (pd->phy_irq > 0)
+> +		mdp->mii_bus->irq[pd->phy] = pd->phy_irq;
+>  
+> +	ret = of_mdiobus_register(mdp->mii_bus, dev->of_node);
+>  	if (ret)
+>  		goto out_free_bus;
+>  
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> index f5f37bfa1d58..5df1a608e566 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+> @@ -233,10 +233,7 @@ int stmmac_mdio_register(struct net_device *ndev)
+>  	new_bus->phy_mask = mdio_bus_data->phy_mask;
+>  	new_bus->parent = priv->device;
+>  
+> -	if (mdio_node)
+> -		err = of_mdiobus_register(new_bus, mdio_node);
+> -	else
+> -		err = mdiobus_register(new_bus);
+> +	err = of_mdiobus_register(new_bus, mdio_node);
+>  	if (err != 0) {
+>  		dev_err(dev, "Cannot register the MDIO bus\n");
+>  		goto bus_register_fail;
+> diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
+> index 98a1c97fb95e..8ac72831af05 100644
+> --- a/drivers/net/ethernet/ti/davinci_mdio.c
+> +++ b/drivers/net/ethernet/ti/davinci_mdio.c
+> @@ -429,12 +429,10 @@ static int davinci_mdio_probe(struct platform_device *pdev)
+>  	 * defined to support backward compatibility with DTs which assume that
+>  	 * Davinci MDIO will always scan the bus for PHYs detection.
+>  	 */
+> -	if (dev->of_node && of_get_child_count(dev->of_node)) {
+> +	if (dev->of_node && of_get_child_count(dev->of_node))
+>  		data->skip_scan = true;
+> -		ret = of_mdiobus_register(data->bus, dev->of_node);
+> -	} else {
+> -		ret = mdiobus_register(data->bus);
+> -	}
+> +
+> +	ret = of_mdiobus_register(data->bus, dev->of_node);
+>  	if (ret)
+>  		goto bail_out;
+>  
+> diff --git a/drivers/net/phy/mdio-gpio.c b/drivers/net/phy/mdio-gpio.c
+> index b501221819e1..4e4c8daf44c3 100644
+> --- a/drivers/net/phy/mdio-gpio.c
+> +++ b/drivers/net/phy/mdio-gpio.c
+> @@ -179,11 +179,7 @@ static int mdio_gpio_probe(struct platform_device *pdev)
+>  	if (!new_bus)
+>  		return -ENODEV;
+>  
+> -	if (pdev->dev.of_node)
+> -		ret = of_mdiobus_register(new_bus, pdev->dev.of_node);
+> -	else
+> -		ret = mdiobus_register(new_bus);
+> -
+> +	ret = of_mdiobus_register(new_bus, pdev->dev.of_node);
+>  	if (ret)
+>  		mdio_gpio_bus_deinit(&pdev->dev);
+>  
+> diff --git a/drivers/net/phy/mdio-mscc-miim.c b/drivers/net/phy/mdio-mscc-miim.c
+> index 8c689ccfdbca..badbc99bedd3 100644
+> --- a/drivers/net/phy/mdio-mscc-miim.c
+> +++ b/drivers/net/phy/mdio-mscc-miim.c
+> @@ -151,11 +151,7 @@ static int mscc_miim_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> -	if (pdev->dev.of_node)
+> -		ret = of_mdiobus_register(bus, pdev->dev.of_node);
+> -	else
+> -		ret = mdiobus_register(bus);
+> -
+> +	ret = of_mdiobus_register(bus, pdev->dev.of_node);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "Cannot register MDIO bus (%d)\n", ret);
+>  		return ret;
+> diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+> index 91761436709a..8dff87ec6d99 100644
+> --- a/drivers/net/usb/lan78xx.c
+> +++ b/drivers/net/usb/lan78xx.c
+> @@ -1843,12 +1843,9 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
+>  	}
+>  
+>  	node = of_get_child_by_name(dev->udev->dev.of_node, "mdio");
+> -	if (node) {
+> -		ret = of_mdiobus_register(dev->mdiobus, node);
+> +	ret = of_mdiobus_register(dev->mdiobus, node);
+> +	if (node)
+>  		of_node_put(node);
+> -	} else {
+> -		ret = mdiobus_register(dev->mdiobus);
+> -	}
+>  	if (ret) {
+>  		netdev_err(dev->net, "can't register MDIO bus\n");
+>  		goto exit1;
+> -- 
+> 2.14.1
+> 
+
+-- 
+Antoine T�nart, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
