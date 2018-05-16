@@ -1,66 +1,50 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2] ARM: dts: imx7d: correct cpu supply name for voltage scaling
-Date: Wed, 16 May 2018 10:25:48 +0800
-Message-ID: <1526437548-32372-1-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v3 0/2] usb: dwc3: support clocks and resets for DWC3 core
+Date: Wed, 16 May 2018 11:41:05 +0900
+Message-ID: <1526438467-12470-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-usb@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@ti.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Correct CPU supply name to meet cpufreq-dt driver's
-requirement for voltage scaling.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-changes since V1:
-	fix the "No newline at end of file" caused by vim editor.
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 2 +-
- arch/arm/boot/dts/imx7d-nitrogen7.dts   | 2 +-
- arch/arm/boot/dts/imx7d-sdb.dts         | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+In the current design of DWC3 driver,
+the DT typically becomes a nested structure like follows:
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 7f64568..8bf365d 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -33,7 +33,7 @@
- };
- 
- &cpu0 {
--	arm-supply = <&sw1a_reg>;
-+	cpu-supply = <&sw1a_reg>;
- };
- 
- &fec1 {
-diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-index b8e73b4..70c53e5 100644
---- a/arch/arm/boot/dts/imx7d-nitrogen7.dts
-+++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
-@@ -144,7 +144,7 @@
- };
- 
- &cpu0 {
--	arm-supply = <&sw1a_reg>;
-+	cpu-supply = <&sw1a_reg>;
- };
- 
- &fec1 {
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 722a45a..9408491 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -141,7 +141,7 @@
- };
- 
- &cpu0 {
--	arm-supply = <&sw1a_reg>;
-+	cpu-supply = <&sw1a_reg>;
- };
- 
- &ecspi3 {
+  dwc3-glue {
+          compatible = "foo,dwc3";
+          ...
+
+          dwc3 {
+                  compatible = "snps,dwc3";
+                  ...
+          };
+  }
+
+The current DWC3 core (drivers/usb/dwc3/core.c) can not handle
+clocks / resets at all.
+
+The only solution we have now, is to put DWC3 core node under
+the glue layer node, then add clocks and resets there.
+Actually, dwc3-of-simple.c exists to handle clocks and resets.
+
+As always for digital circuits, DWC3 core IP itself needs clock input.
+This is specific to this IP.  So, supporting clocks and resets in
+dwc3/core.c makes sense.
+
+In this version, the number of clocks (and names) is specific
+to this IP, with clock names taken from Synopsys datasheet.
+
+
+Masahiro Yamada (2):
+  usb: dwc3: use local copy of resource to fix-up register offset
+  usb: dwc3: support clocks and resets for DWC3 core
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |  21 +++++
+ drivers/usb/dwc3/core.c                        | 118 +++++++++++++++++++------
+ drivers/usb/dwc3/core.h                        |   8 ++
+ 3 files changed, 122 insertions(+), 25 deletions(-)
+
 -- 
 2.7.4
