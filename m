@@ -1,193 +1,93 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v6 9/9] iio: counter: Remove IIO counter subdirectory
-Date: Wed, 16 May 2018 13:52:39 -0400
-Message-ID: <4c335e0eebfbaf6e86f41e0f2864d76993d90b13.1526487615.git.vilhelm.gray@gmail.com>
-References: <cover.1526487615.git.vilhelm.gray@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1526487615.git.vilhelm.gray@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: benjamin.gaignard@st.com, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, William Breathitt Gray <vilhelm.gray@gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH RFC 2/6] dt-bindings: hwmon: Add Raspberry Pi voltage
+ sensor
+Date: Wed, 16 May 2018 18:51:39 +0100
+Message-ID: <874lj7cwus.fsf@anholt.net>
+References: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
+ <1526477827-10859-3-git-send-email-stefan.wahren@i2se.com>
+ <30fc5bac-0c4a-b2c4-a018-ea521510aaea@arm.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6326555866005236573=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <30fc5bac-0c4a-b2c4-a018-ea521510aaea@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the IIO counter subdirectory which is now superceded
-by the Counter subsystem. Deprecation warnings are added to the
-documentation of the relevant IIO counter sysfs attributes.
+--===============6326555866005236573==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- Documentation/ABI/testing/sysfs-bus-iio          |  8 ++++++++
- .../ABI/testing/sysfs-bus-iio-counter-104-quad-8 | 16 ++++++++++++++++
- drivers/iio/Kconfig                              |  1 -
- drivers/iio/Makefile                             |  1 -
- drivers/iio/counter/Kconfig                      |  8 --------
- drivers/iio/counter/Makefile                     |  5 -----
- 6 files changed, 24 insertions(+), 15 deletions(-)
- delete mode 100644 drivers/iio/counter/Kconfig
- delete mode 100644 drivers/iio/counter/Makefile
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 731146c3b138..6115d97b075e 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1637,6 +1637,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_raw
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Raw counter device counts from channel Y. For quadrature
- 		counters, multiplication by an available [Y]_scale results in
- 		the counts of a single quadrature signal phase from channel Y.
-@@ -1645,6 +1647,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_raw
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Raw counter device index value from channel Y. This attribute
- 		provides an absolute positional reference (e.g. a pulse once per
- 		revolution) which may be used to home positional systems as
-@@ -1654,6 +1658,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_count_count_direction_available
- KernelVersion:	4.12
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		A list of possible counting directions which are:
- 		- "up"	: counter device is increasing.
- 		- "down": counter device is decreasing.
-@@ -1662,4 +1668,6 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_count_direction
- KernelVersion:	4.12
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Raw counter device counters direction for channel Y.
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
-index 7fac2c268d9a..bac3d0d48b7b 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
-@@ -6,6 +6,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_index_synchronous_mode_available
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Discrete set of available values for the respective counter
- 		configuration are listed in this file.
- 
-@@ -13,6 +15,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_count_mode
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Count mode for channel Y. Four count modes are available:
- 		normal, range limit, non-recycle, and modulo-n. The preset value
- 		for channel Y is used by the count mode where required.
-@@ -47,6 +51,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_noise_error
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Read-only attribute that indicates whether excessive noise is
- 		present at the channel Y count inputs in quadrature clock mode;
- 		irrelevant in non-quadrature clock mode.
-@@ -55,6 +61,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_preset
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		If the counter device supports preset registers, the preset
- 		count for channel Y is provided by this attribute.
- 
-@@ -62,6 +70,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_quadrature_mode
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Configure channel Y counter for non-quadrature or quadrature
- 		clock mode. Selecting non-quadrature clock mode will disable
- 		synchronous load mode. In quadrature clock mode, the channel Y
-@@ -83,6 +93,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_set_to_preset_on_index
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Whether to set channel Y counter with channel Y preset value
- 		when channel Y index input is active, or continuously count.
- 		Valid attribute values are boolean.
-@@ -91,6 +103,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_index_polarity
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Active level of channel Y index input; irrelevant in
- 		non-synchronous load mode.
- 
-@@ -98,6 +112,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_synchronous_mode
- KernelVersion:	4.10
- Contact:	linux-iio@vger.kernel.org
- Description:
-+		This interface is deprecated; please use the Counter subsystem.
-+
- 		Configure channel Y counter for non-synchronous or synchronous
- 		load mode. Synchronous load mode cannot be selected in
- 		non-quadrature clock mode.
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index d69e85a8bdc3..1152efad91a1 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -74,7 +74,6 @@ source "drivers/iio/afe/Kconfig"
- source "drivers/iio/amplifiers/Kconfig"
- source "drivers/iio/chemical/Kconfig"
- source "drivers/iio/common/Kconfig"
--source "drivers/iio/counter/Kconfig"
- source "drivers/iio/dac/Kconfig"
- source "drivers/iio/dummy/Kconfig"
- source "drivers/iio/frequency/Kconfig"
-diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
-index d8cba9c229c0..7bdd31f1b88f 100644
---- a/drivers/iio/Makefile
-+++ b/drivers/iio/Makefile
-@@ -20,7 +20,6 @@ obj-y += amplifiers/
- obj-y += buffer/
- obj-y += chemical/
- obj-y += common/
--obj-y += counter/
- obj-y += dac/
- obj-y += dummy/
- obj-y += gyro/
-diff --git a/drivers/iio/counter/Kconfig b/drivers/iio/counter/Kconfig
-deleted file mode 100644
-index 95a7a0df6cac..000000000000
---- a/drivers/iio/counter/Kconfig
-+++ /dev/null
-@@ -1,8 +0,0 @@
--#
--# Counter devices
--#
--# When adding new entries keep the list in alphabetical order
--
--menu "Counters"
--
--endmenu
-diff --git a/drivers/iio/counter/Makefile b/drivers/iio/counter/Makefile
-deleted file mode 100644
-index 8fd3d954775a..000000000000
---- a/drivers/iio/counter/Makefile
-+++ /dev/null
-@@ -1,5 +0,0 @@
--#
--# Makefile for IIO counter devices
--#
--
--# When adding new entries keep the list in alphabetical order
--- 
-2.17.0
+Robin Murphy <robin.murphy@arm.com> writes:
+
+> On 16/05/18 14:37, Stefan Wahren wrote:
+>> Recent VC4 firmware provides a hardware-independent way to retrieve the
+>> under-voltage sensor on the following Raspberry Pi boards:
+>>    - Raspberry Pi B+ (via GPIO on SoC)
+>>    - Raspberry Pi A+ (via GPIO on SoC)
+>>    - Raspberry Pi 2 B (via GPIO on SoC)
+>>    - Raspberry Pi 3 B (via GPIO on port expander)
+>>    - Raspberry Pi 3 B+ (via PMIC)
+>>=20
+>> TODO:
+>>    - try to make bcm2835 firmware a bus driver
+>
+> Do you actually need a DT binding? From the probe routine in patch 2 it=20
+> looks like this capability can be discovered dynamically by asking the=20
+> firmware, therefore it might be more straightforward for the firmware=20
+> driver itself to probe that and create a child device iff the feature is=
+=20
+> present, which the hwmon driver can then bind to as a pure platform drive=
+r.
+
+Agreed, let's skip doing this in DT.  I just switched the bcm2835-camera
+driver over to not need DT, and I think you could do something similar
+(and use the pdev->dev.parent to get at the firmware device).
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlr8b6wACgkQtdYpNtH8
+nugfWQ/9HQ4aiwNdnBlLpznZLAUwlk7+rcBYuLb1tcC63eHCWzs28IA1pOnA67EO
+uBYFedesXRu1rkT8hD3Bmt9inBtMjM67CEUaUrn28GJ4EYvGYFXJVMRFTGcRE2rt
+yUmSzLVKvzywLh9QkGCJMoFGf1zs/L/8aXGk66sc7FJCdKB1w9Wkd02QoZB48Hc7
+7FgW3Ct/XZ7X15qUzp2e1c/5HvKNg2VgDBJrKm6ABW/HxEtTCgXeiGiKD5peQZ9P
+IzC2Hs84hhUv57PXuSInVE67hpCbLaOuz0v04lDzAo8M30yfNsHUJZGfw6HMP9YY
+g1fn1BLBYpGhGtI12CJrHYHjmPIDL/xVknL6OuRcyigykhwrT8mjPttdxugP650Q
+6kRLJJAdbw+inJ5IWR+9X4hXKwERuoZ/ek6N/jUkyMWqD4c0bdZ1NGHXx8tfCPsC
+OypnrrCneAxuTB7xFRTwT0PZeH1EiHDaznVNwDsv4ocrq5EISYPqx9asQiyIuTrP
+DPu5Ah82nQ/TtRe38kSaA1Tmj1r4pgHKwGkYY+iCpzbc8RMFGJqDoBCr4t9nvgDS
+sElvx6uzUTt+sfIPoR5HgXx8QoZ6hy1O+TDdfl20eXSjGJeG9sbCf783ZKQf5pFJ
+h81m3P2HtTkrZ+MlntNQlariaFANVpZsuBCXLyhf8Yh55pXOo9E=
+=SRZ3
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============6326555866005236573==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6326555866005236573==--
