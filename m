@@ -1,105 +1,89 @@
-Return-Path: <SRS0=8cqM=II=google.com=dianders@kernel.org>
-MIME-Version: 1.0
-Sender: dianders@google.com
-In-Reply-To: <CAD=FV=VGcttQ6H1-Hnqj+Jrk+eaE52bOna6NojG5DoQ--A5aEg@mail.gmail.com>
-References: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
- <1521836461-6515-4-git-send-email-kramasub@codeaurora.org> <CAD=FV=VGcttQ6H1-Hnqj+Jrk+eaE52bOna6NojG5DoQ--A5aEg@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 21 May 2018 11:14:28 -0700
-Message-ID: <CAD=FV=VhZXM102dtqG0+3m3HQ0fkAW4moTGwef=2rSLnvvzrgQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] i2c: i2c-qcom-geni: Add bus driver for the
- Qualcomm GENI I2C controller
-Content-Type: text/plain; charset="UTF-8"
-To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, Wolfram Sang <wsa@the-dreams.de>, Andy Gross <andy.gross@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Evan Green <evgreen@chromium.org>, acourbot@chromium.org, Stephen Boyd <swboyd@chromium.org>, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
+Return-Path: <SRS0=Hy+M=IE=linuxtv.org=mchehab@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Wed, 16 May 2018 15:20:22 +0000
+Subject: [git:media_tree/cs_7e6b6b945272] media: dt-bindings: media: Binding document for OV7251 camera sensor
+Reply-to: linux-media@vger.kernel.org
+Message-Id: <E1fJG8i-0005iR-Ov@www.linuxtv.org>
+To: linuxtv-commits@linuxtv.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Wolfram,
+This is an automatic generated email to let you know that the following patch were queued:
 
-On Fri, Mar 23, 2018 at 4:34 PM, Doug Anderson <dianders@chromium.org> wrote:
-> Hi,
->
-> On Fri, Mar 23, 2018 at 1:20 PM, Karthikeyan Ramasubramanian
-> <kramasub@codeaurora.org> wrote:
->> This bus driver supports the GENI based i2c hardware controller in the
->> Qualcomm SOCs. The Qualcomm Generic Interface (GENI) is a programmable
->> module supporting a wide range of serial interfaces including I2C. The
->> driver supports FIFO mode and DMA mode of transfer and switches modes
->> dynamically depending on the size of the transfer.
->>
->> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
->> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
->> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
->> ---
->>  drivers/i2c/busses/Kconfig         |  13 +
->>  drivers/i2c/busses/Makefile        |   1 +
->>  drivers/i2c/busses/i2c-qcom-geni.c | 650 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 664 insertions(+)
->
-> [...]
->
->> +/*
->> + * Hardware uses the underlying formula to calculate time periods of
->> + * SCL clock cycle. Firmware uses some additional cycles excluded from the
->> + * below formula and it is confirmed that the time periods are within
->> + * specification limits.
->
-> I was hoping for more than just "oh, and there's a fudge factor", but
-> I guess this is the best I'm going to get?
->
->
->> +static int geni_i2c_probe(struct platform_device *pdev)
->> +{
->> +       struct geni_i2c_dev *gi2c;
->> +       struct resource *res;
->> +       u32 proto, tx_depth;
->> +       int ret;
->> +
->> +       gi2c = devm_kzalloc(&pdev->dev, sizeof(*gi2c), GFP_KERNEL);
->> +       if (!gi2c)
->> +               return -ENOMEM;
->> +
->> +       gi2c->se.dev = &pdev->dev;
->> +       gi2c->se.wrapper = dev_get_drvdata(pdev->dev.parent);
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       gi2c->se.base = devm_ioremap_resource(&pdev->dev, res);
->> +       if (IS_ERR(gi2c->se.base))
->> +               return PTR_ERR(gi2c->se.base);
->> +
->> +       gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
->> +       if (IS_ERR(gi2c->se.clk)) {
->> +               ret = PTR_ERR(gi2c->se.clk);
->> +               dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       ret = device_property_read_u32(&pdev->dev, "clock-frequency",
->> +                                                       &gi2c->clk_freq_out);
->> +       if (ret) {
->> +               /* Clock frequency not specified, so default to 100kHz. */
->> +               dev_info(&pdev->dev,
->> +                       "Bus frequency not specified, default to 100kHz.\n");
->
-> If you happen to spin again, can you remove the comment since it's
-> obvious from the string in the print?  It looks a lot like this code:
->
-> /* Print hello, world */
-> printf("hello, world\n");
->
->
-> In any case, that's a pretty minor nit, so I'll add:
->
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->
-> ...assuming that the bindings and "geni" code get Acked / landed
-> somewhere.  Ideally let's not land this before the geni code lands
-> since if the geni API changes for some reason it'll cause us grief.
+Subject: media: dt-bindings: media: Binding document for OV7251 camera sensor
+Author:  Todor Tomov <todor.tomov@linaro.org>
+Date:    Wed Apr 25 12:20:45 2018 -0400
 
-The bindings and "geni" code have landed in Andy's tree, so whenever
-you get a chance it would be super if you could land this i2c driver
-(assuming it looks good to you).  I know at least a few people have
-been poking at this and it seems to work for basic transfers.
+Add the document for ov7251 device tree binding.
 
-Thanks!
+CC: Rob Herring <robh@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
--Doug
+ .../devicetree/bindings/media/i2c/ov7251.txt       | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+---
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+new file mode 100644
+index 000000000000..8281151f7493
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+@@ -0,0 +1,52 @@
++* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
++
++The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor
++with an active array size of 640H x 480V. It is programmable through a serial
++I2C interface.
++
++Required Properties:
++- compatible: Value should be "ovti,ov7251".
++- clocks: Reference to the xclk clock.
++- clock-names: Should be "xclk".
++- clock-frequency: Frequency of the xclk clock.
++- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
++  to the hardware pin XSHUTDOWN which is physically active low.
++- vdddo-supply: Chip digital IO regulator.
++- vdda-supply: Chip analog regulator.
++- vddd-supply: Chip digital core regulator.
++
++The device node shall contain one 'port' child node with a single 'endpoint'
++subnode for its digital output video port, in accordance with the video
++interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		...
++
++		ov7251: camera-sensor@60 {
++			compatible = "ovti,ov7251";
++			reg = <0x60>;
++
++			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&camera_bw_default>;
++
++			clocks = <&clks 200>;
++			clock-names = "xclk";
++			clock-frequency = <24000000>;
++
++			vdddo-supply = <&camera_dovdd_1v8>;
++			vdda-supply = <&camera_avdd_2v8>;
++			vddd-supply = <&camera_dvdd_1v2>;
++
++			port {
++				ov7251_ep: endpoint {
++					clock-lanes = <1>;
++					data-lanes = <0>;
++					remote-endpoint = <&csi0_ep>;
++				};
++			};
++		};
++	};
