@@ -1,11 +1,11 @@
-Return-Path: <SRS0=Hy+M=IE=linuxtv.org=mchehab@kernel.org>
+Return-Path: <SRS0=QUUb=ID=linuxtv.org=mchehab@kernel.org>
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Date: Wed, 16 May 2018 15:20:22 +0000
-Subject: [git:media_tree/cs_7e6b6b945272] media: dt-bindings: media: Binding document for OV7251 camera sensor
+Subject: [git:media_tree/master] media: dt-bindings: media: Binding document for OV7251 camera sensor
 Reply-to: linux-media@vger.kernel.org
-Message-Id: <E1fJG8i-0005iR-Ov@www.linuxtv.org>
+Message-Id: <E1fIyFZ-0005xb-8z@www.linuxtv.org>
 To: linuxtv-commits@linuxtv.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
 This is an automatic generated email to let you know that the following patch were queued:
