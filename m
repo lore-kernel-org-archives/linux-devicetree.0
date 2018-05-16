@@ -1,37 +1,93 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] dt-bindings: media: rcar-vin: Add R8A77995 support
-Date: Wed, 16 May 2018 09:49:11 +0200
-Message-ID: <20180516074911.7wecz52sldocczyn@verge.net.au>
-References: <1526032802-14376-1-git-send-email-jacopo+renesas@jmondi.org>
- <1526032802-14376-2-git-send-email-jacopo+renesas@jmondi.org>
- <20180511133513.25dldevvnlnxl7y6@verge.net.au>
- <20180515083627.GR5956@w540>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7"
+ S070WV20-CT16 panel
+Date: Wed, 16 May 2018 00:56:36 -0700
+Message-ID: <CAGb2v679hCrS3zjjb5oPkiODha2tnc0sGVSv2f92JBPf6N7+6A@mail.gmail.com>
+References: <20180419093225.614-1-wens@csie.org>
+ <20180419093225.614-5-wens@csie.org>
+ <CAMty3ZD7MbvX5eJ9U4QZRSPTXKD3Ps=hQF2hJSsF17YosXFmmg@mail.gmail.com>
+ <CAGb2v64CASge22O0CviNmgEV0CSFgipkKu86F-6hiaLChPh_EA@mail.gmail.com>
+ <CAMty3ZBSkrdV=SPqK5UoBTN8b+KLD9vsgDkx6DYLxEfb9_TazA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180515083627.GR5956@w540>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMty3ZBSkrdV=SPqK5UoBTN8b+KLD9vsgDkx6DYLxEfb9_TazA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jonathan Liu <net147@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 15, 2018 at 10:36:27AM +0200, jacopo mondi wrote:
-> Hi Simon,
-> 
-> On Fri, May 11, 2018 at 03:35:14PM +0200, Simon Horman wrote:
-> > On Fri, May 11, 2018 at 12:00:00PM +0200, Jacopo Mondi wrote:
-> > > Add compatible string for R-Car D3 R8A7795 to list of SoCs supported by
-> > > rcar-vin driver.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >
-> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> >
-> 
-> Does this goes in through your tree? I will send a v2, should I
-> include this one or you have collected it already?
-
-No, it means I am reviewing it with the expectation that it will
-go through someone else's tree. So if you need to post a v2 please include
-this patch with my Reviewed-by tag.
+T24gV2VkLCBNYXkgMTYsIDIwMTggYXQgMTI6MjAgQU0sIEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1
+bGFzb2x1dGlvbnMuY29tPiB3cm90ZToKPiBPbiBXZWQsIE1heSAxNiwgMjAxOCBhdCAxMjoxMiBQ
+TSwgQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPiB3cm90ZToKPj4gT24gTW9uLCBNYXkgMTQs
+IDIwMTggYXQgMTE6MDMgQU0sIEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1bGFzb2x1dGlvbnMuY29t
+PiB3cm90ZToKPj4+IE9uIFRodSwgQXByIDE5LCAyMDE4IGF0IDM6MDIgUE0sIENoZW4tWXUgVHNh
+aSA8d2Vuc0Bjc2llLm9yZz4gd3JvdGU6Cj4+Pj4gVGhpcyBwYW5lbCBpcyBtYXJrZXRlZCBhcyBC
+YW5hbmEgUGkgNyIgTENEIGRpc3BsYXkuIE9uIHRoZSBiYWNrIGlzCj4+Pj4gYSBzdGlja2VyIGRl
+bm90aW5nIHRoZSBtb2RlbCBuYW1lIFMwNzBXVjIwLUNUMTYuCj4+Pj4KPj4+PiBUaGlzIGlzIGEg
+NyIgODAweDQ4MCBwYW5lbCBjb25uZWN0ZWQgdGhyb3VnaCBhIDI0LWJpdCBSR0IgaW50ZXJmYWNl
+Lgo+Pj4+IEhvd2V2ZXIgdGhlIHBhbmVsIG9ubHkgZG9lcyAyNjJrIGNvbG9ycy4KPj4+Pgo+Pj4+
+IFNpZ25lZC1vZmYtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPj4+PiAtLS0KPj4+
+PiAgLi4uL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2MjAtY3QxNi50eHQgIHwgIDcgKysr
+KysrCj4+Pj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICB8
+IDI1ICsrKysrKysrKysrKysrKysrKysKPj4+PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRp
+b25zKCspCj4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dAo+Pj4+Cj4+
+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2MjAtY3QxNi50eHQKPj4+
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uMmVjMzVjZTM2
+ZTlhCj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0Cj4+Pj4g
+QEAgLTAsMCArMSw3IEBACj4+Pj4gK0JhbmFuYSBQaSA3IiAoUzA3MFdWMjAtQ1QxNikgVEZUIExD
+RCBQYW5lbAo+Pj4+ICsKPj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+PiArLSBjb21wYXRp
+YmxlOiBzaG91bGQgYmUgImJhbmFuYXBpLHMwNzB3djIwLWN0MTYiCj4+Pj4gKwo+Pj4+ICtUaGlz
+IGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hp
+Y2ggaXMgc3BlY2lmaWVkCj4+Pj4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
+cnkuCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+Pj4+IGluZGV4IGNiZjFh
+YjQwNGVlNy4uOWJjMDM3Zjc0ZDZjIDEwMDY0NAo+Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1zaW1wbGUuYwo+Pj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5l
+bC1zaW1wbGUuYwo+Pj4+IEBAIC03NDUsNiArNzQ1LDI4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+cGFuZWxfZGVzYyBhdmljX3RtMDcwZGRoMDMgPSB7Cj4+Pj4gICAgICAgICB9LAo+Pj4+ICB9Owo+
+Pj4+Cj4+Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBiYW5hbmFwaV9z
+MDcwd3YyMF9jdDE2X21vZGUgPSB7Cj4+Pj4gKyAgICAgICAuY2xvY2sgPSAzMDAwMCwKPj4+PiAr
+ICAgICAgIC5oZGlzcGxheSA9IDgwMCwKPj4+PiArICAgICAgIC5oc3luY19zdGFydCA9IDgwMCAr
+IDQwLAo+Pj4+ICsgICAgICAgLmhzeW5jX2VuZCA9IDgwMCArIDQwICsgNDgsCj4+Pj4gKyAgICAg
+ICAuaHRvdGFsID0gODAwICsgNDAgKyA0OCArIDQwLAo+Pj4+ICsgICAgICAgLnZkaXNwbGF5ID0g
+NDgwLAo+Pj4+ICsgICAgICAgLnZzeW5jX3N0YXJ0ID0gNDgwICsgMTMsCj4+Pj4gKyAgICAgICAu
+dnN5bmNfZW5kID0gNDgwICsgMTMgKyAzLAo+Pj4+ICsgICAgICAgLnZ0b3RhbCA9IDQ4MCArIDEz
+ICsgMyArIDI5LAo+Pj4+ICt9Owo+Pj4+ICsKPj4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5l
+bF9kZXNjIGJhbmFuYXBpX3MwNzB3djIwX2N0MTYgPSB7Cj4+Pj4gKyAgICAgICAubW9kZXMgPSAm
+YmFuYW5hcGlfczA3MHd2MjBfY3QxNl9tb2RlLAo+Pj4+ICsgICAgICAgLm51bV9tb2RlcyA9IDEs
+Cj4+Pj4gKyAgICAgICAuYnBjID0gNiwKPj4+PiArICAgICAgIC5zaXplID0gewo+Pj4+ICsgICAg
+ICAgICAgICAgICAud2lkdGggPSAxNTQsCj4+Pj4gKyAgICAgICAgICAgICAgIC5oZWlnaHQgPSA4
+NiwKPj4+PiArICAgICAgIH0sCj4+Pj4gK307Cj4+Pgo+Pj4gSSB0aGluayB0aGlzIHBhcmFsbGVs
+IFJHQiBpbnRlcmZhY2UgcmlnaHQ/IEkgdG9vIGhhdmUgc2FtZSBkaXNwbGF5Cj4+PiB3aXRoIERT
+SSBJJ20gc3VyZSB0aGVzZSBzZXR0aW5nIHdpbGwgbm90IHVzZWZ1bCByaWdodD8gZG8gd2UgbmVl
+ZCB0bwo+Pj4gd3JpdGUgc2VwYXJhdGUgcGFuZWwgZHJpdmVyIGZvciB0aGF0Pwo+Pgo+PiBBRkFJ
+SyB0aGUgRFNJIG1vZGVsIGlzIGFuIFJHQiBwYW5lbCB3aXRoIGEgTUlQSSBEU0kgYnJpZGdlIG9u
+IHRoZQo+PiBjb25uZWN0b3IgYm9hcmQuIFRoZSBtb2RlbCBJIGhhdmUgaXMgZHVhbCBpbnRlcmZh
+Y2UuCj4KPiBZZXMsIHRoaXMgaXMgd2hhdCBJIGhhdmUgWzFdIHdoZXJlIHNhbWUgc3RyaXAgY2Fu
+IHVzZSBmb3IgYm90aCBSR0IgYW5kCj4gTUlQSSBEU0kuIGNhbiBiYW5hbmFwaSxzMDcwd3YyMC1j
+dDE2IHdvcmsgZm9yIERTSSBpbnRlcmZhY2UgYXMgd2VsbD8KCkluIHRoZW9yeSB5ZXMuIFlvdSBj
+YW4gdXNlIFJHQiB3aXRoIEJhbmFuYSBQaSBNMSsgYW5kIERTSSB3aXRoIEJhbmFuYSBQaSBNMy4K
+SG93ZXZlciwgRFNJIG9uIEE4M1QgaXMgbm90IHN1cHBvcnRlZCB5ZXQsIGFuZCBJIGRvbid0IGlu
+dGVuZCB0byBzcGVuZCBteQp0aW1lIHdyaXRpbmcgYSBkcml2ZXIgZm9yIHRoZSBNSVBJIERTSSBi
+cmlkZ2Ugb24gdGhhdCBwYW5lbC4gVGhlIGJyaWRnZSBJQwppcyB0aGUgb25lIG9uIHRvcCBvZiB0
+aGUgRFNJIEZQQyBjb25uZWN0b3IuCgpDaGVuWXUKCj4gWzFdIGh0dHBzOi8vd3d3LmFsaWV4cHJl
+c3MuY29tL2l0ZW0vTmV3LUFycml2YWwtQmFuYW5hLVByby1QaS03LWluY2gtTENELURpc3BsYXkt
+VG91Y2gtU2NyZWVuLVJhc3BiZXJyeS1QaS1DYXItR1BTLUZyZWVTaGlwcGluZy8zMjMzNTYwODgz
+Ni5odG1sCj4KPiBKYWdhbi4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
