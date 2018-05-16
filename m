@@ -1,54 +1,56 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v5 0/7] pcal6524 extensions and fixes for pca953x driver
-Date: Wed, 16 May 2018 16:37:23 +0200
-Message-ID: <9213FFC0-3C2B-447D-AA2C-55D7F93CFA27@goldelico.com>
-References: <cover.1524933096.git.hns@goldelico.com> <CACRpkdbk0rNZ3cUN_noqVtNYgDrydGtCCn2fk7yqVRPoroYqpA@mail.gmail.com> <6AA622D1-DA8C-4C58-8EAE-555989E69149@goldelico.com> <CACRpkda_nrL8HQL3y+tvHKff+5zKykd3Ym1waEm=JC1tFQbbcw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH] driver core: make deferring probe forever optional
+Date: Wed, 16 May 2018 16:38:23 +0200
+Message-ID: <CACRpkdYijOTMDr6Omh8pt2T2ugExpWngqp+bydBJG2tiyE2k7Q@mail.gmail.com>
+References: <20180501213114.20183-1-robh@kernel.org> <20180507183106.GF2259@tuxbook-pro>
+ <91dad272-e07d-2ab6-2afa-538294e9cefa@suse.de> <CACRpkdaYN-wKErERP_65T2NH6L-+8O_ugSgg7pXfkaLkn1A2KQ@mail.gmail.com>
+ <c6655f84-747f-c08b-7b9c-f76ff8857567@suse.de> <45eca00d-57f5-21b5-1f6e-b5f3f60ad276@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda_nrL8HQL3y+tvHKff+5zKykd3Ym1waEm=JC1tFQbbcw@mail.gmail.com>
+In-Reply-To: <45eca00d-57f5-21b5-1f6e-b5f3f60ad276@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@arm.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@kernel.org>, boot-architecture@lists.linaro.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Jan Kiszka <jan.kiszka@siemens.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 14, 2018 at 2:44 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+> On 14.5.2018 09:37, Alexander Graf wrote:
+>> On 05/14/2018 12:01 AM, Linus Walleij wrote:
+>>> On Wed, May 9, 2018 at 11:44 AM, Alexander Graf <agraf@suse.de> wrote:
+>>>> On 05/07/2018 08:31 PM, Bjorn Andersson wrote:
+>>>>> Can you please name platform that has enough support for Alexander to
+>>>>> care about backwards and forwards compatibility but lacks a pinctrl
+>>>>> driver.
+>>>> ZynqMP is one example that immediately comes to my mind. I'm sure
+>>>> there are
+>>>> others too.
+>>> Why isn't that using drivers/pinctrl/pinctrl-zynq.c?
+>>>
+>>> How is it so very different from (old) Zynq as it is already using
+>>> the same GPIO driver?
+>>
+>> That one is very simple: ZynqMP is usually an AMP system where Linux
+>> doesn't have full knowledge of the overall system. IIUC they have a tiny
+>> microblaze (PMU) that does the actual full system configuration for
+>> peripherals that may interfere with each other. This architecture also
+>> allows for safety critical code to run alongside a (less safe) Linux
+>> system.
+>
+> Linux is running in non secure world that's why Linux can't have full
+> system visibility and Linux should ask firmware. It doesn't matter if
+> firmware is running on specific unit or just secure SW in EL3/EL1-S, EL0-S.
+> You can also configure ZynqMP to protect these address ranges not to be
+> accessible from NS sw.
+> If you don't care about security you can use normal read/write accesses
+> at least for gpio case. Pinctrl/clk will be driven via firmware interface.
 
-> Am 16.05.2018 um 16:31 schrieb Linus Walleij =
-<linus.walleij@linaro.org>:
->=20
-> On Wed, May 16, 2018 at 3:32 PM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>> Am 16.05.2018 um 13:53 schrieb Linus Walleij =
-<linus.walleij@linaro.org>:
->>> On Sat, Apr 28, 2018 at 6:31 PM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>=20
->>>> V5:
->>>> * fix wrong split up between patches 1/7and 2/7.
->>>=20
->>> I applied patches 1, 2, 3 so we get some movement on the patch
->>> set and not too much for you to rebase.
->>=20
->> thanks!
->>=20
->> Well, I already had edited the commit messages for resending...
->>=20
->>>=20
->>> It's fine to just resend the rest next time.
->>=20
->> There is only one point open before resending:
->>=20
->> what is the preferred style to be used for PCAL_GPIO_MASK?
->>=20
->> * GENMASK(4, 0)
->> * or 0x1f
->=20
-> No strong opinion... sorry. Whatever you & the other driver
-> contributors are most convenient with.
+OK I get it, the situation is similar to some ACPI-based BIOSes on
+PC where one needs to ask the firmware for misc services.
 
-Ok, then let's keep the GENMASK(4, 0) since nobody did complain
-about it.
+What would be nice is to standardize these APIs (like ACPI or device
+tree does) so we don't end up with one per-SoC-specific driver per
+system. But I guess it is not my pick.
 
-BR and thanks,
-Nikolaus=
+Yours,
+Linus Walleij
