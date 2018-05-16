@@ -1,67 +1,36 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7740: Add CEU0
-Date: Wed, 16 May 2018 10:54:14 +0200
-Message-ID: <20180516085409.5u4hnes2dsfwwf5u@verge.net.au>
-References: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org>
- <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdWSasm9PfurphB5wrgrhkO8v7YBpSZNnnC+mS_Vs4AJ5Q@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 09/11] docs: Fix some broken references
+Date: Wed, 16 May 2018 10:09:15 +0100
+Message-ID: <20180516090915.GZ20410@imbe.wolfsonmicro.main>
+References: <cover.1525870886.git.mchehab+samsung@kernel.org>
+ <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWSasm9PfurphB5wrgrhkO8v7YBpSZNnnC+mS_Vs4AJ5Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Eric Paris <eparis@parisplace.org>, linux-clk@vger.kernel.org, James Morris <jmorris@namei.org>, Alan Stern <stern@rowland.harvard.edu>, xen-devel@lists.xenproject.org, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Jacquet <royale@zerezo.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>, linux-crypto@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo@pa>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 09:40:09AM +0200, Geert Uytterhoeven wrote:
-> Hi Jacopo,
-> 
-> On Thu, Apr 26, 2018 at 8:24 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > Describe CEU0 peripheral for Renesas R-Mobile A1 R8A7740 Soc.
-> >
-> > Reported-by: Geert Uytterhoeven <geert@glider.be>
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> Thanks for your patch!
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Minor question below.
-> 
-> > --- a/arch/arm/boot/dts/r8a7740.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> > @@ -67,6 +67,16 @@
-> >                 power-domains = <&pd_d4>;
-> >         };
-> >
-> > +       ceu0: ceu@fe910000 {
-> > +               reg = <0xfe910000 0x3000>;
-> > +               compatible = "renesas,r8a7740-ceu";
-> > +               interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
-> > +               clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
-> > +               clock-names = "ceu20";
-> 
-> Why the "clock-names" property? It's not mentioned in the DT bindings, and
-> may cause issues if the bindings are ever amended.
-
-I have dropped that property for now.
-
-> 
-> > +               power-domains = <&pd_a4r>;
-> > +               status = "disabled";
-> > +       };
-> > +
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+T24gV2VkLCBNYXkgMDksIDIwMTggYXQgMTA6MTg6NTJBTSAtMDMwMCwgTWF1cm8gQ2FydmFsaG8g
+Q2hlaGFiIHdyb3RlOgo+IEFzIHdlIG1vdmUgc3R1ZmYgYXJvdW5kLCBzb21lIGRvYyByZWZlcmVu
+Y2VzIGFyZSBicm9rZW4uIEZpeCBzb21lIG9mCj4gdGhlbSB2aWEgdGhpcyBzY3JpcHQ6Cj4gCS4v
+c2NyaXB0cy9kb2N1bWVudGF0aW9uLWZpbGUtcmVmLWNoZWNrIC0tZml4LXJzdAo+IAo+IE1hbnVh
+bGx5IGNoZWNrZWQgaWYgdGhlIHByb2R1Y2VkIHJlc3VsdCBpcyB2YWxpZCwgcmVtb3ZpbmcgYSBm
+ZXcKPiBmYWxzZS1wb3NpdGl2ZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF1cm8gQ2FydmFsaG8g
+Q2hlaGFiIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9pbnB1
+dC90b3VjaHNjcmVlbi93bTk3eHgtY29yZS5jICAgICAgIHwgIDIgKy0KCkFja2VkLWJ5OiBDaGFy
+bGVzIEtlZXBheCA8Y2tlZXBheEBvcGVuc291cmNlLndvbGZzb25taWNyby5jb20+CgpUaGFua3Ms
+CkNoYXJsZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Clhlbi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnCmh0
+dHBzOi8vbGlzdHMueGVucHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby94ZW4tZGV2ZWw=
