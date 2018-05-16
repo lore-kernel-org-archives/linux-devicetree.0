@@ -1,148 +1,209 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH v5 4/4] rtc: ds1307: add frequency_test_enable sysfs attribute to check tick on m41txx
-Date: Wed, 16 May 2018 12:32:51 +0200
-Message-ID: <20180516103251.74707-4-giulio.benetti@micronovasrl.com>
-References: <20180516103251.74707-1-giulio.benetti@micronovasrl.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516103251.74707-1-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH] arm64: dts: juno: fix graph node unit addresses for coresight
+ components
+Date: Wed, 16 May 2018 11:34:22 +0100
+Message-ID: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On m41txx you can enable open-drain OUT pin to check if offset is ok.
-Enabling OUT pin with frequency_test_enable attribute, OUT pin will tick
-512 times faster than 1s tick base.
+Currently the coresight components graph node unit addresses are
+continuous for both input and output ports while the "reg" properties
+are restarted for input and output ports separately. This results is
+the following DTC warnings:
 
-Enable or Disable FT bit on CONTROL register if freq_test is 1 or 0.
+ (graph_port): /etf@20010000/ports/port@1: graph node unit address error, expected "0"
+ (graph_port): /etf@20140000/ports/port@1: graph node unit address error, expected "0"
+ (graph_port): /funnel@20040000/ports/port@1: graph node unit address error, expected "0"
+ (graph_port): /funnel@20040000/ports/port@2: graph node unit address error, expected "1"
+ (graph_port): /funnel@20040000/ports/port@3: graph node unit address error, expected "2"
+ (graph_port): /funnel@20130000/ports/port@1: graph node unit address error, expected "0"
+ (graph_port): /funnel@20150000/ports/port@1: graph node unit address error, expected "0"
+ (graph_port): /funnel@20150000/ports/port@2: graph node unit address error, expected "1"
+ (graph_port): /funnel@220c0000/ports/port@1: graph node unit address error, expected "0"
+ (graph_port): /funnel@220c0000/ports/port@2: graph node unit address error, expected "1"
+ (graph_port): /funnel@230c0000/ports/port@1: graph node unit address error, expected "0"
+ (graph_port): /funnel@230c0000/ports/port@2: graph node unit address error, expected "1"
+ (graph_port): /funnel@230c0000/ports/port@3: graph node unit address error, expected "2"
+ (graph_port): /funnel@230c0000/ports/port@4: graph node unit address error, expected "3"
+ (graph_port): /replicator@20120000/ports/port@2: graph node unit address error, expected "0"
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+This patch makes even the reg property to follow the continuous
+numbering as in the graph node unit address.
+
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
-V3 => V4:
-* change attribute from freq_test to frequency_test_enable
-* use regmap_update_bits instead of regmap_write
-V4 => V5:
-* update commit log
+ arch/arm64/boot/dts/arm/juno-base.dtsi    | 20 ++++++++++----------
+ arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi |  8 ++++----
+ arch/arm64/boot/dts/arm/juno.dts          |  2 +-
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
- drivers/rtc/rtc-ds1307.c | 99 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+Hi Suzuki/Mathieu,
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 2797d01bfa1d..de98ddc39515 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -1053,6 +1053,99 @@ static int m41txx_rtc_set_offset(struct device *dev, long offset)
- 				  ctrl_reg);
- }
+I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to check
+if reg field is being used or not and whether this change causes any
+regression. I don't think so, but I may be wrong, let me know.
+
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 708a15887af4..dbeca292a57c 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -131,7 +131,7 @@
  
-+static ssize_t frequency_test_enable_store(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	unsigned long freq_test = 0;
-+	int retval;
-+
-+	retval = kstrtoul(buf, 10, &freq_test);
-+	if ((retval < 0) || (retval > 1)) {
-+		dev_err(dev, "Failed to store RTC Frequency Test attribute\n");
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL, M41TXX_BIT_FT,
-+			   freq_test ? M41TXX_BIT_FT : 0);
-+
-+	return retval ? retval : count;
-+}
-+
-+static ssize_t frequency_test_enable_show(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
-+{
-+	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	int freq_test_en = 0;
-+	unsigned int ctrl_reg;
-+
-+	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
-+
-+	if (ctrl_reg & M41TXX_BIT_FT)
-+		freq_test_en = true;
-+	else
-+		freq_test_en = false;
-+
-+	return sprintf(buf, "%d\n", freq_test_en);
-+}
-+
-+static DEVICE_ATTR_RW(frequency_test_enable);
-+
-+static struct attribute *rtc_freq_test_attrs[] = {
-+	&dev_attr_frequency_test_enable.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group rtc_freq_test_attr_group = {
-+	.attrs		= rtc_freq_test_attrs,
-+};
-+
-+static void rtc_calib_remove_sysfs_group(void *_dev)
-+{
-+	struct device *dev = _dev;
-+
-+	sysfs_remove_group(&dev->kobj, &rtc_freq_test_attr_group);
-+}
-+
-+static int ds1307_add_frequency_test(struct ds1307 *ds1307)
-+{
-+	int err = 0;
-+
-+	switch (ds1307->type) {
-+	case m41t0:
-+	case m41t00:
-+	case m41t11:
-+		/* Export sysfs entries */
-+		err = sysfs_create_group(&(ds1307->dev)->kobj,
-+					 &rtc_freq_test_attr_group);
-+		if (err) {
-+			dev_err(ds1307->dev,
-+				"Failed to create sysfs group: %d\n",
-+				err);
-+			return err;
-+		}
-+
-+		err = devm_add_action_or_reset(ds1307->dev,
-+					       rtc_calib_remove_sysfs_group,
-+					       ds1307->dev);
-+		if (err) {
-+			dev_err(ds1307->dev,
-+				"Failed to add sysfs cleanup action: %d\n",
-+				err);
-+			sysfs_remove_group(&(ds1307->dev)->kobj,
-+					   &rtc_freq_test_attr_group);
-+			return err;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return err;
-+}
-+
- /*----------------------------------------------------------------------*/
+ 			/* output port */
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				etf0_out_port: endpoint {
+ 				};
+ 			};
+@@ -175,7 +175,7 @@
  
- static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
-@@ -1794,6 +1887,12 @@ static int ds1307_probe(struct i2c_client *client,
- 	if (err)
- 		return err;
+ 			/* input ports */
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				main_funnel_in_port0: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster0_funnel_out_port>;
+@@ -183,7 +183,7 @@
+ 			};
  
-+	err = ds1307_add_frequency_test(ds1307);
-+	if (err) {
-+		rtc_device_unregister(ds1307->rtc);
-+		return err;
-+	}
-+
- 	if (chip->nvram_size) {
- 		struct nvmem_config nvmem_cfg = {
- 			.name = "ds1307_nvram",
+ 			port@2 {
+-				reg = <1>;
++				reg = <2>;
+ 				main_funnel_in_port1: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster1_funnel_out_port>;
+@@ -265,7 +265,7 @@
+ 			};
+ 
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				cluster0_funnel_in_port0: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster0_etm0_out_port>;
+@@ -273,7 +273,7 @@
+ 			};
+ 
+ 			port@2 {
+-				reg = <1>;
++				reg = <2>;
+ 				cluster0_funnel_in_port1: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster0_etm1_out_port>;
+@@ -347,7 +347,7 @@
+ 			};
+ 
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				cluster1_funnel_in_port0: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster1_etm0_out_port>;
+@@ -355,21 +355,21 @@
+ 			};
+ 
+ 			port@2 {
+-				reg = <1>;
++				reg = <2>;
+ 				cluster1_funnel_in_port1: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster1_etm1_out_port>;
+ 				};
+ 			};
+ 			port@3 {
+-				reg = <2>;
++				reg = <3>;
+ 				cluster1_funnel_in_port2: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster1_etm2_out_port>;
+ 				};
+ 			};
+ 			port@4 {
+-				reg = <3>;
++				reg = <4>;
+ 				cluster1_funnel_in_port3: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&cluster1_etm3_out_port>;
+@@ -476,7 +476,7 @@
+ 
+ 			/* replicator input port */
+ 			port@2 {
+-				reg = <0>;
++				reg = <2>;
+ 				replicator_in_port0: endpoint {
+ 					slave-mode;
+ 				};
+diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+index 21287f2d75d3..a99f311c8dcb 100644
+--- a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+@@ -21,7 +21,7 @@
+ 
+ 			/* input port */
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				csys1_funnel_in_port0: endpoint {
+ 					slave-mode;
+ 				};
+@@ -52,7 +52,7 @@
+ 
+ 			/* output port */
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				etf1_out_port: endpoint {
+ 					remote-endpoint = <&csys2_funnel_in_port1>;
+ 				};
+@@ -81,7 +81,7 @@
+ 
+ 			/* input ports */
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				csys2_funnel_in_port0: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&etf0_out_port>;
+@@ -89,7 +89,7 @@
+ 			};
+ 
+ 			port@2 {
+-				reg = <1>;
++				reg = <2>;
+ 				csys2_funnel_in_port1: endpoint {
+ 					slave-mode;
+ 					remote-endpoint = <&etf1_out_port>;
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index aa3b341a7547..34e940e7465b 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -260,7 +260,7 @@
+ &main_funnel {
+ 	ports {
+ 		port@3 {
+-			reg = <2>;
++			reg = <3>;
+ 			main_funnel_in_port2: endpoint {
+ 				slave-mode;
+ 				remote-endpoint = <&stm_out_port>;
 -- 
-2.17.0
+2.7.4
