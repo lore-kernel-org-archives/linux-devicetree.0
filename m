@@ -1,105 +1,57 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] arm64: dts: juno: fix graph node unit addresses for
- coresight components
-Date: Wed, 16 May 2018 18:40:59 +0100
-Message-ID: <dd4796b7-a078-27db-0fdc-099a834ce8bc@arm.com>
-References: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
- <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
- <eba4cddf-f668-a5e1-acea-5e6538c230f0@arm.com>
- <CANLsYkyi+m_uQydSWZkf_e1PNSoU-n1rLixuJ0+P9G8hpm68TA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANLsYkyi+m_uQydSWZkf_e1PNSoU-n1rLixuJ0+P9G8hpm68TA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <sudeep.holla@arm.com>
+From: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v7 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Wed, 16 May 2018 10:43:42 -0700
+Message-ID: <1526492623-20527-2-git-send-email-rishabhb@codeaurora.org>
+References: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Documentation for last level cache controller device tree bindings,
+client bindings usage examples.
 
+Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+---
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt      | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
 
-On 16/05/18 18:29, Mathieu Poirier wrote:
-> On 16 May 2018 at 05:49, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>
->>
->> On 16/05/18 12:23, Suzuki K Poulose wrote:
->>> On 05/16/2018 11:34 AM, Sudeep Holla wrote:
->>
->> [..]
->>
->>>> Hi Suzuki/Mathieu,
->>>>
->>>> I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to
->>>> check if reg field is being used or not and whether this change
->>>> causes any regression. I don't think so, but I may be wrong, let me
->>>> know.
->>>
->>> Unfortunately, I think this would break the components like funnel,
->>> where we need the input port number for the connected master to enable
->>> the port. Similarly for the output port number for master components in
->>> the paths. I have a set of patches which address this by taking care of
->>> the port number order to find out the hardware port number.
->>>
->>
->> Ah ok, I now see of_graph_parse_endpoint, sorry for missing that.
-> 
-> The problem is not with of_graph_parse_endpoint(), that will work just
-> fine.  In fact you can add whatever number you want there without
-> impact on how devices see each other in the framework.  The problem is
-> that the port numbering doesn't reflect the HW layout anymore and as
-> such  you can't rely on the port value when configuring the HW.
-> 
-
-Exactly, I had a chat with Suzuki. One option is to introduce new hwid
-field to fix that. If the field is present, it will be used and reg
-field will be ignored. In that way, you won't break the compatibility.
-Just my thoughts. I am not sure if we need to support old kernel with
-updated DTs though. That may be difficult.
-
->>
->>> I will dust it up and send it. That would bring up another important
->>> question.
->>>
->>
->> Cool
->>
->>> How do we deal with the change in the port number scheme ? e.g, should
->>> the new kernel support DTBs with old scheme ?
->>
-> 
-> DT files following the old scheme will spew out warnings like we're
-> getting on Juno and are bound to be fixed.
-> 
-True, they can pick up the new changes too along with changes just
-fixing the warning.
-
->> IIUC, that's needed for backward compatibility as it was used schema.
->> Again I may be wrong.
->>
->>> If so, how do we specify that the DT uses new scheme.
->>
->> Perhaps, add something to indicate the change in numbering scheme ?
-> 
-> The current customers should be moved to the new scheme.  That way we
-> don't have to support two different DT scheme (where one will die
-> eventually).
-> 
-
-But the problem is if someone has DT which can't be modified and we move
-to new scheme only in the kernel, then they will see regression on their
-platforms. If that's fine, it simplifies things a lot. But I am not so
-sure of that ...
-
+diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+new file mode 100644
+index 0000000..0ebbf0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+@@ -0,0 +1,26 @@
++== Introduction==
++
++LLCC (Last Level Cache Controller) provides last level of cache memory in SOC,
++that can be shared by multiple clients. Clients here are different cores in the
++SOC, the idea is to minimize the local caches at the clients and migrate to
++common pool of memory. Cache memory is divided into partitions called slices
++which are assigned to clients. Clients can query the slice details, activate
++and deactivate them.
++
++Properties:
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,sdm845-llcc"
++
++- reg:
++	Usage: required
++	Value Type: <prop-encoded-array>
++	Definition: Start address and the the size of the register region.
++
++Example:
++
++	qcom,llcc@1100000 {
++		compatible = "qcom,sdm845-llcc";
++		reg = <0x1100000 0x250000>;
++	};
 -- 
-Regards,
-Sudeep
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
