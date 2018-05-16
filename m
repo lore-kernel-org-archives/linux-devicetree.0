@@ -1,79 +1,36 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH] arm64: dts: move berlin SoC files from marvell dir to
- synaptics dir
-Date: Wed, 16 May 2018 17:51:57 +0800
-Message-ID: <20180516175157.3d02dbdc@xhacker.debian>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH v4 1/4] rtc: ds1307: fix data pointer to m41t0
+Date: Wed, 16 May 2018 12:05:23 +0200
+Message-ID: <20180516100526.73549-1-giulio.benetti@micronovasrl.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
 List-Id: devicetree@vger.kernel.org
 
-Move device tree files as part of transition from Marvell berlin to
-Synaptics berlin.
+data field points to m41t00, instead it should point to m41t0.
+Driver works correctly because on both cases(m41t0 and m41t00) chip_desc
+are equal.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Point to right enum m41t0 instead of m41t00.
+
+Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 ---
- arch/arm64/boot/dts/Makefile                                 | 1 +
- arch/arm64/boot/dts/marvell/Makefile                         | 4 ----
- arch/arm64/boot/dts/synaptics/Makefile                       | 4 ++++
- arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-dmp.dts | 0
- arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-stb.dts | 0
- arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct.dtsi    | 0
- 6 files changed, 5 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm64/boot/dts/synaptics/Makefile
- rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-dmp.dts (100%)
- rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-stb.dts (100%)
- rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct.dtsi (100%)
+ drivers/rtc/rtc-ds1307.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index 4aa50b9b26bc..3543bc324553 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -22,5 +22,6 @@ subdir-y += renesas
- subdir-y += rockchip
- subdir-y += socionext
- subdir-y += sprd
-+subdir-y += synaptics
- subdir-y += xilinx
- subdir-y += zte
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index cb454beede55..ea9d49f2a911 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -1,8 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--# Berlin SoC Family
--dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
--dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
--
- # Mvebu SoC Family
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
-diff --git a/arch/arm64/boot/dts/synaptics/Makefile b/arch/arm64/boot/dts/synaptics/Makefile
-new file mode 100644
-index 000000000000..de71ddda6835
---- /dev/null
-+++ b/arch/arm64/boot/dts/synaptics/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Berlin SoC Family
-+dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
-+dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dts
-similarity index 100%
-rename from arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
-rename to arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dts
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/synaptics/berlin4ct-stb.dts
-similarity index 100%
-rename from arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-rename to arch/arm64/boot/dts/synaptics/berlin4ct-stb.dts
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/synaptics/berlin4ct.dtsi
-similarity index 100%
-rename from arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-rename to arch/arm64/boot/dts/synaptics/berlin4ct.dtsi
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index a13e59edff53..32aadcbc377f 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -298,7 +298,7 @@ static const struct of_device_id ds1307_of_match[] = {
+ 	},
+ 	{
+ 		.compatible = "st,m41t0",
+-		.data = (void *)m41t00
++		.data = (void *)m41t0
+ 	},
+ 	{
+ 		.compatible = "st,m41t00",
 -- 
 2.17.0
