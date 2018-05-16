@@ -1,15 +1,16 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 00/27] Add multi-channel and overheat IRQ support to
- Armada thermal driver
-Date: Wed, 16 May 2018 19:28:45 +0200
-Message-ID: <871seb33xu.fsf@bootlin.com>
-References: <20180421151255.29929-1-miquel.raynal@bootlin.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH] arm64: dts: juno: fix graph node unit addresses for
+ coresight components
+Date: Wed, 16 May 2018 11:29:45 -0600
+Message-ID: <CANLsYkyi+m_uQydSWZkf_e1PNSoU-n1rLixuJ0+P9G8hpm68TA@mail.gmail.com>
+References: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
+ <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
+ <eba4cddf-f668-a5e1-acea-5e6538c230f0@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180421151255.29929-1-miquel.raynal@bootlin.com> (Miquel
- Raynal's message of "Sat, 21 Apr 2018 17:12:28 +0200")
+In-Reply-To: <eba4cddf-f668-a5e1-acea-5e6538c230f0@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,79 +20,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsLAogCiBPbiBzYW0uLCBhdnJpbCAyMSAyMDE4LCBNaXF1ZWwgUmF5bmFsIDxtaXF1
-ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gVGhlIG9ubHkgY2FwYWJpbGl0eSBvZiB0
-aGUgQXJtYWRhIHRoZXJtYWwgZHJpdmVyIGlzIGN1cnJlbnRseSBqdXN0IHRvCj4gcmVhZCBvbmUg
-c2Vuc29yICh0aGUgZGVmYXVsdCBvbmUpIHBlciBBUCBhbmQgb25lIHBlciBDUC4KPgo+IEFjdHVh
-bGx5LCB0aGVyZSBpcyBvbmUgc2Vuc29yIHBlciBjb3JlIGluIHRoZSBBUDgwNiBwbHVzIG9uZSBz
-ZW5zb3IgaW4KPiB0aGUgdGhlcm1hbCBJUCBpdHNlbGYuIFRoZSBDUDExMCBqdXN0IGZlYXR1cmVz
-IG9uZSB0aGVybWFsIHNlbnNvciBpbiBpdHMKPiBvd24gdGhlcm1hbCBJUC4KPgo+IEFsc28sIHRo
-ZXJlIGlzIG5vIG5lZWQgZm9yIHRoZSB0aGVybWFsIGNvcmUgdG8gcG9sbCB0aGUgdGVtcGVyYXR1
-cmUgb2YKPiBlYWNoIHNlbnNvciBieSBzb2Z0d2FyZSBhcyB0aGlzIElQIChhdCBsZWFzdCBmb3Ig
-QVA4MDYgYW5kIENQMTEwCj4gY29tcGF0aWJsZXMpIGZlYXR1cmVzIGFuIGhhcmR3YXJlIG92ZXJo
-ZWF0IGludGVycnVwdC4KPgo+IFRoaXMgc2VyaWVzIGZpcnN0IGltcHJvdmVzIHRoZSByZWFkYWJp
-bGl0eSBvZiB0aGlzIGRyaXZlciwgdGhlbiBhZGRzCj4gc3VwcG9ydCBmb3IgbXVsdGktY2hhbm5l
-bCB0aGVybWFsIElQcywgYW5kIGZpbmFsbHkgYWRkcyBzdXBwb3J0IGZvciB0aGUKPiBoYXJkd2Fy
-ZSBvdmVyaGVhdCBpbnRlcnJ1cHQuIFRoZSBiaW5kaW5ncyBhbmQgdGhlIGRldmljZS10cmVlcyBh
-cmUKPiB1cGRhdGVkIGFjY29yZGluZ2x5Lgo+Cj4gUGxlYXNlIG5vdGUgdGhhdCB0aGUgdGhlcm1h
-bCBJUCByYWlzZXMgU0VJIGludGVycnVwdHMsIGZyb20gd2hpY2ggdGhlCj4gc3VwcG9ydCBhcyBq
-dXN0IGJlZW4gY29udHJpYnV0ZWQgYW5kIG5vdCBtZXJnZWQgeWV0LiBBcHBseWluZyB0aGUgbGFz
-dAo+IERUIHBhdGNoZXMgcmVmZXJyaW5nIHRvIHRoZSAnc2VpJyBhbmQgJ2ljdV9zZWknIG5vZGVz
-IHdpbGwgcmVxdWlyZSB0aGlzCj4gZmVhdHVyZSBbMV0gdG8gaGF2ZSBiZWVuIGFjY2VwdGVkIGZp
-cnN0Lgo+Cj4gWzFdIGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1h
-cm0ta2VybmVsLzIwMTgtQXByaWwvNTcyODUyLmh0bWwKPgo+IFRoYW5rIHlvdSwKPiBNaXF1w6hs
-Cj4KPgo+IE1pcXVlbCBSYXluYWwgKDI3KToKPiAgIHRoZXJtYWw6IGFybWFkYTogYWRkIGEgZnVu
-Y3Rpb24gdGhhdCBzYW5pdGl6ZXMgdGhlIHRoZXJtYWwgem9uZSBuYW1lCj4gICB0aGVybWFsOiBh
-cm1hZGE6IHJlbW92ZSB1c2VsZXNzIHJlZ2lzdGVyIGFjY2Vzc2VzCj4gICB0aGVybWFsOiBhcm1h
-ZGE6IHJlbW92ZSBtaXNsZWFkaW5nIGNvbW1lbnRzCj4gICB0aGVybWFsOiBhcm1hZGE6IHJlbmFt
-ZSB0aGUgaW5pdGlhbGl6YXRpb24gcm91dGluZQo+ICAgdGhlcm1hbDogYXJtYWRhOiBkaXNzb2Np
-YXRlIGEzODAgYW5kIGNwMTEwIC0+aW5pdCgpIGhvb2tzCj4gICB0aGVybWFsOiBhcm1hZGE6IGF2
-ZXJhZ2Ugb3ZlciBzYW1wbGVzIHRvIGF2b2lkIGdsaXRjaGVzCj4gICB0aGVybWFsOiBhcm1hZGE6
-IGNvbnZlcnQgZHJpdmVyIHRvIHN5c2NvbiByZWdpc3RlciBhY2Nlc3Nlcwo+ICAgdGhlcm1hbDog
-YXJtYWRhOiB1c2UgdGhlIHJlc291cmNlIG1hbmFnZWQgcmVnaXN0cmF0aW9uIGhlbHBlcgo+ICAg
-ICBhbHRlcm5hdGl2ZQo+ICAgdGhlcm1hbDogYXJtYWRhOiBhZGQgbXVsdGktY2hhbm5lbCBzZW5z
-b3JzIHN1cHBvcnQKPiAgIHRoZXJtYWw6IGFybWFkYTogcmVtb3ZlIHNlbnNvcnMgdmFsaWRpdHkg
-ZnJvbSB0aGUgSVAgaW5pdGlhbGl6YXRpb24KPiAgIHRoZXJtYWw6IGFybWFkYTogbW92ZSB2YWxp
-ZGl0eSBjaGVjayBvdXQgb2YgdGhlIHJlYWQgZnVuY3Rpb24KPiAgIHRoZXJtYWw6IGFybWFkYTog
-Z2V0IHJpZCBvZiB0aGUgLT5pc192YWxpZCgpIHBvaW50ZXIKPiAgIHRoZXJtYWw6IGFybWFkYTog
-YWRkIG92ZXJoZWF0IGludGVycnVwdCBzdXBwb3J0Cj4gICBkdC1iaW5kaW5nczogY3AxMTA6IHJl
-bmFtZSBjcDExMCBzeXNjb24gZmlsZQo+ICAgZHQtYmluZGluZ3M6IGFwODA2OiBwcmVwYXJlIHRo
-ZSBzeXNjb24gZmlsZSB0byBsaXN0IG90aGVyIHN5c2NvbnMKPiAgICAgbm9kZXMKPiAgIGR0LWJp
-bmRpbmdzOiBjcDExMDogcHJlcGFyZSB0aGUgc3lzY29uIGZpbGUgdG8gbGlzdCBvdGhlciBzeXNj
-b25zCj4gICAgIG5vZGVzCj4gICBkdC1iaW5kaW5nczogYXA4MDY6IGFkZCB0aGUgdGhlcm1hbCBu
-b2RlIGluIHRoZSBzeXNjb24gZmlsZQo+ICAgZHQtYmluZGluZ3M6IGNwMTEwOiB1cGRhdGUgZG9j
-dW1lbnRhdGlvbiBzaW5jZSBEVCBkZS1kdXBsaWNhdGlvbgo+ICAgZHQtYmluZGluZ3M6IGNwMTEw
-OiBhZGQgdGhlIHRoZXJtYWwgbm9kZSBpbiB0aGUgc3lzY29uIGZpbGUKPiAgIGR0LWJpbmRpbmdz
-OiB0aGVybWFsOiBhcm1hZGE6IGFkZCByZWZlcmVuY2UgdG8gbmV3IGJpbmRpbmdzCj4gICBhcm02
-NDogZHRzOiBtYXJ2ZWxsOiByZW5hbWUgYXA4MDYgc3lzY29uIG5vZGUKPiAgIGFybTY0OiBkdHM6
-IG1hcnZlbGw6IG1vdmUgQVA4MDYvQ1AxMTAgdGhlcm1hbCBub2RlcyBpbnRvIGEgbmV3IHN5c2Nv
-bgo+ICAgYXJtNjQ6IGR0czogbWFydmVsbDogYWRkIHRoZXJtYWwtem9uZSBub2RlIGluIGFwODA2
-IERUU0kgZmlsZQo+ICAgYXJtNjQ6IGR0czogbWFydmVsbDogYWRkIG1hY3JvIHRvIG1ha2UgZGlz
-dGluY3Rpb24gYmV0d2VlbiBub2RlIG5hbWVzCj4gICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBhZGQg
-dGhlcm1hbC16b25lIG5vZGUgaW4gY3AxMTAgRFRTSSBmaWxlCj4gICBhcm02NDogZHRzOiBtYXJ2
-ZWxsOiBhZGQgaW50ZXJydXB0IHN1cHBvcnQgdG8gYXA4MDYgdGhlcm1hbCBub2RlCj4gICBhcm02
-NDogZHRzOiBtYXJ2ZWxsOiBhZGQgaW50ZXJydXB0IHN1cHBvcnQgdG8gY3AxMTAgdGhlcm1hbCBu
-b2RlCj4KPiAgLi4uL2FybS9tYXJ2ZWxsL2FwODA2LXN5c3RlbS1jb250cm9sbGVyLnR4dCAgICAg
-ICAgfCAgNTUgKy0KPiAgLi4uY29udHJvbGxlcjAudHh0ID0+IGNwMTEwLXN5c3RlbS1jb250cm9s
-bGVyLnR4dH0gfCAgNjYgKy0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9hcm1h
-ZGEtdGhlcm1hbC50eHQgfCAgIDUgKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJt
-YWRhLWFwODA2LmR0c2kgICAgICB8ICA4NSArLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZl
-bGwvYXJtYWRhLWNvbW1vbi5kdHNpICAgICB8ICAgMSArCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-bWFydmVsbC9hcm1hZGEtY3AxMTAuZHRzaSAgICAgIHwgIDQ1ICstCj4gIGRyaXZlcnMvdGhlcm1h
-bC9hcm1hZGFfdGhlcm1hbC5jICAgICAgICAgICAgICAgICAgIHwgODc1ICsrKysrKysrKysrKysr
-KysrKy0tLQo+ICA3IGZpbGVzIGNoYW5nZWQsIDk3NiBpbnNlcnRpb25zKCspLCAxNTYgZGVsZXRp
-b25zKC0pCj4gIHJlbmFtZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21h
-cnZlbGwve2NwMTEwLXN5c3RlbS1jb250cm9sbGVyMC50eHQgPT4gY3AxMTAtc3lzdGVtLWNvbnRy
-b2xsZXIudHh0fSAoODMlKQoKV2hhdCBpcyB0aGUgc3RhdHVzIG9mIHRoaXMgc2VyaWVzPwpJIGFt
-IGVzcGVjaWFsbHkgaW50ZXJlc3RlZCBpbiB0aGUgZHQgcGFydC4KRG8geW91IGV4cGVjdCBzZW5k
-aW5nIGEgbmV3IHNlcmllcyBtb2RpZnlpbmcgdGhlbT8KCkdyZWdvcnkKCj4KPiAtLSAKPiAyLjE0
-LjEKPgoKLS0gCkdyZWdvcnkgQ2xlbWVudCwgQm9vdGxpbiAoZm9ybWVybHkgRnJlZSBFbGVjdHJv
-bnMpCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2Jvb3RsaW4u
-Y29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On 16 May 2018 at 05:49, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 16/05/18 12:23, Suzuki K Poulose wrote:
+>> On 05/16/2018 11:34 AM, Sudeep Holla wrote:
+>
+> [..]
+>
+>>> Hi Suzuki/Mathieu,
+>>>
+>>> I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to
+>>> check if reg field is being used or not and whether this change
+>>> causes any regression. I don't think so, but I may be wrong, let me
+>>> know.
+>>
+>> Unfortunately, I think this would break the components like funnel,
+>> where we need the input port number for the connected master to enable
+>> the port. Similarly for the output port number for master components in
+>> the paths. I have a set of patches which address this by taking care of
+>> the port number order to find out the hardware port number.
+>>
+>
+> Ah ok, I now see of_graph_parse_endpoint, sorry for missing that.
+
+The problem is not with of_graph_parse_endpoint(), that will work just
+fine.  In fact you can add whatever number you want there without
+impact on how devices see each other in the framework.  The problem is
+that the port numbering doesn't reflect the HW layout anymore and as
+such  you can't rely on the port value when configuring the HW.
+
+>
+>> I will dust it up and send it. That would bring up another important
+>> question.
+>>
+>
+> Cool
+>
+>> How do we deal with the change in the port number scheme ? e.g, should
+>> the new kernel support DTBs with old scheme ?
+>
+
+DT files following the old scheme will spew out warnings like we're
+getting on Juno and are bound to be fixed.
+
+> IIUC, that's needed for backward compatibility as it was used schema.
+> Again I may be wrong.
+>
+>> If so, how do we specify that the DT uses new scheme.
+>
+> Perhaps, add something to indicate the change in numbering scheme ?
+
+The current customers should be moved to the new scheme.  That way we
+don't have to support two different DT scheme (where one will die
+eventually).
+
+>
+> --
+> Regards,
+> Sudeep
