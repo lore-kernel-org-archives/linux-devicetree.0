@@ -1,14 +1,15 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 2/3] input: touchscreen: edt-ft5x06: assert reset during
- suspend
-Date: Wed, 16 May 2018 14:28:28 +0200
-Message-ID: <20180516122829.23694-3-daniel@zonque.org>
-References: <20180516122829.23694-1-daniel@zonque.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: imx6/7: Remove unit-address from anatop
+ regulators
+Date: Wed, 16 May 2018 09:35:43 -0300
+Message-ID: <CAOMZO5AxTjyrDeT+HvPN_4Ue8yBG0U4tnwFU5nS9zTPOwFDqAQ@mail.gmail.com>
+References: <1526304714-23821-1-git-send-email-festevam@gmail.com>
+ <20180515074042.GP26863@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180516122829.23694-1-daniel@zonque.org>
+In-Reply-To: <20180515074042.GP26863@dragon>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,47 +19,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
-Cc: devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-If the device is not configured as wakeup source, it can be put in reset
-during suspend to save some power.
+Hi Shawn,
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/input/touchscreen/edt-ft5x06.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Tue, May 15, 2018 at 4:40 AM, Shawn Guo <shawnguo@kernel.org> wrote:
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 955f085627fa..c34a0b23f90a 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -1036,9 +1036,12 @@ static int edt_ft5x06_ts_remove(struct i2c_client *client)
- static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
- 
- 	if (device_may_wakeup(dev))
- 		enable_irq_wake(client->irq);
-+	else if (tsdata->reset_gpio)
-+		gpiod_set_value_cansleep(tsdata->reset_gpio, 1);
- 
- 	return 0;
- }
-@@ -1046,9 +1049,12 @@ static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
- static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
- 
- 	if (device_may_wakeup(dev))
- 		disable_irq_wake(client->irq);
-+	else if (tsdata->reset_gpio)
-+		gpiod_set_value_cansleep(tsdata->reset_gpio, 0);
- 
- 	return 0;
- }
--- 
-2.14.3
+> I'm a bit confused.  It looks that the change is just to revert commit
+> 685e1321ba74 ("ARM: dts: imx6: Add unit address and reg for the anatop
+> nodes").  But what about the simple_bus_reg warning the commit was
+> fixing?
+
+Yes, I don't get the original simple_bus_reg warning anymore.
+
+I think we don't need the unit address and reg properties to the
+anatop regulators.
+
+There is already a 'anatop-reg-offset' property that indicates the
+anatop register offset.
+
+Rob, is this patch the correct solution to fix the duplicate
+unit-address dtc warnings?
+
+Thanks
