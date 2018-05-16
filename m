@@ -1,122 +1,121 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v6 1/2] dt: bindings: lm3601x: Introduce the lm3601x
- driver
-Date: Wed, 16 May 2018 15:14:28 -0500
-Message-ID: <407885c7-9aa5-83e4-2895-c53e1df272ee@ti.com>
-References: <20180515154352.20263-1-dmurphy@ti.com>
- <98319f30-2abe-158c-1b51-33d1df80e185@gmail.com>
- <c72494c9-e513-f3d0-3098-83f47aa9367c@ti.com>
- <03934462-13ef-59c0-aa27-01a003bf7baa@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH net-next v2 2/2] drivers: net: Remove device_node checks
+ with of_mdiobus_register()
+Date: Wed, 16 May 2018 23:20:03 +0300
+Message-ID: <72171a45-3c50-6550-9798-d13df72628ea@cogentembedded.com>
+References: <20180515235619.27773-1-f.fainelli@gmail.com>
+ <20180515235619.27773-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <03934462-13ef-59c0-aa27-01a003bf7baa@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180515235619.27773-3-f.fainelli@gmail.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>, Russell King <rmk+kernel@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Petazzoni <tho>
 List-Id: devicetree@vger.kernel.org
 
-On 05/16/2018 03:10 PM, Jacek Anaszewski wrote:
-> Dan,
+Hello!
+
+On 05/16/2018 02:56 AM, Florian Fainelli wrote:
+
+> A number of drivers have the following pattern:
 > 
-> On 05/15/2018 11:29 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 05/15/2018 04:13 PM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> Thanks for the update.
->>>
->>> On 05/15/2018 05:43 PM, Dan Murphy wrote:
->>>> Introduce the device tree bindings for the lm3601x
->>>> family of LED torch, flash and IR drivers.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>
->>>> v6 - Removed multiple led child nodes, fixed example to display micro ranges
->>>> for corresponding child nodes and added led-sources to define the current driver -
->>>> https://patchwork.kernel.org/patch/10392121/
->>>>
->>>> v5 - No changes - https://patchwork.kernel.org/patch/10391743/
->>>> v4 - Added " " around "=", changed strobe to flash on label, removed "support and
->>>> register" comment and change ir lable to ir:torch - See v2 patchworks for comments
->>>> v3 - Removed wildcard compatible - https://patchwork.kernel.org/patch/10386241/
->>>> v2 - No changes - https://patchwork.kernel.org/patch/10384587/
->>>>
->>>>    .../devicetree/bindings/leds/leds-lm3601x.txt | 47 +++++++++++++++++++
->>>>    1 file changed, 47 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
->>>> new file mode 100644
->>>> index 000000000000..27930a89e9a5
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
->>>> @@ -0,0 +1,47 @@
->>>> +* Texas Instruments - lm3601x Single-LED Flash Driver
->>>> +
->>>> +The LM3601X are ultra-small LED flash drivers that
->>>> +provide a high level of adjustability.
->>>> +
->>>> +Required properties:
->>>> +    - compatible : Can be one of the following
->>>> +        "ti,lm36010"
->>>> +        "ti,lm36011"
->>>> +    - reg : I2C slave address
->>>> +    - #address-cells : 1
->>>> +    - #size-cells : 0
->>>> +
->>>> +Required child properties:
->>>> +    - reg : 0
->>>> +    - led-sources:    0 - Indicates a IR mode
->>>> +            1 - Indicates a Torch (white LED) mode
->>>
->>> You don't need led-sources at all. Please use reg as in
->>> the previous version. led-sources is useful for describing
->>> more complex arrangements. Here reg will do.
->>
->> OK.  Thought we would keep consistent with the max IC.
->>
->>>
->>>> +
->>>> +Required properties for flash LED child nodes:
->>>> +    See Documentation/devicetree/bindings/leds/common.txt
->>>> +    - flash-max-microamp : Range from 11mA -> 1.5A
->>>> +    - flash-max-timeout-us : Range from 40ms -> 1600ms
->>>> +    - led-max-microamp : Range from 2.4mA -> 376mA
->>>
->>> Please give also a step in the format like below
->>> (taken from max77693):
->>>
->>>      Valid values: 62500 - 1000000, step by 62500 (rounded down)
->>
->> I would do this but the step is not linear.  The step is 40ms from 40 -> 400.
->> after that the step goes to 200ms from 400->1600.
->>
->> same with the current ranges.
+> if (np)
+> 	of_mdiobus_register()
+> else
+> 	mdiobus_register()
 > 
-> If you're going to apply Andy's formula in the driver, then you can
-> present it also here. Anyway, please avoid using non-standard "->"
-> symbol in favor of "to" if you're using "from".
+> which the implementation of of_mdiobus_register() now takes care of.
+> Remove that pattern in drivers that strictly adhere to it.
 > 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+[...]
 
-OK I will.  I have not decided if I am going to apply the formula or not.
-I am still trying to process all the comments and determine what is preference and
-what is beneficial.
+> diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+> index ac621f44237a..02e8982519ce 100644
+> --- a/drivers/net/dsa/bcm_sf2.c
+> +++ b/drivers/net/dsa/bcm_sf2.c
+> @@ -450,12 +450,8 @@ static int bcm_sf2_mdio_register(struct dsa_switch *ds)
+>  	priv->slave_mii_bus->parent = ds->dev->parent;
+>  	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
+>  
+> -	if (dn)
+> -		err = of_mdiobus_register(priv->slave_mii_bus, dn);
+> -	else
+> -		err = mdiobus_register(priv->slave_mii_bus);
+> -
+> -	if (err)
+> +	err = of_mdiobus_register(priv->slave_mii_bus, dn);
+> +	if (err && dn)
 
+   of_node_put() checks for NULL.
 
-> Or even better I propose to list allowed values - there are not
-> so many of them.
-> 
+>  		of_node_put(dn);
+>  
+>  	return err;
+[...]
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> index d4604bc8eb5b..f3e43db0d6cb 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -2052,13 +2052,9 @@ static int fec_enet_mii_init(struct platform_device *pdev)
+>  	fep->mii_bus->parent = &pdev->dev;
+>  
+>  	node = of_get_child_by_name(pdev->dev.of_node, "mdio");
+> -	if (node) {
+> -		err = of_mdiobus_register(fep->mii_bus, node);
+> +	err = of_mdiobus_register(fep->mii_bus, node);
+> +	if (node)
+>  		of_node_put(node);
 
-I will figure that out based on what I do with the driver.  Been busy doing internal work today
+   Same comment here.
 
-Dan
+[...]
+> diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+> index 5970d9e5ddf1..8dd41e08a6c6 100644
+> --- a/drivers/net/ethernet/renesas/sh_eth.c
+> +++ b/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -3025,15 +3025,10 @@ static int sh_mdio_init(struct sh_eth_private *mdp,
+>  		 pdev->name, pdev->id);
+>  
+>  	/* register MDIO bus */
+> -	if (dev->of_node) {
+> -		ret = of_mdiobus_register(mdp->mii_bus, dev->of_node);
+> -	} else {
+> -		if (pd->phy_irq > 0)
+> -			mdp->mii_bus->irq[pd->phy] = pd->phy_irq;
+> -
+> -		ret = mdiobus_register(mdp->mii_bus);
+> -	}
+> +	if (pd->phy_irq > 0)
+> +		mdp->mii_bus->irq[pd->phy] = pd->phy_irq;
+>  
+> +	ret = of_mdiobus_register(mdp->mii_bus, dev->of_node);
+>  	if (ret)
+>  		goto out_free_bus;
+>  
 
+   This part is:
 
--- 
-------------------
-Dan Murphy
+Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+> diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+> index 91761436709a..8dff87ec6d99 100644
+> --- a/drivers/net/usb/lan78xx.c
+> +++ b/drivers/net/usb/lan78xx.c
+> @@ -1843,12 +1843,9 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
+>  	}
+>  
+>  	node = of_get_child_by_name(dev->udev->dev.of_node, "mdio");
+> -	if (node) {
+> -		ret = of_mdiobus_register(dev->mdiobus, node);
+> +	ret = of_mdiobus_register(dev->mdiobus, node);
+> +	if (node)
+>  		of_node_put(node);
+
+   of_node_put() checks for NULL, again...
+
+MBR, Sergei
