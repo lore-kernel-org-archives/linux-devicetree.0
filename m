@@ -1,43 +1,32 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: initial V3HSK board device tree
-Date: Wed, 16 May 2018 09:04:09 +0200
-Message-ID: <20180516070409.rz6cle4n2k6qgi7t@verge.net.au>
-References: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
- <50de037c-7560-c261-f96a-f86065674c9b@cogentembedded.com>
- <20180513080704.yeypjjtv7hdmqajt@verge.net.au>
+From: Teika Kazura <teika@gmx.com>
+Subject: Re: [PATCH v2 0/9] Input: support for latest Lenovo thinkpads
+ (series 80)
+Date: Wed, 16 May 2018 16:09:15 +0900 (JST)
+Message-ID: <20180516.160915.1252752723511457980.teika@gmx.com>
+References: <CAO-hwJJnHPEQ+R+8qWb1Dn+otqgmbcKgiNDOyNkVBD+xdzY_zw@mail.gmail.com>
+        <00f701d3d627$bcf41de0$36dc59a0$@emc.com.tw>
+        <ca40347e-44cd-aa93-75ba-1bf0a63705be@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180513080704.yeypjjtv7hdmqajt@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ca40347e-44cd-aa93-75ba-1bf0a63705be@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: aaron.ma@canonical.com, dmitry.torokhov@gmail.com
+Cc: benjamin.tissoires@redhat.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 13, 2018 at 10:07:04AM +0200, Simon Horman wrote:
-> On Thu, May 10, 2018 at 09:12:30PM +0300, Sergei Shtylyov wrote:
-> > Add the initial device  tree for  the V3H Starter Kit board.
-> > The board has 1 debug serial port (SCIF0); include support for it,
-> > so that the serial console can work.
-> > 
-> > Based on the original (and large) patch by Vladimir Barinov.
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> This looks fine but I will wait to see if there are other reviews before
-> applying.
-> 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+From: Aaron Ma <aaron.ma@canonical.com>
+Date:   Tue, 17 Apr 2018 19:42:27 +0800
 
-Applied
+> Could you apply my patch too?
+> 
+> It add LEN0096 that Benjamin's patch doesn't include.
+> 
+> +	"LEN0096", /* X280 */
+
+Aaron, in your original patch in last Oct [1], both *LEN0092 and* LEN0096 were aded. Which should be the case, both two, or only LEN0096?
+
+[1] https://www.spinics.net/lists/kernel/msg2625450.html
+
+Teika (Teika kazura)
