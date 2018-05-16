@@ -1,44 +1,86 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC 6/6] arm64: defconfig: Enable RPi voltage sensor
-Date: Wed, 16 May 2018 15:37:07 +0200
-Message-ID: <1526477827-10859-7-git-send-email-stefan.wahren@i2se.com>
-References: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 0/3] arm64: dts: Draak: Enable video inputs and VIN4
+Date: Wed, 16 May 2018 15:42:06 +0200
+Message-ID: <1526478129-16465-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Eric Anholt <eric@anholt.net>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch enables the hwmon driver for the Raspberry Pi.
+Hello,
+   the second iteration of this series enables HDMI and CVBS video inputs
+for the Draak board.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+>From v1 series the description of VIN4 video interface for R8A77995 SoC has
+already been collected by Simon, thus I'm not resending it.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index d25121b..5cdecef 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -352,6 +352,7 @@ CONFIG_BATTERY_BQ27XXX=y
- CONFIG_SENSORS_ARM_SCPI=y
- CONFIG_SENSORS_LM90=m
- CONFIG_SENSORS_INA2XX=m
-+CONFIG_SENSORS_RASPBERRYPI_HWMON=m
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
--- 
+This new version describes the HDMI input as v1 did, but does not connect it
+to the VIN4 interface, as the video input path is shared between HDMI and
+CVBS, and the default switches configuration selects CVBS.
+
+I've not been able to test CVBS capture as I don't have any CVBS video source
+here, but the devices shows up in the media controller graph as expected.
+
+-------------------------------------------------------------------------------
+[root@alarm ~]# media-ctl  -p -d /dev/media1
+Media controller API version 4.17.0
+
+Media device information
+------------------------
+driver          rcar_vin
+model           renesas,vin-r8a77995
+serial
+bus info        platform:e6ef4000.video
+hw revision     0x0
+driver version  4.17.0
+
+Device topology
+- entity 1: adv7180 0-0020 (1 pad, 1 link)
+            type V4L2 subdev subtype Unknown flags 20004
+            device node name /dev/v4l-subdev6
+        pad0: Source
+                [fmt:UYVY8_2X8/720x480 field:interlaced colorspace:smpte170m]
+                -> "VIN4 output":0 []
+
+- entity 5: VIN4 output (1 pad, 1 link)
+            type Node subtype V4L flags 0
+            device node name /dev/video3
+        pad0: Sink
+                <- "adv7180 0-0020":0 []
+-------------------------------------------------------------------------------
+
+Compared to Gen2 boards that use adv7180 (Lager, Alt, Koelsch, Porter, Gose
+and Silk) I have removed the 'bus-width' property as it is not parsed by the
+driver nor mentioned in the chip device tree binding description.
+
+Switching from CVBS to HDMI input requires connecting the HDMI decoder endpoint
+to VIN4, change the pin muxing to increase the VIN4 input bus width to 24 bits,
+and add the synchronism signal polarities to the vin endpoint, as the HDMI
+decoder uses BT.601 while the analog video decoder uses BT.656 unconditionally.
+
+The series has been developed on top of media-master tree but applies cleanly
+on top of latest renesas-driver.
+
+Patches for testing are available at:
+git://jmondi.org/linux d3/media-master/driver-v2
+git://jmondi.org/linux d3/media-master/dts-v2
+git://jmondi.org/vin-tests d3
+
+Thanks
+    j
+
+Jacopo Mondi (3):
+  dt-bindings: media: rcar-vin: Add R8A77995 support
+  arm64: dts: renesas: draak: Describe CVBS input
+  arm64: dts: renesas: draak: Describe HDMI input
+
+ .../devicetree/bindings/media/rcar_vin.txt         |  1 +
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts     | 74 ++++++++++++++++++++++
+ 2 files changed, 75 insertions(+)
+
+--
 2.7.4
