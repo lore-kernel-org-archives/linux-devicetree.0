@@ -1,41 +1,68 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v6 2/3] gpio: pca953x: define masks for addressing common and extended registers
-Date: Wed, 16 May 2018 19:01:25 +0200
-Message-ID: <314df7f911fda8f5584cc4384a26074848a2673b.1526490085.git.hns@goldelico.com>
-References: <cover.1526490085.git.hns@goldelico.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v6 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Wed, 16 May 2018 10:03:33 -0700
+Message-ID: <152649021310.210890.14841324536807182632@swboyd.mtv.corp.google.com>
+References: <1525810921-15878-1-git-send-email-rishabhb@codeaurora.org>
+ <1525810921-15878-2-git-send-email-rishabhb@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1526490085.git.hns@goldelico.com>
-In-Reply-To: <cover.1526490085.git.hns@goldelico.com>
-References: <cover.1526490085.git.hns@goldelico.com>
+In-Reply-To: <1525810921-15878-2-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-These mask bits are to be used to map the extended register
-addreseses (which are defined for an unsupported 8-bit pcal chip)
-to 16 and 24 bit chips (pcal6524).
+Quoting Rishabh Bhatnagar (2018-05-08 13:22:00)
+> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Do=
+cumentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> new file mode 100644
+> index 0000000..a586a17
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> @@ -0,0 +1,32 @@
+> +=3D=3D Introduction=3D=3D
+> +
+> +LLCC (Last Level Cache Controller) provides last level of cache memory i=
+n SOC,
+> +that can be shared by multiple clients. Clients here are different cores=
+ in the
+> +SOC, the idea is to minimize the local caches at the clients and migrate=
+ to
+> +common pool of memory. Cache memory is divided into partitions called sl=
+ices
+> +which are assigned to clients. Clients can query the slice details, acti=
+vate
+> +and deactivate them.
+> +
+> +Properties:
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: must be "qcom,sdm845-llcc"
+> +
+> +- reg:
+> +       Usage: required
+> +       Value Type: <prop-encoded-array>
+> +       Definition: Start address and the range of the LLCC registers.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/gpio/gpio-pca953x.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Start address and size?
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 2b667166e855..c0eb679e60d4 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -56,6 +56,10 @@
- #define PCAL6524_DEBOUNCE	0x2d
- 
- #define PCA_GPIO_MASK		0x00FF
-+
-+#define PCAL_GPIO_MASK		GENMASK(4, 0)
-+#define PCAL_PINCTRL_MASK	(~PCAL_GPIO_MASK)
-+
- #define PCA_INT			0x0100
- #define PCA_PCAL		0x0200
- #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
--- 
-2.12.2
+> +
+> +- max-slices:
+> +       usage: required
+> +       Value Type: <u32>
+> +       Definition: Number of cache slices supported by hardware
+> +
+> +Example:
+> +
+> +       llcc: qcom,llcc@1100000 {
+
+cache-controller@1100000 ?
+
+> +               compatible =3D "qcom,sdm845-llcc";
+> +               reg =3D <0x1100000 0x250000>;
+> +               max-slices =3D <32>;
+> +       };
+> --=20
