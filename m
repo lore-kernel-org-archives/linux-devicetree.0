@@ -1,43 +1,107 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 09/11] docs: Fix some broken references
-Date: Wed, 16 May 2018 09:12:56 -0600
-Message-ID: <CANLsYkwXUGJ-DM4M48SXuy+31r6sC7_Q3fc9Rgue6wFdeMQv6g@mail.gmail.com>
-References: <cover.1525870886.git.mchehab+samsung@kernel.org>
- <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 04/17] media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
+Date: Thu, 17 May 2018 00:15:41 +0900
+Message-ID: <CAAFQd5C6deXgEj5+oH41g+4Yqre2RMq9m+efZ40M_7Eks=X8ow@mail.gmail.com>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <20180308094807.9443-5-jacob-chen@iotwrt.com>
+ <18647985.GIavVuIZz4@avalon> <CAFLEztRY0xSScE51uvUtS89PqE_bNjkMfzBeTQTPyKd6asfPEQ@mail.gmail.com>
+ <CAFLEztTsPdR9mjj7uu+0dUpUecUx=bLRBRcfue06Gy5YdrgGDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-In-Reply-To: <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Eric Paris <eparis@parisplace.org>, linux-clk@vger.kernel.org, James Morris <jmorris@namei.org>, Alan Stern <stern@rowland.harvard.edu>, xen-devel@lists.xenproject.org, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Jacquet <royale@zerezo.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Li Zefan <lizefan@huawei.com>, linux-crypto@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, David Airlie <airlied@linux.ie>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFLEztTsPdR9mjj7uu+0dUpUecUx=bLRBRcfue06Gy5YdrgGDA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jacobchen110@gmail.com
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Shunqian Zheng <zhengsq@rock-chips.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, zhengxing@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-T24gOSBNYXkgMjAxOCBhdCAwNzoxOCwgTWF1cm8gQ2FydmFsaG8gQ2hlaGFiCjxtY2hlaGFiK3Nh
-bXN1bmdAa2VybmVsLm9yZz4gd3JvdGU6Cj4gQXMgd2UgbW92ZSBzdHVmZiBhcm91bmQsIHNvbWUg
-ZG9jIHJlZmVyZW5jZXMgYXJlIGJyb2tlbi4gRml4IHNvbWUgb2YKPiB0aGVtIHZpYSB0aGlzIHNj
-cmlwdDoKPiAgICAgICAgIC4vc2NyaXB0cy9kb2N1bWVudGF0aW9uLWZpbGUtcmVmLWNoZWNrIC0t
-Zml4LXJzdAo+Cj4gTWFudWFsbHkgY2hlY2tlZCBpZiB0aGUgcHJvZHVjZWQgcmVzdWx0IGlzIHZh
-bGlkLCByZW1vdmluZyBhIGZldwo+IGZhbHNlLXBvc2l0aXZlcy4KPgo+IFNpZ25lZC1vZmYtYnk6
-IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYitzYW1zdW5nQGtlcm5lbC5vcmc+Cj4gLS0t
-Cgo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vdHJhY2UvY29yZXNpZ2h0LnR4dCBiL0Rv
-Y3VtZW50YXRpb24vdHJhY2UvY29yZXNpZ2h0LnR4dAo+IGluZGV4IDFkNzRhZDAyMDJiNi4uZWZi
-YzgzMjE0NmU3IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vdHJhY2UvY29yZXNpZ2h0LnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vdHJhY2UvY29yZXNpZ2h0LnR4dAo+IEBAIC00MjYsNSAr
-NDI2LDUgQEAgcm9vdEBnZW5lcmljYXJtdjg6fiMKPiAgRGV0YWlscyBvbiBob3cgdG8gdXNlIHRo
-ZSBnZW5lcmljIFNUTSBBUEkgY2FuIGJlIGZvdW5kIGhlcmUgWzJdLgo+Cj4gIFsxXS4gRG9jdW1l
-bnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1idXMtY29yZXNpZ2h0LWRldmljZXMtc3RtCj4gLVsy
-XS4gRG9jdW1lbnRhdGlvbi90cmFjZS9zdG0udHh0Cj4gK1syXS4gRG9jdW1lbnRhdGlvbi90cmFj
-ZS9zdG0ucnN0Cj4gIFszXS4gaHR0cHM6Ly9naXRodWIuY29tL0xpbmFyby9wZXJmLW9wZW5jc2QK
-CkFja2VkLWJ5OiBNYXRoaWV1IFBvaXJpZXIgPG1hdGhpZXUucG9pcmllckBsaW5hcm8ub3JnPgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVs
-IG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0
-cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
+Hi Jacob,
+
+On Wed, May 16, 2018 at 11:54 PM Jacob Chen <jacobchen110@gmail.com> wrote:
+
+> 2018-05-16 22:39 GMT+08:00 Jacob Chen <jacobchen110@gmail.com>:
+> > Hi Laurent,
+> >
+> > 2018-05-16 13:20 GMT+08:00 Laurent Pinchart <
+laurent.pinchart@ideasonboard.com>:
+> >> Hi Jacob,
+> >>
+> >> Thank you for the patch.
+> >>
+> >> On Thursday, 8 March 2018 11:47:54 EEST Jacob Chen wrote:
+> >>> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> >>>
+> >>> This commit adds a subdev driver for Rockchip MIPI Synopsys DPHY
+driver
+> >>
+> >> Should this really be a subdev driver ? After a quick look at the
+code, the
+> >> only parameters you need to configure the PHY is the number of lanes
+and the
+> >> data rate. Implementing the whole subdev API seems overcomplicated to
+me,
+> >> especially given that the D-PHY doesn't deal with video streams as
+such, but
+> >> operates one level down. Shouldn't we model the D-PHY using the Linux
+PHY
+> >> framework ? I believe all the features you need are there except for a
+D-PHY-
+> >> specific configuration function that should be very easy to add.
+> >>
+> >
+> > It deserves a subdev driver since the ISP is not the only user.
+> > Other driver, like VIP, use it too.
+> >
+> >
+
+> For example, if there are two sensors connected to a rk3399 board.
+
+> Sensor1 --> DPHY1
+> Sensor2 --> DPHY2
+
+> With a subdev phy driver, i can choose either ISP or VIP for
+> sensor1/sensor2 by enable/disable media link in the run time.
+> 1.
+> Sensor1 --> DPHY1 ---> VIP
+> Sensor2 --> DPHY2 ---> ISP1
+> 2.
+> Sensor1 --> DPHY1 ---> ISP1
+> Sensor2 --> DPHY2 ---> VIP
+
+
+What is VIP?
+
+Also, if we model the DPHY using the PHY interface, it will be still
+possible to achieve the same, just by toggling the link between sensor and
+VIP or ISP1:
+
+1.
+
+Sensor1 -------|~|--- VIP
+         \             | (PHY interface)
+          \           DPHY1
+           \           | (PHY interface)
+            \---| |-- ISP1
+
+Sensor2 -------| |-- VIP
+         \             | (PHY interface)
+          \           DPHY2
+           \           | (PHY interface)
+            \---|~|-- ISP1
+
+2.
+
+Sensor1 -------| |-- VIP
+         \             | (PHY interface)
+          \           DPHY1
+           \           | (PHY interface)
+            \---|~|-- ISP1
+
+Sensor2 -------|~|-- VIP
+         \             | (PHY interface)
+          \           DPHY2
+           \           | (PHY interface)
+            \---| |-- ISP1
+
+Best regards,
+Tomasz
