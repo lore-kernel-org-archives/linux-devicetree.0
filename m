@@ -1,209 +1,147 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] arm64: dts: juno: fix graph node unit addresses for coresight
- components
-Date: Wed, 16 May 2018 11:34:22 +0100
-Message-ID: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v10_00/27]_ARM:_davinci:_convert_to_common_clo?=
+ =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
+Date: Wed, 16 May 2018 16:13:07 +0530
+Message-ID: <c16cdbb3-c4a2-b1e3-0804-6bfc4249641d@ti.com>
+References: <20180509172606.29387-1-david@lechnology.com>
+ <CAHCN7xJ6+vmyrTQGYH=pKz5GRf7rLT4otreNgu6TJi_3UAEX5w@mail.gmail.com>
+ <CAMRc=MdO0EtzDHp3RF4ym3umWM_KfhvpWHV2+Y3270ygKz9iGw@mail.gmail.com>
+ <CAHCN7xJt=tsc2zHWu+6y_2z=+kHdaovh3TD_MJ1+UeUbTdyj8w@mail.gmail.com>
+ <CAMpxmJUKGS_wm1O+HJBt2yY=BQ4169ka1p0264O-PJFdGj5Fdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMpxmJUKGS_wm1O+HJBt2yY=BQ4169ka1p0264O-PJFdGj5Fdg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently the coresight components graph node unit addresses are
-continuous for both input and output ports while the "reg" properties
-are restarted for input and output ports separately. This results is
-the following DTC warnings:
+On Wednesday 16 May 2018 01:17 PM, Bartosz Golaszewski wrote:
+> 2018-05-16 0:44 GMT+02:00 Adam Ford <aford173@gmail.com>:
+>> On Tue, May 15, 2018 at 4:25 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>> 2018-05-14 2:40 GMT+02:00 Adam Ford <aford173@gmail.com>:
+>>>> On Wed, May 9, 2018 at 12:25 PM, David Lechner <david@lechnology.com> wrote:
+>>>>> This series converts mach-davinci to use the common clock framework.
+>>>>>
+>>>>> The series works like this, the first 3 patches fix some issues with the clock
+>>>>> drivers that have already been accepted into the mainline kernel.
+>>>>>
+>>>>> Then, starting with "ARM: davinci: pass clock as parameter to
+>>>>> davinci_timer_init()", we get the mach code ready for the switch by adding the
+>>>>> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
+>>>>> around the legacy clocks so that we can switch easily between the old and the
+>>>>> new.
+>>>>>
+>>>>> "ARM: davinci: switch to common clock framework" actually flips the switch
+>>>>> to start using the new clock drivers. Then the next 8 patches remove all
+>>>>> of the old clock code.
+>>>>>
+>>>>> The final four patches add device tree clock support to the one SoC that
+>>>>> supports it.
+>>>>>
+>>>>> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
+>>>>> board file).
+>>>>>
+>>>>
+>>>> I am not sure if I did something wrong, but I attempted to build and I
+>>>> wasn't able to boot the da850-evm.dtb your repo common-clk-v11,
+>>>> however the legacy board file boot was OK.
+>>>>
+>>>> make davinci_all_defconfig ARCH=arm
+>>>> make zImage modules da850-evm.dtb ARCH=arm CROSS_COMPILE=arm-linux- -j8
+>>>>
+>>>> 3140416 bytes read in 1464 ms (2 MiB/s)
+>>>> 20353 bytes read in 15 ms (1.3 MiB/s)
+>>>> ## Flattened Device Tree blob at c0600000
+>>>>    Booting using the fdt blob at 0xc0600000
+>>>>    Loading Device Tree to c7e57000, end c7e5ef80 ... OK
+>>>>
+>>>> Starting kernel ...
+>>>>
+>>>> Uncompressing Linux... done, booting the kernel.
+>>>>
+>>>> (and hang)
+>>>>
+>>>> If you have some suggestions, I am try them as I get time.
+>>>>
+>>>> adam
+>>>>
+>>>
+>>> Runs fine on da850-lcdk and dm365-evm. I'll test the da850-evm
+>>> tomorrow when I'll have access to it.
+>>
+>> I set the bootargs to: bootargs=console=ttyS2,115200n8
+>> clk_ignore_unused root=/dev/mmcblk0p2 rw rootfstype=ext4 rootwait
+>>
+>> I enabled DEBUG_LL and EARLY_PRINTK, yet when it loads, I only get:
 
- (graph_port): /etf@20010000/ports/port@1: graph node unit address error, expected "0"
- (graph_port): /etf@20140000/ports/port@1: graph node unit address error, expected "0"
- (graph_port): /funnel@20040000/ports/port@1: graph node unit address error, expected "0"
- (graph_port): /funnel@20040000/ports/port@2: graph node unit address error, expected "1"
- (graph_port): /funnel@20040000/ports/port@3: graph node unit address error, expected "2"
- (graph_port): /funnel@20130000/ports/port@1: graph node unit address error, expected "0"
- (graph_port): /funnel@20150000/ports/port@1: graph node unit address error, expected "0"
- (graph_port): /funnel@20150000/ports/port@2: graph node unit address error, expected "1"
- (graph_port): /funnel@220c0000/ports/port@1: graph node unit address error, expected "0"
- (graph_port): /funnel@220c0000/ports/port@2: graph node unit address error, expected "1"
- (graph_port): /funnel@230c0000/ports/port@1: graph node unit address error, expected "0"
- (graph_port): /funnel@230c0000/ports/port@2: graph node unit address error, expected "1"
- (graph_port): /funnel@230c0000/ports/port@3: graph node unit address error, expected "2"
- (graph_port): /funnel@230c0000/ports/port@4: graph node unit address error, expected "3"
- (graph_port): /replicator@20120000/ports/port@2: graph node unit address error, expected "0"
+With DEBUG_LL, you dont get any prints "automatically". You need add 
+printascii() calls where you need. I use the attached patch which 
+patches printk() calls with printascii()[1]
 
-This patch makes even the reg property to follow the continuous
-numbering as in the graph node unit address.
+>>
+>> ## Flattened Device Tree blob at c0600000
+>>    Booting using the fdt blob at 0xc0600000
+>>    Loading Device Tree to c7e57000, end c7e5ef35 ... OK
+>>
+>> Starting kernel ...
+>>
+>> Uncompressing Linux... done, booting the kernel.
+>>
+>>
+>> I am doing this at my home, so I don't have a debugger for the
+>> DA850-EVM.  I am using a SOM that is an AM1808, but I vaguely remember
+>> something about enabling a DSP clock somewhere, but I cannot seem to
+>> find the e-mail.  I know its counter intuitive that we'd need to
+>> enable a clock that runs the DSP since it doesn't exist on the AM1808,
+>> but I would have thought the clk_ignore_unused would have worked
+>> around that issue.
+>>
+>> If someone else has a DA850-EVM or suggestions, I'm willing to try
+>> them as I have time.
+>>
+>> adam
+> 
+> Hi Adam,
+> 
+> everything works fine for me both when booting the DTB and in legacy
+> mode on da850-evm.
+> 
+> I'm using the following bootargs:
+>     ip=dhcp console=ttyS2,115200n8 root=/dev/nfs rw nfsroot=<snip!>,v3
+> nfsrootdebug
+> 
+> Regular davinci_all_defconfig on David's common-clk-v11 branch.
 
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- arch/arm64/boot/dts/arm/juno-base.dtsi    | 20 ++++++++++----------
- arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi |  8 ++++----
- arch/arm64/boot/dts/arm/juno.dts          |  2 +-
- 3 files changed, 15 insertions(+), 15 deletions(-)
+Adam, if you still cannot get it to work, one problem could be that the 
+DT size has increased and its being overwritten. You could look at where 
+you are loading various binaries. Or append the .dtb to zImage and 
+switch on APPENDED_DTB config in kernel.
 
-Hi Suzuki/Mathieu,
+Thanks,
+Sekhar
 
-I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to check
-if reg field is being used or not and whether this change causes any
-regression. I don't think so, but I may be wrong, let me know.
-
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 708a15887af4..dbeca292a57c 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -131,7 +131,7 @@
+[1]
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 5b5a708..c3419c0 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1488,6 +1488,7 @@ static size_t cont_print_text(char *text, size_t size)
+ 	return textlen;
+ }
  
- 			/* output port */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				etf0_out_port: endpoint {
- 				};
- 			};
-@@ -175,7 +175,7 @@
++void printascii(char *);
+ asmlinkage int vprintk_emit(int facility, int level,
+ 			    const char *dict, size_t dictlen,
+ 			    const char *fmt, va_list args)
+@@ -1552,6 +1553,7 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 		text_len--;
+ 		lflags |= LOG_NEWLINE;
+ 	}
++	printascii(text);
  
- 			/* input ports */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				main_funnel_in_port0: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster0_funnel_out_port>;
-@@ -183,7 +183,7 @@
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				main_funnel_in_port1: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster1_funnel_out_port>;
-@@ -265,7 +265,7 @@
- 			};
- 
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				cluster0_funnel_in_port0: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster0_etm0_out_port>;
-@@ -273,7 +273,7 @@
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				cluster0_funnel_in_port1: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster0_etm1_out_port>;
-@@ -347,7 +347,7 @@
- 			};
- 
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				cluster1_funnel_in_port0: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster1_etm0_out_port>;
-@@ -355,21 +355,21 @@
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				cluster1_funnel_in_port1: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster1_etm1_out_port>;
- 				};
- 			};
- 			port@3 {
--				reg = <2>;
-+				reg = <3>;
- 				cluster1_funnel_in_port2: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster1_etm2_out_port>;
- 				};
- 			};
- 			port@4 {
--				reg = <3>;
-+				reg = <4>;
- 				cluster1_funnel_in_port3: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&cluster1_etm3_out_port>;
-@@ -476,7 +476,7 @@
- 
- 			/* replicator input port */
- 			port@2 {
--				reg = <0>;
-+				reg = <2>;
- 				replicator_in_port0: endpoint {
- 					slave-mode;
- 				};
-diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-index 21287f2d75d3..a99f311c8dcb 100644
---- a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-@@ -21,7 +21,7 @@
- 
- 			/* input port */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				csys1_funnel_in_port0: endpoint {
- 					slave-mode;
- 				};
-@@ -52,7 +52,7 @@
- 
- 			/* output port */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				etf1_out_port: endpoint {
- 					remote-endpoint = <&csys2_funnel_in_port1>;
- 				};
-@@ -81,7 +81,7 @@
- 
- 			/* input ports */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				csys2_funnel_in_port0: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&etf0_out_port>;
-@@ -89,7 +89,7 @@
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				csys2_funnel_in_port1: endpoint {
- 					slave-mode;
- 					remote-endpoint = <&etf1_out_port>;
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index aa3b341a7547..34e940e7465b 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -260,7 +260,7 @@
- &main_funnel {
- 	ports {
- 		port@3 {
--			reg = <2>;
-+			reg = <3>;
- 			main_funnel_in_port2: endpoint {
- 				slave-mode;
- 				remote-endpoint = <&stm_out_port>;
--- 
-2.7.4
+ 	/* strip kernel syslog prefix and extract log level or control flags */
+ 	if (facility == 0) {
