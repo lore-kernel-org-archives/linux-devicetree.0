@@ -1,94 +1,56 @@
-From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Wed, 16 May 2018 09:27:22 -0700
-Message-ID: <152648804247.210890.6352930842767133968@swboyd.mtv.corp.google.com>
-References: <1526363564-13823-1-git-send-email-spanda@codeaurora.org>
- <1526363564-13823-3-git-send-email-spanda@codeaurora.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/2] ARM64: dts: meson-axg: remove incorrect i2c ao clock
+Date: Wed, 16 May 2018 18:27:19 +0200
+Message-ID: <1526488039.2897.65.camel@baylibre.com>
+References: <20180516155203.24922-1-jbrunet@baylibre.com>
+         <20180516155203.24922-3-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1526363564-13823-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180516155203.24922-3-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBTYW5kZWVwIFBhbmRhICgyMDE4LTA1LTE0IDIyOjUyOjQyKQo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242
-NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
-MDAwLi5iODJiYjU2Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gQEAgLTAsMCAr
-MSw4MSBAQAo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGludGVycnVwdHM6IFNwZWNpZmll
-ciBmb3IgdGhlIFNONjVEU0k4NiBpbnRlcnJ1cHQgbGluZS4KPiArLSBocGQtZ3Bpb3M6IE9GIGRl
-dmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbnMgZm9yIEhQRCBwaW4uCj4gKwo+ICstIGdwaW8t
-Y29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xsZXIuCj4gKy0g
-I2dwaW8tY2VsbHMgICAgOiBTaG91bGQgYmUgdHdvLiBUaGUgZmlyc3QgY2VsbCBpcyB0aGUgcGlu
-IG51bWJlciBhbmQKPiArICAgICAgICAgICAgICAgICAgIHRoZSBzZWNvbmQgY2VsbCBpcyB1c2Vk
-IHRvIHNwZWNpZnkgZmxhZ3MuCj4gKyAgICAgICAgICAgICAgICAgICBTZWUgLi4vLi4vZ3Bpby9n
-cGlvLnR4dCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KPiArLSAjcHdtLWNlbGxzIDogU2hvdWxkIGJl
-IG9uZS4gU2VlIC4uLy4uL3B3bS9wd20udHh0IGZvciBkZXNjcmlwdGlvbiBvZgo+ICsgICAgICAg
-ICAgICAgICB0aGUgY2VsbCBmb3JtYXRzLgo+ICsKPiArLSBjbG9jay1uYW1lczogc2hvdWxkIGJl
-ICJyZWZjbGsiCj4gKy0gY2xvY2tzOiBPRiBkZXZpY2UtdHJlZSBjbG9jayBzcGVjaWZpY2F0aW9u
-IGZvciByZWZjbGsgaW5wdXQuIFRoZSByZWZlcmVuY2UKCldoYXQgaXMgIk9GIGRldmljZS10cmVl
-IC4qIHNwZWNpZmljYXRpb24iIHByb3ZpZGluZz8gVGhpcyBpcyBhbGwgYW4gT0YKZGV2aWNlLXRy
-ZWUgc3BlY2lmaWNhdGlvbi4KCj4gKyAgY2xvY2sgcmF0ZSBtdXN0IGJlIDEyIE1IeiwgMTkuMiBN
-SHosIDI2IE1IeiwgMjcgTUh6IG9yIDM4LjQgTUh6Lgo+ICsKPiArUmVxdWlyZWQgbm9kZXM6Cj4g
-Kwo+ICtUaGlzIGRldmljZSBoYXMgdHdvIHZpZGVvIHBvcnRzLiBUaGVpciBjb25uZWN0aW9ucyBh
-cmUgbW9kZWxsZWQgdXNpbmcgdGhlCj4gK09GIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Lgo+ICsKPiArLSBWaWRl
-byBwb3J0IDAgZm9yIERTSSBpbnB1dAo+ICstIFZpZGVvIHBvcnQgMSBmb3IgZURQIG91dHB1dAo+
-ICsKPiArRXhhbXBsZQo+ICstLS0tLS0tCj4gKwo+ICtlZHAtYnJpZGdlQDJkIHsKPiArICAgICAg
-IGNvbXBhdGlibGUgPSAidGksc242NWRzaTg2IjsKPiArICAgICAgICNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+ICsgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKyAgICAgICByZWcgPSA8MHgyZD47
-Cj4gKwo+ICsgICAgICAgZW5hYmxlLWdwaW9zID0gPCZtc21ncGlvIDMzIEdQSU9fQUNUSVZFX0hJ
-R0g+Owo+ICsgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzM+Owo+ICsgICAgICAgaW50
-ZXJydXB0cyA9IDw0IElSUV9UWVBFX0VER0VfRkFMTElORz47Cj4gKwo+ICsgICAgICAgdmNjaW8t
-c3VwcGx5ID0gPCZwbTg5MTZfbDE3PjsKPiArICAgICAgIHZjY2Etc3VwcGx5ID0gPCZwbTg5MTZf
-bDY+Owo+ICsgICAgICAgdnBsbC1zdXBwbHkgPSA8JnBtODkxNl9sMTc+Owo+ICsgICAgICAgdmNj
-LXN1cHBseSA9IDwmcG04OTE2X2w2PjsKPiArCj4gKyAgICAgICBjbG9jay1uYW1lcyA9ICJyZWZj
-bGsiOwo+ICsgICAgICAgY2xvY2tzID0gPCZpbnB1dF9yZWZjbGs+Owo+ICsKPiArICAgICAgIHBv
-cnRzIHsKPiArICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAg
-ICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgcG9ydEAwIHsK
-PiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKwo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGVkcF9icmlkZ2VfaW46IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47CgpIb3cgZG8gd2Uga25v
-dyB0aGUgbnVtYmVyIG9mIGxhbmVzIHRoYXQgYXJlIGNvbm5lY3RlZCBhbmQgaWYgdGhlcmUncyBv
-bmUKY2hhbm5lbCAoQSkgb3IgdHdvIGNoYW5uZWxzIChBIGFuZCBCKT8gV291bGQgdGhlcmUgYmUg
-dHdvIGVuZHBvaW50cyBpbgp0aGF0IGNhc2U/Cgo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07
-Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICBwb3J0QDEgewo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPiArCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgZWRwX2JyaWRnZV9vdXQ6IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX3BhbmVsX2luPjsKClRoZSBoYXJkd2Fy
-ZSBsb29rcyB0byBzdXBwb3J0IHNvbWUgc29ydCBvZiBsYW5lIHJlbnVtYmVyaW5nIHNjaGVtZSwK
-d2hlcmUgdGhlIGVEUCBsb2dpY2FsIGxhbmUgMCBjYW4gYmUgcm91dGVkIHRocm91Z2ggYSBkaWZm
-ZXJlbnQgcGluIHRoYW4KTUxQL04wLCBzYW1lIGZvciBsb2dpY2FsIGxhbmUgMSwgZXRjLiBJIGRv
-bid0IGhhdmUgYSB1c2UgY2FzZSBmb3IgdGhpcwpyaWdodCBub3csIGJ1dCBJIGhvcGUgdGhhdCBp
-dCBjb3VsZCBiZSBhZGRlZCBzb21ld2hlcmUgaW4gdGhlIGJpbmRpbmcgYXMKYW4gb3B0aW9uYWwg
-cHJvcGVydHkgdG8gZGVzY3JpYmUgdGhpcyBsYW5lIHJlbWFwcGluZyBmZWF0dXJlLiBJdCBhbHNv
-CmhhcyBzb21lIHNvcnQgb2YgbGFuZSBwb2xhcml0eSBpbnZlcnNpb24gZmVhdHVyZS4gUGVyaGFw
-cyB0aGVyZSBuZWVkcyB0bwpiZSBhIGxhbmUtY29uZmlnIHByb3BlcnR5IHRoYXQgZG9lcyB0aGlz
-IHJlbWFwcGluZyBhbmQgaW52ZXJzaW9uIHdpdGgKdHdvIGNlbGxzLgoKCWxhbmUtY29uZmlnID0g
-PDAgMD4sIC8qIExhbmUgMCBsb2dpY2FsIGlzIGxhbmUgMCBwaHlzICghaW52KSAqLwoJICAgICAg
-ICAgICAgICA8MSAwPiwgLyogTGFuZSAxIGxvZ2ljYWwgaXMgbGFuZSAxIHBoeXMgKCFpbnYpICov
-CgkJICAgICAgPDIgMD4sIC8qIExhbmUgMiBsb2dpY2FsIGlzIGxhbmUgMiBwaHlzICghaW52KSAq
-LwoJCSAgICAgIDwzIDA+OyAvKiBMYW5lIDMgbG9naWNhbCBpcyBsYW5lIDMgcGh5cyAoIWludikg
-Ki8KCk9yCgoJbGFuZS1jb25maWcgPSA8MiAxPiwgLyogTGFuZSAyIGxvZ2ljYWwgaXMgbGFuZSAw
-IHBoeXMgKGludikgKi8KCSAgICAgICAgICAgICAgPDEgMD4sIC8qIExhbmUgMSBsb2dpY2FsIGlz
-IGxhbmUgMSBwaHlzICghaW52KSAqLwoJCSAgICAgIDwzIDE+LCAvKiBMYW5lIDMgbG9naWNhbCBp
-cyBsYW5lIDIgcGh5cyAoaW52KSAqLwoJCSAgICAgIDwwIDA+OyAvKiBMYW5lIDAgbG9naWNhbCBp
-cyBsYW5lIDMgcGh5cyAoIWludikgKi8KCgo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4g
-KyAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICB9OwpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9mcmVlZHJlbm8K
+On Wed, 2018-05-16 at 17:52 +0200, Jerome Brunet wrote:
+> The clock specified for the i2c AO controller is the one from
+> the EE domain, which is incorrect as this controller needs the
+> clock from AO clock controller.
+> 
+> Replace with xtal to avoid claiming an unrelated gate until the
+> required clock controller becomes available.
+
+I wrongly assumed the gate was provided by the clkc from AO domain.
+Looking at what we did for the GX series, it seems to be provided by the EE
+controller with CLKID_AO_I2C.
+
+I'll send a v2 fixing this.
+Sorry for the noise
+
+> 
+> Fixes: dc6f858e2690 ("ARM64: dts: meson-axg: add I2C DT info for Meson-AXG SoC")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index b59f341104d7..b82b9d79ec49 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -1110,7 +1110,12 @@
+>  				compatible = "amlogic,meson-axg-i2c";
+>  				reg = <0x0 0x05000 0x0 0x20>;
+>  				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
+> -				clocks = <&clkc CLKID_I2C>;
+> +
+> +				/*
+> +				 * FIXME: replace with the correct clock when
+> +				 * the controller is available
+> +				 */
+> +				clocks = <&xtal>;
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  				status = "disabled";
