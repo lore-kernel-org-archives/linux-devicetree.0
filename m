@@ -1,7 +1,7 @@
 From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH v4 4/4] rtc: ds1307: add freq_test sysfs attribute to check tick on m41txx
-Date: Wed, 16 May 2018 12:05:26 +0200
-Message-ID: <20180516100526.73549-4-giulio.benetti@micronovasrl.com>
+Subject: [PATCH v4 3/4] rtc: ds1307: add offset sysfs for mt41txx chips.
+Date: Wed, 16 May 2018 12:05:25 +0200
+Message-ID: <20180516100526.73549-3-giulio.benetti@micronovasrl.com>
 References: <20180516100526.73549-1-giulio.benetti@micronovasrl.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180516100526.73549-1-giulio.benetti@micronovasrl.com>
@@ -10,137 +10,153 @@ To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
 List-Id: devicetree@vger.kernel.org
 
-On m41txx you can enable open-drain OUT pin to check if offset is ok.
-Enabling OUT pin with freq_test attribute, OUT pin will tick 512 times
-faster than 1s tick base.
+m41txx chips can hold a calibration value to get correct clock bias.
 
-Enable or Disable FT bit on CONTROL register if freq_test is 1 or 0.
+Add offset handling (ranging between -63ppm and 126ppm) via sysfs.
 
 Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 ---
 V3 => V4:
-* change attribute from freq_test to frequency_test_enable
-* use regmap_update_bits instead of regmap_write
+* use ppm as offset input according to documentation instead of
+raw ic offset values.
+* use regmap_update_bits instead of regmap_write to update ic registers
+* sysfs_remove_group if devm_add_action_or_reset fails
+* rtc_device_unregister if ds1307_add_frequency_test fails on m41txx
+series
 
- drivers/rtc/rtc-ds1307.c | 99 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+ drivers/rtc/rtc-ds1307.c | 81 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
 diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 2797d01bfa1d..de98ddc39515 100644
+index 0ab0c166da83..2797d01bfa1d 100644
 --- a/drivers/rtc/rtc-ds1307.c
 +++ b/drivers/rtc/rtc-ds1307.c
-@@ -1053,6 +1053,99 @@ static int m41txx_rtc_set_offset(struct device *dev, long offset)
- 				  ctrl_reg);
+@@ -114,6 +114,20 @@ enum ds_type {
+ #	define RX8025_BIT_VDET		0x40
+ #	define RX8025_BIT_XST		0x20
+ 
++#define M41TXX_REG_CONTROL	0x07
++#	define M41TXX_BIT_OUT		0x80
++#	define M41TXX_BIT_FT		0x40
++#	define M41TXX_BIT_CALIB_SIGN	0x20
++#	define M41TXX_M_CALIBRATION	0x1f
++
++/* negative offset step is -2.034ppm */
++#define M41TXX_NEG_OFFSET_STEP_PPM	2034
++/* positive offset step is +4.068ppm */
++#define M41TXX_POS_OFFSET_STEP_PPM	4068
++/* Min and max values supported with 'offset' interface by M41TXX */
++#define M41TXX_MIN_OFFSET	(((-31) * M41TXX_NEG_OFFSET_STEP_PPM) / 1000)
++#define M41TXX_MAX_OFFSET	(((31) * M41TXX_POS_OFFSET_STEP_PPM) / 1000)
++
+ struct ds1307 {
+ 	enum ds_type		type;
+ 	unsigned long		flags;
+@@ -146,6 +160,9 @@ struct chip_desc {
+ 
+ static int ds1307_get_time(struct device *dev, struct rtc_time *t);
+ static int ds1307_set_time(struct device *dev, struct rtc_time *t);
++static int ds1337_read_alarm(struct device *dev, struct rtc_wkalrm *t);
++static int ds1337_set_alarm(struct device *dev, struct rtc_wkalrm *t);
++static int ds1307_alarm_irq_enable(struct device *dev, unsigned int enabled);
+ static u8 do_trickle_setup_ds1339(struct ds1307 *, u32 ohms, bool diode);
+ static irqreturn_t rx8130_irq(int irq, void *dev_id);
+ static int rx8130_read_alarm(struct device *dev, struct rtc_wkalrm *t);
+@@ -155,6 +172,8 @@ static irqreturn_t mcp794xx_irq(int irq, void *dev_id);
+ static int mcp794xx_read_alarm(struct device *dev, struct rtc_wkalrm *t);
+ static int mcp794xx_set_alarm(struct device *dev, struct rtc_wkalrm *t);
+ static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled);
++static int m41txx_rtc_read_offset(struct device *dev, long *offset);
++static int m41txx_rtc_set_offset(struct device *dev, long offset);
+ 
+ static const struct rtc_class_ops rx8130_rtc_ops = {
+ 	.read_time      = ds1307_get_time,
+@@ -172,6 +191,16 @@ static const struct rtc_class_ops mcp794xx_rtc_ops = {
+ 	.alarm_irq_enable = mcp794xx_alarm_irq_enable,
+ };
+ 
++static const struct rtc_class_ops m41txx_rtc_ops = {
++	.read_time      = ds1307_get_time,
++	.set_time       = ds1307_set_time,
++	.read_alarm	= ds1337_read_alarm,
++	.set_alarm	= ds1337_set_alarm,
++	.alarm_irq_enable = ds1307_alarm_irq_enable,
++	.read_offset	= m41txx_rtc_read_offset,
++	.set_offset	= m41txx_rtc_set_offset,
++};
++
+ static const struct chip_desc chips[last_ds_type] = {
+ 	[ds_1307] = {
+ 		.nvram_offset	= 8,
+@@ -227,10 +256,17 @@ static const struct chip_desc chips[last_ds_type] = {
+ 		.irq_handler = rx8130_irq,
+ 		.rtc_ops = &rx8130_rtc_ops,
+ 	},
++	[m41t0] = {
++		.rtc_ops	= &m41txx_rtc_ops,
++	},
++	[m41t00] = {
++		.rtc_ops	= &m41txx_rtc_ops,
++	},
+ 	[m41t11] = {
+ 		/* this is battery backed SRAM */
+ 		.nvram_offset	= 8,
+ 		.nvram_size	= 56,
++		.rtc_ops	= &m41txx_rtc_ops,
+ 	},
+ 	[mcp794xx] = {
+ 		.alarm		= 1,
+@@ -972,6 +1008,51 @@ static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ 				  enabled ? MCP794XX_BIT_ALM0_EN : 0);
  }
  
-+static ssize_t frequency_test_enable_store(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t count)
++static int m41txx_rtc_read_offset(struct device *dev, long *offset)
 +{
 +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	unsigned long freq_test = 0;
-+	int retval;
-+
-+	retval = kstrtoul(buf, 10, &freq_test);
-+	if ((retval < 0) || (retval > 1)) {
-+		dev_err(dev, "Failed to store RTC Frequency Test attribute\n");
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL, M41TXX_BIT_FT,
-+			   freq_test ? M41TXX_BIT_FT : 0);
-+
-+	return retval ? retval : count;
-+}
-+
-+static ssize_t frequency_test_enable_show(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
-+{
-+	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	int freq_test_en = 0;
 +	unsigned int ctrl_reg;
++	u8 val;
 +
 +	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
 +
-+	if (ctrl_reg & M41TXX_BIT_FT)
-+		freq_test_en = true;
++	val = ctrl_reg & M41TXX_M_CALIBRATION;
++
++	/* check if positive */
++	if (ctrl_reg & M41TXX_BIT_CALIB_SIGN)
++		*offset = (val * M41TXX_POS_OFFSET_STEP_PPM);
 +	else
-+		freq_test_en = false;
++		*offset = -(val * M41TXX_NEG_OFFSET_STEP_PPM);
 +
-+	return sprintf(buf, "%d\n", freq_test_en);
++	*offset = DIV_ROUND_CLOSEST(*offset, 1000);
++
++	return 0;
 +}
 +
-+static DEVICE_ATTR_RW(frequency_test_enable);
-+
-+static struct attribute *rtc_freq_test_attrs[] = {
-+	&dev_attr_frequency_test_enable.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group rtc_freq_test_attr_group = {
-+	.attrs		= rtc_freq_test_attrs,
-+};
-+
-+static void rtc_calib_remove_sysfs_group(void *_dev)
++static int m41txx_rtc_set_offset(struct device *dev, long offset)
 +{
-+	struct device *dev = _dev;
++	struct ds1307 *ds1307 = dev_get_drvdata(dev);
++	unsigned int ctrl_reg;
 +
-+	sysfs_remove_group(&dev->kobj, &rtc_freq_test_attr_group);
-+}
++	if ((offset < M41TXX_MIN_OFFSET) || (offset > M41TXX_MAX_OFFSET))
++		return -ERANGE;
 +
-+static int ds1307_add_frequency_test(struct ds1307 *ds1307)
-+{
-+	int err = 0;
++	offset *= 1000;
 +
-+	switch (ds1307->type) {
-+	case m41t0:
-+	case m41t00:
-+	case m41t11:
-+		/* Export sysfs entries */
-+		err = sysfs_create_group(&(ds1307->dev)->kobj,
-+					 &rtc_freq_test_attr_group);
-+		if (err) {
-+			dev_err(ds1307->dev,
-+				"Failed to create sysfs group: %d\n",
-+				err);
-+			return err;
-+		}
-+
-+		err = devm_add_action_or_reset(ds1307->dev,
-+					       rtc_calib_remove_sysfs_group,
-+					       ds1307->dev);
-+		if (err) {
-+			dev_err(ds1307->dev,
-+				"Failed to add sysfs cleanup action: %d\n",
-+				err);
-+			sysfs_remove_group(&(ds1307->dev)->kobj,
-+					   &rtc_freq_test_attr_group);
-+			return err;
-+		}
-+		break;
-+	default:
-+		break;
++	if (offset >= 0) {
++		ctrl_reg = DIV_ROUND_CLOSEST(offset,
++					     M41TXX_POS_OFFSET_STEP_PPM);
++		ctrl_reg |= M41TXX_BIT_CALIB_SIGN;
++	} else {
++		ctrl_reg = DIV_ROUND_CLOSEST(abs(offset),
++					     M41TXX_NEG_OFFSET_STEP_PPM);
 +	}
 +
-+	return err;
++	return regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL,
++				  M41TXX_M_CALIBRATION | M41TXX_BIT_CALIB_SIGN,
++				  ctrl_reg);
 +}
 +
  /*----------------------------------------------------------------------*/
  
  static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
-@@ -1794,6 +1887,12 @@ static int ds1307_probe(struct i2c_client *client,
- 	if (err)
- 		return err;
- 
-+	err = ds1307_add_frequency_test(ds1307);
-+	if (err) {
-+		rtc_device_unregister(ds1307->rtc);
-+		return err;
-+	}
-+
- 	if (chip->nvram_size) {
- 		struct nvmem_config nvmem_cfg = {
- 			.name = "ds1307_nvram",
 -- 
 2.17.0
