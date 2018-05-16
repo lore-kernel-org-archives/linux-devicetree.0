@@ -1,55 +1,51 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v4 4/4] drm/rockchip: support dp training outside dp
- firmware
-Date: Wed, 16 May 2018 16:28:47 -0700
-Message-ID: <20180516232845.GA219198@rodete-desktop-imager.corp.google.com>
-References: <1526354560-23135-1-git-send-email-hl@rock-chips.com>
- <1526354560-23135-4-git-send-email-hl@rock-chips.com>
+From: rishabhb@codeaurora.org
+Subject: Re: [PATCH v6 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Wed, 16 May 2018 16:32:27 -0700
+Message-ID: <079348edcb511cefb9f4d76877d50cb7@codeaurora.org>
+References: <1525810921-15878-1-git-send-email-rishabhb@codeaurora.org>
+ <1525810921-15878-2-git-send-email-rishabhb@codeaurora.org>
+ <152649021310.210890.14841324536807182632@swboyd.mtv.corp.google.com>
+ <385198cbb91c4a36ad758997916ad271@codeaurora.org>
+ <152649413707.210890.2655572242392552759@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1526354560-23135-4-git-send-email-hl@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lin Huang <hl@rock-chips.com>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, zyw@rock-chips.com, daniel.vetter@intel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <152649413707.210890.2655572242392552759@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMTUsIDIwMTggYXQgMTE6MjI6NDBBTSArMDgwMCwgTGluIEh1YW5nIHdyb3Rl
-Ogo+IERQIGZpcm13YXJlIHVzZXMgZml4ZWQgcGh5IGNvbmZpZyB2YWx1ZXMgdG8gZG8gdHJhaW5p
-bmcsIGJ1dCBzb21lCj4gYm9hcmRzIG5lZWQgdG8gYWRqdXN0IHRoZXNlIHZhbHVlcyB0byBmaXQg
-Zm9yIHRoZWlyIHVuaXF1ZSBoYXJkd2FyZQo+IGRlc2lnbi4gU28gZ2V0IHBoeSBjb25maWcgdmFs
-dWVzIGZyb20gZHRzIGFuZCB1c2Ugc29mdHdhcmUgbGluayB0cmFpbmluZwo+IGluc3RlYWQgb2Yg
-cmVseWluZyBvbiBmaXJtd2FyZSwgaWYgc29mdHdhcmUgdHJhaW5pbmcgZmFpbCwga2VlcCBmaXJt
-d2FyZQo+IHRyYWluaW5nIGFzIGEgZmFsbGJhY2sgaWYgc3cgdHJhaW5pbmcgZmFpbHMuCj4gCj4g
-Cj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KPiBTaWdu
-ZWQtb2ZmLWJ5OiBMaW4gSHVhbmcgPGhsQHJvY2stY2hpcHMuY29tPgo+IC0tLQo+IENoYW5nZXMg
-aW4gdjI6Cj4gLSB1cGRhdGUgcGF0Y2ggZm9sbG93aW5nIEVucmljIHN1Z2dlc3QKPiBDaGFuZ2Vz
-IGluIHYzOgo+IC0gdXNlIHZhcmlhYmxlIGZ3X3RyYWluaW5nIGluc3RlYWQgc3dfdHJhaW5pbmdf
-c3VjY2Vzcwo+IC0gYmFzZSBvbiBEUCBTUENFLCBpZiB0cmFpbmluZyBmYWlsIHVzZSBsb3dlciBs
-aW5rIHJhdGUgdG8gcmV0cnkgdHJhaW5pbmcKPiBDaGFuZ2VzIGluIHY0Ogo+IC0gaW1wcm92ZSBj
-ZG5fZHBfZ2V0X2xvd2VyX2xpbmtfcmF0ZSgpIGFuZCBjZG5fZHBfc29mdHdhcmVfdHJhaW5fbGlu
-aygpIGZvbGxvdyBTZWFuIHN1Z2dlc3QKPiAKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL01h
-a2VmaWxlICAgICAgICAgICAgICAgfCAgIDMgKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
-L2Nkbi1kcC1jb3JlLmMgICAgICAgICAgfCAgMjQgKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwL2Nkbi1kcC1jb3JlLmggICAgICAgICAgfCAgIDIgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcm9j
-a2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYyB8IDQyMCArKysrKysrKysrKysrKysrKysrKysr
-KysKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuYyAgICAgICAgICAgfCAg
-MzEgKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuaCAgICAgICAgICAg
-fCAgMzggKystCj4gIDYgZmlsZXMgY2hhbmdlZCwgNTA1IGluc2VydGlvbnMoKyksIDEzIGRlbGV0
-aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nk
-bi1kcC1saW5rLXRyYWluaW5nLmMKClBsZWFzZSByZXJ1biBjaGVja3BhdGNoIG5leHQgdGltZS4g
-WW91J3ZlIGdvdCBhIGJ1bmNoIG9mIHdoaXRlc3BhY2UKaXNzdWVzIGluIGNkbl9kcF9nZXRfbG93
-ZXJfbGlua19yYXRlKCkgYW5kIGNkbl9kcF9zb2Z0d2FyZV90cmFpbl9saW5rKCkuCgpCcmlhbgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 2018-05-16 11:08, Stephen Boyd wrote:
+> Quoting rishabhb@codeaurora.org (2018-05-16 10:33:14)
+>> On 2018-05-16 10:03, Stephen Boyd wrote:
+>> > Quoting Rishabh Bhatnagar (2018-05-08 13:22:00)
+>> 
+>> >> +
+>> >> +- max-slices:
+>> >> +       usage: required
+>> >> +       Value Type: <u32>
+>> >> +       Definition: Number of cache slices supported by hardware
+>> >> +
+>> >> +Example:
+>> >> +
+>> >> +       llcc: qcom,llcc@1100000 {
+>> >
+>> > cache-controller@1100000 ?
+>> >
+>> We have tried to use consistent naming convention as in llcc_*
+>> everywhere.
+>> Using cache-controller will mix and match the naming convention. Also 
+>> in
+>> the documentation it is explained what llcc is and its full form.
+>> 
+> 
+> DT prefers standard node names as opposed to vendor specific node 
+> names.
+> Isn't it a cache controller? I fail to see why this can't be done.
+Hi Stephen,
+The driver is vendor specific and also for uniformity purposes we 
+preferred
+to go with this name.
