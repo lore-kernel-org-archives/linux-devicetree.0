@@ -1,191 +1,185 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 2/2] leds: lm3601x: Introduce the lm3601x LED driver
-Date: Thu, 17 May 2018 01:11:23 +0300
-Message-ID: <CAHp75Vd-cyR7zVofP7g+4Z1ouqawV+Rqp5s5BcDhpGiHheUgpg@mail.gmail.com>
-References: <20180515154352.20263-1-dmurphy@ti.com> <20180515154352.20263-2-dmurphy@ti.com>
- <CAHp75VegjkiiD1qTGpi9rr6cg=72t9kSwDrG=sUpUWFVO58M4A@mail.gmail.com>
- <08dda10d-f865-9cf2-b9a5-c79cbab5da98@ti.com> <CAHp75Vcz08zrs3bgMFcvYwRrN_A43D=Nvt5cFDQf8m9whB=yhA@mail.gmail.com>
- <3a0f27b7-86a1-235c-0a96-5ec9c8feb6f0@ti.com>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH 5/6] ARM: dts: rcar-gen2: Remove unused VIN properties
+Date: Thu, 17 May 2018 00:13:07 +0200
+Message-ID: <20180516221307.GF17948@bigcity.dyn.berto.se>
+References: <1526488352-898-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526488352-898-6-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3a0f27b7-86a1-235c-0a96-5ec9c8feb6f0@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1526488352-898-6-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 11:43 PM, Dan Murphy <dmurphy@ti.com> wrote:
-> On 05/15/2018 05:24 PM, Andy Shevchenko wrote:
->> On Wed, May 16, 2018 at 1:08 AM, Dan Murphy <dmurphy@ti.com> wrote:
->>> On 05/15/2018 04:56 PM, Andy Shevchenko wrote:
->>>> On Tue, May 15, 2018 at 6:43 PM, Dan Murphy <dmurphy@ti.com> wrote:
+Hi Jacopo,
 
->>>>> +static const struct lm3601x_max_timeouts strobe_timeouts[] = {
->>>>> +       { 40000, 0x00 },
->>>>> +       { 80000, 0x01 },
->>>>> +       { 120000, 0x02 },
->>>>> +       { 160000, 0x03 },
->>>>> +       { 200000, 0x04 },
->>>>> +       { 240000, 0x05 },
->>>>> +       { 280000, 0x06 },
->>>>> +       { 320000, 0x07 },
->>>>> +       { 360000, 0x08 },
->>>>> +       { 400000, 0x09 },
->>>>> +       { 600000, 0x0a },
->>>>> +       { 800000, 0x0b },
->>>>> +       { 1000000, 0x0c },
->>>>> +       { 1200000, 0x0d },
->>>>> +       { 1400000, 0x0e },
->>>>> +       { 1600000, 0x0f },
->>>>
->>>> Huh?!
->>>
->>> Please give comments that actually mean something other wise I will opt to ignore them.
->>
->> I did below.
->
-> Sort of.  "So what?" and "Huh" are not really a technical comments.
+Thanks for your work.
 
-True.
+On 2018-05-16 18:32:31 +0200, Jacopo Mondi wrote:
+> The 'bus-width' and 'pclk-sample' properties are not parsed by the VIN
+> driver and only confuse users. Remove them in all Gen2 SoC that used
+> them.
+> =
 
-> I can tell from your LVEE presentation that
-> you have a passion for making the kernel better.  That is awesome but if we try to make the code perfect everytime no code will
-> ever get merged.
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  arch/arm/boot/dts/r8a7790-lager.dts   | 3 ---
+>  arch/arm/boot/dts/r8a7791-koelsch.dts | 3 ---
+>  arch/arm/boot/dts/r8a7791-porter.dts  | 1 -
+>  arch/arm/boot/dts/r8a7793-gose.dts    | 3 ---
+>  arch/arm/boot/dts/r8a7794-alt.dts     | 1 -
+>  arch/arm/boot/dts/r8a7794-silk.dts    | 1 -
+>  6 files changed, 12 deletions(-)
+> =
 
-True.
+> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7=
+790-lager.dts
+> index 063fdb6..b56b309 100644
+> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+> @@ -873,10 +873,8 @@
+>  	port {
+>  		vin0ep2: endpoint {
+>  			remote-endpoint =3D <&adv7612_out>;
+> -			bus-width =3D <24>;
 
->  And we are human and we will miss coding issues and make mistakes.
+I can't really make up my mind if this is a good thing or not. Device =
 
-True.
+tree describes the hardware and not what the drivers make use of. And =
 
-While all above is true, I still don't get why we have lookup tables
-whenever we can use simple calculations.
+the fact is that this bus is 24 bits wide. So I'm not sure we should =
 
->>>> strobe_timeout = (x + 1) * 40 * MSECS_IN_SEC;
->>>
->>> Not sure what equation you are trying to point out here.  But if you are trying to apply
->>> a timeout step you cannot do this with this part.  As pointed out in the DT doc the timeout
->>> step is not linear.
->>
->> Yeah, I know people are more than often too lazy to think.
->
-> Well this is why I put the table in.  It is not laziness on my part as I try to add clarity for
-> our newbies or productization engineers, translation/lookup tables are not as bad as you think.
+remove these properties. But I would love to hear what others think =
 
-Sometimes.
+about this.
 
-> I am fully aware that this bloats the data section of the image and has negative impacts
-> on IoT small memory foot print devices.
->
->>
->> if (x < 9)
->>  strobe_timeout = (x + 1) * 40 * MSECS_IN_SEC;
->> else
->>  strobe_timeout = (400 + (x - 9) * 200) * MSECS_IN_SEC;
->>
->
-> Not sure if this will produce the register value I am looking for.  I have to run through the
-> algorithim.  The idea is to take in the timeout and get the reg value to program.
->
-> If it yields the expected output, or with a modified equation, then I can pull it in.
+>  			hsync-active =3D <0>;
+>  			vsync-active =3D <0>;
+> -			pclk-sample =3D <1>;
+>  			data-active =3D <1>;
+>  		};
+>  	};
+> @@ -895,7 +893,6 @@
+> =
 
-So, you need a reversed calculus in this case.
+>  		vin1ep0: endpoint {
+>  			remote-endpoint =3D <&adv7180>;
+> -			bus-width =3D <8>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8=
+a7791-koelsch.dts
+> index f40321a..9967666 100644
+> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
+> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+> @@ -849,10 +849,8 @@
+> =
 
-u8 regval;
+>  		vin0ep2: endpoint {
+>  			remote-endpoint =3D <&adv7612_out>;
+> -			bus-width =3D <24>;
+>  			hsync-active =3D <0>;
+>  			vsync-active =3D <0>;
+> -			pclk-sample =3D <1>;
+>  			data-active =3D <1>;
+>  		};
+>  	};
+> @@ -870,7 +868,6 @@
+> =
 
-/* To make it in range... */
-timeout = clamp_val(timeout, 40000, 1600000);
-/* ...other possibility to issue an error */
+>  		vin1ep: endpoint {
+>  			remote-endpoint =3D <&adv7180>;
+> -			bus-width =3D <8>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a=
+7791-porter.dts
+> index c14e6fe..055a7f1 100644
+> --- a/arch/arm/boot/dts/r8a7791-porter.dts
+> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
+> @@ -391,7 +391,6 @@
+> =
 
-if (timeout >= 400000)
- regval = timeout / 200000 + 0x07;
-else
- regval = timeout / 40000 - 0x01;
+>  		vin0ep: endpoint {
+>  			remote-endpoint =3D <&adv7180>;
+> -			bus-width =3D <8>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a77=
+93-gose.dts
+> index 9ed6961..9d3fba2 100644
+> --- a/arch/arm/boot/dts/r8a7793-gose.dts
+> +++ b/arch/arm/boot/dts/r8a7793-gose.dts
+> @@ -759,10 +759,8 @@
+> =
 
-In any case, please double check it gives a correct values.
+>  		vin0ep2: endpoint {
+>  			remote-endpoint =3D <&adv7612_out>;
+> -			bus-width =3D <24>;
+>  			hsync-active =3D <0>;
+>  			vsync-active =3D <0>;
+> -			pclk-sample =3D <1>;
+>  			data-active =3D <1>;
+>  		};
+>  	};
+> @@ -781,7 +779,6 @@
+> =
 
->>>>> +               brightness_val = (brightness/2);
+>  		vin1ep: endpoint {
+>  			remote-endpoint =3D <&adv7180_out>;
+> -			bus-width =3D <8>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a779=
+4-alt.dts
+> index 26a8834..4bbb9cc 100644
+> --- a/arch/arm/boot/dts/r8a7794-alt.dts
+> +++ b/arch/arm/boot/dts/r8a7794-alt.dts
+> @@ -380,7 +380,6 @@
+> =
 
-> I am still not see the extra spaces here.
+>  		vin0ep: endpoint {
+>  			remote-endpoint =3D <&adv7180>;
+> -			bus-width =3D <8>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/r8a7794-silk.dts b/arch/arm/boot/dts/r8a77=
+94-silk.dts
+> index 351cb3b..c0c5d31 100644
+> --- a/arch/arm/boot/dts/r8a7794-silk.dts
+> +++ b/arch/arm/boot/dts/r8a7794-silk.dts
+> @@ -480,7 +480,6 @@
+> =
 
-Exactly, spaces are missed.
+>  		vin0ep: endpoint {
+>  			remote-endpoint =3D <&adv7180>;
+> -			bus-width =3D <8>;
+>  		};
+>  	};
+>  };
+> --
+> 2.7.4
+> =
 
->> What do you mean? We do not appreciate +LOCs for no (or even nagative!) benefit.
 
-> Again for non-IoT cases this would be fine but if we are striving to meet IoT size
-> requirements I do understand your concern.
+-- =
 
-It has nothing with IoT in this case. The pattern
-
-ret = foo();
-if (ret)
-  return ret;
-
-return 0;
-
-is a too way verbose variant of
-
-ret foo();
-
-though I can imagine some rare cases where it might make sense.
-
-OTOH the variant
-
-ret = foo();
-return ret;
-
-pointless at all.
-
->>>>> +               ret = of_property_read_string(led->led_node, "label", &name);
->>>> device_property_...();
-
->> Jacek, if you need rationale behind this comment it's here: the driver
->> has nothing DT specific and getting rid of OF centric programming
->> allows to reuse the driver on non-DT platforms w/o touching a source
->> code.
-
-> I am deferring this to Jacek.  Because this should be an overall coding change for all LED
-> drivers that are new.
->  Like I pointed out I don't mind adding/changing the code as long as
-> all LED drivers will have that same mandate moving forward.
-
-Whenever we might get driver working on different platforms for free,
-better to do it that way. The entire exersice about unified device
-properties API is to give drivers an agnostic way for getting their
-resources / properties.
-
-> If the maintainers agree we can get this driver to be the example for the use of device_property calls.
-
-That's fair.
-I dunno why Sakari made as3645a not in this way in the first place.
-Will talk to him.
-
->>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
->>>>> +                               "%s:%s", led->led_node->name, name);
->>>>> +               else
->>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
->>>>> +                               "%s:torch", led->led_node->name);
->>>>
->>>> const char *tmp;
->>>>
->>>> ret = device_property_read_...(&tmp);
->>>> if (ret)
->>>>  tmp = ...
->>>> sprintf(...);
->>
->> No comments on this?
->
-> No.  This would depend on the disposition of the device_property calls.
-> If we go that way then yes this will probably change.  But we need to have an
-> if..else as the label property is option in the DT documentation and we have to
-> make a label if one does not exist.
-
-The example is not related to device_property_ vs of_property_.
-The idea is to figure out the label and use it in one place.
-
-Though, I have no preferences of it.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Niklas S=F6derlund
