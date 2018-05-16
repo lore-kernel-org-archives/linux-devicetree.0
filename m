@@ -1,162 +1,100 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH v4 3/4] rtc: ds1307: add offset sysfs for mt41txx chips.
-Date: Wed, 16 May 2018 12:05:25 +0200
-Message-ID: <20180516100526.73549-3-giulio.benetti@micronovasrl.com>
-References: <20180516100526.73549-1-giulio.benetti@micronovasrl.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v5 0/6] Add support for PWM input capture on STM32
+Date: Wed, 16 May 2018 11:13:08 +0100
+Message-ID: <20180516101308.GH5130@dell>
+References: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
+ <20180516080635.GE5130@dell>
+ <c48acc96-1eca-9adc-abb7-131921305ee8@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516100526.73549-1-giulio.benetti@micronovasrl.com>
+Content-Disposition: inline
+In-Reply-To: <c48acc96-1eca-9adc-abb7-131921305ee8@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: alexandre.torgue@st.com, thierry.reding@gmail.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-m41txx chips can hold a calibration value to get correct clock bias.
+On Wed, 16 May 2018, Fabrice Gasnier wrote:
 
-Add offset handling (ranging between -63ppm and 126ppm) via sysfs.
+> On 05/16/2018 10:06 AM, Lee Jones wrote:
+> > On Wed, 16 May 2018, Fabrice Gasnier wrote:
+> > 
+> >> This series adds support for capture to stm32-pwm driver.
+> >> Capture is based on DMAs.
+> >> - First two patches add support for requesting DMAs to MFD core
+> >> - Next three patches add support for capture to stm32-pwm driver
+> >> - This has been tested on stm32429i-eval board.
+> >>
+> >> ---
+> >> Changes in v5:
+> >> - update patch 2 (mfd: stm32-timers: add support for dmas)
+> >>   move stm32_timers_dma struct to header file,
+> >>   fix warning on dma_mapping_error().
+> >>
+> >> Changes in v4:
+> >> - Lee's comments on patch 2 (mfd: stm32-timers: add support for dmas)
+> >>   Add kerneldoc header, better format comments.
+> >>
+> >> Changes in v3:
+> >> - Dropped 2 precusor patches applied by Thierry in pwm tree:
+> >>   "pwm: stm32: fix, remove unused struct device"
+> >>   "pwm: stm32: protect common prescaler for all channels"
+> >> - Note: this series applies on top on pwm tree
+> >> - Implements Lee's comments on MFD part: rework stm32_timers_dma struct,
+> >>   exported routine prototype now use generic device struct, more
+> >>   various comments (see patch 2 changelog).
+> >>
+> >> Resend v2:
+> >> - Add collected Acks
+> >>
+> >> Changes in v2:
+> >> - Abstract DMA handling from child driver: move it to MFD core
+> >> - Rework pwm capture routines to adopt this change
+> >> - Comment on optional dma support, beautify DMAs probe
+> >>
+> >> Fabrice Gasnier (6):
+> >>   dt-bindings: mfd: stm32-timers: add support for dmas
+> >>   mfd: stm32-timers: add support for dmas
+> >>   pwm: stm32: add capture support
+> >>   pwm: stm32: improve capture by tuning counter prescaler
+> >>   pwm: stm32: use input prescaler to improve period capture
+> >>   ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+> > 
+> > Applied patches 1-5.
+> 
+> Many thanks Lee !
+> 
+> Maybe I missed something, but just in case...
+> In your pull request ("[GIT PULL] Immutable branch between MFD and PWM
+> due for the v4.18 merge window") I only see 4 patches:
+> Fabrice Gasnier (4):
+>       mfd: stm32-timers: Add support for DMAs
+>       pwm: stm32: Add capture support
+>       pwm: stm32: Improve capture by tuning counter prescaler
+>       pwm: stm32: Use input prescaler to improve period capture
+> 
+> I can't see patch 1 ("dt-bindings: mfd: stm32-timers: add support for dmas")
+> Is it applied on another tree ?
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
----
-V3 => V4:
-* use ppm as offset input according to documentation instead of
-raw ic offset values.
-* use regmap_update_bits instead of regmap_write to update ic registers
-* sysfs_remove_group if devm_add_action_or_reset fails
-* rtc_device_unregister if ds1307_add_frequency_test fails on m41txx
-series
+Good spot.
 
- drivers/rtc/rtc-ds1307.c | 81 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+Looks like a fumbled the key combination for the bindings patch.
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 0ab0c166da83..2797d01bfa1d 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -114,6 +114,20 @@ enum ds_type {
- #	define RX8025_BIT_VDET		0x40
- #	define RX8025_BIT_XST		0x20
- 
-+#define M41TXX_REG_CONTROL	0x07
-+#	define M41TXX_BIT_OUT		0x80
-+#	define M41TXX_BIT_FT		0x40
-+#	define M41TXX_BIT_CALIB_SIGN	0x20
-+#	define M41TXX_M_CALIBRATION	0x1f
-+
-+/* negative offset step is -2.034ppm */
-+#define M41TXX_NEG_OFFSET_STEP_PPM	2034
-+/* positive offset step is +4.068ppm */
-+#define M41TXX_POS_OFFSET_STEP_PPM	4068
-+/* Min and max values supported with 'offset' interface by M41TXX */
-+#define M41TXX_MIN_OFFSET	(((-31) * M41TXX_NEG_OFFSET_STEP_PPM) / 1000)
-+#define M41TXX_MAX_OFFSET	(((31) * M41TXX_POS_OFFSET_STEP_PPM) / 1000)
-+
- struct ds1307 {
- 	enum ds_type		type;
- 	unsigned long		flags;
-@@ -146,6 +160,9 @@ struct chip_desc {
- 
- static int ds1307_get_time(struct device *dev, struct rtc_time *t);
- static int ds1307_set_time(struct device *dev, struct rtc_time *t);
-+static int ds1337_read_alarm(struct device *dev, struct rtc_wkalrm *t);
-+static int ds1337_set_alarm(struct device *dev, struct rtc_wkalrm *t);
-+static int ds1307_alarm_irq_enable(struct device *dev, unsigned int enabled);
- static u8 do_trickle_setup_ds1339(struct ds1307 *, u32 ohms, bool diode);
- static irqreturn_t rx8130_irq(int irq, void *dev_id);
- static int rx8130_read_alarm(struct device *dev, struct rtc_wkalrm *t);
-@@ -155,6 +172,8 @@ static irqreturn_t mcp794xx_irq(int irq, void *dev_id);
- static int mcp794xx_read_alarm(struct device *dev, struct rtc_wkalrm *t);
- static int mcp794xx_set_alarm(struct device *dev, struct rtc_wkalrm *t);
- static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled);
-+static int m41txx_rtc_read_offset(struct device *dev, long *offset);
-+static int m41txx_rtc_set_offset(struct device *dev, long offset);
- 
- static const struct rtc_class_ops rx8130_rtc_ops = {
- 	.read_time      = ds1307_get_time,
-@@ -172,6 +191,16 @@ static const struct rtc_class_ops mcp794xx_rtc_ops = {
- 	.alarm_irq_enable = mcp794xx_alarm_irq_enable,
- };
- 
-+static const struct rtc_class_ops m41txx_rtc_ops = {
-+	.read_time      = ds1307_get_time,
-+	.set_time       = ds1307_set_time,
-+	.read_alarm	= ds1337_read_alarm,
-+	.set_alarm	= ds1337_set_alarm,
-+	.alarm_irq_enable = ds1307_alarm_irq_enable,
-+	.read_offset	= m41txx_rtc_read_offset,
-+	.set_offset	= m41txx_rtc_set_offset,
-+};
-+
- static const struct chip_desc chips[last_ds_type] = {
- 	[ds_1307] = {
- 		.nvram_offset	= 8,
-@@ -227,10 +256,17 @@ static const struct chip_desc chips[last_ds_type] = {
- 		.irq_handler = rx8130_irq,
- 		.rtc_ops = &rx8130_rtc_ops,
- 	},
-+	[m41t0] = {
-+		.rtc_ops	= &m41txx_rtc_ops,
-+	},
-+	[m41t00] = {
-+		.rtc_ops	= &m41txx_rtc_ops,
-+	},
- 	[m41t11] = {
- 		/* this is battery backed SRAM */
- 		.nvram_offset	= 8,
- 		.nvram_size	= 56,
-+		.rtc_ops	= &m41txx_rtc_ops,
- 	},
- 	[mcp794xx] = {
- 		.alarm		= 1,
-@@ -972,6 +1008,51 @@ static int mcp794xx_alarm_irq_enable(struct device *dev, unsigned int enabled)
- 				  enabled ? MCP794XX_BIT_ALM0_EN : 0);
- }
- 
-+static int m41txx_rtc_read_offset(struct device *dev, long *offset)
-+{
-+	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	unsigned int ctrl_reg;
-+	u8 val;
-+
-+	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
-+
-+	val = ctrl_reg & M41TXX_M_CALIBRATION;
-+
-+	/* check if positive */
-+	if (ctrl_reg & M41TXX_BIT_CALIB_SIGN)
-+		*offset = (val * M41TXX_POS_OFFSET_STEP_PPM);
-+	else
-+		*offset = -(val * M41TXX_NEG_OFFSET_STEP_PPM);
-+
-+	*offset = DIV_ROUND_CLOSEST(*offset, 1000);
-+
-+	return 0;
-+}
-+
-+static int m41txx_rtc_set_offset(struct device *dev, long offset)
-+{
-+	struct ds1307 *ds1307 = dev_get_drvdata(dev);
-+	unsigned int ctrl_reg;
-+
-+	if ((offset < M41TXX_MIN_OFFSET) || (offset > M41TXX_MAX_OFFSET))
-+		return -ERANGE;
-+
-+	offset *= 1000;
-+
-+	if (offset >= 0) {
-+		ctrl_reg = DIV_ROUND_CLOSEST(offset,
-+					     M41TXX_POS_OFFSET_STEP_PPM);
-+		ctrl_reg |= M41TXX_BIT_CALIB_SIGN;
-+	} else {
-+		ctrl_reg = DIV_ROUND_CLOSEST(abs(offset),
-+					     M41TXX_NEG_OFFSET_STEP_PPM);
-+	}
-+
-+	return regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL,
-+				  M41TXX_M_CALIBRATION | M41TXX_BIT_CALIB_SIGN,
-+				  ctrl_reg);
-+}
-+
- /*----------------------------------------------------------------------*/
- 
- static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
+Pull-request to follow.
+
+> >>  .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
+> >>  arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
+> >>  drivers/mfd/stm32-timers.c                         | 201 +++++++++++++++-
+> >>  drivers/pwm/pwm-stm32.c                            | 257 +++++++++++++++++++++
+> >>  include/linux/mfd/stm32-timers.h                   |  58 +++++
+> >>  5 files changed, 537 insertions(+), 2 deletions(-)
+> >>
+> > 
+
 -- 
-2.17.0
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
