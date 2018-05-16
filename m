@@ -1,69 +1,48 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH RFC 3/6] hwmon: Add support for RPi voltage sensor
-Date: Wed, 16 May 2018 19:23:35 +0100
-Message-ID: <b332332e-ccf2-2a1d-5c6f-d8cb88c3a212@arm.com>
-References: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
- <1526477827-10859-4-git-send-email-stefan.wahren@i2se.com>
- <b053c458-e50c-d4db-3a18-699327f021f3@arm.com>
- <20180516180549.GA22705@roeck-us.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH net-next v2 0/2] of: mdio: Fall back to mdiobus_register()
+ with NULL device_node
+Date: Wed, 16 May 2018 20:32:58 +0200
+Message-ID: <CAMuHMdUBk3xT1G0XLd3Y8AJxrCb5zbegNu07dwMsX3zGjvgUpA@mail.gmail.com>
+References: <20180515235619.27773-1-f.fainelli@gmail.com> <20180516.142102.1650229402143291732.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180516180549.GA22705@roeck-us.net>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180516.142102.1650229402143291732.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYvMDUvMTggMTk6MDUsIEd1ZW50ZXIgUm9lY2sgd3JvdGU6Cj4gT24gV2VkLCBNYXkgMTYs
-IDIwMTggYXQgMDI6NTE6NDlQTSArMDEwMCwgUm9iaW4gTXVycGh5IHdyb3RlOgo+PiBIaSBTdGVm
-YW4sCj4+Cj4+IE9uIDE2LzA1LzE4IDE0OjM3LCBTdGVmYW4gV2FocmVuIHdyb3RlOgo+Pj4gQ3Vy
-cmVudGx5IHRoZXJlIGlzIG5vIGVhc3kgd2F5IHRvIGRldGVjdCB1bmRlci12b2x0YWdlIGNvbmRp
-dGlvbnMgb24gYSByZW1vdGUKPj4+IFJhc3BiZXJyeSBQaS4gVGhpcyBod21vbiBkcml2ZXIgcmV0
-cmlldmVzIHRoZSBzdGF0ZSBvZiB0aGUgdW5kZXItdm9sdGFnZSBzZW5zb3IKPj4+IHZpYSBtYWls
-Ym94IGludGVyZmFjZS4gVGhlIGhhbmRsaW5nIGJhc2VkIG9uIE5vcmFsZidzIG1vZGlmaWNhdGlv
-bnMgdG8gdGhlCj4+PiBkb3duc3RyZWFtIGZpcm13YXJlIGRyaXZlci4gSW4gY2FzZSBvZiBhbiB1
-bmRlci12b2x0YWdlIGNvbmRpdGlvbiBvbmx5IGFuIGVudHJ5Cj4+PiBpcyB3cml0dGVuIHRvIHRo
-ZSBrZXJuZWwgbG9nLgo+Pj4KPj4+IENDOiAiTm9yYWxmIFRyw7hubmVzIiA8bm9yYWxmQHRyb25u
-ZXMub3JnPgo+Pj4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBp
-MnNlLmNvbT4KPj4+IC0tLQo+Pj4gICBkcml2ZXJzL2h3bW9uL0tjb25maWcgICAgICAgICAgICAg
-fCAgMTAgKysKPj4+ICAgZHJpdmVycy9od21vbi9NYWtlZmlsZSAgICAgICAgICAgIHwgICAxICsK
-Pj4+ICAgZHJpdmVycy9od21vbi9yYXNwYmVycnlwaS1od21vbi5jIHwgMjA3ICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+PiAgIDMgZmlsZXMgY2hhbmdlZCwgMjE4IGlu
-c2VydGlvbnMoKykKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaHdtb24vcmFzcGJl
-cnJ5cGktaHdtb24uYwo+Pj4KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2h3bW9uL0tjb25maWcg
-Yi9kcml2ZXJzL2h3bW9uL0tjb25maWcKPj4+IGluZGV4IDc2OGFlZDUuLjdmOTM1Y2YgMTAwNjQ0
-Cj4+PiAtLS0gYS9kcml2ZXJzL2h3bW9uL0tjb25maWcKPj4+ICsrKyBiL2RyaXZlcnMvaHdtb24v
-S2NvbmZpZwo+Pj4gQEAgLTEyOTgsNiArMTI5OCwxNiBAQCBjb25maWcgU0VOU09SU19QV01fRkFO
-Cj4+PiAgIAkgIFRoaXMgZHJpdmVyIGNhbiBhbHNvIGJlIGJ1aWx0IGFzIGEgbW9kdWxlLiAgSWYg
-c28sIHRoZSBtb2R1bGUKPj4+ICAgCSAgd2lsbCBiZSBjYWxsZWQgcHdtLWZhbi4KPj4+ICtjb25m
-aWcgU0VOU09SU19SQVNQQkVSUllQSV9IV01PTgo+Pj4gKwl0cmlzdGF0ZSAiUmFzcGJlcnJ5IFBp
-IHZvbHRhZ2UgbW9uaXRvciIKPj4+ICsJZGVwZW5kcyBvbiAoQVJDSF9CQ00yODM1ICYmIFJBU1BC
-RVJSWVBJX0ZJUk1XQVJFKSB8fCAoQ09NUElMRV9URVNUICYmICFSQVNQQkVSUllQSV9GSVJNV0FS
-RSkKPj4KPj4gU2luY2UgUkFTUEJFUlJZUElfRklSTVdBUkUgYWxyZWFkeSBpbXBsaWVzIEFSQ0hf
-QkNNMjgzNSAodmlhIEJDTTI4MzVfTUJPWCksCj4+IHRoaXMgaXMganVzdCBhIHZlcnkgcm91bmRh
-Ym91dCB3YXkgdG8gc2F5Ogo+Pgo+PiAJZGVwZW5kcyBvbiBSQVNQQkVSUllQSV9GSVJNV0FSRSB8
-fCBDT01QSUxFX1RFU1QKPj4KPiBUaGF0IHdvdWxkIHBlcm1pdCBTRU5TT1JTX1JBU1BCRVJSWVBJ
-X0hXTU9OPXkgY29tYmluZWQgd2l0aAo+IFJBU1BCRVJSWVBJX0ZJUk1XQVJFPW0sIHdoaWNoIEFG
-QUlDUyB3b3VsZCByZXN1bHQgaW4gYSBidWlsZCBlcnJvcgo+IGJlY2F1c2UgaW5jbHVkZS9zb2Mv
-YmNtMjgzNS9yYXNwYmVycnlwaS1maXJtd2FyZS5oIHVzZXMgSVNfRU5BQkxFRCgpCj4gYW5kIG5v
-dCBJU19SRUFDSEFCTEUoKS4KCkJ1dCB0aGF0J3Mgb25seSBwb3NzaWJsZSB3aGVuIENPTVBJTEVf
-VEVTVD15LCB3aGVyZSBpbiBhbnkgY2FzZSB0aGVyZSAKYXJlIHN0dWIgZGVmaW5pdGlvbnMgZm9y
-IHRoZSAjZWxzZSBjYXNlIGluIHRoYXQgaGVhZGVyIHdoaWNoIHNob3VsZCAKc3RpbGwgYmUgZW5v
-dWdoIHRvIGJ1aWxkIHdpdGgsIHJpZ2h0PyAoYW5kIGlmIG5vdCwgdGhhdCdzIHByb2JhYmx5IGl0
-cyAKb3duIGJ1ZykKCk5vYm9keSdzIGV4cGVjdGluZyBDT01QSUxFX1RFU1QgY29uZmlncyB0byBh
-Y3R1YWxseSBib290IGFuZCB3b3JrIApwZXJmZWN0bHksIGFyZSB0aGV5PwoKUm9iaW4uCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+Hi David,
+
+On Wed, May 16, 2018 at 8:21 PM, David Miller <davem@davemloft.net> wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> Date: Tue, 15 May 2018 16:56:17 -0700
+>
+>> This patch series updates of_mdiobus_register() such that when the device_node
+>> argument is NULL, it calls mdiobus_register() directly. This is consistent with
+>> the behavior of of_mdiobus_register() when CONFIG_OF=n.
+>>
+>> I only converted the most obvious drivers, there are others that have a much
+>> less obvious behavior and specifically attempt to deal with CONFIG_ACPI.
+>>
+>> Changes in v2:
+>>
+>> - fixed build error in davincin_mdio.c (Grygorii)
+>> - reworked first patch a bit: commit message, subject and removed useless
+>>   code comment
+>
+> Based upon Andrew's response to Geert's feedback, I'm applying this series.
+
+Thanks, his feedback made perfect sense.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
