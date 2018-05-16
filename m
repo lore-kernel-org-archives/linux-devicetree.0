@@ -1,68 +1,26 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] arm64: dts: juno: fix graph node unit addresses for
- coresight components
-Date: Wed, 16 May 2018 12:49:25 +0100
-Message-ID: <eba4cddf-f668-a5e1-acea-5e6538c230f0@arm.com>
-References: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
- <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 6/7] DTS: Bindings: pca953x add an optional vcc-supply property
+Date: Wed, 16 May 2018 13:55:15 +0200
+Message-ID: <CACRpkdbShT-1Nbwg40yCRPbDq2v6Br2eerTX9Zx_=nXT9xcVjw@mail.gmail.com>
+References: <cover.1524933096.git.hns@goldelico.com> <de4bade4236415f62088d68cd5fcd6fb7b67e020.1524933096.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Liviu Dudau <liviu.dudau@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <de4bade4236415f62088d68cd5fcd6fb7b67e020.1524933096.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Apr 28, 2018 at 6:31 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
+> Hardware can have a switchable Vcc supply, so let's add it to
+> the bindings (the current Linux driver code already supports it).
+>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-On 16/05/18 12:23, Suzuki K Poulose wrote:
-> On 05/16/2018 11:34 AM, Sudeep Holla wrote:
+Patch applied.
 
-[..]
-
->> Hi Suzuki/Mathieu,
->>
->> I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to
->> check if reg field is being used or not and whether this change
->> causes any regression. I don't think so, but I may be wrong, let me
->> know.
-> 
-> Unfortunately, I think this would break the components like funnel,
-> where we need the input port number for the connected master to enable
-> the port. Similarly for the output port number for master components in
-> the paths. I have a set of patches which address this by taking care of
-> the port number order to find out the hardware port number.
-> 
-
-Ah ok, I now see of_graph_parse_endpoint, sorry for missing that.
-
-> I will dust it up and send it. That would bring up another important
-> question.
-> 
-
-Cool
-
-> How do we deal with the change in the port number scheme ? e.g, should
-> the new kernel support DTBs with old scheme ? 
-
-IIUC, that's needed for backward compatibility as it was used schema.
-Again I may be wrong.
-
-> If so, how do we specify that the DT uses new scheme.
-
-Perhaps, add something to indicate the change in numbering scheme ?
-
--- 
-Regards,
-Sudeep
+Yours,
+Linus Walleij
