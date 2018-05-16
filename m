@@ -1,11 +1,13 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC 0/6] hwmon: Add support for Raspberry Pi voltage sensor
-Date: Wed, 16 May 2018 15:37:01 +0200
-Message-ID: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH RFC 2/6] dt-bindings: hwmon: Add Raspberry Pi voltage sensor
+Date: Wed, 16 May 2018 15:37:03 +0200
+Message-ID: <1526477827-10859-3-git-send-email-stefan.wahren@i2se.com>
+References: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,30 +21,47 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean 
 Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QSBjb21tb24gaXNzdWUgZm9yIHRoZSBSYXNwYmVycnkgUGkgaXMgYW4gaW5hZGVxdWF0ZSBwb3dl
-ciBzdXBwbHkuIApOb3JhbGYgVHLDuG5uZXMgc3RhcnRlZCBhIGRpc2N1c3Npb24gWzFdIGFib3V0
-IHdyaXR0aW5nIHN1Y2ggdW5kZXItdm9sdGFnZQpjb25kaXRpb25zIGludG8gdGhlIGtlcm5lbCBs
-b2cuCgpUaGlzIHNlcmllcyBpcyBhIGRyYWZ0IHRvIHVwc3RyZWFtIHRoZSByZXN1bHRpbmcga2Vy
-bmVsIHBhdGNoIGFuZCBpcyBub3QKaW50ZW5kZWQgZm9yIDQuMTguCgpbMV0gLSBodHRwczovL2dp
-dGh1Yi5jb20vcmFzcGJlcnJ5cGkvbGludXgvaXNzdWVzLzIzNjcKClN0ZWZhbiBXYWhyZW4gKDYp
-OgogIEFSTTogYmNtMjgzNTogQWRkIEdFVF9USFJPVFRMRUQgZmlybXdhcmUgcHJvcGVydHkKICBk
-dC1iaW5kaW5nczogaHdtb246IEFkZCBSYXNwYmVycnkgUGkgdm9sdGFnZSBzZW5zb3IKICBod21v
-bjogQWRkIHN1cHBvcnQgZm9yIFJQaSB2b2x0YWdlIHNlbnNvcgogIEFSTTogYmNtMjgzNV9kZWZj
-b25maWc6IEVuYWJsZSBSUGkgdm9sdGFnZSBzZW5zb3IKICBBUk06IG11bHRpX3Y3X2RlZmNvbmZp
-ZzogRW5hYmxlIFJQaSB2b2x0YWdlIHNlbnNvcgogIGFybTY0OiBkZWZjb25maWc6IEVuYWJsZSBS
-UGkgdm9sdGFnZSBzZW5zb3IKCiAuLi4vYmluZGluZ3MvaHdtb24vcmFzcGJlcnJ5cGktaHdtb24u
-dHh0ICAgICAgICAgICB8ICAxOSArKwogYXJjaC9hcm0vY29uZmlncy9iY20yODM1X2RlZmNvbmZp
-ZyAgICAgICAgICAgICAgICAgfCAgIDIgKy0KIGFyY2gvYXJtL2NvbmZpZ3MvbXVsdGlfdjdfZGVm
-Y29uZmlnICAgICAgICAgICAgICAgIHwgICAxICsKIGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25m
-aWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvaHdtb24vS2NvbmZpZyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICsKIGRyaXZlcnMvaHdtb24vTWFrZWZp
-bGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvaHdtb24vcmFz
-cGJlcnJ5cGktaHdtb24uYyAgICAgICAgICAgICAgICAgIHwgMjA3ICsrKysrKysrKysrKysrKysr
-KysrKwogaW5jbHVkZS9zb2MvYmNtMjgzNS9yYXNwYmVycnlwaS1maXJtd2FyZS5oICAgICAgICAg
-fCAgIDEgKwogOCBmaWxlcyBjaGFuZ2VkLCAyNDEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9o
-d21vbi9yYXNwYmVycnlwaS1od21vbi50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2h3
-bW9uL3Jhc3BiZXJyeXBpLWh3bW9uLmMKCi0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Recent VC4 firmware provides a hardware-independent way to retrieve the
+under-voltage sensor on the following Raspberry Pi boards:
+  - Raspberry Pi B+ (via GPIO on SoC)
+  - Raspberry Pi A+ (via GPIO on SoC)
+  - Raspberry Pi 2 B (via GPIO on SoC)
+  - Raspberry Pi 3 B (via GPIO on port expander)
+  - Raspberry Pi 3 B+ (via PMIC)
+
+TODO:
+  - try to make bcm2835 firmware a bus driver
+
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ .../devicetree/bindings/hwmon/raspberrypi-hwmon.txt   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt
+
+diff --git a/Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt b/Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt
+new file mode 100644
+index 0000000..ec2523f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt
+@@ -0,0 +1,19 @@
++Raspberry Pi voltage sensor
++---------------------------
++
++The VC4 firmware exposes a mailbox interface that allows the ARM core
++to access the board's voltage sensor.
++
++Required properties :
++- compatible : Should be "raspberrypi,bcm2835-hwmon"
++
++Example:
++
++firmware: firmware-rpi {
++	compatible = "raspberrypi,bcm2835-firmware";
++	mboxes = <&mailbox>;
++
++	voltage-sensor {
++		compatible = "raspberrypi,bcm2835-hwmon";
++	};
++};
+-- 
+2.7.4
