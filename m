@@ -1,56 +1,158 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [GIT PULL ++] Immutable branch between MFD and PWM due for the v4.18
- merge window (v2)
-Date: Wed, 16 May 2018 11:16:53 +0100
-Message-ID: <20180516101653.GI5130@dell>
-References: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
- <20180516081910.GF5130@dell>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH v4 4/4] rtc: ds1307: add freq_test sysfs attribute to
+ check tick on m41txx
+Date: Wed, 16 May 2018 12:27:12 +0200
+Message-ID: <72e1b582-d9c5-523b-9a21-5ad2c6fb1d98@micronovasrl.com>
+References: <20180516100526.73549-1-giulio.benetti@micronovasrl.com>
+ <20180516100526.73549-4-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180516081910.GF5130@dell>
+In-Reply-To: <20180516100526.73549-4-giulio.benetti@micronovasrl.com>
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, thierry.reding@gmail.com
-Cc: alexandre.torgue@st.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Subsequent pull-request containing additional bindings patch.
+Oh, sorry, I've forgotten to reword commit log.
+I follow with v5 patchset.
+Sorry again.
 
-Enjoy!
+Giulio
 
-The following changes since commit 60cc43fc888428bb2f18f08997432d426a243338:
-
-  Linux 4.17-rc1 (2018-04-15 18:24:20 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pwm-v4.18-1
-
-for you to fetch changes up to acc8e22f5d41558c90519aadc011b6d2839aedfe:
-
-  dt-bindings: mfd: stm32-timers: Add support for dmas (2018-05-16 11:13:13 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD and PWM due for the v4.18 merge window (v2)
-
-----------------------------------------------------------------
-Fabrice Gasnier (5):
-      mfd: stm32-timers: Add support for DMAs
-      pwm: stm32: Add capture support
-      pwm: stm32: Improve capture by tuning counter prescaler
-      pwm: stm32: Use input prescaler to improve period capture
-      dt-bindings: mfd: stm32-timers: Add support for dmas
-
- Documentation/devicetree/bindings/mfd/stm32-timers.txt |  20 ++++
- drivers/mfd/stm32-timers.c                             | 201 +++++++++++++++++++++++++++++++-
- drivers/pwm/pwm-stm32.c                                | 257 +++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/stm32-timers.h                       |  58 ++++++++++
- 4 files changed, 534 insertions(+), 2 deletions(-)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Il 16/05/2018 12:05, Giulio Benetti ha scritto:
+> On m41txx you can enable open-drain OUT pin to check if offset is ok.
+> Enabling OUT pin with freq_test attribute, OUT pin will tick 512 times
+> faster than 1s tick base.
+> 
+> Enable or Disable FT bit on CONTROL register if freq_test is 1 or 0.
+> 
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+> V3 => V4:
+> * change attribute from freq_test to frequency_test_enable
+> * use regmap_update_bits instead of regmap_write
+> 
+>   drivers/rtc/rtc-ds1307.c | 99 ++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 99 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+> index 2797d01bfa1d..de98ddc39515 100644
+> --- a/drivers/rtc/rtc-ds1307.c
+> +++ b/drivers/rtc/rtc-ds1307.c
+> @@ -1053,6 +1053,99 @@ static int m41txx_rtc_set_offset(struct device *dev, long offset)
+>   				  ctrl_reg);
+>   }
+>   
+> +static ssize_t frequency_test_enable_store(struct device *dev,
+> +					   struct device_attribute *attr,
+> +					   const char *buf, size_t count)
+> +{
+> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
+> +	unsigned long freq_test = 0;
+> +	int retval;
+> +
+> +	retval = kstrtoul(buf, 10, &freq_test);
+> +	if ((retval < 0) || (retval > 1)) {
+> +		dev_err(dev, "Failed to store RTC Frequency Test attribute\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL, M41TXX_BIT_FT,
+> +			   freq_test ? M41TXX_BIT_FT : 0);
+> +
+> +	return retval ? retval : count;
+> +}
+> +
+> +static ssize_t frequency_test_enable_show(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  char *buf)
+> +{
+> +	struct ds1307 *ds1307 = dev_get_drvdata(dev);
+> +	int freq_test_en = 0;
+> +	unsigned int ctrl_reg;
+> +
+> +	regmap_read(ds1307->regmap, M41TXX_REG_CONTROL, &ctrl_reg);
+> +
+> +	if (ctrl_reg & M41TXX_BIT_FT)
+> +		freq_test_en = true;
+> +	else
+> +		freq_test_en = false;
+> +
+> +	return sprintf(buf, "%d\n", freq_test_en);
+> +}
+> +
+> +static DEVICE_ATTR_RW(frequency_test_enable);
+> +
+> +static struct attribute *rtc_freq_test_attrs[] = {
+> +	&dev_attr_frequency_test_enable.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group rtc_freq_test_attr_group = {
+> +	.attrs		= rtc_freq_test_attrs,
+> +};
+> +
+> +static void rtc_calib_remove_sysfs_group(void *_dev)
+> +{
+> +	struct device *dev = _dev;
+> +
+> +	sysfs_remove_group(&dev->kobj, &rtc_freq_test_attr_group);
+> +}
+> +
+> +static int ds1307_add_frequency_test(struct ds1307 *ds1307)
+> +{
+> +	int err = 0;
+> +
+> +	switch (ds1307->type) {
+> +	case m41t0:
+> +	case m41t00:
+> +	case m41t11:
+> +		/* Export sysfs entries */
+> +		err = sysfs_create_group(&(ds1307->dev)->kobj,
+> +					 &rtc_freq_test_attr_group);
+> +		if (err) {
+> +			dev_err(ds1307->dev,
+> +				"Failed to create sysfs group: %d\n",
+> +				err);
+> +			return err;
+> +		}
+> +
+> +		err = devm_add_action_or_reset(ds1307->dev,
+> +					       rtc_calib_remove_sysfs_group,
+> +					       ds1307->dev);
+> +		if (err) {
+> +			dev_err(ds1307->dev,
+> +				"Failed to add sysfs cleanup action: %d\n",
+> +				err);
+> +			sysfs_remove_group(&(ds1307->dev)->kobj,
+> +					   &rtc_freq_test_attr_group);
+> +			return err;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>   /*----------------------------------------------------------------------*/
+>   
+>   static int ds1307_nvram_read(void *priv, unsigned int offset, void *val,
+> @@ -1794,6 +1887,12 @@ static int ds1307_probe(struct i2c_client *client,
+>   	if (err)
+>   		return err;
+>   
+> +	err = ds1307_add_frequency_test(ds1307);
+> +	if (err) {
+> +		rtc_device_unregister(ds1307->rtc);
+> +		return err;
+> +	}
+> +
+>   	if (chip->nvram_size) {
+>   		struct nvmem_config nvmem_cfg = {
+>   			.name = "ds1307_nvram",
+> 
