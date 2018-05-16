@@ -1,36 +1,79 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v2 09/11] docs: Fix some broken references
-Date: Wed, 16 May 2018 10:09:15 +0100
-Message-ID: <20180516090915.GZ20410@imbe.wolfsonmicro.main>
-References: <cover.1525870886.git.mchehab+samsung@kernel.org>
- <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH] arm64: dts: move berlin SoC files from marvell dir to
+ synaptics dir
+Date: Wed, 16 May 2018 17:51:57 +0800
+Message-ID: <20180516175157.3d02dbdc@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-Content-Disposition: inline
-In-Reply-To: <e959f23d6f6905ee606fadfda13e2bb37deed017.1525870886.git.mchehab+samsung@kernel.org>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Eric Paris <eparis@parisplace.org>, linux-clk@vger.kernel.org, James Morris <jmorris@namei.org>, Alan Stern <stern@rowland.harvard.edu>, xen-devel@lists.xenproject.org, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Jacquet <royale@zerezo.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>, linux-crypto@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo@pa>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMDksIDIwMTggYXQgMTA6MTg6NTJBTSAtMDMwMCwgTWF1cm8gQ2FydmFsaG8g
-Q2hlaGFiIHdyb3RlOgo+IEFzIHdlIG1vdmUgc3R1ZmYgYXJvdW5kLCBzb21lIGRvYyByZWZlcmVu
-Y2VzIGFyZSBicm9rZW4uIEZpeCBzb21lIG9mCj4gdGhlbSB2aWEgdGhpcyBzY3JpcHQ6Cj4gCS4v
-c2NyaXB0cy9kb2N1bWVudGF0aW9uLWZpbGUtcmVmLWNoZWNrIC0tZml4LXJzdAo+IAo+IE1hbnVh
-bGx5IGNoZWNrZWQgaWYgdGhlIHByb2R1Y2VkIHJlc3VsdCBpcyB2YWxpZCwgcmVtb3ZpbmcgYSBm
-ZXcKPiBmYWxzZS1wb3NpdGl2ZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF1cm8gQ2FydmFsaG8g
-Q2hlaGFiIDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9pbnB1
-dC90b3VjaHNjcmVlbi93bTk3eHgtY29yZS5jICAgICAgIHwgIDIgKy0KCkFja2VkLWJ5OiBDaGFy
-bGVzIEtlZXBheCA8Y2tlZXBheEBvcGVuc291cmNlLndvbGZzb25taWNyby5jb20+CgpUaGFua3Ms
-CkNoYXJsZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Clhlbi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnCmh0
-dHBzOi8vbGlzdHMueGVucHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby94ZW4tZGV2ZWw=
+Move device tree files as part of transition from Marvell berlin to
+Synaptics berlin.
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ arch/arm64/boot/dts/Makefile                                 | 1 +
+ arch/arm64/boot/dts/marvell/Makefile                         | 4 ----
+ arch/arm64/boot/dts/synaptics/Makefile                       | 4 ++++
+ arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-dmp.dts | 0
+ arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-stb.dts | 0
+ arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct.dtsi    | 0
+ 6 files changed, 5 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/synaptics/Makefile
+ rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-dmp.dts (100%)
+ rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct-stb.dts (100%)
+ rename arch/arm64/boot/dts/{marvell => synaptics}/berlin4ct.dtsi (100%)
+
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 4aa50b9b26bc..3543bc324553 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -22,5 +22,6 @@ subdir-y += renesas
+ subdir-y += rockchip
+ subdir-y += socionext
+ subdir-y += sprd
++subdir-y += synaptics
+ subdir-y += xilinx
+ subdir-y += zte
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index cb454beede55..ea9d49f2a911 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -1,8 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+-# Berlin SoC Family
+-dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
+-dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+-
+ # Mvebu SoC Family
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+diff --git a/arch/arm64/boot/dts/synaptics/Makefile b/arch/arm64/boot/dts/synaptics/Makefile
+new file mode 100644
+index 000000000000..de71ddda6835
+--- /dev/null
++++ b/arch/arm64/boot/dts/synaptics/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++# Berlin SoC Family
++dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-dmp.dtb
++dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dts
+similarity index 100%
+rename from arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+rename to arch/arm64/boot/dts/synaptics/berlin4ct-dmp.dts
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/synaptics/berlin4ct-stb.dts
+similarity index 100%
+rename from arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
+rename to arch/arm64/boot/dts/synaptics/berlin4ct-stb.dts
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/synaptics/berlin4ct.dtsi
+similarity index 100%
+rename from arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+rename to arch/arm64/boot/dts/synaptics/berlin4ct.dtsi
+-- 
+2.17.0
