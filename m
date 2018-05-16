@@ -1,127 +1,93 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH] arm64: dts: juno: fix graph node unit addresses for
- coresight components
-Date: Wed, 16 May 2018 15:30:37 -0600
-Message-ID: <CANLsYkxHbV_h=GUjKwOAwjhupineDuHh7xKWRVo3aNk-uPKD2g@mail.gmail.com>
-References: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
- <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
- <eba4cddf-f668-a5e1-acea-5e6538c230f0@arm.com>
- <CANLsYkyi+m_uQydSWZkf_e1PNSoU-n1rLixuJ0+P9G8hpm68TA@mail.gmail.com>
- <dd4796b7-a078-27db-0fdc-099a834ce8bc@arm.com>
+From: Subhash Jadavani <subhashj@codeaurora.org>
+Subject: Re: [RFC PATCH V2] scsi: ufs: Add specific callback for setting DMA
+ mask
+Date: Wed, 16 May 2018 14:31:06 -0700
+Message-ID: <1f7df8bfbc161243956233eac80f2cee@codeaurora.org>
+References: <CGME20180308111416epcas1p4f9f1dbb36e8567121c6236ac0e9b4e03@epcas1p4.samsung.com>
+ <1520507013-2410-1-git-send-email-alim.akhtar@samsung.com>
+ <CAGOxZ52yZ8Xqype7AVsH43DWOA2byh2kW3SGsfHyHtzqSH6QPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dd4796b7-a078-27db-0fdc-099a834ce8bc@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Suzuki K Poulose <suzuki.poulose@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGOxZ52yZ8Xqype7AVsH43DWOA2byh2kW3SGsfHyHtzqSH6QPw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@gmail.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, vinayak holikatti <vinholikatti@gmail.com>, devicetree@vger.kernel.org, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16 May 2018 at 11:40, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
->
-> On 16/05/18 18:29, Mathieu Poirier wrote:
->> On 16 May 2018 at 05:49, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>>
->>>
->>> On 16/05/18 12:23, Suzuki K Poulose wrote:
->>>> On 05/16/2018 11:34 AM, Sudeep Holla wrote:
->>>
->>> [..]
->>>
->>>>> Hi Suzuki/Mathieu,
->>>>>
->>>>> I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to
->>>>> check if reg field is being used or not and whether this change
->>>>> causes any regression. I don't think so, but I may be wrong, let me
->>>>> know.
->>>>
->>>> Unfortunately, I think this would break the components like funnel,
->>>> where we need the input port number for the connected master to enable
->>>> the port. Similarly for the output port number for master components in
->>>> the paths. I have a set of patches which address this by taking care of
->>>> the port number order to find out the hardware port number.
->>>>
->>>
->>> Ah ok, I now see of_graph_parse_endpoint, sorry for missing that.
->>
->> The problem is not with of_graph_parse_endpoint(), that will work just
->> fine.  In fact you can add whatever number you want there without
->> impact on how devices see each other in the framework.  The problem is
->> that the port numbering doesn't reflect the HW layout anymore and as
->> such  you can't rely on the port value when configuring the HW.
->>
->
-> Exactly, I had a chat with Suzuki. One option is to introduce new hwid
-> field to fix that. If the field is present, it will be used and reg
-> field will be ignored. In that way, you won't break the compatibility.
+On 2018-05-15 21:31, Alim Akhtar wrote:
+> Ping !!!
+> 
+> On Thu, Mar 8, 2018 at 4:33 PM, Alim Akhtar <alim.akhtar@samsung.com> 
+> wrote:
+>> Currently DMA mask for UFS HCI is set by reading CAP register's
+>> [64AS] bit. Some HCI controller like Exynos support 36-bit bus 
+>> address.
+>> This works perfectly fine with DMA mask set as 64 in case there is no
+>> IOMMU attached to HCI.
+>> In case if HCI is behind an IOMMU, setting DMA mask as 64 bit won't
+>> work as HCI has only 36bit addressing and SMMU has created mapping of
+>> 64 bit and as the device truncates the address, its mapping will not
+>> be found by iommu.
+>> To resolve such issues, let the variant driver sets its own DMA mask.
+>> 
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> ---
+>>  drivers/scsi/ufs/ufshcd.c | 3 +++
+>>  drivers/scsi/ufs/ufshcd.h | 2 ++
+>>  2 files changed, 5 insertions(+)
+>> 
+>> I am not sure if there are other ways available to handle such cases.
+>> The IOMMU I am talking about is arm-smmu and it DT binding does not
+>> give much idea about handling such cases.
+>> Have tested this patch with HCI controller with IOMMU attached.
+>> 
+>> Changes Since V1:
+>>         - Fixed build issue as reported by Kbuild test robot.
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index a355d98..9a1374e 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -7781,6 +7781,9 @@ EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
+>>   */
+>>  static int ufshcd_set_dma_mask(struct ufs_hba *hba)
+>>  {
+>> +       if (hba->vops && hba->vops->set_dma_mask)
+>> +               return hba->vops->set_dma_mask(hba);
+>> +
+>>         if (hba->capabilities & MASK_64_ADDRESSING_SUPPORT) {
+>>                 if (!dma_set_mask_and_coherent(hba->dev, 
+>> DMA_BIT_MASK(64)))
+>>                         return 0;
+>> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+>> index 1332e54..89c6dae 100644
+>> --- a/drivers/scsi/ufs/ufshcd.h
+>> +++ b/drivers/scsi/ufs/ufshcd.h
+>> @@ -297,6 +297,7 @@ struct ufs_pwr_mode_info {
+>>   * @resume: called during host controller PM callback
+>>   * @dbg_register_dump: used to dump controller debug information
+>>   * @phy_initialization: used to initialize phys
+>> + * @set_dma_mask: used to set variant specific DMA mask
+>>   */
+>>  struct ufs_hba_variant_ops {
+>>         const char *name;
+>> @@ -325,6 +326,7 @@ struct ufs_hba_variant_ops {
+>>         int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+>>         void    (*dbg_register_dump)(struct ufs_hba *hba);
+>>         int     (*phy_initialization)(struct ufs_hba *);
+>> +       int     (*set_dma_mask)(struct ufs_hba *hba);
+>>  };
+>> 
+>>  /* clock gating state  */
+>> --
+>> 2.7.4
+>> 
 
-I had the same idea a while back and something Grant Likely and I
-talked about at ELC-E 2017 in Prague.  This is the way I would prefer
-to move forward on this.
+Looks reasonable to me, you may try posting non-RFC version.
 
-> Just my thoughts. I am not sure if we need to support old kernel with
-> updated DTs though. That may be difficult.
-
-Not sure that can be done.  The only way to do that would be to
-continue using the reg property, which isn't possible anymore.  As
-such said DT wouldn't be upstream and I'm not sure we need to care
-about those.
-
->
->>>
->>>> I will dust it up and send it. That would bring up another important
->>>> question.
->>>>
->>>
->>> Cool
->>>
->>>> How do we deal with the change in the port number scheme ? e.g, should
->>>> the new kernel support DTBs with old scheme ?
->>>
->>
->> DT files following the old scheme will spew out warnings like we're
->> getting on Juno and are bound to be fixed.
->>
-> True, they can pick up the new changes too along with changes just
-> fixing the warning.
->
->>> IIUC, that's needed for backward compatibility as it was used schema.
->>> Again I may be wrong.
->>>
->>>> If so, how do we specify that the DT uses new scheme.
->>>
->>> Perhaps, add something to indicate the change in numbering scheme ?
->>
->> The current customers should be moved to the new scheme.  That way we
->> don't have to support two different DT scheme (where one will die
->> eventually).
->>
->
-> But the problem is if someone has DT which can't be modified and we move
-> to new scheme only in the kernel, then they will see regression on their
-> platforms. If that's fine, it simplifies things a lot. But I am not so
-> sure of that ...
-
-You have a point.  The code could check for both reg and hwid
-properties.  If both are there hwid is preferred.  Otherwise the reg
-property is used.  That wouldn't be too difficult to implement and
-avoid introducing a regression.  Of course all this is fantasy until
-we actually try things out.
-
-Thanks,
-Mathieu
-
->
-> --
-> Regards,
-> Sudeep
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
