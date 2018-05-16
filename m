@@ -1,104 +1,172 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH v5 4/4] rtc: ds1307: add frequency_test_enable sysfs
- attribute to check tick on m41txx
-Date: Wed, 16 May 2018 23:02:16 +0200
-Message-ID: <836407b4-8c51-5efa-8e29-f487bbcb528d@micronovasrl.com>
-References: <20180516103251.74707-1-giulio.benetti@micronovasrl.com>
- <20180516103251.74707-4-giulio.benetti@micronovasrl.com>
- <CAHp75VdC74jW+Vox2ogDVzG17Z3kD0Vg-1du4SeK30WajT7N-Q@mail.gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v6 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Wed, 16 May 2018 23:02:34 +0200
+Message-ID: <f46e4b54-c463-6ef0-4155-a5dfb9dc4c2b@gmail.com>
+References: <20180515154352.20263-1-dmurphy@ti.com>
+ <20180515154352.20263-2-dmurphy@ti.com>
+ <CAHp75VegjkiiD1qTGpi9rr6cg=72t9kSwDrG=sUpUWFVO58M4A@mail.gmail.com>
+ <08dda10d-f865-9cf2-b9a5-c79cbab5da98@ti.com>
+ <CAHp75Vcz08zrs3bgMFcvYwRrN_A43D=Nvt5cFDQf8m9whB=yhA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdC74jW+Vox2ogDVzG17Z3kD0Vg-1du4SeK30WajT7N-Q@mail.gmail.com>
-Content-Language: it
+In-Reply-To: <CAHp75Vcz08zrs3bgMFcvYwRrN_A43D=Nvt5cFDQf8m9whB=yhA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, alexandre.belloni@bootlin.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Dan Murphy <dmurphy@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Andy and Dan,
 
-Il 16/05/2018 22:22, Andy Shevchenko ha scritto:
-> On Wed, May 16, 2018 at 1:32 PM, Giulio Benetti
-> <giulio.benetti@micronovasrl.com> wrote:
->> On m41txx you can enable open-drain OUT pin to check if offset is ok.
->> Enabling OUT pin with frequency_test_enable attribute, OUT pin will tick
->> 512 times faster than 1s tick base.
+On 05/16/2018 12:24 AM, Andy Shevchenko wrote:
+> On Wed, May 16, 2018 at 1:08 AM, Dan Murphy <dmurphy@ti.com> wrote:
+>> On 05/15/2018 04:56 PM, Andy Shevchenko wrote:
+>>> On Tue, May 15, 2018 at 6:43 PM, Dan Murphy <dmurphy@ti.com> wrote:
+> 
+>>>> +       depends on LEDS_CLASS && I2C && OF
+>>>
+>>> What is OF specific in this driver?
 >>
->> Enable or Disable FT bit on CONTROL register if freq_test is 1 or 0.
+>> as3645a_led_class_setup has a "of" dependency
+> 
+> So what? Is it called from this driver or?
+> 
+> 
+>>>> +static const struct lm3601x_max_timeouts strobe_timeouts[] = {
+>>>> +       { 40000, 0x00 },
+>>>> +       { 80000, 0x01 },
+>>>> +       { 120000, 0x02 },
+>>>> +       { 160000, 0x03 },
+>>>> +       { 200000, 0x04 },
+>>>> +       { 240000, 0x05 },
+>>>> +       { 280000, 0x06 },
+>>>> +       { 320000, 0x07 },
+>>>> +       { 360000, 0x08 },
+>>>> +       { 400000, 0x09 },
+>>>> +       { 600000, 0x0a },
+>>>> +       { 800000, 0x0b },
+>>>> +       { 1000000, 0x0c },
+>>>> +       { 1200000, 0x0d },
+>>>> +       { 1400000, 0x0e },
+>>>> +       { 1600000, 0x0f },
+>>>
+>>> Huh?!
 >>
->> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+>> Please give comments that actually mean something other wise I will opt to ignore them.
 > 
->> +static ssize_t frequency_test_enable_store(struct device *dev,
->> +                                          struct device_attribute *attr,
->> +                                          const char *buf, size_t count)
->> +{
->> +       struct ds1307 *ds1307 = dev_get_drvdata(dev);
->> +       unsigned long freq_test = 0;
->> +       int retval;
->> +
->> +       retval = kstrtoul(buf, 10, &freq_test);
->> +       if ((retval < 0) || (retval > 1)) {
+> I did below.
 > 
-> kstrtobool() then?
-
-Yes, you're right.
-
+>>> strobe_timeout = (x + 1) * 40 * MSECS_IN_SEC;
+>>
+>> Not sure what equation you are trying to point out here.  But if you are trying to apply
+>> a timeout step you cannot do this with this part.  As pointed out in the DT doc the timeout
+>> step is not linear.
 > 
->> +               dev_err(dev, "Failed to store RTC Frequency Test attribute\n");
+> Yeah, I know people are more than often too lazy to think.
 > 
->> +               return -EINVAL;
-> 
-> ...and do not shadow actual error code.
-
-Ok
-
-> 
->> +       }
->> +
->> +       regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL, M41TXX_BIT_FT,
->> +                          freq_test ? M41TXX_BIT_FT : 0);
->> +
-> 
->> +       return retval ? retval : count;
-> 
-> Does the condition make any sense?
-
-You're right, not at all.
-I changed it into:
-"return count;"
-
-> 
->> +}
-> 
->> +static ssize_t frequency_test_enable_show(struct device *dev,
->> +                                         struct device_attribute *attr,
->> +                                         char *buf)
->> +{
-> 
->> +       int freq_test_en = 0;
-> 
->> +       if (ctrl_reg & M41TXX_BIT_FT)
->> +               freq_test_en = true;
->> +       else
->> +               freq_test_en = false;
->> +
->> +       return sprintf(buf, "%d\n", freq_test_en);
-> 
-> So, is it boolean or integer? This code makes it confusing a lot.
-
-It is a boolean, so now I've updated with this:
-
-if (ctrl_reg & M41TXX_BIT_FT)
-	return scnprintf(buf, PAGE_SIZE, "on\n");
-else
-	return scnprintf(buf, PAGE_SIZE, "off\n");
-
-> 
->> +}
+> if (x < 9)
+>   strobe_timeout = (x + 1) * 40 * MSECS_IN_SEC;
+> else
+>   strobe_timeout = (400 + (x - 9) * 200) * MSECS_IN_SEC;
 > 
 
-Thank you very much for review
+I like the idea.
 
-Giulio Benetti
+>>>> +               brightness_val = (brightness/2);
+>>>
+>>> Spaces.
+>>
+>> Not sure what this means checkpatch was clean
+> 
+> Even besides missed whispaces it has redundant parens.
+> 
+> checkpatch is not a silver bullet to get your code clean and nice.
+> 
+>>> This is return led_...();
+>>
+>> That is a preference.  It does not have to be that way.
+
+I missed that. Dan, please follow Andy's advise.
+
+> 
+> What do you mean? We do not appreciate +LOCs for no (or even nagative!) benefit.
+> 
+>>>> +               ret = of_property_read_string(led->led_node, "label", &name);
+>>>
+>>> device_property_...();
+>>
+>> It can be if the maintainer is requesting this.
+> 
+> Jacek, if you need rationale behind this comment it's here: the driver
+> has nothing DT specific and getting rid of OF centric programming
+> allows to reuse the driver on non-DT platforms w/o touching a source
+> code.
+
+It has an added value, so yes, let's use it as a standard approach
+from now on.
+
+>> Is the trend to move to these functions?
+> 
+> See above.
+> 
+>> Most drivers use the "of" calls.
+> 
+> So what?
+> 
+> 
+>>>> +               if (!ret)
+>>>
+>>> if (ret) sounds more natural. And better just to split
+>>>
+>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
+>>>> +                               "%s:%s", led->led_node->name, name);
+>>>> +               else
+>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
+>>>> +                               "%s:torch", led->led_node->name);
+>>>
+>>> const char *tmp;
+>>>
+>>> ret = device_property_read_...(&tmp);
+>>> if (ret)
+>>>   tmp = ...
+>>> sprintf(...);
+
+We're no longer taking devicename section of a LED class device name
+from DT, so it will look differently anyway.
+
+> No comments on this?
+> 
+>>>> +       led = devm_kzalloc(&client->dev,
+>>>> +                           sizeof(struct lm3601x_led), GFP_KERNEL);
+>>>
+>>> sizeof(*led) and one line in the result
+> 
+> And this?
+
+Ack.
+
+> 
+>>>> +       { },
+>>>
+>>> Terminators better w/o comma.
+>>
+>> Looking at other drivers adding comma's on the sentinel is accepted.  See the as3645a driver
+> 
+> So what?
+> 
+> Terminator at compile time even better.
+> 
+>>>> +       {},
+>>>
+>>> Ditto.
+>>
+>> See above
+> 
+> See above.
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
