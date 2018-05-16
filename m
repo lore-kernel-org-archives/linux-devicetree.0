@@ -1,34 +1,51 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 09/17] media: rkisp1: add rockchip isp1 core driver
-Date: Wed, 16 May 2018 17:08:49 +0900
-Message-ID: <CAAFQd5BZm6+s=o1xEu_+E56R-k+ujAFxfytjA+N_SAcU=4A9FA@mail.gmail.com>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <20180308094807.9443-10-jacob-chen@iotwrt.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD and PWM due for the v4.18
+ merge window
+Date: Wed, 16 May 2018 09:19:10 +0100
+Message-ID: <20180516081910.GF5130@dell>
+References: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308094807.9443-10-jacob-chen@iotwrt.com>
+Content-Disposition: inline
+In-Reply-To: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>, Shunqian Zheng <zhengsq@rock-chips.com>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Chen Jacob <jacob2.chen@rock-chips.com>, =?UTF-8?B?6ZmI5Z+O?= <cc@rock-chips.com>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: alexandre.torgue@st.com, thierry.reding@gmail.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacob, Shunqian,
+Enjoy!
 
-On Thu, Mar 8, 2018 at 6:49 PM Jacob Chen <jacob-chen@iotwrt.com> wrote:
-[snip]
-> +static const struct of_device_id rkisp1_plat_of_match[] = {
-> +       {
-> +               .compatible = "rockchip,rk3288-cif-isp",
-> +               .data = &rk3288_isp_clk_data,
-> +       }, {
-> +               .compatible = "rockchip,rk3399-cif-isp",
-> +               .data = &rk3399_isp_clk_data,
-> +       },
-> +       {},
-> +};
+The following changes since commit 60cc43fc888428bb2f18f08997432d426a243338:
 
-We need MODULE_DEVICE_TABLE() here.
+  Linux 4.17-rc1 (2018-04-15 18:24:20 -0700)
 
-Best regards,
-Tomasz
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pwm-v4.18
+
+for you to fetch changes up to ab3a897847834bf3e864fb07b733c444895a24ba:
+
+  pwm: stm32: Use input prescaler to improve period capture (2018-05-16 09:11:19 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD and PWM due for the v4.18 merge window
+
+----------------------------------------------------------------
+Fabrice Gasnier (4):
+      mfd: stm32-timers: Add support for DMAs
+      pwm: stm32: Add capture support
+      pwm: stm32: Improve capture by tuning counter prescaler
+      pwm: stm32: Use input prescaler to improve period capture
+
+ drivers/mfd/stm32-timers.c       | 201 +++++++++++++++++++++++++++++-
+ drivers/pwm/pwm-stm32.c          | 257 +++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/stm32-timers.h |  58 +++++++++
+ 3 files changed, 514 insertions(+), 2 deletions(-)
+ 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
