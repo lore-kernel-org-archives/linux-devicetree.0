@@ -1,74 +1,34 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v5 0/6] Add support for PWM input capture on STM32
-Date: Wed, 16 May 2018 09:06:35 +0100
-Message-ID: <20180516080635.GE5130@dell>
-References: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 09/17] media: rkisp1: add rockchip isp1 core driver
+Date: Wed, 16 May 2018 17:08:49 +0900
+Message-ID: <CAAFQd5BZm6+s=o1xEu_+E56R-k+ujAFxfytjA+N_SAcU=4A9FA@mail.gmail.com>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <20180308094807.9443-10-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20180308094807.9443-10-jacob-chen@iotwrt.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: alexandre.torgue@st.com, thierry.reding@gmail.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Jacob Chen <jacob-chen@iotwrt.com>, Shunqian Zheng <zhengsq@rock-chips.com>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Chen Jacob <jacob2.chen@rock-chips.com>, =?UTF-8?B?6ZmI5Z+O?= <cc@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 May 2018, Fabrice Gasnier wrote:
+Hi Jacob, Shunqian,
 
-> This series adds support for capture to stm32-pwm driver.
-> Capture is based on DMAs.
-> - First two patches add support for requesting DMAs to MFD core
-> - Next three patches add support for capture to stm32-pwm driver
-> - This has been tested on stm32429i-eval board.
-> 
-> ---
-> Changes in v5:
-> - update patch 2 (mfd: stm32-timers: add support for dmas)
->   move stm32_timers_dma struct to header file,
->   fix warning on dma_mapping_error().
-> 
-> Changes in v4:
-> - Lee's comments on patch 2 (mfd: stm32-timers: add support for dmas)
->   Add kerneldoc header, better format comments.
-> 
-> Changes in v3:
-> - Dropped 2 precusor patches applied by Thierry in pwm tree:
->   "pwm: stm32: fix, remove unused struct device"
->   "pwm: stm32: protect common prescaler for all channels"
-> - Note: this series applies on top on pwm tree
-> - Implements Lee's comments on MFD part: rework stm32_timers_dma struct,
->   exported routine prototype now use generic device struct, more
->   various comments (see patch 2 changelog).
-> 
-> Resend v2:
-> - Add collected Acks
-> 
-> Changes in v2:
-> - Abstract DMA handling from child driver: move it to MFD core
-> - Rework pwm capture routines to adopt this change
-> - Comment on optional dma support, beautify DMAs probe
-> 
-> Fabrice Gasnier (6):
->   dt-bindings: mfd: stm32-timers: add support for dmas
->   mfd: stm32-timers: add support for dmas
->   pwm: stm32: add capture support
->   pwm: stm32: improve capture by tuning counter prescaler
->   pwm: stm32: use input prescaler to improve period capture
->   ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+On Thu, Mar 8, 2018 at 6:49 PM Jacob Chen <jacob-chen@iotwrt.com> wrote:
+[snip]
+> +static const struct of_device_id rkisp1_plat_of_match[] = {
+> +       {
+> +               .compatible = "rockchip,rk3288-cif-isp",
+> +               .data = &rk3288_isp_clk_data,
+> +       }, {
+> +               .compatible = "rockchip,rk3399-cif-isp",
+> +               .data = &rk3399_isp_clk_data,
+> +       },
+> +       {},
+> +};
 
-Applied patches 1-5.
+We need MODULE_DEVICE_TABLE() here.
 
->  .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
->  arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
->  drivers/mfd/stm32-timers.c                         | 201 +++++++++++++++-
->  drivers/pwm/pwm-stm32.c                            | 257 +++++++++++++++++++++
->  include/linux/mfd/stm32-timers.h                   |  58 +++++
->  5 files changed, 537 insertions(+), 2 deletions(-)
-> 
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Tomasz
