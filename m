@@ -1,46 +1,78 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: imx6/7: Remove unit-address from anatop
- regulators
-Date: Wed, 16 May 2018 09:35:43 -0300
-Message-ID: <CAOMZO5AxTjyrDeT+HvPN_4Ue8yBG0U4tnwFU5nS9zTPOwFDqAQ@mail.gmail.com>
-References: <1526304714-23821-1-git-send-email-festevam@gmail.com>
- <20180515074042.GP26863@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180515074042.GP26863@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH V6 00/12] ARM: dts: ipq: updates to enable a few peripherals
+Date: Wed, 16 May 2018 18:19:52 +0530
+Message-ID: <1526475004-10341-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+All the patches have been tested on ipq4019 dk01, 04, 07 and ipq8074 hk01
+boards for spi, bam, qup, qpic, spi-nor, serial, pci.
 
-On Tue, May 15, 2018 at 4:40 AM, Shawn Guo <shawnguo@kernel.org> wrote:
+[V6]
+    * Fixed Bjorn's comments, added his acks that he gave, added Varada's acks
+    * Rebased on top of Andy's for-next branch.
 
-> I'm a bit confused.  It looks that the change is just to revert commit
-> 685e1321ba74 ("ARM: dts: imx6: Add unit address and reg for the anatop
-> nodes").  But what about the simple_bus_reg warning the commit was
-> fixing?
+[v5]
+    * Fixed a minor comment that i missed earlier.
+    * https://www.spinics.net/lists/arm-kernel/msg643071.html
 
-Yes, I don't get the original simple_bus_reg warning anymore.
+[v4]
+    * Fixed more comments.
+    * Dropped reserved-memory nodes from board files as
+      that might break existing users whose u-boot do not
+      specify the fdt_high accordingly.
+    * Added chosen serial node for all boards to have
+      the default serial console specified from DT.
 
-I think we don't need the unit address and reg properties to the
-anatop regulators.
+[v3]
+    * Fixed minor comments from v2,
+      https://www.spinics.net/lists/arm-kernel/msg641480.html
 
-There is already a 'anatop-reg-offset' property that indicates the
-anatop register offset.
+    * Added Abhishek's review tags
 
-Rob, is this patch the correct solution to fix the duplicate
-unit-address dtc warnings?
+[v2]
+    * Addressed all comments from Abhishek
+    * Removed dk01-c2 and dk04-c5 spinand based boards
+      as support for spinand is not complete
+    * Based all patches on top of Andy's for-next branch
 
-Thanks
+[V1]
+    * https://www.spinics.net/lists/arm-kernel/msg631318.html
+
+Sricharan R (12):
+  ARM: dts: ipq4019: Add a default chosen node
+  ARM: dts: ipq4019: Add a few peripheral nodes
+  ARM: dts: ipq4019: Change the max opp frequency
+  ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
+  ARM: dts: ipq4019: Add ipq4019-ap.dk04.1-c1 board file
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk04.1-c3 board file
+  ARM: dts: ipq4019: Add ipq4019-ap.dk07.1 common data
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c1 board file
+  ARM: dts: ipq4019: Add qcom-ipq4019-ap.dk07.1-c2 board file
+  ARM: dts: ipq8074: Add peripheral nodes
+  ARM: dts: ipq8074: Add pcie nodes
+  ARM: dts: ipq8074: Enable few peripherals for hk01 board
+
+ arch/arm/boot/dts/Makefile                      |   4 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi   |  10 +-
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts |  19 ++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts |   9 +
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi   | 111 +++++++++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts |  64 +++++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts |  25 ++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi   |  75 ++++++
+ arch/arm/boot/dts/qcom-ipq4019.dtsi             | 162 ++++++++++--
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts       |  62 ++++-
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi           | 313 +++++++++++++++++++++++-
+ 11 files changed, 827 insertions(+), 27 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c1.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1-c3.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c1.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1-c2.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk07.1.dtsi
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
