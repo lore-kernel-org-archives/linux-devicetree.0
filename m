@@ -1,51 +1,67 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH net-next v2 0/2] of: mdio: Fall back to mdiobus_register()
- with NULL device_node
-Date: Wed, 16 May 2018 10:54:12 +0200
-Message-ID: <CAMuHMdXfOOgADe1my9Y3s3b9_OsXPjbqq1PPFR9izZWhtPuaFg@mail.gmail.com>
-References: <20180515235619.27773-1-f.fainelli@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7740: Add CEU0
+Date: Wed, 16 May 2018 10:54:14 +0200
+Message-ID: <20180516085409.5u4hnes2dsfwwf5u@verge.net.au>
+References: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdWSasm9PfurphB5wrgrhkO8v7YBpSZNnnC+mS_Vs4AJ5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180515235619.27773-1-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>, Russell King <rmk+kernel@armlin>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWSasm9PfurphB5wrgrhkO8v7YBpSZNnnC+mS_Vs4AJ5Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On Wed, May 16, 2018 at 09:40:09AM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+> 
+> On Thu, Apr 26, 2018 at 8:24 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > Describe CEU0 peripheral for Renesas R-Mobile A1 R8A7740 Soc.
+> >
+> > Reported-by: Geert Uytterhoeven <geert@glider.be>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> 
+> Thanks for your patch!
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Minor question below.
+> 
+> > --- a/arch/arm/boot/dts/r8a7740.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> > @@ -67,6 +67,16 @@
+> >                 power-domains = <&pd_d4>;
+> >         };
+> >
+> > +       ceu0: ceu@fe910000 {
+> > +               reg = <0xfe910000 0x3000>;
+> > +               compatible = "renesas,r8a7740-ceu";
+> > +               interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
+> > +               clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
+> > +               clock-names = "ceu20";
+> 
+> Why the "clock-names" property? It's not mentioned in the DT bindings, and
+> may cause issues if the bindings are ever amended.
 
-Thanks for your series!
-I like the effect on simplifying drivers.
+I have dropped that property for now.
 
-On Wed, May 16, 2018 at 1:56 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> This patch series updates of_mdiobus_register() such that when the device_node
-> argument is NULL, it calls mdiobus_register() directly. This is consistent with
-> the behavior of of_mdiobus_register() when CONFIG_OF=n.
-
-IMHO the CONFIG_OF=n behavior of of_mdiobus_register() (which I wasn't
-aware of) is inconsistent with the behavior of other of_*() functions,
-which are just empty stubs.
-
-So I'm wondering if you should do it the other way around, and let
-mdiobus_register() call of_mdiobus_register() if dev->of_node exists?
-
-This does mean mdiobus_register() should gain a struct device * parameter,
-and thus changes to many more drivers are needed.
-
-> I only converted the most obvious drivers, there are others that have a much
-> less obvious behavior and specifically attempt to deal with CONFIG_ACPI.
-
-I haven't looked at the ACPI handling, but perhaps this can be moved
-inside mdiobus_register() as well?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> > +               power-domains = <&pd_a4r>;
+> > +               status = "disabled";
+> > +       };
+> > +
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
