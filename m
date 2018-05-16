@@ -1,45 +1,44 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v5 0/7] pcal6524 extensions and fixes for pca953x driver
-Date: Wed, 16 May 2018 15:32:19 +0200
-Message-ID: <6AA622D1-DA8C-4C58-8EAE-555989E69149@goldelico.com>
-References: <cover.1524933096.git.hns@goldelico.com> <CACRpkdbk0rNZ3cUN_noqVtNYgDrydGtCCn2fk7yqVRPoroYqpA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCHv3] arm64: dts: stratix10: Add QSPI support for Stratix10
+Date: Wed, 16 May 2018 08:36:32 -0500
+Message-ID: <d6175958-41a4-8d5c-2cba-ff6bc9c74a4e@kernel.org>
+References: <1526423187-27521-1-git-send-email-thor.thayer@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbk0rNZ3cUN_noqVtNYgDrydGtCCn2fk7yqVRPoroYqpA@mail.gmail.com>
+In-Reply-To: <1526423187-27521-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: thor.thayer@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-> Am 16.05.2018 um 13:53 schrieb Linus Walleij =
-<linus.walleij@linaro.org>:
->=20
-> On Sat, Apr 28, 2018 at 6:31 PM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->=20
->> V5:
->> * fix wrong split up between patches 1/7and 2/7.
->=20
-> I applied patches 1, 2, 3 so we get some movement on the patch
-> set and not too much for you to rebase.
 
-thanks!
+On 05/15/2018 05:26 PM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Add qspi_clock
+>    The qspi_clk frequency is updated by U-Boot before starting Linux.
+> Add QSPI interface node.
+> Add QSPI flash memory child node.
+>    Setup the QSPI memory in 2 partitions.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+> v2  s/_/-/ in qspi-clk
+>     rename flash node.
+>     use partition child node notation
+> v3  remove unused bus-num node
+>     use device id from table (n25q00a)
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 21 +++++++++++++
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 35 ++++++++++++++++++++++
+>  2 files changed, 56 insertions(+)
+> 
 
-Well, I already had edited the commit messages for resending...
+Applied!
 
->=20
-> It's fine to just resend the rest next time.
-
-There is only one point open before resending:
-
-what is the preferred style to be used for PCAL_GPIO_MASK?
-
-* GENMASK(4, 0)
-* or 0x1f
-
-BR,
-Nikolaus
+Thanks,
+Dinh
