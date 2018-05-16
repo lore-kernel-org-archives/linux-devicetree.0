@@ -1,85 +1,66 @@
-From: Alim Akhtar <alim.akhtar@gmail.com>
-Subject: Re: [RFC PATCH V2] scsi: ufs: Add specific callback for setting DMA mask
-Date: Wed, 16 May 2018 10:01:01 +0530
-Message-ID: <CAGOxZ52yZ8Xqype7AVsH43DWOA2byh2kW3SGsfHyHtzqSH6QPw@mail.gmail.com>
-References: <CGME20180308111416epcas1p4f9f1dbb36e8567121c6236ac0e9b4e03@epcas1p4.samsung.com>
- <1520507013-2410-1-git-send-email-alim.akhtar@samsung.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx7d: use operating-points-v2 for cpu
+Date: Wed, 16 May 2018 12:48:17 +0800
+Message-ID: <1526446097-7111-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520507013-2410-1-git-send-email-alim.akhtar@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, vinayak holikatti <vinholikatti@gmail.com>, subhashj@codeaurora.org, devicetree@vger.kernel.org, Shaik Ameer Basha <shaik.ameer@samsung.com>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ping !!!
+This patch uses "operating-points-v2" instead of
+"operating-points" to be more fit with cpufreq-dt
+driver.
 
-On Thu, Mar 8, 2018 at 4:33 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
-> Currently DMA mask for UFS HCI is set by reading CAP register's
-> [64AS] bit. Some HCI controller like Exynos support 36-bit bus address.
-> This works perfectly fine with DMA mask set as 64 in case there is no
-> IOMMU attached to HCI.
-> In case if HCI is behind an IOMMU, setting DMA mask as 64 bit won't
-> work as HCI has only 36bit addressing and SMMU has created mapping of
-> 64 bit and as the device truncates the address, its mapping will not
-> be found by iommu.
-> To resolve such issues, let the variant driver sets its own DMA mask.
->
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 3 +++
->  drivers/scsi/ufs/ufshcd.h | 2 ++
->  2 files changed, 5 insertions(+)
->
-> I am not sure if there are other ways available to handle such cases.
-> The IOMMU I am talking about is arm-smmu and it DT binding does not
-> give much idea about handling such cases.
-> Have tested this patch with HCI controller with IOMMU attached.
->
-> Changes Since V1:
->         - Fixed build issue as reported by Kbuild test robot.
->
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index a355d98..9a1374e 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -7781,6 +7781,9 @@ EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
->   */
->  static int ufshcd_set_dma_mask(struct ufs_hba *hba)
->  {
-> +       if (hba->vops && hba->vops->set_dma_mask)
-> +               return hba->vops->set_dma_mask(hba);
-> +
->         if (hba->capabilities & MASK_64_ADDRESSING_SUPPORT) {
->                 if (!dma_set_mask_and_coherent(hba->dev, DMA_BIT_MASK(64)))
->                         return 0;
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index 1332e54..89c6dae 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -297,6 +297,7 @@ struct ufs_pwr_mode_info {
->   * @resume: called during host controller PM callback
->   * @dbg_register_dump: used to dump controller debug information
->   * @phy_initialization: used to initialize phys
-> + * @set_dma_mask: used to set variant specific DMA mask
->   */
->  struct ufs_hba_variant_ops {
->         const char *name;
-> @@ -325,6 +326,7 @@ struct ufs_hba_variant_ops {
->         int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
->         void    (*dbg_register_dump)(struct ufs_hba *hba);
->         int     (*phy_initialization)(struct ufs_hba *);
-> +       int     (*set_dma_mask)(struct ufs_hba *hba);
->  };
->
->  /* clock gating state  */
-> --
-> 2.7.4
->
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx7d.dtsi | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-
-
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 4c9877e..28980c8 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -9,12 +9,8 @@
+ / {
+ 	cpus {
+ 		cpu0: cpu@0 {
+-			operating-points = <
+-				/* KHz	uV */
+-				996000	1075000
+-				792000	975000
+-			>;
+ 			clock-frequency = <996000000>;
++			operating-points-v2 = <&cpu0_opp_table>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -22,6 +18,24 @@
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			clock-frequency = <996000000>;
++			operating-points-v2 = <&cpu0_opp_table>;
++		};
++	};
++
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-792000000 {
++			opp-hz = /bits/ 64 <792000000>;
++			opp-microvolt = <975000>;
++			clock-latency-ns = <150000>;
++		};
++		opp-996000000 {
++			opp-hz = /bits/ 64 <996000000>;
++			opp-microvolt = <1075000>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
+ 		};
+ 	};
+ 
 -- 
-Regards,
-Alim
+2.7.4
