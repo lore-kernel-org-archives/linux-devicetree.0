@@ -1,94 +1,28 @@
-Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V4 8/8] arm64: dts: mt6797: add pwrap support for mt6797
-Date: Wed, 2 May 2018 17:21:12 +0800
-Message-ID: <20180502092112.3991-9-argus.lin@mediatek.com>
-In-Reply-To: <20180502092112.3991-1-argus.lin@mediatek.com>
-References: <20180502092112.3991-1-argus.lin@mediatek.com>
+Return-Path: <SRS0=f8Ap=ID=verge.net.au=horms@kernel.org>
+Date: Wed, 16 May 2018 10:58:03 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] soc: renesas: r8a77990-sysc: Add workaround for
+ 3DG-{A,B}
+Message-ID: <20180516085802.5f334ljcpmtsj44u@verge.net.au>
+References: <1526386059-6173-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1526386059-6173-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUedCHrvJd79P49Sa+=f905k=hAE=ZNYRhbyPEdaw8rjQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_005_1851075112.2049781665"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUedCHrvJd79P49Sa+=f905k=hAE=ZNYRhbyPEdaw8rjQ@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_005_1851075112.2049781665
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_006_366195353.1691438948"
+On Wed, May 16, 2018 at 09:47:04AM +0200, Geert Uytterhoeven wrote:
+> On Tue, May 15, 2018 at 2:07 PM, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > This patch adds workaround for 3DG-{A,B} of R-Car E3 ES1.0 because
+> > the SoC has a restriction about the order.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
---__=_Part_Boundary_006_366195353.1691438948
-Content-Type: text/html
-Content-Transfer-Encoding: base64
-
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-bXQ2Nzk3IGlzIGEgaGlnaGx5IGludGVncmF0ZWQgU29DcywgYW5kIGl0IHVzZXMNCm10NjM1MSBh
-cyBQb3dlciBNYW5hZ2VtZW50IElDLg0KV2UgbmVlZCB0byBhZGQgcHdyYXAgZGV2aWNlIHRvIGNv
-bW11bmljYXRlIHdpdGgNCm10NjM1MSBieSBTUEkuDQpUaGUgYmFzZSBhZGRyZXNzIG9mIHB3cmFw
-IGlzIDB4MTAwMGQwMDAsIGFuZCBJUlENCm51bWJlciBpcyAxNzguIEl0IGFsc28gdXNpbmcgZml4
-ZWQgMjZNaHogY2xvY2sNCmFzIFNQSSBDTEsuDQoNClNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiAm
-bHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-bWVkaWF0ZWsvbXQ2Nzk3LmR0c2kgfCAxNCArKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCAxNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21l
-ZGlhdGVrL210Njc5Ny5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcu
-ZHRzaQ0KaW5kZXggNGJlYWE3MTEwN2Q3Li40ODU1NDZlZmM5YmYgMTAwNjQ0DQotLS0gYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQpAQCAtMTYxLDYgKzE2MSwyMCBAQA0KIAkJICAg
-ICAgJmx0OzAgMHgxMDIyMDY5MCAwIDB4MTAmZ3Q7Ow0KIAl9Ow0KIA0KKwlwd3JhcDogcHdyYXBA
-MTAwMGQwMDAgew0KKwkJY29tcGF0aWJsZSA9ICZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3JhcCZx
-dW90OzsNCisJCXJlZyA9ICZsdDswIDB4MTAwMGQwMDAgMCAweDEwMDAmZ3Q7Ow0KKwkJcmVnLW5h
-bWVzID0gJnF1b3Q7cHdyYXAmcXVvdDs7DQorCQlpbnRlcnJ1cHRzID0gJmx0O0dJQ19TUEkgMTc4
-IElSUV9UWVBFX0xFVkVMX0hJR0gmZ3Q7Ow0KKwkJY2xvY2tzID0gJmx0OyZhbXA7Y2xrMjZtJmd0
-OywgJmx0OyZhbXA7Y2xrMjZtJmd0OzsNCisJCWNsb2NrLW5hbWVzID0gJnF1b3Q7c3BpJnF1b3Q7
-LCAmcXVvdDt3cmFwJnF1b3Q7Ow0KKw0KKwkJcG1pYzogbXQ2MzUxIHsNCisJCQljb21wYXRpYmxl
-ID0gJnF1b3Q7bWVkaWF0ZWssbXQ2MzUxJnF1b3Q7Ow0KKwkJCWludGVycnVwdC1jb250cm9sbGVy
-Ow0KKwkJfTsNCisJfTsNCisNCiAJdWFydDA6IHNlcmlhbEAxMTAwMjAwMCB7DQogCQljb21wYXRp
-YmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ2Nzk3LXVhcnQmcXVvdDssDQogCQkJICAgICAmcXVvdDtt
-ZWRpYXRlayxtdDY1NzctdWFydCZxdW90OzsNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBl
-OnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkg
-Tm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGlu
-IHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJl
-IGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhl
-bXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVk
-IHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFu
-eSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5n
-IG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykg
-YnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5
-IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0
-aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1h
-aWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSBy
-ZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0
-aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwg
-YW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90
-aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19LS0+
-
---__=_Part_Boundary_006_366195353.1691438948
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQptdDY3OTcgaXMgYSBo
-aWdobHkgaW50ZWdyYXRlZCBTb0NzLCBhbmQgaXQgdXNlcw0KbXQ2MzUxIGFzIFBvd2VyIE1hbmFn
-ZW1lbnQgSUMuDQpXZSBuZWVkIHRvIGFkZCBwd3JhcCBkZXZpY2UgdG8gY29tbXVuaWNhdGUgd2l0
-aA0KbXQ2MzUxIGJ5IFNQSS4NClRoZSBiYXNlIGFkZHJlc3Mgb2YgcHdyYXAgaXMgMHgxMDAwZDAw
-MCwgYW5kIElSUQ0KbnVtYmVyIGlzIDE3OC4gSXQgYWxzbyB1c2luZyBmaXhlZCAyNk1oeiBjbG9j
-aw0KYXMgU1BJIENMSy4NCg0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVk
-aWF0ZWsuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRz
-aSB8IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykN
-Cg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQppbmRleCA0YmVhYTcx
-MTA3ZDcuLjQ4NTU0NmVmYzliZiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
-aWF0ZWsvbXQ2Nzk3LmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2
-Nzk3LmR0c2kNCkBAIC0xNjEsNiArMTYxLDIwIEBADQogCQkgICAgICA8MCAweDEwMjIwNjkwIDAg
-MHgxMD47DQogCX07DQogDQorCXB3cmFwOiBwd3JhcEAxMDAwZDAwMCB7DQorCQljb21wYXRpYmxl
-ID0gIm1lZGlhdGVrLG10Njc5Ny1wd3JhcCI7DQorCQlyZWcgPSA8MCAweDEwMDBkMDAwIDAgMHgx
-MDAwPjsNCisJCXJlZy1uYW1lcyA9ICJwd3JhcCI7DQorCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
-MTc4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KKwkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmNsazI2
-bT47DQorCQljbG9jay1uYW1lcyA9ICJzcGkiLCAid3JhcCI7DQorDQorCQlwbWljOiBtdDYzNTEg
-ew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzUxIjsNCisJCQlpbnRlcnJ1cHQtY29u
-dHJvbGxlcjsNCisJCX07DQorCX07DQorDQogCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KIAkJ
-Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3OTctdWFydCIsDQogCQkJICAgICAibWVkaWF0ZWss
-bXQ2NTc3LXVhcnQiOw0KLS0gDQoyLjEyLjUNCg==
-
---__=_Part_Boundary_006_366195353.1691438948--
-
---__=_Part_Boundary_005_1851075112.2049781665--
+Thanks, accepted.
