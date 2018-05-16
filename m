@@ -1,85 +1,44 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 3/3] arm64: dts: renesas: draak: Describe HDMI input
-Date: Wed, 16 May 2018 15:42:09 +0200
-Message-ID: <1526478129-16465-4-git-send-email-jacopo+renesas@jmondi.org>
-References: <1526478129-16465-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526478129-16465-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC 5/6] ARM: multi_v7_defconfig: Enable RPi voltage sensor
+Date: Wed, 16 May 2018 15:37:06 +0200
+Message-ID: <1526477827-10859-6-git-send-email-stefan.wahren@i2se.com>
+References: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Eric Anholt <eric@anholt.net>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Describe HDMI input connector and ADV7612 HDMI decoder installed on
-R-Car Gen3 Draak board.
+The patch enables the hwmon driver for the Raspberry Pi.
 
-The video signal routing to the HDMI decoder to the video input interface
-VIN4 is multiplexed with CVBS input path, and enabled/disabled through
-on-board switches SW-49, SW-50, SW-51 and SW-52.
-
-As the default board switches configuration connects CVBS input to VIN4,
-leave the HDMI decoder unconnected in DTS.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 38 ++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 9aba28f..ea99dc9 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -59,6 +59,17 @@
- 		};
- 	};
- 
-+	hdmi-in {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&adv7612_in>;
-+			};
-+		};
-+	};
-+
- 	memory@48000000 {
- 		device_type = "memory";
- 		/* first 128MB is reserved for secure area. */
-@@ -170,6 +181,33 @@
- 			};
- 		};
- 	};
-+
-+	hdmi-decoder@4c {
-+		compatible = "adi,adv7612";
-+		reg = <0x4c>;
-+		default-input = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7612_in: endpoint {
-+					remote-endpoint = <&hdmi_con_in>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				adv7612_out: endpoint {
-+					pclk-sample = <0>;
-+					hsync-active = <0>;
-+					vsync-active = <0>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &i2c1 {
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 720461b..5c9dc00 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -477,6 +477,7 @@ CONFIG_SENSORS_LM90=y
+ CONFIG_SENSORS_LM95245=y
+ CONFIG_SENSORS_NTC_THERMISTOR=m
+ CONFIG_SENSORS_PWM_FAN=m
++CONFIG_SENSORS_RASPBERRYPI_HWMON=m
+ CONFIG_SENSORS_INA2XX=m
+ CONFIG_CPU_THERMAL=y
+ CONFIG_BCM2835_THERMAL=m
 -- 
 2.7.4
