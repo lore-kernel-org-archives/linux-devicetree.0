@@ -1,121 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH net-next v2 2/2] drivers: net: Remove device_node checks
- with of_mdiobus_register()
-Date: Wed, 16 May 2018 23:20:03 +0300
-Message-ID: <72171a45-3c50-6550-9798-d13df72628ea@cogentembedded.com>
-References: <20180515235619.27773-1-f.fainelli@gmail.com>
- <20180515235619.27773-3-f.fainelli@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 4/4] rtc: ds1307: add frequency_test_enable sysfs
+ attribute to check tick on m41txx
+Date: Wed, 16 May 2018 23:22:24 +0300
+Message-ID: <CAHp75VdC74jW+Vox2ogDVzG17Z3kD0Vg-1du4SeK30WajT7N-Q@mail.gmail.com>
+References: <20180516103251.74707-1-giulio.benetti@micronovasrl.com> <20180516103251.74707-4-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180515235619.27773-3-f.fainelli@gmail.com>
-Content-Language: en-MW
+In-Reply-To: <20180516103251.74707-4-giulio.benetti@micronovasrl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>, Russell King <rmk+kernel@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Petazzoni <tho>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, alexandre.belloni@bootlin.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Wed, May 16, 2018 at 1:32 PM, Giulio Benetti
+<giulio.benetti@micronovasrl.com> wrote:
+> On m41txx you can enable open-drain OUT pin to check if offset is ok.
+> Enabling OUT pin with frequency_test_enable attribute, OUT pin will tick
+> 512 times faster than 1s tick base.
+>
+> Enable or Disable FT bit on CONTROL register if freq_test is 1 or 0.
+>
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 
-On 05/16/2018 02:56 AM, Florian Fainelli wrote:
+> +static ssize_t frequency_test_enable_store(struct device *dev,
+> +                                          struct device_attribute *attr,
+> +                                          const char *buf, size_t count)
+> +{
+> +       struct ds1307 *ds1307 = dev_get_drvdata(dev);
+> +       unsigned long freq_test = 0;
+> +       int retval;
+> +
+> +       retval = kstrtoul(buf, 10, &freq_test);
+> +       if ((retval < 0) || (retval > 1)) {
 
-> A number of drivers have the following pattern:
-> 
-> if (np)
-> 	of_mdiobus_register()
-> else
-> 	mdiobus_register()
-> 
-> which the implementation of of_mdiobus_register() now takes care of.
-> Remove that pattern in drivers that strictly adhere to it.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-[...]
+kstrtobool() then?
 
-> diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-> index ac621f44237a..02e8982519ce 100644
-> --- a/drivers/net/dsa/bcm_sf2.c
-> +++ b/drivers/net/dsa/bcm_sf2.c
-> @@ -450,12 +450,8 @@ static int bcm_sf2_mdio_register(struct dsa_switch *ds)
->  	priv->slave_mii_bus->parent = ds->dev->parent;
->  	priv->slave_mii_bus->phy_mask = ~priv->indir_phy_mask;
->  
-> -	if (dn)
-> -		err = of_mdiobus_register(priv->slave_mii_bus, dn);
-> -	else
-> -		err = mdiobus_register(priv->slave_mii_bus);
-> -
-> -	if (err)
-> +	err = of_mdiobus_register(priv->slave_mii_bus, dn);
-> +	if (err && dn)
+> +               dev_err(dev, "Failed to store RTC Frequency Test attribute\n");
 
-   of_node_put() checks for NULL.
+> +               return -EINVAL;
 
->  		of_node_put(dn);
->  
->  	return err;
-[...]
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> index d4604bc8eb5b..f3e43db0d6cb 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -2052,13 +2052,9 @@ static int fec_enet_mii_init(struct platform_device *pdev)
->  	fep->mii_bus->parent = &pdev->dev;
->  
->  	node = of_get_child_by_name(pdev->dev.of_node, "mdio");
-> -	if (node) {
-> -		err = of_mdiobus_register(fep->mii_bus, node);
-> +	err = of_mdiobus_register(fep->mii_bus, node);
-> +	if (node)
->  		of_node_put(node);
+...and do not shadow actual error code.
 
-   Same comment here.
+> +       }
+> +
+> +       regmap_update_bits(ds1307->regmap, M41TXX_REG_CONTROL, M41TXX_BIT_FT,
+> +                          freq_test ? M41TXX_BIT_FT : 0);
+> +
 
-[...]
-> diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-> index 5970d9e5ddf1..8dd41e08a6c6 100644
-> --- a/drivers/net/ethernet/renesas/sh_eth.c
-> +++ b/drivers/net/ethernet/renesas/sh_eth.c
-> @@ -3025,15 +3025,10 @@ static int sh_mdio_init(struct sh_eth_private *mdp,
->  		 pdev->name, pdev->id);
->  
->  	/* register MDIO bus */
-> -	if (dev->of_node) {
-> -		ret = of_mdiobus_register(mdp->mii_bus, dev->of_node);
-> -	} else {
-> -		if (pd->phy_irq > 0)
-> -			mdp->mii_bus->irq[pd->phy] = pd->phy_irq;
-> -
-> -		ret = mdiobus_register(mdp->mii_bus);
-> -	}
-> +	if (pd->phy_irq > 0)
-> +		mdp->mii_bus->irq[pd->phy] = pd->phy_irq;
->  
-> +	ret = of_mdiobus_register(mdp->mii_bus, dev->of_node);
->  	if (ret)
->  		goto out_free_bus;
->  
+> +       return retval ? retval : count;
 
-   This part is:
+Does the condition make any sense?
 
-Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> +}
 
-[...]
-> diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-> index 91761436709a..8dff87ec6d99 100644
-> --- a/drivers/net/usb/lan78xx.c
-> +++ b/drivers/net/usb/lan78xx.c
-> @@ -1843,12 +1843,9 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
->  	}
->  
->  	node = of_get_child_by_name(dev->udev->dev.of_node, "mdio");
-> -	if (node) {
-> -		ret = of_mdiobus_register(dev->mdiobus, node);
-> +	ret = of_mdiobus_register(dev->mdiobus, node);
-> +	if (node)
->  		of_node_put(node);
+> +static ssize_t frequency_test_enable_show(struct device *dev,
+> +                                         struct device_attribute *attr,
+> +                                         char *buf)
+> +{
 
-   of_node_put() checks for NULL, again...
+> +       int freq_test_en = 0;
 
-MBR, Sergei
+> +       if (ctrl_reg & M41TXX_BIT_FT)
+> +               freq_test_en = true;
+> +       else
+> +               freq_test_en = false;
+> +
+> +       return sprintf(buf, "%d\n", freq_test_en);
+
+So, is it boolean or integer? This code makes it confusing a lot.
+
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
