@@ -1,62 +1,59 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [RESEND PATCH v5 0/6] Add support for PWM input capture on STM32
-Date: Wed, 16 May 2018 09:35:55 +0200
-Message-ID: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7740: Add CEU0
+Date: Wed, 16 May 2018 09:40:09 +0200
+Message-ID: <CAMuHMdWSasm9PfurphB5wrgrhkO8v7YBpSZNnnC+mS_Vs4AJ5Q@mail.gmail.com>
+References: <1524767083-19862-1-git-send-email-jacopo+renesas@jmondi.org> <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1524767083-19862-3-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, alexandre.torgue@st.com
-Cc: thierry.reding@gmail.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for capture to stm32-pwm driver.
-Capture is based on DMAs.
-- First two patches add support for requesting DMAs to MFD core
-- Next three patches add support for capture to stm32-pwm driver
-- This has been tested on stm32429i-eval board.
+Hi Jacopo,
 
----
-Changes in v5:
-- update patch 2 (mfd: stm32-timers: add support for dmas)
-  move stm32_timers_dma struct to header file,
-  fix warning on dma_mapping_error().
+On Thu, Apr 26, 2018 at 8:24 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Describe CEU0 peripheral for Renesas R-Mobile A1 R8A7740 Soc.
+>
+> Reported-by: Geert Uytterhoeven <geert@glider.be>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Changes in v4:
-- Lee's comments on patch 2 (mfd: stm32-timers: add support for dmas)
-  Add kerneldoc header, better format comments.
+Thanks for your patch!
 
-Changes in v3:
-- Dropped 2 precusor patches applied by Thierry in pwm tree:
-  "pwm: stm32: fix, remove unused struct device"
-  "pwm: stm32: protect common prescaler for all channels"
-- Note: this series applies on top on pwm tree
-- Implements Lee's comments on MFD part: rework stm32_timers_dma struct,
-  exported routine prototype now use generic device struct, more
-  various comments (see patch 2 changelog).
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Resend v2:
-- Add collected Acks
+Minor question below.
 
-Changes in v2:
-- Abstract DMA handling from child driver: move it to MFD core
-- Rework pwm capture routines to adopt this change
-- Comment on optional dma support, beautify DMAs probe
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -67,6 +67,16 @@
+>                 power-domains = <&pd_d4>;
+>         };
+>
+> +       ceu0: ceu@fe910000 {
+> +               reg = <0xfe910000 0x3000>;
+> +               compatible = "renesas,r8a7740-ceu";
+> +               interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&mstp1_clks R8A7740_CLK_CEU20>;
+> +               clock-names = "ceu20";
 
-Fabrice Gasnier (6):
-  dt-bindings: mfd: stm32-timers: add support for dmas
-  mfd: stm32-timers: add support for dmas
-  pwm: stm32: add capture support
-  pwm: stm32: improve capture by tuning counter prescaler
-  pwm: stm32: use input prescaler to improve period capture
-  ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+Why the "clock-names" property? It's not mentioned in the DT bindings, and
+may cause issues if the bindings are ever amended.
 
- .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
- arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
- drivers/mfd/stm32-timers.c                         | 201 +++++++++++++++-
- drivers/pwm/pwm-stm32.c                            | 257 +++++++++++++++++++++
- include/linux/mfd/stm32-timers.h                   |  58 +++++
- 5 files changed, 537 insertions(+), 2 deletions(-)
+> +               power-domains = <&pd_a4r>;
+> +               status = "disabled";
+> +       };
+> +
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-1.9.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
