@@ -1,102 +1,51 @@
-From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 5/6 v3] bus: fsl-mc: supoprt dma configure for devices on
-	fsl-mc bus
-Date: Wed, 16 May 2018 08:48:57 +0000
-Message-ID: <HE1PR0401MB24253CF729DDCF3F883AC256E6920@HE1PR0401MB2425.eurprd04.prod.outlook.com>
-References: <1524824826-29473-1-git-send-email-nipun.gupta@nxp.com>
-	<1524824826-29473-6-git-send-email-nipun.gupta@nxp.com>
-	<5AF9916E.8000504@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH net-next v2 0/2] of: mdio: Fall back to mdiobus_register()
+ with NULL device_node
+Date: Wed, 16 May 2018 10:54:12 +0200
+Message-ID: <CAMuHMdXfOOgADe1my9Y3s3b9_OsXPjbqq1PPFR9izZWhtPuaFg@mail.gmail.com>
+References: <20180515235619.27773-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5AF9916E.8000504-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180515235619.27773-1-f.fainelli@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>, Russell King <rmk+kernel@armlin>
 List-Id: devicetree@vger.kernel.org
 
+Hi Florian,
 
+Thanks for your series!
+I like the effect on simplifying drivers.
 
-> -----Original Message-----
-> From: Laurentiu Tudor
-> Sent: Monday, May 14, 2018 7:10 PM
-> To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>; robin.murphy-5wv7dgnIgG8@public.gmane.org;
-> will.deacon-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; catalin.marinas-5wv7dgnIgG8@public.gmane.org
-> Cc: hch-jcswGhMUV9g@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org;
-> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> foundation.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
-> pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>;
-> stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>
-> Subject: Re: [PATCH 5/6 v3] bus: fsl-mc: supoprt dma configure for devices
-> on fsl-mc bus
-> 
-> Hi Nipun,
-> 
-> On 04/27/2018 01:27 PM, Nipun Gupta wrote:
-> > Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >   drivers/bus/fsl-mc/fsl-mc-bus.c | 16 ++++++++++++----
-> >   1 file changed, 12 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-
-> bus.c
-> > index 5d8266c..624828b 100644
-> > --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> > +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> > @@ -127,6 +127,16 @@ static int fsl_mc_bus_uevent(struct device *dev,
-> struct kobj_uevent_env *env)
-> >   	return 0;
-> >   }
-> >
-> > +static int fsl_mc_dma_configure(struct device *dev)
-> > +{
-> > +	struct device *dma_dev = dev;
-> > +
-> > +	while (dev_is_fsl_mc(dma_dev))
-> > +		dma_dev = dma_dev->parent;
-> > +
-> > +	return of_dma_configure(dev, dma_dev->of_node, 0);
-> > +}
-> > +
-> >   static ssize_t modalias_show(struct device *dev, struct device_attribute
-> *attr,
-> >   			     char *buf)
-> >   {
-> > @@ -148,6 +158,7 @@ struct bus_type fsl_mc_bus_type = {
-> >   	.name = "fsl-mc",
-> >   	.match = fsl_mc_bus_match,
-> >   	.uevent = fsl_mc_bus_uevent,
-> > +	.dma_configure  = fsl_mc_dma_configure,
-> >   	.dev_groups = fsl_mc_dev_groups,
-> >   };
-> >   EXPORT_SYMBOL_GPL(fsl_mc_bus_type);
-> > @@ -616,6 +627,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc
-> *obj_desc,
-> >   		mc_dev->icid = parent_mc_dev->icid;
-> >   		mc_dev->dma_mask = FSL_MC_DEFAULT_DMA_MASK;
-> >   		mc_dev->dev.dma_mask = &mc_dev->dma_mask;
-> > +		mc_dev->dev.coherent_dma_mask = mc_dev->dma_mask;
-> 
-> This change seems a bit unrelated to the patch subject. I wonder if it
-> makes sense to split it it in a distinct patch.
+On Wed, May 16, 2018 at 1:56 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> This patch series updates of_mdiobus_register() such that when the device_node
+> argument is NULL, it calls mdiobus_register() directly. This is consistent with
+> the behavior of of_mdiobus_register() when CONFIG_OF=n.
 
-Okay. I will spin a v5 after splitting this patch and adding changelog (Greg's comment), fixing typo (Bjorn's comment).
+IMHO the CONFIG_OF=n behavior of of_mdiobus_register() (which I wasn't
+aware of) is inconsistent with the behavior of other of_*() functions,
+which are just empty stubs.
 
-Regards,
-Nipun
+So I'm wondering if you should do it the other way around, and let
+mdiobus_register() call of_mdiobus_register() if dev->of_node exists?
 
-> 
-> ---
-> Best Regards, Laurentiu
+This does mean mdiobus_register() should gain a struct device * parameter,
+and thus changes to many more drivers are needed.
+
+> I only converted the most obvious drivers, there are others that have a much
+> less obvious behavior and specifically attempt to deal with CONFIG_ACPI.
+
+I haven't looked at the ACPI handling, but perhaps this can be moved
+inside mdiobus_register() as well?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
