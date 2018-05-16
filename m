@@ -1,64 +1,32 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:32679
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751755AbeECAm0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 2 May 2018 20:42:26 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v5 12/14] staging: typec: tcpci: keep the not connecting cc line open
-Date: Thu,  3 May 2018 08:24:52 +0800
-Message-Id: <1525307094-27402-13-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
-References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=f8Ap=ID=verge.net.au=horms@kernel.org>
+Date: Wed, 16 May 2018 10:57:30 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/2] soc: renesas: rcar-sysc: Add support for R-Car E3
+ power areas
+Message-ID: <20180516085729.ha2ctk45emuz4xub@verge.net.au>
+References: <1526386059-6173-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1526386059-6173-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXiyKvN3mnzwN8cyRaW5z0eCjQ=p_4=JR-K5evny=PiAA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: jun.li@nxp.com, a.hajda@samsung.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, gsomlo@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXiyKvN3mnzwN8cyRaW5z0eCjQ=p_4=JR-K5evny=PiAA@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-While set polarity, we should keep the not connecting cc line to be
-open.
+On Wed, May 16, 2018 at 09:45:30AM +0200, Geert Uytterhoeven wrote:
+> On Tue, May 15, 2018 at 2:07 PM, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> >
+> > This patch adds Cortex-A53 CPU{0,1}, Cortex-A53 SCU, Cortex-R7, A3VC,
+> > A2VC1 and 3DG-{A,B} power domain areas for the R8A77990 SoC.
+> >
+> > Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> > [shimoda: fix 3DG-{A,B} and add SPDX-License-Identifier]
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/typec/tcpci.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 5c48810..5c0c5e3 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -185,15 +185,25 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
- 			      enum typec_cc_polarity polarity)
- {
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-+	unsigned int reg;
- 	int ret;
- 
--	ret = regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
--			   (polarity == TYPEC_POLARITY_CC2) ?
--			   TCPC_TCPC_CTRL_ORIENTATION : 0);
-+	/* Keep the disconnect cc line open */
-+	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
- 	if (ret < 0)
- 		return ret;
- 
--	return 0;
-+	if (polarity == TYPEC_POLARITY_CC2)
-+		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
-+	else
-+		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC2_SHIFT;
-+	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	return regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
-+			   (polarity == TYPEC_POLARITY_CC2) ?
-+			   TCPC_TCPC_CTRL_ORIENTATION : 0);
- }
- 
- static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
--- 
-2.7.4
-
+Thanks, applied.
