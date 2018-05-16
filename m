@@ -1,306 +1,232 @@
-From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
-Date: Wed, 16 May 2018 13:41:50 -0700
-Message-ID: <20180516134150.34fc8857@jacob-builder>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v6 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Wed, 16 May 2018 15:43:59 -0500
+Message-ID: <3a0f27b7-86a1-235c-0a96-5ec9c8feb6f0@ti.com>
+References: <20180515154352.20263-1-dmurphy@ti.com>
+ <20180515154352.20263-2-dmurphy@ti.com>
+ <CAHp75VegjkiiD1qTGpi9rr6cg=72t9kSwDrG=sUpUWFVO58M4A@mail.gmail.com>
+ <08dda10d-f865-9cf2-b9a5-c79cbab5da98@ti.com>
+ <CAHp75Vcz08zrs3bgMFcvYwRrN_A43D=Nvt5cFDQf8m9whB=yhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180511190641.23008-2-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vcz08zrs3bgMFcvYwRrN_A43D=Nvt5cFDQf8m9whB=yhA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 May 2018 20:06:02 +0100
-Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+Andy
 
-> Shared Virtual Addressing (SVA) provides a way for device drivers to
-> bind process address spaces to devices. This requires the IOMMU to
-> support page table format and features compatible with the CPUs, and
-> usually requires the system to support I/O Page Faults (IOPF) and
-> Process Address Space ID (PASID). When all of these are available,
-> DMA can access virtual addresses of a process. A PASID is allocated
-> for each process, and the device driver programs it into the device
-> in an implementation-specific way.
-> 
-> Add a new API for sharing process page tables with devices. Introduce
-> two IOMMU operations, sva_device_init() and sva_device_shutdown(),
-> that prepare the IOMMU driver for SVA. For example allocate PASID
-> tables and fault queues. Subsequent patches will implement the bind()
-> and unbind() operations.
-> 
-> Support for I/O Page Faults will be added in a later patch using a new
-> feature bit (IOMMU_SVA_FEAT_IOPF). With the current API users must pin
-> down all shared mappings. Other feature bits that may be added in the
-> future are IOMMU_SVA_FEAT_PRIVATE, to support private PASID address
-> spaces, and IOMMU_SVA_FEAT_NO_PASID, to bind the whole device address
-> space to a process.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-> 
-> ---
-> v1->v2:
-> * Add sva_param structure to iommu_param
-> * CONFIG option is only selectable by IOMMU drivers
-> ---
->  drivers/iommu/Kconfig     |   4 ++
->  drivers/iommu/Makefile    |   1 +
->  drivers/iommu/iommu-sva.c | 110
-> ++++++++++++++++++++++++++++++++++++++ include/linux/iommu.h     |
-> 32 +++++++++++ 4 files changed, 147 insertions(+)
->  create mode 100644 drivers/iommu/iommu-sva.c
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 7564237f788d..cca8e06903c7 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -74,6 +74,10 @@ config IOMMU_DMA
->  	select IOMMU_IOVA
->  	select NEED_SG_DMA_LENGTH
->  
-> +config IOMMU_SVA
-> +	bool
-> +	select IOMMU_API
-> +
->  config FSL_PAMU
->  	bool "Freescale IOMMU support"
->  	depends on PCI
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 1fb695854809..1dbcc89ebe4c 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_IOMMU_API) += iommu.o
->  obj-$(CONFIG_IOMMU_API) += iommu-traces.o
->  obj-$(CONFIG_IOMMU_API) += iommu-sysfs.o
->  obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
-> +obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
->  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
-> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
-> new file mode 100644
-> index 000000000000..8b4afb7c63ae
-> --- /dev/null
-> +++ b/drivers/iommu/iommu-sva.c
-> @@ -0,0 +1,110 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Manage PASIDs and bind process address spaces to devices.
-> + *
-> + * Copyright (C) 2018 ARM Ltd.
-> + */
-> +
-> +#include <linux/iommu.h>
-> +#include <linux/slab.h>
-> +
-> +/**
-> + * iommu_sva_device_init() - Initialize Shared Virtual Addressing
-> for a device
-> + * @dev: the device
-> + * @features: bitmask of features that need to be initialized
-> + * @max_pasid: max PASID value supported by the device
-> + *
-> + * Users of the bind()/unbind() API must call this function to
-> initialize all
-> + * features required for SVA.
-> + *
-> + * The device must support multiple address spaces (e.g. PCI PASID).
-> By default
-> + * the PASID allocated during bind() is limited by the IOMMU
-> capacity, and by
-> + * the device PASID width defined in the PCI capability or in the
-> firmware
-> + * description. Setting @max_pasid to a non-zero value smaller than
-> this limit
-> + * overrides it.
-> + *
-seems the min_pasid never gets used. do you really need it?
- 
-> + * The device should not be performing any DMA while this function
-> is running,
-> + * otherwise the behavior is undefined.
-> + *
-> + * Return 0 if initialization succeeded, or an error.
-> + */
-> +int iommu_sva_device_init(struct device *dev, unsigned long features,
-> +			  unsigned int max_pasid)
-> +{
-> +	int ret;
-> +	struct iommu_sva_param *param;
-> +	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> +
-> +	if (!domain || !domain->ops->sva_device_init)
-> +		return -ENODEV;
-> +
-> +	if (features)
-> +		return -EINVAL;
-should it be !features?
+The first response is to Jacek the rest are addressed to you
 
-> +
-> +	param = kzalloc(sizeof(*param), GFP_KERNEL);
-> +	if (!param)
-> +		return -ENOMEM;
-> +
-> +	param->features		= features;
-> +	param->max_pasid	= max_pasid;
-> +
-> +	/*
-> +	 * IOMMU driver updates the limits depending on the IOMMU
-> and device
-> +	 * capabilities.
-> +	 */
-> +	ret = domain->ops->sva_device_init(dev, param);
-> +	if (ret)
-> +		goto err_free_param;
-> +
-> +	mutex_lock(&dev->iommu_param->lock);
-> +	if (dev->iommu_param->sva_param)
-> +		ret = -EEXIST;
-> +	else
-> +		dev->iommu_param->sva_param = param;
-> +	mutex_unlock(&dev->iommu_param->lock);
-> +	if (ret)
-> +		goto err_device_shutdown;
-> +
-> +	return 0;
-> +
-> +err_device_shutdown:
-> +	if (domain->ops->sva_device_shutdown)
-> +		domain->ops->sva_device_shutdown(dev, param);
-> +
-> +err_free_param:
-> +	kfree(param);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_sva_device_init);
-> +
-> +/**
-> + * iommu_sva_device_shutdown() - Shutdown Shared Virtual Addressing
-> for a device
-> + * @dev: the device
-> + *
-> + * Disable SVA. Device driver should ensure that the device isn't
-> performing any
-> + * DMA while this function is running.
-> + */
-> +int iommu_sva_device_shutdown(struct device *dev)
-> +{
-> +	struct iommu_sva_param *param;
-> +	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> +
-> +	if (!domain)
-> +		return -ENODEV;
-> +
-> +	mutex_lock(&dev->iommu_param->lock);
-> +	param = dev->iommu_param->sva_param;
-> +	dev->iommu_param->sva_param = NULL;
-> +	mutex_unlock(&dev->iommu_param->lock);
-> +	if (!param)
-> +		return -ENODEV;
-> +
-> +	if (domain->ops->sva_device_shutdown)
-> +		domain->ops->sva_device_shutdown(dev, param);
-seems a little mismatch here, do you need pass the param. I don't think
-there is anything else model specific iommu driver need to do for the
-param.
-> +
-> +	kfree(param);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_sva_device_shutdown);
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 0933f726d2e6..2efe7738bedb 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -212,6 +212,12 @@ struct page_response_msg {
->  	u64 private_data;
->  };
->  
-> +struct iommu_sva_param {
-> +	unsigned long features;
-> +	unsigned int min_pasid;
-> +	unsigned int max_pasid;
-> +};
-> +
->  /**
->   * struct iommu_ops - iommu ops and capabilities
->   * @capable: check capability
-> @@ -219,6 +225,8 @@ struct page_response_msg {
->   * @domain_free: free iommu domain
->   * @attach_dev: attach device to an iommu domain
->   * @detach_dev: detach device from an iommu domain
-> + * @sva_device_init: initialize Shared Virtual Adressing for a device
-> + * @sva_device_shutdown: shutdown Shared Virtual Adressing for a
-> device
->   * @map: map a physically contiguous memory region to an iommu domain
->   * @unmap: unmap a physically contiguous memory region from an iommu
-> domain
->   * @map_sg: map a scatter-gather list of physically contiguous
-> memory chunks @@ -256,6 +264,10 @@ struct iommu_ops {
->  
->  	int (*attach_dev)(struct iommu_domain *domain, struct device
-> *dev); void (*detach_dev)(struct iommu_domain *domain, struct device
-> *dev);
-> +	int (*sva_device_init)(struct device *dev,
-> +			       struct iommu_sva_param *param);
-> +	void (*sva_device_shutdown)(struct device *dev,
-> +				    struct iommu_sva_param *param);
->  	int (*map)(struct iommu_domain *domain, unsigned long iova,
->  		   phys_addr_t paddr, size_t size, int prot);
->  	size_t (*unmap)(struct iommu_domain *domain, unsigned long
-> iova, @@ -413,6 +425,7 @@ struct iommu_fault_param {
->   * struct iommu_param - collection of per-device IOMMU data
->   *
->   * @fault_param: IOMMU detected device fault reporting data
-> + * @sva_param: SVA parameters
->   *
->   * TODO: migrate other per device data pointers under
-> iommu_dev_data, e.g.
->   *	struct iommu_group	*iommu_group;
-> @@ -421,6 +434,7 @@ struct iommu_fault_param {
->  struct iommu_param {
->  	struct mutex lock;
->  	struct iommu_fault_param *fault_param;
-> +	struct iommu_sva_param *sva_param;
->  };
->  
->  int  iommu_device_register(struct iommu_device *iommu);
-> @@ -920,4 +934,22 @@ static inline int iommu_sva_invalidate(struct
-> iommu_domain *domain, 
->  #endif /* CONFIG_IOMMU_API */
->  
-> +#ifdef CONFIG_IOMMU_SVA
-> +extern int iommu_sva_device_init(struct device *dev, unsigned long
-> features,
-> +				 unsigned int max_pasid);
-> +extern int iommu_sva_device_shutdown(struct device *dev);
-> +#else /* CONFIG_IOMMU_SVA */
-> +static inline int iommu_sva_device_init(struct device *dev,
-> +					unsigned long features,
-> +					unsigned int max_pasid)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline int iommu_sva_device_shutdown(struct device *dev)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif /* CONFIG_IOMMU_SVA */
-> +
->  #endif /* __LINUX_IOMMU_H */
+On 05/15/2018 05:24 PM, Andy Shevchenko wrote:
+> On Wed, May 16, 2018 at 1:08 AM, Dan Murphy <dmurphy@ti.com> wrote:
+>> On 05/15/2018 04:56 PM, Andy Shevchenko wrote:
+>>> On Tue, May 15, 2018 at 6:43 PM, Dan Murphy <dmurphy@ti.com> wrote:
+> 
+>>>> +       depends on LEDS_CLASS && I2C && OF
+>>>
+>>> What is OF specific in this driver?
+>>
+>> as3645a_led_class_setup has a "of" dependency
+> 
+> So what? Is it called from this driver or?
+> 
 
-[Jacob Pan]
+Jacek
+
+Do you have a preference about the use of "of" calls over the device_property calls?
+
+I know Andy is pushing this for IoT and gave a good presentation on it last year on
+common mistakes.  Not sure this is a "common mistake" but more of a overall Linux compatibility issue
+between x86 and ARM using two different configuration methods.
+
+Since these lighting drivers are agnostic to the processor maybe we should adopt that philosophy.
+
+I have no problem being the example driver on that.
+
+> 
+>>>> +static const struct lm3601x_max_timeouts strobe_timeouts[] = {
+>>>> +       { 40000, 0x00 },
+>>>> +       { 80000, 0x01 },
+>>>> +       { 120000, 0x02 },
+>>>> +       { 160000, 0x03 },
+>>>> +       { 200000, 0x04 },
+>>>> +       { 240000, 0x05 },
+>>>> +       { 280000, 0x06 },
+>>>> +       { 320000, 0x07 },
+>>>> +       { 360000, 0x08 },
+>>>> +       { 400000, 0x09 },
+>>>> +       { 600000, 0x0a },
+>>>> +       { 800000, 0x0b },
+>>>> +       { 1000000, 0x0c },
+>>>> +       { 1200000, 0x0d },
+>>>> +       { 1400000, 0x0e },
+>>>> +       { 1600000, 0x0f },
+>>>
+>>> Huh?!
+>>
+>> Please give comments that actually mean something other wise I will opt to ignore them.
+> 
+> I did below.
+
+Sort of.  "So what?" and "Huh" are not really a technical comments. I can tell from your LVEE presentation that
+you have a passion for making the kernel better.  That is awesome but if we try to make the code perfect everytime no code will
+ever get merged.  And we are human and we will miss coding issues and make mistakes.
+
+> 
+>>> strobe_timeout = (x + 1) * 40 * MSECS_IN_SEC;
+>>
+>> Not sure what equation you are trying to point out here.  But if you are trying to apply
+>> a timeout step you cannot do this with this part.  As pointed out in the DT doc the timeout
+>> step is not linear.
+> 
+> Yeah, I know people are more than often too lazy to think.
+
+Well this is why I put the table in.  It is not laziness on my part as I try to add clarity for
+our newbies or productization engineers, translation/lookup tables are not as bad as you think.
+I am fully aware that this bloats the data section of the image and has negative impacts
+on IoT small memory foot print devices.
+
+> 
+> if (x < 9)
+>  strobe_timeout = (x + 1) * 40 * MSECS_IN_SEC;
+> else
+>  strobe_timeout = (400 + (x - 9) * 200) * MSECS_IN_SEC;
+> 
+
+Not sure if this will produce the register value I am looking for.  I have to run through the
+algorithim.  The idea is to take in the timeout and get the reg value to program.
+
+If it yields the expected output, or with a modified equation, then I can pull it in.
+
+>>>> +               brightness_val = (brightness/2);
+>>>
+>>> Spaces.
+>>
+>> Not sure what this means checkpatch was clean
+> 
+> Even besides missed whispaces it has redundant parens.
+> 
+> checkpatch is not a silver bullet to get your code clean and nice.
+> 
+
+True but it is the tool many maintainers use (sometimes) to ensure clean and nice.
+I am still not see the extra spaces here but I do see the unneeded parens.
+
+>>> This is return led_...();
+>>
+>> That is a preference.  It does not have to be that way.
+> 
+> What do you mean? We do not appreciate +LOCs for no (or even nagative!) benefit.
+> 
+
+Again for non-IoT cases this would be fine but if we are striving to meet IoT size
+requirements I do understand your concern.
+
+>>>> +               ret = of_property_read_string(led->led_node, "label", &name);
+>>>
+>>> device_property_...();
+>>
+>> It can be if the maintainer is requesting this.
+> 
+> Jacek, if you need rationale behind this comment it's here: the driver
+> has nothing DT specific and getting rid of OF centric programming
+> allows to reuse the driver on non-DT platforms w/o touching a source
+> code.
+> 
+
+See below
+
+>> Is the trend to move to these functions?
+> 
+> See above.
+
+See below
+
+> 
+>> Most drivers use the "of" calls.
+> 
+> So what?
+> 
+
+I am deferring this to Jacek.  Because this should be an overall coding change for all LED
+drivers that are new.  Like I pointed out I don't mind adding/changing the code as long as
+all LED drivers will have that same mandate moving forward.
+
+If the maintainers agree we can get this driver to be the example for the use of device_property calls.
+
+> 
+>>>> +               if (!ret)
+>>>
+>>> if (ret) sounds more natural. And better just to split
+
+OK
+
+>>>
+>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
+>>>> +                               "%s:%s", led->led_node->name, name);
+>>>> +               else
+>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
+>>>> +                               "%s:torch", led->led_node->name);
+>>>
+>>> const char *tmp;
+>>>
+>>> ret = device_property_read_...(&tmp);
+>>> if (ret)
+>>>  tmp = ...
+>>> sprintf(...);
+> 
+> No comments on this?
+
+No.  This would depend on the disposition of the device_property calls.
+If we go that way then yes this will probably change.  But we need to have an
+if..else as the label property is option in the DT documentation and we have to
+make a label if one does not exist.
+
+> 
+>>>> +       led = devm_kzalloc(&client->dev,
+>>>> +                           sizeof(struct lm3601x_led), GFP_KERNEL);
+>>>
+>>> sizeof(*led) and one line in the result
+> 
+> And this?
+
+Either one should yield the same allocation.  So I can change it.
+
+> 
+> 
+>>>> +       { },
+>>>
+>>> Terminators better w/o comma.
+>>
+>> Looking at other drivers adding comma's on the sentinel is accepted.  See the as3645a driver
+> 
+> So what?
+
+Not a compile issue here.  I have been asked by maintainers/reviewers to add the comma on the sentinnel not just
+struct definition but also for enums.
+
+This is a maintainer decision I defer to them for guidance.
+
+> 
+> Terminator at compile time even better.
+> 
+>>>> +       {},
+>>>
+>>> Ditto.
+>>
+>> See above
+> 
+> See above.
+> 
+
+See above
+
+
+-- 
+------------------
+Dan Murphy
