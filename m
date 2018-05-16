@@ -1,51 +1,88 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH net-next v2 2/2] drivers: net: Remove device_node checks
- with of_mdiobus_register()
-Date: Wed, 16 May 2018 12:01:21 +0100
-Message-ID: <2a70eb7c-7fc9-8bf6-a06a-87b4901d66ae@synopsys.com>
-References: <20180515235619.27773-1-f.fainelli@gmail.com>
- <20180515235619.27773-3-f.fainelli@gmail.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH] arm64: dts: juno: fix graph node unit addresses for
+ coresight components
+Date: Wed, 16 May 2018 12:23:38 +0100
+Message-ID: <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
+References: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180515235619.27773-3-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>, Russell King <rmk+kernel@armlinux.org.uk>, Geert
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Liviu Dudau <liviu.dudau@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16-05-2018 00:56, Florian Fainelli wrote:
-> A number of drivers have the following pattern:
->
-> if (np)
-> 	of_mdiobus_register()
-> else
-> 	mdiobus_register()
->
-> which the implementation of of_mdiobus_register() now takes care of.
-> Remove that pattern in drivers that strictly adhere to it.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/net/dsa/bcm_sf2.c                         |  8 ++------
->  drivers/net/dsa/mv88e6xxx/chip.c                  |  5 +----
->  drivers/net/ethernet/cadence/macb_main.c          | 12 +++---------
->  drivers/net/ethernet/freescale/fec_main.c         |  8 ++------
->  drivers/net/ethernet/marvell/mvmdio.c             |  5 +----
->  drivers/net/ethernet/renesas/sh_eth.c             | 11 +++--------
->  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |  5 +----
+On 05/16/2018 11:34 AM, Sudeep Holla wrote:
+> Currently the coresight components graph node unit addresses are 
+> continuous for both input and output ports while the "reg"
+> properties are restarted for input and output ports separately. This
+> results is the following DTC warnings:
+> 
+> (graph_port): /etf@20010000/ports/port@1: graph node unit address
+> error, expected "0" (graph_port): /etf@20140000/ports/port@1: graph
+> node unit address error, expected "0" (graph_port):
+> /funnel@20040000/ports/port@1: graph node unit address error,
+> expected "0" (graph_port): /funnel@20040000/ports/port@2: graph node
+> unit address error, expected "1" (graph_port):
+> /funnel@20040000/ports/port@3: graph node unit address error,
+> expected "2" (graph_port): /funnel@20130000/ports/port@1: graph node
+> unit address error, expected "0" (graph_port):
+> /funnel@20150000/ports/port@1: graph node unit address error,
+> expected "0" (graph_port): /funnel@20150000/ports/port@2: graph node
+> unit address error, expected "1" (graph_port):
+> /funnel@220c0000/ports/port@1: graph node unit address error,
+> expected "0" (graph_port): /funnel@220c0000/ports/port@2: graph node
+> unit address error, expected "1" (graph_port):
+> /funnel@230c0000/ports/port@1: graph node unit address error,
+> expected "0" (graph_port): /funnel@230c0000/ports/port@2: graph node
+> unit address error, expected "1" (graph_port):
+> /funnel@230c0000/ports/port@3: graph node unit address error,
+> expected "2" (graph_port): /funnel@230c0000/ports/port@4: graph node
+> unit address error, expected "3" (graph_port):
+> /replicator@20120000/ports/port@2: graph node unit address error,
+> expected "0"
+> 
+> This patch makes even the reg property to follow the continuous 
+> numbering as in the graph node unit address.
+> 
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com> Cc: Mathieu Poirier
+> <mathieu.poirier@linaro.org> Cc: Liviu Dudau <liviu.dudau@arm.com> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>> --- 
+> arch/arm64/boot/dts/arm/juno-base.dtsi    | 20 ++++++++++---------- 
+> arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi |  8 ++++---- 
+> arch/arm64/boot/dts/arm/juno.dts          |  2 +- 3 files changed, 15
+> insertions(+), 15 deletions(-)
+> 
+> Hi Suzuki/Mathieu,
+> 
+> I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to
+> check if reg field is being used or not and whether this change
+> causes any regression. I don't think so, but I may be wrong, let me
+> know.
 
-For stmmac:
+Unfortunately, I think this would break the components like funnel,
+where we need the input port number for the connected master to enable
+the port. Similarly for the output port number for master components in
+the paths. I have a set of patches which address this by taking care of
+the port number order to find out the hardware port number.
 
-Reviewed-by: Jose Abreu <joabreu@synopsys.com>
+I will dust it up and send it. That would bring up another important
+question.
 
-Thanks and Best Regards,
-Jose Miguel Abreu
+How do we deal with the change in the port number scheme ? e.g, should
+the new kernel support DTBs with old scheme ? If so, how do we specify
+that the DT uses new scheme.
 
->  drivers/net/ethernet/ti/davinci_mdio.c            |  8 +++-----
->  drivers/net/phy/mdio-gpio.c                       |  6 +-----
->  drivers/net/phy/mdio-mscc-miim.c                  |  6 +-----
->  drivers/net/usb/lan78xx.c                         |  7 ++-----
->  11 files changed, 20 insertions(+), 61 deletions(-)
->
+Cheers
+Suzuki
