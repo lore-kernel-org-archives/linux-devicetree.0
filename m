@@ -1,88 +1,63 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7"
- S070WV20-CT16 panel
-Date: Wed, 16 May 2018 12:50:58 +0530
-Message-ID: <CAMty3ZBSkrdV=SPqK5UoBTN8b+KLD9vsgDkx6DYLxEfb9_TazA@mail.gmail.com>
-References: <20180419093225.614-1-wens@csie.org> <20180419093225.614-5-wens@csie.org>
- <CAMty3ZD7MbvX5eJ9U4QZRSPTXKD3Ps=hQF2hJSsF17YosXFmmg@mail.gmail.com> <CAGb2v64CASge22O0CviNmgEV0CSFgipkKu86F-6hiaLChPh_EA@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-dev: enable vf610 builtin temp sensor
+Date: Wed, 16 May 2018 09:24:31 +0200
+Message-ID: <682aea7dc714fea095f935d41c8fa270@agner.ch>
+References: <20180516063921.10406-1-nikita.yoush@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v64CASge22O0CviNmgEV0CSFgipkKu86F-6hiaLChPh_EA@mail.gmail.com>
+In-Reply-To: <20180516063921.10406-1-nikita.yoush@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Jonathan Liu <net147@gmail.com>
+To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 12:12 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> On Mon, May 14, 2018 at 11:03 AM, Jagan Teki <jagan@amarulasolutions.com> wrote:
->> On Thu, Apr 19, 2018 at 3:02 PM, Chen-Yu Tsai <wens@csie.org> wrote:
->>> This panel is marketed as Banana Pi 7" LCD display. On the back is
->>> a sticker denoting the model name S070WV20-CT16.
->>>
->>> This is a 7" 800x480 panel connected through a 24-bit RGB interface.
->>> However the panel only does 262k colors.
->>>
->>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->>> ---
->>>  .../display/panel/bananapi,s070wv20-ct16.txt  |  7 ++++++
->>>  drivers/gpu/drm/panel/panel-simple.c          | 25 +++++++++++++++++++
->>>  2 files changed, 32 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
->>> new file mode 100644
->>> index 000000000000..2ec35ce36e9a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
->>> @@ -0,0 +1,7 @@
->>> +Banana Pi 7" (S070WV20-CT16) TFT LCD Panel
->>> +
->>> +Required properties:
->>> +- compatible: should be "bananapi,s070wv20-ct16"
->>> +
->>> +This binding is compatible with the simple-panel binding, which is specified
->>> +in simple-panel.txt in this directory.
->>> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
->>> index cbf1ab404ee7..9bc037f74d6c 100644
->>> --- a/drivers/gpu/drm/panel/panel-simple.c
->>> +++ b/drivers/gpu/drm/panel/panel-simple.c
->>> @@ -745,6 +745,28 @@ static const struct panel_desc avic_tm070ddh03 = {
->>>         },
->>>  };
->>>
->>> +static const struct drm_display_mode bananapi_s070wv20_ct16_mode = {
->>> +       .clock = 30000,
->>> +       .hdisplay = 800,
->>> +       .hsync_start = 800 + 40,
->>> +       .hsync_end = 800 + 40 + 48,
->>> +       .htotal = 800 + 40 + 48 + 40,
->>> +       .vdisplay = 480,
->>> +       .vsync_start = 480 + 13,
->>> +       .vsync_end = 480 + 13 + 3,
->>> +       .vtotal = 480 + 13 + 3 + 29,
->>> +};
->>> +
->>> +static const struct panel_desc bananapi_s070wv20_ct16 = {
->>> +       .modes = &bananapi_s070wv20_ct16_mode,
->>> +       .num_modes = 1,
->>> +       .bpc = 6,
->>> +       .size = {
->>> +               .width = 154,
->>> +               .height = 86,
->>> +       },
->>> +};
->>
->> I think this parallel RGB interface right? I too have same display
->> with DSI I'm sure these setting will not useful right? do we need to
->> write separate panel driver for that?
->
-> AFAIK the DSI model is an RGB panel with a MIPI DSI bridge on the
-> connector board. The model I have is dual interface.
+On 16.05.2018 08:39, Nikita Yushchenko wrote:
+> Vybrid has single internal temperature sensor connected to both internal
+> ADC modules.
+> 
+> vf610-zii-dev already has ADC0 enabled. Now, to get temperature sensor
+> captured by iio_hwmon driver, need to configure iio_hwmon node to use
+> that ADC.
 
-Yes, this is what I have [1] where same strip can use for both RGB and
-MIPI DSI. can bananapi,s070wv20-ct16 work for DSI interface as well?
+That seems sensible.
 
-[1] https://www.aliexpress.com/item/New-Arrival-Banana-Pro-Pi-7-inch-LCD-Display-Touch-Screen-Raspberry-Pi-Car-GPS-FreeShipping/32335608836.html
+Acked-by: Stefan Agner <stefan@agner.ch>
 
-Jagan.
+> 
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> ---
+>  arch/arm/boot/dts/vf610-zii-dev.dtsi | 4 ++++
+>  arch/arm/boot/dts/vfxxx.dtsi         | 2 +-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi
+> b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+> index 4890b8a5aa44..5ae5abfe1d55 100644
+> --- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
+> +++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
+> @@ -222,6 +222,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&tempsensor {
+> +	io-channels = <&adc0 16>;
+> +};
+> +
+>  &iomuxc {
+>  	pinctrl_adc0_ad5: adc0ad5grp {
+>  		fsl,pins = <
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index c3f09b737924..d392794d9c13 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -84,7 +84,7 @@
+>  		mask = <0x1000>;
+>  	};
+>  
+> -	iio-hwmon {
+> +	tempsensor: iio-hwmon {
+>  		compatible = "iio-hwmon";
+>  		io-channels = <&adc0 16>, <&adc1 16>;
+>  	};
