@@ -1,78 +1,44 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH RFC 2/6] dt-bindings: hwmon: Add Raspberry Pi voltage
- sensor
-Date: Wed, 16 May 2018 15:23:27 +0100
-Message-ID: <30fc5bac-0c4a-b2c4-a018-ea521510aaea@arm.com>
-References: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
- <1526477827-10859-3-git-send-email-stefan.wahren@i2se.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 0/7] pcal6524 extensions and fixes for pca953x driver
+Date: Wed, 16 May 2018 16:31:10 +0200
+Message-ID: <CACRpkda_nrL8HQL3y+tvHKff+5zKykd3Ym1waEm=JC1tFQbbcw@mail.gmail.com>
+References: <cover.1524933096.git.hns@goldelico.com> <CACRpkdbk0rNZ3cUN_noqVtNYgDrydGtCCn2fk7yqVRPoroYqpA@mail.gmail.com>
+ <6AA622D1-DA8C-4C58-8EAE-555989E69149@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526477827-10859-3-git-send-email-stefan.wahren@i2se.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Eric Anholt <eric@anholt.net>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6AA622D1-DA8C-4C58-8EAE-555989E69149@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On 16/05/18 14:37, Stefan Wahren wrote:
-> Recent VC4 firmware provides a hardware-independent way to retrieve the
-> under-voltage sensor on the following Raspberry Pi boards:
->    - Raspberry Pi B+ (via GPIO on SoC)
->    - Raspberry Pi A+ (via GPIO on SoC)
->    - Raspberry Pi 2 B (via GPIO on SoC)
->    - Raspberry Pi 3 B (via GPIO on port expander)
->    - Raspberry Pi 3 B+ (via PMIC)
-> 
-> TODO:
->    - try to make bcm2835 firmware a bus driver
+On Wed, May 16, 2018 at 3:32 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>> Am 16.05.2018 um 13:53 schrieb Linus Walleij <linus.walleij@linaro.org>:
+>> On Sat, Apr 28, 2018 at 6:31 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>>
+>>> V5:
+>>> * fix wrong split up between patches 1/7and 2/7.
+>>
+>> I applied patches 1, 2, 3 so we get some movement on the patch
+>> set and not too much for you to rebase.
+>
+> thanks!
+>
+> Well, I already had edited the commit messages for resending...
+>
+>>
+>> It's fine to just resend the rest next time.
+>
+> There is only one point open before resending:
+>
+> what is the preferred style to be used for PCAL_GPIO_MASK?
+>
+> * GENMASK(4, 0)
+> * or 0x1f
 
-Do you actually need a DT binding? From the probe routine in patch 2 it 
-looks like this capability can be discovered dynamically by asking the 
-firmware, therefore it might be more straightforward for the firmware 
-driver itself to probe that and create a child device iff the feature is 
-present, which the hwmon driver can then bind to as a pure platform driver.
+No strong opinion... sorry. Whatever you & the other driver
+contributors are most convenient with.
 
-Robin.
-
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->   .../devicetree/bindings/hwmon/raspberrypi-hwmon.txt   | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt b/Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt
-> new file mode 100644
-> index 0000000..ec2523f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/raspberrypi-hwmon.txt
-> @@ -0,0 +1,19 @@
-> +Raspberry Pi voltage sensor
-> +---------------------------
-> +
-> +The VC4 firmware exposes a mailbox interface that allows the ARM core
-> +to access the board's voltage sensor.
-> +
-> +Required properties :
-> +- compatible : Should be "raspberrypi,bcm2835-hwmon"
-> +
-> +Example:
-> +
-> +firmware: firmware-rpi {
-> +	compatible = "raspberrypi,bcm2835-firmware";
-> +	mboxes = <&mailbox>;
-> +
-> +	voltage-sensor {
-> +		compatible = "raspberrypi,bcm2835-hwmon";
-> +	};
-> +};
-> 
+Yours,
+Linus Walleij
