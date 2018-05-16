@@ -1,68 +1,25 @@
-Return-Path: <SRS0=ekey=H4=verge.net.au=horms@kernel.org>
-Date: Wed, 9 May 2018 20:09:50 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFT v3 2/3] dt-bindings: thermal: rcar-thermal: add
- R8A77995 support
-Message-ID: <20180509180950.b35wrl35sxunjmpg@verge.net.au>
-References: <1522759385-17661-1-git-send-email-ykaneko0929@gmail.com>
- <1522759385-17661-3-git-send-email-ykaneko0929@gmail.com>
- <20180409212129.w55kgl6s6fz4pi6v@rob-hp-laptop>
+Return-Path: <SRS0=vAKq=ID=linux.intel.com=mathias.nyman@kernel.org>
+Subject: Re: [PATCH v3 0/2] add support for HiSilicon STB xHCI host controller
+References: <1526278842-13883-1-git-send-email-sunjg79@163.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <dec314a0-d338-d10c-70e2-296468950ccb@linux.intel.com>
+Date: Wed, 16 May 2018 16:48:35 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180409212129.w55kgl6s6fz4pi6v@rob-hp-laptop>
-To: Rob Herring <robh@kernel.org>
-Cc: Yoshihiro Kaneko <ykaneko0929@gmail.com>, linux-renesas-soc@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1526278842-13883-1-git-send-email-sunjg79@163.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: sunjg79@163.com, mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: shawn.guo@linaro.org, xuejiancheng@hisilicon.com, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Apr 09, 2018 at 04:21:29PM -0500, Rob Herring wrote:
-> On Tue, Apr 03, 2018 at 09:43:04PM +0900, Yoshihiro Kaneko wrote:
-> > Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> > index 349e635..5ab5fcd 100644
-> > --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> > +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> > @@ -3,7 +3,8 @@
-> >  Required properties:
-> >  - compatible		: "renesas,thermal-<soctype>",
-> >  			   "renesas,rcar-gen2-thermal" (with thermal-zone) or
-> > -			   "renesas,rcar-thermal" (without thermal-zone) as fallback.
-> > +			   "renesas,rcar-thermal" (without thermal-zone) as
-> > +                           fallback except R-Car D3.
-> >  			  Examples with soctypes are:
-> >  			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
-> >  			    - "renesas,thermal-r8a7743" (RZ/G1M)
-> > @@ -12,13 +13,15 @@ Required properties:
-> >  			    - "renesas,thermal-r8a7791" (R-Car M2-W)
-> >  			    - "renesas,thermal-r8a7792" (R-Car V2H)
-> >  			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-> > +			    - "renesas,thermal-r8a77995" (R-Car D3)
-> >  - reg			: Address range of the thermal registers.
-> >  			  The 1st reg will be recognized as common register
-> >  			  if it has "interrupts".
-> >  
-> >  Option properties:
-> >  
-> > -- interrupts		: use interrupt
-> > +- interrupts		: use interrupt.
-> > +                          Should contain 3 interrupts for R-Car D3.
+On 14.05.2018 09:20, sunjg79@163.com wrote:
+> From: Jianguo Sun <sunjianguo1@huawei.com>
 > 
-> And how many for other chips?
-
-How about this?
-
-				If present should contain 3 interrupts for
-				R-Car D3 or 1 interrupt otherwise.
-
-> >  
-> >  Example (non interrupt support):
-> >  
-> > -- 
-> > 1.9.1
-> > 
+> This patch set adds bindings doc and xhci driver for xHCI host controller
+> on HiSilicon STB SoCs.
 > 
+
+Looks good to me, adding to queue
+
+-Mathias
