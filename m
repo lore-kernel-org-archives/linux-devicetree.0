@@ -1,15 +1,11 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH] arm64: dts: juno: fix graph node unit addresses for
- coresight components
-Date: Wed, 16 May 2018 12:23:38 +0100
-Message-ID: <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
-References: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
+From: Stefan Mavrodiev <stefan@olimex.com>
+Subject: [PATCH 1/1] ARM:dts:sunxi: Add Olimex A20-SOM-EVB-eMMC board
+Date: Wed, 16 May 2018 14:38:08 +0300
+Message-ID: <1526470689-6275-1-git-send-email-stefan@olimex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,70 +15,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Liviu Dudau <liviu.dudau@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/Allwinner sunXi SoC
+ support" <linux-arm-kernel@lists.infradead.org>
+Cc: linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/16/2018 11:34 AM, Sudeep Holla wrote:
-> Currently the coresight components graph node unit addresses are 
-> continuous for both input and output ports while the "reg"
-> properties are restarted for input and output ports separately. This
-> results is the following DTC warnings:
-> 
-> (graph_port): /etf@20010000/ports/port@1: graph node unit address
-> error, expected "0" (graph_port): /etf@20140000/ports/port@1: graph
-> node unit address error, expected "0" (graph_port):
-> /funnel@20040000/ports/port@1: graph node unit address error,
-> expected "0" (graph_port): /funnel@20040000/ports/port@2: graph node
-> unit address error, expected "1" (graph_port):
-> /funnel@20040000/ports/port@3: graph node unit address error,
-> expected "2" (graph_port): /funnel@20130000/ports/port@1: graph node
-> unit address error, expected "0" (graph_port):
-> /funnel@20150000/ports/port@1: graph node unit address error,
-> expected "0" (graph_port): /funnel@20150000/ports/port@2: graph node
-> unit address error, expected "1" (graph_port):
-> /funnel@220c0000/ports/port@1: graph node unit address error,
-> expected "0" (graph_port): /funnel@220c0000/ports/port@2: graph node
-> unit address error, expected "1" (graph_port):
-> /funnel@230c0000/ports/port@1: graph node unit address error,
-> expected "0" (graph_port): /funnel@230c0000/ports/port@2: graph node
-> unit address error, expected "1" (graph_port):
-> /funnel@230c0000/ports/port@3: graph node unit address error,
-> expected "2" (graph_port): /funnel@230c0000/ports/port@4: graph node
-> unit address error, expected "3" (graph_port):
-> /replicator@20120000/ports/port@2: graph node unit address error,
-> expected "0"
-> 
-> This patch makes even the reg property to follow the continuous 
-> numbering as in the graph node unit address.
-> 
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com> Cc: Mathieu Poirier
-> <mathieu.poirier@linaro.org> Cc: Liviu Dudau <liviu.dudau@arm.com> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>> --- 
-> arch/arm64/boot/dts/arm/juno-base.dtsi    | 20 ++++++++++---------- 
-> arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi |  8 ++++---- 
-> arch/arm64/boot/dts/arm/juno.dts          |  2 +- 3 files changed, 15
-> insertions(+), 15 deletions(-)
-> 
-> Hi Suzuki/Mathieu,
-> 
-> I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to
-> check if reg field is being used or not and whether this change
-> causes any regression. I don't think so, but I may be wrong, let me
-> know.
+With the new rev.E of A20-SOM-EVB, there is option for 16GB eMMC.
+Currently used card is KLMAG2GEND, wired to MMC2 slot.
 
-Unfortunately, I think this would break the components like funnel,
-where we need the input port number for the connected master to enable
-the port. Similarly for the output port number for master components in
-the paths. I have a set of patches which address this by taking care of
-the port number order to find out the hardware port number.
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+---
+ arch/arm/boot/dts/Makefile                         |  1 +
+ .../arm/boot/dts/sun7i-a20-olimex-som-evb-emmc.dts | 37 ++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-olimex-som-evb-emmc.dts
 
-I will dust it up and send it. That would bring up another important
-question.
-
-How do we deal with the change in the port number scheme ? e.g, should
-the new kernel support DTBs with old scheme ? If so, how do we specify
-that the DT uses new scheme.
-
-Cheers
-Suzuki
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 1db91ec..7f1ee65 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -959,6 +959,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-m3.dtb \
+ 	sun7i-a20-mk808c.dtb \
+ 	sun7i-a20-olimex-som-evb.dtb \
++	sun7i-a20-olimex-som-evb-emmc.dtb \
+ 	sun7i-a20-olimex-som204-evb.dtb \
+ 	sun7i-a20-olimex-som204-evb-emmc.dtb \
+ 	sun7i-a20-olinuxino-lime.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb-emmc.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb-emmc.dts
+new file mode 100644
+index 0000000..81ebc97
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb-emmc.dts
+@@ -0,0 +1,37 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree Source for A20-Olimex-SOM-EVB-eMMC Board
++ *
++ * Copyright (C) 2018 Olimex Ltd.
++ *   Author: Stefan Mavrodiev <stefan@olimex.com>
++ */
++
++/dts-v1/;
++#include "sun7i-a20-olimex-som-evb.dts"
++
++/ {
++
++	model = "Olimex A20-Olimex-SOM-EVB-eMMC";
++	compatible = "olimex,a20-olimex-som-evb-emmc", "allwinner,sun7i-a20";
++
++	mmc2_pwrseq: mmc2_pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&pio 2 18 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&mmc2_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	emmc: emmc@0 {
++		reg = <0>;
++		compatible = "mmc-card";
++		broken-hpi;
++	};
++};
+-- 
+2.7.4
