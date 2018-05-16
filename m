@@ -1,93 +1,74 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 4/6] drm/panel: simple: Add support for Banana Pi 7"
- S070WV20-CT16 panel
-Date: Wed, 16 May 2018 00:56:36 -0700
-Message-ID: <CAGb2v679hCrS3zjjb5oPkiODha2tnc0sGVSv2f92JBPf6N7+6A@mail.gmail.com>
-References: <20180419093225.614-1-wens@csie.org>
- <20180419093225.614-5-wens@csie.org>
- <CAMty3ZD7MbvX5eJ9U4QZRSPTXKD3Ps=hQF2hJSsF17YosXFmmg@mail.gmail.com>
- <CAGb2v64CASge22O0CviNmgEV0CSFgipkKu86F-6hiaLChPh_EA@mail.gmail.com>
- <CAMty3ZBSkrdV=SPqK5UoBTN8b+KLD9vsgDkx6DYLxEfb9_TazA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v5 0/6] Add support for PWM input capture on STM32
+Date: Wed, 16 May 2018 09:06:35 +0100
+Message-ID: <20180516080635.GE5130@dell>
+References: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMty3ZBSkrdV=SPqK5UoBTN8b+KLD9vsgDkx6DYLxEfb9_TazA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jonathan Liu <net147@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1526456161-27865-1-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: alexandre.torgue@st.com, thierry.reding@gmail.com, benjamin.gaignard@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMTYsIDIwMTggYXQgMTI6MjAgQU0sIEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1
-bGFzb2x1dGlvbnMuY29tPiB3cm90ZToKPiBPbiBXZWQsIE1heSAxNiwgMjAxOCBhdCAxMjoxMiBQ
-TSwgQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPiB3cm90ZToKPj4gT24gTW9uLCBNYXkgMTQs
-IDIwMTggYXQgMTE6MDMgQU0sIEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1bGFzb2x1dGlvbnMuY29t
-PiB3cm90ZToKPj4+IE9uIFRodSwgQXByIDE5LCAyMDE4IGF0IDM6MDIgUE0sIENoZW4tWXUgVHNh
-aSA8d2Vuc0Bjc2llLm9yZz4gd3JvdGU6Cj4+Pj4gVGhpcyBwYW5lbCBpcyBtYXJrZXRlZCBhcyBC
-YW5hbmEgUGkgNyIgTENEIGRpc3BsYXkuIE9uIHRoZSBiYWNrIGlzCj4+Pj4gYSBzdGlja2VyIGRl
-bm90aW5nIHRoZSBtb2RlbCBuYW1lIFMwNzBXVjIwLUNUMTYuCj4+Pj4KPj4+PiBUaGlzIGlzIGEg
-NyIgODAweDQ4MCBwYW5lbCBjb25uZWN0ZWQgdGhyb3VnaCBhIDI0LWJpdCBSR0IgaW50ZXJmYWNl
-Lgo+Pj4+IEhvd2V2ZXIgdGhlIHBhbmVsIG9ubHkgZG9lcyAyNjJrIGNvbG9ycy4KPj4+Pgo+Pj4+
-IFNpZ25lZC1vZmYtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPj4+PiAtLS0KPj4+
-PiAgLi4uL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2MjAtY3QxNi50eHQgIHwgIDcgKysr
-KysrCj4+Pj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICB8
-IDI1ICsrKysrKysrKysrKysrKysrKysKPj4+PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRp
-b25zKCspCj4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1jdDE2LnR4dAo+Pj4+Cj4+
-Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2MjAtY3QxNi50eHQKPj4+
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uMmVjMzVjZTM2
-ZTlhCj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0Cj4+Pj4g
-QEAgLTAsMCArMSw3IEBACj4+Pj4gK0JhbmFuYSBQaSA3IiAoUzA3MFdWMjAtQ1QxNikgVEZUIExD
-RCBQYW5lbAo+Pj4+ICsKPj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+PiArLSBjb21wYXRp
-YmxlOiBzaG91bGQgYmUgImJhbmFuYXBpLHMwNzB3djIwLWN0MTYiCj4+Pj4gKwo+Pj4+ICtUaGlz
-IGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hp
-Y2ggaXMgc3BlY2lmaWVkCj4+Pj4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rv
-cnkuCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUu
-YyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+Pj4+IGluZGV4IGNiZjFh
-YjQwNGVlNy4uOWJjMDM3Zjc0ZDZjIDEwMDY0NAo+Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1zaW1wbGUuYwo+Pj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5l
-bC1zaW1wbGUuYwo+Pj4+IEBAIC03NDUsNiArNzQ1LDI4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-cGFuZWxfZGVzYyBhdmljX3RtMDcwZGRoMDMgPSB7Cj4+Pj4gICAgICAgICB9LAo+Pj4+ICB9Owo+
-Pj4+Cj4+Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBiYW5hbmFwaV9z
-MDcwd3YyMF9jdDE2X21vZGUgPSB7Cj4+Pj4gKyAgICAgICAuY2xvY2sgPSAzMDAwMCwKPj4+PiAr
-ICAgICAgIC5oZGlzcGxheSA9IDgwMCwKPj4+PiArICAgICAgIC5oc3luY19zdGFydCA9IDgwMCAr
-IDQwLAo+Pj4+ICsgICAgICAgLmhzeW5jX2VuZCA9IDgwMCArIDQwICsgNDgsCj4+Pj4gKyAgICAg
-ICAuaHRvdGFsID0gODAwICsgNDAgKyA0OCArIDQwLAo+Pj4+ICsgICAgICAgLnZkaXNwbGF5ID0g
-NDgwLAo+Pj4+ICsgICAgICAgLnZzeW5jX3N0YXJ0ID0gNDgwICsgMTMsCj4+Pj4gKyAgICAgICAu
-dnN5bmNfZW5kID0gNDgwICsgMTMgKyAzLAo+Pj4+ICsgICAgICAgLnZ0b3RhbCA9IDQ4MCArIDEz
-ICsgMyArIDI5LAo+Pj4+ICt9Owo+Pj4+ICsKPj4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5l
-bF9kZXNjIGJhbmFuYXBpX3MwNzB3djIwX2N0MTYgPSB7Cj4+Pj4gKyAgICAgICAubW9kZXMgPSAm
-YmFuYW5hcGlfczA3MHd2MjBfY3QxNl9tb2RlLAo+Pj4+ICsgICAgICAgLm51bV9tb2RlcyA9IDEs
-Cj4+Pj4gKyAgICAgICAuYnBjID0gNiwKPj4+PiArICAgICAgIC5zaXplID0gewo+Pj4+ICsgICAg
-ICAgICAgICAgICAud2lkdGggPSAxNTQsCj4+Pj4gKyAgICAgICAgICAgICAgIC5oZWlnaHQgPSA4
-NiwKPj4+PiArICAgICAgIH0sCj4+Pj4gK307Cj4+Pgo+Pj4gSSB0aGluayB0aGlzIHBhcmFsbGVs
-IFJHQiBpbnRlcmZhY2UgcmlnaHQ/IEkgdG9vIGhhdmUgc2FtZSBkaXNwbGF5Cj4+PiB3aXRoIERT
-SSBJJ20gc3VyZSB0aGVzZSBzZXR0aW5nIHdpbGwgbm90IHVzZWZ1bCByaWdodD8gZG8gd2UgbmVl
-ZCB0bwo+Pj4gd3JpdGUgc2VwYXJhdGUgcGFuZWwgZHJpdmVyIGZvciB0aGF0Pwo+Pgo+PiBBRkFJ
-SyB0aGUgRFNJIG1vZGVsIGlzIGFuIFJHQiBwYW5lbCB3aXRoIGEgTUlQSSBEU0kgYnJpZGdlIG9u
-IHRoZQo+PiBjb25uZWN0b3IgYm9hcmQuIFRoZSBtb2RlbCBJIGhhdmUgaXMgZHVhbCBpbnRlcmZh
-Y2UuCj4KPiBZZXMsIHRoaXMgaXMgd2hhdCBJIGhhdmUgWzFdIHdoZXJlIHNhbWUgc3RyaXAgY2Fu
-IHVzZSBmb3IgYm90aCBSR0IgYW5kCj4gTUlQSSBEU0kuIGNhbiBiYW5hbmFwaSxzMDcwd3YyMC1j
-dDE2IHdvcmsgZm9yIERTSSBpbnRlcmZhY2UgYXMgd2VsbD8KCkluIHRoZW9yeSB5ZXMuIFlvdSBj
-YW4gdXNlIFJHQiB3aXRoIEJhbmFuYSBQaSBNMSsgYW5kIERTSSB3aXRoIEJhbmFuYSBQaSBNMy4K
-SG93ZXZlciwgRFNJIG9uIEE4M1QgaXMgbm90IHN1cHBvcnRlZCB5ZXQsIGFuZCBJIGRvbid0IGlu
-dGVuZCB0byBzcGVuZCBteQp0aW1lIHdyaXRpbmcgYSBkcml2ZXIgZm9yIHRoZSBNSVBJIERTSSBi
-cmlkZ2Ugb24gdGhhdCBwYW5lbC4gVGhlIGJyaWRnZSBJQwppcyB0aGUgb25lIG9uIHRvcCBvZiB0
-aGUgRFNJIEZQQyBjb25uZWN0b3IuCgpDaGVuWXUKCj4gWzFdIGh0dHBzOi8vd3d3LmFsaWV4cHJl
-c3MuY29tL2l0ZW0vTmV3LUFycml2YWwtQmFuYW5hLVByby1QaS03LWluY2gtTENELURpc3BsYXkt
-VG91Y2gtU2NyZWVuLVJhc3BiZXJyeS1QaS1DYXItR1BTLUZyZWVTaGlwcGluZy8zMjMzNTYwODgz
-Ni5odG1sCj4KPiBKYWdhbi4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Wed, 16 May 2018, Fabrice Gasnier wrote:
+
+> This series adds support for capture to stm32-pwm driver.
+> Capture is based on DMAs.
+> - First two patches add support for requesting DMAs to MFD core
+> - Next three patches add support for capture to stm32-pwm driver
+> - This has been tested on stm32429i-eval board.
+> 
+> ---
+> Changes in v5:
+> - update patch 2 (mfd: stm32-timers: add support for dmas)
+>   move stm32_timers_dma struct to header file,
+>   fix warning on dma_mapping_error().
+> 
+> Changes in v4:
+> - Lee's comments on patch 2 (mfd: stm32-timers: add support for dmas)
+>   Add kerneldoc header, better format comments.
+> 
+> Changes in v3:
+> - Dropped 2 precusor patches applied by Thierry in pwm tree:
+>   "pwm: stm32: fix, remove unused struct device"
+>   "pwm: stm32: protect common prescaler for all channels"
+> - Note: this series applies on top on pwm tree
+> - Implements Lee's comments on MFD part: rework stm32_timers_dma struct,
+>   exported routine prototype now use generic device struct, more
+>   various comments (see patch 2 changelog).
+> 
+> Resend v2:
+> - Add collected Acks
+> 
+> Changes in v2:
+> - Abstract DMA handling from child driver: move it to MFD core
+> - Rework pwm capture routines to adopt this change
+> - Comment on optional dma support, beautify DMAs probe
+> 
+> Fabrice Gasnier (6):
+>   dt-bindings: mfd: stm32-timers: add support for dmas
+>   mfd: stm32-timers: add support for dmas
+>   pwm: stm32: add capture support
+>   pwm: stm32: improve capture by tuning counter prescaler
+>   pwm: stm32: use input prescaler to improve period capture
+>   ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+
+Applied patches 1-5.
+
+>  .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
+>  arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
+>  drivers/mfd/stm32-timers.c                         | 201 +++++++++++++++-
+>  drivers/pwm/pwm-stm32.c                            | 257 +++++++++++++++++++++
+>  include/linux/mfd/stm32-timers.h                   |  58 +++++
+>  5 files changed, 537 insertions(+), 2 deletions(-)
+> 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
