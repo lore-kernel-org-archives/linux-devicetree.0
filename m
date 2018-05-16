@@ -1,48 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH net-next v2 0/2] of: mdio: Fall back to mdiobus_register()
- with NULL device_node
-Date: Wed, 16 May 2018 20:32:58 +0200
-Message-ID: <CAMuHMdUBk3xT1G0XLd3Y8AJxrCb5zbegNu07dwMsX3zGjvgUpA@mail.gmail.com>
-References: <20180515235619.27773-1-f.fainelli@gmail.com> <20180516.142102.1650229402143291732.davem@davemloft.net>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 2/3] gpio: pca953x: define masks for addressing common
+ and extended registers
+Date: Wed, 16 May 2018 22:50:53 +0300
+Message-ID: <CAHp75VcadghXsqu66NmrfbEPpgqusEUuzSkrE8PSJjAV0avntQ@mail.gmail.com>
+References: <cover.1526490085.git.hns@goldelico.com> <314df7f911fda8f5584cc4384a26074848a2673b.1526490085.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516.142102.1650229402143291732.davem@davemloft.net>
+In-Reply-To: <314df7f911fda8f5584cc4384a26074848a2673b.1526490085.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Fugang Duan <fugang.duan@nxp.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Woojung Huh <woojung.huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, Tobias Jordan <Tobias.Jordan@elektrobit.com>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-On Wed, May 16, 2018 at 8:21 PM, David Miller <davem@davemloft.net> wrote:
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> Date: Tue, 15 May 2018 16:56:17 -0700
+On Wed, May 16, 2018 at 8:01 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> These mask bits are to be used to map the extended register
+> addreseses (which are defined for an unsupported 8-bit pcal chip)
+> to 16 and 24 bit chips (pcal6524).
 >
->> This patch series updates of_mdiobus_register() such that when the device_node
->> argument is NULL, it calls mdiobus_register() directly. This is consistent with
->> the behavior of of_mdiobus_register() when CONFIG_OF=n.
->>
->> I only converted the most obvious drivers, there are others that have a much
->> less obvious behavior and specifically attempt to deal with CONFIG_ACPI.
->>
->> Changes in v2:
->>
->> - fixed build error in davincin_mdio.c (Grygorii)
->> - reworked first patch a bit: commit message, subject and removed useless
->>   code comment
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  drivers/gpio/gpio-pca953x.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> Based upon Andrew's response to Geert's feedback, I'm applying this series.
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 2b667166e855..c0eb679e60d4 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -56,6 +56,10 @@
+>  #define PCAL6524_DEBOUNCE      0x2d
+>
+>  #define PCA_GPIO_MASK          0x00FF
+> +
+> +#define PCAL_GPIO_MASK         GENMASK(4, 0)
+> +#define PCAL_PINCTRL_MASK      (~PCAL_GPIO_MASK)
+> +
 
-Thanks, his feedback made perfect sense.
+I give second thought about it, and think
+either plain values, or second converted to its own explicit GENMASK
+would be better.
 
-Gr{oetje,eeting}s,
+(most confusing part to me is unknowness of the side of PINCTRL part
+in the mask)
 
-                        Geert
+
+>  #define PCA_INT                        0x0100
+>  #define PCA_PCAL               0x0200
+>  #define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
+> --
+> 2.12.2
+>
+
+
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
