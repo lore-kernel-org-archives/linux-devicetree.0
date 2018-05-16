@@ -1,83 +1,133 @@
-From: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v7 0/2] SDM845 System Cache Driver
-Date: Wed, 16 May 2018 10:43:41 -0700
-Message-ID: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v6 0/9] Introduce the Counter subsystem
+Date: Wed, 16 May 2018 13:50:10 -0400
+Message-ID: <cover.1526487615.git.vilhelm.gray@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To: jic23@kernel.org
+Cc: benjamin.gaignard@st.com, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, William Breathitt Gray <vilhelm.gray@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This series implements system cache or LLCC(Last Level Cache Controller)
-driver for SDM845 SOC. The purpose of the driver is to partition the
-system cache and program the settings such as priortiy, lines to probe
-while doing a look up in the system cache, low power related settings etc.
-The partitions are called cache slices. Each cache slice is associated
-with size and SCID(System Cache ID). The driver also provides API for
-clients to query the cache slice details,activate and deactivate them.
+This revision is primarily a code refactor and formatting cleanup -- the
+interface has remained essentially the same as revision 5, with some
+minor additions.
 
-The driver can be broadly classified into:
-* SOC specific driver: llcc-sdm845.c: Cache partitioning and cache slice
-properties for usecases on sdm845 that need to use system cache.
+Here's a brief summary of the Generic Counter interface and related code
+changes in this revision:
 
-* API : llcc-slice.c: Exports APIs to clients to query cache slice details,
-activate and deactivate cache slices.
+    * checkpatch.pl formatting suggestions implemented (parameters line
+      up with opening round bracket, etc.)
+    * Implement struct counter_ops to enable const structure for
+      driver callbacks
+    * Provide const string array for count_direction and count_mode
+      options to help maintain a consistent interface
+    * Reduce local variables by inlining where appropriate
+    * Bring memory cleanup code closer to respective allocations for
+      clarity and easier debugging
+    * Implement counter_name_attribute_create function to reduce
+      repeated code for various "name" attributes
+    * Implement counter_global_attr_register function to organize global
+      counter attribute registration together
+    * Implement prepare_counter_device_groups_list and
+      prepare_counter_device_groups functions to organize sysfs
+      attribute configuration into logical groups (this makes the
+      counter_register function logic much easier to follow)
 
-Changes since v6:
-* Remove the max-slices property from DT.
-* Make client's slice_ids as macros.
-* Unlock mutex while returning from function in case of error.
+Furthermore, the following additions have been made:
 
-Changes since v5:
-* Remove client information from DT.
-* Make the llcc driver data as global.
-* Check return value of llcc_update_act_ctrl function
-* Change error returned from -EFAULT to -EINVAL
+    * The "ceiling" and "floor" attributes are defined to represent the
+      upper limit and lower limit respectively for a Count
+    * The following attributes are now part of the main Generic Counter
+      interface: count_mode, direction, enable, preset, preset_enable,
+      and error_noise
+    * The "Quadrature x1" and "Quadrature x2" function modes are now
+      known as "Quadrature x1 A" and "Quadrature x2 A" respectively
+    * The following new function modes are defined in order to support
+      the STM32 LP Timer quadrature modes: Quadrature x1 B, Quadrature
+      x2 B, Quadrature x2 Rising, and Quadrature x2 Falling
+    * The "num_counts" and "num_signals" attributes are defined to
+      represent the total number of Counts and total number of Signals
+      respectively
 
-Changes since v4:
-* Remove null pointer checks as per comments.
-* Remove extra blank lines.
+The 104-QUAD-8 counter driver has been updated to make use of the
+Generic Counter API changes ("ceiling" and "floor" attributes, constant
+counter_ops structure, count_mode and direction string arrays, etc.).
 
-Changes since v3:
-* Use the regmap_read_poll_timeout function
-* Check for regmap read/write errors.
-* Remove memory barrier after regmap write
-* Derive memory bank offsets using stride macro variable
-* Remove debug statements from code
-* Remove the qcom_llcc_remove function
-* Use if IS_ENABLED in place of ifdef for built-in module
-* Change EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
-* Remove unnecessary free functions
-* Change the variable names as per review comments
+The STM32 Timer counter driver has been updated to make use of the
+Generic Counter API changes ("ceiling" attribute, constant counter_ops
+structure, etc.). In addition, Fabrice Gasnier added support for a
+missing encoder mode (see STM32_COUNT_ENCODER_MODE_2).
 
-Changes since v2:
-* Corrected the Makefile to fix compilation.
+Proper Generic Counter interface support for the STM32 LP Timer has been
+added to its respective counter driver. This is the last in-tree Linux
+kernel driver using the deprecated IIO Counter interface, so we can
+safely remove that interface in the future now.
 
-Changes since v1:
-* Added Makefile and Kconfig.
+I've added deprecation notices to the IIO Counter attributes to
+encourage the switch to the Generic Counter interface. I didn't mention
+a removal date for the relevant code, but perhaps before the next
+longterm kernel release would be a good idea -- this should prevent the
+IIO Counter API from persisting longer than necessary.
 
-Changes since v0:
-* Removed the syscon and simple-mfd approach
-* Updated the device tree nodes to mention LLCC as a single HW block
-* Moved llcc bank offsets from device tree and handled the offset
-  in the driver.
+William Breathitt Gray
 
-ckadabi@codeaurora.org (2):
-  dt-bindings: Documentation for qcom, llcc
-  drivers: soc: Add LLCC driver
+Benjamin Gaignard (2):
+  dt-bindings: counter: Document stm32 quadrature encoder
+  counter: Add STM32 Timer quadrature encoder
 
- .../devicetree/bindings/arm/msm/qcom,llcc.txt      |  26 ++
- drivers/soc/qcom/Kconfig                           |  17 ++
- drivers/soc/qcom/Makefile                          |   2 +
- drivers/soc/qcom/llcc-sdm845.c                     | 106 +++++++
- drivers/soc/qcom/llcc-slice.c                      | 337 +++++++++++++++++++++
- include/linux/soc/qcom/llcc-qcom.h                 | 180 +++++++++++
- 6 files changed, 668 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
- create mode 100644 drivers/soc/qcom/llcc-sdm845.c
- create mode 100644 drivers/soc/qcom/llcc-slice.c
- create mode 100644 include/linux/soc/qcom/llcc-qcom.h
+Fabrice Gasnier (1):
+  counter: stm32-lptimer: add counter device
+
+William Breathitt Gray (6):
+  counter: Introduce the Generic Counter interface
+  counter: Documentation: Add Generic Counter sysfs documentation
+  docs: Add Generic Counter interface documentation
+  counter: 104-quad-8: Add Generic Counter interface support
+  counter: 104-quad-8: Documentation: Add Generic Counter sysfs
+    documentation
+  iio: counter: Remove IIO counter subdirectory
+
+ Documentation/ABI/testing/sysfs-bus-counter   |  241 +++
+ .../ABI/testing/sysfs-bus-counter-104-quad-8  |   36 +
+ Documentation/ABI/testing/sysfs-bus-iio       |    8 +
+ .../testing/sysfs-bus-iio-counter-104-quad-8  |   16 +
+ .../{iio => }/counter/stm32-lptimer-cnt.txt   |    0
+ .../bindings/counter/stm32-timer-cnt.txt      |   26 +
+ .../devicetree/bindings/mfd/stm32-lptimer.txt |    2 +-
+ .../devicetree/bindings/mfd/stm32-timers.txt  |    7 +
+ Documentation/driver-api/generic-counter.rst  |  336 ++++
+ Documentation/driver-api/index.rst            |    1 +
+ MAINTAINERS                                   |   14 +-
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    1 +
+ drivers/counter/104-quad-8.c                  | 1335 ++++++++++++++
+ drivers/counter/Kconfig                       |   59 +
+ drivers/{iio => }/counter/Makefile            |    6 +-
+ drivers/counter/generic-counter.c             | 1541 +++++++++++++++++
+ drivers/counter/stm32-lptimer-cnt.c           |  722 ++++++++
+ drivers/counter/stm32-timer-cnt.c             |  390 +++++
+ drivers/iio/Kconfig                           |    1 -
+ drivers/iio/Makefile                          |    1 -
+ drivers/iio/counter/104-quad-8.c              |  596 -------
+ drivers/iio/counter/Kconfig                   |   34 -
+ drivers/iio/counter/stm32-lptimer-cnt.c       |  382 ----
+ include/linux/counter.h                       |  554 ++++++
+ 25 files changed, 5293 insertions(+), 1018 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+ rename Documentation/devicetree/bindings/{iio => }/counter/stm32-lptimer-cnt.txt (100%)
+ create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+ create mode 100644 Documentation/driver-api/generic-counter.rst
+ create mode 100644 drivers/counter/104-quad-8.c
+ create mode 100644 drivers/counter/Kconfig
+ rename drivers/{iio => }/counter/Makefile (52%)
+ create mode 100644 drivers/counter/generic-counter.c
+ create mode 100644 drivers/counter/stm32-lptimer-cnt.c
+ create mode 100644 drivers/counter/stm32-timer-cnt.c
+ delete mode 100644 drivers/iio/counter/104-quad-8.c
+ delete mode 100644 drivers/iio/counter/Kconfig
+ delete mode 100644 drivers/iio/counter/stm32-lptimer-cnt.c
+ create mode 100644 include/linux/counter.h
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.0
