@@ -1,51 +1,77 @@
-From: rishabhb@codeaurora.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: Documentation for qcom, llcc
-Date: Wed, 16 May 2018 16:32:27 -0700
-Message-ID: <079348edcb511cefb9f4d76877d50cb7@codeaurora.org>
-References: <1525810921-15878-1-git-send-email-rishabhb@codeaurora.org>
- <1525810921-15878-2-git-send-email-rishabhb@codeaurora.org>
- <152649021310.210890.14841324536807182632@swboyd.mtv.corp.google.com>
- <385198cbb91c4a36ad758997916ad271@codeaurora.org>
- <152649413707.210890.2655572242392552759@swboyd.mtv.corp.google.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v4 4/4] drm/rockchip: support dp training outside dp
+ firmware
+Date: Wed, 16 May 2018 16:51:26 -0700
+Message-ID: <20180516235125.GB219198@rodete-desktop-imager.corp.google.com>
+References: <1526354560-23135-1-git-send-email-hl@rock-chips.com>
+ <1526354560-23135-4-git-send-email-hl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152649413707.210890.2655572242392552759@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1526354560-23135-4-git-send-email-hl@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lin Huang <hl@rock-chips.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, zyw@rock-chips.com, daniel.vetter@intel.com, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-16 11:08, Stephen Boyd wrote:
-> Quoting rishabhb@codeaurora.org (2018-05-16 10:33:14)
->> On 2018-05-16 10:03, Stephen Boyd wrote:
->> > Quoting Rishabh Bhatnagar (2018-05-08 13:22:00)
->> 
->> >> +
->> >> +- max-slices:
->> >> +       usage: required
->> >> +       Value Type: <u32>
->> >> +       Definition: Number of cache slices supported by hardware
->> >> +
->> >> +Example:
->> >> +
->> >> +       llcc: qcom,llcc@1100000 {
->> >
->> > cache-controller@1100000 ?
->> >
->> We have tried to use consistent naming convention as in llcc_*
->> everywhere.
->> Using cache-controller will mix and match the naming convention. Also 
->> in
->> the documentation it is explained what llcc is and its full form.
->> 
-> 
-> DT prefers standard node names as opposed to vendor specific node 
-> names.
-> Isn't it a cache controller? I fail to see why this can't be done.
-Hi Stephen,
-The driver is vendor specific and also for uniformity purposes we 
-preferred
-to go with this name.
+KyBLaXNob24KCkhpLAoKT24gVHVlLCBNYXkgMTUsIDIwMTggYXQgMTE6MjI6NDBBTSArMDgwMCwg
+TGluIEh1YW5nIHdyb3RlOgo+IERQIGZpcm13YXJlIHVzZXMgZml4ZWQgcGh5IGNvbmZpZyB2YWx1
+ZXMgdG8gZG8gdHJhaW5pbmcsIGJ1dCBzb21lCj4gYm9hcmRzIG5lZWQgdG8gYWRqdXN0IHRoZXNl
+IHZhbHVlcyB0byBmaXQgZm9yIHRoZWlyIHVuaXF1ZSBoYXJkd2FyZQo+IGRlc2lnbi4gU28gZ2V0
+IHBoeSBjb25maWcgdmFsdWVzIGZyb20gZHRzIGFuZCB1c2Ugc29mdHdhcmUgbGluayB0cmFpbmlu
+Zwo+IGluc3RlYWQgb2YgcmVseWluZyBvbiBmaXJtd2FyZSwgaWYgc29mdHdhcmUgdHJhaW5pbmcg
+ZmFpbCwga2VlcCBmaXJtd2FyZQo+IHRyYWluaW5nIGFzIGEgZmFsbGJhY2sgaWYgc3cgdHJhaW5p
+bmcgZmFpbHMuCj4gCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNo
+aXBzLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBMaW4gSHVhbmcgPGhsQHJvY2stY2hpcHMuY29tPgo+
+IC0tLQo+IENoYW5nZXMgaW4gdjI6Cj4gLSB1cGRhdGUgcGF0Y2ggZm9sbG93aW5nIEVucmljIHN1
+Z2dlc3QKPiBDaGFuZ2VzIGluIHYzOgo+IC0gdXNlIHZhcmlhYmxlIGZ3X3RyYWluaW5nIGluc3Rl
+YWQgc3dfdHJhaW5pbmdfc3VjY2Vzcwo+IC0gYmFzZSBvbiBEUCBTUENFLCBpZiB0cmFpbmluZyBm
+YWlsIHVzZSBsb3dlciBsaW5rIHJhdGUgdG8gcmV0cnkgdHJhaW5pbmcKPiBDaGFuZ2VzIGluIHY0
+Ogo+IC0gaW1wcm92ZSBjZG5fZHBfZ2V0X2xvd2VyX2xpbmtfcmF0ZSgpIGFuZCBjZG5fZHBfc29m
+dHdhcmVfdHJhaW5fbGluaygpIGZvbGxvdyBTZWFuIHN1Z2dlc3QKPiAKPiAgZHJpdmVycy9ncHUv
+ZHJtL3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAgICAgICAgfCAgIDMgKy0KPiAgZHJpdmVycy9n
+cHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1jb3JlLmMgICAgICAgICAgfCAgMjQgKy0KPiAgZHJpdmVy
+cy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1jb3JlLmggICAgICAgICAgfCAgIDIgKwo+ICBkcml2
+ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYyB8IDQyMCArKysrKysr
+KysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcu
+YyAgICAgICAgICAgfCAgMzEgKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1y
+ZWcuaCAgICAgICAgICAgfCAgMzggKystCj4gIDYgZmlsZXMgY2hhbmdlZCwgNTA1IGluc2VydGlv
+bnMoKyksIDEzIGRlbGV0aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL3JvY2tjaGlwL2Nkbi1kcC1saW5rLXRyYWluaW5nLmMKCi4uLgoKPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1saW5rLXRyYWluaW5nLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+IG5ldyBmaWxlIG1vZGUg
+MTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uN2VmZDA3MAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+IEBAIC0wLDAg
+KzEsNDIwIEBACj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gKy8qCj4g
+KyAqIENvcHlyaWdodCAoQykgRnV6aG91IFJvY2tjaGlwIEVsZWN0cm9uaWNzIENvLkx0ZAo+ICsg
+KiBBdXRob3I6IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+Cj4gKyAqLwo+ICsKPiAr
+I2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4KPiAr
+I2luY2x1ZGUgPGxpbnV4L3BoeS9waHkuaD4KPiArI2luY2x1ZGUgPHNvYy9yb2NrY2hpcC9yb2Nr
+Y2hpcF9waHlfdHlwZWMuaD4KPiArCj4gKyNpbmNsdWRlICJjZG4tZHAtY29yZS5oIgo+ICsjaW5j
+bHVkZSAiY2RuLWRwLXJlZy5oIgo+ICsKPiArc3RhdGljIHZvaWQgY2RuX2RwX3NldF9zaWduYWxf
+bGV2ZWxzKHN0cnVjdCBjZG5fZHBfZGV2aWNlICpkcCkKPiArewo+ICsJc3RydWN0IGNkbl9kcF9w
+b3J0ICpwb3J0ID0gZHAtPnBvcnRbZHAtPmFjdGl2ZV9wb3J0XTsKPiArCXN0cnVjdCByb2NrY2hp
+cF90eXBlY19waHkgKnRjcGh5ID0gcGh5X2dldF9kcnZkYXRhKHBvcnQtPnBoeSk7CgpUaGlzIGlz
+IHN0aWxsIGFudGl0aGV0aWNhbCB0byB0aGUgUEhZIGZyYW1ld29yazsgeW91J3JlIGFzc3VtaW5n
+IHRoYXQKdGhpcyBpcyBhIHBhcnRpY3VsYXIgdHlwZSBvZiBQSFkgaGVyZS4KCj4gKwo+ICsJaW50
+IHJhdGUgPSBkcm1fZHBfYndfY29kZV90b19saW5rX3JhdGUoZHAtPmxpbmsucmF0ZSk7Cj4gKwl1
+OCBzd2luZyA9IChkcC0+dHJhaW5fc2V0WzBdICYgRFBfVFJBSU5fVk9MVEFHRV9TV0lOR19NQVNL
+KSA+Pgo+ICsJCSAgIERQX1RSQUlOX1ZPTFRBR0VfU1dJTkdfU0hJRlQ7Cj4gKwl1OCBwcmVfZW1w
+aGFzaXMgPSAoZHAtPnRyYWluX3NldFswXSAmIERQX1RSQUlOX1BSRV9FTVBIQVNJU19NQVNLKQo+
+ICsJCQkgID4+IERQX1RSQUlOX1BSRV9FTVBIQVNJU19TSElGVDsKPiArCj4gKwl0Y3BoeS0+dHlw
+ZWNfcGh5X2NvbmZpZyhwb3J0LT5waHksIHJhdGUsIGRwLT5saW5rLm51bV9sYW5lcywKPiArCQkJ
+CXN3aW5nLCBwcmVfZW1waGFzaXMpOwoKSXMgdGhpcyBzb21ldGhpbmcgZ2VuZXJpYyB0aGF0IGNv
+dWxkIGJlIGFkZGVkIGFzIGEgbmV3IFBIWSBBUEkgaW5zdGVhZD8KCj4gK30KCkJyaWFuCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
