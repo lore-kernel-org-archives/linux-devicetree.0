@@ -1,26 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 0/7] pcal6524 extensions and fixes for pca953x driver
-Date: Wed, 16 May 2018 13:53:34 +0200
-Message-ID: <CACRpkdbk0rNZ3cUN_noqVtNYgDrydGtCCn2fk7yqVRPoroYqpA@mail.gmail.com>
-References: <cover.1524933096.git.hns@goldelico.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] arm64: dts: juno: fix graph node unit addresses for
+ coresight components
+Date: Wed, 16 May 2018 12:49:25 +0100
+Message-ID: <eba4cddf-f668-a5e1-acea-5e6538c230f0@arm.com>
+References: <1526466862-19173-1-git-send-email-sudeep.holla@arm.com>
+ <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1524933096.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <574f6959-6a84-9e0e-3d89-84d2d75d9191@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Liviu Dudau <liviu.dudau@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 28, 2018 at 6:31 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-> V5:
-> * fix wrong split up between patches 1/7and 2/7.
 
-I applied patches 1, 2, 3 so we get some movement on the patch
-set and not too much for you to rebase.
+On 16/05/18 12:23, Suzuki K Poulose wrote:
+> On 05/16/2018 11:34 AM, Sudeep Holla wrote:
 
-It's fine to just resend the rest next time.
+[..]
 
-Yours,
-Linus Walleij
+>> Hi Suzuki/Mathieu,
+>>
+>> I did a quick scan @ drivers/hwtracing/coresight/of_coresight.c to
+>> check if reg field is being used or not and whether this change
+>> causes any regression. I don't think so, but I may be wrong, let me
+>> know.
+> 
+> Unfortunately, I think this would break the components like funnel,
+> where we need the input port number for the connected master to enable
+> the port. Similarly for the output port number for master components in
+> the paths. I have a set of patches which address this by taking care of
+> the port number order to find out the hardware port number.
+> 
+
+Ah ok, I now see of_graph_parse_endpoint, sorry for missing that.
+
+> I will dust it up and send it. That would bring up another important
+> question.
+> 
+
+Cool
+
+> How do we deal with the change in the port number scheme ? e.g, should
+> the new kernel support DTBs with old scheme ? 
+
+IIUC, that's needed for backward compatibility as it was used schema.
+Again I may be wrong.
+
+> If so, how do we specify that the DT uses new scheme.
+
+Perhaps, add something to indicate the change in numbering scheme ?
+
+-- 
+Regards,
+Sudeep
