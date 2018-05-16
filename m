@@ -1,115 +1,49 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim ngd dt
-	bindings
-Date: Wed, 16 May 2018 17:51:17 +0100
-Message-ID: <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
-References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, girishm@quicinc.com, linux-arm-msm@vger.kernel.org, broonie@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, kramasub@codeaurora.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, sdharia@quicinc.com
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v6 1/3] gpio: pca953x: set the PCA_PCAL flag also when matching by DT
+Date: Wed, 16 May 2018 19:01:24 +0200
+Message-ID: <7c9ab1d702eb62755993321865d260fa54b90358.1526490085.git.hns@goldelico.com>
+References: <cover.1526490085.git.hns@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1526490085.git.hns@goldelico.com>
+In-Reply-To: <cover.1526490085.git.hns@goldelico.com>
+References: <cover.1526490085.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for Qualcomm SLIMBus NGD controller found in
-all new SoCs starting from B family.
-SLIMBus NGD controller is a light-weight driver responsible for
-communicating with SLIMBus slaves directly over the bus using messaging
-interface and communicating with master component residing on ADSP for
-bandwidth and data-channel management
+The of_device_table is missing the PCA_PCAL flag so the
+pcal6524 would be operated in tca6424 compatibility mode which
+does not handle the new interrupt mask registers.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- .../bindings/slimbus/slim-ngd-qcom-ctrl.txt        | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
+ drivers/gpio/gpio-pca953x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
-new file mode 100644
-index 000000000000..c948fb098819
---- /dev/null
-+++ b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
-@@ -0,0 +1,70 @@
-+Qualcomm SLIMBus Non Generic Device (NGD) Controller binding
-+
-+SLIMBus NGD controller is a light-weight driver responsible for communicating
-+with SLIMBus slaves directly over the bus using messaging interface and
-+communicating with master component residing on ADSP for bandwidth and
-+data-channel management
-+
-+Please refer to slimbus/bus.txt for details of the common SLIMBus bindings.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "qcom,slim-ngd"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must specify the base address and size of the controller
-+		    register blocks.
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "ctrl"
-+
-+- qcom,ngd-id
-+	Usage: required
-+	Value type: <u32>
-+	Definition: ngd instance id in the controller
-+- dmas
-+	Usage: required
-+	Value type: <array of phandles>
-+	Definition: List of rx and tx dma channels
-+
-+- dma-names
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "rx" and "tx".
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must list controller IRQ.
-+
-+#address-cells
-+	Usage: required
-+	Refer to slimbus/bus.txt for details of the common SLIMBus bindings.
-+
-+#size-cells
-+	Usage: required
-+	Refer to slimbus/bus.txt for details of the common SLIMBus bindings.
-+
-+= EXAMPLE
-+
-+slim@91c0000 {
-+	compatible = "qcom,slim-ngd";
-+	reg = <0x91c0000 0x2C000>;
-+	reg-names = "ctrl";
-+	interrupts = <0 163 0>;
-+	qcom,ngd-id = <1>;
-+	dmas =	<&slimbam 3>, <&slimbam 4>;
-+	dma-names = "rx", "tx";
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	codec@1 {
-+		compatible = "slim217,1a0";
-+		reg  = <1 0>;
-+	};
-+};
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 7d37692d672e..2b667166e855 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -58,6 +58,7 @@
+ #define PCA_GPIO_MASK		0x00FF
+ #define PCA_INT			0x0100
+ #define PCA_PCAL		0x0200
++#define PCA_LATCH_INT (PCA_PCAL | PCA_INT)
+ #define PCA953X_TYPE		0x1000
+ #define PCA957X_TYPE		0x2000
+ #define PCA_TYPE_MASK		0xF000
+@@ -946,8 +947,8 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "nxp,pca9575", .data = OF_957X(16, PCA_INT), },
+ 	{ .compatible = "nxp,pca9698", .data = OF_953X(40, 0), },
+ 
+-	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_INT), },
+-	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_INT), },
++	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_LATCH_INT), },
++	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_LATCH_INT), },
+ 
+ 	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
+ 	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
 -- 
-2.16.2
+2.12.2
