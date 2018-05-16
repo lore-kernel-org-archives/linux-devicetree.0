@@ -1,29 +1,34 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 0/7] pcal6524 extensions and fixes for pca953x driver
-Date: Wed, 16 May 2018 13:56:56 +0200
-Message-ID: <CACRpkdZixSORyofhK5pOWQJeYN5TUwPkCKCwsqd6xVOBTkcWTg@mail.gmail.com>
-References: <cover.1524933096.git.hns@goldelico.com> <CACRpkdbk0rNZ3cUN_noqVtNYgDrydGtCCn2fk7yqVRPoroYqpA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] pinctrl: bcm2835: Add support for generic pinctrl binding
+Date: Wed, 16 May 2018 14:00:57 +0200
+Message-ID: <CACRpkdZL2_j93=+x_NM-5SzxxoHn6m4LYnfb-k9=5wQ-Oi6NVA@mail.gmail.com>
+References: <1525030092-3643-3-git-send-email-matheus@castello.eng.br>
+ <1525135334-28506-1-git-send-email-matheus@castello.eng.br> <1525135334-28506-2-git-send-email-matheus@castello.eng.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbk0rNZ3cUN_noqVtNYgDrydGtCCn2fk7yqVRPoroYqpA@mail.gmail.com>
+In-Reply-To: <1525135334-28506-2-git-send-email-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 1:53 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Sat, Apr 28, 2018 at 6:31 PM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
->> V5:
->> * fix wrong split up between patches 1/7and 2/7.
->
-> I applied patches 1, 2, 3 so we get some movement on the patch
-> set and not too much for you to rebase.
->
-> It's fine to just resend the rest next time.
+On Tue, May 1, 2018 at 2:42 AM, Matheus Castello
+<matheus@castello.eng.br> wrote:
 
-Oh also 6,7 was ripe. So only two patches to resend :)
+> To keep driver up to date we add generic pinctrl binding support, which
+> covers the features used in this driver and has additional node properties
+> that this SoC has compatibility, so enabling future implementations of
+> these properties without the need to create new node properties in the
+> device trees.
+>
+> The logic of this change maintain the old brcm legacy binding support in
+> order to keep the ABI stable.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+
+Patch applied with Stefan's ACK!
 
 Yours,
 Linus Walleij
