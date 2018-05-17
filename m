@@ -1,201 +1,566 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V1 2/5] backlight: qcom-wled: Add support for WLED4
- peripheral
-Date: Thu, 17 May 2018 20:40:12 +0530
-Message-ID: <7143faaec2d0b7b0fd7e0f3b512839d8@codeaurora.org>
-References: <1525341432-15818-1-git-send-email-kgunda@codeaurora.org>
- <1525341432-15818-3-git-send-email-kgunda@codeaurora.org>
- <20180507162004.GB2259@tuxbook-pro>
- <f970143860bd64624e7fad58333df1be@codeaurora.org>
- <82fa847760309cb3382bf0a8da50162c@codeaurora.org>
- <CAL_JsqLQvSpB3CiS1sA5AXwbvC0xkd1HqEYsjY+=oripMXSwuA@mail.gmail.com>
+From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 07/40] iommu: Add a page fault handler
+Date: Thu, 17 May 2018 16:25:55 +0100
+Message-ID: <20180517162555.00002bd3@huawei.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-8-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLQvSpB3CiS1sA5AXwbvC0xkd1HqEYsjY+=oripMXSwuA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-fbdev@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm-msm-owner@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180511190641.23008-8-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-17 18:01, Rob Herring wrote:
-> On Thu, May 17, 2018 at 4:47 AM,  <kgunda@codeaurora.org> wrote:
->> On 2018-05-08 15:55, kgunda@codeaurora.org wrote:
->>> 
->>> On 2018-05-07 21:50, Bjorn Andersson wrote:
->>>> 
->>>> On Thu 03 May 02:57 PDT 2018, Kiran Gunda wrote:
->>>> 
->>>>> WLED4 peripheral is present on some PMICs like pmi8998
->>>>> and pm660l. It has a different register map and also
->>>>> configurations are different. Add support for it.
->>>>> 
->>>> 
->>>> Several things are going on in this patch, it needs to be split to
->>>> not hide the functional changes from the structural/renames.
->>>> 
->>> Ok. I will split it in the next series.
->>>>> 
->>>>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->>>>> ---
->>>>>  .../bindings/leds/backlight/qcom-wled.txt          | 172 ++++-
->>>>>  drivers/video/backlight/qcom-wled.c                | 749
->>>>> +++++++++++++++------
->>>>>  2 files changed, 696 insertions(+), 225 deletions(-)
->>>>> 
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->>>>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->>>>> index fb39e32..0ceffa1 100644
->>>>> --- 
->>>>> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->>>>> +++ 
->>>>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->>>>> @@ -1,30 +1,129 @@
->>>>>  Binding for Qualcomm Technologies, Inc. WLED driver
->>>>> 
->>>>> -Required properties:
->>>>> -- compatible: should be "qcom,pm8941-wled"
->>>>> -- reg: slave address
->>>>> -
->>>>> -Optional properties:
->>>>> -- default-brightness: brightness value on boot, value from: 0-4095
->>>>> -       default: 2048
->>>>> -- label: The name of the backlight device
->>>>> -- qcom,cs-out: bool; enable current sink output
->>>>> -- qcom,cabc: bool; enable content adaptive backlight control
->>>>> -- qcom,ext-gen: bool; use externally generated modulator signal to 
->>>>> dim
->>>>> -- qcom,current-limit: mA; per-string current limit; value from 0 
->>>>> to 25
->>>>> -       default: 20mA
->>>>> -- qcom,current-boost-limit: mA; boost current limit; one of:
->>>>> -       105, 385, 525, 805, 980, 1260, 1400, 1680
->>>>> -       default: 805mA
->>>>> -- qcom,switching-freq: kHz; switching frequency; one of:
->>>>> -       600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371,
->>>>> -       1600, 1920, 2400, 3200, 4800, 9600,
->>>>> -       default: 1600kHz
->>>>> -- qcom,ovp: V; Over-voltage protection limit; one of:
->>>>> -       27, 29, 32, 35
->>>>> -       default: 29V
->>>>> -- qcom,num-strings: #; number of led strings attached; value from 
->>>>> 1 to
->>>>> 3
->>>>> -       default: 2
->>>>> +WLED (White Light Emitting Diode) driver is used for controlling
->>>>> display
->>>>> +backlight that is part of PMIC on Qualcomm Technologies, Inc. 
->>>>> reference
->>>>> +platforms. The PMIC is connected to the host processor via SPMI 
->>>>> bus.
->>>>> +
->>>>> +- compatible
->>>>> +       Usage:        required
->>>>> +       Value type:   <string>
->>>>> +       Definition:   should be "qcom,pm8941-wled" or
->>>>> "qcom,pmi8998-wled".
->>>>> +                     or "qcom,pm660l-wled".
->>>> 
->>>> 
->>>> Better written as
->>>> 
->>>>                 should be one of:
->>>>                         X
->>>>                         Y
->>>>                         Z
->>>> 
->>> Will do it in the next series.
->>>>> 
->>>>> +
->>>>> +- reg
->>>>> +       Usage:        required
->>>>> +       Value type:   <prop encoded array>
->>>>> +       Definition:   Base address of the WLED modules.
->>>>> +
->>>>> +- interrupts
->>>>> +       Usage:        optional
->>>>> +       Value type:   <prop encoded array>
->>>>> +       Definition:   Interrupts associated with WLED. Interrupts 
->>>>> can be
->>>>> +                     specified as per the encoding listed under
->>>>> +                     Documentation/devicetree/bindings/spmi/
->>>>> +                     qcom,spmi-pmic-arb.txt.
->>>> 
->>>> 
->>>> Better to describe that this should be the "short" and "ovp" 
->>>> interrupts
->>>> in this property than in the interrupt-names.
->>>> 
->>> Ok. I will do it in the next series.
->>>>> 
->>>>> +
->>>>> +- interrupt-names
->>>>> +       Usage:        optional
->>>>> +       Value type:   <string>
->>>>> +       Definition:   Interrupt names associated with the 
->>>>> interrupts.
->>>>> +                     Must be "short" and "ovp". The short circuit
->>>>> detection
->>>>> +                     is not supported for PM8941.
->>>>> +
->>>>> +- label
->>>>> +       Usage:        required
->>>>> +       Value type:   <string>
->>>>> +       Definition:   The name of the backlight device
->>>>> +
->>>>> +- default-brightness
->>>>> +       Usage:        optional
->>>>> +       Value type:   <u32>
->>>>> +       Definition:   brightness value on boot, value from: 0-4095
->>>>> +                     Default: 2048
->>>>> +
->>>>> +- qcom,current-limit
->>>>> +       Usage:        optional
->>>>> +       Value type:   <u32>
->>>>> +       Definition:   uA; per-string current limit
->>>> 
->>>> 
->>>> You can't change unit on an existing property, that breaks any 
->>>> existing
->>>> dts using the qcom,pm8941-wled compatible.
->>>> 
->>> 
->>>>> +                     value:
->>>>> +                     For pm8941: from 0 to 25000 with 5000 ua step
->>>>> +                                 Default 20000 uA
->>>>> +                     For pmi8998: from 0 to 30000 with 5000 ua 
->>>>> step
->>>>> +                                  Default 25000 uA.
->>>> 
->>>> 
->>>> These values could be described just as well in mA, so keep the 
->>>> original
->>>> unit - in particular since the boot-limit is in mA...
->>>> 
->>> Ok. Will keep the original as is in the next series.
->> 
->> Here, I may have to go with the approach as in "qcom,ovp". Because for
->> pm8941
->> the current step is 1 mA (I have wrongly mentioned as 5000uA here) and 
->> for
->> PMI8998
->> the current step is 2.5 mA. Hence, I will add another variable
->> "qcom,current-limit-ua"
->> just like "qcom,ovp-mv".
+On Fri, 11 May 2018 20:06:08 +0100
+Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+
+> Some systems allow devices to handle I/O Page Faults in the core mm. For
+> example systems implementing the PCI PRI extension or Arm SMMU stall
+> model. Infrastructure for reporting these recoverable page faults was
+> recently added to the IOMMU core for SVA virtualisation. Add a page fault
+> handler for host SVA.
 > 
-> Use unit suffixes defined in bindings/property-units.txt.
+> IOMMU driver can now instantiate several fault workqueues and link them to
+> IOPF-capable devices. Drivers can choose between a single global
+> workqueue, one per IOMMU device, one per low-level fault queue, one per
+> domain, etc.
 > 
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe 
-> linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-Thanks for pointing it ! hope I can use "qcom,current-limit-microamp" 
-and
-"qcom,ovp-millivolt". I am asking this because i found only 
-"-microvolt".
-"-millivolt" is not present in the bindings you pointed.
+> When it receives a fault event, supposedly in an IRQ handler, the IOMMU
+> driver reports the fault using iommu_report_device_fault(), which calls
+> the registered handler. The page fault handler then calls the mm fault
+> handler, and reports either success or failure with iommu_page_response().
+> When the handler succeeded, the IOMMU retries the access.
+> 
+> The iopf_param pointer could be embedded into iommu_fault_param. But
+> putting iopf_param into the iommu_param structure allows us not to care
+> about ordering between calls to iopf_queue_add_device() and
+> iommu_register_device_fault_handler().
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+
+Hi Jean-Phillipe,
+
+One question below on how we would end up with partial faults left when
+doing the queue remove. Code looks fine, but I'm not seeing how that
+would happen without buggy hardware... + we presumably have to rely on
+the hardware timing out on that request or it's dead anyway...
+
+Jonathan
+
+> 
+> ---
+> v1->v2: multiple queues registered by IOMMU driver
+> ---
+>  drivers/iommu/Kconfig      |   4 +
+>  drivers/iommu/Makefile     |   1 +
+>  drivers/iommu/io-pgfault.c | 363 +++++++++++++++++++++++++++++++++++++
+>  include/linux/iommu.h      |  58 ++++++
+>  4 files changed, 426 insertions(+)
+>  create mode 100644 drivers/iommu/io-pgfault.c
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 38434899e283..09f13a7c4b60 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -79,6 +79,10 @@ config IOMMU_SVA
+>  	select IOMMU_API
+>  	select MMU_NOTIFIER
+>  
+> +config IOMMU_PAGE_FAULT
+> +	bool
+> +	select IOMMU_API
+> +
+>  config FSL_PAMU
+>  	bool "Freescale IOMMU support"
+>  	depends on PCI
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 1dbcc89ebe4c..4b744e399a1b 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_IOMMU_API) += iommu-traces.o
+>  obj-$(CONFIG_IOMMU_API) += iommu-sysfs.o
+>  obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
+>  obj-$(CONFIG_IOMMU_SVA) += iommu-sva.o
+> +obj-$(CONFIG_IOMMU_PAGE_FAULT) += io-pgfault.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
+> diff --git a/drivers/iommu/io-pgfault.c b/drivers/iommu/io-pgfault.c
+> new file mode 100644
+> index 000000000000..321c00dd3a3d
+> --- /dev/null
+> +++ b/drivers/iommu/io-pgfault.c
+> @@ -0,0 +1,363 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Handle device page faults
+> + *
+> + * Copyright (C) 2018 ARM Ltd.
+> + */
+> +
+> +#include <linux/iommu.h>
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +#include <linux/workqueue.h>
+> +
+> +/**
+> + * struct iopf_queue - IO Page Fault queue
+> + * @wq: the fault workqueue
+> + * @flush: low-level flush callback
+> + * @flush_arg: flush() argument
+> + * @refs: references to this structure taken by producers
+> + */
+> +struct iopf_queue {
+> +	struct workqueue_struct		*wq;
+> +	iopf_queue_flush_t		flush;
+> +	void				*flush_arg;
+> +	refcount_t			refs;
+> +};
+> +
+> +/**
+> + * struct iopf_device_param - IO Page Fault data attached to a device
+> + * @queue: IOPF queue
+> + * @partial: faults that are part of a Page Request Group for which the last
+> + *           request hasn't been submitted yet.
+> + */
+> +struct iopf_device_param {
+> +	struct iopf_queue		*queue;
+> +	struct list_head		partial;
+> +};
+> +
+> +struct iopf_context {
+> +	struct device			*dev;
+> +	struct iommu_fault_event	evt;
+> +	struct list_head		head;
+> +};
+> +
+> +struct iopf_group {
+> +	struct iopf_context		last_fault;
+> +	struct list_head		faults;
+> +	struct work_struct		work;
+> +};
+> +
+> +static int iopf_complete(struct device *dev, struct iommu_fault_event *evt,
+> +			 enum page_response_code status)
+> +{
+> +	struct page_response_msg resp = {
+> +		.addr			= evt->addr,
+> +		.pasid			= evt->pasid,
+> +		.pasid_present		= evt->pasid_valid,
+> +		.page_req_group_id	= evt->page_req_group_id,
+> +		.private_data		= evt->iommu_private,
+> +		.resp_code		= status,
+> +	};
+> +
+> +	return iommu_page_response(dev, &resp);
+> +}
+> +
+> +static enum page_response_code
+> +iopf_handle_single(struct iopf_context *fault)
+> +{
+> +	/* TODO */
+> +	return -ENODEV;
+> +}
+> +
+> +static void iopf_handle_group(struct work_struct *work)
+> +{
+> +	struct iopf_group *group;
+> +	struct iopf_context *fault, *next;
+> +	enum page_response_code status = IOMMU_PAGE_RESP_SUCCESS;
+> +
+> +	group = container_of(work, struct iopf_group, work);
+> +
+> +	list_for_each_entry_safe(fault, next, &group->faults, head) {
+> +		struct iommu_fault_event *evt = &fault->evt;
+> +		/*
+> +		 * Errors are sticky: don't handle subsequent faults in the
+> +		 * group if there is an error.
+> +		 */
+> +		if (status == IOMMU_PAGE_RESP_SUCCESS)
+> +			status = iopf_handle_single(fault);
+> +
+> +		if (!evt->last_req)
+> +			kfree(fault);
+> +	}
+> +
+> +	iopf_complete(group->last_fault.dev, &group->last_fault.evt, status);
+> +	kfree(group);
+> +}
+> +
+> +/**
+> + * iommu_queue_iopf - IO Page Fault handler
+> + * @evt: fault event
+> + * @cookie: struct device, passed to iommu_register_device_fault_handler.
+> + *
+> + * Add a fault to the device workqueue, to be handled by mm.
+> + */
+> +int iommu_queue_iopf(struct iommu_fault_event *evt, void *cookie)
+> +{
+> +	struct iopf_group *group;
+> +	struct iopf_context *fault, *next;
+> +	struct iopf_device_param *iopf_param;
+> +
+> +	struct device *dev = cookie;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (WARN_ON(!mutex_is_locked(&param->lock)))
+> +		return -EINVAL;
+> +
+> +	if (evt->type != IOMMU_FAULT_PAGE_REQ)
+> +		/* Not a recoverable page fault */
+> +		return IOMMU_PAGE_RESP_CONTINUE;
+> +
+> +	/*
+> +	 * As long as we're holding param->lock, the queue can't be unlinked
+> +	 * from the device and therefore cannot disappear.
+> +	 */
+> +	iopf_param = param->iopf_param;
+> +	if (!iopf_param)
+> +		return -ENODEV;
+> +
+> +	if (!evt->last_req) {
+> +		fault = kzalloc(sizeof(*fault), GFP_KERNEL);
+> +		if (!fault)
+> +			return -ENOMEM;
+> +
+> +		fault->evt = *evt;
+> +		fault->dev = dev;
+> +
+> +		/* Non-last request of a group. Postpone until the last one */
+> +		list_add(&fault->head, &iopf_param->partial);
+> +
+> +		return IOMMU_PAGE_RESP_HANDLED;
+> +	}
+> +
+> +	group = kzalloc(sizeof(*group), GFP_KERNEL);
+> +	if (!group)
+> +		return -ENOMEM;
+> +
+> +	group->last_fault.evt = *evt;
+> +	group->last_fault.dev = dev;
+> +	INIT_LIST_HEAD(&group->faults);
+> +	list_add(&group->last_fault.head, &group->faults);
+> +	INIT_WORK(&group->work, iopf_handle_group);
+> +
+> +	/* See if we have partial faults for this group */
+> +	list_for_each_entry_safe(fault, next, &iopf_param->partial, head) {
+> +		if (fault->evt.page_req_group_id == evt->page_req_group_id)
+> +			/* Insert *before* the last fault */
+> +			list_move(&fault->head, &group->faults);
+> +	}
+> +
+> +	queue_work(iopf_param->queue->wq, &group->work);
+> +
+> +	/* Postpone the fault completion */
+> +	return IOMMU_PAGE_RESP_HANDLED;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_queue_iopf);
+> +
+> +/**
+> + * iopf_queue_flush_dev - Ensure that all queued faults have been processed
+> + * @dev: the endpoint whose faults need to be flushed.
+> + *
+> + * Users must call this function when releasing a PASID, to ensure that all
+> + * pending faults for this PASID have been handled, and won't hit the address
+> + * space of the next process that uses this PASID.
+> + *
+> + * Return 0 on success.
+> + */
+> +int iopf_queue_flush_dev(struct device *dev)
+> +{
+> +	int ret = 0;
+> +	struct iopf_queue *queue;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (!param)
+> +		return -ENODEV;
+> +
+> +	/*
+> +	 * It is incredibly easy to find ourselves in a deadlock situation if
+> +	 * we're not careful, because we're taking the opposite path as
+> +	 * iommu_queue_iopf:
+> +	 *
+> +	 *   iopf_queue_flush_dev()   |  PRI queue handler
+> +	 *    lock(mutex)             |   iommu_queue_iopf()
+> +	 *     queue->flush()         |    lock(mutex)
+> +	 *      wait PRI queue empty  |
+> +	 *
+> +	 * So we can't hold the device param lock while flushing. We don't have
+> +	 * to, because the queue or the device won't disappear until all flush
+> +	 * are finished.
+> +	 */
+> +	mutex_lock(&param->lock);
+> +	if (param->iopf_param) {
+> +		queue = param->iopf_param->queue;
+> +	} else {
+> +		ret = -ENODEV;
+> +	}
+> +	mutex_unlock(&param->lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	queue->flush(queue->flush_arg, dev);
+> +
+> +	/*
+> +	 * No need to clear the partial list. All PRGs containing the PASID that
+> +	 * needs to be decommissioned are whole (the device driver made sure of
+> +	 * it before this function was called). They have been submitted to the
+> +	 * queue by the above flush().
+> +	 */
+> +	flush_workqueue(queue->wq);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_flush_dev);
+> +
+> +/**
+> + * iopf_queue_add_device - Add producer to the fault queue
+> + * @queue: IOPF queue
+> + * @dev: device to add
+> + */
+> +int iopf_queue_add_device(struct iopf_queue *queue, struct device *dev)
+> +{
+> +	int ret = -EINVAL;
+> +	struct iopf_device_param *iopf_param;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (!param)
+> +		return -ENODEV;
+> +
+> +	iopf_param = kzalloc(sizeof(*iopf_param), GFP_KERNEL);
+> +	if (!iopf_param)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&iopf_param->partial);
+> +	iopf_param->queue = queue;
+> +
+> +	mutex_lock(&param->lock);
+> +	if (!param->iopf_param) {
+> +		refcount_inc(&queue->refs);
+> +		param->iopf_param = iopf_param;
+> +		ret = 0;
+> +	}
+> +	mutex_unlock(&param->lock);
+> +
+> +	if (ret)
+> +		kfree(iopf_param);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_add_device);
+> +
+> +/**
+> + * iopf_queue_remove_device - Remove producer from fault queue
+> + * @dev: device to remove
+> + *
+> + * Caller makes sure that no more fault is reported for this device, and no more
+> + * flush is scheduled for this device.
+> + *
+> + * Note: safe to call unconditionally on a cleanup path, even if the device
+> + * isn't registered to any IOPF queue.
+> + *
+> + * Return 0 if the device was attached to the IOPF queue
+> + */
+> +int iopf_queue_remove_device(struct device *dev)
+> +{
+> +	struct iopf_context *fault, *next;
+> +	struct iopf_device_param *iopf_param;
+> +	struct iommu_param *param = dev->iommu_param;
+> +
+> +	if (!param)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&param->lock);
+> +	iopf_param = param->iopf_param;
+> +	if (iopf_param) {
+> +		refcount_dec(&iopf_param->queue->refs);
+> +		param->iopf_param = NULL;
+> +	}
+> +	mutex_unlock(&param->lock);
+> +	if (!iopf_param)
+> +		return -EINVAL;
+> +
+> +	list_for_each_entry_safe(fault, next, &iopf_param->partial, head)
+> +		kfree(fault);
+> +
+
+Why would we end up here with partials still in the list?  Buggy hardware?
+
+> +	/*
+> +	 * No more flush is scheduled, and the caller removed all bonds from
+> +	 * this device. unbind() waited until any concurrent mm_exit() finished,
+> +	 * therefore there is no flush() running anymore and we can free the
+> +	 * param.
+> +	 */
+> +	kfree(iopf_param);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_remove_device);
+> +
+> +/**
+> + * iopf_queue_alloc - Allocate and initialize a fault queue
+> + * @name: a unique string identifying the queue (for workqueue)
+> + * @flush: a callback that flushes the low-level queue
+> + * @cookie: driver-private data passed to the flush callback
+> + *
+> + * The callback is called before the workqueue is flushed. The IOMMU driver must
+> + * commit all faults that are pending in its low-level queues at the time of the
+> + * call, into the IOPF queue (with iommu_report_device_fault). The callback
+> + * takes a device pointer as argument, hinting what endpoint is causing the
+> + * flush. When the device is NULL, all faults should be committed.
+> + */
+> +struct iopf_queue *
+> +iopf_queue_alloc(const char *name, iopf_queue_flush_t flush, void *cookie)
+> +{
+> +	struct iopf_queue *queue;
+> +
+> +	queue = kzalloc(sizeof(*queue), GFP_KERNEL);
+> +	if (!queue)
+> +		return NULL;
+> +
+> +	/*
+> +	 * The WQ is unordered because the low-level handler enqueues faults by
+> +	 * group. PRI requests within a group have to be ordered, but once
+> +	 * that's dealt with, the high-level function can handle groups out of
+> +	 * order.
+> +	 */
+> +	queue->wq = alloc_workqueue("iopf_queue/%s", WQ_UNBOUND, 0, name);
+> +	if (!queue->wq) {
+> +		kfree(queue);
+> +		return NULL;
+> +	}
+> +
+> +	queue->flush = flush;
+> +	queue->flush_arg = cookie;
+> +	refcount_set(&queue->refs, 1);
+> +
+> +	return queue;
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_alloc);
+> +
+> +/**
+> + * iopf_queue_free - Free IOPF queue
+> + * @queue: queue to free
+> + *
+> + * Counterpart to iopf_queue_alloc(). Caller must make sure that all producers
+> + * have been removed.
+> + */
+> +void iopf_queue_free(struct iopf_queue *queue)
+> +{
+> +
+
+Nitpick : Blank line here doesn't add anything.
+
+> +	/* Caller should have removed all producers first */
+> +	if (WARN_ON(!refcount_dec_and_test(&queue->refs)))
+> +		return;
+> +
+> +	destroy_workqueue(queue->wq);
+> +	kfree(queue);
+> +}
+> +EXPORT_SYMBOL_GPL(iopf_queue_free);
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index faf3390ce89d..fad3a60e1c14 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -461,11 +461,20 @@ struct iommu_fault_param {
+>  	void *data;
+>  };
+>  
+> +/**
+> + * iopf_queue_flush_t - Flush low-level page fault queue
+> + *
+> + * Report all faults currently pending in the low-level page fault queue
+> + */
+> +struct iopf_queue;
+> +typedef int (*iopf_queue_flush_t)(void *cookie, struct device *dev);
+> +
+>  /**
+>   * struct iommu_param - collection of per-device IOMMU data
+>   *
+>   * @fault_param: IOMMU detected device fault reporting data
+>   * @sva_param: SVA parameters
+> + * @iopf_param: I/O Page Fault queue and data
+>   *
+>   * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
+>   *	struct iommu_group	*iommu_group;
+> @@ -475,6 +484,7 @@ struct iommu_param {
+>  	struct mutex lock;
+>  	struct iommu_fault_param *fault_param;
+>  	struct iommu_sva_param *sva_param;
+> +	struct iopf_device_param *iopf_param;
+>  };
+>  
+>  int  iommu_device_register(struct iommu_device *iommu);
+> @@ -874,6 +884,12 @@ static inline int iommu_report_device_fault(struct device *dev, struct iommu_fau
+>  	return 0;
+>  }
+>  
+> +static inline int iommu_page_response(struct device *dev,
+> +				      struct page_response_msg *msg)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+>  static inline int iommu_group_id(struct iommu_group *group)
+>  {
+>  	return -ENODEV;
+> @@ -1038,4 +1054,46 @@ static inline struct mm_struct *iommu_sva_find(int pasid)
+>  }
+>  #endif /* CONFIG_IOMMU_SVA */
+>  
+> +#ifdef CONFIG_IOMMU_PAGE_FAULT
+> +extern int iommu_queue_iopf(struct iommu_fault_event *evt, void *cookie);
+> +
+> +extern int iopf_queue_add_device(struct iopf_queue *queue, struct device *dev);
+> +extern int iopf_queue_remove_device(struct device *dev);
+> +extern int iopf_queue_flush_dev(struct device *dev);
+> +extern struct iopf_queue *
+> +iopf_queue_alloc(const char *name, iopf_queue_flush_t flush, void *cookie);
+> +extern void iopf_queue_free(struct iopf_queue *queue);
+> +#else /* CONFIG_IOMMU_PAGE_FAULT */
+> +static inline int iommu_queue_iopf(struct iommu_fault_event *evt, void *cookie)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int iopf_queue_add_device(struct iopf_queue *queue,
+> +					struct device *dev)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int iopf_queue_remove_device(struct device *dev)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int iopf_queue_flush_dev(struct device *dev)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline struct iopf_queue *
+> +iopf_queue_alloc(const char *name, iopf_queue_flush_t flush, void *cookie)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline void iopf_queue_free(struct iopf_queue *queue)
+> +{
+> +}
+> +#endif /* CONFIG_IOMMU_PAGE_FAULT */
+> +
+>  #endif /* __LINUX_IOMMU_H */
