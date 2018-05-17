@@ -1,64 +1,71 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: overlay: validate offset from property fixups
-Date: Thu, 17 May 2018 09:56:33 -0700
-Message-ID: <21ae05b7-e9d4-d518-c341-861c74f32922@gmail.com>
-References: <1526530791-18591-1-git-send-email-frowand.list@gmail.com>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
+Date: Thu, 17 May 2018 10:00:23 -0700
+Message-ID: <20180517100023.43585c42@jacob-builder>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+ <20180511190641.23008-2-jean-philippe.brucker@arm.com>
+ <20180516134150.34fc8857@jacob-builder>
+ <96c1e0f0-0aa7-badf-123e-cbb1b05e645e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526530791-18591-1-git-send-email-frowand.list@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <96c1e0f0-0aa7-badf-123e-cbb1b05e645e@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "robdclark@gmail.com" <robdclark@gmail.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.ker>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, 17 May 2018 11:02:02 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-On 05/16/18 21:19, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+> Hi Jacob,
 > 
-> The smatch static checker marks the data in offset as untrusted,
-> leading it to warn:
+> Thanks for reviewing this
 > 
->   drivers/of/resolver.c:125 update_usages_of_a_phandle_reference()
->   error: buffer underflow 'prop->value' 's32min-s32max'
+> On 16/05/18 21:41, Jacob Pan wrote:
+>  [...]  
+> > seems the min_pasid never gets used. do you really need it?  
 > 
-> Add check to verify that offset is within the property data.
+> Yes, the SMMU sets it to 1 in patch 28/40, because it needs to reserve
+> PASID 0
 > 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->  drivers/of/resolver.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  [...]  
+> > should it be !features?  
 > 
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 65d0b7adfcd4..7edfac6f1914 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -122,6 +122,11 @@ static int update_usages_of_a_phandle_reference(struct device_node *overlay,
->  			goto err_fail;
->  		}
->  
-> +		if (offset < 0 || offset + sizeof(__be32) > prop->length) {
-> +			err = -EINVAL;
-> +			goto err_fail;
-> +		}
-> +
->  		*(__be32 *)(prop->value + offset) = cpu_to_be32(phandle);
->  	}
->  
+> This checks if the user sets any unsupported bit in features. No
+> feature is supported right now, but patch 09/40 adds
+> IOMMU_SVA_FEAT_IOPF, and changes this line to "features &
+> ~IOMMU_SVA_FEAT_IOPF"
 > 
+> >> +	mutex_lock(&dev->iommu_param->lock);
+> >> +	param = dev->iommu_param->sva_param;
+> >> +	dev->iommu_param->sva_param = NULL;
+> >> +	mutex_unlock(&dev->iommu_param->lock);
+> >> +	if (!param)
+> >> +		return -ENODEV;
+> >> +
+> >> +	if (domain->ops->sva_device_shutdown)
+> >> +		domain->ops->sva_device_shutdown(dev, param);  
+> > seems a little mismatch here, do you need pass the param. I don't
+> > think there is anything else model specific iommu driver need to do
+> > for the param.  
+> 
+> SMMU doesn't use it, but maybe it would remind other IOMMU driver
+> which features were enabled, so they don't have to keep track of that
+> themselves? I can remove it if it isn't useful
+> 
+If there is a use case, I guess iommu driver can always retrieve the
+param from struct device.
+> Thanks,
+> Jean
 
-I should have mentioned that this results in a new compile warning
-for W=2 and W=3.  The new if statement results in:
-
-drivers/of/resolver.c:125:45: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-
-There are other pre-existing warnings in the same file for comparing
-an integer to prop->length.  The correct solution is probably to
-change the type of the length field in struct property to be
-unsigned.  I have added that task to my todo list.
-
--Frank
+[Jacob Pan]
