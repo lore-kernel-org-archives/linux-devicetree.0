@@ -1,97 +1,121 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] ARM: dra762: hwmod: Add MCAN support
-Date: Thu, 17 May 2018 14:09:31 -0700
-Message-ID: <20180517210931.GQ98604@atomide.com>
-References: <1523181542-3770-1-git-send-email-faiz_abbas@ti.com>
- <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Thu, 17 May 2018 21:10:38 +0000
+Message-ID: <SN1PR02MB37588BFF357865F4C9628D99B8910@SN1PR02MB3758.namprd02.prod.outlook.com>
+References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
+        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
+        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
+        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
+        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
+ <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
+ <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
+In-Reply-To: <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, paul@pwsan.com, lokeshvutla@ti.com, linux@armlinux.org.uk
+To: Jolly Shah <JOLLYS@xilinx.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?B?QmrDtnJuIEFuZGVyc3Nvbg==?= <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180408 09:59]:
-> From: Lokesh Vutla <lokeshvutla@ti.com>
-> 
-> Add MCAN hwmod data and register it for dra762 silicons.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 32 +++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> index 62352d1..a2cd7f8 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> @@ -1356,6 +1356,29 @@ static struct omap_hwmod dra7xx_mailbox13_hwmod = {
->  };
->  
->  /*
-> + * 'mcan' class
-> + *
-> + */
-> +static struct omap_hwmod_class dra76x_mcan_hwmod_class = {
-> +	.name	= "mcan",
-> +};
-> +
-> +/* mcan */
-> +static struct omap_hwmod dra76x_mcan_hwmod = {
-> +	.name		= "mcan",
-> +	.class		= &dra76x_mcan_hwmod_class,
-> +	.clkdm_name	= "wkupaon_clkdm",
-> +	.main_clk	= "mcan_clk",
-> +	.prcm = {
-> +		.omap4 = {
-> +			.clkctrl_offs = DRA7XX_CM_WKUPAON_ADC_CLKCTRL_OFFSET,
-> +			.context_offs = DRA7XX_RM_WKUPAON_ADC_CONTEXT_OFFSET,
-> +			.modulemode   = MODULEMODE_SWCTRL,
-> +		},
-> +	},
-> +};
-
-So based on the ti-sysc related dts comments, this patch should
-work except you should be able to just leave out the clocks here
-with the dts changes.
-
-> +/*
->   * 'mcspi' class
->   *
->   */
-> @@ -3818,6 +3841,14 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per2__epwmss2 = {
->  	.user		= OCP_USER_MPU,
->  };
->  
-> +/* l3_main_1 -> mcan */
-> +static struct omap_hwmod_ocp_if dra76x_l3_main_1__mcan = {
-> +	.master		= &dra7xx_l3_main_1_hwmod,
-> +	.slave		= &dra76x_mcan_hwmod,
-> +	.clk		= "l3_iclk_div",
-> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
-> +};
-> +
->  static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
->  	&dra7xx_l3_main_1__dmm,
->  	&dra7xx_l3_main_2__l3_instr,
-> @@ -3958,6 +3989,7 @@ static struct omap_hwmod_ocp_if *dra7xx_gp_hwmod_ocp_ifs[] __initdata = {
->  /* SoC variant specific hwmod links */
->  static struct omap_hwmod_ocp_if *dra76x_hwmod_ocp_ifs[] __initdata = {
->  	&dra7xx_l4_per3__usb_otg_ss4,
-> +	&dra76x_l3_main_1__mcan,
->  	NULL,
->  };
-
-So the omap_hwmod_class, omap_hwmod_ocp_if and entry on the
-dra76x_hwmod_ocp_ifs list are still needed with ti-sysc for a
-while. Eventually that data will just come from the dts interconnect
-hierarchy. For struct omap_hwmod_class_sysconfig, ti-sysc will
-allocate and it based on the dts data.
-
-Regards,
-
-Tony
+SGkgTWFyZWssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgt
+a2VybmVsLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LWtlcm5lbC0NCj4gb3du
+ZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgSm9sbHkgU2hhaA0KPiBTZW50OiBUaHVy
+c2RheSwgTWFyY2ggMTUsIDIwMTggMTA6NDcgQU0NCj4gVG86IE1hcmVrIFN6eXByb3dza2kgPG0u
+c3p5cHJvd3NraUBzYW1zdW5nLmNvbT47IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiA8Z2VlcnRAbGlu
+dXgtbTY4ay5vcmc+OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiBDYzogTWF0dGhp
+YXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT47IEFuZHkgR3Jvc3MNCj4gPGFuZHku
+Z3Jvc3NAbGluYXJvLm9yZz47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IEdlZXJ0
+DQo+IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+OyBCasO2cm4gQW5kZXJz
+c29uDQo+IDxiam9ybi5hbmRlcnNzb25AbGluYXJvLm9yZz47IHNlYW4ud2FuZ0BtZWRpYXRlay5j
+b207IE1pY2hhbCBTaW1law0KPiA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+OyBNYXJrIFJ1dGxh
+bmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgUmFqYW4NCj4gVmFqYSA8UkFKQU5WQHhpbGlueC5j
+b20+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEDQo+IERFVklDRSBUUkVF
+IEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEFSTSA8bGludXgt
+YXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5n
+IExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSRTog
+W1BBVENIIDEvMl0gZHQtYmluZGluZ3M6IHBvd2VyOiBBZGQgWnlucU1QIHBvd2VyIGRvbWFpbg0K
+PiBiaW5kaW5ncw0KPiANCj4gW1RoaXMgc2VuZGVyIGZhaWxlZCBvdXIgZnJhdWQgZGV0ZWN0aW9u
+IGNoZWNrcyBhbmQgbWF5IG5vdCBiZSB3aG8gdGhleSBhcHBlYXINCj4gdG8gYmUuIExlYXJuIGFi
+b3V0IHNwb29maW5nIGF0IGh0dHA6Ly9ha2EubXMvTGVhcm5BYm91dFNwb29maW5nXQ0KPiANCj4g
+SGkgUm9iLCBHZWVydCwgTWFyZWssDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4gRnJvbTogTWFyZWsgU3p5cHJvd3NraSBbbWFpbHRvOm0uc3p5cHJvd3NraUBzYW1zdW5n
+LmNvbV0NCj4gPiBTZW50OiBUdWVzZGF5LCBNYXJjaCAwNiwgMjAxOCAxMjowNiBBTQ0KPiA+IFRv
+OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPjsgUm9iIEhlcnJpbmcN
+Cj4gPiA8cm9iaEBrZXJuZWwub3JnPg0KPiA+IENjOiBKb2xseSBTaGFoIDxKT0xMWVNAeGlsaW54
+LmNvbT47IE1hdHRoaWFzIEJydWdnZXINCj4gPiA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT47IEFu
+ZHkgR3Jvc3MgPGFuZHkuZ3Jvc3NAbGluYXJvLm9yZz47IFNoYXduDQo+ID4gR3VvIDxzaGF3bmd1
+b0BrZXJuZWwub3JnPjsgR2VlcnQgVXl0dGVyaG9ldmVuDQo+ID4gPGdlZXJ0K3JlbmVzYXNAZ2xp
+ZGVyLmJlPjsgQmrDtnJuIEFuZGVyc3Nvbg0KPiA+IDxiam9ybi5hbmRlcnNzb25AbGluYXJvLm9y
+Zz47IHNlYW4ud2FuZ0BtZWRpYXRlay5jb207IE1pY2hhbCBTaW1law0KPiA+IDxtaWNoYWwuc2lt
+ZWtAeGlsaW54LmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBSYWph
+bg0KPiA+IFZhamEgPFJBSkFOVkB4aWxpbnguY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUg
+QU5EIEZMQVRURU5FRA0KPiBERVZJQ0UNCj4gPiBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZz47IExpbnV4IEFSTSA8bGludXgtYXJtLQ0KPiA+IGtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+ID4ga2Vy
+bmVsQHZnZXIua2VybmVsLm9yZz47IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPg0KPiA+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBkdC1iaW5kaW5nczogcG93ZXI6IEFkZCBaeW5xTVAg
+cG93ZXIgZG9tYWluDQo+ID4gYmluZGluZ3MNCj4gPg0KPiA+IEhpIEFsbCwNCj4gPg0KPiA+IE9u
+IDIwMTgtMDMtMDYgMDg6NTksIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4gPiA+IEhpIFJv
+YiwgSm9sbHksDQo+ID4gPg0KPiA+ID4gT24gTW9uLCBNYXIgNSwgMjAxOCBhdCAxMTozOSBQTSwg
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gPj4gT24gVHVlLCBGZWIg
+MjcsIDIwMTggYXQgMDM6NTU6NDlQTSAtMDgwMCwgSm9sbHkgU2hhaCB3cm90ZToNCj4gPiA+Pj4g
+QWRkIGRvY3VtZW50YXRpb24gdG8gZGVzY3JpYmUgWnlucU1QIHBvd2VyIGRvbWFpbiBiaW5kaW5n
+cy4NCj4gPiA+Pj4NCj4gPiA+Pj4gU2lnbmVkLW9mZi1ieTogSm9sbHkgU2hhaCA8am9sbHlzQHhp
+bGlueC5jb20+DQo+ID4gPj4+IFNpZ25lZC1vZmYtYnk6IFJhamFuIFZhamEgPHJhamFudkB4aWxp
+bnguY29tPg0KPiA+ID4+PiAtLS0NCj4gPiA+Pj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+b3dlci96eW5xbXAtZ2VucGQudHh0ICAgICB8IDQ2DQo+ID4gKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ID4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspDQo+ID4gPj4+ICAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gPj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9wb3dlci96eW5xbXAtZ2VucGQudHh0DQo+ID4gPj4+DQo+ID4gPj4+IGRpZmYgLS1naXQN
+Cj4gPiA+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvenlucW1w
+LWdlbnBkLnR4dA0KPiA+ID4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+b3dlci96eW5xbXAtZ2VucGQudHh0DQo+ID4gPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4g
+Pj4+IGluZGV4IDAwMDAwMDAuLjI1Zjk3MTENCj4gPiA+Pj4gLS0tIC9kZXYvbnVsbA0KPiA+ID4+
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvenlucW1wLWdl
+bnBkLnR4dA0KPiA+ID4+PiArVGhpcyBub2RlIGNvbnRhaW5zIGEgbnVtYmVyIG9mIHN1Ym5vZGVz
+LCBlYWNoIHJlcHJlc2VudGluZyBhDQo+ID4gPj4+ICtzaW5nbGUgUE0gZG9tYWluIHRoYXQgUE0g
+ZG9tYWluIGNvbnN1bWVyIGRldmljZXMgcmVmZXJlbmNlLg0KPiA+ID4+PiArDQo+ID4gPj4+ICs9
+PSBQTSBEb21haW4gTm9kZXMgPT0NCj4gPiA+Pj4gKw0KPiA+ID4+PiArUmVxdWlyZWQgcHJvcGVy
+dGllczoNCj4gPiA+Pj4gKyAtICNwb3dlci1kb21haW4tY2VsbHM6IE51bWJlciBvZiBjZWxscyBp
+biBhIFBNIGRvbWFpbiBzcGVjaWZpZXIuDQo+ID4gPj4+ICtNdXN0IGJlDQo+ID4gMC4NCj4gPiA+
+Pj4gKyAtIHBkLWlkOiBMaXN0IG9mIGRvbWFpbiBpZGVudGlmaWVycyBvZiBhcyBkZWZpbmVkIGJ5
+IHBsYXRmb3JtIGZpcm13YXJlLg0KPiA+IFRoZXNlDQo+ID4gPj4+ICsgICAgICAgaWRlbnRpZmll
+cnMgYXJlIHBhc3NlZCB0byB0aGUgUE0gZmlybXdhcmUuDQo+ID4gPj4+ICsNCj4gPiA+Pj4gK0V4
+YW1wbGU6DQo+ID4gPj4+ICsgICAgIHp5bnFtcC1nZW5wZCB7DQo+ID4gPj4+ICsgICAgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJ4bG54LHp5bnFtcC1nZW5wZCI7DQo+ID4gPj4gV2hhdCdzIHRoZSBj
+b250cm9sIGludGVyZmFjZSBmb3IgY29udHJvbGxpbmcgdGhlIGRvbWFpbnM/DQo+ID4gPj4+ICsN
+Cj4gPiA+Pj4gKyAgICAgICAgICAgICBwZF91c2IwOiBwZC11c2IwIHsNCj4gPiA+Pj4gKyAgICAg
+ICAgICAgICAgICAgICAgIHBkLWlkID0gPDIyPjsNCj4gPiA+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+ID4gPj4gVGhlcmUncyBubyBuZWVkIGZv
+ciBhbGwgdGhlc2Ugc3ViIG5vZGVzLiBNYWtlICNwb3dlci1kb21haW4tY2VsbHMgMQ0KPiA+ID4+
+IGFuZCBwdXQgdGhlIGlkIGluIHRoZSBjZWxsIHZhbHVlLg0KPiA+ID4gVGhhdCB3YXMgbXkgZmly
+c3QgcmVhY3Rpb24sIHRvby4uLg0KPiA+ID4+PiArICAgICAgICAgICAgIH07DQo+ID4gPj4+ICsN
+Cj4gPiA+Pj4gKyAgICAgICAgICAgICBwZF9zYXRhOiBwZC1zYXRhIHsNCj4gPiA+Pj4gKyAgICAg
+ICAgICAgICAgICAgICAgIHBkLWlkID0gPDI4PjsNCj4gPiA+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MD47DQo+ID4gPj4+ICsgICAgICAgICAgICAgfTsN
+Cj4gPiA+Pj4gKw0KPiA+ID4+PiArICAgICAgICAgICAgIHBkX2dwdTogcGQtZ3B1IHsNCj4gPiA+
+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBkLWlkID0gPDU4IDIwIDIxPjsNCj4gPiA+IC4uLiB1
+bnRpbCBJIHNhdyB0aGUgYWJvdmUuDQo+ID4gPiBDb250cm9sbGluZyB0aGUgR1BVIHBvd2VyIGFy
+ZWEgcmVxdWlyZXMgY29udHJvbGxpbmcgMyBwaHlzaWNhbCBhcmVhcz8NCj4gPiA+DQo+ID4gPiBI
+b3dldmVyLCBkb2luZyBpdCB0aGlzIHdheSBtYXkgYml0ZSB5b3UgaW4gdGhlIGZ1dHVyZSwgaWYg
+YSBuZWVkDQo+ID4gPiBhcmlzZXMgdG8gY29udHJvbCBhIHN1YnNldC4gQW5kIHdoYXQgYWJvdXQg
+cG93ZXIgdXAvZG93biBvcmRlcj8NCj4gPg0KPiA+IFdoYXQgYWJvdXQgZGVmaW5pbmcgMyBzZXBh
+cmF0ZSBkb21haW5zIGFuZCBhcnJhbmdpbmcgdGhlbSBpbg0KPiA+IHBhcmVudC1jaGlsZCByZWxh
+dGlvbnNoaXA/IGdlbmVyaWMgcG93ZXIgZG9tYWlucyBhbHJlYWR5IHN1cHBvcnRzIHRoYXQNCj4g
+PiBhbmQgdGhpcyBhbGxvd3MgdG8gbmljZWx5IGRlZmluZSB0aGUgcG93ZXIgb24vb2ZmIG9yZGVy
+Lg0KPiA+DQo+ID4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxz
+ID0gPDB4MD47DQo+ID4gPj4+ICsgICAgICAgICAgICAgfTsNCj4gPiA+Pj4gKyAgICAgfTsNCj4g
+Pg0KPiANCj4gSSBhZ3JlZSBpdCBzaG91bGQgYmUgYXJyYW5nZWQgaW4gYXMgcGFyZW50IGNoaWxk
+IG9yZGVyIHRvIGNvbnRyb2wgc3Vic2V0IG9yIGNvbnRyb2wNCj4gb3JkZXIuIFdpbGwgaW5jb3Jw
+b3JhdGUgdGhvc2UgY2hhbmdlcyBpbiBuZXh0IHZlcnNpb24uDQo+IA0KPiA+IEJlc3QgcmVnYXJk
+cw0KPiA+IC0tDQo+ID4gTWFyZWsgU3p5cHJvd3NraSwgUGhEDQo+ID4gU2Ftc3VuZyBSJkQgSW5z
+dGl0dXRlIFBvbGFuZA0KDQoNCkFzIHN1Z2dlc3RlZCwgSSB0cmllZCBvdXQgcGFyZW50LCBjaGls
+ZCBhcHByb2FjaC4gSG93ZXZlciB3aGF0IEkgZm91bmQgaXMgR2VucGQgY29yZSB0YWtlcyBjYXJl
+IG9mIHBhcmVudCBjaGlsZCBkZXBlbmRlbmNpZXMgZm9yIHBvd2VyIG9uIG9mZiByb3V0aW5lcyBv
+bmx5LiBJbiBvdXIgY2FzZSwgV2UgbmVlZCB0aGVtIGluIGF0dGFjaC1kZXRhY2ggcm91dGluZXMg
+dG9vLiBJbiB0aGF0IGNhc2UsIHdlIG5lZWQgdG8gaGFuZGxlIGRlcGVuZGVuY2llcyBtYW51YWxs
+eSBmb3IgdGhvc2Ugcm91dGluZXMuIFBsZWFzZSBzdWdnZXN0IGJldHRlciBhcHByb2FjaCwgaWYg
+YW55Lg0KDQpUaGFua3MsDQpKb2xseSBTaGFoDQo=
