@@ -1,70 +1,81 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3] ASoC: ssm2305: Add amplifier driver
-Date: Thu, 17 May 2018 18:08:26 +0100
-Message-ID: <20180517170826.GV20254@sirena.org.uk>
-References: <20180517135518.29345-1-m.felsch@pengutronix.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: OMAP serial runtime PM and autosuspend (was: Re: [PATCH 4/7]
+ dt-bindings: gnss: add u-blox binding))
+Date: Thu, 17 May 2018 10:10:38 -0700
+Message-ID: <20180517171038.GL98604@atomide.com>
+References: <20180507163439.GV2285@localhost>
+ <20180507175032.GR98604@atomide.com>
+ <20180508065852.GW2285@localhost>
+ <20180508152228.GV98604@atomide.com>
+ <20180508154756.GW98604@atomide.com>
+ <20180508155405.GX98604@atomide.com>
+ <20180508164904.GZ98604@atomide.com>
+ <20180509131003.GC2285@localhost>
+ <20180509135706.GB98604@atomide.com>
+ <20180517100948.GI30172@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7973636498156069458=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180517135518.29345-1-m.felsch@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, lgirdwood@gmail.com, robh+dt@kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180517100948.GI30172@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+* Johan Hovold <johan@kernel.org> [180517 10:12]:
+> [ Sorry about the late reply. ]
+> 
+> On Wed, May 09, 2018 at 06:57:06AM -0700, Tony Lindgren wrote:
+> > * Johan Hovold <johan@kernel.org> [180509 13:12]:
+> 
+> > > It seems we really should not be using the negative autosuspend to
+> > > configure the RPM behaviour the way these drivers do. Perhaps a new
+> > > mechanism is needed.
+> > 
+> > Hmm well simply defaulting to "on" instead of "auto" and setting the
+> > autosuspend_ms to 3000 by default might be doable. I think that way
+> > we can keep use_autosuspend() in probe. Let's hope there are no
+> > existing use cases that would break with that.
+> 
+> No, defaulting to "on" (i.e. calling pm_runtime_forbid()) wouldn't work
+> either as that would also prevent the device from runtime suspending
+> just as the current negative autosuspend delay does.
 
---===============7973636498156069458==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IX4edXMD7HczJcpd"
-Content-Disposition: inline
+Well in that case we should just stick with -1 value for the
+autosuspend. And just do pm_runtime_put_sync_suspend() after
+probe and on close.
 
+> I fail to see how we can implement this using the current toolbox. What
+> you're after here is really a mechanism for selecting between two
+> different runtime PM schemes at runtime:
+> 
+> 	1. normal serial RPM, where the controller is active while the
+> 	   port is open (this should be the safe default)
 
---IX4edXMD7HczJcpd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Agreed. And that is the case already.
 
-On Thu, May 17, 2018 at 03:55:18PM +0200, Marco Felsch wrote:
+> 	2. aggressive serial RPM, where the controller is allowed to
+> 	   suspend while the port is open even though this may result in
+> 	   lost characters when waking up on incoming data
 
-> +++ b/sound/soc/codecs/ssm2305.c
-> @@ -0,0 +1,104 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Analog Devices SSM2305 Amplifier Driver
+In this case it seems that the only thing needed is to just
+configure the autosuspend delay for the parent port. The use of
+-1 has been around since the start of runtime PM AFAIK, so maybe
+we should just document it. I guess we could also introduce
+pm_runtime_block_autoidle_unless_configured() :)
 
-Please submit a followup patch which makes the entire comment a C++ one
-rather than mixing them in the same comment block, it makes things look
-more intentional.
+> For normal ttys, we need a user-space interface for selecting between
+> the two, and for serdev we may want a way to select the RPM scheme from
+> within the kernel.
+> 
+> Note that with my serdev controller runtime PM patch, serdev core could
+> always opt for aggressive PM (as by default serdev core holds an RPM
+> reference for the controller while the port is open).
 
---IX4edXMD7HczJcpd
-Content-Type: application/pgp-signature; name="signature.asc"
+So if your serdev controller was to set the parent autosuspend
+delay on open() and set it back on close() this should work?
 
------BEGIN PGP SIGNATURE-----
+Regards,
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlr9twoACgkQJNaLcl1U
-h9AajAf/UiZ8aywvLaN3ZCWmVFKBn3bIuoD4mopj84yGqcJ6HGfqErzePPVijPQv
-5iT04Hiw6YkmDV1v1AdtgpiwLlINXIE11dP5leARFZxQEyeM3KN8IAIbewR2sCj4
-tud4b6SoBOCHm2FPssO0Ja8B3TkBjt9WvY42Xz2S8lGbXrKH8Janjw75Lj+5xOpo
-HUSKd0ttM7FahNir3uY+4Lzt2KURBLCOU7BYXCC+c4aYKyhA6V4qwG5VSLsJmABe
-aR4UqcO/zLaSk57bKO4tutnVxH5VXRwQ46DvHoyz18asd4lSoqa3alV/weI6m6dQ
-Z5Ycc83N/zv6IDKIjgqfQ27MtMM2hQ==
-=OMJm
------END PGP SIGNATURE-----
-
---IX4edXMD7HczJcpd--
-
---===============7973636498156069458==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7973636498156069458==--
+Tony
