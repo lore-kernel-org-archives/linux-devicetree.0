@@ -1,43 +1,60 @@
-From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH] ARM64: dts: sun50i: a64: Add spi flash node for sopine
-Date: Thu, 17 May 2018 17:06:13 +0200
-Message-ID: <20180517150613.11916-1-manu@freebsd.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v10 25/27] ARM: davinci: add device tree support to timer
+Date: Thu, 17 May 2018 10:09:34 -0500
+Message-ID: <1162de58-00bc-fdfa-eef1-48a094834ac3@lechnology.com>
+References: <20180509172606.29387-1-david@lechnology.com>
+ <20180509172606.29387-26-david@lechnology.com>
+ <8fa98514-7651-58cb-595e-6c7f713540b8@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8fa98514-7651-58cb-595e-6c7f713540b8@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Emmanuel Vadot <manu@freebsd.org>
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Sopine and Pine64-LTS have a winbond w25q128 spi flash on spi0.
-Add a node for it.
+On 05/17/2018 09:35 AM, Sekhar Nori wrote:
+> Hi David,
+> 
+> On Wednesday 09 May 2018 10:56 PM, David Lechner wrote:
+>> This adds device tree support to the davinci timer so that when clocks
+>> are moved to device tree, the timer will still work.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
+> 
+>> +static int __init of_davinci_timer_init(struct device_node *np)
+>> +{
+>> +	struct clk *clk;
+>> +
+>> +	clk = of_clk_get(np, 0);
+>> +	if (IS_ERR(clk)) {
+>> +		struct of_phandle_args clkspec;
+>> +
+>> +		/*
+>> +		 * Fall back to using ref_clk if the actual clock is not
+>> +		 * available. There will be problems later if the real clock
+>> +		 * source is disabled.
+>> +		 */
+>> +
+>> +		pr_warn("%s: falling back to ref_clk\n", __func__);
+>> +
+>> +		clkspec.np = of_find_node_by_name(NULL, "ref_clk");
+>> +		if (IS_ERR(clkspec.np)) {
+>> +			pr_err("%s: No clock available for timer!\n", __func__);
+>> +			return PTR_ERR(clkspec.np);
+>> +		}
+>> +		clk = of_clk_get_from_provider(&clkspec);
+>> +		of_node_put(clkspec.np);
+>> +	}
+> 
+> Do we need this error path now?
+> 
+> Thanks,
+> Sekhar
+> 
 
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index 43418bd881d8..3285aebc06d9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -66,6 +66,18 @@
- 	};
- };
- 
-+&spi0  {
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "w25q128", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+	};
-+};
-+
- #include "axp803.dtsi"
- 
- &reg_aldo2 {
--- 
-2.17.0
+No, not really.
