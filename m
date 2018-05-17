@@ -1,50 +1,67 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 1/2] ARM: dts: stm32: add USB OTG HS support for stm32mp157c SoC
-Date: Thu, 17 May 2018 17:47:31 +0200
-Message-ID: <1526572052-17155-2-git-send-email-amelie.delaunay@st.com>
-References: <1526572052-17155-1-git-send-email-amelie.delaunay@st.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
+Date: Thu, 17 May 2018 11:14:24 -0500
+Message-ID: <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
+References: <20180517133009.26079-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526572052-17155-1-git-send-email-amelie.delaunay@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180517133009.26079-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for USB OTG HS on STM32MP157C SoC.
-USB OTG HS controller is based on DWC2 controller.
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index b66f673..6c3815f 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -600,6 +600,21 @@
- 			clocks = <&rcc DMAMUX>;
- 		};
- 
-+		usbotg_hs: usb-otg@49000000 {
-+			compatible = "snps,dwc2";
-+			reg = <0x49000000 0x10000>;
-+			clocks = <&rcc USBO_K>;
-+			clock-names = "otg";
-+			resets = <&rcc USBO_R>;
-+			reset-names = "dwc2";
-+			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			g-rx-fifo-size = <256>;
-+			g-np-tx-fifo-size = <32>;
-+			g-tx-fifo-size = <128 128 64 64 64 64 32 32>;
-+			dr_mode = "otg";
-+			status = "disabled";
-+		};
-+
- 		rcc: rcc@50000000 {
- 			compatible = "st,stm32mp1-rcc", "syscon";
- 			reg = <0x50000000 0x1000>;
--- 
-2.7.4
+T24gVGh1LCBNYXkgMTcsIDIwMTggYXQgODozMCBBTSwgTWFyY28gRmVsc2NoIDxtLmZlbHNjaEBw
+ZW5ndXRyb25peC5kZT4gd3JvdGU6Cj4gRnJvbTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5n
+dXRyb25peC5kZT4KPgo+IEFjY29yZGluZyB0byB0aGUgc3NtMjYwMyBkYXRhIHNoZWV0IChjb250
+cm9sIHJlZ2lzdGVyIHNlcXVlbmNpbmcpLCB0aGUKPiBkaWdpdGFsIGNvcmUgc2hvdWxkIGJlIGFj
+dGl2YXRlZCBvbmx5IGFmdGVyIGFsbCBuZWNlc3NhcnkgYml0cyBpbiB0aGUKPiBwb3dlciByZWdp
+c3RlciBhcmUgZW5hYmxlZCwgYW5kIGEgZGVsYXkgZGV0ZXJtaW5lZCBieSB0aGUgZGVjb3VwbGlu
+Zwo+IGNhcGFjaXRvciBvbiB0aGUgVk1JRCBwaW4gaGFzIHBhc3NlZC4gSWYgdGhlIGRpZ2l0YWwg
+Y29yZSBpcyBhY3RpdmF0ZWQKPiB0b28gZWFybHksIG9yIGV2ZW4gYmVmb3JlIHRoZSBBREMgaXMg
+cG93ZXJlZCB1cCwgYXVkaWJsZSBhcnRpZmFjdHMKPiBhcHBlYXIgYXQgdGhlIGJlZ2lubmluZyBv
+ZiB0aGUgcmVjb3JkZWQgc2lnbmFsLgo+Cj4gVGhlIGRpZ2l0YWwgY29yZSBpcyBhbHNvIG5lZWRl
+ZCBmb3IgcGxheWJhY2ssIHNvIHdoZW4gcmVjb3JkaW5nIHN0YXJ0cwo+IGl0IG1heSBhbHJlYWR5
+IGJlIGVuYWJsZWQuIFRoaXMgbWVhbnMgd2UgY2Fubm90IGdldCB0aGUgcG93ZXIgc2VxdWVuY2UK
+PiBjb3JyZWN0IHdoZW4gd2Ugd2FudCB0byBiZSBhYmxlIHRvIHN0YXJ0IHJlY29yZGluZyBhZnRl
+ciBwbGF5YmFjay4KPgo+IEFzIGEgd29ya2Fyb3VuZCBwdXQgdGhlIE1JQyBtdXRlIHN3aXRjaCBp
+bnRvIHRoZSBEQVBNIHJvdXRlcy4gVGhpcwo+IHdheSB3ZSBjYW4ga2VlcCB0aGUgcmVjb3JkaW5n
+IGRpc2FibGVkIHVudGlsIHRoZSBNSUMgQmlhcyBoYXMgc2V0dGxlZAo+IGFuZCB0aHVzIGdldCBy
+aWQgb2YgYXVkaWJsZSBhcnRpZmFjdHMuCj4KPiBUaGUgZGVsYXkgd2UgaGF2ZSB0byB3YWl0IGRl
+cGVuZHMgb24gYSBib2FyZCBzcGVjaWZpYyBjYXBhY2l0b3IKPiBjb25uZWN0ZWQgdG8gdGhlIFZN
+SUQgcGlucywgc28gbWFrZSB0aGUgZGVsYXkgY29uZmlndXJhYmxlIGluIHRoZSBkZXZpY2UKPiB0
+cmVlLgo+Cj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25p
+eC5kZT4KPiBTaWduZWQtb2ZmLWJ5OiBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXgu
+ZGU+Cj4gU2lnbmVkLW9mZi1ieTogTWFyY28gRmVsc2NoIDxtLmZlbHNjaEBwZW5ndXRyb25peC5k
+ZT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYWRpLHNzbTI2MDIudHh0
+IHwgIDcgKysrKysKPiAgc291bmQvc29jL2NvZGVjcy9zc20yNjAyLmMgICAgICAgICAgICAgICAg
+ICAgIHwgMzAgKysrKysrKysrKysrKysrKystLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2Vy
+dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxzc20yNjAyLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9hZGksc3NtMjYwMi50eHQKPiBpbmRleCAzYjMzMDJm
+ZTM5OWIuLjkzMzRkNDhjMDQ2MiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3Mvc291bmQvYWRpLHNzbTI2MDIudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxzc20yNjAyLnR4dAo+IEBAIC0xMSw5ICsxMSwx
+NiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgIC0gcmVnIDogdGhlIEkyQyBhZGRyZXNzIG9m
+IHRoZSBkZXZpY2UgZm9yIEkyQywgdGhlIGNoaXAgc2VsZWN0Cj4gICAgICAgICAgICBudW1iZXIg
+Zm9yIFNQSS4KPgo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsKPiArICAtIHN0YXJ0dXAtZGVs
+YXktdXMgOiBkZWxheSBiZXR3ZWVuIHBvd2VyaW5nIG9uIGFuZCBhY3RpdmF0aW5nIHRoZSBkaWdp
+dGFsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29yZSwgZGV0ZXJtaW5lZCBieSB0aGUgZGVj
+b3VwbGluZyBjYXBhY2l0b3IgQyBvbiB0aGUKPiArICAgICAgICAgICAgICAgICAgICAgIFZNSUQg
+cGluOiBkZWxheSBbwrVzXSA9IEMgW8K1Rl0gKiAyNTAwMCAvIDMuNQo+ICsKCldlIGFscmVhZHkg
+aGF2ZSBzaW1pbGFybHkgZGVmaW5lZCBwcm9wZXJ0eS4gUGxlYXNlIHJldXNlIHRoYXQuIFNlZSBt
+bWMKcHdyc2VxIGJpbmRpbmcuCgpBbHNvLCBwbGVhc2Ugc3BsaXQgYmluZGluZ3MgdG8gc2VwYXJh
+dGUgcGF0Y2guCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3Jn
+Cmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRl
+dmVsCg==
