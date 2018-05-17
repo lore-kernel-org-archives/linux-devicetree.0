@@ -1,7 +1,7 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2 2/3] ARM: dts: stm32: enable RTC on stm32mp157c-ed1
-Date: Thu, 17 May 2018 14:07:07 +0200
-Message-ID: <1526558828-24456-3-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH v2 1/3] ARM: dts: stm32: add RTC support to stm32mp157c
+Date: Thu, 17 May 2018 14:07:06 +0200
+Message-ID: <1526558828-24456-2-git-send-email-amelie.delaunay@st.com>
 References: <1526558828-24456-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,27 +12,32 @@ To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.tor
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable RTC (Real Time Clock) on stm32mp157c-ed1 board.
+Add support for RTC (Real Time Clock) to STM32MP157C SoC.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index ae33653..050c30d 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -68,6 +68,10 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index b66f673..df2d874 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -818,6 +818,15 @@
+ 			status = "disabled";
+ 		};
  
-+&rtc {
-+	status = "okay";
-+};
++		rtc: rtc@5c004000 {
++			compatible = "st,stm32mp1-rtc";
++			reg = <0x5c004000 0x400>;
++			clocks = <&rcc RTCAPB>, <&rcc RTC>;
++			clock-names = "pclk", "rtc_ck";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
 +
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart4_pins_a>;
+ 		i2c6: i2c@5c009000 {
+ 			compatible = "st,stm32f7-i2c";
+ 			reg = <0x5c009000 0x400>;
 -- 
 2.7.4
