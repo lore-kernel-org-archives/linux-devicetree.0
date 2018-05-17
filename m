@@ -1,54 +1,110 @@
-From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH] ARM64: dts: sun50i: h5: Add spi flash node for OrangePi PC2
-Date: Thu, 17 May 2018 12:34:35 +0200
-Message-ID: <20180517103435.92874-1-manu@freebsd.org>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH] ASoC: ssm2305: Add amplifier driver
+Date: Thu, 17 May 2018 12:52:02 +0200
+Message-ID: <472f8866-755a-7484-dddb-16bed933acfe@metafoo.de>
+References: <20180517092245.16036-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Emmanuel Vadot <manu@freebsd.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180517092245.16036-1-m.felsch@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-The OrangePi PC2 have an mx25l1606e spi flash.
-Add a node for it.
+On 05/17/2018 11:22 AM, Marco Felsch wrote:
+> The ssm2305 is a simple Class-D audio amplifier. A application can
+> turn on/off the device by a gpio. It's also possible to hardwire the
+> shutdown pin.
+> 
+> Tested on a i.MX6 based custom board.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
- .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts    | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-index 98862c7c7258..0b870e4b4fad 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -207,6 +207,18 @@
- 	status = "okay";
- };
- 
-+&spi0  {
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "mx25l1606e", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.17.0
+Thanks for the patch. Looks mostly good, some comments inline.
+
+> ---
+>  .../devicetree/bindings/sound/adi,ssm2305.txt |  15 +++
+>  sound/soc/codecs/Kconfig                      |   7 ++
+>  sound/soc/codecs/Makefile                     |   2 +
+>  sound/soc/codecs/ssm2305.c                    | 105 ++++++++++++++++++
+>  4 files changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/adi,ssm2305.txt
+>  create mode 100644 sound/soc/codecs/ssm2305.c
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2305.txt b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
+> new file mode 100644
+> index 000000000000..fc4c99225538
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
+> @@ -0,0 +1,15 @@
+> +Analog Devices SSM2305 Speaker Amplifier
+> +========================================
+> +
+> +Required properties:
+> +  - compatible : "adi,ssm2305"
+> +
+> +Optional properties:
+> +  - ssm2305,shutdown-gpio : the gpio connected to the shutdown pin
+
+I think policy is to use only the -gpios suffix for new bindings.
+
+> +
+> +Example:
+> +
+> +ssm2305: analog-amplifier {
+> +	compatible = "adi,ssm2305";
+> +	ssm2305,shutdown-gpio = <&gpio3 20 GPIO_ACTIVE_LOW>;
+> +};
+[...]
+> +
+> +static int ssm2305_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ssm2305 *priv;
+> +	int err;
+> +
+> +	/* Allocate the private data */
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	/* Shutdown gpio is optional */
+
+If it is really optional you should use gpiod_get_optional. But I wonder
+what is the point of the driver if the GPIO is not present?
+
+> +	priv->gpiod_shutdown = devm_gpiod_get(dev, "ssm2305,shutdown",
+> +					      GPIOD_OUT_LOW);
+> +	if (IS_ERR(priv->gpiod_shutdown)) {
+> +		err = PTR_ERR(priv->gpiod_shutdown);
+> +		if (err != -EPROBE_DEFER)
+> +			dev_warn(dev, "Failed to get 'shutdown' gpio: %d\n",
+> +				 err);
+
+Should err be returned here?
+
+> +	}
+> +
+> +	dev_info(dev, "probed\n");
+
+That's a bit too much noise, imagine every driver did this.
+
+> +
+> +	return devm_snd_soc_register_component(dev, &ssm2305_component_driver,
+> +					       NULL, 0);
+> +}
