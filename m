@@ -1,233 +1,290 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 5/6] ARM: dts: rcar-gen2: Remove unused VIN properties
-Date: Thu, 17 May 2018 11:01:10 +0200
-Message-ID: <20180517090110.GA20190@w540>
-References: <1526488352-898-1-git-send-email-jacopo+renesas@jmondi.org>
- <1526488352-898-6-git-send-email-jacopo+renesas@jmondi.org>
- <20180516221307.GF17948@bigcity.dyn.berto.se>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0027674226239671240=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180516221307.GF17948@bigcity.dyn.berto.se>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Lin Huang <hl@rock-chips.com>
+Subject: [PATCH v5 1/4] drm/rockchip: add transfer function for cdn-dp
+Date: Thu, 17 May 2018 17:17:57 +0800
+Message-ID: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: seanpaul@chromium.org, airlied@linux.ie, zyw@rock-chips.com
+Cc: dianders@chromium.org, briannorris@chromium.org, linux-rockchip@lists.infradead.org, heiko@sntech.de, daniel.vetter@intel.com, jani.nikula@linux.intel.com, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, eballetbo@gmail.com, robh+dt@kernel.org, devicetree@vger.kernel.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Chris Zhong <zyw@rock-chips.com>
 
---===============0027674226239671240==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
+We may support training outside firmware, so we need support
+dpcd read/write to get the message or do some setting with
+display.
 
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Signed-off-by: Lin Huang <hl@rock-chips.com>
+Reviewed-by: Sean Paul <seanpaul@chromium.org>
+Reviewed-by: Enric Balletbo <enric.balletbo@collabora.com>
+---
+Changes in v2:
+- update patch following Enric suggest
+Changes in v3:
+- None
+Changes in v4:
+- None
+Changes in v5:
+- None
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ drivers/gpu/drm/rockchip/cdn-dp-core.c | 55 +++++++++++++++++++++++----
+ drivers/gpu/drm/rockchip/cdn-dp-core.h |  1 +
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c  | 69 ++++++++++++++++++++++++++++++----
+ drivers/gpu/drm/rockchip/cdn-dp-reg.h  | 14 ++++++-
+ 4 files changed, 122 insertions(+), 17 deletions(-)
 
-Hi Niklas,
-
-On Thu, May 17, 2018 at 12:13:07AM +0200, Niklas S=C3=B6derlund wrote:
-> Hi Jacopo,
->
-> Thanks for your work.
->
-> On 2018-05-16 18:32:31 +0200, Jacopo Mondi wrote:
-> > The 'bus-width' and 'pclk-sample' properties are not parsed by the VIN
-> > driver and only confuse users. Remove them in all Gen2 SoC that used
-> > them.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  arch/arm/boot/dts/r8a7790-lager.dts   | 3 ---
-> >  arch/arm/boot/dts/r8a7791-koelsch.dts | 3 ---
-> >  arch/arm/boot/dts/r8a7791-porter.dts  | 1 -
-> >  arch/arm/boot/dts/r8a7793-gose.dts    | 3 ---
-> >  arch/arm/boot/dts/r8a7794-alt.dts     | 1 -
-> >  arch/arm/boot/dts/r8a7794-silk.dts    | 1 -
-> >  6 files changed, 12 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8=
-a7790-lager.dts
-> > index 063fdb6..b56b309 100644
-> > --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> > +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> > @@ -873,10 +873,8 @@
-> >  	port {
-> >  		vin0ep2: endpoint {
-> >  			remote-endpoint =3D <&adv7612_out>;
-> > -			bus-width =3D <24>;
->
-> I can't really make up my mind if this is a good thing or not. Device
-> tree describes the hardware and not what the drivers make use of. And
-> the fact is that this bus is 24 bits wide. So I'm not sure we should
-> remove these properties. But I would love to hear what others think
-> about this.
->
-
-Just to point out those properties are not even documented in rcar-vin
-bindings (actually, none of them was).
-
-I feel it's wrong to have them here, as someone may think that
-changing their value should actually change the VIN interface behavior,
-which it's not true, leading to massive confusion and quite some code
-digging for no reason (and they will get mad at us at some point, probably =
-:)
-
-Thanks
-   j
-
-> >  			hsync-active =3D <0>;
-> >  			vsync-active =3D <0>;
-> > -			pclk-sample =3D <1>;
-> >  			data-active =3D <1>;
-> >  		};
-> >  	};
-> > @@ -895,7 +893,6 @@
-> >
-> >  		vin1ep0: endpoint {
-> >  			remote-endpoint =3D <&adv7180>;
-> > -			bus-width =3D <8>;
-> >  		};
-> >  	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/=
-r8a7791-koelsch.dts
-> > index f40321a..9967666 100644
-> > --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-> > +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> > @@ -849,10 +849,8 @@
-> >
-> >  		vin0ep2: endpoint {
-> >  			remote-endpoint =3D <&adv7612_out>;
-> > -			bus-width =3D <24>;
-> >  			hsync-active =3D <0>;
-> >  			vsync-active =3D <0>;
-> > -			pclk-sample =3D <1>;
-> >  			data-active =3D <1>;
-> >  		};
-> >  	};
-> > @@ -870,7 +868,6 @@
-> >
-> >  		vin1ep: endpoint {
-> >  			remote-endpoint =3D <&adv7180>;
-> > -			bus-width =3D <8>;
-> >  		};
-> >  	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r=
-8a7791-porter.dts
-> > index c14e6fe..055a7f1 100644
-> > --- a/arch/arm/boot/dts/r8a7791-porter.dts
-> > +++ b/arch/arm/boot/dts/r8a7791-porter.dts
-> > @@ -391,7 +391,6 @@
-> >
-> >  		vin0ep: endpoint {
-> >  			remote-endpoint =3D <&adv7180>;
-> > -			bus-width =3D <8>;
-> >  		};
-> >  	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a=
-7793-gose.dts
-> > index 9ed6961..9d3fba2 100644
-> > --- a/arch/arm/boot/dts/r8a7793-gose.dts
-> > +++ b/arch/arm/boot/dts/r8a7793-gose.dts
-> > @@ -759,10 +759,8 @@
-> >
-> >  		vin0ep2: endpoint {
-> >  			remote-endpoint =3D <&adv7612_out>;
-> > -			bus-width =3D <24>;
-> >  			hsync-active =3D <0>;
-> >  			vsync-active =3D <0>;
-> > -			pclk-sample =3D <1>;
-> >  			data-active =3D <1>;
-> >  		};
-> >  	};
-> > @@ -781,7 +779,6 @@
-> >
-> >  		vin1ep: endpoint {
-> >  			remote-endpoint =3D <&adv7180_out>;
-> > -			bus-width =3D <8>;
-> >  		};
-> >  	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7=
-794-alt.dts
-> > index 26a8834..4bbb9cc 100644
-> > --- a/arch/arm/boot/dts/r8a7794-alt.dts
-> > +++ b/arch/arm/boot/dts/r8a7794-alt.dts
-> > @@ -380,7 +380,6 @@
-> >
-> >  		vin0ep: endpoint {
-> >  			remote-endpoint =3D <&adv7180>;
-> > -			bus-width =3D <8>;
-> >  		};
-> >  	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/r8a7794-silk.dts b/arch/arm/boot/dts/r8a=
-7794-silk.dts
-> > index 351cb3b..c0c5d31 100644
-> > --- a/arch/arm/boot/dts/r8a7794-silk.dts
-> > +++ b/arch/arm/boot/dts/r8a7794-silk.dts
-> > @@ -480,7 +480,6 @@
-> >
-> >  		vin0ep: endpoint {
-> >  			remote-endpoint =3D <&adv7180>;
-> > -			bus-width =3D <8>;
-> >  		};
-> >  	};
-> >  };
-> > --
-> > 2.7.4
-> >
->
-> --
-> Regards,
-> Niklas S=C3=B6derlund
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa/UTWAAoJEHI0Bo8WoVY8SesQAIeTcsNVt3KCDFQ2RJ5cwf0g
-IJSgO/15lLtDNdZUxBltmwvpujppz+jPGGss17mZaf6FFdRPCoypp4nw4kmBhmFg
-hHtOBIrXcfJQQZPIP5UswxP2C8lLW0daGlCP0wuHzSAlGLJf3AJQrOYOQNHknTwB
-FBr2AbnPqbY7Oj4MjDLgZeXZjO4E9sQpGOUiHKNJgNChe2ZFcMubJMcNUIEc+Dcq
-HYgZFPSrBc/JBLLg8rRvnr+7H5fFqe8Wfqqcx+P593j0gBqZoJ6iX/NUE3Rc/7q5
-0nKPQyKFX5LqHyGODBZu0BGoCOyecQKWCibIZnyZJGu0GKH/oNOXnZmHOAAfw7om
-wBXC2ZUI6PxqGYwo7IwpBH4hhCMvM/1SwKsRLEV+LnV3UmScg7BNAfJYQ6ANmzBa
-mY7DKe6TaoizKv3gsnq/c5mTh2Hjw3w84A9pdFe9iJDOysERirpSQpuRwJ7H07Wb
-UcbQKL8A9EDIglpXSuMb+3/HnCv3Wse/PjZ6o6aEbXR1RLemY52qrw/SmAV/4c0K
-6etf+tbjc4nmxtiqTMEve8B9gCJY+Z0m3qoXsqO5CRmB+LH3MWnOKrzyFB+4iG8+
-sJmiyPLqVwzoKNGmFjR7/qFTRKu3sNIBaWKKChItrxDpZ+2HAAYMXT6I8cJDCO6g
-SaQxcv4x7eYtuYGVFVKn
-=x1ck
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
-
-
---===============0027674226239671240==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0027674226239671240==--
+diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.c b/drivers/gpu/drm/rockchip/cdn-dp-core.c
+index c6fbdcd..cce64c1 100644
+--- a/drivers/gpu/drm/rockchip/cdn-dp-core.c
++++ b/drivers/gpu/drm/rockchip/cdn-dp-core.c
+@@ -176,8 +176,8 @@ static int cdn_dp_get_sink_count(struct cdn_dp_device *dp, u8 *sink_count)
+ 	u8 value;
+ 
+ 	*sink_count = 0;
+-	ret = cdn_dp_dpcd_read(dp, DP_SINK_COUNT, &value, 1);
+-	if (ret)
++	ret = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, &value, 1);
++	if (ret < 0)
+ 		return ret;
+ 
+ 	*sink_count = DP_GET_SINK_COUNT(value);
+@@ -374,9 +374,9 @@ static int cdn_dp_get_sink_capability(struct cdn_dp_device *dp)
+ 	if (!cdn_dp_check_sink_connection(dp))
+ 		return -ENODEV;
+ 
+-	ret = cdn_dp_dpcd_read(dp, DP_DPCD_REV, dp->dpcd,
+-			       DP_RECEIVER_CAP_SIZE);
+-	if (ret) {
++	ret = drm_dp_dpcd_read(&dp->aux, DP_DPCD_REV, dp->dpcd,
++			       sizeof(dp->dpcd));
++	if (ret < 0) {
+ 		DRM_DEV_ERROR(dp->dev, "Failed to get caps %d\n", ret);
+ 		return ret;
+ 	}
+@@ -582,8 +582,8 @@ static bool cdn_dp_check_link_status(struct cdn_dp_device *dp)
+ 	if (!port || !dp->link.rate || !dp->link.num_lanes)
+ 		return false;
+ 
+-	if (cdn_dp_dpcd_read(dp, DP_LANE0_1_STATUS, link_status,
+-			     DP_LINK_STATUS_SIZE)) {
++	if (drm_dp_dpcd_read_link_status(&dp->aux, link_status) !=
++	    DP_LINK_STATUS_SIZE) {
+ 		DRM_ERROR("Failed to get link status\n");
+ 		return false;
+ 	}
+@@ -1012,6 +1012,40 @@ static int cdn_dp_pd_event(struct notifier_block *nb,
+ 	return NOTIFY_DONE;
+ }
+ 
++static ssize_t cdn_dp_aux_transfer(struct drm_dp_aux *aux,
++				   struct drm_dp_aux_msg *msg)
++{
++	struct cdn_dp_device *dp = container_of(aux, struct cdn_dp_device, aux);
++	int ret;
++	u8 status;
++
++	switch (msg->request & ~DP_AUX_I2C_MOT) {
++	case DP_AUX_NATIVE_WRITE:
++	case DP_AUX_I2C_WRITE:
++	case DP_AUX_I2C_WRITE_STATUS_UPDATE:
++		ret = cdn_dp_dpcd_write(dp, msg->address, msg->buffer,
++					msg->size);
++		break;
++	case DP_AUX_NATIVE_READ:
++	case DP_AUX_I2C_READ:
++		ret = cdn_dp_dpcd_read(dp, msg->address, msg->buffer,
++				       msg->size);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	status = cdn_dp_get_aux_status(dp);
++	if (status == AUX_STATUS_ACK)
++		msg->reply = DP_AUX_NATIVE_REPLY_ACK;
++	else if (status == AUX_STATUS_NACK)
++		msg->reply = DP_AUX_NATIVE_REPLY_NACK;
++	else if (status == AUX_STATUS_DEFER)
++		msg->reply = DP_AUX_NATIVE_REPLY_DEFER;
++
++	return ret;
++}
++
+ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
+ {
+ 	struct cdn_dp_device *dp = dev_get_drvdata(dev);
+@@ -1030,6 +1064,13 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
+ 	dp->active = false;
+ 	dp->active_port = -1;
+ 	dp->fw_loaded = false;
++	dp->aux.name = "DP-AUX";
++	dp->aux.transfer = cdn_dp_aux_transfer;
++	dp->aux.dev = dev;
++
++	ret = drm_dp_aux_register(&dp->aux);
++	if (ret)
++		return ret;
+ 
+ 	INIT_WORK(&dp->event_work, cdn_dp_pd_event_work);
+ 
+diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.h b/drivers/gpu/drm/rockchip/cdn-dp-core.h
+index f57e296..46159b2 100644
+--- a/drivers/gpu/drm/rockchip/cdn-dp-core.h
++++ b/drivers/gpu/drm/rockchip/cdn-dp-core.h
+@@ -78,6 +78,7 @@ struct cdn_dp_device {
+ 	struct platform_device *audio_pdev;
+ 	struct work_struct event_work;
+ 	struct edid *edid;
++	struct drm_dp_aux aux;
+ 
+ 	struct mutex lock;
+ 	bool connected;
+diff --git a/drivers/gpu/drm/rockchip/cdn-dp-reg.c b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
+index eb3042c..979355d 100644
+--- a/drivers/gpu/drm/rockchip/cdn-dp-reg.c
++++ b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
+@@ -221,7 +221,12 @@ static int cdn_dp_reg_write_bit(struct cdn_dp_device *dp, u16 addr,
+ 				   sizeof(field), field);
+ }
+ 
+-int cdn_dp_dpcd_read(struct cdn_dp_device *dp, u32 addr, u8 *data, u16 len)
++/*
++ * Returns the number of bytes transferred on success, or a negative
++ * error code on failure. -ETIMEDOUT is returned if mailbox message was
++ * not send successfully;
++ */
++ssize_t cdn_dp_dpcd_read(struct cdn_dp_device *dp, u32 addr, u8 *data, u16 len)
+ {
+ 	u8 msg[5], reg[5];
+ 	int ret;
+@@ -247,24 +252,41 @@ int cdn_dp_dpcd_read(struct cdn_dp_device *dp, u32 addr, u8 *data, u16 len)
+ 		goto err_dpcd_read;
+ 
+ 	ret = cdn_dp_mailbox_read_receive(dp, data, len);
++	if (!ret)
++		return len;
+ 
+ err_dpcd_read:
++	DRM_DEV_ERROR(dp->dev, "dpcd read failed: %d\n", ret);
+ 	return ret;
+ }
+ 
+-int cdn_dp_dpcd_write(struct cdn_dp_device *dp, u32 addr, u8 value)
++#define CDN_AUX_HEADER_SIZE	5
++#define CDN_AUX_MSG_SIZE	20
++/*
++ * Returns the number of bytes transferred on success, or a negative error
++ * code on failure. -ETIMEDOUT is returned if mailbox message was not send
++ * success; -EINVAL is returned if get the wrong data size after message
++ * is sent
++ */
++ssize_t cdn_dp_dpcd_write(struct cdn_dp_device *dp, u32 addr, u8 *data, u16 len)
+ {
+-	u8 msg[6], reg[5];
++	u8 msg[CDN_AUX_MSG_SIZE + CDN_AUX_HEADER_SIZE];
++	u8 reg[CDN_AUX_HEADER_SIZE];
+ 	int ret;
+ 
+-	msg[0] = 0;
+-	msg[1] = 1;
++	if (WARN_ON(len > CDN_AUX_MSG_SIZE) || WARN_ON(len <= 0))
++		return -EINVAL;
++
++	msg[0] = (len >> 8) & 0xff;
++	msg[1] = len & 0xff;
+ 	msg[2] = (addr >> 16) & 0xff;
+ 	msg[3] = (addr >> 8) & 0xff;
+ 	msg[4] = addr & 0xff;
+-	msg[5] = value;
++
++	memcpy(msg + CDN_AUX_HEADER_SIZE, data, len);
++
+ 	ret = cdn_dp_mailbox_send(dp, MB_MODULE_ID_DP_TX, DPTX_WRITE_DPCD,
+-				  sizeof(msg), msg);
++				  CDN_AUX_HEADER_SIZE + len, msg);
+ 	if (ret)
+ 		goto err_dpcd_write;
+ 
+@@ -277,8 +299,12 @@ int cdn_dp_dpcd_write(struct cdn_dp_device *dp, u32 addr, u8 value)
+ 	if (ret)
+ 		goto err_dpcd_write;
+ 
+-	if (addr != (reg[2] << 16 | reg[3] << 8 | reg[4]))
++	if ((len != (reg[0] << 8 | reg[1])) ||
++	    (addr != (reg[2] << 16 | reg[3] << 8 | reg[4]))) {
+ 		ret = -EINVAL;
++	} else {
++		return len;
++	}
+ 
+ err_dpcd_write:
+ 	if (ret)
+@@ -286,6 +312,33 @@ int cdn_dp_dpcd_write(struct cdn_dp_device *dp, u32 addr, u8 value)
+ 	return ret;
+ }
+ 
++int cdn_dp_get_aux_status(struct cdn_dp_device *dp)
++{
++	u8 status;
++	int ret;
++
++	ret = cdn_dp_mailbox_send(dp, MB_MODULE_ID_DP_TX,
++				  DPTX_GET_LAST_AUX_STAUS, 0, NULL);
++	if (ret)
++		goto err_get_hpd;
++
++	ret = cdn_dp_mailbox_validate_receive(dp, MB_MODULE_ID_DP_TX,
++					      DPTX_GET_LAST_AUX_STAUS,
++					      sizeof(status));
++	if (ret)
++		goto err_get_hpd;
++
++	ret = cdn_dp_mailbox_read_receive(dp, &status, sizeof(status));
++	if (ret)
++		goto err_get_hpd;
++
++	return status;
++
++err_get_hpd:
++	DRM_DEV_ERROR(dp->dev, "get aux status failed: %d\n", ret);
++	return ret;
++}
++
+ int cdn_dp_load_firmware(struct cdn_dp_device *dp, const u32 *i_mem,
+ 			 u32 i_size, const u32 *d_mem, u32 d_size)
+ {
+diff --git a/drivers/gpu/drm/rockchip/cdn-dp-reg.h b/drivers/gpu/drm/rockchip/cdn-dp-reg.h
+index c4bbb4a83..6580b11 100644
+--- a/drivers/gpu/drm/rockchip/cdn-dp-reg.h
++++ b/drivers/gpu/drm/rockchip/cdn-dp-reg.h
+@@ -328,6 +328,13 @@
+ #define GENERAL_BUS_SETTINGS            0x03
+ #define GENERAL_TEST_ACCESS             0x04
+ 
++/* AUX status*/
++#define AUX_STATUS_ACK			0
++#define AUX_STATUS_NACK			1
++#define AUX_STATUS_DEFER			2
++#define AUX_STATUS_SINK_ERROR		3
++#define AUX_STATUS_BUS_ERROR		4
++
+ #define DPTX_SET_POWER_MNG			0x00
+ #define DPTX_SET_HOST_CAPABILITIES		0x01
+ #define DPTX_GET_EDID				0x02
+@@ -469,8 +476,11 @@ int cdn_dp_set_host_cap(struct cdn_dp_device *dp, u8 lanes, bool flip);
+ int cdn_dp_event_config(struct cdn_dp_device *dp);
+ u32 cdn_dp_get_event(struct cdn_dp_device *dp);
+ int cdn_dp_get_hpd_status(struct cdn_dp_device *dp);
+-int cdn_dp_dpcd_write(struct cdn_dp_device *dp, u32 addr, u8 value);
+-int cdn_dp_dpcd_read(struct cdn_dp_device *dp, u32 addr, u8 *data, u16 len);
++ssize_t cdn_dp_dpcd_write(struct cdn_dp_device *dp, u32 addr,
++			  u8 *data, u16 len);
++ssize_t cdn_dp_dpcd_read(struct cdn_dp_device *dp, u32 addr,
++			 u8 *data, u16 len);
++int cdn_dp_get_aux_status(struct cdn_dp_device *dp);
+ int cdn_dp_get_edid_block(void *dp, u8 *edid,
+ 			  unsigned int block, size_t length);
+ int cdn_dp_train_link(struct cdn_dp_device *dp);
+-- 
+2.7.4
