@@ -1,51 +1,49 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
-	iec958 controls
-Date: Thu, 17 May 2018 13:03:44 +0000
-Message-ID: <dcd08b5c-fc92-4b5d-6950-45afe9db3317@st.com>
-References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
- <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
- <20180417111733.GG8973@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180417111733.GG8973@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <B86C931B4FF4BD45AA64B0F90C3B2626@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, "tiwai@suse.com" <tiwai@suse.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "jsarha@ti.com" <jsarha@ti.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+From: Andrea Greco <andrea.greco.gapmilano@gmail.com>
+Subject: [PATCH 2/4] arcnet: com20020: bindings for smsc com20020
+Date: Thu, 17 May 2018 15:06:26 +0200
+Message-ID: <20180517130628.2770-1-andrea.greco.gapmilano@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tobin@apporbit.com
+Cc: andrea.greco.gapmilano@gmail.com, Andrea Greco <a.greco@4sigma.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Takashi,
+From: Andrea Greco <a.greco@4sigma.it>
 
-On 04/17/2018 01:17 PM, Mark Brown wrote:
-> On Tue, Apr 17, 2018 at 08:29:17AM +0000, Olivier MOYSAN wrote:
-> 
->> I guess the blocking patch in this patchset is the patch "add IEC958
->> channel status control helper". This patch has been reviewed several
->> times, but did not get a ack so far.
->> If you think these helpers will not be merged, I will reintegrate the
->> corresponding code in stm driver.
->> Please let me know, if I need to prepare a v2 without helpers, or if we
->> can go further in the review of iec helpers patch ?
-> 
-> I don't mind either way but you're right here, I'm waiting for Takashi
-> to review the first patch.  I'd probably be OK with it just integrated
-> into the driver if we have to go that way though.
-> 
+Add devicetree bindings for smsc com20020
 
-Kind reminder.
-Would you have some comments on this patchset ?
+Signed-off-by: Andrea Greco <a.greco@4sigma.it>
+---
+ .../devicetree/bindings/net/smsc-com20020.txt       | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/smsc-com20020.txt
 
-Thanks
-olivier
+diff --git a/Documentation/devicetree/bindings/net/smsc-com20020.txt b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+new file mode 100644
+index 000000000000..92360b054873
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+@@ -0,0 +1,21 @@
++SMSC com20020 Arcnet network controller
++
++Required propelty:
++- timeout-ns: Arcnet bus timeout, Idle Time (328000 - 20500)
++- bus-speed-bps: Arcnet bus speed (10000000 - 156250)
++- smsc,xtal-mhz: External oscillator frequency
++- smsc,backplane-enabled: Controller use backplane mode
++- reset-gpios: Chip reset pin
++- interrupts: Should contain controller interrupt
++
++arcnet@28000000 {
++    compatible = "smsc,com20020";
++
++	timeout-ns = <20500>;
++	bus-speed-bps = <10000000>;
++	smsc,xtal-mhz = <20>;
++	smsc,backplane-enabled;
++
++	reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
++	interrupts = <&gpio2 10 GPIO_ACTIVE_LOW>;
++};
+-- 
+2.14.3
