@@ -1,37 +1,38 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 2/4] ARM64: dts: meson-axg: correct i2c AO clock
-Date: Thu, 17 May 2018 11:30:58 +0200
-Message-ID: <20180517093100.22225-3-jbrunet@baylibre.com>
-References: <20180517093100.22225-1-jbrunet@baylibre.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [v0 0/2] Add support for QCOM cpufreq FW driver
+Date: Thu, 17 May 2018 12:39:27 +0300
+Message-ID: <CAP245DXgeXvJsw7Q0MU1T97=NYuFywYgNGEQ+vek+obgHpcJsQ@mail.gmail.com>
+References: <1526549401-25666-1-git-send-email-tdas@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180517093100.22225-1-jbrunet@baylibre.com>
+In-Reply-To: <1526549401-25666-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The clock specified for the i2c AO controller is the one for the EE
-domain, which is incorrect as this controller needs the clock for AO
-i2c controller.
+On Thu, May 17, 2018 at 12:29 PM, Taniya Das <tdas@codeaurora.org> wrote:
+> The CPUfreq FW present in some QCOM chipsets offloads the steps necessary
+> for hanging the frequency of CPUs. The driver implements the cpufreq driver
 
-Fixes: dc6f858e2690 ("ARM64: dts: meson-axg: add I2C DT info for Meson-AXG SoC")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+s/hanging/changing :-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index b59f341104d7..d213ab715e03 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1110,7 +1110,7 @@
- 				compatible = "amlogic,meson-axg-i2c";
- 				reg = <0x0 0x05000 0x0 0x20>;
- 				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&clkc CLKID_I2C>;
-+				clocks = <&clkc CLKID_AO_I2C>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
--- 
-2.14.3
+> interface for this firmware.
+>
+> Taniya Das (2):
+>   dt-bindings: clock: Introduce QCOM CPUFREQ FW bindings
+>   cpufreq: qcom-fw: Add support for QCOM cpufreq FW driver
+>
+>  .../bindings/cpufreq/cpufreq-qcom-fw.txt           |  68 +++++
+>  drivers/cpufreq/Kconfig.arm                        |   9 +
+>  drivers/cpufreq/Makefile                           |   1 +
+>  drivers/cpufreq/qcom-cpufreq-fw.c                  | 318 +++++++++++++++++++++
+>  4 files changed, 396 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-fw.c
+>
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>
