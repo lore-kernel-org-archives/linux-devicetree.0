@@ -1,10 +1,14 @@
-Return-Path: <SRS0=GrEx=IE=nxp.com=jun.li@kernel.org>
+Return-Path: <SRS0=KKmW=IE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40045.outbound.protection.outlook.com ([40.107.4.45]:36690
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751494AbeEQNxG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 17 May 2018 09:53:06 -0400
 From: Jun Li <jun.li@nxp.com>
 Subject: RE: [PATCH v5 05/14] usb: typec: add API to get typec basic port
  power and data config
-Date: Thu, 17 May 2018 14:05:41 +0000
-Message-ID: 
- <VI1PR0402MB39179F63BCF3E605443D877389910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Date: Thu, 17 May 2018 13:53:01 +0000
+Message-ID: <VI1PR0402MB39175918FAC406501855417F89910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
  <1525307094-27402-6-git-send-email-jun.li@nxp.com>
  <c28a8352-e960-449b-e7c1-7965d340536e@gmail.com>
@@ -12,76 +16,29 @@ References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
  <74e1c164-1652-75f4-409c-bd1c214bda4d@gmail.com>
  <20180516122527.GC11469@kuha.fi.intel.com>
  <33d02e76-bdf2-be50-68ec-9d520acdbe82@gmail.com>
- <20180517123506.GF11469@kuha.fi.intel.com>
-In-Reply-To: <20180517123506.GF11469@kuha.fi.intel.com>
+In-Reply-To: <33d02e76-bdf2-be50-68ec-9d520acdbe82@gmail.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mats Karrman <mats.dev.list@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Mats Karrman <mats.dev.list@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Heikki,
-
-> > I reread this patch and tried to see it more in the context of the
-> > other patches and the existing code. The naming of the existing string
-> > tables doesn't help in getting this right, however I have a proposal:
-> >
-> > typec_find_port_power_role() to get to TYPEC_PORT_SRC/SNK/DRP
-> > typec_find_port_data_role() to get to TYPEC_PORT_DFP/UFP/DRD
-> > typec_find_power_role() to get to TYPEC_SINK/SOURCE
-> >
-> > and sometime, if the use should arise
-> >
-> > typec_find_data_role() to get to TYPEC_DEVICE/HOST
-> >
-> > I think it is fairly comprehensible, *_port_* concerns a capability
-> > and without *_port_* it is an actual state. Plus it matches the names
-> > of the constants.
->=20
-> Well, there are now four things to consider:
->=20
-> 1) the roles (power and data) the port is capable of supporting
-> 2) Try.SRC and Try.SNK, i.e. the preferred role
-> 3) the current roles
-> 4) the role(s) the user want's to limit the use of a port with DRP ports
->=20
-> The last one I don't know if it's relevant with these functions. It's not
-> information that we would get for example from firmware.
->=20
-> I also don't think we need to use these functions with the current roles =
-the port
-> is in.
->=20
-> If the preferred role is "sink" or "source", so just like the power role,=
- we don't
-> need separate function for it here.
->=20
-> So isn't two functions all we need here: one for the power and one for da=
-ta
-> role?
-
-Take power as an example, can we use one function to only look up
-typec_port_types[]? as capability(typec_port_type) and state(typec_role)
-are different enum, and the allowed strings are different.
-
-static const char * const typec_roles[] =3D {
-	[TYPEC_SINK]    =3D "sink",
-	[TYPEC_SOURCE]  =3D "source",
-};
-
-static const char * const typec_port_types[] =3D {
-	[TYPEC_PORT_SRC] =3D "source",
-	[TYPEC_PORT_SNK] =3D "sink",
-	[TYPEC_PORT_DRP] =3D "dual",
-};
-
-Thanks
-Li Jun
->=20
->=20
-> Thanks,
->=20
-> --
-> heikki
+SGkgTWF0cw0KDQo+IEkgcmVyZWFkIHRoaXMgcGF0Y2ggYW5kIHRyaWVkIHRvIHNlZSBpdCBtb3Jl
+IGluIHRoZSBjb250ZXh0IG9mIHRoZSBvdGhlciBwYXRjaGVzDQo+IGFuZCB0aGUgZXhpc3Rpbmcg
+Y29kZS4gVGhlIG5hbWluZyBvZiB0aGUgZXhpc3Rpbmcgc3RyaW5nIHRhYmxlcyBkb2Vzbid0IGhl
+bHAgaW4NCj4gZ2V0dGluZyB0aGlzIHJpZ2h0LCBob3dldmVyIEkgaGF2ZSBhIHByb3Bvc2FsOg0K
+PiANCj4gdHlwZWNfZmluZF9wb3J0X3Bvd2VyX3JvbGUoKSB0byBnZXQgdG8gVFlQRUNfUE9SVF9T
+UkMvU05LL0RSUA0KPiB0eXBlY19maW5kX3BvcnRfZGF0YV9yb2xlKCkgdG8gZ2V0IHRvIFRZUEVD
+X1BPUlRfREZQL1VGUC9EUkQNCj4gdHlwZWNfZmluZF9wb3dlcl9yb2xlKCkgdG8gZ2V0IHRvIFRZ
+UEVDX1NJTksvU09VUkNFDQo+IA0KPiBhbmQgc29tZXRpbWUsIGlmIHRoZSB1c2Ugc2hvdWxkIGFy
+aXNlDQo+IA0KPiB0eXBlY19maW5kX2RhdGFfcm9sZSgpIHRvIGdldCB0byBUWVBFQ19ERVZJQ0Uv
+SE9TVA0KPiANCj4gSSB0aGluayBpdCBpcyBmYWlybHkgY29tcHJlaGVuc2libGUsICpfcG9ydF8q
+IGNvbmNlcm5zIGEgY2FwYWJpbGl0eSBhbmQgd2l0aG91dA0KPiAqX3BvcnRfKiBpdCBpcyBhbiBh
+Y3R1YWwgc3RhdGUuIFBsdXMgaXQgbWF0Y2hlcyB0aGUgbmFtZXMgb2YgdGhlIGNvbnN0YW50cy4N
+Cj4gDQoNClJlYXNvbmFibGUgdG8gbWUsIEkgd2FzIHVzaW5nICJ0eXBlIiB0byBjb25jZXJuIGEg
+Y2FwYWJpbGl0eSBidXQgaXQgd2FzIG5vdA0KcHJlZmVycmVkLCBpZiBIZWlra2kgYWdyZWUgdGhp
+cyBwcm9wb3NhbCwgSSB3aWxsIGNoYW5nZSB0aGUgQVBJIG5hbWVzIGxpa2UgdGhpcw0KYW5kIGlu
+Y2x1ZGUgNCBBUElzIGFib3ZlLg0KIA0KVGhhbmtzDQpMaSBKdW4NCg==
