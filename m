@@ -1,44 +1,65 @@
-From: frowand.list@gmail.com
-Subject: [PATCH] of: overlay: validate offset from property fixups
-Date: Wed, 16 May 2018 21:19:51 -0700
-Message-ID: <1526530791-18591-1-git-send-email-frowand.list@gmail.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v7 0/3] pcal6524 extensions and fixes for pca953x driver
+Date: Thu, 17 May 2018 06:59:46 +0200
+Message-ID: <cover.1526533188.git.hns@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: galak@codeaurora.org, andy.shevchenko@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+V7:
+* replace PCAL register masks by hex constants
 
-The smatch static checker marks the data in offset as untrusted,
-leading it to warn:
+2018-05-16 19:01:29: V6:
+* added proper attribution to the formula used for fixing the
+  pcal6524 register address (changes commit message only)
+* add back missing first patch from V2 that defines the
+  PCA_LATCH_INT constant
+* removed patches already merged
 
-  drivers/of/resolver.c:125 update_usages_of_a_phandle_reference()
-  error: buffer underflow 'prop->value' 's32min-s32max'
+2018-04-28 18:33:42: V5:
+* fix wrong split up between patches 1/7 and 2/7.
 
-Add check to verify that offset is within the property data.
+2018-04-26 19:35:07: V4:
+* introduced PCA_LATCH_INT constant to make of_table more
+  readable (suggested by Andy Shevchenko)
+* converted all register constants to hex in a separate
+  patch (suggested by Andy Shevchenko)
+* separated additional pcal953x and pcal6524 register
+  definitions into separate patches (suggested by Andy Shevchenko)
+* made special pcal6524 address adjustment more readable
+  (suggested by Andy Shevchenko)
+* moved gpio-controller and interrupt-controller to the
+  "required" section (reviewed by Rob Herring)
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
- drivers/of/resolver.c | 5 +++++
- 1 file changed, 5 insertions(+)
+2018-04-10 18:07:07: V3:
+* add Reported-by: and Reviewed-by:
+* fix wording for bindings description and example
+* convert all register offsets to hex
+* omit the LEVEL-IRQ RFC/hack commit
 
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 65d0b7adfcd4..7edfac6f1914 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -122,6 +122,11 @@ static int update_usages_of_a_phandle_reference(struct device_node *overlay,
- 			goto err_fail;
- 		}
- 
-+		if (offset < 0 || offset + sizeof(__be32) > prop->length) {
-+			err = -EINVAL;
-+			goto err_fail;
-+		}
-+
- 		*(__be32 *)(prop->value + offset) = cpu_to_be32(phandle);
- 	}
- 
+2018-04-04 21:00:27: V2:
+* added PCA_PCAL flags if matched through of-table
+* fix address calculation for extended PCAL6524 registers
+* hack to map LEVEL_LOW to EDGE_FALLING to be able to
+  test in combination with ts3a227e driver
+* improve description of bindings for optional vcc-supply
+  and interrupt-controller;
+
+2018-03-10 09:32:53: no initial description
+
+H. Nikolaus Schaller (3):
+  gpio: pca953x: set the PCA_PCAL flag also when matching by DT
+  gpio: pca953x: define masks for addressing common and extended
+    registers
+  gpio: pca953x: fix address calculation for pcal6524
+
+ drivers/gpio/gpio-pca953x.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
 -- 
-Frank Rowand <frank.rowand@sony.com>
+2.12.2
