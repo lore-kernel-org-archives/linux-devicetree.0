@@ -1,241 +1,125 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v10_00=2F27=5D_ARM=3A_davinci=3A_convert_to_commo?=
-        =?UTF-8?Q?n_clock_framework=E2=80=8B?=
-Date: Wed, 16 May 2018 19:46:54 -0500
-Message-ID: <CAHCN7xL_QbHALJeBaJk9TyfBz5BUYeZHkYR6uyrxXDdnguKjtg@mail.gmail.com>
-References: <20180509172606.29387-1-david@lechnology.com>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSCB2OSAyLzVdIGR0LWJpbmRpbmdzOiBz?=
+ =?utf-8?Q?csi:_ufs:_add_document_for_hisi-ufs?=
+Date: Thu, 17 May 2018 00:50:23 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA63AC2@DGGEMM506-MBX.china.huawei.com>
+References: <20180417140814.38098-1-liwei213@huawei.com>
+ <20180417140814.38098-3-liwei213@huawei.com>
+ <20180424125827.k2dgeu6uon75wzni@rob-hp-laptop>
+ <1699CE87DE933F49876AD744B5DC140FA5AC86@DGGEMM506-MBS.china.huawei.com>
+ <CAL_JsqLf_r=NHHP2ZNEJOoLORXztF1KnU+tq-+COt4CPMLAsiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180509172606.29387-1-david@lechnology.com>
+In-Reply-To: <CAL_JsqLf_r=NHHP2ZNEJOoLORXztF1KnU+tq-+COt4CPMLAsiA@mail.gmail.com>
+Content-Language: zh-CN
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "khilman@baylibre.com" <khilman@baylibre.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "riku.voipio@linaro.org" <riku.voipio@linaro.org>, "treding@nvidia.com" <treding@nvidia.com>, "krzk@kernel.org" <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 9, 2018 at 12:25 PM, David Lechner <david@lechnology.com> wrote:
-> This series converts mach-davinci to use the common clock framework.
->
-> The series works like this, the first 3 patches fix some issues with the clock
-> drivers that have already been accepted into the mainline kernel.
->
-> Then, starting with "ARM: davinci: pass clock as parameter to
-> davinci_timer_init()", we get the mach code ready for the switch by adding the
-> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
-> around the legacy clocks so that we can switch easily between the old and the
-> new.
->
-> "ARM: davinci: switch to common clock framework" actually flips the switch
-> to start using the new clock drivers. Then the next 8 patches remove all
-> of the old clock code.
->
-> The final four patches add device tree clock support to the one SoC that
-> supports it.
->
-> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
-> board file).
->
-I am find.  I don't know what I did wrong, but it's working fine.  If
-you want to add my 'tested-by' go ahead.
-
-Tested-by: Adam Ford <aford173@gmail.com> #da850-evm, ethernet, spi
-flash, SD, UART
-
->
-> Changes:
->
-> v10 changes (also see individual patches for details):
-> - Reworked device tree bindings for DaVinci timer.
-> - Dropped helper functions to conditionally call devm_* versions of functions
-> - Fix some typos
-> - Fix some rebasing issues introduced in v9
->
-> v9 changes (also see individual patches for details):
-> - Rebased on linux-davnci/master (f5e3203bb775)
-> - Dropped drivers/clk patches that landed in v4.17
-> - New drivers/clk patches for early boot special case
-> - New patch for ti,davinci-timer device tree bindings
-> - Updated mach/davinci patches to register clocks in early boot when needed
->
-> v8 changes (also see individual patches for details):
-> - Rebased on linux-davinci/master
-> - Dropped use of __init and __initconst attributes in clk drivers
-> - Add clkdev lookups for PLL SYSCLKs
-> - Fix genpd clock reference counting issue
-> - Fix PSC clock driver loading order issue
-> - Fix typo in device tree and add more power-domains properties
->
-> v7 changes (also see individual patches for details):
-> - Rebased on linux-davinci/master (v4.16-rc)
-> - Convert clock drivers to platform devices
-> - New patch "ARM: davinci: pass clock as parameter to davinci_timer_init()"
-> - Fix issues with lcdk and aemif clock lookups and power domains
-> - Fixed other minor issues brought up in v6 review
->
-> v6 changes (also see individual patches for details):
-> - All of the device tree bindings are changed
-> - All of the clock drivers are changed significantly
-> - Fixed issues brought up during review of v5
-> - "ARM: davinci: move davinci_clk_init() to init_time" is removed from this
->   series and submitted separately
->
-> v5 changes:
-> - Basically, this is an entirely new series
-> - Patches are broken up into bite-sized pieces
-> - Converted PSC clock driver to use regmap
-> - Restored "force" flag for certain DA850 clocks
-> - Added device tree bindings
-> - Moved more of the clock init to drivers/clk
-> - Fixed frequency scaling (maybe*)
->
-> * I have frequency scaling using cpufreq-dt, so I know the clocks are doing
->   what they need to do to make this work, but I haven't figured out how to
->   test davinci-cpufreq driver yet. (Patches to make cpufreq-dt work will be
->   sent separately after this series has landed.)
->
->
-> Dependencies:
->
-> There are still some outstanding fixes to get everything working correctly.
-> These are all just runtime dependencies and only needed for certain platforms.
->
-> - "drm/tilcdc: Fix setting clock divider for omap-l138"[1]
-> - "clk: davinci: pll-dm355: fix SYSCLKn parent names"[2]
-> - "remoteproc/davinci: common clock framework related fixes"[3]
->
-> [1]: https://patchwork.freedesktop.org/patch/210696/
-> [2]: https://lkml.org/lkml/2018/5/9/626
-> [3]: https://lkml.org/lkml/2018/5/2/201
->
-> You can find a working branch with everything included (plus a few extras, like
-> cpufreq-dt) in the "common-clk-v10" branch of https://github.com/dlech/ev3dev-kernel.git.
->
->
-> Testing/debugging for the uninitiated:
->
-> I only have one device to test with, which is based on da850, so I will
-> have to rely on others to do some testing here. Since we are dealing with
-> clocks, if something isn't working, you most likely won't see output on
-> the serial port. To figure out what is going on, you need to enable...
->
->         CONFIG_DEBUG_LL=y
->         CONFIG_EARLY_PRINTK=y
->
-> and add "earlyprintk clk_ignore_unused" to the kernel command line options.
-> You may need to select a different UART for this depending on your board. I
-> think UART1 is the default in the kernel configuration.
->
-> On da850 devices comment out the lines:
->
->         /* pll1_sysclk2 is not affected by CPU scaling, so use it for async3 */
->         parent = clk_hw_get_parent_by_index(&mux->hw, 1);
->         if (parent)
->                 clk_set_parent(mux->hw.clk, parent->clk);
->         else
->                 dev_warn(dev, "Failed to find async3 parent clock\n");
->
-> in da8xx-cfgchip.c or, if using device tree, comment out the lines:
->
->         assigned-clocks = <&async3_clk>;
->         assigned-clock-parents = <&pll1_sysclk 2>;
->
-> in da850.dtsi when doing earlyprintk, otherwise the UART1 and UART2 clock
-> source will change during boot and cause garbled output after a point.
->
->
-> David Lechner (27):
->   clk: davinci: pll: allow dev == NULL
->   clk: davinci: da850-pll: change PLL0 to CLK_OF_DECLARE
->   clk: davinci: psc: allow for dev == NULL
->   ARM: davinci: pass clock as parameter to davinci_timer_init()
->   ARM: davinci: da830: add new clock init using common clock framework
->   ARM: davinci: da850: add new clock init using common clock framework
->   ARM: davinci: dm355: add new clock init using common clock framework
->   ARM: davinci: dm365: add new clock init using common clock framework
->   ARM: davinci: dm644x: add new clock init using common clock framework
->   ARM: davinci: dm646x: add new clock init using common clock framework
->   ARM: davinci: da8xx: add new USB PHY clock init using common clock
->     framework
->   ARM: davinci: da8xx: add new sata_refclk init using common clock
->     framework
->   ARM: davinci: remove CONFIG_DAVINCI_RESET_CLOCKS
->   ARM: davinci_all_defconfig: remove CONFIG_DAVINCI_RESET_CLOCKS
->   ARM: davinci: switch to common clock framework
->   ARM: davinci: da830: Remove legacy clock init
->   ARM: davinci: da850: Remove legacy clock init
->   ARM: davinci: dm355: Remove legacy clock init
->   ARM: davinci: dm365: Remove legacy clock init
->   ARM: davinci: dm644x: Remove legacy clock init
->   ARM: davinci: dm646x: Remove legacy clock init
->   ARM: davinci: da8xx: Remove legacy USB and SATA clock init
->   ARM: davinci: remove legacy clocks
->   dt-bindings: timer: new bindings for TI DaVinci timer
->   ARM: davinci: add device tree support to timer
->   ARM: davinci: da8xx-dt: switch to device tree clocks
->   ARM: dts: da850: Add clocks
->
->  .../bindings/timer/ti,davinci-timer.txt       |  37 +
->  arch/arm/Kconfig                              |   5 +-
->  arch/arm/boot/dts/da850-enbw-cmc.dts          |   4 +
->  arch/arm/boot/dts/da850-evm.dts               |   4 +
->  arch/arm/boot/dts/da850-lcdk.dts              |   9 +
->  arch/arm/boot/dts/da850-lego-ev3.dts          |   4 +
->  arch/arm/boot/dts/da850.dtsi                  | 168 ++++
->  arch/arm/configs/davinci_all_defconfig        |   1 -
->  arch/arm/mach-davinci/Kconfig                 |  13 +-
->  arch/arm/mach-davinci/Makefile                |   4 +-
->  arch/arm/mach-davinci/board-da830-evm.c       |  12 +-
->  arch/arm/mach-davinci/board-da850-evm.c       |   2 +
->  arch/arm/mach-davinci/board-dm355-evm.c       |   2 +
->  arch/arm/mach-davinci/board-dm355-leopard.c   |   2 +
->  arch/arm/mach-davinci/board-dm365-evm.c       |   2 +
->  arch/arm/mach-davinci/board-dm644x-evm.c      |   2 +
->  arch/arm/mach-davinci/board-dm646x-evm.c      |   2 +
->  arch/arm/mach-davinci/board-mityomapl138.c    |   2 +
->  arch/arm/mach-davinci/board-neuros-osd2.c     |   2 +
->  arch/arm/mach-davinci/board-omapl138-hawk.c   |  11 +-
->  arch/arm/mach-davinci/board-sffsdr.c          |   2 +
->  arch/arm/mach-davinci/clock.c                 | 745 -----------------
->  arch/arm/mach-davinci/clock.h                 |  76 --
->  arch/arm/mach-davinci/common.c                |   3 -
->  arch/arm/mach-davinci/da830.c                 | 462 ++---------
->  arch/arm/mach-davinci/da850.c                 | 778 +++---------------
->  arch/arm/mach-davinci/da8xx-dt.c              |  66 --
->  arch/arm/mach-davinci/davinci.h               |   8 +
->  arch/arm/mach-davinci/devices-da8xx.c         |  43 +-
->  arch/arm/mach-davinci/devices.c               |   1 -
->  arch/arm/mach-davinci/dm355.c                 | 406 ++-------
->  arch/arm/mach-davinci/dm365.c                 | 485 +----------
->  arch/arm/mach-davinci/dm644x.c                | 344 +-------
->  arch/arm/mach-davinci/dm646x.c                | 372 +--------
->  arch/arm/mach-davinci/include/mach/clock.h    |   3 -
->  arch/arm/mach-davinci/include/mach/common.h   |  11 +-
->  arch/arm/mach-davinci/include/mach/da8xx.h    |   6 +-
->  arch/arm/mach-davinci/pm_domain.c             |   5 +
->  arch/arm/mach-davinci/psc.c                   | 137 ---
->  arch/arm/mach-davinci/psc.h                   |  12 -
->  arch/arm/mach-davinci/time.c                  |  39 +-
->  arch/arm/mach-davinci/usb-da8xx.c             | 242 +-----
->  drivers/clk/davinci/pll-da830.c               |   4 +-
->  drivers/clk/davinci/pll-da850.c               |  36 +-
->  drivers/clk/davinci/pll-dm355.c               |   8 +-
->  drivers/clk/davinci/pll-dm365.c               |   8 +-
->  drivers/clk/davinci/pll-dm644x.c              |   8 +-
->  drivers/clk/davinci/pll-dm646x.c              |   8 +-
->  drivers/clk/davinci/pll.c                     | 110 +--
->  drivers/clk/davinci/pll.h                     |  30 +-
->  drivers/clk/davinci/psc-dm355.c               |   2 +-
->  drivers/clk/davinci/psc-dm365.c               |   2 +-
->  drivers/clk/davinci/psc-dm644x.c              |   2 +-
->  drivers/clk/davinci/psc-dm646x.c              |   2 +-
->  drivers/clk/davinci/psc.c                     |  27 +-
->  include/linux/clk/davinci.h                   |  29 +
->  56 files changed, 860 insertions(+), 3950 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
->  delete mode 100644 arch/arm/mach-davinci/clock.c
->  delete mode 100644 arch/arm/mach-davinci/psc.c
->  create mode 100644 include/linux/clk/davinci.h
->
-> --
-> 2.17.0
->
+SGksIFJvYg0KDQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrlj5Hku7bkuro6IFJvYiBIZXJyaW5n
+IFttYWlsdG86cm9iaEBrZXJuZWwub3JnXSANCuWPkemAgeaXtumXtDogMjAxOOW5tDXmnIgxNuaX
+pSAyMToxNg0K5pS25Lu25Lq6OiBsaXdlaSAoQ00pDQrmioTpgIE6IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgdmluaG9s
+aWthdHRpQGdtYWlsLmNvbTsgamVqYkBsaW51eC52bmV0LmlibS5jb207IG1hcnRpbi5wZXRlcnNl
+bkBvcmFjbGUuY29tOyBraGlsbWFuQGJheWxpYnJlLmNvbTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ29y
+eS5jbGVtZW50QGZyZWUtZWxlY3Ryb25zLmNvbTsgdGhvbWFzLnBldGF6em9uaUBmcmVlLWVsZWN0
+cm9ucy5jb207IHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29tOyByaWt1LnZvaXBpb0BsaW5h
+cm8ub3JnOyB0cmVkaW5nQG52aWRpYS5jb207IGtyemtAa2VybmVsLm9yZzsgZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtc2NzaUB2Z2VyLmtlcm5lbC5vcmc7IHph
+bmdsZWlnYW5nOyBHZW5namlhbmZlbmc7IGd1b2RvbmcueHVAbGluYXJvLm9yZw0K5Li76aKYOiBS
+ZTog562U5aSNOiBbUEFUQ0ggdjkgMi81XSBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9j
+dW1lbnQgZm9yIGhpc2ktdWZzDQoNCk9uIFR1ZSwgQXByIDI0LCAyMDE4IGF0IDg6NTQgQU0sIGxp
+d2VpIChDTSkgPGxpd2VpMjEzQGh1YXdlaS5jb20+IHdyb3RlOg0KPiBIaSwgUm9iDQo+DQo+IFRo
+YW5rcyBmb3IgeW91ciBwYXRpZW5jZS4NCj4NCj4gSGksIEFybmQNCj4NCj4gRnJvbSBSb2IncyBz
+dWdnZXN0aW9uLCB3ZSBoYXZlIHRvIGxpc3QgdGhlIHByb3BlcnRpZXMgbm9kZSBpbiB1ZnMtaGlz
+aS50eHQgYmluZ2luZ3MgZXZlbiBpZiBkb2N1bWVudGVkIGluIHRoZSBjb21tb24gYmluZGluZy4N
+Cj4NCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFJvYiBIZXJyaW5nIFtt
+YWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMTjlubQ05pyIMjTml6Ug
+MjA6NTgNCj4g5pS25Lu25Lq6OiBsaXdlaSAoQ00pDQo+IOaKhOmAgTogbWFyay5ydXRsYW5kQGFy
+bS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOyB2aW5o
+b2xpa2F0dGlAZ21haWwuY29tOyBqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbTsgbWFydGluLnBldGVy
+c2VuQG9yYWNsZS5jb207IGtoaWxtYW5AYmF5bGlicmUuY29tOyBhcm5kQGFybmRiLmRlOyBncmVn
+b3J5LmNsZW1lbnRAZnJlZS1lbGVjdHJvbnMuY29tOyB0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxl
+Y3Ryb25zLmNvbTsgeWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb207IHJpa3Uudm9pcGlvQGxp
+bmFyby5vcmc7IHRyZWRpbmdAbnZpZGlhLmNvbTsga3J6a0BrZXJuZWwub3JnOyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1zY3NpQHZnZXIua2VybmVsLm9yZzsg
+emFuZ2xlaWdhbmc7IEdlbmdqaWFuZmVuZzsgZ3VvZG9uZy54dUBsaW5hcm8ub3JnDQo+IOS4u+mi
+mDogUmU6IFtQQVRDSCB2OSAyLzVdIGR0LWJpbmRpbmdzOiBzY3NpOiB1ZnM6IGFkZCBkb2N1bWVu
+dCBmb3IgaGlzaS11ZnMNCj4NCj4gT24gVHVlLCBBcHIgMTcsIDIwMTggYXQgMTA6MDg6MTFQTSAr
+MDgwMCwgTGkgV2VpIHdyb3RlOg0KPj4gYWRkIHVmcyBub2RlIGRvY3VtZW50IGZvciBIaXNpbGlj
+b24uDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogTGkgV2VpIDxsaXdlaTIxM0BodWF3ZWkuY29tPg0K
+Pj4gLS0tDQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlz
+aS50eHQgfCAyOSArKysrKysrKysrKysrKysrKysrKysrDQo+PiAgLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdWZzL3Vmc2hjZC1wbHRmcm0udHh0ICAgICAgfCAxMCArKysrKy0tLQ0KPj4gIDIgZmls
+ZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlz
+aS50eHQNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3Vmcy91ZnMtaGlzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dWZzL3Vmcy1oaXNpLnR4dA0KPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAw
+MDAwMDAwMC4uZDQ5YWI3ZDhmMzFkDQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4dA0KPj4gQEAgLTAsMCAr
+MSwyOSBAQA0KPj4gKyogSGlzaWxpY29uIFVuaXZlcnNhbCBGbGFzaCBTdG9yYWdlIChVRlMpIEhv
+c3QgQ29udHJvbGxlcg0KPj4gKw0KPj4gK1VGUyBub2RlcyBhcmUgZGVmaW5lZCB0byBkZXNjcmli
+ZSBvbi1jaGlwIFVGUyBoYXJkd2FyZSBtYWNyby4NCj4+ICtFYWNoIFVGUyBIb3N0IENvbnRyb2xs
+ZXIgc2hvdWxkIGhhdmUgaXRzIG93biBub2RlLg0KPj4gKw0KPj4gK1JlcXVpcmVkIHByb3BlcnRp
+ZXM6DQo+PiArLSBjb21wYXRpYmxlICAgICAgICA6IGNvbXBhdGlibGUgbGlzdCwgY29udGFpbnMg
+b25lIG9mIHRoZSBmb2xsb3dpbmcgLQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAiaGlzaWxpY29uLGhpMzY2MC11ZnMiLCAiamVkZWMsdWZzLTEuMSIgZm9yIGhpc2kg
+dWZzDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGhvc3QgY29udHJv
+bGxlciBwcmVzZW50IG9uIEhpMzZ4eCBjaGlwc2V0Lg0KPj4gKy0gcmVnICAgICAgICAgICAgICAg
+OiBzaG91bGQgY29udGFpbiBVRlMgcmVnaXN0ZXIgYWRkcmVzcyBzcGFjZSAmIFVGUyBTWVMgQ1RS
+TCByZWdpc3RlciBhZGRyZXNzLA0KPj4gKy0gaW50ZXJydXB0LXBhcmVudCAgOiBpbnRlcnJ1cHQg
+ZGV2aWNlDQo+PiArLSBpbnRlcnJ1cHRzICAgICAgICA6IGludGVycnVwdCBudW1iZXINCj4+ICst
+IHJlc2V0cyAgICAgICAgICAgIDogcmVzZXQgbm9kZSByZWdpc3RlciwgdGhlICJhcnN0IiBjb3Jy
+ZXNwb25kcyB0byByZXNldCB0aGUgQVBCL0FYSSBidXMuDQo+DQo+IGFyc3QgYmVsb25ncyBpbiBy
+ZXNldC1uYW1lcy4NCj4NCj4gT0ssIEkgd2lsbCBmaXggaXQgaW4gbmV4dCBwYXRjaDsNCj4NCj4+
+ICstIHJlc2V0LW5hbWVzICAgICAgIDogZGVzY3JpYmUgcmVzZXQgbm9kZSByZWdpc3Rlcg0KPg0K
+PiBXaGF0IGhhcHBlbmVkIHRvIGNsb2Nrcz8gWW91IHN0aWxsIGhhdmUgdG8gbGlzdCB3aGljaCBv
+bmVzIGFwcGx5IGV2ZW4gaWYNCj4gZG9jdW1lbnRlZCBpbiB0aGUgY29tbW9uIGJpbmRpbmcuDQo+
+DQo+IE9LLCBJIHdpbGwgZml4IGl0IGluIG5leHQgcGF0Y2g7DQo+DQo+PiArDQo+PiArRXhhbXBs
+ZToNCj4+ICsNCj4+ICsgICAgIHVmczogdWZzQGZmM2IwMDAwIHsNCj4+ICsgICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJoaXNpbGljb24saGkzNjYwLXVmcyIsICJqZWRlYyx1ZnMtMS4xIjsNCj4+
+ICsgICAgICAgICAgICAgLyogMDogSENJIHN0YW5kYXJkICovDQo+PiArICAgICAgICAgICAgIC8q
+IDE6IFVGUyBTWVMgQ1RSTCAqLw0KPj4gKyAgICAgICAgICAgICByZWcgPSA8MHgwIDB4ZmYzYjAw
+MDAgMHgwIDB4MTAwMD4sDQo+PiArICAgICAgICAgICAgICAgICAgICAgPDB4MCAweGZmM2IxMDAw
+IDB4MCAweDEwMDA+Ow0KPj4gKyAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+
+Ow0KPj4gKyAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjc4IElSUV9UWVBFX0xF
+VkVMX0hJR0g+Ow0KPj4gKyAgICAgICAgICAgICAvKiBvZmZzZXQ6IDB4ODQ7IGJpdDogNyAgKi8N
+Cj4+ICsgICAgICAgICAgICAgcmVzZXRzID0gPCZjcmdfcnN0IDB4ODQgNz47DQo+PiArICAgICAg
+ICAgICAgIHJlc2V0LW5hbWVzID0gImFyc3QiOw0KPj4gKyAgICAgfTsNCj4+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmc2hjZC1wbHRmcm0udHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnNoY2QtcGx0ZnJtLnR4
+dA0KPj4gaW5kZXggYzM5ZGZlZjc2YTE4Li5hZGNmYjc5ZjYzZjUgMTAwNjQ0DQo+PiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmc2hjZC1wbHRmcm0udHh0DQo+
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmc2hjZC1wbHRm
+cm0udHh0DQo+PiBAQCAtNDEsNiArNDEsOCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPj4gIC1s
+YW5lcy1wZXItZGlyZWN0aW9uIDogbnVtYmVyIG9mIGxhbmVzIGF2YWlsYWJsZSBwZXIgZGlyZWN0
+aW9uIC0gZWl0aGVyIDEgb3IgMi4NCj4+ICAgICAgICAgICAgICAgICAgICAgICAgIE5vdGUgdGhh
+dCBpdCBpcyBhc3N1bWUgc2FtZSBudW1iZXIgb2YgbGFuZXMgaXMgdXNlZCBib3RoDQo+PiAgICAg
+ICAgICAgICAgICAgICAgICAgICBkaXJlY3Rpb25zIGF0IG9uY2UuIElmIG5vdCBzcGVjaWZpZWQs
+IGRlZmF1bHQgaXMgMiBsYW5lcyBwZXIgZGlyZWN0aW9uLg0KPj4gKy0gcmVzZXRzICAgICAgICAg
+ICAgOiByZXNldCBub2RlIHJlZ2lzdGVyLCB0aGUgInJzdCIgY29ycmVzcG9uZHMgdG8gcmVzZXQg
+dGhlIHdob2xlIFVGUyBJUC4NCj4+ICstIHJlc2V0LW5hbWVzICAgICAgIDogZGVzY3JpYmUgcmVz
+ZXQgbm9kZSByZWdpc3Rlcg0KPg0KPiBEb2VzIHlvdXIgY29udHJvbGxlciBoYXZlIDEgb3IgMiBy
+ZXNldHM/IFRoZXJlJ3Mgbm8gcG9pbnQgaW4gYWRkaW5nIHRoaXMNCj4gaGVyZSBpZiBpdCBkb2Vz
+bid0IGFwcGx5IHRvIHlvdXIgY29udHJvbGxlci4NCj4NCj4gVGhlcmUgYXJlIDIgcmVzZXQgaW4g
+b3VyIHNvYyBpbml0LCB0aGUgInJzdCIgY29ycmVzcG9uZHMgdG8gcmVzZXQgdGhlIHdob2xlIFVG
+UyBJUCwgYW5kICIgYXJzdCAiIG9ubHkgcmVzZXQgdGhlIEFQQi9BWEkgYnVzLg0KPiBEaXNjdXNz
+ZWQgd2l0aCBvdXIgc29jIGNvbGxlYWd1ZXMgdGhhdCAiYXJzdCIgaXMgYXNzZXJ0IGJ5IGRlZmF1
+bHQgYW5kIG5lZWRzIHRvIGRlYXNzZXJ0LGJ1dCBpdCBkb25lIGluIGJvb3Rsb2FkZXIsc28gd2ls
+bCByZW1vdmUgJ2Fyc3QnIGluIG5leHQgcGF0Y2guDQo+DQo+IEFib3V0IHRoZSAncmVzZXQnIHBy
+b3BlcnR577yMaXQgc2VlbXMgdGhhdCBBcm5kIEJlcmdtYW5uIGhhcyBkaWZmZXJlbnQgc3VnZ2Vz
+dGlvbu+8jGhlIHN1Z2dlc3RlZCB0aGF0IGFkZCAncnN0JyB0byB1ZnNoY2QtcGx0ZnJtIGJlY2F1
+c2UgaXQgc2VlbXMgY29tbW9uLg0KPiBCdXQgaXQgbG9va3MgbGlrZSBvbmx5IG91ciBzb2MgaW5p
+dCBuZWVkcyBpdC4gV2hhdCdzIHlvdXIgb3Bpbmlvbj8gRG9lcyBpdCBzdGlsbCBuZWVkcyBhZGQg
+dG8gY29tbW9uIGJpbmRpbmdzPw0KDQpGb3IgYSBzaW5nbGUgcmVzZXQsIHRoZW4gSSdtIGZpbmUg
+d2l0aCBpdCBiZWluZyBpbiB0aGUgY29tbW9uDQpiaW5kaW5ncy4gSWYgdGhlcmUgYXJlIG11bHRp
+cGxlIHRoZW4gaXQgc2hvdWxkIGJlIGluIHRoZSBzcGVjaWZpYw0KYmluZGluZ3MgYXMgdGhlIHJl
+c2V0IG5hbWVzIGFyZSBsaWtlbHkgZGlmZmVyZW50Lg0KDQpPSywgSSB3aWxsIHJlbW92ZSB0aGUg
+J2Fyc3QnIGFuZCBrZWVwIG9ubHkgJ3JzdCcgaW4gdG5lIGNvbW1vbiBiaW5naW5ncy4NCg0KUm9i
+DQo=
