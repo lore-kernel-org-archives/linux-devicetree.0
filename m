@@ -1,65 +1,27 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: r8a7795: add ccree binding
-Date: Thu, 17 May 2018 11:04:38 +0200
-Message-ID: <20180517090438.pqggltzkcdhzktsp@verge.net.au>
-References: <1526387370-17142-1-git-send-email-gilad@benyossef.com>
- <1526387370-17142-4-git-send-email-gilad@benyossef.com>
- <CAMuHMdWzeNqsho1V6ezZb81T3_HcRzrtuQpmGXsjtFgt9BtZDQ@mail.gmail.com>
- <20180516074333.i2672u435ymwffk3@verge.net.au>
- <CAOtvUMfFjokOLCg6aHNQESJ_q4Jiok3izrPtae5wR+cND=XL6g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] sh_eth: add R8A77980 support
+Date: Thu, 17 May 2018 10:56:07 +0200
+Message-ID: <20180517085607.igdglwpuswm43zgh@verge.net.au>
+References: <087c91a3-a451-6de7-5e0f-a835f8cc98f1@cogentembedded.com>
+ <d3fe7c8e-3356-4f3a-d550-bc813f3f72cd@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOtvUMfFjokOLCg6aHNQESJ_q4Jiok3izrPtae5wR+cND=XL6g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+In-Reply-To: <d3fe7c8e-3356-4f3a-d550-bc813f3f72cd@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 11:01:57AM +0300, Gilad Ben-Yossef wrote:
-> On Wed, May 16, 2018 at 10:43 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Tue, May 15, 2018 at 04:50:44PM +0200, Geert Uytterhoeven wrote:
-> >> Hi Gilad,
-> >>
-> >> On Tue, May 15, 2018 at 2:29 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> >> > Add bindings for CryptoCell instance in the SoC.
-> >> >
-> >> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> >>
-> >> Thanks for your patch!
-> >>
-> >> > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> >> > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> >> > @@ -528,6 +528,14 @@
-> >> >                         status = "disabled";
-> >> >                 };
-> >> >
-> >> > +               arm_cc630p: crypto@e6601000 {
-> >> > +                       compatible = "arm,cryptocell-630p-ree";
-> >> > +                       interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> >> > +                       #interrupt-cells = <2>;
-> >>
-> >> I believe the #interrupt-cells property is not needed.
-> >>
-> >> > +                       reg = <0x0 0xe6601000 0 0x1000>;
-> >> > +                       clocks = <&cpg CPG_MOD 229>;
-> >> > +               };
-> >>
-> >> The rest looks good, but I cannot verify the register block.
-> >>
-> >> > +
-> >> >                 i2c3: i2c@e66d0000 {
-> >> >                         #address-cells = <1>;
-> >> >                         #size-cells = <0>;
-> >
-> > Thanks, I have applied this after dropping the #interrupt-cells property.
+On Wed, May 16, 2018 at 11:00:29PM +0300, Sergei Shtylyov wrote:
+> Finally, add support for the DT probing of the R-Car V3H (AKA R8A77980) --
+> it's the only R-Car gen3 SoC having the GEther controller -- others have
+> only EtherAVB...
 > 
-> Thanks you!
+> Based on the original (and large) patch by Vladimir Barinov.
 > 
-> Alas, it will not work without the clk patch (the previous one in the
-> series) so they need to be
-> taken or dropped together.
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I think its fine if it does not yet work.
-But not if its causes things that previously worked to stop working.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
