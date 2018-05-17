@@ -1,135 +1,89 @@
-Return-Path: <SRS0=lP+a=H2=verge.net.au=horms@kernel.org>
-Date: Mon, 7 May 2018 14:43:33 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFT v2 1/3] thermal: rcar_thermal: add r8a77995 support
-Message-ID: <20180507124332.3vsqemrywyms4nwy@verge.net.au>
-References: <1522379583-4503-1-git-send-email-ykaneko0929@gmail.com>
- <1522379583-4503-2-git-send-email-ykaneko0929@gmail.com>
- <CAMuHMdX7t9eZQ+3rhzZBKBjETqC7EUgZ4D+dxwhrwiMxvF3Wdw@mail.gmail.com>
- <CAH1o70JGht863MYjRQzyhXyjm60LL_xGO19iSqZas3Fiu6Z6CQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH1o70JGht863MYjRQzyhXyjm60LL_xGO19iSqZas3Fiu6Z6CQ@mail.gmail.com>
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Return-Path: <SRS0=Hy+M=IE=linuxtv.org=mchehab@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Thu, 17 May 2018 10:22:08 +0000
+Subject: [git:media_tree/master] media: dt-bindings: media: Binding document for OV7251 camera sensor
+Reply-to: linux-media@vger.kernel.org
+Message-Id: <E1fJG4h-0005Ek-Mu@www.linuxtv.org>
+To: linuxtv-commits@linuxtv.org
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, Todor Tomov <todor.tomov@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Kaneko-san,
+This is an automatic generated email to let you know that the following patch were queued:
 
-could you re-spin this series with Geerts concerns (below) addressed.
+Subject: media: dt-bindings: media: Binding document for OV7251 camera sensor
+Author:  Todor Tomov <todor.tomov@linaro.org>
+Date:    Wed Apr 25 12:20:45 2018 -0400
 
-When you repost I think you can add the tested tags and drop the RFT from
-the prefix. I think its likely it can then be merged.
+Add the document for ov7251 device tree binding.
 
-On Tue, Apr 03, 2018 at 08:17:01PM +0900, Yoshihiro Kaneko wrote:
-> Hi Geert-san,
-> 
-> 2018-03-30 18:25 GMT+09:00 Geert Uytterhoeven <geert@linux-m68k.org>:
-> > Hi Kaneko-san,
-> >
-> > On Fri, Mar 30, 2018 at 5:13 AM, Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
-> >> Add support for R-Car D3 (r8a77995) thermal sensor.
-> >>
-> >> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-> >
-> > Thanks for your patch!
-> >
-> >> --- a/drivers/thermal/rcar_thermal.c
-> >> +++ b/drivers/thermal/rcar_thermal.c
-> >> @@ -58,10 +58,35 @@ struct rcar_thermal_common {
-> >>         spinlock_t lock;
-> >>  };
-> >>
-> >> +enum rcar_thermal_type {
-> >> +       RCAR_THERMAL,
-> >> +       RCAR_GEN2_THERMAL,
-> >> +       RCAR_GEN3_THERMAL,
-> >> +};
-> >> +
-> >> +struct rcar_thermal_chip {
-> >> +       int use_of_thermal;
-> >
-> > This can be a single bit:
-> >
-> >     unsigned int use_of_thermal : 1;
-> >
-> >> +       enum rcar_thermal_type type;
-> >
-> > If you would add feature bits, you can get rid of rcar_thermal_type:
-> >
-> >     unsigned int has_filonoff : 1;
-> >     unsigned int has_enr : 1;
-> >     unsigned int needs_suspend_resume : 1;
-> >
-> > The number of interrupts can be stored here, too.
-> 
-> It's nice!
-> 
-> >
-> >> +};
-> >> +
-> >> +static const struct rcar_thermal_chip rcar_thermal = {
-> >> +       .use_of_thermal = 0,
-> >> +       .type = RCAR_THERMAL,
-> >
-> > .has_filonoff = 1,
-> > .has_enr = 0,
-> > ...
-> > .nirqs = 1,
-> >
-> >> @@ -190,7 +222,8 @@ static int rcar_thermal_update_temp(struct rcar_thermal_priv *priv)
-> >>          * enable IRQ
-> >>          */
-> >>         if (rcar_has_irq_support(priv)) {
-> >> -               rcar_thermal_write(priv, FILONOFF, 0);
-> >> +               if (priv->chip->type != RCAR_GEN3_THERMAL)
-> >
-> > if (priv->chip->has_filonoff)
-> >
-> >> @@ -438,6 +471,9 @@ static int rcar_thermal_probe(struct platform_device *pdev)
-> >>         struct rcar_thermal_priv *priv;
-> >>         struct device *dev = &pdev->dev;
-> >>         struct resource *res, *irq;
-> >> +       struct rcar_thermal_chip *chip = ((struct rcar_thermal_chip *)
-> >
-> > I don't think the cast is needed.
-> 
-> I will make 'chip' a const variable.
-> 
-> >
-> >> @@ -457,19 +493,35 @@ static int rcar_thermal_probe(struct platform_device *pdev)
-> >>         pm_runtime_enable(dev);
-> >>         pm_runtime_get_sync(dev);
-> >>
-> >> -       irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> >> -       if (irq) {
-> >> -               /*
-> >> -                * platform has IRQ support.
-> >> -                * Then, driver uses common registers
-> >> -                * rcar_has_irq_support() will be enabled
-> >> -                */
-> >> -               res = platform_get_resource(pdev, IORESOURCE_MEM, mres++);
-> >> -               common->base = devm_ioremap_resource(dev, res);
-> >> -               if (IS_ERR(common->base))
-> >> -                       return PTR_ERR(common->base);
-> >> +       for (i = 0; i < nirq; i++) {
-> >
-> > for (i = 0; i < priv->nirqs; i++) {
-> 
-> 
-> Best regards,
-> Kaneko
-> 
-> >
-> > Gr{oetje,eeting}s,
-> >
-> >                         Geert
-> >
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> >
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
-> 
+CC: Rob Herring <robh@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+ .../devicetree/bindings/media/i2c/ov7251.txt       | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+---
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+new file mode 100644
+index 000000000000..8281151f7493
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+@@ -0,0 +1,52 @@
++* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
++
++The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor
++with an active array size of 640H x 480V. It is programmable through a serial
++I2C interface.
++
++Required Properties:
++- compatible: Value should be "ovti,ov7251".
++- clocks: Reference to the xclk clock.
++- clock-names: Should be "xclk".
++- clock-frequency: Frequency of the xclk clock.
++- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
++  to the hardware pin XSHUTDOWN which is physically active low.
++- vdddo-supply: Chip digital IO regulator.
++- vdda-supply: Chip analog regulator.
++- vddd-supply: Chip digital core regulator.
++
++The device node shall contain one 'port' child node with a single 'endpoint'
++subnode for its digital output video port, in accordance with the video
++interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		...
++
++		ov7251: camera-sensor@60 {
++			compatible = "ovti,ov7251";
++			reg = <0x60>;
++
++			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&camera_bw_default>;
++
++			clocks = <&clks 200>;
++			clock-names = "xclk";
++			clock-frequency = <24000000>;
++
++			vdddo-supply = <&camera_dovdd_1v8>;
++			vdda-supply = <&camera_avdd_2v8>;
++			vddd-supply = <&camera_dvdd_1v2>;
++
++			port {
++				ov7251_ep: endpoint {
++					clock-lanes = <1>;
++					data-lanes = <0>;
++					remote-endpoint = <&csi0_ep>;
++				};
++			};
++		};
++	};
