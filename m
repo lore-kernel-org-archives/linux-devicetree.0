@@ -1,41 +1,36 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH] ARM: dts: stm32: enable USB Host (USBH) EHCI controller on stm32mp157c-ev1
-Date: Thu, 17 May 2018 16:36:52 +0200
-Message-ID: <1526567812-6458-1-git-send-email-amelie.delaunay@st.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v3] ASoC: ssm2305: Add amplifier driver
+Date: Thu, 17 May 2018 16:44:32 +0200
+Message-ID: <399c5202-143b-3c4f-5399-aa6022859ddc@metafoo.de>
+References: <20180517135518.29345-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180517135518.29345-1-m.felsch@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This patch enables USB Host (USBH) EHCI controller on stm32mp157c-ev1.
-As a hub is used between USBH and USB connectors, no need to enable
-USBH OHCI controller: all low- and full-speed traffic is managed by the
-hub.
+On 05/17/2018 03:55 PM, Marco Felsch wrote:
+> The ssm2305 is a simple Class-D audio amplifier. A application can
+> turn on/off the device by a gpio. It's also possible to hardwire the
+> shutdown pin.
+> 
+> Tested on a i.MX6 based custom board.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 9382d80..933036b 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -103,6 +103,12 @@
- 	};
- };
- 
-+&usbh_ehci {
-+	phys = <&usbphyc_port0>;
-+	phy-names = "usb";
-+	status = "okay";
-+};
-+
- &usbphyc {
- 	status = "okay";
- };
--- 
-2.7.4
+Thanks.
