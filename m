@@ -1,63 +1,50 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/2] ARM: dts: imx7: correct enet clock settings
-Date: Thu, 17 May 2018 16:40:22 +0800
-Message-ID: <1526546422-7431-2-git-send-email-Anson.Huang@nxp.com>
-References: <1526546422-7431-1-git-send-email-Anson.Huang@nxp.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 1/3] input: touchscreen: edt-ft5x06: make wakeup source
+ behavior configurable
+Date: Thu, 17 May 2018 10:48:20 +0200
+Message-ID: <3a6eb6a2-8a55-e4d8-f495-fd0d80d95de6@zonque.org>
+References: <20180516122829.23694-1-daniel@zonque.org>
+ <20180516122829.23694-2-daniel@zonque.org> <20180516170333.GA21971@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526546422-7431-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, stefan@agner.ch, adriana.reus@nxp.com, rui.silva@linaro.org
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180516170333.GA21971@dtor-ws>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch corrects ENET "ipg" and "enet_out"
-clock settings according to clock driver's changes.
+Hi Dmitry,
 
-Based on Andy Duan's patch from the NXP kernel tree.
+On Wednesday, May 16, 2018 07:03 PM, Dmitry Torokhov wrote:
+>> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+>> index 5bf63f76ddda..955f085627fa 100644
+>> --- a/drivers/input/touchscreen/edt-ft5x06.c
+>> +++ b/drivers/input/touchscreen/edt-ft5x06.c
+>> @@ -1007,7 +1007,8 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+>>   		goto err_remove_attrs;
+>>   
+>>   	edt_ft5x06_ts_prepare_debugfs(tsdata, dev_driver_string(&client->dev));
+>> -	device_init_wakeup(&client->dev, 1);
+>> +	device_init_wakeup(&client->dev,
+>> +			    device_property_read_bool(dev, "wakeup-source"));
+> 
+> I think we should actually drop device_init_wakeup() call. I2C core
+> already handles "wakeup-source" property (for OF). The static board
+> files can instantiate clients with I2C_CLIENT_WAKE, so that's handled
+> too, and I think ACPI has its own notion of annotating wakeup sources.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx7d.dtsi | 4 ++--
- arch/arm/boot/dts/imx7s.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Ah, right! Thanks, will respin :)
 
-diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-index 200714e..92022ea 100644
---- a/arch/arm/boot/dts/imx7d.dtsi
-+++ b/arch/arm/boot/dts/imx7d.dtsi
-@@ -120,11 +120,11 @@
- 			<GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
- 			<GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
- 			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clks IMX7D_ENET_AXI_ROOT_CLK>,
-+		clocks = <&clks IMX7D_ENET2_IPG_ROOT_CLK>,
- 			<&clks IMX7D_ENET_AXI_ROOT_CLK>,
- 			<&clks IMX7D_ENET2_TIME_ROOT_CLK>,
- 			<&clks IMX7D_PLL_ENET_MAIN_125M_CLK>,
--			<&clks IMX7D_ENET_PHY_REF_ROOT_CLK>;
-+			<&clks IMX7D_ENET_PHY_REF_ROOT_DIV>;
- 		clock-names = "ipg", "ahb", "ptp",
- 			"enet_clk_ref", "enet_out";
- 		fsl,num-tx-queues=<3>;
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 4d42335..cf4ba53 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -1091,11 +1091,11 @@
- 					<GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
- 					<GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
- 					<GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_ENET_AXI_ROOT_CLK>,
-+				clocks = <&clks IMX7D_ENET1_IPG_ROOT_CLK>,
- 					<&clks IMX7D_ENET_AXI_ROOT_CLK>,
- 					<&clks IMX7D_ENET1_TIME_ROOT_CLK>,
- 					<&clks IMX7D_PLL_ENET_MAIN_125M_CLK>,
--					<&clks IMX7D_ENET_PHY_REF_ROOT_CLK>;
-+					<&clks IMX7D_ENET_PHY_REF_ROOT_DIV>;
- 				clock-names = "ipg", "ahb", "ptp",
- 					"enet_clk_ref", "enet_out";
- 				fsl,num-tx-queues=<3>;
--- 
-2.7.4
+
+Daniel
