@@ -1,14 +1,16 @@
-Return-Path: <SRS0=YcIV=II=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:36582 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751286AbeEUNMp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 21 May 2018 09:12:45 -0400
-Date: Mon, 21 May 2018 16:12:39 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v5 05/14] usb: typec: add API to get typec basic port
+Return-Path: <SRS0=KKmW=IE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-he1eur01on0069.outbound.protection.outlook.com ([104.47.0.69]:37640
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751468AbeEQOlf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 17 May 2018 10:41:35 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 05/14] usb: typec: add API to get typec basic port
  power and data config
-Message-ID: <20180521131239.GB10677@kuha.fi.intel.com>
-References: <1525307094-27402-6-git-send-email-jun.li@nxp.com>
+Date: Thu, 17 May 2018 14:41:31 +0000
+Message-ID: <VI1PR0402MB3917F929BBD8C79966B0D7F089910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+ <1525307094-27402-6-git-send-email-jun.li@nxp.com>
  <c28a8352-e960-449b-e7c1-7965d340536e@gmail.com>
  <VI1PR0402MB3917CE86B45CBC1B6F7F576B899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
  <74e1c164-1652-75f4-409c-bd1c214bda4d@gmail.com>
@@ -17,99 +19,67 @@ References: <1525307094-27402-6-git-send-email-jun.li@nxp.com>
  <20180517123506.GF11469@kuha.fi.intel.com>
  <VI1PR0402MB39179F63BCF3E605443D877389910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
  <20180517142420.GH11469@kuha.fi.intel.com>
- <VI1PR0402MB3917F929BBD8C79966B0D7F089910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+In-Reply-To: <20180517142420.GH11469@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB3917F929BBD8C79966B0D7F089910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Jun Li <jun.li@nxp.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Jun,
-
-Sorry for the delay.
-
-On Thu, May 17, 2018 at 02:41:31PM +0000, Jun Li wrote:
-> Hi
-> > -----Original Message-----
-> > From: Heikki Krogerus [mailto:heikki.krogerus@linux.intel.com]
-> > Sent: 2018??5??17?? 22:24
-> > To: Jun Li <jun.li@nxp.com>
-> > Cc: Mats Karrman <mats.dev.list@gmail.com>; robh+dt@kernel.org;
-> > gregkh@linuxfoundation.org; linux@roeck-us.net; a.hajda@samsung.com;
-> > cw00.choi@samsung.com; shufan_lee@richtek.com; Peter Chen
-> > <peter.chen@nxp.com>; gsomlo@gmail.com; devicetree@vger.kernel.org;
-> > linux-usb@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH v5 05/14] usb: typec: add API to get typec basic port power
-> > and data config
-> > 
-> > On Thu, May 17, 2018 at 02:05:41PM +0000, Jun Li wrote:
-> > > Hi Heikki,
-> > >
-> > > > > I reread this patch and tried to see it more in the context of the
-> > > > > other patches and the existing code. The naming of the existing
-> > > > > string tables doesn't help in getting this right, however I have a proposal:
-> > > > >
-> > > > > typec_find_port_power_role() to get to TYPEC_PORT_SRC/SNK/DRP
-> > > > > typec_find_port_data_role() to get to TYPEC_PORT_DFP/UFP/DRD
-> > > > > typec_find_power_role() to get to TYPEC_SINK/SOURCE
-> > > > >
-> > > > > and sometime, if the use should arise
-> > > > >
-> > > > > typec_find_data_role() to get to TYPEC_DEVICE/HOST
-> > > > >
-> > > > > I think it is fairly comprehensible, *_port_* concerns a
-> > > > > capability and without *_port_* it is an actual state. Plus it
-> > > > > matches the names of the constants.
-> > > >
-> > > > Well, there are now four things to consider:
-> > > >
-> > > > 1) the roles (power and data) the port is capable of supporting
-> > > > 2) Try.SRC and Try.SNK, i.e. the preferred role
-> > > > 3) the current roles
-> > > > 4) the role(s) the user want's to limit the use of a port with DRP
-> > > > ports
-> > > >
-> > > > The last one I don't know if it's relevant with these functions.
-> > > > It's not information that we would get for example from firmware.
-> > > >
-> > > > I also don't think we need to use these functions with the current
-> > > > roles the port is in.
-> > > >
-> > > > If the preferred role is "sink" or "source", so just like the power
-> > > > role, we don't need separate function for it here.
-> > > >
-> > > > So isn't two functions all we need here: one for the power and one
-> > > > for data role?
-> > >
-> > > Take power as an example, can we use one function to only look up
-> > > typec_port_types[]? as capability(typec_port_type) and
-> > > state(typec_role) are different enum, and the allowed strings are different.
-> > >
-> > > static const char * const typec_roles[] = {
-> > > 	[TYPEC_SINK]    = "sink",
-> > > 	[TYPEC_SOURCE]  = "source",
-> > > };
-> > >
-> > > static const char * const typec_port_types[] = {
-> > > 	[TYPEC_PORT_SRC] = "source",
-> > > 	[TYPEC_PORT_SNK] = "sink",
-> > > 	[TYPEC_PORT_DRP] = "dual",
-> > > };
-> > 
-> > Where out side the class code we need to convert the current role, the "state",
-> > with these functions?
-> 
-> Currently, the only call site is getting the preferred power role from firmware.
-
-My point was that if we used enum typec_port_type with the prefered
-role, we could use the helper for power role with prefered role. But
-never mind.
-
-
-Thanks,
-
--- 
-heikki
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGVpa2tpIEtyb2dlcnVz
+IFttYWlsdG86aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbV0NCj4gU2VudDogMjAxOMTq
+NdTCMTfI1SAyMjoyNA0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IE1hdHMg
+S2Fycm1hbiA8bWF0cy5kZXYubGlzdEBnbWFpbC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+
+IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBsaW51eEByb2Vjay11cy5uZXQ7IGEuaGFqZGFA
+c2Ftc3VuZy5jb207DQo+IGN3MDAuY2hvaUBzYW1zdW5nLmNvbTsgc2h1ZmFuX2xlZUByaWNodGVr
+LmNvbTsgUGV0ZXIgQ2hlbg0KPiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgZ3NvbWxvQGdtYWlsLmNv
+bTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5v
+cmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjUgMDUvMTRdIHVzYjogdHlwZWM6IGFkZCBBUEkgdG8gZ2V0IHR5cGVjIGJhc2ljIHBvcnQg
+cG93ZXINCj4gYW5kIGRhdGEgY29uZmlnDQo+IA0KPiBPbiBUaHUsIE1heSAxNywgMjAxOCBhdCAw
+MjowNTo0MVBNICswMDAwLCBKdW4gTGkgd3JvdGU6DQo+ID4gSGkgSGVpa2tpLA0KPiA+DQo+ID4g
+PiA+IEkgcmVyZWFkIHRoaXMgcGF0Y2ggYW5kIHRyaWVkIHRvIHNlZSBpdCBtb3JlIGluIHRoZSBj
+b250ZXh0IG9mIHRoZQ0KPiA+ID4gPiBvdGhlciBwYXRjaGVzIGFuZCB0aGUgZXhpc3RpbmcgY29k
+ZS4gVGhlIG5hbWluZyBvZiB0aGUgZXhpc3RpbmcNCj4gPiA+ID4gc3RyaW5nIHRhYmxlcyBkb2Vz
+bid0IGhlbHAgaW4gZ2V0dGluZyB0aGlzIHJpZ2h0LCBob3dldmVyIEkgaGF2ZSBhIHByb3Bvc2Fs
+Og0KPiA+ID4gPg0KPiA+ID4gPiB0eXBlY19maW5kX3BvcnRfcG93ZXJfcm9sZSgpIHRvIGdldCB0
+byBUWVBFQ19QT1JUX1NSQy9TTksvRFJQDQo+ID4gPiA+IHR5cGVjX2ZpbmRfcG9ydF9kYXRhX3Jv
+bGUoKSB0byBnZXQgdG8gVFlQRUNfUE9SVF9ERlAvVUZQL0RSRA0KPiA+ID4gPiB0eXBlY19maW5k
+X3Bvd2VyX3JvbGUoKSB0byBnZXQgdG8gVFlQRUNfU0lOSy9TT1VSQ0UNCj4gPiA+ID4NCj4gPiA+
+ID4gYW5kIHNvbWV0aW1lLCBpZiB0aGUgdXNlIHNob3VsZCBhcmlzZQ0KPiA+ID4gPg0KPiA+ID4g
+PiB0eXBlY19maW5kX2RhdGFfcm9sZSgpIHRvIGdldCB0byBUWVBFQ19ERVZJQ0UvSE9TVA0KPiA+
+ID4gPg0KPiA+ID4gPiBJIHRoaW5rIGl0IGlzIGZhaXJseSBjb21wcmVoZW5zaWJsZSwgKl9wb3J0
+XyogY29uY2VybnMgYQ0KPiA+ID4gPiBjYXBhYmlsaXR5IGFuZCB3aXRob3V0ICpfcG9ydF8qIGl0
+IGlzIGFuIGFjdHVhbCBzdGF0ZS4gUGx1cyBpdA0KPiA+ID4gPiBtYXRjaGVzIHRoZSBuYW1lcyBv
+ZiB0aGUgY29uc3RhbnRzLg0KPiA+ID4NCj4gPiA+IFdlbGwsIHRoZXJlIGFyZSBub3cgZm91ciB0
+aGluZ3MgdG8gY29uc2lkZXI6DQo+ID4gPg0KPiA+ID4gMSkgdGhlIHJvbGVzIChwb3dlciBhbmQg
+ZGF0YSkgdGhlIHBvcnQgaXMgY2FwYWJsZSBvZiBzdXBwb3J0aW5nDQo+ID4gPiAyKSBUcnkuU1JD
+IGFuZCBUcnkuU05LLCBpLmUuIHRoZSBwcmVmZXJyZWQgcm9sZQ0KPiA+ID4gMykgdGhlIGN1cnJl
+bnQgcm9sZXMNCj4gPiA+IDQpIHRoZSByb2xlKHMpIHRoZSB1c2VyIHdhbnQncyB0byBsaW1pdCB0
+aGUgdXNlIG9mIGEgcG9ydCB3aXRoIERSUA0KPiA+ID4gcG9ydHMNCj4gPiA+DQo+ID4gPiBUaGUg
+bGFzdCBvbmUgSSBkb24ndCBrbm93IGlmIGl0J3MgcmVsZXZhbnQgd2l0aCB0aGVzZSBmdW5jdGlv
+bnMuDQo+ID4gPiBJdCdzIG5vdCBpbmZvcm1hdGlvbiB0aGF0IHdlIHdvdWxkIGdldCBmb3IgZXhh
+bXBsZSBmcm9tIGZpcm13YXJlLg0KPiA+ID4NCj4gPiA+IEkgYWxzbyBkb24ndCB0aGluayB3ZSBu
+ZWVkIHRvIHVzZSB0aGVzZSBmdW5jdGlvbnMgd2l0aCB0aGUgY3VycmVudA0KPiA+ID4gcm9sZXMg
+dGhlIHBvcnQgaXMgaW4uDQo+ID4gPg0KPiA+ID4gSWYgdGhlIHByZWZlcnJlZCByb2xlIGlzICJz
+aW5rIiBvciAic291cmNlIiwgc28ganVzdCBsaWtlIHRoZSBwb3dlcg0KPiA+ID4gcm9sZSwgd2Ug
+ZG9uJ3QgbmVlZCBzZXBhcmF0ZSBmdW5jdGlvbiBmb3IgaXQgaGVyZS4NCj4gPiA+DQo+ID4gPiBT
+byBpc24ndCB0d28gZnVuY3Rpb25zIGFsbCB3ZSBuZWVkIGhlcmU6IG9uZSBmb3IgdGhlIHBvd2Vy
+IGFuZCBvbmUNCj4gPiA+IGZvciBkYXRhIHJvbGU/DQo+ID4NCj4gPiBUYWtlIHBvd2VyIGFzIGFu
+IGV4YW1wbGUsIGNhbiB3ZSB1c2Ugb25lIGZ1bmN0aW9uIHRvIG9ubHkgbG9vayB1cA0KPiA+IHR5
+cGVjX3BvcnRfdHlwZXNbXT8gYXMgY2FwYWJpbGl0eSh0eXBlY19wb3J0X3R5cGUpIGFuZA0KPiA+
+IHN0YXRlKHR5cGVjX3JvbGUpIGFyZSBkaWZmZXJlbnQgZW51bSwgYW5kIHRoZSBhbGxvd2VkIHN0
+cmluZ3MgYXJlIGRpZmZlcmVudC4NCj4gPg0KPiA+IHN0YXRpYyBjb25zdCBjaGFyICogY29uc3Qg
+dHlwZWNfcm9sZXNbXSA9IHsNCj4gPiAJW1RZUEVDX1NJTktdICAgID0gInNpbmsiLA0KPiA+IAlb
+VFlQRUNfU09VUkNFXSAgPSAic291cmNlIiwNCj4gPiB9Ow0KPiA+DQo+ID4gc3RhdGljIGNvbnN0
+IGNoYXIgKiBjb25zdCB0eXBlY19wb3J0X3R5cGVzW10gPSB7DQo+ID4gCVtUWVBFQ19QT1JUX1NS
+Q10gPSAic291cmNlIiwNCj4gPiAJW1RZUEVDX1BPUlRfU05LXSA9ICJzaW5rIiwNCj4gPiAJW1RZ
+UEVDX1BPUlRfRFJQXSA9ICJkdWFsIiwNCj4gPiB9Ow0KPiANCj4gV2hlcmUgb3V0IHNpZGUgdGhl
+IGNsYXNzIGNvZGUgd2UgbmVlZCB0byBjb252ZXJ0IHRoZSBjdXJyZW50IHJvbGUsIHRoZSAic3Rh
+dGUiLA0KPiB3aXRoIHRoZXNlIGZ1bmN0aW9ucz8NCg0KQ3VycmVudGx5LCB0aGUgb25seSBjYWxs
+IHNpdGUgaXMgZ2V0dGluZyB0aGUgcHJlZmVycmVkIHBvd2VyIHJvbGUgZnJvbSBmaXJtd2FyZS4N
+Cg0KVGhhbmtzDQpMaSBKdW4NCj4gDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAtLQ0KPiBoZWlra2kN
+Cg==
