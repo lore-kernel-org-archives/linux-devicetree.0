@@ -1,67 +1,72 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
-Date: Thu, 17 May 2018 11:14:24 -0500
-Message-ID: <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
-References: <20180517133009.26079-1-m.felsch@pengutronix.de>
+Subject: Re: [PATCH v6 6/9] dt-bindings: counter: Document stm32 quadrature encoder
+Date: Thu, 17 May 2018 11:23:22 -0500
+Message-ID: <CAL_Jsq+a4s=5N6wUWifoHWQoornbDBY-UY2xrwj1kggNH4Q5pQ@mail.gmail.com>
+References: <cover.1526487615.git.vilhelm.gray@gmail.com> <ccdbbfb2833d274b6bfa234aada57e68d9793dd5.1526487615.git.vilhelm.gray@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180517133009.26079-1-m.felsch@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ccdbbfb2833d274b6bfa234aada57e68d9793dd5.1526487615.git.vilhelm.gray@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMTcsIDIwMTggYXQgODozMCBBTSwgTWFyY28gRmVsc2NoIDxtLmZlbHNjaEBw
-ZW5ndXRyb25peC5kZT4gd3JvdGU6Cj4gRnJvbTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5n
-dXRyb25peC5kZT4KPgo+IEFjY29yZGluZyB0byB0aGUgc3NtMjYwMyBkYXRhIHNoZWV0IChjb250
-cm9sIHJlZ2lzdGVyIHNlcXVlbmNpbmcpLCB0aGUKPiBkaWdpdGFsIGNvcmUgc2hvdWxkIGJlIGFj
-dGl2YXRlZCBvbmx5IGFmdGVyIGFsbCBuZWNlc3NhcnkgYml0cyBpbiB0aGUKPiBwb3dlciByZWdp
-c3RlciBhcmUgZW5hYmxlZCwgYW5kIGEgZGVsYXkgZGV0ZXJtaW5lZCBieSB0aGUgZGVjb3VwbGlu
-Zwo+IGNhcGFjaXRvciBvbiB0aGUgVk1JRCBwaW4gaGFzIHBhc3NlZC4gSWYgdGhlIGRpZ2l0YWwg
-Y29yZSBpcyBhY3RpdmF0ZWQKPiB0b28gZWFybHksIG9yIGV2ZW4gYmVmb3JlIHRoZSBBREMgaXMg
-cG93ZXJlZCB1cCwgYXVkaWJsZSBhcnRpZmFjdHMKPiBhcHBlYXIgYXQgdGhlIGJlZ2lubmluZyBv
-ZiB0aGUgcmVjb3JkZWQgc2lnbmFsLgo+Cj4gVGhlIGRpZ2l0YWwgY29yZSBpcyBhbHNvIG5lZWRl
-ZCBmb3IgcGxheWJhY2ssIHNvIHdoZW4gcmVjb3JkaW5nIHN0YXJ0cwo+IGl0IG1heSBhbHJlYWR5
-IGJlIGVuYWJsZWQuIFRoaXMgbWVhbnMgd2UgY2Fubm90IGdldCB0aGUgcG93ZXIgc2VxdWVuY2UK
-PiBjb3JyZWN0IHdoZW4gd2Ugd2FudCB0byBiZSBhYmxlIHRvIHN0YXJ0IHJlY29yZGluZyBhZnRl
-ciBwbGF5YmFjay4KPgo+IEFzIGEgd29ya2Fyb3VuZCBwdXQgdGhlIE1JQyBtdXRlIHN3aXRjaCBp
-bnRvIHRoZSBEQVBNIHJvdXRlcy4gVGhpcwo+IHdheSB3ZSBjYW4ga2VlcCB0aGUgcmVjb3JkaW5n
-IGRpc2FibGVkIHVudGlsIHRoZSBNSUMgQmlhcyBoYXMgc2V0dGxlZAo+IGFuZCB0aHVzIGdldCBy
-aWQgb2YgYXVkaWJsZSBhcnRpZmFjdHMuCj4KPiBUaGUgZGVsYXkgd2UgaGF2ZSB0byB3YWl0IGRl
-cGVuZHMgb24gYSBib2FyZCBzcGVjaWZpYyBjYXBhY2l0b3IKPiBjb25uZWN0ZWQgdG8gdGhlIFZN
-SUQgcGlucywgc28gbWFrZSB0aGUgZGVsYXkgY29uZmlndXJhYmxlIGluIHRoZSBkZXZpY2UKPiB0
-cmVlLgo+Cj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25p
-eC5kZT4KPiBTaWduZWQtb2ZmLWJ5OiBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXgu
-ZGU+Cj4gU2lnbmVkLW9mZi1ieTogTWFyY28gRmVsc2NoIDxtLmZlbHNjaEBwZW5ndXRyb25peC5k
-ZT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYWRpLHNzbTI2MDIudHh0
-IHwgIDcgKysrKysKPiAgc291bmQvc29jL2NvZGVjcy9zc20yNjAyLmMgICAgICAgICAgICAgICAg
-ICAgIHwgMzAgKysrKysrKysrKysrKysrKystLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDM1IGluc2Vy
-dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxzc20yNjAyLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9hZGksc3NtMjYwMi50eHQKPiBpbmRleCAzYjMzMDJm
-ZTM5OWIuLjkzMzRkNDhjMDQ2MiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc291bmQvYWRpLHNzbTI2MDIudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxzc20yNjAyLnR4dAo+IEBAIC0xMSw5ICsxMSwx
-NiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgIC0gcmVnIDogdGhlIEkyQyBhZGRyZXNzIG9m
-IHRoZSBkZXZpY2UgZm9yIEkyQywgdGhlIGNoaXAgc2VsZWN0Cj4gICAgICAgICAgICBudW1iZXIg
-Zm9yIFNQSS4KPgo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsKPiArICAtIHN0YXJ0dXAtZGVs
-YXktdXMgOiBkZWxheSBiZXR3ZWVuIHBvd2VyaW5nIG9uIGFuZCBhY3RpdmF0aW5nIHRoZSBkaWdp
-dGFsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29yZSwgZGV0ZXJtaW5lZCBieSB0aGUgZGVj
-b3VwbGluZyBjYXBhY2l0b3IgQyBvbiB0aGUKPiArICAgICAgICAgICAgICAgICAgICAgIFZNSUQg
-cGluOiBkZWxheSBbwrVzXSA9IEMgW8K1Rl0gKiAyNTAwMCAvIDMuNQo+ICsKCldlIGFscmVhZHkg
-aGF2ZSBzaW1pbGFybHkgZGVmaW5lZCBwcm9wZXJ0eS4gUGxlYXNlIHJldXNlIHRoYXQuIFNlZSBt
-bWMKcHdyc2VxIGJpbmRpbmcuCgpBbHNvLCBwbGVhc2Ugc3BsaXQgYmluZGluZ3MgdG8gc2VwYXJh
-dGUgcGF0Y2guCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3Jn
-Cmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRl
-dmVsCg==
+On Wed, May 16, 2018 at 12:51 PM, William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+> From: Benjamin Gaignard <benjamin.gaignard@st.com>
+
+v6? Where's v1-v5?
+
+> Add bindings for STM32 Timer quadrature encoder.
+> It is a sub-node of STM32 Timer which implement the
+> counter part of the hardware.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+>  .../bindings/counter/stm32-timer-cnt.txt      | 26 +++++++++++++++++++
+>  .../devicetree/bindings/mfd/stm32-timers.txt  |  7 +++++
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+>
+> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> new file mode 100644
+> index 000000000000..377728128bef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> @@ -0,0 +1,26 @@
+> +STMicroelectronics STM32 Timer quadrature encoder
+> +
+> +STM32 Timer provides quadrature encoder counter mode to detect
+
+'mode' does not sound like a sub-block of the timers block.
+
+> +angular position and direction of rotary elements,
+> +from IN1 and IN2 input signals.
+> +
+> +Must be a sub-node of an STM32 Timer device tree node.
+> +See ../mfd/stm32-timers.txt for details about the parent node.
+> +
+> +Required properties:
+> +- compatible:          Must be "st,stm32-timer-counter".
+> +- pinctrl-names:       Set to "default".
+> +- pinctrl-0:           List of phandles pointing to pin configuration nodes,
+> +                       to set IN1/IN2 pins in mode of operation for Low-Power
+> +                       Timer input on external pin.
+> +
+> +Example:
+> +       timers@40010000  {
+> +               compatible = "st,stm32-timers";
+> +               ...
+> +               counter {
+> +                       compatible = "st,stm32-timer-counter";
+
+Is there only 1? How is the counter addressed?
+
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&tim1_in_pins>;
+> +               };
+> +       };
