@@ -1,83 +1,89 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v5 2/3] ARM: dts: tegra: Fix unit_address_vs_reg and avoid_unnecessary_addr_size DTC warnings
-Date: Thu, 17 May 2018 09:45:02 +0200
-Message-ID: <1526543103-21668-2-git-send-email-krzk@kernel.org>
-References: <1526543103-21668-1-git-send-email-krzk@kernel.org>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
+Date: Thu, 17 May 2018 10:50:34 +0300
+Message-ID: <017601d3edb3$c0d96d40$428c47c0$@codeaurora.org>
+References: <1526375616-16904-1-git-send-email-ilialin@codeaurora.org> <1526375616-16904-13-git-send-email-ilialin@codeaurora.org> <CAHLCerOYq4q2GE+m3MQAbMfxM4azPr95XiLKVtoPVG1Kv2Db=A@mail.gmail.com> <20180516141132.aqjif7d5motmmnlo@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526543103-21668-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <20180516141132.aqjif7d5motmmnlo@vireshk-i7>
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Krzysztof Kozlowski <krzk@kernel.org>
+To: 'Viresh Kumar' <viresh.kumar@linaro.org>, 'Amit Kucheria' <amit.kucheria@linaro.org>
+Cc: 'Michael Turquette' <mturquette@baylibre.com>, sboyd@kernel.org, 'Rob Herring' <robh@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, 'Andy Gross' <andy.gross@linaro.org>, 'David Brown' <david.brown@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 'LKML' <linux-kernel@vger.kernel.org>, 'Linux PM list' <linux-pm@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, 'lakml' <linux-arm-kernel@lists.infradead.org>, 'Rajendra Nayak' <rnayak@codeaurora.org>, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Remove unneeded address/size cells properties and unit addresses to fix
-DTC warnings like:
 
-    arch/arm/boot/dts/tegra30-apalis-eval.dtb: Warning (unit_address_vs_reg):
-        /i2c@7000d000/stmpe811@41/stmpe_touchscreen@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/tegra30-apalis-eval.dtb: Warning (avoid_unnecessary_addr_size):
-        /i2c@7000d000/stmpe811@41: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> -----Original Message-----
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+> Sent: Wednesday, May 16, 2018 17:12
+> To: Amit Kucheria <amit.kucheria@linaro.org>
+> Cc: Ilia Lin <ilialin@codeaurora.org>; Michael Turquette
+> <mturquette@baylibre.com>; sboyd@kernel.org; Rob Herring
+> <robh@kernel.org>; Mark Rutland <mark.rutland@arm.com>; nm@ti.com;
+> lgirdwood@gmail.com; broonie@kernel.org; Andy Gross
+> <andy.gross@linaro.org>; David Brown <david.brown@linaro.org>;
+> catalin.marinas@arm.com; will.deacon@arm.com; Rafael J. Wysocki
+> <rjw@rjwysocki.net>; linux-clk@vger.kernel.org;
+> devicetree@vger.kernel.org; LKML <linux-kernel@vger.kernel.org>; Linux
+> PM list <linux-pm@vger.kernel.org>; linux-arm-msm@vger.kernel.org; linux-
+> soc@vger.kernel.org; lakml <linux-arm-kernel@lists.infradead.org>;
+> Rajendra Nayak <rnayak@codeaurora.org>; nicolas.dechesne@linaro.org;
+> celster@codeaurora.org; tfinkel@codeaurora.org
+> Subject: Re: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
+> 
+> On 16-05-18, 16:12, Amit Kucheria wrote:
+> > > +       ret = PTR_ERR_OR_ZERO(opp_temp =
+> > > +
+> dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
+> > > +       if (0 > ret)
+> >
+> > Any particular reason to prefer this over (ret < 0) that is generally
+> > used? I've seen it used to avoid the == vs. = typos, but not for other
+> > comparisons.
+> >
+> > Suggest sticking to what is commonly used i.e. ret < 0.
+> >
+> > > +               goto free_opp;
+> > > +
+> > > +       cpu_dev = get_cpu_device(GOLD_LEAD);
+> >
+> > Error check cpu_dev here?
+> >
+> > > +       ret = PTR_ERR_OR_ZERO(opp_temp =
+> > > +
+> dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
+> > > +       if (0 > ret)
+> > > +               goto free_opp;
+> 
+> The goto here is wrong
 
----
+If we are here, then the first dev_pm_opp_set_supported_hw() succeeded. And
+should be deallocated before exit with error.
 
-Changes since v4:
-1. None
----
- arch/arm/boot/dts/tegra30-apalis.dtsi  | 4 +---
- arch/arm/boot/dts/tegra30-beaver.dts   | 3 ---
- arch/arm/boot/dts/tegra30-colibri.dtsi | 2 --
- 3 files changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 184f60c720fa..5038ca7b68af 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -590,8 +590,6 @@
- 		/* STMPE811 touch screen controller */
- 		stmpe811@41 {
- 			compatible = "st,stmpe811";
--			#address-cells = <1>;
--			#size-cells = <0>;
- 			reg = <0x41>;
- 			interrupts = <TEGRA_GPIO(V, 0) IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-parent = <&gpio>;
-@@ -600,7 +598,7 @@
- 			blocks = <0x5>;
- 			irq-trigger = <0x1>;
- 
--			stmpe_touchscreen@0 {
-+			stmpe_touchscreen {
- 				compatible = "st,stmpe-ts";
- 				/* 3.25 MHz ADC clock speed */
- 				st,adc-freq = <1>;
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index 72369877d284..961934f70639 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -1791,9 +1791,6 @@
- 			vccio-supply = <&vdd_5v_in_reg>;
- 
- 			regulators {
--				#address-cells = <1>;
--				#size-cells = <0>;
--
- 				vdd1_reg: vdd1 {
- 					regulator-name = "vddio_ddr_1v2";
- 					regulator-min-microvolt = <1200000>;
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index cc46cedf80b9..a593dc8be47f 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -352,8 +352,6 @@
- 		/* STMPE811 touch screen controller */
- 		stmpe811@41 {
- 			compatible = "st,stmpe811";
--			#address-cells = <1>;
--			#size-cells = <0>;
- 			reg = <0x41>;
- 			interrupts = <TEGRA_GPIO(V, 0) IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-parent = <&gpio>;
--- 
-2.7.4
+> 
+> > > +
+> > > +
+> > > +       ret =
+> PTR_ERR_OR_ZERO(platform_device_register_simple("cpufreq-dt",
+> > > +                                                             -1,
+> > > + NULL, 0));
+> > > +
+> > > +       if (0 == ret)
+> > > +               return 0;
+> > > +
+> > > +free_opp:
+> > > +       dev_pm_opp_put_supported_hw(opp_temp);
+> >
+> > This is not needed because dev_pm_opp_set_supported_hw will free
+> > memory in case of failure. This call in only needed in case of a
+> > successful get.
+> 
+> But this is still required for the case where platform device registration
+fails.
+> 
+> --
+> viresh
