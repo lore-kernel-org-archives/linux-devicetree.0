@@ -1,55 +1,83 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 5/6] spi: at91-usart: add driver for at91-usart as spi
-Date: Thu, 17 May 2018 13:54:37 +0900
-Message-ID: <20180517045437.GE20254@sirena.org.uk>
-References: <20180511103822.31698-1-radu.pirea@microchip.com>
- <20180511103822.31698-6-radu.pirea@microchip.com>
- <CAHp75Ve3Ugnjjm8EZkPQTZSvH1qad1e5SqjOn8zz5syHSQea_g@mail.gmail.com>
- <5a3930b867cf8c279953d08c5d5dd1d93113a43b.camel@microchip.com>
- <CAHp75VdRrL25Jgnbk64Qqc5RY3uJdcntJ3xwRdp3F+rRFeTHBA@mail.gmail.com>
- <c23cdde58b9f724f51787c6c38478df983be6efa.camel@microchip.com>
+Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
+Date: Thu, 17 May 2018 15:09:48 +0900
+Message-ID: <20180517060948.GI20254@sirena.org.uk>
+References: <cover.1521246069.git.collinsd@codeaurora.org>
+ <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
+ <152165924074.91116.13025068669916027026@swboyd.mtv.corp.google.com>
+ <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
+ <152411734938.46528.9676451637772936597@swboyd.mtv.corp.google.com>
+ <20180419120813.GD27188@sirena.org.uk>
+ <38f42537-f801-115a-4120-1344a67a0462@codeaurora.org>
+ <20180424174111.GH22073@sirena.org.uk>
+ <d82ef514-b94f-8ed9-6b1e-e07de2a5f455@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ep0oHQY+/Gbo/zt0"
+        protocol="application/pgp-signature"; boundary="OfrWf2Fun5Ae4m0Y"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c23cdde58b9f724f51787c6c38478df983be6efa.camel@microchip.com>
+In-Reply-To: <d82ef514-b94f-8ed9-6b1e-e07de2a5f455@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu.pirea@microchip.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, alexandre.belloni@bootlin.com, Nicolas Ferre <nicolas.ferre@microchip.com>
+To: David Collins <collinsd@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, lgirdwood@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, ilina@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 
---ep0oHQY+/Gbo/zt0
+--OfrWf2Fun5Ae4m0Y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, May 15, 2018 at 12:22:24PM +0300, Radu Pirea wrote:
-> On Mon, 2018-05-14 at 20:38 +0300, Andy Shevchenko wrote:
+On Tue, Apr 24, 2018 at 01:46:21PM -0700, David Collins wrote:
+> On 04/24/2018 10:41 AM, Mark Brown wrote:
 
-> > So, what is not going as expected in "SPI core takes care of CSs"
-> > case?
-> > Did you use oscilloscope for that?
+> > If the hardware has full knowledge of all these constraints and enforces
+> > them transparently then why does the kernel care that it's doing that?
+> > Doesn't it defeat the point of it doing all this stuff if we have to
+> > know about it?
 
-> Yes, I used and CSs was not asserted. Anyway, I will will try again.
+> The RPMh hardware is aware of the parent-child connections between
+> regulators as well as minimum headroom to ensure stable LDO voltage output
+> for subregulated LDOs.  The intention of having the headroom be a
+> configurable property for processors is to support usecases in which
+> subregulated LDO loads are particularly sensitive to noise and require
+> additional headroom.  Such usecases are board dependent and beyond the
+> baseline configurations set in RPMh hardware.
 
-If the core chip select handling is not working properly for some reason
-then the core chip select handling should be fixed rather than just open
-coding in your driver - probably it's also broken for other users.
+So the hardware implementation is some hard coding stuff that doesn't
+really adequately reflect reality?  This seems unfortunate.  However do
+we really need to tell the hardware about the fact that we're adding
+extra headroom - are there actual interactions with non-Linux things
+here?
 
---ep0oHQY+/Gbo/zt0
+> >> XOB managed regulators physically cannot change voltage.  Therefore, do
+> >> you agree that it is reasonable to use fixed_uV for them?  Note that I
+> >> removed init_data->constraints.apply_uV manipulation in version 2 of this
+> >> patch.
+
+> > If these regulators can't change voltage then surely we know what
+> > voltage they have without needing it to be specified in DT?
+
+> In the case of XOB managed LDO regulators, the LDOs physically can be
+> configured to different voltages by the bootloader.  However, the RPMh
+> interface provides no mechanism for the application processor to read or
+> change that voltage.  Therefore, we need a way to specify such voltages in
+> a board specific (as opposed to driver specific) manner (i.e. device tree).
+
+Is the kernel somehow prevented from varying these voltages?
+
+--OfrWf2Fun5Ae4m0Y
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlr9CwwACgkQJNaLcl1U
-h9AHmAf+MeZvNU8HPwcP+sQCno97dw8H+yoy3YJU9I0Dj3O2T7Oo92s9mWkZRvVo
-sOKTcum4hVqmJFePu3boGmH63hfeD0QUOSm6kJr4xkSy1Sxz0ouOhlvI7LRe8XFK
-e7cHXKAznizC8uLRLSmtfWJ1Yxs/Xp6f4ZHidVlXxlstZBp3pPNrf1Fp5l9fuHyn
-SztnBBwxWDd+T0BolFLQttRrPK+QH8kbI4QGd+m7Nf+89x+FAWwsNKbFZE/J7A0A
-J1ZHjrJ4Tby2CIG4dhx0EsBn57AyB+DxZJcCVYt66KyOcggs8kom3k+RxY8kXQNr
-EDDh2ppYFrYMdZt1KnbLilNYeZ14Hw==
-=UhMg
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlr9HKgACgkQJNaLcl1U
+h9BNLAf+MXHtZxYJQq5vjkWDr1x4ZTeTs9eBmLvqlxpkL2U2URCm2ZJWVirJt5fF
+G9f+bcDiJTCeW0dNCR8Cs01LWKgYzoXa/pXlse8LEj3eUO9+RdqjsiyDoD5UfVPU
+TAuMpkvwwnnA46U6OfIV4KIUf8/hNx5rI3R0fyURsrANuBdp47GvHKVhqIBwWYMc
+n8rjy1bzOFT3TYTAwVtXVczMJrwDe0t1qshGfvOaMK7j7fmra2YVtRXFmCW8VVY1
+bwpJwrfKpR1FOGitcqvyP7TLKQy9VtZiuNKpxI4akhIXuSwK5GaFxqwtmO1x8eKk
+XoJRm8dQhKEpblnzBR2Urx7Fg131SA==
+=vmht
 -----END PGP SIGNATURE-----
 
---ep0oHQY+/Gbo/zt0--
+--OfrWf2Fun5Ae4m0Y--
