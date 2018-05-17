@@ -1,93 +1,77 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6] gpio: dwapb: Add support for 1 interrupt per port A
- GPIO
-Date: Thu, 17 May 2018 07:25:00 +0100
-Message-ID: <20180517062500.GJ5130@dell>
-References: <1526027497-32556-1-git-send-email-phil.edworthy@renesas.com>
- <F70CFA9C-2059-432E-BFD3-3FA6CB618795@amperecomputing.com>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
+ bindings
+Date: Thu, 17 May 2018 07:36:40 +0100
+Message-ID: <20180517063640.GK5130@dell>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
+ <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+ <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
+ <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
+ <CACRpkda2VGo0FOdR09tKiTpg66NgoWjubaHp_J3372y=a772Zg@mail.gmail.com>
+ <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <F70CFA9C-2059-432E-BFD3-3FA6CB618795@amperecomputing.com>
+In-Reply-To: <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hoan Tran <hoan.tran@amperecomputing.com>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 May 2018, Hoan Tran wrote:
+On Wed, 16 May 2018, Amelie DELAUNAY wrote:
 
-> Hi Phil,
 > 
-> ﻿On 5/11/18, 1:31 AM, "Phil Edworthy" <phil.edworthy@renesas.com> wrote:
 > 
->     The DesignWare GPIO IP can be configured for either 1 interrupt or 1
->     per GPIO in port A, but the driver currently only supports 1 interrupt.
->     See the DesignWare DW_apb_gpio Databook description of the
->     'GPIO_INTR_IO' parameter.
->     
->     This change allows the driver to work with up to 32 interrupts, it will
->     get as many interrupts as specified in the DT 'interrupts' property.
->     It doesn't do anything clever with the different interrupts, it just calls
->     the same handler used for single interrupt hardware.
->     
->     Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
->     Reviewed-by: Rob Herring <robh@kernel.org>
->     Acked-by: Lee Jones <lee.jones@linaro.org>
->     ---
->     One point to mention is that I have made it possible for users to have
->     unconnected interrupts by specifying holes in the list of interrupts. This is
->     done by supporting the interrupts-extended DT prop.
->     However, I have no use for this and had to hack some test case for this.
->     Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
->     
->     v6:
->      - Treat DT and ACPI the same as much as possible. Note that we can't use
->        platform_get_irq() to get the DT interrupts as they are in the port
->        sub-node and hence do not have an associated platform device.
->     v5:
->      - Rolled ACPI companion code provided by Hoan Tran into this patch.
->     v4:
->      - Use of_irq_get() instead of of_irq_parse_one()+irq_create_of_mapping()
->     v3:
->      - Rolled mfd: intel_quark_i2c_gpio fix into this patch to avoid bisect problems
->     v2:
->      - Replaced interrupt-mask DT prop with support for the interrupts-extended
->        prop. This means replacing the call to irq_of_parse_and_map() with calls
->        to of_irq_parse_one() and irq_create_of_mapping().
->     ---
->      .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  9 +++-
->      drivers/gpio/gpio-dwapb.c                          | 49 +++++++++++++++-------
->      drivers/mfd/intel_quark_i2c_gpio.c                 |  3 +-
->      include/linux/platform_data/gpio-dwapb.h           |  3 +-
->      4 files changed, 45 insertions(+), 19 deletions(-)
->     
->     diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->     index 4a75da7..3c1118b 100644
->     --- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->     +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->     @@ -26,8 +26,13 @@ controller.
->        the second encodes the triger flags encoded as described in
->        Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->      - interrupt-parent : The parent interrupt controller.
->     -- interrupts : The interrupt to the parent controller raised when GPIOs
->     -  generate the interrupts.
->     +- interrupts : The interrupts to the parent controller raised when GPIOs
->     +  generate the interrupts. If the controller provides one combined interrupt
->     +  for all GPIOs, specify a single interrupt. If the controller provides one
->     +  interrupt for each GPIO, provide a list of interrupts that correspond to each
->     +  of the GPIO pins. When specifying multiple interrupts, if any are unconnected,
->     +  use the interrupts-extended property to specify the interrupts and set the
->     +  interrupt controller handle for unused interrupts to 0.
->      - snps,nr-gpios : The number of pins in the port, a single cell.
->      - resets : Reset line for the controller.
->      
-> Acked-by: Hoan Tran <hoan.tran@amperecomputing.com>
+> On 05/16/2018 04:20 PM, Linus Walleij wrote:
+> > On Wed, May 9, 2018 at 9:56 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+> > 
+> >> Indeed, stmfx has other functions than GPIO. But, after comments done
+> >> here: [1] and there: [2], it has been decided to move MFD parent/GPIO
+> >> child drivers into a single PINCTRL/GPIO driver because of the following
+> >> reasons:
+> >> - Other stmfx functions (IDD measurement and TouchScreen controller) are
+> >> not used on any of the boards using an stmfx and supported by Linux, so
+> >> no way to test these functions, and no need to maintain them while they
+> >> are not being used.
+> >> - But, in the case a new board will use more than GPIO function on
+> >> stmfx, the actual implementation allow to easily extract common init
+> >> part of stmfx and put it in an MFD driver.
+> >>
+> >> So I could remove gpio sub-node and put its contents in stmfx node and
+> >> keep single PINCTRL/GPIO driver for the time being.
+> >> Please advise,
+> > 
+> > I would normally advice to use the right modeling from the start, create
+> > the MFD driver and spawn the devices from there. It is confusing
+> > if the layout of the driver(s) doesn't really match the layout of the
+> > hardware.
+> > 
+> > I understand that it is a pain to write new MFD drivers to get your
+> > things going and it would be "nice to get this working really quick
+> > now" but in my experience it is better to do it right from the start.
+> > 
+> 
+> Hi Linus,
+> 
+> Thanks for your advice. I understand the point.
+> So, the right modeling would be to:
+> - create an MFD driver with the common init part of stmfx
+> - remove all common init part of stmfx-pinctrl driver and keep only all 
+> gpio/pinctrl functions.
+> 
+> I will not develop the other stmfx functions (IDD measurement driver and 
+> TouchScreen controller driver) because, as explained ealier, they are 
+> not used on any of the boards using an stmfx and supported by Linux, so 
+> no way to test these functions, and no need to maintain them while they 
+> are not being used.
+> 
+> Lee, are you OK with that ?
 
-Well that's new.  I've never seen a mailer reply like that before.
-
-Which mailer are you using?  Might be worth sorting that out.
+I missed a lot of this conversation I think, but from what I've read,
+it sounds fine.
 
 -- 
 Lee Jones [李琼斯]
