@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v4 08/12] ARM: dts: imx7s: add multiplexer controls
-Date: Thu, 17 May 2018 13:50:29 +0100
-Message-ID: <20180517125033.18050-9-rui.silva@linaro.org>
+Subject: [PATCH v4 07/12] ARM: dts: imx7s: add mipi phy power domain
+Date: Thu, 17 May 2018 13:50:28 +0100
+Message-ID: <20180517125033.18050-8-rui.silva@linaro.org>
 References: <20180517125033.18050-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,35 +21,29 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The IOMUXC General Purpose Register has bitfield to control video bus
-multiplexer to control the CSI input between the MIPI-CSI2 and parallel
-interface. Add that register and mask.
+Add power domain index 0 related with mipi-phy to imx7s.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7s.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 67450ad89940..3590dab529f9 100644
+index 4d42335c0dee..67450ad89940 100644
 --- a/arch/arm/boot/dts/imx7s.dtsi
 +++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -520,8 +520,14 @@
+@@ -636,6 +636,12 @@
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
  
- 			gpr: iomuxc-gpr@30340000 {
- 				compatible = "fsl,imx7d-iomuxc-gpr",
--					"fsl,imx6q-iomuxc-gpr", "syscon";
-+					"fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
- 				reg = <0x30340000 0x10000>;
++					pgc_mipi_phy: pgc-power-domain@0 {
++						#power-domain-cells = <0>;
++						reg = <0>;
++						power-supply = <&reg_1p0d>;
++					};
 +
-+				mux: mux-controller {
-+					compatible = "mmio-mux";
-+					#mux-control-cells = <1>;
-+					mux-reg-masks = <0x14 0x00000010>;
-+				};
- 			};
- 
- 			ocotp: ocotp-ctrl@30350000 {
+ 					pgc_pcie_phy: pgc-power-domain@1 {
+ 						#power-domain-cells = <0>;
+ 						reg = <1>;
 -- 
 2.17.0
