@@ -1,18 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: bindings: Add properties for coupled regulators" to the regulator tree
-Date: Thu, 17 May 2018 17:41:31 +0100 (BST)
-Message-ID: <20180517164131.5026444007E@finisterre.ee.mobilebroadband>
-References: <1520598128-11768-3-git-send-email-m.purski@samsung.com>
+Subject: Applied "regulator: of: add support for allowed modes configuration" to the regulator tree
+Date: Thu, 17 May 2018 17:41:44 +0100 (BST)
+Message-ID: <20180517164144.0CD3D44007E@finisterre.ee.mobilebroadband>
+References: <58bb4f965515a67a6cbbc726b0d7b092c22b79d7.1526088289.git.collinsd@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520598128-11768-3-git-send-email-m.purski@samsung.com>
+In-Reply-To: <58bb4f965515a67a6cbbc726b0d7b092c22b79d7.1526088289.git.collinsd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orgMark Brown <broonie@kernel.org>, Fabio Estevam <festevam@gmail.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>linux-kernel@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.orglinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: bindings: Add properties for coupled regulators
+   regulator: of: add support for allowed modes configuration
 
 has been applied to the regulator tree at
 
@@ -37,38 +37,67 @@ to this mail.
 Thanks,
 Mark
 
->From f98618b34542706eddc3b66abc271f1c8d8c4a05 Mon Sep 17 00:00:00 2001
-From: Maciej Purski <m.purski@samsung.com>
-Date: Mon, 23 Apr 2018 16:33:38 +0200
-Subject: [PATCH] regulator: bindings: Add properties for coupled regulators
+>From 54557ad9737e28b06b632cce723ef2373fe6bf12 Mon Sep 17 00:00:00 2001
+From: David Collins <collinsd@codeaurora.org>
+Date: Fri, 11 May 2018 18:46:47 -0700
+Subject: [PATCH] regulator: of: add support for allowed modes configuration
 
-Some regulators require keeping their voltage spread below defined
-max_spread.
+Add support for configuring the machine constraints
+valid_modes_mask element based on a list of allowed modes
+specified via a device tree property.
 
-Add properties to provide information on regulators' coupling.
-
-Signed-off-by: Maciej Purski <m.purski@samsung.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: David Collins <collinsd@codeaurora.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/regulator/regulator.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/regulator/of_regulator.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index c627aa08f0da..a7cd36877bfe 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -73,6 +73,11 @@ Optional properties:
- 	0: Disable active discharge.
- 	1: Enable active discharge.
- 	Absence of this property will leave configuration to default.
-+- regulator-coupled-with: Regulators with which the regulator
-+  is coupled. The linkage is 2-way - all coupled regulators should be linked
-+  with each other. A regulator should not be coupled with its supplier.
-+- regulator-coupled-max-spread: Max spread between voltages of coupled regulators
-+  in microvolts.
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 0d3f73eacb99..d61fed28fdb9 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -32,7 +32,7 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	struct regulator_state *suspend_state;
+ 	struct device_node *suspend_np;
+ 	unsigned int mode;
+-	int ret, i;
++	int ret, i, len;
+ 	u32 pval;
  
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
+ 	constraints->name = of_get_property(np, "regulator-name", NULL);
+@@ -136,6 +136,33 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 		}
+ 	}
+ 
++	len = of_property_count_elems_of_size(np, "regulator-allowed-modes",
++						sizeof(u32));
++	if (len > 0) {
++		if (desc && desc->of_map_mode) {
++			for (i = 0; i < len; i++) {
++				ret = of_property_read_u32_index(np,
++					"regulator-allowed-modes", i, &pval);
++				if (ret) {
++					pr_err("%s: couldn't read allowed modes index %d, ret=%d\n",
++						np->name, i, ret);
++					break;
++				}
++				mode = desc->of_map_mode(pval);
++				if (mode == REGULATOR_MODE_INVALID)
++					pr_err("%s: invalid regulator-allowed-modes element %u\n",
++						np->name, pval);
++				else
++					constraints->valid_modes_mask |= mode;
++			}
++			if (constraints->valid_modes_mask)
++				constraints->valid_ops_mask
++					|= REGULATOR_CHANGE_MODE;
++		} else {
++			pr_warn("%s: mode mapping not defined\n", np->name);
++		}
++	}
++
+ 	if (!of_property_read_u32(np, "regulator-system-load", &pval))
+ 		constraints->system_load = pval;
+ 
 -- 
 2.17.0
