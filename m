@@ -1,89 +1,71 @@
-From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
-Date: Thu, 17 May 2018 10:50:34 +0300
-Message-ID: <017601d3edb3$c0d96d40$428c47c0$@codeaurora.org>
-References: <1526375616-16904-1-git-send-email-ilialin@codeaurora.org> <1526375616-16904-13-git-send-email-ilialin@codeaurora.org> <CAHLCerOYq4q2GE+m3MQAbMfxM4azPr95XiLKVtoPVG1Kv2Db=A@mail.gmail.com> <20180516141132.aqjif7d5motmmnlo@vireshk-i7>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: Re: [PATCH 2/3] clk: renesas: r8a7795: Add ccree clock
+Date: Thu, 17 May 2018 11:00:10 +0300
+Message-ID: <CAOtvUMf0pnX1+MOz0KkB5LxqL5HTmLRYjVZTUrAx-eCvm26+LA@mail.gmail.com>
+References: <1526387370-17142-1-git-send-email-gilad@benyossef.com>
+ <1526387370-17142-3-git-send-email-gilad@benyossef.com> <CAMuHMdXWPwW_p=D56BhNF274m+JLe+mbD2fqQu8-we-uMW4b8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516141132.aqjif7d5motmmnlo@vireshk-i7>
-Content-Language: en-us
+In-Reply-To: <CAMuHMdXWPwW_p=D56BhNF274m+JLe+mbD2fqQu8-we-uMW4b8Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Viresh Kumar' <viresh.kumar@linaro.org>, 'Amit Kucheria' <amit.kucheria@linaro.org>
-Cc: 'Michael Turquette' <mturquette@baylibre.com>, sboyd@kernel.org, 'Rob Herring' <robh@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, 'Andy Gross' <andy.gross@linaro.org>, 'David Brown' <david.brown@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 'LKML' <linux-kernel@vger.kernel.org>, 'Linux PM list' <linux-pm@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, 'lakml' <linux-arm-kernel@lists.infradead.org>, 'Rajendra Nayak' <rnayak@codeaurora.org>, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>L
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 15, 2018 at 5:47 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Gilad,
+>
+> On Tue, May 15, 2018 at 2:29 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+>> This patch adds the clock used by the CryptoCell 630p instance in the SoC.
+>>
+>> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+>
+> Thanks for your patch!
+>
+>> --- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
+>> +++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+>> @@ -132,6 +132,7 @@ static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
+>>         DEF_MOD("sys-dmac2",             217,   R8A7795_CLK_S0D3),
+>>         DEF_MOD("sys-dmac1",             218,   R8A7795_CLK_S0D3),
+>>         DEF_MOD("sys-dmac0",             219,   R8A7795_CLK_S0D3),
+>> +       DEF_MOD("ccree",                 229,   R8A7795_CLK_S3D2),
+>
+> I don't know if "ccree" is the proper name for this clock, as there
+> may be multiple
+> instances.
 
+I'd be happy to rename it to anything else. Suggestions?
 
-> -----Original Message-----
-> From: Viresh Kumar <viresh.kumar@linaro.org>
-> Sent: Wednesday, May 16, 2018 17:12
-> To: Amit Kucheria <amit.kucheria@linaro.org>
-> Cc: Ilia Lin <ilialin@codeaurora.org>; Michael Turquette
-> <mturquette@baylibre.com>; sboyd@kernel.org; Rob Herring
-> <robh@kernel.org>; Mark Rutland <mark.rutland@arm.com>; nm@ti.com;
-> lgirdwood@gmail.com; broonie@kernel.org; Andy Gross
-> <andy.gross@linaro.org>; David Brown <david.brown@linaro.org>;
-> catalin.marinas@arm.com; will.deacon@arm.com; Rafael J. Wysocki
-> <rjw@rjwysocki.net>; linux-clk@vger.kernel.org;
-> devicetree@vger.kernel.org; LKML <linux-kernel@vger.kernel.org>; Linux
-> PM list <linux-pm@vger.kernel.org>; linux-arm-msm@vger.kernel.org; linux-
-> soc@vger.kernel.org; lakml <linux-arm-kernel@lists.infradead.org>;
-> Rajendra Nayak <rnayak@codeaurora.org>; nicolas.dechesne@linaro.org;
-> celster@codeaurora.org; tfinkel@codeaurora.org
-> Subject: Re: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
-> 
-> On 16-05-18, 16:12, Amit Kucheria wrote:
-> > > +       ret = PTR_ERR_OR_ZERO(opp_temp =
-> > > +
-> dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
-> > > +       if (0 > ret)
-> >
-> > Any particular reason to prefer this over (ret < 0) that is generally
-> > used? I've seen it used to avoid the == vs. = typos, but not for other
-> > comparisons.
-> >
-> > Suggest sticking to what is commonly used i.e. ret < 0.
-> >
-> > > +               goto free_opp;
-> > > +
-> > > +       cpu_dev = get_cpu_device(GOLD_LEAD);
-> >
-> > Error check cpu_dev here?
-> >
-> > > +       ret = PTR_ERR_OR_ZERO(opp_temp =
-> > > +
-> dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
-> > > +       if (0 > ret)
-> > > +               goto free_opp;
-> 
-> The goto here is wrong
+> I also can't verify the parent clock.
 
-If we are here, then the first dev_pm_opp_set_supported_hw() succeeded. And
-should be deallocated before exit with error.
+I'm afraid I can't really help. This is based on code snippet from
+Renesas. I verified it works but
+I am not an expert on the clock settings :-(
 
-> 
-> > > +
-> > > +
-> > > +       ret =
-> PTR_ERR_OR_ZERO(platform_device_register_simple("cpufreq-dt",
-> > > +                                                             -1,
-> > > + NULL, 0));
-> > > +
-> > > +       if (0 == ret)
-> > > +               return 0;
-> > > +
-> > > +free_opp:
-> > > +       dev_pm_opp_put_supported_hw(opp_temp);
-> >
-> > This is not needed because dev_pm_opp_set_supported_hw will free
-> > memory in case of failure. This call in only needed in case of a
-> > successful get.
-> 
-> But this is still required for the case where platform device registration
-fails.
-> 
+>
+>>         DEF_MOD("cmt3",                  300,   R8A7795_CLK_R),
+>>         DEF_MOD("cmt2",                  301,   R8A7795_CLK_R),
+>>         DEF_MOD("cmt1",                  302,   R8A7795_CLK_R),
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
 > --
-> viresh
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+
+
+-- 
+Gilad Ben-Yossef
+Chief Coffee Drinker
+
+"If you take a class in large-scale robotics, can you end up in a
+situation where the homework eats your dog?"
+ -- Jean-Baptiste Queru
