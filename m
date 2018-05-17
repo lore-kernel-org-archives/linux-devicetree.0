@@ -1,43 +1,83 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2] ASoC: ssm2305: Add amplifier driver
-Date: Thu, 17 May 2018 15:11:03 +0200
-Message-ID: <6c7a72fc-f086-78e5-c920-809aeb738528@metafoo.de>
-References: <20180517130047.15565-1-m.felsch@pengutronix.de>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: r8a7795: add ccree binding
+Date: Thu, 17 May 2018 16:12:23 +0300
+Message-ID: <CAOtvUMcnrPnkx35Sgru+3EUxYn+FY9FmDSYSNnZEaVUODHA7+w@mail.gmail.com>
+References: <1526387370-17142-1-git-send-email-gilad@benyossef.com>
+ <1526387370-17142-4-git-send-email-gilad@benyossef.com> <CAMuHMdWzeNqsho1V6ezZb81T3_HcRzrtuQpmGXsjtFgt9BtZDQ@mail.gmail.com>
+ <20180516074333.i2672u435ymwffk3@verge.net.au> <CAOtvUMfFjokOLCg6aHNQESJ_q4Jiok3izrPtae5wR+cND=XL6g@mail.gmail.com>
+ <20180517090438.pqggltzkcdhzktsp@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180517130047.15565-1-m.felsch@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marco Felsch <m.felsch@pengutronix.de>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180517090438.pqggltzkcdhzktsp@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/17/2018 03:00 PM, Marco Felsch wrote:
-[...]
-> +	if (IS_ERR(priv->gpiod_shutdown)) {
-> +		err = PTR_ERR(priv->gpiod_shutdown);
-> +		if (err != -EPROBE_DEFER) {
-> +			dev_err(dev, "Failed to get 'shutdown' gpio: %d\n",
-> +				err);
-> +			return err;
+On Thu, May 17, 2018 at 12:04 PM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, May 17, 2018 at 11:01:57AM +0300, Gilad Ben-Yossef wrote:
+>> On Wed, May 16, 2018 at 10:43 AM, Simon Horman <horms@verge.net.au> wrote:
+>> > On Tue, May 15, 2018 at 04:50:44PM +0200, Geert Uytterhoeven wrote:
+>> >> Hi Gilad,
+>> >>
+>> >> On Tue, May 15, 2018 at 2:29 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+>> >> > Add bindings for CryptoCell instance in the SoC.
+>> >> >
+>> >> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+>> >>
+>> >> Thanks for your patch!
+>> >>
+>> >> > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> >> > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>> >> > @@ -528,6 +528,14 @@
+>> >> >                         status = "disabled";
+>> >> >                 };
+>> >> >
+>> >> > +               arm_cc630p: crypto@e6601000 {
+>> >> > +                       compatible = "arm,cryptocell-630p-ree";
+>> >> > +                       interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+>> >> > +                       #interrupt-cells = <2>;
+>> >>
+>> >> I believe the #interrupt-cells property is not needed.
+>> >>
+>> >> > +                       reg = <0x0 0xe6601000 0 0x1000>;
+>> >> > +                       clocks = <&cpg CPG_MOD 229>;
+>> >> > +               };
+>> >>
+>> >> The rest looks good, but I cannot verify the register block.
+>> >>
+>> >> > +
+>> >> >                 i2c3: i2c@e66d0000 {
+>> >> >                         #address-cells = <1>;
+>> >> >                         #size-cells = <0>;
+>> >
+>> > Thanks, I have applied this after dropping the #interrupt-cells property.
+>>
+>> Thanks you!
+>>
+>> Alas, it will not work without the clk patch (the previous one in the
+>> series) so they need to be
+>> taken or dropped together.
+>
+> I think its fine if it does not yet work.
+> But not if its causes things that previously worked to stop working.
 
-You also want to return the error in the EPROBE_DEFER case, so the driver
-tries to probe again later.
+Based on the further discussion with Geert my recommendation is to
+drop my patch for now,
+take Geert CR clock  patch and I will follow up next week with a v2
+that fixes the clock
+handing as discussed with Geert.
 
-> +		}
-> +	}
-> +
-> +	return devm_snd_soc_register_component(dev, &ssm2305_component_driver,
-> +					       NULL, 0);
-> +}
-[...]
+Many thanks,
+Gilad
+
+
+
+-- 
+Gilad Ben-Yossef
+Chief Coffee Drinker
+
+"If you take a class in large-scale robotics, can you end up in a
+situation where the homework eats your dog?"
+ -- Jean-Baptiste Queru
