@@ -1,38 +1,61 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [v0 0/2] Add support for QCOM cpufreq FW driver
-Date: Thu, 17 May 2018 12:39:27 +0300
-Message-ID: <CAP245DXgeXvJsw7Q0MU1T97=NYuFywYgNGEQ+vek+obgHpcJsQ@mail.gmail.com>
-References: <1526549401-25666-1-git-send-email-tdas@codeaurora.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] ASoC: ssm2305: Add amplifier driver
+Date: Thu, 17 May 2018 11:42:10 +0200
+Message-ID: <1526550130.2971.3.camel@pengutronix.de>
+References: <20180517092245.16036-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526549401-25666-1-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180517092245.16036-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>, lars@metafoo.de, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 12:29 PM, Taniya Das <tdas@codeaurora.org> wrote:
-> The CPUfreq FW present in some QCOM chipsets offloads the steps necessary
-> for hanging the frequency of CPUs. The driver implements the cpufreq driver
+On Thu, 2018-05-17 at 11:22 +0200, Marco Felsch wrote:
+> The ssm2305 is a simple Class-D audio amplifier. A application can
+> turn on/off the device by a gpio. It's also possible to hardwire the
+> shutdown pin.
+> 
+> Tested on a i.MX6 based custom board.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  .../devicetree/bindings/sound/adi,ssm2305.txt |  15 +++
+>  sound/soc/codecs/Kconfig                      |   7 ++
+>  sound/soc/codecs/Makefile                     |   2 +
+>  sound/soc/codecs/ssm2305.c                    | 105 ++++++++++++++++++
+>  4 files changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/adi,ssm2305.txt
+>  create mode 100644 sound/soc/codecs/ssm2305.c
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2305.txt b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
+> new file mode 100644
+> index 000000000000..fc4c99225538
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
+> @@ -0,0 +1,15 @@
+> +Analog Devices SSM2305 Speaker Amplifier
+> +========================================
+> +
+> +Required properties:
+> +  - compatible : "adi,ssm2305"
+> +
+> +Optional properties:
+> +  - ssm2305,shutdown-gpio : the gpio connected to the shutdown pin
 
-s/hanging/changing :-)
+This should be called shutdown-gpios (plural, no vendor prefix) for
+consistency. Also, since the shutdown GPIO on SSM2305 is active low,
+this should be documented here.
 
-> interface for this firmware.
->
-> Taniya Das (2):
->   dt-bindings: clock: Introduce QCOM CPUFREQ FW bindings
->   cpufreq: qcom-fw: Add support for QCOM cpufreq FW driver
->
->  .../bindings/cpufreq/cpufreq-qcom-fw.txt           |  68 +++++
->  drivers/cpufreq/Kconfig.arm                        |   9 +
->  drivers/cpufreq/Makefile                           |   1 +
->  drivers/cpufreq/qcom-cpufreq-fw.c                  | 318 +++++++++++++++++++++
->  4 files changed, 396 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->  create mode 100644 drivers/cpufreq/qcom-cpufreq-fw.c
->
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
->
+regards
+Philipp
