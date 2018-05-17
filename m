@@ -1,102 +1,151 @@
-From: Hoan Tran <hoan.tran@amperecomputing.com>
-Subject: Re: [PATCH v6] gpio: dwapb: Add support for 1 interrupt per port A
- GPIO
-Date: Thu, 17 May 2018 16:46:56 +0000
-Message-ID: <AA01D623-B3ED-446C-B7C4-37856A185A4B@amperecomputing.com>
-References: <1526027497-32556-1-git-send-email-phil.edworthy@renesas.com>
- <F70CFA9C-2059-432E-BFD3-3FA6CB618795@amperecomputing.com>
- <20180517062500.GJ5130@dell>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 03/14] clk: qcom: Add CPU clock driver for msm8996
+Date: Fri, 18 May 2018 00:51:25 +0800
+Message-ID: <201805180030.ZRycsMlN%fengguang.wu@intel.com>
+References: <1526375616-16904-4-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180517062500.GJ5130@dell>
-Content-Language: en-US
-Content-ID: <1DA4FC1A17BBE84EA2C437747D7171E6@prod.exchangelabs.com>
+Content-Disposition: inline
+In-Reply-To: <1526375616-16904-4-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Hoan Tran <hotran@apm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Michel Pollet <michel.pollet@bp.renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: kbuild-all@01.org, mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVlLA0KDQrvu79PbiA1LzE2LzE4LCAxMToyNSBQTSwgIkxlZSBKb25lcyIgPGxlZS5qb25l
-c0BsaW5hcm8ub3JnPiB3cm90ZToNCg0KICAgIE9uIFdlZCwgMTYgTWF5IDIwMTgsIEhvYW4gVHJh
-biB3cm90ZToNCiAgICANCiAgICA+IEhpIFBoaWwsDQogICAgPiANCiAgICA+IE9uIDUvMTEvMTgs
-IDE6MzEgQU0sICJQaGlsIEVkd29ydGh5IiA8cGhpbC5lZHdvcnRoeUByZW5lc2FzLmNvbT4gd3Jv
-dGU6DQogICAgPiANCiAgICA+ICAgICBUaGUgRGVzaWduV2FyZSBHUElPIElQIGNhbiBiZSBjb25m
-aWd1cmVkIGZvciBlaXRoZXIgMSBpbnRlcnJ1cHQgb3IgMQ0KICAgID4gICAgIHBlciBHUElPIGlu
-IHBvcnQgQSwgYnV0IHRoZSBkcml2ZXIgY3VycmVudGx5IG9ubHkgc3VwcG9ydHMgMSBpbnRlcnJ1
-cHQuDQogICAgPiAgICAgU2VlIHRoZSBEZXNpZ25XYXJlIERXX2FwYl9ncGlvIERhdGFib29rIGRl
-c2NyaXB0aW9uIG9mIHRoZQ0KICAgID4gICAgICdHUElPX0lOVFJfSU8nIHBhcmFtZXRlci4NCiAg
-ICA+ICAgICANCiAgICA+ICAgICBUaGlzIGNoYW5nZSBhbGxvd3MgdGhlIGRyaXZlciB0byB3b3Jr
-IHdpdGggdXAgdG8gMzIgaW50ZXJydXB0cywgaXQgd2lsbA0KICAgID4gICAgIGdldCBhcyBtYW55
-IGludGVycnVwdHMgYXMgc3BlY2lmaWVkIGluIHRoZSBEVCAnaW50ZXJydXB0cycgcHJvcGVydHku
-DQogICAgPiAgICAgSXQgZG9lc24ndCBkbyBhbnl0aGluZyBjbGV2ZXIgd2l0aCB0aGUgZGlmZmVy
-ZW50IGludGVycnVwdHMsIGl0IGp1c3QgY2FsbHMNCiAgICA+ICAgICB0aGUgc2FtZSBoYW5kbGVy
-IHVzZWQgZm9yIHNpbmdsZSBpbnRlcnJ1cHQgaGFyZHdhcmUuDQogICAgPiAgICAgDQogICAgPiAg
-ICAgU2lnbmVkLW9mZi1ieTogUGhpbCBFZHdvcnRoeSA8cGhpbC5lZHdvcnRoeUByZW5lc2FzLmNv
-bT4NCiAgICA+ICAgICBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4N
-CiAgICA+ICAgICBBY2tlZC1ieTogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4NCiAg
-ICA+ICAgICAtLS0NCiAgICA+ICAgICBPbmUgcG9pbnQgdG8gbWVudGlvbiBpcyB0aGF0IEkgaGF2
-ZSBtYWRlIGl0IHBvc3NpYmxlIGZvciB1c2VycyB0byBoYXZlDQogICAgPiAgICAgdW5jb25uZWN0
-ZWQgaW50ZXJydXB0cyBieSBzcGVjaWZ5aW5nIGhvbGVzIGluIHRoZSBsaXN0IG9mIGludGVycnVw
-dHMuIFRoaXMgaXMNCiAgICA+ICAgICBkb25lIGJ5IHN1cHBvcnRpbmcgdGhlIGludGVycnVwdHMt
-ZXh0ZW5kZWQgRFQgcHJvcC4NCiAgICA+ICAgICBIb3dldmVyLCBJIGhhdmUgbm8gdXNlIGZvciB0
-aGlzIGFuZCBoYWQgdG8gaGFjayBzb21lIHRlc3QgY2FzZSBmb3IgdGhpcy4NCiAgICA+ICAgICBQ
-ZXJoYXBzIHRoZSBkcml2ZXIgc2hvdWxkIHN1cHBvcnQgMSBpbnRlcnJ1cHQgb3IgYWxsIEdQSU9h
-IGFzIGludGVycnVwdHM/DQogICAgPiAgICAgDQogICAgPiAgICAgdjY6DQogICAgPiAgICAgIC0g
-VHJlYXQgRFQgYW5kIEFDUEkgdGhlIHNhbWUgYXMgbXVjaCBhcyBwb3NzaWJsZS4gTm90ZSB0aGF0
-IHdlIGNhbid0IHVzZQ0KICAgID4gICAgICAgIHBsYXRmb3JtX2dldF9pcnEoKSB0byBnZXQgdGhl
-IERUIGludGVycnVwdHMgYXMgdGhleSBhcmUgaW4gdGhlIHBvcnQNCiAgICA+ICAgICAgICBzdWIt
-bm9kZSBhbmQgaGVuY2UgZG8gbm90IGhhdmUgYW4gYXNzb2NpYXRlZCBwbGF0Zm9ybSBkZXZpY2Uu
-DQogICAgPiAgICAgdjU6DQogICAgPiAgICAgIC0gUm9sbGVkIEFDUEkgY29tcGFuaW9uIGNvZGUg
-cHJvdmlkZWQgYnkgSG9hbiBUcmFuIGludG8gdGhpcyBwYXRjaC4NCiAgICA+ICAgICB2NDoNCiAg
-ICA+ICAgICAgLSBVc2Ugb2ZfaXJxX2dldCgpIGluc3RlYWQgb2Ygb2ZfaXJxX3BhcnNlX29uZSgp
-K2lycV9jcmVhdGVfb2ZfbWFwcGluZygpDQogICAgPiAgICAgdjM6DQogICAgPiAgICAgIC0gUm9s
-bGVkIG1mZDogaW50ZWxfcXVhcmtfaTJjX2dwaW8gZml4IGludG8gdGhpcyBwYXRjaCB0byBhdm9p
-ZCBiaXNlY3QgcHJvYmxlbXMNCiAgICA+ICAgICB2MjoNCiAgICA+ICAgICAgLSBSZXBsYWNlZCBp
-bnRlcnJ1cHQtbWFzayBEVCBwcm9wIHdpdGggc3VwcG9ydCBmb3IgdGhlIGludGVycnVwdHMtZXh0
-ZW5kZWQNCiAgICA+ICAgICAgICBwcm9wLiBUaGlzIG1lYW5zIHJlcGxhY2luZyB0aGUgY2FsbCB0
-byBpcnFfb2ZfcGFyc2VfYW5kX21hcCgpIHdpdGggY2FsbHMNCiAgICA+ICAgICAgICB0byBvZl9p
-cnFfcGFyc2Vfb25lKCkgYW5kIGlycV9jcmVhdGVfb2ZfbWFwcGluZygpLg0KICAgID4gICAgIC0t
-LQ0KICAgID4gICAgICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL3NucHMtZHdhcGItZ3Bp
-by50eHQgICB8ICA5ICsrKy0NCiAgICA+ICAgICAgZHJpdmVycy9ncGlvL2dwaW8tZHdhcGIuYyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfCA0OSArKysrKysrKysrKysrKystLS0tLS0tDQogICAg
-PiAgICAgIGRyaXZlcnMvbWZkL2ludGVsX3F1YXJrX2kyY19ncGlvLmMgICAgICAgICAgICAgICAg
-IHwgIDMgKy0NCiAgICA+ICAgICAgaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL2dwaW8tZHdh
-cGIuaCAgICAgICAgICAgfCAgMyArLQ0KICAgID4gICAgICA0IGZpbGVzIGNoYW5nZWQsIDQ1IGlu
-c2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KICAgID4gICAgIA0KICAgID4gICAgIGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9zbnBzLWR3YXBi
-LWdwaW8udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vc25wcy1k
-d2FwYi1ncGlvLnR4dA0KICAgID4gICAgIGluZGV4IDRhNzVkYTcuLjNjMTExOGIgMTAwNjQ0DQog
-ICAgPiAgICAgLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vc25w
-cy1kd2FwYi1ncGlvLnR4dA0KICAgID4gICAgICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncGlvL3NucHMtZHdhcGItZ3Bpby50eHQNCiAgICA+ICAgICBAQCAtMjYsOCAr
-MjYsMTMgQEAgY29udHJvbGxlci4NCiAgICA+ICAgICAgICB0aGUgc2Vjb25kIGVuY29kZXMgdGhl
-IHRyaWdlciBmbGFncyBlbmNvZGVkIGFzIGRlc2NyaWJlZCBpbg0KICAgID4gICAgICAgIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pbnRlcnJ1
-cHRzLnR4dA0KICAgID4gICAgICAtIGludGVycnVwdC1wYXJlbnQgOiBUaGUgcGFyZW50IGludGVy
-cnVwdCBjb250cm9sbGVyLg0KICAgID4gICAgIC0tIGludGVycnVwdHMgOiBUaGUgaW50ZXJydXB0
-IHRvIHRoZSBwYXJlbnQgY29udHJvbGxlciByYWlzZWQgd2hlbiBHUElPcw0KICAgID4gICAgIC0g
-IGdlbmVyYXRlIHRoZSBpbnRlcnJ1cHRzLg0KICAgID4gICAgICstIGludGVycnVwdHMgOiBUaGUg
-aW50ZXJydXB0cyB0byB0aGUgcGFyZW50IGNvbnRyb2xsZXIgcmFpc2VkIHdoZW4gR1BJT3MNCiAg
-ICA+ICAgICArICBnZW5lcmF0ZSB0aGUgaW50ZXJydXB0cy4gSWYgdGhlIGNvbnRyb2xsZXIgcHJv
-dmlkZXMgb25lIGNvbWJpbmVkIGludGVycnVwdA0KICAgID4gICAgICsgIGZvciBhbGwgR1BJT3Ms
-IHNwZWNpZnkgYSBzaW5nbGUgaW50ZXJydXB0LiBJZiB0aGUgY29udHJvbGxlciBwcm92aWRlcyBv
-bmUNCiAgICA+ICAgICArICBpbnRlcnJ1cHQgZm9yIGVhY2ggR1BJTywgcHJvdmlkZSBhIGxpc3Qg
-b2YgaW50ZXJydXB0cyB0aGF0IGNvcnJlc3BvbmQgdG8gZWFjaA0KICAgID4gICAgICsgIG9mIHRo
-ZSBHUElPIHBpbnMuIFdoZW4gc3BlY2lmeWluZyBtdWx0aXBsZSBpbnRlcnJ1cHRzLCBpZiBhbnkg
-YXJlIHVuY29ubmVjdGVkLA0KICAgID4gICAgICsgIHVzZSB0aGUgaW50ZXJydXB0cy1leHRlbmRl
-ZCBwcm9wZXJ0eSB0byBzcGVjaWZ5IHRoZSBpbnRlcnJ1cHRzIGFuZCBzZXQgdGhlDQogICAgPiAg
-ICAgKyAgaW50ZXJydXB0IGNvbnRyb2xsZXIgaGFuZGxlIGZvciB1bnVzZWQgaW50ZXJydXB0cyB0
-byAwLg0KICAgID4gICAgICAtIHNucHMsbnItZ3Bpb3MgOiBUaGUgbnVtYmVyIG9mIHBpbnMgaW4g
-dGhlIHBvcnQsIGEgc2luZ2xlIGNlbGwuDQogICAgPiAgICAgIC0gcmVzZXRzIDogUmVzZXQgbGlu
-ZSBmb3IgdGhlIGNvbnRyb2xsZXIuDQogICAgPiAgICAgIA0KICAgID4gQWNrZWQtYnk6IEhvYW4g
-VHJhbiA8aG9hbi50cmFuQGFtcGVyZWNvbXB1dGluZy5jb20+DQogICAgDQogICAgV2VsbCB0aGF0
-J3MgbmV3LiAgSSd2ZSBuZXZlciBzZWVuIGEgbWFpbGVyIHJlcGx5IGxpa2UgdGhhdCBiZWZvcmUu
-DQogICAgDQogICAgV2hpY2ggbWFpbGVyIGFyZSB5b3UgdXNpbmc/ICBNaWdodCBiZSB3b3J0aCBz
-b3J0aW5nIHRoYXQgb3V0Lg0KDQpZZXMsIGl0IGxvb2tzIGxpa2UgbXkgbmV3IGVtYWlsIGZyb20g
-b3V0bG9vayBkb2VzIG5vdCBoYXZlIHRoZSBjb3JyZWN0IGZvcm1hdC4gV2l0aCBteSBvbGQgb25l
-LCBpdCB3b3JrcyBjb3JyZWN0bHkuDQoNClRoYW5rcw0KSG9hbg0KICAgIA0KICAgIC0tIA0KICAg
-IExlZSBKb25lcyBb5p2O55C85pavXQ0KICAgIExpbmFybyBTZXJ2aWNlcyBUZWNobmljYWwgTGVh
-ZA0KICAgIExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29Dcw0K
-ICAgIEZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cNCiAgICANCg0K
+Hi Ilia,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on v4.17-rc5]
+[cannot apply to clk/clk-next next-20180517]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Ilia-Lin/CPU-scaling-support-for-msm8996/20180516-064721
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/clk/qcom/clk-cpu-8996.c:142:9: sparse: constant 2150400000 is so big it is long
+>> drivers/clk/qcom/clk-cpu-8996.c:239:22: sparse: symbol 'clk_cpu_8996_mux_ops' was not declared. Should it be static?
+   drivers/clk/qcom/clk-cpu-8996.c:324:19: sparse: symbol 'clks' was not declared. Should it be static?
+
+vim +142 drivers/clk/qcom/clk-cpu-8996.c
+
+   137	
+   138	static const struct pll_vco alt_pll_vco_modes[] = {
+   139		VCO(3,  250000000,  500000000),
+   140		VCO(2,  500000000,  750000000),
+   141		VCO(1,  750000000, 1000000000),
+ > 142		VCO(0, 1000000000, 2150400000),
+   143	};
+   144	
+   145	static const struct alpha_pll_config altpll_config = {
+   146		.l = 16,
+   147		.vco_val = 0x3 << 20,
+   148		.vco_mask = 0x3 << 20,
+   149		.config_ctl_val = 0x4001051b,
+   150		.post_div_mask = 0x3 << 8,
+   151		.post_div_val = 0x1,
+   152		.main_output_mask = BIT(0),
+   153		.early_output_mask = BIT(3),
+   154	};
+   155	
+   156	static struct clk_alpha_pll perfcl_alt_pll = {
+   157		.offset = 0x80100,
+   158		.regs = alt_pll_regs,
+   159		.vco_table = alt_pll_vco_modes,
+   160		.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+   161		.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+   162		.clkr.hw.init = &(struct clk_init_data) {
+   163			.name = "perfcl_alt_pll",
+   164			.parent_names = (const char *[]){ "xo" },
+   165			.num_parents = 1,
+   166			.ops = &clk_alpha_pll_hwfsm_ops,
+   167		},
+   168	};
+   169	
+   170	static struct clk_alpha_pll pwrcl_alt_pll = {
+   171		.offset = 0x100,
+   172		.regs = alt_pll_regs,
+   173		.vco_table = alt_pll_vco_modes,
+   174		.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+   175		.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+   176		.clkr.hw.init = &(struct clk_init_data) {
+   177			.name = "pwrcl_alt_pll",
+   178			.parent_names = (const char *[]){ "xo" },
+   179			.num_parents = 1,
+   180			.ops = &clk_alpha_pll_hwfsm_ops,
+   181		},
+   182	};
+   183	
+   184	/* Mux'es */
+   185	
+   186	struct clk_cpu_8996_mux {
+   187		u32	reg;
+   188		u8	shift;
+   189		u8	width;
+   190		struct clk_hw	*pll;
+   191		struct clk_regmap clkr;
+   192	};
+   193	
+   194	static inline
+   195	struct clk_cpu_8996_mux *to_clk_cpu_8996_mux_hw(struct clk_hw *hw)
+   196	{
+   197		return container_of(to_clk_regmap(hw), struct clk_cpu_8996_mux, clkr);
+   198	}
+   199	
+   200	static u8 clk_cpu_8996_mux_get_parent(struct clk_hw *hw)
+   201	{
+   202		u32 val;
+   203		struct clk_regmap *clkr = to_clk_regmap(hw);
+   204		struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+   205		u32 mask = (u32)GENMASK(cpuclk->width - 1, 0);
+   206	
+   207		regmap_read(clkr->regmap, cpuclk->reg, &val);
+   208		val >>= (u32)(cpuclk->shift);
+   209	
+   210		return (u8)(val & mask);
+   211	}
+   212	
+   213	static int clk_cpu_8996_mux_set_parent(struct clk_hw *hw, u8 index)
+   214	{
+   215		u32 val;
+   216		struct clk_regmap *clkr = to_clk_regmap(hw);
+   217		struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+   218		unsigned int mask = GENMASK(cpuclk->width + cpuclk->shift - 1,
+   219					    cpuclk->shift);
+   220	
+   221		val = (u32)index;
+   222		val <<= (u32)(cpuclk->shift);
+   223	
+   224		return regmap_update_bits(clkr->regmap, cpuclk->reg, mask, val);
+   225	}
+   226	
+   227	static int
+   228	clk_cpu_8996_mux_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
+   229	{
+   230		struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
+   231		struct clk_hw *parent = cpuclk->pll;
+   232	
+   233		req->best_parent_rate = clk_hw_round_rate(parent, req->rate);
+   234		req->best_parent_hw = parent;
+   235	
+   236		return 0;
+   237	}
+   238	
+ > 239	const struct clk_ops clk_cpu_8996_mux_ops = {
+   240		.set_parent = clk_cpu_8996_mux_set_parent,
+   241		.get_parent = clk_cpu_8996_mux_get_parent,
+   242		.determine_rate = clk_cpu_8996_mux_determine_rate,
+   243	};
+   244	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
