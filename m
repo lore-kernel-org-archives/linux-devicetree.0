@@ -1,84 +1,43 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v6 2/2] leds: lm3601x: Introduce the lm3601x LED driver
-Date: Thu, 17 May 2018 23:26:45 +0200
-Message-ID: <f8147f95-b7e3-4a78-90d7-59888b20fd60@gmail.com>
-References: <20180515154352.20263-1-dmurphy@ti.com>
- <20180515154352.20263-2-dmurphy@ti.com>
- <CAHp75VegjkiiD1qTGpi9rr6cg=72t9kSwDrG=sUpUWFVO58M4A@mail.gmail.com>
- <08dda10d-f865-9cf2-b9a5-c79cbab5da98@ti.com>
- <CAHp75Vcz08zrs3bgMFcvYwRrN_A43D=Nvt5cFDQf8m9whB=yhA@mail.gmail.com>
- <f46e4b54-c463-6ef0-4155-a5dfb9dc4c2b@gmail.com>
- <52380a68-9e33-f52a-134d-5d4a928b5383@ti.com>
- <f155e9da-e41d-1201-a9f9-c321654be42e@ti.com>
- <54dcb6cc-7765-f64c-33fd-2920f3865153@ti.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v7 2/2] drivers: soc: Add LLCC driver
+Date: Thu, 17 May 2018 15:30:53 -0700
+Message-ID: <CAE=gft77E+nuRuXxnSFt4bttLVaKiRgH=dvwu=Q9cO4Ga9TN8g@mail.gmail.com>
+References: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org> <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54dcb6cc-7765-f64c-33fd-2920f3865153@ti.com>
-Content-Language: en-US
+In-Reply-To: <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+To: rishabhb@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dan,
+On Wed, May 16, 2018 at 10:44 AM Rishabh Bhatnagar <rishabhb@codeaurora.org>
+wrote:
 
-On 05/17/2018 04:34 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 05/16/2018 04:17 PM, Dan Murphy wrote:
-> <snip>
-> 
->>>>>
->>>>>
->>>>>>>> +               if (!ret)
->>>>>>>
->>>>>>> if (ret) sounds more natural. And better just to split
->>>>>>>
->>>>>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
->>>>>>>> +                               "%s:%s", led->led_node->name, name);
->>>>>>>> +               else
->>>>>>>> +                       snprintf(led->led_name, sizeof(led->led_name),
->>>>>>>> +                               "%s:torch", led->led_node->name);
->>>>>>>
->>>>>>> const char *tmp;
->>>>>>>
->>>>>>> ret = device_property_read_...(&tmp);
->>>>>>> if (ret)
->>>>>>>    tmp = ...
->>>>>>> sprintf(...);
->>>>
->>>> We're no longer taking devicename section of a LED class device name
->>>> from DT, so it will look differently anyway.
->>>>
-> 
-> So in adding the device_property code I think we again are reaching the LED label issue.
-> In ARM with DT we would take the parent device node name and append it to the label
+> LLCC (Last Level Cache Controller) provides additional cache memory
+> in the system. LLCC is partitioned into multiple slices and each
+> slice gets its own priority, size, ID and other config parameters.
+> LLCC driver programs these parameters for each slice. Clients that
+> are assigned to use LLCC need to get information such size & ID of the
+> slice they get and activate or deactivate the slice as needed. LLCC driver
+> provides API for the clients to perform these operations.
 
-AFAIR this approach (parent DT node name used for devicename ) was 
-incidentally applied in leds-as3645a.c. Soon after that we started
-to use led-controller for parent DT name, according to Rob's request.
+> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+>   drivers/soc/qcom/Kconfig           |  17 ++
+>   drivers/soc/qcom/Makefile          |   2 +
+>   drivers/soc/qcom/llcc-sdm845.c     | 106 ++++++++++++
+>   drivers/soc/qcom/llcc-slice.c      | 337
++++++++++++++++++++++++++++++++++++++
+>   include/linux/soc/qcom/llcc-qcom.h | 180 ++++++++++++++++++++
+>   5 files changed, 642 insertions(+)
+>   create mode 100644 drivers/soc/qcom/llcc-sdm845.c
+>   create mode 100644 drivers/soc/qcom/llcc-slice.c
+>   create mode 100644 include/linux/soc/qcom/llcc-qcom.h
 
-In the most of LED class drivers this is a child DT node which is used
-for devicename, in case label is absent.
 
-> if the optional label property was not available.  In migrating to the device_property
-> APIs we don't or can't depend on that parent node anymore.
-> 
-> So for the case where the label property does not exist should we use a hard coded name
-> or should we try to use the name from a device_id table.
-> 
-> This is how we did this for the leds-lp8860 driver.  If the label did not exist we used the
-> i2c_device_id table and pulled the string from there.
+Thanks Rishabh.
 
-i2c_device_id can't be applied as a generic pattern, but only for I2C
-hooked devices. Nonetheless since it allows to save few lines of code
-in case of drivers supporting a family of chips we can use it.
-
-We are going to get rid of a devicename section from LED class device
-name soon anyway, since it is redundant.
-
--- 
-Best regards,
-Jacek Anaszewski
+Reviewed-by: Evan Green <evgreen@chromium.org>
