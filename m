@@ -1,7 +1,7 @@
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH] ASoC: ssm2305: Add amplifier driver
-Date: Thu, 17 May 2018 11:22:45 +0200
-Message-ID: <20180517092245.16036-1-m.felsch@pengutronix.de>
+Subject: [PATCH v2] ASoC: ssm2305: Add amplifier driver
+Date: Thu, 17 May 2018 15:00:47 +0200
+Message-ID: <20180517130047.15565-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -27,34 +27,41 @@ Tested on a i.MX6 based custom board.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- .../devicetree/bindings/sound/adi,ssm2305.txt |  15 +++
+
+Notes (changelog):
+    v2:
+    - fix copyright information
+    - rename shutdown gpio and add some more documentation
+    - mark shutdown gpio as required
+    - rm registration information
+
+ .../devicetree/bindings/sound/adi,ssm2305.txt |  14 +++
  sound/soc/codecs/Kconfig                      |   7 ++
  sound/soc/codecs/Makefile                     |   2 +
  sound/soc/codecs/ssm2305.c                    | 105 ++++++++++++++++++
- 4 files changed, 129 insertions(+)
+ 4 files changed, 128 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/sound/adi,ssm2305.txt
  create mode 100644 sound/soc/codecs/ssm2305.c
 
 diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2305.txt b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
 new file mode 100644
-index 000000000000..fc4c99225538
+index 000000000000..a9c9d83c8a30
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
-@@ -0,0 +1,15 @@
+@@ -0,0 +1,14 @@
 +Analog Devices SSM2305 Speaker Amplifier
 +========================================
 +
 +Required properties:
 +  - compatible : "adi,ssm2305"
-+
-+Optional properties:
-+  - ssm2305,shutdown-gpio : the gpio connected to the shutdown pin
++  - shutdown-gpios : The gpio connected to the shutdown pin.
++                     The gpio signal is ACTIVE_LOW.
 +
 +Example:
 +
 +ssm2305: analog-amplifier {
 +	compatible = "adi,ssm2305";
-+	ssm2305,shutdown-gpio = <&gpio3 20 GPIO_ACTIVE_LOW>;
++	shutdown-gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
 +};
 diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
 index 9548f63ca531..d81b0cb291a3 100644
@@ -103,7 +110,7 @@ index e849d1495308..7d75ac8f6716 100644
  obj-$(CONFIG_SND_SOC_SSM2602_SPI)	+= snd-soc-ssm2602-spi.o
 diff --git a/sound/soc/codecs/ssm2305.c b/sound/soc/codecs/ssm2305.c
 new file mode 100644
-index 000000000000..ce8d5a18c329
+index 000000000000..06ff649a1fd2
 --- /dev/null
 +++ b/sound/soc/codecs/ssm2305.c
 @@ -0,0 +1,105 @@
@@ -111,7 +118,7 @@ index 000000000000..ce8d5a18c329
 +/*
 + * Analog Devices SSM2305 Amplifier Driver
 + *
-+ * Copyright (C) 2018 Pengutronix, Fridolin Tux <kernel@pengutronix.de>
++ * Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
 + */
 +
 +#include <linux/gpio/consumer.h>
@@ -175,17 +182,17 @@ index 000000000000..ce8d5a18c329
 +
 +	platform_set_drvdata(pdev, priv);
 +
-+	/* Shutdown gpio is optional */
-+	priv->gpiod_shutdown = devm_gpiod_get(dev, "ssm2305,shutdown",
++	/* Get shutdown gpio */
++	priv->gpiod_shutdown = devm_gpiod_get(dev, "shutdown",
 +					      GPIOD_OUT_LOW);
 +	if (IS_ERR(priv->gpiod_shutdown)) {
 +		err = PTR_ERR(priv->gpiod_shutdown);
-+		if (err != -EPROBE_DEFER)
-+			dev_warn(dev, "Failed to get 'shutdown' gpio: %d\n",
-+				 err);
++		if (err != -EPROBE_DEFER) {
++			dev_err(dev, "Failed to get 'shutdown' gpio: %d\n",
++				err);
++			return err;
++		}
 +	}
-+
-+	dev_info(dev, "probed\n");
 +
 +	return devm_snd_soc_register_component(dev, &ssm2305_component_driver,
 +					       NULL, 0);
