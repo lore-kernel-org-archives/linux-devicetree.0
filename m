@@ -1,89 +1,103 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
-Date: Thu, 17 May 2018 11:02:02 +0100
-Message-ID: <96c1e0f0-0aa7-badf-123e-cbb1b05e645e@arm.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
-	<20180516134150.34fc8857@jacob-builder>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 1/3] rtc: stm32: rework register management to prepare
+ other version of RTC
+Date: Thu, 17 May 2018 10:01:49 +0000
+Message-ID: <d08bcefc-7698-a968-7a35-ed9ab62bd623@st.com>
+References: <1525880770-22263-1-git-send-email-amelie.delaunay@st.com>
+ <1525880770-22263-2-git-send-email-amelie.delaunay@st.com>
+ <20180516202552.GA24496@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180516134150.34fc8857@jacob-builder>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180516202552.GA24496@piout.net>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Content-ID: <0BC83BF313F6C64AA957102629CD0575@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacob,
+Hi,
 
-Thanks for reviewing this
+On 05/16/2018 10:25 PM, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 09/05/2018 17:46:08+0200, Amelie Delaunay wrote:
+>>   static void stm32_rtc_wpr_unlock(struct stm32_rtc *rtc)
+>>   {
+>> -	writel_relaxed(RTC_WPR_1ST_KEY, rtc->base + STM32_RTC_WPR);
+>> -	writel_relaxed(RTC_WPR_2ND_KEY, rtc->base + STM32_RTC_WPR);
+>> +	struct stm32_rtc_registers regs = rtc->data->regs;
+> 
+> regs should probably be a pointer to ensure that no copy is made. I've
+> actually checked and it doesn't make a difference because gcc is smart
+> enough to not make the copy.
+> 
 
-On 16/05/18 21:41, Jacob Pan wrote:
->> + * The device must support multiple address spaces (e.g. PCI PASID).
->> By default
->> + * the PASID allocated during bind() is limited by the IOMMU
->> capacity, and by
->> + * the device PASID width defined in the PCI capability or in the
->> firmware
->> + * description. Setting @max_pasid to a non-zero value smaller than
->> this limit
->> + * overrides it.
->> + *
-> seems the min_pasid never gets used. do you really need it?
+...
 
-Yes, the SMMU sets it to 1 in patch 28/40, because it needs to reserve
-PASID 0
+>>   static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
+>>   {
+>>   	struct stm32_rtc *rtc = (struct stm32_rtc *)dev_id;
+>> -	unsigned int isr, cr;
+>> +	struct stm32_rtc_registers regs = rtc->data->regs;
+>> +	struct stm32_rtc_events evts = rtc->data->events;
+> 
+> Ditto for evts.
+>
 
->> + * The device should not be performing any DMA while this function
->> is running,
->> + * otherwise the behavior is undefined.
->> + *
->> + * Return 0 if initialization succeeded, or an error.
->> + */
->> +int iommu_sva_device_init(struct device *dev, unsigned long features,
->> +			  unsigned int max_pasid)
->> +{
->> +	int ret;
->> +	struct iommu_sva_param *param;
->> +	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
->> +
->> +	if (!domain || !domain->ops->sva_device_init)
->> +		return -ENODEV;
->> +
->> +	if (features)
->> +		return -EINVAL;
-> should it be !features?
+I prepare a v3 with const struct stm32_rtc_registers *regs and const 
+struct stm32_rtc_events *evts.
 
-This checks if the user sets any unsupported bit in features. No feature
-is supported right now, but patch 09/40 adds IOMMU_SVA_FEAT_IOPF, and
-changes this line to "features & ~IOMMU_SVA_FEAT_IOPF"
+>> +	unsigned int status, cr;
+>>   
+>>   	mutex_lock(&rtc->rtc_dev->ops_lock);
+>>   
+>> -	isr = readl_relaxed(rtc->base + STM32_RTC_ISR);
+>> -	cr = readl_relaxed(rtc->base + STM32_RTC_CR);
+>> +	status = readl_relaxed(rtc->base + regs.isr);
+>> +	cr = readl_relaxed(rtc->base + regs.cr);
+>>   
+>> -	if ((isr & STM32_RTC_ISR_ALRAF) &&
+>> +	if ((status & evts.alra) &&
+>>   	    (cr & STM32_RTC_CR_ALRAIE)) {
+>>   		/* Alarm A flag - Alarm interrupt */
+>>   		dev_dbg(&rtc->rtc_dev->dev, "Alarm occurred\n");
+> 
+> ...
+> 
+>> @@ -641,7 +710,7 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+>>   
+>>   	/*
+>>   	 * After a system reset, RTC_ISR.INITS flag can be read to check if
+>> -	 * the calendar has been initalized or not. INITS flag is reset by a
+>> +	 * the calendar has been initialized or not. INITS flag is reset by a
+>>   	 * power-on reset (no vbat, no power-supply). It is not reset if
+>>   	 * rtc_ck parent clock has changed (so RTC prescalers need to be
+>>   	 * changed). That's why we cannot rely on this flag to know if RTC
+>> @@ -666,7 +735,7 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+>>   			 "alarm won't be able to wake up the system");
+>>   
+>>   	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
+>> -			&stm32_rtc_ops, THIS_MODULE);
+>> +						&stm32_rtc_ops, THIS_MODULE);
+>>   	if (IS_ERR(rtc->rtc_dev)) {
+>>   		ret = PTR_ERR(rtc->rtc_dev);
+>>   		dev_err(&pdev->dev, "rtc device registration failed, err=%d\n",
+> 
+> Those two changes should go into a separate cleanup patch.
+> 
 
->> +	mutex_lock(&dev->iommu_param->lock);
->> +	param = dev->iommu_param->sva_param;
->> +	dev->iommu_param->sva_param = NULL;
->> +	mutex_unlock(&dev->iommu_param->lock);
->> +	if (!param)
->> +		return -ENODEV;
->> +
->> +	if (domain->ops->sva_device_shutdown)
->> +		domain->ops->sva_device_shutdown(dev, param);
-> seems a little mismatch here, do you need pass the param. I don't think
-> there is anything else model specific iommu driver need to do for the
-> param.
+OK, new patch for these two changes in v3.
 
-SMMU doesn't use it, but maybe it would remind other IOMMU driver which
-features were enabled, so they don't have to keep track of that
-themselves? I can remove it if it isn't useful
-
-Thanks,
-Jean
+Thanks for reviewing,
+Amelie
