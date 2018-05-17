@@ -1,34 +1,22 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: qdsp6: q6core: Add q6core driver" to
-	the asoc tree
-Date: Thu, 17 May 2018 17:38:41 +0100 (BST)
-Message-ID: <20180517163841.133C944007E@finisterre.ee.mobilebroadband>
-References: <20180509125635.5653-9-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180509125635.5653-9-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, david.brown@linaro.org, broonie@kernel.org, gregkh@linuxfoundation.org, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
+Subject: Applied "regulator: core: Add voltage balancing mechanism" to the regulator tree
+Date: Thu, 17 May 2018 17:41:24 +0100 (BST)
+Message-ID: <20180517164124.BBD2644007E@finisterre.ee.mobilebroadband>
+References: <1516631412-17542-7-git-send-email-m.purski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516631412-17542-7-git-send-email-m.purski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orgMark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: qdsp6: q6core: Add q6core driver
+   regulator: core: Add voltage balancing mechanism
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -49,459 +37,265 @@ to this mail.
 Thanks,
 Mark
 
->From b73e93e183089176beed8a3f80e5f618a52e02fc Mon Sep 17 00:00:00 2001
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Wed, 9 May 2018 13:56:19 +0100
-Subject: [PATCH] ASoC: qdsp6: q6core: Add q6core driver
+>From 696861761a58d8c93605b5663824929fb6540f16 Mon Sep 17 00:00:00 2001
+From: Maciej Purski <m.purski@samsung.com>
+Date: Mon, 23 Apr 2018 16:33:41 +0200
+Subject: [PATCH] regulator: core: Add voltage balancing mechanism
 
-This patch adds support to core apr service, which is used to query
-status of other static and dynamic services on the dsp.
+On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
+different devices on the board are supplied by different regulators
+with non-fixed voltages. If one of these devices temporarily requires
+higher voltage, there might occur a situation that the spread between
+two devices' voltages is so high, that there is a risk of changing
+'high' and 'low' states on the interconnection between devices powered
+by those regulators.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
-Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
+Introduce new function regulator_balance_voltage(), which
+keeps max_spread constraint fulfilled between a group of coupled
+regulators. It should be called if a regulator changes its
+voltage or after disabling or enabling. Disabled regulators should
+follow changes of the enabled ones, but their consumers' demands
+shouldn't be taken into account while calculating voltage of other
+coupled regulators.
+
+Find voltages, which are closest to suiting all the consumers' demands,
+while fulfilling max_spread constraint, keeping the following rules:
+- if one regulator is about to rise its voltage, rise others
+  voltages in order to keep the max_spread
+- if a regulator, which has caused rising other regulators, is
+  lowered, lower other regulators if possible
+- if one regulator is about to lower its voltage, but it hasn't caused
+  rising other regulators, don't change its voltage if it breaks the
+  max_spread
+
+Change regulators' voltages step by step, keeping max_spread constraint
+fulfilled all the time. Function regulator_get_optimal_voltage()
+should find the best possible change for the regulator, which doesn't
+break max_spread constraint. In function regulator_balance_voltage()
+optimize number of steps by finding highest voltage difference on
+each iteration.
+
+If a regulator, which is about to change its voltage, is not coupled,
+method regulator_get_optimal_voltage() should simply return the lowest
+voltage fulfilling consumers' demands.
+
+Coupling should be checked only if the system is in PM_SUSPEND_ON state.
+
+Signed-off-by: Maciej Purski <m.purski@samsung.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/qcom/Kconfig        |   4 +
- sound/soc/qcom/qdsp6/Makefile |   1 +
- sound/soc/qcom/qdsp6/q6core.c | 380 ++++++++++++++++++++++++++++++++++
- sound/soc/qcom/qdsp6/q6core.h |  15 ++
- 4 files changed, 400 insertions(+)
- create mode 100644 sound/soc/qcom/qdsp6/q6core.c
- create mode 100644 sound/soc/qcom/qdsp6/q6core.h
+ drivers/regulator/core.c | 192 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 192 insertions(+)
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index b44a9fcd7ed3..37ee0d958145 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -44,10 +44,14 @@ config SND_SOC_APQ8016_SBC
- config SND_SOC_QDSP6_COMMON
- 	tristate
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 6ed568b96c0e..225eaca24921 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -105,6 +105,8 @@ static int _notifier_call_chain(struct regulator_dev *rdev,
+ 				  unsigned long event, void *data);
+ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 				     int min_uV, int max_uV);
++static int regulator_balance_voltage(struct regulator_dev *rdev,
++				     suspend_state_t state);
+ static struct regulator *create_regulator(struct regulator_dev *rdev,
+ 					  struct device *dev,
+ 					  const char *supply_name);
+@@ -3102,6 +3104,196 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 	return ret;
+ }
  
-+config SND_SOC_QDSP6_CORE
-+	tristate
-+
- config SND_SOC_QDSP6
- 	tristate "SoC ALSA audio driver for QDSP6"
- 	depends on QCOM_APR && HAS_DMA
- 	select SND_SOC_QDSP6_COMMON
-+	select SND_SOC_QDSP6_CORE
- 	help
- 	 To add support for MSM QDSP6 Soc Audio.
- 	 This will enable sound soc platform specific
-diff --git a/sound/soc/qcom/qdsp6/Makefile b/sound/soc/qcom/qdsp6/Makefile
-index accebdb49306..03b8e89c9731 100644
---- a/sound/soc/qcom/qdsp6/Makefile
-+++ b/sound/soc/qcom/qdsp6/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_SND_SOC_QDSP6_COMMON) += q6dsp-common.o
-+obj-$(CONFIG_SND_SOC_QDSP6_CORE) += q6core.o
-diff --git a/sound/soc/qcom/qdsp6/q6core.c b/sound/soc/qcom/qdsp6/q6core.c
-new file mode 100644
-index 000000000000..06f03a5fe9bd
---- /dev/null
-+++ b/sound/soc/qcom/qdsp6/q6core.c
-@@ -0,0 +1,380 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2011-2017, The Linux Foundation. All rights reserved.
-+// Copyright (c) 2018, Linaro Limited
-+
-+#include <linux/slab.h>
-+#include <linux/wait.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/sched.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/jiffies.h>
-+#include <linux/wait.h>
-+#include <linux/soc/qcom/apr.h>
-+#include "q6core.h"
-+#include "q6dsp-errno.h"
-+
-+#define ADSP_STATE_READY_TIMEOUT_MS    3000
-+#define Q6_READY_TIMEOUT_MS 100
-+#define AVCS_CMD_ADSP_EVENT_GET_STATE		0x0001290C
-+#define AVCS_CMDRSP_ADSP_EVENT_GET_STATE	0x0001290D
-+#define AVCS_GET_VERSIONS       0x00012905
-+#define AVCS_GET_VERSIONS_RSP   0x00012906
-+#define AVCS_CMD_GET_FWK_VERSION	0x001292c
-+#define AVCS_CMDRSP_GET_FWK_VERSION	0x001292d
-+
-+struct avcs_svc_info {
-+	uint32_t service_id;
-+	uint32_t version;
-+} __packed;
-+
-+struct avcs_cmdrsp_get_version {
-+	uint32_t build_id;
-+	uint32_t num_services;
-+	struct avcs_svc_info svc_api_info[];
-+} __packed;
-+
-+/* for ADSP2.8 and above */
-+struct avcs_svc_api_info {
-+	uint32_t service_id;
-+	uint32_t api_version;
-+	uint32_t api_branch_version;
-+} __packed;
-+
-+struct avcs_cmdrsp_get_fwk_version {
-+	uint32_t build_major_version;
-+	uint32_t build_minor_version;
-+	uint32_t build_branch_version;
-+	uint32_t build_subbranch_version;
-+	uint32_t num_services;
-+	struct avcs_svc_api_info svc_api_info[];
-+} __packed;
-+
-+struct q6core {
-+	struct apr_device *adev;
-+	wait_queue_head_t wait;
-+	uint32_t avcs_state;
-+	struct mutex lock;
-+	bool resp_received;
-+	uint32_t num_services;
-+	struct avcs_cmdrsp_get_fwk_version *fwk_version;
-+	struct avcs_cmdrsp_get_version *svc_version;
-+	bool fwk_version_supported;
-+	bool get_state_supported;
-+	bool get_version_supported;
-+	bool is_version_requested;
-+};
-+
-+static struct q6core *g_core;
-+
-+static int q6core_callback(struct apr_device *adev, struct apr_resp_pkt *data)
++static int regulator_get_optimal_voltage(struct regulator_dev *rdev)
 +{
-+	struct q6core *core = dev_get_drvdata(&adev->dev);
-+	struct aprv2_ibasic_rsp_result_t *result;
-+	struct apr_hdr *hdr = &data->hdr;
++	struct coupling_desc *c_desc = &rdev->coupling_desc;
++	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
++	int max_spread = rdev->constraints->max_spread;
++	int n_coupled = c_desc->n_coupled;
++	int desired_min_uV, desired_max_uV, min_current_uV = INT_MAX;
++	int max_current_uV = 0, highest_min_uV = 0, target_uV, possible_uV;
++	int i, ret;
 +
-+	result = data->payload;
-+	switch (hdr->opcode) {
-+	case APR_BASIC_RSP_RESULT:{
-+		result = data->payload;
-+		switch (result->opcode) {
-+		case AVCS_GET_VERSIONS:
-+			if (result->status == ADSP_EUNSUPPORTED)
-+				core->get_version_supported = false;
-+			core->resp_received = true;
-+			break;
-+		case AVCS_CMD_GET_FWK_VERSION:
-+			if (result->status == ADSP_EUNSUPPORTED)
-+				core->fwk_version_supported = false;
-+			core->resp_received = true;
-+			break;
-+		case AVCS_CMD_ADSP_EVENT_GET_STATE:
-+			if (result->status == ADSP_EUNSUPPORTED)
-+				core->get_state_supported = false;
-+			core->resp_received = true;
-+			break;
++	/* If consumers don't provide any demands, set voltage to min_uV */
++	desired_min_uV = rdev->constraints->min_uV;
++	desired_max_uV = rdev->constraints->max_uV;
++	ret = regulator_check_consumers(rdev,
++					&desired_min_uV,
++					&desired_max_uV, PM_SUSPEND_ON);
++	if (ret < 0)
++		goto out;
++
++	/*
++	 * If there are no coupled regulators, simply set the voltage demanded
++	 * by consumers.
++	 */
++	if (n_coupled == 1) {
++		ret = desired_min_uV;
++		goto out;
++	}
++
++	/* Find highest min desired voltage */
++	for (i = 0; i < n_coupled; i++) {
++		int tmp_min = 0;
++		int tmp_max = INT_MAX;
++
++		if (!_regulator_is_enabled(c_rdevs[i]))
++			continue;
++
++		ret = regulator_check_consumers(c_rdevs[i],
++						&tmp_min,
++						&tmp_max, PM_SUSPEND_ON);
++		if (ret < 0)
++			goto out;
++
++		if (tmp_min > highest_min_uV)
++			highest_min_uV = tmp_min;
++	}
++
++	/*
++	 * Let target_uV be equal to the desired one if possible.
++	 * If not, set it to minimum voltage, allowed by other coupled
++	 * regulators.
++	 */
++	target_uV = max(desired_min_uV,  highest_min_uV - max_spread);
++
++	/*
++	 * Find min and max voltages, which currently aren't
++	 * violating max_spread
++	 */
++	for (i = 0; i < n_coupled; i++) {
++		int tmp_act;
++
++		/*
++		 * Don't check the regulator, which is about
++		 * to change voltage
++		 */
++		if (c_rdevs[i] == rdev)
++			continue;
++		if (!_regulator_is_enabled(c_rdevs[i]))
++			continue;
++
++		tmp_act = _regulator_get_voltage(c_rdevs[i]);
++		if (tmp_act < 0) {
++			ret = tmp_act;
++			goto out;
 +		}
-+		break;
-+	}
-+	case AVCS_CMDRSP_GET_FWK_VERSION: {
-+		struct avcs_cmdrsp_get_fwk_version *fwk;
-+		int bytes;
 +
-+		fwk = data->payload;
-+		bytes = sizeof(*fwk) + fwk->num_services *
-+				sizeof(fwk->svc_api_info[0]);
++		if (tmp_act < min_current_uV)
++			min_current_uV = tmp_act;
 +
-+		core->fwk_version = kzalloc(bytes, GFP_ATOMIC);
-+		if (!core->fwk_version)
-+			return -ENOMEM;
-+
-+		memcpy(core->fwk_version, data->payload, bytes);
-+
-+		core->fwk_version_supported = true;
-+		core->resp_received = true;
-+
-+		break;
-+	}
-+	case AVCS_GET_VERSIONS_RSP: {
-+		struct avcs_cmdrsp_get_version *v;
-+		int len;
-+
-+		v = data->payload;
-+
-+		len = sizeof(*v) + v->num_services * sizeof(v->svc_api_info[0]);
-+
-+		core->svc_version = kzalloc(len, GFP_ATOMIC);
-+		if (!core->svc_version)
-+			return -ENOMEM;
-+
-+		memcpy(core->svc_version, data->payload, len);
-+
-+		core->get_version_supported = true;
-+		core->resp_received = true;
-+
-+		break;
-+	}
-+	case AVCS_CMDRSP_ADSP_EVENT_GET_STATE:
-+		core->get_state_supported = true;
-+		core->avcs_state = result->opcode;
-+
-+		core->resp_received = true;
-+		break;
-+	default:
-+		dev_err(&adev->dev, "Message id from adsp core svc: 0x%x\n",
-+			hdr->opcode);
-+		break;
++		if (tmp_act > max_current_uV)
++			max_current_uV = tmp_act;
 +	}
 +
-+	if (core->resp_received)
-+		wake_up(&core->wait);
-+
-+	return 0;
-+}
-+
-+static int q6core_get_fwk_versions(struct q6core *core)
-+{
-+	struct apr_device *adev = core->adev;
-+	struct apr_pkt pkt;
-+	int rc;
-+
-+	pkt.hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
-+				      APR_HDR_LEN(APR_HDR_SIZE), APR_PKT_VER);
-+	pkt.hdr.pkt_size = APR_HDR_SIZE;
-+	pkt.hdr.opcode = AVCS_CMD_GET_FWK_VERSION;
-+
-+	rc = apr_send_pkt(adev, &pkt);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = wait_event_timeout(core->wait, (core->resp_received),
-+				msecs_to_jiffies(Q6_READY_TIMEOUT_MS));
-+	if (rc > 0 && core->resp_received) {
-+		core->resp_received = false;
-+
-+		if (!core->fwk_version_supported)
-+			return -ENOTSUPP;
-+		else
-+			return 0;
++	/* There aren't any other regulators enabled */
++	if (max_current_uV == 0) {
++		possible_uV = target_uV;
++	} else {
++		/*
++		 * Correct target voltage, so as it currently isn't
++		 * violating max_spread
++		 */
++		possible_uV = max(target_uV, max_current_uV - max_spread);
++		possible_uV = min(possible_uV, min_current_uV + max_spread);
 +	}
 +
-+
-+	return rc;
-+}
-+
-+static int q6core_get_svc_versions(struct q6core *core)
-+{
-+	struct apr_device *adev = core->adev;
-+	struct apr_pkt pkt;
-+	int rc;
-+
-+	pkt.hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
-+				      APR_HDR_LEN(APR_HDR_SIZE), APR_PKT_VER);
-+	pkt.hdr.pkt_size = APR_HDR_SIZE;
-+	pkt.hdr.opcode = AVCS_GET_VERSIONS;
-+
-+	rc = apr_send_pkt(adev, &pkt);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = wait_event_timeout(core->wait, (core->resp_received),
-+				msecs_to_jiffies(Q6_READY_TIMEOUT_MS));
-+	if (rc > 0 && core->resp_received) {
-+		core->resp_received = false;
-+		return 0;
++	if (possible_uV > desired_max_uV) {
++		ret = -EINVAL;
++		goto out;
 +	}
++	ret = possible_uV;
 +
-+	return rc;
-+}
-+
-+static bool __q6core_is_adsp_ready(struct q6core *core)
-+{
-+	struct apr_device *adev = core->adev;
-+	struct apr_pkt pkt;
-+	int rc;
-+
-+	core->get_state_supported = false;
-+
-+	pkt.hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
-+				      APR_HDR_LEN(APR_HDR_SIZE), APR_PKT_VER);
-+	pkt.hdr.pkt_size = APR_HDR_SIZE;
-+	pkt.hdr.opcode = AVCS_CMD_ADSP_EVENT_GET_STATE;
-+
-+	rc = apr_send_pkt(adev, &pkt);
-+	if (rc < 0)
-+		return false;
-+
-+	rc = wait_event_timeout(core->wait, (core->resp_received),
-+				msecs_to_jiffies(Q6_READY_TIMEOUT_MS));
-+	if (rc > 0 && core->resp_received) {
-+		core->resp_received = false;
-+
-+		if (core->avcs_state)
-+			return true;
-+	}
-+
-+	/* assume that the adsp is up if we not support this command */
-+	if (!core->get_state_supported)
-+		return true;
-+
-+	return false;
-+}
-+
-+/**
-+ * q6core_get_svc_api_info() - Get version number of a service.
-+ *
-+ * @svc_id: service id of the service.
-+ * @ainfo: Valid struct pointer to fill svc api information.
-+ *
-+ * Return: zero on success and error code on failure or unsupported
-+ */
-+int q6core_get_svc_api_info(int svc_id, struct q6core_svc_api_info *ainfo)
-+{
-+	int i;
-+	int ret = -ENOTSUPP;
-+
-+	if (!g_core || !ainfo)
-+		return 0;
-+
-+	mutex_lock(&g_core->lock);
-+	if (!g_core->is_version_requested) {
-+		if (q6core_get_fwk_versions(g_core) == -ENOTSUPP)
-+			q6core_get_svc_versions(g_core);
-+		g_core->is_version_requested = true;
-+	}
-+
-+	if (g_core->fwk_version_supported) {
-+		for (i = 0; i < g_core->fwk_version->num_services; i++) {
-+			struct avcs_svc_api_info *info;
-+
-+			info = &g_core->fwk_version->svc_api_info[i];
-+			if (svc_id != info->service_id)
-+				continue;
-+
-+			ainfo->api_version = info->api_version;
-+			ainfo->api_branch_version = info->api_branch_version;
-+			ret = 0;
-+			break;
-+		}
-+	} else if (g_core->get_version_supported) {
-+		for (i = 0; i < g_core->svc_version->num_services; i++) {
-+			struct avcs_svc_info *info;
-+
-+			info = &g_core->svc_version->svc_api_info[i];
-+			if (svc_id != info->service_id)
-+				continue;
-+
-+			ainfo->api_version = info->version;
-+			ainfo->api_branch_version = 0;
-+			ret = 0;
-+			break;
-+		}
-+	}
-+
-+	mutex_unlock(&g_core->lock);
-+
++out:
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(q6core_get_svc_api_info);
 +
-+/**
-+ * q6core_is_adsp_ready() - Get status of adsp
-+ *
-+ * Return: Will be an true if adsp is ready and false if not.
-+ */
-+bool q6core_is_adsp_ready(void)
++static int regulator_balance_voltage(struct regulator_dev *rdev,
++				     suspend_state_t state)
 +{
-+	unsigned long  timeout;
-+	bool ret = false;
++	struct regulator_dev **c_rdevs;
++	struct regulator_dev *best_rdev;
++	struct coupling_desc *c_desc = &rdev->coupling_desc;
++	int n_coupled;
++	int i, best_delta, best_uV, ret = 1;
 +
-+	if (!g_core)
-+		return false;
++	c_rdevs = c_desc->coupled_rdevs;
++	n_coupled = c_desc->n_coupled;
 +
-+	mutex_lock(&g_core->lock);
-+	timeout = jiffies + msecs_to_jiffies(ADSP_STATE_READY_TIMEOUT_MS);
-+	for (;;) {
-+		if (__q6core_is_adsp_ready(g_core)) {
-+			ret = true;
-+			break;
++	/*
++	 * if system is in a state other than PM_SUSPEND_ON, don't check
++	 * other coupled regulators
++	 */
++	if (state != PM_SUSPEND_ON)
++		n_coupled = 1;
++
++	/*
++	 * Find the best possible voltage change on each loop. Leave the loop
++	 * if there isn't any possible change.
++	 */
++	while (1) {
++		best_delta = 0;
++		best_uV = 0;
++		best_rdev = NULL;
++
++		/*
++		 * Find highest difference between optimal voltage
++		 * and current voltage.
++		 */
++		for (i = 0; i < n_coupled; i++) {
++			/*
++			 * optimal_uV is the best voltage that can be set for
++			 * i-th regulator at the moment without violating
++			 * max_spread constraint in order to balance
++			 * the coupled voltages.
++			 */
++			int optimal_uV, current_uV;
++
++			optimal_uV = regulator_get_optimal_voltage(c_rdevs[i]);
++			if (optimal_uV < 0) {
++				ret = optimal_uV;
++				goto out;
++			}
++
++			current_uV = _regulator_get_voltage(c_rdevs[i]);
++			if (current_uV < 0) {
++				ret = optimal_uV;
++				goto out;
++			}
++
++			if (abs(best_delta) < abs(optimal_uV - current_uV)) {
++				best_delta = optimal_uV - current_uV;
++				best_rdev = c_rdevs[i];
++				best_uV = optimal_uV;
++			}
 +		}
 +
-+		if (!time_after(timeout, jiffies)) {
-+			ret = false;
-+			break;
++		/* Nothing to change, return successfully */
++		if (!best_rdev) {
++			ret = 0;
++			goto out;
 +		}
++
++		/*
++		 * Lock just the supply regulators, as the regulator itself
++		 * is already locked by regulator_lock_coupled().
++		 */
++		if (best_rdev->supply)
++			regulator_lock_supply(best_rdev->supply->rdev);
++
++		ret = regulator_set_voltage_rdev(best_rdev, best_uV,
++						 best_uV, state);
++		if (best_rdev->supply)
++			regulator_unlock_supply(best_rdev->supply->rdev);
++
++		if (ret < 0)
++			goto out;
 +	}
 +
-+	mutex_unlock(&g_core->lock);
++out:
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(q6core_is_adsp_ready);
 +
-+static int q6core_probe(struct apr_device *adev)
-+{
-+	g_core = kzalloc(sizeof(*g_core), GFP_KERNEL);
-+	if (!g_core)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&adev->dev, g_core);
-+
-+	mutex_init(&g_core->lock);
-+	g_core->adev = adev;
-+	init_waitqueue_head(&g_core->wait);
-+	return 0;
-+}
-+
-+static int q6core_exit(struct apr_device *adev)
-+{
-+	struct q6core *core = dev_get_drvdata(&adev->dev);
-+
-+	if (core->fwk_version_supported)
-+		kfree(core->fwk_version);
-+	if (core->get_version_supported)
-+		kfree(core->svc_version);
-+
-+	g_core = NULL;
-+	kfree(core);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id q6core_device_id[]  = {
-+	{ .compatible = "qcom,q6core" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, q6core_device_id);
-+
-+static struct apr_driver qcom_q6core_driver = {
-+	.probe = q6core_probe,
-+	.remove = q6core_exit,
-+	.callback = q6core_callback,
-+	.driver = {
-+		.name = "qcom-q6core",
-+		.of_match_table = of_match_ptr(q6core_device_id),
-+	},
-+};
-+
-+module_apr_driver(qcom_q6core_driver);
-+MODULE_DESCRIPTION("q6 core");
-+MODULE_LICENSE("GPL v2");
-diff --git a/sound/soc/qcom/qdsp6/q6core.h b/sound/soc/qcom/qdsp6/q6core.h
-new file mode 100644
-index 000000000000..4105b1d730be
---- /dev/null
-+++ b/sound/soc/qcom/qdsp6/q6core.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __Q6CORE_H__
-+#define __Q6CORE_H__
-+
-+struct q6core_svc_api_info {
-+	uint32_t service_id;
-+	uint32_t api_version;
-+	uint32_t api_branch_version;
-+};
-+
-+bool q6core_is_adsp_ready(void);
-+int q6core_get_svc_api_info(int svc_id, struct q6core_svc_api_info *ainfo);
-+
-+#endif /* __Q6CORE_H__ */
+ /**
+  * regulator_set_voltage - set regulator output voltage
+  * @regulator: regulator source
 -- 
 2.17.0
