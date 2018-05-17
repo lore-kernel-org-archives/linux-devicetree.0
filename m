@@ -1,84 +1,120 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH 1/3] ARM: dra762: hwmod: Add MCAN support
-Date: Thu, 17 May 2018 13:43:48 +0530
-Message-ID: <b3456763-2f82-9a0b-d166-ddf7965fc162@ti.com>
-References: <1523181542-3770-1-git-send-email-faiz_abbas@ti.com>
- <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
- <20180501152615.GB98604@atomide.com>
- <b4d95a08-82fd-9f39-53e7-977351788c88@ti.com>
- <20180515171459.GP98604@atomide.com> <20180515171808.GR98604@atomide.com>
- <20180515172324.GS98604@atomide.com>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
+Date: Thu, 17 May 2018 11:20:24 +0300
+Message-ID: <017f01d3edb7$ec160320$c4420960$@codeaurora.org>
+References: <1526375616-16904-1-git-send-email-ilialin@codeaurora.org> <1526375616-16904-13-git-send-email-ilialin@codeaurora.org> <CAHLCerOYq4q2GE+m3MQAbMfxM4azPr95XiLKVtoPVG1Kv2Db=A@mail.gmail.com> <20180516141132.aqjif7d5motmmnlo@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180515172324.GS98604@atomide.com>
-Content-Language: en-US
+In-Reply-To: 
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, paul@pwsan.com, lokeshvutla@ti.com, linux@armlinux.org.uk
+To: 'Viresh Kumar' <viresh.kumar@linaro.org>, 'Amit Kucheria' <amit.kucheria@linaro.org>
+Cc: 'Michael Turquette' <mturquette@baylibre.com>, sboyd@kernel.org, 'Rob Herring' <robh@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, 'Andy Gross' <andy.gross@linaro.org>, 'David Brown' <david.brown@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 'LKML' <linux-kernel@vger.kernel.org>, 'Linux PM list' <linux-pm@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, 'lakml' <linux-arm-kernel@lists.infradead.org>, 'Rajendra Nayak' <rnayak@codeaurora.org>, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
 
-On Tuesday 15 May 2018 10:53 PM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [180515 17:20]:
->> * Tony Lindgren <tony@atomide.com> [180515 17:17]:
->>> * Faiz Abbas <faiz_abbas@ti.com> [180515 06:05]:
->>>> Hi Tony,
->>>>
->>>> On Tuesday 01 May 2018 08:56 PM, Tony Lindgren wrote:
->>>>> Hi,
->>>>>
->>>>> * Faiz Abbas <faiz_abbas@ti.com> [180408 09:59]:
->>>>>> From: Lokesh Vutla <lokeshvutla@ti.com>
->>>>>>
->>>>>> Add MCAN hwmod data and register it for dra762 silicons.
->>>>>>
->>>>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>>>> ---
->>>>>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 32 +++++++++++++++++++++++++++++++
->>>>>>  1 file changed, 32 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>>>>> index 62352d1..a2cd7f8 100644
->>>>>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>>>>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->>>>>> @@ -1356,6 +1356,29 @@ static struct omap_hwmod dra7xx_mailbox13_hwmod = {
->>>>>>  };
->>>>>>  
->>>>>>  /*
->>>>>> + * 'mcan' class
->>>>>> + *
->>>>>> + */
->>>>>> +static struct omap_hwmod_class dra76x_mcan_hwmod_class = {
->>>>>> +	.name	= "mcan",
->>>>>> +};
->>>>>
->>>>> Looks like you're missing the related struct omap_hwmod_class_sysconfig
->>>>> entry for this with the rev and sysconfig registers.
->>>>>
->>>>
->>>> Sorry, I missed this email earlier. The MCAN module doesn't have
->>>> sysconfig registers.
->>>
->>> If there's no sysconfig register you should have no need for adding
->>> anything to omap_hwmod_7xx_data.c. We now have the dts clkctrl
->>> clocks, you can just add that to the dts node for the device.
->>
->> However.. My guess is there is somewhere a top level interconnect
->> target module that uses DRA7XX_CM_WKUPAON_ADC_CLKCTRL. And that
->> module may have multiple child devices.
+
+> -----Original Message-----
+> From: ilialin@codeaurora.org <ilialin@codeaurora.org>
+> Sent: Thursday, May 17, 2018 10:51
+> To: 'Viresh Kumar' <viresh.kumar@linaro.org>; 'Amit Kucheria'
+> <amit.kucheria@linaro.org>
+> Cc: 'Michael Turquette' <mturquette@baylibre.com>; 'sboyd@kernel.org'
+> <sboyd@kernel.org>; 'Rob Herring' <robh@kernel.org>; 'Mark Rutland'
+> <mark.rutland@arm.com>; 'nm@ti.com' <nm@ti.com>;
+> 'lgirdwood@gmail.com' <lgirdwood@gmail.com>; 'broonie@kernel.org'
+> <broonie@kernel.org>; 'Andy Gross' <andy.gross@linaro.org>; 'David Brown'
+> <david.brown@linaro.org>; 'catalin.marinas@arm.com'
+> <catalin.marinas@arm.com>; 'will.deacon@arm.com'
+> <will.deacon@arm.com>; 'Rafael J. Wysocki' <rjw@rjwysocki.net>; 'linux-
+> clk@vger.kernel.org' <linux-clk@vger.kernel.org>;
+> 'devicetree@vger.kernel.org' <devicetree@vger.kernel.org>; 'LKML' <linux-
+> kernel@vger.kernel.org>; 'Linux PM list' <linux-pm@vger.kernel.org>;
+'linux-
+> arm-msm@vger.kernel.org' <linux-arm-msm@vger.kernel.org>; 'linux-
+> soc@vger.kernel.org' <linux-soc@vger.kernel.org>; 'lakml' <linux-arm-
+> kernel@lists.infradead.org>; 'Rajendra Nayak' <rnayak@codeaurora.org>;
+> 'nicolas.dechesne@linaro.org' <nicolas.dechesne@linaro.org>;
+> 'celster@codeaurora.org' <celster@codeaurora.org>;
+> 'tfinkel@codeaurora.org' <tfinkel@codeaurora.org>
+> Subject: RE: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
 > 
-> And I'm guessing the top level module with sysconfig related
-> registers is named "adc" :)
 > 
+> 
+> > -----Original Message-----
+> > From: Viresh Kumar <viresh.kumar@linaro.org>
+> > Sent: Wednesday, May 16, 2018 17:12
+> > To: Amit Kucheria <amit.kucheria@linaro.org>
+> > Cc: Ilia Lin <ilialin@codeaurora.org>; Michael Turquette
+> > <mturquette@baylibre.com>; sboyd@kernel.org; Rob Herring
+> > <robh@kernel.org>; Mark Rutland <mark.rutland@arm.com>; nm@ti.com;
+> > lgirdwood@gmail.com; broonie@kernel.org; Andy Gross
+> > <andy.gross@linaro.org>; David Brown <david.brown@linaro.org>;
+> > catalin.marinas@arm.com; will.deacon@arm.com; Rafael J. Wysocki
+> > <rjw@rjwysocki.net>; linux-clk@vger.kernel.org;
+> > devicetree@vger.kernel.org; LKML <linux-kernel@vger.kernel.org>; Linux
+> > PM list <linux-pm@vger.kernel.org>; linux-arm-msm@vger.kernel.org;
+> > linux- soc@vger.kernel.org; lakml
+> > <linux-arm-kernel@lists.infradead.org>;
+> > Rajendra Nayak <rnayak@codeaurora.org>; nicolas.dechesne@linaro.org;
+> > celster@codeaurora.org; tfinkel@codeaurora.org
+> > Subject: Re: [PATCH v7 12/14] cpufreq: Add Kryo CPU scaling driver
+> >
+> > On 16-05-18, 16:12, Amit Kucheria wrote:
+> > > > +       ret = PTR_ERR_OR_ZERO(opp_temp =
+> > > > +
+> > dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
+> > > > +       if (0 > ret)
+> > >
+> > > Any particular reason to prefer this over (ret < 0) that is
+> > > generally used? I've seen it used to avoid the == vs. = typos, but
+> > > not for other comparisons.
+> > >
+> > > Suggest sticking to what is commonly used i.e. ret < 0.
+> > >
+> > > > +               goto free_opp;
+> > > > +
+> > > > +       cpu_dev = get_cpu_device(GOLD_LEAD);
+> > >
+> > > Error check cpu_dev here?
+> > >
+> > > > +       ret = PTR_ERR_OR_ZERO(opp_temp =
+> > > > +
+> > dev_pm_opp_set_supported_hw(cpu_dev,&versions,1));
+> > > > +       if (0 > ret)
+> > > > +               goto free_opp;
+> >
+> > The goto here is wrong
+> 
+> If we are here, then the first dev_pm_opp_set_supported_hw() succeeded.
+> And should be deallocated before exit with error.
 
-Yes. The MCAN clocks are controlled by the ADC_CLKCTRL register.
-Please see TRM:
-http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=spruie9&fileType=pdf
-page: 1530
+My bad. Got you.
 
-Thanks,
-Faiz
+> 
+> >
+> > > > +
+> > > > +
+> > > > +       ret =
+> > PTR_ERR_OR_ZERO(platform_device_register_simple("cpufreq-dt",
+> > > > +                                                             -1,
+> > > > + NULL, 0));
+> > > > +
+> > > > +       if (0 == ret)
+> > > > +               return 0;
+> > > > +
+> > > > +free_opp:
+> > > > +       dev_pm_opp_put_supported_hw(opp_temp);
+> > >
+> > > This is not needed because dev_pm_opp_set_supported_hw will free
+> > > memory in case of failure. This call in only needed in case of a
+> > > successful get.
+> >
+> > But this is still required for the case where platform device
+registration fails.
+> >
+> > --
+> > viresh
