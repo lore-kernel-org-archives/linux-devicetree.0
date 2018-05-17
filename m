@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 3/4] ARM64: dts: meson-axg: add i2c AO pins
-Date: Thu, 17 May 2018 11:30:59 +0200
-Message-ID: <20180517093100.22225-4-jbrunet@baylibre.com>
+Subject: [PATCH v2 2/4] ARM64: dts: meson-axg: correct i2c AO clock
+Date: Thu, 17 May 2018 11:30:58 +0200
+Message-ID: <20180517093100.22225-3-jbrunet@baylibre.com>
 References: <20180517093100.22225-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180517093100.22225-1-jbrunet@baylibre.com>
@@ -10,65 +10,28 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the pins related to the i2c AO controller of the meson-axg platform
+The clock specified for the i2c AO controller is the one for the EE
+domain, which is incorrect as this controller needs the clock for AO
+i2c controller.
 
+Fixes: dc6f858e2690 ("ARM64: dts: meson-axg: add I2C DT info for Meson-AXG SoC")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 42 ++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index d213ab715e03..e315701cb6ac 100644
+index b59f341104d7..d213ab715e03 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1046,6 +1046,48 @@
- 					gpio-ranges = <&pinctrl_aobus 0 0 15>;
- 				};
- 
-+				i2c_ao_sck_4_pins: i2c_ao_sck_4 {
-+					mux {
-+						groups = "i2c_ao_sck_4";
-+						function = "i2c_ao";
-+					};
-+				};
-+
-+				i2c_ao_sck_8_pins: i2c_ao_sck_8 {
-+					mux {
-+						groups = "i2c_ao_sck_8";
-+						function = "i2c_ao";
-+					};
-+				};
-+
-+				i2c_ao_sck_10_pins: i2c_ao_sck_10 {
-+					mux {
-+						groups = "i2c_ao_sck_10";
-+						function = "i2c_ao";
-+					};
-+				};
-+
-+				i2c_ao_sda_5_pins: i2c_ao_sda_5 {
-+					mux {
-+						groups = "i2c_ao_sda_5";
-+						function = "i2c_ao";
-+					};
-+				};
-+
-+				i2c_ao_sda_9_pins: i2c_ao_sda_9 {
-+					mux {
-+						groups = "i2c_ao_sda_9";
-+						function = "i2c_ao";
-+					};
-+				};
-+
-+				i2c_ao_sda_11_pins: i2c_ao_sda_11 {
-+					mux {
-+						groups = "i2c_ao_sda_11";
-+						function = "i2c_ao";
-+					};
-+				};
-+
- 				remote_input_ao_pins: remote_input_ao {
- 					mux {
- 						groups = "remote_input_ao";
+@@ -1110,7 +1110,7 @@
+ 				compatible = "amlogic,meson-axg-i2c";
+ 				reg = <0x0 0x05000 0x0 0x20>;
+ 				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
+-				clocks = <&clkc CLKID_I2C>;
++				clocks = <&clkc CLKID_AO_I2C>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
 -- 
 2.14.3
