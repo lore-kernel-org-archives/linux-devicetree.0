@@ -1,433 +1,449 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH RFC 3/6] hwmon: Add support for RPi voltage sensor
-Date: Thu, 17 May 2018 09:43:20 -0700
-Message-ID: <20180517164320.GA30364@roeck-us.net>
-References: <1526477827-10859-1-git-send-email-stefan.wahren@i2se.com>
- <1526477827-10859-4-git-send-email-stefan.wahren@i2se.com>
- <20180516182144.GB22705@roeck-us.net>
- <1560428919.21731.1526500741266@email.1und1.de>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [v0 2/2] cpufreq: qcom-fw: Add support for QCOM cpufreq FW driver
+Date: Thu, 17 May 2018 22:43:52 +0530
+Message-ID: <501a284c-9271-230a-1621-d8c70b59710d@codeaurora.org>
+References: <1526549401-25666-1-git-send-email-tdas@codeaurora.org>
+ <1526549401-25666-3-git-send-email-tdas@codeaurora.org>
+ <20180517101405.23oxyqpmpjhauflx@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1560428919.21731.1526500741266@email.1und1.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180517101405.23oxyqpmpjhauflx@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, amit.kucheria@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 09:59:01PM +0200, Stefan Wahren wrote:
-> Hi Guenter,
-> =
+Hi Viresh,
 
-> > Guenter Roeck <linux@roeck-us.net> hat am 16. Mai 2018 um 20:21 geschri=
-eben:
-> > =
+Thanks for the review comments, I have already fixed the resource 
+comment in the v1 series which I sent across. I will fix the rest of the 
+comments and send it for review.
 
-> > =
+On 5/17/2018 3:44 PM, Viresh Kumar wrote:
+> On 17-05-18, 15:00, Taniya Das wrote:
+>> The CPUfreq FW present in some QCOM chipsets offloads the steps necessary
+>> for hanging the frequency of CPUs. The driver implements the cpufreq driver
+>> interface for this firmware.
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> ---
+>>   drivers/cpufreq/Kconfig.arm       |   9 ++
+>>   drivers/cpufreq/Makefile          |   1 +
+>>   drivers/cpufreq/qcom-cpufreq-fw.c | 318 ++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 328 insertions(+)
+>>   create mode 100644 drivers/cpufreq/qcom-cpufreq-fw.c
+>>
+>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>> index 96b35b8..a50aa6e 100644
+>> --- a/drivers/cpufreq/Kconfig.arm
+>> +++ b/drivers/cpufreq/Kconfig.arm
+>> @@ -301,3 +301,12 @@ config ARM_PXA2xx_CPUFREQ
+>>   	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+>>
+>>   	  If in doubt, say N.
+>> +
+>> +config ARM_QCOM_CPUFREQ_FW
+>> +	tristate "QCOM CPUFreq FW driver"
+>> +	help
+>> +	 Support for the CPUFreq FW driver.
+>> +	 The CPUfreq FW preset in some QCOM chipsets offloads the steps
+>> +	 necessary for changing the frequency of CPUs. The driver
+>> +	 implements the cpufreq driver interface for this firmware.
+>> +	 Say Y if you want to support CPUFreq FW.
+>> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> index 8d24ade..a3edbce 100644
+>> --- a/drivers/cpufreq/Makefile
+>> +++ b/drivers/cpufreq/Makefile
+>> @@ -85,6 +85,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>>   obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+>>   obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>>   obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+>> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_FW)	+= qcom-cpufreq-fw.o
+>>
+>>
+>>   ##################################################################################
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-fw.c b/drivers/cpufreq/qcom-cpufreq-fw.c
+>> new file mode 100644
+>> index 0000000..67996d5
+>> --- /dev/null
+>> +++ b/drivers/cpufreq/qcom-cpufreq-fw.c
+>> @@ -0,0 +1,318 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/cpufreq.h>
+>> +#include <linux/init.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +
+>> +#define INIT_RATE			300000000UL
+>> +#define XO_RATE				19200000UL
+>> +#define LUT_MAX_ENTRIES			40U
+>> +#define CORE_COUNT_VAL(val)		((val & GENMASK(18, 16)) >> 16)
+>> +#define LUT_ROW_SIZE			32
+>> +
+>> +struct cpufreq_qcom {
+>> +	struct cpufreq_frequency_table *table;
+>> +	struct device *dev;
+>> +	void __iomem *perf_base;
+>> +	void __iomem *lut_base;
+>> +	cpumask_t related_cpus;
+>> +	unsigned int max_cores;
+>> +};
+>> +
+>> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+>> +
+>> +static int
+>> +qcom_cpufreq_fw_target_index(struct cpufreq_policy *policy, unsigned int index)
+>> +{
+>> +	struct cpufreq_qcom *c = policy->driver_data;
+>> +
+>> +	if (index >= LUT_MAX_ENTRIES) {
+>> +		dev_err(c->dev,
+>> +		"Passing an index (%u) that's greater than max (%d)\n",
+> 
+> Alignment issues here. Run checkpatch --strict.
+> 
+>> +					index, LUT_MAX_ENTRIES - 1);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	writel_relaxed(index, c->perf_base);
+>> +
+>> +	/* Make sure the write goes through before proceeding */
+>> +	mb();
+>> +	return 0;
+>> +}
+>> +
+>> +static unsigned int qcom_cpufreq_fw_get(unsigned int cpu)
+>> +{
+>> +	struct cpufreq_qcom *c;
+>> +	unsigned int index;
+>> +
+>> +	c = qcom_freq_domain_map[cpu];
+>> +	if (!c)
+>> +		return -ENODEV;
+>> +
+>> +	index = readl_relaxed(c->perf_base);
+>> +	index = min(index, LUT_MAX_ENTRIES - 1);
+>> +
+>> +	return c->table[index].frequency;
+>> +}
+>> +
+>> +static int qcom_cpufreq_fw_cpu_init(struct cpufreq_policy *policy)
+>> +{
+>> +	struct cpufreq_qcom *c;
+>> +	int ret;
+>> +
+>> +	c = qcom_freq_domain_map[policy->cpu];
+>> +	if (!c) {
+>> +		pr_err("No scaling support for CPU%d\n", policy->cpu);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	cpumask_copy(policy->cpus, &c->related_cpus);
+>> +
+>> +	policy->table = c->table;
+>> +	policy->driver_data = c;
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static struct freq_attr *qcom_cpufreq_fw_attr[] = {
+>> +	&cpufreq_freq_attr_scaling_available_freqs,
+>> +	&cpufreq_freq_attr_scaling_boost_freqs,
+>> +	NULL
+>> +};
+>> +
+>> +static struct cpufreq_driver cpufreq_qcom_fw_driver = {
+>> +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
+>> +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
+>> +	.verify		= cpufreq_generic_frequency_table_verify,
+>> +	.target_index	= qcom_cpufreq_fw_target_index,
+>> +	.get		= qcom_cpufreq_fw_get,
+>> +	.init		= qcom_cpufreq_fw_cpu_init,
+>> +	.name		= "qcom-cpufreq-fw",
+>> +	.attr		= qcom_cpufreq_fw_attr,
+>> +	.boost_enabled	= true,
+>> +};
+>> +
+>> +static int qcom_read_lut(struct platform_device *pdev,
+>> +			struct cpufreq_qcom *c)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	u32 data, src, lval, i, core_count, prev_cc = 0;
+>> +
+>> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
+>> +				sizeof(*c->table), GFP_KERNEL);
+>> +	if (!c->table)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>> +		data = readl_relaxed(c->lut_base + i * LUT_ROW_SIZE);
+>> +		src = ((data & GENMASK(31, 30)) >> 30);
+>> +		lval = (data & GENMASK(7, 0));
+>> +		core_count = CORE_COUNT_VAL(data);
+> 
+> Why do you need this here ? And why do below in case this doesn't
+> match max-cores count ?
+> 
+>> +
+>> +		if (!src)
+>> +			c->table[i].frequency = INIT_RATE / 1000;
+>> +		else
+>> +			c->table[i].frequency = XO_RATE * lval / 1000;
+>> +
+>> +		c->table[i].driver_data = c->table[i].frequency;
+>> +
+>> +		dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
+>> +				i, c->table[i].frequency, core_count);
+>> +
+>> +		if (core_count != c->max_cores)
+>> +			c->table[i].frequency = CPUFREQ_ENTRY_INVALID;
+>> +
+>> +		/*
+>> +		 * Two of the same frequencies with the same core counts means
+>> +		 * end of table.
+>> +		 */
+>> +		if (i > 0 && c->table[i - 1].driver_data ==
+>> +					c->table[i].driver_data
+>> +					&& prev_cc == core_count) {
+>> +			struct cpufreq_frequency_table *prev = &c->table[i - 1];
+>> +
+>> +			if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
+>> +				prev->flags = CPUFREQ_BOOST_FREQ;
+>> +				prev->frequency = prev->driver_data;
+>> +			}
+>> +
+>> +			break;
+>> +		}
+>> +		prev_cc = core_count;
+>> +	}
+>> +	c->table[i].frequency = CPUFREQ_TABLE_END;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int qcom_get_related_cpus(struct device_node *np, struct cpumask *m)
+>> +{
+>> +	struct device_node *dev_phandle;
+>> +	struct device *cpu_dev;
+>> +	int cpu, i = 0, ret = -ENOENT;
+>> +
+>> +	dev_phandle = of_parse_phandle(np, "qcom,cpulist", i++);
+> 
+> TBH, I am not a great fan of the CPU phandle list you have created
+> here. Lets see what Rob has to say on this.
+> 
+>> +	while (dev_phandle) {
+>> +		for_each_possible_cpu(cpu) {
+>> +			cpu_dev = get_cpu_device(cpu);
+>> +			if (cpu_dev && cpu_dev->of_node == dev_phandle) {
+>> +				cpumask_set_cpu(cpu, m);
+>> +				ret = 0;
+> 
+> Maybe just remove this line ...
+> 
+>> +				break;
+>> +			}
+>> +		}
+>> +		dev_phandle = of_parse_phandle(np, "qcom,cpulist", i++);
+>> +	}
+>> +
+>> +	return ret;
+> 
+> and check for empty cpumask for an error here.
+> 
+>> +}
+>> +
+>> +static int qcom_cpu_resources_init(struct platform_device *pdev,
+>> +						struct device_node *np)
+> 
+> You may want to align these properly. Try running checkpatch with
+> --strict option.
+> 
+>> +{
+>> +	struct cpufreq_qcom *c;
+>> +	struct resource res;
+>> +	struct device *dev = &pdev->dev;
+>> +	void __iomem *en_base;
+>> +	int cpu, index = 0, ret;
+> 
+> Why initialize index here ?
+> 
+>> +
+>> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+> 
+> Check for a valid 'c' here ?
+> 
+>> +
+>> +	res = platform_get_resource_byname(dev, IORESOURCE_MEM, "en_base");
+> 
+> You are assigning a pointer to a structure here :(
+> 
+>> +	if (!res) {
+>> +		dev_err(dev, "Enable base not defined for %s\n", np->name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	en_base = devm_ioremap(dev, res->start, resource_size(res));
+> 
+> You don't get a build error for doing res->start here ? Looks like you
+> sent a driver upstream which doesn't even build.
+> 
+>> +	if (!en_base) {
+>> +		dev_err(dev, "Unable to map %s en-base\n", np->name);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	/* FW should be enabled state to proceed */
+>> +	if (!(readl_relaxed(en_base) & 0x1)) {
+>> +		dev_err(dev, "%s firmware not enabled\n", np->name);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	devm_iounmap(&pdev->dev, en_base);
+>> +
+>> +	index = of_property_match_string(np, "reg-names", "perf_base");
+>> +	if (index < 0)
+>> +		return index;
+>> +
+>> +	if (of_address_to_resource(np, index, &res))
+>> +		return -ENOMEM;
+>> +
+>> +	c->perf_base = devm_ioremap(dev, res.start, resource_size(&res));
+>> +	if (!c->perf_base) {
+>> +		dev_err(dev, "Unable to map %s perf-base\n", np->name);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	index = of_property_match_string(np, "reg-names", "lut_base");
+>> +	if (index < 0)
+>> +		return index;
+>> +
+>> +	if (of_address_to_resource(np, index, &res))
+>> +		return -ENOMEM;
+>> +
+>> +	c->lut_base = devm_ioremap(dev, res.start, resource_size(&res));
+>> +	if (!c->lut_base) {
+>> +		dev_err(dev, "Unable to map %s lut-base\n", np->name);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	ret = qcom_get_related_cpus(np, &c->related_cpus);
+>> +	if (ret) {
+>> +		dev_err(dev, "%s failed to get core phandles\n", np->name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	c->max_cores = cpumask_weight(&c->related_cpus);
+>> +
+>> +	ret = qcom_read_lut(pdev, c);
+>> +	if (ret) {
+>> +		dev_err(dev, "%s failed to read LUT\n", np->name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	for_each_cpu(cpu, &c->related_cpus)
+>> +		qcom_freq_domain_map[cpu] = c;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int qcom_resources_init(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np;
+>> +	int ret = -ENODEV;
+>> +
+>> +	for_each_available_child_of_node(pdev->dev.of_node, np) {
+>> +		if (of_device_is_compatible(np, "cpufreq")) {
+>> +			ret = qcom_cpu_resources_init(pdev, np);
+>> +			if (ret)
+>> +				return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return ret;
+> 
+> Don't initialize ret to -ENODEV, rather return -ENODEV directly here.
+> That makes it more readable.
+> 
+>> +}
+>> +
+>> +static int qcom_cpufreq_fw_driver_probe(struct platform_device *pdev)
+>> +{
+>> +	int rc = 0;
+> 
+> Don't need to initialize to 0 here.
+> 
+>> +
+>> +	/* Get the bases of cpufreq for domains */
+>> +	rc = qcom_resources_init(pdev);
+>> +	if (rc) {
+>> +		dev_err(&pdev->dev, "CPUFreq resource init failed\n");
+>> +		return rc;
+>> +	}
+>> +
+>> +	rc = cpufreq_register_driver(&cpufreq_qcom_fw_driver);
+>> +	if (rc) {
+>> +		dev_err(&pdev->dev, "CPUFreq FW driver failed to register\n");
+>> +		return rc;
+>> +	}
+>> +
+>> +	dev_info(&pdev->dev, "QCOM CPUFreq FW driver inited\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id match_table[] = {
+>> +	{ .compatible = "qcom,cpufreq-fw" },
+>> +	{}
+>> +};
+>> +
+>> +static struct platform_driver qcom_cpufreq_fw_driver = {
+>> +	.probe = qcom_cpufreq_fw_driver_probe,
+>> +	.driver = {
+>> +		.name = "qcom-cpufreq-fw",
+>> +		.of_match_table = match_table,
+>> +		.owner = THIS_MODULE,
+>> +	},
+>> +};
+>> +
+>> +static int __init qcom_cpufreq_fw_init(void)
+>> +{
+>> +	return platform_driver_register(&qcom_cpufreq_fw_driver);
+>> +}
+>> +subsys_initcall(qcom_cpufreq_fw_init);
+> 
+> Why this for a driver which can be built as a module ? You really want
+> it to be built as a module ?
+> 
+>> +
+>> +static void __exit qcom_cpufreq_fw_exit(void)
+>> +{
+>> +	platform_driver_unregister(&qcom_cpufreq_fw_driver);
+>> +}
+> 
+> But you don't unregister the cpufreq driver ?
+> 
+>> +module_exit(qcom_cpufreq_fw_exit);
+>> +
+>> +MODULE_DESCRIPTION("QCOM CPU Frequency FW");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+>> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
 
-> > On Wed, May 16, 2018 at 03:37:04PM +0200, Stefan Wahren wrote:
-> > > Currently there is no easy way to detect under-voltage conditions on =
-a remote
-> > > Raspberry Pi. This hwmon driver retrieves the state of the under-volt=
-age sensor
-> > > via mailbox interface. The handling based on Noralf's modifications t=
-o the
-> > > downstream firmware driver. In case of an under-voltage condition onl=
-y an entry
-> > > is written to the kernel log.
-> > > =
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-> > =
-
-> > My major concern is how this is displayed with the 'sensors' command.
-> > Can you test and report ?
-> =
-
-> I get the following output:
-> rpi_volt-isa-0000
-> Adapter: ISA adapter
-> in0:              N/A  =
-
-> =
-
-Ok, that works.
-
-> > =
-
-> > Of course, it would be much better if the firmware would also report
-> > the actual voltage, but I guess we can't have everything.
-> =
-
-> I think this isn't possible because the hardware only provide a binary va=
-lue (GPIO).
-> =
-
-> > =
-
-> > More comments inline.
-> > =
-
-> > Thanks,
-> > Guenter
-> > =
-
-> > > CC: "Noralf Tr=F8nnes" <noralf@tronnes.org>
-> > > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> > > ---
-> > >  drivers/hwmon/Kconfig             |  10 ++
-> > >  drivers/hwmon/Makefile            |   1 +
-> > >  drivers/hwmon/raspberrypi-hwmon.c | 207 ++++++++++++++++++++++++++++=
-++++++++++
-> > =
-
-> > Please also provide Documentation/hwmon/raspberrypi-hwmon.
-> > =
-
-> > >  3 files changed, 218 insertions(+)
-> > >  create mode 100644 drivers/hwmon/raspberrypi-hwmon.c
-> > > =
-
-> > > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > > index 768aed5..7f935cf 100644
-> > > --- a/drivers/hwmon/Kconfig
-> > > +++ b/drivers/hwmon/Kconfig
-> > > @@ -1298,6 +1298,16 @@ config SENSORS_PWM_FAN
-> > >  	  This driver can also be built as a module.  If so, the module
-> > >  	  will be called pwm-fan.
-> > >  =
-
-> > > +config SENSORS_RASPBERRYPI_HWMON
-> > > +	tristate "Raspberry Pi voltage monitor"
-> > > +	depends on (ARCH_BCM2835 && RASPBERRYPI_FIRMWARE) || (COMPILE_TEST =
-&& !RASPBERRYPI_FIRMWARE)
-> > > +	help
-> > > +	  If you say yes here you get support for voltage sensor on the
-> > > +	  Raspberry Pi.
-> > > +
-> > > +	  This driver can also be built as a module. If so, the module
-> > > +	  will be called raspberrypi-hwmon.
-> > > +
-> > >  config SENSORS_SHT15
-> > >  	tristate "Sensiron humidity and temperature sensors. SHT15 and comp=
-at."
-> > >  	depends on GPIOLIB || COMPILE_TEST
-> > > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> > > index e7d52a3..a929770 100644
-> > > --- a/drivers/hwmon/Makefile
-> > > +++ b/drivers/hwmon/Makefile
-> > > @@ -141,6 +141,7 @@ obj-$(CONFIG_SENSORS_PC87427)	+=3D pc87427.o
-> > >  obj-$(CONFIG_SENSORS_PCF8591)	+=3D pcf8591.o
-> > >  obj-$(CONFIG_SENSORS_POWR1220)  +=3D powr1220.o
-> > >  obj-$(CONFIG_SENSORS_PWM_FAN)	+=3D pwm-fan.o
-> > > +obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)	+=3D raspberrypi-hwmon.o
-> > >  obj-$(CONFIG_SENSORS_S3C)	+=3D s3c-hwmon.o
-> > >  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+=3D sch56xx-common.o
-> > >  obj-$(CONFIG_SENSORS_SCH5627)	+=3D sch5627.o
-> > > diff --git a/drivers/hwmon/raspberrypi-hwmon.c b/drivers/hwmon/raspbe=
-rrypi-hwmon.c
-> > > new file mode 100644
-> > > index 0000000..2003f6c
-> > > --- /dev/null
-> > > +++ b/drivers/hwmon/raspberrypi-hwmon.c
-> > > @@ -0,0 +1,207 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Raspberry Pi voltage sensor driver
-> > > + *
-> > > + * Based on firmware/raspberrypi.c by Noralf Tr=F8nnes
-> > > + *
-> > > + * Copyright (C) 2018 Stefan Wahren <stefan.wahren@i2se.com>
-> > > + */
-> > > +#include <linux/device.h>
-> > > +#include <linux/err.h>
-> > > +#include <linux/hwmon.h>
-> > > +#include <linux/hwmon-sysfs.h>
-> > =
-
-> > Unnecessary include
-> > =
-
-> > > +#include <linux/module.h>
-> > > +#include <linux/of_device.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/workqueue.h>
-> > > +#include <soc/bcm2835/raspberrypi-firmware.h>
-> > > +
-> > > +#define UNDERVOLTAGE_STICKY_BIT	BIT(16)
-> > > +
-> > > +struct rpi_hwmon_data {
-> > > +	struct device *hwmon_dev;
-> > > +	struct rpi_firmware *fw;
-> > > +	u32 last_throttled;
-> > > +	struct delayed_work get_values_poll_work;
-> > > +};
-> > > +
-> > > +static void rpi_firmware_get_throttled(struct rpi_hwmon_data *data)
-> > > +{
-> > > +	u32 new_uv, old_uv, value;
-> > > +	int ret;
-> > > +
-> > > +	/* Clear sticky bits */
-> > =
-
-> > Please make more explicit that this is a request/command sent to the fi=
-rmware.
-> > =
-
-> > > +	value =3D 0xffff;
-> > > +
-> > > +	ret =3D rpi_firmware_property(data->fw, RPI_FIRMWARE_GET_THROTTLED,
-> > > +				    &value, sizeof(value));
-> > > +	if (ret) {
-> > > +		dev_err_once(data->hwmon_dev, "%s: Failed to get throttled (%d)\n",
-> > > +			     __func__, ret);
-> > =
-
-> > The function name seems unnecessary.
-> > =
-
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	new_uv =3D value & UNDERVOLTAGE_STICKY_BIT;
-> > > +	old_uv =3D data->last_throttled & UNDERVOLTAGE_STICKY_BIT;
-> > > +	data->last_throttled =3D value;
-> > > +
-> > > +	if (new_uv =3D=3D old_uv)
-> > > +		return;
-> > > +
-> > > +	if (new_uv)
-> > > +		dev_crit(data->hwmon_dev, "Under-voltage detected! (0x%08x)\n",
-> > > +			 value);
-> > > +	else
-> > > +		dev_info(data->hwmon_dev, "Voltage normalised (0x%08x)\n",
-> > > +			 value);
-> > =
-
-> > What value do those hex values provide to the user ?
-> =
-
-> The actual definition of the bits can be found in the commit log of patch=
- #1. But this isn't very helpful for an end user.
-> =
-
-I would suggest to drop the value from the log.
-
-> > =
-
-> > > +
-> > > +	sysfs_notify(&data->hwmon_dev->kobj, NULL, "in0_lcrit_alarm");
-> > > +}
-> > > +
-> > > +static void get_values_poll(struct work_struct *work)
-> > > +{
-> > > +	struct rpi_hwmon_data *data;
-> > > +
-> > > +	data =3D container_of(work, struct rpi_hwmon_data,
-> > > +			    get_values_poll_work.work);
-> > > +
-> > > +	rpi_firmware_get_throttled(data);
-> > > +
-> > > +	/*
-> > > +	 * We can't run faster than the sticky shift (100ms) since we get
-> > > +	 * flipping in the sticky bits that are cleared.
-> > > +	 */
-> > > +	schedule_delayed_work(&data->get_values_poll_work, 2 * HZ);
-> > > +}
-> > > +
-> > > +static int rpi_read(struct device *dev, enum hwmon_sensor_types type,
-> > > +		    u32 attr, int channel, long *val)
-> > > +{
-> > > +	struct rpi_hwmon_data *data =3D dev_get_drvdata(dev);
-> > > +
-> > > +	if (type !=3D hwmon_in)
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > > +	if (attr !=3D hwmon_in_lcrit_alarm)
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > > +	if (channel)
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > There is only one channel, one attribute, and one type supported.
-> > As such, the checks are unnecessary.
-> > =
-
-> > > +	*val =3D !!(data->last_throttled & UNDERVOLTAGE_STICKY_BIT);
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static umode_t rpi_is_visible(const void *_data, enum hwmon_sensor_t=
-ypes type,
-> > > +			      u32 attr, int channel)
-> > > +{
-> > > +	if (type !=3D hwmon_in)
-> > > +		return 0;
-> > > +
-> > > +	if (attr !=3D hwmon_in_lcrit_alarm)
-> > > +		return 0;
-> > > +
-> > > +	if (channel)
-> > > +		return 0;
-> > =
-
-> > Same as above. In the list below, there is not a single conditional att=
-ribute.
-> > Given that, the checks should be unnecessary, and it should be sufficie=
-nt to
-> > just return 0444.
-> > =
-
-> > > +
-> > > +	return 0444;
-> > > +}
-> > > +
-> > > +static const u32 rpi_in_config[] =3D {
-> > > +	HWMON_I_LCRIT_ALARM,
-> > > +	0
-> > > +};
-> > > +
-> > > +static const struct hwmon_channel_info rpi_in =3D {
-> > > +	.type =3D hwmon_in,
-> > > +	.config =3D rpi_in_config,
-> > > +};
-> > > +
-> > > +static const struct hwmon_channel_info *rpi_info[] =3D {
-> > > +	&rpi_in,
-> > > +	NULL
-> > > +};
-> > > +
-> > > +static const struct hwmon_ops rpi_hwmon_ops =3D {
-> > > +	.is_visible =3D rpi_is_visible,
-> > > +	.read =3D rpi_read,
-> > > +};
-> > > +
-> > > +static const struct hwmon_chip_info rpi_chip_info =3D {
-> > > +	.ops =3D &rpi_hwmon_ops,
-> > > +	.info =3D rpi_info,
-> > > +};
-> > > +
-> > > +static int rpi_hwmon_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct device *dev =3D &pdev->dev;
-> > > +	struct device_node *fw_node;
-> > > +	struct rpi_hwmon_data *data;
-> > > +	int ret;
-> > > +
-> > > +	data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> > > +	if (!data)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	fw_node =3D of_get_parent(dev->of_node);
-> > > +	if (!fw_node) {
-> > > +		dev_err(dev, "Missing firmware node\n");
-> > > +		return -ENOENT;
-> > > +	}
-> > > +
-> > > +	data->fw =3D rpi_firmware_get(fw_node);
-> > > +	of_node_put(fw_node);
-> > > +	if (!data->fw)
-> > > +		return -EPROBE_DEFER;
-> > > +
-> > > +	ret =3D rpi_firmware_property(data->fw, RPI_FIRMWARE_GET_THROTTLED,
-> > > +				    &data->last_throttled,
-> > > +				    sizeof(data->last_throttled));
-> > > +	if (ret) {
-> > > +		dev_info(dev, "Firmware doesn't support GET_THROTTLED\n");
-> > =
-
-> > If this is an error -> dev_err().
-> =
-
-> I wasn't sure. If the firmware is too old, we cannot provide this feature=
- and it's a waste of resources to load this driver. On the other side i don=
-'t want to confuse people this is something bad.
-> =
-
-Then I would suggest to return -ENODEV.
-
-Guenter
-
-> Stefan
-> =
-
-> > =
-
-> > > +		return -EOPNOTSUPP;
-> > =
-
-> > or return -ENODEV.
-> > =
-
-> > > +	}
-> > > +
-> > > +	data->hwmon_dev =3D devm_hwmon_device_register_with_info(dev, "rpi_=
-volt",
-> > > +							       data,
-> > > +							       &rpi_chip_info,
-> > > +							       NULL);
-> > > +
-> > > +	INIT_DELAYED_WORK(&data->get_values_poll_work, get_values_poll);
-> > > +	platform_set_drvdata(pdev, data);
-> > > +
-> > > +	if (!PTR_ERR_OR_ZERO(data->hwmon_dev))
-> > > +		schedule_delayed_work(&data->get_values_poll_work, 2 * HZ);
-> > > +
-> > > +	return PTR_ERR_OR_ZERO(data->hwmon_dev);
-> > > +}
-> > > +
-> > > +static int rpi_hwmon_remove(struct platform_device *pdev)
-> > > +{
-> > > +	struct rpi_hwmon_data *data =3D platform_get_drvdata(pdev);
-> > > +
-> > > +	cancel_delayed_work_sync(&data->get_values_poll_work);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id rpi_hwmon_of_match[] =3D {
-> > > +	{ .compatible =3D "raspberrypi,bcm2835-hwmon", },
-> > > +	{ /* sentinel */},
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, rpi_hwmon_of_match);
-> > > +
-> > > +static struct platform_driver rpi_hwmon_driver =3D {
-> > > +	.probe =3D rpi_hwmon_probe,
-> > > +	.remove =3D rpi_hwmon_remove,
-> > > +	.driver =3D {
-> > > +		.name =3D "raspberrypi-hwmon",
-> > > +		.of_match_table =3D rpi_hwmon_of_match,
-> > > +	},
-> > > +};
-> > > +module_platform_driver(rpi_hwmon_driver);
-> > > +
-> > > +MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
-> > > +MODULE_DESCRIPTION("Raspberry Pi voltage sensor driver");
-> > > +MODULE_LICENSE("GPL v2");
-> > > -- =
-
-> > > 2.7.4
-> > > =
-
-> > > --
-> > > To unsubscribe from this list: send the line "unsubscribe linux-hwmon=
-" in
-> > > the body of a message to majordomo@vger.kernel.org
-> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > =
-
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
