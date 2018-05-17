@@ -1,80 +1,161 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
- bindings
-Date: Thu, 17 May 2018 07:36:40 +0100
-Message-ID: <20180517063640.GK5130@dell>
-References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
- <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
- <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
- <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
- <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
- <CACRpkda2VGo0FOdR09tKiTpg66NgoWjubaHp_J3372y=a772Zg@mail.gmail.com>
- <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: draak: Describe HDMI input
+Date: Thu, 17 May 2018 09:14:56 +0200
+Message-ID: <20180517071456.GT5956@w540>
+References: <1526478129-16465-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526478129-16465-4-git-send-email-jacopo+renesas@jmondi.org>
+ <20180516222318.GI17948@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XDqeUMnLaDfDQgU1"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com>
+In-Reply-To: <20180516222318.GI17948@bigcity.dyn.berto.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 May 2018, Amelie DELAUNAY wrote:
 
-> 
-> 
-> On 05/16/2018 04:20 PM, Linus Walleij wrote:
-> > On Wed, May 9, 2018 at 9:56 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
-> > 
-> >> Indeed, stmfx has other functions than GPIO. But, after comments done
-> >> here: [1] and there: [2], it has been decided to move MFD parent/GPIO
-> >> child drivers into a single PINCTRL/GPIO driver because of the following
-> >> reasons:
-> >> - Other stmfx functions (IDD measurement and TouchScreen controller) are
-> >> not used on any of the boards using an stmfx and supported by Linux, so
-> >> no way to test these functions, and no need to maintain them while they
-> >> are not being used.
-> >> - But, in the case a new board will use more than GPIO function on
-> >> stmfx, the actual implementation allow to easily extract common init
-> >> part of stmfx and put it in an MFD driver.
-> >>
-> >> So I could remove gpio sub-node and put its contents in stmfx node and
-> >> keep single PINCTRL/GPIO driver for the time being.
-> >> Please advise,
-> > 
-> > I would normally advice to use the right modeling from the start, create
-> > the MFD driver and spawn the devices from there. It is confusing
-> > if the layout of the driver(s) doesn't really match the layout of the
-> > hardware.
-> > 
-> > I understand that it is a pain to write new MFD drivers to get your
-> > things going and it would be "nice to get this working really quick
-> > now" but in my experience it is better to do it right from the start.
-> > 
-> 
-> Hi Linus,
-> 
-> Thanks for your advice. I understand the point.
-> So, the right modeling would be to:
-> - create an MFD driver with the common init part of stmfx
-> - remove all common init part of stmfx-pinctrl driver and keep only all 
-> gpio/pinctrl functions.
-> 
-> I will not develop the other stmfx functions (IDD measurement driver and 
-> TouchScreen controller driver) because, as explained ealier, they are 
-> not used on any of the boards using an stmfx and supported by Linux, so 
-> no way to test these functions, and no need to maintain them while they 
-> are not being used.
-> 
-> Lee, are you OK with that ?
+--XDqeUMnLaDfDQgU1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I missed a lot of this conversation I think, but from what I've read,
-it sounds fine.
+Hi Niklas,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On Thu, May 17, 2018 at 12:23:18AM +0200, Niklas S=C3=B6derlund wrote:
+> Hi Jacopo,
+>
+> Thanks for your patch.
+>
+> On 2018-05-16 15:42:09 +0200, Jacopo Mondi wrote:
+> > Describe HDMI input connector and ADV7612 HDMI decoder installed on
+> > R-Car Gen3 Draak board.
+> >
+> > The video signal routing to the HDMI decoder to the video input interfa=
+ce
+> > VIN4 is multiplexed with CVBS input path, and enabled/disabled through
+> > on-board switches SW-49, SW-50, SW-51 and SW-52.
+> >
+> > As the default board switches configuration connects CVBS input to VIN4,
+> > leave the HDMI decoder unconnected in DTS.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>
+> I'm not sure we have a policy about describing hardware which can't be
+> used without flipping switches. I have no opinion on if we should do
+> that or not I leave that to others, but for the change itself.
+>
+> Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
+>
+
+Thanks
+
+> I think it's good we describe it as it's part of the Draak board itself
+> and not an expansion board which we have seen a lot of :-) Maybe even
+> add a commented out line in the adv7612 port@2 which hints which VIN
+> this is connected to if the switches are flipped?
+
+The only VIN instance that's on Draak, VIN4.
+
+I can add a comment that describes the switch settings that enables
+the HDMI video capture path.
+
+Thanks
+   j
+
+
+>
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 38 ++++++++++++++++++=
+++++++++
+> >  1 file changed, 38 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm6=
+4/boot/dts/renesas/r8a77995-draak.dts
+> > index 9aba28f..ea99dc9 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> > @@ -59,6 +59,17 @@
+> >  		};
+> >  	};
+> >
+> > +	hdmi-in {
+> > +		compatible =3D "hdmi-connector";
+> > +		type =3D "a";
+> > +
+> > +		port {
+> > +			hdmi_con_in: endpoint {
+> > +				remote-endpoint =3D <&adv7612_in>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> >  	memory@48000000 {
+> >  		device_type =3D "memory";
+> >  		/* first 128MB is reserved for secure area. */
+> > @@ -170,6 +181,33 @@
+> >  			};
+> >  		};
+> >  	};
+> > +
+> > +	hdmi-decoder@4c {
+> > +		compatible =3D "adi,adv7612";
+> > +		reg =3D <0x4c>;
+> > +		default-input =3D <0>;
+> > +
+> > +		ports {
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > +
+> > +			port@0 {
+> > +				reg =3D <0>;
+> > +				adv7612_in: endpoint {
+> > +					remote-endpoint =3D <&hdmi_con_in>;
+> > +				};
+> > +			};
+> > +
+> > +			port@2 {
+> > +				reg =3D <2>;
+> > +				adv7612_out: endpoint {
+> > +					pclk-sample =3D <0>;
+> > +					hsync-active =3D <0>;
+> > +					vsync-active =3D <0>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> >  };
+> >
+> >  &i2c1 {
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
+
+--XDqeUMnLaDfDQgU1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJa/SvvAAoJEHI0Bo8WoVY85gMQALtxzdM7R7Pdz9zNE52kDjDX
+ANTFqlqU2MQZdW+tUpO4B7vu/V2QN3V0c1JzAZr7Y9rxd+6XdfsU30mCwadSiDah
+gwvV6pWqmgZ4qODTD8Zdj5pkFmGj/8FOc1XMcHTI1jGD7eZDKQCweN/ofHTVMwTU
+ulRk7xvIkcUpNy1wzzhGm+uZC0YtJlXy0yR4O02jNjS4JuE+GQBOBkvgfv5GdWi2
+bKDtiQ1I4LfIgUDbY2MPojPPIs0BFebC+thqoXeGZtowYiI9SOAIWozYOITeOYV8
+b4WqN/ucwS1pHaUoeprKDGBgoun1FsVxD9gdvYKfGYt2R/C+n7l+Sq6dUhRIiYt9
+EHpNfZEBLm19bZP9payOCWkXRV4egJINsmPwz0l11lU/BsapxgpAZTY58SgMfQgk
+ldlGU3aMD+diH4FWXkmItzDohIHRsUThJsyoI2qC97x3Q1d8DBYO3xMTNiMmBEfc
+SM0k3KKKuHCSjgSjYcMvZlj9kaxOE/MUpw4B2lCfKnB9V7g9TuG6r2lArr8rfgek
+SUWyREOAdiJmHUyMPlS/DrFW+uJVCMr/RPvbvp+++RcQWdR5Mcr63TBLPvD5Px9v
+Rl09bS6JMZjnLLJLYw+pvIXJMaAjvyHjI0RXJny/h6ofyNgpCcRxRp/biT8fDWov
+cngYJfC+yzTfGOmla1Aw
+=NMVH
+-----END PGP SIGNATURE-----
+
+--XDqeUMnLaDfDQgU1--
