@@ -1,36 +1,51 @@
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: Re: [PATCH 1/3] crypto: ccree: drop signature register check
-Date: Thu, 17 May 2018 15:54:17 +0300
-Message-ID: <CAOtvUMcN2kYFQEiMc7ignecPTdt9yOnfs2=TDjRnMAJ9WNRbuQ@mail.gmail.com>
-References: <1526387370-17142-1-git-send-email-gilad@benyossef.com> <1526387370-17142-2-git-send-email-gilad@benyossef.com>
+From: Olivier MOYSAN <olivier.moysan@st.com>
+Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
+	iec958 controls
+Date: Thu, 17 May 2018 13:03:44 +0000
+Message-ID: <dcd08b5c-fc92-4b5d-6950-45afe9db3317@st.com>
+References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+ <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
+ <20180417111733.GG8973@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526387370-17142-2-git-send-email-gilad@benyossef.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>
-Cc: Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180417111733.GG8973@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <B86C931B4FF4BD45AA64B0F90C3B2626@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, "tiwai@suse.com" <tiwai@suse.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "jsarha@ti.com" <jsarha@ti.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Herbert,
+Hello Takashi,
 
-On Tue, May 15, 2018 at 3:29 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> We were using the content of the signature register as a sanity
-> check for the hardware functioning but it turns out not all
-> implementers use the same values so the check is giving false
-> negative on certain SoCs and so we drop it.
->
+On 04/17/2018 01:17 PM, Mark Brown wrote:
+> On Tue, Apr 17, 2018 at 08:29:17AM +0000, Olivier MOYSAN wrote:
+> 
+>> I guess the blocking patch in this patchset is the patch "add IEC958
+>> channel status control helper". This patch has been reviewed several
+>> times, but did not get a ack so far.
+>> If you think these helpers will not be merged, I will reintegrate the
+>> corresponding code in stm driver.
+>> Please let me know, if I need to prepare a v2 without helpers, or if we
+>> can go further in the review of iec helpers patch ?
+> 
+> I don't mind either way but you're right here, I'm waiting for Takashi
+> to review the first patch.  I'd probably be OK with it just integrated
+> into the driver if we have to go that way though.
+> 
 
-Please drop this patch. I have found a better fix and will send a v2 soon.
+Kind reminder.
+Would you have some comments on this patchset ?
 
-Thanks,
-Gilad
-
-
--- 
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-"If you take a class in large-scale robotics, can you end up in a
-situation where the homework eats your dog?"
- -- Jean-Baptiste Queru
+Thanks
+olivier
