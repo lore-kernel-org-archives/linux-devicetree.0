@@ -1,100 +1,63 @@
-Return-Path: <SRS0=lpWp=ID=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from userp2120.oracle.com ([156.151.31.85]:49060 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751595AbeEPOL2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 16 May 2018 10:11:28 -0400
-Date: Wed, 16 May 2018 17:11:19 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [bug report] of: Introduce Device Tree resolve support.
-Message-ID: <20180516141119.GA27580@mwanda>
+Return-Path: <SRS0=KKmW=IE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr20066.outbound.protection.outlook.com ([40.107.2.66]:4704
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751356AbeEQNRH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 17 May 2018 09:17:07 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 12/14] staging: typec: tcpci: keep the not connecting
+ cc line open
+Date: Thu, 17 May 2018 13:17:02 +0000
+Message-ID: <VI1PR0402MB39172BABA0C43F0F8BD3824F89910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1525307094-27402-1-git-send-email-jun.li@nxp.com>
+ <1525307094-27402-13-git-send-email-jun.li@nxp.com>
+ <HE1PR04MB1450507C65FD86DA4BE46F7B8B920@HE1PR04MB1450.eurprd04.prod.outlook.com>
+In-Reply-To: <HE1PR04MB1450507C65FD86DA4BE46F7B8B920@HE1PR04MB1450.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Sender: devicetree-owner@vger.kernel.org
-To: pantelis.antoniou@konsulko.com
-Cc: devicetree@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Pantelis Antoniou,
-
-The patch 7941b27b16e3: "of: Introduce Device Tree resolve support."
-from Jul 4, 2014, leads to the following static checker warning:
-
-	drivers/of/resolver.c:125 update_usages_of_a_phandle_reference()
-	error: buffer underflow 'prop->value' 's32min-s32max'
-
-drivers/of/resolver.c
-    72  static int update_usages_of_a_phandle_reference(struct device_node *overlay,
-    73                  struct property *prop_fixup, phandle phandle)
-    74  {
-    75          struct device_node *refnode;
-    76          struct property *prop;
-    77          char *value, *cur, *end, *node_path, *prop_name, *s;
-    78          int offset, len;
-                    ^^^^^^
-    79          int err = 0;
-    80  
-    81          value = kmemdup(prop_fixup->value, prop_fixup->length, GFP_KERNEL);
-    82          if (!value)
-    83                  return -ENOMEM;
-    84  
-    85          /* prop_fixup contains a list of tuples of path:property_name:offset */
-    86          end = value + prop_fixup->length;
-    87          for (cur = value; cur < end; cur += len + 1) {
-    88                  len = strlen(cur);
-    89  
-    90                  node_path = cur;
-    91                  s = strchr(cur, ':');
-    92                  if (!s) {
-    93                          err = -EINVAL;
-    94                          goto err_fail;
-    95                  }
-    96                  *s++ = '\0';
-    97  
-    98                  prop_name = s;
-    99                  s = strchr(s, ':');
-   100                  if (!s) {
-   101                          err = -EINVAL;
-   102                          goto err_fail;
-   103                  }
-   104                  *s++ = '\0';
-   105  
-   106                  err = kstrtoint(s, 10, &offset);
-                                               ^^^^^^^
-Smatch marks data that we get from the kstrtoint() as untrusted.
-
-   107                  if (err)
-   108                          goto err_fail;
-   109  
-   110                  refnode = __of_find_node_by_full_path(of_node_get(overlay), node_path);
-   111                  if (!refnode)
-   112                          continue;
-   113  
-   114                  for_each_property_of_node(refnode, prop) {
-   115                          if (!of_prop_cmp(prop->name, prop_name))
-   116                                  break;
-   117                  }
-   118                  of_node_put(refnode);
-   119  
-   120                  if (!prop) {
-   121                          err = -ENOENT;
-   122                          goto err_fail;
-   123                  }
-   124  
-   125                  *(__be32 *)(prop->value + offset) = cpu_to_be32(phandle);
-                                    ^^^^^^^^^^^^^^^^^^^^
-So then it complains about this...
-
-We probably trust this data and are fine with it writing to where ever
-but it would be nice for reviewers to prevent the array
-underflow/overflow warning.  I'm not even sure how big prop->value is
-though so I don't know what the bounds check should be.
-
-   126          }
-   127  
-   128  err_fail:
-   129          kfree(value);
-   130          return err;
-
-regards,
-dan carpenter
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGV0ZXIgQ2hlbg0KPiBT
+ZW50OiAyMDE4xOo11MIxNsjVIDE2OjM2DQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPjsg
+cm9iaCtkdEBrZXJuZWwub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gaGVpa2tp
+Lmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsgbGludXhAcm9lY2stdXMubmV0DQo+IENjOiBhLmhh
+amRhQHNhbXN1bmcuY29tOyBjdzAwLmNob2lAc2Ftc3VuZy5jb207DQo+IHNodWZhbl9sZWVAcmlj
+aHRlay5jb207IGdzb21sb0BnbWFpbC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0K
+PiBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
+Y29tPg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHY1IDEyLzE0XSBzdGFnaW5nOiB0eXBlYzogdGNw
+Y2k6IGtlZXAgdGhlIG5vdCBjb25uZWN0aW5nIGNjDQo+IGxpbmUgb3Blbg0KPiANCj4gDQo+ID4N
+Cj4gPiBXaGlsZSBzZXQgcG9sYXJpdHksIHdlIHNob3VsZCBrZWVwIHRoZSBub3QgY29ubmVjdGlu
+ZyBjYyBsaW5lIHRvIGJlIG9wZW4uDQo+ID4NCj4gDQo+IGtlZXAgdGhlIGRpc2Nvbm5lY3RlZCBj
+YyBsaW5lIG9wZW4/DQoNCk9rYXksIEkgd2lsbCBjaGFuZ2UuDQoNClRoYW5rcw0KTGkgSnVuDQo+
+IA0KPiBQZXRlcg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYyB8IDE4ICsrKysr
+KysrKysrKysrLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgNCBk
+ZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMv
+dGNwY2kuYyBiL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jIGluZGV4DQo+ID4gNWM0ODgx
+MC4uNWMwYzVlMyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2ku
+Yw0KPiA+ICsrKyBiL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jDQo+ID4gQEAgLTE4NSwx
+NSArMTg1LDI1IEBAIHN0YXRpYyBpbnQgdGNwY2lfc2V0X3BvbGFyaXR5KHN0cnVjdCB0Y3BjX2Rl
+diAqdGNwYywNCj4gPiAgCQkJICAgICAgZW51bSB0eXBlY19jY19wb2xhcml0eSBwb2xhcml0eSkg
+IHsNCj4gPiAgCXN0cnVjdCB0Y3BjaSAqdGNwY2kgPSB0Y3BjX3RvX3RjcGNpKHRjcGMpOw0KPiA+
+ICsJdW5zaWduZWQgaW50IHJlZzsNCj4gPiAgCWludCByZXQ7DQo+ID4NCj4gPiAtCXJldCA9IHJl
+Z21hcF93cml0ZSh0Y3BjaS0+cmVnbWFwLCBUQ1BDX1RDUENfQ1RSTCwNCj4gPiAtCQkJICAgKHBv
+bGFyaXR5ID09IFRZUEVDX1BPTEFSSVRZX0NDMikgPw0KPiA+IC0JCQkgICBUQ1BDX1RDUENfQ1RS
+TF9PUklFTlRBVElPTiA6IDApOw0KPiA+ICsJLyogS2VlcCB0aGUgZGlzY29ubmVjdCBjYyBsaW5l
+IG9wZW4gKi8NCj4gPiArCXJldCA9IHJlZ21hcF9yZWFkKHRjcGNpLT5yZWdtYXAsIFRDUENfUk9M
+RV9DVFJMLCAmcmVnKTsNCj4gPiAgCWlmIChyZXQgPCAwKQ0KPiA+ICAJCXJldHVybiByZXQ7DQo+
+ID4NCj4gPiAtCXJldHVybiAwOw0KPiA+ICsJaWYgKHBvbGFyaXR5ID09IFRZUEVDX1BPTEFSSVRZ
+X0NDMikNCj4gPiArCQlyZWcgfD0gVENQQ19ST0xFX0NUUkxfQ0NfT1BFTiA8PA0KPiA+IFRDUENf
+Uk9MRV9DVFJMX0NDMV9TSElGVDsNCj4gPiArCWVsc2UNCj4gPiArCQlyZWcgfD0gVENQQ19ST0xF
+X0NUUkxfQ0NfT1BFTiA8PA0KPiA+IFRDUENfUk9MRV9DVFJMX0NDMl9TSElGVDsNCj4gPiArCXJl
+dCA9IHJlZ21hcF93cml0ZSh0Y3BjaS0+cmVnbWFwLCBUQ1BDX1JPTEVfQ1RSTCwgcmVnKTsNCj4g
+PiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0dXJu
+IHJlZ21hcF93cml0ZSh0Y3BjaS0+cmVnbWFwLCBUQ1BDX1RDUENfQ1RSTCwNCj4gPiArCQkJICAg
+KHBvbGFyaXR5ID09IFRZUEVDX1BPTEFSSVRZX0NDMikgPw0KPiA+ICsJCQkgICBUQ1BDX1RDUENf
+Q1RSTF9PUklFTlRBVElPTiA6IDApOw0KPiA+ICB9DQo+ID4NCj4gPiAgc3RhdGljIGludCB0Y3Bj
+aV9zZXRfdmNvbm4oc3RydWN0IHRjcGNfZGV2ICp0Y3BjLCBib29sIGVuYWJsZSkNCj4gPiAtLQ0K
+PiA+IDIuNy40DQoNCg==
