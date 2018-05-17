@@ -1,82 +1,96 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
-Date: Thu, 17 May 2018 13:48:41 -0700
-Message-ID: <6cb2ac52-258c-332b-e912-809d16e14114@codeaurora.org>
-References: <cover.1521246069.git.collinsd@codeaurora.org>
- <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
- <152165924074.91116.13025068669916027026@swboyd.mtv.corp.google.com>
- <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
- <152411734938.46528.9676451637772936597@swboyd.mtv.corp.google.com>
- <20180419120813.GD27188@sirena.org.uk>
- <38f42537-f801-115a-4120-1344a67a0462@codeaurora.org>
- <20180424174111.GH22073@sirena.org.uk>
- <d82ef514-b94f-8ed9-6b1e-e07de2a5f455@codeaurora.org>
- <20180517060948.GI20254@sirena.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] ARM: dra762: hwmod: Add MCAN support
+Date: Thu, 17 May 2018 14:04:50 -0700
+Message-ID: <20180517210450.GP98604@atomide.com>
+References: <1523181542-3770-1-git-send-email-faiz_abbas@ti.com>
+ <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
+ <20180501152615.GB98604@atomide.com>
+ <b4d95a08-82fd-9f39-53e7-977351788c88@ti.com>
+ <20180515171459.GP98604@atomide.com>
+ <20180515171808.GR98604@atomide.com>
+ <20180515172324.GS98604@atomide.com>
+ <b3456763-2f82-9a0b-d166-ddf7965fc162@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180517060948.GI20254@sirena.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <b3456763-2f82-9a0b-d166-ddf7965fc162@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, lgirdwood@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, ilina@codeaurora.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, paul@pwsan.com, lokeshvutla@ti.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 05/16/2018 11:09 PM, Mark Brown wrote:
-> On Tue, Apr 24, 2018 at 01:46:21PM -0700, David Collins wrote:
->> The RPMh hardware is aware of the parent-child connections between
->> regulators as well as minimum headroom to ensure stable LDO voltage output
->> for subregulated LDOs.  The intention of having the headroom be a
->> configurable property for processors is to support usecases in which
->> subregulated LDO loads are particularly sensitive to noise and require
->> additional headroom.  Such usecases are board dependent and beyond the
->> baseline configurations set in RPMh hardware.
+* Faiz Abbas <faiz_abbas@ti.com> [180517 08:14]:
+> On Tuesday 15 May 2018 10:53 PM, Tony Lindgren wrote:
+> > And I'm guessing the top level module with sysconfig related
+> > registers is named "adc" :)
+> > 
 > 
-> So the hardware implementation is some hard coding stuff that doesn't
-> really adequately reflect reality?  This seems unfortunate.  However do
-> we really need to tell the hardware about the fact that we're adding
-> extra headroom - are there actual interactions with non-Linux things
-> here?
+> Yes. The MCAN clocks are controlled by the ADC_CLKCTRL register.
+> Please see TRM:
+> http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=spruie9&fileType=pdf
+> page: 1530
 
-The RPMh hardware is configured by the boot loader.  The configuration
-does reflect reality; however, it cannot handle all configurations at
-initialization time.  Specific headroom management typically comes up in
-modem usecases for RF supplies that are sensitive to noise.  This feature
-allows RPMh masters (application processor, modem processor, etc) to make
-requests only for the regulators that they directly care about without
-having to worry about power grid parent-child details and setting the
-voltage of parent regulators in order to ensure sufficient headroom.
+Thanks that helps :) Looks like we have:
 
-If you really don't like having this feature present in the Linux RPMh
-regulator driver, then I'd be ok removing it.  It is not required for
-SDM845 which the driver is initially targeting.
+MCANSS_PID      rev             0
+MCANSS_CTRL     sysconfig       0x4
+MCANSS_STAT     sysstatus       0x8
 
+With current Linux next, this should work with just ti-sysc if
+we added yet another sysconfig layout.. See
 
->>>> XOB managed regulators physically cannot change voltage.  Therefore, do
->>>> you agree that it is reasonable to use fixed_uV for them?  Note that I
->>>> removed init_data->constraints.apply_uV manipulation in version 2 of this
->>>> patch.
-> 
->>> If these regulators can't change voltage then surely we know what
->>> voltage they have without needing it to be specified in DT?
-> 
->> In the case of XOB managed LDO regulators, the LDOs physically can be
->> configured to different voltages by the bootloader.  However, the RPMh
->> interface provides no mechanism for the application processor to read or
->> change that voltage.  Therefore, we need a way to specify such voltages in
->> a board specific (as opposed to driver specific) manner (i.e. device tree).
-> 
-> Is the kernel somehow prevented from varying these voltages?
+Documentation/devicetree/bindings/bus/ti-sysc.txt
 
-Yes.  Physically, there exists no RPMh register to read or write the
-voltage of LDOs managed via XOB.  Additionally, the kernel running on the
-application processor is blocked from configuring the voltage via a direct
-SPMI writes by access permissions that crash the system when violated.
+Looks like this is not quite "ti,sysc-omap4" as there are no
+ti,sysc-midle or ti,sysc-sidle, and sysstatus reset bit is
+inverted..
 
-Take care,
-David
+Anyways, I think the dts part should be similar to this with
+the new sysconfig added (untested):
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+target-module@42c00000 {
+	compatible ="ti,sysc-yet-to-be-determined";
+	ti,hwmods = "mcan";
+	reg = <0x42c00000 4>,
+	      <0x42c00004 4>,
+	      <0x42c00008 4>;
+	reg-names = "rev", "sysc", "syss";
+	clocks = <&wkupaon_clkctrl CM_WKUPAON_ADC_CLKCTRL>;
+	clock-names = "fck";
+	ti,sysc-mask = <(SYSC_OMAP4_SOFTRESET | SYSC_DRA7_ENAWAKEUP)>;
+	ti,syss-mask = <1>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	ranges = <0 0x42c00000 0x2000>;
+
+	mcan@0 {
+		compatible = "bosch,m_can";
+		reg = <0x1a00 0x4000>,
+		      <0 0x18fc>;
+		reg-names = "m_can", "message_ram";
+		interrupt-parent = <&gic>;
+		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names = "int0", "int1";
+		clocks = <&mcan_clk>, <&l3_iclk_div>;
+		clock-names = "cclk", "hclk";
+		bosch,mram-cfg = <0x0 0 0 32 0 0 1 1>;
+	};
+};
+
+You'd have to add a new struct sysc_regbits to ti-sysc.c similar
+to sysc_regbits_omap4 for the .srst_shift = 0. Not sure if the same
+register layout is used for other modules, but might be worth checking
+the TRM. Also the clock node is missing for wkupaon_clkctrl from
+include/dt-bindings/clock/dra7.h.
+
+If the "message_ram" can operate independent of the driver,
+it could be a separate child node under the target-module.
+
+In the hwmod you still need the struct omap_hwmod for now,
+but clocks should no longer be needed there.
+
+Regards,
+
+Tony
