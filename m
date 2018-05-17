@@ -1,107 +1,64 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v4] Input: add bu21029 touch driver
-Date: Thu, 17 May 2018 18:03:41 +0800
-Message-ID: <201805171546.tV4UnTVC%fengguang.wu@intel.com>
-References: <1526477123-18208-1-git-send-email-mark.jonas@de.bosch.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: OMAP serial runtime PM and autosuspend (was: Re: [PATCH 4/7]
+ dt-bindings: gnss: add u-blox binding))
+Date: Thu, 17 May 2018 12:09:48 +0200
+Message-ID: <20180517100948.GI30172@localhost>
+References: <20180507154515.GP98604@atomide.com>
+ <20180507163439.GV2285@localhost>
+ <20180507175032.GR98604@atomide.com>
+ <20180508065852.GW2285@localhost>
+ <20180508152228.GV98604@atomide.com>
+ <20180508154756.GW98604@atomide.com>
+ <20180508155405.GX98604@atomide.com>
+ <20180508164904.GZ98604@atomide.com>
+ <20180509131003.GC2285@localhost>
+ <20180509135706.GB98604@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1526477123-18208-1-git-send-email-mark.jonas@de.bosch.com>
+In-Reply-To: <20180509135706.GB98604@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hs@denx.de, andy.shevchenko@gmail.com, Zhu Yi <yi.zhu5@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhu,
+[ Sorry about the late reply. ]
 
-Thank you for the patch! Perhaps something to improve:
+On Wed, May 09, 2018 at 06:57:06AM -0700, Tony Lindgren wrote:
+> * Johan Hovold <johan@kernel.org> [180509 13:12]:
 
-[auto build test WARNING on v4.17-rc5]
-[also build test WARNING on next-20180516]
-[cannot apply to input/next]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> > It seems we really should not be using the negative autosuspend to
+> > configure the RPM behaviour the way these drivers do. Perhaps a new
+> > mechanism is needed.
+> 
+> Hmm well simply defaulting to "on" instead of "auto" and setting the
+> autosuspend_ms to 3000 by default might be doable. I think that way
+> we can keep use_autosuspend() in probe. Let's hope there are no
+> existing use cases that would break with that.
 
-url:    https://github.com/0day-ci/linux/commits/Mark-Jonas/Input-add-bu21029-touch-driver/20180517-133332
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+No, defaulting to "on" (i.e. calling pm_runtime_forbid()) wouldn't work
+either as that would also prevent the device from runtime suspending
+just as the current negative autosuspend delay does.
 
+I fail to see how we can implement this using the current toolbox. What
+you're after here is really a mechanism for selecting between two
+different runtime PM schemes at runtime:
 
-sparse warnings: (new ones prefixed by >>)
+	1. normal serial RPM, where the controller is active while the
+	   port is open (this should be the safe default)
 
->> drivers/input/touchscreen/bu21029_ts.c:289:13: sparse: cast to restricted __be16
->> drivers/input/touchscreen/bu21029_ts.c:289:13: sparse: cast to restricted __be16
->> drivers/input/touchscreen/bu21029_ts.c:289:13: sparse: cast to restricted __be16
->> drivers/input/touchscreen/bu21029_ts.c:289:13: sparse: cast to restricted __be16
+	2. aggressive serial RPM, where the controller is allowed to
+	   suspend while the port is open even though this may result in
+	   lost characters when waking up on incoming data
 
-vim +289 drivers/input/touchscreen/bu21029_ts.c
+For normal ttys, we need a user-space interface for selecting between
+the two, and for serdev we may want a way to select the RPM scheme from
+within the kernel.
 
-   258	
-   259	static int bu21029_start_chip(struct input_dev *dev)
-   260	{
-   261		struct bu21029_ts_data *bu21029 = input_get_drvdata(dev);
-   262		struct i2c_client *i2c = bu21029->client;
-   263		struct {
-   264			u8 reg;
-   265			u8 value;
-   266		} init_table[] = {
-   267			{BU21029_CFR0_REG, CFR0_VALUE},
-   268			{BU21029_CFR1_REG, CFR1_VALUE},
-   269			{BU21029_CFR2_REG, CFR2_VALUE},
-   270			{BU21029_CFR3_REG, CFR3_VALUE},
-   271			{BU21029_LDO_REG,  LDO_VALUE}
-   272		};
-   273		int error, i;
-   274		u16 hwid;
-   275	
-   276		/* take chip out of reset */
-   277		gpiod_set_value_cansleep(bu21029->reset_gpios, 0);
-   278		mdelay(START_DELAY_MS);
-   279	
-   280		error = i2c_smbus_read_i2c_block_data(i2c,
-   281						      BU21029_HWID_REG,
-   282						      2,
-   283						      (u8 *)&hwid);
-   284		if (error < 0) {
-   285			dev_err(&i2c->dev, "failed to read HW ID\n");
-   286			goto out;
-   287		}
-   288	
- > 289		if (be16_to_cpu(hwid) != SUPPORTED_HWID) {
-   290			dev_err(&i2c->dev, "unsupported HW ID 0x%x\n", hwid);
-   291			error = -ENODEV;
-   292			goto out;
-   293		}
-   294	
-   295		for (i = 0; i < ARRAY_SIZE(init_table); ++i) {
-   296			error = i2c_smbus_write_byte_data(i2c,
-   297							  init_table[i].reg,
-   298							  init_table[i].value);
-   299			if (error < 0) {
-   300				dev_err(&i2c->dev,
-   301					"failed to write 0x%x to register 0x%x\n",
-   302					init_table[i].value,
-   303					init_table[i].reg);
-   304				goto out;
-   305			}
-   306		}
-   307	
-   308		error = i2c_smbus_write_byte(i2c, BU21029_AUTOSCAN);
-   309		if (error < 0) {
-   310			dev_err(&i2c->dev, "failed to start autoscan\n");
-   311			goto out;
-   312		}
-   313	
-   314		enable_irq(bu21029->client->irq);
-   315		return 0;
-   316	
-   317	out:
-   318		bu21029_stop_chip(dev);
-   319		return error;
-   320	}
-   321	
+Note that with my serdev controller runtime PM patch, serdev core could
+always opt for aggressive PM (as by default serdev core holds an RPM
+reference for the controller while the port is open).
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Thanks,
+Johan
