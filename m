@@ -1,7 +1,7 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v7 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Thu, 17 May 2018 07:50:11 +0200
-Message-ID: <20180517055014.6607-4-o.rempel@pengutronix.de>
+Subject: [PATCH v7 1/6] ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff property
+Date: Thu, 17 May 2018 07:50:09 +0200
+Message-ID: <20180517055014.6607-2-o.rempel@pengutronix.de>
 References: <20180517055014.6607-1-o.rempel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180517055014.6607-1-o.rempel@pengutronix.de>
@@ -10,26 +10,30 @@ To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J.
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Export pm_power_off_prepare. It is needed to implement power off on
-Freescale/NXP iMX6 based boards with external power management
-integrated circuit (PMIC).
-
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- kernel/reboot.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index e4ced883d8de..83810d726f3e 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -49,6 +49,7 @@ int reboot_force;
-  */
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+index a45ca67a9d5f..e1308346e00d 100644
+--- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+@@ -6,6 +6,14 @@ Required properties:
+ - interrupts: Should contain CCM interrupt
+ - #clock-cells: Should be <1>
  
- void (*pm_power_off_prepare)(void);
-+EXPORT_SYMBOL_GPL(pm_power_off_prepare);
- 
- /**
-  *	emergency_restart - reboot the system
++Optional properties:
++- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
++  on power off.
++  Use this property if the SoC should be powered off by external power
++  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
++  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
++  be using "syscon-poweroff" driver instead.
++
+ The clock consumer should specify the desired clock by having the clock
+ ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+ for the full list of i.MX6 Quad and DualLite clock IDs.
 -- 
 2.17.0
