@@ -1,118 +1,359 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 14/17] dt-bindings/interrupt-controller: add description
- for Marvell SEI node
-Date: Fri, 18 May 2018 16:48:48 +0200
-Message-ID: <20180518164848.475b80ad@xps13>
-References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
- <20180421135537.24716-15-miquel.raynal@bootlin.com>
- <20180427205032.6u5zzf7265wpgppg@rob-hp-laptop>
- <20180428124827.3992b1ee@xps13>
- <CAL_JsqJ51riH+9Any7Bc6DN0Dx+WJdDAvOQ1gJCXTTUW0EUWsQ@mail.gmail.com>
+From: Sergey Suloev <ssuloev@orpaltech.com>
+Subject: Re: [PATCH v2 12/26] drm/sun4i: Add support for multiple DW HDMI PHY
+ clock parents
+Date: Fri, 18 May 2018 18:09:40 +0300
+Message-ID: <824c6989-7930-86dc-1195-494580f6cb38@orpaltech.com>
+References: <20180518094536.17201-1-jagan@amarulasolutions.com>
+ <20180518094536.17201-13-jagan@amarulasolutions.com>
+ <20180518100116.4bf2qcffg7ekxa7u@flea> <4909574.Q3IFWM0xt6@jernej-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJ51riH+9Any7Bc6DN0Dx+WJdDAvOQ1gJCXTTUW0EUWsQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4909574.Q3IFWM0xt6@jernej-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gTW9uLCAzMCBBcHIgMjAxOCAwOTowOToxMCAtMDUwMCwgUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFNhdCwgQXByIDI4LCAyMDE4IGF0IDU6NDgg
-QU0sIE1pcXVlbCBSYXluYWwKPiA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4gd3JvdGU6Cj4g
-PiBIaSBSb2IsCj4gPgo+ID4gT24gRnJpLCAyNyBBcHIgMjAxOCAxNTo1MDozMiAtMDUwMCwgUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiAgCj4gPj4gT24gU2F0LCBBcHIg
-MjEsIDIwMTggYXQgMDM6NTU6MzRQTSArMDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZTogIAo+ID4+
-ID4gRGVzY3JpYmUgdGhlIFNFSSAoU3lzdGVtIEVycm9yIEludGVycnVwdCkgY29udHJvbGxlciBk
-cml2ZXIuIFRoZQo+ID4+ID4gY29udHJvbGxlciBpcyBwYXJ0IG9mIHRoZSBHSUMuIEl0IGFnZ3Jl
-Z2F0ZXMgdHdvIHR5cGVzIG9mIGludGVycnVwdHMsCj4gPj4gPiB3aXJlZCBhbmQgTVNJcyBmcm9t
-IHJlc3BlY3RpdmVseSB0aGUgQVAgYW5kIHRoZSBDUHMsIGludG8gYSBzaW5nbGUgU1BJCj4gPj4g
-PiBpbnRlcnJ1cHQuCj4gPj4gPgo+ID4+ID4gU3VnZ2VzdGVkLWJ5OiBIYWltIEJvb3QgPGhheWlt
-QG1hcnZlbGwuY29tPgo+ID4+ID4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVs
-LnJheW5hbEBib290bGluLmNvbT4KPiA+PiA+IC0tLQo+ID4+ID4gIC4uLi9iaW5kaW5ncy9pbnRl
-cnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQgIHwgNTQgKysrKysrKysrKysrKysrKysr
-KysrKwo+ID4+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspCj4gPj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1
-cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQKPiA+PiA+Cj4gPj4gPiBkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL21h
-cnZlbGwsc2VpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1
-cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQKPiA+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-Cj4gPj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmEyNDZkNTk1NTJiMQo+ID4+ID4gLS0tIC9kZXYv
-bnVsbAo+ID4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVy
-cnVwdC1jb250cm9sbGVyL21hcnZlbGwsc2VpLnR4dAo+ID4+ID4gQEAgLTAsMCArMSw1NCBAQAo+
-ID4+ID4gK01hcnZlbGwgU0VJIChTeXN0ZW0gRXJyb3IgSW50ZXJydXB0KSBDb250cm9sbGVyCj4g
-Pj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+
-PiA+ICsKPiA+PiA+ICtNYXJ2ZWxsIFNFSSAoU3lzdGVtIEVycm9yIEludGVycnVwdCkgY29udHJv
-bGxlciBpcyBhbiBpbnRlcnJ1cHQgYWdncmVnYXRvci4KPiA+PiA+ICtJdCByZWNlaXZlcyBpbnRl
-cnJ1cHRzIGZyb20gc2V2ZXJhbCBzb3VyY2VzIGFuZCBhZ2dyZWdhdGVzIHRoZW0gdG8gYSBzaW5n
-bGUKPiA+PiA+ICtpbnRlcnJ1cHQgbGluZSAoYW4gU1BJKSBvbiB0aGUgcHJpbWFyeSBpbnRlcnJ1
-cHQgY29udHJvbGxlci4KPiA+PiA+ICsKPiA+PiA+ICtUaGUgSVJRIGNoaXAgY2FuIGhhbmRsZSB1
-cCB0byA2NCBTRUlzLCBhIHNldCBjb21lcyBmcm9tIHRoZSBBUCBhbmQgaXMKPiA+PiA+ICt3aXJl
-ZCB3aGlsZSBhIHNlY29uZCBzZXQgY29tZXMgZnJvbSB0aGUgQ1BzIGJ5IHRoZSBtZWFuIG9mIE1T
-SXMuIEVhY2gKPiA+PiA+ICsnZG9tYWluJyBpcyByZXByZXNlbnRlZCBhcyBhIHN1Ym5vZGUuCj4g
-Pj4gPiArCj4gPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICsKPiA+PiA+ICstIGNv
-bXBhdGlibGU6IHNob3VsZCBiZSAibWFydmVsbCxhcm1hZGEtOGstc2VpIi4KPiA+PiA+ICstIHJl
-ZzogU0VJIHJlZ2lzdGVycyBsb2NhdGlvbiBhbmQgbGVuZ3RoLgo+ID4+ID4gKy0gaW50ZXJydXB0
-czogaWRlbnRpZmllcyB0aGUgcGFyZW50IElSUSB0aGF0IHdpbGwgYmUgdHJpZ2dlcmVkLgo+ID4+
-ID4gKy0gI2FkZHJlc3MtY2VsbHM6IHNob3VsZCBiZSAnMScsIHJlcHJlc2VudHMgdGhlIHBvc2l0
-aW9uIG9mIHRoZSBmaXJzdAo+ID4+ID4gKyAgICAgICAgICAgICAgICAgIElSUSBvZiBhIGdpdmVu
-IHR5cGUgaW4gdGhlIFNFSSByYW5nZS4KPiA+PiA+ICstICNzaXplLWNlbGxzOiBzaG91bGQgYmUg
-JzEnLCByZXByZXNlbnRzIHRoZSBudW1iZXIgb2YgYSBnaXZlbiB0eXBlIG9mCj4gPj4gPiArICAg
-ICAgICAgICAgICAgSVJRcy4KPiA+PiA+ICsKPiA+PiA+ICtDaGlsZCBub2RlICdzZWktd2lyZWQt
-Y29udHJvbGxlcicgcmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICsKPiA+PiA+ICstIHJlZzog
-dGhlIHJhbmdlIG9mIHdpcmVkIGludGVycnVwdHMuCj4gPj4gPiArLSAjaW50ZXJydXB0LWNlbGxz
-OiBudW1iZXIgb2YgY2VsbHMgdG8gZGVmaW5lIGFuIFNFSSB3aXJlZCBpbnRlcnJ1cHQKPiA+PiA+
-ICsgICAgICAgICAgICAgICAgICAgIGNvbWluZyBmcm9tIHRoZSBBUCwgc2hvdWxkIGJlIDEuIFRo
-ZSBjZWxsIGlzIHRoZSBJUlEKPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgIG51bWJlci4KPiA+
-PiA+ICstIGludGVycnVwdC1jb250cm9sbGVyOiBpZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIGlu
-dGVycnVwdCBjb250cm9sbGVyLgo+ID4+ID4gKwo+ID4+ID4gK0NoaWxkIG5vZGUgJ3NlaS1tc2kt
-Y29udHJvbGxlcicgcmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICsKPiA+PiA+ICstIHJlZzog
-dGhlIHJhbmdlIG9mIG5vbi13aXJlZCBpbnRlcnJ1cHRzIHRyaWdnZXJlZCBieSB3YXkgb2YgTVNJ
-cy4KPiA+PiA+ICstIG1zaS1jb250cm9sbGVyOiBpZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIE1T
-SSBjb250cm9sbGVyLgo+ID4+ID4gKwo+ID4+ID4gK0V4YW1wbGU6Cj4gPj4gPiArCj4gPj4gPiAr
-ICAgICAgICBzZWk6IHNlaUAzZjAyMDAgewo+ID4+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgPSAibWFydmVsbCxhcm1hZGEtOGstc2VpIjsKPiA+PiA+ICsgICAgICAgICAgICAgICByZWcg
-PSA8MHgzZjAyMDAgMHg0MD47Cj4gPj4gPiArICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxH
-SUNfU1BJIDAgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPj4gPiArICAgICAgICAgICAgICAgI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gPiArICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
-MT47Cj4gPj4gPiArCj4gPj4gPiArICAgICAgICAgICAgICAgc2VpX3dpcmVkX2NvbnRyb2xsZXI6
-IHNlaS13aXJlZC1jb250cm9sbGVyQDAgewo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPDAgMjE+OyAgCj4gPj4KPiA+PiBVc2luZyBpbnRlcnJ1cHQgbnVtYmVycyBpbiByZWcg
-aXMgc3RyYW5nZS4gIAo+ID4KPiA+IEkgdGhvdWdodCB0aGUgcmVnIHByb3BlcnR5IHdhcyB0aGUg
-b25lIHRvIGNob29zZSBoZXJlLCBJIGNhbiBvZiBjb3Vyc2UKPiA+IGNoYW5nZSBpdCwgd2hhdCB3
-b3VsZCB5b3Ugc3VnZ2VzdD8KPiA+ICAKPiA+PiAgCj4gPj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gPj4gPiArICAgICAgICAgICAgICAgfTsKPiA+PiA+
-ICsKPiA+PiA+ICsgICAgICAgICAgICAgICBzZWlfbXNpX2NvbnRyb2xsZXI6IHNlaS1tc2ktY29u
-dHJvbGxlckAyMSB7Cj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MjEgNDM+
-Owo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbXNpLWNvbnRyb2xsZXI7ICAKPiA+Pgo+
-ID4+IENhbid0IHRoZSBwYXJlbnQgYmUgYm90aCBhbiBpbnRlcnJ1cHQtY29udHJvbGxlciBhbmQg
-bXNpLWNvbnRyb2xsZXI/ICAKCkkgd291bGQgcHJlZmVyIHRvIGRlc2NyaWJlIGhvdyB0aGUgaGFy
-ZHdhcmUgaXMgc3BsaXQgaW4gdHdvCnN1Yi1jb250cm9sbGVycy4gQW5kIHRvIGFuc3dlciB0aGUg
-cXVlc3Rpb246IG5vLCB0aGUgcGFyZW50IGNhbm5vdCBiZQpib3RoIGFuZCBpbnRlcnJ1cHQtY29u
-dHJvbGxlciBhbmQgYW4gbXNpLWNvbnRyb2xsZXIuCgo+ID4KPiA+IFdlIG5lZWQgdG8ga25vdyB3
-aGljaCBvbmUgYWdncmVnYXRlcyBpbnRlcnJ1cHRzLCB3aGljaCBvbmUgcmVjZWl2ZXMKPiA+IE1T
-SXMgYW5kIG1vc3QgaW1wb3J0YW50bHkgd2hpY2ggaW50ZXJydXB0IGlzIHdoYXQgKHdpdGhpbiB0
-aGUgNjQKPiA+IHRoYXQgYXJlIGhhbmRsZWQgYnkgdGhlIFNFSSkuICAKPiAKPiBZb3UgbWVhbiB0
-aGF0IDAtMjAgYXJlIHdpcmVkIGFuZCAyMS02MyBhcmUgbXNpPyAibWFydmVsbCxtc2ktYmFzZSA9
-Cj4gPDIxPjsiIGluIHRoZSBwYXJlbnQgd291bGQgYmUgc3VmZmljaWVudCBmb3IgdGhhdCB0aG91
-Z2ggeW91IG1heSB3YW50Cj4gc29tZXRoaW5nIG1vcmUgZmxleGlibGUgdG8gaGF2ZSBtdWx0aXBs
-ZSByYW5nZXMuCgpBYnNvbHV0ZWx5LCBJIHdvdWxkIGxpa2Ugc29tZXRoaW5nIG1vcmUgZmxleGli
-bGUuCgo+IAo+IEl0IGxvb2tzIGxpa2UgdGhlcmUgbWF5IGFscmVhZHkgYmUgc2ltaWxhciBiaW5k
-aW5ncy4gU2VlCj4gJ21zaS1hdmFpbGFibGUtcmFuZ2VzIiBhbmQgInthbCxhcm19LG1zaS1iYXNl
-LXNwaSIuCgpJZiB5b3UgYXJlIG9rLCBJIHdpbGwgdXNlIGEgbmV3IHByb3BlcnR5IG5hbWVkICdt
-YXJ2ZWxsLHNlaS1yYW5nZXMnCmluc3RlYWQgb2YgdGhlIHJlZyBwcm9wZXJ0eSB3aGljaCBpcyBp
-bmRlZWQgbW9yZSBleHBsaWNpdC4KClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi, guys,
+
+On 05/18/2018 05:46 PM, Jernej Škrabec wrote:
+> Hi,
+>
+> Dne petek, 18. maj 2018 ob 12:01:16 CEST je Maxime Ripard napisal(a):
+>> On Fri, May 18, 2018 at 03:15:22PM +0530, Jagan Teki wrote:
+>>> From: Jernej Skrabec <jernej.skrabec@siol.net>
+>>>
+>>> Some SoCs with DW HDMI have multiple possible clock parents, like A64
+>>> and R40.
+>>>
+>>> Expand HDMI PHY clock driver to support second clock parent.
+>>>
+>>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>>> ---
+>>> Changes for v2:
+>>> - new patch
+>>>
+>>>   drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h      |  9 ++-
+>>>   drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c     | 33 ++++++++---
+>>>   drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c | 89
+>>>   ++++++++++++++++++++++-------- 3 files changed, 96 insertions(+), 35
+>>>   deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+>>> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 79154f0f674a..303189d6602c
+>>> 100644
+>>> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+>>> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+>>> @@ -98,7 +98,8 @@
+>>>
+>>>   #define SUN8I_HDMI_PHY_PLL_CFG1_LDO2_EN		BIT(29)
+>>>   #define SUN8I_HDMI_PHY_PLL_CFG1_LDO1_EN		BIT(28)
+>>>   #define SUN8I_HDMI_PHY_PLL_CFG1_HV_IS_33	BIT(27)
+>>>
+>>> -#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL	BIT(26)
+>>> +#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK	BIT(26)
+>>> +#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_SHIFT	26
+>>>
+>>>   #define SUN8I_HDMI_PHY_PLL_CFG1_PLLEN		BIT(25)
+>>>   #define SUN8I_HDMI_PHY_PLL_CFG1_LDO_VSET(x)	((x) << 22)
+>>>   #define SUN8I_HDMI_PHY_PLL_CFG1_UNKNOWN(x)	((x) << 20)
+>>>
+>>> @@ -146,7 +147,7 @@
+>>>
+>>>   struct sun8i_hdmi_phy;
+>>>   
+>>>   struct sun8i_hdmi_phy_variant {
+>>>
+>>> -	bool has_phy_clk;
+>>> +	int  phy_clk_num;
+>>>
+>>>   	void (*phy_init)(struct sun8i_hdmi_phy *phy);
+>>>   	void (*phy_disable)(struct dw_hdmi *hdmi,
+>>>   	
+>>>   			    struct sun8i_hdmi_phy *phy);
+>>>
+>>> @@ -160,6 +161,7 @@ struct sun8i_hdmi_phy {
+>>>
+>>>   	struct clk			*clk_mod;
+>>>   	struct clk			*clk_phy;
+>>>   	struct clk			*clk_pll0;
+>>>
+>>> +	struct clk			*clk_pll1;
+>>>
+>>>   	unsigned int			rcal;
+>>>   	struct regmap			*regs;
+>>>   	struct reset_control		*rst_phy;
+>>>
+>>> @@ -188,6 +190,7 @@ void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi
+>>> *hdmi);
+>>>
+>>>   void sun8i_hdmi_phy_init(struct sun8i_hdmi_phy *phy);
+>>>   const struct dw_hdmi_phy_ops *sun8i_hdmi_phy_get_ops(void);
+>>>
+>>> -int sun8i_phy_clk_create(struct sun8i_hdmi_phy *phy, struct device *dev);
+>>> +int sun8i_phy_clk_create(struct sun8i_hdmi_phy *phy, struct device *dev,
+>>> +			 int clk_num);
+>>>
+>>>   #endif /* _SUN8I_DW_HDMI_H_ */
+>>>
+>>> diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+>>> b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c index 5a52fc489a9d..0eadf087fc46
+>>> 100644
+>>> --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+>>> +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+>>> @@ -183,7 +183,13 @@ static int sun8i_hdmi_phy_config_h3(struct dw_hdmi
+>>> *hdmi,>
+>>>   	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_ANA_CFG1_REG,
+>>>   	
+>>>   			   SUN8I_HDMI_PHY_ANA_CFG1_TXEN_MASK, 0);
+>>>
+>>> -	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, pll_cfg1_init);
+>>> +	/*
+>>> +	 * NOTE: We have to be careful not to overwrite PHY parent
+>>> +	 * clock selection bit and clock divider.
+>>> +	 */
+>>> +	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG,
+>>> +			   (u32)~SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK,
+>>> +			   pll_cfg1_init);
+>>>
+>>>   	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG2_REG,
+>>>   	
+>>>   			   (u32)~SUN8I_HDMI_PHY_PLL_CFG2_PREDIV_MSK,
+>>>   			   pll_cfg2_init);
+>>>
+>>> @@ -232,7 +238,7 @@ static int sun8i_hdmi_phy_config(struct dw_hdmi *hdmi,
+>>> void *data,>
+>>>   	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_DBG_CTRL_REG,
+>>>   	
+>>>   			   SUN8I_HDMI_PHY_DBG_CTRL_POL_MASK, val);
+>>>
+>>> -	if (phy->variant->has_phy_clk)
+>>> +	if (phy->variant->phy_clk_num)
+>>>
+>>>   		clk_set_rate(phy->clk_phy, mode->crtc_clock * 1000);
+>>>   	
+>>>   	return phy->variant->phy_config(hdmi, phy, mode->crtc_clock * 1000);
+>>>
+>>> @@ -393,7 +399,7 @@ static const struct sun8i_hdmi_phy_variant
+>>> sun8i_a83t_hdmi_phy = {>
+>>>   };
+>>>   
+>>>   static const struct sun8i_hdmi_phy_variant sun8i_h3_hdmi_phy = {
+>>>
+>>> -	.has_phy_clk = true,
+>>> +	.phy_clk_num = 1,
+>>>
+>>>   	.phy_init = &sun8i_hdmi_phy_init_h3,
+>>>   	.phy_disable = &sun8i_hdmi_phy_disable_h3,
+>>>   	.phy_config = &sun8i_hdmi_phy_config_h3,
+>>>
+>>> @@ -464,7 +470,7 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi,
+>>> struct device_node *node)>
+>>>   		goto err_put_clk_bus;
+>>>   	
+>>>   	}
+>>>
+>>> -	if (phy->variant->has_phy_clk) {
+>>> +	if (phy->variant->phy_clk_num) {
+>>>
+>>>   		phy->clk_pll0 = of_clk_get_by_name(node, "pll-0");
+>>>   		if (IS_ERR(phy->clk_pll0)) {
+>>>   		
+>>>   			dev_err(dev, "Could not get pll-0 clock\n");
+>>>
+>>> @@ -472,7 +478,16 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi,
+>>> struct device_node *node)>
+>>>   			goto err_put_clk_mod;
+>>>   		
+>>>   		}
+>>>
+>>> -		ret = sun8i_phy_clk_create(phy, dev);
+>>> +		if (phy->variant->phy_clk_num) {
+>>> +			phy->clk_pll1 = of_clk_get_by_name(node, "pll-1");
+>>> +			if (IS_ERR(phy->clk_pll1)) {
+>>> +				dev_err(dev, "Could not get pll-1 clock\n");
+>>> +				ret = PTR_ERR(phy->clk_pll1);
+>>> +				goto err_put_clk_mod;
+>>> +			}
+>>> +		}
+>>> +
+>> You have a bug here. If phy_clk_num == 1, you'll still try to lookup
+>> pll-1.
+> This is actually WIP patch taken from my github. This issue was fixed already
+> locally on disk. I thought Jagan will not use it until SRAM C patches land.
+>
+>> And this is a bit sloppy, since if phy_clk_num == 3, you won't try to
+>> lookup pll-2 either.
+> It is highly unlikely this will be higher than 2, at least for this HDMI PHY,
+> since it has only 1 bit reserved for parent selection. But since I have to fix
+> it, I'll add ">= 2"
+>
+>>> +		ret = sun8i_phy_clk_create(phy, dev, phy->variant->phy_clk_num);
+>>>
+>>>   		if (ret) {
+>>>   		
+>>>   			dev_err(dev, "Couldn't create the PHY clock\n");
+>>>   			goto err_put_clk_pll0;
+>>>
+>>> @@ -515,8 +530,8 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi,
+>>> struct device_node *node)>
+>>>   err_put_rst_phy:
+>>>   	reset_control_put(phy->rst_phy);
+>>>   
+>>>   err_put_clk_pll0:
+>>> -	if (phy->variant->has_phy_clk)
+>>> -		clk_put(phy->clk_pll0);
+>>> +	clk_put(phy->clk_pll0);
+>>> +	clk_put(phy->clk_pll1);
+>>>
+>>>   err_put_clk_mod:
+>>>   	clk_put(phy->clk_mod);
+>>>   
+>>>   err_put_clk_bus:
+>>> @@ -536,8 +551,8 @@ void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi *hdmi)
+>>>
+>>>   	reset_control_put(phy->rst_phy);
+>>>
+>>> -	if (phy->variant->has_phy_clk)
+>>> -		clk_put(phy->clk_pll0);
+>>> +	clk_put(phy->clk_pll0);
+>>> +	clk_put(phy->clk_pll1);
+>>>
+>>>   	clk_put(phy->clk_mod);
+>>>   	clk_put(phy->clk_bus);
+>>>   
+>>>   }
+>>>
+>>> diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
+>>> b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c index
+>>> faea449812f8..85b12fc96dbc 100644
+>>> --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
+>>> +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
+>>> @@ -22,29 +22,36 @@ static int sun8i_phy_clk_determine_rate(struct clk_hw
+>>> *hw,>
+>>>   {
+>>>   
+>>>   	unsigned long rate = req->rate;
+>>>   	unsigned long best_rate = 0;
+>>>
+>>> -	struct clk_hw *parent;
+>>> +	struct clk_hw *best_parent = NULL;
+>>> +	struct clk_hw *parent = NULL;
+>>>
+>>>   	int best_div = 1;
+>>>
+>>> -	int i;
+>>> +	int i, p;
+>>>
+>>> -	parent = clk_hw_get_parent(hw);
+>>> -
+>>> -	for (i = 1; i <= 16; i++) {
+>>> -		unsigned long ideal = rate * i;
+>>> -		unsigned long rounded;
+>>> -
+>>> -		rounded = clk_hw_round_rate(parent, ideal);
+>>> -
+>>> -		if (rounded == ideal) {
+>>> -			best_rate = rounded;
+>>> -			best_div = i;
+>>> -			break;
+>>> -		}
+>>> +	for (p = 0; p < clk_hw_get_num_parents(hw); p++) {
+>>> +		parent = clk_hw_get_parent_by_index(hw, p);
+>>> +		if (!parent)
+>>> +			continue;
+>>>
+>>> -		if (!best_rate ||
+>>> -		    abs(rate - rounded / i) <
+>>> -		    abs(rate - best_rate / best_div)) {
+>>> -			best_rate = rounded;
+>>> -			best_div = i;
+>>> +		for (i = 1; i <= 16; i++) {
+>>> +			unsigned long ideal = rate * i;
+>>> +			unsigned long rounded;
+>>> +
+>>> +			rounded = clk_hw_round_rate(parent, ideal);
+>>> +
+>>> +			if (rounded == ideal) {
+>>> +				best_rate = rounded;
+>>> +				best_div = i;
+>>> +				best_parent = parent;
+>>> +				break;
+>>> +			}
+>>> +
+>>> +			if (!best_rate ||
+>>> +			    abs(rate - rounded / i) <
+>>> +			    abs(rate - best_rate / best_div)) {
+>>> +				best_rate = rounded;
+>>> +				best_div = i;
+>>> +				best_parent = parent;
+>>> +			}
+>>>
+>>>   		}
+>>>   	
+>>>   	}
+>>>
+>>> @@ -95,22 +102,58 @@ static int sun8i_phy_clk_set_rate(struct clk_hw *hw,
+>>> unsigned long rate,>
+>>>   	return 0;
+>>>   
+>>>   }
+>>>
+>>> +static u8 sun8i_phy_clk_get_parent(struct clk_hw *hw)
+>>> +{
+>>> +	struct sun8i_phy_clk *priv = hw_to_phy_clk(hw);
+>>> +	u32 reg;
+>>> +
+>>> +	regmap_read(priv->phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, &reg);
+>>> +	reg = (reg & SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK) >>
+>>> +	      SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_SHIFT;
+>>> +
+>>> +	return reg;
+>>> +}
+>>> +
+>>> +static int sun8i_phy_clk_set_parent(struct clk_hw *hw, u8 index)
+>>> +{
+>>> +	struct sun8i_phy_clk *priv = hw_to_phy_clk(hw);
+>>> +
+>>> +	if (index > 1)
+>>> +		return -EINVAL;
+>>> +
+>>> +	regmap_update_bits(priv->phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG,
+>>> +			   SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK,
+>>> +			   index << SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_SHIFT);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>> The DT bindings changes and the clk changes should be part of separate
+>> patches.
+> By DT bindings changes you mean code which reads DT and not DT documentation,
+> right?
+>
+> Ok, I'll split it.
+>
+> BTW, I'll resend fixed version of this patch for my R40 HDMI series, since
+> there is nothing to hold it back, unlike for this.
+>
+> Best regards,
+> Jernej
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+you have been talking about SRAM patches, required for A64 DE2, for 
+about a half a year.
+May I ask you to explain in a couple of words why they are so important ?
+I am really curious because I have DE2 already working on my A64 without 
+those magic patches..
+
+Thanks,
+Sergey
