@@ -1,45 +1,58 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH V7 03/12] ARM: dts: ipq4019: Change the max opp frequency
-Date: Fri, 18 May 2018 13:49:16 +0530
-Message-ID: <1526631565-9972-4-git-send-email-sricharan@codeaurora.org>
-References: <1526631565-9972-1-git-send-email-sricharan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526631565-9972-1-git-send-email-sricharan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com, sricharan@codeaurora.org
+From: Saravana Kannan <skannan@codeaurora.org>
+Subject: [PATCH 0/2] Adding support for scaling cache/memory based on CPU frequency
+Date: Fri, 18 May 2018 01:24:46 -0700
+Message-ID: <1526631889-5084-1-git-send-email-skannan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Saravana Kannan <skannan@codeaurora.org>, Rajendra Nayak <rjendra@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The max opp frequency is 716MHZ. So update that.
+Many CPU architectures have caches that can scale independent of the CPUs.
+Frequency scaling of the caches is necessary to make sure the cache is not
+a performance bottleneck that leads to poor performance and power. The same
+idea applies for RAM/DDR.
 
-Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+To achieve this, this patch series adds a generic devfreq governor that can
+listen to the frequency transitions of each CPU frequency domain and then
+adjusts the frequency of the cache (or any devfreq device) based on the
+frequency of the CPUs.
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 1541e18..2c4ad7d 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -47,7 +47,7 @@
- 				48000	1100000
- 				200000	1100000
- 				500000	1100000
--				666000	1100000
-+				716000  1100000
- 			>;
- 			clock-latency = <256000>;
- 		};
+To decide the frequency of the device, the governor does one of the
+following:
+
+* Uses a CPU frequency to device frequency mapping table
+  - Either one mapping table used for all CPU freq policies (typically used
+    for system with homogeneous cores/clusters that have the same OPPs.
+  - One mapping table per CPU freq policy (typically used for ASMP systems
+    with heterogeneous CPUs with different OPPs)
+
+OR
+
+* Scales the device frequency in proportion to the CPU frequency. So, if
+  the CPUs are running at their max frequency, the device runs at its max
+  frequency.  If the CPUs are running at their min frequency, the device
+  runs at its min frequency. And interpolated for frequencies in between.
+
+Since CPUs/clusters can be hotplugged and their policies disables, this
+devfreq governor also has to listen to CPU freq policy notifiers for these
+events. So, this patch brings back the policy CREATE/REMOVE notifiers.
+
+Saravana Kannan (2):
+  Revert "cpufreq: Remove policy create/remove notifiers"
+  PM / devfreq: Generic cpufreq governor
+
+ .../bindings/devfreq/devfreq-cpufreq.txt           |  53 ++
+ drivers/cpufreq/cpufreq.c                          |  16 +-
+ drivers/devfreq/Kconfig                            |   8 +
+ drivers/devfreq/Makefile                           |   1 +
+ drivers/devfreq/governor_cpufreq.c                 | 628 +++++++++++++++++++++
+ include/linux/cpufreq.h                            |   3 +
+ 6 files changed, 704 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-cpufreq.txt
+ create mode 100644 drivers/devfreq/governor_cpufreq.c
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
