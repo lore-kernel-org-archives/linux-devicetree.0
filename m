@@ -1,83 +1,27 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
-Date: Fri, 18 May 2018 21:18:35 +0000
-Message-ID: <SN1PR02MB37582339D5B3937748F4D9ACB8900@SN1PR02MB3758.namprd02.prod.outlook.com>
-References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
-        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
-        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
-        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
-        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
-        <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
-        <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
-        <SN1PR02MB37588BFF357865F4C9628D99B8910@SN1PR02MB3758.namprd02.prod.outlook.com>
- <be5cecb2-3d0d-22f8-48a2-f94ed9546e04@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: add MediaTek XS-PHY binding
+Date: Fri, 18 May 2018 16:29:25 -0500
+Message-ID: <20180518212925.GA25632@rob-hp-laptop>
+References: <1525932629-10603-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1525932629-10603-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <be5cecb2-3d0d-22f8-48a2-f94ed9546e04@samsung.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1525932629-10603-2-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?B?QmrDtnJuIEFuZGVyc3Nvbg==?= <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyZWssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyZWsg
-U3p5cHJvd3NraSBbbWFpbHRvOm0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbV0NCj4gU2VudDogVGh1
-cnNkYXksIE1heSAxNywgMjAxOCAxMTozMSBQTQ0KPiBUbzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhp
-bGlueC5jb20+OyBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZz47
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+IENjOiBNYXR0aGlhcyBCcnVnZ2VyIDxt
-YXR0aGlhcy5iZ2dAZ21haWwuY29tPjsgQW5keSBHcm9zcw0KPiA8YW5keS5ncm9zc0BsaW5hcm8u
-b3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgR2VlcnQNCj4gVXl0dGVyaG9l
-dmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IEJqw7ZybiBBbmRlcnNzb24NCj4gPGJqb3Ju
-LmFuZGVyc3NvbkBsaW5hcm8ub3JnPjsgc2Vhbi53YW5nQG1lZGlhdGVrLmNvbTsgTWljaGFsIFNp
-bWVrDQo+IDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRs
-YW5kQGFybS5jb20+OyBSYWphbg0KPiBWYWphIDxSQUpBTlZAeGlsaW54LmNvbT47IG9wZW4gbGlz
-dDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQNCj4gREVWSUNFIFRSRUUgQklORElOR1MgPGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0tDQo+IGtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgt
-DQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBk
-dC1iaW5kaW5nczogcG93ZXI6IEFkZCBaeW5xTVAgcG93ZXIgZG9tYWluDQo+IGJpbmRpbmdzDQo+
-IA0KPiBIaSBKb2xseSwNCj4gDQo+IE9uIDIwMTgtMDUtMTcgMjM6MTAsIEpvbGx5IFNoYWggd3Jv
-dGU6DQo+IA0KPiA+Pj4+Pj4gK0V4YW1wbGU6DQo+ID4+Pj4+PiArICAgICB6eW5xbXAtZ2VucGQg
-ew0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICBjb21wYXRpYmxlID0gInhsbngsenlucW1wLWdlbnBk
-IjsNCj4gPj4+Pj4gV2hhdCdzIHRoZSBjb250cm9sIGludGVyZmFjZSBmb3IgY29udHJvbGxpbmcg
-dGhlIGRvbWFpbnM/DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiArICAgICAgICAgICAgIHBkX3VzYjA6
-IHBkLXVzYjAgew0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBkLWlkID0gPDIyPjsN
-Cj4gPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+
-Ow0KPiA+Pj4+PiBUaGVyZSdzIG5vIG5lZWQgZm9yIGFsbCB0aGVzZSBzdWIgbm9kZXMuIE1ha2Ug
-I3Bvd2VyLWRvbWFpbi1jZWxscw0KPiA+Pj4+PiAxIGFuZCBwdXQgdGhlIGlkIGluIHRoZSBjZWxs
-IHZhbHVlLg0KPiA+Pj4+IFRoYXQgd2FzIG15IGZpcnN0IHJlYWN0aW9uLCB0b28uLi4NCj4gPj4+
-Pj4+ICsgICAgICAgICAgICAgfTsNCj4gPj4+Pj4+ICsNCj4gPj4+Pj4+ICsgICAgICAgICAgICAg
-cGRfc2F0YTogcGQtc2F0YSB7DQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgcGQtaWQg
-PSA8Mjg+Ow0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2Vs
-bHMgPSA8MD47DQo+ID4+Pj4+PiArICAgICAgICAgICAgIH07DQo+ID4+Pj4+PiArDQo+ID4+Pj4+
-PiArICAgICAgICAgICAgIHBkX2dwdTogcGQtZ3B1IHsNCj4gPj4+Pj4+ICsgICAgICAgICAgICAg
-ICAgICAgICBwZC1pZCA9IDw1OCAyMCAyMT47DQo+ID4+Pj4gLi4uIHVudGlsIEkgc2F3IHRoZSBh
-Ym92ZS4NCj4gPj4+PiBDb250cm9sbGluZyB0aGUgR1BVIHBvd2VyIGFyZWEgcmVxdWlyZXMgY29u
-dHJvbGxpbmcgMyBwaHlzaWNhbCBhcmVhcz8NCj4gPj4+Pg0KPiA+Pj4+IEhvd2V2ZXIsIGRvaW5n
-IGl0IHRoaXMgd2F5IG1heSBiaXRlIHlvdSBpbiB0aGUgZnV0dXJlLCBpZiBhIG5lZWQNCj4gPj4+
-PiBhcmlzZXMgdG8gY29udHJvbCBhIHN1YnNldC4gQW5kIHdoYXQgYWJvdXQgcG93ZXIgdXAvZG93
-biBvcmRlcj8NCj4gPj4+IFdoYXQgYWJvdXQgZGVmaW5pbmcgMyBzZXBhcmF0ZSBkb21haW5zIGFu
-ZCBhcnJhbmdpbmcgdGhlbSBpbg0KPiA+Pj4gcGFyZW50LWNoaWxkIHJlbGF0aW9uc2hpcD8gZ2Vu
-ZXJpYyBwb3dlciBkb21haW5zIGFscmVhZHkgc3VwcG9ydHMNCj4gPj4+IHRoYXQgYW5kIHRoaXMg
-YWxsb3dzIHRvIG5pY2VseSBkZWZpbmUgdGhlIHBvd2VyIG9uL29mZiBvcmRlci4NCj4gPj4+DQo+
-ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwweDA+
-Ow0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICB9Ow0KPiA+Pj4+Pj4gKyAgICAgfTsNCj4gPj4gSSBh
-Z3JlZSBpdCBzaG91bGQgYmUgYXJyYW5nZWQgaW4gYXMgcGFyZW50IGNoaWxkIG9yZGVyIHRvIGNv
-bnRyb2wNCj4gPj4gc3Vic2V0IG9yIGNvbnRyb2wgb3JkZXIuIFdpbGwgaW5jb3Jwb3JhdGUgdGhv
-c2UgY2hhbmdlcyBpbiBuZXh0IHZlcnNpb24uDQo+ID4NCj4gPiBBcyBzdWdnZXN0ZWQsIEkgdHJp
-ZWQgb3V0IHBhcmVudCwgY2hpbGQgYXBwcm9hY2guIEhvd2V2ZXIgd2hhdCBJIGZvdW5kIGlzDQo+
-IEdlbnBkIGNvcmUgdGFrZXMgY2FyZSBvZiBwYXJlbnQgY2hpbGQgZGVwZW5kZW5jaWVzIGZvciBw
-b3dlciBvbiBvZmYgcm91dGluZXMNCj4gb25seS4gSW4gb3VyIGNhc2UsIFdlIG5lZWQgdGhlbSBp
-biBhdHRhY2gtZGV0YWNoIHJvdXRpbmVzIHRvby4gSW4gdGhhdCBjYXNlLCB3ZQ0KPiBuZWVkIHRv
-IGhhbmRsZSBkZXBlbmRlbmNpZXMgbWFudWFsbHkgZm9yIHRob3NlIHJvdXRpbmVzLiBQbGVhc2Ug
-c3VnZ2VzdCBiZXR0ZXINCj4gYXBwcm9hY2gsIGlmIGFueS4NCj4gDQo+IFdoYXQgZG8geW91IG1l
-YW4gdG8gaGFuZGxlIGF0dGFjaC1kZXRhY2g/DQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gLS0NCj4g
-TWFyZWsgU3p5cHJvd3NraSwgUGhEDQo+IFNhbXN1bmcgUiZEIEluc3RpdHV0ZSBQb2xhbmQNCg0K
-Rm9yIG91ciBwb3dlciBkb21haW4gZHJpdmVyLCAgd2UgcmVxdWVzdCB1c2FnZSBvZiB0aGVzZSBu
-b2RlcyBpbiBhdHRhY2ggcm91dGluZXMgYW5kIHBvd2VyIHRoZW0gb24gaW4gcG93ZXIgb24gcm91
-dGluZS4gU28gZm9yIGJlbG93IHNwZWNpZmljIGNhc2UsIHdoZW4gYXR0YWNoX2RldiBpcyBjYWxs
-ZWQsIGFsbCAzIG5vZGVzIG5lZWQgdG8gYmUgcmVxdWVzdGVkLg0KDQo+ID4+Pj4+PiArICAgICAg
-ICAgICAgIHBkX2dwdTogcGQtZ3B1IHsNCj4gPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBw
-ZC1pZCA9IDw1OCAyMCAyMT47DQoNClRoYW5rcywNCkpvbGx5IFNoYWgNCg0KDQo=
+On Thu, May 10, 2018 at 02:10:28PM +0800, Chunfeng Yun wrote:
+> Add a DT binding documentation of XS-PHY for MediaTek SoCs
+> with USB3.1 GEN2 controller
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  .../devicetree/bindings/phy/phy-mtk-xsphy.txt      |  110 ++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-xsphy.txt
+
+Reviewed-by: Rob Herring <robh@kernel.org>
