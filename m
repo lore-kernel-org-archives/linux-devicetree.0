@@ -1,89 +1,71 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 17/27] dt-bindings: ap806: add the thermal node in the
- syscon file
-Date: Fri, 18 May 2018 11:56:09 +0200
-Message-ID: <20180518115609.420de41d@xps13>
-References: <20180421151255.29929-1-miquel.raynal@bootlin.com>
- <20180421151255.29929-18-miquel.raynal@bootlin.com>
- <20180427210722.obyujepjvqc5hwcd@rob-hp-laptop>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v11 0/4] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Fri, 18 May 2018 15:44:01 +0530
+Message-ID: <8bda01d5-61aa-d163-3b25-e8b055d54644@codeaurora.org>
+References: <20180322102204.14760-1-vivek.gautam@codeaurora.org>
+	<CAAFQd5CDY5p8oBz4QC5f6GsKiiYqdenCHGCqKhuWn10JwKjOpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180427210722.obyujepjvqc5hwcd@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAAFQd5CDY5p8oBz4QC5f6GsKiiYqdenCHGCqKhuWn10JwKjOpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKVGhhbmtzIGZvciByZXZpZXdpbmcsIG9uZSBxdWVzdGlvbiBiZWxvdy4KCk9uIEZy
-aSwgMjcgQXByIDIwMTggMTY6MDc6MjIgLTA1MDAsIFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
-cmc+IHdyb3RlOgoKPiBPbiBTYXQsIEFwciAyMSwgMjAxOCBhdCAwNToxMjo0NVBNICswMjAwLCBN
-aXF1ZWwgUmF5bmFsIHdyb3RlOgo+ID4gRXhwbGFpbiB0aGUgdGhlcm1hbCBiaW5kaW5ncyBub3cg
-dGhhdCB0aGUgdGhlcm1hbCBJUCBpcyBkZXNjcmliZWQgYmVpbmcKPiA+IGluc2lkZSBvZiBhIHN5
-c3RlbSBjb250cm9sbGVyLiBBZGQgYSByZWZlcmVuY2UgdG8gdGhlIHRoZXJtYWwtem9uZSBub2Rl
-Lgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJv
-b3RsaW4uY29tPgo+ID4gLS0tCj4gPiAgLi4uL2FybS9tYXJ2ZWxsL2FwODA2LXN5c3RlbS1jb250
-cm9sbGVyLnR4dCAgICAgICAgfCA0MyArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKykKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWFydmVsbC9hcDgwNi1zeXN0ZW0tY29udHJv
-bGxlci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21hcnZlbGwv
-YXA4MDYtc3lzdGVtLWNvbnRyb2xsZXIudHh0Cj4gPiBpbmRleCBhODU2ZWI5YTRlMDUuLmM5NWYz
-YWM1YzcyOCAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vbWFydmVsbC9hcDgwNi1zeXN0ZW0tY29udHJvbGxlci50eHQKPiA+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWFydmVsbC9hcDgwNi1zeXN0ZW0tY29u
-dHJvbGxlci50eHQKPiA+IEBAIC0xMSw2ICsxMSw5IEBAIEZvciB0aGUgdG9wIGxldmVsIG5vZGU6
-Cj4gPiAgIC0gY29tcGF0aWJsZTogbXVzdCBiZTogInN5c2NvbiIsICJzaW1wbGUtbWZkIjsKPiA+
-ICAgLSByZWc6IHJlZ2lzdGVyIGFyZWEgb2YgdGhlIEFQODA2IHN5c3RlbSBjb250cm9sbGVyCj4g
-PiAgCj4gPiArU1lTVEVNIENPTlRST0xMRVIgMAo+ID4gKz09PT09PT09PT09PT09PT09PT0KPiA+
-ICsKPiA+ICBDbG9ja3M6Cj4gPiAgLS0tLS0tLQo+ID4gIAo+ID4gQEAgLTk4LDMgKzEwMSw0MyBA
-QCBhcF9zeXNjb246IHN5c3RlbS1jb250cm9sbGVyQDZmNDAwMCB7Cj4gPiAgCQlncGlvLXJhbmdl
-cyA9IDwmYXBfcGluY3RybCAwIDAgMTk+Owo+ID4gIAl9Owo+ID4gIH07Cj4gPiArCj4gPiArU1lT
-VEVNIENPTlRST0xMRVIgMQo+ID4gKz09PT09PT09PT09PT09PT09PT0KPiA+ICsKPiA+ICtUaGVy
-bWFsOgo+ID4gKy0tLS0tLS0tCj4gPiArCj4gPiArRm9yIGNvbW1vbiBiaW5kaW5nIHBhcnQgYW5k
-IHVzYWdlLCByZWZlciB0bwo+ID4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90
-aGVybWFsL3RoZXJtYWwudHh0Cj4gPiArCj4gPiArVGhlIHRoZXJtYWwgSVAgY2FuIHByb2JlIHRo
-ZSB0ZW1wZXJhdHVyZSBhbGwgYXJvdW5kIHRoZSBwcm9jZXNzb3IuIEl0Cj4gPiArbWF5IGZlYXR1
-cmUgc2V2ZXJhbCBjaGFubmVscywgZWFjaCBvZiB0aGVtIHdpcmVkIHRvIG9uZSBzZW5zb3IuCj4g
-PiArCj4gPiArSXQgaXMgcG9zc2libGUgdG8gc2V0dXAgYW4gb3ZlcmhlYXQgaW50ZXJydXB0IGJ5
-IGdpdmluZyBhdCBsZWFzdCBvbmUKPiA+ICtjcml0aWNhbCBwb2ludCB0byBhbnkgc3Vibm9kZSBv
-ZiB0aGUgdGhlcm1hbC16b25lIG5vZGUuCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoK
-PiA+ICstIGNvbXBhdGlibGU6ICJtYXJ2ZWxsLGFybWFkYS1hcDgwNi10aGVybWFsIgo+ID4gKwo+
-ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiArLSBpbnRlcnJ1cHQtcGFyZW50L2ludGVycnVw
-dHM6IG92ZXJoZWF0IGludGVycnVwdCBoYW5kbGUuIFNob3VsZCBwb2ludCB0bwo+ID4gKyAgbGlu
-ZSAxOCBvZiB0aGUgU0VJIGlycWNoaXAuCj4gPiArICBTZWUgaW50ZXJydXB0LWNvbnRyb2xsZXIv
-aW50ZXJydXB0cy50eHQKPiA+ICstICN0aGVybWFsLXNlbnNvci1jZWxsczogc2hhbGwgYmUgPDE+
-IHdoZW4gdGhlcm1hbC16b25lcyBzdWJub2RlcyByZWZlcgo+ID4gKyAgdG8gdGhpcyBJUCBhbmQg
-cmVwcmVzZW50cyB0aGUgY2hhbm5lbCBJRC4gVGhlcmUgaXMgb25lIHNlbnNvciBwZXIKPiA+ICsg
-IGNoYW5uZWwuIE8gcmVmZXJzIHRvIHRoZSB0aGVybWFsIElQIGludGVybmFsIGNoYW5uZWwsIHdo
-aWxlIHBvc2l0aXZlCj4gPiArICBJRHMgcmVmZXIgdG8gZWFjaCBDUFUuCj4gPiArCj4gPiArRXhh
-bXBsZToKPiA+ICthcF9zeXNjb24xOiBzeXN0ZW0tY29udHJvbGxlckA2ZjgwMDAgewo+ID4gKwlj
-b21wYXRpYmxlID0gInN5c2NvbiIsICJzaW1wbGUtbWZkIjsKPiA+ICsJcmVnID0gPDB4NmY4MDAw
-IDB4MTAwMD47Cj4gPiArCj4gPiArCWFwX3RoZXJtYWw6IGFwLXRoZXJtYWwgewo+ID4gKwkJY29t
-cGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYS1hcDgwNi10aGVybWFsIjsgIAo+IAo+IElzIHRoZXJl
-IGEgcmVnaXN0ZXIgcmFuZ2UgYXNzb2NpYXRlZCB3aXRoIHRoZSB0aGVybWFsIGZ1bmN0aW9ucz8K
-CkluZGVlZCB0aGVyZSBpcyBhIHNtYWxsIG9uZSAodGhyZWUgcmVnaXN0ZXJzKSBidXQgd2UgYWxz
-byBuZWVkIHRvIGFjY2Vzcwpzb21lIHJlZ2lzdGVycyBvdXQgb2YgdGhpcyBhcmVhIChzbyBjYWxs
-ZWQgdGhlICdERlgnIGFyZWEsIGluIHRoaXMKc3lzY29uLCB0byByb3V0ZSBjb3JyZWN0bHkgdGhl
-IGludGVycnVwdCkgYW5kIEkgZmVhciB3ZSdsbCBuZWVkIHRvCmFjY2VzcyBvdGhlcnMgaW4gdGhl
-IGZ1dHVyZS4gSSBjaG9vc2UgdG8gZGVjbGFyZSBhIHN5c2NvbiBiZWNhdXNlIHRoaXMKYXJlYSBt
-aXhlcyBhIGxvdCBvZiBtaXNjIHJlZ2lzdGVycy4KClNvIGRvIHlvdSB0aGluayBJIHNob3VsZCBk
-ZWNsYXJlIHRoZXNlIDMgcmVnaXN0ZXJzIGFyZWEgaW4gYSByZWcKcHJvcGVydHk/IE9yIGtlZXAg
-dGhlIHdheSBJIHJldHJpZXZlZCB0aGUgb2Zmc2V0cyBpbiB0aGUgc3lzY29uOgpkZWZpbmluZyBv
-ZmZzZXRzIGluIHRoZSBjb2RlPwoKPiAKPiA+ICsJCWludGVycnVwdC1wYXJlbnQgPSA8JnNlaT47
-Cj4gPiArCQlpbnRlcnJ1cHRzID0gPDE4PjsKPiA+ICsJCSN0aGVybWFsLXNlbnNvci1jZWxscyA9
-IDwxPjsKPiA+ICsJfTsKPiA+ICt9Owo+ID4gLS0gCj4gPiAyLjE0LjEKPiA+ICAgCgpUaGFua3Ms
-Ck1pcXXDqGwKCi0tIApNaXF1ZWwgUmF5bmFsLCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0
-cm9ucykKRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwczovL2Jvb3Rs
-aW4uY29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+Hi Robin,
+
+
+On 4/9/2018 9:52 AM, Tomasz Figa wrote:
+> Hi Will, Robin,
+>
+> On Thu, Mar 22, 2018 at 7:22 PM Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> wrote:
+>
+>> This series provides the support for turning on the arm-smmu's
+>> clocks/power domains using runtime pm. This is done using the
+>> recently introduced device links patches, which lets the smmu's
+>> runtime to follow the master's runtime pm, so the smmu remains
+>> powered only when the masters use it.
+>> As not all implementations support clock/power gating, we are checking
+>> for a valid 'smmu->dev's pm_domain' to conditionally enable the runtime
+>> power management for such smmu implementations that can support it.
+>> This series also adds support for Qcom's arm-smmu-v2 variant that
+>> has different clocks and power requirements.
+>> Took some reference from the exynos runtime patches [1].
+>> With conditional runtime pm now, we avoid touching dev->power.lock
+>> in fastpaths for smmu implementations that don't need to do anything
+>> useful with pm_runtime.
+>> This lets us to use the much-argued pm_runtime_get_sync/put_sync()
+>> calls in map/unmap callbacks so that the clients do not have to
+>> worry about handling any of the arm-smmu's power.
+>> Previous version of this patch series is @ [5].
+>> [v11]
+>>      * Some more cleanups for device link. We don't need an explicit
+>>        delete for device link from the driver, but just set the flag
+>>        DL_FLAG_AUTOREMOVE.
+>>        device_link_add() API description says -
+>>        "If the DL_FLAG_AUTOREMOVE is set, the link will be removed
+>>        automatically when the consumer device driver unbinds."
+>>      * Addressed the comments for 'smmu' in arm_smmu_map/unmap().
+>>      * Dropped the patch [10] that introduced device_link_del_dev() API.
+> As far as I can see, this version addresses all the earlier comments. Do
+> you think this is something that you could apply?
+>
+> Best regards,
+> Tomasz
+
+Gentle ping. Are we picking this series for 4.18?
+
+Regards
+Vivek
