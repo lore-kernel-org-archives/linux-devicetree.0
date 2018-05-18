@@ -1,38 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 24/27] dt-bindings: timer: new bindings for TI
- DaVinci timer
-Date: Fri, 18 May 2018 09:24:18 -0500
-Message-ID: <20180518142418.GA2298@rob-hp-laptop>
-References: <20180509172606.29387-1-david@lechnology.com>
- <20180509172606.29387-25-david@lechnology.com>
+Subject: Re: [PATCH v8 11/15] dt-bindings: cpufreq: Document
+ operating-points-v2-kryo-cpu
+Date: Fri, 18 May 2018 09:26:39 -0500
+Message-ID: <20180518142639.GA3877@rob-hp-laptop>
+References: <1526555955-29960-1-git-send-email-ilialin@codeaurora.org>
+ <1526555955-29960-12-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180509172606.29387-25-david@lechnology.com>
+In-Reply-To: <1526555955-29960-12-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Ilia Lin <ilialin@codeaurora.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 09, 2018 at 12:26:03PM -0500, David Lechner wrote:
-> This adds new device tree bindings for the timer IP block of TI
-> DaVinci-like SoCs.
+On Thu, May 17, 2018 at 02:19:11PM +0300, Ilia Lin wrote:
+> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
+> to provide the OPP framework with required information.
+> This is used to determine the voltage and frequency value for each OPP of
+> operating-points-v2 table when it is parsed by the OPP framework.
 > 
-> Signed-off-by: David Lechner <david@lechnology.com>
+> This change adds documentation for the DT bindings.
+> The "operating-points-v2-kryo-cpu" DT extends the "operating-points-v2"
+> with following parameters:
+> - nvmem-cells (NVMEM area containig the speedbin information)
+> - opp-supported-hw: A single 32 bit bitmap value,
+>   representing compatible HW:
+> 			0:	MSM8996 V3, speedbin 0
+> 			1:	MSM8996 V3, speedbin 1
+> 			2:	MSM8996 V3, speedbin 2
+> 			3:	unused
+> 			4:	MSM8996 SG, speedbin 0
+> 			5:	MSM8996 SG, speedbin 1
+> 			6:	MSM8996 SG, speedbin 2
+> 			7-31:	unused
+> 
+> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
-> 
-> v10 changes:
-> - changed compatible to "ti,da830-timer"
-> - added interrupts and interrupt-names properties
-> - fixed grammatical error
-> 
-> v9 changes:
-> - new patch in v9
-> 
-> 
->  .../bindings/timer/ti,davinci-timer.txt       | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ti,davinci-timer.txt
+>  .../devicetree/bindings/opp/kryo-cpufreq.txt       | 680 +++++++++++++++++++++
+>  1 file changed, 680 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
