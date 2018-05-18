@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 22/26] arm64: dts: allwinner: a64:
- nanopi-a64: Enable HDMI output
-Date: Fri, 18 May 2018 15:15:32 +0530
-Message-ID: <20180518094536.17201-23-jagan@amarulasolutions.com>
+Subject: [PATCH v2 23/26] arm64: dts: allwinner: a64:
+ orangepi-win: Enable HDMI output
+Date: Fri, 18 May 2018 15:15:33 +0530
+Message-ID: <20180518094536.17201-24-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB2OC7LLQKGQENWEIBXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB36C7LLQKGQE3BSGYBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,21 +20,21 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable HDMI output on nanopi-a64 board.
+Enable HDMI output on Orangepi-win board.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
 - none
 
- .../boot/dts/allwinner/sun50i-a64-nanopi-a64.dts   | 26 ++++++++++++++++++++++
+ .../boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 26 ++++++++++++++++++++++
  1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index e2dce48fa29a..19fe7eed45e9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -57,6 +57,21 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+index bf42690a3361..b6fdd052d473 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+@@ -57,12 +57,38 @@
  	chosen {
  		stdout-path = "serial0:115200n8";
  	};
@@ -55,8 +55,7 @@ index e2dce48fa29a..19fe7eed45e9 100644
 +	status = "okay";
  };
  
- &ehci0 {
-@@ -67,6 +82,17 @@
+ &ehci1 {
  	status = "okay";
  };
  
@@ -71,8 +70,8 @@ index e2dce48fa29a..19fe7eed45e9 100644
 +	};
 +};
 +
- /* i2c1 connected with gpio headers like pine64, bananapi */
- &i2c1 {
+ &mmc0 {
  	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
 -- 
 2.14.3
