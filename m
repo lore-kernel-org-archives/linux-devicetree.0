@@ -1,44 +1,32 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH] ARM: dts: da850-evm: Enable SATA port
-Date: Fri, 18 May 2018 15:43:39 -0500
-Message-ID: <20180518204339.14298-1-aford173@gmail.com>
+From: Trilok Soni <tsoni@codeaurora.org>
+Subject: Re: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim ngd dt bindings
+Date: Fri, 18 May 2018 13:47:05 -0700
+Message-ID: <802138cc-77cc-9800-f725-0ab8a9f0467e@codeaurora.org>
+References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
+ <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Adam Ford <aford173@gmail.com>, devicetree@vger.kernel.org, nsekhar@ti.com, adam.ford@logicpd.com, khilman@kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-The DA850-EVM from Logic PD has a SATA port and the module that went
-with the kit support it as well. This patch will enable the SATA
-controller.
+Hi Srinivas
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+On 5/16/2018 9:51 AM, Srinivas Kandagatla wrote:
+> This patch adds bindings for Qualcomm SLIMBus NGD controller found in
+> all new SoCs starting from B family.
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index a76c2ddfd23e..afccbe7681e7 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -160,6 +160,10 @@
- 	};
- };
- 
-+&sata {
-+	status = "okay";
-+};
-+
- &serial0 {
- 	status = "okay";
- };
+"X/Y/Z family" has no meaning here in upstream and just put the 
+processor name from which you are adding the support or tested to start 
+with.
+
+
 -- 
-2.17.0
+---Trilok Soni
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
