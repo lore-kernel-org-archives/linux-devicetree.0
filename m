@@ -1,12 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 17/26] arm64: dts: allwinner: a64: Add HDMI support
-Date: Fri, 18 May 2018 15:15:27 +0530
-Message-ID: <20180518094536.17201-18-jagan@amarulasolutions.com>
+Subject: [PATCH v2 18/26] drm/sun4i: Enable DesignWare HDMI for
+ SUN8I and SUN50I
+Date: Fri, 18 May 2018 15:15:28 +0530
+Message-ID: <20180518094536.17201-19-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBTGC7LLQKGQEG2FA76A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBUWC7LLQKGQEGLMDMBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,58 +20,28 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-HDMI on Allwinner A64 has similar behaviour like H3/H5/A83T, so
-reuse the same dts node details for A64 with A83T compatible
-as fallback.
-
-HDMI PHY on Allwinner A64 has two clock parents so add them
-as pll-0 and pll-1 in CCU clock phadles.
+Allwinner SoC like SUN8I and SUN50I are now using DesignWare HDMI
+so enable them as default.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
-- Change compatibles and other based on previous patch changes
+- Enable for SUN8I
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/gpu/drm/sun4i/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 9c1452ee8027..4ffd4787acd2 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -705,6 +705,33 @@
- 			#interrupt-cells = <3>;
- 		};
+diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
+index a84120025197..c10617c1f84b 100644
+--- a/drivers/gpu/drm/sun4i/Kconfig
++++ b/drivers/gpu/drm/sun4i/Kconfig
+@@ -52,6 +52,7 @@ config DRM_SUN6I_DSI
  
-+		hdmi: hdmi@1ee0000 {
-+			compatible = "allwinner,sun50i-a64-dw-hdmi",
-+				     "allwinner,sun8i-a83t-dw-hdmi";
-+			reg = <0x01ee0000 0x10000>;
-+			reg-io-width = <1>;
-+			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
-+				 <&ccu CLK_HDMI>;
-+			clock-names = "iahb", "isfr", "tmds";
-+			resets = <&ccu RST_BUS_HDMI1>;
-+			reset-names = "ctrl";
-+			phys = <&hdmi_phy>;
-+			phy-names = "hdmi-phy";
-+			status = "disabled";
-+		};
-+
-+		hdmi_phy: hdmi-phy@1ef0000 {
-+			compatible = "allwinner,sun50i-a64-hdmi-phy";
-+			reg = <0x01ef0000 0x10000>;
-+			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
-+				 <&ccu CLK_PLL_VIDEO0>, <&ccu CLK_PLL_VIDEO1>;
-+			clock-names = "bus", "mod", "pll-0", "pll-1";
-+			resets = <&ccu RST_BUS_HDMI0>;
-+			reset-names = "phy";
-+			#phy-cells = <0>;
-+		};
-+
- 		rtc: rtc@1f00000 {
- 			compatible = "allwinner,sun6i-a31-rtc";
- 			reg = <0x01f00000 0x54>;
+ config DRM_SUN8I_DW_HDMI
+ 	tristate "Support for Allwinner version of DesignWare HDMI"
++	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+ 	depends on DRM_SUN4I
+ 	select DRM_DW_HDMI
+ 	help
 -- 
 2.14.3
