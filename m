@@ -1,99 +1,118 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 2/3] arm64: dts: renesas: draak: Describe CVBS input
-Date: Fri, 18 May 2018 16:47:57 +0200
-Message-ID: <1526654878-11143-3-git-send-email-jacopo+renesas@jmondi.org>
-References: <1526654878-11143-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 14/17] dt-bindings/interrupt-controller: add description
+ for Marvell SEI node
+Date: Fri, 18 May 2018 16:48:48 +0200
+Message-ID: <20180518164848.475b80ad@xps13>
+References: <20180421135537.24716-1-miquel.raynal@bootlin.com>
+ <20180421135537.24716-15-miquel.raynal@bootlin.com>
+ <20180427205032.6u5zzf7265wpgppg@rob-hp-laptop>
+ <20180428124827.3992b1ee@xps13>
+ <CAL_JsqJ51riH+9Any7Bc6DN0Dx+WJdDAvOQ1gJCXTTUW0EUWsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526654878-11143-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJ51riH+9Any7Bc6DN0Dx+WJdDAvOQ1gJCXTTUW0EUWsQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM
+ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Describe CVBS video input through analog video decoder ADV7180
-connected to video input interface VIN4.
-
-The video input signal path is shared with HDMI video input, and
-selected by on-board switches SW-53 and SW-54 with CVBS input selected
-by the default switches configuration.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
----
-v2 -> v3:
-- Add comment to describe the shared input video path
-- Add my SoB and Niklas' R-b tags
----
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 42 ++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 9d73de8..95745fc 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -142,6 +142,11 @@
- 		groups = "usb0";
- 		function = "usb0";
- 	};
-+
-+	vin4_pins_cvbs: vin4 {
-+		groups = "vin4_data8", "vin4_sync", "vin4_clk";
-+		function = "vin4";
-+	};
- };
-
- &i2c0 {
-@@ -154,6 +159,23 @@
- 		reg = <0x50>;
- 		pagesize = <8>;
- 	};
-+
-+	analog-video@20 {
-+		compatible = "adi,adv7180";
-+		reg = <0x20>;
-+
-+		port {
-+			/*
-+			 * The VIN4 video input path is shared between
-+			 * CVBS and HDMI inputs through SW[49-54] switches.
-+			 *
-+			 * CVBS is the default selection, link it to VIN4 here.
-+			 */
-+			adv7180_out: endpoint {
-+				remote-endpoint = <&vin4_in>;
-+			};
-+		};
-+	};
- };
-
- &i2c1 {
-@@ -246,3 +268,23 @@
- 	timeout-sec = <60>;
- 	status = "okay";
- };
-+
-+&vin4 {
-+	pinctrl-0 = <&vin4_pins_cvbs>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			vin4_in: endpoint {
-+				remote-endpoint = <&adv7180_out>;
-+			};
-+		};
-+	};
-+};
---
-2.7.4
+SGkgUm9iLAoKT24gTW9uLCAzMCBBcHIgMjAxOCAwOTowOToxMCAtMDUwMCwgUm9iIEhlcnJpbmcg
+PHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFNhdCwgQXByIDI4LCAyMDE4IGF0IDU6NDgg
+QU0sIE1pcXVlbCBSYXluYWwKPiA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4gd3JvdGU6Cj4g
+PiBIaSBSb2IsCj4gPgo+ID4gT24gRnJpLCAyNyBBcHIgMjAxOCAxNTo1MDozMiAtMDUwMCwgUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiAgCj4gPj4gT24gU2F0LCBBcHIg
+MjEsIDIwMTggYXQgMDM6NTU6MzRQTSArMDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZTogIAo+ID4+
+ID4gRGVzY3JpYmUgdGhlIFNFSSAoU3lzdGVtIEVycm9yIEludGVycnVwdCkgY29udHJvbGxlciBk
+cml2ZXIuIFRoZQo+ID4+ID4gY29udHJvbGxlciBpcyBwYXJ0IG9mIHRoZSBHSUMuIEl0IGFnZ3Jl
+Z2F0ZXMgdHdvIHR5cGVzIG9mIGludGVycnVwdHMsCj4gPj4gPiB3aXJlZCBhbmQgTVNJcyBmcm9t
+IHJlc3BlY3RpdmVseSB0aGUgQVAgYW5kIHRoZSBDUHMsIGludG8gYSBzaW5nbGUgU1BJCj4gPj4g
+PiBpbnRlcnJ1cHQuCj4gPj4gPgo+ID4+ID4gU3VnZ2VzdGVkLWJ5OiBIYWltIEJvb3QgPGhheWlt
+QG1hcnZlbGwuY29tPgo+ID4+ID4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVs
+LnJheW5hbEBib290bGluLmNvbT4KPiA+PiA+IC0tLQo+ID4+ID4gIC4uLi9iaW5kaW5ncy9pbnRl
+cnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQgIHwgNTQgKysrKysrKysrKysrKysrKysr
+KysrKwo+ID4+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspCj4gPj4gPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1
+cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQKPiA+PiA+Cj4gPj4gPiBkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL21h
+cnZlbGwsc2VpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1
+cHQtY29udHJvbGxlci9tYXJ2ZWxsLHNlaS50eHQKPiA+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+Cj4gPj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmEyNDZkNTk1NTJiMQo+ID4+ID4gLS0tIC9kZXYv
+bnVsbAo+ID4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVy
+cnVwdC1jb250cm9sbGVyL21hcnZlbGwsc2VpLnR4dAo+ID4+ID4gQEAgLTAsMCArMSw1NCBAQAo+
+ID4+ID4gK01hcnZlbGwgU0VJIChTeXN0ZW0gRXJyb3IgSW50ZXJydXB0KSBDb250cm9sbGVyCj4g
+Pj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+
+PiA+ICsKPiA+PiA+ICtNYXJ2ZWxsIFNFSSAoU3lzdGVtIEVycm9yIEludGVycnVwdCkgY29udHJv
+bGxlciBpcyBhbiBpbnRlcnJ1cHQgYWdncmVnYXRvci4KPiA+PiA+ICtJdCByZWNlaXZlcyBpbnRl
+cnJ1cHRzIGZyb20gc2V2ZXJhbCBzb3VyY2VzIGFuZCBhZ2dyZWdhdGVzIHRoZW0gdG8gYSBzaW5n
+bGUKPiA+PiA+ICtpbnRlcnJ1cHQgbGluZSAoYW4gU1BJKSBvbiB0aGUgcHJpbWFyeSBpbnRlcnJ1
+cHQgY29udHJvbGxlci4KPiA+PiA+ICsKPiA+PiA+ICtUaGUgSVJRIGNoaXAgY2FuIGhhbmRsZSB1
+cCB0byA2NCBTRUlzLCBhIHNldCBjb21lcyBmcm9tIHRoZSBBUCBhbmQgaXMKPiA+PiA+ICt3aXJl
+ZCB3aGlsZSBhIHNlY29uZCBzZXQgY29tZXMgZnJvbSB0aGUgQ1BzIGJ5IHRoZSBtZWFuIG9mIE1T
+SXMuIEVhY2gKPiA+PiA+ICsnZG9tYWluJyBpcyByZXByZXNlbnRlZCBhcyBhIHN1Ym5vZGUuCj4g
+Pj4gPiArCj4gPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICsKPiA+PiA+ICstIGNv
+bXBhdGlibGU6IHNob3VsZCBiZSAibWFydmVsbCxhcm1hZGEtOGstc2VpIi4KPiA+PiA+ICstIHJl
+ZzogU0VJIHJlZ2lzdGVycyBsb2NhdGlvbiBhbmQgbGVuZ3RoLgo+ID4+ID4gKy0gaW50ZXJydXB0
+czogaWRlbnRpZmllcyB0aGUgcGFyZW50IElSUSB0aGF0IHdpbGwgYmUgdHJpZ2dlcmVkLgo+ID4+
+ID4gKy0gI2FkZHJlc3MtY2VsbHM6IHNob3VsZCBiZSAnMScsIHJlcHJlc2VudHMgdGhlIHBvc2l0
+aW9uIG9mIHRoZSBmaXJzdAo+ID4+ID4gKyAgICAgICAgICAgICAgICAgIElSUSBvZiBhIGdpdmVu
+IHR5cGUgaW4gdGhlIFNFSSByYW5nZS4KPiA+PiA+ICstICNzaXplLWNlbGxzOiBzaG91bGQgYmUg
+JzEnLCByZXByZXNlbnRzIHRoZSBudW1iZXIgb2YgYSBnaXZlbiB0eXBlIG9mCj4gPj4gPiArICAg
+ICAgICAgICAgICAgSVJRcy4KPiA+PiA+ICsKPiA+PiA+ICtDaGlsZCBub2RlICdzZWktd2lyZWQt
+Y29udHJvbGxlcicgcmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICsKPiA+PiA+ICstIHJlZzog
+dGhlIHJhbmdlIG9mIHdpcmVkIGludGVycnVwdHMuCj4gPj4gPiArLSAjaW50ZXJydXB0LWNlbGxz
+OiBudW1iZXIgb2YgY2VsbHMgdG8gZGVmaW5lIGFuIFNFSSB3aXJlZCBpbnRlcnJ1cHQKPiA+PiA+
+ICsgICAgICAgICAgICAgICAgICAgIGNvbWluZyBmcm9tIHRoZSBBUCwgc2hvdWxkIGJlIDEuIFRo
+ZSBjZWxsIGlzIHRoZSBJUlEKPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgIG51bWJlci4KPiA+
+PiA+ICstIGludGVycnVwdC1jb250cm9sbGVyOiBpZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIGlu
+dGVycnVwdCBjb250cm9sbGVyLgo+ID4+ID4gKwo+ID4+ID4gK0NoaWxkIG5vZGUgJ3NlaS1tc2kt
+Y29udHJvbGxlcicgcmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICsKPiA+PiA+ICstIHJlZzog
+dGhlIHJhbmdlIG9mIG5vbi13aXJlZCBpbnRlcnJ1cHRzIHRyaWdnZXJlZCBieSB3YXkgb2YgTVNJ
+cy4KPiA+PiA+ICstIG1zaS1jb250cm9sbGVyOiBpZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIE1T
+SSBjb250cm9sbGVyLgo+ID4+ID4gKwo+ID4+ID4gK0V4YW1wbGU6Cj4gPj4gPiArCj4gPj4gPiAr
+ICAgICAgICBzZWk6IHNlaUAzZjAyMDAgewo+ID4+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGli
+bGUgPSAibWFydmVsbCxhcm1hZGEtOGstc2VpIjsKPiA+PiA+ICsgICAgICAgICAgICAgICByZWcg
+PSA8MHgzZjAyMDAgMHg0MD47Cj4gPj4gPiArICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDAgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPj4gPiArICAgICAgICAgICAgICAgI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gPiArICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
+MT47Cj4gPj4gPiArCj4gPj4gPiArICAgICAgICAgICAgICAgc2VpX3dpcmVkX2NvbnRyb2xsZXI6
+IHNlaS13aXJlZC1jb250cm9sbGVyQDAgewo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+cmVnID0gPDAgMjE+OyAgCj4gPj4KPiA+PiBVc2luZyBpbnRlcnJ1cHQgbnVtYmVycyBpbiByZWcg
+aXMgc3RyYW5nZS4gIAo+ID4KPiA+IEkgdGhvdWdodCB0aGUgcmVnIHByb3BlcnR5IHdhcyB0aGUg
+b25lIHRvIGNob29zZSBoZXJlLCBJIGNhbiBvZiBjb3Vyc2UKPiA+IGNoYW5nZSBpdCwgd2hhdCB3
+b3VsZCB5b3Ugc3VnZ2VzdD8KPiA+ICAKPiA+PiAgCj4gPj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gPj4gPiArICAgICAgICAgICAgICAgfTsKPiA+PiA+
+ICsKPiA+PiA+ICsgICAgICAgICAgICAgICBzZWlfbXNpX2NvbnRyb2xsZXI6IHNlaS1tc2ktY29u
+dHJvbGxlckAyMSB7Cj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MjEgNDM+
+Owo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbXNpLWNvbnRyb2xsZXI7ICAKPiA+Pgo+
+ID4+IENhbid0IHRoZSBwYXJlbnQgYmUgYm90aCBhbiBpbnRlcnJ1cHQtY29udHJvbGxlciBhbmQg
+bXNpLWNvbnRyb2xsZXI/ICAKCkkgd291bGQgcHJlZmVyIHRvIGRlc2NyaWJlIGhvdyB0aGUgaGFy
+ZHdhcmUgaXMgc3BsaXQgaW4gdHdvCnN1Yi1jb250cm9sbGVycy4gQW5kIHRvIGFuc3dlciB0aGUg
+cXVlc3Rpb246IG5vLCB0aGUgcGFyZW50IGNhbm5vdCBiZQpib3RoIGFuZCBpbnRlcnJ1cHQtY29u
+dHJvbGxlciBhbmQgYW4gbXNpLWNvbnRyb2xsZXIuCgo+ID4KPiA+IFdlIG5lZWQgdG8ga25vdyB3
+aGljaCBvbmUgYWdncmVnYXRlcyBpbnRlcnJ1cHRzLCB3aGljaCBvbmUgcmVjZWl2ZXMKPiA+IE1T
+SXMgYW5kIG1vc3QgaW1wb3J0YW50bHkgd2hpY2ggaW50ZXJydXB0IGlzIHdoYXQgKHdpdGhpbiB0
+aGUgNjQKPiA+IHRoYXQgYXJlIGhhbmRsZWQgYnkgdGhlIFNFSSkuICAKPiAKPiBZb3UgbWVhbiB0
+aGF0IDAtMjAgYXJlIHdpcmVkIGFuZCAyMS02MyBhcmUgbXNpPyAibWFydmVsbCxtc2ktYmFzZSA9
+Cj4gPDIxPjsiIGluIHRoZSBwYXJlbnQgd291bGQgYmUgc3VmZmljaWVudCBmb3IgdGhhdCB0aG91
+Z2ggeW91IG1heSB3YW50Cj4gc29tZXRoaW5nIG1vcmUgZmxleGlibGUgdG8gaGF2ZSBtdWx0aXBs
+ZSByYW5nZXMuCgpBYnNvbHV0ZWx5LCBJIHdvdWxkIGxpa2Ugc29tZXRoaW5nIG1vcmUgZmxleGli
+bGUuCgo+IAo+IEl0IGxvb2tzIGxpa2UgdGhlcmUgbWF5IGFscmVhZHkgYmUgc2ltaWxhciBiaW5k
+aW5ncy4gU2VlCj4gJ21zaS1hdmFpbGFibGUtcmFuZ2VzIiBhbmQgInthbCxhcm19LG1zaS1iYXNl
+LXNwaSIuCgpJZiB5b3UgYXJlIG9rLCBJIHdpbGwgdXNlIGEgbmV3IHByb3BlcnR5IG5hbWVkICdt
+YXJ2ZWxsLHNlaS1yYW5nZXMnCmluc3RlYWQgb2YgdGhlIHJlZyBwcm9wZXJ0eSB3aGljaCBpcyBp
+bmRlZWQgbW9yZSBleHBsaWNpdC4KClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
