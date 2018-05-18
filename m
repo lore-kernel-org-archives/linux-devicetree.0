@@ -1,46 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 11/15] dt-bindings: cpufreq: Document
- operating-points-v2-kryo-cpu
-Date: Fri, 18 May 2018 09:26:39 -0500
-Message-ID: <20180518142639.GA3877@rob-hp-laptop>
-References: <1526555955-29960-1-git-send-email-ilialin@codeaurora.org>
- <1526555955-29960-12-git-send-email-ilialin@codeaurora.org>
+Subject: Re: [PATCH v6 1/2] dt-bindings: Documentation for qcom, llcc
+Date: Fri, 18 May 2018 09:31:54 -0500
+Message-ID: <20180518143154.GA6224@rob-hp-laptop>
+References: <1525810921-15878-1-git-send-email-rishabhb@codeaurora.org>
+ <1525810921-15878-2-git-send-email-rishabhb@codeaurora.org>
+ <152649021310.210890.14841324536807182632@swboyd.mtv.corp.google.com>
+ <385198cbb91c4a36ad758997916ad271@codeaurora.org>
+ <152649413707.210890.2655572242392552759@swboyd.mtv.corp.google.com>
+ <079348edcb511cefb9f4d76877d50cb7@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1526555955-29960-12-git-send-email-ilialin@codeaurora.org>
+In-Reply-To: <079348edcb511cefb9f4d76877d50cb7@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: rishabhb@codeaurora.org
+Cc: Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 02:19:11PM +0300, Ilia Lin wrote:
-> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-> to provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each OPP of
-> operating-points-v2 table when it is parsed by the OPP framework.
-> 
-> This change adds documentation for the DT bindings.
-> The "operating-points-v2-kryo-cpu" DT extends the "operating-points-v2"
-> with following parameters:
-> - nvmem-cells (NVMEM area containig the speedbin information)
-> - opp-supported-hw: A single 32 bit bitmap value,
->   representing compatible HW:
-> 			0:	MSM8996 V3, speedbin 0
-> 			1:	MSM8996 V3, speedbin 1
-> 			2:	MSM8996 V3, speedbin 2
-> 			3:	unused
-> 			4:	MSM8996 SG, speedbin 0
-> 			5:	MSM8996 SG, speedbin 1
-> 			6:	MSM8996 SG, speedbin 2
-> 			7-31:	unused
-> 
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  .../devicetree/bindings/opp/kryo-cpufreq.txt       | 680 +++++++++++++++++++++
->  1 file changed, 680 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+On Wed, May 16, 2018 at 04:32:27PM -0700, rishabhb@codeaurora.org wrote:
+> On 2018-05-16 11:08, Stephen Boyd wrote:
+> > Quoting rishabhb@codeaurora.org (2018-05-16 10:33:14)
+> > > On 2018-05-16 10:03, Stephen Boyd wrote:
+> > > > Quoting Rishabh Bhatnagar (2018-05-08 13:22:00)
+> > > 
+> > > >> +
+> > > >> +- max-slices:
+> > > >> +       usage: required
+> > > >> +       Value Type: <u32>
+> > > >> +       Definition: Number of cache slices supported by hardware
+> > > >> +
+> > > >> +Example:
+> > > >> +
+> > > >> +       llcc: qcom,llcc@1100000 {
+> > > >
+> > > > cache-controller@1100000 ?
+> > > >
+> > > We have tried to use consistent naming convention as in llcc_*
+> > > everywhere.
+> > > Using cache-controller will mix and match the naming convention.
+> > > Also in
+> > > the documentation it is explained what llcc is and its full form.
+> > > 
+> > 
+> > DT prefers standard node names as opposed to vendor specific node names.
+> > Isn't it a cache controller? I fail to see why this can't be done.
+> Hi Stephen,
+> The driver is vendor specific and also for uniformity purposes we preferred
+> to go with this name.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Almost *every* node and driver is vendor specific. Please do as Stephen 
+suggested.
+
+Rob
