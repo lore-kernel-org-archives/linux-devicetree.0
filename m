@@ -1,79 +1,131 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH V2 1/3] clk: imx7d: correct enet phy ref clock gates
-Date: Fri, 18 May 2018 15:03:48 +0200
-Message-ID: <66f3e8827e41338291c3e2298cbc87cc@agner.ch>
-References: <1526605266-18464-1-git-send-email-Anson.Huang@nxp.com>
+From: David Julian Veenstra <davidjulianveenstra@gmail.com>
+Subject: Re: [PATCH v3 6/9] staging: iio: ad2s1200: Add scaling factor for
+ angular velocity channel
+Date: Fri, 18 May 2018 15:10:18 +0200
+Message-ID: <8736ypcdol.fsf@gmail.com>
+References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
+ <803058d8b119451a193c556866ffbb291ec83bcb.1524432236.git.davidjulianveenstra@gmail.com>
+ <20180428182344.59fec23e@archlinux> <20180428183514.08ab2a6c@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526605266-18464-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, adriana.reus@nxp.com, rui.silva@linaro.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20180428183514.08ab2a6c@archlinux>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 18.05.2018 03:01, Anson Huang wrote:
-> IMX7D_ENET_PHY_REF_ROOT_DIV supplies clock for PHY directly,
-> there is no clock gate after it, rename it to
-> IMX7D_ENET_PHY_REF_ROOT_CLK to avoid device tree change.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-
---
-Stefan
-
-> ---
->  drivers/clk/imx/clk-imx7d.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-> index 975a20d..23d5090a 100644
-> --- a/drivers/clk/imx/clk-imx7d.c
-> +++ b/drivers/clk/imx/clk-imx7d.c
-> @@ -738,7 +738,7 @@ static void __init imx7d_clocks_init(struct
-> device_node *ccm_node)
->  	clks[IMX7D_ENET1_TIME_ROOT_DIV] =
-> imx_clk_divider2("enet1_time_post_div", "enet1_time_pre_div", base +
-> 0xa780, 0, 6);
->  	clks[IMX7D_ENET2_REF_ROOT_DIV] =
-> imx_clk_divider2("enet2_ref_post_div", "enet2_ref_pre_div", base +
-> 0xa800, 0, 6);
->  	clks[IMX7D_ENET2_TIME_ROOT_DIV] =
-> imx_clk_divider2("enet2_time_post_div", "enet2_time_pre_div", base +
-> 0xa880, 0, 6);
-> -	clks[IMX7D_ENET_PHY_REF_ROOT_DIV] =
-> imx_clk_divider2("enet_phy_ref_post_div", "enet_phy_ref_pre_div", base
-> + 0xa900, 0, 6);
-> +	clks[IMX7D_ENET_PHY_REF_ROOT_CLK] =
-> imx_clk_divider2("enet_phy_ref_root_clk", "enet_phy_ref_pre_div", base
-> + 0xa900, 0, 6);
->  	clks[IMX7D_EIM_ROOT_DIV] = imx_clk_divider2("eim_post_div",
-> "eim_pre_div", base + 0xa980, 0, 6);
->  	clks[IMX7D_NAND_ROOT_CLK] = imx_clk_divider2("nand_root_clk",
-> "nand_pre_div", base + 0xaa00, 0, 6);
->  	clks[IMX7D_QSPI_ROOT_DIV] = imx_clk_divider2("qspi_post_div",
-> "qspi_pre_div", base + 0xaa80, 0, 6);
-> @@ -816,7 +816,6 @@ static void __init imx7d_clocks_init(struct
-> device_node *ccm_node)
->  	clks[IMX7D_ENET1_TIME_ROOT_CLK] =
-> imx_clk_gate4("enet1_time_root_clk", "enet1_time_post_div", base +
-> 0x44f0, 0);
->  	clks[IMX7D_ENET2_REF_ROOT_CLK] = imx_clk_gate4("enet2_ref_root_clk",
-> "enet2_ref_post_div", base + 0x4500, 0);
->  	clks[IMX7D_ENET2_TIME_ROOT_CLK] =
-> imx_clk_gate4("enet2_time_root_clk", "enet2_time_post_div", base +
-> 0x4510, 0);
-> -	clks[IMX7D_ENET_PHY_REF_ROOT_CLK] =
-> imx_clk_gate4("enet_phy_ref_root_clk", "enet_phy_ref_post_div", base +
-> 0x4520, 0);
->  	clks[IMX7D_EIM_ROOT_CLK] = imx_clk_gate4("eim_root_clk",
-> "eim_post_div", base + 0x4160, 0);
->  	clks[IMX7D_NAND_RAWNAND_CLK] =
-> imx_clk_gate2_shared2("nand_rawnand_clk", "nand_root_clk", base +
-> 0x4140, 0, &share_count_nand);
->  	clks[IMX7D_NAND_USDHC_BUS_RAWNAND_CLK] =
-> imx_clk_gate2_shared2("nand_usdhc_rawnand_clk", "nand_usdhc_root_clk",
-> base + 0x4140, 0, &share_count_nand);
+Ck9uIDI4LCBBcHJpbCAyMDE4IDE3OjM1LCBKb25hdGhhbiBDYW1lcm9uIHdyb3RlOgoKPiBPbiBT
+YXQsIDI4IEFwciAyMDE4IDE4OjIzOjQ0ICswMTAwCj4gSm9uYXRoYW4gQ2FtZXJvbiA8amljMjNA
+a2VybmVsLm9yZz4gd3JvdGU6Cj4KPj4gT24gTW9uLCAyMyBBcHIgMjAxOCAwMDowMzo1OSArMDIw
+MAo+PiBEYXZpZCBWZWVuc3RyYSA8ZGF2aWRqdWxpYW52ZWVuc3RyYUBnbWFpbC5jb20+IHdyb3Rl
+Ogo+PiAKPj4gPiBUaGUgc3lzZnMgaWlvIEFCSSBzdGF0ZXMgcmFkaWFucyBwZXIgc2Vjb25kIGlz
+IGV4cGVjdGVkIGFzIHRoZSB1bml0IGZvcgo+PiA+IGFuZ3VsYXIgdmVsb2NpdHksIGJ1dCB0aGUg
+MTItYml0IGFuZ3VsYXIgdmVsb2NpdHkgcmVnaXN0ZXIgaGFzIHJwcyAgCj4+IFJlYWxseSBzbWFs
+bCBwb2ludCwgYnV0IHJwcyBpcyBhIGJpdCBhbWJpZ3VvdXMgZ2l2ZW4gd2UgYXJlCj4+IHRhbGtp
+bmcgYWJvdXQgY29udmVydGluZyB0byByYWRpYW4ncyBwZXIgc2Vjb25kIDspCj4+IAo+PiByZXZz
+IGlzIHRoZSAnY29tbW9uJyBuYW1lIGZvciB3aGF0IGl0IGN1cnJlbnRseSBpcyBJIHRoaW5rLgo+
+PiAKPj4gT3RoZXJ3aXNlIHRoaXMgbG9va3MgZ29vZC4KPiBBY3R1YWxseSwgSSBjYW4ndCBpbW1l
+ZGlhdGVseSB0ZWxsIGZyb20gdGhlIGRhdGFzaGVldCB3aGF0IHRoZSBzY2FsaW5nIGlzLi4uCj4K
+PiAiQml0IDE1IHRocm91Z2ggYml0IDQgY29ycmVzcG9uZCB0byB0aGUgYW5ndWxhcgo+IGluZm9y
+bWF0aW9uLiBUaGUgYW5ndWxhciBwb3NpdGlvbiBkYXRhIGZvcm1hdCBpcyB1bnNpZ25lZAo+IGJp
+bmFyeSwgd2l0aCBhbGwgemVyb3MgY29ycmVzcG9uZGluZyB0byAwIGRlZ3JlZXMgYW5kIGFsbCBv
+bmVzCj4gY29ycmVzcG9uZGluZyB0byAzNjAgZGVncmVlcyDigJNsIExTQi4gVGhlIGFuZ3VsYXIg
+dmVsb2NpdHkgZGF0YQo+IGZvcm1hdCBpbnN0ZWFkIGlzIHR3b3MgY29tcGxlbWVudCBiaW5hcnks
+IHdpdGggdGhlIE1TQgo+IHJlcHJlc2VudGluZyB0aGUgcm90YXRpb24gZGlyZWN0aW9uIgo+Cj4g
+RWFybGllciB3YXMgYWxzbyBoYWQ6Cj4KPiAiRGF0YSBGb3JtYXQKPiBUaGUgZGlnaXRhbCBhbmds
+ZSBzaWduYWwgcmVwcmVzZW50cyB0aGUgYWJzb2x1dGUgcG9zaXRpb24gb2YgdGhlCj4gcmVzb2x2
+ZXIgc2hhZnQgYXMgYSAxMi1iaXQgdW5zaWduZWQgYmluYXJ5IHdvcmQuIFRoZSBkaWdpdGFsCj4g
+dmVsb2NpdHkgc2lnbmFsIGlzIGEgMTItYml0IHR3b3MgY29tcGxlbWVudCB3b3JkLCB3aGljaAo+
+IHJlcHJlc2VudHMgdGhlIHZlbG9jaXR5IG9mIHRoZSByZXNvbHZlciBzaGFmdCByb3RhdGluZyBp
+biBlaXRoZXIgYQo+IGNsb2Nrd2lzZSBvciBhIGNvdW50ZXJjbG9ja3dpc2UgZGlyZWN0aW9uLiIK
+Pgo+IFNvIGZvciBwb3NpdGlvbiB0aGUgMTIgYml0cyBjb3JyZXNwb25kIHRvIDAgdG8gMzYwIC0g
+MzYwLygyXjEyKQo+IGhlbmNlIF9TQ0FMRSBpcyAzNjAvKDJeMTIpCj4KPiBCdXQgSSdtIG5vdCBz
+ZWVpbmcgYW55IGhpbnQgd2hhdHNvZXZlciBvbiB0aGUgc2NhbGluZyBmb3IgdGhlCj4gcm90YXRp
+b25hbCB2ZWxvY2l0eS4uLgo+Cj4gQW0gSSBtaXNzaW5nIGl0IHNvbWV3aGVyZT8gIHlvdSBtaWdo
+dCBiZSByaWdodCBpbiBob3cgeW91IGhhdmUKPiByZWFkIGl0IGdpdmVuIGl0IHdpbGwgdHJhY2sg
+dXAgdG8gMTAwMHJwcyBhbmQgd2UgYXJlIDIgZGlyZWN0aW9uYWwKPiBzbyAtMjA0OCB0byAyMDQ3
+IHNvIG5vdCBhIGh1Z2UgYW1vdW50IG9mIHdhc3RlZCBzcGFjZS4KPgo+IEZhaWxpbmcgYW55IG90
+aGVyIGV2aWRlbmNlIEknbGwgZ28gd2l0aCB3aGF0IHlvdSBoYXZlIHVudGlsIHdlCj4gY2FuIHRl
+c3QgdGhpcywgYnV0IHRoZSBkYXRhc2hlZXQgY291bGQgYmUgY2xlYXJlciEKCldoZW4gSSBmaXJz
+dCByZWFkIHRoZSBkYXRhc2hlZXQgaXQgd2Fzbid0IGNsZWFyIHRvIG1lIGVpdGhlci4gU28gSQpl
+bWFpbGVkIE1pY2hhZWwgSGVubmVyaWNoLiBIZSBjb25maXJtZWQgdG8gbWUgdGhhdCB0aGUgc2Nh
+bGluZyBmYWN0b3IKZm9yIGRlZ3JlZXMgaXMgaW5kZWVkIDM2MCAvICgyXjEyLSAxKS4gQW5kIGhl
+IHRvbGQgbWUgdGhhdCB0aGUgdW5pdApmb3IgYW5ndWxhciB2ZWxvY2l0eSBpcyByZXZvbHV0aW9u
+cyBwZXIgc2Vjb25kLCBhbmQgdGhhdCBJIHNob3VsZAp1c2UgYSBzY2FsaW5nIGZhY3RvciBvZiAy
+UEkgdG8gY29udmVydCBpdCB0byByYWQvcy4KCkJlc3QgcmVnYXJkcywKRGF2aWQgVmVlbnN0cmEK
+Cj4KPiBKb25hdGhhbgo+PiAKPj4gSm9uYXRoYW4KPj4gCj4+IAo+PiA+IGFzIGl0cyB1bml0LiBT
+byBhIHNjYWxpbmcgZmFjdG9yIG9mIGFwcHJveGltYXRlbHkgMiAqIFBpIGlzCj4+ID4gYWRkZWQg
+dG8gdGhlIGFuZ3VsYXIgdmVsb2NpdHkgY2hhbm5lbC4KPj4gPiAKPj4gPiBTaWduZWQtb2ZmLWJ5
+OiBEYXZpZCBWZWVuc3RyYSA8ZGF2aWRqdWxpYW52ZWVuc3RyYUBnbWFpbC5jb20+Cj4+ID4gLS0t
+Cj4+ID4gQ2hhbmdlcyBpbiB2MzoKPj4gPiAgLSBBIGRlY2ltYWwgYXBwcm94aW1hdGlvbiBvZiB0
+aGUgc2NhbGUgaXMgdXNlZCwgaW5zdGVhZAo+PiA+ICAgIG9mIGEgZnJhY3Rpb25hbCBhcHByb3hp
+bWF0aW9uLgo+PiA+ICAtIFJlbW92ZSB1bm5lZWRlZCBleHBsYW5hdGlvbiBvZiBpaW9fY29udmVy
+dF9yYXdfdG9fcHJvY2Vzc2VkLgo+PiA+IAo+PiA+ICBkcml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29s
+dmVyL2FkMnMxMjAwLmMgfCA3MSArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KPj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQo+PiA+
+IAo+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29sdmVyL2FkMnMxMjAw
+LmMgYi9kcml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29sdmVyL2FkMnMxMjAwLmMKPj4gPiBpbmRleCAz
+YzcxNjM2MTBmZjYuLjNlMTY5NmU1MmMzOCAxMDA2NDQKPj4gPiAtLS0gYS9kcml2ZXJzL3N0YWdp
+bmcvaWlvL3Jlc29sdmVyL2FkMnMxMjAwLmMKPj4gPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvaWlv
+L3Jlc29sdmVyL2FkMnMxMjAwLmMKPj4gPiBAQCAtNTcsMzcgKzU3LDU1IEBAIHN0YXRpYyBpbnQg
+YWQyczEyMDBfcmVhZF9yYXcoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwKPj4gPiAgCXN0cnVj
+dCBhZDJzMTIwMF9zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOwo+PiA+ICAJaW50IHJl
+dCA9IDA7Cj4+ID4gIAo+PiA+IC0JbXV0ZXhfbG9jaygmc3QtPmxvY2spOwo+PiA+IC0JZ3Bpb2Rf
+c2V0X3ZhbHVlKHN0LT5zYW1wbGUsIDApOwo+PiA+IC0KPj4gPiAtCS8qIGRlbGF5ICg2ICogQUQy
+UzEyMDBfVFNDTEsgKyAyMCkgbmFubyBzZWNvbmRzICovCj4+ID4gLQl1ZGVsYXkoMSk7Cj4+ID4g
+LQlncGlvZF9zZXRfdmFsdWUoc3QtPnNhbXBsZSwgMSk7Cj4+ID4gLQlncGlvZF9zZXRfdmFsdWUo
+c3QtPnJkdmVsLCAhIShjaGFuLT50eXBlID09IElJT19BTkdMKSk7Cj4+ID4gLQo+PiA+IC0JcmV0
+ID0gc3BpX3JlYWQoc3QtPnNkZXYsICZzdC0+cngsIDIpOwo+PiA+IC0JaWYgKHJldCA8IDApIHsK
+Pj4gPiArCXN3aXRjaCAobSkgewo+PiA+ICsJY2FzZSBJSU9fQ0hBTl9JTkZPX1NDQUxFOgo+PiA+
+ICsJCXN3aXRjaCAoY2hhbi0+dHlwZSkgewo+PiA+ICsJCWNhc2UgSUlPX0FOR0xfVkVMOgo+PiA+
+ICsJCQkvKiAyICogUGkgfj0gNi4yODMxODUgKi8KPj4gPiArCQkJKnZhbCA9IDY7Cj4+ID4gKwkJ
+CSp2YWwyID0gMjgzMTg1Owo+PiA+ICsJCQlyZXR1cm4gSUlPX1ZBTF9JTlRfUExVU19NSUNSTzsK
+Pj4gPiArCQlkZWZhdWx0Ogo+PiA+ICsJCQlyZXR1cm4gLUVJTlZBTDsKPj4gPiArCQl9Cj4+ID4g
+KwkJYnJlYWs7Cj4+ID4gKwljYXNlIElJT19DSEFOX0lORk9fUkFXOgo+PiA+ICsJCW11dGV4X2xv
+Y2soJnN0LT5sb2NrKTsKPj4gPiArCQlncGlvZF9zZXRfdmFsdWUoc3QtPnNhbXBsZSwgMCk7Cj4+
+ID4gKwo+PiA+ICsJCS8qIGRlbGF5ICg2ICogQUQyUzEyMDBfVFNDTEsgKyAyMCkgbmFubyBzZWNv
+bmRzICovCj4+ID4gKwkJdWRlbGF5KDEpOwo+PiA+ICsJCWdwaW9kX3NldF92YWx1ZShzdC0+c2Ft
+cGxlLCAxKTsKPj4gPiArCQlncGlvZF9zZXRfdmFsdWUoc3QtPnJkdmVsLCAhIShjaGFuLT50eXBl
+ID09IElJT19BTkdMKSk7Cj4+ID4gKwo+PiA+ICsJCXJldCA9IHNwaV9yZWFkKHN0LT5zZGV2LCAm
+c3QtPnJ4LCAyKTsKPj4gPiArCQlpZiAocmV0IDwgMCkgewo+PiA+ICsJCQltdXRleF91bmxvY2so
+JnN0LT5sb2NrKTsKPj4gPiArCQkJcmV0dXJuIHJldDsKPj4gPiArCQl9Cj4+ID4gKwo+PiA+ICsJ
+CXN3aXRjaCAoY2hhbi0+dHlwZSkgewo+PiA+ICsJCWNhc2UgSUlPX0FOR0w6Cj4+ID4gKwkJCSp2
+YWwgPSBiZTE2X3RvX2NwdXAoJnN0LT5yeCkgPj4gNDsKPj4gPiArCQkJYnJlYWs7Cj4+ID4gKwkJ
+Y2FzZSBJSU9fQU5HTF9WRUw6Cj4+ID4gKwkJCSp2YWwgPSBzaWduX2V4dGVuZDMyKGJlMTZfdG9f
+Y3B1cCgmc3QtPnJ4KSA+PiA0LCAxMSk7Cj4+ID4gKwkJCWJyZWFrOwo+PiA+ICsJCWRlZmF1bHQ6
+Cj4+ID4gKwkJCW11dGV4X3VubG9jaygmc3QtPmxvY2spOwo+PiA+ICsJCQlyZXR1cm4gLUVJTlZB
+TDsKPj4gPiArCQl9Cj4+ID4gKwo+PiA+ICsJCS8qIGRlbGF5ICgyICogQUQyUzEyMDBfVFNDTEsg
+KyAyMCkgbnMgZm9yIHNhbXBsZSBwdWxzZSAqLwo+PiA+ICsJCXVkZWxheSgxKTsKPj4gPiAgCQlt
+dXRleF91bmxvY2soJnN0LT5sb2NrKTsKPj4gPiAtCQlyZXR1cm4gcmV0Owo+PiA+IC0JfQo+PiA+
+ICAKPj4gPiAtCXN3aXRjaCAoY2hhbi0+dHlwZSkgewo+PiA+IC0JY2FzZSBJSU9fQU5HTDoKPj4g
+PiAtCQkqdmFsID0gYmUxNl90b19jcHVwKCZzdC0+cngpID4+IDQ7Cj4+ID4gLQkJYnJlYWs7Cj4+
+ID4gLQljYXNlIElJT19BTkdMX1ZFTDoKPj4gPiAtCQkqdmFsID0gc2lnbl9leHRlbmQzMihiZTE2
+X3RvX2NwdXAoJnN0LT5yeCkgPj4gNCwgMTEpOwo+PiA+IC0JCWJyZWFrOwo+PiA+ICsJCXJldHVy
+biBJSU9fVkFMX0lOVDsKPj4gPiAgCWRlZmF1bHQ6Cj4+ID4gLQkJbXV0ZXhfdW5sb2NrKCZzdC0+
+bG9jayk7Cj4+ID4gLQkJcmV0dXJuIC1FSU5WQUw7Cj4+ID4gKwkJYnJlYWs7Cj4+ID4gIAl9Cj4+
+ID4gIAo+PiA+IC0JLyogZGVsYXkgKDIgKiBBRDJTMTIwMF9UU0NMSyArIDIwKSBucyBmb3Igc2Ft
+cGxlIHB1bHNlICovCj4+ID4gLQl1ZGVsYXkoMSk7Cj4+ID4gLQltdXRleF91bmxvY2soJnN0LT5s
+b2NrKTsKPj4gPiAtCj4+ID4gLQlyZXR1cm4gSUlPX1ZBTF9JTlQ7Cj4+ID4gKwlyZXR1cm4gLUVJ
+TlZBTDsKPj4gPiAgfQo+PiA+ICAKPj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBpaW9fY2hhbl9z
+cGVjIGFkMnMxMjAwX2NoYW5uZWxzW10gPSB7Cj4+ID4gQEAgLTEwMSw2ICsxMTksNyBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IGlpb19jaGFuX3NwZWMgYWQyczEyMDBfY2hhbm5lbHNbXSA9IHsKPj4g
+PiAgCQkuaW5kZXhlZCA9IDEsCj4+ID4gIAkJLmNoYW5uZWwgPSAwLAo+PiA+ICAJCS5pbmZvX21h
+c2tfc2VwYXJhdGUgPSBCSVQoSUlPX0NIQU5fSU5GT19SQVcpLAo+PiA+ICsJCS5pbmZvX21hc2tf
+c2hhcmVkX2J5X3R5cGUgPSBCSVQoSUlPX0NIQU5fSU5GT19TQ0FMRSksCj4+ID4gIAl9Cj4+ID4g
+IH07Cj4+ID4gICAgCj4+IAo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDog
+c2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtaWlvIiBpbgo+PiB0aGUgYm9keSBvZiBh
+IG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+PiBNb3JlIG1ham9yZG9tbyBp
+bmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcg
+bGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhk
+cml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
