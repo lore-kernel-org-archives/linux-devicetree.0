@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/3] sh_eth: add EDMR.NBST support
-Date: Fri, 18 May 2018 21:31:28 +0300
-Message-ID: <6dc30bc4-04f4-7ac3-e9e9-de86f2eee99f@cogentembedded.com>
+Subject: [PATCH v2 3/3] sh_eth: add R8A77980 support
+Date: Fri, 18 May 2018 21:32:46 +0300
+Message-ID: <a0dec765-3196-c09d-b41c-c1eb3025a8ad@cogentembedded.com>
 References: <f30c98ff-f6da-9e7f-c637-49076a428885@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -14,8 +14,9 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem
 Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The R-Car V3H (AKA R8A77980) GEther controller adds the DMA burst mode bit
-(NBST) in EDMR and the manual tells to always set it before doing any DMA.
+Finally, add support for the DT probing of the R-Car V3H (AKA R8A77980) --
+it's the only R-Car gen3 SoC having the GEther controller -- others have
+only EtherAVB...
 
 Based on the original (and large) patch by Vladimir Barinov.
 
@@ -27,42 +28,81 @@ Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Changes in version 2:
 - added Simon's tag.
 
- drivers/net/ethernet/renesas/sh_eth.c |    4 ++++
- drivers/net/ethernet/renesas/sh_eth.h |    2 ++
- 2 files changed, 6 insertions(+)
+ Documentation/devicetree/bindings/net/sh_eth.txt |    1 
+ drivers/net/ethernet/renesas/sh_eth.c            |   44 +++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
 
+Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/sh_eth.txt
++++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+@@ -14,6 +14,7 @@ Required properties:
+ 	      "renesas,ether-r8a7791"  if the device is a part of R8A7791 SoC.
+ 	      "renesas,ether-r8a7793"  if the device is a part of R8A7793 SoC.
+ 	      "renesas,ether-r8a7794"  if the device is a part of R8A7794 SoC.
++	      "renesas,gether-r8a77980" if the device is a part of R8A77980 SoC.
+ 	      "renesas,ether-r7s72100" if the device is a part of R7S72100 SoC.
+ 	      "renesas,rcar-gen1-ether" for a generic R-Car Gen1 device.
+ 	      "renesas,rcar-gen2-ether" for a generic R-Car Gen2 or RZ/G1
 Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
 ===================================================================
 --- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
 +++ net-next/drivers/net/ethernet/renesas/sh_eth.c
-@@ -1434,6 +1434,10 @@ static int sh_eth_dev_init(struct net_de
- 
- 	sh_eth_write(ndev, mdp->cd->trscer_err_mask, TRSCER);
- 
-+	/* DMA transfer burst mode */
-+	if (mdp->cd->nbst)
-+		sh_eth_modify(ndev, EDMR, EDMR_NBST, EDMR_NBST);
+@@ -753,6 +753,49 @@ static struct sh_eth_cpu_data rcar_gen2_
+ 	.rmiimode	= 1,
+ 	.magic		= 1,
+ };
 +
- 	if (mdp->cd->bculr)
- 		sh_eth_write(ndev, 0x800, BCULR);	/* Burst sycle set */
++/* R8A77980 */
++static struct sh_eth_cpu_data r8a77980_data = {
++	.soft_reset	= sh_eth_soft_reset_gether,
++
++	.set_duplex	= sh_eth_set_duplex,
++	.set_rate	= sh_eth_set_rate_gether,
++
++	.register_type  = SH_ETH_REG_GIGABIT,
++
++	.edtrr_trns	= EDTRR_TRNS_GETHER,
++	.ecsr_value	= ECSR_PSRTO | ECSR_LCHNG | ECSR_ICD | ECSR_MPD,
++	.ecsipr_value	= ECSIPR_PSRTOIP | ECSIPR_LCHNGIP | ECSIPR_ICDIP |
++			  ECSIPR_MPDIP,
++	.eesipr_value	= EESIPR_RFCOFIP | EESIPR_ECIIP |
++			  EESIPR_FTCIP | EESIPR_TDEIP | EESIPR_TFUFIP |
++			  EESIPR_FRIP | EESIPR_RDEIP | EESIPR_RFOFIP |
++			  EESIPR_RMAFIP | EESIPR_RRFIP |
++			  EESIPR_RTLFIP | EESIPR_RTSFIP |
++			  EESIPR_PREIP | EESIPR_CERFIP,
++
++	.tx_check       = EESR_FTC | EESR_CD | EESR_RTO,
++	.eesr_err_check = EESR_TWB1 | EESR_TWB | EESR_TABT | EESR_RABT |
++			  EESR_RFE | EESR_RDE | EESR_RFRMER |
++			  EESR_TFE | EESR_TDE | EESR_ECI,
++	.fdr_value	= 0x0000070f,
++
++	.apr		= 1,
++	.mpr		= 1,
++	.tpauser	= 1,
++	.bculr		= 1,
++	.hw_swap	= 1,
++	.nbst		= 1,
++	.rpadir		= 1,
++	.rpadir_value   = 2 << 16,
++	.no_trimd	= 1,
++	.no_ade		= 1,
++	.xdfar_rw	= 1,
++	.hw_checksum	= 1,
++	.select_mii	= 1,
++	.magic		= 1,
++	.cexcr		= 1,
++};
+ #endif /* CONFIG_OF */
  
-Index: net-next/drivers/net/ethernet/renesas/sh_eth.h
-===================================================================
---- net-next.orig/drivers/net/ethernet/renesas/sh_eth.h
-+++ net-next/drivers/net/ethernet/renesas/sh_eth.h
-@@ -184,6 +184,7 @@ enum GECMR_BIT {
- 
- /* EDMR */
- enum DMAC_M_BIT {
-+	EDMR_NBST = 0x80,
- 	EDMR_EL = 0x40, /* Litte endian */
- 	EDMR_DL1 = 0x20, EDMR_DL0 = 0x10,
- 	EDMR_SRST_GETHER = 0x03,
-@@ -505,6 +506,7 @@ struct sh_eth_cpu_data {
- 	unsigned bculr:1;	/* EtherC have BCULR */
- 	unsigned tsu:1;		/* EtherC have TSU */
- 	unsigned hw_swap:1;	/* E-DMAC have DE bit in EDMR */
-+	unsigned nbst:1;	/* E-DMAC has NBST bit in EDMR */
- 	unsigned rpadir:1;	/* E-DMAC have RPADIR */
- 	unsigned no_trimd:1;	/* E-DMAC DO NOT have TRIMD */
- 	unsigned no_ade:1;	/* E-DMAC DO NOT have ADE bit in EESR */
+ static void sh_eth_set_rate_sh7724(struct net_device *ndev)
+@@ -3134,6 +3177,7 @@ static const struct of_device_id sh_eth_
+ 	{ .compatible = "renesas,ether-r8a7791", .data = &rcar_gen2_data },
+ 	{ .compatible = "renesas,ether-r8a7793", .data = &rcar_gen2_data },
+ 	{ .compatible = "renesas,ether-r8a7794", .data = &rcar_gen2_data },
++	{ .compatible = "renesas,gether-r8a77980", .data = &r8a77980_data },
+ 	{ .compatible = "renesas,ether-r7s72100", .data = &r7s72100_data },
+ 	{ .compatible = "renesas,rcar-gen1-ether", .data = &rcar_gen1_data },
+ 	{ .compatible = "renesas,rcar-gen2-ether", .data = &rcar_gen2_data },
