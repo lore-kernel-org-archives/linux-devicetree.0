@@ -1,53 +1,67 @@
-From: djw@t-chip.com.cn
-Subject: [PATCH v2 3/5] arm64: dts: rockchip: Add gpio-mute to rk3328
-Date: Fri, 18 May 2018 11:52:06 +0800
-Message-ID: <1526615528-9707-3-git-send-email-djw@t-chip.com.cn>
-References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn>
- <1526615528-9707-1-git-send-email-djw@t-chip.com.cn>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v10 25/27] ARM: davinci: add device tree support to timer
+Date: Fri, 18 May 2018 11:35:18 +0530
+Message-ID: <c7064bee-d385-4496-c19e-1b72853b01f1@ti.com>
+References: <20180509172606.29387-1-david@lechnology.com>
+ <20180509172606.29387-26-david@lechnology.com>
+ <8fa98514-7651-58cb-595e-6c7f713540b8@ti.com>
+ <1162de58-00bc-fdfa-eef1-48a094834ac3@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526615528-9707-1-git-send-email-djw@t-chip.com.cn>
+In-Reply-To: <1162de58-00bc-fdfa-eef1-48a094834ac3@lechnology.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Finley Xiao <finley.xiao@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Rocky Hao <rocky.hao@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Levin Du <djw@t-chip.com.cn>
+On Thursday 17 May 2018 08:39 PM, David Lechner wrote:
+> On 05/17/2018 09:35 AM, Sekhar Nori wrote:
+>> Hi David,
+>>
+>> On Wednesday 09 May 2018 10:56 PM, David Lechner wrote:
+>>> This adds device tree support to the davinci timer so that when clocks
+>>> are moved to device tree, the timer will still work.
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> ---
+>>
+>>> +static int __init of_davinci_timer_init(struct device_node *np)
+>>> +{
+>>> +    struct clk *clk;
+>>> +
+>>> +    clk = of_clk_get(np, 0);
+>>> +    if (IS_ERR(clk)) {
+>>> +        struct of_phandle_args clkspec;
+>>> +
+>>> +        /*
+>>> +         * Fall back to using ref_clk if the actual clock is not
+>>> +         * available. There will be problems later if the real clock
+>>> +         * source is disabled.
+>>> +         */
+>>> +
+>>> +        pr_warn("%s: falling back to ref_clk\n", __func__);
+>>> +
+>>> +        clkspec.np = of_find_node_by_name(NULL, "ref_clk");
+>>> +        if (IS_ERR(clkspec.np)) {
+>>> +            pr_err("%s: No clock available for timer!\n", __func__);
+>>> +            return PTR_ERR(clkspec.np);
+>>> +        }
+>>> +        clk = of_clk_get_from_provider(&clkspec);
+>>> +        of_node_put(clkspec.np);
+>>> +    }
+>>
+>> Do we need this error path now?
+>>
+>> Thanks,
+>> Sekhar
+>>
+> 
+> No, not really.
 
-Adding a new gpio controller named "gpio-mute" to rk3328, providing
-access to the GPIO_MUTE pin defined in the syscon GRF_SOC_CON10.
+Then lets just print an error and return the error number.
 
-The GPIO_MUTE pin is referred to as <&gpio-mute 1>.
-
-Signed-off-by: Levin Du <djw@t-chip.com.cn>
-
----
-
-Changes in v2:
-- Rename gpio_syscon10 to gpio_mute in rk3328.dtsi
-
-Changes in v1:
-- Split from V0 and add to rk3328.dtsi for general use.
-
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index b8e9da1..5ba29d3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -309,6 +309,13 @@
- 			mode-loader = <BOOT_BL_DOWNLOAD>;
- 		};
- 
-+		/* The GPIO_MUTE pin is referred to as <&gpio-mute 1>.*/
-+		gpio_mute: gpio-mute {
-+			compatible = "rockchip,gpio-syscon";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <0 0x0428 0>;
-+		};
- 	};
- 
- 	uart0: serial@ff110000 {
--- 
-2.7.4
+Thanks,
+Sekhar
