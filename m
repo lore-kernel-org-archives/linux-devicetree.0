@@ -1,209 +1,89 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH V7 11/12] ARM: dts: ipq8074: Add pcie nodes
-Date: Fri, 18 May 2018 13:49:24 +0530
-Message-ID: <1526631565-9972-12-git-send-email-sricharan@codeaurora.org>
-References: <1526631565-9972-1-git-send-email-sricharan@codeaurora.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v5 4/4] drm/rockchip: support dp training outside dp
+ firmware
+Date: Fri, 18 May 2018 10:52:17 +0200
+Message-ID: <11928313.3EhRqhFFHB@phil>
+References: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
+ <d4c38236-7455-ccd5-a1d9-a000b7d78be9@rock-chips.com>
+ <CA+ASDXN2LT6FcX_2-MM=Qu7cZOHwVK3+2rGDLGcC1SnY3BJaSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526631565-9972-1-git-send-email-sricharan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com, sricharan@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CA+ASDXN2LT6FcX_2-MM=Qu7cZOHwVK3+2rGDLGcC1SnY3BJaSw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: devicetree@vger.kernel.org, hl <hl@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, Doug Anderson <dianders@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Chris Zhong <zyw@rock-chips.com>, Daniel Vetter <daniel.vetter@intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The driver/phy support for ipq8074 is available now.
-So enabling the nodes in DT.
-
-Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 157 +++++++++++++++++++++++++++++++++-
- 1 file changed, 156 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index bd58ab4..1822698 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -24,7 +24,7 @@
- 		ranges = <0 0 0 0xffffffff>;
- 		compatible = "simple-bus";
- 
--		pinctrl@1000000 {
-+		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,ipq8074-pinctrl";
- 			reg = <0x1000000 0x300000>;
- 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-@@ -278,6 +278,161 @@
- 			pinctrl-names = "default";
- 			status = "disabled";
- 		};
-+
-+		pcie_phy0: phy@86000 {
-+			compatible = "qcom,ipq8074-qmp-pcie-phy";
-+			reg = <0x86000 0x1000>;
-+			#phy-cells = <0>;
-+			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
-+			clock-names = "pipe_clk";
-+			clock-output-names = "pcie20_phy0_pipe_clk";
-+
-+			resets = <&gcc GCC_PCIE0_PHY_BCR>,
-+				<&gcc GCC_PCIE0PHY_PHY_BCR>;
-+			reset-names = "phy",
-+				      "common";
-+			status = "disabled";
-+		};
-+
-+		pcie0: pci@20000000 {
-+			compatible = "qcom,pcie-ipq8074";
-+			reg =  <0x20000000 0xf1d
-+				0x20000f20 0xa8
-+				0x80000 0x2000
-+				0x20100000 0x1000>;
-+			reg-names = "dbi", "elbi", "parf", "config";
-+			device_type = "pci";
-+			linux,pci-domain = <0>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			phys = <&pcie_phy0>;
-+			phy-names = "pciephy";
-+
-+			ranges = <0x81000000 0 0x20200000 0x20200000
-+				  0 0x100000   /* downstream I/O */
-+				  0x82000000 0 0x20300000 0x20300000
-+				  0 0xd00000>; /* non-prefetchable memory */
-+
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 75
-+					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 78
-+					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 79
-+					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 83
-+					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
-+				 <&gcc GCC_PCIE0_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE0_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE0_AHB_CLK>,
-+				 <&gcc GCC_PCIE0_AUX_CLK>;
-+
-+			clock-names = "iface",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "aux";
-+			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
-+				 <&gcc GCC_PCIE0_SLEEP_ARES>,
-+				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
-+				 <&gcc GCC_PCIE0_AHB_ARES>,
-+				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>;
-+			reset-names = "pipe",
-+				      "sleep",
-+				      "sticky",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "axi_m_sticky";
-+			status = "disabled";
-+		};
-+
-+		pcie_phy1: phy@8e000 {
-+			compatible = "qcom,ipq8074-qmp-pcie-phy";
-+			reg = <0x8e000 0x1000>;
-+			#phy-cells = <0>;
-+			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
-+			clock-names = "pipe_clk";
-+			clock-output-names = "pcie20_phy1_pipe_clk";
-+
-+			resets = <&gcc GCC_PCIE1_PHY_BCR>,
-+				<&gcc GCC_PCIE1PHY_PHY_BCR>;
-+			reset-names = "phy",
-+				      "common";
-+			status = "disabled";
-+		};
-+
-+		pcie1: pci@10000000 {
-+			compatible = "qcom,pcie-ipq8074";
-+			reg =  <0x10000000 0xf1d
-+				0x10000f20 0xa8
-+				0x88000 0x2000
-+				0x10100000 0x1000>;
-+			reg-names = "dbi", "elbi", "parf", "config";
-+			device_type = "pci";
-+			linux,pci-domain = <1>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			phys = <&pcie_phy1>;
-+			phy-names = "pciephy";
-+
-+			ranges = <0x81000000 0 0x10200000 0x10200000
-+				  0 0x100000   /* downstream I/O */
-+				  0x82000000 0 0x10300000 0x10300000
-+				  0 0xd00000>; /* non-prefetchable memory */
-+
-+			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 142
-+					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 143
-+					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 144
-+					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 145
-+					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
-+				 <&gcc GCC_PCIE1_AXI_M_CLK>,
-+				 <&gcc GCC_PCIE1_AXI_S_CLK>,
-+				 <&gcc GCC_PCIE1_AHB_CLK>,
-+				 <&gcc GCC_PCIE1_AUX_CLK>;
-+			clock-names = "iface",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "aux";
-+			resets = <&gcc GCC_PCIE1_PIPE_ARES>,
-+				 <&gcc GCC_PCIE1_SLEEP_ARES>,
-+				 <&gcc GCC_PCIE1_CORE_STICKY_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_MASTER_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_SLAVE_ARES>,
-+				 <&gcc GCC_PCIE1_AHB_ARES>,
-+				 <&gcc GCC_PCIE1_AXI_MASTER_STICKY_ARES>;
-+			reset-names = "pipe",
-+				      "sleep",
-+				      "sticky",
-+				      "axi_m",
-+				      "axi_s",
-+				      "ahb",
-+				      "axi_m_sticky";
-+			status = "disabled";
-+		};
- 	};
- 
- 	cpus {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+QW0gRnJlaXRhZywgMTguIE1haSAyMDE4LCAwMzo0NTo0NiBDRVNUIHNjaHJpZWIgQnJpYW4gTm9y
+cmlzOgo+IE9uIFRodSwgTWF5IDE3LCAyMDE4IGF0IDY6NDEgUE0sIGhsIDxobEByb2NrLWNoaXBz
+LmNvbT4gd3JvdGU6Cj4gPiBPbiBUaHVyc2RheSwgTWF5IDE3LCAyMDE4IDA5OjUxIFBNLCBTZWFu
+IFBhdWwgd3JvdGU6Cj4gPj4gT24gVGh1LCBNYXkgMTcsIDIwMTggYXQgMDU6MTg6MDBQTSArMDgw
+MCwgTGluIEh1YW5nIHdyb3RlOgo+ID4+PiBEUCBmaXJtd2FyZSB1c2VzIGZpeGVkIHBoeSBjb25m
+aWcgdmFsdWVzIHRvIGRvIHRyYWluaW5nLCBidXQgc29tZQo+ID4+PiBib2FyZHMgbmVlZCB0byBh
+ZGp1c3QgdGhlc2UgdmFsdWVzIHRvIGZpdCBmb3IgdGhlaXIgdW5pcXVlIGhhcmR3YXJlCj4gPj4+
+IGRlc2lnbi4gU28gZ2V0IHBoeSBjb25maWcgdmFsdWVzIGZyb20gZHRzIGFuZCB1c2Ugc29mdHdh
+cmUgbGluayB0cmFpbmluZwo+ID4+PiBpbnN0ZWFkIG9mIHJlbHlpbmcgb24gZmlybXdhcmUsIGlm
+IHNvZnR3YXJlIHRyYWluaW5nIGZhaWwsIGtlZXAgZmlybXdhcmUKPiA+Pj4gdHJhaW5pbmcgYXMg
+YSBmYWxsYmFjayBpZiBzdyB0cmFpbmluZyBmYWlscy4KPiA+Pj4KPiA+Pj4gU2lnbmVkLW9mZi1i
+eTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KPiA+Pj4gU2lnbmVkLW9mZi1ieTog
+TGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiA+Pj4gLS0tCj4gPj4+IENoYW5nZXMgaW4g
+djI6Cj4gPj4+IC0gdXBkYXRlIHBhdGNoIGZvbGxvd2luZyBFbnJpYyBzdWdnZXN0Cj4gPj4+IENo
+YW5nZXMgaW4gdjM6Cj4gPj4+IC0gdXNlIHZhcmlhYmxlIGZ3X3RyYWluaW5nIGluc3RlYWQgc3df
+dHJhaW5pbmdfc3VjY2Vzcwo+ID4+PiAtIGJhc2Ugb24gRFAgU1BDRSwgaWYgdHJhaW5pbmcgZmFp
+bCB1c2UgbG93ZXIgbGluayByYXRlIHRvIHJldHJ5IHRyYWluaW5nCj4gPj4+IENoYW5nZXMgaW4g
+djQ6Cj4gPj4+IC0gaW1wcm92ZSBjZG5fZHBfZ2V0X2xvd2VyX2xpbmtfcmF0ZSgpIGFuZCBjZG5f
+ZHBfc29mdHdhcmVfdHJhaW5fbGluaygpIGZvbGxvdyBTZWFuIHN1Z2dlc3QKPiA+Pj4gQ2hhbmdl
+cyBpbiB2NToKPiA+Pj4gLSBmaXggc29tZSB3aGl0ZXNwY2FlIGlzc3VlCj4gPj4+Cj4gPj4+ICAg
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAgICAgICAgfCAgIDMgKy0K
+PiA+Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICB8
+ICAyNCArLQo+ID4+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtY29yZS5oICAg
+ICAgICAgIHwgICAyICsKPiA+Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxp
+bmstdHJhaW5pbmcuYyB8IDQyMCArKysrKysrKysrKysrKysrKysrKysrKysKPiA+Pj4gICBkcml2
+ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLXJlZy5jICAgICAgICAgICB8ICAzMSArLQo+ID4+
+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtcmVnLmggICAgICAgICAgIHwgIDM4
+ICsrLQo+ID4+PiAgIDYgZmlsZXMgY2hhbmdlZCwgNTA1IGluc2VydGlvbnMoKyksIDEzIGRlbGV0
+aW9ucygtKQo+ID4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+ID4+Pgo+IC4uLgo+ID4+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1saW5rLXRyYWluaW5nLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+ID4+PiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NAo+ID4+PiBpbmRleCAwMDAwMDAwLi43M2MzMjkwCj4gPj4+IC0tLSAvZGV2L251
+bGwKPiA+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1saW5rLXRyYWlu
+aW5nLmMKPiA+Pj4gQEAgLTAsMCArMSw0MjAgQEAKPiA+Pj4gKy8vIFNQRFgtTGljZW5zZS1JZGVu
+dGlmaWVyOiBHUEwtMi4wCj4gPj4+ICsvKgo+ID4+PiArICogQ29weXJpZ2h0IChDKSBGdXpob3Ug
+Um9ja2NoaXAgRWxlY3Ryb25pY3MgQ28uTHRkCj4gPj4+ICsgKiBBdXRob3I6IENocmlzIFpob25n
+IDx6eXdAcm9jay1jaGlwcy5jb20+Cj4gPj4+ICsgKi8KPiA+Pj4gKwo+ID4+PiArI2luY2x1ZGUg
+PGxpbnV4L2RldmljZS5oPgo+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4gPj4+ICsj
+aW5jbHVkZSA8bGludXgvcGh5L3BoeS5oPgo+ID4+PiArI2luY2x1ZGUgPHNvYy9yb2NrY2hpcC9y
+b2NrY2hpcF9waHlfdHlwZWMuaD4KPiA+Pj4gKwo+ID4+PiArI2luY2x1ZGUgImNkbi1kcC1jb3Jl
+LmgiCj4gPj4+ICsjaW5jbHVkZSAiY2RuLWRwLXJlZy5oIgo+ID4+PiArCj4gPj4+ICtzdGF0aWMg
+dm9pZCBjZG5fZHBfc2V0X3NpZ25hbF9sZXZlbHMoc3RydWN0IGNkbl9kcF9kZXZpY2UgKmRwKQo+
+ID4+PiArewo+ID4+PiArICAgICAgIHN0cnVjdCBjZG5fZHBfcG9ydCAqcG9ydCA9IGRwLT5wb3J0
+W2RwLT5hY3RpdmVfcG9ydF07Cj4gPj4+ICsgICAgICAgc3RydWN0IHJvY2tjaGlwX3R5cGVjX3Bo
+eSAqdGNwaHkgPSBwaHlfZ2V0X2RydmRhdGEocG9ydC0+cGh5KTsKPiA+Pgo+ID4+IFlvdSBpZ25v
+cmVkIEJyaWFuJ3MgY29tbWVudCBvbiB0aGUgcHJldmlvdXMgcGF0Y2g6Cj4gPj4gICAgVGhpcyBp
+cyBzdGlsbCBhbnRpdGhldGljYWwgdG8gdGhlIFBIWSBmcmFtZXdvcms7IHlvdSdyZSBhc3N1bWlu
+ZyB0aGF0Cj4gPj4gICAgdGhpcyBpcyBhIHBhcnRpY3VsYXIgdHlwZSBvZiBQSFkgaGVyZS4KPiA+
+Pgo+ID4+IEZXSVcsIHRoZSBtZWRpYXRlayBkcm0gZHJpdmVyIGFsc28gYXNzdW1lcyBhIGNlcnRh
+aW4gUEhZIHR5cGUuIEEgcXVpY2sgZ3JlcCBvZgo+ID4+IGRyaXZlcnMvIHNob3dzIHRoYXQgdGhl
+IG9ubHkgb3RoZXIgbm9uLXBoeS8gZHJpdmVyIHVzaW5nIHRoaXMgZnVuY3Rpb24KPiA+PiAocGlu
+Y3RybC10ZWdyYS14dXNiLmMpIGFsc28gY2FzdHMgaXQuCj4gPj4KPiA+PiBTZWFuCj4gPgo+ID4g
+VGhhbmtzIFNlYW4sIGV4Y2VwdCBwaHkgZnJhbWV3b3JrIGhhdmUgbmV3IEFQSSB0byBoYW5kbGUg
+aXQsIGkgaGF2ZSBub3QKPiA+IGlkZWEgaG93IHRvIGRvIGl0IGluIGEgYmV0dGVyIHdheS4KPiAK
+PiBXZWxsLCBpZiBNZWRpYXRlayBjYW4gZG8gaXQgZm9yIHRoZWlyIE1JUEkgYW5kIEhETUksIHRo
+ZW4gbWF5YmUgd2UganVzdCBkbyBpdC4uLgoKSSdkIHRoaW5rIHNvIHRvby4gVGhpcyBpcyBpbiBS
+b2NrY2hpcC1zcGVjaWZpYyBjb2RlIHNvIGl0IHdpbGwgYWx3YXlzIGJlCnBvc3NpYmxlIHRvIGVh
+c2lseSBnZXQgdGhlIHNvYy10eXBlIGFuZCB0aHVzIHBoeS10eXBlLCBpZiB0aGF0IGNvbWJpbmF0
+aW9uCnJlYWxseSBjaGFuZ2VzIGRvd24gdGhlIHJvYWQuCgoKSGVpa28KCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
