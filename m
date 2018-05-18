@@ -1,7 +1,8 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v4 07/12] staging: iio: ad2s1200: Add dt table
-Date: Fri, 18 May 2018 20:22:41 +0200
-Message-ID: <eb4fa431405d0d4e73889d440b3b1c95d5c47e54.1526667118.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v4 08/12] dt-bindings: iio: resolver: Document AD2S1200
+ bindings
+Date: Fri, 18 May 2018 20:22:50 +0200
+Message-ID: <cbe0f4194cca49c303fbe62b215bfaf0af6e2bbb.1526667118.git.davidjulianveenstra@gmail.com>
 References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,41 +23,41 @@ To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-Add device tree table for matching with the vendor ID.
+Add documentation for the device tree bindings of the AD2S1200 resolver.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
 Changes in v4:
- - Introduced in this version.
+ - Added vendor prefix to gpio function name.
+ - Added unit address.
+ - Changed commit subject to be more inline with other dt-bindings
+   commit .
 
- drivers/staging/iio/resolver/ad2s1200.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../bindings/iio/resolver/ad2s1200.txt           | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
 
-diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-index 9a8aa2448897..67d9747f88a6 100644
---- a/drivers/staging/iio/resolver/ad2s1200.c
-+++ b/drivers/staging/iio/resolver/ad2s1200.c
-@@ -154,6 +154,13 @@ static int ad2s1200_probe(struct spi_device *spi)
- 	return devm_iio_device_register(&spi->dev, indio_dev);
- }
- 
-+static const struct of_device_id ad2s1200_of_match[] = {
-+	{ .compatible = "adi,ad2s1200", },
-+	{ .compatible = "adi,ad2s1205", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ad2s1200_of_match);
+diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+new file mode 100644
+index 000000000000..bbf54260c911
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+@@ -0,0 +1,16 @@
++Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
 +
- static const struct spi_device_id ad2s1200_id[] = {
- 	{ "ad2s1200" },
- 	{ "ad2s1205" },
-@@ -164,6 +171,7 @@ MODULE_DEVICE_TABLE(spi, ad2s1200_id);
- static struct spi_driver ad2s1200_driver = {
- 	.driver = {
- 		.name = DRV_NAME,
-+		.of_match_table = of_match_ptr(ad2s1200_of_match),
- 	},
- 	.probe = ad2s1200_probe,
- 	.id_table = ad2s1200_id,
++Required properties:
++ - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
++ - reg : the SPI chip select number of the device
++ - adi,sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
++ - adi,rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200
++
++Example:
++
++	resolver@0 {
++		compatible = "adi,ad2s1200";
++		reg = <4>;
++		adi,sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
++		adi,rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
++	};
 -- 
 2.17.0
