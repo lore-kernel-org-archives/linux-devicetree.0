@@ -1,139 +1,97 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v9 14/15] ASoC: qdsp6: dt-bindings: Add apq8096 machine bindings
-Date: Fri, 18 May 2018 13:56:09 +0100
-Message-ID: <20180518125610.26200-15-srinivas.kandagatla@linaro.org>
-References: <20180518125610.26200-1-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180518125610.26200-1-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org
-Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, david.brown@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, plai@codeaurora.org, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, spatakok@qti.qualcomm.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: David Julian Veenstra <davidjulianveenstra@gmail.com>
+Subject: Re: [PATCH v3 5/9] staging: iio: ad2s1200: Add documentation for
+ device tree binding
+Date: Fri, 18 May 2018 15:00:44 +0200
+Message-ID: <874lj5ce4j.fsf@gmail.com>
+References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
+ <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
+ <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
+ <20180428162758.2a49130c@archlinux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20180428162758.2a49130c@archlinux>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: devel@driverdev.osuosl.org, Rob Herring <robh@kernel.org>, lars@metafoo.de, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings documentation file for Qualcomm apq8096 sound card.
+On 28, April 2018 15:27, Jonathan Cameron wrote:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Banajit Goswami <bgoswami@codeaurora.org>
----
- .../devicetree/bindings/sound/qcom,apq8096.txt     | 109 +++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+> On Fri, 27 Apr 2018 09:48:20 -0500
+> Rob Herring <robh@kernel.org> wrote:
+>
+>> On Mon, Apr 23, 2018 at 12:03:47AM +0200, David Veenstra wrote:
+>> > Add documentation for the added device tree bindings.
+>> > 
+>> > Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
+>> > ---
+>> > Changes in v3:
+>> >  - Documentation is added to Documentation/devicetree/bindings/iio/resolver
+>> >    instead of staging directory.
+>> >  - Add mention to ad2s1205 device.
+>> > 
+>> >  .../devicetree/bindings/iio/resolver/ad2s1200.txt        | 16 ++++++++++++++++
+>> >  1 file changed, 16 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+>> > 
+>> > diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+>> > new file mode 100644
+>> > index 000000000000..46b51db38368
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+>> > @@ -0,0 +1,16 @@
+>> > +Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
+>> > +
+>> > +Required properties:
+>> > + - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
+>> > + - reg : the SPI chip select number of the device
+>> > + - sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
+>> > + - rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200  
+>> 
+>> Are these gpios something that would be common to resolvers (whatever 
+>> that is) or specific to this chip. For the latter, you need vendor 
+>> prefixes.
+>
+> They are pretty chip specific I think, so prefixes needed.
+>
+> I'd not really registered that gpios should be vendor prefixed for some reason
+> (kind of obvious now you mention it).  We have only a few from a quick grep
+> of the bindings for IIO devices (there are loads elsewhere that aren't and
+> are clearly very much part specific).  Ah well, will try and do better moving
+> forward on this!
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-new file mode 100644
-index 000000000000..aa54e49fc8a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-@@ -0,0 +1,109 @@
-+* Qualcomm Technologies APQ8096 ASoC sound card driver
-+
-+This binding describes the APQ8096 sound card, which uses qdsp for audio.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "qcom,apq8096-sndcard"
-+
-+- qcom,audio-routing:
-+	Usage: Optional
-+	Value type: <stringlist>
-+	Definition:  A list of the connections between audio components.
-+		  Each entry is a pair of strings, the first being the
-+		  connection's sink, the second being the connection's
-+		  source. Valid names could be power supplies, MicBias
-+		  of codec and the jacks on the board:
-+		  Valid names include:
-+
-+		Board Connectors:
-+			"Headphone Left"
-+			"Headphone Right"
-+			"Earphone"
-+			"Line Out1"
-+			"Line Out2"
-+			"Line Out3"
-+			"Line Out4"
-+			"Analog Mic1"
-+			"Analog Mic2"
-+			"Analog Mic3"
-+			"Analog Mic4"
-+			"Analog Mic5"
-+			"Analog Mic6"
-+			"Digital Mic2"
-+			"Digital Mic3"
-+
-+		Audio pins and MicBias on WCD9335 Codec:
-+			"MIC_BIAS1
-+			"MIC_BIAS2"
-+			"MIC_BIAS3"
-+			"MIC_BIAS4"
-+			"AMIC1"
-+			"AMIC2"
-+			"AMIC3"
-+			"AMIC4"
-+			"AMIC5"
-+			"AMIC6"
-+			"AMIC6"
-+			"DMIC1"
-+			"DMIC2"
-+			"DMIC3"
-+= dailinks
-+Each subnode of sndcard represents either a dailink, and subnodes of each
-+dailinks would be cpu/codec/platform dais.
-+
-+- link-name:
-+	Usage: required
-+	Value type: <string>
-+	Definition: User friendly name for dai link
-+
-+= CPU, PLATFORM, CODEC dais subnodes
-+- cpu:
-+	Usage: required
-+	Value type: <subnode>
-+	Definition: cpu dai sub-node
-+
-+- codec:
-+	Usage: Optional
-+	Value type: <subnode>
-+	Definition: codec dai sub-node
-+
-+- platform:
-+	Usage: Optional
-+	Value type: <subnode>
-+	Definition: platform dai sub-node
-+
-+- sound-dai:
-+	Usage: required
-+	Value type: <phandle with arguments>
-+	Definition: dai phandle/s and port of CPU/CODEC/PLATFORM node.
-+
-+Example:
-+
-+audio {
-+	compatible = "qcom,apq8096-sndcard";
-+	qcom,model = "DB820c";
-+
-+	mm1-dai-link {
-+		link-name = "MultiMedia1";
-+		cpu {
-+			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA1>;
-+		};
-+	};
-+
-+	hdmi-dai-link {
-+		link-name = "HDMI Playback";
-+		cpu {
-+			sound-dai = <&q6afe HDMI_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6adm>;
-+		};
-+
-+		codec {
-+			sound-dai = <&hdmi 0>;
-+		};
-+	};
-+};
--- 
-2.16.2
+The vendor prefixes are new to me. I'll add it in the next version.
+
+Best regards,
+David Veenstra
+
+>
+> Jonathan
+>
+>
+>> 
+>> > +
+>> > +Example:
+>> > +
+>> > +	resolver {  
+>> 
+>> Missing unit address.
+>> 
+>> > +		compatible = "adi,ad2s1200";
+>> > +		reg = <4>;
+>> > +		sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
+>> > +		rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
+>> > +	};
+>> > -- 
+>> > 2.16.2
+>> >   
