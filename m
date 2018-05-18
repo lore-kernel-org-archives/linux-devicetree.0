@@ -1,8 +1,8 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v4 05/12] staging: iio: ad2s1200: Replace legacy gpio API
- with modern API
-Date: Fri, 18 May 2018 20:21:56 +0200
-Message-ID: <78bc9c09403ac1fa08d610a86505416b85edb306.1526667118.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v4 06/12] staging: iio: ad2s1200: Replace platform data with
+ dt bindings
+Date: Fri, 18 May 2018 20:22:32 +0200
+Message-ID: <6beef6b7514c53f4fac77d661dcae139b55935bf.1526667118.git.davidjulianveenstra@gmail.com>
 References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,61 +23,73 @@ To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-The legacy, integer based gpio API is replaced with the modern
-descriptor based API.
+Remove usage of platform data, and replace it with device tree
+facilities.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
- drivers/staging/iio/resolver/ad2s1200.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Changes in v4:
+ - Added vendor prefix to gpio function names.
+
+ drivers/staging/iio/resolver/ad2s1200.c | 32 ++++++++++++-------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-index 430cc62591fe..b2c46a8c6b77 100644
+index b2c46a8c6b77..9a8aa2448897 100644
 --- a/drivers/staging/iio/resolver/ad2s1200.c
 +++ b/drivers/staging/iio/resolver/ad2s1200.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/spi/spi.h>
-@@ -43,8 +44,8 @@
- struct ad2s1200_state {
- 	struct mutex lock;
- 	struct spi_device *sdev;
--	int sample;
--	int rdvel;
-+	struct gpio_desc *sample;
-+	struct gpio_desc *rdvel;
- 	__be16 rx ____cacheline_aligned;
- };
+@@ -25,9 +25,6 @@
  
-@@ -58,12 +59,12 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
- 	int ret;
+ #define DRV_NAME "ad2s1200"
  
- 	mutex_lock(&st->lock);
--	gpio_set_value(st->sample, 0);
-+	gpiod_set_value(st->sample, 0);
+-/* input pin sample and rdvel is controlled by driver */
+-#define AD2S1200_PN	2
+-
+ /* input clock on serial interface */
+ #define AD2S1200_HZ	8192000
+ /* clock period in nano second */
+@@ -111,20 +108,9 @@ static const struct iio_info ad2s1200_info = {
  
- 	/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
- 	udelay(1);
--	gpio_set_value(st->sample, 1);
--	gpio_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
-+	gpiod_set_value(st->sample, 1);
-+	gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
+ static int ad2s1200_probe(struct spi_device *spi)
+ {
+-	unsigned short *pins = spi->dev.platform_data;
+ 	struct ad2s1200_state *st;
+ 	struct iio_dev *indio_dev;
+-	int pn, ret;
+-
+-	for (pn = 0; pn < AD2S1200_PN; pn++) {
+-		ret = devm_gpio_request_one(&spi->dev, pins[pn], GPIOF_DIR_OUT,
+-					    DRV_NAME);
+-		if (ret) {
+-			dev_err(&spi->dev, "request gpio pin %d failed\n",
+-				pins[pn]);
+-			return ret;
+-		}
+-	}
++	int ret;
  
- 	ret = spi_read(st->sdev, &st->rx, 2);
- 	if (ret < 0) {
-@@ -133,8 +134,8 @@ static int ad2s1200_probe(struct spi_device *spi)
+ 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+ 	if (!indio_dev)
+@@ -134,8 +120,20 @@ static int ad2s1200_probe(struct spi_device *spi)
  	st = iio_priv(indio_dev);
  	mutex_init(&st->lock);
  	st->sdev = spi;
--	st->sample = pins[0];
--	st->rdvel = pins[1];
-+	st->sample = gpio_to_desc(pins[0]);
-+	st->rdvel = gpio_to_desc(pins[1]);
+-	st->sample = gpio_to_desc(pins[0]);
+-	st->rdvel = gpio_to_desc(pins[1]);
++
++	st->sample = devm_gpiod_get(&spi->dev, "adi,sample", GPIOD_OUT_LOW);
++	if (IS_ERR(st->sample)) {
++		dev_err(&spi->dev, "Failed to claim SAMPLE gpio: err=%ld\n",
++			PTR_ERR(st->sample));
++		return PTR_ERR(st->sample);
++	}
++
++	st->rdvel = devm_gpiod_get(&spi->dev, "adi,rdvel", GPIOD_OUT_LOW);
++	if (IS_ERR(st->rdvel)) {
++		dev_err(&spi->dev, "Failed to claim RDVEL gpio: err=%ld\n",
++			PTR_ERR(st->rdvel));
++		return PTR_ERR(st->rdvel);
++	}
  
  	indio_dev->dev.parent = &spi->dev;
  	indio_dev->info = &ad2s1200_info;
