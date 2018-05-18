@@ -1,12 +1,12 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 05/26] drm/sun4i: DE2 mixer: Add index quirk
-Date: Fri, 18 May 2018 15:15:15 +0530
-Message-ID: <20180518094536.17201-6-jagan@amarulasolutions.com>
+Subject: [PATCH v2 06/26] drm/sun4i: Add support for A64 mixer1
+Date: Fri, 18 May 2018 15:15:16 +0530
+Message-ID: <20180518094536.17201-7-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB6GB7LLQKGQEO2IQSBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB76B7LLQKGQEZJPVNXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,60 +19,49 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Mixers in Allwinner have similar capabilities as others SoCs with DE2.
 
-When TCON set up TCON TOP, it needs to know mixer index. Here we do that
-by setting engine ID to number provided in mixer index quirk.
+Mixer1 has 1 VI and 1 UI planes and supports HW scaling on all
+planes.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
 - New patch
 
- drivers/gpu/drm/sun4i/sun8i_mixer.c | 4 ++--
- drivers/gpu/drm/sun4i/sun8i_mixer.h | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-index 126899d6f0d3..36d90c76317a 100644
+index 36d90c76317a..5b02c6ee2be6 100644
 --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
 +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -353,13 +353,13 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
- 	dev_set_drvdata(dev, mixer);
- 	mixer->engine.ops = &sun8i_engine_ops;
- 	mixer->engine.node = dev->of_node;
--	/* The ID of the mixer currently doesn't matter */
--	mixer->engine.id = -1;
- 
- 	mixer->cfg = of_device_get_match_data(dev);
- 	if (!mixer->cfg)
- 		return -EINVAL;
- 
-+	mixer->engine.id = mixer->cfg->index;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(regs))
-diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h b/drivers/gpu/drm/sun4i/sun8i_mixer.h
-index f34e70c42adf..aeda6e9a7627 100644
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
-@@ -123,6 +123,7 @@ struct de2_fmt_info {
-  *	are invalid.
-  * @mod_rate: module clock rate that needs to be set in order to have
-  *	a functional block.
-+ * @index: mixer index, needed to properly set TCON TOP
-  */
- struct sun8i_mixer_cfg {
- 	int		vi_num;
-@@ -130,6 +131,7 @@ struct sun8i_mixer_cfg {
- 	int		scaler_mask;
- 	int		ccsc;
- 	unsigned long	mod_rate;
-+	int		index;
+@@ -508,6 +508,15 @@ static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
+ 	.mod_rate = 150000000,
  };
  
- struct sun8i_mixer {
++static const struct sun8i_mixer_cfg sun50i_a64_mixer1_cfg = {
++	.ccsc		= 1,
++	.index		= 1,
++	.mod_rate	= 297000000,
++	.scaler_mask	= 0x3,
++	.ui_num		= 1,
++	.vi_num		= 1,
++};
++
+ static const struct of_device_id sun8i_mixer_of_table[] = {
+ 	{
+ 		.compatible = "allwinner,sun8i-a83t-de2-mixer-0",
+@@ -525,6 +534,10 @@ static const struct of_device_id sun8i_mixer_of_table[] = {
+ 		.compatible = "allwinner,sun8i-v3s-de2-mixer",
+ 		.data = &sun8i_v3s_mixer_cfg,
+ 	},
++	{
++		.compatible = "allwinner,sun50i-a64-de2-mixer-1",
++		.data = &sun50i_a64_mixer1_cfg,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun8i_mixer_of_table);
 -- 
 2.14.3
