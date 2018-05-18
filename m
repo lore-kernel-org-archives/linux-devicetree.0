@@ -1,16 +1,15 @@
 From: David Julian Veenstra <davidjulianveenstra@gmail.com>
-Subject: Re: [PATCH v3 6/9] staging: iio: ad2s1200: Add scaling factor for
- angular velocity channel
-Date: Fri, 18 May 2018 15:10:18 +0200
-Message-ID: <8736ypcdol.fsf@gmail.com>
+Subject: Re: [PATCH v3 9/9] staging: iio: ad2s1200: Move driver out of staging
+Date: Fri, 18 May 2018 15:17:08 +0200
+Message-ID: <871se9cdd7.fsf@gmail.com>
 References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
- <803058d8b119451a193c556866ffbb291ec83bcb.1524432236.git.davidjulianveenstra@gmail.com>
- <20180428182344.59fec23e@archlinux> <20180428183514.08ab2a6c@archlinux>
+ <9d2aa4821674e6886166b72acb19f11f91ddf47c.1524432236.git.davidjulianveenstra@gmail.com>
+ <20180428184658.560435a9@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <20180428183514.08ab2a6c@archlinux>
+In-reply-to: <20180428184658.560435a9@archlinux>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -20,112 +19,350 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To: Jonathan Cameron <jic23@kernel.org>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDI4LCBBcHJpbCAyMDE4IDE3OjM1LCBKb25hdGhhbiBDYW1lcm9uIHdyb3RlOgoKPiBPbiBT
-YXQsIDI4IEFwciAyMDE4IDE4OjIzOjQ0ICswMTAwCj4gSm9uYXRoYW4gQ2FtZXJvbiA8amljMjNA
-a2VybmVsLm9yZz4gd3JvdGU6Cj4KPj4gT24gTW9uLCAyMyBBcHIgMjAxOCAwMDowMzo1OSArMDIw
-MAo+PiBEYXZpZCBWZWVuc3RyYSA8ZGF2aWRqdWxpYW52ZWVuc3RyYUBnbWFpbC5jb20+IHdyb3Rl
-Ogo+PiAKPj4gPiBUaGUgc3lzZnMgaWlvIEFCSSBzdGF0ZXMgcmFkaWFucyBwZXIgc2Vjb25kIGlz
-IGV4cGVjdGVkIGFzIHRoZSB1bml0IGZvcgo+PiA+IGFuZ3VsYXIgdmVsb2NpdHksIGJ1dCB0aGUg
-MTItYml0IGFuZ3VsYXIgdmVsb2NpdHkgcmVnaXN0ZXIgaGFzIHJwcyAgCj4+IFJlYWxseSBzbWFs
-bCBwb2ludCwgYnV0IHJwcyBpcyBhIGJpdCBhbWJpZ3VvdXMgZ2l2ZW4gd2UgYXJlCj4+IHRhbGtp
-bmcgYWJvdXQgY29udmVydGluZyB0byByYWRpYW4ncyBwZXIgc2Vjb25kIDspCj4+IAo+PiByZXZz
-IGlzIHRoZSAnY29tbW9uJyBuYW1lIGZvciB3aGF0IGl0IGN1cnJlbnRseSBpcyBJIHRoaW5rLgo+
-PiAKPj4gT3RoZXJ3aXNlIHRoaXMgbG9va3MgZ29vZC4KPiBBY3R1YWxseSwgSSBjYW4ndCBpbW1l
-ZGlhdGVseSB0ZWxsIGZyb20gdGhlIGRhdGFzaGVldCB3aGF0IHRoZSBzY2FsaW5nIGlzLi4uCj4K
-PiAiQml0IDE1IHRocm91Z2ggYml0IDQgY29ycmVzcG9uZCB0byB0aGUgYW5ndWxhcgo+IGluZm9y
-bWF0aW9uLiBUaGUgYW5ndWxhciBwb3NpdGlvbiBkYXRhIGZvcm1hdCBpcyB1bnNpZ25lZAo+IGJp
-bmFyeSwgd2l0aCBhbGwgemVyb3MgY29ycmVzcG9uZGluZyB0byAwIGRlZ3JlZXMgYW5kIGFsbCBv
-bmVzCj4gY29ycmVzcG9uZGluZyB0byAzNjAgZGVncmVlcyDigJNsIExTQi4gVGhlIGFuZ3VsYXIg
-dmVsb2NpdHkgZGF0YQo+IGZvcm1hdCBpbnN0ZWFkIGlzIHR3b3MgY29tcGxlbWVudCBiaW5hcnks
-IHdpdGggdGhlIE1TQgo+IHJlcHJlc2VudGluZyB0aGUgcm90YXRpb24gZGlyZWN0aW9uIgo+Cj4g
-RWFybGllciB3YXMgYWxzbyBoYWQ6Cj4KPiAiRGF0YSBGb3JtYXQKPiBUaGUgZGlnaXRhbCBhbmds
-ZSBzaWduYWwgcmVwcmVzZW50cyB0aGUgYWJzb2x1dGUgcG9zaXRpb24gb2YgdGhlCj4gcmVzb2x2
-ZXIgc2hhZnQgYXMgYSAxMi1iaXQgdW5zaWduZWQgYmluYXJ5IHdvcmQuIFRoZSBkaWdpdGFsCj4g
-dmVsb2NpdHkgc2lnbmFsIGlzIGEgMTItYml0IHR3b3MgY29tcGxlbWVudCB3b3JkLCB3aGljaAo+
-IHJlcHJlc2VudHMgdGhlIHZlbG9jaXR5IG9mIHRoZSByZXNvbHZlciBzaGFmdCByb3RhdGluZyBp
-biBlaXRoZXIgYQo+IGNsb2Nrd2lzZSBvciBhIGNvdW50ZXJjbG9ja3dpc2UgZGlyZWN0aW9uLiIK
-Pgo+IFNvIGZvciBwb3NpdGlvbiB0aGUgMTIgYml0cyBjb3JyZXNwb25kIHRvIDAgdG8gMzYwIC0g
-MzYwLygyXjEyKQo+IGhlbmNlIF9TQ0FMRSBpcyAzNjAvKDJeMTIpCj4KPiBCdXQgSSdtIG5vdCBz
-ZWVpbmcgYW55IGhpbnQgd2hhdHNvZXZlciBvbiB0aGUgc2NhbGluZyBmb3IgdGhlCj4gcm90YXRp
-b25hbCB2ZWxvY2l0eS4uLgo+Cj4gQW0gSSBtaXNzaW5nIGl0IHNvbWV3aGVyZT8gIHlvdSBtaWdo
-dCBiZSByaWdodCBpbiBob3cgeW91IGhhdmUKPiByZWFkIGl0IGdpdmVuIGl0IHdpbGwgdHJhY2sg
-dXAgdG8gMTAwMHJwcyBhbmQgd2UgYXJlIDIgZGlyZWN0aW9uYWwKPiBzbyAtMjA0OCB0byAyMDQ3
-IHNvIG5vdCBhIGh1Z2UgYW1vdW50IG9mIHdhc3RlZCBzcGFjZS4KPgo+IEZhaWxpbmcgYW55IG90
-aGVyIGV2aWRlbmNlIEknbGwgZ28gd2l0aCB3aGF0IHlvdSBoYXZlIHVudGlsIHdlCj4gY2FuIHRl
-c3QgdGhpcywgYnV0IHRoZSBkYXRhc2hlZXQgY291bGQgYmUgY2xlYXJlciEKCldoZW4gSSBmaXJz
-dCByZWFkIHRoZSBkYXRhc2hlZXQgaXQgd2Fzbid0IGNsZWFyIHRvIG1lIGVpdGhlci4gU28gSQpl
-bWFpbGVkIE1pY2hhZWwgSGVubmVyaWNoLiBIZSBjb25maXJtZWQgdG8gbWUgdGhhdCB0aGUgc2Nh
-bGluZyBmYWN0b3IKZm9yIGRlZ3JlZXMgaXMgaW5kZWVkIDM2MCAvICgyXjEyLSAxKS4gQW5kIGhl
-IHRvbGQgbWUgdGhhdCB0aGUgdW5pdApmb3IgYW5ndWxhciB2ZWxvY2l0eSBpcyByZXZvbHV0aW9u
-cyBwZXIgc2Vjb25kLCBhbmQgdGhhdCBJIHNob3VsZAp1c2UgYSBzY2FsaW5nIGZhY3RvciBvZiAy
-UEkgdG8gY29udmVydCBpdCB0byByYWQvcy4KCkJlc3QgcmVnYXJkcywKRGF2aWQgVmVlbnN0cmEK
-Cj4KPiBKb25hdGhhbgo+PiAKPj4gSm9uYXRoYW4KPj4gCj4+IAo+PiA+IGFzIGl0cyB1bml0LiBT
-byBhIHNjYWxpbmcgZmFjdG9yIG9mIGFwcHJveGltYXRlbHkgMiAqIFBpIGlzCj4+ID4gYWRkZWQg
-dG8gdGhlIGFuZ3VsYXIgdmVsb2NpdHkgY2hhbm5lbC4KPj4gPiAKPj4gPiBTaWduZWQtb2ZmLWJ5
-OiBEYXZpZCBWZWVuc3RyYSA8ZGF2aWRqdWxpYW52ZWVuc3RyYUBnbWFpbC5jb20+Cj4+ID4gLS0t
-Cj4+ID4gQ2hhbmdlcyBpbiB2MzoKPj4gPiAgLSBBIGRlY2ltYWwgYXBwcm94aW1hdGlvbiBvZiB0
-aGUgc2NhbGUgaXMgdXNlZCwgaW5zdGVhZAo+PiA+ICAgIG9mIGEgZnJhY3Rpb25hbCBhcHByb3hp
-bWF0aW9uLgo+PiA+ICAtIFJlbW92ZSB1bm5lZWRlZCBleHBsYW5hdGlvbiBvZiBpaW9fY29udmVy
-dF9yYXdfdG9fcHJvY2Vzc2VkLgo+PiA+IAo+PiA+ICBkcml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29s
-dmVyL2FkMnMxMjAwLmMgfCA3MSArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KPj4g
-PiAgMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQo+PiA+
-IAo+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29sdmVyL2FkMnMxMjAw
-LmMgYi9kcml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29sdmVyL2FkMnMxMjAwLmMKPj4gPiBpbmRleCAz
-YzcxNjM2MTBmZjYuLjNlMTY5NmU1MmMzOCAxMDA2NDQKPj4gPiAtLS0gYS9kcml2ZXJzL3N0YWdp
-bmcvaWlvL3Jlc29sdmVyL2FkMnMxMjAwLmMKPj4gPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvaWlv
-L3Jlc29sdmVyL2FkMnMxMjAwLmMKPj4gPiBAQCAtNTcsMzcgKzU3LDU1IEBAIHN0YXRpYyBpbnQg
-YWQyczEyMDBfcmVhZF9yYXcoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwKPj4gPiAgCXN0cnVj
-dCBhZDJzMTIwMF9zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOwo+PiA+ICAJaW50IHJl
-dCA9IDA7Cj4+ID4gIAo+PiA+IC0JbXV0ZXhfbG9jaygmc3QtPmxvY2spOwo+PiA+IC0JZ3Bpb2Rf
-c2V0X3ZhbHVlKHN0LT5zYW1wbGUsIDApOwo+PiA+IC0KPj4gPiAtCS8qIGRlbGF5ICg2ICogQUQy
-UzEyMDBfVFNDTEsgKyAyMCkgbmFubyBzZWNvbmRzICovCj4+ID4gLQl1ZGVsYXkoMSk7Cj4+ID4g
-LQlncGlvZF9zZXRfdmFsdWUoc3QtPnNhbXBsZSwgMSk7Cj4+ID4gLQlncGlvZF9zZXRfdmFsdWUo
-c3QtPnJkdmVsLCAhIShjaGFuLT50eXBlID09IElJT19BTkdMKSk7Cj4+ID4gLQo+PiA+IC0JcmV0
-ID0gc3BpX3JlYWQoc3QtPnNkZXYsICZzdC0+cngsIDIpOwo+PiA+IC0JaWYgKHJldCA8IDApIHsK
-Pj4gPiArCXN3aXRjaCAobSkgewo+PiA+ICsJY2FzZSBJSU9fQ0hBTl9JTkZPX1NDQUxFOgo+PiA+
-ICsJCXN3aXRjaCAoY2hhbi0+dHlwZSkgewo+PiA+ICsJCWNhc2UgSUlPX0FOR0xfVkVMOgo+PiA+
-ICsJCQkvKiAyICogUGkgfj0gNi4yODMxODUgKi8KPj4gPiArCQkJKnZhbCA9IDY7Cj4+ID4gKwkJ
-CSp2YWwyID0gMjgzMTg1Owo+PiA+ICsJCQlyZXR1cm4gSUlPX1ZBTF9JTlRfUExVU19NSUNSTzsK
-Pj4gPiArCQlkZWZhdWx0Ogo+PiA+ICsJCQlyZXR1cm4gLUVJTlZBTDsKPj4gPiArCQl9Cj4+ID4g
-KwkJYnJlYWs7Cj4+ID4gKwljYXNlIElJT19DSEFOX0lORk9fUkFXOgo+PiA+ICsJCW11dGV4X2xv
-Y2soJnN0LT5sb2NrKTsKPj4gPiArCQlncGlvZF9zZXRfdmFsdWUoc3QtPnNhbXBsZSwgMCk7Cj4+
-ID4gKwo+PiA+ICsJCS8qIGRlbGF5ICg2ICogQUQyUzEyMDBfVFNDTEsgKyAyMCkgbmFubyBzZWNv
-bmRzICovCj4+ID4gKwkJdWRlbGF5KDEpOwo+PiA+ICsJCWdwaW9kX3NldF92YWx1ZShzdC0+c2Ft
-cGxlLCAxKTsKPj4gPiArCQlncGlvZF9zZXRfdmFsdWUoc3QtPnJkdmVsLCAhIShjaGFuLT50eXBl
-ID09IElJT19BTkdMKSk7Cj4+ID4gKwo+PiA+ICsJCXJldCA9IHNwaV9yZWFkKHN0LT5zZGV2LCAm
-c3QtPnJ4LCAyKTsKPj4gPiArCQlpZiAocmV0IDwgMCkgewo+PiA+ICsJCQltdXRleF91bmxvY2so
-JnN0LT5sb2NrKTsKPj4gPiArCQkJcmV0dXJuIHJldDsKPj4gPiArCQl9Cj4+ID4gKwo+PiA+ICsJ
-CXN3aXRjaCAoY2hhbi0+dHlwZSkgewo+PiA+ICsJCWNhc2UgSUlPX0FOR0w6Cj4+ID4gKwkJCSp2
-YWwgPSBiZTE2X3RvX2NwdXAoJnN0LT5yeCkgPj4gNDsKPj4gPiArCQkJYnJlYWs7Cj4+ID4gKwkJ
-Y2FzZSBJSU9fQU5HTF9WRUw6Cj4+ID4gKwkJCSp2YWwgPSBzaWduX2V4dGVuZDMyKGJlMTZfdG9f
-Y3B1cCgmc3QtPnJ4KSA+PiA0LCAxMSk7Cj4+ID4gKwkJCWJyZWFrOwo+PiA+ICsJCWRlZmF1bHQ6
-Cj4+ID4gKwkJCW11dGV4X3VubG9jaygmc3QtPmxvY2spOwo+PiA+ICsJCQlyZXR1cm4gLUVJTlZB
-TDsKPj4gPiArCQl9Cj4+ID4gKwo+PiA+ICsJCS8qIGRlbGF5ICgyICogQUQyUzEyMDBfVFNDTEsg
-KyAyMCkgbnMgZm9yIHNhbXBsZSBwdWxzZSAqLwo+PiA+ICsJCXVkZWxheSgxKTsKPj4gPiAgCQlt
-dXRleF91bmxvY2soJnN0LT5sb2NrKTsKPj4gPiAtCQlyZXR1cm4gcmV0Owo+PiA+IC0JfQo+PiA+
-ICAKPj4gPiAtCXN3aXRjaCAoY2hhbi0+dHlwZSkgewo+PiA+IC0JY2FzZSBJSU9fQU5HTDoKPj4g
-PiAtCQkqdmFsID0gYmUxNl90b19jcHVwKCZzdC0+cngpID4+IDQ7Cj4+ID4gLQkJYnJlYWs7Cj4+
-ID4gLQljYXNlIElJT19BTkdMX1ZFTDoKPj4gPiAtCQkqdmFsID0gc2lnbl9leHRlbmQzMihiZTE2
-X3RvX2NwdXAoJnN0LT5yeCkgPj4gNCwgMTEpOwo+PiA+IC0JCWJyZWFrOwo+PiA+ICsJCXJldHVy
-biBJSU9fVkFMX0lOVDsKPj4gPiAgCWRlZmF1bHQ6Cj4+ID4gLQkJbXV0ZXhfdW5sb2NrKCZzdC0+
-bG9jayk7Cj4+ID4gLQkJcmV0dXJuIC1FSU5WQUw7Cj4+ID4gKwkJYnJlYWs7Cj4+ID4gIAl9Cj4+
-ID4gIAo+PiA+IC0JLyogZGVsYXkgKDIgKiBBRDJTMTIwMF9UU0NMSyArIDIwKSBucyBmb3Igc2Ft
-cGxlIHB1bHNlICovCj4+ID4gLQl1ZGVsYXkoMSk7Cj4+ID4gLQltdXRleF91bmxvY2soJnN0LT5s
-b2NrKTsKPj4gPiAtCj4+ID4gLQlyZXR1cm4gSUlPX1ZBTF9JTlQ7Cj4+ID4gKwlyZXR1cm4gLUVJ
-TlZBTDsKPj4gPiAgfQo+PiA+ICAKPj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBpaW9fY2hhbl9z
-cGVjIGFkMnMxMjAwX2NoYW5uZWxzW10gPSB7Cj4+ID4gQEAgLTEwMSw2ICsxMTksNyBAQCBzdGF0
-aWMgY29uc3Qgc3RydWN0IGlpb19jaGFuX3NwZWMgYWQyczEyMDBfY2hhbm5lbHNbXSA9IHsKPj4g
-PiAgCQkuaW5kZXhlZCA9IDEsCj4+ID4gIAkJLmNoYW5uZWwgPSAwLAo+PiA+ICAJCS5pbmZvX21h
-c2tfc2VwYXJhdGUgPSBCSVQoSUlPX0NIQU5fSU5GT19SQVcpLAo+PiA+ICsJCS5pbmZvX21hc2tf
-c2hhcmVkX2J5X3R5cGUgPSBCSVQoSUlPX0NIQU5fSU5GT19TQ0FMRSksCj4+ID4gIAl9Cj4+ID4g
-IH07Cj4+ID4gICAgCj4+IAo+PiAtLQo+PiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDog
-c2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtaWlvIiBpbgo+PiB0aGUgYm9keSBvZiBh
-IG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+PiBNb3JlIG1ham9yZG9tbyBp
-bmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcg
-bGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhk
-cml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+On 28, April 2018 17:46, Jonathan Cameron wrote:
+
+> On Mon, 23 Apr 2018 00:04:42 +0200
+> David Veenstra <davidjulianveenstra@gmail.com> wrote:
+>
+>> Move the iio driver for the ad2s1200 and ad2s1205 resolver-to-digital
+>> converter out of staging, into mainline iio subsystems.
+>> 
+>> Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
+> A few more minor bits and bobs + suggestions.
+>
+> Some little things that I missed in earlier patches.  If I haven't
+> taken the relevant patch, please roll the fixes in for V4.  If I have
+> just do a little follow up patch.
+>
+> Very nearly there!
+>
+
+Thanks, I'll add all the recommendations in V4.
+
+Best regards,
+David Veenstra
+
+> thanks,
+>
+> Jonathan
+>
+>> ---
+>> Changes in v3:
+>>  - Add mention of ad2s1205 in commit message.
+>> 
+>>  drivers/iio/Kconfig                     |   1 +
+>>  drivers/iio/Makefile                    |   1 +
+>>  drivers/iio/resolver/Kconfig            |  17 +++
+>>  drivers/iio/resolver/Makefile           |   5 +
+>>  drivers/iio/resolver/ad2s1200.c         | 201 ++++++++++++++++++++++++++++++++
+>>  drivers/staging/iio/resolver/Kconfig    |  12 --
+>>  drivers/staging/iio/resolver/Makefile   |   1 -
+>>  drivers/staging/iio/resolver/ad2s1200.c | 201 --------------------------------
+>>  8 files changed, 225 insertions(+), 214 deletions(-)
+>>  create mode 100644 drivers/iio/resolver/Kconfig
+>>  create mode 100644 drivers/iio/resolver/Makefile
+>>  create mode 100644 drivers/iio/resolver/ad2s1200.c
+>>  delete mode 100644 drivers/staging/iio/resolver/ad2s1200.c
+>> 
+>> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+>> index b3c8c6ef0dff..4bec3ccbf4a1 100644
+>> --- a/drivers/iio/Kconfig
+>> +++ b/drivers/iio/Kconfig
+>> @@ -92,6 +92,7 @@ source "drivers/iio/potentiometer/Kconfig"
+>>  source "drivers/iio/potentiostat/Kconfig"
+>>  source "drivers/iio/pressure/Kconfig"
+>>  source "drivers/iio/proximity/Kconfig"
+>> +source "drivers/iio/resolver/Kconfig"
+>>  source "drivers/iio/temperature/Kconfig"
+>>  
+>>  endif # IIO
+>> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+>> index b16b2e9ddc40..1865361b8714 100644
+>> --- a/drivers/iio/Makefile
+>> +++ b/drivers/iio/Makefile
+>> @@ -35,5 +35,6 @@ obj-y += potentiometer/
+>>  obj-y += potentiostat/
+>>  obj-y += pressure/
+>>  obj-y += proximity/
+>> +obj-y += resolver/
+>>  obj-y += temperature/
+>>  obj-y += trigger/
+>> diff --git a/drivers/iio/resolver/Kconfig b/drivers/iio/resolver/Kconfig
+>> new file mode 100644
+>> index 000000000000..2ced9f22aa70
+>> --- /dev/null
+>> +++ b/drivers/iio/resolver/Kconfig
+>> @@ -0,0 +1,17 @@
+>> +#
+>> +# Resolver/Synchro drivers
+>> +#
+>> +menu "Resolver to digital converters"
+>> +
+>> +config AD2S1200
+>> +	tristate "Analog Devices ad2s1200/ad2s1205 driver"
+>> +	depends on SPI
+>> +	depends on GPIOLIB || COMPILE_TEST
+>> +	help
+>> +	  Say yes here to build support for Analog Devices spi resolver
+>> +	  to digital converters, ad2s1200 and ad2s1205, provides direct access
+>> +	  via sysfs.
+>> +
+>> +	  To compile this driver as a module, choose M here: the
+>> +	  module will be called ad2s1200.
+>> +endmenu
+>> diff --git a/drivers/iio/resolver/Makefile b/drivers/iio/resolver/Makefile
+>> new file mode 100644
+>> index 000000000000..4e1dccae07e7
+>> --- /dev/null
+>> +++ b/drivers/iio/resolver/Makefile
+>> @@ -0,0 +1,5 @@
+>> +#
+>> +# Makefile for Resolver/Synchro drivers
+>> +#
+>> +
+>> +obj-$(CONFIG_AD2S1200) += ad2s1200.o
+>> diff --git a/drivers/iio/resolver/ad2s1200.c b/drivers/iio/resolver/ad2s1200.c
+>> new file mode 100644
+>> index 000000000000..d2b62308b31d
+>> --- /dev/null
+>> +++ b/drivers/iio/resolver/ad2s1200.c
+>> @@ -0,0 +1,201 @@
+>> +/*
+>> + * ad2s1200.c simple support for the ADI Resolver to Digital Converters:
+>> + * AD2S1200/1205
+>> + *
+>> + * Copyright (c) 2010-2010 Analog Devices Inc.
+>
+> I think you have done enough changes in here that if you want to add your
+> own copyright I think it would be justified.
+>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>
+> One of my pet hates if you want to clean it up :)
+> No point in having a blank line above here.
+>
+>> + */
+>> +
+>> +#include <linux/bitops.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/spi/spi.h>
+>> +#include <linux/sysfs.h>
+>> +#include <linux/types.h>
+>> +
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/sysfs.h>
+>> +
+>> +#define DRV_NAME "ad2s1200"
+>> +
+>> +/* input clock on serial interface */
+>> +#define AD2S1200_HZ	8192000
+>> +/* clock period in nano second */
+>> +#define AD2S1200_TSCLK	(1000000000 / AD2S1200_HZ)
+>> +
+>> +/**
+>> + * struct ad2s1200_state - driver instance specific data.
+>> + * @lock:	protects both the GPIO pins and the rx buffer, to prevent
+>> + *		concurrent spi transactions.
+>> + * @sdev:	spi device.
+>> + * @sample:	GPIO pin SAMPLE.
+>> + * @rdvel:	GPIO pin RDVEL.
+>> + * @rx:		buffer for spi transfers.
+>> + */
+>> +struct ad2s1200_state {
+>> +	struct mutex lock;
+>> +	struct spi_device *sdev;
+>> +	struct gpio_desc *sample;
+>> +	struct gpio_desc *rdvel;
+>> +	__be16 rx ____cacheline_aligned;
+>> +};
+>> +
+>> +static int ad2s1200_read_raw(struct iio_dev *indio_dev,
+>> +			     struct iio_chan_spec const *chan,
+>> +			     int *val,
+>> +			     int *val2,
+>> +			     long m)
+>> +{
+>> +	struct ad2s1200_state *st = iio_priv(indio_dev);
+>> +	int ret = 0;
+> We only return ret in paths that set it. So doesn't need
+> initializing any more.  This might want to be pushed down
+> to the earlier patch changing this code.
+>> +
+>> +	switch (m) {
+>> +	case IIO_CHAN_INFO_SCALE:
+>> +		switch (chan->type) {
+>> +		case IIO_ANGL:
+>> +			/* 2 * Pi / (2^12 - 1) ~= 0.001534355 */
+>> +			*val = 0;
+>> +			*val2 = 1534355;
+>> +			return IIO_VAL_INT_PLUS_NANO;
+>> +		case IIO_ANGL_VEL:
+>> +			/* 2 * Pi ~= 6.283185 */
+>> +			*val = 6;
+>> +			*val2 = 283185;
+>> +			return IIO_VAL_INT_PLUS_MICRO;
+>> +		default:
+>> +			return -EINVAL;
+>> +		}
+>> +		break;
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		mutex_lock(&st->lock);
+>> +		gpiod_set_value(st->sample, 0);
+>> +
+>> +		/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
+>> +		udelay(1);
+>> +		gpiod_set_value(st->sample, 1);
+>> +		gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
+>> +
+>> +		ret = spi_read(st->sdev, &st->rx, 2);
+>> +		if (ret < 0) {
+>> +			mutex_unlock(&st->lock);
+>> +			return ret;
+>> +		}
+>> +
+>> +		switch (chan->type) {
+>> +		case IIO_ANGL:
+>> +			*val = be16_to_cpup(&st->rx) >> 4;
+>> +			break;
+>> +		case IIO_ANGL_VEL:
+>> +			*val = sign_extend32(be16_to_cpup(&st->rx) >> 4, 11);
+>> +			break;
+>> +		default:
+>> +			mutex_unlock(&st->lock);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		/* delay (2 * AD2S1200_TSCLK + 20) ns for sample pulse */
+>> +		udelay(1);
+>> +		mutex_unlock(&st->lock);
+>> +
+>> +		return IIO_VAL_INT;
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static const struct iio_chan_spec ad2s1200_channels[] = {
+>> +	{
+>> +		.type = IIO_ANGL,
+>> +		.indexed = 1,
+>> +		.channel = 0,
+>> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+>> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+>> +	}, {
+>> +		.type = IIO_ANGL_VEL,
+>> +		.indexed = 1,
+>> +		.channel = 0,
+>> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+>> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+>> +	}
+>> +};
+>> +
+>> +static const struct iio_info ad2s1200_info = {
+>> +	.read_raw = ad2s1200_read_raw,
+>> +};
+>> +
+>> +static int ad2s1200_probe(struct spi_device *spi)
+>> +{
+>> +	struct ad2s1200_state *st;
+>> +	struct iio_dev *indio_dev;
+>> +	int ret = 0;
+> I guess this is left from somewhere and should have been in
+> an earlier patch, but there is no need to set to 0 and
+> it is set in all paths.
+>
+> Mind you I've suggested you get rid of the only user
+> anyway so that won't matter as this will go away anyway.
+>
+>> +
+>> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+>> +	if (!indio_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	spi_set_drvdata(spi, indio_dev);
+>> +	st = iio_priv(indio_dev);
+>> +	mutex_init(&st->lock);
+>> +	st->sdev = spi;
+>> +
+>> +	st->sample = devm_gpiod_get(&spi->dev, "sample", GPIOD_OUT_LOW);
+>> +	if (IS_ERR(st->sample)) {
+>> +		dev_err(&spi->dev, "Failed to claim SAMPLE gpio: err=%ld\n",
+>> +			PTR_ERR(st->sample));
+>> +		return PTR_ERR(st->sample);
+>> +	}
+>> +
+>> +	st->rdvel = devm_gpiod_get(&spi->dev, "rdvel", GPIOD_OUT_LOW);
+>> +	if (IS_ERR(st->rdvel)) {
+>> +		dev_err(&spi->dev, "Failed to claim RDVEL gpio: err=%ld\n",
+>> +			PTR_ERR(st->rdvel));
+>> +		return PTR_ERR(st->rdvel);
+>> +	}
+>> +
+>> +	indio_dev->dev.parent = &spi->dev;
+>> +	indio_dev->info = &ad2s1200_info;
+>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>> +	indio_dev->channels = ad2s1200_channels;
+>> +	indio_dev->num_channels = ARRAY_SIZE(ad2s1200_channels);
+>> +	indio_dev->name = spi_get_device_id(spi)->name;
+>> +
+>> +	ret = devm_iio_device_register(&spi->dev, indio_dev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	spi->max_speed_hz = AD2S1200_HZ;
+>> +	spi->mode = SPI_MODE_3;
+>> +	spi_setup(spi);
+> This ordering is racy.  We could in theory have been
+> talking to the device after it's interfaces were exposed
+> in the devm_iio_device_register call.
+>
+> Reorder this to put them before that then just do
+> return devm_iio_device_register
+> to finish up probe.
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct spi_device_id ad2s1200_id[] = {
+>> +	{ "ad2s1200" },
+> Worth putting in an explicit device tree table for matching
+> with the vendor ID.  The intent long term is to remove
+> the nasty code that leads to fall back matching with the
+> spi_device_id table.
+>
+> No reason this needs to happen before taking it out of staging.
+>
+>> +	{ "ad2s1205" },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(spi, ad2s1200_id);
+>> +
+>> +static struct spi_driver ad2s1200_driver = {
+>> +	.driver = {
+>> +		.name = DRV_NAME,
+>> +	},
+>> +	.probe = ad2s1200_probe,
+>> +	.id_table = ad2s1200_id,
+>> +};
+>> +module_spi_driver(ad2s1200_driver);
+>> +
+>> +MODULE_AUTHOR("Graff Yang <graff.yang@gmail.com>");
+>> +MODULE_DESCRIPTION("Analog Devices AD2S1200/1205 Resolver to Digital SPI driver");
+>> +MODULE_LICENSE("GPL v2");
+> ...
