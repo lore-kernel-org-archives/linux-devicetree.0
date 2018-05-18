@@ -1,15 +1,15 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v5 07/12] ARM: dts: imx7s: add mipi phy power domain
-Date: Fri, 18 May 2018 22:54:17 +0100
-Message-ID: <m3y3ggd3zq.fsf@linaro.org>
+Subject: Re: [PATCH v5 08/12] ARM: dts: imx7s: add multiplexer controls
+Date: Fri, 18 May 2018 22:54:49 +0100
+Message-ID: <m3wow0d3yu.fsf@linaro.org>
 References: <20180518092806.3829-1-rui.silva@linaro.org>
- <20180518092806.3829-8-rui.silva@linaro.org>
- <20180518165022.GB21131@rob-hp-laptop>
+ <20180518092806.3829-9-rui.silva@linaro.org>
+ <20180518165146.GC21131@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <20180518165022.GB21131@rob-hp-laptop>
+In-reply-to: <20180518165146.GC21131@rob-hp-laptop>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -24,48 +24,52 @@ Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.i
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
-On Fri 18 May 2018 at 16:50, Rob Herring wrote:
-> On Fri, May 18, 2018 at 10:28:01AM +0100, Rui Miguel Silva 
+On Fri 18 May 2018 at 16:51, Rob Herring wrote:
+> On Fri, May 18, 2018 at 10:28:02AM +0100, Rui Miguel Silva 
 > wrote:
->> Add power domain index 0 related with mipi-phy to imx7s.
+>> The IOMUXC General Purpose Register has bitfield to control 
+>> video bus
+>> multiplexer to control the CSI input between the MIPI-CSI2 and 
+>> parallel
+>> interface. Add that register and mask.
 >> 
 >> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 >> ---
->>  arch/arm/boot/dts/imx7s.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
+>>  arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
 >> 
 >> diff --git a/arch/arm/boot/dts/imx7s.dtsi 
 >> b/arch/arm/boot/dts/imx7s.dtsi
->> index 4d42335c0dee..67450ad89940 100644
+>> index 67450ad89940..3590dab529f9 100644
 >> --- a/arch/arm/boot/dts/imx7s.dtsi
 >> +++ b/arch/arm/boot/dts/imx7s.dtsi
->> @@ -636,6 +636,12 @@
->>  					#address-cells = <1>;
->>  					#size-cells = <0>;
+>> @@ -520,8 +520,14 @@
 >>  
->> +					pgc_mipi_phy: 
->> pgc-power-domain@0 {
->
-> power-domain@0
-
-I can change it, but...
->
->> + 
->> #power-domain-cells = <0>;
->> +						reg = <0>;
->> +						power-supply = 
->> <&reg_1p0d>;
->> +					};
+>>  			gpr: iomuxc-gpr@30340000 {
+>>  				compatible = 
+>>  "fsl,imx7d-iomuxc-gpr",
+>> -					"fsl,imx6q-iomuxc-gpr", 
+>> "syscon";
+>> +					"fsl,imx6q-iomuxc-gpr", 
+>> "syscon", "simple-mfd";
+>>  				reg = <0x30340000 0x10000>;
 >> +
->>  					pgc_pcie_phy: 
->>  pgc-power-domain@1 {
+>> +				mux: mux-controller {
+>> +					compatible = "mmio-mux";
+>> +					#mux-control-cells = <1>;
+>> +					mux-reg-masks = <0x14 
+>> 0x00000010>;
 >
-> ditto.
+> If 1 bit control, then #mux-control-cells can be 0.
 
-This was not introduced by my patch, it is already there and I was
-trying to be coherent with the existing naming.
-but let me know if you like me to change it also.
+Ack.
 
----
-Cheers,
-	Rui
+>
+>> +				};
+>>  			};
+>>  
+>>  			ocotp: ocotp-ctrl@30350000 {
+>> -- 
+>> 2.17.0
+>> 
