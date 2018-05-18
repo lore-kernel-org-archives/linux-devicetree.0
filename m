@@ -1,214 +1,100 @@
-From: skannan@codeaurora.org
-Subject: Re: [PATCH] PM / devfreq: Add support for QCOM devfreq FW
-Date: Fri, 18 May 2018 00:16:07 -0700
-Message-ID: <56e9cd3e57d809ef6cd5765a97101e6e@codeaurora.org>
-References: <CGME20180517060257epcas2p1b42e6969c806473ccdf38ea52a74ca04@epcas2p1.samsung.com>
- <1526536958-29419-1-git-send-email-skannan@codeaurora.org>
- <5AFE3A30.4040505@samsung.com>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
+ bindings
+Date: Fri, 18 May 2018 07:29:04 +0000
+Message-ID: <28c374e6-b440-f785-b371-03fe15c8bc4b@st.com>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
+ <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+ <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
+ <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
+ <CACRpkda2VGo0FOdR09tKiTpg66NgoWjubaHp_J3372y=a772Zg@mail.gmail.com>
+ <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com> <20180517063640.GK5130@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5AFE3A30.4040505@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180517063640.GK5130@dell>
+Content-Language: en-US
+Content-ID: <A8B6A2FB85CB2C43A0FB3B16F8C2746D@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-17 19:28, Chanwoo Choi wrote:
-> Hi,
+On 05/17/2018 08:36 AM, Lee Jones wrote:
+> On Wed, 16 May 2018, Amelie DELAUNAY wrote:
 > 
-> On 2018년 05월 17일 15:02, Saravana Kannan wrote:
->> The firmware present in some QCOM chipsets offloads the steps 
->> necessary for
->> changing the frequency of some devices (Eg: L3). This driver 
->> implements the
->> devfreq interface for this firmware so that various governors could be 
->> used
->> to scale the frequency of these devices.
+>>
+>>
+>> On 05/16/2018 04:20 PM, Linus Walleij wrote:
+>>> On Wed, May 9, 2018 at 9:56 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+>>>
+>>>> Indeed, stmfx has other functions than GPIO. But, after comments done
+>>>> here: [1] and there: [2], it has been decided to move MFD parent/GPIO
+>>>> child drivers into a single PINCTRL/GPIO driver because of the following
+>>>> reasons:
+>>>> - Other stmfx functions (IDD measurement and TouchScreen controller) are
+>>>> not used on any of the boards using an stmfx and supported by Linux, so
+>>>> no way to test these functions, and no need to maintain them while they
+>>>> are not being used.
+>>>> - But, in the case a new board will use more than GPIO function on
+>>>> stmfx, the actual implementation allow to easily extract common init
+>>>> part of stmfx and put it in an MFD driver.
+>>>>
+>>>> So I could remove gpio sub-node and put its contents in stmfx node and
+>>>> keep single PINCTRL/GPIO driver for the time being.
+>>>> Please advise,
+>>>
+>>> I would normally advice to use the right modeling from the start, create
+>>> the MFD driver and spawn the devices from there. It is confusing
+>>> if the layout of the driver(s) doesn't really match the layout of the
+>>> hardware.
+>>>
+>>> I understand that it is a pain to write new MFD drivers to get your
+>>> things going and it would be "nice to get this working really quick
+>>> now" but in my experience it is better to do it right from the start.
+>>>
+>>
+>> Hi Linus,
+>>
+>> Thanks for your advice. I understand the point.
+>> So, the right modeling would be to:
+>> - create an MFD driver with the common init part of stmfx
+>> - remove all common init part of stmfx-pinctrl driver and keep only all
+>> gpio/pinctrl functions.
+>>
+>> I will not develop the other stmfx functions (IDD measurement driver and
+>> TouchScreen controller driver) because, as explained ealier, they are
+>> not used on any of the boards using an stmfx and supported by Linux, so
+>> no way to test these functions, and no need to maintain them while they
+>> are not being used.
+>>
+>> Lee, are you OK with that ?
 > 
-> The description doesn't include what kind of firmware. You have to 
-> explain
-> the type and role of firmware.
-
-Not exactly sure what you mean. I described exactly what the firmware 
-does. Not sure what you mean by what kind of firmware. I just understand 
-the interface with it -- not the implementation of the firmware or 
-hardware.
-
-> And it doesn't contain the description
-> of correlation
-> between 'qcom,devfreq-fw' and 'qcom,devfreq-fw-voter'.
+> I missed a lot of this conversation I think, but from what I've read,
+> it sounds fine.
 > 
 
-Will do.
+I summarize the situation:
+- I still don't have an official datasheet for STMFX device which could 
+justify the use of an MFD driver;
+- the MFD driver will contain the STMFX chip initialization stuff such 
+as regmap initialization (regmap structure will be shared with the 
+child), chip initialization, global interrupt management;
+- there will be only one child (GPIO/PINCTRL node) for the time being.
 
->> 
->> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->> ---
->>  .../bindings/devfreq/devfreq-qcom-fw.txt           |  31 ++
->>  drivers/devfreq/Kconfig                            |  14 +
->>  drivers/devfreq/Makefile                           |   1 +
->>  drivers/devfreq/devfreq_qcom_fw.c                  | 326 
->> +++++++++++++++++++++
->>  4 files changed, 372 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
->>  create mode 100644 drivers/devfreq/devfreq_qcom_fw.c
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt 
->> b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
->> new file mode 100644
->> index 0000000..5e1aecf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
->> @@ -0,0 +1,31 @@
->> +QCOM Devfreq FW device
->> +
->> +Some Qualcomm Technologies, Inc. (QTI) chipsets have a FW that 
->> offloads the
->> +child devices of the corresponding qcom,devfreq-fw device.
->> +
->> +Required properties:
->> +- compatible:		Must be "qcom,devfreq-fw" or "qcom,devfreq-fw-voter"
-> 
-> The use of 'devfreq' word is not proper because 'devfreq' is framework 
-> name.
-> I think you have to use the specific SoC name for the compatible.
-
-I don't think it's mandatory to use chip name. Typically you pick the IP 
-name. This IP is a firmware just for scaling device frequency - so 
-called it qcom,devfreq-fw. I'll see what the DT maintainers say about 
-this.
-
-> In the future,
-> if you need to support the new SoC with this driver, just you can add
-> the new compatible.
-> 
->> +Only for qcom,devfreq-fw:
->> +- reg:			Pairs of physical base addresses and region sizes of
->> +			memory mapped registers.
->> +- reg-names:		Names of the bases for the above registers. Expected
->> +			bases are: "en-base", "lut-base" and "perf-base".
-> 
-> It is not possible to understand what are meaning of "en-base",
-> "lut-base" and "perf-base".
-> because they depend on specific H/W specification. You have to add the
-> detailed description
-> why they are necessary. Also, you should explain whether thery are
-> mandatory or optional.
-
-The are all mandatory, that's why I didn't have the "Optional" heading. 
-I can add descriptions.
-
-> 
->> +
->> +Example:
->> +
->> +	qcom,devfreq-l3 {
->> +		compatible = "qcom,devfreq-fw";
->> +		reg-names = "en-base", "lut-base", "perf-base";
->> +		reg = <0x18321000 0x4>, <0x18321110 0x600>, <0x18321920 0x4>;
->> +
->> +		qcom,cpu0-l3 {
->> +			compatible = "qcom,devfreq-fw-voter";
->> +		};
->> +
->> +		qcom,cpu4-l3 {
->> +			compatible = "qcom,devfreq-fw-voter";
->> +		};
->> +	};
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index 6a172d3..8503018 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -113,6 +113,20 @@ config ARM_RK3399_DMC_DEVFREQ
->>            It sets the frequency for the memory controller and reads 
->> the usage counts
->>            from hardware.
->> 
->> +config ARM_QCOM_DEVFREQ_FW
->> +	bool "Qualcomm Technologies Inc. DEVFREQ FW driver"
->> +	depends on ARCH_QCOM
->> +	select DEVFREQ_GOV_PERFORMANCE
->> +	select DEVFREQ_GOV_POWERSAVE
->> +	select DEVFREQ_GOV_USERSPACE
->> +	default n
->> +	help
->> +	  The firmware present in some QCOM chipsets offloads the steps
->> +	  necessary for changing the frequency of some devices (Eg: L3). 
->> This
->> +	  driver implements the devfreq interface for this firmware so that
->> +	  various governors could be used to scale the frequency of these
->> +	  devices.
-> 
-> As I commented, you need to add a description of what kind of firmwar.
-
-Again, not sure what you mean by "what kind of firmware". It's exactly 
-what I've described here. Can you please elaborate?
-
->> +
->>  source "drivers/devfreq/event/Kconfig"
->> 
->>  endif # PM_DEVFREQ
->> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
->> index 32b8d4d..f1cc8990 100644
->> --- a/drivers/devfreq/Makefile
->> +++ b/drivers/devfreq/Makefile
->> @@ -11,6 +11,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= 
->> governor_passive.o
->>  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
->>  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
->>  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
->> +obj-$(CONFIG_ARM_QCOM_DEVFREQ_FW)	+= devfreq_qcom_fw.o
->> 
->>  # DEVFREQ Event Drivers
->>  obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
->> diff --git a/drivers/devfreq/devfreq_qcom_fw.c 
->> b/drivers/devfreq/devfreq_qcom_fw.c
->> new file mode 100644
->> index 0000000..3e85f76
->> --- /dev/null
->> +++ b/drivers/devfreq/devfreq_qcom_fw.c
->> @@ -0,0 +1,326 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> 
-> Is it right? or Qualcomm?
-
-Yup, it's right.
-
-> 
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/errno.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +#include <linux/list.h>
->> +#include <linux/devfreq.h>
->> +#include <linux/pm_opp.h>
->> +
->> +#define INIT_RATE			300000000UL
->> +#define XO_RATE				19200000UL
->> +#define LUT_MAX_ENTRIES			40U
->> +#define LUT_ROW_SIZE			32
-> 
-> I don't know what are the meaning of 'XO', 'LUT'.
-
-XO is a very common term for crystal oscillator. I don't want to change 
-these symbols.
-LUT stands for Look up table. But I can rename it to FREQ_TBL_.
+So, is "MFD driver + GPIO/PINCTRL driver" the right modeling, and does 
+it still sound fine after this summary ? :)
 
 Thanks,
-Saravana
+Amelie
