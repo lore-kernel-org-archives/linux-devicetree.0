@@ -1,32 +1,211 @@
-From: Trilok Soni <tsoni@codeaurora.org>
-Subject: Re: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim ngd dt bindings
-Date: Fri, 18 May 2018 13:47:05 -0700
-Message-ID: <802138cc-77cc-9800-f725-0ab8a9f0467e@codeaurora.org>
-References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
- <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 2/2] drivers: soc: Add LLCC driver
+Date: Sat, 19 May 2018 00:01:24 +0300
+Message-ID: <CAHp75VdO7+u-PQ+RBH71sxHHG0WkAyEVxv0BNPaycbcRnrZang@mail.gmail.com>
+References: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org> <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
+In-Reply-To: <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
+To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas
+On Wed, May 16, 2018 at 8:43 PM, Rishabh Bhatnagar
+<rishabhb@codeaurora.org> wrote:
+> LLCC (Last Level Cache Controller) provides additional cache memory
+> in the system. LLCC is partitioned into multiple slices and each
+> slice gets its own priority, size, ID and other config parameters.
+> LLCC driver programs these parameters for each slice. Clients that
+> are assigned to use LLCC need to get information such size & ID of the
+> slice they get and activate or deactivate the slice as needed. LLCC driver
+> provides API for the clients to perform these operations.
 
-On 5/16/2018 9:51 AM, Srinivas Kandagatla wrote:
-> This patch adds bindings for Qualcomm SLIMBus NGD controller found in
-> all new SoCs starting from B family.
+> +static const struct of_device_id sdm845_qcom_llcc_of_match[] = {
+> +       { .compatible = "qcom,sdm845-llcc", },
 
-"X/Y/Z family" has no meaning here in upstream and just put the 
-processor name from which you are adding the support or tested to start 
-with.
+> +       { },
 
+Slightly better w/o comma
+
+> +};
+
+> +static struct platform_driver sdm845_qcom_llcc_driver = {
+> +       .driver = {
+> +               .name = "sdm845-llcc",
+
+> +               .owner = THIS_MODULE,
+
+No need. See below.
+
+> +               .of_match_table = sdm845_qcom_llcc_of_match,
+> +       },
+> +       .probe = sdm845_qcom_llcc_probe,
+> +};
+
+> +
+> +static int __init sdm845_init_qcom_llcc_init(void)
+> +{
+> +       return platform_driver_register(&sdm845_qcom_llcc_driver);
+> +}
+> +module_init(sdm845_init_qcom_llcc_init);
+> +
+> +static void __exit sdm845_exit_qcom_llcc_exit(void)
+> +{
+> +       platform_driver_unregister(&sdm845_qcom_llcc_driver);
+> +}
+> +module_exit(sdm845_exit_qcom_llcc_exit);
+
+Why not to use module_platform_driver() macro?
+
+> +#define ACTIVATE                      0x1
+> +#define DEACTIVATE                    0x2
+> +#define ACT_CTRL_OPCODE_ACTIVATE      0x1
+> +#define ACT_CTRL_OPCODE_DEACTIVATE    0x2
+> +#define ACT_CTRL_ACT_TRIG             0x1
+
+Are these bits? Perhaps BIT() ?
+
+> +#define ACT_CTRL_OPCODE_SHIFT         0x1
+> +#define ATTR1_PROBE_TARGET_WAYS_SHIFT 0x2
+> +#define ATTR1_FIXED_SIZE_SHIFT        0x3
+> +#define ATTR1_PRIORITY_SHIFT          0x4
+> +#define ATTR1_MAX_CAP_SHIFT           0x10
+
+Better to use fixed size pattern, i.e. 0x01, 0x02, 0x03, 0x04, 0x10.
+
+> +#define ATTR0_RES_WAYS_MASK           0x00000fff
+> +#define ATTR0_BONUS_WAYS_MASK         0x0fff0000
+
+GENMASK()
+
+> +#define LLCC_LB_CNT_MASK               0xf0000000
+
+Ditto.
+
+> +#define MAX_CAP_TO_BYTES(n) (n * 1024)
+
+(n * SZ_1K) ?
+
+> +#define LLCC_TRP_ACT_CTRLn(n) (n * 0x1000)
+
+SZ_4K ?
+
+> +#define LLCC_TRP_STATUSn(n)   (4 + n * 0x1000)
+
+Ditto.
+
+> +struct llcc_slice_desc *llcc_slice_getd(u32 uid)
+> +{
+> +       const struct llcc_slice_config *cfg;
+> +       struct llcc_slice_desc *desc;
+> +       u32 sz, count = 0;
+> +
+> +       cfg = drv_data->cfg;
+> +       sz = drv_data->cfg_size;
+> +
+
+> +       while (cfg && count < sz) {
+> +               if (cfg->usecase_id == uid)
+> +                       break;
+> +               cfg++;
+> +               count++;
+> +       }
+> +       if (cfg == NULL || count == sz)
+> +               return ERR_PTR(-ENODEV);
+
+if (!cfg)
+          return ERR_PTR(-ENODEV);
+
+while (cfg->... != uid) {
+  cfg++;
+  count++;
+}
+
+if (count == sz)
+ return ...
+
+Though I would rather put it to for () loop.
+
+> +static int llcc_update_act_ctrl(u32 sid,
+> +                               u32 act_ctrl_reg_val, u32 status)
+> +{
+> +       u32 act_ctrl_reg;
+> +       u32 status_reg;
+> +       u32 slice_status;
+
+> +       int ret = 0;
+
+Useless assignment. Check entire patch series for a such.
+
+> +       ret = regmap_read_poll_timeout(drv_data->regmap, status_reg,
+> +       slice_status, !(slice_status & status), 0, LLCC_STATUS_READ_DELAY);
+
+Wrong indentation.
+
+> +       return ret;
+> +}
+
+> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+> +                                 DEACTIVATE);
+
+Perhaps one line (~83 characters here is OK) ?
+
+> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+> +                                 ACTIVATE);
+
+Ditto.
+
+> +               attr1_cfg = bcast_off +
+> +                               LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
+> +               attr0_cfg = bcast_off +
+> +                               LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
+
+Ditto.
+
+> +               attr1_val |= llcc_table[i].probe_target_ways <<
+> +                               ATTR1_PROBE_TARGET_WAYS_SHIFT;
+> +               attr1_val |= llcc_table[i].fixed_size <<
+> +                               ATTR1_FIXED_SIZE_SHIFT;
+> +               attr1_val |= llcc_table[i].priority << ATTR1_PRIORITY_SHIFT;
+
+foo |=
+  bar << SHIFT;
+
+would look slightly better.
+
+> +int qcom_llcc_probe(struct platform_device *pdev,
+> +                     const struct llcc_slice_config *llcc_cfg, u32 sz)
+> +{
+
+> +       drv_data->offsets = devm_kzalloc(dev, num_banks * sizeof(u32),
+> +                                                       GFP_KERNEL);
+> +       if (!drv_data->offsets)
+> +               return -ENOMEM;
+
+devm_kcalloc() ?
+
+> +
+> +       for (i = 0; i < num_banks; i++)
+> +               drv_data->offsets[i] = (i * BANK_OFFSET_STRIDE);
+
+Pointless parens.
+
+> +       drv_data->bitmap = devm_kcalloc(dev,
+> +       BITS_TO_LONGS(drv_data->max_slices), sizeof(unsigned long),
+> +                                               GFP_KERNEL);
+> +       if (!drv_data->bitmap)
+> +               return -ENOMEM;
+
+Perhaps at some point someone will add
+bitmap_alloc()
+devm_bitmap_alloc()
+
+> +       bitmap_zero(drv_data->bitmap, drv_data->max_slices);
+
+Pointless
 
 -- 
----Trilok Soni
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
-Linux Foundation Collaborative Project
+With Best Regards,
+Andy Shevchenko
