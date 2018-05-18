@@ -1,377 +1,286 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v11 22/27] ARM: davinci: da8xx: Remove legacy USB and SATA clock init
-Date: Fri, 18 May 2018 11:48:24 -0500
-Message-ID: <20180518164829.27052-23-david@lechnology.com>
+Subject: [PATCH v11 03/27] clk: davinci: psc: allow for dev == NULL
+Date: Fri, 18 May 2018 11:48:05 -0500
+Message-ID: <20180518164829.27052-4-david@lechnology.com>
 References: <20180518164829.27052-1-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180518164829.27052-1-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This removes the unused legacy USB and SATA clock init code from
-arch/arm/mach-davinci/{devices,usb}-da8xx}.c.
+On some davinci SoCs, we need to register the PSC clocks during early
+boot because they are needed for clocksource/clockevent. These changes
+allow for dev == NULL because in this case, we won't have a platform
+device for the clocks.
+
+Some function declarations are moved to a public header files so that they can
+be called from mach init code.
 
 Signed-off-by: David Lechner <david@lechnology.com>
-Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 ---
 
 v11 changes:
-- none
+- proper unwinding on errors
+- add #include <linux/clk/davinci.h> to avoid W=1 warnings
 
 v10 changes:
-- none
+- dropped helper functions that conditionally called devm_ versions of functions
 
 v9 changes:
-- none
-
-v8 changes:
-- none
-
-v7 changes:
-- rebased
-- add davinci prefix to commit message
-
-v6 changes:
-- rebased
+- new patch in v9
 
 
- arch/arm/mach-davinci/devices-da8xx.c      |  29 ---
- arch/arm/mach-davinci/include/mach/da8xx.h |   3 -
- arch/arm/mach-davinci/usb-da8xx.c          | 238 ---------------------
- 3 files changed, 270 deletions(-)
+ drivers/clk/davinci/psc-dm355.c  |  3 +-
+ drivers/clk/davinci/psc-dm365.c  |  3 +-
+ drivers/clk/davinci/psc-dm644x.c |  3 +-
+ drivers/clk/davinci/psc-dm646x.c |  3 +-
+ drivers/clk/davinci/psc.c        | 58 ++++++++++++++++++++++++--------
+ include/linux/clk/davinci.h      |  5 +++
+ 6 files changed, 57 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index 73de449bbc68..1fd3619f6a09 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -30,11 +30,6 @@
- #include "cpuidle.h"
- #include "sram.h"
+diff --git a/drivers/clk/davinci/psc-dm355.c b/drivers/clk/davinci/psc-dm355.c
+index 128e7345b20c..ddd250107c4e 100644
+--- a/drivers/clk/davinci/psc-dm355.c
++++ b/drivers/clk/davinci/psc-dm355.c
+@@ -6,6 +6,7 @@
+  */
  
--#ifndef CONFIG_COMMON_CLK
--#include <mach/clock.h>
--#include "clock.h"
--#endif
--
- #define DA8XX_TPCC_BASE			0x01c00000
- #define DA8XX_TPTC0_BASE		0x01c08000
- #define DA8XX_TPTC1_BASE		0x01c08400
-@@ -1045,29 +1040,6 @@ int __init da8xx_register_spi_bus(int instance, unsigned num_chipselect)
- }
+ #include <linux/clk-provider.h>
++#include <linux/clk/davinci.h>
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ #include <linux/init.h>
+@@ -68,7 +69,7 @@ static const struct davinci_lpsc_clk_info dm355_psc_info[] = {
+ 	{ }
+ };
  
- #ifdef CONFIG_ARCH_DAVINCI_DA850
--#ifndef CONFIG_COMMON_CLK
--static struct clk sata_refclk = {
--	.name		= "sata_refclk",
--	.set_rate	= davinci_simple_set_rate,
--};
--
--static struct clk_lookup sata_refclk_lookup =
--		CLK("ahci_da850", "refclk", &sata_refclk);
--
--int __init da850_register_sata_refclk(int rate)
--{
--	int ret;
--
--	sata_refclk.rate = rate;
--	ret = clk_register(&sata_refclk);
--	if (ret)
--		return ret;
--
--	clkdev_add(&sata_refclk_lookup);
--
--	return 0;
--}
--#else
- int __init da850_register_sata_refclk(int rate)
+-static int dm355_psc_init(struct device *dev, void __iomem *base)
++int dm355_psc_init(struct device *dev, void __iomem *base)
  {
- 	struct clk *clk;
-@@ -1078,7 +1050,6 @@ int __init da850_register_sata_refclk(int rate)
- 
- 	return clk_register_clkdev(clk, "refclk", "ahci_da850");
+ 	return davinci_psc_register_clocks(dev, dm355_psc_info, 42, base);
  }
--#endif
+diff --git a/drivers/clk/davinci/psc-dm365.c b/drivers/clk/davinci/psc-dm365.c
+index 289af3913fb0..8c73086cc676 100644
+--- a/drivers/clk/davinci/psc-dm365.c
++++ b/drivers/clk/davinci/psc-dm365.c
+@@ -6,6 +6,7 @@
+  */
  
- static struct resource da850_sata_resources[] = {
- 	{
-diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-index 5d7b1de9aa7e..ab4a57f433f4 100644
---- a/arch/arm/mach-davinci/include/mach/da8xx.h
-+++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-@@ -103,9 +103,6 @@ int da8xx_register_watchdog(void);
- int da8xx_register_usb_phy(void);
- int da8xx_register_usb20(unsigned mA, unsigned potpgt);
- int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
--int da8xx_register_usb_refclkin(int rate);
--int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
--int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
- int da8xx_register_usb_phy_clocks(void);
- int da850_register_sata_refclk(int rate);
- int da8xx_register_emac(void);
-diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
-index c8d2f3075e69..c17ce66a3d95 100644
---- a/arch/arm/mach-davinci/usb-da8xx.c
-+++ b/arch/arm/mach-davinci/usb-da8xx.c
-@@ -20,11 +20,6 @@
- #include <mach/da8xx.h>
- #include <mach/irqs.h>
+ #include <linux/clk-provider.h>
++#include <linux/clk/davinci.h>
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ #include <linux/init.h>
+@@ -86,7 +87,7 @@ static const struct davinci_lpsc_clk_info dm365_psc_info[] = {
+ 	{ }
+ };
  
--#ifndef CONFIG_COMMON_CLK
--#include <mach/clock.h>
--#include "clock.h"
--#endif
--
- #define DA8XX_USB0_BASE		0x01e00000
- #define DA8XX_USB1_BASE		0x01e25000
+-static int dm365_psc_init(struct device *dev, void __iomem *base)
++int dm365_psc_init(struct device *dev, void __iomem *base)
+ {
+ 	return davinci_psc_register_clocks(dev, dm365_psc_info, 52, base);
+ }
+diff --git a/drivers/clk/davinci/psc-dm644x.c b/drivers/clk/davinci/psc-dm644x.c
+index c22367baa46f..fc0230e3a3d6 100644
+--- a/drivers/clk/davinci/psc-dm644x.c
++++ b/drivers/clk/davinci/psc-dm644x.c
+@@ -6,6 +6,7 @@
+  */
  
-@@ -87,11 +82,6 @@ static struct platform_device da8xx_usb20_dev = {
- 	.name		= "musb-da8xx",
- 	.id             = -1,
- 	.dev = {
--		/*
--		 * Setting init_name so that clock lookup will work in
--		 * usb20_phy_clk_enable() even if this device is not registered.
--		 */
--		.init_name		= "musb-da8xx",
- 		.platform_data		= &usb_data,
- 		.dma_mask		= &usb_dmamask,
- 		.coherent_dma_mask      = DMA_BIT_MASK(32),
-@@ -140,234 +130,6 @@ int __init da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata)
- 	return platform_device_register(&da8xx_usb11_device);
+ #include <linux/clk-provider.h>
++#include <linux/clk/davinci.h>
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ #include <linux/init.h>
+@@ -63,7 +64,7 @@ static const struct davinci_lpsc_clk_info dm644x_psc_info[] = {
+ 	{ }
+ };
+ 
+-static int dm644x_psc_init(struct device *dev, void __iomem *base)
++int dm644x_psc_init(struct device *dev, void __iomem *base)
+ {
+ 	return davinci_psc_register_clocks(dev, dm644x_psc_info, 41, base);
+ }
+diff --git a/drivers/clk/davinci/psc-dm646x.c b/drivers/clk/davinci/psc-dm646x.c
+index 468ef86ea40b..c3f82ed70a80 100644
+--- a/drivers/clk/davinci/psc-dm646x.c
++++ b/drivers/clk/davinci/psc-dm646x.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/clk-provider.h>
++#include <linux/clk/davinci.h>
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ #include <linux/init.h>
+@@ -58,7 +59,7 @@ static const struct davinci_lpsc_clk_info dm646x_psc_info[] = {
+ 	{ }
+ };
+ 
+-static int dm646x_psc_init(struct device *dev, void __iomem *base)
++int dm646x_psc_init(struct device *dev, void __iomem *base)
+ {
+ 	return davinci_psc_register_clocks(dev, dm646x_psc_info, 46, base);
+ }
+diff --git a/drivers/clk/davinci/psc.c b/drivers/clk/davinci/psc.c
+index ce170e600f09..6326ba1fe3cc 100644
+--- a/drivers/clk/davinci/psc.c
++++ b/drivers/clk/davinci/psc.c
+@@ -15,6 +15,7 @@
+ 
+ #include <linux/clk-provider.h>
+ #include <linux/clk.h>
++#include <linux/clk/davinci.h>
+ #include <linux/clkdev.h>
+ #include <linux/err.h>
+ #include <linux/of_address.h>
+@@ -63,7 +64,7 @@ struct davinci_psc_data {
+ 
+ /**
+  * struct davinci_lpsc_clk - LPSC clock structure
+- * @dev: the device that provides this LPSC
++ * @dev: the device that provides this LPSC or NULL
+  * @hw: clk_hw for the LPSC
+  * @pm_domain: power domain for the LPSC
+  * @genpd_clk: clock reference owned by @pm_domain
+@@ -221,6 +222,7 @@ static void davinci_psc_genpd_detach_dev(struct generic_pm_domain *pm_domain,
+ 
+ /**
+  * davinci_lpsc_clk_register - register LPSC clock
++ * @dev: the clocks's device or NULL
+  * @name: name of this clock
+  * @parent_name: name of clock's parent
+  * @regmap: PSC MMIO region
+@@ -238,7 +240,7 @@ davinci_lpsc_clk_register(struct device *dev, const char *name,
+ 	int ret;
+ 	bool is_on;
+ 
+-	lpsc = devm_kzalloc(dev, sizeof(*lpsc), GFP_KERNEL);
++	lpsc = kzalloc(sizeof(*lpsc), GFP_KERNEL);
+ 	if (!lpsc)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -261,9 +263,15 @@ davinci_lpsc_clk_register(struct device *dev, const char *name,
+ 	lpsc->pd = pd;
+ 	lpsc->flags = flags;
+ 
+-	ret = devm_clk_hw_register(dev, &lpsc->hw);
+-	if (ret < 0)
++	ret = clk_hw_register(dev, &lpsc->hw);
++	if (ret < 0) {
++		kfree(lpsc);
+ 		return ERR_PTR(ret);
++	}
++
++	/* for now, genpd is only registered when using device-tree */
++	if (!dev || !dev->of_node)
++		return lpsc;
+ 
+ 	/* genpd attach needs a way to look up this clock */
+ 	ret = clk_hw_register_clkdev(&lpsc->hw, name, best_dev_name(dev));
+@@ -378,13 +386,15 @@ __davinci_psc_register_clocks(struct device *dev,
+ 	struct regmap *regmap;
+ 	int i, ret;
+ 
+-	psc = devm_kzalloc(dev, sizeof(*psc), GFP_KERNEL);
++	psc = kzalloc(sizeof(*psc), GFP_KERNEL);
+ 	if (!psc)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	clks = devm_kmalloc_array(dev, num_clks, sizeof(*clks), GFP_KERNEL);
+-	if (!clks)
+-		return ERR_PTR(-ENOMEM);
++	clks = kmalloc_array(num_clks, sizeof(*clks), GFP_KERNEL);
++	if (!clks) {
++		ret = -ENOMEM;
++		goto err_free_psc;
++	}
+ 
+ 	psc->clk_data.clks = clks;
+ 	psc->clk_data.clk_num = num_clks;
+@@ -396,16 +406,20 @@ __davinci_psc_register_clocks(struct device *dev,
+ 	for (i = 0; i < num_clks; i++)
+ 		clks[i] = ERR_PTR(-ENOENT);
+ 
+-	pm_domains = devm_kcalloc(dev, num_clks, sizeof(*pm_domains), GFP_KERNEL);
+-	if (!pm_domains)
+-		return ERR_PTR(-ENOMEM);
++	pm_domains = kcalloc(num_clks, sizeof(*pm_domains), GFP_KERNEL);
++	if (!pm_domains) {
++		ret = -ENOMEM;
++		goto err_free_clks;
++	}
+ 
+ 	psc->pm_data.domains = pm_domains;
+ 	psc->pm_data.num_domains = num_clks;
+ 
+-	regmap = devm_regmap_init_mmio(dev, base, &davinci_psc_regmap_config);
+-	if (IS_ERR(regmap))
+-		return ERR_CAST(regmap);
++	regmap = regmap_init_mmio(dev, base, &davinci_psc_regmap_config);
++	if (IS_ERR(regmap)) {
++		ret = PTR_ERR(regmap);
++		goto err_free_pm_domains;
++	}
+ 
+ 	for (; info->name; info++) {
+ 		struct davinci_lpsc_clk *lpsc;
+@@ -423,6 +437,13 @@ __davinci_psc_register_clocks(struct device *dev,
+ 		pm_domains[info->md] = &lpsc->pm_domain;
+ 	}
+ 
++	/*
++	 * for now, a reset controller is only registered when there is a device
++	 * to associate it with.
++	 */
++	if (!dev)
++		return psc;
++
+ 	psc->rcdev.ops = &davinci_psc_reset_ops;
+ 	psc->rcdev.owner = THIS_MODULE;
+ 	psc->rcdev.dev = dev;
+@@ -436,6 +457,15 @@ __davinci_psc_register_clocks(struct device *dev,
+ 		dev_warn(dev, "Failed to register reset controller (%d)\n", ret);
+ 
+ 	return psc;
++
++err_free_pm_domains:
++	kfree(pm_domains);
++err_free_clks:
++	kfree(clks);
++err_free_psc:
++	kfree(psc);
++
++	return ERR_PTR(ret);
  }
  
--#ifndef CONFIG_COMMON_CLK
--static struct clk usb_refclkin = {
--	.name		= "usb_refclkin",
--	.set_rate	= davinci_simple_set_rate,
--};
--
--static struct clk_lookup usb_refclkin_lookup =
--	CLK(NULL, "usb_refclkin", &usb_refclkin);
--
--/**
-- * da8xx_register_usb_refclkin - register USB_REFCLKIN clock
-- *
-- * @rate: The clock rate in Hz
-- *
-- * This clock is only needed if the board provides an external USB_REFCLKIN
-- * signal, in which case it will be used as the parent of usb20_phy_clk and/or
-- * usb11_phy_clk.
-- */
--int __init da8xx_register_usb_refclkin(int rate)
--{
--	int ret;
--
--	usb_refclkin.rate = rate;
--	ret = clk_register(&usb_refclkin);
--	if (ret)
--		return ret;
--
--	clkdev_add(&usb_refclkin_lookup);
--
--	return 0;
--}
--
--static void usb20_phy_clk_enable(struct clk *clk)
--{
--	u32 val;
--	u32 timeout = 500000; /* 500 msec */
--
--	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--
--	/* The USB 2.O PLL requires that the USB 2.O PSC is enabled as well. */
--	davinci_clk_enable(usb20_clk);
--
--	/*
--	 * Turn on the USB 2.0 PHY, but just the PLL, and not OTG. The USB 1.1
--	 * host may use the PLL clock without USB 2.0 OTG being used.
--	 */
--	val &= ~(CFGCHIP2_RESET | CFGCHIP2_PHYPWRDN);
--	val |= CFGCHIP2_PHY_PLLON;
--
--	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--
--	while (--timeout) {
--		val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--		if (val & CFGCHIP2_PHYCLKGD)
--			goto done;
--		udelay(1);
--	}
--
--	pr_err("Timeout waiting for USB 2.0 PHY clock good\n");
--done:
--	davinci_clk_disable(usb20_clk);
--}
--
--static void usb20_phy_clk_disable(struct clk *clk)
--{
--	u32 val;
--
--	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--	val |= CFGCHIP2_PHYPWRDN;
--	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--}
--
--static int usb20_phy_clk_set_parent(struct clk *clk, struct clk *parent)
--{
--	u32 val;
--
--	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--
--	/* Set the mux depending on the parent clock. */
--	if (parent == &usb_refclkin) {
--		val &= ~CFGCHIP2_USB2PHYCLKMUX;
--	} else if (strcmp(parent->name, "pll0_aux_clk") == 0) {
--		val |= CFGCHIP2_USB2PHYCLKMUX;
--	} else {
--		pr_err("Bad parent on USB 2.0 PHY clock\n");
--		return -EINVAL;
--	}
--
--	/* reference frequency also comes from parent clock */
--	val &= ~CFGCHIP2_REFFREQ_MASK;
--	switch (clk_get_rate(parent)) {
--	case 12000000:
--		val |= CFGCHIP2_REFFREQ_12MHZ;
--		break;
--	case 13000000:
--		val |= CFGCHIP2_REFFREQ_13MHZ;
--		break;
--	case 19200000:
--		val |= CFGCHIP2_REFFREQ_19_2MHZ;
--		break;
--	case 20000000:
--		val |= CFGCHIP2_REFFREQ_20MHZ;
--		break;
--	case 24000000:
--		val |= CFGCHIP2_REFFREQ_24MHZ;
--		break;
--	case 26000000:
--		val |= CFGCHIP2_REFFREQ_26MHZ;
--		break;
--	case 38400000:
--		val |= CFGCHIP2_REFFREQ_38_4MHZ;
--		break;
--	case 40000000:
--		val |= CFGCHIP2_REFFREQ_40MHZ;
--		break;
--	case 48000000:
--		val |= CFGCHIP2_REFFREQ_48MHZ;
--		break;
--	default:
--		pr_err("Bad parent clock rate on USB 2.0 PHY clock\n");
--		return -EINVAL;
--	}
--
--	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--
--	return 0;
--}
--
--static struct clk usb20_phy_clk = {
--	.name		= "usb0_clk48",
--	.clk_enable	= usb20_phy_clk_enable,
--	.clk_disable	= usb20_phy_clk_disable,
--	.set_parent	= usb20_phy_clk_set_parent,
--};
--
--static struct clk_lookup usb20_phy_clk_lookup =
--	CLK("da8xx-usb-phy", "usb0_clk48", &usb20_phy_clk);
--
--/**
-- * da8xx_register_usb20_phy_clk - register USB0PHYCLKMUX clock
-- *
-- * @use_usb_refclkin: Selects the parent clock - either "usb_refclkin" if true
-- *	or "pll0_aux" if false.
-- */
--int __init da8xx_register_usb20_phy_clk(bool use_usb_refclkin)
--{
--	struct clk *parent;
--	int ret;
--
--	usb20_clk = clk_get(&da8xx_usb20_dev.dev, "usb20");
--	ret = PTR_ERR_OR_ZERO(usb20_clk);
--	if (ret)
--		return ret;
--
--	parent = clk_get(NULL, use_usb_refclkin ? "usb_refclkin" : "pll0_aux");
--	ret = PTR_ERR_OR_ZERO(parent);
--	if (ret) {
--		clk_put(usb20_clk);
--		return ret;
--	}
--
--	usb20_phy_clk.parent = parent;
--	ret = clk_register(&usb20_phy_clk);
--	if (!ret)
--		clkdev_add(&usb20_phy_clk_lookup);
--
--	clk_put(parent);
--
--	return ret;
--}
--
--static int usb11_phy_clk_set_parent(struct clk *clk, struct clk *parent)
--{
--	u32 val;
--
--	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--
--	/* Set the USB 1.1 PHY clock mux based on the parent clock. */
--	if (parent == &usb20_phy_clk) {
--		val &= ~CFGCHIP2_USB1PHYCLKMUX;
--	} else if (parent == &usb_refclkin) {
--		val |= CFGCHIP2_USB1PHYCLKMUX;
--	} else {
--		pr_err("Bad parent on USB 1.1 PHY clock\n");
--		return -EINVAL;
--	}
--
--	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
--
--	return 0;
--}
--
--static struct clk usb11_phy_clk = {
--	.name		= "usb1_clk48",
--	.set_parent	= usb11_phy_clk_set_parent,
--};
--
--static struct clk_lookup usb11_phy_clk_lookup =
--	CLK("da8xx-usb-phy", "usb1_clk48", &usb11_phy_clk);
--
--/**
-- * da8xx_register_usb11_phy_clk - register USB1PHYCLKMUX clock
-- *
-- * @use_usb_refclkin: Selects the parent clock - either "usb_refclkin" if true
-- *	or "usb0_clk48" if false.
-- */
--int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
--{
--	struct clk *parent;
--	int ret = 0;
--
--	if (use_usb_refclkin)
--		parent = clk_get(NULL, "usb_refclkin");
--	else
--		parent = clk_get(&da8xx_usb_phy.dev, "usb0_clk48");
--	if (IS_ERR(parent))
--		return PTR_ERR(parent);
--
--	usb11_phy_clk.parent = parent;
--	ret = clk_register(&usb11_phy_clk);
--	if (!ret)
--		clkdev_add(&usb11_phy_clk_lookup);
--
--	clk_put(parent);
--
--	return ret;
--}
--#endif
- static struct platform_device da8xx_usb_phy_clks_device = {
- 	.name		= "da830-usb-phy-clks",
- 	.id		= -1,
+ int davinci_psc_register_clocks(struct device *dev,
+diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
+index ebdd9df1c0ef..62764c5cc86e 100644
+--- a/include/linux/clk/davinci.h
++++ b/include/linux/clk/davinci.h
+@@ -21,4 +21,9 @@ int dm365_pll2_init(struct device *dev, void __iomem *base, struct regmap *cfgch
+ int dm644x_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+ int dm646x_pll1_init(struct device *dev, void __iomem *base, struct regmap *cfgchip);
+ 
++int dm355_psc_init(struct device *dev, void __iomem *base);
++int dm365_psc_init(struct device *dev, void __iomem *base);
++int dm644x_psc_init(struct device *dev, void __iomem *base);
++int dm646x_psc_init(struct device *dev, void __iomem *base);
++
+ #endif /* __LINUX_CLK_DAVINCI_PLL_H___ */
 -- 
 2.17.0
