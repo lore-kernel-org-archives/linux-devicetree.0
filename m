@@ -1,211 +1,83 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 2/2] drivers: soc: Add LLCC driver
-Date: Sat, 19 May 2018 00:01:24 +0300
-Message-ID: <CAHp75VdO7+u-PQ+RBH71sxHHG0WkAyEVxv0BNPaycbcRnrZang@mail.gmail.com>
-References: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org> <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Fri, 18 May 2018 21:18:35 +0000
+Message-ID: <SN1PR02MB37582339D5B3937748F4D9ACB8900@SN1PR02MB3758.namprd02.prod.outlook.com>
+References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
+        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
+        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
+        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
+        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
+        <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
+        <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
+        <SN1PR02MB37588BFF357865F4C9628D99B8910@SN1PR02MB3758.namprd02.prod.outlook.com>
+ <be5cecb2-3d0d-22f8-48a2-f94ed9546e04@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
+In-Reply-To: <be5cecb2-3d0d-22f8-48a2-f94ed9546e04@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, Rob Herring <robh@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?utf-8?B?QmrDtnJuIEFuZGVyc3Nvbg==?= <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 8:43 PM, Rishabh Bhatnagar
-<rishabhb@codeaurora.org> wrote:
-> LLCC (Last Level Cache Controller) provides additional cache memory
-> in the system. LLCC is partitioned into multiple slices and each
-> slice gets its own priority, size, ID and other config parameters.
-> LLCC driver programs these parameters for each slice. Clients that
-> are assigned to use LLCC need to get information such size & ID of the
-> slice they get and activate or deactivate the slice as needed. LLCC driver
-> provides API for the clients to perform these operations.
-
-> +static const struct of_device_id sdm845_qcom_llcc_of_match[] = {
-> +       { .compatible = "qcom,sdm845-llcc", },
-
-> +       { },
-
-Slightly better w/o comma
-
-> +};
-
-> +static struct platform_driver sdm845_qcom_llcc_driver = {
-> +       .driver = {
-> +               .name = "sdm845-llcc",
-
-> +               .owner = THIS_MODULE,
-
-No need. See below.
-
-> +               .of_match_table = sdm845_qcom_llcc_of_match,
-> +       },
-> +       .probe = sdm845_qcom_llcc_probe,
-> +};
-
-> +
-> +static int __init sdm845_init_qcom_llcc_init(void)
-> +{
-> +       return platform_driver_register(&sdm845_qcom_llcc_driver);
-> +}
-> +module_init(sdm845_init_qcom_llcc_init);
-> +
-> +static void __exit sdm845_exit_qcom_llcc_exit(void)
-> +{
-> +       platform_driver_unregister(&sdm845_qcom_llcc_driver);
-> +}
-> +module_exit(sdm845_exit_qcom_llcc_exit);
-
-Why not to use module_platform_driver() macro?
-
-> +#define ACTIVATE                      0x1
-> +#define DEACTIVATE                    0x2
-> +#define ACT_CTRL_OPCODE_ACTIVATE      0x1
-> +#define ACT_CTRL_OPCODE_DEACTIVATE    0x2
-> +#define ACT_CTRL_ACT_TRIG             0x1
-
-Are these bits? Perhaps BIT() ?
-
-> +#define ACT_CTRL_OPCODE_SHIFT         0x1
-> +#define ATTR1_PROBE_TARGET_WAYS_SHIFT 0x2
-> +#define ATTR1_FIXED_SIZE_SHIFT        0x3
-> +#define ATTR1_PRIORITY_SHIFT          0x4
-> +#define ATTR1_MAX_CAP_SHIFT           0x10
-
-Better to use fixed size pattern, i.e. 0x01, 0x02, 0x03, 0x04, 0x10.
-
-> +#define ATTR0_RES_WAYS_MASK           0x00000fff
-> +#define ATTR0_BONUS_WAYS_MASK         0x0fff0000
-
-GENMASK()
-
-> +#define LLCC_LB_CNT_MASK               0xf0000000
-
-Ditto.
-
-> +#define MAX_CAP_TO_BYTES(n) (n * 1024)
-
-(n * SZ_1K) ?
-
-> +#define LLCC_TRP_ACT_CTRLn(n) (n * 0x1000)
-
-SZ_4K ?
-
-> +#define LLCC_TRP_STATUSn(n)   (4 + n * 0x1000)
-
-Ditto.
-
-> +struct llcc_slice_desc *llcc_slice_getd(u32 uid)
-> +{
-> +       const struct llcc_slice_config *cfg;
-> +       struct llcc_slice_desc *desc;
-> +       u32 sz, count = 0;
-> +
-> +       cfg = drv_data->cfg;
-> +       sz = drv_data->cfg_size;
-> +
-
-> +       while (cfg && count < sz) {
-> +               if (cfg->usecase_id == uid)
-> +                       break;
-> +               cfg++;
-> +               count++;
-> +       }
-> +       if (cfg == NULL || count == sz)
-> +               return ERR_PTR(-ENODEV);
-
-if (!cfg)
-          return ERR_PTR(-ENODEV);
-
-while (cfg->... != uid) {
-  cfg++;
-  count++;
-}
-
-if (count == sz)
- return ...
-
-Though I would rather put it to for () loop.
-
-> +static int llcc_update_act_ctrl(u32 sid,
-> +                               u32 act_ctrl_reg_val, u32 status)
-> +{
-> +       u32 act_ctrl_reg;
-> +       u32 status_reg;
-> +       u32 slice_status;
-
-> +       int ret = 0;
-
-Useless assignment. Check entire patch series for a such.
-
-> +       ret = regmap_read_poll_timeout(drv_data->regmap, status_reg,
-> +       slice_status, !(slice_status & status), 0, LLCC_STATUS_READ_DELAY);
-
-Wrong indentation.
-
-> +       return ret;
-> +}
-
-> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
-> +                                 DEACTIVATE);
-
-Perhaps one line (~83 characters here is OK) ?
-
-> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
-> +                                 ACTIVATE);
-
-Ditto.
-
-> +               attr1_cfg = bcast_off +
-> +                               LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
-> +               attr0_cfg = bcast_off +
-> +                               LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
-
-Ditto.
-
-> +               attr1_val |= llcc_table[i].probe_target_ways <<
-> +                               ATTR1_PROBE_TARGET_WAYS_SHIFT;
-> +               attr1_val |= llcc_table[i].fixed_size <<
-> +                               ATTR1_FIXED_SIZE_SHIFT;
-> +               attr1_val |= llcc_table[i].priority << ATTR1_PRIORITY_SHIFT;
-
-foo |=
-  bar << SHIFT;
-
-would look slightly better.
-
-> +int qcom_llcc_probe(struct platform_device *pdev,
-> +                     const struct llcc_slice_config *llcc_cfg, u32 sz)
-> +{
-
-> +       drv_data->offsets = devm_kzalloc(dev, num_banks * sizeof(u32),
-> +                                                       GFP_KERNEL);
-> +       if (!drv_data->offsets)
-> +               return -ENOMEM;
-
-devm_kcalloc() ?
-
-> +
-> +       for (i = 0; i < num_banks; i++)
-> +               drv_data->offsets[i] = (i * BANK_OFFSET_STRIDE);
-
-Pointless parens.
-
-> +       drv_data->bitmap = devm_kcalloc(dev,
-> +       BITS_TO_LONGS(drv_data->max_slices), sizeof(unsigned long),
-> +                                               GFP_KERNEL);
-> +       if (!drv_data->bitmap)
-> +               return -ENOMEM;
-
-Perhaps at some point someone will add
-bitmap_alloc()
-devm_bitmap_alloc()
-
-> +       bitmap_zero(drv_data->bitmap, drv_data->max_slices);
-
-Pointless
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgTWFyZWssDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFyZWsg
+U3p5cHJvd3NraSBbbWFpbHRvOm0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbV0NCj4gU2VudDogVGh1
+cnNkYXksIE1heSAxNywgMjAxOCAxMTozMSBQTQ0KPiBUbzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhp
+bGlueC5jb20+OyBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZz47
+IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+IENjOiBNYXR0aGlhcyBCcnVnZ2VyIDxt
+YXR0aGlhcy5iZ2dAZ21haWwuY29tPjsgQW5keSBHcm9zcw0KPiA8YW5keS5ncm9zc0BsaW5hcm8u
+b3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgR2VlcnQNCj4gVXl0dGVyaG9l
+dmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IEJqw7ZybiBBbmRlcnNzb24NCj4gPGJqb3Ju
+LmFuZGVyc3NvbkBsaW5hcm8ub3JnPjsgc2Vhbi53YW5nQG1lZGlhdGVrLmNvbTsgTWljaGFsIFNp
+bWVrDQo+IDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRs
+YW5kQGFybS5jb20+OyBSYWphbg0KPiBWYWphIDxSQUpBTlZAeGlsaW54LmNvbT47IG9wZW4gbGlz
+dDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQNCj4gREVWSUNFIFRSRUUgQklORElOR1MgPGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTGludXggQVJNIDxsaW51eC1hcm0tDQo+IGtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgt
+DQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBk
+dC1iaW5kaW5nczogcG93ZXI6IEFkZCBaeW5xTVAgcG93ZXIgZG9tYWluDQo+IGJpbmRpbmdzDQo+
+IA0KPiBIaSBKb2xseSwNCj4gDQo+IE9uIDIwMTgtMDUtMTcgMjM6MTAsIEpvbGx5IFNoYWggd3Jv
+dGU6DQo+IA0KPiA+Pj4+Pj4gK0V4YW1wbGU6DQo+ID4+Pj4+PiArICAgICB6eW5xbXAtZ2VucGQg
+ew0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICBjb21wYXRpYmxlID0gInhsbngsenlucW1wLWdlbnBk
+IjsNCj4gPj4+Pj4gV2hhdCdzIHRoZSBjb250cm9sIGludGVyZmFjZSBmb3IgY29udHJvbGxpbmcg
+dGhlIGRvbWFpbnM/DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiArICAgICAgICAgICAgIHBkX3VzYjA6
+IHBkLXVzYjAgew0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHBkLWlkID0gPDIyPjsN
+Cj4gPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAjcG93ZXItZG9tYWluLWNlbGxzID0gPDA+
+Ow0KPiA+Pj4+PiBUaGVyZSdzIG5vIG5lZWQgZm9yIGFsbCB0aGVzZSBzdWIgbm9kZXMuIE1ha2Ug
+I3Bvd2VyLWRvbWFpbi1jZWxscw0KPiA+Pj4+PiAxIGFuZCBwdXQgdGhlIGlkIGluIHRoZSBjZWxs
+IHZhbHVlLg0KPiA+Pj4+IFRoYXQgd2FzIG15IGZpcnN0IHJlYWN0aW9uLCB0b28uLi4NCj4gPj4+
+Pj4+ICsgICAgICAgICAgICAgfTsNCj4gPj4+Pj4+ICsNCj4gPj4+Pj4+ICsgICAgICAgICAgICAg
+cGRfc2F0YTogcGQtc2F0YSB7DQo+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgcGQtaWQg
+PSA8Mjg+Ow0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2Vs
+bHMgPSA8MD47DQo+ID4+Pj4+PiArICAgICAgICAgICAgIH07DQo+ID4+Pj4+PiArDQo+ID4+Pj4+
+PiArICAgICAgICAgICAgIHBkX2dwdTogcGQtZ3B1IHsNCj4gPj4+Pj4+ICsgICAgICAgICAgICAg
+ICAgICAgICBwZC1pZCA9IDw1OCAyMCAyMT47DQo+ID4+Pj4gLi4uIHVudGlsIEkgc2F3IHRoZSBh
+Ym92ZS4NCj4gPj4+PiBDb250cm9sbGluZyB0aGUgR1BVIHBvd2VyIGFyZWEgcmVxdWlyZXMgY29u
+dHJvbGxpbmcgMyBwaHlzaWNhbCBhcmVhcz8NCj4gPj4+Pg0KPiA+Pj4+IEhvd2V2ZXIsIGRvaW5n
+IGl0IHRoaXMgd2F5IG1heSBiaXRlIHlvdSBpbiB0aGUgZnV0dXJlLCBpZiBhIG5lZWQNCj4gPj4+
+PiBhcmlzZXMgdG8gY29udHJvbCBhIHN1YnNldC4gQW5kIHdoYXQgYWJvdXQgcG93ZXIgdXAvZG93
+biBvcmRlcj8NCj4gPj4+IFdoYXQgYWJvdXQgZGVmaW5pbmcgMyBzZXBhcmF0ZSBkb21haW5zIGFu
+ZCBhcnJhbmdpbmcgdGhlbSBpbg0KPiA+Pj4gcGFyZW50LWNoaWxkIHJlbGF0aW9uc2hpcD8gZ2Vu
+ZXJpYyBwb3dlciBkb21haW5zIGFscmVhZHkgc3VwcG9ydHMNCj4gPj4+IHRoYXQgYW5kIHRoaXMg
+YWxsb3dzIHRvIG5pY2VseSBkZWZpbmUgdGhlIHBvd2VyIG9uL29mZiBvcmRlci4NCj4gPj4+DQo+
+ID4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgI3Bvd2VyLWRvbWFpbi1jZWxscyA9IDwweDA+
+Ow0KPiA+Pj4+Pj4gKyAgICAgICAgICAgICB9Ow0KPiA+Pj4+Pj4gKyAgICAgfTsNCj4gPj4gSSBh
+Z3JlZSBpdCBzaG91bGQgYmUgYXJyYW5nZWQgaW4gYXMgcGFyZW50IGNoaWxkIG9yZGVyIHRvIGNv
+bnRyb2wNCj4gPj4gc3Vic2V0IG9yIGNvbnRyb2wgb3JkZXIuIFdpbGwgaW5jb3Jwb3JhdGUgdGhv
+c2UgY2hhbmdlcyBpbiBuZXh0IHZlcnNpb24uDQo+ID4NCj4gPiBBcyBzdWdnZXN0ZWQsIEkgdHJp
+ZWQgb3V0IHBhcmVudCwgY2hpbGQgYXBwcm9hY2guIEhvd2V2ZXIgd2hhdCBJIGZvdW5kIGlzDQo+
+IEdlbnBkIGNvcmUgdGFrZXMgY2FyZSBvZiBwYXJlbnQgY2hpbGQgZGVwZW5kZW5jaWVzIGZvciBw
+b3dlciBvbiBvZmYgcm91dGluZXMNCj4gb25seS4gSW4gb3VyIGNhc2UsIFdlIG5lZWQgdGhlbSBp
+biBhdHRhY2gtZGV0YWNoIHJvdXRpbmVzIHRvby4gSW4gdGhhdCBjYXNlLCB3ZQ0KPiBuZWVkIHRv
+IGhhbmRsZSBkZXBlbmRlbmNpZXMgbWFudWFsbHkgZm9yIHRob3NlIHJvdXRpbmVzLiBQbGVhc2Ug
+c3VnZ2VzdCBiZXR0ZXINCj4gYXBwcm9hY2gsIGlmIGFueS4NCj4gDQo+IFdoYXQgZG8geW91IG1l
+YW4gdG8gaGFuZGxlIGF0dGFjaC1kZXRhY2g/DQo+IA0KPiBCZXN0IHJlZ2FyZHMNCj4gLS0NCj4g
+TWFyZWsgU3p5cHJvd3NraSwgUGhEDQo+IFNhbXN1bmcgUiZEIEluc3RpdHV0ZSBQb2xhbmQNCg0K
+Rm9yIG91ciBwb3dlciBkb21haW4gZHJpdmVyLCAgd2UgcmVxdWVzdCB1c2FnZSBvZiB0aGVzZSBu
+b2RlcyBpbiBhdHRhY2ggcm91dGluZXMgYW5kIHBvd2VyIHRoZW0gb24gaW4gcG93ZXIgb24gcm91
+dGluZS4gU28gZm9yIGJlbG93IHNwZWNpZmljIGNhc2UsIHdoZW4gYXR0YWNoX2RldiBpcyBjYWxs
+ZWQsIGFsbCAzIG5vZGVzIG5lZWQgdG8gYmUgcmVxdWVzdGVkLg0KDQo+ID4+Pj4+PiArICAgICAg
+ICAgICAgIHBkX2dwdTogcGQtZ3B1IHsNCj4gPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBw
+ZC1pZCA9IDw1OCAyMCAyMT47DQoNClRoYW5rcywNCkpvbGx5IFNoYWgNCg0KDQo=
