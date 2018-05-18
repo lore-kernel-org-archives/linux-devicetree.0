@@ -1,83 +1,488 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v5 4/4] drm/rockchip: support dp training outside dp
- firmware
-Date: Thu, 17 May 2018 18:45:46 -0700
-Message-ID: <CA+ASDXN2LT6FcX_2-MM=Qu7cZOHwVK3+2rGDLGcC1SnY3BJaSw@mail.gmail.com>
-References: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
- <1526548680-2552-4-git-send-email-hl@rock-chips.com>
- <20180517135136.GD3373@art_vandelay>
- <d4c38236-7455-ccd5-a1d9-a000b7d78be9@rock-chips.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] PM / devfreq: Add support for QCOM devfreq FW
+Date: Fri, 18 May 2018 11:28:00 +0900
+Message-ID: <5AFE3A30.4040505@samsung.com>
+References: <CGME20180517060257epcas2p1b42e6969c806473ccdf38ea52a74ca04@epcas2p1.samsung.com>
+        <1526536958-29419-1-git-send-email-skannan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <d4c38236-7455-ccd5-a1d9-a000b7d78be9@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: hl <hl@rock-chips.com>
-Cc: devicetree@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, Doug Anderson <dianders@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Chris Zhong <zyw@rock-chips.com>, Daniel Vetter <daniel.vetter@intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1526536958-29419-1-git-send-email-skannan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <skannan@codeaurora.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMTcsIDIwMTggYXQgNjo0MSBQTSwgaGwgPGhsQHJvY2stY2hpcHMuY29tPiB3
-cm90ZToKPiBPbiBUaHVyc2RheSwgTWF5IDE3LCAyMDE4IDA5OjUxIFBNLCBTZWFuIFBhdWwgd3Jv
-dGU6Cj4+IE9uIFRodSwgTWF5IDE3LCAyMDE4IGF0IDA1OjE4OjAwUE0gKzA4MDAsIExpbiBIdWFu
-ZyB3cm90ZToKPj4+IERQIGZpcm13YXJlIHVzZXMgZml4ZWQgcGh5IGNvbmZpZyB2YWx1ZXMgdG8g
-ZG8gdHJhaW5pbmcsIGJ1dCBzb21lCj4+PiBib2FyZHMgbmVlZCB0byBhZGp1c3QgdGhlc2UgdmFs
-dWVzIHRvIGZpdCBmb3IgdGhlaXIgdW5pcXVlIGhhcmR3YXJlCj4+PiBkZXNpZ24uIFNvIGdldCBw
-aHkgY29uZmlnIHZhbHVlcyBmcm9tIGR0cyBhbmQgdXNlIHNvZnR3YXJlIGxpbmsgdHJhaW5pbmcK
-Pj4+IGluc3RlYWQgb2YgcmVseWluZyBvbiBmaXJtd2FyZSwgaWYgc29mdHdhcmUgdHJhaW5pbmcg
-ZmFpbCwga2VlcCBmaXJtd2FyZQo+Pj4gdHJhaW5pbmcgYXMgYSBmYWxsYmFjayBpZiBzdyB0cmFp
-bmluZyBmYWlscy4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2st
-Y2hpcHMuY29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogTGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNv
-bT4KPj4+IC0tLQo+Pj4gQ2hhbmdlcyBpbiB2MjoKPj4+IC0gdXBkYXRlIHBhdGNoIGZvbGxvd2lu
-ZyBFbnJpYyBzdWdnZXN0Cj4+PiBDaGFuZ2VzIGluIHYzOgo+Pj4gLSB1c2UgdmFyaWFibGUgZndf
-dHJhaW5pbmcgaW5zdGVhZCBzd190cmFpbmluZ19zdWNjZXNzCj4+PiAtIGJhc2Ugb24gRFAgU1BD
-RSwgaWYgdHJhaW5pbmcgZmFpbCB1c2UgbG93ZXIgbGluayByYXRlIHRvIHJldHJ5IHRyYWluaW5n
-Cj4+PiBDaGFuZ2VzIGluIHY0Ogo+Pj4gLSBpbXByb3ZlIGNkbl9kcF9nZXRfbG93ZXJfbGlua19y
-YXRlKCkgYW5kIGNkbl9kcF9zb2Z0d2FyZV90cmFpbl9saW5rKCkgZm9sbG93IFNlYW4gc3VnZ2Vz
-dAo+Pj4gQ2hhbmdlcyBpbiB2NToKPj4+IC0gZml4IHNvbWUgd2hpdGVzcGNhZSBpc3N1ZQo+Pj4K
-Pj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAgICAgICAgfCAg
-IDMgKy0KPj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1jb3JlLmMgICAgICAg
-ICAgfCAgMjQgKy0KPj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1jb3JlLmgg
-ICAgICAgICAgfCAgIDIgKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxp
-bmstdHJhaW5pbmcuYyB8IDQyMCArKysrKysrKysrKysrKysrKysrKysrKysKPj4+ICAgZHJpdmVy
-cy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuYyAgICAgICAgICAgfCAgMzEgKy0KPj4+ICAg
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuaCAgICAgICAgICAgfCAgMzggKyst
-Cj4+PiAgIDYgZmlsZXMgY2hhbmdlZCwgNTA1IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygt
-KQo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1k
-cC1saW5rLXRyYWluaW5nLmMKPj4+Ci4uLgo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9jZG4tZHAtbGluay10cmFpbmluZy5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwL2Nkbi1kcC1saW5rLXRyYWluaW5nLmMKPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBp
-bmRleCAwMDAwMDAwLi43M2MzMjkwCj4+PiAtLS0gL2Rldi9udWxsCj4+PiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+Pj4gQEAgLTAsMCArMSw0
-MjAgQEAKPj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+Pj4gKy8qCj4+
-PiArICogQ29weXJpZ2h0IChDKSBGdXpob3UgUm9ja2NoaXAgRWxlY3Ryb25pY3MgQ28uTHRkCj4+
-PiArICogQXV0aG9yOiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+Pj4gKyAqLwo+
-Pj4gKwo+Pj4gKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4KPj4+ICsjaW5jbHVkZSA8bGludXgv
-ZGVsYXkuaD4KPj4+ICsjaW5jbHVkZSA8bGludXgvcGh5L3BoeS5oPgo+Pj4gKyNpbmNsdWRlIDxz
-b2Mvcm9ja2NoaXAvcm9ja2NoaXBfcGh5X3R5cGVjLmg+Cj4+PiArCj4+PiArI2luY2x1ZGUgImNk
-bi1kcC1jb3JlLmgiCj4+PiArI2luY2x1ZGUgImNkbi1kcC1yZWcuaCIKPj4+ICsKPj4+ICtzdGF0
-aWMgdm9pZCBjZG5fZHBfc2V0X3NpZ25hbF9sZXZlbHMoc3RydWN0IGNkbl9kcF9kZXZpY2UgKmRw
-KQo+Pj4gK3sKPj4+ICsgICAgICAgc3RydWN0IGNkbl9kcF9wb3J0ICpwb3J0ID0gZHAtPnBvcnRb
-ZHAtPmFjdGl2ZV9wb3J0XTsKPj4+ICsgICAgICAgc3RydWN0IHJvY2tjaGlwX3R5cGVjX3BoeSAq
-dGNwaHkgPSBwaHlfZ2V0X2RydmRhdGEocG9ydC0+cGh5KTsKPj4KPj4gWW91IGlnbm9yZWQgQnJp
-YW4ncyBjb21tZW50IG9uIHRoZSBwcmV2aW91cyBwYXRjaDoKPj4gICAgVGhpcyBpcyBzdGlsbCBh
-bnRpdGhldGljYWwgdG8gdGhlIFBIWSBmcmFtZXdvcms7IHlvdSdyZSBhc3N1bWluZyB0aGF0Cj4+
-ICAgIHRoaXMgaXMgYSBwYXJ0aWN1bGFyIHR5cGUgb2YgUEhZIGhlcmUuCj4+Cj4+IEZXSVcsIHRo
-ZSBtZWRpYXRlayBkcm0gZHJpdmVyIGFsc28gYXNzdW1lcyBhIGNlcnRhaW4gUEhZIHR5cGUuIEEg
-cXVpY2sgZ3JlcCBvZgo+PiBkcml2ZXJzLyBzaG93cyB0aGF0IHRoZSBvbmx5IG90aGVyIG5vbi1w
-aHkvIGRyaXZlciB1c2luZyB0aGlzIGZ1bmN0aW9uCj4+IChwaW5jdHJsLXRlZ3JhLXh1c2IuYykg
-YWxzbyBjYXN0cyBpdC4KPj4KPj4gU2Vhbgo+Cj4gVGhhbmtzIFNlYW4sIGV4Y2VwdCBwaHkgZnJh
-bWV3b3JrIGhhdmUgbmV3IEFQSSB0byBoYW5kbGUgaXQsIGkgaGF2ZSBub3QKPiBpZGVhIGhvdyB0
-byBkbyBpdCBpbiBhIGJldHRlciB3YXkuCgpXZWxsLCBpZiBNZWRpYXRlayBjYW4gZG8gaXQgZm9y
-IHRoZWlyIE1JUEkgYW5kIEhETUksIHRoZW4gbWF5YmUgd2UganVzdCBkbyBpdC4uLgoKQnJpYW4K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+On 2018년 05월 17일 15:02, Saravana Kannan wrote:
+> The firmware present in some QCOM chipsets offloads the steps necessary for
+> changing the frequency of some devices (Eg: L3). This driver implements the
+> devfreq interface for this firmware so that various governors could be used
+> to scale the frequency of these devices.
+
+The description doesn't include what kind of firmware. You have to explain
+the type and role of firmware. And it doesn't contain the description of correlation
+between 'qcom,devfreq-fw' and 'qcom,devfreq-fw-voter'.
+
+> 
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> ---
+>  .../bindings/devfreq/devfreq-qcom-fw.txt           |  31 ++
+>  drivers/devfreq/Kconfig                            |  14 +
+>  drivers/devfreq/Makefile                           |   1 +
+>  drivers/devfreq/devfreq_qcom_fw.c                  | 326 +++++++++++++++++++++
+>  4 files changed, 372 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+>  create mode 100644 drivers/devfreq/devfreq_qcom_fw.c
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+> new file mode 100644
+> index 0000000..5e1aecf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+> @@ -0,0 +1,31 @@
+> +QCOM Devfreq FW device
+> +
+> +Some Qualcomm Technologies, Inc. (QTI) chipsets have a FW that offloads the
+
+you better to change the FW for more readability.
+- s/FW/firmware
+
+> +steps for frequency switching. The qcom,devfreq-fw represents this FW as a
+- s/FW/firmware
+
+Usually, DVFS feature uses the 'frequency scaling' word.
+- s/frequency switching/frequency scaling
+
+> +device. Sometimes, multiple entities want to vote on the frequency request
+> +that is sent to the FW. The qcom,devfreq-fw-voter represents these voters as
+
+s/FW/firmware
+
+> +child devices of the corresponding qcom,devfreq-fw device.
+> +
+> +Required properties:
+> +- compatible:		Must be "qcom,devfreq-fw" or "qcom,devfreq-fw-voter"
+
+The use of 'devfreq' word is not proper because 'devfreq' is framework name.
+I think you have to use the specific SoC name for the compatible. In the future,
+if you need to support the new SoC with this driver, just you can add the new compatible.
+
+> +Only for qcom,devfreq-fw:
+> +- reg:			Pairs of physical base addresses and region sizes of
+> +			memory mapped registers.
+> +- reg-names:		Names of the bases for the above registers. Expected
+> +			bases are: "en-base", "lut-base" and "perf-base".
+
+It is not possible to understand what are meaning of "en-base", "lut-base" and "perf-base".
+because they depend on specific H/W specification. You have to add the detailed description
+why they are necessary. Also, you should explain whether thery are mandatory or optional.
+
+> +
+> +Example:
+> +
+> +	qcom,devfreq-l3 {
+> +		compatible = "qcom,devfreq-fw";
+> +		reg-names = "en-base", "lut-base", "perf-base";
+> +		reg = <0x18321000 0x4>, <0x18321110 0x600>, <0x18321920 0x4>;
+> +
+> +		qcom,cpu0-l3 {
+> +			compatible = "qcom,devfreq-fw-voter";
+> +		};
+> +
+> +		qcom,cpu4-l3 {
+> +			compatible = "qcom,devfreq-fw-voter";
+> +		};
+> +	};
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 6a172d3..8503018 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -113,6 +113,20 @@ config ARM_RK3399_DMC_DEVFREQ
+>            It sets the frequency for the memory controller and reads the usage counts
+>            from hardware.
+>  
+> +config ARM_QCOM_DEVFREQ_FW
+> +	bool "Qualcomm Technologies Inc. DEVFREQ FW driver"
+> +	depends on ARCH_QCOM
+> +	select DEVFREQ_GOV_PERFORMANCE
+> +	select DEVFREQ_GOV_POWERSAVE
+> +	select DEVFREQ_GOV_USERSPACE
+> +	default n
+> +	help
+> +	  The firmware present in some QCOM chipsets offloads the steps
+> +	  necessary for changing the frequency of some devices (Eg: L3). This
+> +	  driver implements the devfreq interface for this firmware so that
+> +	  various governors could be used to scale the frequency of these
+> +	  devices.
+
+As I commented, you need to add a description of what kind of firmwar.
+
+> +
+>  source "drivers/devfreq/event/Kconfig"
+>  
+>  endif # PM_DEVFREQ
+> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+> index 32b8d4d..f1cc8990 100644
+> --- a/drivers/devfreq/Makefile
+> +++ b/drivers/devfreq/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
+>  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+>  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
+>  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
+> +obj-$(CONFIG_ARM_QCOM_DEVFREQ_FW)	+= devfreq_qcom_fw.o
+>  
+>  # DEVFREQ Event Drivers
+>  obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
+> diff --git a/drivers/devfreq/devfreq_qcom_fw.c b/drivers/devfreq/devfreq_qcom_fw.c
+> new file mode 100644
+> index 0000000..3e85f76
+> --- /dev/null
+> +++ b/drivers/devfreq/devfreq_qcom_fw.c
+> @@ -0,0 +1,326 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+
+Is it right? or Qualcomm?
+
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/list.h>
+> +#include <linux/devfreq.h>
+> +#include <linux/pm_opp.h>
+> +
+> +#define INIT_RATE			300000000UL
+> +#define XO_RATE				19200000UL
+> +#define LUT_MAX_ENTRIES			40U
+> +#define LUT_ROW_SIZE			32
+
+I don't know what are the meaning of 'XO', 'LUT'.
+
+> +
+> +struct devfreq_qcom_fw {
+> +	void __iomem *perf_base;
+> +	struct devfreq_dev_profile dp;
+> +	struct list_head ;
+> +	struct list_head voter;
+> +	unsigned int index;
+> +};
+> +
+> +static DEFINE_SPINLOCK(voter_lock);
+> +
+> +static int devfreq_qcom_fw_target(struct device *dev, unsigned long *freq,
+> +				  u32 flags)
+> +{
+> +	struct devfreq_qcom_fw *d = dev_get_drvdata(dev), *pd, *v;
+> +	struct devfreq_dev_profile *p = &d->dp;
+> +	unsigned int index;
+> +	unsigned long lflags;
+> +	struct dev_pm_opp *opp;
+> +	void __iomem *perf_base = d->perf_base;
+> +
+> +	opp = devfreq_recommended_opp(dev, freq, flags);
+> +	if (!IS_ERR(opp))
+> +		dev_pm_opp_put(opp);
+> +	else
+> +		return PTR_ERR(opp);
+> +
+> +	for (index = 0; index < p->max_state; index++)
+> +		if (p->freq_table[index] == *freq)
+> +			break;
+> +
+> +	if (index >= p->max_state) {
+> +		dev_err(dev, "Unable to find index for freq (%lu)!\n", *freq);
+> +		return -EINVAL;
+> +	}
+> +
+> +	d->index = index;
+> +
+> +	spin_lock_irqsave(&voter_lock, lflags);
+> +	/* Voter */
+> +	if (!perf_base) {
+> +		pd = dev_get_drvdata(dev->parent);
+> +		list_for_each_entry(v, &pd->voters, voter)
+> +			index = max(index, v->index);
+> +		perf_base = pd->perf_base;
+> +	}
+> +
+> +	writel_relaxed(index, perf_base);
+> +	spin_unlock_irqrestore(&voter_lock, lflags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int devfreq_qcom_fw_get_cur_freq(struct device *dev,
+> +						 unsigned long *freq)
+> +{
+> +	struct devfreq_qcom_fw *d = dev_get_drvdata(dev);
+> +	struct devfreq_dev_profile *p = &d->dp;
+> +	unsigned int index;
+> +
+> +	/* Voter */
+> +	if (!d->perf_base) {
+> +		index = d->index;
+> +	} else {
+> +		index = readl_relaxed(d->perf_base);
+> +		index = min(index, p->max_state - 1);
+> +	}
+> +	*freq = p->freq_table[index];
+> +
+> +	return 0;
+> +}
+> +
+> +static int devfreq_qcom_populate_opp(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	u32 data, src, lval, i;
+> +	unsigned long freq, prev_freq;
+> +	struct resource *res;
+> +	void __iomem *lut_base;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lut-base");
+> +	if (!res) {
+> +		dev_err(dev, "Unable to find lut-base!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	lut_base = devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!lut_base) {
+> +		dev_err(dev, "Unable to map lut-base\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> +		data = readl_relaxed(lut_base + i * LUT_ROW_SIZE);
+> +		src = ((data & GENMASK(31, 30)) >> 30);
+> +		lval = (data & GENMASK(7, 0));
+> +		freq = src ? XO_RATE * lval : INIT_RATE;
+
+You need to define the global definitions such as XXX_MASK, XXX_SHIFT
+for the readability. And add the role of 'lval' and why have to multiply
+'lavl' to 'XO_RATE'.
+
+> +
+> +		/*
+> +		 * Two of the same frequencies with the same core counts means
+> +		 * end of table.
+> +		 */
+> +		if (i > 0 && prev_freq == freq)
+> +			break;
+> +
+> +		dev_pm_opp_add(&pdev->dev, freq, 0);
+> +
+> +		prev_freq = freq;
+> +	}
+> +
+> +	devm_iounmap(dev, lut_base);
+> +
+> +	return 0;
+> +}
+> +
+> +static int devfreq_qcom_init_hw(struct platform_device *pdev)
+> +{
+> +	struct devfreq_qcom_fw *d;
+> +	struct resource *res;
+> +	struct device *dev = &pdev->dev;
+> +	int ret = 0;
+> +	void __iomem *en_base;
+> +
+> +	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
+> +	if (!d)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "en-base");
+> +	if (!res) {
+> +		dev_err(dev, "Unable to find en-base!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	en_base = devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!en_base) {
+> +		dev_err(dev, "Unable to map en-base\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* FW should be enabled state to proceed */
+> +	if (!(readl_relaxed(en_base) & 1)) {
+> +		dev_err(dev, "FW not enabled\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	devm_iounmap(dev, en_base);
+> +
+> +	ret = devfreq_qcom_populate_opp(pdev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to read LUT\n");
+> +		return ret;
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "perf-base");
+> +	if (!res) {
+> +		dev_err(dev, "Unable to find perf-base!\n");
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	d->perf_base = devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!d->perf_base) {
+> +		dev_err(dev, "Unable to map perf-base\n");
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&d->voters);
+> +	dev_set_drvdata(dev, d);
+> +
+> +out:
+> +	if (ret)
+> +		dev_pm_opp_remove_table(dev);
+> +	return ret;
+> +}
+> +
+> +static int devfreq_qcom_copy_opp(struct device *src_dev, struct device *dst_dev)
+> +{
+> +	unsigned long freq;
+> +	int i, cnt, ret = 0;
+> +	struct dev_pm_opp *opp;
+> +
+> +	if (!src_dev)
+> +		return -ENODEV;
+> +
+> +	cnt = dev_pm_opp_get_opp_count(src_dev);
+> +	if (!cnt)
+> +		return -EINVAL;
+> +
+> +	for (i = 0, freq = 0; i < cnt; i++, freq++) {
+> +		opp = dev_pm_opp_find_freq_ceil(src_dev, &freq);
+> +		if (IS_ERR(opp)) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +		dev_pm_opp_put(opp);
+> +
+> +		ret = dev_pm_opp_add(dst_dev, freq, 0);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	if (ret)
+> +		dev_pm_opp_remove_table(dst_dev);
+> +	return ret;
+> +}
+> +
+> +static int devfreq_qcom_init_voter(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device *par_dev = dev->parent;
+> +	struct devfreq_qcom_fw *d, *pd = dev_get_drvdata(par_dev);
+> +	int ret = 0;
+> +
+> +	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
+> +	if (!d)
+> +		return -ENOMEM;
+> +
+> +	ret = devfreq_qcom_copy_opp(dev->parent, dev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to copy parent OPPs\n");
+> +		return ret;
+> +	}
+> +
+> +	list_add(&d->voter, &pd->voters);
+> +	dev_set_drvdata(dev, d);
+> +
+> +	return 0;
+> +}
+> +
+> +static int devfreq_qcom_fw_driver_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int ret = 0;
+> +	struct devfreq_qcom_fw *d;
+> +	struct devfreq_dev_profile *p;
+> +	struct devfreq *df;
+> +
+> +	if (!of_device_get_match_data(dev))
+> +		ret = devfreq_qcom_init_voter(pdev);
+> +	else
+> +		ret = devfreq_qcom_init_hw(pdev);
+> +	if (ret) {
+> +		dev_err(dev, "Unable to probe device!\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * If device has voter children, do no register directly with devfreq
+> +	 */
+> +	if (of_get_available_child_count(dev->of_node)) {
+> +		of_platform_populate(dev->of_node, NULL, NULL, dev);
+> +		dev_info(dev, "Devfreq QCOM FW parent device initialized.\n");
+> +		return 0;
+> +	}
+> +
+> +	d = dev_get_drvdata(dev);
+> +	p = &d->dp;
+> +	p->polling_ms = 50;
+> +	p->target = devfreq_qcom_fw_target;
+> +	p->get_cur_freq = devfreq_qcom_fw_get_cur_freq;
+> +
+> +	df = devm_devfreq_add_device(dev, p, "performance", NULL);
+> +	if (IS_ERR(df)) {
+> +		dev_err(dev, "Unable to register Devfreq QCOM FW device!\n");
+> +		return PTR_ERR(df);
+> +	}
+> +
+> +	dev_info(dev, "Devfreq QCOM FW device registered.\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id match_table[] = {
+> +	{ .compatible = "qcom,devfreq-fw", .data = (void *) 1 },
+> +	{ .compatible = "qcom,devfreq-fw-voter", .data = (void *) 0 },
+> +	{}
+> +};
+> +
+> +static struct platform_driver devfreq_qcom_fw_driver = {
+> +	.probe = devfreq_qcom_fw_driver_probe,
+> +	.driver = {
+> +		.name = "devfreq-qcom-fw",
+> +		.of_match_table = match_table,
+> +		.owner = THIS_MODULE,
+> +	},
+> +};
+> +
+> +static int __init devfreq_qcom_fw_init(void)
+> +{
+> +	return platform_driver_register(&devfreq_qcom_fw_driver);
+> +}
+> +subsys_initcall(devfreq_qcom_fw_init);
+> +
+> +static void __exit devfreq_qcom_fw_exit(void)
+> +{
+> +	platform_driver_unregister(&devfreq_qcom_fw_driver);
+> +}
+> +module_exit(devfreq_qcom_fw_exit);
+> +
+> +MODULE_DESCRIPTION("Devfreq QCOM FW");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
