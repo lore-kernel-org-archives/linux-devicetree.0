@@ -1,101 +1,214 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ARM: dts: sun7i: Add support for the
- Ainol AW1 tablet
-Date: Fri, 18 May 2018 09:14:36 +0200
-Message-ID: <20180518071436.3vvyllghrdxptsxg@flea>
-References: <20180507220413.21990-1-contact@paulk.fr>
- <20180507220413.21990-3-contact@paulk.fr>
- <20180511143647.ici2bfoeeldto3ju@flea>
- <0da5787f0ce2309a74db88820bc58b3b3501c451.camel@paulk.fr>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: skannan@codeaurora.org
+Subject: Re: [PATCH] PM / devfreq: Add support for QCOM devfreq FW
+Date: Fri, 18 May 2018 00:16:07 -0700
+Message-ID: <56e9cd3e57d809ef6cd5765a97101e6e@codeaurora.org>
+References: <CGME20180517060257epcas2p1b42e6969c806473ccdf38ea52a74ca04@epcas2p1.samsung.com>
+ <1526536958-29419-1-git-send-email-skannan@codeaurora.org>
+ <5AFE3A30.4040505@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nbdmosmxbine5fy7"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZ727HLQKGQEC2FT4EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <0da5787f0ce2309a74db88820bc58b3b3501c451.camel-W9ppeneeCTY@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5AFE3A30.4040505@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---nbdmosmxbine5fy7
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, May 14, 2018 at 10:36:08PM +0200, Paul Kocialkowski wrote:
-> > > +	backlight: backlight {
-> > > +		compatible = "pwm-backlight";
-> > > +		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-> > > +		brightness-levels = <  0   1   1   1   1   2   2   2
-> > > +				       2   3   3   3   3   4   4   4
-> > > +				       5   5   5   6   6   6   7   7
-> > > +				       8   8   8   9   9   9  10  10
-> > > +				      10  11  11  12  12  12  13  13
-> > > +				      14  14  14  15  15  16  16  17
-> > > +				      17  17  18  18  19  19  20  20
-> > > +				      21  21  21  22  22  23  23  24
-> > > +				      24  25  25  26  26  27  27  28
-> > > +				      28  29  30  30  31  31  32  32
-> > > +				      33  33  34  35  35  36  36  37
-> > > +				      38  38  39  39  40  41  41  42
-> > > +				      43  43  44  44  45  46  47  47
-> > > +				      48  49  49  50  51  51  52  53
-> > > +				      54  54  55  56  57  57  58  59
-> > > +				      60  61  61  62  63  64  65  65
-> > > +				      66  67  68  69  70  71  71  72
-> > > +				      73  74  75  76  77  78  79  80
-> > > +				      81  82  83  84  85  86  87  88
-> > > +				      89  90  91  92  93  94  95  96
-> > > +				      97  98  99 101 102 103 104 105
-> > > +				     106 108 109 110 111 112 114 115
-> > > +				     116 117 119 120 121 123 124 125
-> > > +				     127 128 129 131 132 133 135 136
-> > > +				     138 139 141 142 144 145 147 148
-> > > +				     150 151 153 154 156 157 159 161
-> > > +				     162 164 166 167 169 171 173 174
-> > > +				     176 178 180 181 183 185 187 189
-> > > +				     191 192 194 196 198 200 202 204
-> > > +				     206 208 210 212 214 216 219 221
-> > > +				     223 225 227 229 232 234 236 238
-> > > +				     241 242 244 246 248 250 253 255>;
-> > 
-> > You kind of overdid it here :)
-> > 
-> > What I meant to say before was that if you have 10 elements (and you
-> > really should have something in that magnitude) each step should
-> > increase the perceived brightness by 10%.
+On 2018-05-17 19:28, Chanwoo Choi wrote:
+> Hi,
 > 
-> Mhh I think 10 elements would fall too short to really depict the curve
-> with appropriate precision. Given the usual size for brightness cursors
-> in e.g. gnome-shell, it feels like a bigger number would be more
-> appropriate. Let's make it to 100 with values from 0 to 255!
+> On 2018년 05월 17일 15:02, Saravana Kannan wrote:
+>> The firmware present in some QCOM chipsets offloads the steps 
+>> necessary for
+>> changing the frequency of some devices (Eg: L3). This driver 
+>> implements the
+>> devfreq interface for this firmware so that various governors could be 
+>> used
+>> to scale the frequency of these devices.
 > 
-> > In this particular case, I really think having something close to <0 4
-> > 8 16 32 64 128 255> would be enough.
-> > 
-> > And in general, that kind of odd looking table without any more
-> > context is just screaming for a comment :)
+> The description doesn't include what kind of firmware. You have to 
+> explain
+> the type and role of firmware.
+
+Not exactly sure what you mean. I described exactly what the firmware 
+does. Not sure what you mean by what kind of firmware. I just understand 
+the interface with it -- not the implementation of the firmware or 
+hardware.
+
+> And it doesn't contain the description
+> of correlation
+> between 'qcom,devfreq-fw' and 'qcom,devfreq-fw-voter'.
 > 
-> Noted, I will explain the idea, but probably without the exact formula
-> that's really a nasty hack written down on a piece of paper sitting in
-> my garbage at this point.
 
-So no one will ever be able to understand where this sequence comes
-from (yourself-in-two-years included). That sounds like a pretty bad
-idea.
+Will do.
 
-Maxime
+>> 
+>> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>> ---
+>>  .../bindings/devfreq/devfreq-qcom-fw.txt           |  31 ++
+>>  drivers/devfreq/Kconfig                            |  14 +
+>>  drivers/devfreq/Makefile                           |   1 +
+>>  drivers/devfreq/devfreq_qcom_fw.c                  | 326 
+>> +++++++++++++++++++++
+>>  4 files changed, 372 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+>>  create mode 100644 drivers/devfreq/devfreq_qcom_fw.c
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt 
+>> b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+>> new file mode 100644
+>> index 0000000..5e1aecf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+>> @@ -0,0 +1,31 @@
+>> +QCOM Devfreq FW device
+>> +
+>> +Some Qualcomm Technologies, Inc. (QTI) chipsets have a FW that 
+>> offloads the
+>> +child devices of the corresponding qcom,devfreq-fw device.
+>> +
+>> +Required properties:
+>> +- compatible:		Must be "qcom,devfreq-fw" or "qcom,devfreq-fw-voter"
+> 
+> The use of 'devfreq' word is not proper because 'devfreq' is framework 
+> name.
+> I think you have to use the specific SoC name for the compatible.
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---nbdmosmxbine5fy7--
+I don't think it's mandatory to use chip name. Typically you pick the IP 
+name. This IP is a firmware just for scaling device frequency - so 
+called it qcom,devfreq-fw. I'll see what the DT maintainers say about 
+this.
+
+> In the future,
+> if you need to support the new SoC with this driver, just you can add
+> the new compatible.
+> 
+>> +Only for qcom,devfreq-fw:
+>> +- reg:			Pairs of physical base addresses and region sizes of
+>> +			memory mapped registers.
+>> +- reg-names:		Names of the bases for the above registers. Expected
+>> +			bases are: "en-base", "lut-base" and "perf-base".
+> 
+> It is not possible to understand what are meaning of "en-base",
+> "lut-base" and "perf-base".
+> because they depend on specific H/W specification. You have to add the
+> detailed description
+> why they are necessary. Also, you should explain whether thery are
+> mandatory or optional.
+
+The are all mandatory, that's why I didn't have the "Optional" heading. 
+I can add descriptions.
+
+> 
+>> +
+>> +Example:
+>> +
+>> +	qcom,devfreq-l3 {
+>> +		compatible = "qcom,devfreq-fw";
+>> +		reg-names = "en-base", "lut-base", "perf-base";
+>> +		reg = <0x18321000 0x4>, <0x18321110 0x600>, <0x18321920 0x4>;
+>> +
+>> +		qcom,cpu0-l3 {
+>> +			compatible = "qcom,devfreq-fw-voter";
+>> +		};
+>> +
+>> +		qcom,cpu4-l3 {
+>> +			compatible = "qcom,devfreq-fw-voter";
+>> +		};
+>> +	};
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index 6a172d3..8503018 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -113,6 +113,20 @@ config ARM_RK3399_DMC_DEVFREQ
+>>            It sets the frequency for the memory controller and reads 
+>> the usage counts
+>>            from hardware.
+>> 
+>> +config ARM_QCOM_DEVFREQ_FW
+>> +	bool "Qualcomm Technologies Inc. DEVFREQ FW driver"
+>> +	depends on ARCH_QCOM
+>> +	select DEVFREQ_GOV_PERFORMANCE
+>> +	select DEVFREQ_GOV_POWERSAVE
+>> +	select DEVFREQ_GOV_USERSPACE
+>> +	default n
+>> +	help
+>> +	  The firmware present in some QCOM chipsets offloads the steps
+>> +	  necessary for changing the frequency of some devices (Eg: L3). 
+>> This
+>> +	  driver implements the devfreq interface for this firmware so that
+>> +	  various governors could be used to scale the frequency of these
+>> +	  devices.
+> 
+> As I commented, you need to add a description of what kind of firmwar.
+
+Again, not sure what you mean by "what kind of firmware". It's exactly 
+what I've described here. Can you please elaborate?
+
+>> +
+>>  source "drivers/devfreq/event/Kconfig"
+>> 
+>>  endif # PM_DEVFREQ
+>> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+>> index 32b8d4d..f1cc8990 100644
+>> --- a/drivers/devfreq/Makefile
+>> +++ b/drivers/devfreq/Makefile
+>> @@ -11,6 +11,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= 
+>> governor_passive.o
+>>  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+>>  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
+>>  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
+>> +obj-$(CONFIG_ARM_QCOM_DEVFREQ_FW)	+= devfreq_qcom_fw.o
+>> 
+>>  # DEVFREQ Event Drivers
+>>  obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
+>> diff --git a/drivers/devfreq/devfreq_qcom_fw.c 
+>> b/drivers/devfreq/devfreq_qcom_fw.c
+>> new file mode 100644
+>> index 0000000..3e85f76
+>> --- /dev/null
+>> +++ b/drivers/devfreq/devfreq_qcom_fw.c
+>> @@ -0,0 +1,326 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> 
+> Is it right? or Qualcomm?
+
+Yup, it's right.
+
+> 
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/list.h>
+>> +#include <linux/devfreq.h>
+>> +#include <linux/pm_opp.h>
+>> +
+>> +#define INIT_RATE			300000000UL
+>> +#define XO_RATE				19200000UL
+>> +#define LUT_MAX_ENTRIES			40U
+>> +#define LUT_ROW_SIZE			32
+> 
+> I don't know what are the meaning of 'XO', 'LUT'.
+
+XO is a very common term for crystal oscillator. I don't want to change 
+these symbols.
+LUT stands for Look up table. But I can rename it to FREQ_TBL_.
+
+Thanks,
+Saravana
