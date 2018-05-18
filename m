@@ -1,71 +1,209 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain
- bindings
-Date: Fri, 18 May 2018 08:30:45 +0200
-Message-ID: <be5cecb2-3d0d-22f8-48a2-f94ed9546e04@samsung.com>
-References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
-        <1519775750-21297-2-git-send-email-jollys@xilinx.com>
-        <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
-        <CGME20180306075954epcas5p2bbfb21f146ab879b60d004b73187a5e5@epcas5p2.samsung.com>
-        <CAMuHMdVpWciek2xow1Y1W7jga6BEbAZ7OhnyviRsXK39vYGyXw@mail.gmail.com>
-        <d47ed37f-057f-b510-de70-1140dad1b7ad@samsung.com>
-        <DM2PR0201MB07670C06F504F97EF4E4BAD4B8D00@DM2PR0201MB0767.namprd02.prod.outlook.com>
-        <SN1PR02MB37588BFF357865F4C9628D99B8910@SN1PR02MB3758.namprd02.prod.outlook.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 06/12] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Fri, 18 May 2018 09:58:24 +0300
+Message-ID: <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
+References: <20180517125033.18050-1-rui.silva@linaro.org>
+ <20180517125033.18050-7-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN1PR02MB37588BFF357865F4C9628D99B8910@SN1PR02MB3758.namprd02.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?Q?Bj=c3=b6rn_Andersson?= <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180517125033.18050-7-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jolly,
+Hi Rui,
 
-On 2018-05-17 23:10, Jolly Shah wrote:
+On Thu, May 17, 2018 at 01:50:27PM +0100, Rui Miguel Silva wrote:
+> Add bindings documentation for i.MX7 media drivers.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  .../devicetree/bindings/media/imx7.txt        | 145 ++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/imx7.txt b/Documentation/devicetree/bindings/media/imx7.txt
+> new file mode 100644
+> index 000000000000..161cff8e6442
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx7.txt
+> @@ -0,0 +1,145 @@
+> +Freescale i.MX7 Media Video Device
+> +==================================
+> +
+> +Video Media Controller node
+> +---------------------------
 
->>>>>> +Example:
->>>>>> +     zynqmp-genpd {
->>>>>> +             compatible = "xlnx,zynqmp-genpd";
->>>>> What's the control interface for controlling the domains?
->>>>>> +
->>>>>> +             pd_usb0: pd-usb0 {
->>>>>> +                     pd-id = <22>;
->>>>>> +                     #power-domain-cells = <0>;
->>>>> There's no need for all these sub nodes. Make #power-domain-cells 1
->>>>> and put the id in the cell value.
->>>> That was my first reaction, too...
->>>>>> +             };
->>>>>> +
->>>>>> +             pd_sata: pd-sata {
->>>>>> +                     pd-id = <28>;
->>>>>> +                     #power-domain-cells = <0>;
->>>>>> +             };
->>>>>> +
->>>>>> +             pd_gpu: pd-gpu {
->>>>>> +                     pd-id = <58 20 21>;
->>>> ... until I saw the above.
->>>> Controlling the GPU power area requires controlling 3 physical areas?
->>>>
->>>> However, doing it this way may bite you in the future, if a need
->>>> arises to control a subset. And what about power up/down order?
->>> What about defining 3 separate domains and arranging them in
->>> parent-child relationship? generic power domains already supports that
->>> and this allows to nicely define the power on/off order.
->>>
->>>>>> +                     #power-domain-cells = <0x0>;
->>>>>> +             };
->>>>>> +     };
->> I agree it should be arranged in as parent child order to control subset or control
->> order. Will incorporate those changes in next version.
->
-> As suggested, I tried out parent, child approach. However what I found is Genpd core takes care of parent child dependencies for power on off routines only. In our case, We need them in attach-detach routines too. In that case, we need to handle dependencies manually for those routines. Please suggest better approach, if any.
+Note that DT bindings document the hardware, they are as such not Linux
+dependent.
 
-What do you mean to handle attach-detach?
+> +
+> +This is the media controller node for video capture support. It is a
+> +virtual device that lists the camera serial interface nodes that the
+> +media device will control.
 
-Best regards
+Ditto.
+
+> +
+> +Required properties:
+> +- compatible : "fsl,imx7-capture-subsystem";
+> +- ports      : Should contain a list of phandles pointing to camera
+> +		sensor interface port of CSI
+> +
+> +example:
+> +
+> +capture-subsystem {
+
+What's the purpose of this node, if you only refer to another device? This
+one rather does not look like a real device at all.
+
+> +	compatible = "fsl,imx7-capture-subsystem";
+> +	ports = <&csi>;
+> +};
+> +
+> +
+> +mipi_csi2 node
+> +--------------
+> +
+> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
+> +compatible with previous version of Samsung D-phy.
+> +
+> +Required properties:
+> +
+> +- compatible    : "fsl,imx7-mipi-csi2";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain MIPI CSIS interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
+> +                  entries in the clock property;
+> +- power-domains : a phandle to the power domain, see
+> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- reset-names   : should include following entry "mrst";
+> +- resets        : a list of phandle, should contain reset entry of
+> +                  reset-names;
+> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
+> +	          provides power to MIPI CSIS core;
+> +- bus-width     : maximum number of data lanes supported (SoC specific);
+> +
+> +Optional properties:
+> +
+> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
+> +		    value when this property is not specified is 166 MHz;
+> +
+> +port node
+> +---------
+> +
+> +- reg		  : (required) can take the values 0 or 1, where 0 is the
+> +                     related sink port and port 1 should be the source one;
+> +
+> +endpoint node
+> +-------------
+> +
+> +- data-lanes    : (required) an array specifying active physical MIPI-CSI2
+> +		    data input lanes and their mapping to logical lanes; the
+> +		    array's content is unused, only its length is meaningful;
+> +
+> +- fsl,csis-hs-settle : (optional) differential receiver (HS-RX) settle time;
+
+Could you calculate this, as other drivers do? It probably changes
+depending on the device runtime configuration.
+
+> +
+> +example:
+> +
+> +        mipi_csi: mipi-csi@30750000 {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                compatible = "fsl,imx7-mipi-csi2";
+> +                reg = <0x30750000 0x10000>;
+> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
+> +                clock-names = "pclk", "wrap", "phy";
+> +                clock-names = "mipi", "phy";
+> +                clock-frequency = <166000000>;
+> +                power-domains = <&pgc_mipi_phy>;
+> +                phy-supply = <&reg_1p0d>;
+> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+> +                reset-names = "mrst";
+> +                bus-width = <4>;
+> +                fsl,csis-hs-settle = <3>;
+> +                fsl,csis-clk-settle = <0>;
+> +
+> +                port@0 {
+> +                        reg = <0>;
+> +
+> +                        mipi_from_sensor: endpoint {
+> +                                remote-endpoint = <&ov2680_to_mipi>;
+> +                                data-lanes = <1>;
+> +                        };
+> +                };
+> +
+> +                port@1 {
+> +                        reg = <1>;
+> +
+> +                        mipi_vc0_to_csi_mux: endpoint {
+> +                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
+> +                        };
+> +                };
+> +        };
+> +
+> +
+> +csi node
+> +--------
+> +
+> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
+> +to connect directly to external CMOS image sensors.
+> +
+> +Required properties:
+> +
+> +- compatible    : "fsl,imx7-csi";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain CSI interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
+> +                 entries in the clock property;
+> +
+> +example:
+> +
+> +                csi: csi@30710000 {
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+> +
+> +                        compatible = "fsl,imx7-csi";
+> +                        reg = <0x30710000 0x10000>;
+> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
+> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> +                                        <&clks IMX7D_CLK_DUMMY>;
+> +                        clock-names = "axi", "mclk", "dcic";
+> +
+> +                        port {
+> +                                csi_from_csi_mux: endpoint {
+> +                                        remote-endpoint = <&csi_mux_to_csi>;
+> +                                };
+> +                        };
+> +                };
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
