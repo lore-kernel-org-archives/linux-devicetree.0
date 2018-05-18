@@ -1,57 +1,43 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 06/12] media: dt-bindings: add bindings for i.MX7
- media driver
-Date: Sat, 19 May 2018 01:13:47 +0300
-Message-ID: <20180518221346.fy4264hehvjjcd4y@kekkonen.localdomain>
-References: <20180517125033.18050-1-rui.silva@linaro.org>
- <20180517125033.18050-7-rui.silva@linaro.org>
- <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
- <m3tvr5xt9t.fsf@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/6] mfd: at91-usart: added mfd driver for usart
+Date: Fri, 18 May 2018 17:19:49 -0500
+Message-ID: <20180518221949.GA13443@rob-hp-laptop>
+References: <20180511103822.31698-1-radu.pirea@microchip.com>
+ <20180511103822.31698-3-radu.pirea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <m3tvr5xt9t.fsf@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+In-Reply-To: <20180511103822.31698-3-radu.pirea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radu Pirea <radu.pirea@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, richard.genoud@gmail.com, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 18, 2018 at 09:27:58AM +0100, Rui Miguel Silva wrote:
-> > > +endpoint node
-> > > +-------------
-> > > +
-> > > +- data-lanes    : (required) an array specifying active physical
-> > > MIPI-CSI2
-> > > +		    data input lanes and their mapping to logical lanes; the
-> > > +		    array's content is unused, only its length is meaningful;
-
-Btw. do note that you may get a warning due to this from the CSI-2 bus
-property parsing code if the lane numbers are wrong.
-
-> > > +
-> > > +- fsl,csis-hs-settle : (optional) differential receiver (HS-RX)
-> > > settle time;
-> > 
-> > Could you calculate this, as other drivers do? It probably changes
-> > depending on the device runtime configuration.
+On Fri, May 11, 2018 at 01:38:18PM +0300, Radu Pirea wrote:
+> This mfd driver is just a wrapper over atmel_serial driver and
+> spi-at91-usart driver. Selection of one of the drivers is based on a
+> property from device tree. If the property is not specified, the default
+> driver is atmel_serial.
 > 
-> The only reference to possible values to this parameter is given by
-> table in [0], can you point me out the formula for imx7 in the
-> documentation?
+> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
+> ---
+>  drivers/mfd/Kconfig                  | 10 ++++
+>  drivers/mfd/Makefile                 |  1 +
+>  drivers/mfd/at91-usart.c             | 75 ++++++++++++++++++++++++++++
+>  include/dt-bindings/mfd/at91-usart.h | 17 +++++++
+>  4 files changed, 103 insertions(+)
+>  create mode 100644 drivers/mfd/at91-usart.c
+>  create mode 100644 include/dt-bindings/mfd/at91-usart.h
+> 
 
-I don't know imx7 but the other CSI-2 drivers need no such system specific
-configuration.
+> +#ifndef __DT_BINDINGS_AT91_USART_H__
+> +#define __DT_BINDINGS_AT91_USART_H__
+> +
+> +#define AT91_USART_MODE_SERIAL	1
+> +#define AT91_USART_MODE_SPI	2
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Won't this require a DT update for serial mode to add the mode property? 
+That breaks compatibility.
+
+Rob
