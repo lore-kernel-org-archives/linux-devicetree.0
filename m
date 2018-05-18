@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 24/26] arm64: dts: allwinner: a64:
- a64-olinuxino: Enable HDMI output
-Date: Fri, 18 May 2018 15:15:34 +0530
-Message-ID: <20180518094536.17201-25-jagan@amarulasolutions.com>
+Subject: [PATCH v2 25/26] arm64: dts: allwinner: a64: pine64:
+ Enable HDMI output
+Date: Fri, 18 May 2018 15:15:35 +0530
+Message-ID: <20180518094536.17201-26-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB56C7LLQKGQEM3KECUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB7WC7LLQKGQE54ZNCFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,24 +20,25 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable HDMI output on a64-olinuxino board.
+Enable HDMI output on pine64 board.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
 - none
 
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts    | 26 ++++++++++++++++++++++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 26 ++++++++++++++++++++++
  1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 3b3081b10ecb..83329c8fec4f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -58,12 +58,38 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index a75825798a71..a4ec0900a885 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -62,6 +62,21 @@
+ 	chosen {
  		stdout-path = "serial0:115200n8";
  	};
- 
++
 +	connector {
 +		compatible = "hdmi-connector";
 +		type = "a";
@@ -48,17 +49,17 @@ index 3b3081b10ecb..83329c8fec4f 100644
 +			};
 +		};
 +	};
-+
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
- 	};
- };
- 
-+&de {
-+	status = "okay";
 +};
 +
++&de {
++	status = "okay";
+ };
+ 
+ &ehci0 {
+@@ -82,6 +97,17 @@
+ 
+ };
+ 
 +&hdmi {
 +	hvcc-supply = <&reg_dldo1>;
 +	status = "okay";
@@ -70,8 +71,8 @@ index 3b3081b10ecb..83329c8fec4f 100644
 +	};
 +};
 +
- &mmc0 {
+ &i2c1 {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
+ 	pinctrl-0 = <&i2c1_pins>;
 -- 
 2.14.3
