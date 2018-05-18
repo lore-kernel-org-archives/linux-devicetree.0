@@ -1,108 +1,329 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 3/3] sh_eth: add R8A77980 support
-Date: Fri, 18 May 2018 21:32:46 +0300
-Message-ID: <a0dec765-3196-c09d-b41c-c1eb3025a8ad@cogentembedded.com>
-References: <f30c98ff-f6da-9e7f-c637-49076a428885@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <f30c98ff-f6da-9e7f-c637-49076a428885@cogentembedded.com>
-Content-Language: en-MW
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH] arm64: dts: stingray: use NUM_SATA to configure number of sata ports
+Date: Fri, 18 May 2018 11:34:06 -0700
+Message-ID: <1526668446-20048-1-git-send-email-scott.branden@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Finally, add support for the DT probing of the R-Car V3H (AKA R8A77980) --
-it's the only R-Car gen3 SoC having the GEther controller -- others have
-only EtherAVB...
+Move remaining sata configuration to stingray-sata.dtsi and enable
+ports based on NUM_SATA defined.
+Now, all that needs to be done is define NUM_SATA per board.
 
-Based on the original (and large) patch by Vladimir Barinov.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 ---
-Changes in version 2:
-- added Simon's tag.
+ .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 64 --------------------
+ .../boot/dts/broadcom/stingray/bcm958742k.dts      |  2 +
+ .../boot/dts/broadcom/stingray/bcm958742t.dts      |  2 +
+ .../boot/dts/broadcom/stingray/stingray-sata.dtsi  | 68 ++++++++++++++++++++++
+ 4 files changed, 72 insertions(+), 64 deletions(-)
 
- Documentation/devicetree/bindings/net/sh_eth.txt |    1 
- drivers/net/ethernet/renesas/sh_eth.c            |   44 +++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
-
-Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-===================================================================
---- net-next.orig/Documentation/devicetree/bindings/net/sh_eth.txt
-+++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-@@ -14,6 +14,7 @@ Required properties:
- 	      "renesas,ether-r8a7791"  if the device is a part of R8A7791 SoC.
- 	      "renesas,ether-r8a7793"  if the device is a part of R8A7793 SoC.
- 	      "renesas,ether-r8a7794"  if the device is a part of R8A7794 SoC.
-+	      "renesas,gether-r8a77980" if the device is a part of R8A77980 SoC.
- 	      "renesas,ether-r7s72100" if the device is a part of R7S72100 SoC.
- 	      "renesas,rcar-gen1-ether" for a generic R-Car Gen1 device.
- 	      "renesas,rcar-gen2-ether" for a generic R-Car Gen2 or RZ/G1
-Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
-===================================================================
---- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
-+++ net-next/drivers/net/ethernet/renesas/sh_eth.c
-@@ -753,6 +753,49 @@ static struct sh_eth_cpu_data rcar_gen2_
- 	.rmiimode	= 1,
- 	.magic		= 1,
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+index 8862ec9..cacc25e 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
+@@ -72,70 +72,6 @@
+ 	      <0x00000008 0x80000000 0x1 0x80000000>; /* 6G @ 34G */
  };
-+
-+/* R8A77980 */
-+static struct sh_eth_cpu_data r8a77980_data = {
-+	.soft_reset	= sh_eth_soft_reset_gether,
-+
-+	.set_duplex	= sh_eth_set_duplex,
-+	.set_rate	= sh_eth_set_rate_gether,
-+
-+	.register_type  = SH_ETH_REG_GIGABIT,
-+
-+	.edtrr_trns	= EDTRR_TRNS_GETHER,
-+	.ecsr_value	= ECSR_PSRTO | ECSR_LCHNG | ECSR_ICD | ECSR_MPD,
-+	.ecsipr_value	= ECSIPR_PSRTOIP | ECSIPR_LCHNGIP | ECSIPR_ICDIP |
-+			  ECSIPR_MPDIP,
-+	.eesipr_value	= EESIPR_RFCOFIP | EESIPR_ECIIP |
-+			  EESIPR_FTCIP | EESIPR_TDEIP | EESIPR_TFUFIP |
-+			  EESIPR_FRIP | EESIPR_RDEIP | EESIPR_RFOFIP |
-+			  EESIPR_RMAFIP | EESIPR_RRFIP |
-+			  EESIPR_RTLFIP | EESIPR_RTSFIP |
-+			  EESIPR_PREIP | EESIPR_CERFIP,
-+
-+	.tx_check       = EESR_FTC | EESR_CD | EESR_RTO,
-+	.eesr_err_check = EESR_TWB1 | EESR_TWB | EESR_TABT | EESR_RABT |
-+			  EESR_RFE | EESR_RDE | EESR_RFRMER |
-+			  EESR_TFE | EESR_TDE | EESR_ECI,
-+	.fdr_value	= 0x0000070f,
-+
-+	.apr		= 1,
-+	.mpr		= 1,
-+	.tpauser	= 1,
-+	.bculr		= 1,
-+	.hw_swap	= 1,
-+	.nbst		= 1,
-+	.rpadir		= 1,
-+	.rpadir_value   = 2 << 16,
-+	.no_trimd	= 1,
-+	.no_ade		= 1,
-+	.xdfar_rw	= 1,
-+	.hw_checksum	= 1,
-+	.select_mii	= 1,
-+	.magic		= 1,
-+	.cexcr		= 1,
-+};
- #endif /* CONFIG_OF */
  
- static void sh_eth_set_rate_sh7724(struct net_device *ndev)
-@@ -3134,6 +3177,7 @@ static const struct of_device_id sh_eth_
- 	{ .compatible = "renesas,ether-r8a7791", .data = &rcar_gen2_data },
- 	{ .compatible = "renesas,ether-r8a7793", .data = &rcar_gen2_data },
- 	{ .compatible = "renesas,ether-r8a7794", .data = &rcar_gen2_data },
-+	{ .compatible = "renesas,gether-r8a77980", .data = &r8a77980_data },
- 	{ .compatible = "renesas,ether-r7s72100", .data = &r7s72100_data },
- 	{ .compatible = "renesas,rcar-gen1-ether", .data = &rcar_gen1_data },
- 	{ .compatible = "renesas,rcar-gen2-ether", .data = &rcar_gen2_data },
+-&sata0 {
+-	status = "okay";
+-};
+-
+-&sata_phy0{
+-	status = "okay";
+-};
+-
+-&sata1 {
+-	status = "okay";
+-};
+-
+-&sata_phy1{
+-	status = "okay";
+-};
+-
+-&sata2 {
+-	status = "okay";
+-};
+-
+-&sata_phy2{
+-	status = "okay";
+-};
+-
+-&sata3 {
+-	status = "okay";
+-};
+-
+-&sata_phy3{
+-	status = "okay";
+-};
+-
+-&sata4 {
+-	status = "okay";
+-};
+-
+-&sata_phy4{
+-	status = "okay";
+-};
+-
+-&sata5 {
+-	status = "okay";
+-};
+-
+-&sata_phy5{
+-	status = "okay";
+-};
+-
+-&sata6 {
+-	status = "okay";
+-};
+-
+-&sata_phy6{
+-	status = "okay";
+-};
+-
+-&sata7 {
+-	status = "okay";
+-};
+-
+-&sata_phy7{
+-	status = "okay";
+-};
+-
+ &mdio_mux_iproc {
+ 	mdio@10 {
+ 		gphy0: eth-phy@10 {
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts b/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
+index 77efa28..a515346 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
++++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
+@@ -32,6 +32,8 @@
+ 
+ /dts-v1/;
+ 
++#define NUM_SATA	8
++
+ #include "bcm958742-base.dtsi"
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts b/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
+index 5084b03..6a4d19e 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
++++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
+@@ -32,6 +32,8 @@
+ 
+ /dts-v1/;
+ 
++#define NUM_SATA	8
++
+ #include "bcm958742-base.dtsi"
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+index 8c68e0c..7f6d176 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+@@ -43,7 +43,11 @@
+ 			interrupts = <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 0)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata0_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -58,7 +62,11 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 0)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata0_phy0: sata-phy@0 {
+ 				reg = <0>;
+@@ -73,7 +81,11 @@
+ 			interrupts = <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 1)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata1_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -88,7 +100,11 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 1)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata1_phy0: sata-phy@0 {
+ 				reg = <0>;
+@@ -103,7 +119,11 @@
+ 			interrupts = <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 2)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata2_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -118,7 +138,11 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 2)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata2_phy0: sata-phy@0 {
+ 				reg = <0>;
+@@ -133,7 +157,11 @@
+ 			interrupts = <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 3)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata3_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -148,7 +176,11 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 3)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata3_phy0: sata-phy@0 {
+ 				reg = <0>;
+@@ -163,7 +195,11 @@
+ 			interrupts = <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 4)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata4_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -178,7 +214,11 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 4)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata4_phy0: sata-phy@0 {
+ 				reg = <0>;
+@@ -193,7 +233,11 @@
+ 			interrupts = <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 5)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata5_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -208,7 +252,11 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 5)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata5_phy0: sata-phy@0 {
+ 				reg = <0>;
+@@ -223,7 +271,11 @@
+ 			interrupts = <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 6)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata6_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -238,7 +290,11 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 6)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata6_phy0: sata-phy@0 {
+ 				reg = <0>;
+@@ -253,7 +309,11 @@
+ 			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 7)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata7_port0: sata-port@0 {
+ 				reg = <0>;
+@@ -268,11 +328,19 @@
+ 			reg-names = "phy";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++#if (NUM_SATA > 7)
++			status = "okay";
++#else
+ 			status = "disabled";
++#endif
+ 
+ 			sata7_phy0: sata-phy@0 {
+ 				reg = <0>;
+ 				#phy-cells = <0>;
+ 			};
+ 		};
++
++#if (NUM_SATA > 8)
++#error "NUM_SATA > 8"
++#endif
+ 	};
+-- 
+2.5.0
