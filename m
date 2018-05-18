@@ -1,8 +1,7 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v4 06/12] staging: iio: ad2s1200: Replace platform data with
- dt bindings
-Date: Fri, 18 May 2018 20:22:32 +0200
-Message-ID: <6beef6b7514c53f4fac77d661dcae139b55935bf.1526667118.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v4 07/12] staging: iio: ad2s1200: Add dt table
+Date: Fri, 18 May 2018 20:22:41 +0200
+Message-ID: <eb4fa431405d0d4e73889d440b3b1c95d5c47e54.1526667118.git.davidjulianveenstra@gmail.com>
 References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,75 +22,41 @@ To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-Remove usage of platform data, and replace it with device tree
-facilities.
+Add device tree table for matching with the vendor ID.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
 Changes in v4:
- - Added vendor prefix to gpio function names.
+ - Introduced in this version.
 
- drivers/staging/iio/resolver/ad2s1200.c | 32 ++++++++++++-------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
+ drivers/staging/iio/resolver/ad2s1200.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-index b2c46a8c6b77..9a8aa2448897 100644
+index 9a8aa2448897..67d9747f88a6 100644
 --- a/drivers/staging/iio/resolver/ad2s1200.c
 +++ b/drivers/staging/iio/resolver/ad2s1200.c
-@@ -25,9 +25,6 @@
+@@ -154,6 +154,13 @@ static int ad2s1200_probe(struct spi_device *spi)
+ 	return devm_iio_device_register(&spi->dev, indio_dev);
+ }
  
- #define DRV_NAME "ad2s1200"
- 
--/* input pin sample and rdvel is controlled by driver */
--#define AD2S1200_PN	2
--
- /* input clock on serial interface */
- #define AD2S1200_HZ	8192000
- /* clock period in nano second */
-@@ -111,20 +108,9 @@ static const struct iio_info ad2s1200_info = {
- 
- static int ad2s1200_probe(struct spi_device *spi)
- {
--	unsigned short *pins = spi->dev.platform_data;
- 	struct ad2s1200_state *st;
- 	struct iio_dev *indio_dev;
--	int pn, ret;
--
--	for (pn = 0; pn < AD2S1200_PN; pn++) {
--		ret = devm_gpio_request_one(&spi->dev, pins[pn], GPIOF_DIR_OUT,
--					    DRV_NAME);
--		if (ret) {
--			dev_err(&spi->dev, "request gpio pin %d failed\n",
--				pins[pn]);
--			return ret;
--		}
--	}
-+	int ret;
- 
- 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
- 	if (!indio_dev)
-@@ -134,8 +120,20 @@ static int ad2s1200_probe(struct spi_device *spi)
- 	st = iio_priv(indio_dev);
- 	mutex_init(&st->lock);
- 	st->sdev = spi;
--	st->sample = gpio_to_desc(pins[0]);
--	st->rdvel = gpio_to_desc(pins[1]);
++static const struct of_device_id ad2s1200_of_match[] = {
++	{ .compatible = "adi,ad2s1200", },
++	{ .compatible = "adi,ad2s1205", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ad2s1200_of_match);
 +
-+	st->sample = devm_gpiod_get(&spi->dev, "adi,sample", GPIOD_OUT_LOW);
-+	if (IS_ERR(st->sample)) {
-+		dev_err(&spi->dev, "Failed to claim SAMPLE gpio: err=%ld\n",
-+			PTR_ERR(st->sample));
-+		return PTR_ERR(st->sample);
-+	}
-+
-+	st->rdvel = devm_gpiod_get(&spi->dev, "adi,rdvel", GPIOD_OUT_LOW);
-+	if (IS_ERR(st->rdvel)) {
-+		dev_err(&spi->dev, "Failed to claim RDVEL gpio: err=%ld\n",
-+			PTR_ERR(st->rdvel));
-+		return PTR_ERR(st->rdvel);
-+	}
- 
- 	indio_dev->dev.parent = &spi->dev;
- 	indio_dev->info = &ad2s1200_info;
+ static const struct spi_device_id ad2s1200_id[] = {
+ 	{ "ad2s1200" },
+ 	{ "ad2s1205" },
+@@ -164,6 +171,7 @@ MODULE_DEVICE_TABLE(spi, ad2s1200_id);
+ static struct spi_driver ad2s1200_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
++		.of_match_table = of_match_ptr(ad2s1200_of_match),
+ 	},
+ 	.probe = ad2s1200_probe,
+ 	.id_table = ad2s1200_id,
 -- 
 2.17.0
