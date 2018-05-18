@@ -1,12 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 19/26] arm64: dts: allwinner: a64: Add HDMI pipeline
-Date: Fri, 18 May 2018 15:15:29 +0530
-Message-ID: <20180518094536.17201-20-jagan@amarulasolutions.com>
+Subject: [PATCH v2 20/26] drm: sun4i: add support for HVCC
+ regulator for DWC HDMI glue
+Date: Fri, 18 May 2018 15:15:30 +0530
+Message-ID: <20180518094536.17201-21-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBWGC7LLQKGQEB4FOIYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBXOC7LLQKGQEOHAH6AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,57 +20,83 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-HDMI pipeline on Allwinner A64 has similar behavior like A83T
-where tcon1 is connected to HDMI.
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Setup the pipeline according to that.
+Allwinner SoCs with DWC HDMI controller have a "HVCC" power pin for the
+HDMI part, and on some boards it's connected to a dedicated regulator
+rather than the main 3.3v.
 
+Add support for optional HVCC regulator. For boards that doesn't use a
+dedicated regulator to power it, the default dummy regulator is used.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
 - none
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 14 ++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 ++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 4ffd4787acd2..8ec6559d10cc 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -257,6 +257,10 @@
- 					#size-cells = <0>;
- 					reg = <1>;
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+index 9f40a44b456b..7c33faff7ad4 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+@@ -73,6 +73,12 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 	if (encoder->possible_crtcs == 0)
+ 		return -EPROBE_DEFER;
  
-+					tcon1_out_hdmi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&hdmi_in_tcon1>;
-+					};
- 				};
- 			};
- 		};
-@@ -719,6 +723,23 @@
- 			phys = <&hdmi_phy>;
- 			phy-names = "hdmi-phy";
- 			status = "disabled";
++	hdmi->vcc_hdmi = devm_regulator_get(dev, "hvcc");
++	if (IS_ERR(hdmi->vcc_hdmi)) {
++		dev_err(dev, "Could not get HDMI power supply\n");
++		return PTR_ERR(hdmi->vcc_hdmi);
++	}
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				hdmi_in: port@0 {
-+					reg = <0>;
-+
-+					hdmi_in_tcon1: endpoint {
-+						remote-endpoint = <&tcon1_out_hdmi>;
-+					};
-+				};
-+
-+				hdmi_out: port@1 {
-+					reg = <1>;
-+				};
-+			};
- 		};
+ 	hdmi->rst_ctrl = devm_reset_control_get(dev, "ctrl");
+ 	if (IS_ERR(hdmi->rst_ctrl)) {
+ 		dev_err(dev, "Could not get ctrl reset control\n");
+@@ -91,6 +97,12 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 		return ret;
+ 	}
  
- 		hdmi_phy: hdmi-phy@1ef0000 {
++	ret = regulator_enable(hdmi->vcc_hdmi);
++	if (ret) {
++		dev_err(dev, "Cannot enable HDMI power supply\n");
++		goto err_disable_vcc;
++	}
++
+ 	ret = clk_prepare_enable(hdmi->clk_tmds);
+ 	if (ret) {
+ 		dev_err(dev, "Could not enable tmds clock\n");
+@@ -143,6 +155,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 	clk_disable_unprepare(hdmi->clk_tmds);
+ err_assert_ctrl_reset:
+ 	reset_control_assert(hdmi->rst_ctrl);
++err_disable_vcc:
++	regulator_disable(hdmi->vcc_hdmi);
+ 
+ 	return ret;
+ }
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+index 303189d6602c..65366eeb38d8 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -10,6 +10,7 @@
+ #include <drm/drm_encoder.h>
+ #include <linux/clk.h>
+ #include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
+ 
+ #define SUN8I_HDMI_PHY_DBG_CTRL_REG	0x0000
+@@ -175,6 +176,7 @@ struct sun8i_dw_hdmi {
+ 	struct drm_encoder		encoder;
+ 	struct sun8i_hdmi_phy		*phy;
+ 	struct dw_hdmi_plat_data	plat_data;
++	struct regulator		*vcc_hdmi;
+ 	struct reset_control		*rst_ctrl;
+ };
+ 
 -- 
 2.14.3
