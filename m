@@ -1,209 +1,101 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 06/12] media: dt-bindings: add bindings for i.MX7
- media driver
-Date: Fri, 18 May 2018 09:58:24 +0300
-Message-ID: <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
-References: <20180517125033.18050-1-rui.silva@linaro.org>
- <20180517125033.18050-7-rui.silva@linaro.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] ARM: dts: sun7i: Add support for the
+ Ainol AW1 tablet
+Date: Fri, 18 May 2018 09:14:36 +0200
+Message-ID: <20180518071436.3vvyllghrdxptsxg@flea>
+References: <20180507220413.21990-1-contact@paulk.fr>
+ <20180507220413.21990-3-contact@paulk.fr>
+ <20180511143647.ici2bfoeeldto3ju@flea>
+ <0da5787f0ce2309a74db88820bc58b3b3501c451.camel@paulk.fr>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nbdmosmxbine5fy7"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZ727HLQKGQEC2FT4EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180517125033.18050-7-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+In-Reply-To: <0da5787f0ce2309a74db88820bc58b3b3501c451.camel-W9ppeneeCTY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
 
-On Thu, May 17, 2018 at 01:50:27PM +0100, Rui Miguel Silva wrote:
-> Add bindings documentation for i.MX7 media drivers.
+--nbdmosmxbine5fy7
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, May 14, 2018 at 10:36:08PM +0200, Paul Kocialkowski wrote:
+> > > +	backlight: backlight {
+> > > +		compatible = "pwm-backlight";
+> > > +		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > > +		brightness-levels = <  0   1   1   1   1   2   2   2
+> > > +				       2   3   3   3   3   4   4   4
+> > > +				       5   5   5   6   6   6   7   7
+> > > +				       8   8   8   9   9   9  10  10
+> > > +				      10  11  11  12  12  12  13  13
+> > > +				      14  14  14  15  15  16  16  17
+> > > +				      17  17  18  18  19  19  20  20
+> > > +				      21  21  21  22  22  23  23  24
+> > > +				      24  25  25  26  26  27  27  28
+> > > +				      28  29  30  30  31  31  32  32
+> > > +				      33  33  34  35  35  36  36  37
+> > > +				      38  38  39  39  40  41  41  42
+> > > +				      43  43  44  44  45  46  47  47
+> > > +				      48  49  49  50  51  51  52  53
+> > > +				      54  54  55  56  57  57  58  59
+> > > +				      60  61  61  62  63  64  65  65
+> > > +				      66  67  68  69  70  71  71  72
+> > > +				      73  74  75  76  77  78  79  80
+> > > +				      81  82  83  84  85  86  87  88
+> > > +				      89  90  91  92  93  94  95  96
+> > > +				      97  98  99 101 102 103 104 105
+> > > +				     106 108 109 110 111 112 114 115
+> > > +				     116 117 119 120 121 123 124 125
+> > > +				     127 128 129 131 132 133 135 136
+> > > +				     138 139 141 142 144 145 147 148
+> > > +				     150 151 153 154 156 157 159 161
+> > > +				     162 164 166 167 169 171 173 174
+> > > +				     176 178 180 181 183 185 187 189
+> > > +				     191 192 194 196 198 200 202 204
+> > > +				     206 208 210 212 214 216 219 221
+> > > +				     223 225 227 229 232 234 236 238
+> > > +				     241 242 244 246 248 250 253 255>;
+> > 
+> > You kind of overdid it here :)
+> > 
+> > What I meant to say before was that if you have 10 elements (and you
+> > really should have something in that magnitude) each step should
+> > increase the perceived brightness by 10%.
 > 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  .../devicetree/bindings/media/imx7.txt        | 145 ++++++++++++++++++
->  1 file changed, 145 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/imx7.txt
+> Mhh I think 10 elements would fall too short to really depict the curve
+> with appropriate precision. Given the usual size for brightness cursors
+> in e.g. gnome-shell, it feels like a bigger number would be more
+> appropriate. Let's make it to 100 with values from 0 to 255!
 > 
-> diff --git a/Documentation/devicetree/bindings/media/imx7.txt b/Documentation/devicetree/bindings/media/imx7.txt
-> new file mode 100644
-> index 000000000000..161cff8e6442
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx7.txt
-> @@ -0,0 +1,145 @@
-> +Freescale i.MX7 Media Video Device
-> +==================================
-> +
-> +Video Media Controller node
-> +---------------------------
+> > In this particular case, I really think having something close to <0 4
+> > 8 16 32 64 128 255> would be enough.
+> > 
+> > And in general, that kind of odd looking table without any more
+> > context is just screaming for a comment :)
+> 
+> Noted, I will explain the idea, but probably without the exact formula
+> that's really a nasty hack written down on a piece of paper sitting in
+> my garbage at this point.
 
-Note that DT bindings document the hardware, they are as such not Linux
-dependent.
+So no one will ever be able to understand where this sequence comes
+from (yourself-in-two-years included). That sounds like a pretty bad
+idea.
 
-> +
-> +This is the media controller node for video capture support. It is a
-> +virtual device that lists the camera serial interface nodes that the
-> +media device will control.
-
-Ditto.
-
-> +
-> +Required properties:
-> +- compatible : "fsl,imx7-capture-subsystem";
-> +- ports      : Should contain a list of phandles pointing to camera
-> +		sensor interface port of CSI
-> +
-> +example:
-> +
-> +capture-subsystem {
-
-What's the purpose of this node, if you only refer to another device? This
-one rather does not look like a real device at all.
-
-> +	compatible = "fsl,imx7-capture-subsystem";
-> +	ports = <&csi>;
-> +};
-> +
-> +
-> +mipi_csi2 node
-> +--------------
-> +
-> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
-> +compatible with previous version of Samsung D-phy.
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-mipi-csi2";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain MIPI CSIS interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
-> +                  entries in the clock property;
-> +- power-domains : a phandle to the power domain, see
-> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
-> +- reset-names   : should include following entry "mrst";
-> +- resets        : a list of phandle, should contain reset entry of
-> +                  reset-names;
-> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
-> +	          provides power to MIPI CSIS core;
-> +- bus-width     : maximum number of data lanes supported (SoC specific);
-> +
-> +Optional properties:
-> +
-> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
-> +		    value when this property is not specified is 166 MHz;
-> +
-> +port node
-> +---------
-> +
-> +- reg		  : (required) can take the values 0 or 1, where 0 is the
-> +                     related sink port and port 1 should be the source one;
-> +
-> +endpoint node
-> +-------------
-> +
-> +- data-lanes    : (required) an array specifying active physical MIPI-CSI2
-> +		    data input lanes and their mapping to logical lanes; the
-> +		    array's content is unused, only its length is meaningful;
-> +
-> +- fsl,csis-hs-settle : (optional) differential receiver (HS-RX) settle time;
-
-Could you calculate this, as other drivers do? It probably changes
-depending on the device runtime configuration.
-
-> +
-> +example:
-> +
-> +        mipi_csi: mipi-csi@30750000 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                compatible = "fsl,imx7-mipi-csi2";
-> +                reg = <0x30750000 0x10000>;
-> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-> +                                <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-> +                                <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-> +                clock-names = "pclk", "wrap", "phy";
-> +                clock-names = "mipi", "phy";
-> +                clock-frequency = <166000000>;
-> +                power-domains = <&pgc_mipi_phy>;
-> +                phy-supply = <&reg_1p0d>;
-> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-> +                reset-names = "mrst";
-> +                bus-width = <4>;
-> +                fsl,csis-hs-settle = <3>;
-> +                fsl,csis-clk-settle = <0>;
-> +
-> +                port@0 {
-> +                        reg = <0>;
-> +
-> +                        mipi_from_sensor: endpoint {
-> +                                remote-endpoint = <&ov2680_to_mipi>;
-> +                                data-lanes = <1>;
-> +                        };
-> +                };
-> +
-> +                port@1 {
-> +                        reg = <1>;
-> +
-> +                        mipi_vc0_to_csi_mux: endpoint {
-> +                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
-> +                        };
-> +                };
-> +        };
-> +
-> +
-> +csi node
-> +--------
-> +
-> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
-> +to connect directly to external CMOS image sensors.
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-csi";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain CSI interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
-> +                 entries in the clock property;
-> +
-> +example:
-> +
-> +                csi: csi@30710000 {
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
-> +
-> +                        compatible = "fsl,imx7-csi";
-> +                        reg = <0x30710000 0x10000>;
-> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
-> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> +                                        <&clks IMX7D_CLK_DUMMY>;
-> +                        clock-names = "axi", "mclk", "dcic";
-> +
-> +                        port {
-> +                                csi_from_csi_mux: endpoint {
-> +                                        remote-endpoint = <&csi_mux_to_csi>;
-> +                                };
-> +                        };
-> +                };
+Maxime
 
 -- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--nbdmosmxbine5fy7--
