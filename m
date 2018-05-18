@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 23/26] arm64: dts: allwinner: a64:
- orangepi-win: Enable HDMI output
-Date: Fri, 18 May 2018 15:15:33 +0530
-Message-ID: <20180518094536.17201-24-jagan@amarulasolutions.com>
+Subject: [PATCH v2 24/26] arm64: dts: allwinner: a64:
+ a64-olinuxino: Enable HDMI output
+Date: Fri, 18 May 2018 15:15:34 +0530
+Message-ID: <20180518094536.17201-25-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB36C7LLQKGQE3BSGYBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB56C7LLQKGQEM3KECUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,25 +20,24 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable HDMI output on Orangepi-win board.
+Enable HDMI output on a64-olinuxino board.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
 - none
 
- .../boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 26 ++++++++++++++++++++++
+ .../boot/dts/allwinner/sun50i-a64-olinuxino.dts    | 26 ++++++++++++++++++++++
  1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index bf42690a3361..b6fdd052d473 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -57,12 +57,38 @@
- 	chosen {
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+index 3b3081b10ecb..83329c8fec4f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+@@ -58,12 +58,38 @@
  		stdout-path = "serial0:115200n8";
  	};
-+
+ 
 +	connector {
 +		compatible = "hdmi-connector";
 +		type = "a";
@@ -49,16 +48,17 @@ index bf42690a3361..b6fdd052d473 100644
 +			};
 +		};
 +	};
-+};
 +
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+ 	};
+ };
+ 
 +&de {
 +	status = "okay";
- };
- 
- &ehci1 {
- 	status = "okay";
- };
- 
++};
++
 +&hdmi {
 +	hvcc-supply = <&reg_dldo1>;
 +	status = "okay";
