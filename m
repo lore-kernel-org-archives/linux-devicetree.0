@@ -1,84 +1,88 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v4 03/12] clk: imx7d: fix mipi dphy div parent
-Date: Fri, 18 May 2018 09:30:12 +0100
-Message-ID: <m3sh6pxt63.fsf@linaro.org>
-References: <20180517125033.18050-1-rui.silva@linaro.org>
- <20180517125033.18050-4-rui.silva@linaro.org>
- <152658031035.210890.12212209931570500982@swboyd.mtv.corp.google.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3] ASoC: ssm2305: Add amplifier driver
+Date: Fri, 18 May 2018 09:31:30 +0100
+Message-ID: <20180518083130.GA24209@sirena.org.uk>
+References: <20180517135518.29345-1-m.felsch@pengutronix.de>
+ <20180517170826.GV20254@sirena.org.uk>
+ <20180518080711.asgrisdqxgzm3ziw@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <152658031035.210890.12212209931570500982@swboyd.mtv.corp.google.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============4090056778719450929=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180518080711.asgrisdqxgzm3ziw@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, lgirdwood@gmail.com, robh+dt@kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-On Thu 17 May 2018 at 18:05, Stephen Boyd wrote:
-> Quoting Rui Miguel Silva (2018-05-17 05:50:24)
->> Fix the mipi dphy root divider to mipi_dphy_pre_div, this would 
->> remove a orphan
->> clock and set the correct parent.
->> 
->> before:
->> cat clk_orphan_summary
->>                                  enable  prepare  protect
->>    clock                          count    count    count 
->>    rate   accuracy   phase
->> ----------------------------------------------------------------------------------------
->>  mipi_dphy_post_div                   1        1        0 
->>  0          0 0
->>     mipi_dphy_root_clk                1        1        0 
->>     0          0 0
->> 
->> cat clk_dump | grep mipi_dphy
->> mipi_dphy_post_div                    1        1        0 
->> 0          0 0
->>     mipi_dphy_root_clk                1        1        0 
->>     0          0 0
->> 
->> after:
->> cat clk_dump | grep mipi_dphy
->>    mipi_dphy_src                     1        1        0 
->>    24000000          0 0
->>        mipi_dphy_cg                  1        1        0 
->>        24000000          0 0
->>           mipi_dphy_pre_div          1        1        0 
->>           24000000          0 0
->>              mipi_dphy_post_div      1        1        0 
->>              24000000          0 0
->>                 mipi_dphy_root_clk   1        1        0 
->>                 24000000          0 0
->> 
->> Fixes: 8f6d8094b215 ("ARM: imx: add imx7d clk tree support")
->> 
->> Cc: linux-clk@vger.kernel.org
->> Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
->> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
->> ---
->
-> I only get two patches out of the 12 and I don't get a cover 
-> letter.
-> Did you want me to pick up these clk patches into clk-next? 
-> Where are
-> the other patches? Can you cc lkml on all your kernel emails so 
-> I can
-> easily find them?
 
-Yea, sorry, You are right, I will cc all patches to the lists. v5 
-is on
-the way and I will do that.
+--===============4090056778719450929==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Content-Disposition: inline
 
----
-Cheers,
-	Rui
+
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 18, 2018 at 10:07:11AM +0200, Marco Felsch wrote:
+> On 18-05-17 18:08, Mark Brown wrote:
+
+> >=20
+> > Please submit a followup patch which makes the entire comment a C++ one
+> > rather than mixing them in the same comment block, it makes things look
+> > more intentional.
+
+> I'm a bit confused. As documented by the=20
+> Documentation/process/license-rules.rst the license header should be a C++
+> comment but for all block comments the 'normal' coding style should be
+> applied. I can seperate the license header and the comment to make it
+> more intentional.
+
+> // SPDX-License-Identifier: GPL-2.0
+>=20
+> /*
+>  * Analog Devices SSM2305 Amplifier Driver
+>  *
+>  * Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
+>  */
+
+> Is that better?
+
+No, that still looks like a mess.  Just make the whole thing a C++
+comment.
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlr+j14ACgkQJNaLcl1U
+h9BvFAf+NJSpSUKzANz7YjS6xLtNVNzU2XKgigvVjQZCAojOqz0GAiYZ45v8oN07
+XaLTJY9YMNV30eeTmpZn5HyG1djjlRIAC/gb6CKfnGSFWtME/PzfUA4/QbMyhBhf
+dXA5NovzuD7PSK6jkrAEyHnRI1f4lOmZXuBje2dkCSIMve29Mmpqm2ETV2L9vQa1
+7x2kxb5eNyuTSCPbmrlji8mDPeIg2kQvJ6loQEur05IFKY6tknK0qnX2kctXq08T
+YMPSRGj0JaUqgALH5jcfanQ36C95qrUW0TOYr7i57kpBwwq1pXVFZ3LIJ9ulUdrr
+hc9qOAeQUbMdF1Qo6eWpkKre1tdXkg==
+=JjO1
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
+
+--===============4090056778719450929==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4090056778719450929==--
