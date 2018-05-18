@@ -1,143 +1,120 @@
-Return-Path: <atull@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <5fb20388-5a0c-bb8b-4c6f-62d1ee42ec23@gmail.com>
-References: <20180419143804.brdgezjaxqalarum@linaro.org> <20180425073442.e4pikxonhqr5r7cw@linaro.org>
- <8715b1f9-5e30-a14e-a029-fcc129a09c22@gmail.com> <5fb20388-5a0c-bb8b-4c6f-62d1ee42ec23@gmail.com>
-From: Alan Tull <atull@kernel.org>
-Date: Tue, 22 May 2018 14:32:52 -0500
-Message-ID: <CANk1AXQ5kyFCp9YcJ6L7n=Ub4EcKYmbiYXZYzSO_17RHgpPn5g@mail.gmail.com>
+Return-Path: <SRS0=4f+O=IF=gmail.com=frowand.list@kernel.org>
 Subject: Re: Revisiting Devicetree Overlay Manager
-Content-Type: text/plain; charset="UTF-8"
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, dimitrysh@google.com, john.stultz@linaro.org, nicolas.dechesne@linaro.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, daniel.thompson@linaro.org, loic.poulain@linaro.org
+From: Frank Rowand <frowand.list@gmail.com>
+References: <20180419143804.brdgezjaxqalarum@linaro.org>
+ <20180425073442.e4pikxonhqr5r7cw@linaro.org>
+ <8715b1f9-5e30-a14e-a029-fcc129a09c22@gmail.com>
+Message-ID: <5fb20388-5a0c-bb8b-4c6f-62d1ee42ec23@gmail.com>
+Date: Thu, 17 May 2018 20:53:03 -0700
+MIME-Version: 1.0
+In-Reply-To: <8715b1f9-5e30-a14e-a029-fcc129a09c22@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh@kernel.org, grant.likely@secretlab.ca, pantelis.antoniou@konsulko.com, dimitrysh@google.com, john.stultz@linaro.org, nicolas.dechesne@linaro.org, devicetree@vger.kernel.org, daniel.thompson@linaro.org, loic.poulain@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, May 17, 2018 at 10:53 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+Hi Manivannan,
+
+On 04/25/18 10:26, Frank Rowand wrote:
 > Hi Manivannan,
->
-> On 04/25/18 10:26, Frank Rowand wrote:
->> Hi Manivannan,
->>
->> Sorry for the delay.  I'll try to get to this today or tommorrow.
->>
->> -Frank
->
-> Sorry for the even longer than expected delay.  As I mentioned to you
-> off-list (bad Frank!), I wanted to pull together a lot of my disparate
-> thoughts on overlays before responding to your specific proposal and
-> questions.  The first (of probably many versions) of that write up
-> is at:
->
->   https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
-
-Slightly off topic (sorry), but you could move "FPGAs programmed after
-kernel begins execution" to what has been completed since it's
-implemented in drivers/fpga/of-fpga-region.c.  The remaining issue for
-that use is adding some kind of acceptable userspace interface, that
-seems to be captured in "overlay manager" in the "issues and what
-needs to be completed" section.
-
->
-> My thoughts on some of your questions are addressed on that page.
-> I still need to read through your questions because there are
-> probably several that I did not address on that page.
->
+> 
+> Sorry for the delay.  I'll try to get to this today or tommorrow.
+> 
 > -Frank
->
+
+Sorry for the even longer than expected delay.  As I mentioned to you
+off-list (bad Frank!), I wanted to pull together a lot of my disparate
+thoughts on overlays before responding to your specific proposal and
+questions.  The first (of probably many versions) of that write up
+is at:
+
+  https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
+
+My thoughts on some of your questions are addressed on that page.
+I still need to read through your questions because there are
+probably several that I did not address on that page.
+
+-Frank
+
+> 
+> 
+> On 04/25/18 00:34, Manivannan Sadhasivam wrote:
+>> Hi Frank,
 >>
+>> Did you had time to look into this? Especially I'd like to hear your
+>> opinion on the first pain point I have mentioned. I can understand
+>> that the whole point on introducing the of_overlay_fdt_apply() API
+>> is to remove the duplication of overlay FDT unflattening, but do you have
+>> any idea of how we can make this API work with overlay nodes appended
+>> to the base DTB?
 >>
->> On 04/25/18 00:34, Manivannan Sadhasivam wrote:
->>> Hi Frank,
+>> Thanks,
+>> Mani
+>>
+>> On Thu, Apr 19, 2018 at 08:08:04PM +0530, Manivannan Sadhasivam wrote:
+>>> Hello Everyone,
 >>>
->>> Did you had time to look into this? Especially I'd like to hear your
->>> opinion on the first pain point I have mentioned. I can understand
->>> that the whole point on introducing the of_overlay_fdt_apply() API
->>> is to remove the duplication of overlay FDT unflattening, but do you have
->>> any idea of how we can make this API work with overlay nodes appended
->>> to the base DTB?
+>>> I have just started working on the Devicetree Overlay Manager support in
+>>> kernel. The idea is to merge overlays at boot time specified via some
+>>> interface like kernel command line. The motivation for this work comes from
+>>> Overlay Manager [1] submitted by John last year. The mechanism which I have
+>>> been working on is an extension to John's work. It focusses on addressing
+>>> Rob's comments on the Overlay Manager which involves having multiple ways
+>>> to load overlays.
 >>>
->>> Thanks,
+>>> Proposal:
+>>> =========
+>>>
+>>> 1. Pass all devicetree overlays via following methods:
+>>>    - Overlays appended to base DTB
+>>>    - Individual overlays built into kernel as firmware blobs
+>>>    - Any other ways?
+>>>
+>>> 2. Specify overlays to load via kernel command line as below:
+>>>    - overlay_mgr.overlays=<overlay1,overlay2,...>
+>>>
+>>> 3. Merge only the specified overlays during boot time. First look for the
+>>> overlay in the base DTB. If it is found, just apply it, else defer to firmware
+>>> load approach.
+>>>
+>>> The Overlay Manager code is expected to be very simple and will just do the
+>>> above mentioned work. Later on, it will be extended to support dynamic
+>>> modification of overlays from userspace with some additional security
+>>> features like having a property listed in the base devicetree for only
+>>> allowing changes to the current node and its child nodes, etc...
+>>>
+>>> Pain Points:
+>>> ============
+>>>
+>>> 1. Starting from 4.17 we don't have any API exposed from DT core to merge
+>>> individual devicetree nodes. We only have of_overlay_fdt_apply() function
+>>> which takes the whole FDT. This will work very well for the firmware approach
+>>> since we will pass the overlays blobs but not for overlays appended to base DTB,
+>>> where we will pass individual overlay nodes.
+>>>
+>>> 2. Using firmware load method will force us to have this Overlay Manager code
+>>> at late_initcall level since firmware class exists only in fs_inticall level,
+>>> which might be too late for some devices.
+>>>
+>>> 3. This whole approach is not expected to work very well (still not yet tested)
+>>> on DSI based devices since it needs to be present at very early during boot
+>>> process.
+>>>
+>>> The Overlay Manager propsed here will be board agnostic and it should work on
+>>> all platforms supporting DT. This will be a _very_ useful feature for the
+>>> development boards such as 96Boards, Raspberry Pi, BBB etc... and also for
+>>> production ready devices.
+>>>
+>>> So, I'd like to hear suggestions/feedbacks for the above mentioned proposal &
+>>> pain points and hope to land the most awaited feature in kernel.
+>>>
+>>> Regards,
 >>> Mani
 >>>
->>> On Thu, Apr 19, 2018 at 08:08:04PM +0530, Manivannan Sadhasivam wrote:
->>>> Hello Everyone,
->>>>
->>>> I have just started working on the Devicetree Overlay Manager support in
->>>> kernel. The idea is to merge overlays at boot time specified via some
->>>> interface like kernel command line. The motivation for this work comes from
->>>> Overlay Manager [1] submitted by John last year. The mechanism which I have
->>>> been working on is an extension to John's work. It focusses on addressing
->>>> Rob's comments on the Overlay Manager which involves having multiple ways
->>>> to load overlays.
->>>>
->>>> Proposal:
->>>> =========
->>>>
->>>> 1. Pass all devicetree overlays via following methods:
->>>>    - Overlays appended to base DTB
->>>>    - Individual overlays built into kernel as firmware blobs
->>>>    - Any other ways?
-
-Would an interface that allows applying/removing overlays after boot
-time work for you?  I'm referring to something like Pantelis' ConfigFS
-interface which  has been proposed (and currently rejected). I
-understand your proposal is on the kernel command line, but I am
-wondering whether something like that could work for both our uses.
-My use is applying overlays after the kernel has booted to reprogram a
-FPGA and add nodes for the devices that show up in the FPGA (and
-removing the overlays to prepare for reprogramming).
-
-Alan
-
->>>>
->>>> 2. Specify overlays to load via kernel command line as below:
->>>>    - overlay_mgr.overlays=<overlay1,overlay2,...>
->>>>
->>>> 3. Merge only the specified overlays during boot time. First look for the
->>>> overlay in the base DTB. If it is found, just apply it, else defer to firmware
->>>> load approach.
->>>>
->>>> The Overlay Manager code is expected to be very simple and will just do the
->>>> above mentioned work. Later on, it will be extended to support dynamic
->>>> modification of overlays from userspace with some additional security
->>>> features like having a property listed in the base devicetree for only
->>>> allowing changes to the current node and its child nodes, etc...
->>>>
->>>> Pain Points:
->>>> ============
->>>>
->>>> 1. Starting from 4.17 we don't have any API exposed from DT core to merge
->>>> individual devicetree nodes. We only have of_overlay_fdt_apply() function
->>>> which takes the whole FDT. This will work very well for the firmware approach
->>>> since we will pass the overlays blobs but not for overlays appended to base DTB,
->>>> where we will pass individual overlay nodes.
->>>>
->>>> 2. Using firmware load method will force us to have this Overlay Manager code
->>>> at late_initcall level since firmware class exists only in fs_inticall level,
->>>> which might be too late for some devices.
->>>>
->>>> 3. This whole approach is not expected to work very well (still not yet tested)
->>>> on DSI based devices since it needs to be present at very early during boot
->>>> process.
->>>>
->>>> The Overlay Manager propsed here will be board agnostic and it should work on
->>>> all platforms supporting DT. This will be a _very_ useful feature for the
->>>> development boards such as 96Boards, Raspberry Pi, BBB etc... and also for
->>>> production ready devices.
->>>>
->>>> So, I'd like to hear suggestions/feedbacks for the above mentioned proposal &
->>>> pain points and hope to land the most awaited feature in kernel.
->>>>
->>>> Regards,
->>>> Mani
->>>>
->>>> [1] https://lkml.org/lkml/2017/10/10/20
->>>
+>>> [1] https://lkml.org/lkml/2017/10/10/20
 >>
->> .
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
