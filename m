@@ -1,76 +1,85 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 06/12] media: dt-bindings: add bindings for i.MX7
- media driver
-Date: Fri, 18 May 2018 18:08:57 +0200
-Message-ID: <1526659737.3948.19.camel@pengutronix.de>
-References: <20180518092806.3829-1-rui.silva@linaro.org>
- <20180518092806.3829-7-rui.silva@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: ssm2305: fix header layout" to the asoc
+	tree
+Date: Fri, 18 May 2018 17:10:18 +0100
+Message-ID: <E1fJhxS-0001Sb-8H@debutante>
+References: <20180518095506.28875-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180518092806.3829-7-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180518095506.28875-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-05-18 at 10:28 +0100, Rui Miguel Silva wrote:
-> Add bindings documentation for i.MX7 media drivers.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  .../devicetree/bindings/media/imx7.txt        | 125 ++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/imx7.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/imx7.txt b/Documentation/devicetree/bindings/media/imx7.txt
-> new file mode 100644
-> index 000000000000..a26372630377
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx7.txt
-> @@ -0,0 +1,125 @@
-> +Freescale i.MX7 Media Video Device
-> +==================================
-> +
-> +mipi_csi2 node
-> +--------------
-> +
-> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
-> +compatible with previous version of Samsung D-phy.
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-mipi-csi2";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain MIPI CSIS interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
-> +                  entries in the clock property;
-> +- power-domains : a phandle to the power domain, see
-> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
-> +- reset-names   : should include following entry "mrst";
-> +- resets        : a list of phandle, should contain reset entry of
-> +                  reset-names;
-> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
-> +	          provides power to MIPI CSIS core;
-> +- bus-width     : maximum number of data lanes supported (SoC specific);
-> +
-> +Optional properties:
-> +
-> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
-> +		    value when this property is not specified is 166 MHz;
+The patch
 
-Could this be obtained from one of the clock inputs via clk_get_rate?
+   ASoC: ssm2305: fix header layout
 
-regards
-Philipp
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From d460a2ea24db8b99eb7485ecccb453764e7d6b13 Mon Sep 17 00:00:00 2001
+From: Marco Felsch <m.felsch@pengutronix.de>
+Date: Fri, 18 May 2018 11:55:06 +0200
+Subject: [PATCH] ASoC: ssm2305: fix header layout
+
+Make C-header and SPDX-License-Identifier header uniform.
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/ssm2305.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/sound/soc/codecs/ssm2305.c b/sound/soc/codecs/ssm2305.c
+index 39d8b01cd852..2968959c4b75 100644
+--- a/sound/soc/codecs/ssm2305.c
++++ b/sound/soc/codecs/ssm2305.c
+@@ -1,9 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/*
+- * Analog Devices SSM2305 Amplifier Driver
+- *
+- * Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
+- */
++//
++// Analog Devices SSM2305 Amplifier Driver
++//
++// Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
++//
+ 
+ #include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+-- 
+2.17.0
