@@ -1,103 +1,81 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 02/12] media: staging/imx7: add imx7 CSI subdev driver
-Date: Fri, 18 May 2018 12:33:18 +0200
-Message-ID: <1526639598.3948.3.camel@pengutronix.de>
-References: <20180518092806.3829-1-rui.silva@linaro.org>
- <20180518092806.3829-3-rui.silva@linaro.org>
+Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
+Date: Fri, 18 May 2018 12:46:49 +0200
+Message-ID: <1526640409.3948.5.camel@pengutronix.de>
+References: <20180517133009.26079-1-m.felsch@pengutronix.de>
+ <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180518092806.3829-3-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-05-18 at 10:27 +0100, Rui Miguel Silva wrote:
-> This add the media entity subdevice and control driver for the i.MX7
-> CMOS Sensor Interface.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
-[...]
-> +static int imx7_csi_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct imx7_csi *csi;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
-> +	if (!csi)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, &csi->sd);
-> +	csi->dev = dev;
-> +
-> +	ret = imx7_csi_parse_dt(csi);
-> +	if (ret < 0)
-> +		return -ENODEV;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	csi->irq = platform_get_irq(pdev, 0);
-> +	if (!res || csi->irq < 0) {
-> +		dev_err(dev, "Missing platform resources data\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	csi->regbase = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(csi->regbase)) {
-> +		dev_err(dev, "Failed platform resources map\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	spin_lock_init(&csi->irqlock);
-> +	mutex_init(&csi->lock);
-> +
-> +	/* install interrupt handler */
-> +	ret = devm_request_irq(dev, csi->irq, imx7_csi_irq_handler, 0, "csi",
-> +			       (void *)csi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Request CSI IRQ failed.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* add media device */
-> +	csi->imxmd = imx_media_dev_init(dev, false);
-> +	if (IS_ERR(csi->imxmd))
-> +		return PTR_ERR(csi->imxmd);
-> +
-> +	ret = imx_media_of_add_csi(csi->imxmd, node);
-> +	if (ret < 0)
-> +		goto media_cleanup;
-> +
-> +	ret = imx_media_dev_notifier_register(csi->imxmd);
-> +	if (ret < 0)
-> +		goto media_cleanup;
-> +
-> +	v4l2_subdev_init(&csi->sd, &imx7_csi_subdev_ops);
-> +	v4l2_set_subdevdata(&csi->sd, csi);
-> +	csi->sd.internal_ops = &imx7_csi_internal_ops;
-> +	csi->sd.entity.ops = &imx7_csi_entity_ops;
-> +	csi->sd.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
-> +	csi->sd.dev = &pdev->dev;
-> +	csi->sd.owner = THIS_MODULE;
-> +	csi->sd.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	csi->sd.grp_id = IMX_MEDIA_GRP_ID_CSI0;
-
-See my comments on the first patch. Since grp_id specifies an IPU CSI0,
-it would be better to use a different id here to make clear this is a
-standalone CSI as opposed to an IPU CSI.
-
-regards
-Philipp
+SGkgUm9iLAoKT24gVGh1LCAyMDE4LTA1LTE3IGF0IDExOjE0IC0wNTAwLCBSb2IgSGVycmluZyB3
+cm90ZToKPiBPbiBUaHUsIE1heSAxNywgMjAxOCBhdCA4OjMwIEFNLCBNYXJjbyBGZWxzY2ggPG0u
+ZmVsc2NoQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPiA+IEZyb206IFBoaWxpcHAgWmFiZWwgPHAu
+emFiZWxAcGVuZ3V0cm9uaXguZGU+Cj4gPiAKPiA+IEFjY29yZGluZyB0byB0aGUgc3NtMjYwMyBk
+YXRhIHNoZWV0IChjb250cm9sIHJlZ2lzdGVyIHNlcXVlbmNpbmcpLCB0aGUKPiA+IGRpZ2l0YWwg
+Y29yZSBzaG91bGQgYmUgYWN0aXZhdGVkIG9ubHkgYWZ0ZXIgYWxsIG5lY2Vzc2FyeSBiaXRzIGlu
+IHRoZQo+ID4gcG93ZXIgcmVnaXN0ZXIgYXJlIGVuYWJsZWQsIGFuZCBhIGRlbGF5IGRldGVybWlu
+ZWQgYnkgdGhlIGRlY291cGxpbmcKPiA+IGNhcGFjaXRvciBvbiB0aGUgVk1JRCBwaW4gaGFzIHBh
+c3NlZC4gSWYgdGhlIGRpZ2l0YWwgY29yZSBpcyBhY3RpdmF0ZWQKPiA+IHRvbyBlYXJseSwgb3Ig
+ZXZlbiBiZWZvcmUgdGhlIEFEQyBpcyBwb3dlcmVkIHVwLCBhdWRpYmxlIGFydGlmYWN0cwo+ID4g
+YXBwZWFyIGF0IHRoZSBiZWdpbm5pbmcgb2YgdGhlIHJlY29yZGVkIHNpZ25hbC4KPiA+IAo+ID4g
+VGhlIGRpZ2l0YWwgY29yZSBpcyBhbHNvIG5lZWRlZCBmb3IgcGxheWJhY2ssIHNvIHdoZW4gcmVj
+b3JkaW5nIHN0YXJ0cwo+ID4gaXQgbWF5IGFscmVhZHkgYmUgZW5hYmxlZC4gVGhpcyBtZWFucyB3
+ZSBjYW5ub3QgZ2V0IHRoZSBwb3dlciBzZXF1ZW5jZQo+ID4gY29ycmVjdCB3aGVuIHdlIHdhbnQg
+dG8gYmUgYWJsZSB0byBzdGFydCByZWNvcmRpbmcgYWZ0ZXIgcGxheWJhY2suCj4gPiAKPiA+IEFz
+IGEgd29ya2Fyb3VuZCBwdXQgdGhlIE1JQyBtdXRlIHN3aXRjaCBpbnRvIHRoZSBEQVBNIHJvdXRl
+cy4gVGhpcwo+ID4gd2F5IHdlIGNhbiBrZWVwIHRoZSByZWNvcmRpbmcgZGlzYWJsZWQgdW50aWwg
+dGhlIE1JQyBCaWFzIGhhcyBzZXR0bGVkCj4gPiBhbmQgdGh1cyBnZXQgcmlkIG9mIGF1ZGlibGUg
+YXJ0aWZhY3RzLgo+ID4gCj4gPiBUaGUgZGVsYXkgd2UgaGF2ZSB0byB3YWl0IGRlcGVuZHMgb24g
+YSBib2FyZCBzcGVjaWZpYyBjYXBhY2l0b3IKPiA+IGNvbm5lY3RlZCB0byB0aGUgVk1JRCBwaW5z
+LCBzbyBtYWtlIHRoZSBkZWxheSBjb25maWd1cmFibGUgaW4gdGhlIGRldmljZQo+ID4gdHJlZS4K
+PiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25p
+eC5kZT4KPiA+IFNpZ25lZC1vZmYtYnk6IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25p
+eC5kZT4KPiA+IFNpZ25lZC1vZmYtYnk6IE1hcmNvIEZlbHNjaCA8bS5mZWxzY2hAcGVuZ3V0cm9u
+aXguZGU+Cj4gPiAtLS0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9hZGksc3Nt
+MjYwMi50eHQgfCAgNyArKysrKwo+ID4gIHNvdW5kL3NvYy9jb2RlY3Mvc3NtMjYwMi5jICAgICAg
+ICAgICAgICAgICAgICB8IDMwICsrKysrKysrKysrKysrKysrLS0KPiA+ICAyIGZpbGVzIGNoYW5n
+ZWQsIDM1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYWRpLHNzbTI2MDIudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxzc20yNjAyLnR4
+dAo+ID4gaW5kZXggM2IzMzAyZmUzOTliLi45MzM0ZDQ4YzA0NjIgMTAwNjQ0Cj4gPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYWRpLHNzbTI2MDIudHh0Cj4g
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYWRpLHNzbTI2
+MDIudHh0Cj4gPiBAQCAtMTEsOSArMTEsMTYgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICAg
+IC0gcmVnIDogdGhlIEkyQyBhZGRyZXNzIG9mIHRoZSBkZXZpY2UgZm9yIEkyQywgdGhlIGNoaXAg
+c2VsZWN0Cj4gPiAgICAgICAgICAgIG51bWJlciBmb3IgU1BJLgo+ID4gCj4gPiArT3B0aW9uYWwg
+cHJvcGVydGllczoKPiA+ICsKPiA+ICsgIC0gc3RhcnR1cC1kZWxheS11cyA6IGRlbGF5IGJldHdl
+ZW4gcG93ZXJpbmcgb24gYW5kIGFjdGl2YXRpbmcgdGhlIGRpZ2l0YWwKPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGNvcmUsIGRldGVybWluZWQgYnkgdGhlIGRlY291cGxpbmcgY2FwYWNpdG9y
+IEMgb24gdGhlCj4gPiArICAgICAgICAgICAgICAgICAgICAgIFZNSUQgcGluOiBkZWxheSBbwrVz
+XSA9IEMgW8K1Rl0gKiAyNTAwMCAvIDMuNQo+ID4gKwo+IAo+IFdlIGFscmVhZHkgaGF2ZSBzaW1p
+bGFybHkgZGVmaW5lZCBwcm9wZXJ0eS4gUGxlYXNlIHJldXNlIHRoYXQuIFNlZSBtbWMKPiBwd3Jz
+ZXEgYmluZGluZy4KCkRvIHlvdSBtZWFuICdwb3N0LXBvd2VyLW9uLWRlbGF5LW1zJyBmcm9tICdt
+bWMtcHdzZXEtc2ltcGxlJz8KSXQgaXMgZG9jdW1lbnRlZCBhczoKCi0gcG9zdC1wb3dlci1vbi1k
+ZWxheS1tcyA6IERlbGF5IGluIG1zIGFmdGVyIHBvd2VyaW5nIHRoZSBjYXJkIGFuZArCoMKgwqDC
+oMKgwqDCoMKgZGUtYXNzZXJ0aW5nIHRoZSByZXNldC1ncGlvcyAoaWYgYW55KQoKVGhlIHN0YXJ0
+dXAgZGVsYXkgaGVyZSBpcyBub3QgYWZ0ZXIgcG93ZXJpbmcgdGhlIHdob2xlIElDIG9yIGRlYXNz
+ZXJ0aW5nCnJlc2V0cyBhbmQgYmVmb3JlIGl0IGNhbiBiZSB1c2VkLCBidXQgYWZ0ZXIgcG93ZXJp
+bmcgdXAgYSBzcGVjaWZpYyBwYXJ0Cm9mIHRoZSBjb2RlYyAodGhlIEFEQykgYW5kIGJlZm9yZSB1
+bm11dGluZyB0aGUgTUlDIGlucHV0IHRvIHRoZSBkaWdpdGFsCmNvcmUgZHVyaW5nIHN0YXJ0IG9m
+IGRlY29kaW5nLiBXaXRoIHRoaXMgaW4gbWluZCwgZG8geW91IHN0aWxsIHRoaW5rIHRoZQpwcm9w
+ZXJ0eSBzaG91bGQgYmUgY2FsbGVkIHRoZSBzYW1lIGFzIHRoZSBtbWMgZnVsbC1jaGlwIHBvd2Vy
+b24gZGVsYXk/CklmIHNvLCB3b3VsZCBpdCBiZSBhY2NlcHRhYmxlIHRvIHVzZSBwb3N0LXBvd2Vy
+LW9uLWRlbGF5LXVzIHRvIGtlZXAgdGhlCm1pY3Jvc2Vjb25kIHJlc29sdXRpb24/Cgp0aGFua3MK
+UGhpbGlwcApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpB
+bHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDov
+L21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
