@@ -1,164 +1,172 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH V7 04/12] ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
-Date: Fri, 18 May 2018 13:49:17 +0530
-Message-ID: <1526631565-9972-5-git-send-email-sricharan@codeaurora.org>
-References: <1526631565-9972-1-git-send-email-sricharan@codeaurora.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v4 06/12] media: dt-bindings: add bindings for i.MX7 media
+ driver
+Date: Fri, 18 May 2018 09:27:58 +0100
+Message-ID: <m3tvr5xt9t.fsf@linaro.org>
+References: <20180517125033.18050-1-rui.silva@linaro.org>
+ <20180517125033.18050-7-rui.silva@linaro.org>
+ <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526631565-9972-1-git-send-email-sricharan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, absahu@codeaurora.org, marc.zyngier@arm.com, richardcochran@gmail.com, sricharan@codeaurora.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the common parts for the dk04 boards.
+Hi Sakari,
+Thanks for the review.
+On Fri 18 May 2018 at 06:58, Sakari Ailus wrote:
+> Hi Rui,
+>
+> On Thu, May 17, 2018 at 01:50:27PM +0100, Rui Miguel Silva 
+> wrote:
+>> Add bindings documentation for i.MX7 media drivers.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> ---
+>>  .../devicetree/bindings/media/imx7.txt        | 145 
+>>  ++++++++++++++++++
+>>  1 file changed, 145 insertions(+)
+>>  create mode 100644 
+>>  Documentation/devicetree/bindings/media/imx7.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/media/imx7.txt 
+>> b/Documentation/devicetree/bindings/media/imx7.txt
+>> new file mode 100644
+>> index 000000000000..161cff8e6442
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/imx7.txt
+>> @@ -0,0 +1,145 @@
+>> +Freescale i.MX7 Media Video Device
+>> +==================================
+>> +
+>> +Video Media Controller node
+>> +---------------------------
+>
+> Note that DT bindings document the hardware, they are as such 
+> not Linux
+> dependent.
 
-Reviewed-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+This was removed in this series, however I removed it in the wrong 
+patch,
+If you see patch 11/12 you will see this being removed. I will fix 
+this
+in v5. Thanks for notice it.
+
+> 
+>> +
+>> +This is the media controller node for video capture support. 
+>> It is a
+>> +virtual device that lists the camera serial interface nodes 
+>> that the
+>> +media device will control.
+>
+> Ditto.
+>
+>> +
+>> +Required properties:
+>> +- compatible : "fsl,imx7-capture-subsystem";
+>> +- ports      : Should contain a list of phandles pointing to 
+>> camera
+>> +		sensor interface port of CSI
+>> +
+>> +example:
+>> +
+>> +capture-subsystem {
+>
+> What's the purpose of this node, if you only refer to another 
+> device? This
+> one rather does not look like a real device at all.
+>
+>> +	compatible = "fsl,imx7-capture-subsystem";
+>> +	ports = <&csi>;
+>> +};
+>> +
+>> +
+>> +mipi_csi2 node
+>> +--------------
+>> +
+>> +This is the device node for the MIPI CSI-2 receiver core in 
+>> i.MX7 SoC. It is
+>> +compatible with previous version of Samsung D-phy.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible    : "fsl,imx7-mipi-csi2";
+>> +- reg           : base address and length of the register set 
+>> for the device;
+>> +- interrupts    : should contain MIPI CSIS interrupt;
+>> +- clocks        : list of clock specifiers, see
+>> + 
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt for 
+>> details;
+>> +- clock-names   : must contain "pclk", "wrap" and "phy" 
+>> entries, matching
+>> +                  entries in the clock property;
+>> +- power-domains : a phandle to the power domain, see
+>> + 
+>> Documentation/devicetree/bindings/power/power_domain.txt for 
+>> details.
+>> +- reset-names   : should include following entry "mrst";
+>> +- resets        : a list of phandle, should contain reset 
+>> entry of
+>> +                  reset-names;
+>> +- phy-supply    : from the generic phy bindings, a phandle to 
+>> a regulator that
+>> +	          provides power to MIPI CSIS core;
+>> +- bus-width     : maximum number of data lanes supported (SoC 
+>> specific);
+>> +
+>> +Optional properties:
+>> +
+>> +- clock-frequency : The IP's main (system bus) clock frequency 
+>> in Hz, default
+>> +		    value when this property is not specified is 
+>> 166 MHz;
+>> +
+>> +port node
+>> +---------
+>> +
+>> +- reg		  : (required) can take the values 0 or 1, 
+>> where 0 is the
+>> +                     related sink port and port 1 should be 
+>> the source one;
+>> +
+>> +endpoint node
+>> +-------------
+>> +
+>> +- data-lanes    : (required) an array specifying active 
+>> physical MIPI-CSI2
+>> +		    data input lanes and their mapping to logical 
+>> lanes; the
+>> +		    array's content is unused, only its length is 
+>> meaningful;
+>> +
+>> +- fsl,csis-hs-settle : (optional) differential receiver 
+>> (HS-RX) settle time;
+>
+> Could you calculate this, as other drivers do? It probably 
+> changes
+> depending on the device runtime configuration.
+
+The only reference to possible values to this parameter is given 
+by
+table in [0], can you point me out the formula for imx7 in the
+documentation?
+
 ---
- arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi | 111 ++++++++++++++++++++++++++
- arch/arm/boot/dts/qcom-ipq4019.dtsi           |   2 +-
- 2 files changed, 112 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+Cheers,
+	Rui
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
-new file mode 100644
-index 0000000..7c1eb19
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+
-+#include "qcom-ipq4019.dtsi"
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK04.1";
-+
-+	aliases {
-+		serial0 = &blsp1_uart1;
-+		serial1 = &blsp1_uart2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x10000000>; /* 256MB */
-+	};
-+
-+	soc {
-+		pinctrl@1000000 {
-+			serial_0_pins: serial0-pinmux {
-+				pins = "gpio16", "gpio17";
-+				function = "blsp_uart0";
-+				bias-disable;
-+			};
-+
-+			serial_1_pins: serial1-pinmux {
-+				pins = "gpio8", "gpio9",
-+					"gpio10", "gpio11";
-+				function = "blsp_uart1";
-+				bias-disable;
-+			};
-+
-+			spi_0_pins: spi-0-pinmux {
-+				pinmux {
-+					function = "blsp_spi0";
-+					pins = "gpio13", "gpio14", "gpio15";
-+					bias-disable;
-+				};
-+				pinmux_cs {
-+					function = "gpio";
-+					pins = "gpio12";
-+					bias-disable;
-+					output-high;
-+				};
-+			};
-+
-+			i2c_0_pins: i2c-0-pinmux {
-+				pins = "gpio20", "gpio21";
-+				function = "blsp_i2c0";
-+				bias-disable;
-+			};
-+
-+			nand_pins: nand-pins {
-+				pins = "gpio53", "gpio55", "gpio56",
-+					"gpio57", "gpio58", "gpio59",
-+					"gpio60", "gpio62", "gpio63",
-+					"gpio64", "gpio65", "gpio66",
-+					"gpio67", "gpio68", "gpio69";
-+				function = "qpic";
-+			};
-+		};
-+
-+		serial@78af000 {
-+			pinctrl-0 = <&serial_0_pins>;
-+			pinctrl-names = "default";
-+			status = "ok";
-+		};
-+
-+		serial@78b0000 {
-+			pinctrl-0 = <&serial_1_pins>;
-+			pinctrl-names = "default";
-+			status = "ok";
-+		};
-+
-+		dma@7884000 {
-+			status = "ok";
-+		};
-+
-+		spi@78b5000 { /* BLSP1 QUP1 */
-+			pinctrl-0 = <&spi_0_pins>;
-+			pinctrl-names = "default";
-+			status = "ok";
-+			cs-gpios = <&tlmm 12 0>;
-+
-+			m25p80@0 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0>;
-+				compatible = "n25q128a11";
-+				spi-max-frequency = <24000000>;
-+			};
-+		};
-+
-+		pci@40000000 {
-+			status = "ok";
-+			perst-gpio = <&tlmm 38 0x1>;
-+		};
-+
-+		qpic-nand@79b0000 {
-+			pinctrl-0 = <&nand_pins>;
-+			pinctrl-names = "default";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 2c4ad7d..815c912 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -307,7 +307,7 @@
- 			dma-names = "rx", "tx";
- 		};
- 
--		serial@78b0000 {
-+		blsp1_uart2: serial@78b0000 {
- 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
- 			reg = <0x78b0000 0x200>;
- 			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+[0] https://community.nxp.com/thread/463777
