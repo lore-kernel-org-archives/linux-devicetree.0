@@ -1,70 +1,100 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v10 25/27] ARM: davinci: add device tree support to timer
-Date: Fri, 18 May 2018 10:35:54 -0500
-Message-ID: <9bc3fb8f-ca03-9cfd-1e9d-51f8c9347da7@lechnology.com>
-References: <20180509172606.29387-1-david@lechnology.com>
- <20180509172606.29387-26-david@lechnology.com>
- <8fa98514-7651-58cb-595e-6c7f713540b8@ti.com>
- <1162de58-00bc-fdfa-eef1-48a094834ac3@lechnology.com>
- <c7064bee-d385-4496-c19e-1b72853b01f1@ti.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v5 4/4] drm/rockchip: support dp training outside dp
+ firmware
+Date: Fri, 18 May 2018 11:36:56 -0400
+Message-ID: <20180518153656.GK3373@art_vandelay>
+References: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
+ <d4c38236-7455-ccd5-a1d9-a000b7d78be9@rock-chips.com>
+ <CA+ASDXN2LT6FcX_2-MM=Qu7cZOHwVK3+2rGDLGcC1SnY3BJaSw@mail.gmail.com>
+ <11928313.3EhRqhFFHB@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c7064bee-d385-4496-c19e-1b72853b01f1@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <11928313.3EhRqhFFHB@phil>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, hl <hl@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Chris Zhong <zyw@rock-chips.com>, Daniel Vetter <daniel.vetter@intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/18/2018 01:05 AM, Sekhar Nori wrote:
-> On Thursday 17 May 2018 08:39 PM, David Lechner wrote:
->> On 05/17/2018 09:35 AM, Sekhar Nori wrote:
->>> Hi David,
->>>
->>> On Wednesday 09 May 2018 10:56 PM, David Lechner wrote:
->>>> This adds device tree support to the davinci timer so that when clocks
->>>> are moved to device tree, the timer will still work.
->>>>
->>>> Signed-off-by: David Lechner <david@lechnology.com>
->>>> ---
->>>
->>>> +static int __init of_davinci_timer_init(struct device_node *np)
->>>> +{
->>>> +    struct clk *clk;
->>>> +
->>>> +    clk = of_clk_get(np, 0);
->>>> +    if (IS_ERR(clk)) {
->>>> +        struct of_phandle_args clkspec;
->>>> +
->>>> +        /*
->>>> +         * Fall back to using ref_clk if the actual clock is not
->>>> +         * available. There will be problems later if the real clock
->>>> +         * source is disabled.
->>>> +         */
->>>> +
->>>> +        pr_warn("%s: falling back to ref_clk\n", __func__);
->>>> +
->>>> +        clkspec.np = of_find_node_by_name(NULL, "ref_clk");
->>>> +        if (IS_ERR(clkspec.np)) {
->>>> +            pr_err("%s: No clock available for timer!\n", __func__);
->>>> +            return PTR_ERR(clkspec.np);
->>>> +        }
->>>> +        clk = of_clk_get_from_provider(&clkspec);
->>>> +        of_node_put(clkspec.np);
->>>> +    }
->>>
->>> Do we need this error path now?
->>>
->>> Thanks,
->>> Sekhar
->>>
->>
->> No, not really.
-> 
-> Then lets just print an error and return the error number.
-> 
-
-OK. FYI, timer_probe() prints the error if we return and error, so
-I will just return the error.
+T24gRnJpLCBNYXkgMTgsIDIwMTggYXQgMTA6NTI6MTdBTSArMDIwMCwgSGVpa28gU3R1ZWJuZXIg
+d3JvdGU6Cj4gQW0gRnJlaXRhZywgMTguIE1haSAyMDE4LCAwMzo0NTo0NiBDRVNUIHNjaHJpZWIg
+QnJpYW4gTm9ycmlzOgo+ID4gT24gVGh1LCBNYXkgMTcsIDIwMTggYXQgNjo0MSBQTSwgaGwgPGhs
+QHJvY2stY2hpcHMuY29tPiB3cm90ZToKPiA+ID4gT24gVGh1cnNkYXksIE1heSAxNywgMjAxOCAw
+OTo1MSBQTSwgU2VhbiBQYXVsIHdyb3RlOgo+ID4gPj4gT24gVGh1LCBNYXkgMTcsIDIwMTggYXQg
+MDU6MTg6MDBQTSArMDgwMCwgTGluIEh1YW5nIHdyb3RlOgo+ID4gPj4+IERQIGZpcm13YXJlIHVz
+ZXMgZml4ZWQgcGh5IGNvbmZpZyB2YWx1ZXMgdG8gZG8gdHJhaW5pbmcsIGJ1dCBzb21lCj4gPiA+
+Pj4gYm9hcmRzIG5lZWQgdG8gYWRqdXN0IHRoZXNlIHZhbHVlcyB0byBmaXQgZm9yIHRoZWlyIHVu
+aXF1ZSBoYXJkd2FyZQo+ID4gPj4+IGRlc2lnbi4gU28gZ2V0IHBoeSBjb25maWcgdmFsdWVzIGZy
+b20gZHRzIGFuZCB1c2Ugc29mdHdhcmUgbGluayB0cmFpbmluZwo+ID4gPj4+IGluc3RlYWQgb2Yg
+cmVseWluZyBvbiBmaXJtd2FyZSwgaWYgc29mdHdhcmUgdHJhaW5pbmcgZmFpbCwga2VlcCBmaXJt
+d2FyZQo+ID4gPj4+IHRyYWluaW5nIGFzIGEgZmFsbGJhY2sgaWYgc3cgdHJhaW5pbmcgZmFpbHMu
+Cj4gPiA+Pj4KPiA+ID4+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hp
+cHMuY29tPgo+ID4gPj4+IFNpZ25lZC1vZmYtYnk6IExpbiBIdWFuZyA8aGxAcm9jay1jaGlwcy5j
+b20+Cj4gPiA+Pj4gLS0tCj4gPiA+Pj4gQ2hhbmdlcyBpbiB2MjoKPiA+ID4+PiAtIHVwZGF0ZSBw
+YXRjaCBmb2xsb3dpbmcgRW5yaWMgc3VnZ2VzdAo+ID4gPj4+IENoYW5nZXMgaW4gdjM6Cj4gPiA+
+Pj4gLSB1c2UgdmFyaWFibGUgZndfdHJhaW5pbmcgaW5zdGVhZCBzd190cmFpbmluZ19zdWNjZXNz
+Cj4gPiA+Pj4gLSBiYXNlIG9uIERQIFNQQ0UsIGlmIHRyYWluaW5nIGZhaWwgdXNlIGxvd2VyIGxp
+bmsgcmF0ZSB0byByZXRyeSB0cmFpbmluZwo+ID4gPj4+IENoYW5nZXMgaW4gdjQ6Cj4gPiA+Pj4g
+LSBpbXByb3ZlIGNkbl9kcF9nZXRfbG93ZXJfbGlua19yYXRlKCkgYW5kIGNkbl9kcF9zb2Z0d2Fy
+ZV90cmFpbl9saW5rKCkgZm9sbG93IFNlYW4gc3VnZ2VzdAo+ID4gPj4+IENoYW5nZXMgaW4gdjU6
+Cj4gPiA+Pj4gLSBmaXggc29tZSB3aGl0ZXNwY2FlIGlzc3VlCj4gPiA+Pj4KPiA+ID4+PiAgIGRy
+aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAzICstCj4g
+PiA+Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICB8
+ICAyNCArLQo+ID4gPj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1jb3JlLmgg
+ICAgICAgICAgfCAgIDIgKwo+ID4gPj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1k
+cC1saW5rLXRyYWluaW5nLmMgfCA0MjAgKysrKysrKysrKysrKysrKysrKysrKysrCj4gPiA+Pj4g
+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLXJlZy5jICAgICAgICAgICB8ICAzMSAr
+LQo+ID4gPj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuaCAgICAgICAg
+ICAgfCAgMzggKystCj4gPiA+Pj4gICA2IGZpbGVzIGNoYW5nZWQsIDUwNSBpbnNlcnRpb25zKCsp
+LCAxMyBkZWxldGlvbnMoLSkKPiA+ID4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+ID4gPj4+Cj4gPiAuLi4KPiA+
+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1saW5rLXRy
+YWluaW5nLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcu
+Ywo+ID4gPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiA+Pj4gaW5kZXggMDAwMDAwMC4uNzNj
+MzI5MAo+ID4gPj4+IC0tLSAvZGV2L251bGwKPiA+ID4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+ID4gPj4+IEBAIC0wLDAgKzEsNDIwIEBA
+Cj4gPiA+Pj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gPiA+Pj4gKy8q
+Cj4gPiA+Pj4gKyAqIENvcHlyaWdodCAoQykgRnV6aG91IFJvY2tjaGlwIEVsZWN0cm9uaWNzIENv
+Lkx0ZAo+ID4gPj4+ICsgKiBBdXRob3I6IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+
+Cj4gPiA+Pj4gKyAqLwo+ID4gPj4+ICsKPiA+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2RldmljZS5o
+Pgo+ID4gPj4+ICsjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4KPiA+ID4+PiArI2luY2x1ZGUgPGxp
+bnV4L3BoeS9waHkuaD4KPiA+ID4+PiArI2luY2x1ZGUgPHNvYy9yb2NrY2hpcC9yb2NrY2hpcF9w
+aHlfdHlwZWMuaD4KPiA+ID4+PiArCj4gPiA+Pj4gKyNpbmNsdWRlICJjZG4tZHAtY29yZS5oIgo+
+ID4gPj4+ICsjaW5jbHVkZSAiY2RuLWRwLXJlZy5oIgo+ID4gPj4+ICsKPiA+ID4+PiArc3RhdGlj
+IHZvaWQgY2RuX2RwX3NldF9zaWduYWxfbGV2ZWxzKHN0cnVjdCBjZG5fZHBfZGV2aWNlICpkcCkK
+PiA+ID4+PiArewo+ID4gPj4+ICsgICAgICAgc3RydWN0IGNkbl9kcF9wb3J0ICpwb3J0ID0gZHAt
+PnBvcnRbZHAtPmFjdGl2ZV9wb3J0XTsKPiA+ID4+PiArICAgICAgIHN0cnVjdCByb2NrY2hpcF90
+eXBlY19waHkgKnRjcGh5ID0gcGh5X2dldF9kcnZkYXRhKHBvcnQtPnBoeSk7Cj4gPiA+Pgo+ID4g
+Pj4gWW91IGlnbm9yZWQgQnJpYW4ncyBjb21tZW50IG9uIHRoZSBwcmV2aW91cyBwYXRjaDoKPiA+
+ID4+ICAgIFRoaXMgaXMgc3RpbGwgYW50aXRoZXRpY2FsIHRvIHRoZSBQSFkgZnJhbWV3b3JrOyB5
+b3UncmUgYXNzdW1pbmcgdGhhdAo+ID4gPj4gICAgdGhpcyBpcyBhIHBhcnRpY3VsYXIgdHlwZSBv
+ZiBQSFkgaGVyZS4KPiA+ID4+Cj4gPiA+PiBGV0lXLCB0aGUgbWVkaWF0ZWsgZHJtIGRyaXZlciBh
+bHNvIGFzc3VtZXMgYSBjZXJ0YWluIFBIWSB0eXBlLiBBIHF1aWNrIGdyZXAgb2YKPiA+ID4+IGRy
+aXZlcnMvIHNob3dzIHRoYXQgdGhlIG9ubHkgb3RoZXIgbm9uLXBoeS8gZHJpdmVyIHVzaW5nIHRo
+aXMgZnVuY3Rpb24KPiA+ID4+IChwaW5jdHJsLXRlZ3JhLXh1c2IuYykgYWxzbyBjYXN0cyBpdC4K
+PiA+ID4+Cj4gPiA+PiBTZWFuCj4gPiA+Cj4gPiA+IFRoYW5rcyBTZWFuLCBleGNlcHQgcGh5IGZy
+YW1ld29yayBoYXZlIG5ldyBBUEkgdG8gaGFuZGxlIGl0LCBpIGhhdmUgbm90Cj4gPiA+IGlkZWEg
+aG93IHRvIGRvIGl0IGluIGEgYmV0dGVyIHdheS4KPiA+IAo+ID4gV2VsbCwgaWYgTWVkaWF0ZWsg
+Y2FuIGRvIGl0IGZvciB0aGVpciBNSVBJIGFuZCBIRE1JLCB0aGVuIG1heWJlIHdlIGp1c3QgZG8g
+aXQuLi4KPiAKPiBJJ2QgdGhpbmsgc28gdG9vLiBUaGlzIGlzIGluIFJvY2tjaGlwLXNwZWNpZmlj
+IGNvZGUgc28gaXQgd2lsbCBhbHdheXMgYmUKPiBwb3NzaWJsZSB0byBlYXNpbHkgZ2V0IHRoZSBz
+b2MtdHlwZSBhbmQgdGh1cyBwaHktdHlwZSwgaWYgdGhhdCBjb21iaW5hdGlvbgo+IHJlYWxseSBj
+aGFuZ2VzIGRvd24gdGhlIHJvYWQuCj4gCgpTbyBpbiB0aGUgYWJzZW5jZSBvZiBhIGJldHRlciBz
+b2x1dGlvbiwgYW5kIHdpdGggcHJpb3IgYXJ0LAoKUmV2aWV3ZWQtYnk6IFNlYW4gUGF1bCA8c2Vh
+bnBhdWxAY2hyb21pdW0ub3JnPgoKCldlIGp1c3QgbmVlZCBzb21lIGV5ZXMgb24gdGhlIGR0IGFu
+ZCBwaHkgY2hhbmdlcyBpbiB0aGlzIHNldC4gSGVpa28sIGNhbiB5b3UKaGVscCBvdXQgd2l0aCB0
+aGF0PwoKU2VhbgoKPiAKPiBIZWlrbwo+IAo+IAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5n
+aW5lZXIsIEdvb2dsZSAvIENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
