@@ -1,57 +1,82 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v3] ASoC: ssm2305: Add amplifier driver
-Date: Fri, 18 May 2018 10:07:11 +0200
-Message-ID: <20180518080711.asgrisdqxgzm3ziw@pengutronix.de>
-References: <20180517135518.29345-1-m.felsch@pengutronix.de>
- <20180517170826.GV20254@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM64: dts: sun50i: a64: Add spi flash node for sopine
+Date: Fri, 18 May 2018 10:11:41 +0200
+Message-ID: <20180518081141.itlc4pelwkkpfvtv@flea>
+References: <20180517150613.11916-1-manu@freebsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3dfrmciid7fgg2ew"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180517170826.GV20254@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, lgirdwood@gmail.com, robh+dt@kernel.org, kernel@pengutronix.de
+In-Reply-To: <20180517150613.11916-1-manu@freebsd.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emmanuel Vadot <manu@freebsd.org>
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Mark,
 
-On 18-05-17 18:08, Mark Brown wrote:
-> On Thu, May 17, 2018 at 03:55:18PM +0200, Marco Felsch wrote:
-> 
-> > +++ b/sound/soc/codecs/ssm2305.c
-> > @@ -0,0 +1,104 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Analog Devices SSM2305 Amplifier Driver
-> 
-> Please submit a followup patch which makes the entire comment a C++ one
-> rather than mixing them in the same comment block, it makes things look
-> more intentional.
+--3dfrmciid7fgg2ew
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm a bit confused. As documented by the 
-Documentation/process/license-rules.rst the license header should be a C++
-comment but for all block comments the 'normal' coding style should be
-applied. I can seperate the license header and the comment to make it
-more intentional.
+Hi,
 
-// SPDX-License-Identifier: GPL-2.0
+On Thu, May 17, 2018 at 05:06:13PM +0200, Emmanuel Vadot wrote:
+> The Sopine and Pine64-LTS have a winbond w25q128 spi flash on spi0.
+> Add a node for it.
+>=20
+> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/=
+arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+> index 43418bd881d8..3285aebc06d9 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+> @@ -66,6 +66,18 @@
+>  	};
+>  };
+> =20
+> +&spi0  {
+> +	status =3D "okay";
+> +
+> +	flash@0 {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		compatible =3D "w25q128", "jedec,spi-nor";
 
-/*
- * Analog Devices SSM2305 Amplifier Driver
- *
- * Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
- */
+This applies to this patch and your previous Orange Pi PC2 one, but
+the part name must have a vendor. Or you can drop it entirely if the
+SPI-NOR driver can auto-detect it properly.
 
-Is that better?
+Maxime
 
-Marco
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--3dfrmciid7fgg2ew
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlr+ir0ACgkQ0rTAlCFN
+r3Q5KBAAipzUPlHR9Dh2SPT5FSOyXo9okYVIh2my5Bw5moEtcgT/vMIc8FVK9iux
+YAlGwp5Bl1EOsWqXlDwDZuHbC+/0m8yTLfUrgdmFJfppjwyy8jtPR1af1NUT4aFh
+5qE4EWzIRVglkSWxb86Tk4NF4ejm159H7ymFAj3s2RUIARrrNrTyTLDai52epC7y
+iyNNqgeBhHv8mye7NoPQb4dEL5Jmmju/Xhn7n0i+5y2gLVheWX8dxX4HJuVAJtEm
+DteMRXKwpZt+ym2Olup8YOv1qsuwuuiiSZuC5rkEqnC6/BKB+vYiJMDn4totuhAB
+qJPy9sH69Bm8BhfaX277fDNpVphooXI6q0fm3b0MYW9aNeQRvvQALYDlOiQqloYz
+Tk9uJrHwmbHLSyFmPOZmbflTk2GcBfjvOCefaAwnjmeax1iBBf/CHgmQWaERZom2
+GvZu6X321lwJFQ165DD4U6KE6aWfPc4axkpIXm0BO0uuJNFSfzVN4wUSjHrycb8j
+5ZozSmJf4zRuPPMUGoFbqiLso4Kx1E9MP5iuERBOfp1GYns0ArHGRUeSpyla11W7
+lEySKzpZIL3JAAF/3S1Mlvretlx0nom2b428o9UU47Ls4M8tMQArif1vcrV4qAxS
+D64Trdfn277PRO9Wwo0K2qtCp3AMvsiJ/gMvk9XP3CHAWtUKosk=
+=AvFI
+-----END PGP SIGNATURE-----
+
+--3dfrmciid7fgg2ew--
