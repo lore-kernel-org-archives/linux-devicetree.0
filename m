@@ -1,70 +1,189 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/4] Documentation: bindings: add phy_config for
- Rockchip USB Type-C PHY
-Date: Fri, 18 May 2018 11:41:05 -0500
-Message-ID: <20180518164105.GA14201@rob-hp-laptop>
-References: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
- <1526548680-2552-2-git-send-email-hl@rock-chips.com>
+Subject: Re: [PATCH v5 06/12] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Fri, 18 May 2018 11:49:20 -0500
+Message-ID: <20180518164920.GA21131@rob-hp-laptop>
+References: <20180518092806.3829-1-rui.silva@linaro.org>
+ <20180518092806.3829-7-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1526548680-2552-2-git-send-email-hl@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lin Huang <hl@rock-chips.com>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, briannorris@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, zyw@rock-chips.com, daniel.vetter@intel.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180518092806.3829-7-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMTcsIDIwMTggYXQgMDU6MTc6NThQTSArMDgwMCwgTGluIEh1YW5nIHdyb3Rl
-Ogo+IElmIHdhbnQgdG8gZG8gdHJhaW5pbmcgb3V0c2lkZSBEUCBGaXJtd2FyZSwgbmVlZCBwaHkg
-dm9sdGFnZSBzd2luZwo+IGFuZCBwcmVfZW1waGFzaXMgdmFsdWUuCgoiZHQtYmluZGluZ3M6IHBo
-eTogLi4uIiBmb3IgdGhlIHN1YmplY3QgcGxlYXNlLgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBMaW4g
-SHVhbmcgPGhsQHJvY2stY2hpcHMuY29tPgo+IC0tLQo+IENoYW5nZXMgaW4gdjI6Cj4gLSBOb25l
-IAo+IENoYW5nZXMgaW4gdjM6Cj4gLSBtb2RpZnkgcHJvcGVydHkgZGVzY3JpcHRpb24gYW5kIGFk
-ZCB0aGlzIHByb3BlcnR5IHRvIEV4YW1wbGUKPiBDaGFuZ2UgaW4gdjQ6Cj4gLSBOb25lCj4gQ2hh
-bmdlIGluIHY1Ogo+IC0gTm9uZQo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5
-LXJvY2tjaGlwLXR5cGVjLnR4dCB8IDI5ICsrKysrKysrKysrKysrKysrKysrKy0KPiAgMSBmaWxl
-IGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtdHlw
-ZWMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2No
-aXAtdHlwZWMudHh0Cj4gaW5kZXggOTYwZGE3Zi4uYWYyOThmMiAxMDA2NDQKPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy50eHQK
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1yb2NrY2hp
-cC10eXBlYy50eHQKPiBAQCAtMTcsNyArMTcsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAK
-PiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgIC0gZXh0Y29uIDogZXh0Y29uIHNwZWNpZmllciBm
-b3IgdGhlIFBvd2VyIERlbGl2ZXJ5Cj4gLQo+ICsgLSByb2NrY2hpcCxwaHlfY29uZmlnIDogQSBs
-aXN0IG9mIHZvbHRhZ2Ugc3dpbmcobXYpIGFuZCBwcmUtZW1waGFzaXMKPiArCQkJKGRCKSBwYWly
-cy4KCnJvY2tjaGlwLHBoeS1jb25maWcKCj4gIFJlcXVpcmVkIG5vZGVzIDogYSBzdWItbm9kZSBp
-cyByZXF1aXJlZCBmb3IgZWFjaCBwb3J0IHRoZSBwaHkgcHJvdmlkZXMuCj4gIAkJIFRoZSBzdWIt
-bm9kZSBuYW1lIGlzIHVzZWQgdG8gaWRlbnRpZnkgZHAgb3IgdXNiMyBwb3J0LAo+ICAJCSBhbmQg
-c2hhbGwgYmUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOgo+IEBAIC01MCw2ICs1MSwxOSBAQCBFeGFt
-cGxlOgo+ICAJCQkgPCZjcnUgU1JTVF9QX1VQSFkwX1RDUEhZPjsKPiAgCQlyZXNldC1uYW1lcyA9
-ICJ1cGh5IiwgInVwaHktcGlwZSIsICJ1cGh5LXRjcGh5IjsKPiAgCj4gKwkJcm9ja2NoaXAscGh5
-X2NvbmZpZyA9PDB4MmEgMHgwMAoKc3BhY2UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBeCgpBbmQgZm9ybWF0IHdpdGggaW5uZXIgPD4gKCI8IDwwIDE+IDwwIDI+IC4uLiA+IikgdG8g
-c2hvdyB0aGUgcGFpcnMuCgo+ICsJCQkweDFmIDB4MTUKPiArCQkJMHgxNCAweDIyCj4gKwkJCTB4
-MDIgMHgyYgo+ICsJCQkweDIxIDB4MDAKPiArCQkJMHgxMiAweDE1Cj4gKwkJCTB4MDIgMHgyMgo+
-ICsJCQkwIDAKPiArCQkJMHgxNSAweDAwCj4gKwkJCTB4MDAgMHgxNQo+ICsJCQkwIDAKPiArCQkJ
-MCAwPjsKClNpbmNlIHlvdSBoYXZlIDwwIDA+IG11bHRpcGxlIHRpbWVzLCBJIHByZXN1bWUgdGhl
-IGluZGV4IGlzIHNpZ25pZmljYW50IAphbmQgdGhlIGxlbmd0aCBpcyBmaXhlZC4gUGxlYXNlIGRl
-ZmluZSB0aGUgaW5kZXggbWVhbmluZyBhbmQgbGVuZ3RoIAphYm92ZS4KCj4gKwo+ICAJCXRjcGh5
-MF9kcDogZHAtcG9ydCB7Cj4gIAkJCSNwaHktY2VsbHMgPSA8MD47Cj4gIAkJfTsKPiBAQCAtNzQs
-NiArODgsMTkgQEAgRXhhbXBsZToKPiAgCQkJIDwmY3J1IFNSU1RfUF9VUEhZMV9UQ1BIWT47Cj4g
-IAkJcmVzZXQtbmFtZXMgPSAidXBoeSIsICJ1cGh5LXBpcGUiLCAidXBoeS10Y3BoeSI7Cj4gIAo+
-ICsJCXJvY2tjaGlwLHBoeV9jb25maWcgPTwweDJhIDB4MDAKPiArCQkJMHgxZiAweDE1Cj4gKwkJ
-CTB4MTQgMHgyMgo+ICsJCQkweDAyIDB4MmIKPiArCQkJMHgyMSAweDAwCj4gKwkJCTB4MTIgMHgx
-NQo+ICsJCQkweDAyIDB4MjIKPiArCQkJMCAwCj4gKwkJCTB4MTUgMHgwMAo+ICsJCQkweDAwIDB4
-MTUKPiArCQkJMCAwCj4gKwkJCTAgMD47Cj4gKwo+ICAJCXRjcGh5MV9kcDogZHAtcG9ydCB7Cj4g
-IAkJCSNwaHktY2VsbHMgPSA8MD47Cj4gIAkJfTsKPiAtLSAKPiAyLjcuNAo+IApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, May 18, 2018 at 10:28:00AM +0100, Rui Miguel Silva wrote:
+> Add bindings documentation for i.MX7 media drivers.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  .../devicetree/bindings/media/imx7.txt        | 125 ++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/imx7.txt b/Documentation/devicetree/bindings/media/imx7.txt
+> new file mode 100644
+> index 000000000000..a26372630377
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx7.txt
+> @@ -0,0 +1,125 @@
+> +Freescale i.MX7 Media Video Device
+> +==================================
+> +
+> +mipi_csi2 node
+> +--------------
+> +
+> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
+> +compatible with previous version of Samsung D-phy.
+> +
+> +Required properties:
+> +
+> +- compatible    : "fsl,imx7-mipi-csi2";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain MIPI CSIS interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
+> +                  entries in the clock property;
+> +- power-domains : a phandle to the power domain, see
+> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- reset-names   : should include following entry "mrst";
+> +- resets        : a list of phandle, should contain reset entry of
+> +                  reset-names;
+> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
+> +	          provides power to MIPI CSIS core;
+> +- bus-width     : maximum number of data lanes supported (SoC specific);
+
+This property is for parallel buses. Either just rely on data-lanes in 
+the graph or this should be implied by the compatible.
+
+> +
+> +Optional properties:
+> +
+> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
+> +		    value when this property is not specified is 166 MHz;
+> +
+> +port node
+> +---------
+> +
+> +- reg		  : (required) can take the values 0 or 1, where 0 is the
+> +                     related sink port and port 1 should be the source one;
+> +
+> +endpoint node
+> +-------------
+> +
+> +- data-lanes    : (required) an array specifying active physical MIPI-CSI2
+> +		    data input lanes and their mapping to logical lanes; the
+> +		    array's content is unused, only its length is meaningful;
+> +
+> +- fsl,csis-hs-settle : (optional) differential receiver (HS-RX) settle time;
+
+units and unit-suffix?
+
+> +
+> +example:
+> +
+> +        mipi_csi: mipi-csi@30750000 {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                compatible = "fsl,imx7-mipi-csi2";
+> +                reg = <0x30750000 0x10000>;
+> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
+
+> +                clock-names = "pclk", "wrap", "phy";
+> +                clock-names = "mipi", "phy";
+
+Err...
+
+> +                clock-frequency = <166000000>;
+> +                power-domains = <&pgc_mipi_phy>;
+> +                phy-supply = <&reg_1p0d>;
+> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+> +                reset-names = "mrst";
+> +                bus-width = <4>;
+> +                fsl,csis-hs-settle = <3>;
+> +                fsl,csis-clk-settle = <0>;
+
+Not documented.
+
+> +
+> +                port@0 {
+> +                        reg = <0>;
+> +
+> +                        mipi_from_sensor: endpoint {
+> +                                remote-endpoint = <&ov2680_to_mipi>;
+> +                                data-lanes = <1>;
+> +                        };
+> +                };
+> +
+> +                port@1 {
+> +                        reg = <1>;
+> +
+> +                        mipi_vc0_to_csi_mux: endpoint {
+> +                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
+> +                        };
+> +                };
+> +        };
+> +
+> +
+> +csi node
+> +--------
+
+I'd prefer these split into 2 files.
+
+> +
+> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
+> +to connect directly to external CMOS image sensors.
+> +
+> +Required properties:
+> +
+> +- compatible    : "fsl,imx7-csi";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain CSI interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
+> +                 entries in the clock property;
+
+Need the OF graph details.
+
+> +
+> +example:
+> +
+> +                csi: csi@30710000 {
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+> +
+> +                        compatible = "fsl,imx7-csi";
+> +                        reg = <0x30710000 0x10000>;
+> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
+> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> +                                        <&clks IMX7D_CLK_DUMMY>;
+> +                        clock-names = "axi", "mclk", "dcic";
+> +
+> +                        port {
+> +                                csi_from_csi_mux: endpoint {
+> +                                        remote-endpoint = <&csi_mux_to_csi>;
+> +                                };
+> +                        };
+> +                };
+> -- 
+> 2.17.0
+> 
