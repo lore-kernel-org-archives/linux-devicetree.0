@@ -1,229 +1,59 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v4] ASoC: ssm2305: Add amplifier driver
-Date: Fri, 18 May 2018 10:52:42 +0200
-Message-ID: <20180518085242.23635-1-m.felsch@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lars@metafoo.de
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@pengutronix.de
+From: Lei YU <mine260309@gmail.com>
+Subject: [PATCH] clk: aspeed: Add 24MHz fixed clock
+Date: Fri, 18 May 2018 16:57:02 +0800
+Message-ID: <1526633822-17138-1-git-send-email-mine260309@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lei YU <mine260309@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The ssm2305 is a simple Class-D audio amplifier. A application can
-turn on/off the device by a gpio. It's also possible to hardwire the
-shutdown pin.
+Add a 24MHz fixed clock.
+This clock will be used for certain devices, e.g. pwm.
 
-Tested on a i.MX6 based custom board.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Lei YU <mine260309@gmail.com>
 ---
+ drivers/clk/clk-aspeed.c                 | 9 ++++++++-
+ include/dt-bindings/clock/aspeed-clock.h | 1 +
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-Notes (changelog):
-    v2:
-    - fix copyright information
-    - rename shutdown gpio and add some more documentation
-    - mark shutdown gpio as required
-    - rm registration information
-    
-    v3:
-    - fix error handling
-    
-    v4:
-    - fix  license header
-
- .../devicetree/bindings/sound/adi,ssm2305.txt |  14 +++
- sound/soc/codecs/Kconfig                      |   7 ++
- sound/soc/codecs/Makefile                     |   2 +
- sound/soc/codecs/ssm2305.c                    | 104 ++++++++++++++++++
- 4 files changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/adi,ssm2305.txt
- create mode 100644 sound/soc/codecs/ssm2305.c
-
-diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2305.txt b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
-new file mode 100644
-index 000000000000..a9c9d83c8a30
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/adi,ssm2305.txt
-@@ -0,0 +1,14 @@
-+Analog Devices SSM2305 Speaker Amplifier
-+========================================
-+
-+Required properties:
-+  - compatible : "adi,ssm2305"
-+  - shutdown-gpios : The gpio connected to the shutdown pin.
-+                     The gpio signal is ACTIVE_LOW.
-+
-+Example:
-+
-+ssm2305: analog-amplifier {
-+	compatible = "adi,ssm2305";
-+	shutdown-gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
-+};
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 9548f63ca531..d81b0cb291a3 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -142,6 +142,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_SI476X if MFD_SI476X_CORE
- 	select SND_SOC_SIRF_AUDIO_CODEC
- 	select SND_SOC_SPDIF
-+	select SND_SOC_SSM2305
- 	select SND_SOC_SSM2518 if I2C
- 	select SND_SOC_SSM2602_SPI if SPI_MASTER
- 	select SND_SOC_SSM2602_I2C if I2C
-@@ -883,6 +884,12 @@ config SND_SOC_SIRF_AUDIO_CODEC
- config SND_SOC_SPDIF
- 	tristate "S/PDIF CODEC"
+diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
+index 5eb50c3..4664088 100644
+--- a/drivers/clk/clk-aspeed.c
++++ b/drivers/clk/clk-aspeed.c
+@@ -14,7 +14,7 @@
  
-+config SND_SOC_SSM2305
-+	tristate "Analog Devices SSM2305 Class-D Amplifier"
-+	help
-+	  Enable support for Analog Devices SSM2305 filterless
-+	  high-efficiency mono Class-D audio power amplifiers.
-+
- config SND_SOC_SSM2518
- 	tristate
+ #include <dt-bindings/clock/aspeed-clock.h>
  
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index e849d1495308..7d75ac8f6716 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -153,6 +153,7 @@ snd-soc-si476x-objs := si476x.o
- snd-soc-sirf-audio-codec-objs := sirf-audio-codec.o
- snd-soc-spdif-tx-objs := spdif_transmitter.o
- snd-soc-spdif-rx-objs := spdif_receiver.o
-+snd-soc-ssm2305-objs := ssm2305.o
- snd-soc-ssm2518-objs := ssm2518.o
- snd-soc-ssm2602-objs := ssm2602.o
- snd-soc-ssm2602-spi-objs := ssm2602-spi.o
-@@ -404,6 +405,7 @@ obj-$(CONFIG_SND_SOC_SIGMADSP_REGMAP)	+= snd-soc-sigmadsp-regmap.o
- obj-$(CONFIG_SND_SOC_SI476X)	+= snd-soc-si476x.o
- obj-$(CONFIG_SND_SOC_SPDIF)	+= snd-soc-spdif-rx.o snd-soc-spdif-tx.o
- obj-$(CONFIG_SND_SOC_SIRF_AUDIO_CODEC) += sirf-audio-codec.o
-+obj-$(CONFIG_SND_SOC_SSM2305)	+= snd-soc-ssm2305.o
- obj-$(CONFIG_SND_SOC_SSM2518)	+= snd-soc-ssm2518.o
- obj-$(CONFIG_SND_SOC_SSM2602)	+= snd-soc-ssm2602.o
- obj-$(CONFIG_SND_SOC_SSM2602_SPI)	+= snd-soc-ssm2602-spi.o
-diff --git a/sound/soc/codecs/ssm2305.c b/sound/soc/codecs/ssm2305.c
-new file mode 100644
-index 000000000000..d17864c3e2a9
---- /dev/null
-+++ b/sound/soc/codecs/ssm2305.c
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Analog Devices SSM2305 Amplifier Driver
-+//
-+// Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+//
+-#define ASPEED_NUM_CLKS		35
++#define ASPEED_NUM_CLKS		36
+ 
+ #define ASPEED_RESET_CTRL	0x04
+ #define ASPEED_CLK_SELECTION	0x08
+@@ -474,6 +474,13 @@ static int aspeed_clk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(hw);
+ 	aspeed_clk_data->hws[ASPEED_CLK_BCLK] = hw;
+ 
++	/* Fixed 24MHz clock */
++	hw = clk_hw_register_fixed_rate(NULL, "fixed-24m", "clkin",
++					0, 24000000);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++	aspeed_clk_data->hws[ASPEED_CLK_24M] = hw;
 +
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <sound/soc.h>
-+
-+#define DRV_NAME "ssm2305"
-+
-+struct ssm2305 {
-+	/* shutdown gpio */
-+	struct gpio_desc *gpiod_shutdown;
-+};
-+
-+static int ssm2305_power_event(struct snd_soc_dapm_widget *w,
-+			       struct snd_kcontrol *kctrl, int event)
-+{
-+	struct snd_soc_component *c = snd_soc_dapm_to_component(w->dapm);
-+	struct ssm2305 *data = snd_soc_component_get_drvdata(c);
-+
-+	gpiod_set_value_cansleep(data->gpiod_shutdown,
-+				 SND_SOC_DAPM_EVENT_ON(event));
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_dapm_widget ssm2305_dapm_widgets[] = {
-+	/* Stereo input/output */
-+	SND_SOC_DAPM_INPUT("L_IN"),
-+	SND_SOC_DAPM_INPUT("R_IN"),
-+	SND_SOC_DAPM_OUTPUT("L_OUT"),
-+	SND_SOC_DAPM_OUTPUT("R_OUT"),
-+
-+	SND_SOC_DAPM_SUPPLY("Power", SND_SOC_NOPM, 0, 0, ssm2305_power_event,
-+			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
-+};
-+
-+static const struct snd_soc_dapm_route ssm2305_dapm_routes[] = {
-+	{ "L_OUT", NULL, "L_IN" },
-+	{ "R_OUT", NULL, "R_IN" },
-+	{ "L_IN", NULL, "Power" },
-+	{ "R_IN", NULL, "Power" },
-+};
-+
-+static const struct snd_soc_component_driver ssm2305_component_driver = {
-+	.dapm_widgets		= ssm2305_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(ssm2305_dapm_widgets),
-+	.dapm_routes		= ssm2305_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(ssm2305_dapm_routes),
-+};
-+
-+static int ssm2305_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ssm2305 *priv;
-+	int err;
-+
-+	/* Allocate the private data */
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	/* Get shutdown gpio */
-+	priv->gpiod_shutdown = devm_gpiod_get(dev, "shutdown",
-+					      GPIOD_OUT_LOW);
-+	if (IS_ERR(priv->gpiod_shutdown)) {
-+		err = PTR_ERR(priv->gpiod_shutdown);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get 'shutdown' gpio: %d\n",
-+				err);
-+		return err;
-+	}
-+
-+	return devm_snd_soc_register_component(dev, &ssm2305_component_driver,
-+					       NULL, 0);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ssm2305_of_match[] = {
-+	{ .compatible = "adi,ssm2305", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ssm2305_of_match);
-+#endif
-+
-+static struct platform_driver ssm2305_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = of_match_ptr(ssm2305_of_match),
-+	},
-+	.probe = ssm2305_probe,
-+};
-+
-+module_platform_driver(ssm2305_driver);
-+
-+MODULE_DESCRIPTION("ASoC SSM2305 amplifier driver");
-+MODULE_AUTHOR("Marco Felsch <m.felsch@pengutronix.de>");
-+MODULE_LICENSE("GPL v2");
+ 	/*
+ 	 * TODO: There are a number of clocks that not included in this driver
+ 	 * as more information is required:
+diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
+index d3558d8..ff29d8e 100644
+--- a/include/dt-bindings/clock/aspeed-clock.h
++++ b/include/dt-bindings/clock/aspeed-clock.h
+@@ -38,6 +38,7 @@
+ #define ASPEED_CLK_MAC			32
+ #define ASPEED_CLK_BCLK			33
+ #define ASPEED_CLK_MPLL			34
++#define ASPEED_CLK_24M			35
+ 
+ #define ASPEED_RESET_XDMA		0
+ #define ASPEED_RESET_MCTP		1
 -- 
-2.17.0
+2.7.4
