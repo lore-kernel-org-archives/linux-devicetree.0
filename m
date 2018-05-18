@@ -1,97 +1,137 @@
-From: David Julian Veenstra <davidjulianveenstra@gmail.com>
-Subject: Re: [PATCH v3 5/9] staging: iio: ad2s1200: Add documentation for
- device tree binding
-Date: Fri, 18 May 2018 15:00:44 +0200
-Message-ID: <874lj5ce4j.fsf@gmail.com>
-References: <cover.1524432236.git.davidjulianveenstra@gmail.com>
- <0aa68c6684c2b45dd0af398c166d6b36c18be1af.1524432236.git.davidjulianveenstra@gmail.com>
- <20180427144820.jfvypgk6tfp2syty@rob-hp-laptop>
- <20180428162758.2a49130c@archlinux>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH V2 2/3] clk: imx7d: correct enet clock CCGR registers
+Date: Fri, 18 May 2018 15:02:26 +0200
+Message-ID: <c42c4274cfd06297d1699c96d3253125@agner.ch>
+References: <1526605266-18464-1-git-send-email-Anson.Huang@nxp.com>
+ <1526605266-18464-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <20180428162758.2a49130c@archlinux>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: devel@driverdev.osuosl.org, Rob Herring <robh@kernel.org>, lars@metafoo.de, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, daniel.baluta@nxp.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526605266-18464-2-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, adriana.reus@nxp.com, rui.silva@linaro.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28, April 2018 15:27, Jonathan Cameron wrote:
+On 18.05.2018 03:01, Anson Huang wrote:
+> Correct enet clock gates as below:
+> 
+> CCGR6: IMX7D_ENET_AXI_ROOT_CLK (enet1 and enet2 bus clocks)
+> CCGR112: IMX7D_ENET1_TIME_ROOT_CLK, IMX7D_ENET1_IPG_ROOT_CLK
+> CCGR113: IMX7D_ENET2_TIME_ROOT_CLK, IMX7D_ENET2_IPG_ROOT_CLK
+> 
+> Just rename unused IMX7D_ENETx_REF_ROOT_CLK for
+> IMX7D_ENETx_IPG_ROOT_CLK instead of adding new clocks.
 
-> On Fri, 27 Apr 2018 09:48:20 -0500
-> Rob Herring <robh@kernel.org> wrote:
->
->> On Mon, Apr 23, 2018 at 12:03:47AM +0200, David Veenstra wrote:
->> > Add documentation for the added device tree bindings.
->> > 
->> > Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
->> > ---
->> > Changes in v3:
->> >  - Documentation is added to Documentation/devicetree/bindings/iio/resolver
->> >    instead of staging directory.
->> >  - Add mention to ad2s1205 device.
->> > 
->> >  .../devicetree/bindings/iio/resolver/ad2s1200.txt        | 16 ++++++++++++++++
->> >  1 file changed, 16 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
->> > 
->> > diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
->> > new file mode 100644
->> > index 000000000000..46b51db38368
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
->> > @@ -0,0 +1,16 @@
->> > +Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
->> > +
->> > +Required properties:
->> > + - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
->> > + - reg : the SPI chip select number of the device
->> > + - sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
->> > + - rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200  
->> 
->> Are these gpios something that would be common to resolvers (whatever 
->> that is) or specific to this chip. For the latter, you need vendor 
->> prefixes.
->
-> They are pretty chip specific I think, so prefixes needed.
->
-> I'd not really registered that gpios should be vendor prefixed for some reason
-> (kind of obvious now you mention it).  We have only a few from a quick grep
-> of the bindings for IIO devices (there are loads elsewhere that aren't and
-> are clearly very much part specific).  Ah well, will try and do better moving
-> forward on this!
+Are you sure that IMX7D_ENETx_REF_ROOT_CLK are not used?
 
-The vendor prefixes are new to me. I'll add it in the next version.
+I understand that the reference manual does not a gate at 0x44e0...
 
-Best regards,
-David Veenstra
+But in a earlier revision of our Colibri iMX7 we actually used clock
+out, and referenced this clock to enable the reference clock (see also:
+https://patchwork.kernel.org/patch/9211371/).
 
->
-> Jonathan
->
->
->> 
->> > +
->> > +Example:
->> > +
->> > +	resolver {  
->> 
->> Missing unit address.
->> 
->> > +		compatible = "adi,ad2s1200";
->> > +		reg = <4>;
->> > +		sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
->> > +		rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
->> > +	};
->> > -- 
->> > 2.16.2
->> >   
+I guess if the gate really does not exist, then we should/would have to
+set IMX7D_ENET1_REF_ROOT_DIV to use the SoC provided ref clock.
+
+--
+Stefan
+
+> 
+> Based on Andy Duan's patch from the NXP kernel tree.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/clk/imx/clk-imx7d.c             | 10 ++++++----
+>  include/dt-bindings/clock/imx7d-clock.h |  4 ++--
+>  2 files changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
+> index 23d5090a..d4936b9 100644
+> --- a/drivers/clk/imx/clk-imx7d.c
+> +++ b/drivers/clk/imx/clk-imx7d.c
+> @@ -26,6 +26,8 @@ static u32 share_count_sai1;
+>  static u32 share_count_sai2;
+>  static u32 share_count_sai3;
+>  static u32 share_count_nand;
+> +static u32 share_count_enet1;
+> +static u32 share_count_enet2;
+>  
+>  static const struct clk_div_table test_div_table[] = {
+>  	{ .val = 3, .div = 1, },
+> @@ -805,6 +807,10 @@ static void __init imx7d_clocks_init(struct
+> device_node *ccm_node)
+>  	clks[IMX7D_MIPI_DSI_ROOT_CLK] = imx_clk_gate4("mipi_dsi_root_clk",
+> "mipi_dsi_post_div", base + 0x4650, 0);
+>  	clks[IMX7D_MIPI_CSI_ROOT_CLK] = imx_clk_gate4("mipi_csi_root_clk",
+> "mipi_csi_post_div", base + 0x4640, 0);
+>  	clks[IMX7D_MIPI_DPHY_ROOT_CLK] = imx_clk_gate4("mipi_dphy_root_clk",
+> "mipi_dphy_post_div", base + 0x4660, 0);
+> +	clks[IMX7D_ENET1_IPG_ROOT_CLK] =
+> imx_clk_gate2_shared2("enet1_ipg_root_clk", "enet_axi_post_div", base
+> + 0x4700, 0, &share_count_enet1);
+> +	clks[IMX7D_ENET1_TIME_ROOT_CLK] =
+> imx_clk_gate2_shared2("enet1_time_root_clk", "enet1_time_post_div",
+> base + 0x4700, 0, &share_count_enet1);
+> +	clks[IMX7D_ENET2_IPG_ROOT_CLK] =
+> imx_clk_gate2_shared2("enet2_ipg_root_clk", "enet_axi_post_div", base
+> + 0x4710, 0, &share_count_enet2);
+> +	clks[IMX7D_ENET2_TIME_ROOT_CLK] =
+> imx_clk_gate2_shared2("enet2_time_root_clk", "enet2_time_post_div",
+> base + 0x4710, 0, &share_count_enet2);
+>  	clks[IMX7D_SAI1_ROOT_CLK] = imx_clk_gate2_shared2("sai1_root_clk",
+> "sai1_post_div", base + 0x48c0, 0, &share_count_sai1);
+>  	clks[IMX7D_SAI1_IPG_CLK]  = imx_clk_gate2_shared2("sai1_ipg_clk", 
+> "ipg_root_clk",  base + 0x48c0, 0, &share_count_sai1);
+>  	clks[IMX7D_SAI2_ROOT_CLK] = imx_clk_gate2_shared2("sai2_root_clk",
+> "sai2_post_div", base + 0x48d0, 0, &share_count_sai2);
+> @@ -812,10 +818,6 @@ static void __init imx7d_clocks_init(struct
+> device_node *ccm_node)
+>  	clks[IMX7D_SAI3_ROOT_CLK] = imx_clk_gate2_shared2("sai3_root_clk",
+> "sai3_post_div", base + 0x48e0, 0, &share_count_sai3);
+>  	clks[IMX7D_SAI3_IPG_CLK]  = imx_clk_gate2_shared2("sai3_ipg_clk", 
+> "ipg_root_clk",  base + 0x48e0, 0, &share_count_sai3);
+>  	clks[IMX7D_SPDIF_ROOT_CLK] = imx_clk_gate4("spdif_root_clk",
+> "spdif_post_div", base + 0x44d0, 0);
+> -	clks[IMX7D_ENET1_REF_ROOT_CLK] = imx_clk_gate4("enet1_ref_root_clk",
+> "enet1_ref_post_div", base + 0x44e0, 0);
+> -	clks[IMX7D_ENET1_TIME_ROOT_CLK] =
+> imx_clk_gate4("enet1_time_root_clk", "enet1_time_post_div", base +
+> 0x44f0, 0);
+> -	clks[IMX7D_ENET2_REF_ROOT_CLK] = imx_clk_gate4("enet2_ref_root_clk",
+> "enet2_ref_post_div", base + 0x4500, 0);
+> -	clks[IMX7D_ENET2_TIME_ROOT_CLK] =
+> imx_clk_gate4("enet2_time_root_clk", "enet2_time_post_div", base +
+> 0x4510, 0);
+>  	clks[IMX7D_EIM_ROOT_CLK] = imx_clk_gate4("eim_root_clk",
+> "eim_post_div", base + 0x4160, 0);
+>  	clks[IMX7D_NAND_RAWNAND_CLK] =
+> imx_clk_gate2_shared2("nand_rawnand_clk", "nand_root_clk", base +
+> 0x4140, 0, &share_count_nand);
+>  	clks[IMX7D_NAND_USDHC_BUS_RAWNAND_CLK] =
+> imx_clk_gate2_shared2("nand_usdhc_rawnand_clk", "nand_usdhc_root_clk",
+> base + 0x4140, 0, &share_count_nand);
+> diff --git a/include/dt-bindings/clock/imx7d-clock.h
+> b/include/dt-bindings/clock/imx7d-clock.h
+> index b2325d3e2..0d67f53 100644
+> --- a/include/dt-bindings/clock/imx7d-clock.h
+> +++ b/include/dt-bindings/clock/imx7d-clock.h
+> @@ -168,7 +168,7 @@
+>  #define IMX7D_SPDIF_ROOT_SRC		155
+>  #define IMX7D_SPDIF_ROOT_CG		156
+>  #define IMX7D_SPDIF_ROOT_DIV		157
+> -#define IMX7D_ENET1_REF_ROOT_CLK	158
+> +#define IMX7D_ENET1_IPG_ROOT_CLK        158
+>  #define IMX7D_ENET1_REF_ROOT_SRC	159
+>  #define IMX7D_ENET1_REF_ROOT_CG		160
+>  #define IMX7D_ENET1_REF_ROOT_DIV	161
+> @@ -176,7 +176,7 @@
+>  #define IMX7D_ENET1_TIME_ROOT_SRC	163
+>  #define IMX7D_ENET1_TIME_ROOT_CG	164
+>  #define IMX7D_ENET1_TIME_ROOT_DIV	165
+> -#define IMX7D_ENET2_REF_ROOT_CLK	166
+> +#define IMX7D_ENET2_IPG_ROOT_CLK        166
+>  #define IMX7D_ENET2_REF_ROOT_SRC	167
+>  #define IMX7D_ENET2_REF_ROOT_CG		168
+>  #define IMX7D_ENET2_REF_ROOT_DIV	169
