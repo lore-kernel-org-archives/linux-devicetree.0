@@ -1,62 +1,162 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 08/12] ARM: dts: imx7s: add multiplexer controls
-Date: Fri, 18 May 2018 11:51:46 -0500
-Message-ID: <20180518165146.GC21131@rob-hp-laptop>
-References: <20180518092806.3829-1-rui.silva@linaro.org>
- <20180518092806.3829-9-rui.silva@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20180518092806.3829-9-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v11 26/27] ARM: davinci: da8xx-dt: switch to device tree clocks
+Date: Fri, 18 May 2018 11:48:28 -0500
+Message-ID: <20180518164829.27052-27-david@lechnology.com>
+References: <20180518164829.27052-1-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180518164829.27052-1-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 18, 2018 at 10:28:02AM +0100, Rui Miguel Silva wrote:
-> The IOMUXC General Purpose Register has bitfield to control video bus
-> multiplexer to control the CSI input between the MIPI-CSI2 and parallel
-> interface. Add that register and mask.
-> 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 67450ad89940..3590dab529f9 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -520,8 +520,14 @@
->  
->  			gpr: iomuxc-gpr@30340000 {
->  				compatible = "fsl,imx7d-iomuxc-gpr",
-> -					"fsl,imx6q-iomuxc-gpr", "syscon";
-> +					"fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
->  				reg = <0x30340000 0x10000>;
-> +
-> +				mux: mux-controller {
-> +					compatible = "mmio-mux";
-> +					#mux-control-cells = <1>;
-> +					mux-reg-masks = <0x14 0x00000010>;
+This removes all of the clock init code from da8xx-dt.c. This includes
+all of the OF_DEV_AUXDATA that was just used for looking up clocks.
 
-If 1 bit control, then #mux-control-cells can be 0.
+Signed-off-by: David Lechner <david@lechnology.com>
+---
 
-> +				};
->  			};
->  
->  			ocotp: ocotp-ctrl@30350000 {
-> -- 
-> 2.17.0
-> 
+v11 changes:
+- none
+
+v10 changes:
+- removed unused header files
+- removed arch/arm/mach-davinci/time.c changes accidentally introduced in v9
+
+v9 changes:
+- changes to arch/arm/mach-davinci/time.c accidentally got squashed into this
+  commit. will drop this later.
+
+v8 changes:
+- none
+
+v7 changes:
+- rebased
+- drop of_platform_default_populate(NULL, NULL, NULL)
+- add change in pm_domain.c
+
+v6 changes:
+- removed misleading statement from commit message
+
+
+ arch/arm/mach-davinci/da8xx-dt.c  | 64 -------------------------------
+ arch/arm/mach-davinci/pm_domain.c |  5 +++
+ 2 files changed, 5 insertions(+), 64 deletions(-)
+
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 088bc5c0318b..beac80ec4037 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -7,79 +7,16 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  */
+-#include <linux/io.h>
+-#include <linux/of_irq.h>
+-#include <linux/of_platform.h>
+-#include <linux/irqdomain.h>
+-#include <linux/platform_data/ti-aemif.h>
+ 
+ #include <asm/mach/arch.h>
+ 
+ #include <mach/common.h>
+-#include "cp_intc.h"
+ #include <mach/da8xx.h>
+ 
+-static struct of_dev_auxdata da850_aemif_auxdata_lookup[] = {
+-	OF_DEV_AUXDATA("ti,davinci-nand", 0x62000000, "davinci-nand.0", NULL),
+-	{}
+-};
+-
+-static struct aemif_platform_data aemif_data = {
+-	.dev_lookup = da850_aemif_auxdata_lookup,
+-};
+-
+-static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
+-	OF_DEV_AUXDATA("ti,davinci-i2c", 0x01c22000, "i2c_davinci.1", NULL),
+-	OF_DEV_AUXDATA("ti,davinci-i2c", 0x01e28000, "i2c_davinci.2", NULL),
+-	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "davinci-wdt", NULL),
+-	OF_DEV_AUXDATA("ti,da830-mmc", 0x01c40000, "da830-mmc.0", NULL),
+-	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f00000, "ehrpwm.0", NULL),
+-	OF_DEV_AUXDATA("ti,da850-ehrpwm", 0x01f02000, "ehrpwm.1", NULL),
+-	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f06000, "ecap.0", NULL),
+-	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f07000, "ecap.1", NULL),
+-	OF_DEV_AUXDATA("ti,da850-ecap", 0x01f08000, "ecap.2", NULL),
+-	OF_DEV_AUXDATA("ti,da830-spi", 0x01c41000, "spi_davinci.0", NULL),
+-	OF_DEV_AUXDATA("ti,da830-spi", 0x01f0e000, "spi_davinci.1", NULL),
+-	OF_DEV_AUXDATA("ns16550a", 0x01c42000, "serial8250.0", NULL),
+-	OF_DEV_AUXDATA("ns16550a", 0x01d0c000, "serial8250.1", NULL),
+-	OF_DEV_AUXDATA("ns16550a", 0x01d0d000, "serial8250.2", NULL),
+-	OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0", NULL),
+-	OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000, "davinci_emac.1",
+-		       NULL),
+-	OF_DEV_AUXDATA("ti,da830-mcasp-audio", 0x01d00000, "davinci-mcasp.0", NULL),
+-	OF_DEV_AUXDATA("ti,da850-aemif", 0x68000000, "ti-aemif", &aemif_data),
+-	OF_DEV_AUXDATA("ti,da850-tilcdc", 0x01e13000, "da8xx_lcdc.0", NULL),
+-	OF_DEV_AUXDATA("ti,da830-ohci", 0x01e25000, "ohci-da8xx", NULL),
+-	OF_DEV_AUXDATA("ti,da830-musb", 0x01e00000, "musb-da8xx", NULL),
+-	OF_DEV_AUXDATA("ti,da830-usb-phy", 0x01c1417c, "da8xx-usb-phy", NULL),
+-	OF_DEV_AUXDATA("ti,da850-ahci", 0x01e18000, "ahci_da850", NULL),
+-	OF_DEV_AUXDATA("ti,da850-vpif", 0x01e17000, "vpif", NULL),
+-	OF_DEV_AUXDATA("ti,da850-dsp", 0x11800000, "davinci-rproc.0", NULL),
+-	{}
+-};
+-
+ #ifdef CONFIG_ARCH_DAVINCI_DA850
+ 
+ static void __init da850_init_machine(void)
+ {
+-	/* All existing boards use 100MHz SATA refclkpn */
+-	static const unsigned long sata_refclkpn = 100 * 1000 * 1000;
+-
+-	int ret;
+-
+-	da850_register_clocks();
+-
+-	ret = da8xx_register_usb_phy_clocks();
+-	if (ret)
+-		pr_warn("%s: USB PHY CLK registration failed: %d\n",
+-			__func__, ret);
+-
+-	ret = da850_register_sata_refclk(sata_refclkpn);
+-	if (ret)
+-		pr_warn("%s: registering SATA REFCLK failed: %d",
+-			__func__, ret);
+-
+-	of_platform_default_populate(NULL, da850_auxdata_lookup, NULL);
+ 	davinci_pm_init();
+ 	pdata_quirks_init();
+ }
+@@ -94,7 +31,6 @@ static const char *const da850_boards_compat[] __initconst = {
+ 
+ DT_MACHINE_START(DA850_DT, "Generic DA850/OMAP-L138/AM18x")
+ 	.map_io		= da850_init,
+-	.init_time	= da850_init_time,
+ 	.init_machine	= da850_init_machine,
+ 	.dt_compat	= da850_boards_compat,
+ 	.init_late	= davinci_init_late,
+diff --git a/arch/arm/mach-davinci/pm_domain.c b/arch/arm/mach-davinci/pm_domain.c
+index 78eac2c0c146..e251fd593bfd 100644
+--- a/arch/arm/mach-davinci/pm_domain.c
++++ b/arch/arm/mach-davinci/pm_domain.c
+@@ -13,6 +13,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/pm_clock.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
+ 
+ static struct dev_pm_domain davinci_pm_domain = {
+ 	.ops = {
+@@ -28,6 +29,10 @@ static struct pm_clk_notifier_block platform_bus_notifier = {
+ 
+ static int __init davinci_pm_runtime_init(void)
+ {
++	if (of_have_populated_dt())
++		return 0;
++
++	/* Use pm_clk as fallback if we're not using genpd. */
+ 	pm_clk_add_notifier(&platform_bus_type, &platform_bus_notifier);
+ 
+ 	return 0;
+-- 
+2.17.0
