@@ -1,403 +1,143 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 4/5] pinctrl: actions: Add gpio support for Actions S900 SoC
-Date: Sat, 19 May 2018 00:43:40 +0300
-Message-ID: <CAHp75VfUqHqrS+VTonMQ=LWMai4WY_8PyH-+57-R9QTymnKDbA@mail.gmail.com>
-References: <20180518023056.7869-1-manivannan.sadhasivam@linaro.org> <20180518023056.7869-5-manivannan.sadhasivam@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 5/5] remoteproc: qcom: Always assert and deassert
+ reset signals in SDM845
+Date: Fri, 18 May 2018 14:47:08 -0700
+Message-ID: <20180518214708.GU14924@minitux>
+References: <20180425150843.26657-1-sibis@codeaurora.org>
+ <20180425150843.26657-6-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180518023056.7869-5-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180425150843.26657-6-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 18, 2018 at 5:30 AM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Add gpio support to pinctrl driver for Actions Semi S900 SoC.
->
+On Wed 25 Apr 08:08 PDT 2018, Sibi Sankar wrote:
 
-LGTM,
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> SDM845 brings a new reset signal ALT_RESET which is a part of the MSS
+> subsystem hence requires some of the active clks to be enabled before
+> assert/deassert
+> 
+> Reset the modem if the BOOT FSM does timeout
+> 
+> Reset assert/deassert sequence vary across SoCs adding reset, adding
+> start/stop helper functions to handle SoC specific reset sequences
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  drivers/pinctrl/actions/Kconfig        |   1 +
->  drivers/pinctrl/actions/pinctrl-owl.c  | 206 +++++++++++++++++++++++++++++++++
->  drivers/pinctrl/actions/pinctrl-owl.h  |  20 ++++
->  drivers/pinctrl/actions/pinctrl-s900.c |  29 ++++-
->  4 files changed, 255 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-> index ede97cdbbc12..490927b4ea76 100644
-> --- a/drivers/pinctrl/actions/Kconfig
-> +++ b/drivers/pinctrl/actions/Kconfig
-> @@ -4,6 +4,7 @@ config PINCTRL_OWL
->         select PINMUX
->         select PINCONF
->         select GENERIC_PINCONF
-> +       select GPIOLIB
->         help
->           Say Y here to enable Actions Semi OWL pinctrl driver
->
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-> index ee090697b1e9..4942e34c8b76 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.c
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.c
-> @@ -11,6 +11,7 @@
->
->  #include <linux/clk.h>
->  #include <linux/err.h>
-> +#include <linux/gpio/driver.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -31,6 +32,7 @@
->   * struct owl_pinctrl - pinctrl state of the device
->   * @dev: device handle
->   * @pctrldev: pinctrl handle
-> + * @chip: gpio chip
->   * @lock: spinlock to protect registers
->   * @soc: reference to soc_data
->   * @base: pinctrl register base address
-> @@ -38,6 +40,7 @@
->  struct owl_pinctrl {
->         struct device *dev;
->         struct pinctrl_dev *pctrldev;
-> +       struct gpio_chip chip;
->         raw_spinlock_t lock;
->         struct clk *clk;
->         const struct owl_pinctrl_soc_data *soc;
-> @@ -536,6 +539,198 @@ static struct pinctrl_desc owl_pinctrl_desc = {
->         .owner = THIS_MODULE,
->  };
->
-> +static const struct owl_gpio_port *
-> +owl_gpio_get_port(struct owl_pinctrl *pctrl, unsigned int *pin)
+>  drivers/remoteproc/qcom_q6v5_pil.c | 81 ++++++++++++++++++++++++++++--
+>  1 file changed, 76 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+[..]
+> @@ -349,6 +356,32 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
+>  	return 0;
+>  }
+>  
+> +static int q6v5_reset_assert(struct q6v5 *qproc)
 > +{
-> +       unsigned int start = 0, i;
-> +
-> +       for (i = 0; i < pctrl->soc->nports; i++) {
-> +               const struct owl_gpio_port *port = &pctrl->soc->ports[i];
-> +
-> +               if (*pin >= start && *pin < start + port->pins) {
-> +                       *pin -= start;
-> +                       return port;
-> +               }
-> +
-> +               start += port->pins;
-> +       }
-> +
-> +       return NULL;
+> +	return reset_control_assert(qproc->mss_restart);
 > +}
 > +
-> +static void owl_gpio_update_reg(void __iomem *base, unsigned int pin, int flag)
+> +static int q6v5_reset_deassert(struct q6v5 *qproc)
 > +{
-> +       u32 val;
-> +
-> +       val = readl_relaxed(base);
-> +
-> +       if (flag)
-> +               val |= BIT(pin);
-> +       else
-> +               val &= ~BIT(pin);
-> +
-> +       writel_relaxed(val, base);
+> +	return reset_control_deassert(qproc->mss_restart);
 > +}
 > +
-> +static int owl_gpio_request(struct gpio_chip *chip, unsigned int offset)
+> +static int q6v5_alt_reset_assert(struct q6v5 *qproc)
 > +{
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +
-> +       port = owl_gpio_get_port(pctrl, &offset);
-> +       if (WARN_ON(port == NULL))
-> +               return -ENODEV;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       /*
-> +        * GPIOs have higher priority over other modules, so either setting
-> +        * them as OUT or IN is sufficient
-> +        */
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +       owl_gpio_update_reg(gpio_base + port->outen, offset, true);
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +       return 0;
+> +	return reset_control_reset(qproc->mss_restart);
 > +}
 > +
-> +static void owl_gpio_free(struct gpio_chip *chip, unsigned int offset)
+> +static int q6v5_alt_reset_deassert(struct q6v5 *qproc)
 > +{
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
+> +	/* Ensure alt reset is written before restart reg */
+> +	writel(1, qproc->rmb_base + RMB_MBA_ALT_RESET);
 > +
-> +       port = owl_gpio_get_port(pctrl, &offset);
-> +       if (WARN_ON(port == NULL))
-> +               return;
+> +	reset_control_reset(qproc->mss_restart);
 > +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +       /* disable gpio output */
-> +       owl_gpio_update_reg(gpio_base + port->outen, offset, false);
-> +
-> +       /* disable gpio input */
-> +       owl_gpio_update_reg(gpio_base + port->inen, offset, false);
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> +	writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
+> +	return 0;
 > +}
 > +
-> +static int owl_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       port = owl_gpio_get_port(pctrl, &offset);
-> +       if (WARN_ON(port == NULL))
-> +               return -ENODEV;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +       val = readl_relaxed(gpio_base + port->dat);
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +       return !!(val & BIT(offset));
-> +}
-> +
-> +static void owl_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> +{
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +
-> +       port = owl_gpio_get_port(pctrl, &offset);
-> +       if (WARN_ON(port == NULL))
-> +               return;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +       owl_gpio_update_reg(gpio_base + port->dat, offset, value);
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +}
-> +
-> +static int owl_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +
-> +       port = owl_gpio_get_port(pctrl, &offset);
-> +       if (WARN_ON(port == NULL))
-> +               return -ENODEV;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +       owl_gpio_update_reg(gpio_base + port->outen, offset, false);
-> +       owl_gpio_update_reg(gpio_base + port->inen, offset, true);
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static int owl_gpio_direction_output(struct gpio_chip *chip,
-> +                               unsigned int offset, int value)
-> +{
-> +       struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +
-> +       port = owl_gpio_get_port(pctrl, &offset);
-> +       if (WARN_ON(port == NULL))
-> +               return -ENODEV;
-> +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +       owl_gpio_update_reg(gpio_base + port->inen, offset, false);
-> +       owl_gpio_update_reg(gpio_base + port->outen, offset, true);
-> +       owl_gpio_update_reg(gpio_base + port->dat, offset, value);
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static int owl_gpio_init(struct owl_pinctrl *pctrl)
-> +{
-> +       struct gpio_chip *chip;
-> +       int ret;
-> +
-> +       chip = &pctrl->chip;
-> +       chip->base = -1;
-> +       chip->ngpio = pctrl->soc->ngpios;
-> +       chip->label = dev_name(pctrl->dev);
-> +       chip->parent = pctrl->dev;
-> +       chip->owner = THIS_MODULE;
-> +       chip->of_node = pctrl->dev->of_node;
-> +
-> +       ret = gpiochip_add_data(&pctrl->chip, pctrl);
-> +       if (ret) {
-> +               dev_err(pctrl->dev, "failed to register gpiochip\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
-> +                                                       0, 0, chip->ngpio);
-> +       if (ret) {
-> +               dev_err(pctrl->dev, "failed to add pin range\n");
-> +               gpiochip_remove(&pctrl->chip);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  int owl_pinctrl_probe(struct platform_device *pdev,
->                                 struct owl_pinctrl_soc_data *soc_data)
+
+Rather than having these four functions and scattering jumps to some
+function pointer in the code I think it will be shorter and cleaner to
+just have the q6v5_reset_{asert,deassert}() functions and in there check
+if has_alt_reset and take appropriate action.
+
+>  static int q6v5_rmb_pbl_wait(struct q6v5 *qproc, int ms)
 >  {
-> @@ -571,6 +766,13 @@ int owl_pinctrl_probe(struct platform_device *pdev,
->         owl_pinctrl_desc.pins = soc_data->pins;
->         owl_pinctrl_desc.npins = soc_data->npins;
->
-> +       pctrl->chip.direction_input  = owl_gpio_direction_input;
-> +       pctrl->chip.direction_output = owl_gpio_direction_output;
-> +       pctrl->chip.get = owl_gpio_get;
-> +       pctrl->chip.set = owl_gpio_set;
-> +       pctrl->chip.request = owl_gpio_request;
-> +       pctrl->chip.free = owl_gpio_free;
-> +
->         pctrl->soc = soc_data;
->         pctrl->dev = &pdev->dev;
->
-> @@ -581,6 +783,10 @@ int owl_pinctrl_probe(struct platform_device *pdev,
->                 return PTR_ERR(pctrl->pctrldev);
->         }
->
-> +       ret = owl_gpio_init(pctrl);
-> +       if (ret)
-> +               return ret;
-> +
->         platform_set_drvdata(pdev, pctrl);
->
->         return 0;
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
-> index 448f81a6db3b..74342378937c 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.h
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.h
-> @@ -114,6 +114,22 @@ struct owl_pinmux_func {
->         unsigned int ngroups;
->  };
->
-> +/**
-> + * struct owl_gpio_port - Actions GPIO port info
-> + * @offset: offset of the GPIO port.
-> + * @pins: number of pins belongs to the GPIO port.
-> + * @outen: offset of the output enable register.
-> + * @inen: offset of the input enable register.
-> + * @dat: offset of the data register.
-> + */
-> +struct owl_gpio_port {
-> +       unsigned int offset;
-> +       unsigned int pins;
-> +       unsigned int outen;
-> +       unsigned int inen;
-> +       unsigned int dat;
-> +};
-> +
->  /**
->   * struct owl_pinctrl_soc_data - Actions pin controller driver configuration
->   * @pins: array describing all pins of the pin controller.
-> @@ -124,6 +140,8 @@ struct owl_pinmux_func {
->   * @ngroups: number of entries in @groups.
->   * @padinfo: array describing the pad info of this SoC.
->   * @ngpios: number of pingroups the driver should expose as GPIOs.
-> + * @port: array describing all GPIO ports of this SoC.
-> + * @nports: number of GPIO ports in this SoC.
->   */
->  struct owl_pinctrl_soc_data {
->         const struct pinctrl_pin_desc *pins;
-> @@ -134,6 +152,8 @@ struct owl_pinctrl_soc_data {
->         unsigned int ngroups;
->         const struct owl_padinfo *padinfo;
->         unsigned int ngpios;
-> +       const struct owl_gpio_port *ports;
-> +       unsigned int nports;
->  };
->
->  int owl_pinctrl_probe(struct platform_device *pdev,
-> diff --git a/drivers/pinctrl/actions/pinctrl-s900.c b/drivers/pinctrl/actions/pinctrl-s900.c
-> index 08d93f8fc086..5503c7945764 100644
-> --- a/drivers/pinctrl/actions/pinctrl-s900.c
-> +++ b/drivers/pinctrl/actions/pinctrl-s900.c
-> @@ -33,6 +33,13 @@
->  #define PAD_SR1                        (0x0274)
->  #define PAD_SR2                        (0x0278)
->
-> +#define OWL_GPIO_PORT_A                0
-> +#define OWL_GPIO_PORT_B                1
-> +#define OWL_GPIO_PORT_C                2
-> +#define OWL_GPIO_PORT_D                3
-> +#define OWL_GPIO_PORT_E                4
-> +#define OWL_GPIO_PORT_F                5
-> +
->  #define _GPIOA(offset)         (offset)
->  #define _GPIOB(offset)         (32 + (offset))
->  #define _GPIOC(offset)         (64 + (offset))
-> @@ -1814,6 +1821,24 @@ static struct owl_padinfo s900_padinfo[NUM_PADS] = {
->         [SGPIO3] = PAD_INFO_PULLCTL_ST(SGPIO3)
->  };
->
-> +#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat)  \
-> +       [OWL_GPIO_PORT_##port] = {                              \
-> +               .offset = base,                                 \
-> +               .pins = count,                                  \
-> +               .outen = _outen,                                \
-> +               .inen = _inen,                                  \
-> +               .dat = _dat,                                    \
-> +       }
-> +
-> +static const struct owl_gpio_port s900_gpio_ports[] = {
-> +       OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8),
-> +       OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8),
-> +       OWL_GPIO_PORT(C, 0x0018, 12, 0x0, 0x4, 0x8),
-> +       OWL_GPIO_PORT(D, 0x0024, 30, 0x0, 0x4, 0x8),
-> +       OWL_GPIO_PORT(E, 0x0030, 32, 0x0, 0x4, 0x8),
-> +       OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8)
-> +};
-> +
->  static struct owl_pinctrl_soc_data s900_pinctrl_data = {
->         .padinfo = s900_padinfo,
->         .pins = (const struct pinctrl_pin_desc *)s900_pads,
-> @@ -1822,7 +1847,9 @@ static struct owl_pinctrl_soc_data s900_pinctrl_data = {
->         .nfunctions = ARRAY_SIZE(s900_functions),
->         .groups = s900_groups,
->         .ngroups = ARRAY_SIZE(s900_groups),
-> -       .ngpios = NUM_GPIOS
-> +       .ngpios = NUM_GPIOS,
-> +       .ports = s900_gpio_ports,
-> +       .nports = ARRAY_SIZE(s900_gpio_ports)
->  };
->
->  static int s900_pinctrl_probe(struct platform_device *pdev)
-> --
-> 2.14.1
->
+>  	unsigned long timeout;
+> @@ -424,6 +457,8 @@ static int q6v5proc_reset(struct q6v5 *qproc)
+>  				val, (val & BIT(0)) != 0, 10, BOOT_FSM_TIMEOUT);
+>  		if (ret) {
+>  			dev_err(qproc->dev, "Boot FSM failed to complete.\n");
+> +			/* Reset the modem so that boot FSM is in reset state */
+> +			qproc->reset_deassert(qproc);
 
 
+A thing like this typically should go into it's own patch, to keep a
+clear record of why it was changed, but as this is simply amending the
+previous patch it indicates that that one wasn't complete.
 
--- 
-With Best Regards,
-Andy Shevchenko
+So if you reorder the two patches you can just put this directly into
+the sdm845 patch, making it "complete".
+
+(This also means that I want to merge the handover vs ready interrupt
+patch before that one, so please include it in the next revision of the
+series).
+
+>  			return ret;
+>  		}
+>  
+> @@ -792,12 +827,20 @@ static int q6v5_start(struct rproc *rproc)
+>  		dev_err(qproc->dev, "failed to enable supplies\n");
+>  		goto disable_proxy_clk;
+>  	}
+> -	ret = reset_control_deassert(qproc->mss_restart);
+> +
+> +	ret = q6v5_clk_enable(qproc->dev, qproc->reset_clks,
+> +			      qproc->reset_clk_count);
+
+Remind me, why can't you always enable the active clock before
+deasserting reset? That way we wouldn't have to split out the iface
+clock handling to be just slightly longer than the active clocks.
+
+>  	if (ret) {
+> -		dev_err(qproc->dev, "failed to deassert mss restart\n");
+> +		dev_err(qproc->dev, "failed to enable reset clocks\n");
+>  		goto disable_vdd;
+>  	}
+>  
+> +	ret = qproc->reset_deassert(qproc);
+> +	if (ret) {
+> +		dev_err(qproc->dev, "failed to deassert mss restart\n");
+> +		goto disable_reset_clks;
+> +	}
+> +
+[..]
+> @@ -1335,8 +1399,11 @@ static const struct rproc_hexagon_res sdm845_mss = {
+>  			"prng",
+>  			NULL
+>  	},
+> -	.active_clk_names = (char*[]){
+> +	.reset_clk_names = (char*[]){
+>  			"iface",
+> +			NULL
+> +	},
+> +	.active_clk_names = (char*[]){
+
+Again, if you reorder your patches to first add the support for
+alt_reset and then introduce sdm845 you don't need to modify the
+previous patch directly to make it work.
+
+>  			"bus",
+>  			"mem",
+>  			"gpll0_mss",
+
+Regards,
+Bjorn
