@@ -1,16 +1,15 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v4 06/12] media: dt-bindings: add bindings for i.MX7 media
- driver
-Date: Fri, 18 May 2018 09:27:58 +0100
-Message-ID: <m3tvr5xt9t.fsf@linaro.org>
+Subject: Re: [PATCH v4 03/12] clk: imx7d: fix mipi dphy div parent
+Date: Fri, 18 May 2018 09:30:12 +0100
+Message-ID: <m3sh6pxt63.fsf@linaro.org>
 References: <20180517125033.18050-1-rui.silva@linaro.org>
- <20180517125033.18050-7-rui.silva@linaro.org>
- <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
+ <20180517125033.18050-4-rui.silva@linaro.org>
+ <152658031035.210890.12212209931570500982@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
+In-reply-to: <152658031035.210890.12212209931570500982@swboyd.mtv.corp.google.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -20,153 +19,66 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-Thanks for the review.
-On Fri 18 May 2018 at 06:58, Sakari Ailus wrote:
-> Hi Rui,
->
-> On Thu, May 17, 2018 at 01:50:27PM +0100, Rui Miguel Silva 
-> wrote:
->> Add bindings documentation for i.MX7 media drivers.
+Hi Stephen,
+On Thu 17 May 2018 at 18:05, Stephen Boyd wrote:
+> Quoting Rui Miguel Silva (2018-05-17 05:50:24)
+>> Fix the mipi dphy root divider to mipi_dphy_pre_div, this would 
+>> remove a orphan
+>> clock and set the correct parent.
 >> 
+>> before:
+>> cat clk_orphan_summary
+>>                                  enable  prepare  protect
+>>    clock                          count    count    count 
+>>    rate   accuracy   phase
+>> ----------------------------------------------------------------------------------------
+>>  mipi_dphy_post_div                   1        1        0 
+>>  0          0 0
+>>     mipi_dphy_root_clk                1        1        0 
+>>     0          0 0
+>> 
+>> cat clk_dump | grep mipi_dphy
+>> mipi_dphy_post_div                    1        1        0 
+>> 0          0 0
+>>     mipi_dphy_root_clk                1        1        0 
+>>     0          0 0
+>> 
+>> after:
+>> cat clk_dump | grep mipi_dphy
+>>    mipi_dphy_src                     1        1        0 
+>>    24000000          0 0
+>>        mipi_dphy_cg                  1        1        0 
+>>        24000000          0 0
+>>           mipi_dphy_pre_div          1        1        0 
+>>           24000000          0 0
+>>              mipi_dphy_post_div      1        1        0 
+>>              24000000          0 0
+>>                 mipi_dphy_root_clk   1        1        0 
+>>                 24000000          0 0
+>> 
+>> Fixes: 8f6d8094b215 ("ARM: imx: add imx7d clk tree support")
+>> 
+>> Cc: linux-clk@vger.kernel.org
+>> Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
 >> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 >> ---
->>  .../devicetree/bindings/media/imx7.txt        | 145 
->>  ++++++++++++++++++
->>  1 file changed, 145 insertions(+)
->>  create mode 100644 
->>  Documentation/devicetree/bindings/media/imx7.txt
->> 
->> diff --git a/Documentation/devicetree/bindings/media/imx7.txt 
->> b/Documentation/devicetree/bindings/media/imx7.txt
->> new file mode 100644
->> index 000000000000..161cff8e6442
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/imx7.txt
->> @@ -0,0 +1,145 @@
->> +Freescale i.MX7 Media Video Device
->> +==================================
->> +
->> +Video Media Controller node
->> +---------------------------
 >
-> Note that DT bindings document the hardware, they are as such 
-> not Linux
-> dependent.
+> I only get two patches out of the 12 and I don't get a cover 
+> letter.
+> Did you want me to pick up these clk patches into clk-next? 
+> Where are
+> the other patches? Can you cc lkml on all your kernel emails so 
+> I can
+> easily find them?
 
-This was removed in this series, however I removed it in the wrong 
-patch,
-If you see patch 11/12 you will see this being removed. I will fix 
-this
-in v5. Thanks for notice it.
-
-> 
->> +
->> +This is the media controller node for video capture support. 
->> It is a
->> +virtual device that lists the camera serial interface nodes 
->> that the
->> +media device will control.
->
-> Ditto.
->
->> +
->> +Required properties:
->> +- compatible : "fsl,imx7-capture-subsystem";
->> +- ports      : Should contain a list of phandles pointing to 
->> camera
->> +		sensor interface port of CSI
->> +
->> +example:
->> +
->> +capture-subsystem {
->
-> What's the purpose of this node, if you only refer to another 
-> device? This
-> one rather does not look like a real device at all.
->
->> +	compatible = "fsl,imx7-capture-subsystem";
->> +	ports = <&csi>;
->> +};
->> +
->> +
->> +mipi_csi2 node
->> +--------------
->> +
->> +This is the device node for the MIPI CSI-2 receiver core in 
->> i.MX7 SoC. It is
->> +compatible with previous version of Samsung D-phy.
->> +
->> +Required properties:
->> +
->> +- compatible    : "fsl,imx7-mipi-csi2";
->> +- reg           : base address and length of the register set 
->> for the device;
->> +- interrupts    : should contain MIPI CSIS interrupt;
->> +- clocks        : list of clock specifiers, see
->> + 
->> Documentation/devicetree/bindings/clock/clock-bindings.txt for 
->> details;
->> +- clock-names   : must contain "pclk", "wrap" and "phy" 
->> entries, matching
->> +                  entries in the clock property;
->> +- power-domains : a phandle to the power domain, see
->> + 
->> Documentation/devicetree/bindings/power/power_domain.txt for 
->> details.
->> +- reset-names   : should include following entry "mrst";
->> +- resets        : a list of phandle, should contain reset 
->> entry of
->> +                  reset-names;
->> +- phy-supply    : from the generic phy bindings, a phandle to 
->> a regulator that
->> +	          provides power to MIPI CSIS core;
->> +- bus-width     : maximum number of data lanes supported (SoC 
->> specific);
->> +
->> +Optional properties:
->> +
->> +- clock-frequency : The IP's main (system bus) clock frequency 
->> in Hz, default
->> +		    value when this property is not specified is 
->> 166 MHz;
->> +
->> +port node
->> +---------
->> +
->> +- reg		  : (required) can take the values 0 or 1, 
->> where 0 is the
->> +                     related sink port and port 1 should be 
->> the source one;
->> +
->> +endpoint node
->> +-------------
->> +
->> +- data-lanes    : (required) an array specifying active 
->> physical MIPI-CSI2
->> +		    data input lanes and their mapping to logical 
->> lanes; the
->> +		    array's content is unused, only its length is 
->> meaningful;
->> +
->> +- fsl,csis-hs-settle : (optional) differential receiver 
->> (HS-RX) settle time;
->
-> Could you calculate this, as other drivers do? It probably 
-> changes
-> depending on the device runtime configuration.
-
-The only reference to possible values to this parameter is given 
-by
-table in [0], can you point me out the formula for imx7 in the
-documentation?
+Yea, sorry, You are right, I will cc all patches to the lists. v5 
+is on
+the way and I will do that.
 
 ---
 Cheers,
 	Rui
-
-[0] https://community.nxp.com/thread/463777
