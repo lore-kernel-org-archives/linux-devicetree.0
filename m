@@ -1,62 +1,111 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v5 2/4] Documentation: bindings: add phy_config for
- Rockchip USB Type-C PHY
-Date: Fri, 18 May 2018 18:24:00 +0200
-Message-ID: <2417091.oYeT3lua5n@phil>
-References: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
- <1526548680-2552-2-git-send-email-hl@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 6/9] dt-bindings: counter: Document stm32 quadrature
+ encoder
+Date: Fri, 18 May 2018 11:28:15 -0500
+Message-ID: <20180518162815.GA24966@rob-hp-laptop>
+References: <cover.1526487615.git.vilhelm.gray@gmail.com>
+ <ccdbbfb2833d274b6bfa234aada57e68d9793dd5.1526487615.git.vilhelm.gray@gmail.com>
+ <CAL_Jsq+a4s=5N6wUWifoHWQoornbDBY-UY2xrwj1kggNH4Q5pQ@mail.gmail.com>
+ <CA+M3ks4vjE5JMmLjjPnf6ffD9QYSUmSyrpO+yxADT_8WqAA3Tg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1526548680-2552-2-git-send-email-hl@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lin Huang <hl@rock-chips.com>
-Cc: devicetree@vger.kernel.org, airlied@linux.ie, briannorris@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, zyw@rock-chips.com, daniel.vetter@intel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+M3ks4vjE5JMmLjjPnf6ffD9QYSUmSyrpO+yxADT_8WqAA3Tg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgMTcuIE1haSAyMDE4LCAxMToxNzo1OCBDRVNUIHNjaHJpZWIgTGluIEh1
-YW5nOgo+IElmIHdhbnQgdG8gZG8gdHJhaW5pbmcgb3V0c2lkZSBEUCBGaXJtd2FyZSwgbmVlZCBw
-aHkgdm9sdGFnZSBzd2luZwo+IGFuZCBwcmVfZW1waGFzaXMgdmFsdWUuCj4gCj4gU2lnbmVkLW9m
-Zi1ieTogTGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIGluIHYy
-Ogo+IC0gTm9uZSAKPiBDaGFuZ2VzIGluIHYzOgo+IC0gbW9kaWZ5IHByb3BlcnR5IGRlc2NyaXB0
-aW9uIGFuZCBhZGQgdGhpcyBwcm9wZXJ0eSB0byBFeGFtcGxlCj4gQ2hhbmdlIGluIHY0Ogo+IC0g
-Tm9uZQo+IENoYW5nZSBpbiB2NToKPiAtIE5vbmUKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy50eHQgfCAyOSArKysrKysrKysrKysrKysrKysrKyst
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXJv
-Y2tjaGlwLXR5cGVjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkv
-cGh5LXJvY2tjaGlwLXR5cGVjLnR4dAo+IGluZGV4IDk2MGRhN2YuLmFmMjk4ZjIgMTAwNjQ0Cj4g
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAt
-dHlwZWMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9w
-aHktcm9ja2NoaXAtdHlwZWMudHh0Cj4gQEAgLTE3LDcgKzE3LDggQEAgUmVxdWlyZWQgcHJvcGVy
-dGllczoKPiAgCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gICAtIGV4dGNvbiA6IGV4dGNvbiBz
-cGVjaWZpZXIgZm9yIHRoZSBQb3dlciBEZWxpdmVyeQo+IC0KPiArIC0gcm9ja2NoaXAscGh5X2Nv
-bmZpZyA6IEEgbGlzdCBvZiB2b2x0YWdlIHN3aW5nKG12KSBhbmQgcHJlLWVtcGhhc2lzCj4gKwkJ
-CShkQikgcGFpcnMuCgptdiAtPiBtViBJJ2QgdGhpbmsuCgpUaGlzIG5lZWRzIGEgYml0IG1vcmUg
-ZXhwbGFuYXRpb24gcGxlYXNlLiBFc3BlY2lhbGx5IGFzIHRoZSBtdWx0aXBsZSAiMCAwIgpsaW5l
-cyBpbiB0aGUgZXhhbXBsZXMgc3VnZ2VzdCBzb21lIGRlZXBlciBvcmRlcmluZyByZXF1aXJlbWVu
-dHMuCkxpa2UgdGhlIDMgYmxvY2tzIG9mIDQgZW50cmllcyBhcyBjYW4gYmUgc2VlbiBpbiB0aGUg
-ZGVmYXVsdCBjb25maWcgaW4KcGF0Y2gzLiBUaGUgYmluZGluZyBzaG91bGQgZGVmaW5pdGx5IGRl
-c2NyaWJlIHdoYXQgdGhlc2UgYXJlLgoKCj4gIFJlcXVpcmVkIG5vZGVzIDogYSBzdWItbm9kZSBp
-cyByZXF1aXJlZCBmb3IgZWFjaCBwb3J0IHRoZSBwaHkgcHJvdmlkZXMuCj4gIAkJIFRoZSBzdWIt
-bm9kZSBuYW1lIGlzIHVzZWQgdG8gaWRlbnRpZnkgZHAgb3IgdXNiMyBwb3J0LAo+ICAJCSBhbmQg
-c2hhbGwgYmUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOgo+IEBAIC01MCw2ICs1MSwxOSBAQCBFeGFt
-cGxlOgo+ICAJCQkgPCZjcnUgU1JTVF9QX1VQSFkwX1RDUEhZPjsKPiAgCQlyZXNldC1uYW1lcyA9
-ICJ1cGh5IiwgInVwaHktcGlwZSIsICJ1cGh5LXRjcGh5IjsKPiAgCj4gKwkJcm9ja2NoaXAscGh5
-X2NvbmZpZyA9PDB4MmEgMHgwMAo+ICsJCQkweDFmIDB4MTUKPiArCQkJMHgxNCAweDIyCj4gKwkJ
-CTB4MDIgMHgyYgo+ICsJCQkweDIxIDB4MDAKPiArCQkJMHgxMiAweDE1Cj4gKwkJCTB4MDIgMHgy
-Mgo+ICsJCQkwIDAKPiArCQkJMHgxNSAweDAwCj4gKwkJCTB4MDAgMHgxNQo+ICsJCQkwIDAKPiAr
-CQkJMCAwPjsKCkkgZG9uJ3QgdGhpbmsgdGhleSBzaG91bGQgYmUgaGV4LXZhbHVlcywgYXMgYWNj
-b3JkaW5nIHRvIHRoZSBkb2MgYWJvdmUKdGhlc2UgYXJlIHZhbHVlcyBpbiBtViBhbmQgZEIgLgoK
-CkhlaWtvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, May 17, 2018 at 08:59:40PM +0200, Benjamin Gaignard wrote:
+> 2018-05-17 18:23 GMT+02:00 Rob Herring <robh+dt@kernel.org>:
+> > On Wed, May 16, 2018 at 12:51 PM, William Breathitt Gray
+> > <vilhelm.gray@gmail.com> wrote:
+> >> From: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >
+> > v6? Where's v1-v5?
+> >
+> >> Add bindings for STM32 Timer quadrature encoder.
+> >> It is a sub-node of STM32 Timer which implement the
+> >> counter part of the hardware.
+> >>
+> >> Cc: Rob Herring <robh+dt@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> >> ---
+> >>  .../bindings/counter/stm32-timer-cnt.txt      | 26 +++++++++++++++++++
+> >>  .../devicetree/bindings/mfd/stm32-timers.txt  |  7 +++++
+> >>  2 files changed, 33 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> >> new file mode 100644
+> >> index 000000000000..377728128bef
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> >> @@ -0,0 +1,26 @@
+> >> +STMicroelectronics STM32 Timer quadrature encoder
+> >> +
+> >> +STM32 Timer provides quadrature encoder counter mode to detect
+> >
+> > 'mode' does not sound like a sub-block of the timers block.
+> 
+> quadrature encoding is one of the counting modes of this hardware
+> block which is enable to count on other signals/triggers
+
+You don't need a child node and compatible to set a mode.
+
+> >> +angular position and direction of rotary elements,
+> >> +from IN1 and IN2 input signals.
+> >> +
+> >> +Must be a sub-node of an STM32 Timer device tree node.
+> >> +See ../mfd/stm32-timers.txt for details about the parent node.
+> >> +
+> >> +Required properties:
+> >> +- compatible:          Must be "st,stm32-timer-counter".
+> >> +- pinctrl-names:       Set to "default".
+> >> +- pinctrl-0:           List of phandles pointing to pin configuration nodes,
+> >> +                       to set IN1/IN2 pins in mode of operation for Low-Power
+> >> +                       Timer input on external pin.
+> >> +
+> >> +Example:
+> >> +       timers@40010000  {
+> >> +               compatible = "st,stm32-timers";
+> >> +               ...
+> >> +               counter {
+> >> +                       compatible = "st,stm32-timer-counter";
+> >
+> > Is there only 1? How is the counter addressed?
+> 
+> Yes there is only one counter per hardware block.
+> Counter is addressed like the two others sub-nodes and the details
+> about parent mode are describe in stm32-timers.txt
+> Should I add them here too ? so example will be like that:
+
+No, you should drop the child node and add pinctrl to the parent.
+
+Any other functions this block has that you plan on adding? Please make 
+bindings as complete as possible, not what you currently have drivers 
+for.
+
+> timers@40010000  {
+>   #address-cells = <1>;
+>   #size-cells = <0>;
+>   compatible = "st,stm32-timers";
+>   reg = <0x40010000 0x400>;
+>   clocks = <&rcc 0 160>;
+>   clock-names = "int";
+>   counter {
+>     compatible = "st,stm32-timer-counter";
+>     pinctrl-names = "default";
+>     pinctrl-0 = <&tim1_in_pins>;
+>     };
+>  };
+> 
+> Benjamin
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
