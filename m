@@ -1,88 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 5/9] PM / Domains: dt: Allow power-domain property to be a
- list of phandles
-Date: Fri, 18 May 2018 12:46:58 +0200
-Message-ID: <CAMuHMdUTF-8_V6kMAE0THNES+yv2HhZGJA3f41Yfpd1Bs6txHg@mail.gmail.com>
-References: <1526639490-12167-1-git-send-email-ulf.hansson@linaro.org> <1526639490-12167-6-git-send-email-ulf.hansson@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 0/3] Add R8A77980 GEther support
+Date: Fri, 18 May 2018 14:00:57 +0300
+Message-ID: <dfae27c2-0658-cdd5-a4f3-ff373e34fefd@cogentembedded.com>
+References: <087c91a3-a451-6de7-5e0f-a835f8cc98f1@cogentembedded.com>
+ <20180517.145357.2037804925428844092.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526639490-12167-6-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Hunter <jonathanh@nvidia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Todor Tomov <todor.tomov@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180517.145357.2037804925428844092.davem@davemloft.net>
+Content-Language: en-MW
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+On 05/17/2018 09:53 PM, David Miller wrote:
 
-On Fri, May 18, 2018 at 12:31 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> To be able to describe topologies where devices are partitioned across
-> multiple power domains, let's extend the power-domain property to allow
-> being a list of phandles.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Here's a set of 3 patches against DaveM's 'net-next.git' repo. They (gradually)
+>> add R8A77980 GEther support to the 'sh_eth' driver, starting with couple new
+>> register bits/values introduced with this chip, and ending with adding a new
+>> 'struct sh_eth_cpu_data' instance connected to the new DT "compatible" prop
+>> value...
+>>
+>> [1/1] sh_eth: add RGMII support
+>> [2/3] sh_eth: add EDMR.NBST support
+>> [3/3] sh_eth: add R8A77980 support
+> 
+> Waiting for a respin of this, correcting the RGMII check in patch #1.
 
-Thanks for your patch!
+   Respun yesterday, will repost RSN. :-)
 
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -111,8 +111,9 @@ Example 3:
->  ==PM domain consumers==
->
->  Required properties:
-> - - power-domains : A phandle and PM domain specifier as defined by bindings of
-> -                   the power controller specified by phandle.
-> + - power-domains : A phandle and PM domain specifier, or a list of phandles, as
-
-A list of PM domain specifiers?
-
-(A PM domain specifier consists of a phandle, and zero or more indices)
-
-> +                  defined by bindings of the power controller specified by
-> +                  phandle.
->
->  Example:
->
-> @@ -122,9 +123,16 @@ Example:
->                 power-domains = <&power 0>;
->         };
->
-> -The node above defines a typical PM domain consumer device, which is located
-> -inside a PM domain with index 0 of a power controller represented by a node
-> -with the label "power".
-> +       leaky-device@12350000 {
-
-I know it's just an example, but this uses the same unit-address and
-reg property
-as the device node above.
-
-There's a similar issue with the two other examples below, but they
-use different
-node names (leaky-device0 and leaky-device1).
-
-> +               compatible = "foo,i-leak-current";
-> +               reg = <0x12350000 0x1000>;
-> +               power-domains = <&power0 0>, <&power1 0> ;
-> +       };
-> +
-> +The first example above defines a typical PM domain consumer device, which is
-> +located inside a PM domain with index 0 of a power controller represented by a
-> +node with the label "power". In the second example the consumer device are
-> +partitioned across two PM domains.
->
->  Optional properties:
->  - required-opps: This contains phandle to an OPP node in another device's OPP
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+MBR, Sergei
