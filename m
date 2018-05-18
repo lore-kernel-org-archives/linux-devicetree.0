@@ -1,103 +1,89 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v5 4/4] drm/rockchip: support dp training outside dp
- firmware
-Date: Fri, 18 May 2018 18:35:49 +0200
-Message-ID: <5918781.MvJIhHKAbg@phil>
-References: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
- <11928313.3EhRqhFFHB@phil> <20180518153656.GK3373@art_vandelay>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180518153656.GK3373@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: devicetree@vger.kernel.org, hl <hl@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Chris Zhong <zyw@rock-chips.com>, Daniel Vetter <daniel.vetter@intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 06/11] dts: bindings: Restrict coresight tmc-etr scatter-gather mode
+Date: Fri, 18 May 2018 17:39:22 +0100
+Message-ID: <1526661567-4578-7-git-send-email-suzuki.poulose@arm.com>
+References: <1526661567-4578-1-git-send-email-suzuki.poulose@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526661567-4578-1-git-send-email-suzuki.poulose@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, sudeep.holla@arm.com, frowand.list@gmail.com, coresight@lists.linaro.org, mark.rutland@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, John Horley <john.horley@arm.com>, Robert Walker <robert.walker@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgMTguIE1haSAyMDE4LCAxNzozNjo1NiBDRVNUIHNjaHJpZWIgU2VhbiBQYXVs
-Ogo+IE9uIEZyaSwgTWF5IDE4LCAyMDE4IGF0IDEwOjUyOjE3QU0gKzAyMDAsIEhlaWtvIFN0dWVi
-bmVyIHdyb3RlOgo+ID4gQW0gRnJlaXRhZywgMTguIE1haSAyMDE4LCAwMzo0NTo0NiBDRVNUIHNj
-aHJpZWIgQnJpYW4gTm9ycmlzOgo+ID4gPiBPbiBUaHUsIE1heSAxNywgMjAxOCBhdCA2OjQxIFBN
-LCBobCA8aGxAcm9jay1jaGlwcy5jb20+IHdyb3RlOgo+ID4gPiA+IE9uIFRodXJzZGF5LCBNYXkg
-MTcsIDIwMTggMDk6NTEgUE0sIFNlYW4gUGF1bCB3cm90ZToKPiA+ID4gPj4gT24gVGh1LCBNYXkg
-MTcsIDIwMTggYXQgMDU6MTg6MDBQTSArMDgwMCwgTGluIEh1YW5nIHdyb3RlOgo+ID4gPiA+Pj4g
-RFAgZmlybXdhcmUgdXNlcyBmaXhlZCBwaHkgY29uZmlnIHZhbHVlcyB0byBkbyB0cmFpbmluZywg
-YnV0IHNvbWUKPiA+ID4gPj4+IGJvYXJkcyBuZWVkIHRvIGFkanVzdCB0aGVzZSB2YWx1ZXMgdG8g
-Zml0IGZvciB0aGVpciB1bmlxdWUgaGFyZHdhcmUKPiA+ID4gPj4+IGRlc2lnbi4gU28gZ2V0IHBo
-eSBjb25maWcgdmFsdWVzIGZyb20gZHRzIGFuZCB1c2Ugc29mdHdhcmUgbGluayB0cmFpbmluZwo+
-ID4gPiA+Pj4gaW5zdGVhZCBvZiByZWx5aW5nIG9uIGZpcm13YXJlLCBpZiBzb2Z0d2FyZSB0cmFp
-bmluZyBmYWlsLCBrZWVwIGZpcm13YXJlCj4gPiA+ID4+PiB0cmFpbmluZyBhcyBhIGZhbGxiYWNr
-IGlmIHN3IHRyYWluaW5nIGZhaWxzLgo+ID4gPiA+Pj4KPiA+ID4gPj4+IFNpZ25lZC1vZmYtYnk6
-IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+Cj4gPiA+ID4+PiBTaWduZWQtb2ZmLWJ5
-OiBMaW4gSHVhbmcgPGhsQHJvY2stY2hpcHMuY29tPgo+ID4gPiA+Pj4gLS0tCj4gPiA+ID4+PiBD
-aGFuZ2VzIGluIHYyOgo+ID4gPiA+Pj4gLSB1cGRhdGUgcGF0Y2ggZm9sbG93aW5nIEVucmljIHN1
-Z2dlc3QKPiA+ID4gPj4+IENoYW5nZXMgaW4gdjM6Cj4gPiA+ID4+PiAtIHVzZSB2YXJpYWJsZSBm
-d190cmFpbmluZyBpbnN0ZWFkIHN3X3RyYWluaW5nX3N1Y2Nlc3MKPiA+ID4gPj4+IC0gYmFzZSBv
-biBEUCBTUENFLCBpZiB0cmFpbmluZyBmYWlsIHVzZSBsb3dlciBsaW5rIHJhdGUgdG8gcmV0cnkg
-dHJhaW5pbmcKPiA+ID4gPj4+IENoYW5nZXMgaW4gdjQ6Cj4gPiA+ID4+PiAtIGltcHJvdmUgY2Ru
-X2RwX2dldF9sb3dlcl9saW5rX3JhdGUoKSBhbmQgY2RuX2RwX3NvZnR3YXJlX3RyYWluX2xpbmso
-KSBmb2xsb3cgU2VhbiBzdWdnZXN0Cj4gPiA+ID4+PiBDaGFuZ2VzIGluIHY1Ogo+ID4gPiA+Pj4g
-LSBmaXggc29tZSB3aGl0ZXNwY2FlIGlzc3VlCj4gPiA+ID4+Pgo+ID4gPiA+Pj4gICBkcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMyArLQo+ID4gPiA+
-Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICB8ICAy
-NCArLQo+ID4gPiA+Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuaCAg
-ICAgICAgICB8ICAgMiArCj4gPiA+ID4+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4t
-ZHAtbGluay10cmFpbmluZy5jIHwgNDIwICsrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPiA+
-Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLXJlZy5jICAgICAgICAgICB8ICAz
-MSArLQo+ID4gPiA+Pj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLXJlZy5oICAg
-ICAgICAgICB8ICAzOCArKy0KPiA+ID4gPj4+ICAgNiBmaWxlcyBjaGFuZ2VkLCA1MDUgaW5zZXJ0
-aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pCj4gPiA+ID4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWxpbmstdHJhaW5pbmcuYwo+ID4gPiA+Pj4K
-PiA+ID4gLi4uCj4gPiA+ID4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
-L2Nkbi1kcC1saW5rLXRyYWluaW5nLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRw
-LWxpbmstdHJhaW5pbmcuYwo+ID4gPiA+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+ID4gPj4+
-IGluZGV4IDAwMDAwMDAuLjczYzMyOTAKPiA+ID4gPj4+IC0tLSAvZGV2L251bGwKPiA+ID4gPj4+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtbGluay10cmFpbmluZy5jCj4g
-PiA+ID4+PiBAQCAtMCwwICsxLDQyMCBAQAo+ID4gPiA+Pj4gKy8vIFNQRFgtTGljZW5zZS1JZGVu
-dGlmaWVyOiBHUEwtMi4wCj4gPiA+ID4+PiArLyoKPiA+ID4gPj4+ICsgKiBDb3B5cmlnaHQgKEMp
-IEZ1emhvdSBSb2NrY2hpcCBFbGVjdHJvbmljcyBDby5MdGQKPiA+ID4gPj4+ICsgKiBBdXRob3I6
-IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+Cj4gPiA+ID4+PiArICovCj4gPiA+ID4+
-PiArCj4gPiA+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgo+ID4gPiA+Pj4gKyNpbmNs
-dWRlIDxsaW51eC9kZWxheS5oPgo+ID4gPiA+Pj4gKyNpbmNsdWRlIDxsaW51eC9waHkvcGh5Lmg+
-Cj4gPiA+ID4+PiArI2luY2x1ZGUgPHNvYy9yb2NrY2hpcC9yb2NrY2hpcF9waHlfdHlwZWMuaD4K
-PiA+ID4gPj4+ICsKPiA+ID4gPj4+ICsjaW5jbHVkZSAiY2RuLWRwLWNvcmUuaCIKPiA+ID4gPj4+
-ICsjaW5jbHVkZSAiY2RuLWRwLXJlZy5oIgo+ID4gPiA+Pj4gKwo+ID4gPiA+Pj4gK3N0YXRpYyB2
-b2lkIGNkbl9kcF9zZXRfc2lnbmFsX2xldmVscyhzdHJ1Y3QgY2RuX2RwX2RldmljZSAqZHApCj4g
-PiA+ID4+PiArewo+ID4gPiA+Pj4gKyAgICAgICBzdHJ1Y3QgY2RuX2RwX3BvcnQgKnBvcnQgPSBk
-cC0+cG9ydFtkcC0+YWN0aXZlX3BvcnRdOwo+ID4gPiA+Pj4gKyAgICAgICBzdHJ1Y3Qgcm9ja2No
-aXBfdHlwZWNfcGh5ICp0Y3BoeSA9IHBoeV9nZXRfZHJ2ZGF0YShwb3J0LT5waHkpOwo+ID4gPiA+
-Pgo+ID4gPiA+PiBZb3UgaWdub3JlZCBCcmlhbidzIGNvbW1lbnQgb24gdGhlIHByZXZpb3VzIHBh
-dGNoOgo+ID4gPiA+PiAgICBUaGlzIGlzIHN0aWxsIGFudGl0aGV0aWNhbCB0byB0aGUgUEhZIGZy
-YW1ld29yazsgeW91J3JlIGFzc3VtaW5nIHRoYXQKPiA+ID4gPj4gICAgdGhpcyBpcyBhIHBhcnRp
-Y3VsYXIgdHlwZSBvZiBQSFkgaGVyZS4KPiA+ID4gPj4KPiA+ID4gPj4gRldJVywgdGhlIG1lZGlh
-dGVrIGRybSBkcml2ZXIgYWxzbyBhc3N1bWVzIGEgY2VydGFpbiBQSFkgdHlwZS4gQSBxdWljayBn
-cmVwIG9mCj4gPiA+ID4+IGRyaXZlcnMvIHNob3dzIHRoYXQgdGhlIG9ubHkgb3RoZXIgbm9uLXBo
-eS8gZHJpdmVyIHVzaW5nIHRoaXMgZnVuY3Rpb24KPiA+ID4gPj4gKHBpbmN0cmwtdGVncmEteHVz
-Yi5jKSBhbHNvIGNhc3RzIGl0Lgo+ID4gPiA+Pgo+ID4gPiA+PiBTZWFuCj4gPiA+ID4KPiA+ID4g
-PiBUaGFua3MgU2VhbiwgZXhjZXB0IHBoeSBmcmFtZXdvcmsgaGF2ZSBuZXcgQVBJIHRvIGhhbmRs
-ZSBpdCwgaSBoYXZlIG5vdAo+ID4gPiA+IGlkZWEgaG93IHRvIGRvIGl0IGluIGEgYmV0dGVyIHdh
-eS4KPiA+ID4gCj4gPiA+IFdlbGwsIGlmIE1lZGlhdGVrIGNhbiBkbyBpdCBmb3IgdGhlaXIgTUlQ
-SSBhbmQgSERNSSwgdGhlbiBtYXliZSB3ZSBqdXN0IGRvIGl0Li4uCj4gPiAKPiA+IEknZCB0aGlu
-ayBzbyB0b28uIFRoaXMgaXMgaW4gUm9ja2NoaXAtc3BlY2lmaWMgY29kZSBzbyBpdCB3aWxsIGFs
-d2F5cyBiZQo+ID4gcG9zc2libGUgdG8gZWFzaWx5IGdldCB0aGUgc29jLXR5cGUgYW5kIHRodXMg
-cGh5LXR5cGUsIGlmIHRoYXQgY29tYmluYXRpb24KPiA+IHJlYWxseSBjaGFuZ2VzIGRvd24gdGhl
-IHJvYWQuCj4gPiAKPiAKPiBTbyBpbiB0aGUgYWJzZW5jZSBvZiBhIGJldHRlciBzb2x1dGlvbiwg
-YW5kIHdpdGggcHJpb3IgYXJ0LAo+IAo+IFJldmlld2VkLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVs
-QGNocm9taXVtLm9yZz4KPiAKPiAKPiBXZSBqdXN0IG5lZWQgc29tZSBleWVzIG9uIHRoZSBkdCBh
-bmQgcGh5IGNoYW5nZXMgaW4gdGhpcyBzZXQuIEhlaWtvLCBjYW4geW91Cj4gaGVscCBvdXQgd2l0
-aCB0aGF0PwoKZG9uZSwgYnV0IGJvdGggdGhlIGJpbmRpbmcgKyBwaHkgY2hhbmdlcyBzaG91bGQg
-YWxzbyBnZXQgQWNrcyBmcm9tClJvYiAoZHQpIGFuZCBLaXNob24gKHBoeSkuIEVzcGVjaWFsbHkg
-YXMgdGhlIGJpbmRpbmcgY2hhbmdlIGlzIGEgYml0IG1vcmUKdGhhbiBhIG5ldyBzaW1wbGUgcHJv
-cGVydHkuCgoKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+We are about to add the support for ETR builtin scatter-gather mode
+for dealing with large amount of trace buffers. However, on some of
+the platforms, using the ETR SG mode can lock up the system due to
+the way the ETR is connected to the memory subsystem.
+
+In SG mode, the ETR performs READ from the scatter-gather table to
+fetch the next page and regular WRITE of trace data. If the READ
+operation doesn't complete(due to the memory subsystem issues,
+which we have seen on a couple of platforms) the trace WRITE
+cannot proceed leading to issues. So, we by default do not
+use the SG mode, unless it is known to be safe on the platform.
+We define a DT property for the TMC node to specify whether we
+have a proper SG mode.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: John Horley <john.horley@arm.com>
+Cc: Robert Walker <robert.walker@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: frowand.list@gmail.com
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ Documentation/devicetree/bindings/arm/coresight.txt | 2 ++
+ drivers/hwtracing/coresight/coresight-tmc.c         | 9 ++++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index 15ac8e8..603d3c6 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -86,6 +86,8 @@ its hardware characteristcs.
+ 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
+ 	 (embedded trace router)
+ 
++	* arm,scatter-gather: boolean. Indicates that the TMC-ETR can safely
++	  use the SG mode on this system.
+ 
+ Example:
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+index 93c5bfc..7d8331d 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.c
++++ b/drivers/hwtracing/coresight/coresight-tmc.c
+@@ -20,6 +20,7 @@
+ #include <linux/err.h>
+ #include <linux/fs.h>
+ #include <linux/miscdevice.h>
++#include <linux/property.h>
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
+ #include <linux/dma-mapping.h>
+@@ -304,6 +305,12 @@ const struct attribute_group *coresight_tmc_groups[] = {
+ 	NULL,
+ };
+ 
++static inline bool tmc_etr_can_use_sg(struct tmc_drvdata *drvdata)
++{
++	return fwnode_property_present(drvdata->dev->fwnode,
++				       "arm,scatter-gather");
++}
++
+ /* Detect and initialise the capabilities of a TMC ETR */
+ static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
+ 			     u32 devid, void *dev_caps)
+@@ -313,7 +320,7 @@ static int tmc_etr_setup_caps(struct tmc_drvdata *drvdata,
+ 	/* Set the unadvertised capabilities */
+ 	tmc_etr_init_caps(drvdata, (u32)(unsigned long)dev_caps);
+ 
+-	if (!(devid & TMC_DEVID_NOSCAT))
++	if (!(devid & TMC_DEVID_NOSCAT) && tmc_etr_can_use_sg(drvdata))
+ 		tmc_etr_set_cap(drvdata, TMC_ETR_SG);
+ 
+ 	/* Check if the AXI address width is available */
+-- 
+2.7.4
