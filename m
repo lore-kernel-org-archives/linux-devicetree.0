@@ -1,85 +1,62 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: ssm2305: fix header layout" to the asoc
-	tree
-Date: Fri, 18 May 2018 17:10:18 +0100
-Message-ID: <E1fJhxS-0001Sb-8H@debutante>
-References: <20180518095506.28875-1-m.felsch@pengutronix.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v5 2/4] Documentation: bindings: add phy_config for
+ Rockchip USB Type-C PHY
+Date: Fri, 18 May 2018 18:24:00 +0200
+Message-ID: <2417091.oYeT3lua5n@phil>
+References: <1526548680-2552-1-git-send-email-hl@rock-chips.com>
+ <1526548680-2552-2-git-send-email-hl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180518095506.28875-1-m.felsch@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1526548680-2552-2-git-send-email-hl@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lin Huang <hl@rock-chips.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, briannorris@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, zyw@rock-chips.com, daniel.vetter@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: ssm2305: fix header layout
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From d460a2ea24db8b99eb7485ecccb453764e7d6b13 Mon Sep 17 00:00:00 2001
-From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Fri, 18 May 2018 11:55:06 +0200
-Subject: [PATCH] ASoC: ssm2305: fix header layout
-
-Make C-header and SPDX-License-Identifier header uniform.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/ssm2305.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/sound/soc/codecs/ssm2305.c b/sound/soc/codecs/ssm2305.c
-index 39d8b01cd852..2968959c4b75 100644
---- a/sound/soc/codecs/ssm2305.c
-+++ b/sound/soc/codecs/ssm2305.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * Analog Devices SSM2305 Amplifier Driver
-- *
-- * Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-- */
-+//
-+// Analog Devices SSM2305 Amplifier Driver
-+//
-+// Copyright (C) 2018 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+//
- 
- #include <linux/gpio/consumer.h>
- #include <linux/module.h>
--- 
-2.17.0
+QW0gRG9ubmVyc3RhZywgMTcuIE1haSAyMDE4LCAxMToxNzo1OCBDRVNUIHNjaHJpZWIgTGluIEh1
+YW5nOgo+IElmIHdhbnQgdG8gZG8gdHJhaW5pbmcgb3V0c2lkZSBEUCBGaXJtd2FyZSwgbmVlZCBw
+aHkgdm9sdGFnZSBzd2luZwo+IGFuZCBwcmVfZW1waGFzaXMgdmFsdWUuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogTGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIGluIHYy
+Ogo+IC0gTm9uZSAKPiBDaGFuZ2VzIGluIHYzOgo+IC0gbW9kaWZ5IHByb3BlcnR5IGRlc2NyaXB0
+aW9uIGFuZCBhZGQgdGhpcyBwcm9wZXJ0eSB0byBFeGFtcGxlCj4gQ2hhbmdlIGluIHY0Ogo+IC0g
+Tm9uZQo+IENoYW5nZSBpbiB2NToKPiAtIE5vbmUKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy50eHQgfCAyOSArKysrKysrKysrKysrKysrKysrKyst
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCj4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXJv
+Y2tjaGlwLXR5cGVjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkv
+cGh5LXJvY2tjaGlwLXR5cGVjLnR4dAo+IGluZGV4IDk2MGRhN2YuLmFmMjk4ZjIgMTAwNjQ0Cj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAt
+dHlwZWMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9w
+aHktcm9ja2NoaXAtdHlwZWMudHh0Cj4gQEAgLTE3LDcgKzE3LDggQEAgUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiAgCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gICAtIGV4dGNvbiA6IGV4dGNvbiBz
+cGVjaWZpZXIgZm9yIHRoZSBQb3dlciBEZWxpdmVyeQo+IC0KPiArIC0gcm9ja2NoaXAscGh5X2Nv
+bmZpZyA6IEEgbGlzdCBvZiB2b2x0YWdlIHN3aW5nKG12KSBhbmQgcHJlLWVtcGhhc2lzCj4gKwkJ
+CShkQikgcGFpcnMuCgptdiAtPiBtViBJJ2QgdGhpbmsuCgpUaGlzIG5lZWRzIGEgYml0IG1vcmUg
+ZXhwbGFuYXRpb24gcGxlYXNlLiBFc3BlY2lhbGx5IGFzIHRoZSBtdWx0aXBsZSAiMCAwIgpsaW5l
+cyBpbiB0aGUgZXhhbXBsZXMgc3VnZ2VzdCBzb21lIGRlZXBlciBvcmRlcmluZyByZXF1aXJlbWVu
+dHMuCkxpa2UgdGhlIDMgYmxvY2tzIG9mIDQgZW50cmllcyBhcyBjYW4gYmUgc2VlbiBpbiB0aGUg
+ZGVmYXVsdCBjb25maWcgaW4KcGF0Y2gzLiBUaGUgYmluZGluZyBzaG91bGQgZGVmaW5pdGx5IGRl
+c2NyaWJlIHdoYXQgdGhlc2UgYXJlLgoKCj4gIFJlcXVpcmVkIG5vZGVzIDogYSBzdWItbm9kZSBp
+cyByZXF1aXJlZCBmb3IgZWFjaCBwb3J0IHRoZSBwaHkgcHJvdmlkZXMuCj4gIAkJIFRoZSBzdWIt
+bm9kZSBuYW1lIGlzIHVzZWQgdG8gaWRlbnRpZnkgZHAgb3IgdXNiMyBwb3J0LAo+ICAJCSBhbmQg
+c2hhbGwgYmUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOgo+IEBAIC01MCw2ICs1MSwxOSBAQCBFeGFt
+cGxlOgo+ICAJCQkgPCZjcnUgU1JTVF9QX1VQSFkwX1RDUEhZPjsKPiAgCQlyZXNldC1uYW1lcyA9
+ICJ1cGh5IiwgInVwaHktcGlwZSIsICJ1cGh5LXRjcGh5IjsKPiAgCj4gKwkJcm9ja2NoaXAscGh5
+X2NvbmZpZyA9PDB4MmEgMHgwMAo+ICsJCQkweDFmIDB4MTUKPiArCQkJMHgxNCAweDIyCj4gKwkJ
+CTB4MDIgMHgyYgo+ICsJCQkweDIxIDB4MDAKPiArCQkJMHgxMiAweDE1Cj4gKwkJCTB4MDIgMHgy
+Mgo+ICsJCQkwIDAKPiArCQkJMHgxNSAweDAwCj4gKwkJCTB4MDAgMHgxNQo+ICsJCQkwIDAKPiAr
+CQkJMCAwPjsKCkkgZG9uJ3QgdGhpbmsgdGhleSBzaG91bGQgYmUgaGV4LXZhbHVlcywgYXMgYWNj
+b3JkaW5nIHRvIHRoZSBkb2MgYWJvdmUKdGhlc2UgYXJlIHZhbHVlcyBpbiBtViBhbmQgZEIgLgoK
+CkhlaWtvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
