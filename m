@@ -1,56 +1,105 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v8 2/3] mtd: spi-nor: add rockchip serial flash
- controller driver
-Date: Fri, 18 May 2018 13:21:43 +0200
-Message-ID: <20180518132143.3105f301@bbrezillon>
-References: <1518091958-3672-1-git-send-email-andy.yan@rock-chips.com>
-        <1518092327-3827-1-git-send-email-andy.yan@rock-chips.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH 1/3] ARM: dra762: hwmod: Add MCAN support
+Date: Fri, 18 May 2018 17:24:24 +0530
+Message-ID: <96794128-c107-9b04-aed5-5dd9caa7a605@ti.com>
+References: <1523181542-3770-1-git-send-email-faiz_abbas@ti.com>
+ <1523181542-3770-2-git-send-email-faiz_abbas@ti.com>
+ <20180517210931.GQ98604@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518092327-3827-1-git-send-email-andy.yan@rock-chips.com>
+In-Reply-To: <20180517210931.GQ98604@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: cyrille.pitchen@wedev4u.fr, mchehab@kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, shawn.lin@rock-chips.com, heiko@sntech.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, boris.brezillon@free-electrons.com
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, paul@pwsan.com, lokeshvutla@ti.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Tony,
 
-Sorry for the late reply.
-
-On Thu,  8 Feb 2018 20:18:47 +0800
-Andy Yan <andy.yan@rock-chips.com> wrote:
-
-> From: Shawn Lin <shawn.lin@rock-chips.com>
-
-Commit message please.
-
+On Friday 18 May 2018 02:39 AM, Tony Lindgren wrote:
+> * Faiz Abbas <faiz_abbas@ti.com> [180408 09:59]:
+>> From: Lokesh Vutla <lokeshvutla@ti.com>
+>>
+>> Add MCAN hwmod data and register it for dra762 silicons.
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 32 +++++++++++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> index 62352d1..a2cd7f8 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> @@ -1356,6 +1356,29 @@ static struct omap_hwmod dra7xx_mailbox13_hwmod = {
+>>  };
+>>  
+>>  /*
+>> + * 'mcan' class
+>> + *
+>> + */
+>> +static struct omap_hwmod_class dra76x_mcan_hwmod_class = {
+>> +	.name	= "mcan",
+>> +};
+>> +
+>> +/* mcan */
+>> +static struct omap_hwmod dra76x_mcan_hwmod = {
+>> +	.name		= "mcan",
+>> +	.class		= &dra76x_mcan_hwmod_class,
+>> +	.clkdm_name	= "wkupaon_clkdm",
+>> +	.main_clk	= "mcan_clk",
+>> +	.prcm = {
+>> +		.omap4 = {
+>> +			.clkctrl_offs = DRA7XX_CM_WKUPAON_ADC_CLKCTRL_OFFSET,
+>> +			.context_offs = DRA7XX_RM_WKUPAON_ADC_CONTEXT_OFFSET,
+>> +			.modulemode   = MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +};
 > 
-> Add Rockchip SFC(serial flash controller) driver.
+> So based on the ti-sysc related dts comments, this patch should
+> work except you should be able to just leave out the clocks here
+> with the dts changes.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> Acked-by: Marek Vasut <marek.vasut@gmail.com>
+>> +/*
+>>   * 'mcspi' class
+>>   *
+>>   */
+>> @@ -3818,6 +3841,14 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per2__epwmss2 = {
+>>  	.user		= OCP_USER_MPU,
+>>  };
+>>  
+>> +/* l3_main_1 -> mcan */
+>> +static struct omap_hwmod_ocp_if dra76x_l3_main_1__mcan = {
+>> +	.master		= &dra7xx_l3_main_1_hwmod,
+>> +	.slave		= &dra76x_mcan_hwmod,
+>> +	.clk		= "l3_iclk_div",
+>> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>>  static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+>>  	&dra7xx_l3_main_1__dmm,
+>>  	&dra7xx_l3_main_2__l3_instr,
+>> @@ -3958,6 +3989,7 @@ static struct omap_hwmod_ocp_if *dra7xx_gp_hwmod_ocp_ifs[] __initdata = {
+>>  /* SoC variant specific hwmod links */
+>>  static struct omap_hwmod_ocp_if *dra76x_hwmod_ocp_ifs[] __initdata = {
+>>  	&dra7xx_l4_per3__usb_otg_ss4,
+>> +	&dra76x_l3_main_1__mcan,
+>>  	NULL,
+>>  };
 > 
-> ---
+> So the omap_hwmod_class, omap_hwmod_ocp_if and entry on the
+> dra76x_hwmod_ocp_ifs list are still needed with ti-sysc for a
+> while. Eventually that data will just come from the dts interconnect
+> hierarchy. For struct omap_hwmod_class_sysconfig, ti-sysc will
+> allocate and it based on the dts data.
 > 
-> Changes in v8:
-> - remove unused macro SFC_CMD_TRAN_BYTES_MASK
-> - set max transfer length to 15.5KB
-> - remove unnecessary buffer align check
-> - remove the duplicate logic what spi-nor.c already does for spi_nor_write
-> - add spi_nor_erase, as the SFC should get the erase address.
 
-Would you mind sending a new version addressing the problem reported by
-kbuild robots and the comments made by Ezequiel and Robin?
-
-Also, maybe it's too much work, but it would be good to check if the
-driver could use the spi_mem interface [1] so that you can move it to
-drivers/spi/ and possibly get everything ready for SPI NANDs.
+Thanks for the detailed pointers. I will figure out the ti-sysc node
+that needs to be added and post a v2.
 
 Thanks,
-
-Boris
-
-[1]https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/tree/include/linux/spi/spi-mem.h?h=for-4.18
+Faiz
