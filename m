@@ -1,163 +1,80 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH V6] ARM: dts: da850-evm: Enable LCD and Backlight
-Date: Fri, 18 May 2018 13:02:14 -0500
-Message-ID: <20180518180214.9487-1-aford173@gmail.com>
+From: David Veenstra <davidjulianveenstra@gmail.com>
+Subject: [PATCH v4 00/12] iio: ad2s1200: Driver clean up
+Date: Fri, 18 May 2018 20:20:52 +0200
+Message-ID: <cover.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Adam Ford <aford173@gmail.com>, devicetree@vger.kernel.org, nsekhar@ti.com, khilman@kernel.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-When using the board files the LCD works, but not with the DT.
-This adds enables the original da850-evm to work with the same
-LCD in device tree mode.
+For v1 see [1], for v2 see [2], for v3 see [3].
 
-The EVM has a gpio for the regulator and a PWM for dimming the
-backlight.  The LCD and the vpif display pins are mutually
-exclusive, so if using the LCD, do not load the vpif driver.
+A summary of this patch:
+1. Clean up of minor code style issues.
+2. Replace legacy GPIO ABI with modern ABI and remove usage of.
+   platform data.
+4. Add scaling factor for angular position and angular velocity to
+   match the sysfs IIO ABI.
+5. Add documentation for device tree binding
+6. Move driver to main line.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-V6:  Fix some whitespace and comment formatting.  Rename backlight_reg to
-     backlight_lcd
+Changes in v4:
+- Some new minor code style fix ups.
+- Move spi setup to before iio device registration.
+- Add vendor prefix to gpios function name, and dt docs.
+- Add device tree table
+- Add copyright.
 
-V5:  Resync against v4.18/dt
+Best regards,
+David Veenstra
 
-V4:  Move the backlight to PWM, so the driver can control the regulator allowing the 
-     regulator to power down and enabling the ability to change the brightness of the
-     backlight
+[1] https://marc.info/?l=linux-iio&m=152137920426820&w=2
+[2] https://marc.info/?l=linux-iio&m=152425250915148&w=2
+[3] https://marc.info/?l=linux-iio&m=152443456824272&w=2
 
-V3:  Fix errant GPIO, label GPIO pins, and rename the regulator to be more explict to
-     backlight which better matches the schematic.  Updated the description to explain
-     that it cannot be used at the same time as the vpif driver.
+David Veenstra (12):
+  staging: iio: ad2s1200: Remove unneeded newline in license
+  staging: iio: ad2s1200: Remove unneeded initializations
+  staging: iio: ad2s1200: Add kernel docs to driver state
+  staging: iio: ad2s1200: Setup spi before iio device register
+  staging: iio: ad2s1200: Replace legacy gpio API with modern API
+  staging: iio: ad2s1200: Replace platform data with dt bindings
+  staging: iio: ad2s1200: Add dt table
+  dt-bindings: iio: resolver: Document AD2S1200 bindings
+  staging: iio: ad2s1200: Add scaling factor for angular velocity
+    channel
+  staging: iio: ad2s1200: Add scaling factor for angle channel
+  staging: iio: ad2s1200: Add copyright
+  staging: iio: ad2s1200: Move driver out of staging
 
-V2:  Add regulator and GPIO enable pins. Remove PWM backlight and replace with GPIO  
+ .../bindings/iio/resolver/ad2s1200.txt        |  16 ++
+ drivers/iio/Kconfig                           |   1 +
+ drivers/iio/Makefile                          |   1 +
+ drivers/iio/resolver/Kconfig                  |  17 ++
+ drivers/iio/resolver/Makefile                 |   5 +
+ drivers/iio/resolver/ad2s1200.c               | 210 ++++++++++++++++++
+ drivers/staging/iio/resolver/Kconfig          |  12 -
+ drivers/staging/iio/resolver/Makefile         |   1 -
+ drivers/staging/iio/resolver/ad2s1200.c       | 168 --------------
+ 9 files changed, 250 insertions(+), 181 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+ create mode 100644 drivers/iio/resolver/Kconfig
+ create mode 100644 drivers/iio/resolver/Makefile
+ create mode 100644 drivers/iio/resolver/ad2s1200.c
+ delete mode 100644 drivers/staging/iio/resolver/ad2s1200.c
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 0e82bb988fde..3e760e23d88c 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -27,6 +27,60 @@
- 		spi0 = &spi1;
- 	};
- 
-+	backlight: backlight-pwm {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ecap2_pins>;
-+		power-supply = <&backlight_reg>;
-+		compatible = "pwm-backlight";
-+		pwms = <&ecap2 0 50000 0>;
-+		brightness-levels = <0 10 20 30 40 50 60 70 80 90 99>;
-+		default-brightness-level = <7>;
-+	};
-+
-+	panel {
-+		compatible = "ti,tilcdc,panel";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_pins>;
-+		/*
-+		 * The vpif and the LCD are mutually exclusive.
-+		 * To enable VPIF, change the status below to 'disabled' then
-+		 * then change the status of the vpif below to 'okay'
-+		*/
-+		status = "okay";
-+		enable-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>; /* lcd_panel_pwr */
-+
-+		panel-info {
-+			ac-bias		= <255>;
-+			ac-bias-intrpt	= <0>;
-+			dma-burst-sz	= <16>;
-+			bpp		= <16>;
-+			fdd		= <0x80>;
-+			sync-edge	= <0>;
-+			sync-ctrl	= <1>;
-+			raster-order	= <0>;
-+			fifo-th		= <0>;
-+		};
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: 480x272 {
-+				clock-frequency = <9000000>;
-+				hactive = <480>;
-+				vactive = <272>;
-+				hfront-porch = <3>;
-+				hback-porch = <2>;
-+				hsync-len = <42>;
-+				vback-porch = <3>;
-+				vfront-porch = <4>;
-+				vsync-len = <11>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <1>;
-+			};
-+		};
-+	};
-+
- 	vbat: fixedregulator0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vbat";
-@@ -35,6 +89,15 @@
- 		regulator-boot-on;
- 	};
- 
-+	backlight_lcd: backlight-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd_backlight_pwr";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio 47 GPIO_ACTIVE_HIGH>; /* lcd_backlight_pwr */
-+		enable-active-high;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "DA850/OMAP-L138 EVM";
-@@ -63,6 +126,10 @@
- 	};
- };
- 
-+&ecap2 {
-+	status = "okay";
-+};
-+
- &pmx_core {
- 	status = "okay";
- 
-@@ -109,6 +176,10 @@
- 	status = "okay";
- };
- 
-+&lcdc {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 	clock-frequency = <100000>;
-@@ -336,5 +407,10 @@
- &vpif {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&vpif_capture_pins>, <&vpif_display_pins>;
--	status = "okay";
-+	/*
-+	 * The vpif and the LCD are mutually exclusive.
-+	 * To enable VPIF, disable the ti,tilcdc,panel then
-+	 * changed the status below to 'okay'
-+	*/
-+	status = "disabled";
- };
 -- 
 2.17.0
