@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 15/26] dt-bindings: display: Add compatible
- for A64 HDMI PHY
-Date: Fri, 18 May 2018 15:15:25 +0530
-Message-ID: <20180518094536.17201-16-jagan@amarulasolutions.com>
+Subject: [PATCH v2 16/26] dt-bindings: clock: sun50i-a64-ccu:
+ Add PLL_VIDEO[0-1] macros
+Date: Fri, 18 May 2018 15:15:26 +0530
+Message-ID: <20180518094536.17201-17-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBP6C7LLQKGQE3Z77TZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBR6C7LLQKGQEYEZZQGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,28 +20,32 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-HDMI PHY on Allwinner A64 has similar like H3/H5 but with
-two clock parents, so add separate compatible for A64.
+Allwinner A64 has two clock parents PLL_VIDEO0 and PLL_VIDEO1.
+
+Include these macros on dt-bindings so-that the same can be
+used while defining CCU clock phadles.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
-- Add separate compatible for A64
+- new patch
 
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ include/dt-bindings/clock/sun50i-a64-ccu.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 1a5ff416dea4..4f7b9dca8ca0 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -104,6 +104,7 @@ Required properties:
-   - compatible: value must be one of:
-     * allwinner,sun8i-a83t-hdmi-phy
-     * allwinner,sun8i-h3-hdmi-phy
-+    * allwinner,sun50i-a64-hdmi-phy
-   - reg: base address and size of memory-mapped region
-   - clocks: phandles to the clocks feeding the HDMI PHY
-     * bus: the HDMI PHY interface clock
+diff --git a/include/dt-bindings/clock/sun50i-a64-ccu.h b/include/dt-bindings/clock/sun50i-a64-ccu.h
+index d66432c6e675..d1d7d5b7d06a 100644
+--- a/include/dt-bindings/clock/sun50i-a64-ccu.h
++++ b/include/dt-bindings/clock/sun50i-a64-ccu.h
+@@ -43,7 +43,9 @@
+ #ifndef _DT_BINDINGS_CLK_SUN50I_A64_H_
+ #define _DT_BINDINGS_CLK_SUN50I_A64_H_
+ 
++#define CLK_PLL_VIDEO0		7
+ #define CLK_PLL_PERIPH0		11
++#define CLK_PLL_VIDEO1		15
+ 
+ #define CLK_BUS_MIPI_DSI	28
+ #define CLK_BUS_CE		29
 -- 
 2.14.3
