@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 25/26] arm64: dts: allwinner: a64: pine64:
+Subject: [PATCH v2 26/26] arm64: dts: allwinner: a64: sopine:
  Enable HDMI output
-Date: Fri, 18 May 2018 15:15:35 +0530
-Message-ID: <20180518094536.17201-26-jagan@amarulasolutions.com>
+Date: Fri, 18 May 2018 15:15:36 +0530
+Message-ID: <20180518094536.17201-27-jagan@amarulasolutions.com>
 References: <20180518094536.17201-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB7WC7LLQKGQE54ZNCFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBBOD7LLQKGQENZROU6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180518094536.17201-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,25 +20,24 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable HDMI output on pine64 board.
+Enable HDMI output on sopine board.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v2:
 - none
 
- .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 26 ++++++++++++++++++++++
+ .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  | 26 ++++++++++++++++++++++
  1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index a75825798a71..a4ec0900a885 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -62,6 +62,21 @@
- 	chosen {
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index abe179de35d7..72f29b78117c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -61,6 +61,17 @@
  		stdout-path = "serial0:115200n8";
  	};
-+
+ 
 +	connector {
 +		compatible = "hdmi-connector";
 +		type = "a";
@@ -49,15 +48,23 @@ index a75825798a71..a4ec0900a885 100644
 +			};
 +		};
 +	};
-+};
 +
-+&de {
-+	status = "okay";
+ 	reg_vcc1v8: vcc1v8 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc1v8";
+@@ -69,6 +80,10 @@
+ 	};
  };
  
++&de {
++	status = "okay";
++};
++
  &ehci0 {
-@@ -82,6 +97,17 @@
- 
+ 	status = "okay";
+ };
+@@ -86,6 +101,17 @@
+ 	status = "okay";
  };
  
 +&hdmi {
@@ -71,8 +78,8 @@ index a75825798a71..a4ec0900a885 100644
 +	};
 +};
 +
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.14.3
