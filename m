@@ -1,8 +1,8 @@
 From: David Veenstra <davidjulianveenstra@gmail.com>
-Subject: [PATCH v4 04/12] staging: iio: ad2s1200: Setup spi before iio device
- register
-Date: Fri, 18 May 2018 20:21:44 +0200
-Message-ID: <2f531545d91366136c7e421f0931637a45b15d51.1526667118.git.davidjulianveenstra@gmail.com>
+Subject: [PATCH v4 05/12] staging: iio: ad2s1200: Replace legacy gpio API
+ with modern API
+Date: Fri, 18 May 2018 20:21:56 +0200
+Message-ID: <78bc9c09403ac1fa08d610a86505416b85edb306.1526667118.git.davidjulianveenstra@gmail.com>
 References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,45 +23,63 @@ To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Michael.Hennerich@analog.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-The spi should be set up before the device is registered as an iio
-device.
-
-This patch moves the setup to before the device registration.
+The legacy, integer based gpio API is replaced with the modern
+descriptor based API.
 
 Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
 ---
-Changes in v4:
- - Introduced in this version.
-
- drivers/staging/iio/resolver/ad2s1200.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/staging/iio/resolver/ad2s1200.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-index 068aa86e9c11..430cc62591fe 100644
+index 430cc62591fe..b2c46a8c6b77 100644
 --- a/drivers/staging/iio/resolver/ad2s1200.c
 +++ b/drivers/staging/iio/resolver/ad2s1200.c
-@@ -143,15 +143,16 @@ static int ad2s1200_probe(struct spi_device *spi)
- 	indio_dev->num_channels = ARRAY_SIZE(ad2s1200_channels);
- 	indio_dev->name = spi_get_device_id(spi)->name;
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/spi/spi.h>
+@@ -43,8 +44,8 @@
+ struct ad2s1200_state {
+ 	struct mutex lock;
+ 	struct spi_device *sdev;
+-	int sample;
+-	int rdvel;
++	struct gpio_desc *sample;
++	struct gpio_desc *rdvel;
+ 	__be16 rx ____cacheline_aligned;
+ };
  
--	ret = devm_iio_device_register(&spi->dev, indio_dev);
--	if (ret)
--		return ret;
--
- 	spi->max_speed_hz = AD2S1200_HZ;
- 	spi->mode = SPI_MODE_3;
--	spi_setup(spi);
-+	ret = spi_setup(spi);
-+
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "spi_setup failed!\n");
-+		return ret;
-+	}
+@@ -58,12 +59,12 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
+ 	int ret;
  
--	return 0;
-+	return devm_iio_device_register(&spi->dev, indio_dev);
- }
+ 	mutex_lock(&st->lock);
+-	gpio_set_value(st->sample, 0);
++	gpiod_set_value(st->sample, 0);
  
- static const struct spi_device_id ad2s1200_id[] = {
+ 	/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
+ 	udelay(1);
+-	gpio_set_value(st->sample, 1);
+-	gpio_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
++	gpiod_set_value(st->sample, 1);
++	gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
+ 
+ 	ret = spi_read(st->sdev, &st->rx, 2);
+ 	if (ret < 0) {
+@@ -133,8 +134,8 @@ static int ad2s1200_probe(struct spi_device *spi)
+ 	st = iio_priv(indio_dev);
+ 	mutex_init(&st->lock);
+ 	st->sdev = spi;
+-	st->sample = pins[0];
+-	st->rdvel = pins[1];
++	st->sample = gpio_to_desc(pins[0]);
++	st->rdvel = gpio_to_desc(pins[1]);
+ 
+ 	indio_dev->dev.parent = &spi->dev;
+ 	indio_dev->info = &ad2s1200_info;
 -- 
 2.17.0
