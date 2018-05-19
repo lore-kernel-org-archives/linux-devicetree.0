@@ -1,50 +1,77 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v2 12/26] drm/sun4i: Add support for multiple DW HDMI PHY clock parents
-Date: Sat, 19 May 2018 09:11:15 +0200
-Message-ID: <1589389.XrQdaPTFv2@jernej-laptop>
-References: <20180518094536.17201-1-jagan@amarulasolutions.com> <4909574.Q3IFWM0xt6@jernej-laptop> <20180518152651.lfymc3kj7npj5tww@flea>
+From: Christian Lamparter <chunkeey@gmail.com>
+Subject: Re: [PATCH 4/5] pinctrl: actions: Add gpio support for Actions S900 SoC
+Date: Sat, 19 May 2018 11:18:53 +0200
+Message-ID: <12834501.5lBvNSZm06@debian64>
+References: <20180518023056.7869-1-manivannan.sadhasivam@linaro.org> <20180518023056.7869-5-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180518152651.lfymc3kj7npj5tww@flea>
+In-Reply-To: <20180518023056.7869-5-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Dne petek, 18. maj 2018 ob 17:26:51 CEST je Maxime Ripard napisal(a):
-> On Fri, May 18, 2018 at 04:46:41PM +0200, Jernej Škrabec wrote:
-> > > And this is a bit sloppy, since if phy_clk_num == 3, you won't try to
-> > > lookup pll-2 either.
-> > 
-> > It is highly unlikely this will be higher than 2, at least for this HDMI
-> > PHY, since it has only 1 bit reserved for parent selection. But since I
-> > have to fix it, I'll add ">= 2"
+On Friday, May 18, 2018 4:30:55 AM CEST Manivannan Sadhasivam wrote:
+> Add gpio support to pinctrl driver for Actions Semi S900 SoC.
 > 
-> If we're only going to have two parents at most, ever, why don't we
-> had just a single other boolean. This would be less intrusive, and we
-> wouldn't have to check for those corner cases.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> [...]
+> +static int owl_gpio_init(struct owl_pinctrl *pctrl)
+> +{
+> +	struct gpio_chip *chip;
+> +	int ret;
+> +
+> +	chip = &pctrl->chip;
+> +	chip->base = -1;
+> +	chip->ngpio = pctrl->soc->ngpios;
+> +	chip->label = dev_name(pctrl->dev);
+> +	chip->parent = pctrl->dev;
+> +	chip->owner = THIS_MODULE;
+> +	chip->of_node = pctrl->dev->of_node;
+> +
+> +	ret = gpiochip_add_data(&pctrl->chip, pctrl);
+> +	if (ret) {
+> +		dev_err(pctrl->dev, "failed to register gpiochip\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
+> +							0, 0, chip->ngpio);
+> +	if (ret) {
+> +		dev_err(pctrl->dev, "failed to add pin range\n");
+> +		gpiochip_remove(&pctrl->chip);
+> +		return ret;
+> +	}
+> +
+gpiochip_add_pin_range()? That's not going to work with gpio-hogs. 
 
-It seems that usage of "bool" data type in structures is not wanted anymore 
-according to checkpatch and this: https://lkml.org/lkml/2017/11/21/384
+But, you can easily test this. Just add a gpio-hog [0] 
+( Section 2. gpio-controller nodes) into the Devicetree's
+pinctrl node.
 
-I guess I'll use "unsigned int" as recommended by Linus and named it 
-"has_second_parent" to be unambigous that it's boolean in reality.
+something like: (No idea if GPIO1 is already used, but any free
+gpio will do)
+| 		[...]
+|		pinctrl@e01b0000 {
+|			compatible = "actions,s900-pinctrl";
+|			reg = <0x0 0xe01b0000 0x0 0x1000>;
+|			clocks = <&cmu CLK_GPIO>;
+|			gpio-controller;
+|			#gpio-cells = <2>;
+|
+|			line_b {
+|				gpio-hog;
+|				gpios = <1 GPIO_ACTIVE_HIGH>;
+|				output-low;
+|				line-name = "foo-bar-gpio";
+|			};
+|		};
 
-Best regards,
-Jernej
+The pinctrl probe will fail. You can fix this by
+replacing the gpiochip_add_pin_range() and use
+the gpio-ranges [0] property to define the range.
 
-> 
-> > BTW, I'll resend fixed version of this patch for my R40 HDMI series, since
-> > there is nothing to hold it back, unlike for this.
-> 
-> Awesome, thanks!
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+[0] <https://www.kernel.org/doc/Documentation/devicetree/bindings/gpio/gpio.txt>
