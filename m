@@ -1,57 +1,83 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add SMP support
-Date: Sat, 19 May 2018 20:38:13 +0300
-Message-ID: <ec73ce6d-f062-6c4f-d6fa-b99ef6c6bc67@cogentembedded.com>
-References: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
- <ec4c6905-23d1-8600-a1cc-4297fbd1ddaa@cogentembedded.com>
- <CAMuHMdU9JXvN2GLFGLZGeNOpZ9AdJYokbpTqt-Wy97-Z0tXaCA@mail.gmail.com>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH 00/15] Add support for R40 HDMI pipeline
+Date: Sat, 19 May 2018 20:31:12 +0200
+Message-ID: <20180519183127.2718-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdU9JXvN2GLFGLZGeNOpZ9AdJYokbpTqt-Wy97-Z0tXaCA@mail.gmail.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBOO3QHMAKGQELZT5CMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/17/2018 11:23 PM, Geert Uytterhoeven wrote:
+This series adds support for R40 HDMI pipeline. It is a bit special
+than other already supported pipelines because it has additional unit
+called TCON TOP responsible for relationship configuration between
+mixers, TCONs and HDMI. Additionally, it has additional gates for DSI
+and TV TCONs, TV encoder clock settings and pin muxing between LCD
+and TV encoders.
 
->> Add the device nodes for 3 more Cortex-A53 CPU cores; adjust the interrupt
->> delivery masks for the ARM GIC and Architectured Timer.
->>
->> Based on the original (and large) patch by Vladimir Barinov.
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> Thanks for your patch!
-> 
->> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
->> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
->> @@ -30,6 +30,36 @@
->>                         enable-method = "psci";
->>                 };
->>
->> +               a53_1: cpu@1 {
->> +                       device_type = "cpu";
->> +                       compatible = "arm,cortex-a53","arm,armv8";
-> 
-> Please stop copying spaceless lists ;-)
+However, it seems that TCON TOP will become a norm, since newer
+Allwinner SoCs like H6 also have this unit.
 
-   Oops! Simon, do I need to re-post?
+I tested different possible configurations:
+- mixer0 <> TCON-TV0 <> HDMI
+- mixer0 <> TCON-TV1 <> HDMI
+- mixer1 <> TCON-TV0 <> HDMI
+- mixer1 <> TCON-TV1 <> HDMI
 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
+Please review.
 
-MBR, Sergei
+Best regards,
+Jernej
+
+Jernej Skrabec (15):
+  clk: sunxi-ng: r40: Add minimal rate for video PLLs
+  clk: sunxi-ng: r40: Allow setting parent rate to display related
+    clocks
+  clk: sunxi-ng: r40: Export video PLLs
+  dt-bindings: display: sunxi-drm: Add TCON TOP description
+  drm/sun4i: Add TCON TOP driver
+  drm/sun4i: tcon: Add support for tcon-top
+  dt-bindings: display: sun4i-drm: Add R40 HDMI pipeline
+  drm/sun4i: DE2 mixer: Add index quirk
+  drm/sun4i: Add support for R40 mixers
+  drm/sun4i: Add support for R40 TV TCONs
+  drm/sun4i: DW HDMI PHY: Add support for second PLL
+  drm/sun4i: Add support for second clock parent to DW HDMI PHY clk
+    driver
+  drm/sun4i: Add support for A64 HDMI PHY
+  ARM: dts: sun8i: r40: Add HDMI pipeline
+  ARM: dts: sun8i: r40: Enable HDMI output on BananaPi M2 Ultra
+
+ .../bindings/display/sunxi/sun4i-drm.txt      |  36 ++-
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  50 ++++
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 166 ++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.c          |  58 ++--
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.h          |   8 +-
+ drivers/gpu/drm/sun4i/Makefile                |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  67 +++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.h            |   8 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   8 +-
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c        |  61 ++++-
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c    |  90 ++++--
+ drivers/gpu/drm/sun4i/sun8i_mixer.c           |  30 +-
+ drivers/gpu/drm/sun4i/sun8i_mixer.h           |   2 +
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c        | 256 ++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.h        |  20 ++
+ include/dt-bindings/clock/sun8i-r40-ccu.h     |   4 +
+ include/dt-bindings/clock/sun8i-tcon-top.h    |  11 +
+ 17 files changed, 813 insertions(+), 65 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.h
+ create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
+
+-- 
+2.17.0
