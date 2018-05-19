@@ -1,74 +1,59 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH 2/3] dt-bindings: new binding for Ilitek ILI9341 display
- panels
-Date: Sat, 19 May 2018 15:37:21 +0200
-Message-ID: <50928486-822a-aff3-7c37-cc1c40cb62b8@tronnes.org>
-References: <20180515014349.26226-1-david@lechnology.com>
- <20180515014349.26226-3-david@lechnology.com>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: [PATCH v6 4/9] counter: 104-quad-8: Add Generic Counter
+ interface support
+Date: Sat, 19 May 2018 09:55:52 -0400
+Message-ID: <20180519135539.GA31866@sophia>
+References: <881ede525a87ef68fad76cc757ce0ba72df03e5a.1526487615.git.vilhelm.gray@gmail.com>
+ <201805192140.de07sSol%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180515014349.26226-3-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Nitin Patil <nitin@mindsensors.com>, Rob Herring <robh+dt@kernel.org>, limor@ladyada.net, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <201805192140.de07sSol%fengguang.wu@intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kbuild test robot <lkp@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, kbuild-all@01.org, fabrice.gasnier@st.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAxNS4wNS4yMDE4IDAzLjQzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+IFRoaXMgYWRkcyBh
-IG5ldyBiaW5kaW5nIGZvciBJbGl0ZWsgSUxJOTM0MSBkaXNwbGF5IHBhbmVscy4gSXQgaW5jbHVk
-ZXMKPiBhIGNvbXBhdGlibGUgc3RyaW5nIGZvciBvbmUgZGlzcGxheSAobW9yZSBjYW4gYmUgYWRk
-ZWQgaW4gdGhlIGZ1dHVyZSkuCj4KPiBUaGUgdmVuZG9yIHByZWZpeCAibm9uYW1lIiBpcyB1c2Vk
-IGJlY2F1c2UgdGhlIHZlbmRvciBpcyBub3Qga25vd24uCj4gVGhlIFlYMjQwUVYyOS1UIHBhbmVs
-WzFdIGlzIGZvdW5kLCBmb3IgZXhhbXBsZSwgaW4gYW4gQWRhZnJ1aXQgYnJlYWtvdXQKPiBib2Fy
-ZFsyXSBhbmQgaW4gTWluZHNlbnNvcnMnIFBpU3Rvcm1zWzNdLgo+Cj4gWzFdOiBodHRwczovL2Nk
-bi1sZWFybi5hZGFmcnVpdC5jb20vYXNzZXRzL2Fzc2V0cy8wMDAvMDQ2Lzg3OS9vcmlnaW5hbC9T
-UEVDLVlYMjQwUVYyOS1UX1Jldi5BX18xXy5wZGYKPiBbMl06IGh0dHBzOi8vd3d3LmFkYWZydWl0
-LmNvbS9wcm9kdWN0LzI0NzgKPiBbM106IGh0dHA6Ly93d3cubWluZHNlbnNvcnMuY29tL3N0ZW0t
-d2l0aC1yb2JvdGljcy8xMy1waXN0b3Jtcy12Mi1iYXNlLWtpdC1yYXNwYmVycnktcGktYnJhaW4t
-Zm9yLWxlZ28tcm9ib3QKPgo+IFNpZ25lZC1vZmYtYnk6IERhdmlkIExlY2huZXIgPGRhdmlkQGxl
-Y2hub2xvZ3kuY29tPgo+IC0tLQo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkz
-NDEudHh0ICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKwo+ICAgMSBmaWxlIGNoYW5nZWQs
-IDI3IGluc2VydGlvbnMoKykKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQKPgo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxp
-OTM0MS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0
-ZWssaWxpOTM0MS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uMGZjOTBiMmRkNzMyCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5MzQxLnR4dAo+IEBAIC0wLDAgKzEs
-MjcgQEAKPiArSWxpdGVrIElMSTkzNDEgZGlzcGxheSBwYW5lbHMKPiArCj4gK1RoaXMgYmluZGlu
-ZyBpcyBmb3IgZGlzcGxheSBwYW5lbHMgdXNpbmcgYW4gSWxpdGVrIElMSTkzNDEgY29udHJvbGxl
-ciBpbiBTUEkKPiArbW9kZS4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0
-aWJsZToJIm5vbmFtZSx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiCgpDYWxsaW5nIGEgdmVu
-ZG9yICdub25hbWUnIGxvb2tzIGEgYml0IG9kZCBhbmQgQUZBSUNUIGl0IGlzbid0IHVzZWQgYnkK
-YW55IG90aGVyIGJpbmRpbmcuIEEgZ29vZ2xlIHNlYXJjaCBhbHdheXMgbWVudGlvbnMgQWRhZnJ1
-aXQgaW4KY29ubmVjdGlvbiB3aXRoIHRoaXMgcGFuZWwsIHNvIEkgc3VnZ2VzdCB3ZSB1c2UgQWRh
-ZnJ1aXQgYXMgdmVuZG9yLgoKSSBkb24ndCB0aGluayB3ZSBzaG91bGQgdXNlICJpbGl0ZWssaWxp
-OTM0MSIgYXMgYW4gb3B0aW9uL2ZhbGxiYWNrLApiZWNhdXNlIHBhbmVscyB2YXJpZXMgaW4gcmVz
-b2x1dGlvbiAocmFyZWx5KSBhbmQgaW5pdGlhbGl6YXRpb24uIEEKZ2VuZXJpYyBpbGk5MzQxIGRy
-aXZlciB3b3VsZCBwcm9iYWJseSBub3Qgd29yayB3aXRoIGEgcmFuZG9tIG5ldyBwYW5lbC4KCj4g
-Ky0gZGMtZ3Bpb3M6CUQvQyBwaW4KPiArLSByZXNldC1ncGlvczoJUmVzZXQgcGluCj4gKwo+ICtU
-aGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29u
-dHJvbGxlciwgaGVuY2UKPiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAu
-Li9zcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4gKwo+ICtPcHRpb25hbCBwcm9w
-ZXJ0aWVzOgo+ICstIHJvdGF0aW9uOglwYW5lbCByb3RhdGlvbiBpbiBkZWdyZWVzIGNvdW50ZXIg
-Y2xvY2t3aXNlICgwLDkwLDE4MCwyNzApCj4gKy0gYmFja2xpZ2h0OglwaGFuZGxlIG9mIHRoZSBi
-YWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAoKWW91IGZvcmdvdCB0byBtZW50
-aW9uIHRoZSByZWd1bGF0b3IgdGhhdCB5b3Ugc3VwcG9ydCBpbiB0aGUgZHJpdmVyLgoKTm9yYWxm
-LgoKPiArCj4gK0V4YW1wbGU6Cj4gKwlkaXNwbGF5QDB7Cj4gKwkJY29tcGF0aWJsZSA9ICJub25h
-bWUseXgyNDBxdjI5IiwgImlsaXRlayxpbGk5MzQxIjsKPiArCQlyZWcgPSA8MD47Cj4gKwkJc3Bp
-LW1heC1mcmVxdWVuY3kgPSA8MzIwMDAwMDA+Owo+ICsJCWRjLWdwaW9zID0gPCZncGlvMCA5IEdQ
-SU9fQUNUSVZFX0hJR0g+Owo+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvMCA4IEdQSU9fQUNUSVZF
-X0hJR0g+Owo+ICsJCXJvdGF0aW9uID0gPDI3MD47Cj4gKwkJYmFja2xpZ2h0ID0gPCZiYWNrbGln
-aHQ+Owo+ICsJfTsKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On Sat, May 19, 2018 at 09:16:55PM +0800, kbuild test robot wrote:
+>Hi William,
+>
+>I love your patch! Perhaps something to improve:
+>
+>[auto build test WARNING on linus/master]
+>[also build test WARNING on v4.17-rc5 next-20180517]
+>[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+>url:    https://github.com/0day-ci/linux/commits/William-Breathitt-Gray/Introduce-the-Counter-subsystem/20180519-151353
+>reproduce:
+>        # apt-get install sparse
+>        make ARCH=x86_64 allmodconfig
+>        make C=1 CF=-D__CHECK_ENDIAN__
+>
+>
+>sparse warnings: (new ones prefixed by >>)
+>
+>>> drivers/counter/104-quad-8.c:803:26: sparse: symbol 'quad8_ops' was not declared. Should it be static?
+>
+>Please review and possibly fold the followup patch.
+
+Ah, yes it should be static -- looks like I made a minor mistake. I'll
+squash the fix into the next revision of this patchset.
+
+Thank you,
+
+William Breathitt Gray
+
+>
+>---
+>0-DAY kernel test infrastructure                Open Source Technology Center
+>https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
