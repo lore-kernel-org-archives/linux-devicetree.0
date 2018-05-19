@@ -1,96 +1,102 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Fri, 18 May 2018 17:24:45 -0500
-Message-ID: <20180518222445.GA16342@rob-hp-laptop>
-References: <cover.1526088081.git.collinsd@codeaurora.org>
- <41d5df73ddac772551d2966e0752bb0c357b1ded.1526088081.git.collinsd@codeaurora.org>
- <CAD=FV=XegPeFR8pdZM-YiBBJjrbej=C+2biBt4zJKnE90uTYZA@mail.gmail.com>
- <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org>
+From: =?iso-8859-1?Q?Br=FCns=2C_Stefan?= <Stefan.Bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: Re: Re: [PATCH v4 3/3] ARM: dts: sun7i: Add support for
+ the Ainol AW1 tablet
+Date: Sat, 19 May 2018 00:26:14 +0000
+Message-ID: <33944340.T0tLPSd54F@sbruens-linux>
+References: <20180507220413.21990-1-contact@paulk.fr>
+ <0da5787f0ce2309a74db88820bc58b3b3501c451.camel@paulk.fr>
+ <20180518071436.3vvyllghrdxptsxg@flea>
+Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBKG67XLQKGQEPFYMF5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180518071436.3vvyllghrdxptsxg@flea>
+Content-Language: en-US
+Content-ID: <C2DBBB7700A0594F9E84816559F38FF8-KnNo0XtUZUuELgA04lAiVw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Paul
+ Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark
+ Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 05:16:13PM -0700, David Collins wrote:
-> On 05/17/2018 02:22 PM, Doug Anderson wrote:
-> > On Fri, May 11, 2018 at 7:28 PM, David Collins <collinsd@codeaurora.org> wrote:
-> >> +- qcom,regulator-initial-microvolt
-> >> +       Usage:      optional; VRM regulators only
-> >> +       Value type: <u32>
-> >> +       Definition: Specifies the initial voltage in microvolts to request for a
-> >> +                   VRM regulator.
+On Freitag, 18. Mai 2018 09:14:36 CEST Maxime Ripard wrote:
+> On Mon, May 14, 2018 at 10:36:08PM +0200, Paul Kocialkowski wrote:
+> > > > +	backlight: backlight {
+> > > > +		compatible = "pwm-backlight";
+> > > > +		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > > > +		brightness-levels = <  0   1   1   1   1   2   2   2
+> > > > +				       2   3   3   3   3   4   4   4
+> > > > +				       5   5   5   6   6   6   7   7
+> > > > +				       8   8   8   9   9   9  10  10
+> > > > +				      10  11  11  12  12  12  13  13
+> > > > +				      14  14  14  15  15  16  16  17
+> > > > +				      17  17  18  18  19  19  20  20
+> > > > +				      21  21  21  22  22  23  23  24
+> > > > +				      24  25  25  26  26  27  27  28
+> > > > +				      28  29  30  30  31  31  32  32
+> > > > +				      33  33  34  35  35  36  36  37
+> > > > +				      38  38  39  39  40  41  41  42
+> > > > +				      43  43  44  44  45  46  47  47
+> > > > +				      48  49  49  50  51  51  52  53
+> > > > +				      54  54  55  56  57  57  58  59
+> > > > +				      60  61  61  62  63  64  65  65
+> > > > +				      66  67  68  69  70  71  71  72
+> > > > +				      73  74  75  76  77  78  79  80
+> > > > +				      81  82  83  84  85  86  87  88
+> > > > +				      89  90  91  92  93  94  95  96
+> > > > +				      97  98  99 101 102 103 104 105
+> > > > +				     106 108 109 110 111 112 114 115
+> > > > +				     116 117 119 120 121 123 124 125
+> > > > +				     127 128 129 131 132 133 135 136
+> > > > +				     138 139 141 142 144 145 147 148
+> > > > +				     150 151 153 154 156 157 159 161
+> > > > +				     162 164 166 167 169 171 173 174
+> > > > +				     176 178 180 181 183 185 187 189
+> > > > +				     191 192 194 196 198 200 202 204
+> > > > +				     206 208 210 212 214 216 219 221
+> > > > +				     223 225 227 229 232 234 236 238
+> > > > +				     241 242 244 246 248 250 253 255>;
+> > > 
+> > > You kind of overdid it here :)
+> > > 
+> > > What I meant to say before was that if you have 10 elements (and you
+> > > really should have something in that magnitude) each step should
+> > > increase the perceived brightness by 10%.
 > > 
-> > Now that Mark has landed the patch adding support for the
-> > -ENOTRECOVERABLE error code from get_voltage() / get_voltage_sel(), do
-> > we still need the qcom,regulator-initial-microvolt property?
-> 
-> Yes, this is still needed.  The -ENOTRECOVERABLE patch ensures that
-> qcom-rpmh-regulator devices can be registered even if
-> qcom,regulator-initial-microvolt is not specified.  However, that will
-> result in the regulators being configured for the minimum voltage
-> supported in the DT specified min/max range.  The
-> qcom,regulator-initial-microvolt property allows us to set a specific
-> voltage that is larger than the min constraint.
-> 
-> > If this is really still needed, can it be moved to the regulator core?
-> 
-> I'm not opposed to the idea, but I think that Mark is [1]:
-> 
-> >> Do you have a preference for qcom,regulator-initial-microvolt vs a generic
-> >> framework supported regulator-initial-microvolt property for configuring a
-> >> specific voltage at registration time?  We'll need to have support for one
-> >> or the other in order for the qcom_rpmh-regulator driver to be functional.
+> > Mhh I think 10 elements would fall too short to really depict the curve
+> > with appropriate precision. Given the usual size for brightness cursors
+> > in e.g. gnome-shell, it feels like a bigger number would be more
+> > appropriate. Let's make it to 100 with values from 0 to 255!
 > > 
-> > This is basically specific to Qualcomm, I can't off hand think of any
-> > other devices with similar issues.
-> 
-> 
-> >> +- regulator-initial-mode
-> >> +       Usage:      optional; VRM regulators only
-> >> +       Value type: <u32>
-> >> +       Definition: Specifies the initial mode to request for a VRM regulator.
-> >> +                   Supported values are RPMH_REGULATOR_MODE_* which are defined
-> >> +                   in [1] (i.e. 0 to 3).  This property may be specified even
-> >> +                   if the regulator-allow-set-load property is not specified.
+> > > In this particular case, I really think having something close to <0 4
+> > > 8 16 32 64 128 255> would be enough.
+> > > 
+> > > And in general, that kind of odd looking table without any more
+> > > context is just screaming for a comment :)
 > > 
-> > Every time I read the above I wonder why you're documenting a standard
-> > regulator regulator property in your bindings.  ...then I realize it's
-> > because you're doing it because you want to explicitly document what
-> > the valid modes are.  I wonder if it makes sense to just put a
-> > reference somewhere else in this document to go look at the header
-> > file where these are all nicely documented.
+> > Noted, I will explain the idea, but probably without the exact formula
+> > that's really a nasty hack written down on a piece of paper sitting in
+> > my garbage at this point.
 > 
-> Isn't that what the [1] in the above snippet is currently doing.  Further
-> down in qcom,rpmh-regulator.txt is this line:
+> So no one will ever be able to understand where this sequence comes
+> from (yourself-in-two-years included). That sounds like a pretty bad
+> idea.
 > 
-> +[1] include/dt-bindings/regulator/qcom,rpmh-regulator.h
-> 
-> 
-> > Speaking of documenting things like that, it might be worth finding
-> > somewhere in this doc to mention that the "bob" regulator on PMI8998
-> > can support "regulator-allow-bypass".  That tidbit got lost when we
-> > moved to the standard regulator bindings for bypass.
-> 
-> I suppose that I could add something like this:
-> 
-> +- regulator-allow-bypass
-> +	Usage:      optional; BOB type VRM regulators only
-> +	Value type: <empty>
-> +	Definition: See [2] for details.
-> ...
-> +[2]: Documentation/devicetree/bindings/regulator.txt
-> 
-> However, I don't want the patch to get NACKed because it is defining a
-> property that is already defined in the common regulator.txt file.
+> Maxime
 
-If all constraints are defined in the common doc, just "see 
-regulator.txt" is fine. You just need to say what properties this 
-binding uses.
+The following formula yields practically the same table:
 
-Rob
+out = ceil(255 * (0.245 * in/255  +  0.755 * pow(in/255, 2.6) ))
+
+Maximum error: 4, maximum relative error: 0.33 
+
+Kind regards,
+
+Stefan
