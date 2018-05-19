@@ -1,90 +1,121 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 2/3] dt-bindings: new binding for Ilitek ILI9341 display
- panels
-Date: Sat, 19 May 2018 10:50:17 -0500
-Message-ID: <b86e0eac-35bb-e143-ad44-8a091af798a5@lechnology.com>
-References: <20180515014349.26226-1-david@lechnology.com>
- <20180515014349.26226-3-david@lechnology.com>
- <50928486-822a-aff3-7c37-cc1c40cb62b8@tronnes.org>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 35/40] iommu/arm-smmu-v3: Add support for PCI ATS
+Date: Sat, 19 May 2018 13:25:06 -0400
+Message-ID: <922474e8-0aa5-e022-0502-f1e51b0d4859@codeaurora.org>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-36-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <50928486-822a-aff3-7c37-cc1c40cb62b8@tronnes.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180511190641.23008-36-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Nitin Patil <nitin@mindsensors.com>, Rob Herring <robh+dt@kernel.org>, limor@ladyada.net, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
+Cc: xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMTkvMjAxOCAwODozNyBBTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+IAo+IERlbiAx
-NS4wNS4yMDE4IDAzLjQzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+PiBUaGlzIGFkZHMgYSBuZXcg
-YmluZGluZyBmb3IgSWxpdGVrIElMSTkzNDEgZGlzcGxheSBwYW5lbHMuIEl0IGluY2x1ZGVzCj4+
-IGEgY29tcGF0aWJsZSBzdHJpbmcgZm9yIG9uZSBkaXNwbGF5IChtb3JlIGNhbiBiZSBhZGRlZCBp
-biB0aGUgZnV0dXJlKS4KPj4KPj4gVGhlIHZlbmRvciBwcmVmaXggIm5vbmFtZSIgaXMgdXNlZCBi
-ZWNhdXNlIHRoZSB2ZW5kb3IgaXMgbm90IGtub3duLgo+PiBUaGUgWVgyNDBRVjI5LVQgcGFuZWxb
-MV0gaXMgZm91bmQsIGZvciBleGFtcGxlLCBpbiBhbiBBZGFmcnVpdCBicmVha291dAo+PiBib2Fy
-ZFsyXSBhbmQgaW4gTWluZHNlbnNvcnMnIFBpU3Rvcm1zWzNdLgo+Pgo+PiBbMV06IGh0dHBzOi8v
-Y2RuLWxlYXJuLmFkYWZydWl0LmNvbS9hc3NldHMvYXNzZXRzLzAwMC8wNDYvODc5L29yaWdpbmFs
-L1NQRUMtWVgyNDBRVjI5LVRfUmV2LkFfXzFfLnBkZgo+PiBbMl06IGh0dHBzOi8vd3d3LmFkYWZy
-dWl0LmNvbS9wcm9kdWN0LzI0NzgKPj4gWzNdOiBodHRwOi8vd3d3Lm1pbmRzZW5zb3JzLmNvbS9z
-dGVtLXdpdGgtcm9ib3RpY3MvMTMtcGlzdG9ybXMtdjItYmFzZS1raXQtcmFzcGJlcnJ5LXBpLWJy
-YWluLWZvci1sZWdvLXJvYm90Cj4+Cj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIExlY2huZXIgPGRh
-dmlkQGxlY2hub2xvZ3kuY29tPgo+PiAtLS0KPj4gwqAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaWxp
-dGVrLGlsaTkzNDEudHh0wqDCoMKgwqDCoMKgIHwgMjcgKysrKysrKysrKysrKysrKysrKwo+PiDC
-oCAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQo+PiDCoCBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkz
-NDEudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi4wZmM5MGIyZGQ3MzIKPj4gLS0tIC9kZXYvbnVsbAo+
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWss
-aWxpOTM0MS50eHQKPj4gQEAgLTAsMCArMSwyNyBAQAo+PiArSWxpdGVrIElMSTkzNDEgZGlzcGxh
-eSBwYW5lbHMKPj4gKwo+PiArVGhpcyBiaW5kaW5nIGlzIGZvciBkaXNwbGF5IHBhbmVscyB1c2lu
-ZyBhbiBJbGl0ZWsgSUxJOTM0MSBjb250cm9sbGVyIGluIFNQSQo+PiArbW9kZS4KPj4gKwo+PiAr
-UmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTrCoMKgwqAgIm5vbmFtZSx5eDI0
-MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiCj4gCj4gQ2FsbGluZyBhIHZlbmRvciAnbm9uYW1lJyBs
-b29rcyBhIGJpdCBvZGQgYW5kIEFGQUlDVCBpdCBpc24ndCB1c2VkIGJ5Cj4gYW55IG90aGVyIGJp
-bmRpbmcuIEEgZ29vZ2xlIHNlYXJjaCBhbHdheXMgbWVudGlvbnMgQWRhZnJ1aXQgaW4KPiBjb25u
-ZWN0aW9uIHdpdGggdGhpcyBwYW5lbCwgc28gSSBzdWdnZXN0IHdlIHVzZSBBZGFmcnVpdCBhcyB2
-ZW5kb3IuCgpJIHdhcyBob3BpbmcgdGhhdCBzb21lb25lIG1pZ2h0IGtub3cgdGhlIGNvcnJlY3Qg
-dmVuZG9yLCBidXQgYmFycmluZyB0aGF0LApJIGFncmVlIHRoYXQgYWRhZnJ1aXQgaXMgcHJvYmFi
-bHkgdGhlIGJlc3QgY2hvaWNlLgoKPiAKPiBJIGRvbid0IHRoaW5rIHdlIHNob3VsZCB1c2UgImls
-aXRlayxpbGk5MzQxIiBhcyBhbiBvcHRpb24vZmFsbGJhY2ssCj4gYmVjYXVzZSBwYW5lbHMgdmFy
-aWVzIGluIHJlc29sdXRpb24gKHJhcmVseSkgYW5kIGluaXRpYWxpemF0aW9uLiBBCj4gZ2VuZXJp
-YyBpbGk5MzQxIGRyaXZlciB3b3VsZCBwcm9iYWJseSBub3Qgd29yayB3aXRoIGEgcmFuZG9tIG5l
-dyBwYW5lbC4KCkknbSBqdXN0IGZvbGxvd2luZyB0aGUgcHJlY2VkZW50IHNldCBpbiB0aGUgb3Ro
-ZXIgYmluZGluZ3MgZm9yIHNpbWlsYXIKZGlzcGxheXMgdGhhdCBJIGhhdmUgYWxyZWFkeSBkb25l
-LgoKUmVmZXJlbmNlczoKKiBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gv
-MTk0NjQ4LwoqIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9wYXRjaC8xOTUzMjAv
-CgpJIGFncmVlIHRoYXQgaXQgaXMgcHJvYmFibHkgbm90IHN1cGVyLXVzZWZ1bCBhcyBhIGZhbGxi
-YWNrLiBPbiB0aGUgb3RoZXIKaGFuZCwgdGhlIHZlbmRvcnMgYW5kIG1vZGVscyBmb3IgdGhlc2Ug
-ZGlzcGxheXMgYXJlIHByZXR0eSBvYnNjdXJlIGFuZApJIHRoaW5rIGhhdmluZyB0aGUgbW9yZSB3
-ZWxsLWtub3duIGNvbnRyb2xsZXIgbmFtZSBfc29tZXdoZXJlXyBpcyB1c2VmdWwuCgoKPiAKPj4g
-Ky0gZGMtZ3Bpb3M6wqDCoMKgIEQvQyBwaW4KPj4gKy0gcmVzZXQtZ3Bpb3M6wqDCoMKgIFJlc2V0
-IHBpbgo+PiArCj4+ICtUaGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5v
-ZGUgb2YgYSBTUEkgY29udHJvbGxlciwgaGVuY2UKPj4gK2FsbCBtYW5kYXRvcnkgcHJvcGVydGll
-cyBkZXNjcmliZWQgaW4gLi4vc3BpL3NwaS1idXMudHh0IG11c3QgYmUgc3BlY2lmaWVkLgo+PiAr
-Cj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArLSByb3RhdGlvbjrCoMKgwqAgcGFuZWwgcm90
-YXRpb24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQo+PiArLSBi
-YWNrbGlnaHQ6wqDCoMKgIHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQg
-dG8gdGhlIHBhbmVsCj4gCj4gWW91IGZvcmdvdCB0byBtZW50aW9uIHRoZSByZWd1bGF0b3IgdGhh
-dCB5b3Ugc3VwcG9ydCBpbiB0aGUgZHJpdmVyLgo+IAo+IE5vcmFsZi4KPiAKPj4gKwo+PiArRXhh
-bXBsZToKPj4gK8KgwqDCoCBkaXNwbGF5QDB7Cj4+ICvCoMKgwqDCoMKgwqDCoCBjb21wYXRpYmxl
-ID0gIm5vbmFtZSx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiOwo+PiArwqDCoMKgwqDCoMKg
-wqAgcmVnID0gPDA+Owo+PiArwqDCoMKgwqDCoMKgwqAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MzIw
-MDAwMDA+Owo+PiArwqDCoMKgwqDCoMKgwqAgZGMtZ3Bpb3MgPSA8JmdwaW8wIDkgR1BJT19BQ1RJ
-VkVfSElHSD47Cj4+ICvCoMKgwqDCoMKgwqDCoCByZXNldC1ncGlvcyA9IDwmZ3BpbzAgOCBHUElP
-X0FDVElWRV9ISUdIPjsKPj4gK8KgwqDCoMKgwqDCoMKgIHJvdGF0aW9uID0gPDI3MD47Cj4+ICvC
-oMKgwqDCoMKgwqDCoCBiYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4+ICvCoMKgwqAgfTsKPiAK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 5/11/2018 3:06 PM, Jean-Philippe Brucker wrote:
+> PCIe devices can implement their own TLB, named Address Translation Cache
+> (ATC). Enable Address Translation Service (ATS) for devices that support
+> it and send them invalidation requests whenever we invalidate the IOTLBs.
+> 
+>   Range calculation
+>   -----------------
+> 
+> The invalidation packet itself is a bit awkward: range must be naturally
+> aligned, which means that the start address is a multiple of the range
+> size. In addition, the size must be a power of two number of 4k pages. We
+> have a few options to enforce this constraint:
+> 
+> (1) Find the smallest naturally aligned region that covers the requested
+>     range. This is simple to compute and only takes one ATC_INV, but it
+>     will spill on lots of neighbouring ATC entries.
+> 
+> (2) Align the start address to the region size (rounded up to a power of
+>     two), and send a second invalidation for the next range of the same
+>     size. Still not great, but reduces spilling.
+> 
+> (3) Cover the range exactly with the smallest number of naturally aligned
+>     regions. This would be interesting to implement but as for (2),
+>     requires multiple ATC_INV.
+> 
+> As I suspect ATC invalidation packets will be a very scarce resource, I'll
+> go with option (1) for now, and only send one big invalidation. We can
+> move to (2), which is both easier to read and more gentle with the ATC,
+> once we've observed on real systems that we can send multiple smaller
+> Invalidation Requests for roughly the same price as a single big one.
+> 
+> Note that with io-pgtable, the unmap function is called for each page, so
+> this doesn't matter. The problem shows up when sharing page tables with
+> the MMU.
+> 
+>   Timeout
+>   -------
+> 
+> ATC invalidation is allowed to take up to 90 seconds, according to the
+> PCIe spec, so it is possible to hit the SMMU command queue timeout during
+> normal operations.
+> 
+> Some SMMU implementations will raise a CERROR_ATC_INV_SYNC when a CMD_SYNC
+> fails because of an ATC invalidation. Some will just abort the CMD_SYNC.
+> Others might let CMD_SYNC complete and have an asynchronous IMPDEF
+> mechanism to record the error. When we receive a CERROR_ATC_INV_SYNC, we
+> could retry sending all ATC_INV since last successful CMD_SYNC. When a
+> CMD_SYNC fails without CERROR_ATC_INV_SYNC, we could retry sending *all*
+> commands since last successful CMD_SYNC.
+> 
+> We cannot afford to wait 90 seconds in iommu_unmap, let alone MMU
+> notifiers. So we'd have to introduce a more clever system if this timeout
+> becomes a problem, like keeping hold of mappings and invalidating in the
+> background. Implementing safe delayed invalidations is a very complex
+> problem and deserves a series of its own. We'll assess whether more work
+> is needed to properly handle ATC invalidation timeouts once this code runs
+> on real hardware.
+> 
+>   Misc
+>   ----
+> 
+> I didn't put ATC and TLB invalidations in the same functions for three
+> reasons:
+> 
+> * TLB invalidation by range is batched and committed with a single sync.
+>   Batching ATC invalidation is inconvenient, endpoints limit the number of
+>   inflight invalidations. We'd have to count the number of invalidations
+>   queued and send a sync periodically. In addition, I suspect we always
+>   need a sync between TLB and ATC invalidation for the same page.
+> 
+> * Doing ATC invalidation outside tlb_inv_range also allows to send less
+>   requests, since TLB invalidations are done per page or block, while ATC
+>   invalidations target IOVA ranges.
+> 
+> * TLB invalidation by context is performed when freeing the domain, at
+>   which point there isn't any device attached anymore.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+
+
+Nothing specific about this patch but just a general observation. Last time I
+looked at the code, it seemed to require both ATS and PRI support from a given
+hardware.
+
+I think you can assume that for ATS 1.1 specification but ATS 1.0 specification
+allows a system to have ATS+PASID without PRI. 
+
+QDF2400 is ATS 1.0 compatible as an example. 
+
+Is this an assumption / my misinterpretation?
+
+
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
