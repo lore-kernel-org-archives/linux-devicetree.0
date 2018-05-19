@@ -1,121 +1,77 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 15/15] ARM: dts: sun8i: r40: Enable HDMI output
- on BananaPi M2 Ultra
-Date: Sat, 19 May 2018 20:31:27 +0200
-Message-ID: <20180519183127.2718-16-jernej.skrabec@siol.net>
-References: <20180519183127.2718-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 0/3] pcal6524 extensions and fixes for pca953x driver
+Date: Sat, 19 May 2018 21:58:47 +0300
+Message-ID: <CAHp75VeEy_t-jKuTb6sgONw0Mx=iLjdgsS_wJmz88X30652hUg@mail.gmail.com>
+References: <cover.1526533188.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBYG3QHMAKGQERDID3HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180519183127.2718-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1526533188.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Since HDMI can be considered as main output, most capable mixer is
-connected to it (mixer0).
+On Thu, May 17, 2018 at 7:59 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> V7:
+> * replace PCAL register masks by hex constants
+>
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-index 27d9ccd0ef2f..66b492ad5847 100644
---- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-+++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-@@ -58,6 +58,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -93,6 +104,10 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -101,6 +116,22 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_in {
-+	hdmi_in_tcon_tv0: endpoint {
-+		remote-endpoint = <&tcon_tv0_out_hdmi>;
-+	};
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -161,6 +192,12 @@
- 	regulator-name = "vcc-wifi";
- };
- 
-+&mixer0_out {
-+	mixer0_out_tcon_tv0: endpoint {
-+		remote-endpoint = <&tcon_tv0_in_mixer0>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
-@@ -195,6 +232,19 @@
- 	status = "okay";
- };
- 
-+&tcon_tv0_in {
-+	tcon_tv0_in_mixer0: endpoint {
-+		remote-endpoint = <&mixer0_out_tcon_tv0>;
-+	};
-+};
-+
-+&tcon_tv0_out {
-+	tcon_tv0_out_hdmi: endpoint@1 {
-+		reg = <1>;
-+		remote-endpoint = <&hdmi_in_tcon_tv0>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+> 2018-05-16 19:01:29: V6:
+> * added proper attribution to the formula used for fixing the
+>   pcal6524 register address (changes commit message only)
+> * add back missing first patch from V2 that defines the
+>   PCA_LATCH_INT constant
+> * removed patches already merged
+>
+> 2018-04-28 18:33:42: V5:
+> * fix wrong split up between patches 1/7 and 2/7.
+>
+> 2018-04-26 19:35:07: V4:
+> * introduced PCA_LATCH_INT constant to make of_table more
+>   readable (suggested by Andy Shevchenko)
+> * converted all register constants to hex in a separate
+>   patch (suggested by Andy Shevchenko)
+> * separated additional pcal953x and pcal6524 register
+>   definitions into separate patches (suggested by Andy Shevchenko)
+> * made special pcal6524 address adjustment more readable
+>   (suggested by Andy Shevchenko)
+> * moved gpio-controller and interrupt-controller to the
+>   "required" section (reviewed by Rob Herring)
+>
+> 2018-04-10 18:07:07: V3:
+> * add Reported-by: and Reviewed-by:
+> * fix wording for bindings description and example
+> * convert all register offsets to hex
+> * omit the LEVEL-IRQ RFC/hack commit
+>
+> 2018-04-04 21:00:27: V2:
+> * added PCA_PCAL flags if matched through of-table
+> * fix address calculation for extended PCAL6524 registers
+> * hack to map LEVEL_LOW to EDGE_FALLING to be able to
+>   test in combination with ts3a227e driver
+> * improve description of bindings for optional vcc-supply
+>   and interrupt-controller;
+>
+> 2018-03-10 09:32:53: no initial description
+>
+> H. Nikolaus Schaller (3):
+>   gpio: pca953x: set the PCA_PCAL flag also when matching by DT
+>   gpio: pca953x: define masks for addressing common and extended
+>     registers
+>   gpio: pca953x: fix address calculation for pcal6524
+>
+>  drivers/gpio/gpio-pca953x.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> --
+> 2.12.2
+>
+
+
+
 -- 
-2.17.0
+With Best Regards,
+Andy Shevchenko
