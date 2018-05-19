@@ -1,128 +1,55 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 06/15] drm/sun4i: tcon: Add support for tcon-top
-Date: Sat, 19 May 2018 20:31:18 +0200
-Message-ID: <20180519183127.2718-7-jernej.skrabec@siol.net>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH 04/15] dt-bindings: display: sunxi-drm: Add TCON TOP description
+Date: Sat, 19 May 2018 20:31:16 +0200
+Message-ID: <20180519183127.2718-5-jernej.skrabec@siol.net>
 References: <20180519183127.2718-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBSW3QHMAKGQEIMX7PBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180519183127.2718-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180519183127.2718-1-jernej.skrabec@siol.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-If SoC has TCON TOP unit, it has to be configured from TCON, since it
-has all information needed. Additionally, if it is TCON TV, it must also
-enable bus gate inside TCON TOP unit.
+TCON TOP main purpose is to configure whole display pipeline. It
+determines relationships between mixers and TCONs, selects source TCON
+for HDMI, muxes LCD and TV encoder GPIO output, selects TV encoder
+clock source and contains additional TV TCON and DSI gates.
 
-Add support for such TCONs.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 28 ++++++++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.h |  8 ++++++++
- 2 files changed, 36 insertions(+)
+ .../bindings/display/sunxi/sun4i-drm.txt      | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 08747fc3ee71..e0c562ce1c22 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -688,6 +688,16 @@ static int sun4i_tcon_init_clocks(struct device *dev,
- 		dev_err(dev, "Couldn't get the TCON bus clock\n");
- 		return PTR_ERR(tcon->clk);
- 	}
-+
-+	if (tcon->quirks->needs_tcon_top && tcon->quirks->has_channel_1) {
-+		tcon->top_clk = devm_clk_get(dev, "tcon-top");
-+		if (IS_ERR(tcon->top_clk)) {
-+			dev_err(dev, "Couldn't get the TCON TOP bus clock\n");
-+			return PTR_ERR(tcon->top_clk);
-+		}
-+		clk_prepare_enable(tcon->top_clk);
-+	}
-+
- 	clk_prepare_enable(tcon->clk);
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 3346c1e2a7a0..a099957ab62a 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -187,6 +187,26 @@ And on the A23, A31, A31s and A33, you need one more clock line:
+    - 'lvds-alt': An alternative clock source, separate from the TCON channel 0
+                  clock, that can be used to drive the LVDS clock
  
- 	if (tcon->quirks->has_channel_0) {
-@@ -712,6 +722,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
- static void sun4i_tcon_free_clocks(struct sun4i_tcon *tcon)
- {
- 	clk_disable_unprepare(tcon->clk);
-+	clk_disable_unprepare(tcon->top_clk);
- }
- 
- static int sun4i_tcon_init_irq(struct device *dev,
-@@ -980,6 +991,23 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
- 	tcon->id = engine->id;
- 	tcon->quirks = of_device_get_match_data(dev);
- 
-+	if (tcon->quirks->needs_tcon_top) {
-+		struct device_node *np;
++TCON TOP
++--------
 +
-+		np = of_parse_phandle(dev->of_node, "allwinner,tcon-top", 0);
-+		if (np) {
-+			struct platform_device *pdev;
++TCON TOPs main purpose is to configure whole display pipeline. It determines
++relationships between mixers and TCONs, selects source TCON for HDMI, muxes
++LCD and TV encoder GPIO output, selects TV encoder clock source and contains
++additional TV TCON and DSI gates.
 +
-+			pdev = of_find_device_by_node(np);
-+			if (pdev)
-+				tcon->tcon_top = platform_get_drvdata(pdev);
-+			of_node_put(np);
++Required properties:
++  - compatible: value must be one of:
++    * allwinner,sun8i-r40-tcon-top
++  - reg: base address and size of the memory-mapped region.
++  - clocks: phandle to the clocks feeding the TCON TOP
++    * bus: TCON TOP interface clock
++  - clock-names: clock name mentioned above
++  - resets: phandle to the reset line driving the DRC
++    * rst: TCON TOP reset line
++  - reset-names: reset name mentioned above
++  - #clock-cells : must contain 1
 +
-+			if (!tcon->tcon_top)
-+				return -EPROBE_DEFER;
-+		}
-+	}
-+
- 	tcon->lcd_rst = devm_reset_control_get(dev, "lcd");
- 	if (IS_ERR(tcon->lcd_rst)) {
- 		dev_err(dev, "Couldn't get our reset line\n");
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index f6a071cd5a6f..26be0d317a38 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -20,6 +20,8 @@
- #include <linux/list.h>
- #include <linux/reset.h>
+ DRC
+ ---
  
-+#include "sun8i_tcon_top.h"
-+
- #define SUN4I_TCON_GCTL_REG			0x0
- #define SUN4I_TCON_GCTL_TCON_ENABLE			BIT(31)
- #define SUN4I_TCON_GCTL_IOMAP_MASK			BIT(0)
-@@ -224,6 +226,7 @@ struct sun4i_tcon_quirks {
- 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
- 	bool    needs_edp_reset; /* a80 edp reset needed for tcon0 access */
- 	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
-+	bool	needs_tcon_top;  /* TCON TOP holds additional muxing configuration */
- 
- 	/* callback to handle tcon muxing options */
- 	int	(*set_mux)(struct sun4i_tcon *, const struct drm_encoder *);
-@@ -249,6 +252,9 @@ struct sun4i_tcon {
- 	u8				dclk_max_div;
- 	u8				dclk_min_div;
- 
-+	/* TCON TOP clock */
-+	struct clk			*top_clk;
-+
- 	/* Reset control */
- 	struct reset_control		*lcd_rst;
- 	struct reset_control		*lvds_rst;
-@@ -263,6 +269,8 @@ struct sun4i_tcon {
- 
- 	int				id;
- 
-+	struct sun8i_tcon_top		*tcon_top;
-+
- 	/* TCON list management */
- 	struct list_head		list;
- };
 -- 
 2.17.0
