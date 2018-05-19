@@ -1,62 +1,143 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v8 10/15] cpufreq: Add Kryo CPU scaling driver
-Date: Sat, 19 May 2018 12:54:41 +0100
-Message-ID: <20180519115441.GK17671@n2100.armlinux.org.uk>
-References: <1526555955-29960-1-git-send-email-ilialin@codeaurora.org>
- <1526555955-29960-11-git-send-email-ilialin@codeaurora.org>
- <20180518014538.duphof6enscpm5vp@vireshk-i7>
- <018701d3ef61$dfd5e700$9f81b500$@codeaurora.org>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
+ from K+P
+Date: Sat, 19 May 2018 14:02:02 +0200
+Message-ID: <20180519140202.3449e3c1@jawa>
+References: <20180509153428.1440-1-lukma@denx.de>
+        <CAOMZO5AexXNEGVoXa9K_GAm+aFLNRQOXOhF_SdKAjV1qmuD2nA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/JiPSsZOYOlL9J=a1XM0m/MN"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <018701d3ef61$dfd5e700$9f81b500$@codeaurora.org>
+In-Reply-To: <CAOMZO5AexXNEGVoXa9K_GAm+aFLNRQOXOhF_SdKAjV1qmuD2nA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ilialin@codeaurora.org
-Cc: 'Viresh Kumar' <viresh.kumar@linaro.org>, mark.rutland@arm.com, nm@ti.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, tfinkel@codeaurora.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, nicolas.dechesne@linaro.org, linux-clk@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, celster@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, broonie@kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, sboyd@kernel.org, rjw@rjwysocki.net, lgirdwood@gmail.com, amit.kucheria@linaro.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 19, 2018 at 02:09:24PM +0300, ilialin@codeaurora.org wrote:
-> +static int __init qcom_cpufreq_kryo_driver_init(void)
-> +{
-> +       struct device *cpu_dev_silver, *cpu_dev_gold;
-> +       struct opp_table *opp_silver, *opp_gold;
-> +       enum _msm8996_version msm8996_version;
-> +       struct nvmem_cell *speedbin_nvmem;
-> +       struct platform_device *pdev;
-> +       struct device_node *np;
-> +       u8 *speedbin;
-> +       u32 versions;
-> +       size_t len;
-> +       int ret;
-> +
-> +       cpu_dev_silver = get_cpu_device(SILVER_LEAD);
-> +       if (IS_ERR_OR_NULL(cpu_dev_silver))
-> +               return PTR_ERR(cpu_dev_silver);
-> +
-> +       cpu_dev_gold = get_cpu_device(SILVER_LEAD);
-> +       if (IS_ERR_OR_NULL(cpu_dev_gold))
-> +               return PTR_ERR(cpu_dev_gold);
-> +
-> +       msm8996_version = qcom_cpufreq_kryo_get_msm_id();
-> +       if (NUM_OF_MSM8996_VERSIONS == msm8996_version) {
-> +               dev_err(cpu_dev_silver, "Not Snapdragon 820/821!");
-> +               return -ENODEV;
-> +       }
-> +
-> +       np = dev_pm_opp_of_get_opp_desc_node(cpu_dev_silver);
-> +       if (IS_ERR_OR_NULL(np))
-> +               return PTR_ERR(np);
+--Sig_/JiPSsZOYOlL9J=a1XM0m/MN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This function (qcom_cpufreq_kryo_driver_init) returns zero on success.
-You are checking "np" here for being an error pointer, or NULL.
-What value do you think PTR_ERR() returns in the case of PTR_ERR(NULL)?
+Hi Fabio,
 
-IS_ERR_OR_NULL() is considered by some (me included) as being _very_
-harmful because programmers generally fail to look at linux/err.h and
-consider what it means when used as above.
+Thanks for your feedback.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+> Hi Lukasz,
+>=20
+> On Wed, May 9, 2018 at 12:34 PM, Lukasz Majewski <lukma@denx.de>
+> wrote:
+>=20
+> > +&iomuxc {
+> > +       imx53-kp-ddc { =20
+>=20
+> No need for keeping this imx53-kp-ddc.
+>=20
+> > diff --git a/arch/arm/boot/dts/imx53-kp-hsc.dts
+> > b/arch/arm/boot/dts/imx53-kp-hsc.dts new file mode 100644
+> > index 000000000000..fff358395c9d
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx53-kp-hsc.dts
+> > @@ -0,0 +1,53 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright 2018
+> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "imx53-kp.dtsi"
+> > +
+> > +/ {
+> > +       model =3D "K+P imx53 HSC";
+> > +       compatible =3D "kiebackpeter,imx53-hsc", "fsl,imx53";
+> > + =20
+>=20
+> No need for this blank line.
+>=20
+> > +};
+> > +
+> > +&fec {
+> > +       status =3D "okay"; =20
+>=20
+> We usually put the status in the last line.
+
+After moving status property to the end:
+
+Error: arch/arm/boot/dts/imx53-kp-hsc.dts:21.2-18 Properties must
+precede subnodes FATAL ERROR: Unable to parse input tree
+
+So I opt for leaving it as it was.
+
+>=20
+> > +       gpio_buttons {
+> > +               compatible =3D "gpio-keys";
+> > +               #address-cells =3D <1>;
+> > +               #size-cells =3D <0>;
+> > +               pinctrl-names =3D "default";
+> > +               pinctrl-0 =3D <&pinctrl_gpiobuttons>;
+> > +
+> > +               button@1 { =20
+>=20
+> You pass @1 without a reg property. This triggers a warning when
+> building with W=3D1.
+>=20
+> You could remove the @1.
+>=20
+> Please make sure this patch does not introduce any W=3D1 dtc warning.
+>=20
+> > +&iomuxc {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_kp_common>;
+> > +
+> > +       imx53-kp-common { =20
+>=20
+> No need for this  imx53-kp-common
+
+After removing imx53-kp-ddc and imx53-kp-common iomux subnodes I do see
+following errors in the dmesg (v4.17-rc5):
+
+imx53-pinctrl 53fa8000.iomuxc: function 'iomuxc' not supported
+imx53-pinctrl 53fa8000.iomuxc: invalid function iomuxc in map table
+
+Above statements are not visible when I use the v1 code of this patch.
+
+>=20
+> > +&uart4 {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_uart4>;
+> > + =20
+>=20
+> No need for this blank line.
+
+
+I will sent fixed version in v2.
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/JiPSsZOYOlL9J=a1XM0m/MN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlsAEjoACgkQAR8vZIA0
+zr1WPAf9FltjR0GYAkrvt9dY4X9+IhtC7+F9UHQEApuPSJEgDLJGmihT7/ExuAuy
+Opt0k7YyTb7WmpzKBslCzOU1MW79r0BUgxNjThbPPQdM/x1PmnwlWjbjBkbyRaA4
+fRK79QDXzozJQJwi9Nf8wDCk4g/UX9LO1rcuU+3dUqxuFjT5KXcmPIyr5BcBbIlX
+UVCi0An6XQCtUK1dymlA14eQhgGkVdOcw1VhK+uInGC4xI/sxqInrDR3EarevBJx
+h5ZuhI0p0j0cVsmbEStBqglS87MHTkOhNIXRZz1259bQnKgeG97QHHIxTihX5Lss
+42BOLBO8TWuXZMDmobJBR0SZ4A+nrA==
+=wEn3
+-----END PGP SIGNATURE-----
+
+--Sig_/JiPSsZOYOlL9J=a1XM0m/MN--
