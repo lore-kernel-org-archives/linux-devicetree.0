@@ -1,60 +1,97 @@
-From: Qiang Yu <yuq825@gmail.com>
-Subject: Re: [PATCH RFC 06/24] drm/lima: add lima uapi header
-Date: Sun, 20 May 2018 15:25:48 +0800
-Message-ID: <CAKGbVbsgtvcL=2gNCKnrUbbk4reg-tSmZb0k5KZSSbMX6WbfXw@mail.gmail.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180518092815.25280-7-yuq825@gmail.com>
- <a2f2311c-7473-e857-a4e6-1c3e7c44aeaf@denx.de>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 10/15] drm/sun4i: Add support for R40 TV TCONs
+Date: Sun, 20 May 2018 09:30:22 +0200
+Message-ID: <8079031.6V9S5xCcmc@jernej-laptop>
+References: <20180519183127.2718-1-jernej.skrabec@siol.net> <CAGRGNgWumzhiiwJenOXRuRN0i-_2uY=YR5L+9m70HW2ibF=C7w@mail.gmail.com> <CAGRGNgXbKGhnern4=_W9W5dKM54H5B1dnAD7up-23rUAMWWCSw@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <a2f2311c-7473-e857-a4e6-1c3e7c44aeaf@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Vasut <marex@denx.de>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBN6IQTMAKGQEDQ4V4TI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGRGNgXbKGhnern4=_W9W5dKM54H5B1dnAD7up-23rUAMWWCSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXkgMTgsIDIwMTggYXQgNTozMyBQTSwgTWFyZWsgVmFzdXQgPG1hcmV4QGRlbngu
-ZGU+IHdyb3RlOgo+Cj4gT24gMDUvMTgvMjAxOCAxMToyNyBBTSwgUWlhbmcgWXUgd3JvdGU6Cj4K
-PiBDb21taXQgbWVzc2FnZSBpcyBtaXNzaW5nCj4KPiA+IFNpZ25lZC1vZmYtYnk6IFFpYW5nIFl1
-IDx5dXE4MjVAZ21haWwuY29tPgo+ID4gLS0tCj4gPiAgaW5jbHVkZS91YXBpL2RybS9saW1hX2Ry
-bS5oIHwgMTk1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAxOTUgaW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNs
-dWRlL3VhcGkvZHJtL2xpbWFfZHJtLmgKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS91YXBp
-L2RybS9saW1hX2RybS5oIGIvaW5jbHVkZS91YXBpL2RybS9saW1hX2RybS5oCj4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi45ZGY5NWU0NmZiMmMKPiA+IC0t
-LSAvZGV2L251bGwKPiA+ICsrKyBiL2luY2x1ZGUvdWFwaS9kcm0vbGltYV9kcm0uaAo+Cj4gUGxl
-YXNlIGNvbnZlcnQgdGhpcyB0byB0aGUgU1BEWCBsaWNlbnNlIGlkZW50aWZpZXJzLCB0aGF0IGlz
-Cj4KPiAvLyBTUERYLi4uCj4KT0suCgo+ID4gQEAgLTAsMCArMSwxOTUgQEAKPiA+ICsvKgo+ID4g
-KyAqIENvcHlyaWdodCAoQykgMjAxNy0yMDE4IExpbWEgUHJvamVjdAo+ID4gKyAqCj4gPiArICog
-UGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBjaGFyZ2UsIHRvIGFueSBwZXJz
-b24gb2J0YWluaW5nIGEKPiA+ICsgKiBjb3B5IG9mIHRoaXMgc29mdHdhcmUgYW5kIGFzc29jaWF0
-ZWQgZG9jdW1lbnRhdGlvbiBmaWxlcyAodGhlICJTb2Z0d2FyZSIpLAo+ID4gKyAqIHRvIGRlYWwg
-aW4gdGhlIFNvZnR3YXJlIHdpdGhvdXQgcmVzdHJpY3Rpb24sIGluY2x1ZGluZyB3aXRob3V0IGxp
-bWl0YXRpb24KPiA+ICsgKiB0aGUgcmlnaHRzIHRvIHVzZSwgY29weSwgbW9kaWZ5LCBtZXJnZSwg
-cHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwKPiA+ICsgKiBhbmQvb3Igc2VsbCBjb3Bp
-ZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUKPiA+
-ICsgKiBTb2Z0d2FyZSBpcyBmdXJuaXNoZWQgdG8gZG8gc28sIHN1YmplY3QgdG8gdGhlIGZvbGxv
-d2luZyBjb25kaXRpb25zOgo+Cj4gWy4uLl0KPgo+ID4gKyNpZiBkZWZpbmVkKF9fY3BsdXNwbHVz
-KQo+ID4gK2V4dGVybiAiQyIgewo+ID4gKyNlbmRpZgo+Cj4gSXMgdGhpcyBDKysgc3R1ZmYgbmVl
-ZGVkID8KPgpUaGlzIGZpbGUgaXMgdXNlZCBieSBib3RoIGtlcm5lbCBhbmQgdXNlciBzcGFjZSBw
-cm9ncmFtcywgc28gSSBhZGRlZCB0aGlzCmZvbGxvd2luZyBvdGhlciB4eHhfZHJtLmggZmlsZXMg
-aGVyZS4KCj4gWy4uLl0KPgo+ID4gKyNkZWZpbmUgTElNQV9TVUJNSVRfRkxBR19FWFBMSUNJVF9G
-RU5DRSAoMSA8PCAwKQo+ID4gKyNkZWZpbmUgTElNQV9TVUJNSVRfRkxBR19TWU5DX0ZEX09VVCAg
-ICAoMSA8PCAxKQo+Cj4gQklUKDApIGFuZCBCSVQoMSkgaWYgYXBwbGljYWJsZQoKSSBjYW4gdXNl
-IEJJVCgpIGZvciBrZXJuZWwgb25seSBmaWxlcyBidXQgbm90IHRoaXMgdXNlci9rZXJuZWwgc2hh
-cmVkIG9uZSwKYmVjYXVzZSBJIHNlZSBCSVQgaXMgZGVmaW5lZCBpbiB0aGUga2VybmVsIG9ubHks
-IHVzZXIgbmVlZCB0byBkZWZpbmUgaXQgaWYKdGhpcyBmaWxlIHVzZSBpdC4KCj4gWy4uLl0KPgo+
-IC0tCj4gQmVzdCByZWdhcmRzLAo+IE1hcmVrIFZhc3V0Cl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+Dne nedelja, 20. maj 2018 ob 04:09:52 CEST je Julian Calaby napisal(a):
+> Hi Jernej,
+> 
+> On Sun, May 20, 2018 at 11:57 AM, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 
+wrote:
+> > Hi Jernej,
+> > 
+> > On Sun, May 20, 2018 at 4:31 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> 
+wrote:
+> >> R40 display pipeline has a lot of possible configurations. HDMI can be
+> >> connected to 2 different TCONs (out of 4) and mixers can be connected to
+> >> any TCON. All this must be configured in TCON TOP.
+> >> 
+> >> Along with definition of TCON capabilities also add mux callback, which
+> >> can configure this complex pipeline.
+> >> 
+> >> For now, only TCON TV is supported.
+> >> 
+> >> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> >> ---
+> >> 
+> >>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 39 ++++++++++++++++++++++++++++++
+> >>  1 file changed, 39 insertions(+)
+> >> 
+> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> >> b/drivers/gpu/drm/sun4i/sun4i_tcon.c index e0c562ce1c22..81b9551e4f78
+> >> 100644
+> >> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> >> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> >> @@ -1274,6 +1274,31 @@ static int sun6i_tcon_set_mux(struct sun4i_tcon
+> >> *tcon,>> 
+> >>         return 0;
+> >>  
+> >>  }
+> >> 
+> >> +static int sun8i_r40_tcon_tv_set_mux(struct sun4i_tcon *tcon,
+> >> +                                    const struct drm_encoder *encoder,
+> >> +                                    int index)
+> >> +{
+> >> +       if (encoder->encoder_type == DRM_MODE_ENCODER_TMDS)
+> >> +               sun8i_tcon_top_set_hdmi_src(tcon->tcon_top, index);
+> >> +
+> >> +       sun8i_tcon_top_de_config(tcon->tcon_top, tcon->id,
+> >> +                                tcon_type_tv, index);
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static int sun8i_r40_tcon_tv_set_mux_0(struct sun4i_tcon *tcon,
+> >> +                                      const struct drm_encoder *encoder)
+> >> +{
+> >> +       return sun8i_r40_tcon_tv_set_mux(tcon, encoder, 0);
+> >> +}
+> >> +
+> >> +static int sun8i_r40_tcon_tv_set_mux_1(struct sun4i_tcon *tcon,
+> >> +                                      const struct drm_encoder *encoder)
+> >> +{
+> >> +       return sun8i_r40_tcon_tv_set_mux(tcon, encoder, 1);
+> >> +}
+> > 
+> > Are TCON-TOPs going to be a common thing in new SoCs from Allwinner?
+> > If so, maybe we should add an index to the TCON quirks and have a
+> > common TCON-TOP set_mux function.
+> 
+> Actually, that only moves it up a level. Should it be a devicetree property?
+> 
+
+TCON-TOP is besides R40 part of two newest Allwinner SoCs, H6 and A63. 
+However, they have only one TV TCON and one LCD TCON, so indexes are not 
+needed for them (always 0). This makes R40 somewhat special. I don't think it 
+makes sense to expand everything just for one SoC.
+
+Best regards,
+Jernej
