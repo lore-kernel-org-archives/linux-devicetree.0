@@ -1,98 +1,77 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [RFC PATCH V2] scsi: ufs: Add specific callback for setting DMA
- mask
-Date: Sun, 20 May 2018 07:05:45 +0530
-Message-ID: <1e53194e-7255-a353-54ed-5c6c815205dc@samsung.com>
-References: <CGME20180308111416epcas1p4f9f1dbb36e8567121c6236ac0e9b4e03@epcas1p4.samsung.com>
-        <1520507013-2410-1-git-send-email-alim.akhtar@samsung.com>
-        <CAGOxZ52yZ8Xqype7AVsH43DWOA2byh2kW3SGsfHyHtzqSH6QPw@mail.gmail.com>
-        <1f7df8bfbc161243956233eac80f2cee@codeaurora.org>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 07/15] dt-bindings: display: sun4i-drm: Add
+ R40 HDMI pipeline
+Date: Sun, 20 May 2018 11:50:25 +1000
+Message-ID: <CAGRGNgU+PaygxkVkfcxUqMeV1TijJrZRkPkff7b4cxdVY6NQLA@mail.gmail.com>
+References: <20180519183127.2718-1-jernej.skrabec@siol.net> <20180519183127.2718-8-jernej.skrabec@siol.net>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1f7df8bfbc161243956233eac80f2cee@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Subhash Jadavani <subhashj@codeaurora.org>, alim.akhtar@samsung.com
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, vinayak holikatti <vinholikatti@gmail.com>, devicetree@vger.kernel.org, Shaik Ameer Basha <shaik.ameer@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQIP76OUQLBB5VIQPMAKGQE5SBNSFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180519183127.2718-8-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Subhash
+Hi Jernej,
 
-On 05/17/2018 03:01 AM, Subhash Jadavani wrote:
-> On 2018-05-15 21:31, Alim Akhtar wrote:
->> Ping !!!
->>
->> On Thu, Mar 8, 2018 at 4:33 PM, Alim Akhtar <alim.akhtar@samsung.com> 
->> wrote:
->>> Currently DMA mask for UFS HCI is set by reading CAP register's
->>> [64AS] bit. Some HCI controller like Exynos support 36-bit bus address.
->>> This works perfectly fine with DMA mask set as 64 in case there is no
->>> IOMMU attached to HCI.
->>> In case if HCI is behind an IOMMU, setting DMA mask as 64 bit won't
->>> work as HCI has only 36bit addressing and SMMU has created mapping of
->>> 64 bit and as the device truncates the address, its mapping will not
->>> be found by iommu.
->>> To resolve such issues, let the variant driver sets its own DMA mask.
->>>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>> ---
->>>  drivers/scsi/ufs/ufshcd.c | 3 +++
->>>  drivers/scsi/ufs/ufshcd.h | 2 ++
->>>  2 files changed, 5 insertions(+)
->>>
->>> I am not sure if there are other ways available to handle such cases.
->>> The IOMMU I am talking about is arm-smmu and it DT binding does not
->>> give much idea about handling such cases.
->>> Have tested this patch with HCI controller with IOMMU attached.
->>>
->>> Changes Since V1:
->>>         - Fixed build issue as reported by Kbuild test robot.
->>>
->>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->>> index a355d98..9a1374e 100644
->>> --- a/drivers/scsi/ufs/ufshcd.c
->>> +++ b/drivers/scsi/ufs/ufshcd.c
->>> @@ -7781,6 +7781,9 @@ EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
->>>   */
->>>  static int ufshcd_set_dma_mask(struct ufs_hba *hba)
->>>  {
->>> +       if (hba->vops && hba->vops->set_dma_mask)
->>> +               return hba->vops->set_dma_mask(hba);
->>> +
->>>         if (hba->capabilities & MASK_64_ADDRESSING_SUPPORT) {
->>>                 if (!dma_set_mask_and_coherent(hba->dev, 
->>> DMA_BIT_MASK(64)))
->>>                         return 0;
->>> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
->>> index 1332e54..89c6dae 100644
->>> --- a/drivers/scsi/ufs/ufshcd.h
->>> +++ b/drivers/scsi/ufs/ufshcd.h
->>> @@ -297,6 +297,7 @@ struct ufs_pwr_mode_info {
->>>   * @resume: called during host controller PM callback
->>>   * @dbg_register_dump: used to dump controller debug information
->>>   * @phy_initialization: used to initialize phys
->>> + * @set_dma_mask: used to set variant specific DMA mask
->>>   */
->>>  struct ufs_hba_variant_ops {
->>>         const char *name;
->>> @@ -325,6 +326,7 @@ struct ufs_hba_variant_ops {
->>>         int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
->>>         void    (*dbg_register_dump)(struct ufs_hba *hba);
->>>         int     (*phy_initialization)(struct ufs_hba *);
->>> +       int     (*set_dma_mask)(struct ufs_hba *hba);
->>>  };
->>>
->>>  /* clock gating state  */
->>> -- 
->>> 2.7.4
->>>
-> 
-> Looks reasonable to me, you may try posting non-RFC version.
-> 
-Thanks for review.
-Will send a non-RFC version.
+On Sun, May 20, 2018 at 4:31 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+> Missing compatibles and descriptions needed to implement R40 HDMI
+> pipeline are added.
+>
+> For mixers only compatibles are added.
+>
+> TCON description is expanded with R40 TV TCON compatibles. If the SoC
+> has TCON TOP unit, phandle to that unit has to be specified. Additional
+> clock has to be specified if SoC has TCON TOP and TCON is TV TCON.
+>
+> New compatible is added for DWC HDMI PHY, which has additional clock
+> specified.
 
-Regards,
-Alim
+There's a bunch of A64 related stuff mixed in here, is the R40
+compatible with the A64's parts? If so, you should probably mention
+that in the commit log.
+
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  .../bindings/display/sunxi/sun4i-drm.txt         | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> index a099957ab62a..634276f713e8 100644
+> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> @@ -111,8 +112,9 @@ Required properties:
+>    - resets: phandle to the reset controller driving the PHY
+>    - reset-names: must be "phy"
+>
+> -H3 HDMI PHY requires additional clock:
+> +H3 and A64 HDMI PHY requires additional clocks:
+>    - pll-0: parent of phy clock
+> +  - pll-1: second possible phy clock parent (A64 only)
+
+Maybe split this into two:
+
+H3 HDMI PHY ...
+   - pll-0: ...
+
+A64 HDMI PHY ...
+   - pll-0: ...
+   - pll-1: ...
+
+At the moment a quick reading implies that H3 needs pll-1.
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
