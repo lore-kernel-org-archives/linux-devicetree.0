@@ -1,455 +1,126 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 3/9] docs: Add Generic Counter interface documentation
-Date: Sun, 20 May 2018 16:31:09 +0100
-Message-ID: <20180520163109.22b11af8@archlinux>
+Subject: Re: [PATCH v6 6/9] dt-bindings: counter: Document stm32 quadrature
+ encoder
+Date: Sun, 20 May 2018 16:47:23 +0100
+Message-ID: <20180520164723.20218dfc@archlinux>
 References: <cover.1526487615.git.vilhelm.gray@gmail.com>
- <aa4d62315bb11ddc66d0e1a685c81b1721ffe624.1526487615.git.vilhelm.gray@gmail.com>
+        <ccdbbfb2833d274b6bfa234aada57e68d9793dd5.1526487615.git.vilhelm.gray@gmail.com>
+        <CAL_Jsq+a4s=5N6wUWifoHWQoornbDBY-UY2xrwj1kggNH4Q5pQ@mail.gmail.com>
+        <CA+M3ks4vjE5JMmLjjPnf6ffD9QYSUmSyrpO+yxADT_8WqAA3Tg@mail.gmail.com>
+        <20180518162815.GA24966@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <aa4d62315bb11ddc66d0e1a685c81b1721ffe624.1526487615.git.vilhelm.gray@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: devicetree@vger.kernel.org, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180518162815.GA24966@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, William Breathitt Gray <vilhelm.gray@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Fabrice Gasnier <fabrice.gasnier@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 May 2018 13:51:06 -0400
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+On Fri, 18 May 2018 11:28:15 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-> This patch adds high-level documentation about the Generic Counter
-> interface.
+> On Thu, May 17, 2018 at 08:59:40PM +0200, Benjamin Gaignard wrote:
+> > 2018-05-17 18:23 GMT+02:00 Rob Herring <robh+dt@kernel.org>:  
+> > > On Wed, May 16, 2018 at 12:51 PM, William Breathitt Gray
+> > > <vilhelm.gray@gmail.com> wrote:  
+> > >> From: Benjamin Gaignard <benjamin.gaignard@st.com>  
+> > >
+> > > v6? Where's v1-v5?
+> > >  
+> > >> Add bindings for STM32 Timer quadrature encoder.
+> > >> It is a sub-node of STM32 Timer which implement the
+> > >> counter part of the hardware.
+> > >>
+> > >> Cc: Rob Herring <robh+dt@kernel.org>
+> > >> Cc: Mark Rutland <mark.rutland@arm.com>
+> > >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > >> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > >> ---
+> > >>  .../bindings/counter/stm32-timer-cnt.txt      | 26 +++++++++++++++++++
+> > >>  .../devicetree/bindings/mfd/stm32-timers.txt  |  7 +++++
+> > >>  2 files changed, 33 insertions(+)
+> > >>  create mode 100644 Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> > >>
+> > >> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> > >> new file mode 100644
+> > >> index 000000000000..377728128bef
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+> > >> @@ -0,0 +1,26 @@
+> > >> +STMicroelectronics STM32 Timer quadrature encoder
+> > >> +
+> > >> +STM32 Timer provides quadrature encoder counter mode to detect  
+> > >
+> > > 'mode' does not sound like a sub-block of the timers block.  
+> > 
+> > quadrature encoding is one of the counting modes of this hardware
+> > block which is enable to count on other signals/triggers  
 > 
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> You don't need a child node and compatible to set a mode.
 
-Various comments inline.  I've been doing a lot long reviews recently
-(outside of the kernel world) and keep discovering the old rule that
-everytime you read a document you'll find something else to
-improve :(
+A pile of extra hardware becomes relevant and you only want
+to be in this state if you have appropriate external device
+wired up.  In this case there is admittedly not a lot here
+but some devices will look a bit more like a touchscreen controller.
 
-Jonathan
-> ---
->  Documentation/driver-api/generic-counter.rst | 336 +++++++++++++++++++
->  Documentation/driver-api/index.rst           |   1 +
->  MAINTAINERS                                  |   1 +
->  3 files changed, 338 insertions(+)
->  create mode 100644 Documentation/driver-api/generic-counter.rst
+They are often build on top of an ADC module, but have a load
+of touch screen only signals and electrical elements that
+warrant being represented as a separate node in the DT.
+
+
 > 
-> diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
-> new file mode 100644
-> index 000000000000..5c6b9c008c06
-> --- /dev/null
-> +++ b/Documentation/driver-api/generic-counter.rst
-> @@ -0,0 +1,336 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=========================
-> +Generic Counter Interface
-> +=========================
-> +
-> +Introduction
-> +============
-> +
-> +Counter devices are prevalent within a diverse spectrum of industries.
-> +The ubiquitous presence of these devices necessitates a common interface
-> +and standard of interaction and exposure. This driver API attempts to
-> +resolve the issue of duplicate code found among existing counter device
-> +drivers by introducing a generic counter interface for consumption. The
-> +Generic Counter interface enables drivers to support and expose a common
-> +set of components and functionality present in counter devices.
-> +
-> +Theory
-> +======
-> +
-> +Counter devices can vary greatly in design, but regardless of whether
-> +some devices are quadrature encoder counters or tally counters, all
-> +counter devices consist of a core set of components. This core set of
-> +components, shared by all counter devices, is what forms the essence of
-> +the Generic Counter interface.
-> +
-> +There are three core components to a counter:
-
-Enumerate them here.  If people are reading this as a paged document (pdf etc)
-then the list of 3 as titles of next few sections may not be clear.
-
-* Count
-
-* Signal
-
-* Synapse 
-
-> +
-> +COUNT
-> +-----
-> +A Count represents the count data for a set of Signals. The Generic
-> +Counter interface provides the following available count data types:
-> +
-> +* COUNT_POSITION_UNSIGNED:
-> +  Unsigned integer value representing position.
-> +
-> +* COUNT_POSITION_SIGNED:
-> +  Signed integer value representing position.
-
-Just a thought: As the '0' position is effectively arbitrary is there any
-actual difference between signed and unsigned? If we defined all counters
-to be unsigned and just offset any signed ones so the range still fitted
-would we end up with a simpler interface - there would be no real loss
-of meaning that I can see..  I suppose it might not be what people expect
-though when they see their counters start at a large positive value...
-
-
-
-
-> +
-> +A Count has a count function mode which represents the update behavior
-> +for the count data. The Generic Counter interface provides the following
-> +available count function modes:
-> +
-> +* Increase:
-> +  Accumulated count is incremented.
-> +
-> +* Decrease:
-> +  Accumulated count is decremented.
-> +
-> +* Pulse-Direction:
-> +  Rising edges on quadrature pair signal A updates the respective count.
-> +  The input level of quadrature pair signal B determines direction.
-> +
-Perhaps group the quadrature modes for the point of view of this document?
-Might be slightly easier to read?  
-
-* Quadrature Modes
-
-  - x1 A: etc.
-
-> +* Quadrature x1 A:
-> +  If direction is forward, rising edges on quadrature pair signal A
-> +  updates the respective count; if the direction is backward, falling
-> +  edges on quadrature pair signal A updates the respective count.
-> +  Quadrature encoding determines the direction.
-> +
-> +* Quadrature x1 B:
-> +  If direction is forward, rising edges on quadrature pair signal B
-> +  updates the respective count; if the direction is backward, falling
-> +  edges on quadrature pair signal B updates the respective count.
-> +  Quadrature encoding determines the direction.
-> +
-> +* Quadrature x2 A:
-> +  Any state transition on quadrature pair signal A updates the
-> +  respective count. Quadrature encoding determines the direction.
-> +
-> +* Quadrature x2 B:
-> +  Any state transition on quadrature pair signal B updates the
-> +  respective count. Quadrature encoding determines the direction.
-> +
-> +* Quadrature x2 Rising:
-> +  Rising edges on either quadrature pair signals updates the respective
-> +  count. Quadrature encoding determines the direction.
-
-This one I've never met.  Really? There are devices who do this form
-of crazy? It gives really uneven counting and I'm failing to see when
-it would ever make sense...  References for these odd corner cases
-would be good.
-
-
-__|---|____|-----|____
-____|----|____|-----|____
-
-001122222223334444444
-
-
-> +
-> +* Quadrature x2 Falling:
-> +  Falling edges on either quadrature pair signals updates the respective
-> +  count. Quadrature encoding determines the direction.
-> +
-> +* Quadrature x4:
-> +  Any state transition on either quadrature pair signals updates the
-> +  respective count. Quadrature encoding determines the direction.
-> +
-> +A Count has a set of one or more associated Signals.
-> +
-> +SIGNAL
-> +------
-> +A Signal represents a counter input data; this is the input data that is
-> +analyzed by the counter to determine the count data; e.g. a quadrature
-> +signal output line of a rotary encoder. Not all counter devices provide
-> +user access to the Signal data.
-> +
-> +The Generic Counter interface provides the following available signal
-> +data types for when the Signal data is available for user access:
-> +
-> +* SIGNAL_LEVEL_LOW:
-> +  Signal line is in a low state.
-> +
-> +* SIGNAL_LEVEL_HIGH:
-> +  Signal line is in a high state.
-> +
-> +A Signal may be associated with one or more Counts.
-> +
-> +SYNAPSE
-> +-------
-> +A Synapse represents the association of a Signal with a respective
-> +Count. Signal data affects respective Count data, and the Synapse
-> +represents this relationship.
-> +
-> +The Synapse action mode specifies the Signal data condition which
-> +triggers the respective Count's count function evaluation to update the
-> +count data. The Generic Counter interface provides the following
-> +available action modes:
-> +
-> +* None:
-> +  Signal does not trigger the count function. In Pulse-Direction count
-> +  function mode, this Signal is evaluated as Direction.
-> +
-> +* Rising Edge:
-> +  Low state transitions to high state.
-> +
-> +* Falling Edge:
-> +  High state transitions to low state.
-> +
-> +* Both Edges:
-> +  Any state transition.
-> +
-> +A counter is defined as a set of input signals associated with count
-> +data that are generated by the evaluation of the state of the associated
-> +input signals as defined by the respective count functions. Within the
-> +context of the Generic Counter interface, a counter consists of Counts
-> +each associated with a set of Signals, whose respective Synapse
-> +instances represent the count function update conditions for the
-> +associated Counts.
-> +
-> +Paradigm
-> +========
-> +
-> +The most basic counter device may be expressed as a single Count
-> +associated with a single Signal via a single Synapse. Take for example
-> +a counter device which simply accumulates a count of rising edges on a
-> +source input line::
-> +
-> +                Count                Synapse        Signal
-> +                -----                -------        ------
-> +        +---------------------+
-> +        | Data: Count         |    Rising Edge     ________
-> +        | Function: Increase  |  <-------------   / Source \
-> +        |                     |                  ____________
-> +        +---------------------+
-> +
-> +In this example, the Signal is a source input line with a pulsing
-> +voltage, while the Count is a persistent count value which is repeatedly
-> +incremented. The Signal is associated with the respective Count via a
-> +Synapse. The increase function is triggered by the Signal data condition
-> +specified by the Synapse -- in this case a rising edge condition on the
-> +voltage input line. In summary, the counter device existence and
-> +behavior is aptly represented by respective Count, Signal, and Synapse
-> +components: a rising edge condition triggers an increase function on an
-> +accumulating count datum.
-> +
-> +A counter device is not limited to a single Signal; in fact, in theory
-> +many Signals may be associated with even a single Count. For example, a
-> +quadrature encoder counter device can keep track of position based on
-> +the states of two input lines::
-> +
-> +                   Count                 Synapse     Signal
-> +                   -----                 -------     ------
-> +        +-------------------------+
-> +        | Data: Position          |    Both Edges     ___
-> +        | Function: Quadrature x4 |  <------------   / A \
-> +        |                         |                 _______
-> +        |                         |
-> +        |                         |    Both Edges     ___
-> +        |                         |  <------------   / B \
-> +        |                         |                 _______
-> +        +-------------------------+
-> +
-> +In this example, two Signals (quadrature encoder lines A and B) are
-> +associated with a single Count: a rising or falling edge on either A or
-> +B triggers the "Quadrature x4" function which determines the direction
-> +of movement and updates the respective position data. The "Quadrature
-> +x4" function is likely implemented in the hardware of the quadrature
-> +encoder counter device; the Count, Signals, and Synapses simply
-> +represent this hardware behavior and functionality.
-> +
-> +Signals associated with the same Count can have differing Synapse action
-> +mode conditions. For example, a quadrature encoder counter device
-> +operating in a non-quadrature Pulse-Direction mode could have one input
-> +line dedicated for movement and a second input line dedicated for
-> +direction::
-> +
-> +                   Count                   Synapse      Signal
-> +                   -----                   -------      ------
-> +        +---------------------------+
-> +        | Data: Position            |    Rising Edge     ___
-> +        | Function: Pulse-Direction |  <-------------   / A \ (Movement)
-> +        |                           |                  _______
-> +        |                           |
-> +        |                           |       None         ___
-> +        |                           |  <-------------   / B \ (Direction)
-> +        |                           |                  _______
-> +        +---------------------------+
-> +
-> +Only Signal A triggers the "Pulse-Direction" update function, but the
-> +instantaneous state of Signal B is still required in order to know the
-> +direction so that the position data may be properly updated. Ultimately,
-> +both Signals are associated with the same Count via two respective
-> +Synapses, but only one Synapse has an active action mode condition which
-> +triggers the respective count function while the other is left with a
-> +"None" condition action mode to indicate its respective Signal's
-> +availability for state evaluation despite its non-triggering mode.
-> +
-> +Keep in mind that the Signal, Synapse, and Count are abstract
-> +representations which do not need to be closely married to their
-> +respective physical sources. This allows the user of a counter to
-> +divorce themselves from the nuances of physical components (such as
-> +whether an input line is differential or single-ended) and instead focus
-> +on the core idea of what the data and process represent (e.g. position
-> +as interpreted from quadrature encoding data).
-> +
-> +Userspace Interface
-> +===================
-> +
-> +Several sysfs attributes are generated by the Generic Counter interface,
-> +and reside under the /sys/bus/counter/devices/counterX directory, where
-> +counterX refers to the respective counter device. Please see
-> +Documentation/ABI/testing/sys-bus-counter-generic-sysfs for detailed
-> +information on each Generic Counter interface sysfs attribute.
-> +
-> +Through these sysfs attributes, programs and scripts may interact with
-> +the Generic Counter paradigm Counts, Signals, and Synapses of respective
-> +counter devices.
-> +
-> +Driver API
-> +==========
-> +
-> +Driver authors may utilize the Generic Counter interface in their code
-> +by including the include/linux/iio/counter.h header file. This header
-
-Didn't this move?
-
-> +file provides several core data structures, function prototypes, and
-> +macros for defining a counter device.
-> +
-> +.. kernel-doc:: include/linux/counter.h
-> +   :internal:
-> +
-> +.. kernel-doc:: drivers/counter/generic-counter.c
-> +   :export:
-> +
-> +Implementation
-> +==============
-> +
-> +To support a counter device, a driver must first allocate the available
-> +Counter Signals via counter_signal structures. These Signals should
-> +be stored as an array and set to the signals array member of an
-> +allocated counter_device structure before the Counter is registered to
-> +the system.
-> +
-> +Counter Counts may be allocated via counter_count structures, and
-> +respective Counter Signal associations (Synapses) made via
-> +counter_synapse structures. Associated counter_synapse structures are
-> +stored as an array and set to the the synapses array member of the
-> +respective counter_count structure. These counter_count structures are
-> +set to the counts array member of an allocated counter_device structure
-> +before the Counter is registered to the system.
-> +
-> +Driver callbacks should be provided to the counter_device structure via
-> +a constant counter_ops structure in order to communicate with the
-> +device: to read and write various Signals and Counts, and to set and get
-> +the "action mode" and "function mode" for various Synapses and Counts
-> +respectively.
-> +
-> +A defined counter_device structure may be registered to the system by
-> +passing it to the counter_register function, and unregistered by passing
-> +it to the counter_unregister function. Similarly, the
-> +devm_counter_register and devm_counter_unregister functions may be used
-> +if device memory-managed registration is desired.
-> +
-> +Extension sysfs attributes can be created for auxiliary functionality
-> +and data by passing in defined counter_device_ext, counter_count_ext,
-> +and counter_signal_ext structures. In these cases, the
-> +counter_device_ext structure is used for global configuration of the
-> +respective Counter device, while the counter_count_ext and
-> +counter_signal_ext structures allow for auxiliary exposure and
-> +configuration of a specific Count or Signal respectively.
-> +
-> +Architecture
-> +============
-> +
-> +When the Generic Counter interface counter module is loaded, the
-> +counter_init function is called which registers a bus_type named
-> +"counter" to the system. Subsequently, when the module is unloaded, the
-> +counter_exit function is called which unregisters the bus_type named
-> +"counter" from the system.
-> +
-> +Counter devices are registered to the system via the counter_register
-> +function, and later removed via the counter_unregister function. The
-> +counter_register function establishes a unique ID for the Counter
-> +device and creates a respective sysfs directory, where X is the
-> +mentioned unique ID:
-> +
-> +    /sys/bus/counter/devices/counterX
-> +
-> +Sysfs attributes are created within the counterX directory to expose
-> +functionality, configurations, and data relating to the Counts, Signals,
-> +and Synapses of the Counter device, as well as options and information
-> +for the Counter device itself.
-> +
-> +Each Signal has a directory created to house its relevant sysfs
-> +attributes, where Y is the unique ID of the respective Signal:
-> +
-> +    /sys/bus/counter/devices/counterX/signalY
-> +
-> +Similarly, each Count has a directory created to house its relevant
-> +sysfs attributes, where Y is the unique ID of the respective Count:
-> +
-> +    /sys/bus/counter/devices/counterX/countY
-> +
-> +For a more detailed breakdown of the available Generic Counter interface
-> +sysfs attributes, please refer to the
-> +Documentation/ABI/testing/sys-bus-counter file.
-> +
-> +The Signals and Counts associated with the Counter device are registered
-> +to the system as well by the counter_register function. The
-> +signal_read/signal_write driver callbacks are associated with their
-> +respective Signal attributes, while the count_read/count_write and
-> +function_get/function_set driver callbacks are associated with their
-> +respective Count attributes; similarly, the same is true for the
-> +action_get/action_set driver callbacks and their respective Synapse
-> +attributes. If a driver callback is left undefined, then the respective
-> +read/write permission is left disabled for the relevant attributes.
-> +
-> +Similarly, extension sysfs attributes are created for the defined
-> +counter_device_ext, counter_count_ext, and counter_signal_ext
-> +structures that are passed in.
-> diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-> index 6d8352c0f354..5fd747c4f2ce 100644
-> --- a/Documentation/driver-api/index.rst
-> +++ b/Documentation/driver-api/index.rst
-> @@ -25,6 +25,7 @@ available subsections can be seen below.
->     frame-buffer
->     regulator
->     iio/index
-> +   generic-counter
->     input
->     usb/index
->     pci
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1413e3eb49e5..7a01aa63fb33 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3674,6 +3674,7 @@ M:	William Breathitt Gray <vilhelm.gray@gmail.com>
->  L:	linux-iio@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/ABI/testing/sysfs-bus-counter*
-> +F:	Documentation/driver-api/generic-counter.rst
->  F:	drivers/counter/
->  F:	include/linux/counter.h
->  
+> > >> +angular position and direction of rotary elements,
+> > >> +from IN1 and IN2 input signals.
+> > >> +
+> > >> +Must be a sub-node of an STM32 Timer device tree node.
+> > >> +See ../mfd/stm32-timers.txt for details about the parent node.
+> > >> +
+> > >> +Required properties:
+> > >> +- compatible:          Must be "st,stm32-timer-counter".
+> > >> +- pinctrl-names:       Set to "default".
+> > >> +- pinctrl-0:           List of phandles pointing to pin configuration nodes,
+> > >> +                       to set IN1/IN2 pins in mode of operation for Low-Power
+> > >> +                       Timer input on external pin.
+> > >> +
+> > >> +Example:
+> > >> +       timers@40010000  {
+> > >> +               compatible = "st,stm32-timers";
+> > >> +               ...
+> > >> +               counter {
+> > >> +                       compatible = "st,stm32-timer-counter";  
+> > >
+> > > Is there only 1? How is the counter addressed?  
+> > 
+> > Yes there is only one counter per hardware block.
+> > Counter is addressed like the two others sub-nodes and the details
+> > about parent mode are describe in stm32-timers.txt
+> > Should I add them here too ? so example will be like that:  
+> 
+> No, you should drop the child node and add pinctrl to the parent.
+> 
+> Any other functions this block has that you plan on adding? Please make 
+> bindings as complete as possible, not what you currently have drivers 
+> for.
+> 
+> > timers@40010000  {
+> >   #address-cells = <1>;
+> >   #size-cells = <0>;
+> >   compatible = "st,stm32-timers";
+> >   reg = <0x40010000 0x400>;
+> >   clocks = <&rcc 0 160>;
+> >   clock-names = "int";
+> >   counter {
+> >     compatible = "st,stm32-timer-counter";
+> >     pinctrl-names = "default";
+> >     pinctrl-0 = <&tim1_in_pins>;
+> >     };
+> >  };
+> > 
+> > Benjamin  
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel  
