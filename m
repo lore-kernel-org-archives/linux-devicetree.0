@@ -1,25 +1,56 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/3] Add Renesas R8A77980 GEther support
-Date: Sat, 19 May 2018 23:25:04 -0400 (EDT)
-Message-ID: <20180519.232504.690023495926796720.davem@davemloft.net>
-References: <f30c98ff-f6da-9e7f-c637-49076a428885@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <f30c98ff-f6da-9e7f-c637-49076a428885@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/5] Add gpio support for Action Semi S900 SoC
+Date: Sun, 20 May 2018 10:47:31 +0530
+Message-ID: <20180520051736.4842-1-manivannan.sadhasivam@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
+Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Date: Fri, 18 May 2018 21:28:29 +0300
+This patchset adds gpio support for Actions Semi S900 SoC by extending
+the pinctrl driver. There were previous patches submitted for adding a
+standalone gpio driver based on gpiolib. But later on it has been realised
+that the gpio functionality is closely tied with pinctrl subsystem for this
+OWL family processors. So, having a separate gpio driver will make it hard
+to add further functionalities in future. Hence, we decided to drop the
+previous patches below adding a standalone gpio support:
 
-> Here's a set of 3 patches against DaveM's 'net-next.git' repo. They (gradually)
-> add R8A77980 GEther support to the 'sh_eth' driver, starting with couple new
-> register bits/values introduced with this chip, and ending with adding a new
-> 'struct sh_eth_cpu_data' instance connected to the new DT "compatible" prop
-> value...
+dt-bindings: gpio: Add gpio nodes for Actions S900 SoC
+arm64: dts: actions: Add S900 gpio nodes
+arm64: dts: actions: Add gpio line names to Bubblegum-96 board
+gpio: Add gpio driver for Actions OWL S900 SoC
+MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
 
-Series applied, thanks.
+This patchset consits of incremental patches which will apply with the
+previous pinctrl series: Add Actions Semi S900 pinctrl and gpio support,
+excluding the dropped patches mentioned above.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Removed gpiochip_add_pin_range() function and added gpio-ranges property
+  in DT.
+* Added Reviewed-by tag from Andy.
+
+Manivannan Sadhasivam (5):
+  dt-bindings: pinctrl: Add gpio bindings for Actions S900 SoC
+  arm64: dts: actions: Add gpio properties to pinctrl node for S900
+  arm64: dts: actions: Add gpio line names to Bubblegum-96 board
+  pinctrl: actions: Add gpio support for Actions S900 SoC
+  MAINTAINERS: Add Actions Semi S900 pinctrl entries
+
+ .../bindings/pinctrl/actions,s900-pinctrl.txt      |  16 ++
+ MAINTAINERS                                        |   2 +
+ arch/arm64/boot/dts/actions/s900-bubblegum-96.dts  | 175 ++++++++++++++++++
+ arch/arm64/boot/dts/actions/s900.dtsi              |   3 +
+ drivers/pinctrl/actions/Kconfig                    |   1 +
+ drivers/pinctrl/actions/pinctrl-owl.c              | 198 +++++++++++++++++++++
+ drivers/pinctrl/actions/pinctrl-owl.h              |  20 +++
+ drivers/pinctrl/actions/pinctrl-s900.c             |  29 ++-
+ 8 files changed, 443 insertions(+), 1 deletion(-)
+
+-- 
+2.14.1
