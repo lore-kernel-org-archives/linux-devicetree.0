@@ -1,15 +1,15 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 02/12] staging: iio: ad2s1200: Remove unneeded
- initializations
-Date: Sun, 20 May 2018 11:53:10 +0100
-Message-ID: <20180520115310.46786f3b@archlinux>
+Subject: Re: [PATCH v4 03/12] staging: iio: ad2s1200: Add kernel docs to
+ driver state
+Date: Sun, 20 May 2018 11:53:59 +0100
+Message-ID: <20180520115359.3efc80fe@archlinux>
 References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
- <b241956721e6f6df3234c42306935cb0aaaefc00.1526667118.git.davidjulianveenstra@gmail.com>
+ <38a9e24e5cdbc98afbf4d06f9848c55c26ce37ff.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <b241956721e6f6df3234c42306935cb0aaaefc00.1526667118.git.davidjulianveenstra@gmail.com>
+In-Reply-To: <38a9e24e5cdbc98afbf4d06f9848c55c26ce37ff.1526667118.git.davidjulianveenstra@gmail.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -23,40 +23,40 @@ To: David Veenstra <davidjulianveenstra@gmail.com>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 May 2018 20:21:23 +0200
+On Fri, 18 May 2018 20:21:34 +0200
 David Veenstra <davidjulianveenstra@gmail.com> wrote:
 
-> Remove 2 initializations which are unneeded, because the
-> initialized values are never used.
+> Add missing kernel docs to the ad2s1200 driver state.
 > 
 > Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
-Applied.
+Nice.
+
+Applied,
+
+Jonathan
 > ---
 > Changes in v4:
->  - Introduced in this version.
+>  - Simplified explanation of lock.
 > 
->  drivers/staging/iio/resolver/ad2s1200.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/staging/iio/resolver/ad2s1200.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
 > diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-> index df3b34200a89..9bdcf0c86217 100644
+> index 9bdcf0c86217..068aa86e9c11 100644
 > --- a/drivers/staging/iio/resolver/ad2s1200.c
 > +++ b/drivers/staging/iio/resolver/ad2s1200.c
-> @@ -47,7 +47,7 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
->  			     long m)
->  {
->  	struct ad2s1200_state *st = iio_priv(indio_dev);
-> -	int ret = 0;
-> +	int ret;
+> @@ -32,6 +32,14 @@
+>  /* clock period in nano second */
+>  #define AD2S1200_TSCLK	(1000000000 / AD2S1200_HZ)
 >  
->  	mutex_lock(&st->lock);
->  	gpio_set_value(st->sample, 0);
-> @@ -105,7 +105,7 @@ static int ad2s1200_probe(struct spi_device *spi)
->  	unsigned short *pins = spi->dev.platform_data;
->  	struct ad2s1200_state *st;
->  	struct iio_dev *indio_dev;
-> -	int pn, ret = 0;
-> +	int pn, ret;
->  
->  	for (pn = 0; pn < AD2S1200_PN; pn++) {
->  		ret = devm_gpio_request_one(&spi->dev, pins[pn], GPIOF_DIR_OUT,
+> +/**
+> + * struct ad2s1200_state - driver instance specific data.
+> + * @lock:	protects both the GPIO pins and the rx buffer.
+> + * @sdev:	spi device.
+> + * @sample:	GPIO pin SAMPLE.
+> + * @rdvel:	GPIO pin RDVEL.
+> + * @rx:		buffer for spi transfers.
+> + */
+>  struct ad2s1200_state {
+>  	struct mutex lock;
+>  	struct spi_device *sdev;
