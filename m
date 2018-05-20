@@ -1,14 +1,15 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 07/12] staging: iio: ad2s1200: Add dt table
-Date: Sun, 20 May 2018 12:02:31 +0100
-Message-ID: <20180520120231.594d4c49@archlinux>
+Subject: Re: [PATCH v4 05/12] staging: iio: ad2s1200: Replace legacy gpio
+ API with modern API
+Date: Sun, 20 May 2018 12:04:36 +0100
+Message-ID: <20180520120436.57abf51b@archlinux>
 References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
- <eb4fa431405d0d4e73889d440b3b1c95d5c47e54.1526667118.git.davidjulianveenstra@gmail.com>
+ <78bc9c09403ac1fa08d610a86505416b85edb306.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <eb4fa431405d0d4e73889d440b3b1c95d5c47e54.1526667118.git.davidjulianveenstra@gmail.com>
+In-Reply-To: <78bc9c09403ac1fa08d610a86505416b85edb306.1526667118.git.davidjulianveenstra@gmail.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -22,47 +23,82 @@ To: David Veenstra <davidjulianveenstra@gmail.com>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 May 2018 20:22:41 +0200
+On Fri, 18 May 2018 20:21:56 +0200
 David Veenstra <davidjulianveenstra@gmail.com> wrote:
 
-> Add device tree table for matching with the vendor ID.
+> The legacy, integer based gpio API is replaced with the modern
+> descriptor based API.
 > 
 > Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
-Applied
+Hmm This is more complex than it needed to be because it
+has to do some massaging of the two different methods only
+to clean them up in the next patch.
+
+I would have been tempted to combine the two patches or at
+the very least add some comments in here that the nastier
+corners are about to go away.
+
+Anyhow, not to worry I figured it out slightly before sending
+you an email saying not to do it this way ;)
+
+Applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
+
 > ---
-> Changes in v4:
->  - Introduced in this version.
-> 
->  drivers/staging/iio/resolver/ad2s1200.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/staging/iio/resolver/ad2s1200.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-> index 9a8aa2448897..67d9747f88a6 100644
+> index 430cc62591fe..b2c46a8c6b77 100644
 > --- a/drivers/staging/iio/resolver/ad2s1200.c
 > +++ b/drivers/staging/iio/resolver/ad2s1200.c
-> @@ -154,6 +154,13 @@ static int ad2s1200_probe(struct spi_device *spi)
->  	return devm_iio_device_register(&spi->dev, indio_dev);
->  }
+> @@ -13,6 +13,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/spi/spi.h>
+> @@ -43,8 +44,8 @@
+>  struct ad2s1200_state {
+>  	struct mutex lock;
+>  	struct spi_device *sdev;
+> -	int sample;
+> -	int rdvel;
+> +	struct gpio_desc *sample;
+> +	struct gpio_desc *rdvel;
+>  	__be16 rx ____cacheline_aligned;
+>  };
 >  
-> +static const struct of_device_id ad2s1200_of_match[] = {
-> +	{ .compatible = "adi,ad2s1200", },
-> +	{ .compatible = "adi,ad2s1205", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ad2s1200_of_match);
-> +
->  static const struct spi_device_id ad2s1200_id[] = {
->  	{ "ad2s1200" },
->  	{ "ad2s1205" },
-> @@ -164,6 +171,7 @@ MODULE_DEVICE_TABLE(spi, ad2s1200_id);
->  static struct spi_driver ad2s1200_driver = {
->  	.driver = {
->  		.name = DRV_NAME,
-> +		.of_match_table = of_match_ptr(ad2s1200_of_match),
->  	},
->  	.probe = ad2s1200_probe,
->  	.id_table = ad2s1200_id,
+> @@ -58,12 +59,12 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
+>  	int ret;
+>  
+>  	mutex_lock(&st->lock);
+> -	gpio_set_value(st->sample, 0);
+> +	gpiod_set_value(st->sample, 0);
+>  
+>  	/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
+>  	udelay(1);
+> -	gpio_set_value(st->sample, 1);
+> -	gpio_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
+> +	gpiod_set_value(st->sample, 1);
+> +	gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
+>  
+>  	ret = spi_read(st->sdev, &st->rx, 2);
+>  	if (ret < 0) {
+> @@ -133,8 +134,8 @@ static int ad2s1200_probe(struct spi_device *spi)
+>  	st = iio_priv(indio_dev);
+>  	mutex_init(&st->lock);
+>  	st->sdev = spi;
+> -	st->sample = pins[0];
+> -	st->rdvel = pins[1];
+> +	st->sample = gpio_to_desc(pins[0]);
+> +	st->rdvel = gpio_to_desc(pins[1]);
+>  
+>  	indio_dev->dev.parent = &spi->dev;
+>  	indio_dev->info = &ad2s1200_info;
