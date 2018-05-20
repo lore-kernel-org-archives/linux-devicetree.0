@@ -1,118 +1,98 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] ASoC: fsl: Mark 'big-endian' property as
-	optional
-Date: Sat, 19 May 2018 22:12:52 -0300
-Message-ID: <1526778772-6676-1-git-send-email-festevam@gmail.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [RFC PATCH V2] scsi: ufs: Add specific callback for setting DMA
+ mask
+Date: Sun, 20 May 2018 07:05:45 +0530
+Message-ID: <1e53194e-7255-a353-54ed-5c6c815205dc@samsung.com>
+References: <CGME20180308111416epcas1p4f9f1dbb36e8567121c6236ac0e9b4e03@epcas1p4.samsung.com>
+        <1520507013-2410-1-git-send-email-alim.akhtar@samsung.com>
+        <CAGOxZ52yZ8Xqype7AVsH43DWOA2byh2kW3SGsfHyHtzqSH6QPw@mail.gmail.com>
+        <1f7df8bfbc161243956233eac80f2cee@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, timur@tabi.org, nicoleotsuka@gmail.com, robh+dt@kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1f7df8bfbc161243956233eac80f2cee@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Subhash Jadavani <subhashj@codeaurora.org>, alim.akhtar@samsung.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, vinayak holikatti <vinholikatti@gmail.com>, devicetree@vger.kernel.org, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+Hi Subhash
 
-Currently the 'big-endian' property is listed as required, which is
-not correct. i.MX SoCs do not need such property, so move it under
-'Optional properties' entry instead.
+On 05/17/2018 03:01 AM, Subhash Jadavani wrote:
+> On 2018-05-15 21:31, Alim Akhtar wrote:
+>> Ping !!!
+>>
+>> On Thu, Mar 8, 2018 at 4:33 PM, Alim Akhtar <alim.akhtar@samsung.com> 
+>> wrote:
+>>> Currently DMA mask for UFS HCI is set by reading CAP register's
+>>> [64AS] bit. Some HCI controller like Exynos support 36-bit bus address.
+>>> This works perfectly fine with DMA mask set as 64 in case there is no
+>>> IOMMU attached to HCI.
+>>> In case if HCI is behind an IOMMU, setting DMA mask as 64 bit won't
+>>> work as HCI has only 36bit addressing and SMMU has created mapping of
+>>> 64 bit and as the device truncates the address, its mapping will not
+>>> be found by iommu.
+>>> To resolve such issues, let the variant driver sets its own DMA mask.
+>>>
+>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>> ---
+>>>  drivers/scsi/ufs/ufshcd.c | 3 +++
+>>>  drivers/scsi/ufs/ufshcd.h | 2 ++
+>>>  2 files changed, 5 insertions(+)
+>>>
+>>> I am not sure if there are other ways available to handle such cases.
+>>> The IOMMU I am talking about is arm-smmu and it DT binding does not
+>>> give much idea about handling such cases.
+>>> Have tested this patch with HCI controller with IOMMU attached.
+>>>
+>>> Changes Since V1:
+>>>         - Fixed build issue as reported by Kbuild test robot.
+>>>
+>>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>>> index a355d98..9a1374e 100644
+>>> --- a/drivers/scsi/ufs/ufshcd.c
+>>> +++ b/drivers/scsi/ufs/ufshcd.c
+>>> @@ -7781,6 +7781,9 @@ EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
+>>>   */
+>>>  static int ufshcd_set_dma_mask(struct ufs_hba *hba)
+>>>  {
+>>> +       if (hba->vops && hba->vops->set_dma_mask)
+>>> +               return hba->vops->set_dma_mask(hba);
+>>> +
+>>>         if (hba->capabilities & MASK_64_ADDRESSING_SUPPORT) {
+>>>                 if (!dma_set_mask_and_coherent(hba->dev, 
+>>> DMA_BIT_MASK(64)))
+>>>                         return 0;
+>>> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+>>> index 1332e54..89c6dae 100644
+>>> --- a/drivers/scsi/ufs/ufshcd.h
+>>> +++ b/drivers/scsi/ufs/ufshcd.h
+>>> @@ -297,6 +297,7 @@ struct ufs_pwr_mode_info {
+>>>   * @resume: called during host controller PM callback
+>>>   * @dbg_register_dump: used to dump controller debug information
+>>>   * @phy_initialization: used to initialize phys
+>>> + * @set_dma_mask: used to set variant specific DMA mask
+>>>   */
+>>>  struct ufs_hba_variant_ops {
+>>>         const char *name;
+>>> @@ -325,6 +326,7 @@ struct ufs_hba_variant_ops {
+>>>         int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+>>>         void    (*dbg_register_dump)(struct ufs_hba *hba);
+>>>         int     (*phy_initialization)(struct ufs_hba *);
+>>> +       int     (*set_dma_mask)(struct ufs_hba *hba);
+>>>  };
+>>>
+>>>  /* clock gating state  */
+>>> -- 
+>>> 2.7.4
+>>>
+> 
+> Looks reasonable to me, you may try posting non-RFC version.
+> 
+Thanks for review.
+Will send a non-RFC version.
 
-Also, fsl-sai.txt incorrectly referenced 'FTM_PWM registers', so
-change it to 'SAI registers', which is the intended description.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- Documentation/devicetree/bindings/sound/fsl,asrc.txt  | 10 ++++++----
- Documentation/devicetree/bindings/sound/fsl,esai.txt  |  2 ++
- Documentation/devicetree/bindings/sound/fsl,spdif.txt |  2 ++
- Documentation/devicetree/bindings/sound/fsl-sai.txt   |  8 +++++---
- 4 files changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-index f5a1411..1d4d9f9 100644
---- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-@@ -31,14 +31,16 @@ Required properties:
- 			  it. This property is optional depending on the SoC
- 			  design.
- 
--   - big-endian		: If this property is absent, the little endian mode
--			  will be in use as default. Otherwise, the big endian
--			  mode will be in use for all the device registers.
--
-    - fsl,asrc-rate	: Defines a mutual sample rate used by DPCM Back Ends.
- 
-    - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
- 
-+Optional properties:
-+
-+   - big-endian		: If this property is absent, the little endian mode
-+			  will be in use as default. Otherwise, the big endian
-+			  mode will be in use for all the device registers.
-+
- Example:
- 
- asrc: asrc@2034000 {
-diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
-index cacd18b..5b99143 100644
---- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
-@@ -42,6 +42,8 @@ Required properties:
- 			  means all the settings for Receiving would be
- 			  duplicated from Transmition related registers.
- 
-+Optional properties:
-+
-   - big-endian		: If this property is absent, the native endian mode
- 			  will be in use as default, or the big endian mode
- 			  will be in use for all the device registers.
-diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-index 38cfa75..8b324f8 100644
---- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-@@ -33,6 +33,8 @@ Required properties:
- 			  it. This property is optional depending on the SoC
- 			  design.
- 
-+Optional properties:
-+
-    - big-endian		: If this property is absent, the native endian mode
- 			  will be in use as default, or the big endian mode
- 			  will be in use for all the device registers.
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index 740b467..dd9e597 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -28,9 +28,6 @@ Required properties:
- 			  pinctrl-names. See ../pinctrl/pinctrl-bindings.txt
- 			  for details of the property values.
- 
--  - big-endian		: Boolean property, required if all the FTM_PWM
--			  registers are big-endian rather than little-endian.
--
-   - lsb-first		: Configures whether the LSB or the MSB is transmitted
- 			  first for the fifo data. If this property is absent,
- 			  the MSB is transmitted first as default, or the LSB
-@@ -48,6 +45,11 @@ Required properties:
- 			  receive data by following their own bit clocks and
- 			  frame sync clocks separately.
- 
-+Optional properties:
-+
-+  - big-endian		: Boolean property, required if all the SAI
-+			  registers are big-endian rather than little-endian.
-+
- Optional properties (for mx6ul):
- 
-   - fsl,sai-mclk-direction-output: This is a boolean property. If present,
--- 
-2.7.4
+Regards,
+Alim
