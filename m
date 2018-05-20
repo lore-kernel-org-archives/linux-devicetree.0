@@ -1,78 +1,117 @@
-From: Nipun Gupta <nipun.gupta@nxp.com>
-Subject: [PATCH 3/7 v5] iommu: support iommu configuration for fsl-mc devices
-Date: Sun, 20 May 2018 19:19:47 +0530
-Message-ID: <1526824191-7000-4-git-send-email-nipun.gupta@nxp.com>
-References: <1526824191-7000-1-git-send-email-nipun.gupta@nxp.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] ASoC: codec: realtek: Make the node name
+	generic
+Date: Sun, 20 May 2018 12:22:48 -0300
+Message-ID: <1526829768-15001-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526824191-7000-1-git-send-email-nipun.gupta@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robin.murphy@arm.com, will.deacon@arm.com, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, laurentiu.tudor@nxp.com, bhelgaas@google.com
-Cc: devicetree@vger.kernel.org, stuyoder@gmail.com, bharat.bhushan@nxp.com, shawnguo@kernel.org, joro@8bytes.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, iommu@lists.linux-foundation.org, Nipun Gupta <nipun.gupta@nxp.com>, linux-pci@vger.kernel.org, frowand.list@gmail.com, hch@lst.de, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With of_pci_map_rid available for all the busses, use the function
-for configuration of devices on fsl-mc bus
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-Signed-off-by: Nipun Gupta <nipun.gupta@nxp.com>
+"The name of a node should be somewhat generic, reflecting the function
+of the device and not its precise programming model."
+
+Do as suggested in the bindings examples.
+
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- drivers/iommu/of_iommu.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ Documentation/devicetree/bindings/sound/rt274.txt  | 2 +-
+ Documentation/devicetree/bindings/sound/rt5514.txt | 2 +-
+ Documentation/devicetree/bindings/sound/rt5616.txt | 2 +-
+ Documentation/devicetree/bindings/sound/rt5645.txt | 2 +-
+ Documentation/devicetree/bindings/sound/rt5651.txt | 2 +-
+ Documentation/devicetree/bindings/sound/rt5663.txt | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index 811e160..284474d 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -24,6 +24,7 @@
- #include <linux/of_iommu.h>
- #include <linux/of_pci.h>
- #include <linux/slab.h>
-+#include <linux/fsl/mc.h>
+diff --git a/Documentation/devicetree/bindings/sound/rt274.txt b/Documentation/devicetree/bindings/sound/rt274.txt
+index e9a6178..791a1bd 100644
+--- a/Documentation/devicetree/bindings/sound/rt274.txt
++++ b/Documentation/devicetree/bindings/sound/rt274.txt
+@@ -26,7 +26,7 @@ Pins on the device (for linking into audio routes) for RT274:
  
- #define NO_IOMMU	1
+ Example:
  
-@@ -159,6 +160,23 @@ static int of_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
- 	return err;
- }
+-codec: rt274@1c {
++rt274: codec@1c {
+ 	compatible = "realtek,rt274";
+ 	reg = <0x1c>;
+ 	interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+diff --git a/Documentation/devicetree/bindings/sound/rt5514.txt b/Documentation/devicetree/bindings/sound/rt5514.txt
+index 4f33b0d..b25ed08 100644
+--- a/Documentation/devicetree/bindings/sound/rt5514.txt
++++ b/Documentation/devicetree/bindings/sound/rt5514.txt
+@@ -32,7 +32,7 @@ Pins on the device (for linking into audio routes) for I2C:
  
-+static int of_fsl_mc_iommu_init(struct fsl_mc_device *mc_dev,
-+				struct device_node *master_np)
-+{
-+	struct of_phandle_args iommu_spec = { .args_count = 1 };
-+	int err;
-+
-+	err = of_map_rid(master_np, mc_dev->icid, "iommu-map",
-+			 "iommu-map-mask", &iommu_spec.np,
-+			 iommu_spec.args);
-+	if (err)
-+		return err == -ENODEV ? NO_IOMMU : err;
-+
-+	err = of_iommu_xlate(&mc_dev->dev, &iommu_spec);
-+	of_node_put(iommu_spec.np);
-+	return err;
-+}
-+
- const struct iommu_ops *of_iommu_configure(struct device *dev,
- 					   struct device_node *master_np)
- {
-@@ -190,6 +208,8 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+ Example:
  
- 		err = pci_for_each_dma_alias(to_pci_dev(dev),
- 					     of_pci_iommu_init, &info);
-+	} else if (dev_is_fsl_mc(dev)) {
-+		err = of_fsl_mc_iommu_init(to_fsl_mc_device(dev), master_np);
- 	} else {
- 		struct of_phandle_args iommu_spec;
- 		int idx = 0;
+-codec: rt5514@57 {
++rt5514: codec@57 {
+ 	compatible = "realtek,rt5514";
+ 	reg = <0x57>;
+ };
+diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt b/Documentation/devicetree/bindings/sound/rt5616.txt
+index e410858..540a4bf 100644
+--- a/Documentation/devicetree/bindings/sound/rt5616.txt
++++ b/Documentation/devicetree/bindings/sound/rt5616.txt
+@@ -26,7 +26,7 @@ Pins on the device (for linking into audio routes) for RT5616:
+ 
+ Example:
+ 
+-codec: rt5616@1b {
++rt5616: codec@1b {
+ 	compatible = "realtek,rt5616";
+ 	reg = <0x1b>;
+ };
+diff --git a/Documentation/devicetree/bindings/sound/rt5645.txt b/Documentation/devicetree/bindings/sound/rt5645.txt
+index 7cee1f51..a03f9a8 100644
+--- a/Documentation/devicetree/bindings/sound/rt5645.txt
++++ b/Documentation/devicetree/bindings/sound/rt5645.txt
+@@ -69,4 +69,4 @@ codec: rt5650@1a {
+ 	realtek,dmic-en = "true";
+ 	realtek,en-jd-func = "true";
+ 	realtek,jd-mode = <3>;
+-};
+\ No newline at end of file
++};
+diff --git a/Documentation/devicetree/bindings/sound/rt5651.txt b/Documentation/devicetree/bindings/sound/rt5651.txt
+index b852218..a41199a 100644
+--- a/Documentation/devicetree/bindings/sound/rt5651.txt
++++ b/Documentation/devicetree/bindings/sound/rt5651.txt
+@@ -50,7 +50,7 @@ Pins on the device (for linking into audio routes) for RT5651:
+ 
+ Example:
+ 
+-codec: rt5651@1a {
++rt5651: codec@1a {
+ 	compatible = "realtek,rt5651";
+ 	reg = <0x1a>;
+ 	realtek,dmic-en = "true";
+diff --git a/Documentation/devicetree/bindings/sound/rt5663.txt b/Documentation/devicetree/bindings/sound/rt5663.txt
+index 497bcfc..2338644 100644
+--- a/Documentation/devicetree/bindings/sound/rt5663.txt
++++ b/Documentation/devicetree/bindings/sound/rt5663.txt
+@@ -47,7 +47,7 @@ Pins on the device (for linking into audio routes) for RT5663:
+ 
+ Example:
+ 
+-codec: rt5663@12 {
++rt5663: codec@12 {
+ 	compatible = "realtek,rt5663";
+ 	reg = <0x12>;
+ 	interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
 -- 
-1.9.1
+2.7.4
