@@ -1,77 +1,118 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 0/3] pcal6524 extensions and fixes for pca953x driver
-Date: Sat, 19 May 2018 21:58:47 +0300
-Message-ID: <CAHp75VeEy_t-jKuTb6sgONw0Mx=iLjdgsS_wJmz88X30652hUg@mail.gmail.com>
-References: <cover.1526533188.git.hns@goldelico.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] ASoC: fsl: Mark 'big-endian' property as
+	optional
+Date: Sat, 19 May 2018 22:12:52 -0300
+Message-ID: <1526778772-6676-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1526533188.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, timur@tabi.org, nicoleotsuka@gmail.com, robh+dt@kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 7:59 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> V7:
-> * replace PCAL register masks by hex constants
->
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Currently the 'big-endian' property is listed as required, which is
+not correct. i.MX SoCs do not need such property, so move it under
+'Optional properties' entry instead.
 
-> 2018-05-16 19:01:29: V6:
-> * added proper attribution to the formula used for fixing the
->   pcal6524 register address (changes commit message only)
-> * add back missing first patch from V2 that defines the
->   PCA_LATCH_INT constant
-> * removed patches already merged
->
-> 2018-04-28 18:33:42: V5:
-> * fix wrong split up between patches 1/7 and 2/7.
->
-> 2018-04-26 19:35:07: V4:
-> * introduced PCA_LATCH_INT constant to make of_table more
->   readable (suggested by Andy Shevchenko)
-> * converted all register constants to hex in a separate
->   patch (suggested by Andy Shevchenko)
-> * separated additional pcal953x and pcal6524 register
->   definitions into separate patches (suggested by Andy Shevchenko)
-> * made special pcal6524 address adjustment more readable
->   (suggested by Andy Shevchenko)
-> * moved gpio-controller and interrupt-controller to the
->   "required" section (reviewed by Rob Herring)
->
-> 2018-04-10 18:07:07: V3:
-> * add Reported-by: and Reviewed-by:
-> * fix wording for bindings description and example
-> * convert all register offsets to hex
-> * omit the LEVEL-IRQ RFC/hack commit
->
-> 2018-04-04 21:00:27: V2:
-> * added PCA_PCAL flags if matched through of-table
-> * fix address calculation for extended PCAL6524 registers
-> * hack to map LEVEL_LOW to EDGE_FALLING to be able to
->   test in combination with ts3a227e driver
-> * improve description of bindings for optional vcc-supply
->   and interrupt-controller;
->
-> 2018-03-10 09:32:53: no initial description
->
-> H. Nikolaus Schaller (3):
->   gpio: pca953x: set the PCA_PCAL flag also when matching by DT
->   gpio: pca953x: define masks for addressing common and extended
->     registers
->   gpio: pca953x: fix address calculation for pcal6524
->
->  drivers/gpio/gpio-pca953x.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> --
-> 2.12.2
->
+Also, fsl-sai.txt incorrectly referenced 'FTM_PWM registers', so
+change it to 'SAI registers', which is the intended description.
 
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+ Documentation/devicetree/bindings/sound/fsl,asrc.txt  | 10 ++++++----
+ Documentation/devicetree/bindings/sound/fsl,esai.txt  |  2 ++
+ Documentation/devicetree/bindings/sound/fsl,spdif.txt |  2 ++
+ Documentation/devicetree/bindings/sound/fsl-sai.txt   |  8 +++++---
+ 4 files changed, 15 insertions(+), 7 deletions(-)
 
-
+diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+index f5a1411..1d4d9f9 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+@@ -31,14 +31,16 @@ Required properties:
+ 			  it. This property is optional depending on the SoC
+ 			  design.
+ 
+-   - big-endian		: If this property is absent, the little endian mode
+-			  will be in use as default. Otherwise, the big endian
+-			  mode will be in use for all the device registers.
+-
+    - fsl,asrc-rate	: Defines a mutual sample rate used by DPCM Back Ends.
+ 
+    - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
+ 
++Optional properties:
++
++   - big-endian		: If this property is absent, the little endian mode
++			  will be in use as default. Otherwise, the big endian
++			  mode will be in use for all the device registers.
++
+ Example:
+ 
+ asrc: asrc@2034000 {
+diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+index cacd18b..5b99143 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+@@ -42,6 +42,8 @@ Required properties:
+ 			  means all the settings for Receiving would be
+ 			  duplicated from Transmition related registers.
+ 
++Optional properties:
++
+   - big-endian		: If this property is absent, the native endian mode
+ 			  will be in use as default, or the big endian mode
+ 			  will be in use for all the device registers.
+diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
+index 38cfa75..8b324f8 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
+@@ -33,6 +33,8 @@ Required properties:
+ 			  it. This property is optional depending on the SoC
+ 			  design.
+ 
++Optional properties:
++
+    - big-endian		: If this property is absent, the native endian mode
+ 			  will be in use as default, or the big endian mode
+ 			  will be in use for all the device registers.
+diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+index 740b467..dd9e597 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+@@ -28,9 +28,6 @@ Required properties:
+ 			  pinctrl-names. See ../pinctrl/pinctrl-bindings.txt
+ 			  for details of the property values.
+ 
+-  - big-endian		: Boolean property, required if all the FTM_PWM
+-			  registers are big-endian rather than little-endian.
+-
+   - lsb-first		: Configures whether the LSB or the MSB is transmitted
+ 			  first for the fifo data. If this property is absent,
+ 			  the MSB is transmitted first as default, or the LSB
+@@ -48,6 +45,11 @@ Required properties:
+ 			  receive data by following their own bit clocks and
+ 			  frame sync clocks separately.
+ 
++Optional properties:
++
++  - big-endian		: Boolean property, required if all the SAI
++			  registers are big-endian rather than little-endian.
++
+ Optional properties (for mx6ul):
+ 
+   - fsl,sai-mclk-direction-output: This is a boolean property. If present,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
