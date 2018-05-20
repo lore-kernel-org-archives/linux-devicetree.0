@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v1 6/7] MAINTAINERS: update entry for PIN CONTROLLER - MEDIATEK
-Date: Mon, 21 May 2018 01:01:52 +0800
-Message-ID: <e5bcfc9671a79fef4f38933bb04894f0f53b3d63.1526835466.git.sean.wang@mediatek.com>
+Subject: [PATCH v1 1/7] dt-bindings: pinctrl: add external interrupt support to MT7622 pinctrl
+Date: Mon, 21 May 2018 01:01:47 +0800
+Message-ID: <3898620ef606004aaddc332591ca467f56773029.1526835466.git.sean.wang@mediatek.com>
 References: <cover.1526835466.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,24 +14,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Add new files for the entry
+Extend the capability of MT7622 pinctrl with adding EINT so that each
+GPIO can be used to notify CPU when a signal state is changing on the
+line as an external interrupt.
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9051a9c..7f3cced 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11193,6 +11193,7 @@ L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
- F:	Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-+F:	drivers/pinctrl/mediatek/mtk-eint.*
- F:	drivers/pinctrl/mediatek/pinctrl-mtk-common.*
- F:	drivers/pinctrl/mediatek/pinctrl-mt2701.c
- F:	drivers/pinctrl/mediatek/pinctrl-mt7622.c
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+index f18ed99..743b32d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+@@ -9,6 +9,16 @@ Required properties for the root node:
+  - #gpio-cells: Should be two. The first cell is the pin number and the
+    second is the GPIO flags.
+ 
++Optional properties:
++- interrupt-controller  : Marks the device node as an interrupt controller
++
++If the property interrupt-controller is defined, following property is required
++- reg-names: A string describing the "reg" entries. Must contain "eint".
++- interrupts : The interrupt output from the controller.
++- #interrupt-cells: Should be two.
++- interrupt-parent: Phandle of the interrupt parent to which the external
++  GPIO interrupts are forwarded to.
++
+ Please refer to pinctrl-bindings.txt in this directory for details of the
+ common pinctrl bindings used by client devices, including the meaning of the
+ phrase "pin configuration node".
 -- 
 2.7.4
