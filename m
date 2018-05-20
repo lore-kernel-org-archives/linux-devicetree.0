@@ -1,61 +1,58 @@
-Return-Path: <SRS0=pYHN=ID=ragnatech.se=niklas.soderlund+renesas@kernel.org>
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH] dt-bindings: media: rcar_vin: fix style for ports and endpoints
-Date: Thu, 17 May 2018 01:32:12 +0200
-Message-Id: <20180516233212.30931-1-niklas.soderlund+renesas@ragnatech.se>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 20 May 2018 11:24:21 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH trivial] dt-bindings: iio: afe: Spelling
+ s/mesaurement/measurement/
+Message-ID: <20180520112421.2b71cfa5@archlinux>
+In-Reply-To: <1526389584-19835-1-git-send-email-geert+renesas@glider.be>
+References: <1526389584-19835-1-git-send-email-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Peter Rosin <peda@axentia.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The style for referring to ports and endpoint are wrong. Refer to them
-using lowercase and a unit address, port@x and endpoint@x.
+On Tue, 15 May 2018 15:06:24 +0200
+Geert Uytterhoeven <geert+renesas@glider.be> wrote:
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- .../devicetree/bindings/media/rcar_vin.txt    | 20 +++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index c2c57dcf73f4851b..a574b9c037c05a3c 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -45,23 +45,23 @@ The per-board settings Gen2 platforms:
- The per-board settings Gen3 platforms:
- 
- Gen3 platforms can support both a single connected parallel input source
--from external SoC pins (port0) and/or multiple parallel input sources
--from local SoC CSI-2 receivers (port1) depending on SoC.
-+from external SoC pins (port@0) and/or multiple parallel input sources
-+from local SoC CSI-2 receivers (port@1) depending on SoC.
- 
- - renesas,id - ID number of the VIN, VINx in the documentation.
- - ports
--    - port 0 - sub-node describing a single endpoint connected to the VIN
-+    - port@0 - sub-node describing a single endpoint connected to the VIN
-       from external SoC pins described in video-interfaces.txt[1].
--      Describing more then one endpoint in port 0 is invalid. Only VIN
--      instances that are connected to external pins should have port 0.
--    - port 1 - sub-nodes describing one or more endpoints connected to
-+      Describing more then one endpoint in port@0 is invalid. Only VIN
-+      instances that are connected to external pins should have port@0.
-+    - port@1 - sub-nodes describing one or more endpoints connected to
-       the VIN from local SoC CSI-2 receivers. The endpoint numbers must
-       use the following schema.
- 
--        - Endpoint 0 - sub-node describing the endpoint connected to CSI20
--        - Endpoint 1 - sub-node describing the endpoint connected to CSI21
--        - Endpoint 2 - sub-node describing the endpoint connected to CSI40
--        - Endpoint 3 - sub-node describing the endpoint connected to CSI41
-+        - endpoint@0 - sub-node describing the endpoint connected to CSI20
-+        - endpoint@1 - sub-node describing the endpoint connected to CSI21
-+        - endpoint@2 - sub-node describing the endpoint connected to CSI40
-+        - endpoint@3 - sub-node describing the endpoint connected to CSI41
- 
- Device node example for Gen2 platforms
- --------------------------------------
--- 
-2.17.0
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to ignore it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt | 2 +-
+>  Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt     | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt b/Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
+> index 0ddbaebba8ceca13..821b61b8c542ff92 100644
+> --- a/Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
+> +++ b/Documentation/devicetree/bindings/iio/afe/current-sense-amplifier.txt
+> @@ -2,7 +2,7 @@ Current Sense Amplifier
+>  =======================
+>  
+>  When an io-channel measures the output voltage from a current sense
+> -amplifier, the interesting mesaurement is almost always the current
+> +amplifier, the interesting measurement is almost always the current
+>  through the sense resistor, not the voltage output. This binding
+>  describes such a current sense circuit.
+>  
+> diff --git a/Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt b/Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+> index 8e7b3e408a5253c5..0f67108a07b6327b 100644
+> --- a/Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+> +++ b/Documentation/devicetree/bindings/iio/afe/current-sense-shunt.txt
+> @@ -2,7 +2,7 @@ Current Sense Shunt
+>  ===================
+>  
+>  When an io-channel measures the voltage over a current sense shunt,
+> -the interesting mesaurement is almost always the current through the
+> +the interesting measurement is almost always the current through the
+>  shunt, not the voltage over it. This binding describes such a current
+>  sense circuit.
+>  
