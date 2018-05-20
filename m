@@ -1,38 +1,25 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6/7: Remove unit-address from anatop
- regulators
-Date: Sun, 20 May 2018 20:23:54 +0800
-Message-ID: <20180520122353.GT26863@dragon>
-References: <1526304714-23821-1-git-send-email-festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx51-zii-rdu1: limit usbh1 to full-speed
+Date: Sun, 20 May 2018 20:36:07 +0800
+Message-ID: <20180520123606.GU26863@dragon>
+References: <20180515084502.17148-1-nikita.yoush@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1526304714-23821-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180515084502.17148-1-nikita.yoush@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lucas Stach <l.stach@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Marco Franchi <marcofrk@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 14, 2018 at 10:31:54AM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam@nxp.com>
+On Tue, May 15, 2018 at 11:45:02AM +0300, Nikita Yushchenko wrote:
+> On RDU1, imx51 usbh1 interface is either not used, or used via external
+> block that breaks USB2 signalling.
 > 
-> Remove unit-address and reg property from anatop regulators to fix
-> the following DTC warnings with W=1:
+> To keep things working if high-speed device gets connected to that
+> block, use ChipIdea feature to limit port to full speed.
 > 
-> arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddcore@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddpu@20c8140)
-> arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddcore@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddsoc@20c8140)
-> arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unique_unit_address): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddpu@20c8140: duplicate unit-address (also used in node /soc/aips-bus@2000000/anatop@20c8000/regulator-vddsoc@20c8140)
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 
 Applied, thanks.
