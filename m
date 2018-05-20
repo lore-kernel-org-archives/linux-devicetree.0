@@ -1,15 +1,15 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 05/12] staging: iio: ad2s1200: Replace legacy gpio
- API with modern API
-Date: Sun, 20 May 2018 12:04:36 +0100
-Message-ID: <20180520120436.57abf51b@archlinux>
+Subject: Re: [PATCH v4 08/12] dt-bindings: iio: resolver: Document AD2S1200
+ bindings
+Date: Sun, 20 May 2018 12:05:53 +0100
+Message-ID: <20180520120553.4b2526c9@archlinux>
 References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
- <78bc9c09403ac1fa08d610a86505416b85edb306.1526667118.git.davidjulianveenstra@gmail.com>
+ <cbe0f4194cca49c303fbe62b215bfaf0af6e2bbb.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <78bc9c09403ac1fa08d610a86505416b85edb306.1526667118.git.davidjulianveenstra@gmail.com>
+In-Reply-To: <cbe0f4194cca49c303fbe62b215bfaf0af6e2bbb.1526667118.git.davidjulianveenstra@gmail.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -23,82 +23,52 @@ To: David Veenstra <davidjulianveenstra@gmail.com>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 May 2018 20:21:56 +0200
+On Fri, 18 May 2018 20:22:50 +0200
 David Veenstra <davidjulianveenstra@gmail.com> wrote:
 
-> The legacy, integer based gpio API is replaced with the modern
-> descriptor based API.
+> Add documentation for the device tree bindings of the AD2S1200 resolver.
 > 
 > Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
-Hmm This is more complex than it needed to be because it
-has to do some massaging of the two different methods only
-to clean them up in the next patch.
 
-I would have been tempted to combine the two patches or at
-the very least add some comments in here that the nastier
-corners are about to go away.
-
-Anyhow, not to worry I figured it out slightly before sending
-you an email saying not to do it this way ;)
-
-Applied to the togreg branch of iio.git and pushed out as
-testing for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
+Nothing fundamentally wrong it in here, but a few things to tidy up.
 
 > ---
->  drivers/staging/iio/resolver/ad2s1200.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
+> Changes in v4:
+>  - Added vendor prefix to gpio function name.
+>  - Added unit address.
+>  - Changed commit subject to be more inline with other dt-bindings
+>    commit .
 > 
-> diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
-> index 430cc62591fe..b2c46a8c6b77 100644
-> --- a/drivers/staging/iio/resolver/ad2s1200.c
-> +++ b/drivers/staging/iio/resolver/ad2s1200.c
-> @@ -13,6 +13,7 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/spi/spi.h>
-> @@ -43,8 +44,8 @@
->  struct ad2s1200_state {
->  	struct mutex lock;
->  	struct spi_device *sdev;
-> -	int sample;
-> -	int rdvel;
-> +	struct gpio_desc *sample;
-> +	struct gpio_desc *rdvel;
->  	__be16 rx ____cacheline_aligned;
->  };
->  
-> @@ -58,12 +59,12 @@ static int ad2s1200_read_raw(struct iio_dev *indio_dev,
->  	int ret;
->  
->  	mutex_lock(&st->lock);
-> -	gpio_set_value(st->sample, 0);
-> +	gpiod_set_value(st->sample, 0);
->  
->  	/* delay (6 * AD2S1200_TSCLK + 20) nano seconds */
->  	udelay(1);
-> -	gpio_set_value(st->sample, 1);
-> -	gpio_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
-> +	gpiod_set_value(st->sample, 1);
-> +	gpiod_set_value(st->rdvel, !!(chan->type == IIO_ANGL));
->  
->  	ret = spi_read(st->sdev, &st->rx, 2);
->  	if (ret < 0) {
-> @@ -133,8 +134,8 @@ static int ad2s1200_probe(struct spi_device *spi)
->  	st = iio_priv(indio_dev);
->  	mutex_init(&st->lock);
->  	st->sdev = spi;
-> -	st->sample = pins[0];
-> -	st->rdvel = pins[1];
-> +	st->sample = gpio_to_desc(pins[0]);
-> +	st->rdvel = gpio_to_desc(pins[1]);
->  
->  	indio_dev->dev.parent = &spi->dev;
->  	indio_dev->info = &ad2s1200_info;
+>  .../bindings/iio/resolver/ad2s1200.txt           | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> new file mode 100644
+> index 000000000000..bbf54260c911
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/resolver/ad2s1200.txt
+> @@ -0,0 +1,16 @@
+> +Analog Devices AD2S1200 and AD2S1205 Resolver-to-Digital Converter
+> +
+> +Required properties:
+> + - compatible : should be "adi,ad2s1200" or "adi,ad2s1205"
+
+One line per entry.  Saves us having to change this substantially when adding
+more parts in future.
+
+> + - reg : the SPI chip select number of the device
+> + - adi,sample-gpios : The GPIO pin connected to the SAMPLE line of the AD2S1200
+> + - adi,rdvel-gpios : The GPIO pin connected to the RDVEL line of the AD2S1200
+> +
+> +Example:
+> +
+> +	resolver@0 {
+
+@4 if you are going to have reg = <4> below.
+
+> +		compatible = "adi,ad2s1200";
+> +		reg = <4>;
+> +		adi,sample-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
+> +		adi,rdvel-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
+> +	};
