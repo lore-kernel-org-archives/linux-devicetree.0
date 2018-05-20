@@ -1,92 +1,108 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [reset-control] How to initialize hardware state with the shared
- reset line?
-Date: Sun, 20 May 2018 12:57:01 +0200
-Message-ID: <CAFBinCADQsXoc6CUKabH6VX3ZBYb5apo-xBbe1w0BiO8wBAsPw@mail.gmail.com>
-References: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 06/12] staging: iio: ad2s1200: Replace platform data
+ with dt bindings
+Date: Sun, 20 May 2018 12:01:43 +0100
+Message-ID: <20180520120143.075b5bbd@archlinux>
+References: <cover.1526667118.git.davidjulianveenstra@gmail.com>
+ <6beef6b7514c53f4fac77d661dcae139b55935bf.1526667118.git.davidjulianveenstra@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <6beef6b7514c53f4fac77d661dcae139b55935bf.1526667118.git.davidjulianveenstra@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: David Veenstra <davidjulianveenstra@gmail.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 18 May 2018 20:22:32 +0200
+David Veenstra <davidjulianveenstra@gmail.com> wrote:
 
-On Thu, May 10, 2018 at 11:16 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-[snip]
-> I may be missing something, but
-> one solution might be reset hogging on the
-> reset provider side.  This allows us to describe
-> the initial state of reset lines in the reset controller.
->
-> The idea for "reset-hog" is similar to:
->  - "gpio-hog" defined in
->    Documentation/devicetree/bindings/gpio/gpio.txt
->  - "assigned-clocks" defined in
->    Documetation/devicetree/bindings/clock/clock-bindings.txt
->
->
->
-> For example,
->
->    reset-controller {
->             ....
->
->             line_a {
->                   reset-hog;
->                   resets = <1>;
->                   reset-assert;
->             };
->    }
->
->
-> When the reset controller is registered,
-> the reset ID '1' is asserted.
->
->
-> So, all reset consumers that share the reset line '1'
-> will start from the asserted state
-> (i.e. defined state machine state).
-I wonder if a "reset hog" can be board specific:
-- GPIO hogs are definitely board specific (meson-gxbb-odroidc2.dts for
-example uses it to take the USB hub out of reset)
-- assigned-clock-parents (and the like) can also be board specific (I
-made up a use-case since I don't know of any actual examples: board A
-uses an external XTAL while board B uses some other internal
-clock-source because it doesn't have an external XTAL)
+> Remove usage of platform data, and replace it with device tree
+> facilities.
+> 
+> Signed-off-by: David Veenstra <davidjulianveenstra@gmail.com>
+Great,
 
-however, can reset lines be board specific? or in other words: do we
-need to describe them in device-tree?
-we could extend struct reset_controller_dev (= reset controller
-driver) if they are not board specific:
-- either assert all reset lines by default except if they are listed
-in a new field (may break backwards compatibility, requires testing of
-all reset controller drivers)
-- specify a list of reset lines and their desired state (or to keep it
-easy: specify a list of reset lines that should be asserted)
-(I must admit that this is basically your idea but the definition is
-moved from device-tree to the reset controller driver)
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-any "chip" specific differences could be expressed by using a
-different of_device_id
+I think the dt bindings that match this are uncontroversial in
+what they actually are (comments to follow on that patch) so
+should be no problem with this one.
 
-one the other hand: your "reset hog" solution looks fine to me if
-reset lines can be board specific
+Jonathan
 
-> From the discussion with Martin Blumenstingl
-> (https://lkml.org/lkml/2018/4/28/115),
-> the problem for Amlogic is that
-> the reset line is "de-asserted" by default.
-> If so, the 'reset-hog' would fix the problem,
-> and DWC3 driver would be able to use
-> shared, level reset, I think.
-I think you are right: if we could control the initial state then we
-should be able to use level resets
-
-
-Regards
-Martin
+> ---
+> Changes in v4:
+>  - Added vendor prefix to gpio function names.
+> 
+>  drivers/staging/iio/resolver/ad2s1200.c | 32 ++++++++++++-------------
+>  1 file changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/resolver/ad2s1200.c b/drivers/staging/iio/resolver/ad2s1200.c
+> index b2c46a8c6b77..9a8aa2448897 100644
+> --- a/drivers/staging/iio/resolver/ad2s1200.c
+> +++ b/drivers/staging/iio/resolver/ad2s1200.c
+> @@ -25,9 +25,6 @@
+>  
+>  #define DRV_NAME "ad2s1200"
+>  
+> -/* input pin sample and rdvel is controlled by driver */
+> -#define AD2S1200_PN	2
+> -
+>  /* input clock on serial interface */
+>  #define AD2S1200_HZ	8192000
+>  /* clock period in nano second */
+> @@ -111,20 +108,9 @@ static const struct iio_info ad2s1200_info = {
+>  
+>  static int ad2s1200_probe(struct spi_device *spi)
+>  {
+> -	unsigned short *pins = spi->dev.platform_data;
+>  	struct ad2s1200_state *st;
+>  	struct iio_dev *indio_dev;
+> -	int pn, ret;
+> -
+> -	for (pn = 0; pn < AD2S1200_PN; pn++) {
+> -		ret = devm_gpio_request_one(&spi->dev, pins[pn], GPIOF_DIR_OUT,
+> -					    DRV_NAME);
+> -		if (ret) {
+> -			dev_err(&spi->dev, "request gpio pin %d failed\n",
+> -				pins[pn]);
+> -			return ret;
+> -		}
+> -	}
+> +	int ret;
+>  
+>  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+>  	if (!indio_dev)
+> @@ -134,8 +120,20 @@ static int ad2s1200_probe(struct spi_device *spi)
+>  	st = iio_priv(indio_dev);
+>  	mutex_init(&st->lock);
+>  	st->sdev = spi;
+> -	st->sample = gpio_to_desc(pins[0]);
+> -	st->rdvel = gpio_to_desc(pins[1]);
+> +
+> +	st->sample = devm_gpiod_get(&spi->dev, "adi,sample", GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->sample)) {
+> +		dev_err(&spi->dev, "Failed to claim SAMPLE gpio: err=%ld\n",
+> +			PTR_ERR(st->sample));
+> +		return PTR_ERR(st->sample);
+> +	}
+> +
+> +	st->rdvel = devm_gpiod_get(&spi->dev, "adi,rdvel", GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->rdvel)) {
+> +		dev_err(&spi->dev, "Failed to claim RDVEL gpio: err=%ld\n",
+> +			PTR_ERR(st->rdvel));
+> +		return PTR_ERR(st->rdvel);
+> +	}
+>  
+>  	indio_dev->dev.parent = &spi->dev;
+>  	indio_dev->info = &ad2s1200_info;
