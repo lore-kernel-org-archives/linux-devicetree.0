@@ -1,100 +1,92 @@
-MIME-Version: 1.0
-In-Reply-To: <DB6PR0401MB25031C2EFE66E0D90931C4F6E2950@DB6PR0401MB2503.eurprd04.prod.outlook.com>
-References: <20180514120307.15592-1-wen.he_1@nxp.com>
-	<20180514120307.15592-3-wen.he_1@nxp.com>
-	<20180518212605.GA1119@rob-hp-laptop>
-	<DB6PR0401MB25031C2EFE66E0D90931C4F6E2950@DB6PR0401MB2503.eurprd04.prod.outlook.com>
-Date: Wed, 23 May 2018 14:59:24 -0500
-Message-ID: <CAL_JsqLyDaTqccYq16RHNmyEsRmg2D3rYVZv4K7ooSe9SQF1cw@mail.gmail.com>
-Subject: Re: [v4 3/6] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA
+Return-Path: <SRS0=YcIV=II=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr30087.outbound.protection.outlook.com ([40.107.3.87]:27257
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751055AbeEUFwo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 May 2018 01:52:44 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [v4 3/6] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA
  controller bindings
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: Wen He <wen.he_1@nxp.com>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>, Vinod <vkoul@kernel.org>
+Date: Mon, 21 May 2018 05:52:42 +0000
+Message-ID: <DB6PR0401MB25031C2EFE66E0D90931C4F6E2950@DB6PR0401MB2503.eurprd04.prod.outlook.com>
+References: <20180514120307.15592-1-wen.he_1@nxp.com>
+ <20180514120307.15592-3-wen.he_1@nxp.com>
+ <20180518212605.GA1119@rob-hp-laptop>
+In-Reply-To: <20180518212605.GA1119@rob-hp-laptop>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "vinod.koul@intel.com" <vinod.koul@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Updated Vinod's email...
-
-On Mon, May 21, 2018 at 12:52 AM, Wen He <wen.he_1@nxp.com> wrote:
-> Hi Rob,
->
-> Please see my comments inline.
->
-> Best Regards,
-> Wen
->
->> -----Original Message-----
->> From: Rob Herring [mailto:robh@kernel.org]
->> Sent: 2018=E5=B9=B45=E6=9C=8819=E6=97=A5 5:26
->> To: Wen He <wen.he_1@nxp.com>
->> Cc: vinod.koul@intel.com; dmaengine@vger.kernel.org;
->> devicetree@vger.kernel.org; Leo Li <leoyang.li@nxp.com>; Jiafei Pan
->> <jiafei.pan@nxp.com>; Jiaheng Fan <jiaheng.fan@nxp.com>
->> Subject: Re: [v4 3/6] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA
->> controller bindings
->>
->> On Mon, May 14, 2018 at 08:03:04PM +0800, Wen He wrote:
->> > Document the devicetree bindings for NXP Layerscape qDMA controller
->> > which could be found on NXP QorIQ Layerscape SoCs.
->> >
->> > Signed-off-by: Wen He <wen.he_1@nxp.com>
->> > ---
->> > change in v4:
->> >     - Rewrite the bindings document that follows generic DMA bindings
->> > file
->> >
->> > change in v3:
->> >     - no change
->> >
->> > change in v2:
->> >     - Remove indentation
->> >     - Add "Should be" before 'fsl,ls1021a-qdma'
->> >     - Replace 'channels' by 'dma-channels'
->> >     - Replace 'qdma@8390000' by 'dma-controller@8390000'
->> >
->> >  Documentation/devicetree/bindings/dma/fsl-qdma.txt |   41
->> ++++++++++++++++++++
->> >  1 files changed, 41 insertions(+), 0 deletions(-)  create mode 100644
->> > Documentation/devicetree/bindings/dma/fsl-qdma.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt
->> > b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
->> > new file mode 100644
->> > index 0000000..368c4e7
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
->> > @@ -0,0 +1,41 @@
->> > +NXP Layerscape SoC qDMA Controller
->> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > +
->> > +This device follows the generic DMA bindings defined in dma/dma.txt.
->> > +
->> > +Required properties:
->> > +
->> > +- compatible:              Must be one of
->> > +                    "fsl,ls1021a-qdma": for LS1021A Board
->> > +                    "fsl,ls1043a-qdma": for ls1043A Board
->> > +                    "fsl,ls1046a-qdma": for ls1046A Board
->> > +- reg:                     Should contain the register's base address=
- and length.
->> > +- interrupts:              Should contain a reference to the interrup=
-t used by
->> this
->> > +                   device.
->> > +- interrupt-names: Should contain interrupt names:
->> > +                    "qdma-error": the error interrupt
->> > +                    "qdma-queue": the queue interrupt
->> > +- queues:          Should contain number of queues supported.
->>
->> Needs a vendor prefix.
->>
->
-> Does means: The queues filed need a vendor prefix ?
-> like 'fsl-queues' ? right?
-
-No, vendor prefixes end with a comma: fsl,queues
-
-Rob
+SGkgUm9iLA0KDQpQbGVhc2Ugc2VlIG15IGNvbW1lbnRzIGlubGluZS4NCg0KQmVzdCBSZWdhcmRz
+LA0KV2VuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJp
+bmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+IFNlbnQ6IDIwMTjE6jXUwjE5yNUgNToyNg0K
+PiBUbzogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogdmlub2Qua291bEBpbnRlbC5j
+b207IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IEppYWZlaSBQYW4NCj4gPGppYWZlaS5w
+YW5AbnhwLmNvbT47IEppYWhlbmcgRmFuIDxqaWFoZW5nLmZhbkBueHAuY29tPg0KPiBTdWJqZWN0
+OiBSZTogW3Y0IDMvNl0gZHQtYmluZGluZ3M6IGZzbC1xZG1hOiBBZGQgTlhQIExheWVyc2NwYWUg
+cURNQQ0KPiBjb250cm9sbGVyIGJpbmRpbmdzDQo+IA0KPiBPbiBNb24sIE1heSAxNCwgMjAxOCBh
+dCAwODowMzowNFBNICswODAwLCBXZW4gSGUgd3JvdGU6DQo+ID4gRG9jdW1lbnQgdGhlIGRldmlj
+ZXRyZWUgYmluZGluZ3MgZm9yIE5YUCBMYXllcnNjYXBlIHFETUEgY29udHJvbGxlcg0KPiA+IHdo
+aWNoIGNvdWxkIGJlIGZvdW5kIG9uIE5YUCBRb3JJUSBMYXllcnNjYXBlIFNvQ3MuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+ID4gLS0tDQo+ID4g
+Y2hhbmdlIGluIHY0Og0KPiA+IAktIFJld3JpdGUgdGhlIGJpbmRpbmdzIGRvY3VtZW50IHRoYXQg
+Zm9sbG93cyBnZW5lcmljIERNQSBiaW5kaW5ncw0KPiA+IGZpbGUNCj4gPg0KPiA+IGNoYW5nZSBp
+biB2MzoNCj4gPiAJLSBubyBjaGFuZ2UNCj4gPg0KPiA+IGNoYW5nZSBpbiB2MjoNCj4gPiAJLSBS
+ZW1vdmUgaW5kZW50YXRpb24NCj4gPiAJLSBBZGQgIlNob3VsZCBiZSIgYmVmb3JlICdmc2wsbHMx
+MDIxYS1xZG1hJw0KPiA+IAktIFJlcGxhY2UgJ2NoYW5uZWxzJyBieSAnZG1hLWNoYW5uZWxzJw0K
+PiA+IAktIFJlcGxhY2UgJ3FkbWFAODM5MDAwMCcgYnkgJ2RtYS1jb250cm9sbGVyQDgzOTAwMDAn
+DQo+ID4NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtcWRt
+YS50eHQgfCAgIDQxDQo+ICsrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZXMgY2hhbmdl
+ZCwgNDEgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlIDEwMDY0NA0K
+PiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLXFkbWEudHh0DQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rt
+YS9mc2wtcWRtYS50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+bWEvZnNsLXFkbWEudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAw
+MDAwLi4zNjhjNGU3DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLXFkbWEudHh0DQo+ID4gQEAgLTAsMCArMSw0MSBA
+QA0KPiA+ICtOWFAgTGF5ZXJzY2FwZSBTb0MgcURNQSBDb250cm9sbGVyDQo+ID4gKz09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiArDQo+ID4gK1RoaXMgZGV2aWNlIGZvbGxv
+d3MgdGhlIGdlbmVyaWMgRE1BIGJpbmRpbmdzIGRlZmluZWQgaW4gZG1hL2RtYS50eHQuDQo+ID4g
+Kw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICsNCj4gPiArLSBjb21wYXRpYmxlOgkJ
+TXVzdCBiZSBvbmUgb2YNCj4gPiArCQkJICJmc2wsbHMxMDIxYS1xZG1hIjogZm9yIExTMTAyMUEg
+Qm9hcmQNCj4gPiArCQkJICJmc2wsbHMxMDQzYS1xZG1hIjogZm9yIGxzMTA0M0EgQm9hcmQNCj4g
+PiArCQkJICJmc2wsbHMxMDQ2YS1xZG1hIjogZm9yIGxzMTA0NkEgQm9hcmQNCj4gPiArLSByZWc6
+CQkJU2hvdWxkIGNvbnRhaW4gdGhlIHJlZ2lzdGVyJ3MgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgu
+DQo+ID4gKy0gaW50ZXJydXB0czoJCVNob3VsZCBjb250YWluIGEgcmVmZXJlbmNlIHRvIHRoZSBp
+bnRlcnJ1cHQgdXNlZCBieQ0KPiB0aGlzDQo+ID4gKwkJCWRldmljZS4NCj4gPiArLSBpbnRlcnJ1
+cHQtbmFtZXM6CVNob3VsZCBjb250YWluIGludGVycnVwdCBuYW1lczoNCj4gPiArCQkJICJxZG1h
+LWVycm9yIjogdGhlIGVycm9yIGludGVycnVwdA0KPiA+ICsJCQkgInFkbWEtcXVldWUiOiB0aGUg
+cXVldWUgaW50ZXJydXB0DQo+ID4gKy0gcXVldWVzOgkJU2hvdWxkIGNvbnRhaW4gbnVtYmVyIG9m
+IHF1ZXVlcyBzdXBwb3J0ZWQuDQo+IA0KPiBOZWVkcyBhIHZlbmRvciBwcmVmaXguDQo+IA0KDQpE
+b2VzIG1lYW5zOiBUaGUgcXVldWVzIGZpbGVkIG5lZWQgYSB2ZW5kb3IgcHJlZml4ID8NCmxpa2Ug
+J2ZzbC1xdWV1ZXMnID8gcmlnaHQ/DQoNCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6
+DQo+ID4gKw0KPiA+ICstIGRtYS1jaGFubmVsczoJCU51bWJlciBvZiBETUEgY2hhbm5lbHMgc3Vw
+cG9ydGVkIGJ5IHRoZQ0KPiBjb250cm9sbGVyLg0KPiA+ICstIGJpZy1lbmRpYW46CQlJZiBwcmVz
+ZW50IHJlZ2lzdGVycyBhbmQgaGFyZHdhcmUgc2NhdHRlci9nYXRoZXINCj4gZGVzY3JpcHRvcnMN
+Cj4gPiArCQkJb2YgdGhlIHFETUEgYXJlIGltcGxlbWVudGVkIGluIGJpZyBlbmRpYW4gbW9kZSwg
+b3RoZXJ3aXNlIGluDQo+IGxpdHRsZQ0KPiA+ICsJCQltb2RlLg0KPiA+ICsNCj4gPiArRXhhbXBs
+ZXM6DQo+ID4gKw0KPiA+ICsJcWRtYTogZG1hLWNvbnRyb2xsZXJAODM5MDAwMCB7DQo+ID4gKwkJ
+Y29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1xZG1hIjsNCj4gPiArCQlyZWcgPSA8MHgwIDB4ODM5
+ODAwMCAweDAgMHgyMDAwIC8qIENvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ID4gKwkJICAgICAg
+IDB4MCAweDgzOWEwMDAgMHgwIDB4MjAwMD47IC8qIEJsb2NrIHJlZ2lzdGVycyAqLw0KPiA+ICsJ
+CWludGVycnVwdHMgPSA8R0lDX1NQSSAxODUgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ID4gKwkJ
+CQk8R0lDX1NQSSA3NiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQlpbnRlcnJ1cHQtbmFt
+ZXMgPSAicWRtYS1lcnJvciIsICJxZG1hLXF1ZXVlIjsNCj4gPiArCQlkbWEtY2hhbm5lbHMgPSA8
+OD47DQo+ID4gKwkJcXVldWVzID0gPDI+Ow0KPiA+ICsJCWJpZy1lbmRpYW47DQo+ID4gKwl9Ow0K
+PiA+ICsNCj4gPiArRE1BIGNsaWVudHMgbXVzdCB1c2UgdGhlIGZvcm1hdCBkZXNjcmliZWQgaW4g
+ZG1hL2RtYS50eHQgZmlsZS4NCj4gPiAtLQ0KPiA+IDEuNy4xDQo+ID4NCj4gPiAtLQ0KPiA+IFRv
+IHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBk
+ZXZpY2V0cmVlIg0KPiA+IGluIHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdl
+ci5rZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vDQo+ID4gaW5mbyBhdA0KPiA+DQo+IGh0dHBzOi8v
+ZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUy
+RnZnZXINCj4gPiAua2VybmVsLm9yZyUyRm1ham9yZG9tby1pbmZvLmh0bWwmZGF0YT0wMiU3QzAx
+JTdDd2VuLmhlXzElNDBueHANCj4gLmNvbSU3Qw0KPiA+DQo+IGFmZTlmMzBmNjg2NTRiMzYwODU0
+MDhkNWJkMDVmODU2JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDENCj4gNjM1JTdDDQo+
+ID4NCj4gMCU3QzElN0M2MzY2MjI3NTU3MDA2NTk5OTQmc2RhdGE9VzY1aEQ4WllVUW0yJTJGOFRk
+ZmlVR29yZ0INCj4gT204R29qWGRFUzINCj4gPiBtVk56UXBJRSUzRCZyZXNlcnZlZD0wDQo=
