@@ -1,220 +1,60 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: [PATCH v6 9/9] iio: counter: Remove IIO counter subdirectory
-Date: Mon, 21 May 2018 09:58:28 -0400
-Message-ID: <20180521135828.GD5723@sophia>
-References: <cover.1526487615.git.vilhelm.gray@gmail.com>
- <4c335e0eebfbaf6e86f41e0f2864d76993d90b13.1526487615.git.vilhelm.gray@gmail.com>
- <20180520165302.101d37ce@archlinux>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v7 2/2] PCI: mediatek: Using chained IRQ to setup IRQ
+ handle
+Date: Mon, 21 May 2018 15:03:36 +0100
+Message-ID: <20180521140336.GA3149@e107981-ln.cambridge.arm.com>
+References: <1525412853-24367-1-git-send-email-honghui.zhang@mediatek.com>
+ <1525412853-24367-3-git-send-email-honghui.zhang@mediatek.com>
+ <20180518195154.GB41790@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180520165302.101d37ce@archlinux>
+In-Reply-To: <20180518195154.GB41790@bhelgaas-glaptop.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: benjamin.gaignard@st.com, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: honghui.zhang@mediatek.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 20, 2018 at 04:53:02PM +0100, Jonathan Cameron wrote:
->On Wed, 16 May 2018 13:52:39 -0400
->William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
->
->> This patch removes the IIO counter subdirectory which is now superceded
->> by the Counter subsystem. Deprecation warnings are added to the
->> documentation of the relevant IIO counter sysfs attributes.
->> 
->> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
->
->Please drop the directory when it becomes empty rather than in a later
->patch.  IIRC there are some issues with empty Makefiles that will
->make building inbetween tricky.
->
->For the deprecated markings.
->
->Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Fri, May 18, 2018 at 02:51:54PM -0500, Bjorn Helgaas wrote:
+> On Fri, May 04, 2018 at 01:47:33PM +0800, honghui.zhang@mediatek.com wrote:
+> > From: Honghui Zhang <honghui.zhang@mediatek.com>
+> > 
+> > Using irq_chip solution to setup IRQs in order to consist
+> > with IRQ framework.
+> > 
+> > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  drivers/pci/host/pcie-mediatek.c | 206 ++++++++++++++++++++++-----------------
+> >  1 file changed, 115 insertions(+), 91 deletions(-)
+> > 
+> > diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> > index c3dc549..dabf1086 100644
+> > --- a/drivers/pci/host/pcie-mediatek.c
+> > +++ b/drivers/pci/host/pcie-mediatek.c
+> > ...
+> 
+> > -static int mtk_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
+> > -			    irq_hw_number_t hwirq)
+> > +static struct msi_domain_info mtk_msi_domain_info = {
+> 
+> I think this patch should be amended to include this:
+> 
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> index 0d0177ce436c..368b70d9371b 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -193,7 +193,7 @@ config PCIE_MEDIATEK
+>  	bool "MediaTek PCIe controller"
+>  	depends on (ARM || ARM64) && (ARCH_MEDIATEK || COMPILE_TEST)
+>  	depends on OF
+> -	depends on PCI
 
-I'll have the directory removal occur with the removal of the last
-module then when the directory becomes empty.
+Actually I amended your patch, since I do not think the deletion above
+belongs in this commit (I agree that's completely useless but that's
+not this patch that we should remove it).
 
-Regarding the deprecation markings, should I select a specific kernel
-version to date the removal of these attributes, or leave the future
-date open as this patch is now?
+Lorenzo
 
-William Breathitt Gray
-
->
->> ---
->>  Documentation/ABI/testing/sysfs-bus-iio          |  8 ++++++++
->>  .../ABI/testing/sysfs-bus-iio-counter-104-quad-8 | 16 ++++++++++++++++
->>  drivers/iio/Kconfig                              |  1 -
->>  drivers/iio/Makefile                             |  1 -
->>  drivers/iio/counter/Kconfig                      |  8 --------
->>  drivers/iio/counter/Makefile                     |  5 -----
->>  6 files changed, 24 insertions(+), 15 deletions(-)
->>  delete mode 100644 drivers/iio/counter/Kconfig
->>  delete mode 100644 drivers/iio/counter/Makefile
->> 
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
->> index 731146c3b138..6115d97b075e 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-iio
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio
->> @@ -1637,6 +1637,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_raw
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Raw counter device counts from channel Y. For quadrature
->>  		counters, multiplication by an available [Y]_scale results in
->>  		the counts of a single quadrature signal phase from channel Y.
->> @@ -1645,6 +1647,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_raw
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Raw counter device index value from channel Y. This attribute
->>  		provides an absolute positional reference (e.g. a pulse once per
->>  		revolution) which may be used to home positional systems as
->> @@ -1654,6 +1658,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_count_count_direction_available
->>  KernelVersion:	4.12
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		A list of possible counting directions which are:
->>  		- "up"	: counter device is increasing.
->>  		- "down": counter device is decreasing.
->> @@ -1662,4 +1668,6 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_count_direction
->>  KernelVersion:	4.12
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Raw counter device counters direction for channel Y.
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
->> index 7fac2c268d9a..bac3d0d48b7b 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
->> @@ -6,6 +6,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_index_synchronous_mode_available
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Discrete set of available values for the respective counter
->>  		configuration are listed in this file.
->>  
->> @@ -13,6 +15,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_count_mode
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Count mode for channel Y. Four count modes are available:
->>  		normal, range limit, non-recycle, and modulo-n. The preset value
->>  		for channel Y is used by the count mode where required.
->> @@ -47,6 +51,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_noise_error
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Read-only attribute that indicates whether excessive noise is
->>  		present at the channel Y count inputs in quadrature clock mode;
->>  		irrelevant in non-quadrature clock mode.
->> @@ -55,6 +61,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_preset
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		If the counter device supports preset registers, the preset
->>  		count for channel Y is provided by this attribute.
->>  
->> @@ -62,6 +70,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_quadrature_mode
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Configure channel Y counter for non-quadrature or quadrature
->>  		clock mode. Selecting non-quadrature clock mode will disable
->>  		synchronous load mode. In quadrature clock mode, the channel Y
->> @@ -83,6 +93,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_countY_set_to_preset_on_index
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Whether to set channel Y counter with channel Y preset value
->>  		when channel Y index input is active, or continuously count.
->>  		Valid attribute values are boolean.
->> @@ -91,6 +103,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_index_polarity
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Active level of channel Y index input; irrelevant in
->>  		non-synchronous load mode.
->>  
->> @@ -98,6 +112,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_indexY_synchronous_mode
->>  KernelVersion:	4.10
->>  Contact:	linux-iio@vger.kernel.org
->>  Description:
->> +		This interface is deprecated; please use the Counter subsystem.
->> +
->>  		Configure channel Y counter for non-synchronous or synchronous
->>  		load mode. Synchronous load mode cannot be selected in
->>  		non-quadrature clock mode.
->> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
->> index d69e85a8bdc3..1152efad91a1 100644
->> --- a/drivers/iio/Kconfig
->> +++ b/drivers/iio/Kconfig
->> @@ -74,7 +74,6 @@ source "drivers/iio/afe/Kconfig"
->>  source "drivers/iio/amplifiers/Kconfig"
->>  source "drivers/iio/chemical/Kconfig"
->>  source "drivers/iio/common/Kconfig"
->> -source "drivers/iio/counter/Kconfig"
->>  source "drivers/iio/dac/Kconfig"
->>  source "drivers/iio/dummy/Kconfig"
->>  source "drivers/iio/frequency/Kconfig"
->> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
->> index d8cba9c229c0..7bdd31f1b88f 100644
->> --- a/drivers/iio/Makefile
->> +++ b/drivers/iio/Makefile
->> @@ -20,7 +20,6 @@ obj-y += amplifiers/
->>  obj-y += buffer/
->>  obj-y += chemical/
->>  obj-y += common/
->> -obj-y += counter/
->>  obj-y += dac/
->>  obj-y += dummy/
->>  obj-y += gyro/
->> diff --git a/drivers/iio/counter/Kconfig b/drivers/iio/counter/Kconfig
->> deleted file mode 100644
->> index 95a7a0df6cac..000000000000
->> --- a/drivers/iio/counter/Kconfig
->> +++ /dev/null
->> @@ -1,8 +0,0 @@
->> -#
->> -# Counter devices
->> -#
->> -# When adding new entries keep the list in alphabetical order
->> -
->> -menu "Counters"
->> -
->> -endmenu
->> diff --git a/drivers/iio/counter/Makefile b/drivers/iio/counter/Makefile
->> deleted file mode 100644
->> index 8fd3d954775a..000000000000
->> --- a/drivers/iio/counter/Makefile
->> +++ /dev/null
->> @@ -1,5 +0,0 @@
->> -#
->> -# Makefile for IIO counter devices
->> -#
->> -
->> -# When adding new entries keep the list in alphabetical order
->
+> +	depends on PCI_MSI_IRQ_DOMAIN
