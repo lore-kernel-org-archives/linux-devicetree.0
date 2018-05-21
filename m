@@ -1,53 +1,33 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 0/2] Add support for QCOM cpufreq FW driver
-Date: Mon, 21 May 2018 14:32:01 +0530
-Message-ID: <20180521090201.4ix2at6emxsdf6s2@vireshk-i7>
-References: <1526751291-17873-1-git-send-email-tdas@codeaurora.org>
- <20180521060529.kyjkglucbydr6b3f@vireshk-i7>
- <cb15a4db-77cd-8063-f323-652c6b03306e@codeaurora.org>
+Subject: Re: [PATCH v8 10/15] cpufreq: Add Kryo CPU scaling driver
+Date: Mon, 21 May 2018 14:35:53 +0530
+Message-ID: <20180521090553.6wervk335scgnko6@vireshk-i7>
+References: <1526555955-29960-1-git-send-email-ilialin@codeaurora.org>
+ <1526555955-29960-11-git-send-email-ilialin@codeaurora.org>
+ <20180518014538.duphof6enscpm5vp@vireshk-i7>
+ <019201d3ef66$db97aed0$92c70c70$@codeaurora.org>
+ <20180521044938.bnr2sdkmvdorfxqm@vireshk-i7>
+ <000501d3f0e2$23500c00$69f02400$@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cb15a4db-77cd-8063-f323-652c6b03306e@codeaurora.org>
+In-Reply-To: <000501d3f0e2$23500c00$69f02400$@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org
+To: ilialin@codeaurora.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 21-05-18, 13:05, Taniya Das wrote:
-> Hello Viresh,
-> 
-> Sure, will do it next time. Hope updating the fixes in this email is fine.
-> Do let me know in case you need me to send it across again the series with
-> cover letter updated.
-> 
-> On 5/21/2018 11:35 AM, Viresh Kumar wrote:
-> > On 19-05-18, 23:04, Taniya Das wrote:
-> > >   [v2]
-> > >     * Address comments given in v0 series.
-> > 
-> > That's not how you do it. You need to explain every change in enough
-> > detail here so that the reviewers don't need to go to their previous
-> > emails to see what changed.
-> > 
-> Fixes in [v2]
->   * Fixed the alignment issues in "qcom_cpufreq_fw_target_index" for
-> dev_err and also for "qcom_cpu_resources_init".
->  * Removed ret = 0 from qcom_get_related_cpus and added to check for
-> cpu_mask_empty to return -ENOENT.
->  * Fixes qcom_cpu_resources_init function
->    * Remove initialization of 'index'
->    * Check for valid 'c'
->  * Removed initialization of 'prev_cc' from 'qcom_read_lut'.
->  * Remove initialization of 'ret' from function qcom_resources_init and add
-> return -ENODEV based on 'of_get_available_child_count'.
->  * Removed initialization of 'rc' from qcom_cpufreq_fw_driver_probe
->  * Removed module_exit as this driver would not be used as module, also
-> updated the Kconfig to bool from tristate.
->  * Updated the subsystem in device tree bindings.
+On 21-05-18, 12:00, ilialin@codeaurora.org wrote:
+> Final version (addressing Russel's comment as well):
 
-That's what it should look like. Thanks.
+Sorry, can't review it like this. At least you should be posting your
+diff here and you also need to do that from a sane email client like
+mutt, which wouldn't auto-fix/update the code. Doing it from gmail or
+thunderbird will ofcourse screw it.
+
+Or a simple way is to send the patch again (alone) using in-reply-to
+field.
 
 -- 
 viresh
