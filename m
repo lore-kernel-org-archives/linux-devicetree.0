@@ -1,43 +1,156 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] cpufreq: Add Kryo CPU scaling driver
-Date: Mon, 21 May 2018 16:07:36 +0530
-Message-ID: <20180521103736.5bz7oulz5gpl24ea@vireshk-i7>
-References: <1526555955-29960-11-git-send-email-ilialin@codeaurora.org>
- <1526898690-4018-1-git-send-email-ilialin@codeaurora.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [reset-control] How to initialize hardware state with the shared
+ reset line?
+Date: Mon, 21 May 2018 12:40:44 +0200
+Message-ID: <CAFBinCBTTmPqD0UP8zzMBjsjzP9fJx9_pmhGz0_Vy-V+wmhLXQ@mail.gmail.com>
+References: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
+ <CAFBinCADQsXoc6CUKabH6VX3ZBYb5apo-xBbe1w0BiO8wBAsPw@mail.gmail.com> <CAK7LNAR1b_F_eLEWAdQc3L=daGz=ttKq0mQP78BkjzTOssaXvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526898690-4018-1-git-send-email-ilialin@codeaurora.org>
+In-Reply-To: <CAK7LNAR1b_F_eLEWAdQc3L=daGz=ttKq0mQP78BkjzTOssaXvw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Would have been better if you would have updated the subject as:
+Hello,
 
-[PATCH v10 10/15] cpufreq: Add Kryo CPU scaling driver
+On Mon, May 21, 2018 at 3:27 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Hi.
+>
+>
+> 2018-05-20 19:57 GMT+09:00 Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com>:
+>> Hi,
+>>
+>> On Thu, May 10, 2018 at 11:16 AM, Masahiro Yamada
+>> <yamada.masahiro@socionext.com> wrote:
+>> [snip]
+>>> I may be missing something, but
+>>> one solution might be reset hogging on the
+>>> reset provider side.  This allows us to describe
+>>> the initial state of reset lines in the reset controller.
+>>>
+>>> The idea for "reset-hog" is similar to:
+>>>  - "gpio-hog" defined in
+>>>    Documentation/devicetree/bindings/gpio/gpio.txt
+>>>  - "assigned-clocks" defined in
+>>>    Documetation/devicetree/bindings/clock/clock-bindings.txt
+>>>
+>>>
+>>>
+>>> For example,
+>>>
+>>>    reset-controller {
+>>>             ....
+>>>
+>>>             line_a {
+>>>                   reset-hog;
+>>>                   resets = <1>;
+>>>                   reset-assert;
+>>>             };
+>>>    }
+>>>
+>>>
+>>> When the reset controller is registered,
+>>> the reset ID '1' is asserted.
+>>>
+>>>
+>>> So, all reset consumers that share the reset line '1'
+>>> will start from the asserted state
+>>> (i.e. defined state machine state).
+>> I wonder if a "reset hog" can be board specific:
+>> - GPIO hogs are definitely board specific (meson-gxbb-odroidc2.dts for
+>> example uses it to take the USB hub out of reset)
+>> - assigned-clock-parents (and the like) can also be board specific (I
+>> made up a use-case since I don't know of any actual examples: board A
+>> uses an external XTAL while board B uses some other internal
+>> clock-source because it doesn't have an external XTAL)
+>>
+>> however, can reset lines be board specific? or in other words: do we
+>> need to describe them in device-tree?
+>
+> Indeed.
+>
+> I did not come up with board-specific cases.
+>
+> The problem we are discussing is SoC-specific,
+> and reset-controller drivers are definitely SoC-specific.
+>
+> So, I think the initial state can be coded in drivers instead of DT.
+OK, let's also hear Philipp's (reset framework maintainer) opinion on this
 
-On 21-05-18, 13:31, Ilia Lin wrote:
-> In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
-> the CPU frequency subset and voltage value of each OPP varies
-> based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
-> defines the voltage and frequency value based on the msm-id in SMEM
-> and speedbin blown in the efuse combination.
-> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-> to provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each OPP of
-> operating-points-v2 table when it is parsed by the OPP framework.
-> 
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> we could extend struct reset_controller_dev (= reset controller
+>> driver) if they are not board specific:
+>> - either assert all reset lines by default except if they are listed
+>> in a new field (may break backwards compatibility, requires testing of
+>> all reset controller drivers)
+>
+> This is quite simple, but I am afraid there are some cases where the forcible
+> reset-assert is not preferred.
+>
+> For example, the earlycon.  When we use earlycon, we would expect it has been
+> initialized by a boot-loader, or something.
+> If it is reset-asserted on the while, the console output
+> will not be good.
+indeed, so let's skip this idea
 
-Yes, I acked it earlier, but then comments came back. You should drop
-the tags in such cases normally.
+>> - specify a list of reset lines and their desired state (or to keep it
+>> easy: specify a list of reset lines that should be asserted)
+>> (I must admit that this is basically your idea but the definition is
+>> moved from device-tree to the reset controller driver)
+>
+> Yes, I think the list of "reset line ID" and "init state" pairs
+> would be nicer.
+$ grep -R "of_reset_n_cells = [^1]" drivers/reset/
+drivers/reset/reset-berlin.c:   priv->rcdev.of_reset_n_cells = 2;
+drivers/reset/hisilicon/reset-hi3660.c: rc->rst.of_reset_n_cells = 2;
+drivers/reset/reset-ti-sci.c:   data->rcdev.of_reset_n_cells = 2;
+drivers/reset/reset-lantiq.c:   priv->rcdev.of_reset_n_cells = 2;
 
-Anyway, the patch looks fine now.
+everything else uses only one reset cell
+from the lantiq reset dt-binding documentation: "The first cell takes
+the reset set bit and the second cell takes the status bit."
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+I'm not sure what to do with drivers that specify != 1 reset-cell
+though if we use a simple "init state pair"
+maybe Philipp can share his opinion on this one as well
 
--- 
-viresh
+>> any "chip" specific differences could be expressed by using a
+>> different of_device_id
+>>
+>> one the other hand: your "reset hog" solution looks fine to me if
+>> reset lines can be board specific
+>>
+>>> From the discussion with Martin Blumenstingl
+>>> (https://lkml.org/lkml/2018/4/28/115),
+>>> the problem for Amlogic is that
+>>> the reset line is "de-asserted" by default.
+>>> If so, the 'reset-hog' would fix the problem,
+>>> and DWC3 driver would be able to use
+>>> shared, level reset, I think.
+>> I think you are right: if we could control the initial state then we
+>> should be able to use level resets
+>
+>
+> Even further, can we drop the shared reset_control_reset() support, maybe?
+> (in other words, revert commit 7da33a37b48f11)
+I believe we need to keep this if there's hardware out there:
+- where the reset controller only supports reset pulses
+- at least one reset line is shared between multiple devices
+
+I didn't have a closer look at the Amlogic Meson6 SoC yet, but I think
+it matches above criteria. as far as I know:
+- the USB situation there is similar to Meson8b (USB controllers and
+PHYs share a reset line)
+- it uses an older reset controller IP block which does not support
+level resets (only reset pulses)
+
+> Thanks for your comment!
+you're welcome - thank you for bringing up this topic also :)
+
+
+Regards
+Martin
