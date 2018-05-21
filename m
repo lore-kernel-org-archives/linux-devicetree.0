@@ -1,114 +1,130 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: OMAP serial runtime PM and autosuspend (was: Re: [PATCH 4/7]
- dt-bindings: gnss: add u-blox binding))
-Date: Mon, 21 May 2018 15:48:30 +0200
-Message-ID: <20180521134830.GR30172@localhost>
-References: <20180507175032.GR98604@atomide.com>
- <20180508065852.GW2285@localhost>
- <20180508152228.GV98604@atomide.com>
- <20180508154756.GW98604@atomide.com>
- <20180508155405.GX98604@atomide.com>
- <20180508164904.GZ98604@atomide.com>
- <20180509131003.GC2285@localhost>
- <20180509135706.GB98604@atomide.com>
- <20180517100948.GI30172@localhost>
- <20180517171038.GL98604@atomide.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v6 3/5] soc: rockchip: split rockchip_typec_phy struct to
+ separate header
+Date: Mon, 21 May 2018 15:50:32 +0200
+Message-ID: <CAFqH_51DrUQh24XWJ2=MAi8EiGCdiK3dKTV_YexRJawJHN7H0A@mail.gmail.com>
+References: <1526895424-22894-1-git-send-email-hl@rock-chips.com>
+ <1526895424-22894-3-git-send-email-hl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180517171038.GL98604@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1526895424-22894-3-git-send-email-hl@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lin Huang <hl@rock-chips.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chris Zhong <zyw@rock-chips.com>, daniel.vetter@intel.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 10:10:38AM -0700, Tony Lindgren wrote:
-> * Johan Hovold <johan@kernel.org> [180517 10:12]:
-> > [ Sorry about the late reply. ]
-> > 
-> > On Wed, May 09, 2018 at 06:57:06AM -0700, Tony Lindgren wrote:
-> > > * Johan Hovold <johan@kernel.org> [180509 13:12]:
-> > 
-> > > > It seems we really should not be using the negative autosuspend to
-> > > > configure the RPM behaviour the way these drivers do. Perhaps a new
-> > > > mechanism is needed.
-> > > 
-> > > Hmm well simply defaulting to "on" instead of "auto" and setting the
-> > > autosuspend_ms to 3000 by default might be doable. I think that way
-> > > we can keep use_autosuspend() in probe. Let's hope there are no
-> > > existing use cases that would break with that.
-> > 
-> > No, defaulting to "on" (i.e. calling pm_runtime_forbid()) wouldn't work
-> > either as that would also prevent the device from runtime suspending
-> > just as the current negative autosuspend delay does.
-> 
-> Well in that case we should just stick with -1 value for the
-> autosuspend. And just do pm_runtime_put_sync_suspend() after
-> probe and on close.
-
-That won't work either as a negative autosuspend delay prevents runtime
-suspend completely (by grabbing an extra RPM reference).
-
-> > I fail to see how we can implement this using the current toolbox. What
-> > you're after here is really a mechanism for selecting between two
-> > different runtime PM schemes at runtime:
-> > 
-> > 	1. normal serial RPM, where the controller is active while the
-> > 	   port is open (this should be the safe default)
-> 
-> Agreed. And that is the case already.
-
-Yes, but it's not really the case today as since omap-serial (and
-8250-omap) sets a negative autosuspend at probe and hence does not
-runtime-suspend when the port is closed. So that's the long-standing bug
-which needs fixing.
-
-> > 	2. aggressive serial RPM, where the controller is allowed to
-> > 	   suspend while the port is open even though this may result in
-> > 	   lost characters when waking up on incoming data
-> 
-> In this case it seems that the only thing needed is to just
-> configure the autosuspend delay for the parent port. The use of
-> -1 has been around since the start of runtime PM AFAIK, so maybe
-> we should just document it. I guess we could also introduce
-> pm_runtime_block_autoidle_unless_configured() :)
-
-The implications of a negative autosuspend delay are already documented
-(in Documentation/power/runtime_pm.txt); it's just the omap drivers that
-gets it wrong when trying to do things which aren't currently supported
-(and never have been).
-
-So I still think we need a new mechanism for this.
-
-> > For normal ttys, we need a user-space interface for selecting between
-> > the two, and for serdev we may want a way to select the RPM scheme from
-> > within the kernel.
-> > 
-> > Note that with my serdev controller runtime PM patch, serdev core could
-> > always opt for aggressive PM (as by default serdev core holds an RPM
-> > reference for the controller while the port is open).
-> 
-> So if your serdev controller was to set the parent autosuspend
-> delay on open() and set it back on close() this should work?
-
-Is it really the job of a serdev driver to set the autosuspend delay of
-a parent controller? Isn't this somethings which depends on the
-characteristics of the controller (possibly configurable by user space)
-such as the cost of runtime suspending and resuming?
-
-The patch I posted works with what we have today; if a parent serial
-controller driver uses aggressive runtime PM by default or after having
-been configured through sysfs to do so.
-
-What I'm getting at here is that the delay should be set by the serial
-driver implementing aggressive runtime PM. Then all we need is a
-mechanism to determine whether an extra RPM reference should be taken at
-tty open or not (configurable by user space, defaulting to yes).
-
-Specifically, the serial drivers themselves would always use
-autosuspend and not have to deal with supporting the two RPM schemes
-(normal vs aggressive runtime PM).
-
-Thanks,
-Johan
+SGkgTGluLAoKMjAxOC0wNS0yMSAxMTozNyBHTVQrMDI6MDAgTGluIEh1YW5nIDxobEByb2NrLWNo
+aXBzLmNvbT46Cj4gd2UgbWF5IHVzZSByb2NrY2hpcF9waHlfdHlwZWMgc3RydWN0IGluIG90aGVy
+IGRyaXZlciwgc28gc3BsaXQKPiBpdCB0byBzZXBhcmF0ZSBoZWFkZXIuCj4KClRoYXQgcGF0Y2gg
+ZG9lcyBtb3JlIHRoYW4ganVzdCBzcGxpdCBzb21lIHN0cnVjdHMgdG8gYSBwdWJsaWMgaGVhZGVy
+LAppdCBhbHNvIGludHJvZHVjZXMgbmV3IHN0cnVjdHMgYW5kIG5ldyBwYXJhbWV0ZXJzIHJlbGF0
+ZWQgdG8gdGhlCnBoeV9jb25maWcgZmVhdHVyZS4gSU1ITyB5b3Ugc2hvdWxkIGZpcnN0IG1vdmUg
+dGhlIGN1cnJlbnQgc3RydWN0cyBhbmQKaW50cm9kdWNlIHRoZSBuZXcgcGh5X2NvbmZpZyBzdHVm
+ZiBpbiB0aGUgZm9sbG93aW5nIHBhdGNoICg0LzUpLiBJIGFtCm5vdCBzdXJlIGFib3V0IHRoZSBt
+YWludGFpbmVyIHByZWZlcmVuY2VzLCBidXQgYXQgbGVhc3QsIGlmIHRoZQptYWludGFpbmVyIGlz
+IGZpbmUgbGlrZSBpcyBub3csIEknZCBleHBsYWluIHRoYXQgeW91IGludHJvZHVjZSBuZXcKZWxl
+bWVudHMgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLgoKQmVzdCByZWdhcmRzLAogRW5yaWMKCj4gU2ln
+bmVkLW9mZi1ieTogTGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiAtLS0KPiBDaGFuZ2Vz
+IGluIHYyOgo+IC0gTm9uZQo+IENoYW5nZXMgaW4gdjM6Cj4gLSBOb25lCj4gQ2hhbmdlcyBpbiB2
+NDoKPiAtIE5vbmUKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gTm9uZQo+IENoYW5nZXMgaW4gdjY6Cj4g
+LSBuZXcgcGF0Y2ggaGVyZQo+Cj4gIGRyaXZlcnMvcGh5L3JvY2tjaGlwL3BoeS1yb2NrY2hpcC10
+eXBlYy5jIHwgNDcgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgaW5jbHVkZS9zb2Mvcm9ja2No
+aXAvcm9ja2NoaXBfcGh5X3R5cGVjLmggfCA2MyArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgNjQgaW5zZXJ0aW9ucygrKSwgNDYgZGVsZXRpb25zKC0p
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3NvYy9yb2NrY2hpcC9yb2NrY2hpcF9waHlf
+dHlwZWMuaAo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L3JvY2tjaGlwL3BoeS1yb2NrY2hp
+cC10eXBlYy5jIGIvZHJpdmVycy9waHkvcm9ja2NoaXAvcGh5LXJvY2tjaGlwLXR5cGVjLmMKPiBp
+bmRleCA3NmE0YjU4Li43OTUwNTVmIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGh5L3JvY2tjaGlw
+L3BoeS1yb2NrY2hpcC10eXBlYy5jCj4gKysrIGIvZHJpdmVycy9waHkvcm9ja2NoaXAvcGh5LXJv
+Y2tjaGlwLXR5cGVjLmMKPiBAQCAtNjMsNiArNjMsNyBAQAo+Cj4gICNpbmNsdWRlIDxsaW51eC9t
+ZmQvc3lzY29uLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9waHkvcGh5Lmg+Cj4gKyNpbmNsdWRlIDxz
+b2Mvcm9ja2NoaXAvcm9ja2NoaXBfcGh5X3R5cGVjLmg+Cj4KPiAgI2RlZmluZSBDTU5fU1NNX0JB
+TkRHQVAgICAgICAgICAgICAgICAgICAgICAgICAoMHgyMSA8PCAyKQo+ICAjZGVmaW5lIENNTl9T
+U01fQklBUyAgICAgICAgICAgICAgICAgICAoMHgyMiA8PCAyKQo+IEBAIC0zNDksNTIgKzM1MCw2
+IEBACj4gICNkZWZpbmUgTU9ERV9ERlBfVVNCICAgICAgICAgICAgICAgICAgIEJJVCgxKQo+ICAj
+ZGVmaW5lIE1PREVfREZQX0RQICAgICAgICAgICAgICAgICAgICBCSVQoMikKPgo+IC1zdHJ1Y3Qg
+dXNiM3BoeV9yZWcgewo+IC0gICAgICAgdTMyIG9mZnNldDsKPiAtICAgICAgIHUzMiBlbmFibGVf
+Yml0Owo+IC0gICAgICAgdTMyIHdyaXRlX2VuYWJsZTsKPiAtfTsKPiAtCj4gLS8qKgo+IC0gKiBz
+dHJ1Y3Qgcm9ja2NoaXBfdXNiM3BoeV9wb3J0X2NmZzogdXNiMy1waHkgcG9ydCBjb25maWd1cmF0
+aW9uLgo+IC0gKiBAcmVnOiB0aGUgYmFzZSBhZGRyZXNzIGZvciB1c2IzLXBoeSBjb25maWcuCj4g
+LSAqIEB0eXBlY19jb25uX2RpcjogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBjb25uZWN0b3IgZGly
+ZWN0aW9uLgo+IC0gKiBAdXNiM3RvdXNiMl9lbjogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBmb3Jj
+ZSB1c2IyIHRvIHVzYjIgZW5hYmxlLgo+IC0gKiBAZXh0ZXJuYWxfcHNtOiB0aGUgcmVnaXN0ZXIg
+b2YgdHlwZS1jIHBoeSBleHRlcm5hbCBwc20gY2xvY2suCj4gLSAqIEBwaXBlX3N0YXR1czogdGhl
+IHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkgcGlwZSBzdGF0dXMuCj4gLSAqIEB1c2IzX2hvc3RfZGlz
+YWJsZTogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyB1c2IzIGhvc3QgZGlzYWJsZS4KPiAtICogQHVz
+YjNfaG9zdF9wb3J0OiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1jIHVzYjMgaG9zdCBwb3J0Lgo+IC0g
+KiBAdXBoeV9kcF9zZWw6IHRoZSByZWdpc3RlciBvZiB0eXBlLWMgcGh5IERQIHNlbGVjdCBjb250
+cm9sLgo+IC0gKi8KPiAtc3RydWN0IHJvY2tjaGlwX3VzYjNwaHlfcG9ydF9jZmcgewo+IC0gICAg
+ICAgdW5zaWduZWQgaW50IHJlZzsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB0eXBlY19j
+b25uX2RpcjsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1c2IzdG91c2IyX2VuOwo+IC0g
+ICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIGV4dGVybmFsX3BzbTsKPiAtICAgICAgIHN0cnVjdCB1
+c2IzcGh5X3JlZyBwaXBlX3N0YXR1czsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1c2Iz
+X2hvc3RfZGlzYWJsZTsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1c2IzX2hvc3RfcG9y
+dDsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1cGh5X2RwX3NlbDsKPiAtfTsKPiAtCj4g
+LXN0cnVjdCByb2NrY2hpcF90eXBlY19waHkgewo+IC0gICAgICAgc3RydWN0IGRldmljZSAqZGV2
+Owo+IC0gICAgICAgdm9pZCBfX2lvbWVtICpiYXNlOwo+IC0gICAgICAgc3RydWN0IGV4dGNvbl9k
+ZXYgKmV4dGNvbjsKPiAtICAgICAgIHN0cnVjdCByZWdtYXAgKmdyZl9yZWdzOwo+IC0gICAgICAg
+c3RydWN0IGNsayAqY2xrX2NvcmU7Cj4gLSAgICAgICBzdHJ1Y3QgY2xrICpjbGtfcmVmOwo+IC0g
+ICAgICAgc3RydWN0IHJlc2V0X2NvbnRyb2wgKnVwaHlfcnN0Owo+IC0gICAgICAgc3RydWN0IHJl
+c2V0X2NvbnRyb2wgKnBpcGVfcnN0Owo+IC0gICAgICAgc3RydWN0IHJlc2V0X2NvbnRyb2wgKnRj
+cGh5X3JzdDsKPiAtICAgICAgIGNvbnN0IHN0cnVjdCByb2NrY2hpcF91c2IzcGh5X3BvcnRfY2Zn
+ICpwb3J0X2NmZ3M7Cj4gLSAgICAgICAvKiBtdXRleCB0byBwcm90ZWN0IGFjY2VzcyB0byBpbmRp
+dmlkdWFsIFBIWXMgKi8KPiAtICAgICAgIHN0cnVjdCBtdXRleCBsb2NrOwo+IC0KPiAtICAgICAg
+IGJvb2wgZmxpcDsKPiAtICAgICAgIHU4IG1vZGU7Cj4gLX07Cj4gLQo+ICBzdHJ1Y3QgcGh5X3Jl
+ZyB7Cj4gICAgICAgICB1MTYgdmFsdWU7Cj4gICAgICAgICB1MzIgYWRkcjsKPiBkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9zb2Mvcm9ja2NoaXAvcm9ja2NoaXBfcGh5X3R5cGVjLmggYi9pbmNsdWRlL3Nv
+Yy9yb2NrY2hpcC9yb2NrY2hpcF9waHlfdHlwZWMuaAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
+aW5kZXggMDAwMDAwMC4uYmU2YWYwZQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9pbmNsdWRlL3Nv
+Yy9yb2NrY2hpcC9yb2NrY2hpcF9waHlfdHlwZWMuaAo+IEBAIC0wLDAgKzEsNjMgQEAKPiArLyog
+U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8KPiArLyoKPiArICogQ29weXJpZ2h0
+IChDKSBGdXpob3UgUm9ja2NoaXAgRWxlY3Ryb25pY3MgQ28uTHRkCj4gKyAqIEF1dGhvcjogTGlu
+IEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiArICovCj4gKwo+ICsjaWZuZGVmIF9fU09DX1JP
+Q0tDSElQX1BIWV9UWVBFQ19ICj4gKyNkZWZpbmUgX19TT0NfUk9DS0NISVBfUEhZX1RZUEVDX0gK
+PiArCj4gK3N0cnVjdCB1c2IzcGh5X3JlZyB7Cj4gKyAgICAgICB1MzIgb2Zmc2V0Owo+ICsgICAg
+ICAgdTMyIGVuYWJsZV9iaXQ7Cj4gKyAgICAgICB1MzIgd3JpdGVfZW5hYmxlOwo+ICt9Owo+ICsK
+PiArLyoqCj4gKyAqIHN0cnVjdCByb2NrY2hpcF91c2IzcGh5X3BvcnRfY2ZnOiB1c2IzLXBoeSBw
+b3J0IGNvbmZpZ3VyYXRpb24uCj4gKyAqIEByZWc6IHRoZSBiYXNlIGFkZHJlc3MgZm9yIHVzYjMt
+cGh5IGNvbmZpZy4KPiArICogQHR5cGVjX2Nvbm5fZGlyOiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1j
+IGNvbm5lY3RvciBkaXJlY3Rpb24uCj4gKyAqIEB1c2IzdG91c2IyX2VuOiB0aGUgcmVnaXN0ZXIg
+b2YgdHlwZS1jIGZvcmNlIHVzYjIgdG8gdXNiMiBlbmFibGUuCj4gKyAqIEBleHRlcm5hbF9wc206
+IHRoZSByZWdpc3RlciBvZiB0eXBlLWMgcGh5IGV4dGVybmFsIHBzbSBjbG9jay4KPiArICogQHBp
+cGVfc3RhdHVzOiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1jIHBoeSBwaXBlIHN0YXR1cy4KPiArICog
+QHVzYjNfaG9zdF9kaXNhYmxlOiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1jIHVzYjMgaG9zdCBkaXNh
+YmxlLgo+ICsgKiBAdXNiM19ob3N0X3BvcnQ6IHRoZSByZWdpc3RlciBvZiB0eXBlLWMgdXNiMyBo
+b3N0IHBvcnQuCj4gKyAqIEB1cGh5X2RwX3NlbDogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkg
+RFAgc2VsZWN0IGNvbnRyb2wuCj4gKyAqLwo+ICtzdHJ1Y3Qgcm9ja2NoaXBfdXNiM3BoeV9wb3J0
+X2NmZyB7Cj4gKyAgICAgICB1bnNpZ25lZCBpbnQgcmVnOwo+ICsgICAgICAgc3RydWN0IHVzYjNw
+aHlfcmVnIHR5cGVjX2Nvbm5fZGlyOwo+ICsgICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIHVzYjN0
+b3VzYjJfZW47Cj4gKyAgICAgICBzdHJ1Y3QgdXNiM3BoeV9yZWcgZXh0ZXJuYWxfcHNtOwo+ICsg
+ICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIHBpcGVfc3RhdHVzOwo+ICsgICAgICAgc3RydWN0IHVz
+YjNwaHlfcmVnIHVzYjNfaG9zdF9kaXNhYmxlOwo+ICsgICAgICAgc3RydWN0IHVzYjNwaHlfcmVn
+IHVzYjNfaG9zdF9wb3J0Owo+ICsgICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIHVwaHlfZHBfc2Vs
+Owo+ICt9Owo+ICsKPiArc3RydWN0IHBoeV9jb25maWcgewo+ICsgICAgICAgaW50IHN3aW5nOwo+
+ICsgICAgICAgaW50IHBlOwo+ICt9Owo+ICsKPiArc3RydWN0IHJvY2tjaGlwX3R5cGVjX3BoeSB7
+Cj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXY7Cj4gKyAgICAgICB2b2lkIF9faW9tZW0gKmJh
+c2U7Cj4gKyAgICAgICBzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uOwo+ICsgICAgICAgc3RydWN0
+IHJlZ21hcCAqZ3JmX3JlZ3M7Cj4gKyAgICAgICBzdHJ1Y3QgY2xrICpjbGtfY29yZTsKPiArICAg
+ICAgIHN0cnVjdCBjbGsgKmNsa19yZWY7Cj4gKyAgICAgICBzdHJ1Y3QgcmVzZXRfY29udHJvbCAq
+dXBoeV9yc3Q7Cj4gKyAgICAgICBzdHJ1Y3QgcmVzZXRfY29udHJvbCAqcGlwZV9yc3Q7Cj4gKyAg
+ICAgICBzdHJ1Y3QgcmVzZXRfY29udHJvbCAqdGNwaHlfcnN0Owo+ICsgICAgICAgY29uc3Qgc3Ry
+dWN0IHJvY2tjaGlwX3VzYjNwaHlfcG9ydF9jZmcgKnBvcnRfY2ZnczsKPiArICAgICAgIC8qIG11
+dGV4IHRvIHByb3RlY3QgYWNjZXNzIHRvIGluZGl2aWR1YWwgUEhZcyAqLwo+ICsgICAgICAgc3Ry
+dWN0IG11dGV4IGxvY2s7Cj4gKyAgICAgICBzdHJ1Y3QgcGh5X2NvbmZpZyBjb25maWdbM11bNF07
+Cj4gKyAgICAgICBib29sIGZsaXA7Cj4gKyAgICAgICB1OCBtb2RlOwo+ICsgICAgICAgaW50ICgq
+dHlwZWNfcGh5X2NvbmZpZykoc3RydWN0IHBoeSAqcGh5LCBpbnQgbGlua19yYXRlLAo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IGxhbmVzLCB1OCBzd2luZywgdTggcHJlX2Vt
+cCk7Cj4gK307Cj4gKwo+ICsjZW5kaWYKPiAtLQo+IDIuNy40Cj4KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
