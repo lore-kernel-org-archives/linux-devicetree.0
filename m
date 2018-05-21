@@ -1,7 +1,7 @@
 From: "=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?=" <vokac.m@gmail.com>
-Subject: [PATCH net-next 1/7] net: dsa: qca8k: Add QCA8334 binding documentation
-Date: Mon, 21 May 2018 15:28:07 +0200
-Message-ID: <1526909293-56377-2-git-send-email-michal.vokac@ysoft.com>
+Subject: [PATCH net-next 7/7] net: dsa: qca8k: Remove rudundant parentheses
+Date: Mon, 21 May 2018 15:28:13 +0200
+Message-ID: <1526909293-56377-8-git-send-email-michal.vokac@ysoft.com>
 References: <1526909293-56377-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,26 +13,25 @@ To: netdev@vger.kernel.org, michal.vokac@ysoft.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
+Fix warning reported by checkpatch.
+
 Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 ---
- Documentation/devicetree/bindings/net/dsa/qca8k.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/dsa/qca8k.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-index 9c67ee4..3d73cd0 100644
---- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-@@ -2,7 +2,10 @@
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index c834893..c0da402 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -513,7 +513,7 @@ qca8k_port_set_status(struct qca8k_priv *priv, int port, int enable)
+ 	pr_debug("qca: port %i set status %i\n", port, enable);
  
- Required properties:
+ 	/* Port 0 and 6 have no internal PHY */
+-	if ((port > 0) && (port < 6))
++	if (port > 0 && port < 6)
+ 		mask |= QCA8K_PORT_STATUS_LINK_AUTO;
  
--- compatible: should be "qca,qca8337"
-+- compatible: should be one of:
-+    "qca,qca8334"
-+    "qca,qca8337"
-+
- - #size-cells: must be 0
- - #address-cells: must be 1
- 
+ 	if (enable)
 -- 
 2.1.4
