@@ -1,42 +1,70 @@
-Return-Path: <SRS0=yDWK=H3=rock-chips.com=shawn.lin@kernel.org>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v3 1/2] Documentation: mmc: addtional description for post-power-on-delay-ms
-Date: Tue,  8 May 2018 09:04:19 +0800
-Message-Id: <1525741460-109455-1-git-send-email-shawn.lin@rock-chips.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+Return-Path: <SRS0=YcIV=II=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ve1eur01on0040.outbound.protection.outlook.com ([104.47.1.40]:61213
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751134AbeEUJtg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 May 2018 05:49:36 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [v4 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Date: Mon, 21 May 2018 09:49:32 +0000
+Message-ID: <DB6PR0401MB25031B06716D83850C6340ACE2950@DB6PR0401MB2503.eurprd04.prod.outlook.com>
+References: <20180514120307.15592-1-wen.he_1@nxp.com>
+ <20180514120307.15592-2-wen.he_1@nxp.com> <20180517060430.GU13271@vkoul-mobl>
+ <DB6PR0401MB2503E7EEB3C97028AD131C7CE2910@DB6PR0401MB2503.eurprd04.prod.outlook.com>
+ <20180518042125.GE2932@vkoul-mobl>
+ <DB6PR0401MB250380A95367C42C1BC79595E2900@DB6PR0401MB2503.eurprd04.prod.outlook.com>
+ <20180521090925.GA14654@vkoul-mobl>
+In-Reply-To: <20180521090925.GA14654@vkoul-mobl>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-post-power-on-delay-ms woule be reused to substitute the hard-coded 10ms
-delay waiting for power supply to be stable, specificed by individual
-platform/board. Default to 10ms as before, if no available.
-
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-
----
-
-Changes in v3:
-- reused post-power-on-delay-ms suggested by Rob
-
-Changes in v2: None
-
- Documentation/devicetree/bindings/mmc/mmc.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 467cd7b..a1d0cf4 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -56,6 +56,10 @@ Optional properties:
- - fixed-emmc-driver-type: for non-removable eMMC, enforce this driver type.
-   The value <n> is the driver type as specified in the eMMC specification
-   (table 206 in spec version 5.1).
-+- post-power-on-delay-ms : It was invented for MMC pwrseq-simple which could
-+  be referred to mmc-pwrseq-simple.txt. But now it's reused as a tunable delay
-+  waiting for I/O signalling and card power supply to be stable, regardless of
-+  whether pwrseq-simple is used. Default to 10ms if no available.
- 
- *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
- polarity properties, we have to fix the meaning of the "normal" and "inverted"
--- 
-1.9.1
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmlub2QgS291bCBbbWFp
+bHRvOnZpbm9kLmtvdWxAbGluYXJvLm9yZ10NCj4gU2VudDogMjAxOMTqNdTCMjHI1SAxNzowOQ0K
+PiBUbzogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogZG1hZW5naW5lQHZnZXIua2Vy
+bmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBKaWFmZWkgUGFuDQo+IDxqaWFmZWkucGFu
+QG54cC5jb20+OyBKaWFoZW5nIEZhbiA8amlhaGVuZy5mYW5AbnhwLmNvbT4NCj4gU3ViamVjdDog
+UmU6IFt2NCAyLzZdIGRtYWVuZ2luZTogZnNsLXFkbWE6IEFkZCBxRE1BIGNvbnRyb2xsZXIgZHJp
+dmVyIGZvcg0KPiBMYXllcnNjYXBlIFNvQ3MNCj4gDQo+IE9uIDE4LTA1LTE4LCAxMDowNCwgV2Vu
+IEhlIHdyb3RlOg0KPiANCj4gPiA+ID4gPiA+ICt1NjQgcHJlX2FkZHIsIHByZV9xdWV1ZTsNCj4g
+PiA+ID4gPg0KPiA+ID4gPiA+IHdoeSBkbyB3ZSBoYXZlIGEgZ2xvYmFsPw0KPiA+ID4gPg0KPiA+
+ID4gPiBMZXQncyB1cyBzZWUgcURNQSB0aGF0IGhvdyBpcyB3b3Jrcz8NCj4gPiA+ID4NCj4gPiA+
+ID4gRmlyc3QsIHRoZSBzdGF0dXMgbm90aWZpY2F0aW9uIGZvciBETUEgam9icyBhcmUgcmVwb3J0
+ZWQgYmFjayB0bw0KPiA+ID4gPiB0aGUgc3RhdHVzDQo+ID4gPiBxdWV1ZS4NCj4gPiA+ID4gU3Rh
+dHVzIGluZm9ybWF0aW9uIGlzIGNhcnJpZWQgd2l0aGluIHRoZSBjb21tYW5kIGRlc2NyaXB0b3IN
+Cj4gPiA+ID4gc3RhdHVzL2NvbW1hbmQgZmllbGQsIGJpdHMgMTIwLTEyNy4gVGhlIGNvbW1hbmQg
+ZGVzY3JpcHRvciBkZXF1ZXVlDQo+ID4gPiA+IHBvaW50ZXIgYWR2YW5jZXMgb25seSBhZnRlciB0
+aGUgdHJhbnNhY3Rpb24gaGFzIGNvbXBsZXRlZCBhbmQgdGhlDQo+ID4gPiA+IHN0YXR1cw0KPiA+
+ID4gaW5mb3JtYXRpb24gZmllbGQgaGFzIGJlZW4gdXBkYXRlZC4NCj4gPiA+ID4NCj4gPiA+ID4g
+VGhlbiwgdGhlIGNvbW1hbmQgZGVzY3JpcHRvciBhZGRyZXNzIGZpZWxkIHdpaWwgcG9pbnRlciB0
+byB0aGUNCj4gPiA+ID4gY29tbWFuZCBkZXNjcmlwdG9yIGluIGl0cyBvcmlnaW5hbCBmb3JtYXQu
+IEl0IGlzIHRoZSByZXNwb25zaWJpdHkNCj4gPiA+ID4gb2YgdGhlIGFkZHJlc3Mgb2YgdGhlIHN0
+YXR1cyBxdWV1ZSBjb25zdW1lciB0byBkZWFsbG9jYXRlIGJ1ZmZlcnMNCj4gPiA+ID4gYXMgbmVl
+ZGVkIHdoZW4NCj4gPiA+IHRoZSBjb21tYW5kIGRlc2NyaXB0b3IgYWRkcmVzcyBwb2ludGVyIGlz
+IG5vbi16ZXJvLg0KPiA+ID4gPg0KPiA+ID4gPiBNb3JlIGRldGFpbHMgb2YgdGhlIFN0YXR1cyBR
+dWV1ZSBjYW4gYmUgZm91bmQgaW4gUW9ySVEgTGF5ZXJzY2FwZQ0KPiA+ID4gPiBTb2MNCj4gPiA+
+IGRhdGFzaGVldC4NCj4gPiA+ID4NCj4gPiA+ID4gU28sIHRoZXNlIHZhcmlhYmxlIGlzIHVzZWQg
+dG8gcmVjb3JkIGxhdGVzdCB2YWx1ZSB0aGF0IGNvbW1hbmQNCj4gPiA+ID4gZGVzY3JpcHRvciBx
+dWV1ZSBhbmQgc3RhdHVzIGZpZWxkLg0KPiA+ID4gPg0KPiA+ID4gPiBFdmVyeSB0aW1lIHZhcmlh
+YmxlcyB2YWx1ZSBpcyB6ZXJvIHdoZW4gc2V0IHRoZXNlIHZhcmlhYmxlIHRvDQo+ID4gPiA+IGxv
+Y2FsLCB0aGF0J3Mgbm90DQo+ID4gPiB3aGF0IEkgd2FudC4NCj4gPiA+DQo+ID4gPiBXaHkgbm90
+IHN0b3JlIHRoZW0gaW4gZHJpdmVyIGNvbnRleHQ/DQo+ID4gPg0KPiA+DQo+ID4gb2theSwgbWF5
+YmUgSSBzaG91bGQgcmVtb3ZlIHRoZXNlIHZhcmlhYmxlIHRvIHByaXZhdGUgc3RydWN0Pw0KPiAN
+Cj4gWWVzIHRoYXQgd291bGQgYmUgYmV0dGVyDQo+IA0KPiA+ID4gPiA+ID4gKwkJCW1lbXNldChz
+Z19ibG9jay0+dmlydF9hZGRyLCAwLA0KPiA+ID4gPiA+ID4gKwkJCQkJRlNMX1FETUFfRVhQRUNU
+X1NHX0VOVFJZX05VTSAqDQo+IDE2KTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IHdoeSBGU0xfUURN
+QV9FWFBFQ1RfU0dfRU5UUllfTlVNICogMTY/IGFuZCBub3Qgd2hhdCB5b3UNCj4gPiA+IGFsbG9j
+YXRlZD8NCj4gPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBzZWUgbGluZSA0OTcuDQo+ID4gPiA+
+IFRoZSBzZ19wb29sIGJ1ZmZlciBzaXplIGNyZWF0ZWQgaXMgRlNMX1FETUFfRVhQRUNUX1NHX0VO
+VFJZX05VTQ0KPiAqDQo+ID4gPiAxNi4NCj4gPiA+DQo+ID4gPiBQbGVhc2UgZG9jdW1lbnQgdGhp
+cw0KPiA+ID4NCj4gPiBBZGQgY29tbWVudCB0byB0aGlzPw0KPiANCj4geXVwLCBleHBsYWluaW5n
+IHdoZXJlIDE2IGlzIGNvbWluZyBmcm9tDQoNCmdvdCBpdCwgdGhhbmtzIGZvciB5b3VyIHJldmll
+dyBhbmQgd2lsbCBiZSBuZXh0IHZlcnNpb24gZml4IGl0Lg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW4N
+Cg0KPiAtLQ0KPiB+Vmlub2QNCg==
