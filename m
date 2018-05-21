@@ -1,76 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 2/2] leds: lm3601x: Introduce the lm3601x LED driver
-Date: Tue, 22 May 2018 02:05:03 +0300
-Message-ID: <CAHp75Vf_KaRDJU83d8o1Sy1v+oztucJSYBEK9=cqNw6FQspFvg@mail.gmail.com>
-References: <20180521180927.18472-1-dmurphy@ti.com> <20180521180927.18472-2-dmurphy@ti.com>
- <69a920da-f759-de50-865c-0ebc43044b66@gmail.com> <3b20c9cf-5f7e-3ed9-454d-c8e8ca6c0627@ti.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH] drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
+Date: Tue, 22 May 2018 02:23:14 +0300
+Message-ID: <20180521232314.5972-1-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3b20c9cf-5f7e-3ed9-454d-c8e8ca6c0627@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 12:44 AM, Dan Murphy <dmurphy@ti.com> wrote:
-
-
->>> +    child = device_get_next_child_node(&led->client->dev, child);
->>> +    if (!child) {
->>> +        dev_err(&led->client->dev, "No LED Child node\n");
->>> +        return ret;
->>> +    }
->>> +
->>> +    ret = fwnode_property_read_u32(child, "reg", &led->led_mode);
->>> +    if (ret) {
->>> +        dev_err(&led->client->dev, "reg DT property missing\n");
->>> +        goto out_err;
->>> +    }
->>> +
->>> +    if (led->led_mode > LM3601X_LED_TORCH ||
->>> +        led->led_mode < LM3601X_LED_IR) {
->>> +        dev_warn(&led->client->dev, "Invalid led mode requested\n");
->>> +        ret = -EINVAL;
->>> +        goto out_err;
->>> +    }
->>> +
->>> +    ret = fwnode_property_read_string(child, "label", &name);
->>> +    if (ret) {
->>> +        if (led->led_mode == LM3601X_LED_TORCH)
->>> +            name = "torch";
->>> +        else
->>> +            name = "infrared";
->>> +    }
->>> +
->>> +    snprintf(led->led_name, sizeof(led->led_name),
->>> +        "%s:%s", node->name, name);
->>
->> Reading once again my recent explanation regarding this I realized
->> that I didn't provide clear conclusion, which is: we no longer
->> use child node name for LED class device name if label is absent.
->> (apart from that - you're using parent DT node now, i.e.
->> led-controller).
->>
->> Please follow what was done for drivers/leds/leds-cr0014114.c.
->
-> Hmmm.  If this is calling dev->of_node->name to store the name will this
-> work in non-DT configurations?
-
-I didn't found this kind of use in linux-next, perhaps I missed something?
-
-In the driver Jacek referred to I found, though, use of of_node, which
-at some point should be changed to fwnode.
-
-For now you can fill that if you want to using something like this
-(IIRC it should work):
-
-if (is_of_node(fwnode))
- ...->of_node = to_of_node(...);
-
-> I have not dug to deeply into the fwnode code to find out how the nodes
-> get populated.  So my question may not even be valid.
-
--- 
-With Best Regards,
-Andy Shevchenko
+VGhlIGNoYW5nZSBhZGRzIHN1cHBvcnQgZm9yIFNoYXJwIExRMDM1UTdEQjAzIDMuNSIgUVZHQSBw
+YW5lbC4KCk5vdGUgdGhhdCB0aGlzIGFnZWQgcGFuZWwgaXMgYWxyZWFkeSBmb3VuZCBpbiB0aGUg
+a2VybmVsIHNvdXJjZXMsCmZvciBpbnN0YW5jZSBpbiBib2FyZCBtYWNoIGZpbGVzIG1hY2gtbXgy
+MWFkcy5jLCBtYWNoLW14MjdhZHMuYywKbWFjaC1wY20wNDMuYywgbHBkMjcwLmMgYW5kIGlteDI3
+LXBoeXRlYy1waHljb3JlLXJkay5kdHMuCgpTaWduZWQtb2ZmLWJ5OiBWbGFkaW1pciBaYXBvbHNr
+aXkgPHZ6QG1sZWlhLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxs
+cTAzNXE3ZGIwMy50eHQgICB8ICA3ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVs
+LXNpbXBsZS5jICAgICAgICAgICAgICAgfCAyNyArKysrKysrKysrKysrKysrKysrKysrCiAyIGZp
+bGVzIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTAzNXE3ZGIw
+My50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9zaGFycCxscTAzNXE3ZGIwMy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxscTAzNXE3ZGIwMy50eHQKbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNDIwMjdlNQotLS0gL2Rldi9udWxsCisrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMDM1
+cTdkYjAzLnR4dApAQCAtMCwwICsxLDcgQEAKK1NoYXJwIExRMDM1UTdEQjAzIDMuNSIgUVZHQSBU
+RlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3Vs
+ZCBiZSAic2hhcnAsbHEwMzVxN2RiMDMiCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdp
+dGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBs
+ZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2lt
+cGxlLmMKaW5kZXggY2JmMWFiNC4uODk3MDI2MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1z
+aW1wbGUuYwpAQCAtMTc2NCw2ICsxNzY0LDMwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxf
+ZGVzYyBzYW1zdW5nX2x0bjE0MGF0MjlfMzAxID0gewogCX0sCiB9OwogCitzdGF0aWMgY29uc3Qg
+c3RydWN0IGRybV9kaXNwbGF5X21vZGUgc2hhcnBfbHEwMzVxN2RiMDNfbW9kZSA9IHsKKwkuY2xv
+Y2sgPSA1NTAwLAorCS5oZGlzcGxheSA9IDI0MCwKKwkuaHN5bmNfc3RhcnQgPSAyNDAgKyAxNiwK
+KwkuaHN5bmNfZW5kID0gMjQwICsgMTYgKyA3LAorCS5odG90YWwgPSAyNDAgKyAxNiArIDcgKyA1
+LAorCS52ZGlzcGxheSA9IDMyMCwKKwkudnN5bmNfc3RhcnQgPSAzMjAgKyA5LAorCS52c3luY19l
+bmQgPSAzMjAgKyA5ICsgMSwKKwkudnRvdGFsID0gMzIwICsgOSArIDEgKyA3LAorCS52cmVmcmVz
+aCA9IDYwLAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHNoYXJwX2xxMDM1
+cTdkYjAzID0geworCS5tb2RlcyA9ICZzaGFycF9scTAzNXE3ZGIwM19tb2RlLAorCS5udW1fbW9k
+ZXMgPSAxLAorCS5icGMgPSA2LAorCS5zaXplID0geworCQkud2lkdGggPSA1NCwKKwkJLmhlaWdo
+dCA9IDcyLAorCX0sCisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4LAor
+fTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBzaGFycF9scTEwMWsxbHkw
+NF90aW1pbmcgPSB7CiAJLnBpeGVsY2xvY2sgPSB7IDYwMDAwMDAwLCA2NTAwMDAwMCwgODAwMDAw
+MDAgfSwKIAkuaGFjdGl2ZSA9IHsgMTI4MCwgMTI4MCwgMTI4MCB9LApAQCAtMjIzNiw2ICsyMjYw
+LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hb
+XSA9IHsKIAkJLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxsdG4xNDBhdDI5LTMwMSIsCiAJCS5kYXRh
+ID0gJnNhbXN1bmdfbHRuMTQwYXQyOV8zMDEsCiAJfSwgeworCQkuY29tcGF0aWJsZSA9ICJzaGFy
+cCxscTAzNXE3ZGIwMyIsCisJCS5kYXRhID0gJnNoYXJwX2xxMDM1cTdkYjAzLAorCX0sIHsKIAkJ
+LmNvbXBhdGlibGUgPSAic2hhcnAsbHExMDFrMWx5MDQiLAogCQkuZGF0YSA9ICZzaGFycF9scTEw
+MWsxbHkwNCwKIAl9LCB7Ci0tIAoyLjEwLjIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
