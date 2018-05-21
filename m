@@ -1,89 +1,37 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH V3 3/8] ARM: dts: stm32: add ethernet pins to stm32mp157c
-Date: Mon, 21 May 2018 10:07:21 +0200
-Message-ID: <1526890046-10565-4-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH V3 6/8] net: stmmac: add dwmac-4.20a compatible
+Date: Mon, 21 May 2018 10:07:24 +0200
+Message-ID: <1526890046-10565-7-git-send-email-christophe.roullier@st.com>
 References: <1526890046-10565-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1526890046-10565-1-git-send-email-christophe.roullier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: netdev-owner@vger.kernel.org
 To: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, andrew@lunn.ch, christophe.roullier@st.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Add ethernet pins on stm32mp157c.
+Manage dwmac-4.20a version from synopsys
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 46 +++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 6f044100..cf83eb244 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -158,6 +158,52 @@
- 					bias-disable;
- 				};
- 			};
-+
-+			ethernet0_rgmii_pins_a: rgmii-0 {
-+				pins1 {
-+					pinmux = <STM32_PINMUX('G', 5, AF11)>, /* ETH_RGMII_CLK125 */
-+						 <STM32_PINMUX('G', 4, AF11)>, /* ETH_RGMII_GTX_CLK */
-+						 <STM32_PINMUX('G', 13, AF11)>, /* ETH_RGMII_TXD0 */
-+						 <STM32_PINMUX('G', 14, AF11)>, /* ETH_RGMII_TXD1 */
-+						 <STM32_PINMUX('C', 2, AF11)>, /* ETH_RGMII_TXD2 */
-+						 <STM32_PINMUX('E', 2, AF11)>, /* ETH_RGMII_TXD3 */
-+						 <STM32_PINMUX('B', 11, AF11)>, /* ETH_RGMII_TX_CTL */
-+						 <STM32_PINMUX('A', 2, AF11)>, /* ETH_MDIO */
-+						 <STM32_PINMUX('C', 1, AF11)>; /* ETH_MDC */
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <3>;
-+				};
-+				pins2 {
-+					pinmux = <STM32_PINMUX('C', 4, AF11)>, /* ETH_RGMII_RXD0 */
-+						 <STM32_PINMUX('C', 5, AF11)>, /* ETH_RGMII_RXD1 */
-+						 <STM32_PINMUX('B', 0, AF11)>, /* ETH_RGMII_RXD2 */
-+						 <STM32_PINMUX('B', 1, AF11)>, /* ETH_RGMII_RXD3 */
-+						 <STM32_PINMUX('A', 1, AF11)>, /* ETH_RGMII_RX_CLK */
-+						 <STM32_PINMUX('A', 7, AF11)>; /* ETH_RGMII_RX_CTL */
-+					bias-disable;
-+				};
-+			};
-+
-+			ethernet0_rgmii_pins_sleep_a: rgmii-sleep-0 {
-+				pins1 {
-+					pinmux = <STM32_PINMUX('G', 5, ANALOG)>, /* ETH_RGMII_CLK125 */
-+						 <STM32_PINMUX('G', 4, ANALOG)>, /* ETH_RGMII_GTX_CLK */
-+						 <STM32_PINMUX('G', 13, ANALOG)>, /* ETH_RGMII_TXD0 */
-+						 <STM32_PINMUX('G', 14, ANALOG)>, /* ETH_RGMII_TXD1 */
-+						 <STM32_PINMUX('C', 2, ANALOG)>, /* ETH_RGMII_TXD2 */
-+						 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH_RGMII_TXD3 */
-+						 <STM32_PINMUX('B', 11, ANALOG)>, /* ETH_RGMII_TX_CTL */
-+						 <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
-+						 <STM32_PINMUX('C', 1, ANALOG)>, /* ETH_MDC */
-+						 <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
-+						 <STM32_PINMUX('C', 5, ANALOG)>, /* ETH_RGMII_RXD1 */
-+						 <STM32_PINMUX('B', 0, ANALOG)>, /* ETH_RGMII_RXD2 */
-+						 <STM32_PINMUX('B', 1, ANALOG)>, /* ETH_RGMII_RXD3 */
-+						 <STM32_PINMUX('A', 1, ANALOG)>, /* ETH_RGMII_RX_CLK */
-+						 <STM32_PINMUX('A', 7, ANALOG)>; /* ETH_RGMII_RX_CTL */
-+				};
-+			};
- 		};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index ebd3e5f..6d141f3 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -472,7 +472,8 @@ struct plat_stmmacenet_data *
+ 	}
  
- 		pinctrl_z: pin-controller-z {
+ 	if (of_device_is_compatible(np, "snps,dwmac-4.00") ||
+-	    of_device_is_compatible(np, "snps,dwmac-4.10a")) {
++	    of_device_is_compatible(np, "snps,dwmac-4.10a") ||
++	    of_device_is_compatible(np, "snps,dwmac-4.20a")) {
+ 		plat->has_gmac4 = 1;
+ 		plat->has_gmac = 0;
+ 		plat->pmt = 1;
 -- 
 1.9.1
