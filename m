@@ -1,151 +1,201 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: fsl: Mark 'big-endian' property as
-	optional" to the asoc tree
-Date: Mon, 21 May 2018 16:50:29 +0100
-Message-ID: <E1fKn4v-0007Ub-HV@debutante>
-References: <1526778772-6676-1-git-send-email-festevam@gmail.com>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH v4 4/5] remoteproc: qcom: Add support for mss remoteproc
+ on SDM845
+Date: Mon, 21 May 2018 22:21:56 +0530
+Message-ID: <dec6b787-9c61-5f46-2448-27adca00d12f@codeaurora.org>
+References: <20180425150843.26657-1-sibis@codeaurora.org>
+ <20180425150843.26657-5-sibis@codeaurora.org>
+ <20180518213104.GT14924@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1526778772-6676-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, timur@tabi.org, robh+dt@kernel.org, nicoleotsuka@gmail.com, broonie@kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180518213104.GT14924@minitux>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Bjorn,
+Thanks for the review.
 
-   ASoC: fsl: Mark 'big-endian' property as optional
+On 05/19/2018 03:01 AM, Bjorn Andersson wrote:
+> On Wed 25 Apr 08:08 PDT 2018, Sibi Sankar wrote:
+> 
+>>  From SDM845, the Q6SS reset sequence on software side has been
+>> simplified with the introduction of boot FSM which assists in
+>> bringing the Q6 out of reset
+>>
+>> Add GLINK subdevice to allow definition of GLINK edge as a
+>> child of modem-pil
+>>
+> 
+> Please split this in two patches; one adding sdm845 and one adding the
+> glink subdev. You can squash in the addition of the compatible in the dt
+> binding into the sdm845 code patch, you wish as well.
+> 
 
-has been applied to the asoc tree at
+Will split it into two commits
+Will still keep the dt-binding as a separate patch
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> Apart from that this looks good!
+> 
+> Regards,
+> Bjorn
+> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>   drivers/remoteproc/qcom_q6v5_pil.c | 65 +++++++++++++++++++++++++++++-
+>>   1 file changed, 64 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+>> index 7e2d04d4f2f0..4d9504e8bf8e 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_pil.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_pil.c
+>> @@ -57,6 +57,8 @@
+>>   #define RMB_PMI_META_DATA_REG		0x10
+>>   #define RMB_PMI_CODE_START_REG		0x14
+>>   #define RMB_PMI_CODE_LENGTH_REG		0x18
+>> +#define RMB_MBA_MSS_STATUS		0x40
+>> +#define RMB_MBA_ALT_RESET		0x44
+>>   
+>>   #define RMB_CMD_META_DATA_READY		0x1
+>>   #define RMB_CMD_LOAD_READY		0x2
+>> @@ -104,6 +106,13 @@
+>>   #define QDSP6SS_XO_CBCR		0x0038
+>>   #define QDSP6SS_ACC_OVERRIDE_VAL		0x20
+>>   
+>> +/* QDSP6v65 parameters */
+>> +#define QDSP6SS_SLEEP                   0x3C
+>> +#define QDSP6SS_BOOT_CORE_START         0x400
+>> +#define QDSP6SS_BOOT_CMD                0x404
+>> +#define SLEEP_CHECK_MAX_LOOPS           200
+>> +#define BOOT_FSM_TIMEOUT                10000
+>> +
+>>   struct reg_info {
+>>   	struct regulator *reg;
+>>   	int uV;
+>> @@ -170,6 +179,7 @@ struct q6v5 {
+>>   	void *mpss_region;
+>>   	size_t mpss_size;
+>>   
+>> +	struct qcom_rproc_glink glink_subdev;
+>>   	struct qcom_rproc_subdev smd_subdev;
+>>   	struct qcom_rproc_ssr ssr_subdev;
+>>   	struct qcom_sysmon *sysmon;
+>> @@ -184,6 +194,7 @@ enum {
+>>   	MSS_MSM8916,
+>>   	MSS_MSM8974,
+>>   	MSS_MSM8996,
+>> +	MSS_SDM845,
+>>   };
+>>   
+>>   static int q6v5_regulator_init(struct device *dev, struct reg_info *regs,
+>> @@ -390,8 +401,35 @@ static int q6v5proc_reset(struct q6v5 *qproc)
+>>   	int ret;
+>>   	int i;
+>>   
+>> +	if (qproc->version == MSS_SDM845) {
+>>   
+>> -	if (qproc->version == MSS_MSM8996) {
+>> +		val = readl(qproc->reg_base + QDSP6SS_SLEEP);
+>> +		val |= 0x1;
+>> +		writel(val, qproc->reg_base + QDSP6SS_SLEEP);
+>> +
+>> +		ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_SLEEP,
+>> +					 val, !(val & BIT(31)), 1,
+>> +					 SLEEP_CHECK_MAX_LOOPS);
+>> +		if (ret) {
+>> +			dev_err(qproc->dev, "QDSP6SS Sleep clock timed out\n");
+>> +			return -ETIMEDOUT;
+>> +		}
+>> +
+>> +		/* De-assert QDSP6 stop core */
+>> +		writel(1, qproc->reg_base + QDSP6SS_BOOT_CORE_START);
+>> +		/* Trigger boot FSM */
+>> +		writel(1, qproc->reg_base + QDSP6SS_BOOT_CMD);
+>> +
+>> +		ret = readl_poll_timeout(qproc->rmb_base + RMB_MBA_MSS_STATUS,
+>> +				val, (val & BIT(0)) != 0, 10, BOOT_FSM_TIMEOUT);
+>> +		if (ret) {
+>> +			dev_err(qproc->dev, "Boot FSM failed to complete.\n");
+>> +			return ret;
+>> +		}
+>> +
+>> +		goto pbl_wait;
+>> +
+>> +	} else if (qproc->version == MSS_MSM8996) {
+>>   		/* Override the ACC value if required */
+>>   		writel(QDSP6SS_ACC_OVERRIDE_VAL,
+>>   		       qproc->reg_base + QDSP6SS_STRAP_ACC);
+>> @@ -499,6 +537,7 @@ static int q6v5proc_reset(struct q6v5 *qproc)
+>>   	val &= ~Q6SS_STOP_CORE;
+>>   	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
+>>   
+>> +pbl_wait:
+>>   	/* Wait for PBL status */
+>>   	ret = q6v5_rmb_pbl_wait(qproc, 1000);
+>>   	if (ret == -ETIMEDOUT) {
+>> @@ -1256,6 +1295,7 @@ static int q6v5_probe(struct platform_device *pdev)
+>>   	}
+>>   	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
+>>   	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
+>> +	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
+>>   	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
+>>   	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
+>>   	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12);
+>> @@ -1279,6 +1319,7 @@ static int q6v5_remove(struct platform_device *pdev)
+>>   	rproc_del(qproc->rproc);
+>>   
+>>   	qcom_remove_sysmon_subdev(qproc->sysmon);
+>> +	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
+>>   	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
+>>   	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
+>>   	rproc_free(qproc->rproc);
+>> @@ -1286,6 +1327,27 @@ static int q6v5_remove(struct platform_device *pdev)
+>>   	return 0;
+>>   }
+>>   
+>> +static const struct rproc_hexagon_res sdm845_mss = {
+>> +	.hexagon_mba_image = "mba.mbn",
+>> +	.proxy_clk_names = (char*[]){
+>> +			"xo",
+>> +			"axis2",
+>> +			"prng",
+>> +			NULL
+>> +	},
+>> +	.active_clk_names = (char*[]){
+>> +			"iface",
+>> +			"bus",
+>> +			"mem",
+>> +			"gpll0_mss",
+>> +			"snoc_axi",
+>> +			"mnoc_axi",
+>> +			NULL
+>> +	},
+>> +	.need_mem_protection = true,
+>> +	.version = MSS_SDM845,
+>> +};
+>> +
+>>   static const struct rproc_hexagon_res msm8996_mss = {
+>>   	.hexagon_mba_image = "mba.mbn",
+>>   	.proxy_clk_names = (char*[]){
+>> @@ -1379,6 +1441,7 @@ static const struct of_device_id q6v5_of_match[] = {
+>>   	{ .compatible = "qcom,msm8916-mss-pil", .data = &msm8916_mss},
+>>   	{ .compatible = "qcom,msm8974-mss-pil", .data = &msm8974_mss},
+>>   	{ .compatible = "qcom,msm8996-mss-pil", .data = &msm8996_mss},
+>> +	{ .compatible = "qcom,sdm845-mss-pil", .data = &sdm845_mss},
+>>   	{ },
+>>   };
+>>   MODULE_DEVICE_TABLE(of, q6v5_of_match);
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 9ff3036a60837b6ee0b7f70180f39ac29deb8cc2 Mon Sep 17 00:00:00 2001
-From: Fabio Estevam <fabio.estevam@nxp.com>
-Date: Sat, 19 May 2018 22:12:52 -0300
-Subject: [PATCH] ASoC: fsl: Mark 'big-endian' property as optional
-
-Currently the 'big-endian' property is listed as required, which is
-not correct. i.MX SoCs do not need such property, so move it under
-'Optional properties' entry instead.
-
-Also, fsl-sai.txt incorrectly referenced 'FTM_PWM registers', so
-change it to 'SAI registers', which is the intended description.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/fsl,asrc.txt  | 10 ++++++----
- Documentation/devicetree/bindings/sound/fsl,esai.txt  |  2 ++
- Documentation/devicetree/bindings/sound/fsl,spdif.txt |  2 ++
- Documentation/devicetree/bindings/sound/fsl-sai.txt   |  8 +++++---
- 4 files changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-index f5a14115b459..1d4d9f938689 100644
---- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-@@ -31,14 +31,16 @@ Required properties:
- 			  it. This property is optional depending on the SoC
- 			  design.
- 
--   - big-endian		: If this property is absent, the little endian mode
--			  will be in use as default. Otherwise, the big endian
--			  mode will be in use for all the device registers.
--
-    - fsl,asrc-rate	: Defines a mutual sample rate used by DPCM Back Ends.
- 
-    - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
- 
-+Optional properties:
-+
-+   - big-endian		: If this property is absent, the little endian mode
-+			  will be in use as default. Otherwise, the big endian
-+			  mode will be in use for all the device registers.
-+
- Example:
- 
- asrc: asrc@2034000 {
-diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
-index cacd18bb9ba6..5b9914367610 100644
---- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
-@@ -42,6 +42,8 @@ Required properties:
- 			  means all the settings for Receiving would be
- 			  duplicated from Transmition related registers.
- 
-+Optional properties:
-+
-   - big-endian		: If this property is absent, the native endian mode
- 			  will be in use as default, or the big endian mode
- 			  will be in use for all the device registers.
-diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-index 38cfa7573441..8b324f82a782 100644
---- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-@@ -33,6 +33,8 @@ Required properties:
- 			  it. This property is optional depending on the SoC
- 			  design.
- 
-+Optional properties:
-+
-    - big-endian		: If this property is absent, the native endian mode
- 			  will be in use as default, or the big endian mode
- 			  will be in use for all the device registers.
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index 740b467adf7d..dd9e59738e08 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -28,9 +28,6 @@ Required properties:
- 			  pinctrl-names. See ../pinctrl/pinctrl-bindings.txt
- 			  for details of the property values.
- 
--  - big-endian		: Boolean property, required if all the FTM_PWM
--			  registers are big-endian rather than little-endian.
--
-   - lsb-first		: Configures whether the LSB or the MSB is transmitted
- 			  first for the fifo data. If this property is absent,
- 			  the MSB is transmitted first as default, or the LSB
-@@ -48,6 +45,11 @@ Required properties:
- 			  receive data by following their own bit clocks and
- 			  frame sync clocks separately.
- 
-+Optional properties:
-+
-+  - big-endian		: Boolean property, required if all the SAI
-+			  registers are big-endian rather than little-endian.
-+
- Optional properties (for mx6ul):
- 
-   - fsl,sai-mclk-direction-output: This is a boolean property. If present,
 -- 
-2.17.0
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
