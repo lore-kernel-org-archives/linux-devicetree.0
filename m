@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 1/8] dt-bindings: reset: Add AOSS reset bindings for SDM845 SoCs
-Date: Mon, 21 May 2018 22:57:07 +0530
-Message-ID: <20180521172714.8551-2-sibis@codeaurora.org>
+Subject: [PATCH v5 3/8] remoteproc: Move proxy unvote to handover irq handler
+Date: Mon, 21 May 2018 22:57:09 +0530
+Message-ID: <20180521172714.8551-4-sibis@codeaurora.org>
 References: <20180521172714.8551-1-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180521172714.8551-1-sibis@codeaurora.org>
@@ -10,97 +10,83 @@ To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
 Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add SDM845 AOSS (always on subsystem) reset controller binding
+Introduce interrupt handler for smp2p ready interrupt to
+handle start completion. Move the proxy votes for clocks
+and regulators to the handover interrupt context.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- .../bindings/reset/qcom,aoss-reset.txt        | 52 +++++++++++++++++++
- include/dt-bindings/reset/qcom,sdm845-aoss.h  | 17 ++++++
- 2 files changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
- create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
+ drivers/remoteproc/qcom_q6v5_pil.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
-new file mode 100644
-index 000000000000..cd5dcafb4ed7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
-@@ -0,0 +1,52 @@
-+Qualcomm AOSS Reset Controller
-+======================================
+diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+index 76a0c00aa04a..6333bdcd9448 100644
+--- a/drivers/remoteproc/qcom_q6v5_pil.c
++++ b/drivers/remoteproc/qcom_q6v5_pil.c
+@@ -809,11 +809,6 @@ static int q6v5_start(struct rproc *rproc)
+ 			"Failed to reclaim mba buffer system may become unstable\n");
+ 	qproc->running = true;
+ 
+-	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
+-			 qproc->proxy_clk_count);
+-	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+-			       qproc->proxy_reg_count);
+-
+ 	return 0;
+ 
+ reclaim_mpss:
+@@ -892,6 +887,12 @@ static int q6v5_stop(struct rproc *rproc)
+ 	WARN_ON(ret);
+ 
+ 	reset_control_assert(qproc->mss_restart);
 +
-+This binding describes a reset-controller found on AOSS (always on subsystem)
-+for Qualcomm SDM845 SoCs.
++	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
++			 qproc->proxy_clk_count);
++	q6v5_regulator_disable(qproc, qproc->proxy_regs,
++			       qproc->proxy_reg_count);
 +
-+Required properties:
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be:
-+		    "qcom,sdm845-aoss-reset"
+ 	q6v5_clk_disable(qproc->dev, qproc->active_clks,
+ 			 qproc->active_clk_count);
+ 	q6v5_regulator_disable(qproc, qproc->active_regs,
+@@ -959,7 +960,7 @@ static irqreturn_t q6v5_fatal_interrupt(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
++static irqreturn_t q6v5_ready_interrupt(int irq, void *dev)
+ {
+ 	struct q6v5 *qproc = dev;
+ 
+@@ -967,6 +968,18 @@ static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
++static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
++{
++	struct q6v5 *qproc = dev;
 +
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must specify the base address and size of the register
-+	            space.
++	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
++			 qproc->proxy_clk_count);
++	q6v5_regulator_disable(qproc, qproc->proxy_regs,
++			       qproc->proxy_reg_count);
 +
-+- #reset-cells:
-+	Usage: required
-+	Value type: <uint>
-+	Definition: must be 1; cell entry represents the reset index.
++	return IRQ_HANDLED;
++}
 +
-+Example:
+ static irqreturn_t q6v5_stop_ack_interrupt(int irq, void *dev)
+ {
+ 	struct q6v5 *qproc = dev;
+@@ -1194,6 +1207,10 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto free_rproc;
+ 
++	ret = q6v5_request_irq(qproc, pdev, "ready", q6v5_ready_interrupt);
++	if (ret < 0)
++		goto free_rproc;
 +
-+aoss_reset: reset-controller@c2b0000 {
-+	compatible = "qcom,sdm845-aoss-reset";
-+	reg = <0xc2b0000 0x21000>;
-+	#reset-cells = <1>;
-+};
-+
-+Specifying reset lines connected to IP modules
-+==============================================
-+
-+Device nodes that need access to reset lines should
-+specify them as a reset phandle in their corresponding node as
-+specified in reset.txt.
-+
-+For list of all valid reset indicies see
-+<dt-bindings/reset/qcom,sdm845-aoss.h>
-+
-+Example:
-+
-+modem-pil@4080000 {
-+	...
-+
-+	resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
-+	reset-names = "mss_restart";
-+
-+	...
-+};
-diff --git a/include/dt-bindings/reset/qcom,sdm845-aoss.h b/include/dt-bindings/reset/qcom,sdm845-aoss.h
-new file mode 100644
-index 000000000000..476c5fc873b6
---- /dev/null
-+++ b/include/dt-bindings/reset/qcom,sdm845-aoss.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2018 The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
-+#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
-+
-+#define AOSS_CC_MSS_RESTART	0
-+#define AOSS_CC_CAMSS_RESTART	1
-+#define AOSS_CC_VENUS_RESTART	2
-+#define AOSS_CC_GPU_RESTART	3
-+#define AOSS_CC_DISPSS_RESTART	4
-+#define AOSS_CC_WCSS_RESTART	5
-+#define AOSS_CC_LPASS_RESTART	6
-+
-+#endif
+ 	ret = q6v5_request_irq(qproc, pdev, "handover", q6v5_handover_interrupt);
+ 	if (ret < 0)
+ 		goto free_rproc;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
