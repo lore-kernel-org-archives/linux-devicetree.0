@@ -1,88 +1,99 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [v4 07/11] dt-bindings: hwmon: Add documents for PECI hwmon client drivers
-Date: Mon, 21 May 2018 12:59:05 -0700
-Message-ID: <20180521195905.27983-1-jae.hyun.yoo@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Mon, 21 May 2018 23:44:25 +0300
+Message-ID: <CAHp75VcShgaFoJVqbTGBXrrgEr-7JQcCLK4Qy-jydE5++f4VAQ@mail.gmail.com>
+References: <20180521180927.18472-1-dmurphy@ti.com> <20180521180927.18472-2-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180521180927.18472-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Haiyue Wang <haiyue.wang@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, James Feist <james.feist@linux.intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds dt-bindings documents for PECI hwmon client drivers.
+On Mon, May 21, 2018 at 9:09 PM, Dan Murphy <dmurphy@ti.com> wrote:
+> Introduce the family of LED devices that can
+> drive a torch, strobe or IR LED.
+>
+> The LED driver can be configured with a strobe
+> timer to execute a strobe flash.  The IR LED
+> brightness is controlled via the torch brightness
+> register.
+>
+> The data sheet for each the LM36010 and LM36011
+> LED drivers can be found here:
+> http://www.ti.com/product/LM36010
+> http://www.ti.com/product/LM36011
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-Reviewed-by: James Feist <james.feist@linux.intel.com>
-Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-Cc: Joel Stanley <joel@jms.id.au>
----
- .../bindings/hwmon/peci-cputemp.txt           | 23 ++++++++++++++++++
- .../bindings/hwmon/peci-dimmtemp.txt          | 24 +++++++++++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
- create mode 100644 Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt
+Thanks for an update. My comments below.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt b/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
-new file mode 100644
-index 000000000000..2f59aee12d9e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
-@@ -0,0 +1,23 @@
-+Bindings for Intel PECI (Platform Environment Control Interface) cputemp driver.
-+
-+Required properties:
-+- compatible : Should be "intel,peci-cputemp".
-+- reg        : Should contain address of a client CPU. Address range of CPU
-+	       clients is starting from 0x30 based on PECI specification.
-+
-+Example:
-+	peci-bus@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		< more properties >
-+
-+		peci-cputemp@30 {
-+			compatible = "intel,peci-cputemp";
-+			reg = <0x30>;
-+		};
-+
-+		peci-cputemp@31 {
-+			compatible = "intel,peci-cputemp";
-+			reg = <0x31>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt b/Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt
-new file mode 100644
-index 000000000000..4592ce23f620
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt
-@@ -0,0 +1,24 @@
-+Bindings for Intel PECI (Platform Environment Control Interface) dimmtemp
-+driver.
-+
-+Required properties:
-+- compatible : Should be "intel,peci-dimmtemp".
-+- reg        : Should contain address of a client CPU. Address range of CPU
-+	       clients is starting from 0x30 based on PECI specification.
-+
-+Example:
-+	peci-bus@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		< more properties >
-+
-+		peci-dimmtemp@30 {
-+			compatible = "intel,peci-dimmtemp";
-+			reg = <0x30>;
-+		};
-+
-+		peci-dimmtemp@31 {
-+			compatible = "intel,peci-dimmtemp";
-+			reg = <0x31>;
-+		};
-+	};
+> +config LEDS_LM3601X
+> +       tristate "LED support for LM3601x Chips"
+> +       depends on LEDS_CLASS && I2C && OF
+
+Now OF here is superfluous.
+
+> +       depends on LEDS_CLASS_FLASH
+> +       select REGMAP_I2C
+> +       help
+> +         This option enables support for the TI LM3601x family
+> +         of flash, torch and indicator classes.
+
+> +#define LM3601X_TIMEOUT_MASK   0x1e
+> +#define LM3601X_ENABLE_MASK    0x03
+
+I dunno if GENMASK() will be better here.
+
+> +#define LM3601X_LOWER_STEP_US  40000
+> +#define LM3601X_UPPER_STEP_US  200000
+> +#define LM3601X_MIN_TIMEOUT_US 40000
+> +#define LM3601X_MAX_TIMEOUT_US 1600000
+
+> +#define LM3601X_TIMEOUT_XOVER  400000
+
+Missed unit?
+
+> +       ret = regmap_update_bits(led->regmap, LM3601X_ENABLE_REG,
+> +                               LM3601X_MODE_TORCH | LM3601X_MODE_IR_DRV,
+> +                               led_mode_val);
+
+> +               ret = regmap_update_bits(led->regmap, LM3601X_ENABLE_REG,
+> +                                       LM3601X_MODE_TORCH | LM3601X_MODE_IR_DRV,
+> +                                       LM3601X_MODE_STROBE);
+
+Perhaps
+#define ..._MODE_TORCH_WITH_IR   (..._TOCRH | ..._IR_DRV)
+?
+
+> +static int lm3601x_probe(struct i2c_client *client,
+> +                       const struct i2c_device_id *id)
+> +{
+> +       struct lm3601x_led *led;
+> +       int err;
+
+> +       err = lm3601x_parse_node(led, client->dev.of_node);
+> +       if (err < 0)
+
+> +               return -ENODEV;
+
+Shouldn't be
+
+return err;
+
+?
+
+> +       err = lm3601x_register_leds(led);
+> +
+> +       return err;
+
+I will leave this to maintainers since you seems have strong
+objections against more or less standard pattern, i.e.
+
+return lm3601x_register_leds();
+
+> +}
+
 -- 
-2.17.0
+With Best Regards,
+Andy Shevchenko
