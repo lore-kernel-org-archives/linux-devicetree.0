@@ -1,43 +1,34 @@
 From: "=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?=" <vokac.m@gmail.com>
-Subject: [PATCH net-next 0/7] Add support for QCA8334 switch
-Date: Mon, 21 May 2018 15:28:06 +0200
-Message-ID: <1526909293-56377-1-git-send-email-michal.vokac@ysoft.com>
+Subject: [PATCH net-next 2/7] net: dsa: qca8k: Add support for QCA8334 switch
+Date: Mon, 21 May 2018 15:28:08 +0200
+Message-ID: <1526909293-56377-3-git-send-email-michal.vokac@ysoft.com>
+References: <1526909293-56377-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526909293-56377-1-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, michal.vokac@ysoft.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-This series basically adds support for a QCA8334 ethernet switch to the
-qca8k driver. It is a four-port variant of the already supported seven
-port QCA8337. Register map is the same for the whole familly and all chips
-have the same device ID.
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+---
+ drivers/net/dsa/qca8k.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Major part of this series enhances the CPU port setting. Currently the CPU
-port is not set to any sensible defaults compatible with the xGMII
-interface. This series forces the CPU port to its maximum bandwidth and
-also allows to adjust the new defaults using fixed-link device tree
-sub-node.
-
-Alongside these changes I fixed two checkpatch warnings regarding SPDX and
-redundant parentheses.
-
-Michal Vokáč (7):
-  net: dsa: qca8k: Add QCA8334 binding documentation
-  net: dsa: qca8k: Add support for QCA8334 switch
-  net: dsa: qca8k: Enable RXMAC when bringing up a port
-  net: dsa: qca8k: Force CPU port to its highest bandwidth
-  net: dsa: qca8k: Allow overwriting CPU port setting
-  net: dsa: qca8k: Replace GPL boilerplate by SPDX
-  net: dsa: qca8k: Remove rudundant parentheses
-
- .../devicetree/bindings/net/dsa/qca8k.txt          |  5 +-
- drivers/net/dsa/qca8k.c                            | 64 ++++++++++++++++++----
- drivers/net/dsa/qca8k.h                            |  7 ++-
- 3 files changed, 61 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index 3684e56..6a3ffb2 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -1010,6 +1010,7 @@ static SIMPLE_DEV_PM_OPS(qca8k_pm_ops,
+ 			 qca8k_suspend, qca8k_resume);
+ 
+ static const struct of_device_id qca8k_of_match[] = {
++	{ .compatible = "qca,qca8334" },
+ 	{ .compatible = "qca,qca8337" },
+ 	{ /* sentinel */ },
+ };
 -- 
 2.1.4
