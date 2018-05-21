@@ -1,251 +1,154 @@
-From: Ilia Lin <ilialin@codeaurora.org>
-Subject: [PATCH] cpufreq: Add Kryo CPU scaling driver
-Date: Mon, 21 May 2018 13:31:30 +0300
-Message-ID: <1526898690-4018-1-git-send-email-ilialin@codeaurora.org>
-References: <1526555955-29960-11-git-send-email-ilialin@codeaurora.org>
+From: Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH v6 0/9] Add support for SAMA5D2 touchscreen
+Date: Mon, 21 May 2018 13:27:48 +0300
+Message-ID: <1526898477-9952-1-git-send-email-eugen.hristev@microchip.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526555955-29960-11-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: viresh.kumar@linaro.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: jic23@kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com, robh@kernel.org
+Cc: Eugen Hristev <eugen.hristev@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
-the CPU frequency subset and voltage value of each OPP varies
-based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
-defines the voltage and frequency value based on the msm-id in SMEM
-and speedbin blown in the efuse combination.
-The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-to provide the OPP framework with required information.
-This is used to determine the voltage and frequency value for each OPP of
-operating-points-v2 table when it is parsed by the OPP framework.
+Hello,
 
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/Kconfig.arm          |  10 +++
- drivers/cpufreq/Makefile             |   1 +
- drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
- drivers/cpufreq/qcom-cpufreq-kryo.c  | 164 +++++++++++++++++++++++++++++++++++
- 4 files changed, 178 insertions(+)
- create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+This patch series is a rework of my previous series named:
+[PATCH 00/14] iio: triggers: add consumer support
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index de55c7d..0bfd40e 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -124,6 +124,16 @@ config ARM_OMAP2PLUS_CPUFREQ
- 	depends on ARCH_OMAP2PLUS
- 	default ARCH_OMAP2PLUS
- 
-+config ARM_QCOM_CPUFREQ_KRYO
-+	bool "Qualcomm Kryo based CPUFreq"
-+	depends on QCOM_QFPROM
-+	depends on QCOM_SMEM
-+	select PM_OPP
-+	help
-+	  This adds the CPUFreq driver for Qualcomm Kryo SoC based boards.
-+
-+	  If in doubt, say N.
-+
- config ARM_S3C_CPUFREQ
- 	bool
- 	help
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 8d24ade..fb4a2ec 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
- obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
- obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
- obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-+obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
- obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
- obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
- obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 3b585e4..77d6ab8 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -118,6 +118,9 @@
- 
- 	{ .compatible = "nvidia,tegra124", },
- 
-+	{ .compatible = "qcom,apq8096", },
-+	{ .compatible = "qcom,msm8996", },
-+
- 	{ .compatible = "st,stih407", },
- 	{ .compatible = "st,stih410", },
- 
-diff --git a/drivers/cpufreq/qcom-cpufreq-kryo.c b/drivers/cpufreq/qcom-cpufreq-kryo.c
-new file mode 100644
-index 0000000..4e002d0b
---- /dev/null
-+++ b/drivers/cpufreq/qcom-cpufreq-kryo.c
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+/*
-+ * In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
-+ * the CPU frequency subset and voltage value of each OPP varies
-+ * based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
-+ * defines the voltage and frequency value based on the msm-id in SMEM
-+ * and speedbin blown in the efuse combination.
-+ * The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-+ * to provide the OPP framework with required information.
-+ * This is used to determine the voltage and frequency value for each OPP of
-+ * operating-points-v2 table when it is parsed by the OPP framework.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-consumer.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/slab.h>
-+#include <linux/soc/qcom/smem.h>
-+
-+#define MSM_ID_SMEM	137
-+#define SILVER_LEAD	0
-+#define GOLD_LEAD	2
-+
-+enum _msm_id {
-+	MSM8996V3 = 0xF6ul,
-+	APQ8096V3 = 0x123ul,
-+	MSM8996SG = 0x131ul,
-+	APQ8096SG = 0x138ul,
-+};
-+
-+enum _msm8996_version {
-+	MSM8996_V3,
-+	MSM8996_SG,
-+	NUM_OF_MSM8996_VERSIONS,
-+};
-+
-+static enum _msm8996_version __init qcom_cpufreq_kryo_get_msm_id(void)
-+{
-+	size_t len;
-+	u32 *msm_id;
-+	enum _msm8996_version version;
-+
-+	msm_id = qcom_smem_get(QCOM_SMEM_HOST_ANY, MSM_ID_SMEM, &len);
-+	/* The first 4 bytes are format, next to them is the actual msm-id */
-+	msm_id++;
-+
-+	switch ((enum _msm_id)*msm_id) {
-+	case MSM8996V3:
-+	case APQ8096V3:
-+		version = MSM8996_V3;
-+		break;
-+	case MSM8996SG:
-+	case APQ8096SG:
-+		version = MSM8996_SG;
-+		break;
-+	default:
-+		version = NUM_OF_MSM8996_VERSIONS;
-+	}
-+
-+	return version;
-+}
-+
-+static int __init qcom_cpufreq_kryo_driver_init(void)
-+{
-+	struct device *cpu_dev_silver, *cpu_dev_gold;
-+	struct opp_table *opp_silver, *opp_gold;
-+	enum _msm8996_version msm8996_version;
-+	struct nvmem_cell *speedbin_nvmem;
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	u8 *speedbin;
-+	u32 versions;
-+	size_t len;
-+	int ret;
-+
-+	cpu_dev_silver = get_cpu_device(SILVER_LEAD);
-+	if (NULL == cpu_dev_silver)
-+		return -ENODEV;
-+
-+	cpu_dev_gold = get_cpu_device(SILVER_LEAD);
-+	if (NULL == cpu_dev_gold)
-+		return -ENODEV;
-+
-+	msm8996_version = qcom_cpufreq_kryo_get_msm_id();
-+	if (NUM_OF_MSM8996_VERSIONS == msm8996_version) {
-+		dev_err(cpu_dev_silver, "Not Snapdragon 820/821!");
-+		return -ENODEV;
-+	}
-+
-+	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev_silver);
-+	if (IS_ERR(np))
-+		return PTR_ERR(np);
-+
-+	if (!of_device_is_compatible(np, "operating-points-v2-kryo-cpu")) {
-+		ret = -ENOENT;
-+		goto free_np;
-+	}
-+
-+	speedbin_nvmem = of_nvmem_cell_get(np, NULL);
-+	if (IS_ERR(speedbin_nvmem)) {
-+		ret = PTR_ERR(speedbin_nvmem);
-+		dev_err(cpu_dev_silver, "Could not get nvmem cell: %d\n", ret);
-+		goto free_np;
-+	}
-+
-+	speedbin = nvmem_cell_read(speedbin_nvmem, &len);
-+	nvmem_cell_put(speedbin_nvmem);
-+
-+	switch (msm8996_version) {
-+	case MSM8996_V3:
-+		versions = 1 << (unsigned int)(*speedbin);
-+		break;
-+	case MSM8996_SG:
-+		versions = 1 << ((unsigned int)(*speedbin) + 4);
-+		break;
-+	default:
-+		BUG();
-+		break;
-+	}
-+
-+	opp_silver = dev_pm_opp_set_supported_hw(cpu_dev_silver,&versions,1);
-+	if (IS_ERR(opp_silver)) {
-+		dev_err(cpu_dev_silver, "Failed to set supported hardware\n");
-+		ret = PTR_ERR(opp_silver);
-+		goto free_np;
-+	}
-+
-+	opp_gold = dev_pm_opp_set_supported_hw(cpu_dev_gold,&versions,1);
-+	if (IS_ERR(opp_gold)) {
-+		dev_err(cpu_dev_gold, "Failed to set supported hardware\n");
-+		ret = PTR_ERR(opp_gold);
-+		goto free_opp_silver;
-+	}
-+
-+	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-+	if (!IS_ERR(pdev))
-+		return 0;
-+
-+	ret = PTR_ERR(pdev);
-+	dev_err(cpu_dev_silver, "Failed to register platform device\n");
-+	dev_pm_opp_put_supported_hw(opp_gold);
-+
-+free_opp_silver:
-+	dev_pm_opp_put_supported_hw(opp_silver);
-+
-+free_np:
-+	of_node_put(np);
-+
-+	return ret;
-+}
-+late_initcall(qcom_cpufreq_kryo_driver_init);
-+
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Kryo CPUfreq driver");
-+MODULE_LICENSE("GPL v2");
+This is the version 6 of the series, and addresses the received feedback
+on the v2 series named:
+[PATCH v2 00/10]  Add support for SAMA5D2 touchscreen
+and the v3 series named
+[PATCH v3 00/11]  Add support for SAMA5D2 touchscreen
+and the v4 series named
+[PATCH v4 0/9]  Add support for SAMA5D2 touchscreen
+and fixes one bug found in series named
+[PATCH v5 0/9]  Add support for SAMA5D2 touchscreen
+
+This series applies on top of fixes-togreg branch of iio.git,
+specifically on top of commit:
+"f0c8d1f" : iio: adc: at91-sama5d2_adc:
+ fix channel configuration for differential channels
+
+Jonathan, if you need me to rebase this on top of testing, let me know.
+
+Changes in v3, v4, v5 and v6 are presented at the end of the cover letter below.
+Thanks everyone for the feedback. Below is the original v2 cover letter:
+
+In few words, this is the implementation of splitting the functionality
+of the IP block ADC device in SAMA5D2 SoC from ADC with touchscreen
+support. In order to avoid having a MFD device, two separate
+drivers that would work on same register base and split the IRQ,etc,
+as advised on the mailing list, I created a consumer driver for the
+channels, that will connect to the ADC as described in the device tree.
+
+I have collected feedback from everyone and here is the result:
+I have added a new generic resistive touchscreen driver, which acts
+as a iio consumer for the given channels and will create an input
+device and report the events. It uses a callback buffer to register
+to the IIO device and waits for data to be pushed.
+Inside the IIO device, I have kept a similar approach with the first version
+of the series, except that now the driver can take multiple buffers, and
+will configure the touchscreen part of the hardware device if the specific
+channels are requested.
+
+The SAMA5D2 ADC driver registers three new channels: two for the
+position on the X and Y axis, and one for the touch pressure.
+When channels are requested, it will check if the touchscreen channel mask
+includes the requested channels (it is possible that the consumer driver
+will not request pressure for example). If it's the case, it will work
+in touchscreen mode, and will refuse to do usual analog-digital conversion,
+because we have a single trigger and the touchscreen needs it.
+When the scan mask will include only old channels, the driver will function
+in the same way as before. If the scan mask somehow is a mix of the two (the
+masks intersect), the driver will refuse to work whatsoever (cannot have both
+in the same time).
+The driver allows reading raw data for the new channels, if claim direct
+mode works: no touchscreen driver requested anything. The new channels can
+act like the old ones. However, when requesting these channels, the usual
+trigger will not work and will not be enabled. The touchscreen channels
+require special trigger and irq configuration: pen detect, no pen detect
+and a periodic trigger to sample the touchscreen position and pressure.
+If the user attempts to use another trigger while there is a buffer
+that already requested the touchscreen channels (thus the trigger), the
+driver will refuse to comply.
+
+In order to have defines for the channel numbers, I added a bindings include
+file that goes on a separate commit :
+dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer info
+This should go in the same tree with the following commits :
+  ARM: dts: at91: sama5d2: add channel cells for ADC device
+  ARM: dts: at91: sama5d2: Add resistive touch device
+
+as build will break because these commits depend on the binding one
+which creates the included header file.
+V5 update: After discussing with Alexandre Belloni on Mailing list, the two
+DTS patches are to be taken in the next version after bindings reach mainline.
+
+Changes in v6:
+ - Fixed a crash in ADC driver , explained in driver patch changelog.
+ - changed a dev_err to dev_dbg in input driver.
+ - added Reviewed-by Rob Herring.
+
+Changes in v5:
+ - renamed property touchscreen-threshold-pressure to touchscreen-min-pressure
+ - added one return in touchscreen driver
+
+Changes in v4:
+ - removed patch for inkern module get/set kref
+ - addressed feedback on both the ADC and the touchscreen driver. each
+patch has a history inside the patch file for the specific changes.
+ - patch that fixes the channel fix
+[PATCH v3 01/11] iio: adc: at91-sama5d2_adc:
+ fix channel configuration for differential channels
+was accepted in fixes-togreg branch thus removed from this series.
+ - added Reviewed-by for the bindings by Rob Herring
+
+Changes in v3:
+ - changed input driver name according to feedback and reworked in commits
+to adapt to binding changes and new name.
+ - moved channel index fix in at91-sama5d2_adc at the beginning of the series
+(PATCH 01/11)
+ - created a new optional binding for the touchscreen as a separate commit
+and added it to the series :
+ [PATCH v3 04/11] dt-bindings: input: touchscreen: add pressure
+ threshold touchscreen property
+ - changed at91-sama5d2_adc driver patch to address the comments. Exact changes
+are in the patch file for the driver source file.
+
+Eugen Hristev (9):
+  MAINTAINERS: add generic resistive touchscreen adc
+  iio: Add channel for Position Relative
+  dt-bindings: input: touchscreen: add minimum pressure touchscreen
+    property
+  dt-bindings: input: touchscreen: resistive-adc-touch: create bindings
+  iio: adc: at91-sama5d2_adc: add support for position and pressure
+    channels
+  input: touchscreen: resistive-adc-touch: add generic resistive ADC
+    touchscreen
+  dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer
+    info
+  ARM: dts: at91: sama5d2: add channel cells for ADC device
+  ARM: dts: at91: sama5d2: Add resistive touch device
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  12 +
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   9 +
+ .../input/touchscreen/resistive-adc-touch.txt      |  30 +
+ .../bindings/input/touchscreen/touchscreen.txt     |   3 +
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  12 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 609 +++++++++++++++++++--
+ drivers/iio/industrialio-core.c                    |   1 +
+ drivers/input/touchscreen/Kconfig                  |  13 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/resistive-adc-touch.c    | 201 +++++++
+ include/dt-bindings/iio/adc/at91-sama5d2_adc.h     |  16 +
+ include/uapi/linux/iio/types.h                     |   1 +
+ tools/iio/iio_event_monitor.c                      |   2 +
+ 14 files changed, 858 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/resistive-adc-touch.txt
+ create mode 100644 drivers/input/touchscreen/resistive-adc-touch.c
+ create mode 100644 include/dt-bindings/iio/adc/at91-sama5d2_adc.h
+
 -- 
-1.9.1
+2.7.4
