@@ -1,416 +1,180 @@
-From: Ilia Lin <ilialin@codeaurora.org>
-Subject: [PATCH v9 09/15] dt: qcom: Add opp and thermal to the msm8996
-Date: Mon, 21 May 2018 14:25:26 +0300
-Message-ID: <1526901932-9514-10-git-send-email-ilialin@codeaurora.org>
-References: <1526901932-9514-1-git-send-email-ilialin@codeaurora.org>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] slimbus: ngd: Add qcom SLIMBus NGD driver
+Date: Mon, 21 May 2018 17:03:14 +0530
+Message-ID: <20180521113314.GC14654@vkoul-mobl>
+References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
+ <20180516165118.16551-3-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526901932-9514-1-git-send-email-ilialin@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180516165118.16551-3-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 269 ++++++++++++++++++++++++++++++++--
- 1 file changed, 260 insertions(+), 9 deletions(-)
+On 16-05-18, 17:51, Srinivas Kandagatla wrote:
+> This patch adds suppor to Qualcomm SLIMBus Non-Generic Device (NGD)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 37b7152c..e6cf290 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -14,6 +14,7 @@
- #include <dt-bindings/clock/qcom,gcc-msm8996.h>
- #include <dt-bindings/clock/qcom,mmcc-msm8996.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	model = "Qualcomm Technologies, Inc. MSM8996";
-@@ -97,6 +98,9 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 0>;
-+			operating-points-v2 = <&cluster0_opp>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 			      compatible = "cache";
-@@ -109,6 +113,9 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 0>;
-+			operating-points-v2 = <&cluster0_opp>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
- 		};
- 
-@@ -117,6 +124,9 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 1>;
-+			operating-points-v2 = <&cluster1_opp>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_1>;
- 			L2_1: l2-cache {
- 			      compatible = "cache";
-@@ -129,6 +139,9 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 1>;
-+			operating-points-v2 = <&cluster1_opp>;
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_1>;
- 		};
- 
-@@ -155,6 +168,182 @@
- 		};
- 	};
- 
-+	cluster0_opp: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-307200000 {
-+			opp-hz = /bits/ 64 <307200000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-422400000 {
-+			opp-hz = /bits/ 64 <422400000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-480000000 {
-+			opp-hz = /bits/ 64 <480000000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-556800000 {
-+			opp-hz = /bits/ 64 <556800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-652800000 {
-+			opp-hz = /bits/ 64 <652800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-844800000 {
-+			opp-hz = /bits/ 64 <844800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-960000000 {
-+			opp-hz = /bits/ 64 <960000000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1113600000 {
-+			opp-hz = /bits/ 64 <1113600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1228800000 {
-+			opp-hz = /bits/ 64 <1228800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1324800000 {
-+			opp-hz = /bits/ 64 <1324800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1401600000 {
-+			opp-hz = /bits/ 64 <1401600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1478400000 {
-+			opp-hz = /bits/ 64 <1478400000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1593600000 {
-+			opp-hz = /bits/ 64 <1593600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+	};
-+
-+	cluster1_opp: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-307200000 {
-+			opp-hz = /bits/ 64 <307200000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-403200000 {
-+			opp-hz = /bits/ 64 <403200000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-480000000 {
-+			opp-hz = /bits/ 64 <480000000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-556800000 {
-+			opp-hz = /bits/ 64 <556800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-652800000 {
-+			opp-hz = /bits/ 64 <652800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-806400000 {
-+			opp-hz = /bits/ 64 <806400000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-883200000 {
-+			opp-hz = /bits/ 64 <883200000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-940800000 {
-+			opp-hz = /bits/ 64 <940800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1113600000 {
-+			opp-hz = /bits/ 64 <1113600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1248000000 {
-+			opp-hz = /bits/ 64 <1248000000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1324800000 {
-+			opp-hz = /bits/ 64 <1324800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1401600000 {
-+			opp-hz = /bits/ 64 <1401600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1478400000 {
-+			opp-hz = /bits/ 64 <1478400000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1555200000 {
-+			opp-hz = /bits/ 64 <1555200000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1632000000 {
-+			opp-hz = /bits/ 64 <1632000000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1708800000 {
-+			opp-hz = /bits/ 64 <1708800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1785600000 {
-+			opp-hz = /bits/ 64 <1785600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1824000000 {
-+			opp-hz = /bits/ 64 <1824000000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1920000000 {
-+			opp-hz = /bits/ 64 <1920000000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1996800000 {
-+			opp-hz = /bits/ 64 <1996800000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-2073600000 {
-+			opp-hz = /bits/ 64 <2073600000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-2150400000 {
-+			opp-hz = /bits/ 64 <2150400000>;
-+			clock-latency-ns = <200000>;
-+		};
-+	};
-+
- 	thermal-zones {
- 		cpu-thermal0 {
- 			polling-delay-passive = <250>;
-@@ -163,18 +352,34 @@
- 			thermal-sensors = <&tsens0 3>;
- 
- 			trips {
--				cpu_alert0: trip0 {
-+				cpu_alert0: cpu_alert0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn0: cpu_warn0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit0: trip1 {
-+				cpu_crit0: cpu_crit0 {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn0>;
-+					cooling-device = <&CPU0 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu-thermal1 {
-@@ -184,18 +389,34 @@
- 			thermal-sensors = <&tsens0 5>;
- 
- 			trips {
--				cpu_alert1: trip0 {
-+				cpu_alert1: cpu_alert1 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn1: cpu_warn1 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit1: trip1 {
-+				cpu_crit1: cpu_crit1 {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert1>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn1>;
-+					cooling-device = <&CPU0 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu-thermal2 {
-@@ -205,18 +426,33 @@
- 			thermal-sensors = <&tsens0 8>;
- 
- 			trips {
--				cpu_alert2: trip0 {
-+				cpu_alert2: cpu_alert2 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn2: cpu_warn2 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit2: trip1 {
-+				cpu_crit2: cpu_crit2 {
- 					temperature = <110000>;
- 					hysteresis = <2000>;
- 					type = "critical";
- 				};
- 			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert2>;
-+					cooling-device = <&CPU2 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn2>;
-+					cooling-device = <&CPU2 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu-thermal3 {
-@@ -226,9 +462,14 @@
- 			thermal-sensors = <&tsens0 10>;
- 
- 			trips {
--				cpu_alert3: trip0 {
-+				cpu_alert3: cpu_alert3 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
-+					type = "active";
-+				};
-+				cpu_warn3: cpu_warn3 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
-@@ -238,6 +479,16 @@
- 					type = "critical";
- 				};
- 			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert3>;
-+					cooling-device = <&CPU2 THERMAL_NO_LIMIT 7>;
-+				};
-+				map1 {
-+					trip = <&cpu_warn3>;
-+					cooling-device = <&CPU2 8 THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 	};
- 
-@@ -414,7 +665,7 @@
- 		};
- 
- 		kryocc: clock-controller@6400000 {
--			compatible = "qcom,apcc-msm8996";
-+			compatible = "qcom,msm8996-apcc";
- 			reg = <0x6400000 0x90000>;
- 			#clock-cells = <1>;
- 		};
-@@ -1001,7 +1252,7 @@
- 
- 				pinctrl-names = "default", "sleep";
- 				pinctrl-0 = <&pcie2_clkreq_default &pcie2_perst_default &pcie2_wake_default>;
--				pinctrl-1 = <&pcie2_clkreq_sleep &pcie2_perst_default &pcie2_wake_sleep >;
-+				pinctrl-1 = <&pcie2_clkreq_sleep &pcie2_perst_default &pcie2_wake_sleep>;
- 
- 				vdda-supply = <&pm8994_l28>;
- 
+/s/suppor/support
+
+> +/* NGD (Non-ported Generic Device) registers */
+> +#define	NGD_CFG			0x0
+> +#define	NGD_CFG_ENABLE		BIT(0)
+> +#define	NGD_CFG_RX_MSGQ_EN	BIT(1)
+> +#define	NGD_CFG_TX_MSGQ_EN	BIT(2)
+> +#define	NGD_STATUS		0x4
+> +#define NGD_LADDR		BIT(1)
+> +#define	NGD_RX_MSGQ_CFG		0x8
+> +#define	NGD_INT_EN		0x10
+> +#define	NGD_INT_RECFG_DONE	BIT(24)
+> +#define	NGD_INT_TX_NACKED_2	BIT(25)
+> +#define	NGD_INT_MSG_BUF_CONTE	BIT(26)
+> +#define	NGD_INT_MSG_TX_INVAL	BIT(27)
+> +#define	NGD_INT_IE_VE_CHG	BIT(28)
+> +#define	NGD_INT_DEV_ERR		BIT(29)
+> +#define	NGD_INT_RX_MSG_RCVD	BIT(30)
+> +#define	NGD_INT_TX_MSG_SENT	BIT(31)
+> +#define	NGD_INT_STAT		0x14
+> +#define	NGD_INT_CLR		0x18
+> +#define DEF_NGD_INT_MASK (NGD_INT_TX_NACKED_2 | NGD_INT_MSG_BUF_CONTE | \
+> +				NGD_INT_MSG_TX_INVAL | NGD_INT_IE_VE_CHG | \
+> +				NGD_INT_DEV_ERR | NGD_INT_TX_MSG_SENT | \
+> +				NGD_INT_RX_MSG_RCVD)
+> +
+> +/* Slimbus QMI service */
+> +#define SLIMBUS_QMI_SVC_ID 0x0301
+> +#define SLIMBUS_QMI_SVC_V1 1
+> +#define SLIMBUS_QMI_INS_ID 0
+> +#define SLIMBUS_QMI_SELECT_INSTANCE_REQ_V01 0x0020
+> +#define SLIMBUS_QMI_SELECT_INSTANCE_RESP_V01 0x0020
+> +#define SLIMBUS_QMI_POWER_REQ_V01 0x0021
+> +#define SLIMBUS_QMI_POWER_RESP_V01 0x0021
+> +#define SLIMBUS_QMI_CHECK_FRAMER_STATUS_REQ 0x0022
+> +#define SLIMBUS_QMI_CHECK_FRAMER_STATUS_RESP 0x0022
+> +#define SLIMBUS_QMI_POWER_REQ_MAX_MSG_LEN 14
+> +#define SLIMBUS_QMI_POWER_RESP_MAX_MSG_LEN 7
+> +#define SLIMBUS_QMI_SELECT_INSTANCE_REQ_MAX_MSG_LEN 14
+> +#define SLIMBUS_QMI_SELECT_INSTANCE_RESP_MAX_MSG_LEN 7
+> +#define SLIMBUS_QMI_CHECK_FRAMER_STAT_RESP_MAX_MSG_LEN 7
+> +/* QMI response timeout of 500ms */
+> +#define SLIMBUS_QMI_RESP_TOUT 1000
+
+Tabs or spaces, take your pick and use one, not both...
+
+> +static void qcom_slim_qmi_power_resp_cb(struct qmi_handle *handle,
+> +					struct sockaddr_qrtr *sq,
+> +					struct qmi_txn *txn, const void *data)
+> +{
+> +	struct slimbus_power_resp_msg_v01 *resp;
+> +
+> +	resp = (struct slimbus_power_resp_msg_v01 *)data;
+
+you dont need cast away from void
+
+> +	if (resp->resp.result != QMI_RESULT_SUCCESS_V01)
+> +		pr_err("%s: QMI power request failed 0x%x\n", __func__,
+> +				resp->resp.result);
+
+cant we use dev_err?
+
+> +static int qcom_slim_qmi_send_power_request(struct qcom_slim_ngd_ctrl *ctrl,
+> +				struct slimbus_power_req_msg_v01 *req)
+> +{
+> +	struct slimbus_power_resp_msg_v01 resp = { { 0, 0 } };
+> +	struct qmi_txn txn;
+> +	int rc;
+> +
+> +	rc = qmi_txn_init(ctrl->qmi.handle, &txn,
+> +				slimbus_power_resp_msg_v01_ei, &resp);
+> +
+> +	rc = qmi_send_request(ctrl->qmi.handle, NULL, &txn,
+> +				SLIMBUS_QMI_POWER_REQ_V01,
+> +				SLIMBUS_QMI_POWER_REQ_MAX_MSG_LEN,
+> +				slimbus_power_req_msg_v01_ei, req);
+> +	if (rc < 0) {
+> +		dev_err(ctrl->dev, "%s: QMI send req fail %d\n", __func__, rc);
+> +		qmi_txn_cancel(&txn);
+> +	}
+> +
+> +	if (rc < 0)
+> +		return rc;
+
+why not add this is prev error check?
+
+> +static int qcom_slim_qmi_init(struct qcom_slim_ngd_ctrl *ctrl,
+> +			      bool apps_is_master)
+> +{
+> +	int rc = 0;
+
+superfluous init
+
+> +static u32 *qcom_slim_ngd_tx_msg_get(struct qcom_slim_ngd_ctrl *ctrl, int len,
+> +				     struct completion *comp)
+> +{
+> +	struct qcom_slim_ngd_dma_desc *desc;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&ctrl->tx_buf_lock, flags);
+> +
+> +	if ((ctrl->tx_tail + 1) % QCOM_SLIM_NGD_DESC_NUM == ctrl->tx_head) {
+> +		spin_unlock_irqrestore(&ctrl->tx_buf_lock, flags);
+> +		return NULL;
+> +	}
+> +	desc  = &ctrl->txdesc[ctrl->tx_tail];
+> +	desc->base = (u32 *)((u8 *)ctrl->tx_base +
+> +				(ctrl->tx_tail * SLIM_MSGQ_BUF_LEN));
+
+too many casts
+
+> +static int qcom_slim_ngd_post_rx_msgq(struct qcom_slim_ngd_ctrl *ctrl)
+> +{
+> +	struct qcom_slim_ngd_dma_desc *desc;
+> +	struct dma_slave_config conf = {
+> +		.direction = DMA_DEV_TO_MEM,
+> +	};
+> +	int ret, i;
+> +
+> +	ret = dmaengine_slave_config(ctrl->dma_rx_channel, &conf);
+
+so you are only setting direction for conf, not any other parameters? If not why
+bother setting direction
+
+> +	if (ret)
+> +		dev_err(ctrl->dev, "Error Configuring rx dma\n");
+> +
+> +	for (i = 0; i < QCOM_SLIM_NGD_DESC_NUM; i++) {
+> +		desc = &ctrl->rx_desc[i];
+> +		desc->phys = ctrl->rx_phys_base + i * SLIM_MSGQ_BUF_LEN;
+> +		desc->ctrl = ctrl;
+> +		desc->base = ctrl->rx_base + i * SLIM_MSGQ_BUF_LEN;
+> +		desc->desc = dmaengine_prep_slave_single(ctrl->dma_rx_channel,
+> +						desc->phys, SLIM_MSGQ_BUF_LEN,
+> +						DMA_DEV_TO_MEM,
+> +						DMA_PREP_INTERRUPT);
+
+why issue multiple slave_single to dmaengine, you can bundle them and issue
+dmaengine_prep_slave_sg().. 
+
+> +static int qcom_slim_ngd_qmi_svc_event_init(struct qcom_slim_ngd_qmi *qmi)
+> +{
+> +	int ret = 0;
+
+superfluous init here too
+
+> +static int qcom_slim_ngd_runtime_idle(struct device *dev)
+> +{
+> +	struct qcom_slim_ngd_ctrl *ctrl = dev_get_drvdata(dev);
+> +
+> +	if (ctrl->state == QCOM_SLIM_NGD_CTRL_AWAKE)
+> +		ctrl->state = QCOM_SLIM_NGD_CTRL_IDLE;
+> +	pm_request_autosuspend(dev);
+> +	return -EAGAIN;
+> +}
+> +
+> +
+
+double empty lines, here
 -- 
-1.9.1
+~Vinod
