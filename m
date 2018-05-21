@@ -1,54 +1,73 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [linux-next PATCH 0/4] Enable network driver on K2G ICE and GP
- EVMs
-Date: Sun, 20 May 2018 20:17:08 -0700
-Message-ID: <8e1aa492-ae7a-de2b-f5d2-8756b10ece79@oracle.com>
-References: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH] clk: aspeed: Add 24MHz fixed clock
+Date: Mon, 21 May 2018 14:03:36 +0930
+Message-ID: <CACPK8XeBXZQVgjZw6AnkMLSBn40Qvv-TXCQiD=n4xouxU-HskA@mail.gmail.com>
+References: <1526633822-17138-1-git-send-email-mine260309@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Murali Karicheri <m-karicheri2@ti.com>, ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526633822-17138-1-git-send-email-mine260309@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lei YU <mine260309@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/11/18 12:29 PM, Murali Karicheri wrote:
-> Now that NetCP driver patches for K2G SoC is merged to linux-next master
-> this series add patches to enable network driver on K2G ICE and GP EVMs.
-> 
-> Thanks
-> 
-> Applied the patches on top of latest linux-next master, built kernel and
-> booted up on both EVMs. The logs are below
-> 
-> K2G GP EVM: https://pastebin.ubuntu.com/p/ycZDnZXYPx/
-> K2G ICE EVM: https://pastebin.ubuntu.com/p/bdCpzgdrXr/
-> 
-> Murali Karicheri (4):
->    ARM: dts: k2g: add dt bindings to support network driver
->    ARM: dts: keystone-k2g-evm: Enable netcp network driver
->    ARM: dts: keystone-k2g-ice: Enable netcp network driver
->    ARM: keystone: k2g: enable micrel and dp83867 phys
-> 
->   arch/arm/boot/dts/keystone-k2g-evm.dts    |  53 +++++++++++
->   arch/arm/boot/dts/keystone-k2g-ice.dts    |  59 ++++++++++++
->   arch/arm/boot/dts/keystone-k2g-netcp.dtsi | 147 ++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/keystone-k2g.dtsi       |  13 +++
->   arch/arm/configs/keystone_defconfig       |   2 +
->   5 files changed, 274 insertions(+)
->   create mode 100644 arch/arm/boot/dts/keystone-k2g-netcp.dtsi
-> 
-Looks good. Will add this to the queue for 4.19. Thanks !!
+On 18 May 2018 at 18:27, Lei YU <mine260309@gmail.com> wrote:
+> Add a 24MHz fixed clock.
+> This clock will be used for certain devices, e.g. pwm.
+>
+> Signed-off-by: Lei YU <mine260309@gmail.com>
 
-Regards,
-Santosh
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+Cheers,
+
+Joel
+
+> ---
+>  drivers/clk/clk-aspeed.c                 | 9 ++++++++-
+>  include/dt-bindings/clock/aspeed-clock.h | 1 +
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
+> index 5eb50c3..4664088 100644
+> --- a/drivers/clk/clk-aspeed.c
+> +++ b/drivers/clk/clk-aspeed.c
+> @@ -14,7 +14,7 @@
+>
+>  #include <dt-bindings/clock/aspeed-clock.h>
+>
+> -#define ASPEED_NUM_CLKS                35
+> +#define ASPEED_NUM_CLKS                36
+>
+>  #define ASPEED_RESET_CTRL      0x04
+>  #define ASPEED_CLK_SELECTION   0x08
+> @@ -474,6 +474,13 @@ static int aspeed_clk_probe(struct platform_device *pdev)
+>                 return PTR_ERR(hw);
+>         aspeed_clk_data->hws[ASPEED_CLK_BCLK] = hw;
+>
+> +       /* Fixed 24MHz clock */
+> +       hw = clk_hw_register_fixed_rate(NULL, "fixed-24m", "clkin",
+> +                                       0, 24000000);
+> +       if (IS_ERR(hw))
+> +               return PTR_ERR(hw);
+> +       aspeed_clk_data->hws[ASPEED_CLK_24M] = hw;
+> +
+>         /*
+>          * TODO: There are a number of clocks that not included in this driver
+>          * as more information is required:
+> diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
+> index d3558d8..ff29d8e 100644
+> --- a/include/dt-bindings/clock/aspeed-clock.h
+> +++ b/include/dt-bindings/clock/aspeed-clock.h
+> @@ -38,6 +38,7 @@
+>  #define ASPEED_CLK_MAC                 32
+>  #define ASPEED_CLK_BCLK                        33
+>  #define ASPEED_CLK_MPLL                        34
+> +#define ASPEED_CLK_24M                 35
+>
+>  #define ASPEED_RESET_XDMA              0
+>  #define ASPEED_RESET_MCTP              1
+> --
+> 2.7.4
+>
