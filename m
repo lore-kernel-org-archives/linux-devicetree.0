@@ -1,105 +1,97 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH V7] ARM: dts: da850-evm: Enable LCD and Backlight
-Date: Mon, 21 May 2018 20:21:10 +0530
-Message-ID: <2d52e1f8-d321-4465-fdfa-fd0d718c67cf@ti.com>
-References: <20180518203335.13878-1-aford173@gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 04/15] dt-bindings: display: sunxi-drm: Add
+ TCON TOP description
+Date: Mon, 21 May 2018 17:10:24 +0200
+Message-ID: <5513047.T4egid1SBs@jernej-laptop>
+References: <20180519183127.2718-1-jernej.skrabec@siol.net> <20180519183127.2718-5-jernej.skrabec@siol.net> <20180521080147.72esi2kwzcvzmetk@flea>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180518203335.13878-1-aford173@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adam Ford <aford173@gmail.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, khilman@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBC6DRPMAKGQELVMXE7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180521080147.72esi2kwzcvzmetk@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 19 May 2018 02:03 AM, Adam Ford wrote:
-> When using the board files the LCD works, but not with the DT.
-> This adds enables the original da850-evm to work with the same
-> LCD in device tree mode.
+Hi,
+
+Dne ponedeljek, 21. maj 2018 ob 10:01:47 CEST je Maxime Ripard napisal(a):
+> Hi,
 > 
-> The EVM has a gpio for the regulator and a PWM for dimming the
-> backlight.  The LCD and the vpif display pins are mutually
-> exclusive, so if using the LCD, do not load the vpif driver.
+> On Sat, May 19, 2018 at 08:31:16PM +0200, Jernej Skrabec wrote:
+> > TCON TOP main purpose is to configure whole display pipeline. It
+> > determines relationships between mixers and TCONs, selects source TCON
+> > for HDMI, muxes LCD and TV encoder GPIO output,
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> I'm not sure you mean GPIO here, but rather pin?
 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index 0e82bb988fde..a76c2ddfd23e 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -27,6 +27,60 @@
->  		spi0 = &spi1;
->  	};
->  
-> +	backlight: backlight-pwm {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&ecap2_pins>;
-> +		power-supply = <&backlight_lcd>;
-> +		compatible = "pwm-backlight";
-> +		pwms = <&ecap2 0 50000 0>;
+Right, I'll fix that.
 
-It will be nice to add a comment here: "The PWM here corresponds to 
-production hardware. The schematic needs to be 1015171 (15 March 2010), 
-Rev A or newer."
+> 
+> > selects TV encoder clock source and contains additional TV TCON and
+> > DSI gates.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  .../bindings/display/sunxi/sun4i-drm.txt      | 20 +++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
+> > 3346c1e2a7a0..a099957ab62a 100644
+> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > 
+> > @@ -187,6 +187,26 @@ And on the A23, A31, A31s and A33, you need one more 
+clock line:
+> >     - 'lvds-alt': An alternative clock source, separate from the TCON
+> >     channel 0
+> >     
+> >                   clock, that can be used to drive the LVDS clock
+> > 
+> > +TCON TOP
+> > +--------
+> > +
+> > +TCON TOPs main purpose is to configure whole display pipeline. It
+> > determines +relationships between mixers and TCONs, selects source TCON
+> > for HDMI, muxes +LCD and TV encoder GPIO output, selects TV encoder clock
+> > source and contains +additional TV TCON and DSI gates.
+> > +
+> > +Required properties:
+> > +  - compatible: value must be one of:
+> > +    * allwinner,sun8i-r40-tcon-top
+> > +  - reg: base address and size of the memory-mapped region.
+> > +  - clocks: phandle to the clocks feeding the TCON TOP
+> > +    * bus: TCON TOP interface clock
+> > +  - clock-names: clock name mentioned above
+> > +  - resets: phandle to the reset line driving the DRC
+> > +    * rst: TCON TOP reset line
+> > +  - reset-names: reset name mentioned above
+> > +  - #clock-cells : must contain 1
+> > +
+> 
+> I guess you should better describe the OF-graph endpoints, and the
+> clocks output. Just using the binding additions here doesn't allow to
+> get a clear idea of how the DT should look like.
 
-> +		brightness-levels = <0 10 20 30 40 50 60 70 80 90 99>;
-> +		default-brightness-level = <7>;
-> +	};
-> +
-> +	panel {
-> +		compatible = "ti,tilcdc,panel";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&lcd_pins>;
-> +		/*
-> +		 * The vpif and the LCD are mutually exclusive.
-> +		 * To enable VPIF, change the status below to 'disabled' then
-> +		 * then change the status of the vpif below to 'okay'
-> +		*/
+With my idea of implementation, OF graph is the same as before, so I didn't 
+mention anything about it.
 
-This results in checkpatch warning:
- 
-[PATCH V7] ARM: dts: da850-evm: Enable LCD and Backlight.eml:153: WARNING: Block comments should align the * on each line
-[PATCH V7] ARM: dts: da850-evm: Enable LCD and Backlight.eml:239: WARNING: Block comments should align the * on each line
+My idea of dependencies (you should view it in fixed width font):
+         TCON-TOP
+            ^
+            |
+mixer <-> TCON <-> HDMI
 
->  &vpif {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&vpif_capture_pins>, <&vpif_display_pins>;
-> -	status = "okay";
-> +	/*
-> +	 * The vpif and the LCD are mutually exclusive.
-> +	 * To enable VPIF, disable the ti,tilcdc,panel then
-> +	 * changed the status below to 'okay'
-> +	*/
-> +	status = "disabled";
+I'll explain my design decision as response to other mail.
 
-Are you able to see VPIF is disabled after this? Trying your patch, I 
-still see VPIF probing[1]. Also, only VPIF display has a conflict with 
-LCD, correct (capture should be fine)?
-
-Thanks,
-Sekhar
-
-[1]
-[   34.739314] adv7343 0-002a: chip found @ 0x54 (DaVinci I2C adapter)
-[   34.881422] vpif_display vpif_display: Pixel details: Width = 720,Height = 480
-[   34.881506] vpif_display vpif_display: channel=5bf2d970,channel->video_dev=5bf2d970
-[   34.883374] vpif_display vpif_display: Pixel details: Width = 720,Height = 480
-[   34.883450] vpif_display vpif_display: channel=16041996,channel->video_dev=16041996
-[   35.370777] tvp514x 0-005d: tvp514x 0-005d decoder driver registered !!
-[   35.470088] vpif_capture vpif_capture: registered sub device tvp514x-0
-[   35.827492] tvp514x 0-005c: tvp514x 0-005c decoder driver registered !!
-[   35.866031] vpif_capture vpif_capture: registered sub device tvp514x-1
-[   35.953752] vpif_capture vpif_capture: VPIF capture driver initialized
-
-# ls /dev/video
-video0  video1  video2  video3  
+Best regards,
+Jernej
