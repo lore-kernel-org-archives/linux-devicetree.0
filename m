@@ -1,396 +1,131 @@
-From: Bai Ping <ping.bai@nxp.com>
-Subject: [PATCH v6 2/2] ARM: dts: imx: Add basic dts support for imx6sll EVK
- board
-Date: Mon, 21 May 2018 18:46:52 +0800
-Message-ID: <1526899612-22856-2-git-send-email-ping.bai@nxp.com>
-References: <1526899612-22856-1-git-send-email-ping.bai@nxp.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 2/3] arm64: dts: renesas: draak: Describe CVBS input
+Date: Mon, 21 May 2018 13:54:55 +0300
+Message-ID: <6943843.2osudLfTFd@avalon>
+References: <1526654878-11143-1-git-send-email-jacopo+renesas@jmondi.org> <1569661.saMqNra8vc@avalon> <20180521095705.GC4432@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526899612-22856-1-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, robh+dt@kernel.org, kernel@pengutronix.de
-Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-imx@nxp.com, jacky.baip@gmail.com, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180521095705.GC4432@w540>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dts file support for imx6sll EVK board.
+Hi Jacopo,
 
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- change v3->v4
- - update the license indentifier
- - remove leading zero of node
- - remove unused pin from hog group
- change v4->v5
- - use generic name for device node
- - remove unnecessary hog pin group
- change v5->v6
- - no
----
- Documentation/devicetree/bindings/arm/fsl.txt |   4 +
- arch/arm/boot/dts/Makefile                    |   2 +
- arch/arm/boot/dts/imx6sll-evk.dts             | 315 ++++++++++++++++++++++++++
- 3 files changed, 321 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sll-evk.dts
+On Monday, 21 May 2018 12:57:05 EEST jacopo mondi wrote:
+> On Fri, May 18, 2018 at 06:12:15PM +0300, Laurent Pinchart wrote:
+> > On Friday, 18 May 2018 17:47:57 EEST Jacopo Mondi wrote:
+> >> Describe CVBS video input through analog video decoder ADV7180
+> >> connected to video input interface VIN4.
+> >>=20
+> >> The video input signal path is shared with HDMI video input, and
+> >> selected by on-board switches SW-53 and SW-54 with CVBS input selected
+> >> by the default switches configuration.
+> >>=20
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> Reviewed-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
+> >>=20
+> >> ---
+> >> v2 -> v3:
+> >> - Add comment to describe the shared input video path
+> >> - Add my SoB and Niklas' R-b tags
+> >> ---
+> >>=20
+> >>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 42 +++++++++++++++++=
+++
+> >>  1 file changed, 42 insertions(+)
+> >>=20
+> >> diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> >> b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts index 9d73de8..95745fc
+> >> 100644
+> >> --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> >> +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> >> @@ -142,6 +142,11 @@
+> >>  		groups =3D "usb0";
+> >>  		function =3D "usb0";
+> >>  	};
+> >> +
+> >> +	vin4_pins_cvbs: vin4 {
+> >> +		groups =3D "vin4_data8", "vin4_sync", "vin4_clk";
+> >> +		function =3D "vin4";
+> >> +	};
+> >>  };
+> >> =20
+> >>  &i2c0 {
+> >> @@ -154,6 +159,23 @@
+> >>  		reg =3D <0x50>;
+> >>  		pagesize =3D <8>;
+> >>  	};
+> >> +
+> >> +	analog-video@20 {
+> >> +		compatible =3D "adi,adv7180";
+> >> +		reg =3D <0x20>;
+> >> +
+> >> +		port {
+> >=20
+> > The adv7180 DT bindings document the output port as 3 or 6 (respectively
+> > for the CP and ST versions of the chip). You should thus number the por=
+t.
+> > Apart from that the patch looks good.
+>=20
+> I admit I have barely copied this from Gen-2 boards DTS, but reading
+> the driver code and binding description again, I think this is
+> correct, as the output port numbering and mandatory input port (which
+> is missing here) only apply to adv7180cp/st chip versions.
+>=20
+> Here we describe plain adv7180, no need to number output ports afaict.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index cdb9dd7..8a1baa2 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
- Required root node properties:
-     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
- 
-+i.MX6SLL EVK board
-+Required root node properties:
-+    - compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
-+
- Generic i.MX boards
- -------------------
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4753b0..f3fb85f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -521,6 +521,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
- 	imx6sl-warp.dtb
-+dtb-$(CONFIG_SOC_IMX6SLL) += \
-+	imx6sll-evk.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-nitrogen6sx.dtb \
- 	imx6sx-sabreauto.dtb \
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-new file mode 100644
-index 0000000..0cfa4a2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -0,0 +1,315 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2018 NXP.
-+ *
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "imx6sll.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX6SLL EVK Board";
-+	compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x80000000>;
-+	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	reg_usb_otg1_vbus: regulator-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usb_otg1_vbus>;
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_usb_otg2_vbus: regulator-otg2-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usb_otg2_vbus>;
-+		regulator-name = "usb_otg2_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_aud3v: regulator-aud3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wm8962-supply-3v15";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-boot-on;
-+	};
-+
-+	reg_aud4v: regulator-aud4v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wm8962-supply-4v2";
-+		regulator-min-microvolt = <4325000>;
-+		regulator-max-microvolt = <4325000>;
-+		regulator-boot-on;
-+	};
-+
-+	reg_lcd: regulator-lcd {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_lcd>;
-+		regulator-name = "lcd-pwr";
-+		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_sd1_vmmc: regulator-sd1-vmmc {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_sd1_vmmc>;
-+		regulator-name = "SD1_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&gpio3 30 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&cpu0 {
-+	arm-supply = <&sw1a_reg>;
-+	soc-supply = <&sw1c_reg>;
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pfuze100: pmic@8 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1c {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_usb_otg1_vbus: vbus1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_KEY_COL4__GPIO4_IO00 0x17059
-+		>;
-+	};
-+
-+	pinctrl_usb_otg2_vbus: vbus2grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_KEY_COL5__GPIO4_IO02 0x17059
-+		>;
-+	};
-+
-+	pinctrl_reg_lcd: reglcdgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_ECSPI1_SCLK__GPIO4_IO08 0x17059
-+		>;
-+	};
-+
-+	pinctrl_reg_sd1_vmmc: sd1vmmcgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_KEY_COL3__GPIO3_IO30 0x17059
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_UART1_TXD__UART1_DCE_TX 0x1b0b1
-+			MX6SLL_PAD_UART1_RXD__UART1_DCE_RX 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x17059
-+			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x13059
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0	0x17059
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1	0x17059
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2	0x17059
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x170b9
-+			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x130b9
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0	0x170b9
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1	0x170b9
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2	0x170b9
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x170f9
-+			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x130f9
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0	0x170f9
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1	0x170f9
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2	0x170f9
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_I2C1_SCL__I2C1_SCL	 0x4001b8b1
-+			MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x4001b8b1
-+		>;
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	cd-gpios = <&gpio4 7 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	vmmc-supply = <&reg_sd1_vmmc>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
-+	disable-over-current;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	vbus-supply = <&reg_usb_otg2_vbus>;
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
--- 
-1.9.1
+Indeed, my bad.
+
+Shouldn't you however use "adi,adv7180cp" as that's the chip we are using ?=
+=20
+The "adi,adv7180" has no port documented in its DT bindings, so it shouldn'=
+t=20
+have any port node at all.
+
+> >> +			/*
+> >> +			 * The VIN4 video input path is shared between
+> >> +			 * CVBS and HDMI inputs through SW[49-54] switches.
+> >> +			 *
+> >> +			 * CVBS is the default selection, link it to VIN4 here.
+> >> +			 */
+> >> +			adv7180_out: endpoint {
+> >> +				remote-endpoint =3D <&vin4_in>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >>  };
+> >> =20
+> >>  &i2c1 {
+> >> @@ -246,3 +268,23 @@
+> >>  	timeout-sec =3D <60>;
+> >>  	status =3D "okay";
+> >>  };
+> >> +
+> >> +&vin4 {
+> >> +	pinctrl-0 =3D <&vin4_pins_cvbs>;
+> >> +	pinctrl-names =3D "default";
+> >> +
+> >> +	status =3D "okay";
+> >> +
+> >> +	ports {
+> >> +		#address-cells =3D <1>;
+> >> +		#size-cells =3D <0>;
+> >> +
+> >> +		port@0 {
+> >> +			reg =3D <0>;
+> >> +
+> >> +			vin4_in: endpoint {
+> >> +				remote-endpoint =3D <&adv7180_out>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >> +};
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
