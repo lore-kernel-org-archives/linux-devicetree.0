@@ -1,180 +1,157 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] slimbus: ngd: Add qcom SLIMBus NGD driver
-Date: Mon, 21 May 2018 17:03:14 +0530
-Message-ID: <20180521113314.GC14654@vkoul-mobl>
-References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
- <20180516165118.16551-3-srinivas.kandagatla@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v7 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Mon, 21 May 2018 13:36:10 +0200
+Message-ID: <CAPDyKFoH2XX3vgR+SEPEq+R9Xh0kSsBpC1qHwe0i0QOMTze1fw@mail.gmail.com>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
+ <1525805210-15246-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180516165118.16551-3-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1525805210-15246-1-git-send-email-lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
+To: Liming Sun <lsun@mellanox.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16-05-18, 17:51, Srinivas Kandagatla wrote:
-> This patch adds suppor to Qualcomm SLIMBus Non-Generic Device (NGD)
+On 8 May 2018 at 20:46, Liming Sun <lsun@mellanox.com> wrote:
+> This commit adds extension to the dw_mmc driver for Mellanox BlueField
+> SoC. It updates the UHS_REG_EXT register to bring up the eMMC card on
+> this SoC.
+>
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> Reviewed-by: David Woods <dwoods@mellanox.com>
 
-/s/suppor/support
+Thanks, applied for next!
 
-> +/* NGD (Non-ported Generic Device) registers */
-> +#define	NGD_CFG			0x0
-> +#define	NGD_CFG_ENABLE		BIT(0)
-> +#define	NGD_CFG_RX_MSGQ_EN	BIT(1)
-> +#define	NGD_CFG_TX_MSGQ_EN	BIT(2)
-> +#define	NGD_STATUS		0x4
-> +#define NGD_LADDR		BIT(1)
-> +#define	NGD_RX_MSGQ_CFG		0x8
-> +#define	NGD_INT_EN		0x10
-> +#define	NGD_INT_RECFG_DONE	BIT(24)
-> +#define	NGD_INT_TX_NACKED_2	BIT(25)
-> +#define	NGD_INT_MSG_BUF_CONTE	BIT(26)
-> +#define	NGD_INT_MSG_TX_INVAL	BIT(27)
-> +#define	NGD_INT_IE_VE_CHG	BIT(28)
-> +#define	NGD_INT_DEV_ERR		BIT(29)
-> +#define	NGD_INT_RX_MSG_RCVD	BIT(30)
-> +#define	NGD_INT_TX_MSG_SENT	BIT(31)
-> +#define	NGD_INT_STAT		0x14
-> +#define	NGD_INT_CLR		0x18
-> +#define DEF_NGD_INT_MASK (NGD_INT_TX_NACKED_2 | NGD_INT_MSG_BUF_CONTE | \
-> +				NGD_INT_MSG_TX_INVAL | NGD_INT_IE_VE_CHG | \
-> +				NGD_INT_DEV_ERR | NGD_INT_TX_MSG_SENT | \
-> +				NGD_INT_RX_MSG_RCVD)
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/Kconfig            |  9 +++++
+>  drivers/mmc/host/Makefile           |  1 +
+>  drivers/mmc/host/dw_mmc-bluefield.c | 81 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 91 insertions(+)
+>  create mode 100644 drivers/mmc/host/dw_mmc-bluefield.c
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 9589f9c..7784f76 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -690,6 +690,15 @@ config MMC_DW_PLTFM
+>
+>           If unsure, say Y.
+>
+> +config MMC_DW_BLUEFIELD
+> +       tristate "BlueField specific extensions for Synopsys DW Memory Card Interface"
+> +       depends on MMC_DW
+> +       select MMC_DW_PLTFM
+> +       help
+> +         This selects support for Mellanox BlueField SoC specific extensions to
+> +         the Synopsys DesignWare Memory Card Interface driver. Select this
+> +         option for platforms based on Mellanox BlueField SoC's.
 > +
-> +/* Slimbus QMI service */
-> +#define SLIMBUS_QMI_SVC_ID 0x0301
-> +#define SLIMBUS_QMI_SVC_V1 1
-> +#define SLIMBUS_QMI_INS_ID 0
-> +#define SLIMBUS_QMI_SELECT_INSTANCE_REQ_V01 0x0020
-> +#define SLIMBUS_QMI_SELECT_INSTANCE_RESP_V01 0x0020
-> +#define SLIMBUS_QMI_POWER_REQ_V01 0x0021
-> +#define SLIMBUS_QMI_POWER_RESP_V01 0x0021
-> +#define SLIMBUS_QMI_CHECK_FRAMER_STATUS_REQ 0x0022
-> +#define SLIMBUS_QMI_CHECK_FRAMER_STATUS_RESP 0x0022
-> +#define SLIMBUS_QMI_POWER_REQ_MAX_MSG_LEN 14
-> +#define SLIMBUS_QMI_POWER_RESP_MAX_MSG_LEN 7
-> +#define SLIMBUS_QMI_SELECT_INSTANCE_REQ_MAX_MSG_LEN 14
-> +#define SLIMBUS_QMI_SELECT_INSTANCE_RESP_MAX_MSG_LEN 7
-> +#define SLIMBUS_QMI_CHECK_FRAMER_STAT_RESP_MAX_MSG_LEN 7
-> +/* QMI response timeout of 500ms */
-> +#define SLIMBUS_QMI_RESP_TOUT 1000
-
-Tabs or spaces, take your pick and use one, not both...
-
-> +static void qcom_slim_qmi_power_resp_cb(struct qmi_handle *handle,
-> +					struct sockaddr_qrtr *sq,
-> +					struct qmi_txn *txn, const void *data)
+>  config MMC_DW_EXYNOS
+>         tristate "Exynos specific extensions for Synopsys DW Memory Card Interface"
+>         depends on MMC_DW
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 6aead24..85dc132 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -49,6 +49,7 @@ thunderx-mmc-objs := cavium.o cavium-thunderx.o
+>  obj-$(CONFIG_MMC_CAVIUM_THUNDERX) += thunderx-mmc.o
+>  obj-$(CONFIG_MMC_DW)           += dw_mmc.o
+>  obj-$(CONFIG_MMC_DW_PLTFM)     += dw_mmc-pltfm.o
+> +obj-$(CONFIG_MMC_DW_BLUEFIELD) += dw_mmc-bluefield.o
+>  obj-$(CONFIG_MMC_DW_EXYNOS)    += dw_mmc-exynos.o
+>  obj-$(CONFIG_MMC_DW_HI3798CV200) += dw_mmc-hi3798cv200.o
+>  obj-$(CONFIG_MMC_DW_K3)                += dw_mmc-k3.o
+> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
+> new file mode 100644
+> index 0000000..54c3fbb
+> --- /dev/null
+> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
+> @@ -0,0 +1,81 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Mellanox Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/mmc.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include "dw_mmc.h"
+> +#include "dw_mmc-pltfm.h"
+> +
+> +#define UHS_REG_EXT_SAMPLE_MASK                GENMASK(22, 16)
+> +#define UHS_REG_EXT_DRIVE_MASK         GENMASK(29, 23)
+> +#define BLUEFIELD_UHS_REG_EXT_SAMPLE   2
+> +#define BLUEFIELD_UHS_REG_EXT_DRIVE    4
+> +
+> +static void dw_mci_bluefield_set_ios(struct dw_mci *host, struct mmc_ios *ios)
 > +{
-> +	struct slimbus_power_resp_msg_v01 *resp;
+> +       u32 reg;
 > +
-> +	resp = (struct slimbus_power_resp_msg_v01 *)data;
-
-you dont need cast away from void
-
-> +	if (resp->resp.result != QMI_RESULT_SUCCESS_V01)
-> +		pr_err("%s: QMI power request failed 0x%x\n", __func__,
-> +				resp->resp.result);
-
-cant we use dev_err?
-
-> +static int qcom_slim_qmi_send_power_request(struct qcom_slim_ngd_ctrl *ctrl,
-> +				struct slimbus_power_req_msg_v01 *req)
-> +{
-> +	struct slimbus_power_resp_msg_v01 resp = { { 0, 0 } };
-> +	struct qmi_txn txn;
-> +	int rc;
-> +
-> +	rc = qmi_txn_init(ctrl->qmi.handle, &txn,
-> +				slimbus_power_resp_msg_v01_ei, &resp);
-> +
-> +	rc = qmi_send_request(ctrl->qmi.handle, NULL, &txn,
-> +				SLIMBUS_QMI_POWER_REQ_V01,
-> +				SLIMBUS_QMI_POWER_REQ_MAX_MSG_LEN,
-> +				slimbus_power_req_msg_v01_ei, req);
-> +	if (rc < 0) {
-> +		dev_err(ctrl->dev, "%s: QMI send req fail %d\n", __func__, rc);
-> +		qmi_txn_cancel(&txn);
-> +	}
-> +
-> +	if (rc < 0)
-> +		return rc;
-
-why not add this is prev error check?
-
-> +static int qcom_slim_qmi_init(struct qcom_slim_ngd_ctrl *ctrl,
-> +			      bool apps_is_master)
-> +{
-> +	int rc = 0;
-
-superfluous init
-
-> +static u32 *qcom_slim_ngd_tx_msg_get(struct qcom_slim_ngd_ctrl *ctrl, int len,
-> +				     struct completion *comp)
-> +{
-> +	struct qcom_slim_ngd_dma_desc *desc;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&ctrl->tx_buf_lock, flags);
-> +
-> +	if ((ctrl->tx_tail + 1) % QCOM_SLIM_NGD_DESC_NUM == ctrl->tx_head) {
-> +		spin_unlock_irqrestore(&ctrl->tx_buf_lock, flags);
-> +		return NULL;
-> +	}
-> +	desc  = &ctrl->txdesc[ctrl->tx_tail];
-> +	desc->base = (u32 *)((u8 *)ctrl->tx_base +
-> +				(ctrl->tx_tail * SLIM_MSGQ_BUF_LEN));
-
-too many casts
-
-> +static int qcom_slim_ngd_post_rx_msgq(struct qcom_slim_ngd_ctrl *ctrl)
-> +{
-> +	struct qcom_slim_ngd_dma_desc *desc;
-> +	struct dma_slave_config conf = {
-> +		.direction = DMA_DEV_TO_MEM,
-> +	};
-> +	int ret, i;
-> +
-> +	ret = dmaengine_slave_config(ctrl->dma_rx_channel, &conf);
-
-so you are only setting direction for conf, not any other parameters? If not why
-bother setting direction
-
-> +	if (ret)
-> +		dev_err(ctrl->dev, "Error Configuring rx dma\n");
-> +
-> +	for (i = 0; i < QCOM_SLIM_NGD_DESC_NUM; i++) {
-> +		desc = &ctrl->rx_desc[i];
-> +		desc->phys = ctrl->rx_phys_base + i * SLIM_MSGQ_BUF_LEN;
-> +		desc->ctrl = ctrl;
-> +		desc->base = ctrl->rx_base + i * SLIM_MSGQ_BUF_LEN;
-> +		desc->desc = dmaengine_prep_slave_single(ctrl->dma_rx_channel,
-> +						desc->phys, SLIM_MSGQ_BUF_LEN,
-> +						DMA_DEV_TO_MEM,
-> +						DMA_PREP_INTERRUPT);
-
-why issue multiple slave_single to dmaengine, you can bundle them and issue
-dmaengine_prep_slave_sg().. 
-
-> +static int qcom_slim_ngd_qmi_svc_event_init(struct qcom_slim_ngd_qmi *qmi)
-> +{
-> +	int ret = 0;
-
-superfluous init here too
-
-> +static int qcom_slim_ngd_runtime_idle(struct device *dev)
-> +{
-> +	struct qcom_slim_ngd_ctrl *ctrl = dev_get_drvdata(dev);
-> +
-> +	if (ctrl->state == QCOM_SLIM_NGD_CTRL_AWAKE)
-> +		ctrl->state = QCOM_SLIM_NGD_CTRL_IDLE;
-> +	pm_request_autosuspend(dev);
-> +	return -EAGAIN;
+> +       /* Update the Drive and Sample fields in register UHS_REG_EXT. */
+> +       reg = mci_readl(host, UHS_REG_EXT);
+> +       reg &= ~UHS_REG_EXT_SAMPLE_MASK;
+> +       reg |= FIELD_PREP(UHS_REG_EXT_SAMPLE_MASK,
+> +                         BLUEFIELD_UHS_REG_EXT_SAMPLE);
+> +       reg &= ~UHS_REG_EXT_DRIVE_MASK;
+> +       reg |= FIELD_PREP(UHS_REG_EXT_DRIVE_MASK, BLUEFIELD_UHS_REG_EXT_DRIVE);
+> +       mci_writel(host, UHS_REG_EXT, reg);
 > +}
 > +
+> +static const struct dw_mci_drv_data bluefield_drv_data = {
+> +       .set_ios                = dw_mci_bluefield_set_ios
+> +};
 > +
-
-double empty lines, here
--- 
-~Vinod
+> +static const struct of_device_id dw_mci_bluefield_match[] = {
+> +       { .compatible = "mellanox,bluefield-dw-mshc",
+> +         .data = &bluefield_drv_data },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_mci_bluefield_match);
+> +
+> +static int dw_mci_bluefield_probe(struct platform_device *pdev)
+> +{
+> +       const struct dw_mci_drv_data *drv_data = NULL;
+> +       const struct of_device_id *match;
+> +
+> +       if (pdev->dev.of_node) {
+> +               match = of_match_node(dw_mci_bluefield_match,
+> +                                     pdev->dev.of_node);
+> +               drv_data = match->data;
+> +       }
+> +
+> +       return dw_mci_pltfm_register(pdev, drv_data);
+> +}
+> +
+> +static struct platform_driver dw_mci_bluefield_pltfm_driver = {
+> +       .probe          = dw_mci_bluefield_probe,
+> +       .remove         = dw_mci_pltfm_remove,
+> +       .driver         = {
+> +               .name           = "dwmmc_bluefield",
+> +               .of_match_table = dw_mci_bluefield_match,
+> +               .pm             = &dw_mci_pltfm_pmops,
+> +       },
+> +};
+> +
+> +module_platform_driver(dw_mci_bluefield_pltfm_driver);
+> +
+> +MODULE_DESCRIPTION("BlueField DW Multimedia Card driver");
+> +MODULE_AUTHOR("Mellanox Technologies");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.8.3.1
+>
