@@ -1,41 +1,76 @@
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [PATCH v2 0/4] PCI: cadence: Host and EP driver updates for PHY and
- power management
-Date: Mon, 21 May 2018 22:58:39 +0000
-Message-ID: <SN6PR07MB451219710FAD2C0DD9FF05F9D8950@SN6PR07MB4512.namprd07.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Tue, 22 May 2018 02:05:03 +0300
+Message-ID: <CAHp75Vf_KaRDJU83d8o1Sy1v+oztucJSYBEK9=cqNw6FQspFvg@mail.gmail.com>
+References: <20180521180927.18472-1-dmurphy@ti.com> <20180521180927.18472-2-dmurphy@ti.com>
+ <69a920da-f759-de50-865c-0ebc43044b66@gmail.com> <3b20c9cf-5f7e-3ed9-454d-c8e8ca6c0627@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <3b20c9cf-5f7e-3ed9-454d-c8e8ca6c0627@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "bhelgaas@google.com" <bhelgaas@google.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a series of patches for the cadence PCIe host and EP drivers, to:
- - Add optional list of generic PHYs to host and EP drivers
- - Add PHY bindings to devicetree
- - Add Power Management ops, which will enable/disable PHYs if present
-- Update cdns_pcie_writel function signature
+On Tue, May 22, 2018 at 12:44 AM, Dan Murphy <dmurphy@ti.com> wrote:
 
-Changes in v2:
-    Split commit into four patches
-    Re-based on v4.17-rc1
 
-Alan Douglas (4):
-  PCI: cadence: Update cdns_pcie_writel function signature
-  PCI: cadence: Add generic PHY support to host and EP drivers
-  dt-bindings: PCI: cadence: Add DT bindings for optional PHYs
-  PCI: cadence: Add Power Management ops for host and EP
+>>> +    child = device_get_next_child_node(&led->client->dev, child);
+>>> +    if (!child) {
+>>> +        dev_err(&led->client->dev, "No LED Child node\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    ret = fwnode_property_read_u32(child, "reg", &led->led_mode);
+>>> +    if (ret) {
+>>> +        dev_err(&led->client->dev, "reg DT property missing\n");
+>>> +        goto out_err;
+>>> +    }
+>>> +
+>>> +    if (led->led_mode > LM3601X_LED_TORCH ||
+>>> +        led->led_mode < LM3601X_LED_IR) {
+>>> +        dev_warn(&led->client->dev, "Invalid led mode requested\n");
+>>> +        ret = -EINVAL;
+>>> +        goto out_err;
+>>> +    }
+>>> +
+>>> +    ret = fwnode_property_read_string(child, "label", &name);
+>>> +    if (ret) {
+>>> +        if (led->led_mode == LM3601X_LED_TORCH)
+>>> +            name = "torch";
+>>> +        else
+>>> +            name = "infrared";
+>>> +    }
+>>> +
+>>> +    snprintf(led->led_name, sizeof(led->led_name),
+>>> +        "%s:%s", node->name, name);
+>>
+>> Reading once again my recent explanation regarding this I realized
+>> that I didn't provide clear conclusion, which is: we no longer
+>> use child node name for LED class device name if label is absent.
+>> (apart from that - you're using parent DT node now, i.e.
+>> led-controller).
+>>
+>> Please follow what was done for drivers/leds/leds-cr0014114.c.
+>
+> Hmmm.  If this is calling dev->of_node->name to store the name will this
+> work in non-DT configurations?
 
- .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |   4 +
- .../bindings/pci/cdns,cdns-pcie-host.txt           |   2 +
- drivers/pci/cadence/pcie-cadence-ep.c              |  15 ++-
- drivers/pci/cadence/pcie-cadence-host.c            |  34 ++++++
- drivers/pci/cadence/pcie-cadence.c                 | 123 +++++++++++++++++=
-++++
- drivers/pci/cadence/pcie-cadence.h                 |  13 ++-
- 6 files changed, 189 insertions(+), 2 deletions(-)
+I didn't found this kind of use in linux-next, perhaps I missed something?
 
---
+In the driver Jacek referred to I found, though, use of of_node, which
+at some point should be changed to fwnode.
+
+For now you can fill that if you want to using something like this
+(IIRC it should work):
+
+if (is_of_node(fwnode))
+ ...->of_node = to_of_node(...);
+
+> I have not dug to deeply into the fwnode code to find out how the nodes
+> get populated.  So my question may not even be valid.
+
+-- 
+With Best Regards,
+Andy Shevchenko
