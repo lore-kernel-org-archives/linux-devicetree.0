@@ -1,25 +1,24 @@
-Return-Path: <SRS0=xPmq=IM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr30059.outbound.protection.outlook.com ([40.107.3.59]:27496
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=YcIV=II=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-he1eur01on0073.outbound.protection.outlook.com ([104.47.0.73]:37280
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S935076AbeEYHib (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 May 2018 03:38:31 -0400
+        id S1750978AbeEUKnT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 May 2018 06:43:19 -0400
 From: Bai Ping <ping.bai@nxp.com>
-Subject: [PATCH v7 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
-Date: Fri, 25 May 2018 15:42:06 +0800
-Message-Id: <1527234127-11991-1-git-send-email-ping.bai@nxp.com>
+Subject: [PATCH v6 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+Date: Mon, 21 May 2018 18:46:51 +0800
+Message-Id: <1526899612-22856-1-git-send-email-ping.bai@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 To: shawnguo@kernel.org, robh+dt@kernel.org, kernel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, aisheng.dong@nxp.com, jacky.baip@gmail.com
+Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, aisheng.dong@nxp.com, jacky.baip@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
 Add dtsi file for imx6sll.
 
 Signed-off-by: Bai Ping <ping.bai@nxp.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
 ---
  change v3->v4
  - update the license indentifier
@@ -29,13 +28,10 @@ Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
  - use generic name for device node
  change v5->v6
  - drop the unused device node
- change v6->v7
- - move tempmon node out of soc
- - remove unsued clks assign
 ---
  arch/arm/boot/dts/imx6sll-pinfunc.h | 880 ++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6sll.dtsi      | 780 ++++++++++++++++++++++++++++++++
- 2 files changed, 1660 insertions(+)
+ arch/arm/boot/dts/imx6sll.dtsi      | 773 +++++++++++++++++++++++++++++++
+ 2 files changed, 1653 insertions(+)
  create mode 100644 arch/arm/boot/dts/imx6sll-pinfunc.h
  create mode 100644 arch/arm/boot/dts/imx6sll.dtsi
 
@@ -927,10 +923,10 @@ index 0000000..b1c40dc
 +#endif /* __DTS_IMX6SLL_PINFUNC_H */
 diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
 new file mode 100644
-index 0000000..c9b0ccc
+index 0000000..6090ec5
 --- /dev/null
 +++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -0,0 +1,780 @@
+@@ -0,0 +1,773 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 +/*
 + * Copyright 2016 Freescale Semiconductor, Inc.
@@ -1001,9 +997,13 @@ index 0000000..c9b0ccc
 +				 <&clks IMX6SLL_CLK_PLL2_PFD2>,
 +				 <&clks IMX6SLL_CLK_STEP>,
 +				 <&clks IMX6SLL_CLK_PLL1_SW>,
-+				 <&clks IMX6SLL_CLK_PLL1_SYS>;
++				 <&clks IMX6SLL_CLK_PLL1_SYS>,
++				 <&clks IMX6SLL_CLK_PLL1>,
++				 <&clks IMX6SLL_PLL1_BYPASS>,
++				 <&clks IMX6SLL_PLL1_BYPASS_SRC>;
 +			clock-names = "arm", "pll2_pfd2_396m", "step",
-+				      "pll1_sw", "pll1_sys";
++				      "pll1_sw", "pll1_sys", "pll1",
++				      "pll1_bypass", "pll1_bypass_src";
 +		};
 +	};
 +
@@ -1042,16 +1042,6 @@ index 0000000..c9b0ccc
 +		#clock-cells = <0>;
 +		clock-frequency = <0>;
 +		clock-output-names = "ipp_di1";
-+	};
-+
-+	tempmon: temperature-sensor {
-+		compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
-+		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-parent = <&gpc>;
-+		fsl,tempmon = <&anatop>;
-+		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+		nvmem-cell-names = "calib", "temp_grade";
-+		clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
 +	};
 +
 +	soc {
@@ -1295,7 +1285,7 @@ index 0000000..c9b0ccc
 +			};
 +
 +			gpt1: timer@2098000 {
-+				compatible = "fsl,imx6sl-gpt";
++				compatible = "fsl,imx6dl-gpt";
 +				reg = <0x02098000 0x4000>;
 +				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
 +				clocks = <&clks IMX6SLL_CLK_GPT_BUS>,
@@ -1430,6 +1420,15 @@ index 0000000..c9b0ccc
 +					anatop-max-voltage = <3400000>;
 +					anatop-enable-bit = <0>;
 +				};
++			};
++
++			tempmon: temperature-sensor {
++				compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				fsl,tempmon = <&anatop>;
++				fsl,tempmon-data = <&ocotp>;
++				clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
++				status = "disabled";
 +			};
 +
 +			usbphy1: usb-phy@20c9000 {
@@ -1675,19 +1674,9 @@ index 0000000..c9b0ccc
 +			};
 +
 +			ocotp: ocotp-ctrl@21bc000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
 +				compatible = "fsl,imx6sll-ocotp", "syscon";
 +				reg = <0x021bc000 0x4000>;
 +				clocks = <&clks IMX6SLL_CLK_OCOTP>;
-+
-+				tempmon_calib: calib@38 {
-+					reg = <0x38 4>;
-+				};
-+
-+				tempmon_temp_grade: temp-grade@20 {
-+					reg = <0x20 4>;
-+				};
 +			};
 +
 +			audmux: audmux@21d8000 {
