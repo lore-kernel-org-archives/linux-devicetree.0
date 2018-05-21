@@ -1,96 +1,106 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] perf: hisi: fix uncore PMU index ID
-Date: Mon, 21 May 2018 18:05:55 +0100
-Message-ID: <20180521170554.GE21034@arm.com>
-References: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Huiqiang Wang <wanghuiqiang@huawei.com>, linux-arm-kernel@lists.infradead.org
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v5 1/8] dt-bindings: reset: Add AOSS reset bindings for SDM845 SoCs
+Date: Mon, 21 May 2018 22:57:07 +0530
+Message-ID: <20180521172714.8551-2-sibis@codeaurora.org>
+References: <20180521172714.8551-1-sibis@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180521172714.8551-1-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaokun,
+Add SDM845 AOSS (always on subsystem) reset controller binding
 
-[+DT list]
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ .../bindings/reset/qcom,aoss-reset.txt        | 52 +++++++++++++++++++
+ include/dt-bindings/reset/qcom,sdm845-aoss.h  | 17 ++++++
+ 2 files changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+ create mode 100644 include/dt-bindings/reset/qcom,sdm845-aoss.h
 
-On Mon, May 21, 2018 at 07:15:17PM +0800, Shaokun Zhang wrote:
-> According to ACPI SPEC about _UID (Unique ID), The _UID must be unique
-> across all devices with either a common _HID or _CID. For HiSilion
-> uncore PMU, SCCL_ID and INDEX_ID are used to identify the uncore PMU
-> for the same _HID. Therefore, _UID is not equal to INDEX_ID in
-> multi-sccl scene for the same uncore PMU device.
-> 
-> CCL_ID can be used as the INDEX_ID for the L3C PMU and IDX-ID is added
-> in DSDT table for the HHA PMU.
-> 
-> Fixes: 2940bc4("perf: hisi: Add support for HiSilicon SoC L3C PMU driver")
-> Fixes: 2bab3cf("perf: hisi: Add support for HiSilicon SoC HHA PMU driver")
-> Reported-by: Huiqiang Wang <wanghuiqiang@huawei.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Huiqiang Wang <wanghuiqiang@huawei.com>
-> ---
->  drivers/perf/hisilicon/hisi_uncore_hha_pmu.c | 18 ++++++++----------
->  drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c | 11 ++---------
->  2 files changed, 10 insertions(+), 19 deletions(-)
-
-Whilst I'd normally just accept PMU driver submissions for vendor PMUs,
-this part rang my alarm bells:
-
-> diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-> index 443906e..dcd8e77 100644
-> --- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-> +++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-> @@ -238,19 +238,10 @@ MODULE_DEVICE_TABLE(acpi, hisi_hha_pmu_acpi_match);
->  static int hisi_hha_pmu_init_data(struct platform_device *pdev,
->  				  struct hisi_pmu *hha_pmu)
->  {
-> -	unsigned long long id;
->  	struct resource *res;
-> -	acpi_status status;
-> -
-> -	status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
-> -				       "_UID", NULL, &id);
-> -	if (ACPI_FAILURE(status))
-> -		return -EINVAL;
-> -
-> -	hha_pmu->index_id = id;
->  
->  	/*
-> -	 * Use SCCL_ID and UID to identify the HHA PMU, while
-> +	 * Use SCCL_ID and HHA index ID to identify the HHA PMU, while
->  	 * SCCL_ID is in MPIDR[aff2].
->  	 */
->  	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
-> @@ -258,6 +249,13 @@ static int hisi_hha_pmu_init_data(struct platform_device *pdev,
->  		dev_err(&pdev->dev, "Can not read hha sccl-id!\n");
->  		return -EINVAL;
->  	}
-> +
-> +	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
-> +				     &hha_pmu->index_id)) {
-> +		dev_err(&pdev->dev, "Can not read hha index-id!\n");
-> +		return -EINVAL;
-> +	}
-
-Is this a new DT property? If so, please can you update the binding
-documentation and get an Ack from a DT maintainer? It's not clear to me
-what a "hisilicon,idx-id" is, nor how I would generate on from firmware.
-
-Thanks,
-
-Will
+diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+new file mode 100644
+index 000000000000..cd5dcafb4ed7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+@@ -0,0 +1,52 @@
++Qualcomm AOSS Reset Controller
++======================================
++
++This binding describes a reset-controller found on AOSS (always on subsystem)
++for Qualcomm SDM845 SoCs.
++
++Required properties:
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be:
++		    "qcom,sdm845-aoss-reset"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must specify the base address and size of the register
++	            space.
++
++- #reset-cells:
++	Usage: required
++	Value type: <uint>
++	Definition: must be 1; cell entry represents the reset index.
++
++Example:
++
++aoss_reset: reset-controller@c2b0000 {
++	compatible = "qcom,sdm845-aoss-reset";
++	reg = <0xc2b0000 0x21000>;
++	#reset-cells = <1>;
++};
++
++Specifying reset lines connected to IP modules
++==============================================
++
++Device nodes that need access to reset lines should
++specify them as a reset phandle in their corresponding node as
++specified in reset.txt.
++
++For list of all valid reset indicies see
++<dt-bindings/reset/qcom,sdm845-aoss.h>
++
++Example:
++
++modem-pil@4080000 {
++	...
++
++	resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
++	reset-names = "mss_restart";
++
++	...
++};
+diff --git a/include/dt-bindings/reset/qcom,sdm845-aoss.h b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+new file mode 100644
+index 000000000000..476c5fc873b6
+--- /dev/null
++++ b/include/dt-bindings/reset/qcom,sdm845-aoss.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2018 The Linux Foundation. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
++#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
++
++#define AOSS_CC_MSS_RESTART	0
++#define AOSS_CC_CAMSS_RESTART	1
++#define AOSS_CC_VENUS_RESTART	2
++#define AOSS_CC_GPU_RESTART	3
++#define AOSS_CC_DISPSS_RESTART	4
++#define AOSS_CC_WCSS_RESTART	5
++#define AOSS_CC_LPASS_RESTART	6
++
++#endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
