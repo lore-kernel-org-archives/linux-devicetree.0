@@ -1,216 +1,228 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 2/2] slimbus: ngd: Add qcom SLIMBus NGD
-	driver
-Date: Mon, 21 May 2018 09:54:09 +0100
-Message-ID: <cc6b47dc-2b91-68cf-0c27-b7f72305ba04@linaro.org>
-References: <20180516165118.16551-3-srinivas.kandagatla@linaro.org>
- <201805190351.kbyN0JPN%fengguang.wu@intel.com>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v8 10/15] cpufreq: Add Kryo CPU scaling driver
+Date: Mon, 21 May 2018 12:00:09 +0300
+Message-ID: <000501d3f0e2$23500c00$69f02400$@codeaurora.org>
+References: <1526555955-29960-1-git-send-email-ilialin@codeaurora.org> <1526555955-29960-11-git-send-email-ilialin@codeaurora.org> <20180518014538.duphof6enscpm5vp@vireshk-i7> <019201d3ef66$db97aed0$92c70c70$@codeaurora.org> <20180521044938.bnr2sdkmvdorfxqm@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <201805190351.kbyN0JPN%fengguang.wu@intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: kbuild test robot <lkp@intel.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, girishm@quicinc.com, bgoswami@codeaurora.org, gregkh@linuxfoundation.org, broonie@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kramasub@codeaurora.org, kbuild-all@01.org, linux-arm-msm@vger.kernel.org, sdharia@quicinc.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180521044938.bnr2sdkmvdorfxqm@vireshk-i7>
+Content-Language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Viresh Kumar' <viresh.kumar@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the report!
+Final version (addressing Russel's comment as well):
 
-This patch has dependency on https://lkml.org/lkml/2018/5/17/251
 
-I should have mentioned this in cover letter!
 
-thanks,
-srini
 
-On 18/05/18 22:39, kbuild test robot wrote:
-> Hi Srinivas,
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+ */
+
+/*
+ * In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
+ * the CPU frequency subset and voltage value of each OPP varies
+ * based on the silicon variant in use. Qualcomm Process Voltage Scaling
+Tables
+ * defines the voltage and frequency value based on the msm-id in SMEM
+ * and speedbin blown in the efuse combination.
+ * The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the
+SoC
+ * to provide the OPP framework with required information.
+ * This is used to determine the voltage and frequency value for each OPP of
+ * operating-points-v2 table when it is parsed by the OPP framework.
+ */
+
+#include <linux/cpu.h>
+#include <linux/err.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/nvmem-consumer.h>
+#include <linux/of.h>
+#include <linux/platform_device.h>
+#include <linux/pm_opp.h>
+#include <linux/slab.h>
+#include <linux/soc/qcom/smem.h>
+
+#define MSM_ID_SMEM	137
+#define SILVER_LEAD	0
+#define GOLD_LEAD	2
+
+enum _msm_id {
+	MSM8996V3 = 0xF6ul,
+	APQ8096V3 = 0x123ul,
+	MSM8996SG = 0x131ul,
+	APQ8096SG = 0x138ul,
+};
+
+enum _msm8996_version {
+	MSM8996_V3,
+	MSM8996_SG,
+	NUM_OF_MSM8996_VERSIONS,
+};
+
+static enum _msm8996_version __init qcom_cpufreq_kryo_get_msm_id(void)
+{
+	size_t len;
+	u32 *msm_id;
+	enum _msm8996_version version;
+
+	msm_id = qcom_smem_get(QCOM_SMEM_HOST_ANY, MSM_ID_SMEM, &len);
+	/* The first 4 bytes are format, next to them is the actual msm-id
+*/
+	msm_id++;
+
+	switch ((enum _msm_id)*msm_id) {
+	case MSM8996V3:
+	case APQ8096V3:
+		version = MSM8996_V3;
+		break;
+	case MSM8996SG:
+	case APQ8096SG:
+		version = MSM8996_SG;
+		break;
+	default:
+		version = NUM_OF_MSM8996_VERSIONS;
+	}
+
+	return version;
+}
+
+static int __init qcom_cpufreq_kryo_driver_init(void)
+{
+	struct device *cpu_dev_silver, *cpu_dev_gold;
+	struct opp_table *opp_silver, *opp_gold;
+	enum _msm8996_version msm8996_version;
+	struct nvmem_cell *speedbin_nvmem;
+	struct platform_device *pdev;
+	struct device_node *np;
+	u8 *speedbin;
+	u32 versions;
+	size_t len;
+	int ret;
+
+	cpu_dev_silver = get_cpu_device(SILVER_LEAD);
+	if (NULL == cpu_dev_silver)
+		return -ENODEV;
+
+	cpu_dev_gold = get_cpu_device(SILVER_LEAD);
+	if (NULL == cpu_dev_gold)
+		return -ENODEV;
+
+	msm8996_version = qcom_cpufreq_kryo_get_msm_id();
+	if (NUM_OF_MSM8996_VERSIONS == msm8996_version) {
+		dev_err(cpu_dev_silver, "Not Snapdragon 820/821!");
+		return -ENODEV;
+	}
+
+	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev_silver);
+	if (IS_ERR(np))
+		return PTR_ERR(np);
+
+	if (!of_device_is_compatible(np, "operating-points-v2-kryo-cpu")) {
+		ret = -ENOENT;
+		goto free_np;
+	}
+
+	speedbin_nvmem = of_nvmem_cell_get(np, NULL);
+	if (IS_ERR(speedbin_nvmem)) {
+		ret = PTR_ERR(speedbin_nvmem);
+		dev_err(cpu_dev_silver, "Could not get nvmem cell: %d\n",
+ret);
+		goto free_np;
+	}
+
+	speedbin = nvmem_cell_read(speedbin_nvmem, &len);
+	nvmem_cell_put(speedbin_nvmem);
+
+	switch (msm8996_version) {
+	case MSM8996_V3:
+		versions = 1 << (unsigned int)(*speedbin);
+		break;
+	case MSM8996_SG:
+		versions = 1 << ((unsigned int)(*speedbin) + 4);
+		break;
+	default:
+		BUG();
+		break;
+	}
+
+	opp_silver =
+dev_pm_opp_set_supported_hw(cpu_dev_silver,&versions,1);
+	if (IS_ERR(opp_silver)) {
+		dev_err(cpu_dev_silver, "Failed to set supported
+hardware\n");
+		ret = PTR_ERR(opp_silver);
+		goto free_np;
+	}
+
+	opp_gold = dev_pm_opp_set_supported_hw(cpu_dev_gold,&versions,1);
+	if (IS_ERR(opp_gold)) {
+		dev_err(cpu_dev_gold, "Failed to set supported hardware\n");
+		ret = PTR_ERR(opp_gold);
+		goto free_opp_silver;
+	}
+
+	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
+	if (!IS_ERR(pdev))
+		return 0;
+
+	ret = PTR_ERR(pdev);
+	dev_err(cpu_dev_silver, "Failed to register platform device\n");
+	dev_pm_opp_put_supported_hw(opp_gold);
+
+free_opp_silver:
+	dev_pm_opp_put_supported_hw(opp_silver);
+
+free_np:
+	of_node_put(np);
+
+	return ret;
+}
+late_initcall(qcom_cpufreq_kryo_driver_init);
+
+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Kryo CPUfreq driver");
+MODULE_LICENSE("GPL v2");
+
+
+
+
+
+
+> -----Original Message-----
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+> Sent: Monday, May 21, 2018 07:50
+> To: ilialin@codeaurora.org
+> Cc: mturquette@baylibre.com; sboyd@kernel.org; robh@kernel.org;
+> mark.rutland@arm.com; nm@ti.com; lgirdwood@gmail.com;
+> broonie@kernel.org; andy.gross@linaro.org; david.brown@linaro.org;
+> catalin.marinas@arm.com; will.deacon@arm.com; rjw@rjwysocki.net; linux-
+> clk@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-pm@vger.kernel.org; linux-arm-
+> msm@vger.kernel.org; linux-soc@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; rnayak@codeaurora.org;
+> amit.kucheria@linaro.org; nicolas.dechesne@linaro.org;
+> celster@codeaurora.org; tfinkel@codeaurora.org
+> Subject: Re: [PATCH v8 10/15] cpufreq: Add Kryo CPU scaling driver
 > 
-> I love your patch! Yet something to improve:
+> On 19-05-18, 14:45, ilialin@codeaurora.org wrote:
+> > Hi Viresh,
+> >
+> > If I send patches in reply, it will produce new patches, instead of
+> > answers in the thread. Please find below the file dump.
 > 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.17-rc5 next-20180517]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> There is one email from you which appears to be just fine and appears to
+be
+> in reply to this thread only. Maybe its your email client that screwed it
+up for
+> you ? Things look good in mutt.
 > 
-> url:    https://github.com/0day-ci/linux/commits/Srinivas-Kandagatla/slimbus-ngd-dt-bindings-Add-slim-ngd-dt-bindings/20180518-193916
-> config: arm-allmodconfig (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          make.cross ARCH=arm
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->     drivers/slimbus/qcom-ngd-ctrl.c: In function 'qcom_slim_ngd_get_laddr':
->>> drivers/slimbus/qcom-ngd-ctrl.c:862:8: error: implicit declaration of function 'slim_prepare_txn'; did you mean 'slab_prepare_cpu'? [-Werror=implicit-function-declaration]
->       ret = slim_prepare_txn(sctrl, &txn, &done, true);
->             ^~~~~~~~~~~~~~~~
->             slab_prepare_cpu
->     drivers/slimbus/qcom-ngd-ctrl.c: In function 'qcom_slim_ngd_notify_slaves':
->>> drivers/slimbus/qcom-ngd-ctrl.c:969:11: error: implicit declaration of function 'of_slim_get_device'; did you mean 'slim_get_device'? [-Werror=implicit-function-declaration]
->        sbdev = of_slim_get_device(&ctrl->ctrl, node);
->                ^~~~~~~~~~~~~~~~~~
->                slim_get_device
->>> drivers/slimbus/qcom-ngd-ctrl.c:969:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
->        sbdev = of_slim_get_device(&ctrl->ctrl, node);
->              ^
->     cc1: some warnings being treated as errors
-> 
-> vim +862 drivers/slimbus/qcom-ngd-ctrl.c
-> 
->     839	
->     840	static int qcom_slim_ngd_get_laddr(struct slim_controller *sctrl,
->     841					   struct slim_eaddr *ea, u8 *laddr)
->     842	{
->     843		DECLARE_COMPLETION_ONSTACK(done);
->     844		struct slim_val_inf msg =  {0};
->     845		struct slim_msg_txn txn;
->     846		u8 wbuf[10] = {0};
->     847		u8 rbuf[10] = {0};
->     848		int ret;
->     849	
->     850		txn.mt = SLIM_MSG_MT_DEST_REFERRED_USER;
->     851		txn.dt = SLIM_MSG_DEST_LOGICALADDR;
->     852		txn.la = SLIM_LA_MGR;
->     853		txn.ec = 0;
->     854	
->     855		txn.mc = SLIM_USR_MC_ADDR_QUERY;
->     856		txn.rl = 11;
->     857		txn.msg = &msg;
->     858		txn.msg->num_bytes = 7;
->     859		txn.msg->wbuf = wbuf;
->     860		txn.msg->rbuf = rbuf;
->     861	
->   > 862		ret = slim_prepare_txn(sctrl, &txn, &done, true);
->     863		if (ret)
->     864			return ret;
->     865	
->     866		wbuf[0] = (u8)txn.tid;
->     867		memcpy(&wbuf[1], ea, sizeof(*ea));
->     868		ret = slim_do_transfer(sctrl, &txn);
->     869	
->     870		*laddr = rbuf[6];
->     871	
->     872		return ret;
->     873	}
->     874	
->     875	static int qcom_slim_ngd_exit_dma(struct qcom_slim_ngd_ctrl *ctrl)
->     876	{
->     877		if (ctrl->dma_rx_channel)
->     878			dma_release_channel(ctrl->dma_rx_channel);
->     879	
->     880		if (ctrl->dma_tx_channel)
->     881			dma_release_channel(ctrl->dma_tx_channel);
->     882	
->     883		ctrl->dma_tx_channel = ctrl->dma_rx_channel = NULL;
->     884	
->     885		return 0;
->     886	}
->     887	
->     888	static void qcom_slim_ngd_setup(struct qcom_slim_ngd_ctrl *ctrl)
->     889	{
->     890		u32 cfg = readl_relaxed(ctrl->base +
->     891					 NGD_BASE(ctrl->id, ctrl->ver));
->     892	
->     893		if (ctrl->state == QCOM_SLIM_NGD_CTRL_DOWN)
->     894			qcom_slim_ngd_init_dma(ctrl);
->     895	
->     896		/* By default enable message queues */
->     897		cfg |= NGD_CFG_RX_MSGQ_EN;
->     898		cfg |= NGD_CFG_TX_MSGQ_EN;
->     899	
->     900		/* Enable NGD if it's not already enabled*/
->     901		if (!(cfg & NGD_CFG_ENABLE))
->     902			cfg |= NGD_CFG_ENABLE;
->     903	
->     904		writel_relaxed(cfg, ctrl->base + NGD_BASE(ctrl->id, ctrl->ver));
->     905	}
->     906	
->     907	static int qcom_slim_ngd_power_up(struct qcom_slim_ngd_ctrl *ctrl)
->     908	{
->     909		enum qcom_slim_ngd_state cur_state = ctrl->state;
->     910		void __iomem *ngd;
->     911		u32 laddr, rx_msgq;
->     912		int timeout, ret = 0;
->     913	
->     914		if (ctrl->state == QCOM_SLIM_NGD_CTRL_DOWN) {
->     915			timeout = wait_for_completion_timeout(&ctrl->qmi.qmi_comp, HZ);
->     916			if (!timeout)
->     917				return -EREMOTEIO;
->     918		}
->     919	
->     920		if (ctrl->state == QCOM_SLIM_NGD_CTRL_ASLEEP ||
->     921			ctrl->state == QCOM_SLIM_NGD_CTRL_DOWN) {
->     922			ret = qcom_slim_qmi_power_request(ctrl, true);
->     923			if (ret) {
->     924				dev_err(ctrl->dev, "SLIM QMI power request failed:%d\n",
->     925						ret);
->     926				return ret;
->     927			}
->     928		}
->     929	
->     930		ctrl->ver = readl_relaxed(ctrl->base);
->     931		/* Version info in 16 MSbits */
->     932		ctrl->ver >>= 16;
->     933		ngd = ctrl->base + NGD_BASE(ctrl->id, ctrl->ver);
->     934		laddr = readl_relaxed(ngd + NGD_STATUS);
->     935		if (laddr & NGD_LADDR) {
->     936			/*
->     937			 * external MDM restart case where ADSP itself was active framer
->     938			 * For example, modem restarted when playback was active
->     939			 */
->     940			if (cur_state == QCOM_SLIM_NGD_CTRL_AWAKE) {
->     941				dev_info(ctrl->dev, "Subsys restart: ADSP active framer\n");
->     942				return 0;
->     943			}
->     944			return 0;
->     945		}
->     946	
->     947		writel_relaxed(DEF_NGD_INT_MASK, ctrl->base + NGD_INT_EN +
->     948					NGD_BASE(ctrl->id, ctrl->ver));
->     949		rx_msgq = readl_relaxed(ngd + NGD_RX_MSGQ_CFG);
->     950	
->     951		writel_relaxed(rx_msgq|SLIM_RX_MSGQ_TIMEOUT_VAL, ngd + NGD_RX_MSGQ_CFG);
->     952		qcom_slim_ngd_setup(ctrl);
->     953	
->     954		timeout = wait_for_completion_timeout(&ctrl->reconf, HZ);
->     955		if (!timeout) {
->     956			dev_err(ctrl->dev, "capability exchange timed-out\n");
->     957			return -ETIMEDOUT;
->     958		}
->     959	
->     960		return 0;
->     961	}
->     962	
->     963	static void qcom_slim_ngd_notify_slaves(struct qcom_slim_ngd_ctrl *ctrl)
->     964	{
->     965		struct slim_device *sbdev;
->     966		struct device_node *node;
->     967	
->     968		for_each_child_of_node(ctrl->dev->of_node, node) {
->   > 969			sbdev = of_slim_get_device(&ctrl->ctrl, node);
->     970			if (!sbdev)
->     971				continue;
->     972	
->     973			if (slim_get_logical_addr(sbdev))
->     974				dev_err(ctrl->dev, "Failed to get logical address\n");
->     975		}
->     976	}
->     977	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
+> --
+> viresh
