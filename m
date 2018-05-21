@@ -1,187 +1,48 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH V2 2/3] clk: imx7d: correct enet clock CCGR registers
-Date: Mon, 21 May 2018 10:14:23 +0200
-Message-ID: <bdaca652700a6f70aca14fd450bd4dab@agner.ch>
-References: <1526605266-18464-1-git-send-email-Anson.Huang@nxp.com>
- <1526605266-18464-2-git-send-email-Anson.Huang@nxp.com>
- <c42c4274cfd06297d1699c96d3253125@agner.ch>
- <AM3PR04MB1315417C51882B554AEBC617F5950@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: KaiChieh Chuang <kaichieh.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] dt-bindings: soc: update MT6797 power domain
+Date: Mon, 21 May 2018 16:09:46 +0800
+Message-ID: <1526890186-16219-1-git-send-email-kaichieh.chuang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB1315417C51882B554AEBC617F5950@AM3PR04MB1315.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: shawnguo@kernel.org, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, Adriana Reus <adriana.reus@nxp.com>, rui.silva@linaro.org, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kaichieh.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21.05.2018 04:35, Anson Huang wrote:
-> Hi, Stefan
-> 
-> Anson Huang
-> Best Regards!
-> 
-> 
->> -----Original Message-----
->> From: Stefan Agner [mailto:stefan@agner.ch]
->> Sent: Friday, May 18, 2018 9:02 PM
->> To: Anson Huang <anson.huang@nxp.com>
->> Cc: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
->> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
->> mturquette@baylibre.com; sboyd@kernel.org; Adriana Reus
->> <adriana.reus@nxp.com>; rui.silva@linaro.org; dl-linux-imx
->> <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.org;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
->> linux-clk@vger.kernel.org
->> Subject: Re: [PATCH V2 2/3] clk: imx7d: correct enet clock CCGR registers
->>
->> On 18.05.2018 03:01, Anson Huang wrote:
->> > Correct enet clock gates as below:
->> >
->> > CCGR6: IMX7D_ENET_AXI_ROOT_CLK (enet1 and enet2 bus clocks)
->> > CCGR112: IMX7D_ENET1_TIME_ROOT_CLK, IMX7D_ENET1_IPG_ROOT_CLK
->> > CCGR113: IMX7D_ENET2_TIME_ROOT_CLK, IMX7D_ENET2_IPG_ROOT_CLK
->> >
->> > Just rename unused IMX7D_ENETx_REF_ROOT_CLK for
->> > IMX7D_ENETx_IPG_ROOT_CLK instead of adding new clocks.
->>
->> Are you sure that IMX7D_ENETx_REF_ROOT_CLK are not used?
->>
->> I understand that the reference manual does not a gate at 0x44e0...
->>
->> But in a earlier revision of our Colibri iMX7 we actually used clock out, and
->> referenced this clock to enable the reference clock (see also:
->> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
->> work.kernel.org%2Fpatch%2F9211371%2F&data=02%7C01%7CAnson.Huang%
->> 40nxp.com%7Cea0856a68d8e4b921ba608d5bcbf9c02%7C686ea1d3bc2b4c6fa
->> 92cd99c5c301635%7C0%7C1%7C636622453508888330&sdata=rEhwj0innLDc
->> AEgxJyqd5vtG3SNVS05r2hEFvSc%2BQQs%3D&reserved=0).
->>
->> I guess if the gate really does not exist, then we should/would have to set
->> IMX7D_ENET1_REF_ROOT_DIV to use the SoC provided ref clock.
->>
->> --
->> Stefan
->  
-> I looked into the RTL and also checked with our design team, they confirm that
-> there is no CCGR78(0x44e0) and CCGR80(0x4500) on i.MX7D, the register offset
-> are there, but no hardware wire connection for them. That is why they did NOT
-> list them in Reference Manual. So I think we can remove them. 
-> 
-> For your case of using them as clock input, maybe clock tree auto use its parent
-> IMX7D_ENETx_REF_ROOT_DIV which is existing, so it works.
+remove unused power domain in mt6797 and re-index
 
-That make sense.
+Signed-off-by: KaiChieh Chuang <kaichieh.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ include/dt-bindings/power/mt6797-power.h | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-The change looks good to me.
-
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-
---
-Stefan
-
-> 
-> Anson.
-> 
->>
->> >
->> > Based on Andy Duan's patch from the NXP kernel tree.
->> >
->> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->> > ---
->> >  drivers/clk/imx/clk-imx7d.c             | 10 ++++++----
->> >  include/dt-bindings/clock/imx7d-clock.h |  4 ++--
->> >  2 files changed, 8 insertions(+), 6 deletions(-)
->> >
->> > diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
->> > index 23d5090a..d4936b9 100644
->> > --- a/drivers/clk/imx/clk-imx7d.c
->> > +++ b/drivers/clk/imx/clk-imx7d.c
->> > @@ -26,6 +26,8 @@ static u32 share_count_sai1;  static u32
->> > share_count_sai2;  static u32 share_count_sai3;  static u32
->> > share_count_nand;
->> > +static u32 share_count_enet1;
->> > +static u32 share_count_enet2;
->> >
->> >  static const struct clk_div_table test_div_table[] = {
->> >  	{ .val = 3, .div = 1, },
->> > @@ -805,6 +807,10 @@ static void __init imx7d_clocks_init(struct
->> > device_node *ccm_node)
->> >  	clks[IMX7D_MIPI_DSI_ROOT_CLK] = imx_clk_gate4("mipi_dsi_root_clk",
->> > "mipi_dsi_post_div", base + 0x4650, 0);
->> >  	clks[IMX7D_MIPI_CSI_ROOT_CLK] = imx_clk_gate4("mipi_csi_root_clk",
->> > "mipi_csi_post_div", base + 0x4640, 0);
->> >  	clks[IMX7D_MIPI_DPHY_ROOT_CLK] =
->> imx_clk_gate4("mipi_dphy_root_clk",
->> > "mipi_dphy_post_div", base + 0x4660, 0);
->> > +	clks[IMX7D_ENET1_IPG_ROOT_CLK] =
->> > imx_clk_gate2_shared2("enet1_ipg_root_clk", "enet_axi_post_div", base
->> > + 0x4700, 0, &share_count_enet1);
->> > +	clks[IMX7D_ENET1_TIME_ROOT_CLK] =
->> > imx_clk_gate2_shared2("enet1_time_root_clk", "enet1_time_post_div",
->> > base + 0x4700, 0, &share_count_enet1);
->> > +	clks[IMX7D_ENET2_IPG_ROOT_CLK] =
->> > imx_clk_gate2_shared2("enet2_ipg_root_clk", "enet_axi_post_div", base
->> > + 0x4710, 0, &share_count_enet2);
->> > +	clks[IMX7D_ENET2_TIME_ROOT_CLK] =
->> > imx_clk_gate2_shared2("enet2_time_root_clk", "enet2_time_post_div",
->> > base + 0x4710, 0, &share_count_enet2);
->> >  	clks[IMX7D_SAI1_ROOT_CLK] = imx_clk_gate2_shared2("sai1_root_clk",
->> > "sai1_post_div", base + 0x48c0, 0, &share_count_sai1);
->> >  	clks[IMX7D_SAI1_IPG_CLK]  = imx_clk_gate2_shared2("sai1_ipg_clk",
->> > "ipg_root_clk",  base + 0x48c0, 0, &share_count_sai1);
->> >  	clks[IMX7D_SAI2_ROOT_CLK] = imx_clk_gate2_shared2("sai2_root_clk",
->> > "sai2_post_div", base + 0x48d0, 0, &share_count_sai2); @@ -812,10
->> > +818,6 @@ static void __init imx7d_clocks_init(struct device_node
->> > *ccm_node)
->> >  	clks[IMX7D_SAI3_ROOT_CLK] = imx_clk_gate2_shared2("sai3_root_clk",
->> > "sai3_post_div", base + 0x48e0, 0, &share_count_sai3);
->> >  	clks[IMX7D_SAI3_IPG_CLK]  = imx_clk_gate2_shared2("sai3_ipg_clk",
->> > "ipg_root_clk",  base + 0x48e0, 0, &share_count_sai3);
->> >  	clks[IMX7D_SPDIF_ROOT_CLK] = imx_clk_gate4("spdif_root_clk",
->> > "spdif_post_div", base + 0x44d0, 0);
->> > -	clks[IMX7D_ENET1_REF_ROOT_CLK] =
->> imx_clk_gate4("enet1_ref_root_clk",
->> > "enet1_ref_post_div", base + 0x44e0, 0);
->> > -	clks[IMX7D_ENET1_TIME_ROOT_CLK] =
->> > imx_clk_gate4("enet1_time_root_clk", "enet1_time_post_div", base +
->> > 0x44f0, 0);
->> > -	clks[IMX7D_ENET2_REF_ROOT_CLK] =
->> imx_clk_gate4("enet2_ref_root_clk",
->> > "enet2_ref_post_div", base + 0x4500, 0);
->> > -	clks[IMX7D_ENET2_TIME_ROOT_CLK] =
->> > imx_clk_gate4("enet2_time_root_clk", "enet2_time_post_div", base +
->> > 0x4510, 0);
->> >  	clks[IMX7D_EIM_ROOT_CLK] = imx_clk_gate4("eim_root_clk",
->> > "eim_post_div", base + 0x4160, 0);
->> >  	clks[IMX7D_NAND_RAWNAND_CLK] =
->> > imx_clk_gate2_shared2("nand_rawnand_clk", "nand_root_clk", base +
->> > 0x4140, 0, &share_count_nand);
->> >  	clks[IMX7D_NAND_USDHC_BUS_RAWNAND_CLK] =
->> > imx_clk_gate2_shared2("nand_usdhc_rawnand_clk",
->> "nand_usdhc_root_clk",
->> > base + 0x4140, 0, &share_count_nand); diff --git
->> > a/include/dt-bindings/clock/imx7d-clock.h
->> > b/include/dt-bindings/clock/imx7d-clock.h
->> > index b2325d3e2..0d67f53 100644
->> > --- a/include/dt-bindings/clock/imx7d-clock.h
->> > +++ b/include/dt-bindings/clock/imx7d-clock.h
->> > @@ -168,7 +168,7 @@
->> >  #define IMX7D_SPDIF_ROOT_SRC		155
->> >  #define IMX7D_SPDIF_ROOT_CG		156
->> >  #define IMX7D_SPDIF_ROOT_DIV		157
->> > -#define IMX7D_ENET1_REF_ROOT_CLK	158
->> > +#define IMX7D_ENET1_IPG_ROOT_CLK        158
->> >  #define IMX7D_ENET1_REF_ROOT_SRC	159
->> >  #define IMX7D_ENET1_REF_ROOT_CG		160
->> >  #define IMX7D_ENET1_REF_ROOT_DIV	161
->> > @@ -176,7 +176,7 @@
->> >  #define IMX7D_ENET1_TIME_ROOT_SRC	163
->> >  #define IMX7D_ENET1_TIME_ROOT_CG	164
->> >  #define IMX7D_ENET1_TIME_ROOT_DIV	165
->> > -#define IMX7D_ENET2_REF_ROOT_CLK	166
->> > +#define IMX7D_ENET2_IPG_ROOT_CLK        166
->> >  #define IMX7D_ENET2_REF_ROOT_SRC	167
->> >  #define IMX7D_ENET2_REF_ROOT_CG		168
->> >  #define IMX7D_ENET2_REF_ROOT_DIV	169
+diff --git a/include/dt-bindings/power/mt6797-power.h b/include/dt-bindings/power/mt6797-power.h
+index a60c1d8..f96c4e2 100644
+--- a/include/dt-bindings/power/mt6797-power.h
++++ b/include/dt-bindings/power/mt6797-power.h
+@@ -20,11 +20,6 @@
+ #define MT6797_POWER_DOMAIN_MM			3
+ #define MT6797_POWER_DOMAIN_AUDIO		4
+ #define MT6797_POWER_DOMAIN_MFG_ASYNC		5
+-#define MT6797_POWER_DOMAIN_MFG		6
+-#define MT6797_POWER_DOMAIN_MFG_CORE0		7
+-#define MT6797_POWER_DOMAIN_MFG_CORE1		8
+-#define MT6797_POWER_DOMAIN_MFG_CORE2		9
+-#define MT6797_POWER_DOMAIN_MFG_CORE3		10
+-#define MT6797_POWER_DOMAIN_MJC		11
++#define MT6797_POWER_DOMAIN_MJC		6
+ 
+ #endif /* _DT_BINDINGS_POWER_MT6797_POWER_H */
+-- 
+1.9.1
