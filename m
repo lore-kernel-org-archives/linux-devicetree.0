@@ -1,51 +1,160 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 8/8] remoteproc: qcom: Allow defining GLINK edge for mss remoteproc
-Date: Mon, 21 May 2018 22:57:14 +0530
-Message-ID: <20180521172714.8551-9-sibis@codeaurora.org>
-References: <20180521172714.8551-1-sibis@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180521172714.8551-1-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 06/15] drm/sun4i: tcon: Add support for tcon-top
+Date: Mon, 21 May 2018 19:27:46 +0200
+Message-ID: <218132669.UY7RKz0VPx@jernej-laptop>
+References: <20180519183127.2718-1-jernej.skrabec@siol.net> <20180519183127.2718-7-jernej.skrabec@siol.net> <20180521080759.rgviuva65ijcfm2e@flea>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBPEDRTMAKGQEG7A4QCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180521080759.rgviuva65ijcfm2e@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add GLINK subdevice to allow definition of GLINK edge as a
-child of modem-pil.
+Hi,
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_pil.c | 3 +++
- 1 file changed, 3 insertions(+)
+Dne ponedeljek, 21. maj 2018 ob 10:07:59 CEST je Maxime Ripard napisal(a):
+> On Sat, May 19, 2018 at 08:31:18PM +0200, Jernej Skrabec wrote:
+> > If SoC has TCON TOP unit, it has to be configured from TCON, since it
+> > has all information needed. Additionally, if it is TCON TV, it must also
+> > enable bus gate inside TCON TOP unit.
+> 
+> Why?
 
-diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-index 5e85ce975ef8..7656731a6c51 100644
---- a/drivers/remoteproc/qcom_q6v5_pil.c
-+++ b/drivers/remoteproc/qcom_q6v5_pil.c
-@@ -183,6 +183,7 @@ struct q6v5 {
- 	void *mpss_region;
- 	size_t mpss_size;
- 
-+	struct qcom_rproc_glink glink_subdev;
- 	struct qcom_rproc_subdev smd_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
- 	struct qcom_sysmon *sysmon;
-@@ -1347,6 +1348,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	}
- 	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
- 	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
-+	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
- 	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
- 	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
- 	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12);
-@@ -1370,6 +1372,7 @@ static int q6v5_remove(struct platform_device *pdev)
- 	rproc_del(qproc->rproc);
- 
- 	qcom_remove_sysmon_subdev(qproc->sysmon);
-+	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
- 	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
- 	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
- 	rproc_free(qproc->rproc);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I'll explain my design decision below.
+
+> 
+> > Add support for such TCONs.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 28 ++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/sun4i/sun4i_tcon.h |  8 ++++++++
+> >  2 files changed, 36 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > b/drivers/gpu/drm/sun4i/sun4i_tcon.c index 08747fc3ee71..e0c562ce1c22
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > @@ -688,6 +688,16 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+> > 
+> >  		dev_err(dev, "Couldn't get the TCON bus clock\n");
+> >  		return PTR_ERR(tcon->clk);
+> >  	
+> >  	}
+> > 
+> > +
+> > +	if (tcon->quirks->needs_tcon_top && tcon->quirks->has_channel_1) {
+> > +		tcon->top_clk = devm_clk_get(dev, "tcon-top");
+> > +		if (IS_ERR(tcon->top_clk)) {
+> > +			dev_err(dev, "Couldn't get the TCON TOP bus clock\n");
+> > +			return PTR_ERR(tcon->top_clk);
+> > +		}
+> > +		clk_prepare_enable(tcon->top_clk);
+> > +	}
+> > +
+> > 
+> >  	clk_prepare_enable(tcon->clk);
+> >  	
+> >  	if (tcon->quirks->has_channel_0) {
+> > 
+> > @@ -712,6 +722,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+> > 
+> >  static void sun4i_tcon_free_clocks(struct sun4i_tcon *tcon)
+> >  {
+> >  
+> >  	clk_disable_unprepare(tcon->clk);
+> > 
+> > +	clk_disable_unprepare(tcon->top_clk);
+> > 
+> >  }
+> >  
+> >  static int sun4i_tcon_init_irq(struct device *dev,
+> > 
+> > @@ -980,6 +991,23 @@ static int sun4i_tcon_bind(struct device *dev, struct
+> > device *master,> 
+> >  	tcon->id = engine->id;
+> >  	tcon->quirks = of_device_get_match_data(dev);
+> > 
+> > +	if (tcon->quirks->needs_tcon_top) {
+> > +		struct device_node *np;
+> > +
+> > +		np = of_parse_phandle(dev->of_node, "allwinner,tcon-top", 0);
+> > +		if (np) {
+> > +			struct platform_device *pdev;
+> > +
+> > +			pdev = of_find_device_by_node(np);
+> > +			if (pdev)
+> > +				tcon->tcon_top = platform_get_drvdata(pdev);
+> > +			of_node_put(np);
+> > +
+> > +			if (!tcon->tcon_top)
+> > +				return -EPROBE_DEFER;
+> > +		}
+> > +	}
+> > +
+> 
+> I might have missed it, but I've not seen the bindings additions for
+> that property. This shouldn't really be done that way anyway, instead
+> of using a direct phandle, you should be using the of-graph, with the
+> TCON-top sitting where it belongs in the flow of data.
+
+Just to answer to the first question, it did describe it in "[PATCH 07/15] dt-
+bindings: display: sun4i-drm: Add R40 HDMI pipeline".
+
+As why I designed it that way - HW representation could be described that way 
+(ASCII art makes sense when fixed width font is used to view it):
+
+                            / LCD0/LVDS0
+                / TCON-LCD0
+                |           \ MIPI DSI
+mixer0          |
+       \        / TCON-LCD1 - LCD1/LVDS1
+        TCON-TOP
+       /        \ TCON-TV0 - TVE0/RGB
+mixer1          |          \
+                |           TCON-TOP - HDMI
+                |          /
+                \ TCON-TV1 - TVE1/RGB
+
+This is a bit simplified, since there is also TVE-TOP, which is responsible 
+for sharing 4 DACs between both TVE encoders. You can have two TV outs (PAL/
+NTSC) or TVE0 as TV out and TVE1 as RGB or vice versa. It even seems that you 
+can arbitrarly choose which DAC is responsible for which signal, so there is a 
+ton of possible end combinations, but I'm not 100% sure.
+
+Even though I wrote TCON-TOP twice, this is same unit in HW. R40 manual 
+suggest more possibilities, although some of them seem wrong, like RGB feeding 
+from LCD TCON. That is confirmed to be wrong when checking BSP code. 
+
+Additionally, TCON-TOP comes in the middle of TVE0 and LCD0, TVE1 and LCD1 for 
+pin muxing, although I'm not sure why is that needed at all, since according 
+to R40 datasheet, TVE0 and TVE1 pins are dedicated and not on PORT D and PORT 
+H, respectively, as TCON-TOP documentation suggest. However, HSYNC and PSYNC 
+lines might be shared between TVE (when it works in RGB mode) and LCD. But 
+that is just my guess since I'm not really familiar with RGB and LCD 
+interfaces.
+
+I'm really not sure what would be the best representation in OF-graph. Can you 
+suggest one?
+
+On the other hand, mux callback in TCON driver has all available informations 
+at hand. It knows mixer ID, TCON ID and most importantly, encoder type. Based 
+on all that informations, it's easy to configure TCON TOP.
+
+I hope you understand. If you have better idea, I'm all ears, since phandle 
+seems a bit weird to me too, but I think it's the only future proof, when 
+adding LVDS, RGB, TVE or LCD support.
+
+Best regards,
+Jernej
