@@ -1,160 +1,189 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH 06/15] drm/sun4i: tcon: Add support for tcon-top
-Date: Mon, 21 May 2018 19:27:46 +0200
-Message-ID: <218132669.UY7RKz0VPx@jernej-laptop>
-References: <20180519183127.2718-1-jernej.skrabec@siol.net> <20180519183127.2718-7-jernej.skrabec@siol.net> <20180521080759.rgviuva65ijcfm2e@flea>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBPEDRTMAKGQEG7A4QCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180521080759.rgviuva65ijcfm2e@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v5 4/8] remoteproc: Synchronize proxy unvote from multiple contexts
+Date: Mon, 21 May 2018 22:57:10 +0530
+Message-ID: <20180521172714.8551-5-sibis@codeaurora.org>
+References: <20180521172714.8551-1-sibis@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180521172714.8551-1-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Synchronize proxy unvote of clks/regs from q6v5_stop and
+handover interrupt to prevent multiple proxy unvotes
+for a single rproc start.
 
-Dne ponedeljek, 21. maj 2018 ob 10:07:59 CEST je Maxime Ripard napisal(a):
-> On Sat, May 19, 2018 at 08:31:18PM +0200, Jernej Skrabec wrote:
-> > If SoC has TCON TOP unit, it has to be configured from TCON, since it
-> > has all information needed. Additionally, if it is TCON TV, it must also
-> > enable bus gate inside TCON TOP unit.
-> 
-> Why?
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_pil.c | 73 ++++++++++++++++++++++--------
+ 1 file changed, 54 insertions(+), 19 deletions(-)
 
-I'll explain my design decision below.
-
-> 
-> > Add support for such TCONs.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> > 
-> >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 28 ++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/sun4i/sun4i_tcon.h |  8 ++++++++
-> >  2 files changed, 36 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > b/drivers/gpu/drm/sun4i/sun4i_tcon.c index 08747fc3ee71..e0c562ce1c22
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > @@ -688,6 +688,16 @@ static int sun4i_tcon_init_clocks(struct device *dev,
-> > 
-> >  		dev_err(dev, "Couldn't get the TCON bus clock\n");
-> >  		return PTR_ERR(tcon->clk);
-> >  	
-> >  	}
-> > 
-> > +
-> > +	if (tcon->quirks->needs_tcon_top && tcon->quirks->has_channel_1) {
-> > +		tcon->top_clk = devm_clk_get(dev, "tcon-top");
-> > +		if (IS_ERR(tcon->top_clk)) {
-> > +			dev_err(dev, "Couldn't get the TCON TOP bus clock\n");
-> > +			return PTR_ERR(tcon->top_clk);
-> > +		}
-> > +		clk_prepare_enable(tcon->top_clk);
-> > +	}
-> > +
-> > 
-> >  	clk_prepare_enable(tcon->clk);
-> >  	
-> >  	if (tcon->quirks->has_channel_0) {
-> > 
-> > @@ -712,6 +722,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
-> > 
-> >  static void sun4i_tcon_free_clocks(struct sun4i_tcon *tcon)
-> >  {
-> >  
-> >  	clk_disable_unprepare(tcon->clk);
-> > 
-> > +	clk_disable_unprepare(tcon->top_clk);
-> > 
-> >  }
-> >  
-> >  static int sun4i_tcon_init_irq(struct device *dev,
-> > 
-> > @@ -980,6 +991,23 @@ static int sun4i_tcon_bind(struct device *dev, struct
-> > device *master,> 
-> >  	tcon->id = engine->id;
-> >  	tcon->quirks = of_device_get_match_data(dev);
-> > 
-> > +	if (tcon->quirks->needs_tcon_top) {
-> > +		struct device_node *np;
-> > +
-> > +		np = of_parse_phandle(dev->of_node, "allwinner,tcon-top", 0);
-> > +		if (np) {
-> > +			struct platform_device *pdev;
-> > +
-> > +			pdev = of_find_device_by_node(np);
-> > +			if (pdev)
-> > +				tcon->tcon_top = platform_get_drvdata(pdev);
-> > +			of_node_put(np);
-> > +
-> > +			if (!tcon->tcon_top)
-> > +				return -EPROBE_DEFER;
-> > +		}
-> > +	}
-> > +
-> 
-> I might have missed it, but I've not seen the bindings additions for
-> that property. This shouldn't really be done that way anyway, instead
-> of using a direct phandle, you should be using the of-graph, with the
-> TCON-top sitting where it belongs in the flow of data.
-
-Just to answer to the first question, it did describe it in "[PATCH 07/15] dt-
-bindings: display: sun4i-drm: Add R40 HDMI pipeline".
-
-As why I designed it that way - HW representation could be described that way 
-(ASCII art makes sense when fixed width font is used to view it):
-
-                            / LCD0/LVDS0
-                / TCON-LCD0
-                |           \ MIPI DSI
-mixer0          |
-       \        / TCON-LCD1 - LCD1/LVDS1
-        TCON-TOP
-       /        \ TCON-TV0 - TVE0/RGB
-mixer1          |          \
-                |           TCON-TOP - HDMI
-                |          /
-                \ TCON-TV1 - TVE1/RGB
-
-This is a bit simplified, since there is also TVE-TOP, which is responsible 
-for sharing 4 DACs between both TVE encoders. You can have two TV outs (PAL/
-NTSC) or TVE0 as TV out and TVE1 as RGB or vice versa. It even seems that you 
-can arbitrarly choose which DAC is responsible for which signal, so there is a 
-ton of possible end combinations, but I'm not 100% sure.
-
-Even though I wrote TCON-TOP twice, this is same unit in HW. R40 manual 
-suggest more possibilities, although some of them seem wrong, like RGB feeding 
-from LCD TCON. That is confirmed to be wrong when checking BSP code. 
-
-Additionally, TCON-TOP comes in the middle of TVE0 and LCD0, TVE1 and LCD1 for 
-pin muxing, although I'm not sure why is that needed at all, since according 
-to R40 datasheet, TVE0 and TVE1 pins are dedicated and not on PORT D and PORT 
-H, respectively, as TCON-TOP documentation suggest. However, HSYNC and PSYNC 
-lines might be shared between TVE (when it works in RGB mode) and LCD. But 
-that is just my guess since I'm not really familiar with RGB and LCD 
-interfaces.
-
-I'm really not sure what would be the best representation in OF-graph. Can you 
-suggest one?
-
-On the other hand, mux callback in TCON driver has all available informations 
-at hand. It knows mixer ID, TCON ID and most importantly, encoder type. Based 
-on all that informations, it's easy to configure TCON TOP.
-
-I hope you understand. If you have better idea, I'm all ears, since phandle 
-seems a bit weird to me too, but I think it's the only future proof, when 
-adding LVDS, RGB, TVE or LCD support.
-
-Best regards,
-Jernej
+diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+index 6333bdcd9448..a5fa6521bb83 100644
+--- a/drivers/remoteproc/qcom_q6v5_pil.c
++++ b/drivers/remoteproc/qcom_q6v5_pil.c
+@@ -143,6 +143,10 @@ struct q6v5 {
+ 	struct qcom_smem_state *state;
+ 	unsigned stop_bit;
+ 
++	int handover_irq;
++	int wdog_irq;
++	int fatal_irq;
++
+ 	struct clk *active_clks[8];
+ 	struct clk *proxy_clks[4];
+ 	int active_clk_count;
+@@ -170,6 +174,7 @@ struct q6v5 {
+ 	struct qcom_rproc_ssr ssr_subdev;
+ 	struct qcom_sysmon *sysmon;
+ 	bool need_mem_protection;
++	bool unvoted_flag;
+ 	int mpss_perm;
+ 	int mba_perm;
+ 	int version;
+@@ -304,6 +309,20 @@ static void q6v5_clk_disable(struct device *dev,
+ 		clk_disable_unprepare(clks[i]);
+ }
+ 
++static void q6v5_enable_irqs(struct q6v5 *qproc)
++{
++	enable_irq(qproc->wdog_irq);
++	enable_irq(qproc->fatal_irq);
++	enable_irq(qproc->handover_irq);
++}
++
++static void q6v5_disable_irqs(struct q6v5 *qproc)
++{
++	disable_irq(qproc->handover_irq);
++	disable_irq(qproc->fatal_irq);
++	disable_irq(qproc->wdog_irq);
++}
++
+ static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
+ 				   bool remote_owner, phys_addr_t addr,
+ 				   size_t size)
+@@ -727,6 +746,7 @@ static int q6v5_start(struct rproc *rproc)
+ 	int xfermemop_ret;
+ 	int ret;
+ 
++	qproc->unvoted_flag = false;
+ 	ret = q6v5_regulator_enable(qproc, qproc->proxy_regs,
+ 				    qproc->proxy_reg_count);
+ 	if (ret) {
+@@ -793,9 +813,12 @@ static int q6v5_start(struct rproc *rproc)
+ 	if (ret)
+ 		goto reclaim_mpss;
+ 
++	q6v5_enable_irqs(qproc);
++
+ 	ret = wait_for_completion_timeout(&qproc->start_done,
+ 					  msecs_to_jiffies(5000));
+ 	if (ret == 0) {
++		q6v5_disable_irqs(qproc);
+ 		dev_err(qproc->dev, "start timed out\n");
+ 		ret = -ETIMEDOUT;
+ 		goto reclaim_mpss;
+@@ -887,11 +910,14 @@ static int q6v5_stop(struct rproc *rproc)
+ 	WARN_ON(ret);
+ 
+ 	reset_control_assert(qproc->mss_restart);
++	q6v5_disable_irqs(qproc);
+ 
+-	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
+-			 qproc->proxy_clk_count);
+-	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+-			       qproc->proxy_reg_count);
++	if (!qproc->unvoted_flag) {
++		q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
++				 qproc->proxy_clk_count);
++		q6v5_regulator_disable(qproc, qproc->proxy_regs,
++				       qproc->proxy_reg_count);
++	}
+ 
+ 	q6v5_clk_disable(qproc->dev, qproc->active_clks,
+ 			 qproc->active_clk_count);
+@@ -972,10 +998,13 @@ static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
+ {
+ 	struct q6v5 *qproc = dev;
+ 
+-	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
+-			 qproc->proxy_clk_count);
+-	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+-			       qproc->proxy_reg_count);
++	if (!qproc->unvoted_flag) {
++		qproc->unvoted_flag = true;
++		q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
++				 qproc->proxy_clk_count);
++		q6v5_regulator_disable(qproc, qproc->proxy_regs,
++				       qproc->proxy_reg_count);
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -1058,18 +1087,18 @@ static int q6v5_init_reset(struct q6v5 *qproc)
+ 	return 0;
+ }
+ 
+-static int q6v5_request_irq(struct q6v5 *qproc,
++static inline int q6v5_request_irq(struct q6v5 *qproc,
+ 			     struct platform_device *pdev,
+ 			     const char *name,
+-			     irq_handler_t thread_fn)
++			     irq_handler_t thread_fn,
++			     unsigned int *irq_num)
+ {
+ 	int ret;
+ 
+ 	ret = platform_get_irq_byname(pdev, name);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "no %s IRQ defined\n", name);
+-		return ret;
+-	}
++
++	if (irq_num)
++		*irq_num = ret;
+ 
+ 	ret = devm_request_threaded_irq(&pdev->dev, ret,
+ 					NULL, thread_fn,
+@@ -1199,26 +1228,32 @@ static int q6v5_probe(struct platform_device *pdev)
+ 
+ 	qproc->version = desc->version;
+ 	qproc->need_mem_protection = desc->need_mem_protection;
+-	ret = q6v5_request_irq(qproc, pdev, "wdog", q6v5_wdog_interrupt);
++	ret = q6v5_request_irq(qproc, pdev, "wdog", q6v5_wdog_interrupt,
++			       &qproc->wdog_irq);
+ 	if (ret < 0)
+ 		goto free_rproc;
+ 
+-	ret = q6v5_request_irq(qproc, pdev, "fatal", q6v5_fatal_interrupt);
++	ret = q6v5_request_irq(qproc, pdev, "fatal", q6v5_fatal_interrupt,
++			       &qproc->fatal_irq);
+ 	if (ret < 0)
+ 		goto free_rproc;
+ 
+-	ret = q6v5_request_irq(qproc, pdev, "ready", q6v5_ready_interrupt);
++	ret = q6v5_request_irq(qproc, pdev, "ready", q6v5_ready_interrupt,
++			       NULL);
+ 	if (ret < 0)
+ 		goto free_rproc;
+ 
+-	ret = q6v5_request_irq(qproc, pdev, "handover", q6v5_handover_interrupt);
++	ret = q6v5_request_irq(qproc, pdev, "handover", q6v5_handover_interrupt,
++			       &qproc->handover_irq);
+ 	if (ret < 0)
+ 		goto free_rproc;
+ 
+-	ret = q6v5_request_irq(qproc, pdev, "stop-ack", q6v5_stop_ack_interrupt);
++	ret = q6v5_request_irq(qproc, pdev, "stop-ack", q6v5_stop_ack_interrupt,
++			       NULL);
+ 	if (ret < 0)
+ 		goto free_rproc;
+ 
++	q6v5_disable_irqs(qproc);
+ 	qproc->state = qcom_smem_state_get(&pdev->dev, "stop", &qproc->stop_bit);
+ 	if (IS_ERR(qproc->state)) {
+ 		ret = PTR_ERR(qproc->state);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
