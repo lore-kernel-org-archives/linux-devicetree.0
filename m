@@ -1,35 +1,43 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v9 01/15] soc: qcom: Separate kryo l2 accessors from PMU
- driver
-Date: Mon, 21 May 2018 14:17:41 +0100
-Message-ID: <20180521131740.GI19713@arm.com>
-References: <1526901932-9514-1-git-send-email-ilialin@codeaurora.org>
- <1526901932-9514-2-git-send-email-ilialin@codeaurora.org>
+From: "=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?=" <vokac.m@gmail.com>
+Subject: [PATCH net-next 0/7] Add support for QCA8334 switch
+Date: Mon, 21 May 2018 15:28:06 +0200
+Message-ID: <1526909293-56377-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526901932-9514-2-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, tfinkel@codeaurora.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: netdev@vger.kernel.org, michal.vokac@ysoft.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2018 at 02:25:18PM +0300, Ilia Lin wrote:
-> The driver provides kernel level API for other drivers
-> to access the MSM8996 L2 cache registers.
-> Separating the L2 access code from the PMU driver and
-> making it public to allow other drivers use it.
-> The accesses must be separated with a single spinlock,
-> maintained in this driver.
-> 
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> ---
->  drivers/perf/Kconfig                 |  1 +
->  drivers/perf/qcom_l2_pmu.c           | 90 ++++++++++--------------------------
+This series basically adds support for a QCA8334 ethernet switch to the
+qca8k driver. It is a four-port variant of the already supported seven
+port QCA8337. Register map is the same for the whole familly and all chips
+have the same device ID.
 
-I'm fine with the perf bits:
+Major part of this series enhances the CPU port setting. Currently the CPU
+port is not set to any sensible defaults compatible with the xGMII
+interface. This series forces the CPU port to its maximum bandwidth and
+also allows to adjust the new defaults using fixed-link device tree
+sub-node.
 
-Acked-by: Will Deacon <will.deacon@arm.com>
+Alongside these changes I fixed two checkpatch warnings regarding SPDX and
+redundant parentheses.
 
-Will
+Michal Vokáč (7):
+  net: dsa: qca8k: Add QCA8334 binding documentation
+  net: dsa: qca8k: Add support for QCA8334 switch
+  net: dsa: qca8k: Enable RXMAC when bringing up a port
+  net: dsa: qca8k: Force CPU port to its highest bandwidth
+  net: dsa: qca8k: Allow overwriting CPU port setting
+  net: dsa: qca8k: Replace GPL boilerplate by SPDX
+  net: dsa: qca8k: Remove rudundant parentheses
+
+ .../devicetree/bindings/net/dsa/qca8k.txt          |  5 +-
+ drivers/net/dsa/qca8k.c                            | 64 ++++++++++++++++++----
+ drivers/net/dsa/qca8k.h                            |  7 ++-
+ 3 files changed, 61 insertions(+), 15 deletions(-)
+
+-- 
+2.1.4
