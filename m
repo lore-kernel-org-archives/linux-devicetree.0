@@ -1,123 +1,425 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: OMAP serial runtime PM and autosuspend (was: Re: [PATCH 4/7]
- dt-bindings: gnss: add u-blox binding))
-Date: Mon, 21 May 2018 08:48:32 -0700
-Message-ID: <20180521154832.GY98604@atomide.com>
-References: <20180508065852.GW2285@localhost>
- <20180508152228.GV98604@atomide.com>
- <20180508154756.GW98604@atomide.com>
- <20180508155405.GX98604@atomide.com>
- <20180508164904.GZ98604@atomide.com>
- <20180509131003.GC2285@localhost>
- <20180509135706.GB98604@atomide.com>
- <20180517100948.GI30172@localhost>
- <20180517171038.GL98604@atomide.com>
- <20180521134830.GR30172@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: qdsp6: q6afe: Add support to MI2S sysclks" to the asoc tree
+Date: Mon, 21 May 2018 16:49:06 +0100
+Message-ID: <E1fKn3a-0007Nv-Lv@debutante>
+References: <20180518125610.26200-5-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180521134830.GR30172@localhost>
+In-Reply-To: <20180518125610.26200-5-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, rohkumar@qti.qualcomm.com, gregkh@linuxfoundation.org, plai@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-* Johan Hovold <johan@kernel.org> [180521 13:50]:
-> On Thu, May 17, 2018 at 10:10:38AM -0700, Tony Lindgren wrote:
-> > * Johan Hovold <johan@kernel.org> [180517 10:12]:
-> > > No, defaulting to "on" (i.e. calling pm_runtime_forbid()) wouldn't work
-> > > either as that would also prevent the device from runtime suspending
-> > > just as the current negative autosuspend delay does.
-> > 
-> > Well in that case we should just stick with -1 value for the
-> > autosuspend. And just do pm_runtime_put_sync_suspend() after
-> > probe and on close.
-> 
-> That won't work either as a negative autosuspend delay prevents runtime
-> suspend completely (by grabbing an extra RPM reference).
+The patch
 
-Well so negative autosuspend delay is working as documented then :)
+   ASoC: qdsp6: q6afe: Add support to MI2S sysclks
 
-> > > I fail to see how we can implement this using the current toolbox. What
-> > > you're after here is really a mechanism for selecting between two
-> > > different runtime PM schemes at runtime:
-> > > 
-> > > 	1. normal serial RPM, where the controller is active while the
-> > > 	   port is open (this should be the safe default)
-> > 
-> > Agreed. And that is the case already.
-> 
-> Yes, but it's not really the case today as since omap-serial (and
-> 8250-omap) sets a negative autosuspend at probe and hence does not
-> runtime-suspend when the port is closed. So that's the long-standing bug
-> which needs fixing.
+has been applied to the asoc tree at
 
-Yes the bug for closed ports needs to be fixed for sure.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> > > 	2. aggressive serial RPM, where the controller is allowed to
-> > > 	   suspend while the port is open even though this may result in
-> > > 	   lost characters when waking up on incoming data
-> > 
-> > In this case it seems that the only thing needed is to just
-> > configure the autosuspend delay for the parent port. The use of
-> > -1 has been around since the start of runtime PM AFAIK, so maybe
-> > we should just document it. I guess we could also introduce
-> > pm_runtime_block_autoidle_unless_configured() :)
-> 
-> The implications of a negative autosuspend delay are already documented
-> (in Documentation/power/runtime_pm.txt); it's just the omap drivers that
-> gets it wrong when trying to do things which aren't currently supported
-> (and never have been).
-> 
-> So I still think we need a new mechanism for this.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Well if you have some better mechanism in mind let's try it out. Short of
-sprinkling pm_runtime_force_suspend/resume calls all over, I'm out of ideas
-right now.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> > > For normal ttys, we need a user-space interface for selecting between
-> > > the two, and for serdev we may want a way to select the RPM scheme from
-> > > within the kernel.
-> > > 
-> > > Note that with my serdev controller runtime PM patch, serdev core could
-> > > always opt for aggressive PM (as by default serdev core holds an RPM
-> > > reference for the controller while the port is open).
-> > 
-> > So if your serdev controller was to set the parent autosuspend
-> > delay on open() and set it back on close() this should work?
-> 
-> Is it really the job of a serdev driver to set the autosuspend delay of
-> a parent controller? Isn't this somethings which depends on the
-> characteristics of the controller (possibly configurable by user space)
-> such as the cost of runtime suspending and resuming?
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Only in some cases will the serdev driver know it's safe to configure
-the parent controller. Configuring the parent controller from userspace
-works just fine as we've seen for years now.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> The patch I posted works with what we have today; if a parent serial
-> controller driver uses aggressive runtime PM by default or after having
-> been configured through sysfs to do so.
+Thanks,
+Mark
 
-Yeah let's stick with configuring the parent controller from userspace
-for now at least.
+>From a4ae3af59bd58514b5417d7d802a37e82bfcfd8f Mon Sep 17 00:00:00 2001
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Date: Fri, 18 May 2018 13:55:59 +0100
+Subject: [PATCH] ASoC: qdsp6: q6afe: Add support to MI2S sysclks
 
-> What I'm getting at here is that the delay should be set by the serial
-> driver implementing aggressive runtime PM. Then all we need is a
-> mechanism to determine whether an extra RPM reference should be taken at
-> tty open or not (configurable by user space, defaulting to yes).
+This patch adds support to LPASS Bit clock, LPASS Digital
+core clock and OSR clock. These clocks are required for both
+MI2S and PCM setup.
 
-OK yeah some additional on/off switch seems to be missing here.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
+Reviewed-by: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/qcom/qdsp6/q6afe.c | 166 +++++++++++++++++++++++++++++++++++
+ sound/soc/qcom/qdsp6/q6afe.h | 131 +++++++++++++++++++++++++++
+ 2 files changed, 297 insertions(+)
 
-> Specifically, the serial drivers themselves would always use
-> autosuspend and not have to deal with supporting the two RPM schemes
-> (normal vs aggressive runtime PM).
-
-OK. So if I understand your idea right, we could have autosuspend timeout
-set to 3000ms in the 8250_omap.c but still default to RPM blocked?
-Then user can enable aggressive PM via /sys as desired, right?
-
-Regards,
-
-Tony
+diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
+index 0004369b3661..de0030068ecb 100644
+--- a/sound/soc/qcom/qdsp6/q6afe.c
++++ b/sound/soc/qcom/qdsp6/q6afe.c
+@@ -34,6 +34,9 @@
+ 
+ #define AFE_PARAM_ID_CDC_SLIMBUS_SLAVE_CFG 0x00010235
+ 
++#define AFE_PARAM_ID_LPAIF_CLK_CONFIG	0x00010238
++#define AFE_PARAM_ID_INT_DIGITAL_CDC_CLK_CONFIG	0x00010239
++
+ #define AFE_PARAM_ID_SLIMBUS_CONFIG    0x00010212
+ #define AFE_PARAM_ID_I2S_CONFIG	0x0001020D
+ 
+@@ -67,6 +70,11 @@
+ #define AFE_PORT_ID_MULTICHAN_HDMI_RX	0x100E
+ 
+ #define AFE_API_VERSION_SLIMBUS_CONFIG 0x1
++/* Clock set API version */
++#define AFE_API_VERSION_CLOCK_SET 1
++#define Q6AFE_LPASS_CLK_CONFIG_API_VERSION	0x1
++#define AFE_MODULE_CLOCK_SET		0x0001028F
++#define AFE_PARAM_ID_CLOCK_SET		0x00010290
+ 
+ /* SLIMbus Rx port on channel 0. */
+ #define AFE_PORT_ID_SLIMBUS_MULTI_CHAN_0_RX      0x4000
+@@ -142,6 +150,13 @@ struct afe_port_param_data_v2 {
+ 	u16 reserved;
+ } __packed;
+ 
++struct afe_svc_cmd_set_param {
++	uint32_t payload_size;
++	uint32_t payload_address_lsw;
++	uint32_t payload_address_msw;
++	uint32_t mem_map_handle;
++} __packed;
++
+ struct afe_port_cmd_set_param_v2 {
+ 	u16 port_id;
+ 	u16 payload_size;
+@@ -202,6 +217,23 @@ struct afe_param_id_slimbus_cfg {
+  */
+ } __packed;
+ 
++struct afe_clk_cfg {
++	u32                  i2s_cfg_minor_version;
++	u32                  clk_val1;
++	u32                  clk_val2;
++	u16                  clk_src;
++	u16                  clk_root;
++	u16                  clk_set_mode;
++	u16                  reserved;
++} __packed;
++
++struct afe_digital_clk_cfg {
++	u32                  i2s_cfg_minor_version;
++	u32                  clk_val;
++	u16                  clk_root;
++	u16                  reserved;
++} __packed;
++
+ struct afe_param_id_i2s_cfg {
+ 	u32	i2s_cfg_minor_version;
+ 	u16	bit_width;
+@@ -219,6 +251,16 @@ union afe_port_config {
+ 	struct afe_param_id_i2s_cfg	i2s_cfg;
+ } __packed;
+ 
++
++struct afe_clk_set {
++	uint32_t clk_set_minor_version;
++	uint32_t clk_id;
++	uint32_t clk_freq_in_hz;
++	uint16_t clk_attri;
++	uint16_t clk_root;
++	uint32_t enable;
++};
++
+ struct q6afe_port {
+ 	wait_queue_head_t wait;
+ 	union afe_port_config port_cfg;
+@@ -404,6 +446,54 @@ static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
+ 	return ret;
+ }
+ 
++static int q6afe_port_set_param(struct q6afe_port *port, void *data,
++				int param_id, int module_id, int psize)
++{
++	struct afe_svc_cmd_set_param *param;
++	struct afe_port_param_data_v2 *pdata;
++	struct q6afe *afe = port->afe;
++	struct apr_pkt *pkt;
++	u16 port_id = port->id;
++	int ret, pkt_size;
++	void *p, *pl;
++
++	pkt_size = APR_HDR_SIZE + sizeof(*param) + sizeof(*pdata) + psize;
++	p = kzalloc(pkt_size, GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++
++	pkt = p;
++	param = p + APR_HDR_SIZE;
++	pdata = p + APR_HDR_SIZE + sizeof(*param);
++	pl = p + APR_HDR_SIZE + sizeof(*param) + sizeof(*pdata);
++	memcpy(pl, data, psize);
++
++	pkt->hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
++					   APR_HDR_LEN(APR_HDR_SIZE),
++					   APR_PKT_VER);
++	pkt->hdr.pkt_size = pkt_size;
++	pkt->hdr.src_port = 0;
++	pkt->hdr.dest_port = 0;
++	pkt->hdr.token = port->token;
++	pkt->hdr.opcode = AFE_SVC_CMD_SET_PARAM;
++
++	param->payload_size = sizeof(*pdata) + psize;
++	param->payload_address_lsw = 0x00;
++	param->payload_address_msw = 0x00;
++	param->mem_map_handle = 0x00;
++	pdata->module_id = module_id;
++	pdata->param_id = param_id;
++	pdata->param_size = psize;
++
++	ret = afe_apr_send_pkt(afe, pkt, port);
++	if (ret)
++		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
++		       port_id, ret);
++
++	kfree(pkt);
++	return ret;
++}
++
+ static int q6afe_port_set_param_v2(struct q6afe_port *port, void *data,
+ 				   int param_id, int module_id, int psize)
+ {
+@@ -453,6 +543,82 @@ static int q6afe_port_set_param_v2(struct q6afe_port *port, void *data,
+ 	return ret;
+ }
+ 
++static int q6afe_set_lpass_clock(struct q6afe_port *port,
++				 struct afe_clk_cfg *cfg)
++{
++	return q6afe_port_set_param_v2(port, cfg,
++				       AFE_PARAM_ID_LPAIF_CLK_CONFIG,
++				       AFE_MODULE_AUDIO_DEV_INTERFACE,
++				       sizeof(*cfg));
++}
++
++static int q6afe_set_lpass_clock_v2(struct q6afe_port *port,
++				 struct afe_clk_set *cfg)
++{
++	return q6afe_port_set_param(port, cfg, AFE_PARAM_ID_CLOCK_SET,
++				    AFE_MODULE_CLOCK_SET, sizeof(*cfg));
++}
++
++static int q6afe_set_digital_codec_core_clock(struct q6afe_port *port,
++					      struct afe_digital_clk_cfg *cfg)
++{
++	return q6afe_port_set_param_v2(port, cfg,
++				       AFE_PARAM_ID_INT_DIGITAL_CDC_CLK_CONFIG,
++				       AFE_MODULE_AUDIO_DEV_INTERFACE,
++				       sizeof(*cfg));
++}
++
++int q6afe_port_set_sysclk(struct q6afe_port *port, int clk_id,
++			  int clk_src, int clk_root,
++			  unsigned int freq, int dir)
++{
++	struct afe_clk_cfg ccfg = {0,};
++	struct afe_clk_set cset = {0,};
++	struct afe_digital_clk_cfg dcfg = {0,};
++	int ret;
++
++	switch (clk_id) {
++	case LPAIF_DIG_CLK:
++		dcfg.i2s_cfg_minor_version = AFE_API_VERSION_I2S_CONFIG;
++		dcfg.clk_val = freq;
++		dcfg.clk_root = clk_root;
++		ret = q6afe_set_digital_codec_core_clock(port, &dcfg);
++		break;
++	case LPAIF_BIT_CLK:
++		ccfg.i2s_cfg_minor_version = AFE_API_VERSION_I2S_CONFIG;
++		ccfg.clk_val1 = freq;
++		ccfg.clk_src = clk_src;
++		ccfg.clk_root = clk_root;
++		ccfg.clk_set_mode = Q6AFE_LPASS_MODE_CLK1_VALID;
++		ret = q6afe_set_lpass_clock(port, &ccfg);
++		break;
++
++	case LPAIF_OSR_CLK:
++		ccfg.i2s_cfg_minor_version = AFE_API_VERSION_I2S_CONFIG;
++		ccfg.clk_val2 = freq;
++		ccfg.clk_src = clk_src;
++		ccfg.clk_root = clk_root;
++		ccfg.clk_set_mode = Q6AFE_LPASS_MODE_CLK2_VALID;
++		ret = q6afe_set_lpass_clock(port, &ccfg);
++		break;
++	case Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT ... Q6AFE_LPASS_CLK_ID_INT_MCLK_1:
++		cset.clk_set_minor_version = AFE_API_VERSION_CLOCK_SET;
++		cset.clk_id = clk_id;
++		cset.clk_freq_in_hz = freq;
++		cset.clk_attri = clk_src;
++		cset.clk_root = clk_root;
++		cset.enable = !!freq;
++		ret = q6afe_set_lpass_clock_v2(port, &cset);
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(q6afe_port_set_sysclk);
++
+ /**
+  * q6afe_port_stop() - Stop a afe port
+  *
+diff --git a/sound/soc/qcom/qdsp6/q6afe.h b/sound/soc/qcom/qdsp6/q6afe.h
+index 3cb3bb4985a9..5ca54a9bdfd5 100644
+--- a/sound/soc/qcom/qdsp6/q6afe.h
++++ b/sound/soc/qcom/qdsp6/q6afe.h
+@@ -16,6 +16,134 @@
+ #define AFE_MAX_CHAN_COUNT	8
+ #define AFE_PORT_MAX_AUDIO_CHAN_CNT	0x8
+ 
++#define Q6AFE_LPASS_CLK_SRC_INTERNAL 1
++#define Q6AFE_LPASS_CLK_ROOT_DEFAULT 0
++
++#define LPAIF_DIG_CLK	1
++#define LPAIF_BIT_CLK	2
++#define LPAIF_OSR_CLK	3
++
++/* Clock ID for Primary I2S IBIT */
++#define Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT                          0x100
++/* Clock ID for Primary I2S EBIT */
++#define Q6AFE_LPASS_CLK_ID_PRI_MI2S_EBIT                          0x101
++/* Clock ID for Secondary I2S IBIT */
++#define Q6AFE_LPASS_CLK_ID_SEC_MI2S_IBIT                          0x102
++/* Clock ID for Secondary I2S EBIT */
++#define Q6AFE_LPASS_CLK_ID_SEC_MI2S_EBIT                          0x103
++/* Clock ID for Tertiary I2S IBIT */
++#define Q6AFE_LPASS_CLK_ID_TER_MI2S_IBIT                          0x104
++/* Clock ID for Tertiary I2S EBIT */
++#define Q6AFE_LPASS_CLK_ID_TER_MI2S_EBIT                          0x105
++/* Clock ID for Quartnery I2S IBIT */
++#define Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT                         0x106
++/* Clock ID for Quartnery I2S EBIT */
++#define Q6AFE_LPASS_CLK_ID_QUAD_MI2S_EBIT                         0x107
++/* Clock ID for Speaker I2S IBIT */
++#define Q6AFE_LPASS_CLK_ID_SPEAKER_I2S_IBIT                       0x108
++/* Clock ID for Speaker I2S EBIT */
++#define Q6AFE_LPASS_CLK_ID_SPEAKER_I2S_EBIT                       0x109
++/* Clock ID for Speaker I2S OSR */
++#define Q6AFE_LPASS_CLK_ID_SPEAKER_I2S_OSR                        0x10A
++
++/* Clock ID for QUINARY  I2S IBIT */
++#define Q6AFE_LPASS_CLK_ID_QUI_MI2S_IBIT			0x10B
++/* Clock ID for QUINARY  I2S EBIT */
++#define Q6AFE_LPASS_CLK_ID_QUI_MI2S_EBIT			0x10C
++/* Clock ID for SENARY  I2S IBIT */
++#define Q6AFE_LPASS_CLK_ID_SEN_MI2S_IBIT			0x10D
++/* Clock ID for SENARY  I2S EBIT */
++#define Q6AFE_LPASS_CLK_ID_SEN_MI2S_EBIT			0x10E
++/* Clock ID for INT0 I2S IBIT  */
++#define Q6AFE_LPASS_CLK_ID_INT0_MI2S_IBIT                       0x10F
++/* Clock ID for INT1 I2S IBIT  */
++#define Q6AFE_LPASS_CLK_ID_INT1_MI2S_IBIT                       0x110
++/* Clock ID for INT2 I2S IBIT  */
++#define Q6AFE_LPASS_CLK_ID_INT2_MI2S_IBIT                       0x111
++/* Clock ID for INT3 I2S IBIT  */
++#define Q6AFE_LPASS_CLK_ID_INT3_MI2S_IBIT                       0x112
++/* Clock ID for INT4 I2S IBIT  */
++#define Q6AFE_LPASS_CLK_ID_INT4_MI2S_IBIT                       0x113
++/* Clock ID for INT5 I2S IBIT  */
++#define Q6AFE_LPASS_CLK_ID_INT5_MI2S_IBIT                       0x114
++/* Clock ID for INT6 I2S IBIT  */
++#define Q6AFE_LPASS_CLK_ID_INT6_MI2S_IBIT                       0x115
++
++/* Clock ID for QUINARY MI2S OSR CLK  */
++#define Q6AFE_LPASS_CLK_ID_QUI_MI2S_OSR                         0x116
++
++/* Clock ID for Primary PCM IBIT */
++#define Q6AFE_LPASS_CLK_ID_PRI_PCM_IBIT                           0x200
++/* Clock ID for Primary PCM EBIT */
++#define Q6AFE_LPASS_CLK_ID_PRI_PCM_EBIT                           0x201
++/* Clock ID for Secondary PCM IBIT */
++#define Q6AFE_LPASS_CLK_ID_SEC_PCM_IBIT                           0x202
++/* Clock ID for Secondary PCM EBIT */
++#define Q6AFE_LPASS_CLK_ID_SEC_PCM_EBIT                           0x203
++/* Clock ID for Tertiary PCM IBIT */
++#define Q6AFE_LPASS_CLK_ID_TER_PCM_IBIT                           0x204
++/* Clock ID for Tertiary PCM EBIT */
++#define Q6AFE_LPASS_CLK_ID_TER_PCM_EBIT                           0x205
++/* Clock ID for Quartery PCM IBIT */
++#define Q6AFE_LPASS_CLK_ID_QUAD_PCM_IBIT                          0x206
++/* Clock ID for Quartery PCM EBIT */
++#define Q6AFE_LPASS_CLK_ID_QUAD_PCM_EBIT                          0x207
++/* Clock ID for Quinary PCM IBIT */
++#define Q6AFE_LPASS_CLK_ID_QUIN_PCM_IBIT                          0x208
++/* Clock ID for Quinary PCM EBIT */
++#define Q6AFE_LPASS_CLK_ID_QUIN_PCM_EBIT                          0x209
++/* Clock ID for QUINARY PCM OSR  */
++#define Q6AFE_LPASS_CLK_ID_QUI_PCM_OSR                            0x20A
++
++/** Clock ID for Primary TDM IBIT */
++#define Q6AFE_LPASS_CLK_ID_PRI_TDM_IBIT                           0x200
++/** Clock ID for Primary TDM EBIT */
++#define Q6AFE_LPASS_CLK_ID_PRI_TDM_EBIT                           0x201
++/** Clock ID for Secondary TDM IBIT */
++#define Q6AFE_LPASS_CLK_ID_SEC_TDM_IBIT                           0x202
++/** Clock ID for Secondary TDM EBIT */
++#define Q6AFE_LPASS_CLK_ID_SEC_TDM_EBIT                           0x203
++/** Clock ID for Tertiary TDM IBIT */
++#define Q6AFE_LPASS_CLK_ID_TER_TDM_IBIT                           0x204
++/** Clock ID for Tertiary TDM EBIT */
++#define Q6AFE_LPASS_CLK_ID_TER_TDM_EBIT                           0x205
++/** Clock ID for Quartery TDM IBIT */
++#define Q6AFE_LPASS_CLK_ID_QUAD_TDM_IBIT                          0x206
++/** Clock ID for Quartery TDM EBIT */
++#define Q6AFE_LPASS_CLK_ID_QUAD_TDM_EBIT                          0x207
++/** Clock ID for Quinary TDM IBIT */
++#define Q6AFE_LPASS_CLK_ID_QUIN_TDM_IBIT                          0x208
++/** Clock ID for Quinary TDM EBIT */
++#define Q6AFE_LPASS_CLK_ID_QUIN_TDM_EBIT                          0x209
++/** Clock ID for Quinary TDM OSR */
++#define Q6AFE_LPASS_CLK_ID_QUIN_TDM_OSR                           0x20A
++
++/* Clock ID for MCLK1 */
++#define Q6AFE_LPASS_CLK_ID_MCLK_1                                 0x300
++/* Clock ID for MCLK2 */
++#define Q6AFE_LPASS_CLK_ID_MCLK_2                                 0x301
++/* Clock ID for MCLK3 */
++#define Q6AFE_LPASS_CLK_ID_MCLK_3                                 0x302
++/* Clock ID for MCLK4 */
++#define Q6AFE_LPASS_CLK_ID_MCLK_4                                 0x304
++/* Clock ID for Internal Digital Codec Core */
++#define Q6AFE_LPASS_CLK_ID_INTERNAL_DIGITAL_CODEC_CORE            0x303
++/* Clock ID for INT MCLK0 */
++#define Q6AFE_LPASS_CLK_ID_INT_MCLK_0                             0x305
++/* Clock ID for INT MCLK1 */
++#define Q6AFE_LPASS_CLK_ID_INT_MCLK_1                             0x306
++
++/* Clock attribute for invalid use (reserved for internal usage) */
++#define Q6AFE_LPASS_CLK_ATTRIBUTE_INVALID		0x0
++/* Clock attribute for no couple case */
++#define Q6AFE_LPASS_CLK_ATTRIBUTE_COUPLE_NO		0x1
++/* Clock attribute for dividend couple case */
++#define Q6AFE_LPASS_CLK_ATTRIBUTE_COUPLE_DIVIDEND	0x2
++/* Clock attribute for divisor couple case */
++#define Q6AFE_LPASS_CLK_ATTRIBUTE_COUPLE_DIVISOR	0x3
++/* Clock attribute for invert and no couple case */
++#define Q6AFE_LPASS_CLK_ATTRIBUTE_INVERT_COUPLE_NO	0x4
++
+ struct q6afe_hdmi_cfg {
+ 	u16                  datatype;
+ 	u16                  channel_allocation;
+@@ -59,4 +187,7 @@ void q6afe_slim_port_prepare(struct q6afe_port *port,
+ 			  struct q6afe_slim_cfg *cfg);
+ int q6afe_i2s_port_prepare(struct q6afe_port *port, struct q6afe_i2s_cfg *cfg);
+ 
++int q6afe_port_set_sysclk(struct q6afe_port *port, int clk_id,
++			  int clk_src, int clk_root,
++			  unsigned int freq, int dir);
+ #endif /* __Q6AFE_H__ */
+-- 
+2.17.0
