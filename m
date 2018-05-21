@@ -1,365 +1,148 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 05/15] drm/sun4i: Add TCON TOP driver
-Date: Mon, 21 May 2018 10:05:17 +0200
-Message-ID: <20180521080517.3qmlfajqpn4uw7jv@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 06/15] drm/sun4i: tcon: Add support for tcon-top
+Date: Mon, 21 May 2018 10:07:59 +0200
+Message-ID: <20180521080759.rgviuva65ijcfm2e@flea>
 References: <20180519183127.2718-1-jernej.skrabec@siol.net>
- <20180519183127.2718-6-jernej.skrabec@siol.net>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+ <20180519183127.2718-7-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kzknxzpukknjsac3"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSH3RHMAKGQEOUK77FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180519183127.2718-6-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0728899711=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180519183127.2718-7-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---kzknxzpukknjsac3
-Content-Type: text/plain; charset="UTF-8"
+--===============0728899711==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hpqwgjovcbtgqx7h"
 Content-Disposition: inline
 
-On Sat, May 19, 2018 at 08:31:17PM +0200, Jernej Skrabec wrote:
-> As already described in DT binding, TCON TOP is responsible for
-> configuring display pipeline. In this initial driver focus is on HDMI
-> pipeline, so TVE and LCD configuration is not implemented.
-> 
-> Implemented features:
-> - HDMI source selection
-> - clock driver (TCON and DSI gating)
-> - connecting mixers and TCONS
-> 
-> Something similar also existed in previous SoCs, except that it was part
-> of first TCON.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+
+--hpqwgjovcbtgqx7h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, May 19, 2018 at 08:31:18PM +0200, Jernej Skrabec wrote:
+> If SoC has TCON TOP unit, it has to be configured from TCON, since it
+> has all information needed. Additionally, if it is TCON TV, it must also
+> enable bus gate inside TCON TOP unit.
+
+Why?
+
+> Add support for such TCONs.
+>=20
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 > ---
->  drivers/gpu/drm/sun4i/Makefile             |   3 +-
->  drivers/gpu/drm/sun4i/sun8i_tcon_top.c     | 256 +++++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_tcon_top.h     |  20 ++
->  include/dt-bindings/clock/sun8i-tcon-top.h |  11 +
->  4 files changed, 289 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.c
->  create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.h
->  create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
-> 
-> diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
-> index 2589f4acd5ae..09fbfd6304ba 100644
-> --- a/drivers/gpu/drm/sun4i/Makefile
-> +++ b/drivers/gpu/drm/sun4i/Makefile
-> @@ -16,7 +16,8 @@ sun8i-drm-hdmi-y		+= sun8i_hdmi_phy_clk.o
->  
->  sun8i-mixer-y			+= sun8i_mixer.o sun8i_ui_layer.o \
->  				   sun8i_vi_layer.o sun8i_ui_scaler.o \
-> -				   sun8i_vi_scaler.o sun8i_csc.o
-> +				   sun8i_vi_scaler.o sun8i_csc.o \
-> +				   sun8i_tcon_top.o
->  
->  sun4i-tcon-y			+= sun4i_crtc.o
->  sun4i-tcon-y			+= sun4i_dotclock.o
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> new file mode 100644
-> index 000000000000..075a356a6dfa
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> @@ -0,0 +1,256 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/* Copyright (c) 2018 Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> */
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 28 ++++++++++++++++++++++++++++
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h |  8 ++++++++
+>  2 files changed, 36 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/s=
+un4i_tcon.c
+> index 08747fc3ee71..e0c562ce1c22 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -688,6 +688,16 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+>  		dev_err(dev, "Couldn't get the TCON bus clock\n");
+>  		return PTR_ERR(tcon->clk);
+>  	}
 > +
-> +#include <drm/drmP.h>
-> +
-> +#include <dt-bindings/clock/sun8i-tcon-top.h>
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include "sun8i_tcon_top.h"
-> +
-> +#define TCON_TOP_PORT_SEL_REG		0x1C
-> +#define TCON_TOP_PORT_DE0_MSK			GENMASK(1, 0)
-> +#define TCON_TOP_PORT_DE1_MSK			GENMASK(5, 4)
-> +#define TCON_TOP_PORT_TCON_LCD0			0
-> +#define TCON_TOP_PORT_TCON_LCD1			1
-> +#define TCON_TOP_PORT_TCON_TV0			2
-> +#define TCON_TOP_PORT_TCON_TV1			3
-> +
-> +#define TCON_TOP_GATE_SRC_REG		0x20
-> +#define TCON_TOP_HDMI_SRC_MSK			GENMASK(29, 28)
-> +#define TCON_TOP_HDMI_SRC_NONE			0
-> +#define TCON_TOP_HDMI_SRC_TCON_TV0		1
-> +#define TCON_TOP_HDMI_SRC_TCON_TV1		2
-> +#define TCON_TOP_TCON_TV1_GATE			24
-> +#define TCON_TOP_TCON_TV0_GATE			20
-> +#define TCON_TOP_TCON_DSI_GATE			16
-> +
-> +#define CLK_NUM					3
-> +
-> +struct sun8i_tcon_top {
-> +	struct clk		*bus;
-> +	void __iomem		*regs;
-> +	struct reset_control	*rst;
-> +
-> +	/*
-> +	 * spinlock is used for locking access to registers from different
-> +	 * places - tcon driver and clk subsystem.
-> +	 */
-> +	spinlock_t		reg_lock;
-> +};
-> +
-> +struct sun8i_tcon_top_gate {
-> +	const char	*name;
-> +	u8		bit;
-> +	int		index;
-> +};
-> +
-> +static const struct sun8i_tcon_top_gate gates[] = {
-> +	{"bus-tcon-top-dsi", TCON_TOP_TCON_DSI_GATE, CLK_BUS_TCON_TOP_DSI},
-> +	{"bus-tcon-top-tv0", TCON_TOP_TCON_TV0_GATE, CLK_BUS_TCON_TOP_TV0},
-> +	{"bus-tcon-top-tv1", TCON_TOP_TCON_TV1_GATE, CLK_BUS_TCON_TOP_TV1},
-> +};
-> +
-> +void sun8i_tcon_top_set_hdmi_src(struct sun8i_tcon_top *tcon_top, int tcon)
-> +{
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	if (tcon > 1) {
-> +		DRM_ERROR("TCON index is too high!\n");
-> +		return;
-> +	}
-> +
-> +	spin_lock_irqsave(&tcon_top->reg_lock, flags);
-> +
-> +	val = readl(tcon_top->regs + TCON_TOP_GATE_SRC_REG);
-> +	val &= ~TCON_TOP_HDMI_SRC_MSK;
-> +	val |= FIELD_PREP(TCON_TOP_HDMI_SRC_MSK,
-> +			  TCON_TOP_HDMI_SRC_TCON_TV0 + tcon);
-> +	writel(val, tcon_top->regs + TCON_TOP_GATE_SRC_REG);
-> +
-> +	spin_unlock_irqrestore(&tcon_top->reg_lock, flags);
-> +}
-> +
-> +void sun8i_tcon_top_de_config(struct sun8i_tcon_top *tcon_top,
-> +			      int mixer, enum tcon_type tcon_type, int tcon)
-> +{
-> +	unsigned long flags;
-> +	u32 val, reg;
-> +
-> +	if (mixer > 1) {
-> +		DRM_ERROR("Mixer index is too high!\n");
-> +		return;
-> +	}
-> +
-> +	if (tcon > 1) {
-> +		DRM_ERROR("TCON index is too high!\n");
-> +		return;
-> +	}
-> +
-> +	switch (tcon_type) {
-> +	case tcon_type_lcd:
-> +		val = TCON_TOP_PORT_TCON_LCD0 + tcon;
-> +		break;
-> +	case tcon_type_tv:
-> +		val = TCON_TOP_PORT_TCON_TV0 + tcon;
-> +		break;
-> +	default:
-> +		DRM_ERROR("Invalid TCON type!\n");
-> +		return;
-> +	}
-> +
-> +	spin_lock_irqsave(&tcon_top->reg_lock, flags);
-> +
-> +	reg = readl(tcon_top->regs + TCON_TOP_PORT_SEL_REG);
-> +	if (mixer == 0) {
-> +		reg &= ~TCON_TOP_PORT_DE0_MSK;
-> +		reg |= FIELD_PREP(TCON_TOP_PORT_DE0_MSK, val);
-> +	} else {
-> +		reg &= ~TCON_TOP_PORT_DE1_MSK;
-> +		reg |= FIELD_PREP(TCON_TOP_PORT_DE1_MSK, val);
-> +	}
-> +	writel(reg, tcon_top->regs + TCON_TOP_PORT_SEL_REG);
-> +
-> +	spin_unlock_irqrestore(&tcon_top->reg_lock, flags);
-> +}
-> +
-> +static int sun8i_tcon_top_probe(struct platform_device *pdev)
-> +{
-> +	struct clk_hw_onecell_data *clk_data;
-> +	struct sun8i_tcon_top *tcon_top;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	int ret, i;
-> +
-> +	tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
-> +	if (!tcon_top)
-> +		return -ENOMEM;
-> +
-> +	clk_data = devm_kzalloc(&pdev->dev, sizeof(*clk_data) +
-> +				sizeof(*clk_data->hws) * CLK_NUM,
-> +				GFP_KERNEL);
-> +	if (!clk_data)
-> +		return -ENOMEM;
-> +
-> +	spin_lock_init(&tcon_top->reg_lock);
-> +
-> +	tcon_top->rst = devm_reset_control_get(dev, "rst");
-> +	if (IS_ERR(tcon_top->rst)) {
-> +		dev_err(dev, "Couldn't get our reset line\n");
-> +		return PTR_ERR(tcon_top->rst);
-> +	}
-> +
-> +	tcon_top->bus = devm_clk_get(dev, "bus");
-> +	if (IS_ERR(tcon_top->bus)) {
-> +		dev_err(dev, "Couldn't get the bus clock\n");
-> +		return PTR_ERR(tcon_top->bus);
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	tcon_top->regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(tcon_top->regs))
-> +		return PTR_ERR(tcon_top->regs);
-> +
-> +	ret = reset_control_deassert(tcon_top->rst);
-> +	if (ret) {
-> +		dev_err(dev, "Could not deassert ctrl reset control\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(tcon_top->bus);
-> +	if (ret) {
-> +		dev_err(dev, "Could not enable bus clock\n");
-> +		goto err_assert_reset;
-> +	}
-> +
-> +	/*
-> +	 * Default register values might have some reserved bits set, which
-> +	 * prevents TCON TOP from working properly. Set them to 0 here.
-> +	 */
-> +	writel(0, tcon_top->regs + TCON_TOP_PORT_SEL_REG);
-> +	writel(0, tcon_top->regs + TCON_TOP_GATE_SRC_REG);
-> +
-> +	for (i = 0; i < CLK_NUM; i++) {
-> +		const char *parent_name = "bus-tcon-top";
-
-I guess retrieving the parent's clock name at runtime would be more
-flexible.
-
-> +		struct clk_init_data init;
-> +		struct clk_gate *gate;
-> +
-> +		gate = devm_kzalloc(dev, sizeof(*gate), GFP_KERNEL);
-> +		if (!gate) {
-> +			ret = -ENOMEM;
-> +			goto err_disable_clock;
+> +	if (tcon->quirks->needs_tcon_top && tcon->quirks->has_channel_1) {
+> +		tcon->top_clk =3D devm_clk_get(dev, "tcon-top");
+> +		if (IS_ERR(tcon->top_clk)) {
+> +			dev_err(dev, "Couldn't get the TCON TOP bus clock\n");
+> +			return PTR_ERR(tcon->top_clk);
 > +		}
-> +
-> +		init.name = gates[i].name;
-> +		init.ops = &clk_gate_ops;
-> +		init.flags = CLK_IS_BASIC;
-> +		init.parent_names = &parent_name;
-> +		init.num_parents = 1;
-> +
-> +		gate->reg = tcon_top->regs + TCON_TOP_GATE_SRC_REG;
-> +		gate->bit_idx = gates[i].bit;
-> +		gate->lock = &tcon_top->reg_lock;
-> +		gate->hw.init = &init;
-> +
-> +		ret = devm_clk_hw_register(dev, &gate->hw);
-> +		if (ret)
-> +			goto err_disable_clock;
-
-Isn't it what clk_hw_register_gate is doing?
-
-> +		clk_data->hws[gates[i].index] = &gate->hw;
+> +		clk_prepare_enable(tcon->top_clk);
 > +	}
 > +
-> +	clk_data->num = CLK_NUM;
+>  	clk_prepare_enable(tcon->clk);
+> =20
+>  	if (tcon->quirks->has_channel_0) {
+> @@ -712,6 +722,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+>  static void sun4i_tcon_free_clocks(struct sun4i_tcon *tcon)
+>  {
+>  	clk_disable_unprepare(tcon->clk);
+> +	clk_disable_unprepare(tcon->top_clk);
+>  }
+> =20
+>  static int sun4i_tcon_init_irq(struct device *dev,
+> @@ -980,6 +991,23 @@ static int sun4i_tcon_bind(struct device *dev, struc=
+t device *master,
+>  	tcon->id =3D engine->id;
+>  	tcon->quirks =3D of_device_get_match_data(dev);
+> =20
+> +	if (tcon->quirks->needs_tcon_top) {
+> +		struct device_node *np;
 > +
-> +	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_data);
-> +	if (ret)
-> +		goto err_disable_clock;
+> +		np =3D of_parse_phandle(dev->of_node, "allwinner,tcon-top", 0);
+> +		if (np) {
+> +			struct platform_device *pdev;
 > +
-> +	platform_set_drvdata(pdev, tcon_top);
+> +			pdev =3D of_find_device_by_node(np);
+> +			if (pdev)
+> +				tcon->tcon_top =3D platform_get_drvdata(pdev);
+> +			of_node_put(np);
 > +
-> +	return 0;
+> +			if (!tcon->tcon_top)
+> +				return -EPROBE_DEFER;
+> +		}
+> +	}
 > +
-> +err_disable_clock:
-> +	clk_disable_unprepare(tcon_top->bus);
-> +err_assert_reset:
-> +	reset_control_assert(tcon_top->rst);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sun8i_tcon_top_remove(struct platform_device *pdev)
-> +{
-> +	struct sun8i_tcon_top *tcon_top = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(tcon_top->bus);
-> +	reset_control_assert(tcon_top->rst);
-> +
-> +	return 0;
-> +}
-> +
-> +const struct of_device_id sun8i_tcon_top_of_table[] = {
-> +	{ .compatible = "allwinner,sun8i-r40-tcon-top" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sun8i_tcon_top_of_table);
-> +
-> +static struct platform_driver sun8i_tcon_top_platform_driver = {
-> +	.probe		= sun8i_tcon_top_probe,
-> +	.remove		= sun8i_tcon_top_remove,
-> +	.driver		= {
-> +		.name		= "sun8i-tcon-top",
-> +		.of_match_table	= sun8i_tcon_top_of_table,
-> +	},
-> +};
-> +module_platform_driver(sun8i_tcon_top_platform_driver);
-> +
-> +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>");
-> +MODULE_DESCRIPTION("Allwinner R40 TCON TOP driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.h b/drivers/gpu/drm/sun4i/sun8i_tcon_top.h
-> new file mode 100644
-> index 000000000000..19126e07d2a6
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/* Copyright (c) 2018 Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> */
-> +
-> +#ifndef _SUN8I_TCON_TOP_H_
-> +#define _SUN8I_TCON_TOP_H_
-> +
-> +#include <linux/device.h>
-> +
-> +struct sun8i_tcon_top;
-> +
-> +enum tcon_type {
-> +	tcon_type_lcd,
-> +	tcon_type_tv,
 
-The usual practice is to have the enum values upper-case.
+I might have missed it, but I've not seen the bindings additions for
+that property. This shouldn't really be done that way anyway, instead
+of using a direct phandle, you should be using the of-graph, with the
+TCON-top sitting where it belongs in the flow of data.
 
-Thanks!
 Maxime
 
--- 
+--=20
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---kzknxzpukknjsac3--
+
+--hpqwgjovcbtgqx7h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsCfl4ACgkQ0rTAlCFN
+r3S9AQ/+JPfhJ0iDva/Y/hg0a1JulJ5HlTQ5T5gFfD51q6wf0NGh1WCp6QEPOrea
+RgvO5QSwkZn2849ygj+ISHr2PbUmbaDqe2qEJntJFPRUhdwvho3/3oCRq68n+/E1
+P/SJvCvribHnQBILNbrBwP9SovDva0icOICJcCAboac4vrRhNhSr4CwNWOGJEtC3
+g7Rthf9Lk5axhgFQX2/u1M9Q1ocfD0uTCfednvlVGIjWx2By0HL4wkV3C81iWUoT
+NqnTIPVHo3ZwxWViOiFEp0zdvx3eDQ9v79y9aEKnd1A1GNT84izMACjngez0rkVz
+l4gY+rVfvka9W1Nw4EGrQhix4smH5p/Vb9y/5lc3fOS5AHTPuBUPLRuPfZZRUKjj
+T17XrusCGCYeSgk+nuXqS7AaSHKdHYLiYFlkOGcBsU4fRTrZXeYTFoYmKtE1zkqA
+Kj/YpP856mnHSRmNBXZLe1mrbP8SDAvuFXRS4Y+um69ACaZxInq0OEuNKGJZH7BM
+S8fwMnnbOr1XrFiDvjkklRf+mmAgo+m8xRO8YCX1qoN1lxEeyRBcatqj2S0HNaIY
+pvqIAcEhBedQAycsbRrGjwaq6Ewnsy/8v8PUkS/E9u3uYswQBh56z6wS6L46CLuk
+5HQL9CZmo8xMWtMzM5MkCqsiMTGd7diWx/e0yuUFhn4rA5iQkz8=
+=WmZF
+-----END PGP SIGNATURE-----
+
+--hpqwgjovcbtgqx7h--
+
+--===============0728899711==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0728899711==--
