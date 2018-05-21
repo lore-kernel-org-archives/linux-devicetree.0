@@ -1,45 +1,33 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] iommu/ipmmu-vmsa: Document R-Car V3H and E3 IPMMU DT bindings
-Date: Mon, 21 May 2018 23:41:33 +0900
-Message-ID: <152691369384.29456.13581918319106400529.sendpatchset@little-apple>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 4/7] net: dsa: qca8k: Force CPU port to its
+ highest bandwidth
+Date: Mon, 21 May 2018 16:42:05 +0200
+Message-ID: <20180521144205.GC8077@lunn.ch>
+References: <1526909293-56377-1-git-send-email-michal.vokac@ysoft.com>
+ <1526909293-56377-5-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1526909293-56377-5-git-send-email-michal.vokac@ysoft.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <vokac.m@gmail.com>
+Cc: netdev@vger.kernel.org, michal.vokac@ysoft.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+On Mon, May 21, 2018 at 03:28:10PM +0200, Michal Vokáč wrote:
+> By default autonegotiation is enabled to configure MAC on all ports.
+> For the CPU port autonegotiation can not be used so we need to set
+> some sensible defaults manually.
+> 
+> This patch forces the default setting of the CPU port to 1000Mbps/full
+> duplex which is the chip maximum capability.
+> 
+> Also correct size of the bit field used to configure link speed.
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 
-Update the IPMMU DT binding documentation to include the compat strings
-for the IPMMU devices included in the R-Car V3H and E3 SoCs.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
----
-
- Developed on top of renesas-drivers-2018-05-15-v4.17-rc5
-
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    2 ++
- 1 file changed, 2 insertions(+)
-
---- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2018-05-21 23:37:16.370607110 +0900
-@@ -20,6 +20,8 @@ Required Properties:
-     - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
-     - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
-     - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
-+    - "renesas,ipmmu-r8a77980" for the R8A77980 (R-Car V3H) IPMMU.
-+    - "renesas,ipmmu-r8a77990" for the R8A77990 (R-Car E3) IPMMU.
-     - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
-     - "renesas,ipmmu-vmsa" for generic R-Car Gen2 or RZ/G1 VMSA-compatible
- 			   IPMMU.
+    Andrew
