@@ -1,128 +1,88 @@
 From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [v4 05/11] ARM: dts: aspeed: peci: Add PECI node
-Date: Mon, 21 May 2018 12:58:46 -0700
-Message-ID: <20180521195846.27894-1-jae.hyun.yoo@linux.intel.com>
+Subject: [v4 07/11] dt-bindings: hwmon: Add documents for PECI hwmon client drivers
+Date: Mon, 21 May 2018 12:59:05 -0700
+Message-ID: <20180521195905.27983-1-jae.hyun.yoo@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Ryan Chen <ryan_chen@aspeedtech.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Haiyue Wang <haiyue.wang@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, James Feist <james.feist@linux.intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds PECI bus/adapter node of AST24xx/AST25xx into
-aspeed-g4 and aspeed-g5.
+This commit adds dt-bindings documents for PECI hwmon client drivers.
 
 Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
 Reviewed-by: James Feist <james.feist@linux.intel.com>
 Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+Cc: Andrew Jeffery <andrew@aj.id.au>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-Cc: Ryan Chen <ryan_chen@aspeedtech.com>
+Cc: Joel Stanley <joel@jms.id.au>
 ---
- arch/arm/boot/dts/aspeed-g4.dtsi | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/aspeed-g5.dtsi | 26 ++++++++++++++++++++++++++
- 2 files changed, 52 insertions(+)
+ .../bindings/hwmon/peci-cputemp.txt           | 23 ++++++++++++++++++
+ .../bindings/hwmon/peci-dimmtemp.txt          | 24 +++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
+ create mode 100644 Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 518d2bc7c7fc..c101601429b4 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -29,6 +29,7 @@
- 		serial3 = &uart4;
- 		serial4 = &uart5;
- 		serial5 = &vuart;
-+		peci0 = &peci0;
- 	};
- 
- 	cpus {
-@@ -270,6 +271,13 @@
- 				};
- 			};
- 
-+			peci: peci@1e78b000 {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1e78b000 0x60>;
-+			};
+diff --git a/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt b/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
+new file mode 100644
+index 000000000000..2f59aee12d9e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
+@@ -0,0 +1,23 @@
++Bindings for Intel PECI (Platform Environment Control Interface) cputemp driver.
 +
- 			uart2: serial@1e78d000 {
- 				compatible = "ns16550a";
- 				reg = <0x1e78d000 0x20>;
-@@ -313,6 +321,24 @@
- 	};
- };
- 
-+&peci {
-+	peci0: peci-bus@0 {
-+		compatible = "aspeed,ast2400-peci";
-+		reg = <0x0 0x60>;
++Required properties:
++- compatible : Should be "intel,peci-cputemp".
++- reg        : Should contain address of a client CPU. Address range of CPU
++	       clients is starting from 0x30 based on PECI specification.
++
++Example:
++	peci-bus@0 {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		interrupts = <15>;
-+		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
-+		resets = <&syscon ASPEED_RESET_PECI>;
-+		clock-frequency = <24000000>;
-+		msg-timing = <1>;
-+		addr-timing = <1>;
-+		rd-sampling-point = <8>;
-+		cmd-timeout-ms = <1000>;
-+		status = "disabled";
++		< more properties >
++
++		peci-cputemp@30 {
++			compatible = "intel,peci-cputemp";
++			reg = <0x30>;
++		};
++
++		peci-cputemp@31 {
++			compatible = "intel,peci-cputemp";
++			reg = <0x31>;
++		};
 +	};
-+};
+diff --git a/Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt b/Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt
+new file mode 100644
+index 000000000000..4592ce23f620
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt
+@@ -0,0 +1,24 @@
++Bindings for Intel PECI (Platform Environment Control Interface) dimmtemp
++driver.
 +
- &i2c {
- 	i2c_ic: interrupt-controller@0 {
- 		#interrupt-cells = <1>;
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index f9917717dd08..0c4850c3f456 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -29,6 +29,7 @@
- 		serial3 = &uart4;
- 		serial4 = &uart5;
- 		serial5 = &vuart;
-+		peci0 = &peci0;
- 	};
- 
- 	cpus {
-@@ -320,6 +321,13 @@
- 				};
- 			};
- 
-+			peci: peci@1e78b000 {
-+				compatible = "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1e78b000 0x60>;
-+			};
++Required properties:
++- compatible : Should be "intel,peci-dimmtemp".
++- reg        : Should contain address of a client CPU. Address range of CPU
++	       clients is starting from 0x30 based on PECI specification.
 +
- 			uart2: serial@1e78d000 {
- 				compatible = "ns16550a";
- 				reg = <0x1e78d000 0x20>;
-@@ -363,6 +371,24 @@
- 	};
- };
- 
-+&peci {
-+	peci0: peci-bus@0 {
-+		compatible = "aspeed,ast2500-peci";
-+		reg = <0x0 0x60>;
++Example:
++	peci-bus@0 {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		interrupts = <15>;
-+		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
-+		resets = <&syscon ASPEED_RESET_PECI>;
-+		clock-frequency = <24000000>;
-+		msg-timing = <1>;
-+		addr-timing = <1>;
-+		rd-sampling-point = <8>;
-+		cmd-timeout-ms = <1000>;
-+		status = "disabled";
-+	};
-+};
++		< more properties >
 +
- &i2c {
- 	i2c_ic: interrupt-controller@0 {
- 		#interrupt-cells = <1>;
++		peci-dimmtemp@30 {
++			compatible = "intel,peci-dimmtemp";
++			reg = <0x30>;
++		};
++
++		peci-dimmtemp@31 {
++			compatible = "intel,peci-dimmtemp";
++			reg = <0x31>;
++		};
++	};
 -- 
 2.17.0
