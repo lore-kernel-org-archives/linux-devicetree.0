@@ -1,14 +1,13 @@
-Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:7232
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751199AbeEVOUB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 May 2018 10:20:01 -0400
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v5 05/14] usb: typec: add API to get typec basic port
+Return-Path: <SRS0=YcIV=II=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:36582 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751286AbeEUNMp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 May 2018 09:12:45 -0400
+Date: Mon, 21 May 2018 16:12:39 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 05/14] usb: typec: add API to get typec basic port
  power and data config
-Date: Tue, 22 May 2018 14:19:56 +0000
-Message-ID: <VI1PR0402MB39179B4AD2674158CF7EABCC89940@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Message-ID: <20180521131239.GB10677@kuha.fi.intel.com>
 References: <1525307094-27402-6-git-send-email-jun.li@nxp.com>
  <c28a8352-e960-449b-e7c1-7965d340536e@gmail.com>
  <VI1PR0402MB3917CE86B45CBC1B6F7F576B899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
@@ -19,89 +18,98 @@ References: <1525307094-27402-6-git-send-email-jun.li@nxp.com>
  <VI1PR0402MB39179F63BCF3E605443D877389910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
  <20180517142420.GH11469@kuha.fi.intel.com>
  <VI1PR0402MB3917F929BBD8C79966B0D7F089910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
- <20180521131239.GB10677@kuha.fi.intel.com>
-In-Reply-To: <20180521131239.GB10677@kuha.fi.intel.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB3917F929BBD8C79966B0D7F089910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Jun Li <jun.li@nxp.com>
 Cc: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgSGVpa2tpLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEhlaWtr
-aSBLcm9nZXJ1cyBbbWFpbHRvOmhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb21dDQo+IFNl
-bnQ6IDIwMTjE6jXUwjIxyNUgMjE6MTMNCj4gVG86IEp1biBMaSA8anVuLmxpQG54cC5jb20+DQo+
-IENjOiBNYXRzIEthcnJtYW4gPG1hdHMuZGV2Lmxpc3RAZ21haWwuY29tPjsgcm9iaCtkdEBrZXJu
-ZWwub3JnOw0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgbGludXhAcm9lY2stdXMubmV0
-OyBhLmhhamRhQHNhbXN1bmcuY29tOw0KPiBjdzAwLmNob2lAc2Ftc3VuZy5jb207IHNodWZhbl9s
-ZWVAcmljaHRlay5jb207IFBldGVyIENoZW4NCj4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGdzb21s
-b0BnbWFpbC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC11c2JAdmdl
-ci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHY1IDA1LzE0XSB1c2I6IHR5cGVjOiBhZGQgQVBJIHRvIGdldCB0eXBlYyBi
-YXNpYyBwb3J0IHBvd2VyDQo+IGFuZCBkYXRhIGNvbmZpZw0KPiANCj4gSGkgSnVuLA0KPiANCj4g
-U29ycnkgZm9yIHRoZSBkZWxheS4NCj4gDQo+IE9uIFRodSwgTWF5IDE3LCAyMDE4IGF0IDAyOjQx
-OjMxUE0gKzAwMDAsIEp1biBMaSB3cm90ZToNCj4gPiBIaQ0KPiA+ID4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEhlaWtraSBLcm9nZXJ1cyBbbWFpbHRvOmhlaWtraS5r
-cm9nZXJ1c0BsaW51eC5pbnRlbC5jb21dDQo+ID4gPiBTZW50OiAyMDE4Pz81Pz8xNz8/IDIyOjI0
-DQo+ID4gPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiA+IENjOiBNYXRzIEthcnJt
-YW4gPG1hdHMuZGV2Lmxpc3RAZ21haWwuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+ID4g
-Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGxpbnV4QHJvZWNrLXVzLm5ldDsgYS5oYWpkYUBz
-YW1zdW5nLmNvbTsNCj4gPiA+IGN3MDAuY2hvaUBzYW1zdW5nLmNvbTsgc2h1ZmFuX2xlZUByaWNo
-dGVrLmNvbTsgUGV0ZXIgQ2hlbg0KPiA+ID4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGdzb21sb0Bn
-bWFpbC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtdXNiQHZn
-ZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMDUvMTRdIHVzYjogdHlwZWM6IGFkZCBBUEkgdG8gZ2V0IHR5
-cGVjIGJhc2ljDQo+ID4gPiBwb3J0IHBvd2VyIGFuZCBkYXRhIGNvbmZpZw0KPiA+ID4NCj4gPiA+
-IE9uIFRodSwgTWF5IDE3LCAyMDE4IGF0IDAyOjA1OjQxUE0gKzAwMDAsIEp1biBMaSB3cm90ZToN
-Cj4gPiA+ID4gSGkgSGVpa2tpLA0KPiA+ID4gPg0KPiA+ID4gPiA+ID4gSSByZXJlYWQgdGhpcyBw
-YXRjaCBhbmQgdHJpZWQgdG8gc2VlIGl0IG1vcmUgaW4gdGhlIGNvbnRleHQgb2YNCj4gPiA+ID4g
-PiA+IHRoZSBvdGhlciBwYXRjaGVzIGFuZCB0aGUgZXhpc3RpbmcgY29kZS4gVGhlIG5hbWluZyBv
-ZiB0aGUNCj4gPiA+ID4gPiA+IGV4aXN0aW5nIHN0cmluZyB0YWJsZXMgZG9lc24ndCBoZWxwIGlu
-IGdldHRpbmcgdGhpcyByaWdodCwgaG93ZXZlciBJIGhhdmUNCj4gYSBwcm9wb3NhbDoNCj4gPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gPiB0eXBlY19maW5kX3BvcnRfcG93ZXJfcm9sZSgpIHRvIGdldCB0
-byBUWVBFQ19QT1JUX1NSQy9TTksvRFJQDQo+ID4gPiA+ID4gPiB0eXBlY19maW5kX3BvcnRfZGF0
-YV9yb2xlKCkgdG8gZ2V0IHRvIFRZUEVDX1BPUlRfREZQL1VGUC9EUkQNCj4gPiA+ID4gPiA+IHR5
-cGVjX2ZpbmRfcG93ZXJfcm9sZSgpIHRvIGdldCB0byBUWVBFQ19TSU5LL1NPVVJDRQ0KPiA+ID4g
-PiA+ID4NCj4gPiA+ID4gPiA+IGFuZCBzb21ldGltZSwgaWYgdGhlIHVzZSBzaG91bGQgYXJpc2UN
-Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiB0eXBlY19maW5kX2RhdGFfcm9sZSgpIHRvIGdldCB0
-byBUWVBFQ19ERVZJQ0UvSE9TVA0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IEkgdGhpbmsgaXQg
-aXMgZmFpcmx5IGNvbXByZWhlbnNpYmxlLCAqX3BvcnRfKiBjb25jZXJucyBhDQo+ID4gPiA+ID4g
-PiBjYXBhYmlsaXR5IGFuZCB3aXRob3V0ICpfcG9ydF8qIGl0IGlzIGFuIGFjdHVhbCBzdGF0ZS4g
-UGx1cyBpdA0KPiA+ID4gPiA+ID4gbWF0Y2hlcyB0aGUgbmFtZXMgb2YgdGhlIGNvbnN0YW50cy4N
-Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IFdlbGwsIHRoZXJlIGFyZSBub3cgZm91ciB0aGluZ3MgdG8g
-Y29uc2lkZXI6DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAxKSB0aGUgcm9sZXMgKHBvd2VyIGFuZCBk
-YXRhKSB0aGUgcG9ydCBpcyBjYXBhYmxlIG9mIHN1cHBvcnRpbmcNCj4gPiA+ID4gPiAyKSBUcnku
-U1JDIGFuZCBUcnkuU05LLCBpLmUuIHRoZSBwcmVmZXJyZWQgcm9sZQ0KPiA+ID4gPiA+IDMpIHRo
-ZSBjdXJyZW50IHJvbGVzDQo+ID4gPiA+ID4gNCkgdGhlIHJvbGUocykgdGhlIHVzZXIgd2FudCdz
-IHRvIGxpbWl0IHRoZSB1c2Ugb2YgYSBwb3J0IHdpdGgNCj4gPiA+ID4gPiBEUlAgcG9ydHMNCj4g
-PiA+ID4gPg0KPiA+ID4gPiA+IFRoZSBsYXN0IG9uZSBJIGRvbid0IGtub3cgaWYgaXQncyByZWxl
-dmFudCB3aXRoIHRoZXNlIGZ1bmN0aW9ucy4NCj4gPiA+ID4gPiBJdCdzIG5vdCBpbmZvcm1hdGlv
-biB0aGF0IHdlIHdvdWxkIGdldCBmb3IgZXhhbXBsZSBmcm9tIGZpcm13YXJlLg0KPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gSSBhbHNvIGRvbid0IHRoaW5rIHdlIG5lZWQgdG8gdXNlIHRoZXNlIGZ1bmN0
-aW9ucyB3aXRoIHRoZQ0KPiA+ID4gPiA+IGN1cnJlbnQgcm9sZXMgdGhlIHBvcnQgaXMgaW4uDQo+
-ID4gPiA+ID4NCj4gPiA+ID4gPiBJZiB0aGUgcHJlZmVycmVkIHJvbGUgaXMgInNpbmsiIG9yICJz
-b3VyY2UiLCBzbyBqdXN0IGxpa2UgdGhlDQo+ID4gPiA+ID4gcG93ZXIgcm9sZSwgd2UgZG9uJ3Qg
-bmVlZCBzZXBhcmF0ZSBmdW5jdGlvbiBmb3IgaXQgaGVyZS4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+
-IFNvIGlzbid0IHR3byBmdW5jdGlvbnMgYWxsIHdlIG5lZWQgaGVyZTogb25lIGZvciB0aGUgcG93
-ZXIgYW5kDQo+ID4gPiA+ID4gb25lIGZvciBkYXRhIHJvbGU/DQo+ID4gPiA+DQo+ID4gPiA+IFRh
-a2UgcG93ZXIgYXMgYW4gZXhhbXBsZSwgY2FuIHdlIHVzZSBvbmUgZnVuY3Rpb24gdG8gb25seSBs
-b29rIHVwDQo+ID4gPiA+IHR5cGVjX3BvcnRfdHlwZXNbXT8gYXMgY2FwYWJpbGl0eSh0eXBlY19w
-b3J0X3R5cGUpIGFuZA0KPiA+ID4gPiBzdGF0ZSh0eXBlY19yb2xlKSBhcmUgZGlmZmVyZW50IGVu
-dW0sIGFuZCB0aGUgYWxsb3dlZCBzdHJpbmdzIGFyZQ0KPiBkaWZmZXJlbnQuDQo+ID4gPiA+DQo+
-ID4gPiA+IHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QgdHlwZWNfcm9sZXNbXSA9IHsNCj4gPiA+
-ID4gCVtUWVBFQ19TSU5LXSAgICA9ICJzaW5rIiwNCj4gPiA+ID4gCVtUWVBFQ19TT1VSQ0VdICA9
-ICJzb3VyY2UiLA0KPiA+ID4gPiB9Ow0KPiA+ID4gPg0KPiA+ID4gPiBzdGF0aWMgY29uc3QgY2hh
-ciAqIGNvbnN0IHR5cGVjX3BvcnRfdHlwZXNbXSA9IHsNCj4gPiA+ID4gCVtUWVBFQ19QT1JUX1NS
-Q10gPSAic291cmNlIiwNCj4gPiA+ID4gCVtUWVBFQ19QT1JUX1NOS10gPSAic2luayIsDQo+ID4g
-PiA+IAlbVFlQRUNfUE9SVF9EUlBdID0gImR1YWwiLA0KPiA+ID4gPiB9Ow0KPiA+ID4NCj4gPiA+
-IFdoZXJlIG91dCBzaWRlIHRoZSBjbGFzcyBjb2RlIHdlIG5lZWQgdG8gY29udmVydCB0aGUgY3Vy
-cmVudCByb2xlLA0KPiA+ID4gdGhlICJzdGF0ZSIsIHdpdGggdGhlc2UgZnVuY3Rpb25zPw0KPiA+
-DQo+ID4gQ3VycmVudGx5LCB0aGUgb25seSBjYWxsIHNpdGUgaXMgZ2V0dGluZyB0aGUgcHJlZmVy
-cmVkIHBvd2VyIHJvbGUgZnJvbSBmaXJtd2FyZS4NCj4gDQo+IE15IHBvaW50IHdhcyB0aGF0IGlm
-IHdlIHVzZWQgZW51bSB0eXBlY19wb3J0X3R5cGUgd2l0aCB0aGUgcHJlZmVyZWQgcm9sZSwgd2UN
-Cj4gY291bGQgdXNlIHRoZSBoZWxwZXIgZm9yIHBvd2VyIHJvbGUgd2l0aCBwcmVmZXJlZCByb2xl
-LiBCdXQgbmV2ZXIgbWluZC4NCg0KR290IHlvdXIgcG9pbnQuIFNvIGxldCdzIGZvbGxvdyBNYXRz
-J3Mgc3VnZ2VzdGlvbiBvbiB0aGlzLCBJIHdpbGwgdXBkYXRlIGEgbmV3IHZlcnNpb24uDQoNClRo
-YW5rcw0KTGkgSnVuDQo+IA0KPiANCj4gVGhhbmtzLA0KPiANCj4gLS0NCj4gaGVpa2tpDQo=
+Hi Jun,
+
+Sorry for the delay.
+
+On Thu, May 17, 2018 at 02:41:31PM +0000, Jun Li wrote:
+> Hi
+> > -----Original Message-----
+> > From: Heikki Krogerus [mailto:heikki.krogerus@linux.intel.com]
+> > Sent: 2018??5??17?? 22:24
+> > To: Jun Li <jun.li@nxp.com>
+> > Cc: Mats Karrman <mats.dev.list@gmail.com>; robh+dt@kernel.org;
+> > gregkh@linuxfoundation.org; linux@roeck-us.net; a.hajda@samsung.com;
+> > cw00.choi@samsung.com; shufan_lee@richtek.com; Peter Chen
+> > <peter.chen@nxp.com>; gsomlo@gmail.com; devicetree@vger.kernel.org;
+> > linux-usb@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH v5 05/14] usb: typec: add API to get typec basic port power
+> > and data config
+> > 
+> > On Thu, May 17, 2018 at 02:05:41PM +0000, Jun Li wrote:
+> > > Hi Heikki,
+> > >
+> > > > > I reread this patch and tried to see it more in the context of the
+> > > > > other patches and the existing code. The naming of the existing
+> > > > > string tables doesn't help in getting this right, however I have a proposal:
+> > > > >
+> > > > > typec_find_port_power_role() to get to TYPEC_PORT_SRC/SNK/DRP
+> > > > > typec_find_port_data_role() to get to TYPEC_PORT_DFP/UFP/DRD
+> > > > > typec_find_power_role() to get to TYPEC_SINK/SOURCE
+> > > > >
+> > > > > and sometime, if the use should arise
+> > > > >
+> > > > > typec_find_data_role() to get to TYPEC_DEVICE/HOST
+> > > > >
+> > > > > I think it is fairly comprehensible, *_port_* concerns a
+> > > > > capability and without *_port_* it is an actual state. Plus it
+> > > > > matches the names of the constants.
+> > > >
+> > > > Well, there are now four things to consider:
+> > > >
+> > > > 1) the roles (power and data) the port is capable of supporting
+> > > > 2) Try.SRC and Try.SNK, i.e. the preferred role
+> > > > 3) the current roles
+> > > > 4) the role(s) the user want's to limit the use of a port with DRP
+> > > > ports
+> > > >
+> > > > The last one I don't know if it's relevant with these functions.
+> > > > It's not information that we would get for example from firmware.
+> > > >
+> > > > I also don't think we need to use these functions with the current
+> > > > roles the port is in.
+> > > >
+> > > > If the preferred role is "sink" or "source", so just like the power
+> > > > role, we don't need separate function for it here.
+> > > >
+> > > > So isn't two functions all we need here: one for the power and one
+> > > > for data role?
+> > >
+> > > Take power as an example, can we use one function to only look up
+> > > typec_port_types[]? as capability(typec_port_type) and
+> > > state(typec_role) are different enum, and the allowed strings are different.
+> > >
+> > > static const char * const typec_roles[] = {
+> > > 	[TYPEC_SINK]    = "sink",
+> > > 	[TYPEC_SOURCE]  = "source",
+> > > };
+> > >
+> > > static const char * const typec_port_types[] = {
+> > > 	[TYPEC_PORT_SRC] = "source",
+> > > 	[TYPEC_PORT_SNK] = "sink",
+> > > 	[TYPEC_PORT_DRP] = "dual",
+> > > };
+> > 
+> > Where out side the class code we need to convert the current role, the "state",
+> > with these functions?
+> 
+> Currently, the only call site is getting the preferred power role from firmware.
+
+My point was that if we used enum typec_port_type with the prefered
+role, we could use the helper for power role with prefered role. But
+never mind.
+
+
+Thanks,
+
+-- 
+heikki
