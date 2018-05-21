@@ -1,170 +1,96 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH v4 5/5] remoteproc: qcom: Always assert and deassert reset
- signals in SDM845
-Date: Mon, 21 May 2018 22:27:47 +0530
-Message-ID: <e4422d6e-c151-0823-606f-e43a9ae62f80@codeaurora.org>
-References: <20180425150843.26657-1-sibis@codeaurora.org>
- <20180425150843.26657-6-sibis@codeaurora.org>
- <20180518214708.GU14924@minitux>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] perf: hisi: fix uncore PMU index ID
+Date: Mon, 21 May 2018 18:05:55 +0100
+Message-ID: <20180521170554.GE21034@arm.com>
+References: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180518214708.GU14924@minitux>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Huiqiang Wang <wanghuiqiang@huawei.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-Thanks for the review. Will make all the required changes in v5.
+Hi Shaokun,
 
-On 05/19/2018 03:17 AM, Bjorn Andersson wrote:
-> On Wed 25 Apr 08:08 PDT 2018, Sibi Sankar wrote:
-> 
->> SDM845 brings a new reset signal ALT_RESET which is a part of the MSS
->> subsystem hence requires some of the active clks to be enabled before
->> assert/deassert
->>
->> Reset the modem if the BOOT FSM does timeout
->>
->> Reset assert/deassert sequence vary across SoCs adding reset, adding
->> start/stop helper functions to handle SoC specific reset sequences
->>
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>   drivers/remoteproc/qcom_q6v5_pil.c | 81 ++++++++++++++++++++++++++++--
->>   1 file changed, 76 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-> [..]
->> @@ -349,6 +356,32 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
->>   	return 0;
->>   }
->>   
->> +static int q6v5_reset_assert(struct q6v5 *qproc)
->> +{
->> +	return reset_control_assert(qproc->mss_restart);
->> +}
->> +
->> +static int q6v5_reset_deassert(struct q6v5 *qproc)
->> +{
->> +	return reset_control_deassert(qproc->mss_restart);
->> +}
->> +
->> +static int q6v5_alt_reset_assert(struct q6v5 *qproc)
->> +{
->> +	return reset_control_reset(qproc->mss_restart);
->> +}
->> +
->> +static int q6v5_alt_reset_deassert(struct q6v5 *qproc)
->> +{
->> +	/* Ensure alt reset is written before restart reg */
->> +	writel(1, qproc->rmb_base + RMB_MBA_ALT_RESET);
->> +
->> +	reset_control_reset(qproc->mss_restart);
->> +
->> +	writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
->> +	return 0;
->> +}
->> +
-> 
-> Rather than having these four functions and scattering jumps to some
-> function pointer in the code I think it will be shorter and cleaner to
-> just have the q6v5_reset_{asert,deassert}() functions and in there check
-> if has_alt_reset and take appropriate action.
-> 
+[+DT list]
 
-yes this seems simpler
+On Mon, May 21, 2018 at 07:15:17PM +0800, Shaokun Zhang wrote:
+> According to ACPI SPEC about _UID (Unique ID), The _UID must be unique
+> across all devices with either a common _HID or _CID. For HiSilion
+> uncore PMU, SCCL_ID and INDEX_ID are used to identify the uncore PMU
+> for the same _HID. Therefore, _UID is not equal to INDEX_ID in
+> multi-sccl scene for the same uncore PMU device.
+> 
+> CCL_ID can be used as the INDEX_ID for the L3C PMU and IDX-ID is added
+> in DSDT table for the HHA PMU.
+> 
+> Fixes: 2940bc4("perf: hisi: Add support for HiSilicon SoC L3C PMU driver")
+> Fixes: 2bab3cf("perf: hisi: Add support for HiSilicon SoC HHA PMU driver")
+> Reported-by: Huiqiang Wang <wanghuiqiang@huawei.com>
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Huiqiang Wang <wanghuiqiang@huawei.com>
+> ---
+>  drivers/perf/hisilicon/hisi_uncore_hha_pmu.c | 18 ++++++++----------
+>  drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c | 11 ++---------
+>  2 files changed, 10 insertions(+), 19 deletions(-)
 
->>   static int q6v5_rmb_pbl_wait(struct q6v5 *qproc, int ms)
->>   {
->>   	unsigned long timeout;
->> @@ -424,6 +457,8 @@ static int q6v5proc_reset(struct q6v5 *qproc)
->>   				val, (val & BIT(0)) != 0, 10, BOOT_FSM_TIMEOUT);
->>   		if (ret) {
->>   			dev_err(qproc->dev, "Boot FSM failed to complete.\n");
->> +			/* Reset the modem so that boot FSM is in reset state */
->> +			qproc->reset_deassert(qproc);
-> 
-> 
-> A thing like this typically should go into it's own patch, to keep a
-> clear record of why it was changed, but as this is simply amending the
-> previous patch it indicates that that one wasn't complete.
-> 
-> So if you reorder the two patches you can just put this directly into
-> the sdm845 patch, making it "complete".
-> 
-> (This also means that I want to merge the handover vs ready interrupt
-> patch before that one, so please include it in the next revision of the
-> series).
-> 
+Whilst I'd normally just accept PMU driver submissions for vendor PMUs,
+this part rang my alarm bells:
 
-Will re-order them.
+> diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+> index 443906e..dcd8e77 100644
+> --- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+> +++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+> @@ -238,19 +238,10 @@ MODULE_DEVICE_TABLE(acpi, hisi_hha_pmu_acpi_match);
+>  static int hisi_hha_pmu_init_data(struct platform_device *pdev,
+>  				  struct hisi_pmu *hha_pmu)
+>  {
+> -	unsigned long long id;
+>  	struct resource *res;
+> -	acpi_status status;
+> -
+> -	status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
+> -				       "_UID", NULL, &id);
+> -	if (ACPI_FAILURE(status))
+> -		return -EINVAL;
+> -
+> -	hha_pmu->index_id = id;
+>  
+>  	/*
+> -	 * Use SCCL_ID and UID to identify the HHA PMU, while
+> +	 * Use SCCL_ID and HHA index ID to identify the HHA PMU, while
+>  	 * SCCL_ID is in MPIDR[aff2].
+>  	 */
+>  	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
+> @@ -258,6 +249,13 @@ static int hisi_hha_pmu_init_data(struct platform_device *pdev,
+>  		dev_err(&pdev->dev, "Can not read hha sccl-id!\n");
+>  		return -EINVAL;
+>  	}
+> +
+> +	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
+> +				     &hha_pmu->index_id)) {
+> +		dev_err(&pdev->dev, "Can not read hha index-id!\n");
+> +		return -EINVAL;
+> +	}
 
+Is this a new DT property? If so, please can you update the binding
+documentation and get an Ack from a DT maintainer? It's not clear to me
+what a "hisilicon,idx-id" is, nor how I would generate on from firmware.
 
->>   			return ret;
->>   		}
->>   
->> @@ -792,12 +827,20 @@ static int q6v5_start(struct rproc *rproc)
->>   		dev_err(qproc->dev, "failed to enable supplies\n");
->>   		goto disable_proxy_clk;
->>   	}
->> -	ret = reset_control_deassert(qproc->mss_restart);
->> +
->> +	ret = q6v5_clk_enable(qproc->dev, qproc->reset_clks,
->> +			      qproc->reset_clk_count);
-> 
-> Remind me, why can't you always enable the active clock before
-> deasserting reset? That way we wouldn't have to split out the iface
-> clock handling to be just slightly longer than the active clocks.
-> 
+Thanks,
 
-Have to introduce reset clks for backward compatibility, both msm8916
-and msm8996 require the mss_reset to be deasserted before enabling
-the active clks.
-
->>   	if (ret) {
->> -		dev_err(qproc->dev, "failed to deassert mss restart\n");
->> +		dev_err(qproc->dev, "failed to enable reset clocks\n");
->>   		goto disable_vdd;
->>   	}
->>   
->> +	ret = qproc->reset_deassert(qproc);
->> +	if (ret) {
->> +		dev_err(qproc->dev, "failed to deassert mss restart\n");
->> +		goto disable_reset_clks;
->> +	}
->> +
-> [..]
->> @@ -1335,8 +1399,11 @@ static const struct rproc_hexagon_res sdm845_mss = {
->>   			"prng",
->>   			NULL
->>   	},
->> -	.active_clk_names = (char*[]){
->> +	.reset_clk_names = (char*[]){
->>   			"iface",
->> +			NULL
->> +	},
->> +	.active_clk_names = (char*[]){
-> 
-> Again, if you reorder your patches to first add the support for
-> alt_reset and then introduce sdm845 you don't need to modify the
-> previous patch directly to make it work.
-> 
-
-yeah I'll re-order them
-
->>   			"bus",
->>   			"mem",
->>   			"gpll0_mss",
-> 
-> Regards,
-> Bjorn
-> 
-
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Will
