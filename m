@@ -1,71 +1,47 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v7 2/3] dt-bindings: mmc: Add binding for BlueField SoC
-Date: Mon, 21 May 2018 13:36:15 +0200
-Message-ID: <CAPDyKFoBjyOSJLXy+LiTm3BQYgw2BMu_i5g+is+rkZJ5iGyExg@mail.gmail.com>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com>
- <1525805210-15246-1-git-send-email-lsun@mellanox.com> <1525805210-15246-2-git-send-email-lsun@mellanox.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Emmanuel Vadot <manu@freebsd.org>
+Subject: [PATCH v2] ARM64: dts: sun50i: a64: Add spi flash node for sopine
+Date: Mon, 21 May 2018 13:54:13 +0200
+Message-ID: <20180521115413.92070-1-manu@freebsd.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525805210-15246-2-git-send-email-lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Emmanuel Vadot <manu@freebsd.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 May 2018 at 20:46, Liming Sun <lsun@mellanox.com> wrote:
-> This commit adds "mellanox,bluefield-dw-mshc" for dwmmc driver
-> extension on Mellanox BlueField SoC platform.
->
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+The Sopine and Pine64-LTS have a winbond w25q128 spi flash on spi0.
+Add a node for it.
 
-Thanks, applied for next!
+Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+---
+Changes in v2:
+ - Only use the compatible 'jedec,spi-nor' since the device answer to
+ the jedec command 0x9F
 
-Kind regards
-Uffe
+ arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> ---
->  .../devicetree/bindings/mmc/bluefield-dw-mshc.txt  | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
-> new file mode 100644
-> index 0000000..b0f0999
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/bluefield-dw-mshc.txt
-> @@ -0,0 +1,29 @@
-> +* Mellanox Bluefield SoC specific extensions to the Synopsys Designware
-> +  Mobile Storage Host Controller
-> +
-> +Read synopsys-dw-mshc.txt for more details
-> +
-> +The Synopsys designware mobile storage host controller is used to interface
-> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-> +differences between the core Synopsys dw mshc controller properties described
-> +by synopsys-dw-mshc.txt and the properties used by the Mellanox Bluefield SoC
-> +specific extensions to the Synopsys Designware Mobile Storage Host Controller.
-> +
-> +Required Properties:
-> +
-> +* compatible: should be one of the following.
-> +  - "mellanox,bluefield-dw-mshc": for controllers with Mellanox Bluefield SoC
-> +    specific extensions.
-> +
-> +Example:
-> +
-> +       /* Mellanox Bluefield SoC MMC */
-> +       mmc@6008000 {
-> +               compatible = "mellanox,bluefield-dw-mshc";
-> +               reg = <0x6008000 0x400>;
-> +               interrupts = <32>;
-> +               fifo-depth = <0x100>;
-> +               clock-frequency = <24000000>;
-> +               bus-width = <8>;
-> +               cap-mmc-highspeed;
-> +       };
-> --
-> 1.8.3.1
->
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+index 43418bd881d8..b94f93c04acb 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+@@ -66,6 +66,18 @@
+ 	};
+ };
+ 
++&spi0  {
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <40000000>;
++	};
++};
++
+ #include "axp803.dtsi"
+ 
+ &reg_aldo2 {
+-- 
+2.17.0
