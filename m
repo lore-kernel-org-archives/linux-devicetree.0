@@ -1,480 +1,123 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: qdsp6: q6asm: Add support to memory map
-	and unmap" to the asoc tree
-Date: Mon, 21 May 2018 16:47:46 +0100
-Message-ID: <E1fKn2I-0007A6-0f@debutante>
-References: <20180518125610.26200-8-srinivas.kandagatla@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: OMAP serial runtime PM and autosuspend (was: Re: [PATCH 4/7]
+ dt-bindings: gnss: add u-blox binding))
+Date: Mon, 21 May 2018 08:48:32 -0700
+Message-ID: <20180521154832.GY98604@atomide.com>
+References: <20180508065852.GW2285@localhost>
+ <20180508152228.GV98604@atomide.com>
+ <20180508154756.GW98604@atomide.com>
+ <20180508155405.GX98604@atomide.com>
+ <20180508164904.GZ98604@atomide.com>
+ <20180509131003.GC2285@localhost>
+ <20180509135706.GB98604@atomide.com>
+ <20180517100948.GI30172@localhost>
+ <20180517171038.GL98604@atomide.com>
+ <20180521134830.GR30172@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180518125610.26200-8-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, spatakok@qti.qualcomm.com, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, david.brown@linaro.org, broonie@kernel.org, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180521134830.GR30172@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+* Johan Hovold <johan@kernel.org> [180521 13:50]:
+> On Thu, May 17, 2018 at 10:10:38AM -0700, Tony Lindgren wrote:
+> > * Johan Hovold <johan@kernel.org> [180517 10:12]:
+> > > No, defaulting to "on" (i.e. calling pm_runtime_forbid()) wouldn't work
+> > > either as that would also prevent the device from runtime suspending
+> > > just as the current negative autosuspend delay does.
+> > 
+> > Well in that case we should just stick with -1 value for the
+> > autosuspend. And just do pm_runtime_put_sync_suspend() after
+> > probe and on close.
+> 
+> That won't work either as a negative autosuspend delay prevents runtime
+> suspend completely (by grabbing an extra RPM reference).
 
-   ASoC: qdsp6: q6asm: Add support to memory map and unmap
+Well so negative autosuspend delay is working as documented then :)
 
-has been applied to the asoc tree at
+> > > I fail to see how we can implement this using the current toolbox. What
+> > > you're after here is really a mechanism for selecting between two
+> > > different runtime PM schemes at runtime:
+> > > 
+> > > 	1. normal serial RPM, where the controller is active while the
+> > > 	   port is open (this should be the safe default)
+> > 
+> > Agreed. And that is the case already.
+> 
+> Yes, but it's not really the case today as since omap-serial (and
+> 8250-omap) sets a negative autosuspend at probe and hence does not
+> runtime-suspend when the port is closed. So that's the long-standing bug
+> which needs fixing.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Yes the bug for closed ports needs to be fixed for sure.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> > > 	2. aggressive serial RPM, where the controller is allowed to
+> > > 	   suspend while the port is open even though this may result in
+> > > 	   lost characters when waking up on incoming data
+> > 
+> > In this case it seems that the only thing needed is to just
+> > configure the autosuspend delay for the parent port. The use of
+> > -1 has been around since the start of runtime PM AFAIK, so maybe
+> > we should just document it. I guess we could also introduce
+> > pm_runtime_block_autoidle_unless_configured() :)
+> 
+> The implications of a negative autosuspend delay are already documented
+> (in Documentation/power/runtime_pm.txt); it's just the omap drivers that
+> gets it wrong when trying to do things which aren't currently supported
+> (and never have been).
+> 
+> So I still think we need a new mechanism for this.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Well if you have some better mechanism in mind let's try it out. Short of
+sprinkling pm_runtime_force_suspend/resume calls all over, I'm out of ideas
+right now.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> > > For normal ttys, we need a user-space interface for selecting between
+> > > the two, and for serdev we may want a way to select the RPM scheme from
+> > > within the kernel.
+> > > 
+> > > Note that with my serdev controller runtime PM patch, serdev core could
+> > > always opt for aggressive PM (as by default serdev core holds an RPM
+> > > reference for the controller while the port is open).
+> > 
+> > So if your serdev controller was to set the parent autosuspend
+> > delay on open() and set it back on close() this should work?
+> 
+> Is it really the job of a serdev driver to set the autosuspend delay of
+> a parent controller? Isn't this somethings which depends on the
+> characteristics of the controller (possibly configurable by user space)
+> such as the cost of runtime suspending and resuming?
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Only in some cases will the serdev driver know it's safe to configure
+the parent controller. Configuring the parent controller from userspace
+works just fine as we've seen for years now.
 
-Thanks,
-Mark
+> The patch I posted works with what we have today; if a parent serial
+> controller driver uses aggressive runtime PM by default or after having
+> been configured through sysfs to do so.
 
->From a2a5d30218fdf6ad869248ef46bf35b912dc1686 Mon Sep 17 00:00:00 2001
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Fri, 18 May 2018 13:56:02 +0100
-Subject: [PATCH] ASoC: qdsp6: q6asm: Add support to memory map and unmap
+Yeah let's stick with configuring the parent controller from userspace
+for now at least.
 
-This patch adds support to memory map and unmap regions commands in
-q6asm module.
+> What I'm getting at here is that the delay should be set by the serial
+> driver implementing aggressive runtime PM. Then all we need is a
+> mechanism to determine whether an extra RPM reference should be taken at
+> tty open or not (configurable by user space, defaulting to yes).
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-and-tested-by: Rohit kumar <rohitkr@codeaurora.org>
-Reviewed-by: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/qcom/qdsp6/q6asm.c | 347 +++++++++++++++++++++++++++++++++++
- sound/soc/qcom/qdsp6/q6asm.h |   5 +
- 2 files changed, 352 insertions(+)
+OK yeah some additional on/off switch seems to be missing here.
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
-index 585fcfbada6a..a20d243ed10a 100644
---- a/sound/soc/qcom/qdsp6/q6asm.c
-+++ b/sound/soc/qcom/qdsp6/q6asm.c
-@@ -19,10 +19,44 @@
- #include "q6dsp-errno.h"
- #include "q6dsp-common.h"
- 
-+#define ASM_CMD_SHARED_MEM_MAP_REGIONS		0x00010D92
-+#define ASM_CMDRSP_SHARED_MEM_MAP_REGIONS	0x00010D93
-+#define ASM_CMD_SHARED_MEM_UNMAP_REGIONS	0x00010D94
-+
- #define ASM_SYNC_IO_MODE		0x0001
- #define ASM_ASYNC_IO_MODE		0x0002
- #define ASM_TUN_READ_IO_MODE		0x0004	/* tunnel read write mode */
- #define ASM_TUN_WRITE_IO_MODE		0x0008	/* tunnel read write mode */
-+#define ASM_SHIFT_GAPLESS_MODE_FLAG	31
-+#define ADSP_MEMORY_MAP_SHMEM8_4K_POOL	3
-+
-+struct avs_cmd_shared_mem_map_regions {
-+	u16 mem_pool_id;
-+	u16 num_regions;
-+	u32 property_flag;
-+} __packed;
-+
-+struct avs_shared_map_region_payload {
-+	u32 shm_addr_lsw;
-+	u32 shm_addr_msw;
-+	u32 mem_size_bytes;
-+} __packed;
-+
-+struct avs_cmd_shared_mem_unmap_regions {
-+	u32 mem_map_handle;
-+} __packed;
-+
-+struct audio_buffer {
-+	phys_addr_t phys;
-+	uint32_t size;		/* size of buffer */
-+};
-+
-+struct audio_port_data {
-+	struct audio_buffer *buf;
-+	uint32_t num_periods;
-+	uint32_t dsp_buf;
-+	uint32_t mem_map_handle;
-+};
- 
- struct q6asm {
- 	struct apr_device *adev;
-@@ -44,6 +78,8 @@ struct audio_client {
- 	struct mutex cmd_lock;
- 	spinlock_t lock;
- 	struct kref refcount;
-+	/* idx:1 out port, 0: in port */
-+	struct audio_port_data port[2];
- 	wait_queue_head_t cmd_wait;
- 	struct aprv2_ibasic_rsp_result_t result;
- 	int perf_mode;
-@@ -52,6 +88,275 @@ struct audio_client {
- 	struct device *dev;
- };
- 
-+static inline void q6asm_add_hdr(struct audio_client *ac, struct apr_hdr *hdr,
-+				 uint32_t pkt_size, bool cmd_flg,
-+				 uint32_t stream_id)
-+{
-+	hdr->hdr_field = APR_SEQ_CMD_HDR_FIELD;
-+	hdr->src_port = ((ac->session << 8) & 0xFF00) | (stream_id);
-+	hdr->dest_port = ((ac->session << 8) & 0xFF00) | (stream_id);
-+	hdr->pkt_size = pkt_size;
-+	if (cmd_flg)
-+		hdr->token = ac->session;
-+}
-+
-+static int q6asm_apr_send_session_pkt(struct q6asm *a, struct audio_client *ac,
-+				      struct apr_pkt *pkt, uint32_t rsp_opcode)
-+{
-+	struct apr_hdr *hdr = &pkt->hdr;
-+	int rc;
-+
-+	mutex_lock(&ac->cmd_lock);
-+	ac->result.opcode = 0;
-+	ac->result.status = 0;
-+	rc = apr_send_pkt(a->adev, pkt);
-+	if (rc < 0)
-+		goto err;
-+
-+	if (rsp_opcode)
-+		rc = wait_event_timeout(a->mem_wait,
-+					(ac->result.opcode == hdr->opcode) ||
-+					(ac->result.opcode == rsp_opcode),
-+					5 * HZ);
-+	else
-+		rc = wait_event_timeout(a->mem_wait,
-+					(ac->result.opcode == hdr->opcode),
-+					5 * HZ);
-+
-+	if (!rc) {
-+		dev_err(a->dev, "CMD timeout\n");
-+		rc = -ETIMEDOUT;
-+	} else if (ac->result.status > 0) {
-+		dev_err(a->dev, "DSP returned error[%x]\n",
-+			ac->result.status);
-+		rc = -EINVAL;
-+	}
-+
-+err:
-+	mutex_unlock(&ac->cmd_lock);
-+	return rc;
-+}
-+
-+static int __q6asm_memory_unmap(struct audio_client *ac,
-+				phys_addr_t buf_add, int dir)
-+{
-+	struct avs_cmd_shared_mem_unmap_regions *mem_unmap;
-+	struct q6asm *a = dev_get_drvdata(ac->dev->parent);
-+	struct apr_pkt *pkt;
-+	int rc, pkt_size;
-+	void *p;
-+
-+	if (ac->port[dir].mem_map_handle == 0) {
-+		dev_err(ac->dev, "invalid mem handle\n");
-+		return -EINVAL;
-+	}
-+
-+	pkt_size = APR_HDR_SIZE + sizeof(*mem_unmap);
-+	p = kzalloc(pkt_size, GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	pkt = p;
-+	mem_unmap = p + APR_HDR_SIZE;
-+
-+	pkt->hdr.hdr_field = APR_SEQ_CMD_HDR_FIELD;
-+	pkt->hdr.src_port = 0;
-+	pkt->hdr.dest_port = 0;
-+	pkt->hdr.pkt_size = pkt_size;
-+	pkt->hdr.token = ((ac->session << 8) | dir);
-+
-+	pkt->hdr.opcode = ASM_CMD_SHARED_MEM_UNMAP_REGIONS;
-+	mem_unmap->mem_map_handle = ac->port[dir].mem_map_handle;
-+
-+	rc = q6asm_apr_send_session_pkt(a, ac, pkt, 0);
-+	if (rc < 0) {
-+		kfree(pkt);
-+		return rc;
-+	}
-+
-+	ac->port[dir].mem_map_handle = 0;
-+
-+	kfree(pkt);
-+	return 0;
-+}
-+
-+
-+static void q6asm_audio_client_free_buf(struct audio_client *ac,
-+					struct audio_port_data *port)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ac->lock, flags);
-+	port->num_periods = 0;
-+	kfree(port->buf);
-+	port->buf = NULL;
-+	spin_unlock_irqrestore(&ac->lock, flags);
-+}
-+
-+/**
-+ * q6asm_unmap_memory_regions() - unmap memory regions in the dsp.
-+ *
-+ * @dir: direction of audio stream
-+ * @ac: audio client instanace
-+ *
-+ * Return: Will be an negative value on failure or zero on success
-+ */
-+int q6asm_unmap_memory_regions(unsigned int dir, struct audio_client *ac)
-+{
-+	struct audio_port_data *port;
-+	int cnt = 0;
-+	int rc = 0;
-+
-+	port = &ac->port[dir];
-+	if (!port->buf) {
-+		rc = -EINVAL;
-+		goto err;
-+	}
-+
-+	cnt = port->num_periods - 1;
-+	if (cnt >= 0) {
-+		rc = __q6asm_memory_unmap(ac, port->buf[dir].phys, dir);
-+		if (rc < 0) {
-+			dev_err(ac->dev, "%s: Memory_unmap_regions failed %d\n",
-+				__func__, rc);
-+			goto err;
-+		}
-+	}
-+
-+	q6asm_audio_client_free_buf(ac, port);
-+
-+err:
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(q6asm_unmap_memory_regions);
-+
-+static int __q6asm_memory_map_regions(struct audio_client *ac, int dir,
-+				      size_t period_sz, unsigned int periods,
-+				      bool is_contiguous)
-+{
-+	struct avs_cmd_shared_mem_map_regions *cmd = NULL;
-+	struct avs_shared_map_region_payload *mregions = NULL;
-+	struct q6asm *a = dev_get_drvdata(ac->dev->parent);
-+	struct audio_port_data *port = NULL;
-+	struct audio_buffer *ab = NULL;
-+	struct apr_pkt *pkt;
-+	void *p;
-+	unsigned long flags;
-+	uint32_t num_regions, buf_sz;
-+	int rc, i, pkt_size;
-+
-+	if (is_contiguous) {
-+		num_regions = 1;
-+		buf_sz = period_sz * periods;
-+	} else {
-+		buf_sz = period_sz;
-+		num_regions = periods;
-+	}
-+
-+	/* DSP expects size should be aligned to 4K */
-+	buf_sz = ALIGN(buf_sz, 4096);
-+
-+	pkt_size = APR_HDR_SIZE + sizeof(*cmd) +
-+		   (sizeof(*mregions) * num_regions);
-+
-+	p = kzalloc(pkt_size, GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	pkt = p;
-+	cmd = p + APR_HDR_SIZE;
-+	mregions = p + APR_HDR_SIZE +  sizeof(*cmd);
-+
-+	pkt->hdr.hdr_field = APR_SEQ_CMD_HDR_FIELD;
-+	pkt->hdr.src_port = 0;
-+	pkt->hdr.dest_port = 0;
-+	pkt->hdr.pkt_size = pkt_size;
-+	pkt->hdr.token = ((ac->session << 8) | dir);
-+	pkt->hdr.opcode = ASM_CMD_SHARED_MEM_MAP_REGIONS;
-+
-+	cmd->mem_pool_id = ADSP_MEMORY_MAP_SHMEM8_4K_POOL;
-+	cmd->num_regions = num_regions;
-+	cmd->property_flag = 0x00;
-+
-+	spin_lock_irqsave(&ac->lock, flags);
-+	port = &ac->port[dir];
-+
-+	for (i = 0; i < num_regions; i++) {
-+		ab = &port->buf[i];
-+		mregions->shm_addr_lsw = lower_32_bits(ab->phys);
-+		mregions->shm_addr_msw = upper_32_bits(ab->phys);
-+		mregions->mem_size_bytes = buf_sz;
-+		++mregions;
-+	}
-+	spin_unlock_irqrestore(&ac->lock, flags);
-+
-+	rc = q6asm_apr_send_session_pkt(a, ac, pkt,
-+					ASM_CMDRSP_SHARED_MEM_MAP_REGIONS);
-+
-+	kfree(pkt);
-+
-+	return rc;
-+}
-+
-+/**
-+ * q6asm_map_memory_regions() - map memory regions in the dsp.
-+ *
-+ * @dir: direction of audio stream
-+ * @ac: audio client instanace
-+ * @phys: physcial address that needs mapping.
-+ * @period_sz: audio period size
-+ * @periods: number of periods
-+ *
-+ * Return: Will be an negative value on failure or zero on success
-+ */
-+int q6asm_map_memory_regions(unsigned int dir, struct audio_client *ac,
-+			     phys_addr_t phys,
-+			     size_t period_sz, unsigned int periods)
-+{
-+	struct audio_buffer *buf;
-+	unsigned long flags;
-+	int cnt;
-+	int rc;
-+
-+	spin_lock_irqsave(&ac->lock, flags);
-+	if (ac->port[dir].buf) {
-+		dev_err(ac->dev, "Buffer already allocated\n");
-+		spin_unlock_irqrestore(&ac->lock, flags);
-+		return 0;
-+	}
-+
-+	buf = kzalloc(((sizeof(struct audio_buffer)) * periods), GFP_ATOMIC);
-+	if (!buf) {
-+		spin_unlock_irqrestore(&ac->lock, flags);
-+		return -ENOMEM;
-+	}
-+
-+
-+	ac->port[dir].buf = buf;
-+
-+	buf[0].phys = phys;
-+	buf[0].size = period_sz;
-+
-+	for (cnt = 1; cnt < periods; cnt++) {
-+		if (period_sz > 0) {
-+			buf[cnt].phys = buf[0].phys + (cnt * period_sz);
-+			buf[cnt].size = period_sz;
-+		}
-+	}
-+	ac->port[dir].num_periods = periods;
-+
-+	spin_unlock_irqrestore(&ac->lock, flags);
-+
-+	rc = __q6asm_memory_map_regions(ac, dir, period_sz, periods, 1);
-+	if (rc < 0) {
-+		dev_err(ac->dev, "Memory_map_regions failed\n");
-+		q6asm_audio_client_free_buf(ac, &ac->port[dir]);
-+	}
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(q6asm_map_memory_regions);
-+
- static void q6asm_audio_client_release(struct kref *ref)
- {
- 	struct audio_client *ac;
-@@ -108,9 +413,13 @@ static int q6asm_srvc_callback(struct apr_device *adev,
- 			       struct apr_resp_pkt *data)
- {
- 	struct q6asm *q6asm = dev_get_drvdata(&adev->dev);
-+	struct aprv2_ibasic_rsp_result_t *result;
-+	struct audio_port_data *port;
- 	struct audio_client *ac = NULL;
- 	struct apr_hdr *hdr = &data->hdr;
-+	struct q6asm *a;
- 	uint32_t sid = 0;
-+	uint32_t dir = 0;
- 
- 	sid = (hdr->token >> 8) & 0x0F;
- 	ac = q6asm_get_audio_client(q6asm, sid);
-@@ -119,9 +428,47 @@ static int q6asm_srvc_callback(struct apr_device *adev,
- 		return 0;
- 	}
- 
-+	a = dev_get_drvdata(ac->dev->parent);
-+	dir = (hdr->token & 0x0F);
-+	port = &ac->port[dir];
-+	result = data->payload;
-+
-+	switch (hdr->opcode) {
-+	case APR_BASIC_RSP_RESULT:
-+		switch (result->opcode) {
-+		case ASM_CMD_SHARED_MEM_MAP_REGIONS:
-+		case ASM_CMD_SHARED_MEM_UNMAP_REGIONS:
-+			ac->result = *result;
-+			wake_up(&a->mem_wait);
-+			break;
-+		default:
-+			dev_err(&adev->dev, "command[0x%x] not expecting rsp\n",
-+				 result->opcode);
-+			break;
-+		}
-+		goto done;
-+	case ASM_CMDRSP_SHARED_MEM_MAP_REGIONS:
-+		ac->result.status = 0;
-+		ac->result.opcode = hdr->opcode;
-+		port->mem_map_handle = result->opcode;
-+		wake_up(&a->mem_wait);
-+		break;
-+	case ASM_CMD_SHARED_MEM_UNMAP_REGIONS:
-+		ac->result.opcode = hdr->opcode;
-+		ac->result.status = 0;
-+		port->mem_map_handle = 0;
-+		wake_up(&a->mem_wait);
-+		break;
-+	default:
-+		dev_dbg(&adev->dev, "command[0x%x]success [0x%x]\n",
-+			result->opcode, result->status);
-+		break;
-+	}
-+
- 	if (ac->cb)
- 		ac->cb(hdr->opcode, hdr->token, data->payload, ac->priv);
- 
-+done:
- 	kref_put(&ac->refcount, q6asm_audio_client_release);
- 
- 	return 0;
-diff --git a/sound/soc/qcom/qdsp6/q6asm.h b/sound/soc/qcom/qdsp6/q6asm.h
-index b7816e6384e7..8c317b7b63c3 100644
---- a/sound/soc/qcom/qdsp6/q6asm.h
-+++ b/sound/soc/qcom/qdsp6/q6asm.h
-@@ -12,4 +12,9 @@ struct audio_client *q6asm_audio_client_alloc(struct device *dev,
- 					      int session_id, int perf_mode);
- void q6asm_audio_client_free(struct audio_client *ac);
- int q6asm_get_session_id(struct audio_client *ac);
-+int q6asm_map_memory_regions(unsigned int dir,
-+			     struct audio_client *ac,
-+			     phys_addr_t phys,
-+			     size_t bufsz, unsigned int bufcnt);
-+int q6asm_unmap_memory_regions(unsigned int dir, struct audio_client *ac);
- #endif /* __Q6_ASM_H__ */
--- 
-2.17.0
+> Specifically, the serial drivers themselves would always use
+> autosuspend and not have to deal with supporting the two RPM schemes
+> (normal vs aggressive runtime PM).
+
+OK. So if I understand your idea right, we could have autosuspend timeout
+set to 3000ms in the 8250_omap.c but still default to RPM blocked?
+Then user can enable aggressive PM via /sys as desired, right?
+
+Regards,
+
+Tony
