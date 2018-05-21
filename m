@@ -1,48 +1,65 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 0/2] Add support for QCOM cpufreq FW driver
-Date: Mon, 21 May 2018 11:35:29 +0530
-Message-ID: <20180521060529.kyjkglucbydr6b3f@vireshk-i7>
-References: <1526751291-17873-1-git-send-email-tdas@codeaurora.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
+Date: Mon, 21 May 2018 09:57:54 +0300
+Message-ID: <43ff3894-a287-1558-687c-40f50712735c@ti.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+ <1523956215-28154-13-git-send-email-t-kristo@ti.com>
+ <20180417092924.GB20335@flint.armlinux.org.uk>
+ <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
+ <20180417144913.GD5669@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526751291-17873-1-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180417144913.GD5669@atomide.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, trini@konsulko.com, Russell King - ARM Linux <linux@armlinux.org.uk>, robh+dt@kernel.org, frowand.list@gmail.com, wmills@ti.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19-05-18, 23:04, Taniya Das wrote:
->  [v2]
->    * Address comments given in v0 series.
+On 17/04/18 17:49, Tony Lindgren wrote:
+> * Tero Kristo <t-kristo@ti.com> [180417 09:36]:
+>> In typical setup, you can boot a large number of different configs via:
+>>
+>> bootm 0x82000000#dra71-evm#nand#lcd-auo-g101evn01.0
+>>
+>> ... assuming the configs were named like that, and assuming they would be
+>> compatible with each other. The am57xx-evm example provided is better, as
+>> you can chain the different cameras to the available evm configs.
+> 
+> Why not just do it in the bootloader to put together the dtb?
+> 
+> Then for external devices, you could just pass info on the
+> kernel cmdline with lcd=foo camera=bar if they cannot be
+> detected over I2C.
 
-That's not how you do it. You need to explain every change in enough
-detail here so that the reviewers don't need to go to their previous
-emails to see what changed.
+(Added Linux ARM list to CC, this was not part of the original delivery.)
 
->  [v1]
->     * Fixed compilation reported by Amit K.
-> 
-> The CPUfreq FW present in some QCOM chipsets offloads the steps necessary
-> for changing the frequency of CPUs. The driver implements the cpufreq
-> driver interface for this firmware.
-> 
-> Taniya Das (2):
->   dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW bindings
->   cpufreq: qcom-fw: Add support for QCOM cpufreq FW driver
-> 
->  .../bindings/cpufreq/cpufreq-qcom-fw.txt           |  68 +++++
->  drivers/cpufreq/Kconfig.arm                        |   9 +
->  drivers/cpufreq/Makefile                           |   1 +
->  drivers/cpufreq/qcom-cpufreq-fw.c                  | 317 +++++++++++++++++++++
->  4 files changed, 395 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->  create mode 100644 drivers/cpufreq/qcom-cpufreq-fw.c
-> 
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
+Ok trying to resurrect this thread a bit. Is there any kind of consensus 
+how things like this should be handled? Should we add the DT overlay 
+files to kernel tree or not?
 
--- 
-viresh
+Should we add any kind of build infra to kernel tree, and at what level 
+would this be? Just DT overlay file building support, and drop the FIT 
+build support as was proposed in this RFC series or...?
+
+U-boot can obviously parse the base DTB + overlay DTB:s into a single 
+DTB, but this is somewhat clumsy approach and is relatively error prone 
+to get it right.
+
+Building the FIT image post kernel build would also be possible, but who 
+would be doing this, is there any need to get this done in generic 
+manner or shall we just add SoC vendor specific tools for this?
+
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
