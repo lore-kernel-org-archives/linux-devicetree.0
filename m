@@ -1,130 +1,255 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v6 3/5] soc: rockchip: split rockchip_typec_phy struct to
- separate header
-Date: Mon, 21 May 2018 15:50:32 +0200
-Message-ID: <CAFqH_51DrUQh24XWJ2=MAi8EiGCdiK3dKTV_YexRJawJHN7H0A@mail.gmail.com>
-References: <1526895424-22894-1-git-send-email-hl@rock-chips.com>
- <1526895424-22894-3-git-send-email-hl@rock-chips.com>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: [PATCH v6 4/9] counter: 104-quad-8: Add Generic Counter
+ interface support
+Date: Mon, 21 May 2018 09:51:27 -0400
+Message-ID: <20180521135127.GC5723@sophia>
+References: <cover.1526487615.git.vilhelm.gray@gmail.com>
+ <881ede525a87ef68fad76cc757ce0ba72df03e5a.1526487615.git.vilhelm.gray@gmail.com>
+ <20180520164253.5432d2a4@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1526895424-22894-3-git-send-email-hl@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lin Huang <hl@rock-chips.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chris Zhong <zyw@rock-chips.com>, daniel.vetter@intel.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180520164253.5432d2a4@archlinux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: benjamin.gaignard@st.com, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGluLAoKMjAxOC0wNS0yMSAxMTozNyBHTVQrMDI6MDAgTGluIEh1YW5nIDxobEByb2NrLWNo
-aXBzLmNvbT46Cj4gd2UgbWF5IHVzZSByb2NrY2hpcF9waHlfdHlwZWMgc3RydWN0IGluIG90aGVy
-IGRyaXZlciwgc28gc3BsaXQKPiBpdCB0byBzZXBhcmF0ZSBoZWFkZXIuCj4KClRoYXQgcGF0Y2gg
-ZG9lcyBtb3JlIHRoYW4ganVzdCBzcGxpdCBzb21lIHN0cnVjdHMgdG8gYSBwdWJsaWMgaGVhZGVy
-LAppdCBhbHNvIGludHJvZHVjZXMgbmV3IHN0cnVjdHMgYW5kIG5ldyBwYXJhbWV0ZXJzIHJlbGF0
-ZWQgdG8gdGhlCnBoeV9jb25maWcgZmVhdHVyZS4gSU1ITyB5b3Ugc2hvdWxkIGZpcnN0IG1vdmUg
-dGhlIGN1cnJlbnQgc3RydWN0cyBhbmQKaW50cm9kdWNlIHRoZSBuZXcgcGh5X2NvbmZpZyBzdHVm
-ZiBpbiB0aGUgZm9sbG93aW5nIHBhdGNoICg0LzUpLiBJIGFtCm5vdCBzdXJlIGFib3V0IHRoZSBt
-YWludGFpbmVyIHByZWZlcmVuY2VzLCBidXQgYXQgbGVhc3QsIGlmIHRoZQptYWludGFpbmVyIGlz
-IGZpbmUgbGlrZSBpcyBub3csIEknZCBleHBsYWluIHRoYXQgeW91IGludHJvZHVjZSBuZXcKZWxl
-bWVudHMgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLgoKQmVzdCByZWdhcmRzLAogRW5yaWMKCj4gU2ln
-bmVkLW9mZi1ieTogTGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiAtLS0KPiBDaGFuZ2Vz
-IGluIHYyOgo+IC0gTm9uZQo+IENoYW5nZXMgaW4gdjM6Cj4gLSBOb25lCj4gQ2hhbmdlcyBpbiB2
-NDoKPiAtIE5vbmUKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gTm9uZQo+IENoYW5nZXMgaW4gdjY6Cj4g
-LSBuZXcgcGF0Y2ggaGVyZQo+Cj4gIGRyaXZlcnMvcGh5L3JvY2tjaGlwL3BoeS1yb2NrY2hpcC10
-eXBlYy5jIHwgNDcgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgaW5jbHVkZS9zb2Mvcm9ja2No
-aXAvcm9ja2NoaXBfcGh5X3R5cGVjLmggfCA2MyArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgNjQgaW5zZXJ0aW9ucygrKSwgNDYgZGVsZXRpb25zKC0p
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3NvYy9yb2NrY2hpcC9yb2NrY2hpcF9waHlf
-dHlwZWMuaAo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L3JvY2tjaGlwL3BoeS1yb2NrY2hp
-cC10eXBlYy5jIGIvZHJpdmVycy9waHkvcm9ja2NoaXAvcGh5LXJvY2tjaGlwLXR5cGVjLmMKPiBp
-bmRleCA3NmE0YjU4Li43OTUwNTVmIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGh5L3JvY2tjaGlw
-L3BoeS1yb2NrY2hpcC10eXBlYy5jCj4gKysrIGIvZHJpdmVycy9waHkvcm9ja2NoaXAvcGh5LXJv
-Y2tjaGlwLXR5cGVjLmMKPiBAQCAtNjMsNiArNjMsNyBAQAo+Cj4gICNpbmNsdWRlIDxsaW51eC9t
-ZmQvc3lzY29uLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9waHkvcGh5Lmg+Cj4gKyNpbmNsdWRlIDxz
-b2Mvcm9ja2NoaXAvcm9ja2NoaXBfcGh5X3R5cGVjLmg+Cj4KPiAgI2RlZmluZSBDTU5fU1NNX0JB
-TkRHQVAgICAgICAgICAgICAgICAgICAgICAgICAoMHgyMSA8PCAyKQo+ICAjZGVmaW5lIENNTl9T
-U01fQklBUyAgICAgICAgICAgICAgICAgICAoMHgyMiA8PCAyKQo+IEBAIC0zNDksNTIgKzM1MCw2
-IEBACj4gICNkZWZpbmUgTU9ERV9ERlBfVVNCICAgICAgICAgICAgICAgICAgIEJJVCgxKQo+ICAj
-ZGVmaW5lIE1PREVfREZQX0RQICAgICAgICAgICAgICAgICAgICBCSVQoMikKPgo+IC1zdHJ1Y3Qg
-dXNiM3BoeV9yZWcgewo+IC0gICAgICAgdTMyIG9mZnNldDsKPiAtICAgICAgIHUzMiBlbmFibGVf
-Yml0Owo+IC0gICAgICAgdTMyIHdyaXRlX2VuYWJsZTsKPiAtfTsKPiAtCj4gLS8qKgo+IC0gKiBz
-dHJ1Y3Qgcm9ja2NoaXBfdXNiM3BoeV9wb3J0X2NmZzogdXNiMy1waHkgcG9ydCBjb25maWd1cmF0
-aW9uLgo+IC0gKiBAcmVnOiB0aGUgYmFzZSBhZGRyZXNzIGZvciB1c2IzLXBoeSBjb25maWcuCj4g
-LSAqIEB0eXBlY19jb25uX2RpcjogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBjb25uZWN0b3IgZGly
-ZWN0aW9uLgo+IC0gKiBAdXNiM3RvdXNiMl9lbjogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBmb3Jj
-ZSB1c2IyIHRvIHVzYjIgZW5hYmxlLgo+IC0gKiBAZXh0ZXJuYWxfcHNtOiB0aGUgcmVnaXN0ZXIg
-b2YgdHlwZS1jIHBoeSBleHRlcm5hbCBwc20gY2xvY2suCj4gLSAqIEBwaXBlX3N0YXR1czogdGhl
-IHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkgcGlwZSBzdGF0dXMuCj4gLSAqIEB1c2IzX2hvc3RfZGlz
-YWJsZTogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyB1c2IzIGhvc3QgZGlzYWJsZS4KPiAtICogQHVz
-YjNfaG9zdF9wb3J0OiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1jIHVzYjMgaG9zdCBwb3J0Lgo+IC0g
-KiBAdXBoeV9kcF9zZWw6IHRoZSByZWdpc3RlciBvZiB0eXBlLWMgcGh5IERQIHNlbGVjdCBjb250
-cm9sLgo+IC0gKi8KPiAtc3RydWN0IHJvY2tjaGlwX3VzYjNwaHlfcG9ydF9jZmcgewo+IC0gICAg
-ICAgdW5zaWduZWQgaW50IHJlZzsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB0eXBlY19j
-b25uX2RpcjsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1c2IzdG91c2IyX2VuOwo+IC0g
-ICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIGV4dGVybmFsX3BzbTsKPiAtICAgICAgIHN0cnVjdCB1
-c2IzcGh5X3JlZyBwaXBlX3N0YXR1czsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1c2Iz
-X2hvc3RfZGlzYWJsZTsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1c2IzX2hvc3RfcG9y
-dDsKPiAtICAgICAgIHN0cnVjdCB1c2IzcGh5X3JlZyB1cGh5X2RwX3NlbDsKPiAtfTsKPiAtCj4g
-LXN0cnVjdCByb2NrY2hpcF90eXBlY19waHkgewo+IC0gICAgICAgc3RydWN0IGRldmljZSAqZGV2
-Owo+IC0gICAgICAgdm9pZCBfX2lvbWVtICpiYXNlOwo+IC0gICAgICAgc3RydWN0IGV4dGNvbl9k
-ZXYgKmV4dGNvbjsKPiAtICAgICAgIHN0cnVjdCByZWdtYXAgKmdyZl9yZWdzOwo+IC0gICAgICAg
-c3RydWN0IGNsayAqY2xrX2NvcmU7Cj4gLSAgICAgICBzdHJ1Y3QgY2xrICpjbGtfcmVmOwo+IC0g
-ICAgICAgc3RydWN0IHJlc2V0X2NvbnRyb2wgKnVwaHlfcnN0Owo+IC0gICAgICAgc3RydWN0IHJl
-c2V0X2NvbnRyb2wgKnBpcGVfcnN0Owo+IC0gICAgICAgc3RydWN0IHJlc2V0X2NvbnRyb2wgKnRj
-cGh5X3JzdDsKPiAtICAgICAgIGNvbnN0IHN0cnVjdCByb2NrY2hpcF91c2IzcGh5X3BvcnRfY2Zn
-ICpwb3J0X2NmZ3M7Cj4gLSAgICAgICAvKiBtdXRleCB0byBwcm90ZWN0IGFjY2VzcyB0byBpbmRp
-dmlkdWFsIFBIWXMgKi8KPiAtICAgICAgIHN0cnVjdCBtdXRleCBsb2NrOwo+IC0KPiAtICAgICAg
-IGJvb2wgZmxpcDsKPiAtICAgICAgIHU4IG1vZGU7Cj4gLX07Cj4gLQo+ICBzdHJ1Y3QgcGh5X3Jl
-ZyB7Cj4gICAgICAgICB1MTYgdmFsdWU7Cj4gICAgICAgICB1MzIgYWRkcjsKPiBkaWZmIC0tZ2l0
-IGEvaW5jbHVkZS9zb2Mvcm9ja2NoaXAvcm9ja2NoaXBfcGh5X3R5cGVjLmggYi9pbmNsdWRlL3Nv
-Yy9yb2NrY2hpcC9yb2NrY2hpcF9waHlfdHlwZWMuaAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
-aW5kZXggMDAwMDAwMC4uYmU2YWYwZQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9pbmNsdWRlL3Nv
-Yy9yb2NrY2hpcC9yb2NrY2hpcF9waHlfdHlwZWMuaAo+IEBAIC0wLDAgKzEsNjMgQEAKPiArLyog
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8KPiArLyoKPiArICogQ29weXJpZ2h0
-IChDKSBGdXpob3UgUm9ja2NoaXAgRWxlY3Ryb25pY3MgQ28uTHRkCj4gKyAqIEF1dGhvcjogTGlu
-IEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiArICovCj4gKwo+ICsjaWZuZGVmIF9fU09DX1JP
-Q0tDSElQX1BIWV9UWVBFQ19ICj4gKyNkZWZpbmUgX19TT0NfUk9DS0NISVBfUEhZX1RZUEVDX0gK
-PiArCj4gK3N0cnVjdCB1c2IzcGh5X3JlZyB7Cj4gKyAgICAgICB1MzIgb2Zmc2V0Owo+ICsgICAg
-ICAgdTMyIGVuYWJsZV9iaXQ7Cj4gKyAgICAgICB1MzIgd3JpdGVfZW5hYmxlOwo+ICt9Owo+ICsK
-PiArLyoqCj4gKyAqIHN0cnVjdCByb2NrY2hpcF91c2IzcGh5X3BvcnRfY2ZnOiB1c2IzLXBoeSBw
-b3J0IGNvbmZpZ3VyYXRpb24uCj4gKyAqIEByZWc6IHRoZSBiYXNlIGFkZHJlc3MgZm9yIHVzYjMt
-cGh5IGNvbmZpZy4KPiArICogQHR5cGVjX2Nvbm5fZGlyOiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1j
-IGNvbm5lY3RvciBkaXJlY3Rpb24uCj4gKyAqIEB1c2IzdG91c2IyX2VuOiB0aGUgcmVnaXN0ZXIg
-b2YgdHlwZS1jIGZvcmNlIHVzYjIgdG8gdXNiMiBlbmFibGUuCj4gKyAqIEBleHRlcm5hbF9wc206
-IHRoZSByZWdpc3RlciBvZiB0eXBlLWMgcGh5IGV4dGVybmFsIHBzbSBjbG9jay4KPiArICogQHBp
-cGVfc3RhdHVzOiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1jIHBoeSBwaXBlIHN0YXR1cy4KPiArICog
-QHVzYjNfaG9zdF9kaXNhYmxlOiB0aGUgcmVnaXN0ZXIgb2YgdHlwZS1jIHVzYjMgaG9zdCBkaXNh
-YmxlLgo+ICsgKiBAdXNiM19ob3N0X3BvcnQ6IHRoZSByZWdpc3RlciBvZiB0eXBlLWMgdXNiMyBo
-b3N0IHBvcnQuCj4gKyAqIEB1cGh5X2RwX3NlbDogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkg
-RFAgc2VsZWN0IGNvbnRyb2wuCj4gKyAqLwo+ICtzdHJ1Y3Qgcm9ja2NoaXBfdXNiM3BoeV9wb3J0
-X2NmZyB7Cj4gKyAgICAgICB1bnNpZ25lZCBpbnQgcmVnOwo+ICsgICAgICAgc3RydWN0IHVzYjNw
-aHlfcmVnIHR5cGVjX2Nvbm5fZGlyOwo+ICsgICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIHVzYjN0
-b3VzYjJfZW47Cj4gKyAgICAgICBzdHJ1Y3QgdXNiM3BoeV9yZWcgZXh0ZXJuYWxfcHNtOwo+ICsg
-ICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIHBpcGVfc3RhdHVzOwo+ICsgICAgICAgc3RydWN0IHVz
-YjNwaHlfcmVnIHVzYjNfaG9zdF9kaXNhYmxlOwo+ICsgICAgICAgc3RydWN0IHVzYjNwaHlfcmVn
-IHVzYjNfaG9zdF9wb3J0Owo+ICsgICAgICAgc3RydWN0IHVzYjNwaHlfcmVnIHVwaHlfZHBfc2Vs
-Owo+ICt9Owo+ICsKPiArc3RydWN0IHBoeV9jb25maWcgewo+ICsgICAgICAgaW50IHN3aW5nOwo+
-ICsgICAgICAgaW50IHBlOwo+ICt9Owo+ICsKPiArc3RydWN0IHJvY2tjaGlwX3R5cGVjX3BoeSB7
-Cj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXY7Cj4gKyAgICAgICB2b2lkIF9faW9tZW0gKmJh
-c2U7Cj4gKyAgICAgICBzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uOwo+ICsgICAgICAgc3RydWN0
-IHJlZ21hcCAqZ3JmX3JlZ3M7Cj4gKyAgICAgICBzdHJ1Y3QgY2xrICpjbGtfY29yZTsKPiArICAg
-ICAgIHN0cnVjdCBjbGsgKmNsa19yZWY7Cj4gKyAgICAgICBzdHJ1Y3QgcmVzZXRfY29udHJvbCAq
-dXBoeV9yc3Q7Cj4gKyAgICAgICBzdHJ1Y3QgcmVzZXRfY29udHJvbCAqcGlwZV9yc3Q7Cj4gKyAg
-ICAgICBzdHJ1Y3QgcmVzZXRfY29udHJvbCAqdGNwaHlfcnN0Owo+ICsgICAgICAgY29uc3Qgc3Ry
-dWN0IHJvY2tjaGlwX3VzYjNwaHlfcG9ydF9jZmcgKnBvcnRfY2ZnczsKPiArICAgICAgIC8qIG11
-dGV4IHRvIHByb3RlY3QgYWNjZXNzIHRvIGluZGl2aWR1YWwgUEhZcyAqLwo+ICsgICAgICAgc3Ry
-dWN0IG11dGV4IGxvY2s7Cj4gKyAgICAgICBzdHJ1Y3QgcGh5X2NvbmZpZyBjb25maWdbM11bNF07
-Cj4gKyAgICAgICBib29sIGZsaXA7Cj4gKyAgICAgICB1OCBtb2RlOwo+ICsgICAgICAgaW50ICgq
-dHlwZWNfcGh5X2NvbmZpZykoc3RydWN0IHBoeSAqcGh5LCBpbnQgbGlua19yYXRlLAo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IGxhbmVzLCB1OCBzd2luZywgdTggcHJlX2Vt
-cCk7Cj4gK307Cj4gKwo+ICsjZW5kaWYKPiAtLQo+IDIuNy40Cj4KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sun, May 20, 2018 at 04:42:53PM +0100, Jonathan Cameron wrote:
+>On Wed, 16 May 2018 13:51:25 -0400
+>William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+>
+>> This patch adds support for the Generic Counter interface to the
+>> 104-QUAD-8 driver. The existing 104-QUAD-8 device interface should not
+>> be affected by this patch; all changes are intended as supplemental
+>> additions as perceived by the user.
+>> 
+>> Generic Counter Counts are created for the eight quadrature channel
+>> counts, as well as their respective quadrature A and B Signals (which
+>> are associated via respective Synapse structures) and respective index
+>> Signals.
+>> 
+>> The new Generic Counter interface sysfs attributes are intended to
+>> expose the same functionality and data available via the existing
+>> 104-QUAD-8 IIO device interface; the Generic Counter interface serves
+>> to provide the respective functionality and data in a standard way
+>> expected of counter devices.
+>> 
+>> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+>
+>A few general comments that applied just as well to the original driver
+>as they do to the modified version.
+>
+>I wonder if this would be easier to review as two patches.
+>Move the driver then add the counter interfaces?
+>
+>Right now people kind of have to review the old IIO driver and
+>all the new stuff which is a big job..
+>
+>Jonathan
+
+This looks like more simple cleanup, so I expect to incorporate your
+suggestions without problem here as well. I'll also try to make the code
+easier to read by writing some defines for the magic numbers throughout.
+
+William Breathitt Gray
+
+>> ---
+>>  MAINTAINERS                      |    4 +-
+>>  drivers/counter/104-quad-8.c     | 1335 ++++++++++++++++++++++++++++++
+>>  drivers/counter/Kconfig          |   21 +
+>>  drivers/counter/Makefile         |    2 +
+>>  drivers/iio/counter/104-quad-8.c |  596 -------------
+>>  drivers/iio/counter/Kconfig      |   17 -
+>>  drivers/iio/counter/Makefile     |    1 -
+>>  7 files changed, 1360 insertions(+), 616 deletions(-)
+>>  create mode 100644 drivers/counter/104-quad-8.c
+>>  delete mode 100644 drivers/iio/counter/104-quad-8.c
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 7a01aa63fb33..f11bf7885aeb 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -266,12 +266,12 @@ L:	linux-gpio@vger.kernel.org
+>>  S:	Maintained
+>>  F:	drivers/gpio/gpio-104-idio-16.c
+>>  
+>> -ACCES 104-QUAD-8 IIO DRIVER
+>> +ACCES 104-QUAD-8 DRIVER
+>>  M:	William Breathitt Gray <vilhelm.gray@gmail.com>
+>>  L:	linux-iio@vger.kernel.org
+>>  S:	Maintained
+>>  F:	Documentation/ABI/testing/sysfs-bus-iio-counter-104-quad-8
+>> -F:	drivers/iio/counter/104-quad-8.c
+>> +F:	drivers/counter/104-quad-8.c
+>>  
+>>  ACCES PCI-IDIO-16 GPIO DRIVER
+>>  M:	William Breathitt Gray <vilhelm.gray@gmail.com>
+>> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+>> new file mode 100644
+>> index 000000000000..7c72fb72d660
+>> --- /dev/null
+>> +++ b/drivers/counter/104-quad-8.c
+>> @@ -0,0 +1,1335 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>
+>If you are happy with SPDX drop the GPL text below to keep things
+>short.
+>
+>> +/*
+>> + * IIO driver for the ACCES 104-QUAD-8
+>> + * Copyright (C) 2016 William Breathitt Gray
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License, version 2, as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful, but
+>> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+>> + * General Public License for more details.
+>> + *
+>> + * This driver supports the ACCES 104-QUAD-8 and ACCES 104-QUAD-4.
+>> + */
+>> +#include <linux/bitops.h>
+>...
+>> +static int quad8_probe(struct device *dev, unsigned int id)
+>> +{
+>> +	struct iio_dev *indio_dev;
+>> +	struct quad8_iio *quad8iio;
+>> +	int i, j;
+>> +	unsigned int base_offset;
+>> +	int err;
+>> +
+>> +	if (!devm_request_region(dev, base[id], QUAD8_EXTENT, dev_name(dev))) {
+>> +		dev_err(dev, "Unable to lock port addresses (0x%X-0x%X)\n",
+>> +			base[id], base[id] + QUAD8_EXTENT);
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	/* Allocate IIO device; this also allocates driver data structure */
+>> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*quad8iio));
+>> +	if (!indio_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	/* Initialize IIO device */
+>> +	indio_dev->info = &quad8_info;
+>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>> +	indio_dev->num_channels = ARRAY_SIZE(quad8_channels);
+>> +	indio_dev->channels = quad8_channels;
+>> +	indio_dev->name = dev_name(dev);
+>> +	indio_dev->dev.parent = dev;
+>> +
+>> +	/* Initialize Counter device and driver data */
+>> +	quad8iio = iio_priv(indio_dev);
+>> +	quad8iio->counter.name = dev_name(dev);
+>> +	quad8iio->counter.parent = dev;
+>> +	quad8iio->counter.ops = &quad8_ops;
+>> +	quad8iio->counter.counts = quad8_counts;
+>> +	quad8iio->counter.num_counts = ARRAY_SIZE(quad8_counts);
+>> +	quad8iio->counter.signals = quad8_signals;
+>> +	quad8iio->counter.num_signals = ARRAY_SIZE(quad8_signals);
+>> +	quad8iio->counter.priv = quad8iio;
+>> +	quad8iio->base = base[id];
+>> +
+>> +	/* Reset all counters and disable interrupt function */
+>> +	outb(0x01, base[id] + 0x11);
+>> +	/* Set initial configuration for all counters */
+>> +	for (i = 0; i < QUAD8_NUM_COUNTERS; i++) {
+>> +		base_offset = base[id] + 2 * i;
+>> +		/* Reset Byte Pointer */
+>> +		outb(0x01, base_offset + 1);
+>
+>I'm going to be fussy.  There are lots of values
+>in here that look like register bits and you could exchange much of
+>this documentation for a some good defines...
+>
+>Taking base_offset + 1 bits 5 and 6 look to select the actual register
+>and the rest of them do the control.
+>
+>Anyhow, not critical but the readability of this code could be improved
+>somewhat.
+>
+>> +		/* Reset Preset Register */
+>> +		for (j = 0; j < 3; j++)
+>> +			outb(0x00, base_offset);
+>> +		/* Reset Borrow, Carry, Compare, and Sign flags */
+>> +		outb(0x04, base_offset + 1);
+>> +		/* Reset Error flag */
+>> +		outb(0x06, base_offset + 1);
+>> +		/* Binary encoding; Normal count; non-quadrature mode */
+>> +		outb(0x20, base_offset + 1);
+>> +		/* Disable A and B inputs; preset on index; FLG1 as Carry */
+>> +		outb(0x40, base_offset + 1);
+>> +		/* Disable index function; negative index polarity */
+>> +		outb(0x60, base_offset + 1);
+>> +	}
+>> +	/* Enable all counters */
+>> +	outb(0x00, base[id] + 0x11);
+>> +
+>> +	/* Register IIO device */
+>> +	err = devm_iio_device_register(dev, indio_dev);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	/* Register Counter device */
+>> +	return devm_counter_register(dev, &quad8iio->counter);
+>> +}
+>> +
+>> +static struct isa_driver quad8_driver = {
+>> +	.probe = quad8_probe,
+>> +	.driver = {
+>> +		.name = "104-quad-8"
+>> +	}
+>> +};
+>> +
+>> +module_isa_driver(quad8_driver, num_quad8);
+>> +
+>> +MODULE_AUTHOR("William Breathitt Gray <vilhelm.gray@gmail.com>");
+>> +MODULE_DESCRIPTION("ACCES 104-QUAD-8 IIO driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
+>> index 65fa92abd5a4..73f03372484f 100644
+>> --- a/drivers/counter/Kconfig
+>> +++ b/drivers/counter/Kconfig
+>> @@ -16,3 +16,24 @@ menuconfig COUNTER
+>>  	  consumption. The Generic Counter interface enables drivers to support
+>>  	  and expose a common set of components and functionality present in
+>>  	  counter devices.
+>> +
+>> +if COUNTER
+>> +
+>> +config 104_QUAD_8
+>> +	tristate "ACCES 104-QUAD-8 driver"
+>> +	depends on PC104 && X86 && IIO
+>> +	select ISA_BUS_API
+>> +	help
+>> +	  Say yes here to build support for the ACCES 104-QUAD-8 quadrature
+>> +	  encoder counter/interface device family (104-QUAD-8, 104-QUAD-4).
+>> +
+>> +	  Performing a write to a counter's IIO_CHAN_INFO_RAW sets the counter and
+>> +	  also clears the counter's respective error flag. Although the counters
+>> +	  have a 25-bit range, only the lower 24 bits may be set, either directly
+>> +	  or via a counter's preset attribute. Interrupts are not supported by
+>> +	  this driver.
+>
+>This text probably wants to be updated to reflect the new counter subsystem support..
+>
+>> +
+>> +	  The base port addresses for the devices may be configured via the base
+>> +	  array module parameter.
+>> +
+>> +endif # COUNTER
+>> diff --git a/drivers/counter/Makefile b/drivers/counter/Makefile
+>> index ad1ba7109cdc..23a4f6263e45 100644
+>> --- a/drivers/counter/Makefile
+>> +++ b/drivers/counter/Makefile
+>> @@ -6,3 +6,5 @@
+>>  
+>>  obj-$(CONFIG_COUNTER) += counter.o
+>>  counter-y := generic-counter.o
+>> +
+>> +obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
+>> diff --git a/drivers/iio/counter/104-quad-8.c b/drivers/iio/counter/104-quad-8.c
+>...
