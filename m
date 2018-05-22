@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 04/16] irqchip/irq-mvebu-icu: clarify the reset operation of configured interrupts
-Date: Tue, 22 May 2018 11:40:30 +0200
-Message-ID: <20180522094042.24770-5-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 14/16] arm64: dts: marvell: add AP806 SEI subnode
+Date: Tue, 22 May 2018 11:40:40 +0200
+Message-ID: <20180522094042.24770-15-miquel.raynal@bootlin.com>
 References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180522094042.24770-1-miquel.raynal@bootlin.com>
@@ -10,34 +10,44 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Rewrite a small section to clarify the reset operation of interrupts
-already configured by ATF that we want to handle in the driver. This
-will simplify the introduction of System Error Interrupts support.
+Add the System Error Interrupt node, representing an IRQ chip which is
+part of the GIC. The SEI node has two subnodes, one for each interrupt
+domain: wired (from the AP) and not-wired (MSIs from the CPs).
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- drivers/irqchip/irq-mvebu-icu.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index a2a3acd74491..0f2655d7f19e 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -258,8 +258,12 @@ static int mvebu_icu_probe(struct platform_device *pdev)
- 	 * avoid unpredictable SPI assignments done by firmware.
- 	 */
- 	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
--		u32 icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
--		if ((icu_int >> ICU_GROUP_SHIFT) == ICU_GRP_NSR)
-+		u32 icu_int, icu_grp;
-+
-+		icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
-+		icu_grp = icu_int >> ICU_GROUP_SHIFT;
-+
-+		if (icu_grp == ICU_GRP_NSR)
- 			writel_relaxed(0x0, icu->base + ICU_INT_CFG(i));
- 	}
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 176e38d54872..40204a3b893a 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -124,6 +124,25 @@
+ 				interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
  
++			sei: sei@3f0200 {
++				compatible = "marvell,armada-8k-sei";
++				reg = <0x3f0200 0x40>;
++				interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				sei_wired_controller: sei-wired-controller {
++					marvell,sei-ranges = <0 21>;
++					#interrupt-cells = <1>;
++					interrupt-controller;
++				};
++
++				sei_msi_controller: sei-msi-controller {
++					marvell,sei-ranges = <21 43>;
++					msi-controller;
++				};
++			};
++
+ 			xor@400000 {
+ 				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+ 				reg = <0x400000 0x1000>,
 -- 
 2.14.1
