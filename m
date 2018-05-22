@@ -1,105 +1,126 @@
-Return-Path: <SRS0=BfEI=IO=redhat.com=hdegoede@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 07/13] Bluetooth: hci_uart: Restore hci_dev->flush callback on open()
-Date: Sun, 27 May 2018 21:04:51 +0200
-Message-Id: <20180527190457.2632-8-hdegoede@redhat.com>
-In-Reply-To: <20180527190457.2632-1-hdegoede@redhat.com>
-References: <20180527190457.2632-1-hdegoede@redhat.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, robh@kernel.org, Jeremy Cline <jeremy@jcline.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-cys01nam02on0055.outbound.protection.outlook.com ([104.47.37.55]:43712
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751214AbeEVNdX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 May 2018 09:33:23 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [RESEND PATCH 4/4] PCI: cadence: Add Power Management ops for host and EP
+Date: Tue, 22 May 2018 14:33:15 +0100
+Message-ID: <1526995995-23872-1-git-send-email-adouglas@cadence.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.com, cyrille.pitchen@free-electrons.com, Alan Douglas <adouglas@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-For reasons explained in detail in commit 3611f4d2a5e0 ("hci_ldisc:
-fix null pointer deref") the hci_uart_close() functions sets
-hci_dev->flush to NULL.
+These PM ops will enable/disable the optional PHYs if present.  The
+AXI link-down register in the host driver is now cleared in
+cdns_pci_map_bus since the link-down bit will be set if the PHY has
+been disabled.  It is not cleared when enabling the PHY, since the
+link will not yet be up.
 
-But the device may be re-opened after a close, this commit restores the
-hci_dev->flush callback on open().
-
-Note this commit also moves the nearly empty defition of hci_uart_open()
-a bit down in the file to avoid the need for forward declaring
-hci_uart_flush().
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Alan Douglas <adouglas@cadence.com>
 ---
- drivers/bluetooth/hci_ldisc.c  | 20 +++++++++++---------
- drivers/bluetooth/hci_serdev.c | 19 +++++++++++--------
- 2 files changed, 22 insertions(+), 17 deletions(-)
+ drivers/pci/cadence/pcie-cadence-ep.c   |  1 +
+ drivers/pci/cadence/pcie-cadence-host.c |  3 +++
+ drivers/pci/cadence/pcie-cadence.c      | 30 ++++++++++++++++++++++++++++++
+ drivers/pci/cadence/pcie-cadence.h      |  4 ++++
+ 4 files changed, 38 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
-index b6a71705b7d6..8da0f53b5912 100644
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -229,15 +229,6 @@ int hci_uart_init_ready(struct hci_uart *hu)
- }
+diff --git a/drivers/pci/cadence/pcie-cadence-ep.c b/drivers/pci/cadence/pcie-cadence-ep.c
+index 2581caf..e74b8a4 100644
+--- a/drivers/pci/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/cadence/pcie-cadence-ep.c
+@@ -554,6 +554,7 @@ static struct platform_driver cdns_pcie_ep_driver = {
+ 	.driver = {
+ 		.name = "cdns-pcie-ep",
+ 		.of_match_table = cdns_pcie_ep_of_match,
++		.pm	= &cdns_pcie_pm_ops,
+ 	},
+ 	.probe = cdns_pcie_ep_probe,
+ 	.shutdown = cdns_pcie_ep_shutdown,
+diff --git a/drivers/pci/cadence/pcie-cadence-host.c b/drivers/pci/cadence/pcie-cadence-host.c
+index 7536926a..a8b5eda 100644
+--- a/drivers/pci/cadence/pcie-cadence-host.c
++++ b/drivers/pci/cadence/pcie-cadence-host.c
+@@ -61,6 +61,8 @@ static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+ 	/* Check that the link is up */
+ 	if (!(cdns_pcie_readl(pcie, CDNS_PCIE_LM_BASE) & 0x1))
+ 		return NULL;
++	/* Clear AXI link-down status */
++	cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
  
- /* ------- Interface to HCI layer ------ */
--/* Initialize device */
--static int hci_uart_open(struct hci_dev *hdev)
--{
--	BT_DBG("%s %p", hdev->name, hdev);
--
--	/* Nothing to do for UART driver */
--	return 0;
--}
--
- /* Reset device */
- static int hci_uart_flush(struct hci_dev *hdev)
- {
-@@ -264,6 +255,17 @@ static int hci_uart_flush(struct hci_dev *hdev)
- 	return 0;
- }
+ 	/* Update Output registers for AXI region 0. */
+ 	addr0 = CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
+@@ -360,6 +362,7 @@ static struct platform_driver cdns_pcie_host_driver = {
+ 	.driver = {
+ 		.name = "cdns-pcie-host",
+ 		.of_match_table = cdns_pcie_host_of_match,
++		.pm	= &cdns_pcie_pm_ops,
+ 	},
+ 	.probe = cdns_pcie_host_probe,
+ 	.shutdown = cdns_pcie_shutdown,
+diff --git a/drivers/pci/cadence/pcie-cadence.c b/drivers/pci/cadence/pcie-cadence.c
+index 681609a..7a34780 100644
+--- a/drivers/pci/cadence/pcie-cadence.c
++++ b/drivers/pci/cadence/pcie-cadence.c
+@@ -217,3 +217,33 @@ int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie)
  
-+/* Initialize device */
-+static int hci_uart_open(struct hci_dev *hdev)
-+{
-+	BT_DBG("%s %p", hdev->name, hdev);
+ 	return ret;
+ }
 +
-+	/* Undo clearing this from hci_uart_close() */
-+	hdev->flush = hci_uart_flush;
++#ifdef CONFIG_PM_SLEEP
++static int cdns_pcie_suspend_noirq(struct device *dev)
++{
++	struct cdns_pcie *pcie = dev_get_drvdata(dev);
++
++	cdns_pcie_disable_phy(pcie);
 +
 +	return 0;
 +}
 +
- /* Close device */
- static int hci_uart_close(struct hci_dev *hdev)
- {
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index e0e6461b9200..da6eb5bcfa6f 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -101,14 +101,6 @@ static void hci_uart_write_work(struct work_struct *work)
- 
- /* ------- Interface to HCI layer ------ */
- 
--/* Initialize device */
--static int hci_uart_open(struct hci_dev *hdev)
--{
--	BT_DBG("%s %p", hdev->name, hdev);
--
--	return 0;
--}
--
- /* Reset device */
- static int hci_uart_flush(struct hci_dev *hdev)
- {
-@@ -129,6 +121,17 @@ static int hci_uart_flush(struct hci_dev *hdev)
- 	return 0;
- }
- 
-+/* Initialize device */
-+static int hci_uart_open(struct hci_dev *hdev)
++static int cdns_pcie_resume_noirq(struct device *dev)
 +{
-+	BT_DBG("%s %p", hdev->name, hdev);
++	struct cdns_pcie *pcie = dev_get_drvdata(dev);
++	int ret;
 +
-+	/* Undo clearing this from hci_uart_close() */
-+	hdev->flush = hci_uart_flush;
++	ret = cdns_pcie_enable_phy(pcie);
++	if (ret) {
++		dev_err(dev, "failed to enable phy\n");
++		return ret;
++	}
 +
 +	return 0;
 +}
++#endif
 +
- /* Close device */
- static int hci_uart_close(struct hci_dev *hdev)
- {
++const struct dev_pm_ops cdns_pcie_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(cdns_pcie_suspend_noirq,
++				      cdns_pcie_resume_noirq)
++};
+diff --git a/drivers/pci/cadence/pcie-cadence.h b/drivers/pci/cadence/pcie-cadence.h
+index b342c80..ae6bf2a 100644
+--- a/drivers/pci/cadence/pcie-cadence.h
++++ b/drivers/pci/cadence/pcie-cadence.h
+@@ -166,6 +166,9 @@
+ #define CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar) \
+ 	(CDNS_PCIE_AT_BASE + 0x0804 + (bar) * 0x0008)
+ 
++/* AXI link down register */
++#define CDNS_PCIE_AT_LINKDOWN (CDNS_PCIE_AT_BASE + 0x0824)
++
+ enum cdns_pcie_rp_bar {
+ 	RP_BAR0,
+ 	RP_BAR1,
+@@ -314,5 +317,6 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
+ void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
+ int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
+ int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
++extern const struct dev_pm_ops cdns_pcie_pm_ops;
+ 
+ #endif /* _PCIE_CADENCE_H */
 -- 
-2.17.0
+2.2.2
+
