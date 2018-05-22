@@ -1,82 +1,48 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH 3/9] ARM: dts: stout: Drop MTD partitioning from DT
-Date: Tue, 22 May 2018 14:02:51 +0200
-Message-ID: <20180522120257.13232-3-marek.vasut+renesas@gmail.com>
-References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, Marek Vasut <marek.vasut+renesas@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [RESEND PATCH 0/5] mtd: rawnand: add NVIDIA Tegra NAND flash support
+Date: Tue, 22 May 2018 14:07:04 +0200
+Message-ID: <cover.1526990589.git.stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org
+Cc: dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Drop the MTD partitioning from DT, since it does not describe HW
-and to give way to a more flexible kernel command line partition
-passing.
+[resending, this time with mailing lists in cc]
 
-To retain the original partitioning, assure you have enabled
-CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
-following to your kernel command line:
+This picks up an older patchset written by Lucas Stach which
+adds raw NAND flash support for Tegra 2.
+http://lists.infradead.org/pipermail/linux-mtd/2015-November/063031.html
 
-  mtdparts=spi0.0:512k@0(loader),256k(uboot),256k(uboot-env),-(flash)
+The driver has been reworked to implement the ->exec_op callback.
+Some smaller changes and bug fixes have been applied too, but I did
+not keep track of them. Since the original patchset has been posted
+some years back already, I guess review needs to be done from scratch
+anyway.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-renesas-soc@vger.kernel.org
----
- arch/arm/boot/dts/r8a7790-stout.dts | 26 --------------------------
- 1 file changed, 26 deletions(-)
+--
+Stefan
 
-diff --git a/arch/arm/boot/dts/r8a7790-stout.dts b/arch/arm/boot/dts/r8a7790-stout.dts
-index a13a92c26645..dc65519d53ab 100644
---- a/arch/arm/boot/dts/r8a7790-stout.dts
-+++ b/arch/arm/boot/dts/r8a7790-stout.dts
-@@ -211,32 +211,6 @@
- 		spi-cpha;
- 		spi-cpol;
- 		m25p,fast-read;
--
--		partitions {
--			compatible = "fixed-partitions";
--			#address-cells = <1>;
--			#size-cells = <1>;
--
--			partition@0 {
--				label = "loader";
--				reg = <0x00000000 0x00080000>;
--				read-only;
--			};
--			partition@80000 {
--				label = "uboot";
--				reg = <0x00080000 0x00040000>;
--				read-only;
--			};
--			partition@c0000 {
--				label = "uboot-env";
--				reg = <0x000c0000 0x00040000>;
--				read-only;
--			};
--			partition@100000 {
--				label = "flash";
--				reg = <0x00100000 0x03f00000>;
--			};
--		};
- 	};
- };
- 
+Lucas Stach (4):
+  mtd: rawnand: tegra: add devicetree binding
+  clk: tegra20: init NDFLASH clock to sensible rate
+  ARM: tegra: add Tegra20 NAND flash controller node
+  ARM: tegra: enable NAND flash on Colibri T20
+
+Stefan Agner (1):
+  mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
+
+ .../bindings/mtd/nvidia,tegra20-nand.txt      |  29 +
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/tegra20-colibri-512.dtsi    |   7 +
+ arch/arm/boot/dts/tegra20.dtsi                |  13 +
+ drivers/clk/tegra/clk-tegra20.c               |   1 +
+ drivers/mtd/nand/raw/Kconfig                  |   6 +
+ drivers/mtd/nand/raw/Makefile                 |   1 +
+ drivers/mtd/nand/raw/tegra_nand.c             | 915 ++++++++++++++++++
+ 8 files changed, 979 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+
 -- 
-2.16.2
+2.17.0
