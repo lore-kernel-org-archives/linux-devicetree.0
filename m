@@ -1,7 +1,7 @@
 From: "=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?=" <vokac.m@gmail.com>
-Subject: [PATCH net-next v2 2/7] net: dsa: qca8k: Add support for QCA8334 switch
-Date: Tue, 22 May 2018 13:16:27 +0200
-Message-ID: <1526987792-56861-3-git-send-email-michal.vokac@ysoft.com>
+Subject: [PATCH net-next v2 3/7] net: dsa: qca8k: Enable RXMAC when bringing up a port
+Date: Tue, 22 May 2018 13:16:28 +0200
+Message-ID: <1526987792-56861-4-git-send-email-michal.vokac@ysoft.com>
 References: <1526987792-56861-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,27 +13,33 @@ To: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, michal.vokac@ysoft.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for the four-port variant of the Qualcomm QCA833x switch.
+When a port is brought up/down do not enable/disable only the TXMAC
+but the RXMAC as well. This is essential for the CPU port to work.
 
+Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
 Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 Changes in v2:
- - Add commit message.
+ - Add "Fixes" tag as pointed out by Florian.
+ - Add "Reviewed-by" tags from Andrew and Florian.
 
- drivers/net/dsa/qca8k.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/qca8k.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index 3684e56..6a3ffb2 100644
+index 6a3ffb2..0d224f3 100644
 --- a/drivers/net/dsa/qca8k.c
 +++ b/drivers/net/dsa/qca8k.c
-@@ -1010,6 +1010,7 @@ static SIMPLE_DEV_PM_OPS(qca8k_pm_ops,
- 			 qca8k_suspend, qca8k_resume);
+@@ -516,7 +516,7 @@ qca8k_set_pad_ctrl(struct qca8k_priv *priv, int port, int mode)
+ static void
+ qca8k_port_set_status(struct qca8k_priv *priv, int port, int enable)
+ {
+-	u32 mask = QCA8K_PORT_STATUS_TXMAC;
++	u32 mask = QCA8K_PORT_STATUS_TXMAC | QCA8K_PORT_STATUS_RXMAC;
  
- static const struct of_device_id qca8k_of_match[] = {
-+	{ .compatible = "qca,qca8334" },
- 	{ .compatible = "qca,qca8337" },
- 	{ /* sentinel */ },
- };
+ 	pr_debug("qca: port %i set status %i\n", port, enable);
+ 
 -- 
 2.1.4
