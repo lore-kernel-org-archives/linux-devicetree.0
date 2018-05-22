@@ -1,13 +1,11 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC V2 1/6] ARM: bcm2835: Add GET_THROTTLED firmware property
-Date: Tue, 22 May 2018 13:21:47 +0200
-Message-ID: <1526988112-4021-2-git-send-email-stefan.wahren@i2se.com>
-References: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH RFC V2 0/6] hwmon: Add support for Raspberry Pi voltage sensor
+Date: Tue, 22 May 2018 13:21:46 +0200
+Message-ID: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,37 +19,33 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean 
 Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Recent Raspberry Pi firmware provides a mailbox property to detect
-under-voltage conditions. Here is the current definition.
-
-The u32 value returned by the firmware is divided into 2 parts:
-  - lower 16-bits are the live value
-  - upper 16-bits are the history or sticky value
-
-  Bits:
-  0: undervoltage
-  1: arm frequency capped
-  2: currently throttled
-  16: undervoltage has occurred
-  17: arm frequency capped has occurred
-  18: throttling has occurred
-
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- include/soc/bcm2835/raspberrypi-firmware.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index 8ee8991..c4a5c9e 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -75,6 +75,7 @@ enum rpi_firmware_property_tag {
- 	RPI_FIRMWARE_GET_EDID_BLOCK =                         0x00030020,
- 	RPI_FIRMWARE_GET_CUSTOMER_OTP =                       0x00030021,
- 	RPI_FIRMWARE_GET_DOMAIN_STATE =                       0x00030030,
-+	RPI_FIRMWARE_GET_THROTTLED =                          0x00030046,
- 	RPI_FIRMWARE_SET_CLOCK_STATE =                        0x00038001,
- 	RPI_FIRMWARE_SET_CLOCK_RATE =                         0x00038002,
- 	RPI_FIRMWARE_SET_VOLTAGE =                            0x00038003,
--- 
-2.7.4
+QSBjb21tb24gaXNzdWUgZm9yIHRoZSBSYXNwYmVycnkgUGkgaXMgYW4gaW5hZGVxdWF0ZSBwb3dl
+ciBzdXBwbHkuIApOb3JhbGYgVHLDuG5uZXMgc3RhcnRlZCBhIGRpc2N1c3Npb24gWzFdIGFib3V0
+IHdyaXRpbmcgc3VjaCB1bmRlcnZvbHRhZ2UKY29uZGl0aW9ucyBpbnRvIHRoZSBrZXJuZWwgbG9n
+LgoKVGhpcyBzZXJpZXMgaXMgYSBkcmFmdCB0byB1cHN0cmVhbSB0aGUgcmVzdWx0aW5nIGtlcm5l
+bCBwYXRjaCBhbmQgaXMgbm90CmludGVuZGVkIGZvciA0LjE4LgoKQ2hhbmdlcyBpbiBWMjoKLSBz
+aW1wbGlmaWVkIEtjb25maWcgZGVwZW5kZW5jeSBzdWdnZXN0ZWQgYnkgUm9iaW4gTXVycGh5Ci0g
+cmVwbGFjZSBkdC1iaW5kaW5nIGJ5IHByb2JpbmcgZnJvbSBmaXJtd2FyZSBkcml2ZXIKLSBhZGQg
+aHdtb24gZG9jdW1lbnRhdGlvbgotIG1pbm9yIGltcHJvdmVtZW50cyBzdWdnZXN0ZWQgYnkgR3Vl
+bnRlciBSb2VjawoKWzFdIC0gaHR0cHM6Ly9naXRodWIuY29tL3Jhc3BiZXJyeXBpL2xpbnV4L2lz
+c3Vlcy8yMzY3CgpTdGVmYW4gV2FocmVuICg2KToKICBBUk06IGJjbTI4MzU6IEFkZCBHRVRfVEhS
+T1RUTEVEIGZpcm13YXJlIHByb3BlcnR5CiAgaHdtb246IEFkZCBzdXBwb3J0IGZvciBSUGkgdm9s
+dGFnZSBzZW5zb3IKICBmaXJtd2FyZTogcmFzcGJlcnJ5cGk6IFJlZ2lzdGVyIGh3bW9uIGRyaXZl
+cgogIEFSTTogYmNtMjgzNV9kZWZjb25maWc6IEVuYWJsZSBSUGkgdm9sdGFnZSBzZW5zb3IKICBB
+Uk06IG11bHRpX3Y3X2RlZmNvbmZpZzogRW5hYmxlIFJQaSB2b2x0YWdlIHNlbnNvcgogIGFybTY0
+OiBkZWZjb25maWc6IEVuYWJsZSBSUGkgdm9sdGFnZSBzZW5zb3IKCiBEb2N1bWVudGF0aW9uL2h3
+bW9uL3Jhc3BiZXJyeXBpLWh3bW9uICAgICAgfCAgMjIgKysrKwogYXJjaC9hcm0vY29uZmlncy9i
+Y20yODM1X2RlZmNvbmZpZyAgICAgICAgIHwgICAyICstCiBhcmNoL2FybS9jb25maWdzL211bHRp
+X3Y3X2RlZmNvbmZpZyAgICAgICAgfCAgIDEgKwogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZp
+ZyAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZmlybXdhcmUvcmFzcGJlcnJ5cGkuYyAg
+ICAgICAgICAgICB8ICAxOSArKysrCiBkcml2ZXJzL2h3bW9uL0tjb25maWcgICAgICAgICAgICAg
+ICAgICAgICAgfCAgMTAgKysKIGRyaXZlcnMvaHdtb24vTWFrZWZpbGUgICAgICAgICAgICAgICAg
+ICAgICB8ICAgMSArCiBkcml2ZXJzL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uLmMgICAgICAgICAg
+fCAxNjggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIGluY2x1ZGUvc29jL2JjbTI4MzUv
+cmFzcGJlcnJ5cGktZmlybXdhcmUuaCB8ICAgMSArCiA5IGZpbGVzIGNoYW5nZWQsIDIyNCBpbnNl
+cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9od21vbi9yYXNwYmVycnlwaS1od21vbgogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaHdt
+b24vcmFzcGJlcnJ5cGktaHdtb24uYwoKLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
