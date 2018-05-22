@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v6 11/13] ARM: dts: imx7s-warp: add ov2680 sensor node
-Date: Tue, 22 May 2018 15:52:43 +0100
-Message-ID: <20180522145245.3143-12-rui.silva@linaro.org>
+Subject: [PATCH v6 09/13] ARM: dts: imx7s: add multiplexer controls
+Date: Tue, 22 May 2018 15:52:41 +0100
+Message-ID: <20180522145245.3143-10-rui.silva@linaro.org>
 References: <20180522145245.3143-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,91 +21,35 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Warp7 comes with a Omnivision OV2680 sensor, add the node here to make complete
-the camera data path for this system. Add the needed regulator to the analog
-voltage supply, the port and endpoints in mipi_csi node and the pinctrl for the
-reset gpio.
+The IOMUXC General Purpose Register has bitfield to control video bus
+multiplexer to control the CSI input between the MIPI-CSI2 and parallel
+interface. Add that register and mask.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx7s-warp.dts | 44 ++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index cb175ee2fc9d..bf04e13afd02 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -91,6 +91,14 @@
- 		regulator-always-on;
- 	};
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 5e6d2063b143..0b0b85438869 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -520,8 +520,14 @@
  
-+	reg_peri_3p15v: regulator-peri-3p15v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "peri_3p15v_reg";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-always-on;
-+	};
+ 			gpr: iomuxc-gpr@30340000 {
+ 				compatible = "fsl,imx7d-iomuxc-gpr",
+-					"fsl,imx6q-iomuxc-gpr", "syscon";
++					"fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
+ 				reg = <0x30340000 0x10000>;
 +
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "imx7-sgtl5000";
-@@ -218,6 +226,27 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-+
-+	ov2680: camera@36 {
-+		compatible = "ovti,ov2680";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov2680>;
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+		DOVDD-supply = <&sw2_reg>;
-+		DVDD-supply = <&sw2_reg>;
-+		AVDD-supply = <&reg_peri_3p15v>;
-+
-+		port {
-+			ov2680_to_mipi: endpoint {
-+				remote-endpoint = <&mipi_from_sensor>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
- };
++				mux: mux-controller {
++					compatible = "mmio-mux";
++					#mux-control-cells = <0>;
++					mux-reg-masks = <0x14 0x00000010>;
++				};
+ 			};
  
- &i2c4 {
-@@ -352,6 +381,15 @@
- 	#size-cells = <0>;
- 	fsl,csis-hs-settle = <3>;
- 
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_from_sensor: endpoint {
-+			remote-endpoint = <&ov2680_to_mipi>;
-+			data-lanes = <1>;
-+		};
-+	};
-+
- 	port@1 {
- 		reg = <1>;
- 
-@@ -408,6 +446,12 @@
- 		>;
- 	};
- 
-+	pinctrl_ov2680: ov2660grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
-+		>;
-+	};
-+
- 	pinctrl_sai1: sai1grp {
- 		fsl,pins = <
- 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
+ 			ocotp: ocotp-ctrl@30350000 {
 -- 
 2.17.0
