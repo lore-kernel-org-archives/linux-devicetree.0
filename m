@@ -1,105 +1,39 @@
-From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v7 2/9] iio: Add channel for Position Relative
-Date: Tue, 22 May 2018 10:52:32 +0300
-Message-ID: <1526975559-18966-3-git-send-email-eugen.hristev@microchip.com>
-References: <1526975559-18966-1-git-send-email-eugen.hristev@microchip.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 4/7] Bluetooth: Add new quirk for non-persistent
+ setup settings
+Date: Tue, 22 May 2018 16:05:23 +0800
+Message-ID: <1526976323.18877.47.camel@mtkswgap22>
+References: <cover.1526374087.git.sean.wang@mediatek.com>
+         <1d6097f538b3182b2876ad48225ecd6e2d1b128c.1526374087.git.sean.wang@mediatek.com>
+         <920B3BE9-3FE8-4AC6-8C5F-63B0E00182AC@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526975559-18966-1-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <920B3BE9-3FE8-4AC6-8C5F-63B0E00182AC@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com, robh@kernel.org
-Cc: Eugen Hristev <eugen.hristev@microchip.com>
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, BlueZ development <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add new channel type for relative position on a pad.
+On Tue, 2018-05-22 at 09:21 +0200, Marcel Holtmann wrote:
+> Hi Sean,
+> 
 
-These type of analog sensor offers the position of a pen
-on a touchpad, and is represented as a voltage, which can be
-converted to a position on X and Y axis on the pad.
-The channel will hand the relative position on the pad in both directions.
+[ ... ]
 
-The channel can then be consumed by a touchscreen driver or
-read as-is for a raw indication of the touchpen on a touchpad.
+> > -	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
+> > +	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
+> > +	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
+> > 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
+> 
+> I am not 100% sure that we want to send the HCI_DEV_SETUP event also multiple times. That is a userspace change that I would need to think about. We need to check create_monitor_event() and see what the btmon trace for this looks like. Can you send me a btmon -w trace.log when this change is active.
+> 
+> Regards
+> 
+> Marcel
+> 
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
-Changes in v2:
- - modified channel name to relative position as suggested.
- - modified kernel version to 4.18 (presumable)
+Sure, I'll send you the trace.log with the change is active.
 
- Documentation/ABI/testing/sysfs-bus-iio | 12 ++++++++++++
- drivers/iio/industrialio-core.c         |  1 +
- include/uapi/linux/iio/types.h          |  1 +
- tools/iio/iio_event_monitor.c           |  2 ++
- 4 files changed, 16 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 6a5f34b..42a9287 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -190,6 +190,18 @@ Description:
- 		but should match other such assignments on device).
- 		Units after application of scale and offset are m/s^2.
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/in_positionrelative_x_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_positionrelative_y_raw
-+KernelVersion:	4.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Relative position in direction x or y on a pad (may be
-+		arbitrarily assigned but should match other such assignments on
-+		device).
-+		Units after application of scale and offset are milli percents
-+		from the pad's size in both directions. Should be calibrated by
-+		the consumer.
-+
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_raw
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 19bdf3d..14bf3d24 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -85,6 +85,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_COUNT] = "count",
- 	[IIO_INDEX] = "index",
- 	[IIO_GRAVITY]  = "gravity",
-+	[IIO_POSITIONRELATIVE]  = "positionrelative",
- };
- 
- static const char * const iio_modifier_names[] = {
-diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-index 4213cdf..033c7d2 100644
---- a/include/uapi/linux/iio/types.h
-+++ b/include/uapi/linux/iio/types.h
-@@ -44,6 +44,7 @@ enum iio_chan_type {
- 	IIO_COUNT,
- 	IIO_INDEX,
- 	IIO_GRAVITY,
-+	IIO_POSITIONRELATIVE,
- };
- 
- enum iio_modifier {
-diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-index b61245e..148f69d 100644
---- a/tools/iio/iio_event_monitor.c
-+++ b/tools/iio/iio_event_monitor.c
-@@ -58,6 +58,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_PH] = "ph",
- 	[IIO_UVINDEX] = "uvindex",
- 	[IIO_GRAVITY] = "gravity",
-+	[IIO_POSITIONRELATIVE] = "positionrelative",
- };
- 
- static const char * const iio_ev_type_text[] = {
-@@ -151,6 +152,7 @@ static bool event_is_known(struct iio_event_data *event)
- 	case IIO_PH:
- 	case IIO_UVINDEX:
- 	case IIO_GRAVITY:
-+	case IIO_POSITIONRELATIVE:
- 		break;
- 	default:
- 		return false;
--- 
-2.7.4
+	Sean
