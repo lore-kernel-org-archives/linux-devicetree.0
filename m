@@ -1,120 +1,90 @@
-Return-Path: <SRS0=4f+O=IF=gmail.com=frowand.list@kernel.org>
-Subject: Re: Revisiting Devicetree Overlay Manager
-From: Frank Rowand <frowand.list@gmail.com>
-References: <20180419143804.brdgezjaxqalarum@linaro.org>
- <20180425073442.e4pikxonhqr5r7cw@linaro.org>
- <8715b1f9-5e30-a14e-a029-fcc129a09c22@gmail.com>
-Message-ID: <5fb20388-5a0c-bb8b-4c6f-62d1ee42ec23@gmail.com>
-Date: Thu, 17 May 2018 20:53:03 -0700
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v4 3/4] usb: gadget: udc: renesas_usb3: use usb role switch API
+Date: Tue, 22 May 2018 21:01:08 +0900
+Message-Id: <1526990469-20739-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <8715b1f9-5e30-a14e-a029-fcc129a09c22@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: robh@kernel.org, grant.likely@secretlab.ca, pantelis.antoniou@konsulko.com, dimitrysh@google.com, john.stultz@linaro.org, nicolas.dechesne@linaro.org, devicetree@vger.kernel.org, daniel.thompson@linaro.org, loic.poulain@linaro.org
+Content-Type: text/plain
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Manivannan,
+This patch uses usb role switch APIs if the register suceeeded.
 
-On 04/25/18 10:26, Frank Rowand wrote:
-> Hi Manivannan,
-> 
-> Sorry for the delay.  I'll try to get to this today or tommorrow.
-> 
-> -Frank
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/usb/gadget/udc/renesas_usb3.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-Sorry for the even longer than expected delay.  As I mentioned to you
-off-list (bad Frank!), I wanted to pull together a lot of my disparate
-thoughts on overlays before responding to your specific proposal and
-questions.  The first (of probably many versions) of that write up
-is at:
-
-  https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
-
-My thoughts on some of your questions are addressed on that page.
-I still need to read through your questions because there are
-probably several that I did not address on that page.
-
--Frank
-
-> 
-> 
-> On 04/25/18 00:34, Manivannan Sadhasivam wrote:
->> Hi Frank,
->>
->> Did you had time to look into this? Especially I'd like to hear your
->> opinion on the first pain point I have mentioned. I can understand
->> that the whole point on introducing the of_overlay_fdt_apply() API
->> is to remove the duplication of overlay FDT unflattening, but do you have
->> any idea of how we can make this API work with overlay nodes appended
->> to the base DTB?
->>
->> Thanks,
->> Mani
->>
->> On Thu, Apr 19, 2018 at 08:08:04PM +0530, Manivannan Sadhasivam wrote:
->>> Hello Everyone,
->>>
->>> I have just started working on the Devicetree Overlay Manager support in
->>> kernel. The idea is to merge overlays at boot time specified via some
->>> interface like kernel command line. The motivation for this work comes from
->>> Overlay Manager [1] submitted by John last year. The mechanism which I have
->>> been working on is an extension to John's work. It focusses on addressing
->>> Rob's comments on the Overlay Manager which involves having multiple ways
->>> to load overlays.
->>>
->>> Proposal:
->>> =========
->>>
->>> 1. Pass all devicetree overlays via following methods:
->>>    - Overlays appended to base DTB
->>>    - Individual overlays built into kernel as firmware blobs
->>>    - Any other ways?
->>>
->>> 2. Specify overlays to load via kernel command line as below:
->>>    - overlay_mgr.overlays=<overlay1,overlay2,...>
->>>
->>> 3. Merge only the specified overlays during boot time. First look for the
->>> overlay in the base DTB. If it is found, just apply it, else defer to firmware
->>> load approach.
->>>
->>> The Overlay Manager code is expected to be very simple and will just do the
->>> above mentioned work. Later on, it will be extended to support dynamic
->>> modification of overlays from userspace with some additional security
->>> features like having a property listed in the base devicetree for only
->>> allowing changes to the current node and its child nodes, etc...
->>>
->>> Pain Points:
->>> ============
->>>
->>> 1. Starting from 4.17 we don't have any API exposed from DT core to merge
->>> individual devicetree nodes. We only have of_overlay_fdt_apply() function
->>> which takes the whole FDT. This will work very well for the firmware approach
->>> since we will pass the overlays blobs but not for overlays appended to base DTB,
->>> where we will pass individual overlay nodes.
->>>
->>> 2. Using firmware load method will force us to have this Overlay Manager code
->>> at late_initcall level since firmware class exists only in fs_inticall level,
->>> which might be too late for some devices.
->>>
->>> 3. This whole approach is not expected to work very well (still not yet tested)
->>> on DSI based devices since it needs to be present at very early during boot
->>> process.
->>>
->>> The Overlay Manager propsed here will be board agnostic and it should work on
->>> all platforms supporting DT. This will be a _very_ useful feature for the
->>> development boards such as 96Boards, Raspberry Pi, BBB etc... and also for
->>> production ready devices.
->>>
->>> So, I'd like to hear suggestions/feedbacks for the above mentioned proposal &
->>> pain points and hope to land the most awaited feature in kernel.
->>>
->>> Regards,
->>> Mani
->>>
->>> [1] https://lkml.org/lkml/2017/10/10/20
->>
-> 
-> .
-> 
+diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+index 9667a5e..d6c11c9 100644
+--- a/drivers/usb/gadget/udc/renesas_usb3.c
++++ b/drivers/usb/gadget/udc/renesas_usb3.c
+@@ -338,6 +338,8 @@ struct renesas_usb3 {
+ 
+ 	struct usb_role_switch *role_sw;
+ 	struct device *host_dev;
++	struct work_struct role_work;
++	enum usb_role role;
+ 
+ 	struct renesas_usb3_ep *usb3_ep;
+ 	int num_usb3_eps;
+@@ -655,7 +657,15 @@ static void usb3_check_vbus(struct renesas_usb3 *usb3)
+ 	}
+ }
+ 
+-static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
++static void renesas_usb3_role_work(struct work_struct *work)
++{
++	struct renesas_usb3 *usb3 = container_of(work, struct renesas_usb3,
++						 role_work);
++
++	usb_role_switch_set_role(usb3->role_sw, usb3->role);
++}
++
++static void _usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+ {
+ 	if (host)
+ 		usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
+@@ -663,6 +673,16 @@ static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+ 		usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
+ }
+ 
++static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
++{
++	if (usb3->role_sw) {
++		usb3->role = host ? USB_ROLE_HOST : USB_ROLE_DEVICE;
++		schedule_work(&usb3->role_work);
++	} else {
++		_usb3_set_mode(usb3, host);
++	}
++}
++
+ static void usb3_vbus_out(struct renesas_usb3 *usb3, bool enable)
+ {
+ 	if (enable)
+@@ -2328,10 +2348,10 @@ static int renesas_usb3_role_switch_set(struct device *dev,
+ 	pm_runtime_get_sync(dev);
+ 	if (cur_role == USB_ROLE_HOST && role == USB_ROLE_DEVICE) {
+ 		device_release_driver(host);
+-		usb3_set_mode(usb3, false);
++		_usb3_set_mode(usb3, false);
+ 	} else if (cur_role == USB_ROLE_DEVICE && role == USB_ROLE_HOST) {
+ 		/* Must set the mode before device_attach of the host */
+-		usb3_set_mode(usb3, true);
++		_usb3_set_mode(usb3, true);
+ 		/* This device_attach() might sleep */
+ 		if (device_attach(host) < 0)
+ 			dev_err(dev, "device_attach(usb3_port) failed\n");
+@@ -2726,6 +2746,7 @@ static int renesas_usb3_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_dev_create;
+ 
++	INIT_WORK(&usb3->role_work, renesas_usb3_role_work);
+ 	usb3->role_sw = usb_role_switch_register(&pdev->dev,
+ 					&renesas_usb3_role_switch_desc);
+ 	if (!IS_ERR(usb3->role_sw)) {
+-- 
+1.9.1
