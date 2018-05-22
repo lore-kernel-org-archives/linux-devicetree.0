@@ -1,55 +1,73 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 11/11] docs: fix broken references with multiple hints
-Date: Tue, 22 May 2018 12:31:55 -0500
-Message-ID: <20180522173155.GA11767@rob-hp-laptop>
-References: <cover.1525870886.git.mchehab+samsung@kernel.org>
- <63a4f8a93f9115475bc184d0f37d076c9b9c75ff.1525870886.git.mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v2 01/13] dt-bindings: power: add RK3036 SoCs header for
+ power-domain
+Date: Tue, 22 May 2018 12:34:21 -0500
+Message-ID: <20180522173421.GA12892@rob-hp-laptop>
+References: <1526268455-9133-1-git-send-email-zhangqing@rock-chips.com>
+ <1526268501-9200-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <63a4f8a93f9115475bc184d0f37d076c9b9c75ff.1525870886.git.mchehab+samsung@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, linux-usb@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>, devel@driverdev.osuosl.org, Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>, Ingo Molnar <mingo@redhat.com>, linux-input@vger.kernel.org, Roy Pledge <Roy.Pledge@nxp.com>, "Serge E. Hallyn" <serge@hallyn.com>, devicetree@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jiri Kosina <jikos@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-gpio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.orgHa
+In-Reply-To: <1526268501-9200-1-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMDksIDIwMTggYXQgMTA6MTg6NTRBTSAtMDMwMCwgTWF1cm8gQ2FydmFsaG8g
-Q2hlaGFiIHdyb3RlOgo+IFRoZSBzY3JpcHQ6Cj4gCS4vc2NyaXB0cy9kb2N1bWVudGF0aW9uLWZp
-bGUtcmVmLWNoZWNrIC0tZml4LXJzdAo+IAo+IEdpdmVzIG11bHRpcGxlIGhpbnRzIGZvciBicm9r
-ZW4gcmVmZXJlbmNlcyBvbiBzb21lIGZpbGVzLgo+IE1hbnVhbGx5IHVzZSB0aGUgb25lIHRoYXQg
-YXBwbGllcyBmb3Igc29tZSBmaWxlcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXVybyBDYXJ2YWxo
-byBDaGVoYWIgPG1jaGVoYWIrc2Ftc3VuZ0BrZXJuZWwub3JnPgo+IC0tLQo+ICBEb2N1bWVudGF0
-aW9uL0FCSS9vYnNvbGV0ZS9zeXNmcy1ncGlvICAgICAgICAgICAgICAgICAgICAgfCAyICstCj4g
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RkYTk5OHgudHh0ICAgICAg
-ICB8IDIgKy0KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKPiAgRG9j
-dW1lbnRhdGlvbi90cmFjZS9ldmVudHMucnN0ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-MiArLQo+ICBEb2N1bWVudGF0aW9uL3RyYWNlL3RyYWNlcG9pbnQtYW5hbHlzaXMucnN0ICAgICAg
-ICAgICAgICAgfCAyICstCj4gIERvY3VtZW50YXRpb24vdHJhbnNsYXRpb25zL3poX0NOL1N1Ym1p
-dHRpbmdEcml2ZXJzICAgICAgICB8IDIgKy0KPiAgRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMv
-emhfQ04vZ3Bpby50eHQgICAgICAgICAgICAgICAgIHwgNCArKy0tCj4gIE1BSU5UQUlORVJTICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0KPiAgZHJp
-dmVycy9oaWQvdXNiaGlkL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-MiArLQo+ICBkcml2ZXJzL2lucHV0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCA0ICsrLS0KPiAgZHJpdmVycy9pbnB1dC9qb3lzdGljay9LY29uZmlnICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgNCArKy0tCj4gIGRyaXZlcnMvaW5wdXQvam95c3RpY2sv
-aWZvcmNlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8IDIgKy0KPiAgZHJpdmVycy9pbnB1
-dC9zZXJpby9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNCArKy0tCj4g
-IGRyaXZlcnMvc3RhZ2luZy9mc2wtbWMvYnVzL2RwaW8vZHBpby1kcml2ZXIudHh0ICAgICAgICAg
-ICB8IDIgKy0KPiAgZHJpdmVycy92aWRlby9mYmRldi9za2VsZXRvbmZiLmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgOCArKysrLS0tLQo+ICBpbmNsdWRlL2xpbnV4L3RyYWNlcG9pbnQuaCAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyICstCj4gIHNlY3VyaXR5L2RldmljZV9j
-Z3JvdXAuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0KPiAgMTYgZmls
-ZXMgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKSwgMjMgZGVsZXRpb25zKC0pCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, May 14, 2018 at 11:28:21AM +0800, Elaine Zhang wrote:
+> From: Caesar Wang <wxt@rock-chips.com>
+> 
+> According to a description from TRM, add all the power domains.
+> 
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  include/dt-bindings/power/rk3036-power.h | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 include/dt-bindings/power/rk3036-power.h
+> 
+> diff --git a/include/dt-bindings/power/rk3036-power.h b/include/dt-bindings/power/rk3036-power.h
+> new file mode 100644
+> index 000000000000..59e09f1c5af7
+> --- /dev/null
+> +++ b/include/dt-bindings/power/rk3036-power.h
+> @@ -0,0 +1,27 @@
+> +/*
+> + * Copyright (c) 2017 Rockchip Electronics Co. Ltd.
+> + * Author: Caesar Wang <wxt@rock-chips.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+Use SPDX tag instead.
+
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> + */
+> +
+> +#ifndef __DT_BINDINGS_POWER_RK3036_POWER_H__
+> +#define __DT_BINDINGS_POWER_RK3036_POWER_H__
+> +
+> +#define RK3036_PD_MSCH		0
+> +#define RK3036_PD_CORE		1
+> +#define RK3036_PD_PERI		2
+> +#define RK3036_PD_VIO		3
+> +#define RK3036_PD_VPU		4
+> +#define RK3036_PD_GPU		5
+> +#define RK3036_PD_SYS		6
+> +
+> +#endif
+> -- 
+> 1.9.1
+> 
+> 
