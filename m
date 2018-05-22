@@ -1,181 +1,254 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC V2 2/6] hwmon: Add support for RPi voltage sensor
-Date: Tue, 22 May 2018 15:51:36 +0200 (CEST)
-Message-ID: <659923372.11518.1526997096662@email.1und1.de>
-References: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
- <1526988112-4021-3-git-send-email-stefan.wahren@i2se.com>
- <90a768aa-ee8c-1050-cf15-60637069dbdb@roeck-us.net>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [reset-control] How to initialize hardware state with the
+ shared reset line?
+Date: Tue, 22 May 2018 15:56:03 +0200
+Message-ID: <1526997363.3671.25.camel@pengutronix.de>
+References: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <90a768aa-ee8c-1050-cf15-60637069dbdb@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3VlbnRlciwKCj4gR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0PiBoYXQgYW0g
-MjIuIE1haSAyMDE4IHVtIDE1OjQxIGdlc2NocmllYmVuOgo+IAo+IAo+IE9uIDA1LzIyLzIwMTgg
-MDQ6MjEgQU0sIFN0ZWZhbiBXYWhyZW4gd3JvdGU6Cj4gPiBDdXJyZW50bHkgdGhlcmUgaXMgbm8g
-ZWFzeSB3YXkgdG8gZGV0ZWN0IHVuZGVydm9sdGFnZSBjb25kaXRpb25zIG9uIGEKPiA+IHJlbW90
-ZSBSYXNwYmVycnkgUGkuIFRoaXMgaHdtb24gZHJpdmVyIHJldHJpZXZlcyB0aGUgc3RhdGUgb2Yg
-dGhlCj4gPiB1bmRlcnZvbHRhZ2Ugc2Vuc29yIHZpYSBtYWlsYm94IGludGVyZmFjZS4gVGhlIGhh
-bmRsaW5nIGJhc2VkIG9uCj4gPiBOb3JhbGYncyBtb2RpZmljYXRpb25zIHRvIHRoZSBkb3duc3Ry
-ZWFtIGZpcm13YXJlIGRyaXZlci4gSW4gY2FzZSBvZgo+ID4gYW4gdW5kZXJ2b2x0YWdlIGNvbmRp
-dGlvbiBvbmx5IGFuIGVudHJ5IGlzIHdyaXR0ZW4gdG8gdGhlIGtlcm5lbCBsb2cuCj4gPiAKPiA+
-IENDOiAiTm9yYWxmIFRyw7hubmVzIiA8bm9yYWxmQHRyb25uZXMub3JnPgo+ID4gU2lnbmVkLW9m
-Zi1ieTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4KPiA+IC0tLQo+ID4g
-ICBEb2N1bWVudGF0aW9uL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uIHwgIDIyICsrKysrCj4gPiAg
-IGRyaXZlcnMvaHdtb24vS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgMTAgKysKPiA+ICAgZHJp
-dmVycy9od21vbi9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCj4gPiAgIGRyaXZlcnMv
-aHdtb24vcmFzcGJlcnJ5cGktaHdtb24uYyAgICAgfCAxNjggKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKwo+ID4gICA0IGZpbGVzIGNoYW5nZWQsIDIwMSBpbnNlcnRpb25zKCspCj4g
-PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2h3bW9uL3Jhc3BiZXJyeXBpLWh3
-bW9uCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2h3bW9uL3Jhc3BiZXJyeXBpLWh3
-bW9uLmMKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaHdtb24vcmFzcGJlcnJ5
-cGktaHdtb24gYi9Eb2N1bWVudGF0aW9uL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uCj4gPiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uM2M5MmUyYwo+ID4gLS0tIC9kZXYv
-bnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9od21vbi9yYXNwYmVycnlwaS1od21vbgo+ID4g
-QEAgLTAsMCArMSwyMiBAQAo+ID4gK0tlcm5lbCBkcml2ZXIgcmFzcGJlcnJ5cGktaHdtb24KPiA+
-ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPiArCj4gPiArU3VwcG9ydGVkIGJv
-YXJkczoKPiA+ICsgICogUmFzcGJlcnJ5IFBpIEErICh2aWEgR1BJTyBvbiBTb0MpCj4gPiArICAq
-IFJhc3BiZXJyeSBQaSBCKyAodmlhIEdQSU8gb24gU29DKQo+ID4gKyAgKiBSYXNwYmVycnkgUGkg
-MiBCICh2aWEgR1BJTyBvbiBTb0MpCj4gPiArICAqIFJhc3BiZXJyeSBQaSAzIEIgKHZpYSBHUElP
-IG9uIHBvcnQgZXhwYW5kZXIpCj4gPiArICAqIFJhc3BiZXJyeSBQaSAzIEIrICh2aWEgUE1JQykK
-PiA+ICsKPiA+ICtBdXRob3I6IFN0ZWZhbiBXYWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+
-Cj4gPiArCj4gPiArRGVzY3JpcHRpb24KPiA+ICstLS0tLS0tLS0tLQo+ID4gKwo+ID4gK1RoaXMg
-ZHJpdmVyIHBlcmlvZGljYWxseSBwb2xscyBhIG1haWxib3ggcHJvcGVydHkgb2YgdGhlIFZDNCBm
-aXJtd2FyZSB0byBkZXRlY3QKPiA+ICt1bmRlcnZvbHRhZ2UgY29uZGl0aW9ucy4KPiA+ICsKPiA+
-ICtTeXNmcyBlbnRyaWVzCj4gPiArLS0tLS0tLS0tLS0tLQo+ID4gKwo+ID4gK2luMF9sY3JpdF9h
-bGFybQkJVW5kZXJ2b2x0YWdlIGFsYXJtCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9od21vbi9L
-Y29uZmlnIGIvZHJpdmVycy9od21vbi9LY29uZmlnCj4gPiBpbmRleCA3NjhhZWQ1Li45YTViZGIw
-IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9od21vbi9LY29uZmlnCj4gPiArKysgYi9kcml2ZXJz
-L2h3bW9uL0tjb25maWcKPiA+IEBAIC0xMjk4LDYgKzEyOTgsMTYgQEAgY29uZmlnIFNFTlNPUlNf
-UFdNX0ZBTgo+ID4gICAJICBUaGlzIGRyaXZlciBjYW4gYWxzbyBiZSBidWlsdCBhcyBhIG1vZHVs
-ZS4gIElmIHNvLCB0aGUgbW9kdWxlCj4gPiAgIAkgIHdpbGwgYmUgY2FsbGVkIHB3bS1mYW4uCj4g
-PiAgIAo+ID4gK2NvbmZpZyBTRU5TT1JTX1JBU1BCRVJSWVBJX0hXTU9OCj4gPiArCXRyaXN0YXRl
-ICJSYXNwYmVycnkgUGkgdm9sdGFnZSBtb25pdG9yIgo+ID4gKwlkZXBlbmRzIG9uIFJBU1BCRVJS
-WVBJX0ZJUk1XQVJFIHx8IENPTVBJTEVfVEVTVAo+ID4gKwloZWxwCj4gPiArCSAgSWYgeW91IHNh
-eSB5ZXMgaGVyZSB5b3UgZ2V0IHN1cHBvcnQgZm9yIHZvbHRhZ2Ugc2Vuc29yIG9uIHRoZQo+ID4g
-KwkgIFJhc3BiZXJyeSBQaS4KPiA+ICsKPiA+ICsJICBUaGlzIGRyaXZlciBjYW4gYWxzbyBiZSBi
-dWlsdCBhcyBhIG1vZHVsZS4gSWYgc28sIHRoZSBtb2R1bGUKPiA+ICsJICB3aWxsIGJlIGNhbGxl
-ZCByYXNwYmVycnlwaS1od21vbi4KPiA+ICsKPiA+ICAgY29uZmlnIFNFTlNPUlNfU0hUMTUKPiA+
-ICAgCXRyaXN0YXRlICJTZW5zaXJvbiBodW1pZGl0eSBhbmQgdGVtcGVyYXR1cmUgc2Vuc29ycy4g
-U0hUMTUgYW5kIGNvbXBhdC4iCj4gPiAgIAlkZXBlbmRzIG9uIEdQSU9MSUIgfHwgQ09NUElMRV9U
-RVNUCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9od21vbi9NYWtlZmlsZSBiL2RyaXZlcnMvaHdt
-b24vTWFrZWZpbGUKPiA+IGluZGV4IGU3ZDUyYTMuLmE5Mjk3NzAgMTAwNjQ0Cj4gPiAtLS0gYS9k
-cml2ZXJzL2h3bW9uL01ha2VmaWxlCj4gPiArKysgYi9kcml2ZXJzL2h3bW9uL01ha2VmaWxlCj4g
-PiBAQCAtMTQxLDYgKzE0MSw3IEBAIG9iai0kKENPTkZJR19TRU5TT1JTX1BDODc0MjcpCSs9IHBj
-ODc0Mjcubwo+ID4gICBvYmotJChDT05GSUdfU0VOU09SU19QQ0Y4NTkxKQkrPSBwY2Y4NTkxLm8K
-PiA+ICAgb2JqLSQoQ09ORklHX1NFTlNPUlNfUE9XUjEyMjApICArPSBwb3dyMTIyMC5vCj4gPiAg
-IG9iai0kKENPTkZJR19TRU5TT1JTX1BXTV9GQU4pCSs9IHB3bS1mYW4ubwo+ID4gK29iai0kKENP
-TkZJR19TRU5TT1JTX1JBU1BCRVJSWVBJX0hXTU9OKQkrPSByYXNwYmVycnlwaS1od21vbi5vCj4g
-PiAgIG9iai0kKENPTkZJR19TRU5TT1JTX1MzQykJKz0gczNjLWh3bW9uLm8KPiA+ICAgb2JqLSQo
-Q09ORklHX1NFTlNPUlNfU0NINTZYWF9DT01NT04pKz0gc2NoNTZ4eC1jb21tb24ubwo+ID4gICBv
-YmotJChDT05GSUdfU0VOU09SU19TQ0g1NjI3KQkrPSBzY2g1NjI3Lm8KPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uLmMgYi9kcml2ZXJzL2h3bW9uL3Jhc3Bi
-ZXJyeXBpLWh3bW9uLmMKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAw
-Li42MjMzZTg0Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9kcml2ZXJzL2h3bW9uL3Jhc3Bi
-ZXJyeXBpLWh3bW9uLmMKPiA+IEBAIC0wLDAgKzEsMTY4IEBACj4gPiArLy8gU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IEdQTC0yLjArCj4gPiArLyoKPiA+ICsgKiBSYXNwYmVycnkgUGkgdm9sdGFn
-ZSBzZW5zb3IgZHJpdmVyCj4gPiArICoKPiA+ICsgKiBCYXNlZCBvbiBmaXJtd2FyZS9yYXNwYmVy
-cnlwaS5jIGJ5IE5vcmFsZiBUcsO4bm5lcwo+ID4gKyAqCj4gPiArICogQ29weXJpZ2h0IChDKSAy
-MDE4IFN0ZWZhbiBXYWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Cj4gPiArICovCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9lcnIuaD4KPiA+
-ICsjaW5jbHVkZSA8bGludXgvaHdtb24uaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+
-Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ID4gKyNpbmNsdWRlIDxs
-aW51eC9zbGFiLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3dvcmtxdWV1ZS5oPgo+ID4gKyNpbmNs
-dWRlIDxzb2MvYmNtMjgzNS9yYXNwYmVycnlwaS1maXJtd2FyZS5oPgo+ID4gKwo+ID4gKyNkZWZp
-bmUgVU5ERVJWT0xUQUdFX1NUSUNLWV9CSVQJQklUKDE2KQo+ID4gKwo+ID4gK3N0cnVjdCBycGlf
-aHdtb25fZGF0YSB7Cj4gPiArCXN0cnVjdCBkZXZpY2UgKmh3bW9uX2RldjsKPiA+ICsJc3RydWN0
-IHJwaV9maXJtd2FyZSAqZnc7Cj4gPiArCXUzMiBsYXN0X3Rocm90dGxlZDsKPiA+ICsJc3RydWN0
-IGRlbGF5ZWRfd29yayBnZXRfdmFsdWVzX3BvbGxfd29yazsKPiA+ICt9Owo+ID4gKwo+ID4gK3N0
-YXRpYyB2b2lkIHJwaV9maXJtd2FyZV9nZXRfdGhyb3R0bGVkKHN0cnVjdCBycGlfaHdtb25fZGF0
-YSAqZGF0YSkKPiA+ICt7Cj4gPiArCXUzMiBuZXdfdXYsIG9sZF91diwgdmFsdWU7Cj4gPiArCWlu
-dCByZXQ7Cj4gPiArCj4gPiArCS8qIFJlcXVlc3QgZmlybXdhcmUgdG8gY2xlYXIgc3RpY2t5IGJp
-dHMgKi8KPiA+ICsJdmFsdWUgPSAweGZmZmY7Cj4gPiArCj4gPiArCXJldCA9IHJwaV9maXJtd2Fy
-ZV9wcm9wZXJ0eShkYXRhLT5mdywgUlBJX0ZJUk1XQVJFX0dFVF9USFJPVFRMRUQsCj4gPiArCQkJ
-CSAgICAmdmFsdWUsIHNpemVvZih2YWx1ZSkpOwo+ID4gKwlpZiAocmV0KSB7Cj4gPiArCQlkZXZf
-ZXJyX29uY2UoZGF0YS0+aHdtb25fZGV2LCAiRmFpbGVkIHRvIGdldCB0aHJvdHRsZWQgKCVkKVxu
-IiwKPiA+ICsJCQkgICAgIHJldCk7Cj4gPiArCQlyZXR1cm47Cj4gPiArCX0KPiA+ICsKPiA+ICsJ
-bmV3X3V2ID0gdmFsdWUgJiBVTkRFUlZPTFRBR0VfU1RJQ0tZX0JJVDsKPiA+ICsJb2xkX3V2ID0g
-ZGF0YS0+bGFzdF90aHJvdHRsZWQgJiBVTkRFUlZPTFRBR0VfU1RJQ0tZX0JJVDsKPiA+ICsJZGF0
-YS0+bGFzdF90aHJvdHRsZWQgPSB2YWx1ZTsKPiA+ICsKPiA+ICsJaWYgKG5ld191diA9PSBvbGRf
-dXYpCj4gPiArCQlyZXR1cm47Cj4gPiArCj4gPiArCWlmIChuZXdfdXYpCj4gPiArCQlkZXZfY3Jp
-dChkYXRhLT5od21vbl9kZXYsICJVbmRlcnZvbHRhZ2UgZGV0ZWN0ZWQhXG4iKTsKPiA+ICsJZWxz
-ZQo+ID4gKwkJZGV2X2luZm8oZGF0YS0+aHdtb25fZGV2LCAiVm9sdGFnZSBub3JtYWxpc2VkXG4i
-KTsKPiA+ICsKPiA+ICsJc3lzZnNfbm90aWZ5KCZkYXRhLT5od21vbl9kZXYtPmtvYmosIE5VTEws
-ICJpbjBfbGNyaXRfYWxhcm0iKTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIHZvaWQgZ2V0X3Zh
-bHVlc19wb2xsKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yaykKPiA+ICt7Cj4gPiArCXN0cnVjdCBy
-cGlfaHdtb25fZGF0YSAqZGF0YTsKPiA+ICsKPiA+ICsJZGF0YSA9IGNvbnRhaW5lcl9vZih3b3Jr
-LCBzdHJ1Y3QgcnBpX2h3bW9uX2RhdGEsCj4gPiArCQkJICAgIGdldF92YWx1ZXNfcG9sbF93b3Jr
-LndvcmspOwo+ID4gKwo+ID4gKwlycGlfZmlybXdhcmVfZ2V0X3Rocm90dGxlZChkYXRhKTsKPiA+
-ICsKPiA+ICsJLyoKPiA+ICsJICogV2UgY2FuJ3QgcnVuIGZhc3RlciB0aGFuIHRoZSBzdGlja3kg
-c2hpZnQgKDEwMG1zKSBzaW5jZSB3ZSBnZXQKPiA+ICsJICogZmxpcHBpbmcgaW4gdGhlIHN0aWNr
-eSBiaXRzIHRoYXQgYXJlIGNsZWFyZWQuCj4gPiArCSAqLwo+ID4gKwlzY2hlZHVsZV9kZWxheWVk
-X3dvcmsoJmRhdGEtPmdldF92YWx1ZXNfcG9sbF93b3JrLCAyICogSFopOwo+ID4gK30KPiA+ICsK
-PiA+ICtzdGF0aWMgaW50IHJwaV9yZWFkKHN0cnVjdCBkZXZpY2UgKmRldiwgZW51bSBod21vbl9z
-ZW5zb3JfdHlwZXMgdHlwZSwKPiA+ICsJCSAgICB1MzIgYXR0ciwgaW50IGNoYW5uZWwsIGxvbmcg
-KnZhbCkKPiA+ICt7Cj4gPiArCXN0cnVjdCBycGlfaHdtb25fZGF0YSAqZGF0YSA9IGRldl9nZXRf
-ZHJ2ZGF0YShkZXYpOwo+ID4gKwo+ID4gKwkqdmFsID0gISEoZGF0YS0+bGFzdF90aHJvdHRsZWQg
-JiBVTkRFUlZPTFRBR0VfU1RJQ0tZX0JJVCk7Cj4gPiArCXJldHVybiAwOwo+ID4gK30KPiA+ICsK
-PiA+ICtzdGF0aWMgdW1vZGVfdCBycGlfaXNfdmlzaWJsZShjb25zdCB2b2lkICpfZGF0YSwgZW51
-bSBod21vbl9zZW5zb3JfdHlwZXMgdHlwZSwKPiA+ICsJCQkgICAgICB1MzIgYXR0ciwgaW50IGNo
-YW5uZWwpCj4gPiArewo+ID4gKwlyZXR1cm4gMDQ0NDsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGlj
-IGNvbnN0IHUzMiBycGlfaW5fY29uZmlnW10gPSB7Cj4gPiArCUhXTU9OX0lfTENSSVRfQUxBUk0s
-Cj4gPiArCTAKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaHdtb25fY2hh
-bm5lbF9pbmZvIHJwaV9pbiA9IHsKPiA+ICsJLnR5cGUgPSBod21vbl9pbiwKPiA+ICsJLmNvbmZp
-ZyA9IHJwaV9pbl9jb25maWcsCj4gPiArfTsKPiA+ICsKPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0
-IGh3bW9uX2NoYW5uZWxfaW5mbyAqcnBpX2luZm9bXSA9IHsKPiA+ICsJJnJwaV9pbiwKPiA+ICsJ
-TlVMTAo+ID4gK307Cj4gPiArCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBod21vbl9vcHMgcnBp
-X2h3bW9uX29wcyA9IHsKPiA+ICsJLmlzX3Zpc2libGUgPSBycGlfaXNfdmlzaWJsZSwKPiA+ICsJ
-LnJlYWQgPSBycGlfcmVhZCwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
-aHdtb25fY2hpcF9pbmZvIHJwaV9jaGlwX2luZm8gPSB7Cj4gPiArCS5vcHMgPSAmcnBpX2h3bW9u
-X29wcywKPiA+ICsJLmluZm8gPSBycGlfaW5mbywKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBp
-bnQgcnBpX2h3bW9uX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiArewo+
-ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ID4gKwlzdHJ1Y3QgcnBpX2h3
-bW9uX2RhdGEgKmRhdGE7Cj4gPiArCWludCByZXQ7Cj4gPiArCj4gPiArCWRhdGEgPSBkZXZtX2t6
-YWxsb2MoZGV2LCBzaXplb2YoKmRhdGEpLCBHRlBfS0VSTkVMKTsKPiA+ICsJaWYgKCFkYXRhKQo+
-ID4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gPiArCj4gPiArCWRhdGEtPmZ3ID0gcGxhdGZvcm1fZ2V0
-X2RydmRhdGEodG9fcGxhdGZvcm1fZGV2aWNlKGRldi0+cGFyZW50KSk7Cj4gPiArCWlmICghZGF0
-YS0+ZncpCj4gPiArCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiA+ICsKPiAKPiBJIGFtIGEgYml0
-IGF0IGxvc3MgaGVyZSAoYW5kIHNvcnJ5IEkgZGlkbid0IGJyaW5nIHRoaXMgdXAgYmVmb3JlKS4K
-PiBIb3cgd291bGQgdGhpcyBldmVyIGJlIHBvc3NpYmxlLCBnaXZlbiB0aGF0IHRoZSBkcml2ZXIg
-aXMgcmVnaXN0ZXJlZAo+IGZyb20gdGhlIGZpcm13YXJlIGRyaXZlciA/CgpEbyB5b3UgcmVmZXIg
-dG8gdGhlICh3cm9uZykgcmV0dXJuIGNvZGUsIHRoZSBhc3N1bXB0aW9uIHRoYXQgdGhlIHBhcmVu
-dCBtdXN0IGJlIGEgcGxhdGZvcm0gZHJpdmVyIG9yIGEgcG9zc2libGUgcmFjZT8KCj4gCj4gPiAr
-CXJldCA9IHJwaV9maXJtd2FyZV9wcm9wZXJ0eShkYXRhLT5mdywgUlBJX0ZJUk1XQVJFX0dFVF9U
-SFJPVFRMRUQsCj4gPiArCQkJCSAgICAmZGF0YS0+bGFzdF90aHJvdHRsZWQsCj4gPiArCQkJCSAg
-ICBzaXplb2YoZGF0YS0+bGFzdF90aHJvdHRsZWQpKTsKPiA+ICsJaWYgKHJldCkKPiA+ICsJCXJl
-dHVybiAtRU5PREVWOwo+ID4gKwo+ID4gKwlkYXRhLT5od21vbl9kZXYgPSBkZXZtX2h3bW9uX2Rl
-dmljZV9yZWdpc3Rlcl93aXRoX2luZm8oZGV2LCAicnBpX3ZvbHQiLAo+ID4gKwkJCQkJCQkgICAg
-ICAgZGF0YSwKPiA+ICsJCQkJCQkJICAgICAgICZycGlfY2hpcF9pbmZvLAo+ID4gKwkJCQkJCQkg
-ICAgICAgTlVMTCk7Cj4gPiArCj4gPiArCUlOSVRfREVMQVlFRF9XT1JLKCZkYXRhLT5nZXRfdmFs
-dWVzX3BvbGxfd29yaywgZ2V0X3ZhbHVlc19wb2xsKTsKPiA+ICsJcGxhdGZvcm1fc2V0X2RydmRh
-dGEocGRldiwgZGF0YSk7Cj4gPiArCj4gPiArCWlmICghUFRSX0VSUl9PUl9aRVJPKGRhdGEtPmh3
-bW9uX2RldikpCj4gPiArCQlzY2hlZHVsZV9kZWxheWVkX3dvcmsoJmRhdGEtPmdldF92YWx1ZXNf
-cG9sbF93b3JrLCAyICogSFopOwo+ID4gKwo+ID4gKwlyZXR1cm4gUFRSX0VSUl9PUl9aRVJPKGRh
-dGEtPmh3bW9uX2Rldik7Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgcnBpX2h3bW9uX3Jl
-bW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gK3sKPiA+ICsJc3RydWN0IHJw
-aV9od21vbl9kYXRhICpkYXRhID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7Cj4gPiArCj4g
-PiArCWNhbmNlbF9kZWxheWVkX3dvcmtfc3luYygmZGF0YS0+Z2V0X3ZhbHVlc19wb2xsX3dvcmsp
-Owo+ID4gKwo+ID4gKwlyZXR1cm4gMDsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIHN0cnVjdCBw
-bGF0Zm9ybV9kcml2ZXIgcnBpX2h3bW9uX2RyaXZlciA9IHsKPiA+ICsJLnByb2JlID0gcnBpX2h3
-bW9uX3Byb2JlLAo+ID4gKwkucmVtb3ZlID0gcnBpX2h3bW9uX3JlbW92ZSwKPiA+ICsJLmRyaXZl
-ciA9IHsKPiA+ICsJCS5uYW1lID0gInJhc3BiZXJyeXBpLWh3bW9uIiwKPiA+ICsJfSwKPiA+ICt9
-Owo+ID4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIocnBpX2h3bW9uX2RyaXZlcik7Cj4gPiArCj4g
-PiArTU9EVUxFX0FVVEhPUigiU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4i
-KTsKPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlJhc3BiZXJyeSBQaSB2b2x0YWdlIHNlbnNvciBk
-cml2ZXIiKTsKPiA+ICtNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7Cj4gPiAKPgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Masahiro,
+
+On Thu, 2018-05-10 at 18:16 +0900, Masahiro Yamada wrote:
+> Hi.
+> 
+> 
+> The previous thread was:
+> "usb: dwc3: support clocks and resets for DWC3 core"
+> https://patchwork.kernel.org/patch/10349623/
+> 
+> 
+> I changed the subject because
+> I think this is rather reset-control topic than USB.
+
+Thank you for taking the time to write this up in such detail.
+
+Indeed we were not expecting hardware that both defaults to deasserted
+resets and does not have a power-on reset mechanism for the IP cores, so
+yes, the framework currently assumes that all shared reset lines are
+initially (or at some point in the past since power-on were) asserted.
+
+I wonder if we are going to see this more often in the future, or
+whether the Amlogic Meson SoCs will stay the exception.
+
+> I am searching for a good way to initialize hardware devices
+> in the following situation:
+> 
+>  - two or more hardware devices share the same reset line
+
+So in general, at least during runtime, the driver must not expect reset
+assertion to actually work, so the sharing device is not disturbed.
+
+>  - those devices are not reset before booting the kernel
+>    (i.e. flip flops in RTL are random state at driver probe)
+> 
+>  - the hardware IP is used by various SoCs,
+>    and this issue only appears only on some.
+
+Unfortunately for configurable IP cores like the DW ones I am not sure
+to what extent these can actually be considered identical when
+implemented in different SoCs.
+I would expect that the hardware IP's basic requirements, like whether
+the reset must be asserted at some defined point during operation, or
+whether it has to be a pulse of da specific duration, does not change
+between implementations.
+
+> Specifically, the DWC3 USB IP case is in my mind,
+> but this should apply to any hardware in general.
+> 
+> 
+> 
+> 
+> Issue in detail
+> ---------------
+> 
+> The DWC3 USB IP is very popular and used by various SoCs
+> as you see in drivers/usb/dwc3/.
+> 
+> SoCs are using the same RTL as provided by Synopsys.
+> (SoC vendors could tweak the RTL if they like,
+> but it would rarely happen because it would just be troublesome)
+> 
+> So, let's assume we use the same IP with the same RTL version.
+> It is *compatible* in terms of device tree.
+> In this case, we should avoid differentiating the driver code per-SoC.
+> 
+> In fact, we ended up with
+> commit ff0a632 ("usb: dwc3: of-simple: add support for shared and
+> pulsed reset lines")
+> commit e8284db ("usb: dwc3: of-simple: add support for the Amlogic
+> Meson GXL and AXG SoCs")
+
+I'm surprised, didn't all Meson SoCs gain level reset support for this
+purpose?
+I agree this should not be needed in the drivers, and I'd be very happy
+if we could make this work on Meson with the dwc3 driver always
+requesting shared resets.
+
+> This means, the difference that comes from the reset _provider_
+> must be implemented in the reset _consumer_.
+> This is unfortunate.
+
+I am not entirely happy about the shared vs. exclusive naming of the
+API, but I have no better names. By choosing between the two, the
+driver states its requirements of the API, not whether the SoC it is
+implemented in actually shares the reset line with other devices.
+
+> So, I wonder if we can support it in sub-system level somehow
+> instead of messing up the reset consumer driver.
+
+I'd like to deflect and, hoping that this is an exception, ask whether
+we could just do this in the driver?
+
+>  - The reset topology is SoC-dependent.
+>    A reset line is dedicated for single hardware for some SoCs,
+>    and shared by multiple hardware for others.
+
+In which case the driver must be able to cope with shared reset lines,
+so it should use the shared reset API.
+
+>  - The reset policy (pulse reset, level reset, or both of them)
+>    are SoC-dependent (reset controller dependent).
+
+While that may be the case for some hardware IP, I don't think it is the
+case for the dwc3 driver. It doesn't need to assert the reset at any
+time during normal operation, and it works with level resets. The
+pulsed/exclusive reset handling really is just a workaround for the
+missing power-on reset.
+
+> RTL generally contains state machines.
+> The initial state of flip flops are undefined on power-on
+> hence the initial state of state machines are also undefined.
+> 
+> So, digital circuits needs explicit reset in general.
+> 
+> In some cases, the reset is performed before booting the kernel.
+> 
+>  - power-on reset
+>    (FFs are put into defined state on power-on automatically)
+> 
+>  - a reset controller assert reset lines by default
+>    (FFs are fixed to defined state.  If a reset consumer
+>    driver deasserts the reset line, HW starts from the define state)
+> 
+>  - Firmware may reset the hardware before booting the kernel
+> 
+> 
+> If nothing above is done, and the reset line is shared by multiple devices,
+> we do not have a good way to put the hardware into the sane state.
+> 
+> 
+> Reset consumers choose the required reset type:
+> 
+> - Shared reset:
+>     reset_control_assert / reset_control_deassert work like
+> clock_disable / clock_enable.
+>     The consumer must be tolerant to the situation where the HW may
+> not reset-asserted.
+> 
+> - Exclusive reset:
+>     It is guaranteed reset_control_assert() really asserts the reset line,
+>     but only one reset consumer grabs the reset line at the same time.
+
+Yes. The last part is a limitation of the current framework
+implementation, but one that I'd like to keep as long as possible.
+
+To support shared resets with guaranteed assertion, we'd need a
+notification framework with a possibility for drivers to temporarily
+suspend their own operations to allow a reset request from a different
+device, or to veto reset requests if that is not possible. And drivers
+that try to reset need to properly handle failed or deferred reset
+requests. That would introduce a level of complexity that I'd very much
+like to avoid.
+
+> As above, the state machines in digital circuits must start from a
+> defined state.
+> So, we want exclusive reset to reset the FFs.
+> However, this is too much requirement
+> since it is a reset line is often shared.
+
+For missing power-on resets, what we really want is not "exclusive
+reset", and not even "guaranteed reset assertion". We want that after
+the initial reset_deassert, the reset line is deasserted and the device
+has been in reset *at any point in the past* since power-on.
+
+> How to save such an Amlogic case?
+
+I think this case can be solved by either just initializing the reset
+lines to asserted in the reset controller driver (in which case the
+controller driver needs to know about which lines have to be asserted,
+and needs to support assert/deassert ops) or by adding a fallback from
+.deassert to .reset for reset controllers that don't have level reset
+hardware support. That is, if the first driver calls
+reset_control_deassert, the reset controller driver actually issues a
+reset pulse.
+
+> Hogging solve the problem?
+> --------------------------
+> 
+> 
+> I was thinking of a solution.
+> 
+> I may be missing something, but
+> one solution might be reset hogging on the
+> reset provider side.  This allows us to describe
+> the initial state of reset lines in the reset controller.
+> 
+> The idea for "reset-hog" is similar to:
+>  - "gpio-hog" defined in
+>    Documentation/devicetree/bindings/gpio/gpio.txt
+>  - "assigned-clocks" defined in
+>    Documetation/devicetree/bindings/clock/clock-bindings.txt
+> 
+> 
+> 
+> For example,
+> 
+>    reset-controller {
+>             ....
+> 
+>             line_a {
+>                   reset-hog;
+>                   resets = <1>;
+>                   reset-assert;
+>             };
+>    }
+> 
+> 
+> When the reset controller is registered,
+> the reset ID '1' is asserted.
+> 
+> 
+> So, all reset consumers that share the reset line '1'
+> will start from the asserted state
+> (i.e. defined state machine state).
+> 
+> 
+> From the discussion with Martin Blumenstingl
+> (https://lkml.org/lkml/2018/4/28/115),
+> the problem for Amlogic is that
+> the reset line is "de-asserted" by default.
+> If so, the 'reset-hog' would fix the problem,
+> and DWC3 driver would be able to use
+> shared, level reset, I think.
+> 
+> 
+> I think something may be missing from my mind,
+> but I hope this will prompt the discussion,
+> and we will find a better idea.
+
+My question would is: do we need this complexity, or can this be solved
+by just adding a workaround in the meson driver? If a lot of SoCs using
+the simple reset driver had this requirement, I'd seriously consider
+this, but it currently seems to me that this is just an issue with a
+single SoC family.
+
+regards
+Philipp
