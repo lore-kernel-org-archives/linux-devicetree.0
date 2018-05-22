@@ -1,55 +1,23 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 0/4] Introduce STM32MP1 RTC
-Date: Tue, 22 May 2018 20:11:26 +0200
-Message-ID: <20180522181126.GL13267@piout.net>
-References: <1526558666-24243-1-git-send-email-amelie.delaunay@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] arm64: dts: specify 1.8V EMMC capabilities for bcm958742t
+Date: Tue, 22 May 2018 11:12:41 -0700
+Message-ID: <20180522181241.12745-1-f.fainelli@gmail.com>
+References: <1527008499-4120-1-git-send-email-scott.branden@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526558666-24243-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <1527008499-4120-1-git-send-email-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: bcm-kernel-feedback-list@broadcom.com, Scott Branden <scott.branden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/05/2018 14:04:22+0200, Amelie Delaunay wrote:
-> This series introduces STM32MP1 RTC.
-> On STM32MP1:
-> - two clocks are needed, plck and rtc_ck;
-> - to wakeup the system, a wakeup alarm interrupt is needed;
-> - some registers or bits have moved, but the operation is the same;
-> - the Backup Domain Protection (DBP) is not managed by RTC driver.
+On Tue, 22 May 2018 10:01:39 -0700, Scott Branden <scott.branden@broadcom.com> wrote:
+> Specify 1.8V EMMC capabilities for bcm958742t board to indicate support
+> for UHS mode.
 > 
+> Fixes: d4b4aba6be8a ("arm64: dts: Initial DTS files for Broadcom Stingray SOC")
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 > ---
-> Changes in v3:
-> * Move cleanup changes in a separate patch
-> * Replace regs and evts by pointers to ensure no copy is made
-> * Set all registers offset as u16 instead of u8 and u16
-> * Fix Kbuild smatch warning:
->   drivers/rtc/rtc-stm32.c:827 stm32_rtc_probe()
->   warn: always true condition '(regs.verr != ~0) => (0-u16max != (-1))'
-> 
-> Changes in v2:
-> * One compatible per line in bindings file
-> * Remove unnecessary comment under rtc_ck as this clock is required for all
-> * Remove interrupts-extended and add stm32mp1 rtc alarm wakeup interrupt in
->   interrupts property description
-> 
-> Amelie Delaunay (4):
->   rtc: stm32: fix misspelling and misalignment issues
->   rtc: stm32: rework register management to prepare other version of RTC
->   dt-bindings: rtc: update stm32-rtc documentation for stm32mp1 rtc
->   rtc: stm32: add stm32mp1 rtc support
-> 
->  .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  27 +-
->  drivers/rtc/rtc-stm32.c                            | 273 ++++++++++++++++-----
->  2 files changed, 229 insertions(+), 71 deletions(-)
-> 
 
-Applied, thanks.
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Applied to devicetree-arm64/fixes, thanks!
+--
+Florian
