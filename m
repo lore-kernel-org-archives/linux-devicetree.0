@@ -1,74 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 11/13] dt-bindings: power: add PX30 SoCs header for
- power-domain
-Date: Tue, 22 May 2018 12:39:12 -0500
-Message-ID: <20180522173912.GA19562@rob-hp-laptop>
-References: <1526268455-9133-1-git-send-email-zhangqing@rock-chips.com>
- <1526268724-25288-1-git-send-email-zhangqing@rock-chips.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RESEND PATCH 1/5] mtd: rawnand: tegra: add devicetree binding
+Date: Tue, 22 May 2018 19:52:30 +0200
+Message-ID: <20180522195230.471a796e@bbrezillon>
+References: <cover.1526990589.git.stefan@agner.ch>
+        <8bd0f80a9db9abc7af192d1c7d449887b1392ff7.1526990589.git.stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526268724-25288-1-git-send-email-zhangqing@rock-chips.com>
+In-Reply-To: <8bd0f80a9db9abc7af192d1c7d449887b1392ff7.1526990589.git.stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
+To: Stefan Agner <stefan@agner.ch>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 14, 2018 at 11:32:04AM +0800, Elaine Zhang wrote:
-> From: Finley Xiao <finley.xiao@rock-chips.com>
+Hello Stefan,
+
+On Tue, 22 May 2018 14:07:05 +0200
+Stefan Agner <stefan@agner.ch> wrote:
+
+> From: Lucas Stach <dev@lynxeye.de>
 > 
-> According to a description from TRM, add all the power domains.
+> This adds the devicetree binding for the Tegra 2 NAND flash
+> controller.
 > 
-> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > ---
->  include/dt-bindings/power/px30-power.h | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 include/dt-bindings/power/px30-power.h
+>  .../bindings/mtd/nvidia,tegra20-nand.txt      | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
 > 
-> diff --git a/include/dt-bindings/power/px30-power.h b/include/dt-bindings/power/px30-power.h
+> diff --git a/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
 > new file mode 100644
-> index 000000000000..4ed482e80950
+> index 000000000000..522d442937a9
 > --- /dev/null
-> +++ b/include/dt-bindings/power/px30-power.h
-> @@ -0,0 +1,32 @@
-> +/*
-> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +++ b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> @@ -0,0 +1,29 @@
+> +NVIDIA Tegra NAND Flash controller
+> +
+> +Required properties:
+> +- compatible: Must be one of:
+> +  - "nvidia,tegra20-nand"
+> +- reg: MMIO address range
+> +- interrupts: interrupt output of the NFC controller
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +  - nand
+> +- resets: Must contain an entry for each entry in reset-names.
+> +  See ../reset/reset.txt for details.
+> +- reset-names: Must include the following entries:
+> +  - nand
+> +
+> +Optional properties:
+> +- nvidia,wp-gpios: GPIO used to disable write protection of the flash
+> +
+> +  Example:
+> +	nand@70008000 {
+> +		compatible = "nvidia,tegra20-nand";
+> +		reg = <0x70008000 0x100>;
+> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&tegra_car TEGRA20_CLK_NDFLASH>;
+> +		clock-names = "nand";
+> +		resets = <&tegra_car 13>;
+> +		reset-names = "nand";
+> +	};
 
-Same comments here.
+Can you represent the controller and NAND chip separately as
+recommended here [1].
 
-> + */
-> +
-> +#ifndef __DT_BINDINGS_POWER_PX30_POWER_H__
-> +#define __DT_BINDINGS_POWER_PX30_POWER_H__
-> +
-> +/* VD_CORE */
-> +#define PX30_PD_A35_0		0
-> +#define PX30_PD_A35_1		1
-> +#define PX30_PD_A35_2		2
-> +#define PX30_PD_A35_3		3
-> +#define PX30_PD_SCU		4
-> +
-> +/* VD_LOGIC */
-> +#define PX30_PD_USB		5
-> +#define PX30_PD_DDR		6
-> +#define PX30_PD_SDCARD		7
-> +#define PX30_PD_CRYPTO		8
-> +#define PX30_PD_GMAC		9
-> +#define PX30_PD_MMC_NAND	10
-> +#define PX30_PD_VPU		11
-> +#define PX30_PD_VO		12
-> +#define PX30_PD_VI		13
-> +#define PX30_PD_GPU		14
-> +
-> +/* VD_PMU */
-> +#define PX30_PD_PMU		15
-> +
-> +#endif
-> -- 
-> 1.9.1
-> 
-> 
+Thanks,
+
+Boris
+
+[1]https://elixir.bootlin.com/linux/v4.17-rc6/source/Documentation/devicetree/bindings/mtd/nand.txt#L56
