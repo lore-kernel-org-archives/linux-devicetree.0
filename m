@@ -1,70 +1,45 @@
-Return-Path: <SRS0=AbCP=IG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-it0-f68.google.com ([209.85.214.68]:52036 "EHLO
-        mail-it0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752506AbeESUsW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 19 May 2018 16:48:22 -0400
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH] ARM: dts: am3517-evm: Remove unnessary PMIC parameters
-Date: Sat, 19 May 2018 15:48:08 -0500
-Message-Id: <20180519204808.28899-1-aford173@gmail.com>
+Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-bn3nam01on0052.outbound.protection.outlook.com ([104.47.33.52]:54048
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751214AbeEVN05 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 May 2018 09:26:57 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [RESEND PATCH 0/4] PCI: cadence: Host and EP driver updates for PHY and power management
+Date: Tue, 22 May 2018 14:26:09 +0100
+Message-ID: <1526995569-5481-1-git-send-email-adouglas@cadence.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, woods.technical@gmail.com, Adam Ford <aford173@gmail.com>
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.com, cyrille.pitchen@free-electrons.com, Alan Douglas <adouglas@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The AM3517-EVM uses a TPS65023 PMIC.  This is already defined
-by:  compatible = "ti,tps65023"
+This is a series of patches for the cadence PCIe host and EP drivers, to:
+ - Add optional list of generic PHYs to host and EP drivers
+ - Add PHY bindings to devicetree
+ - Add Power Management ops, which will enable/disable PHYs if present
+ - Update cdns_pcie_writel function signature
 
-There doesn't seem to be a need to have each regulator in the
-PMIC with the 'compatible = "regulator-fixed"' since each
-regulator has a min and max setting.
+Changes in v2:
+    Split commit into four patches
+    Re-based on v4.17-rc1
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
 
-diff --git a/arch/arm/boot/dts/am3517-som.dtsi b/arch/arm/boot/dts/am3517-som.dtsi
-index a6d5ff73c163..7ff7cd135dca 100644
---- a/arch/arm/boot/dts/am3517-som.dtsi
-+++ b/arch/arm/boot/dts/am3517-som.dtsi
-@@ -64,7 +64,6 @@
- 		regulators {
- 			vdd_core_reg: VDCDC1 {
- 				regulator-name = "vdd_core";
--				compatible = "regulator-fixed";
- 				regulator-always-on;
- 				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1200000>;
-@@ -72,7 +71,6 @@
- 
- 			vdd_io_reg: VDCDC2 {
- 				regulator-name = "vdd_io";
--				compatible = "regulator-fixed";
- 				regulator-always-on;
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
-@@ -80,7 +78,6 @@
- 
- 			vdd_1v8_reg: VDCDC3 {
- 				regulator-name = "vdd_1v8";
--				compatible = "regulator-fixed";
- 				regulator-always-on;
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-@@ -88,7 +85,6 @@
- 
- 			vdd_usb18_reg: LDO1 {
- 				regulator-name = "vdd_usb18";
--				compatible = "regulator-fixed";
- 				regulator-always-on;
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-@@ -96,7 +92,6 @@
- 
- 			vdd_usb33_reg: LDO2 {
- 				regulator-name = "vdd_usb33";
--				compatible = "regulator-fixed";
- 				regulator-always-on;
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
+Alan Douglas (4):
+  PCI: cadence: Update cdns_pcie_writel function signature
+  PCI: cadence: Add generic PHY support to host and EP drivers
+  dt-bindings: PCI: cadence: Add DT bindings for optional PHYs
+  PCI: cadence: Add Power Management ops for host and EP
+
+ .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |   4 +
+ .../bindings/pci/cdns,cdns-pcie-host.txt           |   2 +
+ drivers/pci/cadence/pcie-cadence-ep.c              |  15 ++-
+ drivers/pci/cadence/pcie-cadence-host.c            |  34 ++++++
+ drivers/pci/cadence/pcie-cadence.c                 | 123 +++++++++++++++++++++
+ drivers/pci/cadence/pcie-cadence.h                 |  13 ++-
+ 6 files changed, 189 insertions(+), 2 deletions(-)
+
 -- 
-2.17.0
+2.2.2
 
