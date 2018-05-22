@@ -1,77 +1,93 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH 7/9] ARM: dts: gose: Drop MTD partitioning from DT
-Date: Tue, 22 May 2018 14:02:55 +0200
-Message-ID: <20180522120257.13232-7-marek.vasut+renesas@gmail.com>
-References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v7 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Tue, 22 May 2018 07:17:08 -0500
+Message-ID: <c5bbffef-5263-f2ff-6394-a14cbc8971b2@ti.com>
+References: <20180521180927.18472-1-dmurphy@ti.com>
+ <20180521180927.18472-2-dmurphy@ti.com>
+ <69a920da-f759-de50-865c-0ebc43044b66@gmail.com>
+ <3b20c9cf-5f7e-3ed9-454d-c8e8ca6c0627@ti.com>
+ <CAHp75Vf_KaRDJU83d8o1Sy1v+oztucJSYBEK9=cqNw6FQspFvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vf_KaRDJU83d8o1Sy1v+oztucJSYBEK9=cqNw6FQspFvg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Drop the MTD partitioning from DT, since it does not describe HW
-and to give way to a more flexible kernel command line partition
-passing.
+Andy
 
-To retain the original partitioning, assure you have enabled
-CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
-following to your kernel command line:
+On 05/21/2018 06:05 PM, Andy Shevchenko wrote:
+> On Tue, May 22, 2018 at 12:44 AM, Dan Murphy <dmurphy@ti.com> wrote:
+> 
+> 
+>>>> +    child = device_get_next_child_node(&led->client->dev, child);
+>>>> +    if (!child) {
+>>>> +        dev_err(&led->client->dev, "No LED Child node\n");
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    ret = fwnode_property_read_u32(child, "reg", &led->led_mode);
+>>>> +    if (ret) {
+>>>> +        dev_err(&led->client->dev, "reg DT property missing\n");
+>>>> +        goto out_err;
+>>>> +    }
+>>>> +
+>>>> +    if (led->led_mode > LM3601X_LED_TORCH ||
+>>>> +        led->led_mode < LM3601X_LED_IR) {
+>>>> +        dev_warn(&led->client->dev, "Invalid led mode requested\n");
+>>>> +        ret = -EINVAL;
+>>>> +        goto out_err;
+>>>> +    }
+>>>> +
+>>>> +    ret = fwnode_property_read_string(child, "label", &name);
+>>>> +    if (ret) {
+>>>> +        if (led->led_mode == LM3601X_LED_TORCH)
+>>>> +            name = "torch";
+>>>> +        else
+>>>> +            name = "infrared";
+>>>> +    }
+>>>> +
+>>>> +    snprintf(led->led_name, sizeof(led->led_name),
+>>>> +        "%s:%s", node->name, name);
+>>>
+>>> Reading once again my recent explanation regarding this I realized
+>>> that I didn't provide clear conclusion, which is: we no longer
+>>> use child node name for LED class device name if label is absent.
+>>> (apart from that - you're using parent DT node now, i.e.
+>>> led-controller).
+>>>
+>>> Please follow what was done for drivers/leds/leds-cr0014114.c.
+>>
+>> Hmmm.  If this is calling dev->of_node->name to store the name will this
+>> work in non-DT configurations?
+> 
+> I didn't found this kind of use in linux-next, perhaps I missed something?
+> 
 
-  mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
+Linux next has a different version then what I found doing a search for the driver.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-renesas-soc@vger.kernel.org
----
- arch/arm/boot/dts/r8a7793-gose.dts | 21 ---------------------
- 1 file changed, 21 deletions(-)
+I will change the code to match what is in linux-next.
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index aa209f6e5d71..b2dd54fbe40c 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -676,27 +676,6 @@
- 		spi-cpol;
- 		spi-cpha;
- 		m25p,fast-read;
--
--		partitions {
--			compatible = "fixed-partitions";
--			#address-cells = <1>;
--			#size-cells = <1>;
--
--			partition@0 {
--				label = "loader";
--				reg = <0x00000000 0x00040000>;
--				read-only;
--			};
--			partition@40000 {
--				label = "user";
--				reg = <0x00040000 0x00400000>;
--				read-only;
--			};
--			partition@440000 {
--				label = "flash";
--				reg = <0x00440000 0x03bc0000>;
--			};
--		};
- 	};
- };
- 
+Dan
+
+> In the driver Jacek referred to I found, though, use of of_node, which
+> at some point should be changed to fwnode.
+> 
+> For now you can fill that if you want to using something like this
+> (IIRC it should work):
+> 
+> if (is_of_node(fwnode))
+>  ...->of_node = to_of_node(...);
+> 
+>> I have not dug to deeply into the fwnode code to find out how the nodes
+>> get populated.  So my question may not even be valid.
+> 
+
+
 -- 
-2.16.2
+------------------
+Dan Murphy
