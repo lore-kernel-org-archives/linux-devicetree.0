@@ -1,26 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: Add gpio bindings for
- Actions S900 SoC
-Date: Tue, 22 May 2018 14:33:03 -0500
-Message-ID: <20180522193303.GA8957@rob-hp-laptop>
-References: <20180520051736.4842-1-manivannan.sadhasivam@linaro.org>
- <20180520051736.4842-2-manivannan.sadhasivam@linaro.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 2/2] ARM: pxa: dts: add pin definitions for extended GPIOs
+Date: Tue, 22 May 2018 21:34:16 +0200
+Message-ID: <87tvqzxz5z.fsf@belgarion.home>
+References: <20180521220044.821-1-daniel@zonque.org>
+ <20180521220044.821-2-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180520051736.4842-2-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linus.walleij@linaro.org, afaerber@suse.de, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180521220044.821-2-daniel@zonque.org> (Daniel Mack's message
+ of "Tue, 22 May 2018 00:00:44 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 20, 2018 at 10:47:32AM +0530, Manivannan Sadhasivam wrote:
-> Add gpio bindings for Actions Semi S900 SoC.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/pinctrl/actions,s900-pinctrl.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+Daniel Mack <daniel@zonque.org> writes:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> The PXA3xx series features some extended GPIO banks which are named GPIO0_2,
+> GPIO1_2 etc. The PXA300, PXA310 and PXA320 have different numbers of such
+> pins, and they also have variant-specific register offsets.
+>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> ---
+>  arch/arm/boot/dts/pxa3xx.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+> index a13ac52e4fd2..446e612688c0 100644
+> --- a/arch/arm/boot/dts/pxa3xx.dtsi
+> +++ b/arch/arm/boot/dts/pxa3xx.dtsi
+> @@ -8,6 +8,13 @@
+>  	 (gpio <= 98) ? (0x0400 + 4 * (gpio - 27)) :	\
+>  	 (gpio <= 127) ? (0x0600 + 4 * (gpio - 99)) :	\
+>  	 0)
+> +#define MFP_PIN_PXA300_0_2	0x674
+> +#define MFP_PIN_PXA300_1_2	0x678
+> +#define MFP_PIN_PXA300_2_2	0x2dc
+> +#define MFP_PIN_PXA300_3_2	0x2e0
+> +#define MFP_PIN_PXA300_4_2	0x2e4
+> +#define MFP_PIN_PXA300_5_2	0x2e8
+> +#define MFP_PIN_PXA300_6_2	0x2ec
+
+To be consistent with the previous items, could it be something like :
+#define MFP_PIN_PXA300_2(gpio) \
+  ... etc ...
+
+And so on for the others.
+
+Cheers.
+
+-- 
+Robert
