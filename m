@@ -1,39 +1,73 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 4/7] Bluetooth: Add new quirk for non-persistent
- setup settings
-Date: Tue, 22 May 2018 16:05:23 +0800
-Message-ID: <1526976323.18877.47.camel@mtkswgap22>
-References: <cover.1526374087.git.sean.wang@mediatek.com>
-         <1d6097f538b3182b2876ad48225ecd6e2d1b128c.1526374087.git.sean.wang@mediatek.com>
-         <920B3BE9-3FE8-4AC6-8C5F-63B0E00182AC@holtmann.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 5/6] ARM: dts: rcar-gen2: Remove unused VIN properties
+Date: Tue, 22 May 2018 10:18:03 +0200
+Message-ID: <20180522081803.m6vaybet3jdzvac4@verge.net.au>
+References: <1526488352-898-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526488352-898-6-git-send-email-jacopo+renesas@jmondi.org>
+ <20180516221307.GF17948@bigcity.dyn.berto.se>
+ <20180517090110.GA20190@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <920B3BE9-3FE8-4AC6-8C5F-63B0E00182AC@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, BlueZ development <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180517090110.GA20190@w540>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, geert@glider.be, laurent.pinchart@ideasonboard.com, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-05-22 at 09:21 +0200, Marcel Holtmann wrote:
-> Hi Sean,
-> 
-
-[ ... ]
-
-> > -	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
-> > +	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
-> > +	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
-> > 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
-> 
-> I am not 100% sure that we want to send the HCI_DEV_SETUP event also multiple times. That is a userspace change that I would need to think about. We need to check create_monitor_event() and see what the btmon trace for this looks like. Can you send me a btmon -w trace.log when this change is active.
-> 
-> Regards
-> 
-> Marcel
-> 
-
-Sure, I'll send you the trace.log with the change is active.
-
-	Sean
+T24gVGh1LCBNYXkgMTcsIDIwMTggYXQgMTE6MDE6MTBBTSArMDIwMCwgamFjb3BvIG1vbmRpIHdy
+b3RlOgo+IEhpIE5pa2xhcywKPiAKPiBPbiBUaHUsIE1heSAxNywgMjAxOCBhdCAxMjoxMzowN0FN
+ICswMjAwLCBOaWtsYXMgU8O2ZGVybHVuZCB3cm90ZToKPiA+IEhpIEphY29wbywKPiA+Cj4gPiBU
+aGFua3MgZm9yIHlvdXIgd29yay4KPiA+Cj4gPiBPbiAyMDE4LTA1LTE2IDE4OjMyOjMxICswMjAw
+LCBKYWNvcG8gTW9uZGkgd3JvdGU6Cj4gPiA+IFRoZSAnYnVzLXdpZHRoJyBhbmQgJ3BjbGstc2Ft
+cGxlJyBwcm9wZXJ0aWVzIGFyZSBub3QgcGFyc2VkIGJ5IHRoZSBWSU4KPiA+ID4gZHJpdmVyIGFu
+ZCBvbmx5IGNvbmZ1c2UgdXNlcnMuIFJlbW92ZSB0aGVtIGluIGFsbCBHZW4yIFNvQyB0aGF0IHVz
+ZWQKPiA+ID4gdGhlbS4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogSmFjb3BvIE1vbmRpIDxq
+YWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+ID4gPiAtLS0KPiA+ID4gIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL3I4YTc3OTAtbGFnZXIuZHRzICAgfCAzIC0tLQo+ID4gPiAgYXJjaC9hcm0vYm9vdC9kdHMv
+cjhhNzc5MS1rb2Vsc2NoLmR0cyB8IDMgLS0tCj4gPiA+ICBhcmNoL2FybS9ib290L2R0cy9yOGE3
+NzkxLXBvcnRlci5kdHMgIHwgMSAtCj4gPiA+ICBhcmNoL2FybS9ib290L2R0cy9yOGE3NzkzLWdv
+c2UuZHRzICAgIHwgMyAtLS0KPiA+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTQtYWx0LmR0
+cyAgICAgfCAxIC0KPiA+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTQtc2lsay5kdHMgICAg
+fCAxIC0KPiA+ID4gIDYgZmlsZXMgY2hhbmdlZCwgMTIgZGVsZXRpb25zKC0pCj4gPiA+Cj4gPiA+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkwLWxhZ2VyLmR0cyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3I4YTc3OTAtbGFnZXIuZHRzCj4gPiA+IGluZGV4IDA2M2ZkYjYuLmI1NmIz
+MDkgMTAwNjQ0Cj4gPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTAtbGFnZXIuZHRz
+Cj4gPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTAtbGFnZXIuZHRzCj4gPiA+IEBA
+IC04NzMsMTAgKzg3Myw4IEBACj4gPiA+ICAJcG9ydCB7Cj4gPiA+ICAJCXZpbjBlcDI6IGVuZHBv
+aW50IHsKPiA+ID4gIAkJCXJlbW90ZS1lbmRwb2ludCA9IDwmYWR2NzYxMl9vdXQ+Owo+ID4gPiAt
+CQkJYnVzLXdpZHRoID0gPDI0PjsKPiA+Cj4gPiBJIGNhbid0IHJlYWxseSBtYWtlIHVwIG15IG1p
+bmQgaWYgdGhpcyBpcyBhIGdvb2QgdGhpbmcgb3Igbm90LiBEZXZpY2UKPiA+IHRyZWUgZGVzY3Jp
+YmVzIHRoZSBoYXJkd2FyZSBhbmQgbm90IHdoYXQgdGhlIGRyaXZlcnMgbWFrZSB1c2Ugb2YuIEFu
+ZAo+ID4gdGhlIGZhY3QgaXMgdGhhdCB0aGlzIGJ1cyBpcyAyNCBiaXRzIHdpZGUuIFNvIEknbSBu
+b3Qgc3VyZSB3ZSBzaG91bGQKPiA+IHJlbW92ZSB0aGVzZSBwcm9wZXJ0aWVzLiBCdXQgSSB3b3Vs
+ZCBsb3ZlIHRvIGhlYXIgd2hhdCBvdGhlcnMgdGhpbmsKPiA+IGFib3V0IHRoaXMuCj4gPgo+IAo+
+IEp1c3QgdG8gcG9pbnQgb3V0IHRob3NlIHByb3BlcnRpZXMgYXJlIG5vdCBldmVuIGRvY3VtZW50
+ZWQgaW4gcmNhci12aW4KPiBiaW5kaW5ncyAoYWN0dWFsbHksIG5vbmUgb2YgdGhlbSB3YXMpLgo+
+IAo+IEkgZmVlbCBpdCdzIHdyb25nIHRvIGhhdmUgdGhlbSBoZXJlLCBhcyBzb21lb25lIG1heSB0
+aGluayB0aGF0Cj4gY2hhbmdpbmcgdGhlaXIgdmFsdWUgc2hvdWxkIGFjdHVhbGx5IGNoYW5nZSB0
+aGUgVklOIGludGVyZmFjZSBiZWhhdmlvciwKPiB3aGljaCBpdCdzIG5vdCB0cnVlLCBsZWFkaW5n
+IHRvIG1hc3NpdmUgY29uZnVzaW9uIGFuZCBxdWl0ZSBzb21lIGNvZGUKPiBkaWdnaW5nIGZvciBu
+byByZWFzb24gKGFuZCB0aGV5IHdpbGwgZ2V0IG1hZCBhdCB1cyBhdCBzb21lIHBvaW50LCBwcm9i
+YWJseSA6KQoKSSB0aGluayBpdHMgZmluZSB0aGF0IHRoZSBkcml2ZXIgZG9lc24ndCBpbXBsZW1l
+bnQgc29tZXRoaW5nIGRlc2NyaWJlZCBpbgpEVCAtIHdlIGFyZSBkZXNjcmliaW5nIHRoZSBoYXJk
+d2FyZSBub3QgdGhlIGltcGxlbWVudGF0aW9uLiBCdXQgSSB0aGluayBpdHMKbm90IGZpbmUgdGhh
+dCBEVCBpbmNsdWRlcyBwcm9wZXJ0aWVzIG5vdCBkZXNjcmliZWQgaW4gdGhlIGJpbmRpbmcuCgpT
+byBJIHRoaW5rIHdlIHNob3VsZCBlaXRoZXIKYSkgRml4IHRoZSBiaW5kaW5nIGRvY3VtZW50YXRp
+b24sIGJ1dCBwZXJoYXBzIGl0IGlzIGFscmVhZHkgY29ycmVjdAogICBpbiB3aGljaCBjYXNlIHdl
+IHNob3VsZDsKYikgQXBwbHkgdGhpcyBwYXRjaAoKT25jZSB3ZSBoYXZlIGRlY2lkZWQgd2hhdCBp
+cyB0aGUgY29ycmVjdCBkZXNjcmlwdGlvbiBvZiB0aGUgaGFyZHdhcmUgd2UKY2FuIGNvbnNpZGVy
+IGltcGxpY2F0aW9ucyBvbiB0aGUgZHJpdmVyIGltcGxlbWVudGF0aW9uLgoKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
