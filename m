@@ -1,14 +1,14 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/9] ARM: shmobile: defconfig: Enable MTD command line
- partition parsing
-Date: Tue, 22 May 2018 16:29:01 +0200
-Message-ID: <CAMuHMdWO24GhbmWD=acMBVNxYg35XrcyE71-S4=Zp9=KXKqE4Q@mail.gmail.com>
+Subject: Re: [PATCH 4/9] ARM: dts: koelsch: Drop MTD partitioning from DT
+Date: Tue, 22 May 2018 16:29:52 +0200
+Message-ID: <CAMuHMdW_r4D2WyJVJAW6smrg5dipjwB6wV5ZF5O4v3Mq2cXd3g@mail.gmail.com>
 References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-4-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+In-Reply-To: <20180522120257.13232-4-marek.vasut+renesas@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,20 +23,20 @@ Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vge
 List-Id: devicetree@vger.kernel.org
 
 On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> In preparation for removing MTD partitioning from the DTs and moving
-> it over to kernel command line partition parsing, enable the support
-> for kernel command line MTD partition parsing.
+> Drop the MTD partitioning from DT, since it does not describe HW
+> and to give way to a more flexible kernel command line partition
+> passing.
 >
-> The argument for not having MTD partitions in the DT is the same as
-> for not having hard drive partitions in DT, neither describes the
-> hardware itself, so it shouldn't be in the DT. Furthermore, kernel
-> command line MTD partition passing allows greater flexibility in
-> case someone decided to repartition the flash, which is well in the
-> realm of possibility with these systems.
+> To retain the original partitioning, assure you have enabled
+> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
+> following to your kernel command line:
+>
+>   mtdparts=spi0.0:512k@0(loader),5632k(user),-(flash)
 >
 > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
