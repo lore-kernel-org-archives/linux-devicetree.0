@@ -1,14 +1,14 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 8/9] ARM: dts: alt: Drop MTD partitioning from DT
-Date: Tue, 22 May 2018 16:45:32 +0200
-Message-ID: <CAMuHMdWb1NtxFNPUk1O4+fR+5pZtLXi8Un361Yg2SZZt_J_RFQ@mail.gmail.com>
+Subject: Re: [PATCH 7/9] ARM: dts: gose: Drop MTD partitioning from DT
+Date: Tue, 22 May 2018 16:44:56 +0200
+Message-ID: <CAMuHMdVDqq=OX62CJ=iUki1vPE1utu8+_FfxMYpbuy-SjjAQfw@mail.gmail.com>
 References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
- <20180522120257.13232-8-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-7-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522120257.13232-8-marek.vasut+renesas@gmail.com>
+In-Reply-To: <20180522120257.13232-7-marek.vasut+renesas@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -31,9 +31,9 @@ On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
 > CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
 > following to your kernel command line:
 >
->   mtdparts=spi0.0:256k@0(loader),256k(system),-(user)
+>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
 
-Drop @0?
+Drop @0? 4m?
 
 > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
