@@ -1,13 +1,13 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 8/9] ARM: dts: alt: Drop MTD partitioning from DT
-Date: Tue, 22 May 2018 14:34:50 +0200
-Message-ID: <20180522123450.7elahuoh6rfvbpth@ninjato>
+Subject: Re: [PATCH 3/9] ARM: dts: stout: Drop MTD partitioning from DT
+Date: Tue, 22 May 2018 14:34:30 +0200
+Message-ID: <20180522123430.ogiv2dxpv2jp3ejw@ninjato>
 References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
- <20180522120257.13232-8-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-3-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1787011194822426462=="
+Content-Type: multipart/mixed; boundary="===============3512992530874383710=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522120257.13232-8-marek.vasut+renesas@gmail.com>
+In-Reply-To: <20180522120257.13232-3-marek.vasut+renesas@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,18 +22,18 @@ Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, li
 List-Id: devicetree@vger.kernel.org
 
 
---===============1787011194822426462==
+--===============3512992530874383710==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lxjcjcjrzgpsvbru"
+	protocol="application/pgp-signature"; boundary="3sgurtknfbbrgete"
 Content-Disposition: inline
 
 
---lxjcjcjrzgpsvbru
+--3sgurtknfbbrgete
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 22, 2018 at 02:02:56PM +0200, Marek Vasut wrote:
+On Tue, May 22, 2018 at 02:02:51PM +0200, Marek Vasut wrote:
 > Drop the MTD partitioning from DT, since it does not describe HW
 > and to give way to a more flexible kernel command line partition
 > passing.
@@ -42,7 +42,7 @@ On Tue, May 22, 2018 at 02:02:56PM +0200, Marek Vasut wrote:
 > CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
 > following to your kernel command line:
 >=20
->   mtdparts=3Dspi0.0:256k@0(loader),256k(system),-(user)
+>   mtdparts=3Dspi0.0:512k@0(loader),256k(uboot),256k(uboot-env),-(flash)
 >=20
 > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -54,30 +54,30 @@ On Tue, May 22, 2018 at 02:02:56PM +0200, Marek Vasut wrote:
 Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
---lxjcjcjrzgpsvbru
+--3sgurtknfbbrgete
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsEDmkACgkQFA3kzBSg
-KbYkQg//bHdUNi/xEYKyYxou4GyXPcq6447E2O4ghx46PQlPPJkZhMPUVQ6a/L0z
-RNcA9BNPA/KpoGSxwbKQ7yehIy4CHo6pluSGQWa+HJemuq4acAKHDvh9aBzmTwLQ
-uitK7Ye9p+GQFhCkYYKhSRx64mrD043UjyocjCmV2+2pG+EhQKE7eIM/ZUWvrBDp
-qfpWufinhQIaScjbz/z7xY3AM5LII6QfVamIC5aY0CNX1iiadFSzx38jSC/WY30d
-16P8zXQp4t5OlD6p1xPxfxR/NOFZ3VFCbeDRFodrsOJvaQXxAH/xGT3hs6Tphsij
-8Pkrr+4XRTliToK4VbspcnNGicDEHBjO9NQcbiHlKk2ChokwpaI78JMBOUYk9+y3
-xx3gjnY4uSJC46+EjruULzVlT/86gZXqLS1Xdl7t9KngkCKkId7ppsNGqR5UT+y5
-6UQPbAQrB+gPu4+qP+aMre+mJSQPlisctJKmklTn01VQMmgQFYoIM5SUGsnVUxtu
-TZd3tMTU0OeayC1ZVOfyx6GQ8zmaFCPJSDsDKaBnAyc9MDARKIb7dDmw9KsPZhHc
-bOXN6u5/QV+4tAfqC5T0u1Gq+CYhlzlT/itFb3jLyudTu1v3sIuC9B4nejI+TtRS
-t2lQ1O3eu/uorv6IM5aaBd/Uvjj2MbWWOFccXVKWwecsaXtF0AU=
-=k+cQ
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsEDlYACgkQFA3kzBSg
+Kba8ZQ//fDUU5LDSpFQCBnOt2i7VHs307yUt5g2FigoIRfAtEsIbz4jlUQZPZ867
+wuE4i8yo5luGXqYfL3Ao7sWV96DnXxeUqx8GSxwuxL0XPHMxLYmhPpX5A4N+iM3Q
+x+fvvEwDUEZdx1Hv/stJBl1IpCHSCYiIOnZaCq4ozTZZYTzGA4/KGkMjPaPka3Mi
+HuItURZXeXJ/Uaa8MRVSKRawWYaPZZ4GpFjfj9K5YRg15O1aGKvkUaFN+IU7yKyM
+/XfeD76b02lPppMEeSNlLK7wiyalskzwVcDx8efByLduEHRgUkzw0tm/OCOKpP2l
+62uBgKDMlO0Sr7TQi3Ng+E7rcYM1OMdcZn5HqPCF2RwfT8l6+i1kRdmZvM/cllVg
+YTwCG/WGq9b7emy0c/j9AFo9vF/vo2kJAy0qnRIG/JsB8ZkYN6PDOn5PPTHO+aBY
+rQRnr85FNDcO6tlJKz1uvOn09Spj+7E1+Hlm99yZ+3DlBaW9kcHaOYx6DsC0oLoa
+AE+mAmOxUhpV7dHRyOxmUBMzeaE9uTziQWhPBklOCty1nDls7boSukCKNoNF4bKE
+AnySNAO2p5nR3UH6Xl4FIy71QAAzRPMATE7z3dE0jBtvjEh2l6OcH0lKpimzb4d6
+8NYRoISOHYMmYu/j5jfUtRltMgM9SdarVLQlD0MTGy467c5W0dM=
+=hTyY
 -----END PGP SIGNATURE-----
 
---lxjcjcjrzgpsvbru--
+--3sgurtknfbbrgete--
 
 
---===============1787011194822426462==
+--===============3512992530874383710==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -88,4 +88,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1787011194822426462==--
+--===============3512992530874383710==--
