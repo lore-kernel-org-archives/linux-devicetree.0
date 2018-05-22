@@ -1,13 +1,13 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
-Date: Tue, 22 May 2018 14:34:42 +0200
-Message-ID: <20180522123442.wd3khrub6jxknvgi@ninjato>
+Subject: Re: [PATCH 7/9] ARM: dts: gose: Drop MTD partitioning from DT
+Date: Tue, 22 May 2018 14:34:46 +0200
+Message-ID: <20180522123446.corqi6446lrq6rxq@ninjato>
 References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
- <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-7-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0764681771686424383=="
+Content-Type: multipart/mixed; boundary="===============1865705448793954304=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
+In-Reply-To: <20180522120257.13232-7-marek.vasut+renesas@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,18 +22,18 @@ Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, li
 List-Id: devicetree@vger.kernel.org
 
 
---===============0764681771686424383==
+--===============1865705448793954304==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="q2xxampfbtehszut"
+	protocol="application/pgp-signature"; boundary="2hj4k7iqegtbf7e2"
 Content-Disposition: inline
 
 
---q2xxampfbtehszut
+--2hj4k7iqegtbf7e2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 22, 2018 at 02:02:54PM +0200, Marek Vasut wrote:
+On Tue, May 22, 2018 at 02:02:55PM +0200, Marek Vasut wrote:
 > Drop the MTD partitioning from DT, since it does not describe HW
 > and to give way to a more flexible kernel command line partition
 > passing.
@@ -54,30 +54,30 @@ On Tue, May 22, 2018 at 02:02:54PM +0200, Marek Vasut wrote:
 Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
---q2xxampfbtehszut
+--2hj4k7iqegtbf7e2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsEDmIACgkQFA3kzBSg
-Kba5Jw/+LBT1sG6BDnqu5+ZMwd/TMl/uGPLfPVwsuKw4y3XqR5PJ4vzB7XEYRXO+
-P9bjW7lvlTE12a2vmmtlMD5j80mVBOR+WY8MU8jeBrzNY31n26Ah4S3PO3ZYzCH4
-q7QVjMpHS7C88jmw+YXaYwVzy8gKQaeW2fTWoWF+IXiTQR721h4NShuPMjdPMg5w
-LuE/zc1LIBsUjPjHNdjD3C5nKqu2n81GJbj+5QLcd2y9+G6ndrjhYqEWSabNck86
-Ml5xHoeLhEfH6j8w4OXt+aEVHNpl3Q6mdGtcrvE7WEKRbcPzH+8Xe64UM4Ucqfbn
-hngIJzUOuaSrqj1J0vwl8WokK6tdb6TxzqCd3LQE3ei9cvgdSQU9wW849nj/zlVv
-gHknA0eOB6FPrTzvpT3jc86AWYl/6usA+lsXOt+ZGi+CCaB+3l+ts5GleYZwNWE2
-tet6cwSYzbd023Cxxt38JU99RfbK6u6AIrQ6Lwk9M/f/5Sj/4oh8PdRzhib6rpZl
-nCAblM3TDVf6yN3qNo6Nd3EMWvRNp1FCz/e4snirsZ0eFx74xKYjKnaataPn0snn
-yWlrYzGetd3c7RCV32duKqXgyMVywsBeN51MHGdEgZ/gsKm8cPbMxnmAHyeDqi26
-JFl+4aAG1N3prBXlG/jdUHWvBgnqQvGNuTpEqJ5jYf+WyRMLEF4=
-=fVzW
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsEDmYACgkQFA3kzBSg
+Kba3+w/+KuJigluxJJ6OqF2CFIGoNKcEKfpJFTDYu833nkfE4V9dBnc0HTC2X7i7
+M3/4jV+UseuH/gQ8HYkdLl3XbYm/MuTlOwm7bjVSs+A/jGaUkniXR7D/kxEjAkOf
+9AAdMR9LbHkDzltXwO88GqPyEdTJHeFsp+3lXXlRSMAs4h7ObHmfbmZAQtkokCT4
+2J0sZKtnXkleHZWIQvR1Rh2Ro3h8fEdmHDdjqPIJRKqe8x4ua0e+xLhxFSV6hLHC
+lmVQB1yH6BRdCBeFSIwNmpUcQOI+bqS07YHDm5AuIm71hhxlBWIYCYo0uCVD69Xd
+HQWX++OIm2EfudhJYE13F2oxTMbkT6uf1oIHLg+AFqKntheo7kb52dcrsQKSxlef
+adoJBKs3PRGo6SOerZNw4yvqPhP2lZFTAiiElV+TQajk7kjtLHRxHyRyYg2gAHVe
+l+/lNdWH6O+np0579+qLbkjiAVnHU2ViEE6M1bHNB8OtllaR9Yoex8V/rRPieuH0
+kXi/Xxbcuq1HtO4FQtsxL+U9HW9vFc3501k/4uIGhHVcTLJw5COp+GM349HOG16g
+AkwWZcioSCFxAA0N3QI61i7qOTSZOCxTI4ip0Z5cu9lVuwhpAcBIYIzyjkprPbx0
+T7zmFPywq36dBKfDs7RoUH17zi6SyW2deY5lEf8UrY9UxQ7KO7U=
+=U8tH
 -----END PGP SIGNATURE-----
 
---q2xxampfbtehszut--
+--2hj4k7iqegtbf7e2--
 
 
---===============0764681771686424383==
+--===============1865705448793954304==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -88,4 +88,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============0764681771686424383==--
+--===============1865705448793954304==--
