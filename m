@@ -1,40 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] soc: bcm: brcmstb: Add missing DDR MEMC compatible
- strings
-Date: Tue, 22 May 2018 17:31:33 -0500
-Message-ID: <20180522223133.GA11292@rob-hp-laptop>
-References: <20180511220242.837-1-f.fainelli@gmail.com>
- <20180511220242.837-3-f.fainelli@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] clk: rockchip: remove deprecated gate-clk code and
+ dt-binding
+Date: Tue, 22 May 2018 17:33:13 -0500
+Message-ID: <20180522223313.GA12580@rob-hp-laptop>
+References: <20180512143038.30447-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180511220242.837-3-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Doug Berger <opendmb@gmail.com>, Justin Chen <justinpopo6@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20180512143038.30447-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 03:02:42PM -0700, Florian Fainelli wrote:
-> We would not be matching the following chip/compatible strings
-> combinations, which would lead to not setting the warm boot flag
-> correctly, fix that:
+On Sat, May 12, 2018 at 04:30:38PM +0200, Heiko Stuebner wrote:
+> Initially we tried modeling clocks via the devicetree before switching
+> to clocks declared in the clock drivers and only exporting specific
+> ids to the devicetree.
 > 
->     7260A0/B0: brcm,brcmstb-memc-ddr-rev-b.2.1
->     7255A0: brcm,brcmstb-memc-ddr-rev-b.2.3
->     7278Bx: brcm,brcmstb-memc-ddr-rev-b.3.1
+> As the old code was in the kernel for 1-2 releases when the new mode
+> of operation was added we kept it for backwards compatibility.
 > 
-> The B2.1 core (which is in 7260 A0 and B0) doesn't have the
-> SHIMPHY_ADDR_CNTL_0_DDR_PAD_CNTRL setup in the memsys init code, nor
-> does it have the warm boot flag re-definition on entry. Those changes
-> were for B2.2 and later MEMSYS cores. Fall back to the previous S2/S3
-> entry method for these specific chips.
+> That deprecation notice is in the binding since july 2014, so nearly
+> 4 years now and I think it's time to drop the old cruft.
 > 
-> Fixes: 0b741b8234c8 ("soc: bcm: brcmstb: Add support for S2/S3/S5 suspend states (ARM)")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Especially as at the time using the mainline kernel on Rockchip devices
+> was not really possible, except for experiments on the really old socs of
+> the rk3066 + rk3188 line, so there shouldn't be any devicetrees still
+> around that rely on that code.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt |  3 +++
->  drivers/soc/bcm/brcmstb/pm/pm-arm.c                        | 12 ++++++++++++
->  2 files changed, 15 insertions(+)
+>  .../devicetree/bindings/clock/rockchip.txt    | 77 ---------------
+>  drivers/clk/rockchip/Makefile                 |  1 -
+>  drivers/clk/rockchip/clk-rockchip.c           | 98 -------------------
+>  3 files changed, 176 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/rockchip.txt
+>  delete mode 100644 drivers/clk/rockchip/clk-rockchip.c
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
