@@ -1,58 +1,96 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2] ARM64: dts: sun50i: h5: Add spi flash node for
- OrangePi PC2
-Date: Tue, 22 May 2018 16:27:23 +0200
-Message-ID: <20180522142723.lm4ivndgwr6mzdpp@flea>
-References: <20180521115426.92115-1-manu@freebsd.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Tue, 22 May 2018 16:28:37 +0200
+Message-ID: <7efc2975ed8c24a708d43dec06a48ceb@agner.ch>
+References: <cover.1526990589.git.stefan@agner.ch>
+ <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+ <2e858be88e00e26495fe47c6cd5cd70c@agner.ch>
+ <0a3c683c-15fd-d05c-4aa2-5fa109c892c6@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bshvfimtksmbvbss"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180521115426.92115-1-manu@freebsd.org>
+In-Reply-To: <0a3c683c-15fd-d05c-4aa2-5fa109c892c6@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@freebsd.org>
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 22.05.2018 15:34, Dmitry Osipenko wrote:
+> On 22.05.2018 15:19, Stefan Agner wrote:
+>> [review sent to my first patch sent off-ml, moving to ml thread]
+>>
+>> On 21.05.2018 16:05, Dmitry Osipenko wrote:
+>>> Hello Stefan,
+>>>
+>>> I don't have expertise to review the actual NAND-related driver logic, so I only
+>>> reviewed the basics. The driver code looks good to me, though I've couple minor
+>>> comments.
+>>>
+>>> On 21.05.2018 03:16, Stefan Agner wrote:
+>>>> Add support for the NAND flash controller found on NVIDIA
+>>>> Tegra 2 SoCs. This implementation does not make use of the
+>>>> command queue feature. Regular operations/data transfers are
+>>>> done in PIO mode. Page read/writes with hardware ECC make
+>>>> use of the DMA for data transfer.
+>>>>
+>>>> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>>>> ---
 
---bshvfimtksmbvbss
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+<snip>
 
-On Mon, May 21, 2018 at 01:54:26PM +0200, Emmanuel Vadot wrote:
-> The OrangePi PC2 have an mx25l1606e spi flash.
-> Add a node for it.
->=20
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+>>>> +static int tegra_nand_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>>>> +				uint8_t *buf, int oob_required, int page)
+>>>> +{
+>>>> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+>>>> +	u32 value, addrs;
+>>>> +
+>>>> +	writel(NAND_CMD_READ0, nand->regs + CMD_1);
+>>>> +	writel(NAND_CMD_READSTART, nand->regs + CMD_2);
+>>>> +
+>>>> +	addrs = tegra_nand_fill_address(mtd, chip, page);
+>>>> +
+>>>> +	value = readl(nand->regs + CFG);
+>>>> +	value |= CFG_HW_ECC | CFG_ERR_COR;
+>>>> +	writel(value, nand->regs + CFG);
+>>>> +
+>>>> +	writel(mtd->writesize - 1, nand->regs + DMA_CFG_A);
+>>>> +	writel(nand->data_dma, nand->regs + DATA_PTR);
+>>>> +
+>>>> +	if (oob_required) {
+>>>> +		writel(mtd_ooblayout_count_freebytes(mtd) - 1,
+>>>> +		       nand->regs + DMA_CFG_B);
+>>>> +		writel(nand->oob_dma, nand->regs + TAG_PTR);
+>>>> +	} else {
+>>>> +		writel(0, nand->regs + DMA_CFG_B);
+>>>> +		writel(0, nand->regs + TAG_PTR);
+>>>> +	}
+>>>> +
+>>>> +	value = DMA_CTRL_GO | DMA_CTRL_IN | DMA_CTRL_PERF_EN |
+>>>> +		DMA_CTRL_REUSE | DMA_CTRL_IE_DONE | DMA_CTRL_IS_DONE |
+>>>> +		DMA_CTRL_BURST_8 | DMA_CTRL_EN_A;
+>>>
+>>> Wouldn't be more efficient to set DMA burst to 16 words? The writesize seems
+>>> always aligned to at least 64 words.
+>>>
+>>
+>> Hm, haven't tested 16 words, 8 was the setting Lucas used.
+>>
+>> Are you sure this is only about write size? Not sure, but isn't the ECC
+>> area also DMA'd? On Colibri we use RS with t=8, hence 144 bytes parity,
+>> so this would be properly aligned non the less...
+>>
+> 
+> I don't know, that's up to you to figure out. Is RS stands for Reed-Solomon and
+> t=8 is the max number of redundant words?
+> 
 
-Fixed the prefix and applied, thanks!
-Maxime
+RS = Reed-Solomon
+t=8 maximum symbol errors
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Will do some testing and check whether it fails.
 
---bshvfimtksmbvbss
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsEKMoACgkQ0rTAlCFN
-r3RclA/+Kyil79U+LvX9vMgRFrGsBgJvsrdYzXNs5zp9a2dRIr3IopP0y15OeB7T
-+sgM2N2ppEkKNVp2nGGTFXmyZeDiQ26BADPCYBwEfxqqkvCb+Sx5O4uT+dPKSrQ2
-ZxOAUHYaFoPBRTPOx+k5BKe1nuUCyh8ZHFSJpkueMpUwFAL2291AHAjbhz13SnyA
-3n3hmMK/p+0ryBb+xBkRQtcUFq+B58neoDxkY/rdEqNf8LPkQy3Kn1KzKwqOvUoD
-7tykYKcJg+aTBfS9dx8GWioH0bS9Fy4P65PWd2j5lN3I0LT3enmwjlW43y2MZIH+
-C9C3dwIt9glxTV8qqVRLhAC0f6U2mDWIgNTEMXeS+I4hZMjT7CAkCLmS7WLonMLU
-E8PEylq5LctAHHU5HlMrCi/5xpW4lfCkZj8ZT/WQXrfJkr/gcyjdmntl6FPoZPxD
-p3sjU8o4hkM9XG6YA/Leou0BsX2sMCLuRHnFI2rsNFCYVjlpDvyDjp6uQd0RXo3M
-3ubJ4TnCXi0/JTQPFtndunBQlhe8RT1SzauflNuWzK39S90LjNKKkuHYr4GSEOdB
-dv5ROQkHzn/oyeh9sagz+75oK43qlASM6hU4GDjcogjfC04m/savUbEz2Unp9fme
-qKjZwWymf9UPr6SWdLkNRrZc468wtkRLl0hnOb5nsDpVKyetY2k=
-=jK8G
------END PGP SIGNATURE-----
-
---bshvfimtksmbvbss--
+--
+Stefan
