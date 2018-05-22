@@ -1,40 +1,114 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v11 03/27] clk: davinci: psc: allow for dev == NULL
-Date: Tue, 22 May 2018 14:35:58 +0530
-Message-ID: <250d94db-c33f-51c9-99c1-3a4ddcd627fa@ti.com>
-References: <20180518164829.27052-1-david@lechnology.com>
- <20180518164829.27052-4-david@lechnology.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] cpufreq: Add Kryo CPU scaling driver
+Date: Tue, 22 May 2018 10:12:34 +0100
+Message-ID: <5b2eb27b-b852-97ff-b099-fe4c22b44937@arm.com>
+References: <1526555955-29960-11-git-send-email-ilialin@codeaurora.org>
+ <1526729701-8589-1-git-send-email-ilialin@codeaurora.org>
+ <153cc316-dcb5-972f-5a2f-c91fe0f6348b@arm.com>
+ <000f01d3f103$3ff78ba0$bfe6a2e0$@codeaurora.org>
+ <2ace10bc-e1c4-2060-94d3-eb71e966ffbe@arm.com>
+ <001201d3f19a$0130a860$0391f920$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180518164829.27052-4-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <001201d3f19a$0130a860$0391f920$@codeaurora.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ilialin@codeaurora.org, mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 May 2018 10:18 PM, David Lechner wrote:
-> On some davinci SoCs, we need to register the PSC clocks during early
-> boot because they are needed for clocksource/clockevent. These changes
-> allow for dev == NULL because in this case, we won't have a platform
-> device for the clocks.
-> 
-> Some function declarations are moved to a public header files so that they can
-> be called from mach init code.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
 
-Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 
-Thanks,
-Sekhar
+On 22/05/18 07:56, ilialin@codeaurora.org wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Sudeep Holla <sudeep.holla@arm.com>
+>> Sent: Monday, May 21, 2018 16:05
+
+[...]
+
+>>
+>>
+>> That may be true and I am not that bothered about it. But assuming physical
+>> ordering from the logical cpu number is *incorrect* and will break if kernel
+>> decides to change the allocation algorithm. Kernel provides no guarantee on
+>> that, so you need to depend on some physical ID or may be DT to achieve
+>> what your want. But the current code as it stands is wrong.
+> 
+> Got your point. In fact CPUs are numbered 0-3 and ordered into 2 clusters in the DT:
+> 
+> cpus {
+> 	#address-cells = <2>;
+> 	#size-cells = <0>;
+> 
+> 	CPU0: cpu@0 {
+> 		...
+> 		reg = <0x0 0x0>;
+> 		...
+> 	};
+> 
+> 	CPU1: cpu@1 {
+> 		...
+> 		reg = <0x0 0x1>;
+> 		...
+> 	};
+> 
+> 	CPU2: cpu@100 {
+> 		...
+> 		reg = <0x0 0x100>;
+> 		...
+> 	};
+> 
+> 	CPU3: cpu@101 {
+> 		...
+> 		reg = <0x0 0x101>;
+> 		...
+> 	};
+> 
+> 	cpu-map {
+> 		cluster0 {
+> 			core0 {
+> 				cpu = <&CPU0>;
+> 			};
+> 
+> 			core1 {
+> 				cpu = <&CPU1>;
+> 			};
+> 		};
+> 
+> 		cluster1 {
+> 			core0 {
+> 				cpu = <&CPU2>;
+> 			};
+> 
+> 			core1 {
+> 				cpu = <&CPU3>;
+> 			};
+> 		};
+> 	};
+> };
+> 
+> As far, as I understand, they are probed in the same order. 
+
+Yes that's correct today, will that have to remain same for ever ?
+No it's not user ABI and kernel can decide to change the allocation
+order. What if for some reason one/more CPUs fails to boot or even
+configured not to boot ?
+
+> However, to be certain that the physical CPU is the one I intend to
+> configure, I have to fetch the device structure pointer for the cpu-map ->
+> clusterX -> core0 -> cpu path. Could you suggest a kernel API to do
+> that?
+> 
+
+Let's rewind a bit. Do you supply OPPs only on CPU0 and CPU2 ?
+If yes, that's again wrong. Simple solution is to parse all logical
+CPUs and skip if the share OPPs with some other CPUs. I think that
+logic already exists in OPP library IIRC.
+
+-- 
+Regards,
+Sudeep
