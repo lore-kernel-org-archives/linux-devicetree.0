@@ -1,39 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] input: touchscreen: edt-ft5x06: don't make device
- a wakeup source by default
-Date: Tue, 22 May 2018 12:54:13 -0500
-Message-ID: <20180522175413.GA24850@rob-hp-laptop>
-References: <20180517090552.5704-1-daniel@zonque.org>
- <20180517090552.5704-2-daniel@zonque.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Tue, 22 May 2018 19:55:56 +0200
+Message-ID: <20180522195556.06de8745@bbrezillon>
+References: <cover.1526990589.git.stefan@agner.ch>
+        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+        <4e19315d0c44d3f9b7ffb63216f2c179@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180517090552.5704-2-daniel@zonque.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, kernel@pengutronix.de, linux-input@vger.kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4e19315d0c44d3f9b7ffb63216f2c179@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 11:05:50AM +0200, Daniel Mack wrote:
-> Allow configuring the device as wakeup source through device properties, as
-> not all platforms want to wake up on touch screen activity.
+Hi Stefan,
+
+On Tue, 22 May 2018 16:53:46 +0200
+Stefan Agner <stefan@agner.ch> wrote:
+
+> Hi,
 > 
-> The I2C core automatically reads the "wakeup-source" DT property to
-> configure a device's wakeup capability, and board supports files can set
-> I2C_CLIENT_WAKE in the flags.
+> I do have some questions for some areas I wanted to improve in the next
+> revision. But I would like to make sure that the way I would like to
+> implement aligns with the MTD subsystem.
 
-This will break wake-up on working systems. Looks like mostly i.MX, but 
-there's one AM437x board. If that board doesn't care, then it is up to 
-Shawn.
+I won't have time to review the driver this week. Will try to have a
+look next week.
 
-Rob
+Regards,
+
+Boris
