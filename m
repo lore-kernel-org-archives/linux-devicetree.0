@@ -1,122 +1,52 @@
-From: Zhangshaokun <zhangshaokun@hisilicon.com>
-Subject: Re: [PATCH] perf: hisi: fix uncore PMU index ID
-Date: Tue, 22 May 2018 17:18:51 +0800
-Message-ID: <a301d72f-687c-0c4f-1d44-83e5bbad5e60@hisilicon.com>
-References: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
- <20180521170554.GE21034@arm.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] cpufreq: Add Kryo CPU scaling driver
+Date: Tue, 22 May 2018 15:08:03 +0530
+Message-ID: <20180522093803.kfmfktdskumxyqbx@vireshk-i7>
+References: <1526555955-29960-11-git-send-email-ilialin@codeaurora.org>
+ <1526729701-8589-1-git-send-email-ilialin@codeaurora.org>
+ <153cc316-dcb5-972f-5a2f-c91fe0f6348b@arm.com>
+ <000f01d3f103$3ff78ba0$bfe6a2e0$@codeaurora.org>
+ <2ace10bc-e1c4-2060-94d3-eb71e966ffbe@arm.com>
+ <001401d3f1a2$c7328850$559798f0$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180521170554.GE21034@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Huiqiang Wang <wanghuiqiang@huawei.com>, linux-arm-kernel@lists.infradead.org, Linuxarm <linuxarm@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <001401d3f1a2$c7328850$559798f0$@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ilialin@codeaurora.org
+Cc: 'Sudeep Holla' <sudeep.holla@arm.com>, mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On 22-05-18, 10:59, ilialin@codeaurora.org wrote:
+> OK, I think I found out the way. Would this be correct?
+> -----------------------------------------------------------------------------------------------
+> extern struct cpu_topology cpu_topology[NR_CPUS];
+> 
+> static struct device *qcom_cpufreq_kryo_get_cluster_lead(int cluster)
+> {
+> 	unsigned cpu;
+> 
+> 	for_each_possible_cpu(cpu) {
+> 		if ((cluster == cpu_topology[cpu].cluster_id) &&
+> 			(0 == cpu_topology[cpu].core_id))
+> 			return get_cpu_device(cpu);
+> 	}
+> 
+> 	return NULL;
+> }
 
-Hi Will,
+Okay, this is what you should do IMHO.
 
-On 2018/5/22 1:05, Will Deacon wrote:
-> Hi Shaokun,
-> 
-> [+DT list]
-> 
-> On Mon, May 21, 2018 at 07:15:17PM +0800, Shaokun Zhang wrote:
->> According to ACPI SPEC about _UID (Unique ID), The _UID must be unique
->> across all devices with either a common _HID or _CID. For HiSilion
->> uncore PMU, SCCL_ID and INDEX_ID are used to identify the uncore PMU
->> for the same _HID. Therefore, _UID is not equal to INDEX_ID in
->> multi-sccl scene for the same uncore PMU device.
->>
->> CCL_ID can be used as the INDEX_ID for the L3C PMU and IDX-ID is added
->> in DSDT table for the HHA PMU.
->>
->> Fixes: 2940bc4("perf: hisi: Add support for HiSilicon SoC L3C PMU driver")
->> Fixes: 2bab3cf("perf: hisi: Add support for HiSilicon SoC HHA PMU driver")
->> Reported-by: Huiqiang Wang <wanghuiqiang@huawei.com>
->> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Huiqiang Wang <wanghuiqiang@huawei.com>
->> ---
->>  drivers/perf/hisilicon/hisi_uncore_hha_pmu.c | 18 ++++++++----------
->>  drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c | 11 ++---------
->>  2 files changed, 10 insertions(+), 19 deletions(-)
-> 
-> Whilst I'd normally just accept PMU driver submissions for vendor PMUs,
-> this part rang my alarm bells:
-> 
->> diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
->> index 443906e..dcd8e77 100644
->> --- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
->> +++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
->> @@ -238,19 +238,10 @@ MODULE_DEVICE_TABLE(acpi, hisi_hha_pmu_acpi_match);
->>  static int hisi_hha_pmu_init_data(struct platform_device *pdev,
->>  				  struct hisi_pmu *hha_pmu)
->>  {
->> -	unsigned long long id;
->>  	struct resource *res;
->> -	acpi_status status;
->> -
->> -	status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
->> -				       "_UID", NULL, &id);
->> -	if (ACPI_FAILURE(status))
->> -		return -EINVAL;
->> -
->> -	hha_pmu->index_id = id;
->>  
->>  	/*
->> -	 * Use SCCL_ID and UID to identify the HHA PMU, while
->> +	 * Use SCCL_ID and HHA index ID to identify the HHA PMU, while
->>  	 * SCCL_ID is in MPIDR[aff2].
->>  	 */
->>  	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
->> @@ -258,6 +249,13 @@ static int hisi_hha_pmu_init_data(struct platform_device *pdev,
->>  		dev_err(&pdev->dev, "Can not read hha sccl-id!\n");
->>  		return -EINVAL;
->>  	}
->> +
->> +	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
->> +				     &hha_pmu->index_id)) {
->> +		dev_err(&pdev->dev, "Can not read hha index-id!\n");
->> +		return -EINVAL;
->> +	}
-> 
-> Is this a new DT property? If so, please can you update the binding
-> documentation and get an Ack from a DT maintainer? It's not clear to me
+for_each_possible_cpu(cpu) {
+        cpu_dev = xxx..
+        ret = dev_pm_opp_set_supported_hw(cpu_dev, xxx, xxx);
+        if (ret && ret != -EBUSY)
+                error-out.
+}
 
-No, it is not a DT property. We don't support DT mode for this platform and
-only support ACPI mode.
+This would require a trivial patch for the OPP core to not throw an
+error message with -EBUSY. I can do that separately.
 
-> what a "hisilicon,idx-id" is, nor how I would generate on from firmware.
-> 
-
-For HiSilicon this platform, it supports multi-sccl. each sccl has more than one uncore
-PMUs. Like HHA uncore PMUs, each sccl has 2-HHA PMUs and idx-id is in _DSD package and
-used to distinguish different HHA PMUs with the same sccl, as follow:
-    Name (_DSD, Package () {
-      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-      Package () {
-        Package () {"hisilicon,scl-id", 0x03},
-        Package () {"hisilicon,idx-id", 0x00},
-      }
-    })
-
-Thanks,
-Shaokun
-
-> Thanks,
-> 
-> Will
-> 
-> .
-> 
+-- 
+viresh
