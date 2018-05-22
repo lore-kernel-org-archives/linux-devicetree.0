@@ -1,50 +1,115 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 8/8] arm64: tegra: Mark tcu as primary serial port on
- Tegra194 P2888
-Date: Tue, 22 May 2018 17:29:13 +0100
-Message-ID: <d7b65d6d-c415-ac49-d729-9c6b44feb8c6@nvidia.com>
-References: <20180508114403.14499-1-mperttunen@nvidia.com>
- <20180508114403.14499-9-mperttunen@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: pinctrl: qcom: add gpio-ranges,
+ gpio-reserved-ranges
+Date: Tue, 22 May 2018 11:29:46 -0500
+Message-ID: <20180522162946.GA25556@rob-hp-laptop>
+References: <910e5a85a6a8020069996e2ff397c93e9c5fe18c.1526935804.git.chunkeey@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180508114403.14499-9-mperttunen@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <mperttunen@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com, gregkh@linuxfoundation.org, thierry.reding@gmail.com
-Cc: araza@nvidia.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <910e5a85a6a8020069996e2ff397c93e9c5fe18c.1526935804.git.chunkeey@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christian Lamparter <chunkeey@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, Sven Eckelmann <sven.eckelmann@openmesh.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 08/05/18 12:44, Mikko Perttunen wrote:
-> The Tegra Combined UART is the proper primary serial port on P2888,
-> so use it.
+On Mon, May 21, 2018 at 10:57:36PM +0200, Christian Lamparter wrote:
+> This patch adds the gpio-ranges and gpio-reserved-ranges property
+> definitions to the binding text files supported by the pinctrl-msm
+> driver framework.
 > 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> gpio-ranges:
+> For DT-based platforms the pinctrl-msm framework currently relies
+> on the deprecated-for-DT gpiochip_add_pin_range() function to add
+> the range of GPIOs to be handled by the pin controller. Due to
+> interactions within gpiolib code, this causes the pinctrl-msm
+> driver to bail out (-517) during boot when a gpio-hog is declared.
+> This can be fatal and cause the system to not boot or reset
+> (for a detailed explanation and call-trace, refer to patch:
+> "pinctrl: msm: fix gpio-hog related boot issues" in this series).
+> 
+> gpio-reserved-ranges:
+> The binding has been added as a precaution since the TrustZone
+> firmware (aka QSEE), which is running as the hypervisor, might
+> have reserved certain, but undisclosed pins. Hence reading or
+> writing to the registers for those pins will cause an
+> XPU violation and this subsequently crashes the kernel.
+> 
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 > ---
->   arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/pinctrl/qcom,apq8064-pinctrl.txt         |  6 ++++++
+>  .../bindings/pinctrl/qcom,apq8084-pinctrl.txt         | 11 +++++++++++
+>  .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt         |  6 ++++++
+>  .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt         |  6 ++++++
+>  .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt         | 10 ++++++++++
+>  .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt         | 11 +++++++++++
+>  .../bindings/pinctrl/qcom,msm8660-pinctrl.txt         |  6 ++++++
+>  .../bindings/pinctrl/qcom,msm8916-pinctrl.txt         | 11 +++++++++++
+>  .../bindings/pinctrl/qcom,msm8960-pinctrl.txt         | 11 +++++++++++
+>  .../bindings/pinctrl/qcom,msm8974-pinctrl.txt         |  6 ++++++
+>  .../bindings/pinctrl/qcom,msm8994-pinctrl.txt         | 11 +++++++++++
+>  .../bindings/pinctrl/qcom,msm8996-pinctrl.txt         | 11 +++++++++++
+>  12 files changed, 106 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> index 859ab5af17c1..95e2433984f7 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> @@ -10,7 +10,7 @@
->   	aliases {
->   		sdhci0 = "/cbb/sdhci@3460000";
->   		sdhci1 = "/cbb/sdhci@3400000";
-> -		serial0 = &uartb;
-> +		serial0 = &tcu;
->   		i2c0 = "/bpmp/i2c";
->   		i2c1 = "/cbb/i2c@3160000";
->   		i2c2 = "/cbb/i2c@c240000";
-> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+> index a752a4716486..7f78c6bb4e35 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+> @@ -10,6 +10,11 @@ Required properties:
+>  - #gpio-cells : Should be two.
+>                  The first cell is the gpio pin number and the
+>                  second cell is used for optional parameters.
+> +- gpio-ranges: Range of pins managed by the GPIO controller.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Just 'see gpio.txt' is sufficient unless you can say how many entries.
 
-Cheers
-Jon
+> +
+> +Optional properties:
+> +
+> +- gpio-reserved-ranges: Range of pins reserved by the TrustZone TEE.
 
--- 
-nvpublic
+ditto.
+
+>  
+>  Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+>  a general description of GPIO and interrupt bindings.
+> @@ -67,6 +72,7 @@ Example:
+>  
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&gsbi5_uart_default>;
+> +		gpio-ranges = <&msmgpio 0 0 90>;
+>  
+>  		gsbi5_uart_default: gsbi5_uart_default {
+>  			mux {
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+> index c4ea61ac56f2..362f32b945af 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+> @@ -40,6 +40,16 @@ MSM8960 platform.
+>  	Definition: must be 2. Specifying the pin number and flags, as defined
+>  		    in <dt-bindings/gpio/gpio.h>
+>  
+> +- gpio-ranges:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+
+But this is phandle with 3 cells.
+
+Still, you don't need to redefine standard properties here. Just need to 
+know optional vs. required and any constraints you can define (e.g. 
+allowed values, number of values, etc.)
+
+
+Same comments apply to the rest.
+
+Rob
