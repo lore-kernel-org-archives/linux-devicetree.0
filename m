@@ -1,90 +1,76 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v4 3/4] usb: gadget: udc: renesas_usb3: use usb role switch API
-Date: Tue, 22 May 2018 21:01:08 +0900
-Message-Id: <1526990469-20739-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751269AbeEVRVc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 May 2018 13:21:32 -0400
+Date: Tue, 22 May 2018 18:21:28 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 1/2] iio: dac: fix missing of_match_table assignment
+ in the LTC 2632 device
+Message-ID: <20180522182128.3770f50c@archlinux>
+In-Reply-To: <1526905288-28668-2-git-send-email-silvan.murer@gmail.com>
+References: <1526905288-28668-1-git-send-email-silvan.murer@gmail.com>
+        <1526905288-28668-2-git-send-email-silvan.murer@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Silvan Murer <silvan.murer@gmail.com>
+Cc: lars@metafoo.de, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch uses usb role switch APIs if the register suceeeded.
+On Mon, 21 May 2018 14:21:27 +0200
+Silvan Murer <silvan.murer@gmail.com> wrote:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/gadget/udc/renesas_usb3.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+> Signed-off-by: Silvan Murer <silvan.murer@gmail.com>
+> Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
 
-diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index 9667a5e..d6c11c9 100644
---- a/drivers/usb/gadget/udc/renesas_usb3.c
-+++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -338,6 +338,8 @@ struct renesas_usb3 {
- 
- 	struct usb_role_switch *role_sw;
- 	struct device *host_dev;
-+	struct work_struct role_work;
-+	enum usb_role role;
- 
- 	struct renesas_usb3_ep *usb3_ep;
- 	int num_usb3_eps;
-@@ -655,7 +657,15 @@ static void usb3_check_vbus(struct renesas_usb3 *usb3)
- 	}
- }
- 
--static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
-+static void renesas_usb3_role_work(struct work_struct *work)
-+{
-+	struct renesas_usb3 *usb3 = container_of(work, struct renesas_usb3,
-+						 role_work);
-+
-+	usb_role_switch_set_role(usb3->role_sw, usb3->role);
-+}
-+
-+static void _usb3_set_mode(struct renesas_usb3 *usb3, bool host)
- {
- 	if (host)
- 		usb3_clear_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
-@@ -663,6 +673,16 @@ static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
- 		usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
- }
- 
-+static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
-+{
-+	if (usb3->role_sw) {
-+		usb3->role = host ? USB_ROLE_HOST : USB_ROLE_DEVICE;
-+		schedule_work(&usb3->role_work);
-+	} else {
-+		_usb3_set_mode(usb3, host);
-+	}
-+}
-+
- static void usb3_vbus_out(struct renesas_usb3 *usb3, bool enable)
- {
- 	if (enable)
-@@ -2328,10 +2348,10 @@ static int renesas_usb3_role_switch_set(struct device *dev,
- 	pm_runtime_get_sync(dev);
- 	if (cur_role == USB_ROLE_HOST && role == USB_ROLE_DEVICE) {
- 		device_release_driver(host);
--		usb3_set_mode(usb3, false);
-+		_usb3_set_mode(usb3, false);
- 	} else if (cur_role == USB_ROLE_DEVICE && role == USB_ROLE_HOST) {
- 		/* Must set the mode before device_attach of the host */
--		usb3_set_mode(usb3, true);
-+		_usb3_set_mode(usb3, true);
- 		/* This device_attach() might sleep */
- 		if (device_attach(host) < 0)
- 			dev_err(dev, "device_attach(usb3_port) failed\n");
-@@ -2726,6 +2746,7 @@ static int renesas_usb3_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_dev_create;
- 
-+	INIT_WORK(&usb3->role_work, renesas_usb3_role_work);
- 	usb3->role_sw = usb_role_switch_register(&pdev->dev,
- 					&renesas_usb3_role_switch_desc);
- 	if (!IS_ERR(usb3->role_sw)) {
--- 
-1.9.1
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/dac/ltc2632.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
+> index ac5e05f..d322b78 100644
+> --- a/drivers/iio/dac/ltc2632.c
+> +++ b/drivers/iio/dac/ltc2632.c
+> @@ -276,15 +276,6 @@ static const struct spi_device_id ltc2632_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(spi, ltc2632_id);
+>  
+> -static struct spi_driver ltc2632_driver = {
+> -	.driver		= {
+> -		.name	= "ltc2632",
+> -	},
+> -	.probe		= ltc2632_probe,
+> -	.id_table	= ltc2632_id,
+> -};
+> -module_spi_driver(ltc2632_driver);
+> -
+>  static const struct of_device_id ltc2632_of_match[] = {
+>  	{
+>  		.compatible = "lltc,ltc2632-l12",
+> @@ -309,6 +300,16 @@ static const struct of_device_id ltc2632_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, ltc2632_of_match);
+>  
+> +static struct spi_driver ltc2632_driver = {
+> +	.driver		= {
+> +		.name	= "ltc2632",
+> +		.of_match_table = of_match_ptr(ltc2632_of_match),
+> +	},
+> +	.probe		= ltc2632_probe,
+> +	.id_table	= ltc2632_id,
+> +};
+> +module_spi_driver(ltc2632_driver);
+> +
+>  MODULE_AUTHOR("Maxime Roussin-Belanger <maxime.roussinbelanger@gmail.com>");
+>  MODULE_DESCRIPTION("LTC2632 DAC SPI driver");
+>  MODULE_LICENSE("GPL v2");
+
