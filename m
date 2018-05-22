@@ -1,68 +1,118 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 06/16] irqchip/irq-mvebu-icu: make irq_domain local
-Date: Tue, 22 May 2018 11:40:32 +0200
-Message-ID: <20180522094042.24770-7-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 07/16] irqchip/irq-mvebu-icu: disociate ICU and NSR
+Date: Tue, 22 May 2018 11:40:33 +0200
+Message-ID: <20180522094042.24770-8-miquel.raynal@bootlin.com>
 References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180522094042.24770-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Make the current MSI irq_domain local to ease the split between ICU
-platform device code and NSR platform device code.
+NSR (non-secure interrupts) are handled in the ICU driver like if there
+was only this type of interrupt in the ICU. Change this behavior to
+prepare the introduction of SEI (System Error Interrupts) support by
+moving the NSR code in a separate function. This is done under the form
+of a 'probe' function to ease future migration to NSR/SEI being platform
+devices part of the ICU.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- drivers/irqchip/irq-mvebu-icu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-mvebu-icu.c | 58 +++++++++++++++++++++++------------------
+ 1 file changed, 33 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index 3694c0d73c0d..607948870a14 100644
+index 607948870a14..24d45186eb6b 100644
 --- a/drivers/irqchip/irq-mvebu-icu.c
 +++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -41,7 +41,6 @@
- struct mvebu_icu {
- 	struct irq_chip irq_chip;
- 	struct regmap *regmap;
--	struct irq_domain *domain;
- 	struct device *dev;
- 	atomic_t initialized;
+@@ -205,6 +205,37 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
+ 	.free      = mvebu_icu_irq_domain_free,
  };
-@@ -218,6 +217,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
- 	struct mvebu_icu *icu;
- 	struct device_node *node = pdev->dev.of_node;
- 	struct device_node *gicp_dn;
+ 
++static int mvebu_icu_subset_probe(struct platform_device *pdev)
++{
++	struct device_node *msi_parent_dn;
 +	struct irq_domain *irq_domain;
++	struct mvebu_icu *icu;
++
++	icu = dev_get_drvdata(&pdev->dev);
++	if (!icu)
++		return -ENODEV;
++
++	pdev->dev.msi_domain = of_msi_get_domain(&pdev->dev, pdev->dev.of_node,
++						 DOMAIN_BUS_PLATFORM_MSI);
++	if (!pdev->dev.msi_domain)
++		return -EPROBE_DEFER;
++
++	msi_parent_dn = irq_domain_get_of_node(pdev->dev.msi_domain);
++	if (!msi_parent_dn)
++		return -ENODEV;
++
++	irq_domain = platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
++						       mvebu_icu_write_msg,
++						       &mvebu_icu_domain_ops,
++						       icu);
++	if (!irq_domain) {
++		dev_err(&pdev->dev, "Failed to create ICU MSI domain\n");
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
+ static struct regmap_config mvebu_icu_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+@@ -215,9 +246,6 @@ static struct regmap_config mvebu_icu_regmap_config = {
+ static int mvebu_icu_probe(struct platform_device *pdev)
+ {
+ 	struct mvebu_icu *icu;
+-	struct device_node *node = pdev->dev.of_node;
+-	struct device_node *gicp_dn;
+-	struct irq_domain *irq_domain;
  	struct resource *res;
  	void __iomem *regs;
  	int i;
-@@ -282,11 +282,11 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+@@ -255,19 +283,6 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+ 	icu->irq_chip.irq_set_affinity = irq_chip_set_affinity_parent;
+ #endif
+ 
+-	/*
+-	 * We're probed after MSI domains have been resolved, so force
+-	 * resolution here.
+-	 */
+-	pdev->dev.msi_domain = of_msi_get_domain(&pdev->dev, node,
+-						 DOMAIN_BUS_PLATFORM_MSI);
+-	if (!pdev->dev.msi_domain)
+-		return -EPROBE_DEFER;
+-
+-	gicp_dn = irq_domain_get_of_node(pdev->dev.msi_domain);
+-	if (!gicp_dn)
+-		return -ENODEV;
+-
+ 	/*
+ 	 * Clean all ICU interrupts with type SPI_NSR, required to
+ 	 * avoid unpredictable SPI assignments done by firmware.
+@@ -282,16 +297,9 @@ static int mvebu_icu_probe(struct platform_device *pdev)
  			regmap_write(icu->regmap, ICU_INT_CFG(i), 0);
  	}
  
--	icu->domain =
-+	irq_domain =
- 		platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
- 						  mvebu_icu_write_msg,
- 						  &mvebu_icu_domain_ops, icu);
--	if (!icu->domain) {
-+	if (!irq_domain) {
- 		dev_err(&pdev->dev, "Failed to create ICU domain\n");
- 		return -ENOMEM;
- 	}
+-	irq_domain =
+-		platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
+-						  mvebu_icu_write_msg,
+-						  &mvebu_icu_domain_ops, icu);
+-	if (!irq_domain) {
+-		dev_err(&pdev->dev, "Failed to create ICU domain\n");
+-		return -ENOMEM;
+-	}
++	platform_set_drvdata(pdev, icu);
+ 
+-	return 0;
++	return mvebu_icu_subset_probe(pdev);
+ }
+ 
+ static const struct of_device_id mvebu_icu_of_match[] = {
 -- 
 2.14.1
