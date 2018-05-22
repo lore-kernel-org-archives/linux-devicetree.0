@@ -1,92 +1,66 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 2/2] drivers: soc: Add LLCC driver
-Date: Tue, 22 May 2018 23:46:07 +0300
-Message-ID: <CAHp75VdmUrSo+Vu3CebEWwc=CbsnS95ZzGC3zv1+zd5MsVgdUA@mail.gmail.com>
-References: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org>
- <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
- <CAHp75VdO7+u-PQ+RBH71sxHHG0WkAyEVxv0BNPaycbcRnrZang@mail.gmail.com>
- <f1970a64be17267e0f044242dc0764d6@codeaurora.org> <CAHp75Vd8HZU+BT38-OfXHiihv1yZG6YBeMWyfweBA+kAwk6HUw@mail.gmail.com>
- <19968f96da0c548dd7d96e7520ce899e@codeaurora.org>
+From: Michal <vokac.m@gmail.com>
+Subject: Re: [PATCH net-next v2 1/7] net: dsa: qca8k: Add QCA8334 binding
+ documentation
+Date: Tue, 22 May 2018 22:50:11 +0200
+Message-ID: <67783b3a-e7df-2b22-eba5-a86e5de22c32@gmail.com>
+References: <1526987792-56861-1-git-send-email-michal.vokac@ysoft.com>
+ <1526987792-56861-2-git-send-email-michal.vokac@ysoft.com>
+ <20180522194039.GA15413@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <19968f96da0c548dd7d96e7520ce899e@codeaurora.org>
+In-Reply-To: <20180522194039.GA15413@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, davem@davemloft.net, michal.vokac@ysoft.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 11:40 PM,  <rishabhb@codeaurora.org> wrote:
-> On 2018-05-22 12:38, Andy Shevchenko wrote:
->> On Tue, May 22, 2018 at 9:33 PM,  <rishabhb@codeaurora.org> wrote:
->>> On 2018-05-18 14:01, Andy Shevchenko wrote:
-
->>>>> +struct llcc_slice_desc *llcc_slice_getd(u32 uid)
->>>>> +{
->>>>> +       const struct llcc_slice_config *cfg;
->>>>> +       struct llcc_slice_desc *desc;
->>>>> +       u32 sz, count = 0;
->>>>> +
->>>>> +       cfg = drv_data->cfg;
->>>>> +       sz = drv_data->cfg_size;
->>>>> +
->>>>
->>>>
->>>>
->>>>> +       while (cfg && count < sz) {
->>>>> +               if (cfg->usecase_id == uid)
->>>>> +                       break;
->>>>> +               cfg++;
->>>>> +               count++;
->>>>> +       }
->>>>> +       if (cfg == NULL || count == sz)
->>>>> +               return ERR_PTR(-ENODEV);
-
->>>> if (!cfg)
->>>>           return ERR_PTR(-ENODEV);
->>>>
->>>> while (cfg->... != uid) {
->>>>   cfg++;
->>>>   count++;
->>>> }
->>>>
->>>> if (count == sz)
->>>>  return ...
->>>>
->>>> Though I would rather put it to for () loop.
->>>>
->>> In each while loop iteration the cfg pointer needs to be checked for
->>> NULL. What if the usecase id never matches the uid passed by client
->>> and we keep iterating. At some point it will crash.
-
->> do {
->>   if (!cfg || count == sz)
->>    return ...(-ENODEV);
->>  ...
->> } while (...);
+On 22.5.2018 21:40, Rob Herring wrote:
+> On Tue, May 22, 2018 at 01:16:26PM +0200, Michal Vokáč wrote:
+>> Add support for the four-port variant of the Qualcomm QCA833x switch.
 >>
->> Though, as I said for-loop will look slightly better I think.
->
-> Is this fine?
-> for (count = 0; count < sz; count++) {
->    if (!cfg)
->         return ERR_PTR(-ENODEV);
->    if (cfg->usecase_id == uid)
->         break;
->    cfg++;
-> }
-> if (count == sz)
->    return ERR_PTR(-ENODEV);
+>> The CPU port default link settings can be reconfigured using
+>> a fixed-link sub-node.
+>>
+>> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+>> ---
+>> Changes in v2:
+>>   - Add commit message and document fixed-link binding.
+>>
+>>   .../devicetree/bindings/net/dsa/qca8k.txt          | 23 +++++++++++++++++++++-
+>>   1 file changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>> index 9c67ee4..15b9057 100644
+>> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+>> @@ -2,7 +2,10 @@
+>>   
+>>   Required properties:
+>>   
+>> -- compatible: should be "qca,qca8337"
+>> +- compatible: should be one of:
+>> +    "qca,qca8334"
+>> +    "qca,qca8337"
+>> +
+>>   - #size-cells: must be 0
+>>   - #address-cells: must be 1
+>>   
+>> @@ -14,6 +17,20 @@ port and PHY id, each subnode describing a port needs to have a valid phandle
+>>   referencing the internal PHY connected to it. The CPU port of this switch is
+>>   always port 0.
+>>   
+>> +A CPU port node has the following optional property:
+> 
+> s/property/node/
+> 
+> Otherwise,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-for (count = 0; cfg && count < sz; count++, cfg++)
- if (_id == uid)
-  break;
+Good catch, I will correct this.
+Thanks for the review Rob.
 
-if (!cfg || count == sz)
-    return ERR_PTR(-ENODEV);
-
-Simpler ?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Michal
