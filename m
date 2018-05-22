@@ -1,145 +1,107 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 1/2] soc: renesas: rcar-sysc: Add support for R-Car E3 power areas
-Date: Tue, 15 May 2018 21:07:38 +0900
-Message-Id: <1526386059-6173-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1526386059-6173-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1526386059-6173-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:7232
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751199AbeEVOUB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 May 2018 10:20:01 -0400
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 05/14] usb: typec: add API to get typec basic port
+ power and data config
+Date: Tue, 22 May 2018 14:19:56 +0000
+Message-ID: <VI1PR0402MB39179B4AD2674158CF7EABCC89940@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1525307094-27402-6-git-send-email-jun.li@nxp.com>
+ <c28a8352-e960-449b-e7c1-7965d340536e@gmail.com>
+ <VI1PR0402MB3917CE86B45CBC1B6F7F576B899C0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <74e1c164-1652-75f4-409c-bd1c214bda4d@gmail.com>
+ <20180516122527.GC11469@kuha.fi.intel.com>
+ <33d02e76-bdf2-be50-68ec-9d520acdbe82@gmail.com>
+ <20180517123506.GF11469@kuha.fi.intel.com>
+ <VI1PR0402MB39179F63BCF3E605443D877389910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <20180517142420.GH11469@kuha.fi.intel.com>
+ <VI1PR0402MB3917F929BBD8C79966B0D7F089910@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+ <20180521131239.GB10677@kuha.fi.intel.com>
+In-Reply-To: <20180521131239.GB10677@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mats Karrman <mats.dev.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-
-This patch adds Cortex-A53 CPU{0,1}, Cortex-A53 SCU, Cortex-R7, A3VC,
-A2VC1 and 3DG-{A,B} power domain areas for the R8A77990 SoC.
-
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-[shimoda: fix 3DG-{A,B} and add SPDX-License-Identifier]
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- .../bindings/power/renesas,rcar-sysc.txt           |  1 +
- drivers/soc/renesas/Kconfig                        |  5 ++++
- drivers/soc/renesas/Makefile                       |  1 +
- drivers/soc/renesas/r8a77990-sysc.c                | 33 ++++++++++++++++++++++
- drivers/soc/renesas/rcar-sysc.c                    |  3 ++
- drivers/soc/renesas/rcar-sysc.h                    |  1 +
- 6 files changed, 44 insertions(+)
- create mode 100644 drivers/soc/renesas/r8a77990-sysc.c
-
-diff --git a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-index 3e91d20..180ae65 100644
---- a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-+++ b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
-@@ -21,6 +21,7 @@ Required properties:
-       - "renesas,r8a77965-sysc" (R-Car M3-N)
-       - "renesas,r8a77970-sysc" (R-Car V3M)
-       - "renesas,r8a77980-sysc" (R-Car V3H)
-+      - "renesas,r8a77990-sysc" (R-Car E3)
-       - "renesas,r8a77995-sysc" (R-Car D3)
-   - reg: Address start and address range for the device.
-   - #power-domain-cells: Must be 1.
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index c0e0286..1d824cb 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -19,6 +19,7 @@ config SOC_RENESAS
- 	select SYSC_R8A77965 if ARCH_R8A77965
- 	select SYSC_R8A77970 if ARCH_R8A77970
- 	select SYSC_R8A77980 if ARCH_R8A77980
-+	select SYSC_R8A77990 if ARCH_R8A77990
- 	select SYSC_R8A77995 if ARCH_R8A77995
- 
- if SOC_RENESAS
-@@ -76,6 +77,10 @@ config SYSC_R8A77980
- 	bool "R-Car V3H System Controller support" if COMPILE_TEST
- 	select SYSC_RCAR
- 
-+config SYSC_R8A77990
-+	bool "R-Car E3 System Controller support" if COMPILE_TEST
-+	select SYSC_RCAR
-+
- config SYSC_R8A77995
- 	bool "R-Car D3 System Controller support" if COMPILE_TEST
- 	select SYSC_RCAR
-diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
-index a86ece7..7dc0f20 100644
---- a/drivers/soc/renesas/Makefile
-+++ b/drivers/soc/renesas/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_SYSC_R8A7796)	+= r8a7796-sysc.o
- obj-$(CONFIG_SYSC_R8A77965)	+= r8a77965-sysc.o
- obj-$(CONFIG_SYSC_R8A77970)	+= r8a77970-sysc.o
- obj-$(CONFIG_SYSC_R8A77980)	+= r8a77980-sysc.o
-+obj-$(CONFIG_SYSC_R8A77990)	+= r8a77990-sysc.o
- obj-$(CONFIG_SYSC_R8A77995)	+= r8a77995-sysc.o
- 
- # Family
-diff --git a/drivers/soc/renesas/r8a77990-sysc.c b/drivers/soc/renesas/r8a77990-sysc.c
-new file mode 100644
-index 0000000..a8c6417
---- /dev/null
-+++ b/drivers/soc/renesas/r8a77990-sysc.c
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas R-Car E3 System Controller
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+#include <linux/bug.h>
-+#include <linux/kernel.h>
-+
-+#include <dt-bindings/power/r8a77990-sysc.h>
-+
-+#include "rcar-sysc.h"
-+
-+static const struct rcar_sysc_area r8a77990_areas[] __initconst = {
-+	{ "always-on",	    0, 0, R8A77990_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
-+	{ "ca53-scu",	0x140, 0, R8A77990_PD_CA53_SCU,  R8A77990_PD_ALWAYS_ON,
-+	  PD_SCU },
-+	{ "ca53-cpu0",	0x200, 0, R8A77990_PD_CA53_CPU0, R8A77990_PD_CA53_SCU,
-+	  PD_CPU_NOCR },
-+	{ "ca53-cpu1",	0x200, 1, R8A77990_PD_CA53_CPU1, R8A77990_PD_CA53_SCU,
-+	  PD_CPU_NOCR },
-+	{ "cr7",	0x240, 0, R8A77990_PD_CR7,	R8A77990_PD_ALWAYS_ON },
-+	{ "a3vc",	0x380, 0, R8A77990_PD_A3VC,	R8A77990_PD_ALWAYS_ON },
-+	{ "a2vc1",	0x3c0, 1, R8A77990_PD_A2VC1,	R8A77990_PD_A3VC },
-+	{ "3dg-a",	0x100, 0, R8A77990_PD_3DG_A,	R8A77990_PD_ALWAYS_ON },
-+	{ "3dg-b",	0x100, 1, R8A77990_PD_3DG_B,	R8A77990_PD_3DG_A },
-+};
-+
-+const struct rcar_sysc_info r8a77990_sysc_info __initconst = {
-+	.areas = r8a77990_areas,
-+	.num_areas = ARRAY_SIZE(r8a77990_areas),
-+};
-diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
-index 99203bd..95120ac 100644
---- a/drivers/soc/renesas/rcar-sysc.c
-+++ b/drivers/soc/renesas/rcar-sysc.c
-@@ -296,6 +296,9 @@ static void __init rcar_sysc_pd_setup(struct rcar_sysc_pd *pd)
- #ifdef CONFIG_SYSC_R8A77980
- 	{ .compatible = "renesas,r8a77980-sysc", .data = &r8a77980_sysc_info },
- #endif
-+#ifdef CONFIG_SYSC_R8A77990
-+	{ .compatible = "renesas,r8a77990-sysc", .data = &r8a77990_sysc_info },
-+#endif
- #ifdef CONFIG_SYSC_R8A77995
- 	{ .compatible = "renesas,r8a77995-sysc", .data = &r8a77995_sysc_info },
- #endif
-diff --git a/drivers/soc/renesas/rcar-sysc.h b/drivers/soc/renesas/rcar-sysc.h
-index 9b24e3a..a22e7cf 100644
---- a/drivers/soc/renesas/rcar-sysc.h
-+++ b/drivers/soc/renesas/rcar-sysc.h
-@@ -62,6 +62,7 @@ struct rcar_sysc_info {
- extern const struct rcar_sysc_info r8a77965_sysc_info;
- extern const struct rcar_sysc_info r8a77970_sysc_info;
- extern const struct rcar_sysc_info r8a77980_sysc_info;
-+extern const struct rcar_sysc_info r8a77990_sysc_info;
- extern const struct rcar_sysc_info r8a77995_sysc_info;
- 
- 
--- 
-1.9.1
+SGkgSGVpa2tpLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEhlaWtr
+aSBLcm9nZXJ1cyBbbWFpbHRvOmhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb21dDQo+IFNl
+bnQ6IDIwMTjE6jXUwjIxyNUgMjE6MTMNCj4gVG86IEp1biBMaSA8anVuLmxpQG54cC5jb20+DQo+
+IENjOiBNYXRzIEthcnJtYW4gPG1hdHMuZGV2Lmxpc3RAZ21haWwuY29tPjsgcm9iaCtkdEBrZXJu
+ZWwub3JnOw0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgbGludXhAcm9lY2stdXMubmV0
+OyBhLmhhamRhQHNhbXN1bmcuY29tOw0KPiBjdzAwLmNob2lAc2Ftc3VuZy5jb207IHNodWZhbl9s
+ZWVAcmljaHRlay5jb207IFBldGVyIENoZW4NCj4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGdzb21s
+b0BnbWFpbC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC11c2JAdmdl
+ci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIIHY1IDA1LzE0XSB1c2I6IHR5cGVjOiBhZGQgQVBJIHRvIGdldCB0eXBlYyBi
+YXNpYyBwb3J0IHBvd2VyDQo+IGFuZCBkYXRhIGNvbmZpZw0KPiANCj4gSGkgSnVuLA0KPiANCj4g
+U29ycnkgZm9yIHRoZSBkZWxheS4NCj4gDQo+IE9uIFRodSwgTWF5IDE3LCAyMDE4IGF0IDAyOjQx
+OjMxUE0gKzAwMDAsIEp1biBMaSB3cm90ZToNCj4gPiBIaQ0KPiA+ID4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEhlaWtraSBLcm9nZXJ1cyBbbWFpbHRvOmhlaWtraS5r
+cm9nZXJ1c0BsaW51eC5pbnRlbC5jb21dDQo+ID4gPiBTZW50OiAyMDE4Pz81Pz8xNz8/IDIyOjI0
+DQo+ID4gPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiA+IENjOiBNYXRzIEthcnJt
+YW4gPG1hdHMuZGV2Lmxpc3RAZ21haWwuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+ID4g
+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGxpbnV4QHJvZWNrLXVzLm5ldDsgYS5oYWpkYUBz
+YW1zdW5nLmNvbTsNCj4gPiA+IGN3MDAuY2hvaUBzYW1zdW5nLmNvbTsgc2h1ZmFuX2xlZUByaWNo
+dGVrLmNvbTsgUGV0ZXIgQ2hlbg0KPiA+ID4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGdzb21sb0Bn
+bWFpbC5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtdXNiQHZn
+ZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMDUvMTRdIHVzYjogdHlwZWM6IGFkZCBBUEkgdG8gZ2V0IHR5
+cGVjIGJhc2ljDQo+ID4gPiBwb3J0IHBvd2VyIGFuZCBkYXRhIGNvbmZpZw0KPiA+ID4NCj4gPiA+
+IE9uIFRodSwgTWF5IDE3LCAyMDE4IGF0IDAyOjA1OjQxUE0gKzAwMDAsIEp1biBMaSB3cm90ZToN
+Cj4gPiA+ID4gSGkgSGVpa2tpLA0KPiA+ID4gPg0KPiA+ID4gPiA+ID4gSSByZXJlYWQgdGhpcyBw
+YXRjaCBhbmQgdHJpZWQgdG8gc2VlIGl0IG1vcmUgaW4gdGhlIGNvbnRleHQgb2YNCj4gPiA+ID4g
+PiA+IHRoZSBvdGhlciBwYXRjaGVzIGFuZCB0aGUgZXhpc3RpbmcgY29kZS4gVGhlIG5hbWluZyBv
+ZiB0aGUNCj4gPiA+ID4gPiA+IGV4aXN0aW5nIHN0cmluZyB0YWJsZXMgZG9lc24ndCBoZWxwIGlu
+IGdldHRpbmcgdGhpcyByaWdodCwgaG93ZXZlciBJIGhhdmUNCj4gYSBwcm9wb3NhbDoNCj4gPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gPiB0eXBlY19maW5kX3BvcnRfcG93ZXJfcm9sZSgpIHRvIGdldCB0
+byBUWVBFQ19QT1JUX1NSQy9TTksvRFJQDQo+ID4gPiA+ID4gPiB0eXBlY19maW5kX3BvcnRfZGF0
+YV9yb2xlKCkgdG8gZ2V0IHRvIFRZUEVDX1BPUlRfREZQL1VGUC9EUkQNCj4gPiA+ID4gPiA+IHR5
+cGVjX2ZpbmRfcG93ZXJfcm9sZSgpIHRvIGdldCB0byBUWVBFQ19TSU5LL1NPVVJDRQ0KPiA+ID4g
+PiA+ID4NCj4gPiA+ID4gPiA+IGFuZCBzb21ldGltZSwgaWYgdGhlIHVzZSBzaG91bGQgYXJpc2UN
+Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiB0eXBlY19maW5kX2RhdGFfcm9sZSgpIHRvIGdldCB0
+byBUWVBFQ19ERVZJQ0UvSE9TVA0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IEkgdGhpbmsgaXQg
+aXMgZmFpcmx5IGNvbXByZWhlbnNpYmxlLCAqX3BvcnRfKiBjb25jZXJucyBhDQo+ID4gPiA+ID4g
+PiBjYXBhYmlsaXR5IGFuZCB3aXRob3V0ICpfcG9ydF8qIGl0IGlzIGFuIGFjdHVhbCBzdGF0ZS4g
+UGx1cyBpdA0KPiA+ID4gPiA+ID4gbWF0Y2hlcyB0aGUgbmFtZXMgb2YgdGhlIGNvbnN0YW50cy4N
+Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IFdlbGwsIHRoZXJlIGFyZSBub3cgZm91ciB0aGluZ3MgdG8g
+Y29uc2lkZXI6DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAxKSB0aGUgcm9sZXMgKHBvd2VyIGFuZCBk
+YXRhKSB0aGUgcG9ydCBpcyBjYXBhYmxlIG9mIHN1cHBvcnRpbmcNCj4gPiA+ID4gPiAyKSBUcnku
+U1JDIGFuZCBUcnkuU05LLCBpLmUuIHRoZSBwcmVmZXJyZWQgcm9sZQ0KPiA+ID4gPiA+IDMpIHRo
+ZSBjdXJyZW50IHJvbGVzDQo+ID4gPiA+ID4gNCkgdGhlIHJvbGUocykgdGhlIHVzZXIgd2FudCdz
+IHRvIGxpbWl0IHRoZSB1c2Ugb2YgYSBwb3J0IHdpdGgNCj4gPiA+ID4gPiBEUlAgcG9ydHMNCj4g
+PiA+ID4gPg0KPiA+ID4gPiA+IFRoZSBsYXN0IG9uZSBJIGRvbid0IGtub3cgaWYgaXQncyByZWxl
+dmFudCB3aXRoIHRoZXNlIGZ1bmN0aW9ucy4NCj4gPiA+ID4gPiBJdCdzIG5vdCBpbmZvcm1hdGlv
+biB0aGF0IHdlIHdvdWxkIGdldCBmb3IgZXhhbXBsZSBmcm9tIGZpcm13YXJlLg0KPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gSSBhbHNvIGRvbid0IHRoaW5rIHdlIG5lZWQgdG8gdXNlIHRoZXNlIGZ1bmN0
+aW9ucyB3aXRoIHRoZQ0KPiA+ID4gPiA+IGN1cnJlbnQgcm9sZXMgdGhlIHBvcnQgaXMgaW4uDQo+
+ID4gPiA+ID4NCj4gPiA+ID4gPiBJZiB0aGUgcHJlZmVycmVkIHJvbGUgaXMgInNpbmsiIG9yICJz
+b3VyY2UiLCBzbyBqdXN0IGxpa2UgdGhlDQo+ID4gPiA+ID4gcG93ZXIgcm9sZSwgd2UgZG9uJ3Qg
+bmVlZCBzZXBhcmF0ZSBmdW5jdGlvbiBmb3IgaXQgaGVyZS4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+
+IFNvIGlzbid0IHR3byBmdW5jdGlvbnMgYWxsIHdlIG5lZWQgaGVyZTogb25lIGZvciB0aGUgcG93
+ZXIgYW5kDQo+ID4gPiA+ID4gb25lIGZvciBkYXRhIHJvbGU/DQo+ID4gPiA+DQo+ID4gPiA+IFRh
+a2UgcG93ZXIgYXMgYW4gZXhhbXBsZSwgY2FuIHdlIHVzZSBvbmUgZnVuY3Rpb24gdG8gb25seSBs
+b29rIHVwDQo+ID4gPiA+IHR5cGVjX3BvcnRfdHlwZXNbXT8gYXMgY2FwYWJpbGl0eSh0eXBlY19w
+b3J0X3R5cGUpIGFuZA0KPiA+ID4gPiBzdGF0ZSh0eXBlY19yb2xlKSBhcmUgZGlmZmVyZW50IGVu
+dW0sIGFuZCB0aGUgYWxsb3dlZCBzdHJpbmdzIGFyZQ0KPiBkaWZmZXJlbnQuDQo+ID4gPiA+DQo+
+ID4gPiA+IHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QgdHlwZWNfcm9sZXNbXSA9IHsNCj4gPiA+
+ID4gCVtUWVBFQ19TSU5LXSAgICA9ICJzaW5rIiwNCj4gPiA+ID4gCVtUWVBFQ19TT1VSQ0VdICA9
+ICJzb3VyY2UiLA0KPiA+ID4gPiB9Ow0KPiA+ID4gPg0KPiA+ID4gPiBzdGF0aWMgY29uc3QgY2hh
+ciAqIGNvbnN0IHR5cGVjX3BvcnRfdHlwZXNbXSA9IHsNCj4gPiA+ID4gCVtUWVBFQ19QT1JUX1NS
+Q10gPSAic291cmNlIiwNCj4gPiA+ID4gCVtUWVBFQ19QT1JUX1NOS10gPSAic2luayIsDQo+ID4g
+PiA+IAlbVFlQRUNfUE9SVF9EUlBdID0gImR1YWwiLA0KPiA+ID4gPiB9Ow0KPiA+ID4NCj4gPiA+
+IFdoZXJlIG91dCBzaWRlIHRoZSBjbGFzcyBjb2RlIHdlIG5lZWQgdG8gY29udmVydCB0aGUgY3Vy
+cmVudCByb2xlLA0KPiA+ID4gdGhlICJzdGF0ZSIsIHdpdGggdGhlc2UgZnVuY3Rpb25zPw0KPiA+
+DQo+ID4gQ3VycmVudGx5LCB0aGUgb25seSBjYWxsIHNpdGUgaXMgZ2V0dGluZyB0aGUgcHJlZmVy
+cmVkIHBvd2VyIHJvbGUgZnJvbSBmaXJtd2FyZS4NCj4gDQo+IE15IHBvaW50IHdhcyB0aGF0IGlm
+IHdlIHVzZWQgZW51bSB0eXBlY19wb3J0X3R5cGUgd2l0aCB0aGUgcHJlZmVyZWQgcm9sZSwgd2UN
+Cj4gY291bGQgdXNlIHRoZSBoZWxwZXIgZm9yIHBvd2VyIHJvbGUgd2l0aCBwcmVmZXJlZCByb2xl
+LiBCdXQgbmV2ZXIgbWluZC4NCg0KR290IHlvdXIgcG9pbnQuIFNvIGxldCdzIGZvbGxvdyBNYXRz
+J3Mgc3VnZ2VzdGlvbiBvbiB0aGlzLCBJIHdpbGwgdXBkYXRlIGEgbmV3IHZlcnNpb24uDQoNClRo
+YW5rcw0KTGkgSnVuDQo+IA0KPiANCj4gVGhhbmtzLA0KPiANCj4gLS0NCj4gaGVpa2tpDQo=
