@@ -1,127 +1,39 @@
-Return-Path: <SRS0=COmU=HV=mediatek.com=argus.lin@kernel.org>
-From: <argus.lin@mediatek.com>
-Subject: [PATCH V4 2/8] soc: mediatek: pwrap: add caps flag for pwrap
-Date: Wed, 2 May 2018 17:21:06 +0800
-Message-ID: <20180502092112.3991-3-argus.lin@mediatek.com>
-In-Reply-To: <20180502092112.3991-1-argus.lin@mediatek.com>
-References: <20180502092112.3991-1-argus.lin@mediatek.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 22 May 2018 15:57:01 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] iio: adc: Add Qualcomm SPMI PMIC5 ADC driver
+Message-ID: <20180522205701.GA31572@rob-hp-laptop>
+References: <1525815536-27781-1-git-send-email-smohanad@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_002_301482021.94841435"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1525815536-27781-1-git-send-email-smohanad@codeaurora.org>
+To: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, cdevired@codeaurora.org, rphani@codeaurora.org, sivaa@codeaurora.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_002_301482021.94841435
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_003_901892777.545011574"
+On Tue, May 08, 2018 at 02:38:56PM -0700, Siddartha Mohanadoss wrote:
+> This patch adds support for Qualcomm SPMI PMIC5 family
+> of ADC driver that supports hardware based offset and
+> gain compensation. The ADC peripheral can measure both
+> voltage and current channels whose input signal is
+> connected to the PMIC.
+> 
+> The register set and configuration has been refreshed
+> compared to the prior Qualcomm PMIC ADC family. Register
+> ADC5 as part of the IIO framework.
+> 
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> ---
+>  drivers/iio/adc/Kconfig                  |  18 +
+>  drivers/iio/adc/Makefile                 |   1 +
+>  drivers/iio/adc/qcom-spmi-adc5.c         | 818 +++++++++++++++++++++++++++++++
+>  drivers/iio/adc/qcom-vadc-common.c       | 241 +++++++++
+>  drivers/iio/adc/qcom-vadc-common.h       |  51 ++
 
---__=_Part_Boundary_003_901892777.545011574
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+>  include/dt-bindings/iio/qcom,spmi-vadc.h | 115 ++++-
 
-PHByZT4NCkZyb206IEFyZ3VzIExpbiAmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNvbSZndDsNCg0K
-V2UgdXNlIGNhcHMgdG8gZGVzY3JpYmUgcHdyYXAmIzM5O3MgY2FwYWJpbGl0eSwgdXNlZA0KdG8g
-cmVwbGFjZSBoYXNfYnJpZGdlIGZsYWcgZm9yIHNpbmdsZSBtZWFuaW5nLg0KDQpTaWduZWQtb2Zm
-LWJ5OiBBcmd1cyBMaW4gJmx0O2FyZ3VzLmxpbkBtZWRpYXRlay5jb20mZ3Q7DQotLS0NCiBkcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgfCAxMSArKysrKysrKysrKw0KIDEgZmls
-ZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9t
-ZWRpYXRlay9tdGstcG1pYy13cmFwLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13
-cmFwLmMNCmluZGV4IGU5ZTA1NGExNWI3ZC4uM2EyNWZmNmU2OTA3IDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstcG1pYy13cmFwLmMNCkBAIC03Niw2ICs3NiwxMiBAQA0KICNkZWZpbmUgUFdSQVBf
-U0xWX0NBUF9TRUNVUklUWQlCSVQoMikNCiAjZGVmaW5lIEhBU19DQVAoX2MsIF94KQkoKChfYykg
-JmFtcDsgKF94KSkgPT0gKF94KSkNCiANCisvKiBHcm91cCBvZiBiaXRzIHVzZWQgZm9yIHNob3du
-IHB3cmFwIGNhcGFiaWxpdHkgKi8NCisjZGVmaW5lIFBXUkFQX0NBUF9CUklER0UJQklUKDApDQor
-I2RlZmluZSBQV1JBUF9DQVBfUkVTRVQJCUJJVCgxKQ0KKyNkZWZpbmUgUFdSQVBfQ0FQX0RDTQkJ
-QklUKDIpDQorI2RlZmluZSBQV1JBUF9DQVBfSU5UMV9FTglCSVQoMykNCisNCiAvKiBkZWZpbmVz
-IGZvciBzbGF2ZSBkZXZpY2Ugd3JhcHBlciByZWdpc3RlcnMgKi8NCiBlbnVtIGRld19yZWdzIHsN
-CiAJUFdSQVBfREVXX0JBU0UsDQpAQCAtNjg0LDYgKzY5MCw4IEBAIHN0cnVjdCBwbWljX3dyYXBw
-ZXJfdHlwZSB7DQogCXUzMiBzcGlfdzsNCiAJdTMyIHdkdF9zcmM7DQogCXVuc2lnbmVkIGludCBo
-YXNfYnJpZGdlOjE7DQorCS8qIEZsYWdzIGluZGljYXRpbmcgdGhlIGNhcGFiaWxpdHkgZm9yIHRo
-ZSB0YXJnZXQgcHdyYXAgKi8NCisJdTggY2FwczsNCiAJaW50ICgqaW5pdF9yZWdfY2xvY2spKHN0
-cnVjdCBwbWljX3dyYXBwZXIgKndycCk7DQogCWludCAoKmluaXRfc29jX3NwZWNpZmljKShzdHJ1
-Y3QgcG1pY193cmFwcGVyICp3cnApOw0KIH07DQpAQCAtMTM5NCw2ICsxNDAyLDcgQEAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSBwd3JhcF9tdDI3MDEgPSB7DQogCS5zcGlf
-dyA9IFBXUkFQX01BTl9DTURfU1BJX1dSSVRFX05FVywNCiAJLndkdF9zcmMgPSBQV1JBUF9XRFRf
-U1JDX01BU0tfQUxMLA0KIAkuaGFzX2JyaWRnZSA9IDAsDQorCS5jYXBzID0gUFdSQVBfQ0FQX1JF
-U0VUIHwgUFdSQVBfQ0FQX0RDTSwNCiAJLmluaXRfcmVnX2Nsb2NrID0gcHdyYXBfbXQyNzAxX2lu
-aXRfcmVnX2Nsb2NrLA0KIAkuaW5pdF9zb2Nfc3BlY2lmaWMgPSBwd3JhcF9tdDI3MDFfaW5pdF9z
-b2Nfc3BlY2lmaWMsDQogfTsNCkBAIC0xNDA2LDYgKzE0MTUsNyBAQCBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHBtaWNfd3JhcHBlcl90eXBlIHB3cmFwX210NzYyMiA9IHsNCiAJLnNwaV93ID0gUFdSQVBf
-TUFOX0NNRF9TUElfV1JJVEUsDQogCS53ZHRfc3JjID0gUFdSQVBfV0RUX1NSQ19NQVNLX0FMTCwN
-CiAJLmhhc19icmlkZ2UgPSAwLA0KKwkuY2FwcyA9IFBXUkFQX0NBUF9SRVNFVCB8IFBXUkFQX0NB
-UF9EQ00sDQogCS5pbml0X3JlZ19jbG9jayA9IHB3cmFwX2NvbW1vbl9pbml0X3JlZ19jbG9jaywN
-CiAJLmluaXRfc29jX3NwZWNpZmljID0gcHdyYXBfbXQ3NjIyX2luaXRfc29jX3NwZWNpZmljLA0K
-IH07DQpAQCAtMTQxOCw2ICsxNDI4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbWljX3dyYXBw
-ZXJfdHlwZSBwd3JhcF9tdDgxMzUgPSB7DQogCS5zcGlfdyA9IFBXUkFQX01BTl9DTURfU1BJX1dS
-SVRFLA0KIAkud2R0X3NyYyA9IFBXUkFQX1dEVF9TUkNfTUFTS19BTEwsDQogCS5oYXNfYnJpZGdl
-ID0gMSwNCisJLmNhcHMgPSBQV1JBUF9DQVBfQlJJREdFIHwgUFdSQVBfQ0FQX1JFU0VUIHwgUFdS
-QVBfQ0FQX0RDTSwNCiAJLmluaXRfcmVnX2Nsb2NrID0gcHdyYXBfY29tbW9uX2luaXRfcmVnX2Ns
-b2NrLA0KIAkuaW5pdF9zb2Nfc3BlY2lmaWMgPSBwd3JhcF9tdDgxMzVfaW5pdF9zb2Nfc3BlY2lm
-aWMsDQogfTsNCi0tIA0KMi4xMi41DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxw
-cmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioq
-KioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3Nh
-Z2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJv
-cHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3Vy
-ZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQg
-b25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRp
-b24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhp
-cyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNp
-cGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElm
-IHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVs
-aWV2ZSANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFz
-ZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUt
-bWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVk
-aW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xv
-c2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsg
-eW91ITwvcHJlPjwhLS19LS0+
+This belongs in the binding patch.
 
---__=_Part_Boundary_003_901892777.545011574
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-RnJvbTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KDQpXZSB1c2UgY2FwcyB0
-byBkZXNjcmliZSBwd3JhcCdzIGNhcGFiaWxpdHksIHVzZWQNCnRvIHJlcGxhY2UgaGFzX2JyaWRn
-ZSBmbGFnIGZvciBzaW5nbGUgbWVhbmluZy4NCg0KU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxh
-cmd1cy5saW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBt
-aWMtd3JhcC5jIHwgMTEgKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9u
-cygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5j
-IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQppbmRleCBlOWUwNTRhMTVi
-N2QuLjNhMjVmZjZlNjkwNyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1w
-bWljLXdyYXAuYw0KKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQpA
-QCAtNzYsNiArNzYsMTIgQEANCiAjZGVmaW5lIFBXUkFQX1NMVl9DQVBfU0VDVVJJVFkJQklUKDIp
-DQogI2RlZmluZSBIQVNfQ0FQKF9jLCBfeCkJKCgoX2MpICYgKF94KSkgPT0gKF94KSkNCiANCisv
-KiBHcm91cCBvZiBiaXRzIHVzZWQgZm9yIHNob3duIHB3cmFwIGNhcGFiaWxpdHkgKi8NCisjZGVm
-aW5lIFBXUkFQX0NBUF9CUklER0UJQklUKDApDQorI2RlZmluZSBQV1JBUF9DQVBfUkVTRVQJCUJJ
-VCgxKQ0KKyNkZWZpbmUgUFdSQVBfQ0FQX0RDTQkJQklUKDIpDQorI2RlZmluZSBQV1JBUF9DQVBf
-SU5UMV9FTglCSVQoMykNCisNCiAvKiBkZWZpbmVzIGZvciBzbGF2ZSBkZXZpY2Ugd3JhcHBlciBy
-ZWdpc3RlcnMgKi8NCiBlbnVtIGRld19yZWdzIHsNCiAJUFdSQVBfREVXX0JBU0UsDQpAQCAtNjg0
-LDYgKzY5MCw4IEBAIHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSB7DQogCXUzMiBzcGlfdzsNCiAJ
-dTMyIHdkdF9zcmM7DQogCXVuc2lnbmVkIGludCBoYXNfYnJpZGdlOjE7DQorCS8qIEZsYWdzIGlu
-ZGljYXRpbmcgdGhlIGNhcGFiaWxpdHkgZm9yIHRoZSB0YXJnZXQgcHdyYXAgKi8NCisJdTggY2Fw
-czsNCiAJaW50ICgqaW5pdF9yZWdfY2xvY2spKHN0cnVjdCBwbWljX3dyYXBwZXIgKndycCk7DQog
-CWludCAoKmluaXRfc29jX3NwZWNpZmljKShzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnApOw0KIH07
-DQpAQCAtMTM5NCw2ICsxNDAyLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwbWljX3dyYXBwZXJf
-dHlwZSBwd3JhcF9tdDI3MDEgPSB7DQogCS5zcGlfdyA9IFBXUkFQX01BTl9DTURfU1BJX1dSSVRF
-X05FVywNCiAJLndkdF9zcmMgPSBQV1JBUF9XRFRfU1JDX01BU0tfQUxMLA0KIAkuaGFzX2JyaWRn
-ZSA9IDAsDQorCS5jYXBzID0gUFdSQVBfQ0FQX1JFU0VUIHwgUFdSQVBfQ0FQX0RDTSwNCiAJLmlu
-aXRfcmVnX2Nsb2NrID0gcHdyYXBfbXQyNzAxX2luaXRfcmVnX2Nsb2NrLA0KIAkuaW5pdF9zb2Nf
-c3BlY2lmaWMgPSBwd3JhcF9tdDI3MDFfaW5pdF9zb2Nfc3BlY2lmaWMsDQogfTsNCkBAIC0xNDA2
-LDYgKzE0MTUsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBtaWNfd3JhcHBlcl90eXBlIHB3cmFw
-X210NzYyMiA9IHsNCiAJLnNwaV93ID0gUFdSQVBfTUFOX0NNRF9TUElfV1JJVEUsDQogCS53ZHRf
-c3JjID0gUFdSQVBfV0RUX1NSQ19NQVNLX0FMTCwNCiAJLmhhc19icmlkZ2UgPSAwLA0KKwkuY2Fw
-cyA9IFBXUkFQX0NBUF9SRVNFVCB8IFBXUkFQX0NBUF9EQ00sDQogCS5pbml0X3JlZ19jbG9jayA9
-IHB3cmFwX2NvbW1vbl9pbml0X3JlZ19jbG9jaywNCiAJLmluaXRfc29jX3NwZWNpZmljID0gcHdy
-YXBfbXQ3NjIyX2luaXRfc29jX3NwZWNpZmljLA0KIH07DQpAQCAtMTQxOCw2ICsxNDI4LDcgQEAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBwbWljX3dyYXBwZXJfdHlwZSBwd3JhcF9tdDgxMzUgPSB7DQog
-CS5zcGlfdyA9IFBXUkFQX01BTl9DTURfU1BJX1dSSVRFLA0KIAkud2R0X3NyYyA9IFBXUkFQX1dE
-VF9TUkNfTUFTS19BTEwsDQogCS5oYXNfYnJpZGdlID0gMSwNCisJLmNhcHMgPSBQV1JBUF9DQVBf
-QlJJREdFIHwgUFdSQVBfQ0FQX1JFU0VUIHwgUFdSQVBfQ0FQX0RDTSwNCiAJLmluaXRfcmVnX2Ns
-b2NrID0gcHdyYXBfY29tbW9uX2luaXRfcmVnX2Nsb2NrLA0KIAkuaW5pdF9zb2Nfc3BlY2lmaWMg
-PSBwd3JhcF9tdDgxMzVfaW5pdF9zb2Nfc3BlY2lmaWMsDQogfTsNCi0tIA0KMi4xMi41DQo=
-
---__=_Part_Boundary_003_901892777.545011574--
-
---__=_Part_Boundary_002_301482021.94841435--
+>  6 files changed, 1243 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/iio/adc/qcom-spmi-adc5.c
