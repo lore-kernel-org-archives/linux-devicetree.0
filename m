@@ -1,194 +1,88 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH RFC V2 2/6] hwmon: Add support for RPi voltage sensor
-Date: Tue, 22 May 2018 07:10:10 -0700
-Message-ID: <bea3d6c7-a713-c4aa-8ae8-7fec80c5da5d@roeck-us.net>
-References: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
- <1526988112-4021-3-git-send-email-stefan.wahren@i2se.com>
- <90a768aa-ee8c-1050-cf15-60637069dbdb@roeck-us.net>
- <659923372.11518.1526997096662@email.1und1.de>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v8 1/2] dt: bindings: lm3601x: Introduce the lm3601x driver
+Date: Tue, 22 May 2018 09:24:16 -0500
+Message-ID: <20180522142417.19639-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <659923372.11518.1526997096662@email.1und1.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, jacek.anaszewski@gmail.com, andy.shevchenko@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMjIvMjAxOCAwNjo1MSBBTSwgU3RlZmFuIFdhaHJlbiB3cm90ZToKPiBIaSBHdWVudGVy
-LAo+IAo+PiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+IGhhdCBhbSAyMi4gTWFp
-IDIwMTggdW0gMTU6NDEgZ2VzY2hyaWViZW46Cj4+Cj4+Cj4+IE9uIDA1LzIyLzIwMTggMDQ6MjEg
-QU0sIFN0ZWZhbiBXYWhyZW4gd3JvdGU6Cj4+PiBDdXJyZW50bHkgdGhlcmUgaXMgbm8gZWFzeSB3
-YXkgdG8gZGV0ZWN0IHVuZGVydm9sdGFnZSBjb25kaXRpb25zIG9uIGEKPj4+IHJlbW90ZSBSYXNw
-YmVycnkgUGkuIFRoaXMgaHdtb24gZHJpdmVyIHJldHJpZXZlcyB0aGUgc3RhdGUgb2YgdGhlCj4+
-PiB1bmRlcnZvbHRhZ2Ugc2Vuc29yIHZpYSBtYWlsYm94IGludGVyZmFjZS4gVGhlIGhhbmRsaW5n
-IGJhc2VkIG9uCj4+PiBOb3JhbGYncyBtb2RpZmljYXRpb25zIHRvIHRoZSBkb3duc3RyZWFtIGZp
-cm13YXJlIGRyaXZlci4gSW4gY2FzZSBvZgo+Pj4gYW4gdW5kZXJ2b2x0YWdlIGNvbmRpdGlvbiBv
-bmx5IGFuIGVudHJ5IGlzIHdyaXR0ZW4gdG8gdGhlIGtlcm5lbCBsb2cuCj4+Pgo+Pj4gQ0M6ICJO
-b3JhbGYgVHLDuG5uZXMiIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBT
-dGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+Pj4gLS0tCj4+PiAgICBEb2N1
-bWVudGF0aW9uL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uIHwgIDIyICsrKysrCj4+PiAgICBkcml2
-ZXJzL2h3bW9uL0tjb25maWcgICAgICAgICAgICAgICAgIHwgIDEwICsrCj4+PiAgICBkcml2ZXJz
-L2h3bW9uL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsKPj4+ICAgIGRyaXZlcnMvaHdt
-b24vcmFzcGJlcnJ5cGktaHdtb24uYyAgICAgfCAxNjggKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKwo+Pj4gICAgNCBmaWxlcyBjaGFuZ2VkLCAyMDEgaW5zZXJ0aW9ucygrKQo+Pj4g
-ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vaHdtb24vcmFzcGJlcnJ5cGktaHdt
-b24KPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2h3bW9uL3Jhc3BiZXJyeXBpLWh3
-bW9uLmMKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9od21vbi9yYXNwYmVycnlw
-aS1od21vbiBiL0RvY3VtZW50YXRpb24vaHdtb24vcmFzcGJlcnJ5cGktaHdtb24KPj4+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwLi4zYzkyZTJjCj4+PiAtLS0gL2Rldi9u
-dWxsCj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uCj4+PiBA
-QCAtMCwwICsxLDIyIEBACj4+PiArS2VybmVsIGRyaXZlciByYXNwYmVycnlwaS1od21vbgo+Pj4g
-Kz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPj4+ICsKPj4+ICtTdXBwb3J0ZWQgYm9h
-cmRzOgo+Pj4gKyAgKiBSYXNwYmVycnkgUGkgQSsgKHZpYSBHUElPIG9uIFNvQykKPj4+ICsgICog
-UmFzcGJlcnJ5IFBpIEIrICh2aWEgR1BJTyBvbiBTb0MpCj4+PiArICAqIFJhc3BiZXJyeSBQaSAy
-IEIgKHZpYSBHUElPIG9uIFNvQykKPj4+ICsgICogUmFzcGJlcnJ5IFBpIDMgQiAodmlhIEdQSU8g
-b24gcG9ydCBleHBhbmRlcikKPj4+ICsgICogUmFzcGJlcnJ5IFBpIDMgQisgKHZpYSBQTUlDKQo+
-Pj4gKwo+Pj4gK0F1dGhvcjogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4K
-Pj4+ICsKPj4+ICtEZXNjcmlwdGlvbgo+Pj4gKy0tLS0tLS0tLS0tCj4+PiArCj4+PiArVGhpcyBk
-cml2ZXIgcGVyaW9kaWNhbGx5IHBvbGxzIGEgbWFpbGJveCBwcm9wZXJ0eSBvZiB0aGUgVkM0IGZp
-cm13YXJlIHRvIGRldGVjdAo+Pj4gK3VuZGVydm9sdGFnZSBjb25kaXRpb25zLgo+Pj4gKwo+Pj4g
-K1N5c2ZzIGVudHJpZXMKPj4+ICstLS0tLS0tLS0tLS0tCj4+PiArCj4+PiAraW4wX2xjcml0X2Fs
-YXJtCQlVbmRlcnZvbHRhZ2UgYWxhcm0KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2h3bW9uL0tj
-b25maWcgYi9kcml2ZXJzL2h3bW9uL0tjb25maWcKPj4+IGluZGV4IDc2OGFlZDUuLjlhNWJkYjAg
-MTAwNjQ0Cj4+PiAtLS0gYS9kcml2ZXJzL2h3bW9uL0tjb25maWcKPj4+ICsrKyBiL2RyaXZlcnMv
-aHdtb24vS2NvbmZpZwo+Pj4gQEAgLTEyOTgsNiArMTI5OCwxNiBAQCBjb25maWcgU0VOU09SU19Q
-V01fRkFOCj4+PiAgICAJICBUaGlzIGRyaXZlciBjYW4gYWxzbyBiZSBidWlsdCBhcyBhIG1vZHVs
-ZS4gIElmIHNvLCB0aGUgbW9kdWxlCj4+PiAgICAJICB3aWxsIGJlIGNhbGxlZCBwd20tZmFuLgo+
-Pj4gICAgCj4+PiArY29uZmlnIFNFTlNPUlNfUkFTUEJFUlJZUElfSFdNT04KPj4+ICsJdHJpc3Rh
-dGUgIlJhc3BiZXJyeSBQaSB2b2x0YWdlIG1vbml0b3IiCj4+PiArCWRlcGVuZHMgb24gUkFTUEJF
-UlJZUElfRklSTVdBUkUgfHwgQ09NUElMRV9URVNUCj4+PiArCWhlbHAKPj4+ICsJICBJZiB5b3Ug
-c2F5IHllcyBoZXJlIHlvdSBnZXQgc3VwcG9ydCBmb3Igdm9sdGFnZSBzZW5zb3Igb24gdGhlCj4+
-PiArCSAgUmFzcGJlcnJ5IFBpLgo+Pj4gKwo+Pj4gKwkgIFRoaXMgZHJpdmVyIGNhbiBhbHNvIGJl
-IGJ1aWx0IGFzIGEgbW9kdWxlLiBJZiBzbywgdGhlIG1vZHVsZQo+Pj4gKwkgIHdpbGwgYmUgY2Fs
-bGVkIHJhc3BiZXJyeXBpLWh3bW9uLgo+Pj4gKwo+Pj4gICAgY29uZmlnIFNFTlNPUlNfU0hUMTUK
-Pj4+ICAgIAl0cmlzdGF0ZSAiU2Vuc2lyb24gaHVtaWRpdHkgYW5kIHRlbXBlcmF0dXJlIHNlbnNv
-cnMuIFNIVDE1IGFuZCBjb21wYXQuIgo+Pj4gICAgCWRlcGVuZHMgb24gR1BJT0xJQiB8fCBDT01Q
-SUxFX1RFU1QKPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2h3bW9uL01ha2VmaWxlIGIvZHJpdmVy
-cy9od21vbi9NYWtlZmlsZQo+Pj4gaW5kZXggZTdkNTJhMy4uYTkyOTc3MCAxMDA2NDQKPj4+IC0t
-LSBhL2RyaXZlcnMvaHdtb24vTWFrZWZpbGUKPj4+ICsrKyBiL2RyaXZlcnMvaHdtb24vTWFrZWZp
-bGUKPj4+IEBAIC0xNDEsNiArMTQxLDcgQEAgb2JqLSQoQ09ORklHX1NFTlNPUlNfUEM4NzQyNykJ
-Kz0gcGM4NzQyNy5vCj4+PiAgICBvYmotJChDT05GSUdfU0VOU09SU19QQ0Y4NTkxKQkrPSBwY2Y4
-NTkxLm8KPj4+ICAgIG9iai0kKENPTkZJR19TRU5TT1JTX1BPV1IxMjIwKSAgKz0gcG93cjEyMjAu
-bwo+Pj4gICAgb2JqLSQoQ09ORklHX1NFTlNPUlNfUFdNX0ZBTikJKz0gcHdtLWZhbi5vCj4+PiAr
-b2JqLSQoQ09ORklHX1NFTlNPUlNfUkFTUEJFUlJZUElfSFdNT04pCSs9IHJhc3BiZXJyeXBpLWh3
-bW9uLm8KPj4+ICAgIG9iai0kKENPTkZJR19TRU5TT1JTX1MzQykJKz0gczNjLWh3bW9uLm8KPj4+
-ICAgIG9iai0kKENPTkZJR19TRU5TT1JTX1NDSDU2WFhfQ09NTU9OKSs9IHNjaDU2eHgtY29tbW9u
-Lm8KPj4+ICAgIG9iai0kKENPTkZJR19TRU5TT1JTX1NDSDU2MjcpCSs9IHNjaDU2Mjcubwo+Pj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHdtb24vcmFzcGJlcnJ5cGktaHdtb24uYyBiL2RyaXZlcnMv
-aHdtb24vcmFzcGJlcnJ5cGktaHdtb24uYwo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGlu
-ZGV4IDAwMDAwMDAuLjYyMzNlODQKPj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL2RyaXZlcnMv
-aHdtb24vcmFzcGJlcnJ5cGktaHdtb24uYwo+Pj4gQEAgLTAsMCArMSwxNjggQEAKPj4+ICsvLyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCsKPj4+ICsvKgo+Pj4gKyAqIFJhc3BiZXJy
-eSBQaSB2b2x0YWdlIHNlbnNvciBkcml2ZXIKPj4+ICsgKgo+Pj4gKyAqIEJhc2VkIG9uIGZpcm13
-YXJlL3Jhc3BiZXJyeXBpLmMgYnkgTm9yYWxmIFRyw7hubmVzCj4+PiArICoKPj4+ICsgKiBDb3B5
-cmlnaHQgKEMpIDIwMTggU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4KPj4+
-ICsgKi8KPj4+ICsjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+Cj4+PiArI2luY2x1ZGUgPGxpbnV4
-L2Vyci5oPgo+Pj4gKyNpbmNsdWRlIDxsaW51eC9od21vbi5oPgo+Pj4gKyNpbmNsdWRlIDxsaW51
-eC9tb2R1bGUuaD4KPj4+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4+PiAr
-I2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPj4+ICsjaW5jbHVkZSA8bGludXgvd29ya3F1ZXVlLmg+
-Cj4+PiArI2luY2x1ZGUgPHNvYy9iY20yODM1L3Jhc3BiZXJyeXBpLWZpcm13YXJlLmg+Cj4+PiAr
-Cj4+PiArI2RlZmluZSBVTkRFUlZPTFRBR0VfU1RJQ0tZX0JJVAlCSVQoMTYpCj4+PiArCj4+PiAr
-c3RydWN0IHJwaV9od21vbl9kYXRhIHsKPj4+ICsJc3RydWN0IGRldmljZSAqaHdtb25fZGV2Owo+
-Pj4gKwlzdHJ1Y3QgcnBpX2Zpcm13YXJlICpmdzsKPj4+ICsJdTMyIGxhc3RfdGhyb3R0bGVkOwo+
-Pj4gKwlzdHJ1Y3QgZGVsYXllZF93b3JrIGdldF92YWx1ZXNfcG9sbF93b3JrOwo+Pj4gK307Cj4+
-PiArCj4+PiArc3RhdGljIHZvaWQgcnBpX2Zpcm13YXJlX2dldF90aHJvdHRsZWQoc3RydWN0IHJw
-aV9od21vbl9kYXRhICpkYXRhKQo+Pj4gK3sKPj4+ICsJdTMyIG5ld191diwgb2xkX3V2LCB2YWx1
-ZTsKPj4+ICsJaW50IHJldDsKPj4+ICsKPj4+ICsJLyogUmVxdWVzdCBmaXJtd2FyZSB0byBjbGVh
-ciBzdGlja3kgYml0cyAqLwo+Pj4gKwl2YWx1ZSA9IDB4ZmZmZjsKPj4+ICsKPj4+ICsJcmV0ID0g
-cnBpX2Zpcm13YXJlX3Byb3BlcnR5KGRhdGEtPmZ3LCBSUElfRklSTVdBUkVfR0VUX1RIUk9UVExF
-RCwKPj4+ICsJCQkJICAgICZ2YWx1ZSwgc2l6ZW9mKHZhbHVlKSk7Cj4+PiArCWlmIChyZXQpIHsK
-Pj4+ICsJCWRldl9lcnJfb25jZShkYXRhLT5od21vbl9kZXYsICJGYWlsZWQgdG8gZ2V0IHRocm90
-dGxlZCAoJWQpXG4iLAo+Pj4gKwkJCSAgICAgcmV0KTsKPj4+ICsJCXJldHVybjsKPj4+ICsJfQo+
-Pj4gKwo+Pj4gKwluZXdfdXYgPSB2YWx1ZSAmIFVOREVSVk9MVEFHRV9TVElDS1lfQklUOwo+Pj4g
-KwlvbGRfdXYgPSBkYXRhLT5sYXN0X3Rocm90dGxlZCAmIFVOREVSVk9MVEFHRV9TVElDS1lfQklU
-Owo+Pj4gKwlkYXRhLT5sYXN0X3Rocm90dGxlZCA9IHZhbHVlOwo+Pj4gKwo+Pj4gKwlpZiAobmV3
-X3V2ID09IG9sZF91dikKPj4+ICsJCXJldHVybjsKPj4+ICsKPj4+ICsJaWYgKG5ld191dikKPj4+
-ICsJCWRldl9jcml0KGRhdGEtPmh3bW9uX2RldiwgIlVuZGVydm9sdGFnZSBkZXRlY3RlZCFcbiIp
-Owo+Pj4gKwllbHNlCj4+PiArCQlkZXZfaW5mbyhkYXRhLT5od21vbl9kZXYsICJWb2x0YWdlIG5v
-cm1hbGlzZWRcbiIpOwo+Pj4gKwo+Pj4gKwlzeXNmc19ub3RpZnkoJmRhdGEtPmh3bW9uX2Rldi0+
-a29iaiwgTlVMTCwgImluMF9sY3JpdF9hbGFybSIpOwo+Pj4gK30KPj4+ICsKPj4+ICtzdGF0aWMg
-dm9pZCBnZXRfdmFsdWVzX3BvbGwoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKQo+Pj4gK3sKPj4+
-ICsJc3RydWN0IHJwaV9od21vbl9kYXRhICpkYXRhOwo+Pj4gKwo+Pj4gKwlkYXRhID0gY29udGFp
-bmVyX29mKHdvcmssIHN0cnVjdCBycGlfaHdtb25fZGF0YSwKPj4+ICsJCQkgICAgZ2V0X3ZhbHVl
-c19wb2xsX3dvcmsud29yayk7Cj4+PiArCj4+PiArCXJwaV9maXJtd2FyZV9nZXRfdGhyb3R0bGVk
-KGRhdGEpOwo+Pj4gKwo+Pj4gKwkvKgo+Pj4gKwkgKiBXZSBjYW4ndCBydW4gZmFzdGVyIHRoYW4g
-dGhlIHN0aWNreSBzaGlmdCAoMTAwbXMpIHNpbmNlIHdlIGdldAo+Pj4gKwkgKiBmbGlwcGluZyBp
-biB0aGUgc3RpY2t5IGJpdHMgdGhhdCBhcmUgY2xlYXJlZC4KPj4+ICsJICovCj4+PiArCXNjaGVk
-dWxlX2RlbGF5ZWRfd29yaygmZGF0YS0+Z2V0X3ZhbHVlc19wb2xsX3dvcmssIDIgKiBIWik7Cj4+
-PiArfQo+Pj4gKwo+Pj4gK3N0YXRpYyBpbnQgcnBpX3JlYWQoc3RydWN0IGRldmljZSAqZGV2LCBl
-bnVtIGh3bW9uX3NlbnNvcl90eXBlcyB0eXBlLAo+Pj4gKwkJICAgIHUzMiBhdHRyLCBpbnQgY2hh
-bm5lbCwgbG9uZyAqdmFsKQo+Pj4gK3sKPj4+ICsJc3RydWN0IHJwaV9od21vbl9kYXRhICpkYXRh
-ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+PiArCj4+PiArCSp2YWwgPSAhIShkYXRhLT5sYXN0
-X3Rocm90dGxlZCAmIFVOREVSVk9MVEFHRV9TVElDS1lfQklUKTsKPj4+ICsJcmV0dXJuIDA7Cj4+
-PiArfQo+Pj4gKwo+Pj4gK3N0YXRpYyB1bW9kZV90IHJwaV9pc192aXNpYmxlKGNvbnN0IHZvaWQg
-Kl9kYXRhLCBlbnVtIGh3bW9uX3NlbnNvcl90eXBlcyB0eXBlLAo+Pj4gKwkJCSAgICAgIHUzMiBh
-dHRyLCBpbnQgY2hhbm5lbCkKPj4+ICt7Cj4+PiArCXJldHVybiAwNDQ0Owo+Pj4gK30KPj4+ICsK
-Pj4+ICtzdGF0aWMgY29uc3QgdTMyIHJwaV9pbl9jb25maWdbXSA9IHsKPj4+ICsJSFdNT05fSV9M
-Q1JJVF9BTEFSTSwKPj4+ICsJMAo+Pj4gK307Cj4+PiArCj4+PiArc3RhdGljIGNvbnN0IHN0cnVj
-dCBod21vbl9jaGFubmVsX2luZm8gcnBpX2luID0gewo+Pj4gKwkudHlwZSA9IGh3bW9uX2luLAo+
-Pj4gKwkuY29uZmlnID0gcnBpX2luX2NvbmZpZywKPj4+ICt9Owo+Pj4gKwo+Pj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgaHdtb25fY2hhbm5lbF9pbmZvICpycGlfaW5mb1tdID0gewo+Pj4gKwkmcnBp
-X2luLAo+Pj4gKwlOVUxMCj4+PiArfTsKPj4+ICsKPj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGh3
-bW9uX29wcyBycGlfaHdtb25fb3BzID0gewo+Pj4gKwkuaXNfdmlzaWJsZSA9IHJwaV9pc192aXNp
-YmxlLAo+Pj4gKwkucmVhZCA9IHJwaV9yZWFkLAo+Pj4gK307Cj4+PiArCj4+PiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBod21vbl9jaGlwX2luZm8gcnBpX2NoaXBfaW5mbyA9IHsKPj4+ICsJLm9wcyA9
-ICZycGlfaHdtb25fb3BzLAo+Pj4gKwkuaW5mbyA9IHJwaV9pbmZvLAo+Pj4gK307Cj4+PiArCj4+
-PiArc3RhdGljIGludCBycGlfaHdtb25fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPj4+ICt7Cj4+PiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4+PiArCXN0
-cnVjdCBycGlfaHdtb25fZGF0YSAqZGF0YTsKPj4+ICsJaW50IHJldDsKPj4+ICsKPj4+ICsJZGF0
-YSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZGF0YSksIEdGUF9LRVJORUwpOwo+Pj4gKwlp
-ZiAoIWRhdGEpCj4+PiArCQlyZXR1cm4gLUVOT01FTTsKPj4+ICsKPj4+ICsJZGF0YS0+ZncgPSBw
-bGF0Zm9ybV9nZXRfZHJ2ZGF0YSh0b19wbGF0Zm9ybV9kZXZpY2UoZGV2LT5wYXJlbnQpKTsKPj4+
-ICsJaWYgKCFkYXRhLT5mdykKPj4+ICsJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+Pj4gKwo+Pgo+
-PiBJIGFtIGEgYml0IGF0IGxvc3MgaGVyZSAoYW5kIHNvcnJ5IEkgZGlkbid0IGJyaW5nIHRoaXMg
-dXAgYmVmb3JlKS4KPj4gSG93IHdvdWxkIHRoaXMgZXZlciBiZSBwb3NzaWJsZSwgZ2l2ZW4gdGhh
-dCB0aGUgZHJpdmVyIGlzIHJlZ2lzdGVyZWQKPj4gZnJvbSB0aGUgZmlybXdhcmUgZHJpdmVyID8K
-PiAKPiBEbyB5b3UgcmVmZXIgdG8gdGhlICh3cm9uZykgcmV0dXJuIGNvZGUsIHRoZSBhc3N1bXB0
-aW9uIHRoYXQgdGhlIHBhcmVudCBtdXN0IGJlIGEgcGxhdGZvcm0gZHJpdmVyIG9yIGEgcG9zc2li
-bGUgcmFjZT8KPiAKClRoZSByZXR1cm4gY29kZSBpcyBvbmUgdGhpbmcuIE15IHF1ZXN0aW9uIHdh
-cyBob3cgdGhlIGRyaXZlciB3b3VsZCBldmVyIGJlIGluc3RhbnRpYXRlZAp3aXRoIHBsYXRmb3Jt
-X2dldF9kcnZkYXRhKHRvX3BsYXRmb3JtX2RldmljZShkZXYtPnBhcmVudCkpID09IE5VTEwgKGJ1
-dCBkZXYtPnBhcmVudCAhPSBOVUxMKSwKc28gSSByZWZlcnJlZCB0byB0aGUgcmFjZS4gQnV0LCBz
-dXJlLCBhIHNlY29uZCBxdWVzdGlvbiB3b3VsZCBiZSBob3cgdGhhdCB3b3VsZCBpbmRpY2F0ZQp0
-aGF0IHRoZSBwYXJlbnQgaXMgbm90IGluc3RhbnRpYXRlZCB5ZXQgKHdoaWNoIGJ5IGl0c2VsZiBz
-ZWVtcyBsaWtlIGFuIG9kZCBxdWVzdGlvbikuCgpZZXQgYW5vdGhlciBxdWVzdGlvbiwgYXMgeW91
-IHBvaW50IG91dCwgaXMgd2h5IHRvIHVzZSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YSh0b19wbGF0Zm9y
-bV9kZXZpY2UoZGV2LT5wYXJlbnQpKQppbnN0ZWFkIG9mIGRldl9nZXRfZHJ2ZGF0YShkZXYtPnBh
-cmVudCkuCgpHdWVudGVyCgo+Pgo+Pj4gKwlyZXQgPSBycGlfZmlybXdhcmVfcHJvcGVydHkoZGF0
-YS0+ZncsIFJQSV9GSVJNV0FSRV9HRVRfVEhST1RUTEVELAo+Pj4gKwkJCQkgICAgJmRhdGEtPmxh
-c3RfdGhyb3R0bGVkLAo+Pj4gKwkJCQkgICAgc2l6ZW9mKGRhdGEtPmxhc3RfdGhyb3R0bGVkKSk7
-Cj4+PiArCWlmIChyZXQpCj4+PiArCQlyZXR1cm4gLUVOT0RFVjsKPj4+ICsKPj4+ICsJZGF0YS0+
-aHdtb25fZGV2ID0gZGV2bV9od21vbl9kZXZpY2VfcmVnaXN0ZXJfd2l0aF9pbmZvKGRldiwgInJw
-aV92b2x0IiwKPj4+ICsJCQkJCQkJICAgICAgIGRhdGEsCj4+PiArCQkJCQkJCSAgICAgICAmcnBp
-X2NoaXBfaW5mbywKPj4+ICsJCQkJCQkJICAgICAgIE5VTEwpOwo+Pj4gKwo+Pj4gKwlJTklUX0RF
-TEFZRURfV09SSygmZGF0YS0+Z2V0X3ZhbHVlc19wb2xsX3dvcmssIGdldF92YWx1ZXNfcG9sbCk7
-Cj4+PiArCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIGRhdGEpOwo+Pj4gKwo+Pj4gKwlpZiAo
-IVBUUl9FUlJfT1JfWkVSTyhkYXRhLT5od21vbl9kZXYpKQo+Pj4gKwkJc2NoZWR1bGVfZGVsYXll
-ZF93b3JrKCZkYXRhLT5nZXRfdmFsdWVzX3BvbGxfd29yaywgMiAqIEhaKTsKPj4+ICsKPj4+ICsJ
-cmV0dXJuIFBUUl9FUlJfT1JfWkVSTyhkYXRhLT5od21vbl9kZXYpOwo+Pj4gK30KPj4+ICsKPj4+
-ICtzdGF0aWMgaW50IHJwaV9od21vbl9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPj4+ICt7Cj4+PiArCXN0cnVjdCBycGlfaHdtb25fZGF0YSAqZGF0YSA9IHBsYXRmb3JtX2dl
-dF9kcnZkYXRhKHBkZXYpOwo+Pj4gKwo+Pj4gKwljYW5jZWxfZGVsYXllZF93b3JrX3N5bmMoJmRh
-dGEtPmdldF92YWx1ZXNfcG9sbF93b3JrKTsKPj4+ICsKPj4+ICsJcmV0dXJuIDA7Cj4+PiArfQo+
-Pj4gKwo+Pj4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHJwaV9od21vbl9kcml2ZXIg
-PSB7Cj4+PiArCS5wcm9iZSA9IHJwaV9od21vbl9wcm9iZSwKPj4+ICsJLnJlbW92ZSA9IHJwaV9o
-d21vbl9yZW1vdmUsCj4+PiArCS5kcml2ZXIgPSB7Cj4+PiArCQkubmFtZSA9ICJyYXNwYmVycnlw
-aS1od21vbiIsCj4+PiArCX0sCj4+PiArfTsKPj4+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKHJw
-aV9od21vbl9kcml2ZXIpOwo+Pj4gKwo+Pj4gK01PRFVMRV9BVVRIT1IoIlN0ZWZhbiBXYWhyZW4g
-PHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Iik7Cj4+PiArTU9EVUxFX0RFU0NSSVBUSU9OKCJSYXNw
-YmVycnkgUGkgdm9sdGFnZSBzZW5zb3IgZHJpdmVyIik7Cj4+PiArTU9EVUxFX0xJQ0VOU0UoIkdQ
-TCB2MiIpOwo+Pj4KPj4KPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Introduce the device tree bindings for the lm3601x
+family of LED torch, flash and IR drivers.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+
+v8 - No changes - https://patchwork.kernel.org/patch/10416161/
+
+v7 - Removed led-sources in favor of reg, fixed malformatted ranges - https://patchwork.kernel.org/patch/10401435/
+v6 - Removed multiple led child nodes, fixed example to display micro ranges
+for corresponding child nodes and added led-sources to define the current driver -
+https://patchwork.kernel.org/patch/10392121/
+v5 - No changes - https://patchwork.kernel.org/patch/10391743/
+v4 - Added " " around "=", changed strobe to flash on label, removed "support and
+register" comment and change ir lable to ir:torch - See v2 patchworks for comments
+v3 - Removed wildcard compatible - https://patchwork.kernel.org/patch/10386241/
+v2 - No changes - https://patchwork.kernel.org/patch/10384587/
+
+ .../devicetree/bindings/leds/leds-lm3601x.txt | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3601x.txt b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+new file mode 100644
+index 000000000000..a88b2c41e75b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+@@ -0,0 +1,45 @@
++* Texas Instruments - lm3601x Single-LED Flash Driver
++
++The LM3601X are ultra-small LED flash drivers that
++provide a high level of adjustability.
++
++Required properties:
++	- compatible : Can be one of the following
++		"ti,lm36010"
++		"ti,lm36011"
++	- reg : I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
++
++Required child properties:
++	- reg : 0 - Indicates a IR mode
++		1 - Indicates a Torch (white LED) mode
++
++Required properties for flash LED child nodes:
++	See Documentation/devicetree/bindings/leds/common.txt
++	- flash-max-microamp : Range from 11mA - 1.5A
++	- flash-max-timeout-us : Range from 40ms - 1600ms
++	- led-max-microamp : Range from 2.4mA - 376mA
++
++Optional child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++led-controller@64 {
++	compatible = "ti,lm36010";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x64>;
++
++	led@0 {
++		reg = <1>;
++		label = "white:torch";
++		led-max-microamp = <376000>;
++		flash-max-microamp = <1500000>;
++		flash-max-timeout-us = <1600000>;
++	};
++}
++
++For more product information please see the links below:
++http://www.ti.com/product/LM36010
++http://www.ti.com/product/LM36011
+-- 
+2.17.0.582.gccdcbd54c
