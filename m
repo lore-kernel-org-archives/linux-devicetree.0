@@ -1,54 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V1 3/3] mmc: host: Register changes for sdcc V5
-Date: Tue, 22 May 2018 14:45:54 -0500
-Message-ID: <20180522194554.GA21209@rob-hp-laptop>
-References: <1526552938-21292-1-git-send-email-vviswana@codeaurora.org>
- <1526552938-21292-4-git-send-email-vviswana@codeaurora.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 2/2] ARM: pxa: dts: add pin definitions for extended GPIOs
+Date: Tue, 22 May 2018 21:46:26 +0200
+Message-ID: <e97656f6-2bfb-c479-e0c2-cd18a6fd20d9@zonque.org>
+References: <20180521220044.821-1-daniel@zonque.org>
+ <20180521220044.821-2-daniel@zonque.org> <87tvqzxz5z.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526552938-21292-4-git-send-email-vviswana@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Viswanath <vviswana@codeaurora.org>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87tvqzxz5z.fsf@belgarion.home>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 03:58:58PM +0530, Vijay Viswanath wrote:
-> From: Sayali Lokhande <sayalil@codeaurora.org>
+On Tuesday, May 22, 2018 09:34 PM, Robert Jarzmik wrote:
+> Daniel Mack <daniel@zonque.org> writes:
 > 
-> For SDCC version 5.0.0 and higher, new compatible string
-> "qcom,sdhci-msm-v5" is added.
+>> The PXA3xx series features some extended GPIO banks which are named GPIO0_2,
+>> GPIO1_2 etc. The PXA300, PXA310 and PXA320 have different numbers of such
+>> pins, and they also have variant-specific register offsets.
+>>
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>> ---
+>>   arch/arm/boot/dts/pxa3xx.dtsi | 24 ++++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+>> index a13ac52e4fd2..446e612688c0 100644
+>> --- a/arch/arm/boot/dts/pxa3xx.dtsi
+>> +++ b/arch/arm/boot/dts/pxa3xx.dtsi
+>> @@ -8,6 +8,13 @@
+>>   	 (gpio <= 98) ? (0x0400 + 4 * (gpio - 27)) :	\
+>>   	 (gpio <= 127) ? (0x0600 + 4 * (gpio - 99)) :	\
+>>   	 0)
+>> +#define MFP_PIN_PXA300_0_2	0x674
+>> +#define MFP_PIN_PXA300_1_2	0x678
+>> +#define MFP_PIN_PXA300_2_2	0x2dc
+>> +#define MFP_PIN_PXA300_3_2	0x2e0
+>> +#define MFP_PIN_PXA300_4_2	0x2e4
+>> +#define MFP_PIN_PXA300_5_2	0x2e8
+>> +#define MFP_PIN_PXA300_6_2	0x2ec
 > 
-> Based on the msm variant, pick the relevant variant data and
-> use it for register read/write to msm specific registers.
+> To be consistent with the previous items, could it be something like :
+> #define MFP_PIN_PXA300_2(gpio) \
+>    ... etc ...
 > 
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-> ---
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |   5 +-
 
-Please split binding patches.
+Ah, yes. Much nicer. Will resend!
 
->  drivers/mmc/host/sdhci-msm.c                       | 344 +++++++++++++--------
->  2 files changed, 222 insertions(+), 127 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index bfdcdc4..c2b7b2b 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -4,7 +4,10 @@ This file documents differences between the core properties in mmc.txt
->  and the properties used by the sdhci-msm driver.
->  
->  Required properties:
-> -- compatible: Should contain "qcom,sdhci-msm-v4".
-> +- compatible: Should contain "qcom,sdhci-msm-v4" or "qcom,sdhci-msm-v5".
 
-Format with 1 per line.
-
-> +		 For SDCC version 5.0.0, MCI registers are removed from SDCC
-> +		 interface and some registers are moved to HC. New compatible
-> +		 string is added to support this change - "qcom,sdhci-msm-v5".
->  - reg: Base address and length of the register in the following order:
->  	- Host controller register map (required)
->  	- SD Core register map (required)
+Thanks,
+Daniel
