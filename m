@@ -1,51 +1,21 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC V2 0/6] hwmon: Add support for Raspberry Pi voltage sensor
-Date: Tue, 22 May 2018 13:21:46 +0200
-Message-ID: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/2] clk: imx6ul: add GPIO clock gates
+Date: Tue, 22 May 2018 08:25:34 -0300
+Message-ID: <CAOMZO5B=-c4erNEBqftyr-aaa17Vhy_bnOTHuvPFSKVP8D6j6w@mail.gmail.com>
+References: <1526959560-6014-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Eric Anholt <eric@anholt.net>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1526959560-6014-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, Matteo Lisi <matteo.lisi@engicam.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QSBjb21tb24gaXNzdWUgZm9yIHRoZSBSYXNwYmVycnkgUGkgaXMgYW4gaW5hZGVxdWF0ZSBwb3dl
-ciBzdXBwbHkuIApOb3JhbGYgVHLDuG5uZXMgc3RhcnRlZCBhIGRpc2N1c3Npb24gWzFdIGFib3V0
-IHdyaXRpbmcgc3VjaCB1bmRlcnZvbHRhZ2UKY29uZGl0aW9ucyBpbnRvIHRoZSBrZXJuZWwgbG9n
-LgoKVGhpcyBzZXJpZXMgaXMgYSBkcmFmdCB0byB1cHN0cmVhbSB0aGUgcmVzdWx0aW5nIGtlcm5l
-bCBwYXRjaCBhbmQgaXMgbm90CmludGVuZGVkIGZvciA0LjE4LgoKQ2hhbmdlcyBpbiBWMjoKLSBz
-aW1wbGlmaWVkIEtjb25maWcgZGVwZW5kZW5jeSBzdWdnZXN0ZWQgYnkgUm9iaW4gTXVycGh5Ci0g
-cmVwbGFjZSBkdC1iaW5kaW5nIGJ5IHByb2JpbmcgZnJvbSBmaXJtd2FyZSBkcml2ZXIKLSBhZGQg
-aHdtb24gZG9jdW1lbnRhdGlvbgotIG1pbm9yIGltcHJvdmVtZW50cyBzdWdnZXN0ZWQgYnkgR3Vl
-bnRlciBSb2VjawoKWzFdIC0gaHR0cHM6Ly9naXRodWIuY29tL3Jhc3BiZXJyeXBpL2xpbnV4L2lz
-c3Vlcy8yMzY3CgpTdGVmYW4gV2FocmVuICg2KToKICBBUk06IGJjbTI4MzU6IEFkZCBHRVRfVEhS
-T1RUTEVEIGZpcm13YXJlIHByb3BlcnR5CiAgaHdtb246IEFkZCBzdXBwb3J0IGZvciBSUGkgdm9s
-dGFnZSBzZW5zb3IKICBmaXJtd2FyZTogcmFzcGJlcnJ5cGk6IFJlZ2lzdGVyIGh3bW9uIGRyaXZl
-cgogIEFSTTogYmNtMjgzNV9kZWZjb25maWc6IEVuYWJsZSBSUGkgdm9sdGFnZSBzZW5zb3IKICBB
-Uk06IG11bHRpX3Y3X2RlZmNvbmZpZzogRW5hYmxlIFJQaSB2b2x0YWdlIHNlbnNvcgogIGFybTY0
-OiBkZWZjb25maWc6IEVuYWJsZSBSUGkgdm9sdGFnZSBzZW5zb3IKCiBEb2N1bWVudGF0aW9uL2h3
-bW9uL3Jhc3BiZXJyeXBpLWh3bW9uICAgICAgfCAgMjIgKysrKwogYXJjaC9hcm0vY29uZmlncy9i
-Y20yODM1X2RlZmNvbmZpZyAgICAgICAgIHwgICAyICstCiBhcmNoL2FybS9jb25maWdzL211bHRp
-X3Y3X2RlZmNvbmZpZyAgICAgICAgfCAgIDEgKwogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZp
-ZyAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZmlybXdhcmUvcmFzcGJlcnJ5cGkuYyAg
-ICAgICAgICAgICB8ICAxOSArKysrCiBkcml2ZXJzL2h3bW9uL0tjb25maWcgICAgICAgICAgICAg
-ICAgICAgICAgfCAgMTAgKysKIGRyaXZlcnMvaHdtb24vTWFrZWZpbGUgICAgICAgICAgICAgICAg
-ICAgICB8ICAgMSArCiBkcml2ZXJzL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uLmMgICAgICAgICAg
-fCAxNjggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIGluY2x1ZGUvc29jL2JjbTI4MzUv
-cmFzcGJlcnJ5cGktZmlybXdhcmUuaCB8ICAgMSArCiA5IGZpbGVzIGNoYW5nZWQsIDIyNCBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9od21vbi9yYXNwYmVycnlwaS1od21vbgogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaHdt
-b24vcmFzcGJlcnJ5cGktaHdtb24uYwoKLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, May 22, 2018 at 12:25 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> i.MX6UL has GPIO clock gates in CCM CCGR, add
+> them into clock tree for clock management.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
