@@ -1,42 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 8/8] dt-bindings: stm32: add compatible for syscon
-Date: Tue, 22 May 2018 12:22:38 -0500
-Message-ID: <20180522172238.GA26145@rob-hp-laptop>
-References: <1526890046-10565-1-git-send-email-christophe.roullier@st.com>
- <1526890046-10565-9-git-send-email-christophe.roullier@st.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
+ partitions
+Date: Tue, 22 May 2018 12:30:50 -0500
+Message-ID: <20180522173050.GA9245@rob-hp-laptop>
+References: <20180509081729.28347-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1526890046-10565-9-git-send-email-christophe.roullier@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Christophe Roullier <christophe.roullier@st.com>
-Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, andrew@lunn.ch
+In-Reply-To: <20180509081729.28347-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2018 at 10:07:26AM +0200, Christophe Roullier wrote:
-> This patch describes syscon DT bindings.
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
->  Documentation/devicetree/bindings/arm/stm32.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
-> index 6808ed9..e46ebad 100644
-> --- a/Documentation/devicetree/bindings/arm/stm32.txt
-> +++ b/Documentation/devicetree/bindings/arm/stm32.txt
-> @@ -8,3 +8,8 @@ using one of the following compatible strings:
->    st,stm32f746
->    st,stm32h743
->    st,stm32mp157
-> +
-> +Required nodes:
-> +- syscon: the soc bus node must have a system controller node pointing to the
-> +  global control registers, with the compatible string
-> +  "st,stm32mp157-syscfg", "syscon";
-
-Please don't mix soc/board bindings with other nodes. So perhaps 
-stm32-syscon.txt.
-
-Rob
+T24gV2VkLCBNYXkgMDksIDIwMTggYXQgMTA6MTc6MjhBTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
+IHdyb3RlOgo+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBC
+cm9hZGNvbSBiYXNlZCBob21lIHJvdXRlciBkZXZpY2VzIHVzZSBwYXJ0aXRpb25zIHdoaWNoIGhh
+dmUgdG8gYmUKPiBkaXNjb3ZlcmVkIGluIGEgc3BlY2lmaWMgd2F5LiBUaGV5IGFyZSBub3QgZml4
+ZWQgYW5kIHRoZXJlIGlzIG5vdCBhbnkKPiBzdGFuZGFyZCBwYXJ0aXRpb24gdGFibGUuIFRoaXMg
+Y29tbWl0IGFkZHMgYW5kIGRlc2NyaWJlcyBhIG5ldyBjdXN0b20KPiBiaW5kaW5nIGZvciBzdWNo
+IGRldmljZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxl
+Y2tpLnBsPgo+IC0tLQo+IFRoaXMgY29tbWl0IGRvY3VtZW50cyBhIG5ldyBiaW5kaW5nIGZvciBk
+ZXNjcmliaW5nIHBhcnRpdGlvbnMuIEp1c3QgYXMgYQo+IHJlbWluZGVyOiB3ZSBhZ3JlZWQgdG8g
+dXNlICJjb21wYXRpYmxlIiBmb3IgdGhhdCBwdXJwb3NlIHRvIGF2b2lkCj4gL2d1ZXNzaW5nLy4g
+VGhlcmUgYXJlIHRvbyBtYW55IGNhc2VzLCBkZXZpY2VzIGFuZCAvZm9ybWF0cy8gdG8ganVzdAo+
+IGJsaW5kbHkgdHJ5IGV2ZXJ5IHBvc3NpYmxlIHBhcnNlci4KPiAKPiBUaGlzIHdhcyBlLmcuIGRl
+c2NyaWJlZCBieSBCb3JpcyBpbiBoaXMgcGF0Y2hzZXQgMisgeWVhcnMgYWdvOgo+IFtSRkMgUEFU
+Q0ggMC83XSBtdGQ6IHBhcnRpdGlvbnM6IGFkZCBvZl9tYXRjaF90YWJsZSBzdXBwb3J0Cj4gaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVy
+LzA2NDA3Ni5odG1sCj4gCj4gUXVvdGU6Cj4gPiAgKDIpIHdlIGNhbid0IGp1c3Qgc2NhbiBmb3Ig
+YWxsIHN1cHBvcnRlZCBwYXJzZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0gZG9lcyksIHNpbmNl
+Cj4gPiAgICAgIHRoZXJlIGlzIGEgd2lkZSBkaXZlcnNpdHkgb2YgImZvcm1hdHMiIChubyBzdGFu
+ZGFyZGl6YXRpb24pLCBhbmQgaXQgaXMgbm90Cj4gPiAgICAgIGFsd2F5cyBzYWZlIG9yIGVmZmlj
+aWVudCB0byBhdHRlbXB0IHRvIGRvIHNvLCBwYXJ0aWN1bGFybHkgc2luY2UgbWFueSBvZgo+ID4g
+ICAgICB0aGVtIGFsbG93IHRoZWlyIGRhdGEgc3RydWN0dXJlcyB0byBiZSBwbGFjZWQgYW55d2hl
+cmUgb24gdGhlIGZsYXNoLCBhbmQKPiA+ICAgICAgc28gcmVxdWlyZSBzY2FubmluZyB0aGUgZW50
+aXJlIGZsYXNoIGRldmljZSB0byBmaW5kIHRoZW0uCj4gCj4gSSBiZWxpZXZlIHRoaXMgc29sdXRp
+b24gd2FzIGFsc28gYWNrZWQgYmFjayB0aGVuIGJ5IFJvYjoKPiBbUkZDIFBBVENIIDMvN10gZG9j
+OiBkdDogbXRkOiBwYXJ0aXRpb246IGFkZCBvbi1mbGFzaCBmb3JtYXQgYmluZGluZwo+IGh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1tdGQvMjAxNS1EZWNlbWJlci8w
+NjQxMDAuaHRtbAo+IAo+IFYyOiBNb3ZlIGRvY3VtZW50YXRpb24gdG8gdGhlIG5ldyBicmNtLGJj
+bTk0N3h4LWNmZS1wYXJ0aXRpb25zLnR4dCBmaWxlCj4gICAgIGFzIHN1Z2dlc3RlZCBieSBSb2Ig
+KHdlIGRvbid0IHdhbnQgdG8gYmxvYXQgcGFydGl0aW9uLnR4dCkuCj4gICAgIFNsaWdodGx5IHVw
+ZGF0ZSBjb21taXQgbWVzc2FnZS4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRk
+L3BhcnRpdGlvbi50eHQgICAgICAgICAgfCAgMiArLQo+ICAuLi4vcGFydGl0aW9ucy9icmNtLGJj
+bTk0N3h4LWNmZS1wYXJ0aXRpb25zLnR4dCAgICB8IDQyICsrKysrKysrKysrKysrKysrKysrKysK
+PiAgMiBmaWxlcyBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3Bh
+cnRpdGlvbnMvYnJjbSxiY205NDd4eC1jZmUtcGFydGl0aW9ucy50eHQKClJldmlld2VkLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcg
+bGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10
+ZC8K
