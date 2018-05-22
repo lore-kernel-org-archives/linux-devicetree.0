@@ -1,109 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 3/6] dt-bindings: clock: renesas,rzn1-clocks: document
- RZ/N1 clock driver
-Date: Tue, 22 May 2018 11:09:13 -0500
-Message-ID: <20180522160913.GA7755@rob-hp-laptop>
-References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
- <1526983321-41949-4-git-send-email-michel.pollet@bp.renesas.com>
+Subject: Re: [PATCH v6 07/13] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Tue, 22 May 2018 11:10:48 -0500
+Message-ID: <20180522161048.GA17123@rob-hp-laptop>
+References: <20180522145245.3143-1-rui.silva@linaro.org>
+ <20180522145245.3143-8-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1526983321-41949-4-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <20180522145245.3143-8-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 11:01:23AM +0100, Michel Pollet wrote:
-> The Renesas RZ/N1 Family (Part #R9A06G0xx) requires a driver
-> to provide the SoC clock infrastructure for Linux.
+On Tue, May 22, 2018 at 03:52:39PM +0100, Rui Miguel Silva wrote:
+> Add bindings documentation for i.MX7 media drivers.
+> The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
 > 
-> This documents the driver bindings.
-> 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 > ---
->  .../bindings/clock/renesas,rzn1-clocks.txt         | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
-> new file mode 100644
-> index 0000000..0c41137
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
-> @@ -0,0 +1,44 @@
-> +* Renesas RZ/N1 Clock Driver
-> +
-> +This driver provides the clock infrastructure used by all the other drivers.
+>  .../devicetree/bindings/media/imx7-csi.txt    | 44 ++++++++++
+>  .../bindings/media/imx7-mipi-csi2.txt         | 82 +++++++++++++++++++
+>  2 files changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7-csi.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
 
-Bindings document h/w not drivers.
-
-> +
-> +One of the 'special' feature of this infrastructure is that Linux doesn't
-
-Bindings are not just for Linux.
-
-> +necessary 'own' all the clocks on the SoC, some other OS runs on
-> +the Cortex-M3 core and that OS can access and claim it's own clocks.
-
-How is this relevant to the binding?
-
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be
-> +    - "renesas,r9a06g032-clocks" for the RZ/N1D
-> +    and "renesas,rzn1-clocks" as a fallback.
-
-Is "clocks" how the chip reference manual refers to this block?
-
-> +  - reg: Base address and length of the memory resource used by the driver
-> +  - #clock-cells: Must be 1
-> +
-> +Examples
-> +--------
-> +
-> +  - Clock driver device node:
-> +
-> +	clock: clocks@4000c000 {
-
-clock-controller@...
-
-> +		compatible = "renesas,r9a06g032-clocks",
-> +				"renesas,rzn1-clocks";
-> +		reg = <0x4000c000 0x1000>;
-> +		status = "okay";
-
-Don't show status in examples. (Plus, I doubt you ever want to have this 
-disabled, so you don't need the property in your dts files either).
-
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +
-> +  - Other drivers can use the clocks as in:
-
-s/drivers/nodes/
-
-> +
-> +	uart0: serial@40060000 {
-> +		compatible = "snps,dw-apb-uart";
-> +		reg = <0x40060000 0x400>;
-> +		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clocks = <&clock RZN1_CLK_UART0>;
-> +		clock-names = "baudclk";
-> +	};
-> +    Note the use of RZN1_CLK_UART0 -- these constants are declared in
-> +    the rzn1-clocks.h header file. These are not hardware based constants
-> +    and are Linux specific.
-
-No, they are not Linux specific. They are part of the DT ABI. 
-
-While it is not a requirement to base them on some h/w numbering, it is 
-preferred if you can. That usually only works if you can base them on 
-bit positions or register offsets.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
