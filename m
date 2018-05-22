@@ -1,29 +1,38 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v2 1/7] net: dsa: qca8k: Add QCA8334 binding
- documentation
-Date: Tue, 22 May 2018 23:58:23 +0200
-Message-ID: <20180522215823.GE4396@lunn.ch>
-References: <1526987792-56861-1-git-send-email-michal.vokac@ysoft.com>
- <1526987792-56861-2-git-send-email-michal.vokac@ysoft.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] soc: bcm: brcmstb: pm: Add support for newer rev
+ B3.0 controllers
+Date: Tue, 22 May 2018 17:30:24 -0500
+Message-ID: <20180522223024.GA7817@rob-hp-laptop>
+References: <20180511220242.837-1-f.fainelli@gmail.com>
+ <20180511220242.837-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1526987792-56861-2-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <20180511220242.837-2-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <vokac.m@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, michal.vokac@ysoft.com
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Doug Berger <opendmb@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Justin Chen <justinpopo6@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 01:16:26PM +0200, Michal Vokáč wrote:
-> Add support for the four-port variant of the Qualcomm QCA833x switch.
+On Fri, May 11, 2018 at 03:02:41PM -0700, Florian Fainelli wrote:
+> From: Doug Berger <opendmb@gmail.com>
 > 
-> The CPU port default link settings can be reconfigured using
-> a fixed-link sub-node.
+> Update the Device Tree binding document and add a matching entry for the
+> MEMC DDR controller revision B3.0 which is found on chips like 7278A0
+> and newer.
 > 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
+> [florian: tweak commit message, make it apply to upstream kernel]
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt | 1 +
+>  drivers/soc/bcm/brcmstb/pm/pm-arm.c                        | 4 ++++
+>  2 files changed, 5 insertions(+)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-    Andrew
+Side note: this should really move out of bindings/arm/ to 
+bindings/memory-controllers/ or at least to its own file.
+
+Rob
