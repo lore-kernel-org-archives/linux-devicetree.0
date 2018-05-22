@@ -1,7 +1,7 @@
 From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH 4/9] ARM: dts: koelsch: Drop MTD partitioning from DT
-Date: Tue, 22 May 2018 14:02:52 +0200
-Message-ID: <20180522120257.13232-4-marek.vasut+renesas@gmail.com>
+Subject: [PATCH 9/9] ARM: dts: silk: Drop MTD partitioning from DT
+Date: Tue, 22 May 2018 14:02:57 +0200
+Message-ID: <20180522120257.13232-9-marek.vasut+renesas@gmail.com>
 References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -29,7 +29,7 @@ To retain the original partitioning, assure you have enabled
 CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
 following to your kernel command line:
 
-  mtdparts=spi0.0:512k@0(loader),5632k(user),-(flash)
+  mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
 
 Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Cc: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -38,16 +38,16 @@ Cc: Simon Horman <horms+renesas@verge.net.au>
 Cc: Wolfram Sang <wsa@the-dreams.de>
 Cc: linux-renesas-soc@vger.kernel.org
 ---
- arch/arm/boot/dts/r8a7791-koelsch.dts | 21 ---------------------
+ arch/arm/boot/dts/r8a7794-silk.dts | 21 ---------------------
  1 file changed, 21 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 8ab793d8b2fd..406d5d29e29c 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -724,27 +724,6 @@
- 		spi-cpha;
+diff --git a/arch/arm/boot/dts/r8a7794-silk.dts b/arch/arm/boot/dts/r8a7794-silk.dts
+index 7808aaee6644..b8163a0e2190 100644
+--- a/arch/arm/boot/dts/r8a7794-silk.dts
++++ b/arch/arm/boot/dts/r8a7794-silk.dts
+@@ -444,27 +444,6 @@
  		spi-cpol;
+ 		spi-cpha;
  		m25p,fast-read;
 -
 -		partitions {
@@ -57,17 +57,17 @@ index 8ab793d8b2fd..406d5d29e29c 100644
 -
 -			partition@0 {
 -				label = "loader";
--				reg = <0x00000000 0x00080000>;
+-				reg = <0x00000000 0x00040000>;
 -				read-only;
 -			};
--			partition@80000 {
+-			partition@40000 {
 -				label = "user";
--				reg = <0x00080000 0x00580000>;
+-				reg = <0x00040000 0x00400000>;
 -				read-only;
 -			};
--			partition@600000 {
+-			partition@440000 {
 -				label = "flash";
--				reg = <0x00600000 0x03a00000>;
+-				reg = <0x00440000 0x03bc0000>;
 -			};
 -		};
  	};
