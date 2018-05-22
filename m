@@ -1,28 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] thermal: qcom: tsens: Allow number of sensors to come
- from DT
-Date: Tue, 22 May 2018 15:14:17 -0500
-Message-ID: <20180522201417.GA19576@rob-hp-laptop>
-References: <20180507235339.8836-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Add compatible string for FRWY-LS1012A
+Date: Tue, 22 May 2018 15:15:39 -0500
+Message-ID: <20180522201539.GA21936@rob-hp-laptop>
+References: <1525760999-6187-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+ <1525760999-6187-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180507235339.8836-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1525760999-6187-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+Cc: oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 07, 2018 at 04:53:39PM -0700, Bjorn Andersson wrote:
-> For platforms that has multiple copies of the TSENS hardware block it's
-> necessary to be able to specify the number of sensors per block in DeviceTree.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Tue, May 08, 2018 at 11:59:59AM +0530, Bhaskar Upadhaya wrote:
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
 > ---
->  .../devicetree/bindings/thermal/qcom-tsens.txt       |  1 +
+>  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
->  drivers/thermal/qcom/tsens.c                         | 12 +++++++++---
->  2 files changed, 10 insertions(+), 3 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
