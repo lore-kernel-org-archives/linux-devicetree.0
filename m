@@ -1,13 +1,13 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/9] ARM: shmobile: defconfig: Enable MTD command line
- partition parsing
-Date: Tue, 22 May 2018 14:32:53 +0200
-Message-ID: <20180522123253.gvxinjmam5hwse5c@ninjato>
+Subject: Re: [PATCH 4/9] ARM: dts: koelsch: Drop MTD partitioning from DT
+Date: Tue, 22 May 2018 14:34:34 +0200
+Message-ID: <20180522123434.abrarobrigx7h4bs@ninjato>
 References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-4-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5032247212923332956=="
+Content-Type: multipart/mixed; boundary="===============7178532910041462046=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+In-Reply-To: <20180522120257.13232-4-marek.vasut+renesas@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,60 +22,62 @@ Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, li
 List-Id: devicetree@vger.kernel.org
 
 
---===============5032247212923332956==
+--===============7178532910041462046==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4bbgvzjmey25ks6c"
+	protocol="application/pgp-signature"; boundary="mbkd4pyt2xxonq6w"
 Content-Disposition: inline
 
 
---4bbgvzjmey25ks6c
+--mbkd4pyt2xxonq6w
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 22, 2018 at 02:02:49PM +0200, Marek Vasut wrote:
-> In preparation for removing MTD partitioning from the DTs and moving
-> it over to kernel command line partition parsing, enable the support
-> for kernel command line MTD partition parsing.
+On Tue, May 22, 2018 at 02:02:52PM +0200, Marek Vasut wrote:
+> Drop the MTD partitioning from DT, since it does not describe HW
+> and to give way to a more flexible kernel command line partition
+> passing.
 >=20
-> The argument for not having MTD partitions in the DT is the same as
-> for not having hard drive partitions in DT, neither describes the
-> hardware itself, so it shouldn't be in the DT. Furthermore, kernel
-> command line MTD partition passing allows greater flexibility in
-> case someone decided to repartition the flash, which is well in the
-> realm of possibility with these systems.
+> To retain the original partitioning, assure you have enabled
+> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
+> following to your kernel command line:
+>=20
+>   mtdparts=3Dspi0.0:512k@0(loader),5632k(user),-(flash)
 >=20
 > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-
-Makes a lot of sense to me.
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Simon Horman <horms+renesas@verge.net.au>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: linux-renesas-soc@vger.kernel.org
 
 Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
---4bbgvzjmey25ks6c
+--mbkd4pyt2xxonq6w
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsEDfEACgkQFA3kzBSg
-KbY+dg/9HMlpFXhuk4Qd5jIwAs2znBC3GnO+RH10krylfgWdqaa4uzDt5ibzRDCs
-UBroGdOxPMforBaSy0pCa2fvKFXDnYDWqFqe+fHkcfcGPeMUg6CF4XT+eLFONSvl
-jPBJJrrtkfTcd6baKe2sc0QGEooHrZU3v6uptcU0R9hGoe4Q4G9+41vnOdZNgDgA
-l+TQawaGB7tq5gs80YUns56qlRLmrlOEr7JHexin3j7eAL5PAGEMWjRkCxXK7dvQ
-Pcpil67/Isc6P8VPBJsM/NDmTWqTh3NybQm9fYKkCQl3vlQDd9sMaWcsI2/28ZS6
-xo+sW214unS4pK+wvzD7G0hcWWs81lkCa63tMK80CH1EHDhWF1u0eKXtKQ6smi9T
-zukkf2nTHoFAjTHEuadI6bZpCp95JAf8hVaF5dnnModsB9hV7TprfnfWzcIOqQGk
-fbaKR8C0nWUMYkjXBfPelmLCL/CM8Hrp+o05W0uHKc6aeAo7EpVJP7/oidqnXwdP
-aaOhoTteFgLFXolUEikZwSqrasQl1nSf3qIiaPIJ0+e48MghFh/+V7JGE3ej/J/K
-BB71aLOPdqCcL+q3+DEKyQYUj7FPYyEBiXTJ9kUQTBTL/hT1EZ3N/0z39Xz6cyau
-3S3x642M/MvozeVYkmNhMjr4sF6ZM9qPmDmQk+l/JUi1lmVz/Rw=
-=24iJ
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsEDloACgkQFA3kzBSg
+KbbIcBAAh6ISCT3+7KIJSJZ8aRmrZ4BbXyoXAK8VA5NMMf3f2mQKVCheApVeSxq4
+8tth/rvqb5sprj8l4h+LMWst0NPvqjlMIopYIQDs9Jeh528rzqDDf6GpZ4D7WNQq
+htAHLe+LnHl3NRTlUcV7+5vBgqLyg6SNGAEt9pk/Y/tQ5LWP4uyHQlQ2yqMrOwkb
+2oP4HLLwrmXqRj93b65qnuCLFg2PGJyo0dX/1EooEh881WvV2+ZWCtwtdSYTA0Kz
+AyRFtRnPpEGGu5rbFQ2HhBms3KzsXRwwueacWNoY8bsxaEn/DgNYRK6oTZw1Lox0
+Tb3S3Jf8qk2JePYWzTxeMZkmC5SY72gBZ/ZanMX4Ce4ilHtTfzDrfvRf1Rb5DJGh
+Gf3scK7t2YdPpbiUn5AJlhnV08GesLYqUdr++8ltOuQERpO/ayIFa+Cr1W59jBY3
+UZZV2oa+NpAowLP4JEXv+FbV70zq4m35dpbu2025b1uGGAuGqssZFqpeNZRi4f+a
+/VNnJHCMQyPsW7SR2qvak25WxzzocyQz0h6tCQWWih4MFhkcioGe3jWYGbEMYS+t
+siLYYXanQQNCTubiyemPhZTreFFUgkCyniP05WfJ5LSqTbQGkmRRZ6UbZPKks4ua
+aEMRpBBtwh/03Xo8wbu/CN60YFQxjUuZKaC1xf0RuOANuV2Fpgs=
+=ctHU
 -----END PGP SIGNATURE-----
 
---4bbgvzjmey25ks6c--
+--mbkd4pyt2xxonq6w--
 
 
---===============5032247212923332956==
+--===============7178532910041462046==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -86,4 +88,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============5032247212923332956==--
+--===============7178532910041462046==--
