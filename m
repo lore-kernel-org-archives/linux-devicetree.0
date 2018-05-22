@@ -1,31 +1,41 @@
-Return-Path: <SRS0=bk6U=IA=ragnatech.se=niklas.soderlund+renesas@kernel.org>
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH] media: dt-bindings: media: rcar_vin: add support for r8a77965
-Date: Sun, 13 May 2018 20:58:18 +0200
-Message-Id: <20180513185818.15359-1-niklas.soderlund+renesas@ragnatech.se>
+Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-by2nam03on0077.outbound.protection.outlook.com ([104.47.42.77]:32319
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751214AbeEVN1L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 22 May 2018 09:27:11 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [RESEND PATCH 1/4] PCI: cadence: Update cdns_pcie_writel function signature
+Date: Tue, 22 May 2018 14:26:53 +0100
+Message-ID: <1526995613-8560-1-git-send-email-adouglas@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.com, cyrille.pitchen@free-electrons.com, Alan Douglas <adouglas@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
- 1 file changed, 1 insertion(+)
+Change cdns_pcie_writel() signature, u16 value changed to u32, since
+this function should write a long value
 
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index a19517e1c669eb35..c2c57dcf73f4851b 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -21,6 +21,7 @@ on Gen3 platforms to a CSI-2 receiver.
-    - "renesas,vin-r8a7794" for the R8A7794 device
-    - "renesas,vin-r8a7795" for the R8A7795 device
-    - "renesas,vin-r8a7796" for the R8A7796 device
-+   - "renesas,vin-r8a77965" for the R8A77965 device
-    - "renesas,vin-r8a77970" for the R8A77970 device
-    - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
-      device.
+Signed-off-by: Alan Douglas <adouglas@cadence.com>
+---
+ drivers/pci/cadence/pcie-cadence.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/cadence/pcie-cadence.h b/drivers/pci/cadence/pcie-cadence.h
+index 4bb2733..ed336cc 100644
+--- a/drivers/pci/cadence/pcie-cadence.h
++++ b/drivers/pci/cadence/pcie-cadence.h
+@@ -279,7 +279,7 @@ static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
+ }
+ 
+ static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
+-					  u32 reg, u16 value)
++					  u32 reg, u32 value)
+ {
+ 	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
+ }
 -- 
-2.17.0
+2.2.2
+
