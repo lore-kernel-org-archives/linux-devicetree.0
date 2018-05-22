@@ -1,143 +1,57 @@
-From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH] cpufreq: Add Kryo CPU scaling driver
-Date: Tue, 22 May 2018 09:56:19 +0300
-Message-ID: <001201d3f19a$0130a860$0391f920$@codeaurora.org>
-References: <1526555955-29960-11-git-send-email-ilialin@codeaurora.org> <1526729701-8589-1-git-send-email-ilialin@codeaurora.org> <153cc316-dcb5-972f-5a2f-c91fe0f6348b@arm.com> <000f01d3f103$3ff78ba0$bfe6a2e0$@codeaurora.org> <2ace10bc-e1c4-2060-94d3-eb71e966ffbe@arm.com>
+From: Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH 6/7 v5] bus: fsl-mc: set coherent dma mask for devices on
+	fsl-mc bus
+Date: Tue, 22 May 2018 07:03:44 +0000
+Message-ID: <5B03C0D0.1090609@nxp.com>
+References: <1526824191-7000-1-git-send-email-nipun.gupta@nxp.com>
+	<1526824191-7000-7-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2ace10bc-e1c4-2060-94d3-eb71e966ffbe@arm.com>
-Content-Language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Sudeep Holla' <sudeep.holla@arm.com>, mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1526824191-7000-7-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-US
+Content-ID: <FB70176499E51542B41B9AB282AF31C3-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> Sent: Monday, May 21, 2018 16:05
-> To: ilialin@codeaurora.org; mturquette@baylibre.com; sboyd@kernel.org;
-> robh@kernel.org; mark.rutland@arm.com; viresh.kumar@linaro.org;
-> nm@ti.com; lgirdwood@gmail.com; broonie@kernel.org;
-> andy.gross@linaro.org; david.brown@linaro.org; =
-catalin.marinas@arm.com;
-> will.deacon@arm.com; rjw@rjwysocki.net; linux-clk@vger.kernel.org
-> Cc: Sudeep Holla <sudeep.holla@arm.com>; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; linux-pm@vger.kernel.org; linux-arm-
-> msm@vger.kernel.org; linux-soc@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; rnayak@codeaurora.org;
-> amit.kucheria@linaro.org; nicolas.dechesne@linaro.org;
-> celster@codeaurora.org; tfinkel@codeaurora.org
-> Subject: Re: [PATCH] cpufreq: Add Kryo CPU scaling driver
->=20
->=20
->=20
-> On 21/05/18 13:57, ilialin@codeaurora.org wrote:
-> >
-> [...]
->=20
-> >>> +#include <linux/cpu.h>
-> >>> +#include <linux/err.h>
-> >>> +#include <linux/init.h>
-> >>> +#include <linux/kernel.h>
-> >>> +#include <linux/module.h>
-> >>> +#include <linux/nvmem-consumer.h>
-> >>> +#include <linux/of.h>
-> >>> +#include <linux/platform_device.h>
-> >>> +#include <linux/pm_opp.h>
-> >>> +#include <linux/slab.h>
-> >>> +#include <linux/soc/qcom/smem.h>
-> >>> +
-> >>> +#define MSM_ID_SMEM	137
-> >>> +#define SILVER_LEAD	0
-> >>> +#define GOLD_LEAD	2
-> >>> +
-> >>
-> >> So I gather form other emails, that these are physical cpu =
-number(not
-> >> even unique identifier like MPIDR). Will this work on parts or
-> >> platforms that need to boot in GOLD LEAD cpus.
-> >
-> > The driver is for Kryo CPU, which (and AFAIK all multicore MSMs)
-> > always boots on the CPU0.
->=20
->=20
-> That may be true and I am not that bothered about it. But assuming =
-physical
-> ordering from the logical cpu number is *incorrect* and will break if =
-kernel
-> decides to change the allocation algorithm. Kernel provides no =
-guarantee on
-> that, so you need to depend on some physical ID or may be DT to =
-achieve
-> what your want. But the current code as it stands is wrong.
+On 05/20/2018 04:49 PM, Nipun Gupta wrote:
+> of_dma_configure() API expects coherent_dma_mask to be correctly
+> set in the devices. This patch does the needful.
+>
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
 
-Got your point. In fact CPUs are numbered 0-3 and ordered into 2 =
-clusters in the DT:
+Acked-by: Laurentiu Tudor <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>
 
-cpus {
-	#address-cells =3D <2>;
-	#size-cells =3D <0>;
+---
+Best Regards, Laurentiu
 
-	CPU0: cpu@0 {
-		...
-		reg =3D <0x0 0x0>;
-		...
-	};
-
-	CPU1: cpu@1 {
-		...
-		reg =3D <0x0 0x1>;
-		...
-	};
-
-	CPU2: cpu@100 {
-		...
-		reg =3D <0x0 0x100>;
-		...
-	};
-
-	CPU3: cpu@101 {
-		...
-		reg =3D <0x0 0x101>;
-		...
-	};
-
-	cpu-map {
-		cluster0 {
-			core0 {
-				cpu =3D <&CPU0>;
-			};
-
-			core1 {
-				cpu =3D <&CPU1>;
-			};
-		};
-
-		cluster1 {
-			core0 {
-				cpu =3D <&CPU2>;
-			};
-
-			core1 {
-				cpu =3D <&CPU3>;
-			};
-		};
-	};
-};
-
-As far, as I understand, they are probed in the same order. However, to =
-be certain that the physical CPU is the one I intend to configure, I =
-have to fetch the device structure pointer for the cpu-map -> clusterX =
--> core0 -> cpu path. Could you suggest a kernel API to do that?
-
-
-
->=20
-> --
-> Regards,
-> Sudeep
+> ---
+>   drivers/bus/fsl-mc/fsl-mc-bus.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index fa43c7d..624828b 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -627,6 +627,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>   		mc_dev->icid = parent_mc_dev->icid;
+>   		mc_dev->dma_mask = FSL_MC_DEFAULT_DMA_MASK;
+>   		mc_dev->dev.dma_mask = &mc_dev->dma_mask;
+> +		mc_dev->dev.coherent_dma_mask = mc_dev->dma_mask;
+>   		dev_set_msi_domain(&mc_dev->dev,
+>   				   dev_get_msi_domain(&parent_mc_dev->dev));
+>   	}
+>
