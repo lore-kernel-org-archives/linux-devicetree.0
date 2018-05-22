@@ -1,35 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] media: rcar-vin:  Drop unnecessary register properties
- from example vin port
-Date: Tue, 22 May 2018 15:57:47 -0500
-Message-ID: <20180522205747.GA2795@rob-hp-laptop>
-References: <20180509184558.14960-1-horms+renesas@verge.net.au>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v8 2/2] leds: lm3601x: Introduce the lm3601x LED driver
+Date: Tue, 22 May 2018 22:58:12 +0200
+Message-ID: <6577f2f9-7a31-3b98-71e2-2f86818eac7a@gmail.com>
+References: <20180522142417.19639-1-dmurphy@ti.com>
+ <20180522142417.19639-2-dmurphy@ti.com>
+ <CAHp75VfTtD3Mnyqb63R_BP8BoAGNZProLCgWoDMo-aTk5C-iVA@mail.gmail.com>
+ <dca52e6e-451c-2ca4-a001-867708622d7b@ti.com>
+ <CAHp75Vdg9HTyQhv1KMOCqq5FjgPAC2q015Opnh3jDWvZY2bbNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180509184558.14960-1-horms+renesas@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vdg9HTyQhv1KMOCqq5FjgPAC2q015Opnh3jDWvZY2bbNQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Dan Murphy <dmurphy@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 09, 2018 at 08:45:58PM +0200, Simon Horman wrote:
-> The example vin port node does not have an address and thus does not
-> need address-cells or address size-properties.
+On 05/22/2018 10:34 PM, Andy Shevchenko wrote:
+> On Tue, May 22, 2018 at 11:26 PM, Dan Murphy <dmurphy@ti.com> wrote:
+>> On 05/22/2018 03:12 PM, Andy Shevchenko wrote:
+>>> On Tue, May 22, 2018 at 5:24 PM, Dan Murphy <dmurphy@ti.com> wrote:
 > 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 3 ---
->  1 file changed, 3 deletions(-)
+> 
+>>>> +static struct lm3601x_led *fled_cdev_to_led(
+>>>> +                               struct led_classdev_flash *fled_cdev)
+>>>
+>>> Didn't notice before. This will look much better in one line.
+>>
+>> Gives LTL warning.
+> 
+> I wouldn't really care about it.
+> But I leave to Jacek to decide.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please make it one line.
+
+It is even Linus' recommendation to not strictly stick to the
+80 character limit as we all have modern computers nowadays.
+
+> After addressing the rest, FWIW,
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
