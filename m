@@ -1,77 +1,39 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RESEND PATCH 1/5] mtd: rawnand: tegra: add devicetree binding
-Date: Tue, 22 May 2018 19:52:30 +0200
-Message-ID: <20180522195230.471a796e@bbrezillon>
-References: <cover.1526990589.git.stefan@agner.ch>
-        <8bd0f80a9db9abc7af192d1c7d449887b1392ff7.1526990589.git.stefan@agner.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] input: touchscreen: edt-ft5x06: don't make device
+ a wakeup source by default
+Date: Tue, 22 May 2018 12:54:13 -0500
+Message-ID: <20180522175413.GA24850@rob-hp-laptop>
+References: <20180517090552.5704-1-daniel@zonque.org>
+ <20180517090552.5704-2-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8bd0f80a9db9abc7af192d1c7d449887b1392ff7.1526990589.git.stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180517090552.5704-2-daniel@zonque.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, kernel@pengutronix.de, linux-input@vger.kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Stefan,
-
-On Tue, 22 May 2018 14:07:05 +0200
-Stefan Agner <stefan@agner.ch> wrote:
-
-> From: Lucas Stach <dev@lynxeye.de>
+On Thu, May 17, 2018 at 11:05:50AM +0200, Daniel Mack wrote:
+> Allow configuring the device as wakeup source through device properties, as
+> not all platforms want to wake up on touch screen activity.
 > 
-> This adds the devicetree binding for the Tegra 2 NAND flash
-> controller.
-> 
-> Signed-off-by: Lucas Stach <dev@lynxeye.de>
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  .../bindings/mtd/nvidia,tegra20-nand.txt      | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> new file mode 100644
-> index 000000000000..522d442937a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> @@ -0,0 +1,29 @@
-> +NVIDIA Tegra NAND Flash controller
-> +
-> +Required properties:
-> +- compatible: Must be one of:
-> +  - "nvidia,tegra20-nand"
-> +- reg: MMIO address range
-> +- interrupts: interrupt output of the NFC controller
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +  - nand
-> +- resets: Must contain an entry for each entry in reset-names.
-> +  See ../reset/reset.txt for details.
-> +- reset-names: Must include the following entries:
-> +  - nand
-> +
-> +Optional properties:
-> +- nvidia,wp-gpios: GPIO used to disable write protection of the flash
-> +
-> +  Example:
-> +	nand@70008000 {
-> +		compatible = "nvidia,tegra20-nand";
-> +		reg = <0x70008000 0x100>;
-> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&tegra_car TEGRA20_CLK_NDFLASH>;
-> +		clock-names = "nand";
-> +		resets = <&tegra_car 13>;
-> +		reset-names = "nand";
-> +	};
+> The I2C core automatically reads the "wakeup-source" DT property to
+> configure a device's wakeup capability, and board supports files can set
+> I2C_CLIENT_WAKE in the flags.
 
-Can you represent the controller and NAND chip separately as
-recommended here [1].
+This will break wake-up on working systems. Looks like mostly i.MX, but 
+there's one AM437x board. If that board doesn't care, then it is up to 
+Shawn.
 
-Thanks,
-
-Boris
-
-[1]https://elixir.bootlin.com/linux/v4.17-rc6/source/Documentation/devicetree/bindings/mtd/nand.txt#L56
+Rob
