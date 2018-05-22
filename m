@@ -1,49 +1,62 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v8 2/2] leds: lm3601x: Introduce the lm3601x LED driver
-Date: Tue, 22 May 2018 22:58:12 +0200
-Message-ID: <6577f2f9-7a31-3b98-71e2-2f86818eac7a@gmail.com>
-References: <20180522142417.19639-1-dmurphy@ti.com>
- <20180522142417.19639-2-dmurphy@ti.com>
- <CAHp75VfTtD3Mnyqb63R_BP8BoAGNZProLCgWoDMo-aTk5C-iVA@mail.gmail.com>
- <dca52e6e-451c-2ca4-a001-867708622d7b@ti.com>
- <CAHp75Vdg9HTyQhv1KMOCqq5FjgPAC2q015Opnh3jDWvZY2bbNQ@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [linux-next PATCH 0/4] Enable network driver on K2G ICE and GP
+ EVMs
+Date: Tue, 22 May 2018 17:28:35 -0400
+Message-ID: <7df564c7-25af-f8a4-1f53-b41ee499c1eb@ti.com>
+References: <1526066952-5230-1-git-send-email-m-karicheri2@ti.com>
+ <8e1aa492-ae7a-de2b-f5d2-8756b10ece79@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vdg9HTyQhv1KMOCqq5FjgPAC2q015Opnh3jDWvZY2bbNQ@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8e1aa492-ae7a-de2b-f5d2-8756b10ece79@oracle.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Dan Murphy <dmurphy@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2018 10:34 PM, Andy Shevchenko wrote:
-> On Tue, May 22, 2018 at 11:26 PM, Dan Murphy <dmurphy@ti.com> wrote:
->> On 05/22/2018 03:12 PM, Andy Shevchenko wrote:
->>> On Tue, May 22, 2018 at 5:24 PM, Dan Murphy <dmurphy@ti.com> wrote:
-> 
-> 
->>>> +static struct lm3601x_led *fled_cdev_to_led(
->>>> +                               struct led_classdev_flash *fled_cdev)
->>>
->>> Didn't notice before. This will look much better in one line.
+On 05/20/2018 11:17 PM, santosh.shilimkar@oracle.com wrote:
+> On 5/11/18 12:29 PM, Murali Karicheri wrote:
+>> Now that NetCP driver patches for K2G SoC is merged to linux-next master
+>> this series add patches to enable network driver on K2G ICE and GP EVMs.
 >>
->> Gives LTL warning.
+>> Thanks
+>>
+>> Applied the patches on top of latest linux-next master, built kernel and
+>> booted up on both EVMs. The logs are below
+>>
+>> K2G GP EVM: https://pastebin.ubuntu.com/p/ycZDnZXYPx/
+>> K2G ICE EVM: https://pastebin.ubuntu.com/p/bdCpzgdrXr/
+>>
+>> Murali Karicheri (4):
+>>    ARM: dts: k2g: add dt bindings to support network driver
+>>    ARM: dts: keystone-k2g-evm: Enable netcp network driver
+>>    ARM: dts: keystone-k2g-ice: Enable netcp network driver
+>>    ARM: keystone: k2g: enable micrel and dp83867 phys
+>>
+>>   arch/arm/boot/dts/keystone-k2g-evm.dts    |  53 +++++++++++
+>>   arch/arm/boot/dts/keystone-k2g-ice.dts    |  59 ++++++++++++
+>>   arch/arm/boot/dts/keystone-k2g-netcp.dtsi | 147 ++++++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/keystone-k2g.dtsi       |  13 +++
+>>   arch/arm/configs/keystone_defconfig       |   2 +
+>>   5 files changed, 274 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/keystone-k2g-netcp.dtsi
+>>
+> Looks good. Will add this to the queue for 4.19. Thanks !!
 > 
-> I wouldn't really care about it.
-> But I leave to Jacek to decide.
-
-Please make it one line.
-
-It is even Linus' recommendation to not strictly stick to the
-80 character limit as we all have modern computers nowadays.
-
-> After addressing the rest, FWIW,
+> Regards,
+> Santosh
 > 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
+Thanks Santosh!
 
 -- 
-Best regards,
-Jacek Anaszewski
+Murali Karicheri
+Linux Kernel, Keystone
