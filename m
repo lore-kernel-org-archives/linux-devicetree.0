@@ -1,115 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: pinctrl: qcom: add gpio-ranges,
- gpio-reserved-ranges
-Date: Tue, 22 May 2018 11:29:46 -0500
-Message-ID: <20180522162946.GA25556@rob-hp-laptop>
-References: <910e5a85a6a8020069996e2ff397c93e9c5fe18c.1526935804.git.chunkeey@gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: media: rcar-vin: Add R8A77995 support
+Date: Tue, 22 May 2018 11:34:13 -0500
+Message-ID: <20180522163413.GA8032@rob-hp-laptop>
+References: <1526913942-15426-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526913942-15426-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <910e5a85a6a8020069996e2ff397c93e9c5fe18c.1526935804.git.chunkeey@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Lamparter <chunkeey@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, Sven Eckelmann <sven.eckelmann@openmesh.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1526913942-15426-2-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2018 at 10:57:36PM +0200, Christian Lamparter wrote:
-> This patch adds the gpio-ranges and gpio-reserved-ranges property
-> definitions to the binding text files supported by the pinctrl-msm
-> driver framework.
+On Mon, May 21, 2018 at 04:45:40PM +0200, Jacopo Mondi wrote:
+> Add compatible string for R-Car D3 R8A7795 to list of SoCs supported by
+> rcar-vin driver.
 > 
-> gpio-ranges:
-> For DT-based platforms the pinctrl-msm framework currently relies
-> on the deprecated-for-DT gpiochip_add_pin_range() function to add
-> the range of GPIOs to be handled by the pin controller. Due to
-> interactions within gpiolib code, this causes the pinctrl-msm
-> driver to bail out (-517) during boot when a gpio-hog is declared.
-> This can be fatal and cause the system to not boot or reset
-> (for a detailed explanation and call-trace, refer to patch:
-> "pinctrl: msm: fix gpio-hog related boot issues" in this series).
-> 
-> gpio-reserved-ranges:
-> The binding has been added as a precaution since the TrustZone
-> firmware (aka QSEE), which is running as the hypervisor, might
-> have reserved certain, but undisclosed pins. Hence reading or
-> writing to the registers for those pins will cause an
-> XPU violation and this subsequently crashes the kernel.
-> 
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 > ---
->  .../bindings/pinctrl/qcom,apq8064-pinctrl.txt         |  6 ++++++
->  .../bindings/pinctrl/qcom,apq8084-pinctrl.txt         | 11 +++++++++++
->  .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt         |  6 ++++++
->  .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt         |  6 ++++++
->  .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt         | 10 ++++++++++
->  .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt         | 11 +++++++++++
->  .../bindings/pinctrl/qcom,msm8660-pinctrl.txt         |  6 ++++++
->  .../bindings/pinctrl/qcom,msm8916-pinctrl.txt         | 11 +++++++++++
->  .../bindings/pinctrl/qcom,msm8960-pinctrl.txt         | 11 +++++++++++
->  .../bindings/pinctrl/qcom,msm8974-pinctrl.txt         |  6 ++++++
->  .../bindings/pinctrl/qcom,msm8994-pinctrl.txt         | 11 +++++++++++
->  .../bindings/pinctrl/qcom,msm8996-pinctrl.txt         | 11 +++++++++++
->  12 files changed, 106 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-> index a752a4716486..7f78c6bb4e35 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
-> @@ -10,6 +10,11 @@ Required properties:
->  - #gpio-cells : Should be two.
->                  The first cell is the gpio pin number and the
->                  second cell is used for optional parameters.
-> +- gpio-ranges: Range of pins managed by the GPIO controller.
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Just 'see gpio.txt' is sufficient unless you can say how many entries.
-
-> +
-> +Optional properties:
-> +
-> +- gpio-reserved-ranges: Range of pins reserved by the TrustZone TEE.
-
-ditto.
-
->  
->  Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
->  a general description of GPIO and interrupt bindings.
-> @@ -67,6 +72,7 @@ Example:
->  
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&gsbi5_uart_default>;
-> +		gpio-ranges = <&msmgpio 0 0 90>;
->  
->  		gsbi5_uart_default: gsbi5_uart_default {
->  			mux {
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
-> index c4ea61ac56f2..362f32b945af 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
-> @@ -40,6 +40,16 @@ MSM8960 platform.
->  	Definition: must be 2. Specifying the pin number and flags, as defined
->  		    in <dt-bindings/gpio/gpio.h>
->  
-> +- gpio-ranges:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-
-But this is phandle with 3 cells.
-
-Still, you don't need to redefine standard properties here. Just need to 
-know optional vs. required and any constraints you can define (e.g. 
-allowed values, number of values, etc.)
-
-
-Same comments apply to the rest.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
