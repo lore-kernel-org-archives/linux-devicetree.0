@@ -1,64 +1,161 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
- partitions
-Date: Tue, 22 May 2018 09:46:31 +0200
-Message-ID: <5267836f-7f30-ceb5-14da-93abca3db63b@gmail.com>
-References: <20180509081729.28347-1-zajec5@gmail.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH v7 0/9] Add support for SAMA5D2 touchscreen
+Date: Tue, 22 May 2018 10:52:30 +0300
+Message-ID: <1526975559-18966-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180509081729.28347-1-zajec5@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, nicolas.ferre@microchip.com, dmitry.torokhov@gmail.com, robh@kernel.org
+Cc: Eugen Hristev <eugen.hristev@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMDkuMDUuMjAxOCAxMDoxNywgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IEZy
-b206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBCcm9hZGNvbSBiYXNl
-ZCBob21lIHJvdXRlciBkZXZpY2VzIHVzZSBwYXJ0aXRpb25zIHdoaWNoIGhhdmUgdG8gYmUKPiBk
-aXNjb3ZlcmVkIGluIGEgc3BlY2lmaWMgd2F5LiBUaGV5IGFyZSBub3QgZml4ZWQgYW5kIHRoZXJl
-IGlzIG5vdCBhbnkKPiBzdGFuZGFyZCBwYXJ0aXRpb24gdGFibGUuIFRoaXMgY29tbWl0IGFkZHMg
-YW5kIGRlc2NyaWJlcyBhIG5ldyBjdXN0b20KPiBiaW5kaW5nIGZvciBzdWNoIGRldmljZXMuCj4g
-Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0t
-LQo+IFRoaXMgY29tbWl0IGRvY3VtZW50cyBhIG5ldyBiaW5kaW5nIGZvciBkZXNjcmliaW5nIHBh
-cnRpdGlvbnMuIEp1c3QgYXMgYQo+IHJlbWluZGVyOiB3ZSBhZ3JlZWQgdG8gdXNlICJjb21wYXRp
-YmxlIiBmb3IgdGhhdCBwdXJwb3NlIHRvIGF2b2lkCj4gL2d1ZXNzaW5nLy4gVGhlcmUgYXJlIHRv
-byBtYW55IGNhc2VzLCBkZXZpY2VzIGFuZCAvZm9ybWF0cy8gdG8ganVzdAo+IGJsaW5kbHkgdHJ5
-IGV2ZXJ5IHBvc3NpYmxlIHBhcnNlci4KPiAKPiBUaGlzIHdhcyBlLmcuIGRlc2NyaWJlZCBieSBC
-b3JpcyBpbiBoaXMgcGF0Y2hzZXQgMisgeWVhcnMgYWdvOgo+IFtSRkMgUEFUQ0ggMC83XSBtdGQ6
-IHBhcnRpdGlvbnM6IGFkZCBvZl9tYXRjaF90YWJsZSBzdXBwb3J0Cj4gaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDA3Ni5odG1s
-Cj4gCj4gUXVvdGU6Cj4+ICAgKDIpIHdlIGNhbid0IGp1c3Qgc2NhbiBmb3IgYWxsIHN1cHBvcnRl
-ZCBwYXJzZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0gZG9lcyksIHNpbmNlCj4+ICAgICAgIHRo
-ZXJlIGlzIGEgd2lkZSBkaXZlcnNpdHkgb2YgImZvcm1hdHMiIChubyBzdGFuZGFyZGl6YXRpb24p
-LCBhbmQgaXQgaXMgbm90Cj4+ICAgICAgIGFsd2F5cyBzYWZlIG9yIGVmZmljaWVudCB0byBhdHRl
-bXB0IHRvIGRvIHNvLCBwYXJ0aWN1bGFybHkgc2luY2UgbWFueSBvZgo+PiAgICAgICB0aGVtIGFs
-bG93IHRoZWlyIGRhdGEgc3RydWN0dXJlcyB0byBiZSBwbGFjZWQgYW55d2hlcmUgb24gdGhlIGZs
-YXNoLCBhbmQKPj4gICAgICAgc28gcmVxdWlyZSBzY2FubmluZyB0aGUgZW50aXJlIGZsYXNoIGRl
-dmljZSB0byBmaW5kIHRoZW0uCj4gCj4gSSBiZWxpZXZlIHRoaXMgc29sdXRpb24gd2FzIGFsc28g
-YWNrZWQgYmFjayB0aGVuIGJ5IFJvYjoKPiBbUkZDIFBBVENIIDMvN10gZG9jOiBkdDogbXRkOiBw
-YXJ0aXRpb246IGFkZCBvbi1mbGFzaCBmb3JtYXQgYmluZGluZwo+IGh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1tdGQvMjAxNS1EZWNlbWJlci8wNjQxMDAuaHRtbAo+
-IAo+IFYyOiBNb3ZlIGRvY3VtZW50YXRpb24gdG8gdGhlIG5ldyBicmNtLGJjbTk0N3h4LWNmZS1w
-YXJ0aXRpb25zLnR4dCBmaWxlCj4gICAgICBhcyBzdWdnZXN0ZWQgYnkgUm9iICh3ZSBkb24ndCB3
-YW50IHRvIGJsb2F0IHBhcnRpdGlvbi50eHQpLgo+ICAgICAgU2xpZ2h0bHkgdXBkYXRlIGNvbW1p
-dCBtZXNzYWdlLgoKSSBzZW50IHRoaXMgVjIgcGVyIHlvdXIgcmVxdWVzdCBmcm9tIFYxOgoKT24g
-OCBNYXkgMjAxOCBhdCAxODoyNSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6
-CiA+IEkgZ3Vlc3MgdGhpcyBpcyBmaW5lLiBDYW4geW91IHJlc2VuZCBhcyBJIGRvbid0IGhhdmUg
-dGhlIG9yaWdpbmFsIHBhdGNoLgogPgogPiBJIHRoaW5rIGl0IHNob3VsZCBiZSBhIHNlcGFyYXRl
-IGZpbGUgdGhvdWdoIGFzIHBhcnRpdGlvbi50eHQgd291bGQKID4gYmVjb21lIHZlcnkgbG9uZyBp
-ZiBldmVyeSB2ZW5kb3IgcGFydGl0aW9uaW5nIHdhcyBhZGRlZCB0aGVyZS4KCldvdWxkIHlvdSBm
-aW5kIGEgbW9tZW50IHRvIHJldmlldy9uYWNrL2FjayBpdCwgcGxlYXNlPwoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNj
-dXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LW10ZC8K
+Hello,
+
+This patch series is a rework of my previous series named:
+[PATCH 00/14] iio: triggers: add consumer support
+
+This is the version 7 of the series, and addresses the received feedback
+on the v2 series named:
+[PATCH v2 00/10]  Add support for SAMA5D2 touchscreen
+and the v3 series named
+[PATCH v3 00/11]  Add support for SAMA5D2 touchscreen
+and the v4 series named
+[PATCH v4 0/9]  Add support for SAMA5D2 touchscreen
+and fixes one bug found in series named
+[PATCH v5 0/9]  Add support for SAMA5D2 touchscreen
+and addresses comments in series named
+[PATCH v6 0/9]  Add support for SAMA5D2 touchscreen
+
+This series applies on top of fixes-togreg branch of iio.git,
+specifically on top of commit:
+"f0c8d1f" : iio: adc: at91-sama5d2_adc:
+ fix channel configuration for differential channels
+
+Jonathan, if you need me to rebase this on top of testing, let me know.
+
+Changes in previous versions are presented at the end of the cover letter below.
+Thanks everyone for the feedback. Below is the original v2 cover letter:
+
+In few words, this is the implementation of splitting the functionality
+of the IP block ADC device in SAMA5D2 SoC from ADC with touchscreen
+support. In order to avoid having a MFD device, two separate
+drivers that would work on same register base and split the IRQ,etc,
+as advised on the mailing list, I created a consumer driver for the
+channels, that will connect to the ADC as described in the device tree.
+
+I have collected feedback from everyone and here is the result:
+I have added a new generic resistive touchscreen driver, which acts
+as a iio consumer for the given channels and will create an input
+device and report the events. It uses a callback buffer to register
+to the IIO device and waits for data to be pushed.
+Inside the IIO device, I have kept a similar approach with the first version
+of the series, except that now the driver can take multiple buffers, and
+will configure the touchscreen part of the hardware device if the specific
+channels are requested.
+
+The SAMA5D2 ADC driver registers three new channels: two for the
+position on the X and Y axis, and one for the touch pressure.
+When channels are requested, it will check if the touchscreen channel mask
+includes the requested channels (it is possible that the consumer driver
+will not request pressure for example). If it's the case, it will work
+in touchscreen mode, and will refuse to do usual analog-digital conversion,
+because we have a single trigger and the touchscreen needs it.
+When the scan mask will include only old channels, the driver will function
+in the same way as before. If the scan mask somehow is a mix of the two (the
+masks intersect), the driver will refuse to work whatsoever (cannot have both
+in the same time).
+The driver allows reading raw data for the new channels, if claim direct
+mode works: no touchscreen driver requested anything. The new channels can
+act like the old ones. However, when requesting these channels, the usual
+trigger will not work and will not be enabled. The touchscreen channels
+require special trigger and irq configuration: pen detect, no pen detect
+and a periodic trigger to sample the touchscreen position and pressure.
+If the user attempts to use another trigger while there is a buffer
+that already requested the touchscreen channels (thus the trigger), the
+driver will refuse to comply.
+
+In order to have defines for the channel numbers, I added a bindings include
+file that goes on a separate commit :
+dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer info
+This should go in the same tree with the following commits :
+  ARM: dts: at91: sama5d2: add channel cells for ADC device
+  ARM: dts: at91: sama5d2: Add resistive touch device
+
+as build will break because these commits depend on the binding one
+which creates the included header file.
+V5 update: After discussing with Alexandre Belloni on Mailing list, the two
+DTS patches are to be taken in the next version after bindings reach mainline.
+
+Changes in v7:
+ - Addressed some feedback from Dmitry, explained in input driver patch
+changelog.
+ - Added Acked-by Dmitry.
+
+Changes in v6:
+ - Fixed a crash in ADC driver , explained in driver patch changelog.
+ - changed a dev_err to dev_dbg in input driver.
+ - added Reviewed-by Rob Herring.
+
+Changes in v5:
+ - renamed property touchscreen-threshold-pressure to touchscreen-min-pressure
+ - added one return in touchscreen driver
+
+Changes in v4:
+ - removed patch for inkern module get/set kref
+ - addressed feedback on both the ADC and the touchscreen driver. each
+patch has a history inside the patch file for the specific changes.
+ - patch that fixes the channel fix
+[PATCH v3 01/11] iio: adc: at91-sama5d2_adc:
+ fix channel configuration for differential channels
+was accepted in fixes-togreg branch thus removed from this series.
+ - added Reviewed-by for the bindings by Rob Herring
+
+Changes in v3:
+ - changed input driver name according to feedback and reworked in commits
+to adapt to binding changes and new name.
+ - moved channel index fix in at91-sama5d2_adc at the beginning of the series
+(PATCH 01/11)
+ - created a new optional binding for the touchscreen as a separate commit
+and added it to the series :
+ [PATCH v3 04/11] dt-bindings: input: touchscreen: add pressure
+ threshold touchscreen property
+ - changed at91-sama5d2_adc driver patch to address the comments. Exact changes
+are in the patch file for the driver source file.
+
+Eugen Hristev (9):
+  MAINTAINERS: add generic resistive touchscreen adc
+  iio: Add channel for Position Relative
+  dt-bindings: input: touchscreen: add minimum pressure touchscreen
+    property
+  dt-bindings: input: touchscreen: resistive-adc-touch: create bindings
+  iio: adc: at91-sama5d2_adc: add support for position and pressure
+    channels
+  input: touchscreen: resistive-adc-touch: add generic resistive ADC
+    touchscreen
+  dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific consumer
+    info
+  ARM: dts: at91: sama5d2: add channel cells for ADC device
+  ARM: dts: at91: sama5d2: Add resistive touch device
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  12 +
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   9 +
+ .../input/touchscreen/resistive-adc-touch.txt      |  30 +
+ .../bindings/input/touchscreen/touchscreen.txt     |   3 +
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  12 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 609 +++++++++++++++++++--
+ drivers/iio/industrialio-core.c                    |   1 +
+ drivers/input/touchscreen/Kconfig                  |  13 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/resistive-adc-touch.c    | 204 +++++++
+ include/dt-bindings/iio/adc/at91-sama5d2_adc.h     |  16 +
+ include/uapi/linux/iio/types.h                     |   1 +
+ tools/iio/iio_event_monitor.c                      |   2 +
+ 14 files changed, 861 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/resistive-adc-touch.txt
+ create mode 100644 drivers/input/touchscreen/resistive-adc-touch.c
+ create mode 100644 include/dt-bindings/iio/adc/at91-sama5d2_adc.h
+
+-- 
+2.7.4
