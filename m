@@ -1,39 +1,75 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v2 03/14] dt-bindings: qcom_nandc: make nand-ecc-strength
- optional
-Date: Tue, 22 May 2018 19:38:01 +0530
-Message-ID: <66498b23730297c67604f274419931bf@codeaurora.org>
-References: <1525350041-22995-1-git-send-email-absahu@codeaurora.org>
- <1525350041-22995-4-git-send-email-absahu@codeaurora.org>
- <20180521163254.71ade105@xps13>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 06/12] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Tue, 22 May 2018 17:08:56 +0300
+Message-ID: <20180522140855.6okv3cvc5uscp6hy@paasikivi.fi.intel.com>
+References: <20180517125033.18050-1-rui.silva@linaro.org>
+ <20180517125033.18050-7-rui.silva@linaro.org>
+ <20180518065824.csio2fgwsxo2g2ow@valkosipuli.retiisi.org.uk>
+ <m3tvr5xt9t.fsf@linaro.org>
+ <20180518221346.fy4264hehvjjcd4y@kekkonen.localdomain>
+ <m336yjvndy.fsf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180521163254.71ade105@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, Archit Taneja <architt@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <m336yjvndy.fsf@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-21 20:02, Miquel Raynal wrote:
-> Hi Abhishek,
+On Tue, May 22, 2018 at 02:19:21PM +0100, Rui Miguel Silva wrote:
+> Hi Sakari,
+> On Fri 18 May 2018 at 22:13, Sakari Ailus wrote:
+> > On Fri, May 18, 2018 at 09:27:58AM +0100, Rui Miguel Silva wrote:
+> > > > > +endpoint node
+> > > > > +-------------
+> > > > > +
+> > > > > +- data-lanes    : (required) an array specifying active > >
+> > > physical
+> > > > > MIPI-CSI2
+> > > > > +		    data input lanes and their mapping to > > logical lanes;
+> > > the
+> > > > > +		    array's content is unused, only its > > length is
+> > > meaningful;
+> > 
+> > Btw. do note that you may get a warning due to this from the CSI-2 bus
+> > property parsing code if the lane numbers are wrong.
+> > 
+> > > > > +
+> > > > > +- fsl,csis-hs-settle : (optional) differential receiver > >
+> > > (HS-RX)
+> > > > > settle time;
+> > > > > Could you calculate this, as other drivers do? It probably >
+> > > changes
+> > > > depending on the device runtime configuration.
+> > > 
+> > > The only reference to possible values to this parameter is given by
+> > > table in [0], can you point me out the formula for imx7 in the
+> > > documentation?
+> > 
+> > I don't know imx7 but the other CSI-2 drivers need no such system
+> > specific
+> > configuration.
 > 
-> On Thu,  3 May 2018 17:50:30 +0530, Abhishek Sahu
-> <absahu@codeaurora.org> wrote:
-> 
->> Now, nand-ecc-strength is optional. If specified in DT, then
->> controller will use this ECC strength otherwise ECC strength will
->> be calculated according to chip requirement and available OOB size.
-> 
-> Same comment as before: don't start the commit log with "now,".
-> 
-> Thanks,
-> Miquèl
+> Hum, I think there is at least one more (which this is compliant) that
+> also use this configuration parameter. [0]
 
-  Thanks Miquel.
-  I will change the commit message.
+Ah, that's where it then probably comes from, if the two hardware blocks share 
+some bits.
 
-  Regards,
-  Abhishek
+I guess it's fine to keep it if you think it's really necessary.
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
