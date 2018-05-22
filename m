@@ -1,63 +1,47 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH 2/2] ARM: pxa: dts: add pin definitions for extended GPIOs
-Date: Tue, 22 May 2018 21:46:26 +0200
-Message-ID: <e97656f6-2bfb-c479-e0c2-cd18a6fd20d9@zonque.org>
-References: <20180521220044.821-1-daniel@zonque.org>
- <20180521220044.821-2-daniel@zonque.org> <87tvqzxz5z.fsf@belgarion.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87tvqzxz5z.fsf@belgarion.home>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: [PATCH] arm64: dts: fix regulator property name for wlan pcie endpoint
+Date: Tue, 22 May 2018 21:57:57 +0200
+Message-ID: <20180522195758.24607-1-niklas.cassel@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, May 22, 2018 09:34 PM, Robert Jarzmik wrote:
-> Daniel Mack <daniel@zonque.org> writes:
-> 
->> The PXA3xx series features some extended GPIO banks which are named GPIO0_2,
->> GPIO1_2 etc. The PXA300, PXA310 and PXA320 have different numbers of such
->> pins, and they also have variant-specific register offsets.
->>
->> Signed-off-by: Daniel Mack <daniel@zonque.org>
->> ---
->>   arch/arm/boot/dts/pxa3xx.dtsi | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
->> index a13ac52e4fd2..446e612688c0 100644
->> --- a/arch/arm/boot/dts/pxa3xx.dtsi
->> +++ b/arch/arm/boot/dts/pxa3xx.dtsi
->> @@ -8,6 +8,13 @@
->>   	 (gpio <= 98) ? (0x0400 + 4 * (gpio - 27)) :	\
->>   	 (gpio <= 127) ? (0x0600 + 4 * (gpio - 99)) :	\
->>   	 0)
->> +#define MFP_PIN_PXA300_0_2	0x674
->> +#define MFP_PIN_PXA300_1_2	0x678
->> +#define MFP_PIN_PXA300_2_2	0x2dc
->> +#define MFP_PIN_PXA300_3_2	0x2e0
->> +#define MFP_PIN_PXA300_4_2	0x2e4
->> +#define MFP_PIN_PXA300_5_2	0x2e8
->> +#define MFP_PIN_PXA300_6_2	0x2ec
-> 
-> To be consistent with the previous items, could it be something like :
-> #define MFP_PIN_PXA300_2(gpio) \
->    ... etc ...
-> 
+The property name vddpe-supply is not included in
+Documentation/devicetree/bindings/pci/qcom,pcie.txt
+nor in the pcie-qcom PCIe Root Complex driver.
 
-Ah, yes. Much nicer. Will resend!
+This property name was used in an initial patchset for pcie-qcom,
+but was renamed in a later revision.
 
+Therefore, the regulator is currently never enabled, leaving us with
+unoperational wlan.
 
-Thanks,
-Daniel
+Fix this by using the correct regulator property name, so that wlan
+comes up correctly.
+
+Fixes: 1c8ca74a2ea1 ("arm64: dts: apq8096-db820c: Enable wlan and bt en pins")
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+---
+Bluetooth needs a similar patch, but since bluetooth needs some more
+work, submit this right now, so we at least have working wlan.
+
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 818bf0efd501..804268f54f37 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -203,7 +203,7 @@
+ 			pcie@600000 {
+ 				status = "okay";
+ 				perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+-				vddpe-supply = <&wlan_en>;
++				vddpe-3v3-supply = <&wlan_en>;
+ 				vddpe1-supply = <&bt_en>;
+ 			};
+ 
+-- 
+2.17.0
