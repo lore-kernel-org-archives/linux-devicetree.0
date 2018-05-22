@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v6 08/13] ARM: dts: imx7s: add mipi phy power domain
-Date: Tue, 22 May 2018 15:52:40 +0100
-Message-ID: <20180522145245.3143-9-rui.silva@linaro.org>
+Subject: [PATCH v6 11/13] ARM: dts: imx7s-warp: add ov2680 sensor node
+Date: Tue, 22 May 2018 15:52:43 +0100
+Message-ID: <20180522145245.3143-12-rui.silva@linaro.org>
 References: <20180522145245.3143-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,33 +21,91 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerb
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add power domain index 0 related with mipi-phy to imx7s.
-
-While at it rename pcie power-domain node to remove pgc prefix.
+Warp7 comes with a Omnivision OV2680 sensor, add the node here to make complete
+the camera data path for this system. Add the needed regulator to the analog
+voltage supply, the port and endpoints in mipi_csi node and the pinctrl for the
+reset gpio.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7s-warp.dts | 44 ++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 4d42335c0dee..5e6d2063b143 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -636,7 +636,13 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index cb175ee2fc9d..bf04e13afd02 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -91,6 +91,14 @@
+ 		regulator-always-on;
+ 	};
  
--					pgc_pcie_phy: pgc-power-domain@1 {
-+					pgc_mipi_phy: power-domain@0 {
-+						#power-domain-cells = <0>;
-+						reg = <0>;
-+						power-supply = <&reg_1p0d>;
-+					};
++	reg_peri_3p15v: regulator-peri-3p15v {
++		compatible = "regulator-fixed";
++		regulator-name = "peri_3p15v_reg";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++		regulator-always-on;
++	};
 +
-+					pgc_pcie_phy: power-domain@1 {
- 						#power-domain-cells = <0>;
- 						reg = <1>;
- 						power-supply = <&reg_1p0d>;
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "imx7-sgtl5000";
+@@ -218,6 +226,27 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	ov2680: camera@36 {
++		compatible = "ovti,ov2680";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov2680>;
++		reg = <0x36>;
++		clocks = <&osc>;
++		clock-names = "xvclk";
++		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
++		DOVDD-supply = <&sw2_reg>;
++		DVDD-supply = <&sw2_reg>;
++		AVDD-supply = <&reg_peri_3p15v>;
++
++		port {
++			ov2680_to_mipi: endpoint {
++				remote-endpoint = <&mipi_from_sensor>;
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
++	};
+ };
+ 
+ &i2c4 {
+@@ -352,6 +381,15 @@
+ 	#size-cells = <0>;
+ 	fsl,csis-hs-settle = <3>;
+ 
++	port@0 {
++		reg = <0>;
++
++		mipi_from_sensor: endpoint {
++			remote-endpoint = <&ov2680_to_mipi>;
++			data-lanes = <1>;
++		};
++	};
++
+ 	port@1 {
+ 		reg = <1>;
+ 
+@@ -408,6 +446,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ov2680: ov2660grp {
++		fsl,pins = <
++			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
++		>;
++	};
++
+ 	pinctrl_sai1: sai1grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
 -- 
 2.17.0
