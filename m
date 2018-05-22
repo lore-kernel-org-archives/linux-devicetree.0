@@ -1,93 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] PM / devfreq: Add support for QCOM devfreq firmware
-Date: Tue, 22 May 2018 13:08:38 -0500
-Message-ID: <20180522180838.GA13423@rob-hp-laptop>
-References: <1526629965-28729-1-git-send-email-skannan@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 07/26] dt-bindings: display: Add
+ compatible for A64 DE2 tcon1 blocks
+Date: Tue, 22 May 2018 13:10:00 -0500
+Message-ID: <20180522181000.GA19875@rob-hp-laptop>
+References: <20180518094536.17201-1-jagan@amarulasolutions.com>
+ <20180518094536.17201-8-jagan@amarulasolutions.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERB65ZSHMAKGQEOVRNNQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1526629965-28729-1-git-send-email-skannan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <skannan@codeaurora.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rjendra@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180518094536.17201-8-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 18, 2018 at 12:52:40AM -0700, Saravana Kannan wrote:
-> The firmware present in some QCOM chipsets offloads the steps necessary for
-> changing the frequency of some devices (Eg: L3). This driver implements the
-> devfreq interface for this firmware so that various governors could be used
-> to scale the frequency of these devices.
+On Fri, May 18, 2018 at 03:15:17PM +0530, Jagan Teki wrote:
+> Allwinner A64 has DE2 pipeline with tcon0 and tcon1 block
+> which is similar Allwinner A83T.
 > 
-> Each client (say cluster 0 and cluster 1) that wants to vote for a
-> particular device's frequency (say, L3 frequency) is represented as a
-> separate voter device (qcom,devfreq-fw-voter) that's a child of the
-> firmware device (qcom,devfreq-fw).
+> This patch adds dt-binding documentation for A64 DE2 tcon1 blocks.
 > 
-> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Mixer1 has different configuration for A64 so use separate compatible
+> but tcon1 has similar behaviour with A83T so add fallback compatible.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > ---
->  .../bindings/devfreq/devfreq-qcom-fw.txt           |  41 +++
->  drivers/devfreq/Kconfig                            |  14 +
->  drivers/devfreq/Makefile                           |   1 +
->  drivers/devfreq/devfreq_qcom_fw.c                  | 330 +++++++++++++++++++++
->  4 files changed, 386 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
->  create mode 100644 drivers/devfreq/devfreq_qcom_fw.c
+> Changes for v2:
+> - Add fallback compatible for tcon1
+> - Add separate compatible for mixer1 
 > 
-> diff --git a/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
-> new file mode 100644
-> index 0000000..f882a0b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
-> @@ -0,0 +1,41 @@
-> +QCOM Devfreq firmware device
-> +
-> +Some Qualcomm Technologies, Inc. (QTI) chipsets have a firmware that
-> +offloads the steps for frequency switching. It provides a table of
-> +supported frequencies and a register to request one of the supported
-> +freqencies.
-> +
-> +The qcom,devfreq-fw represents this firmware as a device. Sometimes,
-> +multiple entities want to vote on the frequency request that is sent to the
-> +firmware. The qcom,devfreq-fw-voter represents these voters as child
-> +devices of the corresponding qcom,devfreq-fw device.
-> +
-> +Required properties:
-> +- compatible:		Must be "qcom,devfreq-fw" or "qcom,devfreq-fw-voter"
+>  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-No versions of firmware?
-
-> +Only for qcom,devfreq-fw:
-> +- reg:			Pairs of physical base addresses and region sizes of
-> +			memory mapped registers.
-
-Registers? Is this firmware or h/w block?
-
-> +- reg-names:		Names of the bases for the above registers.
-> +			Required register regions are:
-> +			- "en-base": address of register to check if the
-> +			  firmware is enabled.
-> +			- "ftbl-base": address region for the frequency
-> +			  table.
-> +			- "perf-base": address of register to request a
-> +			  frequency.
-> +
-> +Example:
-> +
-> +	qcom,devfreq-l3 {
-> +		compatible = "qcom,devfreq-fw";
-> +		reg-names = "en-base", "ftbl-base", "perf-base";
-> +		reg = <0x18321000 0x4>, <0x18321110 0x600>, <0x18321920 0x4>;
-> +
-> +		qcom,cpu0-l3 {
-> +			compatible = "qcom,devfreq-fw-voter";
-
-There's no point in these nodes. They don't have any properties or 
-resources.
-
-> +		};
-> +
-> +		qcom,cpu4-l3 {
-> +			compatible = "qcom,devfreq-fw-voter";
-> +		};
-> +	};
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
