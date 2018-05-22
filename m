@@ -1,122 +1,186 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Tue, 22 May 2018 14:31:39 -0500
-Message-ID: <20180522193139.GA21623@rob-hp-laptop>
-References: <1526751291-17873-1-git-send-email-tdas@codeaurora.org>
- <1526751291-17873-2-git-send-email-tdas@codeaurora.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC V2 2/6] hwmon: Add support for RPi voltage sensor
+Date: Tue, 22 May 2018 21:31:20 +0200 (CEST)
+Message-ID: <723014352.17580.1527017480381@email.1und1.de>
+References: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
+ <1526988112-4021-3-git-send-email-stefan.wahren@i2se.com>
+ <90a768aa-ee8c-1050-cf15-60637069dbdb@roeck-us.net>
+ <659923372.11518.1526997096662@email.1und1.de>
+ <bea3d6c7-a713-c4aa-8ae8-7fec80c5da5d@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526751291-17873-2-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bea3d6c7-a713-c4aa-8ae8-7fec80c5da5d@roeck-us.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 19, 2018 at 11:04:50PM +0530, Taniya Das wrote:
-> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
-> SoCs. This is required for managing the cpu frequency transitions which are
-> controlled by firmware.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../bindings/cpufreq/cpufreq-qcom-fw.txt           | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> new file mode 100644
-> index 0000000..bc912f4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> @@ -0,0 +1,68 @@
-> +Qualcomm Technologies, Inc. CPUFREQ Bindings
-> +
-> +CPUFREQ FW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
-> +SoCs to manage frequency in hardware. It is capable of controlling frequency
-> +for multiple clusters.
-> +
-> +Properties:
-> +- compatible
-> +	Usage:		required
-> +	Value type:	<string>
-> +	Definition:	must be "qcom,cpufreq-fw".
-
-Only 1 version ever?
-
-> +
-> +Note that #address-cells, #size-cells, and ranges shall be present to ensure
-> +the cpufreq can address a freq-domain registers.
-> +
-> +A freq-domain sub-node would be defined for the cpus with the following
-> +properties:
-> +
-> +- compatible:
-> +	Usage:		required
-> +	Value type:	<string>
-> +	Definition:	must be "cpufreq".
-
-Too generic. This is very much a QCom specific binding. Perhaps just 
-drop the compatible.
-
-> +
-> +- reg
-> +	Usage:		required
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Addresses and sizes for the memory of the perf_base
-> +			, lut_base and en_base.
-> +- reg-names
-> +	Usage:		required
-> +	Value type:	<stringlist>
-> +	Definition:	Address names. Must be "perf_base", "lut_base",
-> +			"en_base".
-
-_base is redundant.
-
-> +			Must be specified in the same order as the
-> +			corresponding addresses are specified in the reg
-> +			property.
-
-Actually, must be specified in the order you specify here.
-
-> +
-> +- qcom,cpulist
-> +	Usage:		required
-> +	Value type:	<phandles of CPU>
-> +	Definition:	List of related cpu handles which are under a cluster.
-> +
-> +Example:
-> +	qcom,cpufreq-fw {
-> +		compatible = "qcom,cpufreq-fw";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-
-There's not a smaller address range you can restrict children to?
-
-> +
-> +		freq-domain-0 {
-> +			compatible = "cpufreq";
-> +			reg = <0x17d43920 0x4>,
-> +			     <0x17d43110 0x500>,
-> +			     <0x17d41000 0x4>;
-> +			reg-names = "perf_base", "lut_base", "en_base";
-> +			qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3>;
-> +		};
-> +
-> +		freq-domain-1 {
-> +			compatible = "cpufreq";
-> +			reg = <0x17d46120 0x4>,
-> +			    <0x17d45910 0x500>,
-> +			    <0x17d45800 0x4>;
-> +			reg-names = "perf_base", "lut_base", "en_base";
-> +			qcom,cpulist = <&CPU4 &CPU5 &CPU6 &CPU7>;
-> +		};
-> +	};
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
+Cj4gR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0PiBoYXQgYW0gMjIuIE1haSAyMDE4
+IHVtIDE2OjEwIGdlc2NocmllYmVuOgo+IAo+IAo+IE9uIDA1LzIyLzIwMTggMDY6NTEgQU0sIFN0
+ZWZhbiBXYWhyZW4gd3JvdGU6Cj4gPiBIaSBHdWVudGVyLAo+ID4gCj4gPj4gR3VlbnRlciBSb2Vj
+ayA8bGludXhAcm9lY2stdXMubmV0PiBoYXQgYW0gMjIuIE1haSAyMDE4IHVtIDE1OjQxIGdlc2No
+cmllYmVuOgo+ID4+Cj4gPj4KPiA+PiBPbiAwNS8yMi8yMDE4IDA0OjIxIEFNLCBTdGVmYW4gV2Fo
+cmVuIHdyb3RlOgo+ID4+PiBDdXJyZW50bHkgdGhlcmUgaXMgbm8gZWFzeSB3YXkgdG8gZGV0ZWN0
+IHVuZGVydm9sdGFnZSBjb25kaXRpb25zIG9uIGEKPiA+Pj4gcmVtb3RlIFJhc3BiZXJyeSBQaS4g
+VGhpcyBod21vbiBkcml2ZXIgcmV0cmlldmVzIHRoZSBzdGF0ZSBvZiB0aGUKPiA+Pj4gdW5kZXJ2
+b2x0YWdlIHNlbnNvciB2aWEgbWFpbGJveCBpbnRlcmZhY2UuIFRoZSBoYW5kbGluZyBiYXNlZCBv
+bgo+ID4+PiBOb3JhbGYncyBtb2RpZmljYXRpb25zIHRvIHRoZSBkb3duc3RyZWFtIGZpcm13YXJl
+IGRyaXZlci4gSW4gY2FzZSBvZgo+ID4+PiBhbiB1bmRlcnZvbHRhZ2UgY29uZGl0aW9uIG9ubHkg
+YW4gZW50cnkgaXMgd3JpdHRlbiB0byB0aGUga2VybmVsIGxvZy4KPiA+Pj4KPiA+Pj4gQ0M6ICJO
+b3JhbGYgVHLDuG5uZXMiIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4gPj4+IFNpZ25lZC1vZmYtYnk6
+IFN0ZWZhbiBXYWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Cj4gPj4+IC0tLQo+ID4+PiAg
+ICBEb2N1bWVudGF0aW9uL2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uIHwgIDIyICsrKysrCj4gPj4+
+ICAgIGRyaXZlcnMvaHdtb24vS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgMTAgKysKPiA+Pj4g
+ICAgZHJpdmVycy9od21vbi9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCj4gPj4+ICAg
+IGRyaXZlcnMvaHdtb24vcmFzcGJlcnJ5cGktaHdtb24uYyAgICAgfCAxNjggKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKwo+ID4+PiAgICA0IGZpbGVzIGNoYW5nZWQsIDIwMSBpbnNl
+cnRpb25zKCspCj4gPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2h3bW9u
+L3Jhc3BiZXJyeXBpLWh3bW9uCj4gPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2h3
+bW9uL3Jhc3BiZXJyeXBpLWh3bW9uLmMKPiA+Pj4KPiA+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vaHdtb24vcmFzcGJlcnJ5cGktaHdtb24gYi9Eb2N1bWVudGF0aW9uL2h3bW9uL3Jhc3Bi
+ZXJyeXBpLWh3bW9uCj4gPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4+IGluZGV4IDAwMDAw
+MDAuLjNjOTJlMmMKPiA+Pj4gLS0tIC9kZXYvbnVsbAo+ID4+PiArKysgYi9Eb2N1bWVudGF0aW9u
+L2h3bW9uL3Jhc3BiZXJyeXBpLWh3bW9uCj4gPj4+IEBAIC0wLDAgKzEsMjIgQEAKPiA+Pj4gK0tl
+cm5lbCBkcml2ZXIgcmFzcGJlcnJ5cGktaHdtb24KPiA+Pj4gKz09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0KPiA+Pj4gKwo+ID4+PiArU3VwcG9ydGVkIGJvYXJkczoKPiA+Pj4gKyAgKiBS
+YXNwYmVycnkgUGkgQSsgKHZpYSBHUElPIG9uIFNvQykKPiA+Pj4gKyAgKiBSYXNwYmVycnkgUGkg
+QisgKHZpYSBHUElPIG9uIFNvQykKPiA+Pj4gKyAgKiBSYXNwYmVycnkgUGkgMiBCICh2aWEgR1BJ
+TyBvbiBTb0MpCj4gPj4+ICsgICogUmFzcGJlcnJ5IFBpIDMgQiAodmlhIEdQSU8gb24gcG9ydCBl
+eHBhbmRlcikKPiA+Pj4gKyAgKiBSYXNwYmVycnkgUGkgMyBCKyAodmlhIFBNSUMpCj4gPj4+ICsK
+PiA+Pj4gK0F1dGhvcjogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4KPiA+
+Pj4gKwo+ID4+PiArRGVzY3JpcHRpb24KPiA+Pj4gKy0tLS0tLS0tLS0tCj4gPj4+ICsKPiA+Pj4g
+K1RoaXMgZHJpdmVyIHBlcmlvZGljYWxseSBwb2xscyBhIG1haWxib3ggcHJvcGVydHkgb2YgdGhl
+IFZDNCBmaXJtd2FyZSB0byBkZXRlY3QKPiA+Pj4gK3VuZGVydm9sdGFnZSBjb25kaXRpb25zLgo+
+ID4+PiArCj4gPj4+ICtTeXNmcyBlbnRyaWVzCj4gPj4+ICstLS0tLS0tLS0tLS0tCj4gPj4+ICsK
+PiA+Pj4gK2luMF9sY3JpdF9hbGFybQkJVW5kZXJ2b2x0YWdlIGFsYXJtCj4gPj4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2h3bW9uL0tjb25maWcgYi9kcml2ZXJzL2h3bW9uL0tjb25maWcKPiA+Pj4g
+aW5kZXggNzY4YWVkNS4uOWE1YmRiMCAxMDA2NDQKPiA+Pj4gLS0tIGEvZHJpdmVycy9od21vbi9L
+Y29uZmlnCj4gPj4+ICsrKyBiL2RyaXZlcnMvaHdtb24vS2NvbmZpZwo+ID4+PiBAQCAtMTI5OCw2
+ICsxMjk4LDE2IEBAIGNvbmZpZyBTRU5TT1JTX1BXTV9GQU4KPiA+Pj4gICAgCSAgVGhpcyBkcml2
+ZXIgY2FuIGFsc28gYmUgYnVpbHQgYXMgYSBtb2R1bGUuICBJZiBzbywgdGhlIG1vZHVsZQo+ID4+
+PiAgICAJICB3aWxsIGJlIGNhbGxlZCBwd20tZmFuLgo+ID4+PiAgICAKPiA+Pj4gK2NvbmZpZyBT
+RU5TT1JTX1JBU1BCRVJSWVBJX0hXTU9OCj4gPj4+ICsJdHJpc3RhdGUgIlJhc3BiZXJyeSBQaSB2
+b2x0YWdlIG1vbml0b3IiCj4gPj4+ICsJZGVwZW5kcyBvbiBSQVNQQkVSUllQSV9GSVJNV0FSRSB8
+fCBDT01QSUxFX1RFU1QKPiA+Pj4gKwloZWxwCj4gPj4+ICsJICBJZiB5b3Ugc2F5IHllcyBoZXJl
+IHlvdSBnZXQgc3VwcG9ydCBmb3Igdm9sdGFnZSBzZW5zb3Igb24gdGhlCj4gPj4+ICsJICBSYXNw
+YmVycnkgUGkuCj4gPj4+ICsKPiA+Pj4gKwkgIFRoaXMgZHJpdmVyIGNhbiBhbHNvIGJlIGJ1aWx0
+IGFzIGEgbW9kdWxlLiBJZiBzbywgdGhlIG1vZHVsZQo+ID4+PiArCSAgd2lsbCBiZSBjYWxsZWQg
+cmFzcGJlcnJ5cGktaHdtb24uCj4gPj4+ICsKPiA+Pj4gICAgY29uZmlnIFNFTlNPUlNfU0hUMTUK
+PiA+Pj4gICAgCXRyaXN0YXRlICJTZW5zaXJvbiBodW1pZGl0eSBhbmQgdGVtcGVyYXR1cmUgc2Vu
+c29ycy4gU0hUMTUgYW5kIGNvbXBhdC4iCj4gPj4+ICAgIAlkZXBlbmRzIG9uIEdQSU9MSUIgfHwg
+Q09NUElMRV9URVNUCj4gPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2h3bW9uL01ha2VmaWxlIGIv
+ZHJpdmVycy9od21vbi9NYWtlZmlsZQo+ID4+PiBpbmRleCBlN2Q1MmEzLi5hOTI5NzcwIDEwMDY0
+NAo+ID4+PiAtLS0gYS9kcml2ZXJzL2h3bW9uL01ha2VmaWxlCj4gPj4+ICsrKyBiL2RyaXZlcnMv
+aHdtb24vTWFrZWZpbGUKPiA+Pj4gQEAgLTE0MSw2ICsxNDEsNyBAQCBvYmotJChDT05GSUdfU0VO
+U09SU19QQzg3NDI3KQkrPSBwYzg3NDI3Lm8KPiA+Pj4gICAgb2JqLSQoQ09ORklHX1NFTlNPUlNf
+UENGODU5MSkJKz0gcGNmODU5MS5vCj4gPj4+ICAgIG9iai0kKENPTkZJR19TRU5TT1JTX1BPV1Ix
+MjIwKSAgKz0gcG93cjEyMjAubwo+ID4+PiAgICBvYmotJChDT05GSUdfU0VOU09SU19QV01fRkFO
+KQkrPSBwd20tZmFuLm8KPiA+Pj4gK29iai0kKENPTkZJR19TRU5TT1JTX1JBU1BCRVJSWVBJX0hX
+TU9OKQkrPSByYXNwYmVycnlwaS1od21vbi5vCj4gPj4+ICAgIG9iai0kKENPTkZJR19TRU5TT1JT
+X1MzQykJKz0gczNjLWh3bW9uLm8KPiA+Pj4gICAgb2JqLSQoQ09ORklHX1NFTlNPUlNfU0NINTZY
+WF9DT01NT04pKz0gc2NoNTZ4eC1jb21tb24ubwo+ID4+PiAgICBvYmotJChDT05GSUdfU0VOU09S
+U19TQ0g1NjI3KQkrPSBzY2g1NjI3Lm8KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHdtb24v
+cmFzcGJlcnJ5cGktaHdtb24uYyBiL2RyaXZlcnMvaHdtb24vcmFzcGJlcnJ5cGktaHdtb24uYwo+
+ID4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4+PiBpbmRleCAwMDAwMDAwLi42MjMzZTg0Cj4g
+Pj4+IC0tLSAvZGV2L251bGwKPiA+Pj4gKysrIGIvZHJpdmVycy9od21vbi9yYXNwYmVycnlwaS1o
+d21vbi5jCj4gPj4+IEBAIC0wLDAgKzEsMTY4IEBACj4gPj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRl
+bnRpZmllcjogR1BMLTIuMCsKPiA+Pj4gKy8qCj4gPj4+ICsgKiBSYXNwYmVycnkgUGkgdm9sdGFn
+ZSBzZW5zb3IgZHJpdmVyCj4gPj4+ICsgKgo+ID4+PiArICogQmFzZWQgb24gZmlybXdhcmUvcmFz
+cGJlcnJ5cGkuYyBieSBOb3JhbGYgVHLDuG5uZXMKPiA+Pj4gKyAqCj4gPj4+ICsgKiBDb3B5cmln
+aHQgKEMpIDIwMTggU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4KPiA+Pj4g
+KyAqLwo+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgo+ID4+PiArI2luY2x1ZGUgPGxp
+bnV4L2Vyci5oPgo+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2h3bW9uLmg+Cj4gPj4+ICsjaW5jbHVk
+ZSA8bGludXgvbW9kdWxlLmg+Cj4gPj4+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNl
+Lmg+Cj4gPj4+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+ID4+PiArI2luY2x1ZGUgPGxpbnV4
+L3dvcmtxdWV1ZS5oPgo+ID4+PiArI2luY2x1ZGUgPHNvYy9iY20yODM1L3Jhc3BiZXJyeXBpLWZp
+cm13YXJlLmg+Cj4gPj4+ICsKPiA+Pj4gKyNkZWZpbmUgVU5ERVJWT0xUQUdFX1NUSUNLWV9CSVQJ
+QklUKDE2KQo+ID4+PiArCj4gPj4+ICtzdHJ1Y3QgcnBpX2h3bW9uX2RhdGEgewo+ID4+PiArCXN0
+cnVjdCBkZXZpY2UgKmh3bW9uX2RldjsKPiA+Pj4gKwlzdHJ1Y3QgcnBpX2Zpcm13YXJlICpmdzsK
+PiA+Pj4gKwl1MzIgbGFzdF90aHJvdHRsZWQ7Cj4gPj4+ICsJc3RydWN0IGRlbGF5ZWRfd29yayBn
+ZXRfdmFsdWVzX3BvbGxfd29yazsKPiA+Pj4gK307Cj4gPj4+ICsKPiA+Pj4gK3N0YXRpYyB2b2lk
+IHJwaV9maXJtd2FyZV9nZXRfdGhyb3R0bGVkKHN0cnVjdCBycGlfaHdtb25fZGF0YSAqZGF0YSkK
+PiA+Pj4gK3sKPiA+Pj4gKwl1MzIgbmV3X3V2LCBvbGRfdXYsIHZhbHVlOwo+ID4+PiArCWludCBy
+ZXQ7Cj4gPj4+ICsKPiA+Pj4gKwkvKiBSZXF1ZXN0IGZpcm13YXJlIHRvIGNsZWFyIHN0aWNreSBi
+aXRzICovCj4gPj4+ICsJdmFsdWUgPSAweGZmZmY7Cj4gPj4+ICsKPiA+Pj4gKwlyZXQgPSBycGlf
+ZmlybXdhcmVfcHJvcGVydHkoZGF0YS0+ZncsIFJQSV9GSVJNV0FSRV9HRVRfVEhST1RUTEVELAo+
+ID4+PiArCQkJCSAgICAmdmFsdWUsIHNpemVvZih2YWx1ZSkpOwo+ID4+PiArCWlmIChyZXQpIHsK
+PiA+Pj4gKwkJZGV2X2Vycl9vbmNlKGRhdGEtPmh3bW9uX2RldiwgIkZhaWxlZCB0byBnZXQgdGhy
+b3R0bGVkICglZClcbiIsCj4gPj4+ICsJCQkgICAgIHJldCk7Cj4gPj4+ICsJCXJldHVybjsKPiA+
+Pj4gKwl9Cj4gPj4+ICsKPiA+Pj4gKwluZXdfdXYgPSB2YWx1ZSAmIFVOREVSVk9MVEFHRV9TVElD
+S1lfQklUOwo+ID4+PiArCW9sZF91diA9IGRhdGEtPmxhc3RfdGhyb3R0bGVkICYgVU5ERVJWT0xU
+QUdFX1NUSUNLWV9CSVQ7Cj4gPj4+ICsJZGF0YS0+bGFzdF90aHJvdHRsZWQgPSB2YWx1ZTsKPiA+
+Pj4gKwo+ID4+PiArCWlmIChuZXdfdXYgPT0gb2xkX3V2KQo+ID4+PiArCQlyZXR1cm47Cj4gPj4+
+ICsKPiA+Pj4gKwlpZiAobmV3X3V2KQo+ID4+PiArCQlkZXZfY3JpdChkYXRhLT5od21vbl9kZXYs
+ICJVbmRlcnZvbHRhZ2UgZGV0ZWN0ZWQhXG4iKTsKPiA+Pj4gKwllbHNlCj4gPj4+ICsJCWRldl9p
+bmZvKGRhdGEtPmh3bW9uX2RldiwgIlZvbHRhZ2Ugbm9ybWFsaXNlZFxuIik7Cj4gPj4+ICsKPiA+
+Pj4gKwlzeXNmc19ub3RpZnkoJmRhdGEtPmh3bW9uX2Rldi0+a29iaiwgTlVMTCwgImluMF9sY3Jp
+dF9hbGFybSIpOwo+ID4+PiArfQo+ID4+PiArCj4gPj4+ICtzdGF0aWMgdm9pZCBnZXRfdmFsdWVz
+X3BvbGwoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKQo+ID4+PiArewo+ID4+PiArCXN0cnVjdCBy
+cGlfaHdtb25fZGF0YSAqZGF0YTsKPiA+Pj4gKwo+ID4+PiArCWRhdGEgPSBjb250YWluZXJfb2Yo
+d29yaywgc3RydWN0IHJwaV9od21vbl9kYXRhLAo+ID4+PiArCQkJICAgIGdldF92YWx1ZXNfcG9s
+bF93b3JrLndvcmspOwo+ID4+PiArCj4gPj4+ICsJcnBpX2Zpcm13YXJlX2dldF90aHJvdHRsZWQo
+ZGF0YSk7Cj4gPj4+ICsKPiA+Pj4gKwkvKgo+ID4+PiArCSAqIFdlIGNhbid0IHJ1biBmYXN0ZXIg
+dGhhbiB0aGUgc3RpY2t5IHNoaWZ0ICgxMDBtcykgc2luY2Ugd2UgZ2V0Cj4gPj4+ICsJICogZmxp
+cHBpbmcgaW4gdGhlIHN0aWNreSBiaXRzIHRoYXQgYXJlIGNsZWFyZWQuCj4gPj4+ICsJICovCj4g
+Pj4+ICsJc2NoZWR1bGVfZGVsYXllZF93b3JrKCZkYXRhLT5nZXRfdmFsdWVzX3BvbGxfd29yaywg
+MiAqIEhaKTsKPiA+Pj4gK30KPiA+Pj4gKwo+ID4+PiArc3RhdGljIGludCBycGlfcmVhZChzdHJ1
+Y3QgZGV2aWNlICpkZXYsIGVudW0gaHdtb25fc2Vuc29yX3R5cGVzIHR5cGUsCj4gPj4+ICsJCSAg
+ICB1MzIgYXR0ciwgaW50IGNoYW5uZWwsIGxvbmcgKnZhbCkKPiA+Pj4gK3sKPiA+Pj4gKwlzdHJ1
+Y3QgcnBpX2h3bW9uX2RhdGEgKmRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiA+Pj4gKwo+
+ID4+PiArCSp2YWwgPSAhIShkYXRhLT5sYXN0X3Rocm90dGxlZCAmIFVOREVSVk9MVEFHRV9TVElD
+S1lfQklUKTsKPiA+Pj4gKwlyZXR1cm4gMDsKPiA+Pj4gK30KPiA+Pj4gKwo+ID4+PiArc3RhdGlj
+IHVtb2RlX3QgcnBpX2lzX3Zpc2libGUoY29uc3Qgdm9pZCAqX2RhdGEsIGVudW0gaHdtb25fc2Vu
+c29yX3R5cGVzIHR5cGUsCj4gPj4+ICsJCQkgICAgICB1MzIgYXR0ciwgaW50IGNoYW5uZWwpCj4g
+Pj4+ICt7Cj4gPj4+ICsJcmV0dXJuIDA0NDQ7Cj4gPj4+ICt9Cj4gPj4+ICsKPiA+Pj4gK3N0YXRp
+YyBjb25zdCB1MzIgcnBpX2luX2NvbmZpZ1tdID0gewo+ID4+PiArCUhXTU9OX0lfTENSSVRfQUxB
+Uk0sCj4gPj4+ICsJMAo+ID4+PiArfTsKPiA+Pj4gKwo+ID4+PiArc3RhdGljIGNvbnN0IHN0cnVj
+dCBod21vbl9jaGFubmVsX2luZm8gcnBpX2luID0gewo+ID4+PiArCS50eXBlID0gaHdtb25faW4s
+Cj4gPj4+ICsJLmNvbmZpZyA9IHJwaV9pbl9jb25maWcsCj4gPj4+ICt9Owo+ID4+PiArCj4gPj4+
+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGh3bW9uX2NoYW5uZWxfaW5mbyAqcnBpX2luZm9bXSA9IHsK
+PiA+Pj4gKwkmcnBpX2luLAo+ID4+PiArCU5VTEwKPiA+Pj4gK307Cj4gPj4+ICsKPiA+Pj4gK3N0
+YXRpYyBjb25zdCBzdHJ1Y3QgaHdtb25fb3BzIHJwaV9od21vbl9vcHMgPSB7Cj4gPj4+ICsJLmlz
+X3Zpc2libGUgPSBycGlfaXNfdmlzaWJsZSwKPiA+Pj4gKwkucmVhZCA9IHJwaV9yZWFkLAo+ID4+
+PiArfTsKPiA+Pj4gKwo+ID4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBod21vbl9jaGlwX2luZm8g
+cnBpX2NoaXBfaW5mbyA9IHsKPiA+Pj4gKwkub3BzID0gJnJwaV9od21vbl9vcHMsCj4gPj4+ICsJ
+LmluZm8gPSBycGlfaW5mbywKPiA+Pj4gK307Cj4gPj4+ICsKPiA+Pj4gK3N0YXRpYyBpbnQgcnBp
+X2h3bW9uX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPj4+ICt7Cj4gPj4+
+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsKPiA+Pj4gKwlzdHJ1Y3QgcnBpX2h3
+bW9uX2RhdGEgKmRhdGE7Cj4gPj4+ICsJaW50IHJldDsKPiA+Pj4gKwo+ID4+PiArCWRhdGEgPSBk
+ZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmRhdGEpLCBHRlBfS0VSTkVMKTsKPiA+Pj4gKwlpZiAo
+IWRhdGEpCj4gPj4+ICsJCXJldHVybiAtRU5PTUVNOwo+ID4+PiArCj4gPj4+ICsJZGF0YS0+Zncg
+PSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YSh0b19wbGF0Zm9ybV9kZXZpY2UoZGV2LT5wYXJlbnQpKTsK
+PiA+Pj4gKwlpZiAoIWRhdGEtPmZ3KQo+ID4+PiArCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiA+
+Pj4gKwo+ID4+Cj4gPj4gSSBhbSBhIGJpdCBhdCBsb3NzIGhlcmUgKGFuZCBzb3JyeSBJIGRpZG4n
+dCBicmluZyB0aGlzIHVwIGJlZm9yZSkuCj4gPj4gSG93IHdvdWxkIHRoaXMgZXZlciBiZSBwb3Nz
+aWJsZSwgZ2l2ZW4gdGhhdCB0aGUgZHJpdmVyIGlzIHJlZ2lzdGVyZWQKPiA+PiBmcm9tIHRoZSBm
+aXJtd2FyZSBkcml2ZXIgPwo+ID4gCj4gPiBEbyB5b3UgcmVmZXIgdG8gdGhlICh3cm9uZykgcmV0
+dXJuIGNvZGUsIHRoZSBhc3N1bXB0aW9uIHRoYXQgdGhlIHBhcmVudCBtdXN0IGJlIGEgcGxhdGZv
+cm0gZHJpdmVyIG9yIGEgcG9zc2libGUgcmFjZT8KPiA+IAo+IAo+IFRoZSByZXR1cm4gY29kZSBp
+cyBvbmUgdGhpbmcuIE15IHF1ZXN0aW9uIHdhcyBob3cgdGhlIGRyaXZlciB3b3VsZCBldmVyIGJl
+IGluc3RhbnRpYXRlZAo+IHdpdGggcGxhdGZvcm1fZ2V0X2RydmRhdGEodG9fcGxhdGZvcm1fZGV2
+aWNlKGRldi0+cGFyZW50KSkgPT0gTlVMTCAoYnV0IGRldi0+cGFyZW50ICE9IE5VTEwpLAo+IHNv
+IEkgcmVmZXJyZWQgdG8gdGhlIHJhY2UuIEJ1dCwgc3VyZSwgYSBzZWNvbmQgcXVlc3Rpb24gd291
+bGQgYmUgaG93IHRoYXQgd291bGQgaW5kaWNhdGUKPiB0aGF0IHRoZSBwYXJlbnQgaXMgbm90IGlu
+c3RhbnRpYXRlZCB5ZXQgKHdoaWNoIGJ5IGl0c2VsZiBzZWVtcyBsaWtlIGFuIG9kZCBxdWVzdGlv
+bikuCgpUaGlzIHNob3VsZG4ndCBoYXBwZW4gYW5kIHdvcnRoIGEgbG9nIGVycm9yLiBJbiBwYXRj
+aCAjMyB0aGUgcmVnaXN0cmF0aW9uIGlzIGNhbGxlZCBhZnRlciB0aGUgY29tcGxldGUgcHJpdmF0
+ZSBkYXRhIG9mIHRoZSBmaXJtd2FyZSBkcml2ZXIgaXMgaW5pdGlhbGl6ZWQuIERpZCBpIG1pc3Nl
+ZCBzb21ldGhpbmc/CgpCdXQgaSBtdXN0IGNvbmZlc3MgdGhhdCBpIGRpZG4ndCB0ZXN0IGFsbCBi
+dWlsdGluL21vZHVsZSBjb21iaW5hdGlvbnMuCgo+IAo+IFlldCBhbm90aGVyIHF1ZXN0aW9uLCBh
+cyB5b3UgcG9pbnQgb3V0LCBpcyB3aHkgdG8gdXNlIHBsYXRmb3JtX2dldF9kcnZkYXRhKHRvX3Bs
+YXRmb3JtX2RldmljZShkZXYtPnBhcmVudCkpCj4gaW5zdGVhZCBvZiBkZXZfZ2V0X2RydmRhdGEo
+ZGV2LT5wYXJlbnQpLgoKU3VyZSB0aGlzIGlzIG11Y2ggc2ltcGxlcgoKVGhhbmtzClN0ZWZhbgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
