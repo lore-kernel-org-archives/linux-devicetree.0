@@ -1,233 +1,68 @@
-Return-Path: <SRS0=xgCA=HW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:36303 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751234AbeECT50 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 3 May 2018 15:57:26 -0400
-Date: Thu, 3 May 2018 21:57:21 +0200
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v4 08/14] media: ov772x: support device tree probing
-Message-ID: <20180503195721.GD19612@w540>
-References: <1525021993-17789-1-git-send-email-akinobu.mita@gmail.com>
- <1525021993-17789-9-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=j10c=IJ=codeaurora.org=kramasub@kernel.org>
+Subject: Re: [PATCH v5 3/5] i2c: i2c-qcom-geni: Add bus driver for the
+ Qualcomm GENI I2C controller
+References: <1521836461-6515-1-git-send-email-kramasub@codeaurora.org>
+ <1521836461-6515-4-git-send-email-kramasub@codeaurora.org>
+ <20180521204924.4ldbke6udjshdz2k@katana>
+From: Karthik Ramasubramanian <kramasub@codeaurora.org>
+Message-ID: <bae1c27a-fdc4-c33b-63d5-c776e9c0b9c8@codeaurora.org>
+Date: Tue, 22 May 2018 08:52:54 -0600
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
-Content-Disposition: inline
-In-Reply-To: <1525021993-17789-9-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+In-Reply-To: <20180521204924.4ldbke6udjshdz2k@katana>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
 
---Hf61M2y+wYpnELGG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 
-Akinobu,
-    a very minor thing, please consider this only if you have to
-resend.
-
-On Mon, Apr 30, 2018 at 02:13:07AM +0900, Akinobu Mita wrote:
-> The ov772x driver currently only supports legacy platform data probe.
-> This change enables device tree probing.
->
-> Note that the platform data probe can select auto or manual edge control
-> mode, but the device tree probling can only select auto edge control mode
-> for now.
->
-> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Hans Verkuil <hans.verkuil@cisco.com>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
-> * v4
-> - No changes
->
->  drivers/media/i2c/ov772x.c | 64 ++++++++++++++++++++++++++++++++--------------
->  1 file changed, 45 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> index f939e28..621149a 100644
-> --- a/drivers/media/i2c/ov772x.c
-> +++ b/drivers/media/i2c/ov772x.c
-> @@ -749,13 +749,13 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
->  	case V4L2_CID_VFLIP:
->  		val = ctrl->val ? VFLIP_IMG : 0x00;
->  		priv->flag_vflip = ctrl->val;
-> -		if (priv->info->flags & OV772X_FLAG_VFLIP)
-> +		if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
->  			val ^= VFLIP_IMG;
->  		return ov772x_mask_set(client, COM3, VFLIP_IMG, val);
->  	case V4L2_CID_HFLIP:
->  		val = ctrl->val ? HFLIP_IMG : 0x00;
->  		priv->flag_hflip = ctrl->val;
-> -		if (priv->info->flags & OV772X_FLAG_HFLIP)
-> +		if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
->  			val ^= HFLIP_IMG;
->  		return ov772x_mask_set(client, COM3, HFLIP_IMG, val);
->  	case V4L2_CID_BAND_STOP_FILTER:
-> @@ -914,19 +914,14 @@ static void ov772x_select_params(const struct v4l2_mbus_framefmt *mf,
->  	*win = ov772x_select_win(mf->width, mf->height);
->  }
->
-> -static int ov772x_set_params(struct ov772x_priv *priv,
-> -			     const struct ov772x_color_format *cfmt,
-> -			     const struct ov772x_win_size *win)
-> +static int ov772x_edgectrl(struct ov772x_priv *priv)
->  {
->  	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> -	struct v4l2_fract tpf;
->  	int ret;
-> -	u8  val;
->
-> -	/* Reset hardware. */
-> -	ov772x_reset(client);
-> +	if (!priv->info)
-> +		return 0;
->
-> -	/* Edge Ctrl. */
->  	if (priv->info->edgectrl.strength & OV772X_MANUAL_EDGE_CTRL) {
->  		/*
->  		 * Manual Edge Control Mode.
-> @@ -937,19 +932,19 @@ static int ov772x_set_params(struct ov772x_priv *priv,
->
->  		ret = ov772x_mask_set(client, DSPAUTO, EDGE_ACTRL, 0x00);
->  		if (ret < 0)
-> -			goto ov772x_set_fmt_error;
-> +			return ret;
->
->  		ret = ov772x_mask_set(client,
->  				      EDGE_TRSHLD, OV772X_EDGE_THRESHOLD_MASK,
->  				      priv->info->edgectrl.threshold);
->  		if (ret < 0)
-> -			goto ov772x_set_fmt_error;
-> +			return ret;
->
->  		ret = ov772x_mask_set(client,
->  				      EDGE_STRNGT, OV772X_EDGE_STRENGTH_MASK,
->  				      priv->info->edgectrl.strength);
->  		if (ret < 0)
-> -			goto ov772x_set_fmt_error;
-> +			return ret;
->
->  	} else if (priv->info->edgectrl.upper > priv->info->edgectrl.lower) {
->  		/*
-> @@ -961,15 +956,35 @@ static int ov772x_set_params(struct ov772x_priv *priv,
->  				      EDGE_UPPER, OV772X_EDGE_UPPER_MASK,
->  				      priv->info->edgectrl.upper);
->  		if (ret < 0)
-> -			goto ov772x_set_fmt_error;
-> +			return ret;
->
->  		ret = ov772x_mask_set(client,
->  				      EDGE_LOWER, OV772X_EDGE_LOWER_MASK,
->  				      priv->info->edgectrl.lower);
->  		if (ret < 0)
-> -			goto ov772x_set_fmt_error;
-> +			return ret;
->  	}
->
-> +	return 0;
-> +}
-> +
-> +static int ov772x_set_params(struct ov772x_priv *priv,
-> +			     const struct ov772x_color_format *cfmt,
-> +			     const struct ov772x_win_size *win)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> +	struct v4l2_fract tpf;
-> +	int ret;
-> +	u8  val;
-> +
-> +	/* Reset hardware. */
-> +	ov772x_reset(client);
-> +
-> +	/* Edge Ctrl. */
-> +	ret =  ov772x_edgectrl(priv);
-
-You have two spaces before 'ov772x_edgectrl(priv)'
-
-Thanks
-   j
-
-
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/* Format and window size. */
->  	ret = ov772x_write(client, HSTART, win->rect.left >> 2);
->  	if (ret < 0)
-> @@ -1020,9 +1035,9 @@ static int ov772x_set_params(struct ov772x_priv *priv,
->
->  	/* Set COM3. */
->  	val = cfmt->com3;
-> -	if (priv->info->flags & OV772X_FLAG_VFLIP)
-> +	if (priv->info && (priv->info->flags & OV772X_FLAG_VFLIP))
->  		val |= VFLIP_IMG;
-> -	if (priv->info->flags & OV772X_FLAG_HFLIP)
-> +	if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
->  		val |= HFLIP_IMG;
->  	if (priv->flag_vflip)
->  		val ^= VFLIP_IMG;
-> @@ -1271,8 +1286,9 @@ static int ov772x_probe(struct i2c_client *client,
->  	struct i2c_adapter	*adapter = client->adapter;
->  	int			ret;
->
-> -	if (!client->dev.platform_data) {
-> -		dev_err(&client->dev, "Missing ov772x platform data\n");
-> +	if (!client->dev.of_node && !client->dev.platform_data) {
-> +		dev_err(&client->dev,
-> +			"Missing ov772x platform data for non-DT device\n");
->  		return -EINVAL;
->  	}
->
-> @@ -1370,9 +1386,19 @@ static const struct i2c_device_id ov772x_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, ov772x_id);
->
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id ov772x_of_match[] = {
-> +	{ .compatible = "ovti,ov7725", },
-> +	{ .compatible = "ovti,ov7720", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, ov772x_of_match);
-> +#endif
-> +
->  static struct i2c_driver ov772x_i2c_driver = {
->  	.driver = {
->  		.name = "ov772x",
-> +		.of_match_table = of_match_ptr(ov772x_of_match),
->  	},
->  	.probe    = ov772x_probe,
->  	.remove   = ov772x_remove,
-> --
-> 2.7.4
->
-
---Hf61M2y+wYpnELGG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJa62mhAAoJEHI0Bo8WoVY8nywP/1ymphzxTjbhc0iZlSrhIdLE
-G9wz3EkzG3C+B7I/uhni3j9XqWSS5vqawkwEnunt7Ib+wbRJWyR1xVWTdgrAoV75
-TusydcscdFAFGJFO2QFoGGWwai2tOwPOBWaj9WpfkM+Uq+3ghVtZ8fHWFqbKdajf
-P/uJDfdsMsFepqcRAxBl2Omq2VS/kS1Bt7jb8H1tAy/aP0iBgEWqS64q8rnGEB4W
-I+T+TE4SyNtT9ZXx7MVC+cs0zmBSVyqbNuw/vvu6hf/zq508dAwcXCoSqtYjGTXa
-hENM6TAKM/yl5Pdb7ozCS+OCObPOTnj9Gl6hdSsuRD43MO448duoNr9Z+K4ZCafw
-GAwsINS++4KX1BsUxuYrOqi1Mharl2CUDdVC84x9bq0zTupZpr8HwvAwBz3rQfol
-o6gVIyGQ7hJSDFvlPdFqJv3ZxgbjSZQRl8heOyRdCbAmFQhuEZu20QLb3LG09G4t
-QMsmewcSb0Z/uL1uv/Ge0a0XdtP9VcKSZNsy/0CtepNhQRhlShKNa0s4i4EUv7Kx
-OM84Ozb6zFZpTGjiQ29S1RrExR9R6OHtMCu5EsvcZJf142Bl6KOH8c/VE3XsYmcE
-SbUeA81Yzn8dxwjtkEZlv/jvg07HjZDzfvcc5nxjf8glnRZlGfXQGmbNhN2C1/s2
-8Iou5tNMGHdpgFvF4EHm
-=0NIW
------END PGP SIGNATURE-----
-
---Hf61M2y+wYpnELGG--
+On 5/21/2018 2:49 PM, Wolfram Sang wrote:
+> Hi,
+> 
+> On Fri, Mar 23, 2018 at 02:20:59PM -0600, Karthikeyan Ramasubramanian wrote:
+>> This bus driver supports the GENI based i2c hardware controller in the
+>> Qualcomm SOCs. The Qualcomm Generic Interface (GENI) is a programmable
+>> module supporting a wide range of serial interfaces including I2C. The
+>> driver supports FIFO mode and DMA mode of transfer and switches modes
+>> dynamically depending on the size of the transfer.
+>>
+>> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+>> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+>> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> 
+> Is one of these people interested in maintaining this driver? Then, an
+> entry for MAINTAINERS would be needed, too. (Same goes for
+> drivers/soc/qcom/ IMHO, but this is not my realm, so just saying)
+One of us will maintain this driver and I will update the MAINTAINERS
+appropriately.
+> 
+>> +static const struct geni_i2c_err_log gi2c_log[] = {
+>> +	[GP_IRQ0] = {-EINVAL, "Unknown I2C err GP_IRQ0"},
+>> +	[NACK] = {-ENOTCONN, "NACK: slv unresponsive, check its power/reset-ln"},
+>> +	[GP_IRQ2] = {-EINVAL, "Unknown I2C err GP IRQ2"},
+>> +	[BUS_PROTO] = {-EPROTO, "Bus proto err, noisy/unepxected start/stop"},
+>> +	[ARB_LOST] = {-EBUSY, "Bus arbitration lost, clock line undriveable"},
+>> +	[GP_IRQ5] = {-EINVAL, "Unknown I2C err GP IRQ5"},
+>> +	[GENI_OVERRUN] = {-EIO, "Cmd overrun, check GENI cmd-state machine"},
+>> +	[GENI_ILLEGAL_CMD] = {-EILSEQ, "Illegal cmd, check GENI cmd-state machine"},
+>> +	[GENI_ABORT_DONE] = {-ETIMEDOUT, "Abort after timeout successful"},
+>> +	[GENI_TIMEOUT] = {-ETIMEDOUT, "I2C TXN timed out"},
+>> +};
+> 
+> Please check Documentation/i2c/fault-codes for better -ERRNO values,
+> especially for NACK and ARB_LOST.
+I will check the fault-codes and fix the error codes here.
+> 
+> Rest looks good from a glimpse.
+> 
+> Thanks,
+> 
+>    Wolfram
+> 
+Regards,
+Karthik.
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
