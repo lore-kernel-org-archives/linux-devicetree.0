@@ -1,70 +1,56 @@
-Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam01on0065.outbound.protection.outlook.com ([104.47.32.65]:63072
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751002AbeEVJIC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 May 2018 05:08:02 -0400
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [PATCH 3/4] dt-bindings: PCI: cadence: Add DT bindings for optional
- PHYs
-Date: Tue, 22 May 2018 09:08:01 +0000
-Message-ID: <SN6PR07MB451213F202165D9733877828D8940@SN6PR07MB4512.namprd07.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v4 4/4] arm64: dts: renesas: r8a7795: add OF graph for usb role switch
+Date: Tue, 22 May 2018 21:01:09 +0900
+Message-Id: <1526990469-20739-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "bhelgaas@google.com" <bhelgaas@google.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>
+Content-Type: text/plain
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Alan Douglas <adouglas@cadence.com>
+This patch adds OF graph properties for usb role switch in r8a7795
+into USB3.0 host/peripheral nodes.
 
-Update DT documentation to include optional PHYs for cadence PCIe
-host and endpoint controllers.
+TODO:
+ - need patches for other SoCs.
 
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt   | 4 ++++
- Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt | 2 ++
- 2 files changed, 6 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/=
-Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-index 9a305237..e40c635 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-@@ -9,6 +9,8 @@ Required properties:
-=20
- Optional properties:
- - max-functions: Maximum number of functions that can be configured (defau=
-lt 1).
-+- phys: From PHY bindings: List of Generic PHY phandles.
-+- phy-names:  List of names to identify the PHY.
-=20
- Example:
-=20
-@@ -19,4 +21,6 @@ pcie@fc000000 {
- 	reg-names =3D "reg", "mem";
- 	cdns,max-outbound-regions =3D <16>;
- 	max-functions =3D /bits/ 8 <8>;
-+	phys =3D <&ep_phy0 &ep_phy1>;
-+	phy-names =3D "pcie-lane0","pcie-lane1";
- };
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt =
-b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-index 20a33f3..c0ca4c1 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-@@ -24,6 +24,8 @@ Optional properties:
-   translations (default 32)
- - vendor-id: The PCI vendor ID (16 bits, default is design dependent)
- - device-id: The PCI device ID (16 bits, default is design dependent)
-+- phys: From PHY bindings: List of Generic PHY phandles.
-+- phy-names:  List of names to identify the PHY.
-=20
- Example:
-=20
---=20
-2.2.2
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 1d5e3ac..50d3312 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -1746,6 +1746,12 @@
+ 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+ 			resets = <&cpg 328>;
+ 			status = "disabled";
++
++			port {
++				usb3_host0_ep: endpoint {
++					remote-endpoint = <&usb3_peri0_ep>;
++				};
++			};
+ 		};
+ 
+ 		usb3_peri0: usb@ee020000 {
+@@ -1757,6 +1763,12 @@
+ 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+ 			resets = <&cpg 328>;
+ 			status = "disabled";
++
++			port {
++				usb3_peri0_ep: endpoint {
++					remote-endpoint = <&usb3_host0_ep>;
++				};
++			};
+ 		};
+ 
+ 		usb_dmac0: dma-controller@e65a0000 {
+-- 
+1.9.1
