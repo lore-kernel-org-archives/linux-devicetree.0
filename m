@@ -1,136 +1,143 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH v5 3/8] remoteproc: Move proxy unvote to handover irq
- handler
-Date: Tue, 22 May 2018 12:01:11 +0530
-Message-ID: <310ca259-d4d2-240d-f0a6-057456c1bf5e@codeaurora.org>
-References: <20180521172714.8551-1-sibis@codeaurora.org>
- <20180521172714.8551-4-sibis@codeaurora.org> <20180522043511.GW14924@minitux>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH] cpufreq: Add Kryo CPU scaling driver
+Date: Tue, 22 May 2018 09:56:19 +0300
+Message-ID: <001201d3f19a$0130a860$0391f920$@codeaurora.org>
+References: <1526555955-29960-11-git-send-email-ilialin@codeaurora.org> <1526729701-8589-1-git-send-email-ilialin@codeaurora.org> <153cc316-dcb5-972f-5a2f-c91fe0f6348b@arm.com> <000f01d3f103$3ff78ba0$bfe6a2e0$@codeaurora.org> <2ace10bc-e1c4-2060-94d3-eb71e966ffbe@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180522043511.GW14924@minitux>
-Content-Language: en-US
+In-Reply-To: <2ace10bc-e1c4-2060-94d3-eb71e966ffbe@arm.com>
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: 'Sudeep Holla' <sudeep.holla@arm.com>, mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, viresh.kumar@linaro.org, nm@ti.com, lgirdwood@gmail.com, broonie@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rnayak@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-Thanks for the review.
 
-On 05/22/2018 10:05 AM, Bjorn Andersson wrote:
-> On Mon 21 May 10:27 PDT 2018, Sibi Sankar wrote:
-> 
->> Introduce interrupt handler for smp2p ready interrupt to
->> handle start completion. Move the proxy votes for clocks
->> and regulators to the handover interrupt context.
->>
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> 
-> I added the "synchronization logic" of patch 4 to this one, to make it
-> functional and after testing on db820c I merged patch 3 through 8 into
-> rproc-next.
-> 
 
-making the q6v5_request_irq return the irq number seems more elegant
-unlike the approach I took earlier.
+> -----Original Message-----
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> Sent: Monday, May 21, 2018 16:05
+> To: ilialin@codeaurora.org; mturquette@baylibre.com; sboyd@kernel.org;
+> robh@kernel.org; mark.rutland@arm.com; viresh.kumar@linaro.org;
+> nm@ti.com; lgirdwood@gmail.com; broonie@kernel.org;
+> andy.gross@linaro.org; david.brown@linaro.org; =
+catalin.marinas@arm.com;
+> will.deacon@arm.com; rjw@rjwysocki.net; linux-clk@vger.kernel.org
+> Cc: Sudeep Holla <sudeep.holla@arm.com>; devicetree@vger.kernel.org;
+> linux-kernel@vger.kernel.org; linux-pm@vger.kernel.org; linux-arm-
+> msm@vger.kernel.org; linux-soc@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; rnayak@codeaurora.org;
+> amit.kucheria@linaro.org; nicolas.dechesne@linaro.org;
+> celster@codeaurora.org; tfinkel@codeaurora.org
+> Subject: Re: [PATCH] cpufreq: Add Kryo CPU scaling driver
+>=20
+>=20
+>=20
+> On 21/05/18 13:57, ilialin@codeaurora.org wrote:
+> >
+> [...]
+>=20
+> >>> +#include <linux/cpu.h>
+> >>> +#include <linux/err.h>
+> >>> +#include <linux/init.h>
+> >>> +#include <linux/kernel.h>
+> >>> +#include <linux/module.h>
+> >>> +#include <linux/nvmem-consumer.h>
+> >>> +#include <linux/of.h>
+> >>> +#include <linux/platform_device.h>
+> >>> +#include <linux/pm_opp.h>
+> >>> +#include <linux/slab.h>
+> >>> +#include <linux/soc/qcom/smem.h>
+> >>> +
+> >>> +#define MSM_ID_SMEM	137
+> >>> +#define SILVER_LEAD	0
+> >>> +#define GOLD_LEAD	2
+> >>> +
+> >>
+> >> So I gather form other emails, that these are physical cpu =
+number(not
+> >> even unique identifier like MPIDR). Will this work on parts or
+> >> platforms that need to boot in GOLD LEAD cpus.
+> >
+> > The driver is for Kryo CPU, which (and AFAIK all multicore MSMs)
+> > always boots on the CPU0.
+>=20
+>=20
+> That may be true and I am not that bothered about it. But assuming =
+physical
+> ordering from the logical cpu number is *incorrect* and will break if =
+kernel
+> decides to change the allocation algorithm. Kernel provides no =
+guarantee on
+> that, so you need to depend on some physical ID or may be DT to =
+achieve
+> what your want. But the current code as it stands is wrong.
 
-> I skipped the remainder of patch 4, as I think the ready_irq should be
-> included and I wonder if irq management can remove the need for the
-> "running" variable.
->
+Got your point. In fact CPUs are numbered 0-3 and ordered into 2 =
+clusters in the DT:
 
-will include the ready_irq as well. I think we may need to keep
-"running" for coredump but will check if it can substituted with
-irq management.
+cpus {
+	#address-cells =3D <2>;
+	#size-cells =3D <0>;
 
-> I also moved the enable_irq before we actually start the core, since
-> it's been shown downstream that the smp2p irq might fire fast enough for
-> us to miss it (and the smp2p driver does not redeliver interrupts).
-> 
+	CPU0: cpu@0 {
+		...
+		reg =3D <0x0 0x0>;
+		...
+	};
+
+	CPU1: cpu@1 {
+		...
+		reg =3D <0x0 0x1>;
+		...
+	};
+
+	CPU2: cpu@100 {
+		...
+		reg =3D <0x0 0x100>;
+		...
+	};
+
+	CPU3: cpu@101 {
+		...
+		reg =3D <0x0 0x101>;
+		...
+	};
+
+	cpu-map {
+		cluster0 {
+			core0 {
+				cpu =3D <&CPU0>;
+			};
+
+			core1 {
+				cpu =3D <&CPU1>;
+			};
+		};
+
+		cluster1 {
+			core0 {
+				cpu =3D <&CPU2>;
+			};
+
+			core1 {
+				cpu =3D <&CPU3>;
+			};
+		};
+	};
+};
+
+As far, as I understand, they are probed in the same order. However, to =
+be certain that the physical CPU is the one I intend to configure, I =
+have to fetch the device structure pointer for the cpu-map -> clusterX =
+-> core0 -> cpu path. Could you suggest a kernel API to do that?
+
+
+
+>=20
+> --
 > Regards,
-> Bjorn
-> 
->> ---
->>   drivers/remoteproc/qcom_q6v5_pil.c | 29 +++++++++++++++++++++++------
->>   1 file changed, 23 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
->> index 76a0c00aa04a..6333bdcd9448 100644
->> --- a/drivers/remoteproc/qcom_q6v5_pil.c
->> +++ b/drivers/remoteproc/qcom_q6v5_pil.c
->> @@ -809,11 +809,6 @@ static int q6v5_start(struct rproc *rproc)
->>   			"Failed to reclaim mba buffer system may become unstable\n");
->>   	qproc->running = true;
->>   
->> -	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
->> -			 qproc->proxy_clk_count);
->> -	q6v5_regulator_disable(qproc, qproc->proxy_regs,
->> -			       qproc->proxy_reg_count);
->> -
->>   	return 0;
->>   
->>   reclaim_mpss:
->> @@ -892,6 +887,12 @@ static int q6v5_stop(struct rproc *rproc)
->>   	WARN_ON(ret);
->>   
->>   	reset_control_assert(qproc->mss_restart);
->> +
->> +	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
->> +			 qproc->proxy_clk_count);
->> +	q6v5_regulator_disable(qproc, qproc->proxy_regs,
->> +			       qproc->proxy_reg_count);
->> +
->>   	q6v5_clk_disable(qproc->dev, qproc->active_clks,
->>   			 qproc->active_clk_count);
->>   	q6v5_regulator_disable(qproc, qproc->active_regs,
->> @@ -959,7 +960,7 @@ static irqreturn_t q6v5_fatal_interrupt(int irq, void *dev)
->>   	return IRQ_HANDLED;
->>   }
->>   
->> -static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
->> +static irqreturn_t q6v5_ready_interrupt(int irq, void *dev)
->>   {
->>   	struct q6v5 *qproc = dev;
->>   
->> @@ -967,6 +968,18 @@ static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
->>   	return IRQ_HANDLED;
->>   }
->>   
->> +static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
->> +{
->> +	struct q6v5 *qproc = dev;
->> +
->> +	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
->> +			 qproc->proxy_clk_count);
->> +	q6v5_regulator_disable(qproc, qproc->proxy_regs,
->> +			       qproc->proxy_reg_count);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->>   static irqreturn_t q6v5_stop_ack_interrupt(int irq, void *dev)
->>   {
->>   	struct q6v5 *qproc = dev;
->> @@ -1194,6 +1207,10 @@ static int q6v5_probe(struct platform_device *pdev)
->>   	if (ret < 0)
->>   		goto free_rproc;
->>   
->> +	ret = q6v5_request_irq(qproc, pdev, "ready", q6v5_ready_interrupt);
->> +	if (ret < 0)
->> +		goto free_rproc;
->> +
->>   	ret = q6v5_request_irq(qproc, pdev, "handover", q6v5_handover_interrupt);
->>   	if (ret < 0)
->>   		goto free_rproc;
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
-> 
-
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Sudeep
