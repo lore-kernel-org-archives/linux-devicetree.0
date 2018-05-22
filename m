@@ -1,80 +1,63 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 1/6] clk: meson: clean-up meson clock configuration
-Date: Tue, 22 May 2018 18:34:52 +0200
-Message-ID: <20180522163457.13834-2-jbrunet@baylibre.com>
-References: <20180522163457.13834-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180522163457.13834-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+Date: Tue, 22 May 2018 09:43:34 -0700
+Message-ID: <20180522094334.71f0e36b@jacob-builder>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-4-jean-philippe.brucker@arm.com>
+	<20180516163117.622693ea@jacob-builder>
+	<de478769-9f7a-d40b-a55e-e2c63ad883e8@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <de478769-9f7a-d40b-a55e-e2c63ad883e8-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Clean the dependencies in meson clock Kconfig.
-CLK_AMLOGIC should actually select CLK_REGMAP_MESON which it uses. Also,
-each platform should select CLK_AMLOGIC, so everything is properly turned
-on when the platform Kconfig enable each configuration flag
+On Thu, 17 May 2018 11:02:42 +0100
+Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/clk/meson/Kconfig | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+> On 17/05/18 00:31, Jacob Pan wrote:
+> > On Fri, 11 May 2018 20:06:04 +0100
+> > I am a little confused about domain vs. pasid relationship. If
+> > each domain represents a address space, should there be a domain for
+> > each pasid?  
+> 
+> I don't think there is a formal definition, but from previous
+> discussion the consensus seems to be: domains are a collection of
+> devices that have the same virtual address spaces (one or many).
+> 
+> Keeping that definition makes things easier, in my opinion. Some time
+> ago, I did try to represent PASIDs using "subdomains" (introducing a
+> hierarchy of struct iommu_domain), but it required invasive changes in
+> the IOMMU subsystem and probably all over the tree.
+> 
+> You do need some kind of "root domain" for each device, so that
+> "iommu_get_domain_for_dev()" still makes sense. That root domain
+> doesn't have a single address space but a collection of subdomains.
+> If you need this anyway, representing a PASID with an iommu_domain
+> doesn't seem preferable than using a different structure (io_mm),
+> because they don't have anything in common.
+> 
+My main concern is the PASID table storage. If PASID table storage
+is tied to domain, it is ok to scale up, i.e. multiple devices in a
+domain share a single PASID table. But to scale down, e.g. further
+partition device with VFIO mdev for assignment, each mdev may get its
+own domain via vfio. But there is no IOMMU storage for PASID table at
+mdev device level. Perhaps we do need root domain or some parent-child
+relationship to locate PASID table.
 
-diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
-index 815659eebea3..9d00809f07fc 100644
---- a/drivers/clk/meson/Kconfig
-+++ b/drivers/clk/meson/Kconfig
-@@ -1,13 +1,14 @@
- config COMMON_CLK_AMLOGIC
- 	bool
--	depends on OF
- 	depends on ARCH_MESON || COMPILE_TEST
-+	select COMMON_CLK_REGMAP_MESON
- 
- config COMMON_CLK_MESON_AO
- 	bool
- 	depends on OF
- 	depends on ARCH_MESON || COMPILE_TEST
- 	select COMMON_CLK_REGMAP_MESON
-+	select RESET_CONTROLLER
- 
- config COMMON_CLK_REGMAP_MESON
- 	bool
-@@ -15,9 +16,8 @@ config COMMON_CLK_REGMAP_MESON
- 
- config COMMON_CLK_MESON8B
- 	bool
--	depends on COMMON_CLK_AMLOGIC
-+	select COMMON_CLK_AMLOGIC
- 	select RESET_CONTROLLER
--	select COMMON_CLK_REGMAP_MESON
- 	help
- 	  Support for the clock controller on AmLogic S802 (Meson8),
- 	  S805 (Meson8b) and S812 (Meson8m2) devices. Say Y if you
-@@ -25,10 +25,8 @@ config COMMON_CLK_MESON8B
- 
- config COMMON_CLK_GXBB
- 	bool
--	depends on COMMON_CLK_AMLOGIC
--	select RESET_CONTROLLER
-+	select COMMON_CLK_AMLOGIC
- 	select COMMON_CLK_MESON_AO
--	select COMMON_CLK_REGMAP_MESON
- 	select MFD_SYSCON
- 	help
- 	  Support for the clock controller on AmLogic S905 devices, aka gxbb.
-@@ -36,10 +34,8 @@ config COMMON_CLK_GXBB
- 
- config COMMON_CLK_AXG
- 	bool
--	depends on COMMON_CLK_AMLOGIC
--	select RESET_CONTROLLER
-+	select COMMON_CLK_AMLOGIC
- 	select COMMON_CLK_MESON_AO
--	select COMMON_CLK_REGMAP_MESON
- 	select MFD_SYSCON
- 	help
- 	  Support for the clock controller on AmLogic A113D devices, aka axg.
--- 
-2.14.3
+> Thanks,
+> Jean
+
+[Jacob Pan]
