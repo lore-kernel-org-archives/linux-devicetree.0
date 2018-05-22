@@ -1,41 +1,136 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH v3 3/3] ARM: dts: imx6ull-colibri-wifi: remove operating points
-Date: Tue, 22 May 2018 08:28:53 +0200
-Message-ID: <20180522062853.24799-3-sebastien.szymanski@armadeus.com>
-References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH v5 3/8] remoteproc: Move proxy unvote to handover irq
+ handler
+Date: Tue, 22 May 2018 12:01:11 +0530
+Message-ID: <310ca259-d4d2-240d-f0a6-057456c1bf5e@codeaurora.org>
+References: <20180521172714.8551-1-sibis@codeaurora.org>
+ <20180521172714.8551-4-sibis@codeaurora.org> <20180522043511.GW14924@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180522043511.GW14924@minitux>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T3BlcmF0aW5nIHBvaW50cyBhcmUgbm93IGRlZmluZWQgaW4gdGhlIGlteDZ1bGwuZHRzaSBmaWxl
-IHNvIHJlbW92ZQp0aGVtIGZyb20gYm9hcmQgZGV2aWNlIHRyZWVzLgoKU2lnbmVkLW9mZi1ieTog
-U8OpYmFzdGllbiBTenltYW5za2kgPHNlYmFzdGllbi5zenltYW5za2lAYXJtYWRldXMuY29tPgot
-LS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS13aWZpLmR0c2kgfCAxNCAtLS0t
-LS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS13aWZpLmR0c2kgYi9hcmNoL2FybS9i
-b290L2R0cy9pbXg2dWxsLWNvbGlicmktd2lmaS5kdHNpCmluZGV4IDNkZmZiY2Q1MGJmNi4uMTgz
-MTkzZTg1ODBkIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmkt
-d2lmaS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS13aWZpLmR0
-c2kKQEAgLTIwLDIwICsyMCw2IEBACiAKICZjcHUwIHsKIAljbG9jay1mcmVxdWVuY3kgPSA8Nzky
-MDAwMDAwPjsKLQlvcGVyYXRpbmctcG9pbnRzID0gPAotCQkvKiBrSHoJdVYgKi8KLQkJNzkyMDAw
-ICAxMjI1MDAwCi0JCTUyODAwMAkxMTc1MDAwCi0JCTM5NjAwMAkxMDI1MDAwCi0JCTE5ODAwMAk5
-NTAwMDAKLQk+OwotCWZzbCxzb2Mtb3BlcmF0aW5nLXBvaW50cyA9IDwKLQkJLyogS0h6CXVWICov
-Ci0JCTc5MjAwMCAgMTE3NTAwMAotCQk1MjgwMDAJMTE3NTAwMAotCQkzOTYwMDAJMTE3NTAwMAot
-CQkxOTgwMDAJMTE3NTAwMAotCT47CiB9OwogCiAmaW9tdXhjIHsKLS0gCjIuMTYuMQoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Bjorn,
+Thanks for the review.
+
+On 05/22/2018 10:05 AM, Bjorn Andersson wrote:
+> On Mon 21 May 10:27 PDT 2018, Sibi Sankar wrote:
+> 
+>> Introduce interrupt handler for smp2p ready interrupt to
+>> handle start completion. Move the proxy votes for clocks
+>> and regulators to the handover interrupt context.
+>>
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> 
+> I added the "synchronization logic" of patch 4 to this one, to make it
+> functional and after testing on db820c I merged patch 3 through 8 into
+> rproc-next.
+> 
+
+making the q6v5_request_irq return the irq number seems more elegant
+unlike the approach I took earlier.
+
+> I skipped the remainder of patch 4, as I think the ready_irq should be
+> included and I wonder if irq management can remove the need for the
+> "running" variable.
+>
+
+will include the ready_irq as well. I think we may need to keep
+"running" for coredump but will check if it can substituted with
+irq management.
+
+> I also moved the enable_irq before we actually start the core, since
+> it's been shown downstream that the smp2p irq might fire fast enough for
+> us to miss it (and the smp2p driver does not redeliver interrupts).
+> 
+> Regards,
+> Bjorn
+> 
+>> ---
+>>   drivers/remoteproc/qcom_q6v5_pil.c | 29 +++++++++++++++++++++++------
+>>   1 file changed, 23 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+>> index 76a0c00aa04a..6333bdcd9448 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_pil.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_pil.c
+>> @@ -809,11 +809,6 @@ static int q6v5_start(struct rproc *rproc)
+>>   			"Failed to reclaim mba buffer system may become unstable\n");
+>>   	qproc->running = true;
+>>   
+>> -	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
+>> -			 qproc->proxy_clk_count);
+>> -	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+>> -			       qproc->proxy_reg_count);
+>> -
+>>   	return 0;
+>>   
+>>   reclaim_mpss:
+>> @@ -892,6 +887,12 @@ static int q6v5_stop(struct rproc *rproc)
+>>   	WARN_ON(ret);
+>>   
+>>   	reset_control_assert(qproc->mss_restart);
+>> +
+>> +	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
+>> +			 qproc->proxy_clk_count);
+>> +	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+>> +			       qproc->proxy_reg_count);
+>> +
+>>   	q6v5_clk_disable(qproc->dev, qproc->active_clks,
+>>   			 qproc->active_clk_count);
+>>   	q6v5_regulator_disable(qproc, qproc->active_regs,
+>> @@ -959,7 +960,7 @@ static irqreturn_t q6v5_fatal_interrupt(int irq, void *dev)
+>>   	return IRQ_HANDLED;
+>>   }
+>>   
+>> -static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
+>> +static irqreturn_t q6v5_ready_interrupt(int irq, void *dev)
+>>   {
+>>   	struct q6v5 *qproc = dev;
+>>   
+>> @@ -967,6 +968,18 @@ static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
+>>   	return IRQ_HANDLED;
+>>   }
+>>   
+>> +static irqreturn_t q6v5_handover_interrupt(int irq, void *dev)
+>> +{
+>> +	struct q6v5 *qproc = dev;
+>> +
+>> +	q6v5_clk_disable(qproc->dev, qproc->proxy_clks,
+>> +			 qproc->proxy_clk_count);
+>> +	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+>> +			       qproc->proxy_reg_count);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>>   static irqreturn_t q6v5_stop_ack_interrupt(int irq, void *dev)
+>>   {
+>>   	struct q6v5 *qproc = dev;
+>> @@ -1194,6 +1207,10 @@ static int q6v5_probe(struct platform_device *pdev)
+>>   	if (ret < 0)
+>>   		goto free_rproc;
+>>   
+>> +	ret = q6v5_request_irq(qproc, pdev, "ready", q6v5_ready_interrupt);
+>> +	if (ret < 0)
+>> +		goto free_rproc;
+>> +
+>>   	ret = q6v5_request_irq(qproc, pdev, "handover", q6v5_handover_interrupt);
+>>   	if (ret < 0)
+>>   		goto free_rproc;
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
