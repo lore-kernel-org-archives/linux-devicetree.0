@@ -1,51 +1,121 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v2 2/2] gpu: drm/panel: Add DLC DLC0700YZG-1 panel
-Date: Tue, 22 May 2018 14:37:49 -0500
-Message-ID: <20180522193749.GA13183@rob-hp-laptop>
-References: <20180522094812.31608-1-m.felsch@pengutronix.de>
- <20180522094812.31608-3-m.felsch@pengutronix.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 2/2] drivers: soc: Add LLCC driver
+Date: Tue, 22 May 2018 22:38:36 +0300
+Message-ID: <CAHp75Vd8HZU+BT38-OfXHiihv1yZG6YBeMWyfweBA+kAwk6HUw@mail.gmail.com>
+References: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org>
+ <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
+ <CAHp75VdO7+u-PQ+RBH71sxHHG0WkAyEVxv0BNPaycbcRnrZang@mail.gmail.com> <f1970a64be17267e0f044242dc0764d6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180522094812.31608-3-m.felsch@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, thierry.reding@gmail.com, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f1970a64be17267e0f044242dc0764d6@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMjIsIDIwMTggYXQgMTE6NDg6MTJBTSArMDIwMCwgTWFyY28gRmVsc2NoIHdy
-b3RlOgo+IEZyb206IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Cj4gCj4g
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIERMQyBETEMwNzAwWVpHLTEgMTAyNHg2MDAgTFZE
-UyBwYW5lbHMKPiB0byB0aGUgc2ltcGxlLXBhbmVsIGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+IFttLmZlbHNjaEBwZW5n
-dXRyb25peC5kZTogZml4IHR5cG8gaW4gY29tcGF0aWJsZSBkdC1iaW5kaW5nXQo+IFNpZ25lZC1v
-ZmYtYnk6IE1hcmNvIEZlbHNjaCA8bS5mZWxzY2hAcGVuZ3V0cm9uaXguZGU+Cj4gLS0tCj4gIC4u
-Li9kaXNwbGF5L3BhbmVsL2RsYyxkbGMwNzAweXpnLTEudHh0ICAgICAgICB8ICA3ICsrKysKPiAg
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwgMzIgKysrKysr
-KysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKykKPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL2RsYyxkbGMwNzAweXpnLTEudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2RsYyxkbGMwNzAweXpnLTEudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZGxjLGRs
-YzA3MDB5emctMS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uM2NmYWZlMjZlYjM1Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2RsYyxkbGMwNzAweXpnLTEudHh0Cj4gQEAg
-LTAsMCArMSw3IEBACj4gK0RMQyBEaXNwbGF5IENvLiBETEMwNzAwWVpHLTEgNy4wIiBXU1ZHQSBU
-RlQgTENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6
-IHNob3VsZCBiZSAiZGxjLGRsYzA3MDB5emctMSIKPiArCj4gK1RoaXMgYmluZGluZyBpcyBjb21w
-YXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQK
-PiAraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KCllvdSBuZWVkIHRvIGxp
-c3QgZXhhY3RseSB3aGljaCBwcm9wZXJ0aWVzIHRoaXMgcGFuZWwgdXNlcy4KClJvYgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, May 22, 2018 at 9:33 PM,  <rishabhb@codeaurora.org> wrote:
+> On 2018-05-18 14:01, Andy Shevchenko wrote:
+>> On Wed, May 16, 2018 at 8:43 PM, Rishabh Bhatnagar
+>> <rishabhb@codeaurora.org> wrote:
+
+>>> +#define ACTIVATE                      0x1
+>>> +#define DEACTIVATE                    0x2
+>>> +#define ACT_CTRL_OPCODE_ACTIVATE      0x1
+>>> +#define ACT_CTRL_OPCODE_DEACTIVATE    0x2
+>>> +#define ACT_CTRL_ACT_TRIG             0x1
+>>
+>>
+>> Are these bits? Perhaps BIT() ?
+>>
+> isn't it just better to use fixed size as u suggest in the next comment?
+
+If the are bits, use BIT() macro.
+
+>>> +struct llcc_slice_desc *llcc_slice_getd(u32 uid)
+>>> +{
+>>> +       const struct llcc_slice_config *cfg;
+>>> +       struct llcc_slice_desc *desc;
+>>> +       u32 sz, count = 0;
+>>> +
+>>> +       cfg = drv_data->cfg;
+>>> +       sz = drv_data->cfg_size;
+>>> +
+>>
+>>
+>>> +       while (cfg && count < sz) {
+>>> +               if (cfg->usecase_id == uid)
+>>> +                       break;
+>>> +               cfg++;
+>>> +               count++;
+>>> +       }
+>>> +       if (cfg == NULL || count == sz)
+>>> +               return ERR_PTR(-ENODEV);
+>>
+>>
+>> if (!cfg)
+>>           return ERR_PTR(-ENODEV);
+>>
+>> while (cfg->... != uid) {
+>>   cfg++;
+>>   count++;
+>> }
+>>
+>> if (count == sz)
+>>  return ...
+>>
+>> Though I would rather put it to for () loop.
+>>
+> In each while loop iteration the cfg pointer needs to be checked for
+> NULL. What if the usecase id never matches the uid passed by client
+> and we keep iterating. At some point it will crash.
+
+do {
+  if (!cfg || count == sz)
+   return ...(-ENODEV);
+ ...
+} while (...);
+
+Though, as I said for-loop will look slightly better I think.
+
+>>> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+>>> +                                 DEACTIVATE);
+>>
+>>
+>> Perhaps one line (~83 characters here is OK) ?
+>
+> The checkpatch script complains about such lines.
+
+So what if it just 3 characters out?
+
+>>> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+>>> +                                 ACTIVATE);
+
+>> Ditto.
+
+>>> +               attr1_cfg = bcast_off +
+>>> +
+>>> LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
+>>> +               attr0_cfg = bcast_off +
+>>> +
+>>> LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
+
+>> Ditto.
+
+>>> +               attr1_val |= llcc_table[i].probe_target_ways <<
+>>> +                               ATTR1_PROBE_TARGET_WAYS_SHIFT;
+>>> +               attr1_val |= llcc_table[i].fixed_size <<
+>>> +                               ATTR1_FIXED_SIZE_SHIFT;
+>>> +               attr1_val |= llcc_table[i].priority <<
+>>> ATTR1_PRIORITY_SHIFT;
+
+>> foo |=
+>>   bar << SHIFT;
+>>
+>> would look slightly better.
+
+Did you consider this option ?
+
+-- 
+With Best Regards,
+Andy Shevchenko
