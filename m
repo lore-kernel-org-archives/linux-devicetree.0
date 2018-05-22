@@ -1,82 +1,190 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: add QCOM RPMh regulator driver
-Date: Tue, 22 May 2018 17:36:10 +0100
-Message-ID: <20180522163610.GD24776@sirena.org.uk>
-References: <71fab82672524b95632cdb588c16edfc9711866a.1521246069.git.collinsd@codeaurora.org>
- <152165924074.91116.13025068669916027026@swboyd.mtv.corp.google.com>
- <493c1f5d-df99-ca68-0f90-a7937a696f5d@codeaurora.org>
- <152411734938.46528.9676451637772936597@swboyd.mtv.corp.google.com>
- <20180419120813.GD27188@sirena.org.uk>
- <38f42537-f801-115a-4120-1344a67a0462@codeaurora.org>
- <20180424174111.GH22073@sirena.org.uk>
- <d82ef514-b94f-8ed9-6b1e-e07de2a5f455@codeaurora.org>
- <20180517060948.GI20254@sirena.org.uk>
- <6cb2ac52-258c-332b-e912-809d16e14114@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/unnNtmY43mpUSKx"
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 5/6] dt-bindings: clock: add meson axg audio clock controller bindings
+Date: Tue, 22 May 2018 18:34:56 +0200
+Message-ID: <20180522163457.13834-6-jbrunet@baylibre.com>
+References: <20180522163457.13834-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6cb2ac52-258c-332b-e912-809d16e14114@codeaurora.org>
+In-Reply-To: <20180522163457.13834-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, lgirdwood@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, ilina@codeaurora.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Export the clock ids dt-bindings usable by the consumers of the clock
+controller and add the documentation for the device tree bindings of
+the audio clock controller of the A113 based SoCs.
 
---/unnNtmY43mpUSKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../bindings/clock/amlogic,axg-audio-clkc.txt      | 56 +++++++++++++
+ include/dt-bindings/clock/axg-audio-clkc.h         | 94 ++++++++++++++++++++++
+ 2 files changed, 150 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+ create mode 100644 include/dt-bindings/clock/axg-audio-clkc.h
 
-On Thu, May 17, 2018 at 01:48:41PM -0700, David Collins wrote:
-
-> The RPMh hardware is configured by the boot loader.  The configuration
-> does reflect reality; however, it cannot handle all configurations at
-> initialization time.  Specific headroom management typically comes up in
-> modem usecases for RF supplies that are sensitive to noise.  This feature
-
-...
-
-> If you really don't like having this feature present in the Linux RPMh
-> regulator driver, then I'd be ok removing it.  It is not required for
-> SDM845 which the driver is initially targeting.
-
-It's certainly going to be easier to review it separately.
-
-> >> In the case of XOB managed LDO regulators, the LDOs physically can be
-> >> configured to different voltages by the bootloader.  However, the RPMh
-> >> interface provides no mechanism for the application processor to read or
-> >> change that voltage.  Therefore, we need a way to specify such voltages in
-> >> a board specific (as opposed to driver specific) manner (i.e. device tree).
-
-> > Is the kernel somehow prevented from varying these voltages?
-
-> Yes.  Physically, there exists no RPMh register to read or write the
-> voltage of LDOs managed via XOB.  Additionally, the kernel running on the
-> application processor is blocked from configuring the voltage via a direct
-> SPMI writes by access permissions that crash the system when violated.
-
-*sigh*  Please provide feedback on the problems this (and everything
-else) is causing to the team working on the firmware.  The number of
-issues with this interface compared to anything else we've seen is
-really noticable, I see what it's trying to do with providing something
-like the regulator API is doing but there's quite a lot of missing steps
-in it which cause no end of problems for general purpose software
-written on top of it.
-
---/unnNtmY43mpUSKx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsERvkACgkQJNaLcl1U
-h9BRbQf/bak8Har514vMoevNFbyP0Fz49WvI8YBlBfaGXL+7k5tUpz9B0Iu96kJN
-KqknnwZ9bWkc0RZ+EgyRIDvMS8KwFPJZgXPEkMyp5kp0eADY2iEF4Da0AZ9ENVxY
-VmOgDkfRedCEat/h8FIbOAln/Ee41tYdzVBGPvppyMe/LL7kHW/Vs1fVoHc2Xyb+
-aeoo6h2B6+NyC6qzfa6TaRy8rh2a2xbDWd7QDvSmD3mqSYt9g+E+qDIe3Wx7flj0
-iGpgm3WSFJz0YSadqHzMZMwpsnY8daRatsWsJw2u6Z26vkkzViLaojTHg4+iaH0+
-xB41uwO+JsJd6Jcxed5Mv9TMSZfVng==
-=ZpCa
------END PGP SIGNATURE-----
-
---/unnNtmY43mpUSKx--
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+new file mode 100644
+index 000000000000..61777ad24f61
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+@@ -0,0 +1,56 @@
++* Amlogic AXG Audio Clock Controllers
++
++The Amlogic AXG audio clock controller generates and supplies clock to the
++other elements of the audio subsystem, such as fifos, i2s, spdif and pdm
++devices.
++
++Required Properties:
++
++- compatible	: should be "amlogic,axg-audio-clkc" for the A113X and A113D
++- reg		: physical base address of the clock controller and length of
++		  memory mapped region.
++- clocks	: a list of phandle + clock-specifier pairs for the clocks listed
++		  in clock-names.
++- clock-names	: must contain the following:
++		  * "pclk" - Main peripheral bus clock
++		  may contain the following:
++		  * "mst_in[0-7]" - 8 input plls to generate clock signals
++		  * "slv_sclk[0-9]" - 10 slave bit clocks provided by external
++				      components.
++		  * "slv_lrclk[0-9]" - 10 slave sample clocks provided by external
++				       components.
++- resets	: phandle of the internal reset line
++- #clock-cells	: should be 1.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/axg-audio-clkc.h header and can be
++used in device tree sources.
++
++Example:
++
++clkc_audio: clock-controller@0 {
++	compatible = "amlogic,axg-audio-clkc";
++	reg = <0x0 0x0 0x0 0xb4>;
++	#clock-cells = <1>;
++
++	clocks = <&clkc CLKID_AUDIO>,
++		 <&clkc CLKID_MPLL0>,
++		 <&clkc CLKID_MPLL1>,
++		 <&clkc CLKID_MPLL2>,
++		 <&clkc CLKID_MPLL3>,
++		 <&clkc CLKID_HIFI_PLL>,
++		 <&clkc CLKID_FCLK_DIV3>,
++		 <&clkc CLKID_FCLK_DIV4>,
++		 <&clkc CLKID_GP0_PLL>;
++	clock-names = "pclk",
++		      "mst_in0",
++		      "mst_in1",
++		      "mst_in2",
++		      "mst_in3",
++		      "mst_in4",
++		      "mst_in5",
++		      "mst_in6",
++		      "mst_in7";
++	resets = <&reset RESET_AUDIO>;
++};
+diff --git a/include/dt-bindings/clock/axg-audio-clkc.h b/include/dt-bindings/clock/axg-audio-clkc.h
+new file mode 100644
+index 000000000000..fd9c362099d9
+--- /dev/null
++++ b/include/dt-bindings/clock/axg-audio-clkc.h
+@@ -0,0 +1,94 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
++/*
++ * Copyright (c) 2018 Baylibre SAS.
++ * Author: Jerome Brunet <jbrunet@baylibre.com>
++ */
++
++#ifndef __AXG_AUDIO_CLKC_BINDINGS_H
++#define __AXG_AUDIO_CLKC_BINDINGS_H
++
++#define AUD_CLKID_SLV_SCLK0		9
++#define AUD_CLKID_SLV_SCLK1		10
++#define AUD_CLKID_SLV_SCLK2		11
++#define AUD_CLKID_SLV_SCLK3		12
++#define AUD_CLKID_SLV_SCLK4		13
++#define AUD_CLKID_SLV_SCLK5		14
++#define AUD_CLKID_SLV_SCLK6		15
++#define AUD_CLKID_SLV_SCLK7		16
++#define AUD_CLKID_SLV_SCLK8		17
++#define AUD_CLKID_SLV_SCLK9		18
++#define AUD_CLKID_SLV_LRCLK0		19
++#define AUD_CLKID_SLV_LRCLK1		20
++#define AUD_CLKID_SLV_LRCLK2		21
++#define AUD_CLKID_SLV_LRCLK3		22
++#define AUD_CLKID_SLV_LRCLK4		23
++#define AUD_CLKID_SLV_LRCLK5		24
++#define AUD_CLKID_SLV_LRCLK6		25
++#define AUD_CLKID_SLV_LRCLK7		26
++#define AUD_CLKID_SLV_LRCLK8		27
++#define AUD_CLKID_SLV_LRCLK9		28
++#define AUD_CLKID_DDR_ARB		29
++#define AUD_CLKID_PDM			30
++#define AUD_CLKID_TDMIN_A		31
++#define AUD_CLKID_TDMIN_B		32
++#define AUD_CLKID_TDMIN_C		33
++#define AUD_CLKID_TDMIN_LB		34
++#define AUD_CLKID_TDMOUT_A		35
++#define AUD_CLKID_TDMOUT_B		36
++#define AUD_CLKID_TDMOUT_C		37
++#define AUD_CLKID_FRDDR_A		38
++#define AUD_CLKID_FRDDR_B		39
++#define AUD_CLKID_FRDDR_C		40
++#define AUD_CLKID_TODDR_A		41
++#define AUD_CLKID_TODDR_B		42
++#define AUD_CLKID_TODDR_C		43
++#define AUD_CLKID_LOOPBACK		44
++#define AUD_CLKID_SPDIFIN		45
++#define AUD_CLKID_SPDIFOUT		46
++#define AUD_CLKID_RESAMPLE		47
++#define AUD_CLKID_POWER_DETECT		48
++#define AUD_CLKID_MST_A_MCLK		49
++#define AUD_CLKID_MST_B_MCLK		50
++#define AUD_CLKID_MST_C_MCLK		51
++#define AUD_CLKID_MST_D_MCLK		52
++#define AUD_CLKID_MST_E_MCLK		53
++#define AUD_CLKID_MST_F_MCLK		54
++#define AUD_CLKID_SPDIFOUT_CLK		55
++#define AUD_CLKID_SPDIFIN_CLK		56
++#define AUD_CLKID_PDM_DCLK		57
++#define AUD_CLKID_PDM_SYSCLK		58
++#define AUD_CLKID_MST_A_SCLK		79
++#define AUD_CLKID_MST_B_SCLK		80
++#define AUD_CLKID_MST_C_SCLK		81
++#define AUD_CLKID_MST_D_SCLK		82
++#define AUD_CLKID_MST_E_SCLK		83
++#define AUD_CLKID_MST_F_SCLK		84
++#define AUD_CLKID_MST_A_LRCLK		86
++#define AUD_CLKID_MST_B_LRCLK		87
++#define AUD_CLKID_MST_C_LRCLK		88
++#define AUD_CLKID_MST_D_LRCLK		89
++#define AUD_CLKID_MST_E_LRCLK		90
++#define AUD_CLKID_MST_F_LRCLK		91
++#define AUD_CLKID_TDMIN_A_SCLK_SEL	116
++#define AUD_CLKID_TDMIN_B_SCLK_SEL	117
++#define AUD_CLKID_TDMIN_C_SCLK_SEL	118
++#define AUD_CLKID_TDMIN_LB_SCLK_SEL	119
++#define AUD_CLKID_TDMOUT_A_SCLK_SEL	120
++#define AUD_CLKID_TDMOUT_B_SCLK_SEL	121
++#define AUD_CLKID_TDMOUT_C_SCLK_SEL	122
++#define AUD_CLKID_TDMIN_A_SCLK		123
++#define AUD_CLKID_TDMIN_B_SCLK		124
++#define AUD_CLKID_TDMIN_C_SCLK		125
++#define AUD_CLKID_TDMIN_LB_SCLK		126
++#define AUD_CLKID_TDMOUT_A_SCLK		127
++#define AUD_CLKID_TDMOUT_B_SCLK		128
++#define AUD_CLKID_TDMOUT_C_SCLK		129
++#define AUD_CLKID_TDMIN_A_LRCLK		130
++#define AUD_CLKID_TDMIN_B_LRCLK		131
++#define AUD_CLKID_TDMIN_C_LRCLK		132
++#define AUD_CLKID_TDMIN_LB_LRCLK	133
++#define AUD_CLKID_TDMOUT_A_LRCLK	134
++#define AUD_CLKID_TDMOUT_B_LRCLK	135
++#define AUD_CLKID_TDMOUT_C_LRCLK	136
++
++#endif /* __AXG_AUDIO_CLKC_BINDINGS_H */
+-- 
+2.14.3
