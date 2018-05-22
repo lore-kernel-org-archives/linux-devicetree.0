@@ -1,79 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: imx51-babbage: Fix USB PHY duplicate
- unit-address
-Date: Tue, 22 May 2018 17:45:18 -0500
-Message-ID: <20180522224518.GA20765@rob-hp-laptop>
-References: <1526322576-5838-1-git-send-email-festevam@gmail.com>
- <20180515080624.GR26863@dragon>
+Subject: Re: [RFC PATCH 02/10] dt-bindings: devfreq: rk3399_dmc: Add
+ rockchip,pmu phandle.
+Date: Tue, 22 May 2018 17:45:49 -0500
+Message-ID: <20180522224549.GA26650@rob-hp-laptop>
+References: <20180514211610.26618-1-enric.balletbo@collabora.com>
+ <20180514211610.26618-3-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180515080624.GR26863@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180514211610.26618-3-enric.balletbo@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Derek Basehore <dbasehore@chromium.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-rockchip@lists.infradead.org, kernel@collabora.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 15, 2018 at 04:06:26PM +0800, Shawn Guo wrote:
-> On Mon, May 14, 2018 at 03:29:35PM -0300, Fabio Estevam wrote:
-> > From: Fabio Estevam <fabio.estevam@nxp.com>
-> > 
-> > Currently the following DTC warning is seen with W=1:
-> > 
-> > arch/arm/boot/dts/imx51-babbage.dtb: Warning (unique_unit_address): /usbphy/usbphy@0: duplicate unit-address (also used in node /usbphy/usbh1phy@0)
-> > 
-> > Fix it by moving the USB PHY node outside of simple-bus and drop the
-> > unneeded unit-address.
-> > 
-> > Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
-> > ---
-> >  arch/arm/boot/dts/imx51-babbage.dts | 21 +++++++--------------
-> >  1 file changed, 7 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-> > index b8ca73d..de46906 100644
-> > --- a/arch/arm/boot/dts/imx51-babbage.dts
-> > +++ b/arch/arm/boot/dts/imx51-babbage.dts
-> > @@ -170,20 +170,13 @@
-> >  		mux-ext-port = <3>;
-> >  	};
-> >  
-> > -	usbphy {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		compatible = "simple-bus";
-> > -
-> > -		usbh1phy: usbh1phy@0 {
-> > -			compatible = "usb-nop-xceiv";
-> > -			reg = <0>;
-> > -			clocks = <&clk_usb>;
-> > -			clock-names = "main_clk";
-> > -			reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-> > -			vcc-supply = <&vusb_reg>;
-> > -			#phy-cells = <0>;
-> > -		};
-> > +	usbh1phy: usbphy1 {
-> > +		compatible = "usb-nop-xceiv";
-> > +		clocks = <&clk_usb>;
-> > +		clock-names = "main_clk";
-> > +		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-> > +		vcc-supply = <&vusb_reg>;
-> > +		#phy-cells = <0>;
-> 
-> This should be considered as a whole together with usbphy in imx51.dtsi.
-> Also, I would like to get some input from DT folks on how we should name
-> the node uniquely.  @Rob.
-
-'usbphy1' is fine. I don't have a better suggestion...
-
-Rob
+T24gTW9uLCBNYXkgMTQsIDIwMTggYXQgMTE6MTY6MDJQTSArMDIwMCwgRW5yaWMgQmFsbGV0Ym8g
+aSBTZXJyYSB3cm90ZToKPiBUaGUgUm9ja2NoaXAgRE1DIChEeW5hbWljIE1lbW9yeSBJbnRlcmZh
+Y2UpIG5lZWRzIHRvIGFjY2VzcyB0byB0aGUgUE1VCj4gZ2VuZXJhbCByZWdpc3RlciBmaWxlcyB0
+byBrbm93IHRoZSBEUkFNIHR5cGUsIHNvIGFkZCBhIHBoYW5kbGUgdG8gdGhlCj4gc3lzY29uIHRo
+YXQgbWFuYWdlcyB0aGVzZSByZWdpc3RlcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFs
+bGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KPiAtLS0KPiAKPiAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RldmZyZXEvcmszMzk5X2RtYy50eHQg
+fCAyICsrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCkFja2VkLWJ5OiBSb2Ig
+SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
