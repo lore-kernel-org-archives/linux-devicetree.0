@@ -1,46 +1,38 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 03/16] irqchip/irq-mvebu-icu: fix wrong private data retrieval
-Date: Tue, 22 May 2018 11:40:29 +0200
-Message-ID: <20180522094042.24770-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 02/16] arm64: dts: marvell: fix CP110 ICU node size
+Date: Tue, 22 May 2018 11:40:28 +0200
+Message-ID: <20180522094042.24770-3-miquel.raynal@bootlin.com>
 References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180522094042.24770-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The irq_domain structure has an host_data pointer that just stores
-private data. It is meant to not be touched by the IRQ core. However,
-when it comes to MSI, the MSI layer adds its own private data there
-with a structure that also has a host_data pointer.
+ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
+specification).
 
-Because this IRQ domain is an MSI domain, to access private data we
-should do a d->host_data->host_data, also wrapped as
-'platform_msi_get_host_data()'.
-
-This bug was lying there silently because the 'icu' structure retrieved
-this way was just called by dev_err(), only producing a
-'(NULL device *):' output on the console.
-
+Fixes: 6ef84a827c37 ("arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K")
+Cc: stable@vger.kernel.org
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 ---
- drivers/irqchip/irq-mvebu-icu.c | 2 +-
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index 13063339b416..a2a3acd74491 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -105,7 +105,7 @@ static int
- mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
- 			       unsigned long *hwirq, unsigned int *type)
- {
--	struct mvebu_icu *icu = d->host_data;
-+	struct mvebu_icu *icu = platform_msi_get_host_data(d);
- 	unsigned int icu_group;
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+index 48cad7919efa..9fa41c54f69c 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+@@ -146,7 +146,7 @@
  
- 	/* Check the count of the parameters in dt */
+ 		CP110_LABEL(icu): interrupt-controller@1e0000 {
+ 			compatible = "marvell,cp110-icu";
+-			reg = <0x1e0000 0x10>;
++			reg = <0x1e0000 0x440>;
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			msi-parent = <&gicp>;
 -- 
 2.14.1
