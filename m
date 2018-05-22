@@ -1,47 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: r8a7795: add ccree binding
-Date: Tue, 22 May 2018 09:48:06 +0200
-Message-ID: <CAMuHMdX-t8WfjRKpZ7UxXBbBNojsn-8z7_BM9grmLJcf=9Ks2Q@mail.gmail.com>
-References: <1526387370-17142-1-git-send-email-gilad@benyossef.com>
- <1526387370-17142-4-git-send-email-gilad@benyossef.com> <CAMuHMdWzeNqsho1V6ezZb81T3_HcRzrtuQpmGXsjtFgt9BtZDQ@mail.gmail.com>
- <20180516074333.i2672u435ymwffk3@verge.net.au> <CAOtvUMfFjokOLCg6aHNQESJ_q4Jiok3izrPtae5wR+cND=XL6g@mail.gmail.com>
- <CAMuHMdVM55S7+PdnKusX-qkTxioc=0kQ6EGSbwv+kbLk5RCUYw@mail.gmail.com> <CAOtvUMcf-fHduThORv3cbcN16wEm_Si27OjSjAmSc9g5eK4PJw@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
+ partitions
+Date: Tue, 22 May 2018 09:46:31 +0200
+Message-ID: <5267836f-7f30-ceb5-14da-93abca3db63b@gmail.com>
+References: <20180509081729.28347-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOtvUMcf-fHduThORv3cbcN16wEm_Si27OjSjAmSc9g5eK4PJw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>L
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180509081729.28347-1-zajec5@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gilad,
-
-On Mon, May 21, 2018 at 3:43 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> On Thu, May 17, 2018 at 1:16 PM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> Indeed. From a quick glance, it looks like drivers/crypto/ccree/cc_driver.c
->> does not distinguish between the absence of the clock property, and an
->> actual error in getting the clock, and never considers any error a failure
->> (incl. -PROBE_DEFER).
->>
->> As of_clk_get() returns -ENOENT for both a missing clock property and a
->> missing clock, you should use (devm_)clk_get() instead, and distinguish
->> between NULL (no clock property) and IS_ERR() (actual failure -> abort).
->
-> I was trying to do as you suggested but I didn't quite get what is the
-> dev_id (2nd) parameter to devm_clk_get parameter is supposed to be.
-
-It's the (optional) name of the clock, helpful in case there is more than one.
-In your case, NULL is fine.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgUm9iLAoKT24gMDkuMDUuMjAxOCAxMDoxNywgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IEZy
+b206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBCcm9hZGNvbSBiYXNl
+ZCBob21lIHJvdXRlciBkZXZpY2VzIHVzZSBwYXJ0aXRpb25zIHdoaWNoIGhhdmUgdG8gYmUKPiBk
+aXNjb3ZlcmVkIGluIGEgc3BlY2lmaWMgd2F5LiBUaGV5IGFyZSBub3QgZml4ZWQgYW5kIHRoZXJl
+IGlzIG5vdCBhbnkKPiBzdGFuZGFyZCBwYXJ0aXRpb24gdGFibGUuIFRoaXMgY29tbWl0IGFkZHMg
+YW5kIGRlc2NyaWJlcyBhIG5ldyBjdXN0b20KPiBiaW5kaW5nIGZvciBzdWNoIGRldmljZXMuCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0t
+LQo+IFRoaXMgY29tbWl0IGRvY3VtZW50cyBhIG5ldyBiaW5kaW5nIGZvciBkZXNjcmliaW5nIHBh
+cnRpdGlvbnMuIEp1c3QgYXMgYQo+IHJlbWluZGVyOiB3ZSBhZ3JlZWQgdG8gdXNlICJjb21wYXRp
+YmxlIiBmb3IgdGhhdCBwdXJwb3NlIHRvIGF2b2lkCj4gL2d1ZXNzaW5nLy4gVGhlcmUgYXJlIHRv
+byBtYW55IGNhc2VzLCBkZXZpY2VzIGFuZCAvZm9ybWF0cy8gdG8ganVzdAo+IGJsaW5kbHkgdHJ5
+IGV2ZXJ5IHBvc3NpYmxlIHBhcnNlci4KPiAKPiBUaGlzIHdhcyBlLmcuIGRlc2NyaWJlZCBieSBC
+b3JpcyBpbiBoaXMgcGF0Y2hzZXQgMisgeWVhcnMgYWdvOgo+IFtSRkMgUEFUQ0ggMC83XSBtdGQ6
+IHBhcnRpdGlvbnM6IGFkZCBvZl9tYXRjaF90YWJsZSBzdXBwb3J0Cj4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDA3Ni5odG1s
+Cj4gCj4gUXVvdGU6Cj4+ICAgKDIpIHdlIGNhbid0IGp1c3Qgc2NhbiBmb3IgYWxsIHN1cHBvcnRl
+ZCBwYXJzZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0gZG9lcyksIHNpbmNlCj4+ICAgICAgIHRo
+ZXJlIGlzIGEgd2lkZSBkaXZlcnNpdHkgb2YgImZvcm1hdHMiIChubyBzdGFuZGFyZGl6YXRpb24p
+LCBhbmQgaXQgaXMgbm90Cj4+ICAgICAgIGFsd2F5cyBzYWZlIG9yIGVmZmljaWVudCB0byBhdHRl
+bXB0IHRvIGRvIHNvLCBwYXJ0aWN1bGFybHkgc2luY2UgbWFueSBvZgo+PiAgICAgICB0aGVtIGFs
+bG93IHRoZWlyIGRhdGEgc3RydWN0dXJlcyB0byBiZSBwbGFjZWQgYW55d2hlcmUgb24gdGhlIGZs
+YXNoLCBhbmQKPj4gICAgICAgc28gcmVxdWlyZSBzY2FubmluZyB0aGUgZW50aXJlIGZsYXNoIGRl
+dmljZSB0byBmaW5kIHRoZW0uCj4gCj4gSSBiZWxpZXZlIHRoaXMgc29sdXRpb24gd2FzIGFsc28g
+YWNrZWQgYmFjayB0aGVuIGJ5IFJvYjoKPiBbUkZDIFBBVENIIDMvN10gZG9jOiBkdDogbXRkOiBw
+YXJ0aXRpb246IGFkZCBvbi1mbGFzaCBmb3JtYXQgYmluZGluZwo+IGh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1tdGQvMjAxNS1EZWNlbWJlci8wNjQxMDAuaHRtbAo+
+IAo+IFYyOiBNb3ZlIGRvY3VtZW50YXRpb24gdG8gdGhlIG5ldyBicmNtLGJjbTk0N3h4LWNmZS1w
+YXJ0aXRpb25zLnR4dCBmaWxlCj4gICAgICBhcyBzdWdnZXN0ZWQgYnkgUm9iICh3ZSBkb24ndCB3
+YW50IHRvIGJsb2F0IHBhcnRpdGlvbi50eHQpLgo+ICAgICAgU2xpZ2h0bHkgdXBkYXRlIGNvbW1p
+dCBtZXNzYWdlLgoKSSBzZW50IHRoaXMgVjIgcGVyIHlvdXIgcmVxdWVzdCBmcm9tIFYxOgoKT24g
+OCBNYXkgMjAxOCBhdCAxODoyNSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6
+CiA+IEkgZ3Vlc3MgdGhpcyBpcyBmaW5lLiBDYW4geW91IHJlc2VuZCBhcyBJIGRvbid0IGhhdmUg
+dGhlIG9yaWdpbmFsIHBhdGNoLgogPgogPiBJIHRoaW5rIGl0IHNob3VsZCBiZSBhIHNlcGFyYXRl
+IGZpbGUgdGhvdWdoIGFzIHBhcnRpdGlvbi50eHQgd291bGQKID4gYmVjb21lIHZlcnkgbG9uZyBp
+ZiBldmVyeSB2ZW5kb3IgcGFydGl0aW9uaW5nIHdhcyBhZGRlZCB0aGVyZS4KCldvdWxkIHlvdSBm
+aW5kIGEgbW9tZW50IHRvIHJldmlldy9uYWNrL2FjayBpdCwgcGxlYXNlPwoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNj
+dXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LW10ZC8K
