@@ -1,45 +1,42 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v2 3/6] watchdog: sp805: add 'timeout-sec' DT property support
-Date: Wed, 23 May 2018 13:32:04 -0700
-Message-ID: <1527107527-8093-4-git-send-email-ray.jui@broadcom.com>
-References: <1527107527-8093-1-git-send-email-ray.jui@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527107527-8093-1-git-send-email-ray.jui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: sprd: fix typo in 'remote-endpoint'
+Date: Wed, 23 May 2018 15:30:49 -0500
+Message-ID: <CAL_JsqKrsTpgnLfxhcxeucpoh9NkyGwwZq82QUBgJZrdjGYQzg@mail.gmail.com>
+References: <20180508150952.24562-1-robh@kernel.org>
+ <20180508150952.24562-4-robh@kernel.org>
+ <CAAfSe-tgKJvzCN6eHCuUR94ECSE8ypAR1eRjhV-VJNztebK9Xw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAfSe-tgKJvzCN6eHCuUR94ECSE8ypAR1eRjhV-VJNztebK9Xw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chunyan Zhang <zhang.lyra@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>
+Cc: DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for optional devicetree property 'timeout-sec'.
-'timeout-sec' is used in the driver if specified in devicetree.
-Otherwise, fall back to driver default, i.e., 60 seconds
+On Tue, May 8, 2018 at 8:58 PM, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> Hi Rob,
+>
+> On 8 May 2018 at 23:09, Rob Herring <robh@kernel.org> wrote:
+>> dtc now warns on incomplete OF graph endpoint connections:
+>>
+>> arch/arm64/boot/dts/sprd/sp9860g-1h10.dtb: Warning (graph_endpoint): /soc/stm@10006000/port/endpoint: graph connection to node '/soc/funnel@10001000/ports/port@2/endpoint' is not bidirectional
+>>
+>> The cause is a typo in 'remote-endpoint'.
+>
+> Thanks for fixing this and,
+>
+> Acked-by: Chunyan Zhang <zhang.lyra@gmail.com>
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/watchdog/sp805_wdt.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Is someone going to apply this? Still seeing warnings in linux-next.
 
-diff --git a/drivers/watchdog/sp805_wdt.c b/drivers/watchdog/sp805_wdt.c
-index 03805bc..1484609 100644
---- a/drivers/watchdog/sp805_wdt.c
-+++ b/drivers/watchdog/sp805_wdt.c
-@@ -230,7 +230,14 @@ sp805_wdt_probe(struct amba_device *adev, const struct amba_id *id)
- 	spin_lock_init(&wdt->lock);
- 	watchdog_set_nowayout(&wdt->wdd, nowayout);
- 	watchdog_set_drvdata(&wdt->wdd, wdt);
--	wdt_setload(&wdt->wdd, DEFAULT_TIMEOUT);
-+
-+	/*
-+	 * If 'timeout-sec' devicetree property is specified, use that.
-+	 * Otherwise, use DEFAULT_TIMEOUT
-+	 */
-+	wdt->wdd.timeout = DEFAULT_TIMEOUT;
-+	watchdog_init_timeout(&wdt->wdd, 0, &adev->dev);
-+	wdt_setload(&wdt->wdd, wdt->wdd.timeout);
- 
- 	ret = watchdog_register_device(&wdt->wdd);
- 	if (ret) {
--- 
-2.1.4
+Rob
