@@ -1,101 +1,113 @@
-From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
-Date: Wed, 23 May 2018 14:34:41 +0300
-Message-ID: <002b01d3f28a$0d033900$2709ab00$@codeaurora.org>
-References: <1527068454-28921-1-git-send-email-ilialin@codeaurora.org> <1527068454-28921-2-git-send-email-ilialin@codeaurora.org> <3f1ca60e-7aa8-fccc-ab1c-4b7c37731cce@arm.com> <002901d3f286$198878b0$4c996a10$@codeaurora.org> <CAKohponbpErCeTYu9iQm_-dupz5SUr+TKsYXzqmmARB-pq95iA@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
+ partitions
+Date: Wed, 23 May 2018 13:34:20 +0200
+Message-ID: <20180523133420.34ffe221@bbrezillon>
+References: <20180509081729.28347-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohponbpErCeTYu9iQm_-dupz5SUr+TKsYXzqmmARB-pq95iA@mail.gmail.com>
-Content-Language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Viresh Kumar' <viresh.kumar@linaro.org>, 'Sudeep Holla' <sudeep.holla@arm.com>
-Cc: 'Viresh Kumar' <vireshk@kernel.org>, 'Nishanth Menon' <nm@ti.com>, 'Stephen Boyd' <sboyd@kernel.org>, 'Rob Herring' <robh@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180509081729.28347-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Viresh Kumar <viresh.kumar@linaro.org>
-> Sent: Wednesday, May 23, 2018 14:31
-> To: Ilia Lin <ilialin@codeaurora.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>; Viresh Kumar
-> <vireshk@kernel.org>; Nishanth Menon <nm@ti.com>; Stephen Boyd
-> <sboyd@kernel.org>; Rob Herring <robh@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; linux-
-> pm@vger.kernel.org; devicetree@vger.kernel.org; Linux Kernel Mailing =
-List
-> <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
->=20
-> On 23 May 2018 at 16:36,  <ilialin@codeaurora.org> wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: Sudeep Holla <sudeep.holla@arm.com>
-> >> Sent: Wednesday, May 23, 2018 13:40
-> >> To: Ilia Lin <ilialin@codeaurora.org>; vireshk@kernel.org; =
-nm@ti.com;
-> >> sboyd@kernel.org; robh@kernel.org; mark.rutland@arm.com;
-> >> rjw@rjwysocki.net; linux-pm@vger.kernel.org;
-> >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> >> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> >> Subject: Re: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
-> >>
-> >>
-> >>
-> >> On 23/05/18 10:40, Ilia Lin wrote:
-> >> > In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO
-> >> > processors, the CPU frequency subset and voltage value of each =
-OPP
-> >> > varies based on the silicon variant in use. Qualcomm Process
-> >> > Voltage Scaling Tables defines the voltage and frequency value
-> >> > based on the msm-id in SMEM and speedbin blown in the efuse
-> combination.
-> >> > The qcom-cpufreq-kryo driver reads the msm-id and efuse value =
-from
-> >> > the SoC to provide the OPP framework with required information.
-> >> > This is used to determine the voltage and frequency value for =
-each
-> >> > OPP of
-> >> > operating-points-v2 table when it is parsed by the OPP framework.
-> >> >
-> >> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> >>
-> >> [...]
-> >>
-> >> > +   pdev =3D platform_device_register_simple("cpufreq-dt", -1, =
-NULL, 0);
-> >> > +   if (!IS_ERR(pdev))
-> >> > +           return 0;
-> >> > +
-> >> > +   ret =3D PTR_ERR(pdev);
-> >> > +   dev_err(cpu_dev, "Failed to register platform device\n");
-> >> > +
-> >> > +free_opp:
-> >> > +   for_each_possible_cpu(cpu) {
-> >> > +           if (IS_ERR_OR_NULL(opp_tables[cpu]))
-> >> > +                   break;
-> >> > +           dev_pm_opp_put_supported_hw(opp_tables[cpu]);
-> >> > +   }
-> >> > +free_np:
-> >> > +   of_node_put(np);
-> >> > +
-> >> > +   return ret;
-> >> > +}
-> >> > +late_initcall(qcom_cpufreq_kryo_driver_init);
-> >>
-> >> Any particular reason why this *has* to be late initcall ?
-> >> Please change it to module_initcall otherwise.
-> >
-> > The purpose is to give the cpufreq-dt the time to register the =
-driver and
-> only then my driver will add the platform device.
->=20
-> That isn't required, the device and its driver can be registered in =
-any order.
-
-You are right. I already checked that in the code...
-However, with module_init() the driver fails on reading the nvmem.
+T24gV2VkLCAgOSBNYXkgMjAxOCAxMDoxNzoyOCArMDIwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
+NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Cj4gCj4gQnJvYWRjb20gYmFzZWQgaG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgcGFydGl0
+aW9ucyB3aGljaCBoYXZlIHRvIGJlCj4gZGlzY292ZXJlZCBpbiBhIHNwZWNpZmljIHdheS4gVGhl
+eSBhcmUgbm90IGZpeGVkIGFuZCB0aGVyZSBpcyBub3QgYW55Cj4gc3RhbmRhcmQgcGFydGl0aW9u
+IHRhYmxlLiBUaGlzIGNvbW1pdCBhZGRzIGFuZCBkZXNjcmliZXMgYSBuZXcgY3VzdG9tCj4gYmlu
+ZGluZyBmb3Igc3VjaCBkZXZpY2VzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJhZmHFgiBNacWCZWNr
+aSA8cmFmYWxAbWlsZWNraS5wbD4KCkFwcGxpZWQgYm90aC4KClRoYW5rcywKCkJvcmlzCgo+IC0t
+LQo+IFRoaXMgY29tbWl0IGRvY3VtZW50cyBhIG5ldyBiaW5kaW5nIGZvciBkZXNjcmliaW5nIHBh
+cnRpdGlvbnMuIEp1c3QgYXMgYQo+IHJlbWluZGVyOiB3ZSBhZ3JlZWQgdG8gdXNlICJjb21wYXRp
+YmxlIiBmb3IgdGhhdCBwdXJwb3NlIHRvIGF2b2lkCj4gL2d1ZXNzaW5nLy4gVGhlcmUgYXJlIHRv
+byBtYW55IGNhc2VzLCBkZXZpY2VzIGFuZCAvZm9ybWF0cy8gdG8ganVzdAo+IGJsaW5kbHkgdHJ5
+IGV2ZXJ5IHBvc3NpYmxlIHBhcnNlci4KPiAKPiBUaGlzIHdhcyBlLmcuIGRlc2NyaWJlZCBieSBC
+b3JpcyBpbiBoaXMgcGF0Y2hzZXQgMisgeWVhcnMgYWdvOgo+IFtSRkMgUEFUQ0ggMC83XSBtdGQ6
+IHBhcnRpdGlvbnM6IGFkZCBvZl9tYXRjaF90YWJsZSBzdXBwb3J0Cj4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDA3Ni5odG1s
+Cj4gCj4gUXVvdGU6Cj4gPiAgKDIpIHdlIGNhbid0IGp1c3Qgc2NhbiBmb3IgYWxsIHN1cHBvcnRl
+ZCBwYXJzZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0gZG9lcyksIHNpbmNlCj4gPiAgICAgIHRo
+ZXJlIGlzIGEgd2lkZSBkaXZlcnNpdHkgb2YgImZvcm1hdHMiIChubyBzdGFuZGFyZGl6YXRpb24p
+LCBhbmQgaXQgaXMgbm90Cj4gPiAgICAgIGFsd2F5cyBzYWZlIG9yIGVmZmljaWVudCB0byBhdHRl
+bXB0IHRvIGRvIHNvLCBwYXJ0aWN1bGFybHkgc2luY2UgbWFueSBvZgo+ID4gICAgICB0aGVtIGFs
+bG93IHRoZWlyIGRhdGEgc3RydWN0dXJlcyB0byBiZSBwbGFjZWQgYW55d2hlcmUgb24gdGhlIGZs
+YXNoLCBhbmQKPiA+ICAgICAgc28gcmVxdWlyZSBzY2FubmluZyB0aGUgZW50aXJlIGZsYXNoIGRl
+dmljZSB0byBmaW5kIHRoZW0uICAKPiAKPiBJIGJlbGlldmUgdGhpcyBzb2x1dGlvbiB3YXMgYWxz
+byBhY2tlZCBiYWNrIHRoZW4gYnkgUm9iOgo+IFtSRkMgUEFUQ0ggMy83XSBkb2M6IGR0OiBtdGQ6
+IHBhcnRpdGlvbjogYWRkIG9uLWZsYXNoIGZvcm1hdCBiaW5kaW5nCj4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDEwMC5odG1s
+Cj4gCj4gVjI6IE1vdmUgZG9jdW1lbnRhdGlvbiB0byB0aGUgbmV3IGJyY20sYmNtOTQ3eHgtY2Zl
+LXBhcnRpdGlvbnMudHh0IGZpbGUKPiAgICAgYXMgc3VnZ2VzdGVkIGJ5IFJvYiAod2UgZG9uJ3Qg
+d2FudCB0byBibG9hdCBwYXJ0aXRpb24udHh0KS4KPiAgICAgU2xpZ2h0bHkgdXBkYXRlIGNvbW1p
+dCBtZXNzYWdlLgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9u
+LnR4dCAgICAgICAgICB8ICAyICstCj4gIC4uLi9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3eHgtY2Zl
+LXBhcnRpdGlvbnMudHh0ICAgIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVz
+IGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9i
+cmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25zLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiBpbmRleCAzNmYzYjc2
+OWE2MjYuLmE4ZjM4MjY0MmJhOSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiBAQCAtMTQsNyArMTQsNyBAQCBtZXRo
+b2QgaXMgdXNlZCBmb3IgYSBnaXZlbiBmbGFzaCBkZXZpY2UuIFRvIGRlc2NyaWJlIHRoZSBtZXRo
+b2QgdGhlcmUgc2hvdWxkIGJlCj4gIGEgc3Vibm9kZSBvZiB0aGUgZmxhc2ggZGV2aWNlIHRoYXQg
+aXMgbmFtZWQgJ3BhcnRpdGlvbnMnLiBJdCBtdXN0IGhhdmUgYQo+ICAnY29tcGF0aWJsZScgcHJv
+cGVydHksIHdoaWNoIGlzIHVzZWQgdG8gaWRlbnRpZnkgdGhlIG1ldGhvZCB0byB1c2UuCj4gIAo+
+IC1XZSBjdXJyZW50bHkgb25seSBkb2N1bWVudCBhIGJpbmRpbmcgZm9yIGZpeGVkIGxheW91dHMu
+Cj4gK0F2YWlsYWJsZSBiaW5kaW5ncyBhcmUgbGlzdGVkIGluIHRoZSAicGFydGl0aW9ucyIgc3Vi
+ZGlyZWN0b3J5Lgo+ICAKPiAgCj4gIEZpeGVkIFBhcnRpdGlvbnMKPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3
+eHgtY2ZlLXBhcnRpdGlvbnMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L210ZC9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3eHgtY2ZlLXBhcnRpdGlvbnMudHh0Cj4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjFkNjFhMDI5Mzk1ZQo+IC0tLSAv
+ZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3Bh
+cnRpdGlvbnMvYnJjbSxiY205NDd4eC1jZmUtcGFydGl0aW9ucy50eHQKPiBAQCAtMCwwICsxLDQy
+IEBACj4gK0Jyb2FkY29tIEJDTTQ3eHggUGFydGl0aW9ucwo+ICs9PT09PT09PT09PT09PT09PT09
+PT09PT09PT0KPiArCj4gK0Jyb2FkY29tIGlzIG9uZSBvZiBoYXJkd2FyZSBtYW51ZmFjdHVyZXJz
+IHByb3ZpZGluZyBTb0NzIChCQ000N3h4KSB1c2VkIGluCj4gK2hvbWUgcm91dGVycy4gVGhlaXIg
+QkNNOTQ3eHggYm9hcmRzIHVzaW5nIENGRSBib290bG9hZGVyIGhhdmUgc2V2ZXJhbCBwYXJ0aXRp
+b25zCj4gK3dpdGhvdXQgYW55IG9uLWZsYXNoIHBhcnRpdGlvbiB0YWJsZS4gT24gc29tZSBkZXZp
+Y2VzIHRoZWlyIHNpemVzIGFuZC9vcgo+ICttZWFuaW5ncyBjYW4gYWxzbyB2YXJ5IHNvIGZpeGVk
+IHBhcnRpdGlvbmluZyBjYW4ndCBiZSB1c2VkLgo+ICsKPiArRGlzY292ZXJpbmcgcGFydGl0aW9u
+cyBvbiB0aGVzZSBkZXZpY2VzIGlzIHBvc3NpYmxlIHRoYW5rcyB0byBoYXZpbmcgYSBzcGVjaWFs
+Cj4gK2hlYWRlciBhbmQvb3IgbWFnaWMgc2lnbmF0dXJlIGF0IHRoZSBiZWdpbm5pbmcgb2YgZWFj
+aCBvZiB0aGVtLiBUaGV5IGFyZSBhbHNvCj4gK2Jsb2NrIGFsaWduZWQgd2hpY2ggaXMgaW1wb3J0
+YW50IGZvciBkZXRlcm1pbmlnIGEgc2l6ZS4KPiArCj4gK01vc3Qgb2YgcGFydGl0aW9ucyB1c2Ug
+QVNDSUkgdGV4dCBiYXNlZCBtYWdpYyBmb3IgZGV0ZXJtaW5pbmcgYSB0eXBlLiBNb3JlCj4gK2Nv
+bXBsZXggcGFydGl0aW9ucyAobGlrZSBUUlggd2l0aCBpdHMgSERSMCBtYWdpYykgbWF5IGluY2x1
+ZGUgZXh0cmEgaGVhZGVyCj4gK2NvbnRhaW5pbmcgc29tZSBkZXRhaWxzLCBpbmNsdWRpbmcgYSBs
+ZW5ndGguCj4gKwo+ICtBIGxpc3Qgb2Ygc3VwcG9ydGVkIHBhcnRpdGlvbnMgaW5jbHVkZXM6Cj4g
+KzEpIEJvb3Rsb2FkZXIgd2l0aCBCcm9hZGNvbSdzIENGRSAoQ29tbW9uIEZpcm13YXJlIEVudmly
+b25tZW50KQo+ICsyKSBOVlJBTSB3aXRoIGNvbmZpZ3VyYXRpb24vY2FsaWJyYXRpb24gZGF0YQo+
+ICszKSBEZXZpY2UgbWFudWZhY3R1cmVyJ3MgZGF0YSB3aXRoIHNvbWUgZGVmYXVsdCB2YWx1ZXMg
+KGUuZy4gU1NJRHMpCj4gKzQpIFRSWCBmaXJtd2FyZSBjb250YWluZXIgd2hpY2ggY2FuIGhvbGQg
+dXAgdG8gNCBzdWJwYXJ0aXRpb25zCj4gKzUpIEJhY2t1cCBUUlggZmlybXdhcmUgdXNlZCBhZnRl
+ciBmYWlsZWQgdXBncmFkZQo+ICsKPiArQXMgbWVudGlvbmVkIGVhcmxpZXIsIHJvbGUgb2Ygc29t
+ZSBwYXJ0aXRpb25zIG1heSBkZXBlbmQgb24gZXh0cmEgY29uZmlndXJhdGlvbi4KPiArRm9yIGV4
+YW1wbGUgYm90aDogbWFpbiBmaXJtd2FyZSBhbmQgYmFja3VwIGZpcm13YXJlIHVzZSB0aGUgc2Ft
+ZSBUUlggZm9ybWF0IHdpdGgKPiArdGhlIHNhbWUgaGVhZGVyLiBUbyBkaXN0aW5ndWlzaCBjdXJy
+ZW50bHkgdXNlZCBmaXJtd2FyZSBhIENGRSdzIGVudmlyb25tZW50Cj4gK3ZhcmlhYmxlICJib290
+cGFydGl0aW9uIiBpcyB1c2VkLgo+ICsKPiArCj4gK0RldmljZXMgdXNpbmcgQnJvYWRjb20gcGFy
+dGl0aW9ucyBkZXNjcmliZWQgYWJvdmUgc2hvdWxkIHNob3VsZCBoYXZlIGZsYXNoIG5vZGUKPiAr
+d2l0aCBhIHN1Ym5vZGUgbmFtZWQgInBhcnRpdGlvbnMiIHVzaW5nIGZvbGxvd2luZyBwcm9wZXJ0
+aWVzOgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlIDogKHJlcXVp
+cmVkKSBtdXN0IGJlICJicmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25zIgo+ICsKPiArRXhhbXBs
+ZToKPiArCj4gK2ZsYXNoQDAgewo+ICsJcGFydGl0aW9ucyB7Cj4gKwkJY29tcGF0aWJsZSA9ICJi
+cmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25zIjsKPiArCX07Cj4gK307CgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNj
+dXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LW10ZC8K
