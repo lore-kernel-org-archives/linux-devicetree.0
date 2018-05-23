@@ -1,151 +1,26 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add SMP support
-Date: Wed, 23 May 2018 10:30:44 +0200
-Message-ID: <20180523083041.v3c6rphtuyztwdgk@verge.net.au>
-References: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
- <ec4c6905-23d1-8600-a1cc-4297fbd1ddaa@cogentembedded.com>
- <CAMuHMdU9JXvN2GLFGLZGeNOpZ9AdJYokbpTqt-Wy97-Z0tXaCA@mail.gmail.com>
- <ec73ce6d-f062-6c4f-d6fa-b99ef6c6bc67@cogentembedded.com>
- <20180522085430.eqhan4njajnp5hkk@verge.net.au>
- <CAMuHMdWepA=YbjtVN2iw7uXrWu62LRx1ymix_AUgp6NrOTUgpw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/5] arm64: dts: actions: Add gpio properties to
+ pinctrl node for S900
+Date: Wed, 23 May 2018 10:34:22 +0200
+Message-ID: <CACRpkdZ+kdmZq44m1dMbB0kB4Zo+HmA-cOLE-++tmtHT33M2RQ@mail.gmail.com>
+References: <20180520051736.4842-1-manivannan.sadhasivam@linaro.org> <20180520051736.4842-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWepA=YbjtVN2iw7uXrWu62LRx1ymix_AUgp6NrOTUgpw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180520051736.4842-3-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 11:49:36AM +0200, Geert Uytterhoeven wrote:
-> On Tue, May 22, 2018 at 10:54 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Sat, May 19, 2018 at 08:38:13PM +0300, Sergei Shtylyov wrote:
-> >> On 05/17/2018 11:23 PM, Geert Uytterhoeven wrote:
-> >>
-> >> >> Add the device nodes for 3 more Cortex-A53 CPU cores; adjust the interrupt
-> >> >> delivery masks for the ARM GIC and Architectured Timer.
-> >> >>
-> >> >> Based on the original (and large) patch by Vladimir Barinov.
-> >> >>
-> >> >> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> >> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >> >
-> >> > Thanks for your patch!
-> >> >
-> >> >> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> >> >> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> >> >> @@ -30,6 +30,36 @@
-> >> >>                         enable-method = "psci";
-> >> >>                 };
-> >> >>
-> >> >> +               a53_1: cpu@1 {
-> >> >> +                       device_type = "cpu";
-> >> >> +                       compatible = "arm,cortex-a53","arm,armv8";
-> >> >
-> >> > Please stop copying spaceless lists ;-)
-> >>
-> >>    Oops! Simon, do I need to re-post?
-> >
-> > No, but Geert, are you otherwise ok with this patch?
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Sun, May 20, 2018 at 7:17 AM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-Thanks, I have applied the following:
+> Add gpio properties to pinctrl node for Actions Semi S900 SoC.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] arm64: dts: renesas: r8a77980: add SMP support
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Add the device nodes for 3 more Cortex-A53 CPU cores; adjust the interrupt
-delivery masks for the ARM GIC and Architectured Timer.
-
-Based on the original (and large) patch by Vladimir Barinov.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-[simon: corrected whitespace]
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- arch/arm64/boot/dts/renesas/r8a77980.dtsi | 40 +++++++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-index 4c40f9f0ebc9..6d2b61d83caf 100644
---- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -30,6 +30,36 @@
- 			enable-method = "psci";
- 		};
- 
-+		a53_1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <1>;
-+			clocks = <&cpg CPG_CORE R8A77980_CLK_Z2>;
-+			power-domains = <&sysc R8A77980_PD_CA53_CPU1>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		a53_2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <2>;
-+			clocks = <&cpg CPG_CORE R8A77980_CLK_Z2>;
-+			power-domains = <&sysc R8A77980_PD_CA53_CPU2>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		a53_3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <3>;
-+			clocks = <&cpg CPG_CORE R8A77980_CLK_Z2>;
-+			power-domains = <&sysc R8A77980_PD_CA53_CPU3>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
- 		L2_CA53: cache-controller {
- 			compatible = "cache";
- 			power-domains = <&sysc R8A77980_PD_CA53_SCU>;
-@@ -408,7 +438,7 @@
- 			      <0x0 0xf1020000 0 0x20000>,
- 			      <0x0 0xf1040000 0 0x20000>,
- 			      <0x0 0xf1060000 0 0x20000>;
--			interrupts = <GIC_PPI 9	(GIC_CPU_MASK_SIMPLE(1) |
-+			interrupts = <GIC_PPI 9	(GIC_CPU_MASK_SIMPLE(4) |
- 				      IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&cpg CPG_MOD 408>;
- 			clock-names = "clk";
-@@ -424,13 +454,13 @@
- 
- 	timer {
- 		compatible = "arm,armv8-timer";
--		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
-+		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
- 				       IRQ_TYPE_LEVEL_LOW)>,
--				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
-+				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
- 				       IRQ_TYPE_LEVEL_LOW)>,
--				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) |
-+				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
- 				       IRQ_TYPE_LEVEL_LOW)>,
--				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) |
-+				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
- 				       IRQ_TYPE_LEVEL_LOW)>;
- 	};
- };
--- 
-2.11.0
+Yours,
+Linus Walleij
