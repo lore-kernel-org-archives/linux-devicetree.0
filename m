@@ -1,22 +1,28 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
-Date: Wed, 23 May 2018 17:16:14 +0530
-Message-ID: <CAKohponruWpcjuSDg-=ZbZ1=qm2iPZs36mfKYJ3nQZREkc3JCw@mail.gmail.com>
-References: <1527068454-28921-1-git-send-email-ilialin@codeaurora.org>
- <1527068454-28921-2-git-send-email-ilialin@codeaurora.org>
- <3f1ca60e-7aa8-fccc-ab1c-4b7c37731cce@arm.com> <002901d3f286$198878b0$4c996a10$@codeaurora.org>
- <CAKohponbpErCeTYu9iQm_-dupz5SUr+TKsYXzqmmARB-pq95iA@mail.gmail.com> <002b01d3f28a$0d033900$2709ab00$@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 1/3] gpio: pca953x: set the PCA_PCAL flag also when
+ matching by DT
+Date: Wed, 23 May 2018 13:46:31 +0200
+Message-ID: <CACRpkdZoB3-EafVadGvC41AXG1i1xLkdX6g6eQEHMAyf59xHVw@mail.gmail.com>
+References: <cover.1526533188.git.hns@goldelico.com> <7c9ab1d702eb62755993321865d260fa54b90358.1526533188.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <002b01d3f28a$0d033900$2709ab00$@codeaurora.org>
+In-Reply-To: <7c9ab1d702eb62755993321865d260fa54b90358.1526533188.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On 23 May 2018 at 17:04,  <ilialin@codeaurora.org> wrote:
-> You are right. I already checked that in the code...
-> However, with module_init() the driver fails on reading the nvmem.
+On Thu, May 17, 2018 at 6:59 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-And why is it failing ?
+> The of_device_table is missing the PCA_PCAL flag so the
+> pcal6524 would be operated in tca6424 compatibility mode which
+> does not handle the new interrupt mask registers.
+>
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+Patch applied.
+
+Yours,
+Linus Walleij
