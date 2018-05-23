@@ -1,69 +1,103 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Wed, 23 May 2018 16:56:17 +0100
-Message-ID: <20180523155617.GN4828@sirena.org.uk>
-References: <dc1fbe9c-8973-1c4d-0fbd-809c1ec0a6be@codeaurora.org>
- <CAD=FV=XfSGs14VB464cvMGDNwGS4yvSXjN8itZLffm+Sj-D=ww@mail.gmail.com>
- <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org>
- <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
- <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org>
- <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
- <20180523082908.GB4828@sirena.org.uk>
- <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
- <20180523154057.GL4828@sirena.org.uk>
- <CAD=FV=XWVOdJ8rWJnBTwoNqnYqYRYjknkZtUvT86+skbrTdwig@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2] PM / devfreq: Add support for QCOM devfreq firmware
+Date: Wed, 23 May 2018 17:08:57 +0100
+Message-ID: <20180523160857.GA30950@e107155-lin>
+References: <1526629965-28729-1-git-send-email-skannan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7VkxxUl3xUvPtoxk"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=XWVOdJ8rWJnBTwoNqnYqYRYjknkZtUvT86+skbrTdwig@mail.gmail.com>
+In-Reply-To: <1526629965-28729-1-git-send-email-skannan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Saravana Kannan <skannan@codeaurora.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rjendra@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+As mentioned on the thread that add firmware based cpufreq support, IMO
+these 2 bindings look too similar and can be combined or at-least aligned.
 
---7VkxxUl3xUvPtoxk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, May 18, 2018 at 12:52:40AM -0700, Saravana Kannan wrote:
+> The firmware present in some QCOM chipsets offloads the steps necessary for
+> changing the frequency of some devices (Eg: L3). This driver implements the
+> devfreq interface for this firmware so that various governors could be used
+> to scale the frequency of these devices.
+>
 
-On Wed, May 23, 2018 at 08:50:22AM -0700, Doug Anderson wrote:
-> On Wed, May 23, 2018 at 8:40 AM, Mark Brown <broonie@kernel.org> wrote:
+Is this firmware the same one which controls the CPUFreq described in the
+other thread adding cpufreq support ?
 
-> > It's got to be valid to think about the voltage of a disabled regulator
-> > since drivers want to be able make sure that the regulator gets enabled
-> > with a sensible config.  With most hardware this is really easy since
-> > you can just look at the status reported by the hardware but the RPM
-> > makes this hard since there's so much write only stuff in there.
+> Each client (say cluster 0 and cluster 1) that wants to vote for a
+> particular device's frequency (say, L3 frequency) is represented as a
+> separate voter device (qcom,devfreq-fw-voter) that's a child of the
+> firmware device (qcom,devfreq-fw).
+> 
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> ---
+>  .../bindings/devfreq/devfreq-qcom-fw.txt           |  41 +++
+>  drivers/devfreq/Kconfig                            |  14 +
+>  drivers/devfreq/Makefile                           |   1 +
+>  drivers/devfreq/devfreq_qcom_fw.c                  | 330 +++++++++++++++++++++
+>  4 files changed, 386 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+>  create mode 100644 drivers/devfreq/devfreq_qcom_fw.c
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+> new file mode 100644
+> index 0000000..f882a0b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/devfreq-qcom-fw.txt
+> @@ -0,0 +1,41 @@
+> +QCOM Devfreq firmware device
+> +
+> +Some Qualcomm Technologies, Inc. (QTI) chipsets have a firmware that
+> +offloads the steps for frequency switching. It provides a table of
+> +supported frequencies and a register to request one of the supported
+> +freqencies.
+> +
+> +The qcom,devfreq-fw represents this firmware as a device. Sometimes,
 
-> I should be more clear.  Certainly it should be valid to set the
-> voltage before enabling it so, as you said, the regulator turns on at
-> the right voltage.  I'm saying that it's weird (to me) to expect that
-> setting the voltage for a regulator that a client thinks is disabled
-> will affect any real voltages in the system until the regulator is
-> enabled.  In RPMh apparently setting a voltage of a regulator you
-> think is disabled can affect the regulator output if another client
-> (unbeknownst to you) happens to have it enabled.
+As a whole or just a part of it ? I am getting an impression that this
+firmware is divided into 'n' different pieces and each of them is
+represented as a separate device.
 
-Yes, that's definitely not what's expected but it's unfortunately what
-the firmware chose to implement so we may well be stuck with it
-unfortunately.
+> +multiple entities want to vote on the frequency request that is sent to the
+> +firmware. The qcom,devfreq-fw-voter represents these voters as child
+> +devices of the corresponding qcom,devfreq-fw device.
+> +
+> +Required properties:
+> +- compatible:		Must be "qcom,devfreq-fw" or "qcom,devfreq-fw-voter"
 
---7VkxxUl3xUvPtoxk
-Content-Type: application/pgp-signature; name="signature.asc"
+If this is the same firmware, name it after. What do you need one name
+per subsystem in Linux for the same firmware ?
 
------BEGIN PGP SIGNATURE-----
+> +Only for qcom,devfreq-fw:
+> +- reg:			Pairs of physical base addresses and region sizes of
+> +			memory mapped registers.
+> +- reg-names:		Names of the bases for the above registers.
+> +			Required register regions are:
+> +			- "en-base": address of register to check if the
+> +			  firmware is enabled.
+> +			- "ftbl-base": address region for the frequency
+> +			  table.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsFjyAACgkQJNaLcl1U
-h9Bbhgf+KPFRcR938/oF3MQB7RnAJXl7M0vkyJAeZEKoCm8Etp3Rju0+rgcUNwOu
-oSq43pXLrLGW7yABVYFa1mitG3+0YDXSqt3mDWVkCi+3LIsOe9B0VmYGXbTdlurD
-ZYhXO/6dxfqDnRxXuxEPdRxnBp2xwSCu4NW0bDawtPZDzuHu1n+DbE2X4cJL+GFn
-PTiigFa9ivjAE7vYO61vCzdJno7CaJeaWvIdz5FMTbf9q9GM94+t02Odxj0EkTAf
-qgJ/UBB9z9H43LpplUE7NmP35HBCiJa0xoKVx8nRoe0Y9ca6A8+XJNOS/RY+iYBZ
-g4/qb8dGHtw/gPirWWJ30Fe3AH8IFA==
-=DvZM
------END PGP SIGNATURE-----
+It's called "lut-base" in the cpufreq binding and that's the only difference
+I see.
 
---7VkxxUl3xUvPtoxk--
+> +			- "perf-base": address of register to request a
+> +			  frequency.
+> +
+
+[...]
+
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lut-base");
+> +	if (!res) {
+> +		dev_err(dev, "Unable to find lut-base!\n");
+> +		return -EINVAL;
+> +	}
+> +
+...but in the binding it's called "ftbl-base"
+
+--
+Regards,
+Sudeep
