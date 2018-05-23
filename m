@@ -1,145 +1,102 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 2/2] cpufreq: qcom-fw: Add support for QCOM cpufreq FW
- driver
-Date: Wed, 23 May 2018 11:24:53 +0530
-Message-ID: <20180523055453.uzsbm2ub4stgthzg@vireshk-i7>
-References: <1526751291-17873-1-git-send-email-tdas@codeaurora.org>
- <1526751291-17873-3-git-send-email-tdas@codeaurora.org>
- <20180521090113.qo2lrafjrh2xi6va@vireshk-i7>
- <0fccdc1880c912102548a85008482fa0@codeaurora.org>
- <bf5b09d3-4d97-5357-3fb2-926227bb7229@codeaurora.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
+Date: Wed, 23 May 2018 08:55:20 +0300
+Message-ID: <243730d3-e7f3-584d-b5dd-491c2700cf11@ti.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+ <1523956215-28154-13-git-send-email-t-kristo@ti.com>
+ <20180417092924.GB20335@flint.armlinux.org.uk>
+ <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
+ <20180417144913.GD5669@atomide.com>
+ <43ff3894-a287-1558-687c-40f50712735c@ti.com>
+ <20180522200100.GA23937@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bf5b09d3-4d97-5357-3fb2-926227bb7229@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: skannan@codeaurora.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, amit.kucheria@linaro.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180522200100.GA23937@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, trini@konsulko.com, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, frowand.list@gmail.com, wmills@ti.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22-05-18, 16:13, Taniya Das wrote:
-> On 5/22/2018 12:36 AM, skannan@codeaurora.org wrote:
-> > On 2018-05-21 02:01, Viresh Kumar wrote:
-> > > On 19-05-18, 23:04, Taniya Das wrote:
-
-> > > > +    /* Make sure the write goes through before proceeding */
-> > > > +    mb();
-> > > 
-> > > Btw what happens right after this is done ? Are we guaranteed that the
-> > > frequency is updated in the hardware after this ? What about enabling
-> > > fast-switch for your platform ? Look at drivers/cpufreq/scmi-cpufreq.c
-> > > to see how that is done.
-> > 
-> > Yeah, I don't think this is needed really.
-> > 
+On 22/05/18 23:01, Rob Herring wrote:
+> On Mon, May 21, 2018 at 09:57:54AM +0300, Tero Kristo wrote:
+>> On 17/04/18 17:49, Tony Lindgren wrote:
+>>> * Tero Kristo <t-kristo@ti.com> [180417 09:36]:
+>>>> In typical setup, you can boot a large number of different configs via:
+>>>>
+>>>> bootm 0x82000000#dra71-evm#nand#lcd-auo-g101evn01.0
+>>>>
+>>>> ... assuming the configs were named like that, and assuming they would be
+>>>> compatible with each other. The am57xx-evm example provided is better, as
+>>>> you can chain the different cameras to the available evm configs.
+>>>
+>>> Why not just do it in the bootloader to put together the dtb?
+>>>
+>>> Then for external devices, you could just pass info on the
+>>> kernel cmdline with lcd=foo camera=bar if they cannot be
+>>> detected over I2C.
+>>
+>> (Added Linux ARM list to CC, this was not part of the original delivery.)
+>>
+>> Ok trying to resurrect this thread a bit. Is there any kind of consensus how
+>> things like this should be handled? Should we add the DT overlay files to
+>> kernel tree or not?
 > 
-> Just want to make sure it doesn't really sit in the write buffer before
-> return.
-
-As per Saravana you will be dropping it now, right ?
-
-> > > > +    index = readl_relaxed(c->perf_base);
-> > > > +    index = min(index, LUT_MAX_ENTRIES - 1);
-> > > 
-> > > Will the hardware ever read a value over 39 here ?
-> > 
-> > The register could be initialized to whatever before the kernel is
-> > brought up. Don't want to depend on it being correct to avoid out of
-> > bounds access that could leak data.
-
-Fair enough.
-
-> > > > +static int qcom_read_lut(struct platform_device *pdev,
-> > > > +             struct cpufreq_qcom *c)
-> > > > +{
-> > > > +    struct device *dev = &pdev->dev;
-> > > > +    u32 data, src, lval, i, core_count, prev_cc;
-> > > > +
-> > > > +    c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
-> > > > +                sizeof(*c->table), GFP_KERNEL);
-> > > > +    if (!c->table)
-> > > > +        return -ENOMEM;
-> > > > +
-> > > > +    for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> > > > +        data = readl_relaxed(c->lut_base + i * LUT_ROW_SIZE);
-> > > > +        src = ((data & GENMASK(31, 30)) >> 30);
-> > > > +        lval = (data & GENMASK(7, 0));
-> > > > +        core_count = CORE_COUNT_VAL(data);
-> > > > +
-> > > > +        if (!src)
-> > > > +            c->table[i].frequency = INIT_RATE / 1000;
-> > > > +        else
-> > > > +            c->table[i].frequency = XO_RATE * lval / 1000;
-> > > > +
-> > > > +        c->table[i].driver_data = c->table[i].frequency;
-> > > 
-> > > Why do you need to use driver_data here? Why can't you simple use
-> > > frequency field in the below conditional expressions ?
-> > > 
+> IMO, yes.
 > 
-> The frequency field would be marked INVALID in case the core count does not
-> match and the frequency data would be lost.
+>> Should we add any kind of build infra to kernel tree, and at what level
+>> would this be? Just DT overlay file building support, and drop the FIT build
+>> support as was proposed in this RFC series or...?
 > 
-> > > > +
-> > > > +        dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
-> > > > +            i, c->table[i].frequency, core_count);
-> > > > +
-> > > > +        if (core_count != c->max_cores)
-> > > > +            c->table[i].frequency = CPUFREQ_ENTRY_INVALID;
-> > > > +
-> > > > +        /*
-> > > > +         * Two of the same frequencies with the same core counts means
-> > > > +         * end of table.
-> > > > +         */
-> > > > +        if (i > 0 && c->table[i - 1].driver_data ==
-> > > > +            c->table[i].driver_data && prev_cc == core_count) {
-> > > > +            struct cpufreq_frequency_table *prev = &c->table[i - 1];
-> > > > +
-> > > > +            if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
-> > > 
-> > > There can only be a single boost frequency at max ?
-> > 
-> > As of now, yes. If that changes, we'll change this code later.
-> > 
-> > > > +                prev->flags = CPUFREQ_BOOST_FREQ;
-> > > > +                prev->frequency = prev->driver_data;
-> > > 
-> > > Okay you are using driver_data as a local variable to keep this value
-> > > safe which you might have overwritten. Maybe use a simple variable
-> > > prev_freq for this. It would be much more readable in that case and
-> > > you wouldn't end up abusing the driver_data field.
-> > > 
+> I think I mentioned this already, but I expect that this is going to
+> cause a number of conversions of dtsi + dtsi -> dtb into base dts and
+> overlay(s) dts files. In doing so, we still need to be able to build the
+> original, full dtb.
+
+So you mean like breaking apart the existing .dts files? Are there any 
+plans to get that done (I know the android folks talk about this but I 
+don't like their idea.) If we do the split, how are we going to 
+determine which dts + overlay files are required to get a specific DTB 
+done? I actually wrote a tool for this purpose which parses the FIT 
+image configurations and generates plain dtb files out of the info there 
+if needed, but assuming FIT is abandoned then what...?
+
 > 
-> Please correct me, currently the driver_data is not used by cpufreq core and
-> that was the reason to use it. In case you still think it is not a good way
-> to handle it, I would try to handle it differently.
-
-Yeah, the driver data will not be used by cpufreq core, but I think
-the code would be far more readable if you use a local variable like
-prev_freq instead.
-
-> > > > +            }
-> > > > +
-> > > > +            break;
-> > > > +        }
-> > > > +        prev_cc = core_count;
-> > > > +    }
-> > > > +    c->table[i].frequency = CPUFREQ_TABLE_END;
-> > > 
-> > > Wouldn't you end up writing on c->table[40].frequency here if there
-> > > are 40 frequency value present ?
-> > 
-> > Yeah, the loop condition needs to be fixed.
-> > 
+>> U-boot can obviously parse the base DTB + overlay DTB:s into a single DTB,
+>> but this is somewhat clumsy approach and is relatively error prone to get it
+>> right.
 > 
-> The table allocation is done for 'LUT_MAX_ENTRIES + 1'.
-> Yes in case we have all [0-39] (i.e 40 entries) read from the hardware,
-> would store the same and mark the 40th index as table end. Please correct if
-> I missed something in your comment.
+> Why? How is the kernel better?
 
-Ahh, you are right. I misread it.
+I am mostly speaking about runtime applying of the overlays. If done 
+build time, it is obviously on same level. If you apply the base DTS + 
+overlays from u-boot prompt, it is not too much fun, and if there are 
+any failures it just won't work, but don't really tell you why not.
 
--- 
-viresh
+> 
+>> Building the FIT image post kernel build would also be possible, but who
+>> would be doing this, is there any need to get this done in generic manner or
+>> shall we just add SoC vendor specific tools for this?
+> 
+> I'll tell you up front, I'm not a fan of FIT image (nor uImage,
+> Android boot image, $bootloader image). If you want a collection of
+> files and some configuration data, use a filesystem and a text file.
+
+Ok, thanks for your frank comments. I believe based on this feedback 
+I'll try to modify this series into bare minimal overlay support to 
+kernel, and have the post processing done elsewhere (either u-boot build 
+or possibly completely separate tool.)
+
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
