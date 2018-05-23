@@ -1,90 +1,77 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim ngd dt bindings
-Date: Wed, 23 May 2018 18:17:23 +0100
-Message-ID: <94271b39-37f4-16c5-db35-782bbbc9d851@linaro.org>
-References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
- <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
- <20180523164023.GA24671@rob-hp-laptop>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH 2/2] mtd: partitions: use DT info for parsing partitions with
+ specified type
+Date: Wed, 23 May 2018 19:14:48 +0200
+Message-ID: <20180523171448.26234-2-zajec5@gmail.com>
+References: <20180523171448.26234-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523164023.GA24671@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: gregkh@linuxfoundation.org, kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180523171448.26234-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rob for review,
-
-On 23/05/18 17:40, Rob Herring wrote:
-> On Wed, May 16, 2018 at 05:51:17PM +0100, Srinivas Kandagatla wrote:
->> This patch adds bindings for Qualcomm SLIMBus NGD controller found in
->> all new SoCs starting from B family.
->> SLIMBus NGD controller is a light-weight driver responsible for
->> communicating with SLIMBus slaves directly over the bus using messaging
->> interface and communicating with master component residing on ADSP for
->> bandwidth and data-channel management
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../bindings/slimbus/slim-ngd-qcom-ctrl.txt        | 70 ++++++++++++++++++++++
->>   1 file changed, 70 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
->>
->> diff --git a/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
->> new file mode 100644
->> index 000000000000..c948fb098819
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
->> @@ -0,0 +1,70 @@
->> +Qualcomm SLIMBus Non Generic Device (NGD) Controller binding
->> +
->> +SLIMBus NGD controller is a light-weight driver responsible for communicating
->> +with SLIMBus slaves directly over the bus using messaging interface and
->> +communicating with master component residing on ADSP for bandwidth and
->> +data-channel management
->> +
->> +Please refer to slimbus/bus.txt for details of the common SLIMBus bindings.
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qcom,slim-ngd"
-> 
-> SoC specific compatible needed.
-
-Yes, I will add that in v2.
-> 
->> +
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must specify the base address and size of the controller
->> +		    register blocks.
-> 
-> blocks? Is there more than one? If so, how many?
-Its just one. I will fix the text to reflect this.
-
-> 
->> +
->> +- reg-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "ctrl"
-> 
-> reg-names is pointless when there is only 1.
-> 
->> +
->> +- qcom,ngd-id
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: ngd instance id in the controller
-> 
-> Why do you need this?
-I have removed this totally in my next version, which I will be posting 
-soon.
-
-Thanks,
-srini
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBzdXBwb3J0cyBu
+ZXN0ZWQgcGFydGl0aW9ucyBpbiBhIERULiBJZiBzZWxlY3RlZCBwYXJ0aXRpb24gaGFzIGEKImNv
+bXBhdGlibGUiIHByb3BlcnR5IHNwZWNpZmllZCBpdCB3aWxsIGJlIHBhcnNlZCBsb29raW5nIGZv
+cgpzdWJwYXJ0aXRpb25zLgoKU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBt
+aWxlY2tpLnBsPgotLS0KIGRyaXZlcnMvbXRkL210ZHBhcnQuYyB8IDMzICsrKysrKysrKysrKyst
+LS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDIw
+IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL210ZHBhcnQuYyBiL2RyaXZl
+cnMvbXRkL210ZHBhcnQuYwppbmRleCBmOGQzYTAxNWNkYWQuLjUyZTJjYjM1ZmM3OSAxMDA2NDQK
+LS0tIGEvZHJpdmVycy9tdGQvbXRkcGFydC5jCisrKyBiL2RyaXZlcnMvbXRkL210ZHBhcnQuYwpA
+QCAtMzIyLDIyICszMjIsNiBAQCBzdGF0aWMgaW5saW5lIHZvaWQgZnJlZV9wYXJ0aXRpb24oc3Ry
+dWN0IG10ZF9wYXJ0ICpwKQogCWtmcmVlKHApOwogfQogCi0vKioKLSAqIG10ZF9wYXJzZV9wYXJ0
+IC0gcGFyc2UgTVREIHBhcnRpdGlvbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25zCi0gKgotICog
+QHNsYXZlOiBwYXJ0IHRoYXQgaXMgc3VwcG9zZWQgdG8gYmUgYSBjb250YWluZXIgYW5kIHNob3Vs
+ZCBiZSBwYXJzZWQKLSAqIEB0eXBlczogTlVMTC10ZXJtaW5hdGVkIGFycmF5IHdpdGggbmFtZXMg
+b2YgcGFydGl0aW9uIHBhcnNlcnMgdG8gdHJ5Ci0gKgotICogU29tZSBwYXJ0aXRpb25zIGFyZSBr
+aW5kIG9mIGNvbnRhaW5lcnMgd2l0aCBleHRyYSBzdWJwYXJ0aXRpb25zICh2b2x1bWVzKS4KLSAq
+IFRoZXJlIGNhbiBiZSB2YXJpb3VzIGZvcm1hdHMgb2Ygc3VjaCBjb250YWluZXJzLiBUaGlzIGZ1
+bmN0aW9uIHRyaWVzIHRvIHVzZQotICogc3BlY2lmaWVkIHBhcnNlcnMgdG8gYW5hbHl6ZSBnaXZl
+biBwYXJ0aXRpb24gYW5kIHJlZ2lzdGVycyBmb3VuZAotICogc3VicGFydGl0aW9ucyBvbiBzdWNj
+ZXNzLgotICovCi1zdGF0aWMgaW50IG10ZF9wYXJzZV9wYXJ0KHN0cnVjdCBtdGRfcGFydCAqc2xh
+dmUsIGNvbnN0IGNoYXIgKmNvbnN0ICp0eXBlcykKLXsKLQlyZXR1cm4gcGFyc2VfbXRkX3BhcnRp
+dGlvbnMoJnNsYXZlLT5tdGQsIHR5cGVzLCBOVUxMKTsKLX0KLQogc3RhdGljIHN0cnVjdCBtdGRf
+cGFydCAqYWxsb2NhdGVfcGFydGl0aW9uKHN0cnVjdCBtdGRfaW5mbyAqcGFyZW50LAogCQkJY29u
+c3Qgc3RydWN0IG10ZF9wYXJ0aXRpb24gKnBhcnQsIGludCBwYXJ0bm8sCiAJCQl1aW50NjRfdCBj
+dXJfb2Zmc2V0KQpAQCAtNzM1LDggKzcxOSw4IEBAIGludCBhZGRfbXRkX3BhcnRpdGlvbnMoc3Ry
+dWN0IG10ZF9pbmZvICptYXN0ZXIsCiAKIAkJYWRkX210ZF9kZXZpY2UoJnNsYXZlLT5tdGQpOwog
+CQltdGRfYWRkX3BhcnRpdGlvbl9hdHRycyhzbGF2ZSk7Ci0JCWlmIChwYXJ0c1tpXS50eXBlcykK
+LQkJCW10ZF9wYXJzZV9wYXJ0KHNsYXZlLCBwYXJ0c1tpXS50eXBlcyk7CisJCS8qIExvb2sgZm9y
+IHN1YnBhcnRpdGlvbnMgKi8KKwkJcGFyc2VfbXRkX3BhcnRpdGlvbnMoJnNsYXZlLT5tdGQsIHBh
+cnRzW2ldLnR5cGVzLCBOVUxMKTsKIAogCQljdXJfb2Zmc2V0ID0gc2xhdmUtPm9mZnNldCArIHNs
+YXZlLT5tdGQuc2l6ZTsKIAl9CkBAIC04MTIsNiArNzk2LDEyIEBAIHN0YXRpYyBjb25zdCBjaGFy
+ICogY29uc3QgZGVmYXVsdF9tdGRfcGFydF90eXBlc1tdID0gewogCU5VTEwKIH07CiAKKy8qIENo
+ZWNrIERUIG9ubHkgd2hlbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25zLiAqLworc3RhdGljIGNv
+bnN0IGNoYXIgKiBjb25zdCBkZWZhdWx0X3N1YnBhcnRpdGlvbl90eXBlc1tdID0geworCSJvZnBh
+cnQiLAorCU5VTEwKK307CisKIHN0YXRpYyBpbnQgbXRkX3BhcnRfZG9fcGFyc2Uoc3RydWN0IG10
+ZF9wYXJ0X3BhcnNlciAqcGFyc2VyLAogCQkJICAgICBzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwK
+IAkJCSAgICAgc3RydWN0IG10ZF9wYXJ0aXRpb25zICpwcGFydHMsCkBAIC04ODIsNyArODcyLDkg
+QEAgc3RhdGljIGludCBtdGRfcGFydF9vZl9wYXJzZShzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwK
+IAljb25zdCBjaGFyICpmaXhlZCA9ICJmaXhlZC1wYXJ0aXRpb25zIjsKIAlpbnQgcmV0LCBlcnIg
+PSAwOwogCi0JbnAgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShtdGRfZ2V0X29mX25vZGUobWFzdGVy
+KSwgInBhcnRpdGlvbnMiKTsKKwlucCA9IG10ZF9nZXRfb2Zfbm9kZShtYXN0ZXIpOworCWlmICgh
+bXRkX2lzX3BhcnRpdGlvbihtYXN0ZXIpKQorCQlucCA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKG5w
+LCAicGFydGl0aW9ucyIpOwogCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgImNvbXBh
+dGlibGUiLCBwcm9wLCBjb21wYXQpIHsKIAkJcGFyc2VyID0gbXRkX3BhcnRfZ2V0X2NvbXBhdGli
+bGVfcGFyc2VyKGNvbXBhdCk7CiAJCWlmICghcGFyc2VyKQpAQCAtOTQ1LDcgKzkzNyw4IEBAIGlu
+dCBwYXJzZV9tdGRfcGFydGl0aW9ucyhzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwgY29uc3QgY2hh
+ciAqY29uc3QgKnR5cGVzLAogCWludCByZXQsIGVyciA9IDA7CiAKIAlpZiAoIXR5cGVzKQotCQl0
+eXBlcyA9IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXM7CisJCXR5cGVzID0gbXRkX2lzX3BhcnRpdGlv
+bihtYXN0ZXIpID8gZGVmYXVsdF9zdWJwYXJ0aXRpb25fdHlwZXMgOgorCQkJZGVmYXVsdF9tdGRf
+cGFydF90eXBlczsKIAogCWZvciAoIDsgKnR5cGVzOyB0eXBlcysrKSB7CiAJCS8qCi0tIAoyLjEz
+LjYKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
