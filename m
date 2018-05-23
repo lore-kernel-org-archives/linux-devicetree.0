@@ -1,508 +1,132 @@
-From: Ilia Lin <ilialin@codeaurora.org>
-Subject: [PATCH v11 2/2] dt: qcom: Add qcom-cpufreq-kryo driver configuration
-Date: Wed, 23 May 2018 16:11:31 +0300
-Message-ID: <1527081091-13389-3-git-send-email-ilialin@codeaurora.org>
-References: <1527081091-13389-1-git-send-email-ilialin@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527081091-13389-1-git-send-email-ilialin@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Qiang Yu <yuq825@gmail.com>
+Subject: Re: [PATCH RFC 05/24] Revert "drm: Nerf the preclose callback for
+ modern drivers"
+Date: Wed, 23 May 2018 21:13:34 +0800
+Message-ID: <CAKGbVbuSuAEF9Zd_usM5ika5KuFiY75jCG3gwOfeAExSciRV7Q@mail.gmail.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <20180518092815.25280-6-yuq825@gmail.com>
+ <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: christian.koenig@amd.com
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-1. Add NVMEM node for the speedbin
-2. Add definitions for all possible MSM8996 CPU OPPs.
-The qcom-cpufreq-kryo driver will select the appropriate subset.
-
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dts |   2 +-
- arch/arm64/boot/dts/qcom/msm8996.dtsi       | 281 ++++++++++++++++++++++++++--
- 2 files changed, 270 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-index 230e9c8..da23bda 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-@@ -17,5 +17,5 @@
- 
- / {
- 	model = "Qualcomm Technologies, Inc. DB820c";
--	compatible = "arrow,apq8096-db820c", "qcom,apq8096-sbc";
-+	compatible = "arrow,apq8096-db820c", "qcom,apq8096-sbc", "qcom,apq8096";
- };
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index e6cf290..d96a112 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1,13 +1,6 @@
--/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2014-2015, 2018 The Linux Foundation. All rights reserved.
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -169,177 +162,436 @@
- 	};
- 
- 	cluster0_opp: opp_table0 {
--		compatible = "operating-points-v2";
-+		compatible = "operating-points-v2-kryo-cpu",
-+					"operating-points-v2";
-+		nvmem-cells = <&speedbin_efuse>;
- 		opp-shared;
- 
- 		opp-307200000 {
- 			opp-hz = /bits/ 64 <307200000>;
-+			opp-supported-hw = <0x77>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-384000000 {
-+			opp-hz = /bits/ 64 <384000000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-422400000 {
- 			opp-hz = /bits/ 64 <422400000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-460800000 {
-+			opp-hz = /bits/ 64 <460800000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-480000000 {
- 			opp-hz = /bits/ 64 <480000000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-537600000 {
-+			opp-hz = /bits/ 64 <537600000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-556800000 {
- 			opp-hz = /bits/ 64 <556800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-614400000 {
-+			opp-hz = /bits/ 64 <614400000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-652800000 {
- 			opp-hz = /bits/ 64 <652800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-691200000 {
-+			opp-hz = /bits/ 64 <691200000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-729600000 {
- 			opp-hz = /bits/ 64 <729600000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-768000000 {
-+			opp-hz = /bits/ 64 <768000000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-844800000 {
- 			opp-hz = /bits/ 64 <844800000>;
-+			opp-supported-hw = <0x77>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-902400000 {
-+			opp-hz = /bits/ 64 <902400000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-960000000 {
- 			opp-hz = /bits/ 64 <960000000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-979200000 {
-+			opp-hz = /bits/ 64 <979200000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1036800000 {
- 			opp-hz = /bits/ 64 <1036800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1056000000 {
-+			opp-hz = /bits/ 64 <1056000000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1113600000 {
- 			opp-hz = /bits/ 64 <1113600000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1132800000 {
-+			opp-hz = /bits/ 64 <1132800000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1190400000 {
- 			opp-hz = /bits/ 64 <1190400000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1209600000 {
-+			opp-hz = /bits/ 64 <1209600000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1228800000 {
- 			opp-hz = /bits/ 64 <1228800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1286400000 {
-+			opp-hz = /bits/ 64 <1286400000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1324800000 {
- 			opp-hz = /bits/ 64 <1324800000>;
-+			opp-supported-hw = <0x5>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1363200000 {
-+			opp-hz = /bits/ 64 <1363200000>;
-+			opp-supported-hw = <0x72>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1401600000 {
- 			opp-hz = /bits/ 64 <1401600000>;
-+			opp-supported-hw = <0x5>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1440000000 {
-+			opp-hz = /bits/ 64 <1440000000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1478400000 {
- 			opp-hz = /bits/ 64 <1478400000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1497600000 {
-+			opp-hz = /bits/ 64 <1497600000>;
-+			opp-supported-hw = <0x4>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1516800000 {
-+			opp-hz = /bits/ 64 <1516800000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1593600000 {
- 			opp-hz = /bits/ 64 <1593600000>;
-+			opp-supported-hw = <0x71>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1996800000 {
-+			opp-hz = /bits/ 64 <1996800000>;
-+			opp-supported-hw = <0x20>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-2188800000 {
-+			opp-hz = /bits/ 64 <2188800000>;
-+			opp-supported-hw = <0x10>;
- 			clock-latency-ns = <200000>;
- 		};
- 	};
- 
- 	cluster1_opp: opp_table1 {
--		compatible = "operating-points-v2";
-+		compatible = "operating-points-v2-kryo-cpu";
-+		nvmem-cells = <&speedbin_efuse>;
- 		opp-shared;
- 
- 		opp-307200000 {
- 			opp-hz = /bits/ 64 <307200000>;
-+			opp-supported-hw = <0x77>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-384000000 {
-+			opp-hz = /bits/ 64 <384000000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-403200000 {
- 			opp-hz = /bits/ 64 <403200000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-460800000 {
-+			opp-hz = /bits/ 64 <460800000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-480000000 {
- 			opp-hz = /bits/ 64 <480000000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-537600000 {
-+			opp-hz = /bits/ 64 <537600000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-556800000 {
- 			opp-hz = /bits/ 64 <556800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-614400000 {
-+			opp-hz = /bits/ 64 <614400000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-652800000 {
- 			opp-hz = /bits/ 64 <652800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-691200000 {
-+			opp-hz = /bits/ 64 <691200000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-729600000 {
- 			opp-hz = /bits/ 64 <729600000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-748800000 {
-+			opp-hz = /bits/ 64 <748800000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-806400000 {
- 			opp-hz = /bits/ 64 <806400000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-825600000 {
-+			opp-hz = /bits/ 64 <825600000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-883200000 {
- 			opp-hz = /bits/ 64 <883200000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-902400000 {
-+			opp-hz = /bits/ 64 <902400000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-940800000 {
- 			opp-hz = /bits/ 64 <940800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-979200000 {
-+			opp-hz = /bits/ 64 <979200000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1036800000 {
- 			opp-hz = /bits/ 64 <1036800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1056000000 {
-+			opp-hz = /bits/ 64 <1056000000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1113600000 {
- 			opp-hz = /bits/ 64 <1113600000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1132800000 {
-+			opp-hz = /bits/ 64 <1132800000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1190400000 {
- 			opp-hz = /bits/ 64 <1190400000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1209600000 {
-+			opp-hz = /bits/ 64 <1209600000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1248000000 {
- 			opp-hz = /bits/ 64 <1248000000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1286400000 {
-+			opp-hz = /bits/ 64 <1286400000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1324800000 {
- 			opp-hz = /bits/ 64 <1324800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1363200000 {
-+			opp-hz = /bits/ 64 <1363200000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1401600000 {
- 			opp-hz = /bits/ 64 <1401600000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1440000000 {
-+			opp-hz = /bits/ 64 <1440000000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1478400000 {
- 			opp-hz = /bits/ 64 <1478400000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1516800000 {
-+			opp-hz = /bits/ 64 <1516800000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1555200000 {
- 			opp-hz = /bits/ 64 <1555200000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1593600000 {
-+			opp-hz = /bits/ 64 <1593600000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1632000000 {
- 			opp-hz = /bits/ 64 <1632000000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1670400000 {
-+			opp-hz = /bits/ 64 <1670400000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1708800000 {
- 			opp-hz = /bits/ 64 <1708800000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1747200000 {
-+			opp-hz = /bits/ 64 <1747200000>;
-+			opp-supported-hw = <0x70>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1785600000 {
- 			opp-hz = /bits/ 64 <1785600000>;
-+			opp-supported-hw = <0x7>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-supported-hw = <0x6>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1824000000 {
- 			opp-hz = /bits/ 64 <1824000000>;
-+			opp-supported-hw = <0x71>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1900800000 {
-+			opp-hz = /bits/ 64 <1900800000>;
-+			opp-supported-hw = <0x74>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1920000000 {
- 			opp-hz = /bits/ 64 <1920000000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1977600000 {
-+			opp-hz = /bits/ 64 <1977600000>;
-+			opp-supported-hw = <0x30>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-1996800000 {
- 			opp-hz = /bits/ 64 <1996800000>;
-+			opp-supported-hw = <0x1>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-2054400000 {
-+			opp-hz = /bits/ 64 <2054400000>;
-+			opp-supported-hw = <0x30>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-2073600000 {
- 			opp-hz = /bits/ 64 <2073600000>;
-+			opp-supported-hw = <0x1>;
- 			clock-latency-ns = <200000>;
- 		};
- 		opp-2150400000 {
- 			opp-hz = /bits/ 64 <2150400000>;
-+			opp-supported-hw = <0x31>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-2246400000 {
-+			opp-hz = /bits/ 64 <2246400000>;
-+			opp-supported-hw = <0x10>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-2342400000 {
-+			opp-hz = /bits/ 64 <2342400000>;
-+			opp-supported-hw = <0x10>;
- 			clock-latency-ns = <200000>;
- 		};
- 	};
-@@ -917,6 +1169,11 @@
- 				reg = <0x24f 0x1>;
- 				bits = <1 4>;
- 			};
-+
-+			speedbin_efuse: speedbin@133 {
-+				reg = <0x133 0x1>;
-+				bits = <5 3>;
-+			};
- 		};
- 
- 		phy@34000 {
--- 
-1.9.1
+T24gV2VkLCBNYXkgMjMsIDIwMTggYXQgNTozNSBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo8Y2tvZW5p
+Zy5sZWljaHR6dW1lcmtlbkBnbWFpbC5jb20+IHdyb3RlOgo+IFdlbGwgTkFLLCB0aGF0IGJyaW5n
+cyBiYWNrIGEgY2FsbGJhY2sgd2Ugd29ya2VkIHF1aXRlIGhhcmQgb24gZ2V0dGluZyByaWQKPiBv
+Zi4KPgo+IEl0IGxvb2tzIGxpa2UgdGhlIHByb2JsZW0gaXNuJ3QgdGhhdCB5b3UgbmVlZCB0aGUg
+cHJlY2xvc2UgY2FsbGJhY2ssIGJ1dCB5b3UKPiByYXRoZXIgc2VlbSB0byBtaXN1bmRlcnN0b29k
+IGhvdyBUVE0gd29ya3MuCj4KPiBBbGwgeW91IG5lZWQgdG8gZG8gaXMgdG8gY2xlYW51cCB5b3Vy
+IGNvbW1hbmQgc3VibWlzc2lvbiBwYXRoIHNvIHRoYXQgdGhlCj4gY2FsbGVyIG9mIGxpbWFfc2No
+ZWRfY29udGV4dF9xdWV1ZV90YXNrKCkgYWRkcyB0aGUgcmVzdWx0aW5nIHNjaGVkdWxlciBmZW5j
+ZQo+IHRvIFRUTXMgYnVmZmVyIG9iamVjdHMuCgpZb3UgbWVhbiBhZGRpbmcgdGhlIGZpbmlzaGVk
+IGRtYSBmZW5jZSB0byB0aGUgYnVmZmVyJ3MgcmVzZXJ2YXRpb24gb2JqZWN0IHRoZW4Kd2FpdGlu
+ZyBpdCBiZWZvcmUgdW5tYXAgdGhlIGJ1ZmZlciBmcm9tIEdQVSBWTSBpbiB0aGUgZHJtX3JlbGVh
+c2UoKSdzIGJ1ZmZlcgpjbG9zZSBjYWxsYmFjaz8KCkFkZGluZyBmZW5jZSBpcyBkb25lIGFscmVh
+ZHksIGFuZCBJIGRpZCB3YWl0IGl0IGJlZm9yZSB1bm1hcC4gQnV0IHRoZW4KSSBzZWUgd2hlbgp0
+aGUgYnVmZmVyIGlzIHNoYXJlZCBiZXR3ZWVuIHByb2Nlc3NlcywgdGhlICJwZXJmZWN0IHdhaXQi
+IGlzIGp1c3QKd2FpdCB0aGUgZmVuY2UKZnJvbSB0aGlzIHByb2Nlc3MncyB0YXNrLCBzbyBpdCdz
+IGJldHRlciB0byBhbHNvIGRpc3Rpbmd1aXNoIGZlbmNlcy4KSWYgc28sIEkganVzdCB0aGluawp3
+aHkgd2UgZG9uJ3QganVzdCB3YWl0IHRhc2tzIGZyb20gdGhpcyBwcm9jZXNzIGluIHRoZSBwcmVj
+bG9zZSBiZWZvcmUgdW5tYXAvZnJlZQpidWZmZXIgaW4gdGhlIGRybV9yZWxlYXNlKCk/CgpSZWdh
+cmRzLApRaWFuZwoKPgo+Cj4gQW0gMTguMDUuMjAxOCB1bSAxMToyNyBzY2hyaWViIFFpYW5nIFl1
+Ogo+Pgo+PiBUaGlzIHJldmVydHMgY29tbWl0IDQ1YzNkMjEzYTQwMGM5NTJhYjcxMTlmMzk0YzUy
+OTNiYjY4NzdlNmIuCj4+Cj4+IGxpbWEgZHJpdmVyIG5lZWQgcHJlY2xvc2UgdG8gd2FpdCBhbGwg
+dGFzayBpbiB0aGUgY29udGV4dAo+PiBjcmVhdGVkIHdpdGhpbiBjbG9zaW5nIGZpbGUgdG8gZmlu
+aXNoIGJlZm9yZSBmcmVlIGFsbCB0aGUKPj4gYnVmZmVyIG9iamVjdC4gT3RoZXJ3aXNlIHBlbmRp
+bmcgdGVzayBtYXkgZmFpbCBhbmQgZ2V0Cj4+IG5vaXN5IE1NVSBmYXVsdCBtZXNzYWdlLgo+Pgo+
+PiBNb3ZlIHRoaXMgd2FpdCB0byBlYWNoIGJ1ZmZlciBvYmplY3QgZnJlZSBmdW5jdGlvbiBjYW4K
+Pj4gYWNoaWV2ZSB0aGUgc2FtZSByZXN1bHQgYnV0IHNvbWUgYnVmZmVyIG9iamVjdCBpcyBzaGFy
+ZWQKPj4gd2l0aCBvdGhlciBmaWxlIGNvbnRleHQsIGJ1dCB3ZSBvbmx5IHdhbnQgdG8gd2FpdCB0
+aGUKPj4gY2xvc2luZyBmaWxlIGNvbnRleHQncyB0YXNrcy4gU28gdGhlIGltcGxlbWVudGF0aW9u
+IGlzCj4+IG5vdCB0aGF0IHN0cmFpZ2h0IGZvcndvcmQgY29tcGFyZWQgdG8gdGhlIHByZWNsb3Nl
+IG9uZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogUWlhbmcgWXUgPHl1cTgyNUBnbWFpbC5jb20+Cj4+
+IC0tLQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9kcm1fZmlsZS5jIHwgIDggKysrKy0tLS0KPj4gICBp
+bmNsdWRlL2RybS9kcm1fZHJ2LmggICAgICB8IDIzICsrKysrKysrKysrKysrKysrKysrKy0tCj4+
+ICAgMiBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+Pgo+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9maWxlLmMgYi9kcml2ZXJzL2dwdS9k
+cm0vZHJtX2ZpbGUuYwo+PiBpbmRleCBlMzk0Nzk5OTc5YTYuLjBhNDMxMDczOTZiOSAxMDA2NDQK
+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9maWxlLmMKPj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2RybV9maWxlLmMKPj4gQEAgLTM2MSw4ICszNjEsOSBAQCB2b2lkIGRybV9sYXN0Y2xvc2Uo
+c3RydWN0IGRybV9kZXZpY2UgKiBkZXYpCj4+ICAgICoKPj4gICAgKiBUaGlzIGZ1bmN0aW9uIG11
+c3QgYmUgdXNlZCBieSBkcml2ZXJzIGFzIHRoZWlyCj4+ICZmaWxlX29wZXJhdGlvbnMucmVsZWFz
+ZQo+PiAgICAqIG1ldGhvZC4gSXQgZnJlZXMgYW55IHJlc291cmNlcyBhc3NvY2lhdGVkIHdpdGgg
+dGhlIG9wZW4gZmlsZSwgYW5kCj4+IGNhbGxzIHRoZQo+PiAtICogJmRybV9kcml2ZXIucG9zdGNs
+b3NlIGRyaXZlciBjYWxsYmFjay4gSWYgdGhpcyBpcyB0aGUgbGFzdCBvcGVuIGZpbGUKPj4gZm9y
+IHRoZQo+PiAtICogRFJNIGRldmljZSBhbHNvIHByb2NlZWRzIHRvIGNhbGwgdGhlICZkcm1fZHJp
+dmVyLmxhc3RjbG9zZSBkcml2ZXIKPj4gY2FsbGJhY2suCj4+ICsgKiAmZHJtX2RyaXZlci5wcmVj
+bG9zZSBhbmQgJmRybV9kcml2ZXIubGFzdGNsb3NlIGRyaXZlciBjYWxsYmFja3MuIElmCj4+IHRo
+aXMgaXMKPj4gKyAqIHRoZSBsYXN0IG9wZW4gZmlsZSBmb3IgdGhlIERSTSBkZXZpY2UgYWxzbyBw
+cm9jZWVkcyB0byBjYWxsIHRoZQo+PiArICogJmRybV9kcml2ZXIubGFzdGNsb3NlIGRyaXZlciBj
+YWxsYmFjay4KPj4gICAgKgo+PiAgICAqIFJFVFVSTlM6Cj4+ICAgICoKPj4gQEAgLTM4Miw4ICsz
+ODMsNyBAQCBpbnQgZHJtX3JlbGVhc2Uoc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGZpbGUK
+Pj4gKmZpbHApCj4+ICAgICAgICAgbGlzdF9kZWwoJmZpbGVfcHJpdi0+bGhlYWQpOwo+PiAgICAg
+ICAgIG11dGV4X3VubG9jaygmZGV2LT5maWxlbGlzdF9tdXRleCk7Cj4+ICAgLSAgICAgaWYgKGRy
+bV9jb3JlX2NoZWNrX2ZlYXR1cmUoZGV2LCBEUklWRVJfTEVHQUNZKSAmJgo+PiAtICAgICAgICAg
+ICBkZXYtPmRyaXZlci0+cHJlY2xvc2UpCj4+ICsgICAgICAgaWYgKGRldi0+ZHJpdmVyLT5wcmVj
+bG9zZSkKPj4gICAgICAgICAgICAgICAgIGRldi0+ZHJpdmVyLT5wcmVjbG9zZShkZXYsIGZpbGVf
+cHJpdik7Cj4+ICAgICAgICAgLyogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9kcnYu
+aCBiL2luY2x1ZGUvZHJtL2RybV9kcnYuaAo+PiBpbmRleCBkMjNkY2RkMWJkOTUuLjhkNjA4MGY5
+N2VkNCAxMDA2NDQKPj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2Rydi5oCj4+ICsrKyBiL2luY2x1
+ZGUvZHJtL2RybV9kcnYuaAo+PiBAQCAtMTA3LDYgKzEwNywyMyBAQCBzdHJ1Y3QgZHJtX2RyaXZl
+ciB7Cj4+ICAgICAgICAgICovCj4+ICAgICAgICAgaW50ICgqb3BlbikgKHN0cnVjdCBkcm1fZGV2
+aWNlICosIHN0cnVjdCBkcm1fZmlsZSAqKTsKPj4gICArICAgICAvKioKPj4gKyAgICAgICAgKiBA
+cHJlY2xvc2U6Cj4+ICsgICAgICAgICoKPj4gKyAgICAgICAgKiBPbmUgb2YgdGhlIGRyaXZlciBj
+YWxsYmFja3Mgd2hlbiBhIG5ldyAmc3RydWN0IGRybV9maWxlIGlzCj4+IGNsb3NlZC4KPj4gKyAg
+ICAgICAgKiBVc2VmdWwgZm9yIHRlYXJpbmcgZG93biBkcml2ZXItcHJpdmF0ZSBkYXRhIHN0cnVj
+dHVyZXMKPj4gYWxsb2NhdGVkIGluCj4+ICsgICAgICAgICogQG9wZW4gbGlrZSBidWZmZXIgYWxs
+b2NhdG9ycywgZXhlY3V0aW9uIGNvbnRleHRzIG9yIHNpbWlsYXIKPj4gdGhpbmdzLgo+PiArICAg
+ICAgICAqCj4+ICsgICAgICAgICogU2luY2UgdGhlIGRpc3BsYXkvbW9kZXNldCBzaWRlIG9mIERS
+TSBjYW4gb25seSBiZSBvd25lZCBieQo+PiBleGFjdGx5Cj4+ICsgICAgICAgICogb25lICZzdHJ1
+Y3QgZHJtX2ZpbGUgKHNlZSAmZHJtX2ZpbGUuaXNfbWFzdGVyIGFuZAo+PiAmZHJtX2RldmljZS5t
+YXN0ZXIpCj4+ICsgICAgICAgICogdGhlcmUgc2hvdWxkIG5ldmVyIGJlIGEgbmVlZCB0byB0ZWFy
+IGRvd24gYW55IG1vZGVzZXQgcmVsYXRlZAo+PiArICAgICAgICAqIHJlc291cmNlcyBpbiB0aGlz
+IGNhbGxiYWNrLiBEb2luZyBzbyB3b3VsZCBiZSBhIGRyaXZlciBkZXNpZ24KPj4gYnVnLgo+PiAr
+ICAgICAgICAqCj4+ICsgICAgICAgICogRklYTUU6IEl0IGlzIG5vdCByZWFsbHkgY2xlYXIgd2h5
+IHRoZXJlJ3MgYm90aCBAcHJlY2xvc2UgYW5kCj4+ICsgICAgICAgICogQHBvc3RjbG9zZS4gV2l0
+aG91dCBhIHJlYWxseSBnb29kIHJlYXNvbiwgdXNlIEBwb3N0Y2xvc2Ugb25seS4KPj4gKyAgICAg
+ICAgKi8KPj4gKyAgICAgICB2b2lkICgqcHJlY2xvc2UpIChzdHJ1Y3QgZHJtX2RldmljZSAqLCBz
+dHJ1Y3QgZHJtX2ZpbGUKPj4gKmZpbGVfcHJpdik7Cj4+ICsKPj4gICAgICAgICAvKioKPj4gICAg
+ICAgICAgKiBAcG9zdGNsb3NlOgo+PiAgICAgICAgICAqCj4+IEBAIC0xMTgsNiArMTM1LDkgQEAg
+c3RydWN0IGRybV9kcml2ZXIgewo+PiAgICAgICAgICAqIG9uZSAmc3RydWN0IGRybV9maWxlIChz
+ZWUgJmRybV9maWxlLmlzX21hc3RlciBhbmQKPj4gJmRybV9kZXZpY2UubWFzdGVyKQo+PiAgICAg
+ICAgICAqIHRoZXJlIHNob3VsZCBuZXZlciBiZSBhIG5lZWQgdG8gdGVhciBkb3duIGFueSBtb2Rl
+c2V0IHJlbGF0ZWQKPj4gICAgICAgICAgKiByZXNvdXJjZXMgaW4gdGhpcyBjYWxsYmFjay4gRG9p
+bmcgc28gd291bGQgYmUgYSBkcml2ZXIgZGVzaWduCj4+IGJ1Zy4KPj4gKyAgICAgICAgKgo+PiAr
+ICAgICAgICAqIEZJWE1FOiBJdCBpcyBub3QgcmVhbGx5IGNsZWFyIHdoeSB0aGVyZSdzIGJvdGgg
+QHByZWNsb3NlIGFuZAo+PiArICAgICAgICAqIEBwb3N0Y2xvc2UuIFdpdGhvdXQgYSByZWFsbHkg
+Z29vZCByZWFzb24sIHVzZSBAcG9zdGNsb3NlIG9ubHkuCj4+ICAgICAgICAgICovCj4+ICAgICAg
+ICAgdm9pZCAoKnBvc3RjbG9zZSkgKHN0cnVjdCBkcm1fZGV2aWNlICosIHN0cnVjdCBkcm1fZmls
+ZSAqKTsKPj4gICBAQCAtMTM0LDcgKzE1NCw3IEBAIHN0cnVjdCBkcm1fZHJpdmVyIHsKPj4gICAg
+ICAgICAgKiBzdGF0ZSBjaGFuZ2VzLCBlLmcuIGluIGNvbmp1bmN0aW9uIHdpdGggdGhlCj4+IDpy
+ZWY6YHZnYV9zd2l0Y2hlcm9vYAo+PiAgICAgICAgICAqIGluZnJhc3RydWN0dXJlLgo+PiAgICAg
+ICAgICAqCj4+IC0gICAgICAgICogVGhpcyBpcyBjYWxsZWQgYWZ0ZXIgQHBvc3RjbG9zZSBob29r
+IGhhcyBiZWVuIGNhbGxlZC4KPj4gKyAgICAgICAgKiBUaGlzIGlzIGNhbGxlZCBhZnRlciBAcHJl
+Y2xvc2UgYW5kIEBwb3N0Y2xvc2UgaGF2ZSBiZWVuIGNhbGxlZC4KPj4gICAgICAgICAgKgo+PiAg
+ICAgICAgICAqIE5PVEU6Cj4+ICAgICAgICAgICoKPj4gQEAgLTYwMSw3ICs2MjEsNiBAQCBzdHJ1
+Y3QgZHJtX2RyaXZlciB7Cj4+ICAgICAgICAgLyogTGlzdCBvZiBkZXZpY2VzIGhhbmdpbmcgb2Zm
+IHRoaXMgZHJpdmVyIHdpdGggc3RlYWx0aCBhdHRhY2guICovCj4+ICAgICAgICAgc3RydWN0IGxp
+c3RfaGVhZCBsZWdhY3lfZGV2X2xpc3Q7Cj4+ICAgICAgICAgaW50ICgqZmlyc3RvcGVuKSAoc3Ry
+dWN0IGRybV9kZXZpY2UgKik7Cj4+IC0gICAgICAgdm9pZCAoKnByZWNsb3NlKSAoc3RydWN0IGRy
+bV9kZXZpY2UgKiwgc3RydWN0IGRybV9maWxlCj4+ICpmaWxlX3ByaXYpOwo+PiAgICAgICAgIGlu
+dCAoKmRtYV9pb2N0bCkgKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIHZvaWQgKmRhdGEsIHN0cnVj
+dAo+PiBkcm1fZmlsZSAqZmlsZV9wcml2KTsKPj4gICAgICAgICBpbnQgKCpkbWFfcXVpZXNjZW50
+KSAoc3RydWN0IGRybV9kZXZpY2UgKik7Cj4+ICAgICAgICAgaW50ICgqY29udGV4dF9kdG9yKSAo
+c3RydWN0IGRybV9kZXZpY2UgKmRldiwgaW50IGNvbnRleHQpOwo+Cj4KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
