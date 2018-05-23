@@ -1,114 +1,113 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Subject: Re: [PATCH RFC 05/24] Revert "drm: Nerf the preclose callback for
- modern drivers"
-Date: Wed, 23 May 2018 11:35:04 +0200
-Message-ID: <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180518092815.25280-6-yuq825@gmail.com>
-Reply-To: christian.koenig@amd.com
+From: Xu Zaibo <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 13/40] vfio: Add support for Shared Virtual Addressing
+Date: Wed, 23 May 2018 17:38:43 +0800
+Message-ID: <5B0536A3.1000304@huawei.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-14-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180518092815.25280-6-yuq825@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Qiang Yu <yuq825@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Simon Shields <simon@lineageos.org>, Marek Vasut <marex@denx.de>, Connor Abbott <cwabbott0@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180511190641.23008-14-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
+Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, liguozhu <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-V2VsbCBOQUssIHRoYXQgYnJpbmdzIGJhY2sgYSBjYWxsYmFjayB3ZSB3b3JrZWQgcXVpdGUgaGFy
-ZCBvbiBnZXR0aW5nIApyaWQgb2YuCgpJdCBsb29rcyBsaWtlIHRoZSBwcm9ibGVtIGlzbid0IHRo
-YXQgeW91IG5lZWQgdGhlIHByZWNsb3NlIGNhbGxiYWNrLCBidXQgCnlvdSByYXRoZXIgc2VlbSB0
-byBtaXN1bmRlcnN0b29kIGhvdyBUVE0gd29ya3MuCgpBbGwgeW91IG5lZWQgdG8gZG8gaXMgdG8g
-Y2xlYW51cCB5b3VyIGNvbW1hbmQgc3VibWlzc2lvbiBwYXRoIHNvIHRoYXQgCnRoZSBjYWxsZXIg
-b2YgbGltYV9zY2hlZF9jb250ZXh0X3F1ZXVlX3Rhc2soKSBhZGRzIHRoZSByZXN1bHRpbmcgCnNj
-aGVkdWxlciBmZW5jZSB0byBUVE1zIGJ1ZmZlciBvYmplY3RzLgoKUmVnYXJkcywKQ2hyaXN0aWFu
-LgoKQW0gMTguMDUuMjAxOCB1bSAxMToyNyBzY2hyaWViIFFpYW5nIFl1Ogo+IFRoaXMgcmV2ZXJ0
-cyBjb21taXQgNDVjM2QyMTNhNDAwYzk1MmFiNzExOWYzOTRjNTI5M2JiNjg3N2U2Yi4KPgo+IGxp
-bWEgZHJpdmVyIG5lZWQgcHJlY2xvc2UgdG8gd2FpdCBhbGwgdGFzayBpbiB0aGUgY29udGV4dAo+
-IGNyZWF0ZWQgd2l0aGluIGNsb3NpbmcgZmlsZSB0byBmaW5pc2ggYmVmb3JlIGZyZWUgYWxsIHRo
-ZQo+IGJ1ZmZlciBvYmplY3QuIE90aGVyd2lzZSBwZW5kaW5nIHRlc2sgbWF5IGZhaWwgYW5kIGdl
-dAo+IG5vaXN5IE1NVSBmYXVsdCBtZXNzYWdlLgo+Cj4gTW92ZSB0aGlzIHdhaXQgdG8gZWFjaCBi
-dWZmZXIgb2JqZWN0IGZyZWUgZnVuY3Rpb24gY2FuCj4gYWNoaWV2ZSB0aGUgc2FtZSByZXN1bHQg
-YnV0IHNvbWUgYnVmZmVyIG9iamVjdCBpcyBzaGFyZWQKPiB3aXRoIG90aGVyIGZpbGUgY29udGV4
-dCwgYnV0IHdlIG9ubHkgd2FudCB0byB3YWl0IHRoZQo+IGNsb3NpbmcgZmlsZSBjb250ZXh0J3Mg
-dGFza3MuIFNvIHRoZSBpbXBsZW1lbnRhdGlvbiBpcwo+IG5vdCB0aGF0IHN0cmFpZ2h0IGZvcndv
-cmQgY29tcGFyZWQgdG8gdGhlIHByZWNsb3NlIG9uZS4KPgo+IFNpZ25lZC1vZmYtYnk6IFFpYW5n
-IFl1IDx5dXE4MjVAZ21haWwuY29tPgo+IC0tLQo+ICAgZHJpdmVycy9ncHUvZHJtL2RybV9maWxl
-LmMgfCAgOCArKysrLS0tLQo+ICAgaW5jbHVkZS9kcm0vZHJtX2Rydi5oICAgICAgfCAyMyArKysr
-KysrKysrKysrKysrKysrKystLQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCsp
-LCA2IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmls
-ZS5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9maWxlLmMKPiBpbmRleCBlMzk0Nzk5OTc5YTYuLjBh
-NDMxMDczOTZiOSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2ZpbGUuYwo+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZmlsZS5jCj4gQEAgLTM2MSw4ICszNjEsOSBAQCB2b2lk
-IGRybV9sYXN0Y2xvc2Uoc3RydWN0IGRybV9kZXZpY2UgKiBkZXYpCj4gICAgKgo+ICAgICogVGhp
-cyBmdW5jdGlvbiBtdXN0IGJlIHVzZWQgYnkgZHJpdmVycyBhcyB0aGVpciAmZmlsZV9vcGVyYXRp
-b25zLnJlbGVhc2UKPiAgICAqIG1ldGhvZC4gSXQgZnJlZXMgYW55IHJlc291cmNlcyBhc3NvY2lh
-dGVkIHdpdGggdGhlIG9wZW4gZmlsZSwgYW5kIGNhbGxzIHRoZQo+IC0gKiAmZHJtX2RyaXZlci5w
-b3N0Y2xvc2UgZHJpdmVyIGNhbGxiYWNrLiBJZiB0aGlzIGlzIHRoZSBsYXN0IG9wZW4gZmlsZSBm
-b3IgdGhlCj4gLSAqIERSTSBkZXZpY2UgYWxzbyBwcm9jZWVkcyB0byBjYWxsIHRoZSAmZHJtX2Ry
-aXZlci5sYXN0Y2xvc2UgZHJpdmVyIGNhbGxiYWNrLgo+ICsgKiAmZHJtX2RyaXZlci5wcmVjbG9z
-ZSBhbmQgJmRybV9kcml2ZXIubGFzdGNsb3NlIGRyaXZlciBjYWxsYmFja3MuIElmIHRoaXMgaXMK
-PiArICogdGhlIGxhc3Qgb3BlbiBmaWxlIGZvciB0aGUgRFJNIGRldmljZSBhbHNvIHByb2NlZWRz
-IHRvIGNhbGwgdGhlCj4gKyAqICZkcm1fZHJpdmVyLmxhc3RjbG9zZSBkcml2ZXIgY2FsbGJhY2su
-Cj4gICAgKgo+ICAgICogUkVUVVJOUzoKPiAgICAqCj4gQEAgLTM4Miw4ICszODMsNyBAQCBpbnQg
-ZHJtX3JlbGVhc2Uoc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGZpbGUgKmZpbHApCj4gICAJ
-bGlzdF9kZWwoJmZpbGVfcHJpdi0+bGhlYWQpOwo+ICAgCW11dGV4X3VubG9jaygmZGV2LT5maWxl
-bGlzdF9tdXRleCk7Cj4gICAKPiAtCWlmIChkcm1fY29yZV9jaGVja19mZWF0dXJlKGRldiwgRFJJ
-VkVSX0xFR0FDWSkgJiYKPiAtCSAgICBkZXYtPmRyaXZlci0+cHJlY2xvc2UpCj4gKwlpZiAoZGV2
-LT5kcml2ZXItPnByZWNsb3NlKQo+ICAgCQlkZXYtPmRyaXZlci0+cHJlY2xvc2UoZGV2LCBmaWxl
-X3ByaXYpOwo+ICAgCj4gICAJLyogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vZHJtX2Rydi5o
-IGIvaW5jbHVkZS9kcm0vZHJtX2Rydi5oCj4gaW5kZXggZDIzZGNkZDFiZDk1Li44ZDYwODBmOTdl
-ZDQgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2Rydi5oCj4gKysrIGIvaW5jbHVkZS9k
-cm0vZHJtX2Rydi5oCj4gQEAgLTEwNyw2ICsxMDcsMjMgQEAgc3RydWN0IGRybV9kcml2ZXIgewo+
-ICAgCSAqLwo+ICAgCWludCAoKm9wZW4pIChzdHJ1Y3QgZHJtX2RldmljZSAqLCBzdHJ1Y3QgZHJt
-X2ZpbGUgKik7Cj4gICAKPiArCS8qKgo+ICsJICogQHByZWNsb3NlOgo+ICsJICoKPiArCSAqIE9u
-ZSBvZiB0aGUgZHJpdmVyIGNhbGxiYWNrcyB3aGVuIGEgbmV3ICZzdHJ1Y3QgZHJtX2ZpbGUgaXMg
-Y2xvc2VkLgo+ICsJICogVXNlZnVsIGZvciB0ZWFyaW5nIGRvd24gZHJpdmVyLXByaXZhdGUgZGF0
-YSBzdHJ1Y3R1cmVzIGFsbG9jYXRlZCBpbgo+ICsJICogQG9wZW4gbGlrZSBidWZmZXIgYWxsb2Nh
-dG9ycywgZXhlY3V0aW9uIGNvbnRleHRzIG9yIHNpbWlsYXIgdGhpbmdzLgo+ICsJICoKPiArCSAq
-IFNpbmNlIHRoZSBkaXNwbGF5L21vZGVzZXQgc2lkZSBvZiBEUk0gY2FuIG9ubHkgYmUgb3duZWQg
-YnkgZXhhY3RseQo+ICsJICogb25lICZzdHJ1Y3QgZHJtX2ZpbGUgKHNlZSAmZHJtX2ZpbGUuaXNf
-bWFzdGVyIGFuZCAmZHJtX2RldmljZS5tYXN0ZXIpCj4gKwkgKiB0aGVyZSBzaG91bGQgbmV2ZXIg
-YmUgYSBuZWVkIHRvIHRlYXIgZG93biBhbnkgbW9kZXNldCByZWxhdGVkCj4gKwkgKiByZXNvdXJj
-ZXMgaW4gdGhpcyBjYWxsYmFjay4gRG9pbmcgc28gd291bGQgYmUgYSBkcml2ZXIgZGVzaWduIGJ1
-Zy4KPiArCSAqCj4gKwkgKiBGSVhNRTogSXQgaXMgbm90IHJlYWxseSBjbGVhciB3aHkgdGhlcmUn
-cyBib3RoIEBwcmVjbG9zZSBhbmQKPiArCSAqIEBwb3N0Y2xvc2UuIFdpdGhvdXQgYSByZWFsbHkg
-Z29vZCByZWFzb24sIHVzZSBAcG9zdGNsb3NlIG9ubHkuCj4gKwkgKi8KPiArCXZvaWQgKCpwcmVj
-bG9zZSkgKHN0cnVjdCBkcm1fZGV2aWNlICosIHN0cnVjdCBkcm1fZmlsZSAqZmlsZV9wcml2KTsK
-PiArCj4gICAJLyoqCj4gICAJICogQHBvc3RjbG9zZToKPiAgIAkgKgo+IEBAIC0xMTgsNiArMTM1
-LDkgQEAgc3RydWN0IGRybV9kcml2ZXIgewo+ICAgCSAqIG9uZSAmc3RydWN0IGRybV9maWxlIChz
-ZWUgJmRybV9maWxlLmlzX21hc3RlciBhbmQgJmRybV9kZXZpY2UubWFzdGVyKQo+ICAgCSAqIHRo
-ZXJlIHNob3VsZCBuZXZlciBiZSBhIG5lZWQgdG8gdGVhciBkb3duIGFueSBtb2Rlc2V0IHJlbGF0
-ZWQKPiAgIAkgKiByZXNvdXJjZXMgaW4gdGhpcyBjYWxsYmFjay4gRG9pbmcgc28gd291bGQgYmUg
-YSBkcml2ZXIgZGVzaWduIGJ1Zy4KPiArCSAqCj4gKwkgKiBGSVhNRTogSXQgaXMgbm90IHJlYWxs
-eSBjbGVhciB3aHkgdGhlcmUncyBib3RoIEBwcmVjbG9zZSBhbmQKPiArCSAqIEBwb3N0Y2xvc2Uu
-IFdpdGhvdXQgYSByZWFsbHkgZ29vZCByZWFzb24sIHVzZSBAcG9zdGNsb3NlIG9ubHkuCj4gICAJ
-ICovCj4gICAJdm9pZCAoKnBvc3RjbG9zZSkgKHN0cnVjdCBkcm1fZGV2aWNlICosIHN0cnVjdCBk
-cm1fZmlsZSAqKTsKPiAgIAo+IEBAIC0xMzQsNyArMTU0LDcgQEAgc3RydWN0IGRybV9kcml2ZXIg
-ewo+ICAgCSAqIHN0YXRlIGNoYW5nZXMsIGUuZy4gaW4gY29uanVuY3Rpb24gd2l0aCB0aGUgOnJl
-ZjpgdmdhX3N3aXRjaGVyb29gCj4gICAJICogaW5mcmFzdHJ1Y3R1cmUuCj4gICAJICoKPiAtCSAq
-IFRoaXMgaXMgY2FsbGVkIGFmdGVyIEBwb3N0Y2xvc2UgaG9vayBoYXMgYmVlbiBjYWxsZWQuCj4g
-KwkgKiBUaGlzIGlzIGNhbGxlZCBhZnRlciBAcHJlY2xvc2UgYW5kIEBwb3N0Y2xvc2UgaGF2ZSBi
-ZWVuIGNhbGxlZC4KPiAgIAkgKgo+ICAgCSAqIE5PVEU6Cj4gICAJICoKPiBAQCAtNjAxLDcgKzYy
-MSw2IEBAIHN0cnVjdCBkcm1fZHJpdmVyIHsKPiAgIAkvKiBMaXN0IG9mIGRldmljZXMgaGFuZ2lu
-ZyBvZmYgdGhpcyBkcml2ZXIgd2l0aCBzdGVhbHRoIGF0dGFjaC4gKi8KPiAgIAlzdHJ1Y3QgbGlz
-dF9oZWFkIGxlZ2FjeV9kZXZfbGlzdDsKPiAgIAlpbnQgKCpmaXJzdG9wZW4pIChzdHJ1Y3QgZHJt
-X2RldmljZSAqKTsKPiAtCXZvaWQgKCpwcmVjbG9zZSkgKHN0cnVjdCBkcm1fZGV2aWNlICosIHN0
-cnVjdCBkcm1fZmlsZSAqZmlsZV9wcml2KTsKPiAgIAlpbnQgKCpkbWFfaW9jdGwpIChzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZGV2LCB2b2lkICpkYXRhLCBzdHJ1Y3QgZHJtX2ZpbGUgKmZpbGVfcHJpdik7
-Cj4gICAJaW50ICgqZG1hX3F1aWVzY2VudCkgKHN0cnVjdCBkcm1fZGV2aWNlICopOwo+ICAgCWlu
-dCAoKmNvbnRleHRfZHRvcikgKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIGludCBjb250ZXh0KTsK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On 2018/5/12 3:06, Jean-Philippe Brucker wrote:
+> Add two new ioctls for VFIO containers. VFIO_IOMMU_BIND_PROCESS creates a
+> bond between a container and a process address space, identified by a
+> Process Address Space ID (PASID). Devices in the container append this
+> PASID to DMA transactions in order to access the process' address space.
+> The process page tables are shared with the IOMMU, and mechanisms such as
+> PCI ATS/PRI are used to handle faults. VFIO_IOMMU_UNBIND_PROCESS removes a
+> bond created with VFIO_IOMMU_BIND_PROCESS.
+>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+>
+>
+>
+>
+>
+>
+> +static int vfio_iommu_bind_group(struct vfio_iommu *iommu,
+> +				 struct vfio_group *group,
+> +				 struct vfio_mm *vfio_mm)
+> +{
+> +	int ret;
+> +	bool enabled_sva = false;
+> +	struct vfio_iommu_sva_bind_data data = {
+> +		.vfio_mm	= vfio_mm,
+> +		.iommu		= iommu,
+> +		.count		= 0,
+> +	};
+> +
+> +	if (!group->sva_enabled) {
+> +		ret = iommu_group_for_each_dev(group->iommu_group, NULL,
+> +					       vfio_iommu_sva_init);
+Do we need to do *sva_init here or do anything to avoid repeated initiation?
+while another process already did initiation at this device, I think 
+that current process will get an EEXIST.
+
+Thanks.
+> +		if (ret)
+> +			return ret;
+> +
+> +		group->sva_enabled = enabled_sva = true;
+> +	}
+> +
+> +	ret = iommu_group_for_each_dev(group->iommu_group, &data,
+> +				       vfio_iommu_sva_bind_dev);
+> +	if (ret && data.count > 1)
+> +		iommu_group_for_each_dev(group->iommu_group, vfio_mm,
+> +					 vfio_iommu_sva_unbind_dev);
+> +	if (ret && enabled_sva) {
+> +		iommu_group_for_each_dev(group->iommu_group, NULL,
+> +					 vfio_iommu_sva_shutdown);
+> +		group->sva_enabled = false;
+> +	}
+> +
+> +	return ret;
+> +}
+>
+>
+>   
+> @@ -1442,6 +1636,10 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>   	if (ret)
+>   		goto out_detach;
+>   
+> +	ret = vfio_iommu_replay_bind(iommu, group);
+> +	if (ret)
+> +		goto out_detach;
+> +
+>   	if (resv_msi) {
+>   		ret = iommu_get_msi_cookie(domain->domain, resv_msi_base);
+>   		if (ret)
+> @@ -1547,6 +1745,11 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+>   			continue;
+>   
+>   		iommu_detach_group(domain->domain, iommu_group);
+> +		if (group->sva_enabled) {
+> +			iommu_group_for_each_dev(iommu_group, NULL,
+> +						 vfio_iommu_sva_shutdown);
+> +			group->sva_enabled = false;
+> +		}
+Here, why shut down here? If another process is working on the device, 
+there may be a crash?
+
+Thanks.
+>   		list_del(&group->next);
+>   		kfree(group);
+>   		/*
+> @@ -1562,6 +1765,7 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+>
