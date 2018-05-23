@@ -1,44 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim ngd dt bindings
-Date: Wed, 23 May 2018 14:28:53 -0500
-Message-ID: <CAL_Jsq+YF+EFfqua_GTFU=cwf8oF3HCPCR09MWOoRCJf0-zVnQ@mail.gmail.com>
-References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
- <20180516165118.16551-2-srinivas.kandagatla@linaro.org> <20180523164023.GA24671@rob-hp-laptop>
- <4b83b699-59ad-b177-f360-3e76ba847892@linaro.org>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH 1/5] Documentation: DT: Add optional 'timeout-sec'
+ property for sp805
+Date: Wed, 23 May 2018 12:29:50 -0700
+Message-ID: <4b0ec4ab-2d9e-1e4b-e294-c175805f4013@broadcom.com>
+References: <1527014840-21236-1-git-send-email-ray.jui@broadcom.com>
+ <1527014840-21236-2-git-send-email-ray.jui@broadcom.com>
+ <af81ea74-fb80-11e2-7bdc-d3607bdbd46b@arm.com>
+ <c542388f-e417-f624-ade1-95f9a2fc8a3b@broadcom.com>
+ <20180523185944.GA9989@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4b83b699-59ad-b177-f360-3e76ba847892@linaro.org>
+In-Reply-To: <20180523185944.GA9989@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, sdharia@quicinc.com, girishm@quicinc.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Banajit Goswami <bgoswami@codeaurora.org>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 1:11 PM, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
-> On 23/05/18 17:40, Rob Herring wrote:
+
+
+On 5/23/2018 11:59 AM, Rob Herring wrote:
+> On Wed, May 23, 2018 at 09:25:49AM -0700, Ray Jui wrote:
+>>
+>>
+>> On 5/23/2018 3:57 AM, Robin Murphy wrote:
+>>> On 22/05/18 19:47, Ray Jui wrote:
+>>>> Update the SP805 binding document to add optional 'timeout-sec'
+>>>> devicetree property
+>>>>
+>>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/watchdog/sp805-wdt.txt | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>> b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>> index edc4f0e..f898a86 100644
+>>>> --- a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>> +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>> @@ -19,6 +19,8 @@ Required properties:
+>>>>    Optional properties:
+>>>>    - interrupts : Should specify WDT interrupt number.
+>>>> +- timeout-sec : Should specify default WDT timeout in seconds. If
+>>>> unset, the
+>>>> +                default timeout is 30 seconds
 >>>
->>> +
->>> +- qcom,ngd-id
->>> +       Usage: required
->>> +       Value type: <u32>
->>> +       Definition: ngd instance id in the controller
+>>> According to the SP805 TRM, the default interval is dependent on the
+>>> rate of WDOGCLK, but would typically be a lot longer than that :/
+>>>
+>>> On a related note, anyone have any idea why we seem to have two subtly
+>>> different SP805 bindings defined?
+> 
+> Sigh.
+> 
+>> Interesting, I did not even know that until you pointed this out (and it's
+>> funny that I found that I actually reviewed arm,sp805.txt internally in
+>> Broadcom code review).
 >>
->> Why do you need this?
+>> It looks like one was done by Bhupesh Sharma (sp805-wdt.txt) and the other
+>> was done by Anup Patel (arm,sp805.txt). Both were merged at the same time
+>> around March 20, 2016: 915c56bc01d6. I'd assume both were sent out at around
+>> the same time.
 >>
-> Please ignore my comment from previous reply.
->
-> There are more than one instances of ngd in this slim controller.
-> We need this to make sure we are programming the correct one.
+>> It sounds like we should definitely remove one of them. Given that
+>> sp805-wdt.txt appears to have more detailed descriptions on the use of the
+>> clocks, should we remove arm,sp805.txt?
+> 
+> Take whichever text you like, but I prefer filenames using the
+> compatible string and the correct string is 'arm,sp805' because '-wdt'
+> is redundant. You can probably safely just update all the dts files with
+> 'arm,sp805' and just remove 'arm,sp805-wdt' because it is not actually
+> used (as the ID registers are).
 
-Doesn't the parent-child relationship of devices on the bus provide
-that? If you mean to provide consistent numbering to userspace, then
-that's not a DT problem (nor one that Linux plans to solve).
+Okay. I'll consolidate everything into arm,sp805.txt. Will also fix all 
+DTS files to use "arm,sp805". The fix for actual DTS files will be in a 
+different patch series.
 
-> We also need this instance ID during powering it up using QMI.
-
-Wouldn't that be a QMI ID?
-
-Rob
+> 
+> Rob
+> 
