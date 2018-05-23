@@ -1,55 +1,75 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 1/3] scsi: ufs: set the device reference clock setting
-Date: Wed, 23 May 2018 13:48:30 -0500
-Message-ID: <20180523184830.GA29198@rob-hp-laptop>
-References: <1526962900-20683-1-git-send-email-sayalil@codeaurora.org>
- <1526962900-20683-2-git-send-email-sayalil@codeaurora.org>
+Subject: Re: [PATCH 1/5] Documentation: DT: Add optional 'timeout-sec'
+ property for sp805
+Date: Wed, 23 May 2018 13:59:44 -0500
+Message-ID: <20180523185944.GA9989@rob-hp-laptop>
+References: <1527014840-21236-1-git-send-email-ray.jui@broadcom.com>
+ <1527014840-21236-2-git-send-email-ray.jui@broadcom.com>
+ <af81ea74-fb80-11e2-7bdc-d3607bdbd46b@arm.com>
+ <c542388f-e417-f624-ade1-95f9a2fc8a3b@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1526962900-20683-2-git-send-email-sayalil@codeaurora.org>
+In-Reply-To: <c542388f-e417-f624-ade1-95f9a2fc8a3b@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sayali Lokhande <sayalil@codeaurora.org>
-Cc: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 09:51:38AM +0530, Sayali Lokhande wrote:
-> From: Subhash Jadavani <subhashj@codeaurora.org>
+On Wed, May 23, 2018 at 09:25:49AM -0700, Ray Jui wrote:
 > 
-> UFS host supplies the reference clock to UFS device and UFS device
-> specification allows host to provide one of the 4 frequencies (19.2 MHz,
-> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-> device reference clock frequency setting in the device based on what
-> frequency it is supplying to UFS device.
 > 
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> [cang@codeaurora.org: Resolved trivial merge conflicts]
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  8 +++
->  drivers/scsi/ufs/ufs.h                             |  9 ++++
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 20 ++++++++
->  drivers/scsi/ufs/ufshcd.c                          | 60 ++++++++++++++++++++++
->  drivers/scsi/ufs/ufshcd.h                          |  2 +
->  5 files changed, 99 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index c39dfef..ac94220 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -41,6 +41,12 @@ Optional properties:
->  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
->  			  Note that it is assume same number of lanes is used both
->  			  directions at once. If not specified, default is 2 lanes per direction.
-> +- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
-> +			  0: 19.2 MHz
-> +			  1: 26 MHz
-> +			  2: 38.4 MHz
-> +			  3: 52 MHz
-> +			  Defaults to 26 MHz if not specified.
+> On 5/23/2018 3:57 AM, Robin Murphy wrote:
+> > On 22/05/18 19:47, Ray Jui wrote:
+> > > Update the SP805 binding document to add optional 'timeout-sec'
+> > > devicetree property
+> > > 
+> > > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> > > ---
+> > >   Documentation/devicetree/bindings/watchdog/sp805-wdt.txt | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> > > b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> > > index edc4f0e..f898a86 100644
+> > > --- a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> > > +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> > > @@ -19,6 +19,8 @@ Required properties:
+> > >   Optional properties:
+> > >   - interrupts : Should specify WDT interrupt number.
+> > > +- timeout-sec : Should specify default WDT timeout in seconds. If
+> > > unset, the
+> > > +                default timeout is 30 seconds
+> > 
+> > According to the SP805 TRM, the default interval is dependent on the
+> > rate of WDOGCLK, but would typically be a lot longer than that :/
+> > 
+> > On a related note, anyone have any idea why we seem to have two subtly
+> > different SP805 bindings defined?
 
-You already have "ref_clk", can't you just read its frequency?
+Sigh.
+
+> Interesting, I did not even know that until you pointed this out (and it's
+> funny that I found that I actually reviewed arm,sp805.txt internally in
+> Broadcom code review).
+> 
+> It looks like one was done by Bhupesh Sharma (sp805-wdt.txt) and the other
+> was done by Anup Patel (arm,sp805.txt). Both were merged at the same time
+> around March 20, 2016: 915c56bc01d6. I'd assume both were sent out at around
+> the same time.
+> 
+> It sounds like we should definitely remove one of them. Given that
+> sp805-wdt.txt appears to have more detailed descriptions on the use of the
+> clocks, should we remove arm,sp805.txt?
+
+Take whichever text you like, but I prefer filenames using the 
+compatible string and the correct string is 'arm,sp805' because '-wdt' 
+is redundant. You can probably safely just update all the dts files with 
+'arm,sp805' and just remove 'arm,sp805-wdt' because it is not actually 
+used (as the ID registers are).
 
 Rob
