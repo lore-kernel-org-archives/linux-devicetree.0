@@ -1,34 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Wed, 23 May 2018 11:22:46 -0500
-Message-ID: <20180523162246.GA31202@rob-hp-laptop>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
+Subject: Re: [PATCH v3 08/13] dt-bindings: power: add RK3228 SoCs header for
+ power-domain
+Date: Wed, 23 May 2018 11:23:23 -0500
+Message-ID: <20180523162323.GA8821@rob-hp-laptop>
+References: <1527058129-10260-1-git-send-email-zhangqing@rock-chips.com>
+ <1527058286-10503-1-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
+In-Reply-To: <1527058286-10503-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 07:43:17PM -0700, David Collins wrote:
-> Introduce bindings for RPMh regulator devices found on some
-> Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
-> processor within the SoC to make PMIC regulator requests which
-> are aggregated within the RPMh hardware block along with requests
-> from other processors in the SoC to determine the final PMIC
-> regulator hardware state.
+On Wed, May 23, 2018 at 02:51:26PM +0800, Elaine Zhang wrote:
+> According to a description from TRM, add all the power domains.
 > 
-> Signed-off-by: David Collins <collinsd@codeaurora.org>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 > ---
->  .../bindings/regulator/qcom,rpmh-regulator.txt     | 185 +++++++++++++++++++++
->  .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 ++++
->  2 files changed, 221 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
->  create mode 100644 include/dt-bindings/regulator/qcom,rpmh-regulator.h
+>  include/dt-bindings/power/rk3228-power.h | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 include/dt-bindings/power/rk3228-power.h
 
 Reviewed-by: Rob Herring <robh@kernel.org>
