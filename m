@@ -1,51 +1,43 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v2 4/7] Bluetooth: Add new quirk for non-persistent setup
- settings
-Date: Wed, 23 May 2018 14:31:30 +0200
-Message-ID: <B82BB5F4-E197-4915-A543-C5FF9A5A41F1@holtmann.org>
-References: <cover.1526374087.git.sean.wang@mediatek.com>
- <1d6097f538b3182b2876ad48225ecd6e2d1b128c.1526374087.git.sean.wang@mediatek.com>
- <920B3BE9-3FE8-4AC6-8C5F-63B0E00182AC@holtmann.org>
- <1526976323.18877.47.camel@mtkswgap22> <1527057423.4607.3.camel@mtkswgap22>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Ilia Lin <ilialin@codeaurora.org>
+Subject: [PATCH v11 0/2] Kryo CPU scaling driver
+Date: Wed, 23 May 2018 15:38:57 +0300
+Message-ID: <1527079139-3558-1-git-send-email-ilialin@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527057423.4607.3.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, LKML <linux-kernel@vger.kernel.org>, BlueZ development <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+[v11]
+ * Addressed comment from Russel about device_node reference
+ * Addressed comment from Sudeep about the late_initcall
+ * Transformed init into probe to take care of deferals
 
->> 
->> [ ... ]
->> 
->>>> -	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
->>>> +	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
->>>> +	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
->>>> 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
->>> 
->>> I am not 100% sure that we want to send the HCI_DEV_SETUP event also multiple times. That is a userspace change that I would need to think about. We need to check create_monitor_event() and see what the btmon trace for this looks like. Can you send me a btmon -w trace.log when this change is active.
->>> 
->>> Regards
->>> 
->>> Marcel
->>> 
->> 
->> Sure, I'll send you the trace.log with the change is active.
->> 
->> 	Sean
->> 
-> 
-> 
-> Attached trace.log was captured when I inputted commands power on and
-> then off in bluetoothctl.
+[v10]
+ * Split the series into domains
+ * Addressed comments from Viresh and Sudeep about logical CPU numbering.
 
-the trace.log is somehow mangled. Something is not fully correct. Can you read it with btmon -r trace.log?
+The qcom-cpufreq-kryo driver is aimed to support different SOC versions.
+The driver reads eFuse information and chooses the required OPP subset
+by passing the OPP supported-hw parameter.
 
-Regards
+The series depends on the series from Viresh:
+https://patchwork.kernel.org/patch/10418139/
 
-Marcel
+The previous spin was here:
+https://patchwork.kernel.org/patch/10420809/
+
+Ilia Lin (2):
+  cpufreq: Add Kryo CPU scaling driver
+  dt-bindings: cpufreq: Document operating-points-v2-kryo-cpu
+
+ .../devicetree/bindings/opp/kryo-cpufreq.txt       | 680 +++++++++++++++++++++
+ drivers/cpufreq/Kconfig.arm                        |  10 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   3 +
+ drivers/cpufreq/qcom-cpufreq-kryo.c                | 181 ++++++
+ 5 files changed, 875 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+
+-- 
+1.9.1
