@@ -1,62 +1,165 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
-Date: Wed, 23 May 2018 11:39:37 +0100
-Message-ID: <3f1ca60e-7aa8-fccc-ab1c-4b7c37731cce@arm.com>
-References: <1527068454-28921-1-git-send-email-ilialin@codeaurora.org>
- <1527068454-28921-2-git-send-email-ilialin@codeaurora.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v6 1/4] ARM: dts: tegra: Remove usage of deprecated
+ skeleton.dtsi
+Date: Wed, 23 May 2018 12:46:09 +0200
+Message-ID: <9a42132399d8ea69b5b7ce76c442b7b0@agner.ch>
+References: <1527069406-6359-1-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527068454-28921-2-git-send-email-ilialin@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <1527069406-6359-1-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Lucas Stach <dev@lynxeye.de>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 23/05/18 10:40, Ilia Lin wrote:
-> In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
-> the CPU frequency subset and voltage value of each OPP varies
-> based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
-> defines the voltage and frequency value based on the msm-id in SMEM
-> and speedbin blown in the efuse combination.
-> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-> to provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each OPP of
-> operating-points-v2 table when it is parsed by the OPP framework.
+On 23.05.2018 11:56, Krzysztof Kozlowski wrote:
+> Remove the usage of skeleton.dtsi because it was deprecated since commit
+> 9c0da3cc61f1 ("ARM: dts: explicitly mark skeleton.dtsi as deprecated").
+> It also allows later to fix DTC warnings for missing unit name in
+> /memory nodes.
 > 
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> The /chosen and /aliases nodes are added only when dependent DTSes do
+> not define them.  Compiled DTB is the same as before this commit.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-[...]
+Hm I see, you cannot add unit address here because the board level
+device tree do not have it yet... That makes the split indeed a bit less
+appealing.
 
-> +	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-> +	if (!IS_ERR(pdev))
-> +		return 0;
+Anyway, now we have it, and I think it is still nice to have a separate
+change.
+
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+
+--
+Stefan
+
+
+
+> 
+> ---
+> 
+> Changes since v5:
+> 1. New patch, split with skeleton.dtsi removal (suggested by Stefan).
+> ---
+>  arch/arm/boot/dts/tegra114.dtsi       |  8 ++++++--
+>  arch/arm/boot/dts/tegra124.dtsi       |  6 ++++--
+>  arch/arm/boot/dts/tegra20.dtsi        | 11 +++++++++--
+>  arch/arm/boot/dts/tegra30-apalis.dtsi |  4 ++++
+>  arch/arm/boot/dts/tegra30.dtsi        | 11 +++++++++--
+>  5 files changed, 32 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
+> index 0e4a13295d8a..27ef515e5640 100644
+> --- a/arch/arm/boot/dts/tegra114.dtsi
+> +++ b/arch/arm/boot/dts/tegra114.dtsi
+> @@ -5,11 +5,15 @@
+>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  
+> -#include "skeleton.dtsi"
+> -
+>  / {
+>  	compatible = "nvidia,tegra114";
+>  	interrupt-parent = <&lic>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
 > +
-> +	ret = PTR_ERR(pdev);
-> +	dev_err(cpu_dev, "Failed to register platform device\n");
+> +	memory {
+> +		device_type = "memory";
+> +	};
+>  
+>  	host1x@50000000 {
+>  		compatible = "nvidia,tegra114-host1x", "simple-bus";
+> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+> index 174092bfac90..951feea784af 100644
+> --- a/arch/arm/boot/dts/tegra124.dtsi
+> +++ b/arch/arm/boot/dts/tegra124.dtsi
+> @@ -7,14 +7,16 @@
+>  #include <dt-bindings/reset/tegra124-car.h>
+>  #include <dt-bindings/thermal/tegra124-soctherm.h>
+>  
+> -#include "skeleton.dtsi"
+> -
+>  / {
+>  	compatible = "nvidia,tegra124";
+>  	interrupt-parent = <&lic>;
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+>  
+> +	memory {
+> +		device_type = "memory";
+> +	};
 > +
-> +free_opp:
-> +	for_each_possible_cpu(cpu) {
-> +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
-> +			break;
-> +		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
-> +	}
-> +free_np:
-> +	of_node_put(np);
+>  	pcie@1003000 {
+>  		compatible = "nvidia,tegra124-pcie";
+>  		device_type = "pci";
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 0a7136462a1a..88dd1afb5877 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -4,11 +4,18 @@
+>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  
+> -#include "skeleton.dtsi"
+> -
+>  / {
+>  	compatible = "nvidia,tegra20";
+>  	interrupt-parent = <&lic>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
 > +
-> +	return ret;
-> +}
-> +late_initcall(qcom_cpufreq_kryo_driver_init);
-
-Any particular reason why this *has* to be late initcall ?
-Please change it to module_initcall otherwise.
-Also address the of_node comments from Viresh.
-
-Otherwise, it looks good.
--- 
-Regards,
-Sudeep
+> +	chosen { };
+> +	aliases { };
+> +
+> +	memory {
+> +		device_type = "memory";
+> +	};
+>  
+>  	iram@40000000 {
+>  		compatible = "mmio-sram";
+> diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi
+> b/arch/arm/boot/dts/tegra30-apalis.dtsi
+> index d1d21ec2a844..6f29cbad6e8a 100644
+> --- a/arch/arm/boot/dts/tegra30-apalis.dtsi
+> +++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+> @@ -10,6 +10,10 @@
+>  	model = "Toradex Apalis T30";
+>  	compatible = "toradex,apalis_t30", "nvidia,tegra30";
+>  
+> +	memory {
+> +		reg = <0 0>;
+> +	};
+> +
+>  	pcie@3000 {
+>  		avdd-pexa-supply = <&vdd2_reg>;
+>  		vdd-pexa-supply = <&vdd2_reg>;
+> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> index a110cf84d85f..19237c08c166 100644
+> --- a/arch/arm/boot/dts/tegra30.dtsi
+> +++ b/arch/arm/boot/dts/tegra30.dtsi
+> @@ -5,11 +5,18 @@
+>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  
+> -#include "skeleton.dtsi"
+> -
+>  / {
+>  	compatible = "nvidia,tegra30";
+>  	interrupt-parent = <&lic>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	chosen { };
+> +	aliases { };
+> +
+> +	memory {
+> +		device_type = "memory";
+> +	};
+>  
+>  	pcie@3000 {
+>  		compatible = "nvidia,tegra30-pcie";
