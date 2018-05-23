@@ -1,249 +1,327 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH RFC 00/24] Lima DRM driver
-Date: Wed, 23 May 2018 16:19:19 +0200
-Message-ID: <c1b1b4e9-f4bd-7244-fd34-f4b4bc5d006e@amd.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <940a5ee5-ff3e-e438-504e-f720f201fee6@gmail.com>
- <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
- <ec001286-973f-d3ef-b41c-c634c93ede3e@amd.com>
- <CAKGbVbuSd2FkLCShYkk+nW8xeU=4rBM1NDxROi=HRhFWc929Zw@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 11/16] irqchip/irq-mvebu-icu: add support for System
+ Error Interrupts (SEI)
+Date: Wed, 23 May 2018 15:23:48 +0100
+Message-ID: <cd000f57-e01f-e5b9-77f6-baf4e8f45551@arm.com>
+References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
+ <20180522094042.24770-12-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKGbVbuSd2FkLCShYkk+nW8xeU=4rBM1NDxROi=HRhFWc929Zw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Qiang Yu <yuq825@gmail.com>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180522094042.24770-12-miquel.raynal@bootlin.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjMuMDUuMjAxOCB1bSAxNjoxMyBzY2hyaWViIFFpYW5nIFl1Ogo+IE9uIFdlZCwgTWF5IDIz
-LCAyMDE4IGF0IDk6NTkgUE0sIENocmlzdGlhbiBLw7ZuaWcKPiA8Y2hyaXN0aWFuLmtvZW5pZ0Bh
-bWQuY29tPiB3cm90ZToKPj4gQW0gMjMuMDUuMjAxOCB1bSAxNTo1MiBzY2hyaWViIFFpYW5nIFl1
-Ogo+Pj4gT24gV2VkLCBNYXkgMjMsIDIwMTggYXQgNToyOSBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo+
-Pj4gPGNrb2VuaWcubGVpY2h0enVtZXJrZW5AZ21haWwuY29tPiB3cm90ZToKPj4+PiBBbSAxOC4w
-NS4yMDE4IHVtIDExOjI3IHNjaHJpZWIgUWlhbmcgWXU6Cj4+Pj4+IEtlcm5lbCBEUk0gZHJpdmVy
-IGZvciBBUk0gTWFsaSA0MDAvNDUwIEdQVXMuCj4+Pj4+Cj4+Pj4+IFRoaXMgaW1wbGVtZW50YXRp
-b24gbWFpbmx5IHRha2UgYW1kZ3B1IERSTSBkcml2ZXIgYXMgcmVmZXJlbmNlLgo+Pj4+Pgo+Pj4+
-PiAtIE1hbGkgNHh4IEdQVXMgaGF2ZSB0d28ga2luZHMgb2YgcHJvY2Vzc29ycyBHUCBhbmQgUFAu
-IEdQIGlzIGZvcgo+Pj4+PiAgICAgIE9wZW5HTCB2ZXJ0ZXggc2hhZGVyIHByb2Nlc3NpbmcgYW5k
-IFBQIGlzIGZvciBmcmFnbWVudCBzaGFkZXIKPj4+Pj4gICAgICBwcm9jZXNzaW5nLiBFYWNoIHBy
-b2Nlc3NvciBoYXMgaXRzIG93biBNTVUgc28gcHJjZXNzb3JzIHdvcmsgaW4KPj4+Pj4gICAgICB2
-aXJ0dWFsIGFkZHJlc3Mgc3BhY2UuCj4+Pj4+IC0gVGhlcmUncyBvbmx5IG9uZSBHUCBidXQgbXVs
-dGlwbGUgUFAgKG1heCA0IGZvciBtYWxpIDQwMCBhbmQgOAo+Pj4+PiAgICAgIGZvciBtYWxpIDQ1
-MCkgaW4gdGhlIHNhbWUgbWFsaSA0eHggR1BVLiBBbGwgUFBzIGFyZSBncm91cGVkCj4+Pj4+ICAg
-ICAgdG9nYXRoZXIgdG8gaGFuZGxlIGEgc2luZ2xlIGZyYWdtZW50IHNoYWRlciB0YXNrIGRpdmlk
-ZWQgYnkKPj4+Pj4gICAgICBGQiBvdXRwdXQgdGlsZWQgcGl4ZWxzLiBNYWxpIDQwMCB1c2VyIHNw
-YWNlIGRyaXZlciBpcwo+Pj4+PiAgICAgIHJlc3BvbnNpYmxlIGZvciBhc3NpZ24gdGFyZ2V0IHRp
-bGVkIHBpeGVscyB0byBlYWNoIFBQLCBidXQgbWFsaQo+Pj4+PiAgICAgIDQ1MCBoYXMgYSBIVyBt
-b2R1bGUgY2FsbGVkIERMQlUgdG8gZHluYW1pY2FsbHkgYmFsYW5jZSBlYWNoCj4+Pj4+ICAgICAg
-UFAncyBsb2FkLgo+Pj4+PiAtIFVzZXIgc3BhY2UgZHJpdmVyIGFsbG9jYXRlIGJ1ZmZlciBvYmpl
-Y3QgYW5kIG1hcCBpbnRvIEdQVQo+Pj4+PiAgICAgIHZpcnR1YWwgYWRkcmVzcyBzcGFjZSwgdXBs
-b2FkIGNvbW1hbmQgc3RyZWFtIGFuZCBkcmF3IGRhdGEgd2l0aAo+Pj4+PiAgICAgIENQVSBtbWFw
-IG9mIHRoZSBidWZmZXIgb2JqZWN0LCB0aGVuIHN1Ym1pdCB0YXNrIHRvIEdQL1BQIHdpdGgKPj4+
-Pj4gICAgICBhIHJlZ2lzdGVyIGZyYW1lIGluZGljYXRpbmcgd2hlcmUgaXMgdGhlIGNvbW1hbmQg
-c3RyZWFtIGFuZCBtaXNjCj4+Pj4+ICAgICAgc2V0dGluZ3MuCj4+Pj4+IC0gVGhlcmUncyBubyBj
-b21tYW5kIHN0cmVhbSB2YWxpZGF0aW9uL3JlbG9jYXRpb24gZHVlIHRvIGVhY2ggdXNlcgo+Pj4+
-PiAgICAgIHByb2Nlc3MgaGFzIGl0cyBvd24gR1BVIHZpcnR1YWwgYWRkcmVzcyBzcGFjZS4gR1Av
-UFAncyBNTVUgc3dpdGNoCj4+Pj4+ICAgICAgdmlydHVhbCBhZGRyZXNzIHNwYWNlIGJlZm9yZSBy
-dW5uaW5nIHR3byB0YXNrcyBmcm9tIGRpZmZlcmVudAo+Pj4+PiAgICAgIHVzZXIgcHJvY2Vzcy4g
-RXJyb3Igb3IgZXZpbCB1c2VyIHNwYWNlIGNvZGUganVzdCBnZXQgTU1VIGZhdWx0Cj4+Pj4+ICAg
-ICAgb3IgR1AvUFAgZXJyb3IgSVJRLCB0aGVuIHRoZSBIVy9TVyB3aWxsIGJlIHJlY292ZXJlZC4K
-Pj4+Pj4gLSBVc2UgVFRNIGFzIE1NLiBUVE1fUExfVFQgdHlwZSBtZW1vcnkgaXMgdXNlZCBhcyB0
-aGUgY29udGVudCBvZgo+Pj4+PiAgICAgIGxpbWEgYnVmZmVyIG9iamVjdCB3aGljaCBpcyBhbGxv
-Y2F0ZWQgZnJvbSBUVE0gcGFnZSBwb29sLiBhbGwKPj4+Pj4gICAgICBsaW1hIGJ1ZmZlciBvYmpl
-Y3QgZ2V0cyBwaW5uZWQgd2l0aCBUVE1fUExfRkxBR19OT19FVklDVCB3aGVuCj4+Pj4+ICAgICAg
-YWxsb2NhdGlvbiwgc28gdGhlcmUncyBubyBidWZmZXIgZXZpY3Rpb24gYW5kIHN3YXAgZm9yIG5v
-dy4gV2UKPj4+Pj4gICAgICBuZWVkIHJldmVyc2UgZW5naW5lZXJpbmcgdG8gc2VlIGlmIGFuZCBo
-b3cgR1AvUFAgc3VwcG9ydCBNTVUKPj4+Pj4gICAgICBmYXVsdCByZWNvdmVyeSAoY29udGludWUg
-ZXhlY3V0aW9uKS4gT3RoZXJ3aXNlIHdlIGhhdmUgdG8KPj4+Pj4gICAgICBwaW4vdW5waW4gZWFj
-aCBlbnZvbHZlZCBidWZmZXIgd2hlbiB0YXNrIGNyZWF0aW9uL2RlbGV0aW9uLgo+Pj4+Cj4+Pj4g
-V2VsbCBwaW5uaW5nIGFsbCBtZW1vcnkgaXMgdXN1YWxseSBhIG5vLWdvIGZvciB1cHN0cmVhbWlu
-Zy4gQnV0IHNpbmNlIHlvdQo+Pj4+IGFyZSBhbHJlYWR5IHVzaW5nIHRoZSBkcm1fc2NoZWQgZm9y
-IEdQVSB0YXNrIHNjaGVkdWxpbmcgd2h5IGFyZSB5b3UKPj4+PiBhY3R1YWxseQo+Pj4+IG5lZWRp
-bmcgdGhpcz8KPj4+Pgo+Pj4+IFRoZSBzY2hlZHVsZXIgc2hvdWxkIHRha2UgY2FyZSBvZiBzaWdu
-YWxpbmcgYWxsIGZlbmNlcyB3aGVuIHRoZSBoYXJkd2FyZQo+Pj4+IGlzCj4+Pj4gZG9uZSB3aXRo
-IGl0J3MgbWFnaWMgYW5kIHRoYXQgaXMgZW5vdWdoIGZvciBUVE0gdG8gbm90ZSB0aGF0IGEgYnVm
-ZmVyCj4+Pj4gb2JqZWN0Cj4+Pj4gaXMgbW92YWJsZSBhZ2FpbiAoZS5nLiB1bnBpbiB0aGVtKS4K
-Pj4+IFBsZWFzZSBjb3JyZWN0IG1lIGlmIEknbSB3cm9uZy4KPj4KPj4gV2VsbCwgeW91IGFyZSB3
-cm9uZyA6KQo+Pgo+Pj4gT25lIHdheSB0byBpbXBsZW1lbnQgZXZpY3Rpb24vc3dhcCBpcyBsaWtl
-IHRoaXM6Cj4+PiBjYWxsIHZhbGlkYXRpb24gb24gZWFjaCBidWZmZXJzIGludm9sdmVkIGluIGEg
-dGFzaywgYnV0IHRoaXMgd29uJ3QKPj4+IHByZXZlbnQgaXQgZnJvbQo+Pj4gZXZpY3Rpb24vc3dh
-cCB3aGVuIGV4ZWN1dGluZywgc28gYSBHUFUgTU1VIGZhdWx0IG1heSBoYXBwZW4gYW5kIGluIHRo
-ZQo+Pj4gaGFuZGxlciB3ZSBuZWVkIHRvIHJlY292ZXIgdGhlIGJ1ZmZlciBldmljdGVkL3N3YXBw
-ZWQuCj4+Pgo+Pj4gQW5vdGhlciB3YXkgaXMgcGluL3VucGluIGJ1ZmZlcnMgZXZvbHZlZCB3aGVu
-IHRhc2sgY3JlYXRlL2ZyZWUuCj4+Pgo+Pj4gRmlyc3Qgd2F5IGlzIGJldHRlciB3aGVuIG1lbW9y
-eSBsb2FkIGlzIGxvdyBhbmQgc2Vjb25kIHdheSBpcyBiZXR0ZXIgd2hlbgo+Pj4gbWVtb3J5IGxv
-YWQgaXMgaGlnaC4gRmlyc3Qgd2F5IGFsc28gbmVlZCBsZXNzIG1lbW9yeS4KPj4+Cj4+PiBTbyBJ
-J2QgcHJlZmVyIGZpcnN0IHdheSBidXQgZHVlIHRvIHRoZSBHUFUgTU1VIGZhdWx0Cj4+PiBIVyBv
-cCBuZWVkIHJldmVyc2UgZW5naW5lZXJpbmcsIEkgaGF2ZSB0byBwaW4gYWxsIGJ1ZmZlcnMgbm93
-LiBBZnRlcgo+Pj4gdGhlIEhXIG9wIGlzIGNsZWFyLCBJIGNhbiBjaG9vc2Ugb25lIHdheSB0byBp
-bXBsZW1lbnQuCj4+Cj4+IFRoZSBnZW5lcmFsIGFwcHJvYWNoIGlzOgo+PiAxLikgTG9jayBhbGwg
-Qk9zCj4+IDIuKSBWYWxpZGF0ZSBhbGwgQk9zCj4+IDMuKSBBZGQgdGhlIGZlbmNlCj4+IDQuKSBV
-bmxvY2sgdGhlIEJPcwo+IFRoaXMgaXMgdGhlIHRhc2sgcHJlcGFyZSBwcm9jZXNzLCByaWdodD8K
-Clllcy4KCj4+IEJPcyBjYW4ndCBiZSBldmljdGVkIHdoaWxlIHRoZXkgYXJlIGxvY2tlZAo+IER1
-cmluZyB0aGUgdGFzayBwcmVwYXJlIHN0YWdlLCB0aGV5J3JlIGxvY2tlZCwgYnV0IGFmdGVyIHRh
-c2sgcXVldWVkLCB0aGV5Cj4gZ2V0IHVubG9ja2VkIGFuZCBiZSBldmljdGFibGU/CgpZZXMsIHRo
-ZSBmZW5jZSB5b3UgYWRkZWQgdG8gdGhlIEJPIHByZXZlbnRzIFRUTSBmcm9tIGV2aWN0aW5nIHRo
-ZSBCTyAKdW50aWwgdGhlIGZlbmNlIHNpZ25hbGVkLgoKPgo+PiBhbmQgc2luY2UgeW91IGFscmVh
-ZHkgYWRkIHRoZQo+PiBmZW5jZSB0aGF0IHNob3VsZCBiZSBwZXJmZWN0bHkgc3VmZmljaWVudCB0
-byBwcmV2ZW50IGl0IGZyb20gYmVpbmcgZXZpY3RlZAo+PiB1bnRpbCB5b3VyIG9wZXJhdGlvbiBp
-cyBjb21wbGV0ZWQuCj4gWW91IG1lYW4gSSBoYXZlIHRvIGV4cGxpY2l0bHkgcGluIGl0IHdpdGgg
-VFRNX1BMX0ZMQUdfTk9fRVZJQ1QKPiB3aGVuIHRhc2sgY3JlYXRpb24gb3IgVFRNIHdpbGwgY2hl
-Y2sgYnVmZmVyJ3MgcmVzZXJ2YXRpb24gb2JqZWN0IGFuZAo+IHdvbid0IGV2aWN0IGl0IGlmIHNl
-ZSBhIGZlbmNlPwoKVGhlIHNlY29uZC4gWW91ICpkb24ndCogaGF2ZSB0byBleHBsaWNpdGx5IHBp
-biBpdCB3aXRoIApUVE1fUExfRkxBR19OT19FVklDVCBhcyBsb25nIGFzIHlvdSBhbHdheXMgYWRk
-IHRoZSBjb3JyZWN0IGZlbmNlIHdpdGggCnlvdXIgY29tbWFuZCBzdWJtaXNzaW9ucy4KCldoZW4g
-ZXZpY3Rpbmcgc29tZXRoaW5nIFRUTSB3aWxsIHRha2UgYSBsb29rIGF0IHRoZSBmZW5jZXMgYXNz
-aWduZWQgdG8gCnRoZSBCTyBhbmQgZWl0aGVyIGRvbid0IGV2aWN0IGl0IGF0IGFsbCBvciB3YWl0
-IGZvciBhbGwgZmVuY2VzIHRvIGJlIApjb21wbGV0ZWQgYmVmb3JlIGRvaW5nIHNvLgoKV2hlbiB5
-b3UgbmVlZCB0byB1cGRhdGUgc29tZSBpbnRlcm5hbCBzdGF0ZSBvciBmbHVzaCBjYWNoZXMgb3Ig
-c3R1ZmYgCmxpa2UgdGhhdCB3aGVuIGEgQk8gaXMgZXZpY3RlZCBUVE0gYWxzbyBoYXMgY2FsbGJh
-Y2tzIGZvciB0aGlzLgoKUmVnYXJkcywKQ2hyaXN0aWFuLgoKPgo+IFJlZ2FyZHMsCj4gUWlhbmcK
-Pgo+PiBVc2luZyB0aGUgTU1VIGlzIGNlcnRhaW5seSBiZSBiZXR0ZXIgaW4gZ2VuZXJhbCwgYnV0
-IHVzdWFsbHkgb25seSBvcHRpb25hbAo+PiBhbmQgYSBwYWluIGluIHRoZSBhc3MgdG8gZ2V0IHdv
-cmtpbmcuIFdlIGhhdmUgdGhhdCBpbiBhbWRncHUgZm9yIHF1aXRlIGEKPj4gd2hpbGUgYXMgd2Vs
-bCBub3cgYW5kIHN0aWxsIGRvbid0IHVzZSBpdCBiZWNhdXNlIG9mIHRoYXQuCj4+Cj4+IFJlZ2Fy
-ZHMsCj4+IENocmlzdGlhbi4KPj4KPj4KPj4+IFJlZ2FyZHMsCj4+PiBRaWFuZwo+Pj4KPj4+PiBD
-aHJpc3RpYW4uCj4+Pj4KPj4+Pgo+Pj4+PiAtIFVzZSBkcm1fc2NoZWQgZm9yIEdQVSB0YXNrIHNj
-aGVkdWxlLiBFYWNoIE9wZW5HTCBjb250ZXh0IHNob3VsZAo+Pj4+PiAgICAgIGhhdmUgYSBsaW1h
-IGNvbnRleHQgb2JqZWN0IGluIHRoZSBrZXJuZWwgdG8gZGlzdGluZ3Vpc2ggdGFza3MKPj4+Pj4g
-ICAgICBmcm9tIGRpZmZlcmVudCB1c2VyLiBkcm1fc2NoZWQgZ2V0cyB0YXNrIGZyb20gZWFjaCBs
-aW1hIGNvbnRleHQKPj4+Pj4gICAgICBpbiBhIGZhaXIgd2F5Lgo+Pj4+Pgo+Pj4+PiBOb3QgaW1w
-bGVtZW50ZWQ6Cj4+Pj4+IC0gRHVtcCBidWZmZXIgc3VwcG9ydAo+Pj4+PiAtIFBvd2VyIG1hbmFn
-ZW1lbnQKPj4+Pj4gLSBQZXJmb3JtYW5jZSBjb3VudGVyCj4+Pj4+Cj4+Pj4+IFRoaXMgcGF0Y2gg
-c2VyaWFsIGp1c3QgcGFjayBhIHBhaXIgb2YgLmMvLmggZmlsZXMgaW4gZWFjaCBwYXRjaC4KPj4+
-Pj4gRm9yIHdob2xlIGhpc3Rvcnkgb2YgdGhpcyBkcml2ZXIncyBkZXZlbG9wbWVudCwgc2VlOgo+
-Pj4+PiBodHRwczovL2dpdGh1Yi5jb20veXVxL2xpbnV4LWxpbWEvY29tbWl0cy9saW1hLTQuMTct
-cmM0Cj4+Pj4+Cj4+Pj4+IE1lc2EgZHJpdmVyIGlzIHN0aWxsIGluIGRldmVsb3BtZW50IGFuZCBu
-b3QgcmVhZHkgZm9yIGRhaWx5IHVzYWdlLAo+Pj4+PiBidXQgY2FuIHJ1biBzb21lIHNpbXBsZSB0
-ZXN0cyBsaWtlIGttc2N1YmUgYW5kIGdsYW1yazIsIHNlZToKPj4+Pj4gaHR0cHM6Ly9naXRodWIu
-Y29tL3l1cS9tZXNhLWxpbWEKPj4+Pj4KPj4+Pj4gQW5kcmVpIFBhdWxhdSAoMSk6Cj4+Pj4+ICAg
-ICAgYXJtNjQvZHRzOiBhZGQgc3dpdGNoLWRlbGF5IGZvciBtZXNvbiBtYWxpCj4+Pj4+Cj4+Pj4+
-IExpbWEgUHJvamVjdCBEZXZlbG9wZXJzICgxMCk6Cj4+Pj4+ICAgICAgZHJtL2xpbWE6IGFkZCBt
-YWxpIDR4eCBHUFUgaGFyZHdhcmUgcmVncwo+Pj4+PiAgICAgIGRybS9saW1hOiBhZGQgbGltYSBj
-b3JlIGRyaXZlcgo+Pj4+PiAgICAgIGRybS9saW1hOiBhZGQgR1BVIGRldmljZSBmdW5jdGlvbnMK
-Pj4+Pj4gICAgICBkcm0vbGltYTogYWRkIFBNVSByZWxhdGVkIGZ1bmN0aW9ucwo+Pj4+PiAgICAg
-IGRybS9saW1hOiBhZGQgUFAgcmVsYXRlZCBmdW5jdGlvbnMKPj4+Pj4gICAgICBkcm0vbGltYTog
-YWRkIE1NVSByZWxhdGVkIGZ1bmN0aW9ucwo+Pj4+PiAgICAgIGRybS9saW1hOiBhZGQgR1BVIHZp
-cnR1YWwgbWVtb3J5IHNwYWNlIGhhbmRpbmcKPj4+Pj4gICAgICBkcm0vbGltYTogYWRkIEdFTSBy
-ZWxhdGVkIGZ1bmN0aW9ucwo+Pj4+PiAgICAgIGRybS9saW1hOiBhZGQgR0VNIFByaW1lIHJlbGF0
-ZWQgZnVuY3Rpb25zCj4+Pj4+ICAgICAgZHJtL2xpbWE6IGFkZCBtYWtlZmlsZSBhbmQga2NvbmZp
-Zwo+Pj4+Pgo+Pj4+PiBRaWFuZyBZdSAoMTIpOgo+Pj4+PiAgICAgIGR0LWJpbmRpbmdzOiBhZGQg
-c3dpdGNoLWRlbGF5IHByb3BlcnR5IGZvciBtYWxpLXV0Z2FyZAo+Pj4+PiAgICAgIGFybTY0L2R0
-czogYWRkIHN3aXRjaC1kZWxheSBmb3IgbWVzb24gbWFsaQo+Pj4+PiAgICAgIFJldmVydCAiZHJt
-OiBOZXJmIHRoZSBwcmVjbG9zZSBjYWxsYmFjayBmb3IgbW9kZXJuIGRyaXZlcnMiCj4+Pj4+ICAg
-ICAgZHJtL2xpbWE6IGFkZCBsaW1hIHVhcGkgaGVhZGVyCj4+Pj4+ICAgICAgZHJtL2xpbWE6IGFk
-ZCBMMiBjYWNoZSBmdW5jdGlvbnMKPj4+Pj4gICAgICBkcm0vbGltYTogYWRkIEdQIHJlbGF0ZWQg
-ZnVuY3Rpb25zCj4+Pj4+ICAgICAgZHJtL2xpbWE6IGFkZCBCQ0FTVCByZWxhdGVkIGZ1bmN0aW9u
-Cj4+Pj4+ICAgICAgZHJtL2xpbWE6IGFkZCBETEJVIHJlbGF0ZWQgZnVuY3Rpb25zCj4+Pj4+ICAg
-ICAgZHJtL2xpbWE6IGFkZCBUVE0gc3Vic3lzdGVtIGZ1bmN0aW9ucwo+Pj4+PiAgICAgIGRybS9s
-aW1hOiBhZGQgYnVmZmVyIG9iamVjdCBmdW5jdGlvbnMKPj4+Pj4gICAgICBkcm0vbGltYTogYWRk
-IEdQVSBzY2hlZHVsZSB1c2luZyBEUk1fU0NIRUQKPj4+Pj4gICAgICBkcm0vbGltYTogYWRkIGNv
-bnRleHQgcmVsYXRlZCBmdW5jdGlvbnMKPj4+Pj4KPj4+Pj4gU2ltb24gU2hpZWxkcyAoMSk6Cj4+
-Pj4+ICAgICAgQVJNOiBkdHM6IGFkZCBncHUgbm9kZSB0byBleHlub3M0Cj4+Pj4+Cj4+Pj4+ICAg
-ICAuLi4vYmluZGluZ3MvZ3B1L2FybSxtYWxpLXV0Z2FyZC50eHQgICAgICAgICAgfCAgIDQgKwo+
-Pj4+PiAgICAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNC5kdHNpICAgICAgICAgICAgICAgIHwg
-IDMzICsrCj4+Pj4+ICAgICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi5k
-dHNpICAgfCAgIDEgKwo+Pj4+PiAgICAgLi4uL2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLW1h
-bGkuZHRzaSAgICAgIHwgICAxICsKPj4+Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9LY29uZmlnICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgMiArCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vTWFr
-ZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUv
-ZHJtL2RybV9maWxlLmMgICAgICAgICAgICAgICAgICAgIHwgICA4ICstCj4+Pj4+ICAgICBkcml2
-ZXJzL2dwdS9kcm0vbGltYS9LY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDkgKwo+Pj4+PiAg
-ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvTWFrZWZpbGUgICAgICAgICAgICAgICAgIHwgIDE5ICsK
-Pj4+Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfYmNhc3QuYyAgICAgICAgICAgICB8
-ICA2NSArKysKPj4+Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfYmNhc3QuaCAgICAg
-ICAgICAgICB8ICAzNCArKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9jdHgu
-YyAgICAgICAgICAgICAgIHwgMTQzICsrKysrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vbGlt
-YS9saW1hX2N0eC5oICAgICAgICAgICAgICAgfCAgNTEgKysKPj4+Pj4gICAgIGRyaXZlcnMvZ3B1
-L2RybS9saW1hL2xpbWFfZGV2aWNlLmMgICAgICAgICAgICB8IDQwNyArKysrKysrKysrKysrKwo+
-Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9kZXZpY2UuaCAgICAgICAgICAgIHwg
-MTM2ICsrKysrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2RsYnUuYyAgICAg
-ICAgICAgICAgfCAgNzUgKysrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2Rs
-YnUuaCAgICAgICAgICAgICAgfCAgMzcgKysKPj4+Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9saW1h
-L2xpbWFfZHJ2LmMgICAgICAgICAgICAgICB8IDQ2NiArKysrKysrKysrKysrKysrCj4+Pj4+ICAg
-ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2Rydi5oICAgICAgICAgICAgICAgfCAgNzcgKysr
-Cj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2dlbS5jICAgICAgICAgICAgICAg
-fCA0NTkgKysrKysrKysrKysrKysrKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGlt
-YV9nZW0uaCAgICAgICAgICAgICAgIHwgIDQxICsrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0v
-bGltYS9saW1hX2dlbV9wcmltZS5jICAgICAgICAgfCAgNjYgKysrCj4+Pj4+ICAgICBkcml2ZXJz
-L2dwdS9kcm0vbGltYS9saW1hX2dlbV9wcmltZS5oICAgICAgICAgfCAgMzEgKysKPj4+Pj4gICAg
-IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ3AuYyAgICAgICAgICAgICAgICB8IDI5MyArKysr
-KysrKysrKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9ncC5oICAgICAgICAg
-ICAgICAgIHwgIDM0ICsrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2wyX2Nh
-Y2hlLmMgICAgICAgICAgfCAgOTggKysrKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEv
-bGltYV9sMl9jYWNoZS5oICAgICAgICAgIHwgIDMyICsrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9k
-cm0vbGltYS9saW1hX21tdS5jICAgICAgICAgICAgICAgfCAxNTQgKysrKysrCj4+Pj4+ICAgICBk
-cml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX21tdS5oICAgICAgICAgICAgICAgfCAgMzQgKysKPj4+
-Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfb2JqZWN0LmMgICAgICAgICAgICB8IDEy
-MCArKysrKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9vYmplY3QuaCAgICAg
-ICAgICAgIHwgIDg3ICsrKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9wbXUu
-YyAgICAgICAgICAgICAgIHwgIDg1ICsrKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEv
-bGltYV9wbXUuaCAgICAgICAgICAgICAgIHwgIDMwICsrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9k
-cm0vbGltYS9saW1hX3BwLmMgICAgICAgICAgICAgICAgfCA0MTggKysrKysrKysrKysrKysrCj4+
-Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BwLmggICAgICAgICAgICAgICAgfCAg
-MzcgKysKPj4+Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcmVncy5oICAgICAgICAg
-ICAgICB8IDMwNCArKysrKysrKysrKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGlt
-YV9zY2hlZC5jICAgICAgICAgICAgIHwgNDk3Cj4+Pj4+ICsrKysrKysrKysrKysrKysrKwo+Pj4+
-PiAgICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9zY2hlZC5oICAgICAgICAgICAgIHwgMTI2
-ICsrKysrCj4+Pj4+ICAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3R0bS5jICAgICAgICAg
-ICAgICAgfCA0MDkgKysrKysrKysrKysrKysKPj4+Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9saW1h
-L2xpbWFfdHRtLmggICAgICAgICAgICAgICB8ICA0NCArKwo+Pj4+PiAgICAgZHJpdmVycy9ncHUv
-ZHJtL2xpbWEvbGltYV92bS5jICAgICAgICAgICAgICAgIHwgMzEyICsrKysrKysrKysrCj4+Pj4+
-ICAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmggICAgICAgICAgICAgICAgfCAgNzMg
-KysrCj4+Pj4+ICAgICBpbmNsdWRlL2RybS9kcm1fZHJ2LmggICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgMjMgKy0KPj4+Pj4gICAgIGluY2x1ZGUvdWFwaS9kcm0vbGltYV9kcm0uaCAgICAgICAg
-ICAgICAgICAgICB8IDE5NSArKysrKysrCj4+Pj4+ICAgICA0NCBmaWxlcyBjaGFuZ2VkLCA1NTY1
-IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZwo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL01ha2VmaWxlCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9iY2FzdC5jCj4+Pj4+ICAgICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9iY2FzdC5oCj4+Pj4+ICAgICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9jdHguYwo+Pj4+PiAg
-ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfY3R4LmgKPj4+
-Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2Rldmlj
-ZS5jCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGlt
-YV9kZXZpY2UuaAo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9s
-aW1hL2xpbWFfZGxidS5jCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2xpbWEvbGltYV9kbGJ1LmgKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vbGltYS9saW1hX2Rydi5jCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL2xpbWEvbGltYV9kcnYuaAo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtLmMKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2dlbS5oCj4+Pj4+ICAgICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW1fcHJpbWUuYwo+Pj4+PiAgICAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtX3ByaW1lLmgK
-Pj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2dw
-LmMKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1h
-X2dwLmgKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9s
-aW1hX2wyX2NhY2hlLmMKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vbGltYS9saW1hX2wyX2NhY2hlLmgKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vbGltYS9saW1hX21tdS5jCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9tbXUuaAo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfb2JqZWN0LmMKPj4+Pj4gICAgIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX29iamVjdC5oCj4+Pj4+ICAgICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9wbXUuYwo+Pj4+PiAg
-ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcG11LmgKPj4+
-Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BwLmMK
-Pj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3Bw
-LmgKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1h
-X3JlZ3MuaAo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1h
-L2xpbWFfc2NoZWQuYwo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfc2NoZWQuaAo+Pj4+PiAgICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS9saW1hL2xpbWFfdHRtLmMKPj4+Pj4gICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vbGltYS9saW1hX3R0bS5oCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV92bS5jCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV92bS5oCj4+Pj4+ICAgICBjcmVhdGUgbW9kZSAx
-MDA2NDQgaW5jbHVkZS91YXBpL2RybS9saW1hX2RybS5oCj4+Pj4+CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 22/05/18 10:40, Miquel Raynal wrote:
+> An SEI driver provides an MSI domain through which it is possible to
+> raise SEIs.
+> 
+> Handle the NSR probe function in a more generic way to support other
+> type of interrupts (ie. the SEIs).
+> 
+> For clarity we do not use tree IRQ domains for now but linear ones
+> instead, allocating the 207 ICU lines for each interrupt group.
+
+What's the rational for not using trees? Because that's effectively a
+100% overhead...
+
+> Reallocating an ICU slot is prevented by the use of an ICU-wide bitmap.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/irqchip/irq-mvebu-icu.c | 126 ++++++++++++++++++++++++++++++++++------
+>  1 file changed, 108 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+> index 977e47b2716f..6ad6236d6ff1 100644
+> --- a/drivers/irqchip/irq-mvebu-icu.c
+> +++ b/drivers/irqchip/irq-mvebu-icu.c
+> @@ -28,6 +28,10 @@
+>  #define ICU_SETSPI_NSR_AH	0x14
+>  #define ICU_CLRSPI_NSR_AL	0x18
+>  #define ICU_CLRSPI_NSR_AH	0x1c
+> +#define ICU_SET_SEI_AL		0x50
+> +#define ICU_SET_SEI_AH		0x54
+> +#define ICU_CLR_SEI_AL		0x58
+> +#define ICU_CLR_SEI_AH		0x5C
+>  #define ICU_INT_CFG(x)          (0x100 + 4 * (x))
+>  #define   ICU_INT_ENABLE	BIT(24)
+>  #define   ICU_IS_EDGE		BIT(28)
+> @@ -38,12 +42,28 @@
+>  #define ICU_SATA0_ICU_ID	109
+>  #define ICU_SATA1_ICU_ID	107
+>  
+> +struct mvebu_icu_subset_data {
+> +	unsigned int icu_group;
+> +	unsigned int offset_set_ah;
+> +	unsigned int offset_set_al;
+> +	unsigned int offset_clr_ah;
+> +	unsigned int offset_clr_al;
+> +};
+> +
+>  struct mvebu_icu {
+>  	struct irq_chip irq_chip;
+>  	struct regmap *regmap;
+>  	struct device *dev;
+> -	atomic_t initialized;
+>  	bool legacy_bindings;
+> +	/* Lock on interrupt allocations/releases */
+> +	spinlock_t msi_lock;
+> +	DECLARE_BITMAP(msi_bitmap, ICU_MAX_IRQS);
+> +};
+> +
+> +struct mvebu_icu_msi_data {
+> +	struct mvebu_icu *icu;
+> +	atomic_t initialized;
+> +	const struct mvebu_icu_subset_data *subset_data;
+>  };
+>  
+>  struct mvebu_icu_irq_data {
+> @@ -76,16 +96,25 @@ static struct mvebu_icu *mvebu_icu_dev_get_drvdata(struct platform_device *pdev)
+>  	return icu;
+>  }
+>  
+> -static void mvebu_icu_init(struct mvebu_icu *icu, struct msi_msg *msg)
+> +static void mvebu_icu_init(struct mvebu_icu *icu, struct irq_domain *d,
+> +			   struct msi_msg *msg)
+>  {
+> -	if (atomic_cmpxchg(&icu->initialized, false, true))
+> +	struct mvebu_icu_msi_data *msi_data = platform_msi_get_host_data(d);
+> +	const struct mvebu_icu_subset_data *subset = msi_data->subset_data;
+> +
+> +	if (atomic_cmpxchg(&msi_data->initialized, false, true))
+> +		return;
+> +
+> +	/* Set 'SET' ICU SPI message address in AP */
+> +	regmap_write(icu->regmap, subset->offset_set_ah, msg[0].address_hi);
+> +	regmap_write(icu->regmap, subset->offset_set_al, msg[0].address_lo);
+> +
+> +	if (subset->icu_group != ICU_GRP_NSR)
+>  		return;
+>  
+> -	/* Set Clear/Set ICU SPI message address in AP */
+> -	regmap_write(icu->regmap, ICU_SETSPI_NSR_AH, msg[0].address_hi);
+> -	regmap_write(icu->regmap, ICU_SETSPI_NSR_AL, msg[0].address_lo);
+> -	regmap_write(icu->regmap, ICU_CLRSPI_NSR_AH, msg[1].address_hi);
+> -	regmap_write(icu->regmap, ICU_CLRSPI_NSR_AL, msg[1].address_lo);
+> +	/* Set 'CLEAR' ICU SPI message address in AP (level-MSI only) */
+> +	regmap_write(icu->regmap, subset->offset_clr_ah, msg[1].address_hi);
+> +	regmap_write(icu->regmap, subset->offset_clr_al, msg[1].address_lo);
+>  }
+>  
+>  static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
+> @@ -96,8 +125,8 @@ static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
+>  	unsigned int icu_int;
+>  
+>  	if (msg->address_lo || msg->address_hi) {
+> -		/* One off initialization */
+> -		mvebu_icu_init(icu, msg);
+> +		/* One off initialization per domain */
+> +		mvebu_icu_init(icu, d->domain, msg);
+>  		/* Configure the ICU with irq number & type */
+>  		icu_int = msg->data | ICU_INT_ENABLE;
+>  		if (icu_irqd->type & IRQ_TYPE_EDGE_RISING)
+> @@ -131,7 +160,8 @@ static int
+>  mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+>  			       unsigned long *hwirq, unsigned int *type)
+>  {
+> -	struct mvebu_icu *icu = platform_msi_get_host_data(d);
+> +	struct mvebu_icu_msi_data *msi_data = platform_msi_get_host_data(d);
+> +	struct mvebu_icu *icu = msi_data->icu;
+>  	unsigned int param_count = icu->legacy_bindings ? 3 : 2;
+>  
+>  	/* Check the count of the parameters in dt */
+> @@ -172,7 +202,9 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  	int err;
+>  	unsigned long hwirq;
+>  	struct irq_fwspec *fwspec = args;
+> -	struct mvebu_icu *icu = platform_msi_get_host_data(domain);
+> +	struct mvebu_icu_msi_data *msi_data =
+> +		platform_msi_get_host_data(domain);
+> +	struct mvebu_icu *icu = msi_data->icu;
+>  	struct mvebu_icu_irq_data *icu_irqd;
+>  
+>  	icu_irqd = kmalloc(sizeof(*icu_irqd), GFP_KERNEL);
+> @@ -186,16 +218,22 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  		goto free_irqd;
+>  	}
+>  
+> +	spin_lock(&icu->msi_lock);
+> +	err = bitmap_allocate_region(icu->msi_bitmap, hwirq, 0);
+> +	spin_unlock(&icu->msi_lock);
+
+This (and the freeing counterpart) could deserve a couple of helpers.
+
+> +	if (err < 0)
+> +		goto free_irqd;
+> +
+>  	if (icu->legacy_bindings)
+>  		icu_irqd->icu_group = fwspec->param[0];
+>  	else
+> -		icu_irqd->icu_group = ICU_GRP_NSR;
+> +		icu_irqd->icu_group = msi_data->subset_data->icu_group;
+>  	icu_irqd->icu = icu;
+>  
+>  	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
+>  	if (err) {
+>  		dev_err(icu->dev, "failed to allocate ICU interrupt in parent domain\n");
+> -		goto free_irqd;
+> +		goto free_bitmap;
+>  	}
+>  
+>  	/* Make sure there is no interrupt left pending by the firmware */
+> @@ -214,6 +252,10 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  
+>  free_msi:
+>  	platform_msi_domain_free(domain, virq, nr_irqs);
+> +free_bitmap:
+> +	spin_lock(&icu->msi_lock);
+> +	bitmap_release_region(icu->msi_bitmap, hwirq, 0);
+> +	spin_unlock(&icu->msi_lock);
+>  free_irqd:
+>  	kfree(icu_irqd);
+>  	return err;
+> @@ -223,12 +265,19 @@ static void
+>  mvebu_icu_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+>  			  unsigned int nr_irqs)
+>  {
+> +	struct mvebu_icu_msi_data *msi_data =
+> +		platform_msi_get_host_data(domain);
+> +	struct mvebu_icu *icu = msi_data->icu;
+>  	struct irq_data *d = irq_get_irq_data(virq);
+>  	struct mvebu_icu_irq_data *icu_irqd = d->chip_data;
+>  
+>  	kfree(icu_irqd);
+>  
+>  	platform_msi_domain_free(domain, virq, nr_irqs);
+> +
+> +	spin_lock(&icu->msi_lock);
+> +	bitmap_release_region(icu->msi_bitmap, d->hwirq, 0);
+> +	spin_unlock(&icu->msi_lock);
+>  }
+>  
+>  static const struct irq_domain_ops mvebu_icu_domain_ops = {
+> @@ -239,14 +288,29 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
+>  
+>  static int mvebu_icu_subset_probe(struct platform_device *pdev)
+>  {
+> +	const struct mvebu_icu_subset_data *subset;
+> +	struct mvebu_icu_msi_data *msi_data;
+>  	struct device_node *msi_parent_dn;
+>  	struct irq_domain *irq_domain;
+>  	struct mvebu_icu *icu;
+>  
+> +	msi_data = devm_kzalloc(&pdev->dev, sizeof(*msi_data), GFP_KERNEL);
+> +	if (!msi_data)
+> +		return -ENOMEM;
+> +
+>  	icu = mvebu_icu_dev_get_drvdata(pdev);
+>  	if (IS_ERR(icu))
+>  		return PTR_ERR(icu);
+>  
+> +	subset = of_device_get_match_data(&pdev->dev);
+> +	if (!subset) {
+> +		dev_err(&pdev->dev, "Could not retrieve subset data\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	msi_data->icu = icu;
+> +	msi_data->subset_data = subset;
+> +
+>  	pdev->dev.msi_domain = of_msi_get_domain(&pdev->dev, pdev->dev.of_node,
+>  						 DOMAIN_BUS_PLATFORM_MSI);
+>  	if (!pdev->dev.msi_domain)
+> @@ -259,7 +323,7 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+>  	irq_domain = platform_msi_create_device_domain(&pdev->dev, ICU_MAX_IRQS,
+>  						       mvebu_icu_write_msg,
+>  						       &mvebu_icu_domain_ops,
+> -						       icu);
+> +						       msi_data);
+>  	if (!irq_domain) {
+>  		dev_err(&pdev->dev, "Failed to create ICU MSI domain\n");
+>  		return -ENOMEM;
+> @@ -268,9 +332,30 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct mvebu_icu_subset_data mvebu_icu_nsr_subset_data = {
+> +	.icu_group = ICU_GRP_NSR,
+> +	.offset_set_ah = ICU_SETSPI_NSR_AH,
+> +	.offset_set_al = ICU_SETSPI_NSR_AL,
+> +	.offset_clr_ah = ICU_CLRSPI_NSR_AH,
+> +	.offset_clr_al = ICU_CLRSPI_NSR_AL,
+> +};
+> +
+> +static const struct mvebu_icu_subset_data mvebu_icu_sei_subset_data = {
+> +	.icu_group = ICU_GRP_SEI,
+> +	.offset_set_ah = ICU_SET_SEI_AH,
+> +	.offset_set_al = ICU_SET_SEI_AL,
+> +	.offset_clr_ah = ICU_CLR_SEI_AH,
+> +	.offset_clr_al = ICU_CLR_SEI_AL,
+
+I thought SEI was edge only, given what you do in mvebu_icu_init.
+Confused...
+
+> +};
+> +
+>  static const struct of_device_id mvebu_icu_subset_of_match[] = {
+>  	{
+>  		.compatible = "marvell,cp110-icu-nsr",
+> +		.data = &mvebu_icu_nsr_subset_data,
+> +	},
+> +	{
+> +		.compatible = "marvell,cp110-icu-sei",
+> +		.data = &mvebu_icu_sei_subset_data,
+>  	},
+>  	{},
+>  };
+> @@ -317,6 +402,8 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  	if (IS_ERR(icu->regmap))
+>  		return PTR_ERR(icu->regmap);
+>  
+> +	spin_lock_init(&icu->msi_lock);
+> +
+>  	icu->irq_chip.name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+>  					    "ICU.%x",
+>  					    (unsigned int)res->start);
+> @@ -341,7 +428,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  #endif
+>  
+>  	/*
+> -	 * Clean all ICU interrupts with type SPI_NSR, required to
+> +	 * Clean all ICU interrupts of type NSR and SEI, required to
+>  	 * avoid unpredictable SPI assignments done by firmware.
+>  	 */
+>  	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
+> @@ -350,7 +437,8 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  		regmap_read(icu->regmap, ICU_INT_CFG(i), &icu_int);
+>  		icu_grp = icu_int >> ICU_GROUP_SHIFT;
+>  
+> -		if (icu_grp == ICU_GRP_NSR)
+> +		if (icu_grp == ICU_GRP_NSR ||
+> +		    (icu_grp == ICU_GRP_SEI && !icu->legacy_bindings))
+>  			regmap_write(icu->regmap, ICU_INT_CFG(i), 0);
+>  	}
+>  
+> @@ -363,7 +451,9 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id mvebu_icu_of_match[] = {
+> -	{ .compatible = "marvell,cp110-icu", },
+> +	{
+> +		.compatible = "marvell,cp110-icu",
+> +	},
+>  	{},
+>  };
+>  
+> 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
