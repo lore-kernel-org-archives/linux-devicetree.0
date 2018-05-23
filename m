@@ -1,136 +1,101 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [next, PATCH 6/6] usb: mtu3: fix warning of sleep in atomic context in notifier callback
-Date: Wed, 23 May 2018 16:53:20 +0800
-Message-ID: <3a030435197e69eca02f3565517a1cbccc33ac57.1527065109.git.chunfeng.yun@mediatek.com>
-References: <1291b13a362eaa0cccd30cb8dd4f56d33e1d172d.1527065109.git.chunfeng.yun@mediatek.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
+Date: Wed, 23 May 2018 11:02:14 +0200
+Message-ID: <19d8d6b10d09a7794d9d4bf401cf4b51@agner.ch>
+References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1291b13a362eaa0cccd30cb8dd4f56d33e1d172d.1527065109.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Cc: linux-arm-kernel@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The notifier callbacks of extcon are called in atomic context, but the
-callbacks will call regulator_enable()/regulator_disable() which may
-sleep caused by mutex, so use work queue to call the sleep functions.
+On 22.05.2018 08:28, Sébastien Szymanski wrote:
+> Check the max speed supported from the fuses for i.MX6ULL and update the
+> operating points table accordingly.
+> 
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/mtu3/mtu3.h    | 11 ++++++++++-
- drivers/usb/mtu3/mtu3_dr.c | 44 ++++++++++++++++++++++++++++++++++++--------
- 2 files changed, 46 insertions(+), 9 deletions(-)
+Tested with a 528MHz and 792MHz rated i.MX 6ULL, looks good!
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index a56fee0..87823ac 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -196,7 +196,12 @@ struct mtu3_gpd_ring {
- * @vbus: vbus 5V used by host mode
- * @edev: external connector used to detect vbus and iddig changes
- * @vbus_nb: notifier for vbus detection
--* @vbus_nb: notifier for iddig(idpin) detection
-+* @vbus_work : work of vbus detection notifier, used to avoid sleep in
-+*		notifier callback which is atomic context
-+* @vbus_event : event of vbus detecion notifier
-+* @id_nb : notifier for iddig(idpin) detection
-+* @id_work : work of iddig detection notifier
-+* @id_event : event of iddig detecion notifier
- * @is_u3_drd: whether port0 supports usb3.0 dual-role device or not
- * @manual_drd_enabled: it's true when supports dual-role device by debugfs
- *		to switch host/device modes depending on user input.
-@@ -205,7 +210,11 @@ struct otg_switch_mtk {
- 	struct regulator *vbus;
- 	struct extcon_dev *edev;
- 	struct notifier_block vbus_nb;
-+	struct work_struct vbus_work;
-+	unsigned long vbus_event;
- 	struct notifier_block id_nb;
-+	struct work_struct id_work;
-+	unsigned long id_event;
- 	bool is_u3_drd;
- 	bool manual_drd_enabled;
- };
-diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
-index 80083e0..8c3bbf7 100644
---- a/drivers/usb/mtu3/mtu3_dr.c
-+++ b/drivers/usb/mtu3/mtu3_dr.c
-@@ -174,16 +174,40 @@ static void ssusb_set_mailbox(struct otg_switch_mtk *otg_sx,
- 	}
- }
- 
--static int ssusb_id_notifier(struct notifier_block *nb,
--	unsigned long event, void *ptr)
-+static void ssusb_id_work(struct work_struct *work)
- {
- 	struct otg_switch_mtk *otg_sx =
--		container_of(nb, struct otg_switch_mtk, id_nb);
-+		container_of(work, struct otg_switch_mtk, id_work);
- 
--	if (event)
-+	if (otg_sx->id_event)
- 		ssusb_set_mailbox(otg_sx, MTU3_ID_GROUND);
- 	else
- 		ssusb_set_mailbox(otg_sx, MTU3_ID_FLOAT);
-+}
-+
-+static void ssusb_vbus_work(struct work_struct *work)
-+{
-+	struct otg_switch_mtk *otg_sx =
-+		container_of(work, struct otg_switch_mtk, vbus_work);
-+
-+	if (otg_sx->vbus_event)
-+		ssusb_set_mailbox(otg_sx, MTU3_VBUS_VALID);
-+	else
-+		ssusb_set_mailbox(otg_sx, MTU3_VBUS_OFF);
-+}
-+
-+/*
-+ * @ssusb_id_notifier is called in atomic context, but @ssusb_set_mailbox
-+ * may sleep, so use work queue here
-+ */
-+static int ssusb_id_notifier(struct notifier_block *nb,
-+	unsigned long event, void *ptr)
-+{
-+	struct otg_switch_mtk *otg_sx =
-+		container_of(nb, struct otg_switch_mtk, id_nb);
-+
-+	otg_sx->id_event = event;
-+	schedule_work(&otg_sx->id_work);
- 
- 	return NOTIFY_DONE;
- }
-@@ -194,10 +218,8 @@ static int ssusb_vbus_notifier(struct notifier_block *nb,
- 	struct otg_switch_mtk *otg_sx =
- 		container_of(nb, struct otg_switch_mtk, vbus_nb);
- 
--	if (event)
--		ssusb_set_mailbox(otg_sx, MTU3_VBUS_VALID);
--	else
--		ssusb_set_mailbox(otg_sx, MTU3_VBUS_OFF);
-+	otg_sx->vbus_event = event;
-+	schedule_work(&otg_sx->vbus_work);
- 
- 	return NOTIFY_DONE;
- }
-@@ -398,6 +420,9 @@ int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- {
- 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
- 
-+	INIT_WORK(&otg_sx->id_work, ssusb_id_work);
-+	INIT_WORK(&otg_sx->vbus_work, ssusb_vbus_work);
-+
- 	if (otg_sx->manual_drd_enabled)
- 		ssusb_debugfs_init(ssusb);
- 	else
-@@ -412,4 +437,7 @@ void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
- 
- 	if (otg_sx->manual_drd_enabled)
- 		ssusb_debugfs_exit(ssusb);
-+
-+	cancel_work_sync(&otg_sx->id_work);
-+	cancel_work_sync(&otg_sx->vbus_work);
- }
--- 
-1.9.1
+Tested-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+
+--
+Stefan
+
+> ---
+> 
+> Changes for v3:
+>  - none
+> 
+> Changes for v2:
+>  - none
+> 
+>  drivers/cpufreq/imx6q-cpufreq.c | 29 +++++++++++++++++++++++------
+>  1 file changed, 23 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+> index 83cf631fc9bc..f094687cae52 100644
+> --- a/drivers/cpufreq/imx6q-cpufreq.c
+> +++ b/drivers/cpufreq/imx6q-cpufreq.c
+> @@ -266,6 +266,8 @@ static void imx6q_opp_check_speed_grading(struct
+> device *dev)
+>  }
+>  
+>  #define OCOTP_CFG3_6UL_SPEED_696MHZ	0x2
+> +#define OCOTP_CFG3_6ULL_SPEED_792MHZ	0x2
+> +#define OCOTP_CFG3_6ULL_SPEED_900MHZ	0x3
+>  
+>  static void imx6ul_opp_check_speed_grading(struct device *dev)
+>  {
+> @@ -287,16 +289,30 @@ static void
+> imx6ul_opp_check_speed_grading(struct device *dev)
+>  	 * Speed GRADING[1:0] defines the max speed of ARM:
+>  	 * 2b'00: Reserved;
+>  	 * 2b'01: 528000000Hz;
+> -	 * 2b'10: 696000000Hz;
+> -	 * 2b'11: Reserved;
+> +	 * 2b'10: 696000000Hz on i.MX6UL, 792000000Hz on i.MX6ULL;
+> +	 * 2b'11: 900000000Hz on i.MX6ULL only;
+>  	 * We need to set the max speed of ARM according to fuse map.
+>  	 */
+>  	val = readl_relaxed(base + OCOTP_CFG3);
+>  	val >>= OCOTP_CFG3_SPEED_SHIFT;
+>  	val &= 0x3;
+> -	if (val != OCOTP_CFG3_6UL_SPEED_696MHZ)
+> -		if (dev_pm_opp_disable(dev, 696000000))
+> -			dev_warn(dev, "failed to disable 696MHz OPP\n");
+> +
+> +	if (of_machine_is_compatible("fsl,imx6ul")) {
+> +		if (val != OCOTP_CFG3_6UL_SPEED_696MHZ)
+> +			if (dev_pm_opp_disable(dev, 696000000))
+> +				dev_warn(dev, "failed to disable 696MHz OPP\n");
+> +	}
+> +
+> +	if (of_machine_is_compatible("fsl,imx6ull")) {
+> +		if (val != OCOTP_CFG3_6ULL_SPEED_792MHZ)
+> +			if (dev_pm_opp_disable(dev, 792000000))
+> +				dev_warn(dev, "failed to disable 792MHz OPP\n");
+> +
+> +		if (val != OCOTP_CFG3_6ULL_SPEED_900MHZ)
+> +			if (dev_pm_opp_disable(dev, 900000000))
+> +				dev_warn(dev, "failed to disable 900MHz OPP\n");
+> +	}
+> +
+>  	iounmap(base);
+>  put_node:
+>  	of_node_put(np);
+> @@ -356,7 +372,8 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+>  		goto put_reg;
+>  	}
+>  
+> -	if (of_machine_is_compatible("fsl,imx6ul"))
+> +	if (of_machine_is_compatible("fsl,imx6ul") ||
+> +	    of_machine_is_compatible("fsl,imx6ull"))
+>  		imx6ul_opp_check_speed_grading(cpu_dev);
+>  	else
+>  		imx6q_opp_check_speed_grading(cpu_dev);
