@@ -1,93 +1,139 @@
-From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v3 13/13] soc: rockchip: power-domain: add power domain support for px30
-Date: Wed, 23 May 2018 14:53:32 +0800
-Message-ID: <1527058412-10754-1-git-send-email-zhangqing@rock-chips.com>
-References: <1527058129-10260-1-git-send-email-zhangqing@rock-chips.com>
+From: M P <buserror@gmail.com>
+Subject: Re: [PATCH v6 3/6] dt-bindings: clock: renesas,rzn1-clocks: document
+ RZ/N1 clock driver
+Date: Wed, 23 May 2018 07:52:45 +0100
+Message-ID: <CAMMfpEwn3+fCZZZ8ADNxjun+jzNSnH+8xPcA8OUS_jPUJ-o6LA@mail.gmail.com>
+References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1526983321-41949-4-git-send-email-michel.pollet@bp.renesas.com> <20180522160913.GA7755@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527058129-10260-1-git-send-email-zhangqing@rock-chips.com>
+In-Reply-To: <20180522160913.GA7755@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>
+To: robh@kernel.org
+Cc: michel.pollet@bp.renesas.com, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, Phil Edworthy <phil.edworthy@renesas.com>, buserror+upstream@gmail.com, magnus.damm@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Finley Xiao <finley.xiao@rock-chips.com>
+Hi Rob,
 
-This driver is modified to support PX30 SoC.
+On Tue, 22 May 2018 at 17:09, Rob Herring <robh@kernel.org> wrote:
 
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- drivers/soc/rockchip/pm_domains.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+> On Tue, May 22, 2018 at 11:01:23AM +0100, Michel Pollet wrote:
+> > The Renesas RZ/N1 Family (Part #R9A06G0xx) requires a driver
+> > to provide the SoC clock infrastructure for Linux.
+> >
+> > This documents the driver bindings.
+> >
+> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > ---
+> >  .../bindings/clock/renesas,rzn1-clocks.txt         | 44
+++++++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> >  create mode 100644
+Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
+> >
+> > diff --git
+a/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
+b/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
+> > new file mode 100644
+> > index 0000000..0c41137
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
+> > @@ -0,0 +1,44 @@
+> > +* Renesas RZ/N1 Clock Driver
+> > +
+> > +This driver provides the clock infrastructure used by all the other
+drivers.
 
-diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip/pm_domains.c
-index 90dcd5e21ae6..d0c5615132e3 100644
---- a/drivers/soc/rockchip/pm_domains.c
-+++ b/drivers/soc/rockchip/pm_domains.c
-@@ -18,6 +18,7 @@
- #include <linux/clk.h>
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
-+#include <dt-bindings/power/px30-power.h>
- #include <dt-bindings/power/rk3036-power.h>
- #include <dt-bindings/power/rk3128-power.h>
- #include <dt-bindings/power/rk3228-power.h>
-@@ -114,6 +115,9 @@ struct rockchip_pmu {
- 	.active_wakeup = wakeup,			\
- }
- 
-+#define DOMAIN_PX30(pwr, status, req, wakeup)		\
-+	DOMAIN_M(pwr, status, req, (req) + 16, req, wakeup)
-+
- #define DOMAIN_RK3288(pwr, status, req, wakeup)		\
- 	DOMAIN(pwr, status, req, req, (req) + 16, wakeup)
- 
-@@ -712,6 +716,17 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	return error;
- }
- 
-+static const struct rockchip_domain_info px30_pm_domains[] = {
-+	[PX30_PD_USB]		= DOMAIN_PX30(5, 5, 10, false),
-+	[PX30_PD_SDCARD]	= DOMAIN_PX30(8, 8, 9, false),
-+	[PX30_PD_GMAC]		= DOMAIN_PX30(10, 10, 6, false),
-+	[PX30_PD_MMC_NAND]	= DOMAIN_PX30(11, 11, 5, false),
-+	[PX30_PD_VPU]		= DOMAIN_PX30(12, 12, 14, false),
-+	[PX30_PD_VO]		= DOMAIN_PX30(13, 13, 7, false),
-+	[PX30_PD_VI]		= DOMAIN_PX30(14, 14, 8, false),
-+	[PX30_PD_GPU]		= DOMAIN_PX30(15, 15, 2, false),
-+};
-+
- static const struct rockchip_domain_info rk3036_pm_domains[] = {
- 	[RK3036_PD_MSCH]	= DOMAIN_RK3036(14, 23, 30, true),
- 	[RK3036_PD_CORE]	= DOMAIN_RK3036(13, 17, 24, false),
-@@ -811,6 +826,17 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	[RK3399_PD_SDIOAUDIO]	= DOMAIN_RK3399(31, 31, 29, true),
- };
- 
-+static const struct rockchip_pmu_info px30_pmu = {
-+	.pwr_offset = 0x18,
-+	.status_offset = 0x20,
-+	.req_offset = 0x64,
-+	.idle_offset = 0x6c,
-+	.ack_offset = 0x6c,
-+
-+	.num_domains = ARRAY_SIZE(px30_pm_domains),
-+	.domain_info = px30_pm_domains,
-+};
-+
- static const struct rockchip_pmu_info rk3036_pmu = {
- 	.req_offset = 0x148,
- 	.idle_offset = 0x14c,
-@@ -915,6 +941,10 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 
- static const struct of_device_id rockchip_pm_domain_dt_match[] = {
- 	{
-+		.compatible = "rockchip,px30-power-controller",
-+		.data = (void *)&px30_pmu,
-+	},
-+	{
- 		.compatible = "rockchip,rk3036-power-controller",
- 		.data = (void *)&rk3036_pmu,
- 	},
--- 
-1.9.1
+> Bindings document h/w not drivers.
+
+> > +
+> > +One of the 'special' feature of this infrastructure is that Linux
+doesn't
+
+> Bindings are not just for Linux.
+
+> > +necessary 'own' all the clocks on the SoC, some other OS runs on
+> > +the Cortex-M3 core and that OS can access and claim it's own clocks.
+
+> How is this relevant to the binding?
+
+Well you just said it, if the binding is not just for linux, it's probably
+a good idea to mention it somewhere since I can promise you it's *not*
+documented in the hardware manual. Whatever this binding is for, it's
+relevant to point out it is different from the other clock drivers in the
+same directory... ?
+
+
+> > +
+> > +Required Properties:
+> > +
+> > +  - compatible: Must be
+> > +    - "renesas,r9a06g032-clocks" for the RZ/N1D
+> > +    and "renesas,rzn1-clocks" as a fallback.
+
+> Is "clocks" how the chip reference manual refers to this block?
+
+No, the block is called 'sysctrl' and has tons of other stuff in there.
+I've tried multiple times to get a 'sysctrl' driver in the previous
+versions of the patch, in various shape or form, and I can't because I'd be
+supposed to 'document' binding for stuff that has no code, no purpose, no
+testing, and have all wildly different topics. So, after some more
+lengthily discussion with Geert, we've decided to make the 'primary'
+feature of that block (clocks) as a driver, and see from there onward.
+
+Thanks for all the other comments, all taken onboard for next version!
+Michel
+
+
+> > +  - reg: Base address and length of the memory resource used by the
+driver
+> > +  - #clock-cells: Must be 1
+> > +
+> > +Examples
+> > +--------
+> > +
+> > +  - Clock driver device node:
+> > +
+> > +     clock: clocks@4000c000 {
+
+> clock-controller@...
+
+> > +             compatible = "renesas,r9a06g032-clocks",
+> > +                             "renesas,rzn1-clocks";
+> > +             reg = <0x4000c000 0x1000>;
+> > +             status = "okay";
+
+> Don't show status in examples. (Plus, I doubt you ever want to have this
+> disabled, so you don't need the property in your dts files either).
+
+> > +             #clock-cells = <1>;
+> > +     };
+> > +
+> > +
+> > +  - Other drivers can use the clocks as in:
+
+> s/drivers/nodes/
+
+> > +
+> > +     uart0: serial@40060000 {
+> > +             compatible = "snps,dw-apb-uart";
+> > +             reg = <0x40060000 0x400>;
+> > +             interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> > +             reg-shift = <2>;
+> > +             reg-io-width = <4>;
+> > +             clocks = <&clock RZN1_CLK_UART0>;
+> > +             clock-names = "baudclk";
+> > +     };
+> > +    Note the use of RZN1_CLK_UART0 -- these constants are declared in
+> > +    the rzn1-clocks.h header file. These are not hardware based
+constants
+> > +    and are Linux specific.
+
+> No, they are not Linux specific. They are part of the DT ABI.
+
+> While it is not a requirement to base them on some h/w numbering, it is
+> preferred if you can. That usually only works if you can base them on
+> bit positions or register offsets.
+
+> Rob
