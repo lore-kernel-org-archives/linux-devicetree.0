@@ -1,46 +1,77 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v2 1/3] input: touchscreen: edt-ft5x06: don't make device
- a wakeup source by default
-Date: Wed, 23 May 2018 10:27:48 +0200
-Message-ID: <52c1cd13-3386-8f70-aaf2-e5f4b19fd1e6@zonque.org>
-References: <20180517090552.5704-1-daniel@zonque.org>
- <20180517090552.5704-2-daniel@zonque.org>
- <20180522175413.GA24850@rob-hp-laptop>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Wed, 23 May 2018 09:29:08 +0100
+Message-ID: <20180523082908.GB4828@sirena.org.uk>
+References: <41d5df73ddac772551d2966e0752bb0c357b1ded.1526088081.git.collinsd@codeaurora.org>
+ <CAD=FV=XegPeFR8pdZM-YiBBJjrbej=C+2biBt4zJKnE90uTYZA@mail.gmail.com>
+ <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org>
+ <CAD=FV=U-QOQekUHj=ck57YJbTFdFjCAWr4t2A92x+fCNf+yV9A@mail.gmail.com>
+ <dc1fbe9c-8973-1c4d-0fbd-809c1ec0a6be@codeaurora.org>
+ <CAD=FV=XfSGs14VB464cvMGDNwGS4yvSXjN8itZLffm+Sj-D=ww@mail.gmail.com>
+ <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org>
+ <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
+ <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org>
+ <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522175413.GA24850@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, kernel@pengutronix.de, linux-input@vger.kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, May 22, 2018 07:54 PM, Rob Herring wrote:
-> On Thu, May 17, 2018 at 11:05:50AM +0200, Daniel Mack wrote:
->> Allow configuring the device as wakeup source through device properties, as
->> not all platforms want to wake up on touch screen activity.
->>
->> The I2C core automatically reads the "wakeup-source" DT property to
->> configure a device's wakeup capability, and board supports files can set
->> I2C_CLIENT_WAKE in the flags.
-> 
-> This will break wake-up on working systems. Looks like mostly i.MX, but
-> there's one AM437x board. If that board doesn't care, then it is up to
-> Shawn.
 
-I added the property to the dts files, but as Dmitry pointed out, I 
-missed some. Sorry for that.
+--H1spWtNR+x+ondvy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, May 22, 2018 at 05:08:45PM -0700, Doug Anderson wrote:
 
-Thanks,
-Daniel
+> So one client's vote for a voltage continues to be in effect even if
+> that client votes to have the regulator disabled?  That seems
+> fundamentally broken in RPMh.  I guess my take would be to work around
+
+It's arguable either way - you could say that the client gets to specify
+a safe range at all times or you could say that the machine constraints
+should cover all cases where the hardware is idling.  Of course RPMh
+is missing anything like the machine constraints (as we can see from all
+the fixing up of undesirable hard coding we have to do) so it's kind of
+pushed towards the first case.
+
+> >> A) Turn off VMMC and VQMMC
+> >> B) Program VMMC and VQMMC to defaults
+> >> C) Turn on VMMC and VQMMC
+
+> >> ...right now we bootup and pretend to Linux that VMMC and VQMMC start
+> >> off, so step A) will be no-op.  Sigh.
+
+> > Step A) would not work because the regulator's use_count would be 0 and
+> > regulator_disable() can only be called successfully if use_count > 0.  The
+> > call would have no impact and it would return an error.
+
+> Are you sure regulator_force_disable() won't do the trick on most
+> boards (which will report the regulator being enabled at bootup)?  I
+> haven't tried it, but it seems like it might.
+
+It does mean that things will go wrong if the regulator is shared.
+
+--H1spWtNR+x+ondvy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsFJlMACgkQJNaLcl1U
+h9DDuQf+LqojdX4Kf5LOlLl6Y8kajKuiwIsdkNPtMsadit8Pr7L/0QQsSaY4haiX
+a49Bd610TYihV89EUS1KM/SxFbqqpvfhMN0vdYn9Txy7ysCjo5eJGpdoiFHaZul7
+dLHn39zxKPdfcAJrNAJ084ZM4Yn2Qe3foD26yq63Gp0CueSYjzf2yO7knWEMPDDO
+VrTmjuMN2FJjdw4fP+QVhazikQnupACvbx3EykmuekymxXvGdEdgg1wBjQdfdvw6
+oiSBFRB96KrIk392N07JqJ9OPEhMYZGrbzP7/wD4x9ABhOrIL66x2xk3KMsq8WKs
+U3qA3uBseAFOZboOt4PZcV8RsvFn9A==
+=VPXr
+-----END PGP SIGNATURE-----
+
+--H1spWtNR+x+ondvy--
