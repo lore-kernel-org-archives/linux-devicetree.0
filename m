@@ -1,38 +1,46 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH] arm64: dts: stingray: Add otp device node
-Date: Wed, 23 May 2018 13:17:10 -0700
-Message-ID: <1527106630-4760-1-git-send-email-scott.branden@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Scott Branden <scott.branden@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: msm8916: fix Coresight ETF graph connections
+Date: Wed, 23 May 2018 15:29:29 -0500
+Message-ID: <CAL_JsqL8qBiJUMyUEcih07UoFSAghn6Amfo8OfY-pKU-QX2_mw@mail.gmail.com>
+References: <20180508150952.24562-1-robh@kernel.org>
+ <20180508150952.24562-3-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180508150952.24562-3-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add otp device node for Stingray SOC.
+On Tue, May 8, 2018 at 10:09 AM, Rob Herring <robh@kernel.org> wrote:
+> The ETF input should be connected to the funnel output, and the ETF
+> output should be connected to the replicator input. The labels are wrong
+> and these got swapped:
+>
+> Warning (graph_endpoint): /soc/funnel@821000/ports/port@8/endpoint: graph connection to node '/soc/etf@825000/ports/port@1/endpoint' is not bidirectional
+> Warning (graph_endpoint): /soc/replicator@824000/ports/port@2/endpoint: graph connection to node '/soc/etf@825000/ports/port@0/endpoint' is not bidirectional
+>
+> Fixes: 7c10da373698 ("arm64: dts: qcom: Add msm8916 CoreSight components")
+> Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Fixes: 2fa9e9e29ea2 ("arm64: dts: Add GPIO DT nodes for Stingray SOC")
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Ping. Still seeing warnings in -next for these.
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 99aaff0..6013478 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -258,6 +258,13 @@
- 
- 		#include "stingray-clock.dtsi"
- 
-+		otp: otp@1c400 {
-+			compatible = "brcm,ocotp-v2";
-+			reg = <0x0001c400 0x68>;
-+			brcm,ocotp-size = <2048>;
-+			status = "okay";
-+		};
-+
- 		gpio_crmu: gpio@24800 {
- 			compatible = "brcm,iproc-gpio";
- 			reg = <0x00024800 0x4c>;
--- 
-2.5.0
+Rob
