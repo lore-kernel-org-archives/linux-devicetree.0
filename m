@@ -1,87 +1,159 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 8/8] dt-bindings: stm32: add compatible for syscon
-Date: Wed, 23 May 2018 09:47:42 -0500
-Message-ID: <CAL_JsqL1F7frrfbBOVeoaZc-C=iNKzUB0J9ggpoSKO0o4aGOCw@mail.gmail.com>
-References: <1526890046-10565-1-git-send-email-christophe.roullier@st.com>
- <1526890046-10565-9-git-send-email-christophe.roullier@st.com>
- <20180522172238.GA26145@rob-hp-laptop> <4f6941a0-4b41-f2db-52b1-d45aa7287fa2@st.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2 2/5] gpio: syscon: Add gpio-syscon for rockchip
+Date: Wed, 23 May 2018 17:12:10 +0200
+Message-ID: <1685755.J6GI985WX3@diego>
+References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn> <6ffb43dc-55a5-14eb-eb18-3a731cdaf424@t-chip.com.cn> <CAL_Jsq+_QEBWdxW=J4oVGWeokc-+nMzxzX_pgCayaxg-ehivfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4f6941a0-4b41-f2db-52b1-d45aa7287fa2@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Christophe ROULLIER <christophe.roullier@st.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+_QEBWdxW=J4oVGWeokc-+nMzxzX_pgCayaxg-ehivfQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Levin Du <djw@t-chip.com.cn>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 4:32 AM, Christophe ROULLIER
-<christophe.roullier@st.com> wrote:
-> On 05/22/2018 07:22 PM, Rob Herring wrote:
->> On Mon, May 21, 2018 at 10:07:26AM +0200, Christophe Roullier wrote:
->>> This patch describes syscon DT bindings.
->>>
->>> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
->>> ---
->>>   Documentation/devicetree/bindings/arm/stm32.txt | 5 +++++
->>>   1 file changed, 5 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
->>> index 6808ed9..e46ebad 100644
->>> --- a/Documentation/devicetree/bindings/arm/stm32.txt
->>> +++ b/Documentation/devicetree/bindings/arm/stm32.txt
->>> @@ -8,3 +8,8 @@ using one of the following compatible strings:
->>>     st,stm32f746
->>>     st,stm32h743
->>>     st,stm32mp157
->>> +
->>> +Required nodes:
->>> +- syscon: the soc bus node must have a system controller node pointing to the
->>> +  global control registers, with the compatible string
->>> +  "st,stm32mp157-syscfg", "syscon";
->>
->> Please don't mix soc/board bindings with other nodes. So perhaps
->> stm32-syscon.txt.
->>
->> Rob
->>
->
-> Hi Rob,
->
-> Is it ok for you with this tree file:
+Hi Rob, Levin,
 
-Yes, one nit below.
+sorry for being late to the party.
 
->
-> Documentation/devicetree/bindings/arm/stm32/stm32.txt
-> Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
->         With stm32-syscon.txt:
->
-> ---------------------------------------------------
-> STMicroelectronics STM32 Platforms System Controller
->
-> Properties:
->   - compatible : should contain two values. First value must be :
->                 - " st,stm32mp157-syscfg " - for stm32mp157 based SoCs,
->                 second value must be always "syscon".
->   - reg : offset and length of the register set.
->
-> Example:
->         syscfg: system-config@50020000 {
+Am Mittwoch, 23. Mai 2018, 16:43:07 CEST schrieb Rob Herring:
+> On Tue, May 22, 2018 at 9:02 PM, Levin Du <djw@t-chip.com.cn> wrote:
+> > On 2018-05-23 2:02 AM, Rob Herring wrote:
+> >> On Fri, May 18, 2018 at 11:52:05AM +0800, djw@t-chip.com.cn wrote:
+> >>> From: Levin Du <djw@t-chip.com.cn>
+> >>> 
+> >>> Some GPIOs sit in the GRF_SOC_CON registers of Rockchip SoCs,
+> >>> which do not belong to the general pinctrl.
+> >>> 
+> >>> Adding gpio-syscon support makes controlling regulator or
+> >>> LED using these special pins very easy by reusing existing
+> >>> drivers, such as gpio-regulator and led-gpio.
+> >>> 
+> >>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+> >>> 
+> >>> ---
+> >>> 
+> >>> Changes in v2:
+> >>> - Rename gpio_syscon10 to gpio_mute in doc
+> >>> 
+> >>> Changes in v1:
+> >>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
+> >>> - Add doc rockchip,gpio-syscon.txt
+> >>> 
+> >>>   .../bindings/gpio/rockchip,gpio-syscon.txt         | 41
+> >>> 
+> >>> ++++++++++++++++++++++
+> >>> 
+> >>>   drivers/gpio/gpio-syscon.c                         | 30
+> >>> 
+> >>> ++++++++++++++++
+> >>> 
+> >>>   2 files changed, 71 insertions(+)
+> >>>   create mode 100644
+> >>> 
+> >>> Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+> >>> 
+> >>> diff --git
+> >>> a/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+> >>> b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+> >>> new file mode 100644
+> >>> index 0000000..b1b2a67
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+> >>> @@ -0,0 +1,41 @@
+> >>> +* Rockchip GPIO support for GRF_SOC_CON registers
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible: Should contain "rockchip,gpio-syscon".
+> >>> +- gpio-controller: Marks the device node as a gpio controller.
+> >>> +- #gpio-cells: Should be two. The first cell is the pin number and
+> >>> +  the second cell is used to specify the gpio polarity:
+> >>> +    0 = Active high,
+> >>> +    1 = Active low.
+> >> 
+> >> There's no need for this child node. Just make the parent node a gpio
+> >> controller.
+> >> 
+> >> Rob
+> > 
+> > Hi Rob, it is not clear to me. Do you suggest that the grf node should be
+> > a
+> > gpio controller,
+> > like below?
+> > 
+> > +    grf: syscon at ff100000 {
+> > +        compatible = "rockchip,gpio-syscon", "rockchip,rk3328-grf",
+> > "syscon", "simple-mfd";
+> 
+> Yes, but drop "rockchip,gpio-syscon" and "simple-mfd".
 
-syscon@...
+I would disagree quite a bit here. The grf are the "general register files",
+a bunch of registers used for quite a lot of things, and so it seems
+among other users, also a gpio-controller for some more random pins
+not controlled through the regular gpio controllers.
 
->                 compatible = "st,stm32mp157-syscfg", "syscon";
->                 reg = <0x50020000 0x400>;
->         };
-> ---------------------------------------------------
->
-> Do we need to update also all MCU family (stm32f4, stm32h7, stm32f7)
-> property to be coherent ?
+For a more fully stocked grf, please see
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/rk3288.dtsi#n855
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/rockchip/rk3399.dtsi#n1338
 
-Yes, if they all have the same or similar syscfg block.
+So the gpio controller should definitly also be a subnode.
 
->
-> Thanks for your feedback.
->
-> Christophe.
->
+The gpio in question is called "mute", so I'd think the gpio-syscon driver
+should just define a "rockchip,rk3328-gpio-mute" compatible and contain
+all the register voodoo in the driver itself and not define it in the dt.
+
+So it should probably look like
+
+grf: syscon at ff100000 {
+        compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
+
+	[all the other syscon sub-devices]
+
+	gpio_mute: gpio-mute {
+		compatible = "rockchip,rk3328-gpio-mute";
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+
+	[more other syscon sub-devices]
+};
+
+
+Heiko	
+	
+
+
+
+> > +        //...
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
+> > +        gpio,syscon-dev = <&grf 0x0428 0>;
+> 
+> And drop this. It may be used in the kernel, but it is not a
+> documented property.
+> 
+> > +    };
+> > 
+> > or just reserve the following case in the doc?
+> > 
+> > +    grf: syscon at ff100000 {
+> > +        compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
+> > +        //...
+> > +    };
+> > +
+> > +    gpio_mute: gpio-mute {
+> > +        compatible = "rockchip,gpio-syscon";
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
+> > +        gpio,syscon-dev = <&grf 0x0428 0>;
+> > +    };
+> > 
+> > 
+> > Thanks
+> > Levin
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
