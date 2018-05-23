@@ -1,86 +1,53 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 2/2] mtd: partitions: use DT info for parsing partitions
- with specified type
-Date: Wed, 23 May 2018 20:24:08 +0200
-Message-ID: <20180523202408.632edefa@bbrezillon>
-References: <20180523171448.26234-1-zajec5@gmail.com>
- <20180523171448.26234-2-zajec5@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: soc: update MT6797 power domain
+Date: Wed, 23 May 2018 13:27:59 -0500
+Message-ID: <20180523182759.GA12966@rob-hp-laptop>
+References: <1526890186-16219-1-git-send-email-kaichieh.chuang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180523171448.26234-2-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1526890186-16219-1-git-send-email-kaichieh.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: KaiChieh Chuang <kaichieh.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMyBNYXkgMjAxOCAxOToxNDo0OCArMDIwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
-NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Cj4gCj4gVGhpcyBzdXBwb3J0cyBuZXN0ZWQgcGFydGl0aW9ucyBpbiBhIERULiBJZiBz
-ZWxlY3RlZCBwYXJ0aXRpb24gaGFzIGEKPiAiY29tcGF0aWJsZSIgcHJvcGVydHkgc3BlY2lmaWVk
-IGl0IHdpbGwgYmUgcGFyc2VkIGxvb2tpbmcgZm9yCj4gc3VicGFydGl0aW9ucy4KPiAKPiBTaWdu
-ZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gLS0tCj4gIGRy
-aXZlcnMvbXRkL210ZHBhcnQuYyB8IDMzICsrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0t
-LQo+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL210ZHBhcnQuYyBiL2RyaXZlcnMvbXRkL210ZHBh
-cnQuYwo+IGluZGV4IGY4ZDNhMDE1Y2RhZC4uNTJlMmNiMzVmYzc5IDEwMDY0NAo+IC0tLSBhL2Ry
-aXZlcnMvbXRkL210ZHBhcnQuYwo+ICsrKyBiL2RyaXZlcnMvbXRkL210ZHBhcnQuYwo+IEBAIC0z
-MjIsMjIgKzMyMiw2IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBmcmVlX3BhcnRpdGlvbihzdHJ1Y3Qg
-bXRkX3BhcnQgKnApCj4gIAlrZnJlZShwKTsKPiAgfQo+ICAKPiAtLyoqCj4gLSAqIG10ZF9wYXJz
-ZV9wYXJ0IC0gcGFyc2UgTVREIHBhcnRpdGlvbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25zCj4g
-LSAqCj4gLSAqIEBzbGF2ZTogcGFydCB0aGF0IGlzIHN1cHBvc2VkIHRvIGJlIGEgY29udGFpbmVy
-IGFuZCBzaG91bGQgYmUgcGFyc2VkCj4gLSAqIEB0eXBlczogTlVMTC10ZXJtaW5hdGVkIGFycmF5
-IHdpdGggbmFtZXMgb2YgcGFydGl0aW9uIHBhcnNlcnMgdG8gdHJ5Cj4gLSAqCj4gLSAqIFNvbWUg
-cGFydGl0aW9ucyBhcmUga2luZCBvZiBjb250YWluZXJzIHdpdGggZXh0cmEgc3VicGFydGl0aW9u
-cyAodm9sdW1lcykuCj4gLSAqIFRoZXJlIGNhbiBiZSB2YXJpb3VzIGZvcm1hdHMgb2Ygc3VjaCBj
-b250YWluZXJzLiBUaGlzIGZ1bmN0aW9uIHRyaWVzIHRvIHVzZQo+IC0gKiBzcGVjaWZpZWQgcGFy
-c2VycyB0byBhbmFseXplIGdpdmVuIHBhcnRpdGlvbiBhbmQgcmVnaXN0ZXJzIGZvdW5kCj4gLSAq
-IHN1YnBhcnRpdGlvbnMgb24gc3VjY2Vzcy4KPiAtICovCj4gLXN0YXRpYyBpbnQgbXRkX3BhcnNl
-X3BhcnQoc3RydWN0IG10ZF9wYXJ0ICpzbGF2ZSwgY29uc3QgY2hhciAqY29uc3QgKnR5cGVzKQo+
-IC17Cj4gLQlyZXR1cm4gcGFyc2VfbXRkX3BhcnRpdGlvbnMoJnNsYXZlLT5tdGQsIHR5cGVzLCBO
-VUxMKTsKPiAtfQo+IC0KPiAgc3RhdGljIHN0cnVjdCBtdGRfcGFydCAqYWxsb2NhdGVfcGFydGl0
-aW9uKHN0cnVjdCBtdGRfaW5mbyAqcGFyZW50LAo+ICAJCQljb25zdCBzdHJ1Y3QgbXRkX3BhcnRp
-dGlvbiAqcGFydCwgaW50IHBhcnRubywKPiAgCQkJdWludDY0X3QgY3VyX29mZnNldCkKPiBAQCAt
-NzM1LDggKzcxOSw4IEBAIGludCBhZGRfbXRkX3BhcnRpdGlvbnMoc3RydWN0IG10ZF9pbmZvICpt
-YXN0ZXIsCj4gIAo+ICAJCWFkZF9tdGRfZGV2aWNlKCZzbGF2ZS0+bXRkKTsKPiAgCQltdGRfYWRk
-X3BhcnRpdGlvbl9hdHRycyhzbGF2ZSk7Cj4gLQkJaWYgKHBhcnRzW2ldLnR5cGVzKQo+IC0JCQlt
-dGRfcGFyc2VfcGFydChzbGF2ZSwgcGFydHNbaV0udHlwZXMpOwo+ICsJCS8qIExvb2sgZm9yIHN1
-YnBhcnRpdGlvbnMgKi8KPiArCQlwYXJzZV9tdGRfcGFydGl0aW9ucygmc2xhdmUtPm10ZCwgcGFy
-dHNbaV0udHlwZXMsIE5VTEwpOwo+ICAKPiAgCQljdXJfb2Zmc2V0ID0gc2xhdmUtPm9mZnNldCAr
-IHNsYXZlLT5tdGQuc2l6ZTsKPiAgCX0KPiBAQCAtODEyLDYgKzc5NiwxMiBAQCBzdGF0aWMgY29u
-c3QgY2hhciAqIGNvbnN0IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXNbXSA9IHsKPiAgCU5VTEwKPiAg
-fTsKPiAgCj4gKy8qIENoZWNrIERUIG9ubHkgd2hlbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25z
-LiAqLwo+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGRlZmF1bHRfc3VicGFydGl0aW9uX3R5
-cGVzW10gPSB7Cj4gKwkib2ZwYXJ0IiwKPiArCU5VTEwKPiArfTsKPiArCj4gIHN0YXRpYyBpbnQg
-bXRkX3BhcnRfZG9fcGFyc2Uoc3RydWN0IG10ZF9wYXJ0X3BhcnNlciAqcGFyc2VyLAo+ICAJCQkg
-ICAgIHN0cnVjdCBtdGRfaW5mbyAqbWFzdGVyLAo+ICAJCQkgICAgIHN0cnVjdCBtdGRfcGFydGl0
-aW9ucyAqcHBhcnRzLAo+IEBAIC04ODIsNyArODcyLDkgQEAgc3RhdGljIGludCBtdGRfcGFydF9v
-Zl9wYXJzZShzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwKPiAgCWNvbnN0IGNoYXIgKmZpeGVkID0g
-ImZpeGVkLXBhcnRpdGlvbnMiOwo+ICAJaW50IHJldCwgZXJyID0gMDsKPiAgCj4gLQlucCA9IG9m
-X2dldF9jaGlsZF9ieV9uYW1lKG10ZF9nZXRfb2Zfbm9kZShtYXN0ZXIpLCAicGFydGl0aW9ucyIp
-Owo+ICsJbnAgPSBtdGRfZ2V0X29mX25vZGUobWFzdGVyKTsKPiArCWlmICghbXRkX2lzX3BhcnRp
-dGlvbihtYXN0ZXIpKQo+ICsJCW5wID0gb2ZfZ2V0X2NoaWxkX2J5X25hbWUobnAsICJwYXJ0aXRp
-b25zIik7Cj4gIAlvZl9wcm9wZXJ0eV9mb3JfZWFjaF9zdHJpbmcobnAsICJjb21wYXRpYmxlIiwg
-cHJvcCwgY29tcGF0KSB7Cj4gIAkJcGFyc2VyID0gbXRkX3BhcnRfZ2V0X2NvbXBhdGlibGVfcGFy
-c2VyKGNvbXBhdCk7Cj4gIAkJaWYgKCFwYXJzZXIpCj4gQEAgLTk0NSw3ICs5MzcsOCBAQCBpbnQg
-cGFyc2VfbXRkX3BhcnRpdGlvbnMoc3RydWN0IG10ZF9pbmZvICptYXN0ZXIsIGNvbnN0IGNoYXIg
-KmNvbnN0ICp0eXBlcywKPiAgCWludCByZXQsIGVyciA9IDA7Cj4gIAo+ICAJaWYgKCF0eXBlcykK
-PiAtCQl0eXBlcyA9IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXM7Cj4gKwkJdHlwZXMgPSBtdGRfaXNf
-cGFydGl0aW9uKG1hc3RlcikgPyBkZWZhdWx0X3N1YnBhcnRpdGlvbl90eXBlcyA6Cj4gKwkJCWRl
-ZmF1bHRfbXRkX3BhcnRfdHlwZXM7CgpIbSwgdGhhdCBtZWFucyB0aGUgc3VicGFydHMgaW5oZXJp
-dCB0aGUgcGFyc2VyIHR5cGVzIGZyb20gdGhlaXIgcGFyZW50CmlmIHR5cGVzICE9IE5VTEw/IElz
-IHRoYXQgcmVhbGx5IHdoYXQgd2Ugd2FudD8gQW5kIGlmIHRoYXQncyB3aGF0IHdlCndhbnQsIHdo
-eSBkb24ndCB3ZSBkbyB0aGUgc2FtZSBmb3IgdHlwZXMgPT0gTlVMTD8KCj4gIAo+ICAJZm9yICgg
-OyAqdHlwZXM7IHR5cGVzKyspIHsKPiAgCQkvKgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5n
-IGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1t
-dGQvCg==
+On Mon, May 21, 2018 at 04:09:46PM +0800, KaiChieh Chuang wrote:
+> remove unused power domain in mt6797 and re-index
+> 
+> Signed-off-by: KaiChieh Chuang <kaichieh.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  include/dt-bindings/power/mt6797-power.h | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/include/dt-bindings/power/mt6797-power.h b/include/dt-bindings/power/mt6797-power.h
+> index a60c1d8..f96c4e2 100644
+> --- a/include/dt-bindings/power/mt6797-power.h
+> +++ b/include/dt-bindings/power/mt6797-power.h
+> @@ -20,11 +20,6 @@
+>  #define MT6797_POWER_DOMAIN_MM			3
+>  #define MT6797_POWER_DOMAIN_AUDIO		4
+>  #define MT6797_POWER_DOMAIN_MFG_ASYNC		5
+> -#define MT6797_POWER_DOMAIN_MFG		6
+> -#define MT6797_POWER_DOMAIN_MFG_CORE0		7
+> -#define MT6797_POWER_DOMAIN_MFG_CORE1		8
+> -#define MT6797_POWER_DOMAIN_MFG_CORE2		9
+> -#define MT6797_POWER_DOMAIN_MFG_CORE3		10
+> -#define MT6797_POWER_DOMAIN_MJC		11
+> +#define MT6797_POWER_DOMAIN_MJC		6
+
+This is an ABI. You can't just change the numbering. You'll cause a 
+mismatch between existing dtb and new kernel.
+
+Rob
