@@ -1,67 +1,137 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 24/24] drm/lima: add makefile and kconfig
-Date: Wed, 23 May 2018 12:26:27 -0500
-Message-ID: <20180523172627.GD17409@rob-hp-laptop>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180518092815.25280-25-yuq825@gmail.com>
- <7e0835f9-a368-294d-9483-91513211cf24@denx.de>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v11 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Wed, 23 May 2018 20:42:15 +0300
+Message-ID: <004301d3f2bd$66cf03a0$346d0ae0$@codeaurora.org>
+References: <1527079139-3558-1-git-send-email-ilialin@codeaurora.org> <1527079139-3558-2-git-send-email-ilialin@codeaurora.org> <1ec7645d-72b6-5a1a-48c3-831a3c484a0e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <7e0835f9-a368-294d-9483-91513211cf24@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Vasut <marex@denx.de>, Qiang Yu <yuq825@gmail.com>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel@lists.freedesktop.org, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1ec7645d-72b6-5a1a-48c3-831a3c484a0e@arm.com>
+Content-Language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Sudeep Holla' <sudeep.holla@arm.com>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMjMsIDIwMTggYXQgMDc6MTY6NDFQTSArMDIwMCwgTWFyZWsgVmFzdXQgd3Jv
-dGU6Cj4gT24gMDUvMTgvMjAxOCAxMToyOCBBTSwgUWlhbmcgWXUgd3JvdGU6Cj4gPiBGcm9tOiBM
-aW1hIFByb2plY3QgRGV2ZWxvcGVycyA8ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZz4K
-PiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogUWlhbmcgWXUgPHl1cTgyNUBnbWFpbC5jb20+Cj4gPiBT
-aWduZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+Cj4g
-PiBTaWduZWQtb2ZmLWJ5OiBTaW1vbiBTaGllbGRzIDxzaW1vbkBsaW5lYWdlb3Mub3JnPgo+ID4g
-U2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiA+IC0tLQo+
-ID4gIGRyaXZlcnMvZ3B1L2RybS9LY29uZmlnICAgICAgIHwgIDIgKysKPiA+ICBkcml2ZXJzL2dw
-dS9kcm0vTWFrZWZpbGUgICAgICB8ICAxICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9LY29u
-ZmlnICB8ICA5ICsrKysrKysrKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL01ha2VmaWxlIHwg
-MTkgKysrKysrKysrKysrKysrKysrKwo+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9u
-cygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9LY29uZmln
-Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL01ha2VmaWxlCj4g
-PiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyBiL2RyaXZlcnMvZ3B1
-L2RybS9LY29uZmlnCj4gPiBpbmRleCBkZWVlZmE3YTE3NzMuLmYwMGQ1MjllZTAzNCAxMDA2NDQK
-PiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCj4gPiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vS2NvbmZpZwo+ID4gQEAgLTI4OSw2ICsyODksOCBAQCBzb3VyY2UgImRyaXZlcnMvZ3B1L2Ry
-bS9wbDExMS9LY29uZmlnIgo+ID4gIAo+ID4gIHNvdXJjZSAiZHJpdmVycy9ncHUvZHJtL3R2ZTIw
-MC9LY29uZmlnIgo+ID4gIAo+ID4gK3NvdXJjZSAiZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZp
-ZyIKPiA+ICsKPiA+ICAjIEtlZXAgbGVnYWN5IGRyaXZlcnMgbGFzdAo+ID4gIAo+ID4gIG1lbnVj
-b25maWcgRFJNX0xFR0FDWQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmls
-ZSBiL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZQo+ID4gaW5kZXggNTAwOTNmZjQ0NzliLi5hYmE2
-ODZlNDFkNmIgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKPiA+ICsr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZQo+ID4gQEAgLTEwMywzICsxMDMsNCBAQCBvYmot
-JChDT05GSUdfRFJNX01YU0ZCKQkrPSBteHNmYi8KPiA+ICBvYmotJChDT05GSUdfRFJNX1RJTllE
-Uk0pICs9IHRpbnlkcm0vCj4gPiAgb2JqLSQoQ09ORklHX0RSTV9QTDExMSkgKz0gcGwxMTEvCj4g
-PiAgb2JqLSQoQ09ORklHX0RSTV9UVkUyMDApICs9IHR2ZTIwMC8KPiA+ICtvYmotJChDT05GSUdf
-RFJNX0xJTUEpICArPSBsaW1hLwo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9saW1h
-L0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vbGltYS9LY29uZmlnCj4gPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi40Y2U5YWMyZTgyMDQKPiA+IC0tLSAvZGV2
-L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9saW1hL0tjb25maWcKPiA+IEBAIC0wLDAg
-KzEsOSBAQAo+ID4gKwo+ID4gK2NvbmZpZyBEUk1fTElNQQo+ID4gKyAgICAgICB0cmlzdGF0ZSAi
-TElNQSAoRFJNIHN1cHBvcnQgZm9yIEFSTSBNYWxpIDQwMC80NTAgR1BVKSIKPiA+ICsgICAgICAg
-ZGVwZW5kcyBvbiBEUk0KPiA+ICsgICAgICAgZGVwZW5kcyBvbiBBUkNIX1NVTlhJIHx8IEFSQ0hf
-Uk9DS0NISVAgfHwgQVJDSF9FWFlOT1MgfHwgQVJDSF9NRVNPTgo+IAo+IFlvdSBjYW4gYWRkIEFS
-Q0hfWllOUU1QIGhlcmUgdG9vICwgaXQgaGFzIE1hbGkgNDAwIE1QMi4KCkJldHRlciB5ZXQsIGp1
-c3QgZHJvcCB0aGVtIGFsbCByYXRoZXIgdGhhbiBjb250aW51YWxseSBhZGRpbmcgdG8gdGhlIAps
-aXN0LgoKQnV0IGlmIHlvdSBrZWVwIGl0LCBhZGQgJ3x8IENPTVBJTEVfVEVTVCcuCgpSb2IKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+> -----Original Message-----
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> Sent: Wednesday, May 23, 2018 16:25
+> To: Ilia Lin <ilialin@codeaurora.org>; vireshk@kernel.org; nm@ti.com;
+> sboyd@kernel.org; robh@kernel.org; mark.rutland@arm.com;
+> rjw@rjwysocki.net; linux-pm@vger.kernel.org; devicetree@vger.kernel.org;
+> linux-kernel@vger.kernel.org
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Subject: Re: [PATCH v11 1/2] cpufreq: Add Kryo CPU scaling driver
+> 
+> 
+> 
+> On 23/05/18 13:38, Ilia Lin wrote:
+> > In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO
+> > processors, the CPU frequency subset and voltage value of each OPP
+> > varies based on the silicon variant in use. Qualcomm Process Voltage
+> > Scaling Tables defines the voltage and frequency value based on the
+> > msm-id in SMEM and speedbin blown in the efuse combination.
+> > The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the
+> > SoC to provide the OPP framework with required information.
+> > This is used to determine the voltage and frequency value for each OPP
+> > of
+> > operating-points-v2 table when it is parsed by the OPP framework.
+> >
+> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> > ---
+> >  drivers/cpufreq/Kconfig.arm          |  10 ++
+> >  drivers/cpufreq/Makefile             |   1 +
+> >  drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
+> >  drivers/cpufreq/qcom-cpufreq-kryo.c  | 181
+> > +++++++++++++++++++++++++++++++++++
+> >  4 files changed, 195 insertions(+)
+> >  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+> >
+> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> > index de55c7d..0bfd40e 100644
+> > --- a/drivers/cpufreq/Kconfig.arm
+> > +++ b/drivers/cpufreq/Kconfig.arm
+> > @@ -124,6 +124,16 @@ config ARM_OMAP2PLUS_CPUFREQ
+> >  	depends on ARCH_OMAP2PLUS
+> >  	default ARCH_OMAP2PLUS
+> >
+> > +config ARM_QCOM_CPUFREQ_KRYO
+> > +	bool "Qualcomm Kryo based CPUFreq"
+> > +	depends on QCOM_QFPROM
+> > +	depends on QCOM_SMEM
+> > +	select PM_OPP
+> > +	help
+> > +	  This adds the CPUFreq driver for Qualcomm Kryo SoC based boards.
+> > +
+> > +	  If in doubt, say N.
+> > +
+> 
+> Sorry but just noticed now, any reason why this can't be module. I can't
+> imagine any.
+
+I was asked previously to change this from tristate to bool.
+
+> 
+> [..]
+> 
+> > +static int qcom_cpufreq_kryo_probe(struct platform_device *pdev) {
+> > +	struct opp_table *opp_tables[NR_CPUS] = {0};
+> > +	struct platform_device *cpufreq_dt_pdev;
+> > +	enum _msm8996_version msm8996_version;
+> > +	struct nvmem_cell *speedbin_nvmem;
+> > +	struct device_node *np;
+> > +	struct device *cpu_dev;
+> 
+> [..]
+> 
+> > +
+> > +	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -
+> 1, NULL, 0);
+> > +	if (!IS_ERR(cpufreq_dt_pdev))
+> > +		return 0;
+> > +
+> > +	ret = PTR_ERR(cpufreq_dt_pdev);
+> > +	dev_err(cpu_dev, "Failed to register platform device\n");
+> > +
+> > +free_opp:
+> > +	for_each_possible_cpu(cpu) {
+> > +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
+> > +			break;
+> > +		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int __init qcom_cpufreq_kryo_init(void) {
+> > +	/*
+> > +	 * Since the driver depends on smem and nvmem drivers, which may
+> > +	 * return EPROBE_DEFER, all the real activity is done in the probe,
+> > +	 * which may be defered as well. The init here is only registering
+> > +	 * a platform device.
+> > +	 */
+> > +	platform_device_register_simple("qcom-cpufreq-kryo", -1, NULL, 0);
+> > +	return 0;
+> > +}
+> > +module_init(qcom_cpufreq_kryo_init);
+> 
+> Do you need this at all ? See below on how to eliminate the need for this.
+> 
+> > +
+> > +static struct platform_driver qcom_cpufreq_kryo_driver = {
+> > +	.probe = qcom_cpufreq_kryo_probe,
+> > +	.driver = {
+> > +		.name = "qcom-cpufreq-kryo",
+> > +	},
+> > +};
+> > +builtin_platform_driver(qcom_cpufreq_kryo_driver);
+> 
+> Use builtin_platform_driver_probe and remove qcom_cpufreq_kryo_init or
+> use module_platform_driver_probe if it can be module.
+> 
+> --
+> Regards,
+> Sudeep
