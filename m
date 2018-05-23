@@ -1,41 +1,28 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: v3hsk: add GEther support
-Date: Wed, 23 May 2018 11:18:55 +0200
-Message-ID: <20180523091854.iybdiv6lyuxcv4cw@verge.net.au>
-References: <a4230699-e46f-0782-e3b1-22d58b9033c8@cogentembedded.com>
- <7a853b57-747e-7536-89fe-2e0c847f58f4@cogentembedded.com>
- <20180522085220.vzffiwiwzixlvpkz@verge.net.au>
+Subject: Re: [PATCH v6 1/6] dt-bindings: arm: Document the RZN1D-DB board
+Date: Wed, 23 May 2018 11:20:24 +0200
+Message-ID: <20180523092023.uo3acbxutmvqodux@verge.net.au>
+References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1526983321-41949-2-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdXSGHg9P-MxCHr3h2NRTKAK79KSdf+cB+3a4+pQOvpmSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180522085220.vzffiwiwzixlvpkz@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAMuHMdXSGHg9P-MxCHr3h2NRTKAK79KSdf+cB+3a4+pQOvpmSQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 10:52:21AM +0200, Simon Horman wrote:
-> On Fri, May 18, 2018 at 10:46:19PM +0300, Sergei Shtylyov wrote:
-> > Define the V3H Starter Kit board dependent part of the GEther device node.
-> > 
-> > Based on the original (and large) patch by Vladimir Barinov.
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Wed, May 23, 2018 at 11:03:56AM +0200, Geert Uytterhoeven wrote:
+> On Tue, May 22, 2018 at 12:01 PM, Michel Pollet
+> <michel.pollet@bp.renesas.com> wrote:
+> > This documents the RZ/N1 bindings for the RZN1D-DB board.
+> >
+> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> This looks fine but I will wait to see if there are other reviews before
-> applying.
-> 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Applied.
+Thanks, applied.
