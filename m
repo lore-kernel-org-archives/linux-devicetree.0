@@ -1,131 +1,435 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
-Date: Wed, 23 May 2018 09:13:11 -0500
-Message-ID: <CAL_JsqJPUaQf01Ahrmba2WBAApMTKq6i6LCXe6PGbq-N5f8shA@mail.gmail.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
- <1523956215-28154-13-git-send-email-t-kristo@ti.com>
- <20180417092924.GB20335@flint.armlinux.org.uk>
- <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
- <20180417144913.GD5669@atomide.com>
- <43ff3894-a287-1558-687c-40f50712735c@ti.com>
- <20180522200100.GA23937@rob-hp-laptop>
- <243730d3-e7f3-584d-b5dd-491c2700cf11@ti.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Wed, 23 May 2018 16:18:10 +0200
+Message-ID: <20180523161810.0ed9fe80@bbrezillon>
+References: <cover.1526990589.git.stefan@agner.ch>
+        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <243730d3-e7f3-584d-b5dd-491c2700cf11@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tom Rini <trini@konsulko.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Frank Rowand <frowand.list@gmail.com>, "Mills, William" <wmills@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 12:55 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> On 22/05/18 23:01, Rob Herring wrote:
->>
->> On Mon, May 21, 2018 at 09:57:54AM +0300, Tero Kristo wrote:
->>>
->>> On 17/04/18 17:49, Tony Lindgren wrote:
->>>>
->>>> * Tero Kristo <t-kristo@ti.com> [180417 09:36]:
->>>>>
->>>>> In typical setup, you can boot a large number of different configs via:
->>>>>
->>>>> bootm 0x82000000#dra71-evm#nand#lcd-auo-g101evn01.0
->>>>>
->>>>> ... assuming the configs were named like that, and assuming they would
->>>>> be
->>>>> compatible with each other. The am57xx-evm example provided is better,
->>>>> as
->>>>> you can chain the different cameras to the available evm configs.
->>>>
->>>>
->>>> Why not just do it in the bootloader to put together the dtb?
->>>>
->>>> Then for external devices, you could just pass info on the
->>>> kernel cmdline with lcd=foo camera=bar if they cannot be
->>>> detected over I2C.
->>>
->>>
->>> (Added Linux ARM list to CC, this was not part of the original delivery.)
->>>
->>> Ok trying to resurrect this thread a bit. Is there any kind of consensus
->>> how
->>> things like this should be handled? Should we add the DT overlay files to
->>> kernel tree or not?
->>
->>
->> IMO, yes.
->>
->>> Should we add any kind of build infra to kernel tree, and at what level
->>> would this be? Just DT overlay file building support, and drop the FIT
->>> build
->>> support as was proposed in this RFC series or...?
->>
->>
->> I think I mentioned this already, but I expect that this is going to
->> cause a number of conversions of dtsi + dtsi -> dtb into base dts and
->> overlay(s) dts files. In doing so, we still need to be able to build the
->> original, full dtb.
->
->
-> So you mean like breaking apart the existing .dts files? Are there any plans
-> to get that done (I know the android folks talk about this but I don't like
-> their idea.) If we do the split, how are we going to determine which dts +
-> overlay files are required to get a specific DTB done? I actually wrote a
-> tool for this purpose which parses the FIT image configurations and
-> generates plain dtb files out of the info there if needed, but assuming FIT
-> is abandoned then what...?
+Hi Stefan,
 
-There aren't any plans that I'm aware of. I'm just assuming there are
-some cases in the tree. It would just be some additional build rules:
+On Tue, 22 May 2018 14:07:06 +0200
+Stefan Agner <stefan@agner.ch> wrote:
+> +
+> +struct tegra_nand {
+> +	void __iomem *regs;
+> +	struct clk *clk;
+> +	struct gpio_desc *wp_gpio;
+> +
+> +	struct nand_chip chip;
+> +	struct device *dev;
+> +
+> +	struct completion command_complete;
+> +	struct completion dma_complete;
+> +	bool last_read_error;
+> +
+> +	dma_addr_t data_dma;
+> +	void *data_buf;
+> +	dma_addr_t oob_dma;
+> +	void *oob_buf;
+> +
+> +	int cur_chip;
+> +};
 
-board-kit.dtb: soc-som.dtb expansion-board.dtbo
-  fdtoverlay -o $@ -i $^
+This struct should be split in 2 structures: one representing the NAND
+controller and one representing the NAND chip:
 
-We'd need to come up with some way to express the input and output
-files in a kbuild way. Perhaps similar to how multiple module files
-are done.
+struct tegra_nand_controller {
+	struct nand_hw_control base;
+	void __iomem *regs;
+	struct clk *clk;
+	struct device *dev;
+	struct completion command_complete;
+	struct completion dma_complete;
+	bool last_read_error;
+	int cur_chip;
+};
 
-Even if you are adding new platforms, having the above would still be
-good. It captures what base the overlays apply to and tests that
-applying actually works (rather than leaving that for the user to do
-in the bootloader). FIT images also have or need that information, so
-perhaps we can define a format that works as input for both kbuild and
-FIT images.
+struct tegra_nand {
+	struct nand_chip base;
+	dma_addr_t data_dma;
+	void *data_buf;
+	dma_addr_t oob_dma;
+	void *oob_buf;
+};
 
->>> U-boot can obviously parse the base DTB + overlay DTB:s into a single
->>> DTB,
->>> but this is somewhat clumsy approach and is relatively error prone to get
->>> it
->>> right.
->>
->>
->> Why? How is the kernel better?
->
->
-> I am mostly speaking about runtime applying of the overlays. If done build
-> time, it is obviously on same level. If you apply the base DTS + overlays
-> from u-boot prompt, it is not too much fun, and if there are any failures it
-> just won't work, but don't really tell you why not.
+> +
+> +static inline struct tegra_nand *to_tegra_nand(struct mtd_info *mtd)
+> +{
+> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +
+> +	return nand_get_controller_data(chip);
 
-Runtime, but still at boot time, right?
+then you can just do:
 
-How is the kernel going to have better error handling? Is libfdt error
-handling worse than the kernel's overlay code?
+	return container_of(chip, struct tegra_nand, base);
 
-I do think we need to standardize how we tell bootloaders what
-overlays to apply. I expect that we'll do that as part of EBBR spec[1]
-though that is not part of the immediate focus.
+> +}
+> +
+> +static int tegra_nand_ooblayout_16_ecc(struct mtd_info *mtd, int section,
+> +				       struct mtd_oob_region *oobregion)
+> +{
+> +	if (section > 0)
+> +		return -ERANGE;
+> +
+> +	oobregion->offset = 4;
+> +	oobregion->length = 4;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_nand_ooblayout_16_free(struct mtd_info *mtd, int section,
+> +					struct mtd_oob_region *oobregion)
+> +{
+> +	if (section > 0)
+> +		return -ERANGE;
+> +
+> +	oobregion->offset = 8;
+> +	oobregion->length = 8;
+> +
+> +	return 0;
+> +}
 
-Rob
+...
 
-[1] https://github.com/ARM-software/ebbr
+> +
+> +static int tegra_nand_ooblayout_224_ecc(struct mtd_info *mtd, int section,
+> +				       struct mtd_oob_region *oobregion)
+> +{
+> +	if (section > 0)
+> +		return -ERANGE;
+> +
+> +	oobregion->offset = 4;
+> +	oobregion->length = 144;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_nand_ooblayout_224_free(struct mtd_info *mtd, int section,
+> +					struct mtd_oob_region *oobregion)
+> +{
+> +	if (section > 0)
+> +		return -ERANGE;
+> +
+> +	oobregion->offset = 148;
+> +	oobregion->length = 76;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct mtd_ooblayout_ops tegra_nand_oob_224_ops = {
+> +	.ecc = tegra_nand_ooblayout_224_ecc,
+> +	.free = tegra_nand_ooblayout_224_free,
+> +};
+> +
+
+I'm pretty sure we can find a pattern here to avoid defining a new
+mtd_ooblayout_ops for each OOB size.
+
+> +static irqreturn_t tegra_nand_irq(int irq, void *data)
+> +{
+> +	struct tegra_nand *nand = data;
+> +	u32 isr, dma;
+> +
+> +	isr = readl(nand->regs + ISR);
+> +	dma = readl(nand->regs + DMA_CTRL);
+> +	dev_dbg(nand->dev, "isr %08x\n", isr);
+> +
+> +	if (!isr && !(dma & DMA_CTRL_IS_DONE))
+> +		return IRQ_NONE;
+> +
+> +	if (isr & ISR_CORRFAIL_ERR)
+> +		nand->last_read_error = true;
+> +
+> +	if (isr & ISR_CMD_DONE)
+> +		complete(&nand->command_complete);
+> +
+> +	if (isr & ISR_UND)
+> +		dev_dbg(nand->dev, "FIFO underrun\n");
+> +
+> +	if (isr & ISR_OVR)
+> +		dev_dbg(nand->dev, "FIFO overrun\n");
+> +
+> +	/* handle DMA interrupts */
+> +	if (dma & DMA_CTRL_IS_DONE) {
+> +		writel(dma, nand->regs + DMA_CTRL);
+> +		complete(&nand->dma_complete);
+> +	}
+> +
+> +	/* clear interrupts */
+> +	writel(isr, nand->regs + ISR);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int tegra_nand_cmd(struct nand_chip *chip,
+> +			 const struct nand_subop *subop)
+> +{
+> +	const struct nand_op_instr *instr;
+> +	const struct nand_op_instr *instr_data_in = NULL;
+> +	struct mtd_info *mtd = nand_to_mtd(chip);
+> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+> +	unsigned int op_id = -1, trfr_in_sz = 0, trfr_out_sz = 0, offset = 0;
+> +	bool first_cmd = true;
+> +	bool force8bit;
+> +	u32 cmd = 0;
+> +	u32 value;
+> +
+> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
+> +		unsigned int naddrs, i;
+> +		const u8 *addrs;
+> +		u32 addr1 = 0, addr2 = 0;
+> +
+> +		instr = &subop->instrs[op_id];
+> +
+> +		switch (instr->type) {
+> +		case NAND_OP_CMD_INSTR:
+> +			if (first_cmd) {
+> +				cmd |= CMD_CLE;
+> +				writel(instr->ctx.cmd.opcode, nand->regs + CMD_1);
+> +			} else {
+> +				cmd |= CMD_SEC_CMD;
+> +				writel(instr->ctx.cmd.opcode, nand->regs + CMD_2);
+> +			}
+> +			first_cmd = false;
+> +			break;
+> +		case NAND_OP_ADDR_INSTR:
+> +			offset = nand_subop_get_addr_start_off(subop, op_id);
+> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
+> +			addrs = &instr->ctx.addr.addrs[offset];
+> +
+> +			cmd |= CMD_ALE | CMD_ALE_SIZE(naddrs);
+> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+> +				addr1 |= *addrs++ << (8 * i);
+> +			naddrs -= i;
+> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+> +				addr2 |= *addrs++ << (8 * i);
+> +			writel(addr1, nand->regs + ADDR_1);
+> +			writel(addr2, nand->regs + ADDR_2);
+> +			break;
+> +
+> +		case NAND_OP_DATA_IN_INSTR:
+> +			trfr_in_sz = nand_subop_get_data_len(subop, op_id);
+> +			offset = nand_subop_get_data_start_off(subop, op_id);
+> +
+> +			cmd |= CMD_TRANS_SIZE(trfr_in_sz) | CMD_PIO | CMD_RX | CMD_A_VALID;
+> +
+> +			instr_data_in = instr;
+> +			break;
+> +
+> +		case NAND_OP_DATA_OUT_INSTR:
+> +			trfr_out_sz = nand_subop_get_data_len(subop, op_id);
+> +			offset = nand_subop_get_data_start_off(subop, op_id);
+> +			trfr_out_sz = min_t(size_t, trfr_out_sz, 4);
+> +
+> +			cmd |= CMD_TRANS_SIZE(trfr_out_sz) | CMD_PIO | CMD_TX | CMD_A_VALID;
+> +
+> +			memcpy(&value, instr->ctx.data.buf.out + offset, trfr_out_sz);
+> +			writel(value, nand->regs + RESP);
+> +
+> +			break;
+> +		case NAND_OP_WAITRDY_INSTR:
+> +			cmd |= CMD_RBSY_CHK;
+> +			break;
+> +
+> +		}
+> +	}
+> +
+> +
+> +	cmd |= CMD_GO | CMD_CE(nand->cur_chip);
+> +	writel(cmd, nand->regs + CMD);
+> +	wait_for_completion(&nand->command_complete);
+> +
+> +	if (instr_data_in) {
+> +		u32 value;
+> +		size_t n = min_t(size_t, trfr_in_sz, 4);
+> +
+> +		value = readl(nand->regs + RESP);
+> +		memcpy(instr_data_in->ctx.data.buf.in + offset, &value, n);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct nand_op_parser tegra_nand_op_parser = NAND_OP_PARSER(
+> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+> +		NAND_OP_PARSER_PAT_ADDR_ELEM(true, 8),
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true)),
+> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
+> +		NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, 4)),
+> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+> +		NAND_OP_PARSER_PAT_ADDR_ELEM(true, 8),
+> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
+> +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(true, 4)),
+> +	);
+> +
+> +static int tegra_nand_exec_op(struct nand_chip *chip,
+> +			     const struct nand_operation *op,
+> +			     bool check_only)
+> +{
+> +	return nand_op_parser_exec_op(chip, &tegra_nand_op_parser, op,
+> +				      check_only);
+> +}
+
+Missing empty line here.
+
+> +static void tegra_nand_select_chip(struct mtd_info *mtd, int chip)
+> +{
+> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+> +
+> +	nand->cur_chip = chip;
+> +}
+
+...
+
+> +
+> +static void tegra_nand_setup_chiptiming(struct tegra_nand *nand)
+> +{
+> +	struct nand_chip *chip = &nand->chip;
+> +	int mode;
+> +
+> +	mode = onfi_get_async_timing_mode(chip);
+> +	if (mode == ONFI_TIMING_MODE_UNKNOWN)
+> +		mode = chip->onfi_timing_mode_default;
+> +	else
+> +		mode = fls(mode);
+> +
+> +	tegra_nand_setup_timing(nand, mode);
+
+Hm, you shouldn't do that. Let the core select the timing mode for you,
+and just implement the ->setup_data_interface() hook.
+
+> +}
+> +
+> +static int tegra_nand_probe(struct platform_device *pdev)
+> +{
+> +	struct reset_control *rst;
+> +	struct tegra_nand *nand;
+> +	struct nand_chip *chip;
+> +	struct mtd_info *mtd;
+> +	struct resource *res;
+> +	unsigned long value;
+> +	int irq, err = 0;
+> +
+> +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
+> +	if (!nand)
+> +		return -ENOMEM;
+> +
+> +	nand->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(nand->regs))
+> +		return PTR_ERR(nand->regs);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
+> +			       dev_name(&pdev->dev), nand);
+> +	if (err)
+> +		return err;
+> +
+> +	rst = devm_reset_control_get(&pdev->dev, "nand");
+> +	if (IS_ERR(rst))
+> +		return PTR_ERR(rst);
+> +
+> +	nand->clk = devm_clk_get(&pdev->dev, "nand");
+> +	if (IS_ERR(nand->clk))
+> +		return PTR_ERR(nand->clk);
+> +
+> +	nand->wp_gpio = gpiod_get_optional(&pdev->dev, "wp-gpios",
+> +					   GPIOD_OUT_HIGH);
+> +	if (IS_ERR(nand->wp_gpio))
+> +		return PTR_ERR(nand->wp_gpio);
+> +
+> +	err = clk_prepare_enable(nand->clk);
+> +	if (err)
+> +		return err;
+> +
+> +	reset_control_assert(rst);
+> +	udelay(2);
+> +	reset_control_deassert(rst);
+> +
+> +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
+> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
+> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
+> +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
+> +	writel(value, nand->regs + HWSTATUS_MASK);
+> +
+> +	init_completion(&nand->command_complete);
+> +	init_completion(&nand->dma_complete);
+> +
+> +	/* clear interrupts */
+> +	value = readl(nand->regs + ISR);
+> +	writel(value, nand->regs + ISR);
+> +
+> +	writel(DMA_CTRL_IS_DONE, nand->regs + DMA_CTRL);
+> +
+> +	/* enable interrupts */
+> +	value = IER_UND | IER_OVR | IER_CMD_DONE | IER_ECC_ERR | IER_GIE;
+> +	writel(value, nand->regs + IER);
+> +
+> +	/* reset config */
+> +	writel(0, nand->regs + CFG);
+> +
+> +	chip = &nand->chip;
+> +	mtd = nand_to_mtd(chip);
+> +
+> +	mtd->dev.parent = &pdev->dev;
+> +	mtd->name = "tegra_nand";
+> +	mtd->owner = THIS_MODULE;
+> +
+> +	nand_set_flash_node(chip, pdev->dev.of_node);
+> +	nand_set_controller_data(chip, nand);
+> +
+> +	chip->options = NAND_NO_SUBPAGE_WRITE;
+> +	chip->exec_op = tegra_nand_exec_op;
+> +	chip->select_chip = tegra_nand_select_chip;
+> +	tegra_nand_setup_timing(nand, 0);
+> +
+> +	err = nand_scan_ident(mtd, 1, NULL);
+> +	if (err)
+> +		goto err_disable_clk;
+> +
+> +	if (chip->bbt_options & NAND_BBT_USE_FLASH)
+> +		chip->bbt_options |= NAND_BBT_NO_OOB;
+> +
+> +	nand->data_buf = dmam_alloc_coherent(&pdev->dev, mtd->writesize,
+> +					    &nand->data_dma, GFP_KERNEL);
+> +	if (!nand->data_buf) {
+> +		err = -ENOMEM;
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	nand->oob_buf = dmam_alloc_coherent(&pdev->dev, mtd->oobsize,
+> +					    &nand->oob_dma, GFP_KERNEL);
+> +	if (!nand->oob_buf) {
+> +		err = -ENOMEM;
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	chip->ecc.mode = NAND_ECC_HW;
+> +	chip->ecc.size = 512;
+> +	chip->ecc.read_page = tegra_nand_read_page;
+> +	chip->ecc.write_page = tegra_nand_write_page;
+
+I'd like to have raw accessors implemented here.
+
+That was just a quick review focusing mainly on architectural issues so
+that you can start working on a v2.
+
+Regards,
+
+Boris
