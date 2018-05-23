@@ -1,87 +1,37 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v6 3/4] ARM: dts: tegra: Fix unit_address_vs_reg and avoid_unnecessary_addr_size DTC warnings
-Date: Wed, 23 May 2018 11:56:45 +0200
-Message-ID: <1527069406-6359-3-git-send-email-krzk@kernel.org>
-References: <1527069406-6359-1-git-send-email-krzk@kernel.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] cpufreq: Add Kryo CPU scaling driver
+Date: Wed, 23 May 2018 15:29:13 +0530
+Message-ID: <20180523095913.o6gfwz4e4owthb5p@vireshk-i7>
+References: <1526729701-8589-1-git-send-email-ilialin@codeaurora.org>
+ <1527066324-24726-1-git-send-email-ilialin@codeaurora.org>
+ <20180523094033.GW17671@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527069406-6359-1-git-send-email-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180523094033.GW17671@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Krzysztof Kozlowski <krzk@kernel.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Ilia Lin <ilialin@codeaurora.org>, rjw@rjwysocki.net, sudeep.holla@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Remove unneeded address/size cells properties and unit addresses to fix
-DTC warnings like:
+On 23-05-18, 10:40, Russell King - ARM Linux wrote:
+> On Wed, May 23, 2018 at 12:05:24PM +0300, Ilia Lin wrote:
+> > +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+> > +	if (IS_ERR(np))
+> > +		return PTR_ERR(np);
+> ...
+> > +
+> > +	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
+> > +	if (!IS_ERR(pdev))
+> 
+> Do you need to hold a reference to `np' here?
 
-    arch/arm/boot/dts/tegra30-apalis-eval.dtb: Warning (unit_address_vs_reg):
-        /i2c@7000d000/stmpe811@41/stmpe_touchscreen@0: node has a unit name, but no reg property
-    arch/arm/boot/dts/tegra30-apalis-eval.dtb: Warning (avoid_unnecessary_addr_size):
-        /i2c@7000d000/stmpe811@41: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+I am starting to feel bad for Ilia now. The problem is that there was
+a lot of stuff wrong with the patch and even with so many reviewers it
+wasn't easy to notice all the problems it had.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
+But you are right, this reference needs to be dropped.
 
----
-
-Changes since v5:
-1. Add Stefan's reviewed-by tag.
-
-Changes since v4:
-1. None
----
- arch/arm/boot/dts/tegra30-apalis.dtsi  | 4 +---
- arch/arm/boot/dts/tegra30-beaver.dts   | 3 ---
- arch/arm/boot/dts/tegra30-colibri.dtsi | 2 --
- 3 files changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 9465fc592b7b..d1a2c0a253c8 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -589,8 +589,6 @@
- 		/* STMPE811 touch screen controller */
- 		stmpe811@41 {
- 			compatible = "st,stmpe811";
--			#address-cells = <1>;
--			#size-cells = <0>;
- 			reg = <0x41>;
- 			interrupts = <TEGRA_GPIO(V, 0) IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-parent = <&gpio>;
-@@ -599,7 +597,7 @@
- 			blocks = <0x5>;
- 			irq-trigger = <0x1>;
- 
--			stmpe_touchscreen@0 {
-+			stmpe_touchscreen {
- 				compatible = "st,stmpe-ts";
- 				/* 3.25 MHz ADC clock speed */
- 				st,adc-freq = <1>;
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index 1434d50438f9..b0d40ac8ac6e 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -1790,9 +1790,6 @@
- 			vccio-supply = <&vdd_5v_in_reg>;
- 
- 			regulators {
--				#address-cells = <1>;
--				#size-cells = <0>;
--
- 				vdd1_reg: vdd1 {
- 					regulator-name = "vddio_ddr_1v2";
- 					regulator-min-microvolt = <1200000>;
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index 9bf3327665d3..526ed71cf7a3 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -351,8 +351,6 @@
- 		/* STMPE811 touch screen controller */
- 		stmpe811@41 {
- 			compatible = "st,stmpe811";
--			#address-cells = <1>;
--			#size-cells = <0>;
- 			reg = <0x41>;
- 			interrupts = <TEGRA_GPIO(V, 0) IRQ_TYPE_LEVEL_LOW>;
- 			interrupt-parent = <&gpio>;
 -- 
-2.7.4
+viresh
