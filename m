@@ -1,64 +1,43 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [next, PATCH 2/6] usb: mtu3: fix uncontinuous SeqN issue after disable EP
-Date: Wed, 23 May 2018 16:53:16 +0800
-Message-ID: <bd37d1585905360069baf2f3009b715258be56ac.1527065109.git.chunfeng.yun@mediatek.com>
+Subject: [next, PATCH 3/6] usb: mtu3: clear test_mode flag when reset
+Date: Wed, 23 May 2018 16:53:17 +0800
+Message-ID: <613f22070f3f5be49a4405e53032da485ef35e8c.1527065109.git.chunfeng.yun@mediatek.com>
 References: <1291b13a362eaa0cccd30cb8dd4f56d33e1d172d.1527065109.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1291b13a362eaa0cccd30cb8dd4f56d33e1d172d.1527065109.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reset EP when disable it to reset data toggle for U2 EP, and
-SeqN, flow control status etc for U3 EP, this can avoid
-issue of uncontinuous SeqN
+Clear test_mode flag when the gadget is reset by host, otherwise
+will affect the next test item.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3_core.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/usb/mtu3/mtu3_gadget.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index 65ff53a..279f9cd 100644
---- a/drivers/usb/mtu3/mtu3_core.c
-+++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -195,6 +195,16 @@ static void mtu3_intr_enable(struct mtu3 *mtu)
- 	mtu3_writel(mbase, U3D_DEV_LINK_INTR_ENABLE, SSUSB_DEV_SPEED_CHG_INTR);
+diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
+index de0de01..5c60a8c 100644
+--- a/drivers/usb/mtu3/mtu3_gadget.c
++++ b/drivers/usb/mtu3/mtu3_gadget.c
+@@ -719,4 +719,5 @@ void mtu3_gadget_reset(struct mtu3 *mtu)
+ 	mtu->u1_enable = 0;
+ 	mtu->u2_enable = 0;
+ 	mtu->delayed_status = false;
++	mtu->test_mode = false;
  }
- 
-+/* reset: u2 - data toggle, u3 - SeqN, flow control status etc */
-+static void mtu3_ep_reset(struct mtu3_ep *mep)
-+{
-+	struct mtu3 *mtu = mep->mtu;
-+	u32 rst_bit = EP_RST(mep->is_in, mep->epnum);
-+
-+	mtu3_setbits(mtu->mac_base, U3D_EP_RST, rst_bit);
-+	mtu3_clrbits(mtu->mac_base, U3D_EP_RST, rst_bit);
-+}
-+
- /* set/clear the stall and toggle bits for non-ep0 */
- void mtu3_ep_stall_set(struct mtu3_ep *mep, bool set)
- {
-@@ -220,8 +230,7 @@ void mtu3_ep_stall_set(struct mtu3_ep *mep, bool set)
- 	}
- 
- 	if (!set) {
--		mtu3_setbits(mbase, U3D_EP_RST, EP_RST(mep->is_in, epnum));
--		mtu3_clrbits(mbase, U3D_EP_RST, EP_RST(mep->is_in, epnum));
-+		mtu3_ep_reset(mep);
- 		mep->flags &= ~MTU3_EP_STALL;
- 	} else {
- 		mep->flags |= MTU3_EP_STALL;
-@@ -400,6 +409,7 @@ void mtu3_deconfig_ep(struct mtu3 *mtu, struct mtu3_ep *mep)
- 		mtu3_setbits(mbase, U3D_QIECR0, QMU_RX_DONE_INT(epnum));
- 	}
- 
-+	mtu3_ep_reset(mep);
- 	ep_fifo_free(mep);
- 
- 	dev_dbg(mtu->dev, "%s: %s\n", __func__, mep->name);
 -- 
 1.9.1
