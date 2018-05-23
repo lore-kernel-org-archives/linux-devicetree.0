@@ -1,47 +1,34 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v11 0/2] Kryo CPU scaling driver
-Date: Wed, 23 May 2018 14:54:41 +0100
-Message-ID: <b4c28b51-ecd5-649b-e8fa-e5ce1bbb3139@arm.com>
-References: <1527079139-3558-1-git-send-email-ilialin@codeaurora.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
+ from K+P
+Date: Wed, 23 May 2018 10:56:13 -0300
+Message-ID: <CAOMZO5DoLwEmQz5BQHDLk8sBq7mDH_UxBjRA0RGKb+PunMYu-Q@mail.gmail.com>
+References: <20180509153428.1440-1-lukma@denx.de> <CAOMZO5AexXNEGVoXa9K_GAm+aFLNRQOXOhF_SdKAjV1qmuD2nA@mail.gmail.com>
+ <20180519140202.3449e3c1@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527079139-3558-1-git-send-email-ilialin@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20180519140202.3449e3c1@jawa>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lukasz,
 
+On Sat, May 19, 2018 at 9:02 AM, Lukasz Majewski <lukma@denx.de> wrote:
 
-On 23/05/18 13:38, Ilia Lin wrote:
-> [v11]
->  * Addressed comment from Russel about device_node reference
->  * Addressed comment from Sudeep about the late_initcall
->  * Transformed init into probe to take care of deferals
-> 
-> [v10]
->  * Split the series into domains
->  * Addressed comments from Viresh and Sudeep about logical CPU numbering.
-> 
-> The qcom-cpufreq-kryo driver is aimed to support different SOC versions.
-> The driver reads eFuse information and chooses the required OPP subset
-> by passing the OPP supported-hw parameter.
-> 
-> The series depends on the series from Viresh:
-> https://patchwork.kernel.org/patch/10418139/
-> 
-> The previous spin was here:
-> https://patchwork.kernel.org/patch/10420809/
-> 
+> After removing imx53-kp-ddc and imx53-kp-common iomux subnodes I do see
+> following errors in the dmesg (v4.17-rc5):
+>
+> imx53-pinctrl 53fa8000.iomuxc: function 'iomuxc' not supported
+> imx53-pinctrl 53fa8000.iomuxc: invalid function iomuxc in map table
 
-IIUC, this depends on "CPU scaling support for msm8996" [1] for
-the functionality though the change is independent ?
+Could you please investigate this error?
 
--- 
-Regards,
-Sudeep
+I have just tried the following change on a imx53-qsb:
+http://code.bulix.org/ik01yu-339697
 
-[1] https://www.spinics.net/lists/arm-kernel/msg654978.html
+and it works as expected:
+# dmesg  | grep iomux
+[    0.100046] imx53-pinctrl 53fa8000.iomuxc: initialized IMX pinctrl driver
