@@ -1,61 +1,55 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: arm: omap: dmm: Document new
- compatible for DRA7xx family
-Date: Wed, 23 May 2018 12:56:18 +0300
-Message-ID: <8d77a23a-39f0-0472-1a59-7763f33e5fd1@ti.com>
-References: <20180410113301.18984-1-peter.ujfalusi@ti.com>
- <20180410113301.18984-3-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180410113301.18984-3-peter.ujfalusi@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+From: Esben Haabendal <esben.haabendal@gmail.com>
+Subject: [PATCH 4/4] arm: dts: ls1021a: Enable I2C DMA support
+Date: Wed, 23 May 2018 11:56:23 +0200
+Message-ID: <20180523095623.3347-5-esben.haabendal@gmail.com>
+References: <20180523095623.3347-1-esben.haabendal@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180523095623.3347-1-esben.haabendal@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: Esben Haabendal <eha@deif.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMDQvMTggMTQ6MzMsIFBldGVyIFVqZmFsdXNpIHdyb3RlOgo+IEZyb206IFRvbWkgVmFs
-a2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4gCj4gRGVmaW5lIHVuaXF1ZSBjb21wYXRp
-YmxlIHN0cmluZyBmb3IgdGhlIERNTSBpbiBEUkE3eHggZmFtaWx5Lgo+IAo+IFRoZSBuZXcgY29t
-cGF0aWJsZSBjYW4gYmUgdXNlZCB0byBhcHBseSBEUkE3eHggc3BlY2lmaWMgd29ya2Fyb3VuZHMg
-Zm9yCj4gRVJSQVRBcywgbGlrZSBpODc4IChNUFUgTG9ja3VwIHdpdGggY29uY3VycmVudCBETU0g
-YW5kIEVNSUYgYWNjZXNzZXMpCj4gCj4gU2lnbmVkLW9mZi1ieTogVG9taSBWYWxrZWluZW4gPHRv
-bWkudmFsa2VpbmVuQHRpLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBVamZhbHVzaSA8cGV0
-ZXIudWpmYWx1c2lAdGkuY29tPgo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
-ZWwub3JnPgo+IFJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0
-QGlkZWFzb25ib2FyZC5jb20+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9hcm0vb21hcC9kbW0udHh0IHwgMyArKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
-aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL29tYXAvZG1tLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9hcm0vb21hcC9kbW0udHh0Cj4gaW5kZXggOGJkNmQwYTIzOGE4Li5iYmJl
-N2NkYmEzMGMgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2FybS9vbWFwL2RtbS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL29tYXAvZG1tLnR4dAo+IEBAIC04LDcgKzgsOCBAQCB0cmFuc2xhdGlvbiBmb3IgaW5p
-dGlhdG9ycyB3aGljaCBuZWVkIGNvbnRpZ3VvdXMgZG1hIGJ1cyBhZGRyZXNzZXMuCj4gIAo+ICBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAtIGNvbXBhdGlibGU6CVNob3VsZCBjb250YWluICJ0aSxv
-bWFwNC1kbW0iIGZvciBPTUFQNCBmYW1pbHkKPiAtCQlTaG91bGQgY29udGFpbiAidGksb21hcDUt
-ZG1tIiBmb3IgT01BUDUgYW5kIERSQTd4IGZhbWlseQo+ICsJCVNob3VsZCBjb250YWluICJ0aSxv
-bWFwNS1kbW0iIGZvciBPTUFQNSBmYW1pbHkKPiArCQlTaG91bGQgY29udGFpbiAidGksZHJhNy1k
-bW0iIGZvciBEUkE3eHggZmFtaWx5Cj4gIC0gcmVnOgkJQ29udGFpbnMgRE1NIHJlZ2lzdGVyIGFk
-ZHJlc3MgcmFuZ2UgKGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoKQo+ICAtIGludGVycnVwdHM6CVNo
-b3VsZCBjb250YWluIGFuIGludGVycnVwdC1zcGVjaWZpZXIgZm9yIERNTV9JUlEuCj4gIC0gdGks
-aHdtb2RzOglOYW1lIG9mIHRoZSBod21vZCBhc3NvY2lhdGVkIHRvIERNTSwgd2hpY2ggaXMgdHlw
-aWNhbGx5ICJkbW0iCj4gCgpUaGlua2luZyBhYm91dCB0aGlzIG5vdywgd291bGRuJ3QgaXQgYmUg
-YmV0dGVyIHRvIGFkZCBhIERUIHByb3BlcnR5IHRvCmVuYWJsZSB0aGUgd29yay1hcm91bmQ/IE9y
-IHdlIGNvdWxkIHVzZSBzb2NfZGV2aWNlX21hdGNoKCkgdG8gZmlndXJlIG91dAp0aGF0IHRoaXMg
-aXMgYSBEUkE3IFNvQy4KCiBUb21pCgotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwg
-UG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAw
-NjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Esben Haabendal <eha@deif.com>
+
+Gives substantial performance improvement for transfers larger than 16
+bytes (DMA_THRESHOLD).  Smaller transfers are unaffected.
+
+Signed-off-by: Esben Haabendal <eha@deif.com>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index c55d479971cc..1e5640701c65 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -363,6 +363,8 @@
+ 			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "i2c";
+ 			clocks = <&clockgen 4 1>;
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 39>, <&edma0 1 38>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -374,6 +376,8 @@
+ 			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "i2c";
+ 			clocks = <&clockgen 4 1>;
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 37>, <&edma0 1 36>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -385,6 +389,8 @@
+ 			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "i2c";
+ 			clocks = <&clockgen 4 1>;
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 35>, <&edma0 1 34>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.17.0
