@@ -1,218 +1,550 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH RFC 00/24] Lima DRM driver
-Date: Wed, 23 May 2018 15:59:34 +0200
-Message-ID: <ec001286-973f-d3ef-b41c-c634c93ede3e@amd.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <940a5ee5-ff3e-e438-504e-f720f201fee6@gmail.com>
- <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 09/16] irqchip/irq-mvebu-sei: add new driver for
+ Marvell SEI
+Date: Wed, 23 May 2018 15:05:34 +0100
+Message-ID: <b11849f0-3593-51e1-8d4f-b05bfe6412a1@arm.com>
+References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
+ <20180522094042.24770-10-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Qiang Yu <yuq825@gmail.com>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180522094042.24770-10-miquel.raynal@bootlin.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjMuMDUuMjAxOCB1bSAxNTo1MiBzY2hyaWViIFFpYW5nIFl1Ogo+IE9uIFdlZCwgTWF5IDIz
-LCAyMDE4IGF0IDU6MjkgUE0sIENocmlzdGlhbiBLw7ZuaWcKPiA8Y2tvZW5pZy5sZWljaHR6dW1l
-cmtlbkBnbWFpbC5jb20+IHdyb3RlOgo+PiBBbSAxOC4wNS4yMDE4IHVtIDExOjI3IHNjaHJpZWIg
-UWlhbmcgWXU6Cj4+PiBLZXJuZWwgRFJNIGRyaXZlciBmb3IgQVJNIE1hbGkgNDAwLzQ1MCBHUFVz
-Lgo+Pj4KPj4+IFRoaXMgaW1wbGVtZW50YXRpb24gbWFpbmx5IHRha2UgYW1kZ3B1IERSTSBkcml2
-ZXIgYXMgcmVmZXJlbmNlLgo+Pj4KPj4+IC0gTWFsaSA0eHggR1BVcyBoYXZlIHR3byBraW5kcyBv
-ZiBwcm9jZXNzb3JzIEdQIGFuZCBQUC4gR1AgaXMgZm9yCj4+PiAgICAgT3BlbkdMIHZlcnRleCBz
-aGFkZXIgcHJvY2Vzc2luZyBhbmQgUFAgaXMgZm9yIGZyYWdtZW50IHNoYWRlcgo+Pj4gICAgIHBy
-b2Nlc3NpbmcuIEVhY2ggcHJvY2Vzc29yIGhhcyBpdHMgb3duIE1NVSBzbyBwcmNlc3NvcnMgd29y
-ayBpbgo+Pj4gICAgIHZpcnR1YWwgYWRkcmVzcyBzcGFjZS4KPj4+IC0gVGhlcmUncyBvbmx5IG9u
-ZSBHUCBidXQgbXVsdGlwbGUgUFAgKG1heCA0IGZvciBtYWxpIDQwMCBhbmQgOAo+Pj4gICAgIGZv
-ciBtYWxpIDQ1MCkgaW4gdGhlIHNhbWUgbWFsaSA0eHggR1BVLiBBbGwgUFBzIGFyZSBncm91cGVk
-Cj4+PiAgICAgdG9nYXRoZXIgdG8gaGFuZGxlIGEgc2luZ2xlIGZyYWdtZW50IHNoYWRlciB0YXNr
-IGRpdmlkZWQgYnkKPj4+ICAgICBGQiBvdXRwdXQgdGlsZWQgcGl4ZWxzLiBNYWxpIDQwMCB1c2Vy
-IHNwYWNlIGRyaXZlciBpcwo+Pj4gICAgIHJlc3BvbnNpYmxlIGZvciBhc3NpZ24gdGFyZ2V0IHRp
-bGVkIHBpeGVscyB0byBlYWNoIFBQLCBidXQgbWFsaQo+Pj4gICAgIDQ1MCBoYXMgYSBIVyBtb2R1
-bGUgY2FsbGVkIERMQlUgdG8gZHluYW1pY2FsbHkgYmFsYW5jZSBlYWNoCj4+PiAgICAgUFAncyBs
-b2FkLgo+Pj4gLSBVc2VyIHNwYWNlIGRyaXZlciBhbGxvY2F0ZSBidWZmZXIgb2JqZWN0IGFuZCBt
-YXAgaW50byBHUFUKPj4+ICAgICB2aXJ0dWFsIGFkZHJlc3Mgc3BhY2UsIHVwbG9hZCBjb21tYW5k
-IHN0cmVhbSBhbmQgZHJhdyBkYXRhIHdpdGgKPj4+ICAgICBDUFUgbW1hcCBvZiB0aGUgYnVmZmVy
-IG9iamVjdCwgdGhlbiBzdWJtaXQgdGFzayB0byBHUC9QUCB3aXRoCj4+PiAgICAgYSByZWdpc3Rl
-ciBmcmFtZSBpbmRpY2F0aW5nIHdoZXJlIGlzIHRoZSBjb21tYW5kIHN0cmVhbSBhbmQgbWlzYwo+
-Pj4gICAgIHNldHRpbmdzLgo+Pj4gLSBUaGVyZSdzIG5vIGNvbW1hbmQgc3RyZWFtIHZhbGlkYXRp
-b24vcmVsb2NhdGlvbiBkdWUgdG8gZWFjaCB1c2VyCj4+PiAgICAgcHJvY2VzcyBoYXMgaXRzIG93
-biBHUFUgdmlydHVhbCBhZGRyZXNzIHNwYWNlLiBHUC9QUCdzIE1NVSBzd2l0Y2gKPj4+ICAgICB2
-aXJ0dWFsIGFkZHJlc3Mgc3BhY2UgYmVmb3JlIHJ1bm5pbmcgdHdvIHRhc2tzIGZyb20gZGlmZmVy
-ZW50Cj4+PiAgICAgdXNlciBwcm9jZXNzLiBFcnJvciBvciBldmlsIHVzZXIgc3BhY2UgY29kZSBq
-dXN0IGdldCBNTVUgZmF1bHQKPj4+ICAgICBvciBHUC9QUCBlcnJvciBJUlEsIHRoZW4gdGhlIEhX
-L1NXIHdpbGwgYmUgcmVjb3ZlcmVkLgo+Pj4gLSBVc2UgVFRNIGFzIE1NLiBUVE1fUExfVFQgdHlw
-ZSBtZW1vcnkgaXMgdXNlZCBhcyB0aGUgY29udGVudCBvZgo+Pj4gICAgIGxpbWEgYnVmZmVyIG9i
-amVjdCB3aGljaCBpcyBhbGxvY2F0ZWQgZnJvbSBUVE0gcGFnZSBwb29sLiBhbGwKPj4+ICAgICBs
-aW1hIGJ1ZmZlciBvYmplY3QgZ2V0cyBwaW5uZWQgd2l0aCBUVE1fUExfRkxBR19OT19FVklDVCB3
-aGVuCj4+PiAgICAgYWxsb2NhdGlvbiwgc28gdGhlcmUncyBubyBidWZmZXIgZXZpY3Rpb24gYW5k
-IHN3YXAgZm9yIG5vdy4gV2UKPj4+ICAgICBuZWVkIHJldmVyc2UgZW5naW5lZXJpbmcgdG8gc2Vl
-IGlmIGFuZCBob3cgR1AvUFAgc3VwcG9ydCBNTVUKPj4+ICAgICBmYXVsdCByZWNvdmVyeSAoY29u
-dGludWUgZXhlY3V0aW9uKS4gT3RoZXJ3aXNlIHdlIGhhdmUgdG8KPj4+ICAgICBwaW4vdW5waW4g
-ZWFjaCBlbnZvbHZlZCBidWZmZXIgd2hlbiB0YXNrIGNyZWF0aW9uL2RlbGV0aW9uLgo+Pgo+PiBX
-ZWxsIHBpbm5pbmcgYWxsIG1lbW9yeSBpcyB1c3VhbGx5IGEgbm8tZ28gZm9yIHVwc3RyZWFtaW5n
-LiBCdXQgc2luY2UgeW91Cj4+IGFyZSBhbHJlYWR5IHVzaW5nIHRoZSBkcm1fc2NoZWQgZm9yIEdQ
-VSB0YXNrIHNjaGVkdWxpbmcgd2h5IGFyZSB5b3UgYWN0dWFsbHkKPj4gbmVlZGluZyB0aGlzPwo+
-Pgo+PiBUaGUgc2NoZWR1bGVyIHNob3VsZCB0YWtlIGNhcmUgb2Ygc2lnbmFsaW5nIGFsbCBmZW5j
-ZXMgd2hlbiB0aGUgaGFyZHdhcmUgaXMKPj4gZG9uZSB3aXRoIGl0J3MgbWFnaWMgYW5kIHRoYXQg
-aXMgZW5vdWdoIGZvciBUVE0gdG8gbm90ZSB0aGF0IGEgYnVmZmVyIG9iamVjdAo+PiBpcyBtb3Zh
-YmxlIGFnYWluIChlLmcuIHVucGluIHRoZW0pLgo+IFBsZWFzZSBjb3JyZWN0IG1lIGlmIEknbSB3
-cm9uZy4KCldlbGwsIHlvdSBhcmUgd3JvbmcgOikKCj4gT25lIHdheSB0byBpbXBsZW1lbnQgZXZp
-Y3Rpb24vc3dhcCBpcyBsaWtlIHRoaXM6Cj4gY2FsbCB2YWxpZGF0aW9uIG9uIGVhY2ggYnVmZmVy
-cyBpbnZvbHZlZCBpbiBhIHRhc2ssIGJ1dCB0aGlzIHdvbid0Cj4gcHJldmVudCBpdCBmcm9tCj4g
-ZXZpY3Rpb24vc3dhcCB3aGVuIGV4ZWN1dGluZywgc28gYSBHUFUgTU1VIGZhdWx0IG1heSBoYXBw
-ZW4gYW5kIGluIHRoZQo+IGhhbmRsZXIgd2UgbmVlZCB0byByZWNvdmVyIHRoZSBidWZmZXIgZXZp
-Y3RlZC9zd2FwcGVkLgo+Cj4gQW5vdGhlciB3YXkgaXMgcGluL3VucGluIGJ1ZmZlcnMgZXZvbHZl
-ZCB3aGVuIHRhc2sgY3JlYXRlL2ZyZWUuCj4KPiBGaXJzdCB3YXkgaXMgYmV0dGVyIHdoZW4gbWVt
-b3J5IGxvYWQgaXMgbG93IGFuZCBzZWNvbmQgd2F5IGlzIGJldHRlciB3aGVuCj4gbWVtb3J5IGxv
-YWQgaXMgaGlnaC4gRmlyc3Qgd2F5IGFsc28gbmVlZCBsZXNzIG1lbW9yeS4KPgo+IFNvIEknZCBw
-cmVmZXIgZmlyc3Qgd2F5IGJ1dCBkdWUgdG8gdGhlIEdQVSBNTVUgZmF1bHQKPiBIVyBvcCBuZWVk
-IHJldmVyc2UgZW5naW5lZXJpbmcsIEkgaGF2ZSB0byBwaW4gYWxsIGJ1ZmZlcnMgbm93LiBBZnRl
-cgo+IHRoZSBIVyBvcCBpcyBjbGVhciwgSSBjYW4gY2hvb3NlIG9uZSB3YXkgdG8gaW1wbGVtZW50
-LgoKVGhlIGdlbmVyYWwgYXBwcm9hY2ggaXM6CjEuKSBMb2NrIGFsbCBCT3MKMi4pIFZhbGlkYXRl
-IGFsbCBCT3MKMy4pIEFkZCB0aGUgZmVuY2UKNC4pIFVubG9jayB0aGUgQk9zCgpCT3MgY2FuJ3Qg
-YmUgZXZpY3RlZCB3aGlsZSB0aGV5IGFyZSBsb2NrZWQgYW5kIHNpbmNlIHlvdSBhbHJlYWR5IGFk
-ZCB0aGUgCmZlbmNlIHRoYXQgc2hvdWxkIGJlIHBlcmZlY3RseSBzdWZmaWNpZW50IHRvIHByZXZl
-bnQgaXQgZnJvbSBiZWluZyAKZXZpY3RlZCB1bnRpbCB5b3VyIG9wZXJhdGlvbiBpcyBjb21wbGV0
-ZWQuCgpVc2luZyB0aGUgTU1VIGlzIGNlcnRhaW5seSBiZSBiZXR0ZXIgaW4gZ2VuZXJhbCwgYnV0
-IHVzdWFsbHkgb25seSAKb3B0aW9uYWwgYW5kIGEgcGFpbiBpbiB0aGUgYXNzIHRvIGdldCB3b3Jr
-aW5nLiBXZSBoYXZlIHRoYXQgaW4gYW1kZ3B1IApmb3IgcXVpdGUgYSB3aGlsZSBhcyB3ZWxsIG5v
-dyBhbmQgc3RpbGwgZG9uJ3QgdXNlIGl0IGJlY2F1c2Ugb2YgdGhhdC4KClJlZ2FyZHMsCkNocmlz
-dGlhbi4KCj4KPiBSZWdhcmRzLAo+IFFpYW5nCj4KPj4gQ2hyaXN0aWFuLgo+Pgo+Pgo+Pj4gLSBV
-c2UgZHJtX3NjaGVkIGZvciBHUFUgdGFzayBzY2hlZHVsZS4gRWFjaCBPcGVuR0wgY29udGV4dCBz
-aG91bGQKPj4+ICAgICBoYXZlIGEgbGltYSBjb250ZXh0IG9iamVjdCBpbiB0aGUga2VybmVsIHRv
-IGRpc3Rpbmd1aXNoIHRhc2tzCj4+PiAgICAgZnJvbSBkaWZmZXJlbnQgdXNlci4gZHJtX3NjaGVk
-IGdldHMgdGFzayBmcm9tIGVhY2ggbGltYSBjb250ZXh0Cj4+PiAgICAgaW4gYSBmYWlyIHdheS4K
-Pj4+Cj4+PiBOb3QgaW1wbGVtZW50ZWQ6Cj4+PiAtIER1bXAgYnVmZmVyIHN1cHBvcnQKPj4+IC0g
-UG93ZXIgbWFuYWdlbWVudAo+Pj4gLSBQZXJmb3JtYW5jZSBjb3VudGVyCj4+Pgo+Pj4gVGhpcyBw
-YXRjaCBzZXJpYWwganVzdCBwYWNrIGEgcGFpciBvZiAuYy8uaCBmaWxlcyBpbiBlYWNoIHBhdGNo
-Lgo+Pj4gRm9yIHdob2xlIGhpc3Rvcnkgb2YgdGhpcyBkcml2ZXIncyBkZXZlbG9wbWVudCwgc2Vl
-Ogo+Pj4gaHR0cHM6Ly9naXRodWIuY29tL3l1cS9saW51eC1saW1hL2NvbW1pdHMvbGltYS00LjE3
-LXJjNAo+Pj4KPj4+IE1lc2EgZHJpdmVyIGlzIHN0aWxsIGluIGRldmVsb3BtZW50IGFuZCBub3Qg
-cmVhZHkgZm9yIGRhaWx5IHVzYWdlLAo+Pj4gYnV0IGNhbiBydW4gc29tZSBzaW1wbGUgdGVzdHMg
-bGlrZSBrbXNjdWJlIGFuZCBnbGFtcmsyLCBzZWU6Cj4+PiBodHRwczovL2dpdGh1Yi5jb20veXVx
-L21lc2EtbGltYQo+Pj4KPj4+IEFuZHJlaSBQYXVsYXUgKDEpOgo+Pj4gICAgIGFybTY0L2R0czog
-YWRkIHN3aXRjaC1kZWxheSBmb3IgbWVzb24gbWFsaQo+Pj4KPj4+IExpbWEgUHJvamVjdCBEZXZl
-bG9wZXJzICgxMCk6Cj4+PiAgICAgZHJtL2xpbWE6IGFkZCBtYWxpIDR4eCBHUFUgaGFyZHdhcmUg
-cmVncwo+Pj4gICAgIGRybS9saW1hOiBhZGQgbGltYSBjb3JlIGRyaXZlcgo+Pj4gICAgIGRybS9s
-aW1hOiBhZGQgR1BVIGRldmljZSBmdW5jdGlvbnMKPj4+ICAgICBkcm0vbGltYTogYWRkIFBNVSBy
-ZWxhdGVkIGZ1bmN0aW9ucwo+Pj4gICAgIGRybS9saW1hOiBhZGQgUFAgcmVsYXRlZCBmdW5jdGlv
-bnMKPj4+ICAgICBkcm0vbGltYTogYWRkIE1NVSByZWxhdGVkIGZ1bmN0aW9ucwo+Pj4gICAgIGRy
-bS9saW1hOiBhZGQgR1BVIHZpcnR1YWwgbWVtb3J5IHNwYWNlIGhhbmRpbmcKPj4+ICAgICBkcm0v
-bGltYTogYWRkIEdFTSByZWxhdGVkIGZ1bmN0aW9ucwo+Pj4gICAgIGRybS9saW1hOiBhZGQgR0VN
-IFByaW1lIHJlbGF0ZWQgZnVuY3Rpb25zCj4+PiAgICAgZHJtL2xpbWE6IGFkZCBtYWtlZmlsZSBh
-bmQga2NvbmZpZwo+Pj4KPj4+IFFpYW5nIFl1ICgxMik6Cj4+PiAgICAgZHQtYmluZGluZ3M6IGFk
-ZCBzd2l0Y2gtZGVsYXkgcHJvcGVydHkgZm9yIG1hbGktdXRnYXJkCj4+PiAgICAgYXJtNjQvZHRz
-OiBhZGQgc3dpdGNoLWRlbGF5IGZvciBtZXNvbiBtYWxpCj4+PiAgICAgUmV2ZXJ0ICJkcm06IE5l
-cmYgdGhlIHByZWNsb3NlIGNhbGxiYWNrIGZvciBtb2Rlcm4gZHJpdmVycyIKPj4+ICAgICBkcm0v
-bGltYTogYWRkIGxpbWEgdWFwaSBoZWFkZXIKPj4+ICAgICBkcm0vbGltYTogYWRkIEwyIGNhY2hl
-IGZ1bmN0aW9ucwo+Pj4gICAgIGRybS9saW1hOiBhZGQgR1AgcmVsYXRlZCBmdW5jdGlvbnMKPj4+
-ICAgICBkcm0vbGltYTogYWRkIEJDQVNUIHJlbGF0ZWQgZnVuY3Rpb24KPj4+ICAgICBkcm0vbGlt
-YTogYWRkIERMQlUgcmVsYXRlZCBmdW5jdGlvbnMKPj4+ICAgICBkcm0vbGltYTogYWRkIFRUTSBz
-dWJzeXN0ZW0gZnVuY3Rpb25zCj4+PiAgICAgZHJtL2xpbWE6IGFkZCBidWZmZXIgb2JqZWN0IGZ1
-bmN0aW9ucwo+Pj4gICAgIGRybS9saW1hOiBhZGQgR1BVIHNjaGVkdWxlIHVzaW5nIERSTV9TQ0hF
-RAo+Pj4gICAgIGRybS9saW1hOiBhZGQgY29udGV4dCByZWxhdGVkIGZ1bmN0aW9ucwo+Pj4KPj4+
-IFNpbW9uIFNoaWVsZHMgKDEpOgo+Pj4gICAgIEFSTTogZHRzOiBhZGQgZ3B1IG5vZGUgdG8gZXh5
-bm9zNAo+Pj4KPj4+ICAgIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktdXRnYXJkLnR4dCAgICAg
-ICAgICB8ICAgNCArCj4+PiAgICBhcmNoL2FybS9ib290L2R0cy9leHlub3M0LmR0c2kgICAgICAg
-ICAgICAgICAgfCAgMzMgKysKPj4+ICAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNv
-bi1neGJiLmR0c2kgICB8ICAgMSArCj4+PiAgICAuLi4vYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1n
-eGwtbWFsaS5kdHNpICAgICAgfCAgIDEgKwo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9NYWtl
-ZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0v
-ZHJtX2ZpbGUuYyAgICAgICAgICAgICAgICAgICAgfCAgIDggKy0KPj4+ICAgIGRyaXZlcnMvZ3B1
-L2RybS9saW1hL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgOSArCj4+PiAgICBkcml2ZXJz
-L2dwdS9kcm0vbGltYS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgMTkgKwo+Pj4gICAgZHJp
-dmVycy9ncHUvZHJtL2xpbWEvbGltYV9iY2FzdC5jICAgICAgICAgICAgIHwgIDY1ICsrKwo+Pj4g
-ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9iY2FzdC5oICAgICAgICAgICAgIHwgIDM0ICsr
-Cj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2N0eC5jICAgICAgICAgICAgICAgfCAx
-NDMgKysrKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfY3R4LmggICAgICAgICAg
-ICAgICB8ICA1MSArKwo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9kZXZpY2UuYyAg
-ICAgICAgICAgIHwgNDA3ICsrKysrKysrKysrKysrCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vbGlt
-YS9saW1hX2RldmljZS5oICAgICAgICAgICAgfCAxMzYgKysrKysKPj4+ICAgIGRyaXZlcnMvZ3B1
-L2RybS9saW1hL2xpbWFfZGxidS5jICAgICAgICAgICAgICB8ICA3NSArKysKPj4+ICAgIGRyaXZl
-cnMvZ3B1L2RybS9saW1hL2xpbWFfZGxidS5oICAgICAgICAgICAgICB8ICAzNyArKwo+Pj4gICAg
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9kcnYuYyAgICAgICAgICAgICAgIHwgNDY2ICsrKysr
-KysrKysrKysrKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZHJ2LmggICAgICAg
-ICAgICAgICB8ICA3NyArKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtLmMg
-ICAgICAgICAgICAgICB8IDQ1OSArKysrKysrKysrKysrKysrCj4+PiAgICBkcml2ZXJzL2dwdS9k
-cm0vbGltYS9saW1hX2dlbS5oICAgICAgICAgICAgICAgfCAgNDEgKysKPj4+ICAgIGRyaXZlcnMv
-Z3B1L2RybS9saW1hL2xpbWFfZ2VtX3ByaW1lLmMgICAgICAgICB8ICA2NiArKysKPj4+ICAgIGRy
-aXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtX3ByaW1lLmggICAgICAgICB8ICAzMSArKwo+Pj4g
-ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9ncC5jICAgICAgICAgICAgICAgIHwgMjkzICsr
-KysrKysrKysrCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2dwLmggICAgICAgICAg
-ICAgICAgfCAgMzQgKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfbDJfY2FjaGUu
-YyAgICAgICAgICB8ICA5OCArKysrCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2wy
-X2NhY2hlLmggICAgICAgICAgfCAgMzIgKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xp
-bWFfbW11LmMgICAgICAgICAgICAgICB8IDE1NCArKysrKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfbW11LmggICAgICAgICAgICAgICB8ICAzNCArKwo+Pj4gICAgZHJpdmVycy9n
-cHUvZHJtL2xpbWEvbGltYV9vYmplY3QuYyAgICAgICAgICAgIHwgMTIwICsrKysrCj4+PiAgICBk
-cml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX29iamVjdC5oICAgICAgICAgICAgfCAgODcgKysrCj4+
-PiAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BtdS5jICAgICAgICAgICAgICAgfCAgODUg
-KysrCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BtdS5oICAgICAgICAgICAgICAg
-fCAgMzAgKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcHAuYyAgICAgICAgICAg
-ICAgICB8IDQxOCArKysrKysrKysrKysrKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xp
-bWFfcHAuaCAgICAgICAgICAgICAgICB8ICAzNyArKwo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL2xp
-bWEvbGltYV9yZWdzLmggICAgICAgICAgICAgIHwgMzA0ICsrKysrKysrKysrCj4+PiAgICBkcml2
-ZXJzL2dwdS9kcm0vbGltYS9saW1hX3NjaGVkLmMgICAgICAgICAgICAgfCA0OTcgKysrKysrKysr
-KysrKysrKysrCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3NjaGVkLmggICAgICAg
-ICAgICAgfCAxMjYgKysrKysKPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfdHRtLmMg
-ICAgICAgICAgICAgICB8IDQwOSArKysrKysrKysrKysrKwo+Pj4gICAgZHJpdmVycy9ncHUvZHJt
-L2xpbWEvbGltYV90dG0uaCAgICAgICAgICAgICAgIHwgIDQ0ICsrCj4+PiAgICBkcml2ZXJzL2dw
-dS9kcm0vbGltYS9saW1hX3ZtLmMgICAgICAgICAgICAgICAgfCAzMTIgKysrKysrKysrKysKPj4+
-ICAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfdm0uaCAgICAgICAgICAgICAgICB8ICA3MyAr
-KysKPj4+ICAgIGluY2x1ZGUvZHJtL2RybV9kcnYuaCAgICAgICAgICAgICAgICAgICAgICAgICB8
-ICAyMyArLQo+Pj4gICAgaW5jbHVkZS91YXBpL2RybS9saW1hX2RybS5oICAgICAgICAgICAgICAg
-ICAgIHwgMTk1ICsrKysrKysKPj4+ICAgIDQ0IGZpbGVzIGNoYW5nZWQsIDU1NjUgaW5zZXJ0aW9u
-cygrKSwgNiBkZWxldGlvbnMoLSkKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vbGltYS9LY29uZmlnCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2xpbWEvTWFrZWZpbGUKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vbGltYS9saW1hX2JjYXN0LmMKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vbGltYS9saW1hX2JjYXN0LmgKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vbGltYS9saW1hX2N0eC5jCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL2xpbWEvbGltYV9jdHguaAo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9saW1hL2xpbWFfZGV2aWNlLmMKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2RldmljZS5oCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9kbGJ1LmMKPj4+ICAgIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2RsYnUuaAo+Pj4gICAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZHJ2LmMKPj4+ICAgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2Rydi5oCj4+PiAgICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW0uYwo+Pj4gICAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtLmgKPj4+ICAgIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2dlbV9wcmltZS5jCj4+PiAgICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW1fcHJpbWUuaAo+
-Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ3AuYwo+
-Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ3AuaAo+
-Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfbDJfY2Fj
-aGUuYwo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFf
-bDJfY2FjaGUuaAo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1h
-L2xpbWFfbW11LmMKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGlt
-YS9saW1hX21tdS5oCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xp
-bWEvbGltYV9vYmplY3QuYwo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfb2JqZWN0LmgKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vbGltYS9saW1hX3BtdS5jCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL2xpbWEvbGltYV9wbXUuaAo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS9saW1hL2xpbWFfcHAuYwo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS9saW1hL2xpbWFfcHAuaAo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS9saW1hL2xpbWFfcmVncy5oCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL2xpbWEvbGltYV9zY2hlZC5jCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL2xpbWEvbGltYV9zY2hlZC5oCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV90dG0uYwo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfdHRtLmgKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmMKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmgKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBpbmNsdWRlL3VhcGkvZHJtL2xpbWFfZHJtLmgKPj4+CgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 22/05/18 10:40, Miquel Raynal wrote:
+> This is a cascaded interrupt controller in the AP806 GIC that collapses
+> SEIs (System Error Interrupt) coming from the AP and the CPs (through
+> the ICU).
+> 
+> The SEI handles up to 64 interrupts. The first 21 interrupts are wired
+> and come from the AP. The next 43 interrupts are from the CPs and are
+
+wired to the AP (no interrupts come from it)
+
+> triggered through MSI messages. To handle this complexity, the driver
+> has to declare to the upper layer: one IRQ domain for the wired
+> interrupts, one IRQ domain for the MSIs; and acts as a MSI server
+
+s/server/controller/
+
+> ('parent') by declaring an MSI domain.
+> 
+> Suggested-by: Haim Boot <hayim@marvell.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/irqchip/Kconfig         |   3 +
+>  drivers/irqchip/Makefile        |   1 +
+>  drivers/irqchip/irq-mvebu-sei.c | 422 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 426 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-mvebu-sei.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index e9233db16e03..922e2a919cf3 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -310,6 +310,9 @@ config MVEBU_ODMI
+>  config MVEBU_PIC
+>  	bool
+>  
+> +config MVEBU_SEI
+> +        bool
+> +
+>  config LS_SCFG_MSI
+>  	def_bool y if SOC_LS1021A || ARCH_LAYERSCAPE
+>  	depends on PCI && PCI_MSI
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 15f268f646bf..69d2ccb454ef 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -76,6 +76,7 @@ obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
+>  obj-$(CONFIG_MVEBU_ICU)			+= irq-mvebu-icu.o
+>  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+>  obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
+> +obj-$(CONFIG_MVEBU_SEI)			+= irq-mvebu-sei.o
+>  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+>  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+>  obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
+> diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
+> new file mode 100644
+> index 000000000000..d9abd5e10741
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-mvebu-sei.c
+> @@ -0,0 +1,422 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#define pr_fmt(fmt) "mvebu-sei: " fmt
+> +
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/msi.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/irqchip.h>
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/* Cause register */
+> +#define GICP_SECR(idx)		(0x0  + (idx * 0x4))
+> +/* Mask register */
+> +#define GICP_SEMR(idx)		(0x20 + (idx * 0x4))
+> +#define GICP_SET_SEI_OFFSET	0x30
+> +
+> +#define SEI_IRQ_COUNT_PER_REG	32
+> +#define SEI_IRQ_REG_COUNT	2
+> +#define SEI_IRQ_COUNT		(SEI_IRQ_COUNT_PER_REG * SEI_IRQ_REG_COUNT)
+> +#define SEI_IRQ_REG_IDX(irq_id)	(irq_id / SEI_IRQ_COUNT_PER_REG)
+> +#define SEI_IRQ_REG_BIT(irq_id)	(irq_id % SEI_IRQ_COUNT_PER_REG)
+> +
+> +struct mvebu_sei_interrupt_range {
+> +	u32 first;
+> +	u32 number;
+> +};
+> +
+> +struct mvebu_sei {
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	struct resource *res;
+> +	struct irq_domain *ap_domain;
+> +	struct irq_domain *cp_domain;
+> +	struct mvebu_sei_interrupt_range ap_interrupts;
+> +	struct mvebu_sei_interrupt_range cp_interrupts;
+> +	/* Lock on MSI allocations/releases */
+> +	spinlock_t cp_msi_lock;
+> +	DECLARE_BITMAP(cp_msi_bitmap, SEI_IRQ_COUNT);
+> +};
+> +
+> +static int mvebu_sei_domain_to_sei_irq(struct mvebu_sei *sei,
+> +				       struct irq_domain *domain,
+> +				       irq_hw_number_t hwirq)
+> +{
+> +	if (domain == sei->ap_domain)
+> +		return sei->ap_interrupts.first + hwirq;
+> +	else
+> +		return sei->cp_interrupts.first + hwirq;
+> +}
+> +
+> +static void mvebu_sei_reset(struct mvebu_sei *sei)
+> +{
+> +	u32 reg_idx;
+> +
+> +	/* Clear IRQ cause registers */
+> +	for (reg_idx = 0; reg_idx < SEI_IRQ_REG_COUNT; reg_idx++)
+> +		writel(0xFFFFFFFF, sei->base + GICP_SECR(reg_idx));
+> +}
+> +
+> +static void mvebu_sei_mask_irq(struct irq_data *d)
+> +{
+> +	struct mvebu_sei *sei = irq_data_get_irq_chip_data(d);
+> +	u32 sei_irq = mvebu_sei_domain_to_sei_irq(sei, d->domain, d->hwirq);
+> +	u32 reg_idx = SEI_IRQ_REG_IDX(sei_irq);
+> +	u32 reg;
+> +
+> +	/* 1 disables the interrupt */
+> +	reg = readl(sei->base + GICP_SEMR(reg_idx));
+> +	reg |= BIT(SEI_IRQ_REG_BIT(sei_irq));
+> +	writel(reg, sei->base + GICP_SEMR(reg_idx));
+> +}
+> +
+> +static void mvebu_sei_unmask_irq(struct irq_data *d)
+> +{
+> +	struct mvebu_sei *sei = irq_data_get_irq_chip_data(d);
+> +	u32 sei_irq = mvebu_sei_domain_to_sei_irq(sei, d->domain, d->hwirq);
+> +	u32 reg_idx = SEI_IRQ_REG_IDX(sei_irq);
+> +	u32 reg;
+> +
+> +	/* 0 enables the interrupt */
+> +	reg = readl(sei->base + GICP_SEMR(reg_idx));
+> +	reg &= ~BIT(SEI_IRQ_REG_BIT(sei_irq));
+> +	writel(reg, sei->base + GICP_SEMR(reg_idx));
+> +}
+> +
+> +static void mvebu_sei_compose_msi_msg(struct irq_data *data,
+> +				      struct msi_msg *msg)
+> +{
+> +	struct mvebu_sei *sei = data->chip_data;
+> +	phys_addr_t set = sei->res->start + GICP_SET_SEI_OFFSET;
+> +
+> +	msg->data = mvebu_sei_domain_to_sei_irq(sei, data->domain, data->hwirq);
+> +	msg->address_lo = lower_32_bits(set);
+> +	msg->address_hi = upper_32_bits(set);
+> +}
+> +
+> +static struct irq_chip mvebu_sei_ap_wired_irq_chip = {
+> +	.name			= "AP wired SEI",
+> +	.irq_mask		= mvebu_sei_mask_irq,
+> +	.irq_unmask		= mvebu_sei_unmask_irq,
+> +	.irq_eoi		= irq_chip_eoi_parent,
+> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> +	.irq_set_type		= irq_chip_set_type_parent,
+
+You seem to assume that this driver is purely dealing with edge
+interrupts. And yet you pass the request directly to the parrent. What
+does it mean? Shouldn't you at least check that this is an edge request
+and fail otherwise?
+
+> +};
+> +
+> +static struct irq_chip mvebu_sei_cp_msi_irq_chip = {
+> +	.name			= "CP MSI SEI",
+> +	.irq_mask		= mvebu_sei_mask_irq,
+> +	.irq_unmask		= mvebu_sei_unmask_irq,
+> +	.irq_eoi		= irq_chip_eoi_parent,
+> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> +	.irq_set_type		= irq_chip_set_type_parent,
+
+Same here.
+
+> +	.irq_compose_msi_msg	= mvebu_sei_compose_msi_msg,
+> +};
+> +
+> +static int mvebu_sei_irq_domain_alloc(struct irq_domain *domain,
+> +				      unsigned int virq, unsigned int nr_irqs,
+> +				      void *args)
+> +{
+> +	struct mvebu_sei *sei = domain->host_data;
+> +	struct irq_fwspec *fwspec = args;
+> +	struct irq_chip *irq_chip;
+> +	int sei_hwirq, hwirq;
+> +	int ret;
+> +
+> +	/* Software only supports single allocations for now */
+> +	if (nr_irqs != 1)
+> +		return -ENOTSUPP;
+> +
+> +	if (domain == sei->ap_domain) {
+
+That's not great, really. Pushing the management of the two domains into
+the same callbacks is pretty ugly, and makes the code rather confusing.
+Is there anything really preventing the two domains from being managed
+independently?
+
+> +		irq_chip = &mvebu_sei_ap_wired_irq_chip;
+> +		hwirq = fwspec->param[0];
+> +	} else {
+> +		irq_chip = &mvebu_sei_cp_msi_irq_chip;
+> +		spin_lock(&sei->cp_msi_lock);
+
+This could as well be a mutex.
+
+> +		hwirq = bitmap_find_free_region(sei->cp_msi_bitmap,
+> +						SEI_IRQ_COUNT, 0);
+
+It is a bit weird that you're allocating from a 64bit bitmap while you
+only have 43 interrupts available... At the 44th interrupt, something
+bad is going to happen.
+
+> +		spin_unlock(&sei->cp_msi_lock);
+> +		if (hwirq < 0)
+> +			return -ENOSPC;
+> +	}
+> +
+> +	sei_hwirq = mvebu_sei_domain_to_sei_irq(sei, domain, hwirq);
+
+Splitting the callbacks would definitely avoid that kind of horror.
+
+> +
+> +	fwspec->fwnode = domain->parent->fwnode;
+> +	fwspec->param_count = 3;
+> +	fwspec->param[0] = GIC_SPI;
+> +	fwspec->param[1] = sei_hwirq;
+> +	fwspec->param[2] = IRQ_TYPE_EDGE_RISING;
+> +
+> +	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, fwspec);
+> +	if (ret)
+> +		goto release_region;
+> +
+> +	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, irq_chip, sei);
+> +	if (ret)
+> +		goto free_irq_parents;
+> +
+> +	return 0;
+> +
+> +free_irq_parents:
+> +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
+> +release_region:
+> +	if (domain == sei->cp_domain) {
+> +		spin_lock(&sei->cp_msi_lock);
+> +		bitmap_release_region(sei->cp_msi_bitmap, hwirq, 0);
+> +		spin_unlock(&sei->cp_msi_lock);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void mvebu_sei_irq_domain_free(struct irq_domain *domain,
+> +				      unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	struct mvebu_sei *sei = domain->host_data;
+> +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> +	u32 irq_nb = sei->ap_interrupts.number + sei->cp_interrupts.number;
+> +
+> +	if (nr_irqs != 1 || d->hwirq >= irq_nb) {
+> +		dev_err(sei->dev, "Invalid hwirq %lu\n", d->hwirq);
+> +		return;
+> +	}
+> +
+> +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
+> +
+> +	spin_lock(&sei->cp_msi_lock);
+> +	bitmap_release_region(sei->cp_msi_bitmap, d->hwirq, 0);
+> +	spin_unlock(&sei->cp_msi_lock);
+> +}
+> +
+> +static const struct irq_domain_ops mvebu_sei_ap_domain_ops = {
+> +	.xlate = irq_domain_xlate_onecell,
+> +	.alloc = mvebu_sei_irq_domain_alloc,
+> +	.free = mvebu_sei_irq_domain_free,
+> +};
+> +
+> +static const struct irq_domain_ops mvebu_sei_cp_domain_ops = {
+> +	.alloc = mvebu_sei_irq_domain_alloc,
+> +	.free = mvebu_sei_irq_domain_free,
+> +};
+> +
+> +static struct irq_chip mvebu_sei_msi_irq_chip = {
+> +	.name		= "SEI",
+> +	.irq_set_type	= irq_chip_set_type_parent,
+
+Same question here.
+
+> +};
+> +
+> +static struct msi_domain_ops mvebu_sei_msi_ops = {
+> +};
+> +
+> +static struct msi_domain_info mvebu_sei_msi_domain_info = {
+> +	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
+> +	.ops	= &mvebu_sei_msi_ops,
+> +	.chip	= &mvebu_sei_msi_irq_chip,
+> +};
+> +
+> +static void mvebu_sei_handle_cascade_irq(struct irq_desc *desc)
+> +{
+> +	struct mvebu_sei *sei = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned long irqmap, irq_bit;
+> +	u32 reg_idx, virq, irqn;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	/* Read both SEI cause registers (64 bits) */
+> +	for (reg_idx = 0; reg_idx < SEI_IRQ_REG_COUNT; reg_idx++) {
+> +		irqmap = readl_relaxed(sei->base + GICP_SECR(reg_idx));
+> +
+> +		/* Call handler for each set bit */
+> +		for_each_set_bit(irq_bit, &irqmap, SEI_IRQ_COUNT_PER_REG) {
+> +			/* Cause Register gives the SEI number */
+> +			irqn = irq_bit + reg_idx * SEI_IRQ_COUNT_PER_REG;
+> +			/*
+> +			 * Finding Linux mapping (virq) needs the right domain
+> +			 * and the relative hwirq (which start at 0 in both
+> +			 * cases, while irqn is relative to all SEI interrupts).
+> +			 */
+
+It is a bit odd that you're virtualizing the hwirq number. The whole
+point of splitting hwirq from virq is that you don't have to do that and
+can use the the raw HW number. You're saving a tiny bit of memory in the
+irq_domain, at the expense of more complexity. I don't know if that's
+worth it...
+
+> +			if (irqn < sei->ap_interrupts.number) {
+> +				virq = irq_find_mapping(sei->ap_domain, irqn);
+> +			} else {
+> +				irqn -= sei->ap_interrupts.number;
+> +				virq = irq_find_mapping(sei->cp_domain, irqn);
+> +			}
+> +
+> +			/* Call IRQ handler */
+> +			generic_handle_irq(virq);
+> +		}
+> +
+> +		/* Clear interrupt indication by writing 1 to it */
+> +		writel(irqmap, sei->base + GICP_SECR(reg_idx));
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int mvebu_sei_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node, *parent, *child;
+> +	struct irq_domain *parent_domain, *plat_domain;
+> +	struct mvebu_sei *sei;
+> +	const __be32 *property;
+> +	u32 parent_irq, size;
+> +	int ret;
+> +
+> +	sei = devm_kzalloc(&pdev->dev, sizeof(*sei), GFP_KERNEL);
+> +	if (!sei)
+> +		return -ENOMEM;
+> +
+> +	sei->dev = &pdev->dev;
+> +
+> +	spin_lock_init(&sei->cp_msi_lock);
+> +
+> +	sei->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	sei->base = devm_ioremap_resource(sei->dev, sei->res);
+> +	if (!sei->base) {
+> +		dev_err(sei->dev, "Failed to remap SEI resource\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	mvebu_sei_reset(sei);
+> +
+> +	/*
+> +	 * Reserve the single (top-level) parent SPI IRQ from which all the
+> +	 * interrupts handled by this driver will be signaled.
+> +	 */
+> +	parent_irq = irq_of_parse_and_map(node, 0);
+> +	if (parent_irq <= 0) {
+> +		dev_err(sei->dev, "Failed to retrieve top-level SPI IRQ\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	irq_set_chained_handler(parent_irq, mvebu_sei_handle_cascade_irq);
+> +	irq_set_handler_data(parent_irq, sei);
+> +
+> +	/*
+> +	 * SEIs in the range [ 0; 20] are wired and come from the AP.
+> +	 * SEIs in the range [21; 63] are CP SEI and are triggered through MSIs.
+> +	 *
+> +	 * Each SEI 'domain' is represented as a subnode.
+> +	 */
+> +
+> +	/* Get a reference to the parent domain to create a hierarchy */
+> +	parent = of_irq_find_parent(node);
+> +	if (!parent) {
+> +		dev_err(sei->dev, "Failed to find parent IRQ node\n");
+> +		ret = -ENODEV;
+> +		goto dispose_irq;
+> +	}
+> +
+> +	parent_domain = irq_find_host(parent);
+> +	if (!parent_domain) {
+> +		dev_err(sei->dev, "Failed to find parent IRQ domain\n");
+> +		ret = -ENODEV;
+> +		goto dispose_irq;
+> +	}
+> +
+> +	/* Create the 'wired' hierarchy */
+> +	child = of_find_node_by_name(node, "sei-wired-controller");
+> +	if (!child) {
+> +		dev_err(sei->dev, "Missing 'sei-wired-controller' subnode\n");
+> +		ret = -ENODEV;
+> +		goto dispose_irq;
+> +	}
+> +
+> +	property = of_get_property(child, "marvell,sei-ranges", &size);
+> +	if (!property || size != (2 * sizeof(u32))) {
+> +		dev_err(sei->dev, "Missing 'marvell,sei-ranges' property\n");
+> +		of_node_put(child);
+> +		ret = -ENODEV;
+> +		goto dispose_irq;
+> +	}
+> +
+> +	sei->ap_interrupts.first = be32_to_cpu(property[0]);
+> +	sei->ap_interrupts.number = be32_to_cpu(property[1]);
+> +	sei->ap_domain = irq_domain_create_hierarchy(parent_domain, 0,
+> +						     sei->ap_interrupts.number,
+> +						     of_node_to_fwnode(child),
+> +						     &mvebu_sei_ap_domain_ops,
+> +						     sei);
+> +	of_node_put(child);
+> +	if (!sei->ap_domain) {
+> +		dev_err(sei->dev, "Failed to create AP IRQ domain\n");
+> +		ret = -ENOMEM;
+> +		goto dispose_irq;
+> +	}
+> +
+> +	/* Create the 'MSI' hierarchy */
+> +	child = of_find_node_by_name(node, "sei-msi-controller");
+> +	if (!child) {
+> +		dev_err(sei->dev, "Missing 'sei-msi-controller' subnode\n");
+> +		ret = -ENODEV;
+> +		goto remove_ap_domain;
+> +	}
+> +
+> +	property = of_get_property(child, "marvell,sei-ranges", &size);
+> +	if (!property || size != (2 * sizeof(u32))) {
+> +		dev_err(sei->dev, "Missing 'marvell,sei-ranges' property\n");
+> +		of_node_put(child);
+> +		ret = -ENODEV;
+> +		goto remove_ap_domain;
+> +	}
+> +
+> +	sei->cp_interrupts.first = be32_to_cpu(property[0]);
+> +	sei->cp_interrupts.number = be32_to_cpu(property[1]);
+> +	sei->cp_domain = irq_domain_create_hierarchy(parent_domain, 0,
+> +						     sei->cp_interrupts.number,
+> +						     of_node_to_fwnode(child),
+> +						     &mvebu_sei_cp_domain_ops,
+> +						     sei);
+> +	if (!sei->cp_domain) {
+> +		pr_err("Failed to create CPs IRQ domain\n");
+> +		of_node_put(child);
+> +		ret = -ENOMEM;
+> +		goto remove_ap_domain;
+> +	}
+> +
+> +	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(child),
+> +						     &mvebu_sei_msi_domain_info,
+> +						     sei->cp_domain);
+> +	of_node_put(child);
+> +	if (!plat_domain) {
+> +		pr_err("Failed to create CPs MSI domain\n");
+> +		ret = -ENOMEM;
+> +		goto remove_cp_domain;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, sei);
+> +
+> +	return 0;
+> +
+> +remove_cp_domain:
+> +	irq_domain_remove(sei->cp_domain);
+> +remove_ap_domain:
+> +	irq_domain_remove(sei->ap_domain);
+> +dispose_irq:
+> +	irq_dispose_mapping(parent_irq);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id mvebu_sei_of_match[] = {
+> +	{ .compatible = "marvell,armada-8k-sei", },
+> +	{},
+> +};
+> +
+> +static struct platform_driver mvebu_sei_driver = {
+> +	.probe  = mvebu_sei_probe,
+> +	.driver = {
+> +		.name = "mvebu-sei",
+> +		.of_match_table = mvebu_sei_of_match,
+> +	},
+> +};
+> +builtin_platform_driver(mvebu_sei_driver);
+> 
+
+It feels like this patch could do with a total split:
+
+- Introduce the wired side of the driver
+- then the MSI part
+
+Drop the common domain callbacks, and treat the two domains separately.
+I seriously doubt there will be much of an overlap anyway.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
