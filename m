@@ -1,58 +1,47 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/5] Documentation: DT: Add optional 'timeout-sec'
- property for sp805
-Date: Wed, 23 May 2018 11:10:58 -0700
-Message-ID: <20180523181058.GC27570@roeck-us.net>
-References: <1527014840-21236-1-git-send-email-ray.jui@broadcom.com>
- <1527014840-21236-2-git-send-email-ray.jui@broadcom.com>
- <af81ea74-fb80-11e2-7bdc-d3607bdbd46b@arm.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim
+	ngd dt bindings
+Date: Wed, 23 May 2018 19:11:45 +0100
+Message-ID: <4b83b699-59ad-b177-f360-3e76ba847892@linaro.org>
+References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
+ <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
+ <20180523164023.GA24671@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <af81ea74-fb80-11e2-7bdc-d3607bdbd46b@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Ray Jui <ray.jui@broadcom.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180523164023.GA24671@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, girishm@quicinc.com, gregkh@linuxfoundation.org, broonie@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, kramasub@codeaurora.org, linux-arm-msm@vger.kernel.org, sdharia@quicinc.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 11:57:25AM +0100, Robin Murphy wrote:
-> On 22/05/18 19:47, Ray Jui wrote:
-> >Update the SP805 binding document to add optional 'timeout-sec'
-> >devicetree property
-> >
-> >Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> >Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> >---
-> >  Documentation/devicetree/bindings/watchdog/sp805-wdt.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> >diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> >index edc4f0e..f898a86 100644
-> >--- a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> >+++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> >@@ -19,6 +19,8 @@ Required properties:
-> >  Optional properties:
-> >  - interrupts : Should specify WDT interrupt number.
-> >+- timeout-sec : Should specify default WDT timeout in seconds. If unset, the
-> >+                default timeout is 30 seconds
-> 
-> According to the SP805 TRM, the default interval is dependent on the rate of
-> WDOGCLK, but would typically be a lot longer than that :/
-> 
-Depends on the definition of "default". In the context of watchdog drivers,
-it is (or should be) a driver default, not a chip default.
 
-Guenter
 
-> On a related note, anyone have any idea why we seem to have two subtly
-> different SP805 bindings defined?
+On 23/05/18 17:40, Rob Herring wrote:
+>> +
+>> +- qcom,ngd-id
+>> +	Usage: required
+>> +	Value type: <u32>
+>> +	Definition: ngd instance id in the controller
+> Why do you need this?
 > 
-> Robin.
-> 
-> >  Examples:
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please ignore my comment from previous reply.
+
+There are more than one instances of ngd in this slim controller.
+We need this to make sure we are programming the correct one.
+
+We also need this instance ID during powering it up using QMI.
+
+
+thanks,
+srini
