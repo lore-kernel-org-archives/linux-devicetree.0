@@ -1,37 +1,26 @@
 From: Ilia Lin <ilialin@codeaurora.org>
-Subject: [PATCH v11 3/8] clk: Use devm_ in the register fixed factor clock
-Date: Wed, 23 May 2018 15:52:56 +0300
-Message-ID: <1527079981-11179-4-git-send-email-ilialin@codeaurora.org>
-References: <1527079981-11179-1-git-send-email-ilialin@codeaurora.org>
+Subject: [PATCH v11 0/2] CPU scaling support for msm8996 DT
+Date: Wed, 23 May 2018 16:11:29 +0300
+Message-ID: <1527081091-13389-1-git-send-email-ilialin@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527079981-11179-1-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vireshk@kernel.org, ilialin@codeaurora.org
+To: andy.gross@linaro.org, david.brown@linaro.org, robh@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use devm_clk_hw_register instead of clk_hw_register
-to simplify the usage of this API. This way drivers that call
-the clk_hw_register_fixed_factor won't need to maintain
-a data structure for further cleanup.
+[v11]
+ * Split the series into domains
 
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
----
- drivers/clk/clk-fixed-factor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The series adds OPP tables, thermal and CPU definitions in order to support
+the CPU frequency scaling on msm8996 CPUs.
 
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index a5d402d..8e39bda 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -94,7 +94,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
- 	init.num_parents = 1;
- 
- 	hw = &fix->hw;
--	ret = clk_hw_register(dev, hw);
-+	ret = devm_clk_hw_register(dev, hw);
- 	if (ret) {
- 		kfree(fix);
- 		hw = ERR_PTR(ret);
+Ilia Lin (2):
+  dt: qcom: Add opp and thermal to the msm8996
+  dt: qcom: Add qcom-cpufreq-kryo driver configuration
+
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts |   2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi       | 546 +++++++++++++++++++++++++++-
+ 2 files changed, 528 insertions(+), 20 deletions(-)
+
 -- 
 1.9.1
