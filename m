@@ -1,50 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
-Date: Wed, 23 May 2018 13:39:20 -0500
-Message-ID: <20180523183920.GA23693@rob-hp-laptop>
-References: <20180521232314.5972-1-vz@mleia.com>
+Subject: Re: [PATCH RFC 1/3] scsi: ufs: set the device reference clock setting
+Date: Wed, 23 May 2018 13:48:30 -0500
+Message-ID: <20180523184830.GA29198@rob-hp-laptop>
+References: <1526962900-20683-1-git-send-email-sayalil@codeaurora.org>
+ <1526962900-20683-2-git-send-email-sayalil@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180521232314.5972-1-vz@mleia.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+In-Reply-To: <1526962900-20683-2-git-send-email-sayalil@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sayali Lokhande <sayalil@codeaurora.org>
+Cc: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXkgMjIsIDIwMTggYXQgMDI6MjM6MTRBTSArMDMwMCwgVmxhZGltaXIgWmFwb2xz
-a2l5IHdyb3RlOgo+IFRoZSBjaGFuZ2UgYWRkcyBzdXBwb3J0IGZvciBTaGFycCBMUTAzNVE3REIw
-MyAzLjUiIFFWR0EgcGFuZWwuCj4gCj4gTm90ZSB0aGF0IHRoaXMgYWdlZCBwYW5lbCBpcyBhbHJl
-YWR5IGZvdW5kIGluIHRoZSBrZXJuZWwgc291cmNlcywKPiBmb3IgaW5zdGFuY2UgaW4gYm9hcmQg
-bWFjaCBmaWxlcyBtYWNoLW14MjFhZHMuYywgbWFjaC1teDI3YWRzLmMsCj4gbWFjaC1wY20wNDMu
-YywgbHBkMjcwLmMgYW5kIGlteDI3LXBoeXRlYy1waHljb3JlLXJkay5kdHMuCj4gCj4gU2lnbmVk
-LW9mZi1ieTogVmxhZGltaXIgWmFwb2xza2l5IDx2ekBtbGVpYS5jb20+Cj4gLS0tCj4gIC4uLi9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMDM1cTdkYjAzLnR4dCAgIHwgIDcgKysrKysr
-Cj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwg
-MjcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDM0IGluc2VydGlv
-bnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMDM1cTdkYjAzLnR4dAo+IAo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxs
-cTAzNXE3ZGIwMy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC9zaGFycCxscTAzNXE3ZGIwMy50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGlu
-ZGV4IDAwMDAwMDAuLjQyMDI3ZTUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHEwMzVxN2RiMDMudHh0
-Cj4gQEAgLTAsMCArMSw3IEBACj4gK1NoYXJwIExRMDM1UTdEQjAzIDMuNSIgUVZHQSBURlQgTENE
-IHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHNob3Vs
-ZCBiZSAic2hhcnAsbHEwMzVxN2RiMDMiCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJs
-ZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2lu
-IHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCgpZb3UgbmVlZCB0byBzdGF0ZSB3
-aGljaCBwcm9wZXJ0aWVzIGZyb20gdGhlcmUgdGhpcyBwYW5lbCBhY3R1YWxseSB1c2VzLgoKUm9i
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, May 22, 2018 at 09:51:38AM +0530, Sayali Lokhande wrote:
+> From: Subhash Jadavani <subhashj@codeaurora.org>
+> 
+> UFS host supplies the reference clock to UFS device and UFS device
+> specification allows host to provide one of the 4 frequencies (19.2 MHz,
+> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
+> device reference clock frequency setting in the device based on what
+> frequency it is supplying to UFS device.
+> 
+> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> [cang@codeaurora.org: Resolved trivial merge conflicts]
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> ---
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  8 +++
+>  drivers/scsi/ufs/ufs.h                             |  9 ++++
+>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 20 ++++++++
+>  drivers/scsi/ufs/ufshcd.c                          | 60 ++++++++++++++++++++++
+>  drivers/scsi/ufs/ufshcd.h                          |  2 +
+>  5 files changed, 99 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index c39dfef..ac94220 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -41,6 +41,12 @@ Optional properties:
+>  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
+>  			  Note that it is assume same number of lanes is used both
+>  			  directions at once. If not specified, default is 2 lanes per direction.
+> +- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
+> +			  0: 19.2 MHz
+> +			  1: 26 MHz
+> +			  2: 38.4 MHz
+> +			  3: 52 MHz
+> +			  Defaults to 26 MHz if not specified.
+
+You already have "ref_clk", can't you just read its frequency?
+
+Rob
