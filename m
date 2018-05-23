@@ -1,27 +1,38 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 13/13] soc: rockchip: power-domain: add power domain support for px30
-Date: Wed, 23 May 2018 22:10:30 +0200
-Message-ID: <2327103.c4Zn9voLUv@diego>
-References: <1527058129-10260-1-git-send-email-zhangqing@rock-chips.com> <1527058412-10754-1-git-send-email-zhangqing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH] arm64: dts: stingray: Add otp device node
+Date: Wed, 23 May 2018 13:17:10 -0700
+Message-ID: <1527106630-4760-1-git-send-email-scott.branden@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527058412-10754-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 23. Mai 2018, 08:53:32 CEST schrieb Elaine Zhang:
-> From: Finley Xiao <finley.xiao@rock-chips.com>
-> 
-> This driver is modified to support PX30 SoC.
-> 
-> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+Add otp device node for Stingray SOC.
 
-applied for 4.18 (or later)
+Fixes: 2fa9e9e29ea2 ("arm64: dts: Add GPIO DT nodes for Stingray SOC")
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+---
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thanks
-Heiko
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index 99aaff0..6013478 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -258,6 +258,13 @@
+ 
+ 		#include "stingray-clock.dtsi"
+ 
++		otp: otp@1c400 {
++			compatible = "brcm,ocotp-v2";
++			reg = <0x0001c400 0x68>;
++			brcm,ocotp-size = <2048>;
++			status = "okay";
++		};
++
+ 		gpio_crmu: gpio@24800 {
+ 			compatible = "brcm,iproc-gpio";
+ 			reg = <0x00024800 0x4c>;
+-- 
+2.5.0
