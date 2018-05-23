@@ -1,108 +1,37 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/6] dt-bindings: media: rcar-vin: Describe optional ep
- properties
-Date: Wed, 23 May 2018 22:38:27 +0300
-Message-ID: <1709653.qERUERh18a@avalon>
-References: <1526488352-898-1-git-send-email-jacopo+renesas@jmondi.org>
- <1526488352-898-2-git-send-email-jacopo+renesas@jmondi.org>
- <20180523162947.GA13661@rob-hp-laptop>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v3 0/7] Add support for QCA8334 switch
+Date: Wed, 23 May 2018 15:47:30 -0400 (EDT)
+Message-ID: <20180523.154730.2218442546759769824.davem@davemloft.net>
+References: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180523162947.GA13661@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, niklas.soderlund@ragnatech.se, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: Text/Plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vokac.m@gmail.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, michal.vokac@ysoft.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: "Michal Vok·Ë" <vokac.m@gmail.com>
+Date: Wed, 23 May 2018 08:20:17 +0200
 
-On Wednesday, 23 May 2018 19:29:47 EEST Rob Herring wrote:
-> On Wed, May 16, 2018 at 06:32:27PM +0200, Jacopo Mondi wrote:
-> > Describe the optional endpoint properties for endpoint nodes of port@0
-> > and port@1 of the R-Car VIN driver device tree bindings documentation.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > b/Documentation/devicetree/bindings/media/rcar_vin.txt index
-> > a19517e1..c53ce4e 100644
-> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > @@ -53,6 +53,16 @@ from local SoC CSI-2 receivers (port1) depending on
-> > SoC.
-> > 
-> >        from external SoC pins described in video-interfaces.txt[1].
-> >        Describing more then one endpoint in port 0 is invalid. Only VIN
-> >        instances that are connected to external pins should have port 0.
-> > 
-> > +
-> > +      - Optional properties for endpoint nodes of port@0:
-> > +        - hsync-active: active state of the HSYNC signal, 0/1 for
-> > LOW/HIGH
-> > +	  respectively. Default is active high.
-> > +        - vsync-active: active state of the VSYNC signal, 0/1 for
-> > LOW/HIGH
-> > +	  respectively. Default is active high.
-> > +
-> > +	If both HSYNC and VSYNC polarities are not specified, embedded
-> > +	synchronization is selected.
+> This series basically adds support for a QCA8334 ethernet switch to the
+> qca8k driver. It is a four-port variant of the already supported seven
+> port QCA8337. Register map is the same for the whole familly and all chips
+> have the same device ID.
 > 
-> No need to copy-n-paste from video-interfaces.txt. Just "see
-> video-interfaces.txt" for the description is fine.
+> Major part of this series enhances the CPU port setting. Currently the CPU
+> port is not set to any sensible defaults compatible with the xGMII
+> interface. This series forces the CPU port to its maximum bandwidth and
+> also allows to adjust the new defaults using fixed-link device tree
+> sub-node.
+> 
+> Alongside these changes I fixed two checkpatch warnings regarding SPDX and
+> redundant parentheses.
+> 
+> Changes in v3:
+>  - Rebased on latest net-next/master.
+>  - Corrected fixed-link documentation.
 
-I would still explicitly list the properties that apply to this binding. I 
-agree that there's no need to copy & paste the description of those properties 
-though.
-
-> > +
-> > 
-> >      - port 1 - sub-nodes describing one or more endpoints connected to
-> >      
-> >        the VIN from local SoC CSI-2 receivers. The endpoint numbers must
-> >        use the following schema.
-> > 
-> > @@ -62,6 +72,8 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
-> > 
-> >          - Endpoint 2 - sub-node describing the endpoint connected to
-> >          CSI40
-> >          - Endpoint 3 - sub-node describing the endpoint connected to
-> >          CSI41
-> > 
-> > +      Endpoint nodes of port@1 do not support any optional endpoint
-> > property. +
-> > 
-> >  Device node example for Gen2 platforms
-> >  --------------------------------------
-> > 
-> > @@ -112,7 +124,6 @@ Board setup example for Gen2 platforms (vin1 composite
-> > video input)> 
-> >                  vin1ep0: endpoint {
-> >                  
-> >                          remote-endpoint = <&adv7180>;
-> > 
-> > -                        bus-width = <8>;
-> > 
-> >                  };
-> >          
-> >          };
-> >  
-> >  };
-
--- 
-Regards,
-
-Laurent Pinchart
+Series applied, thank you.
