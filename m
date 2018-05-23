@@ -1,61 +1,131 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 5/6] ARM: dts: Renesas RZN1D-DB Board base file
-Date: Wed, 23 May 2018 11:13:40 +0200
-Message-ID: <CAMuHMdWu69Mfn-JhBgvChZ3tvzUvCOeYKowzizQt3DcWJLeR0A@mail.gmail.com>
-References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com> <1526983321-41949-6-git-send-email-michel.pollet@bp.renesas.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add GEther support
+Date: Wed, 23 May 2018 11:18:08 +0200
+Message-ID: <20180523091807.ppxntc75li6frau6@verge.net.au>
+References: <a4230699-e46f-0782-e3b1-22d58b9033c8@cogentembedded.com>
+ <8910c197-cf1b-9ee9-9ddb-5d2f705a4b26@cogentembedded.com>
+ <CAMuHMdW9UzOGV_zh3NxugYrj0j0qszX+NFoZtFvZRD9CNMHt+w@mail.gmail.com>
+ <bdbfd13e-cf0c-e19a-b76f-5e8e024dca26@cogentembedded.com>
+ <20180523084100.ynv3zoqrikcxem5f@verge.net.au>
+ <9f2c6e9b-a6a9-97f1-7899-3635230acd6f@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526983321-41949-6-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <9f2c6e9b-a6a9-97f1-7899-3635230acd6f@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+On Wed, May 23, 2018 at 12:05:30PM +0300, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 5/23/2018 11:41 AM, Simon Horman wrote:
+> 
+> > > > > Define the generic R8A77980 part of the GEther device node.
+> > > > > 
+> > > > > Based on the original (and large) patch by Vladimir Barinov.
+> > > > > 
+> > > > > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > > > > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > > > 
+> > > > Thanks for your patch!
+> > > > 
+> > > > With the below addressed:
+> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > 
+> > >     Thanks!
+> > > 
+> > > > > --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> > > > > +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> > > > > @@ -417,6 +417,17 @@
+> > > > >                          dma-channels = <16>;
+> > > > >                  };
+> > > > > 
+> > > > > +               gether: ethernet@e7400000 {
+> > > > > +                       compatible = "renesas,gether-r8a77980";
+> > > > > +                       reg = <0 0xe7400000 0 0x1000>;
+> > > > > +                       interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > +                       clocks = <&cpg CPG_MOD 813>;
+> > > > > +                       power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> > > > 
+> > > > resets = <&cpg 813>;
+> > > 
+> > >     As usual...
+> > > 
+> > > > 
+> > > > > +                       #address-cells = <1>;
+> > > > > +                       #size-cells = <0>;
+> > > > > +                       status = "disabled";
+> > > > 
+> > > > Any default phy-mode needed?
+> > > 
+> > >     A default "phy-mode" IMO make sense when the MAC supports a single
+> > > PHY interface mode. In this case, both RMII and RGMII are supported, so
+> > > I coulsn't choose a default...
+> > 
+> > I would think making an arbitrary choice is better than no choice.
+> > How does the driver behave in the absence of a default?
+> 
+>    The board DT *must* assign some "phy-mode" -- it's a required prop.
+>    In this particular case, iff the mode is still unspecified, the driver
+> will select the MII mode for the RMII_MII reg (which is a reserved value for
+> this GEther)...
 
-On Tue, May 22, 2018 at 12:01 PM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> This adds a base device tree file for the RZN1-DB board, with only the
-> basic support allowing the system to boot to a prompt. Only one UART is
-> used, with only a single CPU running.
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+Thanks, if its required that boards provide this property then
+this makes sense to me.
 
-Thanks for your patch!
+I have applied the patch after adding the resets property.
+The result is as follows:
 
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts
-> @@ -0,0 +1,29 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the RZN1D-DB Board
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Europe Limited
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "r9a06g032.dtsi"
-> +
-> +/ {
-> +       model = "RZN1D-DB Board";
-> +       compatible = "renesas,rzn1d400-db",
-> +                       "renesas,r9a06g032", "renesas,rzn1";
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] arm64: dts: renesas: r8a77980: add GEther support
 
-Please drop the "renesas,rzn1".
+Define the generic R8A77980 part of the GEther device node.
 
-With the above fixed:
+Based on the original (and large) patch by Vladimir Barinov.
+
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[simon: add resets property]
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+index 6d2b61d83caf..c797db59ae18 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -417,6 +417,18 @@
+ 			dma-channels = <16>;
+ 		};
+ 
++		gether: ethernet@e7400000 {
++			compatible = "renesas,gether-r8a77980";
++			reg = <0 0xe7400000 0 0x1000>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 813>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 813>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		mmc0: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a77980",
+ 				     "renesas,rcar-gen3-sdhi";
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.11.0
