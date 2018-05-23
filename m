@@ -1,75 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] Documentation: DT: Add optional 'timeout-sec'
- property for sp805
-Date: Wed, 23 May 2018 13:59:44 -0500
-Message-ID: <20180523185944.GA9989@rob-hp-laptop>
-References: <1527014840-21236-1-git-send-email-ray.jui@broadcom.com>
- <1527014840-21236-2-git-send-email-ray.jui@broadcom.com>
- <af81ea74-fb80-11e2-7bdc-d3607bdbd46b@arm.com>
- <c542388f-e417-f624-ade1-95f9a2fc8a3b@broadcom.com>
+Subject: Re: [PATCH V4 8/8] dt-bindings: stm32: add compatible for syscon
+Date: Wed, 23 May 2018 14:03:32 -0500
+Message-ID: <20180523190332.GA20768@rob-hp-laptop>
+References: <1527090479-5263-1-git-send-email-christophe.roullier@st.com>
+ <1527090479-5263-9-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c542388f-e417-f624-ade1-95f9a2fc8a3b@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1527090479-5263-9-git-send-email-christophe.roullier@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Christophe Roullier <christophe.roullier@st.com>
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 09:25:49AM -0700, Ray Jui wrote:
+On Wed, May 23, 2018 at 05:47:59PM +0200, Christophe Roullier wrote:
+> This patch describes syscon DT bindings.
 > 
-> 
-> On 5/23/2018 3:57 AM, Robin Murphy wrote:
-> > On 22/05/18 19:47, Ray Jui wrote:
-> > > Update the SP805 binding document to add optional 'timeout-sec'
-> > > devicetree property
-> > > 
-> > > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > > ---
-> > >   Documentation/devicetree/bindings/watchdog/sp805-wdt.txt | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> > > b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> > > index edc4f0e..f898a86 100644
-> > > --- a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> > > +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-> > > @@ -19,6 +19,8 @@ Required properties:
-> > >   Optional properties:
-> > >   - interrupts : Should specify WDT interrupt number.
-> > > +- timeout-sec : Should specify default WDT timeout in seconds. If
-> > > unset, the
-> > > +                default timeout is 30 seconds
-> > 
-> > According to the SP805 TRM, the default interval is dependent on the
-> > rate of WDOGCLK, but would typically be a lot longer than that :/
-> > 
-> > On a related note, anyone have any idea why we seem to have two subtly
-> > different SP805 bindings defined?
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> ---
+>  Documentation/devicetree/bindings/arm/stm32.txt            | 10 ----------
+>  .../devicetree/bindings/arm/stm32/stm32-syscon.txt         | 14 ++++++++++++++
+>  Documentation/devicetree/bindings/arm/stm32/stm32.txt      | 10 ++++++++++
+>  3 files changed, 24 insertions(+), 10 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/stm32.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32.txt
 
-Sigh.
+In the future, use the -M option so file moves don't show any diff.
 
-> Interesting, I did not even know that until you pointed this out (and it's
-> funny that I found that I actually reviewed arm,sp805.txt internally in
-> Broadcom code review).
-> 
-> It looks like one was done by Bhupesh Sharma (sp805-wdt.txt) and the other
-> was done by Anup Patel (arm,sp805.txt). Both were merged at the same time
-> around March 20, 2016: 915c56bc01d6. I'd assume both were sent out at around
-> the same time.
-> 
-> It sounds like we should definitely remove one of them. Given that
-> sp805-wdt.txt appears to have more detailed descriptions on the use of the
-> clocks, should we remove arm,sp805.txt?
-
-Take whichever text you like, but I prefer filenames using the 
-compatible string and the correct string is 'arm,sp805' because '-wdt' 
-is redundant. You can probably safely just update all the dts files with 
-'arm,sp805' and just remove 'arm,sp805-wdt' because it is not actually 
-used (as the ID registers are).
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
