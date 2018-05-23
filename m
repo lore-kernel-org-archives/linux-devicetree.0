@@ -1,49 +1,86 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 05/15] drm/sun4i: Add TCON TOP driver
-Date: Wed, 23 May 2018 13:23:11 -0500
-Message-ID: <20180523182311.GA8741@rob-hp-laptop>
-References: <20180519183127.2718-1-jernej.skrabec@siol.net>
- <20180519183127.2718-6-jernej.skrabec@siol.net>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 2/2] mtd: partitions: use DT info for parsing partitions
+ with specified type
+Date: Wed, 23 May 2018 20:24:08 +0200
+Message-ID: <20180523202408.632edefa@bbrezillon>
+References: <20180523171448.26234-1-zajec5@gmail.com>
+ <20180523171448.26234-2-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBEXDS3MAKGQETUFJHYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180519183127.2718-6-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180523171448.26234-2-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 19, 2018 at 08:31:17PM +0200, Jernej Skrabec wrote:
-> As already described in DT binding, TCON TOP is responsible for
-> configuring display pipeline. In this initial driver focus is on HDMI
-> pipeline, so TVE and LCD configuration is not implemented.
-> 
-> Implemented features:
-> - HDMI source selection
-> - clock driver (TCON and DSI gating)
-> - connecting mixers and TCONS
-> 
-> Something similar also existed in previous SoCs, except that it was part
-> of first TCON.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/Makefile             |   3 +-
->  drivers/gpu/drm/sun4i/sun8i_tcon_top.c     | 256 +++++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_tcon_top.h     |  20 ++
->  include/dt-bindings/clock/sun8i-tcon-top.h |  11 +
-
-This belongs with the binding doc patch.
-
->  4 files changed, 289 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.c
->  create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.h
->  create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
+T24gV2VkLCAyMyBNYXkgMjAxOCAxOToxNDo0OCArMDIwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
+NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Cj4gCj4gVGhpcyBzdXBwb3J0cyBuZXN0ZWQgcGFydGl0aW9ucyBpbiBhIERULiBJZiBz
+ZWxlY3RlZCBwYXJ0aXRpb24gaGFzIGEKPiAiY29tcGF0aWJsZSIgcHJvcGVydHkgc3BlY2lmaWVk
+IGl0IHdpbGwgYmUgcGFyc2VkIGxvb2tpbmcgZm9yCj4gc3VicGFydGl0aW9ucy4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gLS0tCj4gIGRy
+aXZlcnMvbXRkL210ZHBhcnQuYyB8IDMzICsrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0t
+LQo+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL210ZHBhcnQuYyBiL2RyaXZlcnMvbXRkL210ZHBh
+cnQuYwo+IGluZGV4IGY4ZDNhMDE1Y2RhZC4uNTJlMmNiMzVmYzc5IDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvbXRkL210ZHBhcnQuYwo+ICsrKyBiL2RyaXZlcnMvbXRkL210ZHBhcnQuYwo+IEBAIC0z
+MjIsMjIgKzMyMiw2IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBmcmVlX3BhcnRpdGlvbihzdHJ1Y3Qg
+bXRkX3BhcnQgKnApCj4gIAlrZnJlZShwKTsKPiAgfQo+ICAKPiAtLyoqCj4gLSAqIG10ZF9wYXJz
+ZV9wYXJ0IC0gcGFyc2UgTVREIHBhcnRpdGlvbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25zCj4g
+LSAqCj4gLSAqIEBzbGF2ZTogcGFydCB0aGF0IGlzIHN1cHBvc2VkIHRvIGJlIGEgY29udGFpbmVy
+IGFuZCBzaG91bGQgYmUgcGFyc2VkCj4gLSAqIEB0eXBlczogTlVMTC10ZXJtaW5hdGVkIGFycmF5
+IHdpdGggbmFtZXMgb2YgcGFydGl0aW9uIHBhcnNlcnMgdG8gdHJ5Cj4gLSAqCj4gLSAqIFNvbWUg
+cGFydGl0aW9ucyBhcmUga2luZCBvZiBjb250YWluZXJzIHdpdGggZXh0cmEgc3VicGFydGl0aW9u
+cyAodm9sdW1lcykuCj4gLSAqIFRoZXJlIGNhbiBiZSB2YXJpb3VzIGZvcm1hdHMgb2Ygc3VjaCBj
+b250YWluZXJzLiBUaGlzIGZ1bmN0aW9uIHRyaWVzIHRvIHVzZQo+IC0gKiBzcGVjaWZpZWQgcGFy
+c2VycyB0byBhbmFseXplIGdpdmVuIHBhcnRpdGlvbiBhbmQgcmVnaXN0ZXJzIGZvdW5kCj4gLSAq
+IHN1YnBhcnRpdGlvbnMgb24gc3VjY2Vzcy4KPiAtICovCj4gLXN0YXRpYyBpbnQgbXRkX3BhcnNl
+X3BhcnQoc3RydWN0IG10ZF9wYXJ0ICpzbGF2ZSwgY29uc3QgY2hhciAqY29uc3QgKnR5cGVzKQo+
+IC17Cj4gLQlyZXR1cm4gcGFyc2VfbXRkX3BhcnRpdGlvbnMoJnNsYXZlLT5tdGQsIHR5cGVzLCBO
+VUxMKTsKPiAtfQo+IC0KPiAgc3RhdGljIHN0cnVjdCBtdGRfcGFydCAqYWxsb2NhdGVfcGFydGl0
+aW9uKHN0cnVjdCBtdGRfaW5mbyAqcGFyZW50LAo+ICAJCQljb25zdCBzdHJ1Y3QgbXRkX3BhcnRp
+dGlvbiAqcGFydCwgaW50IHBhcnRubywKPiAgCQkJdWludDY0X3QgY3VyX29mZnNldCkKPiBAQCAt
+NzM1LDggKzcxOSw4IEBAIGludCBhZGRfbXRkX3BhcnRpdGlvbnMoc3RydWN0IG10ZF9pbmZvICpt
+YXN0ZXIsCj4gIAo+ICAJCWFkZF9tdGRfZGV2aWNlKCZzbGF2ZS0+bXRkKTsKPiAgCQltdGRfYWRk
+X3BhcnRpdGlvbl9hdHRycyhzbGF2ZSk7Cj4gLQkJaWYgKHBhcnRzW2ldLnR5cGVzKQo+IC0JCQlt
+dGRfcGFyc2VfcGFydChzbGF2ZSwgcGFydHNbaV0udHlwZXMpOwo+ICsJCS8qIExvb2sgZm9yIHN1
+YnBhcnRpdGlvbnMgKi8KPiArCQlwYXJzZV9tdGRfcGFydGl0aW9ucygmc2xhdmUtPm10ZCwgcGFy
+dHNbaV0udHlwZXMsIE5VTEwpOwo+ICAKPiAgCQljdXJfb2Zmc2V0ID0gc2xhdmUtPm9mZnNldCAr
+IHNsYXZlLT5tdGQuc2l6ZTsKPiAgCX0KPiBAQCAtODEyLDYgKzc5NiwxMiBAQCBzdGF0aWMgY29u
+c3QgY2hhciAqIGNvbnN0IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXNbXSA9IHsKPiAgCU5VTEwKPiAg
+fTsKPiAgCj4gKy8qIENoZWNrIERUIG9ubHkgd2hlbiBsb29raW5nIGZvciBzdWJwYXJ0aXRpb25z
+LiAqLwo+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGRlZmF1bHRfc3VicGFydGl0aW9uX3R5
+cGVzW10gPSB7Cj4gKwkib2ZwYXJ0IiwKPiArCU5VTEwKPiArfTsKPiArCj4gIHN0YXRpYyBpbnQg
+bXRkX3BhcnRfZG9fcGFyc2Uoc3RydWN0IG10ZF9wYXJ0X3BhcnNlciAqcGFyc2VyLAo+ICAJCQkg
+ICAgIHN0cnVjdCBtdGRfaW5mbyAqbWFzdGVyLAo+ICAJCQkgICAgIHN0cnVjdCBtdGRfcGFydGl0
+aW9ucyAqcHBhcnRzLAo+IEBAIC04ODIsNyArODcyLDkgQEAgc3RhdGljIGludCBtdGRfcGFydF9v
+Zl9wYXJzZShzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwKPiAgCWNvbnN0IGNoYXIgKmZpeGVkID0g
+ImZpeGVkLXBhcnRpdGlvbnMiOwo+ICAJaW50IHJldCwgZXJyID0gMDsKPiAgCj4gLQlucCA9IG9m
+X2dldF9jaGlsZF9ieV9uYW1lKG10ZF9nZXRfb2Zfbm9kZShtYXN0ZXIpLCAicGFydGl0aW9ucyIp
+Owo+ICsJbnAgPSBtdGRfZ2V0X29mX25vZGUobWFzdGVyKTsKPiArCWlmICghbXRkX2lzX3BhcnRp
+dGlvbihtYXN0ZXIpKQo+ICsJCW5wID0gb2ZfZ2V0X2NoaWxkX2J5X25hbWUobnAsICJwYXJ0aXRp
+b25zIik7Cj4gIAlvZl9wcm9wZXJ0eV9mb3JfZWFjaF9zdHJpbmcobnAsICJjb21wYXRpYmxlIiwg
+cHJvcCwgY29tcGF0KSB7Cj4gIAkJcGFyc2VyID0gbXRkX3BhcnRfZ2V0X2NvbXBhdGlibGVfcGFy
+c2VyKGNvbXBhdCk7Cj4gIAkJaWYgKCFwYXJzZXIpCj4gQEAgLTk0NSw3ICs5MzcsOCBAQCBpbnQg
+cGFyc2VfbXRkX3BhcnRpdGlvbnMoc3RydWN0IG10ZF9pbmZvICptYXN0ZXIsIGNvbnN0IGNoYXIg
+KmNvbnN0ICp0eXBlcywKPiAgCWludCByZXQsIGVyciA9IDA7Cj4gIAo+ICAJaWYgKCF0eXBlcykK
+PiAtCQl0eXBlcyA9IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXM7Cj4gKwkJdHlwZXMgPSBtdGRfaXNf
+cGFydGl0aW9uKG1hc3RlcikgPyBkZWZhdWx0X3N1YnBhcnRpdGlvbl90eXBlcyA6Cj4gKwkJCWRl
+ZmF1bHRfbXRkX3BhcnRfdHlwZXM7CgpIbSwgdGhhdCBtZWFucyB0aGUgc3VicGFydHMgaW5oZXJp
+dCB0aGUgcGFyc2VyIHR5cGVzIGZyb20gdGhlaXIgcGFyZW50CmlmIHR5cGVzICE9IE5VTEw/IElz
+IHRoYXQgcmVhbGx5IHdoYXQgd2Ugd2FudD8gQW5kIGlmIHRoYXQncyB3aGF0IHdlCndhbnQsIHdo
+eSBkb24ndCB3ZSBkbyB0aGUgc2FtZSBmb3IgdHlwZXMgPT0gTlVMTD8KCj4gIAo+ICAJZm9yICgg
+OyAqdHlwZXM7IHR5cGVzKyspIHsKPiAgCQkvKgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5n
+IGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1t
+dGQvCg==
