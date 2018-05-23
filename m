@@ -1,44 +1,31 @@
-From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v5 3/3] dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
-Date: Wed, 23 May 2018 11:47:12 +0800
-Message-ID: <20180523034712.3420-4-cang@codeaurora.org>
-References: <20180523034712.3420-1-cang@codeaurora.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
+Date: Wed, 23 May 2018 09:59:53 +0530
+Message-ID: <20180523042953.kcp2h5xtwjrjponn@vireshk-i7>
+References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523034712.3420-1-cang@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>
+To: =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: linux-arm-kernel@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update the compatible string for UFS QMP PHY on SDM845.
+On 22-05-18, 08:28, Sébastien Szymanski wrote:
+> Check the max speed supported from the fuses for i.MX6ULL and update the
+> operating points table accordingly.
+> 
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+> ---
+> 
+> Changes for v3:
+>  - none
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+@Sascha and Shawn: Can you guys please Ack this series if there is
+nothing wrong with it ?
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index cef8765..930d94c 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -11,7 +11,8 @@ Required properties:
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
- 	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
- 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
--	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
-+	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
-+	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
- 
-  - reg: offset and length of register set for PHY's common serdes block.
- 
-@@ -29,6 +30,7 @@ Required properties:
- 		"aux" for phy aux clock,
- 		"ref" for 19.2 MHz ref clk,
- 		"com_aux" for phy common block aux clock,
-+		"ref_aux" for phy reference aux clock,
- 		For "qcom,msm8996-qmp-pcie-phy" must contain:
- 			"aux", "cfg_ahb", "ref".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain:
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+viresh
