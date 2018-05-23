@@ -1,61 +1,78 @@
-From: M P <buserror@gmail.com>
-Subject: Re: [PATCH v6 4/6] ARM: dts: Renesas RZ/N1 SoC base device tree file
-Date: Wed, 23 May 2018 12:53:36 +0100
-Message-ID: <CAMMfpEwyLh+1hxCE-Ka0f5hoCi8QfO5an9zvZ3nH6j0=aJ6K=A@mail.gmail.com>
-References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
- <1526983321-41949-5-git-send-email-michel.pollet@bp.renesas.com>
- <CAMuHMdXETt75rGyYRsNEK0O5CO3A-bG70g=-f23y6PO_uK6rWg@mail.gmail.com>
- <CAMMfpEw=6POaZBU9HduKBb8Wk2mH0oAXhCdQo7c+hQWgxka3vA@mail.gmail.com> <CAMuHMdXumeXLw_MAz5MVOKZYO3-F5samUGLSZN7bHSnmD6sfnQ@mail.gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH RFC V2 2/6] hwmon: Add support for RPi voltage sensor
+Date: Wed, 23 May 2018 13:12:10 +0100
+Message-ID: <cbbdab47-cde3-7a7c-c797-c00d546e00d5@arm.com>
+References: <1526988112-4021-1-git-send-email-stefan.wahren@i2se.com>
+ <1526988112-4021-3-git-send-email-stefan.wahren@i2se.com>
+ <90a768aa-ee8c-1050-cf15-60637069dbdb@roeck-us.net>
+ <659923372.11518.1526997096662@email.1und1.de>
+ <bea3d6c7-a713-c4aa-8ae8-7fec80c5da5d@roeck-us.net>
+ <723014352.17580.1527017480381@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXumeXLw_MAz5MVOKZYO3-F5samUGLSZN7bHSnmD6sfnQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: michel.pollet@bp.renesas.com, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, buserror+upstream@gmail.com, Magnus Damm <magnus.damm@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <723014352.17580.1527017480381@email.1und1.de>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On 22/05/18 20:31, Stefan Wahren wrote:
+[...]
+>>>>> +static int rpi_hwmon_probe(struct platform_device *pdev)
+>>>>> +{
+>>>>> +	struct device *dev = &pdev->dev;
+>>>>> +	struct rpi_hwmon_data *data;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>>>>> +	if (!data)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	data->fw = platform_get_drvdata(to_platform_device(dev->parent));
+>>>>> +	if (!data->fw)
+>>>>> +		return -EPROBE_DEFER;
+>>>>> +
+>>>>
+>>>> I am a bit at loss here (and sorry I didn't bring this up before).
+>>>> How would this ever be possible, given that the driver is registered
+>>>> from the firmware driver ?
+>>>
+>>> Do you refer to the (wrong) return code, the assumption that the parent must be a platform driver or a possible race?
+>>>
+>>
+>> The return code is one thing. My question was how the driver would ever be instantiated
+>> with platform_get_drvdata(to_platform_device(dev->parent)) == NULL (but dev->parent != NULL),
+>> so I referred to the race. But, sure, a second question would be how that would indicate
+>> that the parent is not instantiated yet (which by itself seems like an odd question).
+> 
+> This shouldn't happen and worth a log error. In patch #3 the registration is called after the complete private data of the firmware driver is initialized. Did i missed something?
+> 
+> But i must confess that i didn't test all builtin/module combinations.
 
-On Wed, 23 May 2018 at 12:18, Geert Uytterhoeven <geert@linux-m68k.org>
-wrote:
+The point is that, by construction, a "raspberrypi-hwmon" device will 
+only ever be created for this driver to bind to if the firmware device 
+is both fully initialised and known to support the GET_THROTTLED call 
+already. Thus trying to check those again from the hwmon driver is at 
+best pointless, and at worst misleading. If somebody *does* manage to 
+bind this driver to some random inappropriate device, you've still got 
+no guarantee that dev->parent is valid or that 
+dev_get_drvdata(dev->parent)) won't return something non-NULL that isn't 
+a struct rpi_firmware pointer, at which point you're liable to pass the 
+paranoid check yet still crash anyway.
 
-> Hi Michel,
+IOW, you can't reasonably defend against incorrect operation, and under 
+correct operation there's nothing to defend against, so either way it's 
+pretty futile to waste effort trying.
 
-> On Wed, May 23, 2018 at 11:20 AM, M P <buserror@gmail.com> wrote:
-> > On Wed, 23 May 2018 at 10:12, Geert Uytterhoeven <geert@linux-m68k.org>
-> > wrote:
-> >> On Tue, May 22, 2018 at 12:01 PM, Michel Pollet
-> >> <michel.pollet@bp.renesas.com> wrote:
-> >> > +       #address-cells = <1>;
-> >> > +       #size-cells = <1>;
-> >> > +
-> >> > +       cpus {
-> >> > +               #address-cells = <1>;
-> >> > +               #size-cells = <0>;
-> >> > +               clocks = <&clock RZN1_DIV_CA7>;
-> >
-> >> I think the clocks property should be moved to the individual CPU
-nodes.
-> >
-> > Ah, I had a look around, and I found some instances that are in the cpu
-> > sub-node, and others that are not -- it seems that having it in the cpu
-> > sub-node would implies it's core specific... here if that clock is
-changed
-> > both cores would change speed...
-
-> Assumed the driver code knows to look in the parent node, which I doubt
-> the cpufreq code does.
-
-> > Either way, it's not used by the kernel in any way at the moment -- I
-had
-> > hoped cpufreq or something would claim it, but it's not the case.
-
-> I guess you have to add your main SoC compatible value to the whitelist
-> in drivers/cpufreq/cpufreq-dt-platdev.c first.
-
-Most excellent tip here -- I'll add a further patch to enable this, after
-this series eventually gets merged...
-
-Cheers,
-Michel
+Robin.
