@@ -1,45 +1,80 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 0/3] irqchip: meson-gpio: add support for Meson-AXG SoCs
-Date: Wed, 23 May 2018 17:29:56 +0100
-Message-ID: <09d70e1f-abba-79d0-4dc3-7130fd0d07a8@arm.com>
-References: <20180408145700.23520-1-yixun.lan@amlogic.com>
- <0c97c61b-c05b-21cf-c880-80cff04ed6f2@amlogic.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: media: rcar-vin: Describe optional ep
+ properties
+Date: Wed, 23 May 2018 11:29:47 -0500
+Message-ID: <20180523162947.GA13661@rob-hp-laptop>
+References: <1526488352-898-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526488352-898-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0c97c61b-c05b-21cf-c880-80cff04ed6f2@amlogic.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Kevin Hilman <khilman@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Heiner Kallweit <hkallweit1@gmail.com>, Rob Herring <robh@kernel.org>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1526488352-898-2-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/05/18 03:50, Yixun Lan wrote:
-> Hi Marc (or anyone else)
+On Wed, May 16, 2018 at 06:32:27PM +0200, Jacopo Mondi wrote:
+> Describe the optional endpoint properties for endpoint nodes of port@0
+> and port@1 of the R-Car VIN driver device tree bindings documentation.
 > 
-> On 04/08/18 22:56, Yixun Lan wrote:
->>   This series try to add GPIO interrupt controller support for Meson-AXG SoCs.
->>   The first patch is a trivial typo fix, I can fold the first two patches
->> together if necessary.
->>
->> Yixun Lan (3):
->>   dt-bindings: interrupt-controller: fix the double quotes
->>   dt-bindings: interrupt-controller: New binding for Meson-AXG SoC
->>   irqchip/meson-gpio: add support for Meson-AXG SoCs
->>
->>  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt | 11 ++++++-----
->>  drivers/irqchip/irq-meson-gpio.c                              |  5 +++++
->>  2 files changed, 11 insertions(+), 5 deletions(-)
->>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> please consider this merely a ping..
-> will you take this series, or is there anything holding this?
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> index a19517e1..c53ce4e 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -53,6 +53,16 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
+>        from external SoC pins described in video-interfaces.txt[1].
+>        Describing more then one endpoint in port 0 is invalid. Only VIN
+>        instances that are connected to external pins should have port 0.
+> +
+> +      - Optional properties for endpoint nodes of port@0:
+> +        - hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH
+> +	  respectively. Default is active high.
+> +        - vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH
+> +	  respectively. Default is active high.
+> +
+> +	If both HSYNC and VSYNC polarities are not specified, embedded
+> +	synchronization is selected.
 
-Sure, I'll queue that for 4.18.
+No need to copy-n-paste from video-interfaces.txt. Just "see 
+video-interfaces.txt" for the description is fine.
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> +
+>      - port 1 - sub-nodes describing one or more endpoints connected to
+>        the VIN from local SoC CSI-2 receivers. The endpoint numbers must
+>        use the following schema.
+> @@ -62,6 +72,8 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
+>          - Endpoint 2 - sub-node describing the endpoint connected to CSI40
+>          - Endpoint 3 - sub-node describing the endpoint connected to CSI41
+> 
+> +      Endpoint nodes of port@1 do not support any optional endpoint property.
+> +
+>  Device node example for Gen2 platforms
+>  --------------------------------------
+> 
+> @@ -112,7 +124,6 @@ Board setup example for Gen2 platforms (vin1 composite video input)
+> 
+>                  vin1ep0: endpoint {
+>                          remote-endpoint = <&adv7180>;
+> -                        bus-width = <8>;
+>                  };
+>          };
+>  };
+> --
+> 2.7.4
+> 
