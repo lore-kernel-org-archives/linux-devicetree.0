@@ -1,58 +1,81 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next v3 0/7] Add support for QCA8334 switch
-Date: Wed, 23 May 2018 08:39:02 -0700
-Message-ID: <29ea7cdd-5690-e39a-a2ef-4f48fbcb7659@gmail.com>
-References: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Wed, 23 May 2018 16:40:57 +0100
+Message-ID: <20180523154057.GL4828@sirena.org.uk>
+References: <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org>
+ <CAD=FV=U-QOQekUHj=ck57YJbTFdFjCAWr4t2A92x+fCNf+yV9A@mail.gmail.com>
+ <dc1fbe9c-8973-1c4d-0fbd-809c1ec0a6be@codeaurora.org>
+ <CAD=FV=XfSGs14VB464cvMGDNwGS4yvSXjN8itZLffm+Sj-D=ww@mail.gmail.com>
+ <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org>
+ <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
+ <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org>
+ <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
+ <20180523082908.GB4828@sirena.org.uk>
+ <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <vokac.m@gmail.com>, netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, michal.vokac@ysoft.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UK1lfQXsnwKrySH9"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--UK1lfQXsnwKrySH9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 05/22/2018 11:20 PM, Michal Vokáč wrote:
-> This series basically adds support for a QCA8334 ethernet switch to the
-> qca8k driver. It is a four-port variant of the already supported seven
-> port QCA8337. Register map is the same for the whole familly and all chips
-> have the same device ID.
-> 
-> Major part of this series enhances the CPU port setting. Currently the CPU
-> port is not set to any sensible defaults compatible with the xGMII
-> interface. This series forces the CPU port to its maximum bandwidth and
-> also allows to adjust the new defaults using fixed-link device tree
-> sub-node.
-> 
-> Alongside these changes I fixed two checkpatch warnings regarding SPDX and
-> redundant parentheses.
+On Wed, May 23, 2018 at 08:23:22AM -0700, Doug Anderson wrote:
+> Hi,
+>=20
+> On Wed, May 23, 2018 at 1:29 AM, Mark Brown <broonie@kernel.org> wrote:
+>=20
+> > It's arguable either way - you could say that the client gets to specify
+> > a safe range at all times or you could say that the machine constraints
+> > should cover all cases where the hardware is idling.  Of course RPMh
+> > is missing anything like the machine constraints (as we can see from all
+> > the fixing up of undesirable hard coding we have to do) so it's kind of
+> > pushed towards the first case.
 
-Looks great, thanks Michal! Do you have any features or things you are
-working on that would be added later to the driver?
+> OK, fair enough.  If others all agree that it's OK to make requests
+> about the voltage of a disabled regulator then I won't stand in the
+> way.  I guess it does call into question the whole idea of caching /
+> not sending the voltage until the first enable because it means
+> there's no way for the client to use this feature until they've
+> enabled / disabled the regulator once.  If you think of it as invalid
+> to adjust the voltage of a disabled regulator then the caching
+> argument is super clean, but once you say that you should normally be
 
-> 
-> Changes in v3:
->  - Rebased on latest net-next/master.
->  - Corrected fixed-link documentation.
-> 
-> Michal Vokáč (7):
->   net: dsa: qca8k: Add QCA8334 binding documentation
->   net: dsa: qca8k: Add support for QCA8334 switch
->   net: dsa: qca8k: Enable RXMAC when bringing up a port
->   net: dsa: qca8k: Force CPU port to its highest bandwidth
->   net: dsa: qca8k: Allow overwriting CPU port setting
->   net: dsa: qca8k: Replace GPL boilerplate by SPDX
->   net: dsa: qca8k: Remove redundant parentheses
-> 
->  .../devicetree/bindings/net/dsa/qca8k.txt          | 23 +++++++-
->  drivers/net/dsa/qca8k.c                            | 64 ++++++++++++++++++----
->  drivers/net/dsa/qca8k.h                            |  7 ++-
->  3 files changed, 79 insertions(+), 15 deletions(-)
-> 
+It's got to be valid to think about the voltage of a disabled regulator
+since drivers want to be able make sure that the regulator gets enabled
+with a sensible config.  With most hardware this is really easy since
+you can just look at the status reported by the hardware but the RPM
+makes this hard since there's so much write only stuff in there.
 
--- 
-Florian
+> able to do it it feels more like a hacky workaround.  ...but I suppose
+> that's what we've got to live with...
+
+These RPM systems are always going to have problems of some kind
+unfortunately unless the interface changes.
+
+--UK1lfQXsnwKrySH9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsFi4gACgkQJNaLcl1U
+h9AAPwf9HbEl7cITEB2ThBWHPHov7x75fnfLf+B+F1OiRHUSW9PmiFaCEv6L8y3v
+tYMre9zclDiBbeDBvhwZIb8wtxrV8vNG8EJ5IjaXcrxXI5Y8E8SRyIT2PMARafeq
+h1xIn73J55Z5WByvp1+0CKM7G88RhZKvCo55bgVOwSuD7C3LOX+zkktIIyu2G7A+
+8zTl8lfMk6Wj2LvMywE0OC3nlMm3jhsso4xLhTVLzHe6Nsi8TGIOl/bVokJUHnnR
+iVhbbqXVVOKqguyyObsi2hFIuwOrpk/I/54LksQOygcZzbsb6c7/wDeEvQRlTIzX
+5Cyk63hdfSnbuWazYEFcpwMWZgsYIA==
+=nKyD
+-----END PGP SIGNATURE-----
+
+--UK1lfQXsnwKrySH9--
