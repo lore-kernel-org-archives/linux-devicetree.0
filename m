@@ -1,38 +1,88 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 5/5] MAINTAINERS: Add Actions Semi S900 pinctrl entries
-Date: Wed, 23 May 2018 10:40:48 +0200
-Message-ID: <CACRpkdYF7a-uwye0uwn-pT9Bprj74q1-Pcbq4WLyiE+kYY4j7w@mail.gmail.com>
-References: <20180520051736.4842-1-manivannan.sadhasivam@linaro.org> <20180520051736.4842-6-manivannan.sadhasivam@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add GEther support
+Date: Wed, 23 May 2018 10:41:00 +0200
+Message-ID: <20180523084100.ynv3zoqrikcxem5f@verge.net.au>
+References: <a4230699-e46f-0782-e3b1-22d58b9033c8@cogentembedded.com>
+ <8910c197-cf1b-9ee9-9ddb-5d2f705a4b26@cogentembedded.com>
+ <CAMuHMdW9UzOGV_zh3NxugYrj0j0qszX+NFoZtFvZRD9CNMHt+w@mail.gmail.com>
+ <bdbfd13e-cf0c-e19a-b76f-5e8e024dca26@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180520051736.4842-6-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Rob Herring <robh+dt@kernel.org>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <bdbfd13e-cf0c-e19a-b76f-5e8e024dca26@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 20, 2018 at 7:17 AM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Tue, May 22, 2018 at 06:44:59PM +0300, Sergei Shtylyov wrote:
+> On 05/22/2018 02:48 PM, Geert Uytterhoeven wrote:
+> 
+> >> Define the generic R8A77980 part of the GEther device node.
+> >>
+> >> Based on the original (and large) patch by Vladimir Barinov.
+> >>
+> >> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > Thanks for your patch!
+> > 
+> > With the below addressed:
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+>    Thanks!
+> 
+> >> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> >> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> >> @@ -417,6 +417,17 @@
+> >>                         dma-channels = <16>;
+> >>                 };
+> >>
+> >> +               gether: ethernet@e7400000 {
+> >> +                       compatible = "renesas,gether-r8a77980";
+> >> +                       reg = <0 0xe7400000 0 0x1000>;
+> >> +                       interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       clocks = <&cpg CPG_MOD 813>;
+> >> +                       power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> > 
+> > resets = <&cpg 813>;
+> 
+>    As usual...
+> 
+> > 
+> >> +                       #address-cells = <1>;
+> >> +                       #size-cells = <0>;
+> >> +                       status = "disabled";
+> > 
+> > Any default phy-mode needed?
+> 
+>    A default "phy-mode" IMO make sense when the MAC supports a single 
+> PHY interface mode. In this case, both RMII and RGMII are supported, so
+> I coulsn't choose a default...
 
-> Add S900 pinctrl entries under ARCH_ACTIONS
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+I would think making an arbitrary choice is better than no choice.
+How does the driver behave in the absence of a default?
 
-Patch applied tentatively so we have some maintenance entry for this.
-
-Andreas expressed concerns about the driver earlier, so he might want it
-split from the platform parts and have a separate entry for the pinctrl+GPIO
-so Manivannan can maintain that part, also it makes sense to list
-Manivannan as comaintainer of ARCH_ACTIONS with this in.
-
-Andreas: how would you like to proceed?
-
-I understand that I was a bit pushy or even rude in my last message
-about the maintenance of this platform and the code structure of
-the pin control driver. I am sorry if it caused any bad feelings on your
-side :( social conflicts give me the creeps, I just try my best. Maybe
-my best isn't always what it should be.
-
-Yours,
-Linus Walleij
+> 
+> >> +               };
+> >> +
+> >>                 mmc0: mmc@ee140000 {
+> >>                         compatible = "renesas,sdhi-r8a77980",
+> >>                                      "renesas,rcar-gen3-sdhi";
+> > 
+> > 
+> > Gr{oetje,eeting}s,
+> > 
+> >                         Geert
+> > 
+> 
