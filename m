@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: media: rcar-vin: Describe optional ep
- properties
-Date: Wed, 23 May 2018 11:29:47 -0500
-Message-ID: <20180523162947.GA13661@rob-hp-laptop>
+Subject: Re: [PATCH 5/6] ARM: dts: rcar-gen2: Remove unused VIN properties
+Date: Wed, 23 May 2018 11:33:43 -0500
+Message-ID: <20180523163343.GA16505@rob-hp-laptop>
 References: <1526488352-898-1-git-send-email-jacopo+renesas@jmondi.org>
- <1526488352-898-2-git-send-email-jacopo+renesas@jmondi.org>
+ <1526488352-898-6-git-send-email-jacopo+renesas@jmondi.org>
+ <20180516221307.GF17948@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1526488352-898-2-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <20180516221307.GF17948@bigcity.dyn.berto.se>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,61 +20,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 06:32:27PM +0200, Jacopo Mondi wrote:
-> Describe the optional endpoint properties for endpoint nodes of port@0
-> and port@1 of the R-Car VIN driver device tree bindings documentation.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> index a19517e1..c53ce4e 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -53,6 +53,16 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
->        from external SoC pins described in video-interfaces.txt[1].
->        Describing more then one endpoint in port 0 is invalid. Only VIN
->        instances that are connected to external pins should have port 0.
-> +
-> +      - Optional properties for endpoint nodes of port@0:
-> +        - hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH
-> +	  respectively. Default is active high.
-> +        - vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH
-> +	  respectively. Default is active high.
-> +
-> +	If both HSYNC and VSYNC polarities are not specified, embedded
-> +	synchronization is selected.
+On Thu, May 17, 2018 at 12:13:07AM +0200, Niklas S=F6derlund wrote:
+> Hi Jacopo,
+> =
 
-No need to copy-n-paste from video-interfaces.txt. Just "see 
-video-interfaces.txt" for the description is fine.
+> Thanks for your work.
+> =
 
-> +
->      - port 1 - sub-nodes describing one or more endpoints connected to
->        the VIN from local SoC CSI-2 receivers. The endpoint numbers must
->        use the following schema.
-> @@ -62,6 +72,8 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
->          - Endpoint 2 - sub-node describing the endpoint connected to CSI40
->          - Endpoint 3 - sub-node describing the endpoint connected to CSI41
-> 
-> +      Endpoint nodes of port@1 do not support any optional endpoint property.
-> +
->  Device node example for Gen2 platforms
->  --------------------------------------
-> 
-> @@ -112,7 +124,6 @@ Board setup example for Gen2 platforms (vin1 composite video input)
-> 
->                  vin1ep0: endpoint {
->                          remote-endpoint = <&adv7180>;
-> -                        bus-width = <8>;
->                  };
->          };
->  };
-> --
-> 2.7.4
-> 
+> On 2018-05-16 18:32:31 +0200, Jacopo Mondi wrote:
+> > The 'bus-width' and 'pclk-sample' properties are not parsed by the VIN
+> > driver and only confuse users. Remove them in all Gen2 SoC that used
+> > them.
+> > =
+
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  arch/arm/boot/dts/r8a7790-lager.dts   | 3 ---
+> >  arch/arm/boot/dts/r8a7791-koelsch.dts | 3 ---
+> >  arch/arm/boot/dts/r8a7791-porter.dts  | 1 -
+> >  arch/arm/boot/dts/r8a7793-gose.dts    | 3 ---
+> >  arch/arm/boot/dts/r8a7794-alt.dts     | 1 -
+> >  arch/arm/boot/dts/r8a7794-silk.dts    | 1 -
+> >  6 files changed, 12 deletions(-)
+> > =
+
+> > diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8=
+a7790-lager.dts
+> > index 063fdb6..b56b309 100644
+> > --- a/arch/arm/boot/dts/r8a7790-lager.dts
+> > +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+> > @@ -873,10 +873,8 @@
+> >  	port {
+> >  		vin0ep2: endpoint {
+> >  			remote-endpoint =3D <&adv7612_out>;
+> > -			bus-width =3D <24>;
+> =
+
+> I can't really make up my mind if this is a good thing or not. Device =
+
+> tree describes the hardware and not what the drivers make use of. And =
+
+> the fact is that this bus is 24 bits wide. So I'm not sure we should =
+
+> remove these properties. But I would love to hear what others think =
+
+> about this.
+
+IMO, this property should only be present when all the pins are not =
+
+connected. And by "all", I mean the minimum of what each end of the =
+
+graph can support.
+
+Rob
