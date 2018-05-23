@@ -1,35 +1,22 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v6 4/4] ARM: dts: tegra: Work safely with 256 MB
- Colibri-T20 modules
-Date: Wed, 23 May 2018 13:38:29 +0200
-Message-ID: <CAJKOXPfK+GGbvpGx4CVV5+AuskXZ=yEfiMu3NFQpezM46xQRog@mail.gmail.com>
-References: <1527069406-6359-1-git-send-email-krzk@kernel.org>
- <1527069406-6359-4-git-send-email-krzk@kernel.org> <a8969b297da304c292e6587fba7fcc23@agner.ch>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Wed, 23 May 2018 17:16:14 +0530
+Message-ID: <CAKohponruWpcjuSDg-=ZbZ1=qm2iPZs36mfKYJ3nQZREkc3JCw@mail.gmail.com>
+References: <1527068454-28921-1-git-send-email-ilialin@codeaurora.org>
+ <1527068454-28921-2-git-send-email-ilialin@codeaurora.org>
+ <3f1ca60e-7aa8-fccc-ab1c-4b7c37731cce@arm.com> <002901d3f286$198878b0$4c996a10$@codeaurora.org>
+ <CAKohponbpErCeTYu9iQm_-dupz5SUr+TKsYXzqmmARB-pq95iA@mail.gmail.com> <002b01d3f28a$0d033900$2709ab00$@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a8969b297da304c292e6587fba7fcc23@agner.ch>
+In-Reply-To: <002b01d3f28a$0d033900$2709ab00$@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Lucas Stach <dev@lynxeye.de>
+To: Ilia Lin <ilialin@codeaurora.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 1:35 PM, Stefan Agner <stefan@agner.ch> wrote:
-> On 23.05.2018 11:56, Krzysztof Kozlowski wrote:
->> Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
->> (with 1024 MB NAND) flavors.  Both of them will use the same DTSI
->> expecting the bootloader to do the fixup of /memory node.  However in
->> case it does not happen, let's stay on safe side by limiting the memory
->> to 256 MB for both versions of Colibri-T20.
->>
->
-> Maybe also mention the renaming stuff:
->
-> "Rename to remove the unnecessary memory size from the device tree file
-> name. While at it, also follow the typical Toradex SoC, module, carrier
-> board hierarchy."
+On 23 May 2018 at 17:04,  <ilialin@codeaurora.org> wrote:
+> You are right. I already checked that in the code...
+> However, with module_init() the driver fails on reading the nvmem.
 
-Since I am going to resend it for v7... no problem.
-
-Best regards,
-Krzysztof
+And why is it failing ?
