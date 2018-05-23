@@ -1,7 +1,7 @@
-From: Robin Murphy <robin.murphy@arm.com>
+From: Scott Branden <scott.branden@broadcom.com>
 Subject: Re: [PATCH 3/5] watchdog: sp805: set WDOG_HW_RUNNING when appropriate
-Date: Wed, 23 May 2018 18:15:14 +0100
-Message-ID: <ef3539fd-c95c-f364-93c7-680aabd1eea3@arm.com>
+Date: Wed, 23 May 2018 10:15:38 -0700
+Message-ID: <eb1b8beb-4027-606b-200c-c97f128c9bf1@broadcom.com>
 References: <1527014840-21236-1-git-send-email-ray.jui@broadcom.com>
  <1527014840-21236-4-git-send-email-ray.jui@broadcom.com>
  <20180522205457.GA16363@roeck-us.net>
@@ -14,15 +14,18 @@ Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <5a996888-d3d3-9ae6-e438-5de4d5e3ea32@broadcom.com>
-Content-Language: en-GB
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Guenter Roeck <linux@roeck-us.net>
+To: Ray Jui <ray.jui@broadcom.com>, Robin Murphy <robin.murphy@arm.com>, Guenter Roeck <linux@roeck-us.net>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Wim Van Sebroeck <wim@linux-watchdog.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/18 17:29, Ray Jui wrote:
+Raym
+
+
+On 18-05-23 09:29 AM, Ray Jui wrote:
 > Hi Robin,
-> 
+>
 > On 5/23/2018 4:48 AM, Robin Murphy wrote:
 >> On 23/05/18 08:52, Scott Branden wrote:
 >>>
@@ -33,8 +36,8 @@ On 23/05/18 17:29, Ray Jui wrote:
 >>>> On 5/22/2018 1:54 PM, Guenter Roeck wrote:
 >>>>> On Tue, May 22, 2018 at 11:47:18AM -0700, Ray Jui wrote:
 >>>>>> If the watchdog hardware is already enabled during the boot process,
->>>>>> when the Linux watchdog driver loads, it should reset the watchdog 
->>>>>> and
+>>>>>> when the Linux watchdog driver loads, it should reset the 
+>>>>>> watchdog and
 >>>>>> tell the watchdog framework. As a result, ping can be generated from
 >>>>>> the watchdog framework, until the userspace watchdog daemon takes 
 >>>>>> over
@@ -95,36 +98,29 @@ On 23/05/18 17:29, Ray Jui wrote:
 >> than just "return <boolean condition>;" because it forces you to stop 
 >> and double-check that the logic is, in fact, only doing the obvious 
 >> thing.
-> 
+>
 > If you can propose a way to modify my original code above to make it 
 > more readable, I'm fine to make the change.
-
-Well,
-
-	return readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK == ENABLE_MASK;
-
-would probably be reasonable to anyone other than the 80-column zealots, 
-but removing the silly boolean-to-boolean translation idiom really only 
-emphasises the fact that it's fundamentally a big complex statement; for 
-maximum clarity I'd be inclined to separate the two logical operations 
-(read and comparison), e.g.:
-
-	u32 wdtcontrol = readl_relaxed(wdt->base + WDTCONTROL);
-
-	return wdtcontrol & ENABLE_MASK == ENABLE_MASK;
-
-which is still -3 lines vs. the original.
-
+>
 > As I mentioned, I don't think the following change proposed by Guenter 
 > will work due to the reason I pointed out:
-> 
+>
 > return !!(readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK));
+What they are looking for is:
+return ((readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK) == 
+ENABLE_MASK);
 
-FWIW, getting the desired result should only need one logical not 
-swapping for a bitwise one there:
-
-	return !(~readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK);
-
-but that's well into "too clever for its own good" territory ;)
-
-Robin.
+or maybe:
+return !!((readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK) == 
+ENABLE_MASK);
+>
+>>
+>> Robin.
+>>
+>>
+>>
+>> p.s. No thanks for making me remember the mind-boggling horror of 
+>> briefly maintaining part of this legacy codebase... :P
+>>
+>> $ grep -r '? true : false' --include=*.cpp . | wc -l
+>> 951
