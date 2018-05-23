@@ -1,40 +1,26 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [next, PATCH 5/6] usb: mtu3: reset gadget when VBUS_FALL interrupt arises
-Date: Wed, 23 May 2018 16:53:19 +0800
-Message-ID: <4def1d8ab49ab7733693c037c979ea89895856df.1527065109.git.chunfeng.yun@mediatek.com>
-References: <1291b13a362eaa0cccd30cb8dd4f56d33e1d172d.1527065109.git.chunfeng.yun@mediatek.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v6 1/6] dt-bindings: arm: Document the RZN1D-DB board
+Date: Wed, 23 May 2018 10:57:24 +0200
+Message-ID: <20180523085723.yp6qc32cozaf7l2n@verge.net.au>
+References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1526983321-41949-2-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1291b13a362eaa0cccd30cb8dd4f56d33e1d172d.1527065109.git.chunfeng.yun@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <1526983321-41949-2-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When VBUS_FALL interrupt arises, it means U3 device is disconnected
-with host, so need reset status of gadget
+On Tue, May 22, 2018 at 11:01:21AM +0100, Michel Pollet wrote:
+> This documents the RZ/N1 bindings for the RZN1D-DB board.
+> 
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/mtu3/mtu3_core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This looks fine but I will wait to see if there are other reviews before
+applying.
 
-diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index 279f9cd..eecfd06 100644
---- a/drivers/usb/mtu3/mtu3_core.c
-+++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -668,8 +668,10 @@ static irqreturn_t mtu3_u3_ltssm_isr(struct mtu3 *mtu)
- 	if (ltssm & (HOT_RST_INTR | WARM_RST_INTR))
- 		mtu3_gadget_reset(mtu);
- 
--	if (ltssm & VBUS_FALL_INTR)
-+	if (ltssm & VBUS_FALL_INTR) {
- 		mtu3_ss_func_set(mtu, false);
-+		mtu3_gadget_reset(mtu);
-+	}
- 
- 	if (ltssm & VBUS_RISE_INTR)
- 		mtu3_ss_func_set(mtu, true);
--- 
-1.9.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
