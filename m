@@ -1,126 +1,90 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH 3/5] watchdog: sp805: set WDOG_HW_RUNNING when appropriate
-Date: Wed, 23 May 2018 10:15:38 -0700
-Message-ID: <eb1b8beb-4027-606b-200c-c97f128c9bf1@broadcom.com>
-References: <1527014840-21236-1-git-send-email-ray.jui@broadcom.com>
- <1527014840-21236-4-git-send-email-ray.jui@broadcom.com>
- <20180522205457.GA16363@roeck-us.net>
- <0d92b9e9-a3d1-6e91-8371-b5ed3a83e399@broadcom.com>
- <00c121ea-d197-93b8-2f56-bcca963f70fb@broadcom.com>
- <76d47e02-7a5f-3fc2-3905-cd4aa03ac69c@arm.com>
- <5a996888-d3d3-9ae6-e438-5de4d5e3ea32@broadcom.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim ngd dt bindings
+Date: Wed, 23 May 2018 18:17:23 +0100
+Message-ID: <94271b39-37f4-16c5-db35-782bbbc9d851@linaro.org>
+References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
+ <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
+ <20180523164023.GA24671@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5a996888-d3d3-9ae6-e438-5de4d5e3ea32@broadcom.com>
+In-Reply-To: <20180523164023.GA24671@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, Robin Murphy <robin.murphy@arm.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Wim Van Sebroeck <wim@linux-watchdog.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: gregkh@linuxfoundation.org, kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Raym
+Thanks Rob for review,
 
+On 23/05/18 17:40, Rob Herring wrote:
+> On Wed, May 16, 2018 at 05:51:17PM +0100, Srinivas Kandagatla wrote:
+>> This patch adds bindings for Qualcomm SLIMBus NGD controller found in
+>> all new SoCs starting from B family.
+>> SLIMBus NGD controller is a light-weight driver responsible for
+>> communicating with SLIMBus slaves directly over the bus using messaging
+>> interface and communicating with master component residing on ADSP for
+>> bandwidth and data-channel management
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   .../bindings/slimbus/slim-ngd-qcom-ctrl.txt        | 70 ++++++++++++++++++++++
+>>   1 file changed, 70 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
+>> new file mode 100644
+>> index 000000000000..c948fb098819
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
+>> @@ -0,0 +1,70 @@
+>> +Qualcomm SLIMBus Non Generic Device (NGD) Controller binding
+>> +
+>> +SLIMBus NGD controller is a light-weight driver responsible for communicating
+>> +with SLIMBus slaves directly over the bus using messaging interface and
+>> +communicating with master component residing on ADSP for bandwidth and
+>> +data-channel management
+>> +
+>> +Please refer to slimbus/bus.txt for details of the common SLIMBus bindings.
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "qcom,slim-ngd"
+> 
+> SoC specific compatible needed.
 
-On 18-05-23 09:29 AM, Ray Jui wrote:
-> Hi Robin,
->
-> On 5/23/2018 4:48 AM, Robin Murphy wrote:
->> On 23/05/18 08:52, Scott Branden wrote:
->>>
->>>
->>> On 18-05-22 04:24 PM, Ray Jui wrote:
->>>> Hi Guenter,
->>>>
->>>> On 5/22/2018 1:54 PM, Guenter Roeck wrote:
->>>>> On Tue, May 22, 2018 at 11:47:18AM -0700, Ray Jui wrote:
->>>>>> If the watchdog hardware is already enabled during the boot process,
->>>>>> when the Linux watchdog driver loads, it should reset the 
->>>>>> watchdog and
->>>>>> tell the watchdog framework. As a result, ping can be generated from
->>>>>> the watchdog framework, until the userspace watchdog daemon takes 
->>>>>> over
->>>>>> control
->>>>>>
->>>>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>>>>> Reviewed-by: Vladimir Olovyannikov 
->>>>>> <vladimir.olovyannikov@broadcom.com>
->>>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>>>>> ---
->>>>>>   drivers/watchdog/sp805_wdt.c | 22 ++++++++++++++++++++++
->>>>>>   1 file changed, 22 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/watchdog/sp805_wdt.c 
->>>>>> b/drivers/watchdog/sp805_wdt.c
->>>>>> index 1484609..408ffbe 100644
->>>>>> --- a/drivers/watchdog/sp805_wdt.c
->>>>>> +++ b/drivers/watchdog/sp805_wdt.c
->>>>>> @@ -42,6 +42,7 @@
->>>>>>       /* control register masks */
->>>>>>       #define    INT_ENABLE    (1 << 0)
->>>>>>       #define    RESET_ENABLE    (1 << 1)
->>>>>> +    #define    ENABLE_MASK    (INT_ENABLE | RESET_ENABLE)
->>>>>>   #define WDTINTCLR        0x00C
->>>>>>   #define WDTRIS            0x010
->>>>>>   #define WDTMIS            0x014
->>>>>> @@ -74,6 +75,18 @@ module_param(nowayout, bool, 0);
->>>>>>   MODULE_PARM_DESC(nowayout,
->>>>>>           "Set to 1 to keep watchdog running after device release");
->>>>>>   +/* returns true if wdt is running; otherwise returns false */
->>>>>> +static bool wdt_is_running(struct watchdog_device *wdd)
->>>>>> +{
->>>>>> +    struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);
->>>>>> +
->>>>>> +    if ((readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK) ==
->>>>>> +        ENABLE_MASK)
->>>>>> +        return true;
->>>>>> +    else
->>>>>> +        return false;
->>>>>
->>>>>     return !!(readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK));
->>>>>
->>>>
->>>> Note ENABLE_MASK contains two bits (INT_ENABLE and RESET_ENABLE); 
->>>> therefore, a simple !!(expression) would not work? That is, the 
->>>> masked result needs to be compared against the mask again to ensure 
->>>> both bits are set, right?
->>> Ray - your original code looks correct to me.  Easier to read and 
->>> less prone to errors as shown in the attempted translation to a 
->>> single statement.
->>
->>      if (<boolean condition>)
->>          return true;
->>      else
->>          return false;
->>
->> still looks really dumb, though, and IMO is actually harder to read 
->> than just "return <boolean condition>;" because it forces you to stop 
->> and double-check that the logic is, in fact, only doing the obvious 
->> thing.
->
-> If you can propose a way to modify my original code above to make it 
-> more readable, I'm fine to make the change.
->
-> As I mentioned, I don't think the following change proposed by Guenter 
-> will work due to the reason I pointed out:
->
-> return !!(readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK));
-What they are looking for is:
-return ((readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK) == 
-ENABLE_MASK);
+Yes, I will add that in v2.
+> 
+>> +
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: must specify the base address and size of the controller
+>> +		    register blocks.
+> 
+> blocks? Is there more than one? If so, how many?
+Its just one. I will fix the text to reflect this.
 
-or maybe:
-return !!((readl_relaxed(wdt->base + WDTCONTROL) & ENABLE_MASK) == 
-ENABLE_MASK);
->
->>
->> Robin.
->>
->>
->>
->> p.s. No thanks for making me remember the mind-boggling horror of 
->> briefly maintaining part of this legacy codebase... :P
->>
->> $ grep -r '? true : false' --include=*.cpp . | wc -l
->> 951
+> 
+>> +
+>> +- reg-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "ctrl"
+> 
+> reg-names is pointless when there is only 1.
+> 
+>> +
+>> +- qcom,ngd-id
+>> +	Usage: required
+>> +	Value type: <u32>
+>> +	Definition: ngd instance id in the controller
+> 
+> Why do you need this?
+I have removed this totally in my next version, which I will be posting 
+soon.
+
+Thanks,
+srini
