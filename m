@@ -1,131 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] slimbus: ngd: dt-bindings: Add slim
-	ngd dt bindings
-Date: Wed, 23 May 2018 11:40:23 -0500
-Message-ID: <20180523164023.GA24671@rob-hp-laptop>
-References: <20180516165118.16551-1-srinivas.kandagatla@linaro.org>
- <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] perf: hisi: fix uncore PMU index ID
+Date: Wed, 23 May 2018 17:42:20 +0100
+Message-ID: <20180523164219.GG2983@arm.com>
+References: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20180521170554.GE21034@arm.com>
+ <a301d72f-687c-0c4f-1d44-83e5bbad5e60@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180516165118.16551-2-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, girishm@quicinc.com, gregkh@linuxfoundation.org, broonie@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, kramasub@codeaurora.org, linux-arm-msm@vger.kernel.org, sdharia@quicinc.com
+In-Reply-To: <a301d72f-687c-0c4f-1d44-83e5bbad5e60@hisilicon.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhangshaokun <zhangshaokun@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Huiqiang Wang <wanghuiqiang@huawei.com>, linux-arm-kernel@lists.infradead.org, Linuxarm <linuxarm@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 16, 2018 at 05:51:17PM +0100, Srinivas Kandagatla wrote:
-> This patch adds bindings for Qualcomm SLIMBus NGD controller found in
-> all new SoCs starting from B family.
-> SLIMBus NGD controller is a light-weight driver responsible for
-> communicating with SLIMBus slaves directly over the bus using messaging
-> interface and communicating with master component residing on ADSP for
-> bandwidth and data-channel management
+On Tue, May 22, 2018 at 05:18:51PM +0800, Zhangshaokun wrote:
+> On 2018/5/22 1:05, Will Deacon wrote:
+> > Whilst I'd normally just accept PMU driver submissions for vendor PMUs,
+> > this part rang my alarm bells:
+> > 
+> >> diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+> >> index 443906e..dcd8e77 100644
+> >> --- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+> >> +++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+> >> @@ -238,19 +238,10 @@ MODULE_DEVICE_TABLE(acpi, hisi_hha_pmu_acpi_match);
+> >>  static int hisi_hha_pmu_init_data(struct platform_device *pdev,
+> >>  				  struct hisi_pmu *hha_pmu)
+> >>  {
+> >> -	unsigned long long id;
+> >>  	struct resource *res;
+> >> -	acpi_status status;
+> >> -
+> >> -	status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
+> >> -				       "_UID", NULL, &id);
+> >> -	if (ACPI_FAILURE(status))
+> >> -		return -EINVAL;
+> >> -
+> >> -	hha_pmu->index_id = id;
+> >>  
+> >>  	/*
+> >> -	 * Use SCCL_ID and UID to identify the HHA PMU, while
+> >> +	 * Use SCCL_ID and HHA index ID to identify the HHA PMU, while
+> >>  	 * SCCL_ID is in MPIDR[aff2].
+> >>  	 */
+> >>  	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
+> >> @@ -258,6 +249,13 @@ static int hisi_hha_pmu_init_data(struct platform_device *pdev,
+> >>  		dev_err(&pdev->dev, "Can not read hha sccl-id!\n");
+> >>  		return -EINVAL;
+> >>  	}
+> >> +
+> >> +	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
+> >> +				     &hha_pmu->index_id)) {
+> >> +		dev_err(&pdev->dev, "Can not read hha index-id!\n");
+> >> +		return -EINVAL;
+> >> +	}
+> > 
+> > Is this a new DT property? If so, please can you update the binding
+> > documentation and get an Ack from a DT maintainer? It's not clear to me
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../bindings/slimbus/slim-ngd-qcom-ctrl.txt        | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
+> No, it is not a DT property. We don't support DT mode for this platform and
+> only support ACPI mode.
+
+Hmm, but by using the firmware-agnostic "device_property_read_u32"
+interface, aren't you implicitly supporting it via DT as well? In fact,
+don't you now fail the probe if this new property isn't present? Isn't
+that a regression?
+
+> > what a "hisilicon,idx-id" is, nor how I would generate on from firmware.
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
-> new file mode 100644
-> index 000000000000..c948fb098819
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
-> @@ -0,0 +1,70 @@
-> +Qualcomm SLIMBus Non Generic Device (NGD) Controller binding
-> +
-> +SLIMBus NGD controller is a light-weight driver responsible for communicating
-> +with SLIMBus slaves directly over the bus using messaging interface and
-> +communicating with master component residing on ADSP for bandwidth and
-> +data-channel management
-> +
-> +Please refer to slimbus/bus.txt for details of the common SLIMBus bindings.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,slim-ngd"
+> For HiSilicon this platform, it supports multi-sccl. each sccl has more than one uncore
+> PMUs. Like HHA uncore PMUs, each sccl has 2-HHA PMUs and idx-id is in _DSD package and
+> used to distinguish different HHA PMUs with the same sccl, as follow:
+>     Name (_DSD, Package () {
+>       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>       Package () {
+>         Package () {"hisilicon,scl-id", 0x03},
+>         Package () {"hisilicon,idx-id", 0x00},
+>       }
+>     })
 
-SoC specific compatible needed.
+I'm still none the wiser about what this actually is. How is new _DSD crud
+supposed to be documented?
 
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: must specify the base address and size of the controller
-> +		    register blocks.
-
-blocks? Is there more than one? If so, how many?
-
-> +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "ctrl"
-
-reg-names is pointless when there is only 1.
-
-> +
-> +- qcom,ngd-id
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: ngd instance id in the controller
-
-Why do you need this?
-
-> +- dmas
-> +	Usage: required
-> +	Value type: <array of phandles>
-> +	Definition: List of rx and tx dma channels
-> +
-> +- dma-names
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "rx" and "tx".
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: must list controller IRQ.
-> +
-> +#address-cells
-> +	Usage: required
-> +	Refer to slimbus/bus.txt for details of the common SLIMBus bindings.
-> +
-> +#size-cells
-> +	Usage: required
-> +	Refer to slimbus/bus.txt for details of the common SLIMBus bindings.
-> +
-> += EXAMPLE
-> +
-> +slim@91c0000 {
-> +	compatible = "qcom,slim-ngd";
-> +	reg = <0x91c0000 0x2C000>;
-> +	reg-names = "ctrl";
-> +	interrupts = <0 163 0>;
-> +	qcom,ngd-id = <1>;
-> +	dmas =	<&slimbam 3>, <&slimbam 4>;
-> +	dma-names = "rx", "tx";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	codec@1 {
-> +		compatible = "slim217,1a0";
-> +		reg  = <1 0>;
-> +	};
-> +};
-> -- 
-> 2.16.2
-> 
+Will
