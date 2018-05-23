@@ -1,81 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 2/6] dt-bindings: Add the rzn1-clocks.h file
-Date: Wed, 23 May 2018 09:26:30 +0200
-Message-ID: <CAMuHMdWAU9wZkA+Z0BNAGrLV1WrCO3PgCTo2p=q3Mq9Tm6JBGA@mail.gmail.com>
-References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
- <1526983321-41949-3-git-send-email-michel.pollet@bp.renesas.com>
- <CAMuHMdW-HUBRF4rLdfzixcyMUBg7+4XU+-3zayePoyeQiBZ8ZA@mail.gmail.com> <CAMMfpEyTORirKiE417AQzCLzxDTKmy83bwivpfJaHQsKUKMc_w@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v2 02/16] arm64: dts: marvell: fix CP110 ICU node size
+Date: Wed, 23 May 2018 09:36:11 +0200
+Message-ID: <87wovuygb8.fsf@bootlin.com>
+References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
+        <20180522094042.24770-3-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMMfpEyTORirKiE417AQzCLzxDTKmy83bwivpfJaHQsKUKMc_w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: M P <buserror@gmail.com>
-Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180522094042.24770-3-miquel.raynal@bootlin.com> (Miquel
+        Raynal's message of "Tue, 22 May 2018 11:40:28 +0200")
+Sender: stable-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+Hi Miquel,
+ 
+ On mar., mai 22 2018, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-On Wed, May 23, 2018 at 8:44 AM, M P <buserror@gmail.com> wrote:
-> On Tue, 22 May 2018 at 19:44, Geert Uytterhoeven <geert@linux-m68k.org>
-> wrote:
->> On Tue, May 22, 2018 at 12:01 PM, Michel Pollet
->> <michel.pollet@bp.renesas.com> wrote:
->> > This adds the constants necessary to use the renesas,rzn1-clocks driver.
->> >
->> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-
->> > --- /dev/null
->> > +++ b/include/dt-bindings/clock/rzn1-clocks.h
+> ICU size in CP110 is not 0x10 but at least 0x440 bytes long (from the
+> specification).
 >
->> Given this is part of the DT ABI, and there exist multiple different RZ/N1
->> SoCs (and there are probably planned more), I wouldn't call this header
->> file "rzn1-clocks.h", but e.g. "r9a06g032-clocks.h".
+> Fixes: 6ef84a827c37 ("arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+
+Applied on mvebu/fixes
+
+Thanks,
+
+Gregory
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Actually, no, there already are two r906g03X devices that will work
-> perfectly fine with this driver. We had that discussion before, and you
-> insist and me removing mentions of the rzn1 everywhere, however, this
-> applies to *two* devices already, and I'm supposed to upstream support for
-> them. I can't rename r9g06g032 because it is *inexact* that's why it's
-
-My worry is not that there are two r906g03X devices that will work fine
-with this driver, but that there will be other "rzn1" devices that will not
-work with these bindings (the header file is part of the bindings).
-Besides, RZ/N1D and RZ/N1S (Which apparently differ in packaging only?
-Oh no, RZ/N1D (the larger package) has less QSPI channels than RZ/N1S
-(the smaller package)), there's also (at least) RZ/N1L.
-
-> called rzn1. So unless you let me call it r9a06g0xx-clocks.h (which i know
-> you won't as per multiple previous discussions) this can't be called
-> r9a06g032 because it won't be fit for my purpose when I try to bring back
-> the RZ/N1S into the picture.
-
-You can add r9a06g033-clocks.h when adding support for RZ/N1S.
-
-> There are minor difference to clocking,
-
-Aha?
-
-> I don't know if Renesas plans to release any more rzn1's in this series,
-> but my little finger tells me this isn't the case. But regardless of what
-
-We thought the same thing when the first RZ member (RZ/A1H) showed up.
-Did we know this was not going to be the first SoC of a new RZ family, but
-the first SoC of the first subfamily (RZ/A) of the RZ family... And the
-various subfamilies bear not much similarity.
-
-> we plan, Marketing will screw it up.
-
-Correct. And to mitigate that, we have no other choice than to use the real
-part numbers to differentiate. Once bitten, twice shy.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> index 48cad7919efa..9fa41c54f69c 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> @@ -146,7 +146,7 @@
+>  
+>  		CP110_LABEL(icu): interrupt-controller@1e0000 {
+>  			compatible = "marvell,cp110-icu";
+> -			reg = <0x1e0000 0x10>;
+> +			reg = <0x1e0000 0x440>;
+>  			#interrupt-cells = <3>;
+>  			interrupt-controller;
+>  			msi-parent = <&gicp>;
+> -- 
+> 2.14.1
+>
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Gregory Clement, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
