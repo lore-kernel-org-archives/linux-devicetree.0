@@ -1,105 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v4 07/11] dt-bindings: hwmon: Add documents for PECI hwmon
- client drivers
-Date: Wed, 23 May 2018 10:11:47 -0500
-Message-ID: <CAL_JsqJ8rjRzaqasjbdq-jkYfWxdo72YnmKAVNxDwo6wtyv1xg@mail.gmail.com>
-References: <20180521195905.27983-1-jae.hyun.yoo@linux.intel.com>
- <20180522164230.GA11707@rob-hp-laptop> <a05b44a2-ecc8-b028-4308-47d88523a6f1@linux.intel.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
+Date: Wed, 23 May 2018 08:23:22 -0700
+Message-ID: <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
+References: <41d5df73ddac772551d2966e0752bb0c357b1ded.1526088081.git.collinsd@codeaurora.org>
+ <CAD=FV=XegPeFR8pdZM-YiBBJjrbej=C+2biBt4zJKnE90uTYZA@mail.gmail.com>
+ <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org> <CAD=FV=U-QOQekUHj=ck57YJbTFdFjCAWr4t2A92x+fCNf+yV9A@mail.gmail.com>
+ <dc1fbe9c-8973-1c4d-0fbd-809c1ec0a6be@codeaurora.org> <CAD=FV=XfSGs14VB464cvMGDNwGS4yvSXjN8itZLffm+Sj-D=ww@mail.gmail.com>
+ <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org> <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
+ <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org> <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
+ <20180523082908.GB4828@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a05b44a2-ecc8-b028-4308-47d88523a6f1@linux.intel.com>
+In-Reply-To: <20180523082908.GB4828@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Haiyue Wang <haiyue.wang@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, James Feist <james.feist@linux.intel.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>
+To: Mark Brown <broonie@kernel.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 12:18 PM, Jae Hyun Yoo
-<jae.hyun.yoo@linux.intel.com> wrote:
-> On 5/22/2018 9:42 AM, Rob Herring wrote:
->>
->> On Mon, May 21, 2018 at 12:59:05PM -0700, Jae Hyun Yoo wrote:
->>>
->>> This commit adds dt-bindings documents for PECI hwmon client drivers.
->>>
->>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->>> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
->>> Reviewed-by: James Feist <james.feist@linux.intel.com>
->>> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
->>> Cc: Andrew Jeffery <andrew@aj.id.au>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->>> Cc: Joel Stanley <joel@jms.id.au>
->>> ---
->>>   .../bindings/hwmon/peci-cputemp.txt           | 23 ++++++++++++++++++
->>>   .../bindings/hwmon/peci-dimmtemp.txt          | 24 +++++++++++++++++++
->>>   2 files changed, 47 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
->>>   create mode 100644
->>> Documentation/devicetree/bindings/hwmon/peci-dimmtemp.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
->>> b/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
->>> new file mode 100644
->>> index 000000000000..2f59aee12d9e
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/hwmon/peci-cputemp.txt
->>> @@ -0,0 +1,23 @@
->>> +Bindings for Intel PECI (Platform Environment Control Interface) cputemp
->>> driver.
->>> +
->>> +Required properties:
->>> +- compatible : Should be "intel,peci-cputemp".
->>> +- reg        : Should contain address of a client CPU. Address range of
->>> CPU
->>> +              clients is starting from 0x30 based on PECI specification.
->>> +
->>> +Example:
->>> +       peci-bus@0 {
->>> +               #address-cells = <1>;
->>> +               #size-cells = <0>;
->>> +               < more properties >
->>> +
->>> +               peci-cputemp@30 {
->>> +                       compatible = "intel,peci-cputemp";
->>> +                       reg = <0x30>;
->>> +               };
->>
->>
->> [...]
->>
->>> +               peci-dimmtemp@30 {
->>> +                       compatible = "intel,peci-dimmtemp";
->>> +                       reg = <0x30>;
->>> +               };
->>
->>
->> As I said in the prior version, 2 nodes at the same address is wrong.
->>
->> Rob
->>
->
-> In PECI bus, there is one and only bus host (adapter) and multiple
-> clients on a PECI bus, and PECI spec doesn't allow multiple originators
-> so only the host device can originate message.
+Hi,
 
-Yes, I get that. A single host still has to address slave devices.
+On Wed, May 23, 2018 at 1:29 AM, Mark Brown <broonie@kernel.org> wrote:
 
-> In this implementation,
-> all message transactions on a bus from client driver modules and user
-> space will be serialized well in the PECI core bus driver so bus
-> occupation and traffic arbitration will be managed well in the PECI core
-> bus driver even in case of a bus has 2 client drivers at the same
-> address. I'm sure that this implementation doesn't make that kind of
-> problem to OS.
+> It's arguable either way - you could say that the client gets to specify
+> a safe range at all times or you could say that the machine constraints
+> should cover all cases where the hardware is idling.  Of course RPMh
+> is missing anything like the machine constraints (as we can see from all
+> the fixing up of undesirable hard coding we have to do) so it's kind of
+> pushed towards the first case.
 
-Multiple clients to a single device is common, but that is a software
-problem and doesn't belong in DT.
+OK, fair enough.  If others all agree that it's OK to make requests
+about the voltage of a disabled regulator then I won't stand in the
+way.  I guess it does call into question the whole idea of caching /
+not sending the voltage until the first enable because it means
+there's no way for the client to use this feature until they've
+enabled / disabled the regulator once.  If you think of it as invalid
+to adjust the voltage of a disabled regulator then the caching
+argument is super clean, but once you say that you should normally be
+able to do it it feels more like a hacky workaround.  ...but I suppose
+that's what we've got to live with...
 
-I don't think there is a single other case in the kernel where
-multiple drivers can bind to the same device at a given bus address.
-That is why we have things like MFD. Though in this case, why can't
-one hwmon driver register multiple hwmon devices (cpu and dimm temps)?
-
-Rob
+-Doug
