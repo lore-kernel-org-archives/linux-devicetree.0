@@ -1,74 +1,86 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v3 3/3] ARM: dts: imx6ull-colibri-wifi: remove operating
- points
-Date: Wed, 23 May 2018 11:07:17 +0200
-Message-ID: <dc3523800c274e96dc5642c9c5b65ebe@agner.ch>
-References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
- <20180522062853.24799-3-sebastien.szymanski@armadeus.com>
- <20180523043032.2htohlypynnvpiye@vireshk-i7>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 4/6] ARM: dts: Renesas RZ/N1 SoC base device tree file
+Date: Wed, 23 May 2018 11:12:07 +0200
+Message-ID: <CAMuHMdXETt75rGyYRsNEK0O5CO3A-bG70g=-f23y6PO_uK6rWg@mail.gmail.com>
+References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com> <1526983321-41949-5-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523043032.2htohlypynnvpiye@vireshk-i7>
+In-Reply-To: <1526983321-41949-5-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23.05.2018 06:30, Viresh Kumar wrote:
-> On 22-05-18, 08:28, Sébastien Szymanski wrote:
->> Operating points are now defined in the imx6ull.dtsi file so remove
->> them from board device trees.
->>
->> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
->> ---
->>  arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi | 14 --------------
->>  1 file changed, 14 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
->> index 3dffbcd50bf6..183193e8580d 100644
->> --- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
->> +++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
->> @@ -20,20 +20,6 @@
->>
->>  &cpu0 {
->>  	clock-frequency = <792000000>;
->> -	operating-points = <
->> -		/* kHz	uV */
->> -		792000  1225000
->> -		528000	1175000
->> -		396000	1025000
->> -		198000	950000
->> -	>;
->> -	fsl,soc-operating-points = <
->> -		/* KHz	uV */
->> -		792000  1175000
->> -		528000	1175000
->> -		396000	1175000
->> -		198000	1175000
->> -	>;
->>  };
->>
->>  &iomuxc {
-> 
-> Maybe you should merge this with the previous patch itself.
+Hi Michel,
+
+On Tue, May 22, 2018 at 12:01 PM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> This adds the Renesas RZ/N1D (Part #R9A06G032) SoC bare
+> bone support.
+>
+> This currently only handles generic parts (gic, architected timer)
+> and a UART.
+> For simplicity sake, this also relies on the bootloader to set the
+> pinctrl and clocks.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> @@ -0,0 +1,86 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Base Device Tree Source for the Renesas RZ/N1D (R9A06G032)
+> + *
+> + * Copyright (C) 2018 Renesas Electronics Europe Limited
+> + *
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/rzn1-clock.h>
+> +
+> +/ {
+> +       compatible = "renesas,r9a06g032", "renesas,rzn1";
+
+Please drop the "renesas,rzn1".
 
 
-I am with Viresh here, I rather prefer this in a single commit so it is
-clear that frequencies moved to the base device tree.
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               clocks = <&clock RZN1_DIV_CA7>;
 
-Also, add a comment that frequency selection is now handled in code,
-e.g.:
+I think the clocks property should be moved to the individual CPU nodes.
 
-"The valid frequencies for a particular SKU are now selected by the
-cpufreq driver according to ratings stored in OTP fuses."
+> +
+> +               cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <0>;
+> +               };
+> +
+> +               cpu@1 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a7";
+> +                       reg = <1>;
+> +               };
+> +       };
 
-But the two device tree changes with the driver do what they should do
-here, so:
+The rest looks OK to me (pending acceptance of the clock bindings).
 
-Tested-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
+Gr{oetje,eeting}s,
 
---
-Stefan
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
