@@ -1,64 +1,116 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] arcnet: com20020: bindings for smsc com20020
-Date: Wed, 23 May 2018 11:49:31 -0500
-Message-ID: <20180523164931.GA3635@rob-hp-laptop>
-References: <20180517130628.2770-1-andrea.greco.gapmilano@gmail.com>
+Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
+Date: Wed, 23 May 2018 11:53:52 -0500
+Message-ID: <20180523165352.GA6187@rob-hp-laptop>
+References: <20180517133009.26079-1-m.felsch@pengutronix.de>
+ <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
+ <1526640409.3948.5.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20180517130628.2770-1-andrea.greco.gapmilano@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Andrea Greco <andrea.greco.gapmilano@gmail.com>
-Cc: tobin@apporbit.com, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1526640409.3948.5.camel@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Sascha Hauer <s.hauer@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 03:06:26PM +0200, Andrea Greco wrote:
-> From: Andrea Greco <a.greco@4sigma.it>
-> 
-> Add devicetree bindings for smsc com20020
-> 
-> Signed-off-by: Andrea Greco <a.greco@4sigma.it>
-> ---
->  .../devicetree/bindings/net/smsc-com20020.txt       | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/smsc-com20020.txt
+On Fri, May 18, 2018 at 12:46:49PM +0200, Philipp Zabel wrote:
+> Hi Rob,
+> =
 
-One typo, otherwise:
+> On Thu, 2018-05-17 at 11:14 -0500, Rob Herring wrote:
+> > On Thu, May 17, 2018 at 8:30 AM, Marco Felsch <m.felsch@pengutronix.de>=
+ wrote:
+> > > From: Philipp Zabel <p.zabel@pengutronix.de>
+> > > =
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > > According to the ssm2603 data sheet (control register sequencing), the
+> > > digital core should be activated only after all necessary bits in the
+> > > power register are enabled, and a delay determined by the decoupling
+> > > capacitor on the VMID pin has passed. If the digital core is activated
+> > > too early, or even before the ADC is powered up, audible artifacts
+> > > appear at the beginning of the recorded signal.
+> > > =
 
-> 
-> diff --git a/Documentation/devicetree/bindings/net/smsc-com20020.txt b/Documentation/devicetree/bindings/net/smsc-com20020.txt
-> new file mode 100644
-> index 000000000000..92360b054873
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/smsc-com20020.txt
-> @@ -0,0 +1,21 @@
-> +SMSC com20020 Arcnet network controller
-> +
-> +Required propelty:
+> > > The digital core is also needed for playback, so when recording starts
+> > > it may already be enabled. This means we cannot get the power sequence
+> > > correct when we want to be able to start recording after playback.
+> > > =
 
-property
+> > > As a workaround put the MIC mute switch into the DAPM routes. This
+> > > way we can keep the recording disabled until the MIC Bias has settled
+> > > and thus get rid of audible artifacts.
+> > > =
 
-> +- timeout-ns: Arcnet bus timeout, Idle Time (328000 - 20500)
-> +- bus-speed-bps: Arcnet bus speed (10000000 - 156250)
-> +- smsc,xtal-mhz: External oscillator frequency
-> +- smsc,backplane-enabled: Controller use backplane mode
-> +- reset-gpios: Chip reset pin
-> +- interrupts: Should contain controller interrupt
-> +
-> +arcnet@28000000 {
-> +    compatible = "smsc,com20020";
-> +
-> +	timeout-ns = <20500>;
-> +	bus-speed-bps = <10000000>;
-> +	smsc,xtal-mhz = <20>;
-> +	smsc,backplane-enabled;
-> +
-> +	reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-> +	interrupts = <&gpio2 10 GPIO_ACTIVE_LOW>;
-> +};
-> -- 
-> 2.14.3
-> 
+> > > The delay we have to wait depends on a board specific capacitor
+> > > connected to the VMID pins, so make the delay configurable in the dev=
+ice
+> > > tree.
+> > > =
+
+> > > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > ---
+> > >  .../devicetree/bindings/sound/adi,ssm2602.txt |  7 +++++
+> > >  sound/soc/codecs/ssm2602.c                    | 30 +++++++++++++++++=
+--
+> > >  2 files changed, 35 insertions(+), 2 deletions(-)
+> > > =
+
+> > > diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2602.txt =
+b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+> > > index 3b3302fe399b..9334d48c0462 100644
+> > > --- a/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+> > > +++ b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+> > > @@ -11,9 +11,16 @@ Required properties:
+> > >    - reg : the I2C address of the device for I2C, the chip select
+> > >            number for SPI.
+> > > =
+
+> > > +Optional properties:
+> > > +
+> > > +  - startup-delay-us : delay between powering on and activating the =
+digital
+> > > +                       core, determined by the decoupling capacitor =
+C on the
+> > > +                      VMID pin: delay [=B5s] =3D C [=B5F] * 25000 / =
+3.5
+> > > +
+> > =
+
+> > We already have similarly defined property. Please reuse that. See mmc
+> > pwrseq binding.
+> =
+
+> Do you mean 'post-power-on-delay-ms' from 'mmc-pwseq-simple'?
+> It is documented as:
+> =
+
+> - post-power-on-delay-ms : Delay in ms after powering the card and
+> =A0=A0=A0=A0=A0=A0=A0=A0de-asserting the reset-gpios (if any)
+> =
+
+> The startup delay here is not after powering the whole IC or deasserting
+> resets and before it can be used, but after powering up a specific part
+> of the codec (the ADC) and before unmuting the MIC input to the digital
+> core during start of decoding. With this in mind, do you still think the
+> property should be called the same as the mmc full-chip poweron delay?
+> If so, would it be acceptable to use post-power-on-delay-us to keep the
+> microsecond resolution?
+
+Okay, then I'd suggest something a bit more specific. Perhaps =
+
+"pre-unmute-delay-us" and document in a common location.
+
+Rob
