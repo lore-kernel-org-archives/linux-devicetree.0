@@ -1,198 +1,122 @@
-From: Qiang Yu <yuq825@gmail.com>
-Subject: Re: [PATCH RFC 00/24] Lima DRM driver
-Date: Wed, 23 May 2018 21:24:42 +0800
-Message-ID: <CAKGbVbt_5S6AJ3gJyk-C=NgLf1oihmt32M-FORy648jDTEvPUw@mail.gmail.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180523090223.GR3438@phenom.ffwll.local>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v11 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Wed, 23 May 2018 14:25:22 +0100
+Message-ID: <1ec7645d-72b6-5a1a-48c3-831a3c484a0e@arm.com>
+References: <1527079139-3558-1-git-send-email-ilialin@codeaurora.org>
+ <1527079139-3558-2-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180523090223.GR3438@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527079139-3558-2-git-send-email-ilialin@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ilia Lin <ilialin@codeaurora.org>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMjMsIDIwMTggYXQgNTowMiBQTSwgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZm
-d2xsLmNoPiB3cm90ZToKPiBPbiBGcmksIE1heSAxOCwgMjAxOCBhdCAwNToyNzo1MVBNICswODAw
-LCBRaWFuZyBZdSB3cm90ZToKPj4gS2VybmVsIERSTSBkcml2ZXIgZm9yIEFSTSBNYWxpIDQwMC80
-NTAgR1BVcy4KPj4KPj4gVGhpcyBpbXBsZW1lbnRhdGlvbiBtYWlubHkgdGFrZSBhbWRncHUgRFJN
-IGRyaXZlciBhcyByZWZlcmVuY2UuCj4+Cj4+IC0gTWFsaSA0eHggR1BVcyBoYXZlIHR3byBraW5k
-cyBvZiBwcm9jZXNzb3JzIEdQIGFuZCBQUC4gR1AgaXMgZm9yCj4+ICAgT3BlbkdMIHZlcnRleCBz
-aGFkZXIgcHJvY2Vzc2luZyBhbmQgUFAgaXMgZm9yIGZyYWdtZW50IHNoYWRlcgo+PiAgIHByb2Nl
-c3NpbmcuIEVhY2ggcHJvY2Vzc29yIGhhcyBpdHMgb3duIE1NVSBzbyBwcmNlc3NvcnMgd29yayBp
-bgo+PiAgIHZpcnR1YWwgYWRkcmVzcyBzcGFjZS4KPj4gLSBUaGVyZSdzIG9ubHkgb25lIEdQIGJ1
-dCBtdWx0aXBsZSBQUCAobWF4IDQgZm9yIG1hbGkgNDAwIGFuZCA4Cj4+ICAgZm9yIG1hbGkgNDUw
-KSBpbiB0aGUgc2FtZSBtYWxpIDR4eCBHUFUuIEFsbCBQUHMgYXJlIGdyb3VwZWQKPj4gICB0b2dh
-dGhlciB0byBoYW5kbGUgYSBzaW5nbGUgZnJhZ21lbnQgc2hhZGVyIHRhc2sgZGl2aWRlZCBieQo+
-PiAgIEZCIG91dHB1dCB0aWxlZCBwaXhlbHMuIE1hbGkgNDAwIHVzZXIgc3BhY2UgZHJpdmVyIGlz
-Cj4+ICAgcmVzcG9uc2libGUgZm9yIGFzc2lnbiB0YXJnZXQgdGlsZWQgcGl4ZWxzIHRvIGVhY2gg
-UFAsIGJ1dCBtYWxpCj4+ICAgNDUwIGhhcyBhIEhXIG1vZHVsZSBjYWxsZWQgRExCVSB0byBkeW5h
-bWljYWxseSBiYWxhbmNlIGVhY2gKPj4gICBQUCdzIGxvYWQuCj4+IC0gVXNlciBzcGFjZSBkcml2
-ZXIgYWxsb2NhdGUgYnVmZmVyIG9iamVjdCBhbmQgbWFwIGludG8gR1BVCj4+ICAgdmlydHVhbCBh
-ZGRyZXNzIHNwYWNlLCB1cGxvYWQgY29tbWFuZCBzdHJlYW0gYW5kIGRyYXcgZGF0YSB3aXRoCj4+
-ICAgQ1BVIG1tYXAgb2YgdGhlIGJ1ZmZlciBvYmplY3QsIHRoZW4gc3VibWl0IHRhc2sgdG8gR1Av
-UFAgd2l0aAo+PiAgIGEgcmVnaXN0ZXIgZnJhbWUgaW5kaWNhdGluZyB3aGVyZSBpcyB0aGUgY29t
-bWFuZCBzdHJlYW0gYW5kIG1pc2MKPj4gICBzZXR0aW5ncy4KPj4gLSBUaGVyZSdzIG5vIGNvbW1h
-bmQgc3RyZWFtIHZhbGlkYXRpb24vcmVsb2NhdGlvbiBkdWUgdG8gZWFjaCB1c2VyCj4+ICAgcHJv
-Y2VzcyBoYXMgaXRzIG93biBHUFUgdmlydHVhbCBhZGRyZXNzIHNwYWNlLiBHUC9QUCdzIE1NVSBz
-d2l0Y2gKPj4gICB2aXJ0dWFsIGFkZHJlc3Mgc3BhY2UgYmVmb3JlIHJ1bm5pbmcgdHdvIHRhc2tz
-IGZyb20gZGlmZmVyZW50Cj4+ICAgdXNlciBwcm9jZXNzLiBFcnJvciBvciBldmlsIHVzZXIgc3Bh
-Y2UgY29kZSBqdXN0IGdldCBNTVUgZmF1bHQKPj4gICBvciBHUC9QUCBlcnJvciBJUlEsIHRoZW4g
-dGhlIEhXL1NXIHdpbGwgYmUgcmVjb3ZlcmVkLgo+PiAtIFVzZSBUVE0gYXMgTU0uIFRUTV9QTF9U
-VCB0eXBlIG1lbW9yeSBpcyB1c2VkIGFzIHRoZSBjb250ZW50IG9mCj4+ICAgbGltYSBidWZmZXIg
-b2JqZWN0IHdoaWNoIGlzIGFsbG9jYXRlZCBmcm9tIFRUTSBwYWdlIHBvb2wuIGFsbAo+PiAgIGxp
-bWEgYnVmZmVyIG9iamVjdCBnZXRzIHBpbm5lZCB3aXRoIFRUTV9QTF9GTEFHX05PX0VWSUNUIHdo
-ZW4KPj4gICBhbGxvY2F0aW9uLCBzbyB0aGVyZSdzIG5vIGJ1ZmZlciBldmljdGlvbiBhbmQgc3dh
-cCBmb3Igbm93LiBXZQo+PiAgIG5lZWQgcmV2ZXJzZSBlbmdpbmVlcmluZyB0byBzZWUgaWYgYW5k
-IGhvdyBHUC9QUCBzdXBwb3J0IE1NVQo+PiAgIGZhdWx0IHJlY292ZXJ5IChjb250aW51ZSBleGVj
-dXRpb24pLiBPdGhlcndpc2Ugd2UgaGF2ZSB0bwo+PiAgIHBpbi91bnBpbiBlYWNoIGVudm9sdmVk
-IGJ1ZmZlciB3aGVuIHRhc2sgY3JlYXRpb24vZGVsZXRpb24uCj4KPiBDdXJpb3MgcXVlc3Rpb24s
-IGJ1dCB3aHk/IFRoZSBvbmUgdGhpbmcgdGhhdCB0dG0gZG9lcyBoZWxwIHlvdSB3aXRoIGlzCj4g
-a2VlcGluZyB0cmFjayBvZiBidWZmZXIgbW92ZXMgZnJvbS90byBkaXNjcmV0ZSBtZW1vcnkuIFlv
-dSBnZXQgdGhhdAo+IGJlbmVmaXQgYXQgdGhlIGNvc3Qgb2YgYSBuaWNlIG1pZGxheWVyIHdoaWNo
-IHRlbmRzIHRvIGdldCBpbiB0aGUgd2F5LiBJZgo+IGFsbCB5b3UgZG8gaXMgbWFwIGJ1ZmZlcnMg
-aW50byBwYWdldGFibGVzLCB0aGVuIHJvbGxpbmcgeW91ciBvd24gKGxpa2UKPiBlLmcuIGV0bmF2
-aXYgZG9lcykgaXMgSSB0aGluayBtdWNoIGJldHRlcjogQWxsIHRoZSBvdGhlciB0dG0gZnVuY3Rp
-b25hbGl0eQo+IChyZXNlcnZhdHNpb25zLCBkcm1fbW0gYWxsb2NhdGlvbiBtYW5hZ2VtZW50LCBm
-ZW5jZXMpIGhhcyBhbGwgYmVlbgo+IGV4dHJhY3RlZCBhbmQgaXMgYXZhaWxhYmxlIHRvIGFueSBk
-cml2ZXIgd2l0aG91dCB0dG0uCgpZZWFoLCBJIGNhbiBzcGVuZCBtb3JlIHRpbWUgdG8gd3JpdGUg
-b25lIHdpdGhvdXQgdGhhdCBtdWNoIHJlZHVuZGFudApmdW5jdGlvbmFsaXR5IG9mIFRUTSwgYnV0
-IGFzIHRoZXJlJ3Mgb25lIHRoYXQgY2FuIGJlIHVzZWQgZGlyZWN0bHksIEkgZ2l2ZQp1cC4gSSBh
-bHNvIHNlZSB2aXJ0aW8gR1BVIHVzZSB0aGlzIHdheS4KCklmIEknbSBnb2luZyB0byB3cml0ZSBh
-IG5ldyBvbmUsIEkgYWxzbyB3YW50IHRoZSB0dG1fcGFnZV9hbGxvYy5jIHBhZ2UKcG9vbC4gQnV0
-IG15IGludGVyZmFjZSB3b24ndCBiZSB0aGF0IGdlbmVyaWMgYXMgVFRNLgoKUmVnYXJkcywKUWlh
-bmcKCj4gLURhbmllbAo+Cj4+IC0gVXNlIGRybV9zY2hlZCBmb3IgR1BVIHRhc2sgc2NoZWR1bGUu
-IEVhY2ggT3BlbkdMIGNvbnRleHQgc2hvdWxkCj4+ICAgaGF2ZSBhIGxpbWEgY29udGV4dCBvYmpl
-Y3QgaW4gdGhlIGtlcm5lbCB0byBkaXN0aW5ndWlzaCB0YXNrcwo+PiAgIGZyb20gZGlmZmVyZW50
-IHVzZXIuIGRybV9zY2hlZCBnZXRzIHRhc2sgZnJvbSBlYWNoIGxpbWEgY29udGV4dAo+PiAgIGlu
-IGEgZmFpciB3YXkuCj4+Cj4+IE5vdCBpbXBsZW1lbnRlZDoKPj4gLSBEdW1wIGJ1ZmZlciBzdXBw
-b3J0Cj4+IC0gUG93ZXIgbWFuYWdlbWVudAo+PiAtIFBlcmZvcm1hbmNlIGNvdW50ZXIKPj4KPj4g
-VGhpcyBwYXRjaCBzZXJpYWwganVzdCBwYWNrIGEgcGFpciBvZiAuYy8uaCBmaWxlcyBpbiBlYWNo
-IHBhdGNoLgo+PiBGb3Igd2hvbGUgaGlzdG9yeSBvZiB0aGlzIGRyaXZlcidzIGRldmVsb3BtZW50
-LCBzZWU6Cj4+IGh0dHBzOi8vZ2l0aHViLmNvbS95dXEvbGludXgtbGltYS9jb21taXRzL2xpbWEt
-NC4xNy1yYzQKPj4KPj4gTWVzYSBkcml2ZXIgaXMgc3RpbGwgaW4gZGV2ZWxvcG1lbnQgYW5kIG5v
-dCByZWFkeSBmb3IgZGFpbHkgdXNhZ2UsCj4+IGJ1dCBjYW4gcnVuIHNvbWUgc2ltcGxlIHRlc3Rz
-IGxpa2Uga21zY3ViZSBhbmQgZ2xhbXJrMiwgc2VlOgo+PiBodHRwczovL2dpdGh1Yi5jb20veXVx
-L21lc2EtbGltYQo+Pgo+PiBBbmRyZWkgUGF1bGF1ICgxKToKPj4gICBhcm02NC9kdHM6IGFkZCBz
-d2l0Y2gtZGVsYXkgZm9yIG1lc29uIG1hbGkKPj4KPj4gTGltYSBQcm9qZWN0IERldmVsb3BlcnMg
-KDEwKToKPj4gICBkcm0vbGltYTogYWRkIG1hbGkgNHh4IEdQVSBoYXJkd2FyZSByZWdzCj4+ICAg
-ZHJtL2xpbWE6IGFkZCBsaW1hIGNvcmUgZHJpdmVyCj4+ICAgZHJtL2xpbWE6IGFkZCBHUFUgZGV2
-aWNlIGZ1bmN0aW9ucwo+PiAgIGRybS9saW1hOiBhZGQgUE1VIHJlbGF0ZWQgZnVuY3Rpb25zCj4+
-ICAgZHJtL2xpbWE6IGFkZCBQUCByZWxhdGVkIGZ1bmN0aW9ucwo+PiAgIGRybS9saW1hOiBhZGQg
-TU1VIHJlbGF0ZWQgZnVuY3Rpb25zCj4+ICAgZHJtL2xpbWE6IGFkZCBHUFUgdmlydHVhbCBtZW1v
-cnkgc3BhY2UgaGFuZGluZwo+PiAgIGRybS9saW1hOiBhZGQgR0VNIHJlbGF0ZWQgZnVuY3Rpb25z
-Cj4+ICAgZHJtL2xpbWE6IGFkZCBHRU0gUHJpbWUgcmVsYXRlZCBmdW5jdGlvbnMKPj4gICBkcm0v
-bGltYTogYWRkIG1ha2VmaWxlIGFuZCBrY29uZmlnCj4+Cj4+IFFpYW5nIFl1ICgxMik6Cj4+ICAg
-ZHQtYmluZGluZ3M6IGFkZCBzd2l0Y2gtZGVsYXkgcHJvcGVydHkgZm9yIG1hbGktdXRnYXJkCj4+
-ICAgYXJtNjQvZHRzOiBhZGQgc3dpdGNoLWRlbGF5IGZvciBtZXNvbiBtYWxpCj4+ICAgUmV2ZXJ0
-ICJkcm06IE5lcmYgdGhlIHByZWNsb3NlIGNhbGxiYWNrIGZvciBtb2Rlcm4gZHJpdmVycyIKPj4g
-ICBkcm0vbGltYTogYWRkIGxpbWEgdWFwaSBoZWFkZXIKPj4gICBkcm0vbGltYTogYWRkIEwyIGNh
-Y2hlIGZ1bmN0aW9ucwo+PiAgIGRybS9saW1hOiBhZGQgR1AgcmVsYXRlZCBmdW5jdGlvbnMKPj4g
-ICBkcm0vbGltYTogYWRkIEJDQVNUIHJlbGF0ZWQgZnVuY3Rpb24KPj4gICBkcm0vbGltYTogYWRk
-IERMQlUgcmVsYXRlZCBmdW5jdGlvbnMKPj4gICBkcm0vbGltYTogYWRkIFRUTSBzdWJzeXN0ZW0g
-ZnVuY3Rpb25zCj4+ICAgZHJtL2xpbWE6IGFkZCBidWZmZXIgb2JqZWN0IGZ1bmN0aW9ucwo+PiAg
-IGRybS9saW1hOiBhZGQgR1BVIHNjaGVkdWxlIHVzaW5nIERSTV9TQ0hFRAo+PiAgIGRybS9saW1h
-OiBhZGQgY29udGV4dCByZWxhdGVkIGZ1bmN0aW9ucwo+Pgo+PiBTaW1vbiBTaGllbGRzICgxKToK
-Pj4gICBBUk06IGR0czogYWRkIGdwdSBub2RlIHRvIGV4eW5vczQKPj4KPj4gIC4uLi9iaW5kaW5n
-cy9ncHUvYXJtLG1hbGktdXRnYXJkLnR4dCAgICAgICAgICB8ICAgNCArCj4+ICBhcmNoL2FybS9i
-b290L2R0cy9leHlub3M0LmR0c2kgICAgICAgICAgICAgICAgfCAgMzMgKysKPj4gIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLmR0c2kgICB8ICAgMSArCj4+ICAuLi4vYm9v
-dC9kdHMvYW1sb2dpYy9tZXNvbi1neGwtbWFsaS5kdHNpICAgICAgfCAgIDEgKwo+PiAgZHJpdmVy
-cy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKPj4gIGRyaXZl
-cnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICBkcml2
-ZXJzL2dwdS9kcm0vZHJtX2ZpbGUuYyAgICAgICAgICAgICAgICAgICAgfCAgIDggKy0KPj4gIGRy
-aXZlcnMvZ3B1L2RybS9saW1hL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgOSArCj4+ICBk
-cml2ZXJzL2dwdS9kcm0vbGltYS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgMTkgKwo+PiAg
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9iY2FzdC5jICAgICAgICAgICAgIHwgIDY1ICsrKwo+
-PiAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9iY2FzdC5oICAgICAgICAgICAgIHwgIDM0ICsr
-Cj4+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2N0eC5jICAgICAgICAgICAgICAgfCAxNDMg
-KysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfY3R4LmggICAgICAgICAgICAgICB8
-ICA1MSArKwo+PiAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9kZXZpY2UuYyAgICAgICAgICAg
-IHwgNDA3ICsrKysrKysrKysrKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2Rldmlj
-ZS5oICAgICAgICAgICAgfCAxMzYgKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFf
-ZGxidS5jICAgICAgICAgICAgICB8ICA3NSArKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xp
-bWFfZGxidS5oICAgICAgICAgICAgICB8ICAzNyArKwo+PiAgZHJpdmVycy9ncHUvZHJtL2xpbWEv
-bGltYV9kcnYuYyAgICAgICAgICAgICAgIHwgNDY2ICsrKysrKysrKysrKysrKysKPj4gIGRyaXZl
-cnMvZ3B1L2RybS9saW1hL2xpbWFfZHJ2LmggICAgICAgICAgICAgICB8ICA3NyArKysKPj4gIGRy
-aXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtLmMgICAgICAgICAgICAgICB8IDQ1OSArKysrKysr
-KysrKysrKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2dlbS5oICAgICAgICAgICAg
-ICAgfCAgNDEgKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtX3ByaW1lLmMgICAg
-ICAgICB8ICA2NiArKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtX3ByaW1lLmgg
-ICAgICAgICB8ICAzMSArKwo+PiAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9ncC5jICAgICAg
-ICAgICAgICAgIHwgMjkzICsrKysrKysrKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1h
-X2dwLmggICAgICAgICAgICAgICAgfCAgMzQgKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xp
-bWFfbDJfY2FjaGUuYyAgICAgICAgICB8ICA5OCArKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vbGlt
-YS9saW1hX2wyX2NhY2hlLmggICAgICAgICAgfCAgMzIgKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9s
-aW1hL2xpbWFfbW11LmMgICAgICAgICAgICAgICB8IDE1NCArKysrKysKPj4gIGRyaXZlcnMvZ3B1
-L2RybS9saW1hL2xpbWFfbW11LmggICAgICAgICAgICAgICB8ICAzNCArKwo+PiAgZHJpdmVycy9n
-cHUvZHJtL2xpbWEvbGltYV9vYmplY3QuYyAgICAgICAgICAgIHwgMTIwICsrKysrCj4+ICBkcml2
-ZXJzL2dwdS9kcm0vbGltYS9saW1hX29iamVjdC5oICAgICAgICAgICAgfCAgODcgKysrCj4+ICBk
-cml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BtdS5jICAgICAgICAgICAgICAgfCAgODUgKysrCj4+
-ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BtdS5oICAgICAgICAgICAgICAgfCAgMzAgKysK
-Pj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcHAuYyAgICAgICAgICAgICAgICB8IDQxOCAr
-KysrKysrKysrKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcHAuaCAgICAgICAg
-ICAgICAgICB8ICAzNyArKwo+PiAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9yZWdzLmggICAg
-ICAgICAgICAgIHwgMzA0ICsrKysrKysrKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1h
-X3NjaGVkLmMgICAgICAgICAgICAgfCA0OTcgKysrKysrKysrKysrKysrKysrCj4+ICBkcml2ZXJz
-L2dwdS9kcm0vbGltYS9saW1hX3NjaGVkLmggICAgICAgICAgICAgfCAxMjYgKysrKysKPj4gIGRy
-aXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfdHRtLmMgICAgICAgICAgICAgICB8IDQwOSArKysrKysr
-KysrKysrKwo+PiAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV90dG0uaCAgICAgICAgICAgICAg
-IHwgIDQ0ICsrCj4+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmMgICAgICAgICAgICAg
-ICAgfCAzMTIgKysrKysrKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfdm0uaCAg
-ICAgICAgICAgICAgICB8ICA3MyArKysKPj4gIGluY2x1ZGUvZHJtL2RybV9kcnYuaCAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAyMyArLQo+PiAgaW5jbHVkZS91YXBpL2RybS9saW1hX2RybS5o
-ICAgICAgICAgICAgICAgICAgIHwgMTk1ICsrKysrKysKPj4gIDQ0IGZpbGVzIGNoYW5nZWQsIDU1
-NjUgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vbGltYS9LY29uZmlnCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL2xpbWEvTWFrZWZpbGUKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vbGltYS9saW1hX2JjYXN0LmMKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vbGltYS9saW1hX2JjYXN0LmgKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vbGltYS9saW1hX2N0eC5jCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2xpbWEvbGltYV9jdHguaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfZGV2aWNlLmMKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vbGltYS9saW1hX2RldmljZS5oCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2xpbWEvbGltYV9kbGJ1LmMKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vbGltYS9saW1hX2RsYnUuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfZHJ2LmMKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-bGltYS9saW1hX2Rydi5oCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xp
-bWEvbGltYV9nZW0uYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1h
-L2xpbWFfZ2VtLmgKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9s
-aW1hX2dlbV9wcmltZS5jCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xp
-bWEvbGltYV9nZW1fcHJpbWUuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfZ3AuYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9s
-aW1hL2xpbWFfZ3AuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1h
-L2xpbWFfbDJfY2FjaGUuYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9s
-aW1hL2xpbWFfbDJfY2FjaGUuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfbW11LmMKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-bGltYS9saW1hX21tdS5oCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xp
-bWEvbGltYV9vYmplY3QuYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9s
-aW1hL2xpbWFfb2JqZWN0LmgKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-bGltYS9saW1hX3BtdS5jCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xp
-bWEvbGltYV9wbXUuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1h
-L2xpbWFfcHAuYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xp
-bWFfcHAuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFf
-cmVncy5oCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9z
-Y2hlZC5jCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9z
-Y2hlZC5oCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV90
-dG0uYwo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfdHRt
-LmgKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmMK
-Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmgKPj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3VhcGkvZHJtL2xpbWFfZHJtLmgKPj4KPj4gLS0K
-Pj4gMi4xNy4wCj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPj4gZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwo+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo+Cj4gLS0KPiBEYW5pZWwgVmV0dGVyCj4gU29mdHdhcmUgRW5naW5lZXIs
-IEludGVsIENvcnBvcmF0aW9uCj4gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 23/05/18 13:38, Ilia Lin wrote:
+> In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
+> the CPU frequency subset and voltage value of each OPP varies
+> based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
+> defines the voltage and frequency value based on the msm-id in SMEM
+> and speedbin blown in the efuse combination.
+> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
+> to provide the OPP framework with required information.
+> This is used to determine the voltage and frequency value for each OPP of
+> operating-points-v2 table when it is parsed by the OPP framework.
+> 
+> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm          |  10 ++
+>  drivers/cpufreq/Makefile             |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
+>  drivers/cpufreq/qcom-cpufreq-kryo.c  | 181 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 195 insertions(+)
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+> 
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index de55c7d..0bfd40e 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -124,6 +124,16 @@ config ARM_OMAP2PLUS_CPUFREQ
+>  	depends on ARCH_OMAP2PLUS
+>  	default ARCH_OMAP2PLUS
+>  
+> +config ARM_QCOM_CPUFREQ_KRYO
+> +	bool "Qualcomm Kryo based CPUFreq"
+> +	depends on QCOM_QFPROM
+> +	depends on QCOM_SMEM
+> +	select PM_OPP
+> +	help
+> +	  This adds the CPUFreq driver for Qualcomm Kryo SoC based boards.
+> +
+> +	  If in doubt, say N.
+> +
+
+Sorry but just noticed now, any reason why this can't be module. I can't
+imagine any.
+
+[..]
+
+> +static int qcom_cpufreq_kryo_probe(struct platform_device *pdev)
+> +{
+> +	struct opp_table *opp_tables[NR_CPUS] = {0};
+> +	struct platform_device *cpufreq_dt_pdev;
+> +	enum _msm8996_version msm8996_version;
+> +	struct nvmem_cell *speedbin_nvmem;
+> +	struct device_node *np;
+> +	struct device *cpu_dev;
+
+[..]
+
+> +
+> +	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
+> +	if (!IS_ERR(cpufreq_dt_pdev))
+> +		return 0;
+> +
+> +	ret = PTR_ERR(cpufreq_dt_pdev);
+> +	dev_err(cpu_dev, "Failed to register platform device\n");
+> +
+> +free_opp:
+> +	for_each_possible_cpu(cpu) {
+> +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
+> +			break;
+> +		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int __init qcom_cpufreq_kryo_init(void)
+> +{
+> +	/*
+> +	 * Since the driver depends on smem and nvmem drivers, which may
+> +	 * return EPROBE_DEFER, all the real activity is done in the probe,
+> +	 * which may be defered as well. The init here is only registering
+> +	 * a platform device.
+> +	 */
+> +	platform_device_register_simple("qcom-cpufreq-kryo", -1, NULL, 0);
+> +	return 0;
+> +}
+> +module_init(qcom_cpufreq_kryo_init);
+
+Do you need this at all ? See below on how to eliminate the need for this.
+
+> +
+> +static struct platform_driver qcom_cpufreq_kryo_driver = {
+> +	.probe = qcom_cpufreq_kryo_probe,
+> +	.driver = {
+> +		.name = "qcom-cpufreq-kryo",
+> +	},
+> +};
+> +builtin_platform_driver(qcom_cpufreq_kryo_driver);
+
+Use builtin_platform_driver_probe and remove qcom_cpufreq_kryo_init
+or use module_platform_driver_probe if it can be module.
+
+-- 
+Regards,
+Sudeep
