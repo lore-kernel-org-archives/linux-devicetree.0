@@ -1,43 +1,78 @@
-From: "=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?=" <vokac.m@gmail.com>
-Subject: [PATCH net-next v3 2/7] net: dsa: qca8k: Add support for QCA8334 switch
-Date: Wed, 23 May 2018 08:20:19 +0200
-Message-ID: <1527056424-14528-3-git-send-email-michal.vokac@ysoft.com>
-References: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
+Date: Wed, 23 May 2018 08:25:24 +0200
+Message-ID: <CAMuHMdXnNABJSJZ6MLF+aQu8QKpFoMCAvno9Yc-9LOe810NtbA@mail.gmail.com>
+References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
+ <CAMuHMdXRnoyhNz=3v_=ZCV=FWX4TwKqx7MpH0g3c7GwtXKP1tg@mail.gmail.com>
+ <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, michal.vokac@ysoft.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Richard Weinberger <richard@nod.at>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the four-port variant of the Qualcomm QCA833x switch.
+Hi Marek,
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
-Changes in v3:
- - Add "Reviewed-by" tag from Andrew
+On Wed, May 23, 2018 at 12:01 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+> On 05/22/2018 04:43 PM, Geert Uytterhoeven wrote:
+>> On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>> Drop the MTD partitioning from DT, since it does not describe HW
+>>> and to give way to a more flexible kernel command line partition
+>>> passing.
+>>>
+>>> To retain the original partitioning, assure you have enabled
+>>> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
+>>> following to your kernel command line:
+>>>
+>>>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
+>>
+>> I think the "@0" can be dropped, as it's optional?
+>> 4m?
+>
+> My take on this is that the loader is actually at offset 0x0 of the MTD
+> device and we explicitly state that in the mtdparts to anchor the first
+> partition within the MTD device and all the other partitions are at
+> offset +(sum of the sizes of all partitions listed before the current
+> one) relative to that first partition.
 
-Changes in v2:
- - Add commit message
+Where is this explicitly states for the first partition?
 
- drivers/net/dsa/qca8k.c | 1 +
- 1 file changed, 1 insertion(+)
+> Removing the @0 feels fragile at best and it seems to depend on the
+> current behavior of the code.
 
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index 3684e56..6a3ffb2 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -1010,6 +1010,7 @@ static SIMPLE_DEV_PM_OPS(qca8k_pm_ops,
- 			 qca8k_suspend, qca8k_resume);
- 
- static const struct of_device_id qca8k_of_match[] = {
-+	{ .compatible = "qca,qca8334" },
- 	{ .compatible = "qca,qca8337" },
- 	{ /* sentinel */ },
- };
+Better, it also depends on the documented behavior:
+
+Documentation/admin-guide/kernel-parameters.txt refers to
+drivers/mtd/cmdlinepart.c, which states:
+
+ * <offset>  := standard linux memsize
+ *              if omitted the part will immediately follow the previous part
+ *              or 0 if the first part
+
+None of the examples listed there or under the MTD_CMDLINE_PARTS Kconfig
+help text, or in a defconfig bundled with the kernel, use @0 for the first
+partition.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
