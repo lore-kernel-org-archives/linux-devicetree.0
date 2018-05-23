@@ -1,254 +1,211 @@
-From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2 07/40] iommu: Add a page fault handler
-Date: Tue, 22 May 2018 16:35:21 -0700
-Message-ID: <20180522163521.413e60c6@jacob-builder>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-8-jean-philippe.brucker@arm.com>
-	<20180518110434.150a0e64@jacob-builder>
-	<8a640794-a6f3-fa01-82a9-06479a6f779a@arm.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
+Date: Tue, 22 May 2018 17:08:45 -0700
+Message-ID: <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
+References: <cover.1526088081.git.collinsd@codeaurora.org> <41d5df73ddac772551d2966e0752bb0c357b1ded.1526088081.git.collinsd@codeaurora.org>
+ <CAD=FV=XegPeFR8pdZM-YiBBJjrbej=C+2biBt4zJKnE90uTYZA@mail.gmail.com>
+ <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org> <CAD=FV=U-QOQekUHj=ck57YJbTFdFjCAWr4t2A92x+fCNf+yV9A@mail.gmail.com>
+ <dc1fbe9c-8973-1c4d-0fbd-809c1ec0a6be@codeaurora.org> <CAD=FV=XfSGs14VB464cvMGDNwGS4yvSXjN8itZLffm+Sj-D=ww@mail.gmail.com>
+ <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org> <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
+ <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <8a640794-a6f3-fa01-82a9-06479a6f779a-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 May 2018 15:49:40 +0100
-Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+Hi,
 
-> On 18/05/18 19:04, Jacob Pan wrote:
-> >> +struct iopf_context {
-> >> +	struct device			*dev;
-> >> +	struct iommu_fault_event	evt;
-> >> +	struct list_head		head;
-> >> +};
-> >> +
-> >> +struct iopf_group {
-> >> +	struct iopf_context		last_fault;
-> >> +	struct list_head		faults;
-> >> +	struct work_struct		work;
-> >> +};
-> >> +  
-> > All the page requests in the group should belong to the same device,
-> > perhaps struct device tracking should be in iopf_group instead of
-> > iopf_context?  
-> 
-> Right, this is a leftover from when we kept a global list of partial
-> faults. Since the list is now per-device, I can move the dev pointer
-> (I think I should also rename iopf_context to iopf_fault, if that's
-> all right)
-> 
-> >> +static int iopf_complete(struct device *dev, struct
-> >> iommu_fault_event *evt,
-> >> +			 enum page_response_code status)
-> >> +{
-> >> +	struct page_response_msg resp = {
-> >> +		.addr			= evt->addr,
-> >> +		.pasid			= evt->pasid,
-> >> +		.pasid_present		= evt->pasid_valid,
-> >> +		.page_req_group_id	=
-> >> evt->page_req_group_id,
-> >> +		.private_data		= evt->iommu_private,
-> >> +		.resp_code		= status,
-> >> +	};
-> >> +
-> >> +	return iommu_page_response(dev, &resp);
-> >> +}
-> >> +
-> >> +static enum page_response_code
-> >> +iopf_handle_single(struct iopf_context *fault)
-> >> +{
-> >> +	/* TODO */
-> >> +	return -ENODEV;
-> >> +}
-> >> +
-> >> +static void iopf_handle_group(struct work_struct *work)
-> >> +{
-> >> +	struct iopf_group *group;
-> >> +	struct iopf_context *fault, *next;
-> >> +	enum page_response_code status = IOMMU_PAGE_RESP_SUCCESS;
-> >> +
-> >> +	group = container_of(work, struct iopf_group, work);
-> >> +
-> >> +	list_for_each_entry_safe(fault, next, &group->faults,
-> >> head) {
-> >> +		struct iommu_fault_event *evt = &fault->evt;
-> >> +		/*
-> >> +		 * Errors are sticky: don't handle subsequent
-> >> faults in the
-> >> +		 * group if there is an error.
-> >> +		 */  
-> > There might be performance benefit for certain device to continue in
-> > spite of error in that the ATS retry may have less fault. Perhaps a
-> > policy decision for later enhancement.  
-> 
-> Yes I think we should leave it to future work. My current reasoning is
-> that subsequent requests are more likely to fail as well and reporting
-> the error is more urgent, but we need real workloads to confirm this.
-> 
-> >> +		if (status == IOMMU_PAGE_RESP_SUCCESS)
-> >> +			status = iopf_handle_single(fault);
-> >> +
-> >> +		if (!evt->last_req)
-> >> +			kfree(fault);
-> >> +	}
-> >> +
-> >> +	iopf_complete(group->last_fault.dev,
-> >> &group->last_fault.evt, status);
-> >> +	kfree(group);
-> >> +}
-> >> +
-> >> +/**
-> >> + * iommu_queue_iopf - IO Page Fault handler
-> >> + * @evt: fault event
-> >> + * @cookie: struct device, passed to
-> >> iommu_register_device_fault_handler.
-> >> + *
-> >> + * Add a fault to the device workqueue, to be handled by mm.
-> >> + */
-> >> +int iommu_queue_iopf(struct iommu_fault_event *evt, void *cookie)
-> >> +{
-> >> +	struct iopf_group *group;
-> >> +	struct iopf_context *fault, *next;
-> >> +	struct iopf_device_param *iopf_param;
-> >> +
-> >> +	struct device *dev = cookie;
-> >> +	struct iommu_param *param = dev->iommu_param;
-> >> +
-> >> +	if (WARN_ON(!mutex_is_locked(&param->lock)))
-> >> +		return -EINVAL;
-> >> +
-> >> +	if (evt->type != IOMMU_FAULT_PAGE_REQ)
-> >> +		/* Not a recoverable page fault */
-> >> +		return IOMMU_PAGE_RESP_CONTINUE;
-> >> +
-> >> +	/*
-> >> +	 * As long as we're holding param->lock, the queue can't
-> >> be unlinked
-> >> +	 * from the device and therefore cannot disappear.
-> >> +	 */
-> >> +	iopf_param = param->iopf_param;
-> >> +	if (!iopf_param)
-> >> +		return -ENODEV;
-> >> +
-> >> +	if (!evt->last_req) {
-> >> +		fault = kzalloc(sizeof(*fault), GFP_KERNEL);
-> >> +		if (!fault)
-> >> +			return -ENOMEM;
-> >> +
-> >> +		fault->evt = *evt;
-> >> +		fault->dev = dev;
-> >> +
-> >> +		/* Non-last request of a group. Postpone until the
-> >> last one */
-> >> +		list_add(&fault->head, &iopf_param->partial);
-> >> +
-> >> +		return IOMMU_PAGE_RESP_HANDLED;
-> >> +	}
-> >> +
-> >> +	group = kzalloc(sizeof(*group), GFP_KERNEL);
-> >> +	if (!group)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	group->last_fault.evt = *evt;
-> >> +	group->last_fault.dev = dev;
-> >> +	INIT_LIST_HEAD(&group->faults);
-> >> +	list_add(&group->last_fault.head, &group->faults);
-> >> +	INIT_WORK(&group->work, iopf_handle_group);
-> >> +
-> >> +	/* See if we have partial faults for this group */
-> >> +	list_for_each_entry_safe(fault, next,
-> >> &iopf_param->partial, head) {
-> >> +		if (fault->evt.page_req_group_id ==
-> >> evt->page_req_group_id)  
-> > If all 9 bit group index are used, there can be lots of PRGs. For
-> > future enhancement, maybe we can have per group partial list ready
-> > to go when LPIG comes in? I will be less searching.  
-> 
-> Yes, allocating the PRG from the start could be more efficient. I
-> think it's slightly more complicated code so I'd rather see
-> performance numbers before implementing it
-> 
-> >> +			/* Insert *before* the last fault */
-> >> +			list_move(&fault->head, &group->faults);
-> >> +	}
-> >> +  
-> > If you already sorted the group list with last fault at the end,
-> > why do you need a separate entry to track the last fault?  
-> 
-> Not sure I understand your question, sorry. Do you mean why the
-> iopf_group.last_fault? Just to avoid one more kzalloc.
-> 
-kind of :) what i thought was that why can't the last_fault naturally
-be the last entry in your group fault list? then there is no need for
-special treatment in terms of allocation of the last fault. just my
-preference.
-> >> +
-> >> +	queue->flush(queue->flush_arg, dev);
-> >> +
-> >> +	/*
-> >> +	 * No need to clear the partial list. All PRGs containing
-> >> the PASID that
-> >> +	 * needs to be decommissioned are whole (the device driver
-> >> made sure of
-> >> +	 * it before this function was called). They have been
-> >> submitted to the
-> >> +	 * queue by the above flush().
-> >> +	 */  
-> > So you are saying device driver need to make sure LPIG PRQ is
-> > submitted in the flush call above such that partial list is
-> > cleared?  
-> 
-> Not exactly, it's the IOMMU driver that makes sure all LPIG in its
-> queues are submitted by the above flush call. In more details the
-> flow is:
-> 
-> * Either device driver calls unbind()/sva_device_shutdown(), or the
-> process exits.
-> * If the device driver called, then it already told the device to stop
-> using the PASID. Otherwise we use the mm_exit() callback to tell the
-> device driver to stop using the PASID.
-> * In either case, when receiving a stop request from the driver, the
-> device sends the LPIGs to the IOMMU queue.
-> * Then, the flush call above ensures that the IOMMU reports the LPIG
-> with iommu_report_device_fault.
-> * While submitting all LPIGs for this PASID to the work queue,
-> ipof_queue_fault also picked up all partial faults, so the partial
-> list is clean.
-> 
-> Maybe I should improve this comment?
-> 
-thanks for explaining. LPIG submission is done by device asynchronously
-w.r.t. driver stopping/decommission PASID. so if we were to use this
-flow on vt-d, which does not stall page request queue, then we should
-use the iommu model specific flush() callback to ensure LPIG is
-received? There could be queue full condition and retry. I am just
-trying to understand how and where we can make sure LPIG is
-received and all groups are whole.
+On Tue, May 22, 2018 at 3:46 PM, David Collins <collinsd@codeaurora.org> wrote:
+> On 05/22/2018 09:43 AM, Doug Anderson wrote:
+>> On Mon, May 21, 2018 at 5:00 PM, David Collins <collinsd@codeaurora.org> wrote:
+> ...
+>>> Returning the cached (but not sent) initial voltage equal to the min
+>>> constraint voltage in get_voltage() calls should not cause any problems.
+>>> This represents the highest voltage that is guaranteed to be output by the
+>>> regulator.  Consumer's should call regulator_set_voltage() to specify
+>>> their voltage needs.  If they simply call regulator_enable(), then the
+>>> cached voltage will be sent along with the enable request.
+>>
+>> I'm still not seeing the argument for initial-voltage here.  If we
+>> added a feature like you describe where we don't send the voltage
+>> until the first enable couldn't we use the minimum voltage here?  If a
+>> consumer calls regulator_enable() without setting a voltage (which
+>> seems like a terrible idea for something where the voltage could vary)
+>> then it would end up at the minimum voltage.
+>
+> I wasn't proposing the voltage caching feature to be used in the upstream
+> qcom-rpmh-regulator.  I was explaining exactly how the downstream
+> rpmh-regulator driver works.
+>
+> However, if the voltage caching feature is acceptable for upstream usage,
+> then I could add it.  With that in place, I see less of a need for the
+> qcom,regulator-initial-microvolt property and would be ok with removing it
+> for now.
 
-> > what if
-> > there are device failures where device needs to reset (either whole
-> > function level or PASID level), should there still be a need to
-> > clear the partial list for all associated PASID/group?  
-> 
-> I guess the simplest way out, when resetting the device, is for the
-> device driver to call iommu_sva_device_shutdown(). Both the IOMMU
-> driver's sva_device_shutdown() and remove_device() ops should call
-> iopf_queue_remove_device(), which clears the partial list.
-> 
-yes. I think that should work for functional reset.
-> Thanks,
-> Jean
+I think it's the right thing to do an Mark didn't seem to yell, so I'd
+say go for it.
 
-[Jacob Pan]
+
+>> OK, so how's this for a proposal then:
+>>
+>> 1. For RPMh-regulator whenever we see a "set voltage" but Linux hasn't
+>> specified that the regulator is enabled then we don't send the
+>> voltage, we just cache it.
+>>
+>> 2. When we see the first enable then we first send the cached voltage
+>> and then do the enable.
+>>
+>> 3. We don't need an "initial voltage" because any rails that are
+>> expected to be variable voltage the client should be choosing a
+>> voltage.
+>>
+>>
+>> ...taking the SD card case as an example: if the regulator framework
+>> says "set to the minimum: 1.8V" we'll cache this but not apply it yet
+>> because the rail is off as far as Linux is concerned.  Then when the
+>> SD card framework starts up it will set the voltage to 3.3V which will
+>> overwrite the cache.  Then the SD card framework will enable the
+>> regulator and RPMh will set the voltage to 3.3V and enable.
+>
+> I am ok with implementing this feature.
+>
+> However, should the voltage be cached instead of sent immediately any time
+> that Linux has not explicitly requested the regulator to be enabled, or
+> only before the first time that an enable request is sent?
+>
+> 1. regulator_set_voltage(reg, 2960000, 2960000)
+>    --> cache voltage=2960 mV
+> 2. regulator_enable(reg)
+>    --> Send voltage=2960 then enable=1
+> 3. regulator_disable(reg)
+>    --> Send enable=0
+> 4. regulator_set_voltage(reg, 1800000, 2960000)
+>    --> A. Send voltage=1800 OR B. cache voltage=1800?
+>
+> Option A is used on the downstream rpmh-regulator driver in order to avoid
+> cases where AP votes to disable a regulator that is kept enabled by
+> another subsystem but then does not lower the voltage requested thanks to
+> regulator_set_voltage() being called after regulator_disable().  I plan to
+> go with option A for qcom-rpmh-regulator unless there are objections.
+
+So one client's vote for a voltage continues to be in effect even if
+that client votes to have the regulator disabled?  That seems
+fundamentally broken in RPMh.  I guess my take would be to work around
+this RPMh misfeature by saying that whenever Linux votes to disable a
+regulator it also votes for a voltage of 0.  Then another client of
+RPMh won't be affected.
+
+That seems like it would be beneficial in any case.  If the AP always
+asks for 1.3 V and the modem always asks for 1.1 V for the same rail
+then the rail should go down to 1.1 V when the AP says to disable the
+rail.
+
+
+>> This whole thing makes me worry about another problem, though.  You
+>> say that the bootloader left the SD card rail on, right?  ...but as
+>> far as Linux is concerned the SD card rail is off (argh, it can't read
+>> the state that the bootloader left the rail in!)
+>>
+>> ...now imagine any of the following:
+>>
+>> * The user boots up a kernel where the SD card driver is disabled.
+>>
+>> * The user ejects the SD card right after the bootloader used it but
+>> before the kernel driver started.
+>>
+>> When the kernel comes up it will believe that the SD card rail is
+>> disabled so it won't try to disable it.  So the voltage will be left
+>> on.
+>
+> We have not encountered issues with regulators getting left on
+> indefinitely because Linux devices failed to take control of them during
+> boot.  I don't think that this hypothetical issue needs to be addressed in
+> the first qcom-rpmh-regulator driver patch if at all.
+
+I don't think it hypothetical at all.  Linux takes control of a
+regulator and then at bootup it disables all regulators that aren't
+currently used/enabled.  In your case you will report that regulators
+are already disabled and thus you'll neuter the kernel's attempt to
+disable regulators that nobody is using but that might have been left
+on by the bootloader.  It seemed like Mark agreed here.
+
+
+>> You can even come up with a less contrived use case here.  One could
+>> argue that the SD card framework really ought to be ensuring VMMC and
+>> VQMMC are off before it starts tweaking with them just in case the
+>> bootloader left them on.  Thus, it should do:
+>>
+>> A) Turn off VMMC and VQMMC
+>> B) Program VMMC and VQMMC to defaults
+>> C) Turn on VMMC and VQMMC
+>>
+>> ...right now we bootup and pretend to Linux that VMMC and VQMMC start
+>> off, so step A) will be no-op.  Sigh.
+>
+> Step A) would not work because the regulator's use_count would be 0 and
+> regulator_disable() can only be called successfully if use_count > 0.  The
+> call would have no impact and it would return an error.
+
+Are you sure regulator_force_disable() won't do the trick on most
+boards (which will report the regulator being enabled at bootup)?  I
+haven't tried it, but it seems like it might.
+
+...I think you're right that this is a theoretical case at the moment
+because I don't think the MMC framework attempts to get this right,
+but I don't have time to dig right now.  I think it just sets the
+voltage to 3.3V and turns the rail on and if the card thinks it should
+be at 1.8V because the bootloader left the card in that state then:
+whoops.  I'd have to walk through the regulator framework more closely
+to confirm that though.  Certainly on all other boards besides ones
+using RPMh the bootloader can leave regulators on and the kernel can
+query that state.  It seems sane that there would be some way to turn
+a regulator in this state off.  I know for a fact that if you just
+leave the regulator alone (don't claim it or try to enable it) that
+Linux will turn it off.
+
+
+> I don't think that this is an avenue that we want to pursue.  Consumers
+> should not be expected to call regulator_disable() before regulator_enable().
+>
+>
+>> Do we need to have ".is_enabled" return -ENOTRECOVERABLE to help the
+>> regulator framework understand that we don't know the state?  I think
+>> that might require a pile of patches to the regulator framework, but
+>> it can't be helped unless we can somehow get RPMh to give us back the
+>> status of how the bootloader left us (if we had that, we could return
+>> 0 for anything the bootloader didn't touch and that would be correct
+>> from the point of view of the AP).
+>
+> I'm not following what the regulator framework would do as a result of
+> is_enabled() returning -ENOTRECOVERABLE.  If it saw this while processing
+> a regulator_enable() call then it would continue to enable the regulator.
+
+The important use case here is at bootup when we try to disable all
+unused regulators.  We need the framework to know that these
+regulators might not be disabled so it should go ahead and try to
+disable them.
+
+
+> This value could not be seen while handling a regulator_disable() call
+> since the is_enabled() callback is not invoked in the disable call-path.
+> This also seems like an optimization for a problem that we are not
+> encountering now (or likely to ever encounter).  Therefore, I would
+> suggest that we not try to work this into the initial qcom-rpmh-regulator
+> patch.
+
+I think you haven't thought through the bootup case of disabling all
+unused regulators.  When you look at that path I think you'll find
+it's important to make sure that the regulator framework knows that
+you don't know if you're disabled or enabled yet.  I think you want to
+look at regulator_late_cleanup().  Note that right now
+regulator_late_cleanup() doesn't handle error codes from is_enabled
+(actually, several places in the regulator core don't), but actually
+since the error case and the "enabled" case are probably the same this
+might be OK.
+
+
+-Doug
