@@ -1,47 +1,57 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 2/2] ARM: dts: am437x: make edt-ft5x06 a wakeup source for
- imx6 boards
-Date: Wed, 23 May 2018 10:30:13 +0200
-Message-ID: <20180523083013.7570-2-daniel@zonque.org>
-References: <20180523083013.7570-1-daniel@zonque.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 5/6] spi: at91-usart: add driver for at91-usart as spi
+Date: Wed, 23 May 2018 09:30:40 +0100
+Message-ID: <20180523083040.GC4828@sirena.org.uk>
+References: <20180511103822.31698-1-radu.pirea@microchip.com>
+ <20180511103822.31698-6-radu.pirea@microchip.com>
+ <20180517050406.GF20254@sirena.org.uk>
+ <6a59e071-3159-4939-8535-6c7a9d491379@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180523083013.7570-1-daniel@zonque.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
-Cc: devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/Uq4LBwYP4y1W6pO"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6a59e071-3159-4939-8535-6c7a9d491379@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radu Pirea <radu.pirea@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, lee.jones@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, richard.genoud@gmail.com, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-The touchscreen driver no longer configures the device as wakeup source by
-default. A "wakeup-source" property is needed.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- arch/arm/boot/dts/am437x-sk-evm.dts | 2 ++
- 1 file changed, 2 insertions(+)
+--/Uq4LBwYP4y1W6pO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 4118802b7fea..f17ed89da06b 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -537,6 +537,8 @@
- 
- 		touchscreen-size-x = <480>;
- 		touchscreen-size-y = <272>;
-+
-+		wakeup-source;
- 	};
- 
- 	tlv320aic3106: tlv320aic3106@1b {
--- 
-2.14.3
+On Wed, May 23, 2018 at 11:10:28AM +0300, Radu Pirea wrote:
+> On 05/17/2018 08:04 AM, Mark Brown wrote:
+
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Driver for AT91 USART Controllers as SPI
+> > > + *
+> > > + * Copyright (C) 2018 Microchip Technology Inc.
+
+> > Make the entire block a C++ comment so it looks more intentional rather
+> > tha mixing C and C++.
+
+> I know it's ugly, but SPDX license identifier must be in a separate comment
+> block.
+
+No, it doesn't - it just needs to be the first line of the file.
+
+--/Uq4LBwYP4y1W6pO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsFJq8ACgkQJNaLcl1U
+h9A5Dwf+IXTaaeH5wemGlp1J1Cqj9ET0B9mUUqYNsQ+BsMbdI314G1a/S3isLCCw
+XjOds1vEWxncEZb6kxV4v/3bUuOKKrZ7UVlVsY2nycfzgvLsIaGhBcf7/OAAJWb/
+kzfX3gceAsRfmFgbPHXcHMQbT+cWxJMBWUA0hJt2xBdJCVh1EduJ9VNZsbqjJSkU
+nyOZffnBU/sIMj0mibun82oVVFtdu71N0DJEfMAP/mf4sajkjFs4IqGqK80Ghfyx
+LYoD8hf8RKOvGF/Jr/x3K7T7bjAp1tny7kWtwqwf5zAb44FDgG+e6AEDN1bbzAva
+MdFlv1uRTZwcunY5iN+UhKQgi7e4iw==
+=+KAd
+-----END PGP SIGNATURE-----
+
+--/Uq4LBwYP4y1W6pO--
