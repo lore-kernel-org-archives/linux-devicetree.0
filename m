@@ -1,28 +1,38 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 2/3] gpio: pca953x: define masks for addressing common
- and extended registers
-Date: Wed, 23 May 2018 13:47:29 +0200
-Message-ID: <CACRpkdZepB55eBfrJzvxQxa9w9YPN00esUoE43SszaYCeMrAeA@mail.gmail.com>
-References: <cover.1526533188.git.hns@goldelico.com> <2fe132b534a4b1ca717932e78cc3cdae5aacba0d.1526533188.git.hns@goldelico.com>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Wed, 23 May 2018 14:47:24 +0300
+Message-ID: <002d01d3f28b$d3ce3980$7b6aac80$@codeaurora.org>
+References: <1527068454-28921-1-git-send-email-ilialin@codeaurora.org> <1527068454-28921-2-git-send-email-ilialin@codeaurora.org> <3f1ca60e-7aa8-fccc-ab1c-4b7c37731cce@arm.com> <002901d3f286$198878b0$4c996a10$@codeaurora.org> <CAKohponbpErCeTYu9iQm_-dupz5SUr+TKsYXzqmmARB-pq95iA@mail.gmail.com> <002b01d3f28a$0d033900$2709ab00$@codeaurora.org> <CAKohponruWpcjuSDg-=ZbZ1=qm2iPZs36mfKYJ3nQZREkc3JCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2fe132b534a4b1ca717932e78cc3cdae5aacba0d.1526533188.git.hns@goldelico.com>
+In-Reply-To: <CAKohponruWpcjuSDg-=ZbZ1=qm2iPZs36mfKYJ3nQZREkc3JCw@mail.gmail.com>
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexandre Courbot <gnurou@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: 'Viresh Kumar' <viresh.kumar@linaro.org>
+Cc: 'Sudeep Holla' <sudeep.holla@arm.com>, 'Viresh Kumar' <vireshk@kernel.org>, 'Nishanth Menon' <nm@ti.com>, 'Stephen Boyd' <sboyd@kernel.org>, 'Rob Herring' <robh@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 6:59 AM, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+The nvmem will return EPROBE_DEFER, and so will my driver's init. But =
+then no one will call the init again.
 
-> These mask bits are to be used to map the extended register
-> addreseses (which are defined for an unsupported 8-bit pcal chip)
-> to 16 and 24 bit chips (pcal6524).
->
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-Patch applied.
-
-Yours,
-Linus Walleij
+> -----Original Message-----
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+> Sent: Wednesday, May 23, 2018 14:46
+> To: Ilia Lin <ilialin@codeaurora.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>; Viresh Kumar
+> <vireshk@kernel.org>; Nishanth Menon <nm@ti.com>; Stephen Boyd
+> <sboyd@kernel.org>; Rob Herring <robh@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; linux-
+> pm@vger.kernel.org; devicetree@vger.kernel.org; Linux Kernel Mailing =
+List
+> <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH v10 1/2] cpufreq: Add Kryo CPU scaling driver
+>=20
+> On 23 May 2018 at 17:04,  <ilialin@codeaurora.org> wrote:
+> > You are right. I already checked that in the code...
+> > However, with module_init() the driver fails on reading the nvmem.
+>=20
+> And why is it failing ?
