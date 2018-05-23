@@ -1,502 +1,203 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] remoteproc:  Add APSS based Qualcomm ADSP PIL driver for
- SDM845
-Date: Tue, 22 May 2018 23:26:45 -0700
-Message-ID: <20180523062645.GY14924@minitux>
-References: <1526194908-19027-1-git-send-email-rohitkr@codeaurora.org>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [SPAM]Re: [PATCH v2 4/7] Bluetooth: Add new quirk for
+ non-persistent setup settings
+Date: Wed, 23 May 2018 14:37:03 +0800
+Message-ID: <1527057423.4607.3.camel@mtkswgap22>
+References: <cover.1526374087.git.sean.wang@mediatek.com>
+ <1d6097f538b3182b2876ad48225ecd6e2d1b128c.1526374087.git.sean.wang@mediatek.com>
+ <920B3BE9-3FE8-4AC6-8C5F-63B0E00182AC@holtmann.org>
+ <1526976323.18877.47.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526194908-19027-1-git-send-email-rohitkr@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, sbpata@codeaurora.org, asishb@codeaurora.org, rkarra@codeaurora.org, RajendraBabu Medisetti <rajendrabm@codeaurora.org>, Krishnamurthy Renu <krishnamurthy.renu@codeaurora.org>
+Content-Type: multipart/mixed; boundary="=-JSBWckcOte03YOpWJ8HM"
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1526976323.18877.47.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BlueZ development <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun 13 May 00:01 PDT 2018, Rohit kumar wrote:
+--=-JSBWckcOte03YOpWJ8HM
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-> This adds Qualcomm ADSP PIL driver support for SDM845 with ADSP bootup
-> and shutdown operation handled from Application Processor SubSystem(APSS).
+On Tue, 2018-05-22 at 16:05 +0800, Sean Wang wrote:
+> On Tue, 2018-05-22 at 09:21 +0200, Marcel Holtmann wrote:
+> > Hi Sean,
+> > 
 > 
-> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-> Signed-off-by: RajendraBabu Medisetti <rajendrabm@codeaurora.org>
-> Signed-off-by: Krishnamurthy Renu <krishnamurthy.renu@codeaurora.org>
-> ---
->  .../devicetree/bindings/remoteproc/qcom,adsp.txt   |   1 +
->  drivers/remoteproc/Makefile                        |   3 +-
->  drivers/remoteproc/qcom_adsp_pil.c                 | 122 ++++-----
->  drivers/remoteproc/qcom_adsp_pil.h                 |  86 ++++++
->  drivers/remoteproc/qcom_adsp_pil_sdm845.c          | 304 +++++++++++++++++++++
->  5 files changed, 454 insertions(+), 62 deletions(-)
->  create mode 100644 drivers/remoteproc/qcom_adsp_pil.h
->  create mode 100644 drivers/remoteproc/qcom_adsp_pil_sdm845.c
+> [ ... ]
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> index 728e419..a9fe033 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> @@ -10,6 +10,7 @@ on the Qualcomm ADSP Hexagon core.
->  		    "qcom,msm8974-adsp-pil"
->  		    "qcom,msm8996-adsp-pil"
->  		    "qcom,msm8996-slpi-pil"
-> +		    "qcom,sdm845-apss-adsp-pil"
+> > > -	if (hci_dev_test_flag(hdev, HCI_SETUP)) {
+> > > +	if (hci_dev_test_flag(hdev, HCI_SETUP) ||
+> > > +	    test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
+> > > 		hci_sock_dev_event(hdev, HCI_DEV_SETUP);
+> > 
+> > I am not 100% sure that we want to send the HCI_DEV_SETUP event also multiple times. That is a userspace change that I would need to think about. We need to check create_monitor_event() and see what the btmon trace for this looks like. Can you send me a btmon -w trace.log when this change is active.
+> > 
+> > Regards
+> > 
+> > Marcel
+> > 
+> 
+> Sure, I'll send you the trace.log with the change is active.
+> 
+> 	Sean
+> 
 
-Afaict there's nothing in this binding that ties this to the apss, so I
-don't think we should base the compatible on this. The differentiation
-is PAS vs non-PAS; so let's start naming the PAS variants
-"qcom,platform-subsystem-pas" and the non-PAS
-"qcom,platform-subsystem-pil" instead.
+Hi, Marcel
 
-I.e. please make this "qcom,sdm845-adsp-pil".
+Attached trace.log was captured when I inputted commands power on and
+then off in bluetoothctl.
 
-More importantly, any resources such as clocks or reset lines should
-come from DT and as such you need to extend the binding quite a bit -
-which I suggest you do by introducing a new binding document.
+	Sean 
 
->  
->  - interrupts-extended:
->  	Usage: required
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 02627ed..759831b 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -14,7 +14,8 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
->  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
-> -obj-$(CONFIG_QCOM_ADSP_PIL)		+= qcom_adsp_pil.o
-> +obj-$(CONFIG_QCOM_ADSP_PIL)		+= qcom_adsp.o
-> +qcom_adsp-objs				+= qcom_adsp_pil.o qcom_adsp_pil_sdm845.o
->  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
->  obj-$(CONFIG_QCOM_Q6V5_PIL)		+= qcom_q6v5_pil.o
->  obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
-> diff --git a/drivers/remoteproc/qcom_adsp_pil.c b/drivers/remoteproc/qcom_adsp_pil.c
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
 
-I get the feeling that the main reason for modifying this file is its
-name, not that it reduces the complexity of the final solution. I
-definitely think it's cleaner to have some structural duplication and
-keep this driver handling the various PAS based remoteprocs.
 
-Please see the RFC series I posted reducing the duplication between the
-various "Q6V5 drivers".
+--=-JSBWckcOte03YOpWJ8HM
+Content-Disposition: attachment; filename="trace.log"
+Content-Type: text/x-log; name="trace.log"; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-[..]
-> diff --git a/drivers/remoteproc/qcom_adsp_pil.h b/drivers/remoteproc/qcom_adsp_pil.h
-[..]
-> +static inline void update_bits(void *reg, u32 mask_val, u32 set_val, u32 shift)
-> +{
-> +	u32 reg_val = 0;
-> +
-> +	reg_val = ((readl(reg)) & ~mask_val) | ((set_val << shift) & mask_val);
-> +	writel(reg_val, reg);
-> +}
-> +
-> +static inline unsigned int read_bit(void *reg, u32 mask, int shift)
-> +{
-> +	return ((readl(reg) & mask) >> shift);
-> +}
+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
+AAAAAAAJAAAAAADiSoyYm3tp
 
-I don't like these helper functions, their prototype is nonstandard and
-makes it really hard to read all the calling code.
 
-I would prefer if you just inline the operations directly, to make it
-clearer what's going on in each case - if not then at least follow the
-prototype of e.g. regmap_udpate_bits(), which people might be used to.
+--=-JSBWckcOte03YOpWJ8HM
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> +
-> +#endif
-> diff --git a/drivers/remoteproc/qcom_adsp_pil_sdm845.c b/drivers/remoteproc/qcom_adsp_pil_sdm845.c
-> new file mode 100644
-> index 0000000..7518385
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_adsp_pil_sdm845.c
-> @@ -0,0 +1,304 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Qualcomm APSS Based ADSP bootup/shutdown ops for SDM845.
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +
-> +#include "qcom_adsp_pil.h"
-> +
-> +/* set values */
-> +#define CLK_ENABLE				0x1
-> +#define CLK_DISABLE				0x0
+_______________________________________________
+Linux-mediatek mailing list
+Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-mediatek
 
-Just write 0 and 1 in the code, it saves future readers the trouble of
-having to remember if these are special in any way.
-
-> +/* time out value */
-> +#define ACK_TIMEOUT				200000
-
-This is currently given in the rather awkward unit of 5uS. As it's input
-to what should have been a call to readl_poll_timeout() please express
-it in micro seconds.
-
-> +/* mask values */
-> +#define CLK_MASK				GENMASK(4, 0)
-> +#define EVB_MASK				GENMASK(27, 4)
-> +#define SPIN_CLKOFF_MASK			BIT(31)
-> +#define AUDIO_SYNC_RESET_MASK			BIT(2)
-> +#define CLK_ENABLE_MASK				BIT(0)
-> +#define HAL_CLK_MASK				BIT(1)
-> +/* GCC register offsets */
-> +#define GCC_BASE				0x00147000
-
-This doesn't belong here, expose the resource from the gcc driver using
-existing frameworks.
-
-> +#define SWAY_CBCR_OFFSET			0x00000008
-> +/*LPASS register base address and offsets*/
-> +#define LPASS_BASE				0x17000000
-
-This should be in the lpass clock driver.
-
-> +#define AON_CBCR_OFFSET				0x00014098
-> +#define CMD_RCGR_OFFSET				0x00014000
-> +#define CFG_RCGR_OFFSET				0x00014004
-> +#define AHBS_AON_CBCR_OFFSET			0x00033000
-> +#define AHBM_AON_CBCR_OFFSET			0x00026000
-> +/*QDSP6SS register base address and offsets*/
-> +#define QDSP6SS_BASE				0x17300000
-
-This should come from the reg property in DT.
-
-> +#define RST_EVB_OFFSET				0x00000010
-> +#define SLEEP_CBCR_OFFSET			0x0000003C
-> +#define XO_CBCR_OFFSET				0x00000038
-> +#define CORE_CBCR_OFFSET			0x00000020
-> +#define CORE_START_OFFSET			0x00000400
-> +#define BOOT_CMD_OFFSET				0x00000404
-> +#define BOOT_STATUS_OFFSET			0x00000408
-> +#define RET_CFG_OFFSET				0x0000001C
-> +/*TCSR register base address and offsets*/
-> +#define TCSR_BASE				0x01F62000
-
-Look at how we deal with TCSR in the MSS driver instead.
-
-> +#define TCSR_LPASS_MASTER_IDLE_OFFSET		0x00000008
-> +#define TCSR_LPASS_HALTACK_OFFSET		0x00000004
-> +#define TCSR_LPASS_PWR_ON_OFFSET		0x00000010
-> +#define TCSR_LPASS_HALTREQ_OFFSET		0X00000000
-> +
-> +#define RPMH_PDC_SYNC_RESET_ADDR		0x0B2E0100
-> +#define AOSS_CC_LPASS_RESTART_ADDR		0x0C2D0000
-
-Please expose these from an appropriate driver using appropriate
-frameworks.
-
-> +
-> +struct sdm845_reg {
-> +	void __iomem *gcc_base;
-> +	void __iomem *lpass_base;
-> +	void __iomem *qdsp6ss_base;
-> +	void __iomem *tcsr_base;
-> +	void __iomem *pdc_sync;
-> +	void __iomem *cc_lpass;
-
-I expect to see only qdsp6ss_base remain here.
-
-> +};
-> +
-> +static int sdm845_map_registers(struct qcom_adsp *adsp,
-> +				struct platform_device *pdev)
-> +{
-> +	struct sdm845_reg *reg;
-> +
-> +	adsp->priv_reg = devm_kzalloc(&pdev->dev, sizeof(struct sdm845_reg),
-> +			GFP_KERNEL);
-> +	if (!adsp->priv_reg)
-> +		return -ENOMEM;
-> +
-> +	reg = adsp->priv_reg;
-> +
-> +	reg->gcc_base = devm_ioremap(adsp->dev, GCC_BASE, 0xc);
-> +	if (!reg->gcc_base) {
-> +		dev_err(adsp->dev, "%s: failed to map GCC base registers\n",
-> +				__func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	reg->lpass_base = devm_ioremap(adsp->dev, LPASS_BASE, 0x8E004);
-> +	if (!reg->lpass_base) {
-> +		dev_err(adsp->dev, "%s: failed to map LPASS base registers\n",
-> +				__func__);
-> +		return -ENOMEM;
-> +	}
-> +	reg->qdsp6ss_base =  devm_ioremap(adsp->dev, QDSP6SS_BASE, 0x40c);
-> +	if (!reg->qdsp6ss_base) {
-> +		dev_err(adsp->dev, "%s: failed to map QDSP6SS base registers\n",
-> +				__func__);
-> +		return -ENOMEM;
-> +	}
-> +	reg->tcsr_base = devm_ioremap(adsp->dev, TCSR_BASE, 0x14);
-> +	if (!reg->tcsr_base) {
-> +		dev_err(adsp->dev, "%s: failed to map TCSR base registers\n",
-> +				__func__);
-> +		return -ENOMEM;
-> +	}
-> +	reg->pdc_sync = devm_ioremap(adsp->dev, RPMH_PDC_SYNC_RESET_ADDR, 0x4);
-> +	if (!reg->pdc_sync) {
-> +		dev_err(adsp->dev, "%s: failed to map RPMH_PDC_SYNC_RESET register\n",
-> +				__func__);
-> +		return -ENOMEM;
-> +	}
-> +	reg->cc_lpass = devm_ioremap(adsp->dev, AOSS_CC_LPASS_RESTART_ADDR,
-> +			0x4);
-> +	if (!reg->cc_lpass) {
-> +		dev_err(adsp->dev, "%s:failed to map AOSS_CC_LPASS_RESTART register\n",
-> +				__func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int clk_enable_spin(void *reg, int read_shift, int write_shift)
-
-This should be in the appropriate clock drivers.
-
-> +{
-> +	u32 maxDelay = 500;
-> +	u32 val;
-> +
-> +	update_bits(reg, CLK_ENABLE_MASK, CLK_ENABLE, write_shift);
-> +	val = readl(reg);
-> +	if (!(readl(reg) & HAL_CLK_MASK)) {
-> +		/*
-> +		 * wait for disabling of HW signal CLK_OFF to confirm that
-> +		 * clock is actually ON.
-> +		 */
-> +		while (maxDelay-- && read_bit(reg, SPIN_CLKOFF_MASK,
-> +							read_shift))
-> +			udelay(1);
-> +	}
-> +	if (!maxDelay) {
-> +		pr_err("%s: fail to update register = %p\n", __func__, reg);
-> +		return -ETIMEDOUT;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int sdm845_adsp_clk_enable(struct qcom_adsp *adsp)
-> +{
-> +	u32 ret;
-> +	u32 maxDelay = 100;
-> +	struct sdm845_reg *reg = adsp->priv_reg;
-> +
-> +	/* Enable SWAY clock */
-> +	ret = clk_enable_spin(reg->gcc_base + SWAY_CBCR_OFFSET, CLK_MASK, 0x0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Enable LPASS AHB AON Bus */
-> +	ret = clk_enable_spin(reg->lpass_base + AON_CBCR_OFFSET, CLK_MASK, 0x0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set the AON clock root to be sourced by XO */
-> +	writel(CLK_DISABLE, reg->lpass_base + CFG_RCGR_OFFSET);
-> +	writel(CLK_ENABLE, reg->lpass_base + CMD_RCGR_OFFSET);
-> +
-> +	while (read_bit((reg->lpass_base + CMD_RCGR_OFFSET), CLK_ENABLE, 0)
-> +						&& maxDelay--)
-> +		udelay(2);
-> +
-> +	if (!maxDelay) {
-> +		pr_err("%s: fail to enable CMD_RCGR clock\n", __func__);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	/* Enable the QDSP6SS AHBM and AHBS clocks */
-> +	ret = clk_enable_spin(reg->lpass_base + AHBS_AON_CBCR_OFFSET,
-> +				CLK_MASK, 0x0);
-> +	if (ret)
-> +		return ret;
-> +	ret = clk_enable_spin(reg->lpass_base + AHBM_AON_CBCR_OFFSET,
-> +				CLK_MASK, 0x0);
-> +	if (ret)
-> +		return ret;
-
-Above should be calls to the clock framework.
-
-> +
-> +	/* Turn on the XO clock, required to boot FSM */
-> +	update_bits(reg->qdsp6ss_base + XO_CBCR_OFFSET, CLK_ENABLE_MASK,
-> +							CLK_ENABLE, 0x0);
-> +
-> +	/* Enable the QDSP6SS sleep clock for the QDSP6 watchdog enablement */
-> +	update_bits(reg->qdsp6ss_base + SLEEP_CBCR_OFFSET,
-> +					CLK_ENABLE_MASK, CLK_ENABLE, 0x0);
-> +
-> +	/* Configure QDSP6 core CBC to enable clock */
-> +	update_bits(reg->qdsp6ss_base + CORE_CBCR_OFFSET, CLK_ENABLE_MASK,
-> +					CLK_ENABLE, 0x0);
-> +	return 0;
-> +}
-> +
-> +static int sdm845_adsp_reset(struct qcom_adsp *adsp)
-> +{
-> +	u32 timeout = ACK_TIMEOUT;
-> +	struct sdm845_reg *reg = adsp->priv_reg;
-> +
-> +	/* De-assert QDSP6 stop core. QDSP6 will execute after out of reset */
-> +	update_bits(reg->qdsp6ss_base + CORE_START_OFFSET,
-> +					CLK_ENABLE_MASK, CLK_ENABLE, 0x0);
-> +	/* Trigger boot FSM to start QDSP6 */
-> +	writel(CLK_ENABLE, reg->qdsp6ss_base + BOOT_CMD_OFFSET);
-> +
-> +	/* Wait for core to come out of reset */
-> +	while ((!(readl(reg->qdsp6ss_base +
-> +			BOOT_STATUS_OFFSET))) && (timeout-- > 0))
-> +		udelay(5);
-
-Use readl_poll_timeout() from linux/iopoll.h
-
-> +
-> +	if (!timeout)
-> +		return -ETIMEDOUT;
-> +
-> +	return 0;
-> +}
-> +
-> +static int sdm845_bringup(struct qcom_adsp *adsp)
-
-This is called "start" in other places, please use existing naming
-convention to make your code feel familiar to people reading other
-drivers.
-
-> +{
-> +	u32 ret;
-
-ret is exclusively used to store data of the type "int".
-
-> +	struct sdm845_reg *reg = adsp->priv_reg;
-> +
-> +	ret = sdm845_adsp_clk_enable(adsp);
-> +	if (ret) {
-> +		dev_err(adsp->dev, "%s: sdm845_adsp_clk_enable failed\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +	/* Program boot address */
-> +	update_bits(reg->qdsp6ss_base + RST_EVB_OFFSET,
-> +				EVB_MASK, (adsp->mem_phys) >> 8, 0x4);
-
-In the WCSS PIL driver this is:
-
-	writel(rproc->bootaddr >> 4, wcss->reg_base + QDSP6SS_RST_EVB);          
-
-Which I think is the same as you're doing here, although you're shifting
-8 bits right and then 4 (base 16) to the left.
-
-> +
-> +	/* Wait for addresses to be programmed before starting adsp */
-
-That's not what mb() does, it just ensures that any read and writes
-coming after this point isn't reordered with any operations before it.
-
-And as sdm845_adsp_reset() used writel() there is already a wmb() there,
-so you can drop this one.
-
-> +	mb();
-> +	ret = sdm845_adsp_reset(adsp);
-> +	if (ret)
-> +		dev_err(adsp->dev, "%s: De-assert QDSP6 out of reset failed\n",
-> +					__func__);
-
-This string is unique in the kernel, so you don't need __func__.
-
-> +	return ret;
-> +}
-> +
-> +static int sdm845_bringdown(struct qcom_adsp *adsp)
-> +{
-> +	u32 acktimeout = ACK_TIMEOUT;
-> +	u32 temp;
-
-We know this is a temporary variable, name it "val" as we do in the
-other functions.
-
-> +	struct sdm845_reg *reg = adsp->priv_reg;
-> +
-> +	/* Reset the retention logic */
-> +	update_bits(reg->qdsp6ss_base + RET_CFG_OFFSET,
-> +			CLK_ENABLE_MASK, CLK_ENABLE, 0x0);
-> +	/* Disable the slave way clock to LPASS */
-> +	update_bits(reg->gcc_base + SWAY_CBCR_OFFSET,
-> +			CLK_ENABLE_MASK, CLK_DISABLE, 0x0);
-> +
-> +	/* QDSP6 master port needs to be explicitly halted */
-> +	temp = read_bit(reg->tcsr_base + TCSR_LPASS_PWR_ON_OFFSET,
-> +			CLK_ENABLE, 0x0);
-> +	temp = temp && !read_bit(reg->tcsr_base + TCSR_LPASS_MASTER_IDLE_OFFSET,
-> +			CLK_ENABLE, 0x0);
-> +	if (temp) {
-> +		writel(CLK_ENABLE, reg->tcsr_base + TCSR_LPASS_HALTREQ_OFFSET);
-
-CLK_ENABLE happens to have the right value, but the value you write is
-"request halt" not "enable clock".
-
-> +		/*  Wait for halt ACK from QDSP6 */
-> +		while ((read_bit(reg->tcsr_base + TCSR_LPASS_HALTACK_OFFSET,
-> +				CLK_DISABLE, 0x0) == 0) && (acktimeout-- > 0))
-> +			udelay(5);
-> +
-> +		if (acktimeout) {
-> +			if (read_bit(reg->tcsr_base +
-> +					TCSR_LPASS_MASTER_IDLE_OFFSET,
-> +						CLK_ENABLE, 0x0) != 1)
-> +				dev_warn(adsp->dev,
-> +						"%s: failed to receive %s\n",
-> +						__func__, "TCSR MASTER ACK");
-> +		} else {
-> +			dev_err(adsp->dev, "%s: failed to receive halt ack\n",
-> +					__func__);
-> +			return -ETIMEDOUT;
-> +		}
-> +	}
-
-Take a look at q6v5proc_halt_axi_port() in qcom_q6v5_pil.c instead of
-this thing.
-
-> +
-> +	/* Assert the LPASS PDC Reset */
-> +	update_bits(reg->pdc_sync,  AUDIO_SYNC_RESET_MASK,
-> +			CLK_ENABLE, 0x2);
-
-Use https://patchwork.kernel.org/patch/10415991/
-
-reset_control_assert();
-
-> +	/* Place the LPASS processor into reset */
-> +	writel(CLK_ENABLE, reg->cc_lpass);
-> +	/* wait after asserting subsystem restart from AOSS */
-> +	udelay(200);
-> +
-> +	/* Clear the halt request for the AXIM and AHBM for Q6 */
-> +	writel(CLK_DISABLE, reg->tcsr_base + TCSR_LPASS_HALTREQ_OFFSET);
-
-Disable the clock that is the halt request register?
-
-> +
-> +	/* De-assert the LPASS PDC Reset */
-> +	update_bits(reg->pdc_sync, AUDIO_SYNC_RESET_MASK,
-> +			CLK_DISABLE, 0x2);
-
-reset_control_deassert();
-
-> +	/* Remove the LPASS reset */
-> +	writel(CLK_DISABLE, reg->cc_lpass);
-> +	/* wait after de-asserting subsystem restart from AOSS */
-> +	udelay(200);
-> +
-> +	return 0;
-> +}
-
-Regards,
-Bjorn
+--=-JSBWckcOte03YOpWJ8HM--
