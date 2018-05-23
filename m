@@ -1,88 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add GEther support
-Date: Wed, 23 May 2018 10:41:00 +0200
-Message-ID: <20180523084100.ynv3zoqrikcxem5f@verge.net.au>
-References: <a4230699-e46f-0782-e3b1-22d58b9033c8@cogentembedded.com>
- <8910c197-cf1b-9ee9-9ddb-5d2f705a4b26@cogentembedded.com>
- <CAMuHMdW9UzOGV_zh3NxugYrj0j0qszX+NFoZtFvZRD9CNMHt+w@mail.gmail.com>
- <bdbfd13e-cf0c-e19a-b76f-5e8e024dca26@cogentembedded.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v6] gpio: dwapb: Add support for 1 interrupt per port A
+ GPIO
+Date: Wed, 23 May 2018 08:45:57 +0000
+Message-ID: <TY1PR01MB17696814810E9F9DA4C79989F56B0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1526027497-32556-1-git-send-email-phil.edworthy@renesas.com>
+ <CACRpkdZAdhAn97iWPsym_K+A8iVwa3tRacpeEu=J6C=b+xAO6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <bdbfd13e-cf0c-e19a-b76f-5e8e024dca26@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZAdhAn97iWPsym_K+A8iVwa3tRacpeEu=J6C=b+xAO6g@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Hoan Tran <hotran@apm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 06:44:59PM +0300, Sergei Shtylyov wrote:
-> On 05/22/2018 02:48 PM, Geert Uytterhoeven wrote:
-> 
-> >> Define the generic R8A77980 part of the GEther device node.
-> >>
-> >> Based on the original (and large) patch by Vladimir Barinov.
-> >>
-> >> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > Thanks for your patch!
-> > 
-> > With the below addressed:
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
->    Thanks!
-> 
-> >> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> >> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> >> @@ -417,6 +417,17 @@
-> >>                         dma-channels = <16>;
-> >>                 };
-> >>
-> >> +               gether: ethernet@e7400000 {
-> >> +                       compatible = "renesas,gether-r8a77980";
-> >> +                       reg = <0 0xe7400000 0 0x1000>;
-> >> +                       interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       clocks = <&cpg CPG_MOD 813>;
-> >> +                       power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> > 
-> > resets = <&cpg 813>;
-> 
->    As usual...
-> 
-> > 
-> >> +                       #address-cells = <1>;
-> >> +                       #size-cells = <0>;
-> >> +                       status = "disabled";
-> > 
-> > Any default phy-mode needed?
-> 
->    A default "phy-mode" IMO make sense when the MAC supports a single 
-> PHY interface mode. In this case, both RMII and RGMII are supported, so
-> I coulsn't choose a default...
-
-I would think making an arbitrary choice is better than no choice.
-How does the driver behave in the absence of a default?
-
-> 
-> >> +               };
-> >> +
-> >>                 mmc0: mmc@ee140000 {
-> >>                         compatible = "renesas,sdhi-r8a77980",
-> >>                                      "renesas,rcar-gen3-sdhi";
-> > 
-> > 
-> > Gr{oetje,eeting}s,
-> > 
-> >                         Geert
-> > 
-> 
+SGkgTGludXMsDQoNCk9uIDIzIE1heSAyMDE4IDA5OjI5LCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
+PiBPbiBGcmksIE1heSAxMSwgMjAxOCBhdCAxMDozMSBBTSwgUGhpbCBFZHdvcnRoeSB3cm90ZToN
+Cj4gDQo+ID4gVGhlIERlc2lnbldhcmUgR1BJTyBJUCBjYW4gYmUgY29uZmlndXJlZCBmb3IgZWl0
+aGVyIDEgaW50ZXJydXB0IG9yIDENCj4gPiBwZXIgR1BJTyBpbiBwb3J0IEEsIGJ1dCB0aGUgZHJp
+dmVyIGN1cnJlbnRseSBvbmx5IHN1cHBvcnRzIDEgaW50ZXJydXB0Lg0KPiA+IFNlZSB0aGUgRGVz
+aWduV2FyZSBEV19hcGJfZ3BpbyBEYXRhYm9vayBkZXNjcmlwdGlvbiBvZiB0aGUNCj4gPiAnR1BJ
+T19JTlRSX0lPJyBwYXJhbWV0ZXIuDQo+ID4NCj4gPiBUaGlzIGNoYW5nZSBhbGxvd3MgdGhlIGRy
+aXZlciB0byB3b3JrIHdpdGggdXAgdG8gMzIgaW50ZXJydXB0cywgaXQNCj4gPiB3aWxsIGdldCBh
+cyBtYW55IGludGVycnVwdHMgYXMgc3BlY2lmaWVkIGluIHRoZSBEVCAnaW50ZXJydXB0cycgcHJv
+cGVydHkuDQo+ID4gSXQgZG9lc24ndCBkbyBhbnl0aGluZyBjbGV2ZXIgd2l0aCB0aGUgZGlmZmVy
+ZW50IGludGVycnVwdHMsIGl0IGp1c3QNCj4gPiBjYWxscyB0aGUgc2FtZSBoYW5kbGVyIHVzZWQg
+Zm9yIHNpbmdsZSBpbnRlcnJ1cHQgaGFyZHdhcmUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQ
+aGlsIEVkd29ydGh5IDxwaGlsLmVkd29ydGh5QHJlbmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5
+OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiA+IEFja2VkLWJ5OiBMZWUgSm9uZXMg
+PGxlZS5qb25lc0BsaW5hcm8ub3JnPg0KPiA+IC0tLQ0KPiA+IE9uZSBwb2ludCB0byBtZW50aW9u
+IGlzIHRoYXQgSSBoYXZlIG1hZGUgaXQgcG9zc2libGUgZm9yIHVzZXJzIHRvIGhhdmUNCj4gPiB1
+bmNvbm5lY3RlZCBpbnRlcnJ1cHRzIGJ5IHNwZWNpZnlpbmcgaG9sZXMgaW4gdGhlIGxpc3Qgb2Yg
+aW50ZXJydXB0cy4NCj4gPiBUaGlzIGlzIGRvbmUgYnkgc3VwcG9ydGluZyB0aGUgaW50ZXJydXB0
+cy1leHRlbmRlZCBEVCBwcm9wLg0KPiA+IEhvd2V2ZXIsIEkgaGF2ZSBubyB1c2UgZm9yIHRoaXMg
+YW5kIGhhZCB0byBoYWNrIHNvbWUgdGVzdCBjYXNlIGZvciB0aGlzLg0KPiA+IFBlcmhhcHMgdGhl
+IGRyaXZlciBzaG91bGQgc3VwcG9ydCAxIGludGVycnVwdCBvciBhbGwgR1BJT2EgYXMgaW50ZXJy
+dXB0cz8NCj4gPg0KPiA+IHY2Og0KPiA+ICAtIFRyZWF0IERUIGFuZCBBQ1BJIHRoZSBzYW1lIGFz
+IG11Y2ggYXMgcG9zc2libGUuIE5vdGUgdGhhdCB3ZSBjYW4ndCB1c2UNCj4gPiAgICBwbGF0Zm9y
+bV9nZXRfaXJxKCkgdG8gZ2V0IHRoZSBEVCBpbnRlcnJ1cHRzIGFzIHRoZXkgYXJlIGluIHRoZSBw
+b3J0DQo+ID4gICAgc3ViLW5vZGUgYW5kIGhlbmNlIGRvIG5vdCBoYXZlIGFuIGFzc29jaWF0ZWQg
+cGxhdGZvcm0gZGV2aWNlLg0KPiANCj4gSSBhbHJlYWR5IGFwcGxpZWQgdGhpcyBwYXRjaCBpbiBz
+b21lIHZlcnNpb24sIGNhbiB5b3UgY2hlY2sgd2hhdCBpcyBpbiBteQ0KPiBkZXZlbCBicmFuY2gg
+YW5kIHNlbmQgaW5jcmVtZW50YWwgcGF0Y2hlcyBvbiB0b3AgaWYgc29tZXRoaW5nIG5lZWRzDQo+
+IGNoYW5naW5nPw0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVs
+L2dpdC9saW51c3cvbGludXgtDQo+IGdwaW8uZ2l0L2NvbW1pdC8/aD1kZXZlbCZpZD1lNmNhMjZh
+YmQzNzYwNmJhNDg2NGYyMGM4NWQzZmU0YTIxNzNiOTNmDQo+IA0KPiBTb3JyeSBmb3Igbm90IGtu
+b3dpbmcgYnkgaGVhcnQgd2hhdCB3YXMgYXBwbGllZCBvciB3aGVuLCBpdCdzIGp1c3QgdG9vIG11
+Y2gNCj4gZm9yIG1lIHNvbWV0aW1lcy4NCk5vIHByb2JsZW0sIEknbGwgc2VuZCBhIHBhdGNoIHdp
+dGggdGhlIGluY3JlbWVudGFsIGNoYW5nZXMuDQoNClRoYW5rcw0KUGhpbA0K
