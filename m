@@ -1,7 +1,7 @@
 From: Christophe Roullier <christophe.roullier@st.com>
-Subject: [PATCH V4 8/8] dt-bindings: stm32: add compatible for syscon
-Date: Wed, 23 May 2018 17:47:59 +0200
-Message-ID: <1527090479-5263-9-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH V4 3/8] ARM: dts: stm32: add ethernet pins to stm32mp157c
+Date: Wed, 23 May 2018 17:47:54 +0200
+Message-ID: <1527090479-5263-4-git-send-email-christophe.roullier@st.com>
 References: <1527090479-5263-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,69 +12,69 @@ To: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, pe
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-This patch describes syscon DT bindings.
+Add ethernet pins on stm32mp157c.
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- Documentation/devicetree/bindings/arm/stm32.txt            | 10 ----------
- .../devicetree/bindings/arm/stm32/stm32-syscon.txt         | 14 ++++++++++++++
- Documentation/devicetree/bindings/arm/stm32/stm32.txt      | 10 ++++++++++
- 3 files changed, 24 insertions(+), 10 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/stm32.txt
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32.txt
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 46 +++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
-deleted file mode 100644
-index 6808ed9..0000000
---- a/Documentation/devicetree/bindings/arm/stm32.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--STMicroelectronics STM32 Platforms Device Tree Bindings
--
--Each device tree must specify which STM32 SoC it uses,
--using one of the following compatible strings:
--
--  st,stm32f429
--  st,stm32f469
--  st,stm32f746
--  st,stm32h743
--  st,stm32mp157
-diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt b/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
-new file mode 100644
-index 0000000..99980ae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
-@@ -0,0 +1,14 @@
-+STMicroelectronics STM32 Platforms System Controller
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 6f044100..cf83eb244 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -158,6 +158,52 @@
+ 					bias-disable;
+ 				};
+ 			};
 +
-+Properties:
-+   - compatible : should contain two values. First value must be :
-+                 - " st,stm32mp157-syscfg " - for stm32mp157 based SoCs,
-+                 second value must be always "syscon".
-+   - reg : offset and length of the register set.
++			ethernet0_rgmii_pins_a: rgmii-0 {
++				pins1 {
++					pinmux = <STM32_PINMUX('G', 5, AF11)>, /* ETH_RGMII_CLK125 */
++						 <STM32_PINMUX('G', 4, AF11)>, /* ETH_RGMII_GTX_CLK */
++						 <STM32_PINMUX('G', 13, AF11)>, /* ETH_RGMII_TXD0 */
++						 <STM32_PINMUX('G', 14, AF11)>, /* ETH_RGMII_TXD1 */
++						 <STM32_PINMUX('C', 2, AF11)>, /* ETH_RGMII_TXD2 */
++						 <STM32_PINMUX('E', 2, AF11)>, /* ETH_RGMII_TXD3 */
++						 <STM32_PINMUX('B', 11, AF11)>, /* ETH_RGMII_TX_CTL */
++						 <STM32_PINMUX('A', 2, AF11)>, /* ETH_MDIO */
++						 <STM32_PINMUX('C', 1, AF11)>; /* ETH_MDC */
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <3>;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('C', 4, AF11)>, /* ETH_RGMII_RXD0 */
++						 <STM32_PINMUX('C', 5, AF11)>, /* ETH_RGMII_RXD1 */
++						 <STM32_PINMUX('B', 0, AF11)>, /* ETH_RGMII_RXD2 */
++						 <STM32_PINMUX('B', 1, AF11)>, /* ETH_RGMII_RXD3 */
++						 <STM32_PINMUX('A', 1, AF11)>, /* ETH_RGMII_RX_CLK */
++						 <STM32_PINMUX('A', 7, AF11)>; /* ETH_RGMII_RX_CTL */
++					bias-disable;
++				};
++			};
 +
-+ Example:
-+         syscfg: syscon@50020000 {
-+                 compatible = "st,stm32mp157-syscfg", "syscon";
-+                 reg = <0x50020000 0x400>;
-+         };
-+
-diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.txt b/Documentation/devicetree/bindings/arm/stm32/stm32.txt
-new file mode 100644
-index 0000000..6808ed9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/stm32/stm32.txt
-@@ -0,0 +1,10 @@
-+STMicroelectronics STM32 Platforms Device Tree Bindings
-+
-+Each device tree must specify which STM32 SoC it uses,
-+using one of the following compatible strings:
-+
-+  st,stm32f429
-+  st,stm32f469
-+  st,stm32f746
-+  st,stm32h743
-+  st,stm32mp157
++			ethernet0_rgmii_pins_sleep_a: rgmii-sleep-0 {
++				pins1 {
++					pinmux = <STM32_PINMUX('G', 5, ANALOG)>, /* ETH_RGMII_CLK125 */
++						 <STM32_PINMUX('G', 4, ANALOG)>, /* ETH_RGMII_GTX_CLK */
++						 <STM32_PINMUX('G', 13, ANALOG)>, /* ETH_RGMII_TXD0 */
++						 <STM32_PINMUX('G', 14, ANALOG)>, /* ETH_RGMII_TXD1 */
++						 <STM32_PINMUX('C', 2, ANALOG)>, /* ETH_RGMII_TXD2 */
++						 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH_RGMII_TXD3 */
++						 <STM32_PINMUX('B', 11, ANALOG)>, /* ETH_RGMII_TX_CTL */
++						 <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
++						 <STM32_PINMUX('C', 1, ANALOG)>, /* ETH_MDC */
++						 <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
++						 <STM32_PINMUX('C', 5, ANALOG)>, /* ETH_RGMII_RXD1 */
++						 <STM32_PINMUX('B', 0, ANALOG)>, /* ETH_RGMII_RXD2 */
++						 <STM32_PINMUX('B', 1, ANALOG)>, /* ETH_RGMII_RXD3 */
++						 <STM32_PINMUX('A', 1, ANALOG)>, /* ETH_RGMII_RX_CLK */
++						 <STM32_PINMUX('A', 7, ANALOG)>; /* ETH_RGMII_RX_CTL */
++				};
++			};
+ 		};
+ 
+ 		pinctrl_z: pin-controller-z {
 -- 
 1.9.1
