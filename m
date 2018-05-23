@@ -1,137 +1,129 @@
-From: <ilialin@codeaurora.org>
-Subject: RE: [PATCH v11 1/2] cpufreq: Add Kryo CPU scaling driver
-Date: Wed, 23 May 2018 20:42:15 +0300
-Message-ID: <004301d3f2bd$66cf03a0$346d0ae0$@codeaurora.org>
-References: <1527079139-3558-1-git-send-email-ilialin@codeaurora.org> <1527079139-3558-2-git-send-email-ilialin@codeaurora.org> <1ec7645d-72b6-5a1a-48c3-831a3c484a0e@arm.com>
+From: rishabhb@codeaurora.org
+Subject: Re: [PATCH v7 2/2] drivers: soc: Add LLCC driver
+Date: Wed, 23 May 2018 10:59:07 -0700
+Message-ID: <e2fd7e4b452d955b766401fd871e93c4@codeaurora.org>
+References: <1526492623-20527-1-git-send-email-rishabhb@codeaurora.org>
+ <1526492623-20527-3-git-send-email-rishabhb@codeaurora.org>
+ <CAHp75VdO7+u-PQ+RBH71sxHHG0WkAyEVxv0BNPaycbcRnrZang@mail.gmail.com>
+ <f1970a64be17267e0f044242dc0764d6@codeaurora.org>
+ <CAHp75Vd8HZU+BT38-OfXHiihv1yZG6YBeMWyfweBA+kAwk6HUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1ec7645d-72b6-5a1a-48c3-831a3c484a0e@arm.com>
-Content-Language: en-us
+In-Reply-To: <CAHp75Vd8HZU+BT38-OfXHiihv1yZG6YBeMWyfweBA+kAwk6HUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Sudeep Holla' <sudeep.holla@arm.com>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-05-22 12:38, Andy Shevchenko wrote:
+> On Tue, May 22, 2018 at 9:33 PM,  <rishabhb@codeaurora.org> wrote:
+>> On 2018-05-18 14:01, Andy Shevchenko wrote:
+>>> On Wed, May 16, 2018 at 8:43 PM, Rishabh Bhatnagar
+>>> <rishabhb@codeaurora.org> wrote:
+> 
+>>>> +#define ACTIVATE                      0x1
+>>>> +#define DEACTIVATE                    0x2
+>>>> +#define ACT_CTRL_OPCODE_ACTIVATE      0x1
+>>>> +#define ACT_CTRL_OPCODE_DEACTIVATE    0x2
+>>>> +#define ACT_CTRL_ACT_TRIG             0x1
+>>> 
+>>> 
+>>> Are these bits? Perhaps BIT() ?
+>>> 
+>> isn't it just better to use fixed size as u suggest in the next 
+>> comment?
+> 
+> If the are bits, use BIT() macro.
+> 
+>>>> +struct llcc_slice_desc *llcc_slice_getd(u32 uid)
+>>>> +{
+>>>> +       const struct llcc_slice_config *cfg;
+>>>> +       struct llcc_slice_desc *desc;
+>>>> +       u32 sz, count = 0;
+>>>> +
+>>>> +       cfg = drv_data->cfg;
+>>>> +       sz = drv_data->cfg_size;
+>>>> +
+>>> 
+>>> 
+>>>> +       while (cfg && count < sz) {
+>>>> +               if (cfg->usecase_id == uid)
+>>>> +                       break;
+>>>> +               cfg++;
+>>>> +               count++;
+>>>> +       }
+>>>> +       if (cfg == NULL || count == sz)
+>>>> +               return ERR_PTR(-ENODEV);
+>>> 
+>>> 
+>>> if (!cfg)
+>>>           return ERR_PTR(-ENODEV);
+>>> 
+>>> while (cfg->... != uid) {
+>>>   cfg++;
+>>>   count++;
+>>> }
+>>> 
+>>> if (count == sz)
+>>>  return ...
+>>> 
+>>> Though I would rather put it to for () loop.
+>>> 
+>> In each while loop iteration the cfg pointer needs to be checked for
+>> NULL. What if the usecase id never matches the uid passed by client
+>> and we keep iterating. At some point it will crash.
+> 
+> do {
+>   if (!cfg || count == sz)
+>    return ...(-ENODEV);
+>  ...
+> } while (...);
+> 
+> Though, as I said for-loop will look slightly better I think.
+> 
+>>>> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+>>>> +                                 DEACTIVATE);
+>>> 
+>>> 
+>>> Perhaps one line (~83 characters here is OK) ?
+>> 
+>> The checkpatch script complains about such lines.
+> 
+> So what if it just 3 characters out?
+> 
+Many upstream reviewers have objection to lines crossing over 80 
+characters
+I have gotten reviews to reduce the line length even if its like 81~82
+characters. Can we keep this as it is? I have addressed all other
+comments and will send out the next patch by today.
 
-
-> -----Original Message-----
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> Sent: Wednesday, May 23, 2018 16:25
-> To: Ilia Lin <ilialin@codeaurora.org>; vireshk@kernel.org; nm@ti.com;
-> sboyd@kernel.org; robh@kernel.org; mark.rutland@arm.com;
-> rjw@rjwysocki.net; linux-pm@vger.kernel.org; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Subject: Re: [PATCH v11 1/2] cpufreq: Add Kryo CPU scaling driver
+>>>> +       ret = llcc_update_act_ctrl(desc->slice_id, act_ctrl_val,
+>>>> +                                 ACTIVATE);
 > 
+>>> Ditto.
 > 
+>>>> +               attr1_cfg = bcast_off +
+>>>> +
+>>>> LLCC_TRP_ATTR1_CFGn(llcc_table[i].slice_id);
+>>>> +               attr0_cfg = bcast_off +
+>>>> +
+>>>> LLCC_TRP_ATTR0_CFGn(llcc_table[i].slice_id);
 > 
-> On 23/05/18 13:38, Ilia Lin wrote:
-> > In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO
-> > processors, the CPU frequency subset and voltage value of each OPP
-> > varies based on the silicon variant in use. Qualcomm Process Voltage
-> > Scaling Tables defines the voltage and frequency value based on the
-> > msm-id in SMEM and speedbin blown in the efuse combination.
-> > The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the
-> > SoC to provide the OPP framework with required information.
-> > This is used to determine the voltage and frequency value for each OPP
-> > of
-> > operating-points-v2 table when it is parsed by the OPP framework.
-> >
-> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> > ---
-> >  drivers/cpufreq/Kconfig.arm          |  10 ++
-> >  drivers/cpufreq/Makefile             |   1 +
-> >  drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
-> >  drivers/cpufreq/qcom-cpufreq-kryo.c  | 181
-> > +++++++++++++++++++++++++++++++++++
-> >  4 files changed, 195 insertions(+)
-> >  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
-> >
-> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> > index de55c7d..0bfd40e 100644
-> > --- a/drivers/cpufreq/Kconfig.arm
-> > +++ b/drivers/cpufreq/Kconfig.arm
-> > @@ -124,6 +124,16 @@ config ARM_OMAP2PLUS_CPUFREQ
-> >  	depends on ARCH_OMAP2PLUS
-> >  	default ARCH_OMAP2PLUS
-> >
-> > +config ARM_QCOM_CPUFREQ_KRYO
-> > +	bool "Qualcomm Kryo based CPUFreq"
-> > +	depends on QCOM_QFPROM
-> > +	depends on QCOM_SMEM
-> > +	select PM_OPP
-> > +	help
-> > +	  This adds the CPUFreq driver for Qualcomm Kryo SoC based boards.
-> > +
-> > +	  If in doubt, say N.
-> > +
+>>> Ditto.
 > 
-> Sorry but just noticed now, any reason why this can't be module. I can't
-> imagine any.
-
-I was asked previously to change this from tristate to bool.
-
+>>>> +               attr1_val |= llcc_table[i].probe_target_ways <<
+>>>> +                               ATTR1_PROBE_TARGET_WAYS_SHIFT;
+>>>> +               attr1_val |= llcc_table[i].fixed_size <<
+>>>> +                               ATTR1_FIXED_SIZE_SHIFT;
+>>>> +               attr1_val |= llcc_table[i].priority <<
+>>>> ATTR1_PRIORITY_SHIFT;
 > 
-> [..]
+>>> foo |=
+>>>   bar << SHIFT;
+>>> 
+>>> would look slightly better.
 > 
-> > +static int qcom_cpufreq_kryo_probe(struct platform_device *pdev) {
-> > +	struct opp_table *opp_tables[NR_CPUS] = {0};
-> > +	struct platform_device *cpufreq_dt_pdev;
-> > +	enum _msm8996_version msm8996_version;
-> > +	struct nvmem_cell *speedbin_nvmem;
-> > +	struct device_node *np;
-> > +	struct device *cpu_dev;
-> 
-> [..]
-> 
-> > +
-> > +	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -
-> 1, NULL, 0);
-> > +	if (!IS_ERR(cpufreq_dt_pdev))
-> > +		return 0;
-> > +
-> > +	ret = PTR_ERR(cpufreq_dt_pdev);
-> > +	dev_err(cpu_dev, "Failed to register platform device\n");
-> > +
-> > +free_opp:
-> > +	for_each_possible_cpu(cpu) {
-> > +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
-> > +			break;
-> > +		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int __init qcom_cpufreq_kryo_init(void) {
-> > +	/*
-> > +	 * Since the driver depends on smem and nvmem drivers, which may
-> > +	 * return EPROBE_DEFER, all the real activity is done in the probe,
-> > +	 * which may be defered as well. The init here is only registering
-> > +	 * a platform device.
-> > +	 */
-> > +	platform_device_register_simple("qcom-cpufreq-kryo", -1, NULL, 0);
-> > +	return 0;
-> > +}
-> > +module_init(qcom_cpufreq_kryo_init);
-> 
-> Do you need this at all ? See below on how to eliminate the need for this.
-> 
-> > +
-> > +static struct platform_driver qcom_cpufreq_kryo_driver = {
-> > +	.probe = qcom_cpufreq_kryo_probe,
-> > +	.driver = {
-> > +		.name = "qcom-cpufreq-kryo",
-> > +	},
-> > +};
-> > +builtin_platform_driver(qcom_cpufreq_kryo_driver);
-> 
-> Use builtin_platform_driver_probe and remove qcom_cpufreq_kryo_init or
-> use module_platform_driver_probe if it can be module.
-> 
-> --
-> Regards,
-> Sudeep
+> Did you consider this option ?
