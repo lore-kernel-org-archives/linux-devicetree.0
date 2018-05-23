@@ -1,41 +1,21 @@
-Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-by2nam03on0077.outbound.protection.outlook.com ([104.47.42.77]:32319
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751214AbeEVN1L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 May 2018 09:27:11 -0400
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [RESEND PATCH 1/4] PCI: cadence: Update cdns_pcie_writel function signature
-Date: Tue, 22 May 2018 14:26:53 +0100
-Message-ID: <1526995613-8560-1-git-send-email-adouglas@cadence.com>
+Return-Path: <SRS0=Oebe=IK=verge.net.au=horms@kernel.org>
+Date: Wed, 23 May 2018 10:44:18 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 3/3] arm64: dts: renesas: r8a77995: add thermal device
+ support
+Message-ID: <20180523084416.hfvjdy4y33ipx5dj@verge.net.au>
+References: <1526808379-3850-1-git-send-email-ykaneko0929@gmail.com>
+ <1526808379-3850-4-git-send-email-ykaneko0929@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.com, cyrille.pitchen@free-electrons.com, Alan Douglas <adouglas@cadence.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1526808379-3850-4-git-send-email-ykaneko0929@gmail.com>
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Change cdns_pcie_writel() signature, u16 value changed to u32, since
-this function should write a long value
+On Sun, May 20, 2018 at 06:26:19PM +0900, Yoshihiro Kaneko wrote:
+> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
----
- drivers/pci/cadence/pcie-cadence.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/cadence/pcie-cadence.h b/drivers/pci/cadence/pcie-cadence.h
-index 4bb2733..ed336cc 100644
---- a/drivers/pci/cadence/pcie-cadence.h
-+++ b/drivers/pci/cadence/pcie-cadence.h
-@@ -279,7 +279,7 @@ static inline void cdns_pcie_ep_fn_writew(struct cdns_pcie *pcie, u8 fn,
- }
- 
- static inline void cdns_pcie_ep_fn_writel(struct cdns_pcie *pcie, u8 fn,
--					  u32 reg, u16 value)
-+					  u32 reg, u32 value)
- {
- 	writel(value, pcie->reg_base + CDNS_PCIE_EP_FUNC_BASE(fn) + reg);
- }
--- 
-2.2.2
-
+Thanks, applied.
