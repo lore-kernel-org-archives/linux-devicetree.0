@@ -1,49 +1,50 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
-Date: Wed, 23 May 2018 11:37:14 -0700
-Message-ID: <20180523183714.GR98604@atomide.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
- <1523956215-28154-13-git-send-email-t-kristo@ti.com>
- <20180417092924.GB20335@flint.armlinux.org.uk>
- <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
- <20180417144913.GD5669@atomide.com>
- <43ff3894-a287-1558-687c-40f50712735c@ti.com>
- <20180522200100.GA23937@rob-hp-laptop>
- <243730d3-e7f3-584d-b5dd-491c2700cf11@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drm/panel: simple: Add Sharp LQ035Q7DB03 panel support
+Date: Wed, 23 May 2018 13:39:20 -0500
+Message-ID: <20180523183920.GA23693@rob-hp-laptop>
+References: <20180521232314.5972-1-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <243730d3-e7f3-584d-b5dd-491c2700cf11@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, trini@konsulko.com, frowand.list@gmail.com, wmills@ti.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20180521232314.5972-1-vz@mleia.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [180523 05:58]:
-> On 22/05/18 23:01, Rob Herring wrote:
-> > On Mon, May 21, 2018 at 09:57:54AM +0300, Tero Kristo wrote:
-> > > Ok trying to resurrect this thread a bit. Is there any kind of consensus how
-> > > things like this should be handled? Should we add the DT overlay files to
-> > > kernel tree or not?
-> > 
-> > IMO, yes.
-
-I too agree the overlay files should be in the kernel rather than
-people having to try to figure out where to find them.
-
-No idea how we'll verify they'll build though :) Maybe we
-just need randconfig support for DT overlay files too?
-
-Regards,
-
-Tony
+T24gVHVlLCBNYXkgMjIsIDIwMTggYXQgMDI6MjM6MTRBTSArMDMwMCwgVmxhZGltaXIgWmFwb2xz
+a2l5IHdyb3RlOgo+IFRoZSBjaGFuZ2UgYWRkcyBzdXBwb3J0IGZvciBTaGFycCBMUTAzNVE3REIw
+MyAzLjUiIFFWR0EgcGFuZWwuCj4gCj4gTm90ZSB0aGF0IHRoaXMgYWdlZCBwYW5lbCBpcyBhbHJl
+YWR5IGZvdW5kIGluIHRoZSBrZXJuZWwgc291cmNlcywKPiBmb3IgaW5zdGFuY2UgaW4gYm9hcmQg
+bWFjaCBmaWxlcyBtYWNoLW14MjFhZHMuYywgbWFjaC1teDI3YWRzLmMsCj4gbWFjaC1wY20wNDMu
+YywgbHBkMjcwLmMgYW5kIGlteDI3LXBoeXRlYy1waHljb3JlLXJkay5kdHMuCj4gCj4gU2lnbmVk
+LW9mZi1ieTogVmxhZGltaXIgWmFwb2xza2l5IDx2ekBtbGVpYS5jb20+Cj4gLS0tCj4gIC4uLi9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMDM1cTdkYjAzLnR4dCAgIHwgIDcgKysrKysr
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwg
+MjcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDM0IGluc2VydGlv
+bnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL3NoYXJwLGxxMDM1cTdkYjAzLnR4dAo+IAo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaGFycCxs
+cTAzNXE3ZGIwMy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9zaGFycCxscTAzNXE3ZGIwMy50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGlu
+ZGV4IDAwMDAwMDAuLjQyMDI3ZTUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2hhcnAsbHEwMzVxN2RiMDMudHh0
+Cj4gQEAgLTAsMCArMSw3IEBACj4gK1NoYXJwIExRMDM1UTdEQjAzIDMuNSIgUVZHQSBURlQgTENE
+IHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHNob3Vs
+ZCBiZSAic2hhcnAsbHEwMzVxN2RiMDMiCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJs
+ZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2lu
+IHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCgpZb3UgbmVlZCB0byBzdGF0ZSB3
+aGljaCBwcm9wZXJ0aWVzIGZyb20gdGhlcmUgdGhpcyBwYW5lbCBhY3R1YWxseSB1c2VzLgoKUm9i
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
