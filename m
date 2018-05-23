@@ -1,85 +1,74 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add GEther support
-Date: Wed, 23 May 2018 12:05:30 +0300
-Message-ID: <9f2c6e9b-a6a9-97f1-7899-3635230acd6f@cogentembedded.com>
-References: <a4230699-e46f-0782-e3b1-22d58b9033c8@cogentembedded.com>
- <8910c197-cf1b-9ee9-9ddb-5d2f705a4b26@cogentembedded.com>
- <CAMuHMdW9UzOGV_zh3NxugYrj0j0qszX+NFoZtFvZRD9CNMHt+w@mail.gmail.com>
- <bdbfd13e-cf0c-e19a-b76f-5e8e024dca26@cogentembedded.com>
- <20180523084100.ynv3zoqrikcxem5f@verge.net.au>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 3/3] ARM: dts: imx6ull-colibri-wifi: remove operating
+ points
+Date: Wed, 23 May 2018 11:07:17 +0200
+Message-ID: <dc3523800c274e96dc5642c9c5b65ebe@agner.ch>
+References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
+ <20180522062853.24799-3-sebastien.szymanski@armadeus.com>
+ <20180523043032.2htohlypynnvpiye@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180523084100.ynv3zoqrikcxem5f@verge.net.au>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180523043032.2htohlypynnvpiye@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 5/23/2018 11:41 AM, Simon Horman wrote:
-
->>>> Define the generic R8A77980 part of the GEther device node.
->>>>
->>>> Based on the original (and large) patch by Vladimir Barinov.
->>>>
->>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>
->>> Thanks for your patch!
->>>
->>> With the below addressed:
->>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 23.05.2018 06:30, Viresh Kumar wrote:
+> On 22-05-18, 08:28, Sébastien Szymanski wrote:
+>> Operating points are now defined in the imx6ull.dtsi file so remove
+>> them from board device trees.
 >>
->>     Thanks!
+>> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+>> ---
+>>  arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi | 14 --------------
+>>  1 file changed, 14 deletions(-)
 >>
->>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
->>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
->>>> @@ -417,6 +417,17 @@
->>>>                          dma-channels = <16>;
->>>>                  };
->>>>
->>>> +               gether: ethernet@e7400000 {
->>>> +                       compatible = "renesas,gether-r8a77980";
->>>> +                       reg = <0 0xe7400000 0 0x1000>;
->>>> +                       interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
->>>> +                       clocks = <&cpg CPG_MOD 813>;
->>>> +                       power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
->>>
->>> resets = <&cpg 813>;
+>> diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+>> index 3dffbcd50bf6..183193e8580d 100644
+>> --- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+>> +++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+>> @@ -20,20 +20,6 @@
 >>
->>     As usual...
+>>  &cpu0 {
+>>  	clock-frequency = <792000000>;
+>> -	operating-points = <
+>> -		/* kHz	uV */
+>> -		792000  1225000
+>> -		528000	1175000
+>> -		396000	1025000
+>> -		198000	950000
+>> -	>;
+>> -	fsl,soc-operating-points = <
+>> -		/* KHz	uV */
+>> -		792000  1175000
+>> -		528000	1175000
+>> -		396000	1175000
+>> -		198000	1175000
+>> -	>;
+>>  };
 >>
->>>
->>>> +                       #address-cells = <1>;
->>>> +                       #size-cells = <0>;
->>>> +                       status = "disabled";
->>>
->>> Any default phy-mode needed?
->>
->>     A default "phy-mode" IMO make sense when the MAC supports a single
->> PHY interface mode. In this case, both RMII and RGMII are supported, so
->> I coulsn't choose a default...
+>>  &iomuxc {
 > 
-> I would think making an arbitrary choice is better than no choice.
-> How does the driver behave in the absence of a default?
+> Maybe you should merge this with the previous patch itself.
 
-    The board DT *must* assign some "phy-mode" -- it's a required prop.
-    In this particular case, iff the mode is still unspecified, the driver 
-will select the MII mode for the RMII_MII reg (which is a reserved value for 
-this GEther)...
 
-[...]
+I am with Viresh here, I rather prefer this in a single commit so it is
+clear that frequencies moved to the base device tree.
 
-MBR, Sergei
+Also, add a comment that frequency selection is now handled in code,
+e.g.:
+
+"The valid frequencies for a particular SKU are now selected by the
+cpufreq driver according to ratings stored in OTP fuses."
+
+But the two device tree changes with the driver do what they should do
+here, so:
+
+Tested-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+
+--
+Stefan
