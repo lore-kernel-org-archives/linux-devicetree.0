@@ -1,182 +1,95 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Tue, 22 May 2018 18:19:20 -0700
-Message-ID: <b5078a17-4cbb-905e-4cd1-f252a02f97e9@codeaurora.org>
-References: <cover.1526088081.git.collinsd@codeaurora.org>
- <41d5df73ddac772551d2966e0752bb0c357b1ded.1526088081.git.collinsd@codeaurora.org>
- <CAD=FV=XegPeFR8pdZM-YiBBJjrbej=C+2biBt4zJKnE90uTYZA@mail.gmail.com>
- <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org>
- <CAD=FV=U-QOQekUHj=ck57YJbTFdFjCAWr4t2A92x+fCNf+yV9A@mail.gmail.com>
- <dc1fbe9c-8973-1c4d-0fbd-809c1ec0a6be@codeaurora.org>
- <CAD=FV=XfSGs14VB464cvMGDNwGS4yvSXjN8itZLffm+Sj-D=ww@mail.gmail.com>
- <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org>
- <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
- <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org>
- <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
+From: Levin Du <djw@t-chip.com.cn>
+Subject: Re: [PATCH v2 2/5] gpio: syscon: Add gpio-syscon for rockchip
+Date: Wed, 23 May 2018 10:02:15 +0800
+Message-ID: <6ffb43dc-55a5-14eb-eb18-3a731cdaf424@t-chip.com.cn>
+References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn>
+ <1526615528-9707-1-git-send-email-djw@t-chip.com.cn>
+ <1526615528-9707-2-git-send-email-djw@t-chip.com.cn>
+ <20180522180238.GA7328@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
+In-Reply-To: <20180522180238.GA7328@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2018 05:08 PM, Doug Anderson wrote:
-> On Tue, May 22, 2018 at 3:46 PM, David Collins <collinsd@codeaurora.org> wrote:
->> On 05/22/2018 09:43 AM, Doug Anderson wrote:
->>> On Mon, May 21, 2018 at 5:00 PM, David Collins <collinsd@codeaurora.org> wrote:
-...
->> However, if the voltage caching feature is acceptable for upstream usage,
->> then I could add it.  With that in place, I see less of a need for the
->> qcom,regulator-initial-microvolt property and would be ok with removing it
->> for now.
-> 
-> I think it's the right thing to do an Mark didn't seem to yell, so I'd
-> say go for it.
-
-I'll remove qcom,regulator-initial-microvolt support and add voltage caching.
-
-
->>> OK, so how's this for a proposal then:
->>>
->>> 1. For RPMh-regulator whenever we see a "set voltage" but Linux hasn't
->>> specified that the regulator is enabled then we don't send the
->>> voltage, we just cache it.
->>>
->>> 2. When we see the first enable then we first send the cached voltage
->>> and then do the enable.
->>>
->>> 3. We don't need an "initial voltage" because any rails that are
->>> expected to be variable voltage the client should be choosing a
->>> voltage.
->>>
->>>
->>> ...taking the SD card case as an example: if the regulator framework
->>> says "set to the minimum: 1.8V" we'll cache this but not apply it yet
->>> because the rail is off as far as Linux is concerned.  Then when the
->>> SD card framework starts up it will set the voltage to 3.3V which will
->>> overwrite the cache.  Then the SD card framework will enable the
->>> regulator and RPMh will set the voltage to 3.3V and enable.
+On 2018-05-23 2:02 AM, Rob Herring wrote:
+> On Fri, May 18, 2018 at 11:52:05AM +0800, djw@t-chip.com.cn wrote:
+>> From: Levin Du <djw@t-chip.com.cn>
 >>
->> I am ok with implementing this feature.
+>> Some GPIOs sit in the GRF_SOC_CON registers of Rockchip SoCs,
+>> which do not belong to the general pinctrl.
 >>
->> However, should the voltage be cached instead of sent immediately any time
->> that Linux has not explicitly requested the regulator to be enabled, or
->> only before the first time that an enable request is sent?
+>> Adding gpio-syscon support makes controlling regulator or
+>> LED using these special pins very easy by reusing existing
+>> drivers, such as gpio-regulator and led-gpio.
 >>
->> 1. regulator_set_voltage(reg, 2960000, 2960000)
->>    --> cache voltage=2960 mV
->> 2. regulator_enable(reg)
->>    --> Send voltage=2960 then enable=1
->> 3. regulator_disable(reg)
->>    --> Send enable=0
->> 4. regulator_set_voltage(reg, 1800000, 2960000)
->>    --> A. Send voltage=1800 OR B. cache voltage=1800?
+>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
 >>
->> Option A is used on the downstream rpmh-regulator driver in order to avoid
->> cases where AP votes to disable a regulator that is kept enabled by
->> another subsystem but then does not lower the voltage requested thanks to
->> regulator_set_voltage() being called after regulator_disable().  I plan to
->> go with option A for qcom-rpmh-regulator unless there are objections.
-> 
-> So one client's vote for a voltage continues to be in effect even if
-> that client votes to have the regulator disabled?  That seems
-> fundamentally broken in RPMh.  I guess my take would be to work around
-> this RPMh misfeature by saying that whenever Linux votes to disable a
-> regulator it also votes for a voltage of 0.  Then another client of
-> RPMh won't be affected.
-> 
-> That seems like it would be beneficial in any case.  If the AP always
-> asks for 1.3 V and the modem always asks for 1.1 V for the same rail
-> then the rail should go down to 1.1 V when the AP says to disable the
-> rail.
-
-The VRM in RPMh hardware aggregates enable state, output voltage, mode,
-and headroom voltage requests independently for each regulator.  This
-allows for maximum request flexibility and makes no assumptions about
-consumer use cases.  There is nothing inherently wrong about this approach.
-
-I'm concerned about a blanket policy of setting voltage=0 when issuing
-disable requests.  That seems to violate the semantics of the
-regulator_set_voltage() API which enforces the requested voltage range
-until a new range is specified.  There may be workarounds that require a
-regulator to operate at a specific voltage even when no Linux consumers
-explicitly need the regulator enabled.
-
-Given that not masking the voltage on disable is guaranteed to be safe and
-does not silently break potential use cases, I plan to stick with this
-approach.  Therefore, the question about option A or B for voltage caching
-is still relevant.  I think that option A is safer/more API conforming so
-I plan to implement that.
-
-
->>> This whole thing makes me worry about another problem, though.  You
->>> say that the bootloader left the SD card rail on, right?  ...but as
->>> far as Linux is concerned the SD card rail is off (argh, it can't read
->>> the state that the bootloader left the rail in!)
->>>
->>> ...now imagine any of the following:
->>>
->>> * The user boots up a kernel where the SD card driver is disabled.
->>>
->>> * The user ejects the SD card right after the bootloader used it but
->>> before the kernel driver started.
->>>
->>> When the kernel comes up it will believe that the SD card rail is
->>> disabled so it won't try to disable it.  So the voltage will be left
->>> on.
+>> ---
 >>
->> We have not encountered issues with regulators getting left on
->> indefinitely because Linux devices failed to take control of them during
->> boot.  I don't think that this hypothetical issue needs to be addressed in
->> the first qcom-rpmh-regulator driver patch if at all.
-> 
-> I don't think it hypothetical at all.  Linux takes control of a
-> regulator and then at bootup it disables all regulators that aren't
-> currently used/enabled.  In your case you will report that regulators
-> are already disabled and thus you'll neuter the kernel's attempt to
-> disable regulators that nobody is using but that might have been left
-> on by the bootloader.  It seemed like Mark agreed here.
-
-I did not consider regulator_late_cleanup().  I'll initialize the enabled
-value in qcom-rpmh-regulator to -EINVAL to handle this case and also so
-that _regulator_enable() succeeds without further core modification.
-
-
->>> You can even come up with a less contrived use case here.  One could
->>> argue that the SD card framework really ought to be ensuring VMMC and
->>> VQMMC are off before it starts tweaking with them just in case the
->>> bootloader left them on.  Thus, it should do:
->>>
->>> A) Turn off VMMC and VQMMC
->>> B) Program VMMC and VQMMC to defaults
->>> C) Turn on VMMC and VQMMC
->>>
->>> ...right now we bootup and pretend to Linux that VMMC and VQMMC start
->>> off, so step A) will be no-op.  Sigh.
+>> Changes in v2:
+>> - Rename gpio_syscon10 to gpio_mute in doc
 >>
->> Step A) would not work because the regulator's use_count would be 0 and
->> regulator_disable() can only be called successfully if use_count > 0.  The
->> call would have no impact and it would return an error.
-> 
-> Are you sure regulator_force_disable() won't do the trick on most
-> boards (which will report the regulator being enabled at bootup)?  I
-> haven't tried it, but it seems like it might.
+>> Changes in v1:
+>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
+>> - Add doc rockchip,gpio-syscon.txt
+>>
+>>   .../bindings/gpio/rockchip,gpio-syscon.txt         | 41 ++++++++++++++++++++++
+>>   drivers/gpio/gpio-syscon.c                         | 30 ++++++++++++++++
+>>   2 files changed, 71 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+>> new file mode 100644
+>> index 0000000..b1b2a67
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+>> @@ -0,0 +1,41 @@
+>> +* Rockchip GPIO support for GRF_SOC_CON registers
+>> +
+>> +Required properties:
+>> +- compatible: Should contain "rockchip,gpio-syscon".
+>> +- gpio-controller: Marks the device node as a gpio controller.
+>> +- #gpio-cells: Should be two. The first cell is the pin number and
+>> +  the second cell is used to specify the gpio polarity:
+>> +    0 = Active high,
+>> +    1 = Active low.
+> There's no need for this child node. Just make the parent node a gpio
+> controller.
+>
+> Rob
+Hi Rob, it is not clear to me. Do you suggest that the grf node should 
+be a gpio controller,
+like below?
 
-regulator_force_disable() would indeed call the disable() callback.
-However, this function is designed for emergency uses only and will cause
-the use_count to become out of sync with the requested regulator state.  I
-don't think that we want to suggest to consumers that they call
-regulator_force_disable().  It would completely break any shared regulator
-uses cases between multiple Linux consumers.
++    grf: syscon at ff100000 {
++        compatible = "rockchip,gpio-syscon", "rockchip,rk3328-grf", 
+"syscon", "simple-mfd";
++        //...
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio,syscon-dev = <&grf 0x0428 0>;
++    };
 
-Take care,
-David
+or just reserve the following case in the doc?
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
++    grf: syscon at ff100000 {
++        compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
++        //...
++    };
++
++    gpio_mute: gpio-mute {
++        compatible = "rockchip,gpio-syscon";
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio,syscon-dev = <&grf 0x0428 0>;
++    };
+
+
+Thanks
+Levin
