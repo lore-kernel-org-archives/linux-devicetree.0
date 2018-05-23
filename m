@@ -1,43 +1,33 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Wed, 23 May 2018 08:23:22 -0700
-Message-ID: <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
-References: <41d5df73ddac772551d2966e0752bb0c357b1ded.1526088081.git.collinsd@codeaurora.org>
- <CAD=FV=XegPeFR8pdZM-YiBBJjrbej=C+2biBt4zJKnE90uTYZA@mail.gmail.com>
- <869aad59-1cc5-28ef-1fb5-4ef846696c40@codeaurora.org> <CAD=FV=U-QOQekUHj=ck57YJbTFdFjCAWr4t2A92x+fCNf+yV9A@mail.gmail.com>
- <dc1fbe9c-8973-1c4d-0fbd-809c1ec0a6be@codeaurora.org> <CAD=FV=XfSGs14VB464cvMGDNwGS4yvSXjN8itZLffm+Sj-D=ww@mail.gmail.com>
- <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org> <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
- <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org> <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
- <20180523082908.GB4828@sirena.org.uk>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next v3 1/7] net: dsa: qca8k: Add QCA8334 binding
+ documentation
+Date: Wed, 23 May 2018 08:37:45 -0700
+Message-ID: <08b89ba8-abf9-7df3-7a59-dda0303d6854@gmail.com>
+References: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
+ <1527056424-14528-2-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523082908.GB4828@sirena.org.uk>
+In-Reply-To: <1527056424-14528-2-git-send-email-michal.vokac@ysoft.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <vokac.m@gmail.com>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, michal.vokac@ysoft.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Wed, May 23, 2018 at 1:29 AM, Mark Brown <broonie@kernel.org> wrote:
 
-> It's arguable either way - you could say that the client gets to specify
-> a safe range at all times or you could say that the machine constraints
-> should cover all cases where the hardware is idling.  Of course RPMh
-> is missing anything like the machine constraints (as we can see from all
-> the fixing up of undesirable hard coding we have to do) so it's kind of
-> pushed towards the first case.
+On 05/22/2018 11:20 PM, Michal Vokáč wrote:
+> Add support for the four-port variant of the Qualcomm QCA833x switch.
+> 
+> The CPU port default link settings can be reconfigured using
+> a fixed-link sub-node.
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-OK, fair enough.  If others all agree that it's OK to make requests
-about the voltage of a disabled regulator then I won't stand in the
-way.  I guess it does call into question the whole idea of caching /
-not sending the voltage until the first enable because it means
-there's no way for the client to use this feature until they've
-enabled / disabled the regulator once.  If you think of it as invalid
-to adjust the voltage of a disabled regulator then the caching
-argument is super clean, but once you say that you should normally be
-able to do it it feels more like a hacky workaround.  ...but I suppose
-that's what we've got to live with...
-
--Doug
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
