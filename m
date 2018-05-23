@@ -1,50 +1,40 @@
-Return-Path: <SRS0=E3S+=IH=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH v4 2/3] dt-bindings: thermal: rcar-thermal: add R8A77995 support
-Date: Sun, 20 May 2018 18:26:18 +0900
-Message-Id: <1526808379-3850-3-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1526808379-3850-1-git-send-email-ykaneko0929@gmail.com>
-References: <1526808379-3850-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=Oebe=IK=verge.net.au=horms@kernel.org>
+Date: Wed, 23 May 2018 10:51:12 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] media: dt-bindings: media: rcar_vin: add support for
+ r8a77965
+Message-ID: <20180523085111.gud5b2652vkvbgoq@verge.net.au>
+References: <20180513185818.15359-1-niklas.soderlund+renesas@ragnatech.se>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180513185818.15359-1-niklas.soderlund+renesas@ragnatech.se>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Sun, May 13, 2018 at 08:58:18PM +0200, Niklas Söderlund wrote:
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-index 349e635..67c563f 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -3,7 +3,8 @@
- Required properties:
- - compatible		: "renesas,thermal-<soctype>",
- 			   "renesas,rcar-gen2-thermal" (with thermal-zone) or
--			   "renesas,rcar-thermal" (without thermal-zone) as fallback.
-+			   "renesas,rcar-thermal" (without thermal-zone) as
-+                           fallback except R-Car D3.
- 			  Examples with soctypes are:
- 			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
- 			    - "renesas,thermal-r8a7743" (RZ/G1M)
-@@ -12,13 +13,15 @@ Required properties:
- 			    - "renesas,thermal-r8a7791" (R-Car M2-W)
- 			    - "renesas,thermal-r8a7792" (R-Car V2H)
- 			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-+			    - "renesas,thermal-r8a77995" (R-Car D3)
- - reg			: Address range of the thermal registers.
- 			  The 1st reg will be recognized as common register
- 			  if it has "interrupts".
- 
- Option properties:
- 
--- interrupts		: use interrupt
-+- interrupts		: If present should contain 3 interrupts for
-+                          R-Car D3 or 1 interrupt otherwise.
- 
- Example (non interrupt support):
- 
--- 
-1.9.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> index a19517e1c669eb35..c2c57dcf73f4851b 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -21,6 +21,7 @@ on Gen3 platforms to a CSI-2 receiver.
+>     - "renesas,vin-r8a7794" for the R8A7794 device
+>     - "renesas,vin-r8a7795" for the R8A7795 device
+>     - "renesas,vin-r8a7796" for the R8A7796 device
+> +   - "renesas,vin-r8a77965" for the R8A77965 device
+>     - "renesas,vin-r8a77970" for the R8A77970 device
+>     - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
+>       device.
+> -- 
+> 2.17.0
+> 
