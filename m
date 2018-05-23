@@ -1,103 +1,63 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v5 6/7] drm/i2c: tda998x: split encoder and component functions from the work
-Date: Wed, 23 May 2018 11:31:21 +0200
-Message-ID: <20180523093122.27859-7-peda@axentia.se>
-References: <20180523093122.27859-1-peda@axentia.se>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] cpufreq: Add Kryo CPU scaling driver
+Date: Wed, 23 May 2018 15:02:35 +0530
+Message-ID: <20180523093235.k7xugnd7pfisazdx@vireshk-i7>
+References: <1526729701-8589-1-git-send-email-ilialin@codeaurora.org>
+ <1527066324-24726-1-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523093122.27859-1-peda@axentia.se>
+Content-Disposition: inline
+In-Reply-To: <1527066324-24726-1-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Russell King <linux@armlinux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+To: Ilia Lin <ilialin@codeaurora.org>
+Cc: rjw@rjwysocki.net, sudeep.holla@arm.com, linux@armlinux.org.uk, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This enables reuse of the machinery for the case where a drm_bridge
-needs to do the same work via different interfaces.
+On 23-05-18, 12:05, Ilia Lin wrote:
+> In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
+> the CPU frequency subset and voltage value of each OPP varies
+> based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
+> defines the voltage and frequency value based on the msm-id in SMEM
+> and speedbin blown in the efuse combination.
+> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
+> to provide the OPP framework with required information.
+> This is used to determine the voltage and frequency value for each OPP of
+> operating-points-v2 table when it is parsed by the OPP framework.
+> 
+> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm          |  10 +++
+>  drivers/cpufreq/Makefile             |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
+>  drivers/cpufreq/qcom-cpufreq-kryo.c  | 163 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 177 insertions(+)
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/i2c/tda998x_drv.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+Hi Ilia,
 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 3dda07a2fd2f..d401b3d0095c 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1202,11 +1202,10 @@ static void tda998x_encoder_dpms(struct drm_encoder *encoder, int mode)
- }
- 
- static void
--tda998x_encoder_mode_set(struct drm_encoder *encoder,
--			 struct drm_display_mode *mode,
--			 struct drm_display_mode *adjusted_mode)
-+tda998x_mode_set(struct tda998x_priv *priv,
-+		 struct drm_display_mode *mode,
-+		 struct drm_display_mode *adjusted_mode)
- {
--	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
- 	u16 ref_pix, ref_line, n_pix, n_line;
- 	u16 hs_pix_s, hs_pix_e;
- 	u16 vs1_pix_s, vs1_pix_e, vs1_line_s, vs1_line_e;
-@@ -1413,6 +1412,16 @@ tda998x_encoder_mode_set(struct drm_encoder *encoder,
- 	mutex_unlock(&priv->audio_mutex);
- }
- 
-+static void
-+tda998x_encoder_mode_set(struct drm_encoder *encoder,
-+			 struct drm_display_mode *mode,
-+			 struct drm_display_mode *adjusted_mode)
-+{
-+	struct tda998x_priv *priv = enc_to_tda998x_priv(encoder);
-+
-+	tda998x_mode_set(priv, mode, adjusted_mode);
-+}
-+
- static void tda998x_destroy(struct tda998x_priv *priv)
- {
- 	/* disable all IRQs and free the IRQ handler */
-@@ -1662,11 +1671,10 @@ static void tda998x_set_config(struct tda998x_priv *priv,
- 	priv->audio_params = p->audio_params;
- }
- 
--static int tda998x_bind(struct device *dev, struct device *master, void *data)
-+static int tda998x_init(struct device *dev, struct drm_device *drm)
- {
- 	struct tda998x_encoder_params *params = dev->platform_data;
- 	struct i2c_client *client = to_i2c_client(dev);
--	struct drm_device *drm = data;
- 	struct tda998x_priv *priv;
- 	u32 crtcs = 0;
- 	int ret;
-@@ -1714,8 +1722,7 @@ static int tda998x_bind(struct device *dev, struct device *master, void *data)
- 	return ret;
- }
- 
--static void tda998x_unbind(struct device *dev, struct device *master,
--			   void *data)
-+static void tda998x_fini(struct device *dev)
- {
- 	struct tda998x_priv *priv = dev_get_drvdata(dev);
- 
-@@ -1724,6 +1731,19 @@ static void tda998x_unbind(struct device *dev, struct device *master,
- 	tda998x_destroy(priv);
- }
- 
-+static int tda998x_bind(struct device *dev, struct device *master, void *data)
-+{
-+	struct drm_device *drm = data;
-+
-+	return tda998x_init(dev, drm);
-+}
-+
-+static void tda998x_unbind(struct device *dev, struct device *master,
-+			   void *data)
-+{
-+	tda998x_fini(dev);
-+}
-+
- static const struct component_ops tda998x_ops = {
- 	.bind = tda998x_bind,
- 	.unbind = tda998x_unbind,
--- 
-2.11.0
+So the patch looks good now. But I don't see how this series is going
+to get merged. You are touching all parts of the kernel and no single
+maintainer would be able to get these merged easily.
+
+What I would suggest is that you divided the series in at least 3
+parts.
+
+- Patch 10 and 11, just the cpufreq stuff. So that Rafael can apply
+  those independently. Also mention the dependency on my OPP patches
+  in the cover letter for those two patches.
+
+- All clk patches in another series, so that Stephen can apply them.
+
+- And finally everything else to go via ARM-Soc.
+
+Maybe things wouldn't be that simple, but that's what you would need
+to do to get things merged. And please add all Acked by tags you got
+to the patches.
+
+For this patch:
+
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+--
+viresh
