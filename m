@@ -1,7 +1,7 @@
 From: "=?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?=" <vokac.m@gmail.com>
-Subject: [PATCH net-next v3 3/7] net: dsa: qca8k: Enable RXMAC when bringing up a port
-Date: Wed, 23 May 2018 08:20:20 +0200
-Message-ID: <1527056424-14528-4-git-send-email-michal.vokac@ysoft.com>
+Subject: [PATCH net-next v3 2/7] net: dsa: qca8k: Add support for QCA8334 switch
+Date: Wed, 23 May 2018 08:20:19 +0200
+Message-ID: <1527056424-14528-3-git-send-email-michal.vokac@ysoft.com>
 References: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,36 +13,31 @@ To: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, michal.vokac@ysoft.com
 List-Id: devicetree@vger.kernel.org
 
-When a port is brought up/down do not enable/disable only the TXMAC
-but the RXMAC as well. This is essential for the CPU port to work.
+Add support for the four-port variant of the Qualcomm QCA833x switch.
 
-Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
 Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 Changes in v3:
- - none
+ - Add "Reviewed-by" tag from Andrew
 
 Changes in v2:
- - Add "Fixes" tag as pointed out by Florian.
- - Add "Reviewed-by" tags from Andrew and Florian.
+ - Add commit message
 
- drivers/net/dsa/qca8k.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/qca8k.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index 6a3ffb2..0d224f3 100644
+index 3684e56..6a3ffb2 100644
 --- a/drivers/net/dsa/qca8k.c
 +++ b/drivers/net/dsa/qca8k.c
-@@ -516,7 +516,7 @@ qca8k_set_pad_ctrl(struct qca8k_priv *priv, int port, int mode)
- static void
- qca8k_port_set_status(struct qca8k_priv *priv, int port, int enable)
- {
--	u32 mask = QCA8K_PORT_STATUS_TXMAC;
-+	u32 mask = QCA8K_PORT_STATUS_TXMAC | QCA8K_PORT_STATUS_RXMAC;
+@@ -1010,6 +1010,7 @@ static SIMPLE_DEV_PM_OPS(qca8k_pm_ops,
+ 			 qca8k_suspend, qca8k_resume);
  
- 	pr_debug("qca: port %i set status %i\n", port, enable);
- 
+ static const struct of_device_id qca8k_of_match[] = {
++	{ .compatible = "qca,qca8334" },
+ 	{ .compatible = "qca,qca8337" },
+ 	{ /* sentinel */ },
+ };
 -- 
 2.7.4
