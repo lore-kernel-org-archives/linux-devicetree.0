@@ -1,90 +1,61 @@
-Return-Path: <SRS0=ePA5=IB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-dm3nam03on0121.outbound.protection.outlook.com ([104.47.41.121]:5381
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752936AbeENMEY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 14 May 2018 08:04:24 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v4 3/6] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA controller bindings
-Date: Mon, 14 May 2018 20:03:04 +0800
-Message-ID: <20180514120307.15592-3-wen.he_1@nxp.com>
-In-Reply-To: <20180514120307.15592-1-wen.he_1@nxp.com>
-References: <20180514120307.15592-1-wen.he_1@nxp.com>
+Return-Path: <SRS0=wWZA=IK=zonque.org=daniel@kernel.org>
+Subject: Re: [PATCH] clk: Add driver for MAX9485
+References: <20180521085848.17192-1-daniel@zonque.org>
+ <20180523183320.GA15306@rob-hp-laptop>
+From: Daniel Mack <daniel@zonque.org>
+Message-ID: <7ba472cb-114d-8412-16ea-12e7e29e8267@zonque.org>
+Date: Wed, 23 May 2018 21:48:59 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, Wen He <wen.he_1@nxp.com>
+In-Reply-To: <20180523183320.GA15306@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the devicetree bindings for NXP Layerscape qDMA controller
-which could be found on NXP QorIQ Layerscape SoCs.
+Hi Rob,
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-change in v4:
-	- Rewrite the bindings document that follows generic DMA bindings file
+Thanks for the review!
 
-change in v3:
-	- no change
+On Wednesday, May 23, 2018 08:33 PM, Rob Herring wrote:
+> On Mon, May 21, 2018 at 10:58:48AM +0200, Daniel Mack wrote:
+>> From: Daniel Mack <zonque@gmail.com>
+>>
+>> This patch adds a driver for MAX9485, a programmable audio clock generator.
+>>
+>> The device requires a 27.000 MHz clock input. It can provide a gated
+>> buffered output of its input clock and two gated outputs of a PLL that can
+>> generate one out of 16 discrete frequencies. There is only one PLL however,
+>> so the two gated outputs will always have the same frequency but they can
+>> be switched individually.
+>>
+>> The driver for this device exposes 4 clocks in total:
+>>
+>> - MAX9485_MCLKOUT:      A gated, buffered output of the input clock
+>> - MAX9485_CLKOUT:       A PLL that can be configured to 16 different
+>> 			discrete frequencies
+>> - MAX9485_CLKOUT[1,2]:  Two gated outputs for MAX9485_CLKOUT
+>>
+>> Some PLL output frequencies can be achieved with different register
+>> settings. The driver will select the one with lowest jitter in such cases.
+>>
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>> ---
+>>   .../devicetree/bindings/clock/maxim,max9485.txt    |  59 ++++
+>>   drivers/clk/Kconfig                                |   8 +
+>>   drivers/clk/Makefile                               |   1 +
+>>   drivers/clk/clk-max9485.c                          | 379 +++++++++++++++++++++
+>>   include/dt-bindings/clock/maxim,max9485.h          |  19 ++
+> 
+> The 2 DT files should be a separate patch.
 
-change in v2:
-	- Remove indentation
-	- Add "Should be" before 'fsl,ls1021a-qdma'
-	- Replace 'channels' by 'dma-channels'
-	- Replace 'qdma@8390000' by 'dma-controller@8390000'
+Sure, I can do that. In order to keep the series bisectable however, 
+that would mean that the bindings come in first, and then the actual 
+implementation because that also depends on maxim,max9485.h. Is that okay?
 
- Documentation/devicetree/bindings/dma/fsl-qdma.txt |   41 ++++++++++++++++++++
- 1 files changed, 41 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+I agree with the rest of your comments.
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-new file mode 100644
-index 0000000..368c4e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-@@ -0,0 +1,41 @@
-+NXP Layerscape SoC qDMA Controller
-+==================================
-+
-+This device follows the generic DMA bindings defined in dma/dma.txt.
-+
-+Required properties:
-+
-+- compatible:		Must be one of
-+			 "fsl,ls1021a-qdma": for LS1021A Board
-+			 "fsl,ls1043a-qdma": for ls1043A Board
-+			 "fsl,ls1046a-qdma": for ls1046A Board
-+- reg:			Should contain the register's base address and length.
-+- interrupts:		Should contain a reference to the interrupt used by this
-+			device.
-+- interrupt-names:	Should contain interrupt names:
-+			 "qdma-error": the error interrupt
-+			 "qdma-queue": the queue interrupt
-+- queues:		Should contain number of queues supported.
-+
-+Optional properties:
-+
-+- dma-channels:		Number of DMA channels supported by the controller.
-+- big-endian:		If present registers and hardware scatter/gather descriptors
-+			of the qDMA are implemented in big endian mode, otherwise in little
-+			mode.
-+
-+Examples:
-+
-+	qdma: dma-controller@8390000 {
-+		compatible = "fsl,ls1021a-qdma";
-+		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
-+		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
-+		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "qdma-error", "qdma-queue";
-+		dma-channels = <8>;
-+		queues = <2>;
-+		big-endian;
-+	};
-+
-+DMA clients must use the format described in dma/dma.txt file.
--- 
-1.7.1
 
+Thanks,
+Daniel
