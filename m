@@ -1,54 +1,53 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v5 1/7] dt-bindings: display: bridge: lvds-transmitter: add ti,
- ds90c185
-Date: Wed, 23 May 2018 11:31:16 +0200
-Message-ID: <20180523093122.27859-2-peda@axentia.se>
-References: <20180523093122.27859-1-peda@axentia.se>
+From: Christophe ROULLIER <christophe.roullier@st.com>
+Subject: Re: [PATCH V3 8/8] dt-bindings: stm32: add compatible for syscon
+Date: Wed, 23 May 2018 09:32:04 +0000
+Message-ID: <4f6941a0-4b41-f2db-52b1-d45aa7287fa2@st.com>
+References: <1526890046-10565-1-git-send-email-christophe.roullier@st.com>
+ <1526890046-10565-9-git-send-email-christophe.roullier@st.com>
+ <20180522172238.GA26145@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180523093122.27859-1-peda@axentia.se>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel@ffwll.ch>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180522172238.GA26145@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <D17E18F3C92C5F41BBF9615748090EE7@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-Start list of actual chips compatible with "lvds-encoder".
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- .../devicetree/bindings/display/bridge/lvds-transmitter.txt       | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-index fd39ad34c383..50220190c203 100644
---- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-@@ -22,7 +22,13 @@ among others.
- 
- Required properties:
- 
--- compatible: Must be "lvds-encoder"
-+- compatible: Must be one or more of the following
-+  - "ti,ds90c185" for the TI DS90C185 FPD-Link Serializer
-+  - "lvds-encoder" for a generic LVDS encoder device
-+
-+  When compatible with the generic version, nodes must list the
-+  device-specific version corresponding to the device first
-+  followed by the generic version.
- 
- Required nodes:
- 
--- 
-2.11.0
+T24gMDUvMjIvMjAxOCAwNzoyMiBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1vbiwgTWF5
+IDIxLCAyMDE4IGF0IDEwOjA3OjI2QU0gKzAyMDAsIENocmlzdG9waGUgUm91bGxpZXIgd3JvdGU6
+DQo+PiBUaGlzIHBhdGNoIGRlc2NyaWJlcyBzeXNjb24gRFQgYmluZGluZ3MuDQo+Pg0KPj4gU2ln
+bmVkLW9mZi1ieTogQ2hyaXN0b3BoZSBSb3VsbGllciA8Y2hyaXN0b3BoZS5yb3VsbGllckBzdC5j
+b20+DQo+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9z
+dG0zMi50eHQgfCA1ICsrKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykN
+Cj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Fy
+bS9zdG0zMi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3N0bTMy
+LnR4dA0KPj4gaW5kZXggNjgwOGVkOS4uZTQ2ZWJhZCAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc3RtMzIudHh0DQo+PiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3N0bTMyLnR4dA0KPj4gQEAgLTgsMyArOCw4
+IEBAIHVzaW5nIG9uZSBvZiB0aGUgZm9sbG93aW5nIGNvbXBhdGlibGUgc3RyaW5nczoNCj4+ICAg
+ICBzdCxzdG0zMmY3NDYNCj4+ICAgICBzdCxzdG0zMmg3NDMNCj4+ICAgICBzdCxzdG0zMm1wMTU3
+DQo+PiArDQo+PiArUmVxdWlyZWQgbm9kZXM6DQo+PiArLSBzeXNjb246IHRoZSBzb2MgYnVzIG5v
+ZGUgbXVzdCBoYXZlIGEgc3lzdGVtIGNvbnRyb2xsZXIgbm9kZSBwb2ludGluZyB0byB0aGUNCj4+
+ICsgIGdsb2JhbCBjb250cm9sIHJlZ2lzdGVycywgd2l0aCB0aGUgY29tcGF0aWJsZSBzdHJpbmcN
+Cj4+ICsgICJzdCxzdG0zMm1wMTU3LXN5c2NmZyIsICJzeXNjb24iOw0KPiANCj4gUGxlYXNlIGRv
+bid0IG1peCBzb2MvYm9hcmQgYmluZGluZ3Mgd2l0aCBvdGhlciBub2Rlcy4gU28gcGVyaGFwcw0K
+PiBzdG0zMi1zeXNjb24udHh0Lg0KPiANCj4gUm9iDQo+IA0KDQpIaSBSb2IsDQoNCklzIGl0IG9r
+IGZvciB5b3Ugd2l0aCB0aGlzIHRyZWUgZmlsZToNCg0KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9zdG0zMi9zdG0zMi50eHQNCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9hcm0vc3RtMzIvc3RtMzItc3lzY29uLnR4dA0KCVdpdGggc3RtMzItc3lzY29uLnR4
+dDoNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+DQpTVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgUGxhdGZvcm1zIFN5c3RlbSBDb250cm9sbGVyDQoN
+ClByb3BlcnRpZXM6DQogIC0gY29tcGF0aWJsZSA6IHNob3VsZCBjb250YWluIHR3byB2YWx1ZXMu
+IEZpcnN0IHZhbHVlIG11c3QgYmUgOg0KCQktICIgc3Qsc3RtMzJtcDE1Ny1zeXNjZmcgIiAtIGZv
+ciBzdG0zMm1wMTU3IGJhc2VkIFNvQ3MsDQoJCXNlY29uZCB2YWx1ZSBtdXN0IGJlIGFsd2F5cyAi
+c3lzY29uIi4NCiAgLSByZWcgOiBvZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0
+Lg0KDQpFeGFtcGxlOg0KCXN5c2NmZzogc3lzdGVtLWNvbmZpZ0A1MDAyMDAwMCB7DQoJCWNvbXBh
+dGlibGUgPSAic3Qsc3RtMzJtcDE1Ny1zeXNjZmciLCAic3lzY29uIjsNCgkJcmVnID0gPDB4NTAw
+MjAwMDAgMHg0MDA+Ow0KCX07DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0NCg0KRG8gd2UgbmVlZCB0byB1cGRhdGUgYWxzbyBhbGwgTUNVIGZhbWls
+eSAoc3RtMzJmNCwgc3RtMzJoNywgc3RtMzJmNykgDQpwcm9wZXJ0eSB0byBiZSBjb2hlcmVudCA/
+DQoNClRoYW5rcyBmb3IgeW91ciBmZWVkYmFjay4NCg0KQ2hyaXN0b3BoZS4NCg0K
