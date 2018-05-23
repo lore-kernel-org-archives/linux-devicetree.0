@@ -1,96 +1,35 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] perf: hisi: fix uncore PMU index ID
-Date: Wed, 23 May 2018 17:42:20 +0100
-Message-ID: <20180523164219.GG2983@arm.com>
-References: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
- <20180521170554.GE21034@arm.com>
- <a301d72f-687c-0c4f-1d44-83e5bbad5e60@hisilicon.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: overlay: validate offset from property fixups
+Date: Wed, 23 May 2018 11:44:23 -0500
+Message-ID: <20180523164423.GA29515@rob-hp-laptop>
+References: <1526530791-18591-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a301d72f-687c-0c4f-1d44-83e5bbad5e60@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhangshaokun <zhangshaokun@hisilicon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Huiqiang Wang <wanghuiqiang@huawei.com>, linux-arm-kernel@lists.infradead.org, Linuxarm <linuxarm@huawei.com>
+In-Reply-To: <1526530791-18591-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 05:18:51PM +0800, Zhangshaokun wrote:
-> On 2018/5/22 1:05, Will Deacon wrote:
-> > Whilst I'd normally just accept PMU driver submissions for vendor PMUs,
-> > this part rang my alarm bells:
-> > 
-> >> diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-> >> index 443906e..dcd8e77 100644
-> >> --- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-> >> +++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-> >> @@ -238,19 +238,10 @@ MODULE_DEVICE_TABLE(acpi, hisi_hha_pmu_acpi_match);
-> >>  static int hisi_hha_pmu_init_data(struct platform_device *pdev,
-> >>  				  struct hisi_pmu *hha_pmu)
-> >>  {
-> >> -	unsigned long long id;
-> >>  	struct resource *res;
-> >> -	acpi_status status;
-> >> -
-> >> -	status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
-> >> -				       "_UID", NULL, &id);
-> >> -	if (ACPI_FAILURE(status))
-> >> -		return -EINVAL;
-> >> -
-> >> -	hha_pmu->index_id = id;
-> >>  
-> >>  	/*
-> >> -	 * Use SCCL_ID and UID to identify the HHA PMU, while
-> >> +	 * Use SCCL_ID and HHA index ID to identify the HHA PMU, while
-> >>  	 * SCCL_ID is in MPIDR[aff2].
-> >>  	 */
-> >>  	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
-> >> @@ -258,6 +249,13 @@ static int hisi_hha_pmu_init_data(struct platform_device *pdev,
-> >>  		dev_err(&pdev->dev, "Can not read hha sccl-id!\n");
-> >>  		return -EINVAL;
-> >>  	}
-> >> +
-> >> +	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
-> >> +				     &hha_pmu->index_id)) {
-> >> +		dev_err(&pdev->dev, "Can not read hha index-id!\n");
-> >> +		return -EINVAL;
-> >> +	}
-> > 
-> > Is this a new DT property? If so, please can you update the binding
-> > documentation and get an Ack from a DT maintainer? It's not clear to me
+On Wed, May 16, 2018 at 09:19:51PM -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
-> No, it is not a DT property. We don't support DT mode for this platform and
-> only support ACPI mode.
-
-Hmm, but by using the firmware-agnostic "device_property_read_u32"
-interface, aren't you implicitly supporting it via DT as well? In fact,
-don't you now fail the probe if this new property isn't present? Isn't
-that a regression?
-
-> > what a "hisilicon,idx-id" is, nor how I would generate on from firmware.
-> > 
+> The smatch static checker marks the data in offset as untrusted,
+> leading it to warn:
 > 
-> For HiSilicon this platform, it supports multi-sccl. each sccl has more than one uncore
-> PMUs. Like HHA uncore PMUs, each sccl has 2-HHA PMUs and idx-id is in _DSD package and
-> used to distinguish different HHA PMUs with the same sccl, as follow:
->     Name (_DSD, Package () {
->       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->       Package () {
->         Package () {"hisilicon,scl-id", 0x03},
->         Package () {"hisilicon,idx-id", 0x00},
->       }
->     })
+>   drivers/of/resolver.c:125 update_usages_of_a_phandle_reference()
+>   error: buffer underflow 'prop->value' 's32min-s32max'
+> 
+> Add check to verify that offset is within the property data.
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>  drivers/of/resolver.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-I'm still none the wiser about what this actually is. How is new _DSD crud
-supposed to be documented?
+Applied, thanks.
 
-Will
+Rob
