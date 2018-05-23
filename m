@@ -1,142 +1,76 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/5] gpio: syscon: Add gpio-syscon for rockchip
-Date: Wed, 23 May 2018 14:53:53 -0500
-Message-ID: <CAL_Jsq+VBspzCaLD2Wy=fyC-S+LKGZbVsB+b+Etkx91ioXOCuQ@mail.gmail.com>
-References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn>
- <6ffb43dc-55a5-14eb-eb18-3a731cdaf424@t-chip.com.cn> <CAL_Jsq+_QEBWdxW=J4oVGWeokc-+nMzxzX_pgCayaxg-ehivfQ@mail.gmail.com>
- <1685755.J6GI985WX3@diego>
+Subject: Re: [PATCH 1/6] dt-bindings: media: rcar-vin: Describe optional ep
+ properties
+Date: Wed, 23 May 2018 14:55:45 -0500
+Message-ID: <CAL_JsqKAku8JPC_aX40Q59QiNkO9r8qY=pCrOLF13mbQXYpTgw@mail.gmail.com>
+References: <1526488352-898-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1526488352-898-2-git-send-email-jacopo+renesas@jmondi.org>
+ <20180523162947.GA13661@rob-hp-laptop> <1709653.qERUERh18a@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1685755.J6GI985WX3@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Levin Du <djw@t-chip.com.cn>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1709653.qERUERh18a@avalon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, geert@glider.be, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 10:12 AM, Heiko St=C3=BCbner <heiko@sntech.de> wrot=
-e:
-> Hi Rob, Levin,
+On Wed, May 23, 2018 at 2:38 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Rob,
 >
-> sorry for being late to the party.
->
-> Am Mittwoch, 23. Mai 2018, 16:43:07 CEST schrieb Rob Herring:
->> On Tue, May 22, 2018 at 9:02 PM, Levin Du <djw@t-chip.com.cn> wrote:
->> > On 2018-05-23 2:02 AM, Rob Herring wrote:
->> >> On Fri, May 18, 2018 at 11:52:05AM +0800, djw@t-chip.com.cn wrote:
->> >>> From: Levin Du <djw@t-chip.com.cn>
->> >>>
->> >>> Some GPIOs sit in the GRF_SOC_CON registers of Rockchip SoCs,
->> >>> which do not belong to the general pinctrl.
->> >>>
->> >>> Adding gpio-syscon support makes controlling regulator or
->> >>> LED using these special pins very easy by reusing existing
->> >>> drivers, such as gpio-regulator and led-gpio.
->> >>>
->> >>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
->> >>>
->> >>> ---
->> >>>
->> >>> Changes in v2:
->> >>> - Rename gpio_syscon10 to gpio_mute in doc
->> >>>
->> >>> Changes in v1:
->> >>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
->> >>> - Add doc rockchip,gpio-syscon.txt
->> >>>
->> >>>   .../bindings/gpio/rockchip,gpio-syscon.txt         | 41
->> >>>
->> >>> ++++++++++++++++++++++
->> >>>
->> >>>   drivers/gpio/gpio-syscon.c                         | 30
->> >>>
->> >>> ++++++++++++++++
->> >>>
->> >>>   2 files changed, 71 insertions(+)
->> >>>   create mode 100644
->> >>>
->> >>> Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
->> >>>
->> >>> diff --git
->> >>> a/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
->> >>> b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
->> >>> new file mode 100644
->> >>> index 0000000..b1b2a67
->> >>> --- /dev/null
->> >>> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.tx=
-t
->> >>> @@ -0,0 +1,41 @@
->> >>> +* Rockchip GPIO support for GRF_SOC_CON registers
->> >>> +
->> >>> +Required properties:
->> >>> +- compatible: Should contain "rockchip,gpio-syscon".
->> >>> +- gpio-controller: Marks the device node as a gpio controller.
->> >>> +- #gpio-cells: Should be two. The first cell is the pin number and
->> >>> +  the second cell is used to specify the gpio polarity:
->> >>> +    0 =3D Active high,
->> >>> +    1 =3D Active low.
->> >>
->> >> There's no need for this child node. Just make the parent node a gpio
->> >> controller.
->> >>
->> >> Rob
+> On Wednesday, 23 May 2018 19:29:47 EEST Rob Herring wrote:
+>> On Wed, May 16, 2018 at 06:32:27PM +0200, Jacopo Mondi wrote:
+>> > Describe the optional endpoint properties for endpoint nodes of port@0
+>> > and port@1 of the R-Car VIN driver device tree bindings documentation.
 >> >
->> > Hi Rob, it is not clear to me. Do you suggest that the grf node should=
- be
->> > a
->> > gpio controller,
->> > like below?
+>> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> > ---
 >> >
->> > +    grf: syscon at ff100000 {
->> > +        compatible =3D "rockchip,gpio-syscon", "rockchip,rk3328-grf",
->> > "syscon", "simple-mfd";
+>> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 13 ++++++++++++-
+>> >  1 file changed, 12 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
+>> > b/Documentation/devicetree/bindings/media/rcar_vin.txt index
+>> > a19517e1..c53ce4e 100644
+>> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+>> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+>> > @@ -53,6 +53,16 @@ from local SoC CSI-2 receivers (port1) depending on
+>> > SoC.
+>> >
+>> >        from external SoC pins described in video-interfaces.txt[1].
+>> >        Describing more then one endpoint in port 0 is invalid. Only VIN
+>> >        instances that are connected to external pins should have port 0.
+>> >
+>> > +
+>> > +      - Optional properties for endpoint nodes of port@0:
+>> > +        - hsync-active: active state of the HSYNC signal, 0/1 for
+>> > LOW/HIGH
+>> > +     respectively. Default is active high.
+>> > +        - vsync-active: active state of the VSYNC signal, 0/1 for
+>> > LOW/HIGH
+>> > +     respectively. Default is active high.
+>> > +
+>> > +   If both HSYNC and VSYNC polarities are not specified, embedded
+>> > +   synchronization is selected.
 >>
->> Yes, but drop "rockchip,gpio-syscon" and "simple-mfd".
+>> No need to copy-n-paste from video-interfaces.txt. Just "see
+>> video-interfaces.txt" for the description is fine.
 >
-> I would disagree quite a bit here. The grf are the "general register file=
-s",
-> a bunch of registers used for quite a lot of things, and so it seems
-> among other users, also a gpio-controller for some more random pins
-> not controlled through the regular gpio controllers.
->
-> For a more fully stocked grf, please see
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/a=
-rch/arm/boot/dts/rk3288.dtsi#n855
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/a=
-rch/arm64/boot/dts/rockchip/rk3399.dtsi#n1338
->
-> So the gpio controller should definitly also be a subnode.
+> I would still explicitly list the properties that apply to this binding. I
+> agree that there's no need to copy & paste the description of those properties
+> though.
 
-Sigh, yes, if there are a bunch of functions needing subnodes like the
-above, then yes that makes sense. But that's not what has been
-presented. Please make some attempt at defining *all* the functions.
-An actual binding would be nice, but I'll settle for just a list of
-things. The list should have functions that have DT dependencies (like
-clocks for phys in the above) because until you do, you don't need
-child nodes.
+Yes, that's what I meant. List each property with "see
+video-interfaces.txt" for the description of each.
 
-> The gpio in question is called "mute", so I'd think the gpio-syscon drive=
-r
-> should just define a "rockchip,rk3328-gpio-mute" compatible and contain
-> all the register voodoo in the driver itself and not define it in the dt.
-
-Is there really just one GPIO? If it has a defined function, then is
-it really GP? Can you control direction? I know Linus W doesn't like
-that kind of abuse of GPIO.
-
-> So it should probably look like
->
-> grf: syscon at ff100000 {
->         compatible =3D "rockchip,rk3328-grf", "syscon", "simple-mfd";
->
->         [all the other syscon sub-devices]
->
->         gpio_mute: gpio-mute {
->                 compatible =3D "rockchip,rk3328-gpio-mute";
->                 gpio-controller;
->                 #gpio-cells =3D <2>;
->         };
->
->         [more other syscon sub-devices]
-> };
+Rob
