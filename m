@@ -1,35 +1,81 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [RESEND PATCH v2 0/2] gpu: drm/panel: Add DLC DLC0700YZG-1 support
-Date: Tue, 22 May 2018 11:48:10 +0200
-Message-ID: <20180522094812.31608-1-m.felsch@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 2/6] dt-bindings: Add the rzn1-clocks.h file
+Date: Wed, 23 May 2018 09:26:30 +0200
+Message-ID: <CAMuHMdWAU9wZkA+Z0BNAGrLV1WrCO3PgCTo2p=q3Mq9Tm6JBGA@mail.gmail.com>
+References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1526983321-41949-3-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdW-HUBRF4rLdfzixcyMUBg7+4XU+-3zayePoyeQiBZ8ZA@mail.gmail.com> <CAMMfpEyTORirKiE417AQzCLzxDTKmy83bwivpfJaHQsKUKMc_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMMfpEyTORirKiE417AQzCLzxDTKmy83bwivpfJaHQsKUKMc_w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: M P <buserror@gmail.com>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZSBhZGRzIHN1cHBvcnQgZm9yIHRoZSBETEMgRGlzcGxheSBDby4gRExDMDcwMFla
-Ry0xIDcuMCIgV1NWR0EKVEZUIExDRCBwYW5lbC4gVGhlIGN1c3RvbWVyIGlzbid0IGxpc3RlZCBh
-cyB2ZW5kb3Igc28gd2UgaGF2ZSB0byBhZGQgdGhlCnZlbmRvciBwcmVmaXggdG9vLgoKUGhpbGlw
-cCBaYWJlbCAoMik6CiAgZHQtYmluZGluZ3M6IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBETEMgRGlz
-cGxheSBDby4sIEx0ZC4KICBncHU6IGRybS9wYW5lbDogQWRkIERMQyBETEMwNzAwWVpHLTEgcGFu
-ZWwKCiAuLi4vZGlzcGxheS9wYW5lbC9kbGMsZGxjMDcwMHl6Zy0xLnR4dCAgICAgICAgfCAgNyAr
-KysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgfCAgMSAr
-CiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgfCAzMiArKysr
-KysrKysrKysrKysrKysrCiAzIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMoKykKIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9kbGMsZGxjMDcwMHl6Zy0xLnR4dAoKLS0gCjIuMTcuMAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Michel,
+
+On Wed, May 23, 2018 at 8:44 AM, M P <buserror@gmail.com> wrote:
+> On Tue, 22 May 2018 at 19:44, Geert Uytterhoeven <geert@linux-m68k.org>
+> wrote:
+>> On Tue, May 22, 2018 at 12:01 PM, Michel Pollet
+>> <michel.pollet@bp.renesas.com> wrote:
+>> > This adds the constants necessary to use the renesas,rzn1-clocks driver.
+>> >
+>> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+
+>> > --- /dev/null
+>> > +++ b/include/dt-bindings/clock/rzn1-clocks.h
+>
+>> Given this is part of the DT ABI, and there exist multiple different RZ/N1
+>> SoCs (and there are probably planned more), I wouldn't call this header
+>> file "rzn1-clocks.h", but e.g. "r9a06g032-clocks.h".
+>
+> Actually, no, there already are two r906g03X devices that will work
+> perfectly fine with this driver. We had that discussion before, and you
+> insist and me removing mentions of the rzn1 everywhere, however, this
+> applies to *two* devices already, and I'm supposed to upstream support for
+> them. I can't rename r9g06g032 because it is *inexact* that's why it's
+
+My worry is not that there are two r906g03X devices that will work fine
+with this driver, but that there will be other "rzn1" devices that will not
+work with these bindings (the header file is part of the bindings).
+Besides, RZ/N1D and RZ/N1S (Which apparently differ in packaging only?
+Oh no, RZ/N1D (the larger package) has less QSPI channels than RZ/N1S
+(the smaller package)), there's also (at least) RZ/N1L.
+
+> called rzn1. So unless you let me call it r9a06g0xx-clocks.h (which i know
+> you won't as per multiple previous discussions) this can't be called
+> r9a06g032 because it won't be fit for my purpose when I try to bring back
+> the RZ/N1S into the picture.
+
+You can add r9a06g033-clocks.h when adding support for RZ/N1S.
+
+> There are minor difference to clocking,
+
+Aha?
+
+> I don't know if Renesas plans to release any more rzn1's in this series,
+> but my little finger tells me this isn't the case. But regardless of what
+
+We thought the same thing when the first RZ member (RZ/A1H) showed up.
+Did we know this was not going to be the first SoC of a new RZ family, but
+the first SoC of the first subfamily (RZ/A) of the RZ family... And the
+various subfamilies bear not much similarity.
+
+> we plan, Marketing will screw it up.
+
+Correct. And to mitigate that, we have no other choice than to use the real
+part numbers to differentiate. Once bitten, twice shy.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
