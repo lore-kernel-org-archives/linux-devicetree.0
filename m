@@ -1,105 +1,41 @@
-From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH v6 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Wed, 23 May 2018 21:17:23 +0530
-Message-ID: <20fc1a67aafdd59a215c6a3d0f726a6c@codeaurora.org>
-References: <1526363564-13823-1-git-send-email-spanda@codeaurora.org>
- <1526363564-13823-3-git-send-email-spanda@codeaurora.org>
- <152648804247.210890.6352930842767133968@swboyd.mtv.corp.google.com>
+From: Christophe Roullier <christophe.roullier@st.com>
+Subject: [PATCH V4 4/8] ARM: dts: stm32: Add syscfg on stm32mp1
+Date: Wed, 23 May 2018 17:47:55 +0200
+Message-ID: <1527090479-5263-5-git-send-email-christophe.roullier@st.com>
+References: <1527090479-5263-1-git-send-email-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <152648804247.210890.6352930842767133968-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1527090479-5263-1-git-send-email-christophe.roullier@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, peppe.cavallaro@st.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, christophe.roullier@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNS0xNiAyMTo1NywgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgU2FuZGVl
-cCBQYW5kYSAoMjAxOC0wNS0xNCAyMjo1Mjo0MikKPj4gZGlmZiAtLWdpdCAKPj4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
-dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-dGksc242NWRzaTg2LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAw
-Li5iODJiYjU2Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIAo+PiBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4+IEBAIC0w
-LDAgKzEsODEgQEAKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICstIGludGVycnVwdHM6IFNw
-ZWNpZmllciBmb3IgdGhlIFNONjVEU0k4NiBpbnRlcnJ1cHQgbGluZS4KPj4gKy0gaHBkLWdwaW9z
-OiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb25zIGZvciBIUEQgcGluLgo+PiArCj4+
-ICstIGdwaW8tY29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xs
-ZXIuCj4+ICstICNncGlvLWNlbGxzICAgIDogU2hvdWxkIGJlIHR3by4gVGhlIGZpcnN0IGNlbGwg
-aXMgdGhlIHBpbiBudW1iZXIgCj4+IGFuZAo+PiArICAgICAgICAgICAgICAgICAgIHRoZSBzZWNv
-bmQgY2VsbCBpcyB1c2VkIHRvIHNwZWNpZnkgZmxhZ3MuCj4+ICsgICAgICAgICAgICAgICAgICAg
-U2VlIC4uLy4uL2dwaW8vZ3Bpby50eHQgZm9yIG1vcmUgaW5mb3JtYXRpb24uCj4+ICstICNwd20t
-Y2VsbHMgOiBTaG91bGQgYmUgb25lLiBTZWUgLi4vLi4vcHdtL3B3bS50eHQgZm9yIGRlc2NyaXB0
-aW9uIAo+PiBvZgo+PiArICAgICAgICAgICAgICAgdGhlIGNlbGwgZm9ybWF0cy4KPj4gKwo+PiAr
-LSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJyZWZjbGsiCj4+ICstIGNsb2NrczogT0YgZGV2aWNl
-LXRyZWUgY2xvY2sgc3BlY2lmaWNhdGlvbiBmb3IgcmVmY2xrIGlucHV0LiBUaGUgCj4+IHJlZmVy
-ZW5jZQo+IAo+IFdoYXQgaXMgIk9GIGRldmljZS10cmVlIC4qIHNwZWNpZmljYXRpb24iIHByb3Zp
-ZGluZz8gVGhpcyBpcyBhbGwgYW4gT0YKPiBkZXZpY2UtdHJlZSBzcGVjaWZpY2F0aW9uLgpPay4g
-aSB3aWxsIHJlbW92ZSBPRiBkZXZpY2UgdHJlZSwgb25seSBrZWVwIHNwZWNpZmljYXRpb24gZm9y
-IHJlZmNsayAKaW5wdXQuCj4gCj4+ICsgIGNsb2NrIHJhdGUgbXVzdCBiZSAxMiBNSHosIDE5LjIg
-TUh6LCAyNiBNSHosIDI3IE1IeiBvciAzOC40IE1Iei4KPj4gKwo+PiArUmVxdWlyZWQgbm9kZXM6
-Cj4+ICsKPj4gK1RoaXMgZGV2aWNlIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rp
-b25zIGFyZSBtb2RlbGxlZCB1c2luZyAKPj4gdGhlCj4+ICtPRiBncmFwaCBiaW5kaW5ncyBzcGVj
-aWZpZWQgaW4gCj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQu
-Cj4+ICsKPj4gKy0gVmlkZW8gcG9ydCAwIGZvciBEU0kgaW5wdXQKPj4gKy0gVmlkZW8gcG9ydCAx
-IGZvciBlRFAgb3V0cHV0Cj4+ICsKPj4gK0V4YW1wbGUKPj4gKy0tLS0tLS0KPj4gKwo+PiArZWRw
-LWJyaWRnZUAyZCB7Cj4+ICsgICAgICAgY29tcGF0aWJsZSA9ICJ0aSxzbjY1ZHNpODYiOwo+PiAr
-ICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArICAgICAgICNzaXplLWNlbGxzID0gPDA+
-Owo+PiArICAgICAgIHJlZyA9IDwweDJkPjsKPj4gKwo+PiArICAgICAgIGVuYWJsZS1ncGlvcyA9
-IDwmbXNtZ3BpbyAzMyBHUElPX0FDVElWRV9ISUdIPjsKPj4gKyAgICAgICBpbnRlcnJ1cHQtcGFy
-ZW50ID0gPCZncGlvMz47Cj4+ICsgICAgICAgaW50ZXJydXB0cyA9IDw0IElSUV9UWVBFX0VER0Vf
-RkFMTElORz47Cj4+ICsKPj4gKyAgICAgICB2Y2Npby1zdXBwbHkgPSA8JnBtODkxNl9sMTc+Owo+
-PiArICAgICAgIHZjY2Etc3VwcGx5ID0gPCZwbTg5MTZfbDY+Owo+PiArICAgICAgIHZwbGwtc3Vw
-cGx5ID0gPCZwbTg5MTZfbDE3PjsKPj4gKyAgICAgICB2Y2Mtc3VwcGx5ID0gPCZwbTg5MTZfbDY+
-Owo+PiArCj4+ICsgICAgICAgY2xvY2stbmFtZXMgPSAicmVmY2xrIjsKPj4gKyAgICAgICBjbG9j
-a3MgPSA8JmlucHV0X3JlZmNsaz47Cj4+ICsKPj4gKyAgICAgICBwb3J0cyB7Cj4+ICsgICAgICAg
-ICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKyAgICAgICAgICAgICAgICNzaXplLWNl
-bGxzID0gPDA+Owo+PiArCj4+ICsgICAgICAgICAgICAgICBwb3J0QDAgewo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICByZWcgPSA8MD47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ZWRwX2JyaWRnZV9pbjogZW5kcG9pbnQgewo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47Cj4gCj4gSG93IGRvIHdlIGtub3cgdGhl
-IG51bWJlciBvZiBsYW5lcyB0aGF0IGFyZSBjb25uZWN0ZWQgYW5kIGlmIHRoZXJlJ3MgCj4gb25l
-Cj4gY2hhbm5lbCAoQSkgb3IgdHdvIGNoYW5uZWxzIChBIGFuZCBCKT8gV291bGQgdGhlcmUgYmUg
-dHdvIGVuZHBvaW50cyBpbgo+IHRoYXQgY2FzZT8KQ3VycmVudGx5IHdlIGhhdmUgaGFyZCBjb2Rl
-ZCB0aGUgbnVtYmVyIG9mIGxhbmVzIHRvIDQgaW4gZHJpdmVyLiBBbmQgCnJlZ2FyZGluZyBzdXBw
-b3J0aW5nIDIgRFNJIGlucHV0IGNoYW5uZWxzIGR0LWJpbmRpbmcsIHdlIGFyZSBwbGFubmluZyB0
-byAKYWRkIHRob3NlIGVudHJpZXMgb25jZSB3ZSB1cGxvYWQgYSBwYXRjaHNldCBzdXBwb3J0IGR1
-YWwgZHNpIApjb25maWd1cmF0aW9uIGluIGJyaWRnZSBkcml2ZXIuCj4gCj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgICAgICAgICB9Owo+PiArCj4+ICsgICAgICAgICAg
-ICAgICBwb3J0QDEgewo+PiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4+ICsK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgZWRwX2JyaWRnZV9vdXQ6IGVuZHBvaW50IHsKPj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmVkcF9w
-YW5lbF9pbj47Cj4gCj4gVGhlIGhhcmR3YXJlIGxvb2tzIHRvIHN1cHBvcnQgc29tZSBzb3J0IG9m
-IGxhbmUgcmVudW1iZXJpbmcgc2NoZW1lLAo+IHdoZXJlIHRoZSBlRFAgbG9naWNhbCBsYW5lIDAg
-Y2FuIGJlIHJvdXRlZCB0aHJvdWdoIGEgZGlmZmVyZW50IHBpbiB0aGFuCj4gTUxQL04wLCBzYW1l
-IGZvciBsb2dpY2FsIGxhbmUgMSwgZXRjLiBJIGRvbid0IGhhdmUgYSB1c2UgY2FzZSBmb3IgdGhp
-cwo+IHJpZ2h0IG5vdywgYnV0IEkgaG9wZSB0aGF0IGl0IGNvdWxkIGJlIGFkZGVkIHNvbWV3aGVy
-ZSBpbiB0aGUgYmluZGluZyAKPiBhcwo+IGFuIG9wdGlvbmFsIHByb3BlcnR5IHRvIGRlc2NyaWJl
-IHRoaXMgbGFuZSByZW1hcHBpbmcgZmVhdHVyZS4gSXQgYWxzbwo+IGhhcyBzb21lIHNvcnQgb2Yg
-bGFuZSBwb2xhcml0eSBpbnZlcnNpb24gZmVhdHVyZS4gUGVyaGFwcyB0aGVyZSBuZWVkcyAKPiB0
-bwo+IGJlIGEgbGFuZS1jb25maWcgcHJvcGVydHkgdGhhdCBkb2VzIHRoaXMgcmVtYXBwaW5nIGFu
-ZCBpbnZlcnNpb24gd2l0aAo+IHR3byBjZWxscy4KT2suIEkgd2lsbCBhZGQgdGhpcyBmZWF0dXJl
-IHRvIGR0IGJpbmRpbmcuCj4gCj4gCWxhbmUtY29uZmlnID0gPDAgMD4sIC8qIExhbmUgMCBsb2dp
-Y2FsIGlzIGxhbmUgMCBwaHlzICghaW52KSAqLwo+IAkgICAgICAgICAgICAgIDwxIDA+LCAvKiBM
-YW5lIDEgbG9naWNhbCBpcyBsYW5lIDEgcGh5cyAoIWludikgKi8KPiAJCSAgICAgIDwyIDA+LCAv
-KiBMYW5lIDIgbG9naWNhbCBpcyBsYW5lIDIgcGh5cyAoIWludikgKi8KPiAJCSAgICAgIDwzIDA+
-OyAvKiBMYW5lIDMgbG9naWNhbCBpcyBsYW5lIDMgcGh5cyAoIWludikgKi8KPiAKPiBPcgo+IAo+
-IAlsYW5lLWNvbmZpZyA9IDwyIDE+LCAvKiBMYW5lIDIgbG9naWNhbCBpcyBsYW5lIDAgcGh5cyAo
-aW52KSAqLwo+IAkgICAgICAgICAgICAgIDwxIDA+LCAvKiBMYW5lIDEgbG9naWNhbCBpcyBsYW5l
-IDEgcGh5cyAoIWludikgKi8KPiAJCSAgICAgIDwzIDE+LCAvKiBMYW5lIDMgbG9naWNhbCBpcyBs
-YW5lIDIgcGh5cyAoaW52KSAqLwo+IAkJICAgICAgPDAgMD47IC8qIExhbmUgMCBsb2dpY2FsIGlz
-IGxhbmUgMyBwaHlzICghaW52KSAqLwo+IAo+IAo+PiArICAgICAgICAgICAgICAgICAgICAgICB9
-Owo+PiArICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICB9OwpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
-cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+System configuration controller is mainly used to manage
+the compensation cell and other IOs and system related
+settings.
+
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index bc3eddc..3db03a2 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -167,6 +167,11 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		syscfg: syscon@50020000 {
++			compatible = "st,stm32mp157-syscfg", "syscon";
++			reg = <0x50020000 0x400>;
++		};
++
+ 		usart1: serial@5c000000 {
+ 			compatible = "st,stm32h7-uart";
+ 			reg = <0x5c000000 0x400>;
+-- 
+1.9.1
