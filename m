@@ -1,87 +1,43 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
- from K+P
-Date: Thu, 24 May 2018 00:18:33 +0200
-Message-ID: <20180524001833.58b9b59d@jawa>
-References: <20180509153428.1440-1-lukma@denx.de>
-        <CAOMZO5AexXNEGVoXa9K_GAm+aFLNRQOXOhF_SdKAjV1qmuD2nA@mail.gmail.com>
-        <20180519140202.3449e3c1@jawa>
-        <CAOMZO5DoLwEmQz5BQHDLk8sBq7mDH_UxBjRA0RGKb+PunMYu-Q@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/6] Documentation: DT: Add optional 'timeout-sec'
+ property for sp805
+Date: Wed, 23 May 2018 15:29:15 -0700
+Message-ID: <20180523222915.GA16779@roeck-us.net>
+References: <1527107527-8093-1-git-send-email-ray.jui@broadcom.com>
+ <1527107527-8093-3-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//Jhrf4jMObQ6LFENPwbIPV1"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DoLwEmQz5BQHDLk8sBq7mDH_UxBjRA0RGKb+PunMYu-Q@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1527107527-8093-3-git-send-email-ray.jui@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
---Sig_//Jhrf4jMObQ6LFENPwbIPV1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 23, 2018 at 01:32:03PM -0700, Ray Jui wrote:
+> Update the SP805 binding document to add optional 'timeout-sec'
+> devicetree property
+> 
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  Documentation/devicetree/bindings/watchdog/arm,sp805.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> index de93a4d..9cd7470 100644
+> --- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> @@ -18,6 +18,8 @@ Required properties:
+>  
+>  Optional properties:
+>  - interrupts : Should specify WDT interrupt number.
+> +timeout-sec : Should specify default WDT timeout in seconds. If unset, the
+> +              default timeout in the driver is 30 seconds
 
-Hi Fabio,
+That looks odd, with the changed indentation and the missing '-'
+in front of 'timeout-sec'.
 
-> Hi Lukasz,
->=20
-> On Sat, May 19, 2018 at 9:02 AM, Lukasz Majewski <lukma@denx.de>
-> wrote:
->=20
-> > After removing imx53-kp-ddc and imx53-kp-common iomux subnodes I do
-> > see following errors in the dmesg (v4.17-rc5):
-> >
-> > imx53-pinctrl 53fa8000.iomuxc: function 'iomuxc' not supported
-> > imx53-pinctrl 53fa8000.iomuxc: invalid function iomuxc in map
-> > table =20
->=20
-> Could you please investigate this error?
->=20
-
-Ok.
-
-> I have just tried the following change on a imx53-qsb:
-> http://code.bulix.org/ik01yu-339697
-
-I've noticed that this is the "common" dtsi file:
-imx53-qsb-common.dtsi
-
-Is there any board inheriting it? Is it extending the iomux node with
-its own code ?
-
->=20
-> and it works as expected:
-> # dmesg  | grep iomux
-> [    0.100046] imx53-pinctrl 53fa8000.iomuxc: initialized IMX pinctrl
-> driver
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_//Jhrf4jMObQ6LFENPwbIPV1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlsF6LwACgkQAR8vZIA0
-zr20+gf+J2hrtfcLBfqnvvYkTZrGiMYqV6mhq7nE5vh0pxVezR1m0Uwv0iVZfeJL
-i5ELl7IFgS73Mn9zdLoEug4pBB+xBCt8kPg2ixO8YbohaDS1+gviOcSflmLY8Hsj
-9X7KMpKjjHQvlyF6uHGs38bLGbTysnk6E+Q+DBb6COReLpsLHequoQ5Aa63GTFVk
-IMj/PEpCnS1279An3eNK4WhwLFn8OrTXzJL9vFzr3MSQCRE+Ix9I0ik2yB8AwUhE
-CKpbpGvc3FZP/V3su73WLj1NhZBHwDNZQv1PBR6ntSuV9OEnjj3IqYkCDUtAtz8l
-mZk2UC1PanoYhjlZvRc9StMf7b0I4Q==
-=1ag9
------END PGP SIGNATURE-----
-
---Sig_//Jhrf4jMObQ6LFENPwbIPV1--
+Guenter
