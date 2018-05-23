@@ -1,130 +1,85 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v6 4/6] ARM: dts: Renesas RZ/N1 SoC base device tree file
-Date: Wed, 23 May 2018 11:06:33 +0200
-Message-ID: <20180523090633.jiasuisfu55a3pw2@verge.net.au>
-References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
- <1526983321-41949-5-git-send-email-michel.pollet@bp.renesas.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add GEther support
+Date: Wed, 23 May 2018 12:05:30 +0300
+Message-ID: <9f2c6e9b-a6a9-97f1-7899-3635230acd6f@cogentembedded.com>
+References: <a4230699-e46f-0782-e3b1-22d58b9033c8@cogentembedded.com>
+ <8910c197-cf1b-9ee9-9ddb-5d2f705a4b26@cogentembedded.com>
+ <CAMuHMdW9UzOGV_zh3NxugYrj0j0qszX+NFoZtFvZRD9CNMHt+w@mail.gmail.com>
+ <bdbfd13e-cf0c-e19a-b76f-5e8e024dca26@cogentembedded.com>
+ <20180523084100.ynv3zoqrikcxem5f@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526983321-41949-5-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180523084100.ynv3zoqrikcxem5f@verge.net.au>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 22, 2018 at 11:01:24AM +0100, Michel Pollet wrote:
-> This adds the Renesas RZ/N1D (Part #R9A06G032) SoC bare
-> bone support.
-> 
-> This currently only handles generic parts (gic, architected timer)
-> and a UART.
-> For simplicity sake, this also relies on the bootloader to set the
-> pinctrl and clocks.
-> 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+Hello!
 
-I am marking this and the following patch as deferred
-pending acceptance of the bindings it uses.
+On 5/23/2018 11:41 AM, Simon Horman wrote:
 
-> ---
->  arch/arm/boot/dts/r9a06g032.dtsi | 86 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 arch/arm/boot/dts/r9a06g032.dtsi
+>>>> Define the generic R8A77980 part of the GEther device node.
+>>>>
+>>>> Based on the original (and large) patch by Vladimir Barinov.
+>>>>
+>>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>
+>>> Thanks for your patch!
+>>>
+>>> With the below addressed:
+>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>>     Thanks!
+>>
+>>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+>>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+>>>> @@ -417,6 +417,17 @@
+>>>>                          dma-channels = <16>;
+>>>>                  };
+>>>>
+>>>> +               gether: ethernet@e7400000 {
+>>>> +                       compatible = "renesas,gether-r8a77980";
+>>>> +                       reg = <0 0xe7400000 0 0x1000>;
+>>>> +                       interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       clocks = <&cpg CPG_MOD 813>;
+>>>> +                       power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+>>>
+>>> resets = <&cpg 813>;
+>>
+>>     As usual...
+>>
+>>>
+>>>> +                       #address-cells = <1>;
+>>>> +                       #size-cells = <0>;
+>>>> +                       status = "disabled";
+>>>
+>>> Any default phy-mode needed?
+>>
+>>     A default "phy-mode" IMO make sense when the MAC supports a single
+>> PHY interface mode. In this case, both RMII and RGMII are supported, so
+>> I coulsn't choose a default...
 > 
-> diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-> new file mode 100644
-> index 0000000..c7764c7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
-> @@ -0,0 +1,86 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Base Device Tree Source for the Renesas RZ/N1D (R9A06G032)
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Europe Limited
-> + *
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/rzn1-clock.h>
-> +
-> +/ {
-> +	compatible = "renesas,r9a06g032", "renesas,rzn1";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&clock RZN1_DIV_CA7>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0>;
-> +		};
-> +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <1>;
-> +		};
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		interrupt-parent = <&gic>;
-> +		ranges;
-> +
-> +		clock: clocks@4000c000 {
-> +			compatible = "renesas,r9a06g032-clocks",
-> +					"renesas,rzn1-clocks";
-> +			reg = <0x4000c000 0x1000>;
-> +			status = "okay";
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		uart0: serial@40060000 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x40060000 0x400>;
-> +			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-> +			clocks = <&clock RZN1_CLK_UART0>;
-> +			clock-names = "baudclk";
-> +			status = "disabled";
-> +		};
-> +
-> +		gic: gic@44101000 {
-> +			compatible = "arm,cortex-a7-gic", "arm,gic-400";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			reg = <0x44101000 0x1000>, /* Distributer */
-> +			      <0x44102000 0x2000>, /* CPU interface */
-> +			      <0x44104000 0x2000>, /* Virt interface control */
-> +			      <0x44106000 0x2000>; /* Virt CPU interface */
-> +			interrupts =
-> +				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,cortex-a7-timer",
-> +			     "arm,armv7-timer";
-> +		interrupt-parent = <&gic>;
-> +		arm,cpu-registers-not-fw-configured;
-> +		always-on;
-> +		interrupts =
-> +			<GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+> I would think making an arbitrary choice is better than no choice.
+> How does the driver behave in the absence of a default?
+
+    The board DT *must* assign some "phy-mode" -- it's a required prop.
+    In this particular case, iff the mode is still unspecified, the driver 
+will select the MII mode for the RMII_MII reg (which is a reserved value for 
+this GEther)...
+
+[...]
+
+MBR, Sergei
