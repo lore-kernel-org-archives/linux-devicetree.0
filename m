@@ -1,113 +1,133 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: document Broadcom's BCM47xx
- partitions
-Date: Wed, 23 May 2018 13:34:20 +0200
-Message-ID: <20180523133420.34ffe221@bbrezillon>
-References: <20180509081729.28347-1-zajec5@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v6 4/4] ARM: dts: tegra: Work safely with 256 MB
+ Colibri-T20 modules
+Date: Wed, 23 May 2018 13:35:49 +0200
+Message-ID: <a8969b297da304c292e6587fba7fcc23@agner.ch>
+References: <1527069406-6359-1-git-send-email-krzk@kernel.org>
+ <1527069406-6359-4-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180509081729.28347-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Jonas Gorski <jonas.gorski@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527069406-6359-4-git-send-email-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Lucas Stach <dev@lynxeye.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAgOSBNYXkgMjAxOCAxMDoxNzoyOCArMDIwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
-NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Cj4gCj4gQnJvYWRjb20gYmFzZWQgaG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgcGFydGl0
-aW9ucyB3aGljaCBoYXZlIHRvIGJlCj4gZGlzY292ZXJlZCBpbiBhIHNwZWNpZmljIHdheS4gVGhl
-eSBhcmUgbm90IGZpeGVkIGFuZCB0aGVyZSBpcyBub3QgYW55Cj4gc3RhbmRhcmQgcGFydGl0aW9u
-IHRhYmxlLiBUaGlzIGNvbW1pdCBhZGRzIGFuZCBkZXNjcmliZXMgYSBuZXcgY3VzdG9tCj4gYmlu
-ZGluZyBmb3Igc3VjaCBkZXZpY2VzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJhZmHFgiBNacWCZWNr
-aSA8cmFmYWxAbWlsZWNraS5wbD4KCkFwcGxpZWQgYm90aC4KClRoYW5rcywKCkJvcmlzCgo+IC0t
-LQo+IFRoaXMgY29tbWl0IGRvY3VtZW50cyBhIG5ldyBiaW5kaW5nIGZvciBkZXNjcmliaW5nIHBh
-cnRpdGlvbnMuIEp1c3QgYXMgYQo+IHJlbWluZGVyOiB3ZSBhZ3JlZWQgdG8gdXNlICJjb21wYXRp
-YmxlIiBmb3IgdGhhdCBwdXJwb3NlIHRvIGF2b2lkCj4gL2d1ZXNzaW5nLy4gVGhlcmUgYXJlIHRv
-byBtYW55IGNhc2VzLCBkZXZpY2VzIGFuZCAvZm9ybWF0cy8gdG8ganVzdAo+IGJsaW5kbHkgdHJ5
-IGV2ZXJ5IHBvc3NpYmxlIHBhcnNlci4KPiAKPiBUaGlzIHdhcyBlLmcuIGRlc2NyaWJlZCBieSBC
-b3JpcyBpbiBoaXMgcGF0Y2hzZXQgMisgeWVhcnMgYWdvOgo+IFtSRkMgUEFUQ0ggMC83XSBtdGQ6
-IHBhcnRpdGlvbnM6IGFkZCBvZl9tYXRjaF90YWJsZSBzdXBwb3J0Cj4gaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDA3Ni5odG1s
-Cj4gCj4gUXVvdGU6Cj4gPiAgKDIpIHdlIGNhbid0IGp1c3Qgc2NhbiBmb3IgYWxsIHN1cHBvcnRl
-ZCBwYXJzZXJzIChsaWtlIHRoZSBibG9jayBzeXN0ZW0gZG9lcyksIHNpbmNlCj4gPiAgICAgIHRo
-ZXJlIGlzIGEgd2lkZSBkaXZlcnNpdHkgb2YgImZvcm1hdHMiIChubyBzdGFuZGFyZGl6YXRpb24p
-LCBhbmQgaXQgaXMgbm90Cj4gPiAgICAgIGFsd2F5cyBzYWZlIG9yIGVmZmljaWVudCB0byBhdHRl
-bXB0IHRvIGRvIHNvLCBwYXJ0aWN1bGFybHkgc2luY2UgbWFueSBvZgo+ID4gICAgICB0aGVtIGFs
-bG93IHRoZWlyIGRhdGEgc3RydWN0dXJlcyB0byBiZSBwbGFjZWQgYW55d2hlcmUgb24gdGhlIGZs
-YXNoLCBhbmQKPiA+ICAgICAgc28gcmVxdWlyZSBzY2FubmluZyB0aGUgZW50aXJlIGZsYXNoIGRl
-dmljZSB0byBmaW5kIHRoZW0uICAKPiAKPiBJIGJlbGlldmUgdGhpcyBzb2x1dGlvbiB3YXMgYWxz
-byBhY2tlZCBiYWNrIHRoZW4gYnkgUm9iOgo+IFtSRkMgUEFUQ0ggMy83XSBkb2M6IGR0OiBtdGQ6
-IHBhcnRpdGlvbjogYWRkIG9uLWZsYXNoIGZvcm1hdCBiaW5kaW5nCj4gaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDE1LURlY2VtYmVyLzA2NDEwMC5odG1s
-Cj4gCj4gVjI6IE1vdmUgZG9jdW1lbnRhdGlvbiB0byB0aGUgbmV3IGJyY20sYmNtOTQ3eHgtY2Zl
-LXBhcnRpdGlvbnMudHh0IGZpbGUKPiAgICAgYXMgc3VnZ2VzdGVkIGJ5IFJvYiAod2UgZG9uJ3Qg
-d2FudCB0byBibG9hdCBwYXJ0aXRpb24udHh0KS4KPiAgICAgU2xpZ2h0bHkgdXBkYXRlIGNvbW1p
-dCBtZXNzYWdlLgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9u
-LnR4dCAgICAgICAgICB8ICAyICstCj4gIC4uLi9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3eHgtY2Zl
-LXBhcnRpdGlvbnMudHh0ICAgIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVz
-IGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9ucy9i
-cmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25zLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiBpbmRleCAzNmYzYjc2
-OWE2MjYuLmE4ZjM4MjY0MmJhOSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbi50eHQKPiBAQCAtMTQsNyArMTQsNyBAQCBtZXRo
-b2QgaXMgdXNlZCBmb3IgYSBnaXZlbiBmbGFzaCBkZXZpY2UuIFRvIGRlc2NyaWJlIHRoZSBtZXRo
-b2QgdGhlcmUgc2hvdWxkIGJlCj4gIGEgc3Vibm9kZSBvZiB0aGUgZmxhc2ggZGV2aWNlIHRoYXQg
-aXMgbmFtZWQgJ3BhcnRpdGlvbnMnLiBJdCBtdXN0IGhhdmUgYQo+ICAnY29tcGF0aWJsZScgcHJv
-cGVydHksIHdoaWNoIGlzIHVzZWQgdG8gaWRlbnRpZnkgdGhlIG1ldGhvZCB0byB1c2UuCj4gIAo+
-IC1XZSBjdXJyZW50bHkgb25seSBkb2N1bWVudCBhIGJpbmRpbmcgZm9yIGZpeGVkIGxheW91dHMu
-Cj4gK0F2YWlsYWJsZSBiaW5kaW5ncyBhcmUgbGlzdGVkIGluIHRoZSAicGFydGl0aW9ucyIgc3Vi
-ZGlyZWN0b3J5Lgo+ICAKPiAgCj4gIEZpeGVkIFBhcnRpdGlvbnMKPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3
-eHgtY2ZlLXBhcnRpdGlvbnMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L210ZC9wYXJ0aXRpb25zL2JyY20sYmNtOTQ3eHgtY2ZlLXBhcnRpdGlvbnMudHh0Cj4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjFkNjFhMDI5Mzk1ZQo+IC0tLSAv
-ZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3Bh
-cnRpdGlvbnMvYnJjbSxiY205NDd4eC1jZmUtcGFydGl0aW9ucy50eHQKPiBAQCAtMCwwICsxLDQy
-IEBACj4gK0Jyb2FkY29tIEJDTTQ3eHggUGFydGl0aW9ucwo+ICs9PT09PT09PT09PT09PT09PT09
-PT09PT09PT0KPiArCj4gK0Jyb2FkY29tIGlzIG9uZSBvZiBoYXJkd2FyZSBtYW51ZmFjdHVyZXJz
-IHByb3ZpZGluZyBTb0NzIChCQ000N3h4KSB1c2VkIGluCj4gK2hvbWUgcm91dGVycy4gVGhlaXIg
-QkNNOTQ3eHggYm9hcmRzIHVzaW5nIENGRSBib290bG9hZGVyIGhhdmUgc2V2ZXJhbCBwYXJ0aXRp
-b25zCj4gK3dpdGhvdXQgYW55IG9uLWZsYXNoIHBhcnRpdGlvbiB0YWJsZS4gT24gc29tZSBkZXZp
-Y2VzIHRoZWlyIHNpemVzIGFuZC9vcgo+ICttZWFuaW5ncyBjYW4gYWxzbyB2YXJ5IHNvIGZpeGVk
-IHBhcnRpdGlvbmluZyBjYW4ndCBiZSB1c2VkLgo+ICsKPiArRGlzY292ZXJpbmcgcGFydGl0aW9u
-cyBvbiB0aGVzZSBkZXZpY2VzIGlzIHBvc3NpYmxlIHRoYW5rcyB0byBoYXZpbmcgYSBzcGVjaWFs
-Cj4gK2hlYWRlciBhbmQvb3IgbWFnaWMgc2lnbmF0dXJlIGF0IHRoZSBiZWdpbm5pbmcgb2YgZWFj
-aCBvZiB0aGVtLiBUaGV5IGFyZSBhbHNvCj4gK2Jsb2NrIGFsaWduZWQgd2hpY2ggaXMgaW1wb3J0
-YW50IGZvciBkZXRlcm1pbmlnIGEgc2l6ZS4KPiArCj4gK01vc3Qgb2YgcGFydGl0aW9ucyB1c2Ug
-QVNDSUkgdGV4dCBiYXNlZCBtYWdpYyBmb3IgZGV0ZXJtaW5pbmcgYSB0eXBlLiBNb3JlCj4gK2Nv
-bXBsZXggcGFydGl0aW9ucyAobGlrZSBUUlggd2l0aCBpdHMgSERSMCBtYWdpYykgbWF5IGluY2x1
-ZGUgZXh0cmEgaGVhZGVyCj4gK2NvbnRhaW5pbmcgc29tZSBkZXRhaWxzLCBpbmNsdWRpbmcgYSBs
-ZW5ndGguCj4gKwo+ICtBIGxpc3Qgb2Ygc3VwcG9ydGVkIHBhcnRpdGlvbnMgaW5jbHVkZXM6Cj4g
-KzEpIEJvb3Rsb2FkZXIgd2l0aCBCcm9hZGNvbSdzIENGRSAoQ29tbW9uIEZpcm13YXJlIEVudmly
-b25tZW50KQo+ICsyKSBOVlJBTSB3aXRoIGNvbmZpZ3VyYXRpb24vY2FsaWJyYXRpb24gZGF0YQo+
-ICszKSBEZXZpY2UgbWFudWZhY3R1cmVyJ3MgZGF0YSB3aXRoIHNvbWUgZGVmYXVsdCB2YWx1ZXMg
-KGUuZy4gU1NJRHMpCj4gKzQpIFRSWCBmaXJtd2FyZSBjb250YWluZXIgd2hpY2ggY2FuIGhvbGQg
-dXAgdG8gNCBzdWJwYXJ0aXRpb25zCj4gKzUpIEJhY2t1cCBUUlggZmlybXdhcmUgdXNlZCBhZnRl
-ciBmYWlsZWQgdXBncmFkZQo+ICsKPiArQXMgbWVudGlvbmVkIGVhcmxpZXIsIHJvbGUgb2Ygc29t
-ZSBwYXJ0aXRpb25zIG1heSBkZXBlbmQgb24gZXh0cmEgY29uZmlndXJhdGlvbi4KPiArRm9yIGV4
-YW1wbGUgYm90aDogbWFpbiBmaXJtd2FyZSBhbmQgYmFja3VwIGZpcm13YXJlIHVzZSB0aGUgc2Ft
-ZSBUUlggZm9ybWF0IHdpdGgKPiArdGhlIHNhbWUgaGVhZGVyLiBUbyBkaXN0aW5ndWlzaCBjdXJy
-ZW50bHkgdXNlZCBmaXJtd2FyZSBhIENGRSdzIGVudmlyb25tZW50Cj4gK3ZhcmlhYmxlICJib290
-cGFydGl0aW9uIiBpcyB1c2VkLgo+ICsKPiArCj4gK0RldmljZXMgdXNpbmcgQnJvYWRjb20gcGFy
-dGl0aW9ucyBkZXNjcmliZWQgYWJvdmUgc2hvdWxkIHNob3VsZCBoYXZlIGZsYXNoIG5vZGUKPiAr
-d2l0aCBhIHN1Ym5vZGUgbmFtZWQgInBhcnRpdGlvbnMiIHVzaW5nIGZvbGxvd2luZyBwcm9wZXJ0
-aWVzOgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlIDogKHJlcXVp
-cmVkKSBtdXN0IGJlICJicmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25zIgo+ICsKPiArRXhhbXBs
-ZToKPiArCj4gK2ZsYXNoQDAgewo+ICsJcGFydGl0aW9ucyB7Cj4gKwkJY29tcGF0aWJsZSA9ICJi
-cmNtLGJjbTk0N3h4LWNmZS1wYXJ0aXRpb25zIjsKPiArCX07Cj4gK307CgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNj
-dXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LW10ZC8K
+On 23.05.2018 11:56, Krzysztof Kozlowski wrote:
+> Colibri-T20 can come in 256 MB RAM (with 512 MB NAND) or 512 MB RAM
+> (with 1024 MB NAND) flavors.  Both of them will use the same DTSI
+> expecting the bootloader to do the fixup of /memory node.  However in
+> case it does not happen, let's stay on safe side by limiting the memory
+> to 256 MB for both versions of Colibri-T20.
+> 
+
+Maybe also mention the renaming stuff:
+
+"Rename to remove the unnecessary memory size from the device tree file
+name. While at it, also follow the typical Toradex SoC, module, carrier
+board hierarchy."
+
+--
+Stefan
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> RFT:
+> Not tested on 512 MB module as I have only the 256 MB one.
+> 
+> Changes since v5:
+> 1. Add "colibri" suffix to iris DTS (suggested by Stefan).
+> 
+> Changes since v4:
+> 1. Drop the 512 suffix from file names (suggested by Stefan).
+> 
+> Changes since v3:
+> 1. Reduce the memory in existing DTSI instead of creating a new one
+>    (suggested by Marcel).
+> 
+> Changes since v2:
+> 1. Do not add new compatible but use everywhere existing
+>    "toradex,colibri_t20-512" (suggested by Rob).
+> 
+> Changes since v1:
+> 1. Fix memory size in tegra20-colibri-256.dtsi (was working fine because
+>    my bootloader uses mem= argument).
+> ---
+>  arch/arm/boot/dts/Makefile                                       | 2 +-
+>  .../boot/dts/{tegra20-iris-512.dts => tegra20-colibri-iris.dts}  | 4 ++--
+>  .../boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri.dtsi}  | 9 +++++++--
+>  3 files changed, 10 insertions(+), 5 deletions(-)
+>  rename arch/arm/boot/dts/{tegra20-iris-512.dts =>
+> tegra20-colibri-iris.dts} (95%)
+>  rename arch/arm/boot/dts/{tegra20-colibri-512.dtsi =>
+> tegra20-colibri.dtsi} (98%)
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index ec2024ea8b1e..1c8bb55c0948 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1030,7 +1030,7 @@ dtb-$(CONFIG_ARCH_TANGO) += \
+>  	tango4-vantage-1172.dtb
+>  dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
+>  	tegra20-harmony.dtb \
+> -	tegra20-iris-512.dtb \
+> +	tegra20-colibri-iris.dtb \
+>  	tegra20-medcom-wide.dtb \
+>  	tegra20-paz00.dtb \
+>  	tegra20-plutux.dtb \
+> diff --git a/arch/arm/boot/dts/tegra20-iris-512.dts
+> b/arch/arm/boot/dts/tegra20-colibri-iris.dts
+> similarity index 95%
+> rename from arch/arm/boot/dts/tegra20-iris-512.dts
+> rename to arch/arm/boot/dts/tegra20-colibri-iris.dts
+> index 40126388946d..57f16c0e9917 100644
+> --- a/arch/arm/boot/dts/tegra20-iris-512.dts
+> +++ b/arch/arm/boot/dts/tegra20-colibri-iris.dts
+> @@ -1,10 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /dts-v1/;
+>  
+> -#include "tegra20-colibri-512.dtsi"
+> +#include "tegra20-colibri.dtsi"
+>  
+>  / {
+> -	model = "Toradex Colibri T20 512MB on Iris";
+> +	model = "Toradex Colibri T20 256/512 MB on Iris";
+>  	compatible = "toradex,iris", "toradex,colibri_t20-512", "nvidia,tegra20";
+>  
+>  	aliases {
+> diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+> b/arch/arm/boot/dts/tegra20-colibri.dtsi
+> similarity index 98%
+> rename from arch/arm/boot/dts/tegra20-colibri-512.dtsi
+> rename to arch/arm/boot/dts/tegra20-colibri.dtsi
+> index 5623ff8d128c..dc06b23183e1 100644
+> --- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+> +++ b/arch/arm/boot/dts/tegra20-colibri.dtsi
+> @@ -2,7 +2,7 @@
+>  #include "tegra20.dtsi"
+>  
+>  / {
+> -	model = "Toradex Colibri T20 512MB";
+> +	model = "Toradex Colibri T20 256/512 MB";
+>  	compatible = "toradex,colibri_t20-512", "nvidia,tegra20";
+>  
+>  	aliases {
+> @@ -11,7 +11,12 @@
+>  	};
+>  
+>  	memory@0 {
+> -		reg = <0x00000000 0x20000000>;
+> +		/*
+> +		 * Set memory to 256 MB to be safe as this could be used on
+> +		 * 256 or 512 MB module. It is expected from bootloader
+> +		 * to fix this up for 512 MB version.
+> +		 */
+> +		reg = <0x00000000 0x10000000>;
+>  	};
+>  
+>  	host1x@50000000 {
