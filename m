@@ -1,119 +1,217 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 3/6] dt-bindings: clock: renesas,rzn1-clocks: document
- RZ/N1 clock driver
-Date: Wed, 23 May 2018 10:42:10 -0500
-Message-ID: <CAL_JsqLqmwfGZcZseO6gB33BA04TLtwZ94VGKOL7TWp30bm44w@mail.gmail.com>
-References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
- <1526983321-41949-4-git-send-email-michel.pollet@bp.renesas.com>
- <20180522160913.GA7755@rob-hp-laptop> <CAMMfpEwn3+fCZZZ8ADNxjun+jzNSnH+8xPcA8OUS_jPUJ-o6LA@mail.gmail.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH RFC 00/24] Lima DRM driver
+Date: Wed, 23 May 2018 17:44:50 +0200
+Message-ID: <CAKMK7uFfnSLpcQ_MAbqkLfs8DyZS8BfiG5uuxgvynYc_Z7To_g@mail.gmail.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <940a5ee5-ff3e-e438-504e-f720f201fee6@gmail.com>
+ <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMMfpEwn3+fCZZZ8ADNxjun+jzNSnH+8xPcA8OUS_jPUJ-o6LA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: M P <buserror@gmail.com>
-Cc: Michel Pollet <michel.pollet@bp.renesas.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Qiang Yu <yuq825@gmail.com>
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 1:52 AM, M P <buserror@gmail.com> wrote:
-> Hi Rob,
->
-> On Tue, 22 May 2018 at 17:09, Rob Herring <robh@kernel.org> wrote:
->
->> On Tue, May 22, 2018 at 11:01:23AM +0100, Michel Pollet wrote:
->> > The Renesas RZ/N1 Family (Part #R9A06G0xx) requires a driver
->> > to provide the SoC clock infrastructure for Linux.
->> >
->> > This documents the driver bindings.
->> >
->> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
->> > ---
->> >  .../bindings/clock/renesas,rzn1-clocks.txt         | 44
-> ++++++++++++++++++++++
->> >  1 file changed, 44 insertions(+)
->> >  create mode 100644
-> Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
->> >
->> > diff --git
-> a/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
-> b/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
->> > new file mode 100644
->> > index 0000000..0c41137
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/clock/renesas,rzn1-clocks.txt
->> > @@ -0,0 +1,44 @@
->> > +* Renesas RZ/N1 Clock Driver
->> > +
->> > +This driver provides the clock infrastructure used by all the other
-> drivers.
->
->> Bindings document h/w not drivers.
->
->> > +
->> > +One of the 'special' feature of this infrastructure is that Linux
-> doesn't
->
->> Bindings are not just for Linux.
->
->> > +necessary 'own' all the clocks on the SoC, some other OS runs on
->> > +the Cortex-M3 core and that OS can access and claim it's own clocks.
->
->> How is this relevant to the binding?
->
-> Well you just said it, if the binding is not just for linux, it's probably
-> a good idea to mention it somewhere since I can promise you it's *not*
-> documented in the hardware manual. Whatever this binding is for, it's
-> relevant to point out it is different from the other clock drivers in the
-> same directory... ?
-
-That's not an uncommon issue (sometimes it's secure world that owns
-the clocks, not even a different processor). I'm just not sure what I
-do with this information. It doesn't tell me which clocks are owned by
-the M3 or not.
-
->> > +
->> > +Required Properties:
->> > +
->> > +  - compatible: Must be
->> > +    - "renesas,r9a06g032-clocks" for the RZ/N1D
->> > +    and "renesas,rzn1-clocks" as a fallback.
->
->> Is "clocks" how the chip reference manual refers to this block?
->
-> No, the block is called 'sysctrl' and has tons of other stuff in there.
-> I've tried multiple times to get a 'sysctrl' driver in the previous
-> versions of the patch, in various shape or form, and I can't because I'd be
-> supposed to 'document' binding for stuff that has no code, no purpose, no
-> testing, and have all wildly different topics. So, after some more
-> lengthily discussion with Geert, we've decided to make the 'primary'
-> feature of that block (clocks) as a driver, and see from there onward.
-
-If you are referring to Geert's reply on v4, then this is not how I
-interpreted it. I understood it as make the clock driver bind to the
-sysctrl node and the clock driver can register other functions like
-reset. Then later if you need multiple drivers, you can make an MFD
-driver that binds to the sysctrl node and creates child devices to
-bind sub-drivers (like clocks) to. But the DT doesn't change in the
-process wrt clocks.
-
-You don't have to have a driver for everything, but the binding should
-be as complete as possible and done in an extendable way. The way you
-have done it now is not. I can already see that at some point you will
-want to break things and do something like this:
-
-{
-  compatible = "renesas,r9a06g032-sysctrl";
-  ...
-  {
-    compatible = "renesas,r9a06g032-clocks";
-    ...
-  };
-};
-
-Which is likely wrong because there's no need to have a child node
-like that. The parent node can be the clock provider (and any other
-provider). There are cases when child nodes do make sense, but we need
-a more complete binding to make that decision. Evolving it one feature
-at a time doesn't work.
-
-Rob
+T24gV2VkLCBNYXkgMjMsIDIwMTggYXQgMzo1MiBQTSwgUWlhbmcgWXUgPHl1cTgyNUBnbWFpbC5j
+b20+IHdyb3RlOgo+IE9uIFdlZCwgTWF5IDIzLCAyMDE4IGF0IDU6MjkgUE0sIENocmlzdGlhbiBL
+w7ZuaWcKPiA8Y2tvZW5pZy5sZWljaHR6dW1lcmtlbkBnbWFpbC5jb20+IHdyb3RlOgo+PiBBbSAx
+OC4wNS4yMDE4IHVtIDExOjI3IHNjaHJpZWIgUWlhbmcgWXU6Cj4+Pgo+Pj4gS2VybmVsIERSTSBk
+cml2ZXIgZm9yIEFSTSBNYWxpIDQwMC80NTAgR1BVcy4KPj4+Cj4+PiBUaGlzIGltcGxlbWVudGF0
+aW9uIG1haW5seSB0YWtlIGFtZGdwdSBEUk0gZHJpdmVyIGFzIHJlZmVyZW5jZS4KPj4+Cj4+PiAt
+IE1hbGkgNHh4IEdQVXMgaGF2ZSB0d28ga2luZHMgb2YgcHJvY2Vzc29ycyBHUCBhbmQgUFAuIEdQ
+IGlzIGZvcgo+Pj4gICAgT3BlbkdMIHZlcnRleCBzaGFkZXIgcHJvY2Vzc2luZyBhbmQgUFAgaXMg
+Zm9yIGZyYWdtZW50IHNoYWRlcgo+Pj4gICAgcHJvY2Vzc2luZy4gRWFjaCBwcm9jZXNzb3IgaGFz
+IGl0cyBvd24gTU1VIHNvIHByY2Vzc29ycyB3b3JrIGluCj4+PiAgICB2aXJ0dWFsIGFkZHJlc3Mg
+c3BhY2UuCj4+PiAtIFRoZXJlJ3Mgb25seSBvbmUgR1AgYnV0IG11bHRpcGxlIFBQIChtYXggNCBm
+b3IgbWFsaSA0MDAgYW5kIDgKPj4+ICAgIGZvciBtYWxpIDQ1MCkgaW4gdGhlIHNhbWUgbWFsaSA0
+eHggR1BVLiBBbGwgUFBzIGFyZSBncm91cGVkCj4+PiAgICB0b2dhdGhlciB0byBoYW5kbGUgYSBz
+aW5nbGUgZnJhZ21lbnQgc2hhZGVyIHRhc2sgZGl2aWRlZCBieQo+Pj4gICAgRkIgb3V0cHV0IHRp
+bGVkIHBpeGVscy4gTWFsaSA0MDAgdXNlciBzcGFjZSBkcml2ZXIgaXMKPj4+ICAgIHJlc3BvbnNp
+YmxlIGZvciBhc3NpZ24gdGFyZ2V0IHRpbGVkIHBpeGVscyB0byBlYWNoIFBQLCBidXQgbWFsaQo+
+Pj4gICAgNDUwIGhhcyBhIEhXIG1vZHVsZSBjYWxsZWQgRExCVSB0byBkeW5hbWljYWxseSBiYWxh
+bmNlIGVhY2gKPj4+ICAgIFBQJ3MgbG9hZC4KPj4+IC0gVXNlciBzcGFjZSBkcml2ZXIgYWxsb2Nh
+dGUgYnVmZmVyIG9iamVjdCBhbmQgbWFwIGludG8gR1BVCj4+PiAgICB2aXJ0dWFsIGFkZHJlc3Mg
+c3BhY2UsIHVwbG9hZCBjb21tYW5kIHN0cmVhbSBhbmQgZHJhdyBkYXRhIHdpdGgKPj4+ICAgIENQ
+VSBtbWFwIG9mIHRoZSBidWZmZXIgb2JqZWN0LCB0aGVuIHN1Ym1pdCB0YXNrIHRvIEdQL1BQIHdp
+dGgKPj4+ICAgIGEgcmVnaXN0ZXIgZnJhbWUgaW5kaWNhdGluZyB3aGVyZSBpcyB0aGUgY29tbWFu
+ZCBzdHJlYW0gYW5kIG1pc2MKPj4+ICAgIHNldHRpbmdzLgo+Pj4gLSBUaGVyZSdzIG5vIGNvbW1h
+bmQgc3RyZWFtIHZhbGlkYXRpb24vcmVsb2NhdGlvbiBkdWUgdG8gZWFjaCB1c2VyCj4+PiAgICBw
+cm9jZXNzIGhhcyBpdHMgb3duIEdQVSB2aXJ0dWFsIGFkZHJlc3Mgc3BhY2UuIEdQL1BQJ3MgTU1V
+IHN3aXRjaAo+Pj4gICAgdmlydHVhbCBhZGRyZXNzIHNwYWNlIGJlZm9yZSBydW5uaW5nIHR3byB0
+YXNrcyBmcm9tIGRpZmZlcmVudAo+Pj4gICAgdXNlciBwcm9jZXNzLiBFcnJvciBvciBldmlsIHVz
+ZXIgc3BhY2UgY29kZSBqdXN0IGdldCBNTVUgZmF1bHQKPj4+ICAgIG9yIEdQL1BQIGVycm9yIElS
+USwgdGhlbiB0aGUgSFcvU1cgd2lsbCBiZSByZWNvdmVyZWQuCj4+PiAtIFVzZSBUVE0gYXMgTU0u
+IFRUTV9QTF9UVCB0eXBlIG1lbW9yeSBpcyB1c2VkIGFzIHRoZSBjb250ZW50IG9mCj4+PiAgICBs
+aW1hIGJ1ZmZlciBvYmplY3Qgd2hpY2ggaXMgYWxsb2NhdGVkIGZyb20gVFRNIHBhZ2UgcG9vbC4g
+YWxsCj4+PiAgICBsaW1hIGJ1ZmZlciBvYmplY3QgZ2V0cyBwaW5uZWQgd2l0aCBUVE1fUExfRkxB
+R19OT19FVklDVCB3aGVuCj4+PiAgICBhbGxvY2F0aW9uLCBzbyB0aGVyZSdzIG5vIGJ1ZmZlciBl
+dmljdGlvbiBhbmQgc3dhcCBmb3Igbm93LiBXZQo+Pj4gICAgbmVlZCByZXZlcnNlIGVuZ2luZWVy
+aW5nIHRvIHNlZSBpZiBhbmQgaG93IEdQL1BQIHN1cHBvcnQgTU1VCj4+PiAgICBmYXVsdCByZWNv
+dmVyeSAoY29udGludWUgZXhlY3V0aW9uKS4gT3RoZXJ3aXNlIHdlIGhhdmUgdG8KPj4+ICAgIHBp
+bi91bnBpbiBlYWNoIGVudm9sdmVkIGJ1ZmZlciB3aGVuIHRhc2sgY3JlYXRpb24vZGVsZXRpb24u
+Cj4+Cj4+Cj4+IFdlbGwgcGlubmluZyBhbGwgbWVtb3J5IGlzIHVzdWFsbHkgYSBuby1nbyBmb3Ig
+dXBzdHJlYW1pbmcuIEJ1dCBzaW5jZSB5b3UKPj4gYXJlIGFscmVhZHkgdXNpbmcgdGhlIGRybV9z
+Y2hlZCBmb3IgR1BVIHRhc2sgc2NoZWR1bGluZyB3aHkgYXJlIHlvdSBhY3R1YWxseQo+PiBuZWVk
+aW5nIHRoaXM/Cj4+Cj4+IFRoZSBzY2hlZHVsZXIgc2hvdWxkIHRha2UgY2FyZSBvZiBzaWduYWxp
+bmcgYWxsIGZlbmNlcyB3aGVuIHRoZSBoYXJkd2FyZSBpcwo+PiBkb25lIHdpdGggaXQncyBtYWdp
+YyBhbmQgdGhhdCBpcyBlbm91Z2ggZm9yIFRUTSB0byBub3RlIHRoYXQgYSBidWZmZXIgb2JqZWN0
+Cj4+IGlzIG1vdmFibGUgYWdhaW4gKGUuZy4gdW5waW4gdGhlbSkuCj4KPiBQbGVhc2UgY29ycmVj
+dCBtZSBpZiBJJ20gd3JvbmcuCj4KPiBPbmUgd2F5IHRvIGltcGxlbWVudCBldmljdGlvbi9zd2Fw
+IGlzIGxpa2UgdGhpczoKPiBjYWxsIHZhbGlkYXRpb24gb24gZWFjaCBidWZmZXJzIGludm9sdmVk
+IGluIGEgdGFzaywgYnV0IHRoaXMgd29uJ3QKPiBwcmV2ZW50IGl0IGZyb20KPiBldmljdGlvbi9z
+d2FwIHdoZW4gZXhlY3V0aW5nLCBzbyBhIEdQVSBNTVUgZmF1bHQgbWF5IGhhcHBlbiBhbmQgaW4g
+dGhlCj4gaGFuZGxlciB3ZSBuZWVkIHRvIHJlY292ZXIgdGhlIGJ1ZmZlciBldmljdGVkL3N3YXBw
+ZWQuCj4KPiBBbm90aGVyIHdheSBpcyBwaW4vdW5waW4gYnVmZmVycyBldm9sdmVkIHdoZW4gdGFz
+ayBjcmVhdGUvZnJlZS4KPgo+IEZpcnN0IHdheSBpcyBiZXR0ZXIgd2hlbiBtZW1vcnkgbG9hZCBp
+cyBsb3cgYW5kIHNlY29uZCB3YXkgaXMgYmV0dGVyIHdoZW4KPiBtZW1vcnkgbG9hZCBpcyBoaWdo
+LiBGaXJzdCB3YXkgYWxzbyBuZWVkIGxlc3MgbWVtb3J5Lgo+Cj4gU28gSSdkIHByZWZlciBmaXJz
+dCB3YXkgYnV0IGR1ZSB0byB0aGUgR1BVIE1NVSBmYXVsdAo+IEhXIG9wIG5lZWQgcmV2ZXJzZSBl
+bmdpbmVlcmluZywgSSBoYXZlIHRvIHBpbiBhbGwgYnVmZmVycyBub3cuIEFmdGVyCj4gdGhlIEhX
+IG9wIGlzIGNsZWFyLCBJIGNhbiBjaG9vc2Ugb25lIHdheSB0byBpbXBsZW1lbnQuCgpBbGwgdGhl
+IGRyaXZlcnMgdXNpbmcgdHRtIGhhdmUgc29tZXRoaW5nIHRoYXQgbG9va3MgbGlrZSB2cmFtLCBv
+ciBhCnJlcXVpcmVtZW50IHRvIG1vdmUgYnVmZmVycyBhcm91bmQuIEFmYWl1aSB0aGF0IGluY2x1
+ZGVzIHZpcnRpbyBkcm0KZHJpdmVyLiBGcm9tIHlvdXIgZGVzY3JpcHRpb24geW91IGRvbid0IGhh
+dmUgc3VjaCBhIHJlcXVpcmVtZW50LCBhbmQKdGhlbiBkb2luZyB3aGF0IGV0bmF2aXYgaGFzIGRv
+bmUgd291bGQgYmUgYSBsb3Qgc2ltcGxlci4gRXZlcnl0aGluZwp0aGF0J3Mgbm90IHJlbGF0ZWQg
+dG8gYnVmZmVyIG1vdmVtZW50IGhhbmRsaW5nIGlzIGFsc28gYXZhaWxhYmxlCm91dHNpZGUgb2Yg
+dHRtIGFscmVhZHkuCi1EYW5pZWwKCj4gUmVnYXJkcywKPiBRaWFuZwo+Cj4+Cj4+IENocmlzdGlh
+bi4KPj4KPj4KPj4+IC0gVXNlIGRybV9zY2hlZCBmb3IgR1BVIHRhc2sgc2NoZWR1bGUuIEVhY2gg
+T3BlbkdMIGNvbnRleHQgc2hvdWxkCj4+PiAgICBoYXZlIGEgbGltYSBjb250ZXh0IG9iamVjdCBp
+biB0aGUga2VybmVsIHRvIGRpc3Rpbmd1aXNoIHRhc2tzCj4+PiAgICBmcm9tIGRpZmZlcmVudCB1
+c2VyLiBkcm1fc2NoZWQgZ2V0cyB0YXNrIGZyb20gZWFjaCBsaW1hIGNvbnRleHQKPj4+ICAgIGlu
+IGEgZmFpciB3YXkuCj4+Pgo+Pj4gTm90IGltcGxlbWVudGVkOgo+Pj4gLSBEdW1wIGJ1ZmZlciBz
+dXBwb3J0Cj4+PiAtIFBvd2VyIG1hbmFnZW1lbnQKPj4+IC0gUGVyZm9ybWFuY2UgY291bnRlcgo+
+Pj4KPj4+IFRoaXMgcGF0Y2ggc2VyaWFsIGp1c3QgcGFjayBhIHBhaXIgb2YgLmMvLmggZmlsZXMg
+aW4gZWFjaCBwYXRjaC4KPj4+IEZvciB3aG9sZSBoaXN0b3J5IG9mIHRoaXMgZHJpdmVyJ3MgZGV2
+ZWxvcG1lbnQsIHNlZToKPj4+IGh0dHBzOi8vZ2l0aHViLmNvbS95dXEvbGludXgtbGltYS9jb21t
+aXRzL2xpbWEtNC4xNy1yYzQKPj4+Cj4+PiBNZXNhIGRyaXZlciBpcyBzdGlsbCBpbiBkZXZlbG9w
+bWVudCBhbmQgbm90IHJlYWR5IGZvciBkYWlseSB1c2FnZSwKPj4+IGJ1dCBjYW4gcnVuIHNvbWUg
+c2ltcGxlIHRlc3RzIGxpa2Uga21zY3ViZSBhbmQgZ2xhbXJrMiwgc2VlOgo+Pj4gaHR0cHM6Ly9n
+aXRodWIuY29tL3l1cS9tZXNhLWxpbWEKPj4+Cj4+PiBBbmRyZWkgUGF1bGF1ICgxKToKPj4+ICAg
+IGFybTY0L2R0czogYWRkIHN3aXRjaC1kZWxheSBmb3IgbWVzb24gbWFsaQo+Pj4KPj4+IExpbWEg
+UHJvamVjdCBEZXZlbG9wZXJzICgxMCk6Cj4+PiAgICBkcm0vbGltYTogYWRkIG1hbGkgNHh4IEdQ
+VSBoYXJkd2FyZSByZWdzCj4+PiAgICBkcm0vbGltYTogYWRkIGxpbWEgY29yZSBkcml2ZXIKPj4+
+ICAgIGRybS9saW1hOiBhZGQgR1BVIGRldmljZSBmdW5jdGlvbnMKPj4+ICAgIGRybS9saW1hOiBh
+ZGQgUE1VIHJlbGF0ZWQgZnVuY3Rpb25zCj4+PiAgICBkcm0vbGltYTogYWRkIFBQIHJlbGF0ZWQg
+ZnVuY3Rpb25zCj4+PiAgICBkcm0vbGltYTogYWRkIE1NVSByZWxhdGVkIGZ1bmN0aW9ucwo+Pj4g
+ICAgZHJtL2xpbWE6IGFkZCBHUFUgdmlydHVhbCBtZW1vcnkgc3BhY2UgaGFuZGluZwo+Pj4gICAg
+ZHJtL2xpbWE6IGFkZCBHRU0gcmVsYXRlZCBmdW5jdGlvbnMKPj4+ICAgIGRybS9saW1hOiBhZGQg
+R0VNIFByaW1lIHJlbGF0ZWQgZnVuY3Rpb25zCj4+PiAgICBkcm0vbGltYTogYWRkIG1ha2VmaWxl
+IGFuZCBrY29uZmlnCj4+Pgo+Pj4gUWlhbmcgWXUgKDEyKToKPj4+ICAgIGR0LWJpbmRpbmdzOiBh
+ZGQgc3dpdGNoLWRlbGF5IHByb3BlcnR5IGZvciBtYWxpLXV0Z2FyZAo+Pj4gICAgYXJtNjQvZHRz
+OiBhZGQgc3dpdGNoLWRlbGF5IGZvciBtZXNvbiBtYWxpCj4+PiAgICBSZXZlcnQgImRybTogTmVy
+ZiB0aGUgcHJlY2xvc2UgY2FsbGJhY2sgZm9yIG1vZGVybiBkcml2ZXJzIgo+Pj4gICAgZHJtL2xp
+bWE6IGFkZCBsaW1hIHVhcGkgaGVhZGVyCj4+PiAgICBkcm0vbGltYTogYWRkIEwyIGNhY2hlIGZ1
+bmN0aW9ucwo+Pj4gICAgZHJtL2xpbWE6IGFkZCBHUCByZWxhdGVkIGZ1bmN0aW9ucwo+Pj4gICAg
+ZHJtL2xpbWE6IGFkZCBCQ0FTVCByZWxhdGVkIGZ1bmN0aW9uCj4+PiAgICBkcm0vbGltYTogYWRk
+IERMQlUgcmVsYXRlZCBmdW5jdGlvbnMKPj4+ICAgIGRybS9saW1hOiBhZGQgVFRNIHN1YnN5c3Rl
+bSBmdW5jdGlvbnMKPj4+ICAgIGRybS9saW1hOiBhZGQgYnVmZmVyIG9iamVjdCBmdW5jdGlvbnMK
+Pj4+ICAgIGRybS9saW1hOiBhZGQgR1BVIHNjaGVkdWxlIHVzaW5nIERSTV9TQ0hFRAo+Pj4gICAg
+ZHJtL2xpbWE6IGFkZCBjb250ZXh0IHJlbGF0ZWQgZnVuY3Rpb25zCj4+Pgo+Pj4gU2ltb24gU2hp
+ZWxkcyAoMSk6Cj4+PiAgICBBUk06IGR0czogYWRkIGdwdSBub2RlIHRvIGV4eW5vczQKPj4+Cj4+
+PiAgIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktdXRnYXJkLnR4dCAgICAgICAgICB8ICAgNCAr
+Cj4+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQuZHRzaSAgICAgICAgICAgICAgICB8ICAz
+MyArKwo+Pj4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi5kdHNpICAg
+fCAgIDEgKwo+Pj4gICAuLi4vYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwtbWFsaS5kdHNpICAg
+ICAgfCAgIDEgKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDIgKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDEgKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vZHJtX2ZpbGUuYyAgICAgICAg
+ICAgICAgICAgICAgfCAgIDggKy0KPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZyAg
+ICAgICAgICAgICAgICAgIHwgICA5ICsKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvTWFrZWZp
+bGUgICAgICAgICAgICAgICAgIHwgIDE5ICsKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGlt
+YV9iY2FzdC5jICAgICAgICAgICAgIHwgIDY1ICsrKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vbGlt
+YS9saW1hX2JjYXN0LmggICAgICAgICAgICAgfCAgMzQgKysKPj4+ICAgZHJpdmVycy9ncHUvZHJt
+L2xpbWEvbGltYV9jdHguYyAgICAgICAgICAgICAgIHwgMTQzICsrKysrCj4+PiAgIGRyaXZlcnMv
+Z3B1L2RybS9saW1hL2xpbWFfY3R4LmggICAgICAgICAgICAgICB8ICA1MSArKwo+Pj4gICBkcml2
+ZXJzL2dwdS9kcm0vbGltYS9saW1hX2RldmljZS5jICAgICAgICAgICAgfCA0MDcgKysrKysrKysr
+KysrKysKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9kZXZpY2UuaCAgICAgICAgICAg
+IHwgMTM2ICsrKysrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZGxidS5jICAgICAg
+ICAgICAgICB8ICA3NSArKysKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9kbGJ1Lmgg
+ICAgICAgICAgICAgIHwgIDM3ICsrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZHJ2
+LmMgICAgICAgICAgICAgICB8IDQ2NiArKysrKysrKysrKysrKysrCj4+PiAgIGRyaXZlcnMvZ3B1
+L2RybS9saW1hL2xpbWFfZHJ2LmggICAgICAgICAgICAgICB8ICA3NyArKysKPj4+ICAgZHJpdmVy
+cy9ncHUvZHJtL2xpbWEvbGltYV9nZW0uYyAgICAgICAgICAgICAgIHwgNDU5ICsrKysrKysrKysr
+KysrKysKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW0uaCAgICAgICAgICAgICAg
+IHwgIDQxICsrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ2VtX3ByaW1lLmMgICAg
+ICAgICB8ICA2NiArKysKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW1fcHJpbWUu
+aCAgICAgICAgIHwgIDMxICsrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfZ3AuYyAg
+ICAgICAgICAgICAgICB8IDI5MyArKysrKysrKysrKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vbGlt
+YS9saW1hX2dwLmggICAgICAgICAgICAgICAgfCAgMzQgKysKPj4+ICAgZHJpdmVycy9ncHUvZHJt
+L2xpbWEvbGltYV9sMl9jYWNoZS5jICAgICAgICAgIHwgIDk4ICsrKysKPj4+ICAgZHJpdmVycy9n
+cHUvZHJtL2xpbWEvbGltYV9sMl9jYWNoZS5oICAgICAgICAgIHwgIDMyICsrCj4+PiAgIGRyaXZl
+cnMvZ3B1L2RybS9saW1hL2xpbWFfbW11LmMgICAgICAgICAgICAgICB8IDE1NCArKysrKysKPj4+
+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9tbXUuaCAgICAgICAgICAgICAgIHwgIDM0ICsr
+Cj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfb2JqZWN0LmMgICAgICAgICAgICB8IDEy
+MCArKysrKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX29iamVjdC5oICAgICAgICAg
+ICAgfCAgODcgKysrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcG11LmMgICAgICAg
+ICAgICAgICB8ICA4NSArKysKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9wbXUuaCAg
+ICAgICAgICAgICAgIHwgIDMwICsrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcHAu
+YyAgICAgICAgICAgICAgICB8IDQxOCArKysrKysrKysrKysrKysKPj4+ICAgZHJpdmVycy9ncHUv
+ZHJtL2xpbWEvbGltYV9wcC5oICAgICAgICAgICAgICAgIHwgIDM3ICsrCj4+PiAgIGRyaXZlcnMv
+Z3B1L2RybS9saW1hL2xpbWFfcmVncy5oICAgICAgICAgICAgICB8IDMwNCArKysrKysrKysrKwo+
+Pj4gICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3NjaGVkLmMgICAgICAgICAgICAgfCA0OTcg
+KysrKysrKysrKysrKysrKysrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfc2NoZWQu
+aCAgICAgICAgICAgICB8IDEyNiArKysrKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1h
+X3R0bS5jICAgICAgICAgICAgICAgfCA0MDkgKysrKysrKysrKysrKysKPj4+ICAgZHJpdmVycy9n
+cHUvZHJtL2xpbWEvbGltYV90dG0uaCAgICAgICAgICAgICAgIHwgIDQ0ICsrCj4+PiAgIGRyaXZl
+cnMvZ3B1L2RybS9saW1hL2xpbWFfdm0uYyAgICAgICAgICAgICAgICB8IDMxMiArKysrKysrKysr
+Kwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmggICAgICAgICAgICAgICAgfCAg
+NzMgKysrCj4+PiAgIGluY2x1ZGUvZHJtL2RybV9kcnYuaCAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAyMyArLQo+Pj4gICBpbmNsdWRlL3VhcGkvZHJtL2xpbWFfZHJtLmggICAgICAgICAgICAg
+ICAgICAgfCAxOTUgKysrKysrKwo+Pj4gICA0NCBmaWxlcyBjaGFuZ2VkLCA1NTY1IGluc2VydGlv
+bnMoKyksIDYgZGVsZXRpb25zKC0pCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vbGltYS9LY29uZmlnCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vbGltYS9NYWtlZmlsZQo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L2xpbWEvbGltYV9iY2FzdC5jCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vbGltYS9saW1hX2JjYXN0LmgKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9saW1hL2xpbWFfY3R4LmMKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9saW1hL2xpbWFfY3R4LmgKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9saW1hL2xpbWFfZGV2aWNlLmMKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9saW1hL2xpbWFfZGV2aWNlLmgKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9saW1hL2xpbWFfZGxidS5jCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vbGltYS9saW1hX2RsYnUuaAo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2xpbWEvbGltYV9kcnYuYwo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2xpbWEvbGltYV9kcnYuaAo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW0uYwo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW0uaAo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW1fcHJpbWUuYwo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9nZW1fcHJpbWUuaAo+Pj4gICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9ncC5jCj4+PiAgIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX2dwLmgKPj4+ICAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfbDJfY2FjaGUuYwo+Pj4gICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9sMl9jYWNoZS5oCj4+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX21tdS5jCj4+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX21tdS5oCj4+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX29iamVjdC5jCj4+PiAg
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX29iamVjdC5oCj4+
+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BtdS5jCj4+
+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BtdS5oCj4+
+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3BwLmMKPj4+
+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcHAuaAo+Pj4g
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9yZWdzLmgKPj4+
+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfc2NoZWQuYwo+
+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9zY2hlZC5o
+Cj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3R0bS5j
+Cj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3R0bS5o
+Cj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3ZtLmMK
+Pj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfdm0uaAo+
+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS91YXBpL2RybS9saW1hX2RybS5oCj4+Pgo+
+Pgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJp
+LWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoK
+CgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24K
+KzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
