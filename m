@@ -1,95 +1,265 @@
-From: Levin Du <djw@t-chip.com.cn>
-Subject: Re: [PATCH v2 2/5] gpio: syscon: Add gpio-syscon for rockchip
-Date: Wed, 23 May 2018 10:02:15 +0800
-Message-ID: <6ffb43dc-55a5-14eb-eb18-3a731cdaf424@t-chip.com.cn>
-References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn>
- <1526615528-9707-1-git-send-email-djw@t-chip.com.cn>
- <1526615528-9707-2-git-send-email-djw@t-chip.com.cn>
- <20180522180238.GA7328@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: David Collins <collinsd@codeaurora.org>
+Subject: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
+Date: Tue, 22 May 2018 19:43:17 -0700
+Message-ID: <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
+References: <cover.1527040878.git.collinsd@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180522180238.GA7328@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <cover.1527040878.git.collinsd@codeaurora.org>
+In-Reply-To: <cover.1527040878.git.collinsd@codeaurora.org>
+References: <cover.1527040878.git.collinsd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: David Collins <collinsd@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-23 2:02 AM, Rob Herring wrote:
-> On Fri, May 18, 2018 at 11:52:05AM +0800, djw@t-chip.com.cn wrote:
->> From: Levin Du <djw@t-chip.com.cn>
->>
->> Some GPIOs sit in the GRF_SOC_CON registers of Rockchip SoCs,
->> which do not belong to the general pinctrl.
->>
->> Adding gpio-syscon support makes controlling regulator or
->> LED using these special pins very easy by reusing existing
->> drivers, such as gpio-regulator and led-gpio.
->>
->> Signed-off-by: Levin Du <djw@t-chip.com.cn>
->>
->> ---
->>
->> Changes in v2:
->> - Rename gpio_syscon10 to gpio_mute in doc
->>
->> Changes in v1:
->> - Refactured for general gpio-syscon usage for Rockchip SoCs.
->> - Add doc rockchip,gpio-syscon.txt
->>
->>   .../bindings/gpio/rockchip,gpio-syscon.txt         | 41 ++++++++++++++++++++++
->>   drivers/gpio/gpio-syscon.c                         | 30 ++++++++++++++++
->>   2 files changed, 71 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
->> new file mode 100644
->> index 0000000..b1b2a67
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
->> @@ -0,0 +1,41 @@
->> +* Rockchip GPIO support for GRF_SOC_CON registers
->> +
->> +Required properties:
->> +- compatible: Should contain "rockchip,gpio-syscon".
->> +- gpio-controller: Marks the device node as a gpio controller.
->> +- #gpio-cells: Should be two. The first cell is the pin number and
->> +  the second cell is used to specify the gpio polarity:
->> +    0 = Active high,
->> +    1 = Active low.
-> There's no need for this child node. Just make the parent node a gpio
-> controller.
->
-> Rob
-Hi Rob, it is not clear to me. Do you suggest that the grf node should 
-be a gpio controller,
-like below?
+Introduce bindings for RPMh regulator devices found on some
+Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
+processor within the SoC to make PMIC regulator requests which
+are aggregated within the RPMh hardware block along with requests
+from other processors in the SoC to determine the final PMIC
+regulator hardware state.
 
-+    grf: syscon at ff100000 {
-+        compatible = "rockchip,gpio-syscon", "rockchip,rk3328-grf", 
-"syscon", "simple-mfd";
-+        //...
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio,syscon-dev = <&grf 0x0428 0>;
-+    };
+Signed-off-by: David Collins <collinsd@codeaurora.org>
+---
+ .../bindings/regulator/qcom,rpmh-regulator.txt     | 185 +++++++++++++++++++++
+ .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 ++++
+ 2 files changed, 221 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+ create mode 100644 include/dt-bindings/regulator/qcom,rpmh-regulator.h
 
-or just reserve the following case in the doc?
-
-+    grf: syscon at ff100000 {
-+        compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
-+        //...
-+    };
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+new file mode 100644
+index 0000000..aaac975
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+@@ -0,0 +1,185 @@
++Qualcomm Technologies, Inc. RPMh Regulators
 +
-+    gpio_mute: gpio-mute {
-+        compatible = "rockchip,gpio-syscon";
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio,syscon-dev = <&grf 0x0428 0>;
-+    };
-
-
-Thanks
-Levin
++rpmh-regulator devices support PMIC regulator management via the Voltage
++Regulator Manager (VRM) and Oscillator Buffer (XOB) RPMh accelerators.  The APPS
++processor communicates with these hardware blocks via a Resource State
++Coordinator (RSC) using command packets.  The VRM allows changing three
++parameters for a given regulator: enable state, output voltage, and operating
++mode.  The XOB allows changing only a single parameter for a given regulator:
++its enable state.  Despite its name, the XOB is capable of controlling the
++enable state of any PMIC peripheral.  It is used for clock buffers, low-voltage
++switches, and LDO/SMPS regulators which have a fixed voltage and mode.
++
++=======================
++Required Node Structure
++=======================
++
++RPMh regulators must be described in two levels of device nodes.  The first
++level describes the PMIC containing the regulators and must reside within an
++RPMh device node.  The second level describes each regulator within the PMIC
++which is to be used on the board.  Each of these regulators maps to a single
++RPMh resource.
++
++The names used for regulator nodes must match those supported by a given PMIC.
++Supported regulator node names:
++	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
++	PMI8998:	bob
++	PM8005:		smps1 - smps4
++
++========================
++First Level Nodes - PMIC
++========================
++
++- compatible
++	Usage:      required
++	Value type: <string>
++	Definition: Must be one of: "qcom,pm8998-rpmh-regulators",
++		    "qcom,pmi8998-rpmh-regulators" or
++		    "qcom,pm8005-rpmh-regulators".
++
++- qcom,pmic-id
++	Usage:      required
++	Value type: <string>
++	Definition: RPMh resource name suffix used for the regulators found on
++		    this PMIC.  Typical values: "a", "b", "c", "d", "e", "f".
++
++- vdd-s1-supply
++- vdd-s2-supply
++- vdd-s3-supply
++- vdd-s4-supply
++	Usage:      optional (PM8998 and PM8005 only)
++	Value type: <phandle>
++	Definition: phandle of the parent supply regulator of one or more of the
++		    regulators for this PMIC.
++
++- vdd-s5-supply
++- vdd-s6-supply
++- vdd-s7-supply
++- vdd-s8-supply
++- vdd-s9-supply
++- vdd-s10-supply
++- vdd-s11-supply
++- vdd-s12-supply
++- vdd-s13-supply
++- vdd-l1-l27-supply
++- vdd-l2-l8-l17-supply
++- vdd-l3-l11-supply
++- vdd-l4-l5-supply
++- vdd-l6-supply
++- vdd-l7-l12-l14-l15-supply
++- vdd-l9-supply
++- vdd-l10-l23-l25-supply
++- vdd-l13-l19-l21-supply
++- vdd-l16-l28-supply
++- vdd-l18-l22-supply
++- vdd-l20-l24-supply
++- vdd-l26-supply
++- vin-lvs-1-2-supply
++	Usage:      optional (PM8998 only)
++	Value type: <phandle>
++	Definition: phandle of the parent supply regulator of one or more of the
++		    regulators for this PMIC.
++
++- vdd-bob-supply
++	Usage:      optional (PMI8998 only)
++	Value type: <phandle>
++	Definition: BOB regulator parent supply phandle
++
++===============================
++Second Level Nodes - Regulators
++===============================
++
++- qcom,regulator-drms-modes
++	Usage:      required if regulator-allow-set-load is specified;
++		    VRM regulators only
++	Value type: <prop-encoded-array>
++	Definition: A list of integers specifying the PMIC regulator modes which
++		    can be configured at runtime based upon consumer load needs.
++		    Supported values are RPMH_REGULATOR_MODE_* which are defined
++		    in [1] (i.e. 0 to 3).
++
++- qcom,drms-mode-max-microamps
++	Usage:      required if regulator-allow-set-load is specified;
++		    VRM regulators only
++	Value type: <prop-encoded-array>
++	Definition: A list of integers specifying the maximum allowed load
++		    current in microamps for each of the modes listed in
++		    qcom,regulator-drms-modes (matched 1-to-1 in order).
++		    Elements must be specified in order from lowest to highest
++		    value.
++
++- qcom,always-wait-for-ack
++	Usage:      optional
++	Value type: <empty>
++	Definition: Boolean flag which indicates that the application processor
++		    must wait for an ACK or a NACK from RPMh for every request
++		    sent for this regulator including those which are for a
++		    strictly lower power state.
++
++Other properties defined in Documentation/devicetree/bindings/regulator.txt
++may also be used.  regulator-initial-mode and regulator-allowed-modes may be
++specified for VRM regulators using mode values from [1].  regulator-allow-bypass
++may be specified for BOB type regulators managed via VRM.
++regulator-allow-set-load may be specified for VRM regulators.  It is used in
++conjunction with qcom,regulator-drms-modes and qcom,drms-mode-max-microamps to
++define a dynamic total load current to mode mapping.
++
++[1] include/dt-bindings/regulator/qcom,rpmh-regulator.h
++
++========
++Examples
++========
++
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++
++&apps_rsc {
++	pm8998-rpmh-regulators {
++		compatible = "qcom,pm8998-rpmh-regulators";
++		qcom,pmic-id = "a";
++
++		vdd-l7-l12-l14-l15-supply = <&pm8998_s5>;
++
++		smps2 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++		};
++
++		pm8998_s5: smps5 {
++			regulator-min-microvolt = <1904000>;
++			regulator-max-microvolt = <2040000>;
++		};
++
++		ldo7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-allowed-modes =
++				<RPMH_REGULATOR_MODE_LPM
++				 RPMH_REGULATOR_MODE_HPM>;
++			regulator-allow-set-load;
++			qcom,regulator-drms-modes =
++				<RPMH_REGULATOR_MODE_LPM
++				 RPMH_REGULATOR_MODE_HPM>;
++			qcom,drms-mode-max-microamps = <10000 1000000>;
++		};
++
++		lvs1 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++	};
++
++	pmi8998-rpmh-regulators {
++		compatible = "qcom,pmi8998-rpmh-regulators";
++		qcom,pmic-id = "b";
++
++		bob {
++			regulator-min-microvolt = <3312000>;
++			regulator-max-microvolt = <3600000>;
++			regulator-allowed-modes =
++				<RPMH_REGULATOR_MODE_AUTO
++				 RPMH_REGULATOR_MODE_HPM>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
++		};
++	};
++};
+diff --git a/include/dt-bindings/regulator/qcom,rpmh-regulator.h b/include/dt-bindings/regulator/qcom,rpmh-regulator.h
+new file mode 100644
+index 0000000..86713dc
+--- /dev/null
++++ b/include/dt-bindings/regulator/qcom,rpmh-regulator.h
+@@ -0,0 +1,36 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
++
++#ifndef __QCOM_RPMH_REGULATOR_H
++#define __QCOM_RPMH_REGULATOR_H
++
++/*
++ * These mode constants may be used to specify modes for various RPMh regulator
++ * device tree properties (e.g. regulator-initial-mode).  Each type of regulator
++ * supports a subset of the possible modes.
++ *
++ * %RPMH_REGULATOR_MODE_RET:	Retention mode in which only an extremely small
++ *				load current is allowed.  This mode is supported
++ *				by LDO and SMPS type regulators.
++ * %RPMH_REGULATOR_MODE_LPM:	Low power mode in which a small load current is
++ *				allowed.  This mode corresponds to PFM for SMPS
++ *				and BOB type regulators.  This mode is supported
++ *				by LDO, HFSMPS, BOB, and PMIC4 FTSMPS type
++ *				regulators.
++ * %RPMH_REGULATOR_MODE_AUTO:	Auto mode in which the regulator hardware
++ *				automatically switches between LPM and HPM based
++ *				upon the real-time load current.  This mode is
++ *				supported by HFSMPS, BOB, and PMIC4 FTSMPS type
++ *				regulators.
++ * %RPMH_REGULATOR_MODE_HPM:	High power mode in which the full rated current
++ *				of the regulator is allowed.  This mode
++ *				corresponds to PWM for SMPS and BOB type
++ *				regulators.  This mode is supported by all types
++ *				of regulators.
++ */
++#define RPMH_REGULATOR_MODE_RET		0
++#define RPMH_REGULATOR_MODE_LPM		1
++#define RPMH_REGULATOR_MODE_AUTO	2
++#define RPMH_REGULATOR_MODE_HPM		3
++
++#endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
