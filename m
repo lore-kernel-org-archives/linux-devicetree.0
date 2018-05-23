@@ -1,47 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 06/11] dts: bindings: Restrict coresight tmc-etr
- scatter-gather mode
-Date: Wed, 23 May 2018 13:18:00 -0500
-Message-ID: <20180523181800.GA610@rob-hp-laptop>
-References: <1526661567-4578-1-git-send-email-suzuki.poulose@arm.com>
- <1526661567-4578-7-git-send-email-suzuki.poulose@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/15] clk: sunxi-ng: r40: Export video PLLs
+Date: Wed, 23 May 2018 13:20:01 -0500
+Message-ID: <20180523182001.GA4527@rob-hp-laptop>
+References: <20180519183127.2718-1-jernej.skrabec@siol.net>
+ <20180519183127.2718-4-jernej.skrabec@siol.net>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBVHBS3MAKGQEYVHIGUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1526661567-4578-7-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, sudeep.holla@arm.com, frowand.list@gmail.com, coresight@lists.linaro.org, mark.rutland@arm.com, Mike Leach <mike.leach@linaro.org>, John Horley <john.horley@arm.com>, Robert Walker <robert.walker@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20180519183127.2718-4-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 18, 2018 at 05:39:22PM +0100, Suzuki K Poulose wrote:
-> We are about to add the support for ETR builtin scatter-gather mode
-> for dealing with large amount of trace buffers. However, on some of
-> the platforms, using the ETR SG mode can lock up the system due to
-> the way the ETR is connected to the memory subsystem.
+On Sat, May 19, 2018 at 08:31:15PM +0200, Jernej Skrabec wrote:
+> Video PLLs need to be referenced in R40 DT as possible HDMI PHY parent.
 > 
-> In SG mode, the ETR performs READ from the scatter-gather table to
-> fetch the next page and regular WRITE of trace data. If the READ
-> operation doesn't complete(due to the memory subsystem issues,
-> which we have seen on a couple of platforms) the trace WRITE
-> cannot proceed leading to issues. So, we by default do not
-> use the SG mode, unless it is known to be safe on the platform.
-> We define a DT property for the TMC node to specify whether we
-> have a proper SG mode.
+> Export them.
 > 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: John Horley <john.horley@arm.com>
-> Cc: Robert Walker <robert.walker@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: frowand.list@gmail.com
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 2 ++
->  drivers/hwtracing/coresight/coresight-tmc.c         | 9 ++++++++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
+>  drivers/clk/sunxi-ng/ccu-sun8i-r40.h      | 8 ++++++--
+>  include/dt-bindings/clock/sun8i-r40-ccu.h | 4 ++++
+>  2 files changed, 10 insertions(+), 2 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
