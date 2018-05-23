@@ -1,52 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6] gpio: dwapb: Add support for 1 interrupt per port A GPIO
-Date: Wed, 23 May 2018 10:29:20 +0200
-Message-ID: <CACRpkdZAdhAn97iWPsym_K+A8iVwa3tRacpeEu=J6C=b+xAO6g@mail.gmail.com>
-References: <1526027497-32556-1-git-send-email-phil.edworthy@renesas.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH 2/2] ARM: dts: am437x: make edt-ft5x06 a wakeup source for
+ imx6 boards
+Date: Wed, 23 May 2018 10:30:13 +0200
+Message-ID: <20180523083013.7570-2-daniel@zonque.org>
+References: <20180523083013.7570-1-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526027497-32556-1-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Hoan Tran <hotran@apm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Michel Pollet <michel.pollet@bp.renesas.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180523083013.7570-1-daniel@zonque.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
+Cc: devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 11, 2018 at 10:31 AM, Phil Edworthy
-<phil.edworthy@renesas.com> wrote:
+The touchscreen driver no longer configures the device as wakeup source by
+default. A "wakeup-source" property is needed.
 
-> The DesignWare GPIO IP can be configured for either 1 interrupt or 1
-> per GPIO in port A, but the driver currently only supports 1 interrupt.
-> See the DesignWare DW_apb_gpio Databook description of the
-> 'GPIO_INTR_IO' parameter.
->
-> This change allows the driver to work with up to 32 interrupts, it will
-> get as many interrupts as specified in the DT 'interrupts' property.
-> It doesn't do anything clever with the different interrupts, it just calls
-> the same handler used for single interrupt hardware.
->
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> One point to mention is that I have made it possible for users to have
-> unconnected interrupts by specifying holes in the list of interrupts. This is
-> done by supporting the interrupts-extended DT prop.
-> However, I have no use for this and had to hack some test case for this.
-> Perhaps the driver should support 1 interrupt or all GPIOa as interrupts?
->
-> v6:
->  - Treat DT and ACPI the same as much as possible. Note that we can't use
->    platform_get_irq() to get the DT interrupts as they are in the port
->    sub-node and hence do not have an associated platform device.
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ arch/arm/boot/dts/am437x-sk-evm.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I already applied this patch in some version, can you check what is
-in my devel branch and send incremental patches on top if
-something needs changing?
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=devel&id=e6ca26abd37606ba4864f20c85d3fe4a2173b93f
-
-Sorry for not knowing by heart what was applied or when, it's
-just too much for me sometimes.
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
+index 4118802b7fea..f17ed89da06b 100644
+--- a/arch/arm/boot/dts/am437x-sk-evm.dts
++++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+@@ -537,6 +537,8 @@
+ 
+ 		touchscreen-size-x = <480>;
+ 		touchscreen-size-y = <272>;
++
++		wakeup-source;
+ 	};
+ 
+ 	tlv320aic3106: tlv320aic3106@1b {
+-- 
+2.14.3
