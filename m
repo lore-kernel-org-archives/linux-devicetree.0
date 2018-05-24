@@ -1,139 +1,213 @@
-Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:31184
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753114AbeE1DJK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:09:10 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 00/15] staging: typec: tcpci: move out of staging
-Date: Mon, 28 May 2018 10:52:32 +0800
-Message-Id: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=0Bfh=IL=endian.se=benjamin.lindqvist@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+References: <cover.1526990589.git.stefan@agner.ch> <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+From: Benjamin Lindqvist <benjamin.lindqvist@endian.se>
+Date: Thu, 24 May 2018 09:40:44 +0200
+Message-ID: <CAGefG56E+hqg6rso5RLvzcmDSen0Ea5AJeQrVmKEtU0RtSNcSg@mail.gmail.com>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Content-Type: multipart/alternative; boundary="000000000000ec0670056ceec4ef"
+To: Stefan Agner <stefan@agner.ch>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, Lucas Stach <dev@lynxeye.de>, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, Mirza Krak <mirza.krak@gmail.com>, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set attempts to move the tcpci drivers out of staging by fix
-some tcpci driver issues and define typec and power delivery device
-properties, the changes are verified on NXP PTN5110, which is a standard
-tcpci typec port controller device with power delivery support, tested
-power source and sink with drp config.
+--000000000000ec0670056ceec4ef
+Content-Type: text/plain; charset="UTF-8"
 
-Changes for v6:
-- Change function name to be typec_find_port_power/data_role for find
-  capability, and typec_find_power_role for find one specific power role.
-- Fix rt1711h driver move missing.
-- Add one patch to improve the error checking in tcpci driver, use IS_ERR()
-  instead of PTR_ERR_OR_ZERO().
-- Add Rob's Reviewed-by for patch [2/15].
-- Misc typos fix.
- 
-Changes for v5:
-- Use "power-role" and "data-role" for typec port power and data capability
-  property name.  
-- Use macro defintion instead of cryptic numbers for readability of
-  power delivery properties(PDO).
-- Add one tcpci driver binding string to be "nxp,ptn5110" to follow binding
-  name rule "<vendor prefix>,<device>".
-- Change operating power property name to be op-sink-microwatt.
-- Add one patch(remove unused tcpci_tcpc_config) to resolve bisectablitity
-  issue of patch usb: typec: add fwnode to tcpc.
-- A minor error handling change to keep the error path and success path
-  separate in patch: register port before request irq
-- Rebase to latest Greg's tree with max_snk_* removed.
+Hi Stefan (and all),
 
-Changes for v4:
-- Remove max-sink-* properties as we will purge max_snk_* in tcpm,
-  see patch set[4].
-- Get typec power and data type value via name string(patch 5).
-- Move finding typec and pd properties code from tcpci to tcpm(patch 6)
-- Add a compatible string for nxp ptn5110 typec controller in tcpci driver.
-  (patch 3)
-- Add set cc for drp toggling without try.src/snk in tcpm(patch 10), then
-  patch 11 can only update CCx bits for keep disconnect cc line open.
-- Update op-sink-microwatt-hours example value to be the right value in
-  micorwatts, and accordingly divide 1000 to get its miliwatts value
-  in patch 6.
-- Add Guenter's Reviewed-by for patch(8/9/12)
+First off, I apoloigize in advance if I'm deviating from common kernel
+mailing list courtesy -- this is my first time responding. I just have a
+comment on the NAND driver that I'd like to bring to the public.
 
-[4] https://www.spinics.net/lists/linux-usb/msg167261.html
+> +       switch (mtd->oobsize) {
+> ...
+> +       case 224:
+> +               mtd_set_ooblayout(mtd, &tegra_nand_oob_224_ops);
+> +               chip->ecc.strength = 8;
+> +               chip->ecc.bytes = 18;
+> +               value |= CFG_ECC_SEL | CFG_TVAL_8;
+> +               break; +       case 224:
 
-Changes for v3:
-- Use 2 properties to separate power and data capability of typec port:
-  "power-type" and "data-type", this is based on Heikki's typec class code
-  change[2]. use "try-power-role" to present if the typec port can support
-  Try.SNK or Try.SRC.
-- 4 sink properties(max_sink_mv/ma/mw and op_sink_mw) are kept because the
-  counterpart code is back, see revert patch[3], meanwhile I post a patch
-  to fix the reported problem of current source pdo select machinism(which
-  completely ignored those 4 sink settings), to see if we can keep current
-  code, once it was discussed and have conclusion I can update this
-  accordingly.
-- Use fwnode to get the connector node for dt setting parse.
+I am not sure how you arrived at this oobsize-based inference. I have not
+seen any explicit relation between oob size and ECC algorithm used in the
+reference manual. Indeed, the U-Boot I was working on (a fork of the
+Toradex 2015.04 U-Boot) always has oobsize == 224 but used either BCH[t=16]
+or RS[t=4]. In fact, we tried choosing RS[t=8] in U-Boot but we failed to
+make the BootROM decode this at all. So we had to use RS[t=4]. But changing
+the algorithm did not automatically change the oobsize, at least it didn't
+for us. So maybe you should consider if this is really the way to go about
+deciding which algorithm is used.
 
-Main changes for v2:
-- Typec properties are based on general usb connector bindings[1] proposed
-  by Andrzej Hajda, use the standard unit suffixes as defined in
-  property-units.txt.
-- Add 2 infra APIs to get power sink and source config from dt.
-- Don't change the set_cc api, to keep the uncontacted cc line open,
-  set cc1/cc2 to be open in tcpci driver when set polarity.
-- Directly enable vbus detect in tcpci driver rather than add a API.
-- Details added in each patch.
+Note that we're in fact using this patch set in Linux today, but we had to
+remove the oobsize inference part. Currently we're simply hard coding it to
+CFG_TVAL_4, but maybe it would be cleaner to add ECC algo as a board config
+instead, e.g. in the .dts file or whatever. This seems to be done by other
+vendors already, see for example excerpt of
+Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+below:
 
-[1] https://patchwork.kernel.org/patch/10231447/
-[2] https://patchwork.kernel.org/patch/10276483/
-[3] https://www.spinics.net/lists/linux-usb/msg166366.html
+ - ti,nand-ecc-opt: A string setting the ECC layout to use. One of:
+"sw" 1-bit Hamming ecc code via software
+"hw" <deprecated> use "ham1" instead
+"hw-romcode" <deprecated> use "ham1" instead
+"ham1" 1-bit Hamming ecc code
+"bch4" 4-bit BCH ecc code
+"bch8" 8-bit BCH ecc code
+"bch16" 16-bit BCH ECC code
+Refer below "How to select correct ECC scheme for your device ?"
 
-Li Jun (14):
-  dt-bindings: connector: add properties for typec
-  dt-bindings: usb: add documentation for typec port controller(TCPCI)
-  staging: typec: tcpci: add compatible string for nxp ptn5110
-  usb: typec: add fwnode to tcpc
-  usb: typec: add API to get typec basic port power and data config
-  usb: typec: tcpm: support get typec and pd config from device
-    properties
-  staging: typec: tcpci: remove unused tcpci_tcpc_config
-  staging: typec: tcpci: use IS_ERR() instead of PTR_ERR_OR_ZERO()
-  staging: typec: tcpci: enable vbus detection
-  typec: tcpm: add starting value for drp toggling
-  usb: typec: tcpm: set cc for drp toggling attach
-  staging: typec: tcpci: keep the disconnected cc line open
-  staging: typec: tcpci: Only touch target bit when enable vconn
-  staging: typec: tcpci: move tcpci drivers out of staging
+It seems as if this method would be equally applicable to Tegra NAND.
 
-Peter Chen (1):
-  staging: typec: tcpci: register port before request irq
+Best regards,
+Benjamin
 
- .../bindings/connector/usb-connector.txt           |  44 ++++++
- .../devicetree/bindings/usb/typec-tcpci.txt        |  49 +++++++
- drivers/staging/Kconfig                            |   2 -
- drivers/staging/Makefile                           |   1 -
- drivers/staging/typec/Kconfig                      |  22 ---
- drivers/staging/typec/Makefile                     |   2 -
- drivers/staging/typec/TODO                         |   5 -
- drivers/usb/typec/Kconfig                          |  15 +++
- drivers/usb/typec/Makefile                         |   2 +
- drivers/usb/typec/class.c                          |  50 +++++++
- drivers/{staging => usb}/typec/tcpci.c             |  66 +++++----
- drivers/{staging => usb}/typec/tcpci.h             |   0
- drivers/{staging => usb}/typec/tcpci_rt1711h.c     |   0
- drivers/usb/typec/tcpm.c                           | 148 +++++++++++++++++----
- include/dt-bindings/usb/pd.h                       |  62 +++++++++
- include/linux/usb/tcpm.h                           |   2 +
- include/linux/usb/typec.h                          |   3 +
- 17 files changed, 389 insertions(+), 84 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
- delete mode 100644 drivers/staging/typec/Kconfig
- delete mode 100644 drivers/staging/typec/Makefile
- delete mode 100644 drivers/staging/typec/TODO
- rename drivers/{staging => usb}/typec/tcpci.c (92%)
- rename drivers/{staging => usb}/typec/tcpci.h (100%)
- rename drivers/{staging => usb}/typec/tcpci_rt1711h.c (100%)
- create mode 100644 include/dt-bindings/usb/pd.h
+--000000000000ec0670056ceec4ef
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-2.7.4
+<div dir=3D"ltr"><span style=3D"color:rgb(34,34,34);font-family:arial,sans-=
+serif;font-style:normal;font-variant-ligatures:normal;font-variant-caps:nor=
+mal;font-weight:400;letter-spacing:normal;text-align:start;text-indent:0px;=
+text-transform:none;white-space:normal;word-spacing:0px;background-color:rg=
+b(255,255,255);text-decoration-style:initial;text-decoration-color:initial;=
+font-size:12.8px;float:none;display:inline">Hi Stefan (and all),</span><div=
+><span style=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font-style=
+:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:=
+400;letter-spacing:normal;text-align:start;text-indent:0px;text-transform:n=
+one;white-space:normal;word-spacing:0px;background-color:rgb(255,255,255);t=
+ext-decoration-style:initial;text-decoration-color:initial;font-size:12.8px=
+;float:none;display:inline"><br></span></div><div><span style=3D"font-size:=
+12.8px">First off, I apoloigize in advance if I&#39;m deviating from common=
+ kernel mailing list courtesy -- this is my first time responding. I just h=
+ave a comment on the NAND driver that I&#39;d like to bring to the public.<=
+/span></div><div><br></div><div><span style=3D"font-size:12.8px"><span styl=
+e=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font-size:12.8px;font=
+-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-w=
+eight:400;letter-spacing:normal;text-align:start;text-indent:0px;text-trans=
+form:none;white-space:normal;word-spacing:0px;background-color:rgb(255,255,=
+255);text-decoration-style:initial;text-decoration-color:initial;float:none=
+;display:inline">&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0switch (mtd-&gt;oobsize) =
+{</span><br style=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font-=
+size:12.8px;font-style:normal;font-variant-ligatures:normal;font-variant-ca=
+ps:normal;font-weight:400;letter-spacing:normal;text-align:start;text-inden=
+t:0px;text-transform:none;white-space:normal;word-spacing:0px;background-co=
+lor:rgb(255,255,255);text-decoration-style:initial;text-decoration-color:in=
+itial">&gt; ...=C2=A0</span></div><div><span style=3D"color:rgb(34,34,34);f=
+ont-family:arial,sans-serif;font-style:normal;font-variant-ligatures:normal=
+;font-variant-caps:normal;font-weight:400;letter-spacing:normal;text-align:=
+start;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0=
+px;background-color:rgb(255,255,255);text-decoration-style:initial;text-dec=
+oration-color:initial;font-size:12.8px;float:none;display:inline">&gt; +=C2=
+=A0 =C2=A0 =C2=A0 =C2=A0case 224:</span><br style=3D"color:rgb(34,34,34);fo=
+nt-family:arial,sans-serif;font-style:normal;font-variant-ligatures:normal;=
+font-variant-caps:normal;font-weight:400;letter-spacing:normal;text-align:s=
+tart;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0p=
+x;background-color:rgb(255,255,255);text-decoration-style:initial;text-deco=
+ration-color:initial;font-size:12.8px"><span style=3D"color:rgb(34,34,34);f=
+ont-family:arial,sans-serif;font-style:normal;font-variant-ligatures:normal=
+;font-variant-caps:normal;font-weight:400;letter-spacing:normal;text-align:=
+start;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0=
+px;background-color:rgb(255,255,255);text-decoration-style:initial;text-dec=
+oration-color:initial;font-size:12.8px;float:none;display:inline">&gt; +=C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mtd_set_ooblayout(mtd, =
+&amp;tegra_nand_oob_224_ops);</span><br style=3D"color:rgb(34,34,34);font-f=
+amily:arial,sans-serif;font-style:normal;font-variant-ligatures:normal;font=
+-variant-caps:normal;font-weight:400;letter-spacing:normal;text-align:start=
+;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;ba=
+ckground-color:rgb(255,255,255);text-decoration-style:initial;text-decorati=
+on-color:initial;font-size:12.8px"><span style=3D"color:rgb(34,34,34);font-=
+family:arial,sans-serif;font-style:normal;font-variant-ligatures:normal;fon=
+t-variant-caps:normal;font-weight:400;letter-spacing:normal;text-align:star=
+t;text-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;b=
+ackground-color:rgb(255,255,255);text-decoration-style:initial;text-decorat=
+ion-color:initial;font-size:12.8px;float:none;display:inline">&gt; +=C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0chip-&gt;ecc.strength =3D 8=
+;</span><br style=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font-=
+style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-we=
+ight:400;letter-spacing:normal;text-align:start;text-indent:0px;text-transf=
+orm:none;white-space:normal;word-spacing:0px;background-color:rgb(255,255,2=
+55);text-decoration-style:initial;text-decoration-color:initial;font-size:1=
+2.8px"><span style=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font=
+-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-w=
+eight:400;letter-spacing:normal;text-align:start;text-indent:0px;text-trans=
+form:none;white-space:normal;word-spacing:0px;background-color:rgb(255,255,=
+255);text-decoration-style:initial;text-decoration-color:initial;font-size:=
+12.8px;float:none;display:inline">&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0chip-&gt;ecc.bytes =3D 18;</span><br style=3D"color:rgb=
+(34,34,34);font-family:arial,sans-serif;font-style:normal;font-variant-liga=
+tures:normal;font-variant-caps:normal;font-weight:400;letter-spacing:normal=
+;text-align:start;text-indent:0px;text-transform:none;white-space:normal;wo=
+rd-spacing:0px;background-color:rgb(255,255,255);text-decoration-style:init=
+ial;text-decoration-color:initial;font-size:12.8px"><span style=3D"color:rg=
+b(34,34,34);font-family:arial,sans-serif;font-style:normal;font-variant-lig=
+atures:normal;font-variant-caps:normal;font-weight:400;letter-spacing:norma=
+l;text-align:start;text-indent:0px;text-transform:none;white-space:normal;w=
+ord-spacing:0px;background-color:rgb(255,255,255);text-decoration-style:ini=
+tial;text-decoration-color:initial;font-size:12.8px;float:none;display:inli=
+ne">&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0value |=3D=
+ CFG_ECC_SEL | CFG_TVAL_8;</span><br style=3D"color:rgb(34,34,34);font-fami=
+ly:arial,sans-serif;font-style:normal;font-variant-ligatures:normal;font-va=
+riant-caps:normal;font-weight:400;letter-spacing:normal;text-align:start;te=
+xt-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;backg=
+round-color:rgb(255,255,255);text-decoration-style:initial;text-decoration-=
+color:initial;font-size:12.8px"><span style=3D"color:rgb(34,34,34);font-fam=
+ily:arial,sans-serif;font-style:normal;font-variant-ligatures:normal;font-v=
+ariant-caps:normal;font-weight:400;letter-spacing:normal;text-align:start;t=
+ext-indent:0px;text-transform:none;white-space:normal;word-spacing:0px;back=
+ground-color:rgb(255,255,255);text-decoration-style:initial;text-decoration=
+-color:initial;font-size:12.8px;float:none;display:inline">&gt; +=C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;</span><span style=3D"fo=
+nt-size:12.8px">=C2=A0+=C2=A0 =C2=A0 =C2=A0 =C2=A0case 224:</span><div><br>=
+</div><div><span style=3D"font-size:12.8px">I am not sure how you arrived a=
+t this oobsize-based inference. I have not seen any explicit relation betwe=
+en oob size and ECC algorithm used in the reference manual. Indeed, the U-B=
+oot I was working on (a fork of the Toradex <span style=3D"color:rgb(34,34,=
+34);font-family:arial,sans-serif;font-size:12.8px;font-style:normal;font-va=
+riant-ligatures:normal;font-variant-caps:normal;font-weight:400;letter-spac=
+ing:normal;text-align:start;text-indent:0px;text-transform:none;white-space=
+:normal;word-spacing:0px;background-color:rgb(255,255,255);text-decoration-=
+style:initial;text-decoration-color:initial;float:none;display:inline">2015=
+.04=C2=A0</span>U-Boot) always has oobsize =3D=3D 224 but used either BCH[t=
+=3D16] or RS[t=3D4]. In fact, we tried choosing RS[t=3D8] in U-Boot but we =
+failed to make the BootROM decode this at all. So we had to use RS[t=3D4]. =
+But changing the algorithm did not automatically change the oobsize, at lea=
+st it didn&#39;t for us. So maybe you should consider if this is really the=
+ way to go about deciding which algorithm is used.</span></div><div><span s=
+tyle=3D"font-size:12.8px"><br></span></div><div><span style=3D"font-size:12=
+.8px">Note that we&#39;re in fact using this patch set in Linux today, but =
+we had to remove the oobsize inference part. Currently we&#39;re simply har=
+d coding it to CFG_TVAL_4, but=C2=A0</span><span style=3D"font-size:12.8px"=
+>maybe it would be cleaner to add ECC algo as a board config instead, e.g. =
+in the .dts file or whatever. This seems to be done by other vendors alread=
+y, see for example excerpt of=C2=A0</span><span style=3D"font-size:12.8px">=
+Documentation/devicetree/bindings/mtd/gpmc-nand.txt below:</span></div><div=
+><span style=3D"font-size:12.8px"><br></span></div><div><div><span style=3D=
+"font-size:12.8px">=C2=A0- ti,nand-ecc-opt:<span style=3D"white-space:pre">=
+		</span>A string setting the ECC layout to use. One of:</span></div><div><=
+span style=3D"font-size:12.8px"><span style=3D"white-space:pre">		</span>&q=
+uot;sw&quot;<span style=3D"white-space:pre">		</span>1-bit Hamming ecc code=
+ via software</span></div><div><span style=3D"font-size:12.8px"><span style=
+=3D"white-space:pre">		</span>&quot;hw&quot;<span style=3D"white-space:pre"=
+>		</span>&lt;deprecated&gt; use &quot;ham1&quot; instead</span></div><div>=
+<span style=3D"font-size:12.8px"><span style=3D"white-space:pre">		</span>&=
+quot;hw-romcode&quot;<span style=3D"white-space:pre">	</span>&lt;deprecated=
+&gt; use &quot;ham1&quot; instead</span></div><div><span style=3D"font-size=
+:12.8px"><span style=3D"white-space:pre">		</span>&quot;ham1&quot;<span sty=
+le=3D"white-space:pre">		</span>1-bit Hamming ecc code</span></div><div><sp=
+an style=3D"font-size:12.8px"><span style=3D"white-space:pre">		</span>&quo=
+t;bch4&quot;<span style=3D"white-space:pre">		</span>4-bit BCH ecc code</sp=
+an></div><div><span style=3D"font-size:12.8px"><span style=3D"white-space:p=
+re">		</span>&quot;bch8&quot;<span style=3D"white-space:pre">		</span>8-bit=
+ BCH ecc code</span></div><div><span style=3D"font-size:12.8px"><span style=
+=3D"white-space:pre">		</span>&quot;bch16&quot;<span style=3D"white-space:p=
+re">		</span>16-bit BCH ECC code</span></div><div><span style=3D"font-size:=
+12.8px"><span style=3D"white-space:pre">		</span>Refer below &quot;How to s=
+elect correct ECC scheme for your device ?&quot;</span></div><div style=3D"=
+font-size:12.8px"><br></div></div><div style=3D"font-size:12.8px">It seems =
+as if this method would be equally applicable to Tegra NAND.</div><div><spa=
+n style=3D"font-size:12.8px"><br></span></div><div>Best regards,</div></div=
+><div>Benjamin</div></div>
 
+--000000000000ec0670056ceec4ef--
