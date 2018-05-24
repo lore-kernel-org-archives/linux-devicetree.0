@@ -1,286 +1,82 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v12 1/2] cpufreq: Add Kryo CPU scaling driver
-Date: Thu, 24 May 2018 13:51:56 +0100
-Message-ID: <860be68b-cac0-9efc-b3c7-cc75b391a4c3@arm.com>
-References: <1527152242-31281-1-git-send-email-ilialin@codeaurora.org>
- <1527152242-31281-2-git-send-email-ilialin@codeaurora.org>
+From: Qiang Yu <yuq825@gmail.com>
+Subject: Re: [PATCH RFC 05/24] Revert "drm: Nerf the preclose callback for
+ modern drivers"
+Date: Thu, 24 May 2018 20:54:28 +0800
+Message-ID: <CAKGbVbuWT6oOqfKgomLd9LYnt-yZZuHSmmFtTxKgXqW=92QNvQ@mail.gmail.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <20180518092815.25280-6-yuq825@gmail.com>
+ <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
+ <CAKGbVbuSuAEF9Zd_usM5ika5KuFiY75jCG3gwOfeAExSciRV7Q@mail.gmail.com>
+ <c958599c-b0df-8b85-4123-daeed0fb07ac@amd.com>
+ <CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com>
+ <75f682e9-5b31-ad82-441f-b2c250edc0a0@amd.com>
+ <CAKGbVbttv2zJBaif2EVvqVFQo-xPM+x9hD6X5Lon-bNCNny01A@mail.gmail.com>
+ <569c175b-9e1e-a462-9d87-b64d6675ca88@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527152242-31281-2-git-send-email-ilialin@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
-Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <569c175b-9e1e-a462-9d87-b64d6675ca88@amd.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ilia,
-
-
-On 24/05/18 09:57, Ilia Lin wrote:
-> In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
-> the CPU frequency subset and voltage value of each OPP varies
-> based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
-> defines the voltage and frequency value based on the msm-id in SMEM
-> and speedbin blown in the efuse combination.
-> The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-> to provide the OPP framework with required information.
-> This is used to determine the voltage and frequency value for each OPP of
-> operating-points-v2 table when it is parsed by the OPP framework.
-> 
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> ---
->  drivers/cpufreq/Kconfig.arm          |  10 ++
->  drivers/cpufreq/Makefile             |   1 +
->  drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
->  drivers/cpufreq/qcom-cpufreq-kryo.c  | 194 +++++++++++++++++++++++++++++++++++
->  4 files changed, 208 insertions(+)
->  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
-> 
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index de55c7d..0bfd40e 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -124,6 +124,16 @@ config ARM_OMAP2PLUS_CPUFREQ
->  	depends on ARCH_OMAP2PLUS
->  	default ARCH_OMAP2PLUS
->  
-> +config ARM_QCOM_CPUFREQ_KRYO
-> +	bool "Qualcomm Kryo based CPUFreq"
-> +	depends on QCOM_QFPROM
-> +	depends on QCOM_SMEM
-> +	select PM_OPP
-> +	help
-> +	  This adds the CPUFreq driver for Qualcomm Kryo SoC based boards.
-> +
-> +	  If in doubt, say N.
-> +
->  config ARM_S3C_CPUFREQ
->  	bool
->  	help
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index 8d24ade..fb4a2ec 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -65,6 +65,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
->  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
->  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
->  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
->  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index 3b585e4..77d6ab8 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -118,6 +118,9 @@
->  
->  	{ .compatible = "nvidia,tegra124", },
->  
-> +	{ .compatible = "qcom,apq8096", },
-> +	{ .compatible = "qcom,msm8996", },
-> +
->  	{ .compatible = "st,stih407", },
->  	{ .compatible = "st,stih410", },
->  
-> diff --git a/drivers/cpufreq/qcom-cpufreq-kryo.c b/drivers/cpufreq/qcom-cpufreq-kryo.c
-> new file mode 100644
-> index 0000000..9fe379c
-> --- /dev/null
-> +++ b/drivers/cpufreq/qcom-cpufreq-kryo.c
-> @@ -0,0 +1,194 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +/*
-> + * In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO processors,
-> + * the CPU frequency subset and voltage value of each OPP varies
-> + * based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
-> + * defines the voltage and frequency value based on the msm-id in SMEM
-> + * and speedbin blown in the efuse combination.
-> + * The qcom-cpufreq-kryo driver reads the msm-id and efuse value from the SoC
-> + * to provide the OPP framework with required information.
-> + * This is used to determine the voltage and frequency value for each OPP of
-> + * operating-points-v2 table when it is parsed by the OPP framework.
-> + */
-> +
-> +#include <linux/cpu.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-> +#include <linux/slab.h>
-> +#include <linux/soc/qcom/smem.h>
-> +
-> +#define MSM_ID_SMEM	137
-> +
-> +enum _msm_id {
-> +	MSM8996V3 = 0xF6ul,
-> +	APQ8096V3 = 0x123ul,
-> +	MSM8996SG = 0x131ul,
-> +	APQ8096SG = 0x138ul,
-> +};
-> +
-> +enum _msm8996_version {
-> +	MSM8996_V3,
-> +	MSM8996_SG,
-> +	NUM_OF_MSM8996_VERSIONS,
-> +};
-> +
-> +static enum _msm8996_version __init qcom_cpufreq_kryo_get_msm_id(void)
-> +{
-> +	size_t len;
-> +	u32 *msm_id;
-> +	enum _msm8996_version version;
-> +
-> +	msm_id = qcom_smem_get(QCOM_SMEM_HOST_ANY, MSM_ID_SMEM, &len);
-> +	/* The first 4 bytes are format, next to them is the actual msm-id */
-> +	msm_id++;
-> +
-> +	switch ((enum _msm_id)*msm_id) {
-> +	case MSM8996V3:
-> +	case APQ8096V3:
-> +		version = MSM8996_V3;
-> +		break;
-> +	case MSM8996SG:
-> +	case APQ8096SG:
-> +		version = MSM8996_SG;
-> +		break;
-> +	default:
-> +		version = NUM_OF_MSM8996_VERSIONS;
-> +	}
-> +
-> +	return version;
-> +}
-> +
-> +static int qcom_cpufreq_kryo_probe(struct platform_device *pdev)
-> +{
-> +	struct opp_table *opp_tables[NR_CPUS] = {0};
-> +	struct platform_device *cpufreq_dt_pdev;
-> +	enum _msm8996_version msm8996_version;
-> +	struct nvmem_cell *speedbin_nvmem;
-> +	struct device_node *np;
-> +	struct device *cpu_dev;
-> +	unsigned cpu;
-> +	u8 *speedbin;
-> +	u32 versions;
-> +	size_t len;
-> +	int ret;
-> +
-> +	cpu_dev = get_cpu_device(0);
-> +	if (NULL == cpu_dev)
-> +		return -ENODEV;
-> +
-> +	msm8996_version = qcom_cpufreq_kryo_get_msm_id();
-> +	if (NUM_OF_MSM8996_VERSIONS == msm8996_version) {
-> +		dev_err(cpu_dev, "Not Snapdragon 820/821!");
-> +		return -ENODEV;
-> +	}
-> +
-> +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> +	if (IS_ERR(np))
-> +		return PTR_ERR(np);
-> +
-> +	if (!of_device_is_compatible(np, "operating-points-v2-kryo-cpu")) {
-> +		of_node_put(np);
-> +		return -ENOENT;
-> +	}
-> +
-> +	speedbin_nvmem = of_nvmem_cell_get(np, NULL);
-> +	of_node_put(np);
-> +	if (IS_ERR(speedbin_nvmem)) {
-> +		dev_err(cpu_dev, "Could not get nvmem cell: %ld\n",
-> +			PTR_ERR(speedbin_nvmem));
-> +		return PTR_ERR(speedbin_nvmem);
-> +	}
-> +
-> +	speedbin = nvmem_cell_read(speedbin_nvmem, &len);
-> +	nvmem_cell_put(speedbin_nvmem);
-> +
-> +	switch (msm8996_version) {
-> +	case MSM8996_V3:
-> +		versions = 1 << (unsigned int)(*speedbin);
-> +		break;
-> +	case MSM8996_SG:
-> +		versions = 1 << ((unsigned int)(*speedbin) + 4);
-> +		break;
-> +	default:
-> +		BUG();
-> +		break;
-> +	}
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		cpu_dev = get_cpu_device(cpu);
-> +		if (NULL == cpu_dev) {
-> +			ret = -ENODEV;
-> +			goto free_opp;
-> +		}
-> +
-> +		opp_tables[cpu] = dev_pm_opp_set_supported_hw(cpu_dev,
-> +							      &versions, 1);
-> +		if (IS_ERR(opp_tables[cpu])) {
-> +			ret = PTR_ERR(opp_tables[cpu]);
-> +			dev_err(cpu_dev, "Failed to set supported hardware\n");
-> +			goto free_opp;
-> +		}
-> +	}
-> +
-> +	cpufreq_dt_pdev = platform_device_register_simple("cpufreq-dt", -1,
-> +							  NULL, 0);
-> +	if (!IS_ERR(cpufreq_dt_pdev))
-> +		return 0;
-> +
-> +	ret = PTR_ERR(cpufreq_dt_pdev);
-> +	dev_err(cpu_dev, "Failed to register platform device\n");
-> +
-> +free_opp:
-> +	for_each_possible_cpu(cpu) {
-> +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
-> +			break;
-> +		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static struct platform_driver qcom_cpufreq_kryo_driver = {
-> +	.probe = qcom_cpufreq_kryo_probe,
-> +	.driver = {
-> +		.name = "qcom-cpufreq-kryo",
-> +	},
-> +};
-> +
-> +/*
-> + * Since the driver depends on smem and nvmem drivers, which may
-> + * return EPROBE_DEFER, all the real activity is done in the probe,
-> + * which may be defered as well. The init here is only registering
-> + * the driver and the platform device.
-> + */
-> +static int __init qcom_cpufreq_kryo_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = platform_driver_register(&qcom_cpufreq_kryo_driver);
-> +	if (unlikely(ret < 0))
-> +		return ret;
-> +
-> +	ret = PTR_ERR_OR_ZERO(platform_device_register_simple(
-> +		"qcom-cpufreq-kryo", -1, NULL, 0));
-
-
-You simply can't do this unconditionally here. This will blow up on
-platforms where this driver is not supposed to work. The probe will be
-called on non-QCOM or non-Kryo QCOM platforms and I reckon it will
-crash trying to execute something in qcom_smem_get.
-
--- 
-Regards,
-Sudeep
+T24gVGh1LCBNYXkgMjQsIDIwMTggYXQgNTo0MSBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo8Y2hyaXN0
+aWFuLmtvZW5pZ0BhbWQuY29tPiB3cm90ZToKPiBBbSAyNC4wNS4yMDE4IHVtIDExOjI0IHNjaHJp
+ZWIgUWlhbmcgWXU6Cj4+Cj4+IE9uIFRodSwgTWF5IDI0LCAyMDE4IGF0IDI6NDYgUE0sIENocmlz
+dGlhbiBLw7ZuaWcKPj4gPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4gd3JvdGU6Cj4+IFtTTklQ
+XQo+Pj4KPj4+IEJlY2F1c2Ugb2YgdGhpcyB3ZSBoYXZlIGEgc2VwYXJhdGUgdHJhY2tpbmcgaW4g
+YW1kZ3B1IHNvIHRoYXQgd2Ugbm90IG9ubHkKPj4+IGtub3cgd2hvIGlzIHVzaW5nIHdoaWNoIEJP
+LCB3aG8gaXMgdXNpbmcgd2hpY2ggVk0uCj4+Cj4+IGFtZGdwdSdzIFZNIGltcGxlbWVudGF0aW9u
+IHNlZW1zIHRvbyBjb21wbGljYXRlZCBmb3IgdGhpcyBzaW1wbGUgbWFsaSBHUFUsCj4+IGJ1dCBJ
+IG1heSBpbnZlc3RpZ2F0ZSBpdCBtb3JlIHRvIHNlZSBpZiBJIGNhbiBtYWtlIGl0IGJldHRlci4K
+Pgo+Cj4gWWVhaCwgY29tcGxldGVseSBhZ3JlZS4KPgo+IFRoZSBWTSBoYW5kbGluZyBpbiBhbWRn
+cHUgaXMgcmVhbGx5IGNvbXBsaWNhdGVkIGJlY2F1c2Ugd2UgaGFkIHRvIHR1bmUgaXQKPiBmb3Ig
+bXVsdGlwbGUgdXNlIGNhc2VzLiBFLmcuIHBhcnRpYWwgcmVzaWRlbnQgdGV4dHVyZXMsIGRlbGF5
+ZWQgdXBkYXRlcyBldGMKPiBldGMuLi4uCj4KPiBCdXQgeW91IHNob3VsZCBhdCBsZWFzdCBiZSBh
+YmxlIHRvIHRha2UgdGhlIGxlc3NvbnMgbGVhcm5lZCB3ZSBoYWQgd2l0aCB0aGF0Cj4gVk0gY29k
+ZSBhbmQgbm90IG1ha2UgdGhlIHNhbWUgbWlzdGFrZXMgYWdhaW4uCj4KPj4+IFdlIGludGVudGlv
+bmFsbHkgcmVtb3ZlZCB0aGUgcHJlY2xvc2UgY2FsbGJhY2sgdG8gcHJldmVudCBjZXJ0YWluIHVz
+ZQo+Pj4gY2FzZXMsCj4+PiBicmluZ2luZyBpdCBiYWNrIHRvIGFsbG93IHlvdXIgdXNlIGNhc2Ug
+bG9va3MgcmF0aGVyIGZpc2h5IHRvIG1lLgo+Pgo+PiBTZWVtcyBvdGhlciBkcml2ZXJzIGRvIGVp
+dGhlciB0aGUgZGVmZmVyIG9yIHdhaXQgd2F5IHRvIGFkb3B0IHRoZSBkcm9wCj4+IG9mIHByZWNs
+b3NlLiBJIGNhbiBkbyB0aGUgc2FtZSBhcyB5b3Ugc3VnZ2VzdGVkLCBidXQganVzdCBub3QgdW5k
+ZXJzdGFuZAo+PiB3aHkKPj4gd2UgbWFrZSBvdXIgbGlmZSBoYXJkZXIuIENhbiBJIGtub3cgd2hh
+dCdzIHRoZSBjYXNlIHlvdSB3YW50IHRvIHByZXZlbnQ/Cj4KPgo+IEkgdGhpbmsgd2hhdCBtYXR0
+ZXJzIG1vc3QgZm9yIHlvdXIgY2FzZSBpcyB0aGUgaXNzdWUgaXMgdGhhdCBkcml2ZXJzIHNob3Vs
+ZAo+IGhhbmRsZSBjbG9zaW5nIGEgQk8gYmVjYXVzZSB1c2Vyc3BhY2Ugc2FpZCBzbyBpbiB0aGUg
+c2FtZSB3YXkgaXQgaGFuZGxlcwo+IGNsb3NpbmcgYSBCTyBiZWNhdXNlIG9mIGEgcHJvY2VzcyB0
+ZXJtaW5hdGlvbiwgYnV0IHNlZSBiZWxvdy4KPgo+Pj4gQlRXOiBXaGF0IGV4YWN0bHkgaXMgdGhl
+IGlzc3VlIHdpdGggdXNpbmcgdGhlIHBvc3RjbG9zZSBjYWxsYmFjaz8KPj4KPj4gVGhlIGlzc3Vl
+IGlzLCB3aGVuIEN0cmwrQyB0byB0ZXJtaW5hdGUgYW4gYXBwbGljYXRpb24sIGlmIG5vIHdhaXQg
+b3IKPj4gZGVmZmVyCj4+IHVubWFwLCBidWZmZXIganVzdCBnZXRzIHVubWFwcGVkIGJlZm9yZSB0
+YXNrIGlzIGRvbmUsIHNvIGtlcm5lbCBkcml2ZXIKPj4gZ2V0cyBNTVUgZmF1bHQgYW5kIEhXIHJl
+c2V0IHRvIHJlY292ZXIgdGhlIEdQVS4KPgo+Cj4gWWVhaCwgdGhhdCBzb3VuZHMgbGlrZSBleGFj
+dGx5IG9uZSBvZiB0aGUgcmVhc29ucyB3ZSBoYWQgdGhlIGNhbGxiYWNrIGluIHRoZQo+IGZpcnN0
+IHBsYWNlIGFuZCB3b3JrZWQgb24gdG8gcmVtb3ZpbmcgaXQuCj4KPiBTZWUgdGhlIGludGVudGlv
+biBpcyB0byBoYXZlIHJlbGlhYmxlIGhhbmRsaW5nLCBlLmcuIHVzZSB0aGUgc2FtZSBjb2RlIHBh
+dGgKPiBmb3IgY2xvc2luZyBhIEJPIGJlY2F1c2Ugb2YgYW4gSU9DVEwgYW5kIGNsb3NpbmcgYSBC
+TyBiZWNhdXNlIG9mIHByb2Nlc3MKPiB0ZXJtaW5hdGlvbi4KPgo+IEluIG90aGVyIHdvcmRzIHdo
+YXQgaGFwcGVucyB3aGVuIHVzZXJzcGFjZSBjbG9zZXMgYSBCTyB3aGlsZSB0aGUgR1BVIGlzCj4g
+c3RpbGwgdXNpbmcgaXQ/IFdvdWxkIHlvdSB0aGVuIHJ1biBpbnRvIGEgR1BVIHJlc2V0IGFzIHdl
+bGw/CgpZZXMsIGFsc28gYSBNTVUgZmF1bHQgYW5kIEdQVSByZXNldCB3aGVuIHVzZXIgc3BhY2Ug
+ZHJpdmVyIGVycm9yIHVzYWdlIGxpa2UKdGhpcy4gSSB0aGluayBJIGRvbid0IG5lZWQgdG8gYXZv
+aWQgdGhpcyBjYXNlIGJlY2F1c2UgaXQncyB1c2VyIGVycm9yCnVzYWdlIHdoaWNoIGRlc2VydmUg
+YSBHUFUgcmVzZXQsIGJ1dCBwcm9jZXNzIHRlcm1pbmF0aW9uIGlzIG5vdC4gQnV0IHlvdQpyZW1p
+bmQgbWUgdGhleSBpbmRlZWQgc2hhcmUgdGhlIHNhbWUgY29kZSBwYXRoIGlmIHJlbW92ZSBwcmVj
+bG9zZSBub3cuCgpSZWdhcmRzLApRaWFuZwoKPgo+IEkgbWVhbiBpdCdzIHlvdXIgZHJpdmVyIHN0
+YWNrLCBzbyBJJ20gbm90IGFnYWluc3QgaXQgYXMgbG9uZyBhcyB5b3UgY2FuIGxpdmUKPiB3aXRo
+IGl0LiBCdXQgaXQncyBleGFjdGx5IHRoZSB0aGluZyB3ZSB3YW50ZWQgdG8gYXZvaWQgaGVyZS4K
+ClNlZW1zCgo+Cj4gUmVnYXJkcywKPiBDaHJpc3RpYW4uCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
