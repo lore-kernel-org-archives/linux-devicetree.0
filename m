@@ -1,86 +1,90 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] arm64: allwinner: a64: Add Amarula
- A64-Relic initial support
-Date: Thu, 24 May 2018 10:54:27 +0200
-Message-ID: <20180524085427.xs6yzhpa42zop6e5@flea>
-References: <20180522132228.6564-1-jagan@amarulasolutions.com>
- <20180522143044.pgwawojiwnk2lzxb@flea>
- <CAMty3ZD3JT-ToGAUHN_uj7uVK-jkyAwfEdTBCmJSj34bACFpYQ@mail.gmail.com>
- <20180523081830.4ly6sj34reabbttn@flea>
- <CAMty3ZC-N-6WzYg+kYd2+V3wbQdQmvU706Nog_Urd_EUaWnQjQ@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Thu, 24 May 2018 10:56:14 +0200
+Message-ID: <20180524105614.3c51736c@bbrezillon>
+References: <cover.1526990589.git.stefan@agner.ch>
+        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+        <20180523161810.0ed9fe80@bbrezillon>
+        <2d8107f0e6568512d691e9ea25a1e4e5@agner.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="e7gzo5xpcsc36slw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT73THMAKGQETFF5TVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZC-N-6WzYg+kYd2+V3wbQdQmvU706Nog_Urd_EUaWnQjQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2d8107f0e6568512d691e9ea25a1e4e5@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 24 May 2018 10:46:27 +0200
+Stefan Agner <stefan@agner.ch> wrote:
 
---e7gzo5xpcsc36slw
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, May 23, 2018 at 03:57:05PM +0530, Jagan Teki wrote:
-> On Wed, May 23, 2018 at 1:48 PM, Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Wed, May 23, 2018 at 11:44:56AM +0530, Jagan Teki wrote:
-> >> On Tue, May 22, 2018 at 8:00 PM, Maxime Ripard
-> >> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >> > On Tue, May 22, 2018 at 06:52:28PM +0530, Jagan Teki wrote:
-> >> >> Amarula A64-Relic is Allwinner A64 based IoT device, which support
-> >> >> - Allwinner A64 Cortex-A53
-> >> >> - Mali-400MP2 GPU
-> >> >> - AXP803 PMIC
-> >> >> - 1GB DDR3 RAM
-> >> >> - 8GB eMMC
-> >> >> - AP6330 Wifi/BLE
-> >> >> - MIPI-DSI
-> >> >> - CSI: OV5640 sensor
-> >> >> - USB OTG
-> >> >
-> >> > You claim that this is doing OTG...
-> >> >
-> >> > [..]
-> >> >
-> >> >> +&usb_otg {
-> >> >> +     dr_mode = "peripheral";
-> >> >> +     status = "okay";
-> >> >> +};
-> >> >
-> >> > ... and yet you're setting it as peripheral...
-> >>
-> >> Though it claims OTG, board doesn't have any USB ports to operate(not
-> >> even Mini-AB) the only way to use the board as peripheral to transfer
-> >> images from host.
-> >
-> > I'm not sure what you mean here. If there's no USB connector, why do
-> > you even enable it?
+> Hi Boris,
 > 
-> I'm saying there is no host port on board. Board has connector
-> header[1] comes with few pins includes USB D+, D-, ID, VBUS, GROUND,
-> UART0 TX, RX etc. we have to connect wires to these pins to make
-> pluggable USB to host pc. and here USB pins used for transferring data
-> from host pc to target board like in peripheral mode.
+> Thanks for the initial review! One small question below:
+> 
+> On 23.05.2018 16:18, Boris Brezillon wrote:
+> > Hi Stefan,
+> > 
+> > On Tue, 22 May 2018 14:07:06 +0200
+> > Stefan Agner <stefan@agner.ch> wrote:  
+> >> +
+> >> +struct tegra_nand {
+> >> +	void __iomem *regs;
+> >> +	struct clk *clk;
+> >> +	struct gpio_desc *wp_gpio;
+> >> +
+> >> +	struct nand_chip chip;
+> >> +	struct device *dev;
+> >> +
+> >> +	struct completion command_complete;
+> >> +	struct completion dma_complete;
+> >> +	bool last_read_error;
+> >> +
+> >> +	dma_addr_t data_dma;
+> >> +	void *data_buf;
+> >> +	dma_addr_t oob_dma;
+> >> +	void *oob_buf;
+> >> +
+> >> +	int cur_chip;
+> >> +};  
+> > 
+> > This struct should be split in 2 structures: one representing the NAND
+> > controller and one representing the NAND chip:
+> > 
+> > struct tegra_nand_controller {
+> > 	struct nand_hw_control base;
+> > 	void __iomem *regs;
+> > 	struct clk *clk;
+> > 	struct device *dev;
+> > 	struct completion command_complete;
+> > 	struct completion dma_complete;
+> > 	bool last_read_error;
+> > 	int cur_chip;
+> > };
+> > 
+> > struct tegra_nand {
+> > 	struct nand_chip base;
+> > 	dma_addr_t data_dma;
+> > 	void *data_buf;
+> > 	dma_addr_t oob_dma;
+> > 	void *oob_buf;
+> > };  
+> 
+> Is there a particular reason why you would leave DMA buffers in the chip
+> structure? It seems that is more a controller thing...
 
-I'm still unsure how it's relevant. If the wire is plugged on your
-board's header, is there anything that prevents using it as a host
-assuming you have a proper connector on the other end of your wire?
+The size of those buffers is likely to be device dependent, so if you
+have several NANDs connected to the controller, you'll either have to
+have one buffer at the controller level which is max(all-chip-buf-size)
+or a buffer per device.
 
-Maxime
+Also, do you really need these buffers? The core already provide some
+which are suitable for DMA (chip->oob_poi and chip->data_buf).
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---e7gzo5xpcsc36slw--
+> 
+> If I move them, then struct tegra_nand would be basically empty. Can I
+> just use struct nand_chip and have no driver specific chip abstraction?
+
+Sure.
