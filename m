@@ -1,55 +1,259 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 2/8] driver core: add a deferred probe timeout
-Date: Thu, 24 May 2018 21:01:26 +0200
-Message-ID: <20180524190126.GC31019@kroah.com>
-References: <20180524175024.19874-1-robh@kernel.org>
- <20180524175024.19874-3-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: qcom_spmi: Add support for SAW" to the regulator tree
+Date: Thu, 24 May 2018 20:25:41 +0100
+Message-ID: <E1fLvrp-0006gP-6f@debutante>
+References: <1520166709-554-2-git-send-email-ilialin@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180524175024.19874-3-robh@kernel.org>
+In-Reply-To: <1520166709-554-2-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.combroonie@kernel.org, robh@kernel.org, mark.rutland@arm.com, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.orglinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 24, 2018 at 12:50:18PM -0500, Rob Herring wrote:
-> Deferring probe can wait forever on dependencies that may never appear
-> for a variety of reasons. This can be difficult to debug especially if
-> the console has dependencies or userspace fails to boot to a shell. Add
-> a timeout to retry probing without possibly optional dependencies and to
-> dump out the deferred probe pending list after retrying.
-> 
-> This mechanism is intended for debug purposes. It won't work for the
-> console which needs to be enabled before userspace starts. However, if
-> the console's dependencies are resolved, then the kernel log will be
-> printed (as opposed to no output).
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  7 +++++
->  drivers/base/dd.c                             | 28 ++++++++++++++++++-
->  2 files changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 11fc28ecdb6d..dd3f40b34a24 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -809,6 +809,13 @@
->  			Defaults to the default architecture's huge page size
->  			if not specified.
->  
-> +	deferred_probe_timeout=
-> +			[KNL] Set a timeout in seconds for deferred probe to
-> +			give up waiting on dependencies to probe. Only specific
-> +			dependencies (subsystems or drivers) that have opted in
-> +			will be ignored. This option also dumps out devices
-> +			still on the deferred probe list after retrying.
+The patch
 
-Doesn't sound like a debugging-only option.  I can see devices enabling
-this when they figure out that's the only way their platform can boot :)
+   regulator: qcom_spmi: Add support for SAW
 
-thanks,
+has been applied to the regulator tree at
 
-greg k-h
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 0caecaa87202b667591d57e8ca233ee1b548ba13 Mon Sep 17 00:00:00 2001
+From: Ilia Lin <ilialin@codeaurora.org>
+Date: Mon, 21 May 2018 14:25:30 +0300
+Subject: [PATCH] regulator: qcom_spmi: Add support for SAW
+
+Add support for SAW controlled regulators.
+The regulators defined as SAW controlled in the device tree
+will be controlled through special CPU registers instead of direct
+SPMI accesses.
+This is required especially for CPU supply regulators to synchronize
+with clock scaling and for Automatic Voltage Switching.
+
+Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/qcom_spmi-regulator.c | 133 +++++++++++++++++++++++-
+ 1 file changed, 130 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+index 63c7a0c17777..9817f1a75342 100644
+--- a/drivers/regulator/qcom_spmi-regulator.c
++++ b/drivers/regulator/qcom_spmi-regulator.c
+@@ -25,6 +25,8 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regmap.h>
+ #include <linux/list.h>
++#include <linux/mfd/syscon.h>
++#include <linux/io.h>
+ 
+ /* Pin control enable input pins. */
+ #define SPMI_REGULATOR_PIN_CTRL_ENABLE_NONE		0x00
+@@ -181,6 +183,23 @@ enum spmi_boost_byp_registers {
+ 	SPMI_BOOST_BYP_REG_CURRENT_LIMIT	= 0x4b,
+ };
+ 
++enum spmi_saw3_registers {
++	SAW3_SECURE				= 0x00,
++	SAW3_ID					= 0x04,
++	SAW3_SPM_STS				= 0x0C,
++	SAW3_AVS_STS				= 0x10,
++	SAW3_PMIC_STS				= 0x14,
++	SAW3_RST				= 0x18,
++	SAW3_VCTL				= 0x1C,
++	SAW3_AVS_CTL				= 0x20,
++	SAW3_AVS_LIMIT				= 0x24,
++	SAW3_AVS_DLY				= 0x28,
++	SAW3_AVS_HYSTERESIS			= 0x2C,
++	SAW3_SPM_STS2				= 0x38,
++	SAW3_SPM_PMIC_DATA_3			= 0x4C,
++	SAW3_VERSION				= 0xFD0,
++};
++
+ /* Used for indexing into ctrl_reg.  These are offets from 0x40 */
+ enum spmi_common_control_register_index {
+ 	SPMI_COMMON_IDX_VOLTAGE_RANGE		= 0,
+@@ -1035,6 +1054,89 @@ static irqreturn_t spmi_regulator_vs_ocp_isr(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++#define SAW3_VCTL_DATA_MASK	0xFF
++#define SAW3_VCTL_CLEAR_MASK	0x700FF
++#define SAW3_AVS_CTL_EN_MASK	0x1
++#define SAW3_AVS_CTL_TGGL_MASK	0x8000000
++#define SAW3_AVS_CTL_CLEAR_MASK	0x7efc00
++
++static struct regmap *saw_regmap = NULL;
++
++static void spmi_saw_set_vdd(void *data)
++{
++	u32 vctl, data3, avs_ctl, pmic_sts;
++	bool avs_enabled = false;
++	unsigned long timeout;
++	u8 voltage_sel = *(u8 *)data;
++
++	regmap_read(saw_regmap, SAW3_AVS_CTL, &avs_ctl);
++	regmap_read(saw_regmap, SAW3_VCTL, &vctl);
++	regmap_read(saw_regmap, SAW3_SPM_PMIC_DATA_3, &data3);
++
++	/* select the band */
++	vctl &= ~SAW3_VCTL_CLEAR_MASK;
++	vctl |= (u32)voltage_sel;
++
++	data3 &= ~SAW3_VCTL_CLEAR_MASK;
++	data3 |= (u32)voltage_sel;
++
++	/* If AVS is enabled, switch it off during the voltage change */
++	avs_enabled = SAW3_AVS_CTL_EN_MASK & avs_ctl;
++	if (avs_enabled) {
++		avs_ctl &= ~SAW3_AVS_CTL_TGGL_MASK;
++		regmap_write(saw_regmap, SAW3_AVS_CTL, avs_ctl);
++	}
++
++	regmap_write(saw_regmap, SAW3_RST, 1);
++	regmap_write(saw_regmap, SAW3_VCTL, vctl);
++	regmap_write(saw_regmap, SAW3_SPM_PMIC_DATA_3, data3);
++
++	timeout = jiffies + usecs_to_jiffies(100);
++	do {
++		regmap_read(saw_regmap, SAW3_PMIC_STS, &pmic_sts);
++		pmic_sts &= SAW3_VCTL_DATA_MASK;
++		if (pmic_sts == (u32)voltage_sel)
++			break;
++
++		cpu_relax();
++
++	} while (time_before(jiffies, timeout));
++
++	/* After successful voltage change, switch the AVS back on */
++	if (avs_enabled) {
++		pmic_sts &= 0x3f;
++		avs_ctl &= ~SAW3_AVS_CTL_CLEAR_MASK;
++		avs_ctl |= ((pmic_sts - 4) << 10);
++		avs_ctl |= (pmic_sts << 17);
++		avs_ctl |= SAW3_AVS_CTL_TGGL_MASK;
++		regmap_write(saw_regmap, SAW3_AVS_CTL, avs_ctl);
++	}
++}
++
++static int
++spmi_regulator_saw_set_voltage(struct regulator_dev *rdev, unsigned selector)
++{
++	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
++	int ret;
++	u8 range_sel, voltage_sel;
++
++	ret = spmi_sw_selector_to_hw(vreg, selector, &range_sel, &voltage_sel);
++	if (ret)
++		return ret;
++
++	if (0 != range_sel) {
++		dev_dbg(&rdev->dev, "range_sel = %02X voltage_sel = %02X", \
++			range_sel, voltage_sel);
++		return -EINVAL;
++	}
++
++	/* Always do the SAW register writes on the first CPU */
++	return smp_call_function_single(0, spmi_saw_set_vdd, \
++					&voltage_sel, true);
++}
++
++static struct regulator_ops spmi_saw_ops = {};
++
+ static struct regulator_ops spmi_smps_ops = {
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
+@@ -1250,6 +1352,7 @@ static int spmi_regulator_match(struct spmi_regulator *vreg, u16 force_type)
+ 	}
+ 	dig_major_rev	= version[SPMI_COMMON_REG_DIG_MAJOR_REV
+ 					- SPMI_COMMON_REG_DIG_MAJOR_REV];
++
+ 	if (!force_type) {
+ 		type		= version[SPMI_COMMON_REG_TYPE -
+ 					  SPMI_COMMON_REG_DIG_MAJOR_REV];
+@@ -1648,7 +1751,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 	struct regmap *regmap;
+ 	const char *name;
+ 	struct device *dev = &pdev->dev;
+-	int ret;
++	struct device_node *node = pdev->dev.of_node;
++	struct device_node *syscon;
++	int ret, lenp;
+ 	struct list_head *vreg_list;
+ 
+ 	vreg_list = devm_kzalloc(dev, sizeof(*vreg_list), GFP_KERNEL);
+@@ -1665,7 +1770,22 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 	if (!match)
+ 		return -ENODEV;
+ 
++	if (of_find_property(node, "qcom,saw-reg", &lenp)) {
++		syscon = of_parse_phandle(node, "qcom,saw-reg", 0);
++		saw_regmap = syscon_node_to_regmap(syscon);
++		of_node_put(syscon);
++		if (IS_ERR(regmap))
++			dev_err(dev, "ERROR reading SAW regmap\n");
++	}
++
+ 	for (reg = match->data; reg->name; reg++) {
++
++		if (saw_regmap && \
++		    of_find_property(of_find_node_by_name(node, reg->name), \
++				     "qcom,saw-slave", &lenp)) {
++			continue;
++		}
++
+ 		vreg = devm_kzalloc(dev, sizeof(*vreg), GFP_KERNEL);
+ 		if (!vreg)
+ 			return -ENOMEM;
+@@ -1673,7 +1793,6 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 		vreg->dev = dev;
+ 		vreg->base = reg->base;
+ 		vreg->regmap = regmap;
+-
+ 		if (reg->ocp) {
+ 			vreg->ocp_irq = platform_get_irq_byname(pdev, reg->ocp);
+ 			if (vreg->ocp_irq < 0) {
+@@ -1681,7 +1800,6 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 				goto err;
+ 			}
+ 		}
+-
+ 		vreg->desc.id = -1;
+ 		vreg->desc.owner = THIS_MODULE;
+ 		vreg->desc.type = REGULATOR_VOLTAGE;
+@@ -1698,6 +1816,15 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 		if (ret)
+ 			continue;
+ 
++		if (saw_regmap && \
++		    of_find_property(of_find_node_by_name(node, reg->name), \
++				     "qcom,saw-leader", &lenp)) {
++			spmi_saw_ops = *(vreg->desc.ops);
++			spmi_saw_ops.set_voltage_sel = \
++				spmi_regulator_saw_set_voltage;
++			vreg->desc.ops = &spmi_saw_ops;
++		}
++
+ 		config.dev = dev;
+ 		config.driver_data = vreg;
+ 		config.regmap = regmap;
+-- 
+2.17.0
