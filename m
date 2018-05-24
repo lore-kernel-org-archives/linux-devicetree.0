@@ -1,62 +1,69 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH] ARM: dts: pxa3xx: fix MMC clocks
-Date: Thu, 24 May 2018 19:43:39 +0200
-Message-ID: <20180524174339.12236-1-daniel@zonque.org>
+From: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Subject: RE: [PATCH 4/9] regulator: bd71837: Devicetree bindings for BD71837
+ regulators
+Date: Thu, 24 May 2018 17:30:57 +0000
+Message-ID: <042F8805D2046347BB8420BEAE397A4016C06B47@WILL-MAIL002.REu.RohmEu.com>
+References: <20180524055752.GE4249@localhost.localdomain>,<20180524140118.GS4828@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180524140118.GS4828@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
 List-Id: devicetree@vger.kernel.org
 
-The clocks for the 3 MMC controllers on pxa3xx platforms are CLK_MMC1,
-CLK_MMC2 and CLK_MMC3. CLK_MMC is only for pxa2xx.
+Hello Mark,
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- arch/arm/boot/dts/pxa3xx.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+First of all, thank you for taking your time to check the patches. I do
+appreciate it. I find reading patches hard myself.
 
-diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index 132cce03414f..7ffe06f1dcc0 100644
---- a/arch/arm/boot/dts/pxa3xx.dtsi
-+++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -174,7 +174,7 @@
- 			compatible = "marvell,pxa-mmc";
- 			reg = <0x41100000 0x1000>;
- 			interrupts = <23>;
--			clocks = <&clks CLK_MMC>;
-+			clocks = <&clks CLK_MMC1>;
- 			dmas = <&pdma 21 3
- 				&pdma 22 3>;
- 			dma-names = "rx", "tx";
-@@ -185,7 +185,7 @@
- 			compatible = "marvell,pxa-mmc";
- 			reg = <0x42000000 0x1000>;
- 			interrupts = <41>;
--			clocks = <&clks CLK_MMC1>;
-+			clocks = <&clks CLK_MMC2>;
- 			dmas = <&pdma 93 3
- 				&pdma 94 3>;
- 			dma-names = "rx", "tx";
-@@ -196,7 +196,7 @@
- 			compatible = "marvell,pxa-mmc";
- 			reg = <0x42500000 0x1000>;
- 			interrupts = <55>;
--			clocks = <&clks CLK_MMC2>;
-+			clocks = <&clks CLK_MMC3>;
- 			dmas = <&pdma 46 3
- 				&pdma 47 3>;
- 			dma-names = "rx", "tx";
--- 
-2.14.3
+> From: Mark Brown [broonie@kernel.org]
+> Sent: Thursday, May 24, 2018 5:01 PM
+> 
+> > On Thu, May 24, 2018 at 08:57:52AM +0300, Matti Vaittinen wrote:
+>
+> > +Required properties:
+> > + - compatible: should be "rohm,bd71837-pmic".
+> > + - regulator-name: should be "buck1", ..., "buck8" and "ldo1", ..., "ldo7"
+>
+> The MFD is for a single device, there should be no need for compatibles
+> on subfunctions.
+
+I will check this. I must admit I am not sure what is the de-facto mechanism
+for assigning the correct device-tree nodes to sub devices if compatibles
+are not used? I think I saw device-tree node name being used for regulators
+but how is it done for example with clk? I would be grateful if anyone could
+point me to right direction with this.
+
+Also, another thing I was wondering is how supply regulators should be
+handled? In this case the LDO5 is supplied by BUCK6 and LDO6 by
+BUCK7. 
+
+>From generic regulator bindings
+/Documentation/devicetree/bindings/regulator/regulator.txt
+I found statement:
+
+> - <name>-supply: phandle to the parent supply/regulator node
+
+and
+
+> Regulator Consumers:
+> Consumer nodes can reference one or more of its supplies/
+> regulators using the below bindings.
+>
+> - <name>-supply: phandle to the regulator node
+>
+> These are the same bindings that a regulator in the above
+> example used to reference its own supply, in which case
+> ts just seen as a special case of a regulator being a
+> consumer itself.
+
+but I did not find handling for the supply properties from regulator core.
+Thus I ended up hard coding the supply relation in driver. This means
+that buck6 name must be fixed.
+
+Br,
+    Matti Vaittinen
