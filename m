@@ -1,527 +1,334 @@
-From: Vijay Viswanath <vviswana@codeaurora.org>
-Subject: Re: [PATCH V1 3/3] mmc: host: Register changes for sdcc V5
-Date: Thu, 24 May 2018 18:30:50 +0530
-Message-ID: <0baf8584-7833-0917-4432-363b0ee31bbc@codeaurora.org>
-References: <1526552938-21292-1-git-send-email-vviswana@codeaurora.org>
- <1526552938-21292-4-git-send-email-vviswana@codeaurora.org>
- <CAE=gft4DOJTuZDQDX1PL0fXHKPBsgWRPsO1bgunfO0VZ+pa6zQ@mail.gmail.com>
+From: <ilialin@codeaurora.org>
+Subject: RE: [PATCH v12 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Thu, 24 May 2018 16:03:15 +0300
+Message-ID: <000501d3f35f$96794910$c36bdb30$@codeaurora.org>
+References: <1527152242-31281-1-git-send-email-ilialin@codeaurora.org> <1527152242-31281-2-git-send-email-ilialin@codeaurora.org> <860be68b-cac0-9efc-b3c7-cc75b391a4c3@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft4DOJTuZDQDX1PL0fXHKPBsgWRPsO1bgunfO0VZ+pa6zQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <860be68b-cac0-9efc-b3c7-cc75b391a4c3@arm.com>
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: adrian.hunter@intel.com, Ulf Hansson <ulf.hansson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, Bjorn Andersson <bjorn.andersson@linaro.org>, riteshh@codeaurora.org, vbadigan@codeaurora.org, Doug Anderson <dianders@google.com>, sayalil@codeaurora.org
+To: 'Sudeep Holla' <sudeep.holla@arm.com>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 5/22/2018 11:42 PM, Evan Green wrote:
-> Hi Vijay. Thanks for this patch.
-> 
-> On Thu, May 17, 2018 at 3:30 AM Vijay Viswanath <vviswana@codeaurora.org>
-> wrote:
-> 
->> From: Sayali Lokhande <sayalil@codeaurora.org>
-> 
->> For SDCC version 5.0.0 and higher, new compatible string
->> "qcom,sdhci-msm-v5" is added.
-> 
->> Based on the msm variant, pick the relevant variant data and
->> use it for register read/write to msm specific registers.
-> 
->> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
->> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->> ---
->>    .../devicetree/bindings/mmc/sdhci-msm.txt          |   5 +-
->>    drivers/mmc/host/sdhci-msm.c                       | 344
-> +++++++++++++--------
->>    2 files changed, 222 insertions(+), 127 deletions(-)
-> 
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> index bfdcdc4..c2b7b2b 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> @@ -4,7 +4,10 @@ This file documents differences between the core
-> properties in mmc.txt
->>    and the properties used by the sdhci-msm driver.
-> 
->>    Required properties:
->> -- compatible: Should contain "qcom,sdhci-msm-v4".
->> +- compatible: Should contain "qcom,sdhci-msm-v4" or "qcom,sdhci-msm-v5".
->> +                For SDCC version 5.0.0, MCI registers are removed from
-> SDCC
->> +                interface and some registers are moved to HC. New
-> compatible
->> +                string is added to support this change -
-> "qcom,sdhci-msm-v5".
->>    - reg: Base address and length of the register in the following order:
->>           - Host controller register map (required)
->>           - SD Core register map (required)
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index bb2bb59..408e6b2 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -33,16 +33,11 @@
->>    #define CORE_MCI_GENERICS              0x70
->>    #define SWITCHABLE_SIGNALING_VOLTAGE   BIT(29)
-> 
->> -#define CORE_HC_MODE           0x78
-> 
-> Remove CORE_MCI_VERSION as well.
-> 
+> -----Original Message-----
+> From: Sudeep Holla <sudeep.holla@arm.com>
+> Sent: Thursday, May 24, 2018 15:52
+> To: Ilia Lin <ilialin@codeaurora.org>; vireshk@kernel.org; nm@ti.com;
+> sboyd@kernel.org; robh@kernel.org; mark.rutland@arm.com;
+> rjw@rjwysocki.net
+> Cc: Sudeep Holla <sudeep.holla@arm.com>; linux-pm@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v12 1/2] cpufreq: Add Kryo CPU scaling driver
+>=20
+> Hi Ilia,
+>=20
+>=20
+> On 24/05/18 09:57, Ilia Lin wrote:
+> > In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO
+> > processors, the CPU frequency subset and voltage value of each OPP
+> > varies based on the silicon variant in use. Qualcomm Process Voltage
+> > Scaling Tables defines the voltage and frequency value based on the
+> > msm-id in SMEM and speedbin blown in the efuse combination.
+> > The qcom-cpufreq-kryo driver reads the msm-id and efuse value from =
+the
+> > SoC to provide the OPP framework with required information.
+> > This is used to determine the voltage and frequency value for each =
+OPP
+> > of
+> > operating-points-v2 table when it is parsed by the OPP framework.
+> >
+> > Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> > ---
+> >  drivers/cpufreq/Kconfig.arm          |  10 ++
+> >  drivers/cpufreq/Makefile             |   1 +
+> >  drivers/cpufreq/cpufreq-dt-platdev.c |   3 +
+> >  drivers/cpufreq/qcom-cpufreq-kryo.c  | 194
+> > +++++++++++++++++++++++++++++++++++
+> >  4 files changed, 208 insertions(+)
+> >  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+> >
+> > diff --git a/drivers/cpufreq/Kconfig.arm =
+b/drivers/cpufreq/Kconfig.arm
+> > index de55c7d..0bfd40e 100644
+> > --- a/drivers/cpufreq/Kconfig.arm
+> > +++ b/drivers/cpufreq/Kconfig.arm
+> > @@ -124,6 +124,16 @@ config ARM_OMAP2PLUS_CPUFREQ
+> >  	depends on ARCH_OMAP2PLUS
+> >  	default ARCH_OMAP2PLUS
+> >
+> > +config ARM_QCOM_CPUFREQ_KRYO
+> > +	bool "Qualcomm Kryo based CPUFreq"
+> > +	depends on QCOM_QFPROM
+> > +	depends on QCOM_SMEM
+> > +	select PM_OPP
+> > +	help
+> > +	  This adds the CPUFreq driver for Qualcomm Kryo SoC based boards.
+> > +
+> > +	  If in doubt, say N.
+> > +
+> >  config ARM_S3C_CPUFREQ
+> >  	bool
+> >  	help
+> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile =
+index
+> > 8d24ade..fb4a2ec 100644
+> > --- a/drivers/cpufreq/Makefile
+> > +++ b/drivers/cpufreq/Makefile
+> > @@ -65,6 +65,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+=3D
+> mvebu-cpufreq.o
+> >  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+=3D omap-cpufreq.o
+> >  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+=3D pxa2xx-cpufreq.o
+> >  obj-$(CONFIG_PXA3xx)			+=3D pxa3xx-cpufreq.o
+> > +obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+=3D qcom-cpufreq-
+> kryo.o
+> >  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+=3D s3c2410-cpufreq.o
+> >  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+=3D s3c2412-cpufreq.o
+> >  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+=3D s3c2416-cpufreq.o
+> > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c
+> > b/drivers/cpufreq/cpufreq-dt-platdev.c
+> > index 3b585e4..77d6ab8 100644
+> > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> > @@ -118,6 +118,9 @@
+> >
+> >  	{ .compatible =3D "nvidia,tegra124", },
+> >
+> > +	{ .compatible =3D "qcom,apq8096", },
+> > +	{ .compatible =3D "qcom,msm8996", },
+> > +
+> >  	{ .compatible =3D "st,stih407", },
+> >  	{ .compatible =3D "st,stih410", },
+> >
+> > diff --git a/drivers/cpufreq/qcom-cpufreq-kryo.c
+> > b/drivers/cpufreq/qcom-cpufreq-kryo.c
+> > new file mode 100644
+> > index 0000000..9fe379c
+> > --- /dev/null
+> > +++ b/drivers/cpufreq/qcom-cpufreq-kryo.c
+> > @@ -0,0 +1,194 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> > + */
+> > +
+> > +/*
+> > + * In Certain QCOM SoCs like apq8096 and msm8996 that have KRYO
+> > +processors,
+> > + * the CPU frequency subset and voltage value of each OPP varies
+> > + * based on the silicon variant in use. Qualcomm Process Voltage
+> > +Scaling Tables
+> > + * defines the voltage and frequency value based on the msm-id in
+> > +SMEM
+> > + * and speedbin blown in the efuse combination.
+> > + * The qcom-cpufreq-kryo driver reads the msm-id and efuse value =
+from
+> > +the SoC
+> > + * to provide the OPP framework with required information.
+> > + * This is used to determine the voltage and frequency value for =
+each
+> > +OPP of
+> > + * operating-points-v2 table when it is parsed by the OPP =
+framework.
+> > + */
+> > +
+> > +#include <linux/cpu.h>
+> > +#include <linux/err.h>
+> > +#include <linux/init.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/nvmem-consumer.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_opp.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/soc/qcom/smem.h>
+> > +
+> > +#define MSM_ID_SMEM	137
+> > +
+> > +enum _msm_id {
+> > +	MSM8996V3 =3D 0xF6ul,
+> > +	APQ8096V3 =3D 0x123ul,
+> > +	MSM8996SG =3D 0x131ul,
+> > +	APQ8096SG =3D 0x138ul,
+> > +};
+> > +
+> > +enum _msm8996_version {
+> > +	MSM8996_V3,
+> > +	MSM8996_SG,
+> > +	NUM_OF_MSM8996_VERSIONS,
+> > +};
+> > +
+> > +static enum _msm8996_version __init
+> > +qcom_cpufreq_kryo_get_msm_id(void)
+> > +{
+> > +	size_t len;
+> > +	u32 *msm_id;
+> > +	enum _msm8996_version version;
+> > +
+> > +	msm_id =3D qcom_smem_get(QCOM_SMEM_HOST_ANY,
+> MSM_ID_SMEM, &len);
+> > +	/* The first 4 bytes are format, next to them is the actual msm-id =
+*/
+> > +	msm_id++;
+> > +
+> > +	switch ((enum _msm_id)*msm_id) {
+> > +	case MSM8996V3:
+> > +	case APQ8096V3:
+> > +		version =3D MSM8996_V3;
+> > +		break;
+> > +	case MSM8996SG:
+> > +	case APQ8096SG:
+> > +		version =3D MSM8996_SG;
+> > +		break;
+> > +	default:
+> > +		version =3D NUM_OF_MSM8996_VERSIONS;
+> > +	}
+> > +
+> > +	return version;
+> > +}
+> > +
+> > +static int qcom_cpufreq_kryo_probe(struct platform_device *pdev) {
+> > +	struct opp_table *opp_tables[NR_CPUS] =3D {0};
+> > +	struct platform_device *cpufreq_dt_pdev;
+> > +	enum _msm8996_version msm8996_version;
+> > +	struct nvmem_cell *speedbin_nvmem;
+> > +	struct device_node *np;
+> > +	struct device *cpu_dev;
+> > +	unsigned cpu;
+> > +	u8 *speedbin;
+> > +	u32 versions;
+> > +	size_t len;
+> > +	int ret;
+> > +
+> > +	cpu_dev =3D get_cpu_device(0);
+> > +	if (NULL =3D=3D cpu_dev)
+> > +		return -ENODEV;
+> > +
+> > +	msm8996_version =3D qcom_cpufreq_kryo_get_msm_id();
+> > +	if (NUM_OF_MSM8996_VERSIONS =3D=3D msm8996_version) {
+> > +		dev_err(cpu_dev, "Not Snapdragon 820/821!");
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	np =3D dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+> > +	if (IS_ERR(np))
+> > +		return PTR_ERR(np);
+> > +
+> > +	if (!of_device_is_compatible(np, "operating-points-v2-kryo-cpu")) =
+{
+> > +		of_node_put(np);
+> > +		return -ENOENT;
+> > +	}
+> > +
+> > +	speedbin_nvmem =3D of_nvmem_cell_get(np, NULL);
+> > +	of_node_put(np);
+> > +	if (IS_ERR(speedbin_nvmem)) {
+> > +		dev_err(cpu_dev, "Could not get nvmem cell: %ld\n",
+> > +			PTR_ERR(speedbin_nvmem));
+> > +		return PTR_ERR(speedbin_nvmem);
+> > +	}
+> > +
+> > +	speedbin =3D nvmem_cell_read(speedbin_nvmem, &len);
+> > +	nvmem_cell_put(speedbin_nvmem);
+> > +
+> > +	switch (msm8996_version) {
+> > +	case MSM8996_V3:
+> > +		versions =3D 1 << (unsigned int)(*speedbin);
+> > +		break;
+> > +	case MSM8996_SG:
+> > +		versions =3D 1 << ((unsigned int)(*speedbin) + 4);
+> > +		break;
+> > +	default:
+> > +		BUG();
+> > +		break;
+> > +	}
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> > +		cpu_dev =3D get_cpu_device(cpu);
+> > +		if (NULL =3D=3D cpu_dev) {
+> > +			ret =3D -ENODEV;
+> > +			goto free_opp;
+> > +		}
+> > +
+> > +		opp_tables[cpu] =3D
+> dev_pm_opp_set_supported_hw(cpu_dev,
+> > +							      &versions, 1);
+> > +		if (IS_ERR(opp_tables[cpu])) {
+> > +			ret =3D PTR_ERR(opp_tables[cpu]);
+> > +			dev_err(cpu_dev, "Failed to set supported
+> hardware\n");
+> > +			goto free_opp;
+> > +		}
+> > +	}
+> > +
+> > +	cpufreq_dt_pdev =3D platform_device_register_simple("cpufreq-dt", =
+-
+> 1,
+> > +							  NULL, 0);
+> > +	if (!IS_ERR(cpufreq_dt_pdev))
+> > +		return 0;
+> > +
+> > +	ret =3D PTR_ERR(cpufreq_dt_pdev);
+> > +	dev_err(cpu_dev, "Failed to register platform device\n");
+> > +
+> > +free_opp:
+> > +	for_each_possible_cpu(cpu) {
+> > +		if (IS_ERR_OR_NULL(opp_tables[cpu]))
+> > +			break;
+> > +		dev_pm_opp_put_supported_hw(opp_tables[cpu]);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static struct platform_driver qcom_cpufreq_kryo_driver =3D {
+> > +	.probe =3D qcom_cpufreq_kryo_probe,
+> > +	.driver =3D {
+> > +		.name =3D "qcom-cpufreq-kryo",
+> > +	},
+> > +};
+> > +
+> > +/*
+> > + * Since the driver depends on smem and nvmem drivers, which may
+> > + * return EPROBE_DEFER, all the real activity is done in the probe,
+> > + * which may be defered as well. The init here is only registering
+> > + * the driver and the platform device.
+> > + */
+> > +static int __init qcom_cpufreq_kryo_init(void) {
+> > +	int ret;
+> > +
+> > +	ret =3D platform_driver_register(&qcom_cpufreq_kryo_driver);
+> > +	if (unlikely(ret < 0))
+> > +		return ret;
+> > +
+> > +	ret =3D PTR_ERR_OR_ZERO(platform_device_register_simple(
+> > +		"qcom-cpufreq-kryo", -1, NULL, 0));
+>=20
+>=20
+> You simply can't do this unconditionally here. This will blow up on =
+platforms
+> where this driver is not supposed to work. The probe will be called on =
+non-
+> QCOM or non-Kryo QCOM platforms and I reckon it will crash trying to
+> execute something in qcom_smem_get.
 
-Missed it. Will remove
+What do you mean by 'unconditionally'?
+The driver depends on the smem and nvmem drivers, which depend on =
+ARCH_QCOM:
+ +	depends on QCOM_QFPROM
+ +	depends on QCOM_SMEM
 
->>    #define HC_MODE_EN             0x1
->>    #define CORE_POWER             0x0
->>    #define CORE_SW_RST            BIT(7)
->>    #define FF_CLK_SW_RST_DIS      BIT(13)
-> 
->> -#define CORE_PWRCTL_STATUS     0xdc
->> -#define CORE_PWRCTL_MASK       0xe0
->> -#define CORE_PWRCTL_CLEAR      0xe4
->> -#define CORE_PWRCTL_CTL                0xe8
->>    #define CORE_PWRCTL_BUS_OFF    BIT(0)
->>    #define CORE_PWRCTL_BUS_ON     BIT(1)
->>    #define CORE_PWRCTL_IO_LOW     BIT(2)
->> @@ -63,17 +58,13 @@
->>    #define CORE_CDR_EXT_EN                BIT(19)
->>    #define CORE_DLL_PDN           BIT(29)
->>    #define CORE_DLL_RST           BIT(30)
->> -#define CORE_DLL_CONFIG                0x100
->>    #define CORE_CMD_DAT_TRACK_SEL BIT(0)
->> -#define CORE_DLL_STATUS                0x108
-> 
->> -#define CORE_DLL_CONFIG_2      0x1b4
->>    #define CORE_DDR_CAL_EN                BIT(0)
->>    #define CORE_FLL_CYCLE_CNT     BIT(18)
->>    #define CORE_DLL_CLOCK_DISABLE BIT(21)
-> 
->> -#define CORE_VENDOR_SPEC       0x10c
->> -#define CORE_VENDOR_SPEC_POR_VAL       0xa1c
->> +#define CORE_VENDOR_SPEC_POR_VAL 0xa1c
->>    #define CORE_CLK_PWRSAVE       BIT(1)
->>    #define CORE_HC_MCLK_SEL_DFLT  (2 << 8)
->>    #define CORE_HC_MCLK_SEL_HS400 (3 << 8)
->> @@ -111,17 +102,14 @@
->>    #define CORE_CDC_SWITCH_BYPASS_OFF     BIT(0)
->>    #define CORE_CDC_SWITCH_RC_EN          BIT(1)
-> 
->> -#define CORE_DDR_200_CFG               0x184
->>    #define CORE_CDC_T4_DLY_SEL            BIT(0)
->>    #define CORE_CMDIN_RCLK_EN             BIT(1)
->>    #define CORE_START_CDC_TRAFFIC         BIT(6)
->> -#define CORE_VENDOR_SPEC3      0x1b0
->> +
->>    #define CORE_PWRSAVE_DLL       BIT(3)
-> 
->> -#define CORE_DDR_CONFIG                0x1b8
->>    #define DDR_CONFIG_POR_VAL     0x80040853
-> 
->> -#define CORE_VENDOR_SPEC_CAPABILITIES0 0x11c
-> 
->>    #define INVALID_TUNING_PHASE   -1
->>    #define SDHCI_MSM_MIN_CLOCK    400000
->> @@ -380,10 +368,14 @@ static inline int msm_dll_poll_ck_out_en(struct
-> sdhci_host *host, u8 poll)
->>           u32 wait_cnt = 50;
->>           u8 ck_out_en;
->>           struct mmc_host *mmc = host->mmc;
->> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +       const struct sdhci_msm_offset *msm_offset =
->> +                                       msm_host->offset;
-> 
-> I notice this pattern is pasted all over the place in order to get to the
-> offsets. Maybe a macro or inlined function would be cleaner to get you to
-> directly to the sdhci_msm_offset struct from sdhci_host, rather than this
-> blob of paste soup everywhere. In some places you do seem to use the
-> intermediate locals, so those cases wouldn't need to use the new helper.
-> 
-> 
->>           /* Poll for CK_OUT_EN bit.  max. poll time = 50us */
->> -       ck_out_en = !!(readl_relaxed(host->ioaddr + CORE_DLL_CONFIG) &
->> -                       CORE_CK_OUT_EN);
->> +       ck_out_en = !!(readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config) & CORE_CK_OUT_EN);
-> 
->>           while (ck_out_en != poll) {
->>                   if (--wait_cnt == 0) {
->> @@ -393,8 +385,8 @@ static inline int msm_dll_poll_ck_out_en(struct
-> sdhci_host *host, u8 poll)
->>                   }
->>                   udelay(1);
-> 
->> -               ck_out_en = !!(readl_relaxed(host->ioaddr +
-> CORE_DLL_CONFIG) &
->> -                               CORE_CK_OUT_EN);
->> +               ck_out_en = !!(readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config) & CORE_CK_OUT_EN);
->>           }
-> 
->>           return 0;
->> @@ -410,16 +402,20 @@ static int msm_config_cm_dll_phase(struct
-> sdhci_host *host, u8 phase)
->>           unsigned long flags;
->>           u32 config;
->>           struct mmc_host *mmc = host->mmc;
->> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +       const struct sdhci_msm_offset *msm_offset =
->> +                                       msm_host->offset;
-> 
->>           if (phase > 0xf)
->>                   return -EINVAL;
-> 
->>           spin_lock_irqsave(&host->lock, flags);
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
-> msm_offset->core_dll_config);
->>           config &= ~(CORE_CDR_EN | CORE_CK_OUT_EN);
->>           config |= (CORE_CDR_EXT_EN | CORE_DLL_EN);
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
-> msm_offset->core_dll_config);
-> 
->>           /* Wait until CK_OUT_EN bit of DLL_CONFIG register becomes '0' */
->>           rc = msm_dll_poll_ck_out_en(host, 0);
->> @@ -430,24 +426,24 @@ static int msm_config_cm_dll_phase(struct
-> sdhci_host *host, u8 phase)
->>            * Write the selected DLL clock output phase (0 ... 15)
->>            * to CDR_SELEXT bit field of DLL_CONFIG register.
->>            */
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
-> msm_offset->core_dll_config);
->>           config &= ~CDR_SELEXT_MASK;
->>           config |= grey_coded_phase_table[phase] << CDR_SELEXT_SHIFT;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
-> msm_offset->core_dll_config);
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
-> msm_offset->core_dll_config);
->>           config |= CORE_CK_OUT_EN;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
-> msm_offset->core_dll_config);
-> 
->>           /* Wait until CK_OUT_EN bit of DLL_CONFIG register becomes '1' */
->>           rc = msm_dll_poll_ck_out_en(host, 1);
->>           if (rc)
->>                   goto err_out;
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
-> msm_offset->core_dll_config);
->>           config |= CORE_CDR_EN;
->>           config &= ~CORE_CDR_EXT_EN;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
-> msm_offset->core_dll_config);
-> 
-> Nit: host->ioaddr + msm_offset->core_dll_config might benefit from having
-> its own local, since you use it so much in this function. Same goes for
-> where I've noted below...
-> 
+And if SMEM read in the probe returns something other than Kryo, it will =
+exit.
 
-core_dll_config is very much used. But having a local for it feels like 
-a bad idea. As different versions come up, the most used register may 
-change. So it would be better to stick to a consistent approach to 
-accessing every register.
-
->>           goto out;
-> 
->>    err_out:
->> @@ -573,6 +569,10 @@ static int msm_find_most_appropriate_phase(struct
-> sdhci_host *host,
->>    static inline void msm_cm_dll_set_freq(struct sdhci_host *host)
->>    {
->>           u32 mclk_freq = 0, config;
->> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +       const struct sdhci_msm_offset *msm_offset =
->> +                                       msm_host->offset;
-> 
->>           /* Program the MCLK value to MCLK_FREQ bit field */
->>           if (host->clock <= 112000000)
->> @@ -592,10 +592,10 @@ static inline void msm_cm_dll_set_freq(struct
-> sdhci_host *host)
->>           else if (host->clock <= 200000000)
->>                   mclk_freq = 7;
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
-> msm_offset->core_dll_config);
->>           config &= ~CMUX_SHIFT_PHASE_MASK;
->>           config |= mclk_freq << CMUX_SHIFT_PHASE_SHIFT;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
-> msm_offset->core_dll_config);
->>    }
-> 
->>    /* Initialize the DLL (Programmable Delay Line) */
->> @@ -607,6 +607,8 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->>           int wait_cnt = 50;
->>           unsigned long flags;
->>           u32 config;
->> +       const struct sdhci_msm_offset *msm_offset =
->> +                                       msm_host->offset;
-> 
->>           spin_lock_irqsave(&host->lock, flags);
-> 
->> @@ -615,34 +617,43 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->>            * tuning is in progress. Keeping PWRSAVE ON may
->>            * turn off the clock.
->>            */
->> -       config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
->> +       config = readl_relaxed(host->ioaddr +
-> msm_offset->core_vendor_spec);
->>           config &= ~CORE_CLK_PWRSAVE;
->> -       writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
->> +       writel_relaxed(config, host->ioaddr +
-> msm_offset->core_vendor_spec);
-> 
->>           if (msm_host->use_14lpp_dll_reset) {
->> -               config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +               config = readl_relaxed(host->ioaddr +
->> +                               msm_offset->core_dll_config);
->>                   config &= ~CORE_CK_OUT_EN;
->> -               writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +               writel_relaxed(config, host->ioaddr +
->> +                               msm_offset->core_dll_config);
-> 
->> -               config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
->> +               config = readl_relaxed(host->ioaddr +
->> +                               msm_offset->core_dll_config_2);
->>                   config |= CORE_DLL_CLOCK_DISABLE;
->> -               writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
->> +               writel_relaxed(config, host->ioaddr +
->> +                               msm_offset->core_dll_config_2);
->>           }
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config);
->>           config |= CORE_DLL_RST;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
->> +                       msm_offset->core_dll_config);
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config);
->>           config |= CORE_DLL_PDN;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
->> +                       msm_offset->core_dll_config);
->>           msm_cm_dll_set_freq(host);
-> 
->>           if (msm_host->use_14lpp_dll_reset &&
->>               !IS_ERR_OR_NULL(msm_host->xo_clk)) {
->>                   u32 mclk_freq = 0;
-> 
->> -               config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
->> +               config = readl_relaxed(host->ioaddr +
->> +                               msm_offset->core_dll_config_2);
->>                   config &= CORE_FLL_CYCLE_CNT;
->>                   if (config)
->>                           mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock *
-> 8),
->> @@ -651,40 +662,52 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->>                           mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock *
-> 4),
->>                                           clk_get_rate(msm_host->xo_clk));
-> 
->> -               config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
->> +               config = readl_relaxed(host->ioaddr +
->> +                               msm_offset->core_dll_config_2);
->>                   config &= ~(0xFF << 10);
->>                   config |= mclk_freq << 10;
-> 
->> -               writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
->> +               writel_relaxed(config, host->ioaddr +
->> +                               msm_offset->core_dll_config_2);
->>                   /* wait for 5us before enabling DLL clock */
->>                   udelay(5);
->>           }
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config);
->>           config &= ~CORE_DLL_RST;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
->> +                       msm_offset->core_dll_config);
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config);
->>           config &= ~CORE_DLL_PDN;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
->> +                       msm_offset->core_dll_config);
-> 
->>           if (msm_host->use_14lpp_dll_reset) {
->>                   msm_cm_dll_set_freq(host);
->> -               config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
->> +               config = readl_relaxed(host->ioaddr +
->> +                               msm_offset->core_dll_config_2);
->>                   config &= ~CORE_DLL_CLOCK_DISABLE;
->> -               writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
->> +               writel_relaxed(config, host->ioaddr +
->> +                               msm_offset->core_dll_config_2);
->>           }
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config);
->>           config |= CORE_DLL_EN;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
->> +                       msm_offset->core_dll_config);
-> 
->> -       config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +       config = readl_relaxed(host->ioaddr +
->> +                       msm_offset->core_dll_config);
->>           config |= CORE_CK_OUT_EN;
->> -       writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->> +       writel_relaxed(config, host->ioaddr +
->> +                       msm_offset->core_dll_config);
-> 
-> 
-> ...here. A local for host->ioaddr + msm_offset->core_dll_config would save
-> you a lot of split lines.
-> 
->> @@ -1272,12 +1327,17 @@ static void sdhci_msm_dump_pwr_ctrl_regs(struct
-> sdhci_host *host)
->>    {
->>           struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>           struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +       const struct sdhci_msm_offset *msm_offset =
->> +                                       msm_host->offset;
-> 
->>           pr_err("%s: PWRCTL_STATUS: 0x%08x | PWRCTL_MASK: 0x%08x |
-> PWRCTL_CTL: 0x%08x\n",
->> -                       mmc_hostname(host->mmc),
->> -                       readl_relaxed(msm_host->core_mem +
-> CORE_PWRCTL_STATUS),
->> -                       readl_relaxed(msm_host->core_mem +
-> CORE_PWRCTL_MASK),
->> -                       readl_relaxed(msm_host->core_mem +
-> CORE_PWRCTL_CTL));
->> +               mmc_hostname(host->mmc),
->> +                msm_host->var_ops->msm_readl_relaxed(host,
-> 
-> There's a weird extra space here.
-> 
->> +                       msm_offset->core_pwrctl_status),
->> +               msm_host->var_ops->msm_readl_relaxed(host,
->> +                       msm_offset->core_pwrctl_mask),
->> +               msm_host->var_ops->msm_readl_relaxed(host,
->> +                       msm_offset->core_pwrctl_ctl));
-> 
-> I think the idea of function pointers is fine, but overall the use of them
-> everywhere sure is ugly. It makes it really hard to actually see what's
-> happening. I wonder if things might look a lot cleaner with a helper
-> function here. Then instead of:
-> 
-> msm_host->var_ops->msm_readl_relaxed(host, msm_offset->core_pwrctl_ctl);
-> 
-> You could have
-> 
-> msm_core_read(host, msm_offset->core_pwrctl_ctl);
-> 
-
-if we use a helper function, then we will have to pass msm_host into it 
-as well. Otherwise there would be the hassle of deriving msm_host 
-address from sdhci_host.
-
-How about using a MACRO here instead for readability ?
-
->> @@ -1553,7 +1619,8 @@ static void sdhci_msm_set_regulator_caps(struct
-> sdhci_msm_host *msm_host)
->>                    */
->>                   u32 io_level = msm_host->curr_io_level;
-> 
->> -               config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
->> +               config =  readl_relaxed(host->ioaddr +
->> +                               msm_offset->core_vendor_spec);
-> 
-> Remove the second space before the readl_relaxed.
-> 
->> @@ -1710,32 +1793,40 @@ static int sdhci_msm_probe(struct platform_device
-> *pdev)
->>                   dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
->>           }
-> 
->> -       core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> -       msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
-> core_memres);
->> +       if (!msm_host->mci_removed) {
->> +               core_memres = platform_get_resource(pdev, IORESOURCE_MEM,
-> 1);
->> +               msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
->> +                               core_memres);
-> 
->> -       if (IS_ERR(msm_host->core_mem)) {
->> -               dev_err(&pdev->dev, "Failed to remap registers\n");
->> -               ret = PTR_ERR(msm_host->core_mem);
->> -               goto clk_disable;
->> +               if (IS_ERR(msm_host->core_mem)) {
->> +                       dev_err(&pdev->dev, "Failed to remap
-> registers\n");
->> +                       ret = PTR_ERR(msm_host->core_mem);
->> +                       goto clk_disable;
->> +               }
->>           }
-> 
->>           /* Reset the vendor spec register to power on reset state */
->>           writel_relaxed(CORE_VENDOR_SPEC_POR_VAL,
->> -                      host->ioaddr + CORE_VENDOR_SPEC);
->> -
->> -       /* Set HC_MODE_EN bit in HC_MODE register */
->> -       writel_relaxed(HC_MODE_EN, (msm_host->core_mem + CORE_HC_MODE));
->> -
->> -       config = readl_relaxed(msm_host->core_mem + CORE_HC_MODE);
->> -       config |= FF_CLK_SW_RST_DIS;
->> -       writel_relaxed(config, msm_host->core_mem + CORE_HC_MODE);
->> +                       host->ioaddr + msm_offset->core_vendor_spec);
->> +
->> +       if (!msm_host->mci_removed) {
->> +               /* Set HC_MODE_EN bit in HC_MODE register */
->> +               msm_host->var_ops->msm_writel_relaxed(HC_MODE_EN, host,
->> +                               msm_offset->core_hc_mode);
->> +               config = msm_host->var_ops->msm_readl_relaxed(host,
->> +                               msm_offset->core_hc_mode);
->> +               config |= FF_CLK_SW_RST_DIS;
->> +               msm_host->var_ops->msm_writel_relaxed(config, host,
->> +                               msm_offset->core_hc_mode);
->> +       }
-> 
->>           host_version = readw_relaxed((host->ioaddr + SDHCI_HOST_VERSION));
->>           dev_dbg(&pdev->dev, "Host Version: 0x%x Vendor Version 0x%x\n",
->>                   host_version, ((host_version & SDHCI_VENDOR_VER_MASK) >>
->>                                  SDHCI_VENDOR_VER_SHIFT));
-> 
->> -       core_version = readl_relaxed(msm_host->core_mem +
-> CORE_MCI_VERSION);
->> +       core_version =  msm_host->var_ops->msm_readl_relaxed(host,
->> +               msm_offset->core_mci_version);
-> 
-> Another double space after the =. Perhaps this was a find/replace error?
-> Look out for more of these that I missed.
-> 
-> -Evan
-> 
-
-Thanks for pointing these out. Will check for such issues in all 3 patches.
-
-Thanks,
-Vijay
+>=20
+> --
+> Regards,
+> Sudeep
