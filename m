@@ -1,417 +1,128 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH V4 1/8] net: ethernet: stmmac: add adaptation for
- stm32mp157c.
-Date: Thu, 24 May 2018 09:24:16 +0200
-Message-ID: <1fd2b269-0bb8-ae6d-8e17-0c69b13d7f53@st.com>
-References: <1527090479-5263-1-git-send-email-christophe.roullier@st.com>
- <1527090479-5263-2-git-send-email-christophe.roullier@st.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH RFC 00/24] Lima DRM driver
+Date: Thu, 24 May 2018 09:25:48 +0200
+Message-ID: <CAKMK7uFHpX12RKJewZmSBnTgpcAvr9OpLgyYL__RGQW7vqkJYQ@mail.gmail.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <940a5ee5-ff3e-e438-504e-f720f201fee6@gmail.com>
+ <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
+ <CAKMK7uFfnSLpcQ_MAbqkLfs8DyZS8BfiG5uuxgvynYc_Z7To_g@mail.gmail.com>
+ <CAKGbVbsb5JPXrca6MsRCYgrB76t8wYM8MPKpQU76kJTX8WV-Yg@mail.gmail.com>
+ <cfc190af-1d46-7dca-fded-19b3b7896166@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1527090479-5263-2-git-send-email-christophe.roullier@st.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Christophe Roullier <christophe.roullier@st.com>, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, andrew@lunn.ch
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cfc190af-1d46-7dca-fded-19b3b7896166@amd.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Qiang Yu <yuq825@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 05/23/2018 05:47 PM, Christophe Roullier wrote:
-> Glue codes to support stm32mp157c device and stay
-> compatible with stm32 mcu family
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
-
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
-
->   drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 270 ++++++++++++++++++++--
->   1 file changed, 255 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> index 9e6db16..f51e327 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> @@ -16,49 +16,183 @@
->   #include <linux/of_net.h>
->   #include <linux/phy.h>
->   #include <linux/platform_device.h>
-> +#include <linux/pm_wakeirq.h>
->   #include <linux/regmap.h>
->   #include <linux/slab.h>
->   #include <linux/stmmac.h>
->   
->   #include "stmmac_platform.h"
->   
-> -#define MII_PHY_SEL_MASK	BIT(23)
-> +#define SYSCFG_MCU_ETH_MASK		BIT(23)
-> +#define SYSCFG_MP1_ETH_MASK		GENMASK(23, 16)
-> +
-> +#define SYSCFG_PMCR_ETH_CLK_SEL		BIT(16)
-> +#define SYSCFG_PMCR_ETH_REF_CLK_SEL	BIT(17)
-> +#define SYSCFG_PMCR_ETH_SEL_MII		BIT(20)
-> +#define SYSCFG_PMCR_ETH_SEL_RGMII	BIT(21)
-> +#define SYSCFG_PMCR_ETH_SEL_RMII	BIT(23)
-> +#define SYSCFG_PMCR_ETH_SEL_GMII	0
-> +#define SYSCFG_MCU_ETH_SEL_MII		0
-> +#define SYSCFG_MCU_ETH_SEL_RMII		1
->   
->   struct stm32_dwmac {
->   	struct clk *clk_tx;
->   	struct clk *clk_rx;
-> +	struct clk *clk_eth_ck;
-> +	struct clk *clk_ethstp;
-> +	struct clk *syscfg_clk;
-> +	bool int_phyclk;	/* Clock from RCC to drive PHY */
->   	u32 mode_reg;		/* MAC glue-logic mode register */
->   	struct regmap *regmap;
->   	u32 speed;
-> +	const struct stm32_ops *ops;
-> +	struct device *dev;
-> +};
-> +
-> +struct stm32_ops {
-> +	int (*set_mode)(struct plat_stmmacenet_data *plat_dat);
-> +	int (*clk_prepare)(struct stm32_dwmac *dwmac, bool prepare);
-> +	int (*suspend)(struct stm32_dwmac *dwmac);
-> +	void (*resume)(struct stm32_dwmac *dwmac);
-> +	int (*parse_data)(struct stm32_dwmac *dwmac,
-> +			  struct device *dev);
-> +	u32 syscfg_eth_mask;
->   };
->   
->   static int stm32_dwmac_init(struct plat_stmmacenet_data *plat_dat)
->   {
->   	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
-> -	u32 reg = dwmac->mode_reg;
-> -	u32 val;
->   	int ret;
->   
-> -	val = (plat_dat->interface == PHY_INTERFACE_MODE_MII) ? 0 : 1;
-> -	ret = regmap_update_bits(dwmac->regmap, reg, MII_PHY_SEL_MASK, val);
-> -	if (ret)
-> -		return ret;
-> +	if (dwmac->ops->set_mode) {
-> +		ret = dwmac->ops->set_mode(plat_dat);
-> +		if (ret)
-> +			return ret;
-> +	}
->   
->   	ret = clk_prepare_enable(dwmac->clk_tx);
->   	if (ret)
->   		return ret;
->   
-> -	ret = clk_prepare_enable(dwmac->clk_rx);
-> -	if (ret)
-> -		clk_disable_unprepare(dwmac->clk_tx);
-> +	if (!dwmac->dev->power.is_suspended) {
-> +		ret = clk_prepare_enable(dwmac->clk_rx);
-> +		if (ret) {
-> +			clk_disable_unprepare(dwmac->clk_tx);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (dwmac->ops->clk_prepare) {
-> +		ret = dwmac->ops->clk_prepare(dwmac, true);
-> +		if (ret) {
-> +			clk_disable_unprepare(dwmac->clk_rx);
-> +			clk_disable_unprepare(dwmac->clk_tx);
-> +		}
-> +	}
->   
->   	return ret;
->   }
->   
-> +static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
-> +{
-> +	int ret = 0;
-> +
-> +	if (prepare) {
-> +		ret = clk_prepare_enable(dwmac->syscfg_clk);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (dwmac->int_phyclk) {
-> +			ret = clk_prepare_enable(dwmac->clk_eth_ck);
-> +			if (ret) {
-> +				clk_disable_unprepare(dwmac->syscfg_clk);
-> +				return ret;
-> +			}
-> +		}
-> +	} else {
-> +		clk_disable_unprepare(dwmac->syscfg_clk);
-> +		if (dwmac->int_phyclk)
-> +			clk_disable_unprepare(dwmac->clk_eth_ck);
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
-> +{
-> +	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
-> +	u32 reg = dwmac->mode_reg;
-> +	int val;
-> +
-> +	switch (plat_dat->interface) {
-> +	case PHY_INTERFACE_MODE_MII:
-> +		val = SYSCFG_PMCR_ETH_SEL_MII;
-> +		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
-> +		break;
-> +	case PHY_INTERFACE_MODE_GMII:
-> +		val = SYSCFG_PMCR_ETH_SEL_GMII;
-> +		if (dwmac->int_phyclk)
-> +			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-> +		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
-> +		break;
-> +	case PHY_INTERFACE_MODE_RMII:
-> +		val = SYSCFG_PMCR_ETH_SEL_RMII;
-> +		if (dwmac->int_phyclk)
-> +			val |= SYSCFG_PMCR_ETH_REF_CLK_SEL;
-> +		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +	case PHY_INTERFACE_MODE_RGMII_ID:
-> +	case PHY_INTERFACE_MODE_RGMII_RXID:
-> +	case PHY_INTERFACE_MODE_RGMII_TXID:
-> +		val = SYSCFG_PMCR_ETH_SEL_RGMII;
-> +		if (dwmac->int_phyclk)
-> +			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-> +		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
-> +		break;
-> +	default:
-> +		pr_debug("SYSCFG init :  Do not manage %d interface\n",
-> +			 plat_dat->interface);
-> +		/* Do not manage others interfaces */
-> +		return -EINVAL;
-> +	}
-> +
-> +	return regmap_update_bits(dwmac->regmap, reg,
-> +				 dwmac->ops->syscfg_eth_mask, val);
-> +}
-> +
-> +static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
-> +{
-> +	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
-> +	u32 reg = dwmac->mode_reg;
-> +	int val;
-> +
-> +	switch (plat_dat->interface) {
-> +	case PHY_INTERFACE_MODE_MII:
-> +		val = SYSCFG_MCU_ETH_SEL_MII;
-> +		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
-> +		break;
-> +	case PHY_INTERFACE_MODE_RMII:
-> +		val = SYSCFG_MCU_ETH_SEL_RMII;
-> +		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
-> +		break;
-> +	default:
-> +		pr_debug("SYSCFG init :  Do not manage %d interface\n",
-> +			 plat_dat->interface);
-> +		/* Do not manage others interfaces */
-> +		return -EINVAL;
-> +	}
-> +
-> +	return regmap_update_bits(dwmac->regmap, reg,
-> +				 dwmac->ops->syscfg_eth_mask, val);
-> +}
-> +
->   static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac)
->   {
->   	clk_disable_unprepare(dwmac->clk_tx);
->   	clk_disable_unprepare(dwmac->clk_rx);
-> +
-> +	if (dwmac->ops->clk_prepare)
-> +		dwmac->ops->clk_prepare(dwmac, false);
->   }
->   
->   static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
-> @@ -70,15 +204,22 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
->   	/*  Get TX/RX clocks */
->   	dwmac->clk_tx = devm_clk_get(dev, "mac-clk-tx");
->   	if (IS_ERR(dwmac->clk_tx)) {
-> -		dev_err(dev, "No tx clock provided...\n");
-> +		dev_err(dev, "No ETH Tx clock provided...\n");
->   		return PTR_ERR(dwmac->clk_tx);
->   	}
-> +
->   	dwmac->clk_rx = devm_clk_get(dev, "mac-clk-rx");
->   	if (IS_ERR(dwmac->clk_rx)) {
-> -		dev_err(dev, "No rx clock provided...\n");
-> +		dev_err(dev, "No ETH Rx clock provided...\n");
->   		return PTR_ERR(dwmac->clk_rx);
->   	}
->   
-> +	if (dwmac->ops->parse_data) {
-> +		err = dwmac->ops->parse_data(dwmac, dev);
-> +		if (err)
-> +			return err;
-> +	}
-> +
->   	/* Get mode register */
->   	dwmac->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscon");
->   	if (IS_ERR(dwmac->regmap))
-> @@ -91,11 +232,46 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
->   	return err;
->   }
->   
-> +static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
-> +			       struct device *dev)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +
-> +	dwmac->int_phyclk = of_property_read_bool(np, "st,int-phyclk");
-> +
-> +	/* Check if internal clk from RCC selected */
-> +	if (dwmac->int_phyclk) {
-> +		/*  Get ETH_CLK clocks */
-> +		dwmac->clk_eth_ck = devm_clk_get(dev, "eth-ck");
-> +		if (IS_ERR(dwmac->clk_eth_ck)) {
-> +			dev_err(dev, "No ETH CK clock provided...\n");
-> +			return PTR_ERR(dwmac->clk_eth_ck);
-> +		}
-> +	}
-> +
-> +	/*  Clock used for low power mode */
-> +	dwmac->clk_ethstp = devm_clk_get(dev, "ethstp");
-> +	if (IS_ERR(dwmac->clk_ethstp)) {
-> +		dev_err(dev, "No ETH peripheral clock provided for CStop mode ...\n");
-> +		return PTR_ERR(dwmac->clk_ethstp);
-> +	}
-> +
-> +	/*  Clock for sysconfig */
-> +	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
-> +	if (IS_ERR(dwmac->syscfg_clk)) {
-> +		dev_err(dev, "No syscfg clock provided...\n");
-> +		return PTR_ERR(dwmac->syscfg_clk);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static int stm32_dwmac_probe(struct platform_device *pdev)
->   {
->   	struct plat_stmmacenet_data *plat_dat;
->   	struct stmmac_resources stmmac_res;
->   	struct stm32_dwmac *dwmac;
-> +	const struct stm32_ops *data;
->   	int ret;
->   
->   	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-> @@ -112,6 +288,16 @@ static int stm32_dwmac_probe(struct platform_device *pdev)
->   		goto err_remove_config_dt;
->   	}
->   
-> +	data = of_device_get_match_data(&pdev->dev);
-> +	if (!data) {
-> +		dev_err(&pdev->dev, "no of match data provided\n");
-> +		ret = -EINVAL;
-> +		goto err_remove_config_dt;
-> +	}
-> +
-> +	dwmac->ops = data;
-> +	dwmac->dev = &pdev->dev;
-> +
->   	ret = stm32_dwmac_parse_data(dwmac, &pdev->dev);
->   	if (ret) {
->   		dev_err(&pdev->dev, "Unable to parse OF data\n");
-> @@ -149,15 +335,48 @@ static int stm32_dwmac_remove(struct platform_device *pdev)
->   	return ret;
->   }
->   
-> +static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
-> +{
-> +	int ret = 0;
-> +
-> +	ret = clk_prepare_enable(dwmac->clk_ethstp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	clk_disable_unprepare(dwmac->clk_tx);
-> +	clk_disable_unprepare(dwmac->syscfg_clk);
-> +	if (dwmac->int_phyclk)
-> +		clk_disable_unprepare(dwmac->clk_eth_ck);
-> +
-> +	return ret;
-> +}
-> +
-> +static void stm32mp1_resume(struct stm32_dwmac *dwmac)
-> +{
-> +	clk_disable_unprepare(dwmac->clk_ethstp);
-> +}
-> +
-> +static int stm32mcu_suspend(struct stm32_dwmac *dwmac)
-> +{
-> +	clk_disable_unprepare(dwmac->clk_tx);
-> +	clk_disable_unprepare(dwmac->clk_rx);
-> +
-> +	return 0;
-> +}
-> +
->   #ifdef CONFIG_PM_SLEEP
->   static int stm32_dwmac_suspend(struct device *dev)
->   {
->   	struct net_device *ndev = dev_get_drvdata(dev);
->   	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	struct stm32_dwmac *dwmac = priv->plat->bsp_priv;
-> +
->   	int ret;
->   
->   	ret = stmmac_suspend(dev);
-> -	stm32_dwmac_clk_disable(priv->plat->bsp_priv);
-> +
-> +	if (dwmac->ops->suspend)
-> +		ret = dwmac->ops->suspend(dwmac);
->   
->   	return ret;
->   }
-> @@ -166,8 +385,12 @@ static int stm32_dwmac_resume(struct device *dev)
->   {
->   	struct net_device *ndev = dev_get_drvdata(dev);
->   	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	struct stm32_dwmac *dwmac = priv->plat->bsp_priv;
->   	int ret;
->   
-> +	if (dwmac->ops->resume)
-> +		dwmac->ops->resume(dwmac);
-> +
->   	ret = stm32_dwmac_init(priv->plat);
->   	if (ret)
->   		return ret;
-> @@ -181,8 +404,24 @@ static int stm32_dwmac_resume(struct device *dev)
->   static SIMPLE_DEV_PM_OPS(stm32_dwmac_pm_ops,
->   	stm32_dwmac_suspend, stm32_dwmac_resume);
->   
-> +static struct stm32_ops stm32mcu_dwmac_data = {
-> +	.set_mode = stm32mcu_set_mode,
-> +	.suspend = stm32mcu_suspend,
-> +	.syscfg_eth_mask = SYSCFG_MCU_ETH_MASK
-> +};
-> +
-> +static struct stm32_ops stm32mp1_dwmac_data = {
-> +	.set_mode = stm32mp1_set_mode,
-> +	.clk_prepare = stm32mp1_clk_prepare,
-> +	.suspend = stm32mp1_suspend,
-> +	.resume = stm32mp1_resume,
-> +	.parse_data = stm32mp1_parse_data,
-> +	.syscfg_eth_mask = SYSCFG_MP1_ETH_MASK
-> +};
-> +
->   static const struct of_device_id stm32_dwmac_match[] = {
-> -	{ .compatible = "st,stm32-dwmac"},
-> +	{ .compatible = "st,stm32-dwmac", .data = &stm32mcu_dwmac_data},
-> +	{ .compatible = "st,stm32mp1-dwmac", .data = &stm32mp1_dwmac_data},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, stm32_dwmac_match);
-> @@ -199,5 +438,6 @@ static SIMPLE_DEV_PM_OPS(stm32_dwmac_pm_ops,
->   module_platform_driver(stm32_dwmac_driver);
->   
->   MODULE_AUTHOR("Alexandre Torgue <alexandre.torgue@gmail.com>");
-> -MODULE_DESCRIPTION("STMicroelectronics MCU DWMAC Specific Glue layer");
-> +MODULE_AUTHOR("Christophe Roullier <christophe.roullier@st.com>");
-> +MODULE_DESCRIPTION("STMicroelectronics STM32 DWMAC Specific Glue layer");
->   MODULE_LICENSE("GPL v2");
-> 
+T24gVGh1LCBNYXkgMjQsIDIwMTggYXQgODoyNyBBTSwgQ2hyaXN0aWFuIEvDtm5pZwo8Y2hyaXN0
+aWFuLmtvZW5pZ0BhbWQuY29tPiB3cm90ZToKPiBBbSAyNC4wNS4yMDE4IHVtIDAyOjMxIHNjaHJp
+ZWIgUWlhbmcgWXU6Cj4+Cj4+IE9uIFdlZCwgTWF5IDIzLCAyMDE4IGF0IDExOjQ0IFBNLCBEYW5p
+ZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+IHdyb3RlOgo+Pj4KPj4+IE9uIFdlZCwgTWF5IDIz
+LCAyMDE4IGF0IDM6NTIgUE0sIFFpYW5nIFl1IDx5dXE4MjVAZ21haWwuY29tPiB3cm90ZToKPj4+
+Pgo+Pj4+IE9uIFdlZCwgTWF5IDIzLCAyMDE4IGF0IDU6MjkgUE0sIENocmlzdGlhbiBLw7ZuaWcK
+Pj4+PiA8Y2tvZW5pZy5sZWljaHR6dW1lcmtlbkBnbWFpbC5jb20+IHdyb3RlOgo+Pj4+Pgo+Pj4+
+PiBBbSAxOC4wNS4yMDE4IHVtIDExOjI3IHNjaHJpZWIgUWlhbmcgWXU6Cj4+Pj4+Pgo+Pj4+Pj4g
+S2VybmVsIERSTSBkcml2ZXIgZm9yIEFSTSBNYWxpIDQwMC80NTAgR1BVcy4KPj4+Pj4+Cj4+Pj4+
+PiBUaGlzIGltcGxlbWVudGF0aW9uIG1haW5seSB0YWtlIGFtZGdwdSBEUk0gZHJpdmVyIGFzIHJl
+ZmVyZW5jZS4KPj4+Pj4+Cj4+Pj4+PiAtIE1hbGkgNHh4IEdQVXMgaGF2ZSB0d28ga2luZHMgb2Yg
+cHJvY2Vzc29ycyBHUCBhbmQgUFAuIEdQIGlzIGZvcgo+Pj4+Pj4gICAgIE9wZW5HTCB2ZXJ0ZXgg
+c2hhZGVyIHByb2Nlc3NpbmcgYW5kIFBQIGlzIGZvciBmcmFnbWVudCBzaGFkZXIKPj4+Pj4+ICAg
+ICBwcm9jZXNzaW5nLiBFYWNoIHByb2Nlc3NvciBoYXMgaXRzIG93biBNTVUgc28gcHJjZXNzb3Jz
+IHdvcmsgaW4KPj4+Pj4+ICAgICB2aXJ0dWFsIGFkZHJlc3Mgc3BhY2UuCj4+Pj4+PiAtIFRoZXJl
+J3Mgb25seSBvbmUgR1AgYnV0IG11bHRpcGxlIFBQIChtYXggNCBmb3IgbWFsaSA0MDAgYW5kIDgK
+Pj4+Pj4+ICAgICBmb3IgbWFsaSA0NTApIGluIHRoZSBzYW1lIG1hbGkgNHh4IEdQVS4gQWxsIFBQ
+cyBhcmUgZ3JvdXBlZAo+Pj4+Pj4gICAgIHRvZ2F0aGVyIHRvIGhhbmRsZSBhIHNpbmdsZSBmcmFn
+bWVudCBzaGFkZXIgdGFzayBkaXZpZGVkIGJ5Cj4+Pj4+PiAgICAgRkIgb3V0cHV0IHRpbGVkIHBp
+eGVscy4gTWFsaSA0MDAgdXNlciBzcGFjZSBkcml2ZXIgaXMKPj4+Pj4+ICAgICByZXNwb25zaWJs
+ZSBmb3IgYXNzaWduIHRhcmdldCB0aWxlZCBwaXhlbHMgdG8gZWFjaCBQUCwgYnV0IG1hbGkKPj4+
+Pj4+ICAgICA0NTAgaGFzIGEgSFcgbW9kdWxlIGNhbGxlZCBETEJVIHRvIGR5bmFtaWNhbGx5IGJh
+bGFuY2UgZWFjaAo+Pj4+Pj4gICAgIFBQJ3MgbG9hZC4KPj4+Pj4+IC0gVXNlciBzcGFjZSBkcml2
+ZXIgYWxsb2NhdGUgYnVmZmVyIG9iamVjdCBhbmQgbWFwIGludG8gR1BVCj4+Pj4+PiAgICAgdmly
+dHVhbCBhZGRyZXNzIHNwYWNlLCB1cGxvYWQgY29tbWFuZCBzdHJlYW0gYW5kIGRyYXcgZGF0YSB3
+aXRoCj4+Pj4+PiAgICAgQ1BVIG1tYXAgb2YgdGhlIGJ1ZmZlciBvYmplY3QsIHRoZW4gc3VibWl0
+IHRhc2sgdG8gR1AvUFAgd2l0aAo+Pj4+Pj4gICAgIGEgcmVnaXN0ZXIgZnJhbWUgaW5kaWNhdGlu
+ZyB3aGVyZSBpcyB0aGUgY29tbWFuZCBzdHJlYW0gYW5kIG1pc2MKPj4+Pj4+ICAgICBzZXR0aW5n
+cy4KPj4+Pj4+IC0gVGhlcmUncyBubyBjb21tYW5kIHN0cmVhbSB2YWxpZGF0aW9uL3JlbG9jYXRp
+b24gZHVlIHRvIGVhY2ggdXNlcgo+Pj4+Pj4gICAgIHByb2Nlc3MgaGFzIGl0cyBvd24gR1BVIHZp
+cnR1YWwgYWRkcmVzcyBzcGFjZS4gR1AvUFAncyBNTVUgc3dpdGNoCj4+Pj4+PiAgICAgdmlydHVh
+bCBhZGRyZXNzIHNwYWNlIGJlZm9yZSBydW5uaW5nIHR3byB0YXNrcyBmcm9tIGRpZmZlcmVudAo+
+Pj4+Pj4gICAgIHVzZXIgcHJvY2Vzcy4gRXJyb3Igb3IgZXZpbCB1c2VyIHNwYWNlIGNvZGUganVz
+dCBnZXQgTU1VIGZhdWx0Cj4+Pj4+PiAgICAgb3IgR1AvUFAgZXJyb3IgSVJRLCB0aGVuIHRoZSBI
+Vy9TVyB3aWxsIGJlIHJlY292ZXJlZC4KPj4+Pj4+IC0gVXNlIFRUTSBhcyBNTS4gVFRNX1BMX1RU
+IHR5cGUgbWVtb3J5IGlzIHVzZWQgYXMgdGhlIGNvbnRlbnQgb2YKPj4+Pj4+ICAgICBsaW1hIGJ1
+ZmZlciBvYmplY3Qgd2hpY2ggaXMgYWxsb2NhdGVkIGZyb20gVFRNIHBhZ2UgcG9vbC4gYWxsCj4+
+Pj4+PiAgICAgbGltYSBidWZmZXIgb2JqZWN0IGdldHMgcGlubmVkIHdpdGggVFRNX1BMX0ZMQUdf
+Tk9fRVZJQ1Qgd2hlbgo+Pj4+Pj4gICAgIGFsbG9jYXRpb24sIHNvIHRoZXJlJ3Mgbm8gYnVmZmVy
+IGV2aWN0aW9uIGFuZCBzd2FwIGZvciBub3cuIFdlCj4+Pj4+PiAgICAgbmVlZCByZXZlcnNlIGVu
+Z2luZWVyaW5nIHRvIHNlZSBpZiBhbmQgaG93IEdQL1BQIHN1cHBvcnQgTU1VCj4+Pj4+PiAgICAg
+ZmF1bHQgcmVjb3ZlcnkgKGNvbnRpbnVlIGV4ZWN1dGlvbikuIE90aGVyd2lzZSB3ZSBoYXZlIHRv
+Cj4+Pj4+PiAgICAgcGluL3VucGluIGVhY2ggZW52b2x2ZWQgYnVmZmVyIHdoZW4gdGFzayBjcmVh
+dGlvbi9kZWxldGlvbi4KPj4+Pj4KPj4+Pj4KPj4+Pj4gV2VsbCBwaW5uaW5nIGFsbCBtZW1vcnkg
+aXMgdXN1YWxseSBhIG5vLWdvIGZvciB1cHN0cmVhbWluZy4gQnV0IHNpbmNlCj4+Pj4+IHlvdQo+
+Pj4+PiBhcmUgYWxyZWFkeSB1c2luZyB0aGUgZHJtX3NjaGVkIGZvciBHUFUgdGFzayBzY2hlZHVs
+aW5nIHdoeSBhcmUgeW91Cj4+Pj4+IGFjdHVhbGx5Cj4+Pj4+IG5lZWRpbmcgdGhpcz8KPj4+Pj4K
+Pj4+Pj4gVGhlIHNjaGVkdWxlciBzaG91bGQgdGFrZSBjYXJlIG9mIHNpZ25hbGluZyBhbGwgZmVu
+Y2VzIHdoZW4gdGhlCj4+Pj4+IGhhcmR3YXJlIGlzCj4+Pj4+IGRvbmUgd2l0aCBpdCdzIG1hZ2lj
+IGFuZCB0aGF0IGlzIGVub3VnaCBmb3IgVFRNIHRvIG5vdGUgdGhhdCBhIGJ1ZmZlcgo+Pj4+PiBv
+YmplY3QKPj4+Pj4gaXMgbW92YWJsZSBhZ2FpbiAoZS5nLiB1bnBpbiB0aGVtKS4KPj4+Pgo+Pj4+
+IFBsZWFzZSBjb3JyZWN0IG1lIGlmIEknbSB3cm9uZy4KPj4+Pgo+Pj4+IE9uZSB3YXkgdG8gaW1w
+bGVtZW50IGV2aWN0aW9uL3N3YXAgaXMgbGlrZSB0aGlzOgo+Pj4+IGNhbGwgdmFsaWRhdGlvbiBv
+biBlYWNoIGJ1ZmZlcnMgaW52b2x2ZWQgaW4gYSB0YXNrLCBidXQgdGhpcyB3b24ndAo+Pj4+IHBy
+ZXZlbnQgaXQgZnJvbQo+Pj4+IGV2aWN0aW9uL3N3YXAgd2hlbiBleGVjdXRpbmcsIHNvIGEgR1BV
+IE1NVSBmYXVsdCBtYXkgaGFwcGVuIGFuZCBpbiB0aGUKPj4+PiBoYW5kbGVyIHdlIG5lZWQgdG8g
+cmVjb3ZlciB0aGUgYnVmZmVyIGV2aWN0ZWQvc3dhcHBlZC4KPj4+Pgo+Pj4+IEFub3RoZXIgd2F5
+IGlzIHBpbi91bnBpbiBidWZmZXJzIGV2b2x2ZWQgd2hlbiB0YXNrIGNyZWF0ZS9mcmVlLgo+Pj4+
+Cj4+Pj4gRmlyc3Qgd2F5IGlzIGJldHRlciB3aGVuIG1lbW9yeSBsb2FkIGlzIGxvdyBhbmQgc2Vj
+b25kIHdheSBpcyBiZXR0ZXIKPj4+PiB3aGVuCj4+Pj4gbWVtb3J5IGxvYWQgaXMgaGlnaC4gRmly
+c3Qgd2F5IGFsc28gbmVlZCBsZXNzIG1lbW9yeS4KPj4+Pgo+Pj4+IFNvIEknZCBwcmVmZXIgZmly
+c3Qgd2F5IGJ1dCBkdWUgdG8gdGhlIEdQVSBNTVUgZmF1bHQKPj4+PiBIVyBvcCBuZWVkIHJldmVy
+c2UgZW5naW5lZXJpbmcsIEkgaGF2ZSB0byBwaW4gYWxsIGJ1ZmZlcnMgbm93LiBBZnRlcgo+Pj4+
+IHRoZSBIVyBvcCBpcyBjbGVhciwgSSBjYW4gY2hvb3NlIG9uZSB3YXkgdG8gaW1wbGVtZW50Lgo+
+Pj4KPj4+IEFsbCB0aGUgZHJpdmVycyB1c2luZyB0dG0gaGF2ZSBzb21ldGhpbmcgdGhhdCBsb29r
+cyBsaWtlIHZyYW0sIG9yIGEKPj4+IHJlcXVpcmVtZW50IHRvIG1vdmUgYnVmZmVycyBhcm91bmQu
+IEFmYWl1aSB0aGF0IGluY2x1ZGVzIHZpcnRpbyBkcm0KPj4+IGRyaXZlci4KPj4KPj4gRG9lcyB2
+aXJ0aW8gZHJtIGRyaXZlciBuZWVkIHRvIG1vdmUgYnVmZmVycyBhcm91bmQ/IGFtZGdwdSBhbHNv
+Cj4+IGhhcyBubyB2cmFtIHdoZW4gQVBVLgoKQWZhaXVpIEFQVXMgaGF2ZSBhIHJhbmdlIG9mIHN0
+b2xlbiBtZW1vcnkgd2hpY2ggbG9va3MgYW5kIGFjdHMgYW5kIGlzCm1hbmFnZWQgbGlrZSBkaXNj
+cmV0ZSB2cmFtLiBJbmNsdWRpbmcgbW92aW5nIGJ1ZmZlcnMgYXJvdW5kLgoKPj4+ICBGcm9tIHlv
+dXIgZGVzY3JpcHRpb24geW91IGRvbid0IGhhdmUgc3VjaCBhIHJlcXVpcmVtZW50LCBhbmQKPj4+
+IHRoZW4gZG9pbmcgd2hhdCBldG5hdml2IGhhcyBkb25lIHdvdWxkIGJlIGEgbG90IHNpbXBsZXIu
+IEV2ZXJ5dGhpbmcKPj4+IHRoYXQncyBub3QgcmVsYXRlZCB0byBidWZmZXIgbW92ZW1lbnQgaGFu
+ZGxpbmcgaXMgYWxzbyBhdmFpbGFibGUKPj4+IG91dHNpZGUgb2YgdHRtIGFscmVhZHkuCj4+Cj4+
+IFllYWgsIEkgY291bGQgZG8gbGlrZSBldG5hdml2LCBidXQgaXQncyBub3Qgc2ltcGxlciB0aGFu
+IHVzaW5nIHR0bQo+PiBkaXJlY3RseSBlc3BlY2lhbGx5IHdhbnQgc29tZSBvcHRpbWl6YXRpb24g
+KGxpa2UgdHRtIHBhZ2UgcG9vbCwKPj4gdHRtX2V1X3Jlc2VydmVfYnVmZmVycywgdHRtX2JvX21t
+YXApLiBJZiBJIGhhdmUvd2FudCB0byBpbXBsZW1lbnQKPj4gdGhlbSwgd2h5IG5vdCBqdXN0IHVz
+ZSBUVE0gZGlyZWN0bHkgd2l0aCBhbGwgdGhvc2UgaGVscGVyIGZ1bmN0aW9ucy4KPgo+Cj4gV2Vs
+bCBUVE0gaGFzIHNvbWUgZGVzaWduIGZsYXdzIChlLmcuIGhlYXZpbHkgbGF5ZXJlZCBkZXNpZ24g
+ZXRjLi4uKSwgYnV0IGl0Cj4gYWxzbyBvZmZlcnMgc29tZSByYXRoZXIgbmljZSBmdW5jdGlvbmFs
+aXR5LgoKWWVhaCwgYnV0IEkgc3RpbGwgdGhpbmsgdGhhdCBmb3Igbm9uLWRpc2NyZXRlIGRyaXZl
+cnMganVzdCBtb3ZpbmcgYQpidW5jaCBvZiBtb3JlIG9mIHRoZSBuZWF0IHR0bSBmdW5jdGlvbmFs
+aXR5IGludG8gaGVscGVycyB3aGVyZQpldmVyeW9uZSBjYW4gdXNlIHRoZW0gKGluc3RlYWQgb2Yg
+dGhlIGJpbmFyeSB0dG0geS9uIGRlY2lzaW9uKSB3b3VsZApiZSBtdWNoIGJldHRlci4gRS5nLiB0
+aGUgYWxsb2NhdG9yIHBvb2wgZGVmaW5pdGVseSBzb3VuZHMgbGlrZQpzb21ldGhpbmcgZ2VtIGhl
+bHBlcnMgc2hvdWxkIGJlIGFibGUgdG8gZG8sIHNhbWUgZm9yIHJlc2VydmluZyBhIHBpbGUKb2Yg
+YnVmZmVycyBvciBkZWZhdWx0IG1tYXAgaW1wbGVtZW50YXRpb25zLiBBIGxvdCBvZiB0aGF0IGFs
+c28gZXhpc3RzCmFscmVhZHksIHRoYW5rcyB0byBsb3RzIG9mIGVmZm9ydHMgZnJvbSBOb3JhbGYg
+VHJvbm5lcyBhbmQgb3RoZXJzLgoKSSB0aGluayBpZGVhbGx5IHRoZSBsb25nLXRlcm0gZ29hbCB3
+b3VsZCBiZSB0byBtb2R1bGFyaXplIHR0bSBjb25jZXB0cwphcyBtdWNoIGFzIHBvc3NpYmxlLCBz
+byB0aGF0IGRyaXZlcnMgY2FuIGZsZXhpYmx5IHBpY2smY2hvb3NlIHRoZSBiaXRzCnRoZXkgbmVl
+ZC4gV2UncmUgc2xvd2x5IGdldHRpbmcgdGhlcmUgKGJ1dCBkZWZpbml0ZWx5IG5vdCB5ZXQgdGhl
+cmUgaWYKeW91IG5lZWQgdG8gbWFuYWdlIGRpc2NyZXRlIHZyYW0gSSB0aGluaykuCi1EYW5pZWwK
+LS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCis0
+MSAoMCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
