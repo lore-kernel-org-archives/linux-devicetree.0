@@ -1,105 +1,165 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Thu, 24 May 2018 14:27:36 +0200
-Message-ID: <20180524142736.2ef157fe@bbrezillon>
-References: <cover.1526990589.git.stefan@agner.ch>
-        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
-        <20180523161810.0ed9fe80@bbrezillon>
-        <2d8107f0e6568512d691e9ea25a1e4e5@agner.ch>
-        <20180524105614.3c51736c@bbrezillon>
-        <7b3cc3991fb054130fd54c6fdfec5097@agner.ch>
+From: Vijay Viswanath <vviswana@codeaurora.org>
+Subject: Re: [PATCH V1 2/3] mmc: sdhci-msm: Add msm version specific ops and
+ data structures
+Date: Thu, 24 May 2018 18:05:28 +0530
+Message-ID: <85d7d14c-fd1c-92af-4605-3441649c9fcd@codeaurora.org>
+References: <1526552938-21292-1-git-send-email-vviswana@codeaurora.org>
+ <1526552938-21292-3-git-send-email-vviswana@codeaurora.org>
+ <CAE=gft4ZQ34QankD_S5y_KjoZG8rxQkEfPo7vZsJTUB387P6dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7b3cc3991fb054130fd54c6fdfec5097@agner.ch>
+In-Reply-To: <CAE=gft4ZQ34QankD_S5y_KjoZG8rxQkEfPo7vZsJTUB387P6dQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: adrian.hunter@intel.com, Ulf Hansson <ulf.hansson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, Bjorn Andersson <bjorn.andersson@linaro.org>, riteshh@codeaurora.org, vbadigan@codeaurora.org, Doug Anderson <dianders@google.com>, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 May 2018 13:09:53 +0200
-Stefan Agner <stefan@agner.ch> wrote:
 
-> On 24.05.2018 10:56, Boris Brezillon wrote:
-> > On Thu, 24 May 2018 10:46:27 +0200
-> > Stefan Agner <stefan@agner.ch> wrote:
-> >   
-> >> Hi Boris,
-> >>
-> >> Thanks for the initial review! One small question below:
-> >>
-> >> On 23.05.2018 16:18, Boris Brezillon wrote:  
-> >> > Hi Stefan,
-> >> >
-> >> > On Tue, 22 May 2018 14:07:06 +0200
-> >> > Stefan Agner <stefan@agner.ch> wrote:  
-> >> >> +
-> >> >> +struct tegra_nand {
-> >> >> +	void __iomem *regs;
-> >> >> +	struct clk *clk;
-> >> >> +	struct gpio_desc *wp_gpio;
-> >> >> +
-> >> >> +	struct nand_chip chip;
-> >> >> +	struct device *dev;
-> >> >> +
-> >> >> +	struct completion command_complete;
-> >> >> +	struct completion dma_complete;
-> >> >> +	bool last_read_error;
-> >> >> +
-> >> >> +	dma_addr_t data_dma;
-> >> >> +	void *data_buf;
-> >> >> +	dma_addr_t oob_dma;
-> >> >> +	void *oob_buf;
-> >> >> +
-> >> >> +	int cur_chip;
-> >> >> +};  
-> >> >
-> >> > This struct should be split in 2 structures: one representing the NAND
-> >> > controller and one representing the NAND chip:
-> >> >
-> >> > struct tegra_nand_controller {
-> >> > 	struct nand_hw_control base;
-> >> > 	void __iomem *regs;
-> >> > 	struct clk *clk;
-> >> > 	struct device *dev;
-> >> > 	struct completion command_complete;
-> >> > 	struct completion dma_complete;
-> >> > 	bool last_read_error;
-> >> > 	int cur_chip;
-> >> > };
-> >> >
-> >> > struct tegra_nand {
-> >> > 	struct nand_chip base;
-> >> > 	dma_addr_t data_dma;
-> >> > 	void *data_buf;
-> >> > 	dma_addr_t oob_dma;
-> >> > 	void *oob_buf;
-> >> > };  
-> >>
-> >> Is there a particular reason why you would leave DMA buffers in the chip
-> >> structure? It seems that is more a controller thing...  
-> > 
-> > The size of those buffers is likely to be device dependent, so if you
-> > have several NANDs connected to the controller, you'll either have to
-> > have one buffer at the controller level which is max(all-chip-buf-size)
-> > or a buffer per device.
-> > 
-> > Also, do you really need these buffers? The core already provide some
-> > which are suitable for DMA (chip->oob_poi and chip->data_buf).
-> >   
-> 
-> Good question, I am not sure, that was existing code.
-> 
-> Are you sure data_buf it is DMA capable?
-> 
-> nand_scan_tail allocates with kmalloc:
-> 
-> chip->data_buf = kmalloc(mtd->writesize + mtd->oobsize, GFP_KERNEL);
 
-Also, you might want to set the NAND_USE_BOUNCE_BUFFER flag in
-chip->options, so that the core always pass DMA-able buffers to your
-->read/write_page[_raw] function.
+On 5/22/2018 11:40 PM, Evan Green wrote:
+> On Thu, May 17, 2018 at 3:30 AM Vijay Viswanath <vviswana@codeaurora.org>
+> wrote:
+> 
+>> In addition to offsets of certain registers changing, the registers in
+>> core_mem have been shifted to HC mem as well. To access these registers,
+>> define msm version specific functions. These functions can be loaded
+>> into the function pointers at the time of probe based on the msm version
+>> detected.
+> 
+>> Also defind new data structure to hold version specific Ops and register
+>> addresses.
+> 
+>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+>> ---
+>>    drivers/mmc/host/sdhci-msm.c | 112
+> +++++++++++++++++++++++++++++++++++++++++++
+>>    1 file changed, 112 insertions(+)
+> 
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>> index 2524455..bb2bb59 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -226,6 +226,25 @@ struct sdhci_msm_offset {
+>>           .core_ddr_config_2 = 0x1BC,
+>>    };
+> 
+>> +struct sdhci_msm_variant_ops {
+>> +       u8 (*msm_readb_relaxed)(struct sdhci_host *host, u32 offset);
+> 
+> I don't see any uses of msm_readb_relaxed or msm_writeb_relaxed in this
+> patch or the next one. Are these needed?
 
-[1]https://elixir.bootlin.com/linux/v4.17-rc6/source/include/linux/mtd/rawnand.h#L202
+They are not used as of now. Kept them since they can have use later. 
+Felt it better to define base functions and addresses now itself.
+
+> 
+>> +       u32 (*msm_readl_relaxed)(struct sdhci_host *host, u32 offset);
+>> +       void (*msm_writeb_relaxed)(u8 val, struct sdhci_host *host, u32
+> offset);
+>> +       void (*msm_writel_relaxed)(u32 val, struct sdhci_host *host,
+>> +                       u32 offset);
+>> +};
+>> +
+>> +/*
+>> + * From V5, register spaces have changed. Wrap this info in a structure
+>> + * and choose the data_structure based on version info mentioned in DT.
+>> + */
+>> +struct sdhci_msm_variant_info {
+>> +       bool mci_removed;
+>> +       const struct sdhci_msm_variant_ops *var_ops;
+>> +       const struct sdhci_msm_offset *offset;
+>> +};
+>> +
+>> +
+> 
+> Remove extra blank line.
+> 
+>>    struct sdhci_msm_host {
+>>           struct platform_device *pdev;
+>>           void __iomem *core_mem; /* MSM SDCC mapped address */
+>> @@ -245,8 +264,75 @@ struct sdhci_msm_host {
+>>           wait_queue_head_t pwr_irq_wait;
+>>           bool pwr_irq_flag;
+>>           u32 caps_0;
+>> +       bool mci_removed;
+>> +       const struct sdhci_msm_variant_ops *var_ops;
+>> +       const struct sdhci_msm_offset *offset;
+>>    };
+> 
+>> +/*
+>> + * APIs to read/write to vendor specific registers which were there in
+> the
+>> + * core_mem region before MCI was removed.
+>> + */
+>> +static u8 sdhci_msm_mci_variant_readb_relaxed(struct sdhci_host *host,
+>> +               u32 offset)
+>> +{
+>> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +       return readb_relaxed(msm_host->core_mem + offset);
+>> +}
+>> +
+>> +static u8 sdhci_msm_v5_variant_readb_relaxed(struct sdhci_host *host,
+>> +               u32 offset)
+>> +{
+>> +       return readb_relaxed(host->ioaddr + offset);
+>> +}
+>> +
+>> +static u32 sdhci_msm_mci_variant_readl_relaxed(struct sdhci_host *host,
+>> +               u32 offset)
+>> +{
+>> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +       return readl_relaxed(msm_host->core_mem + offset);
+>> +}
+>> +
+>> +static u32 sdhci_msm_v5_variant_readl_relaxed(struct sdhci_host *host,
+>> +               u32 offset)
+>> +{
+>> +       return readl_relaxed(host->ioaddr + offset);
+>> +}
+>> +
+>> +static void sdhci_msm_mci_variant_writeb_relaxed(u8 val,
+>> +               struct sdhci_host *host, u32 offset)
+>> +{
+>> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +       writeb_relaxed(val, msm_host->core_mem + offset);
+>> +}
+>> +
+>> +static void sdhci_msm_v5_variant_writeb_relaxed(u8 val, struct
+> sdhci_host *host,
+>> +               u32 offset)
+>> +{
+>> +       writeb_relaxed(val, host->ioaddr + offset);
+>> +}
+>> +
+>> +static void sdhci_msm_mci_variant_writel_relaxed(u32 val,
+>> +               struct sdhci_host *host, u32 offset)
+>> +{
+>> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +       writel_relaxed(val, msm_host->core_mem + offset);
+>> +}
+>> +
+>> +static void sdhci_msm_v5_variant_writel_relaxed(u32 val, struct
+> sdhci_host *host,
+> 
+> You squeaked over 80 characters here. Move the second parameter down with
+> the third.
+> 
+> -Evan
+> 
+
+Thanks for going through the patch thoroughly. Will address the comments.
+
+Thanks,
+Vijay
