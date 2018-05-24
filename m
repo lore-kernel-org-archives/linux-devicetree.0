@@ -1,42 +1,48 @@
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
-Date: Thu, 24 May 2018 14:50:39 +0300
-Message-ID: <20180524115039.GA10260@apalos>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
- <20180511190641.23008-4-jean-philippe.brucker@arm.com>
- <20180516163117.622693ea@jacob-builder>
- <de478769-9f7a-d40b-a55e-e2c63ad883e8@arm.com>
- <20180522094334.71f0e36b@jacob-builder>
- <f73b4a0e-669e-8483-88d7-1b2c8a2b9934@arm.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Thu, 24 May 2018 13:53:35 +0200
+Message-ID: <20180524135335.6aa0b7a4@bbrezillon>
+References: <cover.1526990589.git.stefan@agner.ch>
+        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+        <CAGefG55kvShaLhNYsFznbOq0_6RNbb+eJ47DLnnU9qRRpwu-iA@mail.gmail.com>
+        <d8d6cb9fcd8ce7ea5c13b227012de6d2@agner.ch>
+        <CAGefG56khQ2835c2QCteit7FuL_yG+APpj6-4vRRPxztFtkAMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <f73b4a0e-669e-8483-88d7-1b2c8a2b9934@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "robdclark@gmail.com" <robdclark@gmail.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kevin.tian@intel.com" <kevin.tia>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGefG56khQ2835c2QCteit7FuL_yG+APpj6-4vRRPxztFtkAMA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Lindqvist <benjamin.lindqvist@endian.se>
+Cc: Stefan Agner <stefan@agner.ch>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, Lucas Stach <dev@lynxeye.de>, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, Mirza Krak <mirza.krak@gmail.com>, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Interesting, I hadn't thought about this use-case before. At first I
-> thought you were talking about mdev devices assigned to VMs, but I think
-> you're referring to mdevs assigned to userspace drivers instead? Out of
-> curiosity, is it only theoretical or does someone actually need this?
+Hi Benjamin,
 
-There has been some non upstreamed efforts to have mdev and produce userspace
-drivers. Huawei is using it on what they call "wrapdrive" for crypto devices and
-we did a proof of concept for ethernet interfaces. At the time we choose not to
-involve the IOMMU for the reason you mentioned, but having it there would be
-good.
+On Thu, 24 May 2018 13:30:14 +0200
+Benjamin Lindqvist <benjamin.lindqvist@endian.se> wrote:
 
-Thanks
-Ilias
+> Hi Stefan,
+> 
+> It seems to me that a probe similar to what the BootROM does shouldn't
+> be awfully complicated to implement - just cycle through the switch
+> cases in case of an ECC error. But I guess that's more of an idea for
+> further improvements rather than a comment to the patch set under
+> review.
+
+Nope, not really an option, because you're not guaranteed that the NAND
+will be used as a boot media, and the first page or first set of pages
+might just be erased.
+
+> 
+> However, I think that allowing for an override of the oobsize
+> inference would be a good idea before merging, no? This could just be
+> a trivial #ifdef (at least temporarily). If you agree but don't feel
+> like doing it yourself, I'd be happy to pitch in. Let me know.
+
+That's why we have nand-ecc-xxx properties in the DT.
+
+Regards,
+
+Boris
