@@ -1,57 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 5/8] pinctrl: optionally stop deferring probe at end of
- initcalls
-Date: Thu, 24 May 2018 12:50:21 -0500
-Message-ID: <20180524175024.19874-6-robh@kernel.org>
-References: <20180524175024.19874-1-robh@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v3 5/6] spi: at91-usart: add driver for at91-usart as spi
+Date: Thu, 24 May 2018 19:56:20 +0200
+Message-ID: <20180524175620.GB12093@piout.net>
+References: <20180511103822.31698-1-radu.pirea@microchip.com>
+ <20180511103822.31698-6-radu.pirea@microchip.com>
+ <CAHp75Ve3Ugnjjm8EZkPQTZSvH1qad1e5SqjOn8zz5syHSQea_g@mail.gmail.com>
+ <5a3930b867cf8c279953d08c5d5dd1d93113a43b.camel@microchip.com>
+ <CAHp75VdRrL25Jgnbk64Qqc5RY3uJdcntJ3xwRdp3F+rRFeTHBA@mail.gmail.com>
+ <c23cdde58b9f724f51787c6c38478df983be6efa.camel@microchip.com>
+ <20180517045437.GE20254@sirena.org.uk>
+ <0e6e71e2-f8ac-7889-0d81-8d8a4c15223d@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <20180524175024.19874-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0e6e71e2-f8ac-7889-0d81-8d8a4c15223d@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radu Pirea <radu.pirea@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-SWYgdGhlIHBpbmN0cmwgbm9kZSBpbiBEVCBpbmRpY2F0ZXMgdGhhdCBwaW4gc2V0dXAgaXMgb3B0
-aW9uYWwgYW5kIHRoZQpkZWZhdWx0cyBjYW4gYmUgdXNlZCB3aXRoIHRoZSAncGluY3RybC11c2Ut
-ZGVmYXVsdCcsIHRoZW4gb25seSBkZWZlciBwcm9iZQp1bnRpbCBpbml0Y2FsbHMgYXJlIGRvbmUu
-IFRoaXMgZ2l2ZXMgcGxhdGZvcm1zIHRoZSBvcHRpb24gdG8gd29yayB3aXRob3V0CnRoZWlyIHBp
-bmN0cmwgZHJpdmVyIGJlaW5nIGVuYWJsZWQuCgpTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8
-cm9iaEBrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvcGluY3RybC9kZXZpY2V0cmVlLmMgfCAxNCAr
-KysrKysrKysrLS0tLQogMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDQgZGVsZXRp
-b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL2RldmljZXRyZWUuYyBiL2RyaXZl
-cnMvcGluY3RybC9kZXZpY2V0cmVlLmMKaW5kZXggYjYwMTAzOWQ2YzY5Li43NGEzMTA3NGI0MDYg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGluY3RybC9kZXZpY2V0cmVlLmMKKysrIGIvZHJpdmVycy9w
-aW5jdHJsL2RldmljZXRyZWUuYwpAQCAtMTEwLDE3ICsxMTAsMjMgQEAgc3RhdGljIGludCBkdF90
-b19tYXBfb25lX2NvbmZpZyhzdHJ1Y3QgcGluY3RybCAqcCwKIAlpbnQgcmV0OwogCXN0cnVjdCBw
-aW5jdHJsX21hcCAqbWFwOwogCXVuc2lnbmVkIG51bV9tYXBzOworCWJvb2wgcGN0bF9vcHRpb25h
-bCA9IGZhbHNlOwogCiAJLyogRmluZCB0aGUgcGluIGNvbnRyb2xsZXIgY29udGFpbmluZyBucF9j
-b25maWcgKi8KIAlucF9wY3RsZGV2ID0gb2Zfbm9kZV9nZXQobnBfY29uZmlnKTsKIAlmb3IgKDs7
-KSB7CisJCWlmICghcGN0bF9vcHRpb25hbCkKKwkJCXBjdGxfb3B0aW9uYWwgPSBvZl9wcm9wZXJ0
-eV9yZWFkX2Jvb2wobnBfcGN0bGRldiwgInBpbmN0cmwtdXNlLWRlZmF1bHQiKTsKKwogCQlucF9w
-Y3RsZGV2ID0gb2ZfZ2V0X25leHRfcGFyZW50KG5wX3BjdGxkZXYpOwogCQlpZiAoIW5wX3BjdGxk
-ZXYgfHwgb2Zfbm9kZV9pc19yb290KG5wX3BjdGxkZXYpKSB7Ci0JCQlkZXZfaW5mbyhwLT5kZXYs
-ICJjb3VsZCBub3QgZmluZCBwY3RsZGV2IGZvciBub2RlICVwT0YsIGRlZmVycmluZyBwcm9iZVxu
-IiwKLQkJCQlucF9jb25maWcpOwogCQkJb2Zfbm9kZV9wdXQobnBfcGN0bGRldik7Ci0JCQkvKiBP
-SyBsZXQncyBqdXN0IGFzc3VtZSB0aGlzIHdpbGwgYXBwZWFyIGxhdGVyIHRoZW4gKi8KLQkJCXJl
-dHVybiAtRVBST0JFX0RFRkVSOworCQkJcmV0ID0gZHJpdmVyX2RlZmVycmVkX3Byb2JlX2NoZWNr
-X2luaXRfZG9uZShwLT5kZXYsIHBjdGxfb3B0aW9uYWwpOworCQkJaWYgKHJldCA9PSAtRVBST0JF
-X0RFRkVSKQorCQkJCS8qIE9LIGxldCdzIGp1c3QgYXNzdW1lIHRoaXMgd2lsbCBhcHBlYXIgbGF0
-ZXIgdGhlbiAqLworCQkJCWRldl9pbmZvKHAtPmRldiwgImNvdWxkIG5vdCBmaW5kIHBjdGxkZXYg
-Zm9yIG5vZGUgJXBPRiwgZGVmZXJyaW5nIHByb2JlXG4iLAorCQkJCQlucF9jb25maWcpOworCQkJ
-cmV0dXJuIHJldDsKIAkJfQogCQkvKiBJZiB3ZSdyZSBjcmVhdGluZyBhIGhvZyB3ZSBjYW4gdXNl
-IHRoZSBwYXNzZWQgcGN0bGRldiAqLwogCQlpZiAocGN0bGRldiAmJiAobnBfcGN0bGRldiA9PSBw
-LT5kZXYtPm9mX25vZGUpKQotLSAKMi4xNy4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpib290LWFyY2hpdGVjdHVyZSBtYWlsaW5nIGxpc3QKYm9vdC1h
-cmNoaXRlY3R1cmVAbGlzdHMubGluYXJvLm9yZwpodHRwczovL2xpc3RzLmxpbmFyby5vcmcvbWFp
-bG1hbi9saXN0aW5mby9ib290LWFyY2hpdGVjdHVyZQo=
+Hi,
+
+On 24/05/2018 19:04:11+0300, Radu Pirea wrote:
+> 
+> 
+> On 05/17/2018 07:54 AM, Mark Brown wrote:
+> > On Tue, May 15, 2018 at 12:22:24PM +0300, Radu Pirea wrote:
+> > > On Mon, 2018-05-14 at 20:38 +0300, Andy Shevchenko wrote:
+> > 
+> > > > So, what is not going as expected in "SPI core takes care of CSs"
+> > > > case?
+> > > > Did you use oscilloscope for that?
+> > 
+> > > Yes, I used and CSs was not asserted. Anyway, I will will try again.
+> > 
+> > If the core chip select handling is not working properly for some reason
+> > then the core chip select handling should be fixed rather than just open
+> > coding in your driver - probably it's also broken for other users.
+> > 
+> 
+> Hi Mark,
+> 
+> I found the fix for cs-gpios. If I change spi_add_device function like
+> this(see below) everything is ok.
+> 
+> int spi_add_device(struct spi_device *spi)
+> 
+> ...
+> 
+>     if (ctlr->cs_gpios){
+>         spi->cs_gpio = ctlr->cs_gpios[spi->chip_select];
+>         if(gpio_is_valid(spi->cs_gpio))
+>             gpio_direction_output(spi->cs_gpio, !(spi->mode & SPI_CS_HIGH));
+> 
+>     }
+> 
+> ...
+> 
+>     return status;
+> }
+> 
+> In the subsystem gpio direction of pins is never set and gpio_set_value()
+> don't set the direction.
+> In my opinion gpio_direction_output() set direction should be called in
+> spi_add_device. What do you think? Is ok?
+
+Back in 2014, I was suggesting using devm_gpio_request_one() in
+of_spi_register_master(). That would take care of setting the direction
+of the GPIO:
+
+https://www.spinics.net/lists/arm-kernel/msg351251.html
+
+I never took the time to create the patch and test though.
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
