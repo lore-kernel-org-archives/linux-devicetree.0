@@ -1,7 +1,7 @@
 From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH v2 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
-Date: Thu, 24 May 2018 17:07:18 +0200
-Message-ID: <20180524150721.28964-6-marek.vasut+renesas@gmail.com>
+Subject: [PATCH v2 2/9] ARM: dts: lager: Drop MTD partitioning from DT
+Date: Thu, 24 May 2018 17:07:14 +0200
+Message-ID: <20180524150721.28964-2-marek.vasut+renesas@gmail.com>
 References: <20180524150721.28964-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -33,6 +33,7 @@ following to your kernel command line:
 
 Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Simon Horman <horms+renesas@verge.net.au>
@@ -41,16 +42,16 @@ Cc: linux-renesas-soc@vger.kernel.org
 ---
 V2: Drop the @0 anchor from the commit message, use 4m
 ---
- arch/arm/boot/dts/r8a7792-wheat.dts | 21 ---------------------
+ arch/arm/boot/dts/r8a7790-lager.dts | 21 ---------------------
  1 file changed, 21 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7792-wheat.dts b/arch/arm/boot/dts/r8a7792-wheat.dts
-index db01de7a3811..93f78716225a 100644
---- a/arch/arm/boot/dts/r8a7792-wheat.dts
-+++ b/arch/arm/boot/dts/r8a7792-wheat.dts
-@@ -217,27 +217,6 @@
- 		spi-cpol;
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 092610e3f953..7c95e62efd46 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -710,27 +710,6 @@
  		spi-cpha;
+ 		spi-cpol;
  		m25p,fast-read;
 -
 -		partitions {
