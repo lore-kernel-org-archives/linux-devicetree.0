@@ -1,104 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 2/8] driver core: add a deferred probe timeout
-Date: Thu, 24 May 2018 12:50:18 -0500
-Message-ID: <20180524175024.19874-3-robh@kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 6/8] iommu: Stop deferring probe at end of initcalls
+Date: Thu, 24 May 2018 12:50:22 -0500
+Message-ID: <20180524175024.19874-7-robh@kernel.org>
 References: <20180524175024.19874-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524175024.19874-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180524175024.19874-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Deferring probe can wait forever on dependencies that may never appear
-for a variety of reasons. This can be difficult to debug especially if
-the console has dependencies or userspace fails to boot to a shell. Add
-a timeout to retry probing without possibly optional dependencies and to
-dump out the deferred probe pending list after retrying.
+The IOMMU subsystem has its own mechanism to not defer probe if driver
+support is missing. Now that the driver core supports stopping deferring
+probe if drivers aren't built-in (and probed), use the driver core
+support so the IOMMU specific support can be removed.
 
-This mechanism is intended for debug purposes. It won't work for the
-console which needs to be enabled before userspace starts. However, if
-the console's dependencies are resolved, then the kernel log will be
-printed (as opposed to no output).
-
-Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  7 +++++
- drivers/base/dd.c                             | 28 ++++++++++++++++++-
- 2 files changed, 34 insertions(+), 1 deletion(-)
+ drivers/iommu/of_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 11fc28ecdb6d..dd3f40b34a24 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -809,6 +809,13 @@
- 			Defaults to the default architecture's huge page size
- 			if not specified.
- 
-+	deferred_probe_timeout=
-+			[KNL] Set a timeout in seconds for deferred probe to
-+			give up waiting on dependencies to probe. Only specific
-+			dependencies (subsystems or drivers) that have opted in
-+			will be ignored. This option also dumps out devices
-+			still on the deferred probe list after retrying.
-+
- 	dhash_entries=	[KNL]
- 			Set number of hash buckets for dentry cache.
- 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index d6034718da6f..4133b240c7e4 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -226,9 +226,17 @@ void device_unblock_probing(void)
- 	driver_deferred_probe_trigger();
- }
- 
-+static int deferred_probe_timeout = -1;
-+static int __init deferred_probe_timeout_setup(char *str)
-+{
-+	deferred_probe_timeout = simple_strtol(str, NULL, 0);
-+	return 1;
-+}
-+__setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
-+
- int driver_deferred_probe_check_init_done(struct device *dev, bool optional)
- {
--	if (optional && initcalls_done) {
-+	if ((optional || !deferred_probe_timeout) && initcalls_done) {
- 		dev_WARN(dev, "ignoring dependency for device, assuming no driver");
- 		return -ENODEV;
- 	}
-@@ -236,6 +244,19 @@ int driver_deferred_probe_check_init_done(struct device *dev, bool optional)
- 	return -EPROBE_DEFER;
- }
- 
-+static void deferred_probe_timeout_work_func(struct work_struct *work)
-+{
-+	struct device_private *private, *p;
-+
-+	deferred_probe_timeout = 0;
-+	driver_deferred_probe_trigger();
-+	flush_work(&deferred_probe_work);
-+
-+	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, deferred_probe)
-+		dev_info(private->device, "deferred probe pending");
-+}
-+static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
-+
- /**
-  * deferred_probe_initcall() - Enable probing of deferred devices
-  *
-@@ -257,6 +278,11 @@ static int deferred_probe_initcall(void)
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 5c36a8b7656a..2aac8387717c 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -133,7 +133,7 @@ static int of_iommu_xlate(struct device *dev,
+ 	 * a proper probe-ordering dependency mechanism in future.
  	 */
- 	driver_deferred_probe_trigger();
- 	flush_work(&deferred_probe_work);
-+
-+	if (deferred_probe_timeout > 0) {
-+		schedule_delayed_work(&deferred_probe_timeout_work,
-+			deferred_probe_timeout * HZ);
-+	}
- 	return 0;
+ 	if (!ops)
+-		return -EPROBE_DEFER;
++		return driver_deferred_probe_check_init_done(dev, true);
+ 
+ 	return ops->of_xlate(dev, iommu_spec);
  }
- late_initcall(deferred_probe_initcall);
 -- 
 2.17.0
