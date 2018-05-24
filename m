@@ -1,75 +1,77 @@
-Return-Path: <SRS0=xPmq=IM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relmlor3.renesas.com ([210.160.252.173]:65323 "EHLO
-        relmlie2.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750981AbeEYCuI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 24 May 2018 22:50:08 -0400
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH/RFC v4 2/4] usb: gadget: udc: renesas_usb3: Add register
- of usb role switch
-Date: Fri, 25 May 2018 02:50:02 +0000
-Message-ID: <OSBPR01MB2293A13319114050EAD034B2D8690@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=wnI8=IL=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <CAL_JsqJv-gZ4Ya6KCOtvQhzBPdLcqkU7c+kdH_TdPW9qvhtmxQ@mail.gmail.com>
 References: <1526990469-20739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <1526990469-20739-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180522171302.GA21363@rob-hp-laptop>
- <OSBPR01MB229367114CFC1AC30C0430E4D86B0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+ <20180522171302.GA21363@rob-hp-laptop> <OSBPR01MB229367114CFC1AC30C0430E4D86B0@OSBPR01MB2293.jpnprd01.prod.outlook.com>
  <CAL_JsqJv-gZ4Ya6KCOtvQhzBPdLcqkU7c+kdH_TdPW9qvhtmxQ@mail.gmail.com>
- <CAMuHMdWzORSs1_HeObaK0A1sYb_O8XTORA4EEk_riTKMWhWWAQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWzORSs1_HeObaK0A1sYb_O8XTORA4EEk_riTKMWhWWAQ@mail.gmail.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 24 May 2018 10:17:41 +0200
+Message-ID: <CAMuHMdWzORSs1_HeObaK0A1sYb_O8XTORA4EEk_riTKMWhWWAQ@mail.gmail.com>
+Subject: Re: [PATCH/RFC v4 2/4] usb: gadget: udc: renesas_usb3: Add register
+ of usb role switch
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgUm9iLCBHZWVydC1zYW4sDQoNCj4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuLCBTZW50OiBU
-aHVyc2RheSwgTWF5IDI0LCAyMDE4IDU6MTggUE0NCj4gDQo+IEhpIFJvYiwNCj4gDQo+IE9uIFdl
-ZCwgTWF5IDIzLCAyMDE4IGF0IDU6MDAgUE0sIFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
-IHdyb3RlOg0KPHNuaXA+DQo+ID4+PiA+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+Pj4gPiAg
-ICAtIHBoeXM6IHBoYW5kbGUgKyBwaHkgc3BlY2lmaWVyIHBhaXINCj4gPj4+ID4gICAgLSBwaHkt
-bmFtZXM6IG11c3QgYmUgInVzYiINCj4gPj4+ID4gKyAgLSBUaGUgY29ubmVjdGlvbiB0byBhIHVz
-YjMuMCBob3N0IG5vZGUgbmVlZHMgYnkgdXNpbmcgT0YgZ3JhcGggYmluZGluZ3MgZm9yDQo+ID4+
-PiA+ICsgICAgdXNiIHJvbGUgc3dpdGNoLg0KPiA+Pj4gPiArICAgLSBwb3J0QDAgPSBVU0IzLjAg
-aG9zdCBwb3J0Lg0KPiA+Pj4NCj4gPj4+IE9uIHRoZSBob3N0IHNpZGUsIHRoaXMgbWlnaHQgY29u
-ZmxpY3Qgd2l0aCB0aGUgVVNCIGNvbm5lY3RvciBiaW5kaW5nLg0KPiA+Pj4NCj4gPj4+IEkgd291
-bGQgZWl0aGVyIG1ha2Ugc3VyZSB0aGlzIGNhbiB3b3JrIHdpdGggdGhlIGNvbm5lY3RvciBiaW5k
-aW5nIGJ5DQo+ID4+PiBoYXZpbmcgMiBlbmRwb2ludHMgb24gdGhlIEhTIG9yIFNTIHBvcnQgb3Ig
-anVzdCB1c2UgdGhlICdjb21wYW5pb24nDQo+ID4+PiBwcm9wZXJ0eSBkZWZpbmVkIGluIHVzYi1n
-ZW5lcmljLnR4dC4NCj4gPj4NCj4gPj4gSSBkb24ndCB1bmRlcnN0YW5kIHRoZSBmaXJzdCBvbmUg
-bm93Li4uIFRoaXMgbWVhbnMgdGhlIHJlbmVzYXNfdXNiMyBzaG91bGQgZm9sbG93DQo+ID4+IFVT
-QiBjb25uZWN0b3IgYmluZGluZyBhbmQgaGF2ZSAyIGVuZHBvaW50cyBmb3IgdGhlIHVzYiByb2xl
-IHN3aXRjaCB0byBhdm9pZA0KPiA+PiB0aGUgY29uZmxpY3QgbGlrZSBiZWxvdz8NCj4gPj4gIC0g
-cG9ydDFAMDogU3VwZXIgU3BlZWQgKFNTKSwgcHJlc2VudCBpbiBTUyBjYXBhYmxlIGNvbm5lY3Rv
-cnMgKGZyb20gdXNiLWNvbm5lY3Rvci50eHQpLg0KPiA+PiAgLSBwb3J0MUAxOiBVU0IzLjAgaG9z
-dCBwb3J0Lg0KPiA+DQo+ID4gSSdtIGNvbmZ1c2VkLCBTUyBhbmQgVVNCMy4wIGFyZSB0aGUgc2Ft
-ZSBlc3NlbnRpYWxseS4gSXQgd291bGQgYmU6DQo+ID4NCj4gPiBwb3J0QDEvZW5kcG9pbnRAMDog
-U1MgaG9zdCBwb3J0DQo+ID4gcG9ydEAxL2VuZHBvaW50QDE6IFNTIGRldmljZSBwb3J0DQoNClRo
-YW5rIHlvdSBmb3IgdGhlIGNvbW1lbnQuIEl0J3MgYmV0dGVyIHRoYW4gbXkgZGVzY3JpcHRpb24u
-DQoNCj4gPj4gQWJvdXQgdGhlICdjb21wYW5pb24nIGluIHVzYi1nZW5lcmljLnR4dCwgdGhlIHBy
-b3BlcnR5IGludGVuZHMgdG8gYmUgdXNlZCBmb3IgRUhDSSBvciBob3N0IHNpZGUNCj4gPj4gbGlr
-ZSB0aGUgY29tbWl0IGxvZyBbMV0uIElmIHRoZXJlIGlzIGFjY2VwdCB0byB1c2UgJ2NvbXBhbmlv
-bicgZm9yIHRoaXMgcGF0Y2gsIEkgdGhpbmsgaXQgd2lsbA0KPiA+PiBiZSBzaW1wbGUgdG8gYWNo
-aWV2ZSB0aGlzIHJvbGUgc3dpdGNoIGZlYXR1cmUuIEhvd2V2ZXIsIGluIGxhc3QgbW9udGgsIEkg
-c3VibWl0dGVkIGEgc2ltaWxhciBwYXRjaCBbMl0NCj4gPj4gdGhhdCBoYXMgInJlbmVzYXMsaG9z
-dCIgcHJvcGVydHksIGJ1dCBJIGdvdCByZXBseSBmcm9tIEFuZHkgWzNdIGFuZCBIZWlra2kgWzRd
-LiBTbywgSSdtDQo+ID4+IHRyeWluZyB0byBpbXByb3ZlIHRoZSBkZXZpY2UgY29ubmVjdGlvbiBm
-cmFtZXdvcmsgWzVdIG5vdy4NCj4gPg0KPiA+IEkgdGhpbmsgdGhpcyBjYXNlIGlzIHJhcmUgZW5v
-dWdoIHRoYXQgd2UgZG9uJ3QgbmVlZCBhIGdlbmVyYWwgc29sdXRpb24NCj4gPiB1c2luZyBPRiBn
-cmFwaCwgc28gSSdtIGZpbmUgd2l0aCBhIHNpbXBsZSwgc2luZ2xlIHByb3BlcnR5IHRvIGxpbmsg
-dGhlDQo+ID4gMiBub2Rlcy4gRWl0aGVyIHJldXNpbmcgImNvbXBhbmlvbiIgb3IgInJlbmVzYXMs
-aG9zdCIgaXMgZmluZSBieSBtZS4NCj4gDQo+IEknZCBnbyBmb3IgdGhlIHN0YW5kYXJkICJjb21w
-YW5pb24iIG92ZXIgInJlbmVzYXMsaG9zdCJbKl0uDQo+IA0KPiBbKl0gRG9oLCB3ZSBoYXZlIGFu
-b3RoZXIgb25lICgicmVuZXNhcyxib25kaW5nIiksIGludmVudGVkIHdoZW4gSSB3YXNuJ3QNCj4g
-ICAgIGF3YXJlIG9mIHRoZSBleGlzdGVuY2Ugb2YgImNvbXBhbmlvbiIgeWV0Li4uDQoNClRoYW5r
-IHlvdSBmb3IgdGhlIGNvbW1lbnRzLiBTbywgSSdsbCByZXVzZSAiY29tcGFuaW9uIiBmb3IgaXQu
-DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0aW5n
-fXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2Vl
-cnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBn
-ZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRo
-IHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEkn
-bSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0
-aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGlu
-dXMgVG9ydmFsZHMNCg==
+Hi Rob,
+
+On Wed, May 23, 2018 at 5:00 PM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, May 23, 2018 at 1:52 AM, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+>>> From: Rob Herring, Sent: Wednesday, May 23, 2018 2:13 AM
+>>> On Tue, May 22, 2018 at 09:01:07PM +0900, Yoshihiro Shimoda wrote:
+>>> > --- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+>>> > +++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+>>> > @@ -19,6 +19,9 @@ Required properties:
+>>> >  Optional properties:
+>>> >    - phys: phandle + phy specifier pair
+>>> >    - phy-names: must be "usb"
+>>> > +  - The connection to a usb3.0 host node needs by using OF graph bindings for
+>>> > +    usb role switch.
+>>> > +   - port@0 = USB3.0 host port.
+>>>
+>>> On the host side, this might conflict with the USB connector binding.
+>>>
+>>> I would either make sure this can work with the connector binding by
+>>> having 2 endpoints on the HS or SS port or just use the 'companion'
+>>> property defined in usb-generic.txt.
+>>
+>> I don't understand the first one now... This means the renesas_usb3 should follow
+>> USB connector binding and have 2 endpoints for the usb role switch to avoid
+>> the conflict like below?
+>>  - port1@0: Super Speed (SS), present in SS capable connectors (from usb-connector.txt).
+>>  - port1@1: USB3.0 host port.
+>
+> I'm confused, SS and USB3.0 are the same essentially. It would be:
+>
+> port@1/endpoint@0: SS host port
+> port@1/endpoint@1: SS device port
+>
+>> About the 'companion' in usb-generic.txt, the property intends to be used for EHCI or host side
+>> like the commit log [1]. If there is accept to use 'companion' for this patch, I think it will
+>> be simple to achieve this role switch feature. However, in last month, I submitted a similar patch [2]
+>> that has "renesas,host" property, but I got reply from Andy [3] and Heikki [4]. So, I'm
+>> trying to improve the device connection framework [5] now.
+>
+> I think this case is rare enough that we don't need a general solution
+> using OF graph, so I'm fine with a simple, single property to link the
+> 2 nodes. Either reusing "companion" or "renesas,host" is fine by me.
+
+I'd go for the standard "companion" over "renesas,host"[*].
+
+[*] Doh, we have another one ("renesas,bonding"), invented when I wasn't
+    aware of the existence of "companion" yet...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
