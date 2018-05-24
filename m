@@ -1,7 +1,7 @@
 From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v3 1/6] Documentation: DT: Consolidate SP805 binding docs
-Date: Wed, 23 May 2018 17:15:19 -0700
-Message-ID: <1527120924-12131-2-git-send-email-ray.jui@broadcom.com>
+Subject: [PATCH v3 4/6] watchdog: sp805: set WDOG_HW_RUNNING when appropriate
+Date: Wed, 23 May 2018 17:15:22 -0700
+Message-ID: <1527120924-12131-5-git-send-email-ray.jui@broadcom.com>
 References: <1527120924-12131-1-git-send-email-ray.jui@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1527120924-12131-1-git-send-email-ray.jui@broadcom.com>
@@ -10,95 +10,62 @@ To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net
 Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Consolidate two SP805 binding documents "arm,sp805.txt" and
-"sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
-desired compatible string to be used
+If the watchdog hardware is already enabled during the boot process,
+when the Linux watchdog driver loads, it should reset the watchdog and
+tell the watchdog framework. As a result, ping can be generated from
+the watchdog framework, until the userspace watchdog daemon takes over
+control
 
 Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Vladimir Olovyannikov <vladimir.olovyannikov@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 ---
- .../devicetree/bindings/watchdog/arm,sp805.txt     | 27 ++++++++++++++-----
- .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31 ----------------------
- 2 files changed, 20 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+ drivers/watchdog/sp805_wdt.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-index ca99d64..0fa3629 100644
---- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-+++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-@@ -1,17 +1,30 @@
- ARM AMBA Primecell SP805 Watchdog
+diff --git a/drivers/watchdog/sp805_wdt.c b/drivers/watchdog/sp805_wdt.c
+index 1484609..d662a6f 100644
+--- a/drivers/watchdog/sp805_wdt.c
++++ b/drivers/watchdog/sp805_wdt.c
+@@ -42,6 +42,7 @@
+ 	/* control register masks */
+ 	#define	INT_ENABLE	(1 << 0)
+ 	#define	RESET_ENABLE	(1 << 1)
++	#define	ENABLE_MASK	(INT_ENABLE | RESET_ENABLE)
+ #define WDTINTCLR		0x00C
+ #define WDTRIS			0x010
+ #define WDTMIS			0x014
+@@ -74,6 +75,15 @@ module_param(nowayout, bool, 0);
+ MODULE_PARM_DESC(nowayout,
+ 		"Set to 1 to keep watchdog running after device release");
  
-+SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
-+can be used to identify the peripheral type, vendor, and revision.
-+This value can be used for driver matching.
++/* returns true if wdt is running; otherwise returns false */
++static bool wdt_is_running(struct watchdog_device *wdd)
++{
++	struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);
++	u32 wdtcontrol = readl_relaxed(wdt->base + WDTCONTROL);
 +
-+As SP805 WDT is a primecell IP, it follows the base bindings specified in
-+'arm/primecell.txt'
++	return (wdtcontrol & ENABLE_MASK) == ENABLE_MASK;
++}
 +
- Required properties:
--- compatible: Should be "arm,sp805" & "arm,primecell"
--- reg: Should contain location and length for watchdog timer register.
--- interrupts: Should contain the list of watchdog timer interrupts.
--- clocks: clocks driving the watchdog timer hardware. This list should be 2
--	clocks. With 2 clocks, the order is wdogclk clock, apb_pclk.
-+- compatible:  Should be "arm,sp805" & "arm,primecell"
-+- reg:         Should contain location and length for watchdog timer register
-+- clocks:      Clocks driving the watchdog timer hardware. This list should be
-+               2 clocks. With 2 clocks, the order is wdog_clk, apb_pclk
-+               wdog_clk can be equal to or be a sub-multiple of the apb_pclk
-+               frequency
-+- clock-names: Shall be "wdog_clk" for first clock and "apb_pclk" for the
-+               second one
-+
-+Optional properties:
-+- interrupts:  Should specify WDT interrupt number
+ /* This routine finds load value that will reset system in required timout */
+ static int wdt_setload(struct watchdog_device *wdd, unsigned int timeout)
+ {
+@@ -239,6 +249,15 @@ sp805_wdt_probe(struct amba_device *adev, const struct amba_id *id)
+ 	watchdog_init_timeout(&wdt->wdd, 0, &adev->dev);
+ 	wdt_setload(&wdt->wdd, wdt->wdd.timeout);
  
- Example:
- 	watchdog@66090000 {
- 		compatible = "arm,sp805", "arm,primecell";
- 		reg = <0x66090000 0x1000>;
- 		interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&apb_pclk>,<&apb_pclk>;
--		clock-names = "wdogclk", "apb_pclk";
-+		clocks = <&wdt_clk>, <&apb_pclk>;
-+		clock-names = "wdog_clk", "apb_pclk";
- 	};
-diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-deleted file mode 100644
-index edc4f0e..0000000
---- a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--* ARM SP805 Watchdog Timer (WDT) Controller
--
--SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
--can be used to identify the peripheral type, vendor, and revision.
--This value can be used for driver matching.
--
--As SP805 WDT is a primecell IP, it follows the base bindings specified in
--'arm/primecell.txt'
--
--Required properties:
--- compatible : Should be "arm,sp805-wdt", "arm,primecell"
--- reg : Base address and size of the watchdog timer registers.
--- clocks : From common clock binding.
--           First clock is PCLK and the second is WDOGCLK.
--           WDOGCLK can be equal to or be a sub-multiple of the PCLK frequency.
--- clock-names : From common clock binding.
--                Shall be "apb_pclk" for first clock and "wdog_clk" for the
--                second one.
--
--Optional properties:
--- interrupts : Should specify WDT interrupt number.
--
--Examples:
--
--		cluster1_core0_watchdog: wdt@c000000 {
--			compatible = "arm,sp805-wdt", "arm,primecell";
--			reg = <0x0 0xc000000 0x0 0x1000>;
--			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
--			clock-names = "apb_pclk", "wdog_clk";
--		};
--
++	/*
++	 * If HW is already running, enable/reset the wdt and set the running
++	 * bit to tell the wdt subsystem
++	 */
++	if (wdt_is_running(&wdt->wdd)) {
++		wdt_enable(&wdt->wdd);
++		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
++	}
++
+ 	ret = watchdog_register_device(&wdt->wdd);
+ 	if (ret) {
+ 		dev_err(&adev->dev, "watchdog_register_device() failed: %d\n",
 -- 
 2.1.4
