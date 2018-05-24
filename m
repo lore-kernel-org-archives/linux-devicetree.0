@@ -1,98 +1,91 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 2/2] mtd: partitions: use DT info for parsing partitions
- with specified type
-Date: Thu, 24 May 2018 07:50:10 +0200
-Message-ID: <0204012f-71b6-70ef-860d-fcce3abdd302@gmail.com>
-References: <20180523171448.26234-1-zajec5@gmail.com>
- <20180523171448.26234-2-zajec5@gmail.com>
- <20180523202408.632edefa@bbrezillon>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 0/9] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC driver
+Date: Thu, 24 May 2018 08:54:53 +0300
+Message-ID: <20180524055453.GA4249@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180523202408.632edefa@bbrezillon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjMuMDUuMjAxOCAyMDoyNCwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOgo+IE9uIFdlZCwgMjMg
-TWF5IDIwMTggMTk6MTQ6NDggKzAyMDAKPiBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBnbWFpbC5j
-b20+IHdyb3RlOgo+IAo+PiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+
-Cj4+Cj4+IFRoaXMgc3VwcG9ydHMgbmVzdGVkIHBhcnRpdGlvbnMgaW4gYSBEVC4gSWYgc2VsZWN0
-ZWQgcGFydGl0aW9uIGhhcyBhCj4+ICJjb21wYXRpYmxlIiBwcm9wZXJ0eSBzcGVjaWZpZWQgaXQg
-d2lsbCBiZSBwYXJzZWQgbG9va2luZyBmb3IKPj4gc3VicGFydGl0aW9ucy4KPj4KPj4gU2lnbmVk
-LW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+PiAtLS0KPj4gICBk
-cml2ZXJzL210ZC9tdGRwYXJ0LmMgfCAzMyArKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0t
-LS0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0p
-Cj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9tdGRwYXJ0LmMgYi9kcml2ZXJzL210ZC9t
-dGRwYXJ0LmMKPj4gaW5kZXggZjhkM2EwMTVjZGFkLi41MmUyY2IzNWZjNzkgMTAwNjQ0Cj4+IC0t
-LSBhL2RyaXZlcnMvbXRkL210ZHBhcnQuYwo+PiArKysgYi9kcml2ZXJzL210ZC9tdGRwYXJ0LmMK
-Pj4gQEAgLTMyMiwyMiArMzIyLDYgQEAgc3RhdGljIGlubGluZSB2b2lkIGZyZWVfcGFydGl0aW9u
-KHN0cnVjdCBtdGRfcGFydCAqcCkKPj4gICAJa2ZyZWUocCk7Cj4+ICAgfQo+PiAgIAo+PiAtLyoq
-Cj4+IC0gKiBtdGRfcGFyc2VfcGFydCAtIHBhcnNlIE1URCBwYXJ0aXRpb24gbG9va2luZyBmb3Ig
-c3VicGFydGl0aW9ucwo+PiAtICoKPj4gLSAqIEBzbGF2ZTogcGFydCB0aGF0IGlzIHN1cHBvc2Vk
-IHRvIGJlIGEgY29udGFpbmVyIGFuZCBzaG91bGQgYmUgcGFyc2VkCj4+IC0gKiBAdHlwZXM6IE5V
-TEwtdGVybWluYXRlZCBhcnJheSB3aXRoIG5hbWVzIG9mIHBhcnRpdGlvbiBwYXJzZXJzIHRvIHRy
-eQo+PiAtICoKPj4gLSAqIFNvbWUgcGFydGl0aW9ucyBhcmUga2luZCBvZiBjb250YWluZXJzIHdp
-dGggZXh0cmEgc3VicGFydGl0aW9ucyAodm9sdW1lcykuCj4+IC0gKiBUaGVyZSBjYW4gYmUgdmFy
-aW91cyBmb3JtYXRzIG9mIHN1Y2ggY29udGFpbmVycy4gVGhpcyBmdW5jdGlvbiB0cmllcyB0byB1
-c2UKPj4gLSAqIHNwZWNpZmllZCBwYXJzZXJzIHRvIGFuYWx5emUgZ2l2ZW4gcGFydGl0aW9uIGFu
-ZCByZWdpc3RlcnMgZm91bmQKPj4gLSAqIHN1YnBhcnRpdGlvbnMgb24gc3VjY2Vzcy4KPj4gLSAq
-Lwo+PiAtc3RhdGljIGludCBtdGRfcGFyc2VfcGFydChzdHJ1Y3QgbXRkX3BhcnQgKnNsYXZlLCBj
-b25zdCBjaGFyICpjb25zdCAqdHlwZXMpCj4+IC17Cj4+IC0JcmV0dXJuIHBhcnNlX210ZF9wYXJ0
-aXRpb25zKCZzbGF2ZS0+bXRkLCB0eXBlcywgTlVMTCk7Cj4+IC19Cj4+IC0KPj4gICBzdGF0aWMg
-c3RydWN0IG10ZF9wYXJ0ICphbGxvY2F0ZV9wYXJ0aXRpb24oc3RydWN0IG10ZF9pbmZvICpwYXJl
-bnQsCj4+ICAgCQkJY29uc3Qgc3RydWN0IG10ZF9wYXJ0aXRpb24gKnBhcnQsIGludCBwYXJ0bm8s
-Cj4+ICAgCQkJdWludDY0X3QgY3VyX29mZnNldCkKPj4gQEAgLTczNSw4ICs3MTksOCBAQCBpbnQg
-YWRkX210ZF9wYXJ0aXRpb25zKHN0cnVjdCBtdGRfaW5mbyAqbWFzdGVyLAo+PiAgIAo+PiAgIAkJ
-YWRkX210ZF9kZXZpY2UoJnNsYXZlLT5tdGQpOwo+PiAgIAkJbXRkX2FkZF9wYXJ0aXRpb25fYXR0
-cnMoc2xhdmUpOwo+PiAtCQlpZiAocGFydHNbaV0udHlwZXMpCj4+IC0JCQltdGRfcGFyc2VfcGFy
-dChzbGF2ZSwgcGFydHNbaV0udHlwZXMpOwo+PiArCQkvKiBMb29rIGZvciBzdWJwYXJ0aXRpb25z
-ICovCj4+ICsJCXBhcnNlX210ZF9wYXJ0aXRpb25zKCZzbGF2ZS0+bXRkLCBwYXJ0c1tpXS50eXBl
-cywgTlVMTCk7Cj4+ICAgCj4+ICAgCQljdXJfb2Zmc2V0ID0gc2xhdmUtPm9mZnNldCArIHNsYXZl
-LT5tdGQuc2l6ZTsKPj4gICAJfQo+PiBAQCAtODEyLDYgKzc5NiwxMiBAQCBzdGF0aWMgY29uc3Qg
-Y2hhciAqIGNvbnN0IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXNbXSA9IHsKPj4gICAJTlVMTAo+PiAg
-IH07Cj4+ICAgCj4+ICsvKiBDaGVjayBEVCBvbmx5IHdoZW4gbG9va2luZyBmb3Igc3VicGFydGl0
-aW9ucy4gKi8KPj4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgZGVmYXVsdF9zdWJwYXJ0aXRp
-b25fdHlwZXNbXSA9IHsKPj4gKwkib2ZwYXJ0IiwKPj4gKwlOVUxMCj4+ICt9Owo+PiArCj4+ICAg
-c3RhdGljIGludCBtdGRfcGFydF9kb19wYXJzZShzdHJ1Y3QgbXRkX3BhcnRfcGFyc2VyICpwYXJz
-ZXIsCj4+ICAgCQkJICAgICBzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwKPj4gICAJCQkgICAgIHN0
-cnVjdCBtdGRfcGFydGl0aW9ucyAqcHBhcnRzLAo+PiBAQCAtODgyLDcgKzg3Miw5IEBAIHN0YXRp
-YyBpbnQgbXRkX3BhcnRfb2ZfcGFyc2Uoc3RydWN0IG10ZF9pbmZvICptYXN0ZXIsCj4+ICAgCWNv
-bnN0IGNoYXIgKmZpeGVkID0gImZpeGVkLXBhcnRpdGlvbnMiOwo+PiAgIAlpbnQgcmV0LCBlcnIg
-PSAwOwo+PiAgIAo+PiAtCW5wID0gb2ZfZ2V0X2NoaWxkX2J5X25hbWUobXRkX2dldF9vZl9ub2Rl
-KG1hc3RlciksICJwYXJ0aXRpb25zIik7Cj4+ICsJbnAgPSBtdGRfZ2V0X29mX25vZGUobWFzdGVy
-KTsKPj4gKwlpZiAoIW10ZF9pc19wYXJ0aXRpb24obWFzdGVyKSkKPj4gKwkJbnAgPSBvZl9nZXRf
-Y2hpbGRfYnlfbmFtZShucCwgInBhcnRpdGlvbnMiKTsKPj4gICAJb2ZfcHJvcGVydHlfZm9yX2Vh
-Y2hfc3RyaW5nKG5wLCAiY29tcGF0aWJsZSIsIHByb3AsIGNvbXBhdCkgewo+PiAgIAkJcGFyc2Vy
-ID0gbXRkX3BhcnRfZ2V0X2NvbXBhdGlibGVfcGFyc2VyKGNvbXBhdCk7Cj4+ICAgCQlpZiAoIXBh
-cnNlcikKPj4gQEAgLTk0NSw3ICs5MzcsOCBAQCBpbnQgcGFyc2VfbXRkX3BhcnRpdGlvbnMoc3Ry
-dWN0IG10ZF9pbmZvICptYXN0ZXIsIGNvbnN0IGNoYXIgKmNvbnN0ICp0eXBlcywKPj4gICAJaW50
-IHJldCwgZXJyID0gMDsKPj4gICAKPj4gICAJaWYgKCF0eXBlcykKPj4gLQkJdHlwZXMgPSBkZWZh
-dWx0X210ZF9wYXJ0X3R5cGVzOwo+PiArCQl0eXBlcyA9IG10ZF9pc19wYXJ0aXRpb24obWFzdGVy
-KSA/IGRlZmF1bHRfc3VicGFydGl0aW9uX3R5cGVzIDoKPj4gKwkJCWRlZmF1bHRfbXRkX3BhcnRf
-dHlwZXM7Cj4gCj4gSG0sIHRoYXQgbWVhbnMgdGhlIHN1YnBhcnRzIGluaGVyaXQgdGhlIHBhcnNl
-ciB0eXBlcyBmcm9tIHRoZWlyIHBhcmVudAo+IGlmIHR5cGVzICE9IE5VTEw/IElzIHRoYXQgcmVh
-bGx5IHdoYXQgd2Ugd2FudD8gQW5kIGlmIHRoYXQncyB3aGF0IHdlCj4gd2FudCwgd2h5IGRvbid0
-IHdlIGRvIHRoZSBzYW1lIGZvciB0eXBlcyA9PSBOVUxMPwoKTm8sIHVubGVzcyBJJ20gbWlzc2lu
-ZyBzb21ldGhpbmcuIEluIGFkZF9tdGRfcGFydGl0aW9ucygpIHRoZXJlIGlzIG5vdwphIGZvbGxv
-d2luZyBjYWxsOgpwYXJzZV9tdGRfcGFydGl0aW9ucygmc2xhdmUtPm10ZCwgcGFydHNbaV0udHlw
-ZXMsIE5VTEwpOwoKSW4gbW9zdCBjYXNlcyBwYXJ0c1tpXS50eXBlcyBpcyBOVUxMLCB1bmxlc3Mg
-eW91J3JlIHVzaW5nIHNvbWUKZXhjZXB0aW9uYWwgZHJpdmVyIChsaWtlIGJjbTQ3eHhwYXJ0KSB3
-aGljaCBzZXRzICJ0eXBlcyIuCgpTbyBmb3IgZWFjaCBwYXJ0aXRpb24gcGFyc2VfbXRkX3BhcnRp
-dGlvbnMoKSB3aWxsIGJlIGNhbGxlZCB3aXRoICJ0eXBlcyIKYXJndW1lbnQgYWxtb3N0IGFsd2F5
-cyBzZXQgdG8gTlVMTCAobm8gaW5oZXJpdGluZykuIFRoYXQgd2lsbCByZXN1bHQgaW4KcGlja2lu
-ZyBkZWZhdWx0X3N1YnBhcnRpdGlvbl90eXBlcy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5n
-IGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1t
-dGQvCg==
+Patch series adding support for ROHM BD71837 PMIC.
+
+BD71837 is a programmable Power Management IC for powering single-core,
+dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+low BOM cost and compact solution footprint. It integrates 8 buck
+regulators and 7 LDO’s to provide all the power rails required by the
+SoC and the commonly used peripherals.
+
+The driver aims to not limit the usage of PMIC. Thus the buck and LDO
+naming is generic and not tied to any specific purposes. However there
+is following limitations which make it mostly suitable for use cases
+where the processor where PMIC driver is running is powered by the PMIC:
+
+- The PMIC is not re-initialized if it resets. PMIC may reset as a
+  result of voltage monitoring (over/under voltage) or due to reset
+  request. Driver is only initializing PMIC at probe. This is not
+  problem as long as processor controlling PMIC is powered by PMIC.
+
+- The PMIC internal state machine is ignored by driver. Driver assumes
+  the PMIC is wired so that it is always in "run" state when controlled
+  by the driver.
+
+patch 1: 
+        MFD driver and definitions bringing interrupt support and
+        enabling clk and regulator subsystems.
+Patch 2:
+        Kconfig and Makefiles for MFD.
+Patches 3, 4 and 5:
+        device tree binding documents.
+Patch 6:
+        clock subsystem and support for gated clock.
+Patch 7:
+        Kconfig and Makefiles for clock.
+Patch 8:
+        regulator driver supporting 8 bucks and 7 LDOs.
+Patch 9: 
+        Kconfig and Makefiles for regulators
+
+This patch series is based on for-mfd-next
+
+---
+
+Matti Vaittinen (9):
+  mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+  mfd: bd71837: build BD71837 PMIC MFD driver
+  mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  regulator: bd71837: Devicetree bindings for BD71837 regulators
+  clk: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  clk: bd71837: Add driver for BD71837 PMIC clock
+  clk: bd71837: Build ROHM BD71837 PMIC clock driver
+  regulator: bd71837: BD71837 PMIC regulator driver
+  regulator: bd71837: Build BD71837 regulator driver
+
+ .../bindings/clock/rohm,bd71837-clock.txt          |  37 ++
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  55 ++
+ .../bindings/regulator/rohm,bd71837-regulator.txt  | 124 ++++
+ drivers/clk/Kconfig                                |   9 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-bd71837.c                          | 155 +++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bd71837.c                              | 238 +++++++
+ drivers/regulator/Kconfig                          |  11 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/bd71837-regulator.c              | 683 +++++++++++++++++++++
+ include/linux/mfd/bd71837.h                        | 316 ++++++++++
+ 13 files changed, 1644 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ create mode 100644 drivers/clk/clk-bd71837.c
+ create mode 100644 drivers/mfd/bd71837.c
+ create mode 100644 drivers/regulator/bd71837-regulator.c
+ create mode 100644 include/linux/mfd/bd71837.h
+
+-- 
+2.14.3
