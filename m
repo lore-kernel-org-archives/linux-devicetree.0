@@ -1,56 +1,86 @@
-From: "Ivan T. Ivanov" <iivanov.xz@gmail.com>
-Subject: Re: [PATCH] arm64: dts: msm8916: fix Coresight ETF graph connections
-Date: Thu, 24 May 2018 07:48:53 +0300
-Message-ID: <20180524044853.713.23166@silver>
-References: <20180508150952.24562-1-robh@kernel.org>
- <20180508150952.24562-3-robh@kernel.org>
- <CAL_JsqL8qBiJUMyUEcih07UoFSAghn6Amfo8OfY-pKU-QX2_mw@mail.gmail.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
+ bindings
+Date: Thu, 24 May 2018 10:48:10 +0530
+Message-ID: <cba1616d-ad12-599b-4351-3c7240de852a@codeaurora.org>
+References: <1526751291-17873-1-git-send-email-tdas@codeaurora.org>
+ <1526751291-17873-2-git-send-email-tdas@codeaurora.org>
+ <20180522193139.GA21623@rob-hp-laptop>
+ <20180523054846.zn7gftt6aqyibd26@vireshk-i7>
+ <CAL_JsqL7VdSjerOioc5cSOyKAAXJuVnPJqp_WbTtwr11UUxq=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqL8qBiJUMyUEcih07UoFSAghn6Amfo8OfY-pKU-QX2_mw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: David Brown <david.brown@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL7VdSjerOioc5cSOyKAAXJuVnPJqp_WbTtwr11UUxq=A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, Saravana Kannan <skannan@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2018-05-23 23:29:29)
-> On Tue, May 8, 2018 at 10:09 AM, Rob Herring <robh@kernel.org> wrote:
-> > The ETF input should be connected to the funnel output, and the ETF
-> > output should be connected to the replicator input. The labels are wrong
-> > and these got swapped:
-> >
-> > Warning (graph_endpoint): /soc/funnel@821000/ports/port@8/endpoint: graph connection to node '/soc/etf@825000/ports/port@1/endpoint' is not bidirectional
-> > Warning (graph_endpoint): /soc/replicator@824000/ports/port@2/endpoint: graph connection to node '/soc/etf@825000/ports/port@0/endpoint' is not bidirectional
-> >
-> > Fixes: 7c10da373698 ("arm64: dts: qcom: Add msm8916 CoreSight components")
-> > Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Cc: Andy Gross <andy.gross@linaro.org>
-> > Cc: David Brown <david.brown@linaro.org>
-> > Cc: linux-arm-msm@vger.kernel.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8916.dtsi | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+Hello Rob, Viresh,
+
+Thank you for the comments. If I understand correctly, the device tree 
+nodes should look something like the below.
+
+Though I am not sure if any vendor name could be associated in the cpu 
+nodes.
+
+Please suggest if my understanding is wrong.
+
+cpu@0 {
+	qcom,freq-domain = <&freq_domain_table0>;
+	…
+};
+
+same follows for cpu 1/2/3
+
+cpu@400 {
+	qcom,freq-domain = <&freq_domain_table1>;
+	…
+};
+same follows for cpu 5/6/7
+
+freq_domain_table0 : freq_table {
+	reg = < >, < >, < > ;
+	reg-names = "perf_base", "lut_base", "en_base";
+};
+
+freq_domain_table1 : freq_table {
+	reg = < >, < >, < > ;
+	reg-names = "perf_base", "lut_base", "en_base";
+};
+
+
+
+On 5/23/2018 7:48 PM, Rob Herring wrote:
+> On Wed, May 23, 2018 at 12:48 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> On 22-05-18, 14:31, Rob Herring wrote:
+>>> On Sat, May 19, 2018 at 11:04:50PM +0530, Taniya Das wrote:
+>>>> +           freq-domain-0 {
+>>>> +                   compatible = "cpufreq";
+>>>> +                   reg = <0x17d43920 0x4>,
+>>>> +                        <0x17d43110 0x500>,
+>>>> +                        <0x17d41000 0x4>;
+>>>> +                   reg-names = "perf_base", "lut_base", "en_base";
+>>>> +                   qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3>;
+>>
+>> I was thinking, can't we add platform specific properties in the CPU
+>> nodes ? If yes, then we can point the phandle of fw node from the CPUs
+>> and this awkward list can go away.
 > 
-> Ping. Still seeing warnings in -next for these.
->
+> Yes, that's fine. That would be more like OPP binding in that the CPU
+> points to the OPP table rather than the OPP pointing to the CPUs.
+> 
+> With that, you can get rid of the child nodes completely. Just make
+> the parent reg property N sets of 3 addresses for N domains.
+> 
+> Rob
+> 
 
- Hi Rob,
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
- I no longer have access to this hardware and documentation.
- I am sure that Mathieu and friends will take care for verification
- of this patch :-)
-
- Regards,
- Ivan
+--
