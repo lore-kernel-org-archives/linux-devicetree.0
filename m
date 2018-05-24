@@ -1,71 +1,53 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] scripts/dtc: Fixed format mismatch in fprintf
-Date: Thu, 24 May 2018 09:11:28 -0700
-Message-ID: <6e8298cb-795d-f786-0fbd-c77835f3ab91@gmail.com>
-References: <20180524025018.73187-1-nixiaoming@huawei.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 2/6] Documentation: DT: Add optional 'timeout-sec'
+ property for sp805
+Date: Thu, 24 May 2018 09:16:28 -0700
+Message-ID: <20180524161628.GA28425@roeck-us.net>
+References: <1527120924-12131-1-git-send-email-ray.jui@broadcom.com>
+ <1527120924-12131-3-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524025018.73187-1-nixiaoming@huawei.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1527120924-12131-3-git-send-email-ray.jui@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nixiaoming <nixiaoming@huawei.com>, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/18 19:50, nixiaoming wrote:
-> format specifier "d" need arg type "int" , but the according arg
-> "fdt32_to_cpu(xxx)" has type "unsigned int"
+On Wed, May 23, 2018 at 05:15:20PM -0700, Ray Jui wrote:
+> Update the SP805 binding document to add optional 'timeout-sec'
+> devicetree property
 > 
-> Signed-off-by: nixiaoming <nixiaoming@huawei.com>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 > ---
->  scripts/dtc/fdtdump.c  | 6 +++---
->  scripts/dtc/flattree.c | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/watchdog/arm,sp805.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/scripts/dtc/fdtdump.c b/scripts/dtc/fdtdump.c
-> index 7d460a5..851bb6f 100644
-> --- a/scripts/dtc/fdtdump.c
-> +++ b/scripts/dtc/fdtdump.c
-> @@ -66,12 +66,12 @@ static void dump_blob(void *blob)
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> index 0fa3629..1debea3 100644
+> --- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> @@ -19,6 +19,8 @@ Required properties:
 >  
->  	printf("/dts-v1/;\n");
->  	printf("// magic:\t\t0x%x\n", fdt32_to_cpu(bph->magic));
-> -	printf("// totalsize:\t\t0x%x (%d)\n", totalsize, totalsize);
-> +	printf("// totalsize:\t\t0x%x (%u)\n", totalsize, totalsize);
->  	printf("// off_dt_struct:\t0x%x\n", off_dt);
->  	printf("// off_dt_strings:\t0x%x\n", off_str);
->  	printf("// off_mem_rsvmap:\t0x%x\n", off_mem_rsvmap);
-> -	printf("// version:\t\t%d\n", version);
-> -	printf("// last_comp_version:\t%d\n",
-> +	printf("// version:\t\t%u\n", version);
-> +	printf("// last_comp_version:\t%u\n",
->  	       fdt32_to_cpu(bph->last_comp_version));
->  	if (version >= 2)
->  		printf("// boot_cpuid_phys:\t0x%x\n",
-> diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
-> index 8d268fb..28da281 100644
-> --- a/scripts/dtc/flattree.c
-> +++ b/scripts/dtc/flattree.c
-> @@ -393,7 +393,7 @@ void dt_to_blob(FILE *f, struct dt_info *dti, int version)
->  			padlen = 0;
->  			if (quiet < 1)
->  				fprintf(stderr,
-> -					"Warning: blob size %d >= minimum size %d\n",
-> +					"Warning: blob size %u >= minimum size %d\n",
->  					fdt32_to_cpu(fdt.totalsize), minsize);
->  		}
->  	}
+>  Optional properties:
+>  - interrupts:  Should specify WDT interrupt number
+> +- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
+> +               default timeout in the driver is 30 seconds
+
+"... the default timeout is determined by the driver" might be better.
+If you want to mandate a default here (not sure if that is a good idea),
+I would suggest to use something like "should be 30 seconds".
+
+Guenter
+
+>  
+>  Example:
+>  	watchdog@66090000 {
+> -- 
+> 2.1.4
 > 
-
-
-We import this file from the upstream dtc project.  Please send patches
-for this file to:
-
-   David Gibson <david@gibson.dropbear.id.au>
-   devicetree-compiler@vger.kernel.org
-
-Thanks,
-
-Frank
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
