@@ -1,402 +1,100 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v7 2/4] ARM: dts: tegra: Fix unit_address_vs_reg DTC
- warnings for /memory
-Date: Thu, 24 May 2018 11:30:38 +0200
-Message-ID: <f7115418ec6eb4dadee12114278bce67@agner.ch>
-References: <1527144833-24285-1-git-send-email-krzk@kernel.org>
- <1527144833-24285-2-git-send-email-krzk@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: [PATCH v7 0/5] arm: Base support for Renesas RZN1D-DB Board
+Date: Thu, 24 May 2018 10:28:38 +0100
+Message-ID: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527144833-24285-2-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Lucas Stach <dev@lynxeye.de>
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24.05.2018 08:53, Krzysztof Kozlowski wrote:
-> Add a generic /memory node in each Tegra DTSI (with empty reg property,
-> to be overidden by each DTS) and set proper unit address for /memory
-> nodes to fix the DTC warnings:
-> 
->     arch/arm/boot/dts/tegra20-harmony.dtb: Warning (unit_address_vs_reg):
->         /memory: node has a reg or ranges property, but no unit name
-> 
-> The DTB after the change is the same as before except adding
-> unit-address to /memory node.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+This series adds the plain basic support for booting a bare
+kernel on the RZ/N1D-DB Board. It's been trimmed to the strict
+minimum as a 'base', further patches that could add the
+rest of the support.
 
-Looks good to me! Thanks!
+Note on the clock driver: Current usage of the clocks on Linux
+involves Linux 'claiming' all of them, disabling the one it doesn't
+need and so on.
+On *this* architecture it can't be done, there is at least one other
+OS running on the CM3 core that claims it's own clock; Linux can claim
+some others but definitely not start disabling stuff it isn't supposed to.
 
-Reviewed-by: Stefan Agner <stefan@agner.ch>
+Thanks for the comments on the previous versions!
 
---
-Stefan
+v7:
+ + Removed mention of 'rz[/]n1' from everywhere.
+ + Removed unwanted documentation.
+ + Renamed clock node back to sysctrl.
+ + Renamed rzn1-clocks.h to r9a06g032-sysctrl.h to match
+ + Made the clock driver claim the sysctrl node.
+ + Fixed a couple of 'sparse' warning in the clock driver.
+v6:
+ + Fix for suggestion by Geert Uytterhoeven
+ + Removed "renesas,rzn1" from the board bindings
+ + Removed patches already merged.
+ + Removed reboot driver
+ + Added a whole clock infrastructure.
+ + Rebased on next-20180517
+v5:
+ + Given the problems I have with getting in some structure around the
+   sysctrl block, I've removed the MFD, I've now attached the reboot
+   driver on it's  own pair of registers.
+ + Rebased on next-20180417
+v4:
+ + Fixes for suggestions by Simon Horman
+ + Fixes for suggestions by Jacopo Mondi
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Renamed the r9a06g0xx.dtsi file, given up on trying to get a family
+   common file in, so dropped potential RZ/N1S support and now only
+   focus on RZ/N1D for this patchset.
+ + Added 'always-on' to the architected timer node, because it is.
+ + Added ARCH_R9A06G032, to match others patterns like RCAR
+ + Sorted the .dts files, added empty lines as required.
+ + Fixed patch prefixes to match git-log for bindings&dts
+ + Merged board .dts & Makefile changes together
+ + Rebased on next-20180410
+v3:
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Removed SoC Specific renesas,r9a06g032-xxx, as it's not needed for now.
+ + Kept renesas,rzn1 as a family/generic for this family.
+ + Fixed a couple of the commit messages.
+ + Added Geert's Reviewed-By where appropriate.
+v2:
+ + Fixes for suggestions by Simon Horman
+ + Fixes for suggestions by Rob Herring
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Removed the mach file
+ + Added a MFD base for the sysctrl block
+ + Added a regmap based sub driver for the reboot handler
+ + Renamed the files to match shmobile conventions
+ + Adapted the compatible= strings to reflect 'family' vs 'part'
+   distinction.
+ + Removed the sysctrl.h file entirelly.
+ + Fixed every warnings from the DTC compiler on W=12 mode.
+ + Split the device-tree patches from the code.
 
-> ---
-> 
-> Changes since v6:
-> 1. Fix unit addresses for tegra124 and minor nits (suggested by Stefan).
-> 
-> Changes since v5:
-> 1. Split with skeleton.dtsi removal (suggested by Stefan).
-> 
-> Changes since v4:
-> 1. None
-> ---
->  arch/arm/boot/dts/tegra114-dalmore.dts      | 2 +-
->  arch/arm/boot/dts/tegra114-roth.dts         | 2 +-
->  arch/arm/boot/dts/tegra114-tn7.dts          | 2 +-
->  arch/arm/boot/dts/tegra114.dtsi             | 3 ++-
->  arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 2 +-
->  arch/arm/boot/dts/tegra124-apalis.dtsi      | 2 +-
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts   | 2 +-
->  arch/arm/boot/dts/tegra124-nyan.dtsi        | 2 +-
->  arch/arm/boot/dts/tegra124-venice2.dts      | 2 +-
->  arch/arm/boot/dts/tegra124.dtsi             | 3 ++-
->  arch/arm/boot/dts/tegra20-colibri-512.dtsi  | 2 +-
->  arch/arm/boot/dts/tegra20-harmony.dts       | 2 +-
->  arch/arm/boot/dts/tegra20-paz00.dts         | 2 +-
->  arch/arm/boot/dts/tegra20-seaboard.dts      | 2 +-
->  arch/arm/boot/dts/tegra20-tamonten.dtsi     | 2 +-
->  arch/arm/boot/dts/tegra20-trimslice.dts     | 2 +-
->  arch/arm/boot/dts/tegra20-ventana.dts       | 2 +-
->  arch/arm/boot/dts/tegra20.dtsi              | 3 ++-
->  arch/arm/boot/dts/tegra30-apalis.dtsi       | 4 ++--
->  arch/arm/boot/dts/tegra30-beaver.dts        | 2 +-
->  arch/arm/boot/dts/tegra30-cardhu.dtsi       | 2 +-
->  arch/arm/boot/dts/tegra30-colibri.dtsi      | 2 +-
->  arch/arm/boot/dts/tegra30.dtsi              | 3 ++-
->  23 files changed, 28 insertions(+), 24 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts
-> b/arch/arm/boot/dts/tegra114-dalmore.dts
-> index eafff16765b4..1788556b4977 100644
-> --- a/arch/arm/boot/dts/tegra114-dalmore.dts
-> +++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-> @@ -23,7 +23,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x80000000 0x40000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra114-roth.dts
-> b/arch/arm/boot/dts/tegra114-roth.dts
-> index 7ed7370ee67a..3d3835591cd2 100644
-> --- a/arch/arm/boot/dts/tegra114-roth.dts
-> +++ b/arch/arm/boot/dts/tegra114-roth.dts
-> @@ -28,7 +28,7 @@
->  		};
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		/* memory >= 0x79600000 is reserved for firmware usage */
->  		reg = <0x80000000 0x79600000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra114-tn7.dts
-> b/arch/arm/boot/dts/tegra114-tn7.dts
-> index 7fc4a8b31e45..bfdd1bf61816 100644
-> --- a/arch/arm/boot/dts/tegra114-tn7.dts
-> +++ b/arch/arm/boot/dts/tegra114-tn7.dts
-> @@ -28,7 +28,7 @@
->  		};
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		/* memory >= 0x37e00000 is reserved for firmware usage */
->  		reg = <0x80000000 0x37e00000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-> index 27ef515e5640..85488a150701 100644
-> --- a/arch/arm/boot/dts/tegra114.dtsi
-> +++ b/arch/arm/boot/dts/tegra114.dtsi
-> @@ -11,8 +11,9 @@
->  	#address-cells = <1>;
->  	#size-cells = <1>;
->  
-> -	memory {
-> +	memory@80000000 {
->  		device_type = "memory";
-> +		reg = <0x80000000 0x0>;
->  	};
->  
->  	host1x@50000000 {
-> diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> index bb67edb016c5..acb5b379e896 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> @@ -15,7 +15,7 @@
->  	compatible = "toradex,apalis-tk1-v1.2", "toradex,apalis-tk1",
->  		     "nvidia,tegra124";
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi
-> b/arch/arm/boot/dts/tegra124-apalis.dtsi
-> index 65a2161b9b8e..08518e424448 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-> @@ -50,7 +50,7 @@
->  	model = "Toradex Apalis TK1";
->  	compatible = "toradex,apalis-tk1", "nvidia,tegra124";
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-> b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-> index 6dbcf84dafbc..9151b3ebb839 100644
-> --- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-> +++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-> @@ -24,7 +24,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi
-> b/arch/arm/boot/dts/tegra124-nyan.dtsi
-> index 3609367037a6..d5f11d6d987e 100644
-> --- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-> @@ -13,7 +13,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra124-venice2.dts
-> b/arch/arm/boot/dts/tegra124-venice2.dts
-> index 89bcc178994d..82d139648ef1 100644
-> --- a/arch/arm/boot/dts/tegra124-venice2.dts
-> +++ b/arch/arm/boot/dts/tegra124-venice2.dts
-> @@ -18,7 +18,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-> index 951feea784af..183c5acafb22 100644
-> --- a/arch/arm/boot/dts/tegra124.dtsi
-> +++ b/arch/arm/boot/dts/tegra124.dtsi
-> @@ -13,8 +13,9 @@
->  	#address-cells = <2>;
->  	#size-cells = <2>;
->  
-> -	memory {
-> +	memory@80000000 {
->  		device_type = "memory";
-> +		reg = <0x0 0x80000000 0x0 0x0>;
->  	};
->  
->  	pcie@1003000 {
-> diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-> b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-> index 5c202b3e3bb1..5623ff8d128c 100644
-> --- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-> +++ b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-> @@ -10,7 +10,7 @@
->  		rtc1 = "/rtc@7000e000";
->  	};
->  
-> -	memory {
-> +	memory@0 {
->  		reg = <0x00000000 0x20000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra20-harmony.dts
-> b/arch/arm/boot/dts/tegra20-harmony.dts
-> index 628a55a9318b..1d96d92b72a7 100644
-> --- a/arch/arm/boot/dts/tegra20-harmony.dts
-> +++ b/arch/arm/boot/dts/tegra20-harmony.dts
-> @@ -18,7 +18,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@0 {
->  		reg = <0x00000000 0x40000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
-> b/arch/arm/boot/dts/tegra20-paz00.dts
-> index 30436969adc0..ef245291924f 100644
-> --- a/arch/arm/boot/dts/tegra20-paz00.dts
-> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
-> @@ -19,7 +19,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@0 {
->  		reg = <0x00000000 0x20000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts
-> b/arch/arm/boot/dts/tegra20-seaboard.dts
-> index 284aae351ff2..f91441683aad 100644
-> --- a/arch/arm/boot/dts/tegra20-seaboard.dts
-> +++ b/arch/arm/boot/dts/tegra20-seaboard.dts
-> @@ -18,7 +18,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@0 {
->  		reg = <0x00000000 0x40000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-> b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-> index 872046d48709..20137fc578b1 100644
-> --- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-> +++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-> @@ -15,7 +15,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@0 {
->  		reg = <0x00000000 0x20000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts
-> b/arch/arm/boot/dts/tegra20-trimslice.dts
-> index d55c6b240a30..9eb26dc15f6b 100644
-> --- a/arch/arm/boot/dts/tegra20-trimslice.dts
-> +++ b/arch/arm/boot/dts/tegra20-trimslice.dts
-> @@ -18,7 +18,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@0 {
->  		reg = <0x00000000 0x40000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra20-ventana.dts
-> b/arch/arm/boot/dts/tegra20-ventana.dts
-> index ee3fbf941e79..f44551e2d9d0 100644
-> --- a/arch/arm/boot/dts/tegra20-ventana.dts
-> +++ b/arch/arm/boot/dts/tegra20-ventana.dts
-> @@ -18,7 +18,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@0 {
->  		reg = <0x00000000 0x40000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index 88dd1afb5877..55581c0e5105 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -13,8 +13,9 @@
->  	chosen { };
->  	aliases { };
->  
-> -	memory {
-> +	memory@0 {
->  		device_type = "memory";
-> +		reg = <0 0>;
->  	};
->  
->  	iram@40000000 {
-> diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi
-> b/arch/arm/boot/dts/tegra30-apalis.dtsi
-> index 6f29cbad6e8a..9465fc592b7b 100644
-> --- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-> +++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-> @@ -10,8 +10,8 @@
->  	model = "Toradex Apalis T30";
->  	compatible = "toradex,apalis_t30", "nvidia,tegra30";
->  
-> -	memory {
-> -		reg = <0 0>;
-> +	memory@80000000 {
-> +		reg = <0x80000000 0x40000000>;
->  	};
->  
->  	pcie@3000 {
-> diff --git a/arch/arm/boot/dts/tegra30-beaver.dts
-> b/arch/arm/boot/dts/tegra30-beaver.dts
-> index ae52a5039506..1434d50438f9 100644
-> --- a/arch/arm/boot/dts/tegra30-beaver.dts
-> +++ b/arch/arm/boot/dts/tegra30-beaver.dts
-> @@ -17,7 +17,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x80000000 0x7ff00000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> index 92a9740c533f..33b73dca16a3 100644
-> --- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> +++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> @@ -40,7 +40,7 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x80000000 0x40000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi
-> b/arch/arm/boot/dts/tegra30-colibri.dtsi
-> index c44d8c40c410..9bf3327665d3 100644
-> --- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-> +++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-> @@ -10,7 +10,7 @@
->  	model = "Toradex Colibri T30";
->  	compatible = "toradex,colibri_t30", "nvidia,tegra30";
->  
-> -	memory {
-> +	memory@80000000 {
->  		reg = <0x80000000 0x40000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-> index 19237c08c166..bc42f791d791 100644
-> --- a/arch/arm/boot/dts/tegra30.dtsi
-> +++ b/arch/arm/boot/dts/tegra30.dtsi
-> @@ -14,8 +14,9 @@
->  	chosen { };
->  	aliases { };
->  
-> -	memory {
-> +	memory@80000000 {
->  		device_type = "memory";
-> +		reg = <0x80000000 0x0>;
->  	};
->  
->  	pcie@3000 {
+Michel Pollet (5):
+  dt-bindings: Add the r9a06g032-sysctrl.h file
+  dt-bindings: clock: renesas,r9a06g032-sysctrl: documentation
+  ARM: dts: Renesas R9A06G032 base device tree file
+  ARM: dts: Renesas RZN1D-DB Board base file
+  clk: renesas: Renesas R9A06G032 clock driver
+
+ .../bindings/clock/renesas,r9a06g032-sysctrl.txt   |  32 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts        |  29 +
+ arch/arm/boot/dts/r9a06g032.dtsi                   |  86 +++
+ drivers/clk/renesas/Kconfig                        |   6 +
+ drivers/clk/renesas/Makefile                       |   1 +
+ drivers/clk/renesas/r9a06g032-clocks.c             | 812 +++++++++++++++++++++
+ include/dt-bindings/clock/r9a06g032-sysctrl.h      | 187 +++++
+ 8 files changed, 1154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+ create mode 100644 arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts
+ create mode 100644 arch/arm/boot/dts/r9a06g032.dtsi
+ create mode 100644 drivers/clk/renesas/r9a06g032-clocks.c
+ create mode 100644 include/dt-bindings/clock/r9a06g032-sysctrl.h
+
+-- 
+2.7.4
