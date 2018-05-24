@@ -1,67 +1,94 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Thu, 24 May 2018 14:19:18 +0200
-Message-ID: <146a3abbbff4dcef30ad662a0fb85ff1@agner.ch>
-References: <cover.1526990589.git.stefan@agner.ch>
- <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
- <CAGefG55kvShaLhNYsFznbOq0_6RNbb+eJ47DLnnU9qRRpwu-iA@mail.gmail.com>
- <d8d6cb9fcd8ce7ea5c13b227012de6d2@agner.ch>
- <CAGefG56khQ2835c2QCteit7FuL_yG+APpj6-4vRRPxztFtkAMA@mail.gmail.com>
- <20180524135335.6aa0b7a4@bbrezillon>
+From: Qiang Yu <yuq825@gmail.com>
+Subject: Re: [PATCH RFC 05/24] Revert "drm: Nerf the preclose callback for
+ modern drivers"
+Date: Thu, 24 May 2018 17:24:02 +0800
+Message-ID: <CAKGbVbttv2zJBaif2EVvqVFQo-xPM+x9hD6X5Lon-bNCNny01A@mail.gmail.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <20180518092815.25280-6-yuq825@gmail.com>
+ <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
+ <CAKGbVbuSuAEF9Zd_usM5ika5KuFiY75jCG3gwOfeAExSciRV7Q@mail.gmail.com>
+ <c958599c-b0df-8b85-4123-daeed0fb07ac@amd.com>
+ <CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com>
+ <75f682e9-5b31-ad82-441f-b2c250edc0a0@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524135335.6aa0b7a4@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Benjamin Lindqvist <benjamin.lindqvist@endian.se>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, Lucas Stach <dev@lynxeye.de>, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, Mirza Krak <mirza.krak@gmail.com>, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <75f682e9-5b31-ad82-441f-b2c250edc0a0@amd.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24.05.2018 13:53, Boris Brezillon wrote:
-> Hi Benjamin,
-> 
-> On Thu, 24 May 2018 13:30:14 +0200
-> Benjamin Lindqvist <benjamin.lindqvist@endian.se> wrote:
-> 
->> Hi Stefan,
->>
->> It seems to me that a probe similar to what the BootROM does shouldn't
->> be awfully complicated to implement - just cycle through the switch
->> cases in case of an ECC error. But I guess that's more of an idea for
->> further improvements rather than a comment to the patch set under
->> review.
-> 
-> Nope, not really an option, because you're not guaranteed that the NAND
-> will be used as a boot media, and the first page or first set of pages
-> might just be erased.
-> 
-
-Yeah I did not meant probing like the Boot ROM does.
-
-What I meant was using only the ECC modes which are supported by the
-Boot ROM when the driver tries to choose a viable mode. So that would
-be:
-- RS t=4
-- BCH t=8
-- BCH t=16
-
-Maybe we could add a property to enable that behavior:
-
-tegra,use-bootable-ecc-only;
-
->>
->> However, I think that allowing for an override of the oobsize
->> inference would be a good idea before merging, no? This could just be
->> a trivial #ifdef (at least temporarily). If you agree but don't feel
->> like doing it yourself, I'd be happy to pitch in. Let me know.
-> 
-> That's why we have nand-ecc-xxx properties in the DT.
-> 
-
-Yes, nand-ecc-strength is the first thing I plan to implement, that way
-strength can be defined in dt.
-
---
-Stefan
+T24gVGh1LCBNYXkgMjQsIDIwMTggYXQgMjo0NiBQTSwgQ2hyaXN0aWFuIEvDtm5pZwo8Y2hyaXN0
+aWFuLmtvZW5pZ0BhbWQuY29tPiB3cm90ZToKPiBBbSAyNC4wNS4yMDE4IHVtIDAzOjM4IHNjaHJp
+ZWIgUWlhbmcgWXU6Cj4KPiBbU05JUF0KPgo+IEFkZGluZyBmZW5jZSBpcyBkb25lIGFscmVhZHks
+IGFuZCBJIGRpZCB3YWl0IGl0IGJlZm9yZSB1bm1hcC4gQnV0IHRoZW4KPiBJIHNlZSB3aGVuCj4g
+dGhlIGJ1ZmZlciBpcyBzaGFyZWQgYmV0d2VlbiBwcm9jZXNzZXMsIHRoZSAicGVyZmVjdCB3YWl0
+IiBpcyBqdXN0Cj4gd2FpdCB0aGUgZmVuY2UKPiBmcm9tIHRoaXMgcHJvY2VzcydzIHRhc2ssIHNv
+IGl0J3MgYmV0dGVyIHRvIGFsc28gZGlzdGluZ3Vpc2ggZmVuY2VzLgo+IElmIHNvLCBJIGp1c3Qg
+dGhpbmsKPiB3aHkgd2UgZG9uJ3QganVzdCB3YWl0IHRhc2tzIGZyb20gdGhpcyBwcm9jZXNzIGlu
+IHRoZSBwcmVjbG9zZSBiZWZvcmUKPiB1bm1hcC9mcmVlCj4gYnVmZmVyIGluIHRoZSBkcm1fcmVs
+ZWFzZSgpPwo+Cj4gV2VsbCBpdCBkZXBlbmRzIG9uIHlvdXIgVk0gbWFuYWdlbWVudC4gV2hlbiB1
+c2Vyc3BhY2UgZXhwZWN0cyB0aGF0IHRoZSBWTQo+IHNwYWNlIHRoZSBCTyB1c2VkIGlzIHJldXNh
+YmxlIGltbWVkaWF0ZWx5IHRoYW4gdGhlIFRUTSBjYWxsYmFjayB3b24ndCB3b3JrLgo+Cj4gT24g
+dGhlIG90aGVyIGhhbmQgeW91IGNhbiBqdXN0IGdyYWIgdGhlIGxpc3Qgb2YgZmVuY2VzIG9uIGEg
+Qk8gYW5kIGZpbHRlcgo+IG91dCB0aGUgb25lcyBmcm9tIHlvdXIgY3VycmVudCBwcm9jZXNzIGFu
+ZCB3YWl0IGZvciB0aG9zZS4gU2VlCj4gYW1kZ3B1X3N5bmNfcmVzdigpIGFzIGFuIGV4YW1wbGUg
+aG93IHRvIGRvIHRoYXQuCj4KPiBJbiBjdXJyZW50IGxpbWEgaW1wbGVtZW50YXRpb24sIHVzZXIg
+c3BhY2UgZHJpdmVyIGlzIHJlc3BvbnNpYmxlIG5vdAo+IHVubWFwL2ZyZWUKPiBidWZmZXIgYmVm
+b3JlIHRhc2sgaXMgY29tcGxldGUuIEFuZCBWTSBtYXAvdW5tYXAgaXMgbm90IGRpZmZlcmVkLgo+
+Cj4KPiBXZWxsIGl0J3MgdXAgdG8geW91IGhvdyB0byBkZXNpZ24gdXNlcnNwYWNlLCBidXQgaW4g
+dGhlIHBhc3QgZG9pbmcgaXQgbGlrZQo+IHRoYXQgdHVybmVkIG91dCB0byBiZSBhIHJhdGhlciBi
+YWQgZGVzaWduIGRlY2lzaW9uLgo+Cj4gS2VlcCBpbiBtaW5kIHRoYXQgdGhlIGtlcm5lbCBkcml2
+ZXIgbXVzdCBndWFyYW50ZWUgdGhhdCBhIHNoYWRlcnMgY2FuIG5ldmVyCj4gYWNjZXNzIGZyZWVk
+IHVwIG1lbW9yeS4KPgo+IE90aGVyd2lzZSB0YWtpbmcgb3ZlciB0aGUgc3lzdGVtIGZyb20gYW4g
+dW5wcml2aWxlZ2VkIHByb2Nlc3NlcyBiZWNvbWVzIGp1c3QKPiBhIHR5cGluZyBleGVyY2lzZSB3
+aGVuIHlvdSBtYW5hZ2UgdG8gYWNjZXNzIGZyZWVkIG1lbW9yeSB3aGljaCBpcyBub3cgdXNlZAo+
+IGZvciBhIHBhZ2UgdGFibGUuCgpSaWdodCwgSSBrbm93IHRoaXMgaGFzIHRvIGJlIGF2b2lkZWQu
+Cgo+Cj4gQmVjYXVzZSBvZiB0aGlzIHdlIGhhdmUgYSBzZXBhcmF0ZSB0cmFja2luZyBpbiBhbWRn
+cHUgc28gdGhhdCB3ZSBub3Qgb25seQo+IGtub3cgd2hvIGlzIHVzaW5nIHdoaWNoIEJPLCB3aG8g
+aXMgdXNpbmcgd2hpY2ggVk0uCgphbWRncHUncyBWTSBpbXBsZW1lbnRhdGlvbiBzZWVtcyB0b28g
+Y29tcGxpY2F0ZWQgZm9yIHRoaXMgc2ltcGxlIG1hbGkgR1BVLApidXQgSSBtYXkgaW52ZXN0aWdh
+dGUgaXQgbW9yZSB0byBzZWUgaWYgSSBjYW4gbWFrZSBpdCBiZXR0ZXIuCgo+Cj4gVGhpcyB3b3Jr
+cyBzaW1wbGUgYW5kIGZpbmUgZXhjZXB0IHRoZSBjYXNlIHRoYXQgdXNlciBwcmVzcyBDdHJsK0Mg
+dG8KPiB0ZXJtaW5hdGUKPiB0aGUgYXBwbGljYXRpb24gd2hpY2ggd2lsbCBmb3JjZSB0byBjbG9z
+ZSBkcm0gZmQuCj4KPgo+IEknbSBub3Qgc3VyZSBpZiB0aGF0IGFjdHVhbGx5IHdvcmtzIGFzIGZp
+bmUgYXMgeW91IHRoaW5rLgo+Cj4gRm9yIGFuIGV4YW1wbGUgb2Ygd2hhdCB3ZSBoYWQgdG8gYWRk
+IHRvIHByZXZlbnQgc2VjdXJpdHkgYnJlYWNoZXMsIHRha2UgYQo+IGxvb2sgYXQgYW1kZ3B1X2dl
+bV9vYmplY3RfY2xvc2UoKS4KPgo+IEknZCBtb3JlIHByZWZlciB0byB3YWl0IGJ1ZmZlciBmZW5j
+ZSBiZWZvcmUgdm0gdW5tYXAgYW5kIGZpbHRlciBsaWtlCj4gYW1kZ3B1X3N5bmNfcmVzdigpIGNv
+bXBhcmVkIHRvIGltcGxlbWVudCByZWZjb3VudCBpbiBrZXJuZWwgdGFzay4KPiBCdXQgdGhlc2Ug
+dHdvIHdheXMgYXJlIGFsbCBub3QgYXMgc2ltcGxlIGFzIHByZWNsb3NlLgo+Cj4KPiBXZWxsLCBJ
+IHdvdWxkIHJhdGhlciBzYXkgeW91IHNob3VsZCBlaXRoZXIgZGVsYXkgVk0gdW5tYXAgb3BlcmF0
+aW9ucyB1bnRpbAo+IGFsbCB1c2VycyBvZiB0aGUgVk0gYXJlIGRvbmUgd2l0aCB0aGVpciB3b3Jr
+IHVzaW5nIHRoZSB0dG1fYm9fZGVzdHJveQo+IGNhbGxiYWNrLgo+Cj4gT3IgeW91IGJsb2NrIGlu
+IHRoZSBnZW1fY2xvc2Vfb2JqZWN0IGNhbGxiYWNrIHVudGlsIGFsbCB0YXNrcyB1c2luZyB0aGUg
+Qk8KPiBhcmUgZG9uZSB3aXRoIGl0Lgo+Cj4gU28gSSBzdGlsbCBkb24ndCB1bmRlcnN0YW5kIHdo
+eSB5b3UgZG9uJ3Qgd2FudCB0byBnZXQgcHJlY2xvc2UgYmFjayBldmVuCj4gaGF2ZSB0byBpbnRy
+b2R1Y2Ugb3RoZXIgY29tcGxpY2F0ZWQgbWVjaGFuaXNtIHRvIGNvdmVyIHRoZSBjYXNlIGZyZWUv
+dW5tYXAKPiBidWZmZXIgYmVmb3JlIHRoaXMgcHJvY2VzcydzIHRhc2sgaXMgZG9uZT8KPgo+Cj4g
+V2UgaW50ZW50aW9uYWxseSByZW1vdmVkIHRoZSBwcmVjbG9zZSBjYWxsYmFjayB0byBwcmV2ZW50
+IGNlcnRhaW4gdXNlIGNhc2VzLAo+IGJyaW5naW5nIGl0IGJhY2sgdG8gYWxsb3cgeW91ciB1c2Ug
+Y2FzZSBsb29rcyByYXRoZXIgZmlzaHkgdG8gbWUuCgpTZWVtcyBvdGhlciBkcml2ZXJzIGRvIGVp
+dGhlciB0aGUgZGVmZmVyIG9yIHdhaXQgd2F5IHRvIGFkb3B0IHRoZSBkcm9wCm9mIHByZWNsb3Nl
+LiBJIGNhbiBkbyB0aGUgc2FtZSBhcyB5b3Ugc3VnZ2VzdGVkLCBidXQganVzdCBub3QgdW5kZXJz
+dGFuZCB3aHkKd2UgbWFrZSBvdXIgbGlmZSBoYXJkZXIuIENhbiBJIGtub3cgd2hhdCdzIHRoZSBj
+YXNlIHlvdSB3YW50IHRvIHByZXZlbnQ/Cgo+Cj4gQlRXOiBXaGF0IGV4YWN0bHkgaXMgdGhlIGlz
+c3VlIHdpdGggdXNpbmcgdGhlIHBvc3RjbG9zZSBjYWxsYmFjaz8KClRoZSBpc3N1ZSBpcywgd2hl
+biBDdHJsK0MgdG8gdGVybWluYXRlIGFuIGFwcGxpY2F0aW9uLCBpZiBubyB3YWl0IG9yIGRlZmZl
+cgp1bm1hcCwgYnVmZmVyIGp1c3QgZ2V0cyB1bm1hcHBlZCBiZWZvcmUgdGFzayBpcyBkb25lLCBz
+byBrZXJuZWwgZHJpdmVyCmdldHMgTU1VIGZhdWx0IGFuZCBIVyByZXNldCB0byByZWNvdmVyIHRo
+ZSBHUFUuCgpSZWdhcmRzLApRaWFuZwoKPgo+IFJlZ2FyZHMsCj4gQ2hyaXN0aWFuLgo+Cj4KPiBS
+ZWdhcmRzLAo+IFFpYW5nCj4KPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
