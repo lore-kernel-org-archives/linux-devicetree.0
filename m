@@ -1,99 +1,85 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: Re: [PATCH 05/15] drm/sun4i: Add TCON TOP driver
-Date: Thu, 24 May 2018 22:33:58 +0200
-Message-ID: <2523764.1gMShBa1ZC@jernej-laptop>
-References: <20180519183127.2718-1-jernej.skrabec@siol.net> <5965231.6ucpJrPIQ5@jernej-laptop> <20180524084351.x4ugbbsz3mqv6fh7@flea>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] driver core: make deferring probe after init optional
+Date: Thu, 24 May 2018 15:57:54 -0500
+Message-ID: <CAL_JsqJK69A3W=YrSfvPetM95CROOJhU1bW1rMEOGtji=t0ORQ@mail.gmail.com>
+References: <20180524175024.19874-1-robh@kernel.org> <20180524175024.19874-2-robh@kernel.org>
+ <20180524190031.GB31019@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBZODTTMAKGQEMAHFLVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180524084351.x4ugbbsz3mqv6fh7@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180524190031.GB31019@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, May 24, 2018 at 2:00 PM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Thu, May 24, 2018 at 12:50:17PM -0500, Rob Herring wrote:
+>> Deferred probe will currently wait forever on dependent devices to probe,
+>> but sometimes a driver will never exist. It's also not always critical for
+>> a driver to exist. Platforms can rely on default configuration from the
+>> bootloader or reset defaults for things such as pinctrl and power domains.
+>> This is often the case with initial platform support until various drivers
+>> get enabled. There's at least 2 scenarios where deferred probe can render
+>> a platform broken. Both involve using a DT which has more devices and
+>> dependencies than the kernel supports. The 1st case is a driver may be
+>> disabled in the kernel config. The 2nd case is the kernel version may
+>> simply not have the dependent driver. This can happen if using a newer DT
+>> (provided by firmware perhaps) with a stable kernel version.
+>>
+>> Subsystems or drivers may opt-in to this behavior by calling
+>> driver_deferred_probe_check_init_done() instead of just returning
+>> -EPROBE_DEFER. They may use additional information from DT or kernel's
+>> config to decide whether to continue to defer probe or not.
+>>
+>> Cc: Alexander Graf <agraf@suse.de>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/base/dd.c      | 17 +++++++++++++++++
+>>  include/linux/device.h |  2 ++
+>>  2 files changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>> index c9f54089429b..d6034718da6f 100644
+>> --- a/drivers/base/dd.c
+>> +++ b/drivers/base/dd.c
+>> @@ -226,6 +226,16 @@ void device_unblock_probing(void)
+>>       driver_deferred_probe_trigger();
+>>  }
+>>
+>> +int driver_deferred_probe_check_init_done(struct device *dev, bool optional)
+>> +{
+>> +     if (optional && initcalls_done) {
+>
+> Wait, what's the "optional" mess here?
 
-Dne =C4=8Detrtek, 24. maj 2018 ob 10:43:51 CEST je Maxime Ripard napisal(a)=
-:
-> Hi,
->=20
-> On Mon, May 21, 2018 at 05:15:15PM +0200, Jernej =C5=A0krabec wrote:
-> > > > +	/*
-> > > > +	 * Default register values might have some reserved bits set,=20
-which
-> > > > +	 * prevents TCON TOP from working properly. Set them to 0 here.
-> > > > +	 */
-> > > > +	writel(0, tcon_top->regs + TCON_TOP_PORT_SEL_REG);
-> > > > +	writel(0, tcon_top->regs + TCON_TOP_GATE_SRC_REG);
-> > > > +
-> > > > +	for (i =3D 0; i < CLK_NUM; i++) {
-> > > > +		const char *parent_name =3D "bus-tcon-top";
-> > >=20
-> > > I guess retrieving the parent's clock name at runtime would be more
-> > > flexible.
-> >=20
-> > It is, but will it ever be anything else?
->=20
-> Probably not, but when the complexity is exactly the same (using
-> __clk_get_name), we'd better use the more appropriate solution. If we
-> ever need to change that clock name, or to use the driver with an SoC
-> that wouldn't have the same clock name for whatever reason, it will
-> just work.
->=20
-> > > > +		struct clk_init_data init;
-> > > > +		struct clk_gate *gate;
-> > > > +
-> > > > +		gate =3D devm_kzalloc(dev, sizeof(*gate), GFP_KERNEL);
-> > > > +		if (!gate) {
-> > > > +			ret =3D -ENOMEM;
-> > > > +			goto err_disable_clock;
-> > > > +		}
-> > > > +
-> > > > +		init.name =3D gates[i].name;
-> > > > +		init.ops =3D &clk_gate_ops;
-> > > > +		init.flags =3D CLK_IS_BASIC;
-> > > > +		init.parent_names =3D &parent_name;
-> > > > +		init.num_parents =3D 1;
-> > > > +
-> > > > +		gate->reg =3D tcon_top->regs + TCON_TOP_GATE_SRC_REG;
-> > > > +		gate->bit_idx =3D gates[i].bit;
-> > > > +		gate->lock =3D &tcon_top->reg_lock;
-> > > > +		gate->hw.init =3D &init;
-> > > > +
-> > > > +		ret =3D devm_clk_hw_register(dev, &gate->hw);
-> > > > +		if (ret)
-> > > > +			goto err_disable_clock;
-> > >=20
-> > > Isn't it what clk_hw_register_gate is doing?
-> >=20
-> > Almost, but not exactly. My goal was to use devm_* functions, so there =
-is
-> > no need to do any special cleanup.
->=20
-> Is it the only difference? If so, you can just create a
-> devm_clk_hw_register gate.
+My intent was that subsystems just always call this function and never
+return EPROBE_DEFER themselves. Then the driver core can make
+decisions as to what to do (such as the timeout added in the next
+patch). Or it can print common error/debug messages. So optional is a
+hint to allow subsystems per device control.
 
-I checked around and it seems that in clk core there are only non devm_*=20
-helpers like clk_hw_register_gate() for some reason. I guess I'll just use=
-=20
-that and manually unregister all the clocks in cleanup function.
+>
+> The caller knows this value, so why do you need to even pass it in here?
 
-Best regards,
-Jernej
+Because regardless of the value, we always stop deferring when/if we
+hit the timeout and the caller doesn't know about the timeout. If we
+get rid of it, we'd need functions for both init done and for deferred
+timeout.
 
+> And bool values that are not obvious are horrid.  I had to go look this
+> up when reading the later patches that just passed "true" in this
+> variable as I had no idea what that meant.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Perhaps inverting it and calling it "keep_deferring" would be better.
+However, the flag is ignored if we have timed out.
+
+>
+> So as-is, no, this isn't ok, sorry.
+>
+> And at the least, this needs some kerneldoc to explain it :)
+
+That part is easy enough to fix.
+
+Rob
