@@ -1,71 +1,206 @@
-From: Qiang Yu <yuq825@gmail.com>
-Subject: Re: [PATCH RFC 24/24] drm/lima: add makefile and kconfig
-Date: Thu, 24 May 2018 08:49:52 +0800
-Message-ID: <CAKGbVbuJFB3Dft_5XYSmbFByTTWh1Vcx0YP91OMnKT9P93Jx5A@mail.gmail.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180518092815.25280-25-yuq825@gmail.com>
- <7e0835f9-a368-294d-9483-91513211cf24@denx.de>
- <20180523172627.GD17409@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180523172627.GD17409@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Simon Shields <simon@lineageos.org>, Erico Nunes <nunes.erico@gmail.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH] arm64: dt: Update sp805 compatible string
+Date: Wed, 23 May 2018 17:52:57 -0700
+Message-ID: <1527123177-23273-1-git-send-email-ray.jui@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Wei Xu <xuwei5@hisilicon.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-WWVhaCwgdGhlIGxpc3QgaXMgY29taW5nIGxvbmdlciBhbmQgbG9uZ2VyLCBtYXliZSBJIHNob3Vs
-ZCBqdXN0IHVzZQpBUk0gfHwgQVJNNjQgfHwgQ09NUElMRV9URVNUCgpSZWdhcmRzLApRaWFuZwoK
-T24gVGh1LCBNYXkgMjQsIDIwMTggYXQgMToyNiBBTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4gT24gV2VkLCBNYXkgMjMsIDIwMTggYXQgMDc6MTY6NDFQTSArMDIwMCwg
-TWFyZWsgVmFzdXQgd3JvdGU6Cj4+IE9uIDA1LzE4LzIwMTggMTE6MjggQU0sIFFpYW5nIFl1IHdy
-b3RlOgo+PiA+IEZyb206IExpbWEgUHJvamVjdCBEZXZlbG9wZXJzIDxkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnPgo+PiA+Cj4+ID4gU2lnbmVkLW9mZi1ieTogUWlhbmcgWXUgPHl1cTgy
-NUBnbWFpbC5jb20+Cj4+ID4gU2lnbmVkLW9mZi1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJv
-bmdAYmF5bGlicmUuY29tPgo+PiA+IFNpZ25lZC1vZmYtYnk6IFNpbW9uIFNoaWVsZHMgPHNpbW9u
-QGxpbmVhZ2Vvcy5vcmc+Cj4+ID4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtv
-QHNudGVjaC5kZT4KPj4gPiAtLS0KPj4gPiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAg
-fCAgMiArKwo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICB8ICAxICsKPj4gPiAg
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZyAgfCAgOSArKysrKysrKysKPj4gPiAgZHJpdmVy
-cy9ncHUvZHJtL2xpbWEvTWFrZWZpbGUgfCAxOSArKysrKysrKysrKysrKysrKysrCj4+ID4gIDQg
-ZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZwo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL2xpbWEvTWFrZWZpbGUKPj4gPgo+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCj4+ID4gaW5kZXggZGVl
-ZWZhN2ExNzczLi5mMDBkNTI5ZWUwMzQgMTAwNjQ0Cj4+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L0tjb25maWcKPj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+PiA+IEBAIC0yODks
-NiArMjg5LDggQEAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vcGwxMTEvS2NvbmZpZyIKPj4gPgo+
-PiA+ICBzb3VyY2UgImRyaXZlcnMvZ3B1L2RybS90dmUyMDAvS2NvbmZpZyIKPj4gPgo+PiA+ICtz
-b3VyY2UgImRyaXZlcnMvZ3B1L2RybS9saW1hL0tjb25maWciCj4+ID4gKwo+PiA+ICAjIEtlZXAg
-bGVnYWN5IGRyaXZlcnMgbGFzdAo+PiA+Cj4+ID4gIG1lbnVjb25maWcgRFJNX0xFR0FDWQo+PiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0v
-TWFrZWZpbGUKPj4gPiBpbmRleCA1MDA5M2ZmNDQ3OWIuLmFiYTY4NmU0MWQ2YiAxMDA2NDQKPj4g
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKPj4gPiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vTWFrZWZpbGUKPj4gPiBAQCAtMTAzLDMgKzEwMyw0IEBAIG9iai0kKENPTkZJR19EUk1fTVhT
-RkIpICs9IG14c2ZiLwo+PiA+ICBvYmotJChDT05GSUdfRFJNX1RJTllEUk0pICs9IHRpbnlkcm0v
-Cj4+ID4gIG9iai0kKENPTkZJR19EUk1fUEwxMTEpICs9IHBsMTExLwo+PiA+ICBvYmotJChDT05G
-SUdfRFJNX1RWRTIwMCkgKz0gdHZlMjAwLwo+PiA+ICtvYmotJChDT05GSUdfRFJNX0xJTUEpICAr
-PSBsaW1hLwo+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbGltYS9LY29uZmlnIGIv
-ZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZwo+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+
-ID4gaW5kZXggMDAwMDAwMDAwMDAwLi40Y2U5YWMyZTgyMDQKPj4gPiAtLS0gL2Rldi9udWxsCj4+
-ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZwo+PiA+IEBAIC0wLDAgKzEsOSBA
-QAo+PiA+ICsKPj4gPiArY29uZmlnIERSTV9MSU1BCj4+ID4gKyAgICAgICB0cmlzdGF0ZSAiTElN
-QSAoRFJNIHN1cHBvcnQgZm9yIEFSTSBNYWxpIDQwMC80NTAgR1BVKSIKPj4gPiArICAgICAgIGRl
-cGVuZHMgb24gRFJNCj4+ID4gKyAgICAgICBkZXBlbmRzIG9uIEFSQ0hfU1VOWEkgfHwgQVJDSF9S
-T0NLQ0hJUCB8fCBBUkNIX0VYWU5PUyB8fCBBUkNIX01FU09OCj4+Cj4+IFlvdSBjYW4gYWRkIEFS
-Q0hfWllOUU1QIGhlcmUgdG9vICwgaXQgaGFzIE1hbGkgNDAwIE1QMi4KPgo+IEJldHRlciB5ZXQs
-IGp1c3QgZHJvcCB0aGVtIGFsbCByYXRoZXIgdGhhbiBjb250aW51YWxseSBhZGRpbmcgdG8gdGhl
-Cj4gbGlzdC4KPgo+IEJ1dCBpZiB5b3Uga2VlcCBpdCwgYWRkICd8fCBDT01QSUxFX1RFU1QnLgo+
-Cj4gUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The two sp805 binding documents 'arm,sp805.txt' and 'sp805-wdt.txt' are
+consolidated into 1 ('arm,sp805.txt'), with the compatible string
+consolidated to "arm,sp805", which are already used in all ARM32 dts
+and most ARM64 dts files
+
+Update the following dtsi to use the consolidated compatible string
+'arm,sp805':
+
+fsl-ls1088a.dtsi
+fsl-ls208xa.dtsi
+hi3660.dtsi
+hi6220.dtsi
+
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 16 ++++++++--------
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 16 ++++++++--------
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi      |  4 ++--
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  2 +-
+ 4 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 1c6556b..473c503 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -614,56 +614,56 @@
+ 		};
+ 
+ 		cluster1_core0_watchdog: wdt@c000000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc000000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster1_core1_watchdog: wdt@c010000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc010000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster1_core2_watchdog: wdt@c020000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc020000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster1_core3_watchdog: wdt@c030000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc030000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster2_core0_watchdog: wdt@c100000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc100000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster2_core1_watchdog: wdt@c110000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc110000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster2_core2_watchdog: wdt@c120000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc120000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster2_core3_watchdog: wdt@c130000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc130000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 137ef4d..5242ef9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -258,56 +258,56 @@
+ 		};
+ 
+ 		cluster1_core0_watchdog: wdt@c000000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc000000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster1_core1_watchdog: wdt@c010000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc010000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster2_core0_watchdog: wdt@c100000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc100000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster2_core1_watchdog: wdt@c110000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc110000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster3_core0_watchdog: wdt@c200000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc200000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster3_core1_watchdog: wdt@c210000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc210000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster4_core0_watchdog: wdt@c300000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc300000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+ 		};
+ 
+ 		cluster4_core1_watchdog: wdt@c310000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xc310000 0x0 0x1000>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "apb_pclk", "wdog_clk";
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index ec3eb8e..dcfa3fe 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -951,7 +951,7 @@
+ 		};
+ 
+ 		watchdog0: watchdog@e8a06000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xe8a06000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&crg_ctrl HI3660_OSC32K>;
+@@ -959,7 +959,7 @@
+ 		};
+ 
+ 		watchdog1: watchdog@e8a07000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xe8a07000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&crg_ctrl HI3660_OSC32K>;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 586b281c..beda66b 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -816,7 +816,7 @@
+ 		};
+ 
+ 		watchdog0: watchdog@f8005000 {
+-			compatible = "arm,sp805-wdt", "arm,primecell";
++			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x0 0xf8005000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ao_ctrl HI6220_WDT0_PCLK>;
+-- 
+2.1.4
