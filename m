@@ -1,233 +1,148 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH RFC 05/24] Revert "drm: Nerf the preclose callback for
- modern drivers"
-Date: Thu, 24 May 2018 08:46:15 +0200
-Message-ID: <75f682e9-5b31-ad82-441f-b2c250edc0a0@amd.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180518092815.25280-6-yuq825@gmail.com>
- <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
- <CAKGbVbuSuAEF9Zd_usM5ika5KuFiY75jCG3gwOfeAExSciRV7Q@mail.gmail.com>
- <c958599c-b0df-8b85-4123-daeed0fb07ac@amd.com>
- <CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1319906312=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Qiang Yu <yuq825@gmail.com>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v7 1/4] ARM: dts: tegra: Remove usage of deprecated skeleton.dtsi
+Date: Thu, 24 May 2018 08:53:50 +0200
+Message-ID: <1527144833-24285-1-git-send-email-krzk@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---===============1319906312==
-Content-Type: multipart/alternative;
- boundary="------------F43F41783AC1044353216ACC"
-Content-Language: en-US
+Remove the usage of skeleton.dtsi because it was deprecated since commit
+9c0da3cc61f1 ("ARM: dts: explicitly mark skeleton.dtsi as deprecated").
+It also allows later to fix DTC warnings for missing unit name in
+/memory nodes.
 
-This is a multi-part message in MIME format.
---------------F43F41783AC1044353216ACC
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+The /chosen and /aliases nodes are added only when dependent DTSes do
+not define them.  Compiled DTB is the same as before this commit.
 
-Am 24.05.2018 um 03:38 schrieb Qiang Yu:
-> [SNIP]
->>> Adding fence is done already, and I did wait it before unmap. But then
->>> I see when
->>> the buffer is shared between processes, the "perfect wait" is just
->>> wait the fence
->>> from this process's task, so it's better to also distinguish fences.
->>> If so, I just think
->>> why we don't just wait tasks from this process in the preclose before
->>> unmap/free
->>> buffer in the drm_release()?
->>
->> Well it depends on your VM management. When userspace expects that the VM
->> space the BO used is reusable immediately than the TTM callback won't work.
->>
->> On the other hand you can just grab the list of fences on a BO and filter
->> out the ones from your current process and wait for those. See
->> amdgpu_sync_resv() as an example how to do that.
-> In current lima implementation, user space driver is responsible not unmap/free
-> buffer before task is complete. And VM map/unmap is not differed.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
 
-Well it's up to you how to design userspace, but in the past doing it 
-like that turned out to be a rather bad design decision.
+---
 
-Keep in mind that the kernel driver must guarantee that a shaders can 
-never access freed up memory.
+Changes since v6:
+1. Add Stefan's reviewed-by tag.
 
-Otherwise taking over the system from an unprivileged processes becomes 
-just a typing exercise when you manage to access freed memory which is 
-now used for a page table.
+Changes since v5:
+1. New patch, split with skeleton.dtsi removal (suggested by Stefan).
+---
+ arch/arm/boot/dts/tegra114.dtsi       |  8 ++++++--
+ arch/arm/boot/dts/tegra124.dtsi       |  6 ++++--
+ arch/arm/boot/dts/tegra20.dtsi        | 11 +++++++++--
+ arch/arm/boot/dts/tegra30-apalis.dtsi |  4 ++++
+ arch/arm/boot/dts/tegra30.dtsi        | 11 +++++++++--
+ 5 files changed, 32 insertions(+), 8 deletions(-)
 
-Because of this we have a separate tracking in amdgpu so that we not 
-only know who is using which BO, who is using which VM.
-
-> This works simple and fine except the case that user press Ctrl+C to terminate
-> the application which will force to close drm fd.
-
-I'm not sure if that actually works as fine as you think.
-
-For an example of what we had to add to prevent security breaches, take 
-a look at amdgpu_gem_object_close().
-
-> I'd more prefer to wait buffer fence before vm unmap and filter like
-> amdgpu_sync_resv() compared to implement refcount in kernel task.
-> But these two ways are all not as simple as preclose.
-
-Well, I would rather say you should either delay VM unmap operations 
-until all users of the VM are done with their work using the 
-ttm_bo_destroy callback.
-
-Or you block in the gem_close_object callback until all tasks using the 
-BO are done with it.
-
-> So I still don't understand why you don't want to get preclose back even
-> have to introduce other complicated mechanism to cover the case free/unmap
-> buffer before this process's task is done?
-
-We intentionally removed the preclose callback to prevent certain use 
-cases, bringing it back to allow your use case looks rather fishy to me.
-
-BTW: What exactly is the issue with using the postclose callback?
-
-Regards,
-Christian.
-
->
-> Regards,
-> Qiang
->
-
-
---------------F43F41783AC1044353216ACC
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <div class="moz-cite-prefix">Am 24.05.2018 um 03:38 schrieb Qiang
-      Yu:<br>
-    </div>
-    <blockquote type="cite"
-cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">[SNIP]
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre wrap="">Adding fence is done already, and I did wait it before unmap. But then
-I see when
-the buffer is shared between processes, the "perfect wait" is just
-wait the fence
-from this process's task, so it's better to also distinguish fences.
-If so, I just think
-why we don't just wait tasks from this process in the preclose before
-unmap/free
-buffer in the drm_release()?
-</pre>
-        </blockquote>
-        <pre wrap="">
-
-Well it depends on your VM management. When userspace expects that the VM
-space the BO used is reusable immediately than the TTM callback won't work.
-
-On the other hand you can just grab the list of fences on a BO and filter
-out the ones from your current process and wait for those. See
-amdgpu_sync_resv() as an example how to do that.
-</pre>
-      </blockquote>
-      <pre wrap="">
-In current lima implementation, user space driver is responsible not unmap/free
-buffer before task is complete. And VM map/unmap is not differed.</pre>
-    </blockquote>
-    <br>
-    Well it's up to you how to design userspace, but in the past doing
-    it like that turned out to be a rather bad design decision.<br>
-    <br>
-    Keep in mind that the kernel driver must guarantee that a shaders
-    can never access freed up memory.<br>
-    <br>
-    Otherwise taking over the system from an unprivileged processes
-    becomes just a typing exercise when you manage to access freed
-    memory which is now used for a page table.<br>
-    <br>
-    Because of this we have a separate tracking in amdgpu so that we not
-    only know who is using which BO, who is using which VM.<br>
-    <br>
-    <blockquote type="cite"
-cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
-      <pre wrap="">This works simple and fine except the case that user press Ctrl+C to terminate
-the application which will force to close drm fd.</pre>
-    </blockquote>
-    <br>
-    I'm not sure if that actually works as fine as you think.<br>
-    <br>
-    For an example of what we had to add to prevent security breaches,
-    take a look at <span class="pl-en">amdgpu_gem_object_close().</span><br>
-    <br>
-    <blockquote type="cite"
-cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
-      <pre wrap="">I'd more prefer to wait buffer fence before vm unmap and filter like
-amdgpu_sync_resv() compared to implement refcount in kernel task.
-But these two ways are all not as simple as preclose.</pre>
-    </blockquote>
-    <br>
-    Well, I would rather say you should either delay VM unmap operations
-    until all users of the VM are done with their work using the
-    ttm_bo_destroy callback.<br>
-    <br>
-    Or you block in the <span class="pl-en">gem_close_object callback
-      until all tasks using the BO are done with it.</span><br>
-    <br>
-    <blockquote type="cite"
-cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
-      <pre wrap="">So I still don't understand why you don't want to get preclose back even
-have to introduce other complicated mechanism to cover the case free/unmap
-buffer before this process's task is done?</pre>
-    </blockquote>
-    <br>
-    We intentionally removed the preclose callback to prevent certain
-    use cases, bringing it back to allow your use case looks rather
-    fishy to me.<br>
-    <br>
-    BTW: What exactly is the issue with using the postclose callback?<br>
-    <br>
-    Regards,<br>
-    Christian.<br>
-    <br>
-    <blockquote type="cite"
-cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
-      <pre wrap="">
-
-Regards,
-Qiang
-
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------F43F41783AC1044353216ACC--
-
---===============1319906312==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1319906312==--
+diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
+index 0e4a13295d8a..27ef515e5640 100644
+--- a/arch/arm/boot/dts/tegra114.dtsi
++++ b/arch/arm/boot/dts/tegra114.dtsi
+@@ -5,11 +5,15 @@
+ #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+-#include "skeleton.dtsi"
+-
+ / {
+ 	compatible = "nvidia,tegra114";
+ 	interrupt-parent = <&lic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	memory {
++		device_type = "memory";
++	};
+ 
+ 	host1x@50000000 {
+ 		compatible = "nvidia,tegra114-host1x", "simple-bus";
+diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+index 174092bfac90..951feea784af 100644
+--- a/arch/arm/boot/dts/tegra124.dtsi
++++ b/arch/arm/boot/dts/tegra124.dtsi
+@@ -7,14 +7,16 @@
+ #include <dt-bindings/reset/tegra124-car.h>
+ #include <dt-bindings/thermal/tegra124-soctherm.h>
+ 
+-#include "skeleton.dtsi"
+-
+ / {
+ 	compatible = "nvidia,tegra124";
+ 	interrupt-parent = <&lic>;
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	memory {
++		device_type = "memory";
++	};
++
+ 	pcie@1003000 {
+ 		compatible = "nvidia,tegra124-pcie";
+ 		device_type = "pci";
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 0a7136462a1a..88dd1afb5877 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -4,11 +4,18 @@
+ #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+-#include "skeleton.dtsi"
+-
+ / {
+ 	compatible = "nvidia,tegra20";
+ 	interrupt-parent = <&lic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	chosen { };
++	aliases { };
++
++	memory {
++		device_type = "memory";
++	};
+ 
+ 	iram@40000000 {
+ 		compatible = "mmio-sram";
+diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
+index d1d21ec2a844..6f29cbad6e8a 100644
+--- a/arch/arm/boot/dts/tegra30-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+@@ -10,6 +10,10 @@
+ 	model = "Toradex Apalis T30";
+ 	compatible = "toradex,apalis_t30", "nvidia,tegra30";
+ 
++	memory {
++		reg = <0 0>;
++	};
++
+ 	pcie@3000 {
+ 		avdd-pexa-supply = <&vdd2_reg>;
+ 		vdd-pexa-supply = <&vdd2_reg>;
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index a110cf84d85f..19237c08c166 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -5,11 +5,18 @@
+ #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+-#include "skeleton.dtsi"
+-
+ / {
+ 	compatible = "nvidia,tegra30";
+ 	interrupt-parent = <&lic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	chosen { };
++	aliases { };
++
++	memory {
++		device_type = "memory";
++	};
+ 
+ 	pcie@3000 {
+ 		compatible = "nvidia,tegra30-pcie";
+-- 
+2.7.4
