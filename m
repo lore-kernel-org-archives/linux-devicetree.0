@@ -1,17 +1,18 @@
 From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH RFC 00/24] Lima DRM driver
-Date: Thu, 24 May 2018 08:27:59 +0200
-Message-ID: <cfc190af-1d46-7dca-fded-19b3b7896166@amd.com>
+Subject: Re: [PATCH RFC 05/24] Revert "drm: Nerf the preclose callback for
+ modern drivers"
+Date: Thu, 24 May 2018 08:46:15 +0200
+Message-ID: <75f682e9-5b31-ad82-441f-b2c250edc0a0@amd.com>
 References: <20180518092815.25280-1-yuq825@gmail.com>
- <940a5ee5-ff3e-e438-504e-f720f201fee6@gmail.com>
- <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
- <CAKMK7uFfnSLpcQ_MAbqkLfs8DyZS8BfiG5uuxgvynYc_Z7To_g@mail.gmail.com>
- <CAKGbVbsb5JPXrca6MsRCYgrB76t8wYM8MPKpQU76kJTX8WV-Yg@mail.gmail.com>
+ <20180518092815.25280-6-yuq825@gmail.com>
+ <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
+ <CAKGbVbuSuAEF9Zd_usM5ika5KuFiY75jCG3gwOfeAExSciRV7Q@mail.gmail.com>
+ <c958599c-b0df-8b85-4123-daeed0fb07ac@amd.com>
+ <CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============1319906312=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKGbVbsb5JPXrca6MsRCYgrB76t8wYM8MPKpQU76kJTX8WV-Yg@mail.gmail.com>
+In-Reply-To: <CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
@@ -22,87 +23,211 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Qiang Yu <yuq825@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+To: Qiang Yu <yuq825@gmail.com>
 Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjQuMDUuMjAxOCB1bSAwMjozMSBzY2hyaWViIFFpYW5nIFl1Ogo+IE9uIFdlZCwgTWF5IDIz
-LCAyMDE4IGF0IDExOjQ0IFBNLCBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+IHdyb3Rl
-Ogo+PiBPbiBXZWQsIE1heSAyMywgMjAxOCBhdCAzOjUyIFBNLCBRaWFuZyBZdSA8eXVxODI1QGdt
-YWlsLmNvbT4gd3JvdGU6Cj4+PiBPbiBXZWQsIE1heSAyMywgMjAxOCBhdCA1OjI5IFBNLCBDaHJp
-c3RpYW4gS8O2bmlnCj4+PiA8Y2tvZW5pZy5sZWljaHR6dW1lcmtlbkBnbWFpbC5jb20+IHdyb3Rl
-Ogo+Pj4+IEFtIDE4LjA1LjIwMTggdW0gMTE6Mjcgc2NocmllYiBRaWFuZyBZdToKPj4+Pj4gS2Vy
-bmVsIERSTSBkcml2ZXIgZm9yIEFSTSBNYWxpIDQwMC80NTAgR1BVcy4KPj4+Pj4KPj4+Pj4gVGhp
-cyBpbXBsZW1lbnRhdGlvbiBtYWlubHkgdGFrZSBhbWRncHUgRFJNIGRyaXZlciBhcyByZWZlcmVu
-Y2UuCj4+Pj4+Cj4+Pj4+IC0gTWFsaSA0eHggR1BVcyBoYXZlIHR3byBraW5kcyBvZiBwcm9jZXNz
-b3JzIEdQIGFuZCBQUC4gR1AgaXMgZm9yCj4+Pj4+ICAgICBPcGVuR0wgdmVydGV4IHNoYWRlciBw
-cm9jZXNzaW5nIGFuZCBQUCBpcyBmb3IgZnJhZ21lbnQgc2hhZGVyCj4+Pj4+ICAgICBwcm9jZXNz
-aW5nLiBFYWNoIHByb2Nlc3NvciBoYXMgaXRzIG93biBNTVUgc28gcHJjZXNzb3JzIHdvcmsgaW4K
-Pj4+Pj4gICAgIHZpcnR1YWwgYWRkcmVzcyBzcGFjZS4KPj4+Pj4gLSBUaGVyZSdzIG9ubHkgb25l
-IEdQIGJ1dCBtdWx0aXBsZSBQUCAobWF4IDQgZm9yIG1hbGkgNDAwIGFuZCA4Cj4+Pj4+ICAgICBm
-b3IgbWFsaSA0NTApIGluIHRoZSBzYW1lIG1hbGkgNHh4IEdQVS4gQWxsIFBQcyBhcmUgZ3JvdXBl
-ZAo+Pj4+PiAgICAgdG9nYXRoZXIgdG8gaGFuZGxlIGEgc2luZ2xlIGZyYWdtZW50IHNoYWRlciB0
-YXNrIGRpdmlkZWQgYnkKPj4+Pj4gICAgIEZCIG91dHB1dCB0aWxlZCBwaXhlbHMuIE1hbGkgNDAw
-IHVzZXIgc3BhY2UgZHJpdmVyIGlzCj4+Pj4+ICAgICByZXNwb25zaWJsZSBmb3IgYXNzaWduIHRh
-cmdldCB0aWxlZCBwaXhlbHMgdG8gZWFjaCBQUCwgYnV0IG1hbGkKPj4+Pj4gICAgIDQ1MCBoYXMg
-YSBIVyBtb2R1bGUgY2FsbGVkIERMQlUgdG8gZHluYW1pY2FsbHkgYmFsYW5jZSBlYWNoCj4+Pj4+
-ICAgICBQUCdzIGxvYWQuCj4+Pj4+IC0gVXNlciBzcGFjZSBkcml2ZXIgYWxsb2NhdGUgYnVmZmVy
-IG9iamVjdCBhbmQgbWFwIGludG8gR1BVCj4+Pj4+ICAgICB2aXJ0dWFsIGFkZHJlc3Mgc3BhY2Us
-IHVwbG9hZCBjb21tYW5kIHN0cmVhbSBhbmQgZHJhdyBkYXRhIHdpdGgKPj4+Pj4gICAgIENQVSBt
-bWFwIG9mIHRoZSBidWZmZXIgb2JqZWN0LCB0aGVuIHN1Ym1pdCB0YXNrIHRvIEdQL1BQIHdpdGgK
-Pj4+Pj4gICAgIGEgcmVnaXN0ZXIgZnJhbWUgaW5kaWNhdGluZyB3aGVyZSBpcyB0aGUgY29tbWFu
-ZCBzdHJlYW0gYW5kIG1pc2MKPj4+Pj4gICAgIHNldHRpbmdzLgo+Pj4+PiAtIFRoZXJlJ3Mgbm8g
-Y29tbWFuZCBzdHJlYW0gdmFsaWRhdGlvbi9yZWxvY2F0aW9uIGR1ZSB0byBlYWNoIHVzZXIKPj4+
-Pj4gICAgIHByb2Nlc3MgaGFzIGl0cyBvd24gR1BVIHZpcnR1YWwgYWRkcmVzcyBzcGFjZS4gR1Av
-UFAncyBNTVUgc3dpdGNoCj4+Pj4+ICAgICB2aXJ0dWFsIGFkZHJlc3Mgc3BhY2UgYmVmb3JlIHJ1
-bm5pbmcgdHdvIHRhc2tzIGZyb20gZGlmZmVyZW50Cj4+Pj4+ICAgICB1c2VyIHByb2Nlc3MuIEVy
-cm9yIG9yIGV2aWwgdXNlciBzcGFjZSBjb2RlIGp1c3QgZ2V0IE1NVSBmYXVsdAo+Pj4+PiAgICAg
-b3IgR1AvUFAgZXJyb3IgSVJRLCB0aGVuIHRoZSBIVy9TVyB3aWxsIGJlIHJlY292ZXJlZC4KPj4+
-Pj4gLSBVc2UgVFRNIGFzIE1NLiBUVE1fUExfVFQgdHlwZSBtZW1vcnkgaXMgdXNlZCBhcyB0aGUg
-Y29udGVudCBvZgo+Pj4+PiAgICAgbGltYSBidWZmZXIgb2JqZWN0IHdoaWNoIGlzIGFsbG9jYXRl
-ZCBmcm9tIFRUTSBwYWdlIHBvb2wuIGFsbAo+Pj4+PiAgICAgbGltYSBidWZmZXIgb2JqZWN0IGdl
-dHMgcGlubmVkIHdpdGggVFRNX1BMX0ZMQUdfTk9fRVZJQ1Qgd2hlbgo+Pj4+PiAgICAgYWxsb2Nh
-dGlvbiwgc28gdGhlcmUncyBubyBidWZmZXIgZXZpY3Rpb24gYW5kIHN3YXAgZm9yIG5vdy4gV2UK
-Pj4+Pj4gICAgIG5lZWQgcmV2ZXJzZSBlbmdpbmVlcmluZyB0byBzZWUgaWYgYW5kIGhvdyBHUC9Q
-UCBzdXBwb3J0IE1NVQo+Pj4+PiAgICAgZmF1bHQgcmVjb3ZlcnkgKGNvbnRpbnVlIGV4ZWN1dGlv
-bikuIE90aGVyd2lzZSB3ZSBoYXZlIHRvCj4+Pj4+ICAgICBwaW4vdW5waW4gZWFjaCBlbnZvbHZl
-ZCBidWZmZXIgd2hlbiB0YXNrIGNyZWF0aW9uL2RlbGV0aW9uLgo+Pj4+Cj4+Pj4gV2VsbCBwaW5u
-aW5nIGFsbCBtZW1vcnkgaXMgdXN1YWxseSBhIG5vLWdvIGZvciB1cHN0cmVhbWluZy4gQnV0IHNp
-bmNlIHlvdQo+Pj4+IGFyZSBhbHJlYWR5IHVzaW5nIHRoZSBkcm1fc2NoZWQgZm9yIEdQVSB0YXNr
-IHNjaGVkdWxpbmcgd2h5IGFyZSB5b3UgYWN0dWFsbHkKPj4+PiBuZWVkaW5nIHRoaXM/Cj4+Pj4K
-Pj4+PiBUaGUgc2NoZWR1bGVyIHNob3VsZCB0YWtlIGNhcmUgb2Ygc2lnbmFsaW5nIGFsbCBmZW5j
-ZXMgd2hlbiB0aGUgaGFyZHdhcmUgaXMKPj4+PiBkb25lIHdpdGggaXQncyBtYWdpYyBhbmQgdGhh
-dCBpcyBlbm91Z2ggZm9yIFRUTSB0byBub3RlIHRoYXQgYSBidWZmZXIgb2JqZWN0Cj4+Pj4gaXMg
-bW92YWJsZSBhZ2FpbiAoZS5nLiB1bnBpbiB0aGVtKS4KPj4+IFBsZWFzZSBjb3JyZWN0IG1lIGlm
-IEknbSB3cm9uZy4KPj4+Cj4+PiBPbmUgd2F5IHRvIGltcGxlbWVudCBldmljdGlvbi9zd2FwIGlz
-IGxpa2UgdGhpczoKPj4+IGNhbGwgdmFsaWRhdGlvbiBvbiBlYWNoIGJ1ZmZlcnMgaW52b2x2ZWQg
-aW4gYSB0YXNrLCBidXQgdGhpcyB3b24ndAo+Pj4gcHJldmVudCBpdCBmcm9tCj4+PiBldmljdGlv
-bi9zd2FwIHdoZW4gZXhlY3V0aW5nLCBzbyBhIEdQVSBNTVUgZmF1bHQgbWF5IGhhcHBlbiBhbmQg
-aW4gdGhlCj4+PiBoYW5kbGVyIHdlIG5lZWQgdG8gcmVjb3ZlciB0aGUgYnVmZmVyIGV2aWN0ZWQv
-c3dhcHBlZC4KPj4+Cj4+PiBBbm90aGVyIHdheSBpcyBwaW4vdW5waW4gYnVmZmVycyBldm9sdmVk
-IHdoZW4gdGFzayBjcmVhdGUvZnJlZS4KPj4+Cj4+PiBGaXJzdCB3YXkgaXMgYmV0dGVyIHdoZW4g
-bWVtb3J5IGxvYWQgaXMgbG93IGFuZCBzZWNvbmQgd2F5IGlzIGJldHRlciB3aGVuCj4+PiBtZW1v
-cnkgbG9hZCBpcyBoaWdoLiBGaXJzdCB3YXkgYWxzbyBuZWVkIGxlc3MgbWVtb3J5Lgo+Pj4KPj4+
-IFNvIEknZCBwcmVmZXIgZmlyc3Qgd2F5IGJ1dCBkdWUgdG8gdGhlIEdQVSBNTVUgZmF1bHQKPj4+
-IEhXIG9wIG5lZWQgcmV2ZXJzZSBlbmdpbmVlcmluZywgSSBoYXZlIHRvIHBpbiBhbGwgYnVmZmVy
-cyBub3cuIEFmdGVyCj4+PiB0aGUgSFcgb3AgaXMgY2xlYXIsIEkgY2FuIGNob29zZSBvbmUgd2F5
-IHRvIGltcGxlbWVudC4KPj4gQWxsIHRoZSBkcml2ZXJzIHVzaW5nIHR0bSBoYXZlIHNvbWV0aGlu
-ZyB0aGF0IGxvb2tzIGxpa2UgdnJhbSwgb3IgYQo+PiByZXF1aXJlbWVudCB0byBtb3ZlIGJ1ZmZl
-cnMgYXJvdW5kLiBBZmFpdWkgdGhhdCBpbmNsdWRlcyB2aXJ0aW8gZHJtCj4+IGRyaXZlci4KPiBE
-b2VzIHZpcnRpbyBkcm0gZHJpdmVyIG5lZWQgdG8gbW92ZSBidWZmZXJzIGFyb3VuZD8gYW1kZ3B1
-IGFsc28KPiBoYXMgbm8gdnJhbSB3aGVuIEFQVS4KPgo+PiAgRnJvbSB5b3VyIGRlc2NyaXB0aW9u
-IHlvdSBkb24ndCBoYXZlIHN1Y2ggYSByZXF1aXJlbWVudCwgYW5kCj4+IHRoZW4gZG9pbmcgd2hh
-dCBldG5hdml2IGhhcyBkb25lIHdvdWxkIGJlIGEgbG90IHNpbXBsZXIuIEV2ZXJ5dGhpbmcKPj4g
-dGhhdCdzIG5vdCByZWxhdGVkIHRvIGJ1ZmZlciBtb3ZlbWVudCBoYW5kbGluZyBpcyBhbHNvIGF2
-YWlsYWJsZQo+PiBvdXRzaWRlIG9mIHR0bSBhbHJlYWR5Lgo+IFllYWgsIEkgY291bGQgZG8gbGlr
-ZSBldG5hdml2LCBidXQgaXQncyBub3Qgc2ltcGxlciB0aGFuIHVzaW5nIHR0bQo+IGRpcmVjdGx5
-IGVzcGVjaWFsbHkgd2FudCBzb21lIG9wdGltaXphdGlvbiAobGlrZSB0dG0gcGFnZSBwb29sLAo+
-IHR0bV9ldV9yZXNlcnZlX2J1ZmZlcnMsIHR0bV9ib19tbWFwKS4gSWYgSSBoYXZlL3dhbnQgdG8g
-aW1wbGVtZW50Cj4gdGhlbSwgd2h5IG5vdCBqdXN0IHVzZSBUVE0gZGlyZWN0bHkgd2l0aCBhbGwg
-dGhvc2UgaGVscGVyIGZ1bmN0aW9ucy4KCldlbGwgVFRNIGhhcyBzb21lIGRlc2lnbiBmbGF3cyAo
-ZS5nLiBoZWF2aWx5IGxheWVyZWQgZGVzaWduIGV0Yy4uLiksIGJ1dCAKaXQgYWxzbyBvZmZlcnMg
-c29tZSByYXRoZXIgbmljZSBmdW5jdGlvbmFsaXR5LgoKUmVnYXJkcywKQ2hyaXN0aWFuLgoKPgo+
-IFJlZ2FyZHMsCj4gUWlhbmcKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+This is a multi-part message in MIME format.
+--===============1319906312==
+Content-Type: multipart/alternative;
+ boundary="------------F43F41783AC1044353216ACC"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------F43F41783AC1044353216ACC
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Am 24.05.2018 um 03:38 schrieb Qiang Yu:
+> [SNIP]
+>>> Adding fence is done already, and I did wait it before unmap. But then
+>>> I see when
+>>> the buffer is shared between processes, the "perfect wait" is just
+>>> wait the fence
+>>> from this process's task, so it's better to also distinguish fences.
+>>> If so, I just think
+>>> why we don't just wait tasks from this process in the preclose before
+>>> unmap/free
+>>> buffer in the drm_release()?
+>>
+>> Well it depends on your VM management. When userspace expects that the VM
+>> space the BO used is reusable immediately than the TTM callback won't work.
+>>
+>> On the other hand you can just grab the list of fences on a BO and filter
+>> out the ones from your current process and wait for those. See
+>> amdgpu_sync_resv() as an example how to do that.
+> In current lima implementation, user space driver is responsible not unmap/free
+> buffer before task is complete. And VM map/unmap is not differed.
+
+Well it's up to you how to design userspace, but in the past doing it 
+like that turned out to be a rather bad design decision.
+
+Keep in mind that the kernel driver must guarantee that a shaders can 
+never access freed up memory.
+
+Otherwise taking over the system from an unprivileged processes becomes 
+just a typing exercise when you manage to access freed memory which is 
+now used for a page table.
+
+Because of this we have a separate tracking in amdgpu so that we not 
+only know who is using which BO, who is using which VM.
+
+> This works simple and fine except the case that user press Ctrl+C to terminate
+> the application which will force to close drm fd.
+
+I'm not sure if that actually works as fine as you think.
+
+For an example of what we had to add to prevent security breaches, take 
+a look at amdgpu_gem_object_close().
+
+> I'd more prefer to wait buffer fence before vm unmap and filter like
+> amdgpu_sync_resv() compared to implement refcount in kernel task.
+> But these two ways are all not as simple as preclose.
+
+Well, I would rather say you should either delay VM unmap operations 
+until all users of the VM are done with their work using the 
+ttm_bo_destroy callback.
+
+Or you block in the gem_close_object callback until all tasks using the 
+BO are done with it.
+
+> So I still don't understand why you don't want to get preclose back even
+> have to introduce other complicated mechanism to cover the case free/unmap
+> buffer before this process's task is done?
+
+We intentionally removed the preclose callback to prevent certain use 
+cases, bringing it back to allow your use case looks rather fishy to me.
+
+BTW: What exactly is the issue with using the postclose callback?
+
+Regards,
+Christian.
+
+>
+> Regards,
+> Qiang
+>
+
+
+--------------F43F41783AC1044353216ACC
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <div class="moz-cite-prefix">Am 24.05.2018 um 03:38 schrieb Qiang
+      Yu:<br>
+    </div>
+    <blockquote type="cite"
+cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">[SNIP]
+      <blockquote type="cite">
+        <blockquote type="cite">
+          <pre wrap="">Adding fence is done already, and I did wait it before unmap. But then
+I see when
+the buffer is shared between processes, the "perfect wait" is just
+wait the fence
+from this process's task, so it's better to also distinguish fences.
+If so, I just think
+why we don't just wait tasks from this process in the preclose before
+unmap/free
+buffer in the drm_release()?
+</pre>
+        </blockquote>
+        <pre wrap="">
+
+Well it depends on your VM management. When userspace expects that the VM
+space the BO used is reusable immediately than the TTM callback won't work.
+
+On the other hand you can just grab the list of fences on a BO and filter
+out the ones from your current process and wait for those. See
+amdgpu_sync_resv() as an example how to do that.
+</pre>
+      </blockquote>
+      <pre wrap="">
+In current lima implementation, user space driver is responsible not unmap/free
+buffer before task is complete. And VM map/unmap is not differed.</pre>
+    </blockquote>
+    <br>
+    Well it's up to you how to design userspace, but in the past doing
+    it like that turned out to be a rather bad design decision.<br>
+    <br>
+    Keep in mind that the kernel driver must guarantee that a shaders
+    can never access freed up memory.<br>
+    <br>
+    Otherwise taking over the system from an unprivileged processes
+    becomes just a typing exercise when you manage to access freed
+    memory which is now used for a page table.<br>
+    <br>
+    Because of this we have a separate tracking in amdgpu so that we not
+    only know who is using which BO, who is using which VM.<br>
+    <br>
+    <blockquote type="cite"
+cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
+      <pre wrap="">This works simple and fine except the case that user press Ctrl+C to terminate
+the application which will force to close drm fd.</pre>
+    </blockquote>
+    <br>
+    I'm not sure if that actually works as fine as you think.<br>
+    <br>
+    For an example of what we had to add to prevent security breaches,
+    take a look at <span class="pl-en">amdgpu_gem_object_close().</span><br>
+    <br>
+    <blockquote type="cite"
+cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
+      <pre wrap="">I'd more prefer to wait buffer fence before vm unmap and filter like
+amdgpu_sync_resv() compared to implement refcount in kernel task.
+But these two ways are all not as simple as preclose.</pre>
+    </blockquote>
+    <br>
+    Well, I would rather say you should either delay VM unmap operations
+    until all users of the VM are done with their work using the
+    ttm_bo_destroy callback.<br>
+    <br>
+    Or you block in the <span class="pl-en">gem_close_object callback
+      until all tasks using the BO are done with it.</span><br>
+    <br>
+    <blockquote type="cite"
+cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
+      <pre wrap="">So I still don't understand why you don't want to get preclose back even
+have to introduce other complicated mechanism to cover the case free/unmap
+buffer before this process's task is done?</pre>
+    </blockquote>
+    <br>
+    We intentionally removed the preclose callback to prevent certain
+    use cases, bringing it back to allow your use case looks rather
+    fishy to me.<br>
+    <br>
+    BTW: What exactly is the issue with using the postclose callback?<br>
+    <br>
+    Regards,<br>
+    Christian.<br>
+    <br>
+    <blockquote type="cite"
+cite="mid:CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com">
+      <pre wrap="">
+
+Regards,
+Qiang
+
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------F43F41783AC1044353216ACC--
+
+--===============1319906312==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1319906312==--
