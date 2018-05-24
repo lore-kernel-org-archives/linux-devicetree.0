@@ -1,31 +1,60 @@
-From: cang@codeaurora.org
-Subject: Re: [PATCH v5 3/3] dt-bindings: phy-qcom-qmp: Add UFS phy compatible
- string for sdm845
-Date: Thu, 24 May 2018 08:56:37 +0800
-Message-ID: <10338ae800fa862d23e5e7c64cffc119@codeaurora.org>
-References: <20180523034712.3420-1-cang@codeaurora.org>
- <20180523034712.3420-4-cang@codeaurora.org>
- <20180523161323.GA28074@rob-hp-laptop>
+From: Qiang Yu <yuq825@gmail.com>
+Subject: Re: [PATCH RFC 07/24] drm/lima: add mali 4xx GPU hardware regs
+Date: Thu, 24 May 2018 08:58:02 +0800
+Message-ID: <CAKGbVbsa1O6owhhpA2qw2ZCyGdhmmF=uN9s+UKLJspoN_dwNSg@mail.gmail.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <20180518092815.25280-8-yuq825@gmail.com>
+ <20180523172401.GC17409@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523161323.GA28074@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180523172401.GC17409@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Rob Herring <robh@kernel.org>
-Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-24 00:13, Rob Herring wrote:
-> On Wed, May 23, 2018 at 11:47:12AM +0800, Can Guo wrote:
->> Update the compatible string for UFS QMP PHY on SDM845.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Thank you Rob.
+T24gVGh1LCBNYXkgMjQsIDIwMTggYXQgMToyNCBBTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
+Lm9yZz4gd3JvdGU6Cj4gT24gRnJpLCBNYXkgMTgsIDIwMTggYXQgMDU6Mjc6NThQTSArMDgwMCwg
+UWlhbmcgWXUgd3JvdGU6Cj4+IEZyb206IExpbWEgUHJvamVjdCBEZXZlbG9wZXJzIDxkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBRaWFuZyBZdSA8
+eXVxODI1QGdtYWlsLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtv
+QHNudGVjaC5kZT4KPj4gLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3JlZ3MuaCB8
+IDMwNCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwg
+MzA0IGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+bGltYS9saW1hX3JlZ3MuaAo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2xpbWEv
+bGltYV9yZWdzLmggYi9kcml2ZXJzL2dwdS9kcm0vbGltYS9saW1hX3JlZ3MuaAo+PiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmVhNGEzN2Q2OWI5OAo+PiAtLS0g
+L2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9saW1hL2xpbWFfcmVncy5oCj4+IEBA
+IC0wLDAgKzEsMzA0IEBACj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAyMDEwLTIwMTcgQVJN
+IExpbWl0ZWQuIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4KPiBJIGFzc3VtZSB0aGlzIGNhbWUgZnJv
+bSBBUk0ncyBvdXQgb2YgdHJlZSBrZXJuZWwgZHJpdmVyICBzb3VyY2UuIFlvdQo+IHNob3VsZCBk
+b2N1bWVudCB3aGF0IGl0IHdhcyBiYXNlZCBvbi4KClllcywgSSdsbCBjb21tZW50IGl0LgoKPgo+
+PiArICogQ29weXJpZ2h0IChDKSAyMDE3LTIwMTggTGltYSBQcm9qZWN0Cj4KPiBJQU5BTCwgYnV0
+IGlzIExpbWEgUHJvamVjdCBhIGxlZ2FsIGVudGl0eSB0aGF0IGNhbiBjb3B5cmlnaHQgdGhpbmdz
+PwoKSSBoZWFyZCB0aGlzIHNlY29uZCB0aW1lLiBTZWVtcyBpdCdzIG5vdCBhIGdvb2QgaWRlYSB0
+byB3cml0ZSBsaWtlCnRoaXMuIEknbGwgY2hhbmdlIHRoZSBjb3B5cmlnaHQgbmV4dCB0aW1lLgoK
+Pgo+PiArICoKPj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlIGFuZCBpcyBwcm92
+aWRlZCB0byB5b3UgdW5kZXIKPj4gKyAqIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVi
+bGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzCj4+ICsgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29m
+dHdhcmUgRm91bmRhdGlvbiwgYW5kIGFueSB1c2UgYnkKPj4gKyAqIHlvdSBvZiB0aGlzIHByb2dy
+YW0gaXMgc3ViamVjdCB0byB0aGUgdGVybXMgb2Ygc3VjaCBHTlUKPj4gKyAqIGxpY2VuY2UuCj4+
+ICsgKgo+PiArICogQSBjb3B5IG9mIHRoZSBsaWNlbmNlIGlzIGluY2x1ZGVkIHdpdGggdGhlIHBy
+b2dyYW0sIGFuZAo+PiArICogY2FuIGFsc28gYmUgb2J0YWluZWQgZnJvbSBGcmVlIFNvZnR3YXJl
+IEZvdW5kYXRpb24sIEluYy4sCj4+ICsgKiA1MSBGcmFua2xpbiBTdHJlZXQsIEZpZnRoIEZsb29y
+LCBCb3N0b24sIE1BICAwMjExMC0xMzAxLCBVU0EuCj4KPiBZb3UgY2FuIHVzZSBTUERYIHRhZ3Mg
+aW5zdGVhZC4KCklmIHVzaW5nIFNQRFgsIGNhbiBJIGRyb3AgdGhlc2UgbGljZW5zZSB0ZXh0PyBI
+b3cgYWJvdXQgdGhlIGNvcHlyaWdodAp0ZXh0IGFzIEkgc2VlIFNQRFggaGVhZGVyIGRvZXNuJ3Qg
+aGF2ZSBpdD8KClJlZ2FyZHMsClFpYW5nCgo+Cj4gUm9iCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
