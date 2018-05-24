@@ -1,126 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "dt-bindings: qcom_spmi: Document SAW support" to the regulator tree
-Date: Thu, 24 May 2018 20:25:37 +0100
-Message-ID: <E1fLvrl-0006TA-04@debutante>
-References: <1520166709-554-3-git-send-email-ilialin@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] driver core: make deferring probe after init optional
+Date: Thu, 24 May 2018 14:42:43 -0500
+Message-ID: <CAL_JsqL86en1UYHA6BMHDW8q=A4kOoo6ro1qXuXHjEwT=KXoMg@mail.gmail.com>
+References: <20180524175024.19874-1-robh@kernel.org> <20180524175024.19874-2-robh@kernel.org>
+ <20180524185639.GA31019@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520166709-554-3-git-send-email-ilialin@codeaurora.org>
+In-Reply-To: <20180524185639.GA31019@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.combroonie@kernel.org, robh@kernel.org, mark.rutland@arm.com, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.orglinux-kernel@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Thu, May 24, 2018 at 1:56 PM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Thu, May 24, 2018 at 12:50:17PM -0500, Rob Herring wrote:
+>> Deferred probe will currently wait forever on dependent devices to probe,
+>> but sometimes a driver will never exist. It's also not always critical for
+>> a driver to exist. Platforms can rely on default configuration from the
+>> bootloader or reset defaults for things such as pinctrl and power domains.
+>> This is often the case with initial platform support until various drivers
+>> get enabled. There's at least 2 scenarios where deferred probe can render
+>> a platform broken. Both involve using a DT which has more devices and
+>> dependencies than the kernel supports. The 1st case is a driver may be
+>> disabled in the kernel config. The 2nd case is the kernel version may
+>> simply not have the dependent driver. This can happen if using a newer DT
+>> (provided by firmware perhaps) with a stable kernel version.
+>>
+>> Subsystems or drivers may opt-in to this behavior by calling
+>> driver_deferred_probe_check_init_done() instead of just returning
+>> -EPROBE_DEFER. They may use additional information from DT or kernel's
+>> config to decide whether to continue to defer probe or not.
+>>
+>> Cc: Alexander Graf <agraf@suse.de>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/base/dd.c      | 17 +++++++++++++++++
+>>  include/linux/device.h |  2 ++
+>>  2 files changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>> index c9f54089429b..d6034718da6f 100644
+>> --- a/drivers/base/dd.c
+>> +++ b/drivers/base/dd.c
+>> @@ -226,6 +226,16 @@ void device_unblock_probing(void)
+>>       driver_deferred_probe_trigger();
+>>  }
+>>
+>> +int driver_deferred_probe_check_init_done(struct device *dev, bool optional)
+>> +{
+>> +     if (optional && initcalls_done) {
+>> +             dev_WARN(dev, "ignoring dependency for device, assuming no driver");
+>
+> You really only need dev_warn(), here, right?
 
-   dt-bindings: qcom_spmi: Document SAW support
+No, the screaming is on purpose.
 
-has been applied to the regulator tree at
+Bjorn had concerns about debugging/supporting subtle problems that
+could stem from this. Such as electrical settings not quite right that
+cause intermittent errors.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From f50e5ddae899d1599e4d6ccb46eadd78b7ed14bc Mon Sep 17 00:00:00 2001
-From: Ilia Lin <ilialin@codeaurora.org>
-Date: Mon, 21 May 2018 14:25:31 +0300
-Subject: [PATCH] dt-bindings: qcom_spmi: Document SAW support
-
-Document the DT bindings for the SAW regulators.
-
-The saw-leader is the only property that is configurable in DT.
-
-The saw-slave property allows ganging (grouping) of
-several regulators so that their outputs can be combined.
-
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../regulator/qcom,spmi-regulator.txt         | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-index 57d2c65899df..406f2e570c50 100644
---- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-@@ -110,6 +110,11 @@ Qualcomm SPMI Regulators
- 	Definition: Reference to regulator supplying the input pin, as
- 		    described in the data sheet.
- 
-+- qcom,saw-reg:
-+	Usage: optional
-+	Value type: <phandle>
-+	Description: Reference to syscon node defining the SAW registers.
-+
- 
- The regulator node houses sub-nodes for each regulator within the device. Each
- sub-node is identified using the node's name, with valid values listed for each
-@@ -201,6 +206,17 @@ see regulator.txt - with additional custom properties described below:
- 			2 = 0.55 uA
- 			3 = 0.75 uA
- 
-+- qcom,saw-slave:
-+	Usage: optional
-+	Value type: <boo>
-+	Description: SAW controlled gang slave. Will not be configured.
-+
-+- qcom,saw-leader:
-+	Usage: optional
-+	Value type: <boo>
-+	Description: SAW controlled gang leader. Will be configured as
-+		     SAW regulator.
-+
- Example:
- 
- 	regulators {
-@@ -221,3 +237,32 @@ Example:
- 
- 		....
- 	};
-+
-+Example 2:
-+
-+	saw3: syscon@9A10000 {
-+		compatible = "syscon";
-+		reg = <0x9A10000 0x1000>;
-+	};
-+
-+	...
-+
-+	spm-regulators {
-+		compatible = "qcom,pm8994-regulators";
-+		qcom,saw-reg = <&saw3>;
-+		s8 {
-+			qcom,saw-slave;
-+		};
-+		s9 {
-+			qcom,saw-slave;
-+		};
-+		s10 {
-+			qcom,saw-slave;
-+		};
-+		pm8994_s11_saw: s11 {
-+			qcom,saw-leader;
-+			regulator-always-on;
-+			regulator-min-microvolt = <900000>;
-+			regulator-max-microvolt = <1140000>;
-+		};
-+	};
--- 
-2.17.0
+Rob
