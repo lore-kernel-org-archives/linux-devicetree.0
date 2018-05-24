@@ -1,371 +1,100 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v7 2/4] ARM: dts: tegra: Fix unit_address_vs_reg DTC warnings for /memory
-Date: Thu, 24 May 2018 08:53:51 +0200
-Message-ID: <1527144833-24285-2-git-send-email-krzk@kernel.org>
-References: <1527144833-24285-1-git-send-email-krzk@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl bindings
+Date: Thu, 24 May 2018 09:13:32 +0200
+Message-ID: <CACRpkdbZ2Hr7cc5+dyPaL0CKYuy2-oosEr=UPo60+3beDCVi9A@mail.gmail.com>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
+ <20180416181940.4b5z4svbde3ompij@rob-hp-laptop> <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
+ <55392fe7-20d2-9447-60f9-4bd226b60195@st.com> <CACRpkda2VGo0FOdR09tKiTpg66NgoWjubaHp_J3372y=a772Zg@mail.gmail.com>
+ <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com> <20180517063640.GK5130@dell> <28c374e6-b440-f785-b371-03fe15c8bc4b@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527144833-24285-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <28c374e6-b440-f785-b371-03fe15c8bc4b@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>, Krzysztof Kozlowski <krzk@kernel.org>
+To: Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a generic /memory node in each Tegra DTSI (with empty reg property,
-to be overidden by each DTS) and set proper unit address for /memory
-nodes to fix the DTC warnings:
+On Fri, May 18, 2018 at 9:29 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+> On 05/17/2018 08:36 AM, Lee Jones wrote:
+>> On Wed, 16 May 2018, Amelie DELAUNAY wrote:
+>>> On 05/16/2018 04:20 PM, Linus Walleij wrote:
+>>>> On Wed, May 9, 2018 at 9:56 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+>>>>
+>>>>> Indeed, stmfx has other functions than GPIO. But, after comments done
+>>>>> here: [1] and there: [2], it has been decided to move MFD parent/GPIO
+>>>>> child drivers into a single PINCTRL/GPIO driver because of the following
+>>>>> reasons:
+>>>>> - Other stmfx functions (IDD measurement and TouchScreen controller) are
+>>>>> not used on any of the boards using an stmfx and supported by Linux, so
+>>>>> no way to test these functions, and no need to maintain them while they
+>>>>> are not being used.
+>>>>> - But, in the case a new board will use more than GPIO function on
+>>>>> stmfx, the actual implementation allow to easily extract common init
+>>>>> part of stmfx and put it in an MFD driver.
+>>>>>
+>>>>> So I could remove gpio sub-node and put its contents in stmfx node and
+>>>>> keep single PINCTRL/GPIO driver for the time being.
+>>>>> Please advise,
+>>>>
+>>>> I would normally advice to use the right modeling from the start, create
+>>>> the MFD driver and spawn the devices from there. It is confusing
+>>>> if the layout of the driver(s) doesn't really match the layout of the
+>>>> hardware.
+>>>>
+>>>> I understand that it is a pain to write new MFD drivers to get your
+>>>> things going and it would be "nice to get this working really quick
+>>>> now" but in my experience it is better to do it right from the start.
+>>>>
+>>>
+>>> Hi Linus,
+>>>
+>>> Thanks for your advice. I understand the point.
+>>> So, the right modeling would be to:
+>>> - create an MFD driver with the common init part of stmfx
+>>> - remove all common init part of stmfx-pinctrl driver and keep only all
+>>> gpio/pinctrl functions.
+>>>
+>>> I will not develop the other stmfx functions (IDD measurement driver and
+>>> TouchScreen controller driver) because, as explained ealier, they are
+>>> not used on any of the boards using an stmfx and supported by Linux, so
+>>> no way to test these functions, and no need to maintain them while they
+>>> are not being used.
+>>>
+>>> Lee, are you OK with that ?
+>>
+>> I missed a lot of this conversation I think, but from what I've read,
+>> it sounds fine.
+>>
+>
+> I summarize the situation:
+> - I still don't have an official datasheet for STMFX device which could
+> justify the use of an MFD driver;
+> - the MFD driver will contain the STMFX chip initialization stuff such
+> as regmap initialization (regmap structure will be shared with the
+> child), chip initialization, global interrupt management;
+> - there will be only one child (GPIO/PINCTRL node) for the time being.
 
-    arch/arm/boot/dts/tegra20-harmony.dtb: Warning (unit_address_vs_reg):
-        /memory: node has a reg or ranges property, but no unit name
+But there will be more devices in it. And they will invariably be put
+to use later, and there will be new versions of the chip as well, and
+then you will be happy about doing the MFD core, which makes it
+easy to add new variants with different subdevices.
 
-The DTB after the change is the same as before except adding
-unit-address to /memory node.
+> So, is "MFD driver + GPIO/PINCTRL driver" the right modeling, and does
+> it still sound fine after this summary ? :)
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+No I think it should use an MFD core.
 
----
+Mainly because of device tree concerns.
 
-Changes since v6:
-1. Fix unit addresses for tegra124 and minor nits (suggested by Stefan).
+The main reason is that the device tree bindings will be different if
+you add an MFD core later, the GPIO and pinctrl driver will
+move to a child node, making old device trees incompatible.
 
-Changes since v5:
-1. Split with skeleton.dtsi removal (suggested by Stefan).
+We could have a single driver in GPIO+pin control if it is a child
+of an MFD node in the device tree, but it doesn't make much
+sense as the I2C device need to be probing to the MFD core.
 
-Changes since v4:
-1. None
----
- arch/arm/boot/dts/tegra114-dalmore.dts      | 2 +-
- arch/arm/boot/dts/tegra114-roth.dts         | 2 +-
- arch/arm/boot/dts/tegra114-tn7.dts          | 2 +-
- arch/arm/boot/dts/tegra114.dtsi             | 3 ++-
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 2 +-
- arch/arm/boot/dts/tegra124-apalis.dtsi      | 2 +-
- arch/arm/boot/dts/tegra124-jetson-tk1.dts   | 2 +-
- arch/arm/boot/dts/tegra124-nyan.dtsi        | 2 +-
- arch/arm/boot/dts/tegra124-venice2.dts      | 2 +-
- arch/arm/boot/dts/tegra124.dtsi             | 3 ++-
- arch/arm/boot/dts/tegra20-colibri-512.dtsi  | 2 +-
- arch/arm/boot/dts/tegra20-harmony.dts       | 2 +-
- arch/arm/boot/dts/tegra20-paz00.dts         | 2 +-
- arch/arm/boot/dts/tegra20-seaboard.dts      | 2 +-
- arch/arm/boot/dts/tegra20-tamonten.dtsi     | 2 +-
- arch/arm/boot/dts/tegra20-trimslice.dts     | 2 +-
- arch/arm/boot/dts/tegra20-ventana.dts       | 2 +-
- arch/arm/boot/dts/tegra20.dtsi              | 3 ++-
- arch/arm/boot/dts/tegra30-apalis.dtsi       | 4 ++--
- arch/arm/boot/dts/tegra30-beaver.dts        | 2 +-
- arch/arm/boot/dts/tegra30-cardhu.dtsi       | 2 +-
- arch/arm/boot/dts/tegra30-colibri.dtsi      | 2 +-
- arch/arm/boot/dts/tegra30.dtsi              | 3 ++-
- 23 files changed, 28 insertions(+), 24 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-index eafff16765b4..1788556b4977 100644
---- a/arch/arm/boot/dts/tegra114-dalmore.dts
-+++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-@@ -23,7 +23,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra114-roth.dts b/arch/arm/boot/dts/tegra114-roth.dts
-index 7ed7370ee67a..3d3835591cd2 100644
---- a/arch/arm/boot/dts/tegra114-roth.dts
-+++ b/arch/arm/boot/dts/tegra114-roth.dts
-@@ -28,7 +28,7 @@
- 		};
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		/* memory >= 0x79600000 is reserved for firmware usage */
- 		reg = <0x80000000 0x79600000>;
- 	};
-diff --git a/arch/arm/boot/dts/tegra114-tn7.dts b/arch/arm/boot/dts/tegra114-tn7.dts
-index 7fc4a8b31e45..bfdd1bf61816 100644
---- a/arch/arm/boot/dts/tegra114-tn7.dts
-+++ b/arch/arm/boot/dts/tegra114-tn7.dts
-@@ -28,7 +28,7 @@
- 		};
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		/* memory >= 0x37e00000 is reserved for firmware usage */
- 		reg = <0x80000000 0x37e00000>;
- 	};
-diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-index 27ef515e5640..85488a150701 100644
---- a/arch/arm/boot/dts/tegra114.dtsi
-+++ b/arch/arm/boot/dts/tegra114.dtsi
-@@ -11,8 +11,9 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
--	memory {
-+	memory@80000000 {
- 		device_type = "memory";
-+		reg = <0x80000000 0x0>;
- 	};
- 
- 	host1x@50000000 {
-diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-index bb67edb016c5..acb5b379e896 100644
---- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-@@ -15,7 +15,7 @@
- 	compatible = "toradex,apalis-tk1-v1.2", "toradex,apalis-tk1",
- 		     "nvidia,tegra124";
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
-index 65a2161b9b8e..08518e424448 100644
---- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-@@ -50,7 +50,7 @@
- 	model = "Toradex Apalis TK1";
- 	compatible = "toradex,apalis-tk1", "nvidia,tegra124";
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-index 6dbcf84dafbc..9151b3ebb839 100644
---- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-+++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-@@ -24,7 +24,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
-index 3609367037a6..d5f11d6d987e 100644
---- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-+++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-@@ -13,7 +13,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
-index 89bcc178994d..82d139648ef1 100644
---- a/arch/arm/boot/dts/tegra124-venice2.dts
-+++ b/arch/arm/boot/dts/tegra124-venice2.dts
-@@ -18,7 +18,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 951feea784af..183c5acafb22 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -13,8 +13,9 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
--	memory {
-+	memory@80000000 {
- 		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x0>;
- 	};
- 
- 	pcie@1003000 {
-diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-index 5c202b3e3bb1..5623ff8d128c 100644
---- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-+++ b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-@@ -10,7 +10,7 @@
- 		rtc1 = "/rtc@7000e000";
- 	};
- 
--	memory {
-+	memory@0 {
- 		reg = <0x00000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
-index 628a55a9318b..1d96d92b72a7 100644
---- a/arch/arm/boot/dts/tegra20-harmony.dts
-+++ b/arch/arm/boot/dts/tegra20-harmony.dts
-@@ -18,7 +18,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		reg = <0x00000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
-index 30436969adc0..ef245291924f 100644
---- a/arch/arm/boot/dts/tegra20-paz00.dts
-+++ b/arch/arm/boot/dts/tegra20-paz00.dts
-@@ -19,7 +19,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		reg = <0x00000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dts
-index 284aae351ff2..f91441683aad 100644
---- a/arch/arm/boot/dts/tegra20-seaboard.dts
-+++ b/arch/arm/boot/dts/tegra20-seaboard.dts
-@@ -18,7 +18,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		reg = <0x00000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-index 872046d48709..20137fc578b1 100644
---- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-+++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-@@ -15,7 +15,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		reg = <0x00000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
-index d55c6b240a30..9eb26dc15f6b 100644
---- a/arch/arm/boot/dts/tegra20-trimslice.dts
-+++ b/arch/arm/boot/dts/tegra20-trimslice.dts
-@@ -18,7 +18,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		reg = <0x00000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dts
-index ee3fbf941e79..f44551e2d9d0 100644
---- a/arch/arm/boot/dts/tegra20-ventana.dts
-+++ b/arch/arm/boot/dts/tegra20-ventana.dts
-@@ -18,7 +18,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		reg = <0x00000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 88dd1afb5877..55581c0e5105 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -13,8 +13,9 @@
- 	chosen { };
- 	aliases { };
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
-+		reg = <0 0>;
- 	};
- 
- 	iram@40000000 {
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 6f29cbad6e8a..9465fc592b7b 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -10,8 +10,8 @@
- 	model = "Toradex Apalis T30";
- 	compatible = "toradex,apalis_t30", "nvidia,tegra30";
- 
--	memory {
--		reg = <0 0>;
-+	memory@80000000 {
-+		reg = <0x80000000 0x40000000>;
- 	};
- 
- 	pcie@3000 {
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index ae52a5039506..1434d50438f9 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -17,7 +17,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x7ff00000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-index 92a9740c533f..33b73dca16a3 100644
---- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-+++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-@@ -40,7 +40,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index c44d8c40c410..9bf3327665d3 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -10,7 +10,7 @@
- 	model = "Toradex Colibri T30";
- 	compatible = "toradex,colibri_t30", "nvidia,tegra30";
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 19237c08c166..bc42f791d791 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -14,8 +14,9 @@
- 	chosen { };
- 	aliases { };
- 
--	memory {
-+	memory@80000000 {
- 		device_type = "memory";
-+		reg = <0x80000000 0x0>;
- 	};
- 
- 	pcie@3000 {
--- 
-2.7.4
+Yours,
+Linus Walleij
