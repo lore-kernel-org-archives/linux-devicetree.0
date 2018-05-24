@@ -1,32 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] arcnet: com20020: bindings for smsc com20020
-Date: Thu, 24 May 2018 09:36:36 -0500
-Message-ID: <CAL_JsqL1M3SuH_cJGUhh0+Xg+UYDjAc-=a+USENOKznvWib1Ng@mail.gmail.com>
-References: <20180517130628.2770-1-andrea.greco.gapmilano@gmail.com>
- <20180523164931.GA3635@rob-hp-laptop> <CAPoXtQJYmfk+-4qOpbEetUAdVwTgVPmk=mQaFv7yLF2V2dO=4A@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v12 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Thu, 24 May 2018 15:47:33 +0100
+Message-ID: <15d6025c-1307-64e0-6715-34240fcaf8eb@arm.com>
+References: <1527152242-31281-1-git-send-email-ilialin@codeaurora.org>
+ <1527152242-31281-2-git-send-email-ilialin@codeaurora.org>
+ <860be68b-cac0-9efc-b3c7-cc75b391a4c3@arm.com>
+ <000501d3f35f$96794910$c36bdb30$@codeaurora.org>
+ <b4e221af-57f7-fd11-942d-6bc6f6b55a73@arm.com>
+ <000701d3f368$fd31e410$f795ac30$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPoXtQJYmfk+-4qOpbEetUAdVwTgVPmk=mQaFv7yLF2V2dO=4A@mail.gmail.com>
+In-Reply-To: <000701d3f368$fd31e410$f795ac30$@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Greco <andrea.greco.gapmilano@gmail.com>
-Cc: "Tobin C. Harding" <tobin@apporbit.com>, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: ilialin@codeaurora.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 5:17 PM, Andrea Greco
-<andrea.greco.gapmilano@gmail.com> wrote:
-> On 05/23/2018 06:49 PM, Rob Herring wrote:
->> One typo, otherwise:
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Yes typo, Fixed over my branch, sorry for that...
-> I expect a comment about bps, Bit per Second, used in `bus-speed-bps`
-> You will add it by your self in property-units.txt, or required my patch?
 
-If you want to add it, that's fine. But it's really not something that
-comes up often. For UARTs, there's already the "current-speed"
-property and most other things I can think of use Hz to express
-speeds.
 
-Rob
+On 24/05/18 15:10, ilialin@codeaurora.org wrote:
+> Thank you for the explanation. However, could you suggest, which
+> condition should I check then? Device tree?
+> 
+
+Yes some compatible which is applicable for all the SoCs or platforms on
+which this driver can work ?
+
+-- 
+Regards,
+Sudeep
