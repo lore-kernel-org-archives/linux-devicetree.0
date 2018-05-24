@@ -1,53 +1,70 @@
-Return-Path: <SRS0=oVvL=IM=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v5 6/6] arm: dts: ls1021a: add qdma device tree nodes
-Date: Fri, 25 May 2018 19:19:20 +0800
-Message-ID: <20180525111920.24498-6-wen.he_1@nxp.com>
-In-Reply-To: <20180525111920.24498-1-wen.he_1@nxp.com>
-References: <20180525111920.24498-1-wen.he_1@nxp.com>
+Return-Path: <SRS0=hdYN=IL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-cys01nam02on0042.outbound.protection.outlook.com ([104.47.37.42]:38617
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S935704AbeEXIXB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 24 May 2018 04:23:01 -0400
+From: Alan Douglas <adouglas@cadence.com>
+Subject: RE: [RESEND PATCH 3/4] dt-bindings: PCI: cadence: Add DT bindings for
+ optional PHYs
+Date: Thu, 24 May 2018 08:22:57 +0000
+Message-ID: <SN6PR07MB4512126062D1B934DF342713D86A0@SN6PR07MB4512.namprd07.prod.outlook.com>
+References: <1526995952-22031-1-git-send-email-adouglas@cadence.com>
+ <20180523185229.GA7457@rob-hp-laptop>
+In-Reply-To: <20180523185229.GA7457@rob-hp-laptop>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.com" <linux-kernel@vger.kernel.com>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>
 List-ID: <devicetree@vger.kernel.org>
 
-add the qDMA device tree nodes for LS1021A devices.
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-change in v5:
-	- Replace dts node variable 'queues' to 'fsl,queues' that add vendor prefix
+On  23 May 2018 19:52, Rob Herring wrote:
+> On Tue, May 22, 2018 at 02:32:32PM +0100, Alan Douglas wrote:
+> > Update DT documentation to include optional PHYs for cadence PCIe
+> > host and endpoint controllers.
+> >
+> > Signed-off-by: Alan Douglas <adouglas@cadence.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt   | 4 ++++
+> >  Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt | 2 ++
+> >  2 files changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.tx=
+t b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-
+> ep.txt
+> > index 9a305237..e40c635 100644
+> > --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> > +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> > @@ -9,6 +9,8 @@ Required properties:
+> >
+> >  Optional properties:
+> >  - max-functions: Maximum number of functions that can be configured (d=
+efault 1).
+> > +- phys: From PHY bindings: List of Generic PHY phandles.
+> > +- phy-names:  List of names to identify the PHY.
+>=20
+> You need to define how many. I'd assume one, but I guess your example is
+> 1 per lane.
+>=20
+I can update the description in v3 as follows:
+ - phys: From PHY bindings: List of Generic PHY phandles. One per lane if m=
+ore than one in the
+  list.  If only one PHY listed it must manage all lanes.=20
+ - phy-names:  List of names to identify the PHY, one for each in the list.
+> >
+> >  Example:
+> >
+> > @@ -19,4 +21,6 @@ pcie@fc000000 {
+> >  	reg-names =3D "reg", "mem";
+> >  	cdns,max-outbound-regions =3D <16>;
+> >  	max-functions =3D /bits/ 8 <8>;
+> > +	phys =3D <&ep_phy0 &ep_phy1>;
+> > +	phy-names =3D "pcie-lane0","pcie-lane1";
+> >  };
 
-change in v4:
-	- no
 
- arch/arm/boot/dts/ls1021a.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c55d479..061c839 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -571,6 +571,21 @@
- 				 <&clockgen 4 1>;
- 		};
- 
-+		qdma: dma-controller@8390000 {
-+			compatible = "fsl,ls1021a-qdma";
-+			reg = <0x0 0x8398000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8399000 0x0 0x1000>, /* Status regs */
-+				<0x0 0x839a000 0x0 0x2000>; /* Block regs */
-+			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error", "qdma-queue";
-+			dma-channels = <8>;
-+			fsl,queues = <2>;
-+			status-sizes = <64>;
-+			queue-sizes = <64 64>;
-+			big-endian;
-+		};
-+
- 		dcu: dcu@2ce0000 {
- 			compatible = "fsl,ls1021a-dcu";
- 			reg = <0x0 0x2ce0000 0x0 0x10000>;
--- 
-1.7.1
+
