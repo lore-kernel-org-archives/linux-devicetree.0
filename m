@@ -1,7 +1,7 @@
 From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH v2 5/9] ARM: dts: porter: Drop MTD partitioning from DT
-Date: Thu, 24 May 2018 17:07:17 +0200
-Message-ID: <20180524150721.28964-5-marek.vasut+renesas@gmail.com>
+Subject: [PATCH v2 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
+Date: Thu, 24 May 2018 17:07:18 +0200
+Message-ID: <20180524150721.28964-6-marek.vasut+renesas@gmail.com>
 References: <20180524150721.28964-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -29,11 +29,10 @@ To retain the original partitioning, assure you have enabled
 CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
 following to your kernel command line:
 
-  mtdparts=spi0.0:256k(loader_prg),4m(user_prg),-(flash_fs)
+  mtdparts=spi0.0:256k(loader),4m(user),-(flash)
 
 Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Simon Horman <horms+renesas@verge.net.au>
@@ -42,16 +41,16 @@ Cc: linux-renesas-soc@vger.kernel.org
 ---
 V2: Drop the @0 anchor from the commit message, use 4m
 ---
- arch/arm/boot/dts/r8a7791-porter.dts | 21 ---------------------
+ arch/arm/boot/dts/r8a7792-wheat.dts | 21 ---------------------
  1 file changed, 21 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a7791-porter.dts
-index a01101b49d99..45d89e064407 100644
---- a/arch/arm/boot/dts/r8a7791-porter.dts
-+++ b/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -344,27 +344,6 @@
- 		spi-tx-bus-width = <4>;
- 		spi-rx-bus-width = <4>;
+diff --git a/arch/arm/boot/dts/r8a7792-wheat.dts b/arch/arm/boot/dts/r8a7792-wheat.dts
+index db01de7a3811..93f78716225a 100644
+--- a/arch/arm/boot/dts/r8a7792-wheat.dts
++++ b/arch/arm/boot/dts/r8a7792-wheat.dts
+@@ -217,27 +217,6 @@
+ 		spi-cpol;
+ 		spi-cpha;
  		m25p,fast-read;
 -
 -		partitions {
@@ -60,17 +59,17 @@ index a01101b49d99..45d89e064407 100644
 -			#size-cells = <1>;
 -
 -			partition@0 {
--				label = "loader_prg";
+-				label = "loader";
 -				reg = <0x00000000 0x00040000>;
 -				read-only;
 -			};
 -			partition@40000 {
--				label = "user_prg";
+-				label = "user";
 -				reg = <0x00040000 0x00400000>;
 -				read-only;
 -			};
 -			partition@440000 {
--				label = "flash_fs";
+-				label = "flash";
 -				reg = <0x00440000 0x03bc0000>;
 -			};
 -		};
