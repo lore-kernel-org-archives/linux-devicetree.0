@@ -1,50 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 8/8] PM / Domains: Stop deferring probe at the end of initcall
-Date: Thu, 24 May 2018 12:50:24 -0500
-Message-ID: <20180524175024.19874-9-robh@kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 5/8] pinctrl: optionally stop deferring probe at end of
+ initcalls
+Date: Thu, 24 May 2018 12:50:21 -0500
+Message-ID: <20180524175024.19874-6-robh@kernel.org>
 References: <20180524175024.19874-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524175024.19874-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <20180524175024.19874-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-All PM domain drivers must be built-in (at least those using DT), so
-there is no point deferring probe after initcalls are done. Continuing
-to defer probe may prevent booting successfully even if managing PM
-domains is not required. This can happen if the user failed to enable
-the driver or if power-domains are added to a platform's DT, but there
-is not yet a driver (e.g. a new DTB with an old kernel).
-
-Call the driver core function driver_deferred_probe_check_init_done()
-instead of just returning -EPROBE_DEFER to stop deferring probe when
-initcalls are done.
-
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Kevin Hilman <khilman@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/base/power/domain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 1ea0e2502e8e..6398cf786e6a 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -2218,7 +2218,7 @@ int genpd_dev_pm_attach(struct device *dev)
- 		mutex_unlock(&gpd_list_lock);
- 		dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
- 			__func__, PTR_ERR(pd));
--		return -EPROBE_DEFER;
-+		return driver_deferred_probe_check_init_done(dev, true);
- 	}
- 
- 	dev_dbg(dev, "adding to PM domain %s\n", pd->name);
--- 
-2.17.0
+SWYgdGhlIHBpbmN0cmwgbm9kZSBpbiBEVCBpbmRpY2F0ZXMgdGhhdCBwaW4gc2V0dXAgaXMgb3B0
+aW9uYWwgYW5kIHRoZQpkZWZhdWx0cyBjYW4gYmUgdXNlZCB3aXRoIHRoZSAncGluY3RybC11c2Ut
+ZGVmYXVsdCcsIHRoZW4gb25seSBkZWZlciBwcm9iZQp1bnRpbCBpbml0Y2FsbHMgYXJlIGRvbmUu
+IFRoaXMgZ2l2ZXMgcGxhdGZvcm1zIHRoZSBvcHRpb24gdG8gd29yayB3aXRob3V0CnRoZWlyIHBp
+bmN0cmwgZHJpdmVyIGJlaW5nIGVuYWJsZWQuCgpTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8
+cm9iaEBrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvcGluY3RybC9kZXZpY2V0cmVlLmMgfCAxNCAr
+KysrKysrKysrLS0tLQogMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDQgZGVsZXRp
+b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL2RldmljZXRyZWUuYyBiL2RyaXZl
+cnMvcGluY3RybC9kZXZpY2V0cmVlLmMKaW5kZXggYjYwMTAzOWQ2YzY5Li43NGEzMTA3NGI0MDYg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGluY3RybC9kZXZpY2V0cmVlLmMKKysrIGIvZHJpdmVycy9w
+aW5jdHJsL2RldmljZXRyZWUuYwpAQCAtMTEwLDE3ICsxMTAsMjMgQEAgc3RhdGljIGludCBkdF90
+b19tYXBfb25lX2NvbmZpZyhzdHJ1Y3QgcGluY3RybCAqcCwKIAlpbnQgcmV0OwogCXN0cnVjdCBw
+aW5jdHJsX21hcCAqbWFwOwogCXVuc2lnbmVkIG51bV9tYXBzOworCWJvb2wgcGN0bF9vcHRpb25h
+bCA9IGZhbHNlOwogCiAJLyogRmluZCB0aGUgcGluIGNvbnRyb2xsZXIgY29udGFpbmluZyBucF9j
+b25maWcgKi8KIAlucF9wY3RsZGV2ID0gb2Zfbm9kZV9nZXQobnBfY29uZmlnKTsKIAlmb3IgKDs7
+KSB7CisJCWlmICghcGN0bF9vcHRpb25hbCkKKwkJCXBjdGxfb3B0aW9uYWwgPSBvZl9wcm9wZXJ0
+eV9yZWFkX2Jvb2wobnBfcGN0bGRldiwgInBpbmN0cmwtdXNlLWRlZmF1bHQiKTsKKwogCQlucF9w
+Y3RsZGV2ID0gb2ZfZ2V0X25leHRfcGFyZW50KG5wX3BjdGxkZXYpOwogCQlpZiAoIW5wX3BjdGxk
+ZXYgfHwgb2Zfbm9kZV9pc19yb290KG5wX3BjdGxkZXYpKSB7Ci0JCQlkZXZfaW5mbyhwLT5kZXYs
+ICJjb3VsZCBub3QgZmluZCBwY3RsZGV2IGZvciBub2RlICVwT0YsIGRlZmVycmluZyBwcm9iZVxu
+IiwKLQkJCQlucF9jb25maWcpOwogCQkJb2Zfbm9kZV9wdXQobnBfcGN0bGRldik7Ci0JCQkvKiBP
+SyBsZXQncyBqdXN0IGFzc3VtZSB0aGlzIHdpbGwgYXBwZWFyIGxhdGVyIHRoZW4gKi8KLQkJCXJl
+dHVybiAtRVBST0JFX0RFRkVSOworCQkJcmV0ID0gZHJpdmVyX2RlZmVycmVkX3Byb2JlX2NoZWNr
+X2luaXRfZG9uZShwLT5kZXYsIHBjdGxfb3B0aW9uYWwpOworCQkJaWYgKHJldCA9PSAtRVBST0JF
+X0RFRkVSKQorCQkJCS8qIE9LIGxldCdzIGp1c3QgYXNzdW1lIHRoaXMgd2lsbCBhcHBlYXIgbGF0
+ZXIgdGhlbiAqLworCQkJCWRldl9pbmZvKHAtPmRldiwgImNvdWxkIG5vdCBmaW5kIHBjdGxkZXYg
+Zm9yIG5vZGUgJXBPRiwgZGVmZXJyaW5nIHByb2JlXG4iLAorCQkJCQlucF9jb25maWcpOworCQkJ
+cmV0dXJuIHJldDsKIAkJfQogCQkvKiBJZiB3ZSdyZSBjcmVhdGluZyBhIGhvZyB3ZSBjYW4gdXNl
+IHRoZSBwYXNzZWQgcGN0bGRldiAqLwogCQlpZiAocGN0bGRldiAmJiAobnBfcGN0bGRldiA9PSBw
+LT5kZXYtPm9mX25vZGUpKQotLSAKMi4xNy4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpib290LWFyY2hpdGVjdHVyZSBtYWlsaW5nIGxpc3QKYm9vdC1h
+cmNoaXRlY3R1cmVAbGlzdHMubGluYXJvLm9yZwpodHRwczovL2xpc3RzLmxpbmFyby5vcmcvbWFp
+bG1hbi9saXN0aW5mby9ib290LWFyY2hpdGVjdHVyZQo=
