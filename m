@@ -1,48 +1,70 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 4/4] gpiolib: discourage gpiochip_add_pin[group]_range
- for DT pinctrls
-Date: Thu, 24 May 2018 10:07:02 +0200
-Message-ID: <CACRpkdbOTfoj293LO-nyPEbxwXOWRuNyTqwxb_MWoQ2wM3=-Hg@mail.gmail.com>
-References: <270904bcbf03a6b6ac3150f4a7daa15aa7e97586.1526935804.git.chunkeey@gmail.com>
- <0ae3376606a89bcdf3fe753a5c967f7103699e09.1526935804.git.chunkeey@gmail.com>
- <910e5a85a6a8020069996e2ff397c93e9c5fe18c.1526935804.git.chunkeey@gmail.com>
- <2969992a1005d7e7f4ea23d4c684d2f10d4a0aca.1526935804.git.chunkeey@gmail.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v5 1/3] phy: Power on PHY before start Serdes
+ configuration
+Date: Thu, 24 May 2018 13:47:58 +0530
+Message-ID: <dd6b1e3d-e894-e40f-452a-2dec2421b1c7@codeaurora.org>
+References: <20180523034712.3420-1-cang@codeaurora.org>
+ <20180523034712.3420-2-cang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2969992a1005d7e7f4ea23d4c684d2f10d4a0aca.1526935804.git.chunkeey@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Lamparter <chunkeey@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sven Eckelmann <sven.eckelmann@openmesh.com>, Andy Gross <andy.gross@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180523034712.3420-2-cang@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Can Guo <cang@codeaurora.org>, subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2018 at 10:57 PM, Christian Lamparter
-<chunkeey@gmail.com> wrote:
+Hi Can,
 
-> This patch adds the stern warning to the kerneldoc text of both
-> gpiochip_add_pin[group]_range() functions in hope of detering
-> developers from ever using them in their DeviceTree-supported
-> pinctrl drivers in the future.
+
+On 5/23/2018 9:17 AM, Can Guo wrote:
+> PHYs should be powered on before register configuration starts.
 >
-> For anyone affected: Please refer to Section 2.1 of
-> Documentation/devicetree/bindings/gpio/gpio.txt on how to
-> bind pinctrl and gpio drivers via the "gpio-ranges" property.
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+
+Thanks for fixing this.
+
+>   drivers/phy/qualcomm/phy-qcom-qmp.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
 >
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 97ef942..9bfdba1 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -1000,6 +1000,12 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+>   			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
+>   	}
+>   
+> +	/*
+> +	 * Pull out PHY from POWER DOWN state.
+> +	 * This is active low enable signal to power-down PHY.
+> +	 */
+> +	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+> +
 
-I'm a big fan of this patch, so applied.
+Thanks. This is in sync with the requirements of USB and UFS phys across 
+platforms
+using this qmp phy driver, viz. 8996 and 845.
+However, as discussed with you offline the PCIe phy has different 
+requirement.
+PCIe phy on 8996 doesn't need the QPHY_POWER_DOWN_CONTROL (pcs level 
+power down)
+before configuring the phys. Rather COM_POWER_DOWN_CONTROL is enough.
+It needs the QPHY_POWER_DOWN_CONTROL after programming the
+serdes, tx, rx, and pcs blocks, and right before doing SW_RESET, and 
+START_CONTROL.
 
-I wouldn't mind a pr_info() warning about it at runtime too,
-but this is nice.
+So we should just do the above QPHY_POWER_DOWN_CONTROL in
+qcom_qmp_phy_com_init() only for non-PCIe phys at the moment, and
+skip the QPHY_POWER_DOWN_CONTROL in qcom_qmp_phy_init()
+for these non-PCIe phys.
 
-Yours,
-Linus Walleij
+Thanks
+Vivek
+
+>   	/* Serdes configuration */
+>   	qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl,
+>   			       cfg->serdes_tbl_num);
