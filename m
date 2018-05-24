@@ -1,106 +1,47 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v3 4/6] watchdog: sp805: set WDOG_HW_RUNNING when
- appropriate
-Date: Thu, 24 May 2018 09:36:25 -0700
-Message-ID: <5e3d05f2-d526-9108-e2fd-13573458be85@broadcom.com>
-References: <1527120924-12131-1-git-send-email-ray.jui@broadcom.com>
- <1527120924-12131-5-git-send-email-ray.jui@broadcom.com>
- <20180524161901.GB28425@roeck-us.net>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v7 0/4] Add suppport for sn65dsi86 bridge chip
+ and Innolux 2k edp panel
+Date: Thu, 24 May 2018 22:11:15 +0530
+Message-ID: <1527180079-12721-1-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524161901.GB28425@roeck-us.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 5/24/2018 9:19 AM, Guenter Roeck wrote:
-> On Wed, May 23, 2018 at 05:15:22PM -0700, Ray Jui wrote:
->> If the watchdog hardware is already enabled during the boot process,
->> when the Linux watchdog driver loads, it should reset the watchdog and
->> tell the watchdog framework. As a result, ping can be generated from
->> the watchdog framework, until the userspace watchdog daemon takes over
->> control
->>
->> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Vladimir Olovyannikov <vladimir.olovyannikov@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> I have one question, though: Is it really correct that both
-> INT_ENABLE _and_ RESET_ENABLE have to be set to enable the watdog ?
-> What if only RESET_ENABLE is set ?
-
-According to the SP805 TRM, INT_ENABLE needs to be set to high to enable 
-the counter and the interrupt. Counter will be stopped if INT_ENABLE is 
-cleared. So yes, INT_ENABLE needs to be set.
-
-Thanks,
-
-Ray
-
-> 
-> Thanks,
-> Guenter
-> 
->> ---
->>   drivers/watchdog/sp805_wdt.c | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>
->> diff --git a/drivers/watchdog/sp805_wdt.c b/drivers/watchdog/sp805_wdt.c
->> index 1484609..d662a6f 100644
->> --- a/drivers/watchdog/sp805_wdt.c
->> +++ b/drivers/watchdog/sp805_wdt.c
->> @@ -42,6 +42,7 @@
->>   	/* control register masks */
->>   	#define	INT_ENABLE	(1 << 0)
->>   	#define	RESET_ENABLE	(1 << 1)
->> +	#define	ENABLE_MASK	(INT_ENABLE | RESET_ENABLE)
->>   #define WDTINTCLR		0x00C
->>   #define WDTRIS			0x010
->>   #define WDTMIS			0x014
->> @@ -74,6 +75,15 @@ module_param(nowayout, bool, 0);
->>   MODULE_PARM_DESC(nowayout,
->>   		"Set to 1 to keep watchdog running after device release");
->>   
->> +/* returns true if wdt is running; otherwise returns false */
->> +static bool wdt_is_running(struct watchdog_device *wdd)
->> +{
->> +	struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);
->> +	u32 wdtcontrol = readl_relaxed(wdt->base + WDTCONTROL);
->> +
->> +	return (wdtcontrol & ENABLE_MASK) == ENABLE_MASK;
->> +}
->> +
->>   /* This routine finds load value that will reset system in required timout */
->>   static int wdt_setload(struct watchdog_device *wdd, unsigned int timeout)
->>   {
->> @@ -239,6 +249,15 @@ sp805_wdt_probe(struct amba_device *adev, const struct amba_id *id)
->>   	watchdog_init_timeout(&wdt->wdd, 0, &adev->dev);
->>   	wdt_setload(&wdt->wdd, wdt->wdd.timeout);
->>   
->> +	/*
->> +	 * If HW is already running, enable/reset the wdt and set the running
->> +	 * bit to tell the wdt subsystem
->> +	 */
->> +	if (wdt_is_running(&wdt->wdd)) {
->> +		wdt_enable(&wdt->wdd);
->> +		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
->> +	}
->> +
->>   	ret = watchdog_register_device(&wdt->wdd);
->>   	if (ret) {
->>   		dev_err(&adev->dev, "watchdog_register_device() failed: %d\n",
->> -- 
->> 2.1.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Q2hhbmdlcyBpbiBjdXJyZW50IHBhdGNoc2V0OgogLSBEZWZlciBicmlkZ2UgZHJpdmVyIHByb2Jl
+IHVudGlsIHBhbmVsIHByb2JlIGhhcHBlbnMuCiAtIFVwZGF0ZSB0aGUgb2ZfZ3JhcGggQVBJcyBi
+YXNlZCBvbiBjb21tZW50cy4KIC0gQWRkIG9wdGlvbmFsIGxhbmUtY29uZmlnIGR0LWJpbmRpbmcg
+dG8gYnJpZGdlIGRvY3VtZW50YXRpb24uCgpTYW5kZWVwIFBhbmRhICg0KToKICBkcm0vYnJpZGdl
+OiBhZGQgc3VwcG9ydCBmb3Igc242NWRzaTg2IGJyaWRnZSBkcml2ZXIKICBkdC1iaW5kaW5nczog
+ZHJtL2JyaWRnZTogRG9jdW1lbnQgc242NWRzaTg2IGJyaWRnZSBiaW5kaW5ncwogIGRybS9wYW5l
+bDogYWRkIElubm9sdXggVFYxMjNXQU0gcGFuZWwgZHJpdmVyIHN1cHBvcnQKICBkdC1iaW5kaW5n
+czogZHJtL3BhbmVsOiBEb2N1bWVudCBJbm5vbHV4IFRWMTIzV0FNIHBhbmVsIGJpbmRpbmdzCgog
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCAgODkg
+KysrCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCAgICB8
+ICAyMCArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAg
+ICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jICAgICAg
+ICAgICAgICB8IDY3NSArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgIDI3ICsKIDYgZmlsZXMgY2hhbmdlZCwg
+ODIxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L2lubm9sdXgsdHYxMjN3YW0udHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS90aS1zbjY1ZHNpODYuYwoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRl
+ciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91
+bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2ZyZWVkcmVubwo=
