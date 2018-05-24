@@ -1,52 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 3/4] ARM: dts: qcom: add gpio-ranges property
-Date: Thu, 24 May 2018 10:05:16 +0200
-Message-ID: <CACRpkdZ2QAuQDjkqERESmf7Lbr69XSaHj2JCO9hf8a6YiNP2RA@mail.gmail.com>
-References: <270904bcbf03a6b6ac3150f4a7daa15aa7e97586.1526935804.git.chunkeey@gmail.com>
- <910e5a85a6a8020069996e2ff397c93e9c5fe18c.1526935804.git.chunkeey@gmail.com>
- <0ae3376606a89bcdf3fe753a5c967f7103699e09.1526935804.git.chunkeey@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0ae3376606a89bcdf3fe753a5c967f7103699e09.1526935804.git.chunkeey@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Lamparter <chunkeey@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sven Eckelmann <sven.eckelmann@openmesh.com>, Andy Gross <andy.gross@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: [PATCH v3 0/3] Renesas R9A06G032 SMP enabler
+Date: Thu, 24 May 2018 11:30:26 +0100
+Message-ID: <1527157834-7747-1-git-send-email-michel.pollet@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Carlo Caione <carlo@endlessm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rajendra Nayak <rnayak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Juri Lelli <juri.lelli@arm.com>, Frank Rowand <frank.rowand@sony.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2018 at 10:57 PM, Christian Lamparter
-<chunkeey@gmail.com> wrote:
+*WARNING -- this requires the base R9A06G032 support patches 
+already posted
 
-> This patch adds the gpio-ranges property to almost all of
-> the Qualcomm ARM platforms that utilize the pinctrl-msm
-> framework.
->
-> The gpio-ranges property is part of the gpiolib subsystem.
-> As a result, the binding text is available in section
-> "2.1 gpio- and pin-controller interaction" of
-> Documentation/devicetree/bindings/gpio/gpio.txt
->
-> For more information please see the patch titled:
-> "pinctrl: msm: fix gpio-hog related boot issues" from
-> this series.
->
-> Reported-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
-> Tested-by: Sven Eckelmann <sven.eckelmann@openmesh.com> [ipq4019]
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+This patch series is for enabling the second CA7 of the R9A06G032.
+It's based on a spin_table method, and it reuses the same binding
+property as that driver.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+v3:
+  + Removed mentions of rz/?n1d?
+  + Rebased on base patch v7 
+v2:
+  + Added suggestions from Florian Fainelli
+  + Use __pa_symbol()
+  + Simplified logic in prepare_cpu()
+  + Reordered the patches
+  + Rebased on RZN1 Base patch v5
 
-I guess Andy will apply this?
+Michel Pollet (3):
+  dt-bindings: cpu: Add Renesas R9A06G032 SMP enable method.
+  arm: shmobile: Add the R9A06G032 SMP enabler driver
+  ARM: dts: Renesas R9A06G032 SMP enable method
 
-Yours,
-Linus Walleij
+ Documentation/devicetree/bindings/arm/cpus.txt |  1 +
+ arch/arm/boot/dts/r9a06g032.dtsi               |  2 +
+ arch/arm/mach-shmobile/Makefile                |  1 +
+ arch/arm/mach-shmobile/smp-r9a06g032.c         | 85 ++++++++++++++++++++++++++
+ 4 files changed, 89 insertions(+)
+ create mode 100644 arch/arm/mach-shmobile/smp-r9a06g032.c
+
+-- 
+2.7.4
