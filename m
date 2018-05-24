@@ -1,107 +1,86 @@
-From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH v12 0/8] Clock for CPU scaling support for msm8996
-Date: Thu, 24 May 2018 14:25:10 +0300
-Message-ID: <CAHLCerM-F3joG=9YgvqMiGTFvw_CAv82R91ZP7v6mxTjykz9DA@mail.gmail.com>
-References: <1527148218-16540-1-git-send-email-ilialin@codeaurora.org>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v6 05/17] media: rkisp1: add Rockchip ISP1 subdev driver
+Date: Thu, 24 May 2018 14:30:12 +0300
+Message-ID: <20180524113012.mt5b2f2vrhfrn3d7@tarshish>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
+ <20180308094807.9443-6-jacob-chen@iotwrt.com>
+ <20180503090909.o3dyhukzs2y7em5z@tarshish>
+ <CAAFQd5CvBv4hkE=PSHBJTYa9Lj0SyggxpMBEAYD=if0=T0uzHw@mail.gmail.com>
+ <20180507063814.vweb4p3nfgnoc3td@tarshish>
+ <CAAFQd5A7gAK4fXH9YVrobR5_QX_5f8xa272R_56v5YUghV6Sxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527148218-16540-1-git-send-email-ilialin@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5A7gAK4fXH9YVrobR5_QX_5f8xa272R_56v5YUghV6Sxw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, vireshk@kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, lakml <linux-arm-kernel@lists.infradead.org>
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Jacob Chen <jacob-chen@iotwrt.com>, ARM/Rockchip SoC <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?utf-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, =?utf-8?B?6ZmI5Z+O?=
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 24, 2018 at 10:50 AM, Ilia Lin <ilialin@codeaurora.org> wrote:
-> [v12]
->  * Addressed the kbuild fail on arm architecture
->
-> [v11]
->  * Split the series into domains
->
-> [v9]
->  * Addressed comments from Viresh and Russel about the error handling
->
-> [v8]
->  * Reordered the patch series into 4 groups
->  * Addressed comments from Amit about the comments and commit messages
->  * Addressed comments from Amit and Viresh about the resourses deallocation
->
-> [v7]
->  * Addressed comments from Viresh about resourses deallocation
->    and DT compatible
->
-> [v6]
->  * Addressed comments from Viresh about:
->  ** Comments style
->  ** Kconfig bool instead of tristate
->  ** DT and documentation style
->  ** Resourses deallocation on an error
->  ** Typos
->
-> [v5]
->  * Rebased
->  * Addressed comments from Bjorn about SPDX style,
->    functions and parameters naming
->  * Addressed comments from Viresh DT properties and style, comments style,
->    resourses deallocation, documentation placement
->  * Addressed comments from Sricharan about unnessesary include
->  * Addressed comments from Nicolas
->  * Addressed comments from Rob about the commit messages and acks
->  * Addressed comments from Mark
->
-> [v4]
->  * Adressed all comments from Stephen
->  * Added CPU regulator support
->  * Added qcom-cpufreq-kryo driver
->
-> [v3]
->  * Rebased on top of the latest PLL driver changes
->  * Addressed comment from Rob Herring for bindings
->
-> [v2]
->  * Addressed comments from Rob Herring for bindings
->  * Addressed comments from Mark Rutland for memory barrier
->  * Addressed comments from Julien Thierry for clock reenabling condition
->  * Tuned the HW configuration for clock frequencies below 600MHz
->
-> SOC (1/15):
-> Extracts the kryo l2 accessors driver from the QCOM PMU driver
->
-> Clocks (2/15-9/15):
-> This series adds support for the CPU clocks on msm8996 devices.
-> The driver uses the existing PLL drivers and is required to control
-> the CPU frequency scaling on the MSM8996.
->
-> Ilia Lin (6):
->   soc: qcom: Separate kryo l2 accessors from PMU driver
->   clk: Use devm_ in the register fixed factor clock
->   clk: qcom: Add CPU clock driver for msm8996
->   dt-bindings: clk: qcom: Add bindings for CPU clock for msm8996
->   clk: qcom: cpu-8996: Add support to switch below 600Mhz
->   clk: qcom: Add ACD path to CPU clock driver for msm8996
->
-> Rajendra Nayak (2):
->   clk: qcom: Make clk_alpha_pll_configure available to modules
->   clk: qcom: cpu-8996: Add support to switch to alternate PLL
->
->  .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
->  drivers/clk/clk-fixed-factor.c                     |   2 +-
->  drivers/clk/qcom/Kconfig                           |  10 +
->  drivers/clk/qcom/Makefile                          |   1 +
->  drivers/clk/qcom/clk-alpha-pll.c                   |   1 +
->  drivers/clk/qcom/clk-alpha-pll.h                   |   6 +
->  drivers/clk/qcom/clk-cpu-8996.c                    | 510 +++++++++++++++++++++
+Hi Tomasz,
 
+On Mon, May 07, 2018 at 06:41:50AM +0000, Tomasz Figa wrote:
+> On Mon, May 7, 2018 at 3:38 PM Baruch Siach <baruch@tkos.co.il> wrote:
+> > On Mon, May 07, 2018 at 06:13:27AM +0000, Tomasz Figa wrote:
+> > > On Thu, May 3, 2018 at 6:09 PM Baruch Siach <baruch@tkos.co.il> wrote:
+> > > > On Thu, Mar 08, 2018 at 05:47:55PM +0800, Jacob Chen wrote:
+> > > > > +static int rkisp1_isp_sd_s_power(struct v4l2_subdev *sd, int on)
+> > > > > +{
+> > > > > +     struct rkisp1_device *isp_dev = sd_to_isp_dev(sd);
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     v4l2_dbg(1, rkisp1_debug, &isp_dev->v4l2_dev, "s_power: %d\n",
+> > > on);
+> > > > > +
+> > > > > +     if (on) {
+> > > > > +             ret = pm_runtime_get_sync(isp_dev->dev);
+> > > > > +             if (ret < 0)
+> > > > > +                     return ret;
+> > > > > +
+> > > > > +             rkisp1_config_clk(isp_dev);
+> > > > > +     } else {
+> > > > > +             ret = pm_runtime_put(isp_dev->dev);
+> > >
+> > > > I commented this line out to make more than one STREAMON work.
+> Otherwise,
+> > > > the second STREAMON hangs. I guess the bug is not this driver.
+> Probably
+> > > > something in drivers/soc/rockchip/pm_domains.c. Just noting that in
+> case
+> > > > you or someone on Cc would like to investigate it further.
+> > > >
+> > > > I tested v4.16-rc4 on the Tinkerboard.
+> > >
+> > > Looks like that version doesn't include the IOMMU PM and clock handling
+> > > rework [1], which should fix a lot of runtime PM issues. FWIW,
+> linux-next
+> > > seems to already include it.
+> > >
+> > > [1] https://lkml.org/lkml/2018/3/23/44
+> 
+> > Thanks for the reference.
+> 
+> > It looks like the iommu driver part is in Linus' tree already. The DT
+> part is
+> > in the v4.18-armsoc/dts32 branch of Heiko's tree. Am I missing anything?
+> 
+> You're right, most of the series made it in time for 4.17. However, the DT
+> part (precisely, the clocks properties added to IOMMU nodes) is crucial for
+> the fixes to be effective.
+> 
+> > Anyway, I'll take a look.
+> 
+> Thanks for testing. :) (Forgot to mention in my previous email...)
 
->  drivers/perf/Kconfig                               |   1 +
->  drivers/perf/qcom_l2_pmu.c                         |  90 +---
->  drivers/soc/qcom/Kconfig                           |   3 +
->  drivers/soc/qcom/Makefile                          |   1 +
->  drivers/soc/qcom/kryo-l2-accessors.c               |  56 +++
->  include/soc/qcom/kryo-l2-accessors.h               |  12 +
+I finally got around to testing. Unfortunately, kernel v4.17-rc6 with 
+cherry-pick of commit c78751f91c0b (ARM: dts: rockchip: add clocks in iommu 
+nodes) from Heiko's tree still exhibit the same problem. STREAMON hangs on 
+second try. The same workaround "fixes" it.
 
-For the perf/l2-accessors part, Reviewed-by: Amit Kucheria
-<amit.kucheria@linaro.org>
+baruch
 
-For the entire series, Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
