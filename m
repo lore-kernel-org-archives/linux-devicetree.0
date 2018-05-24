@@ -1,36 +1,65 @@
-From: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Subject: RE: [PATCH 9/9] regulator: bd71837: Build BD71837 regulator driver
-Date: Thu, 24 May 2018 17:34:24 +0000
-Message-ID: <042F8805D2046347BB8420BEAE397A4016C06B52@WILL-MAIL002.REu.RohmEu.com>
-References: <20180524060114.GJ4249@localhost.localdomain>,<20180524140159.GT4828@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 0/8] Make deferring probe forever optional
+Date: Thu, 24 May 2018 12:50:16 -0500
+Message-ID: <20180524175024.19874-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524140159.GT4828@sirena.org.uk>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This series came out of a discussion on the ARM boot-architecture
+list[1] about DT forwards and backwards compatibility issues. There are
+issues with newer DTs breaking on older, stable kernels. Some of these
+are difficult to solve, but cases of optional devices not having
+kernel support should be solvable.
+
+I tested this on a RPi3 B with the pinctrl driver forced off. With this
+change, the MMC/SD and UART drivers can function without the pinctrl
+driver.
+
+v2:
+ - Add a DT property for pinctrl to flag using defaults
+ - Add a debug timeout to stop deferring some number of seconds after
+   initcalls are done (giving modules a chance to load)
+ - Split pinctrl support to its own patch
+ - WARN when we stop deferring probe for a device
+ - Add IOMMU support
+ - Add PM domain support
+
+Rob
+
+[1] https://lists.linaro.org/pipermail/boot-architecture/2018-April/000466.html
 
 
-> On Thu, May 24, 2018 at 09:01:14AM +0300, Matti Vaittinen wrote:
-> > Configurations and Makefile for BD71837 regulator driver
-> >
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > ---
-> >  drivers/regulator/Kconfig  | 11 +++++++++++
-> >  drivers/regulator/Makefile |  1 +
-> >  2 files changed, 12 insertions(+)
->
-> Just squash this into the single patch adding the driver, it makes life
-> easier.
+Rob Herring (8):
+  driver core: make deferring probe after init optional
+  driver core: add a deferred probe timeout
+  dt-bindings: pinctrl: add a 'pinctrl-use-default' property
+  arm: dts: bcm283x: mark the UART pin muxing nodes with
+    pinctrl-use-default
+  pinctrl: optionally stop deferring probe at end of initcalls
+  iommu: Stop deferring probe at end of initcalls
+  iommu: Remove IOMMU_OF_DECLARE
+  PM / Domains: Stop deferring probe at the end of initcall
 
-Will do. I was wondering if it is nicer to have smaller patches and thus
-decided to split this but if it is easier to read them in one patch
-- no problem.
+ .../admin-guide/kernel-parameters.txt         |  7 +++
+ .../bindings/pinctrl/pinctrl-bindings.txt     |  6 +++
+ arch/arm/boot/dts/bcm283x.dtsi                |  2 +
+ drivers/base/dd.c                             | 43 +++++++++++++++++++
+ drivers/base/power/domain.c                   |  2 +-
+ drivers/iommu/arm-smmu-v3.c                   |  2 -
+ drivers/iommu/arm-smmu.c                      |  7 ---
+ drivers/iommu/exynos-iommu.c                  |  2 -
+ drivers/iommu/ipmmu-vmsa.c                    |  3 --
+ drivers/iommu/msm_iommu.c                     |  2 -
+ drivers/iommu/of_iommu.c                      | 21 +--------
+ drivers/iommu/qcom_iommu.c                    |  2 -
+ drivers/iommu/rockchip-iommu.c                |  2 -
+ drivers/pinctrl/devicetree.c                  | 14 ++++--
+ include/linux/device.h                        |  2 +
+ include/linux/of_iommu.h                      |  4 --
+ 16 files changed, 73 insertions(+), 48 deletions(-)
 
-Br,
-    Matti Vaittinen
+--
+2.17.0
