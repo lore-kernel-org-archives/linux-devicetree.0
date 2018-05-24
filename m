@@ -1,154 +1,207 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: OMAP serial runtime PM and autosuspend (was: Re: [PATCH 4/7]
- dt-bindings: gnss: add u-blox binding))
-Date: Thu, 24 May 2018 06:32:37 -0700
-Message-ID: <20180524133237.GA98604@atomide.com>
-References: <20180508154756.GW98604@atomide.com>
- <20180508155405.GX98604@atomide.com>
- <20180508164904.GZ98604@atomide.com>
- <20180509131003.GC2285@localhost>
- <20180509135706.GB98604@atomide.com>
- <20180517100948.GI30172@localhost>
- <20180517171038.GL98604@atomide.com>
- <20180521134830.GR30172@localhost>
- <20180521154832.GY98604@atomide.com>
- <20180524091742.GZ30172@localhost>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/5] gpio: syscon: Add gpio-syscon for rockchip
+Date: Thu, 24 May 2018 08:38:48 -0500
+Message-ID: <CAL_JsqKO+1KpESJ1E58QcfWoNOpfVw6M_JVkAruZhFF5thEg7g@mail.gmail.com>
+References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn>
+ <1685755.J6GI985WX3@diego> <CAL_Jsq+VBspzCaLD2Wy=fyC-S+LKGZbVsB+b+Etkx91ioXOCuQ@mail.gmail.com>
+ <3307687.qJF5Pr3uHG@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180524091742.GZ30172@localhost>
+In-Reply-To: <3307687.qJF5Pr3uHG@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Levin Du <djw@t-chip.com.cn>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Johan Hovold <johan@kernel.org> [180524 09:20]:
-> On Mon, May 21, 2018 at 08:48:32AM -0700, Tony Lindgren wrote:
-> > 
-> > Yes the bug for closed ports needs to be fixed for sure.
-> 
-> I did some forensic on this and it seems this problem has "always" been
-> there. Specifically, closed ports have never been runtime suspended
-> unless a non-negative autosuspend delay has been set by user space since
-> fcdca75728ac ("ARM: OMAP2+: UART: Add runtime pm support for omap-serial
-> driver") which was merged seven years ago.
+On Thu, May 24, 2018 at 7:07 AM, Heiko Stuebner <heiko@sntech.de> wrote:
+> Hi Rob,
 >
-> So while it would certainly be nice to save some more power by default,
-> this would really be a new feature rather than a bug or regression fix
-> (which reduces the urgency for this issue somewhat too).
+> Am Mittwoch, 23. Mai 2018, 21:53:53 CEST schrieb Rob Herring:
+>> On Wed, May 23, 2018 at 10:12 AM, Heiko St=C3=BCbner <heiko@sntech.de> w=
+rote:
+>> > Am Mittwoch, 23. Mai 2018, 16:43:07 CEST schrieb Rob Herring:
+>> >> On Tue, May 22, 2018 at 9:02 PM, Levin Du <djw@t-chip.com.cn> wrote:
+>> >> > On 2018-05-23 2:02 AM, Rob Herring wrote:
+>> >> >> On Fri, May 18, 2018 at 11:52:05AM +0800, djw@t-chip.com.cn wrote:
+>> >> >>> From: Levin Du <djw@t-chip.com.cn>
+>> >> >>>
+>> >> >>> Some GPIOs sit in the GRF_SOC_CON registers of Rockchip SoCs,
+>> >> >>> which do not belong to the general pinctrl.
+>> >> >>>
+>> >> >>> Adding gpio-syscon support makes controlling regulator or
+>> >> >>> LED using these special pins very easy by reusing existing
+>> >> >>> drivers, such as gpio-regulator and led-gpio.
+>> >> >>>
+>> >> >>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+>> >> >>>
+>> >> >>> ---
+>> >> >>>
+>> >> >>> Changes in v2:
+>> >> >>> - Rename gpio_syscon10 to gpio_mute in doc
+>> >> >>>
+>> >> >>> Changes in v1:
+>> >> >>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
+>> >> >>> - Add doc rockchip,gpio-syscon.txt
+>> >> >>>
+>> >> >>>   .../bindings/gpio/rockchip,gpio-syscon.txt         | 41
+>> >> >>>
+>> >> >>> ++++++++++++++++++++++
+>> >> >>>
+>> >> >>>   drivers/gpio/gpio-syscon.c                         | 30
+>> >> >>>
+>> >> >>> ++++++++++++++++
+>> >> >>>
+>> >> >>>   2 files changed, 71 insertions(+)
+>> >> >>>   create mode 100644
+>> >> >>>
+>> >> >>> Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+>> >> >>>
+>> >> >>> diff --git
+>> >> >>> a/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+>> >> >>> b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
+>> >> >>> new file mode 100644
+>> >> >>> index 0000000..b1b2a67
+>> >> >>> --- /dev/null
+>> >> >>> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon=
+.txt
+>> >> >>> @@ -0,0 +1,41 @@
+>> >> >>> +* Rockchip GPIO support for GRF_SOC_CON registers
+>> >> >>> +
+>> >> >>> +Required properties:
+>> >> >>> +- compatible: Should contain "rockchip,gpio-syscon".
+>> >> >>> +- gpio-controller: Marks the device node as a gpio controller.
+>> >> >>> +- #gpio-cells: Should be two. The first cell is the pin number a=
+nd
+>> >> >>> +  the second cell is used to specify the gpio polarity:
+>> >> >>> +    0 =3D Active high,
+>> >> >>> +    1 =3D Active low.
+>> >> >>
+>> >> >> There's no need for this child node. Just make the parent node a g=
+pio
+>> >> >> controller.
+>> >> >>
+>> >> >> Rob
+>> >> >
+>> >> > Hi Rob, it is not clear to me. Do you suggest that the grf node sho=
+uld be
+>> >> > a
+>> >> > gpio controller,
+>> >> > like below?
+>> >> >
+>> >> > +    grf: syscon at ff100000 {
+>> >> > +        compatible =3D "rockchip,gpio-syscon", "rockchip,rk3328-gr=
+f",
+>> >> > "syscon", "simple-mfd";
+>> >>
+>> >> Yes, but drop "rockchip,gpio-syscon" and "simple-mfd".
+>> >
+>> > I would disagree quite a bit here. The grf are the "general register f=
+iles",
+>> > a bunch of registers used for quite a lot of things, and so it seems
+>> > among other users, also a gpio-controller for some more random pins
+>> > not controlled through the regular gpio controllers.
+>> >
+>> > For a more fully stocked grf, please see
+>> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/arch/arm/boot/dts/rk3288.dtsi#n855
+>> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/arch/arm64/boot/dts/rockchip/rk3399.dtsi#n1338
+>> >
+>> > So the gpio controller should definitly also be a subnode.
+>>
+>> Sigh, yes, if there are a bunch of functions needing subnodes like the
+>> above, then yes that makes sense. But that's not what has been
+>> presented. Please make some attempt at defining *all* the functions.
+>> An actual binding would be nice, but I'll settle for just a list of
+>> things. The list should have functions that have DT dependencies (like
+>> clocks for phys in the above) because until you do, you don't need
+>> child nodes.
+>
+> That's the problem with the Rockchip-GRF, you only realize its content
+> when implementing specific features.
+>
+> Like on the rk3399 the table of the register-list of the GRF alone is 11
+> pages long with the register details tables taking up another 230 pages.
+> And functional description is often somewhat thin.
 
-Yes it's been there since the start.
+But surely one can scan thru it and have some clue what functions
+there are. For example, does this chip have phy registers in GRF?
 
-> > > > > 	2. aggressive serial RPM, where the controller is allowed to
-> > > > > 	   suspend while the port is open even though this may result in
-> > > > > 	   lost characters when waking up on incoming data
-> > > > 
-> > > > In this case it seems that the only thing needed is to just
-> > > > configure the autosuspend delay for the parent port. The use of
-> > > > -1 has been around since the start of runtime PM AFAIK, so maybe
-> > > > we should just document it. I guess we could also introduce
-> > > > pm_runtime_block_autoidle_unless_configured() :)
-> > > 
-> > > The implications of a negative autosuspend delay are already documented
-> > > (in Documentation/power/runtime_pm.txt); it's just the omap drivers that
-> > > gets it wrong when trying to do things which aren't currently supported
-> > > (and never have been).
-> > > 
-> > > So I still think we need a new mechanism for this.
-> > 
-> > Well if you have some better mechanism in mind let's try it out. Short of
-> > sprinkling pm_runtime_force_suspend/resume calls all over, I'm out of ideas
-> > right now.
-> 
-> Yeah, that would be too much of a hack and likely wouldn't work either
-> (and we really should do away with those _force calls altogether).
-> 
-> I've been thinking a bit too much about this already, but it may be
-> possible to use the pm QoS framework for this. A resume latency can be
-> set through sysfs where "n/a" is defined to mean "no latency accepted"
-> (i.e. controller remains always-on while port is open) and "0" means
-> "any latency accepted" (i.e. omap aggressive serial RPM is allowed).
+> So I'm not sure I fully understand what you're asking, but in general
+> we define the bindings for sub-devices when tackling these individual
+> components, see for example
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+?id=3D72580a49a837c2c7da83f698c00592eac41537d8
 
-Oh yeah, PM QoS might work here!
+Yes, and in that case it makes sense. The individual functions
+themselves have resources defined in DT like clocks. What I don't want
+to see are child nodes defining *only* a compatible and any provider
+properties (e.g. #gpio-cells). The only reason to do that is to make
+Linux bind a driver, but DT is not a list of drivers to bind.
 
-> Now, implementing this may get a little tricky as we want to be able to
-> change this setting on the fly (consider consoles) and we need to figure
-> out the interaction with serdev (user space should probably not be
-> allowed to request a resume latency for ports used by serdev).
+This is what I don't want to see:
 
-It sounds like Andy Shevchenko has a series of patches that just might
-allow us to make this all generic for Linux serial framework. So adding
-Andy to Cc, I don't think he has posted all the patches yet.
+syscon {
+  compatible =3D "foo,soc-sysctrl", "syscon", "simple-mfd";
+  reg =3D <...>;
+  clock-controller {
+    compatible =3D "foo,soc-sysctrl-clocks";
+    #clock-cells =3D <1>;
+  };
+  reset-controller {
+    compatible =3D "foo,soc-sysctrl-resets";
+    #reset-cells =3D <1>;
+  };
+  gpio {
+    compatible =3D "foo,soc-sysctrl-gpios";
+    #gpio-cells =3D <2>;
+    gpio-controller;
+  };
+};
 
-Andy, see the PM QoS comment above for console idling :)
+But rather:
 
-> I'd be happy to dig into this some more, but not in my spare time I'm
-> afraid.
+syscon {
+  compatible =3D "foo,soc-sysctrl";
+  reg =3D <...>;
+  #clock-cells =3D <1>;
+  #reset-cells =3D <1>;
+  #gpio-cells =3D <2>;
+  gpio-controller;
+};
 
-Indeed.
+> which also has a real phy-driver behind it and binding against that
+> subnode of the GRF simple-mfd.
+>
+> These are real IP blocks somewhere on the socs, with regular supplies
+> like resets, clocks etc in most cases. Only their controlling registers
+> got dumped into the GRF for some reason.
 
-> > > > > For normal ttys, we need a user-space interface for selecting between
-> > > > > the two, and for serdev we may want a way to select the RPM scheme from
-> > > > > within the kernel.
-> > > > > 
-> > > > > Note that with my serdev controller runtime PM patch, serdev core could
-> > > > > always opt for aggressive PM (as by default serdev core holds an RPM
-> > > > > reference for the controller while the port is open).
-> > > > 
-> > > > So if your serdev controller was to set the parent autosuspend
-> > > > delay on open() and set it back on close() this should work?
-> > > 
-> > > Is it really the job of a serdev driver to set the autosuspend delay of
-> > > a parent controller? Isn't this somethings which depends on the
-> > > characteristics of the controller (possibly configurable by user space)
-> > > such as the cost of runtime suspending and resuming?
-> > 
-> > Only in some cases will the serdev driver know it's safe to configure
-> > the parent controller. Configuring the parent controller from userspace
-> > works just fine as we've seen for years now.
-> 
-> Yes, user space may override the default settings provided by the serial
-> driver, but a serdev driver, in contrast, knows nothing about the
-> underlying serial hardware.
-> 
-> > > The patch I posted works with what we have today; if a parent serial
-> > > controller driver uses aggressive runtime PM by default or after having
-> > > been configured through sysfs to do so.
-> > 
-> > Yeah let's stick with configuring the parent controller from userspace
-> > for now at least.
-> 
-> Yep, status quo works for the time being (since this isn't a
-> regression). 
-> 
-> > > What I'm getting at here is that the delay should be set by the serial
-> > > driver implementing aggressive runtime PM. Then all we need is a
-> > > mechanism to determine whether an extra RPM reference should be taken at
-> > > tty open or not (configurable by user space, defaulting to yes).
-> > 
-> > OK yeah some additional on/off switch seems to be missing here.
-> 
-> As mentioned above, PM QoS resume latency may possibly be used, and
-> otherwise me may able to define a new (generic) QoS flag for this.
+I can tell that from your examples, but I can't tell that with this
+binding. For this binding, it looks like you are adding a sub-node for
+1 register bit. That wouldn't scale if you have 11 page register list.
 
-Good idea.
+> And in retrospect it really looks like we're doing something right,
+> because it seems these bindings seem quite stable over time.
+>
+>
+>> > The gpio in question is called "mute", so I'd think the gpio-syscon dr=
+iver
+>> > should just define a "rockchip,rk3328-gpio-mute" compatible and contai=
+n
+>> > all the register voodoo in the driver itself and not define it in the =
+dt.
+>>
+>> Is there really just one GPIO? If it has a defined function, then is
+>> it really GP? Can you control direction? I know Linus W doesn't like
+>> that kind of abuse of GPIO.
+>
+> looks like I convinced Linus that we're not abusing anything with this :-=
+) .
 
-> > > Specifically, the serial drivers themselves would always use
-> > > autosuspend and not have to deal with supporting the two RPM schemes
-> > > (normal vs aggressive runtime PM).
-> > 
-> > OK. So if I understand your idea right, we could have autosuspend timeout
-> > set to 3000ms in the 8250_omap.c but still default to RPM blocked?
-> > Then user can enable aggressive PM via /sys as desired, right?
-> 
-> Not RPM blocked; the ports must always be able to suspend when the port
-> is closed. But user space should be able to enable the aggressive
-> (active) runtime PM via sysfs independently of the autosuspend delay,
-> yes.
+Okay, but still my question remains: is it really only 1 GPIO?
+Dropping "-mute" would be more future proof if not.
 
-Yup OK, I like the PM QoS approach.
-
-Regards,
-
-Tony
+Rob
