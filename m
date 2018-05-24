@@ -1,94 +1,74 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 1/5] Documentation: DT: Add optional 'timeout-sec'
- property for sp805
-Date: Thu, 24 May 2018 14:52:21 +0100
-Message-ID: <16e0b756-d455-77f3-0560-75cacf7e3afa@arm.com>
-References: <1527014840-21236-1-git-send-email-ray.jui@broadcom.com>
- <1527014840-21236-2-git-send-email-ray.jui@broadcom.com>
- <af81ea74-fb80-11e2-7bdc-d3607bdbd46b@arm.com>
- <c542388f-e417-f624-ade1-95f9a2fc8a3b@broadcom.com>
- <20180523185944.GA9989@rob-hp-laptop>
- <4b0ec4ab-2d9e-1e4b-e294-c175805f4013@broadcom.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v12 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Thu, 24 May 2018 15:01:15 +0100
+Message-ID: <b4e221af-57f7-fd11-942d-6bc6f6b55a73@arm.com>
+References: <1527152242-31281-1-git-send-email-ilialin@codeaurora.org>
+ <1527152242-31281-2-git-send-email-ilialin@codeaurora.org>
+ <860be68b-cac0-9efc-b3c7-cc75b391a4c3@arm.com>
+ <000501d3f35f$96794910$c36bdb30$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4b0ec4ab-2d9e-1e4b-e294-c175805f4013@broadcom.com>
-Content-Language: en-GB
+In-Reply-To: <000501d3f35f$96794910$c36bdb30$@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, Rob Herring <robh@kernel.org>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+To: ilialin@codeaurora.org, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/18 20:29, Ray Jui wrote:
-> 
-> 
-> On 5/23/2018 11:59 AM, Rob Herring wrote:
->> On Wed, May 23, 2018 at 09:25:49AM -0700, Ray Jui wrote:
->>>
->>>
->>> On 5/23/2018 3:57 AM, Robin Murphy wrote:
->>>> On 22/05/18 19:47, Ray Jui wrote:
->>>>> Update the SP805 binding document to add optional 'timeout-sec'
->>>>> devicetree property
->>>>>
->>>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>>>> ---
->>>>>    Documentation/devicetree/bindings/watchdog/sp805-wdt.txt | 2 ++
->>>>>    1 file changed, 2 insertions(+)
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>>> b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>>> index edc4f0e..f898a86 100644
->>>>> --- a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>>> +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>>>> @@ -19,6 +19,8 @@ Required properties:
->>>>>    Optional properties:
->>>>>    - interrupts : Should specify WDT interrupt number.
->>>>> +- timeout-sec : Should specify default WDT timeout in seconds. If
->>>>> unset, the
->>>>> +                default timeout is 30 seconds
->>>>
->>>> According to the SP805 TRM, the default interval is dependent on the
->>>> rate of WDOGCLK, but would typically be a lot longer than that :/
->>>>
->>>> On a related note, anyone have any idea why we seem to have two subtly
->>>> different SP805 bindings defined?
->>
->> Sigh.
->>
->>> Interesting, I did not even know that until you pointed this out (and 
->>> it's
->>> funny that I found that I actually reviewed arm,sp805.txt internally in
->>> Broadcom code review).
->>>
->>> It looks like one was done by Bhupesh Sharma (sp805-wdt.txt) and the 
->>> other
->>> was done by Anup Patel (arm,sp805.txt). Both were merged at the same 
->>> time
->>> around March 20, 2016: 915c56bc01d6. I'd assume both were sent out at 
->>> around
->>> the same time.
->>>
->>> It sounds like we should definitely remove one of them. Given that
->>> sp805-wdt.txt appears to have more detailed descriptions on the use 
->>> of the
->>> clocks, should we remove arm,sp805.txt?
->>
->> Take whichever text you like, but I prefer filenames using the
->> compatible string and the correct string is 'arm,sp805' because '-wdt'
->> is redundant. You can probably safely just update all the dts files with
->> 'arm,sp805' and just remove 'arm,sp805-wdt' because it is not actually
->> used (as the ID registers are).
-> 
-> Okay. I'll consolidate everything into arm,sp805.txt. Will also fix all 
-> DTS files to use "arm,sp805". The fix for actual DTS files will be in a 
-> different patch series.
 
-Looking at the current in-tree DTs, for extra fun try to figure out 
-which binding each instance was following for the clocks. The most 
-common answer seems to be "neither"... :(
 
-Robin.
+On 24/05/18 14:03, ilialin@codeaurora.org wrote:
+> 
+> 
+
+[...]
+
+>>> +
+>>> +	ret = PTR_ERR_OR_ZERO(platform_device_register_simple(
+>>> +		"qcom-cpufreq-kryo", -1, NULL, 0));
+>>
+>>
+>> You simply can't do this unconditionally here. This will blow up on platforms
+>> where this driver is not supposed to work. The probe will be called on non-
+>> QCOM or non-Kryo QCOM platforms and I reckon it will crash trying to
+>> execute something in qcom_smem_get.
+> 
+> What do you mean by 'unconditionally'?
+
+Why should you even add/register a device "qcom-cpufreq-kryo" on other
+platforms. Drivers can get registered, but only devices that are present
+or required by the platform need to be registered.
+
+> The driver depends on the smem and nvmem drivers, which depend on ARCH_QCOM:
+>  +	depends on QCOM_QFPROM
+>  +	depends on QCOM_SMEM
+> 
+
+Sure, but we have something called single image for all ARM64 platforms.
+May be QCOM still used to tweeking config to build binary for your
+particular mobile platform but the distro kernel need single binary to
+work on all platforms. We have moved far away from platform specific
+builds long back now IIRC.
+
+> And if SMEM read in the probe returns something other than Kryo, it will exit.
+> 
+
+Check what this driver does ?
+
+	msm_id = qcom_smem_get(QCOM_SMEM_HOST_ANY, MSM_ID_SMEM, &len);
+	msm_id++;
+	switch ((enum _msm_id)*msm_id)
+
+I think it *will and should* crash here ? You need to check the return
+value for sure. But since qcom_smem_get return -EPROBE_DEFER, we keep
+retrying even on non QCOM platforms which is something I would like to
+avoid.
+
+Therefore that's not the main concern. Why do I have to see
+"qcom-cpufreq-kryo" device registered on my non QCOM platform ?
+
+-- 
+Regards,
+Sudeep
