@@ -1,451 +1,64 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Thu, 24 May 2018 10:46:27 +0200
-Message-ID: <2d8107f0e6568512d691e9ea25a1e4e5@agner.ch>
-References: <cover.1526990589.git.stefan@agner.ch>
- <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
- <20180523161810.0ed9fe80@bbrezillon>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/5] gpio: syscon: Add gpio-syscon for rockchip
+Date: Thu, 24 May 2018 10:47:59 +0200
+Message-ID: <CACRpkdYrHyGmMOi-qNTRxC=TR1wMnM30PxdHfNAApmZ0ucnjJg@mail.gmail.com>
+References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn>
+ <1685755.J6GI985WX3@diego>
+ <CACRpkdYCdNZ=ASw1uz4zKXC4AMd1EGbvG_G5K5cwSpH5eGPgKA@mail.gmail.com>
+ <2044895.BqI5yRtle6@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523161810.0ed9fe80@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2044895.BqI5yRtle6@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Wayne Chou <zxf@t-chip.com.cn>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Levin Du <djw@t-chip.com.cn>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-Thanks for the initial review! One small question below:
-
-On 23.05.2018 16:18, Boris Brezillon wrote:
-> Hi Stefan,
-> 
-> On Tue, 22 May 2018 14:07:06 +0200
-> Stefan Agner <stefan@agner.ch> wrote:
->> +
->> +struct tegra_nand {
->> +	void __iomem *regs;
->> +	struct clk *clk;
->> +	struct gpio_desc *wp_gpio;
->> +
->> +	struct nand_chip chip;
->> +	struct device *dev;
->> +
->> +	struct completion command_complete;
->> +	struct completion dma_complete;
->> +	bool last_read_error;
->> +
->> +	dma_addr_t data_dma;
->> +	void *data_buf;
->> +	dma_addr_t oob_dma;
->> +	void *oob_buf;
->> +
->> +	int cur_chip;
->> +};
-> 
-> This struct should be split in 2 structures: one representing the NAND
-> controller and one representing the NAND chip:
-> 
-> struct tegra_nand_controller {
-> 	struct nand_hw_control base;
-> 	void __iomem *regs;
-> 	struct clk *clk;
-> 	struct device *dev;
-> 	struct completion command_complete;
-> 	struct completion dma_complete;
-> 	bool last_read_error;
-> 	int cur_chip;
-> };
-> 
-> struct tegra_nand {
-> 	struct nand_chip base;
-> 	dma_addr_t data_dma;
-> 	void *data_buf;
-> 	dma_addr_t oob_dma;
-> 	void *oob_buf;
-> };
-
-Is there a particular reason why you would leave DMA buffers in the chip
-structure? It seems that is more a controller thing...
-
-If I move them, then struct tegra_nand would be basically empty. Can I
-just use struct nand_chip and have no driver specific chip abstraction?
-
---
-Stefan
-
-> 
->> +
->> +static inline struct tegra_nand *to_tegra_nand(struct mtd_info *mtd)
->> +{
->> +	struct nand_chip *chip = mtd_to_nand(mtd);
->> +
->> +	return nand_get_controller_data(chip);
-> 
-> then you can just do:
-> 
-> 	return container_of(chip, struct tegra_nand, base);
-> 
->> +}
->> +
->> +static int tegra_nand_ooblayout_16_ecc(struct mtd_info *mtd, int section,
->> +				       struct mtd_oob_region *oobregion)
->> +{
->> +	if (section > 0)
->> +		return -ERANGE;
->> +
->> +	oobregion->offset = 4;
->> +	oobregion->length = 4;
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_nand_ooblayout_16_free(struct mtd_info *mtd, int section,
->> +					struct mtd_oob_region *oobregion)
->> +{
->> +	if (section > 0)
->> +		return -ERANGE;
->> +
->> +	oobregion->offset = 8;
->> +	oobregion->length = 8;
->> +
->> +	return 0;
->> +}
-> 
-> ...
-> 
->> +
->> +static int tegra_nand_ooblayout_224_ecc(struct mtd_info *mtd, int section,
->> +				       struct mtd_oob_region *oobregion)
->> +{
->> +	if (section > 0)
->> +		return -ERANGE;
->> +
->> +	oobregion->offset = 4;
->> +	oobregion->length = 144;
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_nand_ooblayout_224_free(struct mtd_info *mtd, int section,
->> +					struct mtd_oob_region *oobregion)
->> +{
->> +	if (section > 0)
->> +		return -ERANGE;
->> +
->> +	oobregion->offset = 148;
->> +	oobregion->length = 76;
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct mtd_ooblayout_ops tegra_nand_oob_224_ops = {
->> +	.ecc = tegra_nand_ooblayout_224_ecc,
->> +	.free = tegra_nand_ooblayout_224_free,
->> +};
->> +
-> 
-> I'm pretty sure we can find a pattern here to avoid defining a new
-> mtd_ooblayout_ops for each OOB size.
-> 
->> +static irqreturn_t tegra_nand_irq(int irq, void *data)
->> +{
->> +	struct tegra_nand *nand = data;
->> +	u32 isr, dma;
->> +
->> +	isr = readl(nand->regs + ISR);
->> +	dma = readl(nand->regs + DMA_CTRL);
->> +	dev_dbg(nand->dev, "isr %08x\n", isr);
->> +
->> +	if (!isr && !(dma & DMA_CTRL_IS_DONE))
->> +		return IRQ_NONE;
->> +
->> +	if (isr & ISR_CORRFAIL_ERR)
->> +		nand->last_read_error = true;
->> +
->> +	if (isr & ISR_CMD_DONE)
->> +		complete(&nand->command_complete);
->> +
->> +	if (isr & ISR_UND)
->> +		dev_dbg(nand->dev, "FIFO underrun\n");
->> +
->> +	if (isr & ISR_OVR)
->> +		dev_dbg(nand->dev, "FIFO overrun\n");
->> +
->> +	/* handle DMA interrupts */
->> +	if (dma & DMA_CTRL_IS_DONE) {
->> +		writel(dma, nand->regs + DMA_CTRL);
->> +		complete(&nand->dma_complete);
->> +	}
->> +
->> +	/* clear interrupts */
->> +	writel(isr, nand->regs + ISR);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int tegra_nand_cmd(struct nand_chip *chip,
->> +			 const struct nand_subop *subop)
->> +{
->> +	const struct nand_op_instr *instr;
->> +	const struct nand_op_instr *instr_data_in = NULL;
->> +	struct mtd_info *mtd = nand_to_mtd(chip);
->> +	struct tegra_nand *nand = to_tegra_nand(mtd);
->> +	unsigned int op_id = -1, trfr_in_sz = 0, trfr_out_sz = 0, offset = 0;
->> +	bool first_cmd = true;
->> +	bool force8bit;
->> +	u32 cmd = 0;
->> +	u32 value;
->> +
->> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
->> +		unsigned int naddrs, i;
->> +		const u8 *addrs;
->> +		u32 addr1 = 0, addr2 = 0;
->> +
->> +		instr = &subop->instrs[op_id];
->> +
->> +		switch (instr->type) {
->> +		case NAND_OP_CMD_INSTR:
->> +			if (first_cmd) {
->> +				cmd |= CMD_CLE;
->> +				writel(instr->ctx.cmd.opcode, nand->regs + CMD_1);
->> +			} else {
->> +				cmd |= CMD_SEC_CMD;
->> +				writel(instr->ctx.cmd.opcode, nand->regs + CMD_2);
->> +			}
->> +			first_cmd = false;
->> +			break;
->> +		case NAND_OP_ADDR_INSTR:
->> +			offset = nand_subop_get_addr_start_off(subop, op_id);
->> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
->> +			addrs = &instr->ctx.addr.addrs[offset];
->> +
->> +			cmd |= CMD_ALE | CMD_ALE_SIZE(naddrs);
->> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
->> +				addr1 |= *addrs++ << (8 * i);
->> +			naddrs -= i;
->> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
->> +				addr2 |= *addrs++ << (8 * i);
->> +			writel(addr1, nand->regs + ADDR_1);
->> +			writel(addr2, nand->regs + ADDR_2);
->> +			break;
->> +
->> +		case NAND_OP_DATA_IN_INSTR:
->> +			trfr_in_sz = nand_subop_get_data_len(subop, op_id);
->> +			offset = nand_subop_get_data_start_off(subop, op_id);
->> +
->> +			cmd |= CMD_TRANS_SIZE(trfr_in_sz) | CMD_PIO | CMD_RX | CMD_A_VALID;
->> +
->> +			instr_data_in = instr;
->> +			break;
->> +
->> +		case NAND_OP_DATA_OUT_INSTR:
->> +			trfr_out_sz = nand_subop_get_data_len(subop, op_id);
->> +			offset = nand_subop_get_data_start_off(subop, op_id);
->> +			trfr_out_sz = min_t(size_t, trfr_out_sz, 4);
->> +
->> +			cmd |= CMD_TRANS_SIZE(trfr_out_sz) | CMD_PIO | CMD_TX | CMD_A_VALID;
->> +
->> +			memcpy(&value, instr->ctx.data.buf.out + offset, trfr_out_sz);
->> +			writel(value, nand->regs + RESP);
->> +
->> +			break;
->> +		case NAND_OP_WAITRDY_INSTR:
->> +			cmd |= CMD_RBSY_CHK;
->> +			break;
->> +
->> +		}
->> +	}
->> +
->> +
->> +	cmd |= CMD_GO | CMD_CE(nand->cur_chip);
->> +	writel(cmd, nand->regs + CMD);
->> +	wait_for_completion(&nand->command_complete);
->> +
->> +	if (instr_data_in) {
->> +		u32 value;
->> +		size_t n = min_t(size_t, trfr_in_sz, 4);
->> +
->> +		value = readl(nand->regs + RESP);
->> +		memcpy(instr_data_in->ctx.data.buf.in + offset, &value, n);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct nand_op_parser tegra_nand_op_parser = NAND_OP_PARSER(
->> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
->> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
->> +		NAND_OP_PARSER_PAT_ADDR_ELEM(true, 8),
->> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
->> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true)),
->> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
->> +		NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, 4)),
->> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
->> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
->> +		NAND_OP_PARSER_PAT_ADDR_ELEM(true, 8),
->> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
->> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
->> +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(true, 4)),
->> +	);
->> +
->> +static int tegra_nand_exec_op(struct nand_chip *chip,
->> +			     const struct nand_operation *op,
->> +			     bool check_only)
->> +{
->> +	return nand_op_parser_exec_op(chip, &tegra_nand_op_parser, op,
->> +				      check_only);
->> +}
-> 
-> Missing empty line here.
-> 
->> +static void tegra_nand_select_chip(struct mtd_info *mtd, int chip)
->> +{
->> +	struct tegra_nand *nand = to_tegra_nand(mtd);
->> +
->> +	nand->cur_chip = chip;
->> +}
-> 
-> ...
-> 
->> +
->> +static void tegra_nand_setup_chiptiming(struct tegra_nand *nand)
->> +{
->> +	struct nand_chip *chip = &nand->chip;
->> +	int mode;
->> +
->> +	mode = onfi_get_async_timing_mode(chip);
->> +	if (mode == ONFI_TIMING_MODE_UNKNOWN)
->> +		mode = chip->onfi_timing_mode_default;
->> +	else
->> +		mode = fls(mode);
->> +
->> +	tegra_nand_setup_timing(nand, mode);
-> 
-> Hm, you shouldn't do that. Let the core select the timing mode for you,
-> and just implement the ->setup_data_interface() hook.
-> 
->> +}
->> +
->> +static int tegra_nand_probe(struct platform_device *pdev)
->> +{
->> +	struct reset_control *rst;
->> +	struct tegra_nand *nand;
->> +	struct nand_chip *chip;
->> +	struct mtd_info *mtd;
->> +	struct resource *res;
->> +	unsigned long value;
->> +	int irq, err = 0;
->> +
->> +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
->> +	if (!nand)
->> +		return -ENOMEM;
->> +
->> +	nand->dev = &pdev->dev;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(nand->regs))
->> +		return PTR_ERR(nand->regs);
->> +
->> +	irq = platform_get_irq(pdev, 0);
->> +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
->> +			       dev_name(&pdev->dev), nand);
->> +	if (err)
->> +		return err;
->> +
->> +	rst = devm_reset_control_get(&pdev->dev, "nand");
->> +	if (IS_ERR(rst))
->> +		return PTR_ERR(rst);
->> +
->> +	nand->clk = devm_clk_get(&pdev->dev, "nand");
->> +	if (IS_ERR(nand->clk))
->> +		return PTR_ERR(nand->clk);
->> +
->> +	nand->wp_gpio = gpiod_get_optional(&pdev->dev, "wp-gpios",
->> +					   GPIOD_OUT_HIGH);
->> +	if (IS_ERR(nand->wp_gpio))
->> +		return PTR_ERR(nand->wp_gpio);
->> +
->> +	err = clk_prepare_enable(nand->clk);
->> +	if (err)
->> +		return err;
->> +
->> +	reset_control_assert(rst);
->> +	udelay(2);
->> +	reset_control_deassert(rst);
->> +
->> +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
->> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
->> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
->> +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
->> +	writel(value, nand->regs + HWSTATUS_MASK);
->> +
->> +	init_completion(&nand->command_complete);
->> +	init_completion(&nand->dma_complete);
->> +
->> +	/* clear interrupts */
->> +	value = readl(nand->regs + ISR);
->> +	writel(value, nand->regs + ISR);
->> +
->> +	writel(DMA_CTRL_IS_DONE, nand->regs + DMA_CTRL);
->> +
->> +	/* enable interrupts */
->> +	value = IER_UND | IER_OVR | IER_CMD_DONE | IER_ECC_ERR | IER_GIE;
->> +	writel(value, nand->regs + IER);
->> +
->> +	/* reset config */
->> +	writel(0, nand->regs + CFG);
->> +
->> +	chip = &nand->chip;
->> +	mtd = nand_to_mtd(chip);
->> +
->> +	mtd->dev.parent = &pdev->dev;
->> +	mtd->name = "tegra_nand";
->> +	mtd->owner = THIS_MODULE;
->> +
->> +	nand_set_flash_node(chip, pdev->dev.of_node);
->> +	nand_set_controller_data(chip, nand);
->> +
->> +	chip->options = NAND_NO_SUBPAGE_WRITE;
->> +	chip->exec_op = tegra_nand_exec_op;
->> +	chip->select_chip = tegra_nand_select_chip;
->> +	tegra_nand_setup_timing(nand, 0);
->> +
->> +	err = nand_scan_ident(mtd, 1, NULL);
->> +	if (err)
->> +		goto err_disable_clk;
->> +
->> +	if (chip->bbt_options & NAND_BBT_USE_FLASH)
->> +		chip->bbt_options |= NAND_BBT_NO_OOB;
->> +
->> +	nand->data_buf = dmam_alloc_coherent(&pdev->dev, mtd->writesize,
->> +					    &nand->data_dma, GFP_KERNEL);
->> +	if (!nand->data_buf) {
->> +		err = -ENOMEM;
->> +		goto err_disable_clk;
->> +	}
->> +
->> +	nand->oob_buf = dmam_alloc_coherent(&pdev->dev, mtd->oobsize,
->> +					    &nand->oob_dma, GFP_KERNEL);
->> +	if (!nand->oob_buf) {
->> +		err = -ENOMEM;
->> +		goto err_disable_clk;
->> +	}
->> +
->> +	chip->ecc.mode = NAND_ECC_HW;
->> +	chip->ecc.size = 512;
->> +	chip->ecc.read_page = tegra_nand_read_page;
->> +	chip->ecc.write_page = tegra_nand_write_page;
-> 
-> I'd like to have raw accessors implemented here.
-> 
-> That was just a quick review focusing mainly on architectural issues so
-> that you can start working on a v2.
-> 
-> Regards,
-> 
-> Boris
+T24gVGh1LCBNYXkgMjQsIDIwMTggYXQgMTA6MzUgQU0sIEhlaWtvIFN0w7xibmVyIDxoZWlrb0Bz
+bnRlY2guZGU+IHdyb3RlOgo+IEFtIERvbm5lcnN0YWcsIDI0LiBNYWkgMjAxOCwgMTA6Mjg6NDQg
+Q0VTVCBzY2hyaWViIExpbnVzIFdhbGxlaWo6Cj4+IE9uIFdlZCwgTWF5IDIzLCAyMDE4IGF0IDU6
+MTIgUE0sIEhlaWtvIFN0w7xibmVyIDxoZWlrb0BzbnRlY2guZGU+IHdyb3RlOgo+PiA+IFNvIHRo
+ZSBncGlvIGNvbnRyb2xsZXIgc2hvdWxkIGRlZmluaXRseSBhbHNvIGJlIGEgc3Vibm9kZS4KPj4g
+Pgo+PiA+IFRoZSBncGlvIGluIHF1ZXN0aW9uIGlzIGNhbGxlZCAibXV0ZSIsIHNvIEknZCB0aGlu
+ayB0aGUgZ3Bpby1zeXNjb24gZHJpdmVyCj4+ID4gc2hvdWxkIGp1c3QgZGVmaW5lIGEgInJvY2tj
+aGlwLHJrMzMyOC1ncGlvLW11dGUiIGNvbXBhdGlibGUgYW5kIGNvbnRhaW4KPj4gPiBhbGwgdGhl
+IHJlZ2lzdGVyIHZvb2RvbyBpbiB0aGUgZHJpdmVyIGl0c2VsZiBhbmQgbm90IGRlZmluZSBpdCBp
+biB0aGUgZHQuCj4+ID4KPj4gPiBTbyBpdCBzaG91bGQgcHJvYmFibHkgbG9vayBsaWtlCj4+ID4K
+Pj4gPiBncmY6IHN5c2NvbiBhdCBmZjEwMDAwMCB7Cj4+ID4KPj4gPiAgICAgICAgIGNvbXBhdGli
+bGUgPSAicm9ja2NoaXAscmszMzI4LWdyZiIsICJzeXNjb24iLCAic2ltcGxlLW1mZCI7Cj4+ID4K
+Pj4gPiAgICAgICAgIFthbGwgdGhlIG90aGVyIHN5c2NvbiBzdWItZGV2aWNlc10KPj4gPgo+PiA+
+ICAgICAgICAgZ3Bpb19tdXRlOiBncGlvLW11dGUgewo+PiA+Cj4+ID4gICAgICAgICAgICAgICAg
+IGNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzI4LWdwaW8tbXV0ZSI7Cj4+ID4gICAgICAgICAg
+ICAgICAgIGdwaW8tY29udHJvbGxlcjsKPj4gPiAgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMg
+PSA8Mj47Cj4+ID4KPj4gPiAgICAgICAgIH07Cj4+Cj4+IEknbSBzY2VwdGljLgo+Pgo+PiBUaGF0
+IGRvZXNuJ3Qgc291bmQgbGlrZSAiZ2VuZXJhbCBwdXJwb3NlIGlucHV0IG91dHB1dCIgYXQgYWxs
+Lgo+Pgo+PiBJdCBzb3VuZHMgbGlrZSBzcGVjaWFsIHB1cnBvc2UsIGZvciBhIG11dGUgYnV0dG9u
+Lgo+Pgo+PiBEb2VzIGl0IHVzZSBJUlE/IEkgd291bGQgcmVjb21tZW5kIGltcGxlbWVudGluZwo+
+PiBkcml2ZXJzL2lucHV0L2tleWJvYXJkL3N5c2Nvbi1rZXlzLmMgaW4gdGhlIHNhbWUgdmVpbgo+
+PiBhcyBkcml2ZXJzL2xlZHMvbGVkcy1zeXNjb24uYyBzbyB5b3UgY2FuIGF2b2lkIGluZGlyZWN0
+aW9uCj4+IHRocm91Z2ggR1BJTyBmb3Igbm8gZ29vZCByZWFzb24gYXQgYWxsLgo+Cj4gVG8gcXVv
+dGUgTGV2aW4gZnJvbSB0aGUgb3RoZXIgbWFpbDoKPiAtLS0tLS0tLQo+IFRoZSAibXV0ZSIgcGlu
+IGlzIGEgb3V0cHV0IG9ubHkgR1BJTywgd2hpY2ggaXMgYWxyZWFkeSBzdXBwb3J0ZWQgYnkKPiBz
+ZXR0aW5nIGZsYWdzIGluIHRoZSBncGlvLXN5c2Nvbgo+ICAgZHJpdmVyLiBBbmQgeWVzLCB0aGlz
+IHBpbiBoYXMgYSBkZWZpbmVkIGZ1bmN0aW9uLCBidXQgY2FuIGFsc28gYmUgdXNlZAo+IGZvciBn
+ZW5lcmFsIHB1cnBvc2Ugb3BlcmF0aW9uLgo+IC0tLS0tLS0tCj4KPiBTbyB0byBzdW1tYXJpemUs
+IHRoZSBkb2N1bWVudGF0aW9uIGNhbGxzIGl0ICJtdXRlIiwgYnV0IGl0IGlzIHVzYWJsZSBhcwo+
+IGEgZ2VuZXJhbCBwaW4sIHdoaWNoIGlzIHRoZSByZWFzb24gTGV2aW4gaXMgd29ya2luZyBvbiBp
+dCAtIGJlY2F1c2Ugb24gaGlzCj4gYm9hcmQgdGhpcyBwaW4gaXMgdXNlZCB0byBzd2l0Y2ggYmV0
+d2VlbiB0d28gdm9sdGFnZXMgKGFrYSBhIGdwaW8tcmVndWxhdG9yKQo+IGZvciB0aGUgc2RtbWMg
+Y29udHJvbGxlciBbMy4zViArIDEuOFZdLgoKT0sgdGhlbiwgSSB3YXMgd3JvbmchIDopCgpHbyBh
+aGVhZCB3aXRoIHRoaXMsIHNvcnJ5IGZvciB0aGUgZnV6ei4KCllvdXJzLApMaW51cyBXYWxsZWlq
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
