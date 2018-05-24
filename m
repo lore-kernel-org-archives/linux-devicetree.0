@@ -1,52 +1,33 @@
-From: Vitaly Andrianov <vitalya@ti.com>
-Subject: [PATCH 3/3] ARM: dts: k2e: add dts node for k2e hw_rng driver
-Date: Thu, 24 May 2018 09:12:18 -0400
-Message-ID: <1527167538-29837-4-git-send-email-vitalya@ti.com>
-References: <1527167538-29837-1-git-send-email-vitalya@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v3 0/7] Add support for QCA8334 switch
+Date: Thu, 24 May 2018 15:17:38 +0200
+Message-ID: <20180524131738.GD24557@lunn.ch>
+References: <1527056424-14528-1-git-send-email-michal.vokac@ysoft.com>
+ <29ea7cdd-5690-e39a-a2ef-4f48fbcb7659@gmail.com>
+ <f8bf325c-77a5-d44b-34c3-93ea4b11fd84@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527167538-29837-1-git-send-email-vitalya@ti.com>
+Content-Disposition: inline
+In-Reply-To: <f8bf325c-77a5-d44b-34c3-93ea4b11fd84@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: vitalya@ti.com, m-karicheri2@ti.com
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <vokac.m@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, vivien.didelot@savoirfairelinux.com, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, michal.vokac@ysoft.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dts node for k2e hw_random generator driver
+> Thank you too Florian. And also big thank to you Andrew. You helped me
+> a lot to debug the RGMII issue. I have been stuck at that for more than
+> a month and would not resolve it without your help.
 
-Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- arch/arm/boot/dts/keystone-k2e-netcp.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+We are here to help. I also got stuck figuring out RGMII issues, so i
+know what it feels like...
+ 
+> As I have done this in a process of upgrading our BSP to a more recent
+> kernel, and hopefully mainline, I now need to move on to other parts of
+> the board.
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-index a17311c..1db17ec 100644
---- a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-@@ -225,3 +225,23 @@ netcp: netcp@24000000 {
- 		};
- 	};
- };
-+
-+sa_subsys: subsys@24080000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "simple-bus";
-+	ranges = <0 0x24080000 0x40000>;
-+
-+	sa_config: subsys@0 {
-+		compatible = "syscon";
-+		reg = <0x0 0x100>;
-+	};
-+
-+	rng@24000 {
-+		compatible = "ti,keystone-rng";
-+		reg = <0x24000 0x1000>;
-+		ti,syscon-sa-cfg = <&sa_config>;
-+		clocks = <&clksa>;
-+		clock-names = "fck";
-+	};
-+};
--- 
-2.7.4
+Do you think you can mainline the board? It would be nice to have an
+in kernel board using this switch. If you post the device tree
+patches, please Cc: me.
+
+	 Andrew
