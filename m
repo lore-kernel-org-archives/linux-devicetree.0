@@ -1,7 +1,7 @@
 From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH v2 4/9] ARM: dts: koelsch: Drop MTD partitioning from DT
-Date: Thu, 24 May 2018 17:07:16 +0200
-Message-ID: <20180524150721.28964-4-marek.vasut+renesas@gmail.com>
+Subject: [PATCH v2 7/9] ARM: dts: gose: Drop MTD partitioning from DT
+Date: Thu, 24 May 2018 17:07:19 +0200
+Message-ID: <20180524150721.28964-7-marek.vasut+renesas@gmail.com>
 References: <20180524150721.28964-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -29,30 +29,29 @@ To retain the original partitioning, assure you have enabled
 CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
 following to your kernel command line:
 
-  mtdparts=spi0.0:512k(loader),5632k(user),-(flash)
+  mtdparts=spi0.0:256k(loader),4m(user),-(flash)
 
 Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Simon Horman <horms+renesas@verge.net.au>
 Cc: Wolfram Sang <wsa@the-dreams.de>
 Cc: linux-renesas-soc@vger.kernel.org
 ---
-V2: Drop the @0 anchor from the commit message
+V2: Drop the @0 anchor from the commit message, use 4m
 ---
- arch/arm/boot/dts/r8a7791-koelsch.dts | 21 ---------------------
+ arch/arm/boot/dts/r8a7793-gose.dts | 21 ---------------------
  1 file changed, 21 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 8ab793d8b2fd..406d5d29e29c 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -724,27 +724,6 @@
- 		spi-cpha;
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index aa209f6e5d71..b2dd54fbe40c 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -676,27 +676,6 @@
  		spi-cpol;
+ 		spi-cpha;
  		m25p,fast-read;
 -
 -		partitions {
@@ -62,17 +61,17 @@ index 8ab793d8b2fd..406d5d29e29c 100644
 -
 -			partition@0 {
 -				label = "loader";
--				reg = <0x00000000 0x00080000>;
+-				reg = <0x00000000 0x00040000>;
 -				read-only;
 -			};
--			partition@80000 {
+-			partition@40000 {
 -				label = "user";
--				reg = <0x00080000 0x00580000>;
+-				reg = <0x00040000 0x00400000>;
 -				read-only;
 -			};
--			partition@600000 {
+-			partition@440000 {
 -				label = "flash";
--				reg = <0x00600000 0x03a00000>;
+-				reg = <0x00440000 0x03bc0000>;
 -			};
 -		};
  	};
