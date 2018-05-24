@@ -1,65 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 07/24] drm/lima: add mali 4xx GPU hardware regs
-Date: Thu, 24 May 2018 09:31:33 -0500
-Message-ID: <CAL_Jsq+kyYX1hQMjYDHwBJL3+YOkH1h4ei9GdkvYgFnWvRXO8A@mail.gmail.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180518092815.25280-8-yuq825@gmail.com>
- <20180523172401.GC17409@rob-hp-laptop>
- <CAKGbVbsa1O6owhhpA2qw2ZCyGdhmmF=uN9s+UKLJspoN_dwNSg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] arcnet: com20020: bindings for smsc com20020
+Date: Thu, 24 May 2018 09:36:36 -0500
+Message-ID: <CAL_JsqL1M3SuH_cJGUhh0+Xg+UYDjAc-=a+USENOKznvWib1Ng@mail.gmail.com>
+References: <20180517130628.2770-1-andrea.greco.gapmilano@gmail.com>
+ <20180523164931.GA3635@rob-hp-laptop> <CAPoXtQJYmfk+-4qOpbEetUAdVwTgVPmk=mQaFv7yLF2V2dO=4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKGbVbsa1O6owhhpA2qw2ZCyGdhmmF=uN9s+UKLJspoN_dwNSg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Qiang Yu <yuq825@gmail.com>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPoXtQJYmfk+-4qOpbEetUAdVwTgVPmk=mQaFv7yLF2V2dO=4A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrea Greco <andrea.greco.gapmilano@gmail.com>
+Cc: "Tobin C. Harding" <tobin@apporbit.com>, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMjMsIDIwMTggYXQgNzo1OCBQTSwgUWlhbmcgWXUgPHl1cTgyNUBnbWFpbC5j
-b20+IHdyb3RlOgo+IE9uIFRodSwgTWF5IDI0LCAyMDE4IGF0IDE6MjQgQU0sIFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOgo+PiBPbiBGcmksIE1heSAxOCwgMjAxOCBhdCAwNToy
-Nzo1OFBNICswODAwLCBRaWFuZyBZdSB3cm90ZToKPj4+IEZyb206IExpbWEgUHJvamVjdCBEZXZl
-bG9wZXJzIDxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPgo+Pj4KPj4+IFNpZ25lZC1v
-ZmYtYnk6IFFpYW5nIFl1IDx5dXE4MjVAZ21haWwuY29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogSGVp
-a28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4+IC0tLQo+Pj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9saW1hL2xpbWFfcmVncy5oIHwgMzA0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysK
-Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMzA0IGluc2VydGlvbnMoKykKPj4+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9yZWdzLmgKPj4+Cj4+PiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9yZWdzLmggYi9kcml2ZXJzL2dwdS9kcm0vbGlt
-YS9saW1hX3JlZ3MuaAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAw
-MDAwMC4uZWE0YTM3ZDY5Yjk4Cj4+PiAtLS0gL2Rldi9udWxsCj4+PiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vbGltYS9saW1hX3JlZ3MuaAo+Pj4gQEAgLTAsMCArMSwzMDQgQEAKPj4+ICsvKgo+Pj4g
-KyAqIENvcHlyaWdodCAoQykgMjAxMC0yMDE3IEFSTSBMaW1pdGVkLiBBbGwgcmlnaHRzIHJlc2Vy
-dmVkLgo+Pgo+PiBJIGFzc3VtZSB0aGlzIGNhbWUgZnJvbSBBUk0ncyBvdXQgb2YgdHJlZSBrZXJu
-ZWwgZHJpdmVyICBzb3VyY2UuIFlvdQo+PiBzaG91bGQgZG9jdW1lbnQgd2hhdCBpdCB3YXMgYmFz
-ZWQgb24uCj4KPiBZZXMsIEknbGwgY29tbWVudCBpdC4KPgo+Pgo+Pj4gKyAqIENvcHlyaWdodCAo
-QykgMjAxNy0yMDE4IExpbWEgUHJvamVjdAo+Pgo+PiBJQU5BTCwgYnV0IGlzIExpbWEgUHJvamVj
-dCBhIGxlZ2FsIGVudGl0eSB0aGF0IGNhbiBjb3B5cmlnaHQgdGhpbmdzPwo+Cj4gSSBoZWFyZCB0
-aGlzIHNlY29uZCB0aW1lLiBTZWVtcyBpdCdzIG5vdCBhIGdvb2QgaWRlYSB0byB3cml0ZSBsaWtl
-Cj4gdGhpcy4gSSdsbCBjaGFuZ2UgdGhlIGNvcHlyaWdodCBuZXh0IHRpbWUuCj4KPj4KPj4+ICsg
-Kgo+Pj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlIGFuZCBpcyBwcm92aWRlZCB0
-byB5b3UgdW5kZXIKPj4+ICsgKiB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBM
-aWNlbnNlIHZlcnNpb24gMiBhcwo+Pj4gKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2Fy
-ZSBGb3VuZGF0aW9uLCBhbmQgYW55IHVzZSBieQo+Pj4gKyAqIHlvdSBvZiB0aGlzIHByb2dyYW0g
-aXMgc3ViamVjdCB0byB0aGUgdGVybXMgb2Ygc3VjaCBHTlUKPj4+ICsgKiBsaWNlbmNlLgo+Pj4g
-KyAqCj4+PiArICogQSBjb3B5IG9mIHRoZSBsaWNlbmNlIGlzIGluY2x1ZGVkIHdpdGggdGhlIHBy
-b2dyYW0sIGFuZAo+Pj4gKyAqIGNhbiBhbHNvIGJlIG9idGFpbmVkIGZyb20gRnJlZSBTb2Z0d2Fy
-ZSBGb3VuZGF0aW9uLCBJbmMuLAo+Pj4gKyAqIDUxIEZyYW5rbGluIFN0cmVldCwgRmlmdGggRmxv
-b3IsIEJvc3RvbiwgTUEgIDAyMTEwLTEzMDEsIFVTQS4KPj4KPj4gWW91IGNhbiB1c2UgU1BEWCB0
-YWdzIGluc3RlYWQuCj4KPiBJZiB1c2luZyBTUERYLCBjYW4gSSBkcm9wIHRoZXNlIGxpY2Vuc2Ug
-dGV4dD8gSG93IGFib3V0IHRoZSBjb3B5cmlnaHQKPiB0ZXh0IGFzIEkgc2VlIFNQRFggaGVhZGVy
-IGRvZXNuJ3QgaGF2ZSBpdD8KCkxpY2Vuc2UgYW5kIGNvcHlyaWdodCBhcmUgMiBpbmRlcGVuZGVu
-dCB0aGluZ3MuIFllcywgeW91IGNhbiBkcm9wIHRoZQpsaWNlbnNlIHRleHQsIGJ1dCBrZWVwIHRo
-ZSBjb3B5cmlnaHRzLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On Wed, May 23, 2018 at 5:17 PM, Andrea Greco
+<andrea.greco.gapmilano@gmail.com> wrote:
+> On 05/23/2018 06:49 PM, Rob Herring wrote:
+>> One typo, otherwise:
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Yes typo, Fixed over my branch, sorry for that...
+> I expect a comment about bps, Bit per Second, used in `bus-speed-bps`
+> You will add it by your self in property-units.txt, or required my patch?
+
+If you want to add it, that's fine. But it's really not something that
+comes up often. For UARTs, there's already the "current-speed"
+property and most other things I can think of use Hz to express
+speeds.
+
+Rob
