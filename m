@@ -1,89 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 8/9] regulator: bd71837: BD71837 PMIC regulator driver
-Date: Thu, 24 May 2018 15:14:27 +0100
-Message-ID: <20180524141427.GU4828@sirena.org.uk>
-References: <20180524060036.GI4249@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LtN0I0gXzHUftVCi"
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [PATCH v2 0/5] crypto: ccree: cleanup, fixes and R-Car enabling
+Date: Thu, 24 May 2018 15:19:05 +0100
+Message-ID: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180524060036.GI4249@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>
+Cc: Ofir Drang <ofir.drang@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patch set enables the use of CryptoCell found in some Renesas R-Car
+Salvator-X boards and fixes some driver issues uncovered that prevented
+to work properly.
 
---LtN0I0gXzHUftVCi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes from v1:
+- Properly fix the bug that caused us to read a bad signature register
+  rather than dropping the check
+- Proper DT fields as indicated by Geert Uytterhoeven.
+- Better clock enabling as suggested by Geert Uytterhoeven.
 
-On Thu, May 24, 2018 at 09:00:36AM +0300, Matti Vaittinen wrote:
+Note! the last two patches in the set depend on the
+"clk: renesas: r8a7795: Add CR clock" patch from Geert Uytterhoeven.
 
-> @@ -0,0 +1,683 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2018 ROHM Semiconductors */
-> +/*
-> + * bd71837-regulator.c ROHM BD71837MWV regulator driver
-> + */
-> +#include <linux/kernel.h>
+Gilad Ben-Yossef (5):
+  crypto: ccree: correct host regs offset
+  crypto: ccree: better clock handling
+  crypto: ccree: silence debug prints
+  clk: renesas: r8a7795: add ccree clock bindings
+  arm64: dts: renesas: r8a7795: add ccree binding
 
-Make the entire comment block a C++ comment so it looks more intentional
-and add a blank line before the headers for legibility.
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi |  9 +++++++++
+ drivers/clk/renesas/r8a7795-cpg-mssr.c   |  1 +
+ drivers/crypto/ccree/cc_debugfs.c        |  7 +++++--
+ drivers/crypto/ccree/cc_driver.c         | 34 ++++++++++++++++++++++++++------
+ drivers/crypto/ccree/cc_driver.h         |  2 ++
+ drivers/crypto/ccree/cc_host_regs.h      |  6 ++++--
+ 6 files changed, 49 insertions(+), 10 deletions(-)
 
-> +static int bd71837_regulator_set_regmap(struct regulator_dev *rdev, int set)
-> +{
-> +	int ret = -EINVAL;
-> +	struct bd71837_pmic *pmic = rdev->reg_data;
-> +
-> +	if (pmic) {
-> +		mutex_lock(&pmic->mtx);
-> +		if (!set)
-> +			ret = regulator_disable_regmap(rdev);
-> +		else
-> +			ret = regulator_enable_regmap(rdev);
-> +		mutex_unlock(&pmic->mtx);
-> +	}
-
-This looks very weird - why might we not have a parent PMIC, what is the
-lock doing and what is this wrapper function intended to do?  Similar
-issues apply to the voltage functions, if there's any need for this it
-needs to be better documented but it really doesn't look like a good
-idea.
-
-> +	err =
-> +	    regmap_update_bits(pmic->mfd->regmap, BD71837_REG_REGLOCK,
-> +			       (REGLOCK_PWRSEQ | REGLOCK_VREG), 0);
-> +	if (err) {
-> +		dev_err(&pmic->pdev->dev, "Failed to unlock PMIC (%d)\n", err);
-> +		goto err;
-> +	} else
-> +		dev_dbg(&pmic->pdev->dev, "%s: Unlocked lock register 0x%x\n",
-> +			__func__, BD71837_REG_REGLOCK);
-
-There's loads of coding style problems with this code, please refer to
-the coding style - indentation is weird and if there's { } on one side
-of an else it should be on both.
-
-> +		rdev = regulator_register(desc, &config);
-> +		if (IS_ERR(rdev)) {
-
-devm_regulator_regster()
-
---LtN0I0gXzHUftVCi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsGyMIACgkQJNaLcl1U
-h9BVuQf/cxnvFEfK8b/tJjG1FFbjWQlAQDE04Ti6c9LSrNP5jc7u1pzkBpmbqYH7
-lk+4NUzecWbgrqSNvKBQbERCeE1U+CXC/jAP+9kRiAOZBz2tHptA5wfUZT0nhhFn
-YU2J/99hDSDYfpt7rTfjXBG5ljXUrymJ/eWrzRGnrbRVSvnav3ViST7TJBdG23mt
-6nnhcAo9CrEjYgKCfOJPFXXmiukU0+aWSpwQA2+ygOBXZKk5dG+FSLpbgTHpEzWt
-ucQTwHEFPkQaEr/NubKHEeIetZ8nOoow7bd22gCswE+Thrtu2H9WLLYDldGmWXvc
-DxS/F8D740F4NXZfRhv3HN0YEKHPIQ==
-=upsr
------END PGP SIGNATURE-----
-
---LtN0I0gXzHUftVCi--
+-- 
+2.7.4
