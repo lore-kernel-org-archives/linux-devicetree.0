@@ -1,60 +1,51 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 5/6] spi: at91-usart: add driver for at91-usart as spi
-Date: Thu, 24 May 2018 19:16:28 +0100
-Message-ID: <20180524181628.GE4828@sirena.org.uk>
-References: <20180511103822.31698-1-radu.pirea@microchip.com>
- <20180511103822.31698-6-radu.pirea@microchip.com>
- <CAHp75Ve3Ugnjjm8EZkPQTZSvH1qad1e5SqjOn8zz5syHSQea_g@mail.gmail.com>
- <5a3930b867cf8c279953d08c5d5dd1d93113a43b.camel@microchip.com>
- <CAHp75VdRrL25Jgnbk64Qqc5RY3uJdcntJ3xwRdp3F+rRFeTHBA@mail.gmail.com>
- <c23cdde58b9f724f51787c6c38478df983be6efa.camel@microchip.com>
- <20180517045437.GE20254@sirena.org.uk>
- <0e6e71e2-f8ac-7889-0d81-8d8a4c15223d@microchip.com>
- <20180524175620.GB12093@piout.net>
+Subject: Re: [PATCH v2 1/8] driver core: make deferring probe after init
+ optional
+Date: Thu, 24 May 2018 19:18:34 +0100
+Message-ID: <20180524181834.GF4828@sirena.org.uk>
+References: <20180524175024.19874-1-robh@kernel.org>
+ <20180524175024.19874-2-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fzZfjcV6kaBgkq89"
+        protocol="application/pgp-signature"; boundary="27KoNqt0fmcl1zj/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180524175620.GB12093@piout.net>
+In-Reply-To: <20180524175024.19874-2-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Radu Pirea <radu.pirea@microchip.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---fzZfjcV6kaBgkq89
+--27KoNqt0fmcl1zj/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 24, 2018 at 07:56:20PM +0200, Alexandre Belloni wrote:
+On Thu, May 24, 2018 at 12:50:17PM -0500, Rob Herring wrote:
 
-> Back in 2014, I was suggesting using devm_gpio_request_one() in
-> of_spi_register_master(). That would take care of setting the direction
-> of the GPIO:
+> Subsystems or drivers may opt-in to this behavior by calling
+> driver_deferred_probe_check_init_done() instead of just returning
+> -EPROBE_DEFER. They may use additional information from DT or kernel's
+> config to decide whether to continue to defer probe or not.
 
-> https://www.spinics.net/lists/arm-kernel/msg351251.html
+Should userspace have some involvement in this decision?  It knows if
+it's got any intention of loading modules for example.  Kernel config
+checks might be good enough, though it's going to be a pain to work out
+if the relevant driver is built as a module for example.
 
-> I never took the time to create the patch and test though.
-
-Right, this'd be ideal but unfortunately it does mean we'd have to
-transition all the existing users that open code their requests which is
-a pain.  It'd be really nice if someone had the time/enthusiam to do it
-though.
-
---fzZfjcV6kaBgkq89
+--27KoNqt0fmcl1zj/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsHAXwACgkQJNaLcl1U
-h9ByOQgAhs9RFeiFQSgUep94tUUdJU85bZVBQRkfQiidVevSbmmgtz05neQXGEIW
-UxyKwshNRVCqV2cnNMKLrLCjLOMS46TdgEfUnkzWegJQ0vhwj+XJ+AWJtCPwFZaT
-CdROhNgbhE6zNCNJGNEc8kUNrAscKV/bllQh6M6SceLpddXqcnbtgdPF6+iOKAKh
-LDWT7nzUeX49b0zEmMfnoSHLBdpQjrQui4an3bllPpZ3XB0IipIHKX+gU0lqpYSw
-qzN8auPOdD1Wqk70KfWi/+PK1flmqlQ4d9eJEOf02/zLSG7p/BjjVBKmT60DkN9+
-sM0kLWPGAOrqz+msZG7H3CegweQ9Hw==
-=dq7H
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsHAfkACgkQJNaLcl1U
+h9DOLgf9HKYqvzG7WS+j0s6svb/ahcIJabCWBi7iW7mF8DoFBL23J9ZAz2s4f6oq
+3HLOOmJUX7Wb4FXg88m/wScvuwHaLlOceSF32LCzajnDOrGDIXD+fXQVd+u4WlF5
+/tUYOwdzrEBF0YXZ+6uZx/5mUnDxOTanTMrxC0dvMVhfR1JZC17DUmUStv/WrCN6
+/gNyHoiqLQZCaxcPOyE6KcKSsbOKSu9KdUj/ZrITgwGZ/4fYO5lRY3NurNLqwmis
+Yrxvh6DKIyvLtd7m4ws5YV1RtrgvB9M6OJlXaUqhBEB/EBlQT3t8mGFR+Ho2OZU2
+ChA7CiU8Y6j/ZfC2tBt97Bp6j+qhPg==
+=IvVb
 -----END PGP SIGNATURE-----
 
---fzZfjcV6kaBgkq89--
+--27KoNqt0fmcl1zj/--
