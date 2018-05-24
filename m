@@ -1,71 +1,67 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v3 2/6] Documentation: DT: Add optional 'timeout-sec'
- property for sp805
-Date: Thu, 24 May 2018 09:42:20 -0700
-Message-ID: <621dc488-2d8d-003b-9bd1-4de59e8d178b@broadcom.com>
-References: <1527120924-12131-1-git-send-email-ray.jui@broadcom.com>
- <1527120924-12131-3-git-send-email-ray.jui@broadcom.com>
- <20180524161628.GA28425@roeck-us.net>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH] arm64: dts: msm8916: fix Coresight ETF graph connections
+Date: Thu, 24 May 2018 10:32:46 -0600
+Message-ID: <CANLsYkz9tAH7mazz2LNCtoYsdH4f5bKfGWEnJHsgH0mK6vNMEg@mail.gmail.com>
+References: <20180508150952.24562-1-robh@kernel.org>
+ <20180508150952.24562-3-robh@kernel.org>
+ <CAL_JsqL8qBiJUMyUEcih07UoFSAghn6Amfo8OfY-pKU-QX2_mw@mail.gmail.com>
+ <20180524044853.713.23166@silver>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524161628.GA28425@roeck-us.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180524044853.713.23166@silver>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Ivan T. Ivanov" <iivanov.xz@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Brown <david.brown@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 5/24/2018 9:16 AM, Guenter Roeck wrote:
-> On Wed, May 23, 2018 at 05:15:20PM -0700, Ray Jui wrote:
->> Update the SP805 binding document to add optional 'timeout-sec'
->> devicetree property
+On 23 May 2018 at 22:48, Ivan T. Ivanov <iivanov.xz@gmail.com> wrote:
+> Quoting Rob Herring (2018-05-23 23:29:29)
+>> On Tue, May 8, 2018 at 10:09 AM, Rob Herring <robh@kernel.org> wrote:
+>> > The ETF input should be connected to the funnel output, and the ETF
+>> > output should be connected to the replicator input. The labels are wrong
+>> > and these got swapped:
+>> >
+>> > Warning (graph_endpoint): /soc/funnel@821000/ports/port@8/endpoint: graph connection to node '/soc/etf@825000/ports/port@1/endpoint' is not bidirectional
+>> > Warning (graph_endpoint): /soc/replicator@824000/ports/port@2/endpoint: graph connection to node '/soc/etf@825000/ports/port@0/endpoint' is not bidirectional
+>> >
+>> > Fixes: 7c10da373698 ("arm64: dts: qcom: Add msm8916 CoreSight components")
+>> > Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+>> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> > Cc: Andy Gross <andy.gross@linaro.org>
+>> > Cc: David Brown <david.brown@linaro.org>
+>> > Cc: linux-arm-msm@vger.kernel.org
+>> > Signed-off-by: Rob Herring <robh@kernel.org>
+>> > ---
+>> >  arch/arm64/boot/dts/qcom/msm8916.dtsi | 4 ++--
+>> >  1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->> ---
->>   Documentation/devicetree/bindings/watchdog/arm,sp805.txt | 2 ++
->>   1 file changed, 2 insertions(+)
+>> Ping. Still seeing warnings in -next for these.
 >>
->> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
->> index 0fa3629..1debea3 100644
->> --- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
->> +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
->> @@ -19,6 +19,8 @@ Required properties:
->>   
->>   Optional properties:
->>   - interrupts:  Should specify WDT interrupt number
->> +- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
->> +               default timeout in the driver is 30 seconds
-> 
-> "... the default timeout is determined by the driver" might be better.
-> If you want to mandate a default here (not sure if that is a good idea),
-> I would suggest to use something like "should be 30 seconds".
-> 
+>
+>  Hi Rob,
+>
+>  I no longer have access to this hardware and documentation.
+>  I am sure that Mathieu and friends will take care for verification
+>  of this patch :-)
 
-Okay. This can be changed to:
+The code triggers on the "slave-mode" property rather than the labels,
+so this patch has no effect on how a path is established.  I've tested
+this on a 410c and things look good.
 
-- timeout-sec: Should specify default WDT timeout in seconds. If unset, 
-the default timeout is determined by the driver.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Please advise how to proceed with this patch series. Should I make the 
-above modification and send out v4?
-
-Thanks,
-
-Ray
-
-> Guenter
-> 
->>   
->>   Example:
->>   	watchdog@66090000 {
->> -- 
->> 2.1.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>  Regards,
+>  Ivan
+>
