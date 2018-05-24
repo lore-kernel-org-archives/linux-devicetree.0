@@ -1,75 +1,27 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v3 2/2] gpu: drm/panel: Add DLC DLC0700YZG-1 panel
-Date: Wed, 23 May 2018 11:25:04 +0200
-Message-ID: <20180523092504.5142-3-m.felsch@pengutronix.de>
-References: <20180523092504.5142-1-m.felsch@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 5/7] pinctrl: mediatek: remove unused fields in struct mtk_eint_hw
+Date: Thu, 24 May 2018 09:40:31 +0200
+Message-ID: <CACRpkdYD-N7uLOZmYSKaTJpsa+8N3KStVRpKfR45j2OFveNveQ@mail.gmail.com>
+References: <cover.1526835466.git.sean.wang@mediatek.com> <72462fb7aab16463a42066998ac3b4bf35ada416.1526835466.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180523092504.5142-1-m.felsch@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <72462fb7aab16463a42066998ac3b4bf35ada416.1526835466.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KClRoaXMgcGF0Y2gg
-YWRkcyBzdXBwb3J0IGZvciBETEMgRExDMDcwMFlaRy0xIDEwMjR4NjAwIExWRFMgcGFuZWxzCnRv
-IHRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8
-cC56YWJlbEBwZW5ndXRyb25peC5kZT4KW20uZmVsc2NoQHBlbmd1dHJvbml4LmRlOiBmaXggdHlw
-byBpbiBjb21wYXRpYmxlIGR0LWJpbmRpbmddClttLmZlbHNjaEBwZW5ndXRyb25peC5kZTogYWRk
-IHByb3BlcnR5IGJpbmRpbmdzXQpTaWduZWQtb2ZmLWJ5OiBNYXJjbyBGZWxzY2ggPG0uZmVsc2No
-QHBlbmd1dHJvbml4LmRlPgotLS0KIC4uLi9kaXNwbGF5L3BhbmVsL2RsYyxkbGMwNzAweXpnLTEu
-dHh0ICAgICAgICB8IDEzICsrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2lt
-cGxlLmMgICAgICAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQs
-IDQ1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9kbGMsZGxjMDcwMHl6Zy0xLnR4dAoKZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2Rs
-YyxkbGMwNzAweXpnLTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvZGxjLGRsYzA3MDB5emctMS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
-ZXggMDAwMDAwMDAwMDAwLi5iZjA2YmIwMjViMDgKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9kbGMsZGxjMDcwMHl6Zy0x
-LnR4dApAQCAtMCwwICsxLDEzIEBACitETEMgRGlzcGxheSBDby4gRExDMDcwMFlaRy0xIDcuMCIg
-V1NWR0EgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxl
-OiBzaG91bGQgYmUgImRsYyxkbGMwNzAweXpnLTEiCistIHBvd2VyLXN1cHBseTogU2VlIHNpbXBs
-ZS1wYW5lbC50eHQKKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gcmVzZXQtZ3Bpb3M6IFNlZSBw
-YW5lbC1jb21tb24udHh0CistIGVuYWJsZS1ncGlvczogU2VlIHNpbXBsZS1wYW5lbC50eHQKKy0g
-YmFja2xpZ2h0OiBTZWUgc2ltcGxlLXBhbmVsLnR4dAorCitUaGlzIGJpbmRpbmcgaXMgY29tcGF0
-aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCitp
-biBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
-bmVsLXNpbXBsZS5jCmluZGV4IGNiZjFhYjQwNGVlNy4uYTkxNjc1NGIyYWZhIDEwMDY0NAotLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC04NTcsNiArODU3LDM1IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgcGFuZWxfZGVzYyBjaHVuZ2h3YV9jbGFhMTAxd2IwMSA9IHsKIAl9LAogfTsKIAor
-c3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBkbGNfZGxjMDcwMHl6Z18xX3RpbWlu
-ZyA9IHsKKwkucGl4ZWxjbG9jayA9IHsgNDUwMDAwMDAsIDUxMjAwMDAwLCA1NzAwMDAwMCB9LAor
-CS5oYWN0aXZlID0geyAxMDI0LCAxMDI0LCAxMDI0IH0sCisJLmhmcm9udF9wb3JjaCA9IHsgMTAw
-LCAxMDYsIDExMyB9LAorCS5oYmFja19wb3JjaCA9IHsgMTAwLCAxMDYsIDExMyB9LAorCS5oc3lu
-Y19sZW4gPSB7IDEwMCwgMTA4LCAxMTQgfSwKKwkudmFjdGl2ZSA9IHsgNjAwLCA2MDAsIDYwMCB9
-LAorCS52ZnJvbnRfcG9yY2ggPSB7IDgsIDExLCAxNSB9LAorCS52YmFja19wb3JjaCA9IHsgOCwg
-MTEsIDE1IH0sCisJLnZzeW5jX2xlbiA9IHsgOSwgMTMsIDE1IH0sCisJLmZsYWdzID0gRElTUExB
-WV9GTEFHU19ERV9ISUdILAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGRs
-Y19kbGMwNzAweXpnXzEgPSB7CisJLnRpbWluZ3MgPSAmZGxjX2RsYzA3MDB5emdfMV90aW1pbmcs
-CisJLm51bV90aW1pbmdzID0gMSwKKwkuYnBjID0gNiwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0g
-MTU0LAorCQkuaGVpZ2h0ID0gODYsCisJfSwKKwkuZGVsYXkgPSB7CisJCS5wcmVwYXJlID0gMzAs
-CisJCS5lbmFibGUgPSAyMDAsCisJCS5kaXNhYmxlID0gMjAwLAorCX0sCisJLmJ1c19mb3JtYXQg
-PSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDdYM19TUFdHLAorfTsKKwogc3RhdGljIGNvbnN0IHN0
-cnVjdCBkcm1fZGlzcGxheV9tb2RlIGVkdF9ldDA1NzA5MGRodV9tb2RlID0gewogCS5jbG9jayA9
-IDI1MTc1LAogCS5oZGlzcGxheSA9IDY0MCwKQEAgLTIxMjQsNiArMjE1Myw5IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJfSwgewog
-CQkuY29tcGF0aWJsZSA9ICJjaHVuZ2h3YSxjbGFhMTAxd2IwMSIsCiAJCS5kYXRhID0gJmNodW5n
-aHdhX2NsYWExMDF3YjAxCisJfSwgeworCQkuY29tcGF0aWJsZSA9ICJkbGMsZGxjMDcwMHl6Zy0x
-IiwKKwkJLmRhdGEgPSAmZGxjX2RsYzA3MDB5emdfMSwKIAl9LCB7CiAJCS5jb21wYXRpYmxlID0g
-ImVkdCxldDA1NzA5MGRodSIsCiAJCS5kYXRhID0gJmVkdF9ldDA1NzA5MGRodSwKLS0gCjIuMTcu
-MAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sun, May 20, 2018 at 7:01 PM,  <sean.wang@mediatek.com> wrote:
+
+> From: Sean Wang <sean.wang@mediatek.com>
+>
+> The .name field has been not being used in existent code logic, so
+> it's better that we remove them all.
+>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+
+Patch applied.
+
+Yours,
+Linus Walleij
