@@ -1,47 +1,50 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/9] regulator: bd71837: Devicetree bindings for BD71837
- regulators
-Date: Thu, 24 May 2018 15:01:18 +0100
-Message-ID: <20180524140118.GS4828@sirena.org.uk>
-References: <20180524055752.GE4249@localhost.localdomain>
+Subject: Re: [PATCH 9/9] regulator: bd71837: Build BD71837 regulator driver
+Date: Thu, 24 May 2018 15:01:59 +0100
+Message-ID: <20180524140159.GT4828@sirena.org.uk>
+References: <20180524060114.GJ4249@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jesV4P1FjH8FXPjZ"
+        protocol="application/pgp-signature"; boundary="8+OS07CeIgZ706fH"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180524055752.GE4249@localhost.localdomain>
+In-Reply-To: <20180524060114.GJ4249@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
 
---jesV4P1FjH8FXPjZ
+--8+OS07CeIgZ706fH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 24, 2018 at 08:57:52AM +0300, Matti Vaittinen wrote:
+On Thu, May 24, 2018 at 09:01:14AM +0300, Matti Vaittinen wrote:
+> Configurations and Makefile for BD71837 regulator driver
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  drivers/regulator/Kconfig  | 11 +++++++++++
+>  drivers/regulator/Makefile |  1 +
+>  2 files changed, 12 insertions(+)
 
-> +Required properties:
-> + - compatible: should be "rohm,bd71837-pmic".
-> + - regulator-name: should be "buck1", ..., "buck8" and "ldo1", ..., "ldo7"
+Just squash this into the single patch adding the driver, it makes life
+easier.
 
-The MFD is for a single device, there should be no need for compatibles
-on subfunctions.
-
---jesV4P1FjH8FXPjZ
+--8+OS07CeIgZ706fH
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsGxa0ACgkQJNaLcl1U
-h9DzoAf/YtDROa5spIF4Aj92gogq2LCWJvmR0STB4Nbei4Mqbb/m5Q6Vrl4/hDn3
-TKFumDLaK0XXUC7ggXNcv7r+1hXo72SGzpUwbN9sYkc8VDIlyimdLUHVpV/GHuuI
-kQMBIeRe9KWnmJERhAolLDxtSoQFh4ma1kZCdWpjepBsRaS6tSznzrZhGlaEC0tG
-2E8rm711TIk6WDcTEsggTCIYzbQVKlT9C6RyKCcQ5YRZ+GvkVhE1mpTaVtYrkD+P
-COUMKzGV/J3wOotvDdBKIShCZ562dK4rpchUKTAWDP2YMowy0DAJFykU4SzPQC2i
-b5Mo5ola3dgBXm6kiCgrMd8BWrx/og==
-=IokF
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsGxdYACgkQJNaLcl1U
+h9ABiwf9HN+x1x1xOqtjg6KETg+ssfmw3CVV6U+YrkiO4jhM1ruOeXzUDgvDoF4n
+qqIhNFc+NSIYlcq+X47gr9XaTg+GeJBgFHxW44eGkfr8h+JFuc/KEYuLRPMKWUss
+xMqJzd8wYhBcrwM+k0/4qeLWlfNh3+2CcesD1nPNqEcs00buB66MYq9X4aH5ASyZ
+Hy7XIeYdzl4QWVUBw6X8Gwk1JJy/RvY9+lbTElQhbRPNDo8a1CFRGG+F0zd8YkME
+CA4OB0iBXgnrKH9arf+p+AZVRWqKbo32vRYp+BELwxuf9R84fRnHtX4/JoTJolrE
+/xDQmqYEeo3hbR2UveF9TeHcBCCadw==
+=bi1a
 -----END PGP SIGNATURE-----
 
---jesV4P1FjH8FXPjZ--
+--8+OS07CeIgZ706fH--
