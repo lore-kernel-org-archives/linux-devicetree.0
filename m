@@ -1,62 +1,41 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH RFC 24/24] drm/lima: add makefile and kconfig
-Date: Wed, 23 May 2018 19:16:41 +0200
-Message-ID: <7e0835f9-a368-294d-9483-91513211cf24@denx.de>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <20180518092815.25280-25-yuq825@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 2/7] pinctrl: mediatek: refactor EINT related code for
+ all MediaTek pinctrl can fit
+Date: Thu, 24 May 2018 09:37:48 +0200
+Message-ID: <CACRpkdatfPK8r-wttDJ=ty--2T7AiW8YiAu6kqKN6FQTf9R23w@mail.gmail.com>
+References: <cover.1526835466.git.sean.wang@mediatek.com> <7265772c758d4c56cabb95fda708550bc4d2fcb5.1526835466.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180518092815.25280-25-yuq825@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Qiang Yu <yuq825@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Simon Shields <simon@lineageos.org>, Connor Abbott <cwabbott0@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7265772c758d4c56cabb95fda708550bc4d2fcb5.1526835466.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMTgvMjAxOCAxMToyOCBBTSwgUWlhbmcgWXUgd3JvdGU6Cj4gRnJvbTogTGltYSBQcm9q
-ZWN0IERldmVsb3BlcnMgPGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+Cj4gCj4gU2ln
-bmVkLW9mZi1ieTogUWlhbmcgWXUgPHl1cTgyNUBnbWFpbC5jb20+Cj4gU2lnbmVkLW9mZi1ieTog
-TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgo+IFNpZ25lZC1vZmYtYnk6
-IFNpbW9uIFNoaWVsZHMgPHNpbW9uQGxpbmVhZ2Vvcy5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogSGVp
-a28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL0tj
-b25maWcgICAgICAgfCAgMiArKwo+ICBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICB8ICAx
-ICsKPiAgZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZyAgfCAgOSArKysrKysrKysKPiAgZHJp
-dmVycy9ncHUvZHJtL2xpbWEvTWFrZWZpbGUgfCAxOSArKysrKysrKysrKysrKysrKysrCj4gIDQg
-ZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL2xpbWEvTWFrZWZpbGUKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL0tj
-b25maWcgYi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+IGluZGV4IGRlZWVmYTdhMTc3My4uZjAw
-ZDUyOWVlMDM0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCj4gKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL0tjb25maWcKPiBAQCAtMjg5LDYgKzI4OSw4IEBAIHNvdXJjZSAiZHJp
-dmVycy9ncHUvZHJtL3BsMTExL0tjb25maWciCj4gIAo+ICBzb3VyY2UgImRyaXZlcnMvZ3B1L2Ry
-bS90dmUyMDAvS2NvbmZpZyIKPiAgCj4gK3NvdXJjZSAiZHJpdmVycy9ncHUvZHJtL2xpbWEvS2Nv
-bmZpZyIKPiArCj4gICMgS2VlcCBsZWdhY3kgZHJpdmVycyBsYXN0Cj4gIAo+ICBtZW51Y29uZmln
-IERSTV9MRUdBQ1kKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlIGIvZHJp
-dmVycy9ncHUvZHJtL01ha2VmaWxlCj4gaW5kZXggNTAwOTNmZjQ0NzliLi5hYmE2ODZlNDFkNmIg
-MTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9n
-cHUvZHJtL01ha2VmaWxlCj4gQEAgLTEwMywzICsxMDMsNCBAQCBvYmotJChDT05GSUdfRFJNX01Y
-U0ZCKQkrPSBteHNmYi8KPiAgb2JqLSQoQ09ORklHX0RSTV9USU5ZRFJNKSArPSB0aW55ZHJtLwo+
-ICBvYmotJChDT05GSUdfRFJNX1BMMTExKSArPSBwbDExMS8KPiAgb2JqLSQoQ09ORklHX0RSTV9U
-VkUyMDApICs9IHR2ZTIwMC8KPiArb2JqLSQoQ09ORklHX0RSTV9MSU1BKSAgKz0gbGltYS8KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2xpbWEvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9saW1hL0tjb25maWcKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAw
-MC4uNGNlOWFjMmU4MjA0Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9s
-aW1hL0tjb25maWcKPiBAQCAtMCwwICsxLDkgQEAKPiArCj4gK2NvbmZpZyBEUk1fTElNQQo+ICsg
-ICAgICAgdHJpc3RhdGUgIkxJTUEgKERSTSBzdXBwb3J0IGZvciBBUk0gTWFsaSA0MDAvNDUwIEdQ
-VSkiCj4gKyAgICAgICBkZXBlbmRzIG9uIERSTQo+ICsgICAgICAgZGVwZW5kcyBvbiBBUkNIX1NV
-TlhJIHx8IEFSQ0hfUk9DS0NISVAgfHwgQVJDSF9FWFlOT1MgfHwgQVJDSF9NRVNPTgoKWW91IGNh
-biBhZGQgQVJDSF9aWU5RTVAgaGVyZSB0b28gLCBpdCBoYXMgTWFsaSA0MDAgTVAyLgoKLS0gCkJl
-c3QgcmVnYXJkcywKTWFyZWsgVmFzdXQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On Sun, May 20, 2018 at 7:01 PM,  <sean.wang@mediatek.com> wrote:
+
+> From: Sean Wang <sean.wang@mediatek.com>
+>
+> This patch is in preparation for adding EINT support to MT7622 pinctrl,
+> and the refactoring doesn't alter any existent logic.
+>
+> A reason we have to refactor EINT code pieces into a generic way is that
+> currently, they're tightly coupled with a certain type of MediaTek pinctrl
+> would cause a grown in a very bad way as there is different types of
+> pinctrl devices getting to join.
+>
+> Therefore, it is an essential or urgent thing that EINT code pieces are
+> refactored to eliminate any dependencies across GPIO and EINT as possible.
+>
+> Additional structure mtk_eint_[xt, hw, regs] are being introduced for
+> indicating how maps being designed between GPIO and EINT hw number, how to
+> set and get GPIO state for a certain EINT pin, what characteristic on a
+> EINT device is present on various SoCs.
+>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+
+Patch applied.
+
+Yours,
+Linus Walleij
