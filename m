@@ -1,72 +1,101 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH RFC 00/24] Lima DRM driver
-Date: Thu, 24 May 2018 11:53:54 +0200
-Message-ID: <8e50b92d-6475-3f54-998d-fe6a4bd783b6@amd.com>
-References: <20180518092815.25280-1-yuq825@gmail.com>
- <940a5ee5-ff3e-e438-504e-f720f201fee6@gmail.com>
- <CAKGbVbsMftEyOv6bh2g-yebj1+yO+BNJ=j1yJzgjwkM59wFz5w@mail.gmail.com>
- <CAKMK7uFfnSLpcQ_MAbqkLfs8DyZS8BfiG5uuxgvynYc_Z7To_g@mail.gmail.com>
- <CAKGbVbsb5JPXrca6MsRCYgrB76t8wYM8MPKpQU76kJTX8WV-Yg@mail.gmail.com>
- <cfc190af-1d46-7dca-fded-19b3b7896166@amd.com>
- <CAKMK7uFHpX12RKJewZmSBnTgpcAvr9OpLgyYL__RGQW7vqkJYQ@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Thu, 24 May 2018 14:23:56 +0200
+Message-ID: <20180524142356.0fc68797@bbrezillon>
+References: <cover.1526990589.git.stefan@agner.ch>
+        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+        <20180523161810.0ed9fe80@bbrezillon>
+        <2d8107f0e6568512d691e9ea25a1e4e5@agner.ch>
+        <20180524105614.3c51736c@bbrezillon>
+        <7b3cc3991fb054130fd54c6fdfec5097@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKMK7uFHpX12RKJewZmSBnTgpcAvr9OpLgyYL__RGQW7vqkJYQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Qiang Yu <yuq825@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7b3cc3991fb054130fd54c6fdfec5097@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjQuMDUuMjAxOCB1bSAwOToyNSBzY2hyaWViIERhbmllbCBWZXR0ZXI6Cj4gW1NOSVBdCj4+
-PiBEb2VzIHZpcnRpbyBkcm0gZHJpdmVyIG5lZWQgdG8gbW92ZSBidWZmZXJzIGFyb3VuZD8gYW1k
-Z3B1IGFsc28KPj4+IGhhcyBubyB2cmFtIHdoZW4gQVBVLgo+IEFmYWl1aSBBUFVzIGhhdmUgYSBy
-YW5nZSBvZiBzdG9sZW4gbWVtb3J5IHdoaWNoIGxvb2tzIGFuZCBhY3RzIGFuZCBpcwo+IG1hbmFn
-ZWQgbGlrZSBkaXNjcmV0ZSB2cmFtLiBJbmNsdWRpbmcgbW92aW5nIGJ1ZmZlcnMgYXJvdW5kLgoK
-QlRXOiBXZSBhcmUgYWN0dWFsbHkgd29ya2luZyBvbiBnZXR0aW5nIHJpZCBvZiB0aGF0LiBFLmcu
-IHRoZSBvbmx5IHRoaW5nIAptb2Rlcm4gQVBVcyBuZWVkIHRoaXMgc3RvbGVuIFZSQU0gZm9yIGFy
-ZSBwYWdlIHRhYmxlcywgYW5kIGl0J3MganVzdCBhIAptYXR0ZXIgb2YgbXkgdGltZSB0byBmaXgg
-dGhpcy4KCj4+Pj4gICBGcm9tIHlvdXIgZGVzY3JpcHRpb24geW91IGRvbid0IGhhdmUgc3VjaCBh
-IHJlcXVpcmVtZW50LCBhbmQKPj4+PiB0aGVuIGRvaW5nIHdoYXQgZXRuYXZpdiBoYXMgZG9uZSB3
-b3VsZCBiZSBhIGxvdCBzaW1wbGVyLiBFdmVyeXRoaW5nCj4+Pj4gdGhhdCdzIG5vdCByZWxhdGVk
-IHRvIGJ1ZmZlciBtb3ZlbWVudCBoYW5kbGluZyBpcyBhbHNvIGF2YWlsYWJsZQo+Pj4+IG91dHNp
-ZGUgb2YgdHRtIGFscmVhZHkuCj4+PiBZZWFoLCBJIGNvdWxkIGRvIGxpa2UgZXRuYXZpdiwgYnV0
-IGl0J3Mgbm90IHNpbXBsZXIgdGhhbiB1c2luZyB0dG0KPj4+IGRpcmVjdGx5IGVzcGVjaWFsbHkg
-d2FudCBzb21lIG9wdGltaXphdGlvbiAobGlrZSB0dG0gcGFnZSBwb29sLAo+Pj4gdHRtX2V1X3Jl
-c2VydmVfYnVmZmVycywgdHRtX2JvX21tYXApLiBJZiBJIGhhdmUvd2FudCB0byBpbXBsZW1lbnQK
-Pj4+IHRoZW0sIHdoeSBub3QganVzdCB1c2UgVFRNIGRpcmVjdGx5IHdpdGggYWxsIHRob3NlIGhl
-bHBlciBmdW5jdGlvbnMuCj4+Cj4+IFdlbGwgVFRNIGhhcyBzb21lIGRlc2lnbiBmbGF3cyAoZS5n
-LiBoZWF2aWx5IGxheWVyZWQgZGVzaWduIGV0Yy4uLiksIGJ1dCBpdAo+PiBhbHNvIG9mZmVycyBz
-b21lIHJhdGhlciBuaWNlIGZ1bmN0aW9uYWxpdHkuCj4gWWVhaCwgYnV0IEkgc3RpbGwgdGhpbmsg
-dGhhdCBmb3Igbm9uLWRpc2NyZXRlIGRyaXZlcnMganVzdCBtb3ZpbmcgYQo+IGJ1bmNoIG9mIG1v
-cmUgb2YgdGhlIG5lYXQgdHRtIGZ1bmN0aW9uYWxpdHkgaW50byBoZWxwZXJzIHdoZXJlCj4gZXZl
-cnlvbmUgY2FuIHVzZSB0aGVtIChpbnN0ZWFkIG9mIHRoZSBiaW5hcnkgdHRtIHkvbiBkZWNpc2lv
-bikgd291bGQKPiBiZSBtdWNoIGJldHRlci4gRS5nLiB0aGUgYWxsb2NhdG9yIHBvb2wgZGVmaW5p
-dGVseSBzb3VuZHMgbGlrZQo+IHNvbWV0aGluZyBnZW0gaGVscGVycyBzaG91bGQgYmUgYWJsZSB0
-byBkbywgc2FtZSBmb3IgcmVzZXJ2aW5nIGEgcGlsZQo+IG9mIGJ1ZmZlcnMgb3IgZGVmYXVsdCBt
-bWFwIGltcGxlbWVudGF0aW9ucy4gQSBsb3Qgb2YgdGhhdCBhbHNvIGV4aXN0cwo+IGFscmVhZHks
-IHRoYW5rcyB0byBsb3RzIG9mIGVmZm9ydHMgZnJvbSBOb3JhbGYgVHJvbm5lcyBhbmQgb3RoZXJz
-Lgo+Cj4gSSB0aGluayBpZGVhbGx5IHRoZSBsb25nLXRlcm0gZ29hbCB3b3VsZCBiZSB0byBtb2R1
-bGFyaXplIHR0bSBjb25jZXB0cwo+IGFzIG11Y2ggYXMgcG9zc2libGUsIHNvIHRoYXQgZHJpdmVy
-cyBjYW4gZmxleGlibHkgcGljayZjaG9vc2UgdGhlIGJpdHMKPiB0aGV5IG5lZWQuIFdlJ3JlIHNs
-b3dseSBnZXR0aW5nIHRoZXJlIChidXQgZGVmaW5pdGVseSBub3QgeWV0IHRoZXJlIGlmCj4geW91
-IG5lZWQgdG8gbWFuYWdlIGRpc2NyZXRlIHZyYW0gSSB0aGluaykuCgpZZXMsIGNvbXBsZXRlbHkg
-YWdyZWUuIEl0J3MganVzdCB0aGF0IG5vYm9keSBoYWQgdGltZSBmb3IgdGhhdC4KCkVzcGVjaWFs
-bHkgdGhlIGRpZmZlcmVudCBtZW1vcnkgcG9vbHMgc2hvdWxkIGJlIGNsZWFuZWQgdXAgYW5kIG1v
-dmVkIAppbnRvIGEgY29tbW9uIERSTSBmdW5jdGlvbmFsaXR5IG9yIGV2ZW4gaW50byB0aGUgRE1B
-IG9yIGRpcmVjdGx5IHRoZSBNTSAKc3Vic3lzdGVtLgoKRS5nLiBhbiBpbnRlcmZhY2UgbGlrZTog
-SSdtIGRldmljZSBYIGFuZCBuZWVkIG1lbW9yeSB3aGljaCBpcyAKY2FjaGVkL3VuY2FjaGVkL3dj
-IHBsZWFzZSBhbGxvY2F0ZSBzb21ldGhpbmcgZm9yIG1lLgoKUmVnYXJkcywKQ2hyaXN0aWFuLgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, 24 May 2018 13:09:53 +0200
+Stefan Agner <stefan@agner.ch> wrote:
+
+> On 24.05.2018 10:56, Boris Brezillon wrote:
+> > On Thu, 24 May 2018 10:46:27 +0200
+> > Stefan Agner <stefan@agner.ch> wrote:
+> >   
+> >> Hi Boris,
+> >>
+> >> Thanks for the initial review! One small question below:
+> >>
+> >> On 23.05.2018 16:18, Boris Brezillon wrote:  
+> >> > Hi Stefan,
+> >> >
+> >> > On Tue, 22 May 2018 14:07:06 +0200
+> >> > Stefan Agner <stefan@agner.ch> wrote:  
+> >> >> +
+> >> >> +struct tegra_nand {
+> >> >> +	void __iomem *regs;
+> >> >> +	struct clk *clk;
+> >> >> +	struct gpio_desc *wp_gpio;
+> >> >> +
+> >> >> +	struct nand_chip chip;
+> >> >> +	struct device *dev;
+> >> >> +
+> >> >> +	struct completion command_complete;
+> >> >> +	struct completion dma_complete;
+> >> >> +	bool last_read_error;
+> >> >> +
+> >> >> +	dma_addr_t data_dma;
+> >> >> +	void *data_buf;
+> >> >> +	dma_addr_t oob_dma;
+> >> >> +	void *oob_buf;
+> >> >> +
+> >> >> +	int cur_chip;
+> >> >> +};  
+> >> >
+> >> > This struct should be split in 2 structures: one representing the NAND
+> >> > controller and one representing the NAND chip:
+> >> >
+> >> > struct tegra_nand_controller {
+> >> > 	struct nand_hw_control base;
+> >> > 	void __iomem *regs;
+> >> > 	struct clk *clk;
+> >> > 	struct device *dev;
+> >> > 	struct completion command_complete;
+> >> > 	struct completion dma_complete;
+> >> > 	bool last_read_error;
+> >> > 	int cur_chip;
+> >> > };
+> >> >
+> >> > struct tegra_nand {
+> >> > 	struct nand_chip base;
+> >> > 	dma_addr_t data_dma;
+> >> > 	void *data_buf;
+> >> > 	dma_addr_t oob_dma;
+> >> > 	void *oob_buf;
+> >> > };  
+> >>
+> >> Is there a particular reason why you would leave DMA buffers in the chip
+> >> structure? It seems that is more a controller thing...  
+> > 
+> > The size of those buffers is likely to be device dependent, so if you
+> > have several NANDs connected to the controller, you'll either have to
+> > have one buffer at the controller level which is max(all-chip-buf-size)
+> > or a buffer per device.
+> > 
+> > Also, do you really need these buffers? The core already provide some
+> > which are suitable for DMA (chip->oob_poi and chip->data_buf).
+> >   
+> 
+> Good question, I am not sure, that was existing code.
+> 
+> Are you sure data_buf it is DMA capable?
+> 
+> nand_scan_tail allocates with kmalloc:
+> 
+> chip->data_buf = kmalloc(mtd->writesize + mtd->oobsize, GFP_KERNEL);
+
+Yes, kmalloc() allocates DMA-able buffers, so those are DMA-safe.
