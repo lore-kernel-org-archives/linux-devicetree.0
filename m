@@ -1,70 +1,212 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v5 1/3] phy: Power on PHY before start Serdes
- configuration
-Date: Thu, 24 May 2018 13:47:58 +0530
-Message-ID: <dd6b1e3d-e894-e40f-452a-2dec2421b1c7@codeaurora.org>
-References: <20180523034712.3420-1-cang@codeaurora.org>
- <20180523034712.3420-2-cang@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH 12/15] drm/sun4i: Add support for second
+ clock parent to DW HDMI PHY clk driver
+Date: Thu, 24 May 2018 10:27:01 +0200
+Message-ID: <20180524082701.q5lr6adjnjdseq6o@flea>
+References: <20180519183127.2718-1-jernej.skrabec@siol.net>
+ <20180519183127.2718-13-jernej.skrabec@siol.net>
+ <20180521081253.cmx2mvfbfybgmtlv@flea>
+ <4018914.loHx9iTxYh@jernej-laptop>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180523034712.3420-2-cang@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Can Guo <cang@codeaurora.org>, subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="a3afohr5y5usfzsz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYHOTHMAKGQEGG6OPZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <4018914.loHx9iTxYh@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Can,
 
+--a3afohr5y5usfzsz
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 5/23/2018 9:17 AM, Can Guo wrote:
-> PHYs should be powered on before register configuration starts.
->
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> ---
+On Mon, May 21, 2018 at 05:02:23PM +0200, Jernej =C5=A0krabec wrote:
+> Hi,
+>=20
+> Dne ponedeljek, 21. maj 2018 ob 10:12:53 CEST je Maxime Ripard napisal(a)=
+:
+> > On Sat, May 19, 2018 at 08:31:24PM +0200, Jernej Skrabec wrote:
+> > > Expand HDMI PHY clock driver to support second clock parent.
+> > >=20
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > > ---
+> > >=20
+> > >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h      |  6 +-
+> > >  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c     | 29 ++++++-
+> > >  drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c | 90 ++++++++++++++++----=
+--
+> > >  3 files changed, 98 insertions(+), 27 deletions(-)
+> > >=20
+> > > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 801a17222762..aadbe0a10=
+b0c
+> > > 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > > @@ -98,7 +98,8 @@
+> > >=20
+> > >  #define SUN8I_HDMI_PHY_PLL_CFG1_LDO2_EN		BIT(29)
+> > >  #define SUN8I_HDMI_PHY_PLL_CFG1_LDO1_EN		BIT(28)
+> > >  #define SUN8I_HDMI_PHY_PLL_CFG1_HV_IS_33	BIT(27)
+> > >=20
+> > > -#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL	BIT(26)
+> > > +#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK	BIT(26)
+> > > +#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_SHIFT	26
+> > >=20
+> > >  #define SUN8I_HDMI_PHY_PLL_CFG1_PLLEN		BIT(25)
+> > >  #define SUN8I_HDMI_PHY_PLL_CFG1_LDO_VSET(x)	((x) << 22)
+> > >  #define SUN8I_HDMI_PHY_PLL_CFG1_UNKNOWN(x)	((x) << 20)
+> > >=20
+> > > @@ -190,6 +191,7 @@ void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi
+> > > *hdmi);
+> > >=20
+> > >  void sun8i_hdmi_phy_init(struct sun8i_hdmi_phy *phy);
+> > >  const struct dw_hdmi_phy_ops *sun8i_hdmi_phy_get_ops(void);
+> > >=20
+> > > -int sun8i_phy_clk_create(struct sun8i_hdmi_phy *phy, struct device *=
+dev);
+> > > +int sun8i_phy_clk_create(struct sun8i_hdmi_phy *phy, struct device *=
+dev,
+> > > +			 bool second_parent);
+> > >=20
+> > >  #endif /* _SUN8I_DW_HDMI_H_ */
+> > >=20
+> > > diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> > > b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c index deba47ed69d8..7a911f0a=
+3ae3
+> > > 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> > > @@ -183,7 +183,13 @@ static int sun8i_hdmi_phy_config_h3(struct dw_hd=
+mi
+> > > *hdmi,>=20
+> > >  	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_ANA_CFG1_REG,
+> > >  =09
+> > >  			   SUN8I_HDMI_PHY_ANA_CFG1_TXEN_MASK, 0);
+> > >=20
+> > > -	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, pll_cfg1_init)=
+;
+> > > +	/*
+> > > +	 * NOTE: We have to be careful not to overwrite PHY parent
+> > > +	 * clock selection bit and clock divider.
+> > > +	 */
+> > > +	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG,
+> > > +			   ~SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK,
+> > > +			   pll_cfg1_init);
+> >=20
+> > It feels like it belongs in a separate patch.
+>=20
+> Why? clk_set_rate() on HDMI PHY clock is called before this function, so=
+=20
+> SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL bit is already set to correct value. Ori=
+ginal=20
+> code doesn't take this into account and sets it to 0 here in all cases, w=
+hich=20
+> obviously is not right.
+>=20
+> If you insist on splitting this in new patch, it has to be applied before=
+=20
+> clock changes. It would also need to include "reset PLL clock configurati=
+on"=20
+> chunk (next change in this patch), otherwise other SoCs with only one par=
+ent=20
+> could get 1 there, which is obviously wrong. Note that I didn't really te=
+sted=20
+> if default value of this bit is 0 or 1, but I wouldn't really like to dep=
+end=20
+> on default values.
 
-Thanks for fixing this.
+I don't have a strong feeling about this, but to me, the fact that you
+don't want to overwrite the muxing bit because the clock might use it
+is sensible in itself, disregarding the fact that the clock *will* use
+it.
 
->   drivers/phy/qualcomm/phy-qcom-qmp.c | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 97ef942..9bfdba1 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1000,6 +1000,12 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
->   			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
->   	}
->   
-> +	/*
-> +	 * Pull out PHY from POWER DOWN state.
-> +	 * This is active low enable signal to power-down PHY.
-> +	 */
-> +	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-> +
+>=20
+> >=20
+> > >  	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG2_REG,
+> > >  =09
+> > >  			   (u32)~SUN8I_HDMI_PHY_PLL_CFG2_PREDIV_MSK,
+> > >  			   pll_cfg2_init);
+> > >=20
+> > > @@ -352,6 +358,10 @@ static void sun8i_hdmi_phy_init_h3(struct
+> > > sun8i_hdmi_phy *phy)>=20
+> > >  			   SUN8I_HDMI_PHY_ANA_CFG3_SCLEN |
+> > >  			   SUN8I_HDMI_PHY_ANA_CFG3_SDAEN);
+> > >=20
+> > > +	/* reset PLL clock configuration */
+> > > +	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, 0);
+> > > +	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG2_REG, 0);
+> > > +
+> >=20
+> > Ditto,
+> >=20
+> > > +
+> > > +		/*
+> > > +		 * Even though HDMI PHY clock doesn't have enable/disable
+> > > +		 * handlers, we have to enable it. Otherwise it could happen
+> > > +		 * that parent PLL is not enabled by clock framework in a
+> > > +		 * highly unlikely event when parent PLL is used solely for
+> > > +		 * HDMI PHY clock.
+> > > +		 */
+> > > +		clk_prepare_enable(phy->clk_phy);
+> >=20
+> > The implementation of the clock doesn't really matter in our API
+> > usage. If we're using a clock, we have to call
+> > clk_prepare_enable. That's documented everywhere, and mentionning how
+> > the clock is implemented is an abstraction leakage and it's
+> > irrelevant. I'd simply remove the comment here.
+> >=20
+> > And it should be in a separate patch as well.
+>=20
+> OK. Should I add Fixes tag, since current code obviously is not by the sp=
+ecs?=20
+> It could still get in 4.17...
 
-Thanks. This is in sync with the requirements of USB and UFS phys across 
-platforms
-using this qmp phy driver, viz. 8996 and 845.
-However, as discussed with you offline the PCIe phy has different 
-requirement.
-PCIe phy on 8996 doesn't need the QPHY_POWER_DOWN_CONTROL (pcs level 
-power down)
-before configuring the phys. Rather COM_POWER_DOWN_CONTROL is enough.
-It needs the QPHY_POWER_DOWN_CONTROL after programming the
-serdes, tx, rx, and pcs blocks, and right before doing SW_RESET, and 
-START_CONTROL.
+Yep!
 
-So we should just do the above QPHY_POWER_DOWN_CONTROL in
-qcom_qmp_phy_com_init() only for non-PCIe phys at the moment, and
-skip the QPHY_POWER_DOWN_CONTROL in qcom_qmp_phy_init()
-for these non-PCIe phys.
+Maxime
 
-Thanks
-Vivek
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
->   	/* Serdes configuration */
->   	qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl,
->   			       cfg->serdes_tbl_num);
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--a3afohr5y5usfzsz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsGdz4ACgkQ0rTAlCFN
+r3RMUw//UYKkkVPdpNYcYjvpWBDixWbgpr3EA5kW6/Lyu41bWPNcdlvcXPggjV0F
+7mQwpNTgGW0ftQpNrt00uMnYuVzKnnnr9ItsKtfmBojQW66aYmXGBU4EyFaZwpEh
+9921X0MUimtMDph5/abfP+mVzjC+93QK9swAXQKAaNsxbGNCX/HO6GbJC0KhYsf1
+hDeG6nPXzvl+seoh/PdKzp9vw3tC5YYmzbf1Qt5k1Cw1itIuSi9xDmERoIPVVznl
+mggcCGtgASS8ORXyHyoNuEYTPxAl9et72KH6JfVcJIfM5gKN1EfUaWnKrzD6HHSl
+Y7sr4Vt41rh7CxwPz8t6wqaAArM7g5nULyOOtw9zBljpIzVIt2pZFNARXpwBZxRN
+zXSuT1/4h9X2RlpOtLbGxtCc6YevLMEOnllbw+ENBLNGrry3c7pNZcb1nqcQePw4
+0DgFeS790cT4sl0GH7w4ChDs+TBHiciqqMwNQ7Rgr2jKLUNbAx3e9+PgxPLvkqna
+QaFqEWtgnVw7KGPuwd1jO/VTJ1toAD5DAB5BFwuytrxE6R4iABAebGD0ykuC9z95
+LxXiIUhej5dGG4681Bu2Et/p1hPJUxMTrrQP0odrsQc3087nFcn1sV3Y1Lqn8tBk
+o8IGMxFyvOQR58nHFy5jPLZ49fMpIyUze6RZ80Nv3i14Rc7Qmxw=
+=HC2i
+-----END PGP SIGNATURE-----
+
+--a3afohr5y5usfzsz--
