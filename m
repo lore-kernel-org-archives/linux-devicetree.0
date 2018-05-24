@@ -1,56 +1,39 @@
-From: nixiaoming <nixiaoming@huawei.com>
-Subject: [PATCH] scripts/dtc: Fixed format mismatch in fprintf
-Date: Thu, 24 May 2018 10:50:18 +0800
-Message-ID: <20180524025018.73187-1-nixiaoming@huawei.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v11 1/2] cpufreq: Add Kryo CPU scaling driver
+Date: Thu, 24 May 2018 10:04:43 +0530
+Message-ID: <20180524043443.adivshl2un53n6hm@vireshk-i7>
+References: <1527079139-3558-1-git-send-email-ilialin@codeaurora.org>
+ <1527079139-3558-2-git-send-email-ilialin@codeaurora.org>
+ <1ec7645d-72b6-5a1a-48c3-831a3c484a0e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1ec7645d-72b6-5a1a-48c3-831a3c484a0e@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nixiaoming@huawei.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Ilia Lin <ilialin@codeaurora.org>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-format specifier "d" need arg type "int" , but the according arg
-"fdt32_to_cpu(xxx)" has type "unsigned int"
+On 23-05-18, 14:25, Sudeep Holla wrote:
+> On 23/05/18 13:38, Ilia Lin wrote:
+> > +config ARM_QCOM_CPUFREQ_KRYO
+> > +	bool "Qualcomm Kryo based CPUFreq"
+> > +	depends on QCOM_QFPROM
+> > +	depends on QCOM_SMEM
+> > +	select PM_OPP
+> > +	help
+> > +	  This adds the CPUFreq driver for Qualcomm Kryo SoC based boards.
+> > +
+> > +	  If in doubt, say N.
+> > +
+> 
+> Sorry but just noticed now, any reason why this can't be module. I can't
+> imagine any.
 
-Signed-off-by: nixiaoming <nixiaoming@huawei.com>
----
- scripts/dtc/fdtdump.c  | 6 +++---
- scripts/dtc/flattree.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Actually I asked him to do that as cpufreq-dt itself can be compiled
+in as module and this driver wasn't doing much and isn't big enough
+(size wise) as well.
 
-diff --git a/scripts/dtc/fdtdump.c b/scripts/dtc/fdtdump.c
-index 7d460a5..851bb6f 100644
---- a/scripts/dtc/fdtdump.c
-+++ b/scripts/dtc/fdtdump.c
-@@ -66,12 +66,12 @@ static void dump_blob(void *blob)
- 
- 	printf("/dts-v1/;\n");
- 	printf("// magic:\t\t0x%x\n", fdt32_to_cpu(bph->magic));
--	printf("// totalsize:\t\t0x%x (%d)\n", totalsize, totalsize);
-+	printf("// totalsize:\t\t0x%x (%u)\n", totalsize, totalsize);
- 	printf("// off_dt_struct:\t0x%x\n", off_dt);
- 	printf("// off_dt_strings:\t0x%x\n", off_str);
- 	printf("// off_mem_rsvmap:\t0x%x\n", off_mem_rsvmap);
--	printf("// version:\t\t%d\n", version);
--	printf("// last_comp_version:\t%d\n",
-+	printf("// version:\t\t%u\n", version);
-+	printf("// last_comp_version:\t%u\n",
- 	       fdt32_to_cpu(bph->last_comp_version));
- 	if (version >= 2)
- 		printf("// boot_cpuid_phys:\t0x%x\n",
-diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
-index 8d268fb..28da281 100644
---- a/scripts/dtc/flattree.c
-+++ b/scripts/dtc/flattree.c
-@@ -393,7 +393,7 @@ void dt_to_blob(FILE *f, struct dt_info *dti, int version)
- 			padlen = 0;
- 			if (quiet < 1)
- 				fprintf(stderr,
--					"Warning: blob size %d >= minimum size %d\n",
-+					"Warning: blob size %u >= minimum size %d\n",
- 					fdt32_to_cpu(fdt.totalsize), minsize);
- 		}
- 	}
 -- 
-2.10.1
+viresh
