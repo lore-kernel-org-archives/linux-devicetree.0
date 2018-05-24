@@ -1,61 +1,123 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/3] input: touchscreen: edt-ft5x06: don't make device
- a wakeup source by default
-Date: Thu, 24 May 2018 16:17:32 -0700
-Message-ID: <20180524231732.GC177107@dtor-ws>
-References: <20180517090552.5704-1-daniel@zonque.org>
- <20180517090552.5704-2-daniel@zonque.org>
- <20180522175413.GA24850@rob-hp-laptop>
- <52c1cd13-3386-8f70-aaf2-e5f4b19fd1e6@zonque.org>
- <CAL_JsqJQt6vFqH-KzNvjW+FZXCgzNAwXj_nSYow2Uz2Vcmi_Cg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] driver core: make deferring probe after init optional
+Date: Thu, 24 May 2018 18:47:21 -0500
+Message-ID: <CAL_JsqLZFTszxs=t1=R0FQ3vP0scvpUBa6=Fb2S9LrTEvx4d_g@mail.gmail.com>
+References: <20180524175024.19874-1-robh@kernel.org> <20180524175024.19874-2-robh@kernel.org>
+ <20180524222855.GD14924@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJQt6vFqH-KzNvjW+FZXCgzNAwXj_nSYow2Uz2Vcmi_Cg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, linux-input@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180524222855.GD14924@minitux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 09:45:05AM -0500, Rob Herring wrote:
-> On Wed, May 23, 2018 at 3:27 AM, Daniel Mack <daniel@zonque.org> wrote:
-> > On Tuesday, May 22, 2018 07:54 PM, Rob Herring wrote:
-> >>
-> >> On Thu, May 17, 2018 at 11:05:50AM +0200, Daniel Mack wrote:
-> >>>
-> >>> Allow configuring the device as wakeup source through device properties,
-> >>> as
-> >>> not all platforms want to wake up on touch screen activity.
-> >>>
-> >>> The I2C core automatically reads the "wakeup-source" DT property to
-> >>> configure a device's wakeup capability, and board supports files can set
-> >>> I2C_CLIENT_WAKE in the flags.
-> >>
-> >>
-> >> This will break wake-up on working systems. Looks like mostly i.MX, but
-> >> there's one AM437x board. If that board doesn't care, then it is up to
-> >> Shawn.
-> >
-> >
-> > I added the property to the dts files, but as Dmitry pointed out, I missed
-> > some. Sorry for that.
-> 
-> Just adding the property to dts files doesn't fix the compatibility
-> problem. If a user uses an existing dtb (before this change) with a
-> new kernel (after this change), then wakeup will stop working.
+On Thu, May 24, 2018 at 5:28 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Thu 24 May 10:50 PDT 2018, Rob Herring wrote:
+>
+>> Deferred probe will currently wait forever on dependent devices to probe,
+>> but sometimes a driver will never exist. It's also not always critical for
+>> a driver to exist. Platforms can rely on default configuration from the
+>> bootloader or reset defaults for things such as pinctrl and power domains.
+>> This is often the case with initial platform support until various drivers
+>> get enabled. There's at least 2 scenarios where deferred probe can render
+>> a platform broken. Both involve using a DT which has more devices and
+>> dependencies than the kernel supports. The 1st case is a driver may be
+>> disabled in the kernel config. The 2nd case is the kernel version may
+>> simply not have the dependent driver. This can happen if using a newer DT
+>> (provided by firmware perhaps) with a stable kernel version.
+>>
+>> Subsystems or drivers may opt-in to this behavior by calling
+>> driver_deferred_probe_check_init_done() instead of just returning
+>> -EPROBE_DEFER. They may use additional information from DT or kernel's
+>> config to decide whether to continue to defer probe or not.
+>>
+>
+> For builtin drivers this still looks reasonable.
+>
+> But I would like to have an additional clarification here stating that
+> drivers that might be targeted by this query must not be compiled as
+> modules.
+>
+> And I would prefer to see an ack from e.g. Arnd that arm-soc is okay
+> that we drop "tristate" on drivers affected by this; e.g. if we put this
+> in the pinctrl core then all pinctrl drivers should be "bool" and so
+> should any i2c, ssbi and spmi buses and drivers be.
 
-Is this a practical problem though? Do we know of any products with
-this touch panel that use DTS not distributed with the kernel?
+For pinctrl, you are not affected now unless you change your DT. I
+made pinctrl opt-in since as you said it could lead to some
+intermittent problems. If iommu or power domains are required, then it
+should fail pretty hard.
 
--- 
-Dmitry
+However, good luck getting your serial console to work if it has a
+pinctrl dependency and that's a module. It won't work because the
+console has to be up before userspace. Of course, you can just rely on
+earlycon, but that just proves that pinctrl is not required (at least
+for 1 serial pin). :)
+
+Rob
+
+>
+> Regards,
+> Bjorn
+>
+>> Cc: Alexander Graf <agraf@suse.de>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/base/dd.c      | 17 +++++++++++++++++
+>>  include/linux/device.h |  2 ++
+>>  2 files changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>> index c9f54089429b..d6034718da6f 100644
+>> --- a/drivers/base/dd.c
+>> +++ b/drivers/base/dd.c
+>> @@ -226,6 +226,16 @@ void device_unblock_probing(void)
+>>       driver_deferred_probe_trigger();
+>>  }
+>>
+>> +int driver_deferred_probe_check_init_done(struct device *dev, bool optional)
+>> +{
+>> +     if (optional && initcalls_done) {
+>> +             dev_WARN(dev, "ignoring dependency for device, assuming no driver");
+>> +             return -ENODEV;
+>> +     }
+>> +
+>> +     return -EPROBE_DEFER;
+>> +}
+>> +
+>>  /**
+>>   * deferred_probe_initcall() - Enable probing of deferred devices
+>>   *
+>> @@ -240,6 +250,13 @@ static int deferred_probe_initcall(void)
+>>       /* Sort as many dependencies as possible before exiting initcalls */
+>>       flush_work(&deferred_probe_work);
+>>       initcalls_done = true;
+>> +
+>> +     /*
+>> +      * Trigger deferred probe again, this time we won't defer anything
+>> +      * that is optional
+>> +      */
+>> +     driver_deferred_probe_trigger();
+>> +     flush_work(&deferred_probe_work);
+>>       return 0;
+>>  }
+>>  late_initcall(deferred_probe_initcall);
+>> diff --git a/include/linux/device.h b/include/linux/device.h
+>> index 477956990f5e..f3dafd44c285 100644
+>> --- a/include/linux/device.h
+>> +++ b/include/linux/device.h
+>> @@ -334,6 +334,8 @@ struct device *driver_find_device(struct device_driver *drv,
+>>                                 struct device *start, void *data,
+>>                                 int (*match)(struct device *dev, void *data));
+>>
+>> +int driver_deferred_probe_check_init_done(struct device *dev, bool optional);
+>> +
+>>  /**
+>>   * struct subsys_interface - interfaces to device functions
+>>   * @name:       name of the device function
+>> --
+>> 2.17.0
+>>
