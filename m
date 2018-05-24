@@ -1,176 +1,67 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 2/5] gpio: syscon: Add gpio-syscon for rockchip
-Date: Thu, 24 May 2018 14:18:24 +0200
-Message-ID: <2373122.g04ZbCo5Dh@phil>
-References: <1526614328-6869-1-git-send-email-djw@t-chip.com.cn> <CAL_Jsq+VBspzCaLD2Wy=fyC-S+LKGZbVsB+b+Etkx91ioXOCuQ@mail.gmail.com> <860b225a-94e0-c3cb-94c2-5e354e0ccb1f@t-chip.com.cn>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Thu, 24 May 2018 14:19:18 +0200
+Message-ID: <146a3abbbff4dcef30ad662a0fb85ff1@agner.ch>
+References: <cover.1526990589.git.stefan@agner.ch>
+ <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+ <CAGefG55kvShaLhNYsFznbOq0_6RNbb+eJ47DLnnU9qRRpwu-iA@mail.gmail.com>
+ <d8d6cb9fcd8ce7ea5c13b227012de6d2@agner.ch>
+ <CAGefG56khQ2835c2QCteit7FuL_yG+APpj6-4vRRPxztFtkAMA@mail.gmail.com>
+ <20180524135335.6aa0b7a4@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <860b225a-94e0-c3cb-94c2-5e354e0ccb1f@t-chip.com.cn>
+In-Reply-To: <20180524135335.6aa0b7a4@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Levin Du <djw@t-chip.com.cn>
-Cc: Rob Herring <robh@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Benjamin Lindqvist <benjamin.lindqvist@endian.se>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, Lucas Stach <dev@lynxeye.de>, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, Mirza Krak <mirza.krak@gmail.com>, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Levin,
-
-Am Donnerstag, 24. Mai 2018, 03:59:36 CEST schrieb Levin Du:
-> Hi all, I'd like to quote reply of Robin Murphy at
->   http://lists.infradead.org/pipermail/linux-rockchip/2018-May/020619.html
+On 24.05.2018 13:53, Boris Brezillon wrote:
+> Hi Benjamin,
 > 
-> >
-> > I would suggest s/pin number/bit number in the associated GRF register/
-> > here. At least in this RK3328 case there's only one pin, which isn't
-> > numbered, and if you naively considered it pin 0 of this 'bank' you'd
-> > already have the wrong number. Since we're dealing with the "random
-> > SoC-specific controls" region of the GRF as opposed to the
-> > relatively-consistent and organised pinmux parts, I don't think we
-> > should rely on any assumptions about how things are laid out.
-> >
-> > I was initially going to suggest a more specific compatible string as
-> > well, but on reflection I think the generic "rockchip,gpio-syscon" for
-> > basic "flip this single GRF bit" functionality actually is the right way
-> > to go. In the specific RK3328 GPIO_MUTE case, there look to be 4 bits in
-> > total related to this pin - the enable, value, and some pull controls
-> > (which I assume apply when the output is disabled) - if at some point in
-> > future we *did* want to start explicitly controlling the rest of them
-> > too, then would be a good time to define a separate
-> > "rockchip,rk3328-gpio-mute" binding (and probably a dedicated driver)
-> > for that specialised functionality, independently of this basic one.
+> On Thu, 24 May 2018 13:30:14 +0200
+> Benjamin Lindqvist <benjamin.lindqvist@endian.se> wrote:
 > 
+>> Hi Stefan,
+>>
+>> It seems to me that a probe similar to what the BootROM does shouldn't
+>> be awfully complicated to implement - just cycle through the switch
+>> cases in case of an ECC error. But I guess that's more of an idea for
+>> further improvements rather than a comment to the patch set under
+>> review.
 > 
-> Shall we go the generic "rockchip,gpio-syscon" way, or the specific
->   "rockchip,rk3328-gpio-mute" way? I prefer the former one.
+> Nope, not really an option, because you're not guaranteed that the NAND
+> will be used as a boot media, and the first page or first set of pages
+> might just be erased.
 > 
-> The property of "gpio,syscon-dev" in gpio-syscon driver should be 
-> documented.
-> Since the gpio controller is defined in the dtsi file, which inevitably 
-> contains voodoo
-> register addresses. But at the board level dts file, there won't be more 
-> register
-> addresses.
 
-Past experience shows that the GRF is not really suitable for
-generalization, as it's more of a dumping ground where chip designers
-can put everything that's left over. This is especially true for
-GRF_SOC_CONx registers, that really only contain pretty random bits.
+Yeah I did not meant probing like the Boot ROM does.
 
-So personally, I'd really prefer soc-specific compatibles as everywhere
-else, instead of trying to push stuff into the devicetree that won't hold
-up on future socs.
+What I meant was using only the ECC modes which are supported by the
+Boot ROM when the driver tries to choose a viable mode. So that would
+be:
+- RS t=4
+- BCH t=8
+- BCH t=16
 
+Maybe we could add a property to enable that behavior:
 
-> On 2018-05-24 3:53 AM, Rob Herring wrote:
-> > On Wed, May 23, 2018 at 10:12 AM, Heiko Stübner <heiko@sntech.de> wrote:
-> >> Hi Rob, Levin,
-> >>
-> >> sorry for being late to the party.
-> >>
-> >> Am Mittwoch, 23. Mai 2018, 16:43:07 CEST schrieb Rob Herring:
-> >>> On Tue, May 22, 2018 at 9:02 PM, Levin Du <djw@t-chip.com.cn> wrote:
-> >>>> On 2018-05-23 2:02 AM, Rob Herring wrote:
-> >>>>> On Fri, May 18, 2018 at 11:52:05AM +0800, djw@t-chip.com.cn wrote:
-> >>>>>> From: Levin Du <djw@t-chip.com.cn>
-> >>>>>>
-> >>>>>> Some GPIOs sit in the GRF_SOC_CON registers of Rockchip SoCs,
-> >>>>>> which do not belong to the general pinctrl.
-> >>>>>>
-> >>>>>> Adding gpio-syscon support makes controlling regulator or
-> >>>>>> LED using these special pins very easy by reusing existing
-> >>>>>> drivers, such as gpio-regulator and led-gpio.
-> >>>>>>
-> >>>>>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
-> >>>>>>
-> >>>>>> ---
-> >>>>>>
-> >>>>>> Changes in v2:
-> >>>>>> - Rename gpio_syscon10 to gpio_mute in doc
-> >>>>>>
-> >>>>>> Changes in v1:
-> >>>>>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
-> >>>>>> - Add doc rockchip,gpio-syscon.txt
-> >>>>>>
-> >>>>>>    .../bindings/gpio/rockchip,gpio-syscon.txt         | 41
-> >>>>>>
-> >>>>>> ++++++++++++++++++++++
-> >>>>>>
-> >>>>>>    drivers/gpio/gpio-syscon.c                         | 30
-> >>>>>>
-> >>>>>> ++++++++++++++++
-> >>>>>>
-> >>>>>>    2 files changed, 71 insertions(+)
-> >>>>>>    create mode 100644
-> >>>>>>
-> >>>>>> Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-> >>>>>>
-> >>>>>> diff --git
-> >>>>>> a/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-> >>>>>> b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-> >>>>>> new file mode 100644
-> >>>>>> index 0000000..b1b2a67
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-syscon.txt
-> >>>>>> @@ -0,0 +1,41 @@
-> >>>>>> +* Rockchip GPIO support for GRF_SOC_CON registers
-> >>>>>> +
-> >>>>>> +Required properties:
-> >>>>>> +- compatible: Should contain "rockchip,gpio-syscon".
-> >>>>>> +- gpio-controller: Marks the device node as a gpio controller.
-> >>>>>> +- #gpio-cells: Should be two. The first cell is the pin number and
-> >>>>>> +  the second cell is used to specify the gpio polarity:
-> >>>>>> +    0 = Active high,
-> >>>>>> +    1 = Active low.
-> >>>>> There's no need for this child node. Just make the parent node a gpio
-> >>>>> controller.
-> >>>>>
-> >>>>> Rob
-> >>>> Hi Rob, it is not clear to me. Do you suggest that the grf node should be
-> >>>> a
-> >>>> gpio controller,
-> >>>> like below?
-> >>>>
-> >>>> +    grf: syscon at ff100000 {
-> >>>> +        compatible = "rockchip,gpio-syscon", "rockchip,rk3328-grf",
-> >>>> "syscon", "simple-mfd";
-> >>> Yes, but drop "rockchip,gpio-syscon" and "simple-mfd".
-> >> I would disagree quite a bit here. The grf are the "general register files",
-> >> a bunch of registers used for quite a lot of things, and so it seems
-> >> among other users, also a gpio-controller for some more random pins
-> >> not controlled through the regular gpio controllers.
-> >>
-> >> For a more fully stocked grf, please see
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/rk3288.dtsi#n855
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/rockchip/rk3399.dtsi#n1338
-> >>
-> >> So the gpio controller should definitly also be a subnode.
-> > Sigh, yes, if there are a bunch of functions needing subnodes like the
-> > above, then yes that makes sense. But that's not what has been
-> > presented. Please make some attempt at defining *all* the functions.
-> > An actual binding would be nice, but I'll settle for just a list of
-> > things. The list should have functions that have DT dependencies (like
-> > clocks for phys in the above) because until you do, you don't need
-> > child nodes.
+tegra,use-bootable-ecc-only;
+
+>>
+>> However, I think that allowing for an override of the oobsize
+>> inference would be a good idea before merging, no? This could just be
+>> a trivial #ifdef (at least temporarily). If you agree but don't feel
+>> like doing it yourself, I'd be happy to pitch in. Let me know.
 > 
-> In rk3328.dtsi file, there are lots of line "rockchip,grf = <&grf>;" in 
-> various nodes,
-> such as tsadc,  cru, gmac2io, gmac2phy, and also pinctrl, which are not 
-> sub nodes of
-> `grf`, but for reference only. The gpio-syscon node should also have 
-> similar behavior.
->   They are not strongly coupled. The gpio-syscon node should be defined 
-> outside of the
-> `grf` node.
+> That's why we have nand-ecc-xxx properties in the DT.
+> 
 
-Not necessarily.
+Yes, nand-ecc-strength is the first thing I plan to implement, that way
+strength can be defined in dt.
 
-I.e. things like the tsadc, cru etc have their own register space and only
-some minor additional bits inside the GRF.
-
-Other things like some phys and your mute-gpio are _fully embedded_ inside
-the GRF and thus become child devices. This describes the hardware layout
-way better, helps unclutter the devicetree and also shows this distinction
-between "additional bits" and "embedded" clearly.
-
-
-Heiko
+--
+Stefan
