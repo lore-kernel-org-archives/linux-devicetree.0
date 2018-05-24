@@ -1,208 +1,204 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 2/3] arm64: dts: renesas: draak: Describe CVBS input
-Date: Thu, 24 May 2018 21:59:43 +0200
-Message-ID: <20180524195943.GC18369@w540>
-References: <1526654878-11143-1-git-send-email-jacopo+renesas@jmondi.org>
- <6943843.2osudLfTFd@avalon>
- <20180521123340.GA15035@w540>
- <1728709.thk7gXDxlo@avalon>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [reset-control] How to initialize hardware state with the shared
+ reset line?
+Date: Thu, 24 May 2018 22:09:38 +0200
+Message-ID: <CAFBinCBAoRebScz+DTSKSgiU5DjeSHS1F3=2vt8KM-yCv+2A8g@mail.gmail.com>
+References: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
+ <CAFBinCADQsXoc6CUKabH6VX3ZBYb5apo-xBbe1w0BiO8wBAsPw@mail.gmail.com>
+ <CAK7LNAR1b_F_eLEWAdQc3L=daGz=ttKq0mQP78BkjzTOssaXvw@mail.gmail.com>
+ <CAFBinCBTTmPqD0UP8zzMBjsjzP9fJx9_pmhGz0_Vy-V+wmhLXQ@mail.gmail.com> <1526997879.3671.27.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cPi+lWm09sJ+d57q"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1728709.thk7gXDxlo@avalon>
+In-Reply-To: <1526997879.3671.27.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, niklas.soderlund@ragnatech.se, horms@verge.net.au, geert@glider.be, magnus.damm@gmail.com, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Philipp,
 
---cPi+lWm09sJ+d57q
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-HI Laurent,
-
-On Mon, May 21, 2018 at 04:10:34PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
+On Tue, May 22, 2018 at 4:04 PM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> Hi Martin,
 >
-> On Monday, 21 May 2018 15:33:40 EEST jacopo mondi wrote:
-> > On Mon, May 21, 2018 at 01:54:55PM +0300, Laurent Pinchart wrote:
-> > > On Monday, 21 May 2018 12:57:05 EEST jacopo mondi wrote:
-> > >> On Fri, May 18, 2018 at 06:12:15PM +0300, Laurent Pinchart wrote:
-> > >>> On Friday, 18 May 2018 17:47:57 EEST Jacopo Mondi wrote:
-> > >>>> Describe CVBS video input through analog video decoder ADV7180
-> > >>>> connected to video input interface VIN4.
-> > >>>>
-> > >>>> The video input signal path is shared with HDMI video input, and
-> > >>>> selected by on-board switches SW-53 and SW-54 with CVBS input
-> > >>>> selected by the default switches configuration.
-> > >>>>
-> > >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > >>>> Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragna=
-tech.se>
-> > >>>>
-> > >>>> ---
-> > >>>> v2 -> v3:
-> > >>>> - Add comment to describe the shared input video path
-> > >>>> - Add my SoB and Niklas' R-b tags
-> > >>>> ---
-> > >>>>
-> > >>>>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 42 +++++++++++++=
-+++++
-> > >>>>  1 file changed, 42 insertions(+)
-> > >>>>
-> > >>>> diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-> > >>>> b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts index
-> > >>>> 9d73de8..95745fc
-> > >>>> 100644
-> > >>>> --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-> > >>>> +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-> > >>>> @@ -142,6 +142,11 @@
-> > >>>>  		groups =3D "usb0";
-> > >>>>  		function =3D "usb0";
-> > >>>>  	};
-> > >>>> +
-> > >>>> +	vin4_pins_cvbs: vin4 {
-> > >>>> +		groups =3D "vin4_data8", "vin4_sync", "vin4_clk";
-> > >>>> +		function =3D "vin4";
-> > >>>> +	};
-> > >>>>  };
-> > >>>>
-> > >>>>  &i2c0 {
-> > >>>> @@ -154,6 +159,23 @@
-> > >>>>  		reg =3D <0x50>;
-> > >>>>  		pagesize =3D <8>;
-> > >>>>  	};
-> > >>>> +
-> > >>>> +	analog-video@20 {
-> > >>>> +		compatible =3D "adi,adv7180";
-> > >>>> +		reg =3D <0x20>;
-> > >>>> +
-> > >>>> +		port {
-> > >>>
-> > >>> The adv7180 DT bindings document the output port as 3 or 6
-> > >>> (respectively for the CP and ST versions of the chip). You should t=
-hus
-> > >>> number the port. Apart from that the patch looks good.
-> > >>
-> > >> I admit I have barely copied this from Gen-2 boards DTS, but reading
-> > >> the driver code and binding description again, I think this is
-> > >> correct, as the output port numbering and mandatory input port (which
-> > >> is missing here) only apply to adv7180cp/st chip versions.
-> > >>
-> > >> Here we describe plain adv7180, no need to number output ports afaic=
-t.
-> > >
-> > > Indeed, my bad.
-> > >
-> > > Shouldn't you however use "adi,adv7180cp" as that's the chip we are u=
-sing
-> > > ?
-> > > The "adi,adv7180" has no port documented in its DT bindings, so it
-> > > shouldn't have any port node at all.
-> >
-> > I'm a bit confused here.
-> >
-> > The only Gen-2 board using the "adi,adv7180cp" compatible string is
-> > Gose, which is also the only one I can get schematics for. That board
-> > indeed feature an ADV7180WBCP32Z, as the Draak does. I cannot get
-> > schematics for any other Gen-2 board, to compare the ADV7180 variant
-> > installed there. If anyone can confirm that all other Gen-2 board uses
-> > a different version (or that all other Gen-2 board DTS file use a
-> > wrong compatible string value), I'll re-send this with a different
-> > compatible value and proper port nodes numbering.
+> On Mon, 2018-05-21 at 12:40 +0200, Martin Blumenstingl wrote:
+>> Hello,
+>>
+>> On Mon, May 21, 2018 at 3:27 AM, Masahiro Yamada
+>> <yamada.masahiro@socionext.com> wrote:
+>> > Hi.
+>> >
+>> >
+>> > 2018-05-20 19:57 GMT+09:00 Martin Blumenstingl
+>> > <martin.blumenstingl@googlemail.com>:
+>> > > Hi,
+>> > >
+>> > > On Thu, May 10, 2018 at 11:16 AM, Masahiro Yamada
+>> > > <yamada.masahiro@socionext.com> wrote:
+>> > > [snip]
+>> > > > I may be missing something, but
+>> > > > one solution might be reset hogging on the
+>> > > > reset provider side.  This allows us to describe
+>> > > > the initial state of reset lines in the reset controller.
+>> > > >
+>> > > > The idea for "reset-hog" is similar to:
+>> > > >  - "gpio-hog" defined in
+>> > > >    Documentation/devicetree/bindings/gpio/gpio.txt
+>> > > >  - "assigned-clocks" defined in
+>> > > >    Documetation/devicetree/bindings/clock/clock-bindings.txt
+>> > > >
+>> > > >
+>> > > >
+>> > > > For example,
+>> > > >
+>> > > >    reset-controller {
+>> > > >             ....
+>> > > >
+>> > > >             line_a {
+>> > > >                   reset-hog;
+>> > > >                   resets = <1>;
+>> > > >                   reset-assert;
+>> > > >             };
+>> > > >    }
+>> > > >
+>> > > >
+>> > > > When the reset controller is registered,
+>> > > > the reset ID '1' is asserted.
+>> > > >
+>> > > >
+>> > > > So, all reset consumers that share the reset line '1'
+>> > > > will start from the asserted state
+>> > > > (i.e. defined state machine state).
+>> > >
+>> > > I wonder if a "reset hog" can be board specific:
+>> > > - GPIO hogs are definitely board specific (meson-gxbb-odroidc2.dts for
+>> > > example uses it to take the USB hub out of reset)
+>> > > - assigned-clock-parents (and the like) can also be board specific (I
+>> > > made up a use-case since I don't know of any actual examples: board A
+>> > > uses an external XTAL while board B uses some other internal
+>> > > clock-source because it doesn't have an external XTAL)
+>> > >
+>> > > however, can reset lines be board specific? or in other words: do we
+>> > > need to describe them in device-tree?
+>> >
+>> > Indeed.
+>> >
+>> > I did not come up with board-specific cases.
+>> >
+>> > The problem we are discussing is SoC-specific,
+>> > and reset-controller drivers are definitely SoC-specific.
+>> >
+>> > So, I think the initial state can be coded in drivers instead of DT.
+>>
+>> OK, let's also hear Philipp's (reset framework maintainer) opinion on this
 >
-> Other Gen2 boards use a ADV7180WBCP32Z as well. The issue here isn't that=
- the
-> chip you're trying to support is different. The DT bindings that were
-> initially written for the adi,adv7180 didn't have port nodes. When it was=
- time
-> to add them, we realized that two variants of the chip existed with diffe=
-rent
-> connectivity. We have thus added two new compatible strings to differenti=
-ate
-> them, with different port numbers. The old compatible string should be
-> deprecated in favour of the new ones.
+> I'd like to know if there are other SoC families besides Amlogic Meson
+> that potentially could have this problem and about how many of the
+> resets that are documented in include/dt-bindings/reset/amlogic,meson*
+> we are actually talking. Are all of those initially deasserted and none
+> of the connected peripherals have power-on reset mechanisms?
+I cannot speak for other SoC families besides Amlogic
+Meson8/Meson8b/Meson8m2 and GX (disclaimer: I am a community
+contributor, I don't have access to Amlogic's internal datasheets - my
+knowledge is based on their public datasheets, their GPL kernel/u-boot
+sources and trial and error)
+
+it seems that at least "some" (but I don't know the exact number)
+resets are de-asserted by the bootloader
+Amlogic's u-boot for example also enables all gate clocks by default
+
+I CC'ed the Amlogic mailing list because I'm not sure if everyone
+working on that SoC family is watching the linux-arm-kernel mailing
+list
+
+>> > > we could extend struct reset_controller_dev (= reset controller
+>> > > driver) if they are not board specific:
+>> > > - either assert all reset lines by default except if they are listed
+>> > > in a new field (may break backwards compatibility, requires testing of
+>> > > all reset controller drivers)
+>> >
+>> > This is quite simple, but I am afraid there are some cases where the forcible
+>> > reset-assert is not preferred.
+>> >
+>> > For example, the earlycon.  When we use earlycon, we would expect it has been
+>> > initialized by a boot-loader, or something.
+>> > If it is reset-asserted on the while, the console output
+>> > will not be good.
+>>
+>> indeed, so let's skip this idea
 >
+> Maybe we should at first add initial reset assertion to the Meson driver
+> on a case by case bases?
+this seems simple enough to test it - we can still generalize this
+later on (either by adding support to the reset framework, DT bindings
+or something else)
 
-Ack, thanks for explaining.
-
-I don't have any Gen2 board here, but if someone is willing to test, I
-can change the Gen2 bindings to use the new version in a follow-up
-series.
-
-Thanks
-   j
-
-> > >>>> +			/*
-> > >>>> +			 * The VIN4 video input path is shared between
-> > >>>> +			 * CVBS and HDMI inputs through SW[49-54] switches.
-> > >>>> +			 *
-> > >>>> +			 * CVBS is the default selection, link it to VIN4 here.
-> > >>>> +			 */
-> > >>>> +			adv7180_out: endpoint {
-> > >>>> +				remote-endpoint =3D <&vin4_in>;
-> > >>>> +			};
-> > >>>> +		};
-> > >>>> +	};
-> > >>>>  };
-> > >>>>
-> > >>>>  &i2c1 {
-> > >>>> @@ -246,3 +268,23 @@
-> > >>>>  	timeout-sec =3D <60>;
-> > >>>>  	status =3D "okay";
-> > >>>>  };
->  >>>> +
-> > >>>> +&vin4 {
-> > >>>> +	pinctrl-0 =3D <&vin4_pins_cvbs>;
-> > >>>> +	pinctrl-names =3D "default";
-> > >>>> +
-> > >>>> +	status =3D "okay";
-> > >>>> +
-> > >>>> +	ports {
-> > >>>> +		#address-cells =3D <1>;
-> > >>>> +		#size-cells =3D <0>;
-> > >>>> +
-> > >>>> +		port@0 {
-> > >>>> +			reg =3D <0>;
-> > >>>> +
-> > >>>> +			vin4_in: endpoint {
-> > >>>> +				remote-endpoint =3D <&adv7180_out>;
-> > >>>> +			};
-> > >>>> +		};
-> > >>>> +	};
-> > >>>> +};
+> We can't add required reset hog DT bindings to the Meson reset
+> controller anyway without breaking DT backwards compatibility.
 >
-> --
-> Regards,
+>> > > - specify a list of reset lines and their desired state (or to keep it
+>> > > easy: specify a list of reset lines that should be asserted)
+>> > > (I must admit that this is basically your idea but the definition is
+>> > > moved from device-tree to the reset controller driver)
+>> >
+>> > Yes, I think the list of "reset line ID" and "init state" pairs
+>> > would be nicer.
+>>
+>> $ grep -R "of_reset_n_cells = [^1]" drivers/reset/
+>> drivers/reset/reset-berlin.c:   priv->rcdev.of_reset_n_cells = 2;
+>> drivers/reset/hisilicon/reset-hi3660.c: rc->rst.of_reset_n_cells = 2;
+>> drivers/reset/reset-ti-sci.c:   data->rcdev.of_reset_n_cells = 2;
+>> drivers/reset/reset-lantiq.c:   priv->rcdev.of_reset_n_cells = 2;
+>>
+>> everything else uses only one reset cell
+>> from the lantiq reset dt-binding documentation: "The first cell takes
+>> the reset set bit and the second cell takes the status bit."
+>>
+>> I'm not sure what to do with drivers that specify != 1 reset-cell
+>> though if we use a simple "init state pair"
+>> maybe Philipp can share his opinion on this one as well
 >
-> Laurent Pinchart
+> See above, so far I am not convinced (either way) whether this should be
+> described in the DT at all.
 >
+>> > > any "chip" specific differences could be expressed by using a
+>> > > different of_device_id
+>> > >
+>> > > one the other hand: your "reset hog" solution looks fine to me if
+>> > > reset lines can be board specific
+>> > >
+>> > > > From the discussion with Martin Blumenstingl
+>> > > > (https://lkml.org/lkml/2018/4/28/115),
+>> > > > the problem for Amlogic is that
+>> > > > the reset line is "de-asserted" by default.
+>> > > > If so, the 'reset-hog' would fix the problem,
+>> > > > and DWC3 driver would be able to use
+>> > > > shared, level reset, I think.
+>> > >
+>> > > I think you are right: if we could control the initial state then we
+>> > > should be able to use level resets
+>> >
+>> >
+>> > Even further, can we drop the shared reset_control_reset() support, maybe?
+>> > (in other words, revert commit 7da33a37b48f11)
+>>
+>> I believe we need to keep this if there's hardware out there:
+>> - where the reset controller only supports reset pulses
+>> - at least one reset line is shared between multiple devices
+>>
+>> I didn't have a closer look at the Amlogic Meson6 SoC yet, but I think
+>> it matches above criteria. as far as I know:
+>> - the USB situation there is similar to Meson8b (USB controllers and
+>> PHYs share a reset line)
+>> - it uses an older reset controller IP block which does not support
+>> level resets (only reset pulses)
 >
->
+> See my answer to Masahiro's first mail. I think somebody suggested in
+> the past to add a fallback from the deassert to the reset op. I think
+> this is something that should work in this case.
+this is an interesting idea - it should work for Meson6 (in case
+mainline ever gains support for this old SoC)
 
---cPi+lWm09sJ+d57q
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbBxmvAAoJEHI0Bo8WoVY8T4MP/3q1sl9D+YjiLyumyYZW0JC7
-aNpreQtnGkaLWUSh0Y2/0rkHnIgUSR+xfSn1aYlWMfs8B4lbx/qbX6PuX58NZHd+
-IfUq1lHLQTIE4wMFxyOsB9jfd4tuzylpvYu7tOYj4ovz08qRyHqZkCGNImReAYtx
-VHgZSiMJCxeko9MIIpMkHKfvFyKeWEj2km0vfyvcCGNHKoxV0iTPQi5WX+wLQcHx
-uv8LVS71m2t9/yqNZr4o/O74xCXfPsz7tj3MdH7v3skCglqIvLo/iKwVBMWkn4aE
-/muWnzeeh1GYHD46a6p6tWEU2wbY4H/WZNoHdCQOkBLZ3MzZTevESNE23J4tYq+U
-Orc/5xlFR6nu9dTgfpRMapElFBSjyTJmDWnS0gA+xO2ikDgQAnRdX0j2DrZAwCtp
-l49Ig/8uvatsBUWTWX6Q1BmKNuKgQzOJAgt73Rj9Xa4GUXxeAHMbeceLDFPWHt4s
-PECbnGkES8mhJQVJE6Sw06CbOkswWT9fY10FHjy9QmZI1nIKSsCJIj4MC6ill1/i
-2bPuTaKF5bmMalHpfmhL176uq/0JgduURcOIBAKM4AeC8jEvcOG5/NePxaT86O2r
-seZC/YYOWJViAs1VgNBcBYeJuuWHXycl/EkiqGg+XSPuzPjmX4Yjo61P0su8yZ1m
-5Gd1tkps81NiDgwWR49X
-=IxYo
------END PGP SIGNATURE-----
-
---cPi+lWm09sJ+d57q--
+Regards
+Martin
