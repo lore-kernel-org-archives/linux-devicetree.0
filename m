@@ -1,92 +1,112 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 4/6] watchdog: sp805: set WDOG_HW_RUNNING when
- appropriate
-Date: Thu, 24 May 2018 09:19:01 -0700
-Message-ID: <20180524161901.GB28425@roeck-us.net>
-References: <1527120924-12131-1-git-send-email-ray.jui@broadcom.com>
- <1527120924-12131-5-git-send-email-ray.jui@broadcom.com>
+From: richard.gong@linux.intel.com
+Subject: [PATCHv5 0/8] Add Intel Stratix10 FPGA manager and service layer
+Date: Thu, 24 May 2018 11:33:12 -0500
+Message-ID: <1527179600-26441-1-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527120924-12131-5-git-send-email-ray.jui@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, corbet@lwn.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 23, 2018 at 05:15:22PM -0700, Ray Jui wrote:
-> If the watchdog hardware is already enabled during the boot process,
-> when the Linux watchdog driver loads, it should reset the watchdog and
-> tell the watchdog framework. As a result, ping can be generated from
-> the watchdog framework, until the userspace watchdog daemon takes over
-> control
-> 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Vladimir Olovyannikov <vladimir.olovyannikov@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+From: Richard Gong <richard.gong@intel.com>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+This is the 5th submission of Intel stratix10 service layer patches. Intel
+Stratix10 FPGA manager, which is 1st Stratix10 service layer client, is
+included in this submission.
 
-I have one question, though: Is it really correct that both
-INT_ENABLE _and_ RESET_ENABLE have to be set to enable the watdog ?
-What if only RESET_ENABLE is set ?
+Stratix10 service layer patches have been reviewed internally by Alan Tull
+and other colleagues at Intel.
 
-Thanks,
-Guenter
+Some features of the Intel Stratix10 SoC require a level of privilege
+higher than the kernel is granted. Such secure features include
+FPGA programming. In terms of the ARMv8 architecture, the kernel runs
+at Exception Level 1 (EL1), access to the features requires
+Exception Level 3 (EL3).
 
-> ---
->  drivers/watchdog/sp805_wdt.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/watchdog/sp805_wdt.c b/drivers/watchdog/sp805_wdt.c
-> index 1484609..d662a6f 100644
-> --- a/drivers/watchdog/sp805_wdt.c
-> +++ b/drivers/watchdog/sp805_wdt.c
-> @@ -42,6 +42,7 @@
->  	/* control register masks */
->  	#define	INT_ENABLE	(1 << 0)
->  	#define	RESET_ENABLE	(1 << 1)
-> +	#define	ENABLE_MASK	(INT_ENABLE | RESET_ENABLE)
->  #define WDTINTCLR		0x00C
->  #define WDTRIS			0x010
->  #define WDTMIS			0x014
-> @@ -74,6 +75,15 @@ module_param(nowayout, bool, 0);
->  MODULE_PARM_DESC(nowayout,
->  		"Set to 1 to keep watchdog running after device release");
->  
-> +/* returns true if wdt is running; otherwise returns false */
-> +static bool wdt_is_running(struct watchdog_device *wdd)
-> +{
-> +	struct sp805_wdt *wdt = watchdog_get_drvdata(wdd);
-> +	u32 wdtcontrol = readl_relaxed(wdt->base + WDTCONTROL);
-> +
-> +	return (wdtcontrol & ENABLE_MASK) == ENABLE_MASK;
-> +}
-> +
->  /* This routine finds load value that will reset system in required timout */
->  static int wdt_setload(struct watchdog_device *wdd, unsigned int timeout)
->  {
-> @@ -239,6 +249,15 @@ sp805_wdt_probe(struct amba_device *adev, const struct amba_id *id)
->  	watchdog_init_timeout(&wdt->wdd, 0, &adev->dev);
->  	wdt_setload(&wdt->wdd, wdt->wdd.timeout);
->  
-> +	/*
-> +	 * If HW is already running, enable/reset the wdt and set the running
-> +	 * bit to tell the wdt subsystem
-> +	 */
-> +	if (wdt_is_running(&wdt->wdd)) {
-> +		wdt_enable(&wdt->wdd);
-> +		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
-> +	}
-> +
->  	ret = watchdog_register_device(&wdt->wdd);
->  	if (ret) {
->  		dev_err(&adev->dev, "watchdog_register_device() failed: %d\n",
-> -- 
-> 2.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Intel Stratix10 service layer provides an in kernel API for drivers to
+request access to the secure features. The requests are queued and
+processed one by one. ARM’s SMCCC is used to pass the execution of the
+requests on to a secure monitor (EL3).
+
+Later the Intel Stratix10 service layer driver will be extended to provide
+services for QSPI, Crypto and warm reset.
+
+v2: add patches for FPGA manager, FPGA manager binding, dts and defconfig
+    remove intel-service subdirectory and intel-service.h, move intel-smc.h
+    and intel-service.c to driver/misc subdirectory
+    remove global variables
+    change service layer driver be 'default n'
+    correct SPDX markers
+    add timeout for do..while() loop
+    add kernel-doc for the functions and structs, correct multiline comments
+    replace kfifo_in/kfifo_out with kfifo_in_spinlocked/kfifo_out_spinlocked
+    rename struct intel_svc_data (at client header) to intel_svc_client_msg
+    rename struct intel_svc_private_mem to intel_svc_data
+    other corrections/changes from Intel internal code reviews
+v3: change all exported functions with "intel_svc_" as the prefix
+    increase timeout values for claiming back submitted buffer(s)
+    rename struct intel_command_reconfig_payload to
+    struct intel_svc_command_reconfig_payload
+    add pr_err() to provide the error return value
+    change to put fpga_mgr node under firmware/svc node
+    change to FPGA manager to align the update of service client APIs, and the
+    update of fpga_mgr device node
+    Other corrections/changes
+v4: s/intel/stratix10/ on some variables, structs, functions, and file names
+    intel-service.c -> stratix10-svc.c
+    intel-smc.h -> stratix10-smc.h
+    intel-service-client.h -> stratix10-svc-client.h
+    remove non-kernel-doc formatting
+    s/fpga-mgr@0/fpga-mgr/ to remove unit_address at fpga_mgr node
+    add Rob's Reviewed-by
+    add Richard's signed-off-by
+v5: add a new API statix10_svc_done() which is called by service client
+    when client request is completed or error occurs during request
+    process. Which allows service layer to free its resources.
+    remove dummy client from service layer client header and service layer
+    source file.
+    add Rob's Reviewed-by
+    add a new file stratix10-svc.rst and add that to driver-api/index.rst
+    kernel-doc fixes
+
+Alan Tull (3):
+  dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+  arm64: dts: stratix10: add fpga manager and region
+  fpga: add intel stratix10 soc fpga manager driver
+
+Richard Gong (5):
+  dt-bindings, firmware: add Intel Stratix10 service layer binding
+  arm64: dts: stratix10: add stratix10 service driver binding to base
+    dtsi
+  driver, misc: add Intel Stratix10 service layer driver
+  defconfig: enable fpga and service layer
+  Documentation: driver-api: add stratix10 service layer
+
+ .../bindings/firmware/intel,stratix10-svc.txt      |  57 ++
+ .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt |  17 +
+ Documentation/driver-api/index.rst                 |   1 +
+ Documentation/driver-api/stratix10-svc.rst         |  32 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  33 +
+ arch/arm64/configs/defconfig                       |   6 +
+ drivers/fpga/Kconfig                               |   6 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/stratix10-soc.c                       | 545 ++++++++++++
+ drivers/misc/Kconfig                               |  12 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/stratix10-smc.h                       | 205 +++++
+ drivers/misc/stratix10-svc.c                       | 984 +++++++++++++++++++++
+ include/linux/stratix10-svc-client.h               | 199 +++++
+ 14 files changed, 2099 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+ create mode 100644 Documentation/driver-api/stratix10-svc.rst
+ create mode 100644 drivers/fpga/stratix10-soc.c
+ create mode 100644 drivers/misc/stratix10-smc.h
+ create mode 100644 drivers/misc/stratix10-svc.c
+ create mode 100644 include/linux/stratix10-svc-client.h
+
+-- 
+2.7.4
