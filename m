@@ -1,60 +1,150 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/6] Documentation: DT: Add optional 'timeout-sec'
- property for sp805
-Date: Thu, 24 May 2018 10:12:29 -0700
-Message-ID: <20180524171229.GC9499@roeck-us.net>
-References: <1527120924-12131-1-git-send-email-ray.jui@broadcom.com>
- <1527120924-12131-3-git-send-email-ray.jui@broadcom.com>
- <20180524161628.GA28425@roeck-us.net>
- <621dc488-2d8d-003b-9bd1-4de59e8d178b@broadcom.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v9 01/15] ARM: Add Krait L2 register accessor functions
+Date: Thu, 24 May 2018 10:39:26 -0700
+Message-ID: <20180524173926.GC14924@minitux>
+References: <1520347148-27852-1-git-send-email-sricharan@codeaurora.org>
+ <1520347148-27852-2-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <621dc488-2d8d-003b-9bd1-4de59e8d178b@broadcom.com>
+In-Reply-To: <1520347148-27852-2-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 24, 2018 at 09:42:20AM -0700, Ray Jui wrote:
-> 
-> 
-> On 5/24/2018 9:16 AM, Guenter Roeck wrote:
-> >On Wed, May 23, 2018 at 05:15:20PM -0700, Ray Jui wrote:
-> >>Update the SP805 binding document to add optional 'timeout-sec'
-> >>devicetree property
-> >>
-> >>Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> >>---
-> >>  Documentation/devicetree/bindings/watchdog/arm,sp805.txt | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> >>index 0fa3629..1debea3 100644
-> >>--- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> >>+++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> >>@@ -19,6 +19,8 @@ Required properties:
-> >>  Optional properties:
-> >>  - interrupts:  Should specify WDT interrupt number
-> >>+- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
-> >>+               default timeout in the driver is 30 seconds
-> >
-> >"... the default timeout is determined by the driver" might be better.
-> >If you want to mandate a default here (not sure if that is a good idea),
-> >I would suggest to use something like "should be 30 seconds".
-> >
-> 
-> Okay. This can be changed to:
-> 
-> - timeout-sec: Should specify default WDT timeout in seconds. If unset, the
-> default timeout is determined by the driver.
-> 
-> Please advise how to proceed with this patch series. Should I make the above
-> modification and send out v4?
+On Tue 06 Mar 06:38 PST 2018, Sricharan R wrote:
 
-I would suggest to wait a day or two, then send out v4 if there are no further
-comments.
+> From: Stephen Boyd <sboyd@codeaurora.org>
+> 
+> Krait CPUs have a handful of L2 cache controller registers that
+> live behind a cp15 based indirection register. First you program
+> the indirection register (l2cpselr) to point the L2 'window'
+> register (l2cpdr) at what you want to read/write.  Then you
+> read/write the 'window' register to do what you want. The
+> l2cpselr register is not banked per-cpu so we must lock around
+> accesses to it to prevent other CPUs from re-pointing l2cpdr
+> underneath us.
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 
-Thanks,
-Guenter
+This should have your signed-off-by here as well.
+
+Apart from that:
+
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  arch/arm/common/Kconfig                   |  3 ++
+>  arch/arm/common/Makefile                  |  1 +
+>  arch/arm/common/krait-l2-accessors.c      | 48 +++++++++++++++++++++++++++++++
+>  arch/arm/include/asm/krait-l2-accessors.h | 10 +++++++
+>  4 files changed, 62 insertions(+)
+>  create mode 100644 arch/arm/common/krait-l2-accessors.c
+>  create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
+> 
+> diff --git a/arch/arm/common/Kconfig b/arch/arm/common/Kconfig
+> index e5ad070..c8e1986 100644
+> --- a/arch/arm/common/Kconfig
+> +++ b/arch/arm/common/Kconfig
+> @@ -7,6 +7,9 @@ config DMABOUNCE
+>  	bool
+>  	select ZONE_DMA
+>  
+> +config KRAIT_L2_ACCESSORS
+> +	bool
+> +
+>  config SHARP_LOCOMO
+>  	bool
+>  
+> diff --git a/arch/arm/common/Makefile b/arch/arm/common/Makefile
+> index 70b4a14..eec6cd1 100644
+> --- a/arch/arm/common/Makefile
+> +++ b/arch/arm/common/Makefile
+> @@ -7,6 +7,7 @@ obj-y				+= firmware.o
+>  
+>  obj-$(CONFIG_SA1111)		+= sa1111.o
+>  obj-$(CONFIG_DMABOUNCE)		+= dmabounce.o
+> +obj-$(CONFIG_KRAIT_L2_ACCESSORS) += krait-l2-accessors.o
+>  obj-$(CONFIG_SHARP_LOCOMO)	+= locomo.o
+>  obj-$(CONFIG_SHARP_PARAM)	+= sharpsl_param.o
+>  obj-$(CONFIG_SHARP_SCOOP)	+= scoop.o
+> diff --git a/arch/arm/common/krait-l2-accessors.c b/arch/arm/common/krait-l2-accessors.c
+> new file mode 100644
+> index 0000000..9a97dda
+> --- /dev/null
+> +++ b/arch/arm/common/krait-l2-accessors.c
+> @@ -0,0 +1,48 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> +
+> +#include <linux/spinlock.h>
+> +#include <linux/export.h>
+> +
+> +#include <asm/barrier.h>
+> +#include <asm/krait-l2-accessors.h>
+> +
+> +static DEFINE_RAW_SPINLOCK(krait_l2_lock);
+> +
+> +void krait_set_l2_indirect_reg(u32 addr, u32 val)
+> +{
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&krait_l2_lock, flags);
+> +	/*
+> +	 * Select the L2 window by poking l2cpselr, then write to the window
+> +	 * via l2cpdr.
+> +	 */
+> +	asm volatile ("mcr p15, 3, %0, c15, c0, 6 @ l2cpselr" : : "r" (addr));
+> +	isb();
+> +	asm volatile ("mcr p15, 3, %0, c15, c0, 7 @ l2cpdr" : : "r" (val));
+> +	isb();
+> +
+> +	raw_spin_unlock_irqrestore(&krait_l2_lock, flags);
+> +}
+> +EXPORT_SYMBOL(krait_set_l2_indirect_reg);
+> +
+> +u32 krait_get_l2_indirect_reg(u32 addr)
+> +{
+> +	u32 val;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&krait_l2_lock, flags);
+> +	/*
+> +	 * Select the L2 window by poking l2cpselr, then read from the window
+> +	 * via l2cpdr.
+> +	 */
+> +	asm volatile ("mcr p15, 3, %0, c15, c0, 6 @ l2cpselr" : : "r" (addr));
+> +	isb();
+> +	asm volatile ("mrc p15, 3, %0, c15, c0, 7 @ l2cpdr" : "=r" (val));
+> +
+> +	raw_spin_unlock_irqrestore(&krait_l2_lock, flags);
+> +
+> +	return val;
+> +}
+> +EXPORT_SYMBOL(krait_get_l2_indirect_reg);
+> diff --git a/arch/arm/include/asm/krait-l2-accessors.h b/arch/arm/include/asm/krait-l2-accessors.h
+> new file mode 100644
+> index 0000000..dd7c474
+> --- /dev/null
+> +++ b/arch/arm/include/asm/krait-l2-accessors.h
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> +
+> +#ifndef __ASMARM_KRAIT_L2_ACCESSORS_H
+> +#define __ASMARM_KRAIT_L2_ACCESSORS_H
+> +
+> +extern void krait_set_l2_indirect_reg(u32 addr, u32 val);
+> +extern u32 krait_get_l2_indirect_reg(u32 addr);
+> +
+> +#endif
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
