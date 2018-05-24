@@ -1,57 +1,116 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH 9/9] regulator: bd71837: Build BD71837 regulator driver
-Date: Thu, 24 May 2018 09:01:14 +0300
-Message-ID: <20180524060114.GJ4249@localhost.localdomain>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 2/2] mtd: partitions: use DT info for parsing partitions
+ with specified type
+Date: Thu, 24 May 2018 08:15:08 +0200
+Message-ID: <20180524081508.27761234@bbrezillon>
+References: <20180523171448.26234-1-zajec5@gmail.com>
+ <20180523171448.26234-2-zajec5@gmail.com>
+ <20180523202408.632edefa@bbrezillon>
+ <0204012f-71b6-70ef-860d-fcce3abdd302@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <0204012f-71b6-70ef-860d-fcce3abdd302@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Configurations and Makefile for BD71837 regulator driver
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/regulator/Kconfig  | 11 +++++++++++
- drivers/regulator/Makefile |  1 +
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 097f61784a7d..139f4b53fea0 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -180,6 +180,17 @@ config REGULATOR_BCM590XX
- 	  BCM590xx PMUs. This will enable support for the software
- 	  controllable LDO/Switching regulators.
- 
-+config REGULATOR_BD71837
-+	tristate "ROHM BD71837 Power Regulator"
-+	depends on MFD_BD71837
-+	help
-+	  This driver supports voltage regulators on ROHM BD71837 PMIC.
-+	  This will enable support for the software controllable buck
-+	  and LDO regulators.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called bd71837-regulator.
-+
- config REGULATOR_BD9571MWV
- 	tristate "ROHM BD9571MWV Regulators"
- 	depends on MFD_BD9571MWV
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 590674fbecd7..1b4d8ec416c2 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -27,6 +27,7 @@ obj-$(CONFIG_REGULATOR_AS3711) += as3711-regulator.o
- obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
- obj-$(CONFIG_REGULATOR_AXP20X) += axp20x-regulator.o
- obj-$(CONFIG_REGULATOR_BCM590XX) += bcm590xx-regulator.o
-+obj-$(CONFIG_REGULATOR_BD71837) += bd71837-regulator.o
- obj-$(CONFIG_REGULATOR_BD9571MWV) += bd9571mwv-regulator.o
- obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
- obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
--- 
-2.14.3
+T24gVGh1LCAyNCBNYXkgMjAxOCAwNzo1MDoxMCArMDIwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
+NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBPbiAyMy4wNS4yMDE4IDIwOjI0LCBCb3JpcyBCcmV6aWxs
+b24gd3JvdGU6Cj4gPiBPbiBXZWQsIDIzIE1heSAyMDE4IDE5OjE0OjQ4ICswMjAwCj4gPiBSYWZh
+xYIgTWnFgmVja2kgPHphamVjNUBnbWFpbC5jb20+IHdyb3RlOgo+ID4gICAKPiA+PiBGcm9tOiBS
+YWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gPj4KPiA+PiBUaGlzIHN1cHBvcnRz
+IG5lc3RlZCBwYXJ0aXRpb25zIGluIGEgRFQuIElmIHNlbGVjdGVkIHBhcnRpdGlvbiBoYXMgYQo+
+ID4+ICJjb21wYXRpYmxlIiBwcm9wZXJ0eSBzcGVjaWZpZWQgaXQgd2lsbCBiZSBwYXJzZWQgbG9v
+a2luZyBmb3IKPiA+PiBzdWJwYXJ0aXRpb25zLgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogUmFm
+YcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+ID4+IC0tLQo+ID4+ICAgZHJpdmVycy9t
+dGQvbXRkcGFydC5jIHwgMzMgKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPj4g
+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pCj4gPj4K
+PiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvbXRkcGFydC5jIGIvZHJpdmVycy9tdGQvbXRk
+cGFydC5jCj4gPj4gaW5kZXggZjhkM2EwMTVjZGFkLi41MmUyY2IzNWZjNzkgMTAwNjQ0Cj4gPj4g
+LS0tIGEvZHJpdmVycy9tdGQvbXRkcGFydC5jCj4gPj4gKysrIGIvZHJpdmVycy9tdGQvbXRkcGFy
+dC5jCj4gPj4gQEAgLTMyMiwyMiArMzIyLDYgQEAgc3RhdGljIGlubGluZSB2b2lkIGZyZWVfcGFy
+dGl0aW9uKHN0cnVjdCBtdGRfcGFydCAqcCkKPiA+PiAgIAlrZnJlZShwKTsKPiA+PiAgIH0KPiA+
+PiAgIAo+ID4+IC0vKioKPiA+PiAtICogbXRkX3BhcnNlX3BhcnQgLSBwYXJzZSBNVEQgcGFydGl0
+aW9uIGxvb2tpbmcgZm9yIHN1YnBhcnRpdGlvbnMKPiA+PiAtICoKPiA+PiAtICogQHNsYXZlOiBw
+YXJ0IHRoYXQgaXMgc3VwcG9zZWQgdG8gYmUgYSBjb250YWluZXIgYW5kIHNob3VsZCBiZSBwYXJz
+ZWQKPiA+PiAtICogQHR5cGVzOiBOVUxMLXRlcm1pbmF0ZWQgYXJyYXkgd2l0aCBuYW1lcyBvZiBw
+YXJ0aXRpb24gcGFyc2VycyB0byB0cnkKPiA+PiAtICoKPiA+PiAtICogU29tZSBwYXJ0aXRpb25z
+IGFyZSBraW5kIG9mIGNvbnRhaW5lcnMgd2l0aCBleHRyYSBzdWJwYXJ0aXRpb25zICh2b2x1bWVz
+KS4KPiA+PiAtICogVGhlcmUgY2FuIGJlIHZhcmlvdXMgZm9ybWF0cyBvZiBzdWNoIGNvbnRhaW5l
+cnMuIFRoaXMgZnVuY3Rpb24gdHJpZXMgdG8gdXNlCj4gPj4gLSAqIHNwZWNpZmllZCBwYXJzZXJz
+IHRvIGFuYWx5emUgZ2l2ZW4gcGFydGl0aW9uIGFuZCByZWdpc3RlcnMgZm91bmQKPiA+PiAtICog
+c3VicGFydGl0aW9ucyBvbiBzdWNjZXNzLgo+ID4+IC0gKi8KPiA+PiAtc3RhdGljIGludCBtdGRf
+cGFyc2VfcGFydChzdHJ1Y3QgbXRkX3BhcnQgKnNsYXZlLCBjb25zdCBjaGFyICpjb25zdCAqdHlw
+ZXMpCj4gPj4gLXsKPiA+PiAtCXJldHVybiBwYXJzZV9tdGRfcGFydGl0aW9ucygmc2xhdmUtPm10
+ZCwgdHlwZXMsIE5VTEwpOwo+ID4+IC19Cj4gPj4gLQo+ID4+ICAgc3RhdGljIHN0cnVjdCBtdGRf
+cGFydCAqYWxsb2NhdGVfcGFydGl0aW9uKHN0cnVjdCBtdGRfaW5mbyAqcGFyZW50LAo+ID4+ICAg
+CQkJY29uc3Qgc3RydWN0IG10ZF9wYXJ0aXRpb24gKnBhcnQsIGludCBwYXJ0bm8sCj4gPj4gICAJ
+CQl1aW50NjRfdCBjdXJfb2Zmc2V0KQo+ID4+IEBAIC03MzUsOCArNzE5LDggQEAgaW50IGFkZF9t
+dGRfcGFydGl0aW9ucyhzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwKPiA+PiAgIAo+ID4+ICAgCQlh
+ZGRfbXRkX2RldmljZSgmc2xhdmUtPm10ZCk7Cj4gPj4gICAJCW10ZF9hZGRfcGFydGl0aW9uX2F0
+dHJzKHNsYXZlKTsKPiA+PiAtCQlpZiAocGFydHNbaV0udHlwZXMpCj4gPj4gLQkJCW10ZF9wYXJz
+ZV9wYXJ0KHNsYXZlLCBwYXJ0c1tpXS50eXBlcyk7Cj4gPj4gKwkJLyogTG9vayBmb3Igc3VicGFy
+dGl0aW9ucyAqLwo+ID4+ICsJCXBhcnNlX210ZF9wYXJ0aXRpb25zKCZzbGF2ZS0+bXRkLCBwYXJ0
+c1tpXS50eXBlcywgTlVMTCk7Cj4gPj4gICAKPiA+PiAgIAkJY3VyX29mZnNldCA9IHNsYXZlLT5v
+ZmZzZXQgKyBzbGF2ZS0+bXRkLnNpemU7Cj4gPj4gICAJfQo+ID4+IEBAIC04MTIsNiArNzk2LDEy
+IEBAIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QgZGVmYXVsdF9tdGRfcGFydF90eXBlc1tdID0g
+ewo+ID4+ICAgCU5VTEwKPiA+PiAgIH07Cj4gPj4gICAKPiA+PiArLyogQ2hlY2sgRFQgb25seSB3
+aGVuIGxvb2tpbmcgZm9yIHN1YnBhcnRpdGlvbnMuICovCj4gPj4gK3N0YXRpYyBjb25zdCBjaGFy
+ICogY29uc3QgZGVmYXVsdF9zdWJwYXJ0aXRpb25fdHlwZXNbXSA9IHsKPiA+PiArCSJvZnBhcnQi
+LAo+ID4+ICsJTlVMTAo+ID4+ICt9Owo+ID4+ICsKPiA+PiAgIHN0YXRpYyBpbnQgbXRkX3BhcnRf
+ZG9fcGFyc2Uoc3RydWN0IG10ZF9wYXJ0X3BhcnNlciAqcGFyc2VyLAo+ID4+ICAgCQkJICAgICBz
+dHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwKPiA+PiAgIAkJCSAgICAgc3RydWN0IG10ZF9wYXJ0aXRp
+b25zICpwcGFydHMsCj4gPj4gQEAgLTg4Miw3ICs4NzIsOSBAQCBzdGF0aWMgaW50IG10ZF9wYXJ0
+X29mX3BhcnNlKHN0cnVjdCBtdGRfaW5mbyAqbWFzdGVyLAo+ID4+ICAgCWNvbnN0IGNoYXIgKmZp
+eGVkID0gImZpeGVkLXBhcnRpdGlvbnMiOwo+ID4+ICAgCWludCByZXQsIGVyciA9IDA7Cj4gPj4g
+ICAKPiA+PiAtCW5wID0gb2ZfZ2V0X2NoaWxkX2J5X25hbWUobXRkX2dldF9vZl9ub2RlKG1hc3Rl
+ciksICJwYXJ0aXRpb25zIik7Cj4gPj4gKwlucCA9IG10ZF9nZXRfb2Zfbm9kZShtYXN0ZXIpOwo+
+ID4+ICsJaWYgKCFtdGRfaXNfcGFydGl0aW9uKG1hc3RlcikpCj4gPj4gKwkJbnAgPSBvZl9nZXRf
+Y2hpbGRfYnlfbmFtZShucCwgInBhcnRpdGlvbnMiKTsKPiA+PiAgIAlvZl9wcm9wZXJ0eV9mb3Jf
+ZWFjaF9zdHJpbmcobnAsICJjb21wYXRpYmxlIiwgcHJvcCwgY29tcGF0KSB7Cj4gPj4gICAJCXBh
+cnNlciA9IG10ZF9wYXJ0X2dldF9jb21wYXRpYmxlX3BhcnNlcihjb21wYXQpOwo+ID4+ICAgCQlp
+ZiAoIXBhcnNlcikKPiA+PiBAQCAtOTQ1LDcgKzkzNyw4IEBAIGludCBwYXJzZV9tdGRfcGFydGl0
+aW9ucyhzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwgY29uc3QgY2hhciAqY29uc3QgKnR5cGVzLAo+
+ID4+ICAgCWludCByZXQsIGVyciA9IDA7Cj4gPj4gICAKPiA+PiAgIAlpZiAoIXR5cGVzKQo+ID4+
+IC0JCXR5cGVzID0gZGVmYXVsdF9tdGRfcGFydF90eXBlczsKPiA+PiArCQl0eXBlcyA9IG10ZF9p
+c19wYXJ0aXRpb24obWFzdGVyKSA/IGRlZmF1bHRfc3VicGFydGl0aW9uX3R5cGVzIDoKPiA+PiAr
+CQkJZGVmYXVsdF9tdGRfcGFydF90eXBlczsgIAo+ID4gCj4gPiBIbSwgdGhhdCBtZWFucyB0aGUg
+c3VicGFydHMgaW5oZXJpdCB0aGUgcGFyc2VyIHR5cGVzIGZyb20gdGhlaXIgcGFyZW50Cj4gPiBp
+ZiB0eXBlcyAhPSBOVUxMPyBJcyB0aGF0IHJlYWxseSB3aGF0IHdlIHdhbnQ/IEFuZCBpZiB0aGF0
+J3Mgd2hhdCB3ZQo+ID4gd2FudCwgd2h5IGRvbid0IHdlIGRvIHRoZSBzYW1lIGZvciB0eXBlcyA9
+PSBOVUxMPyAgCj4gCj4gTm8sIHVubGVzcyBJJ20gbWlzc2luZyBzb21ldGhpbmcuIEluIGFkZF9t
+dGRfcGFydGl0aW9ucygpIHRoZXJlIGlzIG5vdwo+IGEgZm9sbG93aW5nIGNhbGw6Cj4gcGFyc2Vf
+bXRkX3BhcnRpdGlvbnMoJnNsYXZlLT5tdGQsIHBhcnRzW2ldLnR5cGVzLCBOVUxMKTsKPiAKPiBJ
+biBtb3N0IGNhc2VzIHBhcnRzW2ldLnR5cGVzIGlzIE5VTEwsIHVubGVzcyB5b3UncmUgdXNpbmcg
+c29tZQo+IGV4Y2VwdGlvbmFsIGRyaXZlciAobGlrZSBiY200N3h4cGFydCkgd2hpY2ggc2V0cyAi
+dHlwZXMiLgo+IAo+IFNvIGZvciBlYWNoIHBhcnRpdGlvbiBwYXJzZV9tdGRfcGFydGl0aW9ucygp
+IHdpbGwgYmUgY2FsbGVkIHdpdGggInR5cGVzIgo+IGFyZ3VtZW50IGFsbW9zdCBhbHdheXMgc2V0
+IHRvIE5VTEwgKG5vIGluaGVyaXRpbmcpLiBUaGF0IHdpbGwgcmVzdWx0IGluCj4gcGlja2luZyBk
+ZWZhdWx0X3N1YnBhcnRpdGlvbl90eXBlcy4KCkFuZCB0aGF0J3MgdGhlICJhbG1vc3QgYWx3YXlz
+IiBJJ20gbm90IGhhcHB5IHdpdGguIEVpdGhlciB5b3UgZG9uJ3QKd2FudCB0byBpbmhlcml0IHRo
+ZSB0eXBlcyBmcm9tIHRoZSBwYXJlbnQgYW5kIHlvdSBkbyB0aGF0IGZvciBib3RoICE9Ck5VTEwg
+YW5kID09IE5VTEwsIG9yIHlvdSBpbmhlcml0IGl0IGZvciBib3RoLgoKQWxzbywgSSdkIHJlYWxs
+eSBsaWtlIHRvIGltcHJvdmUgdGhlICdwYXJ0IHBhcnNlciB0eXBlcycgc2VsZWN0aW9uIGxvZ2lj
+CmJ5IGxldHRpbmcgdGhlIGJvYXJkcyBzZWxlY3QgdGhlIHBhcnQgcGFyc2VycyBpbnN0ZWFkIG9m
+IGhhdmluZyB0aGUgTVRECmRyaXZlcnMgZG8gaXQuCgpNYXliZSB3ZSBjb3VsZCBoYXZlIGFuIGFw
+cHJvYWNoIHNpbWlsYXIgdG8gdGhlIGdwaW8tbG9va3VwLXRhYmxlIHdoZXJlCmJvYXJkIGZpbGVz
+IGNvdWxkIGFzc2lnbiBhIHBhcnQtcGFyc2VyIGxpc3QgdG8gYW4gTVREIG5hbWUsIGFuZCB0aGVu
+IGxldAp0aGUgY29yZSBmaW5kIHdoZXRoZXIgdGhlcmUncyBhIHBhcnQgcGFyc2VyIGxpc3QgYXR0
+YWNoZWQgdG8gdGhlIE1URApkZXYgYXQgcmVnaXN0cmF0aW9uIHRpbWUuIEFuZCBmb3IgRFQtYmFz
+ZWQgc2V0dXAsIHRoaXMgaW5mb3JtYXRpb24Kd291bGQganVzdCBiZSBleHRyYWN0ZWQgZnJvbSB0
+aGUgY29tcGF0aWJsZSBvZiB0aGUgJ3BhcnRpdGlvbnMnIG5vZGUgKG9yCnRoZSBub2RlIGRpcmVj
+dGx5IGlmIHRoZSBNVEQgZGV2aWNlIGlzIGEgcGFydGl0aW9uKS4KCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lv
+biBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1tdGQvCg==
