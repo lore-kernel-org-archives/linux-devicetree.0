@@ -1,101 +1,73 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Thu, 24 May 2018 14:23:56 +0200
-Message-ID: <20180524142356.0fc68797@bbrezillon>
-References: <cover.1526990589.git.stefan@agner.ch>
-        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
-        <20180523161810.0ed9fe80@bbrezillon>
-        <2d8107f0e6568512d691e9ea25a1e4e5@agner.ch>
-        <20180524105614.3c51736c@bbrezillon>
-        <7b3cc3991fb054130fd54c6fdfec5097@agner.ch>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Subject: Re: [PATCH RFC 05/24] Revert "drm: Nerf the preclose callback for
+ modern drivers"
+Date: Thu, 24 May 2018 11:41:30 +0200
+Message-ID: <569c175b-9e1e-a462-9d87-b64d6675ca88@amd.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <20180518092815.25280-6-yuq825@gmail.com>
+ <9b48f845-9854-1029-ed21-df7b3590935b@gmail.com>
+ <CAKGbVbuSuAEF9Zd_usM5ika5KuFiY75jCG3gwOfeAExSciRV7Q@mail.gmail.com>
+ <c958599c-b0df-8b85-4123-daeed0fb07ac@amd.com>
+ <CAKGbVbv10zGLe34J1BXdKHg1Kg0=7A3jUy_8pnjVjNs1T=r8mw@mail.gmail.com>
+ <75f682e9-5b31-ad82-441f-b2c250edc0a0@amd.com>
+ <CAKGbVbttv2zJBaif2EVvqVFQo-xPM+x9hD6X5Lon-bNCNny01A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7b3cc3991fb054130fd54c6fdfec5097@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKGbVbttv2zJBaif2EVvqVFQo-xPM+x9hD6X5Lon-bNCNny01A@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Qiang Yu <yuq825@gmail.com>
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 May 2018 13:09:53 +0200
-Stefan Agner <stefan@agner.ch> wrote:
-
-> On 24.05.2018 10:56, Boris Brezillon wrote:
-> > On Thu, 24 May 2018 10:46:27 +0200
-> > Stefan Agner <stefan@agner.ch> wrote:
-> >   
-> >> Hi Boris,
-> >>
-> >> Thanks for the initial review! One small question below:
-> >>
-> >> On 23.05.2018 16:18, Boris Brezillon wrote:  
-> >> > Hi Stefan,
-> >> >
-> >> > On Tue, 22 May 2018 14:07:06 +0200
-> >> > Stefan Agner <stefan@agner.ch> wrote:  
-> >> >> +
-> >> >> +struct tegra_nand {
-> >> >> +	void __iomem *regs;
-> >> >> +	struct clk *clk;
-> >> >> +	struct gpio_desc *wp_gpio;
-> >> >> +
-> >> >> +	struct nand_chip chip;
-> >> >> +	struct device *dev;
-> >> >> +
-> >> >> +	struct completion command_complete;
-> >> >> +	struct completion dma_complete;
-> >> >> +	bool last_read_error;
-> >> >> +
-> >> >> +	dma_addr_t data_dma;
-> >> >> +	void *data_buf;
-> >> >> +	dma_addr_t oob_dma;
-> >> >> +	void *oob_buf;
-> >> >> +
-> >> >> +	int cur_chip;
-> >> >> +};  
-> >> >
-> >> > This struct should be split in 2 structures: one representing the NAND
-> >> > controller and one representing the NAND chip:
-> >> >
-> >> > struct tegra_nand_controller {
-> >> > 	struct nand_hw_control base;
-> >> > 	void __iomem *regs;
-> >> > 	struct clk *clk;
-> >> > 	struct device *dev;
-> >> > 	struct completion command_complete;
-> >> > 	struct completion dma_complete;
-> >> > 	bool last_read_error;
-> >> > 	int cur_chip;
-> >> > };
-> >> >
-> >> > struct tegra_nand {
-> >> > 	struct nand_chip base;
-> >> > 	dma_addr_t data_dma;
-> >> > 	void *data_buf;
-> >> > 	dma_addr_t oob_dma;
-> >> > 	void *oob_buf;
-> >> > };  
-> >>
-> >> Is there a particular reason why you would leave DMA buffers in the chip
-> >> structure? It seems that is more a controller thing...  
-> > 
-> > The size of those buffers is likely to be device dependent, so if you
-> > have several NANDs connected to the controller, you'll either have to
-> > have one buffer at the controller level which is max(all-chip-buf-size)
-> > or a buffer per device.
-> > 
-> > Also, do you really need these buffers? The core already provide some
-> > which are suitable for DMA (chip->oob_poi and chip->data_buf).
-> >   
-> 
-> Good question, I am not sure, that was existing code.
-> 
-> Are you sure data_buf it is DMA capable?
-> 
-> nand_scan_tail allocates with kmalloc:
-> 
-> chip->data_buf = kmalloc(mtd->writesize + mtd->oobsize, GFP_KERNEL);
-
-Yes, kmalloc() allocates DMA-able buffers, so those are DMA-safe.
+QW0gMjQuMDUuMjAxOCB1bSAxMToyNCBzY2hyaWViIFFpYW5nIFl1Ogo+IE9uIFRodSwgTWF5IDI0
+LCAyMDE4IGF0IDI6NDYgUE0sIENocmlzdGlhbiBLw7ZuaWcKPiA8Y2hyaXN0aWFuLmtvZW5pZ0Bh
+bWQuY29tPiB3cm90ZToKPiBbU05JUF0KPj4gQmVjYXVzZSBvZiB0aGlzIHdlIGhhdmUgYSBzZXBh
+cmF0ZSB0cmFja2luZyBpbiBhbWRncHUgc28gdGhhdCB3ZSBub3Qgb25seQo+PiBrbm93IHdobyBp
+cyB1c2luZyB3aGljaCBCTywgd2hvIGlzIHVzaW5nIHdoaWNoIFZNLgo+IGFtZGdwdSdzIFZNIGlt
+cGxlbWVudGF0aW9uIHNlZW1zIHRvbyBjb21wbGljYXRlZCBmb3IgdGhpcyBzaW1wbGUgbWFsaSBH
+UFUsCj4gYnV0IEkgbWF5IGludmVzdGlnYXRlIGl0IG1vcmUgdG8gc2VlIGlmIEkgY2FuIG1ha2Ug
+aXQgYmV0dGVyLgoKWWVhaCwgY29tcGxldGVseSBhZ3JlZS4KClRoZSBWTSBoYW5kbGluZyBpbiBh
+bWRncHUgaXMgcmVhbGx5IGNvbXBsaWNhdGVkIGJlY2F1c2Ugd2UgaGFkIHRvIHR1bmUgCml0IGZv
+ciBtdWx0aXBsZSB1c2UgY2FzZXMuIEUuZy4gcGFydGlhbCByZXNpZGVudCB0ZXh0dXJlcywgZGVs
+YXllZCAKdXBkYXRlcyBldGMgZXRjLi4uLgoKQnV0IHlvdSBzaG91bGQgYXQgbGVhc3QgYmUgYWJs
+ZSB0byB0YWtlIHRoZSBsZXNzb25zIGxlYXJuZWQgd2UgaGFkIHdpdGggCnRoYXQgVk0gY29kZSBh
+bmQgbm90IG1ha2UgdGhlIHNhbWUgbWlzdGFrZXMgYWdhaW4uCgo+PiBXZSBpbnRlbnRpb25hbGx5
+IHJlbW92ZWQgdGhlIHByZWNsb3NlIGNhbGxiYWNrIHRvIHByZXZlbnQgY2VydGFpbiB1c2UgY2Fz
+ZXMsCj4+IGJyaW5naW5nIGl0IGJhY2sgdG8gYWxsb3cgeW91ciB1c2UgY2FzZSBsb29rcyByYXRo
+ZXIgZmlzaHkgdG8gbWUuCj4gU2VlbXMgb3RoZXIgZHJpdmVycyBkbyBlaXRoZXIgdGhlIGRlZmZl
+ciBvciB3YWl0IHdheSB0byBhZG9wdCB0aGUgZHJvcAo+IG9mIHByZWNsb3NlLiBJIGNhbiBkbyB0
+aGUgc2FtZSBhcyB5b3Ugc3VnZ2VzdGVkLCBidXQganVzdCBub3QgdW5kZXJzdGFuZCB3aHkKPiB3
+ZSBtYWtlIG91ciBsaWZlIGhhcmRlci4gQ2FuIEkga25vdyB3aGF0J3MgdGhlIGNhc2UgeW91IHdh
+bnQgdG8gcHJldmVudD8KCkkgdGhpbmsgd2hhdCBtYXR0ZXJzIG1vc3QgZm9yIHlvdXIgY2FzZSBp
+cyB0aGUgaXNzdWUgaXMgdGhhdCBkcml2ZXJzIApzaG91bGQgaGFuZGxlIGNsb3NpbmcgYSBCTyBi
+ZWNhdXNlIHVzZXJzcGFjZSBzYWlkIHNvIGluIHRoZSBzYW1lIHdheSBpdCAKaGFuZGxlcyBjbG9z
+aW5nIGEgQk8gYmVjYXVzZSBvZiBhIHByb2Nlc3MgdGVybWluYXRpb24sIGJ1dCBzZWUgYmVsb3cu
+Cgo+PiBCVFc6IFdoYXQgZXhhY3RseSBpcyB0aGUgaXNzdWUgd2l0aCB1c2luZyB0aGUgcG9zdGNs
+b3NlIGNhbGxiYWNrPwo+IFRoZSBpc3N1ZSBpcywgd2hlbiBDdHJsK0MgdG8gdGVybWluYXRlIGFu
+IGFwcGxpY2F0aW9uLCBpZiBubyB3YWl0IG9yIGRlZmZlcgo+IHVubWFwLCBidWZmZXIganVzdCBn
+ZXRzIHVubWFwcGVkIGJlZm9yZSB0YXNrIGlzIGRvbmUsIHNvIGtlcm5lbCBkcml2ZXIKPiBnZXRz
+IE1NVSBmYXVsdCBhbmQgSFcgcmVzZXQgdG8gcmVjb3ZlciB0aGUgR1BVLgoKWWVhaCwgdGhhdCBz
+b3VuZHMgbGlrZSBleGFjdGx5IG9uZSBvZiB0aGUgcmVhc29ucyB3ZSBoYWQgdGhlIGNhbGxiYWNr
+IGluIAp0aGUgZmlyc3QgcGxhY2UgYW5kIHdvcmtlZCBvbiB0byByZW1vdmluZyBpdC4KClNlZSB0
+aGUgaW50ZW50aW9uIGlzIHRvIGhhdmUgcmVsaWFibGUgaGFuZGxpbmcsIGUuZy4gdXNlIHRoZSBz
+YW1lIGNvZGUgCnBhdGggZm9yIGNsb3NpbmcgYSBCTyBiZWNhdXNlIG9mIGFuIElPQ1RMIGFuZCBj
+bG9zaW5nIGEgQk8gYmVjYXVzZSBvZiAKcHJvY2VzcyB0ZXJtaW5hdGlvbi4KCkluIG90aGVyIHdv
+cmRzIHdoYXQgaGFwcGVucyB3aGVuIHVzZXJzcGFjZSBjbG9zZXMgYSBCTyB3aGlsZSB0aGUgR1BV
+IGlzIApzdGlsbCB1c2luZyBpdD8gV291bGQgeW91IHRoZW4gcnVuIGludG8gYSBHUFUgcmVzZXQg
+YXMgd2VsbD8KCkkgbWVhbiBpdCdzIHlvdXIgZHJpdmVyIHN0YWNrLCBzbyBJJ20gbm90IGFnYWlu
+c3QgaXQgYXMgbG9uZyBhcyB5b3UgY2FuIApsaXZlIHdpdGggaXQuIEJ1dCBpdCdzIGV4YWN0bHkg
+dGhlIHRoaW5nIHdlIHdhbnRlZCB0byBhdm9pZCBoZXJlLgoKUmVnYXJkcywKQ2hyaXN0aWFuLgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
