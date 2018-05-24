@@ -1,72 +1,65 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 07/11] arm64: kexec_file: add crash dump support
-Date: Thu, 24 May 2018 09:25:43 -0500
-Message-ID: <CAL_JsqLGgDTfhz6XqgMzDM_KL_W9HRtVOwjeP6rfk3+Tn-Stgg@mail.gmail.com>
-References: <20180425062629.29404-1-takahiro.akashi@linaro.org>
- <20180425062629.29404-8-takahiro.akashi@linaro.org> <0aba6388-8a73-d371-7b92-3594639eb27e@arm.com>
- <20180518153552.GA23468@rob-hp-laptop> <20180521101425.GC9887@linaro.org>
+Subject: Re: [PATCH RFC 07/24] drm/lima: add mali 4xx GPU hardware regs
+Date: Thu, 24 May 2018 09:31:33 -0500
+Message-ID: <CAL_Jsq+kyYX1hQMjYDHwBJL3+YOkH1h4ei9GdkvYgFnWvRXO8A@mail.gmail.com>
+References: <20180518092815.25280-1-yuq825@gmail.com>
+ <20180518092815.25280-8-yuq825@gmail.com>
+ <20180523172401.GC17409@rob-hp-laptop>
+ <CAKGbVbsa1O6owhhpA2qw2ZCyGdhmmF=uN9s+UKLJspoN_dwNSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180521101425.GC9887@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh@kernel.org>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKGbVbsa1O6owhhpA2qw2ZCyGdhmmF=uN9s+UKLJspoN_dwNSg@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Qiang Yu <yuq825@gmail.com>
+Cc: Simon Shields <simon@lineageos.org>, devicetree@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, Marek Vasut <marex@denx.de>, Neil Armstrong <narmstrong@baylibre.com>, Andrei Paulau <7134956@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, Erico Nunes <nunes.erico@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 21, 2018 at 5:14 AM, AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
-> Hi Rob,
->
-> On Fri, May 18, 2018 at 10:35:52AM -0500, Rob Herring wrote:
->> On Tue, May 15, 2018 at 06:12:59PM +0100, James Morse wrote:
->> > Hi guys,
->> >
->> > (CC: +RobH, devicetree list)
->>
->> Thanks.
->>
->> > On 25/04/18 07:26, AKASHI Takahiro wrote:
->> > > Enabling crash dump (kdump) includes
->> > > * prepare contents of ELF header of a core dump file, /proc/vmcore,
->> > >   using crash_prepare_elf64_headers(), and
->> > > * add two device tree properties, "linux,usable-memory-range" and
->> > >   "linux,elfcorehdr", which represent repsectively a memory range
->> > >   to be used by crash dump kernel and the header's location
->>
->> BTW, I intend to move existing parsing these out of the arch code.
->> Please don't add more DT handling to arch/ unless it is *really* arch
->> specific. I'd assume that the next arch to add kexec support will use
->> these bindings instead of the powerpc way.
->
-> So do you expect all the fdt-related stuff in my current implementation
-> for arm64 to be put into libfdt, or at least drivers/of, from the beginning?
-
-Yes.
-
-> I'm not sure how arch-specific the properties here are. For instance,
-> it is only arm64 that uses "linux,usable-memory-range" right now but
-> if some other arch follows, it is no more arch-specific.
-> # I remember that you didn't like this property :)
-
-The question I guess is what will the next arch use. I don't think any
-other DT based arch supports crashdump or kexec yet.
-
->> > > +{
->> > > + void *buf, *prop;
->> > > + size_t buf_size;
->> > > + int result;
->> > > +
->> > > + buf_size = (__dt_root_addr_cells + __dt_root_size_cells) * sizeof(u32);
->> > > + prop = buf = vmalloc(buf_size);
->>
->> This can go on the stack instead (and would be required to to work in
->> libfdt).
->
-> Well, I can't agree with you here since we are now in effort, as far as
-> I correctly understand, of purging all the variable-sized arrays on a local
-> stack out of the kernel code.
-
-You don't need a variable sized array. The array size just needs to
-the the maximum size (16 bytes).
-
-Rob
+T24gV2VkLCBNYXkgMjMsIDIwMTggYXQgNzo1OCBQTSwgUWlhbmcgWXUgPHl1cTgyNUBnbWFpbC5j
+b20+IHdyb3RlOgo+IE9uIFRodSwgTWF5IDI0LCAyMDE4IGF0IDE6MjQgQU0sIFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOgo+PiBPbiBGcmksIE1heSAxOCwgMjAxOCBhdCAwNToy
+Nzo1OFBNICswODAwLCBRaWFuZyBZdSB3cm90ZToKPj4+IEZyb206IExpbWEgUHJvamVjdCBEZXZl
+bG9wZXJzIDxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPgo+Pj4KPj4+IFNpZ25lZC1v
+ZmYtYnk6IFFpYW5nIFl1IDx5dXE4MjVAZ21haWwuY29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogSGVp
+a28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPj4+IC0tLQo+Pj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9saW1hL2xpbWFfcmVncy5oIHwgMzA0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysK
+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMzA0IGluc2VydGlvbnMoKykKPj4+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9yZWdzLmgKPj4+Cj4+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL2xpbWEvbGltYV9yZWdzLmggYi9kcml2ZXJzL2dwdS9kcm0vbGlt
+YS9saW1hX3JlZ3MuaAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAw
+MDAwMC4uZWE0YTM3ZDY5Yjk4Cj4+PiAtLS0gL2Rldi9udWxsCj4+PiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vbGltYS9saW1hX3JlZ3MuaAo+Pj4gQEAgLTAsMCArMSwzMDQgQEAKPj4+ICsvKgo+Pj4g
+KyAqIENvcHlyaWdodCAoQykgMjAxMC0yMDE3IEFSTSBMaW1pdGVkLiBBbGwgcmlnaHRzIHJlc2Vy
+dmVkLgo+Pgo+PiBJIGFzc3VtZSB0aGlzIGNhbWUgZnJvbSBBUk0ncyBvdXQgb2YgdHJlZSBrZXJu
+ZWwgZHJpdmVyICBzb3VyY2UuIFlvdQo+PiBzaG91bGQgZG9jdW1lbnQgd2hhdCBpdCB3YXMgYmFz
+ZWQgb24uCj4KPiBZZXMsIEknbGwgY29tbWVudCBpdC4KPgo+Pgo+Pj4gKyAqIENvcHlyaWdodCAo
+QykgMjAxNy0yMDE4IExpbWEgUHJvamVjdAo+Pgo+PiBJQU5BTCwgYnV0IGlzIExpbWEgUHJvamVj
+dCBhIGxlZ2FsIGVudGl0eSB0aGF0IGNhbiBjb3B5cmlnaHQgdGhpbmdzPwo+Cj4gSSBoZWFyZCB0
+aGlzIHNlY29uZCB0aW1lLiBTZWVtcyBpdCdzIG5vdCBhIGdvb2QgaWRlYSB0byB3cml0ZSBsaWtl
+Cj4gdGhpcy4gSSdsbCBjaGFuZ2UgdGhlIGNvcHlyaWdodCBuZXh0IHRpbWUuCj4KPj4KPj4+ICsg
+Kgo+Pj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlIGFuZCBpcyBwcm92aWRlZCB0
+byB5b3UgdW5kZXIKPj4+ICsgKiB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBM
+aWNlbnNlIHZlcnNpb24gMiBhcwo+Pj4gKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2Fy
+ZSBGb3VuZGF0aW9uLCBhbmQgYW55IHVzZSBieQo+Pj4gKyAqIHlvdSBvZiB0aGlzIHByb2dyYW0g
+aXMgc3ViamVjdCB0byB0aGUgdGVybXMgb2Ygc3VjaCBHTlUKPj4+ICsgKiBsaWNlbmNlLgo+Pj4g
+KyAqCj4+PiArICogQSBjb3B5IG9mIHRoZSBsaWNlbmNlIGlzIGluY2x1ZGVkIHdpdGggdGhlIHBy
+b2dyYW0sIGFuZAo+Pj4gKyAqIGNhbiBhbHNvIGJlIG9idGFpbmVkIGZyb20gRnJlZSBTb2Z0d2Fy
+ZSBGb3VuZGF0aW9uLCBJbmMuLAo+Pj4gKyAqIDUxIEZyYW5rbGluIFN0cmVldCwgRmlmdGggRmxv
+b3IsIEJvc3RvbiwgTUEgIDAyMTEwLTEzMDEsIFVTQS4KPj4KPj4gWW91IGNhbiB1c2UgU1BEWCB0
+YWdzIGluc3RlYWQuCj4KPiBJZiB1c2luZyBTUERYLCBjYW4gSSBkcm9wIHRoZXNlIGxpY2Vuc2Ug
+dGV4dD8gSG93IGFib3V0IHRoZSBjb3B5cmlnaHQKPiB0ZXh0IGFzIEkgc2VlIFNQRFggaGVhZGVy
+IGRvZXNuJ3QgaGF2ZSBpdD8KCkxpY2Vuc2UgYW5kIGNvcHlyaWdodCBhcmUgMiBpbmRlcGVuZGVu
+dCB0aGluZ3MuIFllcywgeW91IGNhbiBkcm9wIHRoZQpsaWNlbnNlIHRleHQsIGJ1dCBrZWVwIHRo
+ZSBjb3B5cmlnaHRzLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
