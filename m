@@ -1,112 +1,98 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Thu, 24 May 2018 11:16:06 +0530
-Message-ID: <05796839-2584-a011-127f-ce193b0ae7c3@codeaurora.org>
-References: <1526751291-17873-1-git-send-email-tdas@codeaurora.org>
- <1526751291-17873-2-git-send-email-tdas@codeaurora.org>
- <34b510f5-fd0b-2e28-45b0-f200f9f8d2c5@arm.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH 2/2] mtd: partitions: use DT info for parsing partitions
+ with specified type
+Date: Thu, 24 May 2018 07:50:10 +0200
+Message-ID: <0204012f-71b6-70ef-860d-fcce3abdd302@gmail.com>
+References: <20180523171448.26234-1-zajec5@gmail.com>
+ <20180523171448.26234-2-zajec5@gmail.com>
+ <20180523202408.632edefa@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <34b510f5-fd0b-2e28-45b0-f200f9f8d2c5@arm.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180523202408.632edefa@bbrezillon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 5/23/2018 8:43 PM, Sudeep Holla wrote:
-> 
-> 
-> On 19/05/18 18:34, Taniya Das wrote:
->> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
->> SoCs. This is required for managing the cpu frequency transitions which are
->> controlled by firmware.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   .../bindings/cpufreq/cpufreq-qcom-fw.txt           | 68 ++++++++++++++++++++++
->>   1 file changed, 68 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->>
->> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->> new file mode 100644
->> index 0000000..bc912f4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->> @@ -0,0 +1,68 @@
->> +Qualcomm Technologies, Inc. CPUFREQ Bindings
->> +
->> +CPUFREQ FW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
->> +SoCs to manage frequency in hardware. It is capable of controlling frequency
->> +for multiple clusters.
->> +
->> +Properties:
->> +- compatible
->> +	Usage:		required
->> +	Value type:	<string>
->> +	Definition:	must be "qcom,cpufreq-fw".
->> +
-> 
-> If the firmware is referred with some other name, better to use that
-> than cpufreq
->> +Note that #address-cells, #size-cells, and ranges shall be present to ensure
->> +the cpufreq can address a freq-domain registers.
->> +
->> +A freq-domain sub-node would be defined for the cpus with the following
->> +properties:
->> +
->> +- compatible:
->> +	Usage:		required
->> +	Value type:	<string>
->> +	Definition:	must be "cpufreq".
->> +
->> +- reg
->> +	Usage:		required
->> +	Value type:	<prop-encoded-array>
->> +	Definition:	Addresses and sizes for the memory of the perf_base
->> +			, lut_base and en_base.
-> 
-> Can you explicitly define each one of them ? Either here or in reg-names.
-> 
-
-Sure will define each of them in the next series.
-
->> +- reg-names
->> +	Usage:		required
->> +	Value type:	<stringlist>
->> +	Definition:	Address names. Must be "perf_base", "lut_base",
->> +			"en_base".
->> +			Must be specified in the same order as the
->> +			corresponding addresses are specified in the reg
->> +			property.
->> +
->> +- qcom,cpulist
->> +	Usage:		required
->> +	Value type:	<phandles of CPU>
->> +	Definition:	List of related cpu handles which are under a cluster.
->> +
-> 
-> As already mentioned by Rob and Viresh, better to align with OPP style
-> to avoid phandle list of CPUs.
-> 
-
-I have put down an example device tree node for Rob & Viresh to review.
-
-> Also I see similar bindings for devfreq, can't they be aligned ?
-> E.g. lut_base here while it's ftbl_base in devfreq.
-> 
-
-It is actually the look up table, thus was the name given as "lut". Will 
-check with Saravana for devfreq and align accordingly.
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+T24gMjMuMDUuMjAxOCAyMDoyNCwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOgo+IE9uIFdlZCwgMjMg
+TWF5IDIwMTggMTk6MTQ6NDggKzAyMDAKPiBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBnbWFpbC5j
+b20+IHdyb3RlOgo+IAo+PiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+
+Cj4+Cj4+IFRoaXMgc3VwcG9ydHMgbmVzdGVkIHBhcnRpdGlvbnMgaW4gYSBEVC4gSWYgc2VsZWN0
+ZWQgcGFydGl0aW9uIGhhcyBhCj4+ICJjb21wYXRpYmxlIiBwcm9wZXJ0eSBzcGVjaWZpZWQgaXQg
+d2lsbCBiZSBwYXJzZWQgbG9va2luZyBmb3IKPj4gc3VicGFydGl0aW9ucy4KPj4KPj4gU2lnbmVk
+LW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+PiAtLS0KPj4gICBk
+cml2ZXJzL210ZC9tdGRwYXJ0LmMgfCAzMyArKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0t
+LS0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0p
+Cj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9tdGRwYXJ0LmMgYi9kcml2ZXJzL210ZC9t
+dGRwYXJ0LmMKPj4gaW5kZXggZjhkM2EwMTVjZGFkLi41MmUyY2IzNWZjNzkgMTAwNjQ0Cj4+IC0t
+LSBhL2RyaXZlcnMvbXRkL210ZHBhcnQuYwo+PiArKysgYi9kcml2ZXJzL210ZC9tdGRwYXJ0LmMK
+Pj4gQEAgLTMyMiwyMiArMzIyLDYgQEAgc3RhdGljIGlubGluZSB2b2lkIGZyZWVfcGFydGl0aW9u
+KHN0cnVjdCBtdGRfcGFydCAqcCkKPj4gICAJa2ZyZWUocCk7Cj4+ICAgfQo+PiAgIAo+PiAtLyoq
+Cj4+IC0gKiBtdGRfcGFyc2VfcGFydCAtIHBhcnNlIE1URCBwYXJ0aXRpb24gbG9va2luZyBmb3Ig
+c3VicGFydGl0aW9ucwo+PiAtICoKPj4gLSAqIEBzbGF2ZTogcGFydCB0aGF0IGlzIHN1cHBvc2Vk
+IHRvIGJlIGEgY29udGFpbmVyIGFuZCBzaG91bGQgYmUgcGFyc2VkCj4+IC0gKiBAdHlwZXM6IE5V
+TEwtdGVybWluYXRlZCBhcnJheSB3aXRoIG5hbWVzIG9mIHBhcnRpdGlvbiBwYXJzZXJzIHRvIHRy
+eQo+PiAtICoKPj4gLSAqIFNvbWUgcGFydGl0aW9ucyBhcmUga2luZCBvZiBjb250YWluZXJzIHdp
+dGggZXh0cmEgc3VicGFydGl0aW9ucyAodm9sdW1lcykuCj4+IC0gKiBUaGVyZSBjYW4gYmUgdmFy
+aW91cyBmb3JtYXRzIG9mIHN1Y2ggY29udGFpbmVycy4gVGhpcyBmdW5jdGlvbiB0cmllcyB0byB1
+c2UKPj4gLSAqIHNwZWNpZmllZCBwYXJzZXJzIHRvIGFuYWx5emUgZ2l2ZW4gcGFydGl0aW9uIGFu
+ZCByZWdpc3RlcnMgZm91bmQKPj4gLSAqIHN1YnBhcnRpdGlvbnMgb24gc3VjY2Vzcy4KPj4gLSAq
+Lwo+PiAtc3RhdGljIGludCBtdGRfcGFyc2VfcGFydChzdHJ1Y3QgbXRkX3BhcnQgKnNsYXZlLCBj
+b25zdCBjaGFyICpjb25zdCAqdHlwZXMpCj4+IC17Cj4+IC0JcmV0dXJuIHBhcnNlX210ZF9wYXJ0
+aXRpb25zKCZzbGF2ZS0+bXRkLCB0eXBlcywgTlVMTCk7Cj4+IC19Cj4+IC0KPj4gICBzdGF0aWMg
+c3RydWN0IG10ZF9wYXJ0ICphbGxvY2F0ZV9wYXJ0aXRpb24oc3RydWN0IG10ZF9pbmZvICpwYXJl
+bnQsCj4+ICAgCQkJY29uc3Qgc3RydWN0IG10ZF9wYXJ0aXRpb24gKnBhcnQsIGludCBwYXJ0bm8s
+Cj4+ICAgCQkJdWludDY0X3QgY3VyX29mZnNldCkKPj4gQEAgLTczNSw4ICs3MTksOCBAQCBpbnQg
+YWRkX210ZF9wYXJ0aXRpb25zKHN0cnVjdCBtdGRfaW5mbyAqbWFzdGVyLAo+PiAgIAo+PiAgIAkJ
+YWRkX210ZF9kZXZpY2UoJnNsYXZlLT5tdGQpOwo+PiAgIAkJbXRkX2FkZF9wYXJ0aXRpb25fYXR0
+cnMoc2xhdmUpOwo+PiAtCQlpZiAocGFydHNbaV0udHlwZXMpCj4+IC0JCQltdGRfcGFyc2VfcGFy
+dChzbGF2ZSwgcGFydHNbaV0udHlwZXMpOwo+PiArCQkvKiBMb29rIGZvciBzdWJwYXJ0aXRpb25z
+ICovCj4+ICsJCXBhcnNlX210ZF9wYXJ0aXRpb25zKCZzbGF2ZS0+bXRkLCBwYXJ0c1tpXS50eXBl
+cywgTlVMTCk7Cj4+ICAgCj4+ICAgCQljdXJfb2Zmc2V0ID0gc2xhdmUtPm9mZnNldCArIHNsYXZl
+LT5tdGQuc2l6ZTsKPj4gICAJfQo+PiBAQCAtODEyLDYgKzc5NiwxMiBAQCBzdGF0aWMgY29uc3Qg
+Y2hhciAqIGNvbnN0IGRlZmF1bHRfbXRkX3BhcnRfdHlwZXNbXSA9IHsKPj4gICAJTlVMTAo+PiAg
+IH07Cj4+ICAgCj4+ICsvKiBDaGVjayBEVCBvbmx5IHdoZW4gbG9va2luZyBmb3Igc3VicGFydGl0
+aW9ucy4gKi8KPj4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgZGVmYXVsdF9zdWJwYXJ0aXRp
+b25fdHlwZXNbXSA9IHsKPj4gKwkib2ZwYXJ0IiwKPj4gKwlOVUxMCj4+ICt9Owo+PiArCj4+ICAg
+c3RhdGljIGludCBtdGRfcGFydF9kb19wYXJzZShzdHJ1Y3QgbXRkX3BhcnRfcGFyc2VyICpwYXJz
+ZXIsCj4+ICAgCQkJICAgICBzdHJ1Y3QgbXRkX2luZm8gKm1hc3RlciwKPj4gICAJCQkgICAgIHN0
+cnVjdCBtdGRfcGFydGl0aW9ucyAqcHBhcnRzLAo+PiBAQCAtODgyLDcgKzg3Miw5IEBAIHN0YXRp
+YyBpbnQgbXRkX3BhcnRfb2ZfcGFyc2Uoc3RydWN0IG10ZF9pbmZvICptYXN0ZXIsCj4+ICAgCWNv
+bnN0IGNoYXIgKmZpeGVkID0gImZpeGVkLXBhcnRpdGlvbnMiOwo+PiAgIAlpbnQgcmV0LCBlcnIg
+PSAwOwo+PiAgIAo+PiAtCW5wID0gb2ZfZ2V0X2NoaWxkX2J5X25hbWUobXRkX2dldF9vZl9ub2Rl
+KG1hc3RlciksICJwYXJ0aXRpb25zIik7Cj4+ICsJbnAgPSBtdGRfZ2V0X29mX25vZGUobWFzdGVy
+KTsKPj4gKwlpZiAoIW10ZF9pc19wYXJ0aXRpb24obWFzdGVyKSkKPj4gKwkJbnAgPSBvZl9nZXRf
+Y2hpbGRfYnlfbmFtZShucCwgInBhcnRpdGlvbnMiKTsKPj4gICAJb2ZfcHJvcGVydHlfZm9yX2Vh
+Y2hfc3RyaW5nKG5wLCAiY29tcGF0aWJsZSIsIHByb3AsIGNvbXBhdCkgewo+PiAgIAkJcGFyc2Vy
+ID0gbXRkX3BhcnRfZ2V0X2NvbXBhdGlibGVfcGFyc2VyKGNvbXBhdCk7Cj4+ICAgCQlpZiAoIXBh
+cnNlcikKPj4gQEAgLTk0NSw3ICs5MzcsOCBAQCBpbnQgcGFyc2VfbXRkX3BhcnRpdGlvbnMoc3Ry
+dWN0IG10ZF9pbmZvICptYXN0ZXIsIGNvbnN0IGNoYXIgKmNvbnN0ICp0eXBlcywKPj4gICAJaW50
+IHJldCwgZXJyID0gMDsKPj4gICAKPj4gICAJaWYgKCF0eXBlcykKPj4gLQkJdHlwZXMgPSBkZWZh
+dWx0X210ZF9wYXJ0X3R5cGVzOwo+PiArCQl0eXBlcyA9IG10ZF9pc19wYXJ0aXRpb24obWFzdGVy
+KSA/IGRlZmF1bHRfc3VicGFydGl0aW9uX3R5cGVzIDoKPj4gKwkJCWRlZmF1bHRfbXRkX3BhcnRf
+dHlwZXM7Cj4gCj4gSG0sIHRoYXQgbWVhbnMgdGhlIHN1YnBhcnRzIGluaGVyaXQgdGhlIHBhcnNl
+ciB0eXBlcyBmcm9tIHRoZWlyIHBhcmVudAo+IGlmIHR5cGVzICE9IE5VTEw/IElzIHRoYXQgcmVh
+bGx5IHdoYXQgd2Ugd2FudD8gQW5kIGlmIHRoYXQncyB3aGF0IHdlCj4gd2FudCwgd2h5IGRvbid0
+IHdlIGRvIHRoZSBzYW1lIGZvciB0eXBlcyA9PSBOVUxMPwoKTm8sIHVubGVzcyBJJ20gbWlzc2lu
+ZyBzb21ldGhpbmcuIEluIGFkZF9tdGRfcGFydGl0aW9ucygpIHRoZXJlIGlzIG5vdwphIGZvbGxv
+d2luZyBjYWxsOgpwYXJzZV9tdGRfcGFydGl0aW9ucygmc2xhdmUtPm10ZCwgcGFydHNbaV0udHlw
+ZXMsIE5VTEwpOwoKSW4gbW9zdCBjYXNlcyBwYXJ0c1tpXS50eXBlcyBpcyBOVUxMLCB1bmxlc3Mg
+eW91J3JlIHVzaW5nIHNvbWUKZXhjZXB0aW9uYWwgZHJpdmVyIChsaWtlIGJjbTQ3eHhwYXJ0KSB3
+aGljaCBzZXRzICJ0eXBlcyIuCgpTbyBmb3IgZWFjaCBwYXJ0aXRpb24gcGFyc2VfbXRkX3BhcnRp
+dGlvbnMoKSB3aWxsIGJlIGNhbGxlZCB3aXRoICJ0eXBlcyIKYXJndW1lbnQgYWxtb3N0IGFsd2F5
+cyBzZXQgdG8gTlVMTCAobm8gaW5oZXJpdGluZykuIFRoYXQgd2lsbCByZXN1bHQgaW4KcGlja2lu
+ZyBkZWZhdWx0X3N1YnBhcnRpdGlvbl90eXBlcy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5n
+IGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1t
+dGQvCg==
