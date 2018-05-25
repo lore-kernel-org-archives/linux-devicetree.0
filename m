@@ -1,294 +1,97 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH 2/3] clk: bcm: Update and add tingray clock entries
-Date: Fri, 25 May 2018 09:45:16 -0700
-Message-ID: <1527266717-8406-3-git-send-email-ray.jui@broadcom.com>
-References: <1527266717-8406-1-git-send-email-ray.jui@broadcom.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx51-zii-rdu1: Make sure SD1_WP is low
+Date: Fri, 25 May 2018 09:59:16 -0700
+Message-ID: <CAHQ1cqFWm-A2rkLr+LPqvp_eipG9VV01TY4innXqABaYuKbXDA@mail.gmail.com>
+References: <20180525030153.15986-1-andrew.smirnov@gmail.com> <1527257797.3472.8.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527266717-8406-1-git-send-email-ray.jui@broadcom.com>
+In-Reply-To: <1527257797.3472.8.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pramod Kumar <pramod.kumar@broadcom.com>, Ray Jui <ray.jui@broadcom.com>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Update and add Stingray clock definitions and tables so they match the
-binding document and the latest ASIC datasheet
+On Fri, May 25, 2018 at 7:16 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> Am Donnerstag, den 24.05.2018, 20:01 -0700 schrieb Andrey Smirnov:
+>> Make sure that MX51_PAD_GPIO1_1 does not remain configure as
+>> ALT0/SD1_WP (it is out of reset). This is needed because of external
+>> pull-up resistor attached to that pad that, when left unchanged, will
+>> drive SD1_WP high preventing eSDHC1/eMMC from working correctly.
+>>
+>> To fix that add a pinmux configuration line configureing the pad to
+>> function as a GPIO. While we are at it, add a corresponding input GPIO
+>> hog in an effort to minimize current consumption.
+>
+> Enabling the input part of the pad also consumes (a small amount of)
+> power, if you are after minimizing power consumption, better configure
+> the pin as output and drive it in the pull direction.
+>
 
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
----
- drivers/clk/bcm/clk-sr.c           | 135 ++++++++++++++++++++++++++++++++-----
- include/dt-bindings/clock/bcm-sr.h |  24 +++++--
- 2 files changed, 137 insertions(+), 22 deletions(-)
+Sure, sounds good, will do in v2.
 
-diff --git a/drivers/clk/bcm/clk-sr.c b/drivers/clk/bcm/clk-sr.c
-index adc74f4..7b9efc0 100644
---- a/drivers/clk/bcm/clk-sr.c
-+++ b/drivers/clk/bcm/clk-sr.c
-@@ -56,8 +56,8 @@ static const struct iproc_pll_ctrl sr_genpll0 = {
- };
- 
- static const struct iproc_clk_ctrl sr_genpll0_clk[] = {
--	[BCM_SR_GENPLL0_SATA_CLK] = {
--		.channel = BCM_SR_GENPLL0_SATA_CLK,
-+	[BCM_SR_GENPLL0_125M_CLK] = {
-+		.channel = BCM_SR_GENPLL0_125M_CLK,
- 		.flags = IPROC_CLK_AON,
- 		.enable = ENABLE_VAL(0x4, 6, 0, 12),
- 		.mdiv = REG_VAL(0x18, 0, 9),
-@@ -102,6 +102,65 @@ static int sr_genpll0_clk_init(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct iproc_pll_ctrl sr_genpll2 = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
-+		IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 1, 13, 12),
-+	.reset = RESET_VAL(0x0, 12, 11),
-+	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
-+	.sw_ctrl = SW_CTRL_VAL(0x10, 31),
-+	.ndiv_int = REG_VAL(0x10, 20, 10),
-+	.ndiv_frac = REG_VAL(0x10, 0, 20),
-+	.pdiv = REG_VAL(0x14, 0, 4),
-+	.status = REG_VAL(0x30, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_genpll2_clk[] = {
-+	[BCM_SR_GENPLL2_NIC_CLK] = {
-+		.channel = BCM_SR_GENPLL2_NIC_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 6, 0, 12),
-+		.mdiv = REG_VAL(0x18, 0, 9),
-+	},
-+	[BCM_SR_GENPLL2_TS_500_CLK] = {
-+		.channel = BCM_SR_GENPLL2_TS_500_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 7, 1, 13),
-+		.mdiv = REG_VAL(0x18, 10, 9),
-+	},
-+	[BCM_SR_GENPLL2_125_NITRO_CLK] = {
-+		.channel = BCM_SR_GENPLL2_125_NITRO_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 8, 2, 14),
-+		.mdiv = REG_VAL(0x18, 20, 9),
-+	},
-+	[BCM_SR_GENPLL2_CHIMP_CLK] = {
-+		.channel = BCM_SR_GENPLL2_CHIMP_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 9, 3, 15),
-+		.mdiv = REG_VAL(0x1c, 0, 9),
-+	},
-+	[BCM_SR_GENPLL2_NIC_FLASH_CLK] = {
-+		.channel = BCM_SR_GENPLL2_NIC_FLASH_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 10, 4, 16),
-+		.mdiv = REG_VAL(0x1c, 10, 9),
-+	},
-+	[BCM_SR_GENPLL2_FS4_CLK] = {
-+		.channel = BCM_SR_GENPLL2_FS4_CLK,
-+		.enable = ENABLE_VAL(0x4, 11, 5, 17),
-+		.mdiv = REG_VAL(0x1c, 20, 9),
-+	},
-+};
-+
-+static int sr_genpll2_clk_init(struct platform_device *pdev)
-+{
-+	iproc_pll_clk_setup(pdev->dev.of_node,
-+			    &sr_genpll2, NULL, 0, sr_genpll2_clk,
-+			    ARRAY_SIZE(sr_genpll2_clk));
-+	return 0;
-+}
-+
- static const struct iproc_pll_ctrl sr_genpll3 = {
- 	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
- 		IPROC_CLK_PLL_NEEDS_SW_CFG,
-@@ -157,6 +216,30 @@ static const struct iproc_clk_ctrl sr_genpll4_clk[] = {
- 		.enable = ENABLE_VAL(0x4, 6, 0, 12),
- 		.mdiv = REG_VAL(0x18, 0, 9),
- 	},
-+	[BCM_SR_GENPLL4_TPIU_PLL_CLK] = {
-+		.channel = BCM_SR_GENPLL4_TPIU_PLL_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 7, 1, 13),
-+		.mdiv = REG_VAL(0x18, 10, 9),
-+	},
-+	[BCM_SR_GENPLL4_NOC_CLK] = {
-+		.channel = BCM_SR_GENPLL4_NOC_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 8, 2, 14),
-+		.mdiv = REG_VAL(0x18, 20, 9),
-+	},
-+	[BCM_SR_GENPLL4_CHCLK_FS4_CLK] = {
-+		.channel = BCM_SR_GENPLL4_CHCLK_FS4_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 9, 3, 15),
-+		.mdiv = REG_VAL(0x1c, 0, 9),
-+	},
-+	[BCM_SR_GENPLL4_BRIDGE_FSCPU_CLK] = {
-+		.channel = BCM_SR_GENPLL4_BRIDGE_FSCPU_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 10, 4, 16),
-+		.mdiv = REG_VAL(0x1c, 10, 9),
-+	},
- };
- 
- static int sr_genpll4_clk_init(struct platform_device *pdev)
-@@ -181,18 +264,21 @@ static const struct iproc_pll_ctrl sr_genpll5 = {
- };
- 
- static const struct iproc_clk_ctrl sr_genpll5_clk[] = {
--	[BCM_SR_GENPLL5_FS_CLK] = {
--		.channel = BCM_SR_GENPLL5_FS_CLK,
--		.flags = IPROC_CLK_AON,
-+	[BCM_SR_GENPLL5_FS4_HF_CLK] = {
-+		.channel = BCM_SR_GENPLL5_FS4_HF_CLK,
- 		.enable = ENABLE_VAL(0x4, 6, 0, 12),
- 		.mdiv = REG_VAL(0x18, 0, 9),
- 	},
--	[BCM_SR_GENPLL5_SPU_CLK] = {
--		.channel = BCM_SR_GENPLL5_SPU_CLK,
--		.flags = IPROC_CLK_AON,
--		.enable = ENABLE_VAL(0x4, 6, 0, 12),
-+	[BCM_SR_GENPLL5_CRYPTO_AE_CLK] = {
-+		.channel = BCM_SR_GENPLL5_CRYPTO_AE_CLK,
-+		.enable = ENABLE_VAL(0x4, 7, 1, 12),
- 		.mdiv = REG_VAL(0x18, 10, 9),
- 	},
-+	[BCM_SR_GENPLL5_RAID_AE_CLK] = {
-+		.channel = BCM_SR_GENPLL5_RAID_AE_CLK,
-+		.enable = ENABLE_VAL(0x4, 8, 2, 14),
-+		.mdiv = REG_VAL(0x18, 20, 9),
-+	},
- };
- 
- static int sr_genpll5_clk_init(struct platform_device *pdev)
-@@ -214,24 +300,30 @@ static const struct iproc_pll_ctrl sr_lcpll0 = {
- };
- 
- static const struct iproc_clk_ctrl sr_lcpll0_clk[] = {
--	[BCM_SR_LCPLL0_SATA_REF_CLK] = {
--		.channel = BCM_SR_LCPLL0_SATA_REF_CLK,
-+	[BCM_SR_LCPLL0_SATA_REFP_CLK] = {
-+		.channel = BCM_SR_LCPLL0_SATA_REFP_CLK,
- 		.flags = IPROC_CLK_AON,
- 		.enable = ENABLE_VAL(0x0, 7, 1, 13),
- 		.mdiv = REG_VAL(0x14, 0, 9),
- 	},
--	[BCM_SR_LCPLL0_USB_REF_CLK] = {
--		.channel = BCM_SR_LCPLL0_USB_REF_CLK,
-+	[BCM_SR_LCPLL0_SATA_REFN_CLK] = {
-+		.channel = BCM_SR_LCPLL0_SATA_REFN_CLK,
- 		.flags = IPROC_CLK_AON,
- 		.enable = ENABLE_VAL(0x0, 8, 2, 14),
- 		.mdiv = REG_VAL(0x14, 10, 9),
- 	},
--	[BCM_SR_LCPLL0_SATA_REFPN_CLK] = {
--		.channel = BCM_SR_LCPLL0_SATA_REFPN_CLK,
-+	[BCM_SR_LCPLL0_SATA_350_CLK] = {
-+		.channel = BCM_SR_LCPLL0_SATA_350_CLK,
- 		.flags = IPROC_CLK_AON,
- 		.enable = ENABLE_VAL(0x0, 9, 3, 15),
- 		.mdiv = REG_VAL(0x14, 20, 9),
- 	},
-+	[BCM_SR_LCPLL0_SATA_500_CLK] = {
-+		.channel = BCM_SR_LCPLL0_SATA_500_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 10, 4, 16),
-+		.mdiv = REG_VAL(0x18, 0, 9),
-+	},
- };
- 
- static int sr_lcpll0_clk_init(struct platform_device *pdev)
-@@ -259,6 +351,18 @@ static const struct iproc_clk_ctrl sr_lcpll1_clk[] = {
- 		.enable = ENABLE_VAL(0x0, 7, 1, 13),
- 		.mdiv = REG_VAL(0x14, 0, 9),
- 	},
-+	[BCM_SR_LCPLL1_USB_REF_CLK] = {
-+		.channel = BCM_SR_LCPLL1_USB_REF_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 8, 2, 14),
-+		.mdiv = REG_VAL(0x14, 10, 9),
-+	},
-+	[BCM_SR_LCPLL1_CRMU_TS_CLK] = {
-+		.channel = BCM_SR_LCPLL1_CRMU_TS_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 9, 3, 15),
-+		.mdiv = REG_VAL(0x14, 20, 9),
-+	},
- };
- 
- static int sr_lcpll1_clk_init(struct platform_device *pdev)
-@@ -298,6 +402,7 @@ static int sr_lcpll_pcie_clk_init(struct platform_device *pdev)
- 
- static const struct of_device_id sr_clk_dt_ids[] = {
- 	{ .compatible = "brcm,sr-genpll0", .data = sr_genpll0_clk_init },
-+	{ .compatible = "brcm,sr-genpll2", .data = sr_genpll2_clk_init },
- 	{ .compatible = "brcm,sr-genpll4", .data = sr_genpll4_clk_init },
- 	{ .compatible = "brcm,sr-genpll5", .data = sr_genpll5_clk_init },
- 	{ .compatible = "brcm,sr-lcpll0", .data = sr_lcpll0_clk_init },
-diff --git a/include/dt-bindings/clock/bcm-sr.h b/include/dt-bindings/clock/bcm-sr.h
-index cff6c6f..419011b 100644
---- a/include/dt-bindings/clock/bcm-sr.h
-+++ b/include/dt-bindings/clock/bcm-sr.h
-@@ -35,7 +35,7 @@
- 
- /* GENPLL 0 clock channel ID SCR HSLS FS PCIE */
- #define BCM_SR_GENPLL0			0
--#define BCM_SR_GENPLL0_SATA_CLK		1
-+#define BCM_SR_GENPLL0_125M_CLK		1
- #define BCM_SR_GENPLL0_SCR_CLK		2
- #define BCM_SR_GENPLL0_250M_CLK		3
- #define BCM_SR_GENPLL0_PCIE_AXI_CLK	4
-@@ -50,9 +50,11 @@
- /* GENPLL 2 clock channel ID NITRO MHB*/
- #define BCM_SR_GENPLL2			0
- #define BCM_SR_GENPLL2_NIC_CLK		1
--#define BCM_SR_GENPLL2_250_NITRO_CLK	2
-+#define BCM_SR_GENPLL2_TS_500_CLK	2
- #define BCM_SR_GENPLL2_125_NITRO_CLK	3
- #define BCM_SR_GENPLL2_CHIMP_CLK	4
-+#define BCM_SR_GENPLL2_NIC_FLASH_CLK	5
-+#define BCM_SR_GENPLL2_FS4_CLK		6
- 
- /* GENPLL 3 HSLS clock channel ID */
- #define BCM_SR_GENPLL3			0
-@@ -62,11 +64,16 @@
- /* GENPLL 4 SCR clock channel ID */
- #define BCM_SR_GENPLL4			0
- #define BCM_SR_GENPLL4_CCN_CLK		1
-+#define BCM_SR_GENPLL4_TPIU_PLL_CLK	2
-+#define BCM_SR_GENPLL4_NOC_CLK		3
-+#define BCM_SR_GENPLL4_CHCLK_FS4_CLK	4
-+#define BCM_SR_GENPLL4_BRIDGE_FSCPU_CLK	5
- 
- /* GENPLL 5 FS4 clock channel ID */
- #define BCM_SR_GENPLL5			0
--#define BCM_SR_GENPLL5_FS_CLK		1
--#define BCM_SR_GENPLL5_SPU_CLK		2
-+#define BCM_SR_GENPLL5_FS4_HF_CLK	1
-+#define BCM_SR_GENPLL5_CRYPTO_AE_CLK	2
-+#define BCM_SR_GENPLL5_RAID_AE_CLK	3
- 
- /* GENPLL 6 NITRO clock channel ID */
- #define BCM_SR_GENPLL6			0
-@@ -74,13 +81,16 @@
- 
- /* LCPLL0  clock channel ID */
- #define BCM_SR_LCPLL0			0
--#define BCM_SR_LCPLL0_SATA_REF_CLK	1
--#define BCM_SR_LCPLL0_USB_REF_CLK	2
--#define BCM_SR_LCPLL0_SATA_REFPN_CLK	3
-+#define BCM_SR_LCPLL0_SATA_REFP_CLK	1
-+#define BCM_SR_LCPLL0_SATA_REFN_CLK	2
-+#define BCM_SR_LCPLL0_SATA_350_CLK	3
-+#define BCM_SR_LCPLL0_SATA_500_CLK	4
- 
- /* LCPLL1  clock channel ID */
- #define BCM_SR_LCPLL1			0
- #define BCM_SR_LCPLL1_WAN_CLK		1
-+#define BCM_SR_LCPLL1_USB_REF_CLK	2
-+#define BCM_SR_LCPLL1_CRMU_TS_CLK	3
- 
- /* LCPLL PCIE  clock channel ID */
- #define BCM_SR_LCPLL_PCIE		0
--- 
-2.1.4
+>>
+>> > Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+>> > Cc: Shawn Guo <shawnguo@kernel.org>
+>> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+>> > Cc: Lucas Stach <l.stach@pengutronix.de>
+>> > Cc: Chris Healy <cphealy@gmail.com>
+>> > Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/imx51-zii-rdu1.dts | 28 ++++++++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+>> index df9eca94d812..d484e7e46b27 100644
+>> --- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
+>> +++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+>> @@ -476,6 +476,17 @@
+>> >     status = "okay";
+>>  };
+>>
+>> +&gpio1 {
+>> > +   unused-sd3-wp-gpio {
+>> > +           /*
+>> > +            * See pinctrl_esdhc1 below for more details on this
+>> > +            */
+>> > +           gpio-hog;
+>> > +           gpios = <1 GPIO_ACTIVE_HIGH>;
+>> > +           input;
+>> > +   };
+>> +};
+>> +
+>>  &i2c2 {
+>> >     pinctrl-names = "default";
+>> >     pinctrl-0 = <&pinctrl_i2c2>;
+>> @@ -660,6 +671,23 @@
+>> > >                   MX51_PAD_SD1_DATA1__SD1_DATA1           0x20d5
+>> > >                   MX51_PAD_SD1_DATA2__SD1_DATA2           0x20d5
+>> > >                   MX51_PAD_SD1_DATA3__SD1_DATA3           0x20d5
+>> > +                   /*
+>> > +                    * GPIO1_1 is not directly used by eSDHC1 in
+>> > +                    * any capacity, but earlier versions of RDU1
+>> > +                    * used that pin as WP GPIO for eSDHC3 and
+>> > +                    * because of that that pad has an external
+>> > +                    * pull-up resistor. This is problematic
+>> > +                    * because out of reset the pad is configured
+>> > +                    * as ALT0 which serves as SD1_WP, which, when
+>> > +                    * pulled high by and external pull-up, will
+>> > +                    * inhibit execution of any write request to
+>> > +                    * attached eMMC device.
+>> > +                    *
+>> > +                    * To avoid this problem we configure the pad
+>> > +                    * to ALT1/GPIO and avoid driving SD1_WP
+>> +                      * signal high.
+>
+> Applying the patch complains about whitespace damage in the above 2
+> lines.
+>
+
+My bad, sorry about that, will fix in v2.
+
+Thanks,
+Andrey Smirnov
