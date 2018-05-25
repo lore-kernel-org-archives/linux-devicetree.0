@@ -1,101 +1,143 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
-Date: Fri, 25 May 2018 18:24:41 +0100
-Message-ID: <20180525172441.GN4828@sirena.org.uk>
-References: <20180517133009.26079-1-m.felsch@pengutronix.de>
- <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
- <1526640409.3948.5.camel@pengutronix.de>
- <20180523165352.GA6187@rob-hp-laptop>
- <20180525094724.3f4edofopk52i3v6@pengutronix.de>
- <20180525102609.GK4828@sirena.org.uk>
- <20180525114253.jj6akdazsbxqkbfu@pengutronix.de>
- <20180525145245.GM4828@sirena.org.uk>
- <1527261489.4938.9.camel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] driver core: make deferring probe after init optional
+Date: Fri, 25 May 2018 12:35:00 -0500
+Message-ID: <CAL_JsqKXyBZjpz3dvR+7Hign7Z3iwnvKWrAUdoPDWWBgjWmQLg@mail.gmail.com>
+References: <20180524175024.19874-1-robh@kernel.org> <20180524175024.19874-2-robh@kernel.org>
+ <20180524190031.GB31019@kroah.com> <CAL_JsqJK69A3W=YrSfvPetM95CROOJhU1bW1rMEOGtji=t0ORQ@mail.gmail.com>
+ <92e3be10-e65a-99e9-6ef7-f11ded6a35f9@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1939452328822749507=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1527261489.4938.9.camel@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <92e3be10-e65a-99e9-6ef7-f11ded6a35f9@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 25, 2018 at 7:20 AM, Robin Murphy <robin.murphy@arm.com> wrote:
+> On 24/05/18 21:57, Rob Herring wrote:
+>>
+>> On Thu, May 24, 2018 at 2:00 PM, Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> On Thu, May 24, 2018 at 12:50:17PM -0500, Rob Herring wrote:
+>>>>
+>>>> Deferred probe will currently wait forever on dependent devices to
+>>>> probe,
+>>>> but sometimes a driver will never exist. It's also not always critical
+>>>> for
+>>>> a driver to exist. Platforms can rely on default configuration from the
+>>>> bootloader or reset defaults for things such as pinctrl and power
+>>>> domains.
+>>>> This is often the case with initial platform support until various
+>>>> drivers
+>>>> get enabled. There's at least 2 scenarios where deferred probe can
+>>>> render
+>>>> a platform broken. Both involve using a DT which has more devices and
+>>>> dependencies than the kernel supports. The 1st case is a driver may be
+>>>> disabled in the kernel config. The 2nd case is the kernel version may
+>>>> simply not have the dependent driver. This can happen if using a newer
+>>>> DT
+>>>> (provided by firmware perhaps) with a stable kernel version.
+>>>>
+>>>> Subsystems or drivers may opt-in to this behavior by calling
+>>>> driver_deferred_probe_check_init_done() instead of just returning
+>>>> -EPROBE_DEFER. They may use additional information from DT or kernel's
+>>>> config to decide whether to continue to defer probe or not.
+>>>>
+>>>> Cc: Alexander Graf <agraf@suse.de>
+>>>> Signed-off-by: Rob Herring <robh@kernel.org>
+>>>> ---
+>>>>   drivers/base/dd.c      | 17 +++++++++++++++++
+>>>>   include/linux/device.h |  2 ++
+>>>>   2 files changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+>>>> index c9f54089429b..d6034718da6f 100644
+>>>> --- a/drivers/base/dd.c
+>>>> +++ b/drivers/base/dd.c
+>>>> @@ -226,6 +226,16 @@ void device_unblock_probing(void)
+>>>>        driver_deferred_probe_trigger();
+>>>>   }
+>>>>
+>>>> +int driver_deferred_probe_check_init_done(struct device *dev, bool
+>>>> optional)
+>>>> +{
+>>>> +     if (optional && initcalls_done) {
+>>>
+>>>
+>>> Wait, what's the "optional" mess here?
+>>
+>>
+>> My intent was that subsystems just always call this function and never
+>> return EPROBE_DEFER themselves. Then the driver core can make
+>> decisions as to what to do (such as the timeout added in the next
+>> patch). Or it can print common error/debug messages. So optional is a
+>> hint to allow subsystems per device control.
+>
+>
+> Maybe just driver_defer_probe() might be a more descriptive name? To me,
+> calling "foo_check_x()" with a parameter that says "I don't actually care
+> about x" is the really unintuitive bit.
 
---===============1939452328822749507==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8QM4kKE+nfbBA4vJ"
-Content-Disposition: inline
+All the other (though static or internal to driver core) functions are
+prefixed driver_deferred_probe_* so I was trying to remain consistent
+there. You're right though, with the timeout it's not just whether
+initcalls are done. It's really "get the return value depending on the
+core's deferred probe state". So perhaps one of these:
 
+driver_deferred_probe_get_return_val()
+driver_deferred_probe_handle_return()
 
---8QM4kKE+nfbBA4vJ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The other option would be a more straight-forward functions that just
+returns a bool on whether to continue deferring and leave the return
+code handling to the caller:
 
-On Fri, May 25, 2018 at 05:18:09PM +0200, Philipp Zabel wrote:
-> On Fri, 2018-05-25 at 15:52 +0100, Mark Brown wrote:
-> > On Fri, May 25, 2018 at 01:42:53PM +0200, Marco Felsch wrote:
+if (driver_deferred_probe_enabled_for_builtin(dev))
+  return -EPROBE_DEFER;
+else
+  return -ENODEV;
 
-> > > Also the formula for the delay time (t =3D C =D7 25,000/3.5) depends =
-only on
-> > > the capacity size.
+The pinctrl case would look like this:
 
-> > Why not just have the user specify the capacitance of the capacitor on
-> > the rail which they can directly read from the schematic rather than
-> > forcing them to do the calcualtion?  That seems a bit clearer and more
-> > user friendly (plus if someone decides the spec was wrong it's easier to
-> > roll out fixes).
+builtin_only = of_property_read_bool(np_pctldev, "pinctrl-use-default");
+if (builtin_only && driver_deferred_probe_enabled_for_builtin(dev))
+  return -EPROBE_DEFER;
+else if (!builtin_only && driver_deferred_probe_enabled(dev))
+  return -EPROBE_DEFER;
+else
+  return -ENODEV;
 
-> The exact capacitance may not be known or vary above the nominal value
-> because of cheap components, and the formula from the datasheet is just
-> a guideline.
+I still prefer the former, picking the bike shed color is easier with
+the latter.
 
-That variability is going to apply just as much to the charge time
-calculations/measurements as it is to the initial capacitance value -
-the results are going to be very much garbage in, garbage out.
+>>>
+>>> The caller knows this value, so why do you need to even pass it in here?
+>>
+>>
+>> Because regardless of the value, we always stop deferring when/if we
+>> hit the timeout and the caller doesn't know about the timeout. If we
+>> get rid of it, we'd need functions for both init done and for deferred
+>> timeout.
+>>
+>>> And bool values that are not obvious are horrid.  I had to go look this
+>>> up when reading the later patches that just passed "true" in this
+>>> variable as I had no idea what that meant.
+>>
+>>
+>> Perhaps inverting it and calling it "keep_deferring" would be better.
+>> However, the flag is ignored if we have timed out.
+>
+>
+> Perhaps an enum (or bitmask of named flags) then? That would allow the most
+> readability at callsites, plus it seems quite likely that we may want
+> intermediate degrees of "deferral strictness" eventually.
 
-> I'd expect the usual method to set this delay to be semi-empirical:
-> "start from the value calculated from datasheet and schematics and then
-> increase until no more audio artifacts on a representative sample of
-> boards".
-> I think it is be better to specify a delay that works than a bogus
-> capacitance value that happens to correspond to a delay that works.
+A bitmask is just 32 booleans stuffed into one parameter which I can
+guess Greg's opinion on.
 
-If this is varying so drastically per board/system that it's relevant
-then we're already into problematic territory.  For most devices we just
-have a number for the part, not something that varies so wildly that
-each system needs to configure it.
+I can't really think of other flags we might need here. If we added
+some userspace trigger saying module loading is done, I don't think
+we'd need that to be per caller.
 
---8QM4kKE+nfbBA4vJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsIRtgACgkQJNaLcl1U
-h9Bgxwf/RY7Q7a3jCjohxDoR84MqXn+NSDeTJGvqhQ896V5jKPDaH5DmMHm0sNd6
-LVybEi3zgb3+y3zXfLKoo4P62Hl83LJZCpQWp0sH5f2TiRPsO2sgKZfXRC93ihZP
-INUMx031TOZMl3BLPWGCer+wT7QZzHgJY4P/WP0iATZdps6Z8TfxBa30DZ4KRmwr
-K+HBFhjj4NyQYpFI5uLrRs7utFTWgNh+LS5y8K4YYflIP+nb61FxKwpG5yyeYRGX
-EIBF1bnJOzJxk1ur9kcWKQ4resM6biY6/eKXu2IMZUpGpfeiCtm+pO6aa5u2HEP4
-TtJVkuVZ/9jebSz+AcDafamypcJeng==
-=RnHn
------END PGP SIGNATURE-----
-
---8QM4kKE+nfbBA4vJ--
-
---===============1939452328822749507==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1939452328822749507==--
+Rob
