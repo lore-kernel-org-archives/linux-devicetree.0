@@ -1,59 +1,104 @@
-Return-Path: <SRS0=BfEI=IO=redhat.com=hdegoede@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 09/13] Bluetooth: hci_serdev: Fix HCI_UART_INIT_PENDING not working
-Date: Sun, 27 May 2018 21:04:53 +0200
-Message-Id: <20180527190457.2632-10-hdegoede@redhat.com>
-In-Reply-To: <20180527190457.2632-1-hdegoede@redhat.com>
-References: <20180527190457.2632-1-hdegoede@redhat.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, robh@kernel.org, Jeremy Cline <jeremy@jcline.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=Vvkr=IM=gmx.de=FrankWu@kernel.org>
+MIME-Version: 1.0
+Message-ID: <trinity-63c216a4-492c-4250-934a-37dc10d0cb56-1527263229587@3c-app-gmx-bs69>
+From: "Frank Wunderlich" <FrankWu@gmx.de>
+Subject: fix green/blue pio-led on bpi-r2
+Content-Type: text/html; charset=UTF-8
+Date: Fri, 25 May 2018 17:47:09 +0200
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Init hci_uart->init_ready so that hci_uart_init_ready() works properly.
+<html><head></head><body><div style="font-family: Verdana;font-size: 12.0px;"><div>
+<div>Hi,</div>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/bluetooth/hci_ldisc.c  | 2 +-
- drivers/bluetooth/hci_serdev.c | 1 +
- drivers/bluetooth/hci_uart.h   | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+<div>&nbsp;</div>
 
-diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
-index 8da0f53b5912..1b240022dc19 100644
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -195,7 +195,7 @@ static void hci_uart_write_work(struct work_struct *work)
- 	clear_bit(HCI_UART_SENDING, &hu->tx_state);
- }
- 
--static void hci_uart_init_work(struct work_struct *work)
-+void hci_uart_init_work(struct work_struct *work)
- {
- 	struct hci_uart *hu = container_of(work, struct hci_uart, init_ready);
- 	int err;
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index ce024142f5d3..cf1ade833fcd 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -309,6 +309,7 @@ int hci_uart_register_device(struct hci_uart *hu,
- 	hdev->bus = HCI_UART;
- 	hci_set_drvdata(hdev, hu);
- 
-+	INIT_WORK(&hu->init_ready, hci_uart_init_work);
- 	INIT_WORK(&hu->write_work, hci_uart_write_work);
- 	percpu_init_rwsem(&hu->proto_lock);
- 
-diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
-index 66e8c68e4607..00cab2fd7a1b 100644
---- a/drivers/bluetooth/hci_uart.h
-+++ b/drivers/bluetooth/hci_uart.h
-@@ -116,6 +116,7 @@ void hci_uart_unregister_device(struct hci_uart *hu);
- 
- int hci_uart_tx_wakeup(struct hci_uart *hu);
- int hci_uart_init_ready(struct hci_uart *hu);
-+void hci_uart_init_work(struct work_struct *work);
- void hci_uart_set_baudrate(struct hci_uart *hu, unsigned int speed);
- void hci_uart_set_flow_control(struct hci_uart *hu, bool enable);
- void hci_uart_set_speeds(struct hci_uart *hu, unsigned int init_speed,
--- 
-2.17.0
+<div>i&#39;ve tested LEDs on bananapi-r2 and see that they stay on at boot-time and can be switched off by &quot;echo 0&quot;, as this behaviour is not logical i changed that. Also green and blue are swapped by access their names in sysfs.</div>
+
+<div>&nbsp;</div>
+
+<div>http://forum.banana-pi.org/t/control-on-board-leds/4287/33</div>
+
+<div>&nbsp;</div>
+
+<div>hoping everything is alright with the patch (it&#39;s my first on here)</div>
+
+<div>&nbsp;</div>
+
+<div>to test it:</div>
+
+<div>&nbsp;</div>
+
+<div>[16:08] root@bpi-r2:~# L=/sys/class/leds/bpi-r2&#92;:isink</div>
+
+<div>[17:41] root@bpi-r2:~# L2=/sys/class/leds/bpi-r2&#92;:pio<br/>
+[17:42] root@bpi-r2:~# echo 1 &gt; &#36;L2:green/brightness<br/>
+[17:42] root@bpi-r2:~# echo 1 &gt; &#36;L2:blue/brightness<br/>
+[17:42] root@bpi-r2:~# echo 0 &gt; &#36;L2:green/brightness<br/>
+[17:42] root@bpi-r2:~# echo 0 &gt; &#36;L2:blue/brightness</div>
+
+<div>&nbsp;</div>
+
+<div>at least options needed:</div>
+
+<div>CONFIG_SYSFS=y</div>
+
+<div>CONFIG_GPIO_SYSFS=y</div>
+
+<div>CONFIG_LEDS_CLASS=y</div>
+
+<div>CONFIG_LEDS_MT6323=y</div>
+
+<div>CONFIG_LEDS_GPIO=y</div>
+
+<div>&nbsp;</div>
+
+<div>regards Frank</div>
+
+<div>&nbsp;</div>
+
+<div>From 850977bdb8cf05b1212c69232f03fd55293fe21a Mon Sep 17 00:00:00 2001<br/>
+From: Frank Wunderlich &lt;frank-w@public-files.de&gt;<br/>
+Date: Mon, 21 May 2018 21:38:53 +0200<br/>
+Subject: [PATCH] [DTS] fix green/blue pio-led on bpi-r2</div>
+
+<div>Signed-off-by: Frank Wunderlich &lt;frank-w@public-files.de&gt;<br/>
+---<br/>
+&nbsp;arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts &#124; 14 +++++++-------<br/>
+&nbsp;1 file changed, 7 insertions(+), 7 deletions(-)</div>
+
+<div>diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts<br/>
+index 024bdb7d6cca5..6fa37a2764110 100644<br/>
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts<br/>
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts<br/>
+@@ -80,21 +80,21 @@<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;pinctrl-names = &quot;default&quot;;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;pinctrl-0 = &lt;&amp;led_pins_a&gt;;<br/>
+&nbsp;<br/>
+-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;blue {<br/>
+-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;label = &quot;bpi-r2:pio:blue&quot;;<br/>
+-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;gpios = &lt;&amp;pio 241 GPIO_ACTIVE_HIGH&gt;;<br/>
++&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;green {<br/>
++&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;label = &quot;bpi-r2:pio:green&quot;;<br/>
++&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;gpios = &lt;&amp;pio 241 GPIO_ACTIVE_LOW&gt;;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;default-state = &quot;off&quot;;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;};<br/>
+&nbsp;<br/>
+-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;green {<br/>
+-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;label = &quot;bpi-r2:pio:green&quot;;<br/>
+-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;gpios = &lt;&amp;pio 240 GPIO_ACTIVE_HIGH&gt;;<br/>
++&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;blue {<br/>
++&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;label = &quot;bpi-r2:pio:blue&quot;;<br/>
++&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;gpios = &lt;&amp;pio 240 GPIO_ACTIVE_LOW&gt;;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;default-state = &quot;off&quot;;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;};<br/>
+&nbsp;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;red {<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;label = &quot;bpi-r2:pio:red&quot;;<br/>
+-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;gpios = &lt;&amp;pio 239 GPIO_ACTIVE_HIGH&gt;;<br/>
++&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;gpios = &lt;&amp;pio 239 GPIO_ACTIVE_LOW&gt;;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;default-state = &quot;off&quot;;<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;};<br/>
+&nbsp;&nbsp;&nbsp; &nbsp;};</div>
+</div></div></body></html>
