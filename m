@@ -1,108 +1,392 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH 4/9] regulator: bd71837: Devicetree bindings for BD71837
- regulators
-Date: Fri, 25 May 2018 08:54:30 +0300
-Message-ID: <20180525055430.GB16888@localhost.localdomain>
-References: <20180524055752.GE4249@localhost.localdomain>
- <20180524140118.GS4828@sirena.org.uk>
- <042F8805D2046347BB8420BEAE397A4016C06B47@WILL-MAIL002.REu.RohmEu.com>
- <20180524175721.GB4828@sirena.org.uk>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v6 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+Date: Fri, 25 May 2018 05:43:43 +0000
+Message-ID: <HE1PR04MB3113D024D0BCCB6B96F0D8F687690@HE1PR04MB3113.eurprd04.prod.outlook.com>
+References: <1526899612-22856-1-git-send-email-ping.bai@nxp.com>
+ <AM0PR04MB42110730C8F91B61CC32168480690@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180524175721.GB4828@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB42110730C8F91B61CC32168480690@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 24, 2018 at 06:57:21PM +0100, Mark Brown wrote:
-> On Thu, May 24, 2018 at 05:30:57PM +0000, Vaittinen, Matti wrote:
-> > > > On Thu, May 24, 2018 at 08:57:52AM +0300, Matti Vaittinen wrote:
-> > >
-> > > > +Required properties:
-> > > > + - compatible: should be "rohm,bd71837-pmic".
-> > > > + - regulator-name: should be "buck1", ..., "buck8" and "ldo1", ..., "ldo7"
-> > >
-> > > The MFD is for a single device, there should be no need for compatibles
-> > > on subfunctions.
-> > 
-> > I will check this. I must admit I am not sure what is the de-facto mechanism
-> > for assigning the correct device-tree nodes to sub devices if compatibles
-> > are not used? I think I saw device-tree node name being used for regulators
+> Subject: RE: [PATCH v6 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
 > 
-> You can look at the regulators node within the parent device, you know
-> that in Linux the parent device will be the MFD.
-
-So I should parse the device-tree in MFD my driver in order to locate
-the regulators node? Isn't that somewhat like code dublication? If we
-rely on compatibles we can avoid device-tree parsing in MFD driver,
-right? An in-tree example of this is:
-
-Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
->Required properties:
->- compatible: should be "sprd,sc27xx-regulator".
-//snip
->Example:
->	regulators {
->		compatible = "sprd,sc27xx-regulator";
->
->		 vddarm0: BUCK_CPU0 {
->			regulator-name = "vddarm0";
->			regulator-min-microvolt = <400000>;
-
-drivers/mfd/sprd-sc27xx-spi.c
-> static const struct mfd_cell sprd_pmic_devs[] = {
-	//snip
->        }, {
->                .name = "sc27xx-regulator",
->                .of_compatible = "sprd,sc27xx-regulator",
->        }, {
-	//snip
-> };
-
-and in probe just:
->        ret = devm_mfd_add_devices(&spi->dev, PLATFORM_DEVID_AUTO,
->                                   sprd_pmic_devs, ARRAY_SIZE(sprd_pmic_devs),
->                                   NULL, 0,
->                                   regmap_irq_get_domain(ddata->irq_data));
-
-this looks clean to me and offloads the device-tree parsing completely
-to generic code. Wouldn't that be simpler approach that looking up the
-regulator node in MFD driver code? (I can do as you suggested but to me
-the approach used in sprd-sc27xx-spi.c makes sense)
-
-> > Also, another thing I was wondering is how supply regulators should be
-> > handled? In this case the LDO5 is supplied by BUCK6 and LDO6 by
-> > BUCK7. 
+> > -----Original Message-----
+> > From: Jacky Bai
+> > Sent: Monday, May 21, 2018 6:47 PM
+> > To: shawnguo@kernel.org; robh+dt@kernel.org; kernel@pengutronix.de
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>;
+> devicetree@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; dl-linux-imx
+> > <linux-imx@nxp.com>; A.s. Dong <aisheng.dong@nxp.com>;
+> > jacky.baip@gmail.com
+> > Subject: [PATCH v6 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+> >
 > 
-> > From generic regulator bindings
-> > /Documentation/devicetree/bindings/regulator/regulator.txt
-> > I found statement:
+> [...]
 > 
-> > > - <name>-supply: phandle to the parent supply/regulator node
+> [...]
 > 
-> None of that stuff uses compatible strings, just handle it as covered in
-> the bindings.
-Sorry. I have not been clear with my question. This part was unrelated
-to compatible properties - I should have stated it in my previous mail.
+> > +
+> > +			tempmon: temperature-sensor {
+> > +				compatible = "fsl,imx6sll-tempmon",
+> > "fsl,imx6sx-tempmon";
+> > +				interrupts = <GIC_SPI 49
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				fsl,tempmon = <&anatop>;
+> > +				fsl,tempmon-data = <&ocotp>;
+> > +				clocks = <&clks
+> > IMX6SLL_CLK_PLL3_USB_OTG>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> 
+> Pls move it out of SoC node to root node.
+> See:
+> commit 225fa59fddfa7 ("ARM: dts: imx7: Move tempmon node out of bus")
+> 
+Ok, will move it out.
 
-What I meant is that I tried out adding
-xxx-supply = <&buck6>;
-in LDO5 device tree node and expected that the regulator core code would
-take care of parsing this from device-tree and adding the supply
-information to LDO5. This was not done and I did not fing parsing for
-*-supply from drivers/regulator/of_regulator.c. So I was wondering if I
-am missing something? I guess the *-supply properties in device-tree for
-BD71837 regulators are now ignored. Should the supply parsing be added
-in drivers/regulator/of_regulator.c - or have I simply misunderstood
-something?
+> And probably we need switch to the new way?
+> See:
+> commit de25b9bb4a4 ("ARM: dts: imx7s: add temperature monitor support")
+> 
 
-Anyways, I ended up hard coding:
-.supply_name = "buck6"
-in LDO5 regulator_desc before passing the desc to regulator_register().
-This works but it means the buck6 name must be fixed to "buck6".
+I prefer to keep it same as other imx6 soc.
 
-Br,
-	Matti Vaittinen
+BR
+Jacky Bai
+> Otherwise:
+> Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
+> 
+> Regards
+> Dong Aisheng
+> 
+> > +			usbphy1: usb-phy@20c9000 {
+> > +				compatible = "fsl,imx6sll-usbphy",
+> > "fsl,imx6ul-usbphy",
+> > +						"fsl,imx23-usbphy";
+> > +				reg = <0x020c9000 0x1000>;
+> > +				interrupts = <GIC_SPI 40
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBPHY1>;
+> > +				phy-3p0-supply = <&reg_3p0>;
+> > +				fsl,anatop = <&anatop>;
+> > +			};
+> > +
+> > +			usbphy2: usb-phy@20ca000 {
+> > +				compatible = "fsl,imx6sll-usbphy",
+> > "fsl,imx6ul-usbphy",
+> > +						"fsl,imx23-usbphy";
+> > +				reg = <0x020ca000 0x1000>;
+> > +				interrupts = <GIC_SPI 41
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBPHY2>;
+> > +				phy-reg_3p0-supply = <&reg_3p0>;
+> > +				fsl,anatop = <&anatop>;
+> > +			};
+> > +
+> > +			snvs: snvs@20cc000 {
+> > +				compatible = "fsl,sec-v4.0-mon", "syscon",
+> > "simple-mfd";
+> > +				reg = <0x020cc000 0x4000>;
+> > +
+> > +				snvs_rtc: snvs-rtc-lp {
+> > +					compatible = "fsl,sec-v4.0-mon-rtc-
+> > lp";
+> > +					regmap = <&snvs>;
+> > +					offset = <0x34>;
+> > +					interrupts = <GIC_SPI 19
+> > IRQ_TYPE_LEVEL_HIGH>,
+> > +						     <GIC_SPI 20
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				};
+> > +
+> > +				snvs_poweroff: snvs-poweroff {
+> > +					compatible = "syscon-poweroff";
+> > +					regmap = <&snvs>;
+> > +					offset = <0x38>;
+> > +					mask = <0x61>;
+> > +				};
+> > +
+> > +				snvs_pwrkey: snvs-powerkey {
+> > +					compatible = "fsl,sec-v4.0-pwrkey";
+> > +					regmap = <&snvs>;
+> > +					interrupts = <GIC_SPI 4
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +					linux,keycode = <KEY_POWER>;
+> > +					wakeup-source;
+> > +				};
+> > +			};
+> > +
+> > +			src: reset-controller@20d8000 {
+> > +				compatible = "fsl,imx6sll-src";
+> > +				reg = <0x020d8000 0x4000>;
+> > +				interrupts = <GIC_SPI 91
+> > IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 96
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				#reset-cells = <1>;
+> > +			};
+> > +
+> > +			gpc: interrupt-controller@20dc000 {
+> > +				compatible = "fsl,imx6sll-gpc", "fsl,imx6q-
+> > gpc";
+> > +				reg = <0x020dc000 0x4000>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <3>;
+> > +				interrupts = <GIC_SPI 89
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				interrupt-parent = <&intc>;
+> > +				fsl,mf-mix-wakeup-irq = <0x7c00000 0x7d00
+> > 0x0 0x1400640>;
+> > +			};
+> > +
+> > +			iomuxc: pinctrl@20e0000 {
+> > +				compatible = "fsl,imx6sll-iomuxc";
+> > +				reg = <0x020e0000 0x4000>;
+> > +			};
+> > +
+> > +			gpr: iomuxc-gpr@20e4000 {
+> > +				compatible = "fsl,imx6sll-iomuxc-gpr",
+> > +					     "fsl,imx6q-iomuxc-gpr", "syscon";
+> > +				reg = <0x020e4000 0x4000>;
+> > +			};
+> > +
+> > +			csi: csi@20e8000 {
+> > +				compatible = "fsl,imx6sll-csi", "fsl,imx6s-csi";
+> > +				reg = <0x020e8000 0x4000>;
+> > +				interrupts = <GIC_SPI 7
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_DUMMY>,
+> > +					 <&clks IMX6SLL_CLK_CSI>,
+> > +					 <&clks IMX6SLL_CLK_DUMMY>;
+> > +				clock-names = "disp-axi", "csi_mclk",
+> > "disp_dcic";
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			sdma: dma-controller@20ec000 {
+> > +				compatible = "fsl,imx6sll-sdma", "fsl,imx35-
+> > sdma";
+> > +				reg = <0x020ec000 0x4000>;
+> > +				interrupts = <GIC_SPI 2
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_SDMA>,
+> > +					 <&clks IMX6SLL_CLK_SDMA>;
+> > +				clock-names = "ipg", "ahb";
+> > +				#dma-cells = <3>;
+> > +				iram = <&ocram>;
+> > +				fsl,sdma-ram-script-name =
+> > "imx/sdma/sdma-imx6q.bin";
+> > +			};
+> > +
+> > +			lcdif: lcd-controller@20f8000 {
+> > +				compatible = "fsl,imx6sll-lcdif", "fsl,imx28-
+> > lcdif";
+> > +				reg = <0x020f8000 0x4000>;
+> > +				interrupts = <GIC_SPI 39
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_LCDIF_PIX>,
+> > +					 <&clks IMX6SLL_CLK_LCDIF_APB>,
+> > +					 <&clks IMX6SLL_CLK_DUMMY>;
+> > +				clock-names = "pix", "axi", "disp_axi";
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			dcp: dcp@20fc000 {
+> > +				compatible = "fsl,imx28-dcp";
+> > +				reg = <0x020fc000 0x4000>;
+> > +				interrupts = <GIC_SPI 99
+> > IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 100
+> > IRQ_TYPE_LEVEL_HIGH>,
+> > +					     <GIC_SPI 101
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_DCP>;
+> > +				clock-names = "dcp";
+> > +			};
+> > +		};
+> > +
+> > +		aips2: aips-bus@2100000 {
+> > +			compatible = "fsl,aips-bus", "simple-bus";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <1>;
+> > +			reg = <0x02100000 0x100000>;
+> > +			ranges;
+> > +
+> > +			usbotg1: usb@2184000 {
+> > +				compatible = "fsl,imx6sll-usb", "fsl,imx6ul-
+> > usb",
+> > +						"fsl,imx27-usb";
+> > +				reg = <0x02184000 0x200>;
+> > +				interrupts = <GIC_SPI 43
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBOH3>;
+> > +				fsl,usbphy = <&usbphy1>;
+> > +				fsl,usbmisc = <&usbmisc 0>;
+> > +				fsl,anatop = <&anatop>;
+> > +				ahb-burst-config = <0x0>;
+> > +				tx-burst-size-dword = <0x10>;
+> > +				rx-burst-size-dword = <0x10>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usbotg2: usb@2184200 {
+> > +				compatible = "fsl,imx6sll-usb", "fsl,imx6ul-
+> > usb",
+> > +						"fsl,imx27-usb";
+> > +				reg = <0x02184200 0x200>;
+> > +				interrupts = <GIC_SPI 42
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USBOH3>;
+> > +				fsl,usbphy = <&usbphy2>;
+> > +				fsl,usbmisc = <&usbmisc 1>;
+> > +				ahb-burst-config = <0x0>;
+> > +				tx-burst-size-dword = <0x10>;
+> > +				rx-burst-size-dword = <0x10>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usbmisc: usbmisc@2184800 {
+> > +				#index-cells = <1>;
+> > +				compatible = "fsl,imx6sll-usbmisc",
+> > "fsl,imx6ul-usbmisc",
+> > +						"fsl,imx6q-usbmisc";
+> > +				reg = <0x02184800 0x200>;
+> > +			};
+> > +
+> > +			usdhc1: mmc@2190000 {
+> > +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-
+> > usdhc";
+> > +				reg = <0x02190000 0x4000>;
+> > +				interrupts = <GIC_SPI 22
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USDHC1>,
+> > +					 <&clks IMX6SLL_CLK_USDHC1>,
+> > +					 <&clks IMX6SLL_CLK_USDHC1>;
+> > +				clock-names = "ipg", "ahb", "per";
+> > +				bus-width = <4>;
+> > +				fsl,tuning-step = <2>;
+> > +				fsl,tuning-start-tap = <20>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usdhc2: mmc@2194000 {
+> > +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-
+> > usdhc";
+> > +				reg = <0x02194000 0x4000>;
+> > +				interrupts = <GIC_SPI 23
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USDHC2>,
+> > +					 <&clks IMX6SLL_CLK_USDHC2>,
+> > +					 <&clks IMX6SLL_CLK_USDHC2>;
+> > +				clock-names = "ipg", "ahb", "per";
+> > +				bus-width = <4>;
+> > +				fsl,tuning-step = <2>;
+> > +				fsl,tuning-start-tap = <20>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			usdhc3: mmc@2198000 {
+> > +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-
+> > usdhc";
+> > +				reg = <0x02198000 0x4000>;
+> > +				interrupts = <GIC_SPI 24
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_USDHC3>,
+> > +					 <&clks IMX6SLL_CLK_USDHC3>,
+> > +					 <&clks IMX6SLL_CLK_USDHC3>;
+> > +				clock-names = "ipg", "ahb", "per";
+> > +				bus-width = <4>;
+> > +				fsl,tuning-step = <2>;
+> > +				fsl,tuning-start-tap = <20>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			i2c1: i2c@21a0000 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				compatible = "fs,imx6sll-i2c", "fsl,imx21-i2c";
+> > +				reg = <0x021a0000 0x4000>;
+> > +				interrupts = <GIC_SPI 36
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_I2C1>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			i2c2: i2c@21a4000 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				compatible = "fsl,imx6sll-i2c", "fsl,imx21-i2c";
+> > +				reg = <0x021a4000 0x4000>;
+> > +				interrupts = <GIC_SPI 37
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_I2C2>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			i2c3: i2c@21a8000 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				compatible = "fsl,imx6sll-i2c", "fsl,imx21-i2c";
+> > +				reg = <0x021a8000 0x4000>;
+> > +				interrupts = <GIC_SPI 38
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SLL_CLK_I2C3>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			mmdc: memory-controller@21b0000 {
+> > +				compatible = "fsl,imx6sll-mmdc", "fsl,imx6q-
+> > mmdc";
+> > +				reg = <0x021b0000 0x4000>;
+> > +			};
+> > +
+> > +			ocotp: ocotp-ctrl@21bc000 {
+> > +				compatible = "fsl,imx6sll-ocotp", "syscon";
+> > +				reg = <0x021bc000 0x4000>;
+> > +				clocks = <&clks IMX6SLL_CLK_OCOTP>;
+> > +			};
+> > +
+> > +			audmux: audmux@21d8000 {
+> > +				compatible = "fsl,imx6sll-audmux",
+> > "fsl,imx31-audmux";
+> > +				reg = <0x021d8000 0x4000>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			uart5: serial@21f4000 {
+> > +				compatible = "fsl,imx6sll-uart", "fsl,imx6q-
+> > uart",
+> > +					     "fsl,imx21-uart";
+> > +				reg = <0x021f4000 0x4000>;
+> > +				interrupts =<GIC_SPI 30
+> > IRQ_TYPE_LEVEL_HIGH>;
+> > +				dmas = <&sdma 33 4 0>, <&sdma 34 4 0>;
+> > +				dma-names = "rx", "tx";
+> > +				clocks = <&clks IMX6SLL_CLK_UART5_IPG>,
+> > +					 <&clks
+> > IMX6SLL_CLK_UART5_SERIAL>;
+> > +				clock-names = "ipg", "per";
+> > +				status = "disabled";
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > --
+> > 1.9.1
