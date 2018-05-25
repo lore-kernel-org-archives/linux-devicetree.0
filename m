@@ -1,197 +1,61 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v1 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
-Date: Fri, 25 May 2018 20:18:18 +0000
-Message-ID: <AM2PR05MB0753C0BABE7A5B4C24614744A1690@AM2PR05MB0753.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <8c2bfde9-5dd2-c1f9-a7f1-503c6eb8b0fe@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8c2bfde9-5dd2-c1f9-a7f1-503c6eb8b0fe@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH 00/11] Add throttler driver for non-thermal throttling
+Date: Fri, 25 May 2018 13:30:32 -0700
+Message-ID: <20180525203043.249193-1-mka@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the comments! Uploaded patch series v2. 
-Please also see response inline.
+This series adds the throttler driver, for non-thermal throttling of
+CPUs and devfreq devices. A use case for non-thermal throttling could
+be the detection of a high battery discharge voltage, close to the
+over-current protection (OCP) limit of the battery.
 
-- Liming
+To support throttling of devfreq devices the series introduces the
+concept of a devfreq policy and the DEVFREQ_ADJUST notifier (similar
+to CPUFREQ_ADJUST). Further it includes some related devfreq bugfixes
+and improvements that change some of the code that is also touched
+by the policy changes.
 
-> -----Original Message-----
-> From: Robin Murphy [mailto:robin.murphy@arm.com]
-> Sent: Friday, May 25, 2018 1:15 PM
-> To: Liming Sun <lsun@mellanox.com>; Olof Johansson <olof@lixom.net>;
-> Arnd Bergmann <arnd@arndb.de>; David Woods <dwoods@mellanox.com>
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH v1 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
-> 
-> On 25/05/18 17:06, Liming Sun wrote:
-> [...]
-> > diff --git a/drivers/soc/mellanox/tmfifo.c b/drivers/soc/mellanox/tmfifo.c
-> > new file mode 100644
-> > index 0000000..a3303d1
-> > --- /dev/null
-> > +++ b/drivers/soc/mellanox/tmfifo.c
-> > @@ -0,0 +1,1265 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> This tag doesn't match the included license text...
+Matthias Kaehlcke (11):
+  PM / devfreq: Init user limits from OPP limits, not viceversa
+  PM / devfreq: Fix handling of min/max_freq == 0
+  PM / devfreq: Remove check for df->max_freq == 0 from governors
+  PM / devfreq: Remove redundant frequency adjustment from governors
+  PM / devfreq: governors: Return device frequency limits instead of
+    user limits
+  PM / devfreq: Add struct devfreq_policy
+  PM / devfreg: Add support policy notifiers
+  PM / devfreq: Make update_devfreq() public
+  misc: throttler: Add core support for non-thermal throttling
+  dt-bindings: misc: add bindings for throttler
+  misc/throttler: Add Chrome OS EC throttler
 
-Fixed in patch v2-1/4.
+ .../devicetree/bindings/misc/throttler.txt    |  41 ++
+ drivers/devfreq/devfreq.c                     | 203 ++++++----
+ drivers/devfreq/governor.h                    |   3 -
+ drivers/devfreq/governor_passive.c            |   4 +-
+ drivers/devfreq/governor_performance.c        |   5 +-
+ drivers/devfreq/governor_powersave.c          |   2 +-
+ drivers/devfreq/governor_simpleondemand.c     |  13 +-
+ drivers/devfreq/governor_userspace.c          |  16 +-
+ drivers/misc/Kconfig                          |   1 +
+ drivers/misc/Makefile                         |   1 +
+ drivers/misc/throttler/Kconfig                |  28 ++
+ drivers/misc/throttler/Makefile               |   2 +
+ drivers/misc/throttler/core.c                 | 373 ++++++++++++++++++
+ drivers/misc/throttler/cros_ec_throttler.c    | 122 ++++++
+ include/linux/devfreq.h                       | 112 +++++-
+ include/linux/throttler.h                     |  10 +
+ 16 files changed, 813 insertions(+), 123 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/throttler.txt
+ create mode 100644 drivers/misc/throttler/Kconfig
+ create mode 100644 drivers/misc/throttler/Makefile
+ create mode 100644 drivers/misc/throttler/core.c
+ create mode 100644 drivers/misc/throttler/cros_ec_throttler.c
+ create mode 100644 include/linux/throttler.h
 
-> 
-> > +/*
-> > + * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
-> > + *
-> > + * This software is available to you under a choice of one of two
-> > + * licenses.  You may choose to be licensed under the terms of the GNU
-> > + * General Public License (GPL) Version 2, available from the file
-> > + * COPYING in the main directory of this source tree, or the
-> > + * OpenIB.org BSD license below:
-> > + *
-> > + *     Redistribution and use in source and binary forms, with or
-> > + *     without modification, are permitted provided that the following
-> > + *     conditions are met:
-> > + *
-> > + *      - Redistributions of source code must retain the above
-> > + *        copyright notice, this list of conditions and the following
-> > + *        disclaimer.
-> > + *
-> > + *      - Redistributions in binary form must reproduce the above
-> > + *        copyright notice, this list of conditions and the following
-> > + *        disclaimer in the documentation and/or other materials
-> > + *        provided with the distribution.
-> > + *
-> > + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
-> KIND,
-> > + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-> WARRANTIES OF
-> > + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-> COPYRIGHT HOLDERS
-> > + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
-> AN
-> > + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-> OR IN
-> > + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-> IN THE
-> > + * SOFTWARE.
-> > + */
-> 
-> [...]
-> > +/* Several utility macros to get/set the register fields. */
-> > +#define TMFIFO_GET_FIELD(reg, field) \
-> > +	(((reg) >> field##_SHIFT) & ((1UL << field##_WIDTH) - 1))
-> > +
-> > +#define TMFIFO_SET_FIELD(reg, field, value) ({ \
-> > +	u64 _mask = ((1UL << field##_WIDTH) - 1) << field##_SHIFT; \
-> > +	((reg) & ~_mask) | (((value) << field##_SHIFT) & _mask); \
-> > +})
-> 
-> There's no need to reinvent <linux/bitfield.h>
-
-Updated in patch v2-1/4.
-
-> 
-> [...]
-> > +MODULE_DESCRIPTION("Mellanox BlueField SoC TMFIFO Driver");
-> > +MODULE_AUTHOR("Mellanox Technologies, Ltd");
-> > +MODULE_LICENSE("GPL");
-> 
-> ...and this implies yet another different license (since it indicates
-> "GPLv2 or later")
-
-Fixed in patch v2-1/4.
-
-> 
-> > +MODULE_VERSION("0.7");
-> > diff --git a/drivers/soc/mellanox/tmfifo_regs.h
-> b/drivers/soc/mellanox/tmfifo_regs.h
-> > new file mode 100644
-> > index 0000000..b07f353
-> > --- /dev/null
-> > +++ b/drivers/soc/mellanox/tmfifo_regs.h
-> > @@ -0,0 +1,112 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> Again, this doesn't match the included text. Also, the SPDX comment
-> style is /* */ for headers.
-
-Updated in patch v2-1/4.
-
-> 
-> > +/*
-> > + * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
-> > + *
-> > + * This software is available to you under a choice of one of two
-> > + * licenses.  You may choose to be licensed under the terms of the GNU
-> > + * General Public License (GPL) Version 2, available from the file
-> > + * COPYING in the main directory of this source tree, or the
-> > + * OpenIB.org BSD license below:
-> > + *
-> > + *     Redistribution and use in source and binary forms, with or
-> > + *     without modification, are permitted provided that the following
-> > + *     conditions are met:
-> > + *
-> > + *      - Redistributions of source code must retain the above
-> > + *        copyright notice, this list of conditions and the following
-> > + *        disclaimer.
-> > + *
-> > + *      - Redistributions in binary form must reproduce the above
-> > + *        copyright notice, this list of conditions and the following
-> > + *        disclaimer in the documentation and/or other materials
-> > + *        provided with the distribution.
-> > + *
-> > + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
-> KIND,
-> > + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-> WARRANTIES OF
-> > + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-> COPYRIGHT HOLDERS
-> > + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
-> AN
-> > + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-> OR IN
-> > + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-> IN THE
-> > + * SOFTWARE.
-> > + */
-> 
-> [...]
-> > +#ifdef __ASSEMBLER__
-> > +#define _64bit(x) x
-> > +#else /* __ASSEMBLER__ */
-> > +#ifdef __tile__
-> > +#define _64bit(x) x ## UL
-> > +#else /* __tile__ */
-> > +#define _64bit(x) x ## ULL
-> > +#endif /* __tile__ */
-> > +#endif /* __ASSEMBLER */
-> > +
-> > +#ifdef __KERNEL__
-> > +#include <linux/types.h>
-> > +#else
-> > +#include <stdint.h>
-> > +#endif
-> > +
-> > +#ifndef __DOXYGEN__
-> 
-> Given that this is a private header under drivers/, is any of that lot
-> necessary?
-
-Simplified and updated it in patch v2-1/4.
-
-> 
-> Robin.
+-- 
+2.17.0.921.gf22659ad46-goog
