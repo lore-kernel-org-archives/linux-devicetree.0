@@ -1,115 +1,463 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3 2/8] drm/mediatek: support maximum 64 mutex mod
-Date: Fri, 25 May 2018 11:24:24 +0800
-Message-ID: <1527218664.27165.4.camel@mtksdaap41>
-References: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
- <1527215665-11937-3-git-send-email-stu.hsieh@mediatek.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v6 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+Date: Fri, 25 May 2018 03:24:34 +0000
+Message-ID: <AM0PR04MB42110730C8F91B61CC32168480690@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1526899612-22856-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1527215665-11937-3-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: stu.hsieh@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526899612-22856-1-git-send-email-ping.bai@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0dToKCk9uIEZyaSwgMjAxOC0wNS0yNSBhdCAxMDozNCArMDgwMCwgc3R1LmhzaWVoQG1l
-ZGlhdGVrLmNvbSB3cm90ZToKPiBGcm9tOiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5j
-b20+Cj4gCj4gVGhpcyBwYXRjaCBzdXBwb3J0IHRoYXQgaWYgbW9kdWxlcyBtb3JlIHRoYW4gMzIs
-Cj4gYWRkIGluZGV4IG1vcmUgdGhhbiAzMSB3aGVuIHVzaW5nIERJU1BfUkVHX01VVEVYX01PRDIg
-Yml0Cj4gCgpSZXZpZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gU2lnbmVk
-LW9mZi1ieTogU3R1IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyB8IDc1ICsrKysrKysrKysrKysrKysr
-KysrKy0tLS0tLS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDQ3IGluc2VydGlvbnMoKyksIDI4
-IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4g
-aW5kZXggODEzMGYzZGFiNjYxLi40N2ZmYTI0MGJkMjUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHAuYwo+IEBAIC00MSwzMSArNDEsMzIgQEAKPiAgI2RlZmluZSBESVNQ
-X1JFR19NVVRFWF9SU1QobikJKDB4MjggKyAweDIwICogKG4pKQo+ICAjZGVmaW5lIERJU1BfUkVH
-X01VVEVYX01PRChuKQkoMHgyYyArIDB4MjAgKiAobikpCj4gICNkZWZpbmUgRElTUF9SRUdfTVVU
-RVhfU09GKG4pCSgweDMwICsgMHgyMCAqIChuKSkKPiArI2RlZmluZSBESVNQX1JFR19NVVRFWF9N
-T0QyKG4pCSgweDM0ICsgMHgyMCAqIChuKSkKPiAgCj4gICNkZWZpbmUgSU5UX01VVEVYCQkJCUJJ
-VCgxKQo+ICAKPiAtI2RlZmluZSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfT1ZMMAkJQklUKDExKQo+
-IC0jZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9PVkwxCQlCSVQoMTIpCj4gLSNkZWZpbmUg
-TVQ4MTczX01VVEVYX01PRF9ESVNQX1JETUEwCQlCSVQoMTMpCj4gLSNkZWZpbmUgTVQ4MTczX01V
-VEVYX01PRF9ESVNQX1JETUExCQlCSVQoMTQpCj4gLSNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9E
-SVNQX1JETUEyCQlCSVQoMTUpCj4gLSNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX1dETUEw
-CQlCSVQoMTYpCj4gLSNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX1dETUExCQlCSVQoMTcp
-Cj4gLSNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX0NPTE9SMAkJQklUKDE4KQo+IC0jZGVm
-aW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9DT0xPUjEJCUJJVCgxOSkKPiAtI2RlZmluZSBNVDgx
-NzNfTVVURVhfTU9EX0RJU1BfQUFMCQlCSVQoMjApCj4gLSNkZWZpbmUgTVQ4MTczX01VVEVYX01P
-RF9ESVNQX0dBTU1BCQlCSVQoMjEpCj4gLSNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX1VG
-T0UJCUJJVCgyMikKPiAtI2RlZmluZSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfUFdNMAkJQklUKDIz
-KQo+IC0jZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9QV00xCQlCSVQoMjQpCj4gLSNkZWZp
-bmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX09ECQlCSVQoMjUpCj4gLQo+IC0jZGVmaW5lIE1UMjcw
-MV9NVVRFWF9NT0RfRElTUF9PVkwJCUJJVCgzKQo+IC0jZGVmaW5lIE1UMjcwMV9NVVRFWF9NT0Rf
-RElTUF9XRE1BCQlCSVQoNikKPiAtI2RlZmluZSBNVDI3MDFfTVVURVhfTU9EX0RJU1BfQ09MT1IJ
-CUJJVCg3KQo+IC0jZGVmaW5lIE1UMjcwMV9NVVRFWF9NT0RfRElTUF9CTFMJCUJJVCg5KQo+IC0j
-ZGVmaW5lIE1UMjcwMV9NVVRFWF9NT0RfRElTUF9SRE1BMAkJQklUKDEwKQo+IC0jZGVmaW5lIE1U
-MjcwMV9NVVRFWF9NT0RfRElTUF9SRE1BMQkJQklUKDEyKQo+ICsjZGVmaW5lIE1UODE3M19NVVRF
-WF9NT0RfRElTUF9PVkwwCQkxMQo+ICsjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9PVkwx
-CQkxMgo+ICsjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9SRE1BMAkJMTMKPiArI2RlZmlu
-ZSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfUkRNQTEJCTE0Cj4gKyNkZWZpbmUgTVQ4MTczX01VVEVY
-X01PRF9ESVNQX1JETUEyCQkxNQo+ICsjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9XRE1B
-MAkJMTYKPiArI2RlZmluZSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfV0RNQTEJCTE3Cj4gKyNkZWZp
-bmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX0NPTE9SMAkJMTgKPiArI2RlZmluZSBNVDgxNzNfTVVU
-RVhfTU9EX0RJU1BfQ09MT1IxCQkxOQo+ICsjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9B
-QUwJCTIwCj4gKyNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX0dBTU1BCQkyMQo+ICsjZGVm
-aW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9VRk9FCQkyMgo+ICsjZGVmaW5lIE1UODE3M19NVVRF
-WF9NT0RfRElTUF9QV00wCQkyMwo+ICsjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9QV00x
-CQkyNAo+ICsjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9PRAkJMjUKPiArCj4gKyNkZWZp
-bmUgTVQyNzAxX01VVEVYX01PRF9ESVNQX09WTAkJMwo+ICsjZGVmaW5lIE1UMjcwMV9NVVRFWF9N
-T0RfRElTUF9XRE1BCQk2Cj4gKyNkZWZpbmUgTVQyNzAxX01VVEVYX01PRF9ESVNQX0NPTE9SCQk3
-Cj4gKyNkZWZpbmUgTVQyNzAxX01VVEVYX01PRF9ESVNQX0JMUwkJOQo+ICsjZGVmaW5lIE1UMjcw
-MV9NVVRFWF9NT0RfRElTUF9SRE1BMAkJMTAKPiArI2RlZmluZSBNVDI3MDFfTVVURVhfTU9EX0RJ
-U1BfUkRNQTEJCTEyCj4gIAo+ICAjZGVmaW5lIE1VVEVYX1NPRl9TSU5HTEVfTU9ERQkJMAo+ICAj
-ZGVmaW5lIE1VVEVYX1NPRl9EU0kwCQkJMQo+IEBAIC0yNzgsNiArMjc5LDcgQEAgdm9pZCBtdGtf
-ZGlzcF9tdXRleF9hZGRfY29tcChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4LAo+ICAJc3Ry
-dWN0IG10a19kZHAgKmRkcCA9IGNvbnRhaW5lcl9vZihtdXRleCwgc3RydWN0IG10a19kZHAsCj4g
-IAkJCQkJICAgbXV0ZXhbbXV0ZXgtPmlkXSk7Cj4gIAl1bnNpZ25lZCBpbnQgcmVnOwo+ICsJdW5z
-aWduZWQgaW50IG9mZnNldDsKPiAgCj4gIAlXQVJOX09OKCZkZHAtPm11dGV4W211dGV4LT5pZF0g
-IT0gbXV0ZXgpOwo+ICAKPiBAQCAtMjkyLDkgKzI5NCwxNyBAQCB2b2lkIG10a19kaXNwX211dGV4
-X2FkZF9jb21wKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAqbXV0ZXgsCj4gIAkJcmVnID0gTVVURVhf
-U09GX0RQSTA7Cj4gIAkJYnJlYWs7Cj4gIAlkZWZhdWx0Ogo+IC0JCXJlZyA9IHJlYWRsX3JlbGF4
-ZWQoZGRwLT5yZWdzICsgRElTUF9SRUdfTVVURVhfTU9EKG11dGV4LT5pZCkpOwo+IC0JCXJlZyB8
-PSBkZHAtPm11dGV4X21vZFtpZF07Cj4gLQkJd3JpdGVsX3JlbGF4ZWQocmVnLCBkZHAtPnJlZ3Mg
-KyBESVNQX1JFR19NVVRFWF9NT0QobXV0ZXgtPmlkKSk7Cj4gKwkJaWYgKGRkcC0+bXV0ZXhfbW9k
-W2lkXSA8IDMyKSB7Cj4gKwkJCW9mZnNldCA9IERJU1BfUkVHX01VVEVYX01PRChtdXRleC0+aWQp
-Owo+ICsJCQlyZWcgPSByZWFkbF9yZWxheGVkKGRkcC0+cmVncyArIG9mZnNldCk7Cj4gKwkJCXJl
-ZyB8PSAxIDw8IGRkcC0+bXV0ZXhfbW9kW2lkXTsKPiArCQkJd3JpdGVsX3JlbGF4ZWQocmVnLCBk
-ZHAtPnJlZ3MgKyBvZmZzZXQpOwo+ICsJCX0gZWxzZSB7Cj4gKwkJCW9mZnNldCA9IERJU1BfUkVH
-X01VVEVYX01PRDIobXV0ZXgtPmlkKTsKPiArCQkJcmVnID0gcmVhZGxfcmVsYXhlZChkZHAtPnJl
-Z3MgKyBvZmZzZXQpOwo+ICsJCQlyZWcgfD0gMSA8PCAoZGRwLT5tdXRleF9tb2RbaWRdIC0gMzIp
-Owo+ICsJCQl3cml0ZWxfcmVsYXhlZChyZWcsIGRkcC0+cmVncyArIG9mZnNldCk7Cj4gKwkJfQo+
-ICAJCXJldHVybjsKPiAgCX0KPiAgCj4gQEAgLTMwNyw2ICszMTcsNyBAQCB2b2lkIG10a19kaXNw
-X211dGV4X3JlbW92ZV9jb21wKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAqbXV0ZXgsCj4gIAlzdHJ1
-Y3QgbXRrX2RkcCAqZGRwID0gY29udGFpbmVyX29mKG11dGV4LCBzdHJ1Y3QgbXRrX2RkcCwKPiAg
-CQkJCQkgICBtdXRleFttdXRleC0+aWRdKTsKPiAgCXVuc2lnbmVkIGludCByZWc7Cj4gKwl1bnNp
-Z25lZCBpbnQgb2Zmc2V0Owo+ICAKPiAgCVdBUk5fT04oJmRkcC0+bXV0ZXhbbXV0ZXgtPmlkXSAh
-PSBtdXRleCk7Cj4gIAo+IEBAIC0zMTgsOSArMzI5LDE3IEBAIHZvaWQgbXRrX2Rpc3BfbXV0ZXhf
-cmVtb3ZlX2NvbXAoc3RydWN0IG10a19kaXNwX211dGV4ICptdXRleCwKPiAgCQkJICAgICAgIGRk
-cC0+cmVncyArIERJU1BfUkVHX01VVEVYX1NPRihtdXRleC0+aWQpKTsKPiAgCQlicmVhazsKPiAg
-CWRlZmF1bHQ6Cj4gLQkJcmVnID0gcmVhZGxfcmVsYXhlZChkZHAtPnJlZ3MgKyBESVNQX1JFR19N
-VVRFWF9NT0QobXV0ZXgtPmlkKSk7Cj4gLQkJcmVnICY9IH4oZGRwLT5tdXRleF9tb2RbaWRdKTsK
-PiAtCQl3cml0ZWxfcmVsYXhlZChyZWcsIGRkcC0+cmVncyArIERJU1BfUkVHX01VVEVYX01PRCht
-dXRleC0+aWQpKTsKPiArCQlpZiAoZGRwLT5tdXRleF9tb2RbaWRdIDwgMzIpIHsKPiArCQkJb2Zm
-c2V0ID0gRElTUF9SRUdfTVVURVhfTU9EKG11dGV4LT5pZCk7Cj4gKwkJCXJlZyA9IHJlYWRsX3Jl
-bGF4ZWQoZGRwLT5yZWdzICsgb2Zmc2V0KTsKPiArCQkJcmVnICY9IH4oMSA8PCBkZHAtPm11dGV4
-X21vZFtpZF0pOwo+ICsJCQl3cml0ZWxfcmVsYXhlZChyZWcsIGRkcC0+cmVncyArIG9mZnNldCk7
-Cj4gKwkJfSBlbHNlIHsKPiArCQkJb2Zmc2V0ID0gRElTUF9SRUdfTVVURVhfTU9EMihtdXRleC0+
-aWQpOwo+ICsJCQlyZWcgPSByZWFkbF9yZWxheGVkKGRkcC0+cmVncyArIG9mZnNldCk7Cj4gKwkJ
-CXJlZyAmPSB+KDEgPDwgKGRkcC0+bXV0ZXhfbW9kW2lkXSAtIDMyKSk7Cj4gKwkJCXdyaXRlbF9y
-ZWxheGVkKHJlZywgZGRwLT5yZWdzICsgb2Zmc2V0KTsKPiArCQl9Cj4gIAkJYnJlYWs7Cj4gIAl9
-Cj4gIH0KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+> -----Original Message-----
+> From: Jacky Bai
+> Sent: Monday, May 21, 2018 6:47 PM
+> To: shawnguo@kernel.org; robh+dt@kernel.org; kernel@pengutronix.de
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>; devicetree@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>;
+> A.s. Dong <aisheng.dong@nxp.com>; jacky.baip@gmail.com
+> Subject: [PATCH v6 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+> 
+
+[...]
+
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			compatible = "arm,cortex-a9";
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +			next-level-cache = <&L2>;
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				996000  1275000
+> +				792000  1175000
+> +				396000  1075000
+> +				198000	975000
+> +			>;
+> +			fsl,soc-operating-points = <
+> +				/* ARM kHz      SOC-PU uV */
+> +				996000          1175000
+> +				792000          1175000
+> +				396000          1175000
+> +				198000		1175000
+> +			>;
+> +			clock-latency = <61036>; /* two CLK32 periods */
+> +			clocks = <&clks IMX6SLL_CLK_ARM>,
+> +				 <&clks IMX6SLL_CLK_PLL2_PFD2>,
+> +				 <&clks IMX6SLL_CLK_STEP>,
+> +				 <&clks IMX6SLL_CLK_PLL1_SW>,
+> +				 <&clks IMX6SLL_CLK_PLL1_SYS>,
+> +				 <&clks IMX6SLL_CLK_PLL1>,
+> +				 <&clks IMX6SLL_PLL1_BYPASS>,
+> +				 <&clks IMX6SLL_PLL1_BYPASS_SRC>;
+> +			clock-names = "arm", "pll2_pfd2_396m", "step",
+> +				      "pll1_sw", "pll1_sys", "pll1",
+> +				      "pll1_bypass", "pll1_bypass_src";
+> +		};
+
+Please remove the unused pll1, pll1_bypass and pll1_bypass_src clocks.
+
+> +	};
+> +
+> +	intc: interrupt-controller@a01000 {
+> +		compatible = "arm,cortex-a9-gic";
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		reg = <0x00a01000 0x1000>,
+> +		      <0x00a00100 0x100>;
+> +		interrupt-parent = <&intc>;
+> +	};
+> +
+> +	ckil: clock-ckil {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "ckil";
+> +	};
+> +
+> +	osc: clock-osc-24m {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <24000000>;
+> +		clock-output-names = "osc";
+> +	};
+> +
+
+[...]
+
+> +
+> +			gpt1: timer@2098000 {
+> +				compatible = "fsl,imx6dl-gpt";
+
+This looks strange as mx6sll is derived from mx6sl.
+How about change to "fsl,imx6sl-gpt" which is already supported?
+
+> +				reg = <0x02098000 0x4000>;
+> +				interrupts = <GIC_SPI 55
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_GPT_BUS>,
+> +					 <&clks IMX6SLL_CLK_GPT_SERIAL>;
+> +				clock-names = "ipg", "per";
+> +			};
+> +
+
+[...]
+
+> +
+> +			tempmon: temperature-sensor {
+> +				compatible = "fsl,imx6sll-tempmon",
+> "fsl,imx6sx-tempmon";
+> +				interrupts = <GIC_SPI 49
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				fsl,tempmon = <&anatop>;
+> +				fsl,tempmon-data = <&ocotp>;
+> +				clocks = <&clks
+> IMX6SLL_CLK_PLL3_USB_OTG>;
+> +				status = "disabled";
+> +			};
+> +
+
+Pls move it out of SoC node to root node.
+See:
+commit 225fa59fddfa7 ("ARM: dts: imx7: Move tempmon node out of bus")
+
+And probably we need switch to the new way?
+See:
+commit de25b9bb4a4 ("ARM: dts: imx7s: add temperature monitor support")
+
+Otherwise:
+Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
+
+Regards
+Dong Aisheng
+
+> +			usbphy1: usb-phy@20c9000 {
+> +				compatible = "fsl,imx6sll-usbphy",
+> "fsl,imx6ul-usbphy",
+> +						"fsl,imx23-usbphy";
+> +				reg = <0x020c9000 0x1000>;
+> +				interrupts = <GIC_SPI 40
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_USBPHY1>;
+> +				phy-3p0-supply = <&reg_3p0>;
+> +				fsl,anatop = <&anatop>;
+> +			};
+> +
+> +			usbphy2: usb-phy@20ca000 {
+> +				compatible = "fsl,imx6sll-usbphy",
+> "fsl,imx6ul-usbphy",
+> +						"fsl,imx23-usbphy";
+> +				reg = <0x020ca000 0x1000>;
+> +				interrupts = <GIC_SPI 41
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_USBPHY2>;
+> +				phy-reg_3p0-supply = <&reg_3p0>;
+> +				fsl,anatop = <&anatop>;
+> +			};
+> +
+> +			snvs: snvs@20cc000 {
+> +				compatible = "fsl,sec-v4.0-mon", "syscon",
+> "simple-mfd";
+> +				reg = <0x020cc000 0x4000>;
+> +
+> +				snvs_rtc: snvs-rtc-lp {
+> +					compatible = "fsl,sec-v4.0-mon-rtc-
+> lp";
+> +					regmap = <&snvs>;
+> +					offset = <0x34>;
+> +					interrupts = <GIC_SPI 19
+> IRQ_TYPE_LEVEL_HIGH>,
+> +						     <GIC_SPI 20
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				};
+> +
+> +				snvs_poweroff: snvs-poweroff {
+> +					compatible = "syscon-poweroff";
+> +					regmap = <&snvs>;
+> +					offset = <0x38>;
+> +					mask = <0x61>;
+> +				};
+> +
+> +				snvs_pwrkey: snvs-powerkey {
+> +					compatible = "fsl,sec-v4.0-pwrkey";
+> +					regmap = <&snvs>;
+> +					interrupts = <GIC_SPI 4
+> IRQ_TYPE_LEVEL_HIGH>;
+> +					linux,keycode = <KEY_POWER>;
+> +					wakeup-source;
+> +				};
+> +			};
+> +
+> +			src: reset-controller@20d8000 {
+> +				compatible = "fsl,imx6sll-src";
+> +				reg = <0x020d8000 0x4000>;
+> +				interrupts = <GIC_SPI 91
+> IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 96
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				#reset-cells = <1>;
+> +			};
+> +
+> +			gpc: interrupt-controller@20dc000 {
+> +				compatible = "fsl,imx6sll-gpc", "fsl,imx6q-
+> gpc";
+> +				reg = <0x020dc000 0x4000>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <3>;
+> +				interrupts = <GIC_SPI 89
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupt-parent = <&intc>;
+> +				fsl,mf-mix-wakeup-irq = <0x7c00000 0x7d00
+> 0x0 0x1400640>;
+> +			};
+> +
+> +			iomuxc: pinctrl@20e0000 {
+> +				compatible = "fsl,imx6sll-iomuxc";
+> +				reg = <0x020e0000 0x4000>;
+> +			};
+> +
+> +			gpr: iomuxc-gpr@20e4000 {
+> +				compatible = "fsl,imx6sll-iomuxc-gpr",
+> +					     "fsl,imx6q-iomuxc-gpr", "syscon";
+> +				reg = <0x020e4000 0x4000>;
+> +			};
+> +
+> +			csi: csi@20e8000 {
+> +				compatible = "fsl,imx6sll-csi", "fsl,imx6s-csi";
+> +				reg = <0x020e8000 0x4000>;
+> +				interrupts = <GIC_SPI 7
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_DUMMY>,
+> +					 <&clks IMX6SLL_CLK_CSI>,
+> +					 <&clks IMX6SLL_CLK_DUMMY>;
+> +				clock-names = "disp-axi", "csi_mclk",
+> "disp_dcic";
+> +				status = "disabled";
+> +			};
+> +
+> +			sdma: dma-controller@20ec000 {
+> +				compatible = "fsl,imx6sll-sdma", "fsl,imx35-
+> sdma";
+> +				reg = <0x020ec000 0x4000>;
+> +				interrupts = <GIC_SPI 2
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_SDMA>,
+> +					 <&clks IMX6SLL_CLK_SDMA>;
+> +				clock-names = "ipg", "ahb";
+> +				#dma-cells = <3>;
+> +				iram = <&ocram>;
+> +				fsl,sdma-ram-script-name =
+> "imx/sdma/sdma-imx6q.bin";
+> +			};
+> +
+> +			lcdif: lcd-controller@20f8000 {
+> +				compatible = "fsl,imx6sll-lcdif", "fsl,imx28-
+> lcdif";
+> +				reg = <0x020f8000 0x4000>;
+> +				interrupts = <GIC_SPI 39
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_LCDIF_PIX>,
+> +					 <&clks IMX6SLL_CLK_LCDIF_APB>,
+> +					 <&clks IMX6SLL_CLK_DUMMY>;
+> +				clock-names = "pix", "axi", "disp_axi";
+> +				status = "disabled";
+> +			};
+> +
+> +			dcp: dcp@20fc000 {
+> +				compatible = "fsl,imx28-dcp";
+> +				reg = <0x020fc000 0x4000>;
+> +				interrupts = <GIC_SPI 99
+> IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 100
+> IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 101
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_DCP>;
+> +				clock-names = "dcp";
+> +			};
+> +		};
+> +
+> +		aips2: aips-bus@2100000 {
+> +			compatible = "fsl,aips-bus", "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			reg = <0x02100000 0x100000>;
+> +			ranges;
+> +
+> +			usbotg1: usb@2184000 {
+> +				compatible = "fsl,imx6sll-usb", "fsl,imx6ul-
+> usb",
+> +						"fsl,imx27-usb";
+> +				reg = <0x02184000 0x200>;
+> +				interrupts = <GIC_SPI 43
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_USBOH3>;
+> +				fsl,usbphy = <&usbphy1>;
+> +				fsl,usbmisc = <&usbmisc 0>;
+> +				fsl,anatop = <&anatop>;
+> +				ahb-burst-config = <0x0>;
+> +				tx-burst-size-dword = <0x10>;
+> +				rx-burst-size-dword = <0x10>;
+> +				status = "disabled";
+> +			};
+> +
+> +			usbotg2: usb@2184200 {
+> +				compatible = "fsl,imx6sll-usb", "fsl,imx6ul-
+> usb",
+> +						"fsl,imx27-usb";
+> +				reg = <0x02184200 0x200>;
+> +				interrupts = <GIC_SPI 42
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_USBOH3>;
+> +				fsl,usbphy = <&usbphy2>;
+> +				fsl,usbmisc = <&usbmisc 1>;
+> +				ahb-burst-config = <0x0>;
+> +				tx-burst-size-dword = <0x10>;
+> +				rx-burst-size-dword = <0x10>;
+> +				status = "disabled";
+> +			};
+> +
+> +			usbmisc: usbmisc@2184800 {
+> +				#index-cells = <1>;
+> +				compatible = "fsl,imx6sll-usbmisc",
+> "fsl,imx6ul-usbmisc",
+> +						"fsl,imx6q-usbmisc";
+> +				reg = <0x02184800 0x200>;
+> +			};
+> +
+> +			usdhc1: mmc@2190000 {
+> +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-
+> usdhc";
+> +				reg = <0x02190000 0x4000>;
+> +				interrupts = <GIC_SPI 22
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_USDHC1>,
+> +					 <&clks IMX6SLL_CLK_USDHC1>,
+> +					 <&clks IMX6SLL_CLK_USDHC1>;
+> +				clock-names = "ipg", "ahb", "per";
+> +				bus-width = <4>;
+> +				fsl,tuning-step = <2>;
+> +				fsl,tuning-start-tap = <20>;
+> +				status = "disabled";
+> +			};
+> +
+> +			usdhc2: mmc@2194000 {
+> +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-
+> usdhc";
+> +				reg = <0x02194000 0x4000>;
+> +				interrupts = <GIC_SPI 23
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_USDHC2>,
+> +					 <&clks IMX6SLL_CLK_USDHC2>,
+> +					 <&clks IMX6SLL_CLK_USDHC2>;
+> +				clock-names = "ipg", "ahb", "per";
+> +				bus-width = <4>;
+> +				fsl,tuning-step = <2>;
+> +				fsl,tuning-start-tap = <20>;
+> +				status = "disabled";
+> +			};
+> +
+> +			usdhc3: mmc@2198000 {
+> +				compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-
+> usdhc";
+> +				reg = <0x02198000 0x4000>;
+> +				interrupts = <GIC_SPI 24
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_USDHC3>,
+> +					 <&clks IMX6SLL_CLK_USDHC3>,
+> +					 <&clks IMX6SLL_CLK_USDHC3>;
+> +				clock-names = "ipg", "ahb", "per";
+> +				bus-width = <4>;
+> +				fsl,tuning-step = <2>;
+> +				fsl,tuning-start-tap = <20>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c1: i2c@21a0000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				compatible = "fs,imx6sll-i2c", "fsl,imx21-i2c";
+> +				reg = <0x021a0000 0x4000>;
+> +				interrupts = <GIC_SPI 36
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_I2C1>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c2: i2c@21a4000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				compatible = "fsl,imx6sll-i2c", "fsl,imx21-i2c";
+> +				reg = <0x021a4000 0x4000>;
+> +				interrupts = <GIC_SPI 37
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_I2C2>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c3: i2c@21a8000 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				compatible = "fsl,imx6sll-i2c", "fsl,imx21-i2c";
+> +				reg = <0x021a8000 0x4000>;
+> +				interrupts = <GIC_SPI 38
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6SLL_CLK_I2C3>;
+> +				status = "disabled";
+> +			};
+> +
+> +			mmdc: memory-controller@21b0000 {
+> +				compatible = "fsl,imx6sll-mmdc", "fsl,imx6q-
+> mmdc";
+> +				reg = <0x021b0000 0x4000>;
+> +			};
+> +
+> +			ocotp: ocotp-ctrl@21bc000 {
+> +				compatible = "fsl,imx6sll-ocotp", "syscon";
+> +				reg = <0x021bc000 0x4000>;
+> +				clocks = <&clks IMX6SLL_CLK_OCOTP>;
+> +			};
+> +
+> +			audmux: audmux@21d8000 {
+> +				compatible = "fsl,imx6sll-audmux",
+> "fsl,imx31-audmux";
+> +				reg = <0x021d8000 0x4000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			uart5: serial@21f4000 {
+> +				compatible = "fsl,imx6sll-uart", "fsl,imx6q-
+> uart",
+> +					     "fsl,imx21-uart";
+> +				reg = <0x021f4000 0x4000>;
+> +				interrupts =<GIC_SPI 30
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				dmas = <&sdma 33 4 0>, <&sdma 34 4 0>;
+> +				dma-names = "rx", "tx";
+> +				clocks = <&clks IMX6SLL_CLK_UART5_IPG>,
+> +					 <&clks
+> IMX6SLL_CLK_UART5_SERIAL>;
+> +				clock-names = "ipg", "per";
+> +				status = "disabled";
+> +			};
+> +		};
+> +	};
+> +};
+> --
+> 1.9.1
