@@ -1,188 +1,101 @@
-From: Radu Pirea <radu.pirea@microchip.com>
-Subject: [PATCH v4 6/6] tty/serial: atmel: changed the driver to work under at91-usart mfd
-Date: Fri, 25 May 2018 20:19:41 +0300
-Message-ID: <20180525171941.26766-7-radu.pirea@microchip.com>
-References: <20180525171941.26766-1-radu.pirea@microchip.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
+Date: Fri, 25 May 2018 18:24:41 +0100
+Message-ID: <20180525172441.GN4828@sirena.org.uk>
+References: <20180517133009.26079-1-m.felsch@pengutronix.de>
+ <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
+ <1526640409.3948.5.camel@pengutronix.de>
+ <20180523165352.GA6187@rob-hp-laptop>
+ <20180525094724.3f4edofopk52i3v6@pengutronix.de>
+ <20180525102609.GK4828@sirena.org.uk>
+ <20180525114253.jj6akdazsbxqkbfu@pengutronix.de>
+ <20180525145245.GM4828@sirena.org.uk>
+ <1527261489.4938.9.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525171941.26766-1-radu.pirea@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Radu Pirea <radu.pirea@microchip.com>
+Content-Type: multipart/mixed; boundary="===============1939452328822749507=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1527261489.4938.9.camel@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This patch modifies the place where resources and device tree properties
-are searched.
 
-Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
----
- drivers/tty/serial/Kconfig        |  1 +
- drivers/tty/serial/atmel_serial.c | 40 +++++++++++++++++--------------
- 2 files changed, 23 insertions(+), 18 deletions(-)
+--===============1939452328822749507==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="8QM4kKE+nfbBA4vJ"
+Content-Disposition: inline
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 3682fd3e960c..25e55332f8b1 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -119,6 +119,7 @@ config SERIAL_ATMEL
- 	depends on ARCH_AT91 || COMPILE_TEST
- 	select SERIAL_CORE
- 	select SERIAL_MCTRL_GPIO if GPIOLIB
-+	select MFD_AT91_USART
- 	help
- 	  This enables the driver for the on-chip UARTs of the Atmel
- 	  AT91 processors.
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index df46a9e88c34..740c7d7f4a0c 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -193,8 +193,8 @@ static struct console atmel_console;
- 
- #if defined(CONFIG_OF)
- static const struct of_device_id atmel_serial_dt_ids[] = {
--	{ .compatible = "atmel,at91rm9200-usart" },
--	{ .compatible = "atmel,at91sam9260-usart" },
-+	{ .compatible = "atmel,at91rm9200-usart-serial" },
-+	{ .compatible = "atmel,at91sam9260-usart-serial" },
- 	{ /* sentinel */ }
- };
- #endif
-@@ -915,6 +915,7 @@ static void atmel_tx_dma(struct uart_port *port)
- static int atmel_prepare_tx_dma(struct uart_port *port)
- {
- 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
-+	struct device *mfd_dev = port->dev->parent;
- 	dma_cap_mask_t		mask;
- 	struct dma_slave_config config;
- 	int ret, nent;
-@@ -922,7 +923,7 @@ static int atmel_prepare_tx_dma(struct uart_port *port)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
- 
--	atmel_port->chan_tx = dma_request_slave_channel(port->dev, "tx");
-+	atmel_port->chan_tx = dma_request_slave_channel(mfd_dev, "tx");
- 	if (atmel_port->chan_tx == NULL)
- 		goto chan_err;
- 	dev_info(port->dev, "using %s for tx DMA transfers\n",
-@@ -1093,6 +1094,7 @@ static void atmel_rx_from_dma(struct uart_port *port)
- static int atmel_prepare_rx_dma(struct uart_port *port)
- {
- 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
-+	struct device *mfd_dev = port->dev->parent;
- 	struct dma_async_tx_descriptor *desc;
- 	dma_cap_mask_t		mask;
- 	struct dma_slave_config config;
-@@ -1104,7 +1106,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_CYCLIC, mask);
- 
--	atmel_port->chan_rx = dma_request_slave_channel(port->dev, "rx");
-+	atmel_port->chan_rx = dma_request_slave_channel(mfd_dev, "rx");
- 	if (atmel_port->chan_rx == NULL)
- 		goto chan_err;
- 	dev_info(port->dev, "using %s for rx DMA transfers\n",
-@@ -1631,7 +1633,7 @@ static void atmel_tasklet_tx_func(unsigned long data)
- static void atmel_init_property(struct atmel_uart_port *atmel_port,
- 				struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np = pdev->dev.parent->of_node;
- 
- 	/* DMA/PDC usage specification */
- 	if (of_property_read_bool(np, "atmel,use-dma-rx")) {
-@@ -2222,8 +2224,8 @@ static const char *atmel_type(struct uart_port *port)
-  */
- static void atmel_release_port(struct uart_port *port)
- {
--	struct platform_device *pdev = to_platform_device(port->dev);
--	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
-+	struct platform_device *mpdev = to_platform_device(port->dev->parent);
-+	int size = resource_size(mpdev->resource);
- 
- 	release_mem_region(port->mapbase, size);
- 
-@@ -2238,8 +2240,8 @@ static void atmel_release_port(struct uart_port *port)
-  */
- static int atmel_request_port(struct uart_port *port)
- {
--	struct platform_device *pdev = to_platform_device(port->dev);
--	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
-+	struct platform_device *mpdev = to_platform_device(port->dev->parent);
-+	int size = resource_size(mpdev->resource);
- 
- 	if (!request_mem_region(port->mapbase, size, "atmel_serial"))
- 		return -EBUSY;
-@@ -2341,27 +2343,28 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
- {
- 	int ret;
- 	struct uart_port *port = &atmel_port->uart;
-+	struct platform_device *mpdev = to_platform_device(pdev->dev.parent);
- 
- 	atmel_init_property(atmel_port, pdev);
- 	atmel_set_ops(port);
- 
--	uart_get_rs485_mode(&pdev->dev, &port->rs485);
-+	uart_get_rs485_mode(&mpdev->dev, &port->rs485);
- 
- 	port->iotype		= UPIO_MEM;
- 	port->flags		= UPF_BOOT_AUTOCONF | UPF_IOREMAP;
- 	port->ops		= &atmel_pops;
- 	port->fifosize		= 1;
- 	port->dev		= &pdev->dev;
--	port->mapbase	= pdev->resource[0].start;
--	port->irq	= pdev->resource[1].start;
-+	port->mapbase		= mpdev->resource[0].start;
-+	port->irq		= mpdev->resource[1].start;
- 	port->rs485_config	= atmel_config_rs485;
--	port->membase	= NULL;
-+	port->membase		= NULL;
- 
- 	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
- 
- 	/* for console, the clock could already be configured */
- 	if (!atmel_port->clk) {
--		atmel_port->clk = clk_get(&pdev->dev, "usart");
-+		atmel_port->clk = clk_get(&mpdev->dev, "usart");
- 		if (IS_ERR(atmel_port->clk)) {
- 			ret = PTR_ERR(atmel_port->clk);
- 			atmel_port->clk = NULL;
-@@ -2652,11 +2655,13 @@ static int atmel_serial_resume(struct platform_device *pdev)
- static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
- 				     struct platform_device *pdev)
- {
-+	struct device *dev = pdev->dev.parent;
-+
- 	atmel_port->fifo_size = 0;
- 	atmel_port->rts_low = 0;
- 	atmel_port->rts_high = 0;
- 
--	if (of_property_read_u32(pdev->dev.of_node,
-+	if (of_property_read_u32(dev->of_node,
- 				 "atmel,fifo-size",
- 				 &atmel_port->fifo_size))
- 		return;
-@@ -2694,11 +2699,10 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
- static int atmel_serial_probe(struct platform_device *pdev)
- {
- 	struct atmel_uart_port *atmel_port;
--	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np = pdev->dev.parent->of_node;
- 	void *data;
- 	int ret = -ENODEV;
- 	bool rs485_enabled;
--
- 	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
- 
- 	ret = of_alias_get_id(np, "serial");
-@@ -2845,7 +2849,7 @@ static struct platform_driver atmel_serial_driver = {
- 	.suspend	= atmel_serial_suspend,
- 	.resume		= atmel_serial_resume,
- 	.driver		= {
--		.name			= "atmel_usart",
-+		.name			= "atmel_usart_serial",
- 		.of_match_table		= of_match_ptr(atmel_serial_dt_ids),
- 	},
- };
--- 
-2.17.0
+
+--8QM4kKE+nfbBA4vJ
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 25, 2018 at 05:18:09PM +0200, Philipp Zabel wrote:
+> On Fri, 2018-05-25 at 15:52 +0100, Mark Brown wrote:
+> > On Fri, May 25, 2018 at 01:42:53PM +0200, Marco Felsch wrote:
+
+> > > Also the formula for the delay time (t =3D C =D7 25,000/3.5) depends =
+only on
+> > > the capacity size.
+
+> > Why not just have the user specify the capacitance of the capacitor on
+> > the rail which they can directly read from the schematic rather than
+> > forcing them to do the calcualtion?  That seems a bit clearer and more
+> > user friendly (plus if someone decides the spec was wrong it's easier to
+> > roll out fixes).
+
+> The exact capacitance may not be known or vary above the nominal value
+> because of cheap components, and the formula from the datasheet is just
+> a guideline.
+
+That variability is going to apply just as much to the charge time
+calculations/measurements as it is to the initial capacitance value -
+the results are going to be very much garbage in, garbage out.
+
+> I'd expect the usual method to set this delay to be semi-empirical:
+> "start from the value calculated from datasheet and schematics and then
+> increase until no more audio artifacts on a representative sample of
+> boards".
+> I think it is be better to specify a delay that works than a bogus
+> capacitance value that happens to correspond to a delay that works.
+
+If this is varying so drastically per board/system that it's relevant
+then we're already into problematic territory.  For most devices we just
+have a number for the part, not something that varies so wildly that
+each system needs to configure it.
+
+--8QM4kKE+nfbBA4vJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsIRtgACgkQJNaLcl1U
+h9Bgxwf/RY7Q7a3jCjohxDoR84MqXn+NSDeTJGvqhQ896V5jKPDaH5DmMHm0sNd6
+LVybEi3zgb3+y3zXfLKoo4P62Hl83LJZCpQWp0sH5f2TiRPsO2sgKZfXRC93ihZP
+INUMx031TOZMl3BLPWGCer+wT7QZzHgJY4P/WP0iATZdps6Z8TfxBa30DZ4KRmwr
+K+HBFhjj4NyQYpFI5uLrRs7utFTWgNh+LS5y8K4YYflIP+nb61FxKwpG5yyeYRGX
+EIBF1bnJOzJxk1ur9kcWKQ4resM6biY6/eKXu2IMZUpGpfeiCtm+pO6aa5u2HEP4
+TtJVkuVZ/9jebSz+AcDafamypcJeng==
+=RnHn
+-----END PGP SIGNATURE-----
+
+--8QM4kKE+nfbBA4vJ--
+
+--===============1939452328822749507==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1939452328822749507==--
