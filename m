@@ -1,81 +1,52 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH] ARM: dts: imx51-zii-rdu1: Make sure SD1_WP is low
-Date: Thu, 24 May 2018 20:01:53 -0700
-Message-ID: <20180525030153.15986-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v3 1/8] drm/mediatek: update dt-bindings for mt2712
+Date: Fri, 25 May 2018 11:18:12 +0800
+Message-ID: <1527218292.27165.2.camel@mtksdaap41>
+References: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
+ <1527215665-11937-2-git-send-email-stu.hsieh@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1527215665-11937-2-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: stu.hsieh@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Make sure that MX51_PAD_GPIO1_1 does not remain configure as
-ALT0/SD1_WP (it is out of reset). This is needed because of external
-pull-up resistor attached to that pad that, when left unchanged, will
-drive SD1_WP high preventing eSDHC1/eMMC from working correctly.
-
-To fix that add a pinmux configuration line configureing the pad to
-function as a GPIO. While we are at it, add a corresponding input GPIO
-hog in an effort to minimize current consumption.
-
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index df9eca94d812..d484e7e46b27 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -476,6 +476,17 @@
- 	status = "okay";
- };
- 
-+&gpio1 {
-+	unused-sd3-wp-gpio {
-+		/*
-+		 * See pinctrl_esdhc1 below for more details on this
-+		 */
-+		gpio-hog;
-+		gpios = <1 GPIO_ACTIVE_HIGH>;
-+		input;
-+	};
-+};
-+
- &i2c2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
-@@ -660,6 +671,23 @@
- 			MX51_PAD_SD1_DATA1__SD1_DATA1		0x20d5
- 			MX51_PAD_SD1_DATA2__SD1_DATA2		0x20d5
- 			MX51_PAD_SD1_DATA3__SD1_DATA3		0x20d5
-+			/*
-+			 * GPIO1_1 is not directly used by eSDHC1 in
-+			 * any capacity, but earlier versions of RDU1
-+			 * used that pin as WP GPIO for eSDHC3 and
-+			 * because of that that pad has an external
-+			 * pull-up resistor. This is problematic
-+			 * because out of reset the pad is configured
-+			 * as ALT0 which serves as SD1_WP, which, when
-+			 * pulled high by and external pull-up, will
-+			 * inhibit execution of any write request to
-+			 * attached eMMC device.
-+			 *
-+			 * To avoid this problem we configure the pad
-+                	 * to ALT1/GPIO and avoid driving SD1_WP
-+                	 * signal high.
-+			 */
-+			MX51_PAD_GPIO1_1__GPIO1_1		0x0000
- 		>;
- 	};
- 
--- 
-2.17.0
+SGksIFN0dToKCk9uIEZyaSwgMjAxOC0wNS0yNSBhdCAxMDozNCArMDgwMCwgc3R1LmhzaWVoQG1l
+ZGlhdGVrLmNvbSB3cm90ZToKPiBGcm9tOiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5j
+b20+Cj4gCj4gVXBkYXRlIGRldmljZSB0cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhl
+IGRpc3BsYXkgc3Vic3lzdGVtIGZvcgo+IE1lZGlhdGVrIE1UMjcxMiBTb0NzLgo+IAoKSSd2ZSBh
+Y2tlZCB2MiBvZiB0aGlzIHBhdGNoIGFuZCB2MyBpcyB0aGUgc2FtZSBhcyB2Miwgc28geW91IHNo
+b3VsZCBrZWVwCm15IGFjayBpbiBjb21taXQgbWVzc2FnZS4KClJlZ2FyZHMsCkNLCgo+IFNpZ25l
+ZC1vZmYtYnk6IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWss
+ZGlzcC50eHQgfCAyICstCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
+dGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkaXNwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0Cj4gaW5k
+ZXggMzgzMTgzYTg5MTY0Li44NDY5ZGU1MTAwMDEgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQK
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRl
+ay9tZWRpYXRlayxkaXNwLnR4dAo+IEBAIC00MCw3ICs0MCw3IEBAIFJlcXVpcmVkIHByb3BlcnRp
+ZXMgKGFsbCBmdW5jdGlvbiBibG9ja3MpOgo+ICAJIm1lZGlhdGVrLDxjaGlwPi1kcGkiICAgICAg
+ICAtIERQSSBjb250cm9sbGVyLCBzZWUgbWVkaWF0ZWssZHBpLnR4dAo+ICAJIm1lZGlhdGVrLDxj
+aGlwPi1kaXNwLW11dGV4IiAtIGRpc3BsYXkgbXV0ZXgKPiAgCSJtZWRpYXRlayw8Y2hpcD4tZGlz
+cC1vZCIgICAgLSBvdmVyZHJpdmUKPiAtICB0aGUgc3VwcG9ydGVkIGNoaXBzIGFyZSBtdDI3MDEg
+YW5kIG10ODE3My4KPiArICB0aGUgc3VwcG9ydGVkIGNoaXBzIGFyZSBtdDI3MDEsIG10MjcxMiBh
+bmQgbXQ4MTczLgo+ICAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2Yg
+dGhlIGZ1bmN0aW9uIGJsb2NrIHJlZ2lzdGVyIHNwYWNlCj4gIC0gaW50ZXJydXB0czogVGhlIGlu
+dGVycnVwdCBzaWduYWwgZnJvbSB0aGUgZnVuY3Rpb24gYmxvY2sgKHJlcXVpcmVkLCBleGNlcHQg
+Zm9yCj4gICAgbWVyZ2UgYW5kIHNwbGl0IGZ1bmN0aW9uIGJsb2NrcykuCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
