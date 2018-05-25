@@ -1,75 +1,61 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v13 1/2] cpufreq: Add Kryo CPU scaling driver
-Date: Fri, 25 May 2018 11:48:33 +0100
-Message-ID: <3aa2ced3-ad14-e02b-6702-c0fd1c48513b@arm.com>
-References: <1527174220-13244-1-git-send-email-ilialin@codeaurora.org>
- <1527174220-13244-2-git-send-email-ilialin@codeaurora.org>
- <20180525035412.3jjocp7ccmv5u2il@vireshk-i7>
- <DF878CBB-304A-4116-83D5-DF6BCEB7C131@codeaurora.org>
- <20180525040536.njrdqjn376oehw2b@vireshk-i7>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 0/2] slimbus: Add QCOM SLIMBus NGD driver
+Date: Fri, 25 May 2018 12:15:45 +0100
+Message-ID: <20180525111547.18556-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525040536.njrdqjn376oehw2b@vireshk-i7>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Ilia Lin <ilialin@codeaurora.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, girishm@quicinc.com, linux-arm-msm@vger.kernel.org, broonie@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, kramasub@codeaurora.org, srinivas.kandagatla@linaro.org, sdharia@quicinc.com
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds support to basic version of Qualcomm NGD SLIMBus
+controller driver found SoCs from B family.
 
+This controller is light-weight SLIMBus controller driver responsible for
+communicating with slave HW directly over the bus using messaging
+interface, and communicating with master component residing on ADSP
+for bandwidth and data-channel management.
 
-On 25/05/18 05:05, Viresh Kumar wrote:
-> On 25-05-18, 07:00, Ilia Lin wrote:
->>
->>
->> On May 25, 2018 6:54:12 AM GMT+03:00, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->>> On 24-05-18, 18:03, Ilia Lin wrote:
->>>> +static int __init qcom_cpufreq_kryo_init(void)
->>>> +{
->>>> +	struct device_node *np;
->>>> +	struct device *cpu_dev;
->>>> +	int ret;
->>>> +
->>>> +	cpu_dev = get_cpu_device(0);
->>>> +	if (NULL == cpu_dev)
->>>> +		ret = -ENODEV;
->>>> +
->>>> +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
->>>> +	if (IS_ERR(np))
->>>> +		return PTR_ERR(np);
->>>> +
->>>> +	ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
->>>> +	of_node_put(np);
->>>> +	if (!ret)
->>>> +		return -ENOENT;
->>>> +
->>>
->>> I hate the fact that it is taking so long to get done with this. But
->>> can't you
->>> just check machine compatibility instead of this complicated setup to
->>> check OPP
->>> node ? Like:
->>>
->>>        if (!of_device_is_compatible("qcom,apq8096") &&
->>>            !of_device_is_compatible("qcom,msm8996"))
->>>                return;
->>
->> I have to check the "operating-points-v2-kryo-cpu" anyway, so I moved it from probe to the init.
-> 
-> Okay, leave it as is then. Don't send anything yet and wait for Sudeep to
-> respond.
-> 
+Tested this patchset on DB820c with WCD9335 codec.
+I have pushed my working branch to [1] incase someone want to try.
 
-I have already mentioned that I can't suggest since I don't have much
-knowledge on QCOM PM. I see lots of patches flying around these days
-with multiple people doing same things in different ways. That's why I
-suggested Ilia to check with Taniya or Saravana or SBoyd to see what's
-the best thing to do in this context. I don't prefer using OPP
-compatible and would go with machine compatibility as you suggested.
-But I am fine with OPP, just wanted to make sure it won't clash with
-anything else.
+This patch has dependency on https://lkml.org/lkml/2018/5/17/251
+
+Changes sinc v1 (https://lwn.net/Articles/754679):
+- Fixed DT binding making NGD slave of the slim controller.
+- Fixed few typos spotted by Vinod.
+- Removed unnessary dmaengine_slave_config suggested by Vinod
+- Removed few unnessary initializations.
+- fixed commit log to remove reference to B family suggested by Trilok
+
+Thanks,
+srini
+
+[1] https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=slimbus-ngd
+
+Srinivas Kandagatla (2):
+  slimbus: ngd: dt-bindings: Add slim ngd dt bindings
+  slimbus: ngd: Add qcom SLIMBus NGD driver
+
+ .../bindings/slimbus/slim-ngd-qcom-ctrl.txt        |   84 ++
+ drivers/slimbus/Kconfig                            |   11 +
+ drivers/slimbus/Makefile                           |    3 +
+ drivers/slimbus/qcom-ngd-ctrl.c                    | 1342 ++++++++++++++++++++
+ drivers/slimbus/slimbus.h                          |    8 +
+ 5 files changed, 1448 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
+ create mode 100644 drivers/slimbus/qcom-ngd-ctrl.c
+
 -- 
-Regards,
-Sudeep
+2.16.2
