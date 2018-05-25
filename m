@@ -1,54 +1,141 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: Re: [PATCH v3 3/8] drm/mediatek: add connection from OD1 to RDMA1
-Date: Fri, 25 May 2018 17:36:53 +0800
-Message-ID: <1527241013.11190.11.camel@mtksdccf07>
-References: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
- <1527215665-11937-4-git-send-email-stu.hsieh@mediatek.com>
- <1527218776.27165.5.camel@mtksdaap41>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
+Date: Fri, 25 May 2018 11:47:24 +0200
+Message-ID: <20180525094724.3f4edofopk52i3v6@pengutronix.de>
+References: <20180517133009.26079-1-m.felsch@pengutronix.de>
+ <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
+ <1526640409.3948.5.camel@pengutronix.de>
+ <20180523165352.GA6187@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1527218776.27165.5.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180523165352.GA6187@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-SGksIENLOgoKRm9yIHRoaXMgcGF0Y2gsIEkgd291bGQgbW92ZSBpdCBhZnRlciAiYWRkIGRkcCBj
-b21wb25lbnQgT0QxIgpBbmQgYWRkIHRoaXMgbGluZSAiI2RlZmluZSBPRDFfTU9VVF9FTl9SRE1B
-MSAgICAgICAgICAgICAgQklUKDE2KSIgZnJvbQp0aGUgcGF0aCAiQWRkIHN1cHBvcnQgZm9yIG1l
-ZGlhdGVrIFNPQyBNVDI3MTIiIHRvIHRoaXMgcGF0Y2gKClJlZ2FyZHMsClN0dQoKT24gRnJpLCAy
-MDE4LTA1LTI1IGF0IDExOjI2ICswODAwLCBDSyBIdSB3cm90ZToKPiBIaSwgU3R1Ogo+IAo+IE9u
-IEZyaSwgMjAxOC0wNS0yNSBhdCAxMDozNCArMDgwMCwgc3R1LmhzaWVoQG1lZGlhdGVrLmNvbSB3
-cm90ZToKPiA+IEZyb206IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiA+IAo+
-ID4gVGhpcyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBPRDEgdG8gUkRNQTEgZm9yIGV4
-dCBwYXRoLgo+ID4gCj4gCj4gUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+
-Cj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+
-Cj4gPiAtLS0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyB8IDMg
-KysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ID4gaW5kZXggNDdmZmEyNDBiZDI1Li4wZjU2
-OGRkODUzZDggMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHAuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMK
-PiA+IEBAIC0xNTEsNiArMTUxLDkgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX21vdXRf
-ZW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAo+ID4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
-Q09NUE9ORU5UX0dBTU1BICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSkgewo+ID4gIAkJ
-KmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9HQU1NQV9NT1VUX0VOOwo+ID4gIAkJdmFsdWUg
-PSBHQU1NQV9NT1VUX0VOX1JETUExOwo+ID4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9O
-RU5UX09EMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfUkRNQTEpIHsKPiA+ICsJCSphZGRyID0g
-RElTUF9SRUdfQ09ORklHX0RJU1BfT0RfTU9VVF9FTjsKPiA+ICsJCXZhbHVlID0gT0QxX01PVVRf
-RU5fUkRNQTE7Cj4gPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYg
-bmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsKPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09O
-RklHX0RJU1BfUkRNQTFfTU9VVF9FTjsKPiA+ICAJCXZhbHVlID0gUkRNQTFfTU9VVF9EUEkwOwo+
-IAo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Rob,
+
+On 18-05-23 11:53, Rob Herring wrote:
+> On Fri, May 18, 2018 at 12:46:49PM +0200, Philipp Zabel wrote:
+> > Hi Rob,
+> > =
+
+> > On Thu, 2018-05-17 at 11:14 -0500, Rob Herring wrote:
+> > > On Thu, May 17, 2018 at 8:30 AM, Marco Felsch <m.felsch@pengutronix.d=
+e> wrote:
+> > > > From: Philipp Zabel <p.zabel@pengutronix.de>
+> > > > =
+
+> > > > According to the ssm2603 data sheet (control register sequencing), =
+the
+> > > > digital core should be activated only after all necessary bits in t=
+he
+> > > > power register are enabled, and a delay determined by the decoupling
+> > > > capacitor on the VMID pin has passed. If the digital core is activa=
+ted
+> > > > too early, or even before the ADC is powered up, audible artifacts
+> > > > appear at the beginning of the recorded signal.
+> > > > =
+
+> > > > The digital core is also needed for playback, so when recording sta=
+rts
+> > > > it may already be enabled. This means we cannot get the power seque=
+nce
+> > > > correct when we want to be able to start recording after playback.
+> > > > =
+
+> > > > As a workaround put the MIC mute switch into the DAPM routes. This
+> > > > way we can keep the recording disabled until the MIC Bias has settl=
+ed
+> > > > and thus get rid of audible artifacts.
+> > > > =
+
+> > > > The delay we have to wait depends on a board specific capacitor
+> > > > connected to the VMID pins, so make the delay configurable in the d=
+evice
+> > > > tree.
+> > > > =
+
+> > > > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > ---
+> > > >  .../devicetree/bindings/sound/adi,ssm2602.txt |  7 +++++
+> > > >  sound/soc/codecs/ssm2602.c                    | 30 +++++++++++++++=
+++--
+> > > >  2 files changed, 35 insertions(+), 2 deletions(-)
+> > > > =
+
+> > > > diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2602.tx=
+t b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+> > > > index 3b3302fe399b..9334d48c0462 100644
+> > > > --- a/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+> > > > +++ b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
+> > > > @@ -11,9 +11,16 @@ Required properties:
+> > > >    - reg : the I2C address of the device for I2C, the chip select
+> > > >            number for SPI.
+> > > > =
+
+> > > > +Optional properties:
+> > > > +
+> > > > +  - startup-delay-us : delay between powering on and activating th=
+e digital
+> > > > +                       core, determined by the decoupling capacito=
+r C on the
+> > > > +                      VMID pin: delay [=B5s] =3D C [=B5F] * 25000 =
+/ 3.5
+> > > > +
+> > > =
+
+> > > We already have similarly defined property. Please reuse that. See mmc
+> > > pwrseq binding.
+> > =
+
+> > Do you mean 'post-power-on-delay-ms' from 'mmc-pwseq-simple'?
+> > It is documented as:
+> > =
+
+> > - post-power-on-delay-ms : Delay in ms after powering the card and
+> > =A0=A0=A0=A0=A0=A0=A0=A0de-asserting the reset-gpios (if any)
+> > =
+
+> > The startup delay here is not after powering the whole IC or deasserting
+> > resets and before it can be used, but after powering up a specific part
+> > of the codec (the ADC) and before unmuting the MIC input to the digital
+> > core during start of decoding. With this in mind, do you still think the
+> > property should be called the same as the mmc full-chip poweron delay?
+> > If so, would it be acceptable to use post-power-on-delay-us to keep the
+> > microsecond resolution?
+> =
+
+> Okay, then I'd suggest something a bit more specific. Perhaps =
+
+> "pre-unmute-delay-us" and document in a common location.
+> =
+
+> Rob
+
+The delay is not just for the line-in/mic path it is also for the out
+path. More technical, it is needed to charge the decouple capacity which
+provides the voltage bias for the analog input/output frontends.
+
+I found the: "ti,charge-period (sound/ti,tas5086.txt)" binding which
+represents nearly the same but it is not common. One opportunity would be to
+introduce a common "charge-period-us" binding and change the ti binding the
+common binding later.
+
+Would that be okay?
+
+Marco
