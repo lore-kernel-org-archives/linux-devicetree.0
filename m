@@ -1,80 +1,62 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v6 3/9] docs: Add Generic Counter interface documentation
-Date: Fri, 25 May 2018 11:26:11 +0200
-Message-ID: <cd045792-8ed2-8d83-231a-661975ffc7c5@st.com>
-References: <cover.1526487615.git.vilhelm.gray@gmail.com>
- <aa4d62315bb11ddc66d0e1a685c81b1721ffe624.1526487615.git.vilhelm.gray@gmail.com>
- <20180520163109.22b11af8@archlinux> <20180521134729.GB5723@sophia>
- <20180522180805.2b61f0ed@archlinux>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v7 3/5] ARM: dts: Renesas R9A06G032 base device tree file
+Date: Fri, 25 May 2018 11:27:46 +0200
+Message-ID: <CAMuHMdW5VvZ-wbO7TuZC2z+KFPLq_PhBGe3WbAeES-nezb7tmQ@mail.gmail.com>
+References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com> <1527154169-32380-4-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522180805.2b61f0ed@archlinux>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527154169-32380-4-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2018 07:08 PM, Jonathan Cameron wrote:
->>>> +* Quadrature x2 Rising:
->>>> +  Rising edges on either quadrature pair signals updates the respective
->>>> +  count. Quadrature encoding determines the direction.  
->>> This one I've never met.  Really? There are devices who do this form
->>> of crazy? It gives really uneven counting and I'm failing to see when
->>> it would ever make sense...  References for these odd corner cases
->>> would be good.
->>>
->>>
->>> __|---|____|-----|____
->>> ____|----|____|-----|____
->>>
->>> 001122222223334444444  
->> That's the same reaction I had when I discovered this -- in fact the
->> STM32 LP Timer is the first time I've come across such a quadrature
->> mode. I'm not sure of the use case for this mode, because positioning
->> wouldn't be precise as you've pointed out. Perhaps Fabrice or Benjamin
->> can probe the ST guys responsible for this design choice to figure out
->> the rationale.
-> Hmm.  My inclination would be to not support it unless someone can up
-> with a meaningful use.  We are adding ABI (be it not much) for a case
-> that to us makes no sense.
+Hi Michel,
 
-Hi Jonathan, William,
+On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> This adds the Renesas R9A06G032 bare bone support.
+>
+> This currently only handles generic parts (gic, architected timer)
+> and a UART.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
-Sorry for the late reply. To follow your advise, we can probably drop
-this for now. I think simple counter, or quadrature x4 will be mostly
-used for now. As you pointed out, there's not much ABI for x2
-rising/falling cases. It will not be a big deal to add it later if needed.
+Thanks for your patch!
 
-I can help to update (remove & test) this in LP-Timer counter driver if
-you wish.
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
 
-Please let me know,
+> +       soc {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               interrupt-parent = <&gic>;
+> +               ranges;
+> +
+> +               sysctrl: sysctrl@4000c000 {
 
-Thanks,
-Fabrice
+system-controller@
 
-> 
-> Looks rather like the sort of thing that is a side effect of the
-> implementation rather than deliberate.
-> 
->> I'm leaving in these modes for now, as they do exist in the STM32 LP
->> Timer, but it does make me curious what the intentions for them were
->> (perhaps use cases outside of traditional quadrature encoder
->> positioning).
->>
-> Sure if there is a usecase then fair enough.
-> 
-> Jonathan
-> 
-> 
+> +                       compatible = "renesas,r9a06g032-sysctrl";
+> +                       reg = <0x4000c000 0x1000>;
+> +                       status = "okay";
+> +                       #clock-cells = <1>;
+> +               };
+
+With the minor nit above resolved, and pending acceptance of the
+sysctrl bindings:
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
