@@ -1,117 +1,87 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v2 13/40] vfio: Add support for Shared Virtual Addressing
-Date: Fri, 25 May 2018 10:47:43 +0100
-Message-ID: <fea420ff-e738-e2ed-ab1e-a3f4dde4b6ef@arm.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
- <20180511190641.23008-14-jean-philippe.brucker@arm.com>
- <5B0536A3.1000304@huawei.com> <cd13f60d-b282-3804-4ca7-2d34476c597f@arm.com>
- <5B06B17C.1090809@huawei.com> <205c1729-8026-3efe-c363-d37d7150d622@arm.com>
- <5B077765.30703@huawei.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
+Date: Fri, 25 May 2018 11:49:13 +0200
+Message-ID: <CAMuHMdWv2ZRbX=k5+H_WfAeoQ4QsyQLU9iQ9TJ9OQ0fmwg0GOQ@mail.gmail.com>
+References: <1527157834-7747-1-git-send-email-michel.pollet@bp.renesas.com> <1527157834-7747-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5B077765.30703@huawei.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xu Zaibo <xuzaibo@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
-Cc: "bharatku@xilinx.com" <bharatku@xilinx.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "rgummal@xilinx.com" <rgummal@xilinx.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "christian.koenig@amd.com" <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527157834-7747-3-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Juri Lelli <juri.lelli@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@endlessm.com>, Kevin Hilman <khilman@>
 List-Id: devicetree@vger.kernel.org
 
-On 25/05/18 03:39, Xu Zaibo wrote:
-> Hi,
-> 
-> On 2018/5/24 23:04, Jean-Philippe Brucker wrote:
->> On 24/05/18 13:35, Xu Zaibo wrote:
->>>> Right, sva_init() must be called once for any device that intends to use
->>>> bind(). For the second process though, group->sva_enabled will be true
->>>> so we won't call sva_init() again, only bind().
->>> Well, while I create mediated devices based on one parent device to support multiple
->>> processes(a new process will create a new 'vfio_group' for the corresponding mediated device,
->>> and 'sva_enabled' cannot work any more), in fact, *sva_init and *sva_shutdown are basically
->>> working on parent device, so, as a result, I just only need sva initiation and shutdown on the
->>> parent device only once. So I change the two as following:
->>>
->>> @@ -551,8 +565,18 @@ int iommu_sva_device_init(struct device *dev, unsigned long features,
->>>        if (features & ~IOMMU_SVA_FEAT_IOPF)
->>>           return -EINVAL;
->>>
->>> +    /* If already exists, do nothing  */
->>> +    mutex_lock(&dev->iommu_param->lock);
->>> +    if (dev->iommu_param->sva_param) {
->>> +        mutex_unlock(&dev->iommu_param->lock);
->>> +        return 0;
->>> +    }
->>> +    mutex_unlock(&dev->iommu_param->lock);
->>>
->>>       if (features & IOMMU_SVA_FEAT_IOPF) {
->>>           ret = iommu_register_device_fault_handler(dev, iommu_queue_iopf,
->>>
->>>
->>> @@ -621,6 +646,14 @@ int iommu_sva_device_shutdown(struct device *dev)
->>>       if (!domain)
->>>           return -ENODEV;
->>>
->>> +    /* If any other process is working on the device, shut down does nothing. */
->>> +    mutex_lock(&dev->iommu_param->lock);
->>> +    if (!list_empty(&dev->iommu_param->sva_param->mm_list)) {
->>> +        mutex_unlock(&dev->iommu_param->lock);
->>> +        return 0;
->>> +    }
->>> +    mutex_unlock(&dev->iommu_param->lock);
->> I don't think iommu-sva.c is the best place for this, it's probably
->> better to implement an intermediate layer (the mediating driver), that
->> calls iommu_sva_device_init() and iommu_sva_device_shutdown() once. Then
->> vfio-pci would still call these functions itself, but for mdev the
->> mediating driver keeps a refcount of groups, and calls device_shutdown()
->> only when freeing the last mdev.
->>
->> A device driver (non mdev in this example) expects to be able to free
->> all its resources after sva_device_shutdown() returns. Imagine the
->> mm_list isn't empty (mm_exit() is running late), and instead of waiting
->> in unbind_dev_all() below, we return 0 immediately. Then the calling
->> driver frees its resources, and the mm_exit callback along with private
->> data passed to bind() disappear. If a mm_exit() is still running in
->> parallel, then it will try to access freed data and corrupt memory. So
->> in this function if mm_list isn't empty, the only thing we can do is wait.
->>
-> I still don't understand why we should 'unbind_dev_all', is it possible 
-> to do a 'unbind_dev_pasid'?
+Hi Michel,
 
-Not in sva_device_shutdown(), it needs to clean up everything. For
-example you want to physically unplug the device, or assign it to a VM.
-To prevent any leak sva_device_shutdown() needs to remove all bonds. In
-theory there shouldn't be any, since either the driver did unbind_dev(),
-or all process exited. This is a safety net.
+On Thu, May 24, 2018 at 12:30 PM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot time, it
+> requires a special enable method to get it started.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
-> Then we can do other things instead of waiting that user may not like. :)
+Thanks for your patch!
 
-They may not like it, but it's for their own good :) At the moment we're
-waiting that:
+>  arch/arm/mach-shmobile/smp-r9a06g032.c | 85 ++++++++++++++++++++++++++++++++++
 
-* All exit_mm() callback for this device have finished. If we don't wait
-  then the caller will free the private data passed to bind and the
-  mm_exit() callback while they are still being used.
+I think you can safely call this driver smp-rzn1d.c, or smp-rzn1.c.
+Source files are not covered by the stable DT ABI, and can be reordered
+later at will.
 
-* All page requests targeting this device are dealt with. If we don't
-  wait then some requests, that are lingering in the IOMMU PRI queue,
-  may hit the next contexts bound to this device, possibly in a
-  different VM. It may not be too risky (though probably exploitable in
-  some way), but is incredibly messy.
+I expect you will just add more CPU_METHOD_OF_DECLARE() lines later
+(perhaps with a little bit of extra code to handle deviations).
 
-All of this is bounded in time, and normally should be over pretty fast
-unless the device driver's exit_mm() does something strange. If the
-driver did the right thing, there shouldn't be any wait here (although
-there may be one in unbind_dev() for the same reasons - prevent use
-after free).
+> --- /dev/null
+> +++ b/arch/arm/mach-shmobile/smp-r9a06g032.c
+> @@ -0,0 +1,85 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * RZ/N1D Second CA7 enabler.
+> + *
+> + * Copyright (C) 2018 Renesas Electronics Europe Limited
+> + *
+> + * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
+> + * Derived from action,s500-smp
+> + */
+> +
+> +#include <linux/delay.h>
 
-Thanks,
-Jean
+Do you need this?
+
+> +#include <asm/cacheflush.h>
+> +#include <asm/smp_plat.h>
+> +#include <asm/smp_scu.h>
+
+Do you need these?
+
+> +static void __init rzn1_smp_prepare_cpus(unsigned int max_cpus)
+> +{
+> +       struct device_node *dn;
+> +       int ret;
+> +       u32 bootaddr;
+
+> +       pr_info("CPU#1: cpu-release-addr %08x\n", (u32)bootaddr);
+
+The cast is not needed.
+
+> +
+> +       cpu_bootaddr = ioremap(bootaddr, sizeof(bootaddr));
+> +       if (!cpu_bootaddr)
+> +               pr_err("CPU#1: cpu-release-addr map failed\n");
+
+If this fails, that is basically an OOM condition, which will scream anyway.
+So I think you should drop the error message.
+
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
