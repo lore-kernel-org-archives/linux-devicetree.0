@@ -1,15 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 05/15] arm: dts: uniphier: Add missing cooling device properties for CPUs
-Date: Fri, 25 May 2018 16:01:51 +0530
-Message-ID: <51ac4a5f0466aeed3f223663d9c34d6345b2a1f2.1527244201.git.viresh.kumar@linaro.org>
+Subject: [PATCH 08/15] arm: dts: dra74x: Add missing cooling device properties for CPUs
+Date: Fri, 25 May 2018 16:01:54 +0530
+Message-ID: <4860aab6e550b91ecc5c37c80cbffa6a6a70a4c9.1527244201.git.viresh.kumar@linaro.org>
 References: <cover.1527244200.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1527244200.git.viresh.kumar@linaro.org>
 In-Reply-To: <cover.1527244200.git.viresh.kumar@linaro.org>
 References: <cover.1527244200.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: arm@kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The cooling device properties, like "#cooling-cells" and
@@ -22,36 +22,32 @@ it is trying to bring up, so that it can register a cooling device.
 
 Add such missing properties.
 
+Fix other missing properties (clocks, supply, clock latency) as well to
+make it all work.
+
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm/boot/dts/uniphier-pxs2.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/dra74x.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index debcbd15c24b..40ed15465095 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -36,6 +36,7 @@
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
- 			operating-points-v2 = <&cpu_opp>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -46,6 +47,7 @@
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
- 			operating-points-v2 = <&cpu_opp>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -56,6 +58,7 @@
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
- 			operating-points-v2 = <&cpu_opp>;
-+			#cooling-cells = <2>;
+diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
+index 91e93ab588ca..8f9df09155d8 100644
+--- a/arch/arm/boot/dts/dra74x.dtsi
++++ b/arch/arm/boot/dts/dra74x.dtsi
+@@ -18,6 +18,16 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
++
++			clocks = <&dpll_mpu_ck>;
++			clock-names = "cpu";
++
++			clock-latency = <300000>; /* From omap-cpufreq driver */
++
++			/* cooling options */
++			#cooling-cells = <2>; /* min followed by max */
++
++			vbb-supply = <&abb_mpu>;
  		};
  	};
  
