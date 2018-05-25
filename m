@@ -1,65 +1,80 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: Re: [PATCH v3 4/8] drm/mediatek: add ddp component AAL1
-Date: Fri, 25 May 2018 17:25:33 +0800
-Message-ID: <1527240333.11190.3.camel@mtksdccf07>
-References: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
-         <1527215665-11937-5-git-send-email-stu.hsieh@mediatek.com>
-         <1527222238.27165.12.camel@mtksdaap41>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v6 3/9] docs: Add Generic Counter interface documentation
+Date: Fri, 25 May 2018 11:26:11 +0200
+Message-ID: <cd045792-8ed2-8d83-231a-661975ffc7c5@st.com>
+References: <cover.1526487615.git.vilhelm.gray@gmail.com>
+ <aa4d62315bb11ddc66d0e1a685c81b1721ffe624.1526487615.git.vilhelm.gray@gmail.com>
+ <20180520163109.22b11af8@archlinux> <20180521134729.GB5723@sophia>
+ <20180522180805.2b61f0ed@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527222238.27165.12.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180522180805.2b61f0ed@archlinux>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi. CK:
+On 05/22/2018 07:08 PM, Jonathan Cameron wrote:
+>>>> +* Quadrature x2 Rising:
+>>>> +  Rising edges on either quadrature pair signals updates the respective
+>>>> +  count. Quadrature encoding determines the direction.  
+>>> This one I've never met.  Really? There are devices who do this form
+>>> of crazy? It gives really uneven counting and I'm failing to see when
+>>> it would ever make sense...  References for these odd corner cases
+>>> would be good.
+>>>
+>>>
+>>> __|---|____|-----|____
+>>> ____|----|____|-----|____
+>>>
+>>> 001122222223334444444  
+>> That's the same reaction I had when I discovered this -- in fact the
+>> STM32 LP Timer is the first time I've come across such a quadrature
+>> mode. I'm not sure of the use case for this mode, because positioning
+>> wouldn't be precise as you've pointed out. Perhaps Fabrice or Benjamin
+>> can probe the ST guys responsible for this design choice to figure out
+>> the rationale.
+> Hmm.  My inclination would be to not support it unless someone can up
+> with a meaningful use.  We are adding ABI (be it not much) for a case
+> that to us makes no sense.
 
-On Fri, 2018-05-25 at 12:23 +0800, CK Hu wrote:
-> Hi, Stu:
-> 
-> On Fri, 2018-05-25 at 10:34 +0800, stu.hsieh@mediatek.com wrote:
-> > From: Stu Hsieh <stu.hsieh@mediatek.com>
-> > 
-> > This patch add component AAL1 and
-> > rename AAL to AAL0
-> > 
-> > Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> > index 0828cf8bf85c..eee3c0cc2632 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> > @@ -41,7 +41,8 @@ enum mtk_ddp_comp_type {
-> >  };
-> >  
-> >  enum mtk_ddp_comp_id {
-> > -	DDP_COMPONENT_AAL,
-> > +	DDP_COMPONENT_AAL0,
-> > +	DDP_COMPONENT_AAL1,
-> 
-> Be sure compiling is success when you apply each patch of a series. I
-> think when you apply to this patch, it would cause compiling error
-> because some related modification is in the patch 'Add support for
-> mediatek SOC MT2712'. So move the modification from that patch to this
-> patch.
-> 
-> Regards,
-> CK
-I would move some modification related some component to associated
-patch from the patch 'Add support for mediatek SOC MT2712'
+Hi Jonathan, William,
 
-Regards,
-Stu
+Sorry for the late reply. To follow your advise, we can probably drop
+this for now. I think simple counter, or quadrature x4 will be mostly
+used for now. As you pointed out, there's not much ABI for x2
+rising/falling cases. It will not be a big deal to add it later if needed.
+
+I can help to update (remove & test) this in LP-Timer counter driver if
+you wish.
+
+Please let me know,
+
+Thanks,
+Fabrice
 
 > 
-> >  	DDP_COMPONENT_BLS,
-> >  	DDP_COMPONENT_COLOR0,
-> >  	DDP_COMPONENT_COLOR1,
+> Looks rather like the sort of thing that is a side effect of the
+> implementation rather than deliberate.
+> 
+>> I'm leaving in these modes for now, as they do exist in the STM32 LP
+>> Timer, but it does make me curious what the intentions for them were
+>> (perhaps use cases outside of traditional quadrature encoder
+>> positioning).
+>>
+> Sure if there is a usecase then fair enough.
+> 
+> Jonathan
 > 
 > 
