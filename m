@@ -1,97 +1,155 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx51-zii-rdu1: Make sure SD1_WP is low
-Date: Fri, 25 May 2018 09:59:16 -0700
-Message-ID: <CAHQ1cqFWm-A2rkLr+LPqvp_eipG9VV01TY4innXqABaYuKbXDA@mail.gmail.com>
-References: <20180525030153.15986-1-andrew.smirnov@gmail.com> <1527257797.3472.8.camel@pengutronix.de>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v1 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
+Date: Fri, 25 May 2018 18:14:38 +0100
+Message-ID: <8c2bfde9-5dd2-c1f9-a7f1-503c6eb8b0fe@arm.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527257797.3472.8.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liming Sun <lsun@mellanox.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 7:16 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
-> Am Donnerstag, den 24.05.2018, 20:01 -0700 schrieb Andrey Smirnov:
->> Make sure that MX51_PAD_GPIO1_1 does not remain configure as
->> ALT0/SD1_WP (it is out of reset). This is needed because of external
->> pull-up resistor attached to that pad that, when left unchanged, will
->> drive SD1_WP high preventing eSDHC1/eMMC from working correctly.
->>
->> To fix that add a pinmux configuration line configureing the pad to
->> function as a GPIO. While we are at it, add a corresponding input GPIO
->> hog in an effort to minimize current consumption.
->
-> Enabling the input part of the pad also consumes (a small amount of)
-> power, if you are after minimizing power consumption, better configure
-> the pin as output and drive it in the pull direction.
->
+On 25/05/18 17:06, Liming Sun wrote:
+[...]
+> diff --git a/drivers/soc/mellanox/tmfifo.c b/drivers/soc/mellanox/tmfifo.c
+> new file mode 100644
+> index 0000000..a3303d1
+> --- /dev/null
+> +++ b/drivers/soc/mellanox/tmfifo.c
+> @@ -0,0 +1,1265 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
-Sure, sounds good, will do in v2.
+This tag doesn't match the included license text...
 
->>
->> > Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
->> > Cc: Shawn Guo <shawnguo@kernel.org>
->> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
->> > Cc: Lucas Stach <l.stach@pengutronix.de>
->> > Cc: Chris Healy <cphealy@gmail.com>
->> > Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->> ---
->>  arch/arm/boot/dts/imx51-zii-rdu1.dts | 28 ++++++++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
->> index df9eca94d812..d484e7e46b27 100644
->> --- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
->> +++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
->> @@ -476,6 +476,17 @@
->> >     status = "okay";
->>  };
->>
->> +&gpio1 {
->> > +   unused-sd3-wp-gpio {
->> > +           /*
->> > +            * See pinctrl_esdhc1 below for more details on this
->> > +            */
->> > +           gpio-hog;
->> > +           gpios = <1 GPIO_ACTIVE_HIGH>;
->> > +           input;
->> > +   };
->> +};
->> +
->>  &i2c2 {
->> >     pinctrl-names = "default";
->> >     pinctrl-0 = <&pinctrl_i2c2>;
->> @@ -660,6 +671,23 @@
->> > >                   MX51_PAD_SD1_DATA1__SD1_DATA1           0x20d5
->> > >                   MX51_PAD_SD1_DATA2__SD1_DATA2           0x20d5
->> > >                   MX51_PAD_SD1_DATA3__SD1_DATA3           0x20d5
->> > +                   /*
->> > +                    * GPIO1_1 is not directly used by eSDHC1 in
->> > +                    * any capacity, but earlier versions of RDU1
->> > +                    * used that pin as WP GPIO for eSDHC3 and
->> > +                    * because of that that pad has an external
->> > +                    * pull-up resistor. This is problematic
->> > +                    * because out of reset the pad is configured
->> > +                    * as ALT0 which serves as SD1_WP, which, when
->> > +                    * pulled high by and external pull-up, will
->> > +                    * inhibit execution of any write request to
->> > +                    * attached eMMC device.
->> > +                    *
->> > +                    * To avoid this problem we configure the pad
->> > +                    * to ALT1/GPIO and avoid driving SD1_WP
->> +                      * signal high.
->
-> Applying the patch complains about whitespace damage in the above 2
-> lines.
->
+> +/*
+> + * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
+> + *
+> + * This software is available to you under a choice of one of two
+> + * licenses.  You may choose to be licensed under the terms of the GNU
+> + * General Public License (GPL) Version 2, available from the file
+> + * COPYING in the main directory of this source tree, or the
+> + * OpenIB.org BSD license below:
+> + *
+> + *     Redistribution and use in source and binary forms, with or
+> + *     without modification, are permitted provided that the following
+> + *     conditions are met:
+> + *
+> + *      - Redistributions of source code must retain the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer.
+> + *
+> + *      - Redistributions in binary form must reproduce the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer in the documentation and/or other materials
+> + *        provided with the distribution.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> + * SOFTWARE.
+> + */
 
-My bad, sorry about that, will fix in v2.
+[...]
+> +/* Several utility macros to get/set the register fields. */
+> +#define TMFIFO_GET_FIELD(reg, field) \
+> +	(((reg) >> field##_SHIFT) & ((1UL << field##_WIDTH) - 1))
+> +
+> +#define TMFIFO_SET_FIELD(reg, field, value) ({ \
+> +	u64 _mask = ((1UL << field##_WIDTH) - 1) << field##_SHIFT; \
+> +	((reg) & ~_mask) | (((value) << field##_SHIFT) & _mask); \
+> +})
 
-Thanks,
-Andrey Smirnov
+There's no need to reinvent <linux/bitfield.h>
+
+[...]
+> +MODULE_DESCRIPTION("Mellanox BlueField SoC TMFIFO Driver");
+> +MODULE_AUTHOR("Mellanox Technologies, Ltd");
+> +MODULE_LICENSE("GPL");
+
+...and this implies yet another different license (since it indicates 
+"GPLv2 or later")
+
+> +MODULE_VERSION("0.7");
+> diff --git a/drivers/soc/mellanox/tmfifo_regs.h b/drivers/soc/mellanox/tmfifo_regs.h
+> new file mode 100644
+> index 0000000..b07f353
+> --- /dev/null
+> +++ b/drivers/soc/mellanox/tmfifo_regs.h
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+Again, this doesn't match the included text. Also, the SPDX comment 
+style is /* */ for headers.
+
+> +/*
+> + * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
+> + *
+> + * This software is available to you under a choice of one of two
+> + * licenses.  You may choose to be licensed under the terms of the GNU
+> + * General Public License (GPL) Version 2, available from the file
+> + * COPYING in the main directory of this source tree, or the
+> + * OpenIB.org BSD license below:
+> + *
+> + *     Redistribution and use in source and binary forms, with or
+> + *     without modification, are permitted provided that the following
+> + *     conditions are met:
+> + *
+> + *      - Redistributions of source code must retain the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer.
+> + *
+> + *      - Redistributions in binary form must reproduce the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer in the documentation and/or other materials
+> + *        provided with the distribution.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> + * SOFTWARE.
+> + */
+
+[...]
+> +#ifdef __ASSEMBLER__
+> +#define _64bit(x) x
+> +#else /* __ASSEMBLER__ */
+> +#ifdef __tile__
+> +#define _64bit(x) x ## UL
+> +#else /* __tile__ */
+> +#define _64bit(x) x ## ULL
+> +#endif /* __tile__ */
+> +#endif /* __ASSEMBLER */
+> +
+> +#ifdef __KERNEL__
+> +#include <linux/types.h>
+> +#else
+> +#include <stdint.h>
+> +#endif
+> +
+> +#ifndef __DOXYGEN__
+
+Given that this is a private header under drivers/, is any of that lot 
+necessary?
+
+Robin.
