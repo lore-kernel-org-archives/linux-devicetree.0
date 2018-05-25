@@ -1,70 +1,89 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v13 1/2] cpufreq: Add Kryo CPU scaling driver
-Date: Fri, 25 May 2018 09:35:36 +0530
-Message-ID: <20180525040536.njrdqjn376oehw2b@vireshk-i7>
-References: <1527174220-13244-1-git-send-email-ilialin@codeaurora.org>
- <1527174220-13244-2-git-send-email-ilialin@codeaurora.org>
- <20180525035412.3jjocp7ccmv5u2il@vireshk-i7>
- <DF878CBB-304A-4116-83D5-DF6BCEB7C131@codeaurora.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 5/5] MAINTAINERS: Add Actions Semi S900 pinctrl entries
+Date: Fri, 25 May 2018 06:12:00 +0200
+Message-ID: <25d1c303-71d7-8c38-880f-7bb0e133a876@suse.de>
+References: <20180520051736.4842-1-manivannan.sadhasivam@linaro.org>
+ <20180520051736.4842-6-manivannan.sadhasivam@linaro.org>
+ <CACRpkdYF7a-uwye0uwn-pT9Bprj74q1-Pcbq4WLyiE+kYY4j7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DF878CBB-304A-4116-83D5-DF6BCEB7C131@codeaurora.org>
+In-Reply-To: <CACRpkdYF7a-uwye0uwn-pT9Bprj74q1-Pcbq4WLyiE+kYY4j7w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, robh@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh+dt@kernel.org>, liuwei@actions-semi.com, 96boards@ucrobotics.com, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25-05-18, 07:00, Ilia Lin wrote:
+Am 23.05.2018 um 10:40 schrieb Linus Walleij:
+> On Sun, May 20, 2018 at 7:17 AM, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
 > 
+>> Add S900 pinctrl entries under ARCH_ACTIONS
+>>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> On May 25, 2018 6:54:12 AM GMT+03:00, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >On 24-05-18, 18:03, Ilia Lin wrote:
-> >> +static int __init qcom_cpufreq_kryo_init(void)
-> >> +{
-> >> +	struct device_node *np;
-> >> +	struct device *cpu_dev;
-> >> +	int ret;
-> >> +
-> >> +	cpu_dev = get_cpu_device(0);
-> >> +	if (NULL == cpu_dev)
-> >> +		ret = -ENODEV;
-> >> +
-> >> +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> >> +	if (IS_ERR(np))
-> >> +		return PTR_ERR(np);
-> >> +
-> >> +	ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
-> >> +	of_node_put(np);
-> >> +	if (!ret)
-> >> +		return -ENOENT;
-> >> +
-> >
-> >I hate the fact that it is taking so long to get done with this. But
-> >can't you
-> >just check machine compatibility instead of this complicated setup to
-> >check OPP
-> >node ? Like:
-> >
-> >        if (!of_device_is_compatible("qcom,apq8096") &&
-> >            !of_device_is_compatible("qcom,msm8996"))
-> >                return;
+> Patch applied tentatively so we have some maintenance entry for this.
 > 
-> I have to check the "operating-points-v2-kryo-cpu" anyway, so I moved it from probe to the init.
+> Andreas expressed concerns about the driver earlier, so he might want it
+> split from the platform parts and have a separate entry for the pinctrl+GPIO
+> so Manivannan can maintain that part, also it makes sense to list
+> Manivannan as comaintainer of ARCH_ACTIONS with this in.
+> 
+> Andreas: how would you like to proceed?
+> 
+> I understand that I was a bit pushy or even rude in my last message
+> about the maintenance of this platform and the code structure of
+> the pin control driver. I am sorry if it caused any bad feelings on your
+> side :( social conflicts give me the creeps, I just try my best. Maybe
+> my best isn't always what it should be.
 
-Okay, leave it as is then. Don't send anything yet and wait for Sudeep to
-respond.
+I fail to understand how splitting the MAINTAINERS section is going to
+help with the pinctrl conflict at hand? The problem is that instead of
+refactoring my S500 pinctrl driver to his liking, Mani has submitted a
+competing S900 pinctrl driver that you went on to merge. The human
+aspect is that merging his driver took the credit away from me having
+written the earlier pinctrl driver (based on my rtd1295 pinctrl driver).
+The practical aspect is that I can't drop my pinctrl driver from my work
+branch until there is equivalent functionality in the merged driver. I
+am lacking the time to rewrite S500 pin definitions on top of Mani's
+myself at this time, and I haven't seen S500 patches from him yet.
 
-> >
-> >And please see if you can add an entry in MAINTAINERS and add your
-> >working email
-> >id there.
-> 
-> Sure. Should this be part of the patch itself?
+Also I had been investing efforts in explaining the upstreaming process
+to Actions, last in November. I see Thomas Liau and Jeff Chen missing in
+CC and I have not seen any Reviewed-by or Acked-by from anyone at
+Actions on this and the preceding series. There are more chips than the
+one on Linaro's 96board, so I would prefer to assure that the design
+works for all. Thus I am very critical of you applying the patches
+without waiting for review by Actions.
 
-If you need to send another version of this series, then add it to this patch
-itself. Else send it separately and don't resend this stuff.
+Other aspects are: The reason I wrote the pinctrl driver is that I
+experienced a UART TX issue on the Sparky board and was hoping a pinctrl
+driver might resolve that, but it didn't. So I still have a mix of
+boards where some are working and some are pretty unusable, without any
+clues on why.
+
+That said, I don't object to having a separate MAINTAINERS section for
+the pinctrl driver(s) as long as I still get CC'ed on changes. We have
+wanted to add Mani as R for Actions overall, so that would probably mean
+adding me as R to an Actions pinctrl section, to avoid syncing the paths
+between two sections. I had previously felt that it does not make sense
+to list Mani as co-maintainer (M) for Actions overall since he can't tag
+and submit from my repo. And for the record I have offered him to take
+over which he didn't want to. I still hope to find some more time to
+review and queue his SPS patches, a driver that I have designed and thus
+understand and am much happier about the incremental additions there.
+
+A further side note is that I had reached out about setting up an
+infradead mailing list linux-actions, but there was no response from
+David or anyone. Having an L on the section(s) would avoid messing with
+R and hand-maintained CC lists. Any help with that appreciated.
+
+Regards,
+Andreas
 
 -- 
-viresh
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
