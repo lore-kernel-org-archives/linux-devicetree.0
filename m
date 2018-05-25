@@ -1,141 +1,117 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
-Date: Fri, 25 May 2018 11:47:24 +0200
-Message-ID: <20180525094724.3f4edofopk52i3v6@pengutronix.de>
-References: <20180517133009.26079-1-m.felsch@pengutronix.de>
- <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
- <1526640409.3948.5.camel@pengutronix.de>
- <20180523165352.GA6187@rob-hp-laptop>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v2 13/40] vfio: Add support for Shared Virtual Addressing
+Date: Fri, 25 May 2018 10:47:43 +0100
+Message-ID: <fea420ff-e738-e2ed-ab1e-a3f4dde4b6ef@arm.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+ <20180511190641.23008-14-jean-philippe.brucker@arm.com>
+ <5B0536A3.1000304@huawei.com> <cd13f60d-b282-3804-4ca7-2d34476c597f@arm.com>
+ <5B06B17C.1090809@huawei.com> <205c1729-8026-3efe-c363-d37d7150d622@arm.com>
+ <5B077765.30703@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180523165352.GA6187@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5B077765.30703@huawei.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xu Zaibo <xuzaibo@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+Cc: "bharatku@xilinx.com" <bharatku@xilinx.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "rgummal@xilinx.com" <rgummal@xilinx.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "christian.koenig@amd.com" <christian.koenig@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 25/05/18 03:39, Xu Zaibo wrote:
+> Hi,
+> 
+> On 2018/5/24 23:04, Jean-Philippe Brucker wrote:
+>> On 24/05/18 13:35, Xu Zaibo wrote:
+>>>> Right, sva_init() must be called once for any device that intends to use
+>>>> bind(). For the second process though, group->sva_enabled will be true
+>>>> so we won't call sva_init() again, only bind().
+>>> Well, while I create mediated devices based on one parent device to support multiple
+>>> processes(a new process will create a new 'vfio_group' for the corresponding mediated device,
+>>> and 'sva_enabled' cannot work any more), in fact, *sva_init and *sva_shutdown are basically
+>>> working on parent device, so, as a result, I just only need sva initiation and shutdown on the
+>>> parent device only once. So I change the two as following:
+>>>
+>>> @@ -551,8 +565,18 @@ int iommu_sva_device_init(struct device *dev, unsigned long features,
+>>>        if (features & ~IOMMU_SVA_FEAT_IOPF)
+>>>           return -EINVAL;
+>>>
+>>> +    /* If already exists, do nothing  */
+>>> +    mutex_lock(&dev->iommu_param->lock);
+>>> +    if (dev->iommu_param->sva_param) {
+>>> +        mutex_unlock(&dev->iommu_param->lock);
+>>> +        return 0;
+>>> +    }
+>>> +    mutex_unlock(&dev->iommu_param->lock);
+>>>
+>>>       if (features & IOMMU_SVA_FEAT_IOPF) {
+>>>           ret = iommu_register_device_fault_handler(dev, iommu_queue_iopf,
+>>>
+>>>
+>>> @@ -621,6 +646,14 @@ int iommu_sva_device_shutdown(struct device *dev)
+>>>       if (!domain)
+>>>           return -ENODEV;
+>>>
+>>> +    /* If any other process is working on the device, shut down does nothing. */
+>>> +    mutex_lock(&dev->iommu_param->lock);
+>>> +    if (!list_empty(&dev->iommu_param->sva_param->mm_list)) {
+>>> +        mutex_unlock(&dev->iommu_param->lock);
+>>> +        return 0;
+>>> +    }
+>>> +    mutex_unlock(&dev->iommu_param->lock);
+>> I don't think iommu-sva.c is the best place for this, it's probably
+>> better to implement an intermediate layer (the mediating driver), that
+>> calls iommu_sva_device_init() and iommu_sva_device_shutdown() once. Then
+>> vfio-pci would still call these functions itself, but for mdev the
+>> mediating driver keeps a refcount of groups, and calls device_shutdown()
+>> only when freeing the last mdev.
+>>
+>> A device driver (non mdev in this example) expects to be able to free
+>> all its resources after sva_device_shutdown() returns. Imagine the
+>> mm_list isn't empty (mm_exit() is running late), and instead of waiting
+>> in unbind_dev_all() below, we return 0 immediately. Then the calling
+>> driver frees its resources, and the mm_exit callback along with private
+>> data passed to bind() disappear. If a mm_exit() is still running in
+>> parallel, then it will try to access freed data and corrupt memory. So
+>> in this function if mm_list isn't empty, the only thing we can do is wait.
+>>
+> I still don't understand why we should 'unbind_dev_all', is it possible 
+> to do a 'unbind_dev_pasid'?
 
-On 18-05-23 11:53, Rob Herring wrote:
-> On Fri, May 18, 2018 at 12:46:49PM +0200, Philipp Zabel wrote:
-> > Hi Rob,
-> > =
+Not in sva_device_shutdown(), it needs to clean up everything. For
+example you want to physically unplug the device, or assign it to a VM.
+To prevent any leak sva_device_shutdown() needs to remove all bonds. In
+theory there shouldn't be any, since either the driver did unbind_dev(),
+or all process exited. This is a safety net.
 
-> > On Thu, 2018-05-17 at 11:14 -0500, Rob Herring wrote:
-> > > On Thu, May 17, 2018 at 8:30 AM, Marco Felsch <m.felsch@pengutronix.d=
-e> wrote:
-> > > > From: Philipp Zabel <p.zabel@pengutronix.de>
-> > > > =
+> Then we can do other things instead of waiting that user may not like. :)
 
-> > > > According to the ssm2603 data sheet (control register sequencing), =
-the
-> > > > digital core should be activated only after all necessary bits in t=
-he
-> > > > power register are enabled, and a delay determined by the decoupling
-> > > > capacitor on the VMID pin has passed. If the digital core is activa=
-ted
-> > > > too early, or even before the ADC is powered up, audible artifacts
-> > > > appear at the beginning of the recorded signal.
-> > > > =
+They may not like it, but it's for their own good :) At the moment we're
+waiting that:
 
-> > > > The digital core is also needed for playback, so when recording sta=
-rts
-> > > > it may already be enabled. This means we cannot get the power seque=
-nce
-> > > > correct when we want to be able to start recording after playback.
-> > > > =
+* All exit_mm() callback for this device have finished. If we don't wait
+  then the caller will free the private data passed to bind and the
+  mm_exit() callback while they are still being used.
 
-> > > > As a workaround put the MIC mute switch into the DAPM routes. This
-> > > > way we can keep the recording disabled until the MIC Bias has settl=
-ed
-> > > > and thus get rid of audible artifacts.
-> > > > =
+* All page requests targeting this device are dealt with. If we don't
+  wait then some requests, that are lingering in the IOMMU PRI queue,
+  may hit the next contexts bound to this device, possibly in a
+  different VM. It may not be too risky (though probably exploitable in
+  some way), but is incredibly messy.
 
-> > > > The delay we have to wait depends on a board specific capacitor
-> > > > connected to the VMID pins, so make the delay configurable in the d=
-evice
-> > > > tree.
-> > > > =
+All of this is bounded in time, and normally should be over pretty fast
+unless the device driver's exit_mm() does something strange. If the
+driver did the right thing, there shouldn't be any wait here (although
+there may be one in unbind_dev() for the same reasons - prevent use
+after free).
 
-> > > > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > ---
-> > > >  .../devicetree/bindings/sound/adi,ssm2602.txt |  7 +++++
-> > > >  sound/soc/codecs/ssm2602.c                    | 30 +++++++++++++++=
-++--
-> > > >  2 files changed, 35 insertions(+), 2 deletions(-)
-> > > > =
-
-> > > > diff --git a/Documentation/devicetree/bindings/sound/adi,ssm2602.tx=
-t b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
-> > > > index 3b3302fe399b..9334d48c0462 100644
-> > > > --- a/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
-> > > > +++ b/Documentation/devicetree/bindings/sound/adi,ssm2602.txt
-> > > > @@ -11,9 +11,16 @@ Required properties:
-> > > >    - reg : the I2C address of the device for I2C, the chip select
-> > > >            number for SPI.
-> > > > =
-
-> > > > +Optional properties:
-> > > > +
-> > > > +  - startup-delay-us : delay between powering on and activating th=
-e digital
-> > > > +                       core, determined by the decoupling capacito=
-r C on the
-> > > > +                      VMID pin: delay [=B5s] =3D C [=B5F] * 25000 =
-/ 3.5
-> > > > +
-> > > =
-
-> > > We already have similarly defined property. Please reuse that. See mmc
-> > > pwrseq binding.
-> > =
-
-> > Do you mean 'post-power-on-delay-ms' from 'mmc-pwseq-simple'?
-> > It is documented as:
-> > =
-
-> > - post-power-on-delay-ms : Delay in ms after powering the card and
-> > =A0=A0=A0=A0=A0=A0=A0=A0de-asserting the reset-gpios (if any)
-> > =
-
-> > The startup delay here is not after powering the whole IC or deasserting
-> > resets and before it can be used, but after powering up a specific part
-> > of the codec (the ADC) and before unmuting the MIC input to the digital
-> > core during start of decoding. With this in mind, do you still think the
-> > property should be called the same as the mmc full-chip poweron delay?
-> > If so, would it be acceptable to use post-power-on-delay-us to keep the
-> > microsecond resolution?
-> =
-
-> Okay, then I'd suggest something a bit more specific. Perhaps =
-
-> "pre-unmute-delay-us" and document in a common location.
-> =
-
-> Rob
-
-The delay is not just for the line-in/mic path it is also for the out
-path. More technical, it is needed to charge the decouple capacity which
-provides the voltage bias for the analog input/output frontends.
-
-I found the: "ti,charge-period (sound/ti,tas5086.txt)" binding which
-represents nearly the same but it is not common. One opportunity would be to
-introduce a common "charge-period-us" binding and change the ti binding the
-common binding later.
-
-Would that be okay?
-
-Marco
+Thanks,
+Jean
