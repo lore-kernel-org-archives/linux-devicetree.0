@@ -1,159 +1,258 @@
-Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00058.outbound.protection.outlook.com ([40.107.0.58]:6784
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753050AbeE1DKl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:10:41 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 15/15] staging: typec: tcpci: move tcpci drivers out of staging
-Date: Mon, 28 May 2018 10:52:47 +0800
-Message-Id: <1527475967-15201-16-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=G1rk=IM=codeaurora.org=smohanad@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: Add DT binding document for
+ PMIC5 ADC
+References: <1525815501-27588-1-git-send-email-smohanad@codeaurora.org>
+ <20180512111543.4f65dddd@archlinux>
+ <18857b67-0865-7794-d981-87beb3f9c22f@codeaurora.org>
+ <20180522205413.GA28348@rob-hp-laptop>
+From: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Message-ID: <f35da700-f91e-8270-c891-afd13265d84d@codeaurora.org>
+Date: Fri, 25 May 2018 11:18:00 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <20180522205413.GA28348@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, cdevired@codeaurora.org, rphani@codeaurora.org, sivaa@codeaurora.org
 List-ID: <devicetree@vger.kernel.org>
 
-Move TCPCI(Typec port controller interface) driver and rt1711h
-driver out of staging.
+Hi Rob,
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/Kconfig                        |  2 --
- drivers/staging/Makefile                       |  1 -
- drivers/staging/typec/Kconfig                  | 22 ----------------------
- drivers/staging/typec/Makefile                 |  2 --
- drivers/staging/typec/TODO                     |  5 -----
- drivers/usb/typec/Kconfig                      | 15 +++++++++++++++
- drivers/usb/typec/Makefile                     |  2 ++
- drivers/{staging => usb}/typec/tcpci.c         |  0
- drivers/{staging => usb}/typec/tcpci.h         |  0
- drivers/{staging => usb}/typec/tcpci_rt1711h.c |  0
- 10 files changed, 17 insertions(+), 32 deletions(-)
+Thanks for the comments.
 
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index d5926f0..d83ff66 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -112,8 +112,6 @@ source "drivers/staging/greybus/Kconfig"
- 
- source "drivers/staging/vc04_services/Kconfig"
- 
--source "drivers/staging/typec/Kconfig"
--
- source "drivers/staging/vboxvideo/Kconfig"
- 
- source "drivers/staging/pi433/Kconfig"
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index 919753c..a71ec1f 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -2,7 +2,6 @@
- # Makefile for staging directory
- 
- obj-y				+= media/
--obj-y				+= typec/
- obj-$(CONFIG_IPX)		+= ipx/
- obj-$(CONFIG_NCP_FS)		+= ncpfs/
- obj-$(CONFIG_PRISM2_USB)	+= wlan-ng/
-diff --git a/drivers/staging/typec/Kconfig b/drivers/staging/typec/Kconfig
-deleted file mode 100644
-index 3aa981f..0000000
---- a/drivers/staging/typec/Kconfig
-+++ /dev/null
-@@ -1,22 +0,0 @@
--menu "USB Power Delivery and Type-C drivers"
--
--if TYPEC_TCPM
--
--config TYPEC_TCPCI
--	tristate "Type-C Port Controller Interface driver"
--	depends on I2C
--	select REGMAP_I2C
--	help
--	  Type-C Port Controller driver for TCPCI-compliant controller.
--
--config TYPEC_RT1711H
--	tristate "Richtek RT1711H Type-C chip driver"
--	select TYPEC_TCPCI
--	help
--	  Richtek RT1711H Type-C chip driver that works with
--	  Type-C Port Controller Manager to provide USB PD and USB
--	  Type-C functionalities.
--
--endif
--
--endmenu
-diff --git a/drivers/staging/typec/Makefile b/drivers/staging/typec/Makefile
-deleted file mode 100644
-index 7803d48..0000000
---- a/drivers/staging/typec/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
--obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
--obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
-diff --git a/drivers/staging/typec/TODO b/drivers/staging/typec/TODO
-deleted file mode 100644
-index 53fe2f7..0000000
---- a/drivers/staging/typec/TODO
-+++ /dev/null
-@@ -1,5 +0,0 @@
--tcpci:
--- Test with real hardware
--
--Please send patches to Guenter Roeck <linux@roeck-us.net> and copy
--Heikki Krogerus <heikki.krogerus@linux.intel.com>.
-diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-index 2c8eab1..972fd19 100644
---- a/drivers/usb/typec/Kconfig
-+++ b/drivers/usb/typec/Kconfig
-@@ -56,6 +56,21 @@ config TYPEC_TCPM
- 
- if TYPEC_TCPM
- 
-+config TYPEC_TCPCI
-+	tristate "Type-C Port Controller Interface driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Type-C Port Controller driver for TCPCI-compliant controller.
-+
-+config TYPEC_RT1711H
-+	tristate "Richtek RT1711H Type-C chip driver"
-+	select TYPEC_TCPCI
-+	help
-+	  Richtek RT1711H Type-C chip driver that works with
-+	  Type-C Port Controller Manager to provide USB PD and USB
-+	  Type-C functionalities.
-+
- source "drivers/usb/typec/fusb302/Kconfig"
- 
- config TYPEC_WCOVE
-diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-index 1f599a6..46f86ee 100644
---- a/drivers/usb/typec/Makefile
-+++ b/drivers/usb/typec/Makefile
-@@ -7,3 +7,5 @@ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
- obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
- obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
- obj-$(CONFIG_TYPEC)		+= mux/
-+obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
-+obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/usb/typec/tcpci.c
-similarity index 100%
-rename from drivers/staging/typec/tcpci.c
-rename to drivers/usb/typec/tcpci.c
-diff --git a/drivers/staging/typec/tcpci.h b/drivers/usb/typec/tcpci.h
-similarity index 100%
-rename from drivers/staging/typec/tcpci.h
-rename to drivers/usb/typec/tcpci.h
-diff --git a/drivers/staging/typec/tcpci_rt1711h.c b/drivers/usb/typec/tcpci_rt1711h.c
-similarity index 100%
-rename from drivers/staging/typec/tcpci_rt1711h.c
-rename to drivers/usb/typec/tcpci_rt1711h.c
--- 
-2.7.4
 
+On 05/22/2018 01:54 PM, Rob Herring wrote:
+> On Tue, May 15, 2018 at 04:57:03PM -0700, Siddartha Mohanadoss wrote:
+>> Hi Jonathan,
+>>
+>> Thanks for the comments.
+>>
+>>
+>> On 05/12/2018 03:15 AM, Jonathan Cameron wrote:
+>>> On Tue,  8 May 2018 14:38:21 -0700
+>>> Siddartha Mohanadoss <smohanad@codeaurora.org> wrote:
+>>>
+>>>> PMIC5 ADC has support for clients to measure voltage and current
+>>>> on inputs connected to the PMIC. Clients include reading voltage
+>>>> phone power and on board system thermistors for thermal management.
+>>>> ADC5 on certain PMIC has support to read battery current.
+>>>>
+>>>> This change adds documentation.
+>>>>
+>>>> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+>>> Hi Siddartha,
+>>>
+>>> Some complexity in here!  Anyhow, a few comments inline and we will definitely
+>>> be wanting guidance from the devicetree people for this one.
+>>>
+>>> Jonathan
+>>>
+>>>> ---
+>>>>    .../devicetree/bindings/iio/adc/qcom,spmi-adc5.txt | 137 +++++++++++++++++++++
+>>>>    1 file changed, 137 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5.txt
+>>>> new file mode 100644
+>>>> index 0000000..c9268ba
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-adc5.txt
+>>>> @@ -0,0 +1,137 @@
+>>>> +Qualcomm Technologies Inc. SPMI PMIC5 voltage and current ADC
+>>>> +
+>>>> +SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
+>>>> +voltage. The VADC is a 16-bit sigma-delta ADC.
+>>>> +
+>>>> +ADC node:
+>>>> +
+>>>> +- compatible:
+>>>> +    Usage: required
+>>>> +    Value type: <string>
+>>>> +    Definition: Should contain "qcom,spmi-adc5" for PMIC5 ADC driver.
+>>>> +		Should contain "qcom,spmi-adc-rev2" for PMIC refresh ADC driver.
+> Chip specific compatible strings please unless you convince me there are
+> a large number of chips per above compatible.
+
+The above compatible property supports at least 5 different PMIC's each 
+so far,
+hence split it as a separate property to address the differences.
+
+>
+> Bindings are for hardware, not drivers.
+>
+>>>> +
+>>>> +- reg:
+>>>> +    Usage: required
+>>>> +    Value type: <prop-encoded-array>
+>>>> +    Definition: VADC base address and length in the SPMI PMIC register map.
+>>>> +
+>>>> +- #address-cells:
+>>>> +    Usage: required
+>>>> +    Value type: <u32>
+>>>> +    Definition: Must be one. Child node 'reg' property should define ADC
+>>>> +            channel number.
+>>>> +
+>>>> +- #size-cells:
+>>>> +    Usage: required
+>>>> +    Value type: <u32>
+>>>> +    Definition: Must be zero.
+>>>> +
+>>>> +- #io-channel-cells:
+>>>> +    Usage: required
+>>>> +    Value type: <u32>
+>>>> +    Definition: Must be one. For details about IIO bindings see:
+>>>> +            Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>> +
+>>>> +- interrupts:
+>>>> +    Usage: optional
+>>>> +    Value type: <prop-encoded-array>
+>>>> +    Definition: End of conversion interrupt.
+>>>> +
+>>>> +Channel node properties:
+>>>> +
+>>>> +- reg:
+>>>> +    Usage: required
+>>>> +    Value type: <u32>
+>>>> +    Definition: ADC channel number.
+>>>> +            See include/dt-bindings/iio/qcom,spmi-vadc.h
+>>>> +
+>>>> +- label:
+>>>> +    Usage: required
+>>>> +    Value type: <empty>
+>>>> +    Definition: ADC datasheet channel name.
+>>>> +            For thermistor inputs connected to generic AMUX or GPIO inputs
+>>>> +            these can vary across platform for the same pins. Hence select
+>>>> +            the datasheet name for this channel.
+> Why do you need this? If the name comes from a datasheet list, then
+> perhaps you should list the exact string here. Otherwise, there's a lot
+> left to the user in terms of capitalization, etc.
+
+I will fix the comment. The label property name used is from the 
+schematics for the
+respective platform and not the data sheet. Some of the channel names on 
+the PMIC
+datasheet are generic such as ADC_AMUX_THM1 and ADC_GPIO1. Depending on the
+platform these pins can be connected to measure different thermistors or 
+inputs
+across the platforms.
+
+>
+>>>> +
+>>>> +- qcom,pre-scaling:
+>>>> +    Usage: required
+>>>> +    Value type: <u32 array>
+>>>> +    Definition: Used for scaling the channel input signal before the signal is
+>>>> +            fed to VADC. The configuration for this node is to know the
+>>>> +            pre-determined ratio and use it for post scaling. Select one from
+>>>> +            the following options.
+>>>> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
+>>>> +            If property is not found default value depending on chip will be used.
+>>>> +
+>>>> +- qcom,decimation:
+>>>> +    Usage: optional
+>>>> +    Value type: <u32>
+>>>> +    Definition: This parameter is used to decrease ADC sampling rate.
+>>>> +            Quicker measurements can be made by reducing decimation ratio.
+>>>> +            For PMIC5 ADC, combined two step decimation values are 250, 420 and 840.
+>>>> +            If property is not found, default value of 840 will be used.
+>>> The odd indenting here needs sorting.  Mixture of spaces and tabs at the moment.
+>> Ok, will take a look.
+>>> Hmm. In someways this is a policy decision so should be pushed up to userspace,
+>>> but given the 'right' value will be somewhat dependent on what you are doing
+>>> with the channel and what is wired to it, it could arguably have a 'right' value
+>>> for a given circuit.  This is really just the sampling frequency wrapped
+>>> up in decimation of something, I'm guessing some input clock?
+>> Yes. It's number of samples collected over a 4.8MHz clock.
+>> The only reason to update this value would be if client wants to get
+>> the conversion results back sooner. Hence left this as an optional property.
+>>> Let's see what the Device-tree people think on this one!  Personally I have
+>>> never really minded devicetree providing sensible defaults.  We can put
+>>> control on these things later, if there is a usecase for changing them.
+> I don't have a problem with this in DT, though my first thought was it
+> should be common. Then after reading some on decimation, I'm not sure it
+> would always just be a single 32-bit value?
+
+For this PMIC family, the decimation and fast averaging are common 
+settings used
+across all the channels. In this case the decimation ratio values 
+specified are
+programmed as an index to select the above decimation value. Not sure if 
+i answered
+the question. Please let me know if this needs further clarification.
+
+>
+>>>> +	    For PMIC refresh ADC, supported decimation values are 256, 512, 1024.
+>>>> +	    If property is not found, default value of 1024 will be used.
+>>>> +
+>>>> +- qcom,ratiometric:
+>>>> +    Usage: optional
+>>>> +    Value type: <empty>
+>>>> +    Definition: Channel calibration type. If this property is specified
+>>>> +            VADC will use the VDD reference (1.875V) and GND for channel
+>>>> +            calibration. If property is not found, channel will be
+>>>> +            calibrated with 0V and 1.25V reference channels, also
+>>>> +            known as absolute calibration.
+>>>> +
+>>>> +- qcom,hw-settle-time:
+>>>> +    Usage: optional
+>>>> +    Value type: <u32>
+>>>> +    Definition: Time between AMUX getting configured and the ADC starting
+>>>> +            conversion.
+>>>> +	    For PMIC5, delay = 15us for value 0,
+>>>> +			100us * (value) for values 0 < value < 11, and
+>>>> +            		2ms * (value - 10) otherwise.
+>>>> +            Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 800,
+>>> This description is very confusing given the different uses of 'value'
+>>> None of the values you have allowed is less than 11 so the first condition
+>>> doesn't apply.
+>> The 'value' is an index programmed in the hardware to achieve the
+>> hardware settling delay specified under valid values. I will update the
+>> documentation here.
+>>>> +            900 us and 1, 2, 4, 6, 8, 10 ms
+>>>> +            If property is not found, channel will use 15us.
+>>>> +	    For PMIC rev2, delay = 100us * (value) for values 0 < value < 11, and
+>>>> +			2ms * (value - 10) otherwise.
+>>>> +            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
+>>>> +            900 us and 1, 2, 4, 6, 8, 10 ms
+>>>> +            If property is not found, channel will use 0 us.
+>>>> +
+>>>> +- qcom,avg-samples:
+>>>> +    Usage: optional
+>>>> +    Value type: <u32>
+>>>> +    Definition: Number of samples to be used for measurement.
+>>>> +            Averaging provides the option to obtain a single measurement
+>>>> +            from the ADC that is an average of multiple samples. The value
+>>>> +            selected is 2^(value).
+>>>> +            Valid values are: 1, 2, 4, 8, 16
+>>>> +            If property is not found, 1 sample will be used.
+>>> As with decimation, this is arguably not a feature of the hardware, but
+>>> a software decision...
+> We already have a common property for touchscreens and vendor properties
+> for a few ADCs, so we should define a common one.
+>
+> Now, sadly, I've just found that all these properties are already
+> defined in bindings/iio/adc/qcom,spmi-vadc.txt. Why didn't you add these
+> compatibles to the existing binding. Then we're not reviewing the same
+> thing again...
+
+I figured it would be easier for the client to follow and cleaner to 
+separate it
+out for a per family otherwise it needs a separate definition for each 
+of the
+property based on the PMIC type.
+
+The earlier PMIC ADC family has capability to specify the decimation
+and fast averaging for each channel. On PMIC5 ADC these two
+properties are common across all channels and are required to be
+programmed only once. The hardware settling delays have
+differences within the family. I do not have a preference either way, i can
+try and merge these with the existing bindings for the next patch revision
+and based on the comments i can either revert or use the existing one.
+
+>
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
