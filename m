@@ -1,62 +1,54 @@
-Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-sn1nam01on0085.outbound.protection.outlook.com ([104.47.32.85]:59584
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751214AbeEVNdP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 May 2018 09:33:15 -0400
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [RESEND PATCH 3/4] dt-bindings: PCI: cadence: Add DT bindings for optional PHYs
-Date: Tue, 22 May 2018 14:32:32 +0100
-Message-ID: <1526995952-22031-1-git-send-email-adouglas@cadence.com>
+Return-Path: <SRS0=oVvL=IM=nxp.com=wen.he_1@kernel.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v5 4/6] arm64: dts: ls1043a: add qdma device tree nodes
+Date: Fri, 25 May 2018 19:19:18 +0800
+Message-ID: <20180525111920.24498-4-wen.he_1@nxp.com>
+In-Reply-To: <20180525111920.24498-1-wen.he_1@nxp.com>
+References: <20180525111920.24498-1-wen.he_1@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.com, cyrille.pitchen@free-electrons.com, Alan Douglas <adouglas@cadence.com>
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Update DT documentation to include optional PHYs for cadence PCIe
-host and endpoint controllers.
+add the qDMA device tree nodes for LS1043A devices.
 
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt   | 4 ++++
- Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt | 2 ++
- 2 files changed, 6 insertions(+)
+change in v5:
+	- Replace dts node variable 'queues' to 'fsl,queues' that add vendor prefix
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-index 9a305237..e40c635 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
-@@ -9,6 +9,8 @@ Required properties:
+change in v4:
+	- no
+
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 1109f22..48f9165 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -673,6 +673,21 @@
+ 			dma-coherent;
+ 		};
  
- Optional properties:
- - max-functions: Maximum number of functions that can be configured (default 1).
-+- phys: From PHY bindings: List of Generic PHY phandles.
-+- phy-names:  List of names to identify the PHY.
- 
- Example:
- 
-@@ -19,4 +21,6 @@ pcie@fc000000 {
- 	reg-names = "reg", "mem";
- 	cdns,max-outbound-regions = <16>;
- 	max-functions = /bits/ 8 <8>;
-+	phys = <&ep_phy0 &ep_phy1>;
-+	phy-names = "pcie-lane0","pcie-lane1";
- };
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-index 20a33f3..c0ca4c1 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-@@ -24,6 +24,8 @@ Optional properties:
-   translations (default 32)
- - vendor-id: The PCI vendor ID (16 bits, default is design dependent)
- - device-id: The PCI device ID (16 bits, default is design dependent)
-+- phys: From PHY bindings: List of Generic PHY phandles.
-+- phy-names:  List of names to identify the PHY.
- 
- Example:
- 
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1043a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
++				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue";
++			dma-channels = <8>;
++			fsl,queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++			big-endian;
++		};
++
+ 		msi1: msi-controller1@1571000 {
+ 			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1571000 0x0 0x8>;
 -- 
-2.2.2
-
+1.7.1
