@@ -1,48 +1,435 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3 3/8] drm/mediatek: add connection from OD1 to RDMA1
-Date: Fri, 25 May 2018 11:26:16 +0800
-Message-ID: <1527218776.27165.5.camel@mtksdaap41>
-References: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
- <1527215665-11937-4-git-send-email-stu.hsieh@mediatek.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v6 2/2] ARM: dts: imx: Add basic dts support for imx6sll
+ EVK board
+Date: Fri, 25 May 2018 03:35:11 +0000
+Message-ID: <AM0PR04MB4211E4F641B731C2A26C88BD80690@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1526899612-22856-1-git-send-email-ping.bai@nxp.com>
+ <1526899612-22856-2-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1527215665-11937-4-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: stu.hsieh@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1526899612-22856-2-git-send-email-ping.bai@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacky Bai <ping.bai@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0dToKCk9uIEZyaSwgMjAxOC0wNS0yNSBhdCAxMDozNCArMDgwMCwgc3R1LmhzaWVoQG1l
-ZGlhdGVrLmNvbSB3cm90ZToKPiBGcm9tOiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5j
-b20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBPRDEgdG8gUkRNQTEg
-Zm9yIGV4dCBwYXRoLgo+IAoKUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+
-Cgo+IFNpZ25lZC1vZmYtYnk6IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiAt
-LS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCAzICsrKwo+ICAx
-IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZGRwLmMKPiBpbmRleCA0N2ZmYTI0MGJkMjUuLjBmNTY4ZGQ4NTNkOCAxMDA2NDQK
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gQEAgLTE1MSw2ICsxNTEsOSBA
-QCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfbW91dF9lbihlbnVtIG10a19kZHBfY29tcF9p
-ZCBjdXIsCj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX0dBTU1BICYmIG5leHQg
-PT0gRERQX0NPTVBPTkVOVF9SRE1BMSkgewo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJ
-U1BfR0FNTUFfTU9VVF9FTjsKPiAgCQl2YWx1ZSA9IEdBTU1BX01PVVRfRU5fUkRNQTE7Cj4gKwl9
-IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09EMSAmJiBuZXh0ID09IEREUF9DT01QT05F
-TlRfUkRNQTEpIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX09EX01PVVRfRU47
-Cj4gKwkJdmFsdWUgPSBPRDFfTU9VVF9FTl9SRE1BMTsKPiAgCX0gZWxzZSBpZiAoY3VyID09IERE
-UF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsKPiAgCQkq
-YWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX01PVVRfRU47Cj4gIAkJdmFsdWUgPSBS
-RE1BMV9NT1VUX0RQSTA7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+> -----Original Message-----
+> From: Jacky Bai
+> Sent: Monday, May 21, 2018 6:47 PM
+> To: shawnguo@kernel.org; robh+dt@kernel.org; kernel@pengutronix.de
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>; devicetree@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>;
+> A.s. Dong <aisheng.dong@nxp.com>; jacky.baip@gmail.com
+> Subject: [PATCH v6 2/2] ARM: dts: imx: Add basic dts support for imx6sll EVK
+> board
+> 
+> Add dts file support for imx6sll EVK board.
+> 
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  change v3->v4
+>  - update the license indentifier
+>  - remove leading zero of node
+>  - remove unused pin from hog group
+>  change v4->v5
+>  - use generic name for device node
+>  - remove unnecessary hog pin group
+>  change v5->v6
+>  - no
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+>  arch/arm/boot/dts/Makefile                    |   2 +
+>  arch/arm/boot/dts/imx6sll-evk.dts             | 315
+> ++++++++++++++++++++++++++
+>  3 files changed, 321 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6sll-evk.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
+> b/Documentation/devicetree/bindings/arm/fsl.txt
+> index cdb9dd7..8a1baa2 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board  Required root
+> node properties:
+>      - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
+> 
+> +i.MX6SLL EVK board
+> +Required root node properties:
+> +    - compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
+> +
+>  Generic i.MX boards
+>  -------------------
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f4753b0..f3fb85f 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -521,6 +521,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  dtb-$(CONFIG_SOC_IMX6SL) += \
+>  	imx6sl-evk.dtb \
+>  	imx6sl-warp.dtb
+> +dtb-$(CONFIG_SOC_IMX6SLL) += \
+> +	imx6sll-evk.dtb
+>  dtb-$(CONFIG_SOC_IMX6SX) += \
+>  	imx6sx-nitrogen6sx.dtb \
+>  	imx6sx-sabreauto.dtb \
+> diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-
+> evk.dts
+> new file mode 100644
+> index 0000000..0cfa4a2
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6sll-evk.dts
+> @@ -0,0 +1,315 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017-2018 NXP.
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include "imx6sll.dtsi"
+> +
+> +/ {
+> +	model = "Freescale i.MX6SLL EVK Board";
+> +	compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
+> +
+> +	memory@80000000 {
+> +		reg = <0x80000000 0x80000000>;
+> +	};
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm1 0 5000000>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+> +	};
+> +
+> +	reg_usb_otg1_vbus: regulator-otg1-vbus {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_usb_otg1_vbus>;
+> +		regulator-name = "usb_otg1_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	reg_usb_otg2_vbus: regulator-otg2-vbus {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_usb_otg2_vbus>;
+> +		regulator-name = "usb_otg2_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	reg_aud3v: regulator-aud3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "wm8962-supply-3v15";
+> +		regulator-min-microvolt = <3150000>;
+> +		regulator-max-microvolt = <3150000>;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	reg_aud4v: regulator-aud4v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "wm8962-supply-4v2";
+> +		regulator-min-microvolt = <4325000>;
+> +		regulator-max-microvolt = <4325000>;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	reg_lcd: regulator-lcd {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_reg_lcd>;
+> +		regulator-name = "lcd-pwr";
+> +		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	reg_sd1_vmmc: regulator-sd1-vmmc {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_reg_sd1_vmmc>;
+> +		regulator-name = "SD1_SPWR";
+> +		regulator-min-microvolt = <3000000>;
+> +		regulator-max-microvolt = <3000000>;
+> +		gpio = <&gpio3 30 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	arm-supply = <&sw1a_reg>;
+> +	soc-supply = <&sw1c_reg>;
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	pfuze100: pmic@8 {
+> +		compatible = "fsl,pfuze100";
+> +		reg = <0x08>;
+> +
+> +		regulators {
+> +			sw1a_reg: sw1ab {
+> +				regulator-min-microvolt = <300000>;
+> +				regulator-max-microvolt = <1875000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw1c_reg: sw1c {
+> +				regulator-min-microvolt = <300000>;
+> +				regulator-max-microvolt = <1875000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw2_reg: sw2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3a_reg: sw3a {
+> +				regulator-min-microvolt = <400000>;
+> +				regulator-max-microvolt = <1975000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3b_reg: sw3b {
+> +				regulator-min-microvolt = <400000>;
+> +				regulator-max-microvolt = <1975000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw4_reg: sw4 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			swbst_reg: swbst {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5150000>;
+> +			};
+> +
+> +			snvs_reg: vsnvs {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vref_reg: vrefddr {
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen1_reg: vgen1 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen2_reg: vgen2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +			};
+> +
+> +			vgen3_reg: vgen3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			vgen4_reg: vgen4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen5_reg: vgen5 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen6_reg: vgen6 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_usb_otg1_vbus: vbus1grp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_KEY_COL4__GPIO4_IO00 0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usb_otg2_vbus: vbus2grp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_KEY_COL5__GPIO4_IO02 0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_reg_lcd: reglcdgrp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_ECSPI1_SCLK__GPIO4_IO08 0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_reg_sd1_vmmc: sd1vmmcgrp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_KEY_COL3__GPIO3_IO30 0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_UART1_TXD__UART1_DCE_TX
+> 0x1b0b1
+> +			MX6SLL_PAD_UART1_RXD__UART1_DCE_RX
+> 0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x17059
+> +			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x13059
+> +			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
+> 	0x17059
+> +			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
+> 	0x17059
+> +			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
+> 	0x17059
+> +			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
+> 	0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x170b9
+> +			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x130b9
+> +			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
+> 	0x170b9
+> +			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
+> 	0x170b9
+> +			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
+> 	0x170b9
+> +			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
+> 	0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x170f9
+> +			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x130f9
+> +			MX6SLL_PAD_SD1_DATA0__SD1_DATA0
+> 	0x170f9
+> +			MX6SLL_PAD_SD1_DATA1__SD1_DATA1
+> 	0x170f9
+> +			MX6SLL_PAD_SD1_DATA2__SD1_DATA2
+> 	0x170f9
+> +			MX6SLL_PAD_SD1_DATA3__SD1_DATA3
+> 	0x170f9
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg1: usbotg1grp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID
+> 0x17059
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_I2C1_SCL__I2C1_SCL	 0x4001b8b1
+> +			MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x4001b8b1
+> +		>;
+> +	};
+> +};
+
+Due to iomux node usually may expend largely, we choose better to put iomux node
+at the end of this file to make other nodes easily looking.
+
+Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
+
+Regards
+Dong Aisheng
+
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+> +	cd-gpios = <&gpio4 7 GPIO_ACTIVE_LOW>;
+> +	wp-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
+> +	keep-power-in-suspend;
+> +	wakeup-source;
+> +	vmmc-supply = <&reg_sd1_vmmc>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg1 {
+> +	vbus-supply = <&reg_usb_otg1_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg1>;
+> +	disable-over-current;
+> +	srp-disable;
+> +	hnp-disable;
+> +	adp-disable;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg2 {
+> +	vbus-supply = <&reg_usb_otg2_vbus>;
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
+> --
+> 1.9.1
