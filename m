@@ -1,111 +1,56 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 10/15] arm: dts: rk3288: Add missing cooling device properties for CPUs
-Date: Fri, 25 May 2018 16:01:56 +0530
-Message-ID: <11f16618dc965a7996976a2bca040cd87d1961d2.1527244201.git.viresh.kumar@linaro.org>
+Subject: [PATCH 13/15] arm: dts: r8a7743: Add missing OPP properties for CPUs
+Date: Fri, 25 May 2018 16:01:59 +0530
+Message-ID: <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
 References: <cover.1527244200.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1527244200.git.viresh.kumar@linaro.org>
 In-Reply-To: <cover.1527244200.git.viresh.kumar@linaro.org>
 References: <cover.1527244200.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: arm@kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The cooling device properties, like "#cooling-cells" and
-"dynamic-power-coefficient", should either be present for all the CPUs
-of a cluster or none. If these are present only for a subset of CPUs of
-a cluster then things will start falling apart as soon as the CPUs are
-brought online in a different order. For example, this will happen
-because the operating system looks for such properties in the CPU node
-it is trying to bring up, so that it can register a cooling device.
+The OPP properties, like "operating-points", should either be present
+for all the CPUs of a cluster or none. If these are present only for a
+subset of CPUs of a cluster then things will start falling apart as soon
+as the CPUs are brought online in a different order. For example, this
+will happen because the operating system looks for such properties in
+the CPU node it is trying to bring up, so that it can create an OPP
+table.
 
 Add such missing properties.
 
-Fix other missing properties (clocks, OPP, clock latency) as well to
-make it all work.
+Fix other missing property (clock latency) as well to make it all
+work.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 54 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ arch/arm/boot/dts/r8a7743.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index d7e49d29ace5..752a892847dd 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -122,18 +122,72 @@
- 			compatible = "arm,cortex-a12";
- 			reg = <0x501>;
- 			resets = <&cru SRST_CORE1>;
-+			operating-points = <
-+				/* KHz    uV */
-+				1608000 1350000
-+				1512000 1300000
-+				1416000 1200000
-+				1200000 1100000
-+				1008000 1050000
-+				 816000 1000000
-+				 696000  950000
-+				 600000  900000
-+				 408000  900000
-+				 312000  900000
-+				 216000  900000
-+				 126000  900000
-+			>;
-+			#cooling-cells = <2>; /* min followed by max */
-+			clock-latency = <40000>;
-+			clocks = <&cru ARMCLK>;
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 142949d7066f..e4fb31c4f0ee 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -98,8 +98,17 @@
+ 			reg = <1>;
+ 			clock-frequency = <1500000000>;
+ 			clocks = <&cpg CPG_CORE R8A7743_CLK_Z>;
++			clock-latency = <300000>; /* 300 us */
+ 			power-domains = <&sysc R8A7743_PD_CA15_CPU1>;
+ 			next-level-cache = <&L2_CA15>;
++
++			/* kHz - uV - OPPs unknown yet */
++			operating-points = <1500000 1000000>,
++					   <1312500 1000000>,
++					   <1125000 1000000>,
++					   < 937500 1000000>,
++					   < 750000 1000000>,
++					   < 375000 1000000>;
  		};
- 		cpu2: cpu@502 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a12";
- 			reg = <0x502>;
- 			resets = <&cru SRST_CORE2>;
-+			operating-points = <
-+				/* KHz    uV */
-+				1608000 1350000
-+				1512000 1300000
-+				1416000 1200000
-+				1200000 1100000
-+				1008000 1050000
-+				 816000 1000000
-+				 696000  950000
-+				 600000  900000
-+				 408000  900000
-+				 312000  900000
-+				 216000  900000
-+				 126000  900000
-+			>;
-+			#cooling-cells = <2>; /* min followed by max */
-+			clock-latency = <40000>;
-+			clocks = <&cru ARMCLK>;
- 		};
- 		cpu3: cpu@503 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a12";
- 			reg = <0x503>;
- 			resets = <&cru SRST_CORE3>;
-+			operating-points = <
-+				/* KHz    uV */
-+				1608000 1350000
-+				1512000 1300000
-+				1416000 1200000
-+				1200000 1100000
-+				1008000 1050000
-+				 816000 1000000
-+				 696000  950000
-+				 600000  900000
-+				 408000  900000
-+				 312000  900000
-+				 216000  900000
-+				 126000  900000
-+			>;
-+			#cooling-cells = <2>; /* min followed by max */
-+			clock-latency = <40000>;
-+			clocks = <&cru ARMCLK>;
- 		};
- 	};
  
+ 		L2_CA15: cache-controller-0 {
 -- 
 2.15.0.194.g9af6a3dea062
