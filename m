@@ -1,155 +1,65 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v1 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
-Date: Fri, 25 May 2018 18:14:38 +0100
-Message-ID: <8c2bfde9-5dd2-c1f9-a7f1-503c6eb8b0fe@arm.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: [PATCH v4 0/6] Driver for at91 usart in spi mode
+Date: Fri, 25 May 2018 20:19:35 +0300
+Message-ID: <20180525171941.26766-1-radu.pirea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liming Sun <lsun@mellanox.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Radu Pirea <radu.pirea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/05/18 17:06, Liming Sun wrote:
-[...]
-> diff --git a/drivers/soc/mellanox/tmfifo.c b/drivers/soc/mellanox/tmfifo.c
-> new file mode 100644
-> index 0000000..a3303d1
-> --- /dev/null
-> +++ b/drivers/soc/mellanox/tmfifo.c
-> @@ -0,0 +1,1265 @@
-> +// SPDX-License-Identifier: GPL-2.0
+Hello,
 
-This tag doesn't match the included license text...
+This is the second version of driver. I added a mfd driver which by
+default probes atmel_serial driver and if in dt is specified to probe
+the spi driver, then the spi-at91-usart driver will be probed. The
+compatible for atmel_serial is now the compatible for at91-usart mfd
+driver and compatilbe for atmel_serial driver was changed in order to
+keep the bindings for serial as they are.
 
-> +/*
-> + * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
-> + *
-> + * This software is available to you under a choice of one of two
-> + * licenses.  You may choose to be licensed under the terms of the GNU
-> + * General Public License (GPL) Version 2, available from the file
-> + * COPYING in the main directory of this source tree, or the
-> + * OpenIB.org BSD license below:
-> + *
-> + *     Redistribution and use in source and binary forms, with or
-> + *     without modification, are permitted provided that the following
-> + *     conditions are met:
-> + *
-> + *      - Redistributions of source code must retain the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer.
-> + *
-> + *      - Redistributions in binary form must reproduce the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer in the documentation and/or other materials
-> + *        provided with the distribution.
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> + * SOFTWARE.
-> + */
+Changes in v1:
+- added spi-at91-usart driver
 
-[...]
-> +/* Several utility macros to get/set the register fields. */
-> +#define TMFIFO_GET_FIELD(reg, field) \
-> +	(((reg) >> field##_SHIFT) & ((1UL << field##_WIDTH) - 1))
-> +
-> +#define TMFIFO_SET_FIELD(reg, field, value) ({ \
-> +	u64 _mask = ((1UL << field##_WIDTH) - 1) << field##_SHIFT; \
-> +	((reg) & ~_mask) | (((value) << field##_SHIFT) & _mask); \
-> +})
+Changes in v2:
+- added at91-usart mfd driver
+- modified spi-at91-usart driver to work as mfd driver child
+- modified atmel_serial driver to work as mfd driver child
 
-There's no need to reinvent <linux/bitfield.h>
+Changes in v3:
+- fixed spi slaves probing
 
-[...]
-> +MODULE_DESCRIPTION("Mellanox BlueField SoC TMFIFO Driver");
-> +MODULE_AUTHOR("Mellanox Technologies, Ltd");
-> +MODULE_LICENSE("GPL");
+Changes in v4:
+- modified the spi driver to use cs gpio support form spi subsystem
+- fixed dma transfers for serial driver
+- squashed binding for spi and serial and moved them to mfd/atmel-usart.txt
 
-...and this implies yet another different license (since it indicates 
-"GPLv2 or later")
 
-> +MODULE_VERSION("0.7");
-> diff --git a/drivers/soc/mellanox/tmfifo_regs.h b/drivers/soc/mellanox/tmfifo_regs.h
-> new file mode 100644
-> index 0000000..b07f353
-> --- /dev/null
-> +++ b/drivers/soc/mellanox/tmfifo_regs.h
-> @@ -0,0 +1,112 @@
-> +// SPDX-License-Identifier: GPL-2.0
+Radu Pirea (6):
+  MAINTAINERS: add at91 usart mfd driver
+  dt-bindings: add binding for atmel-usart in SPI mode
+  mfd: at91-usart: added mfd driver for usart
+  MAINTAINERS: add at91 usart spi driver
+  spi: at91-usart: add driver for at91-usart as spi
+  tty/serial: atmel: changed the driver to work under at91-usart mfd
 
-Again, this doesn't match the included text. Also, the SPDX comment 
-style is /* */ for headers.
+ .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
+ MAINTAINERS                                   |  16 +
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/at91-usart.c                      |  75 +++
+ drivers/spi/Kconfig                           |   9 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-at91-usart.c                  | 431 ++++++++++++++++++
+ drivers/tty/serial/Kconfig                    |   1 +
+ drivers/tty/serial/atmel_serial.c             |  40 +-
+ include/dt-bindings/mfd/at91-usart.h          |  17 +
+ 11 files changed, 606 insertions(+), 20 deletions(-)
+ rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
+ create mode 100644 drivers/mfd/at91-usart.c
+ create mode 100644 drivers/spi/spi-at91-usart.c
+ create mode 100644 include/dt-bindings/mfd/at91-usart.h
 
-> +/*
-> + * Copyright (c) 2018, Mellanox Technologies. All rights reserved.
-> + *
-> + * This software is available to you under a choice of one of two
-> + * licenses.  You may choose to be licensed under the terms of the GNU
-> + * General Public License (GPL) Version 2, available from the file
-> + * COPYING in the main directory of this source tree, or the
-> + * OpenIB.org BSD license below:
-> + *
-> + *     Redistribution and use in source and binary forms, with or
-> + *     without modification, are permitted provided that the following
-> + *     conditions are met:
-> + *
-> + *      - Redistributions of source code must retain the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer.
-> + *
-> + *      - Redistributions in binary form must reproduce the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer in the documentation and/or other materials
-> + *        provided with the distribution.
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-> + * SOFTWARE.
-> + */
-
-[...]
-> +#ifdef __ASSEMBLER__
-> +#define _64bit(x) x
-> +#else /* __ASSEMBLER__ */
-> +#ifdef __tile__
-> +#define _64bit(x) x ## UL
-> +#else /* __tile__ */
-> +#define _64bit(x) x ## ULL
-> +#endif /* __tile__ */
-> +#endif /* __ASSEMBLER */
-> +
-> +#ifdef __KERNEL__
-> +#include <linux/types.h>
-> +#else
-> +#include <stdint.h>
-> +#endif
-> +
-> +#ifndef __DOXYGEN__
-
-Given that this is a private header under drivers/, is any of that lot 
-necessary?
-
-Robin.
+-- 
+2.17.0
