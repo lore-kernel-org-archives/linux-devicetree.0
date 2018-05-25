@@ -1,61 +1,72 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/9] regulator: bd71837: Devicetree bindings for BD71837
- regulators
-Date: Fri, 25 May 2018 11:24:58 +0100
-Message-ID: <20180525102458.GJ4828@sirena.org.uk>
-References: <20180524055752.GE4249@localhost.localdomain>
- <20180524140118.GS4828@sirena.org.uk>
- <042F8805D2046347BB8420BEAE397A4016C06B47@WILL-MAIL002.REu.RohmEu.com>
- <20180524175721.GB4828@sirena.org.uk>
- <20180525055430.GB16888@localhost.localdomain>
+Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
+Date: Fri, 25 May 2018 11:26:09 +0100
+Message-ID: <20180525102609.GK4828@sirena.org.uk>
+References: <20180517133009.26079-1-m.felsch@pengutronix.de>
+ <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
+ <1526640409.3948.5.camel@pengutronix.de>
+ <20180523165352.GA6187@rob-hp-laptop>
+ <20180525094724.3f4edofopk52i3v6@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jmkJtp15SxLq1SbD"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180525055430.GB16888@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
+Content-Type: multipart/mixed; boundary="===============7677205709529174942=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180525094724.3f4edofopk52i3v6@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
 
---jmkJtp15SxLq1SbD
+--===============7677205709529174942==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="T5F8Mpu1Sg8jtYtl"
+Content-Disposition: inline
+
+
+--T5F8Mpu1Sg8jtYtl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, May 25, 2018 at 08:54:30AM +0300, Matti Vaittinen wrote:
-> On Thu, May 24, 2018 at 06:57:21PM +0100, Mark Brown wrote:
+On Fri, May 25, 2018 at 11:47:24AM +0200, Marco Felsch wrote:
 
-> > You can look at the regulators node within the parent device, you know
-> > that in Linux the parent device will be the MFD.
+> I found the: "ti,charge-period (sound/ti,tas5086.txt)" binding which
+> represents nearly the same but it is not common. One opportunity would be to
+> introduce a common "charge-period-us" binding and change the ti binding the
+> common binding later.
 
-> So I should parse the device-tree in MFD my driver in order to locate
-> the regulators node? Isn't that somewhat like code dublication? If we
-> rely on compatibles we can avoid device-tree parsing in MFD driver,
+Are you sure what you have is a charge period and not some stabalization
+time or something?
 
-No, there's no need to do this - the child can just look at the of_node
-of the parent since it can never be instantiated otherwise.
-
-> right? An in-tree example of this is:
-
-There are some bad examples (and some where the same regulators can get
-used with multiple different parents) but that's no reason not to follow
-good practice.
-
---jmkJtp15SxLq1SbD
+--T5F8Mpu1Sg8jtYtl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsH5HoACgkQJNaLcl1U
-h9Drrwf9H6otj10qIc8vXKx60U0IrSi0dtXfTKSeJMWeuElp1J7E6COsbouwImXE
-uh+FgmF2eC5HgXWrkELT7Sc+9FfzxOHmievxmnB+cz5oL3Q64FkLO1W3vV6embAk
-VF3Su3R+RPF+0jAFJm1cqOOVXWYKc1q9Dd8VTx3qCNXF93rCA9Q7V1XEBgIGlQqp
-wRWI6/1gWaVatWtwGYqOXD9YWxHwMGSZu9QbyxYGY607df0pohuTQH5kHGXAGaVC
-cNwyAH20E2i0YJuWhV4y7LDB9wi8+2dtQ57WlB+AT1A/jEQ41vrgMEt3YoubcCJf
-KVuH0O+wzznJSPbgEvlcV2+nMIhZOQ==
-=Ma5W
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsH5MAACgkQJNaLcl1U
+h9D0nAf/TkfjY5yL0LIna/QZ2emlLPo80P6AOd37c3vruPNzXhAsEVZFQKZ8a/mT
+EVAAkRp9r1r8XWdejBGkH0XlQPcDw0/GePEFBaJDI253UVt6RznayyRtbxZ5Wa4q
+j0RyKP5Ti10Z0sko8JPrsCsP0Proc062Xih7naRrAxQVfFgdFH4nZPIfVf4kO/jW
+BT1/IVJ236jEoPSHDuRQULzGzHyLyCo1tWHcItsVgu+tnixURQlrMaAutStkHdNF
+SqXXO11EaHz+ybFyWg5BBQ4qLlTu6Rgi1LaVzcdWjZH7EtCkZuhjEzeugLW5iRr1
+YRntSvZehgGp5IE/w0HonLKxuVjLkA==
+=I6Sp
 -----END PGP SIGNATURE-----
 
---jmkJtp15SxLq1SbD--
+--T5F8Mpu1Sg8jtYtl--
+
+--===============7677205709529174942==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7677205709529174942==--
