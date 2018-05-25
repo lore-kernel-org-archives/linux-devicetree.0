@@ -1,51 +1,81 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH] arm64: dts: sprd: fix typo in 'remote-endpoint'
-Date: Fri, 25 May 2018 10:36:45 +0800
-Message-ID: <CAAfSe-vCb7uXOV5GCg_EMEb6VC=oiofSggWHhWbEzpKWfODVZw@mail.gmail.com>
-References: <20180508150952.24562-1-robh@kernel.org>
- <20180508150952.24562-4-robh@kernel.org>
- <CAAfSe-tgKJvzCN6eHCuUR94ECSE8ypAR1eRjhV-VJNztebK9Xw@mail.gmail.com>
- <CAL_JsqKrsTpgnLfxhcxeucpoh9NkyGwwZq82QUBgJZrdjGYQzg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKrsTpgnLfxhcxeucpoh9NkyGwwZq82QUBgJZrdjGYQzg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, "arm@kernel.org" <arm@kernel.org>
-Cc: Orson Zhai <orsonzhai@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Baolin Wang <baolin.wang@linaro.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH] ARM: dts: imx51-zii-rdu1: Make sure SD1_WP is low
+Date: Thu, 24 May 2018 20:01:53 -0700
+Message-ID: <20180525030153.15986-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Chris Healy <cphealy@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Olof
+Make sure that MX51_PAD_GPIO1_1 does not remain configure as
+ALT0/SD1_WP (it is out of reset). This is needed because of external
+pull-up resistor attached to that pad that, when left unchanged, will
+drive SD1_WP high preventing eSDHC1/eMMC from working correctly.
 
-Could you please take this patch through arm-soc git?
+To fix that add a pinmux configuration line configureing the pad to
+function as a GPIO. While we are at it, add a corresponding input GPIO
+hog in an effort to minimize current consumption.
 
-Thanks,
-Chunyan
+Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ arch/arm/boot/dts/imx51-zii-rdu1.dts | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-On 24 May 2018 at 04:30, Rob Herring <robh@kernel.org> wrote:
-> On Tue, May 8, 2018 at 8:58 PM, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->> Hi Rob,
->>
->> On 8 May 2018 at 23:09, Rob Herring <robh@kernel.org> wrote:
->>> dtc now warns on incomplete OF graph endpoint connections:
->>>
->>> arch/arm64/boot/dts/sprd/sp9860g-1h10.dtb: Warning (graph_endpoint): /soc/stm@10006000/port/endpoint: graph connection to node '/soc/funnel@10001000/ports/port@2/endpoint' is not bidirectional
->>>
->>> The cause is a typo in 'remote-endpoint'.
->>
->> Thanks for fixing this and,
->>
->> Acked-by: Chunyan Zhang <zhang.lyra@gmail.com>
->
-> Is someone going to apply this? Still seeing warnings in linux-next.
->
-> Rob
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index df9eca94d812..d484e7e46b27 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -476,6 +476,17 @@
+ 	status = "okay";
+ };
+ 
++&gpio1 {
++	unused-sd3-wp-gpio {
++		/*
++		 * See pinctrl_esdhc1 below for more details on this
++		 */
++		gpio-hog;
++		gpios = <1 GPIO_ACTIVE_HIGH>;
++		input;
++	};
++};
++
+ &i2c2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+@@ -660,6 +671,23 @@
+ 			MX51_PAD_SD1_DATA1__SD1_DATA1		0x20d5
+ 			MX51_PAD_SD1_DATA2__SD1_DATA2		0x20d5
+ 			MX51_PAD_SD1_DATA3__SD1_DATA3		0x20d5
++			/*
++			 * GPIO1_1 is not directly used by eSDHC1 in
++			 * any capacity, but earlier versions of RDU1
++			 * used that pin as WP GPIO for eSDHC3 and
++			 * because of that that pad has an external
++			 * pull-up resistor. This is problematic
++			 * because out of reset the pad is configured
++			 * as ALT0 which serves as SD1_WP, which, when
++			 * pulled high by and external pull-up, will
++			 * inhibit execution of any write request to
++			 * attached eMMC device.
++			 *
++			 * To avoid this problem we configure the pad
++                	 * to ALT1/GPIO and avoid driving SD1_WP
++                	 * signal high.
++			 */
++			MX51_PAD_GPIO1_1__GPIO1_1		0x0000
+ 		>;
+ 	};
+ 
+-- 
+2.17.0
