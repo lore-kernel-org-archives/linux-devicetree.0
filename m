@@ -1,67 +1,76 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v3 04/16] dt-bindings: qcom_nandc: remove nand-ecc-step-size
-Date: Fri, 25 May 2018 17:51:32 +0530
-Message-ID: <1527250904-21988-5-git-send-email-absahu@codeaurora.org>
-References: <1527250904-21988-1-git-send-email-absahu@codeaurora.org>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v4 0/7] ASoC: add driver for Atmel I2S controller
+Date: Fri, 25 May 2018 15:34:21 +0300
+Message-ID: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527250904-21988-1-git-send-email-absahu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, Archit Taneja <architt@codeaurora.org>, Abhishek Sahu <absahu@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, nicolas.ferre@microchip.com, boris.brezillon@bootlin.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, broonie@kernel.org
+Cc: Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-QCOM NAND controller supports only one step size (512) but
-nand-ecc-step-size is required property in DT. This DT property
-can be removed and ecc step size can be assigned in driver with
-512 value.
+This is a rework of Cyrille's patches named:
+[PATCH v3 0/2] ASoC: add driver for Atmel I2S controller
+https://lkml.org/lkml/2015/9/29/454
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
----
+This is the version 4 of the series, and addresses the received feedback
+on the mailing lists.
 
-Currently there is no user in mainline linux kernel for
-QPIC. Following patches for this node is in review
+This series applies on top of asoc-next branch of broonie/sound.git.
 
-https://patchwork.kernel.org/patch/10426405/
-https://patchwork.kernel.org/patch/10426385/
+Based on received feedback, I created a mux clock driver to select the I2S
+clock source, that also includes proper devicetree bindings and nodes.
+Also, I added the I2S nodes in sama5d2's devicetree, with the missing
+pin muxing for the second I2S controller.
 
-If these changes got merged then I will submit another change
-to remove the nand-ecc-step-size from actual DTS.
+This series of patches adds support to the new Atmel I2S controller
+embedded on sama5d2 SoCs.
 
-* Changes from v2:
+ChangeLog
 
- NEW CHANGE
+v3 -> v4
+ - as suggested by Rob Herring:
+   - added a clock mux driver for I2S's clock control bit;
+   - more precise description of I2S's devicetree bindings;
+   - removed SoC and internal detalls from bindings;
+ - addressed comments from Mark Brown;
+ - added devicetree nodes and pin muxing for I2S;
 
- Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 3 ---
- 1 file changed, 3 deletions(-)
+v2 -> v3
+- fix the coding style, add some more comments and add a section dedicated
+  to sama5d2 SoCs in the DT binding documentation as suggested by Mark
+  Brown.
 
-diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-index f246aa0..1123cc6 100644
---- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-+++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-@@ -45,7 +45,6 @@ Required properties:
- 			number (e.g., 0, 1, 2, etc.)
- - #address-cells:	see partition.txt
- - #size-cells:		see partition.txt
--- nand-ecc-step-size:	must be 512. see nand.txt for more details.
- 
- Optional properties:
- - nand-bus-width:	see nand.txt
-@@ -79,7 +78,6 @@ nand-controller@1ac00000 {
- 		reg = <0>;
- 
- 		nand-ecc-strength = <4>;
--		nand-ecc-step-size = <512>;
- 		nand-bus-width = <8>;
- 
- 		partitions {
-@@ -119,7 +117,6 @@ nand-controller@79b0000 {
- 	nand@0 {
- 		reg = <0>;
- 		nand-ecc-strength = <4>;
--		nand-ecc-step-size = <512>;
- 		nand-bus-width = <8>;
- 
- 		partitions {
+v1 -> v2
+- initialize dev->dev before calling dev->caps->mck_init()
+
+
+Codrin Ciubotariu (3):
+  dt-bindings: clk: at91: add an I2S mux clock
+  clk: at91: add I2S clock mux driver
+  ARM: dts: at91: sama5d2: add I2S clock muxing nodes
+
+Cyrille Pitchen (4):
+  ASoC: atmel-i2s: dt-bindings: add DT bindings for I2S controller
+  ASoC: atmel-i2s: add driver for the new Atmel I2S controller
+  ARM: dts: at91: sama5d2: add nodes for I2S controllers
+  ARM: dts: at91: sama5d2 Xplained: add pin muxing for I2S
+
+ .../devicetree/bindings/clock/at91-clock.txt       |  34 +
+ .../devicetree/bindings/sound/atmel-i2s.txt        |  47 ++
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  28 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  52 ++
+ arch/arm/mach-at91/Kconfig                         |   4 +
+ drivers/clk/at91/Makefile                          |   1 +
+ drivers/clk/at91/clk-i2s-mux.c                     | 117 ++++
+ sound/soc/atmel/Kconfig                            |   9 +
+ sound/soc/atmel/Makefile                           |   2 +
+ sound/soc/atmel/atmel-i2s.c                        | 765 +++++++++++++++++++++
+ 10 files changed, 1059 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-i2s.txt
+ create mode 100644 drivers/clk/at91/clk-i2s-mux.c
+ create mode 100644 sound/soc/atmel/atmel-i2s.c
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc.
-is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
