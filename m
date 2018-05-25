@@ -1,72 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
-Date: Fri, 25 May 2018 11:26:09 +0100
-Message-ID: <20180525102609.GK4828@sirena.org.uk>
-References: <20180517133009.26079-1-m.felsch@pengutronix.de>
- <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
- <1526640409.3948.5.camel@pengutronix.de>
- <20180523165352.GA6187@rob-hp-laptop>
- <20180525094724.3f4edofopk52i3v6@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v7 1/5] dt-bindings: Add the r9a06g032-sysctrl.h file
+Date: Fri, 25 May 2018 12:31:43 +0200
+Message-ID: <CAMuHMdVzN0Cbc9+MJqC4EzVgD3bkDixkf10NA13ko87cMwvpLA@mail.gmail.com>
+References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com> <1527154169-32380-2-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7677205709529174942=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180525094724.3f4edofopk52i3v6@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527154169-32380-2-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Michel,
 
---===============7677205709529174942==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="T5F8Mpu1Sg8jtYtl"
-Content-Disposition: inline
+On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> This adds the constants necessary to use the renesas,r9a06g032-sysctrl no=
+de.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
+Thanks for your patch!
 
---T5F8Mpu1Sg8jtYtl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r9a06g032-sysctrl.h
 
-On Fri, May 25, 2018 at 11:47:24AM +0200, Marco Felsch wrote:
+You can still call this file r9a06g032-clocks.h, if you want, as it
+contains clock definitions only.
 
-> I found the: "ti,charge-period (sound/ti,tas5086.txt)" binding which
-> represents nearly the same but it is not common. One opportunity would be to
-> introduce a common "charge-period-us" binding and change the ti binding the
-> common binding later.
+> @@ -0,0 +1,187 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * R9A06G032 sysctrl IDs
+> + *
+> + * Copyright (C) 2018 Renesas Electronics Europe Limited
+> + *
+> + * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
+> + * Derived from zx-reboot.c
+> + */
+> +
+> +#ifndef __DT_BINDINGS_R9A06G032_SYSCTRL_H__
+> +#define __DT_BINDINGS_R9A06G032_SYSCTRL_H__
+> +
+> +#define R9A06G032_CLKOUT                       0
+> +#define R9A06G032_CLK_PLL_USB                  1
+> +#define R9A06G032_CLK_48                       1 /* AKA CLK_PLL_USB */
+> +#define R9A06G032_CLKOUT_D10                   2
+> +#define R9A06G032_CLKOUT_D16                   3
+> +#define R9A06G032_MSEBIS_CLK                   3 /* AKA CLKOUT_D16 */
+> +#define R9A06G032_MSEBIM_CLK                   3 /* AKA CLKOUT_D16 */
+> +#define R9A06G032_CLKOUT_D160                  4
+> +#define R9A06G032_CLKOUT_D1OR2                 5
+> +#define R9A06G032_CLK_DDRPHY_PLLCLK            5 /* AKA CLKOUT_D1OR2 */
 
-Are you sure what you have is a charge period and not some stabalization
-time or something?
+[...]
 
---T5F8Mpu1Sg8jtYtl
-Content-Type: application/pgp-signature; name="signature.asc"
+I have 3 comments:
 
------BEGIN PGP SIGNATURE-----
+  1. I had expected this list to match (both name- and order-wise) Appendix
+     C ("Clock Tree Structure") in the RZ/N1[DSL] User=E2=80=99s Manual: Sy=
+stem
+     Introduction, Multiplexing, Electrical and Mechanical Information.
+     That would make it easier to review.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsH5MAACgkQJNaLcl1U
-h9D0nAf/TkfjY5yL0LIna/QZ2emlLPo80P6AOd37c3vruPNzXhAsEVZFQKZ8a/mT
-EVAAkRp9r1r8XWdejBGkH0XlQPcDw0/GePEFBaJDI253UVt6RznayyRtbxZ5Wa4q
-j0RyKP5Ti10Z0sko8JPrsCsP0Proc062Xih7naRrAxQVfFgdFH4nZPIfVf4kO/jW
-BT1/IVJ236jEoPSHDuRQULzGzHyLyCo1tWHcItsVgu+tnixURQlrMaAutStkHdNF
-SqXXO11EaHz+ybFyWg5BBQ4qLlTu6Rgi1LaVzcdWjZH7EtCkZuhjEzeugLW5iRr1
-YRntSvZehgGp5IE/w0HonLKxuVjLkA==
-=I6Sp
------END PGP SIGNATURE-----
+  2. These definitions seems to be a mix of:
+       1. Internal core clocks,
+       2. Other core clocks,
+       3. Module clocks.
 
---T5F8Mpu1Sg8jtYtl--
+     The internal clocks do not need to be referenced from DT, so I would
+     not make them part of the DT bindings.
 
---===============7677205709529174942==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+  3. It looks like the module clocks can be referred to by register offset
+     and bit position, which is similar to how this is handled on R-Car
+     SoCs.
+     Perhaps you can just drop the definitions for these from the header
+     file, and refer to them by (combined) register offset and bit position
+     instead?
+     Or am I missing something?
+     I believe this can also be done for the module resets (later).
 
+Thanks again!
 
---===============7677205709529174942==--
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
