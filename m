@@ -1,87 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
-Date: Fri, 25 May 2018 11:49:13 +0200
-Message-ID: <CAMuHMdWv2ZRbX=k5+H_WfAeoQ4QsyQLU9iQ9TJ9OQ0fmwg0GOQ@mail.gmail.com>
-References: <1527157834-7747-1-git-send-email-michel.pollet@bp.renesas.com> <1527157834-7747-3-git-send-email-michel.pollet@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 0/6] Add powerdomain driver for corners on msm8996/sdm845
+Date: Fri, 25 May 2018 15:31:15 +0530
+Message-ID: <20180525100121.28214-1-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527157834-7747-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Juri Lelli <juri.lelli@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@endlessm.com>, Kevin Hilman <khilman@>
+To: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, collinsd@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+Changes in v2:
+* added a powerdomain driver for sdm845 which supports communicating to RPMh
+* dropped the changes to sdhc driver to move over to using OPP
+as there is active discussion on using OPP as the interface vs
+handling all of it in clock drivers
+* Other minor binding updates based on review of v1
 
-On Thu, May 24, 2018 at 12:30 PM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot time, it
-> requires a special enable method to get it started.
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+With performance state support for genpd merged, and with some more
+patches to add support for them in the OPP layer [1] in linux-next,
+this is an effort to model a powerdomain driver to communicate corner/level
+values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
 
-Thanks for your patch!
+The series is based on linux-next as it depends on OPP updates and SMD845
+specific patches which are all in linux-next. It also depends on the RPMH
+communication patches [2] for the sdm845 rpmhpd driver.
 
->  arch/arm/mach-shmobile/smp-r9a06g032.c | 85 ++++++++++++++++++++++++++++++++++
+[1] https://lwn.net/Articles/742136/
+[2] https://lkml.org/lkml/2018/5/9/729
 
-I think you can safely call this driver smp-rzn1d.c, or smp-rzn1.c.
-Source files are not covered by the stable DT ABI, and can be reordered
-later at will.
+Rajendra Nayak (6):
+  soc: qcom: rpmpd: Add a powerdomain driver to model corners
+  dt-bindings: opp: Introduce qcom-opp bindings
+  soc: qcom: rpmpd: Add support for get/set performance state
+  arm64: dts: msm8996: Add rpmpd device node
+  soc: qcom: rpmh powerdomain driver
+  soc: qcom: rpmpd/rpmhpd: Add a max vote on all corners at init
 
-I expect you will just add more CPU_METHOD_OF_DECLARE() lines later
-(perhaps with a little bit of extra code to handle deviations).
-
-> --- /dev/null
-> +++ b/arch/arm/mach-shmobile/smp-r9a06g032.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * RZ/N1D Second CA7 enabler.
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Europe Limited
-> + *
-> + * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
-> + * Derived from action,s500-smp
-> + */
-> +
-> +#include <linux/delay.h>
-
-Do you need this?
-
-> +#include <asm/cacheflush.h>
-> +#include <asm/smp_plat.h>
-> +#include <asm/smp_scu.h>
-
-Do you need these?
-
-> +static void __init rzn1_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +       struct device_node *dn;
-> +       int ret;
-> +       u32 bootaddr;
-
-> +       pr_info("CPU#1: cpu-release-addr %08x\n", (u32)bootaddr);
-
-The cast is not needed.
-
-> +
-> +       cpu_bootaddr = ioremap(bootaddr, sizeof(bootaddr));
-> +       if (!cpu_bootaddr)
-> +               pr_err("CPU#1: cpu-release-addr map failed\n");
-
-If this fails, that is basically an OOM condition, which will scream anyway.
-So I think you should drop the error message.
-
-> +}
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../devicetree/bindings/opp/qcom-opp.txt      |  25 ++
+ .../devicetree/bindings/power/qcom,rpmhpd.txt |  65 +++
+ .../devicetree/bindings/power/qcom,rpmpd.txt  |  55 +++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  40 ++
+ drivers/soc/qcom/Kconfig                      |  18 +
+ drivers/soc/qcom/Makefile                     |   2 +
+ drivers/soc/qcom/rpmhpd.c                     | 369 ++++++++++++++++++
+ drivers/soc/qcom/rpmpd.c                      | 354 +++++++++++++++++
+ 8 files changed, 928 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+ create mode 100644 drivers/soc/qcom/rpmhpd.c
+ create mode 100644 drivers/soc/qcom/rpmpd.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
