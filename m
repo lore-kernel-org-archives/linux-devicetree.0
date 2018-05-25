@@ -1,60 +1,78 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: Re: [PATCH v3 1/8] drm/mediatek: update dt-bindings for mt2712
-Date: Fri, 25 May 2018 17:20:58 +0800
-Message-ID: <1527240058.11190.0.camel@mtksdccf07>
-References: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
-         <1527215665-11937-2-git-send-email-stu.hsieh@mediatek.com>
-         <1527218292.27165.2.camel@mtksdaap41>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v7 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl: documentation
+Date: Fri, 25 May 2018 11:23:48 +0200
+Message-ID: <CAMuHMdUb4fWFB9oP41ejO0_FDxmgBPL0GxQnkFv18Zfb5=1-fw@mail.gmail.com>
+References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com> <1527154169-32380-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527218292.27165.2.camel@mtksdaap41>
+In-Reply-To: <1527154169-32380-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, CK:
+Hi Michel,
 
-On Fri, 2018-05-25 at 11:18 +0800, CK Hu wrote:
-> Hi, Stu:
-> 
-> On Fri, 2018-05-25 at 10:34 +0800, stu.hsieh@mediatek.com wrote:
-> > From: Stu Hsieh <stu.hsieh@mediatek.com>
-> > 
-> > Update device tree binding documentation for the display subsystem for
-> > Mediatek MT2712 SoCs.
-> > 
-> 
-> I've acked v2 of this patch and v3 is the same as v2, so you should keep
-> my ack in commit message.
-> 
-> Regards,
-> CK
-OK
+On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> The Renesas R9A06G032 SYSCTRL node description.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
-Regards,
-Stu
+Thanks for your patch!
 
-> 
-> > Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> > index 383183a89164..8469de510001 100644
-> > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> > @@ -40,7 +40,7 @@ Required properties (all function blocks):
-> >  	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
-> >  	"mediatek,<chip>-disp-mutex" - display mutex
-> >  	"mediatek,<chip>-disp-od"    - overdrive
-> > -  the supported chips are mt2701 and mt8173.
-> > +  the supported chips are mt2701, mt2712 and mt8173.
-> >  - reg: Physical base address and length of the function block register space
-> >  - interrupts: The interrupt signal from the function block (required, except for
-> >    merge and split function blocks).
-> 
-> 
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> @@ -0,0 +1,32 @@
+> +* Renesas R9A06G032 SYSCTRL
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must be:
+> +    - "renesas,r9a06g032-sysctrl"
+> +  - reg: Base address and length of the SYSCTRL IO block.
+> +  - #clock-cells: Must be 1
+
+No clocks/clock-names for the external clock inputs?
+
+"RZ/N1 has 3 clock sources, 1 reference clock inputs for RGMII, and 2
+ reference clock outputs for RMII/MII."
+
+Given the documentation explicitly mentions the module clocks are to be
+used for power-management, you may want to add #power-domain-cells as well,
+and let the driver register clock domain. But that can be added later
+(although it will break backwards compatibility with old DTBs).
+
+As PWRCTRL_* registers allow to reset individual modules, #reset-cells is
+another thing to add later.  It's good to start thinking early about how to
+reference resets, though.
+E.g. on other Renesas-SoCs, module resets uses the same numerical
+references as module clocks.
+
+
+> +
+> +Examples
+> +--------
+> +
+> +  - SYSCTRL node:
+> +
+> +       sysctrl: sysctrl@4000c000 {
+
+system-controller@
+
+> +               compatible = "renesas,r9a06g032-sysctrl";
+> +               reg = <0x4000c000 0x1000>;
+> +               #clock-cells = <1>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
