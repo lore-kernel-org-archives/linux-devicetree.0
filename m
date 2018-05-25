@@ -1,707 +1,179 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 1/5] ptp: rework gianfar_ptp as QorIQ common PTP driver
-Date: Fri, 25 May 2018 12:40:34 +0800
-Message-ID: <20180525044038.37756-1-yangbo.lu@nxp.com>
+Subject: [PATCH 4/5] dt-bindings: ptp: add ptp-qoriq.txt
+Date: Fri, 25 May 2018 12:40:37 +0800
+Message-ID: <20180525044038.37756-4-yangbo.lu@nxp.com>
+References: <20180525044038.37756-1-yangbo.lu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180525044038.37756-1-yangbo.lu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>, claudiu.manoil@nxp.com, Rob Herring <robh+dt@kernel.org>
 Cc: Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-gianfar_ptp was the PTP clock driver for 1588 timer
-module of Freescale QorIQ eTSEC (Enhanced Three-Speed
-Ethernet Controllers) platforms. Actually QorIQ DPAA
-(Data Path Acceleration Architecture) platforms is
-also using the same 1588 timer module in hardware.
-
-This patch is to rework gianfar_ptp as QorIQ common
-PTP driver to support both DPAA and eTSEC. Moved
-gianfar_ptp.c to drivers/ptp/, renamed it as
-ptp_qoriq.c, and renamed many variables. There were
-not any function changes.
+This patch is to add a documentation for ptp_qoriq dt-bindings.
+The description for ptp_qoriq dt-bindings was actually moved
+from Documentation/devicetree/bindings/net/fsl-tsec-phy.txt,
+since gianfar_ptp driver was moved to ptp_qoriq driver.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
- drivers/net/ethernet/freescale/Makefile            |    1 -
- drivers/ptp/Kconfig                                |   14 +-
- drivers/ptp/Makefile                               |    1 +
- .../freescale/gianfar_ptp.c => ptp/ptp_qoriq.c}    |  320 ++++++++++----------
- 4 files changed, 174 insertions(+), 162 deletions(-)
- rename drivers/{net/ethernet/freescale/gianfar_ptp.c => ptp/ptp_qoriq.c} (58%)
+ .../devicetree/bindings/net/fsl-tsec-phy.txt       |   68 +-------------------
+ .../devicetree/bindings/ptp/ptp-qoriq.txt          |   69 ++++++++++++++++++++
+ 2 files changed, 70 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
 
-diff --git a/drivers/net/ethernet/freescale/Makefile b/drivers/net/ethernet/freescale/Makefile
-index ed8ad0f..0914a3e 100644
---- a/drivers/net/ethernet/freescale/Makefile
-+++ b/drivers/net/ethernet/freescale/Makefile
-@@ -14,7 +14,6 @@ obj-$(CONFIG_FS_ENET) += fs_enet/
- obj-$(CONFIG_FSL_PQ_MDIO) += fsl_pq_mdio.o
- obj-$(CONFIG_FSL_XGMAC_MDIO) += xgmac_mdio.o
- obj-$(CONFIG_GIANFAR) += gianfar_driver.o
--obj-$(CONFIG_PTP_1588_CLOCK_GIANFAR) += gianfar_ptp.o
- gianfar_driver-objs := gianfar.o \
- 		gianfar_ethtool.o
- obj-$(CONFIG_UCC_GETH) += ucc_geth_driver.o
-diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
-index a21ad10..474c988 100644
---- a/drivers/ptp/Kconfig
-+++ b/drivers/ptp/Kconfig
-@@ -41,19 +41,19 @@ config PTP_1588_CLOCK_DTE
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called ptp_dte.
+diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+index 79bf352..047bdf7 100644
+--- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
++++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+@@ -86,70 +86,4 @@ Example:
  
--config PTP_1588_CLOCK_GIANFAR
--	tristate "Freescale eTSEC as PTP clock"
-+config PTP_1588_CLOCK_QORIQ
-+	tristate "Freescale QorIQ 1588 timer as PTP clock"
- 	depends on GIANFAR
- 	depends on PTP_1588_CLOCK
- 	default y
- 	help
--	  This driver adds support for using the eTSEC as a PTP
--	  clock. This clock is only useful if your PTP programs are
--	  getting hardware time stamps on the PTP Ethernet packets
--	  using the SO_TIMESTAMPING API.
-+	  This driver adds support for using the Freescale QorIQ 1588
-+	  timer as a PTP clock. This clock is only useful if your PTP
-+	  programs are getting hardware time stamps on the PTP Ethernet
-+	  packets using the SO_TIMESTAMPING API.
+ * Gianfar PTP clock nodes
  
- 	  To compile this driver as a module, choose M here: the module
--	  will be called gianfar_ptp.
-+	  will be called ptp_qoriq.
- 
- config PTP_1588_CLOCK_IXP46X
- 	tristate "Intel IXP46x as PTP clock"
-diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
-index fd28207..19efa9c 100644
---- a/drivers/ptp/Makefile
-+++ b/drivers/ptp/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
- obj-$(CONFIG_PTP_1588_CLOCK_IXP46X)	+= ptp_ixp46x.o
- obj-$(CONFIG_PTP_1588_CLOCK_PCH)	+= ptp_pch.o
- obj-$(CONFIG_PTP_1588_CLOCK_KVM)	+= ptp_kvm.o
-+obj-$(CONFIG_PTP_1588_CLOCK_QORIQ)	+= ptp_qoriq.o
-diff --git a/drivers/net/ethernet/freescale/gianfar_ptp.c b/drivers/ptp/ptp_qoriq.c
-similarity index 58%
-rename from drivers/net/ethernet/freescale/gianfar_ptp.c
-rename to drivers/ptp/ptp_qoriq.c
-index 9f8d4f8..5110cce 100644
---- a/drivers/net/ethernet/freescale/gianfar_ptp.c
-+++ b/drivers/ptp/ptp_qoriq.c
-@@ -1,5 +1,5 @@
- /*
-- * PTP 1588 clock using the eTSEC
-+ * PTP 1588 clock for Freescale QorIQ 1588 timer
-  *
-  * Copyright (C) 2010 OMICRON electronics GmbH
-  *
-@@ -29,16 +29,15 @@
- #include <linux/of_platform.h>
- #include <linux/timex.h>
- #include <linux/io.h>
-+#include <linux/slab.h>
- 
- #include <linux/ptp_clock_kernel.h>
- 
--#include "gianfar.h"
+-General Properties:
 -
- /*
-- * gianfar ptp registers
-+ * qoriq ptp registers
-  * Generated by regen.tcl on Thu May 13 01:38:57 PM CEST 2010
-  */
--struct gianfar_ptp_registers {
-+struct qoriq_ptp_registers {
- 	u32 tmr_ctrl;     /* Timer control register */
- 	u32 tmr_tevent;   /* Timestamp event register */
- 	u32 tmr_temask;   /* Timer event mask register */
-@@ -127,18 +126,19 @@ struct gianfar_ptp_registers {
- #define PRSC_OCK_MASK         (0xffff)
- 
- 
--#define DRIVER		"gianfar_ptp"
-+#define DRIVER		"ptp_qoriq"
- #define DEFAULT_CKSEL	1
- #define N_EXT_TS	2
--#define REG_SIZE	sizeof(struct gianfar_ptp_registers)
-+#define REG_SIZE	sizeof(struct qoriq_ptp_registers)
- 
--struct etsects {
--	struct gianfar_ptp_registers __iomem *regs;
-+struct qoriq_ptp {
-+	struct qoriq_ptp_registers __iomem *regs;
- 	spinlock_t lock; /* protects regs */
- 	struct ptp_clock *clock;
- 	struct ptp_clock_info caps;
- 	struct resource *rsrc;
- 	int irq;
-+	int phc_index;
- 	u64 alarm_interval; /* for periodic alarm */
- 	u64 alarm_value;
- 	u32 tclk_period;  /* nanoseconds */
-@@ -149,54 +149,67 @@ struct etsects {
- 	u32 tmr_fiper2;
- };
- 
-+static inline u32 qoriq_read(unsigned __iomem *addr)
-+{
-+	u32 val;
+-  - compatible   Should be "fsl,etsec-ptp"
+-  - reg          Offset and length of the register set for the device
+-  - interrupts   There should be at least two interrupts. Some devices
+-                 have as many as four PTP related interrupts.
+-
+-Clock Properties:
+-
+-  - fsl,cksel        Timer reference clock source.
+-  - fsl,tclk-period  Timer reference clock period in nanoseconds.
+-  - fsl,tmr-prsc     Prescaler, divides the output clock.
+-  - fsl,tmr-add      Frequency compensation value.
+-  - fsl,tmr-fiper1   Fixed interval period pulse generator.
+-  - fsl,tmr-fiper2   Fixed interval period pulse generator.
+-  - fsl,max-adj      Maximum frequency adjustment in parts per billion.
+-
+-  These properties set the operational parameters for the PTP
+-  clock. You must choose these carefully for the clock to work right.
+-  Here is how to figure good values:
+-
+-  TimerOsc     = selected reference clock   MHz
+-  tclk_period  = desired clock period       nanoseconds
+-  NominalFreq  = 1000 / tclk_period         MHz
+-  FreqDivRatio = TimerOsc / NominalFreq     (must be greater that 1.0)
+-  tmr_add      = ceil(2^32 / FreqDivRatio)
+-  OutputClock  = NominalFreq / tmr_prsc     MHz
+-  PulseWidth   = 1 / OutputClock            microseconds
+-  FiperFreq1   = desired frequency in Hz
+-  FiperDiv1    = 1000000 * OutputClock / FiperFreq1
+-  tmr_fiper1   = tmr_prsc * tclk_period * FiperDiv1 - tclk_period
+-  max_adj      = 1000000000 * (FreqDivRatio - 1.0) - 1
+-
+-  The calculation for tmr_fiper2 is the same as for tmr_fiper1. The
+-  driver expects that tmr_fiper1 will be correctly set to produce a 1
+-  Pulse Per Second (PPS) signal, since this will be offered to the PPS
+-  subsystem to synchronize the Linux clock.
+-
+-  Reference clock source is determined by the value, which is holded
+-  in CKSEL bits in TMR_CTRL register. "fsl,cksel" property keeps the
+-  value, which will be directly written in those bits, that is why,
+-  according to reference manual, the next clock sources can be used:
+-
+-  <0> - external high precision timer reference clock (TSEC_TMR_CLK
+-        input is used for this purpose);
+-  <1> - eTSEC system clock;
+-  <2> - eTSEC1 transmit clock;
+-  <3> - RTC clock input.
+-
+-  When this attribute is not used, eTSEC system clock will serve as
+-  IEEE 1588 timer reference clock.
+-
+-Example:
+-
+-	ptp_clock@24e00 {
+-		compatible = "fsl,etsec-ptp";
+-		reg = <0x24E00 0xB0>;
+-		interrupts = <12 0x8 13 0x8>;
+-		interrupt-parent = < &ipic >;
+-		fsl,cksel       = <1>;
+-		fsl,tclk-period = <10>;
+-		fsl,tmr-prsc    = <100>;
+-		fsl,tmr-add     = <0x999999A4>;
+-		fsl,tmr-fiper1  = <0x3B9AC9F6>;
+-		fsl,tmr-fiper2  = <0x00018696>;
+-		fsl,max-adj     = <659999998>;
+-	};
++Refer to Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+new file mode 100644
+index 0000000..0f569d8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+@@ -0,0 +1,69 @@
++* Freescale QorIQ 1588 timer based PTP clock
 +
-+	val = ioread32be(addr);
-+	return val;
-+}
++General Properties:
 +
-+static inline void qoriq_write(unsigned __iomem *addr, u32 val)
-+{
-+	iowrite32be(val, addr);
-+}
++  - compatible   Should be "fsl,etsec-ptp"
++  - reg          Offset and length of the register set for the device
++  - interrupts   There should be at least two interrupts. Some devices
++                 have as many as four PTP related interrupts.
 +
- /*
-  * Register access functions
-  */
- 
--/* Caller must hold etsects->lock. */
--static u64 tmr_cnt_read(struct etsects *etsects)
-+/* Caller must hold qoriq_ptp->lock. */
-+static u64 tmr_cnt_read(struct qoriq_ptp *qoriq_ptp)
- {
- 	u64 ns;
- 	u32 lo, hi;
- 
--	lo = gfar_read(&etsects->regs->tmr_cnt_l);
--	hi = gfar_read(&etsects->regs->tmr_cnt_h);
-+	lo = qoriq_read(&qoriq_ptp->regs->tmr_cnt_l);
-+	hi = qoriq_read(&qoriq_ptp->regs->tmr_cnt_h);
- 	ns = ((u64) hi) << 32;
- 	ns |= lo;
- 	return ns;
- }
- 
--/* Caller must hold etsects->lock. */
--static void tmr_cnt_write(struct etsects *etsects, u64 ns)
-+/* Caller must hold qoriq_ptp->lock. */
-+static void tmr_cnt_write(struct qoriq_ptp *qoriq_ptp, u64 ns)
- {
- 	u32 hi = ns >> 32;
- 	u32 lo = ns & 0xffffffff;
- 
--	gfar_write(&etsects->regs->tmr_cnt_l, lo);
--	gfar_write(&etsects->regs->tmr_cnt_h, hi);
-+	qoriq_write(&qoriq_ptp->regs->tmr_cnt_l, lo);
-+	qoriq_write(&qoriq_ptp->regs->tmr_cnt_h, hi);
- }
- 
--/* Caller must hold etsects->lock. */
--static void set_alarm(struct etsects *etsects)
-+/* Caller must hold qoriq_ptp->lock. */
-+static void set_alarm(struct qoriq_ptp *qoriq_ptp)
- {
- 	u64 ns;
- 	u32 lo, hi;
- 
--	ns = tmr_cnt_read(etsects) + 1500000000ULL;
-+	ns = tmr_cnt_read(qoriq_ptp) + 1500000000ULL;
- 	ns = div_u64(ns, 1000000000UL) * 1000000000ULL;
--	ns -= etsects->tclk_period;
-+	ns -= qoriq_ptp->tclk_period;
- 	hi = ns >> 32;
- 	lo = ns & 0xffffffff;
--	gfar_write(&etsects->regs->tmr_alarm1_l, lo);
--	gfar_write(&etsects->regs->tmr_alarm1_h, hi);
-+	qoriq_write(&qoriq_ptp->regs->tmr_alarm1_l, lo);
-+	qoriq_write(&qoriq_ptp->regs->tmr_alarm1_h, hi);
- }
- 
--/* Caller must hold etsects->lock. */
--static void set_fipers(struct etsects *etsects)
-+/* Caller must hold qoriq_ptp->lock. */
-+static void set_fipers(struct qoriq_ptp *qoriq_ptp)
- {
--	set_alarm(etsects);
--	gfar_write(&etsects->regs->tmr_fiper1, etsects->tmr_fiper1);
--	gfar_write(&etsects->regs->tmr_fiper2, etsects->tmr_fiper2);
-+	set_alarm(qoriq_ptp);
-+	qoriq_write(&qoriq_ptp->regs->tmr_fiper1, qoriq_ptp->tmr_fiper1);
-+	qoriq_write(&qoriq_ptp->regs->tmr_fiper2, qoriq_ptp->tmr_fiper2);
- }
- 
- /*
-@@ -205,72 +218,72 @@ static void set_fipers(struct etsects *etsects)
- 
- static irqreturn_t isr(int irq, void *priv)
- {
--	struct etsects *etsects = priv;
-+	struct qoriq_ptp *qoriq_ptp = priv;
- 	struct ptp_clock_event event;
- 	u64 ns;
- 	u32 ack = 0, lo, hi, mask, val;
- 
--	val = gfar_read(&etsects->regs->tmr_tevent);
-+	val = qoriq_read(&qoriq_ptp->regs->tmr_tevent);
- 
- 	if (val & ETS1) {
- 		ack |= ETS1;
--		hi = gfar_read(&etsects->regs->tmr_etts1_h);
--		lo = gfar_read(&etsects->regs->tmr_etts1_l);
-+		hi = qoriq_read(&qoriq_ptp->regs->tmr_etts1_h);
-+		lo = qoriq_read(&qoriq_ptp->regs->tmr_etts1_l);
- 		event.type = PTP_CLOCK_EXTTS;
- 		event.index = 0;
- 		event.timestamp = ((u64) hi) << 32;
- 		event.timestamp |= lo;
--		ptp_clock_event(etsects->clock, &event);
-+		ptp_clock_event(qoriq_ptp->clock, &event);
- 	}
- 
- 	if (val & ETS2) {
- 		ack |= ETS2;
--		hi = gfar_read(&etsects->regs->tmr_etts2_h);
--		lo = gfar_read(&etsects->regs->tmr_etts2_l);
-+		hi = qoriq_read(&qoriq_ptp->regs->tmr_etts2_h);
-+		lo = qoriq_read(&qoriq_ptp->regs->tmr_etts2_l);
- 		event.type = PTP_CLOCK_EXTTS;
- 		event.index = 1;
- 		event.timestamp = ((u64) hi) << 32;
- 		event.timestamp |= lo;
--		ptp_clock_event(etsects->clock, &event);
-+		ptp_clock_event(qoriq_ptp->clock, &event);
- 	}
- 
- 	if (val & ALM2) {
- 		ack |= ALM2;
--		if (etsects->alarm_value) {
-+		if (qoriq_ptp->alarm_value) {
- 			event.type = PTP_CLOCK_ALARM;
- 			event.index = 0;
--			event.timestamp = etsects->alarm_value;
--			ptp_clock_event(etsects->clock, &event);
-+			event.timestamp = qoriq_ptp->alarm_value;
-+			ptp_clock_event(qoriq_ptp->clock, &event);
- 		}
--		if (etsects->alarm_interval) {
--			ns = etsects->alarm_value + etsects->alarm_interval;
-+		if (qoriq_ptp->alarm_interval) {
-+			ns = qoriq_ptp->alarm_value + qoriq_ptp->alarm_interval;
- 			hi = ns >> 32;
- 			lo = ns & 0xffffffff;
--			spin_lock(&etsects->lock);
--			gfar_write(&etsects->regs->tmr_alarm2_l, lo);
--			gfar_write(&etsects->regs->tmr_alarm2_h, hi);
--			spin_unlock(&etsects->lock);
--			etsects->alarm_value = ns;
-+			spin_lock(&qoriq_ptp->lock);
-+			qoriq_write(&qoriq_ptp->regs->tmr_alarm2_l, lo);
-+			qoriq_write(&qoriq_ptp->regs->tmr_alarm2_h, hi);
-+			spin_unlock(&qoriq_ptp->lock);
-+			qoriq_ptp->alarm_value = ns;
- 		} else {
--			gfar_write(&etsects->regs->tmr_tevent, ALM2);
--			spin_lock(&etsects->lock);
--			mask = gfar_read(&etsects->regs->tmr_temask);
-+			qoriq_write(&qoriq_ptp->regs->tmr_tevent, ALM2);
-+			spin_lock(&qoriq_ptp->lock);
-+			mask = qoriq_read(&qoriq_ptp->regs->tmr_temask);
- 			mask &= ~ALM2EN;
--			gfar_write(&etsects->regs->tmr_temask, mask);
--			spin_unlock(&etsects->lock);
--			etsects->alarm_value = 0;
--			etsects->alarm_interval = 0;
-+			qoriq_write(&qoriq_ptp->regs->tmr_temask, mask);
-+			spin_unlock(&qoriq_ptp->lock);
-+			qoriq_ptp->alarm_value = 0;
-+			qoriq_ptp->alarm_interval = 0;
- 		}
- 	}
- 
- 	if (val & PP1) {
- 		ack |= PP1;
- 		event.type = PTP_CLOCK_PPS;
--		ptp_clock_event(etsects->clock, &event);
-+		ptp_clock_event(qoriq_ptp->clock, &event);
- 	}
- 
- 	if (ack) {
--		gfar_write(&etsects->regs->tmr_tevent, ack);
-+		qoriq_write(&qoriq_ptp->regs->tmr_tevent, ack);
- 		return IRQ_HANDLED;
- 	} else
- 		return IRQ_NONE;
-@@ -280,18 +293,18 @@ static irqreturn_t isr(int irq, void *priv)
-  * PTP clock operations
-  */
- 
--static int ptp_gianfar_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
-+static int ptp_qoriq_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
- {
- 	u64 adj, diff;
- 	u32 tmr_add;
- 	int neg_adj = 0;
--	struct etsects *etsects = container_of(ptp, struct etsects, caps);
-+	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
- 
- 	if (scaled_ppm < 0) {
- 		neg_adj = 1;
- 		scaled_ppm = -scaled_ppm;
- 	}
--	tmr_add = etsects->tmr_add;
-+	tmr_add = qoriq_ptp->tmr_add;
- 	adj = tmr_add;
- 
- 	/* calculate diff as adj*(scaled_ppm/65536)/1000000
-@@ -303,70 +316,70 @@ static int ptp_gianfar_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
- 
- 	tmr_add = neg_adj ? tmr_add - diff : tmr_add + diff;
- 
--	gfar_write(&etsects->regs->tmr_add, tmr_add);
-+	qoriq_write(&qoriq_ptp->regs->tmr_add, tmr_add);
- 
- 	return 0;
- }
- 
--static int ptp_gianfar_adjtime(struct ptp_clock_info *ptp, s64 delta)
-+static int ptp_qoriq_adjtime(struct ptp_clock_info *ptp, s64 delta)
- {
- 	s64 now;
- 	unsigned long flags;
--	struct etsects *etsects = container_of(ptp, struct etsects, caps);
-+	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
- 
--	spin_lock_irqsave(&etsects->lock, flags);
-+	spin_lock_irqsave(&qoriq_ptp->lock, flags);
- 
--	now = tmr_cnt_read(etsects);
-+	now = tmr_cnt_read(qoriq_ptp);
- 	now += delta;
--	tmr_cnt_write(etsects, now);
--	set_fipers(etsects);
-+	tmr_cnt_write(qoriq_ptp, now);
-+	set_fipers(qoriq_ptp);
- 
--	spin_unlock_irqrestore(&etsects->lock, flags);
-+	spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
- 
- 	return 0;
- }
- 
--static int ptp_gianfar_gettime(struct ptp_clock_info *ptp,
-+static int ptp_qoriq_gettime(struct ptp_clock_info *ptp,
- 			       struct timespec64 *ts)
- {
- 	u64 ns;
- 	unsigned long flags;
--	struct etsects *etsects = container_of(ptp, struct etsects, caps);
-+	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
- 
--	spin_lock_irqsave(&etsects->lock, flags);
-+	spin_lock_irqsave(&qoriq_ptp->lock, flags);
- 
--	ns = tmr_cnt_read(etsects);
-+	ns = tmr_cnt_read(qoriq_ptp);
- 
--	spin_unlock_irqrestore(&etsects->lock, flags);
-+	spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
- 
- 	*ts = ns_to_timespec64(ns);
- 
- 	return 0;
- }
- 
--static int ptp_gianfar_settime(struct ptp_clock_info *ptp,
-+static int ptp_qoriq_settime(struct ptp_clock_info *ptp,
- 			       const struct timespec64 *ts)
- {
- 	u64 ns;
- 	unsigned long flags;
--	struct etsects *etsects = container_of(ptp, struct etsects, caps);
-+	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
- 
- 	ns = timespec64_to_ns(ts);
- 
--	spin_lock_irqsave(&etsects->lock, flags);
-+	spin_lock_irqsave(&qoriq_ptp->lock, flags);
- 
--	tmr_cnt_write(etsects, ns);
--	set_fipers(etsects);
-+	tmr_cnt_write(qoriq_ptp, ns);
-+	set_fipers(qoriq_ptp);
- 
--	spin_unlock_irqrestore(&etsects->lock, flags);
-+	spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
- 
- 	return 0;
- }
- 
--static int ptp_gianfar_enable(struct ptp_clock_info *ptp,
-+static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
- 			      struct ptp_clock_request *rq, int on)
- {
--	struct etsects *etsects = container_of(ptp, struct etsects, caps);
-+	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
- 	unsigned long flags;
- 	u32 bit, mask;
- 
-@@ -382,25 +395,25 @@ static int ptp_gianfar_enable(struct ptp_clock_info *ptp,
- 		default:
- 			return -EINVAL;
- 		}
--		spin_lock_irqsave(&etsects->lock, flags);
--		mask = gfar_read(&etsects->regs->tmr_temask);
-+		spin_lock_irqsave(&qoriq_ptp->lock, flags);
-+		mask = qoriq_read(&qoriq_ptp->regs->tmr_temask);
- 		if (on)
- 			mask |= bit;
- 		else
- 			mask &= ~bit;
--		gfar_write(&etsects->regs->tmr_temask, mask);
--		spin_unlock_irqrestore(&etsects->lock, flags);
-+		qoriq_write(&qoriq_ptp->regs->tmr_temask, mask);
-+		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
- 		return 0;
- 
- 	case PTP_CLK_REQ_PPS:
--		spin_lock_irqsave(&etsects->lock, flags);
--		mask = gfar_read(&etsects->regs->tmr_temask);
-+		spin_lock_irqsave(&qoriq_ptp->lock, flags);
-+		mask = qoriq_read(&qoriq_ptp->regs->tmr_temask);
- 		if (on)
- 			mask |= PP1EN;
- 		else
- 			mask &= ~PP1EN;
--		gfar_write(&etsects->regs->tmr_temask, mask);
--		spin_unlock_irqrestore(&etsects->lock, flags);
-+		qoriq_write(&qoriq_ptp->regs->tmr_temask, mask);
-+		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
- 		return 0;
- 
- 	default:
-@@ -410,142 +423,141 @@ static int ptp_gianfar_enable(struct ptp_clock_info *ptp,
- 	return -EOPNOTSUPP;
- }
- 
--static const struct ptp_clock_info ptp_gianfar_caps = {
-+static const struct ptp_clock_info ptp_qoriq_caps = {
- 	.owner		= THIS_MODULE,
--	.name		= "gianfar clock",
-+	.name		= "qoriq ptp clock",
- 	.max_adj	= 512000,
- 	.n_alarm	= 0,
- 	.n_ext_ts	= N_EXT_TS,
- 	.n_per_out	= 0,
- 	.n_pins		= 0,
- 	.pps		= 1,
--	.adjfine	= ptp_gianfar_adjfine,
--	.adjtime	= ptp_gianfar_adjtime,
--	.gettime64	= ptp_gianfar_gettime,
--	.settime64	= ptp_gianfar_settime,
--	.enable		= ptp_gianfar_enable,
-+	.adjfine	= ptp_qoriq_adjfine,
-+	.adjtime	= ptp_qoriq_adjtime,
-+	.gettime64	= ptp_qoriq_gettime,
-+	.settime64	= ptp_qoriq_settime,
-+	.enable		= ptp_qoriq_enable,
- };
- 
--static int gianfar_ptp_probe(struct platform_device *dev)
-+static int qoriq_ptp_probe(struct platform_device *dev)
- {
- 	struct device_node *node = dev->dev.of_node;
--	struct etsects *etsects;
-+	struct qoriq_ptp *qoriq_ptp;
- 	struct timespec64 now;
- 	int err = -ENOMEM;
- 	u32 tmr_ctrl;
- 	unsigned long flags;
- 
--	etsects = kzalloc(sizeof(*etsects), GFP_KERNEL);
--	if (!etsects)
-+	qoriq_ptp = kzalloc(sizeof(*qoriq_ptp), GFP_KERNEL);
-+	if (!qoriq_ptp)
- 		goto no_memory;
- 
- 	err = -ENODEV;
- 
--	etsects->caps = ptp_gianfar_caps;
-+	qoriq_ptp->caps = ptp_qoriq_caps;
- 
--	if (of_property_read_u32(node, "fsl,cksel", &etsects->cksel))
--		etsects->cksel = DEFAULT_CKSEL;
-+	if (of_property_read_u32(node, "fsl,cksel", &qoriq_ptp->cksel))
-+		qoriq_ptp->cksel = DEFAULT_CKSEL;
- 
- 	if (of_property_read_u32(node,
--				 "fsl,tclk-period", &etsects->tclk_period) ||
-+				 "fsl,tclk-period", &qoriq_ptp->tclk_period) ||
- 	    of_property_read_u32(node,
--				 "fsl,tmr-prsc", &etsects->tmr_prsc) ||
-+				 "fsl,tmr-prsc", &qoriq_ptp->tmr_prsc) ||
- 	    of_property_read_u32(node,
--				 "fsl,tmr-add", &etsects->tmr_add) ||
-+				 "fsl,tmr-add", &qoriq_ptp->tmr_add) ||
- 	    of_property_read_u32(node,
--				 "fsl,tmr-fiper1", &etsects->tmr_fiper1) ||
-+				 "fsl,tmr-fiper1", &qoriq_ptp->tmr_fiper1) ||
- 	    of_property_read_u32(node,
--				 "fsl,tmr-fiper2", &etsects->tmr_fiper2) ||
-+				 "fsl,tmr-fiper2", &qoriq_ptp->tmr_fiper2) ||
- 	    of_property_read_u32(node,
--				 "fsl,max-adj", &etsects->caps.max_adj)) {
-+				 "fsl,max-adj", &qoriq_ptp->caps.max_adj)) {
- 		pr_err("device tree node missing required elements\n");
- 		goto no_node;
- 	}
- 
--	etsects->irq = platform_get_irq(dev, 0);
-+	qoriq_ptp->irq = platform_get_irq(dev, 0);
- 
--	if (etsects->irq < 0) {
-+	if (qoriq_ptp->irq < 0) {
- 		pr_err("irq not in device tree\n");
- 		goto no_node;
- 	}
--	if (request_irq(etsects->irq, isr, 0, DRIVER, etsects)) {
-+	if (request_irq(qoriq_ptp->irq, isr, 0, DRIVER, qoriq_ptp)) {
- 		pr_err("request_irq failed\n");
- 		goto no_node;
- 	}
- 
--	etsects->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
--	if (!etsects->rsrc) {
-+	qoriq_ptp->rsrc = platform_get_resource(dev, IORESOURCE_MEM, 0);
-+	if (!qoriq_ptp->rsrc) {
- 		pr_err("no resource\n");
- 		goto no_resource;
- 	}
--	if (request_resource(&iomem_resource, etsects->rsrc)) {
-+	if (request_resource(&iomem_resource, qoriq_ptp->rsrc)) {
- 		pr_err("resource busy\n");
- 		goto no_resource;
- 	}
- 
--	spin_lock_init(&etsects->lock);
-+	spin_lock_init(&qoriq_ptp->lock);
- 
--	etsects->regs = ioremap(etsects->rsrc->start,
--				resource_size(etsects->rsrc));
--	if (!etsects->regs) {
-+	qoriq_ptp->regs = ioremap(qoriq_ptp->rsrc->start,
-+				resource_size(qoriq_ptp->rsrc));
-+	if (!qoriq_ptp->regs) {
- 		pr_err("ioremap ptp registers failed\n");
- 		goto no_ioremap;
- 	}
- 	getnstimeofday64(&now);
--	ptp_gianfar_settime(&etsects->caps, &now);
-+	ptp_qoriq_settime(&qoriq_ptp->caps, &now);
- 
- 	tmr_ctrl =
--	  (etsects->tclk_period & TCLK_PERIOD_MASK) << TCLK_PERIOD_SHIFT |
--	  (etsects->cksel & CKSEL_MASK) << CKSEL_SHIFT;
-+	  (qoriq_ptp->tclk_period & TCLK_PERIOD_MASK) << TCLK_PERIOD_SHIFT |
-+	  (qoriq_ptp->cksel & CKSEL_MASK) << CKSEL_SHIFT;
- 
--	spin_lock_irqsave(&etsects->lock, flags);
-+	spin_lock_irqsave(&qoriq_ptp->lock, flags);
- 
--	gfar_write(&etsects->regs->tmr_ctrl,   tmr_ctrl);
--	gfar_write(&etsects->regs->tmr_add,    etsects->tmr_add);
--	gfar_write(&etsects->regs->tmr_prsc,   etsects->tmr_prsc);
--	gfar_write(&etsects->regs->tmr_fiper1, etsects->tmr_fiper1);
--	gfar_write(&etsects->regs->tmr_fiper2, etsects->tmr_fiper2);
--	set_alarm(etsects);
--	gfar_write(&etsects->regs->tmr_ctrl,   tmr_ctrl|FIPERST|RTPE|TE|FRD);
-+	qoriq_write(&qoriq_ptp->regs->tmr_ctrl,   tmr_ctrl);
-+	qoriq_write(&qoriq_ptp->regs->tmr_add,    qoriq_ptp->tmr_add);
-+	qoriq_write(&qoriq_ptp->regs->tmr_prsc,   qoriq_ptp->tmr_prsc);
-+	qoriq_write(&qoriq_ptp->regs->tmr_fiper1, qoriq_ptp->tmr_fiper1);
-+	qoriq_write(&qoriq_ptp->regs->tmr_fiper2, qoriq_ptp->tmr_fiper2);
-+	set_alarm(qoriq_ptp);
-+	qoriq_write(&qoriq_ptp->regs->tmr_ctrl,   tmr_ctrl|FIPERST|RTPE|TE|FRD);
- 
--	spin_unlock_irqrestore(&etsects->lock, flags);
-+	spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
- 
--	etsects->clock = ptp_clock_register(&etsects->caps, &dev->dev);
--	if (IS_ERR(etsects->clock)) {
--		err = PTR_ERR(etsects->clock);
-+	qoriq_ptp->clock = ptp_clock_register(&qoriq_ptp->caps, &dev->dev);
-+	if (IS_ERR(qoriq_ptp->clock)) {
-+		err = PTR_ERR(qoriq_ptp->clock);
- 		goto no_clock;
- 	}
--	gfar_phc_index = ptp_clock_index(etsects->clock);
-+	qoriq_ptp->phc_index = ptp_clock_index(qoriq_ptp->clock);
- 
--	platform_set_drvdata(dev, etsects);
-+	platform_set_drvdata(dev, qoriq_ptp);
- 
- 	return 0;
- 
- no_clock:
--	iounmap(etsects->regs);
-+	iounmap(qoriq_ptp->regs);
- no_ioremap:
--	release_resource(etsects->rsrc);
-+	release_resource(qoriq_ptp->rsrc);
- no_resource:
--	free_irq(etsects->irq, etsects);
-+	free_irq(qoriq_ptp->irq, qoriq_ptp);
- no_node:
--	kfree(etsects);
-+	kfree(qoriq_ptp);
- no_memory:
- 	return err;
- }
- 
--static int gianfar_ptp_remove(struct platform_device *dev)
-+static int qoriq_ptp_remove(struct platform_device *dev)
- {
--	struct etsects *etsects = platform_get_drvdata(dev);
-+	struct qoriq_ptp *qoriq_ptp = platform_get_drvdata(dev);
- 
--	gfar_write(&etsects->regs->tmr_temask, 0);
--	gfar_write(&etsects->regs->tmr_ctrl,   0);
-+	qoriq_write(&qoriq_ptp->regs->tmr_temask, 0);
-+	qoriq_write(&qoriq_ptp->regs->tmr_ctrl,   0);
- 
--	gfar_phc_index = -1;
--	ptp_clock_unregister(etsects->clock);
--	iounmap(etsects->regs);
--	release_resource(etsects->rsrc);
--	free_irq(etsects->irq, etsects);
--	kfree(etsects);
-+	ptp_clock_unregister(qoriq_ptp->clock);
-+	iounmap(qoriq_ptp->regs);
-+	release_resource(qoriq_ptp->rsrc);
-+	free_irq(qoriq_ptp->irq, qoriq_ptp);
-+	kfree(qoriq_ptp);
- 
- 	return 0;
- }
-@@ -556,17 +568,17 @@ static int gianfar_ptp_remove(struct platform_device *dev)
- };
- MODULE_DEVICE_TABLE(of, match_table);
- 
--static struct platform_driver gianfar_ptp_driver = {
-+static struct platform_driver qoriq_ptp_driver = {
- 	.driver = {
--		.name		= "gianfar_ptp",
-+		.name		= "ptp_qoriq",
- 		.of_match_table	= match_table,
- 	},
--	.probe       = gianfar_ptp_probe,
--	.remove      = gianfar_ptp_remove,
-+	.probe       = qoriq_ptp_probe,
-+	.remove      = qoriq_ptp_remove,
- };
- 
--module_platform_driver(gianfar_ptp_driver);
-+module_platform_driver(qoriq_ptp_driver);
- 
- MODULE_AUTHOR("Richard Cochran <richardcochran@gmail.com>");
--MODULE_DESCRIPTION("PTP clock using the eTSEC");
-+MODULE_DESCRIPTION("PTP clock for Freescale QorIQ 1588 timer");
- MODULE_LICENSE("GPL");
++Clock Properties:
++
++  - fsl,cksel        Timer reference clock source.
++  - fsl,tclk-period  Timer reference clock period in nanoseconds.
++  - fsl,tmr-prsc     Prescaler, divides the output clock.
++  - fsl,tmr-add      Frequency compensation value.
++  - fsl,tmr-fiper1   Fixed interval period pulse generator.
++  - fsl,tmr-fiper2   Fixed interval period pulse generator.
++  - fsl,max-adj      Maximum frequency adjustment in parts per billion.
++
++  These properties set the operational parameters for the PTP
++  clock. You must choose these carefully for the clock to work right.
++  Here is how to figure good values:
++
++  TimerOsc     = selected reference clock   MHz
++  tclk_period  = desired clock period       nanoseconds
++  NominalFreq  = 1000 / tclk_period         MHz
++  FreqDivRatio = TimerOsc / NominalFreq     (must be greater that 1.0)
++  tmr_add      = ceil(2^32 / FreqDivRatio)
++  OutputClock  = NominalFreq / tmr_prsc     MHz
++  PulseWidth   = 1 / OutputClock            microseconds
++  FiperFreq1   = desired frequency in Hz
++  FiperDiv1    = 1000000 * OutputClock / FiperFreq1
++  tmr_fiper1   = tmr_prsc * tclk_period * FiperDiv1 - tclk_period
++  max_adj      = 1000000000 * (FreqDivRatio - 1.0) - 1
++
++  The calculation for tmr_fiper2 is the same as for tmr_fiper1. The
++  driver expects that tmr_fiper1 will be correctly set to produce a 1
++  Pulse Per Second (PPS) signal, since this will be offered to the PPS
++  subsystem to synchronize the Linux clock.
++
++  Reference clock source is determined by the value, which is holded
++  in CKSEL bits in TMR_CTRL register. "fsl,cksel" property keeps the
++  value, which will be directly written in those bits, that is why,
++  according to reference manual, the next clock sources can be used:
++
++  <0> - external high precision timer reference clock (TSEC_TMR_CLK
++        input is used for this purpose);
++  <1> - eTSEC system clock;
++  <2> - eTSEC1 transmit clock;
++  <3> - RTC clock input.
++
++  When this attribute is not used, eTSEC system clock will serve as
++  IEEE 1588 timer reference clock.
++
++Example:
++
++	ptp_clock@24e00 {
++		compatible = "fsl,etsec-ptp";
++		reg = <0x24E00 0xB0>;
++		interrupts = <12 0x8 13 0x8>;
++		interrupt-parent = < &ipic >;
++		fsl,cksel       = <1>;
++		fsl,tclk-period = <10>;
++		fsl,tmr-prsc    = <100>;
++		fsl,tmr-add     = <0x999999A4>;
++		fsl,tmr-fiper1  = <0x3B9AC9F6>;
++		fsl,tmr-fiper2  = <0x00018696>;
++		fsl,max-adj     = <659999998>;
++	};
 -- 
 1.7.1
