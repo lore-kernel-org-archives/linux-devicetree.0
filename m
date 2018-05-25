@@ -1,401 +1,224 @@
-From: Bai Ping <ping.bai@nxp.com>
-Subject: [PATCH v7 2/2] ARM: dts: imx: Add basic dts support for imx6sll EVK
- board
-Date: Fri, 25 May 2018 15:42:07 +0800
-Message-ID: <1527234127-11991-2-git-send-email-ping.bai@nxp.com>
-References: <1527234127-11991-1-git-send-email-ping.bai@nxp.com>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH RESEND V4 6/9] dt-bindings: clock: add imx7ulp clock binding doc
+Date: Fri, 25 May 2018 15:51:08 +0800
+Message-ID: <1527234671-31755-7-git-send-email-aisheng.dong@nxp.com>
+References: <1527234671-31755-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1527234127-11991-1-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, robh+dt@kernel.org, kernel@pengutronix.de
-Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, jacky.baip@gmail.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527234671-31755-1-git-send-email-aisheng.dong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@kernel.org, mturquette@baylibre.com, shawnguo@kernel.org, Anson.Huang@nxp.com, ping.bai@nxp.com, linux-imx@nxp.com, Dong Aisheng <aisheng.dong@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dts file support for imx6sll EVK board.
+i.MX7ULP Clock functions are under joint control of the System
+Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
+modules, and Core Mode Controller (CMC)1 blocks
 
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
----
- change v3->v4
- - update the license indentifier
- - remove leading zero of node
- - remove unused pin from hog group
- change v4->v5
- - use generic name for device node
- - remove unnecessary hog pin group
- change v5->v6
- - no
- change v6->v7
- - move the iomuxc node to the end of dts file
----
- Documentation/devicetree/bindings/arm/fsl.txt |   4 +
- arch/arm/boot/dts/Makefile                    |   2 +
- arch/arm/boot/dts/imx6sll-evk.dts             | 317 ++++++++++++++++++++++++++
- 3 files changed, 323 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sll-evk.dts
+Note IMX7ULP has two clock domains: M4 and A7. This binding doc
+is only for A7 clock domain.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index cdb9dd7..8a1baa2 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
- Required root node properties:
-     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
- 
-+i.MX6SLL EVK board
-+Required root node properties:
-+    - compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
-+
- Generic i.MX boards
- -------------------
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4753b0..f3fb85f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -521,6 +521,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
- 	imx6sl-warp.dtb
-+dtb-$(CONFIG_SOC_IMX6SLL) += \
-+	imx6sll-evk.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-nitrogen6sx.dtb \
- 	imx6sx-sabreauto.dtb \
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Anson Huang <Anson.Huang@nxp.com>
+Cc: Bai Ping <ping.bai@nxp.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+---
+ChangeLog:
+v2->v3:
+ * no changes
+v1->v2: no changes
+---
+ .../devicetree/bindings/clock/imx7ulp-clock.txt    |  62 ++++++++++++
+ include/dt-bindings/clock/imx7ulp-clock.h          | 105 +++++++++++++++++++++
+ 2 files changed, 167 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
+ create mode 100644 include/dt-bindings/clock/imx7ulp-clock.h
+
+diff --git a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
 new file mode 100644
-index 0000000..0f5bd16
+index 0000000..76ea3c7
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -0,0 +1,317 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++++ b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
+@@ -0,0 +1,62 @@
++* Clock bindings for Freescale i.MX7ULP
++
++i.MX7ULP Clock functions are under joint control of the System
++Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
++modules, and Core Mode Controller (CMC)1 blocks
++
++The clocking scheme provides clear separation between M4 domain
++and A7 domain. Except for a few clock sources shared between two
++domains, such as the System Oscillator clock, the Slow IRC (SIRC),
++and and the Fast IRC clock (FIRCLK), clock sources and clock
++management are separated and contained within each domain.
++
++M4 clock management consists of SCG0, PCC0, PCC1, and CMC0 modules.
++A7 clock management consists of SCG1, PCC2, PCC3, and CMC1 modules.
++
++Note: this binding doc is only for A7 clock domain.
++
++Required properties:
++
++- compatible:	Should be "fsl,imx7ulp-clock".
++- reg : 	Should contain registers location and length for scg1,
++		pcc2 and pcc3.
++- reg-names:	Should contain the according reg names "scg1", "pcc2"
++		and "pcc3".
++- #clock-cells:	Should be <1>.
++- clocks:	Should contain the fixed input clocks.
++- clock-name:   Should contain the following clock names:"rsoc", "sosc",
++		"sirc", "firc", "upll", "mpll".
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell.
++See include/dt-bindings/clock/imx7ulp-clock.h
++for the full list of i.MX7ULP clock IDs.
++
++Examples:
++
++#include <dt-bindings/clock/imx7ulp-clock.h>
++
++clks: scg1@403e0000 {
++	compatible = "fsl,imx7ulp-clock";
++	reg = <0x403e0000 0x10000>
++	      <0x403f0000 0x10000>
++	      <0x40b30000 0x10000>;
++	reg-names = "scg1", "pcc2", "pcc3";
++	clocks = <&rsoc>, <&sosc>, <&sirc>,
++		 <&firc>, <&upll>, <&mpll>;
++	clock-names = "rsoc", "sosc", "sirc",
++		      "firc", "upll", "mpll";
++	#clock-cells = <1>;
++};
++
++usdhc1: usdhc@40380000 {
++	compatible = "fsl,imx7ulp-usdhc";
++	reg = <0x40380000 0x10000>;
++	interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks IMX7ULP_CLK_NIC1_BUS_DIV>,
++		 <&clks IMX7ULP_CLK_NIC1_DIV>,
++		 <&clks IMX7ULP_CLK_USDHC1>;
++	clock-names ="ipg", "ahb", "per";
++	bus-width = <4>;
++	status = "disabled";
++};
+diff --git a/include/dt-bindings/clock/imx7ulp-clock.h b/include/dt-bindings/clock/imx7ulp-clock.h
+new file mode 100644
+index 0000000..2b6a29d
+--- /dev/null
++++ b/include/dt-bindings/clock/imx7ulp-clock.h
+@@ -0,0 +1,105 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
 +/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2018 NXP.
++ * Copyright (C) 2016 Freescale Semiconductor, Inc.
++ * Copyright 2017~2018 NXP
 + *
 + */
 +
-+/dts-v1/;
++#ifndef __DT_BINDINGS_CLOCK_IMX7ULP_H
++#define __DT_BINDINGS_CLOCK_IMX7ULP_H
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "imx6sll.dtsi"
++#define IMX7ULP_CLK_DUMMY		0
++#define IMX7ULP_CLK_ROSC		1
++#define IMX7ULP_CLK_SOSC		2
++#define IMX7ULP_CLK_FIRC		3
 +
-+/ {
-+	model = "Freescale i.MX6SLL EVK Board";
-+	compatible = "fsl,imx6sll-evk", "fsl,imx6sll";
++/* SCG1 */
++#define IMX7ULP_CLK_SPLL_PRE_SEL	4
++#define IMX7ULP_CLK_SPLL_PRE_DIV	5
++#define IMX7ULP_CLK_SPLL		6
++#define IMX7ULP_CLK_SPLL_POST_DIV1	7
++#define IMX7ULP_CLK_SPLL_POST_DIV2	8
++#define IMX7ULP_CLK_SPLL_PFD0		9
++#define IMX7ULP_CLK_SPLL_PFD1		10
++#define IMX7ULP_CLK_SPLL_PFD2		11
++#define IMX7ULP_CLK_SPLL_PFD3		12
++#define IMX7ULP_CLK_SPLL_PFD_SEL	13
++#define IMX7ULP_CLK_SPLL_SEL		14
++#define IMX7ULP_CLK_APLL_PRE_SEL	15
++#define IMX7ULP_CLK_APLL_PRE_DIV	16
++#define IMX7ULP_CLK_APLL		17
++#define IMX7ULP_CLK_APLL_POST_DIV1	18
++#define IMX7ULP_CLK_APLL_POST_DIV2	19
++#define IMX7ULP_CLK_APLL_PFD0		20
++#define IMX7ULP_CLK_APLL_PFD1		21
++#define IMX7ULP_CLK_APLL_PFD2		22
++#define IMX7ULP_CLK_APLL_PFD3		23
++#define IMX7ULP_CLK_APLL_PFD_SEL	24
++#define IMX7ULP_CLK_APLL_SEL		25
++#define IMX7ULP_CLK_UPLL		26
++#define IMX7ULP_CLK_SYS_SEL		27
++#define IMX7ULP_CLK_CORE_DIV		28
++#define IMX7ULP_CLK_BUS_DIV		29
++#define IMX7ULP_CLK_PLAT_DIV		30
++#define IMX7ULP_CLK_DDR_SEL		31
++#define IMX7ULP_CLK_DDR_DIV		32
++#define IMX7ULP_CLK_NIC_SEL		33
++#define IMX7ULP_CLK_NIC0_DIV		34
++#define IMX7ULP_CLK_GPU_DIV		35
++#define IMX7ULP_CLK_NIC1_DIV		36
++#define IMX7ULP_CLK_NIC1_BUS_DIV	37
++#define IMX7ULP_CLK_NIC1_EXT_DIV	38
 +
-+	memory@80000000 {
-+		reg = <0x80000000 0x80000000>;
-+	};
++/* PCG2 */
++#define IMX7ULP_CLK_DMA1		39
++#define IMX7ULP_CLK_RGPIO2P1		40
++#define IMX7ULP_CLK_FLEXBUS		41
++#define IMX7ULP_CLK_SEMA42_1		42
++#define IMX7ULP_CLK_DMA_MUX1		43
++#define IMX7ULP_CLK_SNVS		44
++#define IMX7ULP_CLK_CAAM		45
++#define IMX7ULP_CLK_LPTPM4		46
++#define IMX7ULP_CLK_LPTPM5		47
++#define IMX7ULP_CLK_LPIT1		48
++#define IMX7ULP_CLK_LPSPI2		49
++#define IMX7ULP_CLK_LPSPI3		50
++#define IMX7ULP_CLK_LPI2C4		51
++#define IMX7ULP_CLK_LPI2C5		52
++#define IMX7ULP_CLK_LPUART4		53
++#define IMX7ULP_CLK_LPUART5		54
++#define IMX7ULP_CLK_FLEXIO1		55
++#define IMX7ULP_CLK_USB0		56
++#define IMX7ULP_CLK_USB1		57
++#define IMX7ULP_CLK_USB_PHY		58
++#define IMX7ULP_CLK_USB_PL301		59
++#define IMX7ULP_CLK_USDHC0		60
++#define IMX7ULP_CLK_USDHC1		61
++#define IMX7ULP_CLK_WDG1		62
++#define IMX7ULP_CLK_WDG2		63
 +
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
++/* PCG3 */
++#define IMX7ULP_CLK_LPTPM6		64
++#define IMX7ULP_CLK_LPTPM7		65
++#define IMX7ULP_CLK_LPI2C6		66
++#define IMX7ULP_CLK_LPI2C7		67
++#define IMX7ULP_CLK_LPUART6		68
++#define IMX7ULP_CLK_LPUART7		69
++#define IMX7ULP_CLK_VIU			70
++#define IMX7ULP_CLK_DSI			71
++#define IMX7ULP_CLK_LCDIF		72
++#define IMX7ULP_CLK_MMDC		73
++#define IMX7ULP_CLK_PCTLC		74
++#define IMX7ULP_CLK_PCTLD		75
++#define IMX7ULP_CLK_PCTLE		76
++#define IMX7ULP_CLK_PCTLF		77
++#define IMX7ULP_CLK_GPU3D		78
++#define IMX7ULP_CLK_GPU2D		79
++#define IMX7ULP_CLK_MIPI_PLL		80
++#define IMX7ULP_CLK_SIRC		81
++#define IMX7ULP_CLK_SOSC_BUS_CLK	82
++#define IMX7ULP_CLK_FIRC_BUS_CLK	83
++#define IMX7ULP_CLK_SPLL_BUS_CLK	84
 +
-+	reg_usb_otg1_vbus: regulator-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usb_otg1_vbus>;
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
++#define IMX7ULP_CLK_END			85
 +
-+	reg_usb_otg2_vbus: regulator-otg2-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usb_otg2_vbus>;
-+		regulator-name = "usb_otg2_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_aud3v: regulator-aud3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wm8962-supply-3v15";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-boot-on;
-+	};
-+
-+	reg_aud4v: regulator-aud4v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wm8962-supply-4v2";
-+		regulator-min-microvolt = <4325000>;
-+		regulator-max-microvolt = <4325000>;
-+		regulator-boot-on;
-+	};
-+
-+	reg_lcd: regulator-lcd {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_lcd>;
-+		regulator-name = "lcd-pwr";
-+		gpio = <&gpio4 8 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_sd1_vmmc: regulator-sd1-vmmc {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_sd1_vmmc>;
-+		regulator-name = "SD1_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&gpio3 30 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
-+
-+&cpu0 {
-+	arm-supply = <&sw1a_reg>;
-+	soc-supply = <&sw1c_reg>;
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pfuze100: pmic@8 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1c {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	cd-gpios = <&gpio4 7 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	vmmc-supply = <&reg_sd1_vmmc>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
-+	disable-over-current;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	vbus-supply = <&reg_usb_otg2_vbus>;
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_usb_otg1_vbus: vbus1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_KEY_COL4__GPIO4_IO00 0x17059
-+		>;
-+	};
-+
-+	pinctrl_usb_otg2_vbus: vbus2grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_KEY_COL5__GPIO4_IO02 0x17059
-+		>;
-+	};
-+
-+	pinctrl_reg_lcd: reglcdgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_ECSPI1_SCLK__GPIO4_IO08 0x17059
-+		>;
-+	};
-+
-+	pinctrl_reg_sd1_vmmc: sd1vmmcgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_KEY_COL3__GPIO3_IO30 0x17059
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_UART1_TXD__UART1_DCE_TX 0x1b0b1
-+			MX6SLL_PAD_UART1_RXD__UART1_DCE_RX 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x17059
-+			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x13059
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0	0x17059
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1	0x17059
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2	0x17059
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x170b9
-+			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x130b9
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0	0x170b9
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1	0x170b9
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2	0x170b9
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_CMD__SD1_CMD	0x170f9
-+			MX6SLL_PAD_SD1_CLK__SD1_CLK	0x130f9
-+			MX6SLL_PAD_SD1_DATA0__SD1_DATA0	0x170f9
-+			MX6SLL_PAD_SD1_DATA1__SD1_DATA1	0x170f9
-+			MX6SLL_PAD_SD1_DATA2__SD1_DATA2	0x170f9
-+			MX6SLL_PAD_SD1_DATA3__SD1_DATA3	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_I2C1_SCL__I2C1_SCL	 0x4001b8b1
-+			MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x4001b8b1
-+		>;
-+	};
-+};
-+
-+
++#endif /* __DT_BINDINGS_CLOCK_IMX7ULP_H */
 -- 
-1.9.1
+2.7.4
