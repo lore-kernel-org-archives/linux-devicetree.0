@@ -1,37 +1,29 @@
 From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
- properties for CPUs
-Date: Fri, 25 May 2018 14:10:25 -0700
-Message-ID: <20180525211025.c73zdcdtyuvlewng@localhost>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/2] arm64: dts: Add GPIO and GPIO keys device nodes
+Date: Fri, 25 May 2018 15:29:09 -0700
+Message-ID: <20180525222909.sedcwcakptjoetma@localhost>
+References: <fcea1874b6e3d0243684c133c7b34f2384341a32.1523846102.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
+In-Reply-To: <fcea1874b6e3d0243684c133c7b34f2384341a32.1523846102.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, orsonzhai@gmail.com, zhang.lyra@gmail.com, devicetree@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 11:10:01AM +0530, Viresh Kumar wrote:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
+On Mon, Apr 16, 2018 at 10:40:03AM +0800, Baolin Wang wrote:
+> This patch adds device nodes to enable one GPIO controller located on
+> digital chip, 2 EIC (external interrupt controller) controllers loacted
+> on PMIC and digital chip for Spreadtrum SC9860 platform.
 > 
-> Add such missing properties.
+> Moreover this patch adds 3 GPIO keys relied on EIC controller to support
+> power key and volume up/down keys.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-This seems awkward compared to just having one cooling-cells in the /cpus node
-instead.
-
-What's it used for? I don't see any properties in the device nodes on meson-gxm
-that have any cooling-foo cells in them? So why should #cooling-cells be
-needed?
+Applied with "sprd:" added to the subject.
 
 
 -Olof
