@@ -1,15 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 4/6] arm64: dts: mediatek: Add missing cooling device properties for CPUs
-Date: Fri, 25 May 2018 11:10:04 +0530
-Message-ID: <49b1086c104b0ee22f6e992a0abb380de9320c09.1527225682.git.viresh.kumar@linaro.org>
+Subject: [PATCH 5/6] arm64: dts: rockchip: Add missing cooling device properties for CPUs
+Date: Fri, 25 May 2018 11:10:05 +0530
+Message-ID: <d7f32cb0c3b77901cb5e37320a454e5e1dfed958.1527225682.git.viresh.kumar@linaro.org>
 References: <cover.1527225682.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1527225682.git.viresh.kumar@linaro.org>
 In-Reply-To: <cover.1527225682.git.viresh.kumar@linaro.org>
 References: <cover.1527225682.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The cooling device properties, like "#cooling-cells" and
@@ -22,43 +22,156 @@ it is trying to bring up, so that it can register a cooling device.
 
 Add such missing properties.
 
+Do minor rearrangement as well to keep ordering consistent.
+
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 ++
- 2 files changed, 3 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi |  3 +++
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 12 ++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi |  8 ++++++--
+ 3 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 9213c966c224..d49fe125e770 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index b8e9da15e00c..902a0907ad34 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
 @@ -89,6 +89,7 @@
- 				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
- 			clock-names = "cpu", "intermediate";
- 			operating-points-v2 = <&cpu_opp_table>;
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			clocks = <&cru ARMCLK>;
 +			#cooling-cells = <2>;
+ 			dynamic-power-coefficient = <120>;
  			enable-method = "psci";
- 			clock-frequency = <1300000000>;
+ 			next-level-cache = <&l2>;
+@@ -100,6 +101,7 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x2>;
+ 			clocks = <&cru ARMCLK>;
++			#cooling-cells = <2>;
+ 			dynamic-power-coefficient = <120>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+@@ -111,6 +113,7 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x3>;
+ 			clocks = <&cru ARMCLK>;
++			#cooling-cells = <2>;
+ 			dynamic-power-coefficient = <120>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index ad91ced78649..c32f2a551a1f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -122,6 +122,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++
++			#cooling-cells = <2>; /* min followed by max */
  		};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 94597e33c806..abd2f15a544b 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -168,6 +168,7 @@
- 			reg = <0x001>;
+ 
+ 		cpu_l2: cpu@2 {
+@@ -129,6 +131,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x2>;
  			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			#cooling-cells = <2>;
- 			clocks = <&infracfg CLK_INFRA_CA53SEL>,
- 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 			clock-names = "cpu", "intermediate";
-@@ -193,6 +194,7 @@
- 			reg = <0x101>;
++
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu_l3: cpu@3 {
+@@ -136,6 +140,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x3>;
  			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			#cooling-cells = <2>;
- 			clocks = <&infracfg CLK_INFRA_CA57SEL>,
- 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 			clock-names = "cpu", "intermediate";
++
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu_b0: cpu@100 {
+@@ -152,6 +158,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
++
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu_b2: cpu@102 {
+@@ -159,6 +167,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
++
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+ 		cpu_b3: cpu@103 {
+@@ -166,6 +176,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
++
++			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index e0040b648f43..da935383a8f2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -108,8 +108,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+-			#cooling-cells = <2>; /* min followed by max */
+ 			clocks = <&cru ARMCLKL>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			dynamic-power-coefficient = <100>;
+ 		};
+ 
+@@ -119,6 +119,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKL>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			dynamic-power-coefficient = <100>;
+ 		};
+ 
+@@ -128,6 +129,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKL>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			dynamic-power-coefficient = <100>;
+ 		};
+ 
+@@ -137,6 +139,7 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKL>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			dynamic-power-coefficient = <100>;
+ 		};
+ 
+@@ -145,8 +148,8 @@
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
+-			#cooling-cells = <2>; /* min followed by max */
+ 			clocks = <&cru ARMCLKB>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			dynamic-power-coefficient = <436>;
+ 		};
+ 
+@@ -156,6 +159,7 @@
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKB>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			dynamic-power-coefficient = <436>;
+ 		};
+ 	};
 -- 
 2.15.0.194.g9af6a3dea062
