@@ -1,68 +1,110 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8996: Use UFS_GDSC for UFS
-Date: Fri, 25 May 2018 18:21:50 +0530
-Message-ID: <CAFp+6iH5bS5rmqZ1oy09COb2Rzuz6zbN7pFwxz0WTJNOYTTbkg@mail.gmail.com>
-References: <20180524223122.12601-1-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Johan Hovold <johan@kernel.org>
+Subject: [RFC PATCH 1/3] USB: serial: add device-tree support
+Date: Fri, 25 May 2018 14:52:55 +0200
+Message-ID: <20180525125257.29124-2-johan@kernel.org>
+References: <20180525125257.29124-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524223122.12601-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20180525125257.29124-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Manu Gautam <mgautam@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Lookup and associate serial-port device-tree nodes given a parent
+USB-interface node during probe.
 
-On Fri, May 25, 2018 at 4:01 AM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> The UFS host controller occationally (20%) fails to enable
-> gcc_ufs_axi_clk because the UFS GDSC is not enabled. In most cases it's
-> enabled through the UFS phy driver, but to make sure it's enabled let's
-> enable it directly from the UFS host controller directly as well.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 380e14591686..03c7904bda14 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -674,6 +674,8 @@
->                         vccq-max-microamp = <450000>;
->                         vccq2-max-microamp = <450000>;
->
-> +                       power-domains = <&gcc UFS_GDSC>;
-> +
+Note that a serial-port node must be named "serial" and have a "reg"
+property so that ports on multi-port interfaces can be distinguished.
 
-We shouldn't need power-domain with the phy. UFS_GDSC should
-be attached to the controller, as the phy is powered up only after
-the controller is power-up, and during collapse too, we turn off
-the phy first.
-Can you try testing keeping UFS_GDSC only with ufs controller and
-remove it from the ufs-phy node? We are doing same on the 4.14 release
-branch too for db820.
-I apologize to have missed this in your patch for ufs-related dt nodes.
-Can we please fix this now?
+	&usb_interface {
+		#address-cells = <1>;
+		#size-cells = <0>;
 
-Best regards
-Vivek
+		serial@0 {
+			reg = <0>;
+		};
+	};
 
->                         clock-names =
->                                 "core_clk_src",
->                                 "core_clk",
-> --
-> 2.17.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FIXME: binding doc
 
+Not-signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/usb/serial/usb-serial.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-
+diff --git a/drivers/usb/serial/usb-serial.c b/drivers/usb/serial/usb-serial.c
+index 44ecf0e2be9d..5a7ebe1e9fd6 100644
+--- a/drivers/usb/serial/usb-serial.c
++++ b/drivers/usb/serial/usb-serial.c
+@@ -35,6 +35,7 @@
+ #include <linux/usb/serial.h>
+ #include <linux/kfifo.h>
+ #include <linux/idr.h>
++#include <linux/of.h>
+ 
+ #define DRIVER_AUTHOR "Greg Kroah-Hartman <gregkh@linuxfoundation.org>"
+ #define DRIVER_DESC "USB Serial Driver core"
+@@ -97,7 +98,6 @@ static int allocate_minors(struct usb_serial *serial, int num_ports)
+ 		if (minor < 0)
+ 			goto error;
+ 		port->minor = minor;
+-		port->port_number = i;
+ 	}
+ 	serial->minors_reserved = 1;
+ 	mutex_unlock(&table_lock);
+@@ -589,6 +589,7 @@ static void usb_serial_port_release(struct device *dev)
+ 	kfifo_free(&port->write_fifo);
+ 	kfree(port->interrupt_in_buffer);
+ 	kfree(port->interrupt_out_buffer);
++	of_node_put(dev->of_node);
+ 	tty_port_destroy(&port->port);
+ 	kfree(port);
+ }
+@@ -857,6 +858,29 @@ static int setup_port_interrupt_out(struct usb_serial_port *port,
+ 	return 0;
+ }
+ 
++/* FIXME: move to separate compilation unit? */
++static struct device_node *find_port_node(struct usb_interface *intf, int port)
++{
++	struct device_node *node;
++	u32 reg;
++
++	for_each_child_of_node(intf->dev.of_node, node) {
++		if (!node->name || of_node_cmp(node->name, "serial") != 0)
++			continue;
++
++		if (of_property_read_u32(node, "reg", &reg))
++			continue;
++
++		if (reg == port)
++			break;
++	}
++
++	dev_dbg(&intf->dev, "node %pOF, port %d: %pOFP\n", intf->dev.of_node,
++			port, node);
++
++	return node;
++}
++
+ static int usb_serial_probe(struct usb_interface *interface,
+ 			       const struct usb_device_id *id)
+ {
+@@ -963,6 +987,7 @@ static int usb_serial_probe(struct usb_interface *interface,
+ 			retval = -ENOMEM;
+ 			goto err_free_epds;
+ 		}
++		port->port_number = i;
+ 		tty_port_init(&port->port);
+ 		port->port.ops = &serial_port_ops;
+ 		port->serial = serial;
+@@ -976,6 +1001,7 @@ static int usb_serial_probe(struct usb_interface *interface,
+ 		port->dev.bus = &usb_serial_bus_type;
+ 		port->dev.release = &usb_serial_port_release;
+ 		port->dev.groups = usb_serial_port_groups;
++		port->dev.of_node = find_port_node(interface, port->port_number);
+ 		device_initialize(&port->dev);
+ 	}
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.0
