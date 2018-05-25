@@ -1,46 +1,65 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH] usb: gadget: composite: fix delayed_status race condition when set_interface
-Date: Fri, 25 May 2018 17:24:57 +0800
-Message-ID: <75dc545f259a68d36d49c0c663d5cac19bb61a24.1527240183.git.chunfeng.yun@mediatek.com>
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: Re: [PATCH v3 4/8] drm/mediatek: add ddp component AAL1
+Date: Fri, 25 May 2018 17:25:33 +0800
+Message-ID: <1527240333.11190.3.camel@mtksdccf07>
+References: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
+         <1527215665-11937-5-git-send-email-stu.hsieh@mediatek.com>
+         <1527222238.27165.12.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527222238.27165.12.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-It happens when enable debug log, if set_alt() returns
-USB_GADGET_DELAYED_STATUS and usb_composite_setup_continue()
-is called before increasing count of @delayed_status,
-so fix it by using spinlock of @cdev->lock.
+Hi. CK:
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Tested-by: Jay Hsu <shih-chieh.hsu@mediatek.com>
----
- drivers/usb/gadget/composite.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Fri, 2018-05-25 at 12:23 +0800, CK Hu wrote:
+> Hi, Stu:
+> 
+> On Fri, 2018-05-25 at 10:34 +0800, stu.hsieh@mediatek.com wrote:
+> > From: Stu Hsieh <stu.hsieh@mediatek.com>
+> > 
+> > This patch add component AAL1 and
+> > rename AAL to AAL0
+> > 
+> > Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> > index 0828cf8bf85c..eee3c0cc2632 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> > @@ -41,7 +41,8 @@ enum mtk_ddp_comp_type {
+> >  };
+> >  
+> >  enum mtk_ddp_comp_id {
+> > -	DDP_COMPONENT_AAL,
+> > +	DDP_COMPONENT_AAL0,
+> > +	DDP_COMPONENT_AAL1,
+> 
+> Be sure compiling is success when you apply each patch of a series. I
+> think when you apply to this patch, it would cause compiling error
+> because some related modification is in the patch 'Add support for
+> mediatek SOC MT2712'. So move the modification from that patch to this
+> patch.
+> 
+> Regards,
+> CK
+I would move some modification related some component to associated
+patch from the patch 'Add support for mediatek SOC MT2712'
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index f242c2b..d2fa071 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -1719,6 +1719,8 @@ static int fill_ext_prop(struct usb_configuration *c, int interface, u8 *buf)
- 		 */
- 		if (w_value && !f->get_alt)
- 			break;
-+
-+		spin_lock(&cdev->lock);
- 		value = f->set_alt(f, w_index, w_value);
- 		if (value == USB_GADGET_DELAYED_STATUS) {
- 			DBG(cdev,
-@@ -1728,6 +1730,7 @@ static int fill_ext_prop(struct usb_configuration *c, int interface, u8 *buf)
- 			DBG(cdev, "delayed_status count %d\n",
- 					cdev->delayed_status);
- 		}
-+		spin_unlock(&cdev->lock);
- 		break;
- 	case USB_REQ_GET_INTERFACE:
- 		if (ctrl->bRequestType != (USB_DIR_IN|USB_RECIP_INTERFACE))
--- 
-1.9.1
+Regards,
+Stu
+
+> 
+> >  	DDP_COMPONENT_BLS,
+> >  	DDP_COMPONENT_COLOR0,
+> >  	DDP_COMPONENT_COLOR1,
+> 
+> 
