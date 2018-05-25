@@ -1,66 +1,61 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 8/9] regulator: bd71837: BD71837 PMIC regulator driver
-Date: Fri, 25 May 2018 11:14:23 +0100
-Message-ID: <20180525101423.GH4828@sirena.org.uk>
-References: <20180524060036.GI4249@localhost.localdomain>
- <20180524141427.GU4828@sirena.org.uk>
- <042F8805D2046347BB8420BEAE397A4016C06B60@WILL-MAIL002.REu.RohmEu.com>
- <20180525072253.GC16888@localhost.localdomain>
+Subject: Re: [PATCH 4/9] regulator: bd71837: Devicetree bindings for BD71837
+ regulators
+Date: Fri, 25 May 2018 11:24:58 +0100
+Message-ID: <20180525102458.GJ4828@sirena.org.uk>
+References: <20180524055752.GE4249@localhost.localdomain>
+ <20180524140118.GS4828@sirena.org.uk>
+ <042F8805D2046347BB8420BEAE397A4016C06B47@WILL-MAIL002.REu.RohmEu.com>
+ <20180524175721.GB4828@sirena.org.uk>
+ <20180525055430.GB16888@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5joxkA65nhhP20dL"
+        protocol="application/pgp-signature"; boundary="jmkJtp15SxLq1SbD"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180525072253.GC16888@localhost.localdomain>
+In-Reply-To: <20180525055430.GB16888@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matti Vaittinen <mazziesaccount@gmail.com>
 Cc: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>, "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
 List-Id: devicetree@vger.kernel.org
 
 
---5joxkA65nhhP20dL
+--jmkJtp15SxLq1SbD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 25, 2018 at 10:22:53AM +0300, Matti Vaittinen wrote:
-> On Thu, May 24, 2018 at 05:51:27PM +0000, Vaittinen, Matti wrote:
+On Fri, May 25, 2018 at 08:54:30AM +0300, Matti Vaittinen wrote:
+> On Thu, May 24, 2018 at 06:57:21PM +0100, Mark Brown wrote:
 
-> > > devm_regulator_regster()
+> > You can look at the regulators node within the parent device, you know
+> > that in Linux the parent device will be the MFD.
 
-> > Makes sense. Thanks
+> So I should parse the device-tree in MFD my driver in order to locate
+> the regulators node? Isn't that somewhat like code dublication? If we
+> rely on compatibles we can avoid device-tree parsing in MFD driver,
 
-> I was going to do=20
+No, there's no need to do this - the child can just look at the of_node
+of the parent since it can never be instantiated otherwise.
 
-> -       pmic =3D kzalloc(sizeof(struct bd71837_pmic), GFP_KERNEL);
-> +       pmic =3D devm_kzalloc(&pdev->dev, sizeof(struct bd71837_pmic),
-> +                           GFP_KERNEL);
+> right? An in-tree example of this is:
 
-> and
+There are some bad examples (and some where the same regulators can get
+used with multiple different parents) but that's no reason not to follow
+good practice.
 
-> -               rdev =3D regulator_register(desc, &config);
-> +               rdev =3D devm_regulator_register(&pdev->dev, desc, &confi=
-g);
->=20
-> but is there now a race regarding freeing the pmic structure and
-> unregistering the regulator?
-
-Why?  devm_ stuff gets unwound in the opposite order to the order in
-which it was allocated.
-
---5joxkA65nhhP20dL
+--jmkJtp15SxLq1SbD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsH4f8ACgkQJNaLcl1U
-h9DKDQf4uSA3vgrIWIUP402K0U92AnqIGE1tuwBS18LG8nCPC8ZFZ1eCX6TiGT4Y
-EZazDly8jgR+PHzV7EqWpfw9HwhYjrRbBzuAbC7JdtQQVRT1e71OPiE8DIS8j9Il
-3T7/T3olewntmTbmYB74HC/lkR/eLm7b4n26JNVZQE0UuP1YV6RPi3gAHlFGmZov
-wEPbl4JhzJoDL3Wwjh0YzU66ZwwvgpvKsS6xBITDUn23npchiK5zJ3ue++ZeW4P9
-UhudtTqJr7Z8m5LKoMnGFPYeo9m5TjOKBxoCmoQFvoCo7EykP1DXeITA4uXnex3L
-w/0IG0ArdpwwX/Wuq65wz7EcL4jn
-=OtVA
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsH5HoACgkQJNaLcl1U
+h9Drrwf9H6otj10qIc8vXKx60U0IrSi0dtXfTKSeJMWeuElp1J7E6COsbouwImXE
+uh+FgmF2eC5HgXWrkELT7Sc+9FfzxOHmievxmnB+cz5oL3Q64FkLO1W3vV6embAk
+VF3Su3R+RPF+0jAFJm1cqOOVXWYKc1q9Dd8VTx3qCNXF93rCA9Q7V1XEBgIGlQqp
+wRWI6/1gWaVatWtwGYqOXD9YWxHwMGSZu9QbyxYGY607df0pohuTQH5kHGXAGaVC
+cNwyAH20E2i0YJuWhV4y7LDB9wi8+2dtQ57WlB+AT1A/jEQ41vrgMEt3YoubcCJf
+KVuH0O+wzznJSPbgEvlcV2+nMIhZOQ==
+=Ma5W
 -----END PGP SIGNATURE-----
 
---5joxkA65nhhP20dL--
+--jmkJtp15SxLq1SbD--
