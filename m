@@ -1,15 +1,15 @@
 Return-Path: <SRS0=xPmq=IM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:52954 "EHLO
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:52870 "EHLO
         hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S935967AbeEYNwn (ORCPT
+        by vger.kernel.org with ESMTP id S933110AbeEYNlD (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 May 2018 09:52:43 -0400
+        Fri, 25 May 2018 09:41:03 -0400
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2.2 2/2] smiapp: Support the "rotation" property
-Date: Fri, 25 May 2018 16:52:35 +0300
-Message-Id: <20180525135235.12386-1-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180525134055.11121-1-sakari.ailus@linux.intel.com>
-References: <20180525134055.11121-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v2.1 2/2] smiapp: Support the "rotation" property
+Date: Fri, 25 May 2018 16:40:55 +0300
+Message-Id: <20180525134055.11121-1-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180525122726.3409-3-sakari.ailus@linux.intel.com>
+References: <20180525122726.3409-3-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, andy.yeh@intel.com, sebastian.reichel@collabora.co.uk
@@ -21,9 +21,9 @@ as the pixel order.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
-since v2.2:
+since v2:
 
-- Fix property name in code.
+- Fix the property name in the commit message
 
  .../devicetree/bindings/media/i2c/nokia,smia.txt         |  2 ++
  drivers/media/i2c/smiapp/smiapp-core.c                   | 16 ++++++++++++++++
@@ -43,7 +43,7 @@ index 33f10a94c381..6f509657470e 100644
  
  Endpoint node mandatory properties
 diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index e1f8208581aa..e9e0f21efc2a 100644
+index e1f8208581aa..32286df6ab43 100644
 --- a/drivers/media/i2c/smiapp/smiapp-core.c
 +++ b/drivers/media/i2c/smiapp/smiapp-core.c
 @@ -2764,6 +2764,7 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
@@ -58,7 +58,7 @@ index e1f8208581aa..e9e0f21efc2a 100644
  
  	dev_dbg(dev, "lanes %u\n", hwcfg->lanes);
  
-+	rval = fwnode_property_read_u32(fwnode, "rotation", &rotation);
++	rval = fwnode_property_read_u32(fwnode, "upside-down", &rotation);
 +	if (!rval) {
 +		switch (rotation) {
 +		case 180:
