@@ -1,68 +1,67 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: new binding for Ilitek ILI9341
- display panels
-Date: Fri, 25 May 2018 15:14:33 -0500
-Message-ID: <c4ee580a-4adf-278f-1be4-be4e5cb53660@lechnology.com>
-References: <20180525193623.15533-1-david@lechnology.com>
- <20180525193623.15533-4-david@lechnology.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v2 2/4] arm64: Add Mellanox BlueField SoC config option
+Date: Fri, 25 May 2018 16:17:14 -0400
+Message-ID: <1527279436-14773-2-git-send-email-lsun@mellanox.com>
+References: <1527279436-14773-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180525193623.15533-4-david@lechnology.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Nitin Patil <nitin@mindsensors.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527279436-14773-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, Liming Sun <lsun@mellanox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMjUvMjAxOCAwMjozNiBQTSwgRGF2aWQgTGVjaG5lciB3cm90ZToKPiBUaGlzIGFkZHMg
-YSBuZXcgYmluZGluZyBmb3IgSWxpdGVrIElMSTkzNDEgZGlzcGxheSBwYW5lbHMuIEl0IGluY2x1
-ZGVzCj4gYSBjb21wYXRpYmxlIHN0cmluZyBmb3Igb25lIGRpc3BsYXkgKG1vcmUgY2FuIGJlIGFk
-ZGVkIGluIHRoZSBmdXR1cmUpLgo+IAo+IFRoZSB2ZW5kb3IgcHJlZml4ICJub25hbWUiIGlzIHVz
-ZWQgYmVjYXVzZSB0aGUgdmVuZG9yIGlzIG5vdCBrbm93bi4KCkxvb2tzIGxpa2UgSSBmb3Jnb3Qg
-dG8gdXBkYXRlICJub25hbWUiIHRvICJhZGFmcnVpdCIgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLgpQ
-YXRjaCBpcyBhcyBpbnRlbmRlZCB0aG91Z2guCgo+IFRoZSBZWDI0MFFWMjktVCBwYW5lbFsxXSBp
-cyBmb3VuZCwgZm9yIGV4YW1wbGUsIGluIGFuIEFkYWZydWl0IGJyZWFrb3V0Cj4gYm9hcmRbMl0g
-YW5kIGluIE1pbmRzZW5zb3JzJyBQaVN0b3Jtc1szXS4KPiAKPiBbMV06IGh0dHBzOi8vY2RuLWxl
-YXJuLmFkYWZydWl0LmNvbS9hc3NldHMvYXNzZXRzLzAwMC8wNDYvODc5L29yaWdpbmFsL1NQRUMt
-WVgyNDBRVjI5LVRfUmV2LkFfXzFfLnBkZgo+IFsyXTogaHR0cHM6Ly93d3cuYWRhZnJ1aXQuY29t
-L3Byb2R1Y3QvMjQ3OAo+IFszXTogaHR0cDovL3d3dy5taW5kc2Vuc29ycy5jb20vc3RlbS13aXRo
-LXJvYm90aWNzLzEzLXBpc3Rvcm1zLXYyLWJhc2Uta2l0LXJhc3BiZXJyeS1waS1icmFpbi1mb3It
-bGVnby1yb2JvdAo+IAo+IFNpZ25lZC1vZmYtYnk6IERhdmlkIExlY2huZXIgPGRhdmlkQGxlY2hu
-b2xvZ3kuY29tPgo+IC0tLQo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkzNDEu
-dHh0ICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKwo+ICAgMSBmaWxlIGNoYW5nZWQsIDI3
-IGluc2VydGlvbnMoKykKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQKPiAKPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkz
-NDEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVr
-LGlsaTkzNDEudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAu
-LjE2OWIzMmU0ZWU0ZQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0MS50eHQKPiBAQCAtMCwwICsxLDI3
-IEBACj4gK0lsaXRlayBJTEk5MzQxIGRpc3BsYXkgcGFuZWxzCj4gKwo+ICtUaGlzIGJpbmRpbmcg
-aXMgZm9yIGRpc3BsYXkgcGFuZWxzIHVzaW5nIGFuIElsaXRlayBJTEk5MzQxIGNvbnRyb2xsZXIg
-aW4gU1BJCj4gK21vZGUuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGli
-bGU6CSJhZGFmcnVpdCx5eDI0MHF2MjkiLCAiaWxpdGVrLGlsaTkzNDEiCj4gKy0gZGMtZ3Bpb3M6
-CUQvQyBwaW4KPiArLSByZXNldC1ncGlvczoJUmVzZXQgcGluCj4gKwo+ICtUaGUgbm9kZSBmb3Ig
-dGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29udHJvbGxlciwgaGVu
-Y2UKPiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAuLi9zcGkvc3BpLWJ1
-cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICst
-IHJvdGF0aW9uOglwYW5lbCByb3RhdGlvbiBpbiBkZWdyZWVzIGNvdW50ZXIgY2xvY2t3aXNlICgw
-LDkwLDE4MCwyNzApCj4gKy0gYmFja2xpZ2h0OglwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2
-aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+ICsKPiArRXhhbXBsZToKPiArCWRpc3BsYXlAMHsK
-PiArCQljb21wYXRpYmxlID0gImFkYWZydWl0LHl4MjQwcXYyOSIsICJpbGl0ZWssaWxpOTM0MSI7
-Cj4gKwkJcmVnID0gPDA+Owo+ICsJCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDMyMDAwMDAwPjsKPiAr
-CQlkYy1ncGlvcyA9IDwmZ3BpbzAgOSBHUElPX0FDVElWRV9ISUdIPjsKPiArCQlyZXNldC1ncGlv
-cyA9IDwmZ3BpbzAgOCBHUElPX0FDVElWRV9ISUdIPjsKPiArCQlyb3RhdGlvbiA9IDwyNzA+Owo+
-ICsJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPiArCX07Cj4gCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This commit introduces config option for Mellanox BlueField SoC,
+which can be used to build the SoC specific drivers, and enables
+it by default in configs/defconfig.
+
+Reviewed-by: David Woods <dwoods@mellanox.com>
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+ arch/arm64/Kconfig.platforms | 6 ++++++
+ arch/arm64/configs/defconfig | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 2b1535c..74ad03f 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -110,6 +110,12 @@ config ARCH_MESON
+ 	help
+ 	  This enables support for the Amlogic S905 SoCs.
+ 
++config ARCH_MLNX_BLUEFIELD
++	bool "Mellanox BlueField SoC Family"
++	select SOC_MLNX
++	help
++	  This enables support for the Mellanox BlueField SoC.
++
+ config ARCH_MVEBU
+ 	bool "Marvell EBU SoC Family"
+ 	select ARMADA_AP806_SYSCON
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 1c98939..842f607 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -43,6 +43,7 @@ CONFIG_ARCH_LG1K=y
+ CONFIG_ARCH_HISI=y
+ CONFIG_ARCH_MEDIATEK=y
+ CONFIG_ARCH_MESON=y
++CONFIG_ARCH_MLNX_BLUEFIELD=y
+ CONFIG_ARCH_MVEBU=y
+ CONFIG_ARCH_QCOM=y
+ CONFIG_ARCH_ROCKCHIP=y
+-- 
+1.8.3.1
