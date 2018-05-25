@@ -1,101 +1,90 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: [PATCH v6 3/9] docs: Add Generic Counter interface documentation
-Date: Fri, 25 May 2018 09:00:04 -0400
-Message-ID: <20180525130004.GA3751@sophia>
-References: <cover.1526487615.git.vilhelm.gray@gmail.com>
- <aa4d62315bb11ddc66d0e1a685c81b1721ffe624.1526487615.git.vilhelm.gray@gmail.com>
- <20180520163109.22b11af8@archlinux>
- <20180521134729.GB5723@sophia>
- <20180522180805.2b61f0ed@archlinux>
- <cd045792-8ed2-8d83-231a-661975ffc7c5@st.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH v3 6/6] tty/serial: atmel: changed the driver to work
+ under at91-usart mfd
+Date: Fri, 25 May 2018 15:35:40 +0200
+Message-ID: <f817c82a-95b6-afb3-e662-c481a877cf01@sorico.fr>
+References: <20180511103822.31698-1-radu.pirea@microchip.com>
+ <20180511103822.31698-7-radu.pirea@microchip.com>
+ <4a75568e-a52e-3872-f465-d707372a5c12@sorico.fr>
+ <95a51c6c69bf1a2422f545ac1f06846ebcdb186a.camel@microchip.com>
+ <4d70c73e-9db7-bdff-7414-04a4843acae3@sorico.fr>
+ <391de5c1-45d7-4773-fe57-7f2bc747214b@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cd045792-8ed2-8d83-231a-661975ffc7c5@st.com>
+In-Reply-To: <391de5c1-45d7-4773-fe57-7f2bc747214b@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, benjamin.gaignard@st.com, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Radu Pirea <radu.pirea@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, lee.jones@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 11:26:11AM +0200, Fabrice Gasnier wrote:
->On 05/22/2018 07:08 PM, Jonathan Cameron wrote:
->>>>> +* Quadrature x2 Rising:
->>>>> +  Rising edges on either quadrature pair signals updates the respective
->>>>> +  count. Quadrature encoding determines the direction.  
->>>> This one I've never met.  Really? There are devices who do this form
->>>> of crazy? It gives really uneven counting and I'm failing to see when
->>>> it would ever make sense...  References for these odd corner cases
->>>> would be good.
+On 25/05/2018 14:17, Radu Pirea wrote:
+> 
+> 
+> On 05/15/2018 04:14 PM, Richard Genoud wrote:
+>> On 15/05/2018 14:47, Radu Pirea wrote:
+>>> On Mon, 2018-05-14 at 12:57 +0200, Richard Genoud wrote:
+>>>> After your patch, the DMA is not selected anymore:
+>>>> atmel_usart_serial atmel_usart_serial.0.auto: TX channel not
+>>>> available, switch to pio
+>>>> instead of:
+>>>> atmel_usart fffff200.serial: using dma1chan2 for tx DMA transfers
 >>>>
+>>> Fixed.
+>>>> And the kernel doesn't log anymore on the serial console, despite the
+>>>> loglevel=8
+>>>> (after reverting this series, the kernel logs reappears on the serial
+>>>> console)
 >>>>
->>>> __|---|____|-----|____
->>>> ____|----|____|-----|____
+>>> Which serial are you using as console?
+>> fffff200.serial (sam9g35-cm)
+>> ( stdout-path = "serial0:115200n8"; in the DTS )
+>>
+>> With this series applied, all the kernel log goes on the screen.
+>> Without, it goes on the serial debug.
+>>
+> I tested again with archlinux arm and poky-linux4sam release as distros
+> and kernel log goes on the serial debug. Can you give me more details
+> like cmdline?
+I used kernel 4.17-rc6
+at91_dt_defconfig
+at91sam9g35ek.dtb
+
+Kernel command line: root=/dev/mtdblock1 rw rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs
+( the one from the DTS )
+
+Detailed instructions:
+
+git checkout v4.17-rc6 
+ARCH=arm CROSS_COMPILE=path_to_my_Xchain/arm-linux- LOADADDR=0x20008000 make -j 12 at91_dt_defconfig
+ARCH=arm CROSS_COMPILE=path_to_my_Xchain/arm-linux- LOADADDR=0x20008000 make -j 12 uImage at91sam9g35ek.dtb
+cp arch/arm/boot/uImage arch/arm/boot/dts/at91sam9g35ek.dtb /tftpboot/
+
+>From uboot:
+tftpboot 0x20007FC0 uImage
+tftpboot 0x26400000 at91sam9g35ek.dtb
+bootm 0x20007FC0 - 0x26400000
+
+[ I see the logs on the serial debug ]
+
+git am \[PATCH\ v3\ [1-6]*
+
+ARCH=arm CROSS_COMPILE=path_to_my_Xchain/arm-linux- LOADADDR=0x20008000 make -j 12 uImage at91sam9g35ek.dtb
+cp arch/arm/boot/uImage arch/arm/boot/dts/at91sam9g35ek.dtb /tftpboot/
+
+>From uboot:
+tftpboot 0x20007FC0 uImage
+tftpboot 0x26400000 at91sam9g35ek.dtb
+bootm 0x20007FC0 - 0x26400000
+
+[ I don't see the logs on the serial debug anymore ]
+
+
+>>>> (tests done on sam9g35)
 >>>>
->>>> 001122222223334444444  
->>> That's the same reaction I had when I discovered this -- in fact the
->>> STM32 LP Timer is the first time I've come across such a quadrature
->>> mode. I'm not sure of the use case for this mode, because positioning
->>> wouldn't be precise as you've pointed out. Perhaps Fabrice or Benjamin
->>> can probe the ST guys responsible for this design choice to figure out
->>> the rationale.
->> Hmm.  My inclination would be to not support it unless someone can up
->> with a meaningful use.  We are adding ABI (be it not much) for a case
->> that to us makes no sense.
->
->Hi Jonathan, William,
->
->Sorry for the late reply. To follow your advise, we can probably drop
->this for now. I think simple counter, or quadrature x4 will be mostly
->used for now. As you pointed out, there's not much ABI for x2
->rising/falling cases. It will not be a big deal to add it later if needed.
->
->I can help to update (remove & test) this in LP-Timer counter driver if
->you wish.
->
->Please let me know,
->
->Thanks,
->Fabrice
-
-All right, let's postpone the COUNT_FUNCTION_QUADRATURE_X2_RISING and
-COUNT_FUNCTION_QUADRATURE_X2_FALLING modes for now. Fabrice, send me
-over an update patch removing these modes from the LP-Timer counter
-driver and I'll squash it in with the next patchset revision.
-
-I'll keep the rest of the quadrature modes the same as they are used in
-the other counter drivers as well (with the remaining "Quadrature x1 B"
-staying to complete the pattern) and I've seen real world use cases for
-each:
-
-    * COUNT_FUNCTION_QUADRATURE_X1_A
-    * COUNT_FUNCTION_QUADRATURE_X1_B
-    * COUNT_FUNCTION_QUADRATURE_X2_A
-    * COUNT_FUNCTION_QUADRATURE_X2_B
-
-Adding support in the future for "Quadrature x2 Rising" and "Quadrature
-x2 Falling" will be trivial, so really the main requirement in order to
-bring these modes back is to provide reasonable use cases for them. My
-suspicion is that there was some rationale for these Quadrature x2 modes
-in the STM32 LP-Timer -- afterall, why else would the engineers go
-through the trouble of designing and implementing it -- but until that
-use case is clear, it's best to wait on changing the Generic Counter ABI
-lest we end up with an interface that is never used in the real world.
-
-William Breathitt Gray
-
->
->> 
->> Looks rather like the sort of thing that is a side effect of the
->> implementation rather than deliberate.
->> 
->>> I'm leaving in these modes for now, as they do exist in the STM32 LP
->>> Timer, but it does make me curious what the intentions for them were
->>> (perhaps use cases outside of traditional quadrature encoder
->>> positioning).
->>>
->> Sure if there is a usecase then fair enough.
->> 
->> Jonathan
->> 
->> 
+>>> I will consider the rest of suggestions.
+>>>> regards,
+>>>> Richard
+>>
