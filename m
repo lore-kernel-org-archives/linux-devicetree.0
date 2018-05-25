@@ -1,67 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 5/5] MAINTAINERS: Add Actions Semi S900 pinctrl entries
-Date: Fri, 25 May 2018 14:12:06 +0200
-Message-ID: <CACRpkdaTQOWA_5nyasxTwE=cGRis+uaLhw66pmkd+qPxMC6FFQ@mail.gmail.com>
-References: <20180520051736.4842-1-manivannan.sadhasivam@linaro.org>
- <20180520051736.4842-6-manivannan.sadhasivam@linaro.org> <CACRpkdYF7a-uwye0uwn-pT9Bprj74q1-Pcbq4WLyiE+kYY4j7w@mail.gmail.com>
- <25d1c303-71d7-8c38-880f-7bb0e133a876@suse.de> <20180525050103.3hg3u2v5mvftqhht@linaro.org>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: Re: [PATCH v3 6/6] tty/serial: atmel: changed the driver to work
+ under at91-usart mfd
+Date: Fri, 25 May 2018 15:17:39 +0300
+Message-ID: <391de5c1-45d7-4773-fe57-7f2bc747214b@microchip.com>
+References: <20180511103822.31698-1-radu.pirea@microchip.com>
+ <20180511103822.31698-7-radu.pirea@microchip.com>
+ <4a75568e-a52e-3872-f465-d707372a5c12@sorico.fr>
+ <95a51c6c69bf1a2422f545ac1f06846ebcdb186a.camel@microchip.com>
+ <4d70c73e-9db7-bdff-7414-04a4843acae3@sorico.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525050103.3hg3u2v5mvftqhht@linaro.org>
+In-Reply-To: <4d70c73e-9db7-bdff-7414-04a4843acae3@sorico.fr>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, liuwei@actions-semi.com, 96boards@ucrobotics.com, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
+To: Richard Genoud <richard.genoud@gmail.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, lee.jones@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 7:01 AM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
 
-> FYI, I have ordered S700 based Cubieboard and will work on adding support for
-> that first. I still don't have access to S500 board yet since it is not
-> available on my region. Will find a way to get this asap.
 
-Awesome, then we can count on some actions action here.
-
->> Also I had been investing efforts in explaining the upstreaming process
->> to Actions, last in November. I see Thomas Liau and Jeff Chen missing in
->> CC and I have not seen any Reviewed-by or Acked-by from anyone at
->> Actions on this and the preceding series. There are more chips than the
->> one on Linaro's 96board, so I would prefer to assure that the design
->> works for all. Thus I am very critical of you applying the patches
->> without waiting for review by Actions.
->
-> I don't think Actions would be interested in any upstreaming efforts. It
-> is our (comunity) responsibility to add support for that in order to
-> have our boards running mainline kernel and that's what we both have been
-> doing. Moreover I only saw once David Liau responded to your patchset and
-> there isn't much further. So how can you expect the subsystem maintainer's
-> to hold the patch series waiting for a so far silent SoC manufacturer's
-> response?
-
-They are certainly informed now! :D
-
-Actions semi folks, please familiarize yourself with the following:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/tree/Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt?h=devel
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/tree/drivers/pinctrl/actions?h=devel
-
-If you have any concerns with this, now is a good time to share them.
-
-> I
-> did ask you to add me as Co-Maintainer but you didn't responded to that.
-> I know that I can't send any pull requests to Arnd, but we should sort
-> it out IMO. Also, if you are completely swamped, then I take take up the
-> maintainership role now inorder to keep the things moving. TBH I don't
-> want my patches to be floating for months without any reason.
-
-Doing some comainatinership can very well include doing pull
-requests as long as you agree on who does what.
-
-I think it may be a bit late for the next merge window right now,
-but if you simply queue up stuff in some git tree and ask
-Srothwell to include it in linux-next then Andreas can very well
-pull it to his tree from there and then to ARM SoC or you can
-queue patches as well.
-
-Yours,
-Linus Walleij
+On 05/15/2018 04:14 PM, Richard Genoud wrote:
+> On 15/05/2018 14:47, Radu Pirea wrote:
+>> On Mon, 2018-05-14 at 12:57 +0200, Richard Genoud wrote:
+>>> After your patch, the DMA is not selected anymore:
+>>> atmel_usart_serial atmel_usart_serial.0.auto: TX channel not
+>>> available, switch to pio
+>>> instead of:
+>>> atmel_usart fffff200.serial: using dma1chan2 for tx DMA transfers
+>>>
+>> Fixed.
+>>> And the kernel doesn't log anymore on the serial console, despite the
+>>> loglevel=8
+>>> (after reverting this series, the kernel logs reappears on the serial
+>>> console)
+>>>
+>> Which serial are you using as console?
+> fffff200.serial (sam9g35-cm)
+> ( stdout-path = "serial0:115200n8"; in the DTS )
+> 
+> With this series applied, all the kernel log goes on the screen.
+> Without, it goes on the serial debug.
+> 
+I tested again with archlinux arm and poky-linux4sam release as distros 
+and kernel log goes on the serial debug. Can you give me more details 
+like cmdline?
+>>> (tests done on sam9g35)
+>>>
+>> I will consider the rest of suggestions.
+>>> regards,
+>>> Richard
+> 
