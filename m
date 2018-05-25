@@ -1,67 +1,61 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 01/11] PM / devfreq: Init user limits from OPP limits, not viceversa
-Date: Fri, 25 May 2018 13:30:33 -0700
-Message-ID: <20180525203043.249193-2-mka@chromium.org>
-References: <20180525203043.249193-1-mka@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525203043.249193-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v2 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
+ BlueField SoC
+Date: Fri, 25 May 2018 16:17:15 -0400
+Message-ID: <1527279436-14773-3-git-send-email-lsun@mellanox.com>
+References: <1527279436-14773-1-git-send-email-lsun@mellanox.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527279436-14773-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, Liming Sun <lsun@mellanox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding
-the devfreq device") introduced the initialization of the user
-limits min/max_freq from the lowest/highest available OPPs. Later
-commit f1d981eaecf8 ("PM / devfreq: Use the available min/max
-frequency") added scaling_min/max_freq, which actually represent
-the frequencies of the lowest/highest available OPP. scaling_min/
-max_freq are initialized with the values from min/max_freq, which
-is totally correct in the context, but a bit awkward to read.
-
-Swap the initialization and assign scaling_min/max_freq with the
-OPP freqs and then the user limts min/max_freq with scaling_min/
-max_freq.
-
-Needless to say that this change is a NOP, intended to improve
-readability.
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: David Woods <dwoods@mellanox.com>
+Signed-off-by: Liming Sun <lsun@mellanox.com>
 ---
- drivers/devfreq/devfreq.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/soc/mellanox/tmfifo.txt      | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index fe2af6aa88fc..0057ef5b0a98 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -604,21 +604,21 @@ struct devfreq *devfreq_add_device(struct device *dev,
- 		mutex_lock(&devfreq->lock);
- 	}
- 
--	devfreq->min_freq = find_available_min_freq(devfreq);
--	if (!devfreq->min_freq) {
-+	devfreq->scaling_min_freq = find_available_min_freq(devfreq);
-+	if (!devfreq->scaling_min_freq) {
- 		mutex_unlock(&devfreq->lock);
- 		err = -EINVAL;
- 		goto err_dev;
- 	}
--	devfreq->scaling_min_freq = devfreq->min_freq;
-+	devfreq->min_freq = devfreq->scaling_min_freq;
- 
--	devfreq->max_freq = find_available_max_freq(devfreq);
--	if (!devfreq->max_freq) {
-+	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
-+	if (!devfreq->scaling_max_freq) {
- 		mutex_unlock(&devfreq->lock);
- 		err = -EINVAL;
- 		goto err_dev;
- 	}
--	devfreq->scaling_max_freq = devfreq->max_freq;
-+	devfreq->max_freq = devfreq->scaling_max_freq;
- 
- 	dev_set_name(&devfreq->dev, "devfreq%d",
- 				atomic_inc_return(&devfreq_no));
+diff --git a/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+new file mode 100644
+index 0000000..0a362f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+@@ -0,0 +1,20 @@
++* Mellanox BlueField SoC TmFifo
++
++BlueField TmFifo provides a shared FIFO between the target and the
++external host machine, which can be accessed via USB or PCIe.
++
++Required properties:
++
++- compatible:	Should be "mellanox,bf-tmfifo"
++- reg:		Physical base address and length of Rx/Tx block
++- interrupts:	The interrupt number of Rx low water mark, Rx high water mark
++		Tx low water mark, Tx high water mark respectively.
++
++Example:
++
++tmfifo@800a20 {
++	compatible = "mellanox,bf-tmfifo";
++	reg = <0x00800a20 0x00000018
++	       0x00800a40 0x00000018>;
++	interrupts = <41, 42, 43, 44>;
++};
 -- 
-2.17.0.921.gf22659ad46-goog
+1.8.3.1
