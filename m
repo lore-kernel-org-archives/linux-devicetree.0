@@ -1,143 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/8] driver core: make deferring probe after init optional
-Date: Fri, 25 May 2018 12:35:00 -0500
-Message-ID: <CAL_JsqKXyBZjpz3dvR+7Hign7Z3iwnvKWrAUdoPDWWBgjWmQLg@mail.gmail.com>
-References: <20180524175024.19874-1-robh@kernel.org> <20180524175024.19874-2-robh@kernel.org>
- <20180524190031.GB31019@kroah.com> <CAL_JsqJK69A3W=YrSfvPetM95CROOJhU1bW1rMEOGtji=t0ORQ@mail.gmail.com>
- <92e3be10-e65a-99e9-6ef7-f11ded6a35f9@arm.com>
+From: David Lechner <david@lechnology.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v11_00/27]_ARM:_davinci:_convert_to_common_clo?=
+ =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
+Date: Fri, 25 May 2018 13:21:12 -0500
+Message-ID: <9ca9d240-f556-cb4f-1a58-4a55c379a02f@lechnology.com>
+References: <20180518164829.27052-1-david@lechnology.com>
+ <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <92e3be10-e65a-99e9-6ef7-f11ded6a35f9@arm.com>
+In-Reply-To: <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 7:20 AM, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 24/05/18 21:57, Rob Herring wrote:
+On 05/22/2018 04:38 AM, Sekhar Nori wrote:
+> Hi David,
+> 
+> On Friday 18 May 2018 10:18 PM, David Lechner wrote:
+>> This series converts mach-davinci to use the common clock framework.
 >>
->> On Thu, May 24, 2018 at 2:00 PM, Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->>>
->>> On Thu, May 24, 2018 at 12:50:17PM -0500, Rob Herring wrote:
->>>>
->>>> Deferred probe will currently wait forever on dependent devices to
->>>> probe,
->>>> but sometimes a driver will never exist. It's also not always critical
->>>> for
->>>> a driver to exist. Platforms can rely on default configuration from the
->>>> bootloader or reset defaults for things such as pinctrl and power
->>>> domains.
->>>> This is often the case with initial platform support until various
->>>> drivers
->>>> get enabled. There's at least 2 scenarios where deferred probe can
->>>> render
->>>> a platform broken. Both involve using a DT which has more devices and
->>>> dependencies than the kernel supports. The 1st case is a driver may be
->>>> disabled in the kernel config. The 2nd case is the kernel version may
->>>> simply not have the dependent driver. This can happen if using a newer
->>>> DT
->>>> (provided by firmware perhaps) with a stable kernel version.
->>>>
->>>> Subsystems or drivers may opt-in to this behavior by calling
->>>> driver_deferred_probe_check_init_done() instead of just returning
->>>> -EPROBE_DEFER. They may use additional information from DT or kernel's
->>>> config to decide whether to continue to defer probe or not.
->>>>
->>>> Cc: Alexander Graf <agraf@suse.de>
->>>> Signed-off-by: Rob Herring <robh@kernel.org>
->>>> ---
->>>>   drivers/base/dd.c      | 17 +++++++++++++++++
->>>>   include/linux/device.h |  2 ++
->>>>   2 files changed, 19 insertions(+)
->>>>
->>>> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
->>>> index c9f54089429b..d6034718da6f 100644
->>>> --- a/drivers/base/dd.c
->>>> +++ b/drivers/base/dd.c
->>>> @@ -226,6 +226,16 @@ void device_unblock_probing(void)
->>>>        driver_deferred_probe_trigger();
->>>>   }
->>>>
->>>> +int driver_deferred_probe_check_init_done(struct device *dev, bool
->>>> optional)
->>>> +{
->>>> +     if (optional && initcalls_done) {
->>>
->>>
->>> Wait, what's the "optional" mess here?
+>> The series works like this, the first 3 patches fix some issues with the clock
+>> drivers that have already been accepted into the mainline kernel.
 >>
+>> Then, starting with "ARM: davinci: pass clock as parameter to
+>> davinci_timer_init()", we get the mach code ready for the switch by adding the
+>> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
+>> around the legacy clocks so that we can switch easily between the old and the
+>> new.
 >>
->> My intent was that subsystems just always call this function and never
->> return EPROBE_DEFER themselves. Then the driver core can make
->> decisions as to what to do (such as the timeout added in the next
->> patch). Or it can print common error/debug messages. So optional is a
->> hint to allow subsystems per device control.
->
->
-> Maybe just driver_defer_probe() might be a more descriptive name? To me,
-> calling "foo_check_x()" with a parameter that says "I don't actually care
-> about x" is the really unintuitive bit.
-
-All the other (though static or internal to driver core) functions are
-prefixed driver_deferred_probe_* so I was trying to remain consistent
-there. You're right though, with the timeout it's not just whether
-initcalls are done. It's really "get the return value depending on the
-core's deferred probe state". So perhaps one of these:
-
-driver_deferred_probe_get_return_val()
-driver_deferred_probe_handle_return()
-
-The other option would be a more straight-forward functions that just
-returns a bool on whether to continue deferring and leave the return
-code handling to the caller:
-
-if (driver_deferred_probe_enabled_for_builtin(dev))
-  return -EPROBE_DEFER;
-else
-  return -ENODEV;
-
-The pinctrl case would look like this:
-
-builtin_only = of_property_read_bool(np_pctldev, "pinctrl-use-default");
-if (builtin_only && driver_deferred_probe_enabled_for_builtin(dev))
-  return -EPROBE_DEFER;
-else if (!builtin_only && driver_deferred_probe_enabled(dev))
-  return -EPROBE_DEFER;
-else
-  return -ENODEV;
-
-I still prefer the former, picking the bike shed color is easier with
-the latter.
-
->>>
->>> The caller knows this value, so why do you need to even pass it in here?
+>> "ARM: davinci: switch to common clock framework" actually flips the switch
+>> to start using the new clock drivers. Then the next 8 patches remove all
+>> of the old clock code.
 >>
+>> The final four patches add device tree clock support to the one SoC that
+>> supports it.
 >>
->> Because regardless of the value, we always stop deferring when/if we
->> hit the timeout and the caller doesn't know about the timeout. If we
->> get rid of it, we'd need functions for both init done and for deferred
->> timeout.
->>
->>> And bool values that are not obvious are horrid.  I had to go look this
->>> up when reading the later patches that just passed "true" in this
->>> variable as I had no idea what that meant.
->>
->>
->> Perhaps inverting it and calling it "keep_deferring" would be better.
->> However, the flag is ignored if we have timed out.
->
->
-> Perhaps an enum (or bitmask of named flags) then? That would allow the most
-> readability at callsites, plus it seems quite likely that we may want
-> intermediate degrees of "deferral strictness" eventually.
+>> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
+>> board file).
+> 
+> If you do end up sending a v12, you can leave out the mach-davinci
+> portions unless there are any changes you need to make. I will pick them
+> up from this series once the driver dependencies are merged.
+> 
+> I do hope the drivers/clk/* changes can be merged from v4.18.
+> 
 
-A bitmask is just 32 booleans stuffed into one parameter which I can
-guess Greg's opinion on.
+I have resent all of the clk patches (including all of the ones I listed as
+dependencies in addition to the three remaining in this series) under the
+cover "clk: davinci: outstanding fixes​".
 
-I can't really think of other flags we might need here. If we added
-some userspace trigger saying module loading is done, I don't think
-we'd need that to be per caller.
-
-Rob
+I also found that we need to add power-domains properties to the PWM nodes
+in "ARM: dts: da850: Add clocks". I probably should just take your advice
+and just globally added them even if they are not documented for some types
+ofnodes.
