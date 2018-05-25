@@ -1,121 +1,62 @@
-From: Zhangshaokun <zhangshaokun@hisilicon.com>
-Subject: Re: [PATCH] perf: hisi: fix uncore PMU index ID
-Date: Fri, 25 May 2018 16:34:06 +0800
-Message-ID: <3c5215c8-8ad6-8e6d-7878-7fcd3a0cfad5@hisilicon.com>
-References: <1526901317-52248-1-git-send-email-zhangshaokun@hisilicon.com>
- <20180521170554.GE21034@arm.com>
- <a301d72f-687c-0c4f-1d44-83e5bbad5e60@hisilicon.com>
- <20180523164219.GG2983@arm.com>
+From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+Date: Fri, 25 May 2018 09:39:59 +0100
+Message-ID: <20180525093959.000040a7@huawei.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-4-jean-philippe.brucker@arm.com>
+	<20180516163117.622693ea@jacob-builder>
+	<de478769-9f7a-d40b-a55e-e2c63ad883e8@arm.com>
+	<20180522094334.71f0e36b@jacob-builder>
+	<f73b4a0e-669e-8483-88d7-1b2c8a2b9934@arm.com>
+	<20180524115039.GA10260@apalos>
+	<19e82a74-429a-3f86-119e-32b12082d0ff@arm.com>
+	<20180525063311.GA11605@apalos>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180523164219.GG2983@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Huiqiang Wang <wanghuiqiang@huawei.com>, linux-arm-kernel@lists.infradead.org, Linuxarm <linuxarm@huawei.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180525063311.GA11605@apalos>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Ilias Apalodimas <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
++CC Kenneth Lee
 
-On 2018/5/24 0:42, Will Deacon wrote:
-> On Tue, May 22, 2018 at 05:18:51PM +0800, Zhangshaokun wrote:
->> On 2018/5/22 1:05, Will Deacon wrote:
->>> Whilst I'd normally just accept PMU driver submissions for vendor PMUs,
->>> this part rang my alarm bells:
->>>
->>>> diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
->>>> index 443906e..dcd8e77 100644
->>>> --- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
->>>> +++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
->>>> @@ -238,19 +238,10 @@ MODULE_DEVICE_TABLE(acpi, hisi_hha_pmu_acpi_match);
->>>>  static int hisi_hha_pmu_init_data(struct platform_device *pdev,
->>>>  				  struct hisi_pmu *hha_pmu)
->>>>  {
->>>> -	unsigned long long id;
->>>>  	struct resource *res;
->>>> -	acpi_status status;
->>>> -
->>>> -	status = acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev),
->>>> -				       "_UID", NULL, &id);
->>>> -	if (ACPI_FAILURE(status))
->>>> -		return -EINVAL;
->>>> -
->>>> -	hha_pmu->index_id = id;
->>>>  
->>>>  	/*
->>>> -	 * Use SCCL_ID and UID to identify the HHA PMU, while
->>>> +	 * Use SCCL_ID and HHA index ID to identify the HHA PMU, while
->>>>  	 * SCCL_ID is in MPIDR[aff2].
->>>>  	 */
->>>>  	if (device_property_read_u32(&pdev->dev, "hisilicon,scl-id",
->>>> @@ -258,6 +249,13 @@ static int hisi_hha_pmu_init_data(struct platform_device *pdev,
->>>>  		dev_err(&pdev->dev, "Can not read hha sccl-id!\n");
->>>>  		return -EINVAL;
->>>>  	}
->>>> +
->>>> +	if (device_property_read_u32(&pdev->dev, "hisilicon,idx-id",
->>>> +				     &hha_pmu->index_id)) {
->>>> +		dev_err(&pdev->dev, "Can not read hha index-id!\n");
->>>> +		return -EINVAL;
->>>> +	}
->>>
->>> Is this a new DT property? If so, please can you update the binding
->>> documentation and get an Ack from a DT maintainer? It's not clear to me
->>
->> No, it is not a DT property. We don't support DT mode for this platform and
->> only support ACPI mode.
-> 
-> Hmm, but by using the firmware-agnostic "device_property_read_u32"
-> interface, aren't you implicitly supporting it via DT as well? In fact,
-> don't you now fail the probe if this new property isn't present? Isn't
-> that a regression?
-> 
+On Fri, 25 May 2018 09:33:11 +0300
+Ilias Apalodimas <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Even though we don't support DT, using unified device interface seems a better practice
-in general. We could use acpi_dev_get_property(), but not much gain.
-As for regression, this never worked anyway, right? And this is for a new platform with
-little distribution, so not much pain to upgrade the FW.
-
->>> what a "hisilicon,idx-id" is, nor how I would generate on from firmware.
->>>
->>
->> For HiSilicon this platform, it supports multi-sccl. each sccl has more than one uncore
->> PMUs. Like HHA uncore PMUs, each sccl has 2-HHA PMUs and idx-id is in _DSD package and
->> used to distinguish different HHA PMUs with the same sccl, as follow:
->>     Name (_DSD, Package () {
->>       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->>       Package () {
->>         Package () {"hisilicon,scl-id", 0x03},
->>         Package () {"hisilicon,idx-id", 0x00},
->>       }
->>     })
-> 
-> I'm still none the wiser about what this actually is. How is new _DSD crud
-> supposed to be documented?
-> 
-
-For instance:
-when run perf list | grep hisi_sccl3_hha
-hisi_sccl3_hha0/rx_outer/ [kernel PMU event]
-------------------------------------------
-hisi_sccl3_hha1/rx_outer/ [kernel PMU event]
-0 and 1 are the hha index in the same sccl that sccl-id is 3.
-We document as hisi_sccl{X}_<l3c{Y}/hha{Y}/ddrc{Y}> in
-Documentation/perf/hisi-pmu.txt
-
-Thanks,
-Shaokun
-
-> Will
-> 
-> .
-> 
+> On Thu, May 24, 2018 at 04:04:39PM +0100, Jean-Philippe Brucker wrote:
+> > On 24/05/18 12:50, Ilias Apalodimas wrote:  
+> > >> Interesting, I hadn't thought about this use-case before. At first I
+> > >> thought you were talking about mdev devices assigned to VMs, but I think
+> > >> you're referring to mdevs assigned to userspace drivers instead? Out of
+> > >> curiosity, is it only theoretical or does someone actually need this?  
+> > > 
+> > > There has been some non upstreamed efforts to have mdev and produce userspace
+> > > drivers. Huawei is using it on what they call "wrapdrive" for crypto devices and
+> > > we did a proof of concept for ethernet interfaces. At the time we choose not to
+> > > involve the IOMMU for the reason you mentioned, but having it there would be
+> > > good.  
+> > 
+> > I'm guessing there were good reasons to do it that way but I wonder, is
+> > it not simpler to just have the kernel driver create a /dev/foo, with a
+> > standard ioctl/mmap/poll interface? Here VFIO adds a layer of
+> > indirection, and since the mediating driver has to implement these
+> > operations already, what is gained?  
+> The best reason i can come up with is "common code". You already have one API
+> doing that for you so we replicate it in a /dev file?
+> The mdev approach still needs extentions to support what we tried to do (i.e
+> mdev bus might need yo have access on iommu_ops), but as far as i undestand it's
+> a possible case.
+> > 
+> > Thanks,
+> > Jean  
