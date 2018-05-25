@@ -1,79 +1,57 @@
-From: cang@codeaurora.org
-Subject: Re: [PATCH v5 1/3] phy: Power on PHY before start Serdes
- configuration
-Date: Fri, 25 May 2018 09:32:34 +0800
-Message-ID: <7d45dbec17a9bbf48159c6857f89a65a@codeaurora.org>
-References: <20180523034712.3420-1-cang@codeaurora.org>
- <20180523034712.3420-2-cang@codeaurora.org>
- <dd6b1e3d-e894-e40f-452a-2dec2421b1c7@codeaurora.org>
+From: <stu.hsieh@mediatek.com>
+Subject: [PATCH v3 0/8] Add support for mediatek SOC MT2712
+Date: Fri, 25 May 2018 10:34:17 +0800
+Message-ID: <1527215665-11937-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dd6b1e3d-e894-e40f-452a-2dec2421b1c7@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-24 16:17, Vivek Gautam wrote:
-> Hi Can,
-> 
-> 
-> On 5/23/2018 9:17 AM, Can Guo wrote:
->> PHYs should be powered on before register configuration starts.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> ---
-> 
-> Thanks for fixing this.
-> 
->>   drivers/phy/qualcomm/phy-qcom-qmp.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->> 
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c 
->> b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> index 97ef942..9bfdba1 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> @@ -1000,6 +1000,12 @@ static int qcom_qmp_phy_com_init(struct 
->> qcom_qmp *qmp)
->>   			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
->>   	}
->>   +	/*
->> +	 * Pull out PHY from POWER DOWN state.
->> +	 * This is active low enable signal to power-down PHY.
->> +	 */
->> +	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
->> +
-> 
-> Thanks. This is in sync with the requirements of USB and UFS phys
-> across platforms
-> using this qmp phy driver, viz. 8996 and 845.
-> However, as discussed with you offline the PCIe phy has different 
-> requirement.
-> PCIe phy on 8996 doesn't need the QPHY_POWER_DOWN_CONTROL (pcs level 
-> power down)
-> before configuring the phys. Rather COM_POWER_DOWN_CONTROL is enough.
-> It needs the QPHY_POWER_DOWN_CONTROL after programming the
-> serdes, tx, rx, and pcs blocks, and right before doing SW_RESET, and
-> START_CONTROL.
-> 
-> So we should just do the above QPHY_POWER_DOWN_CONTROL in
-> qcom_qmp_phy_com_init() only for non-PCIe phys at the moment, and
-> skip the QPHY_POWER_DOWN_CONTROL in qcom_qmp_phy_init()
-> for these non-PCIe phys.
-> 
-> Thanks
-> Vivek
-> 
-
-Sure Vivek, I shall make the change per we talked.
-
-Thanks
-Can
-
->>   	/* Serdes configuration */
->>   	qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl,
->>   			       cfg->serdes_tbl_num);
+RnJvbTogU3R1IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgoKVGhpcyBwYXRjaCBhZGQg
+c3VwcG9ydCBmb3IgdGhlIE1lZGlhdGVrIE1UMjcxMiBESVNQIHN1YnN5c3RlbS4KTVQyNzEyIGlz
+IGJhc2Ugb24gTVQ4MTczLCB0aGVyZSBhcmUgc29tZSBkaWZmZXJlbmNlIGFzIGZvbGxvd2luZzoK
+TVQyNzEyIHN1cHBvcnQgdGhyZWUgZGlzcCBvdXRwdXQodHdvIG92bCBhbmQgb25lIHJkbWEpCgpD
+aGFuZ2UgaW4gdjM6Ci0gQWRkZWQgcGF0Y2ggZm9yIGRkcCBjb21wb25lbnQgQUFMMQotIEFkZGVk
+IHBhdGNoIGZvciBkZHAgY29tcG9uZW50IE9EMQotIEFkZGVkIHBhdGNoIGZvciBkZHAgY29tcG9u
+ZW50IFBXTTIKLSBBZGRlZCBwYXRjaCB0byBjcmVhdGUgdGhpcmQgZGRwIHBhdGgKLSBSZWJhc2Ug
+cGF0Y2ggInN1cHBvcnQgbWF4aW11bSA2NCBtdXRleCBtb2QiIGJlZm9yZQogICJBZGQgc3VwcG9y
+dCBmb3IgbWVkaWF0ZWsgU09DIE1UMjcxMiIKLSBSZWJhc2UgcGF0Y2ggImFkZCBjb25uZWN0aW9u
+IGZyb20gT0QxIHRvIFJETUExIiBiZWZvcmUKICAiQWRkIHN1cHBvcnQgZm9yIG1lZGlhdGVrIFNP
+QyBNVDI3MTIiCi0gUmVtb3ZlIHR3byBkZWZpbml0aW9uIGFib3V0IFJETUEwIGFuZCBSRE1BMgot
+IENoYW5nZSB0aGUgZGVmaW5pdGlvbiBhYm91dCBtdXRleCBtb2R1bGUgZnJvbQogIGJpdHdpc2Ug
+dG8gaW5kZXgKCkNoYW5nZXMgaW4gdjI6Ci0gdXBkYXRlIGR0LWJpbmRpbmdzIGZvciBtdDI3MTIK
+LSBBZGRlZCBwYXRjaCB0byBjb25uZWN0aW9uIGZyb20gT0QxIHRvIFJETUExCi0gQWRkZWQgcGF0
+Y2ggdG8gc3VwcG9ydCBtYXhpbXVtIDY0IG11dGV4IG1vZAotIHJld3JpdGUgbXV0ZXggbW9kIGNv
+bmRpdGlvbiBmb3IgcmVkdWNpbmcgb25lIGJ5dGUKLSBDaGFuZ2UgdGhlIGNvbXBvbmVudCBuYW1l
+IEFBTC9PRCB0byBBQUwwL09EMCBmb3IgbmFtaW5nIGNvbnNpc3RlbmN5Ci0gTW92ZSB0aGUgY29t
+cGF0aWJsZSBpbmZvbWF0aW9uIGFib3V0IGRwaSB0byBvdGhlciBwYXRjaCB3aGljaCBtb2RpZnkK
+ICB0aGUgZHBpIGRyaXZlciBmb3IgbXQyNzEyCgoKU3R1IEhzaWVoICg4KToKICBkcm0vbWVkaWF0
+ZWs6IHVwZGF0ZSBkdC1iaW5kaW5ncyBmb3IgbXQyNzEyCiAgZHJtL21lZGlhdGVrOiBzdXBwb3J0
+IG1heGltdW0gNjQgbXV0ZXggbW9kCiAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9t
+IE9EMSB0byBSRE1BMQogIGRybS9tZWRpYXRlazogYWRkIGRkcCBjb21wb25lbnQgQUFMMQogIGRy
+bS9tZWRpYXRlazogYWRkIGRkcCBjb21wb25lbnQgT0QxCiAgZHJtL21lZGlhdGVrOiBhZGQgZGRw
+IGNvbXBvbmVudCBQV00yCiAgZHJtL21lZGlhdGVrOiBBZGQgc3VwcG9ydCBmb3IgbWVkaWF0ZWsg
+U09DIE1UMjcxMgogIGRybS9tZWRpYXRlazogYWRkIHRoaXJkIGRkcCBwYXRoCgogLi4uL2JpbmRp
+bmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgICAgfCAgIDIgKy0KIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICAgICAgICAgICAgIHwgMTI0ICsrKysr
+KysrKysrKysrKy0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2Nv
+bXAuYyAgICAgICAgfCAgIDggKy0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmggICAgICAgIHwgICA3ICstCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kcnYuYyAgICAgICAgICAgICB8ICA0NyArKysrKysrLQogZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZHJ2LmggICAgICAgICAgICAgfCAgIDcgKy0KIDYgZmlsZXMgY2hhbmdlZCwg
+MTU1IGluc2VydGlvbnMoKyksIDQwIGRlbGV0aW9ucygtKQoKLS0gCjIuMTIuNQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
