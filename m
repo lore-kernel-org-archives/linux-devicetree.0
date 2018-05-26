@@ -1,67 +1,67 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 03/16] dt-bindings: qcom_nandc: make
- nand-ecc-strength optional
-Date: Sat, 26 May 2018 10:42:53 +0200
-Message-ID: <20180526104253.05489470@xps13>
-References: <1527250904-21988-1-git-send-email-absahu@codeaurora.org>
-        <1527250904-21988-4-git-send-email-absahu@codeaurora.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 5/5] clk: renesas: Renesas R9A06G032 clock driver
+Date: Sat, 26 May 2018 21:45:31 +0800
+Message-ID: <201805261954.tlXfbMbi%fengguang.wu@intel.com>
+References: <1527154169-32380-6-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527250904-21988-4-git-send-email-absahu@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1527154169-32380-6-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, Archit Taneja <architt@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: kbuild-all@01.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Abhishek,
+Hi Michel,
 
-On Fri, 25 May 2018 17:51:31 +0530, Abhishek Sahu
-<absahu@codeaurora.org> wrote:
+Thank you for the patch! Perhaps something to improve:
 
-> If nand-ecc-strength specified in DT, then controller will use
-> this ECC strength otherwise ECC strength will be calculated
-> according to chip requirement and available OOB size.
-> 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> ---
-> * Changes from v2:
->   NONE
-> 
-> * Changes from v1:
->   NEW PATCH
-> 
->  Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> index 73d336be..f246aa0 100644
-> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> @@ -45,11 +45,13 @@ Required properties:
->  			number (e.g., 0, 1, 2, etc.)
->  - #address-cells:	see partition.txt
->  - #size-cells:		see partition.txt
-> -- nand-ecc-strength:	see nand.txt
->  - nand-ecc-step-size:	must be 512. see nand.txt for more details.
+[auto build test WARNING on renesas-drivers/clk-renesas]
+[also build test WARNING on v4.17-rc6]
+[cannot apply to robh/for-next]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-I think you can squash the two dt-bindings commits as they are tightly
-related to each other.
-
->  
->  Optional properties:
->  - nand-bus-width:	see nand.txt
-> +- nand-ecc-strength:	see nand.txt. If not specified, then ECC strength will
-> +			be used according to chip requirement and available
-> +			OOB size.
->  
->  Each nandcs device node may optionally contain a 'partitions' sub-node, which
->  further contains sub-nodes describing the flash partition mapping. See
+url:    https://github.com/0day-ci/linux/commits/Michel-Pollet/dt-bindings-Add-the-r9a06g032-sysctrl-h-file/20180526-154235
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git clk-renesas
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
 
+sparse warnings: (new ones prefixed by >>)
 
--- 
-Miquel Raynal, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>> drivers/clk/renesas/r9a06g032-clocks.c:430:22: sparse: cast removes address space of expression
+>> drivers/clk/renesas/r9a06g032-clocks.c:431:30: sparse: incorrect type in argument 1 (different address spaces) @@    expected unsigned int [noderef] [usertype] <asn:2>*reg @@    got eref] [usertype] <asn:2>*reg @@
+   drivers/clk/renesas/r9a06g032-clocks.c:431:30:    expected unsigned int [noderef] [usertype] <asn:2>*reg
+   drivers/clk/renesas/r9a06g032-clocks.c:431:30:    got unsigned int [usertype] *reg
+   drivers/clk/renesas/r9a06g032-clocks.c:516:22: sparse: cast removes address space of expression
+   drivers/clk/renesas/r9a06g032-clocks.c:528:38: sparse: incorrect type in argument 2 (different address spaces) @@    expected unsigned int [noderef] [usertype] <asn:2>*reg @@    got eref] [usertype] <asn:2>*reg @@
+   drivers/clk/renesas/r9a06g032-clocks.c:528:38:    expected unsigned int [noderef] [usertype] <asn:2>*reg
+   drivers/clk/renesas/r9a06g032-clocks.c:528:38:    got unsigned int [usertype] *reg
+
+vim +430 drivers/clk/renesas/r9a06g032-clocks.c
+
+   421	
+   422	#define to_r9a06g032_divider(_hw) \
+   423			container_of(_hw, struct r9a06g032_clk_div, hw)
+   424	
+   425	static unsigned long r9a06g032_divider_recalc_rate(
+   426		struct clk_hw *hw,
+   427		unsigned long parent_rate)
+   428	{
+   429		struct r9a06g032_clk_div *clk = to_r9a06g032_divider(hw);
+ > 430		u32 *reg = ((u32 *)clk->clocks->reg) + clk->reg;
+ > 431		long div = clk_readl(reg);
+   432	
+   433		if (div < clk->min)
+   434			div = clk->min;
+   435		else if (div > clk->max)
+   436			div = clk->max;
+   437		return DIV_ROUND_UP(parent_rate, div);
+   438	}
+   439	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
