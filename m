@@ -1,64 +1,67 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
- properties for CPUs
-Date: Sat, 26 May 2018 10:37:49 +0200
-Message-ID: <9f9cc086-6069-afbc-d3c6-46608ff35b79@baylibre.com>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
- <20180525211025.c73zdcdtyuvlewng@localhost>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 03/16] dt-bindings: qcom_nandc: make
+ nand-ecc-strength optional
+Date: Sat, 26 May 2018 10:42:53 +0200
+Message-ID: <20180526104253.05489470@xps13>
+References: <1527250904-21988-1-git-send-email-absahu@codeaurora.org>
+        <1527250904-21988-4-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180525211025.c73zdcdtyuvlewng@localhost>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, chris.redpath@arm.com, linux-amlogic@lists.infradead.org, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527250904-21988-4-git-send-email-absahu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Andy Gross <andy.gross@linaro.org>, Archit Taneja <architt@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Abhishek,
 
-On 25/05/2018 23:10, Olof Johansson wrote:
-> On Fri, May 25, 2018 at 11:10:01AM +0530, Viresh Kumar wrote:
->> The cooling device properties, like "#cooling-cells" and
->> "dynamic-power-coefficient", should either be present for all the CPUs
->> of a cluster or none. If these are present only for a subset of CPUs of
->> a cluster then things will start falling apart as soon as the CPUs are
->> brought online in a different order. For example, this will happen
->> because the operating system looks for such properties in the CPU node
->> it is trying to bring up, so that it can register a cooling device.
->>
->> Add such missing properties.
+On Fri, 25 May 2018 17:51:31 +0530, Abhishek Sahu
+<absahu@codeaurora.org> wrote:
+
+> If nand-ecc-strength specified in DT, then controller will use
+> this ECC strength otherwise ECC strength will be calculated
+> according to chip requirement and available OOB size.
 > 
-> This seems awkward compared to just having one cooling-cells in the /cpus node
-> instead.
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> ---
+> * Changes from v2:
+>   NONE
 > 
-> What's it used for? I don't see any properties in the device nodes on meson-gxm
-> that have any cooling-foo cells in them? So why should #cooling-cells be
-> needed?
+> * Changes from v1:
+>   NEW PATCH
+> 
+>  Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> index 73d336be..f246aa0 100644
+> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> @@ -45,11 +45,13 @@ Required properties:
+>  			number (e.g., 0, 1, 2, etc.)
+>  - #address-cells:	see partition.txt
+>  - #size-cells:		see partition.txt
+> -- nand-ecc-strength:	see nand.txt
+>  - nand-ecc-step-size:	must be 512. see nand.txt for more details.
+
+I think you can squash the two dt-bindings commits as they are tightly
+related to each other.
+
+>  
+>  Optional properties:
+>  - nand-bus-width:	see nand.txt
+> +- nand-ecc-strength:	see nand.txt. If not specified, then ECC strength will
+> +			be used according to chip requirement and available
+> +			OOB size.
+>  
+>  Each nandcs device node may optionally contain a 'partitions' sub-node, which
+>  further contains sub-nodes describing the flash partition mapping. See
 
 
-There is no reason to have the cooling-cells on these other CPUs, the DVFS is
-controlled on the first CPU of each cluster, here cpu0 and cpu4 and only
-cpu0 and cpu4 are used as cooling-cells.
 
-Neil
-
-> 
-> 
-> -Olof
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+-- 
+Miquel Raynal, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
