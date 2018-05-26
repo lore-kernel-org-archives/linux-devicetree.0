@@ -1,13 +1,16 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 0/3] Dts nodes for Keystone2 hw_rng driver
-Date: Fri, 25 May 2018 21:43:32 -0700
-Message-ID: <45e0a1c8-739e-0a38-bd86-047c37551f62@oracle.com>
-References: <1527167538-29837-1-git-send-email-vitalya@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
+ properties for CPUs
+Date: Sat, 26 May 2018 10:37:49 +0200
+Message-ID: <9f9cc086-6069-afbc-d3c6-46608ff35b79@baylibre.com>
+References: <cover.1527225682.git.viresh.kumar@linaro.org>
+ <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
+ <20180525211025.c73zdcdtyuvlewng@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1527167538-29837-1-git-send-email-vitalya@ti.com>
+In-Reply-To: <20180525211025.c73zdcdtyuvlewng@localhost>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -18,19 +21,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vitaly Andrianov <vitalya@ti.com>, ssantosh@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: m-karicheri2@ti.com
+To: Olof Johansson <olof@lixom.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, chris.redpath@arm.com, linux-amlogic@lists.infradead.org, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/24/18 6:12 AM, Vitaly Andrianov wrote:
-> This series adds dts nodes for Keystone2 hw_rng driver
-> 
-> Vitaly Andrianov (3):
->    ARM: dts: k2hk: add dts node for k2hk hw_rng driver
->    ARM: dts: k2l: add dts node for k2l hw_rng driver
->    ARM: dts: k2e: add dts node for k2e hw_rng driver
-> 
-Looks good. Will queue this up for 4.19. Thanks !!
+Hi,
 
-Regards,
-Santosh
+On 25/05/2018 23:10, Olof Johansson wrote:
+> On Fri, May 25, 2018 at 11:10:01AM +0530, Viresh Kumar wrote:
+>> The cooling device properties, like "#cooling-cells" and
+>> "dynamic-power-coefficient", should either be present for all the CPUs
+>> of a cluster or none. If these are present only for a subset of CPUs of
+>> a cluster then things will start falling apart as soon as the CPUs are
+>> brought online in a different order. For example, this will happen
+>> because the operating system looks for such properties in the CPU node
+>> it is trying to bring up, so that it can register a cooling device.
+>>
+>> Add such missing properties.
+> 
+> This seems awkward compared to just having one cooling-cells in the /cpus node
+> instead.
+> 
+> What's it used for? I don't see any properties in the device nodes on meson-gxm
+> that have any cooling-foo cells in them? So why should #cooling-cells be
+> needed?
+
+
+There is no reason to have the cooling-cells on these other CPUs, the DVFS is
+controlled on the first CPU of each cluster, here cpu0 and cpu4 and only
+cpu0 and cpu4 are used as cooling-cells.
+
+Neil
+
+> 
+> 
+> -Olof
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
