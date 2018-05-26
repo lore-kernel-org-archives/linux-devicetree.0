@@ -1,772 +1,117 @@
-From: Saravana Kannan <skannan@codeaurora.org>
-Subject: Re: [PATCH 2/2] PM / devfreq: Generic cpufreq governor
-Date: Thu, 31 May 2018 14:53:02 -0700
-Message-ID: <dbd33da2-ca46-b51e-0044-b1efebf7480d@codeaurora.org>
-References: <1526631889-5084-1-git-send-email-skannan@codeaurora.org>
- <1526631889-5084-3-git-send-email-skannan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Return-Path: <SRS0=mCuI=IN=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
+Message-ID: <5b08c5ef.1c69fb81.51d23.659bSMTPIN_ADDED_BROKEN@mx.google.com>
+Date: Sat, 26 May 2018 10:24:45 +0800
+From: Kenneth Lee <Kenneth-Lee-2012@foxmail.com>
+Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+ <20180511190641.23008-4-jean-philippe.brucker@arm.com>
+ <20180516163117.622693ea@jacob-builder>
+ <de478769-9f7a-d40b-a55e-e2c63ad883e8@arm.com>
+ <20180522094334.71f0e36b@jacob-builder>
+ <f73b4a0e-669e-8483-88d7-1b2c8a2b9934@arm.com>
+ <20180524115039.GA10260@apalos>
+ <19e82a74-429a-3f86-119e-32b12082d0ff@arm.com>
+ <20180525063311.GA11605@apalos>
+ <20180525093959.000040a7@huawei.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20180525093959.000040a7@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526631889-5084-3-git-send-email-skannan@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rjendra@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, liguozhu@hisilicon.com, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kevin.tian@intel.com" <kevin.tian@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "rgummal@xilinx.com" <rgummal@xilinx.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com" <shunyong.yang@hxt-semitech.com>, Robin Murphy <Robin.Murphy@arm.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>, "robdclark@gmail.com" <robdclark@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "christian.koenig@amd.com" <christian.koenig@amd.com>, "nwatters@codeaurora.org" <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+List-ID: <devicetree@vger.kernel.org>
 
-Chanwoo,
+On Fri, May 25, 2018 at 09:39:59AM +0100, Jonathan Cameron wrote:
+> Date: Fri, 25 May 2018 09:39:59 +0100
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> CC: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+>  "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "kvm@vger.kernel.org"
+>  <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org"
+>  <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>,
+>  Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org"
+>  <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+>  "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com"
+>  <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>,
+>  "joro@8bytes.org" <joro@8bytes.org>, "robdclark@gmail.com"
+>  <robdclark@gmail.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>,
+>  "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+>  "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com"
+>  <rfranz@cavium.com>, "devicetree@vger.kernel.org"
+>  <devicetree@vger.kernel.org>, "kevin.tian@intel.com"
+>  <kevin.tian@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+>  "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+>  "rgummal@xilinx.com" <rgummal@xilinx.com>, "thunder.leizhen@huawei.com"
+>  <thunder.leizhen@huawei.com>, "linux-arm-kernel@lists.infradead.org"
+>  <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com"
+>  <shunyong.yang@hxt-semitech.com>, "dwmw2@infradead.org"
+>  <dwmw2@infradead.org>, "liubo95@huawei.com" <liubo95@huawei.com>,
+>  "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>,
+>  "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+>  Robin Murphy <Robin.Murphy@arm.com>, "christian.koenig@amd.com"
+>  <christian.koenig@amd.com>, "nwatters@codeaurora.org"
+>  <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com"
+>  <baolu.lu@linux.intel.com>, liguozhu@hisilicon.com,
+>  kenneth-lee-2012@foxmail.com
+> Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+> Message-ID: <20180525093959.000040a7@huawei.com>
+> 
+> +CC Kenneth Lee
+> 
+> On Fri, 25 May 2018 09:33:11 +0300
+> Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
+> 
+> > On Thu, May 24, 2018 at 04:04:39PM +0100, Jean-Philippe Brucker wrote:
+> > > On 24/05/18 12:50, Ilias Apalodimas wrote:  
+> > > >> Interesting, I hadn't thought about this use-case before. At first I
+> > > >> thought you were talking about mdev devices assigned to VMs, but I think
+> > > >> you're referring to mdevs assigned to userspace drivers instead? Out of
+> > > >> curiosity, is it only theoretical or does someone actually need this?  
+> > > > 
+> > > > There has been some non upstreamed efforts to have mdev and produce userspace
+> > > > drivers. Huawei is using it on what they call "wrapdrive" for crypto devices and
+> > > > we did a proof of concept for ethernet interfaces. At the time we choose not to
+> > > > involve the IOMMU for the reason you mentioned, but having it there would be
+> > > > good.  
+> > > 
+> > > I'm guessing there were good reasons to do it that way but I wonder, is
+> > > it not simpler to just have the kernel driver create a /dev/foo, with a
+> > > standard ioctl/mmap/poll interface? Here VFIO adds a layer of
+> > > indirection, and since the mediating driver has to implement these
+> > > operations already, what is gained?  
+> > The best reason i can come up with is "common code". You already have one API
+> > doing that for you so we replicate it in a /dev file?
+> > The mdev approach still needs extentions to support what we tried to do (i.e
+> > mdev bus might need yo have access on iommu_ops), but as far as i undestand it's
+> > a possible case.
 
-Friendly reminder for a review. I've addressed your comments on v1 of 
-this patch.
+Hi, Jean, Please allow me to share my understanding here:
+https://zhuanlan.zhihu.com/p/35489035
 
--Saravana
-
-
-On 05/18/2018 01:24 AM, Saravana Kannan wrote:
-> This devfreq governor is a generic implementation that can scale any
-> devfreq device based on the current CPU frequency of all ONLINE CPUs. It
-> allows for specifying CPU freq to devfreq mapping for specific devices.
-> When such a mapping is not present, it defaults to scaling the device
-> frequency in proportion to the CPU frequency.
->
-> Change-Id: I7f786b9059435afe85b9ec8c504a4655731ee20e
-> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
-> ---
->   .../bindings/devfreq/devfreq-cpufreq.txt           |  53 ++
->   drivers/devfreq/Kconfig                            |   8 +
->   drivers/devfreq/Makefile                           |   1 +
->   drivers/devfreq/governor_cpufreq.c                 | 628 +++++++++++++++++++++
->   4 files changed, 690 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-cpufreq.txt
->   create mode 100644 drivers/devfreq/governor_cpufreq.c
->
-> diff --git a/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq.txt b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq.txt
-> new file mode 100644
-> index 0000000..6537538
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq.txt
-> @@ -0,0 +1,53 @@
-> +Devfreq CPUfreq governor
-> +
-> +devfreq-cpufreq is a parent device that contains one or more child devices.
-> +Each child device provides CPU frequency to device frequency mapping for a
-> +specific device. Examples of devices that could use this are: DDR, cache and
-> +CCI.
-> +
-> +Parent device name shall be "devfreq-cpufreq".
-> +
-> +Required child device properties:
-> +- cpu-to-dev-map, or cpu-to-dev-map-<X>:
-> +			A list of tuples where each tuple consists of a
-> +			CPU frequency (KHz) and the corresponding device
-> +			frequency. CPU frequencies not listed in the table
-> +			will use the device frequency that corresponds to the
-> +			next rounded up CPU frequency.
-> +			Use "cpu-to-dev-map" if all CPUs in the system should
-> +			share same mapping.
-> +			Use cpu-to-dev-map-<cpuid> to describe different
-> +			mappings for different CPUs. The property should be
-> +			listed only for the first CPU if multiple CPUs are
-> +			synchronous.
-> +- target-dev:		Phandle to device that this mapping applies to.
-> +
-> +Example:
-> +	devfreq-cpufreq {
-> +		cpubw-cpufreq {
-> +			target-dev = <&cpubw>;
-> +			cpu-to-dev-map =
-> +				<  300000  1144 >,
-> +				<  422400  2288 >,
-> +				<  652800  3051 >,
-> +				<  883200  5996 >,
-> +				< 1190400  8056 >,
-> +				< 1497600 10101 >,
-> +				< 1728000 12145 >,
-> +				< 2649600 16250 >;
-> +		};
-> +
-> +		cache-cpufreq {
-> +			target-dev = <&cache>;
-> +			cpu-to-dev-map =
-> +				<  300000  300000 >,
-> +				<  422400  422400 >,
-> +				<  652800  499200 >,
-> +				<  883200  576000 >,
-> +				<  960000  960000 >,
-> +				< 1497600 1036800 >,
-> +				< 1574400 1574400 >,
-> +				< 1728000 1651200 >,
-> +				< 2649600 1728000 >;
-> +		};
-> +	};
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 8503018..5eeb33f 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -73,6 +73,14 @@ config DEVFREQ_GOV_PASSIVE
->   	  through sysfs entries. The passive governor recommends that
->   	  devfreq device uses the OPP table to get the frequency/voltage.
->   
-> +config DEVFREQ_GOV_CPUFREQ
-> +	tristate "CPUfreq"
-> +	depends on CPU_FREQ
-> +	help
-> +	  Chooses frequency based on the online CPUs' current frequency and a
-> +	  CPU frequency to device frequency mapping table(s). This governor
-> +	  can be useful for controlling devices such as DDR, cache, CCI, etc.
-> +
->   comment "DEVFREQ Drivers"
->   
->   config ARM_EXYNOS_BUS_DEVFREQ
-> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-> index f1cc8990..cafe7c2 100644
-> --- a/drivers/devfreq/Makefile
-> +++ b/drivers/devfreq/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PERFORMANCE)	+= governor_performance.o
->   obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
->   obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
->   obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
-> +obj-$(CONFIG_DEVFREQ_GOV_CPUFREQ)	+= governor_cpufreq.o
->   
->   # DEVFREQ Drivers
->   obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
-> diff --git a/drivers/devfreq/governor_cpufreq.c b/drivers/devfreq/governor_cpufreq.c
-> new file mode 100644
-> index 0000000..8f8ea26
-> --- /dev/null
-> +++ b/drivers/devfreq/governor_cpufreq.c
-> @@ -0,0 +1,628 @@
-> +/*
-> + * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#define pr_fmt(fmt) "dev-cpufreq: " fmt
-> +
-> +#include <linux/devfreq.h>
-> +#include <linux/cpu.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/slab.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/module.h>
-> +#include "governor.h"
-> +
-> +struct cpu_state {
-> +	unsigned int freq;
-> +	unsigned int min_freq;
-> +	unsigned int max_freq;
-> +	bool on;
-> +	unsigned int first_cpu;
-> +};
-> +static struct cpu_state *state[NR_CPUS];
-> +static int cpufreq_cnt;
-> +
-> +struct freq_map {
-> +	unsigned int cpu_khz;
-> +	unsigned int target_freq;
-> +};
-> +
-> +struct devfreq_node {
-> +	struct devfreq *df;
-> +	void *orig_data;
-> +	struct device *dev;
-> +	struct device_node *of_node;
-> +	struct list_head list;
-> +	struct freq_map **map;
-> +	struct freq_map *common_map;
-> +};
-> +static LIST_HEAD(devfreq_list);
-> +static DEFINE_MUTEX(state_lock);
-> +static DEFINE_MUTEX(cpufreq_reg_lock);
-> +
-> +static void update_all_devfreqs(void)
-> +{
-> +	struct devfreq_node *node;
-> +
-> +	list_for_each_entry(node, &devfreq_list, list) {
-> +		struct devfreq *df = node->df;
-> +		if (!node->df)
-> +			continue;
-> +		mutex_lock(&df->lock);
-> +		update_devfreq(df);
-> +		mutex_unlock(&df->lock);
-> +
-> +	}
-> +}
-> +
-> +static struct devfreq_node *find_devfreq_node(struct device *dev)
-> +{
-> +	struct devfreq_node *node;
-> +
-> +	list_for_each_entry(node, &devfreq_list, list)
-> +		if (node->dev == dev || node->of_node == dev->of_node)
-> +			return node;
-> +
-> +	return NULL;
-> +}
-> +
-> +/* ==================== cpufreq part ==================== */
-> +static void add_policy(struct cpufreq_policy *policy)
-> +{
-> +	struct cpu_state *new_state;
-> +	unsigned int cpu, first_cpu;
-> +
-> +	if (state[policy->cpu]) {
-> +		state[policy->cpu]->freq = policy->cur;
-> +		state[policy->cpu]->on = true;
-> +	} else {
-> +		new_state = kzalloc(sizeof(struct cpu_state), GFP_KERNEL);
-> +		if (!new_state)
-> +			return;
-> +
-> +		first_cpu = cpumask_first(policy->related_cpus);
-> +		new_state->first_cpu = first_cpu;
-> +		new_state->freq = policy->cur;
-> +		new_state->min_freq = policy->cpuinfo.min_freq;
-> +		new_state->max_freq = policy->cpuinfo.max_freq;
-> +		new_state->on = true;
-> +
-> +		for_each_cpu(cpu, policy->related_cpus)
-> +			state[cpu] = new_state;
-> +	}
-> +}
-> +
-> +static int cpufreq_policy_notifier(struct notifier_block *nb,
-> +		unsigned long event, void *data)
-> +{
-> +	struct cpufreq_policy *policy = data;
-> +
-> +	switch (event) {
-> +	case CPUFREQ_CREATE_POLICY:
-> +		mutex_lock(&state_lock);
-> +		add_policy(policy);
-> +		update_all_devfreqs();
-> +		mutex_unlock(&state_lock);
-> +		break;
-> +
-> +	case CPUFREQ_REMOVE_POLICY:
-> +		mutex_lock(&state_lock);
-> +		if (state[policy->cpu]) {
-> +			state[policy->cpu]->on = false;
-> +			update_all_devfreqs();
-> +		}
-> +		mutex_unlock(&state_lock);
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct notifier_block cpufreq_policy_nb = {
-> +	.notifier_call = cpufreq_policy_notifier
-> +};
-> +
-> +static int cpufreq_trans_notifier(struct notifier_block *nb,
-> +		unsigned long event, void *data)
-> +{
-> +	struct cpufreq_freqs *freq = data;
-> +	struct cpu_state *s;
-> +
-> +	if (event != CPUFREQ_POSTCHANGE)
-> +		return 0;
-> +
-> +	mutex_lock(&state_lock);
-> +
-> +	s = state[freq->cpu];
-> +	if (!s)
-> +		goto out;
-> +
-> +	if (s->freq != freq->new) {
-> +		s->freq = freq->new;
-> +		update_all_devfreqs();
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&state_lock);
-> +	return 0;
-> +}
-> +
-> +static struct notifier_block cpufreq_trans_nb = {
-> +	.notifier_call = cpufreq_trans_notifier
-> +};
-> +
-> +static int register_cpufreq(void)
-> +{
-> +	int ret = 0;
-> +	unsigned int cpu;
-> +	struct cpufreq_policy *policy;
-> +
-> +	mutex_lock(&cpufreq_reg_lock);
-> +
-> +	if (cpufreq_cnt)
-> +		goto cnt_not_zero;
-> +
-> +	get_online_cpus();
-> +	ret = cpufreq_register_notifier(&cpufreq_policy_nb,
-> +				CPUFREQ_POLICY_NOTIFIER);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = cpufreq_register_notifier(&cpufreq_trans_nb,
-> +				CPUFREQ_TRANSITION_NOTIFIER);
-> +	if (ret) {
-> +		cpufreq_unregister_notifier(&cpufreq_policy_nb,
-> +				CPUFREQ_POLICY_NOTIFIER);
-> +		goto out;
-> +	}
-> +
-> +	for_each_online_cpu(cpu) {
-> +		policy = cpufreq_cpu_get(cpu);
-> +		if (policy) {
-> +			add_policy(policy);
-> +			cpufreq_cpu_put(policy);
-> +		}
-> +	}
-> +out:
-> +	put_online_cpus();
-> +cnt_not_zero:
-> +	if (!ret)
-> +		cpufreq_cnt++;
-> +	mutex_unlock(&cpufreq_reg_lock);
-> +	return ret;
-> +}
-> +
-> +static int unregister_cpufreq(void)
-> +{
-> +	int ret = 0;
-> +	int cpu;
-> +
-> +	mutex_lock(&cpufreq_reg_lock);
-> +
-> +	if (cpufreq_cnt > 1)
-> +		goto out;
-> +
-> +	cpufreq_unregister_notifier(&cpufreq_policy_nb,
-> +				CPUFREQ_POLICY_NOTIFIER);
-> +	cpufreq_unregister_notifier(&cpufreq_trans_nb,
-> +				CPUFREQ_TRANSITION_NOTIFIER);
-> +
-> +	for (cpu = ARRAY_SIZE(state) - 1; cpu >= 0; cpu--) {
-> +		if (!state[cpu])
-> +			continue;
-> +		if (state[cpu]->first_cpu == cpu)
-> +			kfree(state[cpu]);
-> +		state[cpu] = NULL;
-> +	}
-> +
-> +out:
-> +	cpufreq_cnt--;
-> +	mutex_unlock(&cpufreq_reg_lock);
-> +	return ret;
-> +}
-> +
-> +/* ==================== devfreq part ==================== */
-> +
-> +static unsigned int interpolate_freq(struct devfreq *df, unsigned int cpu)
-> +{
-> +	unsigned long *freq_table = df->profile->freq_table;
-> +	unsigned int cpu_min = state[cpu]->min_freq;
-> +	unsigned int cpu_max = state[cpu]->max_freq;
-> +	unsigned int cpu_freq = state[cpu]->freq;
-> +	unsigned int dev_min, dev_max, cpu_percent;
-> +
-> +	if (freq_table) {
-> +		dev_min = freq_table[0];
-> +		dev_max = freq_table[df->profile->max_state - 1];
-> +	} else {
-> +		if (df->max_freq <= df->min_freq)
-> +			return 0;
-> +		dev_min = df->min_freq;
-> +		dev_max = df->max_freq;
-> +	}
-> +
-> +	cpu_percent = ((cpu_freq - cpu_min) * 100) / (cpu_max - cpu_min);
-> +	return dev_min + mult_frac(dev_max - dev_min, cpu_percent, 100);
-> +}
-> +
-> +static unsigned int cpu_to_dev_freq(struct devfreq *df, unsigned int cpu)
-> +{
-> +	struct freq_map *map = NULL;
-> +	unsigned int cpu_khz = 0, freq;
-> +	struct devfreq_node *n = df->data;
-> +
-> +	if (!state[cpu] || !state[cpu]->on || state[cpu]->first_cpu != cpu) {
-> +		freq = 0;
-> +		goto out;
-> +	}
-> +
-> +	if (n->common_map)
-> +		map = n->common_map;
-> +	else if (n->map)
-> +		map = n->map[cpu];
-> +
-> +	cpu_khz = state[cpu]->freq;
-> +
-> +	if (!map) {
-> +		freq = interpolate_freq(df, cpu);
-> +		goto out;
-> +	}
-> +
-> +	while (map->cpu_khz && map->cpu_khz < cpu_khz)
-> +		map++;
-> +	if (!map->cpu_khz)
-> +		map--;
-> +	freq = map->target_freq;
-> +
-> +out:
-> +	dev_dbg(df->dev.parent, "CPU%u: %d -> dev: %u\n", cpu, cpu_khz, freq);
-> +	return freq;
-> +}
-> +
-> +static int devfreq_cpufreq_get_freq(struct devfreq *df,
-> +					unsigned long *freq)
-> +{
-> +	unsigned int cpu, tgt_freq = 0;
-> +	struct devfreq_node *node;
-> +
-> +	node = df->data;
-> +	if (!node) {
-> +		pr_err("Unable to find devfreq node!\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	for_each_possible_cpu(cpu)
-> +		tgt_freq = max(tgt_freq, cpu_to_dev_freq(df, cpu));
-> +
-> +	*freq = tgt_freq;
-> +	return 0;
-> +}
-> +
-> +static unsigned int show_table(char *buf, unsigned int len,
-> +				struct freq_map *map)
-> +{
-> +	unsigned int cnt = 0;
-> +
-> +	cnt += snprintf(buf + cnt, len - cnt, "CPU freq\tDevice freq\n");
-> +
-> +	while (map->cpu_khz && cnt < len) {
-> +		cnt += snprintf(buf + cnt, len - cnt, "%8u\t%11u\n",
-> +				map->cpu_khz, map->target_freq);
-> +		map++;
-> +	}
-> +	if (cnt < len)
-> +		cnt += snprintf(buf + cnt, len - cnt, "\n");
-> +
-> +	return cnt;
-> +}
-> +
-> +static ssize_t show_map(struct device *dev, struct device_attribute *attr,
-> +			char *buf)
-> +{
-> +	struct devfreq *df = to_devfreq(dev);
-> +	struct devfreq_node *n = df->data;
-> +	struct freq_map *map;
-> +	unsigned int cnt = 0, cpu;
-> +
-> +	mutex_lock(&state_lock);
-> +	if (n->common_map) {
-> +		map = n->common_map;
-> +		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
-> +				"Common table for all CPUs:\n");
-> +		cnt += show_table(buf + cnt, PAGE_SIZE - cnt, map);
-> +	} else if (n->map) {
-> +		for_each_possible_cpu(cpu) {
-> +			map = n->map[cpu];
-> +			if (!map)
-> +				continue;
-> +			cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
-> +					"CPU %u:\n", cpu);
-> +			if (cnt >= PAGE_SIZE)
-> +				break;
-> +			cnt += show_table(buf + cnt, PAGE_SIZE - cnt, map);
-> +			if (cnt >= PAGE_SIZE)
-> +				break;
-> +		}
-> +	} else {
-> +		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
-> +				"Device freq interpolated based on CPU freq\n");
-> +	}
-> +	mutex_unlock(&state_lock);
-> +
-> +	return cnt;
-> +}
-> +
-> +static DEVICE_ATTR(freq_map, 0444, show_map, NULL);
-> +static struct attribute *dev_attr[] = {
-> +	&dev_attr_freq_map.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group dev_attr_group = {
-> +	.name = "cpufreq",
-> +	.attrs = dev_attr,
-> +};
-> +
-> +static int devfreq_cpufreq_gov_start(struct devfreq *devfreq)
-> +{
-> +	int ret = 0;
-> +	struct devfreq_node *node;
-> +	bool alloc = false;
-> +
-> +	ret = register_cpufreq();
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sysfs_create_group(&devfreq->dev.kobj, &dev_attr_group);
-> +	if (ret) {
-> +		unregister_cpufreq();
-> +		return ret;
-> +	}
-> +
-> +	mutex_lock(&state_lock);
-> +
-> +	node = find_devfreq_node(devfreq->dev.parent);
-> +	if (node == NULL) {
-> +		node = kzalloc(sizeof(struct devfreq_node), GFP_KERNEL);
-> +		if (!node) {
-> +			pr_err("Out of memory!\n");
-> +			ret = -ENOMEM;
-> +			goto alloc_fail;
-> +		}
-> +		alloc = true;
-> +		node->dev = devfreq->dev.parent;
-> +		list_add_tail(&node->list, &devfreq_list);
-> +	}
-> +	node->df = devfreq;
-> +	node->orig_data = devfreq->data;
-> +	devfreq->data = node;
-> +
-> +	mutex_lock(&devfreq->lock);
-> +	ret = update_devfreq(devfreq);
-> +	mutex_unlock(&devfreq->lock);
-> +	if (ret) {
-> +		pr_err("Freq update failed!\n");
-> +		goto update_fail;
-> +	}
-> +
-> +	mutex_unlock(&state_lock);
-> +	return 0;
-> +
-> +update_fail:
-> +	devfreq->data = node->orig_data;
-> +	if (alloc) {
-> +		list_del(&node->list);
-> +		kfree(node);
-> +	}
-> +alloc_fail:
-> +	mutex_unlock(&state_lock);
-> +	sysfs_remove_group(&devfreq->dev.kobj, &dev_attr_group);
-> +	unregister_cpufreq();
-> +	return ret;
-> +}
-> +
-> +static void devfreq_cpufreq_gov_stop(struct devfreq *devfreq)
-> +{
-> +	struct devfreq_node *node = devfreq->data;
-> +
-> +	mutex_lock(&state_lock);
-> +	devfreq->data = node->orig_data;
-> +	if (node->map || node->common_map) {
-> +		node->df = NULL;
-> +	} else {
-> +		list_del(&node->list);
-> +		kfree(node);
-> +	}
-> +	mutex_unlock(&state_lock);
-> +
-> +	sysfs_remove_group(&devfreq->dev.kobj, &dev_attr_group);
-> +	unregister_cpufreq();
-> +}
-> +
-> +static int devfreq_cpufreq_ev_handler(struct devfreq *devfreq,
-> +					unsigned int event, void *data)
-> +{
-> +	int ret;
-> +
-> +	switch (event) {
-> +	case DEVFREQ_GOV_START:
-> +
-> +		ret = devfreq_cpufreq_gov_start(devfreq);
-> +		if (ret) {
-> +			pr_err("Governor start failed!\n");
-> +			return ret;
-> +		}
-> +		pr_debug("Enabled dev CPUfreq governor\n");
-> +		break;
-> +
-> +	case DEVFREQ_GOV_STOP:
-> +
-> +		devfreq_cpufreq_gov_stop(devfreq);
-> +		pr_debug("Disabled dev CPUfreq governor\n");
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct devfreq_governor devfreq_cpufreq = {
-> +	.name = "cpufreq",
-> +	.get_target_freq = devfreq_cpufreq_get_freq,
-> +	.event_handler = devfreq_cpufreq_ev_handler,
-> +};
-> +
-> +#define NUM_COLS	2
-> +static struct freq_map *read_tbl(struct device_node *of_node, char *prop_name)
-> +{
-> +	int len, nf, i, j;
-> +	u32 data;
-> +	struct freq_map *tbl;
-> +
-> +	if (!of_find_property(of_node, prop_name, &len))
-> +		return NULL;
-> +	len /= sizeof(data);
-> +
-> +	if (len % NUM_COLS || len == 0)
-> +		return NULL;
-> +	nf = len / NUM_COLS;
-> +
-> +	tbl = kzalloc((nf + 1) * sizeof(*tbl), GFP_KERNEL);
-> +	if (!tbl)
-> +		return NULL;
-> +
-> +	for (i = 0, j = 0; i < nf; i++, j += 2) {
-> +		of_property_read_u32_index(of_node, prop_name, j, &data);
-> +		tbl[i].cpu_khz = data;
-> +
-> +		of_property_read_u32_index(of_node, prop_name, j + 1, &data);
-> +		tbl[i].target_freq = data;
-> +	}
-> +	tbl[i].cpu_khz = 0;
-> +
-> +	return tbl;
-> +}
-> +
-> +#define PROP_TARGET "target-dev"
-> +#define PROP_TABLE "cpu-to-dev-map"
-> +static int add_table_from_of(struct device_node *of_node)
-> +{
-> +	struct device_node *target_of_node;
-> +	struct devfreq_node *node;
-> +	struct freq_map *common_tbl;
-> +	struct freq_map **tbl_list = NULL;
-> +	static char prop_name[] = PROP_TABLE "-999999";
-> +	int cpu, ret, cnt = 0, prop_sz = ARRAY_SIZE(prop_name);
-> +
-> +	target_of_node = of_parse_phandle(of_node, PROP_TARGET, 0);
-> +	if (!target_of_node)
-> +		return -EINVAL;
-> +
-> +	node = kzalloc(sizeof(struct devfreq_node), GFP_KERNEL);
-> +	if (!node)
-> +		return -ENOMEM;
-> +
-> +	common_tbl = read_tbl(of_node, PROP_TABLE);
-> +	if (!common_tbl) {
-> +		tbl_list = kzalloc(sizeof(*tbl_list) * NR_CPUS, GFP_KERNEL);
-> +		if (!tbl_list) {
-> +			ret = -ENOMEM;
-> +			goto err_list;
-> +		}
-> +
-> +		for_each_possible_cpu(cpu) {
-> +			ret = snprintf(prop_name, prop_sz, "%s-%d",
-> +					PROP_TABLE, cpu);
-> +			if (ret >= prop_sz) {
-> +				pr_warn("More CPUs than I can handle!\n");
-> +				pr_warn("Skipping rest of the tables!\n");
-> +				break;
-> +			}
-> +			tbl_list[cpu] = read_tbl(of_node, prop_name);
-> +			if (tbl_list[cpu])
-> +				cnt++;
-> +		}
-> +	}
-> +	if (!common_tbl && !cnt) {
-> +		ret = -EINVAL;
-> +		goto err_tbl;
-> +	}
-> +
-> +	mutex_lock(&state_lock);
-> +	node->of_node = target_of_node;
-> +	node->map = tbl_list;
-> +	node->common_map = common_tbl;
-> +	list_add_tail(&node->list, &devfreq_list);
-> +	mutex_unlock(&state_lock);
-> +
-> +	return 0;
-> +err_tbl:
-> +	kfree(tbl_list);
-> +err_list:
-> +	kfree(node);
-> +	return ret;
-> +}
-> +
-> +static int __init devfreq_cpufreq_init(void)
-> +{
-> +	int ret;
-> +	struct device_node *of_par, *of_child;
-> +
-> +	of_par = of_find_node_by_name(NULL, "devfreq-cpufreq");
-> +	if (of_par) {
-> +		for_each_child_of_node(of_par, of_child) {
-> +			ret = add_table_from_of(of_child);
-> +			if (ret)
-> +				pr_err("Parsing %s failed!\n", of_child->name);
-> +			else
-> +				pr_debug("Parsed %s.\n", of_child->name);
-> +		}
-> +		of_node_put(of_par);
-> +	} else {
-> +		pr_info("No tables parsed from DT.\n");
-> +	}
-> +
-> +	ret = devfreq_add_governor(&devfreq_cpufreq);
-> +	if (ret) {
-> +		pr_err("Governor add failed!\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +subsys_initcall(devfreq_cpufreq_init);
-> +
-> +static void __exit devfreq_cpufreq_exit(void)
-> +{
-> +	int ret, cpu;
-> +	struct devfreq_node *node, *tmp;
-> +
-> +	ret = devfreq_remove_governor(&devfreq_cpufreq);
-> +	if (ret)
-> +		pr_err("Governor remove failed!\n");
-> +
-> +	mutex_lock(&state_lock);
-> +	list_for_each_entry_safe(node, tmp, &devfreq_list, list) {
-> +		kfree(node->common_map);
-> +		for_each_possible_cpu(cpu)
-> +			kfree(node->map[cpu]);
-> +		kfree(node->map);
-> +		list_del(&node->list);
-> +		kfree(node);
-> +	}
-> +	mutex_unlock(&state_lock);
-> +}
-> +module_exit(devfreq_cpufreq_exit);
-> +
-> +MODULE_DESCRIPTION("CPU freq based generic governor for devfreq devices");
-> +MODULE_LICENSE("GPL v2");
+The reason we do not use the /dev/foo scheme is that the devices to be
+shared are programmable accelerators. We cannot fix up the kernel driver for them.
+> > > 
+> > > Thanks,
+> > > Jean  
+> 
+> 
 
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+			-Kenneth Lee (Hisilicon)
+
+
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
