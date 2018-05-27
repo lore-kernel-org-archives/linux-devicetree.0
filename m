@@ -1,45 +1,69 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6 wandboard and riotboard: remove
- regulators bus node
-Date: Sun, 27 May 2018 13:40:13 -0300
-Message-ID: <CAOMZO5AzC1FVfwuimxnaGgsksDk6MjXpGiwwbc0Yer-fX8ZVFA@mail.gmail.com>
-References: <20180526183053.14029-1-akurz@blala.de>
- <20180526183053.14029-2-akurz@blala.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180526183053.14029-2-akurz@blala.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Kurz <akurz@blala.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash support
+Date: Sun, 27 May 2018 23:54:36 +0200
+Message-ID: <20180527215442.14760-1-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org
+Cc: dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+This picks up an older patchset written by Lucas Stach which
+adds raw NAND flash support for Tegra 2.
+http://lists.infradead.org/pipermail/linux-mtd/2015-November/063031.html
 
-[It would be better to split this patch in two: one for wandboard and
-another one for riotboard]
+The driver has been reworked to implement the ->exec_op callback.
+Some smaller changes and bug fixes have been applied too, but I did
+not keep track of them. Since the original patchset has been posted
+some years back already, I guess review needs to be done from scratch
+anyway.
 
-On Sat, May 26, 2018 at 3:30 PM, Alexander Kurz <akurz@blala.de> wrote:
+This second revision is a rather major overhaul again. There are some
+open issues:
+- Driver specific DMA enabled (read/write)_page_raw are non functional
+  (I am not sure why, or if this is maybe even not possible at all...)
+- OOB layout discrepancy
+  When using HW BCH support, the location of the ECC bytes changes
+  depending on whether extra OOB bytes (tag data) are transmitted or
+  not... Writing/Reading should always be with tag enabled or always
+  without. I am not sure how to solve this correctly, maybe disallow
+  using OOB data with HW ECC completely?
 
-> +
-> +       reg_2p5v: fixedregulator@0 {
+--
+Stefan
 
-This causes dtc warnings with W=1 as you are passing a unit address
-without a corresponding reg property.
+Changes since v1:
+- Split controller and NAND chip structure
+- Add BCH support
+- Allow to select algorithm and strength using device tree
+- Improve HW ECC error reporting and use DEC_STATUS_BUF only
+- Use SPDX license identifier
+- Use per algorithm mtd_ooblayout_ops
+- Use setup_data_interface callback for NAND timing configuration
 
-You can rewrite this as:
+Lucas Stach (4):
+  mtd: rawnand: tegra: add devicetree binding
+  clk: tegra20: init NDFLASH clock to sensible rate
+  ARM: tegra: add Tegra20 NAND flash controller node
+  ARM: tegra: enable NAND flash on Colibri T20
 
-reg_2p5v: regulator-2p5v {
+Stefan Agner (2):
+  mtd: rawnand: add Reed-Solomon error correction algorithm
+  mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
 
-Please follow this convention in the entire series.
+ .../bindings/mtd/nvidia,tegra20-nand.txt      |  62 ++
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/tegra20-colibri-512.dtsi    |  16 +
+ arch/arm/boot/dts/tegra20.dtsi                |  13 +
+ drivers/clk/tegra/clk-tegra20.c               |   1 +
+ drivers/mtd/nand/raw/Kconfig                  |   6 +
+ drivers/mtd/nand/raw/Makefile                 |   1 +
+ drivers/mtd/nand/raw/nand_base.c              |   1 +
+ drivers/mtd/nand/raw/tegra_nand.c             | 999 ++++++++++++++++++
+ include/linux/mtd/rawnand.h                   |   1 +
+ 10 files changed, 1107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
 
-Thanks
+-- 
+2.17.0
