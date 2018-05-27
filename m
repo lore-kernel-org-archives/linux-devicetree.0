@@ -1,54 +1,117 @@
-Return-Path: <SRS0=oVvL=IM=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v5 5/6] arm64: dts: ls1046a: add qdma device tree nodes
-Date: Fri, 25 May 2018 19:19:19 +0800
-Message-ID: <20180525111920.24498-5-wen.he_1@nxp.com>
-In-Reply-To: <20180525111920.24498-1-wen.he_1@nxp.com>
-References: <20180525111920.24498-1-wen.he_1@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <SRS0=BfEI=IO=redhat.com=hdegoede@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 10/13] Bluetooth: hci_h5: Add support for serdev enumerated devices
+Date: Sun, 27 May 2018 21:04:54 +0200
+Message-Id: <20180527190457.2632-11-hdegoede@redhat.com>
+In-Reply-To: <20180527190457.2632-1-hdegoede@redhat.com>
+References: <20180527190457.2632-1-hdegoede@redhat.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, robh@kernel.org, Jeremy Cline <jeremy@jcline.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-add the qDMA device tree nodes for LS1046A devices.
+Add basic support for serdev enumerated devices, note sine this does
+not (yet) declare any of / ACPI ids to bind to atm this is a nop.
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-change in v5:
-	- Replace dts node variable 'queues' to 'fsl,queues' that add vendor prefix
+ drivers/bluetooth/hci_h5.c | 51 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 4 deletions(-)
 
-change in v4:
-	- no
-
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 136ebfa..27988e2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -597,6 +597,21 @@
- 				 <&clockgen 4 1>;
- 		};
+diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+index 6a8d0d06aba7..11bfe28edb86 100644
+--- a/drivers/bluetooth/hci_h5.c
++++ b/drivers/bluetooth/hci_h5.c
+@@ -23,6 +23,7 @@
  
-+		qdma: dma-controller@8380000 {
-+			compatible = "fsl,ls1021a-qdma", "fsl,ls1046a-qdma";
-+			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
-+				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
-+			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error", "qdma-queue";
-+			dma-channels = <8>;
-+			fsl,queues = <2>;
-+			status-sizes = <64>;
-+			queue-sizes = <64 64>;
-+			big-endian;
-+		};
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
++#include <linux/serdev.h>
+ #include <linux/skbuff.h>
+ 
+ #include <net/bluetooth/bluetooth.h>
+@@ -65,6 +66,9 @@ enum {
+ };
+ 
+ struct h5 {
++	/* Must be the first member, hci_serdev.c expects this. */
++	struct hci_uart		serdev_hu;
 +
- 		usb0: usb@2f00000 {
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x2f00000 0x0 0x10000>;
+ 	struct sk_buff_head	unack;		/* Unack'ed packets queue */
+ 	struct sk_buff_head	rel;		/* Reliable packets queue */
+ 	struct sk_buff_head	unrel;		/* Unreliable packets queue */
+@@ -193,9 +197,13 @@ static int h5_open(struct hci_uart *hu)
+ 
+ 	BT_DBG("hu %p", hu);
+ 
+-	h5 = kzalloc(sizeof(*h5), GFP_KERNEL);
+-	if (!h5)
+-		return -ENOMEM;
++	if (hu->serdev) {
++		h5 = serdev_device_get_drvdata(hu->serdev);
++	} else {
++		h5 = kzalloc(sizeof(*h5), GFP_KERNEL);
++		if (!h5)
++			return -ENOMEM;
++	}
+ 
+ 	hu->priv = h5;
+ 	h5->hu = hu;
+@@ -229,7 +237,8 @@ static int h5_close(struct hci_uart *hu)
+ 	skb_queue_purge(&h5->rel);
+ 	skb_queue_purge(&h5->unrel);
+ 
+-	kfree(h5);
++	if (!hu->serdev)
++		kfree(h5);
+ 
+ 	return 0;
+ }
+@@ -750,12 +759,46 @@ static const struct hci_uart_proto h5p = {
+ 	.flush		= h5_flush,
+ };
+ 
++static int h5_serdev_probe(struct serdev_device *serdev)
++{
++	struct h5 *h5;
++
++	h5 = devm_kzalloc(&serdev->dev, sizeof(*h5), GFP_KERNEL);
++	if (!h5)
++		return -ENOMEM;
++
++	set_bit(HCI_UART_RESET_ON_INIT, &h5->serdev_hu.flags);
++
++	h5->hu = &h5->serdev_hu;
++	h5->serdev_hu.serdev = serdev;
++	serdev_device_set_drvdata(serdev, h5);
++
++	return hci_uart_register_device(&h5->serdev_hu, &h5p);
++}
++
++static void h5_serdev_remove(struct serdev_device *serdev)
++{
++	struct h5 *h5 = serdev_device_get_drvdata(serdev);
++
++	hci_uart_unregister_device(&h5->serdev_hu);
++}
++
++static struct serdev_device_driver h5_serdev_driver = {
++	.probe = h5_serdev_probe,
++	.remove = h5_serdev_remove,
++	.driver = {
++		.name = "hci_uart_h5",
++	},
++};
++
+ int __init h5_init(void)
+ {
++	serdev_device_driver_register(&h5_serdev_driver);
+ 	return hci_uart_register_proto(&h5p);
+ }
+ 
+ int __exit h5_deinit(void)
+ {
++	serdev_device_driver_unregister(&h5_serdev_driver);
+ 	return hci_uart_unregister_proto(&h5p);
+ }
 -- 
-1.7.1
+2.17.0
