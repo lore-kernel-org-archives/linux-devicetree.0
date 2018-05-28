@@ -1,79 +1,96 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v4 3/9] drm/mediatek: add ddp component AAL1
-Date: Mon, 28 May 2018 15:03:55 +0800
-Message-ID: <1527491035.24367.1.camel@mtksdaap41>
+Subject: Re: [PATCH v4 4/9] drm/mediatek: add ddp component OD1
+Date: Mon, 28 May 2018 15:07:43 +0800
+Message-ID: <1527491263.24367.3.camel@mtksdaap41>
 References: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
- <1527489507-24453-4-git-send-email-stu.hsieh@mediatek.com>
+         <1527489507-24453-5-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1527489507-24453-4-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527489507-24453-5-git-send-email-stu.hsieh@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0dToKCk9uIE1vbiwgMjAxOC0wNS0yOCBhdCAxNDozOCArMDgwMCwgU3R1IEhzaWVoIHdy
-b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIGNvbXBvbmVudCBBQUwxIGFuZAo+IHJlbmFtZSBBQUwgdG8g
-QUFMMAo+IAoKUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+Cgo+IFNpZ25l
-ZC1vZmYtYnk6IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8IDIgKy0KPiAgZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDMgKystCj4gIGRyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAzICsrLQo+ICBkcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgIHwgMiArLQo+ICA0IGZpbGVzIGNoYW5n
-ZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHAuYwo+IGluZGV4IDQ3ZmZhMjQwYmQyNS4uNzIxNzY2NWY0YjVkIDEw
-MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBAQCAtMTEwLDcgKzEx
-MCw3IEBAIHN0YXRpYyBjb25zdCB1bnNpZ25lZCBpbnQgbXQyNzAxX211dGV4X21vZFtERFBfQ09N
-UE9ORU5UX0lEX01BWF0gPSB7Cj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50
-IG10ODE3M19tdXRleF9tb2RbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0gewo+IC0JW0REUF9DT01Q
-T05FTlRfQUFMXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9BQUwsCj4gKwlbRERQX0NPTVBPTkVO
-VF9BQUwwXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9BQUwsCj4gIAlbRERQX0NPTVBPTkVOVF9D
-T0xPUjBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX0NPTE9SMCwKPiAgCVtERFBfQ09NUE9ORU5U
-X0NPTE9SMV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfQ09MT1IxLAo+ICAJW0REUF9DT01QT05F
-TlRfR0FNTUFdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX0dBTU1BLAo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+IGluZGV4IDQ2NzIzMTdlM2FkMS4uMDkx
-OTAzOTgwNWFhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcF9jb21wLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBf
-Y29tcC5jCj4gQEAgLTIxOCw3ICsyMTgsOCBAQCBzdHJ1Y3QgbXRrX2RkcF9jb21wX21hdGNoIHsK
-PiAgfTsKPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2RkcF9jb21wX21hdGNoIG10a19k
-ZHBfbWF0Y2hlc1tERFBfQ09NUE9ORU5UX0lEX01BWF0gPSB7Cj4gLQlbRERQX0NPTVBPTkVOVF9B
-QUxdCT0geyBNVEtfRElTUF9BQUwsCTAsICZkZHBfYWFsIH0sCj4gKwlbRERQX0NPTVBPTkVOVF9B
-QUwwXQk9IHsgTVRLX0RJU1BfQUFMLAkwLCAmZGRwX2FhbCB9LAo+ICsJW0REUF9DT01QT05FTlRf
-QUFMMV0JPSB7IE1US19ESVNQX0FBTCwJMSwgJmRkcF9hYWwgfSwKPiAgCVtERFBfQ09NUE9ORU5U
-X0JMU10JPSB7IE1US19ESVNQX0JMUywJMCwgTlVMTCB9LAo+ICAJW0REUF9DT01QT05FTlRfQ09M
-T1IwXQk9IHsgTVRLX0RJU1BfQ09MT1IsCTAsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX0NP
-TE9SMV0JPSB7IE1US19ESVNQX0NPTE9SLAkxLCBOVUxMIH0sCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oCj4gaW5kZXggMDgyOGNmOGJmODVjLi5lZWUzYzBj
-YzI2MzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-X2NvbXAuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
-LmgKPiBAQCAtNDEsNyArNDEsOCBAQCBlbnVtIG10a19kZHBfY29tcF90eXBlIHsKPiAgfTsKPiAg
-Cj4gIGVudW0gbXRrX2RkcF9jb21wX2lkIHsKPiAtCUREUF9DT01QT05FTlRfQUFMLAo+ICsJRERQ
-X0NPTVBPTkVOVF9BQUwwLAo+ICsJRERQX0NPTVBPTkVOVF9BQUwxLAo+ICAJRERQX0NPTVBPTkVO
-VF9CTFMsCj4gIAlERFBfQ09NUE9ORU5UX0NPTE9SMCwKPiAgCUREUF9DT01QT05FTlRfQ09MT1Ix
-LAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4gaW5kZXggYTJjYTkwZmM0
-MDNjLi5hNDE1MjYwZjNkNWYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
-cnYuYwo+IEBAIC0xNDksNyArMTQ5LDcgQEAgc3RhdGljIGNvbnN0IGVudW0gbXRrX2RkcF9jb21w
-X2lkIG10MjcwMV9tdGtfZGRwX2V4dFtdID0gewo+ICBzdGF0aWMgY29uc3QgZW51bSBtdGtfZGRw
-X2NvbXBfaWQgbXQ4MTczX210a19kZHBfbWFpbltdID0gewo+ICAJRERQX0NPTVBPTkVOVF9PVkww
-LAo+ICAJRERQX0NPTVBPTkVOVF9DT0xPUjAsCj4gLQlERFBfQ09NUE9ORU5UX0FBTCwKPiArCURE
-UF9DT01QT05FTlRfQUFMMCwKPiAgCUREUF9DT01QT05FTlRfT0QsCj4gIAlERFBfQ09NUE9ORU5U
-X1JETUEwLAo+ICAJRERQX0NPTVBPTkVOVF9VRk9FLAoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi, Stu:
+
+On Mon, 2018-05-28 at 14:38 +0800, Stu Hsieh wrote:
+> This patch add the component OD1 and
+> rename the OD to OD1
+
+rename the OD to OD0
+
+> 
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c      | 4 ++--
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 3 ++-
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 3 ++-
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c      | 2 +-
+>  4 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 7217665f4b5d..58e44349e315 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -114,7 +114,7 @@ static const unsigned int mt8173_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+>  	[DDP_COMPONENT_COLOR0] = MT8173_MUTEX_MOD_DISP_COLOR0,
+>  	[DDP_COMPONENT_COLOR1] = MT8173_MUTEX_MOD_DISP_COLOR1,
+>  	[DDP_COMPONENT_GAMMA] = MT8173_MUTEX_MOD_DISP_GAMMA,
+> -	[DDP_COMPONENT_OD] = MT8173_MUTEX_MOD_DISP_OD,
+> +	[DDP_COMPONENT_OD0] = MT8173_MUTEX_MOD_DISP_OD,
+>  	[DDP_COMPONENT_OVL0] = MT8173_MUTEX_MOD_DISP_OVL0,
+>  	[DDP_COMPONENT_OVL1] = MT8173_MUTEX_MOD_DISP_OVL1,
+>  	[DDP_COMPONENT_PWM0] = MT8173_MUTEX_MOD_DISP_PWM0,
+> @@ -139,7 +139,7 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>  	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_RDMA0) {
+>  		*addr = DISP_REG_CONFIG_DISP_OVL_MOUT_EN;
+>  		value = OVL_MOUT_EN_RDMA;
+> -	} else if (cur == DDP_COMPONENT_OD && next == DDP_COMPONENT_RDMA0) {
+> +	} else if (cur == DDP_COMPONENT_OD0 && next == DDP_COMPONENT_RDMA0) {
+>  		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+>  		value = OD_MOUT_EN_RDMA0;
+>  	} else if (cur == DDP_COMPONENT_UFOE && next == DDP_COMPONENT_DSI0) {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> index 0919039805aa..87acf6be87f6 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -227,7 +227,8 @@ static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_ID_MAX] = {
+>  	[DDP_COMPONENT_DSI0]	= { MTK_DSI,		0, NULL },
+>  	[DDP_COMPONENT_DSI1]	= { MTK_DSI,		1, NULL },
+>  	[DDP_COMPONENT_GAMMA]	= { MTK_DISP_GAMMA,	0, &ddp_gamma },
+> -	[DDP_COMPONENT_OD]	= { MTK_DISP_OD,	0, &ddp_od },
+> +	[DDP_COMPONENT_OD0]	= { MTK_DISP_OD,	0, &ddp_od },
+> +	[DDP_COMPONENT_OD1]	= { MTK_DISP_OD,	1, &ddp_od },
+>  	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
+>  	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
+>  	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index eee3c0cc2632..9b19fc4423f1 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -50,7 +50,8 @@ enum mtk_ddp_comp_id {
+>  	DDP_COMPONENT_DSI0,
+>  	DDP_COMPONENT_DSI1,
+>  	DDP_COMPONENT_GAMMA,
+> -	DDP_COMPONENT_OD,
+> +	DDP_COMPONENT_OD0,
+> +	DDP_COMPONENT_OD1,
+>  	DDP_COMPONENT_OVL0,
+>  	DDP_COMPONENT_OVL1,
+>  	DDP_COMPONENT_PWM0,
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index a415260f3d5f..08d5d0b47bfe 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -150,7 +150,7 @@ static const enum mtk_ddp_comp_id mt8173_mtk_ddp_main[] = {
+>  	DDP_COMPONENT_OVL0,
+>  	DDP_COMPONENT_COLOR0,
+>  	DDP_COMPONENT_AAL0,
+> -	DDP_COMPONENT_OD,
+> +	DDP_COMPONENT_OD0,
+>  	DDP_COMPONENT_RDMA0,
+>  	DDP_COMPONENT_UFOE,
+>  	DDP_COMPONENT_DSI0,
