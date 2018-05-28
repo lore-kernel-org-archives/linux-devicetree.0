@@ -1,67 +1,60 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 01/15] arm: dts: armada: Fix "#cooling-cells" property's
- name
-Date: Mon, 28 May 2018 16:53:04 +0200
-Message-ID: <8736ybygq7.fsf@bootlin.com>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <cover.1527244200.git.viresh.kumar@linaro.org>
- <26a0666368694db610414a85a08843435ea070a7.1527244201.git.viresh.kumar@linaro.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2 4/6] clk: tegra20: init NDFLASH clock to sensible rate
+Date: Mon, 28 May 2018 17:53:08 +0200
+Message-ID: <5665b799f763daa82dced238fb494863@agner.ch>
+References: <20180527215442.14760-5-stefan@agner.ch>
+ <20180528075510.GQ6835@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <26a0666368694db610414a85a08843435ea070a7.1527244201.git.viresh.kumar@linaro.org>
- (Viresh Kumar's message of "Fri, 25 May 2018 16:01:47 +0530")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Vincent Guittot <vincent.guittot@linaro.org>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, chris.redpath@arm.com, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180528075510.GQ6835@tbergstrom-lnx.Nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
- 
- On ven., mai 25 2018, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On 28.05.2018 09:55, Peter De Schrijver wrote:
+> On Sun, May 27, 2018 at 11:54:40PM +0200, Stefan Agner wrote:
+>> From: Lucas Stach <dev@lynxeye.de>
+>>
+>> Set up the NAND Flash controller clock to run at 150MHz
+>> instead of the rate set by the bootloader. This is a
+>> conservative rate which also yields good performance.
+>>
+>> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  drivers/clk/tegra/clk-tegra20.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+>> index 0ee56dd04cec..dff8c425cd28 100644
+>> --- a/drivers/clk/tegra/clk-tegra20.c
+>> +++ b/drivers/clk/tegra/clk-tegra20.c
+>> @@ -1049,6 +1049,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+>>  	{ TEGRA20_CLK_GR2D, TEGRA20_CLK_PLL_C, 300000000, 0 },
+>>  	{ TEGRA20_CLK_GR3D, TEGRA20_CLK_PLL_C, 300000000, 0 },
+>>  	{ TEGRA20_CLK_VDE, TEGRA20_CLK_CLK_MAX, 300000000, 0 },
+>> +	{ TEGRA20_CLK_NDFLASH, TEGRA20_CLK_PLL_P, 150000000, 0 },
+>>  	/* must be the last entry */
+>>  	{ TEGRA20_CLK_CLK_MAX, TEGRA20_CLK_CLK_MAX, 0, 0 },
+>>  };
+>> --
+>> 2.17.0
+>>
+> 
+> Maybe better to specify this in the Tegra20 dtsi? See 
+> "Assigned clock parents and rates" in
+> Documentation/devicetree/bindings/clock/clock-bindings.txt
 
-> It should be "#cooling-cells" instead of "cooling-cells". Fix it.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+assigned-clocks indeed works just fine for this case. Thanks for
+bringing this up, will drop this patch and add the device tree
+properties in v3.
 
+Hm, interesting that none of the Tegra device tree make use of the
+feature so far. I guess there would be other cases where this would be
+useful as well (the one just above, VDE?).
 
-Applied on mvebu/fixes
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm/boot/dts/armada-385-synology-ds116.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/armada-385-synology-ds116.dts b/arch/arm/boot/dts/armada-385-synology-ds116.dts
-> index 6782ce481ac9..d8769956cbfc 100644
-> --- a/arch/arm/boot/dts/armada-385-synology-ds116.dts
-> +++ b/arch/arm/boot/dts/armada-385-synology-ds116.dts
-> @@ -139,7 +139,7 @@
->  					      3700 5
->  					      3900 6
->  					      4000 7>;
-> -			cooling-cells = <2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		gpio-leds {
-> -- 
-> 2.15.0.194.g9af6a3dea062
->
-
--- 
-Gregory Clement, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+--
+Stefan
