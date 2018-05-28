@@ -1,203 +1,51 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/4 RFCv2] net: dsa: Add bindings for Realtek SMI DSAs
-Date: Mon, 28 May 2018 19:47:50 +0200
-Message-ID: <20180528174752.6806-3-linus.walleij@linaro.org>
-References: <20180528174752.6806-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180528174752.6806-1-linus.walleij@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?q?Antti=20Sepp=C3=A4l=C3=A4?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH v4 0/6] Enhance support for the SP805 WDT
+Date: Mon, 28 May 2018 11:01:31 -0700
+Message-ID: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The Realtek SMI family is a set of DSA chips that provide
-switching in routers. This binding just follows the pattern
-set by other switches but with the introduction of an embedded
-irqchip to demux and handle the interrupts fired by the single
-line from the chip.
+This patch series enhances the support for the SP805 watchdog timer.
+First of all, 'timeout-sec' devicetree property is added. In addition,
+support is also added to allow the driver to reset the watchdog if it
+has been detected that watchdot has been started in the bootloader. In
+this case, the driver will initiate the ping service from the kernel
+watchdog subsystem, before a user mode daemon takes over. This series
+also enables SP805 in the default ARM64 defconfig
 
-This interrupt construction is similar to how we handle
-interrupt controllers inside PCI bridges etc.
+This patch series is based off v4.17-rc5 and is available on GIHUB:
+repo: https://github.com/Broadcom/arm64-linux.git
+branch: sp805-wdt-v4
 
-Cc: Antti Seppälä <a.seppala@gmail.com>
-Cc: Roman Yeryomin <roman@advem.lv>
-Cc: Colin Leitner <colin.leitner@googlemail.com>
-Cc: Gabor Juhos <juhosg@openwrt.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog RFCv1->RFCv2:
-- Switch to Andrew's suggestion to have a local MDIO bus
-  definition inside of the DSA device node
-- Add realtek,disabled-leds
-- Correct WAN IRQ to 12 in the example
----
- .../bindings/net/dsa/realtek-smi.txt          | 153 ++++++++++++++++++
- 1 file changed, 153 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
+Changes since v3:
+ - Improve description of 'timeout-sec' in the binding document, per
+recommendation from Guenter Roeck
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt b/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
-new file mode 100644
-index 000000000000..b6ae8541bd55
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
-@@ -0,0 +1,153 @@
-+Realtek SMI-based Switches
-+==========================
-+
-+The SMI "Simple Management Interface" is a two-wire protocol using
-+bit-banged GPIO that while it reuses the MDIO lines MCK and MDIO does
-+not use the MDIO protocol. This binding defines how to specify the
-+SMI-based Realtek devices.
-+
-+Required properties:
-+
-+- compatible: must be exactly one of:
-+      "realtek,rtl8366"
-+      "realtek,rtl8366rb" (4+1 ports)
-+      "realtek,rtl8366s"  (4+1 ports)
-+      "realtek,rtl8367"
-+      "realtek,rtl8367b"
-+      "realtek,rtl8368s"  (8 port)
-+      "realtek,rtl8369"
-+      "realtek,rtl8370"   (8 port)
-+
-+Required properties:
-+- mdc-gpios: GPIO line for the MDC clock line.
-+- mdio-gpios: GPIO line for the MDIO data line.
-+- reset-gpios: GPIO line for the reset signal.
-+
-+Optional properties:
-+- realtek,disable-leds: if the LED drivers are not used in the
-+  hardware design this will disable them so they are not turned on
-+  and wasting power.
-+
-+Required subnodes:
-+
-+- interrupt-controller
-+
-+  This defines an interrupt controller with an IRQ line (typically
-+  a GPIO) that will demultiplex and handle the interrupt from the single
-+  interrupt line coming out of one of the SMI-based chips. It most
-+  importantly provides link up/down interrupts to the PHY blocks inside
-+  the ASIC.
-+
-+Required properties of interrupt-controller:
-+
-+- interrupt: parent interrupt, see interrupt-controller/interrupts.txt
-+- interrupt-controller: see interrupt-controller/interrupts.txt
-+- #address-cells: should be <0>
-+- #interrupt-cells: should be <1>
-+
-+- mdio
-+
-+  This defines the internal MDIO bus of the SMI device, mostly for the
-+  purpose of being able to hook the interrupts to the right PHY and
-+  the right PHY to the corresponding port.
-+
-+Required properties of mdio:
-+
-+- compatible: should be set to "realtek,smi-mdio" for all SMI devices
-+
-+See net/mdio.txt for additional MDIO bus properties.
-+
-+See net/dsa/dsa.txt for a list of additional required and optional properties
-+and subnodes of DSA switches.
-+
-+Examples:
-+
-+switch {
-+	compatible = "realtek,rtl8366rb";
-+	/* 22 = MDIO (has input reads), 21 = MDC (clock, output only) */
-+	mdc-gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
-+	mdio-gpios = <&gpio0 22 GPIO_ACTIVE_HIGH>;
-+	reset-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-+
-+	switch_intc: interrupt-controller {
-+		/* GPIO 15 provides the interrupt */
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+	};
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0>;
-+		port@0 {
-+			reg = <0>;
-+			label = "lan0";
-+			phy-handle = <&phy0>;
-+		};
-+		port@1 {
-+			reg = <1>;
-+			label = "lan1";
-+			phy-handle = <&phy1>;
-+		};
-+		port@2 {
-+			reg = <2>;
-+			label = "lan2";
-+			phy-handle = <&phy2>;
-+		};
-+		port@3 {
-+			reg = <3>;
-+			label = "lan3";
-+			phy-handle = <&phy3>;
-+		};
-+		port@4 {
-+			reg = <4>;
-+			label = "wan";
-+			phy-handle = <&phy4>;
-+		};
-+		port@5 {
-+			reg = <5>;
-+			label = "cpu";
-+			ethernet = <&gmac0>;
-+			phy-mode = "rgmii";
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+			};
-+		};
-+	};
-+
-+	mdio {
-+		compatible = "realtek,smi-mdio", "dsa-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		phy0: phy@0 {
-+			reg = <0>;
-+			interrupt-parent = <&switch_intc>;
-+			interrupts = <0>;
-+		};
-+		phy1: phy@1 {
-+			reg = <1>;
-+			interrupt-parent = <&switch_intc>;
-+			interrupts = <1>;
-+		};
-+		phy2: phy@2 {
-+			reg = <2>;
-+			interrupt-parent = <&switch_intc>;
-+			interrupts = <2>;
-+		};
-+		phy3: phy@3 {
-+			reg = <3>;
-+			interrupt-parent = <&switch_intc>;
-+			interrupts = <3>;
-+		};
-+		phy4: phy@4 {
-+			reg = <4>;
-+			interrupt-parent = <&switch_intc>;
-+			interrupts = <12>;
-+		};
-+	};
-+};
+Changes since v2:
+ - Fix indent and format to make them consistent within arm,sp805.txt
+
+Changes since v1:
+ - Consolidate two duplicated SP805 binding documents into one
+ - Slight change of the wdt_is_running implementation per discussion
+
+Ray Jui (6):
+  Documentation: DT: Consolidate SP805 binding docs
+  Documentation: DT: Add optional 'timeout-sec' property for sp805
+  watchdog: sp805: add 'timeout-sec' DT property support
+  watchdog: sp805: set WDOG_HW_RUNNING when appropriate
+  arm64: dt: set initial SR watchdog timeout to 60 seconds
+  arm64: defconfig: add CONFIG_ARM_SP805_WATCHDOG
+
+ .../devicetree/bindings/watchdog/arm,sp805.txt     | 29 +++++++++++++++-----
+ .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31 ----------------------
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  1 +
+ arch/arm64/configs/defconfig                       |  1 +
+ drivers/watchdog/sp805_wdt.c                       | 28 ++++++++++++++++++-
+ 5 files changed, 51 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+
 -- 
-2.17.0
+2.1.4
