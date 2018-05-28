@@ -1,105 +1,79 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 05/11] PM / devfreq: governors: Return device frequency
- limits instead of user limits
-Date: Mon, 28 May 2018 15:56:40 +0900
-Message-ID: <5B0BA828.4070903@samsung.com>
-References: <20180525203043.249193-1-mka@chromium.org>
-        <CGME20180525203310epcas4p34b5ad54243a2e93c7e5bff019ac9e627@epcas4p3.samsung.com>
-        <20180525203043.249193-6-mka@chromium.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v4 3/9] drm/mediatek: add ddp component AAL1
+Date: Mon, 28 May 2018 15:03:55 +0800
+Message-ID: <1527491035.24367.1.camel@mtksdaap41>
+References: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
+ <1527489507-24453-4-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180525203043.249193-6-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1527489507-24453-4-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2018년 05월 26일 05:30, Matthias Kaehlcke wrote:
-> The performance, powersave and simpleondemand governors can return
-> df->min/max_freq, which are the user defined frequency limits.
-> update_devfreq() already takes care of adjusting the target frequency
-> with the user limits if necessary, therefore we can return
-> df->scaling_min/max_freq instead, which is the min/max frequency
-> supported by the device at a given time (depending on the
-> enabled/disabled OPPs)
-
-As you mentioned on the description, update_devfreq() adjusts
-the final target frequency. So, actually, there are no any
-benefits when changing from max_freq/min_freq to scaling_max/min_freq.
-
-I think that it is not necessary.
-
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/devfreq/governor_performance.c    | 2 +-
->  drivers/devfreq/governor_powersave.c      | 2 +-
->  drivers/devfreq/governor_simpleondemand.c | 6 +++---
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/devfreq/governor_performance.c b/drivers/devfreq/governor_performance.c
-> index 1c990cb45098..a8e3478b3c43 100644
-> --- a/drivers/devfreq/governor_performance.c
-> +++ b/drivers/devfreq/governor_performance.c
-> @@ -20,7 +20,7 @@ static int devfreq_performance_func(struct devfreq *df,
->  	 * target callback should be able to get floor value as
->  	 * said in devfreq.h
->  	 */
-> -	*freq = df->max_freq;
-> +	*freq = df->scaling_max_freq;
->  	return 0;
->  }
->  
-> diff --git a/drivers/devfreq/governor_powersave.c b/drivers/devfreq/governor_powersave.c
-> index 0c42f23249ef..8696efd32e5a 100644
-> --- a/drivers/devfreq/governor_powersave.c
-> +++ b/drivers/devfreq/governor_powersave.c
-> @@ -20,7 +20,7 @@ static int devfreq_powersave_func(struct devfreq *df,
->  	 * target callback should be able to get ceiling value as
->  	 * said in devfreq.h
->  	 */
-> -	*freq = df->min_freq;
-> +	*freq = df->scaling_min_freq;
->  	return 0;
->  }
->  
-> diff --git a/drivers/devfreq/governor_simpleondemand.c b/drivers/devfreq/governor_simpleondemand.c
-> index 3da7554b4837..805fee09c754 100644
-> --- a/drivers/devfreq/governor_simpleondemand.c
-> +++ b/drivers/devfreq/governor_simpleondemand.c
-> @@ -46,7 +46,7 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
->  
->  	/* Assume MAX if it is going to be divided by zero */
->  	if (stat->total_time == 0) {
-> -		*freq = df->max_freq;
-> +		*freq = df->scaling_max_freq;
->  		return 0;
->  	}
->  
-> @@ -59,13 +59,13 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
->  	/* Set MAX if it's busy enough */
->  	if (stat->busy_time * 100 >
->  	    stat->total_time * dfso_upthreshold) {
-> -		*freq = df->max_freq;
-> +		*freq = df->scaling_max_freq;
->  		return 0;
->  	}
->  
->  	/* Set MAX if we do not know the initial frequency */
->  	if (stat->current_frequency == 0) {
-> -		*freq = df->max_freq;
-> +		*freq = df->scaling_max_freq;
->  		return 0;
->  	}
->  
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+SGksIFN0dToKCk9uIE1vbiwgMjAxOC0wNS0yOCBhdCAxNDozOCArMDgwMCwgU3R1IEhzaWVoIHdy
+b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIGNvbXBvbmVudCBBQUwxIGFuZAo+IHJlbmFtZSBBQUwgdG8g
+QUFMMAo+IAoKUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+Cgo+IFNpZ25l
+ZC1vZmYtYnk6IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8IDIgKy0KPiAgZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDMgKystCj4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAzICsrLQo+ICBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgIHwgMiArLQo+ICA0IGZpbGVzIGNoYW5n
+ZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHAuYwo+IGluZGV4IDQ3ZmZhMjQwYmQyNS4uNzIxNzY2NWY0YjVkIDEw
+MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBAQCAtMTEwLDcgKzEx
+MCw3IEBAIHN0YXRpYyBjb25zdCB1bnNpZ25lZCBpbnQgbXQyNzAxX211dGV4X21vZFtERFBfQ09N
+UE9ORU5UX0lEX01BWF0gPSB7Cj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50
+IG10ODE3M19tdXRleF9tb2RbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0gewo+IC0JW0REUF9DT01Q
+T05FTlRfQUFMXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9BQUwsCj4gKwlbRERQX0NPTVBPTkVO
+VF9BQUwwXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9BQUwsCj4gIAlbRERQX0NPTVBPTkVOVF9D
+T0xPUjBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX0NPTE9SMCwKPiAgCVtERFBfQ09NUE9ORU5U
+X0NPTE9SMV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfQ09MT1IxLAo+ICAJW0REUF9DT01QT05F
+TlRfR0FNTUFdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX0dBTU1BLAo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+IGluZGV4IDQ2NzIzMTdlM2FkMS4uMDkx
+OTAzOTgwNWFhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcF9jb21wLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBf
+Y29tcC5jCj4gQEAgLTIxOCw3ICsyMTgsOCBAQCBzdHJ1Y3QgbXRrX2RkcF9jb21wX21hdGNoIHsK
+PiAgfTsKPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2RkcF9jb21wX21hdGNoIG10a19k
+ZHBfbWF0Y2hlc1tERFBfQ09NUE9ORU5UX0lEX01BWF0gPSB7Cj4gLQlbRERQX0NPTVBPTkVOVF9B
+QUxdCT0geyBNVEtfRElTUF9BQUwsCTAsICZkZHBfYWFsIH0sCj4gKwlbRERQX0NPTVBPTkVOVF9B
+QUwwXQk9IHsgTVRLX0RJU1BfQUFMLAkwLCAmZGRwX2FhbCB9LAo+ICsJW0REUF9DT01QT05FTlRf
+QUFMMV0JPSB7IE1US19ESVNQX0FBTCwJMSwgJmRkcF9hYWwgfSwKPiAgCVtERFBfQ09NUE9ORU5U
+X0JMU10JPSB7IE1US19ESVNQX0JMUywJMCwgTlVMTCB9LAo+ICAJW0REUF9DT01QT05FTlRfQ09M
+T1IwXQk9IHsgTVRLX0RJU1BfQ09MT1IsCTAsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX0NP
+TE9SMV0JPSB7IE1US19ESVNQX0NPTE9SLAkxLCBOVUxMIH0sCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oCj4gaW5kZXggMDgyOGNmOGJmODVjLi5lZWUzYzBj
+YzI2MzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
+X2NvbXAuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
+LmgKPiBAQCAtNDEsNyArNDEsOCBAQCBlbnVtIG10a19kZHBfY29tcF90eXBlIHsKPiAgfTsKPiAg
+Cj4gIGVudW0gbXRrX2RkcF9jb21wX2lkIHsKPiAtCUREUF9DT01QT05FTlRfQUFMLAo+ICsJRERQ
+X0NPTVBPTkVOVF9BQUwwLAo+ICsJRERQX0NPTVBPTkVOVF9BQUwxLAo+ICAJRERQX0NPTVBPTkVO
+VF9CTFMsCj4gIAlERFBfQ09NUE9ORU5UX0NPTE9SMCwKPiAgCUREUF9DT01QT05FTlRfQ09MT1Ix
+LAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyBi
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4gaW5kZXggYTJjYTkwZmM0
+MDNjLi5hNDE1MjYwZjNkNWYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+cnYuYwo+IEBAIC0xNDksNyArMTQ5LDcgQEAgc3RhdGljIGNvbnN0IGVudW0gbXRrX2RkcF9jb21w
+X2lkIG10MjcwMV9tdGtfZGRwX2V4dFtdID0gewo+ICBzdGF0aWMgY29uc3QgZW51bSBtdGtfZGRw
+X2NvbXBfaWQgbXQ4MTczX210a19kZHBfbWFpbltdID0gewo+ICAJRERQX0NPTVBPTkVOVF9PVkww
+LAo+ICAJRERQX0NPTVBPTkVOVF9DT0xPUjAsCj4gLQlERFBfQ09NUE9ORU5UX0FBTCwKPiArCURE
+UF9DT01QT05FTlRfQUFMMCwKPiAgCUREUF9DT01QT05FTlRfT0QsCj4gIAlERFBfQ09NUE9ORU5U
+X1JETUEwLAo+ICAJRERQX0NPTVBPTkVOVF9VRk9FLAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
