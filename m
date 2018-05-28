@@ -1,121 +1,37 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 2/6] mtd: rawnand: tegra: add devicetree binding
-Date: Mon, 28 May 2018 00:23:54 +0200
-Message-ID: <20180528002354.45025afd@xps13>
-References: <20180527215442.14760-3-stefan@agner.ch>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6 wandboard and riotboard: remove
+ regulators bus node
+Date: Sun, 27 May 2018 21:56:18 -0300
+Message-ID: <CAOMZO5A_eMtMNxyzqryDmmMYTrWOSwZAL++K9x4b9Lz5KpQjzw@mail.gmail.com>
+References: <20180526183053.14029-1-akurz@blala.de>
+ <20180526183053.14029-2-akurz@blala.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180527215442.14760-3-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180526183053.14029-2-akurz@blala.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Kurz <akurz@blala.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Sat, May 26, 2018 at 3:30 PM, Alexander Kurz <akurz@blala.de> wrote:
 
-On Sun, 27 May 2018 23:54:38 +0200, Stefan Agner <stefan@agner.ch>
-wrote:
+> +       reg_usb_otg_vbus: fixedregulator@2 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "usb_otg_vbus";
+> +               regulator-min-microvolt = <5000000>;
+> +               regulator-max-microvolt = <5000000>;
+> +               gpio = <&gpio3 22 0>;
 
-> From: Lucas Stach <dev@lynxeye.de>
-> 
-> This adds the devicetree binding for the Tegra 2 NAND flash
-> controller.
-> 
-> Signed-off-by: Lucas Stach <dev@lynxeye.de>
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  .../bindings/mtd/nvidia,tegra20-nand.txt      | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> new file mode 100644
-> index 000000000000..49e472af1b39
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
-> @@ -0,0 +1,62 @@
-> +NVIDIA Tegra NAND Flash controller
-> +
-> +Required properties:
-> +- compatible: Must be one of:
+Please use  gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>; instead.
 
-Nitpick: just put the compatible here as there is only one?
-
-> +  - "nvidia,tegra20-nand"
-> +- reg: MMIO address range
-> +- interrupts: interrupt output of the NFC controller
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +  - nand
-> +- resets: Must contain an entry for each entry in reset-names.
-> +  See ../reset/reset.txt for details.
-> +- reset-names: Must include the following entries:
-> +  - nand
-> +
-> +Optional children nodes:
-> +Individual NAND chips are children of the NAND controller node. Currently
-> +only one NAND chip supported.
-> +
-> +Required children node properties:
-> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
-
->From 1? It usually starts at 0.
-
-> +
-> +Optional children node properties:
-> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
-> +- nand-ecc-algo: string, algorithm of NAND ECC.
-> +		 Supported values are: "rs", "bch".
-> +- nand-bus-width : 8 or 16 bus width if not present 8
-> +- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-> +- nand-ecc-strength: integer representing the number of bits to correct
-> +		     per ECC step. Supported strength using HW ECC modes are:
-> +		     - RS: 4, 6, 8
-> +		     - BCH: 4, 8, 14, 16
-> +- nand-ecc-step-size: integer representing the number of data bytes
-> +		      that are covered by a single ECC step. Must be 512.
-
-Please don't re-explain nand generic DT properties, point to nand.txt
-instead.
-
-> +- wp-gpios: GPIO specifier for the write protect pin.
-> +
-> +Optional child node of NAND chip nodes:
-> +Partitions: see partition.txt
-> +
-> +  Example:
-> +	nand@70008000 {
-> +		compatible = "nvidia,tegra20-nand";
-> +		reg = <0x70008000 0x100>;
-> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&tegra_car TEGRA20_CLK_NDFLASH>;
-> +		clock-names = "nand";
-> +		resets = <&tegra_car 13>;
-> +		reset-names = "nand";
-> +
-> +		nand-chip@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			nand-bus-width = <8>;
-> +			nand-on-flash-bbt;
-> +			nand-ecc-algo = "bch";
-> +			nand-ecc-step-size = <512>;
-
-In the driver you only refer to step sizes of 512 B, you can remove the
-property from the bindings.
-
-> +			nand-ecc-strength = <8>;
-> +			wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-
-
-
--- 
-Miquel Raynal, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +               enable-active-high;
