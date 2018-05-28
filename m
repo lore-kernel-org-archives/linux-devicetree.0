@@ -1,61 +1,89 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 3/6] mfd: at91-usart: added mfd driver for usart
-Date: Mon, 28 May 2018 11:00:49 +0300
-Message-ID: <CAHp75VeeiFhShuMOVzuy2FjxrkfsxxzhyfAnwQNOoeaRwZ103Q@mail.gmail.com>
-References: <20180525171941.26766-1-radu.pirea@microchip.com> <20180525171941.26766-4-radu.pirea@microchip.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 09/11] misc: throttler: Add core support for non-thermal
+ throttling
+Date: Mon, 28 May 2018 10:08:26 +0200
+Message-ID: <20180528080826.GA17162@kroah.com>
+References: <20180525203043.249193-1-mka@chromium.org>
+ <20180525203043.249193-10-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525171941.26766-4-radu.pirea@microchip.com>
+Content-Disposition: inline
+In-Reply-To: <20180525203043.249193-10-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu.pirea@microchip.com>
-Cc: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, alexandre.belloni@bootlin.com, Lee Jones <lee.jones@linaro.org>, Richard Genoud <richard.genoud@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 8:19 PM, Radu Pirea <radu.pirea@microchip.com> wrote:
-> This mfd driver is just a wrapper over atmel_serial driver and
-> spi-at91-usart driver. Selection of one of the drivers is based on a
-> property from device tree. If the property is not specified, the default
-> driver is atmel_serial.
+On Fri, May 25, 2018 at 01:30:41PM -0700, Matthias Kaehlcke wrote:
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index 20be70c3f118..01a1714dd2ad 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -57,3 +57,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
+>  obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
+>  obj-$(CONFIG_OCXL)		+= ocxl/
+>  obj-$(CONFIG_MISC_RTSX)		+= cardreader/
+> +obj-y				+= throttler/
 
-> +       depends on OF
+Shouldn't you depend on a Kconfig option to traverse into this
+directory?
 
-What makes this driver OF specific?
+> diff --git a/drivers/misc/throttler/Kconfig b/drivers/misc/throttler/Kconfig
+> new file mode 100644
+> index 000000000000..ef8388f6bc0a
+> --- /dev/null
+> +++ b/drivers/misc/throttler/Kconfig
+> @@ -0,0 +1,13 @@
+> +menuconfig THROTTLER
+> +	bool "Throttler support"
+> +	default n
 
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
+the default is always 'n' no need to say it again here :)
 
-Ditto.
-
-> +#include <linux/pinctrl/pinctrl.h>
-
-How exactly is this used?
-
-> +#include <linux/platform_device.h>
-
-> +#include <linux/slab.h>
-
-Ditto.
-
-> +#include <linux/types.h>
-
-> +static int at91_usart_mode_probe(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct mfd_cell cell;
-> +       u32 opmode;
-> +       int err;
+> +	depends on OF
+> +	select CPU_FREQ
+> +	select PM_DEVFREQ
+> +	help
+> +	  This option enables core support for non-thermal throttling of CPUs
+> +	  and devfreq devices.
 > +
+> +	  Note that you also need a event monitor module usually called
+> +	  *_throttler.
+> +
+> diff --git a/drivers/misc/throttler/Makefile b/drivers/misc/throttler/Makefile
+> new file mode 100644
+> index 000000000000..c8d920cee315
+> --- /dev/null
+> +++ b/drivers/misc/throttler/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_THROTTLER)		+= core.o
+> diff --git a/drivers/misc/throttler/core.c b/drivers/misc/throttler/core.c
+> new file mode 100644
+> index 000000000000..c058d03212b8
+> --- /dev/null
+> +++ b/drivers/misc/throttler/core.c
+> @@ -0,0 +1,373 @@
+> +/*
+> + * Core code for non-thermal throttling
+> + *
+> + * Copyright (C) 2018 Google, Inc.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
 
-> +       err = of_property_read_u32(np, "atmel,usart-mode", &opmode);
+Please just use a single SPDX line, like checkpatch.pl would have warned
+you about.  No need for the full verbous license boiler-plate text here
+at all.
 
-Check unified device property API.
+thanks,
 
-> +       return mfd_add_devices(&pdev->dev, PLATFORM_DEVID_AUTO, &cell, 1,
-> +                             NULL, 0, NULL);
-
-No devm_ and no ->remove(). Why to leak resources?
-
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
