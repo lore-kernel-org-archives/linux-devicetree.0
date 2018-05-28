@@ -1,86 +1,54 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] Documentation: dt-bindings: Explicitly mark Samsung Exynos SoC bindings as unstable
-Date: Mon, 28 May 2018 21:13:27 +0200
-Message-ID: <20180528191327.23772-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH 0/3] ASoC: make simple-card a bit more versatile
+Date: Mon, 28 May 2018 21:35:00 +0200
+Message-ID: <20180528193503.18905-1-daniel@zonque.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, kuninori.morimoto.gx@renesas.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+In the process of porting some boards to DT, I noticed the simple-card
+driver is already capable of handling most cases just fine. The missing
+bits I've spotted are:
 
-Samsung Exynos SoCs and boards related bindings evolved since the initial
-introduction, but initially the bindings were minimal and a bit incomplete
-(they never described all the hardware modules available in the SoCs).
-Since then some significant (not fully compatible) changes have been
-already committed a few times (like gpio replaced by pinctrl, display ddc,
-mfc reserved memory, some core clocks added to various hardware modules,
-added more required nodes).
+ * The clock that is passed in is only read, never set, which is not
+   sufficient for boards that support several sampling rates with
+   different base frequencies
 
-On the other side there are no boards which have device tree embedded in
-the bootloader. Device tree blob is always compiled from the kernel tree
-and updated together with the kernel image.
+ * The sysclk id that is passed to snd_soc_dai_set_sysclk() is
+   hard-coded
 
-Thus to avoid further adding a bunch of workarounds for old/missing
-bindings, make development of new platforms easier and allow to make
-cleanup of the existing code and device tree files, lets mark some
-Samsung Exynos SoC platform bindings as unstable. This means that
-bindings can may change at any time and users should use the dtb file
-compiled from the same kernel source tree as the kernel image.
+ * There's currently no support for calling into snd_soc_dai_set_clkdiv()
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The following three patches fix all those and make simple-card a good
+match for the board I'm working with.
 
----
 
-Changes since v1:
-1. Rebase
-2. Add specific compatibles to mark unstable.
+Thanks,
+Daniel
 
-v1 is here:
-https://patchwork.kernel.org/patch/9477963/
+Daniel Mack (3):
+  ASoC: simple-card: set cpu dai clk in hw_params
+  ASoC: simple-card: make sysclk index configurable
+  ASoC: simple-card: add support for clock divider setup
 
-Previous tags (not applying due to change in contents):
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- .../devicetree/bindings/arm/samsung/exynos.txt     | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos.txt
+ .../devicetree/bindings/sound/simple-card.txt      | 13 ++++++
+ include/sound/simple_card_utils.h                  | 19 ++++++++
+ sound/soc/generic/simple-card-utils.c              | 50 ++++++++++++++++++++++
+ sound/soc/generic/simple-card.c                    | 49 +++++++++++++++++++--
+ 4 files changed, 127 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos.txt b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-new file mode 100644
-index 000000000000..7410cb79e4b2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-@@ -0,0 +1,26 @@
-+Samsung Exynos SoC Family Device Tree Bindings
-+---------------------------------------------------------------
-+
-+Work in progress statement:
-+
-+Following Device Tree files and bindings applying to Samsung Exynos SoCs and
-+boards are considered "unstable":
-+
-+ - samsung,exynos5433* (all compatibles related to Exynos5433)
-+ - samsung,exynos7* (all compatibles related to Exynos7)
-+ - samsung,tm2-audio
-+ - samsung,mfc-v10
-+ - samsung,exynos*-mipi-dsi
-+ - samsung,exynos5-dp
-+ - samsung,exynos*-hdmi
-+ - samsung,exynos*-hdmiddc
-+ - samsung,exynos*-hdmiphy
-+ - samsung,exynos*-mixer
-+ - samsung,exynos*-fimd
-+
-+Any Samsung Exynos device tree binding mentioned may change at any time. Be
-+sure to use a device tree binary and a kernel image generated from the same
-+source tree.
-+
-+Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
-+stable binding/ABI.
 -- 
-2.14.1
+2.14.3
