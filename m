@@ -1,47 +1,36 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH v4 2/6] Documentation: DT: Add optional 'timeout-sec' property
- for sp805
-Date: Mon, 28 May 2018 11:01:33 -0700
-Message-ID: <1527530497-10392-3-git-send-email-ray.jui@broadcom.com>
-References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] dt-bindings: arm: Remove obsolete insignal-boards.txt
+Date: Mon, 28 May 2018 20:53:10 +0200
+Message-ID: <20180528185310.21971-1-krzk@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update the SP805 binding document to add optional 'timeout-sec'
-devicetree property
+The compatibles mentioned in insignal-boards.txt are already documented
+under devicetree/bindings/arm/samsung/samsung-boards.txt.  Also the
+contents of insignal-boards.txt is not accurate, e.g. does not mention
+Arndale boards.
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- Documentation/devicetree/bindings/watchdog/arm,sp805.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/insignal-boards.txt | 8 --------
+ 1 file changed, 8 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/insignal-boards.txt
 
-diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-index 0fa3629..bee6f1f 100644
---- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-+++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-@@ -19,6 +19,8 @@ Required properties:
- 
- Optional properties:
- - interrupts:  Should specify WDT interrupt number
-+- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
-+               default timeout is determined by the driver
- 
- Example:
- 	watchdog@66090000 {
+diff --git a/Documentation/devicetree/bindings/arm/insignal-boards.txt b/Documentation/devicetree/bindings/arm/insignal-boards.txt
+deleted file mode 100644
+index 524c3dc5d808..000000000000
+--- a/Documentation/devicetree/bindings/arm/insignal-boards.txt
++++ /dev/null
+@@ -1,8 +0,0 @@
+-* Insignal's Exynos4210 based Origen evaluation board
+-
+-Origen low-cost evaluation board is based on Samsung's Exynos4210 SoC.
+-
+-Required root node properties:
+-    - compatible = should be one or more of the following.
+-        (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
+-        (b) "samsung,exynos4210"  - for boards based on Exynos4210 SoC.
 -- 
-2.1.4
+2.14.1
