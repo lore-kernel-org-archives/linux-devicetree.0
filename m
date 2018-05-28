@@ -1,50 +1,110 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 13/15] arm: dts: r8a7743: Add missing OPP properties for
- CPUs
-Date: Mon, 28 May 2018 13:58:38 +0200
-Message-ID: <20180528115832.b2wovvanypxkgalj@verge.net.au>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
- <20180528092331.3jon45nsqfdzs5ds@verge.net.au>
- <20180528105831.vesrswazlagynemq@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Oleksandr Shamray <oleksandrs@mellanox.com>
+Subject: [patch v22 3/4] Documentation: jtag: Add bindings for Aspeed SoC 24xx and 25xx families JTAG master driver
+Date: Mon, 28 May 2018 15:00:26 +0300
+Message-ID: <1527508827-30724-4-git-send-email-oleksandrs@mellanox.com>
+References: <1527508827-30724-1-git-send-email-oleksandrs@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180528105831.vesrswazlagynemq@vireshk-i7>
+In-Reply-To: <1527508827-30724-1-git-send-email-oleksandrs@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+To: gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, Oleksandr Shamray <oleksandrs@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 04:28:31PM +0530, Viresh Kumar wrote:
-> On 28-05-18, 11:23, Simon Horman wrote:
-> > [Cc Biju Das]
-> > 
-> > On Fri, May 25, 2018 at 04:01:59PM +0530, Viresh Kumar wrote:
-> > > The OPP properties, like "operating-points", should either be present
-> > > for all the CPUs of a cluster or none. If these are present only for a
-> > > subset of CPUs of a cluster then things will start falling apart as soon
-> > > as the CPUs are brought online in a different order. For example, this
-> > > will happen because the operating system looks for such properties in
-> > > the CPU node it is trying to bring up, so that it can create an OPP
-> > > table.
-> > > 
-> > > Add such missing properties.
-> > > 
-> > > Fix other missing property (clock latency) as well to make it all
-> > > work.
-> > > 
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
-> > Thanks, this looks good to me and it looks like it should have:
-> > 
-> > Fixes: 0417814ea140 ("ARM: dts: r8a7743: Add OPP table for frequency scaling")
-> 
-> Sure.
-> 
-> Will you be picking this patch directly and send it part of your pull
-> request ? Maybe add Fixes tag then only ?
+It has been tested on Mellanox system with BMC equipped with
+Aspeed 2520 SoC for programming CPLD devices.
 
-Yes, that is my plan. I can handle adding the Fixes tag.
-But I'll wait to see if Bjiu has an feedback first.
+Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v21->v22
+v20->v21
+v19->v20
+v18->v19
+
+v17->v18
+v16->v17
+v15->v16
+Comments pointed by Joel Stanley <joel.stan@gmail.com>
+- change clocks = <&clk_apb> to proper clocks = <&syscon ASPEED_CLK_APB>
+- add reset descriptions in bndings file
+
+v14->v15
+v13->v14
+v12->v13
+v11->v12
+v10->v11
+v9->v10
+v8->v9
+v7->v8
+Comments pointed by pointed by Joel Stanley <joel.stan@gmail.com>
+- Change compatible string to ast2400 and ast2000
+
+V6->v7
+Comments pointed by Tobias Klauser <tklauser@distanz.ch>
+ - Fix spell "Doccumentation" -> "Documentation"
+
+v5->v6
+Comments pointed by Tobias Klauser <tklauser@distanz.ch>
+- Small nit: s/documentation/Documentation/
+
+v4->v5
+
+V3->v4
+Comments pointed by Rob Herring <robh@kernel.org>
+- delete unnecessary "status" and "reg-shift" descriptions in
+  bndings file
+
+v2->v3
+Comments pointed by Rob Herring <robh@kernel.org>
+- split Aspeed jtag driver and binding to sepatrate patches
+- delete unnecessary "status" and "reg-shift" descriptions in
+  bndings file
+---
+ .../devicetree/bindings/jtag/aspeed-jtag.txt       |   22 ++++++++++++++++++++
+ MAINTAINERS                                        |    1 +
+ 2 files changed, 23 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/jtag/aspeed-jtag.txt
+
+diff --git a/Documentation/devicetree/bindings/jtag/aspeed-jtag.txt b/Documentation/devicetree/bindings/jtag/aspeed-jtag.txt
+new file mode 100644
+index 0000000..7c36eb6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/jtag/aspeed-jtag.txt
+@@ -0,0 +1,22 @@
++Aspeed JTAG driver for ast2400 and ast2500 SoC
++
++Required properties:
++- compatible:		Should be one of
++      - "aspeed,ast2400-jtag"
++      - "aspeed,ast2500-jtag"
++- reg			contains the offset and length of the JTAG memory
++			region
++- clocks		root clock of bus, should reference the APB
++			clock in the second cell
++- resets		phandle to reset controller with the reset number in
++			the second cell
++- interrupts		should contain JTAG controller interrupt
++
++Example:
++jtag: jtag@1e6e4000 {
++	compatible = "aspeed,ast2500-jtag";
++	reg = <0x1e6e4000 0x1c>;
++	clocks = <&syscon ASPEED_CLK_APB>;
++	resets = <&syscon ASPEED_RESET_JTAG_MASTER>;
++	interrupts = <43>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7b8b2c..a5e5f75 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7617,6 +7617,7 @@ S:	Maintained
+ F:	include/linux/jtag.h
+ F:	include/uapi/linux/jtag.h
+ F:	drivers/jtag/
++F:	Documentation/devicetree/bindings/jtag/
+ 
+ K10TEMP HARDWARE MONITORING DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+-- 
+1.7.1
