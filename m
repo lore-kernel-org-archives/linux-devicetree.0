@@ -1,72 +1,45 @@
-Return-Path: <SRS0=7PqC=IR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:45182 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750708AbeE3LEa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 30 May 2018 07:04:30 -0400
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH] arm64: dts: msm8996: Use dwc3-qcom glue driver for USB
-Date: Wed, 30 May 2018 16:34:00 +0530
-Message-Id: <20180530110400.30710-1-mgautam@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: vivek.gautam@codeaurora.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Return-Path: <SRS0=w7UK=IP=nxp.com=jun.li@kernel.org>
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v6 07/15] staging: typec: tcpci: remove unused tcpci_tcpc_config
+Date: Mon, 28 May 2018 10:52:39 +0800
+Message-Id: <1527475967-15201-8-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Move from dwc3-of-simple to dwc3-qcom glue driver to
-support peripheral mode which requires qscratch wrapper
-programming on VBUS event.
+Since we will use config settings via device properties, so
+remove the hard code tcpci_tcpc_config.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
- arch/arm64/boot/dts/qcom/msm8996.dtsi        | 6 ++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/typec/tcpci.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index f45a0ab30d30..83bc1b9ff6ef 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -108,6 +108,7 @@
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index e59547a..076498a 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
+ 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+ };
  
- 		usb@6a00000 {
- 			status = "okay";
-+			extcon = <&usb3_id>;
+-static const struct tcpc_config tcpci_tcpc_config = {
+-	.type = TYPEC_PORT_DFP,
+-	.default_role = TYPEC_SINK,
+-};
+-
+ static int tcpci_parse_config(struct tcpci *tcpci)
+ {
+ 	tcpci->controls_vbus = true; /* XXX */
  
- 			dwc3@6a00000 {
- 				extcon = <&usb3_id>;
-@@ -124,6 +125,7 @@
- 
- 		usb@7600000 {
- 			status = "okay";
-+			extcon = <&usb2_id>;
- 
- 			dwc3@7600000 {
- 				extcon = <&usb2_id>;
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 26292027ba9b..d30516c0db87 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -777,7 +777,8 @@
- 		};
- 
- 		usb2: usb@7600000 {
--			compatible = "qcom,dwc3";
-+			compatible = "qcom,msm8996-dwc3", "qcom,dwc3";
-+			reg = <0x76f8800 0x400>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -805,7 +806,8 @@
- 		};
- 
- 		usb3: usb@6a00000 {
--			compatible = "qcom,dwc3";
-+			compatible = "qcom,msm8996-dwc3", "qcom,dwc3";
-+			reg = <0x6af8800 0x400>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
+-	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+-	tcpci->tcpc.config = &tcpci_tcpc_config;
+ 	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
+ 							 "connector");
+ 	if (!tcpci->tcpc.fwnode) {
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+2.7.4
