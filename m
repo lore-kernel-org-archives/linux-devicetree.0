@@ -1,114 +1,86 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/4 RFCv2] net: dsa: Add bindings for Realtek SMI DSAs
-Date: Mon, 28 May 2018 20:54:25 +0200
-Message-ID: <20180528185425.GD27177@lunn.ch>
-References: <20180528174752.6806-1-linus.walleij@linaro.org>
- <20180528174752.6806-3-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180528174752.6806-3-linus.walleij@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2] Documentation: dt-bindings: Explicitly mark Samsung Exynos SoC bindings as unstable
+Date: Mon, 28 May 2018 21:13:27 +0200
+Message-ID: <20180528191327.23772-1-krzk@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-> +Examples:
-> +
-> +switch {
-> +	compatible = "realtek,rtl8366rb";
-> +	/* 22 = MDIO (has input reads), 21 = MDC (clock, output only) */
-> +	mdc-gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
-> +	mdio-gpios = <&gpio0 22 GPIO_ACTIVE_HIGH>;
-> +	reset-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-> +
-> +	switch_intc: interrupt-controller {
-> +		/* GPIO 15 provides the interrupt */
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-controller;
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +	};
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			label = "lan0";
-> +			phy-handle = <&phy0>;
-> +		};
-> +		port@1 {
-> +			reg = <1>;
-> +			label = "lan1";
-> +			phy-handle = <&phy1>;
-> +		};
-> +		port@2 {
-> +			reg = <2>;
-> +			label = "lan2";
-> +			phy-handle = <&phy2>;
-> +		};
-> +		port@3 {
-> +			reg = <3>;
-> +			label = "lan3";
-> +			phy-handle = <&phy3>;
-> +		};
-> +		port@4 {
-> +			reg = <4>;
-> +			label = "wan";
-> +			phy-handle = <&phy4>;
-> +		};
-> +		port@5 {
-> +			reg = <5>;
-> +			label = "cpu";
-> +			ethernet = <&gmac0>;
-> +			phy-mode = "rgmii";
-> +			fixed-link {
-> +				speed = <1000>;
-> +				full-duplex;
-> +			};
-> +		};
-> +	};
-> +
-> +	mdio {
-> +		compatible = "realtek,smi-mdio", "dsa-mdio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		phy0: phy@0 {
-> +			reg = <0>;
-> +			interrupt-parent = <&switch_intc>;
-> +			interrupts = <0>;
-> +		};
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Hi Linus
+Samsung Exynos SoCs and boards related bindings evolved since the initial
+introduction, but initially the bindings were minimal and a bit incomplete
+(they never described all the hardware modules available in the SoCs).
+Since then some significant (not fully compatible) changes have been
+already committed a few times (like gpio replaced by pinctrl, display ddc,
+mfc reserved memory, some core clocks added to various hardware modules,
+added more required nodes).
 
-This all looks correct, and as i suggested a while ago.
+On the other side there are no boards which have device tree embedded in
+the bootloader. Device tree blob is always compiled from the kernel tree
+and updated together with the kernel image.
 
-But since then, i discovered something, which allows this to be
-simplified.
+Thus to avoid further adding a bunch of workarounds for old/missing
+bindings, make development of new platforms easier and allow to make
+cleanup of the existing code and device tree files, lets mark some
+Samsung Exynos SoC platform bindings as unstable. This means that
+bindings can may change at any time and users should use the dtb file
+compiled from the same kernel source tree as the kernel image.
 
-The mdio bus structure has an irq array. If you put the interrupt
-numbers into this array, when the phy is connected, it will use that
-interrupt. You then don't need a lot of this in your device tree.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Take a look at:
+---
 
-commit 6f88284f3bd77a0e51de22d4956f07557bcc0dbf
-Author: Andrew Lunn <andrew@lunn.ch>
-Date:   Sat Mar 17 20:32:05 2018 +0100
+Changes since v1:
+1. Rebase
+2. Add specific compatibles to mark unstable.
 
-    net: dsa: mv88e6xxx: Add MDIO interrupts for internal PHYs
-    
-    When registering an MDIO bus, it is possible to pass an array of
-    interrupts, one per address on the bus. phylib will then associate the
-    interrupt to the PHY device, if no other interrupt is provided.
-    
-    Some of the global2 interrupts are PHY interrupts. Place them into the
-    MDIO bus structure.
+v1 is here:
+https://patchwork.kernel.org/patch/9477963/
 
+Previous tags (not applying due to change in contents):
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+ .../devicetree/bindings/arm/samsung/exynos.txt     | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos.txt
 
-    Andrew
+diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos.txt b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
+new file mode 100644
+index 000000000000..7410cb79e4b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
+@@ -0,0 +1,26 @@
++Samsung Exynos SoC Family Device Tree Bindings
++---------------------------------------------------------------
++
++Work in progress statement:
++
++Following Device Tree files and bindings applying to Samsung Exynos SoCs and
++boards are considered "unstable":
++
++ - samsung,exynos5433* (all compatibles related to Exynos5433)
++ - samsung,exynos7* (all compatibles related to Exynos7)
++ - samsung,tm2-audio
++ - samsung,mfc-v10
++ - samsung,exynos*-mipi-dsi
++ - samsung,exynos5-dp
++ - samsung,exynos*-hdmi
++ - samsung,exynos*-hdmiddc
++ - samsung,exynos*-hdmiphy
++ - samsung,exynos*-mixer
++ - samsung,exynos*-fimd
++
++Any Samsung Exynos device tree binding mentioned may change at any time. Be
++sure to use a device tree binary and a kernel image generated from the same
++source tree.
++
++Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
++stable binding/ABI.
+-- 
+2.14.1
