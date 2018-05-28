@@ -1,105 +1,94 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
-Date: Mon, 28 May 2018 10:54:57 +0200
-Message-ID: <CAMuHMdXYyN=XY6nb9RVEE+t0NeoSPhTh6fUk-9YWdFzAE1FfPA@mail.gmail.com>
-References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
- <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
- <CAMuHMdXRnoyhNz=3v_=ZCV=FWX4TwKqx7MpH0g3c7GwtXKP1tg@mail.gmail.com>
- <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
- <CAMuHMdXnNABJSJZ6MLF+aQu8QKpFoMCAvno9Yc-9LOe810NtbA@mail.gmail.com>
- <7e1563c3-3e13-235b-3071-c3936502530f@gmail.com>
- <20180528084135.q5xng5eaypprsypr@verge.net.au>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v2 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC driver
+Date: Mon, 28 May 2018 12:00:03 +0300
+Message-ID: <20180528090003.GA8778@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180528084135.q5xng5eaypprsypr@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Richard Weinberger <richard@nod.at>, Boris Brezillon <boris.brezillon@bootlin.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Patch series adding support for ROHM BD71837 PMIC.
 
-On Mon, May 28, 2018 at 10:41 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, May 24, 2018 at 04:52:59PM +0200, Marek Vasut wrote:
->> On 05/23/2018 08:25 AM, Geert Uytterhoeven wrote:
->> > On Wed, May 23, 2018 at 12:01 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
->> >> On 05/22/2018 04:43 PM, Geert Uytterhoeven wrote:
->> >>> On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
->> >>>> Drop the MTD partitioning from DT, since it does not describe HW
->> >>>> and to give way to a more flexible kernel command line partition
->> >>>> passing.
->> >>>>
->> >>>> To retain the original partitioning, assure you have enabled
->> >>>> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
->> >>>> following to your kernel command line:
->> >>>>
->> >>>>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
->> >>>
->> >>> I think the "@0" can be dropped, as it's optional?
->> >>> 4m?
->> >>
->> >> My take on this is that the loader is actually at offset 0x0 of the MTD
->> >> device and we explicitly state that in the mtdparts to anchor the first
->> >> partition within the MTD device and all the other partitions are at
->> >> offset +(sum of the sizes of all partitions listed before the current
->> >> one) relative to that first partition.
->> >
->> > Where is this explicitly states for the first partition?
->> >
->> >> Removing the @0 feels fragile at best and it seems to depend on the
->> >> current behavior of the code.
->> >
->> > Better, it also depends on the documented behavior:
->> >
->> > Documentation/admin-guide/kernel-parameters.txt refers to
->> > drivers/mtd/cmdlinepart.c, which states:
->> >
->> >  * <offset>  := standard linux memsize
->> >  *              if omitted the part will immediately follow the previous part
->> >  *              or 0 if the first part
->> >
->> > None of the examples listed there or under the MTD_CMDLINE_PARTS Kconfig
->> > help text, or in a defconfig bundled with the kernel, use @0 for the first
->> > partition.
->>
->> I think this is exceptionally fragile and dangerous to depend on this,
->> but so be it.
->
-> Could you respin with this change?
->
-> I would also like to ask for another change, in light of recent
-> feedback from Olof Johansson ("Re: [GIT PULL] Renesas ARM64 Based SoC DT
-> Updates for v4.18").
->
-> Please consolidate the dts patches into a single patch?
+BD71837 is a programmable Power Management IC for powering single-core,
+dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+low BOM cost and compact solution footprint. It integrates 8 buck
+regulators and 7 LDO’s to provide all the power rails required by the
+SoC and the commonly used peripherals.
 
-I think it's better to keep them split, as each commit description mentions
-what needs to be passed on the kernel command line for the corresponding
-board.
+The driver aims to not limit the usage of PMIC. Thus the buck and LDO
+naming is generic and not tied to any specific purposes. However there
+is following limitations which make it mostly suitable for use cases
+where the processor where PMIC driver is running is powered by the PMIC:
 
-Combining it in a single patch makes it much harder to extract this information.
-Unless you're fine with a list:
+- The PMIC is not re-initialized if it resets. PMIC may reset as a
+  result of voltage monitoring (over/under voltage) or due to reset
+  request. Driver is only initializing PMIC at probe. This is not
+  problem as long as processor controlling PMIC is powered by PMIC.
 
-   koelsch: ...
-   wheat: mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
+- The PMIC internal state machine is ignored by driver. Driver assumes
+  the PMIC is wired so that it is always in "run" state when controlled
+  by the driver.
 
-Gr{oetje,eeting}s,
+Changelog v2
+Based on feedback from Mark Brown
+- Squashed code and buildfile changes to same patch
+- Fixed some styling issues
+- Changed SPDX comments to CPP style
+- Error out if voltage is changed when regulator is enabled instead of
+  Disabling the regulator for duration of change
+- Use devm_regulator_register
+- Remove compatible usage from regulators - use parent dev for config
+- Add a note about using regulator-boot-on for BUCK6 and 7
+- fixed warnings from kbuild test robot
 
-                        Geert
+patch 1: 
+        MFD driver and definitions bringing interrupt support and
+        enabling clk and regulator subsystems.
+Patches 2, 3 and 4:
+        device tree binding documents.
+Patch 5:
+        clock subsystem and support for gated clock.
+Patch 6:
+        regulator driver supporting 8 bucks and 7 LDOs.
+
+This patch series is based on for-mfd-next
+
+---
+
+Matti Vaittinen (6):
+  mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+  mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  regulator: bd71837: Devicetree bindings for BD71837 regulators
+  clk: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  clk: bd71837: Add driver for BD71837 PMIC clock
+  regulator: bd71837: BD71837 PMIC regulator driver
+
+ .../bindings/clock/rohm,bd71837-clock.txt          |  37 ++
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  52 ++
+ .../bindings/regulator/rohm,bd71837-regulator.txt  | 126 ++++
+ drivers/clk/Kconfig                                |   9 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-bd71837.c                          | 154 +++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bd71837.c                              | 238 ++++++++
+ drivers/regulator/Kconfig                          |  11 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/bd71837-regulator.c              | 678 +++++++++++++++++++++
+ include/linux/mfd/bd71837.h                        | 316 ++++++++++
+ 13 files changed, 1637 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ create mode 100644 drivers/clk/clk-bd71837.c
+ create mode 100644 drivers/mfd/bd71837.c
+ create mode 100644 drivers/regulator/bd71837-regulator.c
+ create mode 100644 include/linux/mfd/bd71837.h
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.14.3
