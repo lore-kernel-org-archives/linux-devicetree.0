@@ -1,59 +1,50 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
- properties for CPUs
-Date: Mon, 28 May 2018 16:46:51 +0530
-Message-ID: <20180528111651.s7xl7e46sfduqk6j@vireshk-i7>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
- <20180525211025.c73zdcdtyuvlewng@localhost>
- <9f9cc086-6069-afbc-d3c6-46608ff35b79@baylibre.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.16 243/272] dt-bindings: display: msm/dsi: Fix the PHY regulator supply props
+Date: Mon, 28 May 2018 12:04:36 +0200
+Message-ID: <20180528100300.706127633@linuxfoundation.org>
+References: <20180528100240.256525891@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9f9cc086-6069-afbc-d3c6-46608ff35b79@baylibre.com>
+In-Reply-To: <20180528100240.256525891@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, chris.redpath@arm.com, linux-amlogic@lists.infradead.org, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Rob Clark <robdclark@gmail.com>, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26-05-18, 10:37, Neil Armstrong wrote:
-> Hi,
-> 
-> On 25/05/2018 23:10, Olof Johansson wrote:
-> > On Fri, May 25, 2018 at 11:10:01AM +0530, Viresh Kumar wrote:
-> >> The cooling device properties, like "#cooling-cells" and
-> >> "dynamic-power-coefficient", should either be present for all the CPUs
-> >> of a cluster or none. If these are present only for a subset of CPUs of
-> >> a cluster then things will start falling apart as soon as the CPUs are
-> >> brought online in a different order. For example, this will happen
-> >> because the operating system looks for such properties in the CPU node
-> >> it is trying to bring up, so that it can register a cooling device.
-> >>
-> >> Add such missing properties.
-> > 
-> > This seems awkward compared to just having one cooling-cells in the /cpus node
-> > instead.
-> > 
-> > What's it used for? I don't see any properties in the device nodes on meson-gxm
-> > that have any cooling-foo cells in them? So why should #cooling-cells be
-> > needed?
-> 
-> 
-> There is no reason to have the cooling-cells on these other CPUs, the DVFS is
-> controlled on the first CPU of each cluster, here cpu0 and cpu4 and only
-> cpu0 and cpu4 are used as cooling-cells.
+4.16-stable review patch.  If anyone has any objections, please let me know.
 
-First, this is an incomplete definition of the hardware as all the
-CPUs are cooling-devices here and DT shouldn't be written assuming how
-OS will interpret it.
+------------------
 
-And then it is broken right now. You can offline your second cluster
-(4567 CPUs) and bring CPU5 up first. You will see things breaking.
+From: Archit Taneja <architt@codeaurora.org>
 
-I have explained more in detail here.
+[ Upstream commit 8c4905fd4939c59e0f7993ba34883e328eef4b59 ]
 
-https://marc.info/?l=linux-kernel&m=152750569414761
+The PHY regulator supply names vary across different PHY versions.
+Mention explicitly which PHYs require which supplies.
 
--- 
-viresh
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ Documentation/devicetree/bindings/display/msm/dsi.txt |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
++++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+@@ -102,7 +102,11 @@ Required properties:
+ - clocks: Phandles to device clocks. See [1] for details on clock bindings.
+ - clock-names: the following clocks are required:
+   * "iface"
++  For 28nm HPM/LP, 28nm 8960 PHYs:
+ - vddio-supply: phandle to vdd-io regulator device node
++  For 20nm PHY:
++- vddio-supply: phandle to vdd-io regulator device node
++- vcca-supply: phandle to vcca regulator device node
+ 
+ Optional properties:
+ - qcom,dsi-phy-regulator-ldo-mode: Boolean value indicating if the LDO mode PHY
