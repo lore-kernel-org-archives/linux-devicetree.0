@@ -1,51 +1,60 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 15/15] arm: dts: imx: Add missing OPP properties for CPUs
-Date: Mon, 28 May 2018 16:37:39 +0530
-Message-ID: <20180528110739.ewmhlf72sl7u5ju7@vireshk-i7>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <264124e14b966a1bbc07c364fbd89fc55aa765e6.1527244201.git.viresh.kumar@linaro.org>
- <1527248760.3472.6.camel@pengutronix.de>
+Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
+ properties for CPUs
+Date: Mon, 28 May 2018 16:43:58 +0530
+Message-ID: <20180528111358.meyle364fy6wuruf@vireshk-i7>
+References: <cover.1527225682.git.viresh.kumar@linaro.org>
+ <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
+ <20180525211025.c73zdcdtyuvlewng@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1527248760.3472.6.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: arm@kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, chris.redpath@arm.com, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180525211025.c73zdcdtyuvlewng@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, chris.redpath@arm.com, linux-amlogic@lists.infradead.org, ionela.voinescu@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+On 25-05-18, 14:10, Olof Johansson wrote:
+> On Fri, May 25, 2018 at 11:10:01AM +0530, Viresh Kumar wrote:
+> > The cooling device properties, like "#cooling-cells" and
+> > "dynamic-power-coefficient", should either be present for all the CPUs
+> > of a cluster or none. If these are present only for a subset of CPUs of
+> > a cluster then things will start falling apart as soon as the CPUs are
+> > brought online in a different order. For example, this will happen
+> > because the operating system looks for such properties in the CPU node
+> > it is trying to bring up, so that it can register a cooling device.
+> > 
+> > Add such missing properties.
+> 
+> This seems awkward compared to just having one cooling-cells in the /cpus node
+> instead.
 
-On 25-05-18, 13:46, Lucas Stach wrote:
-> This is a lot of duplicate information for what is effectively a shared
->  cluster wide thing. This does absolutely not _feel_ right.
+Well, we don't allow that property to be present in /cpus node right
+now and it is per device. And then we may not want all the CPUs to be
+cooling devices really.
 
-I cannot agree more :)
-
-> What problem are you solving here? Why do we need all this duplicate
-> information? Why can't we fix it by falling back to looking at cpu0 if
+> What's it used for? I don't see any properties in the device nodes on meson-gxm
+> that have any cooling-foo cells in them? So why should #cooling-cells be
 > needed?
 
-Let me try explaining one of the problem scenarios to you as your
-platform is a single cluster one. Make cpufreq driver as module, don't
-insert it, hotplug out CPU0 and now insert the cpufreq driver. The
-cpufreq core will try adding the cpufreq policy for CPU1 but wouldn't
-find the required information in the DT node of CPU1 and so will fail
-or behave incorrectly.
+This property is required to declare a device as a cooling-device and
+the device here is CPU. We use it as a cooling device by limiting its
+higher range of frequencies, so that it doesn't generate too much
+heat.
 
-We can't look at CPU0 as we don't know they are related at all.
-Nothing tells that to us. The right solution to fix the duplication is
-to move to OPP-v2 bindings, which allow us to create a single OPP
-table node and refer to it from all the CPU nodes. Because in case of
-imx platforms getting updated here, we use the old and some platforms
-specific frequency tables, we have to duplicate it everywhere.
-
-But looking from DT otherwise, all the device should anyway have all
-the information required right in their node. That can be simplified
-with things like phandle to opp-v2 node, but still everything needs to
-be there. We shouldn't really rely on other CPU nodes to make it work.
-That would be an incomplete definition of the hardware IMHO.
+It is already there for CPU0 and CPU4, but it should really be there
+for all the CPUs, like we have clock, supply, caches, etc.
 
 -- 
 viresh
