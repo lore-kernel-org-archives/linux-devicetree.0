@@ -1,77 +1,89 @@
-Return-Path: <SRS0=xPmq=IM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:52238 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S966506AbeEYM1k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 May 2018 08:27:40 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 2/2] smiapp: Support the "upside-down" property
-Date: Fri, 25 May 2018 15:27:26 +0300
-Message-Id: <20180525122726.3409-3-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180525122726.3409-1-sakari.ailus@linux.intel.com>
-References: <20180525122726.3409-1-sakari.ailus@linux.intel.com>
+Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00084.outbound.protection.outlook.com ([40.107.0.84]:1472
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1753114AbeE1DJV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 May 2018 23:09:21 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v6 02/15] dt-bindings: usb: add documentation for typec port controller(TCPCI)
+Date: Mon, 28 May 2018 10:52:34 +0800
+Message-Id: <1527475967-15201-3-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, andy.yeh@intel.com, sebastian.reichel@collabora.co.uk
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Use the "upside-down" property to tell that the sensor is mounted upside
-down. This reverses the behaviour of the VFLIP and HFLIP controls as well
-as the pixel order.
+TCPCI stands for typec port controller interface, its implementation
+has full typec port control with power delivery support, it's a
+standard i2c slave with GPIO input as irq interface, detail see spec
+"Universal Serial Bus Type-C Port Controller Interface Specification
+Revision 1.0, Version 1.1"
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- .../devicetree/bindings/media/i2c/nokia,smia.txt         |  2 ++
- drivers/media/i2c/smiapp/smiapp-core.c                   | 16 ++++++++++++++++
- 2 files changed, 18 insertions(+)
+ .../devicetree/bindings/usb/typec-tcpci.txt        | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-index 33f10a94c381..6f509657470e 100644
---- a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-@@ -29,6 +29,8 @@ Optional properties
- - reset-gpios: XSHUTDOWN GPIO
- - flash-leds: See ../video-interfaces.txt
- - lens-focus: See ../video-interfaces.txt
-+- rotation: Integer property; valid values are 0 (sensor mounted upright)
-+	    and 180 (sensor mounted upside down).
- 
- 
- Endpoint node mandatory properties
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index e1f8208581aa..32286df6ab43 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -2764,6 +2764,7 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- 	struct v4l2_fwnode_endpoint *bus_cfg;
- 	struct fwnode_handle *ep;
- 	struct fwnode_handle *fwnode = dev_fwnode(dev);
-+	u32 rotation;
- 	int i;
- 	int rval;
- 
-@@ -2800,6 +2801,21 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- 
- 	dev_dbg(dev, "lanes %u\n", hwcfg->lanes);
- 
-+	rval = fwnode_property_read_u32(fwnode, "upside-down", &rotation);
-+	if (!rval) {
-+		switch (rotation) {
-+		case 180:
-+			hwcfg->module_board_orient =
-+				SMIAPP_MODULE_BOARD_ORIENT_180;
-+			/* Fall through */
-+		case 0:
-+			break;
-+		default:
-+			dev_err(dev, "invalid rotation %u\n", rotation);
-+			goto out_err;
-+		}
-+	}
+diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+new file mode 100644
+index 0000000..0dd1469
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+@@ -0,0 +1,49 @@
++TCPCI(Typec port cotroller interface) binding
++---------------------------------------------
 +
- 	/* NVM size is not mandatory */
- 	fwnode_property_read_u32(fwnode, "nokia,nvm-size", &hwcfg->nvm_size);
- 
++Required properties:
++- compatible:       should be set one of following:
++		    - "nxp,ptn5110" for NXP USB PD TCPC PHY IC ptn5110.
++
++- reg:              the i2c slave address of typec port controller device.
++- interrupt-parent: the phandle to the interrupt controller which provides
++                    the interrupt.
++- interrupts:       interrupt specification for tcpci alert.
++
++Required sub-node:
++- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
++  of connector node are specified in
++  Documentation/devicetree/bindings/connector/usb-connector.txt
++
++Example:
++
++ptn5110@50 {
++	compatible = "nxp,ptn5110";
++	reg = <0x50>;
++	interrupt-parent = <&gpio3>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		data-role = "dual";
++		power-role = "dual";
++		try-power-role = "sink";
++		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
++		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
++			     PDO_VAR(5000, 12000, 2000)>;
++		op-sink-microwatt = <10000000>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@1 {
++				reg = <1>;
++				usb_con_ss: endpoint {
++					remote-endpoint = <&usb3_data_ss>;
++				};
++			};
++		};
++	};
++};
 -- 
-2.11.0
+2.7.4
 
