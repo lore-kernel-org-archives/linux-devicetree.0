@@ -1,50 +1,135 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.16 243/272] dt-bindings: display: msm/dsi: Fix the PHY regulator supply props
-Date: Mon, 28 May 2018 12:04:36 +0200
-Message-ID: <20180528100300.706127633@linuxfoundation.org>
-References: <20180528100240.256525891@linuxfoundation.org>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
+ bindings
+Date: Mon, 28 May 2018 11:39:50 +0000
+Message-ID: <8d8b0f05-7f04-e718-7a45-148af38a03d4@st.com>
+References: <1523440025-18077-1-git-send-email-amelie.delaunay@st.com>
+ <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
+ <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
+ <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
+ <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
+ <CACRpkda2VGo0FOdR09tKiTpg66NgoWjubaHp_J3372y=a772Zg@mail.gmail.com>
+ <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com> <20180517063640.GK5130@dell>
+ <28c374e6-b440-f785-b371-03fe15c8bc4b@st.com>
+ <CACRpkdbZ2Hr7cc5+dyPaL0CKYuy2-oosEr=UPo60+3beDCVi9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180528100240.256525891@linuxfoundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Rob Clark <robdclark@gmail.com>, Sasha Levin <alexander.levin@microsoft.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbZ2Hr7cc5+dyPaL0CKYuy2-oosEr=UPo60+3beDCVi9A@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <064CC68FBA4EA74BAE9E208ECCC8F28D@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open
+ list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-4.16-stable review patch.  If anyone has any objections, please let me know.
+On 05/24/2018 09:13 AM, Linus Walleij wrote:
+> On Fri, May 18, 2018 at 9:29 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+>> On 05/17/2018 08:36 AM, Lee Jones wrote:
+>>> On Wed, 16 May 2018, Amelie DELAUNAY wrote:
+>>>> On 05/16/2018 04:20 PM, Linus Walleij wrote:
+>>>>> On Wed, May 9, 2018 at 9:56 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+>>>>>
+>>>>>> Indeed, stmfx has other functions than GPIO. But, after comments done
+>>>>>> here: [1] and there: [2], it has been decided to move MFD parent/GPIO
+>>>>>> child drivers into a single PINCTRL/GPIO driver because of the following
+>>>>>> reasons:
+>>>>>> - Other stmfx functions (IDD measurement and TouchScreen controller) are
+>>>>>> not used on any of the boards using an stmfx and supported by Linux, so
+>>>>>> no way to test these functions, and no need to maintain them while they
+>>>>>> are not being used.
+>>>>>> - But, in the case a new board will use more than GPIO function on
+>>>>>> stmfx, the actual implementation allow to easily extract common init
+>>>>>> part of stmfx and put it in an MFD driver.
+>>>>>>
+>>>>>> So I could remove gpio sub-node and put its contents in stmfx node and
+>>>>>> keep single PINCTRL/GPIO driver for the time being.
+>>>>>> Please advise,
+>>>>>
+>>>>> I would normally advice to use the right modeling from the start, create
+>>>>> the MFD driver and spawn the devices from there. It is confusing
+>>>>> if the layout of the driver(s) doesn't really match the layout of the
+>>>>> hardware.
+>>>>>
+>>>>> I understand that it is a pain to write new MFD drivers to get your
+>>>>> things going and it would be "nice to get this working really quick
+>>>>> now" but in my experience it is better to do it right from the start.
+>>>>>
+>>>>
+>>>> Hi Linus,
+>>>>
+>>>> Thanks for your advice. I understand the point.
+>>>> So, the right modeling would be to:
+>>>> - create an MFD driver with the common init part of stmfx
+>>>> - remove all common init part of stmfx-pinctrl driver and keep only all
+>>>> gpio/pinctrl functions.
+>>>>
+>>>> I will not develop the other stmfx functions (IDD measurement driver and
+>>>> TouchScreen controller driver) because, as explained ealier, they are
+>>>> not used on any of the boards using an stmfx and supported by Linux, so
+>>>> no way to test these functions, and no need to maintain them while they
+>>>> are not being used.
+>>>>
+>>>> Lee, are you OK with that ?
+>>>
+>>> I missed a lot of this conversation I think, but from what I've read,
+>>> it sounds fine.
+>>>
+>>
+>> I summarize the situation:
+>> - I still don't have an official datasheet for STMFX device which could
+>> justify the use of an MFD driver;
+>> - the MFD driver will contain the STMFX chip initialization stuff such
+>> as regmap initialization (regmap structure will be shared with the
+>> child), chip initialization, global interrupt management;
+>> - there will be only one child (GPIO/PINCTRL node) for the time being.
+> 
+> But there will be more devices in it. And they will invariably be put
+> to use later, and there will be new versions of the chip as well, and
+> then you will be happy about doing the MFD core, which makes it
+> easy to add new variants with different subdevices.
+> 
+>> So, is "MFD driver + GPIO/PINCTRL driver" the right modeling, and does
+>> it still sound fine after this summary ? :)
+> 
+> No I think it should use an MFD core.
+> 
+> Mainly because of device tree concerns.
+> 
+> The main reason is that the device tree bindings will be different if
+> you add an MFD core later, the GPIO and pinctrl driver will
+> move to a child node, making old device trees incompatible.
+> 
+> We could have a single driver in GPIO+pin control if it is a child
+> of an MFD node in the device tree, but it doesn't make much
+> sense as the I2C device need to be probing to the MFD core.
+> 
 
-------------------
+I agree with you Linus, and that's why all STMFX chip initialization 
+stuff was decorrelated in pinctrl-stmfx. This shows that this stuff 
+needs to be in an MFD core.
 
-From: Archit Taneja <architt@codeaurora.org>
+But as there is only one child for now (due to the reasons mentioned 
+earlier), it can suggest that it is not a Multi-Function Device.
 
-[ Upstream commit 8c4905fd4939c59e0f7993ba34883e328eef4b59 ]
+I'm not able to target when IDD or TS functions will be required on a 
+Linux product, but it still makes sense to consider that these functions 
+will be used on a Linux product.
 
-The PHY regulator supply names vary across different PHY versions.
-Mention explicitly which PHYs require which supplies.
+So, I think MFD core + GPIO/pinctrl driver is the right modeling, but I 
+wanted to be sure that this is okay for everyone. I don't want to spend 
+time on something that will not be accepted due to its modeling.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/devicetree/bindings/display/msm/dsi.txt |    4 ++++
- 1 file changed, 4 insertions(+)
-
---- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-@@ -102,7 +102,11 @@ Required properties:
- - clocks: Phandles to device clocks. See [1] for details on clock bindings.
- - clock-names: the following clocks are required:
-   * "iface"
-+  For 28nm HPM/LP, 28nm 8960 PHYs:
- - vddio-supply: phandle to vdd-io regulator device node
-+  For 20nm PHY:
-+- vddio-supply: phandle to vdd-io regulator device node
-+- vcca-supply: phandle to vcca regulator device node
- 
- Optional properties:
- - qcom,dsi-phy-regulator-ldo-mode: Boolean value indicating if the LDO mode PHY
+Regards,
+Amelie
