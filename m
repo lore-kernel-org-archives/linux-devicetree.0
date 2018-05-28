@@ -1,75 +1,53 @@
-Return-Path: <SRS0=BfEI=IO=redhat.com=hdegoede@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 01/13] dt-bindings: net: bluetooth: add support for Realtek Bluetooth chips
-Date: Sun, 27 May 2018 21:04:45 +0200
-Message-Id: <20180527190457.2632-2-hdegoede@redhat.com>
-In-Reply-To: <20180527190457.2632-1-hdegoede@redhat.com>
-References: <20180527190457.2632-1-hdegoede@redhat.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, robh@kernel.org, Jeremy Cline <jeremy@jcline.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00059.outbound.protection.outlook.com ([40.107.0.59]:46304
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1753149AbeE1DJ6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 May 2018 23:09:58 -0400
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v6 08/15] staging: typec: tcpci: use IS_ERR() instead of PTR_ERR_OR_ZERO()
+Date: Mon, 28 May 2018 10:52:40 +0800
+Message-Id: <1527475967-15201-9-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+As tcpm_register_port() and tcpci_register_port() never return
+NULL and NULL is not a success in this case, use IS_ERR() to check
+the return value of both.
 
-This adds the documentation for Bluetooth functionality of the Realtek
-RTL8723BS and RTL8723DS.
-Both are SDIO wifi chips with an additional Bluetooth module which is
-connected via UART to the host.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jeremy Cline <jeremy@jcline.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- .../bindings/net/realtek-bluetooth.txt        | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.txt
+ drivers/staging/typec/tcpci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.txt b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-new file mode 100644
-index 000000000000..1491329c4cd1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-@@ -0,0 +1,41 @@
-+Realtek Bluetooth Chips
-+-----------------------
-+
-+This documents the binding structure and common properties for serial
-+attached Realtek devices.
-+
-+Serial attached Realtek devices shall be a child node of the host UART
-+device the slave device is attached to. See ../serial/slave-device.txt
-+for more information
-+
-+Required properties:
-+- compatible: should contain one of the following:
-+    * "realtek,rtl8723bs-bluetooth"
-+    * "realtek,rtl8723ds-bluetooth"
-+
-+Optional properties:
-+- realtek,config-data: Bluetooth chipset configuration data which is
-+			needed for communication (it typically contains
-+			board specific settings like the baudrate and
-+			whether flow-control is used).
-+			This is an array of u8 values.
-+- enable-gpios: GPIO specifier, used to enable/disable the BT module
-+- reset-gpios: GPIO specifier, used to reset the BT module
-+
-+
-+Example:
-+
-+&uart {
-+	...
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723bs-bluetooth";
-+		enable-gpios = <&gpio 20 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
-+		realtek,config-data = /bits/ 8 <
-+			0x55 0xab 0x23 0x87 0x29 0x00 0xf4 0x00 0x01 0x01 0xf6 0x00
-+			0x02 0x81 0x00 0xfa 0x00 0x02 0x12 0x80 0x0c 0x00 0x10 0x02
-+			0x80 0x92 0x04 0x50 0xc5 0xea 0x19 0xe1 0x1b 0xfd 0xaf 0x5f
-+			0x01 0xa4 0x0b 0xd9 0x00 0x01 0x0f 0xe4 0x00 0x01 0x08>;
-+	};
-+};
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 076498a..b63f147 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -509,7 +509,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
+ 		return ERR_PTR(err);
+ 
+ 	tcpci->port = tcpm_register_port(tcpci->dev, &tcpci->tcpc);
+-	if (PTR_ERR_OR_ZERO(tcpci->port))
++	if (IS_ERR(tcpci->port))
+ 		return ERR_CAST(tcpci->port);
+ 
+ 	return tcpci;
+@@ -551,7 +551,7 @@ static int tcpci_probe(struct i2c_client *client,
+ 		return err;
+ 
+ 	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
+-	if (PTR_ERR_OR_ZERO(chip->tcpci))
++	if (IS_ERR(chip->tcpci))
+ 		return PTR_ERR(chip->tcpci);
+ 
+ 	i2c_set_clientdata(client, chip);
 -- 
-2.17.0
+2.7.4
+
