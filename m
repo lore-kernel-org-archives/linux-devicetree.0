@@ -1,75 +1,105 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 06/15] arm: dts: sun: Add missing cooling device
- properties for CPUs
-Date: Mon, 28 May 2018 10:44:46 +0200
-Message-ID: <20180528084446.g24fphqqac2hi3rr@flea>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <eded393f4b508a1f377f9af6859a3b82a6787e1c.1527244201.git.viresh.kumar@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
+Date: Mon, 28 May 2018 10:54:57 +0200
+Message-ID: <CAMuHMdXYyN=XY6nb9RVEE+t0NeoSPhTh6fUk-9YWdFzAE1FfPA@mail.gmail.com>
+References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
+ <CAMuHMdXRnoyhNz=3v_=ZCV=FWX4TwKqx7MpH0g3c7GwtXKP1tg@mail.gmail.com>
+ <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
+ <CAMuHMdXnNABJSJZ6MLF+aQu8QKpFoMCAvno9Yc-9LOe810NtbA@mail.gmail.com>
+ <7e1563c3-3e13-235b-3071-c3936502530f@gmail.com>
+ <20180528084135.q5xng5eaypprsypr@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l4dcsg23dumy77y5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <eded393f4b508a1f377f9af6859a3b82a6787e1c.1527244201.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180528084135.q5xng5eaypprsypr@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Richard Weinberger <richard@nod.at>, Boris Brezillon <boris.brezillon@bootlin.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
---l4dcsg23dumy77y5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, May 28, 2018 at 10:41 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, May 24, 2018 at 04:52:59PM +0200, Marek Vasut wrote:
+>> On 05/23/2018 08:25 AM, Geert Uytterhoeven wrote:
+>> > On Wed, May 23, 2018 at 12:01 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>> >> On 05/22/2018 04:43 PM, Geert Uytterhoeven wrote:
+>> >>> On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>> >>>> Drop the MTD partitioning from DT, since it does not describe HW
+>> >>>> and to give way to a more flexible kernel command line partition
+>> >>>> passing.
+>> >>>>
+>> >>>> To retain the original partitioning, assure you have enabled
+>> >>>> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
+>> >>>> following to your kernel command line:
+>> >>>>
+>> >>>>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
+>> >>>
+>> >>> I think the "@0" can be dropped, as it's optional?
+>> >>> 4m?
+>> >>
+>> >> My take on this is that the loader is actually at offset 0x0 of the MTD
+>> >> device and we explicitly state that in the mtdparts to anchor the first
+>> >> partition within the MTD device and all the other partitions are at
+>> >> offset +(sum of the sizes of all partitions listed before the current
+>> >> one) relative to that first partition.
+>> >
+>> > Where is this explicitly states for the first partition?
+>> >
+>> >> Removing the @0 feels fragile at best and it seems to depend on the
+>> >> current behavior of the code.
+>> >
+>> > Better, it also depends on the documented behavior:
+>> >
+>> > Documentation/admin-guide/kernel-parameters.txt refers to
+>> > drivers/mtd/cmdlinepart.c, which states:
+>> >
+>> >  * <offset>  := standard linux memsize
+>> >  *              if omitted the part will immediately follow the previous part
+>> >  *              or 0 if the first part
+>> >
+>> > None of the examples listed there or under the MTD_CMDLINE_PARTS Kconfig
+>> > help text, or in a defconfig bundled with the kernel, use @0 for the first
+>> > partition.
+>>
+>> I think this is exceptionally fragile and dangerous to depend on this,
+>> but so be it.
+>
+> Could you respin with this change?
+>
+> I would also like to ask for another change, in light of recent
+> feedback from Olof Johansson ("Re: [GIT PULL] Renesas ARM64 Based SoC DT
+> Updates for v4.18").
+>
+> Please consolidate the dts patches into a single patch?
 
-Hi,
+I think it's better to keep them split, as each commit description mentions
+what needs to be passed on the kernel command line for the corresponding
+board.
 
-On Fri, May 25, 2018 at 04:01:52PM +0530, Viresh Kumar wrote:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
->=20
-> Add such missing properties.
->=20
-> Fix other missing properties (clocks, OPP, clock latency) as well to
-> make it all work.
->=20
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Combining it in a single patch makes it much harder to extract this information.
+Unless you're fine with a list:
 
-The prefix should be sunxi and not sun, but it looks good to me
-otherwise.
+   koelsch: ...
+   wheat: mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
 
-Let me know what your preferred merge method is.
+Gr{oetje,eeting}s,
 
-Maxime
+                        Geert
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---l4dcsg23dumy77y5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsLwX0ACgkQ0rTAlCFN
-r3RTFw/+LvuG8dQ9Ks/IdzZIq1rc1Nx/wOZ/ZXEjoSkAkGSNsZ8ybTgBgxcEbyiS
-mPRsoPKw2tF/nYdZfk31GzDoCTns64e/xuqdH5rKS+Dtu0h3NCsYY/8Nky6pHdfX
-Shbksby8TlVEu/1YYraB/l+xrSzUqGnz5OHVGcYhc5qhzE9jqgvrVyFt8JWRqhPT
-FlDKYHGox+fpqdEannhvPl2maPoT4Ox9b3ZNKihGQv5Ag/uUN2VpXUnjGI7AvSjY
-DLEcyU/4yyFkfX7NGWz5opWurePWAzwI2KRUO3SjDkXlawpmz5Mi1a0nZALcvsaG
-y85hxZypa354XEtWe2bQJQWBDLdeWzvHar9Y3H157BxwthyLuH/ZzCqDt1eThrxN
-b5fGm2uqyr/hHxWNjMtq/6exMvXD3E6zufZ3PhbW5BmqCKEIIPxLapRsu6Jsxb0Q
-G39zc6N9ml0qTPqJ5JDgPDoDxI1+pTN8BBV89mgVNlqcyX6e9xehU+y7Kgx0XrJL
-CMYlBAENIYosOWqdO2ZlxmkC03rRq+A4ZCvMbFhtc93VXT3ZQZxfHnJaX/m2HUK9
-253UeU18vFs4SyUvwgFgU5QicpNqdzei+3/KV5c32frHZVZKgoSyswjjKcf7dnBG
-Bh+f3PvRXXgrE060DyqzNVBjrTEYKm9J3ImdjMlL8kpSivuF6Lw=
-=zAUF
------END PGP SIGNATURE-----
-
---l4dcsg23dumy77y5--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
