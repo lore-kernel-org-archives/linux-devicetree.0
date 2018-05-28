@@ -1,71 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 10/11] arm64: dts: r8a77965-salvator-x: Enable DU
- external clocks and HDMI
-Date: Mon, 28 May 2018 11:06:45 +0200
-Message-ID: <CAMuHMdW6HeWMwRDcn6PLnwzgxvYz-h=jx=1qvYEK9okwqY0itg@mail.gmail.com>
-References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
- <20180427165722.19445-11-kieran.bingham+renesas@ideasonboard.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v7 3/5] ARM: dts: Renesas R9A06G032 base device tree file
+Date: Mon, 28 May 2018 11:15:30 +0200
+Message-ID: <20180528091529.xno3o4nt7k7cenmy@verge.net.au>
+References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1527154169-32380-4-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdW5VvZ-wbO7TuZC2z+KFPLq_PhBGe3WbAeES-nezb7tmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180427165722.19445-11-kieran.bingham+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Will Deacon <will.deacon@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW5VvZ-wbO7TuZC2z+KFPLq_PhBGe3WbAeES-nezb7tmQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2llcmFuLCBNb3JpbW90by1zYW4sCgpPbiBGcmksIEFwciAyNywgMjAxOCBhdCA2OjU3IFBN
-LCBLaWVyYW4gQmluZ2hhbQo8a2llcmFuLmJpbmdoYW0rcmVuZXNhc0BpZGVhc29uYm9hcmQuY29t
-PiB3cm90ZToKPiBUaGUgRFUxIGV4dGVybmFsIGRvdCBjbG9jayBpcyBwcm92aWRlZCBieSB0aGUg
-Zml4ZWQgZnJlcXVlbmN5IGNsb2NrCj4gZ2VuZXJhdG9yIFgyMSwgd2hpbGUgdGhlIERVMCBhbmQg
-RFUzIGNsb2NrcyBhcmUgcHJvdmlkZWQgYnkgdGhlCj4gcHJvZ3JhbW1hYmxlIFZlcnNhY2xvY2s1
-IGNsb2NrIGdlbmVyYXRvci4KPgo+IEVuYWJsZSB0aGUgY2xvY2tzLCBhbmQgdGhlIEhETUkgZW5j
-b2RlciBmb3IgdGhlIE0zLU4gU2FsdmF0b3ItWCBib2FyZAo+IGFuZCBob29rIGl0IHVwIHRvIHRo
-ZSBIRE1JIGNvbm5lY3Rvci4KPgo+IEJhc2VkIG9uIHBhdGNoZXMgZnJvbSBUYWtlc2hpIEtpaGFy
-YSA8dGFrZXNoaS5raWhhcmEuZGZAcmVuZXNhcy5jb20+Cj4KPiBTaWduZWQtb2ZmLWJ5OiBLaWVy
-YW4gQmluZ2hhbSA8a2llcmFuLmJpbmdoYW0rcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+Cj4g
-LS0tCj4gdjI6Cj4gIC0gUmVtb3ZlIExWRFMgY2xvY2tzIGZyb20gRFUgbm9kZQo+ICAtIE1lcmdl
-IERVIENsb2NrcyBhbmQgSERNSSBlbmFibGVtZW50Cj4gLS0tCj4gIC4uLi9ib290L2R0cy9yZW5l
-c2FzL3I4YTc3OTY1LXNhbHZhdG9yLXguZHRzICB8IDI4ICsrKysrKysrKysrKysrKysrKysKPiAg
-MSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUtc2FsdmF0b3IteC5kdHMgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUtc2FsdmF0b3IteC5kdHMKPiBpbmRleCA3NWQ4OTBk
-OTFkZjkuLjM0MGEzYzcyYjY1YSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jl
-bmVzYXMvcjhhNzc5NjUtc2FsdmF0b3IteC5kdHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L3JlbmVzYXMvcjhhNzc5NjUtc2FsdmF0b3IteC5kdHMKPiBAQCAtMTksMyArMTksMzEgQEAKPiAg
-ICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDQ4MDAwMDAwIDB4MCAweDc4MDAwMDAwPjsKPiAg
-ICAgICAgIH07Cj4gIH07Cj4gKwo+ICsmZHUgewo+ICsgICAgICAgY2xvY2tzID0gPCZjcGcgQ1BH
-X01PRCA3MjQ+LAo+ICsgICAgICAgICAgICAgICAgPCZjcGcgQ1BHX01PRCA3MjM+LAo+ICsgICAg
-ICAgICAgICAgICAgPCZjcGcgQ1BHX01PRCA3MjE+LAo+ICsgICAgICAgICAgICAgICAgPCZ2ZXJz
-YWNsb2NrNSAxPiwKPiArICAgICAgICAgICAgICAgIDwmeDIxX2Nsaz4sCj4gKyAgICAgICAgICAg
-ICAgICA8JnZlcnNhY2xvY2s1IDI+Owo+ICsgICAgICAgY2xvY2stbmFtZXMgPSAiZHUuMCIsICJk
-dS4xIiwgImR1LjMiLAo+ICsgICAgICAgICAgICAgICAgICAgICAiZGNsa2luLjAiLCAiZGNsa2lu
-LjEiLCAiZGNsa2luLjMiOwo+ICt9Owo+ICsKPiArJmhkbWkwIHsKPiArICAgICAgIHN0YXR1cyA9
-ICJva2F5IjsKPiArCj4gKyAgICAgICBwb3J0cyB7Cj4gKyAgICAgICAgICAgICAgIHBvcnRAMSB7
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Owo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHJjYXJfZHdfaGRtaTBfb3V0OiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWkwX2Nvbj47Cj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgfTsKPiArICAgICAgIH07Cj4gK307
-Cj4gKwo+ICsmaGRtaTBfY29uIHsKPiArICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmcmNhcl9k
-d19oZG1pMF9vdXQ+Owo+ICt9OwoKSSB0aGluayB0aGUgaGRtaTAgYW5kIGhkbWkwX2NvbiBwYXJ0
-cyBjYW4gYmUgbW92ZWQgdG8gc2FsdmF0b3ItY29tbW9uLmR0c2kuCkNhbiB3ZSBkbyB0aGF0IG5v
-dyAod2l0aCBzdHVicz8pLCBvciBkb2VzIHRoaXMgaGF2ZSB0byB3YWl0IHVudGlsIHI4YTc3OTY1
-IGhhcwpyZWNlaXZlZCBIRE1JIHNvdW5kIHN1cHBvcnQ/CgpHcntvZXRqZSxlZXRpbmd9cywKCiAg
-ICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLSAKR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRo
-ZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoK
-SW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBt
-eXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVz
-dCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, May 25, 2018 at 11:27:46AM +0200, Geert Uytterhoeven wrote:
+> Hi Michel,
+> 
+> On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
+> <michel.pollet@bp.renesas.com> wrote:
+> > This adds the Renesas R9A06G032 bare bone support.
+> >
+> > This currently only handles generic parts (gic, architected timer)
+> > and a UART.
+> >
+> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> 
+> Thanks for your patch!
+> 
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> 
+> > +       soc {
+> > +               compatible = "simple-bus";
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               interrupt-parent = <&gic>;
+> > +               ranges;
+> > +
+> > +               sysctrl: sysctrl@4000c000 {
+> 
+> system-controller@
+> 
+> > +                       compatible = "renesas,r9a06g032-sysctrl";
+> > +                       reg = <0x4000c000 0x1000>;
+> > +                       status = "okay";
+> > +                       #clock-cells = <1>;
+> > +               };
+> 
+> With the minor nit above resolved, and pending acceptance of the
+> sysctrl bindings:
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Thanks. I have marked this patch, and the following one, as deferred
+pending acceptance of those bindings. Please repost or otherwise ping me
+once that has happened.
