@@ -1,15 +1,13 @@
 Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00087.outbound.protection.outlook.com ([40.107.0.87]:41092
+Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:31184
         "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753137AbeE1DJq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:09:46 -0400
+        id S1753114AbeE1DJK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 27 May 2018 23:09:10 -0400
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 06/15] usb: typec: tcpm: support get typec and pd config from device properties
-Date: Mon, 28 May 2018 10:52:38 +0800
-Message-Id: <1527475967-15201-7-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v6 00/15] staging: typec: tcpci: move out of staging
+Date: Mon, 28 May 2018 10:52:32 +0800
+Message-Id: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -17,195 +15,125 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.
 Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds support of get typec and power delivery config from
-firmware description.
+This patch set attempts to move the tcpci drivers out of staging by fix
+some tcpci driver issues and define typec and power delivery device
+properties, the changes are verified on NXP PTN5110, which is a standard
+tcpci typec port controller device with power delivery support, tested
+power source and sink with drp config.
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/usb/typec/tcpm.c | 132 +++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 110 insertions(+), 22 deletions(-)
+Changes for v6:
+- Change function name to be typec_find_port_power/data_role for find
+  capability, and typec_find_power_role for find one specific power role.
+- Fix rt1711h driver move missing.
+- Add one patch to improve the error checking in tcpci driver, use IS_ERR()
+  instead of PTR_ERR_OR_ZERO().
+- Add Rob's Reviewed-by for patch [2/15].
+- Misc typos fix.
+ 
+Changes for v5:
+- Use "power-role" and "data-role" for typec port power and data capability
+  property name.  
+- Use macro defintion instead of cryptic numbers for readability of
+  power delivery properties(PDO).
+- Add one tcpci driver binding string to be "nxp,ptn5110" to follow binding
+  name rule "<vendor prefix>,<device>".
+- Change operating power property name to be op-sink-microwatt.
+- Add one patch(remove unused tcpci_tcpc_config) to resolve bisectablitity
+  issue of patch usb: typec: add fwnode to tcpc.
+- A minor error handling change to keep the error path and success path
+  separate in patch: register port before request irq
+- Rebase to latest Greg's tree with max_snk_* removed.
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index fcd22e8..aa17cd5 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -4241,6 +4241,81 @@ static int tcpm_copy_vdos(u32 *dest_vdo, const u32 *src_vdo,
- 	return nr_vdo;
- }
- 
-+static int tcpm_fw_get_caps(struct tcpm_port *port,
-+			    struct fwnode_handle *fwnode)
-+{
-+	const char *cap_str;
-+	int ret;
-+	u32 mw;
-+
-+	if (!port || !fwnode)
-+		return -EINVAL;
-+
-+	/* USB data support is optional */
-+	ret = fwnode_property_read_string(fwnode, "data-role", &cap_str);
-+	if (ret == 0) {
-+		port->typec_caps.data = typec_find_port_data_role(cap_str);
-+		if (port->typec_caps.data < 0)
-+			return -EINVAL;
-+	}
-+
-+	ret = fwnode_property_read_string(fwnode, "power-role", &cap_str);
-+	if (ret < 0)
-+		return ret;
-+
-+	port->typec_caps.type = typec_find_port_power_role(cap_str);
-+	if (port->typec_caps.type < 0)
-+		return -EINVAL;
-+	port->port_type = port->typec_caps.type;
-+
-+	if (port->port_type == TYPEC_PORT_SNK)
-+		goto sink;
-+
-+	/* Get soruce pdos */
-+	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
-+					     NULL, 0);
-+	if (ret <= 0)
-+		return -EINVAL;
-+
-+	port->nr_src_pdo = min(ret, PDO_MAX_OBJECTS);
-+	ret = fwnode_property_read_u32_array(fwnode, "source-pdos",
-+					     port->src_pdo, port->nr_src_pdo);
-+	if ((ret < 0) || tcpm_validate_caps(port, port->src_pdo,
-+					    port->nr_src_pdo))
-+		return -EINVAL;
-+
-+	if (port->port_type == TYPEC_PORT_SRC)
-+		return 0;
-+
-+	/* Get the preferred power role for DRP */
-+	ret = fwnode_property_read_string(fwnode, "try-power-role", &cap_str);
-+	if (ret < 0)
-+		return ret;
-+
-+	port->typec_caps.prefer_role = typec_find_power_role(cap_str);
-+	if (port->typec_caps.prefer_role < 0)
-+		return -EINVAL;
-+sink:
-+	/* Get sink pdos */
-+	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
-+					     NULL, 0);
-+	if (ret <= 0)
-+		return -EINVAL;
-+
-+	port->nr_snk_pdo = min(ret, PDO_MAX_OBJECTS);
-+	ret = fwnode_property_read_u32_array(fwnode, "sink-pdos",
-+					     port->snk_pdo, port->nr_snk_pdo);
-+	if ((ret < 0) || tcpm_validate_caps(port, port->snk_pdo,
-+					    port->nr_snk_pdo))
-+		return -EINVAL;
-+
-+	if (fwnode_property_read_u32(fwnode, "op-sink-microwatt", &mw) < 0)
-+		return -EINVAL;
-+	port->operating_snk_mw = mw / 1000;
-+
-+	return 0;
-+}
-+
- int tcpm_update_source_capabilities(struct tcpm_port *port, const u32 *pdo,
- 				    unsigned int nr_pdo)
- {
-@@ -4526,12 +4601,36 @@ static int devm_tcpm_psy_register(struct tcpm_port *port)
- 	return PTR_ERR_OR_ZERO(port->psy);
- }
- 
-+static int tcpm_copy_caps(struct tcpm_port *port,
-+			  const struct tcpc_config *tcfg)
-+{
-+	if (tcpm_validate_caps(port, tcfg->src_pdo, tcfg->nr_src_pdo) ||
-+	    tcpm_validate_caps(port, tcfg->snk_pdo, tcfg->nr_snk_pdo))
-+		return -EINVAL;
-+
-+	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcfg->src_pdo,
-+					  tcfg->nr_src_pdo);
-+	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcfg->snk_pdo,
-+					  tcfg->nr_snk_pdo);
-+
-+	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcfg->snk_vdo,
-+					  tcfg->nr_snk_vdo);
-+
-+	port->operating_snk_mw = tcfg->operating_snk_mw;
-+
-+	port->typec_caps.prefer_role = tcfg->default_role;
-+	port->typec_caps.type = tcfg->type;
-+	port->typec_caps.data = tcfg->data;
-+
-+	return 0;
-+}
-+
- struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- {
- 	struct tcpm_port *port;
- 	int i, err;
- 
--	if (!dev || !tcpc || !tcpc->config ||
-+	if (!dev || !tcpc ||
- 	    !tcpc->get_vbus || !tcpc->set_cc || !tcpc->get_cc ||
- 	    !tcpc->set_polarity || !tcpc->set_vconn || !tcpc->set_vbus ||
- 	    !tcpc->set_pd_rx || !tcpc->set_roles || !tcpc->pd_transmit)
-@@ -4561,30 +4660,19 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	init_completion(&port->pps_complete);
- 	tcpm_debugfs_init(port);
- 
--	if (tcpm_validate_caps(port, tcpc->config->src_pdo,
--			       tcpc->config->nr_src_pdo) ||
--	    tcpm_validate_caps(port, tcpc->config->snk_pdo,
--			       tcpc->config->nr_snk_pdo)) {
--		err = -EINVAL;
-+	if (tcpc->config)
-+		err = tcpm_copy_caps(port, tcpc->config);
-+	else
-+		err = tcpm_fw_get_caps(port, tcpc->fwnode);
-+	if (err < 0)
- 		goto out_destroy_wq;
--	}
--	port->nr_src_pdo = tcpm_copy_pdos(port->src_pdo, tcpc->config->src_pdo,
--					  tcpc->config->nr_src_pdo);
--	port->nr_snk_pdo = tcpm_copy_pdos(port->snk_pdo, tcpc->config->snk_pdo,
--					  tcpc->config->nr_snk_pdo);
--	port->nr_snk_vdo = tcpm_copy_vdos(port->snk_vdo, tcpc->config->snk_vdo,
--					  tcpc->config->nr_snk_vdo);
--
--	port->operating_snk_mw = tcpc->config->operating_snk_mw;
--	if (!tcpc->config->try_role_hw)
--		port->try_role = tcpc->config->default_role;
-+
-+	if (!tcpc->config || !tcpc->config->try_role_hw)
-+		port->try_role = port->typec_caps.prefer_role;
- 	else
- 		port->try_role = TYPEC_NO_PREFERRED_ROLE;
- 
- 	port->typec_caps.fwnode = tcpc->fwnode;
--	port->typec_caps.prefer_role = tcpc->config->default_role;
--	port->typec_caps.type = tcpc->config->type;
--	port->typec_caps.data = tcpc->config->data;
- 	port->typec_caps.revision = 0x0120;	/* Type-C spec release 1.2 */
- 	port->typec_caps.pd_revision = 0x0300;	/* USB-PD spec release 3.0 */
- 	port->typec_caps.dr_set = tcpm_dr_set;
-@@ -4594,7 +4682,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	port->typec_caps.port_type_set = tcpm_port_type_set;
- 
- 	port->partner_desc.identity = &port->partner_ident;
--	port->port_type = tcpc->config->type;
-+	port->port_type = port->typec_caps.type;
- 
- 	port->role_sw = usb_role_switch_get(port->dev);
- 	if (IS_ERR(port->role_sw)) {
-@@ -4612,7 +4700,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 		goto out_destroy_wq;
- 	}
- 
--	if (tcpc->config->alt_modes) {
-+	if (tcpc->config && tcpc->config->alt_modes) {
- 		const struct typec_altmode_desc *paltmode = tcpc->config->alt_modes;
- 
- 		i = 0;
+Changes for v4:
+- Remove max-sink-* properties as we will purge max_snk_* in tcpm,
+  see patch set[4].
+- Get typec power and data type value via name string(patch 5).
+- Move finding typec and pd properties code from tcpci to tcpm(patch 6)
+- Add a compatible string for nxp ptn5110 typec controller in tcpci driver.
+  (patch 3)
+- Add set cc for drp toggling without try.src/snk in tcpm(patch 10), then
+  patch 11 can only update CCx bits for keep disconnect cc line open.
+- Update op-sink-microwatt-hours example value to be the right value in
+  micorwatts, and accordingly divide 1000 to get its miliwatts value
+  in patch 6.
+- Add Guenter's Reviewed-by for patch(8/9/12)
+
+[4] https://www.spinics.net/lists/linux-usb/msg167261.html
+
+Changes for v3:
+- Use 2 properties to separate power and data capability of typec port:
+  "power-type" and "data-type", this is based on Heikki's typec class code
+  change[2]. use "try-power-role" to present if the typec port can support
+  Try.SNK or Try.SRC.
+- 4 sink properties(max_sink_mv/ma/mw and op_sink_mw) are kept because the
+  counterpart code is back, see revert patch[3], meanwhile I post a patch
+  to fix the reported problem of current source pdo select machinism(which
+  completely ignored those 4 sink settings), to see if we can keep current
+  code, once it was discussed and have conclusion I can update this
+  accordingly.
+- Use fwnode to get the connector node for dt setting parse.
+
+Main changes for v2:
+- Typec properties are based on general usb connector bindings[1] proposed
+  by Andrzej Hajda, use the standard unit suffixes as defined in
+  property-units.txt.
+- Add 2 infra APIs to get power sink and source config from dt.
+- Don't change the set_cc api, to keep the uncontacted cc line open,
+  set cc1/cc2 to be open in tcpci driver when set polarity.
+- Directly enable vbus detect in tcpci driver rather than add a API.
+- Details added in each patch.
+
+[1] https://patchwork.kernel.org/patch/10231447/
+[2] https://patchwork.kernel.org/patch/10276483/
+[3] https://www.spinics.net/lists/linux-usb/msg166366.html
+
+Li Jun (14):
+  dt-bindings: connector: add properties for typec
+  dt-bindings: usb: add documentation for typec port controller(TCPCI)
+  staging: typec: tcpci: add compatible string for nxp ptn5110
+  usb: typec: add fwnode to tcpc
+  usb: typec: add API to get typec basic port power and data config
+  usb: typec: tcpm: support get typec and pd config from device
+    properties
+  staging: typec: tcpci: remove unused tcpci_tcpc_config
+  staging: typec: tcpci: use IS_ERR() instead of PTR_ERR_OR_ZERO()
+  staging: typec: tcpci: enable vbus detection
+  typec: tcpm: add starting value for drp toggling
+  usb: typec: tcpm: set cc for drp toggling attach
+  staging: typec: tcpci: keep the disconnected cc line open
+  staging: typec: tcpci: Only touch target bit when enable vconn
+  staging: typec: tcpci: move tcpci drivers out of staging
+
+Peter Chen (1):
+  staging: typec: tcpci: register port before request irq
+
+ .../bindings/connector/usb-connector.txt           |  44 ++++++
+ .../devicetree/bindings/usb/typec-tcpci.txt        |  49 +++++++
+ drivers/staging/Kconfig                            |   2 -
+ drivers/staging/Makefile                           |   1 -
+ drivers/staging/typec/Kconfig                      |  22 ---
+ drivers/staging/typec/Makefile                     |   2 -
+ drivers/staging/typec/TODO                         |   5 -
+ drivers/usb/typec/Kconfig                          |  15 +++
+ drivers/usb/typec/Makefile                         |   2 +
+ drivers/usb/typec/class.c                          |  50 +++++++
+ drivers/{staging => usb}/typec/tcpci.c             |  66 +++++----
+ drivers/{staging => usb}/typec/tcpci.h             |   0
+ drivers/{staging => usb}/typec/tcpci_rt1711h.c     |   0
+ drivers/usb/typec/tcpm.c                           | 148 +++++++++++++++++----
+ include/dt-bindings/usb/pd.h                       |  62 +++++++++
+ include/linux/usb/tcpm.h                           |   2 +
+ include/linux/usb/typec.h                          |   3 +
+ 17 files changed, 389 insertions(+), 84 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
+ delete mode 100644 drivers/staging/typec/Kconfig
+ delete mode 100644 drivers/staging/typec/Makefile
+ delete mode 100644 drivers/staging/typec/TODO
+ rename drivers/{staging => usb}/typec/tcpci.c (92%)
+ rename drivers/{staging => usb}/typec/tcpci.h (100%)
+ rename drivers/{staging => usb}/typec/tcpci_rt1711h.c (100%)
+ create mode 100644 include/dt-bindings/usb/pd.h
+
 -- 
 2.7.4
 
