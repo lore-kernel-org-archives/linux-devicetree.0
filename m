@@ -1,30 +1,79 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH 0/3] Stingray thermal driver support
-Date: Mon, 28 May 2018 11:11:21 +0530
-Message-ID: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Mon, 28 May 2018 11:11:22 +0530
+Message-ID: <1527486084-4636-2-git-send-email-srinath.mannam@broadcom.com>
+References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-These patches adds the stingray thermal driver and its
-corresponding DT nodes with documentation.
+From: Pramod Kumar <pramod.kumar@broadcom.com>
 
-Pramod Kumar (3):
-  dt-bindings: thermal: Add binding document for SR thermal
-  arm64: dts: stingray: Add Stingray Thermal DT support.
-  thermal: broadcom: Add Stingray thermal driver
+Add binding document for supported thermal implementation
+in Stingray.
 
- .../bindings/thermal/brcm,sr-thermal.txt           |  45 ++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  37 +++++
- drivers/thermal/Kconfig                            |   3 +-
- drivers/thermal/broadcom/Kconfig                   |   9 ++
- drivers/thermal/broadcom/Makefile                  |   1 +
- drivers/thermal/broadcom/sr-thermal.c              | 151 +++++++++++++++++++++
- 6 files changed, 245 insertions(+), 1 deletion(-)
+Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+---
+ .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
- create mode 100644 drivers/thermal/broadcom/sr-thermal.c
 
+diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+new file mode 100644
+index 0000000..33f9e11
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+@@ -0,0 +1,45 @@
++* Broadcom Stingray Thermal
++
++This binding describes thermal sensors that is part of Stingray SoCs.
++
++Required properties:
++- compatible : Must be "brcm,sr-thermal"
++- reg : memory where tmon data will be available.
++
++Example:
++	tmons {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		tmon_ihost0: thermal@8f100000 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100000 0x4>;
++		};
++
++		tmon_ihost1: thermal@8f100004 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100004 0x4>;
++		};
++
++		tmon_ihost2: thermal@8f100008 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100008 0x4>;
++		};
++
++		tmon_ihost3: thermal@8f10000c {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f10000c 0x4>;
++		};
++
++		tmon_crmu: thermal@8f100010 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100010 0x4>;
++		};
++
++		tmon_nitro: thermal@8f100014 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100014 0x4>;
++		};
++	};
 -- 
 2.7.4
