@@ -1,84 +1,259 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 07/12] dt-bindings: tc358754: add DT bindings
-Date: Mon, 28 May 2018 13:18:36 +0300
-Message-ID: <2275901.CJI6BsfBlP@avalon>
-References: <1527500833-16005-1-git-send-email-m.purski@samsung.com>
- <CGME20180528094727eucas1p153b8116120cd2195b15b74776f171cbe@eucas1p1.samsung.com>
- <1527500833-16005-8-git-send-email-m.purski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1527500833-16005-8-git-send-email-m.purski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Oleksandr Shamray <oleksandrs@mellanox.com>
+Subject: [patch v22 4/4] Documentation: jtag: Add ABI documentation
+Date: Mon, 28 May 2018 13:34:12 +0300
+Message-ID: <1527503652-21975-5-git-send-email-oleksandrs@mellanox.com>
+References: <1527503652-21975-1-git-send-email-oleksandrs@mellanox.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527503652-21975-1-git-send-email-oleksandrs@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, vadimp@mellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, Oleksandr Shamray <oleksandrs@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFjaWVqLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBNb25kYXksIDI4IE1heSAy
-MDE4IDEyOjQ3OjExIEVFU1QgTWFjaWVqIFB1cnNraSB3cm90ZToKPiBUaGUgcGF0Y2ggYWRkcyBi
-aW5kaW5ncyB0byBUb3NoaWJhIERTSS9MVkRTIGJyaWRnZSBUQzM1ODc2NC4KPiBCaW5kaW5ncyBk
-ZXNjcmliZSBwb3dlciBzdXBwbGllcywgcmVzZXQgZ3BpbyBhbmQgdmlkZW8gaW50ZXJmYWNlcy4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+
-IFNpZ25lZC1vZmYtYnk6IE1hY2llaiBQdXJza2kgPG0ucHVyc2tpQHNhbXN1bmcuY29tPgo+IC0t
-LQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdG9zaGliYSx0YzM1ODc2NC50eHQgICB8
-IDQyICsrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlvbnMo
-KykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjQudHh0Cj4gCj4gZGlmZiAtLWdpdAo+
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hp
-YmEsdGMzNTg3NjQudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvdG9zaGliYSx0YzM1ODc2NC50eHQgbmV3Cj4gZmlsZSBtb2RlIDEwMDY0NAo+
-IGluZGV4IDAwMDAwMDAuLmQwOWJkYzIKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjQu
-dHh0Cj4gQEAgLTAsMCArMSw0MiBAQAo+ICtUQzM1ODc2NCBNSVBJLURTSSB0byBMVkRTIHBhbmVs
-IGJyaWRnZQo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6ICJ0
-b3NoaWJhLHRjMzU4NzY0Igo+ICsgIC0gcmVnOiB0aGUgdmlydHVhbCBjaGFubmVsIG51bWJlciBv
-ZiBhIERTSSBwZXJpcGhlcmFsCj4gKyAgLSB2ZGRjLXN1cHBseTogY29yZSB2b2x0YWdlIHN1cHBs
-eQo+ICsgIC0gdmRkaW8tc3VwcGx5OiBJL08gdm9sdGFnZSBzdXBwbHkKPiArICAtIHZkZG1pcGkt
-c3VwcGx5OiBNSVBJIHZvbHRhZ2Ugc3VwcGx5Cj4gKyAgLSB2ZGRsdmRzMTMzLXN1cHBseTogTFZE
-UzEgMy4zViB2b2x0YWdlIHN1cHBseQo+ICsgIC0gdmRkbHZkczExMi1zdXBwbHk6IExWRFMxIDEu
-MlYgdm9sdGFnZSBzdXBwbHkKClRoYXQncyBhIGxvdCBvZiBwb3dlciBzdXBwbGllcy4gQ291bGQg
-c29tZSBvZiB0aGVtIGJlIG1lcmdlZCB0b2dldGhlciA/IFNlZSAKaHR0cHM6Ly9wYXRjaHdvcmsu
-ZnJlZWRlc2t0b3Aub3JnL3BhdGNoLzIxNjA1OC8gZm9yIGFuIGVhcmxpZXIgZGlzY3Vzc2lvbiBv
-biAKdGhlIHNhbWUgc3ViamVjdC4KCj4gKyAgLSByZXNldC1ncGlvczogYSBHUElPIHNwZWMgZm9y
-IHRoZSByZXNldCBwaW4KPiArCj4gK1RoZSBkZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB6ZXJvIHRv
-IHR3byAncG9ydCcgY2hpbGQgbm9kZXMsIGVhY2ggd2l0aCBvbmUKPiArY2hpbGQKPiArJ2VuZHBv
-aW50JyBub2RlLCBhY2NvcmRpbmcgdG8gdGhlIGJpbmRpbmdzIGRlZmluZWQgaW4gWzFdLgo+ICtU
-aGUgZm9sbG93aW5nIGFyZSBwcm9wZXJ0aWVzIHNwZWNpZmljIHRvIHRob3NlIG5vZGVzLgo+ICsK
-PiArcG9ydDoKPiArICAtIHJlZzogKHJlcXVpcmVkKSBjYW4gYmUgMCBmb3IgRFNJIHBvcnQgb3Ig
-MSBmb3IgTFZEUyBwb3J0OwoKVGhpcyBzZWVtcyBwcmV0dHkgdmFndWUgdG8gbWUuIEl0IGNvdWxk
-IGJlIHJlYWQgYXMgbWVhbmluZyB0aGF0IHBvcnRzIGFyZSAKY29tcGxldGVseSBvcHRpb25hbCwg
-YW5kIHRoYXQgdGhlIHBvcnQgbnVtYmVyIHlvdSBsaXN0IGNhbiBiZSB1c2VkLCBidXQgdGhhdCAK
-c29tZXRoaW5nIGVsc2UgY291bGQgYmUgdXNlZCB0by4KCkxldCdzIG1ha2UgdGhlIHBvcnQgbm9k
-ZXMgbWFuZGF0b3J5LiBJIHByb3Bvc2UgdGhlIGZvbGxvd2luZy4KClJlcXVpcmVkIG5vZGVzOgoK
-VGhlIFRDMzU4NzY0IGhhcyBEU0kgYW5kIExWRFMgcG9ydHMgd2hvc2UgY29ubmVjdGlvbnMgYXJl
-IGRlc2NyaWJlZCB1c2luZyB0aGUgCk9GIGdyYXBoIGJpbmRpbmdzIGRlZmluZWQgaW4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4gVGhlIApkZXZpY2Ugbm9kZSBt
-dXN0IGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHBlciBEU0kgYW5kIExWRFMgcG9ydC4g
-VGhlIHBvcnQgCm5vZGVzIGFyZSBudW1iZXJlZCBhcyBmb2xsb3dzLgoKICBQb3J0ICAgICAgICAg
-ICAgICAgICAgTnVtYmVyCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KICBEU0kgSW5wdXQgICAgICAgICAgICAgMAogIExW
-RFMgT3V0cHV0ICAgICAgICAgICAxCgpFYWNoIHBvcnQgbm9kZSBtdXN0IGNvbnRhaW4gZW5kcG9p
-bnQgbm9kZXMgZGVzY3JpYmluZyB0aGUgaGFyZHdhcmUgCmNvbm5lY3Rpb25zLgoKPiArWzFdOiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50
-eHQKPiArCj4gK0V4YW1wbGU6Cj4gKwo+ICsJYnJpZGdlQDAgewo+ICsJCXJlZyA9IDwwPjsKPiAr
-CQljb21wYXRpYmxlID0gInRvc2hpYmEsdGMzNTg3NjQiOwo+ICsJCXZkZGMtc3VwcGx5ID0gPCZ2
-Y2NfMXYyX3JlZz47Cj4gKwkJdmRkaW8tc3VwcGx5ID0gPCZ2Y2NfMXY4X3JlZz47Cj4gKwkJdmRk
-bWlwaS1zdXBwbHkgPSA8JnZjY18xdjJfcmVnPjsKPiArCQl2ZGRsdmRzMTMzLXN1cHBseSA9IDwm
-dmNjXzN2M19yZWc+Owo+ICsJCXZkZGx2ZHMxMTItc3VwcGx5ID0gPCZ2Y2NfMXYyX3JlZz47Cj4g
-KwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZDEgNiBHUElPX0FDVElWRV9MT1c+Owo+ICsJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCXBvcnRAMSB7Cj4gKwkJ
-CXJlZyA9IDwxPjsKPiArCQkJbHZkc19lcDogZW5kcG9pbnQgewo+ICsJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZwYW5lbF9lcD47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07CgotLSAKUmVnYXJkcywK
-CkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+Added document that describe the ABI for JTAG class drivrer
+
+Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+v21->v22
+Comments pointed by Randy Dunlap <rdunlap@infradead.org>
+- fix spell in ABI doccumentation
+
+v20->v21
+Comments pointed by Randy Dunlap <rdunlap@infradead.org>
+- Fix JTAG dirver help in Kconfig
+
+v19->v20
+Comments pointed by Randy Dunlap <rdunlap@infradead.org>
+- Fix JTAG doccumentation
+
+v18->v19
+Pavel Machek <pavel@ucw.cz>
+- Added JTAG doccumentation to Documentation/jtag
+
+v17->v18
+v16->v17
+v15->v16
+v14->v15
+v13->v14
+v12->v13
+v11->v12 Tobias Klauser <tklauser@distanz.ch>
+Comments pointed by
+- rename /Documentation/ABI/testing/jatg-dev -> jtag-dev
+- Typo: s/interfase/interface
+v10->v11
+v9->v10
+Fixes added by Oleksandr:
+- change jtag-cdev to jtag-dev in documentation
+- update KernelVersion and Date in jtag-dev documentation;
+v8->v9
+v7->v8
+v6->v7
+Comments pointed by Pavel Machek <pavel@ucw.cz>
+- Added jtag-cdev documentation to Documentation/ABI/testing folder
+---
+ Documentation/ABI/testing/jtag-dev |   27 +++++++++
+ Documentation/jtag/overview        |   28 +++++++++
+ Documentation/jtag/transactions    |  109 ++++++++++++++++++++++++++++++++++++
+ MAINTAINERS                        |    1 +
+ 4 files changed, 165 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/ABI/testing/jtag-dev
+ create mode 100644 Documentation/jtag/overview
+ create mode 100644 Documentation/jtag/transactions
+
+diff --git a/Documentation/ABI/testing/jtag-dev b/Documentation/ABI/testing/jtag-dev
+new file mode 100644
+index 0000000..4325316
+--- /dev/null
++++ b/Documentation/ABI/testing/jtag-dev
+@@ -0,0 +1,27 @@
++What:		/dev/jtag[0-9]+
++Date:		May 2018
++KernelVersion:	4.18
++Contact:	oleksandrs@mellanox.com
++Description:
++		The misc device files /dev/jtag* are the interface
++		between JTAG master interface and userspace.
++
++		The ioctl(2)-based ABI is defined and documented in
++		[include/uapi]<linux/jtag.h>.
++
++		The following file operations are supported:
++
++		open(2)
++		The argument flag currently support only one access
++		mode O_RDWR.
++
++		ioctl(2)
++		Initiate various actions.
++		See the inline documentation in [include/uapi]<linux/jtag.h>
++		for descriptions of all ioctls.
++
++		close(2)
++		Stops and free up the I/O contexts that was associated
++		with the file descriptor.
++
++Users:		TBD
+diff --git a/Documentation/jtag/overview b/Documentation/jtag/overview
+new file mode 100644
+index 0000000..42b487a
+--- /dev/null
++++ b/Documentation/jtag/overview
+@@ -0,0 +1,28 @@
++Linux kernel JTAG support
++=========================
++
++The JTAG is an industry standard for verifying hardware.
++JTAG provides access to many logic signals of a complex integrated circuit,
++including the device pins.
++
++A JTAG interface is a special interface added to a chip.
++Depending on the version of JTAG, two, four, or five pins are added.
++
++The connector pins are:
++	TDI (Test Data In)
++	TDO (Test Data Out)
++	TCK (Test Clock)
++	TMS (Test Mode Select)
++	TRST (Test Reset) optional
++
++JTAG interface is designed to have two parts - basic core driver and
++hardware specific driver. The basic driver introduces a general interface
++which is not dependent of specific hardware. It provides communication
++between user space and hardware specific driver.
++Each JTAG device is represented as a char device from (jtag0, jtag1, ...).
++Access to a JTAG device is performed through IOCTL calls.
++
++Call flow example:
++User: open  -> /dev/jatgX
++User: ioctl -> /dev/jtagX -> JTAG core driver -> JTAG hardware specific driver
++User: close -> /dev/jatgX
+diff --git a/Documentation/jtag/transactions b/Documentation/jtag/transactions
+new file mode 100644
+index 0000000..2abf833
+--- /dev/null
++++ b/Documentation/jtag/transactions
+@@ -0,0 +1,109 @@
++The JTAG API
++=============
++
++JTAG master devices can be accessed through a character misc-device.
++Each JTAG master interface can be accessed by using /dev/jtagN.
++
++JTAG system calls set:
++- SIR (Scan Instruction Register, IEEE 1149.1 Instruction Register scan);
++- SDR (Scan Data Register, IEEE 1149.1 Data Register scan);
++- RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
++number of clocks.
++
++open(), close()
++-------
++open() opens JTAG device. Only one open operation per JTAG device
++can be performed. Two or more open for one device will return error.
++
++Open/Close  device:
++- jtag_fd = open("/dev/jtag0", O_RDWR);
++- close(jtag_fd);
++
++ioctl()
++-------
++All access operations to JTAG devices performed through ioctl interface.
++The IOCTL interface supports these requests:
++	JTAG_IOCRUNTEST - Force JTAG state machine to RUN_TEST/IDLE state
++	JTAG_SIOCFREQ - Set JTAG TCK frequency
++	JTAG_GIOCFREQ - Get JTAG TCK frequency
++	JTAG_IOCXFER - send JTAG data Xfer
++	JTAG_GIOCSTATUS - get current JTAG TAP status
++	JTAG_SIOCMODE - set JTAG mode flags.
++
++JTAG_SIOCFREQ, JTAG_GIOCFREQ
++------
++Set/Get JTAG clock speed:
++
++	unsigned int jtag_fd;
++	ioctl(jtag_fd, JTAG_SIOCFREQ, &frq);
++	ioctl(jtag_fd, JTAG_GIOCFREQ, &frq);
++
++JTAG_IOCRUNTEST
++------
++Force JTAG state machine to RUN_TEST/IDLE state
++
++struct jtag_run_test_idle {
++	__u8	reset;
++	__u8	endstate;
++	__u8	tck;
++};
++
++reset: 0 - run IDLE/PAUSE from current state
++	   1 - go through TEST_LOGIC/RESET state before  IDLE/PAUSE
++endstate: completion flag
++tck: clock counter
++
++Example:
++	struct jtag_run_test_idle runtest;
++
++	runtest.endstate = JTAG_STATE_IDLE;
++	runtest.reset = 0;
++	runtest.tck = data_p->tck;
++	usleep(25 * 1000);
++	ioctl(jtag_fd, JTAG_IOCRUNTEST, &runtest);
++
++JTAG_IOCXFER
++------
++Send SDR/SIR transaction
++
++struct jtag_xfer {
++	__u8	type;
++	__u8	direction;
++	__u8	endstate;
++	__u8	padding;
++	__u32	length;
++	__u64	tdio;
++};
++
++type: transfer type - JTAG_SIR_XFER/JTAG_SDR_XFER
++direction: xfer direction - JTAG_SIR_XFER/JTAG_SDR_XFER,
++length: xfer data len in bits
++tdio : xfer data array
++endstate: xfer end state after transaction finish
++	   can be: JTAG_STATE_IDLE/JTAG_STATE_PAUSEIR/JTAG_STATE_PAUSEDR
++
++Example:
++	struct jtag_xfer xfer;
++	static char buf[64];
++	static unsigned int buf_len = 0;
++	[...]
++	xfer.type = JTAG_SDR_XFER;
++	xfer.tdio = (__u64)buf;
++	xfer.length = buf_len;
++	xfer.endstate = JTAG_STATE_IDLE;
++
++	if (is_read)
++		xfer.direction = JTAG_READ_XFER;
++	else
++		xfer.direction = JTAG_WRITE_XFER;
++
++	ioctl(jtag_fd, JTAG_IOCXFER, &xfer);
++
++JTAG_SIOCMODE
++------
++If hardware driver can support different running modes you can change it.
++
++Example:
++	unsigned int mode;
++	mode = JTAG_XFER_HW_MODE;
++	ioctl(jtag_fd, JTAG_SIOCMODE, &mode);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a5e5f75..e067eda 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7618,6 +7618,7 @@ F:	include/linux/jtag.h
+ F:	include/uapi/linux/jtag.h
+ F:	drivers/jtag/
+ F:	Documentation/devicetree/bindings/jtag/
++F:	Documentation/ABI/testing/jtag-dev
+ 
+ K10TEMP HARDWARE MONITORING DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+-- 
+1.7.1
