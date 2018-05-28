@@ -1,86 +1,86 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH v4 0/9] Add support for mediatek SOC MT2712
-Date: Mon, 28 May 2018 14:38:18 +0800
-Message-ID: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v4 4/9] drm/mediatek: add ddp component OD1
+Date: Mon, 28 May 2018 14:38:22 +0800
+Message-ID: <1527489507-24453-5-git-send-email-stu.hsieh@mediatek.com>
+References: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add support for the Mediatek MT2712 DISP subsystem.
-MT2712 is base on MT8173, there are some difference as following:
-MT2712 support three disp output(two ovl and one rdma)
-
-Change in v4:
-- Move some modification about AAL1 from patch
-  "Add support for mediatek SOC MT2712" to
-  "add ddp component AAL1"
-- Move some modification about OD1 from patch
-  "Add support for mediatek SOC MT2712" to
-  "add ddp component OD1"
-- Move some modification about PWM2 from patch
-  "Add support for mediatek SOC MT2712" to
-  "add ddp component PWM2"
-- Move some modification about third ddp path from patch
-  "Add support for mediatek SOC MT2712" to
-  "add third ddp path"
-- Move the definition OD1_MOUT_EN_RDMA1 from patch
-  "Add support for mediatek SOC MT2712" to
-  "add connection from OD1 to RDMA1"
-- Rebase the patch "add connection from OD1 to RDMA1" after
-  "add ddp component OD1"
-- Rebase the patch "add third ddp path" before
-  "Add support for mediatek SOC MT2712"
-- Modify the 2712 MUTEX MODULE in the order by index
-- Added patch for ddp component PWM1
-- For patch "add third ddp path"
-  Add the condition in mtk_crtc_create() that if there
-  is no ddp path, then return 0 to avoid the null crtc
-
-Change in v3:
-- Added patch for ddp component AAL1
-- Added patch for ddp component OD1
-- Added patch for ddp component PWM2
-- Added patch to create third ddp path
-- Rebase patch "support maximum 64 mutex mod" before
-  "Add support for mediatek SOC MT2712"
-- Rebase patch "add connection from OD1 to RDMA1" before
-  "Add support for mediatek SOC MT2712"
-- Remove two definition about RDMA0 and RDMA2
-- Change the definition about mutex module from
-  bitwise to index
-
-Changes in v2:
-- update dt-bindings for mt2712
-- Added patch to connection from OD1 to RDMA1
-- Added patch to support maximum 64 mutex mod
-- rewrite mutex mod condition for reducing one byte
-- Change the component name AAL/OD to AAL0/OD0 for naming consistency
-- Move the compatible information about dpi to other patch which modify
-  the dpi driver for mt2712
-
-Stu Hsieh (9):
-  drm/mediatek: update dt-bindings for mt2712
-  drm/mediatek: support maximum 64 mutex mod
-  drm/mediatek: add ddp component AAL1
-  drm/mediatek: add ddp component OD1
-  drm/mediatek: add ddp component PWM1
-  drm/mediatek: add ddp component PWM2
-  drm/mediatek: add connection from OD1 to RDMA1
-  drm/mediatek: add third ddp path
-  drm/mediatek: Add support for mediatek SOC MT2712
-
- .../bindings/display/mediatek/mediatek,disp.txt    |   2 +-
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |   3 +
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 124 +++++++++++++++------
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |   8 +-
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |   7 +-
- drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  47 +++++++-
- drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   7 +-
- 7 files changed, 158 insertions(+), 40 deletions(-)
-
--- 
-2.12.5
+VGhpcyBwYXRjaCBhZGQgdGhlIGNvbXBvbmVudCBPRDEgYW5kCnJlbmFtZSB0aGUgT0QgdG8gT0Qx
+CgpTaWduZWQtb2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQog
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8IDQgKystLQogZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDMgKystCiBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIHwgMyArKy0KIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgfCAyICstCiA0IGZpbGVzIGNoYW5nZWQs
+IDcgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcC5jCmluZGV4IDcyMTc2NjVmNGI1ZC4uNThlNDQzNDllMzE1IDEwMDY0NAotLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYworKysgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwpAQCAtMTE0LDcgKzExNCw3IEBAIHN0YXRpYyBj
+b25zdCB1bnNpZ25lZCBpbnQgbXQ4MTczX211dGV4X21vZFtERFBfQ09NUE9ORU5UX0lEX01BWF0g
+PSB7CiAJW0REUF9DT01QT05FTlRfQ09MT1IwXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9DT0xP
+UjAsCiAJW0REUF9DT01QT05FTlRfQ09MT1IxXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9DT0xP
+UjEsCiAJW0REUF9DT01QT05FTlRfR0FNTUFdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX0dBTU1B
+LAotCVtERFBfQ09NUE9ORU5UX09EXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9PRCwKKwlbRERQ
+X0NPTVBPTkVOVF9PRDBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX09ELAogCVtERFBfQ09NUE9O
+RU5UX09WTDBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDAsCiAJW0REUF9DT01QT05FTlRf
+T1ZMMV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfT1ZMMSwKIAlbRERQX0NPTVBPTkVOVF9QV00w
+XSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9QV00wLApAQCAtMTM5LDcgKzEzOSw3IEBAIHN0YXRp
+YyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwK
+IAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09WTDAgJiYgbmV4dCA9PSBERFBfQ09N
+UE9ORU5UX1JETUEwKSB7CiAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfT1ZMX01PVVRf
+RU47CiAJCXZhbHVlID0gT1ZMX01PVVRfRU5fUkRNQTsKLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
+Q09NUE9ORU5UX09EICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCkgeworCX0gZWxzZSBp
+ZiAoY3VyID09IEREUF9DT01QT05FTlRfT0QwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9SRE1B
+MCkgewogCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX09EX01PVVRfRU47CiAJCXZhbHVl
+ID0gT0RfTU9VVF9FTl9SRE1BMDsKIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1VG
+T0UgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTApIHsKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCmluZGV4IDA5MTkwMzk4MDVhYS4uODdhY2Y2YmU4N2Y2
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5j
+CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMKQEAgLTIy
+Nyw3ICsyMjcsOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9tYXRjaCBtdGtf
+ZGRwX21hdGNoZXNbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0gewogCVtERFBfQ09NUE9ORU5UX0RT
+STBdCT0geyBNVEtfRFNJLAkJMCwgTlVMTCB9LAogCVtERFBfQ09NUE9ORU5UX0RTSTFdCT0geyBN
+VEtfRFNJLAkJMSwgTlVMTCB9LAogCVtERFBfQ09NUE9ORU5UX0dBTU1BXQk9IHsgTVRLX0RJU1Bf
+R0FNTUEsCTAsICZkZHBfZ2FtbWEgfSwKLQlbRERQX0NPTVBPTkVOVF9PRF0JPSB7IE1US19ESVNQ
+X09ELAkwLCAmZGRwX29kIH0sCisJW0REUF9DT01QT05FTlRfT0QwXQk9IHsgTVRLX0RJU1BfT0Qs
+CTAsICZkZHBfb2QgfSwKKwlbRERQX0NPTVBPTkVOVF9PRDFdCT0geyBNVEtfRElTUF9PRCwJMSwg
+JmRkcF9vZCB9LAogCVtERFBfQ09NUE9ORU5UX09WTDBdCT0geyBNVEtfRElTUF9PVkwsCTAsIE5V
+TEwgfSwKIAlbRERQX0NPTVBPTkVOVF9PVkwxXQk9IHsgTVRLX0RJU1BfT1ZMLAkxLCBOVUxMIH0s
+CiAJW0REUF9DT01QT05FTlRfUFdNMF0JPSB7IE1US19ESVNQX1BXTSwJMCwgTlVMTCB9LApkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKaW5kZXggZWVlM2MwY2My
+NjMyLi45YjE5ZmM0NDIzZjEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcF9jb21wLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZGRwX2NvbXAuaApAQCAtNTAsNyArNTAsOCBAQCBlbnVtIG10a19kZHBfY29tcF9pZCB7CiAJRERQ
+X0NPTVBPTkVOVF9EU0kwLAogCUREUF9DT01QT05FTlRfRFNJMSwKIAlERFBfQ09NUE9ORU5UX0dB
+TU1BLAotCUREUF9DT01QT05FTlRfT0QsCisJRERQX0NPTVBPTkVOVF9PRDAsCisJRERQX0NPTVBP
+TkVOVF9PRDEsCiAJRERQX0NPTVBPTkVOVF9PVkwwLAogCUREUF9DT01QT05FTlRfT1ZMMSwKIAlE
+RFBfQ09NUE9ORU5UX1BXTTAsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCmlu
+ZGV4IGE0MTUyNjBmM2Q1Zi4uMDhkNWQwYjQ3YmZlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kcnYuYwpAQCAtMTUwLDcgKzE1MCw3IEBAIHN0YXRpYyBjb25zdCBlbnVtIG10a19k
+ZHBfY29tcF9pZCBtdDgxNzNfbXRrX2RkcF9tYWluW10gPSB7CiAJRERQX0NPTVBPTkVOVF9PVkww
+LAogCUREUF9DT01QT05FTlRfQ09MT1IwLAogCUREUF9DT01QT05FTlRfQUFMMCwKLQlERFBfQ09N
+UE9ORU5UX09ELAorCUREUF9DT01QT05FTlRfT0QwLAogCUREUF9DT01QT05FTlRfUkRNQTAsCiAJ
+RERQX0NPTVBPTkVOVF9VRk9FLAogCUREUF9DT01QT05FTlRfRFNJMCwKLS0gCjIuMTIuNQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
