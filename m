@@ -1,99 +1,61 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
-Date: Mon, 28 May 2018 11:36:03 +0200
-Message-ID: <20180528093602.eb36j34bbfzmpmw2@verge.net.au>
-References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
- <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
- <CAMuHMdXRnoyhNz=3v_=ZCV=FWX4TwKqx7MpH0g3c7GwtXKP1tg@mail.gmail.com>
- <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
- <CAMuHMdXnNABJSJZ6MLF+aQu8QKpFoMCAvno9Yc-9LOe810NtbA@mail.gmail.com>
- <7e1563c3-3e13-235b-3071-c3936502530f@gmail.com>
- <20180528084135.q5xng5eaypprsypr@verge.net.au>
- <CAMuHMdXYyN=XY6nb9RVEE+t0NeoSPhTh6fUk-9YWdFzAE1FfPA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXYyN=XY6nb9RVEE+t0NeoSPhTh6fUk-9YWdFzAE1FfPA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Richard Weinberger <richard@nod.at>, Boris Brezillon <boris.brezillon@bootlin.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH 00/12] Add TOSHIBA TC358764 DSI/LVDS bridge driver
+Date: Mon, 28 May 2018 11:47:04 +0200
+Message-ID: <1527500833-16005-1-git-send-email-m.purski@samsung.com>
+References: <CGME20180528094721eucas1p22b90fd838ce00f029fec7f5241cc06b5@eucas1p2.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 10:54:57AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Mon, May 28, 2018 at 10:41 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Thu, May 24, 2018 at 04:52:59PM +0200, Marek Vasut wrote:
-> >> On 05/23/2018 08:25 AM, Geert Uytterhoeven wrote:
-> >> > On Wed, May 23, 2018 at 12:01 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> >> >> On 05/22/2018 04:43 PM, Geert Uytterhoeven wrote:
-> >> >>> On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> >> >>>> Drop the MTD partitioning from DT, since it does not describe HW
-> >> >>>> and to give way to a more flexible kernel command line partition
-> >> >>>> passing.
-> >> >>>>
-> >> >>>> To retain the original partitioning, assure you have enabled
-> >> >>>> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
-> >> >>>> following to your kernel command line:
-> >> >>>>
-> >> >>>>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
-> >> >>>
-> >> >>> I think the "@0" can be dropped, as it's optional?
-> >> >>> 4m?
-> >> >>
-> >> >> My take on this is that the loader is actually at offset 0x0 of the MTD
-> >> >> device and we explicitly state that in the mtdparts to anchor the first
-> >> >> partition within the MTD device and all the other partitions are at
-> >> >> offset +(sum of the sizes of all partitions listed before the current
-> >> >> one) relative to that first partition.
-> >> >
-> >> > Where is this explicitly states for the first partition?
-> >> >
-> >> >> Removing the @0 feels fragile at best and it seems to depend on the
-> >> >> current behavior of the code.
-> >> >
-> >> > Better, it also depends on the documented behavior:
-> >> >
-> >> > Documentation/admin-guide/kernel-parameters.txt refers to
-> >> > drivers/mtd/cmdlinepart.c, which states:
-> >> >
-> >> >  * <offset>  := standard linux memsize
-> >> >  *              if omitted the part will immediately follow the previous part
-> >> >  *              or 0 if the first part
-> >> >
-> >> > None of the examples listed there or under the MTD_CMDLINE_PARTS Kconfig
-> >> > help text, or in a defconfig bundled with the kernel, use @0 for the first
-> >> > partition.
-> >>
-> >> I think this is exceptionally fragile and dangerous to depend on this,
-> >> but so be it.
-> >
-> > Could you respin with this change?
-> >
-> > I would also like to ask for another change, in light of recent
-> > feedback from Olof Johansson ("Re: [GIT PULL] Renesas ARM64 Based SoC DT
-> > Updates for v4.18").
-> >
-> > Please consolidate the dts patches into a single patch?
-> 
-> I think it's better to keep them split, as each commit description mentions
-> what needs to be passed on the kernel command line for the corresponding
-> board.
-> 
-> Combining it in a single patch makes it much harder to extract this information.
-> Unless you're fine with a list:
-> 
->    koelsch: ...
->    wheat: mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
+Hi all,
 
-Lets try a list.
+this patchset is a next attempt to add the tc358764 driver.
+The previous one can be found here:
+
+https://lists.freedesktop.org/archives/dri-devel/2014-February/053705.html
+
+Back then, TC358764 was added as a panel driver.
+
+The bridge is supposed to be a DSI peripheral. Currently exynos_dsi accepts only panels
+as its peripherals. Therefore, some logic in exynos_dsi had to be ammended. That is implemented
+in first 4 patches.
+
+Apart from the driver this patchset adds support for BOE HV070WSA-100 panel, which is used by
+TC358764 and dts nodes to exynos5250.dtsi and exynos5250-arndale.dtsi.
+
+Best regards,
+
+Maciej Purski
+
+Maciej Purski (12):
+  drm/exynos: rename "bridge_node" to "mic_bridge_node"
+  drm/exynos: move pm_runtime_get_sync() to exynos_dsi_init()
+  drm/exynos: move connector creation to attach callback
+  drm/exynos: add non-panel path to exynos_dsi_enable()
+  panel/hv070wsa-100: add DT bindings
+  drm/panel: add support for BOE HV070WSA-100 panel to simple-panel
+  dt-bindings: tc358754: add DT bindings
+  drm/bridge: tc358764: Add DSI to LVDS bridge driver
+  ARM: dts: exynos5250: add mipi-phy node
+  ARM: dts: exynos5250: add DSI node
+  ARM: dts: exynos5250-arndale: add display regulators
+  ARM: dts: exynos5250-arndale: add dsi and panel nodes
+
+ .../bindings/display/bridge/toshiba,tc358764.txt   |  42 ++
+ .../bindings/display/panel/boe,hv070wsa-100.txt    |   7 +
+ arch/arm/boot/dts/exynos5250-arndale.dts           |  63 +++
+ arch/arm/boot/dts/exynos5250.dtsi                  |  20 +
+ drivers/gpu/drm/bridge/Kconfig                     |   7 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/tc358764.c                  | 547 +++++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            |  84 ++--
+ drivers/gpu/drm/panel/panel-simple.c               |  25 +
+ 9 files changed, 756 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,hv070wsa-100.txt
+ create mode 100644 drivers/gpu/drm/bridge/tc358764.c
+
+-- 
+2.7.4
