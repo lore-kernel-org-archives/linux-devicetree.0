@@ -1,598 +1,800 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [patch v22 1/4] drivers: jtag: Add JTAG core driver
-Date: Mon, 28 May 2018 14:35:27 +0200
-Message-ID: <20180528123527.GA17613@kroah.com>
-References: <1527503652-21975-1-git-send-email-oleksandrs@mellanox.com>
- <1527503652-21975-2-git-send-email-oleksandrs@mellanox.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Mon, 28 May 2018 14:39:32 +0200
+Message-ID: <93655d05adabed2f32a423fafe6a5fb7@agner.ch>
+References: <cover.1526990589.git.stefan@agner.ch>
+ <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+ <20180528000422.7f18dc5f@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527503652-21975-2-git-send-email-oleksandrs@mellanox.com>
+In-Reply-To: <20180528000422.7f18dc5f@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>
-Cc: arnd@arndb.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, vadimp@mellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 01:34:09PM +0300, Oleksandr Shamray wrote:
-> Initial patch for JTAG driver
-> JTAG class driver provide infrastructure to support hardware/software
-> JTAG platform drivers. It provide user layer API interface for flashing
-> and debugging external devices which equipped with JTAG interface
-> using standard transactions.
+On 28.05.2018 00:04, Miquel Raynal wrote:
+> Hi Stefan,
 > 
-> Driver exposes set of IOCTL to user space for:
-> - XFER:
-> - SIR (Scan Instruction Register, IEEE 1149.1 Data Register scan);
-> - SDR (Scan Data Register, IEEE 1149.1 Instruction Register scan);
-> - RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
->   number of clocks).
-> - SIOCFREQ/GIOCFREQ for setting and reading JTAG frequency.
+> I just see your v2 while I'm sending my review on the driver, will
+> probably wait for v4 then ;)
+
+Hehe, yeah lets hope we do not race on v3 :-)
+
+Some comments to things which are not addressed yet in v2:
+
 > 
-> Driver core provides set of internal APIs for allocation and
-> registration:
-> - jtag_register;
-> - jtag_unregister;
-> - jtag_alloc;
-> - jtag_free;
+> Thanks for the work though!
+> Miquèl
 > 
-> Platform driver on registration with jtag-core creates the next
-> entry in dev folder:
-> /dev/jtagX
+> On Tue, 22 May 2018 14:07:06 +0200, Stefan Agner <stefan@agner.ch>
+> wrote:
 > 
-> Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
-> Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-> Acked-by: Philippe Ombredanne <pombredanne@nexb.com>
-> ---
-> v21->v22
+>> Add support for the NAND flash controller found on NVIDIA
+>> Tegra 2 SoCs. This implementation does not make use of the
+>> command queue feature. Regular operations/data transfers are
+>> done in PIO mode. Page read/writes with hardware ECC make
+>> use of the DMA for data transfer.
+>>
+>> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+> 
+> [...]
+> 
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/raw/tegra_nand.c
+>> @@ -0,0 +1,915 @@
+>> +/*
+>> + * Copyright (C) 2018 Stefan Agner <stefan@agner.ch>
+>> + * Copyright (C) 2014-2015 Lucas Stach <dev@lynxeye.de>
+>> + * Copyright (C) 2012 Avionic Design GmbH
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+> 
+> Please use SPDX tag.
+> 
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/completion.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/err.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mtd/partitions.h>
+>> +#include <linux/mtd/rawnand.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset.h>
+>> +
+>> +#define CMD					0x00
+>> +#define   CMD_GO				(1 << 31)
+>> +#define   CMD_CLE				(1 << 30)
+>> +#define   CMD_ALE				(1 << 29)
+>> +#define   CMD_PIO				(1 << 28)
+>> +#define   CMD_TX				(1 << 27)
+>> +#define   CMD_RX				(1 << 26)
+> 
+> Please use the BIT(x) macro instead of (1 << x)
+> 
 
-22 versions, way to stick with this...
+Ok.
 
-Anyway, time to review it again.  I feel it's really close, but I don't
-want to apply it yet as the api feels odd in places.  If others have
-asked you to make these changes to look like this, I'm sorry, then
-please push back on me:
+>> +#define   CMD_SEC_CMD				(1 << 25)
+>> +#define   CMD_AFT_DAT				(1 << 24)
+>> +#define   CMD_TRANS_SIZE(x)			(((x - 1) & 0xf) << 20)
+>> +#define   CMD_A_VALID				(1 << 19)
+>> +#define   CMD_B_VALID				(1 << 18)
+>> +#define   CMD_RD_STATUS_CHK			(1 << 17)
+>> +#define   CMD_RBSY_CHK				(1 << 16)
+>> +#define   CMD_CE(x)				(1 << (8 + ((x) & 0x7)))
+>> +#define   CMD_CLE_SIZE(x)			(((x - 1) & 0x3) << 4)
+>> +#define   CMD_ALE_SIZE(x)			(((x - 1) & 0xf) << 0)
+>> +
+> 
+> [...]
+> 
+>> +static int tegra_nand_cmd(struct nand_chip *chip,
+>> +			 const struct nand_subop *subop)
+>> +{
+>> +	const struct nand_op_instr *instr;
+>> +	const struct nand_op_instr *instr_data_in = NULL;
+>> +	struct mtd_info *mtd = nand_to_mtd(chip);
+>> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+>> +	unsigned int op_id = -1, trfr_in_sz = 0, trfr_out_sz = 0, offset = 0;
+>> +	bool first_cmd = true;
+>> +	bool force8bit;
+>> +	u32 cmd = 0;
+>> +	u32 value;
+>> +
+>> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
+>> +		unsigned int naddrs, i;
+>> +		const u8 *addrs;
+>> +		u32 addr1 = 0, addr2 = 0;
+>> +
+>> +		instr = &subop->instrs[op_id];
+>> +
+>> +		switch (instr->type) {
+>> +		case NAND_OP_CMD_INSTR:
+>> +			if (first_cmd) {
+>> +				cmd |= CMD_CLE;
+>> +				writel(instr->ctx.cmd.opcode, nand->regs + CMD_1);
+>> +			} else {
+>> +				cmd |= CMD_SEC_CMD;
+>> +				writel(instr->ctx.cmd.opcode, nand->regs + CMD_2);
+>> +			}
+>> +			first_cmd = false;
+>> +			break;
+>> +		case NAND_OP_ADDR_INSTR:
+>> +			offset = nand_subop_get_addr_start_off(subop, op_id);
+>> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
+>> +			addrs = &instr->ctx.addr.addrs[offset];
+>> +
+>> +			cmd |= CMD_ALE | CMD_ALE_SIZE(naddrs);
+>> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+>> +				addr1 |= *addrs++ << (8 * i);
+>> +			naddrs -= i;
+>> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+>> +				addr2 |= *addrs++ << (8 * i);
+>> +			writel(addr1, nand->regs + ADDR_1);
+>> +			writel(addr2, nand->regs + ADDR_2);
+>> +			break;
+>> +
+>> +		case NAND_OP_DATA_IN_INSTR:
+>> +			trfr_in_sz = nand_subop_get_data_len(subop, op_id);
+>> +			offset = nand_subop_get_data_start_off(subop, op_id);
+>> +
+>> +			cmd |= CMD_TRANS_SIZE(trfr_in_sz) | CMD_PIO | CMD_RX | CMD_A_VALID;
+>> +
+>> +			instr_data_in = instr;
+>> +			break;
+>> +
+>> +		case NAND_OP_DATA_OUT_INSTR:
+>> +			trfr_out_sz = nand_subop_get_data_len(subop, op_id);
+>> +			offset = nand_subop_get_data_start_off(subop, op_id);
+>> +			trfr_out_sz = min_t(size_t, trfr_out_sz, 4);
+>> +
+>> +			cmd |= CMD_TRANS_SIZE(trfr_out_sz) | CMD_PIO | CMD_TX | CMD_A_VALID;
+>> +
+>> +			memcpy(&value, instr->ctx.data.buf.out + offset, trfr_out_sz);
+>> +			writel(value, nand->regs + RESP);
+>> +
+>> +			break;
+>> +		case NAND_OP_WAITRDY_INSTR:
+>> +			cmd |= CMD_RBSY_CHK;
+>> +			break;
+>> +
+>> +		}
+>> +	}
+>> +
+>> +
+>> +	cmd |= CMD_GO | CMD_CE(nand->cur_chip);
+>> +	writel(cmd, nand->regs + CMD);
+>> +	wait_for_completion(&nand->command_complete);
+> 
+> _timeout?
+> 
 
-> +/*
-> + * JTAG core driver supports up to 256 devices
-> + * JTAG device name will be in range jtag0-jtag255
-> + * Set maximum len of jtag id to 3
-> + */
-> +
-> +#define MAX_JTAG_DEVS	255
+Yes, I definitely will do this. One half a second should be fine?
 
-Why have a max at all?  You should be able to just dynamically allocate
-them.  Anyway, if you do want a max, you need to be able to properly
-keep the max number, and right now you have a race when registering (you
-check the number, and then much later do you increment it, a pointless
-use of an atomic value if I've ever seen one...)
+>> +
+>> +	if (instr_data_in) {
+>> +		u32 value;
+>> +		size_t n = min_t(size_t, trfr_in_sz, 4);
+>> +
+>> +		value = readl(nand->regs + RESP);
+>> +		memcpy(instr_data_in->ctx.data.buf.in + offset, &value, n);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct nand_op_parser tegra_nand_op_parser = NAND_OP_PARSER(
+>> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
+>> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+>> +		NAND_OP_PARSER_PAT_ADDR_ELEM(true, 8),
+>> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+>> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true)),
+>> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
+>> +		NAND_OP_PARSER_PAT_DATA_OUT_ELEM(false, 4)),
+>> +	NAND_OP_PARSER_PATTERN(tegra_nand_cmd,
+>> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+>> +		NAND_OP_PARSER_PAT_ADDR_ELEM(true, 8),
+>> +		NAND_OP_PARSER_PAT_CMD_ELEM(true),
+>> +		NAND_OP_PARSER_PAT_WAITRDY_ELEM(true),
+>> +		NAND_OP_PARSER_PAT_DATA_IN_ELEM(true, 4)),
+>> +	);
+>> +
+>> +static int tegra_nand_exec_op(struct nand_chip *chip,
+>> +			     const struct nand_operation *op,
+>> +			     bool check_only)
+>> +{
+>> +	return nand_op_parser_exec_op(chip, &tegra_nand_op_parser, op,
+>> +				      check_only);
+>> +}
+>> +static void tegra_nand_select_chip(struct mtd_info *mtd, int chip)
+>> +{
+>> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+>> +
+>> +	nand->cur_chip = chip;
+> 
+> You should probably save the timings configuration and apply them back
+> here in case of using different chips.
+> 
 
-> +#define MAX_JTAG_NAME_LEN (sizeof("jtag") + 3)
-> +
-> +struct jtag {
-> +	struct miscdevice miscdev;
+So far multiple chips are not supported, but yes, would need to be done
+in that case.
 
-If you are a miscdev, why even have a max number?  Just let the max
-number of miscdev devices rule things.
+>> +}
+>> +
+>> +static u32 tegra_nand_fill_address(struct mtd_info *mtd, struct nand_chip *chip,
+>> +				   int page)
+>> +{
+>> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+>> +
+>> +	/* Lower 16-bits are column, always 0 */
+>> +	writel(page << 16, nand->regs + ADDR_1);
+>> +
+>> +	if (chip->options & NAND_ROW_ADDR_3) {
+>> +		writel(page >> 16, nand->regs + ADDR_2);
+>> +		return 5;
+>> +	}
+>> +
+>> +	return 4;
+>> +}
+>> +
+>> +static int tegra_nand_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>> +				uint8_t *buf, int oob_required, int page)
+>> +{
+>> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+>> +	u32 value, addrs;
+>> +
+>> +	writel(NAND_CMD_READ0, nand->regs + CMD_1);
+>> +	writel(NAND_CMD_READSTART, nand->regs + CMD_2);
+>> +
+>> +	addrs = tegra_nand_fill_address(mtd, chip, page);
+>> +
+>> +	value = readl(nand->regs + CFG);
+>> +	value |= CFG_HW_ECC | CFG_ERR_COR;
+>> +	writel(value, nand->regs + CFG);
+>> +
+>> +	writel(mtd->writesize - 1, nand->regs + DMA_CFG_A);
+>> +	writel(nand->data_dma, nand->regs + DATA_PTR);
+>> +
+>> +	if (oob_required) {
+>> +		writel(mtd_ooblayout_count_freebytes(mtd) - 1,
+>> +		       nand->regs + DMA_CFG_B);
+>> +		writel(nand->oob_dma, nand->regs + TAG_PTR);
+>> +	} else {
+>> +		writel(0, nand->regs + DMA_CFG_B);
+>> +		writel(0, nand->regs + TAG_PTR);
+>> +	}
+>> +
+>> +	value = DMA_CTRL_GO | DMA_CTRL_IN | DMA_CTRL_PERF_EN |
+>> +		DMA_CTRL_REUSE | DMA_CTRL_IE_DONE | DMA_CTRL_IS_DONE |
+>> +		DMA_CTRL_BURST_8 | DMA_CTRL_EN_A;
+>> +	if (oob_required)
+>> +		value |= DMA_CTRL_EN_B;
+>> +	writel(value, nand->regs + DMA_CTRL);
+>> +
+>> +	value = CMD_CLE | CMD_ALE | CMD_ALE_SIZE(addrs) | CMD_SEC_CMD |
+>> +		CMD_RBSY_CHK | CMD_GO | CMD_RX | CMD_TRANS_SIZE(9) |
+>> +		CMD_A_VALID | CMD_CE(nand->cur_chip);
+>> +	if (oob_required)
+>> +		value |= CMD_B_VALID;
+>> +	writel(value, nand->regs + CMD);
+>> +
+>> +	wait_for_completion(&nand->command_complete);
+>> +	wait_for_completion(&nand->dma_complete);
+>> +
+>> +	if (oob_required) {
+>> +		struct mtd_oob_region oobregion;
+>> +
+>> +		mtd_ooblayout_free(mtd, 0, &oobregion);
+> 
+> Don't you want to save the oobregion parameters once and then just
+> refer to them?
+> 
 
-> +	const struct jtag_ops *ops;
-> +	int id;
-> +	bool opened;
+I probably could just safe the size of the free OOB region.
 
-You shouldn't care about this, but ok...
+Anyway have some open questions wrt OOB support with HW ECC, see cover
+letter of v2.
 
-> +	struct mutex open_lock;
-> +	unsigned long priv[0];
-> +};
-> +
-> +static DEFINE_IDA(jtag_ida);
-> +
-> +static atomic_t jtag_refcount = ATOMIC_INIT(0);
+>> +		memcpy(chip->oob_poi, nand->oob_buf + oobregion.offset,
+>> +		       mtd_ooblayout_count_freebytes(mtd));
+>> +	}
+>> +	memcpy(buf, nand->data_buf, mtd->writesize);
+>> +
+>> +	value = readl(nand->regs + CFG);
+>> +	value &= ~(CFG_HW_ECC | CFG_ERR_COR);
+>> +	writel(value, nand->regs + CFG);
+>> +
+>> +	value = readl(nand->regs + DEC_STATUS);
+>> +	if (value & DEC_STATUS_A_ECC_FAIL) {
+>> +		/*
+>> +		 * The ECC isn't smart enough to figure out if a page is
+>> +		 * completely erased and flags an error in this case. So we
+>> +		 * check the read data here to figure out if it's a legitimate
+>> +		 * error or a false positive.
+>> +		 */
+>> +		int i, err;
+>> +		int flips_threshold = chip->ecc.strength / 2;
+>> +		int max_bitflips = 0;
+>> +
+>> +		for (i = 0; i < chip->ecc.steps; i++) {
+>> +			u8 *data = buf + (chip->ecc.size * i);
+>> +			err = nand_check_erased_ecc_chunk(data, chip->ecc.size,
+> 
+> Are you sure the data was uncorrected there? I bet you have corrected
+> data in chip->ecc.size and should re-read the page with the raw
+> helpers before using nand_check_erased_ecc_chunk().
+>  
 
-Either use it as an atomic properly (test_and_set), or just leave it as
-an int, or better yet, don't use it at all.
+Hm, quite likely. Will check that.
 
-> +void *jtag_priv(struct jtag *jtag)
-> +{
-> +	return jtag->priv;
-> +}
-> +EXPORT_SYMBOL_GPL(jtag_priv);
+>> +							  NULL, 0,
+>> +							  NULL, 0,
+>> +							  flips_threshold);
+> 
+> I think you should use chip->ecc.strength instead of flips_threshold
+> (and remove it).
+> 
 
-Api naming issue here.  Traditionally this is a "get/set_drvdata" type
-function, as in dev_get_drvdata(), or dev_set_drvdata.  But, you are
-right in that the network stack has a netdev_priv() call, where you
-probably copied this idea from.
+Hm, so higher level will check and relocate if we get closer to
+correctable bits?
 
-I don't know, I guess it's ok as-is, as it's the way networking does it,
-it's your call though.
+Probably wrong in drivers/mtd/nand/raw/vf610_nfc.c then too?
 
-> +static long jtag_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> +{
-> +	struct jtag *jtag = file->private_data;
-> +	struct jtag_run_test_idle idle;
-> +	struct jtag_xfer xfer;
-> +	u8 *xfer_data;
-> +	u32 data_size;
-> +	u32 value;
-> +	int err;
-> +
-> +	if (!arg)
-> +		return -EINVAL;
-> +
-> +	switch (cmd) {
-> +	case JTAG_GIOCFREQ:
-> +		if (!jtag->ops->freq_get)
-> +			return -EOPNOTSUPP;
-> +
-> +		err = jtag->ops->freq_get(jtag, &value);
-> +		if (err)
-> +			break;
-> +
-> +		if (put_user(value, (__u32 __user *)arg))
-> +			err = -EFAULT;
-> +		break;
-> +
-> +	case JTAG_SIOCFREQ:
-> +		if (!jtag->ops->freq_set)
-> +			return -EOPNOTSUPP;
-> +
-> +		if (get_user(value, (__u32 __user *)arg))
-> +			return -EFAULT;
-> +		if (value == 0)
-> +			return -EINVAL;
-> +
-> +		err = jtag->ops->freq_set(jtag, value);
-> +		break;
-> +
-> +	case JTAG_IOCRUNTEST:
-> +		if (copy_from_user(&idle, (const void __user *)arg,
-> +				   sizeof(struct jtag_run_test_idle)))
-> +			return -EFAULT;
-> +
-> +		if (idle.endstate > JTAG_STATE_PAUSEDR)
-> +			return -EINVAL;
+>> +			if (err < 0)
+>> +				return err;
+> 
+> In case of ECC failure you should increment ecc_stats.failed.
+> 
+>> +
+>> +			max_bitflips += max_bitflips;
+> 
+> max_bitflipts = max_t(unsigned int, max_bitflipts, err);
+> 
+>> +		}
+>> +
+>> +		return max_bitflips;
+>> +	}
+>> +
+>> +	if (nand->last_read_error) {
+>> +		int max_corr_cnt, corr_sec_flag;
+>> +
+>> +		value = readl(nand->regs + DEC_STAT_BUF);
+>> +		corr_sec_flag = (value & DEC_STAT_BUF_CORR_SEC_FLAG_MASK) >>
+>> +				DEC_STAT_BUF_CORR_SEC_FLAG_SHIFT;
+>> +		max_corr_cnt = (value & DEC_STAT_BUF_MAX_CORR_CNT_MASK) >>
+>> +			       DEC_STAT_BUF_MAX_CORR_CNT_SHIFT;
+>> +
+>> +		/*
+>> +		 * The value returned in the register is the maximum of
+>> +		 * bitflips encountered in any of the ECC regions. As there is
+>> +		 * no way to get the number of bitflips in a specific regions
+>> +		 * we are not able to deliver correct stats but instead
+>> +		 * overestimate the number of corrected bitflips by assuming
+>> +		 * that all regions where errors have been corrected
+>> +		 * encountered the maximum number of bitflips.
+>> +		 */
+>> +		mtd->ecc_stats.corrected += max_corr_cnt * hweight8(corr_sec_flag);
+> 
+> That's bad. But okay if we don't have the information.
+> 
+>> +		nand->last_read_error = false;
+>> +		return value;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_nand_write_page(struct mtd_info *mtd, struct nand_chip *chip,
+>> +				 const uint8_t *buf, int oob_required, int page)
+>> +{
+>> +	struct tegra_nand *nand = to_tegra_nand(mtd);
+>> +	u32 value, addrs;
+>> +
+>> +	writel(NAND_CMD_SEQIN, nand->regs + CMD_1);
+>> +	writel(NAND_CMD_PAGEPROG, nand->regs + CMD_2);
+>> +
+>> +	addrs = tegra_nand_fill_address(mtd, chip, page);
+>> +
+>> +	value = readl(nand->regs + CFG);
+>> +	value |= CFG_HW_ECC | CFG_ERR_COR;
+>> +	writel(value, nand->regs + CFG);
+> 
+> You might want to test with the _relaxed() operators?
+> 
+>> +
+>> +	memcpy(nand->data_buf, buf, mtd->writesize);
+>> +
+>> +	writel(mtd->writesize - 1, nand->regs + DMA_CFG_A);
+>> +	writel(nand->data_dma, nand->regs + DATA_PTR);
+>> +
+>> +	if (oob_required) {
+>> +		struct mtd_oob_region oobregion;
+>> +
+>> +		mtd_ooblayout_free(mtd, 0, &oobregion);
+>> +		memcpy(nand->oob_buf, chip->oob_poi + oobregion.offset,
+>> +		       mtd_ooblayout_count_freebytes(mtd));
+>> +		writel(mtd_ooblayout_count_freebytes(mtd) - 1,
+>> +		       nand->regs + DMA_CFG_B);
+>> +		writel(nand->oob_dma, nand->regs + TAG_PTR);
+>> +	} else {
+>> +		writel(0, nand->regs + DMA_CFG_B);
+>> +		writel(0, nand->regs + TAG_PTR);
+>> +	}
+>> +
+>> +	value = DMA_CTRL_GO | DMA_CTRL_OUT | DMA_CTRL_PERF_EN |
+>> +		DMA_CTRL_IE_DONE | DMA_CTRL_IS_DONE |
+>> +		DMA_CTRL_BURST_8 | DMA_CTRL_EN_A;
+>> +	if (oob_required)
+>> +		value |= DMA_CTRL_EN_B;
+> 
+> Line here
+> 
+>> +	writel(value, nand->regs + DMA_CTRL);
+>> +
+>> +	value = CMD_CLE | CMD_ALE | CMD_ALE_SIZE(addrs) | CMD_SEC_CMD |
+>> +		CMD_AFT_DAT | CMD_RBSY_CHK | CMD_GO | CMD_TX | CMD_A_VALID |
+>> +		CMD_TRANS_SIZE(9) | CMD_CE(nand->cur_chip);
+>> +	if (oob_required)
+>> +		value |= CMD_B_VALID;
+> 
+> Line here
+> 
+>> +	writel(value, nand->regs + CMD);
+>> +
+>> +	wait_for_completion(&nand->command_complete);
+>> +	wait_for_completion(&nand->dma_complete);
+>> +
+>> +	value = readl(nand->regs + CFG);
+>> +	value &= ~(CFG_HW_ECC | CFG_ERR_COR);
+>> +	writel(value, nand->regs + CFG);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tegra_nand_setup_timing(struct tegra_nand *nand, int mode)
+>> +{
+>> +	/*
+>> +	 * The period (and all other timings in this function) is in ps,
+>> +	 * so need to take care here to avoid integer overflows.
+> 
+> You might wanna check __DIVIDE, PSEC_TO_NSEC and PSEC_TO_MSEC macros in
+> rawnand.h. You could use them in the following derivations.
+> 
+>> +	 */
+>> +	unsigned int rate = clk_get_rate(nand->clk) / 1000000;
+>> +	unsigned int period = DIV_ROUND_UP(1000000, rate);
+>> +	const struct nand_sdr_timings *timings;
+>> +	u32 val, reg = 0;
+>> +
+>> +	timings = onfi_async_timing_mode_to_sdr_timings(mode);
+>> +
+>> +	val = DIV_ROUND_UP(max3(timings->tAR_min, timings->tRR_min,
+>> +				timings->tRC_min), period);
+>> +	if (val > 2)
+>> +		val -= 3;
+>> +	reg |= TIMING_TCR_TAR_TRR(val);
+>> +
+>> +	val = DIV_ROUND_UP(max(max(timings->tCS_min, timings->tCH_min),
+>> +				   max(timings->tALS_min, timings->tALH_min)),
+> 
+> Is the second line aligned correctly?
+> 
+>> +			   period);
+>> +	if (val > 1)
+>> +		val -= 2;
+> 
+> This is weird and I would recommend a comment.
+> 
+>> +	reg |= TIMING_TCS(val);
+>> +
+>> +	val = DIV_ROUND_UP(max(timings->tRP_min, timings->tREA_max) + 6000,
+>> +			   period);
+>> +	reg |= TIMING_TRP(val) | TIMING_TRP_RESP(val);
+>> +
+>> +	reg |= TIMING_TWB(DIV_ROUND_UP(timings->tWB_max, period));
+>> +	reg |= TIMING_TWHR(DIV_ROUND_UP(timings->tWHR_min, period));
+>> +	reg |= TIMING_TWH(DIV_ROUND_UP(timings->tWH_min, period));
+>> +	reg |= TIMING_TWP(DIV_ROUND_UP(timings->tWP_min, period));
+>> +	reg |= TIMING_TRH(DIV_ROUND_UP(timings->tRHW_min, period));
+>> +
+>> +	writel(reg, nand->regs + TIMING_1);
+>> +
+>> +	val = DIV_ROUND_UP(timings->tADL_min, period);
+>> +	if (val > 2)
+>> +		val -= 3;
+> 
+> Ditto
+> 
+>> +	reg = TIMING_TADL(val);
+>> +
+>> +	writel(reg, nand->regs + TIMING_2);
+>> +}
+>> +
+>> +static void tegra_nand_setup_chiptiming(struct tegra_nand *nand)
+>> +{
+>> +	struct nand_chip *chip = &nand->chip;
+>> +	int mode;
+>> +
+>> +	mode = onfi_get_async_timing_mode(chip);
+>> +	if (mode == ONFI_TIMING_MODE_UNKNOWN)
+>> +		mode = chip->onfi_timing_mode_default;
+>> +	else
+>> +		mode = fls(mode);
+>> +
+>> +	tegra_nand_setup_timing(nand, mode);
+>> +}
+> 
+> You can drop this function and use tegra_nand_setup_timing directly as
+> hook for ->setup_data_interface().
+> 
+>> +
+>> +static int tegra_nand_probe(struct platform_device *pdev)
+>> +{
+>> +	struct reset_control *rst;
+>> +	struct tegra_nand *nand;
+> 
+> Would you mind having another name for the tegra_nand structure than
+> just 'nand'? I found it confusing as, following Boris comment, it won't
+> be a 'NAND device' structure but rather more a controller structure.
+> 
+>> +	struct nand_chip *chip;
+>> +	struct mtd_info *mtd;
+>> +	struct resource *res;
+>> +	unsigned long value;
+> 
+> s/value/reg/ ? or something more explicit?
+> 
+>> +	int irq, err = 0;
+>> +
+>> +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
+>> +	if (!nand)
+>> +		return -ENOMEM;
+>> +
+>> +	nand->dev = &pdev->dev;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(nand->regs))
+>> +		return PTR_ERR(nand->regs);
+>> +
+>> +	irq = platform_get_irq(pdev, 0);
+>> +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
+>> +			       dev_name(&pdev->dev), nand);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	rst = devm_reset_control_get(&pdev->dev, "nand");
+>> +	if (IS_ERR(rst))
+>> +		return PTR_ERR(rst);
+>> +
+>> +	nand->clk = devm_clk_get(&pdev->dev, "nand");
+>> +	if (IS_ERR(nand->clk))
+>> +		return PTR_ERR(nand->clk);
+>> +
+>> +	nand->wp_gpio = gpiod_get_optional(&pdev->dev, "wp-gpios",
+>> +					   GPIOD_OUT_HIGH);
+>> +	if (IS_ERR(nand->wp_gpio))
+>> +		return PTR_ERR(nand->wp_gpio);
+>> +
+>> +	err = clk_prepare_enable(nand->clk);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	reset_control_assert(rst);
+>> +	udelay(2);
+>> +	reset_control_deassert(rst);
+>> +
+>> +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
+>> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
+>> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
+>> +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
+>> +	writel(value, nand->regs + HWSTATUS_MASK);
+>> +
+>> +	init_completion(&nand->command_complete);
+>> +	init_completion(&nand->dma_complete);
+>> +
+>> +	/* clear interrupts */
+>> +	value = readl(nand->regs + ISR);
+>> +	writel(value, nand->regs + ISR);
+>> +
+>> +	writel(DMA_CTRL_IS_DONE, nand->regs + DMA_CTRL);
+>> +
+>> +	/* enable interrupts */
+>> +	value = IER_UND | IER_OVR | IER_CMD_DONE | IER_ECC_ERR | IER_GIE;
+>> +	writel(value, nand->regs + IER);
+>> +
+>> +	/* reset config */
+>> +	writel(0, nand->regs + CFG);
+>> +
+>> +	chip = &nand->chip;
+>> +	mtd = nand_to_mtd(chip);
+>> +
+>> +	mtd->dev.parent = &pdev->dev;
+>> +	mtd->name = "tegra_nand";
+> 
+> I just figured it was undocumented (yet) but you could have a label
+> string property in your nand DT node that tells you the name of the
+> MTD device instead of something too generic like tegra_nand.
+> 
 
-No validation that idle contains sane values?  Don't make every jtag
-driver have to do this type of validation please.
+I think that was used back in the kernel parameter mtd partition time?
+So maybe it should stay the same in case somebody uses it? But yeah, I
+can use a label property with "tegra_nand" instead of hard coding it.
 
+--
+Stefan
 
-> +
-> +		err = jtag->ops->idle(jtag, &idle);
-> +		break;
-> +
-> +	case JTAG_IOCXFER:
-> +		if (copy_from_user(&xfer, (const void __user *)arg,
-> +				   sizeof(struct jtag_xfer)))
-> +			return -EFAULT;
-> +
-> +		if (xfer.length >= JTAG_MAX_XFER_DATA_LEN)
-> +			return -EINVAL;
-> +
-> +		if (xfer.type > JTAG_SDR_XFER)
-> +			return -EINVAL;
-> +
-> +		if (xfer.direction > JTAG_WRITE_XFER)
-> +			return -EINVAL;
-> +
-> +		if (xfer.endstate > JTAG_STATE_PAUSEDR)
-> +			return -EINVAL;
-> +
-
-See, you do good error checking here, why not for the previous ioctl?
-
-
-> +		data_size = DIV_ROUND_UP(xfer.length, BITS_PER_BYTE);
-> +		xfer_data = memdup_user(u64_to_user_ptr(xfer.tdio), data_size);
-> +
-
-No blank line.
-
-> +		if (IS_ERR(xfer_data))
-> +			return -EFAULT;
-> +
-> +		err = jtag->ops->xfer(jtag, &xfer, xfer_data);
-> +		if (err) {
-> +			kfree(xfer_data);
-> +			return -EFAULT;
-
-Why not return the error given to you?  -EFAULT is only if there is a
-memory error in a copy_to/from_user() call.
-
-> +		}
-> +
-> +		err = copy_to_user(u64_to_user_ptr(xfer.tdio),
-> +				   (void *)xfer_data, data_size);
-> +		kfree(xfer_data);
-> +		if (err)
-> +			return -EFAULT;
-
-Like here, that's correct.
-
-> +
-> +		if (copy_to_user((void __user *)arg, (void *)&xfer,
-> +				 sizeof(struct jtag_xfer)))
-> +			return -EFAULT;
-> +		break;
-> +
-> +	case JTAG_GIOCSTATUS:
-> +		err = jtag->ops->status_get(jtag, &value);
-> +		if (err)
-> +			break;
-> +
-> +		err = put_user(value, (__u32 __user *)arg);
-> +		break;
-> +	case JTAG_SIOCMODE:
-> +		if (!jtag->ops->mode_set)
-> +			return -EOPNOTSUPP;
-> +
-> +		if (get_user(value, (__u32 __user *)arg))
-> +			return -EFAULT;
-> +		if (value == 0)
-> +			return -EINVAL;
-> +
-> +		err = jtag->ops->mode_set(jtag, value);
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return err;
-> +}
-> +
-> +static int jtag_open(struct inode *inode, struct file *file)
-> +{
-> +	struct jtag *jtag = container_of(file->private_data, struct jtag, miscdev);
-> +
-> +	if (mutex_lock_interruptible(&jtag->open_lock))
-> +		return -ERESTARTSYS;
-
-Why restart?  Just grab the lock, you don't want to have to do
-restartable logic in userspace, right?
-
-> +
-> +	if (jtag->opened) {
-> +		mutex_unlock(&jtag->open_lock);
-> +		return -EBUSY;
-
-Why do you care about only 1 userspace open call?  What does that buy
-you?  Userspace can always pass around that file descriptor and use it
-in multiple places, so you are not really "protecting" yourself from
-anything.
-
-And better yet, if you get rid of this, your open/release functions get
-very tiny and simple.
-
-> +	}
-> +	jtag->opened = true;
-> +	mutex_unlock(&jtag->open_lock);
-> +
-> +	nonseekable_open(inode, file);
-
-No error checking of the return value?  Not good :(
-
-> +	file->private_data = jtag;
-> +	return 0;
-> +}
-> +
-> +static int jtag_release(struct inode *inode, struct file *file)
-> +{
-> +	struct jtag *jtag = file->private_data;
-> +
-> +	mutex_lock(&jtag->open_lock);
-> +	jtag->opened = false;
-> +	mutex_unlock(&jtag->open_lock);
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations jtag_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.open		= jtag_open,
-> +	.release	= jtag_release,
-> +	.llseek		= noop_llseek,
-> +	.unlocked_ioctl = jtag_ioctl,
-> +};
-> +
-> +struct jtag *jtag_alloc(struct device *host, size_t priv_size,
-> +			const struct jtag_ops *ops)
-> +{
-> +	struct jtag *jtag;
-> +
-> +	if (!host)
-> +		return NULL;
-> +
-> +	if (!ops)
-> +		return NULL;
-> +
-> +	if (!ops->idle || !ops->status_get || !ops->xfer)
-> +		return NULL;
-> +
-> +	jtag = kzalloc(sizeof(*jtag) + priv_size, GFP_KERNEL);
-> +	if (!jtag)
-> +		return NULL;
-> +
-> +	jtag->ops = ops;
-> +	jtag->miscdev.parent = host;
-> +
-> +	return jtag;
-> +}
-> +EXPORT_SYMBOL_GPL(jtag_alloc);
-> +
-> +void jtag_free(struct jtag *jtag)
-> +{
-> +	kfree(jtag);
-> +}
-> +EXPORT_SYMBOL_GPL(jtag_free);
-> +
-> +static int jtag_register(struct jtag *jtag)
-> +{
-> +	struct device *dev = jtag->miscdev.parent;
-> +	char *name;
-> +	int err;
-> +	int id;
-> +
-> +	if (!dev)
-> +		return -ENODEV;
-> +
-> +	if (atomic_read(&jtag_refcount) >= MAX_JTAG_DEVS)
-> +		return -ENOSPC;
-
-Here, you are reading the value, and then setting it a long ways away.
-What happens if two people call this at the same time.  Not good.
-Either do it correctly, or better yet, don't do it at all.
-
-> +
-> +	id = ida_simple_get(&jtag_ida, 0, 0, GFP_KERNEL);
-> +	if (id < 0)
-> +		return id;
-> +
-> +	jtag->id = id;
-> +	jtag->opened = false;
-> +
-> +	name = kzalloc(MAX_JTAG_NAME_LEN, GFP_KERNEL);
-> +	if (!name) {
-> +		err = -ENOMEM;
-> +		goto err_jtag_alloc;
-> +	}
-> +
-> +	err = snprintf(name, MAX_JTAG_NAME_LEN, "jtag%d", id);
-> +	if (err < 0)
-> +		goto err_jtag_name;
-> +
-> +	mutex_init(&jtag->open_lock);
-> +	jtag->miscdev.fops =  &jtag_fops;
-> +	jtag->miscdev.minor = MISC_DYNAMIC_MINOR;
-> +	jtag->miscdev.name = name;
-> +
-> +	err = misc_register(&jtag->miscdev);
-> +	if (err) {
-> +		dev_err(jtag->miscdev.parent, "Unable to register device\n");
-> +		goto err_jtag_name;
-> +	}
-> +	pr_info("%s %d\n", __func__, __LINE__);
-> +	atomic_inc(&jtag_refcount);
-> +	return 0;
-> +
-> +err_jtag_name:
-> +	kfree(name);
-> +err_jtag_alloc:
-> +	ida_simple_remove(&jtag_ida, id);
-> +	return err;
-> +}
-> +
-> +static void jtag_unregister(struct jtag *jtag)
-> +{
-> +	misc_deregister(&jtag->miscdev);
-> +	kfree(jtag->miscdev.name);
-> +	ida_simple_remove(&jtag_ida, jtag->id);
-> +	atomic_dec(&jtag_refcount);
-> +}
-> +
-> +static void devm_jtag_unregister(struct device *dev, void *res)
-> +{
-> +	jtag_unregister(*(struct jtag **)res);
-> +}
-> +
-> +int devm_jtag_register(struct device *dev, struct jtag *jtag)
-> +{
-> +	struct jtag **ptr;
-> +	int ret;
-> +
-> +	ptr = devres_alloc(devm_jtag_unregister, sizeof(*ptr), GFP_KERNEL);
-> +	if (!ptr)
-> +		return -ENOMEM;
-> +
-> +	ret = jtag_register(jtag);
-> +	if (!ret) {
-> +		*ptr = jtag;
-> +		devres_add(dev, ptr);
-> +	} else {
-> +		devres_free(ptr);
-> +	}
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_jtag_register);
-> +
-> +static void __exit jtag_exit(void)
-> +{
-> +	ida_destroy(&jtag_ida);
-> +}
-> +
-> +module_exit(jtag_exit);
-> +
-> +MODULE_AUTHOR("Oleksandr Shamray <oleksandrs@mellanox.com>");
-> +MODULE_DESCRIPTION("Generic jtag support");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/jtag.h b/include/linux/jtag.h
-> new file mode 100644
-> index 0000000..56d784d
-> --- /dev/null
-> +++ b/include/linux/jtag.h
-> @@ -0,0 +1,43 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// include/linux/jtag.h - JTAG class driver
-> +//
-> +// Copyright (c) 2018 Mellanox Technologies. All rights reserved.
-> +// Copyright (c) 2018 Oleksandr Shamray <oleksandrs@mellanox.com>
-> +
-> +#ifndef __JTAG_H
-> +#define __JTAG_H
-> +
-> +#include <uapi/linux/jtag.h>
-> +
-> +#define jtag_u64_to_ptr(arg) ((void *)(uintptr_t)arg)
-
-Why do you need such a horrid cast?  What is this for?  And why use
-uintptr_t at all?  It's not a "normal" kernel type.
-
-> +
-> +#define JTAG_MAX_XFER_DATA_LEN 65535
-> +
-> +struct jtag;
-> +/**
-> + * struct jtag_ops - callbacks for JTAG control functions:
-> + *
-> + * @freq_get: get frequency function. Filled by dev driver
-> + * @freq_set: set frequency function. Filled by dev driver
-> + * @status_get: set status function. Mandatory func. Filled by dev driver
-> + * @idle: set JTAG to idle state function. Mandatory func. Filled by dev driver
-> + * @xfer: send JTAG xfer function. Mandatory func. Filled by dev driver
-> + * @mode_set: set specific work mode for JTAG. Filled by dev driver
-> + */
-> +struct jtag_ops {
-> +	int (*freq_get)(struct jtag *jtag, u32 *freq);
-> +	int (*freq_set)(struct jtag *jtag, u32 freq);
-> +	int (*status_get)(struct jtag *jtag, u32 *state);
-> +	int (*idle)(struct jtag *jtag, struct jtag_run_test_idle *idle);
-> +	int (*xfer)(struct jtag *jtag, struct jtag_xfer *xfer, u8 *xfer_data);
-> +	int (*mode_set)(struct jtag *jtag, u32 mode_mask);
-> +};
-> +
-> +void *jtag_priv(struct jtag *jtag);
-> +int devm_jtag_register(struct device *dev, struct jtag *jtag);
-> +void devm_jtag_unregister(struct device *dev, void *res);
-> +struct jtag *jtag_alloc(struct device *host, size_t priv_size,
-> +			const struct jtag_ops *ops);
-> +void jtag_free(struct jtag *jtag);
-> +
-> +#endif /* __JTAG_H */
-> diff --git a/include/uapi/linux/jtag.h b/include/uapi/linux/jtag.h
-> new file mode 100644
-> index 0000000..8bbf1a7
-> --- /dev/null
-> +++ b/include/uapi/linux/jtag.h
-> @@ -0,0 +1,102 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// include/uapi/linux/jtag.h - JTAG class driver uapi
-> +//
-> +// Copyright (c) 2018 Mellanox Technologies. All rights reserved.
-> +// Copyright (c) 2018 Oleksandr Shamray <oleksandrs@mellanox.com>
-> +
-> +#ifndef __UAPI_LINUX_JTAG_H
-> +#define __UAPI_LINUX_JTAG_H
-> +
-> +/*
-> + * JTAG_XFER_HW_MODE: JTAG hardware mode. Used to set HW drived or bitbang
-> + * mode. This is bitmask param of ioctl JTAG_SIOCMODE command
-> + */
-> +#define  JTAG_XFER_HW_MODE 1
-> +
-> +/**
-> + * enum jtag_endstate:
-> + *
-> + * @JTAG_STATE_IDLE: JTAG state machine IDLE state
-> + * @JTAG_STATE_PAUSEIR: JTAG state machine PAUSE_IR state
-> + * @JTAG_STATE_PAUSEDR: JTAG state machine PAUSE_DR state
-> + */
-> +enum jtag_endstate {
-> +	JTAG_STATE_IDLE,
-> +	JTAG_STATE_PAUSEIR,
-> +	JTAG_STATE_PAUSEDR,
-> +};
-> +
-> +/**
-> + * enum jtag_xfer_type:
-> + *
-> + * @JTAG_SIR_XFER: SIR transfer
-> + * @JTAG_SDR_XFER: SDR transfer
-> + */
-> +enum jtag_xfer_type {
-> +	JTAG_SIR_XFER,
-> +	JTAG_SDR_XFER,
-> +};
-> +
-> +/**
-> + * enum jtag_xfer_direction:
-> + *
-> + * @JTAG_READ_XFER: read transfer
-> + * @JTAG_WRITE_XFER: write transfer
-> + */
-> +enum jtag_xfer_direction {
-> +	JTAG_READ_XFER,
-> +	JTAG_WRITE_XFER,
-> +};
-> +
-> +/**
-> + * struct jtag_run_test_idle - forces JTAG state machine to
-> + * RUN_TEST/IDLE state
-> + *
-> + * @reset: 0 - run IDLE/PAUSE from current state
-> + *         1 - go through TEST_LOGIC/RESET state before  IDLE/PAUSE
-> + * @end: completion flag
-> + * @tck: clock counter
-> + *
-> + * Structure provide interface to JTAG device for  JTAG IDLE execution.
-> + */
-> +struct jtag_run_test_idle {
-> +	__u8	reset;
-> +	__u8	endstate;
-> +	__u8	tck;
-> +};
-> +
-> +/**
-> + * struct jtag_xfer - jtag xfer:
-> + *
-> + * @type: transfer type
-> + * @direction: xfer direction
-> + * @length: xfer bits len
-> + * @tdio : xfer data array
-> + * @endir: xfer end state
-> + *
-> + * Structure provide interface to JTAG device for JTAG SDR/SIR xfer execution.
-> + */
-> +struct jtag_xfer {
-> +	__u8	type;
-> +	__u8	direction;
-> +	__u8	endstate;
-> +	__u8	padding;
-> +	__u32	length;
-> +	__u64	tdio;
-> +};
-> +
-> +/* ioctl interface */
-> +#define __JTAG_IOCTL_MAGIC	0xb2
-> +
-> +#define JTAG_IOCRUNTEST	_IOW(__JTAG_IOCTL_MAGIC, 0,\
-> +			     struct jtag_run_test_idle)
-
-No need for 2 lines here, fits just fine on one.
-
-> +#define JTAG_SIOCFREQ	_IOW(__JTAG_IOCTL_MAGIC, 1, unsigned int)
-> +#define JTAG_GIOCFREQ	_IOR(__JTAG_IOCTL_MAGIC, 2, unsigned int)
-> +#define JTAG_IOCXFER	_IOWR(__JTAG_IOCTL_MAGIC, 3, struct jtag_xfer)
-> +#define JTAG_GIOCSTATUS _IOWR(__JTAG_IOCTL_MAGIC, 4, enum jtag_endstate)
-> +#define JTAG_SIOCMODE	_IOW(__JTAG_IOCTL_MAGIC, 5, unsigned int)
-> +
-> +#define JTAG_FIRST_MINOR 0
-
-Why is this in a uapi file?
-
-> +#define JTAG_MAX_DEVICES 32
-
-This is never used, why is it in a uapi file?
-
-So, almost there, with the above mentioned things, I think you can make
-the code even simpler, which is always better, right?
-
-thanks,
-
-greg k-h
+>> +	mtd->owner = THIS_MODULE;
+>> +
+>> +	nand_set_flash_node(chip, pdev->dev.of_node);
+>> +	nand_set_controller_data(chip, nand);
+>> +
+>> +	chip->options = NAND_NO_SUBPAGE_WRITE;
+>> +	chip->exec_op = tegra_nand_exec_op;
+>> +	chip->select_chip = tegra_nand_select_chip;
+>> +	tegra_nand_setup_timing(nand, 0);
+> 
+> You really should implement ->setup_data_interface() and let the core
+> handle the timings issue entirely (mind that chipnr is not the NAND
+> chip id but more the CS id asserted for the pointed NAND chip).
+>  
+>> +
+>> +	err = nand_scan_ident(mtd, 1, NULL);
+>> +	if (err)
+>> +		goto err_disable_clk;
+>> +
+>> +	if (chip->bbt_options & NAND_BBT_USE_FLASH)
+>> +		chip->bbt_options |= NAND_BBT_NO_OOB;
+>> +
+>> +	nand->data_buf = dmam_alloc_coherent(&pdev->dev, mtd->writesize,
+>> +					    &nand->data_dma, GFP_KERNEL);
+> 
+> Do you need these buffers before nand_scan_tail() or could you simply
+> use the ones allocated by the core right after?
+> 
+>> +	if (!nand->data_buf) {
+>> +		err = -ENOMEM;
+>> +		goto err_disable_clk;
+>> +	}
+>> +
+>> +	nand->oob_buf = dmam_alloc_coherent(&pdev->dev, mtd->oobsize,
+>> +					    &nand->oob_dma, GFP_KERNEL);
+>> +	if (!nand->oob_buf) {
+>> +		err = -ENOMEM;
+>> +		goto err_disable_clk;
+>> +	}
+>> +
+>> +	chip->ecc.mode = NAND_ECC_HW;
+>> +	chip->ecc.size = 512;
+>> +	chip->ecc.read_page = tegra_nand_read_page;
+>> +	chip->ecc.write_page = tegra_nand_write_page;
+>> +
+>> +	value = readl(nand->regs + CFG);
+>> +	value |= CFG_PIPE_EN | CFG_SKIP_SPARE | CFG_SKIP_SPARE_SIZE_4 |
+>> +		 CFG_TAG_BYTE_SIZE(mtd_ooblayout_count_freebytes(mtd) - 1);
+>> +
+>> +	if (chip->options & NAND_BUSWIDTH_16)
+>> +		value |= CFG_BUS_WIDTH_16;
+>> +
+>> +	switch (mtd->oobsize) {
+>> +	case 16:
+>> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_16_ops);
+>> +		chip->ecc.strength = 1;
+>> +		chip->ecc.bytes = 4;
+>> +		break;
+>> +	case 64:
+>> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_64_ops);
+>> +		chip->ecc.strength = 8;
+>> +		chip->ecc.bytes = 18;
+>> +		value |= CFG_ECC_SEL | CFG_TVAL_8;
+>> +		break;
+>> +	case 128:
+>> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_128_ops);
+>> +		chip->ecc.strength = 8;
+>> +		chip->ecc.bytes = 18;
+>> +		value |= CFG_ECC_SEL | CFG_TVAL_8;
+>> +		break;
+>> +	case 224:
+>> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_224_ops);
+>> +		chip->ecc.strength = 8;
+>> +		chip->ecc.bytes = 18;
+>> +		value |= CFG_ECC_SEL | CFG_TVAL_8;
+>> +		break;
+>> +	default:
+>> +		dev_err(&pdev->dev, "unhandled OOB size %d\n", mtd->oobsize);
+>> +		err = -ENODEV;
+>> +		goto err_disable_clk;
+>> +	}
+>> +
+>> +	switch (mtd->writesize) {
+>> +	case 256:
+>> +		value |= CFG_PS_256;
+>> +		break;
+>> +	case 512:
+>> +		value |= CFG_PS_512;
+>> +		break;
+>> +	case 1024:
+>> +		value |= CFG_PS_1024;
+>> +		break;
+>> +	case 2048:
+>> +		value |= CFG_PS_2048;
+>> +		break;
+>> +	case 4096:
+>> +		value |= CFG_PS_4096;
+>> +		break;
+>> +	default:
+>> +		dev_err(&pdev->dev, "unhandled writesize %d\n", mtd->writesize);
+>> +		err = -ENODEV;
+>> +		goto err_disable_clk;
+>> +	}
+>> +
+>> +	writel(value, nand->regs + CFG);
+>> +
+>> +	tegra_nand_setup_chiptiming(nand);
+>> +
+>> +	err = nand_scan_tail(mtd);
+>> +	if (err)
+>> +		goto err_disable_clk;
+>> +
+>> +	err = mtd_device_register(mtd, NULL, 0);
+>> +	if (err)
+>> +		goto err_cleanup_nand;
+>> +
+>> +	platform_set_drvdata(pdev, nand);
+>> +
+>> +	return 0;
+>> +
+>> +err_cleanup_nand:
+>> +	nand_cleanup(chip);
+>> +err_disable_clk:
+>> +	clk_disable_unprepare(nand->clk);
+>> +	return err;
+>> +}
+>> +
+>> +static int tegra_nand_remove(struct platform_device *pdev)
+>> +{
+>> +	struct tegra_nand *nand = platform_get_drvdata(pdev);
+>> +
+>> +	nand_release(nand_to_mtd(&nand->chip));
+>> +
+>> +	clk_disable_unprepare(nand->clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id tegra_nand_of_match[] = {
+>> +	{ .compatible = "nvidia,tegra20-nand" },
+>> +	{ /* sentinel */ }
+>> +};
+>> +
+>> +static struct platform_driver tegra_nand_driver = {
+>> +	.driver = {
+>> +		.name = "tegra-nand",
+>> +		.of_match_table = tegra_nand_of_match,
+>> +	},
+>> +	.probe = tegra_nand_probe,
+>> +	.remove = tegra_nand_remove,
+>> +};
+>> +module_platform_driver(tegra_nand_driver);
+>> +
+>> +MODULE_DESCRIPTION("NVIDIA Tegra NAND driver");
+>> +MODULE_AUTHOR("Thierry Reding <thierry.reding@nvidia.com>");
+>> +MODULE_AUTHOR("Lucas Stach <dev@lynxeye.de>");
+>> +MODULE_AUTHOR("Stefan Agner <stefan@agner.ch>");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DEVICE_TABLE(of, tegra_nand_of_match);
