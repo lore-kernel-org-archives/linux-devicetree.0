@@ -1,7 +1,7 @@
 From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH 1/6] PCI: iproc: Update iProc PCI binding for INTx support
-Date: Tue, 29 May 2018 14:58:45 -0700
-Message-ID: <1527631130-20045-2-git-send-email-ray.jui@broadcom.com>
+Subject: [PATCH 4/6] arm: dts: Change PCIe INTx mapping for NSP
+Date: Tue, 29 May 2018 14:58:48 -0700
+Message-ID: <1527631130-20045-5-git-send-email-ray.jui@broadcom.com>
 References: <1527631130-20045-1-git-send-email-ray.jui@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1527631130-20045-1-git-send-email-ray.jui@broadcom.com>
@@ -10,78 +10,68 @@ To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@googl
 Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the iProc PCIe binding document for better modeling of the legacy
-interrupt (INTx) support
+Change the PCIe INTx mapping to model the 4 INTx interrupts in the
+IRQ domain of the iProc PCIe controller itself
 
 Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 ---
- .../devicetree/bindings/pci/brcm,iproc-pcie.txt    | 31 +++++++++++++++++-----
- 1 file changed, 24 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/bcm-nsp.dtsi | 27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-index b8e48b4..7ea24dc 100644
---- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-@@ -13,9 +13,6 @@ controller, used in Stingray
-   PAXB-based root complex is used for external endpoint devices. PAXC-based
- root complex is connected to emulated endpoint devices internal to the ASIC
- - reg: base address and length of the PCIe controller I/O register space
--- #interrupt-cells: set to <1>
--- interrupt-map-mask and interrupt-map, standard PCI properties to define the
--  mapping of the PCIe interface to interrupt numbers
- - linux,pci-domain: PCI domain ID. Should be unique for each host controller
- - bus-range: PCI bus numbers covered
- - #address-cells: set to <3>
-@@ -41,6 +38,16 @@ Required:
- - brcm,pcie-ob-axi-offset: The offset from the AXI address to the internal
- address used by the iProc PCIe core (not the PCIe address)
- 
-+Legacy interrupt (INTx) support (optional):
-+
-+Note INTx is for PAXB only.
-+
-+- interrupt-controller: claims itself as an interrupt controller for INTx
-+- #interrupt-cells: set to <1>
-+- interrupt-map-mask and interrupt-map, standard PCI properties to define
-+the mapping of the PCIe interface to interrupt numbers
-+- interrupts: interrupt line wired to the generic GIC for INTx support
-+
- MSI support (optional):
- 
- For older platforms without MSI integrated in the GIC, iProc PCIe core provides
-@@ -77,9 +84,14 @@ Example:
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index dcc55aa..8c4c8b2 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -494,9 +494,14 @@
  		compatible = "brcm,iproc-pcie";
  		reg = <0x18012000 0x1000>;
  
 +		interrupt-controller;
  		#interrupt-cells = <1>;
 -		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
+-		interrupt-map = <0 0 0 0 &gic GIC_SPI 131 IRQ_TYPE_NONE>;
 +		interrupt-map-mask = <0 0 0 7>;
 +		interrupt-map = <0 0 0 1 &pcie0 1>,
 +				<0 0 0 2 &pcie0 2>,
 +				<0 0 0 3 &pcie0 3>,
 +				<0 0 0 4 &pcie0 4>;
-+		interrupts = <GIC_SPI 100 IRQ_TYPE_NONE>;
++		interrupts = <GIC_SPI 131 IRQ_TYPE_NONE>;
  
  		linux,pci-domain = <0>;
  
-@@ -115,9 +127,14 @@ Example:
+@@ -531,9 +536,14 @@
  		compatible = "brcm,iproc-pcie";
  		reg = <0x18013000 0x1000>;
  
 +		interrupt-controller;
  		#interrupt-cells = <1>;
 -		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
+-		interrupt-map = <0 0 0 0 &gic GIC_SPI 137 IRQ_TYPE_NONE>;
 +		interrupt-map-mask = <0 0 0 7>;
 +		interrupt-map = <0 0 0 1 &pcie1 1>,
 +				<0 0 0 2 &pcie1 2>,
 +				<0 0 0 3 &pcie1 3>,
 +				<0 0 0 4 &pcie1 4>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
++		interrupts = <GIC_SPI 137 IRQ_TYPE_NONE>;
  
  		linux,pci-domain = <1>;
+ 
+@@ -568,9 +578,14 @@
+ 		compatible = "brcm,iproc-pcie";
+ 		reg = <0x18014000 0x1000>;
+ 
++		interrupt-controller;
+ 		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0>;
+-		interrupt-map = <0 0 0 0 &gic GIC_SPI 143 IRQ_TYPE_NONE>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie2 1>,
++				<0 0 0 2 &pcie2 2>,
++				<0 0 0 3 &pcie2 3>,
++				<0 0 0 4 &pcie2 4>;
++		interrupts = <GIC_SPI 143 IRQ_TYPE_NONE>;
+ 
+ 		linux,pci-domain = <2>;
  
 -- 
 2.1.4
