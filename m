@@ -1,70 +1,54 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v1 1/2] dt-binding: hwmon: Add NPCM7xx PWM documentation
-Date: Tue, 29 May 2018 09:57:42 -0700
-Message-ID: <20180529165742.GE2162@roeck-us.net>
-References: <1527588141-18639-1-git-send-email-tmaimon77@gmail.com>
- <1527588141-18639-2-git-send-email-tmaimon77@gmail.com>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 0/5] Reintroduce i.MX EPIT Timer
+Date: Tue, 29 May 2018 19:04:31 +0200
+Message-ID: <20180529170436.22711-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527588141-18639-2-git-send-email-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Cl=C3=A9ment=20Peron?= <clement.peron@devialet.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 01:02:20PM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM7xx Pulse Width Modulation (PWM) controller.
-> 
-
-As mentioned in the other commit, this should be a pwm driver,
-not a hwmon driver.
-
-Guenter
-
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../devicetree/bindings/hwmon/npcm7xx-pwm.txt      | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/npcm7xx-pwm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/npcm7xx-pwm.txt b/Documentation/devicetree/bindings/hwmon/npcm7xx-pwm.txt
-> new file mode 100644
-> index 000000000000..2d8a7ccdc8cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/npcm7xx-pwm.txt
-> @@ -0,0 +1,25 @@
-> +Nuvoton NPCM7xx Pulse-width modulation (PWM) controller device driver
-> +
-> +The NPCM7xx has two identical PWM controller modules,
-> +Each module has four PWM controller outputs.
-> +NPCM7xx PWM controller module 0 outputs PWM0-3 and NPCM7xx PWM controller
-> +module 1 outputs PWM4-7.
-> +
-> +Required properties:
-> +- compatible	: "nuvoton,npcm750-pwm" for Poleg NPCM7XX.
-> +- reg		: Offset and length of the registers set for the device.
-> +- clocks	: phandle of pwm reference clock.
-> +- pinctrl-names	: a pinctrl state named "default" must be defined.
-> +- pinctrl-0 	: phandle referencing pin configuration of the PWM ports.
-> +
-> +pwm:pwm@f0103000 {
-> +	compatible = "nuvoton,npcm750-pwm";
-> +	reg = <0xf0103000 0x50
-> +		0xf0104000 0x50>;
-> +	clocks = <&clk NPCM7XX_CLK_APB3>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pwm0_pins &pwm1_pins
-> +			&pwm2_pins &pwm3_pins
-> +			&pwm4_pins &pwm5_pins
-> +			&pwm6_pins &pwm7_pins>;
-> +};
-> -- 
-> 2.14.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogQ2zDqW1lbnQgUGVyb24gPGNsZW1lbnQucGVyb25AZGV2aWFsZXQuY29tPgoKQXMgc3Vn
+Z2VzdGVkIGluIHRoZSBjb21taXQgbWVzc2FnZSB3ZSBoYXZlIGFkZGVkIHRoZSBkZXZpY2UgdHJl
+ZSBzdXBwb3J0LApwcm9wZXIgYmluZGluZ3MgYW5kIHdlIG1vdmVkIHRoZSBkcml2ZXIgaW50byB0
+aGUgY29ycmVjdCBmb2xkZXIuCgpNb3Jlb3ZlciB3ZSBtYWRlIHNvbWUgY2hhbmdlcyBsaWtlIHVz
+ZSBvZiByZWxheGVkIElPIGFjY2Vzb3IsCmltcGxlbWVudCBzY2hlZF9jbG9jaywgZGVsYXlfdGlt
+ZXIgYW5kIHJlZHVjZSB0aGUgY2xvY2tldmVudHMgbWluX2RlbHRhLgoKQ2hhbmdlcyBzaW5jZSB2
+MiAoVGhhbmtzIEZhYmlvIEVzdGV2YW0pOgotIFJlbW92ZWQgdW51c2VkICJja2lsIiBjbG9jawot
+IEFkZCBvdXRfaW91bm1hcAotIENoZWNrIGFuZCBoYW5kbGUgaWYgY2xrX3ByZXBhcmVfZW5hYmxl
+IGZhaWxlZAotIEZpeCBjb21tZW50IHR5cG8KCkNoYW5nZXMgc2luY2UgdjEgKFRoYW5rcyBWbGFk
+aW1pciBaYXBvbHNraXkpOgotIEFkZCBPRiBkZXBlbmRlbmN5IGluIEtjb25maWcKLSBTb3J0IGhl
+YWRlcgotIFVzZSBCSVQgbWFjcm8KLSBSZW1vdmUgdXNlbGVzcyBjb21tZW50cwotIEZpeCBpbmNv
+cnJlY3QgaW5kZW50Ci0gRml4IG1lbW9yeSBsZWFrCi0gQWRkIGNoZWNrIGFuZCBoYW5kbGUgcG9z
+c2libGUgcmV0dXJuZWQgZXJyb3IKCkNsw6ltZW50IFBlcm9uICgyKToKICBBUk06IGlteDogcmVt
+b3ZlIGluZXhpc3RhbnQgRVBJVCB0aW1lciBpbml0CiAgRG9jdW1lbnRhdGlvbjogRFQ6IGFkZCBp
+Lk1YIEVQSVQgdGltZXIgYmluZGluZwoKQ29saW4gRGlkaWVyICgzKToKICBjbGs6IGlteDY6IGFk
+ZCBFUElUIGNsb2NrIHN1cHBvcnQKICBjbG9ja3NvdXJjZTogYWRkIGRyaXZlciBmb3IgaS5NWCBF
+UElUIHRpbWVyCiAgQVJNOiBkdHM6IGlteDZxZGw6IGFkZCBtaXNzaW5nIGNvbXBhdGlibGUgYW5k
+IGNsb2NrIHByb3BlcnRpZXMgZm9yCiAgICBFUElUCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Y2xvY2svaW14NnEsZXBpdC50eHQgIHwgIDI0ICsrCiBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRs
+LmR0c2kgICAgICAgICAgICAgICAgfCAgMTAgKwogYXJjaC9hcm0vbWFjaC1pbXgvY29tbW9uLmgg
+ICAgICAgICAgICAgICAgICAgIHwgICAxIC0KIGRyaXZlcnMvY2xrL2lteC9jbGstaW14NnEuYyAg
+ICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcgICAg
+ICAgICAgICAgICAgICAgfCAgMTIgKwogZHJpdmVycy9jbG9ja3NvdXJjZS9NYWtlZmlsZSAgICAg
+ICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItaW14LWVwaXQu
+YyAgICAgICAgICB8IDI4MyArKysrKysrKysrKysrKysrKysKIGluY2x1ZGUvZHQtYmluZGluZ3Mv
+Y2xvY2svaW14NnFkbC1jbG9jay5oICAgICB8ICAgNCArLQogOCBmaWxlcyBjaGFuZ2VkLCAzMzUg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEsZXBpdC50eHQKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLWlteC1lcGl0LmMKCi0tIAoyLjE3
+LjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
