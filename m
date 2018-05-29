@@ -1,44 +1,76 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 5/5] ARM: dts: dra76-evm: Add VBUS GPIO to USB1/USB2 extcon
-Date: Tue, 29 May 2018 12:00:58 +0300
-Message-ID: <1527584458-6257-6-git-send-email-rogerq@ti.com>
-References: <1527584458-6257-1-git-send-email-rogerq@ti.com>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: Re: [PATCH v2 10/11] arm64: dts: r8a77965-salvator-x: Enable DU
+ external clocks and HDMI
+Date: Tue, 29 May 2018 10:08:33 +0100
+Message-ID: <3a36b5e7-56ab-c680-e575-7a8394e5799a@ideasonboard.com>
+References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
+ <20180427165722.19445-11-kieran.bingham+renesas@ideasonboard.com>
+ <CAMuHMdW6HeWMwRDcn6PLnwzgxvYz-h=jx=1qvYEK9okwqY0itg@mail.gmail.com>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527584458-6257-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMuHMdW6HeWMwRDcn6PLnwzgxvYz-h=jx=1qvYEK9okwqY0itg@mail.gmail.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Will Deacon <will.deacon@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The board has USB VBUS detection available over GPIO. Plug it to
-extcon node of USB1 and USB2 ports.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/dra76-evm.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
-index 2deb964..bec72ec 100644
---- a/arch/arm/boot/dts/dra76-evm.dts
-+++ b/arch/arm/boot/dts/dra76-evm.dts
-@@ -404,3 +404,11 @@
- 	phys = <&pcie1_phy>, <&pcie2_phy>;
- 	phy-names = "pcie-phy0", "pcie-phy1";
- };
-+
-+&extcon_usb1 {
-+	vbus-gpio = <&pcf_lcd 14 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&extcon_usb2 {
-+	vbus-gpio = <&pcf_lcd 15 GPIO_ACTIVE_HIGH>;
-+};
--- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgR2VlcnQsCgpPbiAyOC8wNS8xOCAxMDowNiwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+
+IEhpIEtpZXJhbiwgTW9yaW1vdG8tc2FuLAo+IAo+IE9uIEZyaSwgQXByIDI3LCAyMDE4IGF0IDY6
+NTcgUE0sIEtpZXJhbiBCaW5naGFtCj4gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJv
+YXJkLmNvbT4gd3JvdGU6Cj4+IFRoZSBEVTEgZXh0ZXJuYWwgZG90IGNsb2NrIGlzIHByb3ZpZGVk
+IGJ5IHRoZSBmaXhlZCBmcmVxdWVuY3kgY2xvY2sKPj4gZ2VuZXJhdG9yIFgyMSwgd2hpbGUgdGhl
+IERVMCBhbmQgRFUzIGNsb2NrcyBhcmUgcHJvdmlkZWQgYnkgdGhlCj4+IHByb2dyYW1tYWJsZSBW
+ZXJzYWNsb2NrNSBjbG9jayBnZW5lcmF0b3IuCj4+Cj4+IEVuYWJsZSB0aGUgY2xvY2tzLCBhbmQg
+dGhlIEhETUkgZW5jb2RlciBmb3IgdGhlIE0zLU4gU2FsdmF0b3ItWCBib2FyZAo+PiBhbmQgaG9v
+ayBpdCB1cCB0byB0aGUgSERNSSBjb25uZWN0b3IuCj4+Cj4+IEJhc2VkIG9uIHBhdGNoZXMgZnJv
+bSBUYWtlc2hpIEtpaGFyYSA8dGFrZXNoaS5raWhhcmEuZGZAcmVuZXNhcy5jb20+Cj4+Cj4+IFNp
+Z25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmluZ2hhbStyZW5lc2FzQGlkZWFz
+b25ib2FyZC5jb20+Cj4+Cj4+IC0tLQo+PiB2MjoKPj4gIC0gUmVtb3ZlIExWRFMgY2xvY2tzIGZy
+b20gRFUgbm9kZQo+PiAgLSBNZXJnZSBEVSBDbG9ja3MgYW5kIEhETUkgZW5hYmxlbWVudAo+PiAt
+LS0KPj4gIC4uLi9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTY1LXNhbHZhdG9yLXguZHRzICB8IDI4
+ICsrKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCsp
+Cj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUt
+c2FsdmF0b3IteC5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUtc2Fs
+dmF0b3IteC5kdHMKPj4gaW5kZXggNzVkODkwZDkxZGY5Li4zNDBhM2M3MmI2NWEgMTAwNjQ0Cj4+
+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk2NS1zYWx2YXRvci14LmR0
+cwo+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUtc2FsdmF0b3It
+eC5kdHMKPj4gQEAgLTE5LDMgKzE5LDMxIEBACj4+ICAgICAgICAgICAgICAgICByZWcgPSA8MHgw
+IDB4NDgwMDAwMDAgMHgwIDB4NzgwMDAwMDA+Owo+PiAgICAgICAgIH07Cj4+ICB9Owo+PiArCj4+
+ICsmZHUgewo+PiArICAgICAgIGNsb2NrcyA9IDwmY3BnIENQR19NT0QgNzI0PiwKPj4gKyAgICAg
+ICAgICAgICAgICA8JmNwZyBDUEdfTU9EIDcyMz4sCj4+ICsgICAgICAgICAgICAgICAgPCZjcGcg
+Q1BHX01PRCA3MjE+LAo+PiArICAgICAgICAgICAgICAgIDwmdmVyc2FjbG9jazUgMT4sCj4+ICsg
+ICAgICAgICAgICAgICAgPCZ4MjFfY2xrPiwKPj4gKyAgICAgICAgICAgICAgICA8JnZlcnNhY2xv
+Y2s1IDI+Owo+PiArICAgICAgIGNsb2NrLW5hbWVzID0gImR1LjAiLCAiZHUuMSIsICJkdS4zIiwK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICJkY2xraW4uMCIsICJkY2xraW4uMSIsICJkY2xraW4u
+MyI7Cj4+ICt9Owo+PiArCj4+ICsmaGRtaTAgewo+PiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsK
+Pj4gKwo+PiArICAgICAgIHBvcnRzIHsKPj4gKyAgICAgICAgICAgICAgIHBvcnRAMSB7Cj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgcmNhcl9kd19oZG1pMF9vdXQ6IGVuZHBvaW50IHsKPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWkwX2Nvbj47Cj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgICAgICAgICB9Owo+PiArICAgICAgIH07Cj4+ICt9
+Owo+PiArCj4+ICsmaGRtaTBfY29uIHsKPj4gKyAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnJj
+YXJfZHdfaGRtaTBfb3V0PjsKPj4gK307Cj4gCj4gSSB0aGluayB0aGUgaGRtaTAgYW5kIGhkbWkw
+X2NvbiBwYXJ0cyBjYW4gYmUgbW92ZWQgdG8gc2FsdmF0b3ItY29tbW9uLmR0c2kuCj4gQ2FuIHdl
+IGRvIHRoYXQgbm93ICh3aXRoIHN0dWJzPyksIG9yIGRvZXMgdGhpcyBoYXZlIHRvIHdhaXQgdW50
+aWwgcjhhNzc5NjUgaGFzCj4gcmVjZWl2ZWQgSERNSSBzb3VuZCBzdXBwb3J0PwoKSSBkb24ndCBr
+bm93IGFib3V0IHRoZSBzb3VuZCBpbnRlZ3JhdGlvbiBJJ20gYWZyYWlkLCBidXQgY29tbW9uIEhE
+TUkgY29ubmVjdGlvbnMKd291bGQgY2VydGFpbmx5IGJlIGEgYmVuZWZpdCBJIGJlbGlldmUuCgpJ
+cyB0aGlzIHNvbWV0aGluZyB5b3UncmUgbG9va2luZyB0byB0YWNrbGU/IE9yIHdvdWxkIHlvdSBs
+aWtlCm1lL01vcmltb3RvLXNhbi9tZWRpYSB0ZWFtIHRvIGxvb2sgYXQgaXQ/CgoKLS0KUmVnYXJk
+cwoKS2llcmFuCgo+IEdye29ldGplLGVldGluZ31zLAo+IAo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgIEdlZXJ0Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
