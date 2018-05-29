@@ -1,11 +1,14 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 0/8] media: rcar-vin: Brush endpoint properties
-Date: Tue, 29 May 2018 17:05:51 +0200
-Message-ID: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 1/8] dt-bindings: media: rcar-vin: Describe optional ep
+ properties
+Date: Tue, 29 May 2018 17:05:52 +0200
+Message-ID: <1527606359-19261-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,59 +22,42 @@ To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verg
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-   3rd version of VIN endpoint brushing series.
-
-Slightly enlarged the linux-media receiver list, as this new version
-introduces a common property in 'video-interfaces.txt'.
-
-Quite some changes compared to v1/v2:
-- First patch in the series changed to include Niklas' comments on using
-  spaces for indent over tabs in documentation and as suggested by Rob and
-  Laurent to refer to 'video-interfaces.txt' in property description.
-- As suggested by Rob this series introduces a new property 'data-enable-active'
-  to describe data enable signal polarity instead of using 'data-active' which
-  refers to the data lanes polarity.
-- Use this new property to control CLKENB pin polarity in VIN driver
-- Introduce a new custom property to describe the 'use HSYNC as data-enable'
-  function provided by VIN. In previous iterations I used the presence of
-  'data-active' to enable/disable this functionality. That was confusing and
-  not correct as it used the wrong property. As this is a VIN specificity, I
-  thought a custom property is more suited.
-- Last patch is still there and I know it is debated. My opinion is that it is
-  still needed, as the presence of those un-documented and un-parsed properties
-  confuses users which may expect changing those properties value to reflect on
-  the video interface configuration, which does not happens instead.
-
-Individual changelog per patch when relevant.
-
-Thanks
-    j
-
-Jacopo Mondi (8):
-  dt-bindings: media: rcar-vin: Describe optional ep properties
-  dt-bindings: media: Document data-enable-active property
-  media: v4l2-fwnode: parse 'data-enable-active' prop
-  dt-bindings: media: rcar-vin: Add 'data-enable-active'
-  media: rcar-vin: Handle data-enable polarity
-  dt-bindings: rcar-vin: Add 'hsync-as-de' custom prop
-  media: rcar-vin: Handle 'hsync-as-de' property
-  ARM: dts: rcar-gen2: Remove unused VIN properties
-
- Documentation/devicetree/bindings/media/rcar_vin.txt     | 16 +++++++++++++++-
- .../devicetree/bindings/media/video-interfaces.txt       |  2 ++
- arch/arm/boot/dts/r8a7790-lager.dts                      |  3 ---
- arch/arm/boot/dts/r8a7791-koelsch.dts                    |  3 ---
- arch/arm/boot/dts/r8a7791-porter.dts                     |  1 -
- arch/arm/boot/dts/r8a7793-gose.dts                       |  3 ---
- arch/arm/boot/dts/r8a7794-alt.dts                        |  1 -
- arch/arm/boot/dts/r8a7794-silk.dts                       |  1 -
- drivers/media/platform/rcar-vin/rcar-core.c              |  6 ++++++
- drivers/media/platform/rcar-vin/rcar-dma.c               | 11 +++++++++++
- drivers/media/platform/rcar-vin/rcar-vin.h               |  2 ++
- drivers/media/v4l2-core/v4l2-fwnode.c                    |  5 +++++
- include/media/v4l2-mediabus.h                            |  2 ++
- 13 files changed, 43 insertions(+), 13 deletions(-)
-
---
-2.7.4
+RGVzY3JpYmUgdGhlIG9wdGlvbmFsIGVuZHBvaW50IHByb3BlcnRpZXMgZm9yIGVuZHBvaW50IG5v
+ZGVzIG9mIHBvcnRAMAphbmQgcG9ydEAxIG9mIHRoZSBSLUNhciBWSU4gZHJpdmVyIGRldmljZSB0
+cmVlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkg
+PGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+CkFja2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8
+bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KCi0tLQp2MiAtPiB2MzoKLSBE
+byBub3QgcmVwZWF0IHByb3BlcnR5IGRlc2NyaXB0aW9uLCBqdXN0IHJlZmVyZW5jZSB2aWRlby1p
+bnRlcmZhY2VzLnR4dAotIEluZGVudCB3aXRoIHNwYWNlcywgbm90IHRhYnMgYXMgdGhlIHJlc3Qg
+b2YgdGhlIGRvY3VtZW50Ci0gRG8gbm90IHJlbW92ZSAoeWV0KSB0aGUgJ2J1cy13aWR0aCcgcHJv
+cGVydHkgZnJvbSBleGFtcGxlCi0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21lZGlhL3JjYXJfdmluLnR4dCB8IDEwICsrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMCBp
+bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL21lZGlhL3JjYXJfdmluLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZWRpYS9yY2FyX3Zpbi50eHQKaW5kZXggNWM2ZjJhNy4uNGQ5MWEzNiAxMDA2NDQKLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3JjYXJfdmluLnR4dAorKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvcmNhcl92aW4udHh0CkBA
+IC01NCw2ICs1NCwxNCBAQCBmcm9tIGxvY2FsIFNvQyBDU0ktMiByZWNlaXZlcnMgKHBvcnQxKSBk
+ZXBlbmRpbmcgb24gU29DLgogICAgICAgZnJvbSBleHRlcm5hbCBTb0MgcGlucyBkZXNjcmliZWQg
+aW4gdmlkZW8taW50ZXJmYWNlcy50eHRbMV0uCiAgICAgICBEZXNjcmliaW5nIG1vcmUgdGhlbiBv
+bmUgZW5kcG9pbnQgaW4gcG9ydCAwIGlzIGludmFsaWQuIE9ubHkgVklOCiAgICAgICBpbnN0YW5j
+ZXMgdGhhdCBhcmUgY29ubmVjdGVkIHRvIGV4dGVybmFsIHBpbnMgc2hvdWxkIGhhdmUgcG9ydCAw
+LgorCisgICAgICAtIE9wdGlvbmFsIHByb3BlcnRpZXMgZm9yIGVuZHBvaW50IG5vZGVzIG9mIHBv
+cnRAMDoKKyAgICAgICAgLSBoc3luYy1hY3RpdmU6IHNlZSBbMV0gZm9yIGRlc2NyaXB0aW9uLiBE
+ZWZhdWx0IGlzIGFjdGl2ZSBoaWdoLgorICAgICAgICAtIHZzeW5jLWFjdGl2ZTogc2VlIFsxXSBm
+b3IgZGVzY3JpcHRpb24uIERlZmF1bHQgaXMgYWN0aXZlIGhpZ2guCisKKyAgICAgICAgSWYgYm90
+aCBIU1lOQyBhbmQgVlNZTkMgcG9sYXJpdGllcyBhcmUgbm90IHNwZWNpZmllZCwgZW1iZWRkZWQK
+KyAgICAgICAgc3luY2hyb25pemF0aW9uIGlzIHNlbGVjdGVkLgorCiAgICAgLSBwb3J0IDEgLSBz
+dWItbm9kZXMgZGVzY3JpYmluZyBvbmUgb3IgbW9yZSBlbmRwb2ludHMgY29ubmVjdGVkIHRvCiAg
+ICAgICB0aGUgVklOIGZyb20gbG9jYWwgU29DIENTSS0yIHJlY2VpdmVycy4gVGhlIGVuZHBvaW50
+IG51bWJlcnMgbXVzdAogICAgICAgdXNlIHRoZSBmb2xsb3dpbmcgc2NoZW1hLgpAQCAtNjMsNiAr
+NzEsOCBAQCBmcm9tIGxvY2FsIFNvQyBDU0ktMiByZWNlaXZlcnMgKHBvcnQxKSBkZXBlbmRpbmcg
+b24gU29DLgogICAgICAgICAtIEVuZHBvaW50IDIgLSBzdWItbm9kZSBkZXNjcmliaW5nIHRoZSBl
+bmRwb2ludCBjb25uZWN0ZWQgdG8gQ1NJNDAKICAgICAgICAgLSBFbmRwb2ludCAzIC0gc3ViLW5v
+ZGUgZGVzY3JpYmluZyB0aGUgZW5kcG9pbnQgY29ubmVjdGVkIHRvIENTSTQxCgorICAgICAgRW5k
+cG9pbnQgbm9kZXMgb2YgcG9ydEAxIGRvIG5vdCBzdXBwb3J0IGFueSBvcHRpb25hbCBlbmRwb2lu
+dCBwcm9wZXJ0eS4KKwogRGV2aWNlIG5vZGUgZXhhbXBsZSBmb3IgR2VuMiBwbGF0Zm9ybXMKIC0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgotLQoyLjcuNAoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
