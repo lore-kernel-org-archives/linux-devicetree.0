@@ -1,73 +1,62 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v2] arm64: dts: qcom: msm8996: Move UFS_GDSC to UFS HCD
-Date: Tue, 29 May 2018 16:31:00 +0530
-Message-ID: <CAFp+6iGAhOyC8pM57rGNyVS_zpi3XBoZzcExY=BYVrWRgt4GLQ@mail.gmail.com>
-References: <20180524223122.12601-1-bjorn.andersson@linaro.org> <20180525184525.355-1-bjorn.andersson@linaro.org>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH v14 0/2] Kryo CPU scaling driver
+Date: Tue, 29 May 2018 14:11:02 +0300
+Message-ID: <CAHLCerNAGNWdYbRTmStJcrAw7jj5nmowqvaNCtHA6LEnRpParw@mail.gmail.com>
+References: <1527250067-1256-1-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525184525.355-1-bjorn.andersson@linaro.org>
+In-Reply-To: <1527250067-1256-1-git-send-email-ilialin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Manu Gautam <mgautam@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
+To: Ilia Lin <ilialin@codeaurora.org>
+Cc: vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 26, 2018 at 12:15 AM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> The UFS_GDSC backs the resources needed by the UFS HCD, rather than the
-> PHY. This results in the UFS HCD occationally failing to enable some of
-> its clocks.
+On Fri, May 25, 2018 at 3:07 PM, Ilia Lin <ilialin@codeaurora.org> wrote:
+> [v14]
+>  * Addressed comment from Sudeep about DT compatible
+>  * Added MAINTAINERS entry
 >
-> Move the UFS_GDSC reference to the UFS HCD node instead, to correct
-> this.
+> [v13]
+>  * Addressed comment from Sudeep about DT compatible check on init
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> [v12]
+>  * Addressed comments from Sudeep and Viresh about the single init
 >
-> Changes since v1:
-> - Dropped UFS_GDSC from phy node
+> [v11]
+>  * Addressed comment from Russel about device_node reference
+>  * Addressed comment from Sudeep about the late_initcall
+>  * Transformed init into probe to take care of deferals
 >
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> [v10]
+>  * Split the series into domains
+>  * Addressed comments from Viresh and Sudeep about logical CPU numbering.
 >
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 380e14591686..8c7f9ca25b53 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -654,8 +654,6 @@
->                         clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
->                                  <&gcc GCC_UFS_CLKREF_CLK>;
->                         status = "disabled";
-> -
-> -                       power-domains = <&gcc UFS_GDSC>;
->                 };
+> The qcom-cpufreq-kryo driver is aimed to support different SOC versions.
+> The driver reads eFuse information and chooses the required OPP subset
+> by passing the OPP supported-hw parameter.
 >
->                 ufshc@624000 {
-> @@ -674,6 +672,8 @@
->                         vccq-max-microamp = <450000>;
->                         vccq2-max-microamp = <450000>;
+> The series depends on the series from Viresh:
+> https://patchwork.kernel.org/patch/10418139/
 >
-> +                       power-domains = <&gcc UFS_GDSC>;
-> +
+> The previous spin was here:
+> https://patchwork.kernel.org/patch/10424949/
+>
+> Ilia Lin (2):
+>   cpufreq: Add Kryo CPU scaling driver
+>   dt-bindings: cpufreq: Document operating-points-v2-kryo-cpu
+>
+>  .../devicetree/bindings/opp/kryo-cpufreq.txt       | 680 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 +
+>  drivers/cpufreq/Kconfig.arm                        |  10 +
+>  drivers/cpufreq/Makefile                           |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c               |   3 +
+>  drivers/cpufreq/qcom-cpufreq-kryo.c                | 206 +++++++
+>  6 files changed, 907 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/kryo-cpufreq.txt
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
+>
+FWIW,
 
-Looks good.
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-
-Regards
-Vivek
->                         clock-names =
->                                 "core_clk_src",
->                                 "core_clk",
-> --
-> 2.17.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
