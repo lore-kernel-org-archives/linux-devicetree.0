@@ -1,38 +1,91 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 1/8] driver core: make deferring probe after init
- optional
-Date: Mon, 28 May 2018 22:12:14 -0700
-Message-ID: <1765be22-4bd7-c870-926c-2956e46df1d9@gmail.com>
-References: <20180524175024.19874-1-robh@kernel.org>
- <20180524175024.19874-2-robh@kernel.org>
- <20180524181834.GF4828@sirena.org.uk>
+From: Alexander Kurz <akurz@blala.de>
+Subject: [PATCH v2 1/4] ARM: dts: imx6qdl-wandboard: remove regulators bus node
+Date: Tue, 29 May 2018 06:20:18 +0000
+Message-ID: <20180529062021.3154-2-akurz@blala.de>
+References: <20180529062021.3154-1-akurz@blala.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180524181834.GF4828@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexander Graf <agraf@suse.de>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, boot-architecture@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180529062021.3154-1-akurz@blala.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Alexander Kurz <akurz@blala.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/24/18 11:18, Mark Brown wrote:
-> On Thu, May 24, 2018 at 12:50:17PM -0500, Rob Herring wrote:
-> 
->> Subsystems or drivers may opt-in to this behavior by calling
->> driver_deferred_probe_check_init_done() instead of just returning
->> -EPROBE_DEFER. They may use additional information from DT or kernel's
->> config to decide whether to continue to defer probe or not.
-> 
-> Should userspace have some involvement in this decision?  It knows if
-> it's got any intention of loading modules for example.  Kernel config
-> checks might be good enough, though it's going to be a pain to work out
-> if the relevant driver is built as a module for example.
-> 
+To match the convention, move all regulator-fixed nodes directly into
+the root node.
 
-A parallel issue is that loading an overlay could provide the resource
-that will allow the deferred probe to complete.  (That is, once we
-finish implementing the run time overlays feature.)
+Signed-off-by: Alexander Kurz <akurz@blala.de>
+---
+ arch/arm/boot/dts/imx6qdl-wandboard.dtsi | 40 +++++++++++++-------------------
+ 1 file changed, 16 insertions(+), 24 deletions(-)
 
--Frank
+diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+index ed96d7b5feab..b9c6c9d5d357 100644
+--- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+@@ -12,30 +12,6 @@
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		reg_2p5v: regulator@0 {
+-			compatible = "regulator-fixed";
+-			reg = <0>;
+-			regulator-name = "2P5V";
+-			regulator-min-microvolt = <2500000>;
+-			regulator-max-microvolt = <2500000>;
+-			regulator-always-on;
+-		};
+-
+-		reg_3p3v: regulator@1 {
+-			compatible = "regulator-fixed";
+-			reg = <1>;
+-			regulator-name = "3P3V";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			regulator-always-on;
+-		};
+-	};
+-
+ 	sound {
+ 		compatible = "fsl,imx6-wandboard-sgtl5000",
+ 			     "fsl,imx-audio-sgtl5000";
+@@ -56,6 +32,22 @@
+ 		spdif-controller = <&spdif>;
+ 		spdif-out;
+ 	};
++
++	reg_2p5v: regulator-2p5v {
++		compatible = "regulator-fixed";
++		regulator-name = "2P5V";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
+ };
+ 
+ &audmux {
+-- 
+2.11.0
