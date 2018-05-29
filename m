@@ -1,94 +1,59 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH] arm64: allwinner: a64-amarula-relic: Enable
- AP6330 WiFi support
-Date: Tue, 29 May 2018 22:52:38 +0530
-Message-ID: <20180529172238.9718-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
+Date: Tue, 29 May 2018 18:33:14 +0100
+Message-ID: <20180529173314.GN17671@n2100.armlinux.org.uk>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+ <1523956215-28154-13-git-send-email-t-kristo@ti.com>
+ <20180417092924.GB20335@flint.armlinux.org.uk>
+ <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
+ <20180417144913.GD5669@atomide.com>
+ <43ff3894-a287-1558-687c-40f50712735c@ti.com>
+ <20180522200100.GA23937@rob-hp-laptop>
+ <16a6017f-96c8-42d8-38bc-5cdd36d6793f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB3UYW3MAKGQEKU2YN2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <16a6017f-96c8-42d8-38bc-5cdd36d6793f@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, trini@konsulko.com, wmills@ti.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable AP6330 WiFi/BT combo chip on Amarula A64-Relic board:
-- WiFi SDIO interface is connected to MMC1
-- WiFi WL-PMU-EN pin connected to gpio PL2: attach to mmc-pwrseq
-- WiFi WL-WAKE-AP pin connected to gpio PL3
-- 32kHz external oscillator gate clock from RTC
+On Tue, May 29, 2018 at 10:05:37AM -0700, Frank Rowand wrote:
+> On 05/22/18 13:01, Rob Herring wrote:
+> > I'll tell you up front, I'm not a fan of FIT image (nor uImage, 
+> > Android boot image, $bootloader image). If you want a collection of 
+> > files and some configuration data, use a filesystem and a text file.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- .../dts/allwinner/sun50i-a64-amarula-relic.dts     | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+Me neither.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index ce4a256ff086..a77b70ca88e3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -21,12 +21,43 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* WL-PMU-EN: PL2 */
-+	};
- };
- 
- &ehci0 {
- 	status = "okay";
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	/*
-+	 * Schematic shows both dldo4 and eldo1 connected for vcc-io-wifi, but
-+	 * dldo4 connection shows DNP(Do Not Populate) and eldo1 connected with
-+	 * 0Ohm register to vcc-io-wifi so eldo1 is used.
-+	 */
-+	vqmmc-supply = <&reg_eldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&r_pio>;
-+		interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;	/* WL-WAKE-AP: PL3 */
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
-@@ -170,6 +201,12 @@
- 	regulator-name = "vcc-rtc";
- };
- 
-+&rtc {
-+	clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
-+	clocks = <&osc32k>;
-+	#clock-cells = <1>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+> My gut feel is that using a filesystem and a text file is the easier way
+> to create the boot info.  But that also makes applying the overlay(s)
+> during early Linux boot (at the point of FDT unflattening) impractical
+> (can't access the file system without a driver, the driver depends on
+> the devicetree, the devicetree depends upon the overlay).
+
+Why do you want to apply overlays during the kernel boot?  The boot
+loader should be providing the kernel with the merged DT to describe
+the system that the kernel is running on - it's not the kernel's
+job to put that together.
+
+The whole point of DT is to make the kernel _less_ tied to the hardware
+and more generic.  If we're going to introduce an entirely new set of
+drivers into the kernel to "probe" the hardware to determine which
+overlays are required, then that's really defeating the purpose of DT.
+
 -- 
-2.14.3
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
