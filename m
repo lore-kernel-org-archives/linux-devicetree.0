@@ -1,59 +1,57 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2] MAINTAINERS: add myself as maintainer for QorIQ PTP clock driver
-Date: Tue, 29 May 2018 11:47:44 +0800
-Message-ID: <20180529034744.44590-1-yangbo.lu@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>, claudiu.manoil@nxp.com, Rob Herring <robh+dt@kernel.org>
-Cc: Yangbo Lu <yangbo.lu@nxp.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 1/3] ASoC: simple-card: set cpu dai clk in
+	hw_params
+Date: Tue, 29 May 2018 06:26:24 +0200
+Message-ID: <6f6585a2-918f-ed9f-0965-5eac547933b0@zonque.org>
+References: <20180528193503.18905-1-daniel@zonque.org>
+ <20180528193503.18905-2-daniel@zonque.org>
+ <874lir5jox.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <874lir5jox.wl%kuninori.morimoto.gx@renesas.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Added myself as maintainer for QorIQ PTP clock driver.
-Since gianfar_ptp.c was renamed to ptp_qoriq.c, let's
-maintain it under QorIQ PTP clock driver.
+On Tuesday, May 29, 2018 03:38 AM, Kuninori Morimoto wrote:
+>> The simple-card driver currently accepts a clock node in the cpu dai
+>> sub-node and only uses it as an alternative to the
+>> 'system-clock-frequency' property to get the current frequency.
+>>
+>> This patch adds another use of the passed clock node. If mclk-fs is
+>> specified, the clock will be set to the calculated rate (stream rate *
+>> mclk_fs) in hw_params. This allows platforms to pass a tuneable clock
+>> as phandle that will automatically be set to the right rates.
+>>
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>> ---
+> (snip)
+>>   	if (mclk_fs) {
+>>   		mclk = params_rate(params) * mclk_fs;
+>> +
+>> +		if (dai_props->cpu_dai.clk)
+>> +			clk_set_rate(dai_props->cpu_dai.clk, mclk);
+>> +
+>>   		ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
+>>   					     SND_SOC_CLOCK_IN);
+>>   		if (ret && ret != -ENOTSUPP)
+> 
+> Having codec is nice balance ?
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Changes for v2:
-	- Dropped dpaa2/rtc part.
----
- MAINTAINERS |   10 ++++++++--
- 1 files changed, 8 insertions(+), 2 deletions(-)
+Ah, yes, why not. Will post a v2.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f492431..c16340c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5620,7 +5620,6 @@ M:	Claudiu Manoil <claudiu.manoil@nxp.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/ethernet/freescale/gianfar*
--X:	drivers/net/ethernet/freescale/gianfar_ptp.c
- F:	Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
- 
- FREESCALE GPMI NAND DRIVER
-@@ -5667,6 +5666,14 @@ S:	Maintained
- F:	drivers/net/ethernet/freescale/fman
- F:	Documentation/devicetree/bindings/powerpc/fsl/fman.txt
- 
-+FREESCALE QORIQ PTP CLOCK DRIVER
-+M:	Yangbo Lu <yangbo.lu@nxp.com>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	drivers/ptp/ptp_qoriq.c
-+F:	include/linux/fsl/ptp_qoriq.h
-+F:	Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-+
- FREESCALE QUAD SPI DRIVER
- M:	Han Xu <han.xu@nxp.com>
- L:	linux-mtd@lists.infradead.org
-@@ -11405,7 +11412,6 @@ S:	Maintained
- W:	http://linuxptp.sourceforge.net/
- F:	Documentation/ABI/testing/sysfs-ptp
- F:	Documentation/ptp/*
--F:	drivers/net/ethernet/freescale/gianfar_ptp.c
- F:	drivers/net/phy/dp83640*
- F:	drivers/ptp/*
- F:	include/linux/ptp_cl*
--- 
-1.7.1
+
+Thanks,
+Daniel
