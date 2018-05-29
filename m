@@ -1,49 +1,36 @@
-From: Radu Pirea <radu.pirea@microchip.com>
-Subject: Re: [PATCH v4 6/6] tty/serial: atmel: changed the driver to work
- under at91-usart mfd
-Date: Tue, 29 May 2018 12:15:03 +0300
-Message-ID: <44649341-c238-5b59-6786-50d80f9d4cba@microchip.com>
-References: <20180525171941.26766-1-radu.pirea@microchip.com>
- <20180525171941.26766-7-radu.pirea@microchip.com>
- <e1445467-2df0-4593-852d-939e6795f318@sorico.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: avifishman70@gmail.com
+Subject: [PATCH v1 3/3] MAINTAINERS: add subfolders for nuvoton *npcm*
+Date: Tue, 29 May 2018 11:35:35 +0300
+Message-ID: <1527582935-31175-4-git-send-email-avifishman70@gmail.com>
+References: <1527582935-31175-1-git-send-email-avifishman70@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e1445467-2df0-4593-852d-939e6795f318@sorico.fr>
-Content-Language: en-US
+In-Reply-To: <1527582935-31175-1-git-send-email-avifishman70@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc: avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, rdunlap@infradead.org, Avi Fishman <AviFishman70@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Avi Fishman <AviFishman70@gmail.com>
 
+Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
+---
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 05/28/2018 01:08 PM, Richard Genoud wrote:
-> On 25/05/2018 19:19, Radu Pirea wrote:
->> This patch modifies the place where resources and device tree properties
->> are searched.
->>
->> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
->> ---
->>   drivers/tty/serial/Kconfig        |  1 +
->>   drivers/tty/serial/atmel_serial.c | 40 +++++++++++++++++--------------
->>   2 files changed, 23 insertions(+), 18 deletions(-)
-> the stdout-path property of the chosen node is still broken in this verion.
-> if :
-> stdout-path = "serial0:115200n8";
-> is set in the DTS, the console output should go on serial0 (aka dbgu)
-> cf Documentation/devicetree/bindings/chosen.txt
-> 
-> With this patch applied, this is not the case anymore.
-> Adding console=ttyS0,115200 in the chosen node is not the solution here.
-> 
-
-I fixed the issue few minutes ago :)
-
-I hope DMA setup is ok now.
-
-> 
-> regards,
-> Richard.
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e0ce3c5f32e5..23c450adad44 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1727,7 +1727,10 @@ F:	arch/arm/mach-npcm/
+ F:	arch/arm/boot/dts/nuvoton-npcm*
+ F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
+ F:	drivers/*/*npcm*
++F:	drivers/*/*/*npcm*
+ F:	Documentation/*/*npcm*
++F:	Documentation/*/*/*npcm*
++F:	Documentation/*/*/*/*npcm*
+ 
+ ARM/NUVOTON W90X900 ARM ARCHITECTURE
+ M:	Wan ZongShun <mcuos.com@gmail.com>
+-- 
+2.14.1
