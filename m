@@ -1,46 +1,80 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4] arm64: allwinner: a64: Add Amarula
- A64-Relic initial support
-Date: Tue, 29 May 2018 18:02:38 +0200
-Message-ID: <20180529160238.cdyzgl3t6jzovn23@flea.home>
-References: <20180524111631.11864-1-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add I2C support
+Date: Tue, 29 May 2018 19:04:48 +0300
+Message-ID: <a33a0dd7-c301-fd44-9374-45d57df6a53d@cogentembedded.com>
+References: <e9c94553-be9d-0eec-a1ee-1713bb97fbab@cogentembedded.com>
+ <3675b19f-b800-172f-9472-c47a37760fa9@cogentembedded.com>
+ <20180529130504.lpkpgads7lfomois@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIHTWXMAKGQEOMOZ77Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180524111631.11864-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180529130504.lpkpgads7lfomois@verge.net.au>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 24, 2018 at 04:46:31PM +0530, Jagan Teki wrote:
-> Amarula A64-Relic is Allwinner A64 based IoT device, which support
-> - Allwinner A64 Cortex-A53
-> - Mali-400MP2 GPU
-> - AXP803 PMIC
-> - 1GB DDR3 RAM
-> - 8GB eMMC
-> - AP6330 Wifi/BLE
-> - MIPI-DSI
-> - CSI: OV5640 sensor
-> - USB OTG
-> - 12V DC power supply
+On 05/29/2018 04:05 PM, Simon Horman wrote:
+
+>> Define the generic R8A77980 parts of the I2C[0-5] device node.
+>>
+>> Based on the original (and large) patch by Vladimir Barinov.
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>>  arch/arm64/boot/dts/renesas/r8a77980.dtsi |  111 ++++++++++++++++++++++++++++++
+>>  1 file changed, 111 insertions(+)
+>>
+>> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+>> ===================================================================
+>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+[...]
+>> @@ -135,6 +144,108 @@
+[...]
+>> +		i2c3: i2c@e66d0000 {
+>> +			compatible = "renesas,i2c-r8a77980",
+>> +				     "renesas,rcar-gen3-i2c";
+>> +			reg = <0 0xe66d0000 0 0x40>;
+>> +			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 928>;
+>> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+>> +			resets = <&cpg 928>;
+>> +			dmas = <&dmac1 0x97>, <&dmac1 0x96>,
+>> +			       <&dmac2 0x97>, <&dmac2 0x96>;
+>> +			dma-names = "tx", "rx", "tx", "rx";
+>> +			i2c-scl-internal-delay-ns = <6>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			status = "disabled";
+>> +		};
 > 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> DMA for i2c3 and i2c4  seems unclear in v0.80 and v1.00 of the User's Manual.
+> Although what is described here does match v0.55E of the User's Manual.
 
-Applied, thanks
+   Hm, looking at all these manuals, I'm not even seeing V3H I2C3/4 having DMA
+in v0.55E!
 
-Maxime
+> Have you been able to confirm what is correct here?
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+   No. Probably need to drop I2C3/4 DMA altogether...
+
+> Other than that this patch looks fine to me.
+
+   TY!
+
+[...]
+
+MBR, Sergei
