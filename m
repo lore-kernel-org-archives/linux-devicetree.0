@@ -1,49 +1,121 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
-Date: Tue, 29 May 2018 23:51:14 +0100
-Message-ID: <20180529225114.GO17671@n2100.armlinux.org.uk>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
- <1523956215-28154-13-git-send-email-t-kristo@ti.com>
- <20180417092924.GB20335@flint.armlinux.org.uk>
- <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
- <20180417144913.GD5669@atomide.com>
- <43ff3894-a287-1558-687c-40f50712735c@ti.com>
- <20180522200100.GA23937@rob-hp-laptop>
- <16a6017f-96c8-42d8-38bc-5cdd36d6793f@gmail.com>
- <20180529173314.GN17671@n2100.armlinux.org.uk>
- <a43ce521-ed7f-6126-4ebf-5e0e303d00a3@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 3/7] drivers/i2c: Add port structure to FSI algorithm
+Date: Wed, 30 May 2018 02:19:25 +0300
+Message-ID: <CAHp75Vd38BrJcULxoqj1mTKCEvMh9ZVYEvzCMAg2t9onZrSR6w@mail.gmail.com>
+References: <1527632665-25707-1-git-send-email-eajames@linux.vnet.ibm.com> <1527632665-25707-4-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <a43ce521-ed7f-6126-4ebf-5e0e303d00a3@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, trini@konsulko.com, wmills@ti.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527632665-25707-4-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 03:45:12PM -0700, Frank Rowand wrote:
-> If the kernel applies the overlay, an alternative to drivers is that the
-> kernel could receive the overlay(s) in a similar manner as the method it
-> currently receives the base devicetree.  (The overlay(s) could be
-> appended to the base devicetree, a wrapper could be placed around the
+On Wed, May 30, 2018 at 1:24 AM, Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+>
+> Add and initialize I2C adapters for each port on the FSI-attached I2C
+> master. Ports for each master are defined in the devicetree.
 
-No wrappers, sorry.  We already have too many places in the Linux
-kernel and its decompressor that try to work out whether a device
-tree or ATAGs are present and how large, and that is done in assembly
-code.  We don't need more complexity to deal with some kind of
-wrapping of device trees as well.
+> +#include <linux/of.h>
+
+
+> +static int fsi_i2c_set_port(struct fsi_i2c_port *port)
+> +{
+> +       int rc;
+> +       struct fsi_device *fsi = port->master->fsi;
+> +       u32 mode, dummy = 0;
+> +       u16 old_port;
+> +
+> +       rc = fsi_i2c_read_reg(fsi, I2C_FSI_MODE, &mode);
+> +       if (rc)
+> +               return rc;
+> +
+
+> +       old_port = GETFIELD(I2C_MODE_PORT, mode);
+> +
+> +       if (old_port != port->port) {
+
+Why not simple
+
+if (port->port == GETFIELD())
+  return 0;
+
+?
+
+> +               /* reset engine when port is changed */
+> +               rc = fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
+> +               if (rc)
+> +                       return rc;
+> +       }
+
+> +       return rc;
+
+It's hardly would be non-zero, right?
+
+> +}
+
+>  static int fsi_i2c_probe(struct device *dev)
+>  {
+
+Isn't below somehow repeats of_i2c_register_devices() ?
+Why not to use it?
+
+> +       /* Add adapter for each i2c port of the master. */
+> +       for_each_available_child_of_node(dev->of_node, np) {
+> +               rc = of_property_read_u32(np, "reg", &port_no);
+> +               if (rc || port_no > USHRT_MAX)
+> +                       continue;
+> +
+> +               port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+> +               if (!port)
+> +                       break;
+> +
+> +               port->master = i2c;
+> +               port->port = port_no;
+> +
+> +               port->adapter.owner = THIS_MODULE;
+> +               port->adapter.dev.of_node = np;
+> +               port->adapter.dev.parent = dev;
+> +               port->adapter.algo = &fsi_i2c_algorithm;
+> +               port->adapter.algo_data = port;
+> +
+> +               snprintf(port->adapter.name, sizeof(port->adapter.name),
+> +                        "i2c_bus-%u", port_no);
+> +
+> +               rc = i2c_add_adapter(&port->adapter);
+> +               if (rc < 0) {
+
+> +                       dev_err(dev, "Failed to register adapter: %d\n", rc);
+
+> +                       devm_kfree(dev, port);
+
+This hurts my eyes. Why?!
+
+> +                       continue;
+> +               }
+> +
+> +               list_add(&port->list, &i2c->ports);
+> +       }
+> +
+>         dev_set_drvdata(dev, i2c);
+>
+>         return 0;
+>  }
+
+> +       if (!list_empty(&i2c->ports)) {
+
+My gosh, this is done already in list_for_each*()
+
+> +               list_for_each_entry(port, &i2c->ports, list) {
+> +                       i2c_del_adapter(&port->adapter);
+> +               }
+
+> +       }
+
+
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+With Best Regards,
+Andy Shevchenko
