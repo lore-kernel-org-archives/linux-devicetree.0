@@ -1,82 +1,49 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 10/11] arm64: dts: r8a77965-salvator-x: Enable DU
- external clocks and HDMI
-Date: Tue, 29 May 2018 11:12:26 +0200
-Message-ID: <CAMuHMdX0CgQXHwHMyTjMt9oMJVXom+9-uLHqe2PXSvrX+Mcy-Q@mail.gmail.com>
-References: <20180427165722.19445-1-kieran.bingham+renesas@ideasonboard.com>
- <20180427165722.19445-11-kieran.bingham+renesas@ideasonboard.com>
- <CAMuHMdW6HeWMwRDcn6PLnwzgxvYz-h=jx=1qvYEK9okwqY0itg@mail.gmail.com>
- <3a36b5e7-56ab-c680-e575-7a8394e5799a@ideasonboard.com>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: Re: [PATCH v4 6/6] tty/serial: atmel: changed the driver to work
+ under at91-usart mfd
+Date: Tue, 29 May 2018 12:15:03 +0300
+Message-ID: <44649341-c238-5b59-6786-50d80f9d4cba@microchip.com>
+References: <20180525171941.26766-1-radu.pirea@microchip.com>
+ <20180525171941.26766-7-radu.pirea@microchip.com>
+ <e1445467-2df0-4593-852d-939e6795f318@sorico.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3a36b5e7-56ab-c680-e575-7a8394e5799a@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Will Deacon <will.deacon@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e1445467-2df0-4593-852d-939e6795f318@sorico.fr>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2llcmFuLAoKT24gVHVlLCBNYXkgMjksIDIwMTggYXQgMTE6MDggQU0sIEtpZXJhbiBCaW5n
-aGFtCjxraWVyYW4uYmluZ2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+IE9u
-IDI4LzA1LzE4IDEwOjA2LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4+IE9uIEZyaSwgQXBy
-IDI3LCAyMDE4IGF0IDY6NTcgUE0sIEtpZXJhbiBCaW5naGFtCj4+IDxraWVyYW4uYmluZ2hhbSty
-ZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+Pj4gVGhlIERVMSBleHRlcm5hbCBkb3Qg
-Y2xvY2sgaXMgcHJvdmlkZWQgYnkgdGhlIGZpeGVkIGZyZXF1ZW5jeSBjbG9jawo+Pj4gZ2VuZXJh
-dG9yIFgyMSwgd2hpbGUgdGhlIERVMCBhbmQgRFUzIGNsb2NrcyBhcmUgcHJvdmlkZWQgYnkgdGhl
-Cj4+PiBwcm9ncmFtbWFibGUgVmVyc2FjbG9jazUgY2xvY2sgZ2VuZXJhdG9yLgo+Pj4KPj4+IEVu
-YWJsZSB0aGUgY2xvY2tzLCBhbmQgdGhlIEhETUkgZW5jb2RlciBmb3IgdGhlIE0zLU4gU2FsdmF0
-b3ItWCBib2FyZAo+Pj4gYW5kIGhvb2sgaXQgdXAgdG8gdGhlIEhETUkgY29ubmVjdG9yLgo+Pj4K
-Pj4+IEJhc2VkIG9uIHBhdGNoZXMgZnJvbSBUYWtlc2hpIEtpaGFyYSA8dGFrZXNoaS5raWhhcmEu
-ZGZAcmVuZXNhcy5jb20+Cj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogS2llcmFuIEJpbmdoYW0gPGtp
-ZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPj4+Cj4+PiAtLS0KPj4+IHYy
-Ogo+Pj4gIC0gUmVtb3ZlIExWRFMgY2xvY2tzIGZyb20gRFUgbm9kZQo+Pj4gIC0gTWVyZ2UgRFUg
-Q2xvY2tzIGFuZCBIRE1JIGVuYWJsZW1lbnQKPj4+IC0tLQo+Pj4gIC4uLi9ib290L2R0cy9yZW5l
-c2FzL3I4YTc3OTY1LXNhbHZhdG9yLXguZHRzICB8IDI4ICsrKysrKysrKysrKysrKysrKysKPj4+
-ICAxIGZpbGUgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUtc2FsdmF0b3IteC5kdHMgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUtc2FsdmF0b3IteC5kdHMKPj4+IGluZGV4
-IDc1ZDg5MGQ5MWRmOS4uMzQwYTNjNzJiNjVhIDEwMDY0NAo+Pj4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9yZW5lc2FzL3I4YTc3OTY1LXNhbHZhdG9yLXguZHRzCj4+PiArKysgYi9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NjUtc2FsdmF0b3IteC5kdHMKPj4+IEBAIC0xOSwz
-ICsxOSwzMSBAQAo+Pj4gICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHg0ODAwMDAwMCAweDAg
-MHg3ODAwMDAwMD47Cj4+PiAgICAgICAgIH07Cj4+PiAgfTsKPj4+ICsKPj4+ICsmZHUgewo+Pj4g
-KyAgICAgICBjbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDcyND4sCj4+PiArICAgICAgICAgICAgICAg
-IDwmY3BnIENQR19NT0QgNzIzPiwKPj4+ICsgICAgICAgICAgICAgICAgPCZjcGcgQ1BHX01PRCA3
-MjE+LAo+Pj4gKyAgICAgICAgICAgICAgICA8JnZlcnNhY2xvY2s1IDE+LAo+Pj4gKyAgICAgICAg
-ICAgICAgICA8JngyMV9jbGs+LAo+Pj4gKyAgICAgICAgICAgICAgICA8JnZlcnNhY2xvY2s1IDI+
-Owo+Pj4gKyAgICAgICBjbG9jay1uYW1lcyA9ICJkdS4wIiwgImR1LjEiLCAiZHUuMyIsCj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgImRjbGtpbi4wIiwgImRjbGtpbi4xIiwgImRjbGtpbi4zIjsK
-Pj4+ICt9Owo+Pj4gKwo+Pj4gKyZoZG1pMCB7Cj4+PiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsK
-Pj4+ICsKPj4+ICsgICAgICAgcG9ydHMgewo+Pj4gKyAgICAgICAgICAgICAgIHBvcnRAMSB7Cj4+
-PiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4+PiArICAgICAgICAgICAgICAg
-ICAgICAgICByY2FyX2R3X2hkbWkwX291dDogZW5kcG9pbnQgewo+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWkwX2Nvbj47Cj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgICB9Owo+Pj4gKyAgICAgICAgICAgICAgIH07Cj4+PiArICAgICAg
-IH07Cj4+PiArfTsKPj4+ICsKPj4+ICsmaGRtaTBfY29uIHsKPj4+ICsgICAgICAgcmVtb3RlLWVu
-ZHBvaW50ID0gPCZyY2FyX2R3X2hkbWkwX291dD47Cj4+PiArfTsKPj4KPj4gSSB0aGluayB0aGUg
-aGRtaTAgYW5kIGhkbWkwX2NvbiBwYXJ0cyBjYW4gYmUgbW92ZWQgdG8gc2FsdmF0b3ItY29tbW9u
-LmR0c2kuCj4+IENhbiB3ZSBkbyB0aGF0IG5vdyAod2l0aCBzdHVicz8pLCBvciBkb2VzIHRoaXMg
-aGF2ZSB0byB3YWl0IHVudGlsIHI4YTc3OTY1IGhhcwo+PiByZWNlaXZlZCBIRE1JIHNvdW5kIHN1
-cHBvcnQ/Cj4KPiBJIGRvbid0IGtub3cgYWJvdXQgdGhlIHNvdW5kIGludGVncmF0aW9uIEknbSBh
-ZnJhaWQsIGJ1dCBjb21tb24gSERNSSBjb25uZWN0aW9ucwo+IHdvdWxkIGNlcnRhaW5seSBiZSBh
-IGJlbmVmaXQgSSBiZWxpZXZlLgo+Cj4gSXMgdGhpcyBzb21ldGhpbmcgeW91J3JlIGxvb2tpbmcg
-dG8gdGFja2xlPyBPciB3b3VsZCB5b3UgbGlrZQo+IG1lL01vcmltb3RvLXNhbi9tZWRpYSB0ZWFt
-IHRvIGxvb2sgYXQgaXQ/CgpGZWVsIGZyZWUgdG8gZ2l2ZSBpdCBhIHRyeS4KClRoYW5rcyEKCkdy
-e29ldGplLGVldGluZ31zLAoKICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQKCi0tIApHZWVy
-dCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdl
-ZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5p
-Y2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcg
-dG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2Ug
-dGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 05/28/2018 01:08 PM, Richard Genoud wrote:
+> On 25/05/2018 19:19, Radu Pirea wrote:
+>> This patch modifies the place where resources and device tree properties
+>> are searched.
+>>
+>> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
+>> ---
+>>   drivers/tty/serial/Kconfig        |  1 +
+>>   drivers/tty/serial/atmel_serial.c | 40 +++++++++++++++++--------------
+>>   2 files changed, 23 insertions(+), 18 deletions(-)
+> the stdout-path property of the chosen node is still broken in this verion.
+> if :
+> stdout-path = "serial0:115200n8";
+> is set in the DTS, the console output should go on serial0 (aka dbgu)
+> cf Documentation/devicetree/bindings/chosen.txt
+> 
+> With this patch applied, this is not the case anymore.
+> Adding console=ttyS0,115200 in the chosen node is not the solution here.
+> 
+
+I fixed the issue few minutes ago :)
+
+I hope DMA setup is ok now.
+
+> 
+> regards,
+> Richard.
+> 
