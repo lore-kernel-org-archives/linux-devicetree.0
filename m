@@ -1,100 +1,200 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 RESEND] display: panel: Add AUO g070vvn01 display
- support (800x480)
-Date: Tue, 29 May 2018 16:26:06 +0200
-Message-ID: <20180529142606.GA22634@ulmo>
-References: <20180410102927.17787-1-lukma@denx.de>
- <20180514190849.18723-1-lukma@denx.de>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: Re: [PATCH v4 5/6] spi: at91-usart: add driver for at91-usart as spi
+Date: Tue, 29 May 2018 17:28:37 +0300
+Message-ID: <110bb353-b131-348c-8e26-9863b074142d@microchip.com>
+References: <20180525171941.26766-1-radu.pirea@microchip.com>
+ <20180525171941.26766-6-radu.pirea@microchip.com>
+ <CAHp75Vc0e=+2YptoFAUuPSpAyxaCUJJqjQPPY5VZHV=MEMOqHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1694544581=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180514190849.18723-1-lukma@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vc0e=+2YptoFAUuPSpAyxaCUJJqjQPPY5VZHV=MEMOqHQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, alexandre.belloni@bootlin.com, Lee Jones <lee.jones@linaro.org>, Richard Genoud <richard.genoud@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1694544581==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
-Content-Disposition: inline
 
+On 05/28/2018 11:21 AM, Andy Shevchenko wrote:
+> On Fri, May 25, 2018 at 8:19 PM, Radu Pirea <radu.pirea@microchip.com> wrote:
+>> This is the driver for at91-usart in spi mode. The USART IP can be configured
+>> to work in many modes and one of them is SPI.
+>>
+>> The driver was tested on sama5d3-xplained and sama5d4-xplained boards with
+>> enc28j60 ethernet controller as slave.
+> 
+>> +#include <linux/of_gpio.h>
+> 
+> What is the use of it?
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I need of_gpio.h for of_gpio_named_count, of_get_named_gpio and 
+devm_gpio_request_one(found in gpio.h)
 
-On Mon, May 14, 2018 at 09:08:49PM +0200, Lukasz Majewski wrote:
-> This commit adds support for AUO's 7.0" display.
->=20
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> Reviewed-by: Rob Herring <robh@kernel.org>
->=20
-> ---
-> Changes for v3:
-> - Remove not used 'bus-format-override =3D "rgb565";' property
->=20
-> Changes for v2:
-> - Add *.txt suffix to the auo,g070wn01 file
-> ---
->  .../bindings/display/panel/auo,g070vvn01.txt       | 29 ++++++++++++++++=
-++++
->  drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++=
-++++++
->  2 files changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g=
-070vvn01.txt
+> 
+>> +#define US_INIT                        (US_MR_SPI_MASTER | US_MR_CHRL | US_MR_CLKO | \
+>> +                               US_MR_WRDBT)
+> 
+> Don't split lines like this, it's hard to read.
+> 
+> #define FOO \
+>   (BAR1 | BAR2)
 
-Next time, please use the standard "drm/panel: " prefix, which increases
-the chances of me seeing the patch.
+I'll fix it.
 
-Also, it's usually a good idea to split patches up into one that has the
-device tree bindings and another one that has the driver changes.
+> 
+> I think I already told this to someone recently, maybe to you.
+> 
+>> +/* Register access macros */
+>> +#define spi_readl(port, reg) \
+>> +       readl_relaxed((port)->regs + US_##reg)
+>> +#define spi_writel(port, reg, value) \
+>> +       writel_relaxed((value), (port)->regs + US_##reg)
+>> +
+>> +#define spi_readb(port, reg) \
+>> +       readb_relaxed((port)->regs + US_##reg)
+>> +#define spi_writeb(port, reg, value) \
+>> +       writeb_relaxed((value), (port)->regs + US_##reg)
+> 
+> Names are too generic. You better to use the same prefix as for the
+> rest, i.e. at91_spi_
 
-Applied, thanks.
+Good ideea. I will change the names.
 
-Thierry
+> 
+>> +       /*used in interrupt to protect data reading*/
+> 
+> Comment style.
+> 
+> You need to read some existing code, perhaps, to see how it's done.
 
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
+Ok. I will add the comment.
 
------BEGIN PGP SIGNATURE-----
+> 
+>> +static inline void at91_usart_spi_tx(struct at91_usart_spi *aus)
+>> +{
+>> +       unsigned int len = aus->current_transfer->len;
+>> +       unsigned int remaining = aus->current_tx_remaining_bytes;
+>> +       const u8  *tx_buf = aus->current_transfer->tx_buf;
+>> +
+> 
+>> +       if (remaining)
+>> +               if (at91_usart_spi_tx_ready(aus)) {
+> 
+> if (x) {
+>   if (y) {
+> ...
+>   }
+> }
+> 
+> is equivalent to if (x && y) {}.
+> 
+> Though, considering your intention here, I would rather go with better
+> pattern, i.e.
+> 
+> if (!remaining)
+>   return;
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlsNYvsACgkQ3SOs138+
-s6EJ3A/7B3hYtcRF8nz6PhemNmpyvVMmtIkKN1VuUTw1ywWKe3sdv8mN3w3Hs25t
-wOyRJKKvV5uOPMfWtyA8FIp/IaR+HCJABlYp/KQkAGsV5C0qRVSYBrLtPvCtM9c3
-RsAsSN3Lg7hsA/W1IiNMt2JWBpeY7xGmk7HHXJWMKJjCmHelBKi3y/RMxAXejBs+
-+RkDbTi7+g90b8pxQY/IjOsvSA3kIRQTrzqwXE8MmUQLLvGXwdkkd4bXBsmYA88I
-kHpEAqo0eJC+bwtSjt/HZAtt1atiXMclzGwGdYzH/HjEk9/LZZ2AIHFS2YPtNKmr
-AHza597m8P9UPp5lIzcG7s7AoPyNNTx8neblLCVMuJvSvGIFFJNLJ9vhHELRG1yb
-2O21sdsAK0k/9ALOiOxgcDiZhijzgTl6H1RUCuIBDF8QLmObpgSxKhrqvyorjNHS
-INCW0qOKL2OWkZR643OpWgV9gDujS3yah0Zaoj5G2h97J88SuCqKIlzJL8he8iWC
-kV8tWSxUZ9p0x74kVNmvwFAGhJAYoySilxQ3j2VgDAxZh0kbCsL/EeP94MRp1f2v
-+jam7fOGciLQ+XSWnC5J4VttBO64/oIsDx29CRZHBYqFwQ1vMxP26xcycNwsk/2R
-+9kBLhcYeFguVGqjvJcX0jDpW2hxU0BSIKQfKrBP6IAvV2Ec6SU=
-=vYjZ
------END PGP SIGNATURE-----
+Thank for suggestion. I will change.
 
---zYM0uCDKw75PZbzx--
+> 
+>> +                       spi_writeb(aus, THR, tx_buf[len - remaining]);
+>> +                       aus->current_tx_remaining_bytes--;
+>> +               }
+>> +}
+>> +
+>> +static inline void at91_usart_spi_rx(struct at91_usart_spi *aus)
+>> +{
+> 
+>> +       if (remaining) {
+>> +               rx_buf[len - remaining] = spi_readb(aus, RHR);
+>> +               aus->current_rx_remaining_bytes--;
+>> +       }
+> 
+> Ditto.
+> 
+>> +}
+> 
+> 
+>> +static int at91_usart_gpio_setup(struct platform_device *pdev)
+>> +{
+> 
+>> +       struct device_node      *np = pdev->dev.parent->of_node;
+> 
+> Your driver is not OF specific as far as I can see. Drop all these
+> device_node stuff and change API calls respectively.
 
---===============1694544581==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+Ok. What do you suggest to use instead of OF API to get the count of 
+cs-gpios and to read their values one by one?
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+> 
+>> +       int                     i;
+> 
+>> +       int                     ret = 0;
+>> +       int                     nb = 0;
+> 
+> What happened to indentation?
+> 
+> Redundnant assignment for both.
+> 
+>> +       if (!np)
+>> +               return -EINVAL;
+>> +
+>> +       nb = of_gpio_named_count(np, "cs-gpios");
+>> +       for (i = 0; i < nb; i++) {
+>> +               int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+>> +
+>> +               if (cs_gpio < 0)
+>> +                       return cs_gpio;
+>> +
+>> +               if (gpio_is_valid(cs_gpio)) {
+>> +                       ret = devm_gpio_request_one(&pdev->dev, cs_gpio,
+>> +                                                   GPIOF_DIR_OUT,
+>> +                                                   dev_name(&pdev->dev));
+>> +                       if (ret)
+>> +                               return ret;
+>> +               }
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int at91_usart_spi_probe(struct platform_device *pdev)
+>> +{
+> 
+>> +       regs = platform_get_resource(to_platform_device(pdev->dev.parent),
+>> +                                    IORESOURCE_MEM, 0);
+>> +       if (!regs)
+>> +               return -EINVAL;
+> 
+> This looks weird. Supply resource to _this_ device in your MFD code.
 
---===============1694544581==--
+I know weird, but is the safest way to pass the resource and the of_node.
+
+> 
+>> +       dev_info(&pdev->dev,
+>> +                "Atmel USART SPI Controller version 0x%x at 0x%08lx (irq %d)\n",
+>> +                spi_readl(aus, VERSION),
+>> +                (unsigned long)regs->start, irq);
+> 
+> I think I already told you, don't use explicit casting when print.
+> If it wasn't you, do you homework then. But above is no go. >
+>> +       return 0;
+> 
+>> +static struct platform_driver at91_usart_spi_driver = {
+>> +       .driver = {
+>> +               .name = "at91_usart_spi",
+> 
+>> +               .of_match_table = of_match_ptr(at91_usart_spi_dt_ids),
+> 
+> Drop of_match_ptr(). It's not needed.
+> 
+>> +       },
+>> +       .probe = at91_usart_spi_probe,
+> 
+>> +       .remove = at91_usart_spi_remove, };
+> 
+> Already told ya, split lines correctly.
+> 
