@@ -1,14 +1,16 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 1/8] dt-bindings: media: rcar-vin: Describe optional ep
- properties
-Date: Tue, 29 May 2018 17:05:52 +0200
-Message-ID: <1527606359-19261-2-git-send-email-jacopo+renesas@jmondi.org>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: condor: add I2C0 support
+Date: Tue, 29 May 2018 18:46:10 +0300
+Message-ID: <9bc27b57-cf26-3b03-6ec4-1e9788a46426@cogentembedded.com>
+References: <e9c94553-be9d-0eec-a1ee-1713bb97fbab@cogentembedded.com>
+ <61f6f4a4-e55c-06e0-cba1-7d90a556950a@cogentembedded.com>
+ <20180529131012.ohyqwmiaxiiw6noi@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <20180529131012.ohyqwmiaxiiw6noi@verge.net.au>
+Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,46 +20,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-RGVzY3JpYmUgdGhlIG9wdGlvbmFsIGVuZHBvaW50IHByb3BlcnRpZXMgZm9yIGVuZHBvaW50IG5v
-ZGVzIG9mIHBvcnRAMAphbmQgcG9ydEAxIG9mIHRoZSBSLUNhciBWSU4gZHJpdmVyIGRldmljZSB0
-cmVlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkg
-PGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+CkFja2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8
-bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KCi0tLQp2MiAtPiB2MzoKLSBE
-byBub3QgcmVwZWF0IHByb3BlcnR5IGRlc2NyaXB0aW9uLCBqdXN0IHJlZmVyZW5jZSB2aWRlby1p
-bnRlcmZhY2VzLnR4dAotIEluZGVudCB3aXRoIHNwYWNlcywgbm90IHRhYnMgYXMgdGhlIHJlc3Qg
-b2YgdGhlIGRvY3VtZW50Ci0gRG8gbm90IHJlbW92ZSAoeWV0KSB0aGUgJ2J1cy13aWR0aCcgcHJv
-cGVydHkgZnJvbSBleGFtcGxlCi0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21lZGlhL3JjYXJfdmluLnR4dCB8IDEwICsrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMCBp
-bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21lZGlhL3JjYXJfdmluLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZWRpYS9yY2FyX3Zpbi50eHQKaW5kZXggNWM2ZjJhNy4uNGQ5MWEzNiAxMDA2NDQKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3JjYXJfdmluLnR4dAorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvcmNhcl92aW4udHh0CkBA
-IC01NCw2ICs1NCwxNCBAQCBmcm9tIGxvY2FsIFNvQyBDU0ktMiByZWNlaXZlcnMgKHBvcnQxKSBk
-ZXBlbmRpbmcgb24gU29DLgogICAgICAgZnJvbSBleHRlcm5hbCBTb0MgcGlucyBkZXNjcmliZWQg
-aW4gdmlkZW8taW50ZXJmYWNlcy50eHRbMV0uCiAgICAgICBEZXNjcmliaW5nIG1vcmUgdGhlbiBv
-bmUgZW5kcG9pbnQgaW4gcG9ydCAwIGlzIGludmFsaWQuIE9ubHkgVklOCiAgICAgICBpbnN0YW5j
-ZXMgdGhhdCBhcmUgY29ubmVjdGVkIHRvIGV4dGVybmFsIHBpbnMgc2hvdWxkIGhhdmUgcG9ydCAw
-LgorCisgICAgICAtIE9wdGlvbmFsIHByb3BlcnRpZXMgZm9yIGVuZHBvaW50IG5vZGVzIG9mIHBv
-cnRAMDoKKyAgICAgICAgLSBoc3luYy1hY3RpdmU6IHNlZSBbMV0gZm9yIGRlc2NyaXB0aW9uLiBE
-ZWZhdWx0IGlzIGFjdGl2ZSBoaWdoLgorICAgICAgICAtIHZzeW5jLWFjdGl2ZTogc2VlIFsxXSBm
-b3IgZGVzY3JpcHRpb24uIERlZmF1bHQgaXMgYWN0aXZlIGhpZ2guCisKKyAgICAgICAgSWYgYm90
-aCBIU1lOQyBhbmQgVlNZTkMgcG9sYXJpdGllcyBhcmUgbm90IHNwZWNpZmllZCwgZW1iZWRkZWQK
-KyAgICAgICAgc3luY2hyb25pemF0aW9uIGlzIHNlbGVjdGVkLgorCiAgICAgLSBwb3J0IDEgLSBz
-dWItbm9kZXMgZGVzY3JpYmluZyBvbmUgb3IgbW9yZSBlbmRwb2ludHMgY29ubmVjdGVkIHRvCiAg
-ICAgICB0aGUgVklOIGZyb20gbG9jYWwgU29DIENTSS0yIHJlY2VpdmVycy4gVGhlIGVuZHBvaW50
-IG51bWJlcnMgbXVzdAogICAgICAgdXNlIHRoZSBmb2xsb3dpbmcgc2NoZW1hLgpAQCAtNjMsNiAr
-NzEsOCBAQCBmcm9tIGxvY2FsIFNvQyBDU0ktMiByZWNlaXZlcnMgKHBvcnQxKSBkZXBlbmRpbmcg
-b24gU29DLgogICAgICAgICAtIEVuZHBvaW50IDIgLSBzdWItbm9kZSBkZXNjcmliaW5nIHRoZSBl
-bmRwb2ludCBjb25uZWN0ZWQgdG8gQ1NJNDAKICAgICAgICAgLSBFbmRwb2ludCAzIC0gc3ViLW5v
-ZGUgZGVzY3JpYmluZyB0aGUgZW5kcG9pbnQgY29ubmVjdGVkIHRvIENTSTQxCgorICAgICAgRW5k
-cG9pbnQgbm9kZXMgb2YgcG9ydEAxIGRvIG5vdCBzdXBwb3J0IGFueSBvcHRpb25hbCBlbmRwb2lu
-dCBwcm9wZXJ0eS4KKwogRGV2aWNlIG5vZGUgZXhhbXBsZSBmb3IgR2VuMiBwbGF0Zm9ybXMKIC0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgotLQoyLjcuNAoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hello!
+
+On 05/29/2018 04:10 PM, Simon Horman wrote:
+
+>> Define the Condor board dependent part of the I2C0 device node.
+>>
+>> The I2C0 bus is populated by 2 ON Semiconductor PCA9654 I/O expanders
+>> and Analog Devices  ADV7511W HDMI transmitter (but we're only describing
+>> the former chips now).
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>>  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   27 ++++++++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>>
+>> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+>> ===================================================================
+>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+>> @@ -80,6 +80,28 @@
+>>  	clock-frequency = <32768>;
+>>  };
+>>  
+>> +&i2c0 {
+>> +	pinctrl-0 = <&i2c0_pins>;
+>> +	pinctrl-names = "default";
+>> +
+>> +	status = "okay";
+>> +	clock-frequency = <400000>;
+>> +
+>> +	io_expander0: gpio@20 {
+> 
+> Hi Sergei,
+> 
+> I'm a little confused about where 0x20 and 0x21 are derived from.
+> Could you explain a little?
+
+   r-carv3h_system_evaluation_board_rev020.pdf, pp. 16-17, lower left corners.
+The schematics gives the 8-bit read/write addresses but we use uniform 7-bit
+I2C address in DTs.
+
+>> +		compatible = "onnn,pca9654";
+>> +		reg = <0x20>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +	};
+>> +
+>> +	io_expander1: gpio@21 {
+>> +		compatible = "onnn,pca9654";
+>> +		reg = <0x21>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +	};
+>> +};
+>> +
+>>  &mmc0 {
+>>  	pinctrl-0 = <&mmc_pins>;
+>>  	pinctrl-1 = <&mmc_pins_uhs>;
