@@ -1,49 +1,94 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 5/5] ARM: dts: imx6qdl: add missing compatible and clock
- properties for EPIT
-Date: Tue, 29 May 2018 19:04:36 +0200
-Message-ID: <20180529170436.22711-6-peron.clem@gmail.com>
-References: <20180529170436.22711-1-peron.clem@gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH] arm64: allwinner: a64-amarula-relic: Enable
+ AP6330 WiFi support
+Date: Tue, 29 May 2018 22:52:38 +0530
+Message-ID: <20180529172238.9718-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180529170436.22711-1-peron.clem@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Cl=C3=A9ment=20Peron?= <clement.peron@devialet.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB3UYW3MAKGQEKU2YN2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogQ29saW4gRGlkaWVyIDxjb2xpbi5kaWRpZXJAZGV2aWFsZXQuY29tPgoKQWRkIG1pc3Np
-bmcgY29tcGF0aWJsZSBhbmQgY2xvY2sgcHJvcGVydGllcyBmb3IgRVBJVCBub2RlLgoKU2lnbmVk
-LW9mZi1ieTogQ29saW4gRGlkaWVyIDxjb2xpbi5kaWRpZXJAZGV2aWFsZXQuY29tPgpTaWduZWQt
-b2ZmLWJ5OiBDbMOpbWVudCBQZXJvbiA8Y2xlbWVudC5wZXJvbkBkZXZpYWxldC5jb20+ClJldmll
-d2VkLWJ5OiBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ci0tLQogYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpIHwgMTAgKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
-IDEwIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRs
-LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kKaW5kZXggYzAwM2U2MmJmMjkw
-Li43NWJiYWNhMzRjYmMgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwuZHRz
-aQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kKQEAgLTg0NCwxMyArODQ0LDIz
-IEBACiAJCQl9OwogCiAJCQllcGl0MTogZXBpdEAyMGQwMDAwIHsgLyogRVBJVDEgKi8KKwkJCQlj
-b21wYXRpYmxlID0gImZzbCxpbXg2cS1lcGl0IjsKIAkJCQlyZWcgPSA8MHgwMjBkMDAwMCAweDQw
-MDA+OwogCQkJCWludGVycnVwdHMgPSA8MCA1NiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCQlj
-bG9ja3MgPSA8JmNsa3MgSU1YNlFETF9DTEtfRVBJVDE+LAorCQkJCQk8JmNsa3MgSU1YNlFETF9D
-TEtfSVBHX1BFUj47CisJCQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgInBlciI7CisJCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKIAkJCX07CiAKIAkJCWVwaXQyOiBlcGl0QDIwZDQwMDAgeyAvKiBFUElU
-MiAqLworCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZxLWVwaXQiOwogCQkJCXJlZyA9IDwweDAy
-MGQ0MDAwIDB4NDAwMD47CiAJCQkJaW50ZXJydXB0cyA9IDwwIDU3IElSUV9UWVBFX0xFVkVMX0hJ
-R0g+OworCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg2UURMX0NMS19FUElUMj4sCisJCQkJCTwmY2xr
-cyBJTVg2UURMX0NMS19JUEdfUEVSPjsKKwkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsK
-KwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCQkJfTsKIAogCQkJc3JjOiBzcmNAMjBkODAwMCB7
-Ci0tIAoyLjE3LjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+Enable AP6330 WiFi/BT combo chip on Amarula A64-Relic board:
+- WiFi SDIO interface is connected to MMC1
+- WiFi WL-PMU-EN pin connected to gpio PL2: attach to mmc-pwrseq
+- WiFi WL-WAKE-AP pin connected to gpio PL3
+- 32kHz external oscillator gate clock from RTC
+
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ .../dts/allwinner/sun50i-a64-amarula-relic.dts     | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index ce4a256ff086..a77b70ca88e3 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -21,12 +21,43 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	wifi_pwrseq: wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
++		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* WL-PMU-EN: PL2 */
++	};
+ };
+ 
+ &ehci0 {
+ 	status = "okay";
+ };
+ 
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	vmmc-supply = <&reg_dcdc1>;
++	/*
++	 * Schematic shows both dldo4 and eldo1 connected for vcc-io-wifi, but
++	 * dldo4 connection shows DNP(Do Not Populate) and eldo1 connected with
++	 * 0Ohm register to vcc-io-wifi so eldo1 is used.
++	 */
++	vqmmc-supply = <&reg_eldo1>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++		interrupt-parent = <&r_pio>;
++		interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>;	/* WL-WAKE-AP: PL3 */
++		interrupt-names = "host-wake";
++	};
++};
++
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_pins>;
+@@ -170,6 +201,12 @@
+ 	regulator-name = "vcc-rtc";
+ };
+ 
++&rtc {
++	clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
++	clocks = <&osc32k>;
++	#clock-cells = <1>;
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+-- 
+2.14.3
