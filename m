@@ -1,89 +1,100 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
- from K+P
-Date: Tue, 29 May 2018 11:11:50 -0300
-Message-ID: <CAOMZO5AU8PDEErHeU1yb9mwgNLJUvWipTrDsY8csXSHiNro-7w@mail.gmail.com>
-References: <20180509153428.1440-1-lukma@denx.de> <CAOMZO5AexXNEGVoXa9K_GAm+aFLNRQOXOhF_SdKAjV1qmuD2nA@mail.gmail.com>
- <20180519140202.3449e3c1@jawa> <CAOMZO5DoLwEmQz5BQHDLk8sBq7mDH_UxBjRA0RGKb+PunMYu-Q@mail.gmail.com>
- <20180529155736.275e27b1@jawa>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 RESEND] display: panel: Add AUO g070vvn01 display
+ support (800x480)
+Date: Tue, 29 May 2018 16:26:06 +0200
+Message-ID: <20180529142606.GA22634@ulmo>
+References: <20180410102927.17787-1-lukma@denx.de>
+ <20180514190849.18723-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529155736.275e27b1@jawa>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1694544581=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180514190849.18723-1-lukma@denx.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Lukasz Majewski <lukma@denx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
 
-On Tue, May 29, 2018 at 10:58 AM, Lukasz Majewski <lukma@denx.de> wrote:
+--===============1694544581==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Disposition: inline
 
-> Sorry for "small" delay on this.
->
-> Ok, so I've investigated the issue:
->
-> 1. The code, which you pasted:
-> http://code.bulix.org/ik01yu-339697
->
-> works correctly as imx53-qsb-common.dtsi directly includes "imx53.dtsi"
-> in which iomuxc label is defined.
->
-> In my case though,
->
-> 2. I do include imx53-tqma53.dtsi [1], in which the iomuxc" label
-> is extended:
->
-> &iomuxc {
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_hog>;
->
->         imx53-tqma53 {
->                 pinctrl_hog: hoggrp {
->
-> .......
->
-> };
->
-> The imx53-tqma53.dtsi then includes imx53.dtsi.
->
-> Moreover, my file -> imx53-kp.dtsi as it includes [1], it extends
-> further the &iomuxc label:
->
-> &iomuxc {
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_kp_common>;
->
->         imx53-kp-common {
->                 pinctrl_buzzer: buzzergrp {
-> .......
-> };
->
-> So, when I remove imx53-kp-common I will have mismatch with [1] iomuxc
-> structure.
->
-> The code works as expected when I do remove imx53-tqma53 in [1].
->
-> However, I would prefer to not touch this imx53-tqma53.dtsi file.
-> It is also included in: imx53-mba53.dts, which extends iomux in
-> following way:
->
-> &iomuxc {
->         lvds1 {
->                 pinctrl_lvds1_1: lvds1-grp1 {
->
->
-> Here I would need to remove lvds1, disp1 and tve to make it working.
-> However, it will not break during build, but at run time.
->
-> Considering the above, I would prefer to leave the code in [1] as is
-> and use imx53-kp-common as well (as in v2 of this patch).
->
-> Fabio, what do you think?
 
-Ok, thanks for the clarification. I just wanted to make sure we did
-not have some kind of iomux bug there.
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think your proposed patch is fine then.
+On Mon, May 14, 2018 at 09:08:49PM +0200, Lukasz Majewski wrote:
+> This commit adds support for AUO's 7.0" display.
+>=20
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>=20
+> ---
+> Changes for v3:
+> - Remove not used 'bus-format-override =3D "rgb565";' property
+>=20
+> Changes for v2:
+> - Add *.txt suffix to the auo,g070wn01 file
+> ---
+>  .../bindings/display/panel/auo,g070vvn01.txt       | 29 ++++++++++++++++=
+++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 31 ++++++++++++++++=
+++++++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g=
+070vvn01.txt
 
-Thanks
+Next time, please use the standard "drm/panel: " prefix, which increases
+the chances of me seeing the patch.
+
+Also, it's usually a good idea to split patches up into one that has the
+device tree bindings and another one that has the driver changes.
+
+Applied, thanks.
+
+Thierry
+
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlsNYvsACgkQ3SOs138+
+s6EJ3A/7B3hYtcRF8nz6PhemNmpyvVMmtIkKN1VuUTw1ywWKe3sdv8mN3w3Hs25t
+wOyRJKKvV5uOPMfWtyA8FIp/IaR+HCJABlYp/KQkAGsV5C0qRVSYBrLtPvCtM9c3
+RsAsSN3Lg7hsA/W1IiNMt2JWBpeY7xGmk7HHXJWMKJjCmHelBKi3y/RMxAXejBs+
++RkDbTi7+g90b8pxQY/IjOsvSA3kIRQTrzqwXE8MmUQLLvGXwdkkd4bXBsmYA88I
+kHpEAqo0eJC+bwtSjt/HZAtt1atiXMclzGwGdYzH/HjEk9/LZZ2AIHFS2YPtNKmr
+AHza597m8P9UPp5lIzcG7s7AoPyNNTx8neblLCVMuJvSvGIFFJNLJ9vhHELRG1yb
+2O21sdsAK0k/9ALOiOxgcDiZhijzgTl6H1RUCuIBDF8QLmObpgSxKhrqvyorjNHS
+INCW0qOKL2OWkZR643OpWgV9gDujS3yah0Zaoj5G2h97J88SuCqKIlzJL8he8iWC
+kV8tWSxUZ9p0x74kVNmvwFAGhJAYoySilxQ3j2VgDAxZh0kbCsL/EeP94MRp1f2v
++jam7fOGciLQ+XSWnC5J4VttBO64/oIsDx29CRZHBYqFwQ1vMxP26xcycNwsk/2R
++9kBLhcYeFguVGqjvJcX0jDpW2hxU0BSIKQfKrBP6IAvV2Ec6SU=
+=vYjZ
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
+
+--===============1694544581==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1694544581==--
