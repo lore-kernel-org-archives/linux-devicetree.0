@@ -1,113 +1,59 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH RESEND] display: panel: Add KOE tx14d24vm1bpa display
- support (320x240)
-Date: Tue, 29 May 2018 17:33:38 +0200
-Message-ID: <20180529173338.5ec631ee@jawa>
-References: <20180412143715.6828-1-lukma@denx.de>
-        <20180509154338.2841-1-lukma@denx.de>
-        <20180519130533.2494bceb@jawa>
-        <20180528095519.799adadc@jawa>
-        <20180529143047.GB22634@ulmo>
-        <20180529170148.7a0363f2@jawa>
-        <20180529152225.GB16038@ulmo>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 5/8] media: rcar-vin: Handle data-enable polarity
+Date: Tue, 29 May 2018 17:05:56 +0200
+Message-ID: <1527606359-19261-6-git-send-email-jacopo+renesas@jmondi.org>
+References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/mcgMiqadJ.1Wr7YVbr.YNHL"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529152225.GB16038@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/mcgMiqadJ.1Wr7YVbr.YNHL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Handle data-enable signal polarity. If the polarity is not specifically
+requested to be active low, use the active high default.
 
-Hi Thierry,
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+v3:
+- use new property to set the CES bit
+---
+ drivers/media/platform/rcar-vin/rcar-dma.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> On Tue, May 29, 2018 at 05:01:48PM +0200, Lukasz Majewski wrote:
-> > Hi Thierry,
-> >  =20
-> > > On Mon, May 28, 2018 at 09:55:19AM +0200, Lukasz Majewski wrote: =20
-> > > > Hi,
-> > > >    =20
-> > > > > Hi Thierry,
-> > > > >    =20
-> > > > > > This commit adds support for KOE's 5.7" display.
-> > > > > >      =20
-> > > > >=20
-> > > > > Thierry, shall I perform some more work on this code, or is it
-> > > > > eligible for applying to your tree?   =20
-> > > >=20
-> > > > Gentle ping. If Thierry is overworked - maybe there is a
-> > > > co-maintainer so he/she could apply this patch?   =20
-> > >=20
-> > > Please use the proper prefix for the commit subject to increase
-> > > the chances of this being noticed. =20
-> >=20
-> > Ok. Is there any list of prefixes in the kernel repository, so I
-> > could look for them (like get_prefix.py - similar to get_maintainer
-> > script)? =20
->=20
-> I don't think there is. A good rule of thumb that I use is to go over
-> the git log for the last couple of commits and see if there's a clear
-> pattern. This doesn't work for every subsystem, but drm/panel is very
-> consistent in this regard, on purpose.
+diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
+index d2b7002..9145b56 100644
+--- a/drivers/media/platform/rcar-vin/rcar-dma.c
++++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+@@ -123,6 +123,7 @@
+ /* Video n Data Mode Register 2 bits */
+ #define VNDMR2_VPS		(1 << 30)
+ #define VNDMR2_HPS		(1 << 29)
++#define VNDMR2_CES		(1 << 28)
+ #define VNDMR2_FTEV		(1 << 17)
+ #define VNDMR2_VLV(n)		((n & 0xf) << 12)
 
-I see.
+@@ -698,6 +699,10 @@ static int rvin_setup(struct rvin_dev *vin)
+ 		/* Vsync Signal Polarity Select */
+ 		if (!(vin->parallel->mbus_flags & V4L2_MBUS_VSYNC_ACTIVE_LOW))
+ 			dmr2 |= VNDMR2_VPS;
++
++		/* Data Enable Polarity Select */
++		if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
++			dmr2 |= VNDMR2_CES;
+ 	}
 
-Is the DRM/panel tree hosted on git.kernel.org?
-
-The tree maintained by you there seems to be:
-kernel/git/thierry.reding/linux-pwm.git
-
-IIRC it is hosted elsewhere. Am I right?
-
->=20
-> > I've used "display: panel" prefix, but I should have used
-> > "drm/panel"=20
-> > >=20
-> > > This is also still missing a Reviewed-by or Acked-by from Rob. =20
-> >=20
-> > Rob has already reviewed this patch. I will send v2
-> > with Rob's Reviewed-by tag. =20
->=20
-> Okay, I'll apply that v2 then.
-
-Thanks.
-
->=20
-> Thanks,
-> Thierry
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
+ 	/*
 --
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/mcgMiqadJ.1Wr7YVbr.YNHL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlsNctIACgkQAR8vZIA0
-zr3hmwf5AYnCAw/Icb4IooODTOLd/yBjADMxIxM+uv+B21H5/Xo7gy2M5P5/d7YW
-0EeudzRu6GhhmaR7k8wvekZjQ0vFZJnFDLec7Ga4iklN3MmXhcAke5Ti/Yx+tQGX
-7vbbjE1zGubSyEUzs9cA/i45GKXIgk1ldQs5lXIxbGe0eIlMALh8av1Faco24Zqn
-Q4Oxa2Fg8zArfYjuzo0DpWaWPzGQHJNEh4/fJeIylr/dbOc6MvqSLKiVusqobtfs
-TXQ0F0RrVOBMWtmm3hiJ3vlTInxjHlEJEhyxfbFIAHyLNC7s4JkSY41OyMGpi2t2
-dYyxumhB3p1hr6zq4ZSCEBMymON9Cg==
-=qNsb
------END PGP SIGNATURE-----
-
---Sig_/mcgMiqadJ.1Wr7YVbr.YNHL--
+2.7.4
