@@ -1,50 +1,120 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 0/2] Add Mediatek X20 Development Board support
-Date: Tue, 29 May 2018 08:38:27 +0200
-Message-ID: <06dbc5ef-5bba-f3e0-1b57-3eaeab26ed68@gmail.com>
-References: <20180529045258.1415-1-manivannan.sadhasivam@linaro.org>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v7 2/4] dt-bindings: drm/bridge: Document sn65dsi86
+ bridge bindings
+Date: Tue, 29 May 2018 08:41:42 +0200
+Message-ID: <20180529064144eucas1p1ea79686c36c55352549a69703edc0798~zCl_dTVxX0264302643eucas1p1O@eucas1p1.samsung.com>
+References: <1527180079-12721-1-git-send-email-spanda@codeaurora.org>
+ <CGME20180525073235epcas1p16b5e6cf91428f652ea287479ec06b35f@epcas1p1.samsung.com>
+ <1527180079-12721-3-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529045258.1415-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1527180079-12721-3-git-send-email-spanda@codeaurora.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com, Mars Cheng <mars.cheng@mediatek.com>, Saber Rezvani <irsaber@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: hoegsberg@chromium.org, chandanu@codeaurora.org, ryadav@codeaurora.org, abhinavk@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
-
-it's nice to see that someone at Linaro cares about upstreaming the 96 board.
->From what I can see, your patches add the very same support to the board as
-does the mt6797 evaluation board. Do you have plans to upstream more drivers for
-the board? Do you have a roadmap or something?
-
-I'm asking becuase I don't want to have just another dead devicetree in the
-kernel which does nothing but provides a boot to rootfs. Especially as this can
-be achieved on the same board with the EVB dts.
-
-Regards,
-Matthias
-
-On 29/05/18 06:52, Manivannan Sadhasivam wrote:
-> Add devicetree support for Mediatek X20 Development Board by Archermind.
-> This board is based on the Deca-Core MT6797 SoC from Mediatek and is
-> one of the 96Boards Consumer Edition platform.
-> 
-> With this devicetree change, board can boot into initramfs.
-> 
-> More information about this board can be found in 96Boards product page:
-> https://www.96boards.org/product/mediatek-x20/
-> 
-> Manivannan Sadhasivam (2):
->   dt-bindings: Add vendor prefix for ArcherMind
->   arm64: dts: Add Mediatek X20 Development Board support
-> 
->  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
->  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
->  3 files changed, 35 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-> 
+T24gMjQuMDUuMjAxOCAxODo0MSwgU2FuZGVlcCBQYW5kYSB3cm90ZToKPiBEb2N1bWVudCB0aGUg
+YmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kgdG8gZURQIGJyaWRnZS4KPgo+IENo
+YW5nZXMgaW4gdjE6Cj4gIC0gUmVwaHJhc2UgdGhlIGR0LWJpbmRpbmcgZGVzY3JpcHRpb25zIHRv
+IGJlIG1vcmUgaW5saW5lIHdpdGggZXhpc3RpbmcKPiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpk
+YSkuCj4gIC0gQWRkIG1pc3NpbmcgZHQtYmluZGluZyB0aGF0IGFyZSBwYXJzZWQgYnkgY29ycmVz
+cG9uZGluZyBkcml2ZXIKPiAgICAoQW5kcnplaiBIYWpkYSkuCj4KPiBDaGFuZ2VzIGluIHYyOgo+
+ICAtIFJlbW92ZSBlZHAgcGFuZWwgc3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5IGtl
+ZXAgYnJpZGdlCj4gICAgc3BlY2lmaWMgZW50cmllcyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUg
+Y3VzdG9tLW1vZGVzIGR0IGVudHJ5IHNpbmNlIGl0cyB1c2FnZSBpcyByZW1vdmVkIGZyb20gZHJp
+dmVyIGFsc28gKFNlYW4gUGF1bCkuCj4gIC0gUmVtb3ZlIGlzLXBsdWdnYWJsZSBkdCBlbnRyeSBz
+aW5jZSB0aGlzIHdpbGwgbm90IGJlIG5lZWRlZCBhbnltb3JlIChTZWFuIFBhdWwpLgo+Cj4gQ2hh
+bmdlcyBpbiB2MzoKPiAgLSBSZW1vdmUgaXJxLWdwaW8gZHQgZW50cnkgYW5kIGluc3RlYWQgcG9w
+dWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4gICAgcHJvcGVydHkgKFJvYiBIZXJyaW5nKS4KPgo+IENo
+YW5nZXMgaW4gdjQ6Cj4gIC0gQWRkIGxpbmsgdG8gYnJpZGdlIGNoaXAgZGF0YXNoZWV0IChTdGVw
+aGVuIEJveWQpCj4gIC0gQWRkIHZwbGwgYW5kIHZjYyByZWd1bGF0b3Igc3VwcGx5IGJpbmRpbmdz
+IChTdGVwaGVuIEJveWQpCj4gIC0gQWRkIHJlZiBjbGsgb3B0aW9uYWwgZHQgYmluZGluZyAoU3Rl
+cGhlbiBCb3lkKQo+ICAtIEFkZCBncGlvLWNvbnRyb2xsZXIgb3B0aW9uYWwgZHQgYmluZGluZyAo
+U3RlcGhlbiBCb3lkKQo+Cj4gQ2hhbmdlcyBpbiB2NToKPiAgLSBVc2UgY2xvY2sgcHJvcGVydHkg
+dG8gc3BlY2lmeSB0aGUgaW5wdXQgcmVmY2xrIChTdGVwaGVuIEJveWQpLgo+ICAtIFVwZGF0ZSBn
+cGlvIGNlbGwgYW5kIHB3bSBjZWxsIG51bWJlcnMgKFN0ZXBoZW4gQm95ZCkuCj4KPiBDaGFuZ2Vz
+IGluIHY2Ogo+ICAtIEFkZCBwcm9wZXJ0eSB0byBtZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2No
+ZW1lIGFuZCBwb2xhcml0eSBpbnZlcnNpb24KPiAgICAoU3RlcGhlbiBCb3lkKS4KPgo+IFNpZ25l
+ZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAg
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQgICAgICAgfCA4OSAr
+KysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA4OSBpbnNlcnRpb25zKCsp
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNu
+NjVkc2k4Ni50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjRhNzcx
+YTMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQKPiBAQCAtMCwwICsxLDg5IEBACj4g
+K1NONjVEU0k4NiBEU0kgdG8gZURQIGJyaWRnZSBjaGlwCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tCj4gKwo+ICtUaGlzIGlzIHRoZSBiaW5kaW5nIGZvciBUZXhhcyBJbnN0cnVt
+ZW50cyBTTjY1RFNJODYgYnJpZGdlLgo+ICtodHRwOi8vd3d3LnRpLmNvbS9nZW5lcmFsL2RvY3Mv
+bGl0L2dldGxpdGVyYXR1cmUudHNwP2dlbmVyaWNQYXJ0TnVtYmVyPXNuNjVkc2k4NiZmaWxlVHlw
+ZT1wZGYKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogTXVzdCBi
+ZSAidGksc242NWRzaTg2Igo+ICstIHJlZzogaTJjIGFkZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQg
+YXMgcGVyIGRhdGFzaGVldAo+ICstIGVuYWJsZS1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBz
+cGVjaWZpY2F0aW9uIGZvciBicmlkZ2VfZW4gcGluCgppbmZvIGFib3V0IGFjdGl2ZSBoaWdoIHNo
+b3VsZCBiZSBhZGRlZAoKPiArCj4gKy0gdmNjaW8tc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQg
+cG93ZXJzIHVwIHRoZSBkaWdpdGFsIElPcy4KPiArLSB2cGxsLXN1cHBseTogQSAxLjhWIHN1cHBs
+eSB0aGF0IHBvd2VycyB1cCB0aGUgZGlzcGxheXBvcnQgUExMLgo+ICstIHZjY2Etc3VwcGx5OiBB
+IDEuMlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBhbmFsb2cgY2lyY3VpdHMuCj4gKy0gdmNj
+LXN1cHBseTogQSAxLjJWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBjb3JlLgo+
+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSBpbnRlcnJ1cHRzOiBTcGVjaWZpZXIgZm9y
+IHRoZSBTTjY1RFNJODYgaW50ZXJydXB0IGxpbmUuCj4gKy0gaHBkLWdwaW9zOiBTcGVjaWZpY2F0
+aW9ucyBmb3IgSFBEIGdwaW8gcGluLgoKQWdhaW4sIHBsZWFzZSBzcGVjaWZ5IGFjdGl2ZSBsZXZl
+bC4KCj4gKwo+ICstIGdwaW8tY29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElP
+IGNvbnRyb2xsZXIuCj4gKy0gI2dwaW8tY2VsbHMgICAgOiBTaG91bGQgYmUgdHdvLiBUaGUgZmly
+c3QgY2VsbCBpcyB0aGUgcGluIG51bWJlciBhbmQKPiArICAgICAgICAgICAgICAgICAgIHRoZSBz
+ZWNvbmQgY2VsbCBpcyB1c2VkIHRvIHNwZWNpZnkgZmxhZ3MuCj4gKyAgICAgICAgICAgICAgICAg
+ICBTZWUgLi4vLi4vZ3Bpby9ncGlvLnR4dCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KPiArLSAjcHdt
+LWNlbGxzIDogU2hvdWxkIGJlIG9uZS4gU2VlIC4uLy4uL3B3bS9wd20udHh0IGZvciBkZXNjcmlw
+dGlvbiBvZgo+ICsgICAgICAgICAgICAgICB0aGUgY2VsbCBmb3JtYXRzLgo+ICsKPiArLSBjbG9j
+ay1uYW1lczogc2hvdWxkIGJlICJyZWZjbGsiCj4gKy0gY2xvY2tzOiBTcGVjaWZpY2F0aW9uIGZv
+ciBpbnB1dCByZWZlcmVuY2UgY2xvY2suIFRoZSByZWZlcmVuY2UKPiArCSAgY2xvY2sgcmF0ZSBt
+dXN0IGJlIDEyIE1IeiwgMTkuMiBNSHosIDI2IE1IeiwgMjcgTUh6IG9yIDM4LjQgTUh6Lgo+ICsK
+PiArLSBsYW5lLWNvbmZpZzogU3BlY2lmaWNhdGlvbiB0byBkZXNjcmliZSB0aGUgbG9naWNhbCB0
+byBwaHlzaWNhbCBsYW5lCj4gKwkgICAgICAgbWFwcGluZyBzY2hlbWUgYW5kIHBvbGFyaXR5IGlu
+dmVyc2lvbiBvZiBsYW5lcy4KClBsZWFzZSBkZXNjcmliZSB0aGlzIHByb3BlcnR5LCBJIGd1ZXNz
+IGl0IGlzIGFib3V0IERTSSBsYW5lcywgYW5kIGl0CnNob3VsZCBiZSBleGFjdCg/KSBmb3VyIHBh
+aXIgb2YgbnVtYmVycywgd2hhdCBhcmUgbWVhbmluZyBhbmQgcmFuZ2VzIG9mCmJvdGggbnVtYmVy
+cy4gV2hhdCBzaG91bGQgYmUgYXNzdW1lZCBpZiBwcm9wZXJ0eSBpcyBub3QgcHJlc2VudC4gQnR3
+IHlvdQpjYW4gbG9vayBpbnRvIG90aGVyIGJpbmRpbmdzIGZvciByZWZlcmVuY2UsIEkgZ3Vlc3Mg
+dGhlcmUgYXJlIGFscmVhZHkKYmluZGluZ3MgaGF2aW5nIHN1Y2ggcHJvcGVydHkuCgpSZWdhcmRz
+CkFuZHJ6ZWoKCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArCj4gK1RoaXMgZGV2aWNlIGhhcyB0
+d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2RlbGxlZCB1c2luZyB0aGUK
+PiArT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gKwo+ICstIFZpZGVvIHBvcnQgMCBmb3IgRFNJIGlucHV0
+Cj4gKy0gVmlkZW8gcG9ydCAxIGZvciBlRFAgb3V0cHV0Cj4gKwo+ICtFeGFtcGxlCj4gKy0tLS0t
+LS0KPiArCj4gK2VkcC1icmlkZ2VAMmQgewo+ICsJY29tcGF0aWJsZSA9ICJ0aSxzbjY1ZHNpODYi
+Owo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCXJl
+ZyA9IDwweDJkPjsKPiArCj4gKwllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzMgR1BJT19BQ1RJ
+VkVfSElHSD47Cj4gKwlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMz47Cj4gKwlpbnRlcnJ1cHRz
+ID0gPDQgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsKPiArCj4gKwl2Y2Npby1zdXBwbHkgPSA8JnBt
+ODkxNl9sMTc+Owo+ICsJdmNjYS1zdXBwbHkgPSA8JnBtODkxNl9sNj47Cj4gKwl2cGxsLXN1cHBs
+eSA9IDwmcG04OTE2X2wxNz47Cj4gKwl2Y2Mtc3VwcGx5ID0gPCZwbTg5MTZfbDY+Owo+ICsKPiAr
+CWNsb2NrLW5hbWVzID0gInJlZmNsayI7Cj4gKwljbG9ja3MgPSA8JmlucHV0X3JlZmNsaz47Cj4g
+Kwo+ICsJbGFuZS1jb25maWcgPSA8MCAwPiwgLyogTGFuZSAwIGxvZ2ljYWwgaXMgbGFuZSAwIHBo
+eXMgKCFpbnYpICovCj4gKwkJICAgICAgPDEgMT4sIC8qIExhbmUgMSBsb2dpY2FsIGlzIGxhbmUg
+MSBwaHlzIChpbnYpICovCj4gKwkJICAgICAgPDIgMD4sIC8qIExhbmUgMiBsb2dpY2FsIGlzIGxh
+bmUgMiBwaHlzICghaW52KSAqLwo+ICsJCSAgICAgIDwzIDE+OyAvKiBMYW5lIDMgbG9naWNhbCBp
+cyBsYW5lIDMgcGh5cyAoaW52KSAqLwo+ICsKPiArCXBvcnRzIHsKPiArCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJcG9ydEAwIHsKPiArCQkJ
+cmVnID0gPDA+Owo+ICsKPiArCQkJZWRwX2JyaWRnZV9pbjogZW5kcG9pbnQgewo+ICsJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQlwb3J0
+QDEgewo+ICsJCQlyZWcgPSA8MT47Cj4gKwo+ICsJCQllZHBfYnJpZGdlX291dDogZW5kcG9pbnQg
+ewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZlZHBfcGFuZWxfaW4+Owo+ICsJCQl9Owo+ICsJ
+CX07Cj4gKwl9Owo+ICt9CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
