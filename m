@@ -1,40 +1,93 @@
-From: Sibi S <sibis@codeaurora.org>
-Subject: Re: [PATCH v5 5/8] dt-bindings: remoteproc: Add Q6v5 Modem PIL
- binding for SDM845
-Date: Tue, 29 May 2018 20:07:40 +0530
-Message-ID: <3ef231eb-b6c4-b173-89fe-88e376a30b72@codeaurora.org>
-References: <20180521172714.8551-1-sibis@codeaurora.org>
- <20180521172714.8551-6-sibis@codeaurora.org>
- <20180522155626.GA2744@rob-hp-laptop>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v4 5/6] spi: at91-usart: add driver for at91-usart as spi
+Date: Tue, 29 May 2018 16:36:52 +0200
+Message-ID: <7ac6e7ba-1f92-22c4-c989-b64107b8644a@microchip.com>
+References: <20180525171941.26766-1-radu.pirea@microchip.com>
+ <20180525171941.26766-6-radu.pirea@microchip.com>
+ <CAHp75Vc0e=+2YptoFAUuPSpAyxaCUJJqjQPPY5VZHV=MEMOqHQ@mail.gmail.com>
+ <110bb353-b131-348c-8e26-9863b074142d@microchip.com>
+ <0c529082-722c-14d8-7a04-dfeb63d5de92@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180522155626.GA2744@rob-hp-laptop>
+In-Reply-To: <0c529082-722c-14d8-7a04-dfeb63d5de92@microchip.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Radu Pirea <radu.pirea@microchip.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, alexandre.belloni@bootlin.com, Lee Jones <lee.jones@linaro.org>, Richard Genoud <richard.genoud@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Ludovic Desroches <ludovic.desroches@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Will send it out again.
-
-On 05/22/2018 09:26 PM, Rob Herring wrote:
-> On Mon, May 21, 2018 at 10:57:11PM +0530, Sibi Sankar wrote:
->> Add new compatible string for Qualcomm SDM845 SoCs
+On 29/05/2018 at 16:34, Nicolas Ferre wrote:
+> On 29/05/2018 at 16:28, Radu Pirea wrote:
 >>
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 1 +
->>   1 file changed, 1 insertion(+)
+>>
+>> On 05/28/2018 11:21 AM, Andy Shevchenko wrote:
+>>> On Fri, May 25, 2018 at 8:19 PM, Radu Pirea <radu.pirea@microchip.com> wrote:
+>>>> This is the driver for at91-usart in spi mode. The USART IP can be configured
+>>>> to work in many modes and one of them is SPI.
 > 
-> Please add acks/reviewed-bys when posting new versions.
+> [..]
 > 
-> Rob
+>>>> +static int at91_usart_gpio_setup(struct platform_device *pdev)
+>>>> +{
+>>>
+>>>> +       struct device_node      *np = pdev->dev.parent->of_node;
+>>>
+>>> Your driver is not OF specific as far as I can see. Drop all these
+>>> device_node stuff and change API calls respectively.
+>>
+>> Ok. What do you suggest to use instead of OF API to get the count of
+>> cs-gpios and to read their values one by one?
 > 
+> As Alexandre said, we can make this driver OF specific.
+> 
+> What could be interesting is to use the gpio descriptors API and not the
+> older one. This would allow us to have far more control over the gpio
+> that we use in our drivers (Ludovic is converting our drivers to only
+> use gpiod structures).
+
+Oh, but we already said that we cannot.
+Disregard my comment then, sorry for the noise.
+
+> Regards,
+>     Nicolas
+> 
+>>
+>>>
+>>>> +       int                     i;
+>>>
+>>>> +       int                     ret = 0;
+>>>> +       int                     nb = 0;
+>>>
+>>> What happened to indentation?
+>>>
+>>> Redundnant assignment for both.
+>>>
+>>>> +       if (!np)
+>>>> +               return -EINVAL;
+>>>> +
+>>>> +       nb = of_gpio_named_count(np, "cs-gpios");
+>>>> +       for (i = 0; i < nb; i++) {
+>>>> +               int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+>>>> +
+>>>> +               if (cs_gpio < 0)
+>>>> +                       return cs_gpio;
+>>>> +
+>>>> +               if (gpio_is_valid(cs_gpio)) {
+>>>> +                       ret = devm_gpio_request_one(&pdev->dev, cs_gpio,
+>>>> +                                                   GPIOF_DIR_OUT,
+>>>> +                                                   dev_name(&pdev->dev));
+>>>> +                       if (ret)
+>>>> +                               return ret;
+>>>> +               }
+>>>> +       }
+>>>> +
+>>>> +       return 0;
+>>>> +}
+> [..]
+> 
+
 
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Nicolas Ferre
