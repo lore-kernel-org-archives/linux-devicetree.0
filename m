@@ -1,261 +1,93 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v7 5/7] drivers/i2c: Add transfer implementation for FSI algorithm
-Date: Tue, 29 May 2018 17:24:23 -0500
-Message-ID: <1527632665-25707-6-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1527632665-25707-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527632665-25707-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, "Edward A. James" <eajames@us.ibm.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
+Date: Tue, 29 May 2018 15:45:12 -0700
+Message-ID: <a43ce521-ed7f-6126-4ebf-5e0e303d00a3@gmail.com>
+References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
+ <1523956215-28154-13-git-send-email-t-kristo@ti.com>
+ <20180417092924.GB20335@flint.armlinux.org.uk>
+ <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
+ <20180417144913.GD5669@atomide.com>
+ <43ff3894-a287-1558-687c-40f50712735c@ti.com>
+ <20180522200100.GA23937@rob-hp-laptop>
+ <16a6017f-96c8-42d8-38bc-5cdd36d6793f@gmail.com>
+ <20180529173314.GN17671@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180529173314.GN17671@n2100.armlinux.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, trini@konsulko.com, wmills@ti.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+On 05/29/18 10:33, Russell King - ARM Linux wrote:
+> On Tue, May 29, 2018 at 10:05:37AM -0700, Frank Rowand wrote:
+>> On 05/22/18 13:01, Rob Herring wrote:
+>>> I'll tell you up front, I'm not a fan of FIT image (nor uImage, 
+>>> Android boot image, $bootloader image). If you want a collection of 
+>>> files and some configuration data, use a filesystem and a text file.
+> 
+> Me neither.
+> 
+>> My gut feel is that using a filesystem and a text file is the easier way
+>> to create the boot info.  But that also makes applying the overlay(s)
+>> during early Linux boot (at the point of FDT unflattening) impractical
+>> (can't access the file system without a driver, the driver depends on
+>> the devicetree, the devicetree depends upon the overlay).
+> 
+> Why do you want to apply overlays during the kernel boot?  The boot
+> loader should be providing the kernel with the merged DT to describe
+> the system that the kernel is running on - it's not the kernel's
+> job to put that together.
 
-Execute I2C transfers from the FSI-attached I2C master. Use polling
-instead of interrupts as we have no hardware IRQ over FSI.
+I would much prefer that overlays get applied before the unflattened
+devicetree is made available to the kernel instead of applying overlays
+late in the boot (after many susbsystems and drivers are initialized)
+or after boot.
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
----
- drivers/i2c/busses/i2c-fsi.c | 203 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 201 insertions(+), 2 deletions(-)
+If overlays are applied before the unflattened devicetree is made
+available to the kernel then subsystems and drivers do not have to be
+aware of the possibility of the data in the devicetree changing instead
+of being invariant.  (I will call this "apply early overlays" later in
+this email.)
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index c0b17df..78e3586 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -150,6 +150,7 @@ struct fsi_i2c_port {
- 	struct i2c_adapter	adapter;
- 	struct fsi_i2c_master	*master;
- 	u16			port;
-+	u16			xfrd;
- };
- 
- static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
-@@ -234,6 +235,103 @@ static int fsi_i2c_set_port(struct fsi_i2c_port *port)
- 	return rc;
- }
- 
-+static int fsi_i2c_start(struct fsi_i2c_port *port, struct i2c_msg *msg,
-+			 bool stop)
-+{
-+	int rc;
-+	struct fsi_i2c_master *i2c = port->master;
-+	u32 cmd = I2C_CMD_WITH_START | I2C_CMD_WITH_ADDR;
-+
-+	port->xfrd = 0;
-+
-+	if (msg->flags & I2C_M_RD)
-+		cmd |= I2C_CMD_READ;
-+
-+	if (stop || msg->flags & I2C_M_STOP)
-+		cmd |= I2C_CMD_WITH_STOP;
-+
-+	cmd = SETFIELD(I2C_CMD_ADDR, cmd, msg->addr >> 1);
-+	cmd = SETFIELD(I2C_CMD_LEN, cmd, msg->len);
-+
-+	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_CMD, &cmd);
-+
-+	return rc;
-+}
-+
-+static int fsi_i2c_write_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
-+			      u8 fifo_count)
-+{
-+	int write;
-+	int rc = 0;
-+	struct fsi_i2c_master *i2c = port->master;
-+	int bytes_to_write = i2c->fifo_size - fifo_count;
-+	int bytes_remaining = msg->len - port->xfrd;
-+
-+	if (bytes_to_write > bytes_remaining)
-+		bytes_to_write = bytes_remaining;
-+
-+	while (bytes_to_write > 0) {
-+		write = bytes_to_write;
-+		/* fsi limited to max 4 byte aligned ops */
-+		if (bytes_to_write > 4)
-+			write = 4;
-+		else if (write == 3)
-+			write = 2;
-+
-+		rc = fsi_device_write(i2c->fsi, I2C_FSI_FIFO,
-+				      &msg->buf[port->xfrd], write);
-+		if (rc)
-+			return rc;
-+
-+		port->xfrd += write;
-+		bytes_to_write -= write;
-+	}
-+
-+	return rc;
-+}
-+
-+static int fsi_i2c_read_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
-+			     u8 fifo_count)
-+{
-+	int read;
-+	int rc = 0;
-+	struct fsi_i2c_master *i2c = port->master;
-+	int xfr_remaining = msg->len - port->xfrd;
-+	u32 dummy;
-+
-+	while (fifo_count) {
-+		read = fifo_count;
-+		/* fsi limited to max 4 byte aligned ops */
-+		if (fifo_count > 4)
-+			read = 4;
-+		else if (read == 3)
-+			read = 2;
-+
-+		if (xfr_remaining) {
-+			if (xfr_remaining < read)
-+				read = xfr_remaining;
-+
-+			rc = fsi_device_read(i2c->fsi, I2C_FSI_FIFO,
-+					     &msg->buf[port->xfrd], read);
-+			if (rc)
-+				return rc;
-+
-+			port->xfrd += read;
-+			xfr_remaining -= read;
-+		} else {
-+			/* no more buffer but data in fifo, need to clear it */
-+			rc = fsi_device_read(i2c->fsi, I2C_FSI_FIFO, &dummy,
-+					     read);
-+			if (rc)
-+				return rc;
-+		}
-+
-+		fifo_count -= read;
-+	}
-+
-+	return rc;
-+}
-+
- static int fsi_i2c_reset_bus(struct fsi_i2c_master *i2c)
- {
- 	int i, rc;
-@@ -396,17 +494,118 @@ static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
- 	return -ETIME;
- }
- 
-+static int fsi_i2c_handle_status(struct fsi_i2c_port *port,
-+				 struct i2c_msg *msg, u32 status)
-+{
-+	int rc;
-+	u8 fifo_count;
-+
-+	if (status & I2C_STAT_ERR) {
-+		rc = fsi_i2c_abort(port, status);
-+		if (rc)
-+			return rc;
-+
-+		if (status & I2C_STAT_INV_CMD)
-+			return -EINVAL;
-+
-+		if (status & (I2C_STAT_PARITY | I2C_STAT_BE_OVERRUN |
-+		    I2C_STAT_BE_ACCESS))
-+			return -EPROTO;
-+
-+		if (status & I2C_STAT_NACK)
-+			return -ENXIO;
-+
-+		if (status & I2C_STAT_LOST_ARB)
-+			return -EAGAIN;
-+
-+		if (status & I2C_STAT_STOP_ERR)
-+			return -EBADMSG;
-+
-+		return -EIO;
-+	}
-+
-+	if (status & I2C_STAT_DAT_REQ) {
-+		fifo_count = GETFIELD(I2C_STAT_FIFO_COUNT, status);
-+
-+		if (msg->flags & I2C_M_RD)
-+			rc = fsi_i2c_read_fifo(port, msg, fifo_count);
-+		else
-+			rc = fsi_i2c_write_fifo(port, msg, fifo_count);
-+
-+		return rc;
-+	}
-+
-+	if (status & I2C_STAT_CMD_COMP) {
-+		if (port->xfrd < msg->len)
-+			rc = -ENODATA;
-+		else
-+			rc = msg->len;
-+
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsi_i2c_wait(struct fsi_i2c_port *port, struct i2c_msg *msg,
-+			unsigned long timeout)
-+{
-+	u32 status = 0;
-+	int rc;
-+	unsigned long start = jiffies;
-+
-+	do {
-+		rc = fsi_i2c_read_reg(port->master->fsi, I2C_FSI_STAT,
-+				      &status);
-+		if (rc)
-+			return rc;
-+
-+		if (status & I2C_STAT_ANY_RESP) {
-+			rc = fsi_i2c_handle_status(port, msg, status);
-+			if (rc < 0)
-+				return rc;
-+
-+			/* cmd complete and all data xfrd */
-+			if (rc == msg->len)
-+				return 0;
-+
-+			/* need to xfr more data, but maybe don't need wait */
-+			continue;
-+		}
-+
-+		usleep_range(I2C_LOCAL_SLEEP_MIN_US, I2C_LOCAL_SLEEP_MAX_US);
-+	} while (time_after(start + timeout, jiffies));
-+
-+	return -ETIME;
-+}
-+
- static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 			int num)
- {
--	int rc;
-+	int i, rc;
-+	unsigned long start_time;
- 	struct fsi_i2c_port *port = adap->algo_data;
-+	struct i2c_msg *msg;
- 
- 	rc = fsi_i2c_set_port(port);
- 	if (rc)
- 		return rc;
- 
--	return -EOPNOTSUPP;
-+	for (i = 0; i < num; ++i) {
-+		msg = msgs + i;
-+		start_time = jiffies;
-+
-+		rc = fsi_i2c_start(port, msg, i == num - 1);
-+		if (rc)
-+			return rc;
-+
-+		rc = fsi_i2c_wait(port, msg,
-+				  adap->timeout - (jiffies - start_time));
-+		if (rc)
-+			return rc;
-+	}
-+
-+	return 0;
- }
- 
- static u32 fsi_i2c_functionality(struct i2c_adapter *adap)
--- 
-1.8.3.1
+There are use cases of overlays where the overlay is not available until
+late in the boot, or after the boot completes.  I am not suggesting that
+those use cases be ignored.  That is a completely different conversation.
+
+If overlays are applied before the unflattened devicetree is made
+available to the kernel, there are at least two obvious methods
+(and I can think of at least one more) -- either the kernel does it
+or the bootloader does it.  I do not see either of the two as being
+the obvious and only correct choice.  If the kernel does it, then
+there is no need for multiple bootloaders to implement the same code.
+If the bootloaders do it, then there is no need for multiple kernels
+(Linux, BSD, etc) to implement the same code.  I do not have a
+strong opinion about whether the bootloaders or the kernels are a
+better place to apply early overlays.
+
+
+> The whole point of DT is to make the kernel _less_ tied to the hardware
+> and more generic.  If we're going to introduce an entirely new set of
+> drivers into the kernel to "probe" the hardware to determine which
+> overlays are required, then that's really defeating the purpose of DT.
+
+If you read my circular dependency sentence carefully, I said a kernel
+driver is impractical for the task of getting the overlay.  So I agree.
+
+If the kernel applies the overlay, an alternative to drivers is that the
+kernel could receive the overlay(s) in a similar manner as the method it
+currently receives the base devicetree.  (The overlay(s) could be
+appended to the base devicetree, a wrapper could be placed around the
+base devicetree and the overlay(s), or some other implementation.  There
+are multiple ways to achieve the same result.)
