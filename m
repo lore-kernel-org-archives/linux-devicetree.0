@@ -1,42 +1,43 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v2 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
- driver
-Date: Tue, 29 May 2018 11:35:41 +0300
-Message-ID: <20180529083541.GA13528@localhost.localdomain>
-References: <20180528090003.GA8778@localhost.localdomain>
- <20180529073958.GB4790@dell>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] mfd: qcom-spmi-pmic: Add support for
+ pm8005,pm8998,pmi8998
+Date: Tue, 29 May 2018 09:38:02 +0100
+Message-ID: <20180529083802.GA8038@dell>
+References: <20180502163535.208548-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180529073958.GB4790@dell>
+In-Reply-To: <20180502163535.208548-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Wed, 02 May 2018, Stephen Boyd wrote:
 
-On Tue, May 29, 2018 at 08:39:58AM +0100, Lee Jones wrote:
-> On Mon, 28 May 2018, Matti Vaittinen wrote:
+> Add the compatibles and PMIC ids for the pm8005, pm8998, and pmi8998
+> PMICS found on MSM8998 and SDM845 based platforms.
 > 
-> > Patch series adding support for ROHM BD71837 PMIC.
-> FYI, this patch-set is going to be difficult to manage since it was
-> not sent 'threaded'.
+> Cc: <devicetree@vger.kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org> 
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
 > 
-> If/when you send a subsequent version, could you please ensure you
-> send the set threaded so the patches keep in relation to one another
-> as they are reviewed?
+> Changes from v1:
+>  * Picked up review tags
+>  * Reordered lists to be based on id numbers
+> 
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 3 +++
+>  drivers/mfd/qcom-spmi-pmic.c                             | 6 ++++++
+>  2 files changed, 9 insertions(+)
 
-Thanks for the guidance. I have not sent so many patches to community so
-I am grateful also from all the practical tips =) Just one slight problem.
-I have only seen emails being threaded when one is replying to an email.
-So how should I send my patches in same thread? Just send first one and
-then send subsequent patches as replies?
+Applied, thanks.
 
-I just killed some unused definitions and one unused variable from the
-code so I am about to send new version. I'll try doing that as a threaded
-series and resend all the patches as v3.
-
-Br,
-	Matti Vaittinen
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
