@@ -1,48 +1,23 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v10 0/2] Initial Allwinner V3s CSI Support
-Date: Wed, 30 May 2018 12:19:34 +0300
-Message-ID: <20180530091934.tbd6xbyr5s3ipn3v@paasikivi.fi.intel.com>
-References: <20180517090224.u3ygdzjr77im2mmp@flea>
- <20180529095757.qkz7jyuxza7movbc@flea.home>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 3/5] crypto: ccree: silence debug prints
+Date: Tue, 29 May 2018 17:13:45 +0100
+Message-ID: <20180529161345.rhx73mixbnxrfzum@verge.net.au>
+References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
+ <1527171551-21979-4-git-send-email-gilad@benyossef.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180529095757.qkz7jyuxza7movbc@flea.home>
+In-Reply-To: <1527171551-21979-4-git-send-email-gilad@benyossef.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Jacob Chen <jacob-chen@iotwrt.com>, Yannick Fertre <yannick.fertre@st.com>, Thierry Reding <treding@nvidia.com>
+To: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 11:57:57AM +0200, Maxime Ripard wrote:
-> On Thu, May 17, 2018 at 11:02:24AM +0200, Maxime Ripard wrote:
-> > On Fri, May 04, 2018 at 02:44:08PM +0800, Yong Deng wrote:
-> > > This patchset add initial support for Allwinner V3s CSI.
-> > > 
-> > > Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> > > interface and CSI1 is used for parallel interface. This is not
-> > > documented in datasheet but by test and guess.
-> > > 
-> > > This patchset implement a v4l2 framework driver and add a binding 
-> > > documentation for it. 
-> > > 
-> > > Currently, the driver only support the parallel interface. And has been
-> > > tested with a BT1120 signal which generating from FPGA. The following
-> > > fetures are not support with this patchset:
-> > >   - ISP 
-> > >   - MIPI-CSI2
-> > >   - Master clock for camera sensor
-> > >   - Power regulator for the front end IC
-> > 
-> > I tested it on my H3 with a parallel camera, and it still works. Thanks!
-> > 
-> > Hans, Sakari, any chance this might land in 4.18?
+On Thu, May 24, 2018 at 03:19:08PM +0100, Gilad Ben-Yossef wrote:
+> The cache parameter register configuration was being too verbose.
+> Use dev_dbg() to only provide the information if needed.
 > 
-> Ping?
+> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 
-I'll try to look into this soonish but it seems to be too late for 4.18.
-Sorry about that.
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
