@@ -1,53 +1,39 @@
-Return-Path: <SRS0=GIEb=IQ=the-dreams.de=wsa@kernel.org>
-Date: Tue, 29 May 2018 20:08:27 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: rcar: document R8A77980 bindings
-Message-ID: <20180529180827.lxcaval2kter63po@ninjato>
-References: <95b945f7-1e6c-39f1-e101-06ed748ccec2@cogentembedded.com>
+Return-Path: <SRS0=fx7s=IQ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="23dsutfutlrd56ce"
-Content-Disposition: inline
+Sender: geert.uytterhoeven@gmail.com
 In-Reply-To: <95b945f7-1e6c-39f1-e101-06ed748ccec2@cogentembedded.com>
+References: <95b945f7-1e6c-39f1-e101-06ed748ccec2@cogentembedded.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 29 May 2018 18:34:48 +0200
+Message-ID: <CAMuHMdWe5uZ6rX6a6NWL3O+VZfDhCaVtUbfqEkvqWEPqx7eLMA@mail.gmail.com>
+Subject: Re: [PATCH] i2c: rcar: document R8A77980 bindings
+Content-Type: text/plain; charset="UTF-8"
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-
---23dsutfutlrd56ce
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, May 28, 2018 at 10:39:05PM +0300, Sergei Shtylyov wrote:
-> R-Car V3H (R8A77980) SoC also has the R-Car gen3 compatible I2C controlle=
-r,
+On Mon, May 28, 2018 at 9:39 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> R-Car V3H (R8A77980) SoC also has the R-Car gen3 compatible I2C controller,
 > so document the SoC  specific bindings.
->=20
+>
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
 
-Applied to for-next, thanks!
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+> ---
+> The patch is against Wolfram Sang's 'linux.git' repo's 'i2c/for-next' branch
+> but I wouldn't mind if it was applied to the 'i2c/for-current' branch. :-)
 
---23dsutfutlrd56ce
-Content-Type: application/pgp-signature; name="signature.asc"
+Who cares? A trivial DT binding update is not critical.
 
------BEGIN PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsNlxsACgkQFA3kzBSg
-KbbIyBAAhBQqh/eQcZmKv2EebhJBqJwxCdrS2UIMj3VODXFsUuWZ3GVwDymLWIuJ
-QxbGqFRiLUsGwVfJrfb00IOZfjfvlUOnAU7ftoiDwsCO19uI/ADy63amUV+/gvMa
-SjVlUI7NMYydBm7vxArdRQi17bGpYwjiiMk4v7aNfNhEBW7f2KvALnriQfxb11CE
-YLaVATPFxZZYRx0jAiP9Xgu99697cCMDYGGhdIV75nRtSeitqIx6SqErpcQeyKfN
-2gGnKWHLjAHmQRdISF5E9Kj0iW5WnzIfyyTwzpomoxIfQO7zU4fi9/Ci7qdknoxI
-nhc1l3CH18+XWVgfEvBJiqYIG+W/xxDkjiCPbH12USLtXRoPbYb0Sz87G8+OBYYl
-dZ+Zo1c9TmAjWcE18csRIVFtKBF9HZJol6DNR4WxTiyHyRKc1NZzvuIT4CX0EtgO
-f93C5RdlaGpALYuHYuOEAoa1pqQWaxzAVCMU+8gjhE/DMVyDTrxy3SP50EThFPMh
-8WnwSmWg6q9bPO55mgwASENTxGIE2ypFuY2e5uKx9am56LibJ85KfTv6wCw37Mc0
-I0j9dmBrXFF0/2nfFohRgSX3dhP958lrLuiEufGgC0nAAOFYkw1RhxxM7uTDvzoJ
-oT+tXEmCdxjwh0Ak1ltoRHJzRSfg8H5QzmtOAEQUVwZPfE8Sw+A=
-=gufs
------END PGP SIGNATURE-----
+                        Geert
 
---23dsutfutlrd56ce--
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
