@@ -1,66 +1,74 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-Date: Tue, 29 May 2018 12:59:15 -0700
-Message-ID: <5bf470c0-8737-273e-c138-58a05d7d9a30@infradead.org>
-References: <1527620084-94864-1-git-send-email-vishal.sagar@xilinx.com>
- <1527620084-94864-3-git-send-email-vishal.sagar@xilinx.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 07/11] PM / devfreg: Add support policy notifiers
+Date: Tue, 29 May 2018 13:02:40 -0700
+Message-ID: <20180529200240.GI168650@google.com>
+References: <20180525203043.249193-8-mka@chromium.org>
+ <20180525203043.249193-1-mka@chromium.org>
+ <CGME20180525203128epcas5p138dbf89498c03bc2a9221aa662001fd4@epcms1p3>
+ <20180528051949epcms1p3bedd6ac3e2f20d0bcd8cb082349d97fa@epcms1p3>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527620084-94864-3-git-send-email-vishal.sagar@xilinx.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180528051949epcms1p3bedd6ac3e2f20d0bcd8cb082349d97fa@epcms1p3>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vishal Sagar <vishal.sagar@xilinx.com>, hyun.kwon@xilinx.com, laurent.pinchart@ideasonboard.com, michal.simek@xilinx.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, dineshk@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2018 11:54 AM, Vishal Sagar wrote:
+On Mon, May 28, 2018 at 02:19:49PM +0900, MyungJoo Ham wrote:
+> >Policy notifiers are called before a frequency change and may narrow
+> >the min/max frequency range in devfreq_policy, which is used to adjust
+> >the target frequency if it is beyond this range.
+> >
+> >Also add a few helpers:
+> > - devfreq_verify_within_[dev_]limits()
+> >    - should be used by the notifiers for policy adjustments.
+> > - dev_to_devfreq()
+> >    - lookup a devfreq strict from a device pointer
+> >
+> >Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> >---
+> > drivers/devfreq/devfreq.c | 47 +++++++++++++++++++++-------
+> > include/linux/devfreq.h   | 66 +++++++++++++++++++++++++++++++++++++++
+> > 2 files changed, 102 insertions(+), 11 deletions(-)
 > 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> ---
->  drivers/media/platform/xilinx/Kconfig           |   12 +
->  drivers/media/platform/xilinx/Makefile          |    1 +
->  drivers/media/platform/xilinx/xilinx-csi2rxss.c | 1751 +++++++++++++++++++++++
->  include/uapi/linux/xilinx-csi2rxss.h            |   25 +
->  include/uapi/linux/xilinx-v4l2-controls.h       |   14 +
->  5 files changed, 1803 insertions(+)
->  create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
->  create mode 100644 include/uapi/linux/xilinx-csi2rxss.h
+> Hello Matthias,
 > 
-> diff --git a/drivers/media/platform/xilinx/Kconfig b/drivers/media/platform/xilinx/Kconfig
-> index a5d21b7..06d5944 100644
-> --- a/drivers/media/platform/xilinx/Kconfig
-> +++ b/drivers/media/platform/xilinx/Kconfig
-> @@ -8,6 +8,18 @@ config VIDEO_XILINX
 > 
->  if VIDEO_XILINX
-> 
-> +config VIDEO_XILINX_CSI2RXSS
-> +       tristate "Xilinx CSI2 Rx Subsystem"
-> +       depends on VIDEO_XILINX
-> +       help
-> +         Driver for Xilinx MIPI CSI2 Rx Subsystem. This is a V4L sub-device
-> +         based driver that takes input from CSI2 Tx source and converts
-> +         it into an AXI4-Stream. It has a DPHY (whose register interface
-> +         can be enabled, an optional I2C controller and an optional Video
+> Why should we have yet another notifier from an instance of devfreq?
+> Wouldn't it better to let the current notifier (transition notifier)
+> handle new events as well by adding possible event states to it?
 
-	    can be enabled),
+Honestly the main reason is that I sought inspiration from cpufreq,
+which uses a dedicated policy notifier. Unfortunately this change
+predates the git history so I don't know what was the exact rationale
+to do it this way.
 
-> +         Format Bridge which converts the AXI4-Stream data to Xilinx Video
-> +         Bus formats based on UG934. The driver is used to set the number
-> +         of active lanes and get short packet data.
-> +
->  config VIDEO_XILINX_TPG
->         tristate "Xilinx Video Test Pattern Generator"
->         depends on VIDEO_XILINX
+Some minor advantages that I see are:
 
+- transition notifiers aren't bothered about adjustments and viceversa
+- different data types are passed for transitions and adjustments,
+  which makes code of notifiers that handle both a bit more messy.
 
+> Anyway, is this the reason why you've separated some data of devfreq
+> into "policy" struct? (I was wondering why while reading commit 6/11).
 
-> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+The DEVFREQ_ADJUST is the reason for the "policy struct". With this
+change we are dealing with 3 types of frequency pairs: user
+(df->min/max_freq), devinfo (df->scaling_min/max_freq) and the
+policy/adjustable ones. I think it is cleaner to group them in a
+struct (and sub-structs), rather than having 6 individual
+<type>_min/max_freq variables. Also it allows to only pass the policy
+object to the notifiers, instead of the entire devfreq device.
 
-:(
+I opted to do the introduction of the struct policy in a separate NOP
+patch, because I think it is easier to review the 'reorg' churn
+and the functional change separately.
 
--- 
-~Randy
+Please let me know if you'd prefer to have certain things done
+differently.
+
+Thanks
+
+Matthias
