@@ -1,79 +1,35 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 6/9] PM / Domains: Don't attach devices in genpd with multi PM domains
-Date: Tue, 29 May 2018 12:04:18 +0200
-Message-ID: <20180529100421.31022-7-ulf.hansson@linaro.org>
-References: <20180529100421.31022-1-ulf.hansson@linaro.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/2] hwmon: Add NPCM7xx PWM driver support
+Date: Tue, 29 May 2018 13:02:19 +0300
+Message-ID: <1527588141-18639-1-git-send-email-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529100421.31022-1-ulf.hansson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Hunter <jonathanh@nvidia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Todor Tomov <todor.tomov@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, linux@roeck-us.net, avifishman70@gmail.com, yuenn@google.com, brendanhiggins@google.com, venture@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The power-domain DT property may now contain a list of PM domain
-specifiers, which represents that a device are partitioned across multiple
-PM domains. This leads to a new situation in genpd_dev_pm_attach(), as only
-one PM domain can be attached per device.
+This patch set adds Pulse Width Modulation (PWM) support 
+for the Nuvoton NPCM7xx Baseboard Management Controller (BMC).
 
-To remain things simple for the most common configuration, when a single PM
-domain is used, let's treat the multiple PM domain case as being specific.
+The NPCM7xx PWM controller can support 8 PWM output ports.
 
-In other words, let's change genpd_dev_pm_attach() to check for multiple PM
-domains and prevent it from attach any PM domain for this case. Instead,
-leave this to be managed separately, from following changes to genpd.
+The hwmon driver provides sysfs entries through which the user can 
+configure and get the duty cycle between 0 (disable the specific PWM) 
+to 255 of particular PWM output port.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Suggested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
+The NPCM7xx PWM driver tested on NPCM750 evaluation board.
 
-Changes in v2:
-	- Minor update to changelog to mention "PM domain specifiers" rather
-	than a "list of phandles".
+Tomer Maimon (2):
+  dt-binding: hwmon: Add NPCM7xx PWM documentation
+  hwmon: npcm-pwm: add NPCM7xx PWM driver
 
----
- drivers/base/power/domain.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/hwmon/npcm7xx-pwm.txt      |  25 ++
+ drivers/hwmon/Kconfig                              |   6 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/npcm7xx-pwm.c                        | 363 +++++++++++++++++++++
+ 4 files changed, 395 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/npcm7xx-pwm.txt
+ create mode 100644 drivers/hwmon/npcm7xx-pwm.c
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 7ebf7993273a..12a20f21974d 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -2229,10 +2229,10 @@ static void genpd_dev_pm_sync(struct device *dev)
-  * attaches the device to retrieved pm_domain ops.
-  *
-  * Returns 1 on successfully attached PM domain, 0 when the device don't need a
-- * PM domain or a negative error code in case of failures. Note that if a
-- * power-domain exists for the device, but it cannot be found or turned on,
-- * then return -EPROBE_DEFER to ensure that the device is not probed and to
-- * re-try again later.
-+ * PM domain or when multiple power-domains exists for it, else a negative error
-+ * code. Note that if a power-domain exists for the device, but it cannot be
-+ * found or turned on, then return -EPROBE_DEFER to ensure that the device is
-+ * not probed and to re-try again later.
-  */
- int genpd_dev_pm_attach(struct device *dev)
- {
-@@ -2243,10 +2243,18 @@ int genpd_dev_pm_attach(struct device *dev)
- 	if (!dev->of_node)
- 		return 0;
- 
-+	/*
-+	 * Devices with multiple PM domains must be attached separately, as we
-+	 * can only attach one PM domain per device.
-+	 */
-+	if (of_count_phandle_with_args(dev->of_node, "power-domains",
-+				       "#power-domain-cells") != 1)
-+		return 0;
-+
- 	ret = of_parse_phandle_with_args(dev->of_node, "power-domains",
- 					"#power-domain-cells", 0, &pd_args);
- 	if (ret < 0)
--		return 0;
-+		return ret;
- 
- 	mutex_lock(&gpd_list_lock);
- 	pd = genpd_get_from_provider(&pd_args);
 -- 
-2.17.0
+2.14.1
