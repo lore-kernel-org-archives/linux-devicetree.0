@@ -1,131 +1,52 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: document the STMFX pinctrl
- bindings
-Date: Tue, 29 May 2018 08:36:25 +0100
-Message-ID: <20180529073625.GA4790@dell>
-References: <1523440025-18077-2-git-send-email-amelie.delaunay@st.com>
- <20180416181940.4b5z4svbde3ompij@rob-hp-laptop>
- <CACRpkdYOMjjYyWQz7PK34jqUK7z5-CmH1HY6un4k8nBn7Cq8ag@mail.gmail.com>
- <55392fe7-20d2-9447-60f9-4bd226b60195@st.com>
- <CACRpkda2VGo0FOdR09tKiTpg66NgoWjubaHp_J3372y=a772Zg@mail.gmail.com>
- <b9005dd8-8214-ceab-0f88-ff1a51b44e34@st.com>
- <20180517063640.GK5130@dell>
- <28c374e6-b440-f785-b371-03fe15c8bc4b@st.com>
- <CACRpkdbZ2Hr7cc5+dyPaL0CKYuy2-oosEr=UPo60+3beDCVi9A@mail.gmail.com>
- <8d8b0f05-7f04-e718-7a45-148af38a03d4@st.com>
+Subject: Re: [PATCH v2 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
+ driver
+Date: Tue, 29 May 2018 08:39:58 +0100
+Message-ID: <20180529073958.GB4790@dell>
+References: <20180528090003.GA8778@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8d8b0f05-7f04-e718-7a45-148af38a03d4@st.com>
+In-Reply-To: <20180528090003.GA8778@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 May 2018, Amelie DELAUNAY wrote:
+On Mon, 28 May 2018, Matti Vaittinen wrote:
 
-> On 05/24/2018 09:13 AM, Linus Walleij wrote:
-> > On Fri, May 18, 2018 at 9:29 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
-> >> On 05/17/2018 08:36 AM, Lee Jones wrote:
-> >>> On Wed, 16 May 2018, Amelie DELAUNAY wrote:
-> >>>> On 05/16/2018 04:20 PM, Linus Walleij wrote:
-> >>>>> On Wed, May 9, 2018 at 9:56 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
-> >>>>>
-> >>>>>> Indeed, stmfx has other functions than GPIO. But, after comments done
-> >>>>>> here: [1] and there: [2], it has been decided to move MFD parent/GPIO
-> >>>>>> child drivers into a single PINCTRL/GPIO driver because of the following
-> >>>>>> reasons:
-> >>>>>> - Other stmfx functions (IDD measurement and TouchScreen controller) are
-> >>>>>> not used on any of the boards using an stmfx and supported by Linux, so
-> >>>>>> no way to test these functions, and no need to maintain them while they
-> >>>>>> are not being used.
-> >>>>>> - But, in the case a new board will use more than GPIO function on
-> >>>>>> stmfx, the actual implementation allow to easily extract common init
-> >>>>>> part of stmfx and put it in an MFD driver.
-> >>>>>>
-> >>>>>> So I could remove gpio sub-node and put its contents in stmfx node and
-> >>>>>> keep single PINCTRL/GPIO driver for the time being.
-> >>>>>> Please advise,
-> >>>>>
-> >>>>> I would normally advice to use the right modeling from the start, create
-> >>>>> the MFD driver and spawn the devices from there. It is confusing
-> >>>>> if the layout of the driver(s) doesn't really match the layout of the
-> >>>>> hardware.
-> >>>>>
-> >>>>> I understand that it is a pain to write new MFD drivers to get your
-> >>>>> things going and it would be "nice to get this working really quick
-> >>>>> now" but in my experience it is better to do it right from the start.
-> >>>>>
-> >>>>
-> >>>> Hi Linus,
-> >>>>
-> >>>> Thanks for your advice. I understand the point.
-> >>>> So, the right modeling would be to:
-> >>>> - create an MFD driver with the common init part of stmfx
-> >>>> - remove all common init part of stmfx-pinctrl driver and keep only all
-> >>>> gpio/pinctrl functions.
-> >>>>
-> >>>> I will not develop the other stmfx functions (IDD measurement driver and
-> >>>> TouchScreen controller driver) because, as explained ealier, they are
-> >>>> not used on any of the boards using an stmfx and supported by Linux, so
-> >>>> no way to test these functions, and no need to maintain them while they
-> >>>> are not being used.
-> >>>>
-> >>>> Lee, are you OK with that ?
-> >>>
-> >>> I missed a lot of this conversation I think, but from what I've read,
-> >>> it sounds fine.
-> >>>
-> >>
-> >> I summarize the situation:
-> >> - I still don't have an official datasheet for STMFX device which could
-> >> justify the use of an MFD driver;
-> >> - the MFD driver will contain the STMFX chip initialization stuff such
-> >> as regmap initialization (regmap structure will be shared with the
-> >> child), chip initialization, global interrupt management;
-> >> - there will be only one child (GPIO/PINCTRL node) for the time being.
-> > 
-> > But there will be more devices in it. And they will invariably be put
-> > to use later, and there will be new versions of the chip as well, and
-> > then you will be happy about doing the MFD core, which makes it
-> > easy to add new variants with different subdevices.
-> > 
-> >> So, is "MFD driver + GPIO/PINCTRL driver" the right modeling, and does
-> >> it still sound fine after this summary ? :)
-> > 
-> > No I think it should use an MFD core.
-> > 
-> > Mainly because of device tree concerns.
-> > 
-> > The main reason is that the device tree bindings will be different if
-> > you add an MFD core later, the GPIO and pinctrl driver will
-> > move to a child node, making old device trees incompatible.
-> > 
-> > We could have a single driver in GPIO+pin control if it is a child
-> > of an MFD node in the device tree, but it doesn't make much
-> > sense as the I2C device need to be probing to the MFD core.
-> > 
+> Patch series adding support for ROHM BD71837 PMIC.
 > 
-> I agree with you Linus, and that's why all STMFX chip initialization 
-> stuff was decorrelated in pinctrl-stmfx. This shows that this stuff 
-> needs to be in an MFD core.
+> BD71837 is a programmable Power Management IC for powering single-core,
+> dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+> low BOM cost and compact solution footprint. It integrates 8 buck
+> regulators and 7 LDO’s to provide all the power rails required by the
+> SoC and the commonly used peripherals.
 > 
-> But as there is only one child for now (due to the reasons mentioned 
-> earlier), it can suggest that it is not a Multi-Function Device.
+> The driver aims to not limit the usage of PMIC. Thus the buck and LDO
+> naming is generic and not tied to any specific purposes. However there
+> is following limitations which make it mostly suitable for use cases
+> where the processor where PMIC driver is running is powered by the PMIC:
 > 
-> I'm not able to target when IDD or TS functions will be required on a 
-> Linux product, but it still makes sense to consider that these functions 
-> will be used on a Linux product.
+> - The PMIC is not re-initialized if it resets. PMIC may reset as a
+>   result of voltage monitoring (over/under voltage) or due to reset
+>   request. Driver is only initializing PMIC at probe. This is not
+>   problem as long as processor controlling PMIC is powered by PMIC.
 > 
-> So, I think MFD core + GPIO/pinctrl driver is the right modeling, but I 
-> wanted to be sure that this is okay for everyone. I don't want to spend 
-> time on something that will not be accepted due to its modeling.
+> - The PMIC internal state machine is ignored by driver. Driver assumes
+>   the PMIC is wired so that it is always in "run" state when controlled
+>   by the driver.
 
-It's fine.  Go ahead.
+FYI, this patch-set is going to be difficult to manage since it was
+not sent 'threaded'.  As people start replying to different patches,
+they are going to scatter-bomb throughout all of the recipient's
+inboxes.
 
-Thanks for seeing this through to a reasonable conclusion.
+If/when you send a subsequent version, could you please ensure you
+send the set threaded so the patches keep in relation to one another
+as they are reviewed?
 
 -- 
 Lee Jones [李琼斯]
