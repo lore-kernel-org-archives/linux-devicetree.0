@@ -1,174 +1,86 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77980: add I2C support
-Date: Tue, 29 May 2018 14:05:04 +0100
-Message-ID: <20180529130504.lpkpgads7lfomois@verge.net.au>
-References: <e9c94553-be9d-0eec-a1ee-1713bb97fbab@cogentembedded.com>
- <3675b19f-b800-172f-9472-c47a37760fa9@cogentembedded.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v4 5/6] spi: at91-usart: add driver for at91-usart as spi
+Date: Tue, 29 May 2018 16:34:37 +0200
+Message-ID: <0c529082-722c-14d8-7a04-dfeb63d5de92@microchip.com>
+References: <20180525171941.26766-1-radu.pirea@microchip.com>
+ <20180525171941.26766-6-radu.pirea@microchip.com>
+ <CAHp75Vc0e=+2YptoFAUuPSpAyxaCUJJqjQPPY5VZHV=MEMOqHQ@mail.gmail.com>
+ <110bb353-b131-348c-8e26-9863b074142d@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <3675b19f-b800-172f-9472-c47a37760fa9@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <110bb353-b131-348c-8e26-9863b074142d@microchip.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radu Pirea <radu.pirea@microchip.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, alexandre.belloni@bootlin.com, Lee Jones <lee.jones@linaro.org>, Richard Genoud <richard.genoud@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Ludovic Desroches <ludovic.desroches@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 11:13:08PM +0300, Sergei Shtylyov wrote:
-> Define the generic R8A77980 parts of the I2C[0-5] device node.
+On 29/05/2018 at 16:28, Radu Pirea wrote:
 > 
-> Based on the original (and large) patch by Vladimir Barinov.
 > 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
->  arch/arm64/boot/dts/renesas/r8a77980.dtsi |  111 ++++++++++++++++++++++++++++++
->  1 file changed, 111 insertions(+)
-> 
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -16,6 +16,15 @@
->  	#address-cells = <2>;
->  	#size-cells = <2>;
->  
-> +	aliases {
-> +		i2c0 = &i2c0;
-> +		i2c1 = &i2c1;
-> +		i2c2 = &i2c2;
-> +		i2c3 = &i2c3;
-> +		i2c4 = &i2c4;
-> +		i2c5 = &i2c5;
-> +	};
-> +
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> @@ -135,6 +144,108 @@
->  			#power-domain-cells = <1>;
->  		};
->  
-> +		i2c0: i2c@e6500000 {
-> +			compatible = "renesas,i2c-r8a77980",
-> +				     "renesas,rcar-gen3-i2c";
-> +			reg = <0 0xe6500000 0 0x40>;
-> +			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 931>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 931>;
-> +			dmas = <&dmac1 0x91>, <&dmac1 0x90>,
-> +			       <&dmac2 0x91>, <&dmac2 0x90>;
-> +			dma-names = "tx", "rx", "tx", "rx";
-> +			i2c-scl-internal-delay-ns = <6>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c1: i2c@e6508000 {
-> +			compatible = "renesas,i2c-r8a77980",
-> +				     "renesas,rcar-gen3-i2c";
-> +			reg = <0 0xe6508000 0 0x40>;
-> +			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 930>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 930>;
-> +			dmas = <&dmac1 0x93>, <&dmac1 0x92>,
-> +			       <&dmac2 0x93>, <&dmac2 0x92>;
-> +			dma-names = "tx", "rx", "tx", "rx";
-> +			i2c-scl-internal-delay-ns = <6>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c2: i2c@e6510000 {
-> +			compatible = "renesas,i2c-r8a77980",
-> +				     "renesas,rcar-gen3-i2c";
-> +			reg = <0 0xe6510000 0 0x40>;
-> +			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 929>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 929>;
-> +			dmas = <&dmac1 0x95>, <&dmac1 0x94>,
-> +			       <&dmac2 0x95>, <&dmac2 0x94>;
-> +			dma-names = "tx", "rx", "tx", "rx";
-> +			i2c-scl-internal-delay-ns = <6>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c3: i2c@e66d0000 {
-> +			compatible = "renesas,i2c-r8a77980",
-> +				     "renesas,rcar-gen3-i2c";
-> +			reg = <0 0xe66d0000 0 0x40>;
-> +			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 928>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 928>;
-> +			dmas = <&dmac1 0x97>, <&dmac1 0x96>,
-> +			       <&dmac2 0x97>, <&dmac2 0x96>;
-> +			dma-names = "tx", "rx", "tx", "rx";
-> +			i2c-scl-internal-delay-ns = <6>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
+> On 05/28/2018 11:21 AM, Andy Shevchenko wrote:
+>> On Fri, May 25, 2018 at 8:19 PM, Radu Pirea <radu.pirea@microchip.com> wrote:
+>>> This is the driver for at91-usart in spi mode. The USART IP can be configured
+>>> to work in many modes and one of them is SPI.
 
-DMA for i2c3 and i2c4  seems unclear in v0.80 and v1.00 of the User's Manual.
-Although what is described here does match v0.55E of the User's Manual.
-Have you been able to confirm what is correct here?
+[..]
 
-Other than that this patch looks fine to me.
-
-> +
-> +		i2c4: i2c@e66d8000 {
-> +			compatible = "renesas,i2c-r8a77980",
-> +				     "renesas,rcar-gen3-i2c";
-> +			reg = <0 0xe66d8000 0 0x40>;
-> +			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 927>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 927>;
-> +			dmas = <&dmac1 0x99>, <&dmac1 0x98>,
-> +			       <&dmac2 0x99>, <&dmac2 0x98>;
-> +			dma-names = "tx", "rx", "tx", "rx";
-> +			i2c-scl-internal-delay-ns = <6>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c5: i2c@e66e0000 {
-> +			compatible = "renesas,i2c-r8a77980",
-> +				     "renesas,rcar-gen3-i2c";
-> +			reg = <0 0xe66e0000 0 0x40>;
-> +			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 919>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 919>;
-> +			dmas = <&dmac1 0x9b>, <&dmac1 0x9a>,
-> +			       <&dmac2 0x9b>, <&dmac2 0x9a>;
-> +			dma-names = "tx", "rx", "tx", "rx";
-> +			i2c-scl-internal-delay-ns = <6>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		hscif0: serial@e6540000 {
->  			compatible = "renesas,hscif-r8a77980",
->  				     "renesas,rcar-gen3-hscif",
+>>> +static int at91_usart_gpio_setup(struct platform_device *pdev)
+>>> +{
+>>
+>>> +       struct device_node      *np = pdev->dev.parent->of_node;
+>>
+>> Your driver is not OF specific as far as I can see. Drop all these
+>> device_node stuff and change API calls respectively.
 > 
+> Ok. What do you suggest to use instead of OF API to get the count of
+> cs-gpios and to read their values one by one?
+
+As Alexandre said, we can make this driver OF specific.
+
+What could be interesting is to use the gpio descriptors API and not the 
+older one. This would allow us to have far more control over the gpio 
+that we use in our drivers (Ludovic is converting our drivers to only 
+use gpiod structures).
+
+Regards,
+   Nicolas
+
+> 
+>>
+>>> +       int                     i;
+>>
+>>> +       int                     ret = 0;
+>>> +       int                     nb = 0;
+>>
+>> What happened to indentation?
+>>
+>> Redundnant assignment for both.
+>>
+>>> +       if (!np)
+>>> +               return -EINVAL;
+>>> +
+>>> +       nb = of_gpio_named_count(np, "cs-gpios");
+>>> +       for (i = 0; i < nb; i++) {
+>>> +               int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+>>> +
+>>> +               if (cs_gpio < 0)
+>>> +                       return cs_gpio;
+>>> +
+>>> +               if (gpio_is_valid(cs_gpio)) {
+>>> +                       ret = devm_gpio_request_one(&pdev->dev, cs_gpio,
+>>> +                                                   GPIOF_DIR_OUT,
+>>> +                                                   dev_name(&pdev->dev));
+>>> +                       if (ret)
+>>> +                               return ret;
+>>> +               }
+>>> +       }
+>>> +
+>>> +       return 0;
+>>> +}
+[..]
+
+-- 
+Nicolas Ferre
