@@ -1,102 +1,88 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 12/12] coresight: tmc: Add configuration support for trace buffer size
-Date: Tue, 29 May 2018 14:15:37 +0100
-Message-ID: <1527599737-28408-13-git-send-email-suzuki.poulose@arm.com>
-References: <1527599737-28408-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527599737-28408-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v2 00/12] coresight: tmc-etr Transparent buffer management
+Date: Tue, 29 May 2018 14:15:25 +0100
+Message-ID: <1527599737-28408-1-git-send-email-suzuki.poulose@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, robert.walker@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: devicetree@vger.kernel.org, mathieu.poirier@linaro.org, robh@kernel.org, coresight@lists.linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org, robert.walker@arm.com, frowand.list@gmail.com, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we can dynamically switch between contiguous memory and
-SG table depending on the trace buffer size, provide the support
-for selecting an appropriate buffer size.
+This series is split of the Coresight ETR perf support patches posted
+here [0]. The CATU support and perf backend support will be posted as
+separate series for better management and review of the patches.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- .../ABI/testing/sysfs-bus-coresight-devices-tmc    |  8 ++++++
- .../devicetree/bindings/arm/coresight.txt          |  3 +-
- drivers/hwtracing/coresight/coresight-tmc.c        | 33 ++++++++++++++++++++++
- 3 files changed, 43 insertions(+), 1 deletion(-)
+This series adds the support for TMC ETR Scatter-Gather mode to allow
+using physical non-contiguous buffer for holding the trace data. It
+also adds a layer to handle the buffer management in a transparent
+manner, independent of the underlying mode used by the TMC ETR.
+The layer chooses the ETR mode based on different parameters (size,
+re-using a set of pages, presence of an SMMU etc.).
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tmc b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tmc
-index 4fe677e..ea78714 100644
---- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tmc
-+++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tmc
-@@ -83,3 +83,11 @@ KernelVersion:	4.7
- Contact:	Mathieu Poirier <mathieu.poirier@linaro.org>
- Description:	(R) Indicates the capabilities of the Coresight TMC.
- 		The value is read directly from the DEVID register, 0xFC8,
-+
-+What:		/sys/bus/coresight/devices/<memory_map>.tmc/buffer_size
-+Date:		August 2018
-+KernelVersion:	4.18
-+Contact:	Mathieu Poirier <mathieu.poirier@linaro.org>
-+Description:	(RW) Size of the trace buffer for TMC-ETR when used in SYSFS
-+		mode. Writable only for TMC-ETR configurations. The value
-+		should be aligned to the kernel pagesize.
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 603d3c6..9aa30a1 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -84,7 +84,8 @@ its hardware characteristcs.
- * Optional property for TMC:
- 
- 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
--	 (embedded trace router)
-+	  (embedded trace router). This property is obsolete. The buffer size
-+	  can be configured dynamically via buffer_size property in sysfs.
- 
- 	* arm,scatter-gather: boolean. Indicates that the TMC-ETR can safely
- 	  use the SG mode on this system.
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-index bc8fc86..1b817ec 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc.c
-@@ -277,8 +277,41 @@ static ssize_t trigger_cntr_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(trigger_cntr);
- 
-+static ssize_t buffer_size_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct tmc_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+
-+	return sprintf(buf, "%#x\n", drvdata->size);
-+}
-+
-+static ssize_t buffer_size_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t size)
-+{
-+	int ret;
-+	unsigned long val;
-+	struct tmc_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+
-+	/* Only permitted for TMC-ETRs */
-+	if (drvdata->config_type != TMC_CONFIG_TYPE_ETR)
-+		return -EPERM;
-+
-+	ret = kstrtoul(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+	/* The buffer size should be page aligned */
-+	if (val & (PAGE_SIZE - 1))
-+		return -EINVAL;
-+	drvdata->size = val;
-+	return size;
-+}
-+
-+static DEVICE_ATTR_RW(buffer_size);
-+
- static struct attribute *coresight_tmc_attrs[] = {
- 	&dev_attr_trigger_cntr.attr,
-+	&dev_attr_buffer_size.attr,
- 	NULL,
- };
- 
+Finally we add a sysfs parameter to tune the buffer size for ETR in
+sysfs-mode.
+
+During the testing, we found out that if the TMC ETR is not properly
+connected to the memory subsystem, the ETR could lock-up the system
+while waiting for the "read" transactions to complete in scatter-gather
+mode. So, we do not use the mode on a system unless it is safe to do
+so. This is specified by a DT property "arm,scatter-gather".
+
+Applies on coreisght-next tree from Mathieu
+
+Changes since previous version [1]:
+ - Rebased to Mathieu's coresight-next tree to resolve a conflict.
+ - Added tags for DT changes from Rob and Mathieu
+ - Split the SG mode backend support patch from the
+   ETR-BUF patch.
+ - Address other comments from Mathieu
+
+Changes since splitted series [0] :
+ - Split the series in [0]
+ - Address comments on v2
+ - Rename DT property "scatter-gather" to "arm,scatter-gather"
+ - Add ETM PID for Cortex-A35, use macros to make the listing easier
+
+[0] - http://lists.infradead.org/pipermail/linux-arm-kernel/2018-May/574875.html
+[1] - http://lists.infradead.org/pipermail/linux-arm-kernel/2018-May/579135.html
+
+Suzuki K Poulose (12):
+  coresight: ETM: Add support for Arm Cortex-A73 and Cortex-A35
+  coresight: tmc: Hide trace buffer handling for file read
+  coresight: tmc-etr: Do not clean trace buffer
+  coresight: tmc-etr: Disallow perf mode
+  coresight: Add helper for inserting synchronization packets
+  dts: bindings: Restrict coresight tmc-etr scatter-gather mode
+  dts: juno: Add scatter-gather support for all revisions
+  coresight: Add generic TMC sg table framework
+  coresight: Add support for TMC ETR SG unit
+  coresight: tmc-etr: Add transparent buffer management
+  coresight: tmc-etr buf: Add TMC scatter gather mode backend
+  coresight: tmc: Add configuration support for trace buffer size
+
+ .../ABI/testing/sysfs-bus-coresight-devices-tmc    |    8 +
+ .../devicetree/bindings/arm/coresight.txt          |    5 +-
+ arch/arm64/boot/dts/arm/juno-base.dtsi             |    1 +
+ drivers/hwtracing/coresight/coresight-etb10.c      |   12 +-
+ drivers/hwtracing/coresight/coresight-etm4x.c      |   31 +-
+ drivers/hwtracing/coresight/coresight-priv.h       |   10 +-
+ drivers/hwtracing/coresight/coresight-tmc-etf.c    |   45 +-
+ drivers/hwtracing/coresight/coresight-tmc-etr.c    | 1010 ++++++++++++++++++--
+ drivers/hwtracing/coresight/coresight-tmc.c        |   83 +-
+ drivers/hwtracing/coresight/coresight-tmc.h        |  110 ++-
+ drivers/hwtracing/coresight/coresight.c            |    3 +-
+ 11 files changed, 1144 insertions(+), 174 deletions(-)
+
 -- 
 2.7.4
