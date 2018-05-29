@@ -2,48 +2,56 @@ Return-Path: <SRS0=wYYg=IQ=renesas.com=yoshihiro.shimoda.uh@kernel.org>
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Subject: RE: [PATCH v5] usb: gadget: udc: renesas_usb3: Add register of usb
  role switch
-Date: Tue, 29 May 2018 02:52:27 +0000
-Message-ID: <TY2PR01MB2297E86466DEA9A16246D752D86D0@TY2PR01MB2297.jpnprd01.prod.outlook.com>
+Date: Tue, 29 May 2018 02:51:16 +0000
+Message-ID: <TY2PR01MB22972E24DA2995C357F5B9BCD86D0@TY2PR01MB2297.jpnprd01.prod.outlook.com>
 References: <1527232376-5613-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180528130439.GD29600@kuha.fi.intel.com>
-In-Reply-To: <20180528130439.GD29600@kuha.fi.intel.com>
+ <CAHp75VcFNkrBXXgCB+pQJHGvHquik7OMD+W=eZn4Gj9b14799w@mail.gmail.com>
+In-Reply-To: <CAHp75VcFNkrBXXgCB+pQJHGvHquik7OMD+W=eZn4Gj9b14799w@mail.gmail.com>
 Content-Language: ja-JP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, USB <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Heikki,
-
-> From: Heikki Krogerus, Sent: Monday, May 28, 2018 10:05 PM
->=20
-> On Fri, May 25, 2018 at 04:12:56PM +0900, Yoshihiro Shimoda wrote:
-> > @@ -2573,6 +2635,12 @@ static void renesas_usb3_init_ram(struct renesas=
-_usb3 *usb3, struct device *dev,
-> >  	EXTCON_NONE,
-> >  };
-> >
-> > +static struct usb_role_switch_desc renesas_usb3_role_switch_desc =3D {
->=20
-> You can constify that.
-
-Thank you for the review! I'll modify this in v6 patch.
-
-Best regards,
-Yoshihiro Shimoda
-
-> > +	.set =3D renesas_usb3_role_switch_set,
-> > +	.get =3D renesas_usb3_role_switch_get,
-> > +	.allow_userspace_control =3D true,
-> > +};
-> > +
-> >  static int renesas_usb3_probe(struct platform_device *pdev)
-> >  {
-> >  	struct renesas_usb3 *usb3;
->=20
-> Thanks,
->=20
-> --
-> heikki
+SGkgQW5keSwNCg0KVGhhbmsgeW91IGZvciB5b3VyIHJldmlldyENCg0KPiBGcm9tOiBBbmR5IFNo
+ZXZjaGVua28sIFNlbnQ6IE1vbmRheSwgTWF5IDI4LCAyMDE4IDk6NDcgUE0NCj4gDQo+IE9uIEZy
+aSwgTWF5IDI1LCAyMDE4IGF0IDEwOjEyIEFNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGlo
+aXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiANCj4gPiAtc3RhdGljIHZvaWQg
+dXNiM19zZXRfbW9kZShzdHJ1Y3QgcmVuZXNhc191c2IzICp1c2IzLCBib29sIGhvc3QpDQo+IA0K
+PiBXb3VsZG4ndCBiZSBiZXR0ZXIgdG8gY2hvb3NlIGFub3RoZXIgbmFtZSBmb3IgYSBuZXcgZnVu
+Y3Rpb24/DQoNCkkgZ290IGl0LiBJJ2xsIGNob29zZSBhbm90aGVyIG5hbWUgZm9yIGEgbmV3IGZ1
+bmN0aW9uIGFzICJ1c2IzX3NldF9tb2RlX2J5X3JvbGVfc3ciLg0KDQo+ID4gKyAgICAgICBzdHJ1
+Y3QgcmVuZXNhc191c2IzICp1c2IzID0gY29udGFpbmVyX29mKHdvcmssIHN0cnVjdCByZW5lc2Fz
+X3VzYjMsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHJvbGVfd29yayk7DQo+IA0KPiBNYXR0ZXIgb2Ygc3R5bGUsIHRob3VnaCBJIHdvdWxkIHJh
+dGhlciBwdXQgZW50aXJlIGNvbnRhaW5lcl9vZigpIG9uDQo+IHRoZSBuZXh0IGxpbmUgKHNlZSBm
+b3IgdGhlIGV4aXN0aW5nIHN0eWxlIGluIHRoZSBtb2R1bGUgYW5kIHVzZSBpdCkuDQoNCkkgZ290
+IGl0LiBJJ2xsIG1vZGlmeSB0aGF0Lg0KDQo+ID4gKyAgICAgICAgICAgICAgIC8qIFRoaXMgZGV2
+aWNlX2F0dGFjaCgpIG1pZ2h0IHNsZWVwICovDQo+ID4gKyAgICAgICAgICAgICAgIGlmIChkZXZp
+Y2VfYXR0YWNoKGhvc3QpIDwgMCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJy
+KGRldiwgImRldmljZV9hdHRhY2godXNiM19wb3J0KSBmYWlsZWRcbiIpOw0KPiANCj4gY2FuJ3Qg
+YmUgInVzYjNfcG9ydCIgcGFydCBkZXJpdmVkIGZyb20gdGhlIGhvc3QgdmFyaWFibGUgc29tZWhv
+dyBhbmQNCj4gdG8gc29tZSBleHRlbmQ/DQoNCk9vcHMuIEkgc2hvdWxkIGRlc2NyaWJlICJob3N0
+IiBpbnN0ZWFkIG9mICJ1c2IzX3BvcnQiLg0KDQo+ID4gKyAgICAgICB1c2IzLT5yb2xlX3N3ID0g
+dXNiX3JvbGVfc3dpdGNoX3JlZ2lzdGVyKCZwZGV2LT5kZXYsDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICZyZW5lc2FzX3VzYjNfcm9sZV9zd2l0Y2hfZGVzYyk7
+DQo+ID4gKyAgICAgICBpZiAoIUlTX0VSUih1c2IzLT5yb2xlX3N3KSkgew0KPiANCj4gPiArICAg
+ICAgICAgICAgICAgdXNiMy0+aG9zdF9kZXYgPSB1c2Jfb2ZfZ2V0X2NvbXBhbmlvbl9kZXYoJnBk
+ZXYtPmRldik7DQo+IA0KPiBIbW0uLi4gQ2FuIGl0IHBvc3NpYmxlIHJldHVybiAtRVBST0JFX0RF
+RkVSPyBJZiBzbywgd291bGQgaXQgYmUgYmV0dGVyDQo+IHRvIHVzZSBvdGhlciBhcHByb2FjaCB0
+byBoYW5kbGUgaXQ/DQoNCkRvZXMgdGhpcyAiaXQiIG1lYW4gIiB1c2Jfb2ZfZ2V0X2NvbXBhbmlv
+bl9kZXYoKSI/IElmIHNvLCBpdCBpcyBub3QgcG9zc2libGUNCnRvIHJldHVybiAtRVBST0JFX0RF
+RkVSLg0KT3IsICIgdXNiX3JvbGVfc3dpdGNoX3JlZ2lzdGVyKCkiPyBBbHNvIHRoaXMgZnVuY3Rp
+b24gaXMgbm90IHBvc3NpYmxlIHRvDQpyZXR1cm4gLUVQUk9CRV9ERUZFUiwgSUlVQy4NCg0KPiA+
+ICsgICAgICAgICAgICAgICBpZiAoSVNfRVJSX09SX05VTEwodXNiMy0+aG9zdF9kZXYpKSB7DQoN
+ClNvLCBJIGNhbiBqdXN0IHVzZSAiaWYgKCF1c2IzLT5ob3N0X2RldikgeyIgaW5zdGVhZCBvZiBh
+Ym92ZS4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIC8qIElmIG5vdCBmb3VuZCwgdGhpcyBkcml2ZXIgd2lsbCBub3QgdXNl
+IGEgcm9sZSBzdyAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHVzYl9yb2xlX3N3aXRj
+aF91bnJlZ2lzdGVyKHVzYjMtPnJvbGVfc3cpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+IHVzYjMtPnJvbGVfc3cgPSBOVUxMOw0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gKyAgICAg
+ICB9IGVsc2Ugew0KPiA+ICsgICAgICAgICAgICAgICB1c2IzLT5yb2xlX3N3ID0gTlVMTDsNCj4g
+PiArICAgICAgIH0NCj4gDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBT
+aGV2Y2hlbmtvDQo=
