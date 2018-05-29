@@ -1,107 +1,65 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [patch v22 1/4] drivers: jtag: Add JTAG core driver
-Date: Tue, 29 May 2018 09:16:33 +0200
-Message-ID: <20180529071633.GB20427@kroah.com>
-References: <1527503652-21975-1-git-send-email-oleksandrs@mellanox.com>
- <1527503652-21975-2-git-send-email-oleksandrs@mellanox.com>
- <20180528123527.GA17613@kroah.com>
- <AM5PR0501MB24490173AD50A2E478DFCF35B16E0@AM5PR0501MB2449.eurprd05.prod.outlook.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 0/2] Add Mediatek X20 Development Board support
+Date: Tue, 29 May 2018 12:57:19 +0530
+Message-ID: <20180529072719.GA5529@Mani-XPS-13-9360>
+References: <20180529045258.1415-1-manivannan.sadhasivam@linaro.org>
+ <06dbc5ef-5bba-f3e0-1b57-3eaeab26ed68@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <AM5PR0501MB24490173AD50A2E478DFCF35B16E0@AM5PR0501MB2449.eurprd05.prod.outlook.com>
+In-Reply-To: <06dbc5ef-5bba-f3e0-1b57-3eaeab26ed68@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "joel@jms.id.au" <joel@jms.id.au>, "jiri@resnulli.us" <jiri@resnulli.us>, "tklauser@distanz.ch" <tklauser@distanz.ch>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vadim Pasternak <vadimp@mellanox.com>, system-sw-low-level <system-sw-low-level@mellanox.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "openocd-devel-owner@lists.sourceforge.net" <openocd-devel-owner@lists.sourceforge.net>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, davem@dave
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com, Mars Cheng <mars.cheng@mediatek.com>, Saber Rezvani <irsaber@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 03:59:46PM +0000, Oleksandr Shamray wrote:
-> > > +	const struct jtag_ops *ops;
-> > > +	int id;
-> > > +	bool opened;
-> > 
-> > You shouldn't care about this, but ok...
+Hi Matthias,
+
+On Tue, May 29, 2018 at 08:38:27AM +0200, Matthias Brugger wrote:
+> Hi Manivannan,
 > 
-> Jtag HW not support to using with multiple requests from different users. So we prohibit this.
-
-Ok, but then that's a userspace problem, not your driver's problem.
-Serial ports can't handle multiple requests in a sane way either, and so
-it's a userspace bug if they do that.  It's not up to the kernel to try
-to prevent it, and really, you are not preventing this from happening at
-all, you are only keeping more than one open() call from happening.  You
-aren't serializing the device access at all.
-
-So you are giving yourself a false sense of "We are protecting the
-device" here.  Just drop the whole "only one open() call" logic
-entirely.  It will make your kernel code simpler and you aren't giving
-yourself false-hope that you really prevented userspace from doing
-something stupid :)
-
-> > > +	case JTAG_IOCRUNTEST:
-> > > +		if (copy_from_user(&idle, (const void __user *)arg,
-> > > +				   sizeof(struct jtag_run_test_idle)))
-> > > +			return -EFAULT;
-> > > +
-> > > +		if (idle.endstate > JTAG_STATE_PAUSEDR)
-> > > +			return -EINVAL;
-> > 
-> > No validation that idle contains sane values?  Don't make every jtag driver
-> > have to do this type of validation please.
-> > 
+> it's nice to see that someone at Linaro cares about upstreaming the 96 board.
+> From what I can see, your patches add the very same support to the board as
+> does the mt6797 evaluation board. Do you have plans to upstream more drivers for
+> the board? Do you have a roadmap or something?
 > 
-> I have partially validation of idle structure  (if (idle.endstate > JTAG_STATE_PAUSEDR)).
-> But I will add more validation.
-
-Go to the nearest whiteboard and write this at the top:
-	ALL INPUT IS EVIL
-
-Don't erase it.  You have to validate all the things, otherwise
-something bad will happen, I guarantee it.  Wait until the syzbot gets
-ahold of this layer if you don't believe me :)
-
-> > > +static int jtag_open(struct inode *inode, struct file *file) {
-> > > +	struct jtag *jtag = container_of(file->private_data, struct jtag,
-> > > +miscdev);
-> > > +
-> > > +	if (mutex_lock_interruptible(&jtag->open_lock))
-> > > +		return -ERESTARTSYS;
-> > 
-> > Why restart?  Just grab the lock, you don't want to have to do restartable
-> > logic in userspace, right?
+> I'm asking becuase I don't want to have just another dead devicetree in the
+> kernel which does nothing but provides a boot to rootfs. Especially as this can
+> be achieved on the same board with the EVB dts.
 > 
-> Will change like:
+
+I can understand your concern here. I do have plans to add more drivers
+in the future for this board but I can't give you any roadmap for that
+since it mostly falls under the spare time work and I have been doing a
+similar kind of work for the Bubblegum-96 board in parallel.
+
+At most I can guarentee that this board's functionality will be added
+gradually in upcoming days.
+
+Thanks,
+Mani
+
+> Regards,
+> Matthias
 > 
-> ret = mutex_lock_interruptible(&jtag->open_lock);
-> if (ret)
-> 	return ret;
-
-No, what's wrong with a simple:
-	mutex_lock();
-?
-
-You are only holding it for a very short time, people can wait, there is
-no rush here or "fast path" happening.
-
-Anyway, this whole lock should just go away entirely, due to the lack of
-needing to track open() calls.  But in the future, keep locks simple, no
-need to add complexity when it is not warranted.
-
-> > > +	if (jtag->opened) {
-> > > +		mutex_unlock(&jtag->open_lock);
-> > > +		return -EBUSY;
+> On 29/05/18 06:52, Manivannan Sadhasivam wrote:
+> > Add devicetree support for Mediatek X20 Development Board by Archermind.
+> > This board is based on the Deca-Core MT6797 SoC from Mediatek and is
+> > one of the 96Boards Consumer Edition platform.
 > > 
-> > Why do you care about only 1 userspace open call?  What does that buy you?
-> > Userspace can always pass around that file descriptor and use it in multiple
-> > places, so you are not really "protecting" yourself from anything.
+> > With this devicetree change, board can boot into initramfs.
 > > 
-> 
-> Accessing to JTAG HW from multiple processes will make confusion in the work of the JTAG protocol.
-> And I want to prohibit this.
-
-See my previous comments for why your attempt at protecting open() does
-not prevent this from happening.  Hint, you forgot about dup(3) :(
-
-thanks,
-
-greg k-h
+> > More information about this board can be found in 96Boards product page:
+> > https://www.96boards.org/product/mediatek-x20/
+> > 
+> > Manivannan Sadhasivam (2):
+> >   dt-bindings: Add vendor prefix for ArcherMind
+> >   arm64: dts: Add Mediatek X20 Development Board support
+> > 
+> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+> >  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+> >  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
+> >  3 files changed, 35 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+> > 
