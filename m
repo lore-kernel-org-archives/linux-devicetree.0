@@ -1,55 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
- driver
-Date: Tue, 29 May 2018 08:39:58 +0100
-Message-ID: <20180529073958.GB4790@dell>
-References: <20180528090003.GA8778@localhost.localdomain>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v2 4/6] clk: tegra20: init NDFLASH clock to sensible rate
+Date: Tue, 29 May 2018 10:48:04 +0300
+Message-ID: <20180529074804.GA6708@tbergstrom-lnx.Nvidia.com>
+References: <20180527215442.14760-5-stefan@agner.ch>
+ <20180528075510.GQ6835@tbergstrom-lnx.Nvidia.com>
+ <5665b799f763daa82dced238fb494863@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180528090003.GA8778@localhost.localdomain>
+In-Reply-To: <5665b799f763daa82dced238fb494863@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Stefan Agner <stefan@agner.ch>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 May 2018, Matti Vaittinen wrote:
-
-> Patch series adding support for ROHM BD71837 PMIC.
+On Mon, May 28, 2018 at 05:53:08PM +0200, Stefan Agner wrote:
+> On 28.05.2018 09:55, Peter De Schrijver wrote:
+> > On Sun, May 27, 2018 at 11:54:40PM +0200, Stefan Agner wrote:
+> >> From: Lucas Stach <dev@lynxeye.de>
+> >>
+> >> Set up the NAND Flash controller clock to run at 150MHz
+> >> instead of the rate set by the bootloader. This is a
+> >> conservative rate which also yields good performance.
+> >>
+> >> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> >> ---
+> >>  drivers/clk/tegra/clk-tegra20.c | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+> >> index 0ee56dd04cec..dff8c425cd28 100644
+> >> --- a/drivers/clk/tegra/clk-tegra20.c
+> >> +++ b/drivers/clk/tegra/clk-tegra20.c
+> >> @@ -1049,6 +1049,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+> >>  	{ TEGRA20_CLK_GR2D, TEGRA20_CLK_PLL_C, 300000000, 0 },
+> >>  	{ TEGRA20_CLK_GR3D, TEGRA20_CLK_PLL_C, 300000000, 0 },
+> >>  	{ TEGRA20_CLK_VDE, TEGRA20_CLK_CLK_MAX, 300000000, 0 },
+> >> +	{ TEGRA20_CLK_NDFLASH, TEGRA20_CLK_PLL_P, 150000000, 0 },
+> >>  	/* must be the last entry */
+> >>  	{ TEGRA20_CLK_CLK_MAX, TEGRA20_CLK_CLK_MAX, 0, 0 },
+> >>  };
+> >> --
+> >> 2.17.0
+> >>
+> > 
+> > Maybe better to specify this in the Tegra20 dtsi? See 
+> > "Assigned clock parents and rates" in
+> > Documentation/devicetree/bindings/clock/clock-bindings.txt
 > 
-> BD71837 is a programmable Power Management IC for powering single-core,
-> dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
-> low BOM cost and compact solution footprint. It integrates 8 buck
-> regulators and 7 LDO’s to provide all the power rails required by the
-> SoC and the commonly used peripherals.
+> assigned-clocks indeed works just fine for this case. Thanks for
+> bringing this up, will drop this patch and add the device tree
+> properties in v3.
 > 
-> The driver aims to not limit the usage of PMIC. Thus the buck and LDO
-> naming is generic and not tied to any specific purposes. However there
-> is following limitations which make it mostly suitable for use cases
-> where the processor where PMIC driver is running is powered by the PMIC:
+> Hm, interesting that none of the Tegra device tree make use of the
+> feature so far. I guess there would be other cases where this would be
+> useful as well (the one just above, VDE?).
 > 
-> - The PMIC is not re-initialized if it resets. PMIC may reset as a
->   result of voltage monitoring (over/under voltage) or due to reset
->   request. Driver is only initializing PMIC at probe. This is not
->   problem as long as processor controlling PMIC is powered by PMIC.
-> 
-> - The PMIC internal state machine is ignored by driver. Driver assumes
->   the PMIC is wired so that it is always in "run" state when controlled
->   by the driver.
 
-FYI, this patch-set is going to be difficult to manage since it was
-not sent 'threaded'.  As people start replying to different patches,
-they are going to scatter-bomb throughout all of the recipient's
-inboxes.
+Yes, historically this feature wasn't available, so we used these init tables.
+Unfortunately it's not easy to get rid of them for parent and rate
+configuration, because new kernels should also work with existing DTBs, so we
+can't just add assigned-clock properties and remove the existing table
+entries. What we could do is use the CLK_IS_CRITICAL flag for all clocks which
+are only enabled by the init table. For not yet merged blocks, this is
+ofcourse not a concern.
 
-If/when you send a subsequent version, could you please ensure you
-send the set threaded so the patches keep in relation to one another
-as they are reviewed?
+Cheers,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Peter.
