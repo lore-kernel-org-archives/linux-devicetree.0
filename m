@@ -1,50 +1,74 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 3/6] mfd: at91-usart: added mfd driver for usart
-Date: Tue, 29 May 2018 11:32:00 +0200
-Message-ID: <20180529093200.GB4793@piout.net>
-References: <20180525171941.26766-1-radu.pirea@microchip.com>
- <20180525171941.26766-4-radu.pirea@microchip.com>
- <CAHp75VeeiFhShuMOVzuy2FjxrkfsxxzhyfAnwQNOoeaRwZ103Q@mail.gmail.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: opp: Introduce qcom-opp bindings
+Date: Tue, 29 May 2018 15:19:54 +0530
+Message-ID: <9786fd42-b48a-757f-97cb-0ca65c2f030e@codeaurora.org>
+References: <20180525100121.28214-1-rnayak@codeaurora.org>
+ <20180525100121.28214-3-rnayak@codeaurora.org>
+ <67054dca-33a8-7e7c-6218-dc5abf84f6d8@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeeiFhShuMOVzuy2FjxrkfsxxzhyfAnwQNOoeaRwZ103Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Richard Genoud <richard.genoud@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Radu Pirea <radu.pirea@microchip.com>, Lee Jones <lee.jones@linaro.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <67054dca-33a8-7e7c-6218-dc5abf84f6d8@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/05/2018 11:00:49+0300, Andy Shevchenko wrote:
-> On Fri, May 25, 2018 at 8:19 PM, Radu Pirea <radu.pirea@microchip.com> wrote:
-> > This mfd driver is just a wrapper over atmel_serial driver and
-> > spi-at91-usart driver. Selection of one of the drivers is based on a
-> > property from device tree. If the property is not specified, the default
-> > driver is atmel_serial.
+
+
+On 05/26/2018 04:03 AM, David Collins wrote:
+> Hello Rajendra,
 > 
-> > +       depends on OF
+> On 05/25/2018 03:01 AM, Rajendra Nayak wrote:
+>> On Qualcomm platforms, an OPP node needs to describe an
 > 
-> What makes this driver OF specific?
+> s/Qualcomm/Qualcomm Technologies, Inc./
 > 
-> > +       err = of_property_read_u32(np, "atmel,usart-mode", &opmode);
-> 
-> Check unified device property API.
 > 
 
-We don't care, this makes the driver OF specific and this is the correct
-thing to do.
+[] ..
 
+> 
+> s/Qualcomm/Qualcomm Technologies, Inc./ ?
+> 
+> s/descibe/describe/
+> 
+> 
+>> +
+>> +OPP tables for devices on Qualcomm platforms require an additional
+> 
+> s/Qualcomm/Qualcomm Technologies, Inc./
+> 
+> 
+>> +platform specific corner/level value to be specified.
+>> +This value is passed on to the RPM (Resource Power Manager) by
+> 
+> Do you want to mention RPMh here as well?
+> 
+> 
+
+[] ..
+
+>> +
+>> +Required properties:
+>> +- qcom,level: On Qualcomm platforms an OPP node can describe a positive value
+> 
+> s/Qualcomm/Qualcomm Technologies, Inc./
+> 
+> 
+>> +representing a corner/level that's communicated with a remote microprocessor
+>> +(usually called the RPM) which then translates it into a certain voltage on
+>> +a voltage rail.
+> 
+> Should these lines be indented 2 spaces as is the case for the compatible
+> property above?
+> 
+> Could you add an example for both RPM and RPMh in this binding file?
+
+Thanks David for the review. I will fix all this up when I respin.
 
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
