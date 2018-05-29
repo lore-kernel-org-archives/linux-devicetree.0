@@ -1,50 +1,57 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/4 RFCv2] net: dsa: Add bindings for Realtek SMI DSAs
-Date: Tue, 29 May 2018 12:30:41 -0700
-Message-ID: <baae8174-8b64-6de5-6e87-eb51b8c769f7@gmail.com>
-References: <20180528174752.6806-1-linus.walleij@linaro.org>
- <20180528174752.6806-3-linus.walleij@linaro.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 05/11] PM / devfreq: governors: Return device frequency
+ limits instead of user limits
+Date: Tue, 29 May 2018 12:32:36 -0700
+Message-ID: <20180529193236.GH168650@google.com>
+References: <20180525203043.249193-6-mka@chromium.org>
+ <20180525203043.249193-1-mka@chromium.org>
+ <CGME20180525203125epcas3p46c7cac352ede4b0ba5d2b36bc32ad566@epcms1p8>
+ <20180528050444epcms1p8e6552d55231a099ec89304dfb1f819b9@epcms1p8>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180528174752.6806-3-linus.walleij@linaro.org>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180528050444epcms1p8e6552d55231a099ec89304dfb1f819b9@epcms1p8>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/28/2018 10:47 AM, Linus Walleij wrote:
-> The Realtek SMI family is a set of DSA chips that provide
-> switching in routers. This binding just follows the pattern
-> set by other switches but with the introduction of an embedded
-> irqchip to demux and handle the interrupts fired by the single
-> line from the chip.
+On Mon, May 28, 2018 at 02:04:44PM +0900, MyungJoo Ham wrote:
+> >The performance, powersave and simpleondemand governors can return
+> >df->min/max_freq, which are the user defined frequency limits.
+> >update_devfreq() already takes care of adjusting the target frequency
+> >with the user limits if necessary, therefore we can return
+> >df->scaling_min/max_freq instead, which is the min/max frequency
+> >supported by the device at a given time (depending on the
+> >enabled/disabled OPPs)
+> >
+> >Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> >---
+> > drivers/devfreq/governor_performance.c    | 2 +-
+> > drivers/devfreq/governor_powersave.c      | 2 +-
+> > drivers/devfreq/governor_simpleondemand.c | 6 +++---
+> > 3 files changed, 5 insertions(+), 5 deletions(-)
+> >
 > 
-> This interrupt construction is similar to how we handle
-> interrupt controllers inside PCI bridges etc.
+> Actually, even scaling_max_freq and scaling_min_freq are
+> covered centerally at devfreq.c:update_devfreq();
 > 
-> Cc: Antti Seppälä <a.seppala@gmail.com>
-> Cc: Roman Yeryomin <roman@advem.lv>
-> Cc: Colin Leitner <colin.leitner@googlemail.com>
-> Cc: Gabor Juhos <juhosg@openwrt.org>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+> Wouldn't it be sufficient to return UINT_MAX for performance
+> and return UINT_MIN (0) for powersave, if the purpose is to
+> remove redundancy?
+> 
+> In the same sense, we may return UINT_MAX for freq-increasing
+> case for simpleondemand as well, because they are filtered
+> centrally anyway.
+> 
+> (This commit might be better merged to 4/11 in that case as well.)
 
-> +
-> +	mdio {
-> +		compatible = "realtek,smi-mdio", "dsa-mdio";
+I did this in the first variant of the patch (before sending it in a
+series), but Chanwoo Choi objected:
 
-You should drop the "dsa-mdio" compatible string here since it both non
-documented and not matched either.
+https://patchwork.kernel.org/patch/10404893/
 
-Other than that, this looks great, with that fixed:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I also still think that returning a constant would be the cleanest
+solution if we can agree on this. What do you think about
+DEVFREQ_MIN/MAX_FREQ (0/UINT_MAX) to make things slightly clearer?
