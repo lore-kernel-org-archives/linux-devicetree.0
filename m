@@ -1,45 +1,31 @@
-From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v6 3/3] dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
-Date: Tue, 29 May 2018 12:37:51 +0800
-Message-ID: <20180529043751.10580-4-cang@codeaurora.org>
-References: <20180529043751.10580-1-cang@codeaurora.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] Add Mediatek X20 Development Board support
+Date: Tue, 29 May 2018 10:22:56 +0530
+Message-ID: <20180529045258.1415-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529043751.10580-1-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>
+To: matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the compatible string for UFS QMP PHY on SDM845.
+Add devicetree support for Mediatek X20 Development Board by Archermind.
+This board is based on the Deca-Core MT6797 SoC from Mediatek and is
+one of the 96Boards Consumer Edition platform.
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+With this devicetree change, board can boot into initramfs.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index cef8765..930d94c 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -11,7 +11,8 @@ Required properties:
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
- 	       "qcom,qmp-v3-usb3-phy" for USB3 QMP V3 phy,
- 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
--	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845.
-+	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
-+	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
- 
-  - reg: offset and length of register set for PHY's common serdes block.
- 
-@@ -29,6 +30,7 @@ Required properties:
- 		"aux" for phy aux clock,
- 		"ref" for 19.2 MHz ref clk,
- 		"com_aux" for phy common block aux clock,
-+		"ref_aux" for phy reference aux clock,
- 		For "qcom,msm8996-qmp-pcie-phy" must contain:
- 			"aux", "cfg_ahb", "ref".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain:
+More information about this board can be found in 96Boards product page:
+https://www.96boards.org/product/mediatek-x20/
+
+Manivannan Sadhasivam (2):
+  dt-bindings: Add vendor prefix for ArcherMind
+  arm64: dts: Add Mediatek X20 Development Board support
+
+ .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+ .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
+ 3 files changed, 35 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.0
