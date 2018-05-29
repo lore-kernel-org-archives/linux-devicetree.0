@@ -1,173 +1,53 @@
-Return-Path: <SRS0=oVvL=IM=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v5 1/6] dmaengine: fsldma: Replace DMA_IN/OUT by FSL_DMA_IN/OUT
-Date: Fri, 25 May 2018 19:19:15 +0800
-Message-ID: <20180525111920.24498-1-wen.he_1@nxp.com>
+Return-Path: <SRS0=GIEb=IQ=the-dreams.de=wsa@kernel.org>
+Date: Tue, 29 May 2018 20:08:27 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: rcar: document R8A77980 bindings
+Message-ID: <20180529180827.lxcaval2kter63po@ninjato>
+References: <95b945f7-1e6c-39f1-e101-06ed748ccec2@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="23dsutfutlrd56ce"
+Content-Disposition: inline
+In-Reply-To: <95b945f7-1e6c-39f1-e101-06ed748ccec2@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch implenment a standard macro call functions is
-used to NXP dma drivers.
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-change in v5:
-	- no
+--23dsutfutlrd56ce
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-change in v4:
-	- no
+On Mon, May 28, 2018 at 10:39:05PM +0300, Sergei Shtylyov wrote:
+> R-Car V3H (R8A77980) SoC also has the R-Car gen3 compatible I2C controlle=
+r,
+> so document the SoC  specific bindings.
+>=20
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>=20
 
-change in v3:
-	- no change
+Applied to for-next, thanks!
 
-change in v2:
-	- Replace 'ioread##width##be(addr) : ioread##width(addr)'
-	  by 'fsl_ioread##width##be(addr) : fsl_ioread##width(addr)'
-	- Fix macro FSL_DMA_IN/OUT build issues in powerpc
-					   
- drivers/dma/fsldma.c |   16 +++++++-------
- drivers/dma/fsldma.h |   57 +++++++++++++++++++++++++++++++++----------------
- 2 files changed, 46 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 3eaece8..75479d6 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -53,42 +53,42 @@
- 
- static void set_sr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->sr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->sr, val, 32);
- }
- 
- static u32 get_sr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->sr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->sr, 32);
- }
- 
- static void set_mr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->mr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->mr, val, 32);
- }
- 
- static u32 get_mr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->mr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->mr, 32);
- }
- 
- static void set_cdar(struct fsldma_chan *chan, dma_addr_t addr)
- {
--	DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
-+	FSL_DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
- }
- 
- static dma_addr_t get_cdar(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
-+	return FSL_DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
- }
- 
- static void set_bcr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->bcr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->bcr, val, 32);
- }
- 
- static u32 get_bcr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->bcr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->bcr, 32);
- }
- 
- /*
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 4787d48..4c33a53 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -196,39 +196,58 @@ struct fsldma_chan {
- #define to_fsl_desc(lh) container_of(lh, struct fsl_desc_sw, node)
- #define tx_to_fsl_desc(tx) container_of(tx, struct fsl_desc_sw, async_tx)
- 
-+#ifdef	CONFIG_PPC
-+#define fsl_ioread32(p)		in_le32(p)
-+#define fsl_ioread32be(p)	in_be32(p)
-+#define fsl_iowrite32(v, p)	out_le32(p, v)
-+#define fsl_iowrite32be(v, p)	out_be32(p, v)
-+
- #ifndef __powerpc64__
--static u64 in_be64(const u64 __iomem *addr)
-+static u64 fsl_ioread64(const u64 __iomem *addr)
- {
--	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
--		(in_be32((u32 __iomem *)addr + 1));
-+	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
-+		(in_le32((u32 __iomem *)addr));
- }
- 
--static void out_be64(u64 __iomem *addr, u64 val)
-+static void fsl_iowrite64(u64 val, u64 __iomem *addr)
- {
--	out_be32((u32 __iomem *)addr, val >> 32);
--	out_be32((u32 __iomem *)addr + 1, (u32)val);
-+	out_le32((u32 __iomem *)addr + 1, val >> 32);
-+	out_le32((u32 __iomem *)addr, (u32)val);
- }
- 
--/* There is no asm instructions for 64 bits reverse loads and stores */
--static u64 in_le64(const u64 __iomem *addr)
-+static u64 fsl_ioread64be(const u64 __iomem *addr)
- {
--	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
--		(in_le32((u32 __iomem *)addr));
-+	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
-+		(in_be32((u32 __iomem *)addr + 1));
- }
- 
--static void out_le64(u64 __iomem *addr, u64 val)
-+static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
- {
--	out_le32((u32 __iomem *)addr + 1, val >> 32);
--	out_le32((u32 __iomem *)addr, (u32)val);
-+	out_be32((u32 __iomem *)addr, val >> 32);
-+	out_be32((u32 __iomem *)addr + 1, (u32)val);
- }
- #endif
-+#endif
- 
--#define DMA_IN(fsl_chan, addr, width)					\
--		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
--			in_be##width(addr) : in_le##width(addr))
--#define DMA_OUT(fsl_chan, addr, val, width)				\
--		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
--			out_be##width(addr, val) : out_le##width(addr, val))
-+#if defined(CONFIG_ARM64) || defined(CONFIG_ARM)
-+#define fsl_ioread32(p)		ioread32(p)
-+#define fsl_ioread32be(p)	ioread32be(p)
-+#define fsl_iowrite32(v, p)	iowrite32(v, p)
-+#define fsl_iowrite32be(v, p)	iowrite32be(v, p)
-+#define fsl_ioread64(p)		ioread64(p)
-+#define fsl_ioread64be(p)	ioread64be(p)
-+#define fsl_iowrite64(v, p)	iowrite64(v, p)
-+#define fsl_iowrite64be(v, p)	iowrite64be(v, p)
-+#endif
-+
-+#define FSL_DMA_IN(fsl_dma, addr, width)				\
-+		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?		\
-+			fsl_ioread##width##be(addr) : fsl_ioread##width(addr))
-+
-+#define FSL_DMA_OUT(fsl_dma, addr, val, width)				\
-+		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?		\
-+			fsl_iowrite##width##be(val, addr) : fsl_iowrite	\
-+		##width(val, addr))
- 
- #define DMA_TO_CPU(fsl_chan, d, width)					\
- 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
--- 
-1.7.1
+--23dsutfutlrd56ce
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsNlxsACgkQFA3kzBSg
+KbbIyBAAhBQqh/eQcZmKv2EebhJBqJwxCdrS2UIMj3VODXFsUuWZ3GVwDymLWIuJ
+QxbGqFRiLUsGwVfJrfb00IOZfjfvlUOnAU7ftoiDwsCO19uI/ADy63amUV+/gvMa
+SjVlUI7NMYydBm7vxArdRQi17bGpYwjiiMk4v7aNfNhEBW7f2KvALnriQfxb11CE
+YLaVATPFxZZYRx0jAiP9Xgu99697cCMDYGGhdIV75nRtSeitqIx6SqErpcQeyKfN
+2gGnKWHLjAHmQRdISF5E9Kj0iW5WnzIfyyTwzpomoxIfQO7zU4fi9/Ci7qdknoxI
+nhc1l3CH18+XWVgfEvBJiqYIG+W/xxDkjiCPbH12USLtXRoPbYb0Sz87G8+OBYYl
+dZ+Zo1c9TmAjWcE18csRIVFtKBF9HZJol6DNR4WxTiyHyRKc1NZzvuIT4CX0EtgO
+f93C5RdlaGpALYuHYuOEAoa1pqQWaxzAVCMU+8gjhE/DMVyDTrxy3SP50EThFPMh
+8WnwSmWg6q9bPO55mgwASENTxGIE2ypFuY2e5uKx9am56LibJ85KfTv6wCw37Mc0
+I0j9dmBrXFF0/2nfFohRgSX3dhP958lrLuiEufGgC0nAAOFYkw1RhxxM7uTDvzoJ
+oT+tXEmCdxjwh0Ak1ltoRHJzRSfg8H5QzmtOAEQUVwZPfE8Sw+A=
+=gufs
+-----END PGP SIGNATURE-----
+
+--23dsutfutlrd56ce--
