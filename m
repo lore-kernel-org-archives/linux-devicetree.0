@@ -1,22 +1,54 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
- from K+P
-Date: Tue, 29 May 2018 12:12:43 -0300
-Message-ID: <CAOMZO5BiKjoiyh0dxycRhPkRzS2Uk9h8fPTA+sXMZBDJpbcyWQ@mail.gmail.com>
-References: <20180509153428.1440-1-lukma@denx.de> <20180519121506.32344-1-lukma@denx.de>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 6/8] dt-bindings: rcar-vin: Add 'hsync-as-de' custom prop
+Date: Tue, 29 May 2018 17:05:57 +0200
+Message-ID: <1527606359-19261-7-git-send-email-jacopo+renesas@jmondi.org>
+References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180519121506.32344-1-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 19, 2018 at 9:15 AM, Lukasz Majewski <lukma@denx.de> wrote:
-> This commit provides support for HSC and DDC boards from
-> Kieback&Peter GmbH vendor.
->
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Document the boolean custom property 'renesas,hsync-as-de' that indicates
+that the HSYNC signal is internally used as data-enable, when the
+CLKENB signal is not connected.
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+As this is a VIN specificity create a custom property specific to the R-Car
+VIN driver.
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+v3:
+- new patch
+---
+ Documentation/devicetree/bindings/media/rcar_vin.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+index ff53226..024c109 100644
+--- a/Documentation/devicetree/bindings/media/rcar_vin.txt
++++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+@@ -60,6 +60,9 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
+         - vsync-active: see [1] for description. Default is active high.
+         - data-enable-active: polarity of CLKENB signal, see [1] for
+           description. Default is active high.
++        - renesas,hsync-as-de: a boolean property to indicate that HSYNC signal
++          is internally used as data-enable when the CLKENB signal is
++          not available.
+
+         If both HSYNC and VSYNC polarities are not specified, embedded
+         synchronization is selected.
+--
+2.7.4
