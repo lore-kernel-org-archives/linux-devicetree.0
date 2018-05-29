@@ -1,71 +1,80 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] ASoC: simple-card: add support for
- clock divider setup
-Date: Tue, 29 May 2018 12:35:09 +0100
-Message-ID: <20180529113509.GE23509@sirena.org.uk>
-References: <20180528193503.18905-1-daniel@zonque.org>
- <20180528193503.18905-4-daniel@zonque.org>
+Subject: Re: [PATCH v3 6/6] regulator: bd71837: BD71837 PMIC regulator driver
+Date: Tue, 29 May 2018 12:47:40 +0100
+Message-ID: <20180529114740.GG23509@sirena.org.uk>
+References: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
+ <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5657300869022295805=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180528193503.18905-4-daniel@zonque.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="64j1qyTOoGvYcHb1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============5657300869022295805==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3XA6nns4nE4KvaS/"
-Content-Disposition: inline
-
-
---3XA6nns4nE4KvaS/
+--64j1qyTOoGvYcHb1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, May 28, 2018 at 09:35:03PM +0200, Daniel Mack wrote:
-> Add support to call into snd_soc_dai_set_clkdiv() for both CPU and codec
-> DAIs from simple-card's hw_params().
+On Tue, May 29, 2018 at 01:02:15PM +0300, Matti Vaittinen wrote:
 
-> This allows platforms to set hardware-specific values without providing an
-> own machine driver.
+> @@ -0,0 +1,677 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (C) 2018 ROHM Semiconductors */
+> +/*
+> + * bd71837-regulator.c ROHM BD71837MWV regulator driver
+> + */
 
-Why do we have anything that actually needs this?  The devices with a
-set_clkdiv() operation are pretty legacy at this point and most of them
-should just be figuring out the dividers for themselves anyway.
+The SPDX header (and the rest of the block) need to be C++ comments.
 
---3XA6nns4nE4KvaS/
+> +static int bd71837_regulator_set_regmap(struct regulator_dev *rdev, int set)
+> +{
+> +	int ret = -EINVAL;
+> +	struct bd71837_pmic *pmic = rdev->reg_data;
+> +
+> +	/* According to the data sheet we must not change regulator voltage
+> +	 * when it is enabled. Thus we need to check if regulator is enabled
+> +	 * before changing the voltage. This mutex is used to avoid race where
+> +	 * we might enable regulator after it's state has been checked but
+> +	 * before the voltage is changed
+> +	 */
+> +	mutex_lock(&pmic->mtx);
+> +	if (!set)
+> +		ret = regulator_disable_regmap(rdev);
+> +	else
+> +		ret = regulator_enable_regmap(rdev);
+> +	mutex_unlock(&pmic->mtx);
+> +
+
+This still has the weird locking/wrapper thing going on.  The regulator
+core will ensure that only one operation is called on a given regulator
+at once.
+
+> +static const struct regulator_desc bd71837_regulators[] = {
+> +	{
+> +	 .name = "buck1",
+
+The indentation style here is weird, please follow CodingStyle.  Looks
+like the second level is just indented by a space for some reason, and
+there's similar problems elsewhere.
+
+--64j1qyTOoGvYcHb1
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsNOu0ACgkQJNaLcl1U
-h9CVCgf+NQElOfAf8cdIW/qUG99D+6vxo8t8oRpBRFJxQ3YjgR9aAZyPGdoLM1+E
-ORRFb5+kZ7AEauK8fddqgfM8tgyI0VWvXfk8B5syzipuVjOKAaL8RZM4qS/8ty0F
-5mvfxUiOg85Lxn18agn65bHH9blPxg2TYemoRkmgArTVgvvkxm4rNRn65Iztdh/n
-hdiuxVSYpEd6FRYqOqLJoOLD5sbwSwlAJdBE1XkIvr8J5ngNfwMq5yZFTlxHWRCs
-Ieu5D3zVDPPIVHx6nG1S8c8sOMnqf+qO1hOki7QYubPz06ZenpaWqSzmOk/Wz04Y
-XFORsFlp6vpa2HQDXUCuhXWFQvWCLw==
-=TcME
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsNPdsACgkQJNaLcl1U
+h9DIMwf9Gko/cLaIOR7E6jd5feuDxB3vTjXfFNZPaTspdh0DO16BEpXHpqfVKEfU
+J8h+FlYeXeaiGA6PGN8hqVSR/VV4duOTRzstjYYeTNpBeYTDeL8KBP2JyqTd5rcO
+r+Wup8DMwGXZi7DbPcCYWef3KBe01tRvijThMkouhfu+6SUpc8jgaeNAQlcAw4O/
+cbNIseTZs82gJAeAp3QJq4qvPNn7LpUjrZh85A0Xp9lVi0h4H/x60LDVPB+EmsII
+gzwDVmIopWv2U+75lkYXSVA0q+fYgzUpT6Cv5eaa19xL1E5KDquvp6CqTNwrjbhX
+s/D6TS6ufJyFzVUuAp59DT2LhrZXwQ==
+=Zutn
 -----END PGP SIGNATURE-----
 
---3XA6nns4nE4KvaS/--
-
---===============5657300869022295805==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5657300869022295805==--
+--64j1qyTOoGvYcHb1--
