@@ -1,66 +1,27 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v3 3/8] media: v4l2-fwnode: parse 'data-enable-active' prop
-Date: Tue, 29 May 2018 17:05:54 +0200
-Message-ID: <1527606359-19261-4-git-send-email-jacopo+renesas@jmondi.org>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 5/8] dt-bindings: remoteproc: Add Q6v5 Modem PIL
+ binding for SDM845
+Date: Tue, 29 May 2018 10:45:30 -0500
+Message-ID: <CAL_Jsq++NFBfjhirWXAengow5K0ZRz7Qm2P+RGi+jQkVxJ9vNQ@mail.gmail.com>
+References: <20180521172714.8551-1-sibis@codeaurora.org> <20180521172714.8551-6-sibis@codeaurora.org>
+ <20180522155626.GA2744@rob-hp-laptop> <3ef231eb-b6c4-b173-89fe-88e376a30b72@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3ef231eb-b6c4-b173-89fe-88e376a30b72@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi S <sibis@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Georgi Djakov <georgi.djakov@linaro.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Kyle Yan <kyan@codeaurora.org>, Sricharan <sricharan@codeaurora.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Parse the newly defined 'data-enable-active' property in parallel endpoint
-parsing function.
+On Tue, May 29, 2018 at 9:37 AM, Sibi S <sibis@codeaurora.org> wrote:
+> Hi Rob,
+> Will send it out again.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Please don't top post on mail lists.
 
----
-v3:
-- new patch
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 4 ++++
- include/media/v4l2-mediabus.h         | 2 ++
- 2 files changed, 6 insertions(+)
+You don't need to resend *just* to add tags. A new version just needs
+them because maintainers aren't going to go search through your prior
+versions for you to add them. But my mentioning it should be enough.
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 3f77aa3..6105191 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -154,6 +154,10 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
- 		flags |= v ? V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH :
- 			V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW;
-
-+	if (!fwnode_property_read_u32(fwnode, "data-enable-active", &v))
-+		flags |= v ? V4L2_MBUS_DATA_ENABLE_HIGH :
-+			V4L2_MBUS_DATA_ENABLE_LOW;
-+
- 	bus->flags = flags;
-
- }
-diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
-index 4d8626c..4bbb5f3 100644
---- a/include/media/v4l2-mediabus.h
-+++ b/include/media/v4l2-mediabus.h
-@@ -45,6 +45,8 @@
- /* Active state of Sync-on-green (SoG) signal, 0/1 for LOW/HIGH respectively. */
- #define V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH		BIT(12)
- #define V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW		BIT(13)
-+#define V4L2_MBUS_DATA_ENABLE_HIGH		BIT(14)
-+#define V4L2_MBUS_DATA_ENABLE_LOW		BIT(15)
-
- /* Serial flags */
- /* How many lanes the client can use */
---
-2.7.4
+Rob
