@@ -1,20 +1,13 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC 12/13] ARM: dts: ti: add dra71-evm FIT description file
-Date: Tue, 29 May 2018 10:05:37 -0700
-Message-ID: <16a6017f-96c8-42d8-38bc-5cdd36d6793f@gmail.com>
-References: <1523956215-28154-1-git-send-email-t-kristo@ti.com>
- <1523956215-28154-13-git-send-email-t-kristo@ti.com>
- <20180417092924.GB20335@flint.armlinux.org.uk>
- <ad5ef67d-d566-0034-a7cd-09a549cbd6d7@ti.com>
- <20180417144913.GD5669@atomide.com>
- <43ff3894-a287-1558-687c-40f50712735c@ti.com>
- <20180522200100.GA23937@rob-hp-laptop>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 2/5] clk: imx6: add EPIT clock support
+Date: Tue, 29 May 2018 19:04:33 +0200
+Message-ID: <20180529170436.22711-3-peron.clem@gmail.com>
+References: <20180529170436.22711-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180522200100.GA23937@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20180529170436.22711-1-peron.clem@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,68 +17,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, trini@konsulko.com, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, wmills@ti.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Cl=C3=A9ment=20Peron?= <clement.peron@devialet.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/18 13:01, Rob Herring wrote:
-> On Mon, May 21, 2018 at 09:57:54AM +0300, Tero Kristo wrote:
->> On 17/04/18 17:49, Tony Lindgren wrote:
->>> * Tero Kristo <t-kristo@ti.com> [180417 09:36]:
->>>> In typical setup, you can boot a large number of different configs via:
->>>>
->>>> bootm 0x82000000#dra71-evm#nand#lcd-auo-g101evn01.0
->>>>
->>>> ... assuming the configs were named like that, and assuming they would be
->>>> compatible with each other. The am57xx-evm example provided is better, as
->>>> you can chain the different cameras to the available evm configs.
->>>
->>> Why not just do it in the bootloader to put together the dtb?
->>>
->>> Then for external devices, you could just pass info on the
->>> kernel cmdline with lcd=foo camera=bar if they cannot be
->>> detected over I2C.
->>
->> (Added Linux ARM list to CC, this was not part of the original delivery.)
->>
->> Ok trying to resurrect this thread a bit. Is there any kind of consensus how
->> things like this should be handled? Should we add the DT overlay files to
->> kernel tree or not?
-> 
-> IMO, yes.
-
-Agreed.
-
-> 
->> Should we add any kind of build infra to kernel tree, and at what level
->> would this be? Just DT overlay file building support, and drop the FIT build
->> support as was proposed in this RFC series or...?
-> 
-> I think I mentioned this already, but I expect that this is going to 
-> cause a number of conversions of dtsi + dtsi -> dtb into base dts and 
-> overlay(s) dts files. In doing so, we still need to be able to build the 
-> original, full dtb.
-> 
->> U-boot can obviously parse the base DTB + overlay DTB:s into a single DTB,
->> but this is somewhat clumsy approach and is relatively error prone to get it
->> right.
-> 
-> Why? How is the kernel better?
-> 
->> Building the FIT image post kernel build would also be possible, but who
->> would be doing this, is there any need to get this done in generic manner or
->> shall we just add SoC vendor specific tools for this?
-> 
-> I'll tell you up front, I'm not a fan of FIT image (nor uImage, 
-> Android boot image, $bootloader image). If you want a collection of 
-> files and some configuration data, use a filesystem and a text file.
-
-My gut feel is that using a filesystem and a text file is the easier way
-to create the boot info.  But that also makes applying the overlay(s)
-during early Linux boot (at the point of FDT unflattening) impractical
-(can't access the file system without a driver, the driver depends on
-the devicetree, the devicetree depends upon the overlay).
-
-> 
-> Rob
-> 
+RnJvbTogQ29saW4gRGlkaWVyIDxjb2xpbi5kaWRpZXJAZGV2aWFsZXQuY29tPgoKQWRkIEVQSVQg
+Y2xvY2sgc3VwcG9ydCB0byB0aGUgaS5NWDZRIGNsb2NraW5nIGluZnJhc3RydWN0dXJlLgoKU2ln
+bmVkLW9mZi1ieTogQ29saW4gRGlkaWVyIDxjb2xpbi5kaWRpZXJAZGV2aWFsZXQuY29tPgpTaWdu
+ZWQtb2ZmLWJ5OiBDbMOpbWVudCBQZXJvbiA8Y2xlbWVudC5wZXJvbkBkZXZpYWxldC5jb20+ClJl
+dmlld2VkLWJ5OiBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ci0tLQogZHJp
+dmVycy9jbGsvaW14L2Nsay1pbXg2cS5jICAgICAgICAgICAgICAgfCAyICsrCiBpbmNsdWRlL2R0
+LWJpbmRpbmdzL2Nsb2NrL2lteDZxZGwtY2xvY2suaCB8IDQgKysrLQogMiBmaWxlcyBjaGFuZ2Vk
+LCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Ns
+ay9pbXgvY2xrLWlteDZxLmMgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDZxLmMKaW5kZXggOGQ1
+MThhZDVkYzEzLi5iOWVhNzAzN2UxOTMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGst
+aW14NnEuYworKysgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDZxLmMKQEAgLTc1Myw2ICs3NTMs
+OCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgaW14NnFfY2xvY2tzX2luaXQoc3RydWN0IGRldmljZV9u
+b2RlICpjY21fbm9kZSkKIAllbHNlCiAJCWNsa1tJTVg2UV9DTEtfRUNTUEk1XSA9IGlteF9jbGtf
+Z2F0ZTIoImVjc3BpNSIsICAgICAgICAiZWNzcGlfcm9vdCIsICAgICAgICBiYXNlICsgMHg2Yywg
+OCk7CiAJY2xrW0lNWDZRRExfQ0xLX0VORVRdICAgICAgICAgPSBpbXhfY2xrX2dhdGUyKCJlbmV0
+IiwgICAgICAgICAgImlwZyIsICAgICAgICAgICAgICAgYmFzZSArIDB4NmMsIDEwKTsKKwljbGtb
+SU1YNlFETF9DTEtfRVBJVDFdICAgICAgICA9IGlteF9jbGtfZ2F0ZTIoImVwaXQxIiwgICAgICAg
+ICAiaXBnIiwgICAgICAgICAgICAgICBiYXNlICsgMHg2YywgMTIpOworCWNsa1tJTVg2UURMX0NM
+S19FUElUMl0gICAgICAgID0gaW14X2Nsa19nYXRlMigiZXBpdDIiLCAgICAgICAgICJpcGciLCAg
+ICAgICAgICAgICAgIGJhc2UgKyAweDZjLCAxNCk7CiAJY2xrW0lNWDZRRExfQ0xLX0VTQUlfRVhU
+QUxdICAgPSBpbXhfY2xrX2dhdGUyX3NoYXJlZCgiZXNhaV9leHRhbCIsICAgImVzYWlfcG9kZiIs
+ICAgYmFzZSArIDB4NmMsIDE2LCAmc2hhcmVfY291bnRfZXNhaSk7CiAJY2xrW0lNWDZRRExfQ0xL
+X0VTQUlfSVBHXSAgICAgPSBpbXhfY2xrX2dhdGUyX3NoYXJlZCgiZXNhaV9pcGciLCAgICJhaGIi
+LCAgICAgICAgICAgYmFzZSArIDB4NmMsIDE2LCAmc2hhcmVfY291bnRfZXNhaSk7CiAJY2xrW0lN
+WDZRRExfQ0xLX0VTQUlfTUVNXSAgICAgPSBpbXhfY2xrX2dhdGUyX3NoYXJlZCgiZXNhaV9tZW0i
+LCAiYWhiIiwgICAgICAgICAgICAgYmFzZSArIDB4NmMsIDE2LCAmc2hhcmVfY291bnRfZXNhaSk7
+CmRpZmYgLS1naXQgYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2lteDZxZGwtY2xvY2suaCBi
+L2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14NnFkbC1jbG9jay5oCmluZGV4IGRhNTlmZDlj
+ZGI1ZS4uN2FkMTcxYjhmM2JmIDEwMDY0NAotLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2Nr
+L2lteDZxZGwtY2xvY2suaAorKysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2lteDZxZGwt
+Y2xvY2suaApAQCAtMjcxLDYgKzI3MSw4IEBACiAjZGVmaW5lIElNWDZRRExfQ0xLX1BSRV9BWEkJ
+CQkyNTgKICNkZWZpbmUgSU1YNlFETF9DTEtfTUxCX1NFTAkJCTI1OQogI2RlZmluZSBJTVg2UURM
+X0NMS19NTEJfUE9ERgkJCTI2MAotI2RlZmluZSBJTVg2UURMX0NMS19FTkQJCQkJMjYxCisjZGVm
+aW5lIElNWDZRRExfQ0xLX0VQSVQxCQkJMjYxCisjZGVmaW5lIElNWDZRRExfQ0xLX0VQSVQyCQkJ
+MjYyCisjZGVmaW5lIElNWDZRRExfQ0xLX0VORAkJCQkyNjMKIAogI2VuZGlmIC8qIF9fRFRfQklO
+RElOR1NfQ0xPQ0tfSU1YNlFETF9IICovCi0tIAoyLjE3LjAKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
