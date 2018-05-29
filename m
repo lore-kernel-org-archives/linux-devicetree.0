@@ -1,124 +1,178 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [patch v25 4/4] Documentation: jtag: Add ABI documentation
-Date: Tue, 29 May 2018 11:54:30 -0700
-Message-ID: <b1afae1e-b93b-3b86-1a45-ab0e408087e1@infradead.org>
-References: <1527605618-15705-1-git-send-email-oleksandrs@mellanox.com>
- <1527605618-15705-5-git-send-email-oleksandrs@mellanox.com>
+From: Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
+Date: Wed, 30 May 2018 00:24:43 +0530
+Message-ID: <1527620084-94864-2-git-send-email-vishal.sagar@xilinx.com>
+References: <1527620084-94864-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1527605618-15705-5-git-send-email-oleksandrs@mellanox.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>, gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: system-sw-low-level@mellanox.com, devicetree@vger.kernel.org, jiri@resnulli.us, vadimp@mellanox.com, linux-api@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, openocd-devel-owner@lists.sourceforge.net, robh+dt@kernel.org, joel@jms.id.au, linux-serial@vger.kernel.org, tklauser@distanz.ch, mchehab@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527620084-94864-1-git-send-email-vishal.sagar@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: hyun.kwon@xilinx.com, laurent.pinchart@ideasonboard.com, michal.simek@xilinx.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, dineshk@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2018 07:53 AM, Oleksandr Shamray wrote:
-> Added document that describe the ABI for JTAG class drivrer
+Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
 
-Sorry, there are still a few typos.  Please see below.
+The Xilinx MIPI CSI-2 Rx Subsystem consists of a DPHY, CSI-2 Rx, an
+optional I2C controller and an optional Video Format Bridge (VFB). The
+active lanes can be configured at run time if enabled in the IP. The
+DPHY register interface may also be enabled.
 
-> ---
->  Documentation/ABI/testing/gpio-cdev |    1 -
->  Documentation/ABI/testing/jtag-dev  |   23 +++++++
->  Documentation/jtag/overview         |   27 +++++++++
->  Documentation/jtag/transactions     |  109 +++++++++++++++++++++++++++++++++++
->  MAINTAINERS                         |    1 +
->  5 files changed, 160 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/ABI/testing/jtag-dev
->  create mode 100644 Documentation/jtag/overview
->  create mode 100644 Documentation/jtag/transactions
-> 
+Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+---
+ .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 117 +++++++++++++++++=
+++++
+ 1 file changed, 117 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi=
+2rxss.txt
 
-> diff --git a/Documentation/jtag/overview b/Documentation/jtag/overview
-> new file mode 100644
-> index 0000000..f179095
-> --- /dev/null
-> +++ b/Documentation/jtag/overview
-> @@ -0,0 +1,27 @@
-> +Linux kernel JTAG support
-> +=========================
-> +
-> +JTAG is an industry standard for verifying hardware.JTAG provides access to
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.t=
+xt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+new file mode 100644
+index 0000000..31ed721
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+@@ -0,0 +1,117 @@
++
++Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
++--------------------------------------------------------
++
++The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traff=
+ic
++from compliant camera sensors and send the output as AXI4 Stream video dat=
+a
++for image processing.
++
++The subsystem consists of a MIPI DPHY in slave mode which captures the
++data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
++packet data. This data is taken in by the Video Format Bridge (VFB),
++if selected, and converted into AXI4 Stream video data at selected
++pixels per clock as per AXI4-Stream Video IP and System Design UG934.
++
++For more details, please refer to PG232 MIPI CSI-2 Receiver Subsystem.
++https://www.xilinx.com/support/documentation/ip_documentation/mipi_csi2_rx=
+_subsystem/v3_0/pg232-mipi-csi2-rx.pdf
++
++Required properties:
++
++- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-2.0" or
++  "xlnx,mipi-csi2-rx-subsystem-3.0"
++
++- reg: Physical base address and length of the registers set for the devic=
+e.
++
++- interrupt-parent: specifies the phandle to the parent interrupt controll=
+er
++
++- interrupts: Property with a value describing the interrupt number.
++
++- xlnx,max-lanes: Maximum active lanes in the design.
++
++- xlnx,vc: Virtual Channel, specifies virtual channel number to be filtere=
+d.
++  If this is 4 then all virtual channels are allowed.
++
++- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw desig=
+n.
++  Packets other than this data type (except for RAW8 and User defined data
++  types) will be filtered out. Possible values are RAW6, RAW7, RAW8, RAW10=
+,
++  RAW12, RAW14, RGB444, RGB555, RGB565, RGB666, RGB888 and YUV4228bit.
++
++- xlnx,axis-tdata-width: AXI Stream width, This denotes the AXI Stream wid=
+th.
++  It depends on Data type chosen, Video Format Bridge enabled/disabled and
++  pixels per clock. If VFB is disabled then its value is either 0x20 (32 b=
+it)
++  or 0x40(64 bit) width.
++
++- xlnx,video-format, xlnx,video-width: Video format and width, as defined =
+in
++  video.txt.
++
++- port: Video port, using the DT bindings defined in ../video-interfaces.t=
+xt.
++  The CSI 2 Rx Subsystem has a two ports, one input port for connecting to
++  camera sensor and other is output port.
++
++- data-lanes: The number of data lanes through which CSI2 Rx Subsystem is
++  connected to the camera sensor as per video-interfaces.txt
++
++Optional properties:
++
++- xlnx,en-active-lanes: Enable Active lanes configuration in Protocol
++  Configuration Register.
++
++- xlnx,dphy-present: This is equivalent to whether DPHY register interface=
+ is
++  enabled or not.
++
++- xlnx,iic-present: This shows whether subsystem's IIC is present or not. =
+This
++  affects the base address of the DPHY.
++
++- xlnx,vfb: Video Format Bridge, Denotes if Video Format Bridge is selecte=
+d
++  so that output is as per AXI stream documented in UG934.
++
++- xlnx,ppc: Pixels per clock, Number of pixels to be transferred per pixel
++  clock. This is valid only if xlnx,vfb property is present.
++
++Example:
++
++       csiss_1: csiss@a0020000 {
++               compatible =3D "xlnx,mipi-csi2-rx-subsystem-3.0";
++               reg =3D <0x0 0xa0020000 0x0 0x20000>;
++               interrupt-parent =3D <&gic>;
++               interrupts =3D <0 95 4>;
++
++               xlnx,max-lanes =3D <0x4>;
++               xlnx,en-active-lanes;
++               xlnx,dphy-present;
++               xlnx,iic-present;
++               xlnx,vc =3D <0x4>;
++               xlnx,csi-pxl-format =3D "RAW8";
++               xlnx,vfb;
++               xlnx,ppc =3D <0x4>;
++               xlnx,axis-tdata-width =3D <0x20>;
++
++               ports {
++                       #address-cells =3D <1>;
++                       #size-cells =3D <0>;
++
++                       port@0 {
++                               reg =3D <0>;
++
++                               xlnx,video-format =3D <XVIP_VF_YUV_422>;
++                               xlnx,video-width =3D <8>;
++                               csiss_out: endpoint {
++                                       remote-endpoint =3D <&vcap_csiss_in=
+>;
++                               };
++                       };
++                       port@1 {
++                               reg =3D <1>;
++
++                               xlnx,video-format =3D <XVIP_VF_YUV_422>;
++                               xlnx,video-width =3D <8>;
++
++                               csiss_in: endpoint {
++                                       data-lanes =3D <1 2 3 4>;
++                                       /* MIPI CSI2 Camera handle */
++                                       remote-endpoint =3D <&vs2016_out>;
++                               };
++
++                       };
++
++               };
++       };
+--
+2.7.4
 
-needs space:
-                                              hardware. JTAG provides
-
-> +many logic signals of a complex integrated circuit, including the device pins.
-> +
-> +A JTAG interface is a special interface added to a chip.
-> +Depending on the version of JTAG, two, four, or five pins are added.
-> +
-> +The connector pins are:
-> +	TDI (Test Data In)
-> +	TDO (Test Data Out)
-> +	TCK (Test Clock)
-> +	TMS (Test Mode Select)
-> +	TRST (Test Reset) optional
-> +
-> +JTAG interface is designed to have two parts - basic core driver and
-> +hardware specific driver. The basic driver introduces a general interface
-> +which is not dependent of specific hardware. It provides communication
-> +between user space and hardware specific driver.
-> +Each JTAG device is represented as a char device from (jtag0, jtag1, ...).
-> +Access to a JTAG device is performed through IOCTL calls.
-> +
-> +Call flow example:
-> +User: open  -> /dev/jatgX
-> +User: ioctl -> /dev/jtagX -> JTAG core driver -> JTAG hardware specific driver
-> +User: close -> /dev/jatgX
-
-> diff --git a/Documentation/jtag/transactions b/Documentation/jtag/transactions
-> new file mode 100644
-> index 0000000..c5176a7
-> --- /dev/null
-> +++ b/Documentation/jtag/transactions
-> @@ -0,0 +1,109 @@
-> +The JTAG API
-> +=============
-> +
-> +JTAG master devices can be accessed through a character misc-device.
-> +Each JTAG master interface can be accessed by using /dev/jtagN.
-> +
-> +JTAG system calls set:
-> +- SIR (Scan Instruction Register, IEEE 1149.1 Instruction Register scan);
-> +- SDR (Scan Data Register, IEEE 1149.1 Data Register scan);
-> +- RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
-> +number of clocks.
-> +
-> +open(), close()
-> +-------
-> +open() opens JTAG device.
-> +
-> +Open/Close  device:
-> +- jtag_fd = open("/dev/jtag0", O_RDWR);
-> +- close(jtag_fd);
-> +
-> +ioctl()
-> +-------
-> +All access operations to JTAG devices are erformed through ioctl interface.
-
-                                             performed
-
-> +The IOCTL interface supports these requests:
-> +	JTAG_IOCRUNTEST - Force JTAG state machine to RUN_TEST/IDLE state
-> +	JTAG_SIOCFREQ - Set JTAG TCK frequency
-> +	JTAG_GIOCFREQ - Get JTAG TCK frequency
-> +	JTAG_IOCXFER - send JTAG data Xfer
-> +	JTAG_GIOCSTATUS - get current JTAG TAP status
-> +	JTAG_SIOCMODE - set JTAG mode flags.
-
-
-
--- 
-~Randy
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
