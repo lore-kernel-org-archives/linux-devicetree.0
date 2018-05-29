@@ -1,74 +1,49 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: opp: Introduce qcom-opp bindings
-Date: Tue, 29 May 2018 15:19:54 +0530
-Message-ID: <9786fd42-b48a-757f-97cb-0ca65c2f030e@codeaurora.org>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-3-rnayak@codeaurora.org>
- <67054dca-33a8-7e7c-6218-dc5abf84f6d8@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Vijay Viswanath <vviswana@codeaurora.org>
+Subject: [PATCH V2 0/4] Changes for SDCC5 version
+Date: Tue, 29 May 2018 15:22:37 +0530
+Message-ID: <1527587561-27448-1-git-send-email-vviswana@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <67054dca-33a8-7e7c-6218-dc5abf84f6d8@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, vviswana@codeaurora.org, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+With SDCC5, the MCI register space got removed and the offset/order of
+several registers have changed. Based on SDCC version used and the register,
+we need to pick the base address and offset.
 
+Changes since RFC:
+	Dropped voltage regulator changes in sdhci-msm
+	Split the "Register changes for sdcc V5" patch
+	Instead of checking mci removal for deciding which base addr to use,
+	new function pointers are defined for the 2 variants of sdcc: 
+		1) MCI present
+		2) V5 (mci removed)
+	Instead of string comparing with the compatible string from DT file,
+	the sdhci_msm_probe will now pick the data associated with the
+	compatible entry and use it to load variant specific address offsets
+	and msm variant specific read/write ops.
 
-On 05/26/2018 04:03 AM, David Collins wrote:
-> Hello Rajendra,
-> 
-> On 05/25/2018 03:01 AM, Rajendra Nayak wrote:
->> On Qualcomm platforms, an OPP node needs to describe an
-> 
-> s/Qualcomm/Qualcomm Technologies, Inc./
-> 
-> 
+Changes since V1:
+	Removed unused msm_reab & msm_writeb APIs
+	Changed certain register addresses from uppercase to lowercase hex
+	letters
+	Removed extra lines and spaces
+	Split "[PATCH V1 0/3] Changes for SDCC5 version" patch into two,
+	one for Documentation and other for the driver changes.
 
-[] ..
+Sayali Lokhande (2):
+  mmc: sdhci-msm: Define new Register address map
+  Documentation: sdhci-msm: Add new compatible string for SDCC v5
 
-> 
-> s/Qualcomm/Qualcomm Technologies, Inc./ ?
-> 
-> s/descibe/describe/
-> 
-> 
->> +
->> +OPP tables for devices on Qualcomm platforms require an additional
-> 
-> s/Qualcomm/Qualcomm Technologies, Inc./
-> 
-> 
->> +platform specific corner/level value to be specified.
->> +This value is passed on to the RPM (Resource Power Manager) by
-> 
-> Do you want to mention RPMh here as well?
-> 
-> 
+Vijay Viswanath (2):
+  mmc: sdhci-msm: Add msm version specific ops and data structures
+  mmc: host: Register changes for sdcc V5
 
-[] ..
-
->> +
->> +Required properties:
->> +- qcom,level: On Qualcomm platforms an OPP node can describe a positive value
-> 
-> s/Qualcomm/Qualcomm Technologies, Inc./
-> 
-> 
->> +representing a corner/level that's communicated with a remote microprocessor
->> +(usually called the RPM) which then translates it into a certain voltage on
->> +a voltage rail.
-> 
-> Should these lines be indented 2 spaces as is the case for the compatible
-> property above?
-> 
-> Could you add an example for both RPM and RPMh in this binding file?
-
-Thanks David for the review. I will fix all this up when I respin.
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |   7 +-
+ drivers/mmc/host/sdhci-msm.c                       | 513 ++++++++++++++++-----
+ 2 files changed, 393 insertions(+), 127 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+ Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
