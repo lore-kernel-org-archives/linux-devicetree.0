@@ -1,53 +1,99 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v10 0/2] Initial Allwinner V3s CSI Support
-Date: Tue, 29 May 2018 11:57:57 +0200
-Message-ID: <20180529095757.qkz7jyuxza7movbc@flea.home>
-References: <20180517090224.u3ygdzjr77im2mmp@flea>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v3 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC driver
+Date: Tue, 29 May 2018 12:57:54 +0300
+Message-ID: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ6IWTMAKGQE6JSFVGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180517090224.u3ygdzjr77im2mmp@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-su
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 17, 2018 at 11:02:24AM +0200, Maxime Ripard wrote:
-> On Fri, May 04, 2018 at 02:44:08PM +0800, Yong Deng wrote:
-> > This patchset add initial support for Allwinner V3s CSI.
-> > 
-> > Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> > interface and CSI1 is used for parallel interface. This is not
-> > documented in datasheet but by test and guess.
-> > 
-> > This patchset implement a v4l2 framework driver and add a binding 
-> > documentation for it. 
-> > 
-> > Currently, the driver only support the parallel interface. And has been
-> > tested with a BT1120 signal which generating from FPGA. The following
-> > fetures are not support with this patchset:
-> >   - ISP 
-> >   - MIPI-CSI2
-> >   - Master clock for camera sensor
-> >   - Power regulator for the front end IC
-> 
-> I tested it on my H3 with a parallel camera, and it still works. Thanks!
-> 
-> Hans, Sakari, any chance this might land in 4.18?
+Patch series adding support for ROHM BD71837 PMIC.
 
-Ping?
+BD71837 is a programmable Power Management IC for powering single-core,
+dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+low BOM cost and compact solution footprint. It integrates 8 buck
+regulators and 7 LDO’s to provide all the power rails required by the
+SoC and the commonly used peripherals.
 
-Maxime
+The driver aims to not limit the usage of PMIC. Thus the buck and LDO
+naming is generic and not tied to any specific purposes. However there
+is following limitations which make it mostly suitable for use cases
+where the processor where PMIC driver is running is powered by the PMIC:
+
+- The PMIC is not re-initialized if it resets. PMIC may reset as a
+  result of voltage monitoring (over/under voltage) or due to reset
+  request. Driver is only initializing PMIC at probe. This is not
+  problem as long as processor controlling PMIC is powered by PMIC.
+
+- The PMIC internal state machine is ignored by driver. Driver assumes
+  the PMIC is wired so that it is always in "run" state when controlled
+  by the driver.
+
+Changelog v3
+- kill unused variable
+- kill unused definitions
+- use REGMAP_IRQ_REG
+
+Changelog v2
+Based on feedback from Mark Brown
+- Squashed code and buildfile changes to same patch
+- Fixed some styling issues
+- Changed SPDX comments to CPP style
+- Error out if voltage is changed when regulator is enabled instead of
+  Disabling the regulator for duration of change
+- Use devm_regulator_register
+- Remove compatible usage from regulators - use parent dev for config
+- Add a note about using regulator-boot-on for BUCK6 and 7
+- fixed warnings from kbuild test robot
+
+patch 1: 
+        MFD driver and definitions bringing interrupt support and
+        enabling clk and regulator subsystems.
+Patches 2, 3 and 4:
+        device tree binding documents.
+Patch 5:
+        clock subsystem and support for gated clock.
+Patch 6:
+        regulator driver supporting 8 bucks and 7 LDOs.
+
+This patch series is based on for-mfd-next
+
+---
+
+Matti Vaittinen (6):
+  mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+  mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  regulator: bd71837: Devicetree bindings for BD71837 regulators
+  clk: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  clk: bd71837: Add driver for BD71837 PMIC clock
+  regulator: bd71837: BD71837 PMIC regulator driver
+
+ .../bindings/clock/rohm,bd71837-clock.txt          |  37 ++
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  52 ++
+ .../bindings/regulator/rohm,bd71837-regulator.txt  | 126 ++++
+ drivers/clk/Kconfig                                |   9 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-bd71837.c                          | 154 +++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bd71837.c                              | 224 +++++++
+ drivers/regulator/Kconfig                          |  11 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/bd71837-regulator.c              | 677 +++++++++++++++++++++
+ include/linux/mfd/bd71837.h                        | 288 +++++++++
+ 13 files changed, 1594 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ create mode 100644 drivers/clk/clk-bd71837.c
+ create mode 100644 drivers/mfd/bd71837.c
+ create mode 100644 drivers/regulator/bd71837-regulator.c
+ create mode 100644 include/linux/mfd/bd71837.h
 
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.14.3
