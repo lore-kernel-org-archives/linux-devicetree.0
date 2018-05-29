@@ -1,43 +1,33 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2] mfd: qcom-spmi-pmic: Add support for
- pm8005,pm8998,pmi8998
-Date: Tue, 29 May 2018 09:38:02 +0100
-Message-ID: <20180529083802.GA8038@dell>
-References: <20180502163535.208548-1-swboyd@chromium.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/5] clk: renesas: r8a7795: add ccree clock bindings
+Date: Tue, 29 May 2018 10:48:58 +0200
+Message-ID: <CAMuHMdVxcnw5Qy4JPo5r-VvgSxDpp==g6sandNeNji+8CgKOqQ@mail.gmail.com>
+References: <1527171551-21979-1-git-send-email-gilad@benyossef.com> <1527171551-21979-5-git-send-email-gilad@benyossef.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180502163535.208548-1-swboyd@chromium.org>
+In-Reply-To: <1527171551-21979-5-git-send-email-gilad@benyossef.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>L
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 02 May 2018, Stephen Boyd wrote:
+On Thu, May 24, 2018 at 4:19 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> This patch adds the clock used by the CryptoCell 630p instance in the SoC.
+>
+> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 
-> Add the compatibles and PMIC ids for the pm8005, pm8998, and pmi8998
-> PMICS found on MSM8998 and SDM845 based platforms.
-> 
-> Cc: <devicetree@vger.kernel.org>
-> Reviewed-by: Rob Herring <robh@kernel.org> 
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Changes from v1:
->  * Picked up review tags
->  * Reordered lists to be based on id numbers
-> 
->  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 3 +++
->  drivers/mfd/qcom-spmi-pmic.c                             | 6 ++++++
->  2 files changed, 9 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks, queueing in clk-renesas-for-v4.19, with "bindings" dropped from the
+one-line summary.
 
-Applied, thanks.
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
