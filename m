@@ -1,120 +1,138 @@
 From: Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v2] display: panel: Add KOE tx14d24vm1bpa display support (320x240)
-Date: Tue, 29 May 2018 17:05:28 +0200
-Message-ID: <20180529150528.22136-1-lukma@denx.de>
-References: <20180412143715.6828-1-lukma@denx.de>
+Subject: Re: [PATCH] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
+ from K+P
+Date: Tue, 29 May 2018 17:09:39 +0200
+Message-ID: <20180529170939.68419862@jawa>
+References: <20180509153428.1440-1-lukma@denx.de>
+ <CAOMZO5AexXNEGVoXa9K_GAm+aFLNRQOXOhF_SdKAjV1qmuD2nA@mail.gmail.com>
+ <20180519140202.3449e3c1@jawa>
+ <CAOMZO5DoLwEmQz5BQHDLk8sBq7mDH_UxBjRA0RGKb+PunMYu-Q@mail.gmail.com>
+ <20180529155736.275e27b1@jawa>
+ <CAOMZO5AU8PDEErHeU1yb9mwgNLJUvWipTrDsY8csXSHiNro-7w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/9A6/bDTizbW5tMTtRq96JlK"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180412143715.6828-1-lukma@denx.de>
+In-Reply-To: <CAOMZO5AU8PDEErHeU1yb9mwgNLJUvWipTrDsY8csXSHiNro-7w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for KOE's 5.7" display.
+--Sig_/9A6/bDTizbW5tMTtRq96JlK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes for v2:
-- Add Reviewed-by tag
+Hi Fabio,
 
----
- .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+> Hi Lukasz,
+>=20
+> On Tue, May 29, 2018 at 10:58 AM, Lukasz Majewski <lukma@denx.de>
+> wrote:
+>=20
+> > Sorry for "small" delay on this.
+> >
+> > Ok, so I've investigated the issue:
+> >
+> > 1. The code, which you pasted:
+> > http://code.bulix.org/ik01yu-339697
+> >
+> > works correctly as imx53-qsb-common.dtsi directly includes
+> > "imx53.dtsi" in which iomuxc label is defined.
+> >
+> > In my case though,
+> >
+> > 2. I do include imx53-tqma53.dtsi [1], in which the iomuxc" label
+> > is extended:
+> >
+> > &iomuxc {
+> >         pinctrl-names =3D "default";
+> >         pinctrl-0 =3D <&pinctrl_hog>;
+> >
+> >         imx53-tqma53 {
+> >                 pinctrl_hog: hoggrp {
+> >
+> > .......
+> >
+> > };
+> >
+> > The imx53-tqma53.dtsi then includes imx53.dtsi.
+> >
+> > Moreover, my file -> imx53-kp.dtsi as it includes [1], it extends
+> > further the &iomuxc label:
+> >
+> > &iomuxc {
+> >         pinctrl-names =3D "default";
+> >         pinctrl-0 =3D <&pinctrl_kp_common>;
+> >
+> >         imx53-kp-common {
+> >                 pinctrl_buzzer: buzzergrp {
+> > .......
+> > };
+> >
+> > So, when I remove imx53-kp-common I will have mismatch with [1]
+> > iomuxc structure.
+> >
+> > The code works as expected when I do remove imx53-tqma53 in [1].
+> >
+> > However, I would prefer to not touch this imx53-tqma53.dtsi file.
+> > It is also included in: imx53-mba53.dts, which extends iomux in
+> > following way:
+> >
+> > &iomuxc {
+> >         lvds1 {
+> >                 pinctrl_lvds1_1: lvds1-grp1 {
+> >
+> >
+> > Here I would need to remove lvds1, disp1 and tve to make it working.
+> > However, it will not break during build, but at run time.
+> >
+> > Considering the above, I would prefer to leave the code in [1] as is
+> > and use imx53-kp-common as well (as in v2 of this patch).
+> >
+> > Fabio, what do you think? =20
+>=20
+> Ok, thanks for the clarification. I just wanted to make sure we did
+> not have some kind of iomux bug there.
+>=20
+> I think your proposed patch is fine then.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-new file mode 100644
-index 000000000000..be7ac666807b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
-@@ -0,0 +1,42 @@
-+Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "koe,tx14d24vm1bpa"
-+- backlight: phandle of the backlight device attached to the panel
-+- power-supply: single regulator to provide the supply voltage
-+
-+Required nodes:
-+- port: Parallel port mapping to connect this display
-+
-+This panel needs single power supply voltage. Its backlight is conntrolled
-+via PWM signal.
-+
-+Example:
-+--------
-+
-+Example device-tree definition when connected to iMX53 based board
-+
-+	lcd_panel: lcd-panel {
-+		compatible = "koe,tx14d24vm1bpa";
-+		backlight = <&backlight_lcd>;
-+		power-supply = <&reg_3v3>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
-+Then one needs to extend the dispX node:
-+
-+	lcd_display: disp1 {
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index d9984bdb5bb5..103b43ce7dee 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1268,6 +1268,29 @@ static const struct panel_desc innolux_zj070na_01p = {
- 	},
- };
- 
-+static const struct display_timing koe_tx14d24vm1bpa_timing = {
-+	.pixelclock = { 5580000, 5850000, 6200000 },
-+	.hactive = { 320, 320, 320 },
-+	.hfront_porch = { 30, 30, 30 },
-+	.hback_porch = { 30, 30, 30 },
-+	.hsync_len = { 1, 5, 17 },
-+	.vactive = { 240, 240, 240 },
-+	.vfront_porch = { 6, 6, 6 },
-+	.vback_porch = { 5, 5, 5 },
-+	.vsync_len = { 1, 2, 11 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH,
-+};
-+
-+static const struct panel_desc koe_tx14d24vm1bpa = {
-+	.timings = &koe_tx14d24vm1bpa_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 115,
-+		.height = 86,
-+	},
-+};
-+
- static const struct display_timing koe_tx31d200vm0baa_timing = {
- 	.pixelclock = { 39600000, 43200000, 48000000 },
- 	.hactive = { 1280, 1280, 1280 },
-@@ -2204,6 +2227,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "innolux,zj070na-01p",
- 		.data = &innolux_zj070na_01p,
- 	}, {
-+		.compatible = "koe,tx14d24vm1bpa",
-+		.data = &koe_tx14d24vm1bpa,
-+	}, {
- 		.compatible = "koe,tx31d200vm0baa",
- 		.data = &koe_tx31d200vm0baa,
- 	}, {
--- 
-2.11.0
+Would you be so kind and add your Reviwed-by or Acked-by tag to second
+version of this patch?
+
+[PATCH v2] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards from
+K+P
+
+>=20
+> Thanks
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/9A6/bDTizbW5tMTtRq96JlK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlsNbTMACgkQAR8vZIA0
+zr2fXQgAtao4u1y4JaUYLUoJuzAWSdvQn0A0d07vW15djS4lP30UuO2Oy1jl7Ab/
+ByPwMgoo4IV2l+g/mHDjftkYFLaYoKwjXbJthPx0kKW0AcnheXE0or0nvulJdVwT
+HipsnUmKCOknKot/5Xrkt7kCJsdclh9+qIY6JjxCV7VWCJQO6fd8X7PMtmUCz7wF
+SNQ7aFZmk8I/3o/gvkHPmXulMwkxK6O66UqzrLrmKtHg1ld5E0RUnTPgwHyybzVt
+3zWfJusDITJuYbSn/ibSqTjF+zgRJB9YFPkNruCz8+/Scm8WY+5XeqxxN9xUD5Qd
+cm03ykLr50HWaDbc+8C2GjdeFkZpRg==
+=rmrB
+-----END PGP SIGNATURE-----
+
+--Sig_/9A6/bDTizbW5tMTtRq96JlK--
