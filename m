@@ -1,55 +1,46 @@
 From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH v6 0/3] Support for Qualcomm UFS QMP PHY on SDM845
-Date: Tue, 29 May 2018 12:37:48 +0800
-Message-ID: <20180529043751.10580-1-cang@codeaurora.org>
+Subject: [PATCH v6 1/3] phy: Update PHY power control sequence
+Date: Tue, 29 May 2018 12:37:49 +0800
+Message-ID: <20180529043751.10580-2-cang@codeaurora.org>
+References: <20180529043751.10580-1-cang@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180529043751.10580-1-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for UFS QMP PHY on SDM845 and the
-compatible string for it. This patch series depends on the current
-proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
-the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
-rebased on updated pipe_clk initialization sequence [3]. This series
-can only be merged once the dependent patches do.
-[1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
-[2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
-[3] https://patchwork.kernel.org/patch/10376551/
+All PHYs should be powered on before register configuration starts. And
+only PCIe PHYs need an extra power control before deasserts reset state.
 
-Changes since v5:
-- Updates the PHY power control sequence.
-- Updates UFS PHY power on condition check.
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Changes since v4:
-- Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
-- Power on PHY before serdes configuration starts.
-- Updates the UFS PHY initialization sequence.
-- Updates a few UFS PHY registers.
-- Incorporated review comments from Vivek and Manu.
-
-Changes since v3:
-- Incorporated review comments from Vivek and Rob.
-
-Changes since v2:
-- Incorporated review comments from Vivek and Rob.
-- Remove "ref_aux" from sdm845 ufs phy clock list structure.
-
-Changes since v1:
-- Incorporated review comments from Vivek and Manu.
-- Update the commit title of patch 2.
-
-Can Guo (3):
-  phy: Update PHY power control sequence
-  phy: Add QMP phy based UFS phy support for sdm845
-  dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
-
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
- drivers/phy/qualcomm/phy-qcom-qmp.c                | 205 +++++++++++++++++++--
- drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
- 3 files changed, 210 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 97ef942..f779b0f 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -982,6 +982,8 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+ 	if (cfg->has_phy_com_ctrl)
+ 		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+ 			     SW_PWRDN);
++	else
++		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+ 
+ 	if (cfg->has_phy_dp_com_ctrl) {
+ 		qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
+@@ -1127,7 +1129,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
+ 	 * Pull out PHY from POWER DOWN state.
+ 	 * This is active low enable signal to power-down PHY.
+ 	 */
+-	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
++	if (cfg->type == PHY_TYPE_PCIE)
++		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+ 
+ 	if (cfg->has_pwrdn_delay)
+ 		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
