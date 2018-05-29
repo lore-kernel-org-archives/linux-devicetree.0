@@ -1,127 +1,50 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v2 5/6] soc: qcom: rpmh powerdomain driver
-Date: Tue, 29 May 2018 12:03:26 -0700
-Message-ID: <06684883-43d8-be4b-b6ec-7f128c680d50@codeaurora.org>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-6-rnayak@codeaurora.org>
- <215deee5-6472-d587-9a90-f7158162ed82@codeaurora.org>
- <6f8e5fe2-199d-ba1f-19d7-2faf276075f3@codeaurora.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/4 RFCv2] net: dsa: Add bindings for Realtek SMI DSAs
+Date: Tue, 29 May 2018 12:30:41 -0700
+Message-ID: <baae8174-8b64-6de5-6e87-eb51b8c769f7@gmail.com>
+References: <20180528174752.6806-1-linus.walleij@linaro.org>
+ <20180528174752.6806-3-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6f8e5fe2-199d-ba1f-19d7-2faf276075f3@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180528174752.6806-3-linus.walleij@linaro.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc: netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rajendra,
 
-On 05/29/2018 03:19 AM, Rajendra Nayak wrote:
-> On 05/26/2018 06:38 AM, David Collins wrote:
->> On 05/25/2018 03:01 AM, Rajendra Nayak wrote:
->>> The RPMh powerdomain driver aggregates the corner votes from various
-...
->>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
->>> index a7a405178967..1faed239701d 100644
->>> --- a/drivers/soc/qcom/Kconfig
->>> +++ b/drivers/soc/qcom/Kconfig
->>> @@ -74,6 +74,15 @@ config QCOM_RMTFS_MEM
->>>  
->>>  	  Say y here if you intend to boot the modem remoteproc.
->>>  
->>> +config QCOM_RPMHPD
->>> +	tristate "Qualcomm RPMh Powerdomain driver"
->>
->> s/Qualcomm/Qualcomm Technologies, Inc./
+
+On 05/28/2018 10:47 AM, Linus Walleij wrote:
+> The Realtek SMI family is a set of DSA chips that provide
+> switching in routers. This binding just follows the pattern
+> set by other switches but with the introduction of an embedded
+> irqchip to demux and handle the interrupts fired by the single
+> line from the chip.
 > 
-> All other config options in qcom/Kconfig use 'Qualcomm XYZ feature'
-> for the comment. Maybe I will leave it that way for consistency?
-
-I don't have a strong opinion about it.  I just want the legal folks to be
-happy.  I'm fine with whatever achieves that goal.
-
-
->>> +
->>> +struct rpmhpd_desc {
->>> +	struct rpmhpd **rpmhpds;
->>> +	size_t num_pds;
->>> +};
->>
->> This struct could be removed and the per-platform arrays could instead be
->> NULL terminated.
+> This interrupt construction is similar to how we handle
+> interrupt controllers inside PCI bridges etc.
 > 
-> Yes, but I would prefer it this way unless you have strong objections.
-> Just makes it easier to do the allocations at probe for genpd_onecell_data structures.
+> Cc: Antti Seppälä <a.seppala@gmail.com>
+> Cc: Roman Yeryomin <roman@advem.lv>
+> Cc: Colin Leitner <colin.leitner@googlemail.com>
+> Cc: Gabor Juhos <juhosg@openwrt.org>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-I'm fine if you keep it as-is.  I mentioned the alternative because
-Stephen had requested the same modification on my qcom-rpmh-regulator
-driver patch [1].  Other reviewers may care about this point.
+> +
+> +	mdio {
+> +		compatible = "realtek,smi-mdio", "dsa-mdio";
 
+You should drop the "dsa-mdio" compatible string here since it both non
+documented and not matched either.
 
->> Is there an API to determine the currently operating performance state of
->> a given power domain?  Is this information accessible from userspace?  We
->> will definitely need this for general debugging.
-> 
-> A quick look shows me its not. I agree its a necessary feature for debug.
-> I will add a patch to expose it via debugfs
+Other than that, this looks great, with that fixed:
 
-Thanks
-
-
->>> +static int rpmhpd_probe(struct platform_device *pdev)
->>> +{
->>> +	int i, ret;
->>> +	size_t num;
->>> +	struct genpd_onecell_data *data;
->>> +	struct rpmhpd **rpmhpds;
->>> +	const struct rpmhpd_desc *desc;
->>> +
->>> +	desc = of_device_get_match_data(&pdev->dev);
->>> +	if (!desc)
->>> +		return -EINVAL;
->>> +
->>> +	rpmhpds = desc->rpmhpds;
->>> +	num = desc->num_pds;
->>> +
->>> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->>> +	if (!data)
->>> +		return -ENOMEM;
->>> +
->>> +	data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
->>> +				     GFP_KERNEL);
->>> +	data->num_domains = num;
->>> +
->>> +	ret = cmd_db_ready();
->>> +	if (ret) {
->>> +		if (ret != -EPROBE_DEFER)
->>> +			dev_err(&pdev->dev, "Command DB unavailable, ret=%d\n",
->>> +				ret);
->>> +		return ret;
->>> +	}
->>> +
->>> +	for (i = 0; i < num; i++) {
->>> +		if (!rpmhpds[i])
->>> +			continue;
->>
->> Why is this check needed?
-> 
-> Just to check/ignore if there are any holes.
-> maybe I should atleast throw a warning instead of silently ignoring it?
-
-A warning message might be a good idea if this condition should ever be
-reached but also doesn't necessarily imply that probing must be ceased.
-It looks like of_genpd_add_provider_onecell() ignores the NULL initialized
-data->domains[i] values so it should be safe to leave the holes in and not
-decrement num_domains accordingly.
-
-Take care,
-David
-
-[1]: https://lkml.org/lkml/2018/3/21/681
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Florian
