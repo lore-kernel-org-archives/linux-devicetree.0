@@ -1,182 +1,224 @@
-Return-Path: <SRS0=tqIY=IQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-db5eur01on0061.outbound.protection.outlook.com ([104.47.2.61]:32920
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932564AbeE2J7n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 29 May 2018 05:59:43 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
+Return-Path: <vkoul@kernel.org>
+Date: Tue, 29 May 2018 12:37:24 +0530
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
  Layerscape SoCs
-Date: Tue, 29 May 2018 09:59:40 +0000
-Message-ID: <AM6PR0402MB3382D42C76332B98D53D001AE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+Message-ID: <20180529070724.GE5666@vkoul-mobl>
 References: <20180525111920.24498-1-wen.he_1@nxp.com>
- <20180525111920.24498-2-wen.he_1@nxp.com> <20180529070724.GE5666@vkoul-mobl>
-In-Reply-To: <20180529070724.GE5666@vkoul-mobl>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+ <20180525111920.24498-2-wen.he_1@nxp.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180525111920.24498-2-wen.he_1@nxp.com>
+To: Wen He <wen.he_1@nxp.com>
+Cc: dmaengine@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZG1hZW5naW5lLW93bmVy
-QHZnZXIua2VybmVsLm9yZw0KPiBbbWFpbHRvOmRtYWVuZ2luZS1vd25lckB2Z2VyLmtlcm5lbC5v
-cmddIE9uIEJlaGFsZiBPZiBWaW5vZA0KPiBTZW50OiAyMDE4xOo11MIyOcjVIDE1OjA3DQo+IFRv
-OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBkbWFlbmdpbmVAdmdlci5rZXJuZWwu
-b3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBM
-ZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IEppYWZlaSBQYW4NCj4gPGppYWZlaS5wYW5Abnhw
-LmNvbT47IEppYWhlbmcgRmFuIDxqaWFoZW5nLmZhbkBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTog
-W3Y1IDIvNl0gZG1hZW5naW5lOiBmc2wtcWRtYTogQWRkIHFETUEgY29udHJvbGxlciBkcml2ZXIg
-Zm9yDQo+IExheWVyc2NhcGUgU29Dcw0KPiANCj4gT24gMjUtMDUtMTgsIDE5OjE5LCBXZW4gSGUg
-d3JvdGU6DQo+IA0KPiA+ICsvKioNCj4gPiArICogc3RydWN0IGZzbF9xZG1hX2Zvcm1hdCAtIFRo
-aXMgaXMgdGhlIHN0cnVjdCBob2xkaW5nIGRlc2NyaWJpbmcgY29tcG91bmQNCj4gPiArICoJCQkg
-ICAgZGVzY3JpcHRvciBmb3JtYXQgd2l0aCBxRE1BLg0KPiA+ICsgKiBAc3RhdHVzOgkJICAgIFRo
-aXMgZmllbGQgd2hpY2ggZGVzY3JpYmVzIGNvbW1hbmQgc3RhdHVzIGFuZA0KPiA+ICsgKgkJCSAg
-ICBlbnF1ZXVlIHN0YXR1cyBub3RpZmljYXRpb24uDQo+ID4gKyAqIEBjZmc6CQkgICAgVGhpcyBm
-aWVsZCB3aGljaCBkZXNjcmliZXMgZnJhbWUgb2Zmc2V0IGFuZCBmcmFtZQ0KPiA+ICsgKgkJCSAg
-ICBmb3JtYXQuDQo+ID4gKyAqIEBhZGRyX2xvOgkJICAgIFRoaXMgZmllbGQgd2hpY2ggaW5kaWNh
-dGluZyB0aGUgc3RhcnQgb2YgdGhlIGJ1ZmZlcg0KPiA+ICsgKgkJCSAgICBob2xkaW5nIHRoZSBj
-b21wb3VuZCBkZXNjcmlwdG9yIG9mIHRoZSBsb3dlciAzMi1iaXRzDQo+ID4gKyAqCQkJICAgIGFk
-ZHJlc3MgaW4gbWVtb3J5IDQwLWJpdCBhZGRyZXNzLg0KPiA+ICsgKiBAYWRkcl9oaToJCSAgICBU
-aGlzIGZpZWxkJ3MgdGhlIHNhbWUgYXMgYWJvdmUgZmllbGQsIGJ1dCBwb2ludA0KPiBoaWdoDQo+
-ID4gKyAqCQkJICAgIDgtYml0cyBpbiBtZW1vcnkgNDAtYml0IGFkZHJlc3MuDQo+ID4gKyAqIEBf
-X3Jlc2VydmVkMToJICAgIFJlc2VydmVkIGZpZWxkLg0KPiA+ICsgKiBAY2ZnOGJfdzE6CQkgICAg
-VGhpcyBmaWVsZCB3aGljaCBkZXNjcmliZXMgY29tcG91bmQgZGVzY3JpcHRvcg0KPiA+ICsgKgkJ
-CSAgICBjb21tYW5kIHF1ZXVlIG9yaWdpbiBwcm9kdWNlZCBieSBxRE1BIGFuZA0KPiBkeW5hbWlj
-DQo+IA0KPiB5b3UgbWF5IHJlbW92ZSAnVGhpcyBmaWVsZCB3aGljaCBkZXNjcmliZXMnLi4uIGlu
-IGFib3ZlIGxpbmVzLCBnaXZlIHJlYWRlciBubw0KPiBpbmZvcm1hdGlvbiA6KQ0KPiANCg0KT2ss
-IHNvIEkgcmVtb3ZlICd0aGlzIGZpbGVkIHdoaWNoIGRlc2NyaWJlcycgYnV0IGtlZXAgdGhlIHNl
-Y29uZCBoYWxmLCByaWdodD8NCg0KPiA+ICsgKgkJCSAgICBkZWJ1ZyBmaWVsZC4NCj4gPiArICog
-QGRhdGEJCSAgICBQb2ludGVyIHRvIHRoZSBtZW1vcnkgNDAtYml0IGFkZHJlc3MsIGRlc2NyaWJl
-cw0KPiBETUENCj4gPiArICoJCQkgICAgc291cmNlIGluZm9ybWFpb24gYW5kIERNQSBkZXN0aW5h
-dGlvbiBpbmZvcm1hdGlvbi4NCj4gDQo+IHR5cG8gaW5mb3JtYWlvbg0KPiANCg0KSSBhbSBzb3Jy
-eSAsIEl0J3Mgc3R1cGlkLg0KDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgZnNsX3FkbWFfcXVldWUgKmZz
-bF9xZG1hX2FsbG9jX3F1ZXVlX3Jlc291cmNlcygNCj4gPiArCQkJCQlzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2LA0KPiA+ICsJCQkJCXVuc2lnbmVkIGludCBxdWV1ZV9udW0pDQo+ID4gK3sN
-Cj4gPiArCXN0cnVjdCBmc2xfcWRtYV9xdWV1ZSAqcXVldWVfaGVhZCwgKnF1ZXVlX3RlbXA7DQo+
-ID4gKwlpbnQgcmV0LCBsZW4sIGk7DQo+ID4gKwl1bnNpZ25lZCBpbnQgcXVldWVfc2l6ZVtGU0xf
-UURNQV9RVUVVRV9NQVhdOw0KPiA+ICsNCj4gPiArCWlmIChxdWV1ZV9udW0gPiBGU0xfUURNQV9R
-VUVVRV9NQVgpDQo+ID4gKwkJcXVldWVfbnVtID0gRlNMX1FETUFfUVVFVUVfTUFYOw0KPiA+ICsJ
-bGVuID0gc2l6ZW9mKCpxdWV1ZV9oZWFkKSAqIHF1ZXVlX251bTsNCj4gPiArCXF1ZXVlX2hlYWQg
-PSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgbGVuLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICgh
-cXVldWVfaGVhZCkNCj4gPiArCQlyZXR1cm4gTlVMTDsNCj4gPiArDQo+ID4gKwlyZXQgPSBkZXZp
-Y2VfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkoJnBkZXYtPmRldiwgInF1ZXVlLXNpemVzIiwNCj4g
-PiArCQkJCQlxdWV1ZV9zaXplLCBxdWV1ZV9udW0pOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJ
-CWRldl9lcnIoJnBkZXYtPmRldiwgIkNhbid0IGdldCBxdWV1ZS1zaXplcy5cbiIpOw0KPiA+ICsJ
-CXJldHVybiBOVUxMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWZvciAoaSA9IDA7IGkgPCBxdWV1
-ZV9udW07IGkrKykgew0KPiA+ICsJCWlmIChxdWV1ZV9zaXplW2ldID4gRlNMX1FETUFfQ0lSQ1VM
-QVJfREVTQ19TSVpFX01BWA0KPiA+ICsJCQl8fCBxdWV1ZV9zaXplW2ldIDwgRlNMX1FETUFfQ0lS
-Q1VMQVJfREVTQ19TSVpFX01JTikgew0KPiA+ICsJCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJHZXQg
-d3JvbmcgcXVldWUtc2l6ZXMuXG4iKTsNCj4gPiArCQkJcmV0dXJuIE5VTEw7DQo+IA0KPiB0aGUg
-aW5kZW50cyBoZXJlIGFyZSBiYWQgZm9yIHJlYWRpbmcuLg0KPiANCg0KU28gSSBhZGQgYSBlbXB0
-eSBsaW5lIGluIGhlcmU/DQoNCj4gPiArc3RhdGljIGludCBmc2xfcWRtYV9xdWV1ZV90cmFuc2Zl
-cl9jb21wbGV0ZShzdHJ1Y3QgZnNsX3FkbWFfZW5naW5lDQo+ID4gKypmc2xfcWRtYSkgew0KPiA+
-ICsJc3RydWN0IGZzbF9xZG1hX3F1ZXVlICpmc2xfcXVldWUgPSBmc2xfcWRtYS0+cXVldWU7DQo+
-ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfcXVldWUgKmZzbF9zdGF0dXMgPSBmc2xfcWRtYS0+c3RhdHVz
-Ow0KPiA+ICsJc3RydWN0IGZzbF9xZG1hX3F1ZXVlICp0ZW1wX3F1ZXVlOw0KPiA+ICsJc3RydWN0
-IGZzbF9xZG1hX2NvbXAgKmZzbF9jb21wOw0KPiA+ICsJc3RydWN0IGZzbF9xZG1hX2Zvcm1hdCAq
-c3RhdHVzX2FkZHI7DQo+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpjc2dmX3NyYzsNCj4g
-PiArCXN0cnVjdCBmc2xfcHJlX3N0YXR1cyBwcmU7DQo+ID4gKwl2b2lkIF9faW9tZW0gKmJsb2Nr
-ID0gZnNsX3FkbWEtPmJsb2NrX2Jhc2U7DQo+ID4gKwl1MzIgcmVnLCBpOw0KPiA+ICsJYm9vbCBk
-dXBsaWNhdGUsIGR1cGxpY2F0ZV9oYW5kbGU7DQo+ID4gKw0KPiA+ICsJbWVtc2V0KCZwcmUsIDAs
-IHNpemVvZihzdHJ1Y3QgZnNsX3ByZV9zdGF0dXMpKTsNCj4gPiArDQo+ID4gKwl3aGlsZSAoMSkg
-ew0KPiA+ICsJCWR1cGxpY2F0ZSA9IDA7DQo+ID4gKwkJZHVwbGljYXRlX2hhbmRsZSA9IDA7DQo+
-ID4gKwkJcmVnID0gcWRtYV9yZWFkbChmc2xfcWRtYSwgYmxvY2sgKyBGU0xfUURNQV9CU1FTUik7
-DQo+ID4gKwkJaWYgKHJlZyAmIEZTTF9RRE1BX0JTUVNSX1FFKQ0KPiA+ICsJCQlyZXR1cm4gMDsN
-Cj4gPiArCQlzdGF0dXNfYWRkciA9IGZzbF9zdGF0dXMtPnZpcnRfaGVhZDsNCj4gPiArCQlpZiAo
-cWRtYV9jY2RmX2dldF9xdWV1ZShzdGF0dXNfYWRkcikgPT0gcHJlLnF1ZXVlICYmDQo+ID4gKwkJ
-CXFkbWFfY2NkZl9hZGRyX2dldDY0KHN0YXR1c19hZGRyKSA9PSBwcmUuYWRkcikNCj4gPiArCQkJ
-ZHVwbGljYXRlID0gMTsNCj4gPiArCQlpID0gcWRtYV9jY2RmX2dldF9xdWV1ZShzdGF0dXNfYWRk
-cik7DQo+ID4gKwkJcHJlLnF1ZXVlID0gcWRtYV9jY2RmX2dldF9xdWV1ZShzdGF0dXNfYWRkcik7
-DQo+ID4gKwkJcHJlLmFkZHIgPSBxZG1hX2NjZGZfYWRkcl9nZXQ2NChzdGF0dXNfYWRkcik7DQo+
-ID4gKwkJdGVtcF9xdWV1ZSA9IGZzbF9xdWV1ZSArIGk7DQo+ID4gKwkJc3Bpbl9sb2NrKCZ0ZW1w
-X3F1ZXVlLT5xdWV1ZV9sb2NrKTsNCj4gPiArCQlpZiAobGlzdF9lbXB0eSgmdGVtcF9xdWV1ZS0+
-Y29tcF91c2VkKSkgew0KPiA+ICsJCQlpZiAoZHVwbGljYXRlKQ0KPiA+ICsJCQkJZHVwbGljYXRl
-X2hhbmRsZSA9IDE7DQo+IA0KPiBjb2RlIHN0eWxlIG1hbmRhdGVzIGJyYWNlcyBmb3IgdGhpcyBh
-cyBlbHNlIGhhcyBicmFjZXMuLg0KPiANCg0KVGhhbmtzLCBpdCdzIGdvb2QgY29tbWVudHMuDQoN
-Cj4gPiArCQkJZWxzZSB7DQo+ID4gKwkJCQlzcGluX3VubG9jaygmdGVtcF9xdWV1ZS0+cXVldWVf
-bG9jayk7DQo+ID4gKwkJCQlyZXR1cm4gLUVBR0FJTjsNCj4gPiArCQkJfQ0KPiA+ICsJCX0gZWxz
-ZSB7DQo+ID4gKwkJCWZzbF9jb21wID0gbGlzdF9maXJzdF9lbnRyeSgmdGVtcF9xdWV1ZS0+Y29t
-cF91c2VkLA0KPiA+ICsJCQkJCQkJc3RydWN0IGZzbF9xZG1hX2NvbXAsDQo+ID4gKwkJCQkJCQls
-aXN0KTsNCj4gPiArCQkJY3NnZl9zcmMgPSBmc2xfY29tcC0+dmlydF9hZGRyICsgMjsNCj4gPiAr
-CQkJaWYgKGZzbF9jb21wLT5idXNfYWRkciArIDE2ICE9IHByZS5hZGRyKSB7DQo+ID4gKwkJCQlp
-ZiAoZHVwbGljYXRlKQ0KPiA+ICsJCQkJCWR1cGxpY2F0ZV9oYW5kbGUgPSAxOw0KPiANCj4gaGVy
-ZSBhcyB3ZWxsDQo+IA0KDQpzdXJlDQoNCj4gPiArc3RhdGljIGlycXJldHVybl90IGZzbF9xZG1h
-X2Vycm9yX2hhbmRsZXIoaW50IGlycSwgdm9pZCAqZGV2X2lkKSB7DQo+ID4gKwlzdHJ1Y3QgZnNs
-X3FkbWFfZW5naW5lICpmc2xfcWRtYSA9IGRldl9pZDsNCj4gPiArCXVuc2lnbmVkIGludCBpbnRy
-Ow0KPiA+ICsJdm9pZCBfX2lvbWVtICpzdGF0dXMgPSBmc2xfcWRtYS0+c3RhdHVzX2Jhc2U7DQo+
-ID4gKw0KPiA+ICsJaW50ciA9IHFkbWFfcmVhZGwoZnNsX3FkbWEsIHN0YXR1cyArIEZTTF9RRE1B
-X0RFRFIpOw0KPiA+ICsNCj4gPiArCWlmIChpbnRyKQ0KPiA+ICsJCWRldl9lcnIoZnNsX3FkbWEt
-PmRtYV9kZXYuZGV2LCAiRE1BIHRyYW5zYWN0aW9uIGVycm9yIVxuIik7DQo+ID4gKw0KPiA+ICsJ
-cWRtYV93cml0ZWwoZnNsX3FkbWEsIDB4ZmZmZmZmZmYsIHN0YXR1cyArIEZTTF9RRE1BX0RFRFIp
-Ow0KPiANCj4gd2h5IHVuY29uZGl0aW9uYWwgd3JpdGUsIHdhcyBleHBlY3RpbmcgdGhhdCB5b3Ug
-d291bGQgd3JpdGUgaWYgaW50ciBpcyBub24gbnVsbA0KPiANCj4gPiArc3RhdGljIGludCBmc2xf
-cWRtYV9yZWdfaW5pdChzdHJ1Y3QgZnNsX3FkbWFfZW5naW5lICpmc2xfcWRtYSkgew0KPiA+ICsJ
-c3RydWN0IGZzbF9xZG1hX3F1ZXVlICpmc2xfcXVldWUgPSBmc2xfcWRtYS0+cXVldWU7DQo+ID4g
-KwlzdHJ1Y3QgZnNsX3FkbWFfcXVldWUgKnRlbXA7DQo+ID4gKwl2b2lkIF9faW9tZW0gKmN0cmwg
-PSBmc2xfcWRtYS0+Y3RybF9iYXNlOw0KPiA+ICsJdm9pZCBfX2lvbWVtICpzdGF0dXMgPSBmc2xf
-cWRtYS0+c3RhdHVzX2Jhc2U7DQo+ID4gKwl2b2lkIF9faW9tZW0gKmJsb2NrID0gZnNsX3FkbWEt
-PmJsb2NrX2Jhc2U7DQo+ID4gKwlpbnQgaSwgcmV0Ow0KPiA+ICsJdTMyIHJlZzsNCj4gPiArDQo+
-ID4gKwkvKiBUcnkgdG8gaGFsdCB0aGUgcURNQSBlbmdpbmUgZmlyc3QuICovDQo+ID4gKwlyZXQg
-PSBmc2xfcWRtYV9oYWx0KGZzbF9xZG1hKTsNCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlkZXZf
-ZXJyKGZzbF9xZG1hLT5kbWFfZGV2LmRldiwgIkRNQSBoYWx0IGZhaWxlZCEiKTsNCj4gPiArCQly
-ZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCS8qDQo+ID4gKwkgKiBDbGVhciB0aGUg
-Y29tbWFuZCBxdWV1ZSBpbnRlcnJ1cHQgZGV0ZWN0IHJlZ2lzdGVyIGZvciBhbGwgcXVldWVzLg0K
-PiA+ICsJICovDQo+ID4gKwlxZG1hX3dyaXRlbChmc2xfcWRtYSwgMHhmZmZmZmZmZiwgYmxvY2sg
-KyBGU0xfUURNQV9CQ1FJRFIoMCkpOw0KPiANCj4gYnVuY2ggb2Ygd3JpdGVzIHdpdGggMHhmZmZm
-ZmZmZiwgY2FuIHlvdSBleHBsYWluIHdoeT8gQWxzbyBoZWxwcyB0byBtYWtlIGENCj4gbWFjcm8g
-Zm9yIHRoaXMNCj4gDQoNCk1heWJlIEkgbWlzc2VkIHRoYXQgSSBzaG91bGQgZGVmaW5lZCB0aGUg
-dmFsdWUgdG8gdGhlIG1hY3JvIGFuZCBhZGQgY29tbWVudC4NClJpZ2h0Pw0KDQo+ID4gKw0KPiA+
-ICsJZm9yIChpID0gMDsgaSA8IGZzbF9xZG1hLT5uX3F1ZXVlczsgaSsrKSB7DQo+ID4gKwkJdGVt
-cCA9IGZzbF9xdWV1ZSArIGk7DQo+ID4gKwkJLyoNCj4gPiArCQkgKiBJbml0aWFsaXplIENvbW1h
-bmQgUXVldWUgcmVnaXN0ZXJzIHRvIHBvaW50IHRvIHRoZSBmaXJzdA0KPiA+ICsJCSAqIGNvbW1h
-bmQgZGVzY3JpcHRvciBpbiBtZW1vcnkuDQo+ID4gKwkJICogRGVxdWV1ZSBQb2ludGVyIEFkZHJl
-c3MgUmVnaXN0ZXJzDQo+ID4gKwkJICogRW5xdWV1ZSBQb2ludGVyIEFkZHJlc3MgUmVnaXN0ZXJz
-DQo+ID4gKwkJICovDQo+ID4gKwkJcWRtYV93cml0ZWwoZnNsX3FkbWEsIHRlbXAtPmJ1c19hZGRy
-LA0KPiA+ICsJCQkJYmxvY2sgKyBGU0xfUURNQV9CQ1FEUEFfU0FERFIoaSkpOw0KPiA+ICsJCXFk
-bWFfd3JpdGVsKGZzbF9xZG1hLCB0ZW1wLT5idXNfYWRkciwNCj4gPiArCQkJCWJsb2NrICsgRlNM
-X1FETUFfQkNRRVBBX1NBRERSKGkpKTsNCj4gPiArDQo+ID4gKwkJLyogSW5pdGlhbGl6ZSB0aGUg
-cXVldWUgbW9kZS4gKi8NCj4gPiArCQlyZWcgPSBGU0xfUURNQV9CQ1FNUl9FTjsNCj4gPiArCQly
-ZWcgfD0gRlNMX1FETUFfQkNRTVJfQ0RfVEhMRChpbG9nMih0ZW1wLT5uX2NxKS00KTsNCj4gPiAr
-CQlyZWcgfD0gRlNMX1FETUFfQkNRTVJfQ1FfU0laRShpbG9nMih0ZW1wLT5uX2NxKS02KTsNCj4g
-DQo+IHNwYWNlIGFyb3VuZCAtIGluIHRoZSBhYm92ZSB0d28gbGluZXMNCj4gDQoNClN1cmUsIHRo
-YW5rcy4gDQoNCj4gPiArc3RhdGljIGVudW0gZG1hX3N0YXR1cyBmc2xfcWRtYV90eF9zdGF0dXMo
-c3RydWN0IGRtYV9jaGFuICpjaGFuLA0KPiA+ICsJCWRtYV9jb29raWVfdCBjb29raWUsIHN0cnVj
-dCBkbWFfdHhfc3RhdGUgKnR4c3RhdGUpIHsNCj4gPiArCWVudW0gZG1hX3N0YXR1cyByZXQ7DQo+
-ID4gKw0KPiA+ICsJcmV0ID0gZG1hX2Nvb2tpZV9zdGF0dXMoY2hhbiwgY29va2llLCB0eHN0YXRl
-KTsNCj4gPiArCWlmIChyZXQgPT0gRE1BX0NPTVBMRVRFIHx8ICF0eHN0YXRlKQ0KPiA+ICsJCXJl
-dHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHJldDsNCj4gDQo+IGhtbW0sIHRoaXMgc2Vl
-bXMgc2FtZSBhcyByZXR1cm4gZG1hX2Nvb2tpZV9zdGF0dXMoKSBzbyB3aHkgc2hvdWxkIHdlDQo+
-IGhhdmUgcmVzdCBvZiB0aGUgY29kZQ0KPiANCg0KUmlnaHQsIGhlcmUgY29kZSBvbmx5IGZpbGwg
-dGhlIHN0cnVjdCBkbWFfZGV2aWNlIG1lbWJlcidzIGRldmljZV90eF9zdGF0dXMuDQoNCj4gPiAr
-c3RhdGljIHZvaWQgZnNsX3FkbWFfaXNzdWVfcGVuZGluZyhzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4p
-IHsNCj4gPiArCXN0cnVjdCBmc2xfcWRtYV9jaGFuICpmc2xfY2hhbiA9IHRvX2ZzbF9xZG1hX2No
-YW4oY2hhbik7DQo+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfcXVldWUgKmZzbF9xdWV1ZSA9IGZzbF9j
-aGFuLT5xdWV1ZTsNCj4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKw0KPiA+ICsJc3Bp
-bl9sb2NrX2lycXNhdmUoJmZzbF9xdWV1ZS0+cXVldWVfbG9jaywgZmxhZ3MpOw0KPiA+ICsJc3Bp
-bl9sb2NrKCZmc2xfY2hhbi0+dmNoYW4ubG9jayk7DQo+ID4gKwlpZiAodmNoYW5faXNzdWVfcGVu
-ZGluZygmZnNsX2NoYW4tPnZjaGFuKSkNCj4gPiArCQlmc2xfcWRtYV9lbnF1ZXVlX2Rlc2MoZnNs
-X2NoYW4pOw0KPiA+ICsJc3Bpbl91bmxvY2soJmZzbF9jaGFuLT52Y2hhbi5sb2NrKTsNCj4gPiAr
-CXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmZzbF9xdWV1ZS0+cXVldWVfbG9jaywgZmxhZ3MpOw0K
-PiANCj4gd2h5IGRvIHdlIG5lZWQgdHdvIGxvY2tzLCBhbmQgc2luY2UgeW91IGFyZSBkb2luZyB2
-Y2hhbiB3aHkgc2hvdWxkIHlvdSBhZGQNCj4geW91ciBvd24gbG9jayBvbiB0b3ANCj4gDQoNClll
-cywgd2UgbmVlZCB0d28gbG9ja3MuDQpBcyB5b3Uga25vdywgdGhlIFFETUEgc3VwcG9ydCBtdWx0
-aXBsZSB2aXJ0dWFsaXplZCBibG9ja3MgZm9yIG11bHRpLWNvcmUgc3VwcG9ydC4NCnNvIHdlIG5l
-ZWQgdG8gbWFrZSBzdXJlIHRoYXQgbXVsaXRpLWNvcmUgYWNjZXNzIGlzc3Vlcy4NCg0KQmVzdCBS
-ZWdhcmRzLA0KV2VuDQo+IC4uLg0KPiANCj4gT3ZlcmFsbCB0aGUgcGF0Y2ggaGFzIHNvbWUgY29k
-ZSBzdHlsZSBpc3N1ZXMgd2hpY2gga2VlcCBjYXRjaGluZyBteSBleWUsIGNhbg0KPiB5b3UgcGxl
-YXNlIGNoZWNrIHRoZW0uIEFsc28gd291bGQgaGVscCB0byBydW4gY2hlY2twYXRjaCB3aXRoIC0t
-c3RyaWN0IGFuZA0KPiAtLWNvZGVzcGVsbCBvcHRpb24gdG8gY2F0Y2ggdHlwb3MgYW5kIGFsaWdu
-bWVudCBpc3N1ZS4gUGxlYXNlIGJld2FyZQ0KPiBjaGVja3BhdGNoIGlzIGEgZ3VpZGUgYW5kIE5P
-VCBhIHJ1bGVib29rIHNvIHVzZSB5b3VyIGRpc2NyZXRpb24gOikNCj4gDQo+IC0tDQo+IH5WaW5v
-ZA0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAi
-dW5zdWJzY3JpYmUgZG1hZW5naW5lIiBpbiB0aGUNCj4gYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFq
-b3Jkb21vQHZnZXIua2VybmVsLm9yZyBNb3JlIG1ham9yZG9tbyBpbmZvIGF0DQo+IGh0dHBzOi8v
-ZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUy
-RnZnZXIuDQo+IGtlcm5lbC5vcmclMkZtYWpvcmRvbW8taW5mby5odG1sJmRhdGE9MDIlN0MwMSU3
-Q3dlbi5oZV8xJTQwbnhwLmNvDQo+IG0lN0MxNWFkYzA4ZDkzODg0MTE4OTg4MTA4ZDVjNTMyZDdl
-ZiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5DQo+IGM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2NjMx
-NzQ0NTI0MTA0NTYxJnNkYXRhPTB1Y1k3MW1yS2dQRWU4ZTMNCj4gSWhPTjkxemFVZU96VGdGVmJ6
-Um5GUHdLd1FvJTNEJnJlc2VydmVkPTANCg==
+On 25-05-18, 19:19, Wen He wrote:
+
+> +/**
+> + * struct fsl_qdma_format - This is the struct holding describing compound
+> + *			    descriptor format with qDMA.
+> + * @status:		    This field which describes command status and
+> + *			    enqueue status notification.
+> + * @cfg:		    This field which describes frame offset and frame
+> + *			    format.
+> + * @addr_lo:		    This field which indicating the start of the buffer
+> + *			    holding the compound descriptor of the lower 32-bits
+> + *			    address in memory 40-bit address.
+> + * @addr_hi:		    This field's the same as above field, but point high
+> + *			    8-bits in memory 40-bit address.
+> + * @__reserved1:	    Reserved field.
+> + * @cfg8b_w1:		    This field which describes compound descriptor
+> + *			    command queue origin produced by qDMA and dynamic
+
+you may remove 'This field which describes'... in above lines, give reader no
+information :)
+
+> + *			    debug field.
+> + * @data		    Pointer to the memory 40-bit address, describes DMA
+> + *			    source informaion and DMA destination information.
+
+typo informaion
+
+> +static struct fsl_qdma_queue *fsl_qdma_alloc_queue_resources(
+> +					struct platform_device *pdev,
+> +					unsigned int queue_num)
+> +{
+> +	struct fsl_qdma_queue *queue_head, *queue_temp;
+> +	int ret, len, i;
+> +	unsigned int queue_size[FSL_QDMA_QUEUE_MAX];
+> +
+> +	if (queue_num > FSL_QDMA_QUEUE_MAX)
+> +		queue_num = FSL_QDMA_QUEUE_MAX;
+> +	len = sizeof(*queue_head) * queue_num;
+> +	queue_head = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
+> +	if (!queue_head)
+> +		return NULL;
+> +
+> +	ret = device_property_read_u32_array(&pdev->dev, "queue-sizes",
+> +					queue_size, queue_num);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't get queue-sizes.\n");
+> +		return NULL;
+> +	}
+> +
+> +	for (i = 0; i < queue_num; i++) {
+> +		if (queue_size[i] > FSL_QDMA_CIRCULAR_DESC_SIZE_MAX
+> +			|| queue_size[i] < FSL_QDMA_CIRCULAR_DESC_SIZE_MIN) {
+> +			dev_err(&pdev->dev, "Get wrong queue-sizes.\n");
+> +			return NULL;
+
+the indents here are bad for reading..
+
+> +static int fsl_qdma_queue_transfer_complete(struct fsl_qdma_engine *fsl_qdma)
+> +{
+> +	struct fsl_qdma_queue *fsl_queue = fsl_qdma->queue;
+> +	struct fsl_qdma_queue *fsl_status = fsl_qdma->status;
+> +	struct fsl_qdma_queue *temp_queue;
+> +	struct fsl_qdma_comp *fsl_comp;
+> +	struct fsl_qdma_format *status_addr;
+> +	struct fsl_qdma_format *csgf_src;
+> +	struct fsl_pre_status pre;
+> +	void __iomem *block = fsl_qdma->block_base;
+> +	u32 reg, i;
+> +	bool duplicate, duplicate_handle;
+> +
+> +	memset(&pre, 0, sizeof(struct fsl_pre_status));
+> +
+> +	while (1) {
+> +		duplicate = 0;
+> +		duplicate_handle = 0;
+> +		reg = qdma_readl(fsl_qdma, block + FSL_QDMA_BSQSR);
+> +		if (reg & FSL_QDMA_BSQSR_QE)
+> +			return 0;
+> +		status_addr = fsl_status->virt_head;
+> +		if (qdma_ccdf_get_queue(status_addr) == pre.queue &&
+> +			qdma_ccdf_addr_get64(status_addr) == pre.addr)
+> +			duplicate = 1;
+> +		i = qdma_ccdf_get_queue(status_addr);
+> +		pre.queue = qdma_ccdf_get_queue(status_addr);
+> +		pre.addr = qdma_ccdf_addr_get64(status_addr);
+> +		temp_queue = fsl_queue + i;
+> +		spin_lock(&temp_queue->queue_lock);
+> +		if (list_empty(&temp_queue->comp_used)) {
+> +			if (duplicate)
+> +				duplicate_handle = 1;
+
+code style mandates braces for this as else has braces..
+
+> +			else {
+> +				spin_unlock(&temp_queue->queue_lock);
+> +				return -EAGAIN;
+> +			}
+> +		} else {
+> +			fsl_comp = list_first_entry(&temp_queue->comp_used,
+> +							struct fsl_qdma_comp,
+> +							list);
+> +			csgf_src = fsl_comp->virt_addr + 2;
+> +			if (fsl_comp->bus_addr + 16 != pre.addr) {
+> +				if (duplicate)
+> +					duplicate_handle = 1;
+
+here as well
+
+> +static irqreturn_t fsl_qdma_error_handler(int irq, void *dev_id)
+> +{
+> +	struct fsl_qdma_engine *fsl_qdma = dev_id;
+> +	unsigned int intr;
+> +	void __iomem *status = fsl_qdma->status_base;
+> +
+> +	intr = qdma_readl(fsl_qdma, status + FSL_QDMA_DEDR);
+> +
+> +	if (intr)
+> +		dev_err(fsl_qdma->dma_dev.dev, "DMA transaction error!\n");
+> +
+> +	qdma_writel(fsl_qdma, 0xffffffff, status + FSL_QDMA_DEDR);
+
+why unconditional write, was expecting that you would write if intr is non null
+
+> +static int fsl_qdma_reg_init(struct fsl_qdma_engine *fsl_qdma)
+> +{
+> +	struct fsl_qdma_queue *fsl_queue = fsl_qdma->queue;
+> +	struct fsl_qdma_queue *temp;
+> +	void __iomem *ctrl = fsl_qdma->ctrl_base;
+> +	void __iomem *status = fsl_qdma->status_base;
+> +	void __iomem *block = fsl_qdma->block_base;
+> +	int i, ret;
+> +	u32 reg;
+> +
+> +	/* Try to halt the qDMA engine first. */
+> +	ret = fsl_qdma_halt(fsl_qdma);
+> +	if (ret) {
+> +		dev_err(fsl_qdma->dma_dev.dev, "DMA halt failed!");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Clear the command queue interrupt detect register for all queues.
+> +	 */
+> +	qdma_writel(fsl_qdma, 0xffffffff, block + FSL_QDMA_BCQIDR(0));
+
+bunch of writes with 0xffffffff, can you explain why? Also helps to make a
+macro for this
+
+> +
+> +	for (i = 0; i < fsl_qdma->n_queues; i++) {
+> +		temp = fsl_queue + i;
+> +		/*
+> +		 * Initialize Command Queue registers to point to the first
+> +		 * command descriptor in memory.
+> +		 * Dequeue Pointer Address Registers
+> +		 * Enqueue Pointer Address Registers
+> +		 */
+> +		qdma_writel(fsl_qdma, temp->bus_addr,
+> +				block + FSL_QDMA_BCQDPA_SADDR(i));
+> +		qdma_writel(fsl_qdma, temp->bus_addr,
+> +				block + FSL_QDMA_BCQEPA_SADDR(i));
+> +
+> +		/* Initialize the queue mode. */
+> +		reg = FSL_QDMA_BCQMR_EN;
+> +		reg |= FSL_QDMA_BCQMR_CD_THLD(ilog2(temp->n_cq)-4);
+> +		reg |= FSL_QDMA_BCQMR_CQ_SIZE(ilog2(temp->n_cq)-6);
+
+space around - in the above two lines
+
+> +static enum dma_status fsl_qdma_tx_status(struct dma_chan *chan,
+> +		dma_cookie_t cookie, struct dma_tx_state *txstate)
+> +{
+> +	enum dma_status ret;
+> +
+> +	ret = dma_cookie_status(chan, cookie, txstate);
+> +	if (ret == DMA_COMPLETE || !txstate)
+> +		return ret;
+> +
+> +	return ret;
+
+hmmm, this seems same as return dma_cookie_status() so why should we have rest
+of the code
+
+> +static void fsl_qdma_issue_pending(struct dma_chan *chan)
+> +{
+> +	struct fsl_qdma_chan *fsl_chan = to_fsl_qdma_chan(chan);
+> +	struct fsl_qdma_queue *fsl_queue = fsl_chan->queue;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&fsl_queue->queue_lock, flags);
+> +	spin_lock(&fsl_chan->vchan.lock);
+> +	if (vchan_issue_pending(&fsl_chan->vchan))
+> +		fsl_qdma_enqueue_desc(fsl_chan);
+> +	spin_unlock(&fsl_chan->vchan.lock);
+> +	spin_unlock_irqrestore(&fsl_queue->queue_lock, flags);
+
+why do we need two locks, and since you are doing vchan why should you add your
+own lock on top
+
+...
+
+Overall the patch has some code style issues which keep catching my eye, can
+you please check them. Also would help to run checkpatch with --strict and
+--codespell option to catch typos and alignment issue. Please beware checkpatch
+is a guide and NOT a rulebook so use your discretion :)
+
+-- 
+~Vinod
