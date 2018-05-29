@@ -1,139 +1,55 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] remoteproc: Add APSS based Qualcomm ADSP PIL driver for
- SDM845
-Date: Mon, 28 May 2018 21:36:34 -0700
-Message-ID: <20180529043634.GF2259@tuxbook-pro>
-References: <1526194908-19027-1-git-send-email-rohitkr@codeaurora.org>
- <20180523062645.GY14924@minitux>
- <767dc01f-abed-8192-0274-ff5fc092f60b@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Can Guo <cang@codeaurora.org>
+Subject: [PATCH v6 0/3] Support for Qualcomm UFS QMP PHY on SDM845
+Date: Tue, 29 May 2018 12:37:48 +0800
+Message-ID: <20180529043751.10580-1-cang@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <767dc01f-abed-8192-0274-ff5fc092f60b@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit Kumar <rohitkr@codeaurora.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, sbpata@codeaurora.org, asishb@codeaurora.org, rkarra@codeaurora.org, RajendraBabu Medisetti <rajendrabm@codeaurora.org>, Krishnamurthy Renu <krishnamurthy.renu@codeaurora.org>, asishb@qti.qualcomm.com, Ramlal Karra <rkarra@qti.qualcomm.com>, Rohit Kumar <rohkumar@qti.qualcomm.com>
+To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Can Guo <cang@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 23 May 22:18 PDT 2018, Rohit Kumar wrote:
+This patch series adds support for UFS QMP PHY on SDM845 and the
+compatible string for it. This patch series depends on the current
+proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
+the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
+rebased on updated pipe_clk initialization sequence [3]. This series
+can only be merged once the dependent patches do.
+[1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
+[2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
+[3] https://patchwork.kernel.org/patch/10376551/
 
-> Thanks Bjorn for reviewing.
-> 
-> 
-> On 5/23/2018 11:56 AM, Bjorn Andersson wrote:
-> > On Sun 13 May 00:01 PDT 2018, Rohit kumar wrote:
-> > 
-> > > --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> > > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> > > @@ -10,6 +10,7 @@ on the Qualcomm ADSP Hexagon core.
-> > >   		    "qcom,msm8974-adsp-pil"
-> > >   		    "qcom,msm8996-adsp-pil"
-> > >   		    "qcom,msm8996-slpi-pil"
-> > > +		    "qcom,sdm845-apss-adsp-pil"
-> > Afaict there's nothing in this binding that ties this to the apss, so I
-> > don't think we should base the compatible on this. The differentiation
-> > is PAS vs non-PAS; so let's start naming the PAS variants
-> > "qcom,platform-subsystem-pas" and the non-PAS
-> > "qcom,platform-subsystem-pil" instead.
-> > 
-> > I.e. please make this "qcom,sdm845-adsp-pil".
-> > 
-> > More importantly, any resources such as clocks or reset lines should
-> > come from DT and as such you need to extend the binding quite a bit -
-> > which I suggest you do by introducing a new binding document.
-> Sure. Will create new dt-binding document with clocks and reset driver info
-> added for sdm845 PIL.
-> 
-> > >   - interrupts-extended:
-> > >   	Usage: required
-> > > diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> > > index 02627ed..759831b 100644
-> > > --- a/drivers/remoteproc/Makefile
-> > > +++ b/drivers/remoteproc/Makefile
-> > > @@ -14,7 +14,8 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
-> > >   obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
-> > >   obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
-> > >   obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
-> > > -obj-$(CONFIG_QCOM_ADSP_PIL)		+= qcom_adsp_pil.o
-> > > +obj-$(CONFIG_QCOM_ADSP_PIL)		+= qcom_adsp.o
-> > > +qcom_adsp-objs				+= qcom_adsp_pil.o qcom_adsp_pil_sdm845.o
-> > >   obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
-> > >   obj-$(CONFIG_QCOM_Q6V5_PIL)		+= qcom_q6v5_pil.o
-> > >   obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
-> > > diff --git a/drivers/remoteproc/qcom_adsp_pil.c b/drivers/remoteproc/qcom_adsp_pil.c
-> > I get the feeling that the main reason for modifying this file is its
-> > name, not that it reduces the complexity of the final solution. I
-> > definitely think it's cleaner to have some structural duplication and
-> > keep this driver handling the various PAS based remoteprocs.
-> The main intention was to re-use exisiting APIs in PAS based PIL
-> driver as the major change was w.r.t. start and stop of ADSP firmware.
-> Load(), interrupt handling and few other APIs will be same as done in
-> exisiting PAS based PIL driver.
+Changes since v5:
+- Updates the PHY power control sequence.
+- Updates UFS PHY power on condition check.
 
-A very good intention, I just think it's good to keep the PAS driver
-only dealing with PAS targets and work on reducing the duplication in
-other ways; keeping the logic as simple as possible.
+Changes since v4:
+- Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
+- Power on PHY before serdes configuration starts.
+- Updates the UFS PHY initialization sequence.
+- Updates a few UFS PHY registers.
+- Incorporated review comments from Vivek and Manu.
 
-> > Please see the RFC series I posted reducing the duplication between the
-> > various "Q6V5 drivers".
-> I went through the RFC. Our code will fit into the design. However, we
-> will still have some amount of code duplication between PAS and
-> Non-PAS ADSP PIL driver. Will this be fine?
+Changes since v3:
+- Incorporated review comments from Vivek and Rob.
 
-I'm sorry for not finding the time to provide you this feedback earlier.
+Changes since v2:
+- Incorporated review comments from Vivek and Rob.
+- Remove "ref_aux" from sdm845 ufs phy clock list structure.
 
-> Please suggest.
-> Will wait for your response whether to write complete new driver or reuse
-> exisitng one.
-> 
+Changes since v1:
+- Incorporated review comments from Vivek and Manu.
+- Update the commit title of patch 2.
 
-For the Hexagon based non-PAS WCSS remoteproc in IPQ8074 we're creating
-a new driver [1], in doing so I extracted some common helper functions
-that reduces the duplication between the drivers and there are a few
-more things on the way (e.g. reduce the code needed to deal with
-memory-regions).
+Can Guo (3):
+  phy: Update PHY power control sequence
+  phy: Add QMP phy based UFS phy support for sdm845
+  dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
 
-Please have a look at either extending this (non-PAS, non-MSA) driver to
-cover the ADSP as well. It's hard for me to see how the exact details
-will look after extracting the clocks and resets to their appropriate
-drivers, if it doesn't fit the details we should work further on making
-sure frameworks and helper functions reduces the logical duplication
-between drivers.
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 205 +++++++++++++++++++--
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
+ 3 files changed, 210 insertions(+), 14 deletions(-)
 
-[1] https://patchwork.kernel.org/patch/10420185/
- 
-> > [..]
-> > > diff --git a/drivers/remoteproc/qcom_adsp_pil.h b/drivers/remoteproc/qcom_adsp_pil.h
-> > [..]
-> > > +static inline void update_bits(void *reg, u32 mask_val, u32 set_val, u32 shift)
-> > > +{
-> > > +	u32 reg_val = 0;
-> > > +
-> > > +	reg_val = ((readl(reg)) & ~mask_val) | ((set_val << shift) & mask_val);
-> > > +	writel(reg_val, reg);
-> > > +}
-> > > +
-> > > +static inline unsigned int read_bit(void *reg, u32 mask, int shift)
-> > > +{
-> > > +	return ((readl(reg) & mask) >> shift);
-> > > +}
-> > I don't like these helper functions, their prototype is nonstandard and
-> > makes it really hard to read all the calling code.
-> > 
-> > I would prefer if you just inline the operations directly, to make it
-> > clearer what's going on in each case - if not then at least follow the
-> > prototype of e.g. regmap_udpate_bits(), which people might be used to.
-> Sure. Will update these APIs to follow standard format used in regmap and
-> other drivers.
-
-I like Rob's argument here (just use readl/writel) and it does suit our
-current style.
-
-[..]
-> Thanks,
-> Rohit
-> 
-
-Thank you Rohit,
-Bjorn
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
