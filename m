@@ -1,159 +1,102 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v3 3/6] regulator: bd71837: Devicetree bindings for BD71837
- regulators
-Date: Tue, 29 May 2018 13:00:01 +0300
-Message-ID: <81fa35b78d71d43ef2fcfeebc8d4b35c1a97599f.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 07/40] iommu: Add a page fault handler
+Date: Tue, 29 May 2018 11:00:21 +0100
+Message-ID: <6bd83326-2da0-1250-3dfc-7d6fbf58d701@arm.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-8-jean-philippe.brucker@arm.com>
+	<20180518110434.150a0e64@jacob-builder>
+	<8a640794-a6f3-fa01-82a9-06479a6f779a@arm.com>
+	<20180522163521.413e60c6@jacob-builder>
+	<bdf9f221-ab97-2168-d072-b7f6a0dba840@arm.com>
+	<20180525173544.05638510@jacob-builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180525173544.05638510@jacob-builder>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document devicetree bindings for ROHM BD71837 PMIC regulators.
+On 26/05/18 01:35, Jacob Pan wrote:
+>>>> Not exactly, it's the IOMMU driver that makes sure all LPIG in its
+>>>> queues are submitted by the above flush call. In more details the
+>>>> flow is:
+>>>>
+>>>> * Either device driver calls unbind()/sva_device_shutdown(), or the
+>>>> process exits.
+>>>> * If the device driver called, then it already told the device to
+>>>> stop using the PASID. Otherwise we use the mm_exit() callback to
+>>>> tell the device driver to stop using the PASID.
+> Sorry I still need more clarification. For the PASID termination
+> initiated by vfio unbind, I don't see device driver given a chance to
+> stop PASID. Seems just call __iommu_sva_unbind_device() which already
+> assume device stopped issuing DMA with the PASID.
+> So it is the vfio unbind caller responsible for doing driver callback
+> to stop DMA on a given PASID?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- .../bindings/regulator/rohm,bd71837-regulator.txt  | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+Yes, but I don't know how to implement this. Since PCI doesn't formalize
+the PASID stop mechanism and the device doesn't have a kernel driver,
+VFIO would need help from the userspace driver for stopping PASID
+(notify the userspace driver when an other process exits).
 
-diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-new file mode 100644
-index 000000000000..4edf3137d9f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
-@@ -0,0 +1,126 @@
-+ROHM BD71837 Power Management Integrated Circuit (PMIC) regulator bindings
-+
-+BD71837MWV is a programmable Power Management
-+IC (PMIC) for powering single-core, dual-core, and
-+quad-core SoC’s such as NXP-i.MX 8M. It is optimized
-+for low BOM cost and compact solution footprint. It
-+integrates 8 Buck regulators and 7 LDO’s to provide all
-+the power rails required by the SoC and the commonly
-+used peripherals.
-+
-+Required properties:
-+ - regulator-name: should be "buck1", ..., "buck8" and "ldo1", ..., "ldo7"
-+
-+List of regulators provided by this controller. BD71837 regulators node
-+should be sub node of the BD71837 MFD node. See BD71837 MFD bindings at
-+Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-+Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
-+definition for each of these nodes is defined using the standard
-+binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
-+Note that if BD71837 starts at RUN state you probably want to use
-+regulator-boot-on at least for BUCK6 and BUCK7 so that those are not
-+disabled by driver at startup. LDO5 and LDO6 are supplied by those and
-+if they are disabled at startup the voltage monitoring for LDO5/LDO6 will
-+cause PMIC to reset.
-+
-+The valid names for regulator nodes are:
-+BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7, BUCK8
-+LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
-+
-+Optional properties:
-+- Any optional property defined in bindings/regulator/regulator.txt
-+
-+Example:
-+regulators {
-+	buck1: BUCK1 {
-+		regulator-name = "buck1";
-+		regulator-min-microvolt = <700000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-boot-on;
-+		regulator-ramp-delay = <1250>;
-+	};
-+	buck2: BUCK2 {
-+		regulator-name = "buck2";
-+		regulator-min-microvolt = <700000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-ramp-delay = <1250>;
-+	};
-+	buck3: BUCK3 {
-+		regulator-name = "buck3";
-+		regulator-min-microvolt = <700000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-boot-on;
-+	};
-+	buck4: BUCK4 {
-+		regulator-name = "buck4";
-+		regulator-min-microvolt = <700000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-boot-on;
-+	};
-+	buck5: BUCK5 {
-+		regulator-name = "buck5";
-+		regulator-min-microvolt = <700000>;
-+		regulator-max-microvolt = <1350000>;
-+		regulator-boot-on;
-+	};
-+	buck6: BUCK6 {
-+		regulator-name = "buck6";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+	};
-+	buck7: BUCK7 {
-+		regulator-name = "buck7";
-+		regulator-min-microvolt = <1605000>;
-+		regulator-max-microvolt = <1995000>;
-+		regulator-boot-on;
-+	};
-+	buck8: BUCK8 {
-+		regulator-name = "buck8";
-+		regulator-min-microvolt = <800000>;
-+		regulator-max-microvolt = <1400000>;
-+	};
-+
-+	ldo1: LDO1 {
-+		regulator-name = "ldo1";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+	};
-+	ldo2: LDO2 {
-+		regulator-name = "ldo2";
-+		regulator-min-microvolt = <900000>;
-+		regulator-max-microvolt = <900000>;
-+		regulator-boot-on;
-+	};
-+	ldo3: LDO3 {
-+		regulator-name = "ldo3";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+	ldo4: LDO4 {
-+		regulator-name = "ldo4";
-+		regulator-min-microvolt = <900000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+	ldo5: LDO5 {
-+		regulator-name = "ldo5";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+	ldo6: LDO6 {
-+		regulator-name = "ldo6";
-+		regulator-min-microvolt = <900000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+	ldo7_reg: LDO7 {
-+		regulator-name = "ldo7";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+
--- 
-2.14.3
+
+>>>> * In either case, when receiving a stop request from the driver,
+>>>> the device sends the LPIGs to the IOMMU queue.
+>>>> * Then, the flush call above ensures that the IOMMU reports the
+>>>> LPIG with iommu_report_device_fault.
+>>>> * While submitting all LPIGs for this PASID to the work queue,
+>>>> ipof_queue_fault also picked up all partial faults, so the partial
+>>>> list is clean.
+>>>>
+>>>> Maybe I should improve this comment?
+>>>>  
+>>> thanks for explaining. LPIG submission is done by device
+>>> asynchronously w.r.t. driver stopping/decommission PASID.  
+>>
+>> Hmm, it should really be synchronous, otherwise there is no way to
+>> know when the PASID can be decommissioned. We need a guarantee such
+>> as the one in 6.20.1 of the PCIe spec, "Managing PASID TLP Prefix
+>> Usage":
+>>
+>> "When the stop request mechanism indicates completion, the Function
+>> has:
+>> * Completed all Non-Posted Requests associated with this PASID.
+>> * Flushed to the host all Posted Requests addressing host memory in
+>> all TCs that were used by the PASID."
+>>
+>> That's in combination with "The function shall [...] finish
+>> transmitting any multi-page Page Request Messages for this PASID
+>> (i.e. send the Page Request Message with the L bit Set)." from the
+>> ATS spec.
+>>
+> I am not contesting on the device side, what I meant was from the
+> host IOMMU driver perspective, LPIG is received via IOMMU host queue,
+> therefore asynchronous. Not sure about ARM, but on VT-d LPIG submission
+> could meet queue full condition. So per VT-d spec, iommu will generate a
+> successful auto response to the device. At this point, assume we
+> already stopped the given PASID on the device, there might not be
+> another LPIG sent for the device. Therefore, you could have a partial
+> list. I think we can just drop the requests in the partial list for
+> that PASID until the PASID gets re-allocated.
+
+Indeed, I'll add this in next version. For a complete solution to the
+queue-full condition (which seems to behave the same way on ARM) I was
+thinking the IOMMU driver should also have a method for removing all
+partial faults when detecting a queue overflow. Since it doesn't know
+which PRGs did receive an auto-response, all it can do is remove all
+partial faults, for all devices using this queue. But freeing the stuck
+partial faults in flush() and remove_device() should be good enough
+
+Thanks,
+Jean
