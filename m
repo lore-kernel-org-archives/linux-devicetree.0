@@ -1,67 +1,54 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 5/7] drivers/i2c: Add transfer implementation for FSI
- algorithm
-Date: Wed, 30 May 2018 15:53:53 -0500
-Message-ID: <710a9afe-e268-9dbc-5183-9793d4eae2d3@linux.vnet.ibm.com>
-References: <1527632665-25707-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1527632665-25707-6-git-send-email-eajames@linux.vnet.ibm.com>
- <CAHp75Vch1uEVvXadVR68tsDY-51=U+7FGr=5k0N5QtpcXpE_3A@mail.gmail.com>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v7 07/10] firmware: xilinx: Add debugfs for IOCTL API
+Date: Wed, 30 May 2018 13:55:22 -0700
+Message-ID: <1527713725-1086-8-git-send-email-jollys@xilinx.com>
+References: <1527713725-1086-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vch1uEVvXadVR68tsDY-51=U+7FGr=5k0N5QtpcXpE_3A@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1527713725-1086-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Edward A. James" <eajames@us.ibm.com>
+To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Rajan Vaja <rajanv@xilinx.com>
 
+Add debugfs file to set/get IOCTL using debugfs interface.
 
-On 05/29/2018 07:08 PM, Andy Shevchenko wrote:
-> On Wed, May 30, 2018 at 1:24 AM, Eddie James <eajames@linux.vnet.ibm.com> wrote:
->> From: "Edward A. James" <eajames@us.ibm.com>
->>
->> Execute I2C transfers from the FSI-attached I2C master. Use polling
->> instead of interrupts as we have no hardware IRQ over FSI.
->> +       if (msg->flags & I2C_M_RD)
->> +               cmd |= I2C_CMD_READ;
-> I think we have a helper for this, though not sure.
+Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ drivers/firmware/xilinx/zynqmp-debug.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Didn't see any other I2C drivers using any helper for msg->flags.
-
->
->> +static int fsi_i2c_write_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
->> +                             u8 fifo_count)
->> +{
->> +       int write;
->> +       int rc = 0;
-> Redundant assignment.
->
->> +       struct fsi_i2c_master *i2c = port->master;
->> +       int bytes_to_write = i2c->fifo_size - fifo_count;
->> +       int bytes_remaining = msg->len - port->xfrd;
->> +       if (bytes_to_write > bytes_remaining)
->> +               bytes_to_write = bytes_remaining;
-> _write = min(_write, _remaining);
->
->> +       while (bytes_to_write > 0) {
->> +               write = bytes_to_write;
->> +               /* fsi limited to max 4 byte aligned ops */
->> +               if (bytes_to_write > 4)
->> +                       write = 4;
->> +               else if (write == 3)
->> +                       write = 2;
-> write = min_t(int, 4, rounddown_pow_of_two(bytes_to_write));
->
-> Also check it carefully, it might be optimized even more, though I
-> didn't think much.
-
-I think it is more readable this way, and I'm not convinced the 
-min(rounddown()) is faster. I did however add a common function to do 
-this check since it's performed in both the read and write fifo 
-functions. Let me know what you think on v8.
-
-Thanks,
-Eddie
+diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
+index 4800366..148dbff 100644
+--- a/drivers/firmware/xilinx/zynqmp-debug.c
++++ b/drivers/firmware/xilinx/zynqmp-debug.c
+@@ -32,6 +32,7 @@ static char debugfs_buf[PAGE_SIZE];
+ #define PM_API(id)		 {id, #id, strlen(#id)}
+ static struct pm_api_info pm_api_list[] = {
+ 	PM_API(PM_GET_API_VERSION),
++	PM_API(PM_IOCTL),
+ };
+ 
+ /**
+@@ -95,6 +96,15 @@ static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
+ 		sprintf(debugfs_buf, "PM-API Version = %d.%d\n",
+ 			pm_api_version >> 16, pm_api_version & 0xffff);
+ 		break;
++	case PM_IOCTL:
++		ret = eemi_ops->ioctl(pm_api_arg[0], pm_api_arg[1],
++				      pm_api_arg[2], pm_api_arg[3],
++				      &pm_api_ret[0]);
++		if (!ret && (pm_api_arg[1] == IOCTL_GET_PLL_FRAC_MODE ||
++			     pm_api_arg[1] == IOCTL_GET_PLL_FRAC_DATA))
++			sprintf(debugfs_buf, "IOCTL return value: %u\n",
++				pm_api_ret[1]);
++		break;
+ 	default:
+ 		sprintf(debugfs_buf, "Unsupported PM-API request\n");
+ 		ret = -EINVAL;
+-- 
+2.7.4
