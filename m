@@ -1,60 +1,278 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 2/2] regulator: add QCOM RPMh regulator driver
-Date: Tue, 29 May 2018 22:32:38 -0700
-Message-ID: <CAD=FV=WF+onhAAWrbmwcHiWyCjuZ=6vvnhodUsia=Ps-da6_4A@mail.gmail.com>
-References: <cover.1527040878.git.collinsd@codeaurora.org> <7489cd65fedb8a31488cf8188885759bcd4820ce.1527040878.git.collinsd@codeaurora.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [reset-control] How to initialize hardware state with the shared
+ reset line?
+Date: Wed, 30 May 2018 14:57:56 +0900
+Message-ID: <CAK7LNAQ56ND=6=7swD3ioKwNsGJCxN1SibkH==n24xPX6SdBBQ@mail.gmail.com>
+References: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
+ <CAFBinCADQsXoc6CUKabH6VX3ZBYb5apo-xBbe1w0BiO8wBAsPw@mail.gmail.com>
+ <CAK7LNAR1b_F_eLEWAdQc3L=daGz=ttKq0mQP78BkjzTOssaXvw@mail.gmail.com>
+ <CAFBinCBTTmPqD0UP8zzMBjsjzP9fJx9_pmhGz0_Vy-V+wmhLXQ@mail.gmail.com>
+ <1526997879.3671.27.camel@pengutronix.de> <CAFBinCBAoRebScz+DTSKSgiU5DjeSHS1F3=2vt8KM-yCv+2A8g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7489cd65fedb8a31488cf8188885759bcd4820ce.1527040878.git.collinsd@codeaurora.org>
+In-Reply-To: <CAFBinCBAoRebScz+DTSKSgiU5DjeSHS1F3=2vt8KM-yCv+2A8g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+2018-05-25 5:09 GMT+09:00 Martin Blumenstingl
+<martin.blumenstingl@googlemail.com>:
+> Hi Philipp,
+>
+> On Tue, May 22, 2018 at 4:04 PM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>> Hi Martin,
+>>
+>> On Mon, 2018-05-21 at 12:40 +0200, Martin Blumenstingl wrote:
+>>> Hello,
+>>>
+>>> On Mon, May 21, 2018 at 3:27 AM, Masahiro Yamada
+>>> <yamada.masahiro@socionext.com> wrote:
+>>> > Hi.
+>>> >
+>>> >
+>>> > 2018-05-20 19:57 GMT+09:00 Martin Blumenstingl
+>>> > <martin.blumenstingl@googlemail.com>:
+>>> > > Hi,
+>>> > >
+>>> > > On Thu, May 10, 2018 at 11:16 AM, Masahiro Yamada
+>>> > > <yamada.masahiro@socionext.com> wrote:
+>>> > > [snip]
+>>> > > > I may be missing something, but
+>>> > > > one solution might be reset hogging on the
+>>> > > > reset provider side.  This allows us to describe
+>>> > > > the initial state of reset lines in the reset controller.
+>>> > > >
+>>> > > > The idea for "reset-hog" is similar to:
+>>> > > >  - "gpio-hog" defined in
+>>> > > >    Documentation/devicetree/bindings/gpio/gpio.txt
+>>> > > >  - "assigned-clocks" defined in
+>>> > > >    Documetation/devicetree/bindings/clock/clock-bindings.txt
+>>> > > >
+>>> > > >
+>>> > > >
+>>> > > > For example,
+>>> > > >
+>>> > > >    reset-controller {
+>>> > > >             ....
+>>> > > >
+>>> > > >             line_a {
+>>> > > >                   reset-hog;
+>>> > > >                   resets = <1>;
+>>> > > >                   reset-assert;
+>>> > > >             };
+>>> > > >    }
+>>> > > >
+>>> > > >
+>>> > > > When the reset controller is registered,
+>>> > > > the reset ID '1' is asserted.
+>>> > > >
+>>> > > >
+>>> > > > So, all reset consumers that share the reset line '1'
+>>> > > > will start from the asserted state
+>>> > > > (i.e. defined state machine state).
+>>> > >
+>>> > > I wonder if a "reset hog" can be board specific:
+>>> > > - GPIO hogs are definitely board specific (meson-gxbb-odroidc2.dts for
+>>> > > example uses it to take the USB hub out of reset)
+>>> > > - assigned-clock-parents (and the like) can also be board specific (I
+>>> > > made up a use-case since I don't know of any actual examples: board A
+>>> > > uses an external XTAL while board B uses some other internal
+>>> > > clock-source because it doesn't have an external XTAL)
+>>> > >
+>>> > > however, can reset lines be board specific? or in other words: do we
+>>> > > need to describe them in device-tree?
+>>> >
+>>> > Indeed.
+>>> >
+>>> > I did not come up with board-specific cases.
+>>> >
+>>> > The problem we are discussing is SoC-specific,
+>>> > and reset-controller drivers are definitely SoC-specific.
+>>> >
+>>> > So, I think the initial state can be coded in drivers instead of DT.
+>>>
+>>> OK, let's also hear Philipp's (reset framework maintainer) opinion on this
+>>
+>> I'd like to know if there are other SoC families besides Amlogic Meson
+>> that potentially could have this problem and about how many of the
+>> resets that are documented in include/dt-bindings/reset/amlogic,meson*
+>> we are actually talking. Are all of those initially deasserted and none
+>> of the connected peripherals have power-on reset mechanisms?
+> I cannot speak for other SoC families besides Amlogic
+> Meson8/Meson8b/Meson8m2 and GX (disclaimer: I am a community
+> contributor, I don't have access to Amlogic's internal datasheets - my
+> knowledge is based on their public datasheets, their GPL kernel/u-boot
+> sources and trial and error)
+>
+> it seems that at least "some" (but I don't know the exact number)
+> resets are de-asserted by the bootloader
+> Amlogic's u-boot for example also enables all gate clocks by default
+>
+> I CC'ed the Amlogic mailing list because I'm not sure if everyone
+> working on that SoC family is watching the linux-arm-kernel mailing
+> list
+>
+>>> > > we could extend struct reset_controller_dev (= reset controller
+>>> > > driver) if they are not board specific:
+>>> > > - either assert all reset lines by default except if they are listed
+>>> > > in a new field (may break backwards compatibility, requires testing of
+>>> > > all reset controller drivers)
+>>> >
+>>> > This is quite simple, but I am afraid there are some cases where the forcible
+>>> > reset-assert is not preferred.
+>>> >
+>>> > For example, the earlycon.  When we use earlycon, we would expect it has been
+>>> > initialized by a boot-loader, or something.
+>>> > If it is reset-asserted on the while, the console output
+>>> > will not be good.
+>>>
+>>> indeed, so let's skip this idea
+>>
+>> Maybe we should at first add initial reset assertion to the Meson driver
+>> on a case by case bases?
+> this seems simple enough to test it - we can still generalize this
+> later on (either by adding support to the reset framework, DT bindings
+> or something else)
+>
+>> We can't add required reset hog DT bindings to the Meson reset
+>> controller anyway without breaking DT backwards compatibility.
+>>
+>>> > > - specify a list of reset lines and their desired state (or to keep it
+>>> > > easy: specify a list of reset lines that should be asserted)
+>>> > > (I must admit that this is basically your idea but the definition is
+>>> > > moved from device-tree to the reset controller driver)
+>>> >
+>>> > Yes, I think the list of "reset line ID" and "init state" pairs
+>>> > would be nicer.
+>>>
+>>> $ grep -R "of_reset_n_cells = [^1]" drivers/reset/
+>>> drivers/reset/reset-berlin.c:   priv->rcdev.of_reset_n_cells = 2;
+>>> drivers/reset/hisilicon/reset-hi3660.c: rc->rst.of_reset_n_cells = 2;
+>>> drivers/reset/reset-ti-sci.c:   data->rcdev.of_reset_n_cells = 2;
+>>> drivers/reset/reset-lantiq.c:   priv->rcdev.of_reset_n_cells = 2;
+>>>
+>>> everything else uses only one reset cell
+>>> from the lantiq reset dt-binding documentation: "The first cell takes
+>>> the reset set bit and the second cell takes the status bit."
+>>>
+>>> I'm not sure what to do with drivers that specify != 1 reset-cell
+>>> though if we use a simple "init state pair"
+>>> maybe Philipp can share his opinion on this one as well
+>>
+>> See above, so far I am not convinced (either way) whether this should be
+>> described in the DT at all.
+>>
+>>> > > any "chip" specific differences could be expressed by using a
+>>> > > different of_device_id
+>>> > >
+>>> > > one the other hand: your "reset hog" solution looks fine to me if
+>>> > > reset lines can be board specific
+>>> > >
+>>> > > > From the discussion with Martin Blumenstingl
+>>> > > > (https://lkml.org/lkml/2018/4/28/115),
+>>> > > > the problem for Amlogic is that
+>>> > > > the reset line is "de-asserted" by default.
+>>> > > > If so, the 'reset-hog' would fix the problem,
+>>> > > > and DWC3 driver would be able to use
+>>> > > > shared, level reset, I think.
+>>> > >
+>>> > > I think you are right: if we could control the initial state then we
+>>> > > should be able to use level resets
+>>> >
+>>> >
+>>> > Even further, can we drop the shared reset_control_reset() support, maybe?
+>>> > (in other words, revert commit 7da33a37b48f11)
+>>>
+>>> I believe we need to keep this if there's hardware out there:
+>>> - where the reset controller only supports reset pulses
+>>> - at least one reset line is shared between multiple devices
+>>>
+>>> I didn't have a closer look at the Amlogic Meson6 SoC yet, but I think
+>>> it matches above criteria. as far as I know:
+>>> - the USB situation there is similar to Meson8b (USB controllers and
+>>> PHYs share a reset line)
+>>> - it uses an older reset controller IP block which does not support
+>>> level resets (only reset pulses)
+>>
+>> See my answer to Masahiro's first mail. I think somebody suggested in
+>> the past to add a fallback from the deassert to the reset op. I think
+>> this is something that should work in this case.
+> this is an interesting idea - it should work for Meson6 (in case
+> mainline ever gains support for this old SoC)
+>
+>
 
-On Tue, May 22, 2018 at 7:43 PM, David Collins <collinsd@codeaurora.org> wrote:
-> + * @ever_enabled:              Boolean indicating that the regulator has been
-> + *                             explicitly enabled at least once.  Voltage
-> + *                             requests should be cached when this flag is not
-> + *                             set.
-
-Do you really need this extra boolean?  Can't you just check if
-"enabled" is still "-EINVAL"?  If it is then you don't pass the
-voltage along.
-
-...this would mean that you'd also need to send the voltage vote when
-the regulator core tries to disable unused regulators at the end of
-bootup, but that should be OK right?  If we never touched a regulator
-anywhere at probe time and we're about to vote to disable it, we know
-there's nobody requiring it to still be on.  We can vote for the
-voltage now without fear of messing up a vote that the BIOS left in
-place.
-
-In theory this should also allow you to assert your vote about the
-voltage of a regulator that has never been enabled, which (if I
-understand correctly) you consider to be a feature.
-
----
-
-Other than that comment, everything else here looks good to go if Mark
-is good with it.  As per the previous threads there are some things
-that I don't like a ton, but I feel it is between you and Mark to
-decide if you're good with it.  A summary of those issues are:
-
-1. I still believe that when we disable a regulator in Linux we should
-tell RPMh that we vote for the lowest voltage.  ...but if Mark is
-happy with the way the driver works now I won't push it.
-
-2. As per my comments in the bindings patch, I still believe that
-"qcom,drms-mode-max-microamps" belongs in the core.  Again, up to
-Mark.
-
-3. As per my comments in the bindings patch, I still believe that
-we're just adding lots of noise to the DT most of the time by
-specifying both "qcom,regulator-drms-modes" and
-"regulator-allowed-modes".  Again, up to Mark.
 
 
--Doug
+One more thing.
+
+
+I want to remove reset_control_reset() entirely.
+
+
+[1] Some reset consumers (e.g. drivers/ata/sata_gemini.c)
+    use reset_control_reset() to reset the HW.
+
+
+[2] Some reset consumers (e.g. drivers/input/keyboard/tegra-kbc.c)
+    use the combination of reset_control_assert() and reset_control_deassert()
+    to reset the HW.
+
+
+
+[1] is the only way if the reset controller only supports the pulse reset.
+
+[2] is the only way if the reset controller only supports the level reset.
+
+
+So, this is another strangeness because
+the implementation of reset controller
+affects reset consumers.
+
+
+
+
+We do not need [1].
+
+
+[2] is more flexible than [1] because hardware usually specifies
+how long the reset line should be kept asserted.
+
+
+For all reset consumers,
+replace
+  reset_control_reset();
+with
+  reset_control_assert();
+  reset_control_deassert();
+
+
+and deprecate reset_control_reset().
+
+I think this is the right thing to do.
+
+
+
+The reset controller side should be implemented like this:
+
+If your reset controller only supports the pulse reset,
+   .deassert hook should be no-op.
+   .assert hook should pulse the reset
+
+Then .reset hook should be removed.
+
+
+
+Or, we can keep the reset drivers as they are.
+drivers/reset/core.c can take care of the proper fallback logic.
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
