@@ -1,29 +1,56 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [v2] MAINTAINERS: add myself as maintainer for QorIQ PTP clock
- driver
-Date: Wed, 30 May 2018 13:27:59 -0400 (EDT)
-Message-ID: <20180530.132759.1609983459551825219.davem@davemloft.net>
-References: <20180529034744.44590-1-yangbo.lu@nxp.com>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
+ model corners
+Date: Wed, 30 May 2018 11:27:27 -0700
+Message-ID: <7432f626-69cd-3535-04bc-de42e0285d41@codeaurora.org>
+References: <20180525100121.28214-1-rnayak@codeaurora.org>
+ <20180525100121.28214-2-rnayak@codeaurora.org>
+ <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
+ <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529034744.44590-1-yangbo.lu@nxp.com>
+In-Reply-To: <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yangbo.lu@nxp.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, richardcochran@gmail.com, claudiu.manoil@nxp.com, robh+dt@kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Date: Tue, 29 May 2018 11:47:44 +0800
+Hello Rajendra,
 
-> Added myself as maintainer for QorIQ PTP clock driver.
-> Since gianfar_ptp.c was renamed to ptp_qoriq.c, let's
-> maintain it under QorIQ PTP clock driver.
+On 05/30/2018 03:14 AM, Rajendra Nayak wrote:
+> On 05/30/2018 02:47 PM, Ulf Hansson wrote:
+>> On 25 May 2018 at 12:01, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+...
+>>> +               pm_genpd_init(&rpmpds[i]->pd, NULL, true);
+>>
+>> Question: Is there no hierarchical topology of the PM domains. No
+>> genpd subdomains?
 > 
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> ---
-> Changes for v2:
-> 	- Dropped dpaa2/rtc part.
+> The hierarchy if any is all handled by the remote core (RPM in this case).
+> For Linux its just a flat view.
 
-Applied to net-next, thanks.
+There is one special case that we'll need to handle somehow.  The APPS
+vlvl request for VDD_MX needs to be greater than or equal to the vlvl
+request for VDD_CX.  Can you please add the necessary code to achieve
+this?  RPMh hardware doesn't handle this hardware requirement due to
+concerns about modem use case latency.
+
+Please note that this is handled in a somewhat hacky manner [1] with the
+downstream rpmh-regulator driver by specifying VDD_MX as the parent of
+VDD_CX and VDD_MX_AO as the parent of VDD_CX_AO with a dropout voltage of
+-1.  That way, enabling CX causes MX to be enabled and voltage level
+requests are propagated from CX to MX (the -1 is ignored because it is
+rounded up within the sparse vlvl numbering space).
+
+Thanks,
+David
+
+[1]:
+https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/arch/arm64/boot/dts/qcom/sdm845-regulator.dtsi?h=msm-4.9#n135
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
