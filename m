@@ -1,650 +1,222 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v2 4/7] Bluetooth: Add new quirk for non-persistent setup
- settings
-Date: Wed, 30 May 2018 08:26:42 +0200
-Message-ID: <DC3FE66E-C3FD-455F-8592-E927604086CD@holtmann.org>
-References: <cover.1526374087.git.sean.wang@mediatek.com>
- <1d6097f538b3182b2876ad48225ecd6e2d1b128c.1526374087.git.sean.wang@mediatek.com>
- <920B3BE9-3FE8-4AC6-8C5F-63B0E00182AC@holtmann.org>
- <1526976323.18877.47.camel@mtkswgap22> <1527057423.4607.3.camel@mtkswgap22>
- <B82BB5F4-E197-4915-A543-C5FF9A5A41F1@holtmann.org>
- <1527084544.4607.8.camel@mtkswgap22>
- <37400FCE-8F9A-433B-8E3A-DE9CBEB469D7@holtmann.org>
- <1527175805.4607.103.camel@mtkswgap22>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527175805.4607.103.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, LKML <linux-kernel@vger.kernel.org>, BlueZ development <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v3 4/5] clocksource: add driver for i.MX EPIT timer
+Date: Wed, 30 May 2018 09:56:11 +0300
+Message-ID: <e2e8bbe6-5957-a8fa-af3c-816f0ad80e32@mentor.com>
+References: <20180529170436.22711-1-peron.clem@gmail.com>
+ <20180529170436.22711-5-peron.clem@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180529170436.22711-5-peron.clem@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
-
->>>>>> 
->>>>>> [ ... ]
-> 
-> [ ... ]
-> 
->>> I post it as plain text as below 
->>> 
->>> 
->>> Bluetooth monitor ver 5.37
->>> = Note: Linux version 4.16.0-rc1+ (aarch64)                            0.641494
->>> = Note: Bluetooth subsystem version 2.22                               0.641502
->>> = New Index: 00:00:46:76:22:01 (BR/EDR,UART,hci0)               [hci0] 0.641505
->>> * Unknown packet (code 14 len 30)                                      0.641509
->>>       01 00 00 00 02 00 01 0e 00 01 00 00 00 10 62 6c  ..............bl
->>>       75 65 74 6f 6f 74 68 64 00 00 00 00 00 00        uetoothd......  
->>> * Unknown packet (code 14 len 30)                                      0.641592
->>>       02 00 00 00 02 00 01 0e 00 01 00 00 00 10 62 74  ..............bt
->>>       6d 6f 6e 00 00 00 00 00 00 00 00 00 00 00        mon...........  
->>> * Unknown packet (code 16 len 7)                                [hci0] 6.536771
->>>       01 00 00 00 05 00 01                             .......         
->>> = Open Index: 00:00:46:76:22:01                                 [hci0] 6.717019
->>> = Index Info: 00:00:46:76:22:01 (MediaTek, Inc.)                [hci0] 6.717030
->> 
->> can you try with the latest BlueZ 5.49 or git version. Seems it actually stumbles over the extra packet here. Fun fact is that I can not get a backtrace to pin-point the issue in btmon and why it crashes.
->> 
-> 
-> I had less experience updating user land BlueZ, but I can try it as possible and see whether Unknown packets still are present at newest version BlueZ. Hopefully I don't misunderstand your point here. 
-
-please use the latest btmon and check if it can read your trace.
-
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.741093
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.742088
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.743102
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.744105
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.745109
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.746104
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.747097
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.748090
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.749078
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.750070
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.751061
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.752054
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.753046
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.754038
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.755031
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.756025
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.757013
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.758006
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.758999
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.759991
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.760983
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.761975
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.762963
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.763956
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.764948
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.765941
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.766933
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.767926
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.768919
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.769914
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.770909
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.771908
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.772904
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.773898
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.774892
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.775890
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.776882
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.777877
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.778871
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.779869
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.780864
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.781858
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.782852
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.783850
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.784845
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.785839
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.786833
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.787831
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.788826
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.789820
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.790814
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.791813
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.792809
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.793803
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.794798
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.795797
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.796791
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.797786
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.798779
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.799778
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.800774
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.801769
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.802763
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.803761
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.804755
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.805749
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.806743
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.807741
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.808737
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.809731
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.810725
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.811725
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.812719
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.813714
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.814708
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.815705
->>>       02 01 01 00 00                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.816378
->>>       02 01 01 00 00                                   .....           
->> 
->> Why do I see only HCI events here? Is this event conveying any useful information. It is kinda complicated that this is 0xe4 event code which is actually reserved for future use by the Bluetooth SIG. Are there any accompanying HCI commands for this and they just not make it into btmon?
->> 
-> 
-> I have made all vendor HCI commands go through BlueZ core in v2 patch. 
-> 
-> And for these HCI events, they are all corresponding to vendor ACL data, applied only to firmware setup packets, but they're not being sent via BlueZ core, so they are not being logged in btmon.
-> 
-> As for its event, where heading 0xe4 refers to a vendor event and is used on notification of that either vendor ACL data or vendor HCI command have been done.
-
-I would prefer if everything goes via the Bluetooth core since then we have it all properly scheduled. Sending things down the ACL data path however if kinda funky. Does your hardware accept sending command both via ACL data and as HCI command? If so, then I would prefer sending them as HCI commands since the speed improvement you think you are getting is neglectable on Linux (I have been down that path). This seems to be a pure optimization when Windows is driving the device.
-
-And the vendor event 0xe4 is really only received during firmware download? It is not ever received during normal operation?
-
-> 
->> 
->> 
->>> < HCI Command: Vendor (0x3f|0x006f) plen 5                      [hci0] 6.816413
->>>       01 07 01 00 04                                   .....           
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 6.816536
->>>       02 07 01 00 00                                   .....           
->>> < HCI Command: Vendor (0x3f|0x006f) plen 6                      [hci0] 8.845071
->>>       01 06 02 00 00 01                                ......          
->>>> HCI Event: Unknown (0xe4) plen 5                              [hci0] 8.923456
->>>       02 06 01 00 00                                   .....           
->> 
->> Here it looks like you have 0x006f opcode with first octet 0x01 for command and then vendor event 0xe4 with first octet 0x02 for event. I assume the second octet is then the vendor command code for these.
->> 
-> 
-> Yes, you're right.
-> 
->>> < HCI Command: Reset (0x03|0x0003) plen 0                      [hci0] 10.861118
->>>> HCI Event: Command Complete (0x0e) plen 4                    [hci0] 10.865763
->>>     Reset (0x03|0x0003) ncmd 1
->>>       Status: Success (0x00)
->>> < HCI Command: Read Local Supported Fe.. (0x04|0x0003) plen 0  [hci0] 10.865805
->>>> HCI Event: Command Complete (0x0e) plen 12                   [hci0] 10.865965
->>>     Read Local Supported Features (0x04|0x0003) ncmd 1
->>>       Status: Success (0x00)
->>>       Features: 0xbf 0x3e 0x8d 0xfe 0xdb 0xff 0x7b 0x87
->>>         3 slot packets
->>>         5 slot packets
->>>         Encryption
->>>         Slot offset
->>>         Timing accuracy
->>>         Role switch
->>>         Sniff mode
->>>         Power control requests
->>>         Channel quality driven data rate (CQDDR)
->>>         SCO link
->>>         HV2 packets
->>>         HV3 packets
->>>         CVSD synchronous data
->>>         Power control
->>>         Transparent synchronous data
->>>         Broadcast Encryption
->>>         Enhanced Data Rate ACL 2 Mbps mode
->>>         Enhanced Data Rate ACL 3 Mbps mode
->>>         Enhanced inquiry scan
->>>         Interlaced inquiry scan
->>>         Interlaced page scan
->>>         RSSI with inquiry results
->>>         Extended SCO link (EV3 packets)
->>>         EV4 packets
->>>         EV5 packets
->>>         AFH capable slave
->>>         AFH classification slave
->>>         LE Supported (Controller)
->>>         3-slot Enhanced Data Rate ACL packets
->>>         5-slot Enhanced Data Rate ACL packets
->>>         Sniff subrating
->>>         Pause encryption
->>>         AFH capable master
->>>         AFH classification master
->>>         Enhanced Data Rate eSCO 2 Mbps mode
->>>         Enhanced Data Rate eSCO 3 Mbps mode
->>>         3-slot Enhanced Data Rate eSCO packets
->>>         Extended Inquiry Response
->>>         Simultaneous LE and BR/EDR (Controller)
->>>         Secure Simple Pairing
->>>         Encapsulated PDU
->>>         Erroneous Data Reporting
->>>         Non-flushable Packet Boundary Flag
->>>         Link Supervision Timeout Changed Event
->>>         Inquiry TX Power Level
->>>         Enhanced Power Control
->>>         Extended features
->>> < HCI Command: Read Local Version Info.. (0x04|0x0001) plen 0  [hci0] 10.865987
->>>> HCI Event: Vendor (0xff) plen 9                              [hci0] 10.866259
->>>       29 19 09 17 20 48 07 11 00                       )... H…       
->> 
->> Is this meant to happen here?
->> 
-> 
-> If event received is not expected as the specification defines, I think it's probably incorrect.
-> 
-> But it requires more discussion with firmware people to make it clearer.
-
-Please check and let them decode what this event means.
-
-> 
->>>> HCI Event: Command Complete (0x0e) plen 12                   [hci0] 10.866372
->>>     Read Local Version Information (0x04|0x0001) ncmd 1
->>>       Status: Success (0x00)
->>>       HCI version: Bluetooth 4.2 (0x08) - Revision 4359 (0x1107)
->>>       LMP version: Bluetooth 4.2 (0x08) - Subversion 2329 (0x0919)
->>>       Manufacturer: MediaTek, Inc. (70)
->>> < HCI Command: Read BD ADDR (0x04|0x0009) plen 0               [hci0] 10.866391
->>>> HCI Event: Command Complete (0x0e) plen 10                   [hci0] 10.866539
->>>     Read BD ADDR (0x04|0x0009) ncmd 1
->>>       Status: Success (0x00)
->>>       Address: 00:00:46:76:22:01 (OLIVETTI NORTH AMERICA)
->>> < HCI Command: Read Buffer Size (0x04|0x0005) plen 0           [hci0] 10.866609
->>>> HCI Event: Command Complete (0x0e) plen 11                   [hci0] 10.866754
->>>     Read Buffer Size (0x04|0x0005) ncmd 1
->>>       Status: Success (0x00)
->>>       ACL MTU: 1021 ACL max packet: 8
->>>       SCO MTU: 184  SCO max packet: 1
->>> < HCI Command: Read Class of Device (0x03|0x0023) plen 0       [hci0] 10.866775
->>>> HCI Event: Command Complete (0x0e) plen 7                    [hci0] 10.866920
->>>     Read Class of Device (0x03|0x0023) ncmd 1
->>>       Status: Success (0x00)
->>>       Class: 0x001f00
->>>         Major class: Uncategorized, specific device code not specified
->>>         Minor class: 0x00
->>> < HCI Command: Read Local Name (0x03|0x0014) plen 0            [hci0] 10.866939
->>>> HCI Event: Command Complete (0x0e) plen 252                  [hci0] 10.867256
->>>     Read Local Name (0x03|0x0014) ncmd 1
->>>       Status: Success (0x00)
->>>       Name: MTK MT7622 #1
->>> < HCI Command: Read Voice Setting (0x03|0x0025) plen 0         [hci0] 10.867308
->>>> HCI Event: Command Complete (0x0e) plen 6                    [hci0] 10.867447
->>>     Read Voice Setting (0x03|0x0025) ncmd 1
->>>       Status: Success (0x00)
->>>       Setting: 0x0060
->>>         Input Coding: Linear
->>>         Input Data Format: 2's complement
->>>         Input Sample Size: 16-bit
->>>         # of bits padding at MSB: 0
->>>         Air Coding Format: CVSD
->>> < HCI Command: Read Number of Supporte.. (0x03|0x0038) plen 0  [hci0] 10.867474
->>>> HCI Event: Command Complete (0x0e) plen 5                    [hci0] 10.867611
->>>     Read Number of Supported IAC (0x03|0x0038) ncmd 1
->>>       Status: Success (0x00)
->>>       Number of IAC: 4
->>> < HCI Command: Read Current IAC LAP (0x03|0x0039) plen 0       [hci0] 10.867678
->>>> HCI Event: Command Complete (0x0e) plen 8                    [hci0] 10.867865
->>>     Read Current IAC LAP (0x03|0x0039) ncmd 1
->>>       Status: Success (0x00)
->>>       Number of IAC: 1
->>>       Access code: 0x9e8b33 (General Inquiry)
->>> < HCI Command: Set Event Filter (0x03|0x0005) plen 1           [hci0] 10.867890
->>>       Type: Clear All Filters (0x00)
->>>> HCI Event: Command Complete (0x0e) plen 4                    [hci0] 10.868033
->>>     Set Event Filter (0x03|0x0005) ncmd 1
->>>       Status: Success (0x00)
->>> < HCI Command: Write Connection Accept.. (0x03|0x0016) plen 2  [hci0] 10.868054
->>>       Timeout: 20000.000 msec (0x7d00)
->>>> HCI Event: Command Complete (0x0e) plen 4                    [hci0] 10.868235
->>>     Write Connection Accept Timeout (0x03|0x0016) ncmd 1
->>>       Status: Success (0x00)
->>> < HCI Command: LE Read Buffer Size (0x08|0x0002) plen 0        [hci0] 10.868262
->>>> HCI Event: Command Complete (0x0e) plen 7                    [hci0] 10.868392
->>>     LE Read Buffer Size (0x08|0x0002) ncmd 1
->>>       Status: Success (0x00)
->>>       Data packet length: 251
->>>       Num data packets: 8
->>> < HCI Command: LE Read Local Supported.. (0x08|0x0003) plen 0  [hci0] 10.868413
->>>> HCI Event: Command Complete (0x0e) plen 12                   [hci0] 10.868587
->>>     LE Read Local Supported Features (0x08|0x0003) ncmd 1
->>>       Status: Success (0x00)
->>>       Features: 0xfd 0x00 0x00 0x00 0x00 0x00 0x00 0x00
->>>         LE Encryption
->>>         Extended Reject Indication
->>>         Slave-initiated Features Exchange
->>>         LE Ping
->>>         LE Data Packet Length Extension
->>>         LL Privacy
->>>         Extended Scanner Filter Policies
->>> < HCI Command: LE Read Supported States (0x08|0x001c) plen 0   [hci0] 10.868646
->>>> HCI Event: Command Complete (0x0e) plen 12                   [hci0] 10.868787
->>>     LE Read Supported States (0x08|0x001c) ncmd 1
->>>       Status: Success (0x00)
->>>       States: 0x000000001fffffff
->>>         Non-connectable Advertising State
->>>         Scannable Advertising State
->>>         Connectable Advertising State
->>>         High Duty Cycle Directed Advertising State
->>>         Passive Scanning State
->>>         Active Scanning State
->>>         Initiating State
->>>           and Connection State (Master Role)
->>>         Connection State (Slave Role)
->>>         Non-connectable Advertising State
->>>           and Passive Scanning State
->>>         Scannable Advertising State
->>>           and Passive Scanning State
->>>         Connectable Advertising State
->>>           and Passive Scanning State
->>>         High Duty Cycle Directed Advertising State
->>>           and Passive Scanning State
->>>         Non-connectable Advertising State
->>>           and Active Scanning State
->>>         Scannable Advertising State
->>>           and Active Scanning State
->>>         Connectable Advertising State
->>>           and Active Scanning State
->>>         High Duty Cycle Directed Advertising State
->>>           and Active Scanning State
->>>         Non-connectable Advertising State
->>>           and Initiating State
->>>         Scannable Advertising State
->>>           and Initiating State
->>>         Non-connectable Advertising State
->>>           and Connection State (Master Role)
->>>         Scannable Advertising State
->>>           and Connection State (Master Role)
->>>         Non-connectable Advertising State
->>>           and Connection State (Slave Role)
->>>         Scannable Advertising State
->>>           and Connection State (Slave Role)
->>>         Passive Scanning State
->>>           and Initiating State
->>>         Active Scanning State
->>>           and Initiating State
->>>         Passive Scanning State
->>>           and Connection State (Master Role)
->>>         Active Scanning State
->>>           and Connection State (Master Role)
->>>         Passive Scanning State
->>>           and Connection State (Slave Role)
->>>         Active Scanning State
->>>           and Connection State (Slave Role)
->>>         Initiating State
->>>           and Connection State (Master Role)
->>>           and Master Role & Master Role
->>> < HCI Command: Read Local Supported Co.. (0x04|0x0002) plen 0  [hci0] 10.868807
->>>> HCI Event: Command Complete (0x0e) plen 68                   [hci0] 10.868985
->>>     Read Local Supported Commands (0x04|0x0002) ncmd 1
->>>       Status: Success (0x00)
->>>       Commands: 176 entries
->>>         Inquiry (Octet 0 - Bit 0)
->>>         Inquiry Cancel (Octet 0 - Bit 1)
->>>         Periodic Inquiry Mode (Octet 0 - Bit 2)
->>>         Exit Periodic Inquiry Mode (Octet 0 - Bit 3)
->>>         Create Connection (Octet 0 - Bit 4)
->>>         Disconnect (Octet 0 - Bit 5)
->>>         Add SCO Connection (Octet 0 - Bit 6)
->>>         Create Connection Cancel (Octet 0 - Bit 7)
->>>         Accept Connection Request (Octet 1 - Bit 0)
->>>         Reject Connection Request (Octet 1 - Bit 1)
->>>         Link Key Request Reply (Octet 1 - Bit 2)
->>>         Link Key Request Negative Reply (Octet 1 - Bit 3)
->>>         PIN Code Request Reply (Octet 1 - Bit 4)
->>>         PIN Code Request Negative Reply (Octet 1 - Bit 5)
->>>         Change Connection Packet Type (Octet 1 - Bit 6)
->>>         Authentication Requested (Octet 1 - Bit 7)
->>>         Set Connection Encryption (Octet 2 - Bit 0)
->>>         Change Connection Link Key (Octet 2 - Bit 1)
->>>         Master Link Key (Octet 2 - Bit 2)
->>>         Remote Name Request (Octet 2 - Bit 3)
->>>         Remote Name Request Cancel (Octet 2 - Bit 4)
->>>         Read Remote Supported Features (Octet 2 - Bit 5)
->>>         Read Remote Extended Features (Octet 2 - Bit 6)
->>>         Read Remote Version Information (Octet 2 - Bit 7)
->>>         Read Clock Offset (Octet 3 - Bit 0)
->>>         Read LMP Handle (Octet 3 - Bit 1)
->>>         Sniff Mode (Octet 4 - Bit 2)
->>>         Exit Sniff Mode (Octet 4 - Bit 3)
->>>         QoS Setup (Octet 4 - Bit 6)
->>>         Role Discovery (Octet 4 - Bit 7)
->>>         Switch Role (Octet 5 - Bit 0)
->>>         Read Link Policy Settings (Octet 5 - Bit 1)
->>>         Write Link Policy Settings (Octet 5 - Bit 2)
->>>         Read Default Link Policy Settings (Octet 5 - Bit 3)
->>>         Write Default Link Policy Settings (Octet 5 - Bit 4)
->>>         Flow Specification (Octet 5 - Bit 5)
->>>         Set Event Mask (Octet 5 - Bit 6)
->>>         Reset (Octet 5 - Bit 7)
->>>         Set Event Filter (Octet 6 - Bit 0)
->>>         Flush (Octet 6 - Bit 1)
->>>         Read PIN Type (Octet 6 - Bit 2)
->>>         Write PIN Type (Octet 6 - Bit 3)
->>>         Create New Unit Key (Octet 6 - Bit 4)
->>>         Read Stored Link Key (Octet 6 - Bit 5)
->>>         Write Stored Link Key (Octet 6 - Bit 6)
->>>         Delete Stored Link Key (Octet 6 - Bit 7)
->>>         Write Local Name (Octet 7 - Bit 0)
->>>         Read Local Name (Octet 7 - Bit 1)
->>>         Read Connection Accept Timeout (Octet 7 - Bit 2)
->>>         Write Connection Accept Timeout (Octet 7 - Bit 3)
->>>         Read Page Timeout (Octet 7 - Bit 4)
->>>         Write Page Timeout (Octet 7 - Bit 5)
->>>         Read Scan Enable (Octet 7 - Bit 6)
->>>         Write Scan Enable (Octet 7 - Bit 7)
->>>         Read Page Scan Activity (Octet 8 - Bit 0)
->>>         Write Page Scan Activity (Octet 8 - Bit 1)
->>>         Read Inquiry Scan Activity (Octet 8 - Bit 2)
->>>         Write Inquiry Scan Activity (Octet 8 - Bit 3)
->>>         Read Authentication Enable (Octet 8 - Bit 4)
->>>         Write Authentication Enable (Octet 8 - Bit 5)
->>>         Read Encryption Mode (Octet 8 - Bit 6)
->>>         Write Encryption Mode (Octet 8 - Bit 7)
->>>         Read Class of Device (Octet 9 - Bit 0)
->>>         Write Class of Device (Octet 9 - Bit 1)
->>>         Read Voice Setting (Octet 9 - Bit 2)
->>>         Write Voice Setting (Octet 9 - Bit 3)
->>>         Read Automatic Flush Timeout (Octet 9 - Bit 4)
->>>         Write Automatic Flush Timeout (Octet 9 - Bit 5)
->>>         Read Num Broadcast Retransmissions (Octet 9 - Bit 6)
->>>         Write Num Broadcast Retransmissions (Octet 9 - Bit 7)
->>>         Read Transmit Power Level (Octet 10 - Bit 2)
->>>         Read Sync Flow Control Enable (Octet 10 - Bit 3)
->>>         Write Sync Flow Control Enable (Octet 10 - Bit 4)
->>>         Set Controller To Host Flow Control (Octet 10 - Bit 5)
->>>         Host Buffer Size (Octet 10 - Bit 6)
->>>         Host Number of Completed Packets (Octet 10 - Bit 7)
->>>         Read Link Supervision Timeout (Octet 11 - Bit 0)
->>>         Write Link Supervision Timeout (Octet 11 - Bit 1)
->>>         Read Number of Supported IAC (Octet 11 - Bit 2)
->>>         Read Current IAC LAP (Octet 11 - Bit 3)
->>>         Write Current IAC LAP (Octet 11 - Bit 4)
->>>         Read Page Scan Mode (Octet 11 - Bit 7)
->>>         Write Page Scan Mode (Octet 12 - Bit 0)
->>>         Set AFH Host Channel Classification (Octet 12 - Bit 1)
->>>         Read Inquiry Scan Type (Octet 12 - Bit 4)
->>>         Write Inquiry Scan Type (Octet 12 - Bit 5)
->>>         Read Inquiry Mode (Octet 12 - Bit 6)
->>>         Write Inquiry Mode (Octet 12 - Bit 7)
->>>         Read Page Scan Type (Octet 13 - Bit 0)
->>>         Write Page Scan Type (Octet 13 - Bit 1)
->>>         Read AFH Channel Assessment Mode (Octet 13 - Bit 2)
->>>         Write AFH Channel Assessment Mode (Octet 13 - Bit 3)
->>>         Read Local Version Information (Octet 14 - Bit 3)
->>>         Read Local Supported Features (Octet 14 - Bit 5)
->>>         Read Local Extended Features (Octet 14 - Bit 6)
->>>         Read Buffer Size (Octet 14 - Bit 7)
->>>         Read Country Code (Octet 15 - Bit 0)
->>>         Read BD ADDR (Octet 15 - Bit 1)
->>>         Read Failed Contact Counter (Octet 15 - Bit 2)
->>>         Reset Failed Contact Counter (Octet 15 - Bit 3)
->>>         Read Link Quality (Octet 15 - Bit 4)
->>>         Read RSSI (Octet 15 - Bit 5)
->>>         Read AFH Channel Map (Octet 15 - Bit 6)
->>>         Read Clock (Octet 15 - Bit 7)
->>>         Read Loopback Mode (Octet 16 - Bit 0)
->>>         Write Loopback Mode (Octet 16 - Bit 1)
->>>         Enable Device Under Test Mode (Octet 16 - Bit 2)
->>>         Setup Synchronous Connection (Octet 16 - Bit 3)
->>>         Accept Synchronous Connection Request (Octet 16 - Bit 4)
->>>         Reject Synchronous Connection Request (Octet 16 - Bit 5)
->>>         Read Extended Inquiry Response (Octet 17 - Bit 0)
->>>         Write Extended Inquiry Response (Octet 17 - Bit 1)
->>>         Refresh Encryption Key (Octet 17 - Bit 2)
->>>         Sniff Subrating (Octet 17 - Bit 4)
->>>         Read Simple Pairing Mode (Octet 17 - Bit 5)
->>>         Write Simple Pairing Mode (Octet 17 - Bit 6)
->>>         Read Local OOB Data (Octet 17 - Bit 7)
->>>         Read Inquiry Response TX Power Level (Octet 18 - Bit 0)
->>>         Write Inquiry Transmit Power Level (Octet 18 - Bit 1)
->>>         Read Default Erroneous Data Reporting (Octet 18 - Bit 2)
->>>         Write Default Erroneous Data Reporting (Octet 18 - Bit 3)
->>>         IO Capability Request Reply (Octet 18 - Bit 7)
->>>         User Confirmation Request Reply (Octet 19 - Bit 0)
->>>         User Confirmation Request Neg Reply (Octet 19 - Bit 1)
->>>         User Passkey Request Reply (Octet 19 - Bit 2)
->>>         User Passkey Request Negative Reply (Octet 19 - Bit 3)
->>>         Remote OOB Data Request Reply (Octet 19 - Bit 4)
->>>         Write Simple Pairing Debug Mode (Octet 19 - Bit 5)
->>>         Enhanced Flush (Octet 19 - Bit 6)
->>>         Remote OOB Data Request Neg Reply (Octet 19 - Bit 7)
->>>         Send Keypress Notification (Octet 20 - Bit 2)
->>>         IO Capability Request Negative Reply (Octet 20 - Bit 3)
->>>         Read Encryption Key Size (Octet 20 - Bit 4)
->>>         Set Event Mask Page 2 (Octet 22 - Bit 2)
->>>         Read Enhanced Transmit Power Level (Octet 24 - Bit 0)
->>>         Enhanced Setup Synchronous Connection (Octet 29 - Bit 3)
->>>         Enhanced Accept Synchronous Connection Request (Octet 29 - Bit 4)
->>>         Read Local Supported Codecs (Octet 29 - Bit 5)
->>>         Set Triggered Clock Capture (Octet 30 - Bit 5)
->>>         Truncated Page (Octet 30 - Bit 6)
->>>         Truncated Page Cancel (Octet 30 - Bit 7)
->>>         Set Connectionless Slave Broadcast (Octet 31 - Bit 0)
->>>         Start Synchronization Train (Octet 31 - Bit 2)
->>>         Set Reserved LT_ADDR (Octet 31 - Bit 4)
->>>         Delete Reserved LT_ADDR (Octet 31 - Bit 5)
->>>         Set Connectionless Slave Broadcast Data (Octet 31 - Bit 6)
->>>         Read Synchronization Train Parameters (Octet 31 - Bit 7)
->>>         Write Synchronization Train Parameters (Octet 32 - Bit 0)
->>>         Remote OOB Extended Data Request Reply (Octet 32 - Bit 1)
->>>         Read Authenticated Payload Timeout (Octet 32 - Bit 4)
->>>         Write Authenticated Payload Timeout (Octet 32 - Bit 5)
->>>         Read Local OOB Extended Data (Octet 32 - Bit 6)
->>>         Write Secure Connections Test Mode (Octet 32 - Bit 7)
->>>         Read Extended Page Timeout (Octet 33 - Bit 0)
->>>         Write Extended Page Timeout (Octet 33 - Bit 1)
->>>         Read Extended Inquiry Length (Octet 33 - Bit 2)
->>>         Write Extended Inquiry Length (Octet 33 - Bit 3)
->>>         LE Set Data Length (Octet 33 - Bit 6)
->>>         LE Read Suggested Default Data Length (Octet 33 - Bit 7)
->>>         LE Write Suggested Default Data Length (Octet 34 - Bit 0)
->>>         LE Read Local P-256 Public Key (Octet 34 - Bit 1)
->>>         LE Generate DHKey (Octet 34 - Bit 2)
->>>         LE Add Device To Resolving List (Octet 34 - Bit 3)
->>>         LE Remove Device From Resolving List (Octet 34 - Bit 4)
->>>         LE Clear Resolving List (Octet 34 - Bit 5)
->>>         LE Read Resolving List Size (Octet 34 - Bit 6)
->>>         LE Read Peer Resolvable Address (Octet 34 - Bit 7)
->>>         LE Read Local Resolvable Address (Octet 35 - Bit 0)
->>>         LE Set Address Resolution Enable (Octet 35 - Bit 1)
->>>         LE Set Resolvable Private Address Timeout (Octet 35 - Bit 2)
->>>         LE Read Maximum Data Length (Octet 35 - Bit 3)
->>>         Octet 35 - Bit 4 
->>>         Octet 35 - Bit 5 
->>>         Octet 35 - Bit 6 
->>>         Octet 35 - Bit 7 
->>>         Octet 36 - Bit 0 
->> 
->> So you support the PHY commands, but do not indicate support LE 2M or LE Coded? Also these are Bluetooth 5.0 commands.
->> 
-> 
-> To be honest. When I ported the device into Bluez core, a unexpected event for LE read local feature would cause a fail at Bluez core, so I made a hack on Bluez core  
-> 
-> to allow that I can keeping bring up the device without be blocked by the issue most probably from firmware.
-> 
-> Below code snippet is the only thing I added to avoid a fail at Bluez core to bring up the device.
-> 
-> @@ -927,6 +927,8 @@ static void hci_cc_le_read_local_features(struct hci_dev *hdev,
->                return;
-> 
->        memcpy(hdev->le_features, rp->features, 8);
-> +       hdev->le_features[0] = 0;
-> +       hdev->le_features[1] = 0;
-> }
-
-Send me the trace where you didn’t clear the feature bits and I check what is going on. I doubt that we have a bug, but maybe some of the commands are optional and we should add an appropriate check. Or you guys need to fix your firmware. A new btmon should decode all bits properly.
-
-Regards
-
-Marcel
+SGkgQ2zDqW1lbnQsCgpwbGVhc2UgZmluZCBzb21lIG1vcmUgcmV2aWV3IGNvbW1lbnRzLgoKT24g
+MDUvMjkvMjAxOCAwODowNCBQTSwgQ2zDqW1lbnQgUMOpcm9uIHdyb3RlOgo+IEZyb206IENvbGlu
+IERpZGllciA8Y29saW4uZGlkaWVyQGRldmlhbGV0LmNvbT4KPiAKPiBBZGQgZHJpdmVyIGZvciBO
+WFAncyBFUElUIHRpbWVyIHVzZWQgaW4gaS5NWCA2IGZhbWlseSBvZiBTb0MuCj4gCj4gU2lnbmVk
+LW9mZi1ieTogQ29saW4gRGlkaWVyIDxjb2xpbi5kaWRpZXJAZGV2aWFsZXQuY29tPgo+IFNpZ25l
+ZC1vZmYtYnk6IENsw6ltZW50IFBlcm9uIDxjbGVtZW50LnBlcm9uQGRldmlhbGV0LmNvbT4KPiAt
+LS0KPiAgZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnICAgICAgICAgIHwgIDEyICsrCj4gIGRy
+aXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZpbGUgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvY2xv
+Y2tzb3VyY2UvdGltZXItaW14LWVwaXQuYyB8IDI4MyArKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPiAgMyBmaWxlcyBjaGFuZ2VkLCAyOTYgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtZXBpdC5jCj4gCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvS2Nv
+bmZpZwo+IGluZGV4IDhlOGEwOTc1NWQxMC4uOTIwYTA4NzRmM2E0IDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvS2Nv
+bmZpZwo+IEBAIC01NzYsNiArNTc2LDE4IEBAIGNvbmZpZyBIODMwMF9UUFUKPiAgCSAgVGhpcyBl
+bmFibGVzIHRoZSBjbG9ja3NvdXJjZSBmb3IgdGhlIEg4MzAwIHBsYXRmb3JtIHdpdGggdGhlCj4g
+IAkgIEg4UzI2NzggY3B1Lgo+ICAKPiArY29uZmlnIENMS1NSQ19JTVhfRVBJVAo+ICsJYm9vbCAi
+Q2xvY2tzb3VyY2UgdXNpbmcgaS5NWCBFUElUIgo+ICsJZGVwZW5kcyBvbiBBUk0gJiYgQ0xLREVW
+X0xPT0tVUCAmJiBPRiAmJiAoQVJDSF9NWEMgfHwgQ09NUElMRV9URVNUKQoKSGVyZSAnZGVwZW5k
+cyBvbiBBUk0nIGNhbiBiZSByZW1vdmVkLCBiZWNhdXNlIEFSQ0hfTVhDIGltcGxpZXMgaXQuCgpB
+bHNvIEFSQ0hfTVhDIGltcGxpZXMgQVJDSF9NVUxUSVBMQVRGT1JNLCB3aGljaCBpbXBsaWVzIFVT
+RV9PRiBpbiB0dXJuLApzbyBJIHdvdWxkIHNheSB0aGF0IHRoZSBmb2xsb3dpbmcgbGluZSBpcyBj
+b3JyZWN0LCBzb3JyeSBhYm91dCBhIHByZXZpb3VzCmNvbW1lbnQgYXNraW5nIHRvIGFkZCBhbiBl
+eHBsaWNpdCBPRiBkZXBlbmRlbmN5OgoKCWRlcGVuZHMgb24gQ0xLREVWX0xPT0tVUCAmJiAoQVJD
+SF9NWEMgfHwgQ09NUElMRV9URVNUKQoKSG93ZXZlciBtb3N0IG9mIHRoZSBjbG9ja3NvdXJjZSBk
+cml2ZXJzIGZvbGxvdyAnYm9vbCAiLi4uIiBpZiBDT01QSUxFX1RFU1QnCnBhdHRlcm4sIGFuZCBp
+dCBtaWdodCBiZSBwcmVmZXJhYmxlIHRvIG1haW50YWluZXJzLgoKPiArCXNlbGVjdCBUSU1FUl9P
+RgoKVGhlIGRyaXZlciBkb2VzIG5vdCBoYXZlIHRoaXMgZGVwZW5kZW5jeS4KCj4gKwlzZWxlY3Qg
+Q0xLU1JDX01NSU8KPiArCWhlbHAKPiArCSAgVGhpcyBlbmFibGVzIEVQSVQgc3VwcG9ydCBhdmFp
+bGFibGUgb24gc29tZSBpLk1YIHBsYXRmb3Jtcy4KPiArCSAgTm9ybWFsbHkgeW91IGRvbid0IGhh
+dmUgYSByZWFzb24gdG8gZG8gc28gYXMgdGhlIEVQSVQgaGFzCj4gKwkgIHRoZSBzYW1lIGZlYXR1
+cmVzIGFuZCB1c2VzIHRoZSBzYW1lIGNsb2NrcyBhcyB0aGUgR1BULgo+ICsJICBBbnl3YXksIG9u
+IHNvbWUgc3lzdGVtcyB0aGUgR1BUIG1heSBiZSBpbiB1c2UgZm9yIG90aGVyCj4gKwkgIHB1cnBv
+c2VzLgo+ICsKPiAgY29uZmlnIENMS1NSQ19JTVhfR1BUCj4gIAlib29sICJDbG9ja3NvdXJjZSB1
+c2luZyBpLk1YIEdQVCIgaWYgQ09NUElMRV9URVNUCj4gIAlkZXBlbmRzIG9uIEFSTSAmJiBDTEtE
+RVZfTE9PS1VQCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZpbGUgYi9k
+cml2ZXJzL2Nsb2Nrc291cmNlL01ha2VmaWxlCj4gaW5kZXggMDBjYWYzN2U1MmY5Li5kOTQyNmY2
+OWVjNjkgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS9NYWtlZmlsZQo+ICsrKyBi
+L2RyaXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZpbGUKPiBAQCAtNjksNiArNjksNyBAQCBvYmotJChD
+T05GSUdfSU5URUdSQVRPUl9BUF9USU1FUikJKz0gdGltZXItaW50ZWdyYXRvci1hcC5vCj4gIG9i
+ai0kKENPTkZJR19DTEtTUkNfVkVSU0FUSUxFKQkJKz0gdmVyc2F0aWxlLm8KPiAgb2JqLSQoQ09O
+RklHX0NMS1NSQ19NSVBTX0dJQykJCSs9IG1pcHMtZ2ljLXRpbWVyLm8KPiAgb2JqLSQoQ09ORklH
+X0NMS1NSQ19UQU5HT19YVEFMKQkJKz0gdGFuZ29feHRhbC5vCj4gK29iai0kKENPTkZJR19DTEtT
+UkNfSU1YX0VQSVQpCQkrPSB0aW1lci1pbXgtZXBpdC5vCj4gIG9iai0kKENPTkZJR19DTEtTUkNf
+SU1YX0dQVCkJCSs9IHRpbWVyLWlteC1ncHQubwo+ICBvYmotJChDT05GSUdfQ0xLU1JDX0lNWF9U
+UE0pCQkrPSB0aW1lci1pbXgtdHBtLm8KPiAgb2JqLSQoQ09ORklHX0FTTTkyNjBfVElNRVIpCQkr
+PSBhc205MjYwX3RpbWVyLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1l
+ci1pbXgtZXBpdC5jIGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtZXBpdC5jCj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjg3MDI1ZDVmM2E5Nwo+IC0t
+LSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLWlteC1lcGl0LmMK
+PiBAQCAtMCwwICsxLDI4MyBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MAo+ICsvKgo+ICsgKiBpLk1YIEVQSVQgVGltZXIKPiArICoKPiArICogQ29weXJpZ2h0IChDKSAy
+MDEwIFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4KPiArICogQ29weXJpZ2h0
+IChDKSAyMDE4IENvbGluIERpZGllciA8Y29saW4uZGlkaWVyQGRldmlhbGV0LmNvbT4KPiArICog
+Q29weXJpZ2h0IChDKSAyMDE4IENsw6ltZW50IFDDqXJvbiA8Y2xlbWVudC5wZXJvbkBkZXZpYWxl
+dC5jb20+Cj4gKyAqLwo+ICsKPiArI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ICsjaW5jbHVkZSA8
+bGludXgvY2xvY2tjaGlwcy5oPgo+ICsjaW5jbHVkZSA8bGludXgvZXJyLmg+CgpUaGUgaW5jbHVk
+ZSBhYm92ZSBjYW4gYmUgZHJvcHBlZC4KCj4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4K
+PiArI2luY2x1ZGUgPGxpbnV4L2lycS5oPgoKVGhlIGluY2x1ZGUgYWJvdmUgY2FuIGJlIGRyb3Bw
+ZWQuCgo+ICsjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPgo+ICsjaW5jbHVkZSA8bGludXgv
+b2ZfaXJxLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgoKVGhlIGluY2x1ZGUgYWJvdmUgY2Fu
+IGJlIGRyb3BwZWQuCgo+ICsjaW5jbHVkZSA8bGludXgvc2NoZWRfY2xvY2suaD4KPiArI2luY2x1
+ZGUgPGxpbnV4L3NsYWIuaD4KPiArCj4gKyNkZWZpbmUgRVBJVENSCQkJCTB4MDAKPiArI2RlZmlu
+ZSBFUElUU1IJCQkJMHgwNAo+ICsjZGVmaW5lIEVQSVRMUgkJCQkweDA4Cj4gKyNkZWZpbmUgRVBJ
+VENNUFIJCQkweDBjCj4gKyNkZWZpbmUgRVBJVENOUgkJCQkweDEwCj4gKwo+ICsjZGVmaW5lIEVQ
+SVRDUl9FTgkJCUJJVCgwKQo+ICsjZGVmaW5lIEVQSVRDUl9FTk1PRAkJCUJJVCgxKQo+ICsjZGVm
+aW5lIEVQSVRDUl9PQ0lFTgkJCUJJVCgyKQo+ICsjZGVmaW5lIEVQSVRDUl9STEQJCQlCSVQoMykK
+PiArI2RlZmluZSBFUElUQ1JfUFJFU0MoeCkJCQkoKCh4KSAmIDB4ZmZmKSA8PCA0KQo+ICsjZGVm
+aW5lIEVQSVRDUl9TV1IJCQlCSVQoMTYpCj4gKyNkZWZpbmUgRVBJVENSX0lPVlcJCQlCSVQoMTcp
+Cj4gKyNkZWZpbmUgRVBJVENSX0RCR0VOCQkJQklUKDE4KQo+ICsjZGVmaW5lIEVQSVRDUl9XQUlU
+RU4JCQlCSVQoMTkpCj4gKyNkZWZpbmUgRVBJVENSX1JFUwkJCUJJVCgyMCkKPiArI2RlZmluZSBF
+UElUQ1JfU1RPUEVOCQkJQklUKDIxKQo+ICsjZGVmaW5lIEVQSVRDUl9PTV9ESVNDT04JCSgwIDw8
+IDIyKQo+ICsjZGVmaW5lIEVQSVRDUl9PTV9UT0dHTEUJCSgxIDw8IDIyKQo+ICsjZGVmaW5lIEVQ
+SVRDUl9PTV9DTEVBUgkJCSgyIDw8IDIyKQo+ICsjZGVmaW5lIEVQSVRDUl9PTV9TRVQJCQkoMyA8
+PCAyMikKPiArI2RlZmluZSBFUElUQ1JfQ0xLU1JDX09GRgkJKDAgPDwgMjQpCj4gKyNkZWZpbmUg
+RVBJVENSX0NMS1NSQ19QRVJJUEhFUkFMCSgxIDw8IDI0KQo+ICsjZGVmaW5lIEVQSVRDUl9DTEtT
+UkNfUkVGX0hJR0gJCSgyIDw8IDI0KQo+ICsjZGVmaW5lIEVQSVRDUl9DTEtTUkNfUkVGX0xPVwkJ
+KDMgPDwgMjQpCj4gKwo+ICsjZGVmaW5lIEVQSVRTUl9PQ0lGCQkJQklUKDApCj4gKwo+ICtzdHJ1
+Y3QgZXBpdF90aW1lciB7Cj4gKwl2b2lkIF9faW9tZW0gKmJhc2U7Cj4gKwlpbnQgaXJxOwo+ICsJ
+c3RydWN0IGNsayAqY2xrX3BlcjsKPiArCXN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgY2VkOwo+
+ICsJc3RydWN0IGlycWFjdGlvbiBhY3Q7Cj4gK307Cj4gKwo+ICtzdGF0aWMgdm9pZCBfX2lvbWVt
+ICpzY2hlZF9jbG9ja19yZWc7Cj4gKwo+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBlcGl0X3RpbWVy
+ICp0b19lcGl0X3RpbWVyKHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgKmNlZCkKPiArewo+ICsJ
+cmV0dXJuIGNvbnRhaW5lcl9vZihjZWQsIHN0cnVjdCBlcGl0X3RpbWVyLCBjZWQpOwo+ICt9Cj4g
+Kwo+ICtzdGF0aWMgaW5saW5lIHZvaWQgZXBpdF9pcnFfZGlzYWJsZShzdHJ1Y3QgZXBpdF90aW1l
+ciAqZXBpdHRtKQo+ICt7Cj4gKwl1MzIgdmFsOwo+ICsKPiArCXZhbCA9IHJlYWRsX3JlbGF4ZWQo
+ZXBpdHRtLT5iYXNlICsgRVBJVENSKTsKPiArCXdyaXRlbF9yZWxheGVkKHZhbCAmIH5FUElUQ1Jf
+T0NJRU4sIGVwaXR0bS0+YmFzZSArIEVQSVRDUik7Cj4gK30KPiArCj4gK3N0YXRpYyBpbmxpbmUg
+dm9pZCBlcGl0X2lycV9lbmFibGUoc3RydWN0IGVwaXRfdGltZXIgKmVwaXR0bSkKPiArewo+ICsJ
+dTMyIHZhbDsKPiArCj4gKwl2YWwgPSByZWFkbF9yZWxheGVkKGVwaXR0bS0+YmFzZSArIEVQSVRD
+Uik7Cj4gKwl3cml0ZWxfcmVsYXhlZCh2YWwgfCBFUElUQ1JfT0NJRU4sIGVwaXR0bS0+YmFzZSAr
+IEVQSVRDUik7Cj4gK30KPiArCj4gK3N0YXRpYyB2b2lkIGVwaXRfaXJxX2Fja25vd2xlZGdlKHN0
+cnVjdCBlcGl0X3RpbWVyICplcGl0dG0pCj4gK3sKPiArCXdyaXRlbF9yZWxheGVkKEVQSVRTUl9P
+Q0lGLCBlcGl0dG0tPmJhc2UgKyBFUElUU1IpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdTY0IG5vdHJh
+Y2UgZXBpdF9yZWFkX3NjaGVkX2Nsb2NrKHZvaWQpCj4gK3sKPiArCXJldHVybiB+cmVhZGxfcmVs
+YXhlZChzY2hlZF9jbG9ja19yZWcpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IF9faW5pdCBlcGl0
+X2Nsb2Nrc291cmNlX2luaXQoc3RydWN0IGVwaXRfdGltZXIgKmVwaXR0bSkKPiArewo+ICsJdW5z
+aWduZWQgaW50IGMgPSBjbGtfZ2V0X3JhdGUoZXBpdHRtLT5jbGtfcGVyKTsKPiArCj4gKwlzY2hl
+ZF9jbG9ja19yZWcgPSBlcGl0dG0tPmJhc2UgKyBFUElUQ05SOwo+ICsJc2NoZWRfY2xvY2tfcmVn
+aXN0ZXIoZXBpdF9yZWFkX3NjaGVkX2Nsb2NrLCAzMiwgYyk7Cj4gKwo+ICsJcmV0dXJuIGNsb2Nr
+c291cmNlX21taW9faW5pdChlcGl0dG0tPmJhc2UgKyBFUElUQ05SLCAiZXBpdCIsIGMsIDIwMCwg
+MzIsCj4gKwkJCWNsb2Nrc291cmNlX21taW9fcmVhZGxfZG93bik7Cj4gK30KPiArCgpJIHdvdWxk
+IHN1Z2dlc3QgdG8gcGxhY2UgZXBpdF9jbG9ja3NvdXJjZV9pbml0KCkgZnVuY3Rpb24gcmlnaHQg
+YmVmb3JlCmVwaXRfdGltZXJfaW5pdCgpLgoKPiArc3RhdGljIGludCBlcGl0X3NldF9uZXh0X2V2
+ZW50KHVuc2lnbmVkIGxvbmcgY3ljbGVzLAo+ICsJCQkgICAgICAgc3RydWN0IGNsb2NrX2V2ZW50
+X2RldmljZSAqY2VkKQo+ICt7Cj4gKwlzdHJ1Y3QgZXBpdF90aW1lciAqZXBpdHRtID0gdG9fZXBp
+dF90aW1lcihjZWQpOwo+ICsJdW5zaWduZWQgbG9uZyB0Y21wOwo+ICsKPiArCXRjbXAgPSByZWFk
+bF9yZWxheGVkKGVwaXR0bS0+YmFzZSArIEVQSVRDTlIpIC0gY3ljbGVzOwo+ICsJd3JpdGVsX3Jl
+bGF4ZWQodGNtcCwgZXBpdHRtLT5iYXNlICsgRVBJVENNUFIpOwo+ICsKPiArCXJldHVybiAwOwo+
+ICt9Cj4gKwo+ICsvKiBMZWZ0IGV2ZW50IHNvdXJjZXMgZGlzYWJsZWQsIG5vIG1vcmUgaW50ZXJy
+dXB0cyBhcHBlYXIgKi8KPiArc3RhdGljIGludCBlcGl0X3NodXRkb3duKHN0cnVjdCBjbG9ja19l
+dmVudF9kZXZpY2UgKmNlZCkKPiArewo+ICsJc3RydWN0IGVwaXRfdGltZXIgKmVwaXR0bSA9IHRv
+X2VwaXRfdGltZXIoY2VkKTsKPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7Cj4gKwo+ICsJLyoKPiAr
+CSAqIFRoZSB0aW1lciBpbnRlcnJ1cHQgZ2VuZXJhdGlvbiBpcyBkaXNhYmxlZCBhdCBsZWFzdAo+
+ICsJICogZm9yIGVub3VnaCB0aW1lIHRvIGNhbGwgZXBpdF9zZXRfbmV4dF9ldmVudCgpCj4gKwkg
+Ki8KPiArCWxvY2FsX2lycV9zYXZlKGZsYWdzKTsKPiArCj4gKwkvKiBEaXNhYmxlIGludGVycnVw
+dCBpbiBFUElUIG1vZHVsZSAqLwo+ICsJZXBpdF9pcnFfZGlzYWJsZShlcGl0dG0pOwo+ICsKPiAr
+CS8qIENsZWFyIHBlbmRpbmcgaW50ZXJydXB0ICovCj4gKwllcGl0X2lycV9hY2tub3dsZWRnZShl
+cGl0dG0pOwo+ICsKPiArCWxvY2FsX2lycV9yZXN0b3JlKGZsYWdzKTsKPiArCj4gKwlyZXR1cm4g
+MDsKPiArfQo+ICsKPiArc3RhdGljIGludCBlcGl0X3NldF9vbmVzaG90KHN0cnVjdCBjbG9ja19l
+dmVudF9kZXZpY2UgKmNlZCkKPiArewo+ICsJc3RydWN0IGVwaXRfdGltZXIgKmVwaXR0bSA9IHRv
+X2VwaXRfdGltZXIoY2VkKTsKPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7Cj4gKwo+ICsJLyoKPiAr
+CSAqIFRoZSB0aW1lciBpbnRlcnJ1cHQgZ2VuZXJhdGlvbiBpcyBkaXNhYmxlZCBhdCBsZWFzdAo+
+ICsJICogZm9yIGVub3VnaCB0aW1lIHRvIGNhbGwgZXBpdF9zZXRfbmV4dF9ldmVudCgpCj4gKwkg
+Ki8KPiArCWxvY2FsX2lycV9zYXZlKGZsYWdzKTsKPiArCj4gKwkvKiBEaXNhYmxlIGludGVycnVw
+dCBpbiBFUElUIG1vZHVsZSAqLwo+ICsJZXBpdF9pcnFfZGlzYWJsZShlcGl0dG0pOwo+ICsKPiAr
+CS8qIENsZWFyIHBlbmRpbmcgaW50ZXJydXB0LCBvbmx5IHdoaWxlIHN3aXRjaGluZyBtb2RlICov
+Cj4gKwlpZiAoIWNsb2NrZXZlbnRfc3RhdGVfb25lc2hvdChjZWQpKQo+ICsJCWVwaXRfaXJxX2Fj
+a25vd2xlZGdlKGVwaXR0bSk7Cj4gKwo+ICsJLyoKPiArCSAqIERvIG5vdCBwdXQgb3ZlcmhlYWQg
+b2YgaW50ZXJydXB0IGVuYWJsZS9kaXNhYmxlIGludG8KPiArCSAqIGVwaXRfc2V0X25leHRfZXZl
+bnQoKSwgdGhlIGNvcmUgaGFzIGFib3V0IDQgbWludXRlcwo+ICsJICogdG8gY2FsbCBlcGl0X3Nl
+dF9uZXh0X2V2ZW50KCkgb3Igc2h1dGRvd24gY2xvY2sgYWZ0ZXIKPiArCSAqIG1vZGUgc3dpdGNo
+aW5nCj4gKwkgKi8KPiArCWVwaXRfaXJxX2VuYWJsZShlcGl0dG0pOwo+ICsJbG9jYWxfaXJxX3Jl
+c3RvcmUoZmxhZ3MpOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaXJxcmV0
+dXJuX3QgZXBpdF90aW1lcl9pbnRlcnJ1cHQoaW50IGlycSwgdm9pZCAqZGV2X2lkKQo+ICt7Cj4g
+KwlzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpjZWQgPSBkZXZfaWQ7Cj4gKwlzdHJ1Y3QgZXBp
+dF90aW1lciAqZXBpdHRtID0gdG9fZXBpdF90aW1lcihjZWQpOwo+ICsKPiArCWVwaXRfaXJxX2Fj
+a25vd2xlZGdlKGVwaXR0bSk7Cj4gKwo+ICsJY2VkLT5ldmVudF9oYW5kbGVyKGNlZCk7Cj4gKwo+
+ICsJcmV0dXJuIElSUV9IQU5ETEVEOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IF9faW5pdCBlcGl0
+X2Nsb2NrZXZlbnRfaW5pdChzdHJ1Y3QgZXBpdF90aW1lciAqZXBpdHRtKQo+ICt7Cj4gKwlzdHJ1
+Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpjZWQgPSAmZXBpdHRtLT5jZWQ7Cj4gKwlzdHJ1Y3QgaXJx
+YWN0aW9uICphY3QgPSAmZXBpdHRtLT5hY3Q7Cj4gKwo+ICsJY2VkLT5uYW1lID0gImVwaXQiOwo+
+ICsJY2VkLT5mZWF0dXJlcyA9IENMT0NLX0VWVF9GRUFUX09ORVNIT1QgfCBDTE9DS19FVlRfRkVB
+VF9EWU5JUlE7Cj4gKwljZWQtPnNldF9zdGF0ZV9zaHV0ZG93biA9IGVwaXRfc2h1dGRvd247Cj4g
+KwljZWQtPnRpY2tfcmVzdW1lID0gZXBpdF9zaHV0ZG93bjsKPiArCWNlZC0+c2V0X3N0YXRlX29u
+ZXNob3QgPSBlcGl0X3NldF9vbmVzaG90Owo+ICsJY2VkLT5zZXRfbmV4dF9ldmVudCA9IGVwaXRf
+c2V0X25leHRfZXZlbnQ7Cj4gKwljZWQtPnJhdGluZyA9IDIwMDsKPiArCWNlZC0+Y3B1bWFzayA9
+IGNwdW1hc2tfb2YoMCk7Cj4gKwljZWQtPmlycSA9IGVwaXR0bS0+aXJxOwo+ICsJY2xvY2tldmVu
+dHNfY29uZmlnX2FuZF9yZWdpc3RlcihjZWQsIGNsa19nZXRfcmF0ZShlcGl0dG0tPmNsa19wZXIp
+LAo+ICsJCTB4ZmYsIDB4ZmZmZmZmZmUpOwoKUGxlYXNlIGluZGVudCB0aGUgd3JhcHBlZCBsaW5l
+LgoKPiArCj4gKwlhY3QtPm5hbWUgPSAiaS5NWCBFUElUIFRpbWVyIFRpY2siLAo+ICsJYWN0LT5m
+bGFncyA9IElSUUZfVElNRVIgfCBJUlFGX0lSUVBPTEw7Cj4gKwlhY3QtPmhhbmRsZXIgPSBlcGl0
+X3RpbWVyX2ludGVycnVwdDsKPiArCWFjdC0+ZGV2X2lkID0gY2VkOwo+ICsKPiArCS8qIE1ha2Ug
+aXJxcyBoYXBwZW4gKi8KPiArCXJldHVybiBzZXR1cF9pcnEoZXBpdHRtLT5pcnEsIGFjdCk7Cj4g
+K30KPiArCj4gK3N0YXRpYyBpbnQgX19pbml0IGVwaXRfdGltZXJfaW5pdChzdHJ1Y3QgZGV2aWNl
+X25vZGUgKm5wKQo+ICt7Cj4gKwlzdHJ1Y3QgZXBpdF90aW1lciAqZXBpdHRtOwo+ICsJc3RydWN0
+IGNsayAqY2xrX2lwZzsKPiArCWludCByZXQ7Cj4gKwo+ICsJZXBpdHRtID0ga3phbGxvYyhzaXpl
+b2YoKmVwaXR0bSksIEdGUF9LRVJORUwpOwo+ICsJaWYgKCFlcGl0dG0pCj4gKwkJcmV0dXJuIC1F
+Tk9NRU07Cj4gKwo+ICsJZXBpdHRtLT5iYXNlID0gb2ZfaW9tYXAobnAsIDApOwo+ICsJaWYgKCFl
+cGl0dG0tPmJhc2UpIHsKPiArCQlyZXQgPSAtRU5YSU87Cj4gKwkJZ290byBvdXRfa2ZyZWU7Cj4g
+Kwl9Cj4gKwo+ICsJZXBpdHRtLT5pcnEgPSBpcnFfb2ZfcGFyc2VfYW5kX21hcChucCwgMCk7Cj4g
+KwlpZiAoIWVwaXR0bS0+aXJxKSB7Cj4gKwkJcmV0ID0gLUVJTlZBTDsKPiArCQlnb3RvIG91dF9p
+b3VubWFwOwo+ICsJfQo+ICsKPiArCWNsa19pcGcgPSBvZl9jbGtfZ2V0X2J5X25hbWUobnAsICJp
+cGciKTsKPiArCWlmIChJU19FUlIoY2xrX2lwZykpIHsKPiArCQlwcl9lcnIoImkuTVggRVBJVDog
+dW5hYmxlIHRvIGdldCBjbGtfaXBnXG4iKTsKPiArCQlyZXQgPSBQVFJfRVJSKGNsa19pcGcpOwo+
+ICsJCWdvdG8gb3V0X2lvdW5tYXA7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5h
+YmxlKGNsa19pcGcpOwo+ICsJaWYgKHJldCkgewo+ICsJCXByX2VycigiaS5NWCBFUElUOiB1bmFi
+bGUgdG8gcHJlcGFyZStlbmFibGUgY2xrX2lwZ1xuIik7Cj4gKwkJZ290byBvdXRfY2xrX2lwZ19k
+aXNhYmxlOwo+ICsJfQo+ICsKPiArCWVwaXR0bS0+Y2xrX3BlciA9IG9mX2Nsa19nZXRfYnlfbmFt
+ZShucCwgInBlciIpOwo+ICsJaWYgKElTX0VSUihlcGl0dG0tPmNsa19wZXIpKSB7Cj4gKwkJcHJf
+ZXJyKCJpLk1YIEVQSVQ6IHVuYWJsZSB0byBnZXQgY2xrX3BlclxuIik7Cj4gKwkJcmV0ID0gUFRS
+X0VSUihlcGl0dG0tPmNsa19wZXIpOwo+ICsJCWdvdG8gb3V0X2Nsa19pcGdfZGlzYWJsZTsKPiAr
+CX0KPiArCj4gKwlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZXBpdHRtLT5jbGtfcGVyKTsKPiAr
+CWlmIChyZXQpIHsKPiArCQlwcl9lcnIoImkuTVggRVBJVDogdW5hYmxlIHRvIHByZXBhcmUrZW5h
+YmxlIGNsa19wZXJcbiIpOwo+ICsJCWdvdG8gb3V0X2Nsa19pcGdfZGlzYWJsZTsKPiArCX0KPiAr
+Cj4gKwkvKiBJbml0aWFsaXNlIHRvIGEga25vd24gc3RhdGUgKGFsbCB0aW1lcnMgb2ZmLCBhbmQg
+dGltaW5nIHJlc2V0KSAqLwo+ICsJd3JpdGVsX3JlbGF4ZWQoMHgwLCBlcGl0dG0tPmJhc2UgKyBF
+UElUQ1IpOwo+ICsJd3JpdGVsX3JlbGF4ZWQoMHhmZmZmZmZmZiwgZXBpdHRtLT5iYXNlICsgRVBJ
+VExSKTsKPiArCXdyaXRlbF9yZWxheGVkKEVQSVRDUl9FTiB8IEVQSVRDUl9DTEtTUkNfUkVGX0hJ
+R0ggfCBFUElUQ1JfV0FJVEVOLAo+ICsJCSAgICAgICBlcGl0dG0tPmJhc2UgKyBFUElUQ1IpOwo+
+ICsKPiArCXJldCA9IGVwaXRfY2xvY2tzb3VyY2VfaW5pdChlcGl0dG0pOwo+ICsJaWYocmV0KSB7
+CgpBZGQgYSBzcGFjZSBiZWZvcmUgbGVmdCBwYXJlbnRoZXNpcy4KCj4gKwkJcHJfZXJyKCJpLk1Y
+IEVQSVQ6IGZhaWxlZCB0byBpbml0IGNsb2Nrc291cmNlXG4iKTsKPiArCQlnb3RvIG91dF9jbGtf
+cGVyX2Rpc2FibGU7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0gZXBpdF9jbG9ja2V2ZW50X2luaXQoZXBp
+dHRtKTsKPiArCWlmKHJldCkgewoKQWRkIGEgc3BhY2UgYmVmb3JlIGxlZnQgcGFyZW50aGVzaXMu
+Cgo+ICsJCXByX2VycigiaS5NWCBFUElUOiBmYWlsZWQgdG8gaW5pdCBjbG9ja2V2ZW50XG4iKTsK
+PiArCQlnb3RvIG91dF9jbGtfcGVyX2Rpc2FibGU7Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIDA7Cj4g
+Kwo+ICtvdXRfY2xrX3Blcl9kaXNhYmxlOgo+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGVwaXR0
+bS0+Y2xrX3Blcik7Cj4gK291dF9jbGtfaXBnX2Rpc2FibGU6Cj4gKwljbGtfZGlzYWJsZV91bnBy
+ZXBhcmUoY2xrX2lwZyk7Cj4gK291dF9pb3VubWFwOgo+ICsJaW91bm1hcChlcGl0dG0tPmJhc2Up
+Owo+ICtvdXRfa2ZyZWU6Cj4gKwlrZnJlZShlcGl0dG0pOwo+ICsKPiArCXJldHVybiByZXQ7Cj4g
+K30KPiArVElNRVJfT0ZfREVDTEFSRShteDZxX3RpbWVyLCAiZnNsLGlteDZxLWVwaXQiLCBlcGl0
+X3RpbWVyX2luaXQpOwo+IAoKSGVyZSAiZnNsLGlteDMxLWVwaXQiIHdvdWxkIGJlIHdheSBiZXR0
+ZXIgdGhhbiAiZnNsLGlteDZxLWVwaXQiLCBwbGVhc2UKZml4IGl0IGluIHRoZSBkb2N1bWVudGF0
+aW9uIGFzIHdlbGwuCgotLQpXaXRoIGJlc3Qgd2lzaGVzLApWbGFkaW1pcgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
