@@ -1,172 +1,139 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v8 3/7] i2c: fsi: Add port structures
-Date: Wed, 30 May 2018 16:07:40 -0500
-Message-ID: <1527714464-8642-4-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 02/11] PM / devfreq: Fix handling of min/max_freq == 0
+Date: Wed, 30 May 2018 14:13:01 -0700
+Message-ID: <20180530211301.GA194977@google.com>
+References: <20180525203043.249193-1-mka@chromium.org>
+ <CGME20180525203323epcas4p45ba35c38413e227f76f68fe331011b19@epcas4p4.samsung.com>
+ <20180525203043.249193-3-mka@chromium.org>
+ <5B0BA3BB.8060505@samsung.com>
+ <20180529185758.GG168650@google.com>
+ <5B0E5AFE.8090703@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <5B0E5AFE.8090703@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, Eddie James <eajames@linux.vnet.ibm.com>
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, =?utf-8?B?w5hyamFu?= Eide <orjan.eide@arm.com>, John Einar Reitan <john.reitan@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add and initialize I2C adapters for each port on the FSI-attached I2C
-master. Ports for each master are defined in the devicetree.
+On Wed, May 30, 2018 at 05:04:14PM +0900, Chanwoo Choi wrote:
+> Hi,
+> 
+> On 2018년 05월 30일 03:57, Matthias Kaehlcke wrote:
+> > On Mon, May 28, 2018 at 03:37:47PM +0900, Chanwoo Choi wrote:
+> >> Hi,
+> >>
+> >> On 2018년 05월 26일 05:30, Matthias Kaehlcke wrote:
+> >>> Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding the
+> >>> devfreq device") initializes df->min/max_freq with the min/max OPP when
+> >>> the device is added. Later commit f1d981eaecf8 ("PM / devfreq: Use the
+> >>> available min/max frequency") adds df->scaling_min/max_freq and the
+> >>> following to the frequency adjustment code:
+> >>>
+> >>>   max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
+> >>>
+> >>> With the current handling of min/max_freq this is incorrect:
+> >>>
+> >>> Even though df->max_freq is now initialized to a value != 0 user space
+> >>> can still set it to 0, in this case max_freq would be 0 instead of
+> >>> df->scaling_max_freq as intended. In consequence the frequency adjustment
+> >>> is not performed:
+> >>>
+> >>>   if (max_freq && freq > max_freq) {
+> >>> 	freq = max_freq;
+> >>>
+> >>> To fix this set df->min/max freq to the min/max OPP in max/max_freq_store,
+> >>> when the user passes a value of 0. This also prevents df->max_freq from
+> >>> being set below the min OPP when df->min_freq is 0, and similar for
+> >>> min_freq. Since it is now guaranteed that df->min/max_freq can't be 0 the
+> >>> checks for this case can be removed.
+> >>>
+> >>> Fixes: f1d981eaecf8 ("PM / devfreq: Use the available min/max frequency")
+> >>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> >>> ---
+> >>>  drivers/devfreq/devfreq.c | 30 ++++++++++++++++++------------
+> >>>  1 file changed, 18 insertions(+), 12 deletions(-)
+> >>>
+> >>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> >>> index 0057ef5b0a98..67da4e7b486b 100644
+> >>> --- a/drivers/devfreq/devfreq.c
+> >>> +++ b/drivers/devfreq/devfreq.c
+> >>> @@ -283,11 +283,11 @@ int update_devfreq(struct devfreq *devfreq)
+> >>>  	max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
+> >>>  	min_freq = MAX(devfreq->scaling_min_freq, devfreq->min_freq);
+> >>>  
+> >>> -	if (min_freq && freq < min_freq) {
+> >>> +	if (freq < min_freq) {
+> >>>  		freq = min_freq;
+> >>>  		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
+> >>>  	}
+> >>> -	if (max_freq && freq > max_freq) {
+> >>> +	if (freq > max_freq) {
+> >>>  		freq = max_freq;
+> >>>  		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+> >>>  	}
+> >>> @@ -1123,17 +1123,20 @@ static ssize_t min_freq_store(struct device *dev, struct device_attribute *attr,
+> >>>  	struct devfreq *df = to_devfreq(dev);
+> >>>  	unsigned long value;
+> >>>  	int ret;
+> >>> -	unsigned long max;
+> >>>  
+> >>>  	ret = sscanf(buf, "%lu", &value);
+> >>>  	if (ret != 1)
+> >>>  		return -EINVAL;
+> >>>  
+> >>>  	mutex_lock(&df->lock);
+> >>> -	max = df->max_freq;
+> >>> -	if (value && max && value > max) {
+> >>> -		ret = -EINVAL;
+> >>> -		goto unlock;
+> >>> +
+> >>> +	if (value) {
+> >>> +		if (value > df->max_freq) {
+> >>> +			ret = -EINVAL;
+> >>> +			goto unlock;
+> >>> +		}
+> >>> +	} else {
+> >>> +		value = df->profile->freq_table[df->profile->max_state - 1];
+> >>>  	}
+> >>
+> >> If you want to prevent that df->min_freq is zero, 
+> >> you should reinitialize 'value' as following.
+> >> Because freq_table must be in ascending order.
+> >> 	value = df->profile->freq_table[0];
+> > 
+> > Thanks for pointing this out!
+> > 
+> > The devfreq device I tested with (a Mali GPU) uses descending order
+> > for some reason, and I assumed that's the usual order.
+> > 
+> > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.4/drivers/gpu/arm/midgard/backend/gpu/mali_kbase_devfreq.c#208
+> > 
+> > It seems the ordering doesn't have any impact beyond this patch. If
+> > the order isn't mandatory for drivers that set up their own freq_table
+> > we should probably support both cases to be safe.
+> 
+> Prior to that 'freq_table' is optional. So, patch[1] initialize the 'freq_table'
+> by using OPP interface if 'freq_table' is NULL.
+> [1] commit 0ec09ac2cebe ("PM / devfreq: Set the freq_table of devfreq device")
+> 
+> Current devfreq recommend the ascending order for 'freq_table'.
+> But, as you know, it might be not enough to support them.
+> 
+> I agree that we should support the both cases (ascending or descending order).
+> 
+> Maybe, it might be not proper to access the freq_table[] directly
+> because we don't know the ordering style of 'freq_table'
+> if 'freq_table' is made by devfreq user instead of devfreq core.
 
-Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
----
- drivers/i2c/busses/i2c-fsi.c | 90 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+If we can assume that it is either ascending or descending, but not
+random order than a simple check if freq_table[0] <
+freq_table[max_state - 1] would be sufficient.
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index e1b183c..be8e15c 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -17,7 +17,9 @@
- #include <linux/fsi.h>
- #include <linux/i2c.h>
- #include <linux/kernel.h>
-+#include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- 
- #define FSI_ENGID_I2C		0x7
- 
-@@ -123,6 +125,14 @@
- struct fsi_i2c_master {
- 	struct fsi_device	*fsi;
- 	u8			fifo_size;
-+	struct list_head	ports;
-+};
-+
-+struct fsi_i2c_port {
-+	struct list_head	list;
-+	struct i2c_adapter	adapter;
-+	struct fsi_i2c_master	*master;
-+	u16			port;
- };
- 
- static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
-@@ -176,9 +186,38 @@ static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
- 	return fsi_i2c_write_reg(i2c->fsi, I2C_FSI_WATER_MARK, &watermark);
- }
- 
-+static int fsi_i2c_set_port(struct fsi_i2c_port *port)
-+{
-+	int rc;
-+	struct fsi_device *fsi = port->master->fsi;
-+	u32 mode, dummy = 0;
-+
-+	rc = fsi_i2c_read_reg(fsi, I2C_FSI_MODE, &mode);
-+	if (rc)
-+		return rc;
-+
-+	if (FIELD_GET(I2C_MODE_PORT, mode) == port->port)
-+		return 0;
-+
-+	mode = (mode & ~I2C_MODE_PORT) | FIELD_PREP(I2C_MODE_PORT, port->port);
-+	rc = fsi_i2c_write_reg(fsi, I2C_FSI_MODE, &mode);
-+	if (rc)
-+		return rc;
-+
-+	/* reset engine when port is changed */
-+	return fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
-+}
-+
- static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 			int num)
- {
-+	int rc;
-+	struct fsi_i2c_port *port = adap->algo_data;
-+
-+	rc = fsi_i2c_set_port(port);
-+	if (rc)
-+		return rc;
-+
- 	return -EOPNOTSUPP;
- }
- 
-@@ -196,23 +235,73 @@ static u32 fsi_i2c_functionality(struct i2c_adapter *adap)
- static int fsi_i2c_probe(struct device *dev)
- {
- 	struct fsi_i2c_master *i2c;
-+	struct fsi_i2c_port *port;
-+	struct device_node *np;
- 	int rc;
-+	u32 port_no;
- 
- 	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
- 	if (!i2c)
- 		return -ENOMEM;
- 
- 	i2c->fsi = to_fsi_dev(dev);
-+	INIT_LIST_HEAD(&i2c->ports);
- 
- 	rc = fsi_i2c_dev_init(i2c);
- 	if (rc)
- 		return rc;
- 
-+	/* Add adapter for each i2c port of the master. */
-+	for_each_available_child_of_node(dev->of_node, np) {
-+		rc = of_property_read_u32(np, "reg", &port_no);
-+		if (rc || port_no > USHRT_MAX)
-+			continue;
-+
-+		port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-+		if (!port)
-+			break;
-+
-+		port->master = i2c;
-+		port->port = port_no;
-+
-+		port->adapter.owner = THIS_MODULE;
-+		port->adapter.dev.of_node = np;
-+		port->adapter.dev.parent = dev;
-+		port->adapter.algo = &fsi_i2c_algorithm;
-+		port->adapter.algo_data = port;
-+
-+		snprintf(port->adapter.name, sizeof(port->adapter.name),
-+			 "i2c_bus-%u", port_no);
-+
-+		rc = i2c_add_adapter(&port->adapter);
-+		if (rc < 0) {
-+			dev_err(dev, "Failed to register adapter: %d\n", rc);
-+			devm_kfree(dev, port);
-+			continue;
-+		}
-+
-+		list_add(&port->list, &i2c->ports);
-+	}
-+
- 	dev_set_drvdata(dev, i2c);
- 
- 	return 0;
- }
- 
-+static int fsi_i2c_remove(struct device *dev)
-+{
-+	struct fsi_i2c_master *i2c = dev_get_drvdata(dev);
-+	struct fsi_i2c_port *port;
-+
-+	if (!list_empty(&i2c->ports)) {
-+		list_for_each_entry(port, &i2c->ports, list) {
-+			i2c_del_adapter(&port->adapter);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static const struct fsi_device_id fsi_i2c_ids[] = {
- 	{ FSI_ENGID_I2C, FSI_VERSION_ANY },
- 	{ 0 }
-@@ -224,6 +313,7 @@ static int fsi_i2c_probe(struct device *dev)
- 		.name = "i2c-fsi",
- 		.bus = &fsi_bus_type,
- 		.probe = fsi_i2c_probe,
-+		.remove = fsi_i2c_remove,
- 	},
- };
- 
--- 
-1.8.3.1
+Otherwise we could also determine the min/max after initialization and
+save the result, though that would leave us with yet another frequency
+pair, which might be confusing, especially if we don't come up with
+good names to distinguish between them.
