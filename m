@@ -1,330 +1,91 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
- model corners
-Date: Wed, 30 May 2018 15:44:53 +0530
-Message-ID: <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-2-rnayak@codeaurora.org>
- <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/7] gnss: add new GNSS subsystem
+Date: Wed, 30 May 2018 12:26:39 +0200
+Message-ID: <20180530102639.GC3259@localhost>
+References: <20180424163458.11947-1-johan@kernel.org>
+ <20180504132741.brn5jqv5ufjhp7ky@earth.universe>
+ <20180507102056.GU2285@localhost>
+ <FA27606D-AB12-4D62-8EBD-3CC6F0900AF7@holtmann.org>
+ <20180508070153.GX2285@localhost>
+ <C8F35484-132F-466C-B87F-B209B2BC8B37@holtmann.org>
+ <20180508124817.GZ2285@localhost>
+ <0EFEDDD9-C21B-458B-884D-FC23F3D38B94@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <0EFEDDD9-C21B-458B-884D-FC23F3D38B94@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, collinsd@codeaurora.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hovold <johan@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Marcel,
 
+Sorry about the late reply. I got side-tracked with other things.
 
-On 05/30/2018 02:47 PM, Ulf Hansson wrote:
-> On 25 May 2018 at 12:01, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->> The powerdomains for corners just pass the performance state set by the
->> consumers to the RPM (Remote Power manager) which then takes care
->> of setting the appropriate voltage on the corresponding rails to
->> meet the performance needs.
->>
->> We add all powerdomain data needed on msm8996 here. This driver can easily
->> be extended by adding data for other qualcomm SoCs as well.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> ---
->>  .../devicetree/bindings/power/qcom,rpmpd.txt  |  55 ++++
+On Tue, May 08, 2018 at 10:03:57PM +0200, Marcel Holtmann wrote:
+> Hi Johan,
 > 
-> Please split DT doc changes into separate patches, to simplify review.
+> >>>>>> I have one concern, though. While providing raw data by
+> >>>>>> default is fine generally, it is a problem with device
+> >>>>>> auto-discovery. I think there should be some IOCTL from
+> >>>>>> the start, that can be used to inform userspace about
+> >>>>>> the raw protocol being used (i.e. "NMEA"). I fear, that
+> >>>>>> userspace may start to just assume raw = NMEA without
+> >>>>>> having this (especially since all initial drivers provide
+> >>>>>> NMEA).
+> >>>>> 
+> >>>>> One problem I see here would be that the driver does not necessarily
+> >>>>> know either what protocol is currently being used. Some devices have
+> >>>>> boot-pins which can be used to configure the initial protocol used (and
+> >>>>> this could perhaps be reflected in DT), but this can often later be
+> >>>>> changed (by user space) and even be made persistent using battery-backed
+> >>>>> ram or eeproms.
+> >>>>> 
+> >>>>> Also note that at least u-blox devices supports having more than one
+> >>>>> protocol active on the same port...
+> >>>> 
+> >>>> as long as userspace can determine that it is GNSS hardware and what
+> >>>> hardware it is, then you deal with the rest in userspace.
+> >>> 
+> >>> Yeah, I think that will do for now.
+> >> 
+> >> I forgot to mention that this part should be simple. So providing a
+> >> DEVTYPE attribute that can be easily associated to the /dev/gnssX
+> >> nodes is a must have here. Doing complex mapping of USB or DT layouts
+> >> to figure out this is NMEA vs some vendor vs I need extra code to
+> >> change the mode etc.
+> > 
+> > Yes, as I mentioned in the cover letter some kind of generic interface
+> > for identifying the device type (and its features) should be defined
+> > eventually.
+> 
+> I think this needs to be present from the start. Half backed
+> subsystems are dangerous. And I really want to avoid hacking in
+> userspace to figure out details about the hardware.
 
-yes, i will split it when I resend the series.
+Fair enough. I've now added support for determining the GNSS type, which
+reflects the protocol(s) supported by the device and which should allow,
+for example, the gpsd protocol probing hack to be dropped.
 
-> 
->>  drivers/soc/qcom/Kconfig                      |   9 +
->>  drivers/soc/qcom/Makefile                     |   1 +
->>  drivers/soc/qcom/rpmpd.c                      | 299 ++++++++++++++++++
->>  4 files changed, 364 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->>  create mode 100644 drivers/soc/qcom/rpmpd.c
->>
-> 
-> [...]
-> 
->> +++ b/drivers/soc/qcom/rpmpd.c
->> @@ -0,0 +1,299 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/export.h>
->> +#include <linux/init.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/pm_domain.h>
->> +#include <linux/mfd/qcom_rpm.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/soc/qcom/smd-rpm.h>
->> +
->> +#include <dt-bindings/mfd/qcom-rpm.h>
->> +
->> +#define domain_to_rpmpd(domain) container_of(domain, struct rpmpd, pd)
->> +
->> +/* Resource types */
->> +#define RPMPD_SMPA 0x61706d73
->> +#define RPMPD_LDOA 0x616f646c
->> +
->> +/* Operation Keys */
->> +#define KEY_CORNER             0x6e726f63 /* corn */
->> +#define KEY_ENABLE             0x6e657773 /* swen */
->> +#define KEY_FLOOR_CORNER       0x636676   /* vfc */
->> +
->> +#define DEFINE_RPMPD_CORN_SMPA(_platform, _name, _active, r_id)                \
->> +       static struct rpmpd _platform##_##_active;                      \
->> +       static struct rpmpd _platform##_##_name = {                     \
->> +               .pd = { .name = #_name, },                              \
->> +               .peer = &_platform##_##_active,                         \
->> +               .res_type = RPMPD_SMPA,                                 \
->> +               .res_id = r_id,                                         \
->> +               .key = KEY_CORNER,                                      \
->> +       };                                                              \
->> +       static struct rpmpd _platform##_##_active = {                   \
->> +               .pd = { .name = #_active, },                            \
->> +               .peer = &_platform##_##_name,                           \
->> +               .active_only = true,                                    \
->> +               .res_type = RPMPD_SMPA,                                 \
->> +               .res_id = r_id,                                         \
->> +               .key = KEY_CORNER,                                      \
->> +       }
->> +
->> +#define DEFINE_RPMPD_CORN_LDOA(_platform, _name, r_id)                 \
->> +       static struct rpmpd _platform##_##_name = {                     \
->> +               .pd = { .name = #_name, },                              \
->> +               .res_type = RPMPD_LDOA,                                 \
->> +               .res_id = r_id,                                         \
->> +               .key = KEY_CORNER,                                      \
->> +       }
->> +
->> +#define DEFINE_RPMPD_VFC(_platform, _name, r_id, r_type)               \
->> +       static struct rpmpd _platform##_##_name = {                     \
->> +               .pd = { .name = #_name, },                              \
->> +               .res_type = r_type,                                     \
->> +               .res_id = r_id,                                         \
->> +               .key = KEY_FLOOR_CORNER,                                \
->> +       }
->> +
->> +#define DEFINE_RPMPD_VFC_SMPA(_platform, _name, r_id)                  \
->> +       DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_SMPA)
->> +
->> +#define DEFINE_RPMPD_VFC_LDOA(_platform, _name, r_id)                  \
->> +       DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_LDOA)
->> +
->> +struct rpmpd_req {
->> +       __le32 key;
->> +       __le32 nbytes;
->> +       __le32 value;
->> +};
->> +
->> +struct rpmpd {
->> +       struct generic_pm_domain pd;
->> +       struct rpmpd *peer;
->> +       const bool active_only;
->> +       unsigned long corner;
->> +       bool enabled;
->> +       const char *res_name;
->> +       const int res_type;
->> +       const int res_id;
->> +       struct qcom_smd_rpm *rpm;
->> +       __le32 key;
->> +};
->> +
->> +struct rpmpd_desc {
->> +       struct rpmpd **rpmpds;
->> +       size_t num_pds;
->> +};
->> +
->> +static DEFINE_MUTEX(rpmpd_lock);
->> +
->> +/* msm8996 RPM powerdomains */
->> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
->> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
->> +DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
->> +
->> +DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
->> +DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
->> +
->> +static struct rpmpd *msm8996_rpmpds[] = {
->> +       [0] = &msm8996_vddcx,
->> +       [1] = &msm8996_vddcx_ao,
->> +       [2] = &msm8996_vddcx_vfc,
->> +       [3] = &msm8996_vddmx,
->> +       [4] = &msm8996_vddmx_ao,
->> +       [5] = &msm8996_vddsscx,
->> +       [6] = &msm8996_vddsscx_vfc,
->> +};
-> 
-> It's not my call, but honestly the above all macros makes the code
-> less readable.
+Currently, there are three types defined:
 
-This is all static data per SoC. The macros will keep the new additions
-needed for every new SoC to a minimal. Currently this supports only
-msm8996.
+	"NMEA"  NMEA 0183
+        "SiRF"  SiRF Binary
+        "UBX"   UBX
 
-> 
-> Anyway, I think you should convert to allocate these structs
-> dynamically from the heap (kzalloc/kcalloc), instead of statically as
-> above.
-> 
->> +
->> +static const struct rpmpd_desc msm8996_desc = {
->> +       .rpmpds = msm8996_rpmpds,
->> +       .num_pds = ARRAY_SIZE(msm8996_rpmpds),
->> +};
->> +
->> +static const struct of_device_id rpmpd_match_table[] = {
->> +       { .compatible = "qcom,msm8996-rpmpd", .data = &msm8996_desc },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, rpmpd_match_table);
-> 
-> [...]
-> 
->> +static int rpmpd_aggregate_corner(struct rpmpd *pd)
->> +{
-> 
-> Isn't the aggregation of the performance states in genpd sufficient
-> for your case?
-> 
-> I guess this is SoC specific and needed anyways, but then could you
-> perhaps add a few comments about what goes on here?
+Note that both SiRF and UBX type devices typically support a subset of
+NMEA 0183 with vendor extensions (e.g. to allow switching to the vendor
+protocol).
 
-Yes, this is SoC specific aggregation for active and sleep votes.
-i will add comments to clarify this is different from the aggregation
-done at the framework level.
-
+> > Note that this is not necessarily something that is needed from the
+> > start however as, for example, gpsd implements protocol detection.
 > 
->> +       int ret;
->> +       struct rpmpd *peer = pd->peer;
->> +       unsigned long active_corner, sleep_corner;
->> +       unsigned long this_corner = 0, this_sleep_corner = 0;
->> +       unsigned long peer_corner = 0, peer_sleep_corner = 0;
->> +
->> +       to_active_sleep(pd, pd->corner, &this_corner, &this_sleep_corner);
->> +
->> +       if (peer && peer->enabled)
->> +               to_active_sleep(peer, peer->corner, &peer_corner,
->> +                               &peer_sleep_corner);
->> +
->> +       active_corner = max(this_corner, peer_corner);
->> +
->> +       ret = rpmpd_send_corner(pd, QCOM_RPM_ACTIVE_STATE, active_corner);
->> +       if (ret)
->> +               return ret;
->> +
->> +       sleep_corner = max(this_sleep_corner, peer_sleep_corner);
->> +
->> +       return rpmpd_send_corner(pd, QCOM_RPM_SLEEP_STATE, sleep_corner);
->> +}
-> 
-> [...]
-> 
->> +static int rpmpd_probe(struct platform_device *pdev)
->> +{
->> +       int i;
->> +       size_t num;
->> +       struct genpd_onecell_data *data;
->> +       struct qcom_smd_rpm *rpm;
->> +       struct rpmpd **rpmpds;
->> +       const struct rpmpd_desc *desc;
->> +
->> +       rpm = dev_get_drvdata(pdev->dev.parent);
->> +       if (!rpm) {
->> +               dev_err(&pdev->dev, "Unable to retrieve handle to RPM\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       desc = of_device_get_match_data(&pdev->dev);
->> +       if (!desc)
->> +               return -EINVAL;
->> +
->> +       rpmpds = desc->rpmpds;
->> +       num = desc->num_pds;
->> +
->> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +       if (!data)
->> +               return -ENOMEM;
->> +
->> +       data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
->> +                                    GFP_KERNEL);
->> +       data->num_domains = num;
->> +
->> +       for (i = 0; i < num; i++) {
->> +               if (!rpmpds[i])
->> +                       continue;
->> +
->> +               rpmpds[i]->rpm = rpm;
->> +               rpmpds[i]->pd.power_off = rpmpd_power_off;
->> +               rpmpds[i]->pd.power_on = rpmpd_power_on;
->> +               pm_genpd_init(&rpmpds[i]->pd, NULL, true);
-> 
-> Question: Is there no hierarchical topology of the PM domains. No
-> genpd subdomains?
+> That might be, but that is a total hack. Lets get this right from the
+> get-go.
 
-The hierarchy if any is all handled by the remote core (RPM in this case).
-For Linux its just a flat view.
+I agree; it's horrid.
 
-> 
->> +
->> +               data->domains[i] = &rpmpds[i]->pd;
->> +       }
->> +
->> +       return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
->> +}
->> +
->> +static int rpmpd_remove(struct platform_device *pdev)
->> +{
->> +       of_genpd_del_provider(pdev->dev.of_node);
->> +       return 0;
->> +}
->> +
->> +static struct platform_driver rpmpd_driver = {
->> +       .driver = {
->> +               .name = "qcom-rpmpd",
->> +               .of_match_table = rpmpd_match_table,
->> +       },
->> +       .probe = rpmpd_probe,
->> +       .remove = rpmpd_remove,
->> +};
->> +
->> +static int __init rpmpd_init(void)
->> +{
->> +       return platform_driver_register(&rpmpd_driver);
->> +}
->> +core_initcall(rpmpd_init);
->> +
->> +static void __exit rpmpd_exit(void)
->> +{
->> +       platform_driver_unregister(&rpmpd_driver);
->> +}
->> +module_exit(rpmpd_exit);
->> +
->> +MODULE_DESCRIPTION("Qualcomm RPM Power Domain Driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:qcom-rpmpd");
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
-> 
-> Besides the minor things above, this looks good to me.
-
-thanks,
-Rajendra
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Thanks,
+Johan
