@@ -1,116 +1,107 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v2 5/6] soc: qcom: rpmh powerdomain driver
-Date: Wed, 30 May 2018 15:37:51 +0530
-Message-ID: <9b147942-8a6a-34c0-ba94-a6935b354b70@codeaurora.org>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-6-rnayak@codeaurora.org>
- <215deee5-6472-d587-9a90-f7158162ed82@codeaurora.org>
- <6f8e5fe2-199d-ba1f-19d7-2faf276075f3@codeaurora.org>
- <36822404-bdf5-1915-03e7-e5ffcff05c9b@codeaurora.org>
- <20180530094438.xnyukvhum7tc6roh@vireshk-i7>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
+Date: Wed, 30 May 2018 12:13:31 +0200
+Message-ID: <d78bb8a8-a351-409c-54d2-33ee02fd8afe@gmail.com>
+References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
+ <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
+ <CAMuHMdXRnoyhNz=3v_=ZCV=FWX4TwKqx7MpH0g3c7GwtXKP1tg@mail.gmail.com>
+ <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
+ <CAMuHMdXnNABJSJZ6MLF+aQu8QKpFoMCAvno9Yc-9LOe810NtbA@mail.gmail.com>
+ <7e1563c3-3e13-235b-3071-c3936502530f@gmail.com>
+ <20180528084135.q5xng5eaypprsypr@verge.net.au>
+ <CAMuHMdXYyN=XY6nb9RVEE+t0NeoSPhTh6fUk-9YWdFzAE1FfPA@mail.gmail.com>
+ <20180528093602.eb36j34bbfzmpmw2@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530094438.xnyukvhum7tc6roh@vireshk-i7>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180528093602.eb36j34bbfzmpmw2@verge.net.au>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: David Collins <collinsd@codeaurora.org>, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Richard Weinberger <richard@nod.at>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/30/2018 03:14 PM, Viresh Kumar wrote:
-> On 30-05-18, 14:25, Rajendra Nayak wrote:
->> []...
+On 05/28/2018 11:36 AM, Simon Horman wrote:
+> On Mon, May 28, 2018 at 10:54:57AM +0200, Geert Uytterhoeven wrote:
+>> Hi Simon,
 >>
->>>>> +Required Properties:
->>>>> + - compatible: Should be one of the following
->>>>> +	* qcom,sdm845-rpmhpd: RPMh powerdomain for the sdm845 family of SoC
->>>>> + - power-domain-cells: number of cells in power domain specifier
->>>>> +	must be 1
->>>>> + - operating-points-v2: Phandle to the OPP table for the power-domain.
->>>>> +	Refer to Documentation/devicetree/bindings/power/power_domain.txt
->>>>> +	and Documentation/devicetree/bindings/opp/qcom-opp.txt for more details
->>>>> +
->>>>> +Example:
->>>>> +
->>>>> +	rpmhpd: power-controller {
->>>>> +		compatible = "qcom,sdm845-rpmhpd";
->>>>> +		#power-domain-cells = <1>;
->>>>> +		operating-points-v2 = <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>,
->>>>> +				      <&rpmhpd_opp_table>;
+>> On Mon, May 28, 2018 at 10:41 AM, Simon Horman <horms@verge.net.au> wrote:
+>>> On Thu, May 24, 2018 at 04:52:59PM +0200, Marek Vasut wrote:
+>>>> On 05/23/2018 08:25 AM, Geert Uytterhoeven wrote:
+>>>>> On Wed, May 23, 2018 at 12:01 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>>>>> On 05/22/2018 04:43 PM, Geert Uytterhoeven wrote:
+>>>>>>> On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>>>>>>> Drop the MTD partitioning from DT, since it does not describe HW
+>>>>>>>> and to give way to a more flexible kernel command line partition
+>>>>>>>> passing.
+>>>>>>>>
+>>>>>>>> To retain the original partitioning, assure you have enabled
+>>>>>>>> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
+>>>>>>>> following to your kernel command line:
+>>>>>>>>
+>>>>>>>>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
+>>>>>>>
+>>>>>>> I think the "@0" can be dropped, as it's optional?
+>>>>>>> 4m?
+>>>>>>
+>>>>>> My take on this is that the loader is actually at offset 0x0 of the MTD
+>>>>>> device and we explicitly state that in the mtdparts to anchor the first
+>>>>>> partition within the MTD device and all the other partitions are at
+>>>>>> offset +(sum of the sizes of all partitions listed before the current
+>>>>>> one) relative to that first partition.
+>>>>>
+>>>>> Where is this explicitly states for the first partition?
+>>>>>
+>>>>>> Removing the @0 feels fragile at best and it seems to depend on the
+>>>>>> current behavior of the code.
+>>>>>
+>>>>> Better, it also depends on the documented behavior:
+>>>>>
+>>>>> Documentation/admin-guide/kernel-parameters.txt refers to
+>>>>> drivers/mtd/cmdlinepart.c, which states:
+>>>>>
+>>>>>  * <offset>  := standard linux memsize
+>>>>>  *              if omitted the part will immediately follow the previous part
+>>>>>  *              or 0 if the first part
+>>>>>
+>>>>> None of the examples listed there or under the MTD_CMDLINE_PARTS Kconfig
+>>>>> help text, or in a defconfig bundled with the kernel, use @0 for the first
+>>>>> partition.
 >>>>
->>>> Can this be changed to simply:
->>>>   operating-points-v2 = <&rpmhpd_opp_table>;
->>>>
->>>> The opp binding documentation [1] states that this should be ok:
->>>>
->>>>     If only one phandle is available, then the same OPP table will be used
->>>>     for all power domains provided by the power domain provider.
+>>>> I think this is exceptionally fragile and dangerous to depend on this,
+>>>> but so be it.
 >>>
->>> thanks, I mentioned this to Viresh but didn't realize he fixed it up.
->>> Will remove the redundant entries.
+>>> Could you respin with this change?
+>>>
+>>> I would also like to ask for another change, in light of recent
+>>> feedback from Olof Johansson ("Re: [GIT PULL] Renesas ARM64 Based SoC DT
+>>> Updates for v4.18").
+>>>
+>>> Please consolidate the dts patches into a single patch?
 >>
->> Looks like the kernel implementation does not handle this yet, and I get
->> an error adding the OPP tables for the powerdomains if I just specify
->> a single OPP table phandle.
+>> I think it's better to keep them split, as each commit description mentions
+>> what needs to be passed on the kernel command line for the corresponding
+>> board.
 >>
->> Viresh, is this expected with the latest patches in linux-next?
+>> Combining it in a single patch makes it much harder to extract this information.
+>> Unless you're fine with a list:
 >>
->> It would be good if I can specify just one phandle instead of coping
->> the same phandle n times. 
+>>    koelsch: ...
+>>    wheat: mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
 > 
-> Please try this untested hunk:
+> Lets try a list.
 
-yes, seems to work.
-
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 6d15f05bfc28..7af0ddec936b 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -554,11 +554,24 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_add_table);
->  int dev_pm_opp_of_add_table_indexed(struct device *dev, int index)
->  {
->         struct device_node *opp_np;
-> -       int ret;
-> +       int ret, count;
->  
-> +again:
->         opp_np = _opp_of_get_opp_desc_node(dev->of_node, index);
-> -       if (!opp_np)
-> +       if (!opp_np) {
-> +               /*
-> +                * If only one phandle is present, then the same OPP table
-> +                * applies for all index requests.
-> +                */
-> +               count = of_count_phandle_with_args(dev->of_node,
-> +                                                  "operating-points-v2", NULL);
-> +               if (count == 1 && index) {
-> +                       index = 0;
-> +                       goto again;
-> +               }
-> +
->                 return -ENODEV;
-> +       }
->  
->         ret = _of_add_opp_table_v2(dev, opp_np);
->         of_node_put(opp_np);
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Reposted with a list, twice :/
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Best regards,
+Marek Vasut
