@@ -1,123 +1,110 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v8 0/7] i2c: Add FSI-attached I2C master algorithm
-Date: Thu, 31 May 2018 08:42:04 +1000
-Message-ID: <58c1059a91b93a490a7fc8bda2112e67e6513840.camel@kernel.crashing.org>
-References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
-         <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Wed, 30 May 2018 16:39:10 -0700
+Message-ID: <75088820-f20d-32ac-780a-5e7dacdf20ff@codeaurora.org>
+References: <cover.1527040878.git.collinsd@codeaurora.org>
+ <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
+ <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
+ <20180530103720.GH6920@sirena.org.uk>
+ <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
+ <20180530155044.GR6920@sirena.org.uk>
+ <CAD=FV=WVUmvPPd5BxXv9Sa_2CRPrrjQvYFyqroY-3fRr4f0Bzg@mail.gmail.com>
+ <20180530162007.GU6920@sirena.org.uk>
+ <CAD=FV=WL9enzYCoSx0fT_ny40ciLJU-hhS9joJ6nySXvWPqAxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com>
+In-Reply-To: <CAD=FV=WL9enzYCoSx0fT_ny40ciLJU-hhS9joJ6nySXvWPqAxQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
+To: Doug Anderson <dianders@chromium.org>, Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-05-31 at 00:31 +0300, Andy Shevchenko wrote:
-> On Thu, May 31, 2018 at 12:07 AM, Eddie James
-> <eajames@linux.vnet.ibm.com> wrote:
-> > This series adds an algorithm for an I2C master physically located on an FSI
-> > slave device. The I2C master has multiple ports, each of which may be connected
-> > to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
-> > 
-> > Due to the multi-port nature of the I2C master, the driver instantiates a new
-> > I2C adapter for each port connected to a slave. The connected ports should be
-> > defined in the device tree under the I2C master device.
+Hello Mark and Doug,
+
+On 05/30/2018 09:24 AM, Doug Anderson wrote:
+> On Wed, May 30, 2018 at 9:20 AM, Mark Brown <broonie@kernel.org> wrote:
+>> On Wed, May 30, 2018 at 09:12:25AM -0700, Doug Anderson wrote:
+>>> On Wed, May 30, 2018 at 8:50 AM, Mark Brown <broonie@kernel.org> wrote:
+>>
+>>>> No, I'm saying that I don't know why that property exists at all.  This
+>>>> sounds like it's intended to be the amount of current the regulator can
+>>>> deliver in each mode which is normally a design property of the silicon.
+>>
+>>> Ah, got it.  So the whole point here is to be able to implement either
+>>> the function "set_load" or the function "get_optimum_mode".  We need
+>>> some sort of table to convert from current to mode.  That's what this
+>>> table does.
+>>
+>> We do need that table, my expectation would be that this table would be
+>> in the driver as it's not something I'd expect to vary between different
+>> systems but rather be a property of the silicon design.  No sense in
+>> every single board having to copy it in.
 > 
-> I'll comment the series later, though you have to address previous
-> comments first:
-> - understand devm_ purpose and how it works
-
-I think it is perfectly understood and I don't see what your problem
-here is. So please be a proper civil human being an express your
-concern precisely rather than with aggressive comments.
-
-Now to clarify that specific point, devm purpose is to automatically
-clean up the resources used by the device when it is torn down.
-
-However, in this specific case, it makes sense to dispose of the port
-structure explicitly because this is a failure in registering an
-individual port which doesn't lead to a failure of the entire driver.
-
-Thus not freeing it means the structure would remain allocated
-uselessly until the whole driver is torn down.
-
-> - understand list_for_each*() macros
-
-This is a genuine misunderstanding of Eddies, I'm sure he will address
-it, your tone however isn't appropriate.
-
-> - discuss with maintainer a design of enumerating ports
-
-I've been at that game for at least a good 2 decades. Maintainers
-generally do *not* discuss design until a patch is proposed. I even
-still try every now and then, maintainers are like lawyers, they don't
-want to tell you what to do in case they still want to reject it after
-seeing it later :-) I know I've been one of them for long enough.
-
-If you have specific issues with how this is done, please express them
-clearly. It's quite possible that there's some better way to do what
-Eddie is doing here, but without *construtive* feedback this is
-pointless. 
-
-> - ... (whatever I forgot and others added) ...
-
-I believe he addressed most of your comments. There is one mistake left
-(the list_for_each) which will be easily fixed. As for the rest, it's
-just ramblings unless you or Wolfram can propose a better alternative
-in which case I'm sure Eddie will be happy to implement it.
-
-I'm disappointed here because we have an example of somebody rather new
-producing what is overall pretty damn good code, despite a few corner
-issues, and being (again) treated like crap.
-
-This isn't the right way to operate, and I believe this has been made
-clear many times before.
-
-Cheers,
-Ben.
-
-> > Changes since v7
-> >  - Fix grammer in Kconfig (a -> an)
-> >  - Change I2C registers to use BIT and GENMASK
-> >  - Remove custom macros and use FIELD_PREP and FIELD_GET
-> >  - Fix a few unecessary initializations and "return rc" that are always zero
-> >  - Clean up the read/write fifo functions a bit
-> >  - Few other clean-up items
-> > 
-> > Changes since v6
-> >  - Remove spinlock for reset functionality; it's unecessary and doesn't work
-> >    with the latest FSI core.
-> >  - Use a mutex instead of a semaphore, and don't wait for timeout to get the
-> >    lock.
-> >  - Use usleeps instead of schedule_timeout; it's not worth the overhead when
-> >    the wait should be very short in between sending the command and receiving
-> >    the response.
-> > 
-> > Changes since v5
-> >  - Fix reset functionality and do a reset after every transfer failure
-> > 
-> > Eddie James (7):
-> >   dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
-> >   i2c: Add FSI-attached I2C master algorithm
-> >   i2c: fsi: Add port structures
-> >   i2c: fsi: Add abort and hardware reset procedures
-> >   i2c: fsi: Add transfer implementation
-> >   i2c: fsi: Add I2C master locking
-> >   i2c: fsi: Add bus recovery
-> > 
-> >  Documentation/devicetree/bindings/i2c/i2c-fsi.txt |  40 ++
-> >  drivers/i2c/busses/Kconfig                        |  11 +
-> >  drivers/i2c/busses/Makefile                       |   1 +
-> >  drivers/i2c/busses/i2c-fsi.c                      | 722 ++++++++++++++++++++++
-> >  4 files changed, 774 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
-> >  create mode 100644 drivers/i2c/busses/i2c-fsi.c
-> > 
-> > --
-> > 1.8.3.1
-> > 
+> Ah, got it!  I'd be OK with it being hardcoded in the driver.
 > 
-> 
-> 
+> At one point I think David was making the argument that some boards
+> have different noise needs for the rails and thus you might want to
+> change modes at different currents.  I don't know if this is realistic
+> but I believe it was part of his original argument for why this needed
+> to be specified.  If we can hardcode this in the driver I'm fine with
+> it...  That would actually solve many of my objections too...
+
+The DRMS modes to use and max allowed current per mode need to be
+specified at the board level in device tree instead of hard-coded per
+regulator type in the driver.  There are at least two use cases driving
+this need: LDOs shared between RPMh client processors and SMPSes requiring
+PWM mode in certain circumstances.
+
+For LDOs the maximum low power mode (LPM) current is typically 10 mA or 30
+mA (depending upon subtype) per hardware documentation. Unfortunately,
+sharing control of regulators with other processors adds some subtlety to
+the LPM current limit that should actually be applied at runtime.
+
+Consider the case of a regulator with physical 10 mA LPM max current. Say
+that modem and application processors each have a load on the regulator
+that draws 9 mA. If they each respect the 10 mA limit, then they'd each
+vote for LPM. The VRM block in RPMh hardware will aggregate these requests
+together using a max function which will result in the regulator being set
+to LPM, even though the total load is 18 mA (which would require high
+power mode (HPM)). To get around this corner case, a LPM max current of 1
+uA can be used for all LDO supplies that have non-application processor
+consumers. Thus, any non-zero regulator_set_load() current request will
+result in setting the regulator to HPM (which is always safe).
+
+The second situation that needs board-level DRMS mode and current limit
+specification is SMPS regulator AUTO mode to PWM (HPM) mode switching.
+SMPS regulators should theoretically always be able to operate in AUTO
+mode as it switches automatically between PWM mode (which can provide the
+maximum current) and PFM mode (which supports lower current but has higher
+efficiency). However, there may be board/system issues that require
+switching to PWM mode for certain use cases as it has better load
+regulation (i.e. no PFM ripple for lower loads) and supports more
+aggressive load current steps (i.e. greater A/ns).
+
+If a Linux consumer requires the ability to force a given SMPS regulator
+from AUTO mode into PWM mode and that SMPS is shared by other Linux
+consumers (which may be the case, but at least must be guaranteed to work
+architecturally), then regulator_set_load() is the only option since it
+provides aggregation, where as regulator_set_mode() does not.
+regulator_set_load() can be utilized in this case by specifying AUTO mode
+and PWM mode as drms modes and specifying some particular AUTO mode
+maximum current (that is known by the consumer) in device tree.  The
+consumer can then call regulator_set_load() with the imposed AUTO mode
+limit + delta when PWM mode is required and a lower value when AUTO mode
+is sufficient.
+
+Note that I previously mentioned the need for board-level drms mode and
+current limit specification in [1].
+
+Take care,
+David
+
+[1]: https://lkml.org/lkml/2018/3/22/802
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
