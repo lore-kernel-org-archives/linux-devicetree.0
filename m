@@ -1,57 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Wed, 30 May 2018 16:50:44 +0100
-Message-ID: <20180530155044.GR6920@sirena.org.uk>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
- <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
- <20180530103720.GH6920@sirena.org.uk>
- <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/6] ARM: dra762: hwmod: Add MCAN support
+Date: Wed, 30 May 2018 08:54:48 -0700
+Message-ID: <20180530155448.GH5705@atomide.com>
+References: <20180530141133.3711-1-faiz_abbas@ti.com>
+ <20180530141133.3711-2-faiz_abbas@ti.com>
+ <20180530145047.GC5705@atomide.com>
+ <cfa9c9df-57a2-69f6-9509-440dc18292e7@ti.com>
+ <20180530152825.GG5705@atomide.com>
+ <b0476932-a6e9-6ef1-69ad-c9a8c55d9739@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tV/+6PImfyFtriLg"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
+In-Reply-To: <b0476932-a6e9-6ef1-69ad-c9a8c55d9739@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
+* Tero Kristo <t-kristo@ti.com> [180530 15:44]:
+> On 30/05/18 18:28, Tony Lindgren wrote:
+> > * Tero Kristo <t-kristo@ti.com> [180530 15:18]:
+> > > For the OCP if part, I think that is still needed until we switch over to
+> > > full sysc driver. clkctrl_offs you probably also need because that is used
+> > > for mapping the omap_hwmod against a specific clkctrl clock. Those can be
+> > > only removed once we are done with hwmod (or figure out some other way to
+> > > assign the clkctrl clock to a hwmod.)
+> > 
+> > Hmm might be worth testing. I thought your commit 70f05be32133
+> > ("ARM: OMAP2+: hwmod: populate clkctrl clocks for hwmods if available")
+> > already parses the clkctrl from dts?
+> 
+> It maps the clkctrl clock to be used by hwmod, if those are available. We
+> didn't add any specific clock entries to DT for mapping the actual clkctrl
+> clock without the hwmod_data hints yet though, as that was deemed temporary
+> solution only due to transition to interconnect driver. I.e., you would need
+> something like this in DT for every device node:
+> 
+> &uart3 {
+>   clocks = <l4per_clkctrl UART3_CLK 0>;
+>   clock-names = "clkctrl";
+> };
+> 
+> ... which is currently not present.
 
---tV/+6PImfyFtriLg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hmm is that not the "fck" clkctrl clock we have already in
+the dts files for the interconnect target modules?
 
-On Wed, May 30, 2018 at 07:54:47AM -0700, Doug Anderson wrote:
-> On Wed, May 30, 2018 at 3:37 AM, Mark Brown <broonie@kernel.org> wrote:
+We can also use pdata callbacks to pass the clock node if
+needed. But I guess I don't quite still understand what we
+are missing :)
 
-> > I'm confused as to why we are specifying the maximum current the device
-> > can deliver in a given mode in the DT - surely that's a fixed property
-> > of the hardware?
+Regards,
 
-> Said another way: you're saying that you'd expect the "max-microamps"
-> table to have one fewer element than the listed modes?  So in the
-> above example you'd have:
-
-No, I'm saying that I don't know why that property exists at all.  This
-sounds like it's intended to be the amount of current the regulator can
-deliver in each mode which is normally a design property of the silicon.
-
---tV/+6PImfyFtriLg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOyFMACgkQJNaLcl1U
-h9APmQf/a3fBWO7O64dclaPSy5PQTT+0iC1JNxs/Hk+txGYbRZTI9mLlpVVG/LJP
-haMLQQpuxMQwCAz00MMYTLcpZDTut1uMaOpYMACfAT8wvC1CWQiPk5rOyW1dKrXz
-C0/st2AmpkF1bALS/uPiqar9Kb9goo0kpXDapFeySHICsqSKSlJW3E6Rjqytz0rR
-SOVBaJ7nbNnxoNAedsklQQodymkpEOrW2UhYBbSeCVvfWBkCgRhtlqCqpaY3iIR6
-KOuQgt+rBIlPUsaEmQBn0gM+tBuu02bwMDCA8lNovZiAhzS2DIJSjSZG6zptBgtg
-AspebxFE83E1JP6nD/GiIuQagki/CA==
-=Tg4l
------END PGP SIGNATURE-----
-
---tV/+6PImfyFtriLg--
+Tony
