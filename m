@@ -1,33 +1,44 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v7 3/7] drivers/i2c: Add port structure to FSI algorithm
-Date: Thu, 31 May 2018 07:16:00 +1000
-Message-ID: <8aaa7fa9874bf140354964535ce5cf023012c3f4.camel@kernel.crashing.org>
-References: <1527632665-25707-1-git-send-email-eajames@linux.vnet.ibm.com>
-         <1527632665-25707-4-git-send-email-eajames@linux.vnet.ibm.com>
-         <CAHp75Vd38BrJcULxoqj1mTKCEvMh9ZVYEvzCMAg2t9onZrSR6w@mail.gmail.com>
-         <ae3de08c-6849-bb3a-7c6c-96309876d48e@linux.vnet.ibm.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 10/10] drivers: clk: Add ZynqMP clock driver
+Date: Wed, 30 May 2018 14:17:58 -0700
+Message-ID: <c042fd9b-85cb-f0d3-101c-f78f3dc4fc44@infradead.org>
+References: <1527713725-1086-1-git-send-email-jollys@xilinx.com>
+ <1527713725-1086-11-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae3de08c-6849-bb3a-7c6c-96309876d48e@linux.vnet.ibm.com>
+In-Reply-To: <1527713725-1086-11-git-send-email-jollys@xilinx.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Edward A. James" <eajames@us.ibm.com>
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tejas Patel <tejasp@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-05-30 at 10:47 -0500, Eddie James wrote:
-> > > +       if (!list_empty(&i2c->ports)) {
-> > 
-> > My gosh, this is done already in list_for_each*()
-> 
-> No, list_for_each_entry does NOT check if the list is empty or if the 
-> first entry is NULL.
+On 05/30/2018 01:55 PM, Jolly Shah wrote:
+> From: Jolly Shah <jolly.shah@xilinx.com>
 
-NULL is never valid for a list. It does however check for an empty list
 
-It does it implicitely in the test part of the for () statement,
-checking if the next pointer points back to the head.
+> diff --git a/drivers/clk/zynqmp/Kconfig b/drivers/clk/zynqmp/Kconfig
+> new file mode 100644
+> index 0000000..fe815f7
+> --- /dev/null
+> +++ b/drivers/clk/zynqmp/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +config COMMON_CLK_ZYNQMP
+> +	bool "Support for Xilinx ZynqMP Ultrascale+ clock controllers"
+> +	depends on OF
+> +	depends on ARCH_ZYNQMP || COMPILE_TEST
+> +	depends on ZYNQMP_FIRMWARE
+> +	help
+> +	  Support for the Zynqmp Ultrascale clock controller.
+> +	  It has a dependency on the PMU firmware.
+> +	  Say Y if you want to support clock support
 
-Cheers,
-Ben.
+	  Say Y if you want to include clock support.
+
+
+-- 
+~Randy
