@@ -1,170 +1,49 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 07/12] dt-bindings: tc358754: add DT bindings
-Date: Wed, 30 May 2018 16:20:15 +0300
-Message-ID: <2964003.icRy2MNiaL@avalon>
-References: <1527500833-16005-1-git-send-email-m.purski@samsung.com> <1928297.lKUBOH9NhR@avalon> <20180530130731eucas1p160d53c3f8500bcecd000bd8895843817~zbgGgQw3b1079710797eucas1p1H@eucas1p1.samsung.com>
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+Subject: [PATCH 10/11] ARM64: dts: ls1046a: Remove fsl,
+ qspi-has-second-chip as it is not used
+Date: Wed, 30 May 2018 15:14:39 +0200
+Message-ID: <1527686082-15142-11-git-send-email-frieder.schrempf@exceet.de>
+References: <1527686082-15142-1-git-send-email-frieder.schrempf@exceet.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530130731eucas1p160d53c3f8500bcecd000bd8895843817~zbgGgQw3b1079710797eucas1p1H@eucas1p1.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Maciej Purski <m.purski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1527686082-15142-1-git-send-email-frieder.schrempf@exceet.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, linux-spi@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, yogeshnarayan.gaur@nxp.com, Madalin Bucur <madalin.bucur@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, broonie@kernel.org, Will Deacon <will.deacon@arm.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, miquel.raynal@bootlin.com, david.wolfe@nxp.com, richard@nod.at, marek.vasut@gmail.com, Frieder Schrempf <frieder.schrempf@exceet.de>, devicetree@vger.kernel.org, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Rob Herring <robh+dt@kernel.org>, han.xu@nxp.com, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, Yuantian Tang <andy.tang@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org, prabhakar.kushwaha@nxp.com, fabio.estevam@nxp.com, Ran Wang <ran.wang_1@nxp.com>, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej,
+After switching to the new FSL QSPI driver the property
+'fsl,qspi-has-second-chip' is not needed anymore.
 
-On Wednesday, 30 May 2018 16:07:29 EEST Andrzej Hajda wrote:
-> On 30.05.2018 14:35, Laurent Pinchart wrote:
-> > On Wednesday, 30 May 2018 12:59:12 EEST Andrzej Hajda wrote:
-> >> On 28.05.2018 12:18, Laurent Pinchart wrote:
-> >>> On Monday, 28 May 2018 12:47:11 EEST Maciej Purski wrote:
-> >>>> The patch adds bindings to Toshiba DSI/LVDS bridge TC358764.
-> >>>> Bindings describe power supplies, reset gpio and video interfaces.
-> >>>> 
-> >>>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> >>>> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> >>>> ---
-> >>>> 
-> >>>>  .../bindings/display/bridge/toshiba,tc358764.txt   | 42
-> >>>>  ++++++++++++++++
-> >>>>  1 file changed, 42 insertions(+)
-> >>>>  create mode 100644
-> >>>> 
-> >>>> Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-> >>>> 
-> >>>> diff --git
-> >>>> a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-> >>>> b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-> >>>> new
-> >>>> file mode 100644
-> >>>> index 0000000..d09bdc2
-> >>>> --- /dev/null
-> >>>> +++
-> >>>> b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-> >>>> @@ -0,0 +1,42 @@
-> >>>> +TC358764 MIPI-DSI to LVDS panel bridge
-> >>>> +
-> >>>> +Required properties:
-> >>>> +  - compatible: "toshiba,tc358764"
-> >>>> +  - reg: the virtual channel number of a DSI peripheral
-> >>>> +  - vddc-supply: core voltage supply
-> >>>> +  - vddio-supply: I/O voltage supply
-> >>>> +  - vddmipi-supply: MIPI voltage supply
-> >>>> +  - vddlvds133-supply: LVDS1 3.3V voltage supply
-> >>>> +  - vddlvds112-supply: LVDS1 1.2V voltage supply
-> >>> 
-> >>> That's a lot of power supplies. Could some of them be merged together ?
-> >>> See https://patchwork.freedesktop.org/patch/216058/ for an earlier
-> >>> discussion on the same subject.
-> >> 
-> >> Specs says about 3 supply voltage values:
-> >> - 1.2V - digital core, DSI-RX PHY
-> >> - 1.8-3.3V - digital I/O
-> >> - 3.3V - LVDS-TX PHY
-> >> 
-> >> So I guess it should be minimal number of supplies. Natural candidates:
-> >> 
-> >> - vddc-supply: core voltage supply, 1.2V
-> >> - vddio-supply: I/O voltage supply, 1.8V or 3.3V
-> >> - vddlvds-supply: LVDS1/2 voltage supply, 3.3V
-> >> 
-> >> I have changed name of the latest supply to be more consistent with
-> >> other supplies, and changed 1.8-3.3 (which incorrectly suggest voltage
-> >> range), to more precise voltage alternative.
-> > 
-> > This looks fine to me.
-> > 
-> >>>> +  - reset-gpios: a GPIO spec for the reset pin
-> >>>> +
-> >>>> +The device node can contain zero to two 'port' child nodes, each with
-> >>>> one
-> >>>> +child
-> >>>> +'endpoint' node, according to the bindings defined in [1].
-> >>>> +The following are properties specific to those nodes.
-> >>>> +
-> >>>> +port:
-> >>>> +  - reg: (required) can be 0 for DSI port or 1 for LVDS port;
-> >>> 
-> >>> This seems pretty vague to me. It could be read as meaning that ports
-> >>> are
-> >>> completely optional, and that the port number you list can be used, but
-> >>> that something else could be used to.
-> >>> 
-> >>> Let's make the port nodes mandatory. I propose the following.
-> >>> 
-> >>> Required nodes:
-> >>> 
-> >>> The TC358764 has DSI and LVDS ports whose connections are described
-> >>> using
-> >>> the OF graph bindings defined in
-> >>> Documentation/devicetree/bindings/graph.txt. The device node must
-> >>> contain
-> >>> one 'port' child node per DSI and LVDS port. The port nodes are numbered
-> >>> as follows.
-> >>> 
-> >>>   Port                  Number
-> >>> 
-> >>> -------------------------------------------------------------------
-> >>> 
-> >>>   DSI Input             0
-> >>>   LVDS Output           1
-> >>> 
-> >>> Each port node must contain endpoint nodes describing the hardware
-> >>> connections.
-> >> 
-> >> Since the bridge is controlled via DSI bus, DSI input port is not
-> >> necessary.
-> > 
-> > I don't agree with this. Regardless of how the bridge is controlled, I
-> > think we should always use ports to describe the data connections.
-> > Otherwise it would get more complicated for display controller drivers to
-> > use different types of bridges.
-> 
-> It was discussed already, and DT guideline is to skip graphs in simple
-> case of parent/child nodes, see for example [1].
-> 
-> [1]: https://marc.info/?l=dri-devel&m=148354108702517&w=2
+The driver now uses the 'reg' property to determine the bus and
+the chipselect.
 
-That's when the child as no other connection at all. I don't think it makes 
-sense to mix description of connections through parent/child relationships and 
-through ports for a single device.
+Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-And that being said, I don't agree with Rob's comment there. Having two 
-different methods to describe connections means that you have to implement 
-them both in all display controller drivers (and even all bridge drivers in 
-the case of chained bridges). That's an extra complexity that can easily be 
-avoided by standardizing DT bindings.
-
-I also wonder whether Rob's position hasn't been reconsidered since then; I 
-vaguely recalled another more recent discussion on this topic. I'm a bit too 
-busy now to try and dig it up now I'm afraid :-/
-
-> >>>> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> >>>> +
-> >>>> +Example:
-> >>>> +
-> >>>> +	bridge@0 {
-> >>>> +		reg = <0>;
-> >>>> +		compatible = "toshiba,tc358764";
-> >>>> +		vddc-supply = <&vcc_1v2_reg>;
-> >>>> +		vddio-supply = <&vcc_1v8_reg>;
-> >>>> +		vddmipi-supply = <&vcc_1v2_reg>;
-> >>>> +		vddlvds133-supply = <&vcc_3v3_reg>;
-> >>>> +		vddlvds112-supply = <&vcc_1v2_reg>;
-> >>>> +		reset-gpios = <&gpd1 6 GPIO_ACTIVE_LOW>;
-> >>>> +		#address-cells = <1>;
-> >>>> +		#size-cells = <0>;
-> >>>> +		port@1 {
-> >>>> +			reg = <1>;
-> >>>> +			lvds_ep: endpoint {
-> >>>> +				remote-endpoint = <&panel_ep>;
-> >>>> +			};
-> >>>> +		};
-> >>>> +	};
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 136ebfa..871189e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -247,7 +247,6 @@
+ 			clock-names = "qspi_en", "qspi";
+ 			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
+ 			big-endian;
+-			fsl,qspi-has-second-chip;
+ 			status = "disabled";
+ 		};
+ 
 -- 
-Regards,
-
-Laurent Pinchart
+2.7.4
