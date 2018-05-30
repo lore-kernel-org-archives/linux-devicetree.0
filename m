@@ -1,147 +1,123 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 00/12] introduce support for early platform drivers
-Date: Wed, 30 May 2018 17:36:34 -0500
-Message-ID: <CAL_Jsq+7=NGj57k=E5GAuDmW7Uu_YkHJXf8jSyc_ad3r1op4yA@mail.gmail.com>
-References: <20180511162028.20616-1-brgl@bgdev.pl> <CAL_JsqL3CWFSpKEGoGwQDxCQ04g4uT1hiDTxXzjz4XTjPbfsoQ@mail.gmail.com>
- <CAMRc=McDNYQ5uk8EyRkDf8eh9q7tyF=t7PcUd6DBLqXcseJ3AQ@mail.gmail.com>
- <CAL_JsqJ=DdkDR3LtnTMHPUpwaUbjPEBgkaCV8ja+p-mTvWZuYA@mail.gmail.com> <20180530194032.982.41562@harbor.lan>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v8 0/7] i2c: Add FSI-attached I2C master algorithm
+Date: Thu, 31 May 2018 08:42:04 +1000
+Message-ID: <58c1059a91b93a490a7fc8bda2112e67e6513840.camel@kernel.crashing.org>
+References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
+         <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530194032.982.41562@harbor.lan>
+In-Reply-To: <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Frank
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 2:40 PM, Michael Turquette
-<mturquette@baylibre.com> wrote:
-> Hi Rob,
->
-> Quoting Rob Herring (2018-05-14 06:20:57)
->> On Mon, May 14, 2018 at 6:38 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->> > 2018-05-11 22:13 GMT+02:00 Rob Herring <robh+dt@kernel.org>:
->> >> On Fri, May 11, 2018 at 11:20 AM, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->> >>> This series is a follow-up to the RFC[1] posted a couple days ago.
->> >>>
->> >>> NOTE: this series applies on top of my recent patches[2] that move the previous
->> >>> implementation of early platform devices to arch/sh.
->> >>>
->> >>> Problem:
->> >>>
->> >>> Certain class of devices, such as timers, certain clock drivers and irq chip
->> >>> drivers need to be probed early in the boot sequence. The currently preferred
->> >>> approach is using one of the OF_DECLARE() macros. This however does not create
->> >>> a platform device which has many drawbacks - such as not being able to use
->> >>> devres routines, dev_ log functions or no way of deferring the init OF function
->> >>> if some other resources are missing.
->> >>
->> >> I skimmed though this and it doesn't look horrible (how's that for
->> >> positive feedback? ;) ). But before going into the details, I think
->> >> first there needs to be agreement this is the right direction.
->> >>
->> >> The question does remain though as to whether this class of devices
->> >> should be platform drivers. They can't be modules. They can't be
->> >> hotplugged. Can they be runtime-pm enabled? So the advantage is ...
->> >>
->> >
->> > The main (but not the only) advantage for drivers that can both be
->> > platform drivers and OF_DECLARE drivers is that we get a single entry
->> > point and can reuse code without resorting to checking if (!dev). It
->> > results in more consistent code base. Another big advantage is
->> > consolidation of device tree and machine code for SoC drivers used in
->> > different boards of which some are still using board files and others
->> > are defined in DT (see: DaVinci).
->> >
->> >> I assume that the clock maintainers had some reason to move clocks to
->> >> be platform drivers. It's just not clear to me what that was.
->> >>
->> >>> For drivers that use both platform drivers and OF_DECLARE the situation is even
->> >>> more complicated as the code needs to take into account that there can possibly
->> >>> be no struct device present. For a specific use case that we're having problems
->> >>> with, please refer to the recent DaVinci common-clock conversion patches and
->> >>> the nasty workaround that this problem implies[3].
->> >>
->> >> So devm_kzalloc will work with this solution? Why did we need
->> >> devm_kzalloc in the first place? The clocks can never be removed and
->> >> cleaning up on error paths is kind of pointless. The system would be
->> >> hosed, right?
->> >>
->> >
->> > It depends - not all clocks are necessary for system to boot.
->>
->> That doesn't matter. You have a single driver for all/most of the
->> clocks, so the driver can't be removed.
->
-> -ECANOFWORMS
->
-> A couple of quick rebuttals, but I imagine we're going to disagree on
-> the platform_driver thing as a matter of taste no matter what...
+On Thu, 2018-05-31 at 00:31 +0300, Andy Shevchenko wrote:
+> On Thu, May 31, 2018 at 12:07 AM, Eddie James
+> <eajames@linux.vnet.ibm.com> wrote:
+> > This series adds an algorithm for an I2C master physically located on an FSI
+> > slave device. The I2C master has multiple ports, each of which may be connected
+> > to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
+> > 
+> > Due to the multi-port nature of the I2C master, the driver instantiates a new
+> > I2C adapter for each port connected to a slave. The connected ports should be
+> > defined in the device tree under the I2C master device.
+> 
+> I'll comment the series later, though you have to address previous
+> comments first:
+> - understand devm_ purpose and how it works
 
-It's really more should the clocksource, clockevents and primary
-interrupt controller be drivers. Let's get agreement on that first. If
-yes, then it probably does make sense that their dependencies are
-drivers too. If not, then making only the dependencies drivers doesn't
-seem right to me.
+I think it is perfectly understood and I don't see what your problem
+here is. So please be a proper civil human being an express your
+concern precisely rather than with aggressive comments.
 
-> 1) There should be multiple clk drivers in a properly modeled system.
-> Some folks still incorrectly put all clocks in a system into a single
-> driver because That's How We Used To Do It, and some systems (simpler
-> ones) really only have a single clock generator IP block.
->
-> Excepting those two reasons above, we really should have separate
-> drivers for clocks controlled by the PMIC, for the (one or more) clock
-> generator blocks inside of the AP/SoC, and then even more for the
-> drivers that map to IP blocks that have their own clock gens.
+Now to clarify that specific point, devm purpose is to automatically
+clean up the resources used by the device when it is torn down.
 
-I agree those should be separate entities at least. But for a given
-h/w block, if you already have to use OF_DECLARE, why would you try to
-split that into OF_DECLARE and a driver? what advantage does putting
-non-boot essential clocks in a driver or transitioning to a driver get
-you?
+However, in this specific case, it makes sense to dispose of the port
+structure explicitly because this is a failure in registering an
+individual port which doesn't lead to a failure of the entire driver.
 
-And I've seen PMIC clocks could be inputs to the SoC's clock
-controller(s), so the dependencies get more complicated. Then does the
-PMIC driver and its dependencies need to be early drivers too?
+Thus not freeing it means the structure would remain allocated
+uselessly until the whole driver is torn down.
 
-> Good examples of the latter are display controllers that generate their
-> own PLL and pixel clock. Or MMC controllers that have a
-> runtime-programmable clock divider. Examples of these are merged into
-> mainline.
+> - understand list_for_each*() macros
 
-But those are drivers of types other than a clock controller that
-happen to register some clocks as well. I wasn't saying these cases
-can't or shouldn't be part of the driver model. Look at irqchips. We
-have some that use the driver model (e.g. every GPIO driver) and some
-that don't because there's no need (e.g. GIC).
+This is a genuine misunderstanding of Eddies, I'm sure he will address
+it, your tone however isn't appropriate.
 
-> 2) Stephen and I wanted clock drivers to actually be represented in the
-> driver model. There were these gigantic clock drivers that exclusively
-> used CLK_OF_DECLARE and they just sort of floated out there in the
-> ether... no representation in sysfs, no struct device to map onto a
-> clock controller struct, etc.
->
-> I'd be happy to hear why you think that platform_driver is a bad fit for
-> a device driver that generally manages memory-mapped system resources
-> that are part of the system glue and not really tied to a specific bus.
-> Sounds like a good fit to me.
->
-> If platform_driver doesn't handle the early boot thing well, that tells
-> me that we have a problem to solve in platform_driver, not in the clk
-> subsystem or drivers.
+> - discuss with maintainer a design of enumerating ports
 
-Doing things earlier is not the only way to solve the problems.
-Perhaps we need to figure out how to start things later. Maybe it's
-not feasible here, I don't know.
+I've been at that game for at least a good 2 decades. Maintainers
+generally do *not* discuss design until a patch is proposed. I even
+still try every now and then, maintainers are like lawyers, they don't
+want to tell you what to do in case they still want to reject it after
+seeing it later :-) I know I've been one of them for long enough.
 
-> 3) Lots of clock controllers should be loadable modules. E.g. i2c clock
-> expanders, potentially external PMIC-related drivers, external audio
-> codecs, etc.
->
-> Again, repeating my point #1 above, just because many platforms have a
-> monolithic clock driver does not mean that this is the Right Way to do
-> it.
+If you have specific issues with how this is done, please express them
+clearly. It's quite possible that there's some better way to do what
+Eddie is doing here, but without *construtive* feedback this is
+pointless. 
 
-And in those cases, I completely agree they should be part of a driver.
+> - ... (whatever I forgot and others added) ...
 
-Rob
+I believe he addressed most of your comments. There is one mistake left
+(the list_for_each) which will be easily fixed. As for the rest, it's
+just ramblings unless you or Wolfram can propose a better alternative
+in which case I'm sure Eddie will be happy to implement it.
+
+I'm disappointed here because we have an example of somebody rather new
+producing what is overall pretty damn good code, despite a few corner
+issues, and being (again) treated like crap.
+
+This isn't the right way to operate, and I believe this has been made
+clear many times before.
+
+Cheers,
+Ben.
+
+> > Changes since v7
+> >  - Fix grammer in Kconfig (a -> an)
+> >  - Change I2C registers to use BIT and GENMASK
+> >  - Remove custom macros and use FIELD_PREP and FIELD_GET
+> >  - Fix a few unecessary initializations and "return rc" that are always zero
+> >  - Clean up the read/write fifo functions a bit
+> >  - Few other clean-up items
+> > 
+> > Changes since v6
+> >  - Remove spinlock for reset functionality; it's unecessary and doesn't work
+> >    with the latest FSI core.
+> >  - Use a mutex instead of a semaphore, and don't wait for timeout to get the
+> >    lock.
+> >  - Use usleeps instead of schedule_timeout; it's not worth the overhead when
+> >    the wait should be very short in between sending the command and receiving
+> >    the response.
+> > 
+> > Changes since v5
+> >  - Fix reset functionality and do a reset after every transfer failure
+> > 
+> > Eddie James (7):
+> >   dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
+> >   i2c: Add FSI-attached I2C master algorithm
+> >   i2c: fsi: Add port structures
+> >   i2c: fsi: Add abort and hardware reset procedures
+> >   i2c: fsi: Add transfer implementation
+> >   i2c: fsi: Add I2C master locking
+> >   i2c: fsi: Add bus recovery
+> > 
+> >  Documentation/devicetree/bindings/i2c/i2c-fsi.txt |  40 ++
+> >  drivers/i2c/busses/Kconfig                        |  11 +
+> >  drivers/i2c/busses/Makefile                       |   1 +
+> >  drivers/i2c/busses/i2c-fsi.c                      | 722 ++++++++++++++++++++++
+> >  4 files changed, 774 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
+> >  create mode 100644 drivers/i2c/busses/i2c-fsi.c
+> > 
+> > --
+> > 1.8.3.1
+> > 
+> 
+> 
+> 
