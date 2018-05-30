@@ -1,55 +1,75 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Wed, 30 May 2018 11:37:20 +0100
-Message-ID: <20180530103720.GH6920@sirena.org.uk>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
- <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
+ driver
+Date: Wed, 30 May 2018 12:00:00 +0100
+Message-ID: <20180530110000.GI6920@sirena.org.uk>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180530090512.GC13528@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lrvsYIebpInmECXG"
+        protocol="application/pgp-signature"; boundary="QDIl5R72YNOeCxaP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
+In-Reply-To: <20180530090512.GC13528@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
 
---lrvsYIebpInmECXG
+--QDIl5R72YNOeCxaP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, May 29, 2018 at 10:23:20PM -0700, Doug Anderson wrote:
+On Wed, May 30, 2018 at 12:05:12PM +0300, Matti Vaittinen wrote:
 
-> > +                       qcom,drms-mode-max-microamps = <10000 1000000>;
+> Other 4 can be used on PWM or PFM switching mode. When PWM is used
+> voltages can be changed without disabling regulator. On PFM this should
+> not be done. These latter 4 regulators can be forced to PWM mode via
+> control bit in register. This driver does not support controlling this
+> mode though. So this driver version just checks if regulator is enabled
+> before changing the voltage and if it is the voltage change fails with
+> -EBUSY
 
-> Things look pretty good to me now.  I'm still hesitant about the whole
-> need to list the modes twice (once using the unordered
-> "regulator-allowed-modes" and once to match up against the ordered
-> "qcom,drms-mode-max-microamps").  I'm also still of the opinion that
-> the whole "drms-mode-max-microamps" ought to be a standard property
-> (not a qcom specific one) and handled in the regulator core.
+It probably should support setting modes (especially if the device isn't
+smart enough to automatically shift which sounds like the case) but
+that's a separate thing.
 
-I'm confused as to why we are specifying the maximum current the device
-can deliver in a given mode in the DT - surely that's a fixed property
-of the hardware?
+> My question is whether it would be good idea to also read the 'force
+> PWM' bit when voltage is changed and allow the change if PWM mode is
+> forced to be used? Problem is that the check and voltage change can't be
+> atomic so there is a chance someone changes the mode (bypassing the
+> driver and regulator core) after this check but before we get to modify
+> the voltage. Furthermore, I doubt the 'force PWM' is widely used (but I
+> can't say for sure as I can't imagine all use cases) as it is not so
+> power efficient.
 
---lrvsYIebpInmECXG
+Why would anything else be changing the mode configuration of the
+regulator while the system is running?  That sounds like a bad idea.
+In any case if the hardware really needs to be manually put into force
+PWM to change voltage then the simplest thing would be to just move it
+into force PWM mode, do the change, then change back if it wasn't
+already in force PWM mode.
+
+The tradeoff with forced PWM mode is that the quality of regulation will
+be a lot better, especially if the load changes suddenly (as things like
+CPUs often do).  Most hardware that's at all current is able respond to
+changes in load and switch modes automatically when it's appropriate,
+except possibly in some very low power modes.
+
+--QDIl5R72YNOeCxaP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOfuAACgkQJNaLcl1U
-h9DCkwf/TUW3B79DOQ8gDtXWhAdDlfnHkl1MQ+yklnO9/BV1sXKmL7RPDwwOyCqT
-cKIWmY4o4H7nvMpr1YXBwW1CXG4r6+87fQDaP0212TufnzJkJjVPv4XMsMAe/Z7b
-BTtTtXCFmudVjSrp4l24q94APzWQcgt5I3FWLKiiv93HhKp8+4RBVCKFq/D3XLxk
-3nhjUG8zvTMhDtADgAYw3cZrT473IOyUEaXCwTc3wY3srVSX5ffzSZqM8Y2K1Vmi
-PLzk694h1wLsHXZe5Ig9HCF/Ys3y65fqhipmHGPcDkB3voPiJj9PNAmSZa16xsYc
-Beq6G12n2RpuddPVHJGdx+kuX2KvmQ==
-=SPtN
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOhC8ACgkQJNaLcl1U
+h9Ag/wf+K4uLA5x5eT0bG96OcP1drAx9nx/aAbTTtQsFPeSTocdCq4nplECWlONt
+Jfi9RRuX2TRezrrQa8QIcfssUhT4M1MJD30Mws0SJ3e1m+vhcSS3FUS4vOepmNPg
+HcFnwg8qXNXSn1ahvYxZ2ISbu20C2uQj2XeJYsB4sQhsBzW/FPp7Z40nH1TMpqR3
+m9hl4NSci25M9BchBzR3vLdltsdYVmGrX4kX2nZSTOXgymX58R+rBLZeyZ4+kMO1
+/E0AUYBNiQ6+UN1NmN0abv0cD/GsvNc8nTEt2lB/IXkVGnz/nyj01pg5/5vrL7fx
+g1F5lBtaLADOmLd6FbvX4wK4BJO3/g==
+=yqHD
 -----END PGP SIGNATURE-----
 
---lrvsYIebpInmECXG--
+--QDIl5R72YNOeCxaP--
