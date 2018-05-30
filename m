@@ -1,61 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Wed, 30 May 2018 17:20:07 +0100
-Message-ID: <20180530162007.GU6920@sirena.org.uk>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
- <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
- <20180530103720.GH6920@sirena.org.uk>
- <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
- <20180530155044.GR6920@sirena.org.uk>
- <CAD=FV=WVUmvPPd5BxXv9Sa_2CRPrrjQvYFyqroY-3fRr4f0Bzg@mail.gmail.com>
+From: Avi Fishman <avifishman70@gmail.com>
+Subject: Re: [PATCH v1 0/3] USB host: Add USB ehci support for nuvoton npcm7xx
+Date: Wed, 30 May 2018 19:22:45 +0300
+Message-ID: <CAKKbWA7N8aaCkJvMeNg3+3cJs3=AfaF5U8ZH_isVpL3oOs8t9Q@mail.gmail.com>
+References: <1527582935-31175-1-git-send-email-avifishman70@gmail.com> <CAKKbWA5zu2ty-OapQMiYXWg6wk0UisPq56gow7_1Tti_fg7fkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dXvu6+ixFx2ZffE8"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WVUmvPPd5BxXv9Sa_2CRPrrjQvYFyqroY-3fRr4f0Bzg@mail.gmail.com>
+In-Reply-To: <CAKKbWA5zu2ty-OapQMiYXWg6wk0UisPq56gow7_1Tti_fg7fkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stern@rowland.harvard.edu
+Cc: Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, davem@davemloft.net, akpm@linux-foundation.org, rdunlap@infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Avi Fishman <AviFishman70@gmail.com>
 
---dXvu6+ixFx2ZffE8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch adds support for ehci controller for the Nuvoton npcm7xx platform.
+Most of the code was taken from ehci-spear.c + specific initialization code
 
-On Wed, May 30, 2018 at 09:12:25AM -0700, Doug Anderson wrote:
-> On Wed, May 30, 2018 at 8:50 AM, Mark Brown <broonie@kernel.org> wrote:
+Avi Fishman (3):
+  USB host: Add USB ehci support for nuvoton npcm7xx platform
+  USB: DT probing support to ehci-npcm7xx
+  MAINTAINERS: add subfolders for nuvoton *npcm*
 
-> > No, I'm saying that I don't know why that property exists at all.  This
-> > sounds like it's intended to be the amount of current the regulator can
-> > deliver in each mode which is normally a design property of the silicon.
+ .../devicetree/bindings/usb/npcm7xx-usb.txt        |  18 ++
+ MAINTAINERS                                        |   3 +
+ drivers/usb/host/Kconfig                           |   8 +
+ drivers/usb/host/Makefile                          |   1 +
+ drivers/usb/host/ehci-npcm7xx.c                    | 212 +++++++++++++++++++++
+ 5 files changed, 242 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+ create mode 100644 drivers/usb/host/ehci-npcm7xx.c
 
-> Ah, got it.  So the whole point here is to be able to implement either
-> the function "set_load" or the function "get_optimum_mode".  We need
-> some sort of table to convert from current to mode.  That's what this
-> table does.
 
-We do need that table, my expectation would be that this table would be
-in the driver as it's not something I'd expect to vary between different
-systems but rather be a property of the silicon design.  No sense in
-every single board having to copy it in.
-
---dXvu6+ixFx2ZffE8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOzzYACgkQJNaLcl1U
-h9CfwQf/dghVtBPln5sTA95A+zVqCX2K0kot4Y5BBRZTpovVgNXnS1RRCmleysbT
-YxTV1SK6ZbbnpQfCnNnt4U2xA4VfWggvfFkm5EabjUkXYAU5RNrS8tD6kI2+SLx4
-uRowqV2F2QRLz5urd71PtSry6jGA4Fa7TXoPUARM1FBpa5INPSh9r3pV8KLpTrVO
-vVKwdbjVrM8a6eJrZ6/RPgkto/sPsHTinXSgNjtbWrpeFGEtdyJyOzRUKexBvGOx
-FbXlzGvSIZw0cftpK1iWxqWfdIf037CeyZK5HJ4qcnAELaROiq7vKhAKV/42XqWx
-8KdIfuF7T6zjcrnzqz4tDa7Vxj505A==
-=vHVF
------END PGP SIGNATURE-----
-
---dXvu6+ixFx2ZffE8--
+-- 
+2.14.1
