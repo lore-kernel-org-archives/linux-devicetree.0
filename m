@@ -1,50 +1,54 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v6 2/6] dt-bindings: Add the rzn1-clocks.h file
-Date: Wed, 30 May 2018 13:49:09 +0000
-Message-ID: <TY1PR01MB1769BE183DE5BC2CAC719663F56C0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
- <1526983321-41949-3-git-send-email-michel.pollet@bp.renesas.com>
- <CAMuHMdW-HUBRF4rLdfzixcyMUBg7+4XU+-3zayePoyeQiBZ8ZA@mail.gmail.com>
- <CAMMfpEyTORirKiE417AQzCLzxDTKmy83bwivpfJaHQsKUKMc_w@mail.gmail.com>
- <CAMuHMdWAU9wZkA+Z0BNAGrLV1WrCO3PgCTo2p=q3Mq9Tm6JBGA@mail.gmail.com>
- <CAMMfpEwKa90XHu_igCxRQLy_CSVHTkN8eD8f7o=wgtttSn=FqA@mail.gmail.com>
- <CAMuHMdWVde-DfbLVbvZT4rQfsVz1z7AMyQVgbO2DXrQKsEdVcw@mail.gmail.com>
- <TY1PR01MB1769DFD4CD9803D10CE1CA4BF56C0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
- <CAMuHMdV8Hey=L6jv7HFyTUbeKdcC8ygn7PFjW2akETHe44MjeQ@mail.gmail.com>
+From: Andrea Greco <andrea.greco.gapmilano@gmail.com>
+Subject: Re: [PATCH 2/4] arcnet: com20020: bindings for smsc com20020
+Date: Wed, 30 May 2018 16:07:22 +0200
+Message-ID: <4f6cda28-478e-1af8-4a63-2165298cabcb@gmail.com>
+References: <20180517130628.2770-1-andrea.greco.gapmilano@gmail.com>
+ <20180523164931.GA3635@rob-hp-laptop>
+ <CAPoXtQJYmfk+-4qOpbEetUAdVwTgVPmk=mQaFv7yLF2V2dO=4A@mail.gmail.com>
+ <CAL_JsqL1M3SuH_cJGUhh0+Xg+UYDjAc-=a+USENOKznvWib1Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV8Hey=L6jv7HFyTUbeKdcC8ygn7PFjW2akETHe44MjeQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL1M3SuH_cJGUhh0+Xg+UYDjAc-=a+USENOKznvWib1Ng@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: M P <buserror@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "Tobin C. Harding" <tobin@apporbit.com>, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDMwIE1heSAyMDE4IDE0OjM3IEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90
-ZToNCj4gT24gV2VkLCBNYXkgMzAsIDIwMTggYXQgMzozMCBQTSwgUGhpbCBFZHdvcnRoeSB3cm90
-ZToNCj4gPiBPbiAyNSBNYXkgMjAxOCAxMDoxMyBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+
-ID4gIFtzbmlwXQ0KPiA+DQo+ID4+IE5vdywgZ2l2ZW4gdGhlIGNsb2NrIGRlZmluaXRpb25zIGZv
-ciBSWi9OMVtEU0xdIGFyZSB0aGUgc2FtZQ0KPiA+PiAoYWx0aG91Z2ggc29tZSBkb24ndCBleGlz
-dCBvbiBzb21lIHZhcmlhbnRzKSwgeW91IGNvdWxkIGtlZXAgb24gdXNpbmcNCj4gPj4gUlpOMV9D
-TEtfRk9PIGZvciB0aGUgbmFtZXMgb2YgdGhlIGRlZmluZXMsIGFuZCBzdG9yZSB0aGVtIGluIGEN
-Cj4gY29tbW9uDQo+ID4+IGZpbGUsIGluY2x1ZGVkIGJ5IHRoZSBzb2Mtc3BlY2lmaWMgZmlsZS4g
-QnV0IHBsZWFzZSBtYWtlIGNsZWFyIHRoZQ0KPiA+PiBjb21tb24gZmlsZSBjYW5ub3QgYmUgaW5j
-bHVkZWQgZGlyZWN0bHksIHNvIHRoZSBmaWxlbmFtZSBkb2VzIG5vdA0KPiA+PiBiZWNvbWUgcGFy
-dCBvZiB0aGUgRFQgQUJJLCBhbmQgeW91IGFyZSBzaGllbGRlZCBmcm9tIGZ1dHVyZSBtYXJrZXRp
-bmcNCj4gPj4gc2lsbGluZXNzIChlLmcuIG5leHQgcXVhcnRlcidzIFJaL04xWCBiZWluZyB0b3Rh
-bGx5IGRpZmZlcmVudCkuDQo+ID4gSG93IGRvZXMgYW4gaW5jbHVkZSBmaWxlbmFtZSBiZWNvbWUg
-cGFydCBvZiB0aGUgRFQgQUJJPw0KPiA+IEkgdGhvdWdodCB0aGUgZHRiIGlzIHRoZSBBQkksIG5v
-dCB0aGUgZHRzLiBBbSBJIHdyb25nPw0KPiANCj4gWW91J3JlIHJpZ2h0LiBJbiBzZSB0aGUgRFQg
-QUJJIGFwcGxpZXMgdG8gdGhlIERUQiwgbm90IHRvIHRoZSBEVFMuDQo+IA0KPiBUaGUgZGVmaW5p
-dGlvbnMgaW5zaWRlIHRoZSBpbmNsdWRlIGZpbGUgYXJlIHBhcnQgb2YgdGhlIERUIGJpbmRpbmdz
-LCBhbmQgdGh1cw0KPiBjYW5ub3QgYmUgY2hhbmdlZC4gIFlvdXIgRFRTIGZpbGVzIGdldCB0aGVz
-ZSBkZWZpbml0aW9ucyBieSBpbmNsdWRpbmcgdGhlDQo+IGhlYWRlciBmaWxlLCBzbyB0aGUgaGVh
-ZGVyIGZpbGVuYW1lIGlzIGFsc28gcGFydCBvZiB0aGUgYmluZGluZ3MsIGFuZCB0aHVzIGNhbid0
-DQo+IGJlIGNoYW5nZWQgdGhhdCBlYXNpbHkuDQpUaGF0IHNlZW1zIGEgYml0IG9uZXJvdXMuLi4g
-DQpJdCBtYWtlcyBzZW5zZSB0aGF0IGJpbmRpbmdzIHRoYXQgYWZmZWN0IHRoZSBkdGIgY2FuIG9u
-bHkgYmUgYWRkZWQgdG8sIHNvIHRoYXQNCmFuIG9sZCBkdGIgc3RpbGwgd29ya3MuIEhvd2V2ZXIs
-IEkgd291bGQgaGF2ZSB0aG91Z2h0IGl0J3MgdGhlIHZhbHVlIG9mIHRoZQ0KY29uc3RhbnQgdGhh
-dCBpcyB0aGUgQUJJLCBub3QgdGhlIHN5bWJvbCBuYW1lIHVzZWQgdG8gc3BlY2lmeSBpdC4NCg0K
-VGhhbmtzIGZvciB5b3UgZmVlZGJhY2shDQpQaGlsDQo=
+On 05/24/2018 04:36 PM, Rob Herring wrote> If you want to add it, that's 
+fine. But it's really not something that
+> comes up often. For UARTs, there's already the "current-speed"
+> property and most other things I can think of use Hz to express
+> speeds.
+
+No, Pref keep standard and use Hz.
+
+This if finally:
+```
+SMSC com20020 Arcnet network controller
+
+Required property:
+- timeout-ns: Arcnet bus timeout, Idle Time (328000 - 20500)
+- bus-speed-bps: Arcnet bus speed (10000000 - 156250)
+- smsc,xtal-mhz: External oscillator frequency
+- smsc,backplane-enabled: Controller use backplane mode
+- reset-gpios: Chip reset pin
+- interrupts: Should contain controller interrupt
+
+arcnet@28000000 {
+	compatible = "smsc,com20020";
+
+	timeout-ns = <20500>;
+	bus-speed-hz = <10000000>;
+	smsc,xtal-mhz = <20>;
+	smsc,backplane-enabled;
+
+	reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
+	interrupts = <&gpio2 10 GPIO_ACTIVE_LOW>;
+};
+```
+If confirmed, for me is right
+
+Andrea
