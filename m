@@ -1,53 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
- driver
-Date: Wed, 30 May 2018 12:16:49 +0100
-Message-ID: <20180530111649.GB8038@dell>
-References: <20180528090003.GA8778@localhost.localdomain>
- <20180529073958.GB4790@dell>
- <20180529083541.GA13528@localhost.localdomain>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v4 0/5] Reintroduce i.MX EPIT Timer
+Date: Wed, 30 May 2018 14:03:22 +0200
+Message-ID: <20180530120327.27681-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180529083541.GA13528@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?q?Cl=C3=A9ment=20Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 May 2018, Matti Vaittinen wrote:
+From: Clément Peron <clement.peron@devialet.com>
 
-> Hello,
-> 
-> On Tue, May 29, 2018 at 08:39:58AM +0100, Lee Jones wrote:
-> > On Mon, 28 May 2018, Matti Vaittinen wrote:
-> > 
-> > > Patch series adding support for ROHM BD71837 PMIC.
-> > FYI, this patch-set is going to be difficult to manage since it was
-> > not sent 'threaded'.
-> > 
-> > If/when you send a subsequent version, could you please ensure you
-> > send the set threaded so the patches keep in relation to one another
-> > as they are reviewed?
-> 
-> Thanks for the guidance. I have not sent so many patches to community so
-> I am grateful also from all the practical tips =) Just one slight problem.
-> I have only seen emails being threaded when one is replying to an email.
-> So how should I send my patches in same thread? Just send first one and
-> then send subsequent patches as replies?
-> 
-> I just killed some unused definitions and one unused variable from the
-> code so I am about to send new version. I'll try doing that as a threaded
-> series and resend all the patches as v3.
+As suggested in the commit message we have added the device tree support,
+proper bindings and we moved the driver into the correct folder.
 
-You don't need to do this manually.
+Moreover we made some changes like use of relaxed IO accesor,
+implement sched_clock, delay_timer and reduce the clockevents min_delta.
 
-Just use `git send-email` with the correct arguments.
+Changes since v3:
+- Clean Kconfig
+- Rename imx6q-epit to imx31-epit
+- Update doc and bindings
+- Indent and fix
+
+Changes since v2 (Thanks Fabio Estevam):
+- Removed unused ckil clock
+- Add out_iounmap
+- Check and handle if clk_prepare_enable failed
+- Fix comment typo
+
+Changes since v1 (Thanks Vladimir Zapolskiy):
+- Add OF dependency in Kconfig
+- Sort header
+- Use BIT macro
+- Remove useless comments
+- Fix incorrect indent
+- Fix memory leak
+- Add check and handle possible returned error
+
+Clément Peron (2):
+  ARM: imx: remove inexistant EPIT timer init
+  Documentation: DT: add i.MX EPIT timer binding
+
+Colin Didier (3):
+  clk: imx6: add EPIT clock support
+  clocksource: add driver for i.MX EPIT timer
+  ARM: dts: imx6qdl: add missing compatible and clock properties for
+    EPIT
+
+ .../devicetree/bindings/timer/fsl,imxepit.txt |  24 ++
+ arch/arm/boot/dts/imx6qdl.dtsi                |  10 +
+ arch/arm/mach-imx/common.h                    |   1 -
+ drivers/clk/imx/clk-imx6q.c                   |   2 +
+ drivers/clocksource/Kconfig                   |  11 +
+ drivers/clocksource/Makefile                  |   1 +
+ drivers/clocksource/timer-imx-epit.c          | 281 ++++++++++++++++++
+ include/dt-bindings/clock/imx6qdl-clock.h     |   4 +-
+ 8 files changed, 332 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxepit.txt
+ create mode 100644 drivers/clocksource/timer-imx-epit.c
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.0
