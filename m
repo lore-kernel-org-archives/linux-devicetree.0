@@ -1,45 +1,51 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Wed, 30 May 2018 07:46:50 -0700
-Message-ID: <CAD=FV=W-MLU9c-SvfLgKAKGP1eHN5xO-013f2M09XUa+QeHzrA@mail.gmail.com>
-References: <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org>
- <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
- <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org> <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
- <20180523082908.GB4828@sirena.org.uk> <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
- <20180523154057.GL4828@sirena.org.uk> <CAD=FV=XWVOdJ8rWJnBTwoNqnYqYRYjknkZtUvT86+skbrTdwig@mail.gmail.com>
- <20180523155617.GN4828@sirena.org.uk> <CAD=FV=W4aDxWbcaJ9GZ1KkvyiTPAPR-oUoTFzJfS+LftU5ZP=Q@mail.gmail.com>
- <20180530093701.GD6920@sirena.org.uk>
+From: Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [DPU PATCH 04/11] dt-bindings: msm/disp: remove unused
+ writeback bindings
+Date: Wed, 30 May 2018 20:19:41 +0530
+Message-ID: <1527691788-9350-5-git-send-email-ryadav@codeaurora.org>
+References: <1527691788-9350-1-git-send-email-ryadav@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530093701.GD6920@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1527691788-9350-1-git-send-email-ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, May 30, 2018 at 2:37 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, May 29, 2018 at 10:30:33PM -0700, Doug Anderson wrote:
->> On Wed, May 23, 2018 at 8:56 AM, Mark Brown <broonie@kernel.org> wrote:
->
->> > Yes, that's definitely not what's expected but it's unfortunately what
->> > the firmware chose to implement so we may well be stuck with it
->> > unfortunately.
->
->> We're not really stuck with it if we do what I was suggesting.  I was
->> suggesting that every time we disable the regulator in Linux we have
->> Linux vote for the lowest voltage it's comfortable with.  Linux keeps
->> track of the true voltage that the driver wants and will always change
->> its vote back to that before enabling.  Thus (assuming Linux is OK
->> with 1.2 V - 1.4 V for a rail):
->
-> That's pretty much what it should do anyway with normally designed
-> hardware.
-
-I guess the question is: do we insist that the driver include this
-workaround, or are we OK with letting the hardware behave as the
-hardware does?
-
--Doug
+RFBVIHdyaXRlYmFjayBzdXBwb3J0IGlzIG5vdCBlbmFibGVkIHlldCBzbwpyZW1vdmluZyB0aGUg
+YmluZGluZ3MuIFRoZSBjb3JyZXNwb25kaW5nIGRyaXZlcgpjb2RlIGlzIGFsc28gcmVtb3ZlZC4g
+VGhlIGJpbmRpbmdzIHdpbGwgYmUgYWRkZWQKYmFjayB3aGVuIHdyaXRlYmFjayBzdXBwb3J0IGlz
+IHJld29ya2VkIGFuZCBlbmFibGVkCmJhc2VkIG9uIG5ldyBEUk0gd3JpdGViYWNrIGNvbm5lY3Rv
+ciBhdCBhIGxhdGVyIHN0YWdlLgoKU2lnbmVkLW9mZi1ieTogUmFqZXNoIFlhZGF2IDxyeWFkYXZA
+Y29kZWF1cm9yYS5vcmc+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL21zbS9kcHUt
+d2IudHh0ICAgICAgICAgfCAyMyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdl
+ZCwgMjMgZGVsZXRpb25zKC0pCiBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2RybS9tc20vZHB1LXdiLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vbXNtL2RwdS13Yi50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL21zbS9kcHUtd2IudHh0CmRlbGV0ZWQgZmlsZSBt
+b2RlIDEwMDY0NAppbmRleCAwMjg0NTUzNi4uMDAwMDAwMAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZHJtL21zbS9kcHUtd2IudHh0CisrKyAvZGV2L251bGwKQEAgLTEs
+MjMgKzAsMCBAQAotUVRJIFNuYXBkcmFnb24gRGlzcGxheSBFbmdpbmUgKERQVSkgd3JpdGViYWNr
+IGRpc3BsYXkKLQotUmVxdWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZToJCSJxY29tLHdi
+LWRpc3BsYXkiCi0KLU9wdGlvbmFsIHByb3BlcnRpZXM6Ci0tIGNlbGwtaW5kZXg6CQlJbmRleCBv
+ZiB3cml0ZWJhY2sgZGV2aWNlIGluc3RhbmNlLgotCQkJRGVmYXVsdCB0byAwIGlmIG5vdCBzcGVj
+aWZpZWQuCi0tIGxhYmVsOgkJU3RyaW5nIHRvIGRlc2NyaWJlIHRoaXMgd3JpdGViYWNrIGRpc3Bs
+YXkuCi0JCQlEZWZhdWx0IHRvICJ1bmtub3duIiBpZiBub3Qgc3BlY2lmaWVkLgotCi1FeGFtcGxl
+OgotCi0vIHsKLQkuLi4KLQotCWRwdV93YjogcWNvbSx3Yi1kaXNwbGF5IHsKLQkJY29tcGF0aWJs
+ZSA9ICJxY29tLHdiLWRpc3BsYXkiOwotCQljZWxsLWluZGV4ID0gPDI+OwotCQlsYWJlbCA9ICJ3
+Yl9kaXNwbGF5IjsKLQl9OwotCi19OwotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3Vu
+ZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZnJlZWRyZW5vCg==
