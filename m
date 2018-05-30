@@ -1,182 +1,59 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 2/7] drivers/i2c: Add FSI-attached I2C master algorithm
-Date: Wed, 30 May 2018 10:40:11 -0500
-Message-ID: <b87ee7a3-9901-b7ec-f89c-8a26f82cbb2f@linux.vnet.ibm.com>
-References: <1527632665-25707-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1527632665-25707-3-git-send-email-eajames@linux.vnet.ibm.com>
- <CAHp75VexBiRQ1SPYK6=N-vmCAC9DhtpNKanYXrFshSM9WZb+UA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
+ driver
+Date: Wed, 30 May 2018 16:41:33 +0100
+Message-ID: <20180530154133.GP6920@sirena.org.uk>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180530090512.GC13528@localhost.localdomain>
+ <20180530110000.GI6920@sirena.org.uk>
+ <20180530125634.GE13528@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="U+NfgObvpQT1Q9Yq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VexBiRQ1SPYK6=N-vmCAC9DhtpNKanYXrFshSM9WZb+UA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180530125634.GE13528@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Edward A. James" <eajames@us.ibm.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
 
+--U+NfgObvpQT1Q9Yq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 05/29/2018 06:42 PM, Andy Shevchenko wrote:
-> On Wed, May 30, 2018 at 1:24 AM, Eddie James <eajames@linux.vnet.ibm.com> wrote:
->> From: "Edward A. James" <eajames@us.ibm.com>
->>
->> Add register definitions for FSI-attached I2C master and functions to
->> access those registers over FSI. Add an FSI driver so that our I2C bus
->> is probed up during an FSI scan.
-> This looks like reinventing a wheel in some ways.
->
-> See my comments below.
->
->> +/*
->> + * Copyright 2017 IBM Corporation
->> + *
->> + * Eddie James <eajames@us.ibm.com>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License
->> + * as published by the Free Software Foundation; either version
->> + * 2 of the License, or (at your option) any later version.
->> + */
-> We are using SPDX identifiers. Can you?
+On Wed, May 30, 2018 at 03:56:34PM +0300, Matti Vaittinen wrote:
+> On Wed, May 30, 2018 at 12:00:00PM +0100, Mark Brown wrote:
 
-Sure.
+> > The tradeoff with forced PWM mode is that the quality of regulation will
+> > be a lot better, especially if the load changes suddenly (as things like
+> > CPUs often do).  Most hardware that's at all current is able respond to
+> > changes in load and switch modes automatically when it's appropriate,
+> > except possibly in some very low power modes.
 
->
->> +/* Find left shift from first set bit in m */
->> +#define MASK_TO_LSH(m)         (__builtin_ffsll(m) - 1ULL)
-> Oh. What about GENMASK()?
->
->> +/* Extract field m from v */
->> +#define GETFIELD(m, v)         (((v) & (m)) >> MASK_TO_LSH(m))
->> +
->> +/* Set field m of v to val */
->> +#define SETFIELD(m, v, val)    \
->> +       (((v) & ~(m)) | ((((typeof(v))(val)) << MASK_TO_LSH(m)) & (m)))
-> Oh, what about https://elixir.bootlin.com/linux/latest/source/include/linux/bitfield.h
-> ?
+> Yes. The mode switching is automatic. But there is this control bit for
+> disabling automatic mode switching and forcing the PWM. Problem with
+> these 4 last bucks is just that if regulator is in PFM (and it may be
+> if not forced to PWM - due to this automatic switching) then the voltage
+> change is not behaving well.
 
-Good idea, thanks.
+That sounds like the mode switching just isn't very good and needs a bit
+of help so forcing the mode is probably going to do the right thing.
 
->
->> +#define I2C_CMD_WITH_START     0x80000000
->> +#define I2C_CMD_WITH_ADDR      0x40000000
->> +#define I2C_CMD_RD_CONT                0x20000000
->> +#define I2C_CMD_WITH_STOP      0x10000000
->> +#define I2C_CMD_FORCELAUNCH    0x08000000
-> BIT() ?
->
->> +#define I2C_CMD_ADDR           0x00fe0000
->> +#define I2C_CMD_READ           0x00010000
-> GENMASK()? Though precisely here it might be good to leave explicit values.
->
->> +#define I2C_CMD_LEN            0x0000ffff
->> +#define I2C_MODE_CLKDIV                0xffff0000
->> +#define I2C_MODE_PORT          0x0000fc00
->> +#define I2C_MODE_ENHANCED      0x00000008
->> +#define I2C_MODE_DIAG          0x00000004
->> +#define I2C_MODE_PACE_ALLOW    0x00000002
->> +#define I2C_MODE_WRAP          0x00000001
-> What are they? Masks? Bit fields? Just plain numbers?
->
->> +#define I2C_WATERMARK_HI       0x0000f000
->> +#define I2C_WATERMARK_LO       0x000000f0
-> GENMASK() ?
->
->> +#define I2C_INT_INV_CMD                0x00008000
->> +#define I2C_INT_PARITY         0x00004000
->> +#define I2C_INT_BE_OVERRUN     0x00002000
->> +#define I2C_INT_BE_ACCESS      0x00001000
->> +#define I2C_INT_LOST_ARB       0x00000800
->> +#define I2C_INT_NACK           0x00000400
->> +#define I2C_INT_DAT_REQ                0x00000200
->> +#define I2C_INT_CMD_COMP       0x00000100
->> +#define I2C_INT_STOP_ERR       0x00000080
->> +#define I2C_INT_BUSY           0x00000040
->> +#define I2C_INT_IDLE           0x00000020
-> BIT()
->
->> +#define I2C_INT_ENABLE         0x0000ff80
->> +#define I2C_INT_ERR            0x0000fcc0
->> +#define I2C_STAT_INV_CMD       0x80000000
->> +#define I2C_STAT_PARITY                0x40000000
->> +#define I2C_STAT_BE_OVERRUN    0x20000000
->> +#define I2C_STAT_BE_ACCESS     0x10000000
->> +#define I2C_STAT_LOST_ARB      0x08000000
->> +#define I2C_STAT_NACK          0x04000000
->> +#define I2C_STAT_DAT_REQ       0x02000000
->> +#define I2C_STAT_CMD_COMP      0x01000000
->> +#define I2C_STAT_STOP_ERR      0x00800000
->> +#define I2C_STAT_MAX_PORT      0x000f0000
->> +#define I2C_STAT_ANY_INT       0x00008000
->> +#define I2C_STAT_SCL_IN                0x00000800
->> +#define I2C_STAT_SDA_IN                0x00000400
->> +#define I2C_STAT_PORT_BUSY     0x00000200
->> +#define I2C_STAT_SELF_BUSY     0x00000100
-> BIT()
->
->> +#define I2C_STAT_FIFO_COUNT    0x000000ff
-> GENMASK()
->
->> +
->> +#define I2C_STAT_ERR           0xfc800000
->> +#define I2C_STAT_ANY_RESP      0xff800000
->> +#define I2C_ESTAT_FIFO_SZ      0xff000000
-> GENMASK()
->
->> +#define I2C_ESTAT_SCL_IN_SY    0x00008000
->> +#define I2C_ESTAT_SDA_IN_SY    0x00004000
->> +#define I2C_ESTAT_S_SCL                0x00002000
->> +#define I2C_ESTAT_S_SDA                0x00001000
->> +#define I2C_ESTAT_M_SCL                0x00000800
->> +#define I2C_ESTAT_M_SDA                0x00000400
->> +#define I2C_ESTAT_HI_WATER     0x00000200
->> +#define I2C_ESTAT_LO_WATER     0x00000100
->> +#define I2C_ESTAT_PORT_BUSY    0x00000080
->> +#define I2C_ESTAT_SELF_BUSY    0x00000040
-> BIT()
->
->> +#define I2C_ESTAT_VERSION      0x0000001f
-> GENMASK()
->
->> +       __be32 data_be;
-> No need to have a suffix. If anything can go wrong we have a tool,
-> it's called sparse. It will catch out inappropriate use of __bitwise
-> types.
+--U+NfgObvpQT1Q9Yq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I already have a variable called data...
+-----BEGIN PGP SIGNATURE-----
 
->
->> +       __be32 data_be = cpu_to_be32(*data);
-> cpu_to_be32p()  IIUC?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOxiwACgkQJNaLcl1U
+h9DYswf9GhespdXdjovv3j9DD9wgImmLpLB7cFVie8Mls+Q5qYCisULfQ8RnqKuo
+XWBvT3Y/MUHvihjjZ+bDmuz9o2UvikmotCTROd/OE5Rn9E32iOn2F7MIKKjoJcbk
+Gs8VlJBTzjmCqbBRGGE7R/28X2onqeqzJl0ARtC/UB1qd4nw0L5OKy+IrYWmlkEY
+XTSX3H5Kgbs/71gGClNJ5ZPc4R0vwperFsKmJ3xQxEmgbgUb42ficiaYQqW7WrLH
+5rmN+7az3K+XJyN8zPQ8g00ABAwJm3RlLN3i0ZqKoSOazLn4pJhmtcbdatDrRY9g
+14agyXOkxwqNkVxTe1u2g8C3J/LpDQ==
+=95b5
+-----END PGP SIGNATURE-----
 
-Sure.
-
->
->> +static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
->> +{
->> +       int rc;
->> +       u32 mode = I2C_MODE_ENHANCED, extended_status, watermark = 0;
->> +       u32 interrupt = 0;
-> Redundant assignment.
-
-No, I need to set the interrupt register to 0, so I must set this.
-
->
->> +
->> +       /* since we use polling, disable interrupts */
->> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_INT_MASK, &interrupt);
->> +       if (rc)
->> +               return rc;
->> +       return rc;
-> Would be non-zero?
-
-No, fsi_i2c_write_reg returns non-zero on error, zero on success. That 
-is what I want.
-
-Thanks,
-Eddie
-
->
->> +}
+--U+NfgObvpQT1Q9Yq--
