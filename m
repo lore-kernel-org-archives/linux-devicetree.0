@@ -1,111 +1,41 @@
-Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00046.outbound.protection.outlook.com ([40.107.0.46]:14834
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753137AbeE1DJk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:09:40 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 05/15] usb: typec: add API to get typec basic port power and data config
-Date: Mon, 28 May 2018 10:52:37 +0800
-Message-Id: <1527475967-15201-6-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <SRS0=B+w2=IR=holtmann.org=marcel@kernel.org>
+Content-Type: text/plain;
+	charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
+Subject: Re: [PATCH 07/13] Bluetooth: hci_uart: Restore hci_dev->flush
+ callback on open()
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20180527190457.2632-8-hdegoede@redhat.com>
+Date: Wed, 30 May 2018 08:47:03 +0200
+Content-Transfer-Encoding: 7bit
+Message-Id: <7EF01249-EB75-4A69-A712-0DEB4AC2E538@holtmann.org>
+References: <20180527190457.2632-1-hdegoede@redhat.com>
+ <20180527190457.2632-8-hdegoede@redhat.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh@kernel.org, Jeremy Cline <jeremy@jcline.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds 3 APIs to get the typec port power and data type,
-and preferred power role by its name string.
+Hi Hans,
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/usb/typec/class.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/usb/typec.h |  3 +++
- 2 files changed, 53 insertions(+)
+> For reasons explained in detail in commit 3611f4d2a5e0 ("hci_ldisc:
+> fix null pointer deref") the hci_uart_close() functions sets
+> hci_dev->flush to NULL.
+> 
+> But the device may be re-opened after a close, this commit restores the
+> hci_dev->flush callback on open().
+> 
+> Note this commit also moves the nearly empty defition of hci_uart_open()
+> a bit down in the file to avoid the need for forward declaring
+> hci_uart_flush().
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> drivers/bluetooth/hci_ldisc.c  | 20 +++++++++++---------
+> drivers/bluetooth/hci_serdev.c | 19 +++++++++++--------
+> 2 files changed, 22 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 53df10d..4c7d18c 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -802,6 +802,12 @@ static const char * const typec_port_types[] = {
- 	[TYPEC_PORT_DRP] = "dual",
- };
- 
-+static const char * const typec_data_caps[] = {
-+	[TYPEC_PORT_DFP] = "host",
-+	[TYPEC_PORT_UFP] = "device",
-+	[TYPEC_PORT_DRD] = "dual",
-+};
-+
- static const char * const typec_port_types_drp[] = {
- 	[TYPEC_PORT_SRC] = "dual [source] sink",
- 	[TYPEC_PORT_SNK] = "dual source [sink]",
-@@ -1252,6 +1258,50 @@ void typec_set_pwr_opmode(struct typec_port *port,
- }
- EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
- 
-+/**
-+ * typec_find_port_power_role - Get the typec port power capability
-+ * @name: port power capability string
-+ *
-+ * This routine is used to find the typec_port_type by its string name.
-+ *
-+ * Returns typec_port_type if success, otherwise negative error code.
-+ */
-+int typec_find_port_power_role(const char *name)
-+{
-+	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
-+			    name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_power_type);
-+
-+/**
-+ * typec_find_power_role - Find the typec one specific power role
-+ * @name: power role string
-+ *
-+ * This routine is used to find the typec_role by its string name.
-+ *
-+ * Returns typec_role if success, otherwise negative error code.
-+ */
-+int typec_find_power_role(const char *name)
-+{
-+	return match_string(typec_roles, ARRAY_SIZE(typec_roles), name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_preferred_role);
-+
-+/**
-+ * typec_find_port_data_role - Get the typec port data capability
-+ * @name: port data capability string
-+ *
-+ * This routine is used to find the typec_port_data by its string name.
-+ *
-+ * Returns typec_port_data if success, otherwise negative error code.
-+ */
-+int typec_find_port_data_role(const char *name)
-+{
-+	return match_string(typec_data_caps, ARRAY_SIZE(typec_data_caps),
-+			    name);
-+}
-+EXPORT_SYMBOL_GPL(typec_find_data_type);
-+
- /* ------------------------------------------ */
- /* API for Multiplexer/DeMultiplexer Switches */
- 
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index 672b39b..15f8d9a 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -267,4 +267,7 @@ int typec_set_orientation(struct typec_port *port,
- 			  enum typec_orientation orientation);
- int typec_set_mode(struct typec_port *port, int mode);
- 
-+int typec_find_port_power_role(const char *name);
-+int typec_find_power_role(const char *name);
-+int typec_find_port_data_role(const char *name);
- #endif /* __LINUX_USB_TYPEC_H */
--- 
-2.7.4
+this patch has been cherry-picked and applied to bluetooth-next tree.
 
+Regards
+
+Marcel
