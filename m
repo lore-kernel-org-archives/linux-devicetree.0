@@ -1,36 +1,53 @@
-From: Avi Fishman <avifishman70@gmail.com>
-Subject: Re: [PATCH v1 0/3] USB host: Add USB ehci support for nuvoton npcm7xx
-Date: Wed, 30 May 2018 19:01:40 +0300
-Message-ID: <CAKKbWA5zu2ty-OapQMiYXWg6wk0UisPq56gow7_1Tti_fg7fkw@mail.gmail.com>
-References: <1527582935-31175-1-git-send-email-avifishman70@gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
+Date: Wed, 30 May 2018 09:06:16 -0700
+Message-ID: <CAD=FV=X2u=hMyWinSDtim-PmFwAy5mXcwg3HeYojAHcsUFhV3g@mail.gmail.com>
+References: <20180523082908.GB4828@sirena.org.uk> <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
+ <20180523154057.GL4828@sirena.org.uk> <CAD=FV=XWVOdJ8rWJnBTwoNqnYqYRYjknkZtUvT86+skbrTdwig@mail.gmail.com>
+ <20180523155617.GN4828@sirena.org.uk> <CAD=FV=W4aDxWbcaJ9GZ1KkvyiTPAPR-oUoTFzJfS+LftU5ZP=Q@mail.gmail.com>
+ <20180530093701.GD6920@sirena.org.uk> <CAD=FV=W-MLU9c-SvfLgKAKGP1eHN5xO-013f2M09XUa+QeHzrA@mail.gmail.com>
+ <20180530150241.GO6920@sirena.org.uk> <CAD=FV=XJd-udEE6az0xP7i6x0oGsnd=BSCyZ0Og_+RjNCMXnCQ@mail.gmail.com>
+ <20180530154849.GQ6920@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527582935-31175-1-git-send-email-avifishman70@gmail.com>
+In-Reply-To: <20180530154849.GQ6920@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stern@rowland.harvard.edu
-Cc: Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, rdu
+To: Mark Brown <broonie@kernel.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Avi Fishman <AviFishman70@gmail.com>
+Hi,
 
-This patch adds support for ehci controller for the Nuvoton npcm7xx platform.
-Most of the code was taken from ehci-spear.c + specific initialization code
+On Wed, May 30, 2018 at 8:48 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, May 30, 2018 at 08:34:50AM -0700, Doug Anderson wrote:
+>> On Wed, May 30, 2018 at 8:02 AM, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > What you're describing sounds like what we should be doing normally, if
+>> > we're not doing that we should probably be fixing the core.
+>
+>> I'm not convinced that this behavior makes sense to move to the core.
+>> On most regulators I'd expect that when the regulator driver says to
+>> turn them off that they will output no voltage.  The reason RPMh is
+>
+> Oh, you mean while the regulator is off...  TBH I don't see a huge
+> problem doing that anyway and just reverting to the bottom of the
+> constraints when everything gets turned off since we have to see if we
+> need to adjust the voltage every time we enabled anyway.
+>
+>> In any other system when Linux disabled the regulator it wouldn't
+>> matter that you left it set at 1.4V.  Thus RPMh is special and IMO the
+>> workaround belongs there.
+>
+> Without the core doing something the regulator isn't going to get told
+> that anything updated voltages anyway...
 
-Avi Fishman (3):
-  USB host: Add USB ehci support for nuvoton npcm7xx platform
-  USB: DT probing support to ehci-npcm7xx
-  MAINTAINERS: add subfolders for nuvoton *npcm*
+I was just suggesting that when the core tells the regulator driver to
+disable itself that the regulator driver tell RPMh to not only disable
+itself but also (temporarily) vote for a lower voltage.  When the core
+tells the regulator to re-enable itself then the regulator driver
+restores the original voltage vote (or applies any vote that might
+have been attempted while the regulator was disabled).  That wouldn't
+require any regulator core changes.
 
- .../devicetree/bindings/usb/npcm7xx-usb.txt        |  18 ++
- MAINTAINERS                                        |   3 +
- drivers/usb/host/Kconfig                           |   8 +
- drivers/usb/host/Makefile                          |   1 +
- drivers/usb/host/ehci-npcm7xx.c                    | 212 +++++++++++++++++++++
- 5 files changed, 242 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
- create mode 100644 drivers/usb/host/ehci-npcm7xx.c
-
-
--- 
-2.14.1
+-Doug
