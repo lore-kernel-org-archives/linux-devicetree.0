@@ -1,132 +1,106 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 08/12] drm/bridge: tc358764: Add DSI to LVDS bridge
- driver
-Date: Wed, 30 May 2018 10:27:46 +0200
-Message-ID: <20180530082748eucas1p1eede54cce4a257bf2795ac8474f9a9d3~zXr4CtkHD0946509465eucas1p1J@eucas1p1.samsung.com>
-References: <1527500833-16005-9-git-send-email-m.purski@samsung.com>
-        <CGME20180530074642epcas1p31772422454439c0a4ed636f620a3c4bc@epcas1p3.samsung.com>
-        <201805301553.AcTypuC4%fengguang.wu@intel.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v4 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC driver
+Date: Wed, 30 May 2018 11:41:13 +0300
+Message-ID: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201805301553.AcTypuC4%fengguang.wu@intel.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>, Maciej Purski <m.purski@samsung.com>
-Cc: kbuild-all@01.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Maciej,
+Patch series adding support for ROHM BD71837 PMIC.
 
+BD71837 is a programmable Power Management IC for powering single-core,
+dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+low BOM cost and compact solution footprint. It integrates 8 buck
+regulators and 7 LDO’s to provide all the power rails required by the
+SoC and the commonly used peripherals.
 
-On 30.05.2018 09:45, kbuild test robot wrote:
-> Hi Maciej,
->
-> Thank you for the patch! Perhaps something to improve:
->
-> [auto build test WARNING on next-20180517]
-> [cannot apply to drm-exynos/exynos-drm/for-next robh/for-next drm/drm-next v4.17-rc6 v4.17-rc5 v4.17-rc4 v4.17-rc7]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Maciej-Purski/Add-TOSHIBA-TC358764-DSI-LVDS-bridge-driver/20180530-011258
-> reproduce:
->         # apt-get install sparse
->         make ARCH=x86_64 allmodconfig
->         make C=1 CF=-D__CHECK_ENDIAN__
->
->
-> sparse warnings: (new ones prefixed by >>)
->
->>> drivers/gpu/drm/bridge/tc358764.c:193:14: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [unsigned] [addressable] [usertype] addr @@    got ed] [addressable] [usertype] addr @@
->    drivers/gpu/drm/bridge/tc358764.c:193:14:    expected unsigned short [unsigned] [addressable] [usertype] addr
->    drivers/gpu/drm/bridge/tc358764.c:193:14:    got restricted __le16 [usertype] <noident>
->>> drivers/gpu/drm/bridge/tc358764.c:197:24: sparse: cast to restricted __le32
->>> drivers/gpu/drm/bridge/tc358764.c:175:5: sparse: symbol 'tc358764_read' was not declared. Should it be static?
->>> drivers/gpu/drm/bridge/tc358764.c:204:5: sparse: symbol 'tc358764_write' was not declared. Should it be static?
-> vim +193 drivers/gpu/drm/bridge/tc358764.c
->
->    174	
->  > 175	int tc358764_read(struct tc358764 *ctx, u16 addr, u32 *val)
+The driver aims to not limit the usage of PMIC. Thus the buck and LDO
+naming is generic and not tied to any specific purposes. However there
+is following limitations which make it mostly suitable for use cases
+where the processor where PMIC driver is running is powered by the PMIC:
 
-add static
+- The PMIC is not re-initialized if it resets. PMIC may reset as a
+  result of voltage monitoring (over/under voltage) or due to reset
+  request. Driver is only initializing PMIC at probe. This is not
+  problem as long as processor controlling PMIC is powered by PMIC.
 
->    176	{
->    177		struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
->    178		const struct mipi_dsi_host_ops *ops = dsi->host->ops;
->    179		struct mipi_dsi_msg msg = {
->    180			.type = MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM,
->    181			.channel = dsi->channel,
->    182			.flags = MIPI_DSI_MSG_USE_LPM,
->    183			.tx_buf = &addr,
->    184			.tx_len = 2,
->    185			.rx_buf = val,
->    186			.rx_len = 4
->    187		};
->    188		ssize_t ret;
->    189	
->    190		if (!ops || !ops->transfer)
->    191			return -EINVAL;
->    192	
->  > 193		addr = cpu_to_le16(addr);
+- The PMIC internal state machine is ignored by driver. Driver assumes
+  the PMIC is wired so that it is always in "run" state when controlled
+  by the driver.
 
-It should be changed to:
+Changelog v4
+- remove mutex from regulator state check as core prevents simultaneous
+  accesses
+- allow voltage change for bucks 1 to 4 when regulator is enabled
+- fix indentiation problems
+- properly correct SPDX comments
 
-cpu_to_le16s(&addr);
+Changelog v3
+- kill unused variable
+- kill unused definitions
+- use REGMAP_IRQ_REG
 
->    194	
->    195		ret = ops->transfer(dsi->host, &msg);
->    196		if (ret >= 0)
->  > 197			*val = le32_to_cpu(*val);
+Changelog v2
+Based on feedback from Mark Brown
+- Squashed code and buildfile changes to same patch
+- Fixed some styling issues
+- Changed SPDX comments to CPP style
+- Error out if voltage is changed when regulator is enabled instead of
+  Disabling the regulator for duration of change
+- Use devm_regulator_register
+- Remove compatible usage from regulators - use parent dev for config
+- Add a note about using regulator-boot-on for BUCK6 and 7
+- fixed warnings from kbuild test robot
 
-le32_to_cpus(val);
+patch 1: 
+        MFD driver and definitions bringing interrupt support and
+        enabling clk and regulator subsystems.
+Patches 2, 3 and 4:
+        device tree binding documents.
+Patch 5:
+        clock subsystem and support for gated clock.
+Patch 6:
+        regulator driver supporting 8 bucks and 7 LDOs.
 
->    198	
->    199		dev_dbg(ctx->dev, "read: %d, addr: %d\n", addr, *val);
->    200	
->    201		return ret;
->    202	}
->    203	
->  > 204	int tc358764_write(struct tc358764 *ctx, u16 addr, u32 val)
+This patch series is based on for-mfd-next
 
-add static
+---
 
+Matti Vaittinen (6):
+  mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+  mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  regulator: bd71837: Devicetree bindings for BD71837 regulators
+  clk: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  clk: bd71837: Add driver for BD71837 PMIC clock
+  regulator: bd71837: BD71837 PMIC regulator driver
 
-Regards
-Andrzej
+ .../bindings/clock/rohm,bd71837-clock.txt          |  37 ++
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  52 ++
+ .../bindings/regulator/rohm,bd71837-regulator.txt  | 126 ++++
+ drivers/clk/Kconfig                                |   9 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-bd71837.c                          | 151 +++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bd71837.c                              | 222 +++++++
+ drivers/regulator/Kconfig                          |  11 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/bd71837-regulator.c              | 640 +++++++++++++++++++++
+ include/linux/mfd/bd71837.h                        | 288 ++++++++++
+ 13 files changed, 1552 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ create mode 100644 drivers/clk/clk-bd71837.c
+ create mode 100644 drivers/mfd/bd71837.c
+ create mode 100644 drivers/regulator/bd71837-regulator.c
+ create mode 100644 include/linux/mfd/bd71837.h
 
->    205	{
->    206		struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
->    207		const struct mipi_dsi_host_ops *ops = dsi->host->ops;
->    208		u8 data[6];
->    209		int ret;
->    210		struct mipi_dsi_msg msg = {
->    211			.type = MIPI_DSI_GENERIC_LONG_WRITE,
->    212			.channel = dsi->channel,
->    213			.flags = MIPI_DSI_MSG_USE_LPM | MIPI_DSI_MSG_REQ_ACK,
->    214			.tx_buf = data,
->    215			.tx_len = 6
->    216		};
->    217	
->    218		if (!ops || !ops->transfer)
->    219			return -EINVAL;
->    220	
->    221		data[0] = addr;
->    222		data[1] = addr >> 8;
->    223		data[2] = val;
->    224		data[3] = val >> 8;
->    225		data[4] = val >> 16;
->    226		data[5] = val >> 24;
->    227	
->    228		ret = ops->transfer(dsi->host, &msg);
->    229	
->    230		return ret;
->    231	}
->    232	
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
->
->
->
+-- 
+2.14.3
