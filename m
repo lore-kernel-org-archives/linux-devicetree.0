@@ -1,54 +1,59 @@
-From: Andrea Greco <andrea.greco.gapmilano@gmail.com>
-Subject: Re: [PATCH 2/4] arcnet: com20020: bindings for smsc com20020
-Date: Wed, 30 May 2018 16:07:22 +0200
-Message-ID: <4f6cda28-478e-1af8-4a63-2165298cabcb@gmail.com>
-References: <20180517130628.2770-1-andrea.greco.gapmilano@gmail.com>
- <20180523164931.GA3635@rob-hp-laptop>
- <CAPoXtQJYmfk+-4qOpbEetUAdVwTgVPmk=mQaFv7yLF2V2dO=4A@mail.gmail.com>
- <CAL_JsqL1M3SuH_cJGUhh0+Xg+UYDjAc-=a+USENOKznvWib1Ng@mail.gmail.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH v2 3/6] clk: ti: dra7: Add clkctrl clock data for the mcan
+ clocks
+Date: Wed, 30 May 2018 19:41:30 +0530
+Message-ID: <20180530141133.3711-4-faiz_abbas@ti.com>
+References: <20180530141133.3711-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL1M3SuH_cJGUhh0+Xg+UYDjAc-=a+USENOKznvWib1Ng@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Tobin C. Harding" <tobin@apporbit.com>, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180530141133.3711-1-faiz_abbas@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: paul@pwsan.com, tony@atomide.com, faiz_abbas@ti.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/24/2018 04:36 PM, Rob Herring wrote> If you want to add it, that's 
-fine. But it's really not something that
-> comes up often. For UARTs, there's already the "current-speed"
-> property and most other things I can think of use Hz to express
-> speeds.
+Add clkctrl data for the m_can clocks and register it within the
+clkctrl driver
 
-No, Pref keep standard and use Hz.
+CC: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ drivers/clk/ti/clk-7xx.c         | 1 +
+ include/dt-bindings/clock/dra7.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-This if finally:
-```
-SMSC com20020 Arcnet network controller
-
-Required property:
-- timeout-ns: Arcnet bus timeout, Idle Time (328000 - 20500)
-- bus-speed-bps: Arcnet bus speed (10000000 - 156250)
-- smsc,xtal-mhz: External oscillator frequency
-- smsc,backplane-enabled: Controller use backplane mode
-- reset-gpios: Chip reset pin
-- interrupts: Should contain controller interrupt
-
-arcnet@28000000 {
-	compatible = "smsc,com20020";
-
-	timeout-ns = <20500>;
-	bus-speed-hz = <10000000>;
-	smsc,xtal-mhz = <20>;
-	smsc,backplane-enabled;
-
-	reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-	interrupts = <&gpio2 10 GPIO_ACTIVE_LOW>;
-};
-```
-If confirmed, for me is right
-
-Andrea
+diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
+index fb249a1637a5..71a122b2dc67 100644
+--- a/drivers/clk/ti/clk-7xx.c
++++ b/drivers/clk/ti/clk-7xx.c
+@@ -708,6 +708,7 @@ static const struct omap_clkctrl_reg_data dra7_wkupaon_clkctrl_regs[] __initcons
+ 	{ DRA7_COUNTER_32K_CLKCTRL, NULL, 0, "wkupaon_iclk_mux" },
+ 	{ DRA7_UART10_CLKCTRL, dra7_uart10_bit_data, CLKF_SW_SUP, "wkupaon_cm:clk:0060:24" },
+ 	{ DRA7_DCAN1_CLKCTRL, dra7_dcan1_bit_data, CLKF_SW_SUP, "wkupaon_cm:clk:0068:24" },
++	{ DRA7_ADC_CLKCTRL, NULL, CLKF_SW_SUP, "mcan_clk" },
+ 	{ 0 },
+ };
+ 
+diff --git a/include/dt-bindings/clock/dra7.h b/include/dt-bindings/clock/dra7.h
+index 5e1061b15aed..d7549c57cac3 100644
+--- a/include/dt-bindings/clock/dra7.h
++++ b/include/dt-bindings/clock/dra7.h
+@@ -168,5 +168,6 @@
+ #define DRA7_COUNTER_32K_CLKCTRL	DRA7_CLKCTRL_INDEX(0x50)
+ #define DRA7_UART10_CLKCTRL	DRA7_CLKCTRL_INDEX(0x80)
+ #define DRA7_DCAN1_CLKCTRL	DRA7_CLKCTRL_INDEX(0x88)
++#define DRA7_ADC_CLKCTRL	DRA7_CLKCTRL_INDEX(0xa0)
+ 
+ #endif
+-- 
+2.17.0
