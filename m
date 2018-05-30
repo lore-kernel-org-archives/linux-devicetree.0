@@ -1,90 +1,104 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v2 4/6] clk: tegra20: init NDFLASH clock to sensible rate
-Date: Wed, 30 May 2018 10:42:25 +0300
-Message-ID: <20180530074225.GC6708@tbergstrom-lnx.Nvidia.com>
-References: <20180527215442.14760-5-stefan@agner.ch>
- <20180528075510.GQ6835@tbergstrom-lnx.Nvidia.com>
- <5665b799f763daa82dced238fb494863@agner.ch>
- <20180529074804.GA6708@tbergstrom-lnx.Nvidia.com>
- <90180dd9fc6e60175c54b9d70e50f0e5@agner.ch>
- <04cdfdf5-33c5-b569-9cd7-dda1b9ea0baf@gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 08/12] drm/bridge: tc358764: Add DSI to LVDS bridge driver
+Date: Wed, 30 May 2018 15:45:42 +0800
+Message-ID: <201805301553.AcTypuC4%fengguang.wu@intel.com>
+References: <1527500833-16005-9-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <04cdfdf5-33c5-b569-9cd7-dda1b9ea0baf@gmail.com>
+In-Reply-To: <1527500833-16005-9-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>, boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: kbuild-all@01.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 03:19:47PM +0300, Dmitry Osipenko wrote:
-> On 29.05.2018 15:12, Stefan Agner wrote:
-> > On 29.05.2018 09:48, Peter De Schrijver wrote:
-> >> On Mon, May 28, 2018 at 05:53:08PM +0200, Stefan Agner wrote:
-> >>> On 28.05.2018 09:55, Peter De Schrijver wrote:
-> >>>> On Sun, May 27, 2018 at 11:54:40PM +0200, Stefan Agner wrote:
-> >>>>> From: Lucas Stach <dev@lynxeye.de>
-> >>>>>
-> >>>>> Set up the NAND Flash controller clock to run at 150MHz
-> >>>>> instead of the rate set by the bootloader. This is a
-> >>>>> conservative rate which also yields good performance.
-> >>>>>
-> >>>>> Signed-off-by: Lucas Stach <dev@lynxeye.de>
-> >>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> >>>>> ---
-> >>>>>  drivers/clk/tegra/clk-tegra20.c | 1 +
-> >>>>>  1 file changed, 1 insertion(+)
-> >>>>>
-> >>>>> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
-> >>>>> index 0ee56dd04cec..dff8c425cd28 100644
-> >>>>> --- a/drivers/clk/tegra/clk-tegra20.c
-> >>>>> +++ b/drivers/clk/tegra/clk-tegra20.c
-> >>>>> @@ -1049,6 +1049,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
-> >>>>>  	{ TEGRA20_CLK_GR2D, TEGRA20_CLK_PLL_C, 300000000, 0 },
-> >>>>>  	{ TEGRA20_CLK_GR3D, TEGRA20_CLK_PLL_C, 300000000, 0 },
-> >>>>>  	{ TEGRA20_CLK_VDE, TEGRA20_CLK_CLK_MAX, 300000000, 0 },
-> >>>>> +	{ TEGRA20_CLK_NDFLASH, TEGRA20_CLK_PLL_P, 150000000, 0 },
-> >>>>>  	/* must be the last entry */
-> >>>>>  	{ TEGRA20_CLK_CLK_MAX, TEGRA20_CLK_CLK_MAX, 0, 0 },
-> >>>>>  };
-> >>>>> --
-> >>>>> 2.17.0
-> >>>>>
-> >>>>
-> >>>> Maybe better to specify this in the Tegra20 dtsi? See
-> >>>> "Assigned clock parents and rates" in
-> >>>> Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>
-> >>> assigned-clocks indeed works just fine for this case. Thanks for
-> >>> bringing this up, will drop this patch and add the device tree
-> >>> properties in v3.
-> >>>
-> >>> Hm, interesting that none of the Tegra device tree make use of the
-> >>> feature so far. I guess there would be other cases where this would be
-> >>> useful as well (the one just above, VDE?).
-> >>>
-> >>
-> >> Yes, historically this feature wasn't available, so we used these init tables.
-> >> Unfortunately it's not easy to get rid of them for parent and rate
-> >> configuration, because new kernels should also work with existing DTBs, so we
-> >> can't just add assigned-clock properties and remove the existing table
-> >> entries. What we could do is use the CLK_IS_CRITICAL flag for all clocks which
-> >> are only enabled by the init table. For not yet merged blocks, this is
-> >> ofcourse not a concern.
-> > 
-> > Sure I understand.
-> > 
-> > Was just somewhat surprised that it isn't used at all yet (grep -r -e
-> > assigned-clock arch/arm/boot/dts/tegra* returns nothing). After all,
-> > assigned clocks bindings have been merged in 2014 :-)
-> > 
-> > At least "clk: tegra: Specify VDE clock rate" merged earlier this year
-> > would have been a candidate already.
-> 
-> I wasn't even aware of existence of the assigned-clock properties, probably just
-> like others.
+Hi Maciej,
 
-This feature seems to be little used indeed. Not sure why.
+Thank you for the patch! Perhaps something to improve:
 
-Peter.
+[auto build test WARNING on next-20180517]
+[cannot apply to drm-exynos/exynos-drm/for-next robh/for-next drm/drm-next v4.17-rc6 v4.17-rc5 v4.17-rc4 v4.17-rc7]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Maciej-Purski/Add-TOSHIBA-TC358764-DSI-LVDS-bridge-driver/20180530-011258
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/gpu/drm/bridge/tc358764.c:193:14: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [unsigned] [addressable] [usertype] addr @@    got ed] [addressable] [usertype] addr @@
+   drivers/gpu/drm/bridge/tc358764.c:193:14:    expected unsigned short [unsigned] [addressable] [usertype] addr
+   drivers/gpu/drm/bridge/tc358764.c:193:14:    got restricted __le16 [usertype] <noident>
+>> drivers/gpu/drm/bridge/tc358764.c:197:24: sparse: cast to restricted __le32
+>> drivers/gpu/drm/bridge/tc358764.c:175:5: sparse: symbol 'tc358764_read' was not declared. Should it be static?
+>> drivers/gpu/drm/bridge/tc358764.c:204:5: sparse: symbol 'tc358764_write' was not declared. Should it be static?
+
+vim +193 drivers/gpu/drm/bridge/tc358764.c
+
+   174	
+ > 175	int tc358764_read(struct tc358764 *ctx, u16 addr, u32 *val)
+   176	{
+   177		struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+   178		const struct mipi_dsi_host_ops *ops = dsi->host->ops;
+   179		struct mipi_dsi_msg msg = {
+   180			.type = MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM,
+   181			.channel = dsi->channel,
+   182			.flags = MIPI_DSI_MSG_USE_LPM,
+   183			.tx_buf = &addr,
+   184			.tx_len = 2,
+   185			.rx_buf = val,
+   186			.rx_len = 4
+   187		};
+   188		ssize_t ret;
+   189	
+   190		if (!ops || !ops->transfer)
+   191			return -EINVAL;
+   192	
+ > 193		addr = cpu_to_le16(addr);
+   194	
+   195		ret = ops->transfer(dsi->host, &msg);
+   196		if (ret >= 0)
+ > 197			*val = le32_to_cpu(*val);
+   198	
+   199		dev_dbg(ctx->dev, "read: %d, addr: %d\n", addr, *val);
+   200	
+   201		return ret;
+   202	}
+   203	
+ > 204	int tc358764_write(struct tc358764 *ctx, u16 addr, u32 val)
+   205	{
+   206		struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+   207		const struct mipi_dsi_host_ops *ops = dsi->host->ops;
+   208		u8 data[6];
+   209		int ret;
+   210		struct mipi_dsi_msg msg = {
+   211			.type = MIPI_DSI_GENERIC_LONG_WRITE,
+   212			.channel = dsi->channel,
+   213			.flags = MIPI_DSI_MSG_USE_LPM | MIPI_DSI_MSG_REQ_ACK,
+   214			.tx_buf = data,
+   215			.tx_len = 6
+   216		};
+   217	
+   218		if (!ops || !ops->transfer)
+   219			return -EINVAL;
+   220	
+   221		data[0] = addr;
+   222		data[1] = addr >> 8;
+   223		data[2] = val;
+   224		data[3] = val >> 8;
+   225		data[4] = val >> 16;
+   226		data[5] = val >> 24;
+   227	
+   228		ret = ops->transfer(dsi->host, &msg);
+   229	
+   230		return ret;
+   231	}
+   232	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
