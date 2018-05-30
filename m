@@ -1,69 +1,117 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Wed, 30 May 2018 16:48:49 +0100
-Message-ID: <20180530154849.GQ6920@sirena.org.uk>
-References: <20180523082908.GB4828@sirena.org.uk>
- <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
- <20180523154057.GL4828@sirena.org.uk>
- <CAD=FV=XWVOdJ8rWJnBTwoNqnYqYRYjknkZtUvT86+skbrTdwig@mail.gmail.com>
- <20180523155617.GN4828@sirena.org.uk>
- <CAD=FV=W4aDxWbcaJ9GZ1KkvyiTPAPR-oUoTFzJfS+LftU5ZP=Q@mail.gmail.com>
- <20180530093701.GD6920@sirena.org.uk>
- <CAD=FV=W-MLU9c-SvfLgKAKGP1eHN5xO-013f2M09XUa+QeHzrA@mail.gmail.com>
- <20180530150241.GO6920@sirena.org.uk>
- <CAD=FV=XJd-udEE6az0xP7i6x0oGsnd=BSCyZ0Og_+RjNCMXnCQ@mail.gmail.com>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v7 3/7] drivers/i2c: Add port structure to FSI algorithm
+Date: Wed, 30 May 2018 10:49:41 -0500
+Message-ID: <b0b5ef58-7c9c-791e-ba34-ea2cc903c64a@linux.vnet.ibm.com>
+References: <1527632665-25707-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1527632665-25707-4-git-send-email-eajames@linux.vnet.ibm.com>
+ <CAHp75Vd38BrJcULxoqj1mTKCEvMh9ZVYEvzCMAg2t9onZrSR6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vIXBmblrD40XNCy4"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XJd-udEE6az0xP7i6x0oGsnd=BSCyZ0Og_+RjNCMXnCQ@mail.gmail.com>
+In-Reply-To: <CAHp75Vd38BrJcULxoqj1mTKCEvMh9ZVYEvzCMAg2t9onZrSR6w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---vIXBmblrD40XNCy4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, May 30, 2018 at 08:34:50AM -0700, Doug Anderson wrote:
-> On Wed, May 30, 2018 at 8:02 AM, Mark Brown <broonie@kernel.org> wrote:
+On 05/29/2018 06:19 PM, Andy Shevchenko wrote:
+> On Wed, May 30, 2018 at 1:24 AM, Eddie James <eajames@linux.vnet.ibm.com> wrote:
+>> From: "Edward A. James" <eajames@us.ibm.com>
+>>
+>> Add and initialize I2C adapters for each port on the FSI-attached I2C
+>> master. Ports for each master are defined in the devicetree.
+>> +#include <linux/of.h>
+>
+>> +static int fsi_i2c_set_port(struct fsi_i2c_port *port)
+>> +{
+>> +       int rc;
+>> +       struct fsi_device *fsi = port->master->fsi;
+>> +       u32 mode, dummy = 0;
+>> +       u16 old_port;
+>> +
+>> +       rc = fsi_i2c_read_reg(fsi, I2C_FSI_MODE, &mode);
+>> +       if (rc)
+>> +               return rc;
+>> +
+>> +       old_port = GETFIELD(I2C_MODE_PORT, mode);
+>> +
+>> +       if (old_port != port->port) {
+> Why not simple
+>
+> if (port->port == GETFIELD())
+>    return 0;
+>
+> ?
+>
+>> +               /* reset engine when port is changed */
+>> +               rc = fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
+>> +               if (rc)
+>> +                       return rc;
+>> +       }
+>> +       return rc;
+> It's hardly would be non-zero, right?
 
-> > What you're describing sounds like what we should be doing normally, if
-> > we're not doing that we should probably be fixing the core.
+Sorry, misunderstood your comment here. You are correct, it can only be 
+zero.
 
-> I'm not convinced that this behavior makes sense to move to the core.
-> On most regulators I'd expect that when the regulator driver says to
-> turn them off that they will output no voltage.  The reason RPMh is
+Thanks,
+Eddie
 
-Oh, you mean while the regulator is off...  TBH I don't see a huge
-problem doing that anyway and just reverting to the bottom of the
-constraints when everything gets turned off since we have to see if we
-need to adjust the voltage every time we enabled anyway.
-
-> In any other system when Linux disabled the regulator it wouldn't
-> matter that you left it set at 1.4V.  Thus RPMh is special and IMO the
-> workaround belongs there.
-
-Without the core doing something the regulator isn't going to get told
-that anything updated voltages anyway...
-
---vIXBmblrD40XNCy4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOx+AACgkQJNaLcl1U
-h9DtYAf/d42wzL/BwC0ZoU87rcBj1tg5JnI3JXmEjk0TAEr8Mr9X26kTgvNDN4he
-sfj0TCQnt106iCytS9vuq13r0vc0N8a73zACI9rBL4AFN2r8/KqyjfG5iuD1IYUf
-eEAlJeBHT5jL8EJOiBgq2z+8n4jIPNnZdK/A8kanILTb2D0yU9LmqXJaLCquSBef
-d3otBG5MHDZNmBvemCG07/dvdvwHHmOZu/QAEsxkqP6cuqw+phTpVrIc2+40lHJk
-QfVj28IYFDxNf3viq4W606P0LE0BtP3pwjhFyKUj6CdLFzFli+EI7lXBuvp1q3UB
-eEWC9xQb5Fw2b4Hj5h+RS6hFhej0mw==
-=hSKi
------END PGP SIGNATURE-----
-
---vIXBmblrD40XNCy4--
+>
+>> +}
+>>   static int fsi_i2c_probe(struct device *dev)
+>>   {
+> Isn't below somehow repeats of_i2c_register_devices() ?
+> Why not to use it?
+>
+>> +       /* Add adapter for each i2c port of the master. */
+>> +       for_each_available_child_of_node(dev->of_node, np) {
+>> +               rc = of_property_read_u32(np, "reg", &port_no);
+>> +               if (rc || port_no > USHRT_MAX)
+>> +                       continue;
+>> +
+>> +               port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+>> +               if (!port)
+>> +                       break;
+>> +
+>> +               port->master = i2c;
+>> +               port->port = port_no;
+>> +
+>> +               port->adapter.owner = THIS_MODULE;
+>> +               port->adapter.dev.of_node = np;
+>> +               port->adapter.dev.parent = dev;
+>> +               port->adapter.algo = &fsi_i2c_algorithm;
+>> +               port->adapter.algo_data = port;
+>> +
+>> +               snprintf(port->adapter.name, sizeof(port->adapter.name),
+>> +                        "i2c_bus-%u", port_no);
+>> +
+>> +               rc = i2c_add_adapter(&port->adapter);
+>> +               if (rc < 0) {
+>> +                       dev_err(dev, "Failed to register adapter: %d\n", rc);
+>> +                       devm_kfree(dev, port);
+> This hurts my eyes. Why?!
+>
+>> +                       continue;
+>> +               }
+>> +
+>> +               list_add(&port->list, &i2c->ports);
+>> +       }
+>> +
+>>          dev_set_drvdata(dev, i2c);
+>>
+>>          return 0;
+>>   }
+>> +       if (!list_empty(&i2c->ports)) {
+> My gosh, this is done already in list_for_each*()
+>
+>> +               list_for_each_entry(port, &i2c->ports, list) {
+>> +                       i2c_del_adapter(&port->adapter);
+>> +               }
+>> +       }
+>
+>
