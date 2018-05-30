@@ -1,107 +1,330 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
-Date: Wed, 30 May 2018 12:13:31 +0200
-Message-ID: <d78bb8a8-a351-409c-54d2-33ee02fd8afe@gmail.com>
-References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
- <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
- <CAMuHMdXRnoyhNz=3v_=ZCV=FWX4TwKqx7MpH0g3c7GwtXKP1tg@mail.gmail.com>
- <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
- <CAMuHMdXnNABJSJZ6MLF+aQu8QKpFoMCAvno9Yc-9LOe810NtbA@mail.gmail.com>
- <7e1563c3-3e13-235b-3071-c3936502530f@gmail.com>
- <20180528084135.q5xng5eaypprsypr@verge.net.au>
- <CAMuHMdXYyN=XY6nb9RVEE+t0NeoSPhTh6fUk-9YWdFzAE1FfPA@mail.gmail.com>
- <20180528093602.eb36j34bbfzmpmw2@verge.net.au>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
+ model corners
+Date: Wed, 30 May 2018 15:44:53 +0530
+Message-ID: <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
+References: <20180525100121.28214-1-rnayak@codeaurora.org>
+ <20180525100121.28214-2-rnayak@codeaurora.org>
+ <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180528093602.eb36j34bbfzmpmw2@verge.net.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Richard Weinberger <richard@nod.at>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, collinsd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/28/2018 11:36 AM, Simon Horman wrote:
-> On Mon, May 28, 2018 at 10:54:57AM +0200, Geert Uytterhoeven wrote:
->> Hi Simon,
->>
->> On Mon, May 28, 2018 at 10:41 AM, Simon Horman <horms@verge.net.au> wrote:
->>> On Thu, May 24, 2018 at 04:52:59PM +0200, Marek Vasut wrote:
->>>> On 05/23/2018 08:25 AM, Geert Uytterhoeven wrote:
->>>>> On Wed, May 23, 2018 at 12:01 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
->>>>>> On 05/22/2018 04:43 PM, Geert Uytterhoeven wrote:
->>>>>>> On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
->>>>>>>> Drop the MTD partitioning from DT, since it does not describe HW
->>>>>>>> and to give way to a more flexible kernel command line partition
->>>>>>>> passing.
->>>>>>>>
->>>>>>>> To retain the original partitioning, assure you have enabled
->>>>>>>> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
->>>>>>>> following to your kernel command line:
->>>>>>>>
->>>>>>>>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
->>>>>>>
->>>>>>> I think the "@0" can be dropped, as it's optional?
->>>>>>> 4m?
->>>>>>
->>>>>> My take on this is that the loader is actually at offset 0x0 of the MTD
->>>>>> device and we explicitly state that in the mtdparts to anchor the first
->>>>>> partition within the MTD device and all the other partitions are at
->>>>>> offset +(sum of the sizes of all partitions listed before the current
->>>>>> one) relative to that first partition.
->>>>>
->>>>> Where is this explicitly states for the first partition?
->>>>>
->>>>>> Removing the @0 feels fragile at best and it seems to depend on the
->>>>>> current behavior of the code.
->>>>>
->>>>> Better, it also depends on the documented behavior:
->>>>>
->>>>> Documentation/admin-guide/kernel-parameters.txt refers to
->>>>> drivers/mtd/cmdlinepart.c, which states:
->>>>>
->>>>>  * <offset>  := standard linux memsize
->>>>>  *              if omitted the part will immediately follow the previous part
->>>>>  *              or 0 if the first part
->>>>>
->>>>> None of the examples listed there or under the MTD_CMDLINE_PARTS Kconfig
->>>>> help text, or in a defconfig bundled with the kernel, use @0 for the first
->>>>> partition.
->>>>
->>>> I think this is exceptionally fragile and dangerous to depend on this,
->>>> but so be it.
->>>
->>> Could you respin with this change?
->>>
->>> I would also like to ask for another change, in light of recent
->>> feedback from Olof Johansson ("Re: [GIT PULL] Renesas ARM64 Based SoC DT
->>> Updates for v4.18").
->>>
->>> Please consolidate the dts patches into a single patch?
->>
->> I think it's better to keep them split, as each commit description mentions
->> what needs to be passed on the kernel command line for the corresponding
->> board.
->>
->> Combining it in a single patch makes it much harder to extract this information.
->> Unless you're fine with a list:
->>
->>    koelsch: ...
->>    wheat: mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
-> 
-> Lets try a list.
 
-Reposted with a list, twice :/
+
+On 05/30/2018 02:47 PM, Ulf Hansson wrote:
+> On 25 May 2018 at 12:01, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>> The powerdomains for corners just pass the performance state set by the
+>> consumers to the RPM (Remote Power manager) which then takes care
+>> of setting the appropriate voltage on the corresponding rails to
+>> meet the performance needs.
+>>
+>> We add all powerdomain data needed on msm8996 here. This driver can easily
+>> be extended by adding data for other qualcomm SoCs as well.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> ---
+>>  .../devicetree/bindings/power/qcom,rpmpd.txt  |  55 ++++
+> 
+> Please split DT doc changes into separate patches, to simplify review.
+
+yes, i will split it when I resend the series.
+
+> 
+>>  drivers/soc/qcom/Kconfig                      |   9 +
+>>  drivers/soc/qcom/Makefile                     |   1 +
+>>  drivers/soc/qcom/rpmpd.c                      | 299 ++++++++++++++++++
+>>  4 files changed, 364 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>>  create mode 100644 drivers/soc/qcom/rpmpd.c
+>>
+> 
+> [...]
+> 
+>> +++ b/drivers/soc/qcom/rpmpd.c
+>> @@ -0,0 +1,299 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/export.h>
+>> +#include <linux/init.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/pm_domain.h>
+>> +#include <linux/mfd/qcom_rpm.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/soc/qcom/smd-rpm.h>
+>> +
+>> +#include <dt-bindings/mfd/qcom-rpm.h>
+>> +
+>> +#define domain_to_rpmpd(domain) container_of(domain, struct rpmpd, pd)
+>> +
+>> +/* Resource types */
+>> +#define RPMPD_SMPA 0x61706d73
+>> +#define RPMPD_LDOA 0x616f646c
+>> +
+>> +/* Operation Keys */
+>> +#define KEY_CORNER             0x6e726f63 /* corn */
+>> +#define KEY_ENABLE             0x6e657773 /* swen */
+>> +#define KEY_FLOOR_CORNER       0x636676   /* vfc */
+>> +
+>> +#define DEFINE_RPMPD_CORN_SMPA(_platform, _name, _active, r_id)                \
+>> +       static struct rpmpd _platform##_##_active;                      \
+>> +       static struct rpmpd _platform##_##_name = {                     \
+>> +               .pd = { .name = #_name, },                              \
+>> +               .peer = &_platform##_##_active,                         \
+>> +               .res_type = RPMPD_SMPA,                                 \
+>> +               .res_id = r_id,                                         \
+>> +               .key = KEY_CORNER,                                      \
+>> +       };                                                              \
+>> +       static struct rpmpd _platform##_##_active = {                   \
+>> +               .pd = { .name = #_active, },                            \
+>> +               .peer = &_platform##_##_name,                           \
+>> +               .active_only = true,                                    \
+>> +               .res_type = RPMPD_SMPA,                                 \
+>> +               .res_id = r_id,                                         \
+>> +               .key = KEY_CORNER,                                      \
+>> +       }
+>> +
+>> +#define DEFINE_RPMPD_CORN_LDOA(_platform, _name, r_id)                 \
+>> +       static struct rpmpd _platform##_##_name = {                     \
+>> +               .pd = { .name = #_name, },                              \
+>> +               .res_type = RPMPD_LDOA,                                 \
+>> +               .res_id = r_id,                                         \
+>> +               .key = KEY_CORNER,                                      \
+>> +       }
+>> +
+>> +#define DEFINE_RPMPD_VFC(_platform, _name, r_id, r_type)               \
+>> +       static struct rpmpd _platform##_##_name = {                     \
+>> +               .pd = { .name = #_name, },                              \
+>> +               .res_type = r_type,                                     \
+>> +               .res_id = r_id,                                         \
+>> +               .key = KEY_FLOOR_CORNER,                                \
+>> +       }
+>> +
+>> +#define DEFINE_RPMPD_VFC_SMPA(_platform, _name, r_id)                  \
+>> +       DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_SMPA)
+>> +
+>> +#define DEFINE_RPMPD_VFC_LDOA(_platform, _name, r_id)                  \
+>> +       DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_LDOA)
+>> +
+>> +struct rpmpd_req {
+>> +       __le32 key;
+>> +       __le32 nbytes;
+>> +       __le32 value;
+>> +};
+>> +
+>> +struct rpmpd {
+>> +       struct generic_pm_domain pd;
+>> +       struct rpmpd *peer;
+>> +       const bool active_only;
+>> +       unsigned long corner;
+>> +       bool enabled;
+>> +       const char *res_name;
+>> +       const int res_type;
+>> +       const int res_id;
+>> +       struct qcom_smd_rpm *rpm;
+>> +       __le32 key;
+>> +};
+>> +
+>> +struct rpmpd_desc {
+>> +       struct rpmpd **rpmpds;
+>> +       size_t num_pds;
+>> +};
+>> +
+>> +static DEFINE_MUTEX(rpmpd_lock);
+>> +
+>> +/* msm8996 RPM powerdomains */
+>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
+>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
+>> +DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
+>> +
+>> +DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
+>> +DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
+>> +
+>> +static struct rpmpd *msm8996_rpmpds[] = {
+>> +       [0] = &msm8996_vddcx,
+>> +       [1] = &msm8996_vddcx_ao,
+>> +       [2] = &msm8996_vddcx_vfc,
+>> +       [3] = &msm8996_vddmx,
+>> +       [4] = &msm8996_vddmx_ao,
+>> +       [5] = &msm8996_vddsscx,
+>> +       [6] = &msm8996_vddsscx_vfc,
+>> +};
+> 
+> It's not my call, but honestly the above all macros makes the code
+> less readable.
+
+This is all static data per SoC. The macros will keep the new additions
+needed for every new SoC to a minimal. Currently this supports only
+msm8996.
+
+> 
+> Anyway, I think you should convert to allocate these structs
+> dynamically from the heap (kzalloc/kcalloc), instead of statically as
+> above.
+> 
+>> +
+>> +static const struct rpmpd_desc msm8996_desc = {
+>> +       .rpmpds = msm8996_rpmpds,
+>> +       .num_pds = ARRAY_SIZE(msm8996_rpmpds),
+>> +};
+>> +
+>> +static const struct of_device_id rpmpd_match_table[] = {
+>> +       { .compatible = "qcom,msm8996-rpmpd", .data = &msm8996_desc },
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, rpmpd_match_table);
+> 
+> [...]
+> 
+>> +static int rpmpd_aggregate_corner(struct rpmpd *pd)
+>> +{
+> 
+> Isn't the aggregation of the performance states in genpd sufficient
+> for your case?
+> 
+> I guess this is SoC specific and needed anyways, but then could you
+> perhaps add a few comments about what goes on here?
+
+Yes, this is SoC specific aggregation for active and sleep votes.
+i will add comments to clarify this is different from the aggregation
+done at the framework level.
+
+> 
+>> +       int ret;
+>> +       struct rpmpd *peer = pd->peer;
+>> +       unsigned long active_corner, sleep_corner;
+>> +       unsigned long this_corner = 0, this_sleep_corner = 0;
+>> +       unsigned long peer_corner = 0, peer_sleep_corner = 0;
+>> +
+>> +       to_active_sleep(pd, pd->corner, &this_corner, &this_sleep_corner);
+>> +
+>> +       if (peer && peer->enabled)
+>> +               to_active_sleep(peer, peer->corner, &peer_corner,
+>> +                               &peer_sleep_corner);
+>> +
+>> +       active_corner = max(this_corner, peer_corner);
+>> +
+>> +       ret = rpmpd_send_corner(pd, QCOM_RPM_ACTIVE_STATE, active_corner);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       sleep_corner = max(this_sleep_corner, peer_sleep_corner);
+>> +
+>> +       return rpmpd_send_corner(pd, QCOM_RPM_SLEEP_STATE, sleep_corner);
+>> +}
+> 
+> [...]
+> 
+>> +static int rpmpd_probe(struct platform_device *pdev)
+>> +{
+>> +       int i;
+>> +       size_t num;
+>> +       struct genpd_onecell_data *data;
+>> +       struct qcom_smd_rpm *rpm;
+>> +       struct rpmpd **rpmpds;
+>> +       const struct rpmpd_desc *desc;
+>> +
+>> +       rpm = dev_get_drvdata(pdev->dev.parent);
+>> +       if (!rpm) {
+>> +               dev_err(&pdev->dev, "Unable to retrieve handle to RPM\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       desc = of_device_get_match_data(&pdev->dev);
+>> +       if (!desc)
+>> +               return -EINVAL;
+>> +
+>> +       rpmpds = desc->rpmpds;
+>> +       num = desc->num_pds;
+>> +
+>> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>> +       if (!data)
+>> +               return -ENOMEM;
+>> +
+>> +       data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
+>> +                                    GFP_KERNEL);
+>> +       data->num_domains = num;
+>> +
+>> +       for (i = 0; i < num; i++) {
+>> +               if (!rpmpds[i])
+>> +                       continue;
+>> +
+>> +               rpmpds[i]->rpm = rpm;
+>> +               rpmpds[i]->pd.power_off = rpmpd_power_off;
+>> +               rpmpds[i]->pd.power_on = rpmpd_power_on;
+>> +               pm_genpd_init(&rpmpds[i]->pd, NULL, true);
+> 
+> Question: Is there no hierarchical topology of the PM domains. No
+> genpd subdomains?
+
+The hierarchy if any is all handled by the remote core (RPM in this case).
+For Linux its just a flat view.
+
+> 
+>> +
+>> +               data->domains[i] = &rpmpds[i]->pd;
+>> +       }
+>> +
+>> +       return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+>> +}
+>> +
+>> +static int rpmpd_remove(struct platform_device *pdev)
+>> +{
+>> +       of_genpd_del_provider(pdev->dev.of_node);
+>> +       return 0;
+>> +}
+>> +
+>> +static struct platform_driver rpmpd_driver = {
+>> +       .driver = {
+>> +               .name = "qcom-rpmpd",
+>> +               .of_match_table = rpmpd_match_table,
+>> +       },
+>> +       .probe = rpmpd_probe,
+>> +       .remove = rpmpd_remove,
+>> +};
+>> +
+>> +static int __init rpmpd_init(void)
+>> +{
+>> +       return platform_driver_register(&rpmpd_driver);
+>> +}
+>> +core_initcall(rpmpd_init);
+>> +
+>> +static void __exit rpmpd_exit(void)
+>> +{
+>> +       platform_driver_unregister(&rpmpd_driver);
+>> +}
+>> +module_exit(rpmpd_exit);
+>> +
+>> +MODULE_DESCRIPTION("Qualcomm RPM Power Domain Driver");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_ALIAS("platform:qcom-rpmpd");
+>> --
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
+> 
+> Besides the minor things above, this looks good to me.
+
+thanks,
+Rajendra
+
 
 -- 
-Best regards,
-Marek Vasut
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
