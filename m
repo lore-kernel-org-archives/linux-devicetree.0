@@ -1,34 +1,45 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 0/5] crypto: ccree: cleanup, fixes and R-Car enabling
-Date: Thu, 31 May 2018 00:28:04 +0800
-Message-ID: <20180530162804.zp4n22nprqmigywz@gondor.apana.org.au>
-References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
+Date: Wed, 30 May 2018 09:31:55 -0700
+Message-ID: <CAD=FV=UpWEMSPUYOHmLQ0g_mF990kwn4_zm=ZCNttLKZiz7i=Q@mail.gmail.com>
+References: <20180523155617.GN4828@sirena.org.uk> <CAD=FV=W4aDxWbcaJ9GZ1KkvyiTPAPR-oUoTFzJfS+LftU5ZP=Q@mail.gmail.com>
+ <20180530093701.GD6920@sirena.org.uk> <CAD=FV=W-MLU9c-SvfLgKAKGP1eHN5xO-013f2M09XUa+QeHzrA@mail.gmail.com>
+ <20180530150241.GO6920@sirena.org.uk> <CAD=FV=XJd-udEE6az0xP7i6x0oGsnd=BSCyZ0Og_+RjNCMXnCQ@mail.gmail.com>
+ <20180530154849.GQ6920@sirena.org.uk> <CAD=FV=X2u=hMyWinSDtim-PmFwAy5mXcwg3HeYojAHcsUFhV3g@mail.gmail.com>
+ <20180530160744.GS6920@sirena.org.uk> <CAD=FV=WVGu0f+=q-C9kiEmaLEUJqGY+Jbns83h72uF-9iasrUw@mail.gmail.com>
+ <20180530161311.GT6920@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
+In-Reply-To: <20180530161311.GT6920@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 24, 2018 at 03:19:05PM +0100, Gilad Ben-Yossef wrote:
-> The patch set enables the use of CryptoCell found in some Renesas R-Car
-> Salvator-X boards and fixes some driver issues uncovered that prevented
-> to work properly.
-> 
-> Changes from v1:
-> - Properly fix the bug that caused us to read a bad signature register
->   rather than dropping the check
-> - Proper DT fields as indicated by Geert Uytterhoeven.
-> - Better clock enabling as suggested by Geert Uytterhoeven.
-> 
-> Note! the last two patches in the set depend on the
-> "clk: renesas: r8a7795: Add CR clock" patch from Geert Uytterhoeven.
+Hi,
 
-Patches 1-3 applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On Wed, May 30, 2018 at 9:13 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, May 30, 2018 at 09:09:02AM -0700, Doug Anderson wrote:
+>> On Wed, May 30, 2018 at 9:07 AM, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > It needs something to tell it what the new voltage to set is.
+>
+>> The regulator driver has its own cache of what voltage was most
+>> recently requested by Linux.  It can use that, can't it?
+>
+> If we're just going to use the most recently set voltage then hopefully
+> the hardware already knew that, and it might not be the lowest available
+> voltage if the last consumer to get turned off was holding the voltage
+> higher.
+
+To circle back to the original point: the problem is that (IMHO) the
+hardware is doing the wrong thing by still counting Linux's vote for a
+voltage even though Linux also voted that the regulator should be
+disabled.  So basically we're working around the hardware by
+pretending to vote for a dummy lower voltage whenever Linux wants the
+regulator disabled.  From Linux's point of view everything works as
+normal--we just tell the hardware a falsehood so it doesn't count our
+vote for a voltage while the regulator is disabled.
+
+-Doug
