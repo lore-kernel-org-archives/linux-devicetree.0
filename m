@@ -1,158 +1,40 @@
-Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00077.outbound.protection.outlook.com ([40.107.0.77]:13063
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753114AbeE1DJP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:09:15 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 01/15] dt-bindings: connector: add properties for typec
-Date: Mon, 28 May 2018 10:52:33 +0800
-Message-Id: <1527475967-15201-2-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=QqZd=IR=intel.com=fengguang.wu@kernel.org>
+Date: Wed, 30 May 2018 20:14:52 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 04/13] Bluetooth: btrtl: add support for retrieving the
+ UART settings
+Message-ID: <201805301938.m1Ny6tn6%fengguang.wu@intel.com>
+References: <20180527190457.2632-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180527190457.2632-5-hdegoede@redhat.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: kbuild-all@01.org, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh@kernel.org, Jeremy Cline <jeremy@jcline.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add bindings supported by current typec driver, so user can pass
-all those properties via dt.
+Hi Martin,
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on bluetooth/master]
+[also build test WARNING on v4.17-rc7 next-20180529]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Hans-de-Goede/Bluetooth-Add-RTL8723BS-support/20180530-141115
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git master
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/bluetooth/btrtl.c:594:14: sparse: symbol 'btrtl_convert_baudrate' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
 ---
- .../bindings/connector/usb-connector.txt           | 44 +++++++++++++++
- include/dt-bindings/usb/pd.h                       | 62 ++++++++++++++++++++++
- 2 files changed, 106 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-index e1463f1..8855bfc 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-@@ -15,6 +15,33 @@ Optional properties:
- - type: size of the connector, should be specified in case of USB-A, USB-B
-   non-fullsize connectors: "mini", "micro".
- 
-+Optional properties for usb-c-connector:
-+- power-role: should be one of "source", "sink" or "dual"(DRP) if typec
-+  connector has power support.
-+- try-power-role: preferred power role if "dual"(DRP) can support Try.SNK
-+  or Try.SRC, should be "sink" for Try.SNK or "source" for Try.SRC.
-+- data-role: should be one of "host", "device", "dual"(DRD) if typec
-+  connector supports USB data.
-+
-+Required properties for usb-c-connector with power delivery support:
-+- source-pdos: An array of u32 with each entry providing supported power
-+  source data object(PDO), the detailed bit definitions of PDO can be found
-+  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
-+  Source_Capabilities Message, the order of each entry(PDO) should follow
-+  the PD spec chapter 6.4.1. Required for power source and power dual role.
-+  User can specify the source PDO array via PDO_FIXED/BATT/VAR() defined in
-+  dt-bindings/usb/pd.h.
-+- sink-pdos: An array of u32 with each entry providing supported power
-+  sink data object(PDO), the detailed bit definitions of PDO can be found
-+  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
-+  Sink Capabilities Message, the order of each entry(PDO) should follow
-+  the PD spec chapter 6.4.1. Required for power sink and power dual role.
-+  User can specify the sink PDO array via PDO_FIXED/BATT/VAR() defined in
-+  dt-bindings/usb/pd.h.
-+- op-sink-microwatt: Sink required operating power in microwatt, if source
-+  can't offer the power, Capability Mismatch is set. Required for power
-+  sink and power dual role.
-+
- Required nodes:
- - any data bus to the connector should be modeled using the OF graph bindings
-   specified in bindings/graph.txt, unless the bus is between parent node and
-@@ -73,3 +100,20 @@ ccic: s2mm005@33 {
- 		};
- 	};
- };
-+
-+3. USB-C connector attached to a typec port controller(ptn5110), which has
-+power delivery support and enables drp.
-+
-+typec: ptn5110@50 {
-+	...
-+	usb_con: connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		power-role = "dual";
-+		try-power-role = "sink";
-+		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-+		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
-+			     PDO_VAR(5000, 12000, 2000)>;
-+		op-sink-microwatt = <10000000>;
-+	};
-+};
-diff --git a/include/dt-bindings/usb/pd.h b/include/dt-bindings/usb/pd.h
-new file mode 100644
-index 0000000..7b7a92f
---- /dev/null
-+++ b/include/dt-bindings/usb/pd.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __DT_POWER_DELIVERY_H
-+#define __DT_POWER_DELIVERY_H
-+
-+/* Power delivery Power Data Object definitions */
-+#define PDO_TYPE_FIXED		0
-+#define PDO_TYPE_BATT		1
-+#define PDO_TYPE_VAR		2
-+#define PDO_TYPE_APDO		3
-+
-+#define PDO_TYPE_SHIFT		30
-+#define PDO_TYPE_MASK		0x3
-+
-+#define PDO_TYPE(t)	((t) << PDO_TYPE_SHIFT)
-+
-+#define PDO_VOLT_MASK		0x3ff
-+#define PDO_CURR_MASK		0x3ff
-+#define PDO_PWR_MASK		0x3ff
-+
-+#define PDO_FIXED_DUAL_ROLE	(1 << 29) /* Power role swap supported */
-+#define PDO_FIXED_SUSPEND	(1 << 28) /* USB Suspend supported (Source) */
-+#define PDO_FIXED_HIGHER_CAP	(1 << 28) /* Requires more than vSafe5V (Sink) */
-+#define PDO_FIXED_EXTPOWER	(1 << 27) /* Externally powered */
-+#define PDO_FIXED_USB_COMM	(1 << 26) /* USB communications capable */
-+#define PDO_FIXED_DATA_SWAP	(1 << 25) /* Data role swap supported */
-+#define PDO_FIXED_VOLT_SHIFT	10	/* 50mV units */
-+#define PDO_FIXED_CURR_SHIFT	0	/* 10mA units */
-+
-+#define PDO_FIXED_VOLT(mv)	((((mv) / 50) & PDO_VOLT_MASK) << PDO_FIXED_VOLT_SHIFT)
-+#define PDO_FIXED_CURR(ma)	((((ma) / 10) & PDO_CURR_MASK) << PDO_FIXED_CURR_SHIFT)
-+
-+#define PDO_FIXED(mv, ma, flags)			\
-+	(PDO_TYPE(PDO_TYPE_FIXED) | (flags) |		\
-+	 PDO_FIXED_VOLT(mv) | PDO_FIXED_CURR(ma))
-+
-+#define VSAFE5V 5000 /* mv units */
-+
-+#define PDO_BATT_MAX_VOLT_SHIFT	20	/* 50mV units */
-+#define PDO_BATT_MIN_VOLT_SHIFT	10	/* 50mV units */
-+#define PDO_BATT_MAX_PWR_SHIFT	0	/* 250mW units */
-+
-+#define PDO_BATT_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MIN_VOLT_SHIFT)
-+#define PDO_BATT_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MAX_VOLT_SHIFT)
-+#define PDO_BATT_MAX_POWER(mw) ((((mw) / 250) & PDO_PWR_MASK) << PDO_BATT_MAX_PWR_SHIFT)
-+
-+#define PDO_BATT(min_mv, max_mv, max_mw)			\
-+	(PDO_TYPE(PDO_TYPE_BATT) | PDO_BATT_MIN_VOLT(min_mv) |	\
-+	 PDO_BATT_MAX_VOLT(max_mv) | PDO_BATT_MAX_POWER(max_mw))
-+
-+#define PDO_VAR_MAX_VOLT_SHIFT	20	/* 50mV units */
-+#define PDO_VAR_MIN_VOLT_SHIFT	10	/* 50mV units */
-+#define PDO_VAR_MAX_CURR_SHIFT	0	/* 10mA units */
-+
-+#define PDO_VAR_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MIN_VOLT_SHIFT)
-+#define PDO_VAR_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MAX_VOLT_SHIFT)
-+#define PDO_VAR_MAX_CURR(ma) ((((ma) / 10) & PDO_CURR_MASK) << PDO_VAR_MAX_CURR_SHIFT)
-+
-+#define PDO_VAR(min_mv, max_mv, max_ma)				\
-+	(PDO_TYPE(PDO_TYPE_VAR) | PDO_VAR_MIN_VOLT(min_mv) |	\
-+	 PDO_VAR_MAX_VOLT(max_mv) | PDO_VAR_MAX_CURR(max_ma))
-+
-+ #endif /* __DT_POWER_DELIVERY_H */
--- 
-2.7.4
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
