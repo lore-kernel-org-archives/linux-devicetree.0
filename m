@@ -1,21 +1,33 @@
-MIME-Version: 1.0
-In-Reply-To: <20180527190457.2632-10-hdegoede@redhat.com>
-References: <20180527190457.2632-1-hdegoede@redhat.com>
-	<20180527190457.2632-10-hdegoede@redhat.com>
-Date: Wed, 30 May 2018 08:25:44 -0500
-Message-ID: <CAL_JsqKBc4_bsaqNd3t5=LPBYgv32Jw3pzUq-=25V7JBbRhF7A@mail.gmail.com>
+Return-Path: <SRS0=B+w2=IR=holtmann.org=marcel@kernel.org>
+Content-Type: text/plain;
+	charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
 Subject: Re: [PATCH 09/13] Bluetooth: hci_serdev: Fix HCI_UART_INIT_PENDING
  not working
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20180527190457.2632-10-hdegoede@redhat.com>
+Date: Wed, 30 May 2018 08:49:58 +0200
+Content-Transfer-Encoding: 7bit
+Message-Id: <9656BBC5-4E1B-448F-AD4E-586489F92A7E@holtmann.org>
+References: <20180527190457.2632-1-hdegoede@redhat.com>
+ <20180527190457.2632-10-hdegoede@redhat.com>
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jeremy Cline <jeremy@jcline.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh@kernel.org, Jeremy Cline <jeremy@jcline.org>, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, May 27, 2018 at 2:04 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+Hi Hans,
+
 > Init hci_uart->init_ready so that hci_uart_init_ready() works properly.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> drivers/bluetooth/hci_ldisc.c  | 2 +-
+> drivers/bluetooth/hci_serdev.c | 1 +
+> drivers/bluetooth/hci_uart.h   | 1 +
+> 3 files changed, 3 insertions(+), 1 deletion(-)
 
-Why do you need to init in a wq? For serdev devices, probe is async
-already. So my thought was this wouldn't be needed.
+this patch has been cherry-picked and applied to bluetooth-next tree.
 
-Rob
+Regards
+
+Marcel
