@@ -1,492 +1,133 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 7/8] gnss: add driver for sirfstar-based receivers
-Date: Wed, 30 May 2018 12:32:41 +0200
-Message-ID: <20180530103242.20773-8-johan@kernel.org>
-References: <20180530103242.20773-1-johan@kernel.org>
+Subject: [PATCH v2 0/8] gnss: add new GNSS subsystem
+Date: Wed, 30 May 2018 12:32:34 +0200
+Message-ID: <20180530103242.20773-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530103242.20773-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add driver for serial-connected SiRFstar-based GNSS receivers.
+This series adds a new subsystem for GNSS receivers (e.g. GPS
+receivers).
 
-These devices typically boot into hibernate mode from which they can be
-woken using a pulse on the ON_OFF input pin. Once active, a pulse on the
-same ON_OFF pin is used to put the device back into hibernate mode. The
-current state can be determined by sampling the WAKEUP output.
+While GNSS receivers are typically accessed using a UART interface they
+often also support other I/O interfaces such as I2C, SPI and USB, while
+yet other devices use iomem or even some form of remote-processor
+messaging (rpmsg).
 
-Hardware configurations where WAKEUP has been connected to ON_OFF (and
-where an initial WAKEUP pulse during boot is sufficient to have the
-device boot into active mode) are also supported. In this case, device
-power is managed using the main-supply regulator only.
+The new GNSS subsystem abstracts the underlying interface and provides a
+new "gnss" class type, which exposes a character-device interface (e.g.
+/dev/gnss0) to user space. This allows GNSS receivers to have a
+representation in the Linux device model, something which is important
+not least for power management purposes and which also allows for easy
+detection and identification of GNSS devices.
 
-Note that configurations where WAKEUP is left not connected, so that the
-device power state can only indirectly be determined using the I/O
-interface, is currently not supported. It should be fairly
-straight-forward to extend the current implementation with such support
-however (and this this is the main reason for not using the generic
-serial implementation for this driver).
+Note that the character-device interface provides raw access to whatever
+protocol the receiver is (currently) using, such as NMEA 0183, UBX or
+SiRF Binary. These protocols are expected to be continued to be handled
+by user space for the time being, even if some hybrid solutions are also
+conceivable (e.g. to have kernel drivers issue management commands).
 
-Note that timepulse-support is left unimplemented.
+This will still allow for better platform integration by allowing GNSS
+devices and their resources (e.g. regulators and enable-gpios) to be
+described by firmware and managed by kernel drivers rather than
+platform-specific scripts and services.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/gnss/Kconfig  |  12 ++
- drivers/gnss/Makefile |   3 +
- drivers/gnss/sirf.c   | 407 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 422 insertions(+)
+While the current interface is kept minimal, it could be extended using
+IOCTLs, sysfs or uevents as needs and proper abstraction levels are
+identified and determined (e.g. for device and feature identification).
+
+Another possible extension is to add generic 1PPS support.
+
+I decided to go with a custom character-device interface rather than
+pretend that these abstract GNSS devices are still TTY devices (e.g.
+/dev/ttyGNSS0). Obviously, modifying line settings or reading modem
+control signals does not make any sense for a device using, say, a
+USB (not USB-serial) or iomem interface. This also means, however, that
+user space would no longer be able to set the line speed to match a new
+port configuration that can be set using the various GNSS protocols when
+the underlying interface is indeed a UART; instead this would need to be
+taken care of by the driver.
+
+Also note that writes are always synchronous instead of requiring user
+space to call tcdrain() after every command.
+
+This all seems to work well-enough (e.g. with gpsd), but please let me
+know if I've overlooked something which would indeed require a TTY
+interface instead.
+
+I have implemented drivers for receivers based on two common GNSS
+chipsets; SiRFstar and u-blox. Due to lack of hardware, the sirf driver
+has been tested using a mockup device and a USB-serial-based SiRFstar IV
+GPS (using out-of-tree USB-serial code). [ Let me know if you've got any
+evaluation kits to spare. ] The ubx driver has been tested using a
+u-blox 8 GNSS evaluation kit (thanks u-blox!).
+
+Finally, note that documentation (including kerneldoc) remains to be
+written, but hopefully this will not hinder review given that the
+current interfaces are fairly self-describing.
+
+Johan
+
+
+Changes in v2
+ - add device type support (new patch 8/8)
+ - fix one unprotected access to ops->write_raw
+ - add support for optional v_bckp supply to ubx driver
+ - drop unnecessary dev_dbgs (Greg)
+ - simplify open() error path (Greg)
+ - indent function parameters further
+ - use gserial->drvdata to access variable length data
+ - dt-bindings
+   - document required reg property for I2C, SPI and USB bindings (Rob)
+   - use "pin name:" prefix when referring to datasheet names (Rob)
+   - add vendor prefix to sirf gpios (Rob)
+   - add optional u-blox v-bckp supply (Rob)
+   - add optional u-blox extint gpio
+   - minor clean ups
+   - add Rob's Reviewed-by tag to patches (2/8 and 6/8)
+
+
+Johan Hovold (8):
+  gnss: add GNSS receiver subsystem
+  dt-bindings: add generic gnss binding
+  gnss: add generic serial driver
+  dt-bindings: gnss: add u-blox binding
+  gnss: add driver for u-blox receivers
+  dt-bindings: gnss: add sirfstar binding
+  gnss: add driver for sirfstar-based receivers
+  gnss: add device type support
+
+ Documentation/ABI/testing/sysfs-class-gnss    |  15 +
+ .../devicetree/bindings/gnss/gnss.txt         |  36 ++
+ .../devicetree/bindings/gnss/sirfstar.txt     |  45 ++
+ .../devicetree/bindings/gnss/u-blox.txt       |  44 ++
+ .../devicetree/bindings/vendor-prefixes.txt   |   4 +
+ MAINTAINERS                                   |   8 +
+ drivers/Kconfig                               |   2 +
+ drivers/Makefile                              |   1 +
+ drivers/gnss/Kconfig                          |  43 ++
+ drivers/gnss/Makefile                         |  16 +
+ drivers/gnss/core.c                           | 420 ++++++++++++++++++
+ drivers/gnss/serial.c                         | 275 ++++++++++++
+ drivers/gnss/serial.h                         |  47 ++
+ drivers/gnss/sirf.c                           | 408 +++++++++++++++++
+ drivers/gnss/ubx.c                            | 153 +++++++
+ include/linux/gnss.h                          |  75 ++++
+ 16 files changed, 1592 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-gnss
+ create mode 100644 Documentation/devicetree/bindings/gnss/gnss.txt
+ create mode 100644 Documentation/devicetree/bindings/gnss/sirfstar.txt
+ create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
+ create mode 100644 drivers/gnss/Kconfig
+ create mode 100644 drivers/gnss/Makefile
+ create mode 100644 drivers/gnss/core.c
+ create mode 100644 drivers/gnss/serial.c
+ create mode 100644 drivers/gnss/serial.h
  create mode 100644 drivers/gnss/sirf.c
+ create mode 100644 drivers/gnss/ubx.c
+ create mode 100644 include/linux/gnss.h
 
-diff --git a/drivers/gnss/Kconfig b/drivers/gnss/Kconfig
-index 784b8c0367d9..6abc88514512 100644
---- a/drivers/gnss/Kconfig
-+++ b/drivers/gnss/Kconfig
-@@ -15,6 +15,18 @@ if GNSS
- config GNSS_SERIAL
- 	tristate
- 
-+config GNSS_SIRF_SERIAL
-+	tristate "SiRFstar GNSS receiver support"
-+	depends on SERIAL_DEV_BUS
-+	---help---
-+	  Say Y here if you have a SiRFstar-based GNSS receiver which uses a
-+	  serial interface.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gnss-sirf.
-+
-+	  If unsure, say N.
-+
- config GNSS_UBX_SERIAL
- 	tristate "u-blox GNSS receiver support"
- 	depends on SERIAL_DEV_BUS
-diff --git a/drivers/gnss/Makefile b/drivers/gnss/Makefile
-index d9295b20b7bc..5cf0ebe0330a 100644
---- a/drivers/gnss/Makefile
-+++ b/drivers/gnss/Makefile
-@@ -9,5 +9,8 @@ gnss-y := core.o
- obj-$(CONFIG_GNSS_SERIAL)		+= gnss-serial.o
- gnss-serial-y := serial.o
- 
-+obj-$(CONFIG_GNSS_SIRF_SERIAL)		+= gnss-sirf.o
-+gnss-sirf-y := sirf.o
-+
- obj-$(CONFIG_GNSS_UBX_SERIAL)		+= gnss-ubx.o
- gnss-ubx-y := ubx.o
-diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
-new file mode 100644
-index 000000000000..5fb0f730db48
---- /dev/null
-+++ b/drivers/gnss/sirf.c
-@@ -0,0 +1,407 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SiRFstar GNSS receiver driver
-+ *
-+ * Copyright (C) 2018 Johan Hovold <johan@kernel.org>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/gnss.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/serdev.h>
-+#include <linux/slab.h>
-+#include <linux/wait.h>
-+
-+#define SIRF_BOOT_DELAY			500
-+#define SIRF_ON_OFF_PULSE_TIME		100
-+#define SIRF_ACTIVATE_TIMEOUT		200
-+#define SIRF_HIBERNATE_TIMEOUT		200
-+
-+struct sirf_data {
-+	struct gnss_device *gdev;
-+	struct serdev_device *serdev;
-+	speed_t	speed;
-+	struct regulator *vcc;
-+	struct gpio_desc *on_off;
-+	struct gpio_desc *wakeup;
-+	int irq;
-+	bool active;
-+	wait_queue_head_t power_wait;
-+};
-+
-+static int sirf_open(struct gnss_device *gdev)
-+{
-+	struct sirf_data *data = gnss_get_drvdata(gdev);
-+	struct serdev_device *serdev = data->serdev;
-+	int ret;
-+
-+	ret = serdev_device_open(serdev);
-+	if (ret)
-+		return ret;
-+
-+	serdev_device_set_baudrate(serdev, data->speed);
-+	serdev_device_set_flow_control(serdev, false);
-+
-+	ret = pm_runtime_get_sync(&serdev->dev);
-+	if (ret < 0) {
-+		dev_err(&gdev->dev, "failed to runtime resume: %d\n", ret);
-+		pm_runtime_put_noidle(&serdev->dev);
-+		goto err_close;
-+	}
-+
-+	return 0;
-+
-+err_close:
-+	serdev_device_close(serdev);
-+
-+	return ret;
-+}
-+
-+static void sirf_close(struct gnss_device *gdev)
-+{
-+	struct sirf_data *data = gnss_get_drvdata(gdev);
-+	struct serdev_device *serdev = data->serdev;
-+
-+	serdev_device_close(serdev);
-+
-+	pm_runtime_put(&serdev->dev);
-+}
-+
-+static int sirf_write_raw(struct gnss_device *gdev, const unsigned char *buf,
-+				size_t count)
-+{
-+	struct sirf_data *data = gnss_get_drvdata(gdev);
-+	struct serdev_device *serdev = data->serdev;
-+	int ret;
-+
-+	/* write is only buffered synchronously */
-+	ret = serdev_device_write(serdev, buf, count, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* FIXME: determine if interrupted? */
-+	serdev_device_wait_until_sent(serdev, 0);
-+
-+	return count;
-+}
-+
-+static const struct gnss_operations sirf_gnss_ops = {
-+	.open		= sirf_open,
-+	.close		= sirf_close,
-+	.write_raw	= sirf_write_raw,
-+};
-+
-+static int sirf_receive_buf(struct serdev_device *serdev,
-+				const unsigned char *buf, size_t count)
-+{
-+	struct sirf_data *data = serdev_device_get_drvdata(serdev);
-+	struct gnss_device *gdev = data->gdev;
-+
-+	return gnss_insert_raw(gdev, buf, count);
-+}
-+
-+static const struct serdev_device_ops sirf_serdev_ops = {
-+	.receive_buf	= sirf_receive_buf,
-+	.write_wakeup	= serdev_device_write_wakeup,
-+};
-+
-+static irqreturn_t sirf_wakeup_handler(int irq, void *dev_id)
-+{
-+	struct sirf_data *data = dev_id;
-+	struct device *dev = &data->serdev->dev;
-+	int ret;
-+
-+	ret = gpiod_get_value_cansleep(data->wakeup);
-+	dev_dbg(dev, "%s - wakeup = %d\n", __func__, ret);
-+	if (ret < 0)
-+		goto out;
-+
-+	data->active = !!ret;
-+	wake_up_interruptible(&data->power_wait);
-+out:
-+	return IRQ_HANDLED;
-+}
-+
-+static int sirf_wait_for_power_state(struct sirf_data *data, bool active,
-+					unsigned long timeout)
-+{
-+	int ret;
-+
-+	ret = wait_event_interruptible_timeout(data->power_wait,
-+			data->active == active, msecs_to_jiffies(timeout));
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret == 0) {
-+		dev_warn(&data->serdev->dev, "timeout waiting for active state = %d\n",
-+				active);
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sirf_pulse_on_off(struct sirf_data *data)
-+{
-+	gpiod_set_value_cansleep(data->on_off, 1);
-+	msleep(SIRF_ON_OFF_PULSE_TIME);
-+	gpiod_set_value_cansleep(data->on_off, 0);
-+}
-+
-+static int sirf_set_active(struct sirf_data *data, bool active)
-+{
-+	unsigned long timeout;
-+	int retries = 3;
-+	int ret;
-+
-+	if (active)
-+		timeout = SIRF_ACTIVATE_TIMEOUT;
-+	else
-+		timeout = SIRF_HIBERNATE_TIMEOUT;
-+
-+	while (retries-- > 0) {
-+		sirf_pulse_on_off(data);
-+		ret = sirf_wait_for_power_state(data, active, timeout);
-+		if (ret < 0) {
-+			if (ret == -ETIMEDOUT)
-+				continue;
-+
-+			return ret;
-+		}
-+
-+		break;
-+	}
-+
-+	if (retries == 0)
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
-+static int sirf_runtime_suspend(struct device *dev)
-+{
-+	struct sirf_data *data = dev_get_drvdata(dev);
-+
-+	if (!data->on_off)
-+		return regulator_disable(data->vcc);
-+
-+	return sirf_set_active(data, false);
-+}
-+
-+static int sirf_runtime_resume(struct device *dev)
-+{
-+	struct sirf_data *data = dev_get_drvdata(dev);
-+
-+	if (!data->on_off)
-+		return regulator_enable(data->vcc);
-+
-+	return sirf_set_active(data, true);
-+}
-+
-+static int __maybe_unused sirf_suspend(struct device *dev)
-+{
-+	struct sirf_data *data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (!pm_runtime_suspended(dev))
-+		ret = sirf_runtime_suspend(dev);
-+
-+	if (data->wakeup)
-+		disable_irq(data->irq);
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused sirf_resume(struct device *dev)
-+{
-+	struct sirf_data *data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (data->wakeup)
-+		enable_irq(data->irq);
-+
-+	if (!pm_runtime_suspended(dev))
-+		ret = sirf_runtime_resume(dev);
-+
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops sirf_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(sirf_suspend, sirf_resume)
-+	SET_RUNTIME_PM_OPS(sirf_runtime_suspend, sirf_runtime_resume, NULL)
-+};
-+
-+static int sirf_parse_dt(struct serdev_device *serdev)
-+{
-+	struct sirf_data *data = serdev_device_get_drvdata(serdev);
-+	struct device_node *node = serdev->dev.of_node;
-+	u32 speed = 9600;
-+
-+	of_property_read_u32(node, "current-speed", &speed);
-+
-+	data->speed = speed;
-+
-+	return 0;
-+}
-+
-+static int sirf_probe(struct serdev_device *serdev)
-+{
-+	struct device *dev = &serdev->dev;
-+	struct gnss_device *gdev;
-+	struct sirf_data *data;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	gdev = gnss_allocate_device(dev);
-+	if (!gdev)
-+		return -ENOMEM;
-+
-+	gdev->ops = &sirf_gnss_ops;
-+	gnss_set_drvdata(gdev, data);
-+
-+	data->serdev = serdev;
-+	data->gdev = gdev;
-+
-+	init_waitqueue_head(&data->power_wait);
-+
-+	serdev_device_set_drvdata(serdev, data);
-+	serdev_device_set_client_ops(serdev, &sirf_serdev_ops);
-+
-+	ret = sirf_parse_dt(serdev);
-+	if (ret)
-+		goto err_put_device;
-+
-+	data->vcc = devm_regulator_get(dev, "vcc");
-+	if (IS_ERR(data->vcc)) {
-+		ret = PTR_ERR(data->vcc);
-+		goto err_put_device;
-+	}
-+
-+	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
-+			GPIOD_OUT_LOW);
-+	if (IS_ERR(data->on_off))
-+		goto err_put_device;
-+
-+	if (data->on_off) {
-+		data->wakeup = devm_gpiod_get_optional(dev, "sirf,wakeup",
-+				GPIOD_IN);
-+		if (IS_ERR(data->wakeup))
-+			goto err_put_device;
-+
-+		/*
-+		 * Configurations where WAKEUP has been left not connected,
-+		 * are currently not supported.
-+		 */
-+		if (!data->wakeup) {
-+			dev_err(dev, "no wakeup gpio specified\n");
-+			ret = -ENODEV;
-+			goto err_put_device;
-+		}
-+	}
-+
-+	if (data->wakeup) {
-+		ret = gpiod_to_irq(data->wakeup);
-+		if (ret < 0)
-+			goto err_put_device;
-+
-+		data->irq = ret;
-+
-+		ret = devm_request_threaded_irq(dev, data->irq, NULL,
-+				sirf_wakeup_handler,
-+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+				"wakeup", data);
-+		if (ret)
-+			goto err_put_device;
-+	}
-+
-+	if (data->on_off) {
-+		ret = regulator_enable(data->vcc);
-+		if (ret)
-+			goto err_put_device;
-+
-+		/* Wait for chip to boot into hibernate mode */
-+		msleep(SIRF_BOOT_DELAY);
-+	}
-+
-+	if (IS_ENABLED(CONFIG_PM)) {
-+		pm_runtime_set_suspended(dev);	/* clear runtime_error flag */
-+		pm_runtime_enable(dev);
-+	} else {
-+		ret = sirf_runtime_resume(dev);
-+		if (ret < 0)
-+			goto err_disable_vcc;
-+	}
-+
-+	ret = gnss_register_device(gdev);
-+	if (ret)
-+		goto err_disable_rpm;
-+
-+	return 0;
-+
-+err_disable_rpm:
-+	if (IS_ENABLED(CONFIG_PM))
-+		pm_runtime_disable(dev);
-+	else
-+		sirf_runtime_suspend(dev);
-+err_disable_vcc:
-+	if (data->on_off)
-+		regulator_disable(data->vcc);
-+err_put_device:
-+	gnss_put_device(data->gdev);
-+
-+	return ret;
-+}
-+
-+static void sirf_remove(struct serdev_device *serdev)
-+{
-+	struct sirf_data *data = serdev_device_get_drvdata(serdev);
-+
-+	gnss_deregister_device(data->gdev);
-+
-+	if (IS_ENABLED(CONFIG_PM))
-+		pm_runtime_disable(&serdev->dev);
-+	else
-+		sirf_runtime_suspend(&serdev->dev);
-+
-+	if (data->on_off)
-+		regulator_disable(data->vcc);
-+
-+	gnss_put_device(data->gdev);
-+};
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id sirf_of_match[] = {
-+	{ .compatible = "fastrax,uc430" },
-+	{ .compatible = "linx,r4" },
-+	{ .compatible = "wi2wi,w2sg0008i" },
-+	{ .compatible = "wi2wi,w2sg0084i" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sirf_of_match);
-+#endif
-+
-+static struct serdev_device_driver sirf_driver = {
-+	.driver	= {
-+		.name		= "gnss-sirf",
-+		.of_match_table	= of_match_ptr(sirf_of_match),
-+		.pm		= &sirf_pm_ops,
-+	},
-+	.probe	= sirf_probe,
-+	.remove	= sirf_remove,
-+};
-+module_serdev_device_driver(sirf_driver);
-+
-+MODULE_AUTHOR("Johan Hovold <johan@kernel.org>");
-+MODULE_DESCRIPTION("SiRFstar GNSS receiver driver");
-+MODULE_LICENSE("GPL v2");
 -- 
 2.17.0
