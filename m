@@ -1,197 +1,40 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V2 13/15] arm: dts: r8a77xx: Add missing OPP properties for CPUs
-Date: Wed, 30 May 2018 10:16:58 +0530
-Message-ID: <c6254ebb1f177468db6b8ac560ffb5a4a0b864f0.1527655562.git.viresh.kumar@linaro.org>
-References: <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH 13/15] arm: dts: r8a7743: Add missing OPP properties for
+ CPUs
+Date: Wed, 30 May 2018 10:17:49 +0530
+Message-ID: <20180530044749.ou45frhlrdykoiuq@vireshk-i7>
+References: <cover.1527244200.git.viresh.kumar@linaro.org>
+ <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
+ <20180528092331.3jon45nsqfdzs5ds@verge.net.au>
+ <20180528105831.vesrswazlagynemq@vireshk-i7>
+ <20180528115832.b2wovvanypxkgalj@verge.net.au>
+ <OSBPR01MB2103A3411D0C3C5DB76F715EB86D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB2103A3411D0C3C5DB76F715EB86D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, biju.das@bp.renesas.com, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, "arm@kernel.org" <arm@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, "ionela.voinescu@arm.com" <ionela.voinescu@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "chris.redpath@arm.com" <chris.redpath@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The OPP properties, like "operating-points", should either be present
-for all the CPUs of a cluster or none. If these are present only for a
-subset of CPUs of a cluster then things will start falling apart as soon
-as the CPUs are brought online in a different order. For example, this
-will happen because the operating system looks for such properties in
-the CPU node it is trying to bring up, so that it can create an OPP
-table.
+On 29-05-18, 13:33, Biju Das wrote:
+> Hi All,
+> 
+> I have tested this patch on RZ/G1M and I didn't find any issues.
+> r8a7743 is similar to r8a7791. So I assume you will apply the same
+> patch for other R-SoC devices as well.
 
-Add such missing properties.
+Okay, I have sent V2 for this and it fixes all those platforms as
+well.
 
-Fix other missing properties (like, clock latency, voltage tolerance,
-etc) as well to make it all work.
+> Apart from this, maybe we need to update the OPP binding
+> documentation. i.e., extend the  operating- point usage to other
+> cores in the cluster (Binding 1: operating-points).
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- arch/arm/boot/dts/r8a7743.dtsi |  9 +++++++++
- arch/arm/boot/dts/r8a7790.dtsi | 34 ++++++++++++++++++++++++++++++++--
- arch/arm/boot/dts/r8a7791.dtsi | 14 ++++++++++++--
- arch/arm/boot/dts/r8a7793.dtsi | 15 +++++++++++++--
- 4 files changed, 66 insertions(+), 6 deletions(-)
+Its already done, you need to start using operating-points-v2 property
+to avoid duplication like this.
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 142949d7066f..e4fb31c4f0ee 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -98,8 +98,17 @@
- 			reg = <1>;
- 			clock-frequency = <1500000000>;
- 			clocks = <&cpg CPG_CORE R8A7743_CLK_Z>;
-+			clock-latency = <300000>; /* 300 us */
- 			power-domains = <&sysc R8A7743_PD_CA15_CPU1>;
- 			next-level-cache = <&L2_CA15>;
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1500000 1000000>,
-+					   <1312500 1000000>,
-+					   <1125000 1000000>,
-+					   < 937500 1000000>,
-+					   < 750000 1000000>,
-+					   < 375000 1000000>;
- 		};
- 
- 		L2_CA15: cache-controller-0 {
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 4d06b154bd7e..c4324b1a2ec4 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -79,12 +79,12 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <0>;
- 			clock-frequency = <1300000000>;
--			voltage-tolerance = <1>; /* 1% */
- 			clocks = <&cpg CPG_CORE R8A7790_CLK_Z>;
--			clock-latency = <300000>; /* 300 us */
- 			power-domains = <&sysc R8A7790_PD_CA15_CPU0>;
- 			next-level-cache = <&L2_CA15>;
- 			capacity-dmips-mhz = <1024>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
- 
- 			/* kHz - uV - OPPs unknown yet */
- 			operating-points = <1400000 1000000>,
-@@ -104,6 +104,16 @@
- 			power-domains = <&sysc R8A7790_PD_CA15_CPU1>;
- 			next-level-cache = <&L2_CA15>;
- 			capacity-dmips-mhz = <1024>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1400000 1000000>,
-+					   <1225000 1000000>,
-+					   <1050000 1000000>,
-+					   < 875000 1000000>,
-+					   < 700000 1000000>,
-+					   < 350000 1000000>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -115,6 +125,16 @@
- 			power-domains = <&sysc R8A7790_PD_CA15_CPU2>;
- 			next-level-cache = <&L2_CA15>;
- 			capacity-dmips-mhz = <1024>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1400000 1000000>,
-+					   <1225000 1000000>,
-+					   <1050000 1000000>,
-+					   < 875000 1000000>,
-+					   < 700000 1000000>,
-+					   < 350000 1000000>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -126,6 +146,16 @@
- 			power-domains = <&sysc R8A7790_PD_CA15_CPU3>;
- 			next-level-cache = <&L2_CA15>;
- 			capacity-dmips-mhz = <1024>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1400000 1000000>,
-+					   <1225000 1000000>,
-+					   <1050000 1000000>,
-+					   < 875000 1000000>,
-+					   < 700000 1000000>,
-+					   < 350000 1000000>;
- 		};
- 
- 		cpu4: cpu@100 {
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 6e1dd7ad7bd6..d1d726a1364a 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -78,11 +78,11 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <0>;
- 			clock-frequency = <1500000000>;
--			voltage-tolerance = <1>; /* 1% */
- 			clocks = <&cpg CPG_CORE R8A7791_CLK_Z>;
--			clock-latency = <300000>; /* 300 us */
- 			power-domains = <&sysc R8A7791_PD_CA15_CPU0>;
- 			next-level-cache = <&L2_CA15>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
- 
- 			/* kHz - uV - OPPs unknown yet */
- 			operating-points = <1500000 1000000>,
-@@ -101,6 +101,16 @@
- 			clocks = <&cpg CPG_CORE R8A7791_CLK_Z>;
- 			power-domains = <&sysc R8A7791_PD_CA15_CPU1>;
- 			next-level-cache = <&L2_CA15>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1500000 1000000>,
-+					   <1312500 1000000>,
-+					   <1125000 1000000>,
-+					   < 937500 1000000>,
-+					   < 750000 1000000>,
-+					   < 375000 1000000>;
- 		};
- 
- 		L2_CA15: cache-controller-0 {
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
-index 4abecfc0ca98..1e6439b85a6b 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -70,10 +70,10 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <0>;
- 			clock-frequency = <1500000000>;
--			voltage-tolerance = <1>; /* 1% */
- 			clocks = <&cpg CPG_CORE R8A7793_CLK_Z>;
--			clock-latency = <300000>; /* 300 us */
- 			power-domains = <&sysc R8A7793_PD_CA15_CPU0>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
- 
- 			/* kHz - uV - OPPs unknown yet */
- 			operating-points = <1500000 1000000>,
-@@ -92,6 +92,17 @@
- 			clock-frequency = <1500000000>;
- 			clocks = <&cpg CPG_CORE R8A7793_CLK_Z>;
- 			power-domains = <&sysc R8A7793_PD_CA15_CPU1>;
-+			voltage-tolerance = <1>; /* 1% */
-+			clock-latency = <300000>; /* 300 us */
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1500000 1000000>,
-+					   <1312500 1000000>,
-+					   <1125000 1000000>,
-+					   < 937500 1000000>,
-+					   < 750000 1000000>,
-+					   < 375000 1000000>;
-+			next-level-cache = <&L2_CA15>;
- 		};
- 
- 		L2_CA15: cache-controller-0 {
 -- 
-2.15.0.194.g9af6a3dea062
+viresh
