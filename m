@@ -1,36 +1,49 @@
-From: Avi Fishman <avifishman70@gmail.com>
-Subject: Re: [PATCH v1 0/3] USB host: Add USB ehci support for nuvoton npcm7xx
-Date: Wed, 30 May 2018 19:22:45 +0300
-Message-ID: <CAKKbWA7N8aaCkJvMeNg3+3cJs3=AfaF5U8ZH_isVpL3oOs8t9Q@mail.gmail.com>
-References: <1527582935-31175-1-git-send-email-avifishman70@gmail.com> <CAKKbWA5zu2ty-OapQMiYXWg6wk0UisPq56gow7_1Tti_fg7fkw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
+Date: Wed, 30 May 2018 09:24:37 -0700
+Message-ID: <CAD=FV=WL9enzYCoSx0fT_ny40ciLJU-hhS9joJ6nySXvWPqAxQ@mail.gmail.com>
+References: <cover.1527040878.git.collinsd@codeaurora.org> <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
+ <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
+ <20180530103720.GH6920@sirena.org.uk> <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
+ <20180530155044.GR6920@sirena.org.uk> <CAD=FV=WVUmvPPd5BxXv9Sa_2CRPrrjQvYFyqroY-3fRr4f0Bzg@mail.gmail.com>
+ <20180530162007.GU6920@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKKbWA5zu2ty-OapQMiYXWg6wk0UisPq56gow7_1Tti_fg7fkw@mail.gmail.com>
+In-Reply-To: <20180530162007.GU6920@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stern@rowland.harvard.edu
-Cc: Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, davem@davemloft.net, akpm@linux-foundation.org, rdunlap@infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Avi Fishman <AviFishman70@gmail.com>
+Hi,
 
-This patch adds support for ehci controller for the Nuvoton npcm7xx platform.
-Most of the code was taken from ehci-spear.c + specific initialization code
+On Wed, May 30, 2018 at 9:20 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, May 30, 2018 at 09:12:25AM -0700, Doug Anderson wrote:
+>> On Wed, May 30, 2018 at 8:50 AM, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > No, I'm saying that I don't know why that property exists at all.  This
+>> > sounds like it's intended to be the amount of current the regulator can
+>> > deliver in each mode which is normally a design property of the silicon.
+>
+>> Ah, got it.  So the whole point here is to be able to implement either
+>> the function "set_load" or the function "get_optimum_mode".  We need
+>> some sort of table to convert from current to mode.  That's what this
+>> table does.
+>
+> We do need that table, my expectation would be that this table would be
+> in the driver as it's not something I'd expect to vary between different
+> systems but rather be a property of the silicon design.  No sense in
+> every single board having to copy it in.
 
-Avi Fishman (3):
-  USB host: Add USB ehci support for nuvoton npcm7xx platform
-  USB: DT probing support to ehci-npcm7xx
-  MAINTAINERS: add subfolders for nuvoton *npcm*
+Ah, got it!  I'd be OK with it being hardcoded in the driver.
 
- .../devicetree/bindings/usb/npcm7xx-usb.txt        |  18 ++
- MAINTAINERS                                        |   3 +
- drivers/usb/host/Kconfig                           |   8 +
- drivers/usb/host/Makefile                          |   1 +
- drivers/usb/host/ehci-npcm7xx.c                    | 212 +++++++++++++++++++++
- 5 files changed, 242 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
- create mode 100644 drivers/usb/host/ehci-npcm7xx.c
+At one point I think David was making the argument that some boards
+have different noise needs for the rails and thus you might want to
+change modes at different currents.  I don't know if this is realistic
+but I believe it was part of his original argument for why this needed
+to be specified.  If we can hardcode this in the driver I'm fine with
+it...  That would actually solve many of my objections too...
 
 
--- 
-2.14.1
+-Doug
