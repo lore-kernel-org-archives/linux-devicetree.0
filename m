@@ -1,45 +1,58 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Wed, 30 May 2018 09:31:55 -0700
-Message-ID: <CAD=FV=UpWEMSPUYOHmLQ0g_mF990kwn4_zm=ZCNttLKZiz7i=Q@mail.gmail.com>
-References: <20180523155617.GN4828@sirena.org.uk> <CAD=FV=W4aDxWbcaJ9GZ1KkvyiTPAPR-oUoTFzJfS+LftU5ZP=Q@mail.gmail.com>
- <20180530093701.GD6920@sirena.org.uk> <CAD=FV=W-MLU9c-SvfLgKAKGP1eHN5xO-013f2M09XUa+QeHzrA@mail.gmail.com>
- <20180530150241.GO6920@sirena.org.uk> <CAD=FV=XJd-udEE6az0xP7i6x0oGsnd=BSCyZ0Og_+RjNCMXnCQ@mail.gmail.com>
- <20180530154849.GQ6920@sirena.org.uk> <CAD=FV=X2u=hMyWinSDtim-PmFwAy5mXcwg3HeYojAHcsUFhV3g@mail.gmail.com>
- <20180530160744.GS6920@sirena.org.uk> <CAD=FV=WVGu0f+=q-C9kiEmaLEUJqGY+Jbns83h72uF-9iasrUw@mail.gmail.com>
- <20180530161311.GT6920@sirena.org.uk>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [DPU PATCH 10/11] drm/msm/dpu: correct
+ dpu_io_util.h include path
+Date: Wed, 30 May 2018 10:30:05 -0600
+Message-ID: <20180530163005.GC5028@jcrouse-lnx.qualcomm.com>
+References: <1527691788-9350-1-git-send-email-ryadav@codeaurora.org>
+ <1527691788-9350-11-git-send-email-ryadav@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530161311.GT6920@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1527691788-9350-11-git-send-email-ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, May 30, 2018 at 9:13 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, May 30, 2018 at 09:09:02AM -0700, Doug Anderson wrote:
->> On Wed, May 30, 2018 at 9:07 AM, Mark Brown <broonie@kernel.org> wrote:
->
->> > It needs something to tell it what the new voltage to set is.
->
->> The regulator driver has its own cache of what voltage was most
->> recently requested by Linux.  It can use that, can't it?
->
-> If we're just going to use the most recently set voltage then hopefully
-> the hardware already knew that, and it might not be the lowest available
-> voltage if the last consumer to get turned off was holding the voltage
-> higher.
-
-To circle back to the original point: the problem is that (IMHO) the
-hardware is doing the wrong thing by still counting Linux's vote for a
-voltage even though Linux also voted that the regulator should be
-disabled.  So basically we're working around the hardware by
-pretending to vote for a dummy lower voltage whenever Linux wants the
-regulator disabled.  From Linux's point of view everything works as
-normal--we just tell the hardware a falsehood so it doesn't count our
-vote for a voltage while the regulator is disabled.
-
--Doug
+T24gV2VkLCBNYXkgMzAsIDIwMTggYXQgMDg6MTk6NDdQTSArMDUzMCwgUmFqZXNoIFlhZGF2IHdy
+b3RlOgo+IGRwdV9pb191dGlsLmggaXMgbW92ZWQgZnJvbSBzdGFuZGFyZCBpbmNsdWRlIHBhdGgK
+PiB0byBkcml2ZXIgZm9sZGVyLCBjb3JyZWN0IHRoZSBpbmNsdWRlIHBhdGggaW4gY29kZS4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBSYWplc2ggWWFkYXYgPHJ5YWRhdkBjb2RlYXVyb3JhLm9yZz4KCklm
+IHRoZSBwcmV2aW91cyBwYXRjaCBkb2Vzbid0IGNvbXBpbGUgd2l0aG91dCB0aGlzIGZpeCB5b3Ug
+c2hvdWxkIHNxdWFzaCB0aGVtLgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
+dTEvZHB1X3Bvd2VyX2hhbmRsZS5jIHwgMSAtCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9k
+cHUxL2RwdV9wb3dlcl9oYW5kbGUuaCB8IDIgKy0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbigrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L21zbS9kaXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9k
+aXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jCj4gaW5kZXggMjRjMzI3NC4uZjk5N2JkOSAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxl
+LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxl
+LmMKPiBAQCAtMjAsNyArMjAsNiBAQAo+ICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+ICAjaW5j
+bHVkZSA8bGludXgvbXV0ZXguaD4KPiAgI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4g
+LSNpbmNsdWRlIDxsaW51eC9kcHVfaW9fdXRpbC5oPgo+ICAKPiAgI2luY2x1ZGUgImRwdV9wb3dl
+cl9oYW5kbGUuaCIKPiAgI2luY2x1ZGUgImRwdV90cmFjZS5oIgo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmggYi9kcml2ZXJzL2dw
+dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmgKPiBpbmRleCA5YTZkNGI5Li4x
+OTNmNDY4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9w
+b3dlcl9oYW5kbGUuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9w
+b3dlcl9oYW5kbGUuaAo+IEBAIC0yMSw3ICsyMSw3IEBACj4gICNkZWZpbmUgRFBVX1BPV0VSX0hB
+TkRMRV9FTkFCTEVfQlVTX0lCX1FVT1RBCTE2MDAwMDAwMDAKPiAgI2RlZmluZSBEUFVfUE9XRVJf
+SEFORExFX0RJU0FCTEVfQlVTX0lCX1FVT1RBCTAKPiAgCj4gLSNpbmNsdWRlIDxsaW51eC9kcHVf
+aW9fdXRpbC5oPgo+ICsjaW5jbHVkZSAiZHB1X2lvX3V0aWwuaCIKPiAgCj4gIC8qIGV2ZW50IHdp
+bGwgYmUgdHJpZ2dlcmVkIGJlZm9yZSBwb3dlciBoYW5kbGVyIGRpc2FibGUgKi8KPiAgI2RlZmlu
+ZSBEUFVfUE9XRVJfRVZFTlRfUFJFX0RJU0FCTEUJMHgxCgotLSAKVGhlIFF1YWxjb21tIElubm92
+YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExp
+bnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
+ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
