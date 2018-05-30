@@ -1,85 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 07/10] dt-bindings: tc358754: add DT bindings
-Date: Wed, 30 May 2018 15:36:29 +0300
-Message-ID: <6047372.VZe6FOdiCA@avalon>
-References: <1527682561-1386-1-git-send-email-m.purski@samsung.com> <CGME20180530121627eucas1p1c8daf24d7c95e9e8b04a523d4662dfd9@eucas1p1.samsung.com> <1527682561-1386-8-git-send-email-m.purski@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
+ model corners
+Date: Wed, 30 May 2018 14:44:25 +0200
+Message-ID: <CAPDyKFpuZ4s7C+Nr3NhU-A40oVw84yK7eEniO6NhHNJ3VosR-A@mail.gmail.com>
+References: <20180525100121.28214-1-rnayak@codeaurora.org> <20180525100121.28214-2-rnayak@codeaurora.org>
+ <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com> <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527682561-1386-8-git-send-email-m.purski@samsung.com>
+In-Reply-To: <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, collinsd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maciej,
+[...]
 
-On Wednesday, 30 May 2018 15:15:58 EEST Maciej Purski wrote:
-> From: Andrzej Hajda <a.hajda@samsung.com>
-> 
-> The patch adds bindings to Toshiba DSI/LVDS bridge TC358764.
-> Bindings describe power supplies, reset gpio and video interfaces.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  .../bindings/display/bridge/toshiba,tc358764.txt   | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-> b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt new
-> file mode 100644
-> index 0000000..6eda14f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
-> @@ -0,0 +1,37 @@
-> +TC358764 MIPI-DSI to LVDS panel bridge
-> +
-> +Required properties:
-> +  - compatible: "toshiba,tc358764"
-> +  - reg: the virtual channel number of a DSI peripheral
-> +  - vddc-supply: core voltage supply, 1.2V
-> +  - vddio-supply: I/O voltage supply, 1.8V or 3.3V
-> +  - vddlvds-supply: LVDS1/2 voltage supply, 3.3V
-> +  - reset-gpios: a GPIO spec for the reset pin
-> +
-> +The device node can contain zero to two 'port' child nodes, each with one
-> +child 'endpoint' node, according to the bindings defined in [1].
-> +The following are properties specific to those nodes.
-> +
-> +port:
-> +  - reg: (required) can be 0 for DSI port or 1 for LVDS port;
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+>>> +
+>>> +static DEFINE_MUTEX(rpmpd_lock);
+>>> +
+>>> +/* msm8996 RPM powerdomains */
+>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
+>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
+>>> +DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
+>>> +
+>>> +DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
+>>> +DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
+>>> +
+>>> +static struct rpmpd *msm8996_rpmpds[] = {
+>>> +       [0] = &msm8996_vddcx,
+>>> +       [1] = &msm8996_vddcx_ao,
+>>> +       [2] = &msm8996_vddcx_vfc,
+>>> +       [3] = &msm8996_vddmx,
+>>> +       [4] = &msm8996_vddmx_ao,
+>>> +       [5] = &msm8996_vddsscx,
+>>> +       [6] = &msm8996_vddsscx_vfc,
+>>> +};
+>>
+>> It's not my call, but honestly the above all macros makes the code
+>> less readable.
+>
+> This is all static data per SoC. The macros will keep the new additions
+> needed for every new SoC to a minimal. Currently this supports only
+> msm8996.
 
-Could you please take the comments I made on v1 into account when you'll post 
-v3 ?
+Right, that's fine then.
 
-> +Example:
-> +
-> +	bridge@0 {
-> +		reg = <0>;
-> +		compatible = "toshiba,tc358764";
-> +		vddc-supply = <&vcc_1v2_reg>;
-> +		vddio-supply = <&vcc_1v8_reg>;
-> +		vddlvds-supply = <&vcc_3v3_reg>;
-> +		reset-gpios = <&gpd1 6 GPIO_ACTIVE_LOW>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@1 {
-> +			reg = <1>;
-> +			lvds_ep: endpoint {
-> +				remote-endpoint = <&panel_ep>;
-> +			};
-> +		};
-> +	};
+>
+>>
+>> Anyway, I think you should convert to allocate these structs
+>> dynamically from the heap (kzalloc/kcalloc), instead of statically as
+>> above.
 
+However, I assume this is still doable!?
 
--- 
-Regards,
+[...]
 
-Laurent Pinchart
+>>> +       for (i = 0; i < num; i++) {
+>>> +               if (!rpmpds[i])
+>>> +                       continue;
+>>> +
+>>> +               rpmpds[i]->rpm = rpm;
+>>> +               rpmpds[i]->pd.power_off = rpmpd_power_off;
+>>> +               rpmpds[i]->pd.power_on = rpmpd_power_on;
+>>> +               pm_genpd_init(&rpmpds[i]->pd, NULL, true);
+>>
+>> Question: Is there no hierarchical topology of the PM domains. No
+>> genpd subdomains?
+>
+> The hierarchy if any is all handled by the remote core (RPM in this case).
+> For Linux its just a flat view.
+
+Okay, thanks for clarifying!
+
+Kind regards
+Uffe
