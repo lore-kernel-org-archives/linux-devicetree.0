@@ -1,77 +1,95 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
- model corners
-Date: Wed, 30 May 2018 14:44:25 +0200
-Message-ID: <CAPDyKFpuZ4s7C+Nr3NhU-A40oVw84yK7eEniO6NhHNJ3VosR-A@mail.gmail.com>
-References: <20180525100121.28214-1-rnayak@codeaurora.org> <20180525100121.28214-2-rnayak@codeaurora.org>
- <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com> <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v4 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
+ driver
+Date: Wed, 30 May 2018 15:56:34 +0300
+Message-ID: <20180530125634.GE13528@localhost.localdomain>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180530090512.GC13528@localhost.localdomain>
+ <20180530110000.GI6920@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180530110000.GI6920@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, collinsd@codeaurora.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-[...]
 
->>> +
->>> +static DEFINE_MUTEX(rpmpd_lock);
->>> +
->>> +/* msm8996 RPM powerdomains */
->>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
->>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
->>> +DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
->>> +
->>> +DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
->>> +DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
->>> +
->>> +static struct rpmpd *msm8996_rpmpds[] = {
->>> +       [0] = &msm8996_vddcx,
->>> +       [1] = &msm8996_vddcx_ao,
->>> +       [2] = &msm8996_vddcx_vfc,
->>> +       [3] = &msm8996_vddmx,
->>> +       [4] = &msm8996_vddmx_ao,
->>> +       [5] = &msm8996_vddsscx,
->>> +       [6] = &msm8996_vddsscx_vfc,
->>> +};
->>
->> It's not my call, but honestly the above all macros makes the code
->> less readable.
->
-> This is all static data per SoC. The macros will keep the new additions
-> needed for every new SoC to a minimal. Currently this supports only
-> msm8996.
+On Wed, May 30, 2018 at 12:00:00PM +0100, Mark Brown wrote:
+> On Wed, May 30, 2018 at 12:05:12PM +0300, Matti Vaittinen wrote:
+> 
+> > Other 4 can be used on PWM or PFM switching mode. When PWM is used
+> > voltages can be changed without disabling regulator. On PFM this should
+> > not be done. These latter 4 regulators can be forced to PWM mode via
+> > control bit in register. This driver does not support controlling this
+> > mode though. So this driver version just checks if regulator is enabled
+> > before changing the voltage and if it is the voltage change fails with
+> > -EBUSY
+> 
+> It probably should support setting modes (especially if the device isn't
+> smart enough to automatically shift which sounds like the case) but
+> that's a separate thing.
 
-Right, that's fine then.
+Thanks for the guidance! The first 4 BUCKs (which support DVS) do change
+the mode automatically. Latter 4 do not. I however didn't find example
+on how to allow doing this mode change via regulator framework and thus
+the driver is not allowing mode change. For me it would sound good to
+allow setting the mode via device-tree property - and via in-kernel API
+or sysfs - but as I said I didn't yet find a nice example on that. (But
+I assume this device is not first one allowing mode change and thus
+there should be an example and I probably should not invent own DT
+properties or sysfs entries for this. Guess I just need to search harder).
 
->
->>
->> Anyway, I think you should convert to allocate these structs
->> dynamically from the heap (kzalloc/kcalloc), instead of statically as
->> above.
+> 
+> > My question is whether it would be good idea to also read the 'force
+> > PWM' bit when voltage is changed and allow the change if PWM mode is
+> > forced to be used? Problem is that the check and voltage change can't be
+> > atomic so there is a chance someone changes the mode (bypassing the
+> > driver and regulator core) after this check but before we get to modify
+> > the voltage. Furthermore, I doubt the 'force PWM' is widely used (but I
+> > can't say for sure as I can't imagine all use cases) as it is not so
+> > power efficient.
+> 
+> Why would anything else be changing the mode configuration of the
+> regulator while the system is running?  That sounds like a bad idea.
+This was also my initial thought. Still with my lack of experience on this
+area (and with my experience on people inventing strange solutions) I
+felt unsure.
 
-However, I assume this is still doable!?
+> In any case if the hardware really needs to be manually put into force
+> PWM to change voltage then the simplest thing would be to just move it
+> into force PWM mode, do the change, then change back if it wasn't
+> already in force PWM mode.
+I see 4 options for these last 4 bucks which can't switch to PWM
+automatically when voltage is changed.
 
-[...]
+1. prohibit voltage change if regulator is enabled (safest? current
+   approach)
+2. allow voltage change if regulator is enabled and force PWM is used
+3. switch to 'force PWM' when changing voltage (as suggested by Mark)
+4. disable regulator for duration of voltage change (discarded option)
 
->>> +       for (i = 0; i < num; i++) {
->>> +               if (!rpmpds[i])
->>> +                       continue;
->>> +
->>> +               rpmpds[i]->rpm = rpm;
->>> +               rpmpds[i]->pd.power_off = rpmpd_power_off;
->>> +               rpmpds[i]->pd.power_on = rpmpd_power_on;
->>> +               pm_genpd_init(&rpmpds[i]->pd, NULL, true);
->>
->> Question: Is there no hierarchical topology of the PM domains. No
->> genpd subdomains?
->
-> The hierarchy if any is all handled by the remote core (RPM in this case).
-> For Linux its just a flat view.
+So option 4 was discarded. Option 1 is the current approach. I will ask
+from ROHM PMIC HW colleagues what they think of Mark's suggestion
+(option 3) and implement it if HW behaves Ok. I guess option 2 is not
+worth the hassle.
 
-Okay, thanks for clarifying!
+> 
+> The tradeoff with forced PWM mode is that the quality of regulation will
+> be a lot better, especially if the load changes suddenly (as things like
+> CPUs often do).  Most hardware that's at all current is able respond to
+> changes in load and switch modes automatically when it's appropriate,
+> except possibly in some very low power modes.
 
-Kind regards
-Uffe
+Yes. The mode switching is automatic. But there is this control bit for
+disabling automatic mode switching and forcing the PWM. Problem with
+these 4 last bucks is just that if regulator is in PFM (and it may be
+if not forced to PWM - due to this automatic switching) then the voltage
+change is not behaving well.
+
+Thanks for all the support Mark!
+
+Br,
+	Matti Vaittinen
