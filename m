@@ -1,66 +1,67 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/2] mmc: meson-gx: add device reset
-Date: Wed, 30 May 2018 09:27:42 +0200
-Message-ID: <CAPDyKFo1ui3XyjXJt0JKrQZd52zEQfsY65LbK_exFqJ6jVDmCQ@mail.gmail.com>
-References: <20180515095748.6794-1-jbrunet@baylibre.com> <20180515095748.6794-3-jbrunet@baylibre.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v3 3/5] Documentation: DT: add i.MX EPIT timer binding
+Date: Wed, 30 May 2018 10:27:51 +0300
+Message-ID: <7f2f8b6b-b7f6-99c1-fc5f-a7628a751fdc@mentor.com>
+References: <20180529170436.22711-1-peron.clem@gmail.com>
+ <20180529170436.22711-4-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180515095748.6794-3-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180529170436.22711-4-peron.clem@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Jerome,
-
-On 15 May 2018 at 11:57, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> Trigger the reset line of the mmc controller while probing, if available.
-> The reset should be optional for now, at least until all related DT nodes
-> have the reset property.
->
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-
-I got a regression boot report from kernelci. The bisect doesn't point
-to a certain commit, but I found $subject patch a possible cause. Is
-it something you can have a look at and see if it's a valid problem?
-https://kernelci.org/boot/id/5b0d68a859b514726179a899/
-
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/meson-gx-mmc.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-> index 4f972b879fe6..9bca359f7936 100644
-> --- a/drivers/mmc/host/meson-gx-mmc.c
-> +++ b/drivers/mmc/host/meson-gx-mmc.c
-> @@ -35,6 +35,7 @@
->  #include <linux/clk.h>
->  #include <linux/clk-provider.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
->  #include <linux/interrupt.h>
->  #include <linux/bitfield.h>
->  #include <linux/pinctrl/consumer.h>
-> @@ -1184,6 +1185,14 @@ static int meson_mmc_probe(struct platform_device *pdev)
->                 goto free_host;
->         }
->
-> +       ret = device_reset_optional(&pdev->dev);
-> +       if (ret) {
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(&pdev->dev, "device reset failed: %d\n", ret);
-> +
-> +               return ret;
-> +       }
-> +
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         host->regs = devm_ioremap_resource(&pdev->dev, res);
->         if (IS_ERR(host->regs)) {
-> --
-> 2.14.3
->
+SGkgQ2zDqW1lbnQsCgpPbiAwNS8yOS8yMDE4IDA4OjA0IFBNLCBDbMOpbWVudCBQw6lyb24gd3Jv
+dGU6Cj4gRnJvbTogQ2zDqW1lbnQgUGVyb24gPGNsZW1lbnQucGVyb25AZGV2aWFsZXQuY29tPgo+
+IAo+IEFkZCBkZXZpY2V0cmVlIGJpbmRpbmcgZG9jdW1lbnQgZm9yIE5YUCdzIGkuTVggU29DIHNw
+ZWNpZmljCj4gRVBJVCB0aW1lciBkcml2ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2zDqW1lbnQg
+UGVyb24gPGNsZW1lbnQucGVyb25AZGV2aWFsZXQuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9jbG9jay9pbXg2cSxlcGl0LnR4dCAgfCAyNCArKysrKysrKysrKysrKysrKysr
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEsZXBpdC50eHQK
+PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
+L2lteDZxLGVwaXQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
+L2lteDZxLGVwaXQudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAw
+MDAuLmE4NGE2MGM2YWUzNQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEsZXBpdC50eHQKClRoZSBmaWxlIHNob3VsZCBi
+ZSByZW5hbWVkIHRvIGEgbW9yZSBnZW5lcmljIG5hbWUgbGlrZSAnaW14LGVwaXQudHh0JwpvciAn
+aW14MzEsZXBpdC50eHQnLgoKQWxzbyBub3RlIHRoYXQgdGhlIGZvbGRlciBpcyBpbmNvcnJlY3Rs
+eSBzZWxlY3RlZCwgaXQgbXVzdCBiZQpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dGltZXIvCgo+IEBAIC0wLDAgKzEsMjQgQEAKPiArQmluZGluZyBmb3IgdGhlIGkuTVg2IEVQSVQg
+dGltZXIKCkxldCdzIGNoYW5nZSBpdCB0byAnQmluZGluZyBmb3IgdGhlIGkuTVggRVBJVCB0aW1l
+cicuCgo+ICsKPiArVGhpcyBiaW5kaW5nIHVzZXMgdGhlIGNvbW1vbiBjbG9jayBiaW5kaW5nWzFd
+Lgo+ICsKPiArWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9j
+ay1iaW5kaW5ncy50eHQKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJs
+ZTogc2hvdWxkIGJlICJmc2wsaW14NnEtZXBpdCIKCkNvbXBhdGlibGUgc2hvdWxkIGJlICJmc2ws
+aW14MzEtZXBpdCIsIGkuTVgzMSBTb0Mgc2VlbXMgdG8gYmUgdGhlIGZpcnN0Cm9uZSBpbiB0aGUg
+c2VyaWVzLCB3aGljaCBoYXMgdGhlIHRpbWVyIG1vZHVsZS4KClRoZXJlIHNob3VsZCBiZSBhZGRl
+ZCBtb3JlIGNvbXBhdGlibGVzIHNwZWNpZmljIHRvIGxhdGVyIFNvQyB2ZXJzaW9ucy4KCj4gKy0g
+cmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIgYW5kIGxlbmd0aCBv
+ZiBtZW1vcnkgbWFwcGVkCj4gKyAgcmVnaW9uLgo+ICstIGludGVycnVwdHM6IFNob3VsZCBjb250
+YWluIEVQSVQgY29udHJvbGxlciBpbnRlcnJ1cHQKPiArLSBjbG9ja3M6IGxpc3Qgb2YgY2xvY2sg
+c3BlY2lmaWVycywgbXVzdCBjb250YWluIGFuIGVudHJ5IGZvciBlYWNoIHJlcXVpcmVkCj4gKyAg
+ZW50cnkgaW4gY2xvY2stbmFtZXMKPiArLSBjbG9jay1uYW1lcyA6IHNob3VsZCBpbmNsdWRlIGVu
+dHJpZXMgImlwZyIsICJwZXIiCj4gKwo+ICtFeGFtcGxlOgo+ICsJZXBpdDE6IGVwaXRAMjBkMDAw
+MCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtZXBpdCI7CgpGb3IgaS5NWDZRIGV4YW1w
+bGUgYSBsaXN0IG9mIGNvbXBhdGlibGVzIHNob3VsZCBiZSB1cGRhdGVkIGxpa2UKCgljb21wYXRp
+YmxlID0gImZzbCxpbXg2cS1lcGl0IiwgImZzbCxpbXgzMS1lcGl0IjsKCj4gKwkJcmVnID0gPDB4
+MDIwZDAwMDAgMHg0MDAwPjsKPiArCQlpbnRlcnJ1cHRzID0gPDAgNTYgSVJRX1RZUEVfTEVWRUxf
+SElHSD47Cj4gKwkJY2xvY2tzID0gPCZjbGtzIElNWDZRRExfQ0xLX0VQSVQxPiwKPiArCQkJPCZj
+bGtzIElNWDZRRExfQ0xLX0lQR19QRVI+Owo+ICsJCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIi
+OwoKSXQgbG9va3MgbGlrZSAiaXBnIiBhbmQgInBlciIgY2xvY2tzIGFyZSBzd2FwcGVkLCBwbGVh
+c2UgZG91YmxlIGNoZWNrIGl0LgoKPiArCX07Cj4gCgotLQpXaXRoIGJlc3Qgd2lzaGVzLApWbGFk
+aW1pcgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
