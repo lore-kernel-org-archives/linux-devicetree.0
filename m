@@ -1,72 +1,136 @@
-Return-Path: <SRS0=hnDX=IS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:35432
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932570AbeEaCAq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 30 May 2018 22:00:46 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
- Layerscape SoCs
-Date: Thu, 31 May 2018 01:58:12 +0000
-Message-ID: <AM6PR0402MB3382A63FF2884BAD8AF6080BE2630@AM6PR0402MB3382.eurprd04.prod.outlook.com>
-References: <20180525111920.24498-1-wen.he_1@nxp.com>
- <20180525111920.24498-2-wen.he_1@nxp.com> <20180529070724.GE5666@vkoul-mobl>
- <AM6PR0402MB3382D42C76332B98D53D001AE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180529101954.GJ5666@vkoul-mobl>
- <AM6PR0402MB3382F92D1123CDCA0E0075EDE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180530102744.GE16230@vkoul-mobl>
-In-Reply-To: <20180530102744.GE16230@vkoul-mobl>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=zYwW=IR=gmail.com=pku.leo@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linaro.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
+In-Reply-To: <20180525111920.24498-2-wen.he_1@nxp.com>
+References: <20180525111920.24498-1-wen.he_1@nxp.com> <20180525111920.24498-2-wen.he_1@nxp.com>
+From: Li Yang <leoyang.li@nxp.com>
+Date: Wed, 30 May 2018 13:51:17 -0500
+Message-ID: <CADRPPNRx2ePL1eteMboAZ7ZvoxrVO1Jn+Koo7TatLQyquymTiQ@mail.gmail.com>
+Subject: Re: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Content-Type: text/plain; charset="UTF-8"
+To: Wen He <wen.he_1@nxp.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, jiafei.pan@nxp.com, jiaheng.fan@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmlub2QgS291bCBbbWFp
-bHRvOnZpbm9kLmtvdWxAbGluYXJvLm9yZ10NCj4gU2VudDogMjAxOMTqNdTCMzDI1SAxODoyOA0K
-PiBUbzogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogZG1hZW5naW5lQHZnZXIua2Vy
-bmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBKaWFmZWkgUGFuDQo+IDxqaWFmZWkucGFu
-QG54cC5jb20+OyBKaWFoZW5nIEZhbiA8amlhaGVuZy5mYW5AbnhwLmNvbT4NCj4gU3ViamVjdDog
-UmU6IFt2NSAyLzZdIGRtYWVuZ2luZTogZnNsLXFkbWE6IEFkZCBxRE1BIGNvbnRyb2xsZXIgZHJp
-dmVyIGZvcg0KPiBMYXllcnNjYXBlIFNvQ3MNCj4gDQo+IE9uIDI5LTA1LTE4LCAxMDozOCwgV2Vu
-IEhlIHdyb3RlOg0KPiANCj4gPiA+ID4gPiA+ICsJLyoNCj4gPiA+ID4gPiA+ICsJICogQ2xlYXIg
-dGhlIGNvbW1hbmQgcXVldWUgaW50ZXJydXB0IGRldGVjdCByZWdpc3RlciBmb3IgYWxsDQo+ID4g
-PiBxdWV1ZXMuDQo+ID4gPiA+ID4gPiArCSAqLw0KPiA+ID4gPiA+ID4gKwlxZG1hX3dyaXRlbChm
-c2xfcWRtYSwgMHhmZmZmZmZmZiwgYmxvY2sgKw0KPiA+ID4gPiA+ID4gK0ZTTF9RRE1BX0JDUUlE
-UigwKSk7DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBidW5jaCBvZiB3cml0ZXMgd2l0aCAweGZmZmZm
-ZmZmLCBjYW4geW91IGV4cGxhaW4gd2h5PyBBbHNvIGhlbHBzDQo+ID4gPiA+ID4gdG8gbWFrZSBh
-IG1hY3JvIGZvciB0aGlzDQo+ID4gPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gTWF5YmUgSSBtaXNz
-ZWQgdGhhdCBJIHNob3VsZCBkZWZpbmVkIHRoZSB2YWx1ZSB0byB0aGUgbWFjcm8gYW5kDQo+ID4g
-PiA+IGFkZA0KPiA+ID4gY29tbWVudC4NCj4gPiA+ID4gUmlnaHQ/DQo+ID4gPg0KPiA+ID4gdGhh
-dCB3b3VsZCBoZWxwLCBidXQgd2h5IGFyZSB5b3Ugd3JpdGluZyAweGZmZmZmZmZmIGF0IGFsbCB0
-aGVzZSBwbGFjZXM/DQo+ID4NCj4gPiBUaGlzIHZhbHVlIGlzIGZyb20gdGhlIGRhdGFzaGVldC4N
-Cj4gPiBTaG91bGQgSSB3cml0ZSBjb21tZW50cyB0byBoZXJlPw0KPiANCj4gWWVzIHRoYXQgd291
-bGQgaGVscCBleHBsYWluaW5nIHdoYXQgdGhpcyBkb2VzLi4NCj4gDQoNCkdvdCBpdC4gVGhhbmtz
-DQoNCj4gPiA+ID4gPiA+ICtzdGF0aWMgdm9pZCBmc2xfcWRtYV9pc3N1ZV9wZW5kaW5nKHN0cnVj
-dCBkbWFfY2hhbiAqY2hhbikgew0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfY2hhbiAq
-ZnNsX2NoYW4gPSB0b19mc2xfcWRtYV9jaGFuKGNoYW4pOw0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3Qg
-ZnNsX3FkbWFfcXVldWUgKmZzbF9xdWV1ZSA9IGZzbF9jaGFuLT5xdWV1ZTsNCj4gPiA+ID4gPiA+
-ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJc3Bp
-bl9sb2NrX2lycXNhdmUoJmZzbF9xdWV1ZS0+cXVldWVfbG9jaywgZmxhZ3MpOw0KPiA+ID4gPiA+
-ID4gKwlzcGluX2xvY2soJmZzbF9jaGFuLT52Y2hhbi5sb2NrKTsNCj4gPiA+ID4gPiA+ICsJaWYg
-KHZjaGFuX2lzc3VlX3BlbmRpbmcoJmZzbF9jaGFuLT52Y2hhbikpDQo+ID4gPiA+ID4gPiArCQlm
-c2xfcWRtYV9lbnF1ZXVlX2Rlc2MoZnNsX2NoYW4pOw0KPiA+ID4gPiA+ID4gKwlzcGluX3VubG9j
-aygmZnNsX2NoYW4tPnZjaGFuLmxvY2spOw0KPiA+ID4gPiA+ID4gKwlzcGluX3VubG9ja19pcnFy
-ZXN0b3JlKCZmc2xfcXVldWUtPnF1ZXVlX2xvY2ssIGZsYWdzKTsNCj4gPiA+ID4gPg0KPiA+ID4g
-PiA+IHdoeSBkbyB3ZSBuZWVkIHR3byBsb2NrcywgYW5kIHNpbmNlIHlvdSBhcmUgZG9pbmcgdmNo
-YW4gd2h5DQo+ID4gPiA+ID4gc2hvdWxkIHlvdSBhZGQgeW91ciBvd24gbG9jayBvbiB0b3ANCj4g
-PiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBZZXMsIHdlIG5lZWQgdHdvIGxvY2tzLg0KPiA+ID4g
-PiBBcyB5b3Uga25vdywgdGhlIFFETUEgc3VwcG9ydCBtdWx0aXBsZSB2aXJ0dWFsaXplZCBibG9j
-a3MgZm9yDQo+ID4gPiA+IG11bHRpLWNvcmUNCj4gPiA+IHN1cHBvcnQuDQo+ID4gPiA+IHNvIHdl
-IG5lZWQgdG8gbWFrZSBzdXJlIHRoYXQgbXVsaXRpLWNvcmUgYWNjZXNzIGlzc3Vlcy4NCj4gPiA+
-DQo+ID4gPiBidXQgd2h5IGNhbnQgeW91IHVzZSB2Y2hhbiBsb2NrIGZvciBhbGw/DQo+ID4gPg0K
-PiA+DQo+ID4gV2UgY2FuJ3Qgb25seSB1c2UgdmNoYW4gbG9jayBmb3IgYWxsLiBvdGhlcndpc2Ug
-ZW5xdWV1ZSBhY3Rpb24gd2lsbCBiZQ0KPiBpbnRlcnJ1cHRlZC4NCj4gDQo+IEkgdGhpbmsgaXQg
-aXMgcG9zc2libGUgdG8gdXNlIG9ubHkgdmNoYW4gbG9jaw0KPiANCg0KSSB0cmllZCB0aGF0IGlm
-IEkgdXNlIG9ubHkgdmNoYW4gbG9jayB0aGVuIHFkbWEgd2lsbCBiZSBjYW4ndCB3b3JrLg0KRG8g
-eW91IGhhdmUgYSBvdGhlciBnb29kIGlkZWE/DQoNCkJlc3QgUmVnYXJkcywNCldlbg0KDQo+IC0t
-DQo+IH5WaW5vZA0K
+On Fri, May 25, 2018 at 6:19 AM, Wen He <wen.he_1@nxp.com> wrote:
+> NXP Queue DMA controller(qDMA) on Layerscape SoCs supports channel
+> virtuallization by allowing DMA jobs to be enqueued into different
+> command queues.
+>
+> Note that this module depends on NXP DPAA.
+>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Signed-off-by: Jiaheng Fan <jiaheng.fan@nxp.com>
+> ---
+> change in v5:
+>         - Fixed the issues includes:
+>                 * add error handler which every function
+>                 * replace word to bit definition
+>                 * move global variable to struct definition
+>                 * add some comments to context
+>
+> change in v4:
+>         - Fixed the issues that Vinod point out in the mail list.
+>
+> change in v3:
+>         - Add 'depends on ARM || ARM64' in file 'drivers/dma/Kconfig'
+>
+> change in v2:
+>         - Replace GPL V2 License details by SPDX tags
+>         - Replace Freescale by NXP
+>         - Reduce and optimize header file references
+>         - Replace big_endian by feature in struct fsl_qdma_engine
+>         - Replace struct fsl_qdma_format by struct fsl_qdma_ccdf
+>           and struct fsl_qdma_csgf
+>         - Remove empty line
+>         - Replace 'if..else' by macro 'FSL_QDMA_IN/OUT' in function
+>           qdma_readl() and qdma_writel()
+>         - Remove function fsl_qdma_alloc_chan_resources()
+>         - Replace 'prei' by 'pre'
+>         - Replace '-1' by '-ENOMEM' in function fsl_qdma_pre_request_enqueue_desc()
+>         - Fix dma pool allocation need to rolled back in function
+>           fsl_qdma_request_enqueue_desc()
+>         - Replace function of_property_read_u32_array() by device_property_read_u32_array()
+>         - Add functions fsl_qdma_cleanup_vchan() and fsl_qdma_irq_exit() to ensure
+>           irq and tasklets stopped
+>         - Replace dts node element 'channels' by 'dma-channels'
+>         - Replace function platform_driver_register() by module_platform_driver()
+>
+>  drivers/dma/Kconfig    |   13 +
+>  drivers/dma/Makefile   |    1 +
+>  drivers/dma/fsl-qdma.c | 1101 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1115 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/dma/fsl-qdma.c
+>
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 6d61cd0..99aff33 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -225,6 +225,19 @@ config FSL_EDMA
+>           multiplexing capability for DMA request sources(slot).
+>           This module can be found on Freescale Vybrid and LS-1 SoCs.
+>
+> +config FSL_QDMA
+> +       tristate "NXP Layerscape qDMA engine support"
+> +       depends on ARM || ARM64
+> +       select DMA_ENGINE
+> +       select DMA_VIRTUAL_CHANNELS
+> +       select DMA_ENGINE_RAID
+> +       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+> +       help
+> +         Support the NXP Layerscape qDMA engine with command queue and legacy mode.
+> +         Channel virtualization is supported through enqueuing of DMA jobs to,
+> +         or dequeuing DMA jobs from, different work queues.
+> +         This module can be found on NXP Layerscape SoCs.
+> +
+>  config FSL_RAID
+>          tristate "Freescale RAID engine Support"
+>          depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index 0f62a4d..93db0fc 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -33,6 +33,7 @@ obj-$(CONFIG_DW_DMAC_CORE) += dw/
+>  obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
+>  obj-$(CONFIG_FSL_DMA) += fsldma.o
+>  obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
+> +obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
+>  obj-$(CONFIG_FSL_RAID) += fsl_raid.o
+>  obj-$(CONFIG_HSU_DMA) += hsu/
+>  obj-$(CONFIG_IMG_MDC_DMA) += img-mdc-dma.o
+> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+> new file mode 100644
+> index 0000000..81df812
+> --- /dev/null
+> +++ b/drivers/dma/fsl-qdma.c
+> @@ -0,0 +1,1101 @@
+
+Not a critical issue, but the format of the file header looks a little
+bit weird to me.  Would you mind clean it up?
+
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright 2018 NXP
+
+I know the SPDX tag is recommended to be the 1st line, but copyright
+normally goes below the file description not above.
+
+> +
+
+No newline needed.
+
+> +/*
+> + * Driver for NXP Layerscape Queue Direct Memory Access Controller
+> + *
+> + * Author:
+> + *  Wen He <wen.he_1@nxp.com>
+> + *  Jiaheng Fan <jiaheng.fan@nxp.com>
+> + *
+
+No newline needed.
+
+> + */
+> +
+
+
+Regards,
+Leo
