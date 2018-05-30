@@ -1,37 +1,66 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] pinctrl: optionally stop deferring probe at end of
- initcalls
-Date: Wed, 30 May 2018 09:00:08 +0200
-Message-ID: <CACRpkdZ_xrHkrprb=7BiOCrnJrAsXNZVnYDf2Jcp4gF99W+pCA@mail.gmail.com>
-References: <20180524175024.19874-1-robh@kernel.org>
- <20180524175024.19874-6-robh@kernel.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/2] mmc: meson-gx: add device reset
+Date: Wed, 30 May 2018 09:27:42 +0200
+Message-ID: <CAPDyKFo1ui3XyjXJt0JKrQZd52zEQfsY65LbK_exFqJ6jVDmCQ@mail.gmail.com>
+References: <20180515095748.6794-1-jbrunet@baylibre.com> <20180515095748.6794-3-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <20180524175024.19874-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180515095748.6794-3-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMjQsIDIwMTggYXQgNzo1MCBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6Cgo+IElmIHRoZSBwaW5jdHJsIG5vZGUgaW4gRFQgaW5kaWNhdGVzIHRoYXQg
-cGluIHNldHVwIGlzIG9wdGlvbmFsIGFuZCB0aGUKPiBkZWZhdWx0cyBjYW4gYmUgdXNlZCB3aXRo
-IHRoZSAncGluY3RybC11c2UtZGVmYXVsdCcsIHRoZW4gb25seSBkZWZlciBwcm9iZQo+IHVudGls
-IGluaXRjYWxscyBhcmUgZG9uZS4gVGhpcyBnaXZlcyBwbGF0Zm9ybXMgdGhlIG9wdGlvbiB0byB3
-b3JrIHdpdGhvdXQKPiB0aGVpciBwaW5jdHJsIGRyaXZlciBiZWluZyBlbmFibGVkLgo+Cj4gU2ln
-bmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCkkgdHJ1c3QgdGhhdCB5
-b3Uga25vdyB3aGF0IHlvdSdyZSBkb2luZyBzbyBJIGd1ZXNzCkFja2VkLWJ5OiBMaW51cyBXYWxs
-ZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+CgpZb3VycywKTGludXMgV2FsbGVpagpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpib290LWFyY2hpdGVj
-dHVyZSBtYWlsaW5nIGxpc3QKYm9vdC1hcmNoaXRlY3R1cmVAbGlzdHMubGluYXJvLm9yZwpodHRw
-czovL2xpc3RzLmxpbmFyby5vcmcvbWFpbG1hbi9saXN0aW5mby9ib290LWFyY2hpdGVjdHVyZQo=
+Jerome,
+
+On 15 May 2018 at 11:57, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> Trigger the reset line of the mmc controller while probing, if available.
+> The reset should be optional for now, at least until all related DT nodes
+> have the reset property.
+>
+> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+
+I got a regression boot report from kernelci. The bisect doesn't point
+to a certain commit, but I found $subject patch a possible cause. Is
+it something you can have a look at and see if it's a valid problem?
+https://kernelci.org/boot/id/5b0d68a859b514726179a899/
+
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/meson-gx-mmc.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
+> index 4f972b879fe6..9bca359f7936 100644
+> --- a/drivers/mmc/host/meson-gx-mmc.c
+> +++ b/drivers/mmc/host/meson-gx-mmc.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/pinctrl/consumer.h>
+> @@ -1184,6 +1185,14 @@ static int meson_mmc_probe(struct platform_device *pdev)
+>                 goto free_host;
+>         }
+>
+> +       ret = device_reset_optional(&pdev->dev);
+> +       if (ret) {
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(&pdev->dev, "device reset failed: %d\n", ret);
+> +
+> +               return ret;
+> +       }
+> +
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         host->regs = devm_ioremap_resource(&pdev->dev, res);
+>         if (IS_ERR(host->regs)) {
+> --
+> 2.14.3
+>
