@@ -1,51 +1,90 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v3 3/5] Documentation: DT: add i.MX EPIT timer binding
-Date: Wed, 30 May 2018 10:38:23 +0300
-Message-ID: <5d71aced-cd2f-3f01-25b0-d87788f22c32@mentor.com>
-References: <20180529170436.22711-1-peron.clem@gmail.com>
- <20180529170436.22711-4-peron.clem@gmail.com>
- <7f2f8b6b-b7f6-99c1-fc5f-a7628a751fdc@mentor.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v2 4/6] clk: tegra20: init NDFLASH clock to sensible rate
+Date: Wed, 30 May 2018 10:42:25 +0300
+Message-ID: <20180530074225.GC6708@tbergstrom-lnx.Nvidia.com>
+References: <20180527215442.14760-5-stefan@agner.ch>
+ <20180528075510.GQ6835@tbergstrom-lnx.Nvidia.com>
+ <5665b799f763daa82dced238fb494863@agner.ch>
+ <20180529074804.GA6708@tbergstrom-lnx.Nvidia.com>
+ <90180dd9fc6e60175c54b9d70e50f0e5@agner.ch>
+ <04cdfdf5-33c5-b569-9cd7-dda1b9ea0baf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7f2f8b6b-b7f6-99c1-fc5f-a7628a751fdc@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <04cdfdf5-33c5-b569-9cd7-dda1b9ea0baf@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>, boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMzAvMjAxOCAxMDoyNyBBTSwgVmxhZGltaXIgWmFwb2xza2l5IHdyb3RlOgo+IEhpIENs
-w6ltZW50LAo+IAo+IE9uIDA1LzI5LzIwMTggMDg6MDQgUE0sIENsw6ltZW50IFDDqXJvbiB3cm90
-ZToKPj4gRnJvbTogQ2zDqW1lbnQgUGVyb24gPGNsZW1lbnQucGVyb25AZGV2aWFsZXQuY29tPgo+
-Pgo+PiBBZGQgZGV2aWNldHJlZSBiaW5kaW5nIGRvY3VtZW50IGZvciBOWFAncyBpLk1YIFNvQyBz
-cGVjaWZpYwo+PiBFUElUIHRpbWVyIGRyaXZlci4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQ2zDqW1l
-bnQgUGVyb24gPGNsZW1lbnQucGVyb25AZGV2aWFsZXQuY29tPgo+PiAtLS0KPj4gIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDZxLGVwaXQudHh0ICB8IDI0ICsrKysrKysrKysrKysr
-KysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDZxLGVw
-aXQudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svaW14NnEsZXBpdC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svaW14NnEsZXBpdC50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXgg
-MDAwMDAwMDAwMDAwLi5hODRhNjBjNmFlMzUKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEsZXBpdC50eHQKPiAKPiBU
-aGUgZmlsZSBzaG91bGQgYmUgcmVuYW1lZCB0byBhIG1vcmUgZ2VuZXJpYyBuYW1lIGxpa2UgJ2lt
-eCxlcGl0LnR4dCcKPiBvciAnaW14MzEsZXBpdC50eHQnLgo+IAo+IEFsc28gbm90ZSB0aGF0IHRo
-ZSBmb2xkZXIgaXMgaW5jb3JyZWN0bHkgc2VsZWN0ZWQsIGl0IG11c3QgYmUKPiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvCj4gCgpBbmQgbGludXgtY2xrIG1haWxpbmcg
-bGlzdCBmb3IgcHVibGlzaGluZyBzZWVtcyB0byBiZSBpbXByb3BlciBvbmUsCmluc3RlYWQgcGxl
-YXNlIGFkZCBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4gYW5kClRo
-b21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPiB0byB0aGUgbGlzdCBvZiBhZGRyZXNz
-ZWVzLAphbmQgdGhlIHByb3BlciBtYWlsaW5nIGxpc3QgYWRkcmVzcyBpcyBsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnCgotLQpXaXRoIGJlc3Qgd2lzaGVzLApWbGFkaW1pcgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, May 29, 2018 at 03:19:47PM +0300, Dmitry Osipenko wrote:
+> On 29.05.2018 15:12, Stefan Agner wrote:
+> > On 29.05.2018 09:48, Peter De Schrijver wrote:
+> >> On Mon, May 28, 2018 at 05:53:08PM +0200, Stefan Agner wrote:
+> >>> On 28.05.2018 09:55, Peter De Schrijver wrote:
+> >>>> On Sun, May 27, 2018 at 11:54:40PM +0200, Stefan Agner wrote:
+> >>>>> From: Lucas Stach <dev@lynxeye.de>
+> >>>>>
+> >>>>> Set up the NAND Flash controller clock to run at 150MHz
+> >>>>> instead of the rate set by the bootloader. This is a
+> >>>>> conservative rate which also yields good performance.
+> >>>>>
+> >>>>> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> >>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> >>>>> ---
+> >>>>>  drivers/clk/tegra/clk-tegra20.c | 1 +
+> >>>>>  1 file changed, 1 insertion(+)
+> >>>>>
+> >>>>> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+> >>>>> index 0ee56dd04cec..dff8c425cd28 100644
+> >>>>> --- a/drivers/clk/tegra/clk-tegra20.c
+> >>>>> +++ b/drivers/clk/tegra/clk-tegra20.c
+> >>>>> @@ -1049,6 +1049,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+> >>>>>  	{ TEGRA20_CLK_GR2D, TEGRA20_CLK_PLL_C, 300000000, 0 },
+> >>>>>  	{ TEGRA20_CLK_GR3D, TEGRA20_CLK_PLL_C, 300000000, 0 },
+> >>>>>  	{ TEGRA20_CLK_VDE, TEGRA20_CLK_CLK_MAX, 300000000, 0 },
+> >>>>> +	{ TEGRA20_CLK_NDFLASH, TEGRA20_CLK_PLL_P, 150000000, 0 },
+> >>>>>  	/* must be the last entry */
+> >>>>>  	{ TEGRA20_CLK_CLK_MAX, TEGRA20_CLK_CLK_MAX, 0, 0 },
+> >>>>>  };
+> >>>>> --
+> >>>>> 2.17.0
+> >>>>>
+> >>>>
+> >>>> Maybe better to specify this in the Tegra20 dtsi? See
+> >>>> "Assigned clock parents and rates" in
+> >>>> Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >>>
+> >>> assigned-clocks indeed works just fine for this case. Thanks for
+> >>> bringing this up, will drop this patch and add the device tree
+> >>> properties in v3.
+> >>>
+> >>> Hm, interesting that none of the Tegra device tree make use of the
+> >>> feature so far. I guess there would be other cases where this would be
+> >>> useful as well (the one just above, VDE?).
+> >>>
+> >>
+> >> Yes, historically this feature wasn't available, so we used these init tables.
+> >> Unfortunately it's not easy to get rid of them for parent and rate
+> >> configuration, because new kernels should also work with existing DTBs, so we
+> >> can't just add assigned-clock properties and remove the existing table
+> >> entries. What we could do is use the CLK_IS_CRITICAL flag for all clocks which
+> >> are only enabled by the init table. For not yet merged blocks, this is
+> >> ofcourse not a concern.
+> > 
+> > Sure I understand.
+> > 
+> > Was just somewhat surprised that it isn't used at all yet (grep -r -e
+> > assigned-clock arch/arm/boot/dts/tegra* returns nothing). After all,
+> > assigned clocks bindings have been merged in 2014 :-)
+> > 
+> > At least "clk: tegra: Specify VDE clock rate" merged earlier this year
+> > would have been a candidate already.
+> 
+> I wasn't even aware of existence of the assigned-clock properties, probably just
+> like others.
+
+This feature seems to be little used indeed. Not sure why.
+
+Peter.
