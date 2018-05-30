@@ -1,58 +1,57 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [DPU PATCH 10/11] drm/msm/dpu: correct
- dpu_io_util.h include path
-Date: Wed, 30 May 2018 10:30:05 -0600
-Message-ID: <20180530163005.GC5028@jcrouse-lnx.qualcomm.com>
-References: <1527691788-9350-1-git-send-email-ryadav@codeaurora.org>
- <1527691788-9350-11-git-send-email-ryadav@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/2] regulator: add QCOM RPMh regulator driver
+Date: Wed, 30 May 2018 17:33:43 +0100
+Message-ID: <20180530163343.GV6920@sirena.org.uk>
+References: <cover.1527040878.git.collinsd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qa1NXTiqN6KSzHv0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527691788-9350-11-git-send-email-ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <cover.1527040878.git.collinsd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMzAsIDIwMTggYXQgMDg6MTk6NDdQTSArMDUzMCwgUmFqZXNoIFlhZGF2IHdy
-b3RlOgo+IGRwdV9pb191dGlsLmggaXMgbW92ZWQgZnJvbSBzdGFuZGFyZCBpbmNsdWRlIHBhdGgK
-PiB0byBkcml2ZXIgZm9sZGVyLCBjb3JyZWN0IHRoZSBpbmNsdWRlIHBhdGggaW4gY29kZS4KPiAK
-PiBTaWduZWQtb2ZmLWJ5OiBSYWplc2ggWWFkYXYgPHJ5YWRhdkBjb2RlYXVyb3JhLm9yZz4KCklm
-IHRoZSBwcmV2aW91cyBwYXRjaCBkb2Vzbid0IGNvbXBpbGUgd2l0aG91dCB0aGlzIGZpeCB5b3Ug
-c2hvdWxkIHNxdWFzaCB0aGVtLgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
-dTEvZHB1X3Bvd2VyX2hhbmRsZS5jIHwgMSAtCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9k
-cHUxL2RwdV9wb3dlcl9oYW5kbGUuaCB8IDIgKy0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxIGluc2Vy
-dGlvbigrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L21zbS9kaXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9k
-aXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jCj4gaW5kZXggMjRjMzI3NC4uZjk5N2JkOSAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxl
-LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxl
-LmMKPiBAQCAtMjAsNyArMjAsNiBAQAo+ICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+ICAjaW5j
-bHVkZSA8bGludXgvbXV0ZXguaD4KPiAgI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4g
-LSNpbmNsdWRlIDxsaW51eC9kcHVfaW9fdXRpbC5oPgo+ICAKPiAgI2luY2x1ZGUgImRwdV9wb3dl
-cl9oYW5kbGUuaCIKPiAgI2luY2x1ZGUgImRwdV90cmFjZS5oIgo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmggYi9kcml2ZXJzL2dw
-dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmgKPiBpbmRleCA5YTZkNGI5Li4x
-OTNmNDY4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9w
-b3dlcl9oYW5kbGUuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9w
-b3dlcl9oYW5kbGUuaAo+IEBAIC0yMSw3ICsyMSw3IEBACj4gICNkZWZpbmUgRFBVX1BPV0VSX0hB
-TkRMRV9FTkFCTEVfQlVTX0lCX1FVT1RBCTE2MDAwMDAwMDAKPiAgI2RlZmluZSBEUFVfUE9XRVJf
-SEFORExFX0RJU0FCTEVfQlVTX0lCX1FVT1RBCTAKPiAgCj4gLSNpbmNsdWRlIDxsaW51eC9kcHVf
-aW9fdXRpbC5oPgo+ICsjaW5jbHVkZSAiZHB1X2lvX3V0aWwuaCIKPiAgCj4gIC8qIGV2ZW50IHdp
-bGwgYmUgdHJpZ2dlcmVkIGJlZm9yZSBwb3dlciBoYW5kbGVyIGRpc2FibGUgKi8KPiAgI2RlZmlu
-ZSBEUFVfUE9XRVJfRVZFTlRfUFJFX0RJU0FCTEUJMHgxCgotLSAKVGhlIFF1YWxjb21tIElubm92
-YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExp
-bnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
-ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+
+--qa1NXTiqN6KSzHv0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, May 22, 2018 at 07:43:16PM -0700, David Collins wrote:
+> This patch series adds a driver and device tree binding documentation for
+> PMIC regulator control via Resource Power Manager-hardened (RPMh) on some
+> Qualcomm Technologies, Inc. SoCs such as SDM845.  RPMh is a hardware block
+
+So, this is a very big driver and obviously it being RPM based it
+doesn't look like other regulators which is causing problems, especially
+when coupled with the desire to implement a bunch of more exotic
+features like the mode setting.  I think this review is going to go a
+lot more smoothly if you split this up into a base driver with just
+normal, standard stuff that doesn't add too many custom properties or
+unusual ways of working and then a series of patches on top of that
+adding things like the mode adjustment and interaction with other RPM
+clients.
+
+We've got other RPM based regulators in tree already so the baseline bit
+shouldn't be too hard, that'll make the rest of the patches much smaller
+and easier to review and mean that the bits that are simpler and easier
+to cope with don't need to be reposted.
+
+--qa1NXTiqN6KSzHv0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsO0mYACgkQJNaLcl1U
+h9Ci/Af6AwaPbNNY3vvBsWxCyE2pVb/OfZff8RFOfNQwK7S7T/Q9zMpuT+hGGs+B
+LemjKDrAEQbXERmfxDOslAp1+Le2p/b/fphDxhD4y75f1EOCFyo3AdxrYfDuNlW5
+6IbTL69vN9u8umsplYEfho1efx8Spigj3zD+sEydmtebVYxPaXPLBIbBXaS13YIo
+rApcrZKZM07D+KnLxEQcMCjmWEyNnaav1Rip1KSQ1wx3zrS/juoFMZOmkIvn+qnc
+UMDb7U2FSBbfWFhTjVt4U+rAfkvnxNLA/76pWXWf7Gn26WQB/iuhZwcz9BbYgqgf
+52pr3JyQSyTIxsfccorB46GD6Tg95w==
+=aKLR
+-----END PGP SIGNATURE-----
+
+--qa1NXTiqN6KSzHv0--
