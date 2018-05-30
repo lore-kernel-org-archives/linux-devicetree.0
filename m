@@ -1,39 +1,71 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 1/5] ARM: imx: remove inexistant EPIT timer init
-Date: Wed, 30 May 2018 14:03:23 +0200
-Message-ID: <20180530120327.27681-2-peron.clem@gmail.com>
-References: <20180530120327.27681-1-peron.clem@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH v2 00/10] Add TOSHIBA TC358764 DSI/LVDS bridge driver
+Date: Wed, 30 May 2018 14:15:51 +0200
+Message-ID: <1527682561-1386-1-git-send-email-m.purski@samsung.com>
+References: <CGME20180530121622eucas1p1015b65cd12a544b1ea72fe6bfd1a3ccc@eucas1p1.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530120327.27681-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?q?Cl=C3=A9ment=20Peron?= <clement.peron@devialet.com>
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Clément Peron <clement.peron@devialet.com>
+Hi all,
 
-i.MX EPIT timer has been removed but not the init function declaration.
+this patchset is a next attempt to add the tc358764 driver.
+The previous one can be found here:
 
-Signed-off-by: Clément Peron <clement.peron@devialet.com>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+https://lists.freedesktop.org/archives/dri-devel/2014-February/053705.html
+
+Back then, TC358764 was added as a panel driver.
+
+The bridge is supposed to be a DSI peripheral. Currently exynos_dsi accepts only panels
+as its peripherals. Therefore, some logic in exynos_dsi had to be ammended. That is implemented
+in first 4 patches.
+
+Apart from the driver this patchset adds support for BOE HV070WSA-100 panel, which is used by
+TC358764 and dts nodes to exynos5250.dtsi and exynos5250-arndale.dtsi.
+
+Best regards,
+
+Maciej Purski
+
 ---
- arch/arm/mach-imx/common.h | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index c8d68e918b2f..18aae76fa2da 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -38,7 +38,6 @@ void imx21_soc_init(void);
- void imx27_soc_init(void);
- void imx31_soc_init(void);
- void imx35_soc_init(void);
--void epit_timer_init(void __iomem *base, int irq);
- int mx21_clocks_init(unsigned long lref, unsigned long fref);
- int mx27_clocks_init(unsigned long fref);
- int mx31_clocks_init(unsigned long fref);
+Changes in v2:
+- fix commits authorship
+- don't call pm_runtime_put_sync() in exyons_dsi_disable(), if pm_runtime_get_sync()
+  has not been called
+- squash dts commits
+- merge some redundant regulators in tc358764 bindings and in DTS
+- fix kbuild robot errors
+
+Andrzej Hajda (6):
+  panel/hv070wsa-100: add DT bindings
+  drm/panel: add support for BOE HV070WSA-100 panel to simple-panel
+  dt-bindings: tc358754: add DT bindings
+  drm/bridge: tc358764: Add DSI to LVDS bridge driver
+  ARM: dts: exynos5250: add DSI node
+  ARM: dts: exynos5250-arndale: add DSI and panel nodes
+
+Maciej Purski (4):
+  drm/exynos: rename "bridge_node" to "mic_bridge_node"
+  drm/exynos: move pm_runtime_get_sync() to exynos_dsi_init()
+  drm/exynos: move connector creation to attach callback
+  drm/exynos: add non-panel path to exynos_dsi_enable()
+
+ .../bindings/display/bridge/toshiba,tc358764.txt   |  37 ++
+ .../bindings/display/panel/boe,hv070wsa-100.txt    |   7 +
+ arch/arm/boot/dts/exynos5250-arndale.dts           |  61 +++
+ arch/arm/boot/dts/exynos5250.dtsi                  |  21 +
+ drivers/gpu/drm/bridge/Kconfig                     |   9 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/tc358764.c                  | 547 +++++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            |  88 ++--
+ drivers/gpu/drm/panel/panel-simple.c               |  25 +
+ 9 files changed, 755 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,hv070wsa-100.txt
+ create mode 100644 drivers/gpu/drm/bridge/tc358764.c
+
 -- 
-2.17.0
+2.7.4
