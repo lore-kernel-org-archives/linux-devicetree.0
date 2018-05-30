@@ -1,54 +1,60 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Wed, 30 May 2018 07:54:47 -0700
-Message-ID: <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
-References: <cover.1527040878.git.collinsd@codeaurora.org> <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
- <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com> <20180530103720.GH6920@sirena.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 4/6] bus: ti-sysc: Add support for using ti-sysc for
+ MCAN on dra76x
+Date: Wed, 30 May 2018 07:57:26 -0700
+Message-ID: <20180530145726.GD5705@atomide.com>
+References: <20180530141133.3711-1-faiz_abbas@ti.com>
+ <20180530141133.3711-5-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530103720.GH6920@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <20180530141133.3711-5-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Faiz Abbas <faiz_abbas@ti.com> [180530 14:12]:
+> The dra76x MCAN generic interconnect module has a its own
+> format for the bits in the control registers.
+...
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -1262,6 +1262,22 @@ static const struct sysc_capabilities sysc_omap4_usb_host_fs = {
+>  	.regbits = &sysc_regbits_omap4_usb_host_fs,
+>  };
+>  
+> +static const struct sysc_regbits sysc_regbits_dra7_mcan = {
+> +	.dmadisable_shift = -ENODEV,
+> +	.midle_shift = -ENODEV,
+> +	.sidle_shift = -ENODEV,
+> +	.clkact_shift = -ENODEV,
+> +	.enwkup_shift = 4,
+> +	.srst_shift = 0,
+> +	.emufree_shift = -ENODEV,
+> +	.autoidle_shift = -ENODEV,
+> +};
+> +
+> +static const struct sysc_capabilities sysc_dra7_mcan = {
+> +	.type = TI_SYSC_DRA7_MCAN,
+> +	.regbits = &sysc_regbits_dra7_mcan,
+> +};
+> +
+>  static int sysc_init_pdata(struct sysc *ddata)
+>  {
+>  	struct ti_sysc_platform_data *pdata = dev_get_platdata(ddata->dev);
+> @@ -1441,6 +1457,7 @@ static const struct of_device_id sysc_match[] = {
+>  	{ .compatible = "ti,sysc-mcasp", .data = &sysc_omap4_mcasp, },
+>  	{ .compatible = "ti,sysc-usb-host-fs",
+>  	  .data = &sysc_omap4_usb_host_fs, },
+> +	{ .compatible = "ti,sysc-dra7-mcan", .data = &sysc_dra7_mcan, },
+>  	{  },
+>  };
 
-On Wed, May 30, 2018 at 3:37 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, May 29, 2018 at 10:23:20PM -0700, Doug Anderson wrote:
->
->> > +                       qcom,drms-mode-max-microamps = <10000 1000000>;
->
->> Things look pretty good to me now.  I'm still hesitant about the whole
->> need to list the modes twice (once using the unordered
->> "regulator-allowed-modes" and once to match up against the ordered
->> "qcom,drms-mode-max-microamps").  I'm also still of the opinion that
->> the whole "drms-mode-max-microamps" ought to be a standard property
->> (not a qcom specific one) and handled in the regulator core.
->
-> I'm confused as to why we are specifying the maximum current the device
-> can deliver in a given mode in the DT - surely that's a fixed property
-> of the hardware?
+Looks good to me. And presumably you checked that no other dra7 modules
+use sysconfig register bit layout like this?
 
-Said another way: you're saying that you'd expect the "max-microamps"
-table to have one fewer element than the listed modes?  So in the
-above example you'd have:
+Regards,
 
-drms-modes: LPM, HPM
-max-microamps: 10000
-
-...or in a more complicated case, you could have:
-
-drms-modes: RET, LPM, AUTO, HPM
-max-microamps: 1, 100, 10000
-
-
-Did I understand you correctly?
-
-I'm personally OK with that color for the shed.  I kinda like the
-symmetry of having the same number of elements in both lists (and
-being able to print an error message if someone ends up asking for too
-much current), but it's not a big deal for me either way.
-
--Doug
+Tony
