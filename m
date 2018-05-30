@@ -1,94 +1,136 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v1 2/2] hwmon: npcm-pwm: add NPCM7xx PWM driver
-Date: Wed, 30 May 2018 09:46:04 -0700
-Message-ID: <20180530164604.GB8270@roeck-us.net>
-References: <1527588141-18639-1-git-send-email-tmaimon77@gmail.com>
- <1527588141-18639-3-git-send-email-tmaimon77@gmail.com>
- <20180529165617.GD2162@roeck-us.net>
- <CAP6Zq1h8_n8R=dqmBxC_bK_YstLt1kkE6UCp2OVsNpKp=RK8og@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ARM: dts: exynos: Add missing CPU clocks to secondary CPUs on Exynos542x
+Date: Wed, 30 May 2018 18:49:22 +0200
+Message-ID: <20180530164922.31851-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP6Zq1h8_n8R=dqmBxC_bK_YstLt1kkE6UCp2OVsNpKp=RK8og@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, jdelvare@suse.com, Avi Fishman <avifishman70@gmail.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-pwm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 06:44:58PM +0300, Tomer Maimon wrote:
-> Hi  Guenter,
-> 
-> Thanks for your prompt reply!
-> 
-> 
-> On 29 May 2018 at 19:56, Guenter Roeck <linux@roeck-us.net> wrote:
-> 
-> > On Tue, May 29, 2018 at 01:02:21PM +0300, Tomer Maimon wrote:
-> > > Add Nuvoton BMC NPCM7xx Pulse Width Modulation (PWM) driver.
-> > >
-> > > The Nuvoton BMC NPCM7xx has two identical PWM controller modules,
-> > > each module has four PWM controller outputs.
-> > >
-> >
-> > I don't see it guaranteed that all future NPCM7xx devices will be PWM
-> > controllers, much less that they will be compatible to the chip really
-> >
-> 
-> Actually all NPCM7xx family have PWM and FAN modules support,
-> 
-> 
-> > supported here. NPCM750, I presume ? I would suggest name the driver
-> > accordingly.
-> >
-> 
-> The compatible name can not be a family name like nuvoton,npcm7xx-pwm, only
-> a specific chip name. (in our case the NPCM750 is the full modules SOC)
-> still you think i should change the driver name? (note: all of our NPCM7xx
-> unique modules drivers are named npcm7xx-*.c or *-npcm7xx.c)
-> 
+Secondary CPUs should have the same information in DeviceTree as booting
+CPU from both correctness point of view and for possible hotplug
+scenarios.
 
-drivers/watchdog/npcm_wdt.c contradicts that statement.
+Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos5420-cpus.dtsi | 6 ++++++
+ arch/arm/boot/dts/exynos5422-cpus.dtsi | 8 +++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-Please discuss with the pwm maintainer. In hwmon, wildcards in driver file
-names are discouraged and will not be accepted. Our recommendation is to pick
-one chip from the family and use it as part of the file name.
-
-> 
-> > As a generic pwm driver, not specifically tied to a fan controller,
-> > this driver does not belong into hwmon. It should be added to the pwm
-> > subsystem. Copying the maintainer and mailing list.
-> >
-> > In the NPCM7xx we have PWM and FAN controller modules,  usually in the
-> aspect of our BMC clients the two module
-> are used together to control the fans.
-> 
-> But because in the NPCM7xx the PWM and the FAN controller are separate
-> modules we
-> thought to do two separate drivers in the hwmon
-> is it possible? or you think it is better to do one hwmon driver for the
-> PWM and the FAN controller.
-> 
-That depends on how closely the two modules are intertwined. If the pwm module
-is generic, it belongs into the pwm subsystem. It only belongs into hwmon
-if it can _only_ be used for fan control, eg if the data reported by the fan
-module is used by the hardware to control the pwm output based on some
-fan speed <-> pw value mapping which is programmed into the chip, and/or
-if the pwm output can only connect to a fan and nothing else, and if the
-relationship between pwm output and fan input is well defined.
-
-If both end up in hwmon, I don't see the benefit of having two separate
-drivers. That means two hwmon devices for the same fan or set of fans,
-one being all but useless in respect to output from the 'sensors'
-command. You'll have to convince me why that would make sense; I just
-don't see the point.  In that case, I would also not see the point of
-having two separate devicetree nodes; to me, that would be similar
-to having two interfaces for a single serial line, one for receive
-and one for transmit.
-
-> note that we were going to submit soon also the FAN controller driver under
-> hwmon.
-> 
-No problem with that as long as there are no wildcards in the file name.
-
-Guenter
+diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+index a8e449471304..0ee6e92a3c29 100644
+--- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+@@ -38,6 +38,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0x1>;
++			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+@@ -49,6 +50,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0x2>;
++			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+@@ -60,6 +62,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0x3>;
++			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+@@ -83,6 +86,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x101>;
++			clocks = <&clock CLK_KFC_CLK>;
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+@@ -94,6 +98,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x102>;
++			clocks = <&clock CLK_KFC_CLK>;
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+@@ -105,6 +110,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x103>;
++			clocks = <&clock CLK_KFC_CLK>;
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+index 7c130a00d1a8..e4a5857c135f 100644
+--- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+@@ -37,6 +37,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x101>;
++			clocks = <&clock CLK_KFC_CLK>;
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+@@ -48,6 +49,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x102>;
++			clocks = <&clock CLK_KFC_CLK>;
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+@@ -59,6 +61,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x103>;
++			clocks = <&clock CLK_KFC_CLK>;
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+@@ -69,8 +72,8 @@
+ 		cpu4: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+-			clocks = <&clock CLK_ARM_CLK>;
+ 			reg = <0x0>;
++			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+@@ -82,6 +85,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0x1>;
++			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+@@ -93,6 +97,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0x2>;
++			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+@@ -104,6 +109,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0x3>;
++			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-- 
+2.14.1
