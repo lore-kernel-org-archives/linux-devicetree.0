@@ -1,12 +1,12 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v8 0/7] i2c: Add FSI-attached I2C master algorithm
-Date: Thu, 31 May 2018 00:31:38 +0300
-Message-ID: <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com>
-References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v8 4/7] i2c: fsi: Add abort and hardware reset procedures
+Date: Thu, 31 May 2018 00:42:11 +0300
+Message-ID: <CAHp75Vc9HAQXj0FonR2mEmg0o7fgTPE-4oXS-zB78OG1gvKKEw@mail.gmail.com>
+References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com> <1527714464-8642-5-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
+In-Reply-To: <1527714464-8642-5-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Eddie James <eajames@linux.vnet.ibm.com>
 Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
@@ -14,58 +14,238 @@ List-Id: devicetree@vger.kernel.org
 
 On Thu, May 31, 2018 at 12:07 AM, Eddie James
 <eajames@linux.vnet.ibm.com> wrote:
-> This series adds an algorithm for an I2C master physically located on an FSI
-> slave device. The I2C master has multiple ports, each of which may be connected
-> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
+> Add abort procedure for failed transfers. Add engine and bus reset
+> procedures to recover from as many faults as possible.
 >
-> Due to the multi-port nature of the I2C master, the driver instantiates a new
-> I2C adapter for each port connected to a slave. The connected ports should be
-> defined in the device tree under the I2C master device.
 
-I'll comment the series later, though you have to address previous
-comments first:
-- understand devm_ purpose and how it works
-- understand list_for_each*() macros
-- discuss with maintainer a design of enumerating ports
-- ... (whatever I forgot and others added) ...
+Few small comments, after addressing which
 
-> Changes since v7
->  - Fix grammer in Kconfig (a -> an)
->  - Change I2C registers to use BIT and GENMASK
->  - Remove custom macros and use FIELD_PREP and FIELD_GET
->  - Fix a few unecessary initializations and "return rc" that are always zero
->  - Clean up the read/write fifo functions a bit
->  - Few other clean-up items
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+
+> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+> ---
+>  drivers/i2c/busses/i2c-fsi.c | 179 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 179 insertions(+)
 >
-> Changes since v6
->  - Remove spinlock for reset functionality; it's unecessary and doesn't work
->    with the latest FSI core.
->  - Use a mutex instead of a semaphore, and don't wait for timeout to get the
->    lock.
->  - Use usleeps instead of schedule_timeout; it's not worth the overhead when
->    the wait should be very short in between sending the command and receiving
->    the response.
+> diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+> index be8e15c..e5dd0f7 100644
+> --- a/drivers/i2c/busses/i2c-fsi.c
+> +++ b/drivers/i2c/busses/i2c-fsi.c
+> @@ -12,10 +12,12 @@
 >
-> Changes since v5
->  - Fix reset functionality and do a reset after every transfer failure
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+> +#include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/errno.h>
+>  #include <linux/fsi.h>
+>  #include <linux/i2c.h>
+> +#include <linux/jiffies.h>
+>  #include <linux/kernel.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+> @@ -122,6 +124,20 @@
+>  #define I2C_ESTAT_SELF_BUSY    BIT(6)
+>  #define I2C_ESTAT_VERSION      GENMASK(4, 0)
 >
-> Eddie James (7):
->   dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
->   i2c: Add FSI-attached I2C master algorithm
->   i2c: fsi: Add port structures
->   i2c: fsi: Add abort and hardware reset procedures
->   i2c: fsi: Add transfer implementation
->   i2c: fsi: Add I2C master locking
->   i2c: fsi: Add bus recovery
+> +/* port busy register */
+> +#define I2C_PORT_BUSY_RESET    BIT(31)
+> +
+> +/* wait for command complete or data request */
+> +#define I2C_CMD_SLEEP_MAX_US   500
+> +#define I2C_CMD_SLEEP_MIN_US   50
+> +
+> +/* wait after reset; choose time from legacy driver */
+> +#define I2C_RESET_SLEEP_MAX_US 2000
+> +#define I2C_RESET_SLEEP_MIN_US 1000
+> +
+> +/* choose timeout length from legacy driver; it's well tested */
+> +#define I2C_ABORT_TIMEOUT      msecs_to_jiffies(100)
+> +
+>  struct fsi_i2c_master {
+>         struct fsi_device       *fsi;
+>         u8                      fifo_size;
+> @@ -208,6 +224,169 @@ static int fsi_i2c_set_port(struct fsi_i2c_port *port)
+>         return fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
+>  }
 >
->  Documentation/devicetree/bindings/i2c/i2c-fsi.txt |  40 ++
->  drivers/i2c/busses/Kconfig                        |  11 +
->  drivers/i2c/busses/Makefile                       |   1 +
->  drivers/i2c/busses/i2c-fsi.c                      | 722 ++++++++++++++++++++++
->  4 files changed, 774 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
->  create mode 100644 drivers/i2c/busses/i2c-fsi.c
->
+> +static int fsi_i2c_reset_bus(struct fsi_i2c_master *i2c)
+> +{
+> +       int i, rc;
+> +       u32 mode, stat, ext, dummy = 0;
+> +
+> +       rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_MODE, &mode);
+> +       if (rc)
+> +               return rc;
+> +
+> +       mode |= I2C_MODE_DIAG;
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
+> +       if (rc)
+> +               return rc;
+> +
+> +       for (i = 0; i < 9; ++i) {
+
+i++
+
+> +               rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_SCL, &dummy);
+> +               if (rc)
+> +                       return rc;
+> +
+> +               rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_SET_SCL, &dummy);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_SCL, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_SDA, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_SET_SCL, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_SET_SDA, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       mode &= ~I2C_MODE_DIAG;
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &stat);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* check for hardware fault */
+> +       if (!(stat & I2C_STAT_SCL_IN) || !(stat & I2C_STAT_SDA_IN)) {
+> +               rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_ESTAT, &ext);
+> +               if (rc)
+> +                       return rc;
+> +
+> +               dev_err(&i2c->fsi->dev, "bus stuck status[%08X] ext[%08X]\n",
+> +                       stat, ext);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int fsi_i2c_reset(struct fsi_i2c_master *i2c, u16 port)
+> +{
+> +       int rc;
+> +       u32 mode, stat, dummy = 0;
+> +
+> +       /* reset engine */
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_I2C, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* re-init engine */
+> +       rc = fsi_i2c_dev_init(i2c);
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_MODE, &mode);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* set port; default after reset is 0 */
+> +       if (port) {
+
+> +               mode = (mode & ~I2C_MODE_PORT) | FIELD_PREP(I2C_MODE_PORT,
+> +                                                           port);
+
+Hmm... This would look better as two expressions
+
+mode &= ~..._PORT;
+mode |= FIELD_PREP(...);
+
+> +               rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +
+> +       /* reset busy register; hw workaround */
+> +       dummy = I2C_PORT_BUSY_RESET;
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_PORT_BUSY, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* force bus reset */
+> +       rc = fsi_i2c_reset_bus(i2c);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* reset errors */
+> +       dummy = 0;
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_ERR, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* wait for command complete */
+> +       usleep_range(I2C_RESET_SLEEP_MIN_US, I2C_RESET_SLEEP_MAX_US);
+> +
+> +       rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_STAT, &stat);
+> +       if (rc)
+> +               return rc;
+> +
+> +       if (stat & I2C_STAT_CMD_COMP)
+> +               return rc;
+> +
+> +       /* failed to get command complete; reset engine again */
+> +       rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_RESET_I2C, &dummy);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* re-init engine again */
+> +       return fsi_i2c_dev_init(i2c);
+> +}
+> +
+> +static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
+> +{
+> +       int rc;
+> +       unsigned long start;
+> +       u32 cmd = I2C_CMD_WITH_STOP;
+> +       struct fsi_device *fsi = port->master->fsi;
+> +
+> +       rc = fsi_i2c_reset(port->master, port->port);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* skip final stop command for these errors */
+> +       if (status & (I2C_STAT_PARITY | I2C_STAT_LOST_ARB | I2C_STAT_STOP_ERR))
+> +               return 0;
+> +
+> +       /* write stop command */
+> +       rc = fsi_i2c_write_reg(fsi, I2C_FSI_CMD, &cmd);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* wait until we see command complete in the master */
+> +       start = jiffies;
+> +
+> +       do {
+> +               rc = fsi_i2c_read_reg(fsi, I2C_FSI_STAT, &status);
+> +               if (rc)
+> +                       return rc;
+> +
+> +               if (status & I2C_STAT_CMD_COMP)
+> +                       return 0;
+> +
+> +               usleep_range(I2C_CMD_SLEEP_MIN_US, I2C_CMD_SLEEP_MAX_US);
+> +       } while (time_after(start + I2C_ABORT_TIMEOUT, jiffies));
+> +
+> +       return -ETIMEDOUT;
+> +}
+> +
+>  static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+>                         int num)
+>  {
 > --
 > 1.8.3.1
 >
