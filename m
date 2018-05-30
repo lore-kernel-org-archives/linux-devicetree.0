@@ -1,136 +1,74 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ARM: dts: exynos: Add missing CPU clocks to secondary CPUs on Exynos542x
-Date: Wed, 30 May 2018 18:49:22 +0200
-Message-ID: <20180530164922.31851-1-krzk@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Wed, 30 May 2018 17:59:37 +0100
+Message-ID: <20180530165937.GX6920@sirena.org.uk>
+References: <20180530150241.GO6920@sirena.org.uk>
+ <CAD=FV=XJd-udEE6az0xP7i6x0oGsnd=BSCyZ0Og_+RjNCMXnCQ@mail.gmail.com>
+ <20180530154849.GQ6920@sirena.org.uk>
+ <CAD=FV=X2u=hMyWinSDtim-PmFwAy5mXcwg3HeYojAHcsUFhV3g@mail.gmail.com>
+ <20180530160744.GS6920@sirena.org.uk>
+ <CAD=FV=WVGu0f+=q-C9kiEmaLEUJqGY+Jbns83h72uF-9iasrUw@mail.gmail.com>
+ <20180530161311.GT6920@sirena.org.uk>
+ <CAD=FV=UpWEMSPUYOHmLQ0g_mF990kwn4_zm=ZCNttLKZiz7i=Q@mail.gmail.com>
+ <20180530163644.GW6920@sirena.org.uk>
+ <CAD=FV=V1gGccKr1mHM0zx_-FFdLU1vrzUChwx6KTUyTGzj39Tw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1RhGCd1AsoFHGRHc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=V1gGccKr1mHM0zx_-FFdLU1vrzUChwx6KTUyTGzj39Tw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Secondary CPUs should have the same information in DeviceTree as booting
-CPU from both correctness point of view and for possible hotplug
-scenarios.
 
-Suggested-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5420-cpus.dtsi | 6 ++++++
- arch/arm/boot/dts/exynos5422-cpus.dtsi | 8 +++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+--1RhGCd1AsoFHGRHc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-index a8e449471304..0ee6e92a3c29 100644
---- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-@@ -38,6 +38,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
- 			reg = <0x1>;
-+			clocks = <&clock CLK_ARM_CLK>;
- 			clock-frequency = <1800000000>;
- 			cci-control-port = <&cci_control1>;
- 			operating-points-v2 = <&cluster_a15_opp_table>;
-@@ -49,6 +50,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
- 			reg = <0x2>;
-+			clocks = <&clock CLK_ARM_CLK>;
- 			clock-frequency = <1800000000>;
- 			cci-control-port = <&cci_control1>;
- 			operating-points-v2 = <&cluster_a15_opp_table>;
-@@ -60,6 +62,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
- 			reg = <0x3>;
-+			clocks = <&clock CLK_ARM_CLK>;
- 			clock-frequency = <1800000000>;
- 			cci-control-port = <&cci_control1>;
- 			operating-points-v2 = <&cluster_a15_opp_table>;
-@@ -83,6 +86,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x101>;
-+			clocks = <&clock CLK_KFC_CLK>;
- 			clock-frequency = <1000000000>;
- 			cci-control-port = <&cci_control0>;
- 			operating-points-v2 = <&cluster_a7_opp_table>;
-@@ -94,6 +98,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x102>;
-+			clocks = <&clock CLK_KFC_CLK>;
- 			clock-frequency = <1000000000>;
- 			cci-control-port = <&cci_control0>;
- 			operating-points-v2 = <&cluster_a7_opp_table>;
-@@ -105,6 +110,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x103>;
-+			clocks = <&clock CLK_KFC_CLK>;
- 			clock-frequency = <1000000000>;
- 			cci-control-port = <&cci_control0>;
- 			operating-points-v2 = <&cluster_a7_opp_table>;
-diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-index 7c130a00d1a8..e4a5857c135f 100644
---- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-@@ -37,6 +37,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x101>;
-+			clocks = <&clock CLK_KFC_CLK>;
- 			clock-frequency = <1000000000>;
- 			cci-control-port = <&cci_control0>;
- 			operating-points-v2 = <&cluster_a7_opp_table>;
-@@ -48,6 +49,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x102>;
-+			clocks = <&clock CLK_KFC_CLK>;
- 			clock-frequency = <1000000000>;
- 			cci-control-port = <&cci_control0>;
- 			operating-points-v2 = <&cluster_a7_opp_table>;
-@@ -59,6 +61,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x103>;
-+			clocks = <&clock CLK_KFC_CLK>;
- 			clock-frequency = <1000000000>;
- 			cci-control-port = <&cci_control0>;
- 			operating-points-v2 = <&cluster_a7_opp_table>;
-@@ -69,8 +72,8 @@
- 		cpu4: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
--			clocks = <&clock CLK_ARM_CLK>;
- 			reg = <0x0>;
-+			clocks = <&clock CLK_ARM_CLK>;
- 			clock-frequency = <1800000000>;
- 			cci-control-port = <&cci_control1>;
- 			operating-points-v2 = <&cluster_a15_opp_table>;
-@@ -82,6 +85,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
- 			reg = <0x1>;
-+			clocks = <&clock CLK_ARM_CLK>;
- 			clock-frequency = <1800000000>;
- 			cci-control-port = <&cci_control1>;
- 			operating-points-v2 = <&cluster_a15_opp_table>;
-@@ -93,6 +97,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
- 			reg = <0x2>;
-+			clocks = <&clock CLK_ARM_CLK>;
- 			clock-frequency = <1800000000>;
- 			cci-control-port = <&cci_control1>;
- 			operating-points-v2 = <&cluster_a15_opp_table>;
-@@ -104,6 +109,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
- 			reg = <0x3>;
-+			clocks = <&clock CLK_ARM_CLK>;
- 			clock-frequency = <1800000000>;
- 			cci-control-port = <&cci_control1>;
- 			operating-points-v2 = <&cluster_a15_opp_table>;
--- 
-2.14.1
+On Wed, May 30, 2018 at 09:41:55AM -0700, Doug Anderson wrote:
+> On Wed, May 30, 2018 at 9:36 AM, Mark Brown <broonie@kernel.org> wrote:
+
+> > Yeah, and I don't think that's unreasonable for the core to do - just
+> > drop the voltage to the constraint minimum after it has turned off the
+> > regulator, then recheck and raise if needed before it enables again.
+
+> Would it do this for all regulators, though?  Most regulators are
+> hooked up over a slow i2c bus, so that means that every regulator
+> disable would now do an extra i2c transfer even though for all
+> regulators (other than RPMh) the voltage of a regulator doesn't matter
+> when it's been "disabled' (from Linux's point of view).
+
+It'd only affect regulators that can vary in voltage and actually get
+disabled which is a pretty small subset.  Most regulators are either
+fixed voltage or always on.
+
+> Hrmmm, I suppose maybe it'd be OK though because for most regulators
+> we'd use "regcache" and most regulators that we enabled/disable a lot
+> are not expected to change voltage in Linux (so the regcache write
+> would hopefully be a noop), so maybe it wouldn't be _that_
+> inefficient...
+
+Even if the regulator lacks a cache we'd at least skip out on the write
+when we're not changing voltage as we'd do a read/modify/update cycle
+and stop at the modify.
+
+--1RhGCd1AsoFHGRHc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsO2HkACgkQJNaLcl1U
+h9DTXQf/VgwB1seFzCThTskB5IXfv81dOdpaoeVGDg7V4Y/r6nAbB5uNeRkQojgl
+aMDgpQFnVqVBsZXktBllwQ7foPOGg8WSd0Q4IlVuQwNNf5nAFqSFy+huw0o47LJ8
+x7aWjVFpLTA4XuNezN6XXwNcP2QO6ZY7lKQmXko66py8oQ7KKrktaTaG6mRXAkwf
+Jb/i+lr13F6TFcb71Ky4gMEx6rClG12dMIs8a7Ud/USTmibRTQZ7uEX+mG1hRfHC
+nsiHZ9YV+OCpIuSePcDwSzRL2CxU//EK4CLx3+Ztp2BCd7XQLk3hsO+arIuOHthH
+A/Zc69LtGG1ZIhBnZtGW4XjsKCOr2g==
+=ZaJS
+-----END PGP SIGNATURE-----
+
+--1RhGCd1AsoFHGRHc--
