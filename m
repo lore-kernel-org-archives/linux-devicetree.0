@@ -1,58 +1,132 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: RE: [PATCH v3 2/3] arm: shmobile: Add the R9A06G032 SMP enabler
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 08/12] drm/bridge: tc358764: Add DSI to LVDS bridge
  driver
-Date: Wed, 30 May 2018 08:19:54 +0000
-Message-ID: <OSBPR01MB20546AE06422C9AD896F8F60D26C0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-References: <1527157834-7747-1-git-send-email-michel.pollet@bp.renesas.com>
- <1527157834-7747-3-git-send-email-michel.pollet@bp.renesas.com>
- <CAMuHMdWv2ZRbX=k5+H_WfAeoQ4QsyQLU9iQ9TJ9OQ0fmwg0GOQ@mail.gmail.com>
+Date: Wed, 30 May 2018 10:27:46 +0200
+Message-ID: <20180530082748eucas1p1eede54cce4a257bf2795ac8474f9a9d3~zXr4CtkHD0946509465eucas1p1J@eucas1p1.samsung.com>
+References: <1527500833-16005-9-git-send-email-m.purski@samsung.com>
+        <CGME20180530074642epcas1p31772422454439c0a4ed636f620a3c4bc@epcas1p3.samsung.com>
+        <201805301553.AcTypuC4%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWv2ZRbX=k5+H_WfAeoQ4QsyQLU9iQ9TJ9OQ0fmwg0GOQ@mail.gmail.com>
+In-Reply-To: <201805301553.AcTypuC4%fengguang.wu@intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Juri Lelli <juri.lelli@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@endlessm.com>, Kevin Hilman <khilma>
+To: kbuild test robot <lkp@intel.com>, Maciej Purski <m.purski@samsung.com>
+Cc: kbuild-all@01.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAyNSBNYXkgMjAxOCAxMDo0OSwgR2VlcnQgd3JvdGU6DQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggdjMgMi8zXSBhcm06IHNobW9iaWxlOiBBZGQgdGhlIFI5QTA2RzAzMiBTTVAgZW5hYmxlcg0K
-PiBkcml2ZXINCj4NCj4gSGkgTWljaGVsLA0KDQpIaSBHZWVydCwNCg0KPg0KPiBPbiBUaHUsIE1h
-eSAyNCwgMjAxOCBhdCAxMjozMCBQTSwgTWljaGVsIFBvbGxldA0KPiA8bWljaGVsLnBvbGxldEBi
-cC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhlIFJlbmVzYXMgUjlBMDZHMDMyIHNlY29uZCBD
-QTcgaXMgcGFya2VkIGluIGEgUk9NIHBlbiBhdCBib290IHRpbWUsDQo+ID4gaXQgcmVxdWlyZXMg
-YSBzcGVjaWFsIGVuYWJsZSBtZXRob2QgdG8gZ2V0IGl0IHN0YXJ0ZWQuDQo+ID4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBNaWNoZWwgUG9sbGV0IDxtaWNoZWwucG9sbGV0QGJwLnJlbmVzYXMuY29tPg0K
-Pg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+DQo+ID4gIGFyY2gvYXJtL21hY2gtc2htb2Jp
-bGUvc21wLXI5YTA2ZzAzMi5jIHwgODUNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrDQo+DQo+IEkgdGhpbmsgeW91IGNhbiBzYWZlbHkgY2FsbCB0aGlzIGRyaXZlciBzbXAt
-cnpuMWQuYywgb3Igc21wLXJ6bjEuYy4NCj4gU291cmNlIGZpbGVzIGFyZSBub3QgY292ZXJlZCBi
-eSB0aGUgc3RhYmxlIERUIEFCSSwgYW5kIGNhbiBiZSByZW9yZGVyZWQgbGF0ZXINCj4gYXQgd2ls
-bC4NCj4NCj4gSSBleHBlY3QgeW91IHdpbGwganVzdCBhZGQgbW9yZSBDUFVfTUVUSE9EX09GX0RF
-Q0xBUkUoKSBsaW5lcyBsYXRlcg0KPiAocGVyaGFwcyB3aXRoIGEgbGl0dGxlIGJpdCBvZiBleHRy
-YSBjb2RlIHRvIGhhbmRsZSBkZXZpYXRpb25zKS4NCg0KTm93IEkgYW0gY29tcGxldGVseSBjb25m
-dXNlZCAtLSB5b3UgaGFkIG1lIHJlbW92ZSB0aGUgbWVudGlvbiBvZiByem4xDQpmcm9tIGV2ZXJ5
-d2hlcmUgaXQgbWF0dGVyZWQgdG8gaGFuZGxlICdmYW1pbHknIGNhc2VzLCBhbmQgbm93IHlvdSBh
-cmUNCnRlbGxpbmcgbWUgdGhhdCBpbiAqdGhpcyogY2FzZSB3aGVyZSB0aGVyZSBpcyBub3QgYSBz
-aW5nbGUgY2hhbmNlIG9mIHRoYXQgZmlsZQ0KY292ZXJpbmcgYW5vdGhlciBwYXJ0IGFuZCB0aGVy
-ZSdzIGEgY2xlYXIgY3V0IGNhc2UgZm9yIGl0IHRvIGJlIHBhcnQgc3BlY2lmaWMNCi4uLi4gSSBz
-aG91bGQgY2FsbCBpdCByem4xPyE/DQoNCkkgZXZlbiBhbHJlYWR5IHJlbmFtZWQgdGhlIHN5bWJv
-bHMgb24gbXkgdHJlZSB0byBtYXRjaCB0aGUNCnJlc3QgZm9yIHY0Li4uDQoNCkknZCBsaWtlIGNv
-bnNpc3RlbmN5IC0tIEkgKnRob3VnaHQqIEkgaGFkIGEgY29uc2lzdGVudCBuYW1pbmcgc2NoZW1l
-IGJlZm9yZSwNCm5vdyBJJ3ZlIG1vdmVkIHRvIHlvdXIgcGFydCBzcGVjaWZpYyBvbmUgKHVuZGVy
-IGR1cmVzcyksIEknZCByYXRoZXIgc3RpY2sgdG8NCnNvbWV0aGluZyB0aGF0IGlzIGNvbnNpc3Rl
-bnQgYW5kIGtlZXAgZXZlcnl0aGluZyBhcyByOWEwNmcwMzIgbm93Lg0KDQo+DQo+ID4gLS0tIC9k
-ZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtL21hY2gtc2htb2JpbGUvc21wLXI5YTA2ZzAzMi5j
-DQo+ID4gQEAgLTAsMCArMSw4NSBAQA0KPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
-R1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBSWi9OMUQgU2Vjb25kIENBNyBlbmFibGVyLg0KPiA+
-ICsgKg0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJv
-cGUgTGltaXRlZA0KPiA+ICsgKg0KPiA+ICsgKiBNaWNoZWwgUG9sbGV0IDxtaWNoZWwucG9sbGV0
-QGJwLnJlbmVzYXMuY29tPiwNCj4gPGJ1c2Vycm9yQGdtYWlsLmNvbT4NCj4gPiArICogRGVyaXZl
-ZCBmcm9tIGFjdGlvbixzNTAwLXNtcA0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxs
-aW51eC9kZWxheS5oPg0KPg0KPiBEbyB5b3UgbmVlZCB0aGlzPw0KDQpGaXhlZCBhbGwgdGhlIG90
-aGVyIHJlbWFya3MsIHRoYW5rcyBmb3IgdGhhdCENCg0KTWljaGVsDQoNCg0KDQoNClJlbmVzYXMg
-RWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91
-cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmds
-YW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+Hi Maciej,
+
+
+On 30.05.2018 09:45, kbuild test robot wrote:
+> Hi Maciej,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on next-20180517]
+> [cannot apply to drm-exynos/exynos-drm/for-next robh/for-next drm/drm-next v4.17-rc6 v4.17-rc5 v4.17-rc4 v4.17-rc7]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Maciej-Purski/Add-TOSHIBA-TC358764-DSI-LVDS-bridge-driver/20180530-011258
+> reproduce:
+>         # apt-get install sparse
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF=-D__CHECK_ENDIAN__
+>
+>
+> sparse warnings: (new ones prefixed by >>)
+>
+>>> drivers/gpu/drm/bridge/tc358764.c:193:14: sparse: incorrect type in assignment (different base types) @@    expected unsigned short [unsigned] [addressable] [usertype] addr @@    got ed] [addressable] [usertype] addr @@
+>    drivers/gpu/drm/bridge/tc358764.c:193:14:    expected unsigned short [unsigned] [addressable] [usertype] addr
+>    drivers/gpu/drm/bridge/tc358764.c:193:14:    got restricted __le16 [usertype] <noident>
+>>> drivers/gpu/drm/bridge/tc358764.c:197:24: sparse: cast to restricted __le32
+>>> drivers/gpu/drm/bridge/tc358764.c:175:5: sparse: symbol 'tc358764_read' was not declared. Should it be static?
+>>> drivers/gpu/drm/bridge/tc358764.c:204:5: sparse: symbol 'tc358764_write' was not declared. Should it be static?
+> vim +193 drivers/gpu/drm/bridge/tc358764.c
+>
+>    174	
+>  > 175	int tc358764_read(struct tc358764 *ctx, u16 addr, u32 *val)
+
+add static
+
+>    176	{
+>    177		struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+>    178		const struct mipi_dsi_host_ops *ops = dsi->host->ops;
+>    179		struct mipi_dsi_msg msg = {
+>    180			.type = MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM,
+>    181			.channel = dsi->channel,
+>    182			.flags = MIPI_DSI_MSG_USE_LPM,
+>    183			.tx_buf = &addr,
+>    184			.tx_len = 2,
+>    185			.rx_buf = val,
+>    186			.rx_len = 4
+>    187		};
+>    188		ssize_t ret;
+>    189	
+>    190		if (!ops || !ops->transfer)
+>    191			return -EINVAL;
+>    192	
+>  > 193		addr = cpu_to_le16(addr);
+
+It should be changed to:
+
+cpu_to_le16s(&addr);
+
+>    194	
+>    195		ret = ops->transfer(dsi->host, &msg);
+>    196		if (ret >= 0)
+>  > 197			*val = le32_to_cpu(*val);
+
+le32_to_cpus(val);
+
+>    198	
+>    199		dev_dbg(ctx->dev, "read: %d, addr: %d\n", addr, *val);
+>    200	
+>    201		return ret;
+>    202	}
+>    203	
+>  > 204	int tc358764_write(struct tc358764 *ctx, u16 addr, u32 val)
+
+add static
+
+
+Regards
+Andrzej
+
+>    205	{
+>    206		struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+>    207		const struct mipi_dsi_host_ops *ops = dsi->host->ops;
+>    208		u8 data[6];
+>    209		int ret;
+>    210		struct mipi_dsi_msg msg = {
+>    211			.type = MIPI_DSI_GENERIC_LONG_WRITE,
+>    212			.channel = dsi->channel,
+>    213			.flags = MIPI_DSI_MSG_USE_LPM | MIPI_DSI_MSG_REQ_ACK,
+>    214			.tx_buf = data,
+>    215			.tx_len = 6
+>    216		};
+>    217	
+>    218		if (!ops || !ops->transfer)
+>    219			return -EINVAL;
+>    220	
+>    221		data[0] = addr;
+>    222		data[1] = addr >> 8;
+>    223		data[2] = val;
+>    224		data[3] = val >> 8;
+>    225		data[4] = val >> 16;
+>    226		data[5] = val >> 24;
+>    227	
+>    228		ret = ops->transfer(dsi->host, &msg);
+>    229	
+>    230		return ret;
+>    231	}
+>    232	
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>
+>
+>
