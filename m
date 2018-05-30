@@ -1,49 +1,31 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH 3/3] ASoC: simple-card: add support for
- clock divider setup
-Date: Wed, 30 May 2018 11:12:11 +0200
-Message-ID: <ace99dbd-3480-9ac3-e5b8-4ddae73bba10@zonque.org>
-References: <20180528193503.18905-1-daniel@zonque.org>
- <20180528193503.18905-4-daniel@zonque.org>
- <20180529113509.GE23509@sirena.org.uk>
- <d6b9da97-8c71-ccfb-07e4-353620396a31@zonque.org>
- <20180530091011.GA6920@sirena.org.uk>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v14 0/2] Kryo CPU scaling driver
+Date: Wed, 30 May 2018 14:45:35 +0530
+Message-ID: <20180530091535.bzvhg4bvn32mqwgq@vireshk-i7>
+References: <1527250067-1256-1-git-send-email-ilialin@codeaurora.org>
+ <CAJZ5v0gwtu-ptPskMeiXqWcRLhaGvvFVRyi-kX=nw_s6if7XGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180530091011.GA6920@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gwtu-ptPskMeiXqWcRLhaGvvFVRyi-kX=nw_s6if7XGg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ilia Lin <ilialin@codeaurora.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, May 30, 2018 11:10 AM, Mark Brown wrote:
-> On Tue, May 29, 2018 at 10:29:10PM +0200, Daniel Mack wrote:
->> On Tuesday, May 29, 2018 01:35 PM, Mark Brown wrote:
+On 30-05-18, 10:08, Rafael J. Wysocki wrote:
+> On Fri, May 25, 2018 at 2:07 PM, Ilia Lin <ilialin@codeaurora.org> wrote:
+> > [v14]
+> >  * Addressed comment from Sudeep about DT compatible
+> >  * Added MAINTAINERS entry
 > 
->>> Why do we have anything that actually needs this?  The devices with a
->>> set_clkdiv() operation are pretty legacy at this point and most of them
->>> should just be figuring out the dividers for themselves anyway.
+> This causes a build issue to occur in my bleeding-edge branch.
 > 
->> The PXA platform CPU DAI still has it, and grepping also reveals some
->> Freescale and Samsung platforms.
-> 
-> PXA is definitely very legacy, as are some of the Samsung and Freescale
-> ones - PXA in particular hasn't had much love in years.
+> Does it depend on anything new in arm-soc?
 
-Yes, I'm currently preparing a larger series of cleanups that I'll send 
-for 4.18. I hope I can also tackle the clkdiv/pll things with that.
+He already sent a v15 and the changelog suggest he fixed that build
+issue.
 
-
-Thanks,
-Daniel
+-- 
+viresh
