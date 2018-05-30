@@ -1,129 +1,35 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: [PATCH 06/11] arm64: dts: Reflect change of FSL QSPI driver and remove unused properties
-Date: Wed, 30 May 2018 15:14:35 +0200
-Message-ID: <1527686082-15142-7-git-send-email-frieder.schrempf@exceet.de>
-References: <1527686082-15142-1-git-send-email-frieder.schrempf@exceet.de>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v6 2/6] dt-bindings: Add the rzn1-clocks.h file
+Date: Wed, 30 May 2018 13:30:20 +0000
+Message-ID: <TY1PR01MB1769DFD4CD9803D10CE1CA4BF56C0@TY1PR01MB1769.jpnprd01.prod.outlook.com>
+References: <1526983321-41949-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1526983321-41949-3-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdW-HUBRF4rLdfzixcyMUBg7+4XU+-3zayePoyeQiBZ8ZA@mail.gmail.com>
+ <CAMMfpEyTORirKiE417AQzCLzxDTKmy83bwivpfJaHQsKUKMc_w@mail.gmail.com>
+ <CAMuHMdWAU9wZkA+Z0BNAGrLV1WrCO3PgCTo2p=q3Mq9Tm6JBGA@mail.gmail.com>
+ <CAMMfpEwKa90XHu_igCxRQLy_CSVHTkN8eD8f7o=wgtttSn=FqA@mail.gmail.com>
+ <CAMuHMdWVde-DfbLVbvZT4rQfsVz1z7AMyQVgbO2DXrQKsEdVcw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527686082-15142-1-git-send-email-frieder.schrempf@exceet.de>
+In-Reply-To: <CAMuHMdWVde-DfbLVbvZT4rQfsVz1z7AMyQVgbO2DXrQKsEdVcw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, linux-spi@vger.kernel.org
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com, prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com, han.xu@nxp.com, Frieder Schrempf <frieder.schrempf@exceet.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, M P <buserror@gmail.com>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The FSL QSPI driver was moved to the SPI framework and it now
-acts as a SPI controller. Therefore the subnodes need to set
-spi-[rx/tx]-bus-width = <4>, so quad mode is used just as before.
-
-Also the properties 'num-cs' and 'bus-num' were never read by the
-driver and can be removed.
-
-The property 'fsl,qspi-has-second-chip' is not needed anymore
-and will be removed after the old driver was disabled to avoid
-breaking fsl-ls1046a-rdb.dts.
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
----
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  | 3 ++-
- arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  | 4 ++--
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 6 ++++--
- arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 4 ++++
- 4 files changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-index 6341281..31e7b31 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-@@ -170,7 +170,6 @@
- };
- 
- &qspi {
--	bus-num = <0>;
- 	status = "okay";
- 
- 	qflash0: s25fl128s@0 {
-@@ -178,6 +177,8 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		spi-max-frequency = <20000000>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
- 		reg = <0>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-index 434383b..dc10105 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-@@ -198,8 +198,6 @@
- };
- 
- &qspi {
--	num-cs = <2>;
--	bus-num = <0>;
- 	status = "okay";
- 
- 	qflash0: s25fl128s@0 {
-@@ -207,6 +205,8 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		spi-max-frequency = <20000000>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
- 		reg = <0>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-index 5dc2782..1848c33 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-@@ -136,8 +136,6 @@
- };
- 
- &qspi {
--	num-cs = <2>;
--	bus-num = <0>;
- 	status = "okay";
- 
- 	qflash0: s25fs512s@0 {
-@@ -145,6 +143,8 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		spi-max-frequency = <20000000>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
- 		reg = <0>;
- 	};
- 
-@@ -153,6 +153,8 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		spi-max-frequency = <20000000>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
- 		reg = <1>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
-index 1de6188..fc62ed9 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
-@@ -170,6 +170,8 @@
- 		#size-cells = <1>;
- 		compatible = "st,m25p80";
- 		spi-max-frequency = <20000000>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
- 		reg = <0>;
- 	};
- 	flash2: s25fl256s1@2 {
-@@ -177,6 +179,8 @@
- 		#size-cells = <1>;
- 		compatible = "st,m25p80";
- 		spi-max-frequency = <20000000>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
- 		reg = <2>;
- 	};
- };
--- 
-2.7.4
+SGkgR2VlcnQsDQoNCk9uIDI1IE1heSAyMDE4IDEwOjEzIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90
+ZToNCiBbc25pcF0NCg0KPiBOb3csIGdpdmVuIHRoZSBjbG9jayBkZWZpbml0aW9ucyBmb3IgUlov
+TjFbRFNMXSBhcmUgdGhlIHNhbWUgKGFsdGhvdWdoIHNvbWUNCj4gZG9uJ3QgZXhpc3Qgb24gc29t
+ZSB2YXJpYW50cyksIHlvdSBjb3VsZCBrZWVwIG9uIHVzaW5nIFJaTjFfQ0xLX0ZPTyBmb3INCj4g
+dGhlIG5hbWVzIG9mIHRoZSBkZWZpbmVzLCBhbmQgc3RvcmUgdGhlbSBpbiBhIGNvbW1vbiBmaWxl
+LCBpbmNsdWRlZCBieSB0aGUNCj4gc29jLXNwZWNpZmljIGZpbGUuIEJ1dCBwbGVhc2UgbWFrZSBj
+bGVhciB0aGUgY29tbW9uIGZpbGUgY2Fubm90IGJlIGluY2x1ZGVkDQo+IGRpcmVjdGx5LCBzbyB0
+aGUgZmlsZW5hbWUgZG9lcyBub3QgYmVjb21lIHBhcnQgb2YgdGhlIERUIEFCSSwgYW5kIHlvdSBh
+cmUNCj4gc2hpZWxkZWQgZnJvbSBmdXR1cmUgbWFya2V0aW5nIHNpbGxpbmVzcyAoZS5nLiBuZXh0
+IHF1YXJ0ZXIncyBSWi9OMVggYmVpbmcNCj4gdG90YWxseSBkaWZmZXJlbnQpLg0KSG93IGRvZXMg
+YW4gaW5jbHVkZSBmaWxlbmFtZSBiZWNvbWUgcGFydCBvZiB0aGUgRFQgQUJJPw0KSSB0aG91Z2h0
+IHRoZSBkdGIgaXMgdGhlIEFCSSwgbm90IHRoZSBkdHMuIEFtIEkgd3Jvbmc/DQoNClRoYW5rcw0K
+UGhpbA0K
