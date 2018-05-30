@@ -1,58 +1,180 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 5/6] ARM: dts: Add generic interconnect target module
- node for MCAN
-Date: Wed, 30 May 2018 08:04:02 -0700
-Message-ID: <20180530150402.GE5705@atomide.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-6-faiz_abbas@ti.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 04/11] dt-bindings: spi: Move and adjust the bindings
+ for the fsl-qspi driver
+Date: Wed, 30 May 2018 17:06:48 +0200
+Message-ID: <20180530170648.02c6fc41@bbrezillon>
+References: <1527686082-15142-1-git-send-email-frieder.schrempf@exceet.de>
+        <1527686082-15142-5-git-send-email-frieder.schrempf@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180530141133.3711-6-faiz_abbas@ti.com>
+In-Reply-To: <1527686082-15142-5-git-send-email-frieder.schrempf@exceet.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com
+To: Frieder Schrempf <frieder.schrempf@exceet.de>
+Cc: linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, miquel.raynal@bootlin.com, broonie@kernel.org, david.wolfe@nxp.com, fabio.estevam@nxp.com, prabhakar.kushwaha@nxp.com, yogeshnarayan.gaur@nxp.com, han.xu@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180530 14:12]:
-> The ti-sysc driver provides support for manipulating the idlemodes
-> and interconnect level resets.
-...
-> --- a/arch/arm/boot/dts/dra76x.dtsi
-> +++ b/arch/arm/boot/dts/dra76x.dtsi
-> @@ -11,6 +11,25 @@
->  / {
->  	compatible = "ti,dra762", "ti,dra7";
->  
-> +	ocp {
+On Wed, 30 May 2018 15:14:33 +0200
+Frieder Schrempf <frieder.schrempf@exceet.de> wrote:
+
+> Move the documentation of the old SPI NOR driver to the place of the new
+> SPI memory interface based driver and adjust the content to reflect the
+> new drivers settings.
+
+Maybe it's better to do that in 2 steps so that people can easily
+identify what has changed in the bindings.
+
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+> ---
+>  .../devicetree/bindings/mtd/fsl-quadspi.txt     | 65 ------------------
+>  .../devicetree/bindings/spi/spi-fsl-qspi.txt    | 69 ++++++++++++++++++++
+>  2 files changed, 69 insertions(+), 65 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> deleted file mode 100644
+> index 483e9cf..0000000
+> --- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> +++ /dev/null
+> @@ -1,65 +0,0 @@
+> -* Freescale Quad Serial Peripheral Interface(QuadSPI)
+> -
+> -Required properties:
+> -  - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+> -		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+> -		 "fsl,ls1021a-qspi"
+> -		 or
+> -		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
+> -		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
+> -  - reg : the first contains the register location and length,
+> -          the second contains the memory mapping address and length
+> -  - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+> -  - interrupts : Should contain the interrupt for the device
+> -  - clocks : The clocks needed by the QuadSPI controller
+> -  - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+> -
+> -Optional properties:
+> -  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
+> -                              Each bus can be connected with two NOR flashes.
+> -			      Most of the time, each bus only has one NOR flash
+> -			      connected, this is the default case.
+> -			      But if there are two NOR flashes connected to the
+> -			      bus, you should enable this property.
+> -			      (Please check the board's schematic.)
+> -  - big-endian : That means the IP register is big endian
+> -
+> -Example:
+> -
+> -qspi0: quadspi@40044000 {
+> -	compatible = "fsl,vf610-qspi";
+> -	reg = <0x40044000 0x1000>, <0x20000000 0x10000000>;
+> -	reg-names = "QuadSPI", "QuadSPI-memory";
+> -	interrupts = <0 24 IRQ_TYPE_LEVEL_HIGH>;
+> -	clocks = <&clks VF610_CLK_QSPI0_EN>,
+> -		<&clks VF610_CLK_QSPI0>;
+> -	clock-names = "qspi_en", "qspi";
+> -
+> -	flash0: s25fl128s@0 {
+> -		....
+> -	};
+> -};
+> -
+> -Example showing the usage of two SPI NOR devices:
+> -
+> -&qspi2 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_qspi2>;
+> -	status = "okay";
+> -
+> -	flash0: n25q256a@0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		compatible = "micron,n25q256a", "jedec,spi-nor";
+> -		spi-max-frequency = <29000000>;
+> -		reg = <0>;
+> -	};
+> -
+> -	flash1: n25q256a@1 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		compatible = "micron,n25q256a", "jedec,spi-nor";
+> -		spi-max-frequency = <29000000>;
+> -		reg = <1>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+> new file mode 100644
+> index 0000000..0ee9cd8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+> @@ -0,0 +1,69 @@
+> +* Freescale Quad Serial Peripheral Interface(QuadSPI)
 > +
-> +		target-module@0x42c00000 {
-> +			compatible = "ti,sysc-dra7-mcan";
-> +			ranges = <0x0 0x42c00000 0x2000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0x42c01900 0x4>,
-> +			      <0x42c01904 0x4>,
-> +			      <0x42c01908 0x4>;
-> +			reg-names = "rev", "sysc", "syss";
-> +			ti,sysc-mask = <(SYSC_OMAP4_SOFTRESET |
-> +					 SYSC_DRA7_MCAN_ENAWAKEUP)>;
-> +			ti,syss-mask = <1>;
-> +			clocks = <&wkupaon_clkctrl DRA7_ADC_CLKCTRL 0>;
-> +			clock-names = "fck";
-> +		};
+> +Required properties:
+> +  - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+> +		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+> +		 "fsl,ls1021a-qspi", "fsl,ls2080a-qspi"
+> +		 or
+> +		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
+> +  - reg : the first contains the register location and length,
+> +          the second contains the memory mapping address and length
+> +  - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
+> +  - interrupts : Should contain the interrupt for the device
+> +  - clocks : The clocks needed by the QuadSPI controller
+> +  - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+> +
+> +Optional properties:
+> +  - big-endian : That means the IP registers format is big endian
+> +
+> +Required SPI slave node properties:
+> +  - reg: There are two buses (A and B) with two chip selects each.
+> +	 This encodes to which bus and CS the flash is connected:
+> +		<0>: Bus A, CS 0
+> +		<1>: Bus A, CS 1
+> +		<2>: Bus B, CS 0
+> +		<3>: Bus B, CS 1
+> +
+> +Example:
+> +
+> +qspi0: quadspi@40044000 {
+> +	compatible = "fsl,vf610-qspi";
+> +	reg = <0x40044000 0x1000>, <0x20000000 0x10000000>;
+> +	reg-names = "QuadSPI", "QuadSPI-memory";
+> +	interrupts = <0 24 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&clks VF610_CLK_QSPI0_EN>,
+> +		<&clks VF610_CLK_QSPI0>;
+> +	clock-names = "qspi_en", "qspi";
+> +
+> +	flash0: s25fl128s@0 {
+> +		....
+> +	};
+> +};
+> +
+> +Example showing the usage of two SPI NOR devices on bus A:
+> +
+> +&qspi2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_qspi2>;
+> +	status = "okay";
+> +
+> +	flash0: n25q256a@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "micron,n25q256a", "jedec,spi-nor";
+> +		spi-max-frequency = <29000000>;
+> +		spi-rx-bus-width = <4>;
+> +		spi-tx-bus-width = <4>;
+> +		reg = <0>;
 > +	};
 > +
->  };
-
-Looks good to me except I think the reset won't do anything currently
-with ti-sysc.c unless you specfify also "ti,hwmods" for the module?
-
-Can you please check? It might be worth adding the reset function to
-ti-sysc.c for non "ti,hwmods" case and that just might remove the
-need for any hwmod code for this module.
-
-Regards,
-
-Tony
+> +	flash1: n25q256a@1 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "micron,n25q256a", "jedec,spi-nor";
+> +		spi-max-frequency = <29000000>;
+> +		spi-rx-bus-width = <4>;
+> +		spi-tx-bus-width = <4>;
+> +		reg = <1>;
+> +	};
+> +};
