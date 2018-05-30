@@ -1,40 +1,111 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 13/15] arm: dts: r8a7743: Add missing OPP properties for
- CPUs
-Date: Wed, 30 May 2018 10:17:49 +0530
-Message-ID: <20180530044749.ou45frhlrdykoiuq@vireshk-i7>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
- <20180528092331.3jon45nsqfdzs5ds@verge.net.au>
- <20180528105831.vesrswazlagynemq@vireshk-i7>
- <20180528115832.b2wovvanypxkgalj@verge.net.au>
- <OSBPR01MB2103A3411D0C3C5DB76F715EB86D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jaewon Kim <jaewon31.kim@samsung.com>
+Subject: [PATCH] drivers: of: of_reserved_mem: detect count overflow or
+ range overlap
+Date: Wed, 30 May 2018 14:21:42 +0900
+Message-ID: <20180530052142.24761-1-jaewon31.kim@samsung.com>
+References: <CGME20180530052041epcas2p395f2fbf4506d911c127cc4243838fedb@epcas2p3.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB2103A3411D0C3C5DB76F715EB86D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, "arm@kernel.org" <arm@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, "ionela.voinescu@arm.com" <ionela.voinescu@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "chris.redpath@arm.com" <chris.redpath@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, m.szyprowski@samsung.com, mitchelh@codeaurora.org
+Cc: frowand.list@gmail.com, devicetree@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com, Jaewon Kim <jaewon31.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29-05-18, 13:33, Biju Das wrote:
-> Hi All,
-> 
-> I have tested this patch on RZ/G1M and I didn't find any issues.
-> r8a7743 is similar to r8a7791. So I assume you will apply the same
-> patch for other R-SoC devices as well.
+During development, number of reserved memory region could be increased
+and a new region could be unwantedly overlapped. In that case the new
+region may work well but one of exisiting region could be affected so
+that it would not be defined properly. It may require time consuming
+work to find reason that there is a newly added region.
 
-Okay, I have sent V2 for this and it fixes all those platforms as
-well.
+If a newly added region invoke kernel panic, it will be helpful. This
+patch records if there is count overflow or range overlap, and invoke
+panic if that case.
 
-> Apart from this, maybe we need to update the OPP binding
-> documentation. i.e., extend the  operating- point usage to other
-> cores in the cluster (Binding 1: operating-points).
+These are test example based on v4.9.
 
-Its already done, you need to start using operating-points-v2 property
-to avoid duplication like this.
+Case 1 - out of region count
+<3>[    0.000000]  [0:        swapper:    0] OF: reserved mem: not enough space all defined regions.
+<0>[    1.688695]  [6:      swapper/0:    1] Kernel panic - not syncing: overflow on reserved memory, check the latest change
+<4>[    1.688743]  [6:      swapper/0:    1] CPU: 6 PID: 1 Comm: swapper/0 Not tainted 4.9.65+ #10
+<4>[    1.688836]  [6:      swapper/0:    1] Call trace:
+<4>[    1.688869]  [6:      swapper/0:    1] [<ffffff8008095748>] dump_backtrace+0x0/0x248
+<4>[    1.688913]  [6:      swapper/0:    1] [<ffffff8008095b48>] show_stack+0x18/0x28
+<4>[    1.688958]  [6:      swapper/0:    1] [<ffffff8008446e84>] dump_stack+0x98/0xc0
+<4>[    1.689001]  [6:      swapper/0:    1] [<ffffff80081cf784>] panic+0x1e0/0x404
+<4>[    1.689046]  [6:      swapper/0:    1] [<ffffff8008ddcdb8>] check_reserved_mem+0x40/0x50
+<4>[    1.689091]  [6:      swapper/0:    1] [<ffffff8008090190>] do_one_initcall+0x54/0x214
+<4>[    1.689138]  [6:      swapper/0:    1] [<ffffff8009eacf98>] kernel_init_freeable+0x198/0x24c
+<4>[    1.689187]  [6:      swapper/0:    1] [<ffffff8009396950>] kernel_init+0x18/0x144
+<4>[    1.689229]  [6:      swapper/0:    1] [<ffffff800808fa50>] ret_from_fork+0x10/0x40
 
+Case 2 - overlapped region
+<3>[    0.000000]  [0:        swapper:    0] OF: reserved mem: OVERLAP DETECTED!
+<0>[    2.309331]  [2:      swapper/0:    1] Kernel panic - not syncing: reserved memory overlap, check the latest change
+<4>[    2.309398]  [2:      swapper/0:    1] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 4.9.65+ #14
+<4>[    2.309508]  [2:      swapper/0:    1] Call trace:
+<4>[    2.309546]  [2:      swapper/0:    1] [<ffffff8008121748>] dump_backtrace+0x0/0x248
+<4>[    2.309599]  [2:      swapper/0:    1] [<ffffff8008121b48>] show_stack+0x18/0x28
+<4>[    2.309652]  [2:      swapper/0:    1] [<ffffff80084d2e84>] dump_stack+0x98/0xc0
+<4>[    2.309701]  [2:      swapper/0:    1] [<ffffff800825b784>] panic+0x1e0/0x404
+<4>[    2.309751]  [2:      swapper/0:    1] [<ffffff8008e68dc4>] check_reserved_mem+0x4c/0x50
+<4>[    2.309802]  [2:      swapper/0:    1] [<ffffff800811c190>] do_one_initcall+0x54/0x214
+<4>[    2.309856]  [2:      swapper/0:    1] [<ffffff8009f38f98>] kernel_init_freeable+0x198/0x24c
+<4>[    2.309913]  [2:      swapper/0:    1] [<ffffff8009422950>] kernel_init+0x18/0x144
+<4>[    2.309961]  [2:      swapper/0:    1] [<ffffff800811ba50>] ret_from_fork+0x10/0x40
+
+Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+---
+ drivers/of/of_reserved_mem.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 9a4f4246231d..e97d5c5dcc9a 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -65,6 +65,7 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+ }
+ #endif
+ 
++static bool rmem_overflow;
+ /**
+  * res_mem_save_node() - save fdt node for second pass initialization
+  */
+@@ -75,6 +76,7 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+ 
+ 	if (reserved_mem_count == ARRAY_SIZE(reserved_mem)) {
+ 		pr_err("not enough space all defined regions.\n");
++		rmem_overflow = true;
+ 		return;
+ 	}
+ 
+@@ -221,6 +223,7 @@ static int __init __rmem_cmp(const void *a, const void *b)
+ 	return 0;
+ }
+ 
++static bool rmem_overlap;
+ static void __init __rmem_check_for_overlap(void)
+ {
+ 	int i;
+@@ -245,6 +248,7 @@ static void __init __rmem_check_for_overlap(void)
+ 			pr_err("OVERLAP DETECTED!\n%s (%pa--%pa) overlaps with %s (%pa--%pa)\n",
+ 			       this->name, &this->base, &this_end,
+ 			       next->name, &next->base, &next_end);
++			rmem_overlap = true;
+ 		}
+ 	}
+ }
+@@ -419,3 +423,13 @@ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
+ 	return NULL;
+ }
+ EXPORT_SYMBOL_GPL(of_reserved_mem_lookup);
++
++static int check_reserved_mem(void)
++{
++	if (rmem_overflow)
++		panic("overflow on reserved memory, check the latest change");
++	if (rmem_overlap)
++		panic("overlap on reserved memory, check the latest change");
++	return 0;
++}
++late_initcall(check_reserved_mem);
 -- 
-viresh
+2.13.0
