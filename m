@@ -1,32 +1,49 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 09/10] ARM: dts: exynos5250: add DSI node
-Date: Wed, 30 May 2018 16:32:57 +0200
-Message-ID: <CAJKOXPdRxLxw6+AC5moC4327W5GMgBN0q3a9odq=adsFGxmdqA@mail.gmail.com>
-References: <CGME20180530121629eucas1p2cc1a8c3f5a8e704f4d6f3cf75834cf00@eucas1p2.samsung.com>
- <1527682561-1386-1-git-send-email-m.purski@samsung.com> <1527682561-1386-10-git-send-email-m.purski@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Applied "regulator: bd71837: BD71837 PMIC regulator driver" to
+ the regulator tree
+Date: Wed, 30 May 2018 15:34:08 +0100
+Message-ID: <20180530143408.GN6920@sirena.org.uk>
+References: <72e644d9855621ea8cfd7ec555e2da02403f21f6.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <E1fNysa-0006jU-41@debutante>
+ <20180530111425.GD13528@localhost.localdomain>
+ <20180530111714.GJ6920@sirena.org.uk>
+ <20180530125828.GF13528@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="N/GrjenRD+RJfyz+"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527682561-1386-10-git-send-email-m.purski@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20180530125828.GF13528@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 2:16 PM, Maciej Purski <m.purski@samsung.com> wrote:
-> From: Andrzej Hajda <a.hajda@samsung.com>
->
-> The patch adds common part of DSI node for Exynos5250 platforms
-> and a required mipi-phy node.
->
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
 
-Thanks for changes. I'll take both DTS patches after bindings get
-accepted and after upcomming merge window.
+--N/GrjenRD+RJfyz+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Best regards,
-Krzysztof
+On Wed, May 30, 2018 at 03:58:28PM +0300, Matti Vaittinen wrote:
+
+> Oh, right. Thanks! So MFD and clk portions should go through the other
+> trees then.
+
+That's what I'd expect, yes.
+
+--N/GrjenRD+RJfyz+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOtl8ACgkQJNaLcl1U
+h9BTTwf/Ua0VXKUuBdaB373nBoZMUzMdsiRxJ0FhQZtMyeTsGbNvvxxkwCGnPHH3
+Hu4tMMwj9k0ELyfLAUVC9hNMK2fjTFi436zLeum/GRVs90bowdUVw0zABNsyKv8f
+Tm4emO6OL2vi+2PlzAbkoeBksRg81+FvGSYw4pPX826F6pdFTODkWpAo7OZtRtEE
+ZKV2M5xvz4+linOokhJgfkMfiMjUTdbVL2lpgYx3uzMu3gekhIolPoVGDgTB1kjq
+Lp4XucUP0mqp7ICK6Okm6CSkPsU7t2If4ITLvn0OtMtbN7MAgJFzsPknxWEvZuQ4
+zNmnLQcBnnGVSW8i4F32gCzwlzjlSA==
+=m4ln
+-----END PGP SIGNATURE-----
+
+--N/GrjenRD+RJfyz+--
