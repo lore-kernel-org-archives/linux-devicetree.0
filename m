@@ -1,77 +1,259 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2] ASoC: simple-card: set cpu dai clk in
-	hw_params
-Date: Wed, 30 May 2018 21:45:56 +0200
-Message-ID: <20180530194556.407-1-daniel@zonque.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v7 5/5] clk: renesas: Renesas R9A06G032 clock driver
+Date: Wed, 30 May 2018 21:49:25 +0200
+Message-ID: <CAMuHMdW9fSKZv2qA2oz9NCL+MdASAMnxf1UZomJv3_Zts44ygw@mail.gmail.com>
+References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com> <1527154169-32380-6-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, kuninori.morimoto.gx@renesas.com
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527154169-32380-6-git-send-email-michel.pollet@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHNpbXBsZS1jYXJkIGRyaXZlciBjdXJyZW50bHkgYWNjZXB0cyBhIGNsb2NrIG5vZGUgaW4g
-dGhlIGNwdSBkYWkKc3ViLW5vZGUgYW5kIG9ubHkgdXNlcyBpdCBhcyBhbiBhbHRlcm5hdGl2ZSB0
-byB0aGUKJ3N5c3RlbS1jbG9jay1mcmVxdWVuY3knIHByb3BlcnR5IHRvIGdldCB0aGUgY3VycmVu
-dCBmcmVxdWVuY3kuCgpUaGlzIHBhdGNoIGFkZHMgYW5vdGhlciB1c2Ugb2YgdGhlIHBhc3NlZCBj
-bG9jayBub2RlLiBJZiBtY2xrLWZzIGlzCnNwZWNpZmllZCwgdGhlIGNsb2NrcyBpbiBjcHUgYW5k
-IGNvZGVjIGRhaSBzdWItbm9kZXMgd2lsbCBiZSBzZXQgdG8KdGhlIGNhbGN1bGF0ZWQgcmF0ZSAo
-c3RyZWFtIHJhdGUgKiBtY2xrX2ZzKSBpbiBod19wYXJhbXMuCgpUaGlzIGFsbG93cyBwbGF0Zm9y
-bXMgdG8gcGFzcyB0dW5lYWJsZSBjbG9ja3MgYXMgcGhhbmRsZSB0aGF0IHdpbGwKYXV0b21hdGlj
-YWxseSBiZSBzZXQgdG8gdGhlIHJpZ2h0IHJhdGVzLgoKU2lnbmVkLW9mZi1ieTogRGFuaWVsIE1h
-Y2sgPGRhbmllbEB6b25xdWUub3JnPgotLS0KClRoaXMgaXMgdGhlIG9ubHkgcGF0Y2ggdGhhdCdz
-IGxlZnQgZnJvbSB0aGUgc2VyaWVzIG9mIHRocmVlIHRoYXQgSQpwb3N0ZWQgZWFybGllci4KCnYx
-IOKGkiB2MjoKCiAqIEFwcGx5IHRoZSBzZXR0aW5nIHRvIGJvdGggdGhlIGNvZGVjIGFuZCB0aGUg
-Y3B1IGRhaQogKiBDaGVjayBmb3IgZXJyb3JzIGZyb20gY2xrX3NldF9yYXRlKCkgYW5kIGF2b2lk
-IHVubmVjZXNzYXJ5IHJhdGUKICAgY2hhbmdlcy4KCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b3VuZC9zaW1wbGUtY2FyZC50eHQgICAgICAgfCAgNSArKysrKwogc291bmQvc29jL2dlbmVyaWMv
-c2ltcGxlLWNhcmQuYyAgICAgICAgICAgICAgICAgICAgIHwgMjEgKysrKysrKysrKysrKysrKysr
-KysrCiAyIGZpbGVzIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3NpbXBsZS1jYXJkLnR4dAppbmRl
-eCAxN2MxM2U3NDY2N2QuLmE0YzcyZDA5Y2Q0NSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3NpbXBsZS1jYXJkLnR4dAorKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0CkBAIC04Niw2ICs4
-NiwxMSBAQCBPcHRpb25hbCBDUFUvQ09ERUMgc3Vibm9kZXMgcHJvcGVydGllczoKIAkJCQkJICBp
-biBkYWkgc3RhcnR1cCgpIGFuZCBkaXNhYmxlZCB3aXRoCiAJCQkJCSAgY2xrX2Rpc2FibGVfdW5w
-cmVwYXJlKCkgaW4gZGFpCiAJCQkJCSAgc2h1dGRvd24oKS4KKwkJCQkJICBJZiBhIGNsb2NrIGlz
-IHNwZWNpZmllZCBhbmQgYQorCQkJCQkgIG11bHRpcGxpY2F0aW9uIGZhY3RvciBpcyBnaXZlbiB3
-aXRoCisJCQkJCSAgbWNsay1mcywgdGhlIGNsb2NrIHdpbGwgYmUgc2V0IHRvIHRoZQorCQkJCQkg
-IGNhbGN1bGF0ZWQgbWNsayBmcmVxdWVuY3kgd2hlbiB0aGUKKwkJCQkJICBzdHJlYW0gc3RhcnRz
-LgogLSBzeXN0ZW0tY2xvY2stZGlyZWN0aW9uLW91dAkJOiBzcGVjaWZpZXMgY2xvY2sgZGlyZWN0
-aW9uIGFzICdvdXQnIG9uCiAJCQkJCSAgaW5pdGlhbGl6YXRpb24uIEl0IGlzIHVzZWZ1bCBmb3Ig
-c29tZSBhQ1BVcyB3aXRoCiAJCQkJCSAgZml4ZWQgY2xvY2tzLgpkaWZmIC0tZ2l0IGEvc291bmQv
-c29jL2dlbmVyaWMvc2ltcGxlLWNhcmQuYyBiL3NvdW5kL3NvYy9nZW5lcmljL3NpbXBsZS1jYXJk
-LmMKaW5kZXggNjk1OWE3NGE2ZjQ5Li40YTUxNmM0MjhiM2QgMTAwNjQ0Ci0tLSBhL3NvdW5kL3Nv
-Yy9nZW5lcmljL3NpbXBsZS1jYXJkLmMKKysrIGIvc291bmQvc29jL2dlbmVyaWMvc2ltcGxlLWNh
-cmQuYwpAQCAtMTM1LDYgKzEzNSwxOCBAQCBzdGF0aWMgdm9pZCBhc29jX3NpbXBsZV9jYXJkX3No
-dXRkb3duKHN0cnVjdCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtKQogCWFzb2Nfc2ltcGxl
-X2NhcmRfY2xrX2Rpc2FibGUoJmRhaV9wcm9wcy0+Y29kZWNfZGFpKTsKIH0KIAorc3RhdGljIGlu
-dCBhc29jX3NpbXBsZV9zZXRfY2xrX3JhdGUoc3RydWN0IGFzb2Nfc2ltcGxlX2RhaSAqc2ltcGxl
-X2RhaSwKKwkJCQkgICAgdW5zaWduZWQgbG9uZyByYXRlKQoreworCWlmICghc2ltcGxlX2RhaS0+
-Y2xrKQorCQlyZXR1cm4gMDsKKworCWlmIChjbGtfZ2V0X3JhdGUoc2ltcGxlX2RhaS0+Y2xrKSA9
-PSByYXRlKQorCQlyZXR1cm4gMDsKKworCXJldHVybiBjbGtfc2V0X3JhdGUoc2ltcGxlX2RhaS0+
-Y2xrLCByYXRlKTsKK30KKwogc3RhdGljIGludCBhc29jX3NpbXBsZV9jYXJkX2h3X3BhcmFtcyhz
-dHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKIAkJCQkgICAgICBzdHJ1Y3Qgc25k
-X3BjbV9od19wYXJhbXMgKnBhcmFtcykKIHsKQEAgLTE1NCw2ICsxNjYsMTUgQEAgc3RhdGljIGlu
-dCBhc29jX3NpbXBsZV9jYXJkX2h3X3BhcmFtcyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1
-YnN0cmVhbSwKIAogCWlmIChtY2xrX2ZzKSB7CiAJCW1jbGsgPSBwYXJhbXNfcmF0ZShwYXJhbXMp
-ICogbWNsa19mczsKKworCQlyZXQgPSBhc29jX3NpbXBsZV9zZXRfY2xrX3JhdGUoJmRhaV9wcm9w
-cy0+Y29kZWNfZGFpLCBtY2xrKTsKKwkJaWYgKHJldCA8IDApCisJCQlyZXR1cm4gcmV0OworCisJ
-CXJldCA9IGFzb2Nfc2ltcGxlX3NldF9jbGtfcmF0ZSgmZGFpX3Byb3BzLT5jcHVfZGFpLCBtY2xr
-KTsKKwkJaWYgKHJldCA8IDApCisJCQlyZXR1cm4gcmV0OworCiAJCXJldCA9IHNuZF9zb2NfZGFp
-X3NldF9zeXNjbGsoY29kZWNfZGFpLCAwLCBtY2xrLAogCQkJCQkgICAgIFNORF9TT0NfQ0xPQ0tf
-SU4pOwogCQlpZiAocmV0ICYmIHJldCAhPSAtRU5PVFNVUFApCi0tIAoyLjE0LjMKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGlu
-ZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXBy
-b2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi Michel,
+
+On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> This provides a clock driver for the Renesas R09A06G032.
+> This uses a structure derived from both the RCAR gen2 driver as well as
+> the renesas-cpg-mssr driver.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/drivers/clk/renesas/r9a06g032-clocks.c
+
+> +/* register/bit pairs are encoded as an uint16_t */
+> +static void clk_rdesc_set(
+> +       struct r9a06g032_priv *clocks,
+> +       uint16_t one, unsigned int on)
+> +{
+> +       u32 __iomem *reg = ((u32 __iomem *)clocks->reg) + (one >> 5);
+
+Do you need the cast? Gcc does support void pointer arithmetic, and treats
+that like byte pointers.
+
+> +       u32 val = clk_readl(reg);
+> +
+> +       val = (val & ~(1U << (one & 0x1f))) | ((!!on) << (one & 0x1f));
+> +       clk_writel(val, reg);
+
+Hence
+
+        clk_writel(val, clocks->reg + 4 * (one >> 5));
+
+Actually clk_{read,write}l() are deprecated, please use {read,write}l() instead.
+
+> +static void r9a06g032_clk_gate_disable(struct clk_hw *hw)
+> +{
+> +       struct r9a06g032_clk_gate *g = to_r9a06g032_gate(hw);
+> +
+> +       if (!g->read_only)
+> +               r9a06g032_clk_gate_set(g->clocks, &g->gate, 0);
+> +       else
+> +               pr_debug("%s %s: disallowed\n", __func__,
+> +                       __clk_get_name(hw->clk));
+
+You can print the name of a clock using %pC:
+
+    pr_debug("%s %pC: disallowed\n", __func__, hw->clk);
+
+But I don't think you need the check, cfr. below.
+
+> +static struct clk *r9a06g032_register_gate(
+> +       struct r9a06g032_priv *clocks,
+> +       const char *parent_name,
+> +       const struct r9a06g032_clkdesc *desc)
+> +{
+> +       struct clk *clk;
+> +       struct r9a06g032_clk_gate *g;
+> +       struct clk_init_data init;
+> +
+> +       g = kzalloc(sizeof(struct r9a06g032_clk_gate), GFP_KERNEL);
+> +       if (!g)
+> +               return NULL;
+> +
+> +       init.name = desc->name;
+> +       init.ops = &r9a06g032_clk_gate_ops;
+> +       init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
+> +       init.parent_names = parent_name ? &parent_name : NULL;
+> +       init.num_parents = parent_name ? 1 : 0;
+> +
+> +       g->clocks = clocks;
+> +       g->index = desc->index;
+> +       g->gate = desc->gate;
+> +       g->hw.init = &init;
+> +       g->read_only = 0;
+> +
+> +       clk = clk_register(NULL, &g->hw);
+> +       if (IS_ERR(clk)) {
+> +               kfree(g);
+> +               return NULL;
+> +       }
+> +       /*
+> +        * important here, some clocks are already in use by the CM3, we
+> +        * have to assume they are not Linux's to play with and try to disable
+> +        * at the end of the boot!
+> +        * Therefore we increase the clock usage count by arbitrarily enabling
+> +        * the clock, allowing it to stay untouched at the end of the boot.
+> +        */
+> +       g->read_only = r9a06g032_clk_gate_is_enabled(&g->hw);
+
+Is checking if the clock is enabled the recommended way to find out if a
+clock is used by the Cortex M3? No need for a table?
+
+> +       if (g->read_only)
+> +               pr_debug("%s was enabled, making read-only\n", desc->name);
+
+You can set init.flags |= CLK_IS_CRITICAL instead of using your own flag.
+
+> +static unsigned long r9a06g032_divider_recalc_rate(
+> +       struct clk_hw *hw,
+> +       unsigned long parent_rate)
+> +{
+> +       struct r9a06g032_clk_div *clk = to_r9a06g032_divider(hw);
+> +       u32 *reg = ((u32 *)clk->clocks->reg) + clk->reg;
+
+Fishy operations on __iomem pointers
+
+> +       long div = clk_readl(reg);
+
+u32 div?
+
+> +
+> +       if (div < clk->min)
+> +               div = clk->min;
+> +       else if (div > clk->max)
+> +               div = clk->max;
+> +       return DIV_ROUND_UP(parent_rate, div);
+> +}
+> +
+> +/*
+> + * Attempts to find a value that is in range of min,max,
+> + * and if a table of set dividers was specified for this
+> + * register, try to find the fixed divider that is the closest
+> + * to the target frequency
+> + */
+> +static long r9a06g032_divider_clamp_div(
+> +       struct r9a06g032_clk_div *clk,
+> +       unsigned long rate, unsigned long prate)
+> +{
+> +       /* + 1 to cope with rates that have the remainder dropped */
+> +       long div = DIV_ROUND_UP(prate, rate + 1);
+> +       int i;
+
+unsigned int i
+
+> +
+> +       if (div <= clk->min)
+> +               return clk->min;
+> +       if (div >= clk->max)
+> +               return clk->max;
+> +
+> +       for (i = 0; clk->table_size && i < clk->table_size - 1; i++) {
+
+> +static long r9a06g032_divider_round_rate(
+> +       struct clk_hw *hw, unsigned long rate,
+> +       unsigned long *prate)
+> +{
+> +       struct r9a06g032_clk_div *clk = to_r9a06g032_divider(hw);
+> +       long div = DIV_ROUND_UP(*prate, rate);
+> +
+> +       pr_devel("%s %pC %ld (prate %ld) (wanted div %ld)\n", __func__,
+
+Ah, you do know about %pC ;-)
+
+> +               hw->clk, rate, *prate, div);
+> +       pr_devel("   min %d (%ld) max %d (%ld)\n",
+> +               clk->min, DIV_ROUND_UP(*prate, clk->min),
+> +               clk->max, DIV_ROUND_UP(*prate, clk->max));
+> +
+> +       div = r9a06g032_divider_clamp_div(clk, rate, *prate);
+> +       /*
+> +        * this is a hack. Currently the serial driver asks for a clock rate
+> +        * that is 16 times the baud rate -- and that is wildly outside the
+> +        * range of the UART divider, somehow there is no provision for that
+> +        * case of 'let the divider as is if outside range'.
+> +        * The serial driver *shouldn't* play with these clocks anyway, there's
+> +        * several uarts attached to this divider, and changing this impacts
+> +        * everyone.
+
+Huh?
+
+> +        */
+> +       if (clk->index == R9A06G032_DIV_UART) {
+> +               pr_devel("%s div uart hack!\n", __func__);
+> +               return clk_get_rate(hw->clk);
+> +       }
+> +       pr_devel("%s %pC %ld / %ld = %ld\n", __func__, hw->clk,
+> +               *prate, div, DIV_ROUND_UP(*prate, div));
+> +       return DIV_ROUND_UP(*prate, div);
+> +}
+> +
+> +static int r9a06g032_divider_set_rate(
+> +       struct clk_hw *hw, unsigned long rate,
+> +       unsigned long parent_rate)
+> +{
+> +       struct r9a06g032_clk_div *clk = to_r9a06g032_divider(hw);
+> +       /* + 1 to cope with rates that have the remainder dropped */
+> +       u32 div = DIV_ROUND_UP(parent_rate, rate + 1);
+> +       u32 *reg = ((u32 *)clk->clocks->reg) + clk->reg;
+> +
+> +       pr_devel("%s %pC rate %ld parent %ld div %d\n", __func__, hw->clk,
+> +               rate, parent_rate, div);
+> +
+> +       /*
+> +        * Need to write the bit 31 with the divider value to
+> +        * latch it. Technically we should wait until it has been
+> +        * cleared too.
+> +        * TODO: Find whether this callback is sleepable, in case
+> +        * the hardware /does/ require some sort of spinloop here.
+> +        */
+> +       clk_writel(div | (1U << 31), reg);
+
+BIT(31)?
+
+> +
+> +       return 0;
+> +}
+
+> +static struct clk *r9a06g032_register_divider(
+> +       struct r9a06g032_priv *clocks,
+> +       const char *parent_name,
+> +       const struct r9a06g032_clkdesc *desc)
+> +{
+> +       struct r9a06g032_clk_div *div;
+> +       struct clk *clk;
+> +       struct clk_init_data init;
+> +       int i;
+
+unsigned int i;
+
+
+> +static void __init r9a06g032_clocks_init(struct device_node *np)
+> +{
+> +       struct r9a06g032_priv *clocks;
+> +       struct clk **clks;
+> +       unsigned int i;
+> +       uint16_t uart_group_sel[2];
+> +
+> +       clocks = kzalloc(sizeof(*clocks), GFP_KERNEL);
+> +       clks = kzalloc(R9A06G032_CLOCK_COUNT * sizeof(struct clk *),
+> +                       GFP_KERNEL);
+
+kcalloc()?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
