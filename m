@@ -1,94 +1,64 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: condor: add I2C0 support
-Date: Wed, 30 May 2018 05:35:39 -0400
-Message-ID: <20180530093535.wjzhk6duxloperk6@verge.net.au>
-References: <e9c94553-be9d-0eec-a1ee-1713bb97fbab@cogentembedded.com>
- <61f6f4a4-e55c-06e0-cba1-7d90a556950a@cogentembedded.com>
- <20180529131012.ohyqwmiaxiiw6noi@verge.net.au>
- <9bc27b57-cf26-3b03-6ec4-1e9788a46426@cogentembedded.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Wed, 30 May 2018 10:37:01 +0100
+Message-ID: <20180530093701.GD6920@sirena.org.uk>
+References: <fb390ccb-927a-8449-05c3-8dcac964bfae@codeaurora.org>
+ <CAD=FV=XARtQNo5Cyg78XuT26JUFgn=7BjWRnXPjP566=a-sF1w@mail.gmail.com>
+ <a106c337-0713-e5d6-cb40-13e05f4d361d@codeaurora.org>
+ <CAD=FV=W=BquL5ojORz4HNP889s=-uNJ-QEzUfAxwXj2Oa3cGew@mail.gmail.com>
+ <20180523082908.GB4828@sirena.org.uk>
+ <CAD=FV=XfPkpGD32MfTfcw02wQ+QetpUhY=P299uhpX6pY_iEvg@mail.gmail.com>
+ <20180523154057.GL4828@sirena.org.uk>
+ <CAD=FV=XWVOdJ8rWJnBTwoNqnYqYRYjknkZtUvT86+skbrTdwig@mail.gmail.com>
+ <20180523155617.GN4828@sirena.org.uk>
+ <CAD=FV=W4aDxWbcaJ9GZ1KkvyiTPAPR-oUoTFzJfS+LftU5ZP=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9bc27b57-cf26-3b03-6ec4-1e9788a46426@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAD=FV=W4aDxWbcaJ9GZ1KkvyiTPAPR-oUoTFzJfS+LftU5ZP=Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 06:46:10PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 05/29/2018 04:10 PM, Simon Horman wrote:
-> 
-> >> Define the Condor board dependent part of the I2C0 device node.
-> >>
-> >> The I2C0 bus is populated by 2 ON Semiconductor PCA9654 I/O expanders
-> >> and Analog Devices  ADV7511W HDMI transmitter (but we're only describing
-> >> the former chips now).
-> >>
-> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >>
-> >> ---
-> >>  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   27 ++++++++++++++++++++++++
-> >>  1 file changed, 27 insertions(+)
-> >>
-> >> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> >> ===================================================================
-> >> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> >> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> >> @@ -80,6 +80,28 @@
-> >>  	clock-frequency = <32768>;
-> >>  };
-> >>  
-> >> +&i2c0 {
-> >> +	pinctrl-0 = <&i2c0_pins>;
-> >> +	pinctrl-names = "default";
-> >> +
-> >> +	status = "okay";
-> >> +	clock-frequency = <400000>;
-> >> +
-> >> +	io_expander0: gpio@20 {
-> > 
-> > Hi Sergei,
-> > 
-> > I'm a little confused about where 0x20 and 0x21 are derived from.
-> > Could you explain a little?
-> 
->    r-carv3h_system_evaluation_board_rev020.pdf, pp. 16-17, lower left corners.
-> The schematics gives the 8-bit read/write addresses but we use uniform 7-bit
-> I2C address in DTs.
 
-Thanks, this patch looks fine to me.
-However, I'd like to give others a chance to review it,
-and it is dependent on patch 1/2 where I have a different review question.
+--xB0nW4MQa6jZONgY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+On Tue, May 29, 2018 at 10:30:33PM -0700, Doug Anderson wrote:
+> On Wed, May 23, 2018 at 8:56 AM, Mark Brown <broonie@kernel.org> wrote:
 
-> >> +		compatible = "onnn,pca9654";
-> >> +		reg = <0x20>;
-> >> +		gpio-controller;
-> >> +		#gpio-cells = <2>;
-> >> +	};
-> >> +
-> >> +	io_expander1: gpio@21 {
-> >> +		compatible = "onnn,pca9654";
-> >> +		reg = <0x21>;
-> >> +		gpio-controller;
-> >> +		#gpio-cells = <2>;
-> >> +	};
-> >> +};
-> >> +
-> >>  &mmc0 {
-> >>  	pinctrl-0 = <&mmc_pins>;
-> >>  	pinctrl-1 = <&mmc_pins_uhs>;
-> 
+> > Yes, that's definitely not what's expected but it's unfortunately what
+> > the firmware chose to implement so we may well be stuck with it
+> > unfortunately.
+
+> We're not really stuck with it if we do what I was suggesting.  I was
+> suggesting that every time we disable the regulator in Linux we have
+> Linux vote for the lowest voltage it's comfortable with.  Linux keeps
+> track of the true voltage that the driver wants and will always change
+> its vote back to that before enabling.  Thus (assuming Linux is OK
+> with 1.2 V - 1.4 V for a rail):
+
+That's pretty much what it should do anyway with normally designed
+hardware.
+
+--xB0nW4MQa6jZONgY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsOcL0ACgkQJNaLcl1U
+h9DM5wf/ZIB/GXA/GKedSaSDuEH7anyaK0FDs0T5+c5BeuhSOKMMO56wPSCmNKOS
+wiMVH2Oe+SjF07QaUMXYAnBKhSJ95P2c+U+MbzexI9MVcaV2DCyqE2PYlALX4Gsg
+1p+F/ESu6fLIbNMWhUQ9jzqIsoNL5fAWX/B5sJeSb1hXPTo/QXvKGMz9SnO0LoLM
+btZh5hlny9lzNGPxEz+8IrcDi/y1JoAjtFUICAfiWlxlk45g88rJ43GciuBb4yYT
+HN4DTFugMryqY97VeQ28RXO5gnvAq5PKjLGfCraDRzy9irgTqyBiuF5mzdCV6vm9
+qMtsByT1THQmE6RX/ab4hL3xbchr/w==
+=hbBI
+-----END PGP SIGNATURE-----
+
+--xB0nW4MQa6jZONgY--
