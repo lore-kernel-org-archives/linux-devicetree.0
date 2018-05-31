@@ -1,71 +1,57 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 2/6] mtd: rawnand: add an option to specify NAND chip as a boot device
-Date: Fri,  1 Jun 2018 00:16:33 +0200
-Message-ID: <20180531221637.6017-3-stefan@agner.ch>
-References: <20180531221637.6017-1-stefan@agner.ch>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v8 0/7] i2c: Add FSI-attached I2C master algorithm
+Date: Fri, 01 Jun 2018 09:33:49 +1000
+Message-ID: <5683dded80ecabef532d2e285e5fc98e29f59510.camel@kernel.crashing.org>
+References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
+         <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com>
+         <58c1059a91b93a490a7fc8bda2112e67e6513840.camel@kernel.crashing.org>
+         <CAHp75Vec+KZCkjcs3qpB=qLmaTon=yTLyu7S_tDrMGcobHW5eQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531221637.6017-1-stefan@agner.ch>
+In-Reply-To: <CAHp75Vec+KZCkjcs3qpB=qLmaTon=yTLyu7S_tDrMGcobHW5eQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
-Cc: dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, stefan@agner.ch, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Eddie James <eajames@linux.vnet.ibm.com>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow to define a NAND chip as a boot device. This can be helpful
-for the selection of the ECC algorithm and strength in case the boot
-ROM supports only a subset of controller provided options.
+On Thu, 2018-05-31 at 09:29 +0300, Andy Shevchenko wrote:
+> > If you have specific issues with how this is done, please express them
+> > clearly. It's quite possible that there's some better way to do what
+> > Eddie is doing here, but without *construtive* feedback this is
+> > pointless.
+> 
+> It feels like you duplicate approach which is done in OF generic case.
+> That is my concern. Though, if Wolfram is telling that is OK, I have
+> no objections.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- Documentation/devicetree/bindings/mtd/nand.txt | 4 ++++
- drivers/mtd/nand/raw/nand_base.c               | 3 +++
- include/linux/mtd/rawnand.h                    | 6 ++++++
- 3 files changed, 13 insertions(+)
+THe OF generic case is about discovering slaves underneath a port, not
+ports inside of a mulit-port master.
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-index 8bb11d809429..8daf81b9748c 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -43,6 +43,10 @@ Optional NAND chip properties:
- 		     This is particularly useful when only the in-band area is
- 		     used by the upper layers, and you want to make your NAND
- 		     as reliable as possible.
-+- nand-is-boot-medium: Whether the NAND chip is a boot medium. Drivers might use
-+		       this information to select ECC algorithms supported by
-+		       the boot ROM or similar restrictions.
-+
- - nand-rb: shall contain the native Ready/Busy ids.
- 
- The ECC strength and ECC step size properties define the correction capability
-diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index 9eb5678dd6d0..c8fb7c9855e2 100644
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -5826,6 +5826,9 @@ static int nand_dt_init(struct nand_chip *chip)
- 	if (of_get_nand_bus_width(dn) == 16)
- 		chip->options |= NAND_BUSWIDTH_16;
- 
-+	if (of_property_read_bool(dn, "nand-is-boot-medium"))
-+		chip->options |= NAND_IS_BOOT_MEDIUM;
-+
- 	if (of_get_nand_on_flash_bbt(dn))
- 		chip->bbt_options |= NAND_BBT_USE_FLASH;
- 
-diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-index 6a82da8c44ce..8e54fcf2fa94 100644
---- a/include/linux/mtd/rawnand.h
-+++ b/include/linux/mtd/rawnand.h
-@@ -212,6 +212,12 @@ enum nand_ecc_algo {
-  */
- #define NAND_WAIT_TCCS		0x00200000
- 
-+/*
-+ * Whether the NAND chip is a boot medium. Drivers might use this information
-+ * to select ECC algorithms supported by the boot ROM or similar restrictions.
-+ */
-+#define NAND_IS_BOOT_MEDIUM	0x00400000
-+
- /* Options set by nand scan */
- /* Nand scan has allocated controller struct */
- #define NAND_CONTROLLER_ALLOC	0x80000000
--- 
-2.17.0
+I am not aware of a generic mechanism for the latter. We *could* make
+the ports sub-devices but it gets messy then to arbitrate the
+communication and deal with the common part. I've seen (and written)
+multi-port masters in the past that use a similar approach to what
+Eddie's doing and it works fine.
+
+> > I'm disappointed here because we have an example of somebody rather new
+> > producing what is overall pretty damn good code,
+> 
+> That is true. His code much better than many I have seen before
+
+Thanks. Also thanks for taking the time to review.
+
+> > despite a few corner
+> > issues, and being (again) treated like crap.
+> 
+> Sorry for that, life is harsh.
+> 
+> > This isn't the right way to operate, and I believe this has been made
+> > clear many times before.
+> 
+> Yes.
+
+
+Cheers,
+Ben.
