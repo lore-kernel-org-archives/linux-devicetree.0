@@ -1,71 +1,103 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v9 01/15] ARM: Add Krait L2 register accessor functions
-Date: Thu, 31 May 2018 10:27:20 +0530
-Message-ID: <9f2e1aa8-21c1-10b0-6193-e6bc16993a0d@codeaurora.org>
-References: <1520347148-27852-1-git-send-email-sricharan@codeaurora.org>
- <1520347148-27852-2-git-send-email-sricharan@codeaurora.org>
- <20180524173926.GC14924@minitux>
- <664089d4-b30d-99bb-2021-12128b2895ba@codeaurora.org>
- <152769571081.144038.4314499217001219157@swboyd.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: djw@t-chip.com.cn
+Subject: [PATCH v3 5/5] arm64: dts: rockchip: Add sdmmc UHS support for roc-rk3328-cc
+Date: Thu, 31 May 2018 13:03:21 +0800
+Message-ID: <1527743001-29656-1-git-send-email-djw@t-chip.com.cn>
+References: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152769571081.144038.4314499217001219157@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk
+To: linux-rockchip@lists.infradead.org
+Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Liang Chen <cl@rock-chips.com>, William Wu <william.wu@rock-chips.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joseph Chen <chenjh@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Rocky Hao <rocky.hao@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+From: Levin Du <djw@t-chip.com.cn>
 
-On 5/30/2018 9:25 PM, Stephen Boyd wrote:
-> Quoting Sricharan R (2018-05-24 22:40:11)
->> Hi Bjorn,
->>
->> On 5/24/2018 11:09 PM, Bjorn Andersson wrote:
->>> On Tue 06 Mar 06:38 PST 2018, Sricharan R wrote:
->>>
->>>> From: Stephen Boyd <sboyd@codeaurora.org>
->>>>
->>>> Krait CPUs have a handful of L2 cache controller registers that
->>>> live behind a cp15 based indirection register. First you program
->>>> the indirection register (l2cpselr) to point the L2 'window'
->>>> register (l2cpdr) at what you want to read/write.  Then you
->>>> read/write the 'window' register to do what you want. The
->>>> l2cpselr register is not banked per-cpu so we must lock around
->>>> accesses to it to prevent other CPUs from re-pointing l2cpdr
->>>> underneath us.
->>>>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Russell King <linux@arm.linux.org.uk>
->>>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->>>
->>> This should have your signed-off-by here as well.
->>>
->>
->>  ok.
->>
->>> Apart from that:
->>>
->>> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>
->>
-> 
-> Will these patches come around again? I'll do a quick sweep on them
-> today but I expect them to be resent.
+In roc-rk3328-cc board, the signal voltage of sdmmc is supplied by
+the vcc_sdio regulator, which is a mux between 1.8V and 3.3V,
+controlled by a special output only gpio pin labeled
+"gpiomut_pmuio_iout", corresponding bit 1 of the syscon GRF_SOC_CON10.
 
-Sure, i will have to resend them again, fixing couple of Bjorn's
-minor comments. Will address your comments that you would give
-as well along with that.
+This special pin can now be reference as <&gpio_mute 0>, thanks
+to the gpio-syscon driver, which makes writing regulator-gpio possible.
 
-Regards,
- Sricharan
+If the signal voltage changes, the io domain needs to change
+correspondingly.
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+To use this feature, the following options are required in kernel config:
+ - CONFIG_GPIO_SYSCON=y
+ - CONFIG_POWER_AVS=y
+ - CONFIG_ROCKCHIP_IODOMAIN=y
+
+Signed-off-by: Levin Du <djw@t-chip.com.cn>
 
 ---
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+
+Changes in v3:
+- Use <&gpio_mute 0> instead of <&gpio_mute 1> to refer to the GPIO_MUTE pin.
+
+Changes in v2:
+- Rename gpio_syscon10 to gpio_mute in rk3328-roc-cc.dts
+
+Changes in v1:
+- Split into small patches
+- Sort dts properties in sdmmc node
+
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index b983abd..25c1111 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -41,6 +41,19 @@
+ 		vin-supply = <&vcc_io>;
+ 	};
+ 
++	vcc_sdio: sdmmcio-regulator {
++		compatible = "regulator-gpio";
++		gpios = <&gpio_mute 0 GPIO_ACTIVE_HIGH>;
++		states = <1800000 0x1
++			  3300000 0x0>;
++		regulator-name = "vcc_sdio";
++		regulator-type = "voltage";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		vin-supply = <&vcc_sys>;
++	};
++
+ 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -213,7 +226,7 @@
+ 
+ 	vccio1-supply = <&vcc_io>;
+ 	vccio2-supply = <&vcc18_emmc>;
+-	vccio3-supply = <&vcc_io>;
++	vccio3-supply = <&vcc_sdio>;
+ 	vccio4-supply = <&vcc_18>;
+ 	vccio5-supply = <&vcc_io>;
+ 	vccio6-supply = <&vcc_io>;
+@@ -242,7 +255,12 @@
+ 	max-frequency = <150000000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
++	sd-uhs-sdr12;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
+ 	vmmc-supply = <&vcc_sd>;
++	vqmmc-supply = <&vcc_sdio>;
+ 	status = "okay";
+ };
+ 
+@@ -277,3 +295,7 @@
+ &usb_host0_ohci {
+ 	status = "okay";
+ };
++
++&gpio_mute {
++	status = "okay";
++};
+-- 
+2.7.4
