@@ -1,66 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 07/10] dt-bindings: tc358754: add DT bindings
-Date: Wed, 30 May 2018 23:02:11 -0500
-Message-ID: <20180531040211.GA23051@rob-hp-laptop>
-References: <1527682561-1386-1-git-send-email-m.purski@samsung.com>
- <CGME20180530121627eucas1p1c8daf24d7c95e9e8b04a523d4662dfd9@eucas1p1.samsung.com>
- <1527682561-1386-8-git-send-email-m.purski@samsung.com>
+Subject: Re: [PATCH v2 3/6] clk: ti: dra7: Add clkctrl clock data for the
+ mcan clocks
+Date: Wed, 30 May 2018 23:03:50 -0500
+Message-ID: <20180531040350.GA25132@rob-hp-laptop>
+References: <20180530141133.3711-1-faiz_abbas@ti.com>
+ <20180530141133.3711-4-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527682561-1386-8-git-send-email-m.purski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20180530141133.3711-4-faiz_abbas@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMzAsIDIwMTggYXQgMDI6MTU6NThQTSArMDIwMCwgTWFjaWVqIFB1cnNraSB3
-cm90ZToKPiBGcm9tOiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IAo+IFRo
-ZSBwYXRjaCBhZGRzIGJpbmRpbmdzIHRvIFRvc2hpYmEgRFNJL0xWRFMgYnJpZGdlIFRDMzU4NzY0
-Lgo+IEJpbmRpbmdzIGRlc2NyaWJlIHBvd2VyIHN1cHBsaWVzLCByZXNldCBncGlvIGFuZCB2aWRl
-byBpbnRlcmZhY2VzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogTWFjaWVqIFB1cnNraSA8bS5wdXJza2lAc2Ft
-c3VuZy5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRj
-MzU4NzY0LnR4dCAgIHwgMzcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdl
-ZCwgMzcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjQudHh0Cj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY0LnR4dAo+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uNmVkYTE0Zgo+IC0tLSAvZGV2L251bGwKPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdG9zaGli
-YSx0YzM1ODc2NC50eHQKPiBAQCAtMCwwICsxLDM3IEBACj4gK1RDMzU4NzY0IE1JUEktRFNJIHRv
-IExWRFMgcGFuZWwgYnJpZGdlCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsgIC0gY29t
-cGF0aWJsZTogInRvc2hpYmEsdGMzNTg3NjQiCj4gKyAgLSByZWc6IHRoZSB2aXJ0dWFsIGNoYW5u
-ZWwgbnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwKPiArICAtIHZkZGMtc3VwcGx5OiBjb3JlIHZv
-bHRhZ2Ugc3VwcGx5LCAxLjJWCj4gKyAgLSB2ZGRpby1zdXBwbHk6IEkvTyB2b2x0YWdlIHN1cHBs
-eSwgMS44ViBvciAzLjNWCj4gKyAgLSB2ZGRsdmRzLXN1cHBseTogTFZEUzEvMiB2b2x0YWdlIHN1
-cHBseSwgMy4zVgo+ICsgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQg
-cGluCj4gKwo+ICtUaGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gemVybyB0byB0d28gJ3BvcnQn
-IGNoaWxkIG5vZGVzLCBlYWNoIHdpdGggb25lCgpIb3cgd291bGQgMCBwb3J0cyBiZSB2YWxpZD8K
-Cj4gK2NoaWxkICdlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZp
-bmVkIGluIFsxXS4KPiArVGhlIGZvbGxvd2luZyBhcmUgcHJvcGVydGllcyBzcGVjaWZpYyB0byB0
-aG9zZSBub2Rlcy4KPiArCj4gK3BvcnQ6Cj4gKyAgLSByZWc6IChyZXF1aXJlZCkgY2FuIGJlIDAg
-Zm9yIERTSSBwb3J0IG9yIDEgZm9yIExWRFMgcG9ydDsKPiArCj4gK1sxXTogRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gKwo+ICtF
-eGFtcGxlOgo+ICsKPiArCWJyaWRnZUAwIHsKPiArCQlyZWcgPSA8MD47Cj4gKwkJY29tcGF0aWJs
-ZSA9ICJ0b3NoaWJhLHRjMzU4NzY0IjsKPiArCQl2ZGRjLXN1cHBseSA9IDwmdmNjXzF2Ml9yZWc+
-Owo+ICsJCXZkZGlvLXN1cHBseSA9IDwmdmNjXzF2OF9yZWc+Owo+ICsJCXZkZGx2ZHMtc3VwcGx5
-ID0gPCZ2Y2NfM3YzX3JlZz47Cj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwZDEgNiBHUElPX0FDVElW
-RV9MT1c+Owo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+
-Owo+ICsJCXBvcnRAMSB7Cj4gKwkJCXJlZyA9IDwxPjsKPiArCQkJbHZkc19lcDogZW5kcG9pbnQg
-ewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9lcD47Cj4gKwkJCX07Cj4gKwkJfTsK
-PiArCX07Cj4gLS0gCj4gMi43LjQKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On Wed, May 30, 2018 at 07:41:30PM +0530, Faiz Abbas wrote:
+> Add clkctrl data for the m_can clocks and register it within the
+> clkctrl driver
+> 
+> CC: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  drivers/clk/ti/clk-7xx.c         | 1 +
+>  include/dt-bindings/clock/dra7.h | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
+> index fb249a1637a5..71a122b2dc67 100644
+> --- a/drivers/clk/ti/clk-7xx.c
+> +++ b/drivers/clk/ti/clk-7xx.c
+> @@ -708,6 +708,7 @@ static const struct omap_clkctrl_reg_data dra7_wkupaon_clkctrl_regs[] __initcons
+>  	{ DRA7_COUNTER_32K_CLKCTRL, NULL, 0, "wkupaon_iclk_mux" },
+>  	{ DRA7_UART10_CLKCTRL, dra7_uart10_bit_data, CLKF_SW_SUP, "wkupaon_cm:clk:0060:24" },
+>  	{ DRA7_DCAN1_CLKCTRL, dra7_dcan1_bit_data, CLKF_SW_SUP, "wkupaon_cm:clk:0068:24" },
+> +	{ DRA7_ADC_CLKCTRL, NULL, CLKF_SW_SUP, "mcan_clk" },
+>  	{ 0 },
+>  };
+>  
+> diff --git a/include/dt-bindings/clock/dra7.h b/include/dt-bindings/clock/dra7.h
+> index 5e1061b15aed..d7549c57cac3 100644
+> --- a/include/dt-bindings/clock/dra7.h
+> +++ b/include/dt-bindings/clock/dra7.h
+> @@ -168,5 +168,6 @@
+>  #define DRA7_COUNTER_32K_CLKCTRL	DRA7_CLKCTRL_INDEX(0x50)
+>  #define DRA7_UART10_CLKCTRL	DRA7_CLKCTRL_INDEX(0x80)
+>  #define DRA7_DCAN1_CLKCTRL	DRA7_CLKCTRL_INDEX(0x88)
+> +#define DRA7_ADC_CLKCTRL	DRA7_CLKCTRL_INDEX(0xa0)
+
+ADC and mcan are the same thing?
+
+>  
+>  #endif
+> -- 
+> 2.17.0
+> 
