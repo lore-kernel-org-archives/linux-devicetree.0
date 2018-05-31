@@ -1,97 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/8] dt-bindings: gnss: add u-blox binding
-Date: Thu, 31 May 2018 08:55:10 -0500
-Message-ID: <CAL_Jsq+-NBqR8H49oB-XZtH8XSCn_BO92Zf17=KfEXfE5mvjAg@mail.gmail.com>
-References: <20180530103242.20773-1-johan@kernel.org> <20180530103242.20773-5-johan@kernel.org>
- <20180531035805.GA16906@rob-hp-laptop> <20180531082241.GD3259@localhost>
+Subject: Re: [PATCH v4 3/6] regulator: bd71837: Devicetree bindings for
+ BD71837 regulators
+Date: Thu, 31 May 2018 09:00:00 -0500
+Message-ID: <CAL_Jsq+thofEt0fXnbV=dsXggGHS=vdHwSLLKQCVvL5cMDO5wA@mail.gmail.com>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <318229ca7ffcceb090fc8d0c43f887decc3082f0.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180531030436.GB16122@rob-hp-laptop> <20180531072145.GH13528@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531082241.GD3259@localhost>
+In-Reply-To: <20180531072145.GH13528@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 31, 2018 at 3:22 AM, Johan Hovold <johan@kernel.org> wrote:
-> On Wed, May 30, 2018 at 10:58:05PM -0500, Rob Herring wrote:
->> On Wed, May 30, 2018 at 12:32:38PM +0200, Johan Hovold wrote:
->> > Add binding for u-blox GNSS receivers.
->> >
->> > Note that the u-blox product names encodes form factor (e.g. "neo"),
->> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
->> > chipset is used for the compatible strings (for now).
->> >
->> > Signed-off-by: Johan Hovold <johan@kernel.org>
->> > ---
->> >  .../devicetree/bindings/gnss/u-blox.txt       | 44 +++++++++++++++++++
->> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->> >  2 files changed, 45 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
->> > new file mode 100644
->> > index 000000000000..caef9ace0b0c
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
->> > @@ -0,0 +1,44 @@
->> > +u-blox GNSS Receiver DT binding
+On Thu, May 31, 2018 at 2:21 AM, Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+> On Wed, May 30, 2018 at 10:04:36PM -0500, Rob Herring wrote:
+>> On Wed, May 30, 2018 at 11:42:32AM +0300, Matti Vaittinen wrote:
+>> > Document devicetree bindings for ROHM BD71837 PMIC regulators.
+>> > +ROHM BD71837 Power Management Integrated Circuit (PMIC) regulator bin=
+dings
 >> > +
->> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
->> > +
->> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
->> > +properties.
->> > +
->> > +Required properties:
->> > +
->> > +- compatible       : Must be one of
+>> > +BD71837MWV is a programmable Power Management
+>> > +IC (PMIC) for powering single-core, dual-core, and
+>> > +quad-core SoC=E2=80=99s such as NXP-i.MX 8M. It is optimized
+>> > +for low BOM cost and compact solution footprint. It
+>> > +integrates 8 Buck regulators and 7 LDO=E2=80=99s to provide all
+>> > +the power rails required by the SoC and the commonly
+>> > +used peripherals.
 >>
->> mixture of space and tab here.
+>> Why duplicate this from the core binding?
 >
-> Oops. Same single space character before the tab here in all three
-> binding docs (and in the in-tree slave_devices.txt which I think I used
-> as a template).
+> I can remove this. I just thought it is nice to see what this chip is
+> doing even without opening the MFD binding doc. Just same question as in
+> the other patch - how should I deliver the change? This was already
+> applied to Mark's tree - should I do new patch on top of the Mark's tree
+> - or do patch against tree which does not yet contain this change? If I
+>   do it on top of Mark's tree then Mark should apply it, right? If I do
+>  it against some other three, thene there will be merge conflict with
+>  Mark, right?
 
-Who wrote that crap? ;)
-
-> Do you want me to fix this even if this turns out to be the only thing
-> that needs to be addressed in a v3?
-
-No
-
->
->> > +
->> > +                   "u-blox,neo-8"
->> > +                   "u-blox,neo-m8"
->> > +
->> > +- vcc-supply       : Main voltage regulator
->> > +
->> > +Required properties (DDC):
->> > +- reg              : DDC (I2C) slave address
->> > +
->> > +Required properties (SPI):
->> > +- reg              : SPI chip select address
->> > +
->> > +Required properties (USB):
->> > +- reg              : Number of the USB hub port or the USB host-controller port
->> > +                  to which this device is attached
->> > +
->> > +Optional properties:
->> > +
->> > +- timepulse-gpios  : Time pulse GPIO
->> > +- u-blox,extint-gpios      : External interrupt GPIO
->>
->> This should be interrupts property instead of a gpio.
->
-> Contrary to what the name may suggest, this pin is actually an input
-> which can be used to control active power or to provide time or
-> frequency aiding data to the receiver (see section 1.13 in [1]).
->
-> I only added it for completeness as the driver does not use it
-> currently. Remove, leave as is, or add "input" to the description as in:
->
->         - u-blox,extint-gpios   : External interrupt input GPIO
-
-Yes. You should also define the active level.
+I thought he only applied the regulator driver part. If not, then
+don't worry about it. (But the right answer would be to do an
+incremental patch on top of his tree).
 
 Rob
