@@ -1,39 +1,50 @@
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: renesas: r8a7795: add ccree binding
-Date: Thu, 31 May 2018 14:55:06 +0300
-Message-ID: <CAOtvUMeBCH+23c3FDWncMwPPe5N=7yjRKzhyLmFXrYazgGbcJw@mail.gmail.com>
-References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
- <1527171551-21979-6-git-send-email-gilad@benyossef.com> <20180529161936.prhp4oikzamr6u3n@verge.net.au>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC PATCH 2/6] dt-bindings: display/ti: add k2g-dss bindings
+Date: Thu, 31 May 2018 15:41:05 +0300
+Message-ID: <20180531124109.3209-3-tomi.valkeinen@ti.com>
+References: <20180531124109.3209-1-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529161936.prhp4oikzamr6u3n@verge.net.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180531124109.3209-1-tomi.valkeinen@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>, Benoit Parrot <bparrot@ti.com>
+Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 7:19 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, May 24, 2018 at 03:19:10PM +0100, Gilad Ben-Yossef wrote:
->> Add bindings for CryptoCell instance in the SoC.
->>
->> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
->
-> In so far as I can review the details of this (which is not much) this
-> looks fine to me. I am, however, a little unclear in when it should be
-> accepted.
-
-Since Herbert Xu ACKed the driver changes, I would say the only gating
-commit is Geert's CR clock patch.
-If that one is in, than I would say this one should go in as well.
-
-Thanks,
-Gilad
-
--- 
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-"If you take a class in large-scale robotics, can you end up in a
-situation where the homework eats your dog?"
- -- Jean-Baptiste Queru
+QWRkIERUIGJpbmRpbmdzIGZvciBUZXhhcyBJbnN0cnVtZW50cyBLMkcgU29DIERpc3BsYXkgU3Vi
+c3lzdGVtLiBUaGUgRFNTCmlzIHF1aXRlIHNpbXBsZSwgd2l0aCBhIHNpbmdsZSBwbGFuZSBhbmQg
+YSBzaW5nbGUgb3V0cHV0LgoKU2lnbmVkLW9mZi1ieTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFs
+a2VpbmVuQHRpLmNvbT4KQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCi0tLQogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxrMmctZHNzLnR4dCB8IDE1ICsrKysrKysr
+KysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxrMmct
+ZHNzLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3RpL3RpLGsyZy1kc3MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvdGkvdGksazJnLWRzcy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXgg
+MDAwMDAwMDAwMDAwLi4xYWYxMTQyNWVkYTMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxrMmctZHNzLnR4dApAQCAtMCww
+ICsxLDE1IEBACitUZXhhcyBJbnN0cnVtZW50cyBLMkcgRGlzcGxheSBTdWJzeXN0ZW0KKz09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQorCitSZXF1aXJlZCBwcm9wZXJ0aWVz
+OgorLSBjb21wYXRpYmxlOiAidGksazJnLWRzcyIKKy0gcmVnOiBhZGRyZXNzIGFuZCBsZW5ndGgg
+b2YgdGhlIHJlZ2lzdGVyIHNwYWNlcyBmb3IgRFNTIHN1Ym1vZHVsZXMKKy0gcmVnLW5hbWVzOiAi
+Y2ZnIiwgImNvbW1vbiIsICJ2aWQxIiwgIm92cjEiLCAidnAxIgorLSBjbG9ja3M6IHBoYW5kbGUg
+dG8gZmNsayBhbmQgdnAxIGNsb2NrcworLSBjbG9jay1uYW1lczogImZjayIsICJ2cDEiCistIGlu
+dGVycnVwdHM6IHBoYW5kbGUgdG8gdGhlIERJU1BDIGludGVycnVwdAorCitUaGUgRFNTIG91dHB1
+dHMgYXJlIGRlc2NyaWJlZCB1c2luZyB0aGUgZGV2aWNlIGdyYXBocyBhcyBkb2N1bWVudGVkIGlu
+CitEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LiBLMkcgRFNTIGhh
+cyBhIHNpbmdsZSBEUEkgb3V0cHV0IGFzCitwb3J0IDAuCisKLS0gClRleGFzIEluc3RydW1lbnRz
+IEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9C
+dXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
