@@ -1,81 +1,94 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 1/6] ARM: dra762: hwmod: Add MCAN support
-Date: Thu, 31 May 2018 09:39:21 -0700
-Message-ID: <20180531163921.GO5705@atomide.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-2-faiz_abbas@ti.com>
- <20180530145047.GC5705@atomide.com>
- <cfa9c9df-57a2-69f6-9509-440dc18292e7@ti.com>
- <20180530152825.GG5705@atomide.com>
- <b0476932-a6e9-6ef1-69ad-c9a8c55d9739@ti.com>
- <20180530155448.GH5705@atomide.com>
- <98c989ca-0694-5150-f74b-35f3e4bf20c0@ti.com>
- <20180531152623.GN5705@atomide.com>
- <f74763ed-7e27-146b-6856-6be1b2ba630d@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for SR
+ thermal
+Date: Thu, 31 May 2018 11:48:20 -0500
+Message-ID: <20180531164820.GA23074@rob-hp-laptop>
+References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
+ <1527486084-4636-2-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f74763ed-7e27-146b-6856-6be1b2ba630d@ti.com>
+In-Reply-To: <1527486084-4636-2-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180531 16:36]:
-> Hi,
+On Mon, May 28, 2018 at 11:11:22AM +0530, Srinath Mannam wrote:
+> From: Pramod Kumar <pramod.kumar@broadcom.com>
 > 
-> On Thursday 31 May 2018 08:56 PM, Tony Lindgren wrote:
-> > * Tero Kristo <t-kristo@ti.com> [180531 06:18]:
-> >> On 30/05/18 18:54, Tony Lindgren wrote:
-> >>> * Tero Kristo <t-kristo@ti.com> [180530 15:44]:
-> >>>> On 30/05/18 18:28, Tony Lindgren wrote:
-> >>>>> * Tero Kristo <t-kristo@ti.com> [180530 15:18]:
-> >>>>>> For the OCP if part, I think that is still needed until we switch over to
-> >>>>>> full sysc driver. clkctrl_offs you probably also need because that is used
-> >>>>>> for mapping the omap_hwmod against a specific clkctrl clock. Those can be
-> >>>>>> only removed once we are done with hwmod (or figure out some other way to
-> >>>>>> assign the clkctrl clock to a hwmod.)
-> >>>>>
-> >>>>> Hmm might be worth testing. I thought your commit 70f05be32133
-> >>>>> ("ARM: OMAP2+: hwmod: populate clkctrl clocks for hwmods if available")
-> >>>>> already parses the clkctrl from dts?
-> >>>>
-> >>>> It maps the clkctrl clock to be used by hwmod, if those are available. We
-> >>>> didn't add any specific clock entries to DT for mapping the actual clkctrl
-> >>>> clock without the hwmod_data hints yet though, as that was deemed temporary
-> >>>> solution only due to transition to interconnect driver. I.e., you would need
-> >>>> something like this in DT for every device node:
-> >>>>
-> >>>> &uart3 {
-> >>>>    clocks = <l4per_clkctrl UART3_CLK 0>;
-> >>>>    clock-names = "clkctrl";
-> >>>> };
-> >>>>
-> >>>> ... which is currently not present.
-> >>>
-> >>> Hmm is that not the "fck" clkctrl clock we have already in
-> >>> the dts files for the interconnect target modules?
-> >>
-> >> Oh okay, yeah, we could parse that one, but currently it is not done, and is
-> >> not present for everything either I believe.
-> >>
-> >>> We can also use pdata callbacks to pass the clock node if
-> >>> needed. But I guess I don't quite still understand what we
-> >>> are missing :)
-> >>
-> >> So, what is missing is the glue logic only from the hwmod codebase. Right
-> >> now this is not supported but should be relatively trivial thing to add if
-> >> we really want to do this.
-> > 
-> > OK let's think about this a bit for v4.19 then.
-> > 
+> Add binding document for supported thermal implementation
+> in Stingray.
 > 
-> I am not sure what the conclusion is. Should I try removing the
-> clkctrl_offsets, clkdm_name, and main_clk?
+> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> ---
+>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> new file mode 100644
+> index 0000000..33f9e11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> @@ -0,0 +1,45 @@
+> +* Broadcom Stingray Thermal
+> +
+> +This binding describes thermal sensors that is part of Stingray SoCs.
+> +
+> +Required properties:
+> +- compatible : Must be "brcm,sr-thermal"
+> +- reg : memory where tmon data will be available.
 
-No need to, it's not going to work currently without them.
+What type of memory is this?
 
-Regards,
+> +
+> +Example:
+> +	tmons {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		tmon_ihost0: thermal@8f100000 {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0x8f100000 0x4>;
+> +		};
 
-Tony
+Convince me that you need a node per register. This can all be 
+accomplished with a single node and either a single reg entry or a 
+series of reg entries.
+
+> +
+> +		tmon_ihost1: thermal@8f100004 {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0x8f100004 0x4>;
+> +		};
+> +
+> +		tmon_ihost2: thermal@8f100008 {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0x8f100008 0x4>;
+> +		};
+> +
+> +		tmon_ihost3: thermal@8f10000c {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0x8f10000c 0x4>;
+> +		};
+> +
+> +		tmon_crmu: thermal@8f100010 {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0x8f100010 0x4>;
+> +		};
+> +
+> +		tmon_nitro: thermal@8f100014 {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0x8f100014 0x4>;
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
