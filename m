@@ -1,125 +1,96 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v2] PCI: mediatek: Add system pm support for MT2712
-Date: Thu, 31 May 2018 16:15:45 +0800
-Message-ID: <1527754545-32378-1-git-send-email-honghui.zhang@mediatek.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 4/8] dt-bindings: gnss: add u-blox binding
+Date: Thu, 31 May 2018 10:22:41 +0200
+Message-ID: <20180531082241.GD3259@localhost>
+References: <20180530103242.20773-1-johan@kernel.org>
+ <20180530103242.20773-5-johan@kernel.org>
+ <20180531035805.GA16906@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180531035805.GA16906@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+To: Rob Herring <robh@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Wed, May 30, 2018 at 10:58:05PM -0500, Rob Herring wrote:
+> On Wed, May 30, 2018 at 12:32:38PM +0200, Johan Hovold wrote:
+> > Add binding for u-blox GNSS receivers.
+> > 
+> > Note that the u-blox product names encodes form factor (e.g. "neo"),
+> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
+> > chipset is used for the compatible strings (for now).
+> > 
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > ---
+> >  .../devicetree/bindings/gnss/u-blox.txt       | 44 +++++++++++++++++++
+> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+> >  2 files changed, 45 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
+> > new file mode 100644
+> > index 000000000000..caef9ace0b0c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
+> > @@ -0,0 +1,44 @@
+> > +u-blox GNSS Receiver DT binding
+> > +
+> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
+> > +
+> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+> > +properties.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible 	: Must be one of
+> 
+> mixture of space and tab here.
 
-The MTCMOS of PCIe Host for MT2712 will be off when system suspend, and all
-the internal control register will be reset after system resume. The PCIe
-link should be re-established and the related control register values
-should be re-set after system resume.
+Oops. Same single space character before the tab here in all three
+binding docs (and in the in-tree slave_devices.txt which I think I used
+as a template).
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-CC: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/pci/host/pcie-mediatek.c | 61 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+Do you want me to fix this even if this turns out to be the only thing
+that needs to be addressed in a v3?
 
-diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index dabf1086..6bf7f5a 100644
---- a/drivers/pci/host/pcie-mediatek.c
-+++ b/drivers/pci/host/pcie-mediatek.c
-@@ -132,12 +132,14 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-+ * @pm_support: whether the host's MTCMOS will be off when suspend
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
-+	bool pm_support;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -1179,12 +1181,70 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int mtk_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
-+	int ret;
-+
-+	soc = pcie->soc;
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		phy_power_on(port->phy);
-+		clk_prepare_enable(port->sys_ck);
-+		clk_prepare_enable(port->ahb_ck);
-+
-+		ret = soc->startup(port);
-+		if (ret) {
-+			dev_err(dev, "Port%d link down\n", port->slot);
-+			phy_power_off(port->phy);
-+			clk_disable_unprepare(port->sys_ck);
-+			clk_disable_unprepare(port->ahb_ck);
-+			return ret;
-+		}
-+
-+		if (IS_ENABLED(CONFIG_PCI_MSI))
-+			mtk_pcie_enable_msi(port);
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
- };
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1211,6 +1271,7 @@ static struct platform_driver mtk_pcie_driver = {
- 		.name = "mtk-pcie",
- 		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(mtk_pcie_driver);
--- 
-2.6.4
+> > +
+> > +			"u-blox,neo-8"
+> > +			"u-blox,neo-m8"
+> > +
+> > +- vcc-supply	: Main voltage regulator
+> > +
+> > +Required properties (DDC):
+> > +- reg		: DDC (I2C) slave address
+> > +
+> > +Required properties (SPI):
+> > +- reg		: SPI chip select address
+> > +
+> > +Required properties (USB):
+> > +- reg		: Number of the USB hub port or the USB host-controller port
+> > +                  to which this device is attached
+> > +
+> > +Optional properties:
+> > +
+> > +- timepulse-gpios	: Time pulse GPIO
+> > +- u-blox,extint-gpios	: External interrupt GPIO
+> 
+> This should be interrupts property instead of a gpio.
+
+Contrary to what the name may suggest, this pin is actually an input
+which can be used to control active power or to provide time or
+frequency aiding data to the receiver (see section 1.13 in [1]).
+
+I only added it for completeness as the driver does not use it
+currently. Remove, leave as is, or add "input" to the description as in:
+
+	- u-blox,extint-gpios	: External interrupt input GPIO
+
+perhaps?
+
+Thanks,
+Johan
+
+[1] https://www.u-blox.com/sites/default/files/NEO-8Q_DataSheet_%28UBX-15031913%29.pdf
