@@ -1,221 +1,142 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH 11/11] misc/throttler: Add Chrome OS EC throttler
-Date: Thu, 31 May 2018 11:05:09 +0200
-Message-ID: <CAFqH_53iMhvq+6NXoXu50sD=PuXBf-2_D3K1Mf+iggLeGSu_mg@mail.gmail.com>
-References: <20180525203043.249193-1-mka@chromium.org> <20180525203043.249193-12-mka@chromium.org>
+From: M P <buserror@gmail.com>
+Subject: Re: [PATCH v7 1/5] dt-bindings: Add the r9a06g032-sysctrl.h file
+Date: Thu, 31 May 2018 10:11:34 +0100
+Message-ID: <CAMMfpEwpiZnZEykzxQJMTwE+cDnOD_qA3nUzyB96DGTWPzSJrw@mail.gmail.com>
+References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1527154169-32380-2-git-send-email-michel.pollet@bp.renesas.com> <CAMuHMdVzN0Cbc9+MJqC4EzVgD3bkDixkf10NA13ko87cMwvpLA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525203043.249193-12-mka@chromium.org>
+In-Reply-To: <CAMuHMdVzN0Cbc9+MJqC4EzVgD3bkDixkf10NA13ko87cMwvpLA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: michel.pollet@bp.renesas.com, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, buserror+upstream@gmail.com, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Fri, 25 May 2018 at 11:31, Geert Uytterhoeven <geert@linux-m68k.org>
+wrote:
 
-The patch looks good to me, just three minor comments to be more
-coherent with other cros-ec drivers.
+> Hi Michel,
 
-2018-05-25 22:30 GMT+02:00 Matthias Kaehlcke <mka@chromium.org>:
-> The driver subscribes to throttling events from the Chrome OS
-> embedded controller and enables/disables system throttling based
-> on these events.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/misc/throttler/Kconfig             |  15 +++
->  drivers/misc/throttler/Makefile            |   1 +
->  drivers/misc/throttler/cros_ec_throttler.c | 122 +++++++++++++++++++++
->  3 files changed, 138 insertions(+)
->  create mode 100644 drivers/misc/throttler/cros_ec_throttler.c
->
-> diff --git a/drivers/misc/throttler/Kconfig b/drivers/misc/throttler/Kconfig
-> index ef8388f6bc0a..652b6817b75c 100644
-> --- a/drivers/misc/throttler/Kconfig
-> +++ b/drivers/misc/throttler/Kconfig
-> @@ -11,3 +11,18 @@ menuconfig THROTTLER
->           Note that you also need a event monitor module usually called
->           *_throttler.
->
-> +if THROTTLER
-> +
-> +config CROS_EC_THROTTLER
-> +       tristate "Throttler event monitor for the Chrome OS Embedded Controller"
+Hi Geert,
 
-s/Chrome OS/ChromeOS/ This is how other cros-ec drivers refer to the
-embedded controller, so will be good if you could maintain this
-denomination.
 
-> +       default n
-> +       depends on MFD_CROS_EC
-> +       ---help---
-> +         This driver adds support to throttle the system in reaction to
-> +         Chrome OS EC events.
-> +
+> On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
+> <michel.pollet@bp.renesas.com> wrote:
+> > This adds the constants necessary to use the renesas,r9a06g032-sysctrl
+node.
+> >
+> > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
-ditto
+> Thanks for your patch!
 
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called cros_ec_throttler.
-> +
-> +endif # THROTTLER
-> +
-> diff --git a/drivers/misc/throttler/Makefile b/drivers/misc/throttler/Makefile
-> index c8d920cee315..d9b2a77dabc9 100644
-> --- a/drivers/misc/throttler/Makefile
-> +++ b/drivers/misc/throttler/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_THROTTLER)                += core.o
-> +obj-$(CONFIG_CROS_EC_THROTTLER)        += cros_ec_throttler.o
-> diff --git a/drivers/misc/throttler/cros_ec_throttler.c b/drivers/misc/throttler/cros_ec_throttler.c
-> new file mode 100644
-> index 000000000000..ea6bc002d49c
-> --- /dev/null
-> +++ b/drivers/misc/throttler/cros_ec_throttler.c
-> @@ -0,0 +1,122 @@
-> +/*
-> + * Driver for throttling triggered by EC events.
-> + *
-> + * Copyright (C) 2018 Google, Inc.
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
+> > --- /dev/null
+> > +++ b/include/dt-bindings/clock/r9a06g032-sysctrl.h
 
-Replace this for the SPDX header format
+> You can still call this file r9a06g032-clocks.h, if you want, as it
+> contains clock definitions only.
 
-// SPDX-License-Identifier: GPL-2.0+
-// Driver for throttling triggered by EC events.
-//
-// Copyright (C) 2018 Google, Inc.
-// Author: Matthias Kaehlcke <mka@chromium.org>
+Well, having renamed the node, I thought it made sense to keep the naming
+consistent. Any further #define could be added to here instead of having to
+add another file...
 
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/throttler.h>
-> +
-> +struct cros_ec_throttler {
-> +       struct cros_ec_device *ec;
-> +       struct throttler *throttler;
-> +       struct notifier_block nb;
-> +};
-> +
-> +static int cros_ec_throttler_event(struct notifier_block *nb,
-> +       unsigned long queued_during_suspend, void *_notify)
-> +{
-> +       struct cros_ec_throttler *cte =
-> +               container_of(nb, struct cros_ec_throttler, nb);
 
-nit: Better add a define here instead of split the line like this ?
+> > @@ -0,0 +1,187 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * R9A06G032 sysctrl IDs
+> > + *
+> > + * Copyright (C) 2018 Renesas Electronics Europe Limited
+> > + *
+> > + * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
+> > + * Derived from zx-reboot.c
+> > + */
+> > +
+> > +#ifndef __DT_BINDINGS_R9A06G032_SYSCTRL_H__
+> > +#define __DT_BINDINGS_R9A06G032_SYSCTRL_H__
+> > +
+> > +#define R9A06G032_CLKOUT                       0
+> > +#define R9A06G032_CLK_PLL_USB                  1
+> > +#define R9A06G032_CLK_48                       1 /* AKA CLK_PLL_USB */
+> > +#define R9A06G032_CLKOUT_D10                   2
+> > +#define R9A06G032_CLKOUT_D16                   3
+> > +#define R9A06G032_MSEBIS_CLK                   3 /* AKA CLKOUT_D16 */
+> > +#define R9A06G032_MSEBIM_CLK                   3 /* AKA CLKOUT_D16 */
+> > +#define R9A06G032_CLKOUT_D160                  4
+> > +#define R9A06G032_CLKOUT_D1OR2                 5
+> > +#define R9A06G032_CLK_DDRPHY_PLLCLK            5 /* AKA CLKOUT_D1OR2 *=
+/
 
-> +       u32 host_event;
-> +
-> +       host_event = cros_ec_get_host_event(cte->ec);
-> +       if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_THROTTLE_START)) {
-> +               throttler_set_level(cte->throttler, 1);
-> +
-> +               return NOTIFY_OK;
-> +       } else if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_THROTTLE_STOP)) {
-> +               throttler_set_level(cte->throttler, 0);
-> +
-> +               return NOTIFY_OK;
-> +       }
-> +
-> +       return NOTIFY_DONE;
-> +}
-> +
-> +static int cros_ec_throttler_probe(struct platform_device *pdev)
-> +{
-> +       struct cros_ec_throttler *cte;
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = pdev->dev.of_node;
-> +       int ret;
-> +
-> +       if (!np) {
-> +               /* should never happen */
-> +               return -EINVAL;
-> +       }
-> +
-> +       cte = devm_kzalloc(dev, sizeof(*cte), GFP_KERNEL);
-> +       if (!cte)
-> +               return -ENOMEM;
-> +
-> +       cte->ec = dev_get_drvdata(pdev->dev.parent);
-> +
-> +       cte->throttler = throttler_setup(dev);
-> +       if (IS_ERR(cte->throttler))
-> +               return PTR_ERR(cte->throttler);
-> +
-> +       dev_set_drvdata(dev, cte);
-> +
-> +       cte->nb.notifier_call = cros_ec_throttler_event;
-> +       ret = blocking_notifier_chain_register(&cte->ec->event_notifier,
-> +                                              &cte->nb);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to register notifier\n");
-> +               throttler_teardown(cte->throttler);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int cros_ec_throttler_remove(struct platform_device *pdev)
-> +{
-> +       struct cros_ec_throttler *cte = platform_get_drvdata(pdev);
-> +
-> +       blocking_notifier_chain_unregister(&cte->ec->event_notifier,
-> +                                          &cte->nb);
-> +
-> +       throttler_teardown(cte->throttler);
-> +
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id cros_ec_throttler_of_match[] = {
-> +        { .compatible = "google,cros-ec-throttler" },
-> +        { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, cros_ec_throttler_of_match);
-> +#endif /* CONFIG_OF */
-> +
-> +static struct platform_driver cros_ec_throttler_driver = {
-> +       .driver = {
-> +               .name = "cros-ec-throttler",
-> +               .of_match_table = of_match_ptr(cros_ec_throttler_of_match),
-> +       },
-> +       .probe          = cros_ec_throttler_probe,
-> +       .remove         = cros_ec_throttler_remove,
-> +};
-> +
-> +module_platform_driver(cros_ec_throttler_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Matthias Kaehlcke <mka@chromium.org>");
-> +MODULE_DESCRIPTION("Chrome OS EC Throttler");
+> [...]
 
-s/Chrome OS/ChromeOS/
+> I have 3 comments:
 
-> --
-> 2.17.0.921.gf22659ad46-goog
->
+>    1. I had expected this list to match (both name- and order-wise)
+Appendix
+>       C ("Clock Tree Structure") in the RZ/N1[DSL] User=E2=80=99s Manual:=
+ System
+>       Introduction, Multiplexing, Electrical and Mechanical Information.
+>       That would make it easier to review.
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Well, that document was made a *long* time after the internal documentation
+we used to generate the clock lists. There are a few things we had to do:
 
-Thanks,
-  Enric
+* Renumber peripherals. We decided a long time ago that u-boot and linux
+would stick to zero based peripherals, and not one based numbers. It's next
+to impossible to keep mixing number based across software base, so we use
+UART0 while the hardware manual mentions UART1 -- It *is* documented
+extensively with out SDK, and makes life using linux a lot easier. It's
+across all our SDK, u-boot, webapps readmes, howtos etc.
+
+* Rename some peripherals. Plenty of peripherals names made little sense
+and had zero consistency, in fact, many names were different depending on
+the place they were used! -- "flashnand"+"nand_flash"+"FNAND" etc,
+"QUADSPI"+"QSPI" etc etc so we also re-normalized the names to match linux
+conventions.
+
+* Other internal reasons I can't document here
+
+Also, the value here are made up anyway -- so I've decided to sort them to
+make sure any clock that has a parent is numbered *after* the parent...
+
+>    2. These definitions seems to be a mix of:
+>         1. Internal core clocks,
+>         2. Other core clocks,
+>         3. Module clocks.
+
+>       The internal clocks do not need to be referenced from DT, so I woul=
+d
+>       not make them part of the DT bindings.
+
+Why? I'm told that "Bindings aren't for linux" -- why can't I imagine
+'something' needing them? Why would I decide NOT to include them,
+as they are there? I 'factored' a few of them to the same number when
+applicable.
+
+This is all done automatically BTW -- a script takes the original clocking
+spreadsheet, and converts it into a table, correcting 'human input' as it
+goes along.
+
+>    3. It looks like the module clocks can be referred to by register offs=
+et
+>       and bit position, which is similar to how this is handled on R-Car
+>       SoCs.
+>       Perhaps you can just drop the definitions for these from the header
+>       file, and refer to them by (combined) register offset and bit
+position
+>       instead?
+>       Or am I missing something?
+>       I believe this can also be done for the module resets (later).
+
+If you look in the .c file, you'll see that most gate have not just one
+register/bit pair associated with them -- there are several, spread
+across registers.. Also, there are clocks in there with two gates,
+or none. Given that, I've decided a separate numbering
+made sense.
+As mentioned, it's arbitrary, with 'root' clocks numbered lowered than
+sub-clocks.
+
+Thank you!
+
+Michel
