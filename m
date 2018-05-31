@@ -1,72 +1,124 @@
-Return-Path: <SRS0=A7Xe=IP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:48480
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1753149AbeE1DKQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 27 May 2018 23:10:16 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v6 11/15] typec: tcpm: add starting value for drp toggling
-Date: Mon, 28 May 2018 10:52:43 +0800
-Message-Id: <1527475967-15201-12-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=KIr6=IS=benyossef.com=gilad@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, jun.li@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <20180529161248.fphjnceozoyxqy7v@verge.net.au>
+References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
+ <1527171551-21979-2-git-send-email-gilad@benyossef.com> <20180529161248.fphjnceozoyxqy7v@verge.net.au>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Date: Thu, 31 May 2018 14:49:54 +0300
+Message-ID: <CAOtvUMebK3eM0O0C4bMa+13vej6egVV389AZ=HOnruPbfxZDkg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] crypto: ccree: correct host regs offset
+Content-Type: multipart/alternative; boundary="000000000000da90a2056d7f104e"
+To: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, stable@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-As DRP port autonomously toggles the Rp/Rd need a start value to
-begin with, so add one parameter for it in tcpm_start_drp_toggling.
+--000000000000da90a2056d7f104e
+Content-Type: text/plain; charset="UTF-8"
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/usb/typec/tcpm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Tue, May 29, 2018 at 7:12 PM, Simon Horman <horms@verge.net.au> wrote:
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index aa17cd5..d885bff 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -2436,15 +2436,15 @@ static int tcpm_set_charge(struct tcpm_port *port, bool charge)
- 	return 0;
- }
- 
--static bool tcpm_start_drp_toggling(struct tcpm_port *port)
-+static bool tcpm_start_drp_toggling(struct tcpm_port *port,
-+				    enum typec_cc_status cc)
- {
- 	int ret;
- 
- 	if (port->tcpc->start_drp_toggling &&
- 	    port->port_type == TYPEC_PORT_DRP) {
- 		tcpm_log_force(port, "Start DRP toggling");
--		ret = port->tcpc->start_drp_toggling(port->tcpc,
--						     tcpm_rp_cc(port));
-+		ret = port->tcpc->start_drp_toggling(port->tcpc, cc);
- 		if (!ret)
- 			return true;
- 	}
-@@ -2752,7 +2752,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		if (!port->non_pd_role_swap)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_src_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, tcpm_rp_cc(port))) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
-@@ -2927,7 +2927,7 @@ static void run_state_machine(struct tcpm_port *port)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_pps_complete(port, -ENOTCONN);
- 		tcpm_snk_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, TYPEC_CC_RD)) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
--- 
-2.7.4
+> On Thu, May 24, 2018 at 03:19:06PM +0100, Gilad Ben-Yossef wrote:
+> > The product signature and HW revision register have different offset on
+> the
+> > older HW revisions.
+> > This fixes the problem of the driver failing sanity check on silicon
+> > despite working on the FPGA emulation systems.
+> >
+> > Fixes: 27b3b22dd98c ("crypto: ccree - add support for older HW revs")
+>
+> Did the above introduce a regression that is fixed by this patch
+> or did it add a feature that only works with this patch?
+>
+>
+Sort of in between - the first patch made more devices work but
+unreliability (it will sometime work, sometime doesn't).
+This one make it work reliably.
 
+
+> In the case of the latter I would drop the Fixes tag,
+> but I don't feel strongly about it.
+>
+
+
+
+>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+>
+> Minor not below not withstanding,
+>
+
+
+
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+>
+> Thank you for the review and help :-)
+
+Gilad
+
+--000000000000da90a2056d7f104e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Tue, May 29, 2018 at 7:12 PM, Simon Horman <span dir=3D"ltr">&lt;<a =
+href=3D"mailto:horms@verge.net.au" target=3D"_blank">horms@verge.net.au</a>=
+&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
+ 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On Th=
+u, May 24, 2018 at 03:19:06PM +0100, Gilad Ben-Yossef wrote:<br>
+&gt; The product signature and HW revision register have different offset o=
+n the<br>
+&gt; older HW revisions.<br>
+&gt; This fixes the problem of the driver failing sanity check on silicon<b=
+r>
+&gt; despite working on the FPGA emulation systems.<br>
+&gt; <br>
+&gt; Fixes: 27b3b22dd98c (&quot;crypto: ccree - add support for older HW re=
+vs&quot;)<br>
+<br>
+</span>Did the above introduce a regression that is fixed by this patch<br>
+or did it add a feature that only works with this patch?<br>
+<br></blockquote><div><br></div><div>Sort of in between - the first patch m=
+ade more devices work but unreliability (it will sometime work, sometime do=
+esn&#39;t).</div><div>This one make it work reliably.</div><div>=C2=A0</div=
+><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1=
+px #ccc solid;padding-left:1ex">
+In the case of the latter I would drop the Fixes tag,<br>
+but I don&#39;t feel strongly about it.<br></blockquote><div><br></div><div=
+>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;b=
+order-left:1px #ccc solid;padding-left:1ex">
+<span class=3D""><br>
+&gt; Cc: <a href=3D"mailto:stable@vger.kernel.org">stable@vger.kernel.org</=
+a><br>
+&gt; Signed-off-by: Gilad Ben-Yossef &lt;<a href=3D"mailto:gilad@benyossef.=
+com">gilad@benyossef.com</a>&gt;<br>
+<br>
+</span>Minor not below not withstanding,<br></blockquote><div><br></div><di=
+v><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bo=
+rder-left:1px #ccc solid;padding-left:1ex">
+<br>
+Reviewed-by: Simon Horman &lt;<a href=3D"mailto:horms%2Brenesas@verge.net.a=
+u">horms+renesas@verge.net.au</a>&gt;<br>
+<div><div class=3D"h5"><br></div></div></blockquote><div>
+
+<div style=3D"color:rgb(34,34,34);font-family:arial,sans-serif;font-size:sm=
+all;font-style:normal;font-variant-ligatures:normal;font-variant-caps:norma=
+l;font-weight:400;letter-spacing:normal;text-align:start;text-indent:0px;te=
+xt-transform:none;white-space:normal;word-spacing:0px;background-color:rgb(=
+255,255,255);text-decoration-style:initial;text-decoration-color:initial">T=
+hank you for the review and help :-)</div><div style=3D"color:rgb(34,34,34)=
+;font-family:arial,sans-serif;font-size:small;font-style:normal;font-varian=
+t-ligatures:normal;font-variant-caps:normal;font-weight:400;letter-spacing:=
+normal;text-align:start;text-indent:0px;text-transform:none;white-space:nor=
+mal;word-spacing:0px;background-color:rgb(255,255,255);text-decoration-styl=
+e:initial;text-decoration-color:initial"><br></div><div style=3D"color:rgb(=
+34,34,34);font-family:arial,sans-serif;font-size:small;font-style:normal;fo=
+nt-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;letter=
+-spacing:normal;text-align:start;text-indent:0px;text-transform:none;white-=
+space:normal;word-spacing:0px;background-color:rgb(255,255,255);text-decora=
+tion-style:initial;text-decoration-color:initial">Gilad=C2=A0</div>
+
+<br></div></div>
+</div></div>
+
+--000000000000da90a2056d7f104e--
