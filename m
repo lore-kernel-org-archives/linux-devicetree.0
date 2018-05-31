@@ -1,152 +1,295 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: Add the r9a06g032-sysctrl.h file
-Date: Thu, 31 May 2018 11:32:52 +0200
-Message-ID: <CAMuHMdXQWSVh37HqrvFWeLNHZ5zNh0=9+hV0_nsQ9mi1HQSCaQ@mail.gmail.com>
-References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com>
- <1527154169-32380-2-git-send-email-michel.pollet@bp.renesas.com>
- <CAMuHMdVzN0Cbc9+MJqC4EzVgD3bkDixkf10NA13ko87cMwvpLA@mail.gmail.com> <CAMMfpEwpiZnZEykzxQJMTwE+cDnOD_qA3nUzyB96DGTWPzSJrw@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2 3/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Thu, 31 May 2018 11:37:41 +0200
+Message-ID: <80eb6a514e96cdbd460c6a0937a9dff9@agner.ch>
+References: <20180527215442.14760-4-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMMfpEwpiZnZEykzxQJMTwE+cDnOD_qA3nUzyB96DGTWPzSJrw@mail.gmail.com>
+In-Reply-To: <20180527215442.14760-4-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: M P <buserror@gmail.com>
-Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org
+Cc: dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+On 27.05.2018 23:54, Stefan Agner wrote:
+> Add support for the NAND flash controller found on NVIDIA
+> Tegra 2 SoCs. This implementation does not make use of the
+> command queue feature. Regular operations/data transfers are
+> done in PIO mode. Page read/writes with hardware ECC make
+> use of the DMA for data transfer.
+> 
+> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  MAINTAINERS                       |   7 +
+>  drivers/mtd/nand/raw/Kconfig      |   6 +
+>  drivers/mtd/nand/raw/Makefile     |   1 +
+>  drivers/mtd/nand/raw/tegra_nand.c | 999 ++++++++++++++++++++++++++++++
+>  4 files changed, 1013 insertions(+)
+>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+> 
+[...]
+> +
+> +	chip->ecc.read_page = tegra_nand_read_page_hwecc;
+> +	chip->ecc.write_page = tegra_nand_write_page_hwecc;
+> +	/* Not functional for unknown reason...
+> +	chip->ecc.read_page_raw = tegra_nand_read_page;
+> +	chip->ecc.write_page_raw = tegra_nand_write_page;
+> +	*/
 
-On Thu, May 31, 2018 at 11:11 AM, M P <buserror@gmail.com> wrote:
-> On Fri, 25 May 2018 at 11:31, Geert Uytterhoeven <geert@linux-m68k.org>
-> wrote:
->> On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
->> <michel.pollet@bp.renesas.com> wrote:
->> > This adds the constants necessary to use the renesas,r9a06g032-sysctrl
-> node.
+I am giving up on these raw read/write_page functions. Using DMA without
+HW ECC just seems not to work.
 
->> > @@ -0,0 +1,187 @@
->> > +/* SPDX-License-Identifier: GPL-2.0 */
->> > +/*
->> > + * R9A06G032 sysctrl IDs
->> > + *
->> > + * Copyright (C) 2018 Renesas Electronics Europe Limited
->> > + *
->> > + * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
->> > + * Derived from zx-reboot.c
->> > + */
->> > +
->> > +#ifndef __DT_BINDINGS_R9A06G032_SYSCTRL_H__
->> > +#define __DT_BINDINGS_R9A06G032_SYSCTRL_H__
->> > +
->> > +#define R9A06G032_CLKOUT                       0
->> > +#define R9A06G032_CLK_PLL_USB                  1
->> > +#define R9A06G032_CLK_48                       1 /* AKA CLK_PLL_USB *=
-/
->> > +#define R9A06G032_CLKOUT_D10                   2
->> > +#define R9A06G032_CLKOUT_D16                   3
->> > +#define R9A06G032_MSEBIS_CLK                   3 /* AKA CLKOUT_D16 */
->> > +#define R9A06G032_MSEBIM_CLK                   3 /* AKA CLKOUT_D16 */
->> > +#define R9A06G032_CLKOUT_D160                  4
->> > +#define R9A06G032_CLKOUT_D1OR2                 5
->> > +#define R9A06G032_CLK_DDRPHY_PLLCLK            5 /* AKA CLKOUT_D1OR2 =
-*/
->
->> [...]
->
->> I have 3 comments:
->
->>    1. I had expected this list to match (both name- and order-wise)
-> Appendix
->>       C ("Clock Tree Structure") in the RZ/N1[DSL] User=E2=80=99s Manual=
-: System
->>       Introduction, Multiplexing, Electrical and Mechanical Information.
->>       That would make it easier to review.
->
-> Well, that document was made a *long* time after the internal documentati=
-on
-> we used to generate the clock lists. There are a few things we had to do:
->
-> * Renumber peripherals. We decided a long time ago that u-boot and linux
-> would stick to zero based peripherals, and not one based numbers. It's ne=
-xt
-> to impossible to keep mixing number based across software base, so we use
-> UART0 while the hardware manual mentions UART1 -- It *is* documented
-> extensively with out SDK, and makes life using linux a lot easier. It's
-> across all our SDK, u-boot, webapps readmes, howtos etc.
->
-> * Rename some peripherals. Plenty of peripherals names made little sense
-> and had zero consistency, in fact, many names were different depending on
-> the place they were used! -- "flashnand"+"nand_flash"+"FNAND" etc,
-> "QUADSPI"+"QSPI" etc etc so we also re-normalized the names to match linu=
-x
-> conventions.
->
-> * Other internal reasons I can't document here
->
-> Also, the value here are made up anyway -- so I've decided to sort them t=
-o
-> make sure any clock that has a parent is numbered *after* the parent...
+I do not get the CMD_DONE interrupt as I do when using DMA with HW ECC.
+I tried with the same settings, just not enabling DMA (HW_ECC not set,
+HW_ERR_CORRECTION not set, and also with/without PIPELINE_EN).
 
-Well, all of that combines makes it very hard for us to review the list.
+A register dump after a successful read with HW ECC looks like this:
+[  196.935199] CMD: 0x66890104
+[  196.938003] STATUS: 0x00000101
+[  196.941049] ISR: 0x00000000
+[  196.943865] CONFIG: 0x0084000b
+[  196.946914] DMA_MST_CTRL: 0x15000004
+[  196.950481] DMA_CFG_A: 0x00000fff
+[  196.954361] DMA_CFG_B: 0x00000000
+[  196.957670] FIFO: 0x0000aa00
 
->>    2. These definitions seems to be a mix of:
->>         1. Internal core clocks,
->>         2. Other core clocks,
->>         3. Module clocks.
->
->>       The internal clocks do not need to be referenced from DT, so I wou=
-ld
->>       not make them part of the DT bindings.
->
-> Why? I'm told that "Bindings aren't for linux" -- why can't I imagine
-> 'something' needing them? Why would I decide NOT to include them,
-> as they are there? I 'factored' a few of them to the same number when
+Whereas without HW ECC completion times out (using
+wait_for_completion_timeout already):
+[  226.128618] tegra-nand 70008000.nand: CMD timeout, last CMD:
+0xe6890104                              
+[  226.135375] CMD: 0xe6890104
+[  226.138201] STATUS: 0x00000100
+[  226.141280] ISR: 0x00000100
+[  226.153372] CONFIG: 0x0084000b
+[  226.156423] DMA_MST_CTRL: 0x95000004
+[  226.159989] DMA_CFG_A: 0x00000fff
+[  226.164084] DMA_CFG_B: 0x00000000
+[  226.167393] FIFO: 0x0000aa00
 
-Just general safety w.r.t. unchangeable DT definitions: anything that is
-not listed here cannot be declared wrong later.
+It looks to me as if the DMA just does not start the data cycle. The
+NAND seems to have read the page (RBSY0 is set).
 
-> applicable.
 
-You're 100% sure they're the same?
+Note that it is never explicitly stated whether DMA without HW ECC is
+supported. There is some indication that it should: There are separated
+bits to enable HW ECC/DMA, the reference manual states "If HW ECC is
+enabled... " and a block diagram shows separate blocks for the ECC
+Engine and NAND DMA control.
 
-> This is all done automatically BTW -- a script takes the original clockin=
-g
-> spreadsheet, and converts it into a table, correcting 'human input' as it
-> goes along.
+There is also indication that it does not: The chapter Restrictions
+reads: "HW_ERR_CORRECTION = 0/1, doesn’t alter controller hardware
+behavior. Software error correction scheme with HW_ERR_CORRECTION = 0,
+is deprecated in Tegra 2 Processor."
 
-So the internal spreadsheet doesn't match the public documentation neither?
+Note that the default implementations nand_(read|write)_page_raw which
+use exec_op do work fine! Unfortunately, the PIO mode only allows 4
+bytes in a read cycle, hence raw read/write is slow...
 
->>    3. It looks like the module clocks can be referred to by register off=
-set
->>       and bit position, which is similar to how this is handled on R-Car
->>       SoCs.
->>       Perhaps you can just drop the definitions for these from the heade=
-r
->>       file, and refer to them by (combined) register offset and bit
-> position
->>       instead?
->>       Or am I missing something?
->>       I believe this can also be done for the module resets (later).
->
-> If you look in the .c file, you'll see that most gate have not just one
-> register/bit pair associated with them -- there are several, spread
-> across registers.. Also, there are clocks in there with two gates,
-> or none. Given that, I've decided a separate numbering
-> made sense.
+--
+Stefan
 
-OK, fair enough.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> +	config = readl(ctrl->regs + CFG);
+> +	config |= CFG_PIPE_EN | CFG_SKIP_SPARE | CFG_SKIP_SPARE_SIZE_4;
+> +
+> +	if (chip->options & NAND_BUSWIDTH_16)
+> +		config |= CFG_BUS_WIDTH_16;
+> +
+> +	switch (chip->ecc.algo) {
+> +	case NAND_ECC_RS:
+> +		bits_per_step = BITS_PER_STEP_RS * chip->ecc.strength;
+> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_rs_ops);
+> +		switch (chip->ecc.strength) {
+> +		case 4:
+> +			config |= CFG_ECC_SEL | CFG_TVAL_4;
+> +			break;
+> +		case 6:
+> +			config |= CFG_ECC_SEL | CFG_TVAL_6;
+> +			break;
+> +		case 8:
+> +			config |= CFG_ECC_SEL | CFG_TVAL_8;
+> +			break;
+> +		default:
+> +			dev_err(dev, "ECC strength %d not supported\n",
+> +				chip->ecc.strength);
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	case NAND_ECC_BCH:
+> +		bits_per_step = BITS_PER_STEP_BCH * chip->ecc.strength;
+> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_bch_ops);
+> +		switch (chip->ecc.strength) {
+> +		case 4:
+> +			bch_config = BCH_TVAL_4;
+> +			break;
+> +		case 8:
+> +			bch_config = BCH_TVAL_8;
+> +			break;
+> +		case 14:
+> +			bch_config = BCH_TVAL_14;
+> +			break;
+> +		case 16:
+> +			bch_config = BCH_TVAL_16;
+> +			break;
+> +		default:
+> +			dev_err(dev, "ECC strength %d not supported\n",
+> +				chip->ecc.strength);
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	default:
+> +		dev_err(dev, "ECC algorithm not supported\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	chip->ecc.bytes = DIV_ROUND_UP(bits_per_step, 8);
+> +
+> +	switch (mtd->writesize) {
+> +	case 256:
+> +		config |= CFG_PS_256;
+> +		break;
+> +	case 512:
+> +		config |= CFG_PS_512;
+> +		break;
+> +	case 1024:
+> +		config |= CFG_PS_1024;
+> +		break;
+> +	case 2048:
+> +		config |= CFG_PS_2048;
+> +		break;
+> +	case 4096:
+> +		config |= CFG_PS_4096;
+> +		break;
+> +	default:
+> +		dev_err(dev, "unhandled writesize %d\n", mtd->writesize);
+> +		return -ENODEV;
+> +	}
+> +
+> +	writel(config, ctrl->regs + CFG);
+> +	writel(bch_config, ctrl->regs + BCH_CONFIG);
+> +
+> +	err = nand_scan_tail(mtd);
+> +	if (err)
+> +		return err;
+> +
+> +	config |= CFG_TAG_BYTE_SIZE(mtd_ooblayout_count_freebytes(mtd) - 1);
+> +	writel(config, ctrl->regs + CFG);
+> +
+> +	err = mtd_device_register(mtd, NULL, 0);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_nand_probe(struct platform_device *pdev)
+> +{
+> +	struct reset_control *rst;
+> +	struct tegra_nand_controller *ctrl;
+> +	struct resource *res;
+> +	unsigned long value;
+> +	int irq, err = 0;
+> +
+> +	ctrl = devm_kzalloc(&pdev->dev, sizeof(*ctrl), GFP_KERNEL);
+> +	if (!ctrl)
+> +		return -ENOMEM;
+> +
+> +	ctrl->dev = &pdev->dev;
+> +	nand_hw_control_init(&ctrl->controller);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	ctrl->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ctrl->regs))
+> +		return PTR_ERR(ctrl->regs);
+> +
+> +	rst = devm_reset_control_get(&pdev->dev, "nand");
+> +	if (IS_ERR(rst))
+> +		return PTR_ERR(rst);
+> +
+> +	ctrl->clk = devm_clk_get(&pdev->dev, "nand");
+> +	if (IS_ERR(ctrl->clk))
+> +		return PTR_ERR(ctrl->clk);
+> +
+> +	err = clk_prepare_enable(ctrl->clk);
+> +	if (err)
+> +		return err;
+> +
+> +	reset_control_reset(rst);
+> +
+> +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
+> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
+> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
+> +	writel(NAND_CMD_STATUS, ctrl->regs + HWSTATUS_CMD);
+> +	writel(value, ctrl->regs + HWSTATUS_MASK);
+> +
+> +	init_completion(&ctrl->command_complete);
+> +	init_completion(&ctrl->dma_complete);
+> +
+> +	/* clear interrupts */
+> +	value = readl(ctrl->regs + ISR);
+> +	writel(value, ctrl->regs + ISR);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
+> +			       dev_name(&pdev->dev), ctrl);
+> +	if (err)
+> +		goto err_disable_clk;
+> +
+> +	writel(DMA_CTRL_IS_DONE, ctrl->regs + DMA_CTRL);
+> +
+> +	/* enable interrupts */
+> +	value = IER_UND | IER_OVR | IER_CMD_DONE | IER_ECC_ERR | IER_GIE;
+> +	writel(value, ctrl->regs + IER);
+> +
+> +	/* reset config */
+> +	writel(0, ctrl->regs + CFG);
+> +
+> +	err = tegra_nand_chips_init(ctrl->dev, ctrl);
+> +	if (err)
+> +		goto err_disable_clk;
+> +
+> +	platform_set_drvdata(pdev, ctrl);
+> +
+> +	return 0;
+> +
+> +err_disable_clk:
+> +	clk_disable_unprepare(ctrl->clk);
+> +	return err;
+> +}
+> +
+> +static int tegra_nand_remove(struct platform_device *pdev)
+> +{
+> +	struct tegra_nand_controller *ctrl = platform_get_drvdata(pdev);
+> +
+> +	nand_release(nand_to_mtd(ctrl->chip));
+> +
+> +	clk_disable_unprepare(ctrl->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id tegra_nand_of_match[] = {
+> +	{ .compatible = "nvidia,tegra20-nand" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver tegra_nand_driver = {
+> +	.driver = {
+> +		.name = "tegra-nand",
+> +		.of_match_table = tegra_nand_of_match,
+> +	},
+> +	.probe = tegra_nand_probe,
+> +	.remove = tegra_nand_remove,
+> +};
+> +module_platform_driver(tegra_nand_driver);
+> +
+> +MODULE_DESCRIPTION("NVIDIA Tegra NAND driver");
+> +MODULE_AUTHOR("Thierry Reding <thierry.reding@nvidia.com>");
+> +MODULE_AUTHOR("Lucas Stach <dev@lynxeye.de>");
+> +MODULE_AUTHOR("Stefan Agner <stefan@agner.ch>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DEVICE_TABLE(of, tegra_nand_of_match);
