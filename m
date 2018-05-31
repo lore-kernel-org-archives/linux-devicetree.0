@@ -1,63 +1,87 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v2 0/6] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC
- driver
-Date: Thu, 31 May 2018 10:26:59 +0300
-Message-ID: <20180531072659.GI13528@localhost.localdomain>
-References: <20180528090003.GA8778@localhost.localdomain>
- <20180529073958.GB4790@dell>
- <20180529083541.GA13528@localhost.localdomain>
- <20180530111649.GB8038@dell>
- <152769382760.144038.10609724773770264610@swboyd.mtv.corp.google.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH] PCI: mediatek: Add system pm support for MT2712
+Date: Thu, 31 May 2018 15:37:40 +0800
+Message-ID: <1527752260.28160.3.camel@mhfsdcap03>
+References: <1527647736-19986-1-git-send-email-honghui.zhang@mediatek.com>
+         <20180531042020.GQ39853@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152769382760.144038.10609724773770264610@swboyd.mtv.corp.google.com>
+In-Reply-To: <20180531042020.GQ39853@bhelgaas-glaptop.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 08:23:47AM -0700, Stephen Boyd wrote:
-> Quoting Lee Jones (2018-05-30 04:16:49)
-> > On Tue, 29 May 2018, Matti Vaittinen wrote:
+On Wed, 2018-05-30 at 23:20 -0500, Bjorn Helgaas wrote:
+> On Wed, May 30, 2018 at 10:35:36AM +0800, honghui.zhang@mediatek.com wrote:
+> > From: Honghui Zhang <honghui.zhang@mediatek.com>
 > > 
-> > > Hello,
-> > > 
-> > > On Tue, May 29, 2018 at 08:39:58AM +0100, Lee Jones wrote:
-> > > > On Mon, 28 May 2018, Matti Vaittinen wrote:
-> > > > 
-> > > > > Patch series adding support for ROHM BD71837 PMIC.
-> > > > FYI, this patch-set is going to be difficult to manage since it was
-> > > > not sent 'threaded'.
-> > > > 
-> > > > If/when you send a subsequent version, could you please ensure you
-> > > > send the set threaded so the patches keep in relation to one another
-> > > > as they are reviewed?
-> > > 
-> > > Thanks for the guidance. I have not sent so many patches to community so
-> > > I am grateful also from all the practical tips =) Just one slight problem.
-> > > I have only seen emails being threaded when one is replying to an email.
-> > > So how should I send my patches in same thread? Just send first one and
-> > > then send subsequent patches as replies?
-> > > 
-> > > I just killed some unused definitions and one unused variable from the
-> > > code so I am about to send new version. I'll try doing that as a threaded
-> > > series and resend all the patches as v3.
+> > The MTCMOS of PCIe Host for MT2712 will be off when system suspend, and all
+> > the internel control register will be reset after system resume. The PCIe
+> > link should be re-established and the related control register values should
+> > be re-set after system resume.
 > > 
-> > You don't need to do this manually.
+> > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> > CC: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  drivers/pci/host/pcie-mediatek.c | 82 ++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 82 insertions(+)
 > > 
-> > Just use `git send-email` with the correct arguments.
-> > 
+> > diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+> > index dabf1086..60f98d92 100644
+> > --- a/drivers/pci/host/pcie-mediatek.c
+> > +++ b/drivers/pci/host/pcie-mediatek.c
+> > @@ -132,12 +132,14 @@ struct mtk_pcie_port;
+> >  /**
+> >   * struct mtk_pcie_soc - differentiate between host generations
+> >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> > + * @pm_support: whether the host's MTCMOS will be off when suspend
+> >   * @ops: pointer to configuration access functions
+> >   * @startup: pointer to controller setting functions
+> >   * @setup_irq: pointer to initialize IRQ functions
+> >   */
+> >  struct mtk_pcie_soc {
+> >  	bool need_fix_class_id;
+> > +	bool pm_support;
+> >  	struct pci_ops *ops;
+> >  	int (*startup)(struct mtk_pcie_port *port);
+> >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> > @@ -1179,12 +1181,91 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+> >  	return err;
+> >  }
+> >  
+> > +static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
+> > +{
+> > +	struct platform_device *pdev;
+> > +	struct mtk_pcie *pcie;
+> > +	struct mtk_pcie_port *port;
+> > +	const struct mtk_pcie_soc *soc;
+> > +
+> > +	pdev = to_platform_device(dev);
+> > +	pcie = platform_get_drvdata(pdev);
+> > +	soc = pcie->soc;
+> > +	if (!soc->pm_support)
+> > +		return 0;
+> > +
+> > +	list_for_each_entry(port, &pcie->ports, list) {
+> > +		clk_disable_unprepare(port->ahb_ck);
+> > +		clk_disable_unprepare(port->sys_ck);
+> > +		phy_power_off(port->phy);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
 > 
-> I usually send with 'git send-email *.patch' so that git can do the
-> threading for me. Looks like these patches were sent with Mutt though,
-> so perhaps 'git format-patch | git imap-send' was used without the
-> --thread option on format-patch.
+> I don't really like the __maybe_unused annotations.  Looking at the
+> other users of SET_NOIRQ_SYSTEM_SLEEP_PM_OPS, I think a small majority
+> of them wrap the function definitions in #ifdef CONFIG_PM_SLEEP
+> instead of using __maybe_unused.  That's also a bit ugly, but has the
+> advantage of truly omitting the definitions when they're not needed.
 
-Yep. I used git format-patch without the --thread and mutt -H for
-sending. Learned the --thread after Lee pointed out the threading and
-used it for further series. Thanks for the help!
+Ok, I will follow your advise in the next version.
 
-Br,
-    Matti Vaittinen
+thanks.
