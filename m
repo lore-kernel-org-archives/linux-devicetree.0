@@ -1,66 +1,42 @@
-Return-Path: <SRS0=ElxP=IQ=linux.intel.com=sakari.ailus@kernel.org>
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 1/1] dw9807: Use the dongwoon,dw9807-vcm compatible string
-Date: Tue, 29 May 2018 15:25:54 +0300
-Message-Id: <20180529122554.3325-1-sakari.ailus@linux.intel.com>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 30 May 2018 19:49:42 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [v5 3/6] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA
+ controller bindings
+Message-ID: <20180531004942.GA10577@rob-hp-laptop>
+References: <20180525111920.24498-1-wen.he_1@nxp.com>
+ <20180525111920.24498-3-wen.he_1@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: linux-media@vger.kernel.org, robh@kernel.org
-Cc: devicetree@vger.kernel.org, bingbu.cao@linux.intel.com, tian.shu.qiu@linux.intel.com, rajmohan.mani@intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180525111920.24498-3-wen.he_1@nxp.com>
+To: Wen He <wen.he_1@nxp.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-The original dw9807 DT bindings patch proposed the dongwoon,dw9807
-compatible string. However, the device also includes an EEPROM on a
-different I²C address. Indicate that this is just the VCM part of the
-entire device.
+On Fri, May 25, 2018 at 07:19:17PM +0800, Wen He wrote:
+> Document the devicetree bindings for NXP Layerscape qDMA controller
+> which could be found on NXP QorIQ Layerscape SoCs.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+> change in v5:
+> 	- Replace dts node variable 'queues' to 'fsl,queues' that add vendor prefix
+> 
+> change in v4:
+> 	- Rewrite the bindings document that follows generic DMA bindings file
+> 
+> change in v3:
+> 	- no change
+> 
+> change in v2:
+> 	- Remove indentation
+> 	- Add "Should be" before 'fsl,ls1021a-qdma'
+> 	- Replace 'channels' by 'dma-channels'
+> 	- Replace 'qdma@8390000' by 'dma-controller@8390000'
+> 
+>  Documentation/devicetree/bindings/dma/fsl-qdma.txt |   41 ++++++++++++++++++++
+>  1 files changed, 41 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
 
-The EEPROM part is compatible with the at24c64 for read-only access, with
-1 kiB page size.
-
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-Hi Rob, others,
-
-The original bindings were missing the EEPROM bit. This change recognises
-it's there, and allows adding more elaborate support for it later on if
-needed.
-
-If this change is fine, I'll squash it to the original patches that are
-not yet merged:
-
-<URL:https://patchwork.linuxtv.org/patch/49613/>
-<URL:https://patchwork.linuxtv.org/patch/49614/>
-
-Thanks.
-
- Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 2 +-
- drivers/media/i2c/dw9807.c                                      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-index 0a1a860beaff..c4701f1eaaf6 100644
---- a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-@@ -5,5 +5,5 @@ controlling voice coil lenses.
- 
- Mandatory properties:
- 
--- compatible: "dongwoon,dw9807"
-+- compatible: "dongwoon,dw9807-vcm"
- - reg: I2C slave address
-diff --git a/drivers/media/i2c/dw9807.c b/drivers/media/i2c/dw9807.c
-index 6ebb98717fb1..8ba3920b6e2f 100644
---- a/drivers/media/i2c/dw9807.c
-+++ b/drivers/media/i2c/dw9807.c
-@@ -302,7 +302,7 @@ static int  __maybe_unused dw9807_vcm_resume(struct device *dev)
- }
- 
- static const struct of_device_id dw9807_of_table[] = {
--	{ .compatible = "dongwoon,dw9807" },
-+	{ .compatible = "dongwoon,dw9807-vcm" },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, dw9807_of_table);
--- 
-2.11.0
+Reviewed-by: Rob Herring <robh@kernel.org>
