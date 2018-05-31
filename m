@@ -1,81 +1,221 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v4 5/5] ARM: dts: imx6qdl: add missing compatible and
- clock properties for EPIT
-Date: Thu, 31 May 2018 11:54:04 +0300
-Message-ID: <f71fe02d-23a7-a475-52df-62c17089549b@mentor.com>
-References: <20180530120327.27681-1-peron.clem@gmail.com>
- <20180530120327.27681-6-peron.clem@gmail.com>
- <a4042956-24e1-6132-4606-b5b8f4e30023@mentor.com>
- <CAJiuCcefvMg6r=06O8m1TYa0hat_dHydcoJ7PN58qUru1K8zMQ@mail.gmail.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH 11/11] misc/throttler: Add Chrome OS EC throttler
+Date: Thu, 31 May 2018 11:05:09 +0200
+Message-ID: <CAFqH_53iMhvq+6NXoXu50sD=PuXBf-2_D3K1Mf+iggLeGSu_mg@mail.gmail.com>
+References: <20180525203043.249193-1-mka@chromium.org> <20180525203043.249193-12-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJiuCcefvMg6r=06O8m1TYa0hat_dHydcoJ7PN58qUru1K8zMQ@mail.gmail.com>
+In-Reply-To: <20180525203043.249193-12-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Clément,
+Hi Matthias,
 
-On 05/31/2018 11:41 AM, Clément Péron wrote:
-> Hi Vladimir,
-> 
-> On Thu, 31 May 2018 at 10:33, Vladimir Zapolskiy
-> <vladimir_zapolskiy@mentor.com> wrote:
->>
->> On 05/30/2018 03:03 PM, Clément Péron wrote:
->>> From: Colin Didier <colin.didier@devialet.com>
->>>
->>> Add missing compatible and clock properties for EPIT node.
->>>
->>> Signed-off-by: Colin Didier <colin.didier@devialet.com>
->>> Signed-off-by: Clément Peron <clement.peron@devialet.com>
->>> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
->>> ---
->>>  arch/arm/boot/dts/imx6qdl.dtsi | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
->>> index c003e62bf290..0feec516847a 100644
->>> --- a/arch/arm/boot/dts/imx6qdl.dtsi
->>> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
->>> @@ -844,13 +844,23 @@
->>>                       };
->>>
->>>                       epit1: epit@20d0000 { /* EPIT1 */
->>
->> epit1: timer@20d0000 { ...
->>
->> And /* EPIT1 */ comment can be removed, it is quite clear from the same
->> line context.
->>
->> Formally it is a subject to another patch, but I think this can be
->> accepted as a part of this one.
-> 
-> Should I also update other boards ?
-> I only did it for imx6qdl.dtsi, but the EPIT is present in other boards
-> but i can't test it myself.
-> 
+The patch looks good to me, just three minor comments to be more
+coherent with other cros-ec drivers.
 
-Sure, please do it, why not, it is quite a safe modification.
+2018-05-25 22:30 GMT+02:00 Matthias Kaehlcke <mka@chromium.org>:
+> The driver subscribes to throttling events from the Chrome OS
+> embedded controller and enables/disables system throttling based
+> on these events.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/misc/throttler/Kconfig             |  15 +++
+>  drivers/misc/throttler/Makefile            |   1 +
+>  drivers/misc/throttler/cros_ec_throttler.c | 122 +++++++++++++++++++++
+>  3 files changed, 138 insertions(+)
+>  create mode 100644 drivers/misc/throttler/cros_ec_throttler.c
+>
+> diff --git a/drivers/misc/throttler/Kconfig b/drivers/misc/throttler/Kconfig
+> index ef8388f6bc0a..652b6817b75c 100644
+> --- a/drivers/misc/throttler/Kconfig
+> +++ b/drivers/misc/throttler/Kconfig
+> @@ -11,3 +11,18 @@ menuconfig THROTTLER
+>           Note that you also need a event monitor module usually called
+>           *_throttler.
+>
+> +if THROTTLER
+> +
+> +config CROS_EC_THROTTLER
+> +       tristate "Throttler event monitor for the Chrome OS Embedded Controller"
 
-One change per one dtsi file will suffice, and I see that imx25.dtsi
-already contains the requested change, however probably you may
-want to update its compatible = "fsl,imx25-epit" line.
+s/Chrome OS/ChromeOS/ This is how other cros-ec drivers refer to the
+embedded controller, so will be good if you could maintain this
+denomination.
 
-Regarding compatibles for other imx6* SoCs, I think all of them should
-be documented in fsl,imxepit.txt and then added to the correspondent
-dtsi files one per SoC.
+> +       default n
+> +       depends on MFD_CROS_EC
+> +       ---help---
+> +         This driver adds support to throttle the system in reaction to
+> +         Chrome OS EC events.
+> +
 
-And I forgot the outcome of one former discussion with Uwe Kleine-König,
-but if my bad memory serves me, we agreed that i.MX25 was released later
-than i.MX31, so the most generic (the last value in the list) compatible
-should be a compatible with i.MX31 like in
+ditto
 
-	imx25.dtsi:367:	compatible = "fsl,imx25-gpt", "fsl,imx31-gpt";
+> +         To compile this driver as a module, choose M here: the
+> +         module will be called cros_ec_throttler.
+> +
+> +endif # THROTTLER
+> +
+> diff --git a/drivers/misc/throttler/Makefile b/drivers/misc/throttler/Makefile
+> index c8d920cee315..d9b2a77dabc9 100644
+> --- a/drivers/misc/throttler/Makefile
+> +++ b/drivers/misc/throttler/Makefile
+> @@ -1 +1,2 @@
+>  obj-$(CONFIG_THROTTLER)                += core.o
+> +obj-$(CONFIG_CROS_EC_THROTTLER)        += cros_ec_throttler.o
+> diff --git a/drivers/misc/throttler/cros_ec_throttler.c b/drivers/misc/throttler/cros_ec_throttler.c
+> new file mode 100644
+> index 000000000000..ea6bc002d49c
+> --- /dev/null
+> +++ b/drivers/misc/throttler/cros_ec_throttler.c
+> @@ -0,0 +1,122 @@
+> +/*
+> + * Driver for throttling triggered by EC events.
+> + *
+> + * Copyright (C) 2018 Google, Inc.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
 
---
-With best wishes,
-Vladimir
+Replace this for the SPDX header format
+
+// SPDX-License-Identifier: GPL-2.0+
+// Driver for throttling triggered by EC events.
+//
+// Copyright (C) 2018 Google, Inc.
+// Author: Matthias Kaehlcke <mka@chromium.org>
+
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/cros_ec.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/throttler.h>
+> +
+> +struct cros_ec_throttler {
+> +       struct cros_ec_device *ec;
+> +       struct throttler *throttler;
+> +       struct notifier_block nb;
+> +};
+> +
+> +static int cros_ec_throttler_event(struct notifier_block *nb,
+> +       unsigned long queued_during_suspend, void *_notify)
+> +{
+> +       struct cros_ec_throttler *cte =
+> +               container_of(nb, struct cros_ec_throttler, nb);
+
+nit: Better add a define here instead of split the line like this ?
+
+> +       u32 host_event;
+> +
+> +       host_event = cros_ec_get_host_event(cte->ec);
+> +       if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_THROTTLE_START)) {
+> +               throttler_set_level(cte->throttler, 1);
+> +
+> +               return NOTIFY_OK;
+> +       } else if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_THROTTLE_STOP)) {
+> +               throttler_set_level(cte->throttler, 0);
+> +
+> +               return NOTIFY_OK;
+> +       }
+> +
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +static int cros_ec_throttler_probe(struct platform_device *pdev)
+> +{
+> +       struct cros_ec_throttler *cte;
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *np = pdev->dev.of_node;
+> +       int ret;
+> +
+> +       if (!np) {
+> +               /* should never happen */
+> +               return -EINVAL;
+> +       }
+> +
+> +       cte = devm_kzalloc(dev, sizeof(*cte), GFP_KERNEL);
+> +       if (!cte)
+> +               return -ENOMEM;
+> +
+> +       cte->ec = dev_get_drvdata(pdev->dev.parent);
+> +
+> +       cte->throttler = throttler_setup(dev);
+> +       if (IS_ERR(cte->throttler))
+> +               return PTR_ERR(cte->throttler);
+> +
+> +       dev_set_drvdata(dev, cte);
+> +
+> +       cte->nb.notifier_call = cros_ec_throttler_event;
+> +       ret = blocking_notifier_chain_register(&cte->ec->event_notifier,
+> +                                              &cte->nb);
+> +       if (ret < 0) {
+> +               dev_err(dev, "failed to register notifier\n");
+> +               throttler_teardown(cte->throttler);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int cros_ec_throttler_remove(struct platform_device *pdev)
+> +{
+> +       struct cros_ec_throttler *cte = platform_get_drvdata(pdev);
+> +
+> +       blocking_notifier_chain_unregister(&cte->ec->event_notifier,
+> +                                          &cte->nb);
+> +
+> +       throttler_teardown(cte->throttler);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id cros_ec_throttler_of_match[] = {
+> +        { .compatible = "google,cros-ec-throttler" },
+> +        { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, cros_ec_throttler_of_match);
+> +#endif /* CONFIG_OF */
+> +
+> +static struct platform_driver cros_ec_throttler_driver = {
+> +       .driver = {
+> +               .name = "cros-ec-throttler",
+> +               .of_match_table = of_match_ptr(cros_ec_throttler_of_match),
+> +       },
+> +       .probe          = cros_ec_throttler_probe,
+> +       .remove         = cros_ec_throttler_remove,
+> +};
+> +
+> +module_platform_driver(cros_ec_throttler_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Matthias Kaehlcke <mka@chromium.org>");
+> +MODULE_DESCRIPTION("Chrome OS EC Throttler");
+
+s/Chrome OS/ChromeOS/
+
+> --
+> 2.17.0.921.gf22659ad46-goog
+>
+
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Thanks,
+  Enric
