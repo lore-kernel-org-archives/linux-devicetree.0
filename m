@@ -1,94 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for SR
- thermal
-Date: Thu, 31 May 2018 11:48:20 -0500
-Message-ID: <20180531164820.GA23074@rob-hp-laptop>
-References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
- <1527486084-4636-2-git-send-email-srinath.mannam@broadcom.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/3] USB: DT probing support to ehci-npcm7xx
+Date: Thu, 31 May 2018 19:49:43 +0300
+Message-ID: <9fe0ca4a-c244-e909-ec27-07c3db89f941@cogentembedded.com>
+References: <1527774046-7952-1-git-send-email-avifishman70@gmail.com>
+ <1527774046-7952-3-git-send-email-avifishman70@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527486084-4636-2-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <1527774046-7952-3-git-send-email-avifishman70@gmail.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
+To: avifishman70@gmail.com, gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc: tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 11:11:22AM +0530, Srinath Mannam wrote:
-> From: Pramod Kumar <pramod.kumar@broadcom.com>
+Hello!
+
+On 05/31/2018 04:40 PM, avifishman70@gmail.com wrote:
+
+> From: Avi Fishman <AviFishman70@gmail.com>
 > 
-> Add binding document for supported thermal implementation
-> in Stingray.
+> Device Tree documentation for Nuvoton npcm7xx EHCI.
 > 
-> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
 > ---
->  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>  Documentation/devicetree/bindings/usb/npcm7xx-usb.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> diff --git a/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt b/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
 > new file mode 100644
-> index 0000000..33f9e11
+> index 000000000000..dec67d4d4c30
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> @@ -0,0 +1,45 @@
-> +* Broadcom Stingray Thermal
+> +++ b/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+> @@ -0,0 +1,17 @@
+> +Nuvoton NPCM7XX SoC USB controllers:
+> +-----------------------------
 > +
-> +This binding describes thermal sensors that is part of Stingray SoCs.
+> +EHCI:
+> +-----
 > +
 > +Required properties:
-> +- compatible : Must be "brcm,sr-thermal"
-> +- reg : memory where tmon data will be available.
-
-What type of memory is this?
-
+> +- compatible: "nuvoton,npcm750-ehci"
+> +- interrupts: Should contain the EHCI interrupt
 > +
 > +Example:
-> +	tmons {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
 > +
-> +		tmon_ihost0: thermal@8f100000 {
-> +			compatible = "brcm,sr-thermal";
-> +			reg = <0x8f100000 0x4>;
-> +		};
+> +	ehci@e1800000 {
 
-Convince me that you need a node per register. This can all be 
-accomplished with a single node and either a single reg entry or a 
-series of reg entries.
+  The node should be named "usb@e1800000" as the DT spec. requires the generic
+node names.
 
-> +
-> +		tmon_ihost1: thermal@8f100004 {
-> +			compatible = "brcm,sr-thermal";
-> +			reg = <0x8f100004 0x4>;
-> +		};
-> +
-> +		tmon_ihost2: thermal@8f100008 {
-> +			compatible = "brcm,sr-thermal";
-> +			reg = <0x8f100008 0x4>;
-> +		};
-> +
-> +		tmon_ihost3: thermal@8f10000c {
-> +			compatible = "brcm,sr-thermal";
-> +			reg = <0x8f10000c 0x4>;
-> +		};
-> +
-> +		tmon_crmu: thermal@8f100010 {
-> +			compatible = "brcm,sr-thermal";
-> +			reg = <0x8f100010 0x4>;
-> +		};
-> +
-> +		tmon_nitro: thermal@8f100014 {
-> +			compatible = "brcm,sr-thermal";
-> +			reg = <0x8f100014 0x4>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+[...]
+
+MBR, Sergei
