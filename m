@@ -1,105 +1,109 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/7] dt-bindings: clk: at91: add an I2S
-	mux clock
-Date: Thu, 31 May 2018 10:56:53 -0500
-Message-ID: <CAL_JsqJu6=ORfutZ5tAyNp2q2rH6P+fgJMRKw750RyFy=ptjPw@mail.gmail.com>
-References: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
- <1527251668-31396-2-git-send-email-codrin.ciubotariu@microchip.com>
- <20180531005827.GA17203@rob-hp-laptop>
- <4f2e6e6a-df3a-b645-093c-b4467b3aa843@microchip.com>
- <CAL_JsqJ=T0p17hHg6=obtydt7T-yrAeOr7C2XAEnDFQ-c0b5XQ@mail.gmail.com>
- <152778070837.144038.4555982304713569160@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v2 4/8] dt-bindings: gnss: add u-blox binding
+Date: Thu, 31 May 2018 10:58:59 -0500
+Message-ID: <CAL_JsqLfqgUbzMWdE_c96DrdgB31gSixbJo+JvsZhoJGJRWYMw@mail.gmail.com>
+References: <20180530103242.20773-1-johan@kernel.org> <20180530103242.20773-5-johan@kernel.org>
+ <20180531035805.GA16906@rob-hp-laptop> <20180531082241.GD3259@localhost>
+ <CAL_Jsq+-NBqR8H49oB-XZtH8XSCn_BO92Zf17=KfEXfE5mvjAg@mail.gmail.com> <20180531143428.GK3259@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <152778070837.144038.4555982304713569160@swboyd.mtv.corp.google.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Mark Brown <broonie@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Codrin Ciubotariu <codrin.ciubotariu@microchip.com>, linux-clk <linux-clk@vger.kernel.org>, Cristian.Birsan@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180531143428.GK3259@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 31, 2018 at 10:31 AM, Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Rob Herring (2018-05-31 07:20:57)
->> On Thu, May 31, 2018 at 5:25 AM, Codrin Ciubotariu
->> <codrin.ciubotariu@microchip.com> wrote:
->> > On 31.05.2018 03:58, Rob Herring wrote:
+On Thu, May 31, 2018 at 9:34 AM, Johan Hovold <johan@kernel.org> wrote:
+> On Thu, May 31, 2018 at 08:55:10AM -0500, Rob Herring wrote:
+>> On Thu, May 31, 2018 at 3:22 AM, Johan Hovold <johan@kernel.org> wrote:
+>> > On Wed, May 30, 2018 at 10:58:05PM -0500, Rob Herring wrote:
+>> >> On Wed, May 30, 2018 at 12:32:38PM +0200, Johan Hovold wrote:
+>> >> > Add binding for u-blox GNSS receivers.
+>> >> >
+>> >> > Note that the u-blox product names encodes form factor (e.g. "neo"),
+>> >> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
+>> >> > chipset is used for the compatible strings (for now).
+>> >> >
+>> >> > Signed-off-by: Johan Hovold <johan@kernel.org>
+>> >> > ---
+>> >> >  .../devicetree/bindings/gnss/u-blox.txt       | 44 +++++++++++++++++++
+>> >> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>> >> >  2 files changed, 45 insertions(+)
+>> >> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
+>> >> >
+>> >> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
+>> >> > new file mode 100644
+>> >> > index 000000000000..caef9ace0b0c
+>> >> > --- /dev/null
+>> >> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
+>> >> > @@ -0,0 +1,44 @@
+>> >> > +u-blox GNSS Receiver DT binding
+>> >> > +
+>> >> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
+>> >> > +
+>> >> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+>> >> > +properties.
+>> >> > +
+>> >> > +Required properties:
+>> >> > +
+>> >> > +- compatible       : Must be one of
 >> >>
->> >> On Fri, May 25, 2018 at 03:34:22PM +0300, Codrin Ciubotariu wrote:
->> >>>
->> >>> The I2S mux clock can be used to select the I2S input clock. The
->> >>> available parents are the peripheral and the generated clocks.
->> >>>
->> >>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
->> >>> ---
->> >>>   .../devicetree/bindings/clock/at91-clock.txt       | 34
->> >>> ++++++++++++++++++++++
->> >>>   1 file changed, 34 insertions(+)
->> >>>
->> >>> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt
->> >>> b/Documentation/devicetree/bindings/clock/at91-clock.txt
->> >>> index 51c259a..1c46b3c 100644
->> >>> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
->> >>> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
->> >>> @@ -90,6 +90,8 @@ Required properties:
->> >>>         "atmel,sama5d2-clk-audio-pll-pmc"
->> >>>                 at91 audio pll output on AUDIOPLLCLK that feeds the PMC
->> >>>                 and can be used by peripheral clock or generic clock
->> >>> +       "atmel,sama5d2-clk-i2s-mux":
->> >>> +               at91 I2S clock source selection
->> >>
->> >>
->> >> Is this boolean or takes some values. If latter, what are valid values?
+>> >> mixture of space and tab here.
 >> >
->> >
->> > This is the compatible string of the clock driver.
+>> > Oops. Same single space character before the tab here in all three
+>> > binding docs (and in the in-tree slave_devices.txt which I think I used
+>> > as a template).
 >>
->> Ah, now I remember. AT91 uses fine grained clock nodes in DT. Is there
->> still a plan to fix this?
+>> Who wrote that crap? ;)
 >
-> I'm also interested in a plan.
+> Heh.
 >
->> >>
->> >>> +               compatible = "atmel,sama5d2-clk-i2s-mux";
->> >>> +               #address-cells = <1>;
->> >>> +               #size-cells = <0>;
->> >>
->> >>
->> >> How do you address this block? My guess is you don't because it is just
->> >> part of some other block and you are just creating this node to
->> >> instantiate a driver. Just make the node for the actual h/w block a
->> >> clock provider and define the clock ids (0 and 1).
 >> >
+>> >> > +
+>> >> > +                   "u-blox,neo-8"
+>> >> > +                   "u-blox,neo-m8"
+>> >> > +
+>> >> > +- vcc-supply       : Main voltage regulator
+>> >> > +
+>> >> > +Required properties (DDC):
+>> >> > +- reg              : DDC (I2C) slave address
+>> >> > +
+>> >> > +Required properties (SPI):
+>> >> > +- reg              : SPI chip select address
+>> >> > +
+>> >> > +Required properties (USB):
+>> >> > +- reg              : Number of the USB hub port or the USB host-controller port
+>> >> > +                  to which this device is attached
+>> >> > +
+>> >> > +Optional properties:
+>> >> > +
+>> >> > +- timepulse-gpios  : Time pulse GPIO
+>> >> > +- u-blox,extint-gpios      : External interrupt GPIO
+>> >>
+>> >> This should be interrupts property instead of a gpio.
 >> >
->> > This block is not addressed, but its children are. The register we access in
->> > this driver is not part of other block. It's a SFR register, accessed
->> > through syscon and it has nothing to do with the I2S IP (see SAMA5D2 DS,
->> > page 1256, fig. 44-1: I2SC Block Diagram) that is the consumer of this
->> > clock. Adding a clock-id property in the I2S node would be just like v3 of
->> > this series, with the difference that we use clock-id instead of alias id to
->> > set the clock parent, which is not how you suggested back then.
+>> > Contrary to what the name may suggest, this pin is actually an input
+>> > which can be used to control active power or to provide time or
+>> > frequency aiding data to the receiver (see section 1.13 in [1]).
+>> >
+>> > I only added it for completeness as the driver does not use it
+>> > currently. Remove, leave as is, or add "input" to the description as in:
+>> >
+>> >         - u-blox,extint-gpios   : External interrupt input GPIO
 >>
->> I wasn't suggesting a clock-id property, but a clock specifier (i.e.
->> make #clock-cells 1).
->>
->> But AT91 clocks are all a mess, so I don't know what to tell you.
->>
+>> Yes. You should also define the active level.
 >
-> If #clock-cells of 1 works then we should go with that. It's still weird
-> that we need random nodes to add more clks, but I guess that's how it's
-> going to be for each at91 clk driver until it changes to be one big
-> provider node.
+> The active level appears to be runtime configurable and dependent on the
+> selected function. For power control it can be used to control force-on
+> (active high), force-off (active low) or both; and for time aiding
+> sampling on falling or rising edge is also configurable. And who knows
+> what else this pin is used for next time they update the firmware. ;)
 
-Seems to me that clock additions could use a new binding and we start
-with a new driver that handles these few clocks initially. But I
-haven't looked whether both can coexist.
+Okay.
+
+> Shall I remove the property, or just add "input" as suggested above?
+
+Just add "input".
 
 Rob
