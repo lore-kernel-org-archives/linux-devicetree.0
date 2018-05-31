@@ -1,63 +1,48 @@
-From: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [DPU PATCH 10/11] drm/msm/dpu: correct
- dpu_io_util.h include path
-Date: Thu, 31 May 2018 17:11:58 +0530
-Message-ID: <681784551573fd8f94ce793457955887@codeaurora.org>
-References: <1527691788-9350-1-git-send-email-ryadav@codeaurora.org>
- <1527691788-9350-11-git-send-email-ryadav@codeaurora.org>
- <20180530163005.GC5028@jcrouse-lnx.qualcomm.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 0/8] gnss: add new GNSS subsystem
+Date: Thu, 31 May 2018 13:47:43 +0200
+Message-ID: <20180531114743.GG3259@localhost>
+References: <20180530103242.20773-1-johan@kernel.org>
+ <20180530143822.lvtwjvbqe7gvbvgq@localhost>
+ <20180531085242.GE3259@localhost>
+ <943C21CA-EEC6-45E2-997E-A6E1FA0549EB@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180530163005.GC5028-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <943C21CA-EEC6-45E2-997E-A6E1FA0549EB@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johan Hovold <johan@kernel.org>, Richard Cochran <richardcochran@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wNS0zMCAyMjowMCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiBPbiBXZWQsIE1heSAz
-MCwgMjAxOCBhdCAwODoxOTo0N1BNICswNTMwLCBSYWplc2ggWWFkYXYgd3JvdGU6Cj4+IGRwdV9p
-b191dGlsLmggaXMgbW92ZWQgZnJvbSBzdGFuZGFyZCBpbmNsdWRlIHBhdGgKPj4gdG8gZHJpdmVy
-IGZvbGRlciwgY29ycmVjdCB0aGUgaW5jbHVkZSBwYXRoIGluIGNvZGUuCj4+IAo+PiBTaWduZWQt
-b2ZmLWJ5OiBSYWplc2ggWWFkYXYgPHJ5YWRhdkBjb2RlYXVyb3JhLm9yZz4KPiAKPiBJZiB0aGUg
-cHJldmlvdXMgcGF0Y2ggZG9lc24ndCBjb21waWxlIHdpdGhvdXQgdGhpcyBmaXggeW91IHNob3Vs
-ZCAKPiBzcXVhc2ggdGhlbS4KSGkgSm9yZGFuLApZZWFoIHlvdSBhcmUgcmlnaHQsIHdpbGwgc3F1
-YXNoIGl0IGluIHYyLgpXZSBhcmUgdHJ5aW5nIHRvIGtlZXAgbXNtIGNvcmUgYW5kIGRwdSBjaGFu
-Z2VzIGluIHNlcGFyYXRlIHBhdGNoZXMgZm9yIApiZXR0ZXIgc3F1YXNoaW5nIHdoZW4gdGhleSBh
-cmUgcHVsbGVkIGJ5IFNlYW4gaW4gZHB1LXN0YWdpbmcgdHJlZSBidXQgCmZvciB0aGlzIGluc3Rh
-bmNlIGNhbid0IGJyZWFrIGNvbXBpbGF0aW9uIHNvIHllYWggSSdsbCBzcXVhc2ggaXQgd2l0aCAK
-cHJldmlvdXMgb25lLgoKVGhhbmtzLApSYWplc2gKCj4gCj4+IC0tLQo+PiAgZHJpdmVycy9ncHUv
-ZHJtL21zbS9kaXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jIHwgMSAtCj4+ICBkcml2ZXJzL2dw
-dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmggfCAyICstCj4+ICAyIGZpbGVz
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9wb3dlcl9oYW5kbGUuYyAKPj4g
-Yi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmMKPj4gaW5k
-ZXggMjRjMzI3NC4uZjk5N2JkOSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9k
-aXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20v
-ZGlzcC9kcHUxL2RwdV9wb3dlcl9oYW5kbGUuYwo+PiBAQCAtMjAsNyArMjAsNiBAQAo+PiAgI2lu
-Y2x1ZGUgPGxpbnV4L3NsYWIuaD4KPj4gICNpbmNsdWRlIDxsaW51eC9tdXRleC5oPgo+PiAgI2lu
-Y2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4+IC0jaW5jbHVkZSA8bGludXgvZHB1X2lvX3V0
-aWwuaD4KPj4gCj4+ICAjaW5jbHVkZSAiZHB1X3Bvd2VyX2hhbmRsZS5oIgo+PiAgI2luY2x1ZGUg
-ImRwdV90cmFjZS5oIgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
-dTEvZHB1X3Bvd2VyX2hhbmRsZS5oIAo+PiBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUx
-L2RwdV9wb3dlcl9oYW5kbGUuaAo+PiBpbmRleCA5YTZkNGI5Li4xOTNmNDY4IDEwMDY0NAo+PiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmgKPj4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5oCj4+
-IEBAIC0yMSw3ICsyMSw3IEBACj4+ICAjZGVmaW5lIERQVV9QT1dFUl9IQU5ETEVfRU5BQkxFX0JV
-U19JQl9RVU9UQQkxNjAwMDAwMDAwCj4+ICAjZGVmaW5lIERQVV9QT1dFUl9IQU5ETEVfRElTQUJM
-RV9CVVNfSUJfUVVPVEEJMAo+PiAKPj4gLSNpbmNsdWRlIDxsaW51eC9kcHVfaW9fdXRpbC5oPgo+
-PiArI2luY2x1ZGUgImRwdV9pb191dGlsLmgiCj4+IAo+PiAgLyogZXZlbnQgd2lsbCBiZSB0cmln
-Z2VyZWQgYmVmb3JlIHBvd2VyIGhhbmRsZXIgZGlzYWJsZSAqLwo+PiAgI2RlZmluZSBEUFVfUE9X
-RVJfRVZFTlRfUFJFX0RJU0FCTEUJMHgxCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2ZyZWVkcmVubwo=
+On Thu, May 31, 2018 at 11:52:18AM +0200, H. Nikolaus Schaller wrote:
+> 
+> > Am 31.05.2018 um 10:52 schrieb Johan Hovold <johan@kernel.org>:
+> > 
+> > On Wed, May 30, 2018 at 07:38:22AM -0700, Richard Cochran wrote:
+> >> On Wed, May 30, 2018 at 12:32:34PM +0200, Johan Hovold wrote:
+> >>> Another possible extension is to add generic 1PPS support.
+> >> 
+> >> There are two possibilities to consider.
+> >> 
+> >> 1. If the PPS causes an interrupt, then it should hook into the PPS
+> >>   subsystem.
+> > 
+> > Registering a PPS child device is what I had in mind for this.
+> 
+> This seems to be duplicating functionality that is already solved by
+> 
+> https://elixir.bootlin.com/linux/v4.17-rc7/source/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> 
+> and
+> 
+> https://elixir.bootlin.com/linux/v4.17-rc7/source/drivers/pps/clients/pps-gpio.c
+> 
+> Or what is bad with just using that?
+
+Using pps-gpio would not allow you to describe the hardware properly,
+something which, for example, may be needed for power management (e.g.
+to power on the GNSS receiver when the pps device is being accessed).
+
+Johan
