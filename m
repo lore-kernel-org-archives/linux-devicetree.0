@@ -1,39 +1,72 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: new binding for Ilitek ILI9341
- display panels
-Date: Wed, 30 May 2018 22:39:21 -0500
-Message-ID: <20180531033921.GA31521@rob-hp-laptop>
-References: <20180525193623.15533-1-david@lechnology.com>
- <20180525193623.15533-4-david@lechnology.com>
- <c4ee580a-4adf-278f-1be4-be4e5cb53660@lechnology.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
+ BlueField SoC
+Date: Wed, 30 May 2018 22:43:52 -0500
+Message-ID: <20180531034352.GA32666@rob-hp-laptop>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1527279436-14773-3-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <c4ee580a-4adf-278f-1be4-be4e5cb53660@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, limor@ladyada.net, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nitin Patil <nitin@mindsensors.com>
+In-Reply-To: <1527279436-14773-3-git-send-email-lsun@mellanox.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liming Sun <lsun@mellanox.com>
+Cc: devicetree@vger.kernel.org, David Woods <dwoods@mellanox.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXkgMjUsIDIwMTggYXQgMDM6MTQ6MzNQTSAtMDUwMCwgRGF2aWQgTGVjaG5lciB3
-cm90ZToKPiBPbiAwNS8yNS8yMDE4IDAyOjM2IFBNLCBEYXZpZCBMZWNobmVyIHdyb3RlOgo+ID4g
-VGhpcyBhZGRzIGEgbmV3IGJpbmRpbmcgZm9yIElsaXRlayBJTEk5MzQxIGRpc3BsYXkgcGFuZWxz
-LiBJdCBpbmNsdWRlcwo+ID4gYSBjb21wYXRpYmxlIHN0cmluZyBmb3Igb25lIGRpc3BsYXkgKG1v
-cmUgY2FuIGJlIGFkZGVkIGluIHRoZSBmdXR1cmUpLgo+ID4gCj4gPiBUaGUgdmVuZG9yIHByZWZp
-eCAibm9uYW1lIiBpcyB1c2VkIGJlY2F1c2UgdGhlIHZlbmRvciBpcyBub3Qga25vd24uCj4gCj4g
-TG9va3MgbGlrZSBJIGZvcmdvdCB0byB1cGRhdGUgIm5vbmFtZSIgdG8gImFkYWZydWl0IiBpbiB0
-aGUgY29tbWl0IG1lc3NhZ2UuCj4gUGF0Y2ggaXMgYXMgaW50ZW5kZWQgdGhvdWdoLgoKT3RoZXIg
-dGhhbiB0aGF0LAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, May 25, 2018 at 04:17:15PM -0400, Liming Sun wrote:
+
+Commit msg?
+
+> Reviewed-by: David Woods <dwoods@mellanox.com>
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> ---
+>  .../devicetree/bindings/soc/mellanox/tmfifo.txt      | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+> new file mode 100644
+> index 0000000..0a362f5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+> @@ -0,0 +1,20 @@
+> +* Mellanox BlueField SoC TmFifo
+> +
+> +BlueField TmFifo provides a shared FIFO between the target and the
+> +external host machine, which can be accessed via USB or PCIe.
+
+A FIFO for what? I'd like to find a better spot than bindings/soc/
+> +
+> +Required properties:
+> +
+> +- compatible:	Should be "mellanox,bf-tmfifo"
+> +- reg:		Physical base address and length of Rx/Tx block
+> +- interrupts:	The interrupt number of Rx low water mark, Rx high water mark
+> +		Tx low water mark, Tx high water mark respectively.
+> +
+> +Example:
+> +
+> +tmfifo@800a20 {
+> +	compatible = "mellanox,bf-tmfifo";
+> +	reg = <0x00800a20 0x00000018
+> +	       0x00800a40 0x00000018>;
+> +	interrupts = <41, 42, 43, 44>;
+> +};
+> -- 
+> 1.8.3.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
