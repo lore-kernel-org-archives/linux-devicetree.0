@@ -1,30 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: fsi-master-gpio: Document "no-gpio-delays"
- property
-Date: Thu, 31 May 2018 12:13:03 -0500
-Message-ID: <20180531171303.GA12599@rob-hp-laptop>
-References: <20180529013044.23815-1-benh@kernel.crashing.org>
- <20180529013044.23815-6-benh@kernel.crashing.org>
- <1a2aaf52c2f4d948d55ccf3953db92528c296733.camel@kernel.crashing.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Add vendor prefix for ArcherMind
+Date: Thu, 31 May 2018 12:16:39 -0500
+Message-ID: <20180531171639.GA23016@rob-hp-laptop>
+References: <20180529045258.1415-1-manivannan.sadhasivam@linaro.org>
+ <20180529045258.1415-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1a2aaf52c2f4d948d55ccf3953db92528c296733.camel@kernel.crashing.org>
+In-Reply-To: <20180529045258.1415-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jeremy Kerr <jk@ozlabs.org>, Joel Stanley <joel@jms.id.au>, Christopher Bostic <cbostic@linux.vnet.ibm.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 11:43:40AM +1000, Benjamin Herrenschmidt wrote:
-> Support for this is being added to the driver but the original
-> patch forgot to add this documentation.
+On Tue, May 29, 2018 at 10:22:57AM +0530, Manivannan Sadhasivam wrote:
+> Add vendor prefix for ArcherMind Technology (Nanjing) Co., Ltd.
 > 
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Applied.
+I've applied this while you all debate the dts file.
 
 Rob
