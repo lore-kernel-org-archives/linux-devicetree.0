@@ -1,80 +1,58 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v8 0/7] i2c: Add FSI-attached I2C master algorithm
-Date: Thu, 31 May 2018 09:29:18 +0300
-Message-ID: <CAHp75Vec+KZCkjcs3qpB=qLmaTon=yTLyu7S_tDrMGcobHW5eQ@mail.gmail.com>
-References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
- <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com> <58c1059a91b93a490a7fc8bda2112e67e6513840.camel@kernel.crashing.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 2/6] mtd: rawnand: tegra: add devicetree binding
+Date: Thu, 31 May 2018 08:42:05 +0200
+Message-ID: <20180531084205.38bfe90f@xps13>
+References: <20180527215442.14760-3-stefan@agner.ch>
+        <20180528002354.45025afd@xps13>
+        <20180531034523.GA5417@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58c1059a91b93a490a7fc8bda2112e67e6513840.camel@kernel.crashing.org>
+In-Reply-To: <20180531034523.GA5417@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Eddie James <eajames@linux.vnet.ibm.com>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Stefan Agner <stefan@agner.ch>, boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 31, 2018 at 1:42 AM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Thu, 2018-05-31 at 00:31 +0300, Andy Shevchenko wrote:
->> On Thu, May 31, 2018 at 12:07 AM, Eddie James
->> <eajames@linux.vnet.ibm.com> wrote:
+Hi Rob,
 
->> I'll comment the series later, though you have to address previous
->> comments first:
->> - understand devm_ purpose and how it works
->
-> I think it is perfectly understood and I don't see what your problem
-> here is. So please be a proper civil human being an express your
-> concern precisely rather than with aggressive comments.
+On Wed, 30 May 2018 22:45:23 -0500, Rob Herring <robh@kernel.org> wrote:
 
-I apologize for this kind of tone, let's assume it was a bad day.
+> On Mon, May 28, 2018 at 12:23:54AM +0200, Miquel Raynal wrote:
+> > Hi Stefan,
+> > 
+> > On Sun, 27 May 2018 23:54:38 +0200, Stefan Agner <stefan@agner.ch>
+> > wrote:
+> >   
+> > > From: Lucas Stach <dev@lynxeye.de>
+> > > 
+> > > This adds the devicetree binding for the Tegra 2 NAND flash
+> > > controller.
+> > > 
+> > > Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> > > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > > ---
+> > >  .../bindings/mtd/nvidia,tegra20-nand.txt      | 62 +++++++++++++++++++
+> > >  1 file changed, 62 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > > new file mode 100644
+> > > index 000000000000..49e472af1b39
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > > @@ -0,0 +1,62 @@
+> > > +NVIDIA Tegra NAND Flash controller
+> > > +
+> > > +Required properties:
+> > > +- compatible: Must be one of:  
+> > 
+> > Nitpick: just put the compatible here as there is only one?  
+> 
+> No, this is how I ask people to format it.
 
-> Now to clarify that specific point, devm purpose is to automatically
-> clean up the resources used by the device when it is torn down.
->
-> However, in this specific case, it makes sense to dispose of the port
-> structure explicitly because this is a failure in registering an
-> individual port which doesn't lead to a failure of the entire driver.
->
-> Thus not freeing it means the structure would remain allocated
-> uselessly until the whole driver is torn down.
+Oh, ok, I'll remember it for my own DT patches then :)
 
-Yep, so, why do we care? If it holds few hundreds of bytes, can't we
-live with it?
-If no, the devm_k*alloc() is a wrong choice in the first place.
-
->> - discuss with maintainer a design of enumerating ports
->
-> I've been at that game for at least a good 2 decades. Maintainers
-> generally do *not* discuss design until a patch is proposed. I even
-> still try every now and then, maintainers are like lawyers, they don't
-> want to tell you what to do in case they still want to reject it after
-> seeing it later :-) I know I've been one of them for long enough.
->
-> If you have specific issues with how this is done, please express them
-> clearly. It's quite possible that there's some better way to do what
-> Eddie is doing here, but without *construtive* feedback this is
-> pointless.
-
-It feels like you duplicate approach which is done in OF generic case.
-That is my concern. Though, if Wolfram is telling that is OK, I have
-no objections.
-
-> I'm disappointed here because we have an example of somebody rather new
-> producing what is overall pretty damn good code,
-
-That is true. His code much better than many I have seen before.
-
-> despite a few corner
-> issues, and being (again) treated like crap.
-
-Sorry for that, life is harsh.
-
-> This isn't the right way to operate, and I believe this has been made
-> clear many times before.
-
-Yes.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Miquèl
