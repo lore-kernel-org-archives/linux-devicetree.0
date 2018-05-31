@@ -1,84 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
- model corners
-Date: Wed, 30 May 2018 22:27:09 -0500
-Message-ID: <20180531032709.GA13554@rob-hp-laptop>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-2-rnayak@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: djw@t-chip.com.cn
+Subject: [PATCH v3 3/5] arm64: dts: rockchip: Add GPIO_MUTE pin support to rk3328
+Date: Thu, 31 May 2018 11:27:51 +0800
+Message-ID: <1527737273-8387-4-git-send-email-djw@t-chip.com.cn>
+References: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180525100121.28214-2-rnayak@codeaurora.org>
+In-Reply-To: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, collinsd@codeaurora.org
+To: linux-rockchip@lists.infradead.org
+Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Finley Xiao <finley.xiao@rock-chips.com>, William Wu <william.wu@rock-chips.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Rocky Hao <rocky.hao@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 03:31:16PM +0530, Rajendra Nayak wrote:
-> The powerdomains for corners just pass the performance state set by the
-> consumers to the RPM (Remote Power manager) which then takes care
-> of setting the appropriate voltage on the corresponding rails to
-> meet the performance needs.
-> 
-> We add all powerdomain data needed on msm8996 here. This driver can easily
-> be extended by adding data for other qualcomm SoCs as well.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  .../devicetree/bindings/power/qcom,rpmpd.txt  |  55 ++++
->  drivers/soc/qcom/Kconfig                      |   9 +
->  drivers/soc/qcom/Makefile                     |   1 +
->  drivers/soc/qcom/rpmpd.c                      | 299 ++++++++++++++++++
->  4 files changed, 364 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->  create mode 100644 drivers/soc/qcom/rpmpd.c
-> 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> new file mode 100644
-> index 000000000000..68f620a2af0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> @@ -0,0 +1,55 @@
-> +Qualcomm RPM Powerdomains
-> +
-> +* For RPM powerdomains, we communicate a performance state to RPM
-> +which then translates it into a corresponding voltage on a rail
-> +
-> +Required Properties:
-> + - compatible: Should be one of the following
-> +	* qcom,msm8996-rpmpd: RPM Powerdomain for the msm8996 family of SoC
-> + - power-domain-cells: number of cells in power domain specifier
-> +	must be 1.
-> + - operating-points-v2: Phandle to the OPP table for the power-domain.
-> +	Refer to Documentation/devicetree/bindings/power/power_domain.txt
-> +	and Documentation/devicetree/bindings/opp/qcom-opp.txt for more details
-> +
-> +Example:
-> +
-> +	rpmpd: power-controller {
-> +		compatible = "qcom,msm8996-rpmpd";
-> +		#power-domain-cells = <1>;
-> +		operating-points-v2 = <&rpmpd_opp_table>,
-> +				      <&rpmpd_opp_table>,
-> +				      <&rpmpd_opp_table>,
-> +				      <&rpmpd_opp_table>,
-> +				      <&rpmpd_opp_table>,
-> +				      <&rpmpd_opp_table>,
-> +				      <&rpmpd_opp_table>;
-> +	};
-> +
-> +	rpmpd_opp_table: opp-table {
-> +		compatible = "operating-points-v2-qcom-level", "operating-points-v2";
-> +
-> +		rpmpd_opp1: opp@1 {
+From: Levin Du <djw@t-chip.com.cn>
 
-unit-address without reg property is not valid.
+Adding a new gpio controller named "gpio_mute" to rk3328, providing
+access to the GPIO_MUTE pin, which is manupulated by the GRF_SOC_CON10
+register.
 
-> +			qcom,level = <1>;
+The GPIO_MUTE pin is referred to as <&gpio_mute 0>.
 
-Is this the only property? If so, I don't see the point in trying to use 
-operating-points-v2 here.
+Signed-off-by: Levin Du <djw@t-chip.com.cn>
 
-Rob
+---
+
+Changes in v3:
+- Use dedicated "rockchip,rk3328-gpio-mute" driver
+
+Changes in v2:
+- Rename gpio_syscon10 to gpio_mute in rk3328.dtsi
+
+Changes in v1:
+- Split from V0 and add to rk3328.dtsi for general use.
+
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index be2bfbc..2ee0fa3 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -309,6 +309,13 @@
+ 			mode-loader = <BOOT_BL_DOWNLOAD>;
+ 		};
+ 
++		/* Use <&gpio_mute 0> to refer to GPIO_MUTE pin */
++		gpio_mute: gpio-mute {
++			compatible = "rockchip,rk3328-gpio-mute";
++			gpio-controller;
++			#gpio-cells = <2>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	uart0: serial@ff110000 {
+-- 
+2.7.4
