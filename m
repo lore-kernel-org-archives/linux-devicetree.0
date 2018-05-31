@@ -1,72 +1,71 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
- model corners
-Date: Thu, 31 May 2018 09:50:55 +0530
-Message-ID: <c4d9f752-0368-6257-bdab-6459b18eb893@codeaurora.org>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-2-rnayak@codeaurora.org>
- <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
- <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
- <CAPDyKFpuZ4s7C+Nr3NhU-A40oVw84yK7eEniO6NhHNJ3VosR-A@mail.gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v9 01/15] ARM: Add Krait L2 register accessor functions
+Date: Thu, 31 May 2018 10:27:20 +0530
+Message-ID: <9f2e1aa8-21c1-10b0-6193-e6bc16993a0d@codeaurora.org>
+References: <1520347148-27852-1-git-send-email-sricharan@codeaurora.org>
+ <1520347148-27852-2-git-send-email-sricharan@codeaurora.org>
+ <20180524173926.GC14924@minitux>
+ <664089d4-b30d-99bb-2021-12128b2895ba@codeaurora.org>
+ <152769571081.144038.4314499217001219157@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpuZ4s7C+Nr3NhU-A40oVw84yK7eEniO6NhHNJ3VosR-A@mail.gmail.com>
+In-Reply-To: <152769571081.144038.4314499217001219157@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, collinsd@codeaurora.org
+To: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
-
-On 05/30/2018 06:14 PM, Ulf Hansson wrote:
-> [...]
-> 
->>>> +
->>>> +static DEFINE_MUTEX(rpmpd_lock);
->>>> +
->>>> +/* msm8996 RPM powerdomains */
->>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
->>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
->>>> +DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
->>>> +
->>>> +DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
->>>> +DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
->>>> +
->>>> +static struct rpmpd *msm8996_rpmpds[] = {
->>>> +       [0] = &msm8996_vddcx,
->>>> +       [1] = &msm8996_vddcx_ao,
->>>> +       [2] = &msm8996_vddcx_vfc,
->>>> +       [3] = &msm8996_vddmx,
->>>> +       [4] = &msm8996_vddmx_ao,
->>>> +       [5] = &msm8996_vddsscx,
->>>> +       [6] = &msm8996_vddsscx_vfc,
->>>> +};
->>>
->>> It's not my call, but honestly the above all macros makes the code
->>> less readable.
+On 5/30/2018 9:25 PM, Stephen Boyd wrote:
+> Quoting Sricharan R (2018-05-24 22:40:11)
+>> Hi Bjorn,
 >>
->> This is all static data per SoC. The macros will keep the new additions
->> needed for every new SoC to a minimal. Currently this supports only
->> msm8996.
-> 
-> Right, that's fine then.
-> 
->>
+>> On 5/24/2018 11:09 PM, Bjorn Andersson wrote:
+>>> On Tue 06 Mar 06:38 PST 2018, Sricharan R wrote:
 >>>
->>> Anyway, I think you should convert to allocate these structs
->>> dynamically from the heap (kzalloc/kcalloc), instead of statically as
->>> above.
+>>>> From: Stephen Boyd <sboyd@codeaurora.org>
+>>>>
+>>>> Krait CPUs have a handful of L2 cache controller registers that
+>>>> live behind a cp15 based indirection register. First you program
+>>>> the indirection register (l2cpselr) to point the L2 'window'
+>>>> register (l2cpdr) at what you want to read/write.  Then you
+>>>> read/write the 'window' register to do what you want. The
+>>>> l2cpselr register is not banked per-cpu so we must lock around
+>>>> accesses to it to prevent other CPUs from re-pointing l2cpdr
+>>>> underneath us.
+>>>>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>>>
+>>> This should have your signed-off-by here as well.
+>>>
+>>
+>>  ok.
+>>
+>>> Apart from that:
+>>>
+>>> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>
+>>
 > 
-> However, I assume this is still doable!?
+> Will these patches come around again? I'll do a quick sweep on them
+> today but I expect them to be resent.
 
-Perhaps it is, but is there any specific advantage of constructing these structures
-dynamically vs statically, given they are static data?
-Most other powerdomain/clock/regulator drivers I see do it statically, and thats
-what I followed.
+Sure, i will have to resend them again, fixing couple of Bjorn's
+minor comments. Will address your comments that you would give
+as well along with that.
+
+Regards,
+ Sricharan
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
