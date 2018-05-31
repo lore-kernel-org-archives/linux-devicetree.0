@@ -1,96 +1,81 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 4/8] dt-bindings: gnss: add u-blox binding
-Date: Thu, 31 May 2018 10:22:41 +0200
-Message-ID: <20180531082241.GD3259@localhost>
-References: <20180530103242.20773-1-johan@kernel.org>
- <20180530103242.20773-5-johan@kernel.org>
- <20180531035805.GA16906@rob-hp-laptop>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v4 3/5] Documentation: DT: add i.MX EPIT timer binding
+Date: Thu, 31 May 2018 11:26:47 +0300
+Message-ID: <0eb40af3-b741-2e65-3af9-f150345beb3c@mentor.com>
+References: <20180530120327.27681-1-peron.clem@gmail.com>
+ <20180530120327.27681-4-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180531035805.GA16906@rob-hp-laptop>
+In-Reply-To: <20180530120327.27681-4-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 10:58:05PM -0500, Rob Herring wrote:
-> On Wed, May 30, 2018 at 12:32:38PM +0200, Johan Hovold wrote:
-> > Add binding for u-blox GNSS receivers.
-> > 
-> > Note that the u-blox product names encodes form factor (e.g. "neo"),
-> > chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
-> > chipset is used for the compatible strings (for now).
-> > 
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
-> > ---
-> >  .../devicetree/bindings/gnss/u-blox.txt       | 44 +++++++++++++++++++
-> >  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
-> >  2 files changed, 45 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
-> > new file mode 100644
-> > index 000000000000..caef9ace0b0c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
-> > @@ -0,0 +1,44 @@
-> > +u-blox GNSS Receiver DT binding
-> > +
-> > +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
-> > +
-> > +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-> > +properties.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible 	: Must be one of
+Hi Clément,
+
+On 05/30/2018 03:03 PM, Clément Péron wrote:
+> From: Clément Peron <clement.peron@devialet.com>
 > 
-> mixture of space and tab here.
-
-Oops. Same single space character before the tab here in all three
-binding docs (and in the in-tree slave_devices.txt which I think I used
-as a template).
-
-Do you want me to fix this even if this turns out to be the only thing
-that needs to be addressed in a v3?
-
-> > +
-> > +			"u-blox,neo-8"
-> > +			"u-blox,neo-m8"
-> > +
-> > +- vcc-supply	: Main voltage regulator
-> > +
-> > +Required properties (DDC):
-> > +- reg		: DDC (I2C) slave address
-> > +
-> > +Required properties (SPI):
-> > +- reg		: SPI chip select address
-> > +
-> > +Required properties (USB):
-> > +- reg		: Number of the USB hub port or the USB host-controller port
-> > +                  to which this device is attached
-> > +
-> > +Optional properties:
-> > +
-> > +- timepulse-gpios	: Time pulse GPIO
-> > +- u-blox,extint-gpios	: External interrupt GPIO
+> Add devicetree binding document for NXP's i.MX SoC specific
+> EPIT timer driver.
 > 
-> This should be interrupts property instead of a gpio.
+> Signed-off-by: Clément Peron <clement.peron@devialet.com>
+> ---
+>  .../devicetree/bindings/timer/fsl,imxepit.txt | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxepit.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxepit.txt b/Documentation/devicetree/bindings/timer/fsl,imxepit.txt
+> new file mode 100644
+> index 000000000000..90112d58af10
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/fsl,imxepit.txt
+> @@ -0,0 +1,24 @@
+> +Binding for the i.MX EPIT timer
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
 
-Contrary to what the name may suggest, this pin is actually an input
-which can be used to control active power or to provide time or
-frequency aiding data to the receiver (see section 1.13 in [1]).
+no, this leftover reference to clock-bindings.txt is invalid, please remove it.
 
-I only added it for completeness as the driver does not use it
-currently. Remove, leave as is, or add "input" to the description as in:
+Instead you may add a simple description of the timer module.
 
-	- u-blox,extint-gpios	: External interrupt input GPIO
+> +Required properties:
+> +- compatible: should be "fsl,imx31-epit"
 
-perhaps?
+To satisfy compatibles with multiple SoCs, apparently you may follow a model,
+which is used with other Freescale controllers, for instance
 
-Thanks,
-Johan
+gpio/fsl-imx-gpio.txt	- compatible : Should be "fsl,<soc>-gpio"
+mmc/fsl-imx-esdhc.txt	- compatible : Should be "fsl,<chip>-esdhc"
+serial/fsl-imx-uart.txt	- compatible : Should be "fsl,<soc>-uart"
+timer/fsl,imxgpt.txt	- compatible : should be "fsl,<soc>-gpt"
 
-[1] https://www.u-blox.com/sites/default/files/NEO-8Q_DataSheet_%28UBX-15031913%29.pdf
+and so on, I hope it would cover Rob's ask.
+
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: Should contain EPIT controller interrupt
+> +- clocks: list of clock specifiers, must contain an entry for each required
+> +  entry in clock-names
+> +- clock-names : should include entries "ipg", "per"
+> +
+> +Example for i.MX6QDL:
+> +	epit1: epit@20d0000 {
+> +		compatible = "fsl,imx6q-epit", "fsl,imx31-epit";
+> +		reg = <0x020d0000 0x4000>;
+> +		interrupts = <0 56 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&clks IMX6QDL_CLK_IPG_PER>,
+> +			<&clks IMX6QDL_CLK_EPIT1>;
+> +		clock-names = "ipg", "per";
+> +	};
+> 
+
+--
+With best wishes,
+Vladimir
