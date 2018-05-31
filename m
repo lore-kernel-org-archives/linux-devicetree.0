@@ -1,89 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: explicitly describe nesting
- partitions
-Date: Thu, 31 May 2018 11:20:29 -0500
-Message-ID: <20180531162029.GA8242@rob-hp-laptop>
-References: <20180523171448.26234-1-zajec5@gmail.com>
+Subject: Re: [PATCH 2/3] clk: bcm: Update and add tingray clock entries
+Date: Thu, 31 May 2018 11:25:56 -0500
+Message-ID: <20180531162556.GA955@rob-hp-laptop>
+References: <1527266717-8406-1-git-send-email-ray.jui@broadcom.com>
+ <1527266717-8406-3-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180523171448.26234-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+In-Reply-To: <1527266717-8406-3-git-send-email-ray.jui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXkgMjMsIDIwMTggYXQgMDc6MTQ6NDdQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
-IHdyb3RlOgo+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBE
-b2N1bWVudGF0aW9uIHdhcyBhbHJlYWR5IHNheWluZyB0aGF0IGZpeGVkIGFuZCBkeW5hbWljIHBh
-cnRpdGlvbmluZyBjYW4KPiBiZSBtaXhlZCBidXQgd2FzIG1pc3NpbmcgYSBjbGVhciBkZXNjcmlw
-dGlvbiBhbmQgZXhhbXBsZXMuIFRoaXMgY29tbWl0Cj4gYWRkcyBhIHByb3BlciBkZXNjcmlwdGlv
-biBvZiBob3cgcGFydGl0aW9ucyBjYW4gYmUgbmVzdGVkIGFuZCBob3cgbGF5b3V0Cj4gZGVzY3Jp
-cHRpb25zIGNhbiBiZSBtaXhlZC4KPiAKPiBUaGlzIGFkZGl0aW9uIGlzIGltcG9ydGFudCBmb3Ig
-cGFydGl0aW9ucyB0aGF0IGNvbnRhaW4gc3VicGFydGl0aW9ucy4KPiBJdCdzIHVzZWZ1bCB0byBo
-YXZlIHBhcmVudCBwYXJ0aXRpb24gcmVnaXN0ZXJlZCAoZS5nLiBmb3Igb3ZlcndyaXRpbmcKPiBw
-dXJwb3NlcykgYXMgd2VsbCBhcyBjaGlsZHJlbiBvbmVzIChmb3IgYWNjZXNzaW5nIGRhdGEpLiBJ
-dCdzIGFsc28KPiByZXF1aXJlZCB3aGVuIGEgc2luZ2xlIHBhcnRpdGlvbiB1c2VzIGRpZmZlcmVu
-dCBwYXJ0aXRpb25pbmcgbWV0aG9kCj4gKGUuZy4gdmVuZG9yIGN1c3RvbSAiZmlybXdhcmUiIHBh
-cnRpdGlvbiB3aXRoIGtlcm5lbCArIHJvb3RmcykuCj4gCj4gU2lnbmVkLW9mZi1ieTogUmFmYcWC
-IE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0tLQo+IEFub3RoZXIgZXhhbXBsZSAoSSBj
-b3VsZG4ndCBwdXQgaW4gRG9jdW1lbnRhdGlvbiB5ZXQpIGNvdWxkIGJlOgo+IAo+IGZsYXNoQDAg
-ewo+IAlwYXJ0aXRpb25zIHsKPiAJCWNvbXBhdGlibGUgPSAiZml4ZWQtcGFydGl0aW9ucyI7Cj4g
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAJCSNzaXplLWNlbGxzID0gPDE+Owo+IAo+IAkJcGFy
-dGl0aW9uQDAgewo+IAkJCWxhYmVsID0gImJvb3Rsb2FkZXIiOwo+IAkJCXJlZyA9IDwweDAwMDAw
-MDAgMHgwMTAwMDAwPjsKPiAJCQlyZWFkLW9ubHk7Cj4gCQl9Owo+IAo+IAkJZmlybXdhcmVAMTAw
-MDAwIHsKPiAJCQlsYWJlbCA9ICJmaXJtd2FyZSI7Cj4gCQkJcmVnID0gPDB4MDEwMDAwMCAweDA4
-MDAwMDA+Owo+IAkJCWNvbXBhdGlibGUgPSAiYnJjbSx0cngiOwo+IAkJfTsKPiAJfTsKPiB9Owo+
-IAo+IEl0J3MgcHJvYmFibHkgZXZlbiBtb3JlIHJlYWxpc3RpYyBvbmUsIGJ1dCB3ZSBkb24ndCBk
-ZXNjcmliZSAiYnJjbSx0cngiCj4gYmluZGluZyB5ZXQuCgpUaGlzIG9uZSBtYWtlcyBtb3JlIHNl
-bnNlIHRvIG1lIHRoYW4gdGhlIG9uZSB5b3UndmUgYWRkZWQgYmVjYXVzZSBpZiB5b3UgCm9ubHkg
-aGF2ZSBmaXhlZCBwYXJ0aXRpb25zLCBpdCBzZWVtcyBsaWtlIG1vc3QgdGltZXMgeW91IGNvdWxk
-IGp1c3QgCmZsYXR0ZW4gdGhlbSB0byAxIGxldmVsLiBJIHN1cHBvc2UgaGF2aW5nIHNvbWUgbGV2
-ZWxzIGNvdWxkIG1ha2UgZG9pbmcgCnVwZGF0ZXMgZWFzaWVyLgoKPiBUaGUgcHVycG9zZSBvZiBh
-Ym92ZSBkZXNjcmlwdGlvbiB3b3VsZCBiZSB0bzoKPiAxKSBTcGVjaWZ5IGZpeGVkIHBhcnRpdGlv
-bnMgKHRoZXkgbmV2ZXIgY2hhbmdlKQo+IDIpIFRlbGwgb3BlcmF0aW5nIHN5c3RlbSB0aGF0ICJm
-aXJtd2FyZSIgcGFydGl0aW9uIHVzZXMgQnJvYWRjb20ncyBUUlgKPiAgICBmb3JtYXQgd2hpY2gg
-aXMgYSBjb250YWluZXIgZm9yIDIgb3IgMyBzdWJwYXJ0aXRpb25zICh1c3VhbGx5OiBrZXJuZWwK
-PiAgICBhbmQgcm9vdGZzKS4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3Bh
-cnRpdGlvbi50eHQgICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dAo+IGluZGV4IGE4ZjM4MjY0MmJh
-OS4uMjIxNDE2N2NlODhhIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dAo+IEBAIC0xNCw2ICsxNCwxMyBAQCBtZXRob2Qg
-aXMgdXNlZCBmb3IgYSBnaXZlbiBmbGFzaCBkZXZpY2UuIFRvIGRlc2NyaWJlIHRoZSBtZXRob2Qg
-dGhlcmUgc2hvdWxkIGJlCj4gIGEgc3Vibm9kZSBvZiB0aGUgZmxhc2ggZGV2aWNlIHRoYXQgaXMg
-bmFtZWQgJ3BhcnRpdGlvbnMnLiBJdCBtdXN0IGhhdmUgYQo+ICAnY29tcGF0aWJsZScgcHJvcGVy
-dHksIHdoaWNoIGlzIHVzZWQgdG8gaWRlbnRpZnkgdGhlIG1ldGhvZCB0byB1c2UuCj4gIAo+ICtX
-aGVuIGEgc2luZ2xlIHBhcnRpdGlvbiBpcyByZXByZXNlbnRlZCB3aXRoIGEgRFQgbm9kZSAoaXQg
-ZGVwZW5kcyBvbiBhIHVzZWQKPiArZm9ybWF0KSBpdCBtYXkgYWxzbyBiZSBkZXNjcmliZWQgdXNp
-bmcgYWJvdmUgcnVsZXMgKCdjb21wYXRpYmxlJyBhbmQgb3B0aW9uYWxseQo+ICtzb21lIGV4dHJh
-IHByb3BlcnRpZXMgLyBzdWJub2RlcykuIEl0IGFsbG93cyBkZXNjcmliaW5nIG1vcmUgY29tcGxl
-eCwKPiAraGllcmFyY2hpY2FsIChtdWx0aS1sZXZlbCkgbGF5b3V0cyBhbmQgc2hvdWxkIGJlIHVz
-ZWQgaWYgdGhlcmUgaXMgc29tZQo+ICtzaWduaWZpY2FudCByZWxhdGlvbiBiZXR3ZWVuIHBhcnRp
-dGlvbnMgb3Igc29tZSBwYXJ0aXRpb24gaW50ZXJuYWxseSB1c2VzCj4gK2Fub3RoZXIgcGFydGl0
-aW9uaW5nIG1ldGhvZC4KPiArCj4gIEF2YWlsYWJsZSBiaW5kaW5ncyBhcmUgbGlzdGVkIGluIHRo
-ZSAicGFydGl0aW9ucyIgc3ViZGlyZWN0b3J5Lgo+ICAKPiAgCj4gQEAgLTczLDYgKzgwLDI0IEBA
-IGZsYXNoQDAgewo+ICAJCXVpbWFnZUAxMDAwMDAgewo+ICAJCQlyZWcgPSA8MHgwMTAwMDAwIDB4
-MjAwMDAwPjsKPiAgCQl9Owo+ICsKPiArCQljYWxpYnJhdGlvbkAyMDAwMDAgewo+ICsJCQlsYWJl
-bCA9ICJjYWxpYnJhdGlvbiI7Cj4gKwkJCXJlZyA9IDwweDAyMDAwMDAgMHgxMDAwMDA+Owo+ICsJ
-CQljb21wYXRpYmxlID0gImZpeGVkLXBhcnRpdGlvbnMiOwo+ICsJCQkjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MT47CgpZb3UgYXJlIG1pc3NpbmcgJ3Jhbmdlcycg
-aGVyZS4KCj4gKwo+ICsJCQlwYXJ0aXRpb25AMCB7Cj4gKwkJCQlsYWJlbCA9ICJ3aWZpMCI7Cj4g
-KwkJCQlyZWcgPSA8MHgwMDAwMDAgMHgwODAwMDA+Owo+ICsJCQl9Owo+ICsKPiArCQkJcGFydGl0
-aW9uQDgwMDAwIHsKPiArCQkJCWxhYmVsID0gIndpZmkxIjsKPiArCQkJCXJlZyA9IDwweDA4MDAw
-MCAweDA4MDAwMD47Cj4gKwkJCX07Cj4gKwkJfTsKPiAgCX07Cj4gIH07Cj4gIAo+IC0tIAo+IDIu
-MTMuNgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
+On Fri, May 25, 2018 at 09:45:16AM -0700, Ray Jui wrote:
+> Update and add Stingray clock definitions and tables so they match the
+> binding document and the latest ASIC datasheet
+> 
+> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> ---
+>  drivers/clk/bcm/clk-sr.c           | 135 ++++++++++++++++++++++++++++++++-----
+>  include/dt-bindings/clock/bcm-sr.h |  24 +++++--
+
+This goes in the 1st patch.
+
+>  2 files changed, 137 insertions(+), 22 deletions(-)
