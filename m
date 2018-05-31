@@ -1,107 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/6] soc: qcom: rpmh powerdomain driver
-Date: Wed, 30 May 2018 22:31:10 -0500
-Message-ID: <20180531033110.GA19195@rob-hp-laptop>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-6-rnayak@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] slimbus: ngd: dt-bindings: Add slim ngd dt
+ bindings
+Date: Wed, 30 May 2018 22:32:42 -0500
+Message-ID: <20180531033242.GA24141@rob-hp-laptop>
+References: <20180525111547.18556-1-srinivas.kandagatla@linaro.org>
+ <20180525111547.18556-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180525100121.28214-6-rnayak@codeaurora.org>
+In-Reply-To: <20180525111547.18556-2-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, collinsd@codeaurora.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: gregkh@linuxfoundation.org, kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 03:31:20PM +0530, Rajendra Nayak wrote:
-> The RPMh powerdomain driver aggregates the corner votes from various
-> consumers for the ARC resources and communicates it to RPMh.
+On Fri, May 25, 2018 at 12:15:46PM +0100, Srinivas Kandagatla wrote:
+> This patch adds bindings for Qualcomm SLIMBus NGD controller.
+> SLIMBus NGD controller is a light-weight driver responsible for
+> communicating with SLIMBus slaves directly over the bus using messaging
+> interface and communicating with master component residing on ADSP for
+> bandwidth and data-channel management
 > 
-> We also add data for all powerdomains on sdm845 as part of the patch.
-> The driver can be extended to support other SoCs which support RPMh
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  .../devicetree/bindings/power/qcom,rpmhpd.txt |  65 ++++
->  drivers/soc/qcom/Kconfig                      |   9 +
->  drivers/soc/qcom/Makefile                     |   1 +
->  drivers/soc/qcom/rpmhpd.c                     | 360 ++++++++++++++++++
->  4 files changed, 435 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
->  create mode 100644 drivers/soc/qcom/rpmhpd.c
-> 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
-> new file mode 100644
-> index 000000000000..c1fa986c12ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
-> @@ -0,0 +1,65 @@
-> +Qualcomm RPMh Powerdomains
-> +
-> +* For RPMh powerdomains, we communicate a performance state to RPMh
-> +which then translates it into a corresponding voltage on a rail
-> +
-> +Required Properties:
-> + - compatible: Should be one of the following
-> +	* qcom,sdm845-rpmhpd: RPMh powerdomain for the sdm845 family of SoC
-> + - power-domain-cells: number of cells in power domain specifier
-> +	must be 1
-> + - operating-points-v2: Phandle to the OPP table for the power-domain.
-> +	Refer to Documentation/devicetree/bindings/power/power_domain.txt
-> +	and Documentation/devicetree/bindings/opp/qcom-opp.txt for more details
-> +
-> +Example:
-> +
-> +	rpmhpd: power-controller {
-> +		compatible = "qcom,sdm845-rpmhpd";
-> +		#power-domain-cells = <1>;
-> +		operating-points-v2 = <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>,
-> +				      <&rpmhpd_opp_table>;
-> +	};
-> +
-> +	rpmhpd_opp_table: opp-table {
-> +		compatible = "operating-points-v2-qcom-level", "operating-points-v2";
-> +
-> +		rpmhpd_opp1: opp@1 {
-> +			qcom-corner = <16>;
+>  .../bindings/slimbus/slim-ngd-qcom-ctrl.txt        | 84 ++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-ngd-qcom-ctrl.txt
 
-Is it corner or level?
-
-> +		};
-> +
-> +		rpmhpd_opp2: opp@2 {
-> +			qcom-corner = <48>;
-> +		};
-> +
-> +		rpmhpd_opp3: opp@3 {
-> +			qcom-corner = <64>;
-> +		};
-> +
-> +		rpmhpd_opp4: opp@4 {
-> +			qcom-corner = <128>;
-> +		};
-> +
-> +		rpmhpd_opp5: opp@5 {
-> +			qcom-corner = <192>;
-> +		};
-> +
-> +		rpmhpd_opp6: opp@6 {
-> +			qcom-corner = <256>;
-> +		};
-> +
-> +		rpmhpd_opp7: opp@7 {
-> +			qcom-corner = <320>;
-> +		};
-> +
-> +		rpmhpd_opp8: opp@8 {
-> +			qcom-corner = <416>;
-> +		};
-> +	};
+Reviewed-by: Rob Herring <robh@kernel.org>
