@@ -1,66 +1,45 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 5/6] ARM: dts: Add generic interconnect target module
- node for MCAN
-Date: Thu, 31 May 2018 15:51:04 +0530
-Message-ID: <2361da91-659d-1aaa-0ab8-d1473bc3a71a@ti.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-6-faiz_abbas@ti.com> <20180530150402.GE5705@atomide.com>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM
+ BD71837 PMIC
+Date: Thu, 31 May 2018 13:23:15 +0300
+Message-ID: <20180531102315.GA5150@localhost.localdomain>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <3b05ca98a671a762013c312f8b70543402ee7556.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180531030129.GA16122@rob-hp-laptop>
+ <20180531071717.GG13528@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530150402.GE5705@atomide.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180531071717.GG13528@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wednesday 30 May 2018 08:34 PM, Tony Lindgren wrote:
-> * Faiz Abbas <faiz_abbas@ti.com> [180530 14:12]:
->> The ti-sysc driver provides support for manipulating the idlemodes
->> and interconnect level resets.
-> ...
->> --- a/arch/arm/boot/dts/dra76x.dtsi
->> +++ b/arch/arm/boot/dts/dra76x.dtsi
->> @@ -11,6 +11,25 @@
->>  / {
->>  	compatible = "ti,dra762", "ti,dra7";
->>  
->> +	ocp {
->> +
->> +		target-module@0x42c00000 {
->> +			compatible = "ti,sysc-dra7-mcan";
->> +			ranges = <0x0 0x42c00000 0x2000>;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			reg = <0x42c01900 0x4>,
->> +			      <0x42c01904 0x4>,
->> +			      <0x42c01908 0x4>;
->> +			reg-names = "rev", "sysc", "syss";
->> +			ti,sysc-mask = <(SYSC_OMAP4_SOFTRESET |
->> +					 SYSC_DRA7_MCAN_ENAWAKEUP)>;
->> +			ti,syss-mask = <1>;
->> +			clocks = <&wkupaon_clkctrl DRA7_ADC_CLKCTRL 0>;
->> +			clock-names = "fck";
->> +		};
->> +	};
->> +
->>  };
+On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
+> Hello Rob,
 > 
-> Looks good to me except I think the reset won't do anything currently
-> with ti-sysc.c unless you specfify also "ti,hwmods" for the module?
+> Thanks for the review!
 > 
-> Can you please check? It might be worth adding the reset function to
-> ti-sysc.c for non "ti,hwmods" case and that just might remove the
-> need for any hwmod code for this module.
+> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
+> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
+> > > Document devicetree bindings for ROHM BD71837 PMIC MFD.
+> > > + - interrupts		: The interrupt line the device is connected to.
+> > > + - interrupt-controller	: Marks the device node as an interrupt controller.
+> > 
+> > What sub blocks have interrupts?
+> 
+> The PMIC can generate interrupts from events which cause it to reset.
+> Eg, irq from watchdog line change, power button pushes, reset request
+> via register interface etc. I don't know any generic handling for these
+> interrupts. In "normal" use-case this PMIC is powering the processor
+> where driver is running and I do not see reasonable handling because
+> power-reset is going to follow the irq.
 > 
 
-If I understand correctly, this involves adding a (*reset_module) in
-ti_sysc_platform_data and defining a ti_sysc_reset_module() in ti-sysc.c
-similar to ti_sysc_idle_module(). Right?
+Oh, but when reading this I understand that the interrupt-controller
+property should at least be optional.
 
-Thanks,
-Faiz
+Br,
+    Matti Vaittinen
