@@ -1,72 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
- BlueField SoC
-Date: Wed, 30 May 2018 22:43:52 -0500
-Message-ID: <20180531034352.GA32666@rob-hp-laptop>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1527279436-14773-3-git-send-email-lsun@mellanox.com>
+Subject: Re: [PATCH v2 2/6] mtd: rawnand: tegra: add devicetree binding
+Date: Wed, 30 May 2018 22:45:23 -0500
+Message-ID: <20180531034523.GA5417@rob-hp-laptop>
+References: <20180527215442.14760-3-stefan@agner.ch>
+ <20180528002354.45025afd@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527279436-14773-3-git-send-email-lsun@mellanox.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: devicetree@vger.kernel.org, David Woods <dwoods@mellanox.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180528002354.45025afd@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Stefan Agner <stefan@agner.ch>, boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 04:17:15PM -0400, Liming Sun wrote:
-
-Commit msg?
-
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
-> ---
->  .../devicetree/bindings/soc/mellanox/tmfifo.txt      | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+On Mon, May 28, 2018 at 12:23:54AM +0200, Miquel Raynal wrote:
+> Hi Stefan,
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> new file mode 100644
-> index 0000000..0a362f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> @@ -0,0 +1,20 @@
-> +* Mellanox BlueField SoC TmFifo
-> +
-> +BlueField TmFifo provides a shared FIFO between the target and the
-> +external host machine, which can be accessed via USB or PCIe.
-
-A FIFO for what? I'd like to find a better spot than bindings/soc/
-> +
-> +Required properties:
-> +
-> +- compatible:	Should be "mellanox,bf-tmfifo"
-> +- reg:		Physical base address and length of Rx/Tx block
-> +- interrupts:	The interrupt number of Rx low water mark, Rx high water mark
-> +		Tx low water mark, Tx high water mark respectively.
-> +
-> +Example:
-> +
-> +tmfifo@800a20 {
-> +	compatible = "mellanox,bf-tmfifo";
-> +	reg = <0x00800a20 0x00000018
-> +	       0x00800a40 0x00000018>;
-> +	interrupts = <41, 42, 43, 44>;
-> +};
-> -- 
-> 1.8.3.1
+> On Sun, 27 May 2018 23:54:38 +0200, Stefan Agner <stefan@agner.ch>
+> wrote:
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > From: Lucas Stach <dev@lynxeye.de>
+> > 
+> > This adds the devicetree binding for the Tegra 2 NAND flash
+> > controller.
+> > 
+> > Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > ---
+> >  .../bindings/mtd/nvidia,tegra20-nand.txt      | 62 +++++++++++++++++++
+> >  1 file changed, 62 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > new file mode 100644
+> > index 000000000000..49e472af1b39
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
+> > @@ -0,0 +1,62 @@
+> > +NVIDIA Tegra NAND Flash controller
+> > +
+> > +Required properties:
+> > +- compatible: Must be one of:
+> 
+> Nitpick: just put the compatible here as there is only one?
+
+No, this is how I ask people to format it.
+
+Rob
