@@ -1,65 +1,31 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v2 1/6] ARM: dra762: hwmod: Add MCAN support
-Date: Thu, 31 May 2018 09:15:08 +0300
-Message-ID: <98c989ca-0694-5150-f74b-35f3e4bf20c0@ti.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-2-faiz_abbas@ti.com> <20180530145047.GC5705@atomide.com>
- <cfa9c9df-57a2-69f6-9509-440dc18292e7@ti.com>
- <20180530152825.GG5705@atomide.com>
- <b0476932-a6e9-6ef1-69ad-c9a8c55d9739@ti.com>
- <20180530155448.GH5705@atomide.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 5/9] PM / Domains: dt: Allow power-domain property to
+ be a list of specifiers
+Date: Thu, 31 May 2018 11:48:21 +0530
+Message-ID: <20180531061821.wcasbwr3s7lphr4a@vireshk-i7>
+References: <20180529100421.31022-1-ulf.hansson@linaro.org>
+ <20180529100421.31022-6-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530155448.GH5705@atomide.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180529100421.31022-6-ulf.hansson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Hunter <jonathanh@nvidia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Todor Tomov <todor.tomov@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/05/18 18:54, Tony Lindgren wrote:
-> * Tero Kristo <t-kristo@ti.com> [180530 15:44]:
->> On 30/05/18 18:28, Tony Lindgren wrote:
->>> * Tero Kristo <t-kristo@ti.com> [180530 15:18]:
->>>> For the OCP if part, I think that is still needed until we switch over to
->>>> full sysc driver. clkctrl_offs you probably also need because that is used
->>>> for mapping the omap_hwmod against a specific clkctrl clock. Those can be
->>>> only removed once we are done with hwmod (or figure out some other way to
->>>> assign the clkctrl clock to a hwmod.)
->>>
->>> Hmm might be worth testing. I thought your commit 70f05be32133
->>> ("ARM: OMAP2+: hwmod: populate clkctrl clocks for hwmods if available")
->>> already parses the clkctrl from dts?
->>
->> It maps the clkctrl clock to be used by hwmod, if those are available. We
->> didn't add any specific clock entries to DT for mapping the actual clkctrl
->> clock without the hwmod_data hints yet though, as that was deemed temporary
->> solution only due to transition to interconnect driver. I.e., you would need
->> something like this in DT for every device node:
->>
->> &uart3 {
->>    clocks = <l4per_clkctrl UART3_CLK 0>;
->>    clock-names = "clkctrl";
->> };
->>
->> ... which is currently not present.
+On 29-05-18, 12:04, Ulf Hansson wrote:
+> To be able to describe topologies where devices are partitioned across
+> multiple power domains, let's extend the power-domain property to allow
+> being a list of PM domain specifiers.
 > 
-> Hmm is that not the "fck" clkctrl clock we have already in
-> the dts files for the interconnect target modules?
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Oh okay, yeah, we could parse that one, but currently it is not done, 
-and is not present for everything either I believe.
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-> We can also use pdata callbacks to pass the clock node if
-> needed. But I guess I don't quite still understand what we
-> are missing :)
-
-So, what is missing is the glue logic only from the hwmod codebase. 
-Right now this is not supported but should be relatively trivial thing 
-to add if we really want to do this.
-
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+viresh
