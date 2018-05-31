@@ -1,108 +1,53 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Thu, 31 May 2018 12:48:16 +0100
-Message-ID: <20180531114816.GC13319@sirena.org.uk>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
- <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
- <20180530103720.GH6920@sirena.org.uk>
- <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
- <20180530155044.GR6920@sirena.org.uk>
- <CAD=FV=WVUmvPPd5BxXv9Sa_2CRPrrjQvYFyqroY-3fRr4f0Bzg@mail.gmail.com>
- <20180530162007.GU6920@sirena.org.uk>
- <CAD=FV=WL9enzYCoSx0fT_ny40ciLJU-hhS9joJ6nySXvWPqAxQ@mail.gmail.com>
- <75088820-f20d-32ac-780a-5e7dacdf20ff@codeaurora.org>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: Re: [PATCH v2 1/5] crypto: ccree: correct host regs offset
+Date: Thu, 31 May 2018 14:51:22 +0300
+Message-ID: <CAOtvUMfoyuaGac29WUYqvfRr1S7Fof3FgMZo_3K7EaozqbeT6Q@mail.gmail.com>
+References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
+ <1527171551-21979-2-git-send-email-gilad@benyossef.com> <20180529161248.fphjnceozoyxqy7v@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <75088820-f20d-32ac-780a-5e7dacdf20ff@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180529161248.fphjnceozoyxqy7v@verge.net.au>
+Sender: stable-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, stable@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>Linux
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 29, 2018 at 7:12 PM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, May 24, 2018 at 03:19:06PM +0100, Gilad Ben-Yossef wrote:
+>> The product signature and HW revision register have different offset on the
+>> older HW revisions.
+>> This fixes the problem of the driver failing sanity check on silicon
+>> despite working on the FPGA emulation systems.
+>>
+>> Fixes: 27b3b22dd98c ("crypto: ccree - add support for older HW revs")
+>
+> Did the above introduce a regression that is fixed by this patch
+> or did it add a feature that only works with this patch?
+>
 
---xesSdrSSBC0PokLI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sort of in between - the first patch made more devices work but
+unreliability (it will sometime work, sometime doesn't).
+This one make it work reliably.
 
-On Wed, May 30, 2018 at 04:39:10PM -0700, David Collins wrote:
+> In the case of the latter I would drop the Fixes tag,
+> but I don't feel strongly about it.
+>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+>
+> Minor not below not withstanding,
+>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-> The DRMS modes to use and max allowed current per mode need to be
-> specified at the board level in device tree instead of hard-coded per
-> regulator type in the driver.  There are at least two use cases driving
-> this need: LDOs shared between RPMh client processors and SMPSes requiring
-> PWM mode in certain circumstances.
+Thank you for the review and help :-)
 
-Is there really no way to improve the RPM firmware?
+Gilad
 
-> Consider the case of a regulator with physical 10 mA LPM max current. Say
-> that modem and application processors each have a load on the regulator
-> that draws 9 mA. If they each respect the 10 mA limit, then they'd each
-> vote for LPM. The VRM block in RPMh hardware will aggregate these requests
+-- 
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
-This is, of course, why the regulator API aggregates this stuff based on
-the current not based on having every individual user select a mode.
-
-> together using a max function which will result in the regulator being set
-> to LPM, even though the total load is 18 mA (which would require high
-> power mode (HPM)). To get around this corner case, a LPM max current of 1
-> uA can be used for all LDO supplies that have non-application processor
-> consumers. Thus, any non-zero regulator_set_load() current request will
-> result in setting the regulator to HPM (which is always safe).
-
-That's obviously just never going to work well, the best you can do here
-is just pretend that the other components are always operating at full
-power (which I assume all the other components are doing too...) or not
-try to use load based mode switching in the first place.
-
-> The second situation that needs board-level DRMS mode and current limit
-> specification is SMPS regulator AUTO mode to PWM (HPM) mode switching.
-> SMPS regulators should theoretically always be able to operate in AUTO
-> mode as it switches automatically between PWM mode (which can provide the
-> maximum current) and PFM mode (which supports lower current but has higher
-> efficiency). However, there may be board/system issues that require
-> switching to PWM mode for certain use cases as it has better load
-> regulation (i.e. no PFM ripple for lower loads) and supports more
-> aggressive load current steps (i.e. greater A/ns).
-
-> If a Linux consumer requires the ability to force a given SMPS regulator
-> from AUTO mode into PWM mode and that SMPS is shared by other Linux
-> consumers (which may be the case, but at least must be guaranteed to work
-> architecturally), then regulator_set_load() is the only option since it
-> provides aggregation, where as regulator_set_mode() does not.
-
-That's obviously broken though, what you're describing is just clearly
-nothing to do with load so trying to configure it using load is just
-going to lead to problems later on.  Honestly it sounds like you just
-want to force the regulator into forced PWM mode all the time, otherwise
-you need to look into implementing support for describing the thing
-you're actually trying to do and add a mechanism for per consumer mode
-configuration.
-
-This has been a frequent pattern with these RPM drivers, trying to find
-some way to shoehorn something that happens to work right now into the
-code.  That's going to make things fragile and hard to maintain, we need
-code that does the thing it's saying it does so that it's easier to
-understand and work with - getting things running isn't enough, they
-need to be clear.
-
---xesSdrSSBC0PokLI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsP4P8ACgkQJNaLcl1U
-h9BZQgf+I/wVcjtOanB4eFLuRoPbjP9O9H6RSWlJp+LFFwEULGP49jMLGuqIeLzK
-mqSzLLeiX5EylzIBQQO9bpRriFg3RVYPu5FOJzUenu6oFqlJjEFO2ALlU0ONDcrG
-OJjFt2J1aLQcoQANqFPDWVfXuJxQPQvBP0spKNqshU6MjoOhHL2o0Agks2QPA7LE
-nMh0N+zMQbggfDkYRqWFGWq3i9wYqilj6MgHEJD5h1yoAF97Hgr7iPM/XDVDFk4R
-h3v5rkWRgCdou4VvKvg4RAKrCjKnZ86FQsQC2LaBHsnIpwSw82f9byBGc6W9MX9F
-JVLIY/r+xiLxURg68B6Hk5L7SUPmaA==
-=+MsJ
------END PGP SIGNATURE-----
-
---xesSdrSSBC0PokLI--
+"If you take a class in large-scale robotics, can you end up in a
+situation where the homework eats your dog?"
+ -- Jean-Baptiste Queru
