@@ -1,29 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] clk: bcm: Update and add tingray clock entries
-Date: Thu, 31 May 2018 11:25:56 -0500
-Message-ID: <20180531162556.GA955@rob-hp-laptop>
-References: <1527266717-8406-1-git-send-email-ray.jui@broadcom.com>
- <1527266717-8406-3-git-send-email-ray.jui@broadcom.com>
+Subject: Re: [PATCH 10/11] dt-bindings: misc: add bindings for throttler
+Date: Thu, 31 May 2018 11:31:59 -0500
+Message-ID: <20180531163159.GA4369@rob-hp-laptop>
+References: <20180525203043.249193-1-mka@chromium.org>
+ <20180525203043.249193-11-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527266717-8406-3-git-send-email-ray.jui@broadcom.com>
+In-Reply-To: <20180525203043.249193-11-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pramod Kumar <pramod.kumar@broadcom.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 09:45:16AM -0700, Ray Jui wrote:
-> Update and add Stingray clock definitions and tables so they match the
-> binding document and the latest ASIC datasheet
-> 
-> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+On Fri, May 25, 2018 at 01:30:42PM -0700, Matthias Kaehlcke wrote:
+
+Commit msg?
+
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  drivers/clk/bcm/clk-sr.c           | 135 ++++++++++++++++++++++++++++++++-----
->  include/dt-bindings/clock/bcm-sr.h |  24 +++++--
+>  .../devicetree/bindings/misc/throttler.txt    | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/throttler.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/throttler.txt b/Documentation/devicetree/bindings/misc/throttler.txt
+> new file mode 100644
+> index 000000000000..92f13e94451a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/throttler.txt
+> @@ -0,0 +1,41 @@
+> +Throttler driver
+> +
+> +The Throttler is used for non-thermal throttling of system components like
+> +CPUs or devfreq devices.
 
-This goes in the 1st patch.
-
->  2 files changed, 137 insertions(+), 22 deletions(-)
+This all looks very Linux specific and not a h/w device. Perhaps you can 
+add hint properties to OPP tables as to what entries can be used for 
+throttling, but otherwise this doesn't belong in DT.
