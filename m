@@ -1,117 +1,241 @@
-Return-Path: <SRS0=mCuI=IN=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
-Message-ID: <5b08c5ef.1c69fb81.51d23.659bSMTPIN_ADDED_BROKEN@mx.google.com>
-Date: Sat, 26 May 2018 10:24:45 +0800
-From: Kenneth Lee <Kenneth-Lee-2012@foxmail.com>
-Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
- <20180511190641.23008-4-jean-philippe.brucker@arm.com>
- <20180516163117.622693ea@jacob-builder>
- <de478769-9f7a-d40b-a55e-e2c63ad883e8@arm.com>
- <20180522094334.71f0e36b@jacob-builder>
- <f73b4a0e-669e-8483-88d7-1b2c8a2b9934@arm.com>
- <20180524115039.GA10260@apalos>
- <19e82a74-429a-3f86-119e-32b12082d0ff@arm.com>
- <20180525063311.GA11605@apalos>
- <20180525093959.000040a7@huawei.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v6] usb: gadget: udc: renesas_usb3: Add register of usb role switch
+Date: Thu, 31 May 2018 15:11:33 +0900
+Message-Id: <1527747093-1674-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20180525093959.000040a7@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, liguozhu@hisilicon.com, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kevin.tian@intel.com" <kevin.tian@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "rgummal@xilinx.com" <rgummal@xilinx.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com" <shunyong.yang@hxt-semitech.com>, Robin Murphy <Robin.Murphy@arm.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>, "robdclark@gmail.com" <robdclark@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "christian.koenig@amd.com" <christian.koenig@amd.com>, "nwatters@codeaurora.org" <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, May 25, 2018 at 09:39:59AM +0100, Jonathan Cameron wrote:
-> Date: Fri, 25 May 2018 09:39:59 +0100
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> CC: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
->  "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "kvm@vger.kernel.org"
->  <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org"
->  <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>,
->  Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org"
->  <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
->  "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com"
->  <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>,
->  "joro@8bytes.org" <joro@8bytes.org>, "robdclark@gmail.com"
->  <robdclark@gmail.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>,
->  "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
->  "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com"
->  <rfranz@cavium.com>, "devicetree@vger.kernel.org"
->  <devicetree@vger.kernel.org>, "kevin.tian@intel.com"
->  <kevin.tian@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
->  "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
->  "rgummal@xilinx.com" <rgummal@xilinx.com>, "thunder.leizhen@huawei.com"
->  <thunder.leizhen@huawei.com>, "linux-arm-kernel@lists.infradead.org"
->  <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com"
->  <shunyong.yang@hxt-semitech.com>, "dwmw2@infradead.org"
->  <dwmw2@infradead.org>, "liubo95@huawei.com" <liubo95@huawei.com>,
->  "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>,
->  "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
->  Robin Murphy <Robin.Murphy@arm.com>, "christian.koenig@amd.com"
->  <christian.koenig@amd.com>, "nwatters@codeaurora.org"
->  <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com"
->  <baolu.lu@linux.intel.com>, liguozhu@hisilicon.com,
->  kenneth-lee-2012@foxmail.com
-> Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
-> Message-ID: <20180525093959.000040a7@huawei.com>
-> 
-> +CC Kenneth Lee
-> 
-> On Fri, 25 May 2018 09:33:11 +0300
-> Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> 
-> > On Thu, May 24, 2018 at 04:04:39PM +0100, Jean-Philippe Brucker wrote:
-> > > On 24/05/18 12:50, Ilias Apalodimas wrote:  
-> > > >> Interesting, I hadn't thought about this use-case before. At first I
-> > > >> thought you were talking about mdev devices assigned to VMs, but I think
-> > > >> you're referring to mdevs assigned to userspace drivers instead? Out of
-> > > >> curiosity, is it only theoretical or does someone actually need this?  
-> > > > 
-> > > > There has been some non upstreamed efforts to have mdev and produce userspace
-> > > > drivers. Huawei is using it on what they call "wrapdrive" for crypto devices and
-> > > > we did a proof of concept for ethernet interfaces. At the time we choose not to
-> > > > involve the IOMMU for the reason you mentioned, but having it there would be
-> > > > good.  
-> > > 
-> > > I'm guessing there were good reasons to do it that way but I wonder, is
-> > > it not simpler to just have the kernel driver create a /dev/foo, with a
-> > > standard ioctl/mmap/poll interface? Here VFIO adds a layer of
-> > > indirection, and since the mediating driver has to implement these
-> > > operations already, what is gained?  
-> > The best reason i can come up with is "common code". You already have one API
-> > doing that for you so we replicate it in a /dev file?
-> > The mdev approach still needs extentions to support what we tried to do (i.e
-> > mdev bus might need yo have access on iommu_ops), but as far as i undestand it's
-> > a possible case.
+This patch adds role switch support for R-Car SoCs into the USB 3.0
+peripheral driver. Some R-Car SoCs (e.g. R-Car H3) have USB 3.0
+dual-role device controller which has the USB 3.0 xHCI host and
+Renesas USB 3.0 peripheral.
 
-Hi, Jean, Please allow me to share my understanding here:
-https://zhuanlan.zhihu.com/p/35489035
+Unfortunately, the mode change register (DRD_CON) contains
+the USB 3.0 peripheral controller side only. So, this renesas_usb3
+driver manages the DRD_CON now. However, in peripheral mode, the host
+should stop. Also the host hardware needs to reinitialize its own
+registers when the mode changes from peripheral to host mode.
+Otherwise, the host cannot work correctly (e.g. detect a device
+as high-speed).
 
-The reason we do not use the /dev/foo scheme is that the devices to be
-shared are programmable accelerators. We cannot fix up the kernel driver for them.
-> > > 
-> > > Thanks,
-> > > Jean  
-> 
-> 
+To achieve this reinitialization by a driver, this driver also
+registers a role switch driver to manage the DRD_CON and get
+a device pointer of usb 3.0 host from "companion" property of OF.
+Then, when the usb role is changed, renesas_usb3_role_switch_set()
+will attach/release the xhci-plat driver to reinitialize the host
+hardware.
 
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+This patch set is based on Felipe's usb.git / testing/next branch
+(commit id = 47265c067c0d129f3a0e94bc221293a780af9d78).
+
+Changes from v5 (https://patchwork.kernel.org/patch/10426483/):
+ - Add a new function "usb3_set_mode_by_role_sw()" instead of reusing
+   usb3_set_mode() and add _usb3_set_mode().
+ - Change a coding style of container_of.
+ - Revise an error message in renesas_usb3_role_switch_set().
+ - Add "const" for "renesas_usb3_role_switch_desc".
+ - Simplify a condition check of usb_of_get_companion_dev().
+
+Changes from RFC v4 (https://patchwork.kernel.org/patch/10418265/):
+ - Use "companion" device tree property simply instead of device_connection
+   APIs with OF graph.
+ - Merge patch 2 and 3 to one.
+ - Revise the commit log (I should had revised this on RFC v4 though).
+
+Changes from RFC v3:
+ - Rebase latest usb.git / testing/next branch.
+ - Add graph parse into device_connection_find_match().
+ - Use workqueue to call _usb3_set_mode() in patch 3.
+   (I realized renesas_usb3_role_switch_set() cannot run on atomic because
+    device_attach() might sleep.)
+
+Changes from RFC v2:
+ - Add registering usb role switch into drivers/usb/gadget/udc/renesas_usb3
+   because hardware resource (a register) is shared and remove individual
+   usb role switch driver/dt-bindings for R-Car.
+ - Remove "usb_role_switch_get_by_graph" API because the renesas_usb3 driver
+   doesn't need such API now.
+
+Changes from RFC:
+ - Remove "device-connection-id" and "usb role switch driver" dt-bingings.
+ - Remove drivers/of code.
+ - Add a new API for find the connection by using graph on devcon.c and roles.c.
+ - Use each new API on the rcar usb role switch and renesas_usb3 drivers.
+ - Update the dtsi file for r8a7795.
+
+
+ drivers/usb/gadget/udc/Kconfig        |  1 +
+ drivers/usb/gadget/udc/renesas_usb3.c | 84 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 84 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
+index b838cae..78823cd 100644
+--- a/drivers/usb/gadget/udc/Kconfig
++++ b/drivers/usb/gadget/udc/Kconfig
+@@ -193,6 +193,7 @@ config USB_RENESAS_USB3
+ 	tristate 'Renesas USB3.0 Peripheral controller'
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+ 	depends on EXTCON && HAS_DMA
++	select USB_ROLE_SWITCH
+ 	help
+ 	   Renesas USB3.0 Peripheral controller is a USB peripheral controller
+ 	   that supports super, high, and full speed USB 3.0 data transfers.
+diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+index 5caf78b..f44a4b1 100644
+--- a/drivers/usb/gadget/udc/renesas_usb3.c
++++ b/drivers/usb/gadget/udc/renesas_usb3.c
+@@ -23,6 +23,8 @@
+ #include <linux/uaccess.h>
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
++#include <linux/usb/of.h>
++#include <linux/usb/role.h>
+ 
+ /* register definitions */
+ #define USB3_AXI_INT_STA	0x008
+@@ -335,6 +337,11 @@ struct renesas_usb3 {
+ 	struct phy *phy;
+ 	struct dentry *dentry;
+ 
++	struct usb_role_switch *role_sw;
++	struct device *host_dev;
++	struct work_struct role_work;
++	enum usb_role role;
++
+ 	struct renesas_usb3_ep *usb3_ep;
+ 	int num_usb3_eps;
+ 
+@@ -651,6 +658,14 @@ static void usb3_check_vbus(struct renesas_usb3 *usb3)
+ 	}
+ }
+ 
++static void renesas_usb3_role_work(struct work_struct *work)
++{
++	struct renesas_usb3 *usb3 =
++			container_of(work, struct renesas_usb3, role_work);
++
++	usb_role_switch_set_role(usb3->role_sw, usb3->role);
++}
++
+ static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+ {
+ 	if (host)
+@@ -659,6 +674,16 @@ static void usb3_set_mode(struct renesas_usb3 *usb3, bool host)
+ 		usb3_set_bit(usb3, DRD_CON_PERI_CON, USB3_DRD_CON);
+ }
+ 
++static void usb3_set_mode_by_role_sw(struct renesas_usb3 *usb3, bool host)
++{
++	if (usb3->role_sw) {
++		usb3->role = host ? USB_ROLE_HOST : USB_ROLE_DEVICE;
++		schedule_work(&usb3->role_work);
++	} else {
++		usb3_set_mode(usb3, host);
++	}
++}
++
+ static void usb3_vbus_out(struct renesas_usb3 *usb3, bool enable)
+ {
+ 	if (enable)
+@@ -672,7 +697,7 @@ static void usb3_mode_config(struct renesas_usb3 *usb3, bool host, bool a_dev)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&usb3->lock, flags);
+-	usb3_set_mode(usb3, host);
++	usb3_set_mode_by_role_sw(usb3, host);
+ 	usb3_vbus_out(usb3, a_dev);
+ 	/* for A-Peripheral or forced B-device mode */
+ 	if ((!host && a_dev) ||
+@@ -2302,6 +2327,41 @@ static int renesas_usb3_set_selfpowered(struct usb_gadget *gadget, int is_self)
+ 	.set_selfpowered	= renesas_usb3_set_selfpowered,
+ };
+ 
++static enum usb_role renesas_usb3_role_switch_get(struct device *dev)
++{
++	struct renesas_usb3 *usb3 = dev_get_drvdata(dev);
++	enum usb_role cur_role;
++
++	pm_runtime_get_sync(dev);
++	cur_role = usb3_is_host(usb3) ? USB_ROLE_HOST : USB_ROLE_DEVICE;
++	pm_runtime_put(dev);
++
++	return cur_role;
++}
++
++static int renesas_usb3_role_switch_set(struct device *dev,
++					enum usb_role role)
++{
++	struct renesas_usb3 *usb3 = dev_get_drvdata(dev);
++	struct device *host = usb3->host_dev;
++	enum usb_role cur_role = renesas_usb3_role_switch_get(dev);
++
++	pm_runtime_get_sync(dev);
++	if (cur_role == USB_ROLE_HOST && role == USB_ROLE_DEVICE) {
++		device_release_driver(host);
++		usb3_set_mode(usb3, false);
++	} else if (cur_role == USB_ROLE_DEVICE && role == USB_ROLE_HOST) {
++		/* Must set the mode before device_attach of the host */
++		usb3_set_mode(usb3, true);
++		/* This device_attach() might sleep */
++		if (device_attach(host) < 0)
++			dev_err(dev, "device_attach(host) failed\n");
++	}
++	pm_runtime_put(dev);
++
++	return 0;
++}
++
+ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
+ 			  const char *buf, size_t count)
+ {
+@@ -2417,6 +2477,8 @@ static int renesas_usb3_remove(struct platform_device *pdev)
+ 	debugfs_remove_recursive(usb3->dentry);
+ 	device_remove_file(&pdev->dev, &dev_attr_role);
+ 
++	usb_role_switch_unregister(usb3->role_sw);
++
+ 	usb_del_gadget_udc(&usb3->gadget);
+ 	renesas_usb3_dma_free_prd(usb3, &pdev->dev);
+ 
+@@ -2573,6 +2635,12 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
+ 	EXTCON_NONE,
+ };
+ 
++static const struct usb_role_switch_desc renesas_usb3_role_switch_desc = {
++	.set = renesas_usb3_role_switch_set,
++	.get = renesas_usb3_role_switch_get,
++	.allow_userspace_control = true,
++};
++
+ static int renesas_usb3_probe(struct platform_device *pdev)
+ {
+ 	struct renesas_usb3 *usb3;
+@@ -2658,6 +2726,20 @@ static int renesas_usb3_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_dev_create;
+ 
++	INIT_WORK(&usb3->role_work, renesas_usb3_role_work);
++	usb3->role_sw = usb_role_switch_register(&pdev->dev,
++					&renesas_usb3_role_switch_desc);
++	if (!IS_ERR(usb3->role_sw)) {
++		usb3->host_dev = usb_of_get_companion_dev(&pdev->dev);
++		if (!usb3->host_dev) {
++			/* If not found, this driver will not use a role sw */
++			usb_role_switch_unregister(usb3->role_sw);
++			usb3->role_sw = NULL;
++		}
++	} else {
++		usb3->role_sw = NULL;
++	}
++
+ 	usb3->workaround_for_vbus = priv->workaround_for_vbus;
+ 
+ 	renesas_usb3_debugfs_init(usb3, &pdev->dev);
 -- 
-			-Kenneth Lee (Hisilicon)
-
-
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+1.9.1
