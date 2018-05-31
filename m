@@ -1,52 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
-Date: Thu, 31 May 2018 09:07:24 -0500
-Message-ID: <CAL_Jsq+33G7zMEDOUXHQijxqqbvqykxZENLe1-52ECkXwo2o4g@mail.gmail.com>
-References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
- <3b05ca98a671a762013c312f8b70543402ee7556.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
- <20180531030129.GA16122@rob-hp-laptop> <20180531071717.GG13528@localhost.localdomain>
- <20180531102315.GA5150@localhost.localdomain>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 00/12] introduce support for early platform drivers
+Date: Thu, 31 May 2018 07:16:45 -0700
+Message-ID: <20180531141645.GM5705@atomide.com>
+References: <20180511162028.20616-1-brgl@bgdev.pl>
+ <CAL_JsqL3CWFSpKEGoGwQDxCQ04g4uT1hiDTxXzjz4XTjPbfsoQ@mail.gmail.com>
+ <CAMRc=McDNYQ5uk8EyRkDf8eh9q7tyF=t7PcUd6DBLqXcseJ3AQ@mail.gmail.com>
+ <CAL_JsqJ=DdkDR3LtnTMHPUpwaUbjPEBgkaCV8ja+p-mTvWZuYA@mail.gmail.com>
+ <20180530194032.982.41562@harbor.lan>
+ <CAL_Jsq+7=NGj57k=E5GAuDmW7Uu_YkHJXf8jSyc_ad3r1op4yA@mail.gmail.com>
+ <CAMuHMdUY+-_72DHg9Tim2d4E24k5KskQxm52bHSyrSYLbZDr2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531102315.GA5150@localhost.localdomain>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUY+-_72DHg9Tim2d4E24k5KskQxm52bHSyrSYLbZDr2g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rich Felker <dalias@libc.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Magnus Damm <magnus.damm@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jiri Slaby <jslaby@suse.com>, devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Johan Hovold <johan@kerne>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 31, 2018 at 5:23 AM, Matti Vaittinen
-<mazziesaccount@gmail.com> wrote:
-> On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
->> Hello Rob,
->>
->> Thanks for the review!
->>
->> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
->> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
->> > > Document devicetree bindings for ROHM BD71837 PMIC MFD.
->> > > + - interrupts            : The interrupt line the device is connected to.
->> > > + - interrupt-controller  : Marks the device node as an interrupt controller.
->> >
->> > What sub blocks have interrupts?
->>
->> The PMIC can generate interrupts from events which cause it to reset.
->> Eg, irq from watchdog line change, power button pushes, reset request
->> via register interface etc. I don't know any generic handling for these
->> interrupts. In "normal" use-case this PMIC is powering the processor
->> where driver is running and I do not see reasonable handling because
->> power-reset is going to follow the irq.
->>
->
-> Oh, but when reading this I understand that the interrupt-controller
-> property should at least be optional.
+* Geert Uytterhoeven <geert@linux-m68k.org> [180531 06:45]:
+> Yes, they should all be drivers.
+> 
+> Assuming clocksources, clockevents, or primary interrupt controllers are
+> special, and thus forcing everyone to use OF_DECLARE for the whole
+> subsystem, doesn't fly everywhere.
+> 
+> Clockevents and interrupt controllers can have a module clock.
+> All three can be part of a PM Domain, which requires a struct device to
+> be handled properly.
 
-I don't think it should. The h/w either has an interrupt controller or
-it doesn't. My concern is you added it but nothing uses it which tells
-me your binding is incomplete. I'd rather see complete bindings even
-if you don't have drivers. For example, as-is, there's not really any
-need for the clocks child node. You can just make the parent a clock
-provider. But we need a complete picture of the h/w to make that
-determination.
+I agree it sure would be nice to have all these as drivers. I believe
+SoC specific clockevent using SoC specific clocks is the reason why some
+clocks cannot currently be drivers.
 
-Rob
+Regards,
+
+Tony
