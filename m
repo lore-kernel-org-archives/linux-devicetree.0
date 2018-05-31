@@ -1,56 +1,85 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH 2/2] ARM: davinci_all_defconfig: Enable Bluetooth
-Date: Thu, 31 May 2018 15:25:49 -0500
-Message-ID: <20180531202549.11255-3-david@lechnology.com>
-References: <20180531202549.11255-1-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531202549.11255-1-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: David Lechner <david@lechnology.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 2/2] arm64: dts: renesas: condor: add I2C0 support
+Date: Thu, 31 May 2018 23:26:49 +0300
+Message-ID: <2ea2c8bc-2abd-57fa-9c13-2ff55b41e0d4@cogentembedded.com>
+References: <2a88f4e9-0a86-8e6f-0ef2-20913dc9431d@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2a88f4e9-0a86-8e6f-0ef2-20913dc9431d@cogentembedded.com>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables Bluetooth modules in davinic_all_defconfig needed for LEGO
-MINDSTORMS EV3.
+Define the Condor board dependent part of the I2C0 device node.
 
-Signed-off-by: David Lechner <david@lechnology.com>
+The I2C0 bus is populated by 2 ON Semiconductor PCA9654 I/O expanders
+and Analog Devices  ADV7511W HDMI transmitter (but we're only describing
+the former chips now).
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
 ---
- arch/arm/configs/davinci_all_defconfig | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Changes in version 2:
+- added Simon's tag.
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index a1b6e106b867..f8448c4703c1 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -54,6 +54,13 @@ CONFIG_INET=y
- CONFIG_IP_PNP=y
- CONFIG_IP_PNP_DHCP=y
- CONFIG_NETFILTER=y
-+CONFIG_BT=m
-+CONFIG_BT_RFCOMM=m
-+CONFIG_BT_BNEP=m
-+CONFIG_BT_HIDP=m
-+CONFIG_BT_LEDS=y
-+CONFIG_BT_HCIUART=m
-+CONFIG_BT_HCIUART_LL=y
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_FW_LOADER=m
-@@ -113,6 +120,7 @@ CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_NR_UARTS=3
- CONFIG_SERIAL_8250_RUNTIME_UARTS=3
- CONFIG_SERIAL_OF_PLATFORM=y
-+CONFIG_SERIAL_DEV_BUS=y
- # CONFIG_HW_RANDOM is not set
- CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
-@@ -212,6 +220,7 @@ CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_OMAP=m
- CONFIG_DMADEVICES=y
- CONFIG_TI_EDMA=y
-+CONFIG_COMMON_CLK_PWM=m
- CONFIG_REMOTEPROC=m
- CONFIG_DA8XX_REMOTEPROC=m
- CONFIG_MEMORY=y
--- 
-2.17.0
+ arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   27 ++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+@@ -80,6 +80,28 @@
+ 	clock-frequency = <32768>;
+ };
+ 
++&i2c0 {
++	pinctrl-0 = <&i2c0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++
++	io_expander0: gpio@20 {
++		compatible = "onnn,pca9654";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	io_expander1: gpio@21 {
++		compatible = "onnn,pca9654";
++		reg = <0x21>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
++
+ &mmc0 {
+ 	pinctrl-0 = <&mmc_pins>;
+ 	pinctrl-1 = <&mmc_pins_uhs>;
+@@ -104,6 +126,11 @@
+ 		function = "canfd0";
+ 	};
+ 
++	i2c0_pins: i2c0 {
++		groups = "i2c0";
++		function = "i2c0";
++	};
++
+ 	mmc_pins: mmc {
+ 		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
+ 		function = "mmc";
