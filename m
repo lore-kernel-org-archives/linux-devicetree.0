@@ -1,107 +1,63 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 6/9] ARM: dts: wheat: Drop MTD partitioning from DT
-Date: Thu, 31 May 2018 07:40:48 -0400
-Message-ID: <20180531114047.6zkdxacep77a6rvc@verge.net.au>
-References: <20180522120257.13232-1-marek.vasut+renesas@gmail.com>
- <20180522120257.13232-6-marek.vasut+renesas@gmail.com>
- <CAMuHMdXRnoyhNz=3v_=ZCV=FWX4TwKqx7MpH0g3c7GwtXKP1tg@mail.gmail.com>
- <fc1cfd7e-db27-9277-dbed-cc2274c614a6@gmail.com>
- <CAMuHMdXnNABJSJZ6MLF+aQu8QKpFoMCAvno9Yc-9LOe810NtbA@mail.gmail.com>
- <7e1563c3-3e13-235b-3071-c3936502530f@gmail.com>
- <20180528084135.q5xng5eaypprsypr@verge.net.au>
- <CAMuHMdXYyN=XY6nb9RVEE+t0NeoSPhTh6fUk-9YWdFzAE1FfPA@mail.gmail.com>
- <20180528093602.eb36j34bbfzmpmw2@verge.net.au>
- <d78bb8a8-a351-409c-54d2-33ee02fd8afe@gmail.com>
+From: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [DPU PATCH 10/11] drm/msm/dpu: correct
+ dpu_io_util.h include path
+Date: Thu, 31 May 2018 17:11:58 +0530
+Message-ID: <681784551573fd8f94ce793457955887@codeaurora.org>
+References: <1527691788-9350-1-git-send-email-ryadav@codeaurora.org>
+ <1527691788-9350-11-git-send-email-ryadav@codeaurora.org>
+ <20180530163005.GC5028@jcrouse-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <d78bb8a8-a351-409c-54d2-33ee02fd8afe@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Richard Weinberger <richard@nod.at>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180530163005.GC5028-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 12:13:31PM +0200, Marek Vasut wrote:
-> On 05/28/2018 11:36 AM, Simon Horman wrote:
-> > On Mon, May 28, 2018 at 10:54:57AM +0200, Geert Uytterhoeven wrote:
-> >> Hi Simon,
-> >>
-> >> On Mon, May 28, 2018 at 10:41 AM, Simon Horman <horms@verge.net.au> wrote:
-> >>> On Thu, May 24, 2018 at 04:52:59PM +0200, Marek Vasut wrote:
-> >>>> On 05/23/2018 08:25 AM, Geert Uytterhoeven wrote:
-> >>>>> On Wed, May 23, 2018 at 12:01 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> >>>>>> On 05/22/2018 04:43 PM, Geert Uytterhoeven wrote:
-> >>>>>>> On Tue, May 22, 2018 at 2:02 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> >>>>>>>> Drop the MTD partitioning from DT, since it does not describe HW
-> >>>>>>>> and to give way to a more flexible kernel command line partition
-> >>>>>>>> passing.
-> >>>>>>>>
-> >>>>>>>> To retain the original partitioning, assure you have enabled
-> >>>>>>>> CONFIG_MTD_CMDLINE_PARTS in your kernel config and add the
-> >>>>>>>> following to your kernel command line:
-> >>>>>>>>
-> >>>>>>>>   mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
-> >>>>>>>
-> >>>>>>> I think the "@0" can be dropped, as it's optional?
-> >>>>>>> 4m?
-> >>>>>>
-> >>>>>> My take on this is that the loader is actually at offset 0x0 of the MTD
-> >>>>>> device and we explicitly state that in the mtdparts to anchor the first
-> >>>>>> partition within the MTD device and all the other partitions are at
-> >>>>>> offset +(sum of the sizes of all partitions listed before the current
-> >>>>>> one) relative to that first partition.
-> >>>>>
-> >>>>> Where is this explicitly states for the first partition?
-> >>>>>
-> >>>>>> Removing the @0 feels fragile at best and it seems to depend on the
-> >>>>>> current behavior of the code.
-> >>>>>
-> >>>>> Better, it also depends on the documented behavior:
-> >>>>>
-> >>>>> Documentation/admin-guide/kernel-parameters.txt refers to
-> >>>>> drivers/mtd/cmdlinepart.c, which states:
-> >>>>>
-> >>>>>  * <offset>  := standard linux memsize
-> >>>>>  *              if omitted the part will immediately follow the previous part
-> >>>>>  *              or 0 if the first part
-> >>>>>
-> >>>>> None of the examples listed there or under the MTD_CMDLINE_PARTS Kconfig
-> >>>>> help text, or in a defconfig bundled with the kernel, use @0 for the first
-> >>>>> partition.
-> >>>>
-> >>>> I think this is exceptionally fragile and dangerous to depend on this,
-> >>>> but so be it.
-> >>>
-> >>> Could you respin with this change?
-> >>>
-> >>> I would also like to ask for another change, in light of recent
-> >>> feedback from Olof Johansson ("Re: [GIT PULL] Renesas ARM64 Based SoC DT
-> >>> Updates for v4.18").
-> >>>
-> >>> Please consolidate the dts patches into a single patch?
-> >>
-> >> I think it's better to keep them split, as each commit description mentions
-> >> what needs to be passed on the kernel command line for the corresponding
-> >> board.
-> >>
-> >> Combining it in a single patch makes it much harder to extract this information.
-> >> Unless you're fine with a list:
-> >>
-> >>    koelsch: ...
-> >>    wheat: mtdparts=spi0.0:256k@0(loader),4096k(user),-(flash)
-> > 
-> > Lets try a list.
-> 
-> Reposted with a list, twice :/
-
-Thanks, got it :)
+T24gMjAxOC0wNS0zMCAyMjowMCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiBPbiBXZWQsIE1heSAz
+MCwgMjAxOCBhdCAwODoxOTo0N1BNICswNTMwLCBSYWplc2ggWWFkYXYgd3JvdGU6Cj4+IGRwdV9p
+b191dGlsLmggaXMgbW92ZWQgZnJvbSBzdGFuZGFyZCBpbmNsdWRlIHBhdGgKPj4gdG8gZHJpdmVy
+IGZvbGRlciwgY29ycmVjdCB0aGUgaW5jbHVkZSBwYXRoIGluIGNvZGUuCj4+IAo+PiBTaWduZWQt
+b2ZmLWJ5OiBSYWplc2ggWWFkYXYgPHJ5YWRhdkBjb2RlYXVyb3JhLm9yZz4KPiAKPiBJZiB0aGUg
+cHJldmlvdXMgcGF0Y2ggZG9lc24ndCBjb21waWxlIHdpdGhvdXQgdGhpcyBmaXggeW91IHNob3Vs
+ZCAKPiBzcXVhc2ggdGhlbS4KSGkgSm9yZGFuLApZZWFoIHlvdSBhcmUgcmlnaHQsIHdpbGwgc3F1
+YXNoIGl0IGluIHYyLgpXZSBhcmUgdHJ5aW5nIHRvIGtlZXAgbXNtIGNvcmUgYW5kIGRwdSBjaGFu
+Z2VzIGluIHNlcGFyYXRlIHBhdGNoZXMgZm9yIApiZXR0ZXIgc3F1YXNoaW5nIHdoZW4gdGhleSBh
+cmUgcHVsbGVkIGJ5IFNlYW4gaW4gZHB1LXN0YWdpbmcgdHJlZSBidXQgCmZvciB0aGlzIGluc3Rh
+bmNlIGNhbid0IGJyZWFrIGNvbXBpbGF0aW9uIHNvIHllYWggSSdsbCBzcXVhc2ggaXQgd2l0aCAK
+cHJldmlvdXMgb25lLgoKVGhhbmtzLApSYWplc2gKCj4gCj4+IC0tLQo+PiAgZHJpdmVycy9ncHUv
+ZHJtL21zbS9kaXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jIHwgMSAtCj4+ICBkcml2ZXJzL2dw
+dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmggfCAyICstCj4+ICAyIGZpbGVz
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9wb3dlcl9oYW5kbGUuYyAKPj4g
+Yi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmMKPj4gaW5k
+ZXggMjRjMzI3NC4uZjk5N2JkOSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9k
+aXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5jCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20v
+ZGlzcC9kcHUxL2RwdV9wb3dlcl9oYW5kbGUuYwo+PiBAQCAtMjAsNyArMjAsNiBAQAo+PiAgI2lu
+Y2x1ZGUgPGxpbnV4L3NsYWIuaD4KPj4gICNpbmNsdWRlIDxsaW51eC9tdXRleC5oPgo+PiAgI2lu
+Y2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4+IC0jaW5jbHVkZSA8bGludXgvZHB1X2lvX3V0
+aWwuaD4KPj4gCj4+ICAjaW5jbHVkZSAiZHB1X3Bvd2VyX2hhbmRsZS5oIgo+PiAgI2luY2x1ZGUg
+ImRwdV90cmFjZS5oIgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
+dTEvZHB1X3Bvd2VyX2hhbmRsZS5oIAo+PiBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUx
+L2RwdV9wb3dlcl9oYW5kbGUuaAo+PiBpbmRleCA5YTZkNGI5Li4xOTNmNDY4IDEwMDY0NAo+PiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmgKPj4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRsZS5oCj4+
+IEBAIC0yMSw3ICsyMSw3IEBACj4+ICAjZGVmaW5lIERQVV9QT1dFUl9IQU5ETEVfRU5BQkxFX0JV
+U19JQl9RVU9UQQkxNjAwMDAwMDAwCj4+ICAjZGVmaW5lIERQVV9QT1dFUl9IQU5ETEVfRElTQUJM
+RV9CVVNfSUJfUVVPVEEJMAo+PiAKPj4gLSNpbmNsdWRlIDxsaW51eC9kcHVfaW9fdXRpbC5oPgo+
+PiArI2luY2x1ZGUgImRwdV9pb191dGlsLmgiCj4+IAo+PiAgLyogZXZlbnQgd2lsbCBiZSB0cmln
+Z2VyZWQgYmVmb3JlIHBvd2VyIGhhbmRsZXIgZGlzYWJsZSAqLwo+PiAgI2RlZmluZSBEUFVfUE9X
+RVJfRVZFTlRfUFJFX0RJU0FCTEUJMHgxCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2ZyZWVkcmVubwo=
