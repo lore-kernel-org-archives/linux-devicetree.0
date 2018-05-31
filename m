@@ -1,57 +1,28 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/3] USB: DT probing support to ehci-npcm7xx
-Date: Thu, 31 May 2018 19:49:43 +0300
-Message-ID: <9fe0ca4a-c244-e909-ec27-07c3db89f941@cogentembedded.com>
-References: <1527774046-7952-1-git-send-email-avifishman70@gmail.com>
- <1527774046-7952-3-git-send-email-avifishman70@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: Remove obsolete insignal-boards.txt
+Date: Thu, 31 May 2018 11:50:07 -0500
+Message-ID: <20180531165007.GA29098@rob-hp-laptop>
+References: <20180528185310.21971-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527774046-7952-3-git-send-email-avifishman70@gmail.com>
-Content-Language: en-MW
+Content-Disposition: inline
+In-Reply-To: <20180528185310.21971-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: avifishman70@gmail.com, gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc: tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 05/31/2018 04:40 PM, avifishman70@gmail.com wrote:
-
-> From: Avi Fishman <AviFishman70@gmail.com>
+On Mon, May 28, 2018 at 08:53:10PM +0200, Krzysztof Kozlowski wrote:
+> The compatibles mentioned in insignal-boards.txt are already documented
+> under devicetree/bindings/arm/samsung/samsung-boards.txt.  Also the
+> contents of insignal-boards.txt is not accurate, e.g. does not mention
+> Arndale boards.
 > 
-> Device Tree documentation for Nuvoton npcm7xx EHCI.
-> 
-> Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  Documentation/devicetree/bindings/usb/npcm7xx-usb.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt b/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
-> new file mode 100644
-> index 000000000000..dec67d4d4c30
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
-> @@ -0,0 +1,17 @@
-> +Nuvoton NPCM7XX SoC USB controllers:
-> +-----------------------------
-> +
-> +EHCI:
-> +-----
-> +
-> +Required properties:
-> +- compatible: "nuvoton,npcm750-ehci"
-> +- interrupts: Should contain the EHCI interrupt
-> +
-> +Example:
-> +
-> +	ehci@e1800000 {
+>  Documentation/devicetree/bindings/arm/insignal-boards.txt | 8 --------
+>  1 file changed, 8 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/insignal-boards.txt
 
-  The node should be named "usb@e1800000" as the DT spec. requires the generic
-node names.
-
-[...]
-
-MBR, Sergei
+Reviewd-by: Rob Herring <robh@kernel.org>
