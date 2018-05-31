@@ -1,51 +1,92 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH 2/3] ASoC: simple-card: make sysclk index
-	configurable
-Date: Thu, 31 May 2018 22:03:59 +0200
-Message-ID: <d5df3c6b-22ae-408b-5727-516fed648b2a@zonque.org>
-References: <20180528193503.18905-1-daniel@zonque.org>
- <20180528193503.18905-3-daniel@zonque.org>
- <20180529112447.GC23509@sirena.org.uk>
- <f130a86f-deca-b5cf-da34-5cf52a9c39fc@zonque.org>
- <20180531170240.GA29973@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 10/11] dt-bindings: misc: add bindings for throttler
+Date: Thu, 31 May 2018 15:04:18 -0500
+Message-ID: <CAL_JsqK_nFtuxhNbAn3yYueLKAxvwfnY=5M6zFdGrwwwPVrP5g@mail.gmail.com>
+References: <20180525203043.249193-1-mka@chromium.org> <20180525203043.249193-11-mka@chromium.org>
+ <20180531163159.GA4369@rob-hp-laptop> <20180531183404.GB88063@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180531170240.GA29973@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180531183404.GB88063@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, May 31, 2018 07:02 PM, Rob Herring wrote:
-> On Tue, May 29, 2018 at 10:23:48PM +0200, Daniel Mack wrote:
+On Thu, May 31, 2018 at 1:34 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> Hi Rob,
+>
+> On Thu, May 31, 2018 at 11:31:59AM -0500, Rob Herring wrote:
+>> On Fri, May 25, 2018 at 01:30:42PM -0700, Matthias Kaehlcke wrote:
+>>
+>> Commit msg?
+>
+> Will add some more info in the next revision.
+>
+>> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>> > ---
+>> >  .../devicetree/bindings/misc/throttler.txt    | 41 +++++++++++++++++++
+>> >  1 file changed, 41 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/misc/throttler.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/misc/throttler.txt b/Documentation/devicetree/bindings/misc/throttler.txt
+>> > new file mode 100644
+>> > index 000000000000..92f13e94451a
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/misc/throttler.txt
+>> > @@ -0,0 +1,41 @@
+>> > +Throttler driver
+>> > +
+>> > +The Throttler is used for non-thermal throttling of system components like
+>> > +CPUs or devfreq devices.
+>>
+>> This all looks very Linux specific and not a h/w device. Perhaps you can
+>> add hint properties to OPP tables as to what entries can be used for
+>> throttling, but otherwise this doesn't belong in DT.
+>
+> My idea is to allow multiple throttlers, which might operate on
+> different throttling devices or use different OPPs for the same
+> device. To support this a simple boolean hint that the OPP can be used
+> for throttling would not be sufficient.
+>
+> What should work is a property with an array of phandles of the
+> throttlers that use a given OPP.
+>
+> AFAIK it is currently not possible to enumerate the devfreq devices in
+> the system, so besides the info in the OPPs the throttler itself would
+> still need a phandle to the devfreq device(s) it uses.
 
->> If that's the case, could you depict how the DT bindings should look like by
->> example?
-> 
-> In clock providers, you just add #clock-cells. Then the consumer side
-> defines 'clocks'. Which clock(s) comes from the dai is defined by the
-> index in the 'clocks' property for that node.
-> 
-> Both ends can be providers, but who is active is determined by defining
-> the actual connections with 'clocks'. Or perhaps you have both
-> directions shown and there is some other means to select which one is
-> active such as solving for who can provide the desired freq.
+Why don't you fix that OS problem instead of working around it in DT?
 
-How about entities that are a clock producer and consume their clocks 
-themselves? That's a rather typical thing for DAIs. Is that expressible 
-in DT?
+>
+> I envision something like this:
+>
+> gpu_opp_table: opp-table2 {
+>   compatible = "operating-points-v2";
+>
+>   opp00 {
+>     opp-hz = /bits/ 64 <200000000>;
+>     opp-microvolt = <800000>;
+>   };
+>   opp01 {
+>     opp-hz = /bits/ 64 <297000000>;
+>     opp-microvolt = <800000>;
+>     opp-throttlers = <&cros_ec_throttler>;
+>   };
+>   ...
+> };
+>
+> cros_ec_throttler: cros-ec-throttler {
+>   compatible = "google,cros-ec-throttler";
 
+Is this an actual h/w device?
 
-Thanks,
-Daniel
+>
+>   devfreq-devices = <&gpu>;
+> };
+>
+> Would this be acceptable?
+>
+> Thanks
+>
+> Matthias
