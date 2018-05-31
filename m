@@ -1,101 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/8] dt-bindings: gnss: add u-blox binding
-Date: Wed, 30 May 2018 22:58:05 -0500
-Message-ID: <20180531035805.GA16906@rob-hp-laptop>
-References: <20180530103242.20773-1-johan@kernel.org>
- <20180530103242.20773-5-johan@kernel.org>
+Subject: Re: [PATCH v2 05/10] panel/hv070wsa-100: add DT bindings
+Date: Wed, 30 May 2018 23:00:27 -0500
+Message-ID: <20180531040027.GA20068@rob-hp-laptop>
+References: <1527682561-1386-1-git-send-email-m.purski@samsung.com>
+ <CGME20180530121626eucas1p288656bbbace0c333decadff418e13c34@eucas1p2.samsung.com>
+ <1527682561-1386-6-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180530103242.20773-5-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1527682561-1386-6-git-send-email-m.purski@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 12:32:38PM +0200, Johan Hovold wrote:
-> Add binding for u-blox GNSS receivers.
-> 
-> Note that the u-blox product names encodes form factor (e.g. "neo"),
-> chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
-> chipset is used for the compatible strings (for now).
-> 
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->  .../devicetree/bindings/gnss/u-blox.txt       | 44 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
-> new file mode 100644
-> index 000000000000..caef9ace0b0c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
-> @@ -0,0 +1,44 @@
-> +u-blox GNSS Receiver DT binding
-> +
-> +The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
-> +
-> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-> +properties.
-> +
-> +Required properties:
-> +
-> +- compatible 	: Must be one of
-
-mixture of space and tab here.
-
-> +
-> +			"u-blox,neo-8"
-> +			"u-blox,neo-m8"
-> +
-> +- vcc-supply	: Main voltage regulator
-> +
-> +Required properties (DDC):
-> +- reg		: DDC (I2C) slave address
-> +
-> +Required properties (SPI):
-> +- reg		: SPI chip select address
-> +
-> +Required properties (USB):
-> +- reg		: Number of the USB hub port or the USB host-controller port
-> +                  to which this device is attached
-> +
-> +Optional properties:
-> +
-> +- timepulse-gpios	: Time pulse GPIO
-> +- u-blox,extint-gpios	: External interrupt GPIO
-
-This should be interrupts property instead of a gpio.
-
-> +- v-bckp-supply	: Backup voltage regulator
-> +
-> +Example:
-> +
-> +serial@1234 {
-> +	compatible = "ns16550a";
-> +
-> +	gnss {
-> +		compatible = "u-blox,neo-8";
-> +
-> +		v-bckp-supply = <&gnss_v_bckp_reg>;
-> +		vcc-supply = <&gnss_vcc_reg>;
-> +	};
-> +};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index b5f978a4cac6..2128dfdf73f1 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -374,6 +374,7 @@ tronsmart	Tronsmart
->  truly	Truly Semiconductors Limited
->  tsd	Theobroma Systems Design und Consulting GmbH
->  tyan	Tyan Computer Corporation
-> +u-blox	u-blox
->  ucrobotics	uCRobotics
->  ubnt	Ubiquiti Networks
->  udoo	Udoo
-> -- 
-> 2.17.0
-> 
+T24gV2VkLCBNYXkgMzAsIDIwMTggYXQgMDI6MTU6NTZQTSArMDIwMCwgTWFjaWVqIFB1cnNraSB3
+cm90ZToKPiBGcm9tOiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgoKImR0LWJp
+bmRpbmdzOiBkaXNwbGF5OiAuLi4iIGlzIHByZWZlcnJlZCBzdWJqZWN0IHByZWZpeC4KCj4gCj4g
+VGhlIHBhdGNoIGFkZHMgYmluZGluZ3MgdG8gQk9FIEhWMDcwLVdTQSBXU1ZHQSBwYW5lbC4KPiBC
+aW5kaW5ncyBhcmUgY29tcGF0aWJsZSB3aXRoIHNpbXBsZSBwYW5lbCBiaW5kaW5ncy4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IFNpZ25l
+ZC1vZmYtYnk6IE1hY2llaiBQdXJza2kgPG0ucHVyc2tpQHNhbXN1bmcuY29tPgo+IC0tLQo+ICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JvZSxodjA3MHdzYS0xMDAudHh0
+ICAgICAgICAgfCA3ICsrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQo+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvYm9lLGh2MDcwd3NhLTEwMC50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYm9lLGh2MDcwd3NhLTEw
+MC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9i
+b2UsaHYwNzB3c2EtMTAwLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAw
+MC4uYmZjMjBhYwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9ib2UsaHYwNzB3c2EtMTAwLnR4dAo+IEBAIC0wLDAg
+KzEsNyBAQAo+ICtCT0UgSFYwNzBXU0EtMTAwIDcuMDEiIFdTVkdBIFRGVCBMQ0QgcGFuZWwKPiAr
+Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJib2Us
+aHYwNzB3c2EtMTAwIgo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUg
+c2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBzaW1wbGUtcGFu
+ZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgoKWW91IGhhdmUgdG8gc3RhdGUgZXhhY3RseSB3aGlj
+aCBwcm9wZXJ0aWVzIGFwcGx5LiBEb2VzIHRoaXMgcGFuZWwgaGF2ZSBhIApiYWNrbGlnaHQ/IDEg
+c3VwcGx5LCAyIHN1cHBsaWVzLCBubyBzdXBwbGllcz8KClJvYgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
