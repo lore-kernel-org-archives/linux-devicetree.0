@@ -1,81 +1,72 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: mediatek: Add system pm support for MT2712
-Date: Wed, 30 May 2018 23:20:20 -0500
-Message-ID: <20180531042020.GQ39853@bhelgaas-glaptop.roam.corp.google.com>
-References: <1527647736-19986-1-git-send-email-honghui.zhang@mediatek.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
+ model corners
+Date: Thu, 31 May 2018 09:50:55 +0530
+Message-ID: <c4d9f752-0368-6257-bdab-6459b18eb893@codeaurora.org>
+References: <20180525100121.28214-1-rnayak@codeaurora.org>
+ <20180525100121.28214-2-rnayak@codeaurora.org>
+ <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
+ <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org>
+ <CAPDyKFpuZ4s7C+Nr3NhU-A40oVw84yK7eEniO6NhHNJ3VosR-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527647736-19986-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <CAPDyKFpuZ4s7C+Nr3NhU-A40oVw84yK7eEniO6NhHNJ3VosR-A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, collinsd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 10:35:36AM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
-> 
-> The MTCMOS of PCIe Host for MT2712 will be off when system suspend, and all
-> the internel control register will be reset after system resume. The PCIe
-> link should be re-established and the related control register values should
-> be re-set after system resume.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> CC: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/pci/host/pcie-mediatek.c | 82 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
-> 
-> diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-> index dabf1086..60f98d92 100644
-> --- a/drivers/pci/host/pcie-mediatek.c
-> +++ b/drivers/pci/host/pcie-mediatek.c
-> @@ -132,12 +132,14 @@ struct mtk_pcie_port;
->  /**
->   * struct mtk_pcie_soc - differentiate between host generations
->   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> + * @pm_support: whether the host's MTCMOS will be off when suspend
->   * @ops: pointer to configuration access functions
->   * @startup: pointer to controller setting functions
->   * @setup_irq: pointer to initialize IRQ functions
->   */
->  struct mtk_pcie_soc {
->  	bool need_fix_class_id;
-> +	bool pm_support;
->  	struct pci_ops *ops;
->  	int (*startup)(struct mtk_pcie_port *port);
->  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> @@ -1179,12 +1181,91 @@ static int mtk_pcie_probe(struct platform_device *pdev)
->  	return err;
->  }
->  
-> +static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct platform_device *pdev;
-> +	struct mtk_pcie *pcie;
-> +	struct mtk_pcie_port *port;
-> +	const struct mtk_pcie_soc *soc;
-> +
-> +	pdev = to_platform_device(dev);
-> +	pcie = platform_get_drvdata(pdev);
-> +	soc = pcie->soc;
-> +	if (!soc->pm_support)
-> +		return 0;
-> +
-> +	list_for_each_entry(port, &pcie->ports, list) {
-> +		clk_disable_unprepare(port->ahb_ck);
-> +		clk_disable_unprepare(port->sys_ck);
-> +		phy_power_off(port->phy);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
 
-I don't really like the __maybe_unused annotations.  Looking at the
-other users of SET_NOIRQ_SYSTEM_SLEEP_PM_OPS, I think a small majority
-of them wrap the function definitions in #ifdef CONFIG_PM_SLEEP
-instead of using __maybe_unused.  That's also a bit ugly, but has the
-advantage of truly omitting the definitions when they're not needed.
+
+On 05/30/2018 06:14 PM, Ulf Hansson wrote:
+> [...]
+> 
+>>>> +
+>>>> +static DEFINE_MUTEX(rpmpd_lock);
+>>>> +
+>>>> +/* msm8996 RPM powerdomains */
+>>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
+>>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
+>>>> +DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
+>>>> +
+>>>> +DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
+>>>> +DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
+>>>> +
+>>>> +static struct rpmpd *msm8996_rpmpds[] = {
+>>>> +       [0] = &msm8996_vddcx,
+>>>> +       [1] = &msm8996_vddcx_ao,
+>>>> +       [2] = &msm8996_vddcx_vfc,
+>>>> +       [3] = &msm8996_vddmx,
+>>>> +       [4] = &msm8996_vddmx_ao,
+>>>> +       [5] = &msm8996_vddsscx,
+>>>> +       [6] = &msm8996_vddsscx_vfc,
+>>>> +};
+>>>
+>>> It's not my call, but honestly the above all macros makes the code
+>>> less readable.
+>>
+>> This is all static data per SoC. The macros will keep the new additions
+>> needed for every new SoC to a minimal. Currently this supports only
+>> msm8996.
+> 
+> Right, that's fine then.
+> 
+>>
+>>>
+>>> Anyway, I think you should convert to allocate these structs
+>>> dynamically from the heap (kzalloc/kcalloc), instead of statically as
+>>> above.
+> 
+> However, I assume this is still doable!?
+
+Perhaps it is, but is there any specific advantage of constructing these structures
+dynamically vs statically, given they are static data?
+Most other powerdomain/clock/regulator drivers I see do it statically, and thats
+what I followed.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
