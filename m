@@ -1,141 +1,152 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 06/15] drm/sun4i: tcon: Add support for tcon-top
-Date: Thu, 31 May 2018 11:21:33 +0200
-Message-ID: <20180531092133.3gqepoabvuruiztz@flea.home>
-References: <20180519183127.2718-1-jernej.skrabec@siol.net>
- <20180519183127.2718-7-jernej.skrabec@siol.net>
- <20180521080759.rgviuva65ijcfm2e@flea>
- <218132669.UY7RKz0VPx@jernej-laptop>
- <20180524085021.qto6266adjvpj6ai@flea>
- <CAGb2v65whE-qW++cg+gu_o2O1dDdCWkumQB41nt3Aqa75Wp3dg@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v7 1/5] dt-bindings: Add the r9a06g032-sysctrl.h file
+Date: Thu, 31 May 2018 11:32:52 +0200
+Message-ID: <CAMuHMdXQWSVh37HqrvFWeLNHZ5zNh0=9+hV0_nsQ9mi1HQSCaQ@mail.gmail.com>
+References: <1527154169-32380-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1527154169-32380-2-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdVzN0Cbc9+MJqC4EzVgD3bkDixkf10NA13ko87cMwvpLA@mail.gmail.com> <CAMMfpEwpiZnZEykzxQJMTwE+cDnOD_qA3nUzyB96DGTWPzSJrw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uszjkr6mfqo6r23v"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKP5X3MAKGQERWULP5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65whE-qW++cg+gu_o2O1dDdCWkumQB41nt3Aqa75Wp3dg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMMfpEwpiZnZEykzxQJMTwE+cDnOD_qA3nUzyB96DGTWPzSJrw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: M P <buserror@gmail.com>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Michel,
 
---uszjkr6mfqo6r23v
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On Thu, May 31, 2018 at 11:11 AM, M P <buserror@gmail.com> wrote:
+> On Fri, 25 May 2018 at 11:31, Geert Uytterhoeven <geert@linux-m68k.org>
+> wrote:
+>> On Thu, May 24, 2018 at 11:28 AM, Michel Pollet
+>> <michel.pollet@bp.renesas.com> wrote:
+>> > This adds the constants necessary to use the renesas,r9a06g032-sysctrl
+> node.
 
-On Thu, May 24, 2018 at 03:01:09PM -0700, Chen-Yu Tsai wrote:
-> >> > > + if (tcon->quirks->needs_tcon_top) {
-> >> > > +         struct device_node *np;
-> >> > > +
-> >> > > +         np = of_parse_phandle(dev->of_node, "allwinner,tcon-top", 0);
-> >> > > +         if (np) {
-> >> > > +                 struct platform_device *pdev;
-> >> > > +
-> >> > > +                 pdev = of_find_device_by_node(np);
-> >> > > +                 if (pdev)
-> >> > > +                         tcon->tcon_top = platform_get_drvdata(pdev);
-> >> > > +                 of_node_put(np);
-> >> > > +
-> >> > > +                 if (!tcon->tcon_top)
-> >> > > +                         return -EPROBE_DEFER;
-> >> > > +         }
-> >> > > + }
-> >> > > +
-> >> >
-> >> > I might have missed it, but I've not seen the bindings additions for
-> >> > that property. This shouldn't really be done that way anyway, instead
-> >> > of using a direct phandle, you should be using the of-graph, with the
-> >> > TCON-top sitting where it belongs in the flow of data.
-> >>
-> >> Just to answer to the first question, it did describe it in "[PATCH 07/15] dt-
-> >> bindings: display: sun4i-drm: Add R40 HDMI pipeline".
-> >>
-> >> As why I designed it that way - HW representation could be described that way
-> >> (ASCII art makes sense when fixed width font is used to view it):
-> >>
-> >>                             / LCD0/LVDS0
-> >>                 / TCON-LCD0
-> >>                 |           \ MIPI DSI
-> >> mixer0          |
-> >>        \        / TCON-LCD1 - LCD1/LVDS1
-> >>         TCON-TOP
-> >>        /        \ TCON-TV0 - TVE0/RGB
-> >> mixer1          |          \
-> >>                 |           TCON-TOP - HDMI
-> >>                 |          /
-> >>                 \ TCON-TV1 - TVE1/RGB
-> >>
-> >> This is a bit simplified, since there is also TVE-TOP, which is responsible
-> >> for sharing 4 DACs between both TVE encoders. You can have two TV outs (PAL/
-> >> NTSC) or TVE0 as TV out and TVE1 as RGB or vice versa. It even seems that you
-> >> can arbitrarly choose which DAC is responsible for which signal, so there is a
-> >> ton of possible end combinations, but I'm not 100% sure.
-> >>
-> >> Even though I wrote TCON-TOP twice, this is same unit in HW. R40 manual
-> >> suggest more possibilities, although some of them seem wrong, like RGB feeding
-> >> from LCD TCON. That is confirmed to be wrong when checking BSP code.
-> >>
-> >> Additionally, TCON-TOP comes in the middle of TVE0 and LCD0, TVE1 and LCD1 for
-> >> pin muxing, although I'm not sure why is that needed at all, since according
-> >> to R40 datasheet, TVE0 and TVE1 pins are dedicated and not on PORT D and PORT
-> >> H, respectively, as TCON-TOP documentation suggest. However, HSYNC and PSYNC
-> >> lines might be shared between TVE (when it works in RGB mode) and LCD. But
-> >> that is just my guess since I'm not really familiar with RGB and LCD
-> >> interfaces.
-> >>
-> >> I'm really not sure what would be the best representation in OF-graph. Can you
-> >> suggest one?
-> >
-> > Rob might disagree on this one, but I don't see anything wrong with
-> > having loops in the graph. If the TCON-TOP can be both the input and
-> > output of the TCONs, then so be it, and have it described that way in
-> > the graph.
-> >
-> > The code is already able to filter out nodes that have already been
-> > added to the list of devices we need to wait for in the component
-> > framework, so that should work as well.
-> >
-> > And we'd need to describe TVE-TOP as well, even though we don't have a
-> > driver for it yet. That will simplify the backward compatibility later
-> > on.
-> 
-> I'm getting the feeling that TCON-TOP / TVE-TOP is the glue layer that
-> binds everything together, and provides signal routing, kind of like
-> DE-TOP on A64. So the signal mux controls that were originally found
-> in TCON0 and TVE0 were moved out.
-> 
-> The driver needs to know about that, but the graph about doesn't make
-> much sense directly. Without looking at the manual, I understand it to
-> likely be one mux between the mixers and TCONs, and one between the
-> TCON-TVs and HDMI. Would it make more sense to just have the graph
-> connections between the muxed components, and remove TCON-TOP from
-> it, like we had in the past? A phandle could be used to reference
-> the TCON-TOP for mux controls, in addition to the clocks and resets.
-> 
-> For TVE, we would need something to represent each of the output pins,
-> so the device tree can actually describe what kind of signal, be it
-> each component of RGB/YUV or composite video, is wanted on each pin,
-> if any. This is also needed on the A20 for the Cubietruck, so we can
-> describe which pins are tied to the VGA connector, and which one does
-> R, G, or B.
+>> > @@ -0,0 +1,187 @@
+>> > +/* SPDX-License-Identifier: GPL-2.0 */
+>> > +/*
+>> > + * R9A06G032 sysctrl IDs
+>> > + *
+>> > + * Copyright (C) 2018 Renesas Electronics Europe Limited
+>> > + *
+>> > + * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
+>> > + * Derived from zx-reboot.c
+>> > + */
+>> > +
+>> > +#ifndef __DT_BINDINGS_R9A06G032_SYSCTRL_H__
+>> > +#define __DT_BINDINGS_R9A06G032_SYSCTRL_H__
+>> > +
+>> > +#define R9A06G032_CLKOUT                       0
+>> > +#define R9A06G032_CLK_PLL_USB                  1
+>> > +#define R9A06G032_CLK_48                       1 /* AKA CLK_PLL_USB *=
+/
+>> > +#define R9A06G032_CLKOUT_D10                   2
+>> > +#define R9A06G032_CLKOUT_D16                   3
+>> > +#define R9A06G032_MSEBIS_CLK                   3 /* AKA CLKOUT_D16 */
+>> > +#define R9A06G032_MSEBIM_CLK                   3 /* AKA CLKOUT_D16 */
+>> > +#define R9A06G032_CLKOUT_D160                  4
+>> > +#define R9A06G032_CLKOUT_D1OR2                 5
+>> > +#define R9A06G032_CLK_DDRPHY_PLLCLK            5 /* AKA CLKOUT_D1OR2 =
+*/
+>
+>> [...]
+>
+>> I have 3 comments:
+>
+>>    1. I had expected this list to match (both name- and order-wise)
+> Appendix
+>>       C ("Clock Tree Structure") in the RZ/N1[DSL] User=E2=80=99s Manual=
+: System
+>>       Introduction, Multiplexing, Electrical and Mechanical Information.
+>>       That would make it easier to review.
+>
+> Well, that document was made a *long* time after the internal documentati=
+on
+> we used to generate the clock lists. There are a few things we had to do:
+>
+> * Renumber peripherals. We decided a long time ago that u-boot and linux
+> would stick to zero based peripherals, and not one based numbers. It's ne=
+xt
+> to impossible to keep mixing number based across software base, so we use
+> UART0 while the hardware manual mentions UART1 -- It *is* documented
+> extensively with out SDK, and makes life using linux a lot easier. It's
+> across all our SDK, u-boot, webapps readmes, howtos etc.
+>
+> * Rename some peripherals. Plenty of peripherals names made little sense
+> and had zero consistency, in fact, many names were different depending on
+> the place they were used! -- "flashnand"+"nand_flash"+"FNAND" etc,
+> "QUADSPI"+"QSPI" etc etc so we also re-normalized the names to match linu=
+x
+> conventions.
+>
+> * Other internal reasons I can't document here
+>
+> Also, the value here are made up anyway -- so I've decided to sort them t=
+o
+> make sure any clock that has a parent is numbered *after* the parent...
 
-I guess we'll see how the DT maintainers feel about this, but my
-impression is that the OF graph should model the flow of data between
-the devices. If there's a mux somewhere, then the data is definitely
-going through it, and as such it should be part of the graph.
+Well, all of that combines makes it very hard for us to review the list.
 
-Maxime
+>>    2. These definitions seems to be a mix of:
+>>         1. Internal core clocks,
+>>         2. Other core clocks,
+>>         3. Module clocks.
+>
+>>       The internal clocks do not need to be referenced from DT, so I wou=
+ld
+>>       not make them part of the DT bindings.
+>
+> Why? I'm told that "Bindings aren't for linux" -- why can't I imagine
+> 'something' needing them? Why would I decide NOT to include them,
+> as they are there? I 'factored' a few of them to the same number when
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---uszjkr6mfqo6r23v--
+Just general safety w.r.t. unchangeable DT definitions: anything that is
+not listed here cannot be declared wrong later.
+
+> applicable.
+
+You're 100% sure they're the same?
+
+> This is all done automatically BTW -- a script takes the original clockin=
+g
+> spreadsheet, and converts it into a table, correcting 'human input' as it
+> goes along.
+
+So the internal spreadsheet doesn't match the public documentation neither?
+
+>>    3. It looks like the module clocks can be referred to by register off=
+set
+>>       and bit position, which is similar to how this is handled on R-Car
+>>       SoCs.
+>>       Perhaps you can just drop the definitions for these from the heade=
+r
+>>       file, and refer to them by (combined) register offset and bit
+> position
+>>       instead?
+>>       Or am I missing something?
+>>       I believe this can also be done for the module resets (later).
+>
+> If you look in the .c file, you'll see that most gate have not just one
+> register/bit pair associated with them -- there are several, spread
+> across registers.. Also, there are clocks in there with two gates,
+> or none. Given that, I've decided a separate numbering
+> made sense.
+
+OK, fair enough.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
