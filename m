@@ -1,74 +1,67 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 1/6] soc: qcom: rpmpd: Add a powerdomain driver to
- model corners
-Date: Thu, 31 May 2018 13:09:23 +0200
-Message-ID: <CAPDyKFox1y5wxL8fxGRxEJL=p+ckOn8hMg3v+pVBHKsg-9aKrA@mail.gmail.com>
-References: <20180525100121.28214-1-rnayak@codeaurora.org> <20180525100121.28214-2-rnayak@codeaurora.org>
- <CAPDyKFoAJjZknWtbbQLn0Hnc3Du_1vnSUnqfwZLYK76j2rg52g@mail.gmail.com>
- <0e07d577-9728-e97a-2da0-dd7dd324f058@codeaurora.org> <CAPDyKFpuZ4s7C+Nr3NhU-A40oVw84yK7eEniO6NhHNJ3VosR-A@mail.gmail.com>
- <c4d9f752-0368-6257-bdab-6459b18eb893@codeaurora.org>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v2 5/6] ARM: dts: Add generic interconnect target module
+ node for MCAN
+Date: Thu, 31 May 2018 16:56:46 +0530
+Message-ID: <be0fd711-c44b-dbe2-648f-08aa88c7aec4@ti.com>
+References: <20180530141133.3711-1-faiz_abbas@ti.com>
+ <20180530141133.3711-6-faiz_abbas@ti.com>
+ <20180531040638.GA26751@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c4d9f752-0368-6257-bdab-6459b18eb893@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, collinsd@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180531040638.GA26751@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, paul@pwsan.com, tony@atomide.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 31 May 2018 at 06:20, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
->
-> On 05/30/2018 06:14 PM, Ulf Hansson wrote:
->> [...]
->>
->>>>> +
->>>>> +static DEFINE_MUTEX(rpmpd_lock);
->>>>> +
->>>>> +/* msm8996 RPM powerdomains */
->>>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
->>>>> +DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
->>>>> +DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
->>>>> +
->>>>> +DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
->>>>> +DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
->>>>> +
->>>>> +static struct rpmpd *msm8996_rpmpds[] = {
->>>>> +       [0] = &msm8996_vddcx,
->>>>> +       [1] = &msm8996_vddcx_ao,
->>>>> +       [2] = &msm8996_vddcx_vfc,
->>>>> +       [3] = &msm8996_vddmx,
->>>>> +       [4] = &msm8996_vddmx_ao,
->>>>> +       [5] = &msm8996_vddsscx,
->>>>> +       [6] = &msm8996_vddsscx_vfc,
->>>>> +};
->>>>
->>>> It's not my call, but honestly the above all macros makes the code
->>>> less readable.
->>>
->>> This is all static data per SoC. The macros will keep the new additions
->>> needed for every new SoC to a minimal. Currently this supports only
->>> msm8996.
->>
->> Right, that's fine then.
->>
->>>
->>>>
->>>> Anyway, I think you should convert to allocate these structs
->>>> dynamically from the heap (kzalloc/kcalloc), instead of statically as
->>>> above.
->>
->> However, I assume this is still doable!?
->
-> Perhaps it is, but is there any specific advantage of constructing these structures
-> dynamically vs statically, given they are static data?
+Hi,
 
-Well, I was just thinking that the genpd struct has grown quite big.
+On Thursday 31 May 2018 09:36 AM, Rob Herring wrote:
+> On Wed, May 30, 2018 at 07:41:32PM +0530, Faiz Abbas wrote:
+>> The ti-sysc driver provides support for manipulating the idlemodes
+>> and interconnect level resets.
+>>
+>> Add the generic interconnect target module node for MCAN to support
+>> the same.
+>>
+>> CC: Tony Lindgren <tony@atomide.com>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  arch/arm/boot/dts/dra76x.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/dra76x.dtsi b/arch/arm/boot/dts/dra76x.dtsi
+>> index bfc82636999c..57b8dc0fe719 100644
+>> --- a/arch/arm/boot/dts/dra76x.dtsi
+>> +++ b/arch/arm/boot/dts/dra76x.dtsi
+>> @@ -11,6 +11,25 @@
+>>  / {
+>>  	compatible = "ti,dra762", "ti,dra7";
+>>  
+>> +	ocp {
+>> +
+>> +		target-module@0x42c00000 {
+> 
+> Build your dtb with W=1 and fix warnings you add (drop '0x').
 
-> Most other powerdomain/clock/regulator drivers I see do it statically, and thats
-> what I followed.
+Sure, Will fix this.
+> 
+> This is a CAN bus controller? If so, then use 'can' for node name.
 
-Right, so forget it and keep it as is.
+Yes but I am using m_can along the lines of dcan in other boards (For
+example, see arch/arm/boot/dts/am33xx.dtsi:1046). Are you saying all CAN
+controllers should only be called can?
 
-Kind regards
-Uffe
+Thanks,
+Faiz
