@@ -1,75 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 4/6] clk: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Wed, 30 May 2018 22:05:22 -0500
-Message-ID: <20180531030522.GC16122@rob-hp-laptop>
-References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
- <99bae24fdaee0fe101e9ed1f2e55682932b92a74.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v4 2/5] clk: imx6: add EPIT clock support
+Date: Wed, 30 May 2018 22:07:15 -0500
+Message-ID: <20180531030715.GA28712@rob-hp-laptop>
+References: <20180530120327.27681-1-peron.clem@gmail.com>
+ <20180530120327.27681-3-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <99bae24fdaee0fe101e9ed1f2e55682932b92a74.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20180530120327.27681-3-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment?= Peron <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 11:42:55AM +0300, Matti Vaittinen wrote:
-> Document devicetree bindings for ROHM BD71837 PMIC clock output.
-
-Comments from the core binding apply here too.
-
+On Wed, May 30, 2018 at 02:03:24PM +0200, Clément Péron wrote:
+> From: Colin Didier <colin.didier@devialet.com>
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Add EPIT clock support to the i.MX6Q clocking infrastructure.
+> 
+> Signed-off-by: Colin Didier <colin.didier@devialet.com>
+> Signed-off-by: Clément Peron <clement.peron@devialet.com>
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 > ---
->  .../bindings/clock/rohm,bd71837-clock.txt          | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt b/Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
-> new file mode 100644
-> index 000000000000..9759fd145781
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
-> @@ -0,0 +1,37 @@
-> +ROHM BD71837 Power Management Integrated Circuit clock bindings
-> +
-> +BD71837 clock node should be sub node of the BD71837 MFD node.
-> +See BD71837 MFD bindings at
-> +Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> +
-> +Required properties:
-> +- compatible		: Should be "rohm,bd71837-clk"
-> +- clock-frequency	: Should be 32768
-> +- #clock-cells		: Should be 0
-> +
-> +Optional properties:
-> +- clock-output-names	: Should contain name for output clock.
-> +  Name "bd71837-32k-out" is used if this is not given.
-> +
-> +
-> +Example:
-> +
-> +pmic: bd71837@4b {
-> +	compatible = "rohm,bd71837";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x4b>;
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <29 GPIO_ACTIVE_LOW>;
-> +	interrupt-names = "irq";
-> +	#interrupt-cells = <1>;
-> +	interrupt-controller;
-> +
-> +	/* Clock node */
-> +	clk: bd71837-32k-out {
-> +		compatible = "rohm,bd71837-clk";
-> +		#clock-cells = <0>;
-> +		clock-frequency  = <32768>;
-> +		clock-output-names = "bd71837-32k-out";
-> +	};
-> +};
-> -- 
-> 2.14.3
-> 
+>  drivers/clk/imx/clk-imx6q.c               | 2 ++
+>  include/dt-bindings/clock/imx6qdl-clock.h | 4 +++-
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  2 files changed, 5 insertions(+), 1 deletion(-)
