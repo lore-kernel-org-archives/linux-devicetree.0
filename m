@@ -1,50 +1,76 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/2] regulator: add QCOM RPMh regulator driver
-Date: Thu, 31 May 2018 11:38:23 +0100
-Message-ID: <20180531103823.GB13319@sirena.org.uk>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <20180530163343.GV6920@sirena.org.uk>
- <da40510b-443d-d8fd-7285-c6e7eff45dc6@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5/uDoXvLw7AC5HRs"
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v3 2/5] PM / Domains: Don't attach devices in genpd with multi PM domains
+Date: Thu, 31 May 2018 12:59:56 +0200
+Message-ID: <20180531105959.14843-3-ulf.hansson@linaro.org>
+References: <20180531105959.14843-1-ulf.hansson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <da40510b-443d-d8fd-7285-c6e7eff45dc6@codeaurora.org>
+In-Reply-To: <20180531105959.14843-1-ulf.hansson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Hunter <jonathanh@nvidia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Todor Tomov <todor.tomov@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The power-domain DT property may now contain a list of PM domain
+specifiers, which represents that a device are partitioned across multiple
+PM domains. This leads to a new situation in genpd_dev_pm_attach(), as only
+one PM domain can be attached per device.
 
---5/uDoXvLw7AC5HRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+To remain things simple for the most common configuration, when a single PM
+domain is used, let's treat the multiple PM domain case as being specific.
 
-On Wed, May 30, 2018 at 05:11:54PM -0700, David Collins wrote:
+In other words, let's change genpd_dev_pm_attach() to check for multiple PM
+domains and prevent it from attach any PM domain for this case. Instead,
+leave this to be managed separately, from following changes to genpd.
 
-> I'll split up the patches so that reviewing is easier.  For the base
-> patch, would you prefer that I remove *all* mode support (handled by
-> generic regulator framework DT properties) or only remove the special
-> purpose drms mode handling support (i.e. qcom,regulator-drms-modes and
-> qcom,drms-mode-max-microamps)?
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Suggested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/base/power/domain.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-Standard operations should be fine, just weird custom stuff that's been
-causing issues.
-
---5/uDoXvLw7AC5HRs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsP0J4ACgkQJNaLcl1U
-h9AWvAf9GFN3V7LQ1QpDCLbT6jGBM8FSyg1Lf4Hc7HIvUz7egioAF4pjj3yR8sWN
-gCwoW2jcKJcwd4Cb8PjhIWJ8hfcbmvhG5VZy3tc3nxV3vZJXfH1SxFSeUKWBnYkn
-mDkcsZP65XA7tCTpM//MnuUQdK3mr4KNEHpUMqAo6a+/bxF7nVIcGnGZN/KypAjb
-/93fFofC9gfHWO7BkhxECxfT8hgd/9GtJf+liR+nkn7/vH/Pduy1kIJGC+idFAJU
-AzUwd3dInLEdy+FYv89VZM3XeS1mIae1wod7RuXxFhZp6SGc8+EAA53htmU+tIK1
-76MHf6I5YMwzVh7Ue4GEK5nAsQL0dw==
-=BoBR
------END PGP SIGNATURE-----
-
---5/uDoXvLw7AC5HRs--
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 6f403d6fccb2..908c44779ae7 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -2229,10 +2229,10 @@ static void genpd_dev_pm_sync(struct device *dev)
+  * attaches the device to retrieved pm_domain ops.
+  *
+  * Returns 1 on successfully attached PM domain, 0 when the device don't need a
+- * PM domain or a negative error code in case of failures. Note that if a
+- * power-domain exists for the device, but it cannot be found or turned on,
+- * then return -EPROBE_DEFER to ensure that the device is not probed and to
+- * re-try again later.
++ * PM domain or when multiple power-domains exists for it, else a negative error
++ * code. Note that if a power-domain exists for the device, but it cannot be
++ * found or turned on, then return -EPROBE_DEFER to ensure that the device is
++ * not probed and to re-try again later.
+  */
+ int genpd_dev_pm_attach(struct device *dev)
+ {
+@@ -2243,10 +2243,18 @@ int genpd_dev_pm_attach(struct device *dev)
+ 	if (!dev->of_node)
+ 		return 0;
+ 
++	/*
++	 * Devices with multiple PM domains must be attached separately, as we
++	 * can only attach one PM domain per device.
++	 */
++	if (of_count_phandle_with_args(dev->of_node, "power-domains",
++				       "#power-domain-cells") != 1)
++		return 0;
++
+ 	ret = of_parse_phandle_with_args(dev->of_node, "power-domains",
+ 					"#power-domain-cells", 0, &pd_args);
+ 	if (ret < 0)
+-		return 0;
++		return ret;
+ 
+ 	mutex_lock(&gpd_list_lock);
+ 	pd = genpd_get_from_provider(&pd_args);
+-- 
+2.17.0
