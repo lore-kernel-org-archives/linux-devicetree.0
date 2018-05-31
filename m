@@ -1,89 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/7] dt-bindings: clk: at91: add an I2S mux clock
-Date: Wed, 30 May 2018 19:58:27 -0500
-Message-ID: <20180531005827.GA17203@rob-hp-laptop>
-References: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
- <1527251668-31396-2-git-send-email-codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: add binding for atmel-usart in SPI
+ mode
+Date: Wed, 30 May 2018 20:00:18 -0500
+Message-ID: <20180531010018.GA24002@rob-hp-laptop>
+References: <20180525171941.26766-1-radu.pirea@microchip.com>
+ <20180525171941.26766-3-radu.pirea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527251668-31396-2-git-send-email-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20180525171941.26766-3-radu.pirea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, nicolas.ferre@microchip.com, boris.brezillon@bootlin.com, alexandre.belloni@bootlin.com, broonie@kernel.org, Cristian.Birsan@microchip.com
+To: Radu Pirea <radu.pirea@microchip.com>
+Cc: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 03:34:22PM +0300, Codrin Ciubotariu wrote:
-> The I2S mux clock can be used to select the I2S input clock. The
-> available parents are the peripheral and the generated clocks.
+On Fri, May 25, 2018 at 08:19:37PM +0300, Radu Pirea wrote:
+> This patch moves the bindings for serial from serial/atmel-usart.txt to
+> mfd/atmel-usart.txt and adds bindings for USART in SPI mode.
 > 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
 > ---
->  .../devicetree/bindings/clock/at91-clock.txt       | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
-> index 51c259a..1c46b3c 100644
-> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
-> @@ -90,6 +90,8 @@ Required properties:
->  	"atmel,sama5d2-clk-audio-pll-pmc"
->  		at91 audio pll output on AUDIOPLLCLK that feeds the PMC
->  		and can be used by peripheral clock or generic clock
-> +	"atmel,sama5d2-clk-i2s-mux":
-> +		at91 I2S clock source selection
+>  .../bindings/{serial => mfd}/atmel-usart.txt  | 25 +++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
 
-Is this boolean or takes some values. If latter, what are valid values?
-
->  
->  Required properties for SCKC node:
->  - reg : defines the IO memory reserved for the SCKC.
-> @@ -507,3 +509,35 @@ For example:
->  			atmel,clk-output-range = <0 83000000>;
->  		};
->  	};
-> +
-> +Required properties for I2S mux clocks:
-> +- #size-cells : shall be 0 (reg is used to encode I2S bus id).
-> +- #address-cells : shall be 1 (reg is used to encode I2S bus id).
-> +- name: device tree node describing a specific mux clock.
-> +	* #clock-cells : from common clock binding; shall be set to 0.
-> +	* clocks : shall be the mux clock parent phandles; shall be 2 phandles:
-> +	  peripheral and generated clock; the first phandle shall belong to the
-> +	  peripheral clock and the second one shall belong to the generated
-> +	  clock; "clock-indices" property can be user to specify
-> +	  the correct order.
-> +	* reg: I2S bus id of the corresponding mux clock.
-> +	  e.g. reg = <0>; for i2s0, reg = <1>; for i2s1
-> +
-> +For example:
-> +	i2s_clkmux {
-
-What is this a child of?
-
-> +		compatible = "atmel,sama5d2-clk-i2s-mux";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-
-How do you address this block? My guess is you don't because it is just 
-part of some other block and you are just creating this node to 
-instantiate a driver. Just make the node for the actual h/w block a 
-clock provider and define the clock ids (0 and 1).
-
-> +
-> +		i2s0muxck: i2s0_muxclk {
-> +			clocks = <&i2s0_clk>, <&i2s0_gclk>;
-> +			#clock-cells = <0>;
-> +			reg = <0>;
-> +		};
-> +
-> +		i2s1muxck: i2s1_muxclk {
-> +			clocks = <&i2s1_clk>, <&i2s1_gclk>;
-> +			#clock-cells = <0>;
-> +			reg = <1>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
