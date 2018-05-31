@@ -1,45 +1,106 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Thu, 31 May 2018 13:23:15 +0300
-Message-ID: <20180531102315.GA5150@localhost.localdomain>
-References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
- <3b05ca98a671a762013c312f8b70543402ee7556.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
- <20180531030129.GA16122@rob-hp-laptop>
- <20180531071717.GG13528@localhost.localdomain>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: clk: at91: add an I2S
+	mux clock
+Date: Thu, 31 May 2018 13:25:26 +0300
+Message-ID: <4f2e6e6a-df3a-b645-093c-b4467b3aa843@microchip.com>
+References: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
+ <1527251668-31396-2-git-send-email-codrin.ciubotariu@microchip.com>
+ <20180531005827.GA17203@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180531071717.GG13528@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180531005827.GA17203@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, broonie@kernel.org, Cristian.Birsan@microchip.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
-> Hello Rob,
+On 31.05.2018 03:58, Rob Herring wrote:
+> On Fri, May 25, 2018 at 03:34:22PM +0300, Codrin Ciubotariu wrote:
+>> The I2S mux clock can be used to select the I2S input clock. The
+>> available parents are the peripheral and the generated clocks.
+>>
+>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>> ---
+>>   .../devicetree/bindings/clock/at91-clock.txt       | 34 ++++++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+>> index 51c259a..1c46b3c 100644
+>> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
+>> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+>> @@ -90,6 +90,8 @@ Required properties:
+>>   	"atmel,sama5d2-clk-audio-pll-pmc"
+>>   		at91 audio pll output on AUDIOPLLCLK that feeds the PMC
+>>   		and can be used by peripheral clock or generic clock
+>> +	"atmel,sama5d2-clk-i2s-mux":
+>> +		at91 I2S clock source selection
 > 
-> Thanks for the review!
-> 
-> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
-> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
-> > > Document devicetree bindings for ROHM BD71837 PMIC MFD.
-> > > + - interrupts		: The interrupt line the device is connected to.
-> > > + - interrupt-controller	: Marks the device node as an interrupt controller.
-> > 
-> > What sub blocks have interrupts?
-> 
-> The PMIC can generate interrupts from events which cause it to reset.
-> Eg, irq from watchdog line change, power button pushes, reset request
-> via register interface etc. I don't know any generic handling for these
-> interrupts. In "normal" use-case this PMIC is powering the processor
-> where driver is running and I do not see reasonable handling because
-> power-reset is going to follow the irq.
-> 
+> Is this boolean or takes some values. If latter, what are valid values?
 
-Oh, but when reading this I understand that the interrupt-controller
-property should at least be optional.
+This is the compatible string of the clock driver.
 
-Br,
-    Matti Vaittinen
+> 
+>>   
+>>   Required properties for SCKC node:
+>>   - reg : defines the IO memory reserved for the SCKC.
+>> @@ -507,3 +509,35 @@ For example:
+>>   			atmel,clk-output-range = <0 83000000>;
+>>   		};
+>>   	};
+>> +
+>> +Required properties for I2S mux clocks:
+>> +- #size-cells : shall be 0 (reg is used to encode I2S bus id).
+>> +- #address-cells : shall be 1 (reg is used to encode I2S bus id).
+>> +- name: device tree node describing a specific mux clock.
+>> +	* #clock-cells : from common clock binding; shall be set to 0.
+>> +	* clocks : shall be the mux clock parent phandles; shall be 2 phandles:
+>> +	  peripheral and generated clock; the first phandle shall belong to the
+>> +	  peripheral clock and the second one shall belong to the generated
+>> +	  clock; "clock-indices" property can be user to specify
+>> +	  the correct order.
+>> +	* reg: I2S bus id of the corresponding mux clock.
+>> +	  e.g. reg = <0>; for i2s0, reg = <1>; for i2s1
+>> +
+>> +For example:
+>> +	i2s_clkmux {
+> 
+> What is this a child of?
+
+It is a child of PMC node, since both parent clocks are generated by PMC.
+
+> 
+>> +		compatible = "atmel,sama5d2-clk-i2s-mux";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+> 
+> How do you address this block? My guess is you don't because it is just
+> part of some other block and you are just creating this node to
+> instantiate a driver. Just make the node for the actual h/w block a
+> clock provider and define the clock ids (0 and 1).
+
+This block is not addressed, but its children are. The register we 
+access in this driver is not part of other block. It's a SFR register, 
+accessed through syscon and it has nothing to do with the I2S IP (see 
+SAMA5D2 DS, page 1256, fig. 44-1: I2SC Block Diagram) that is the 
+consumer of this clock. Adding a clock-id property in the I2S node would 
+be just like v3 of this series, with the difference that we use clock-id 
+instead of alias id to set the clock parent, which is not how you 
+suggested back then.
+
+Thank you for your review.
+
+Best regards,
+Codrin
+
+[...]
