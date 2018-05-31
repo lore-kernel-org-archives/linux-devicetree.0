@@ -1,80 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND V4 6/9] dt-bindings: clock: add imx7ulp clock
- binding doc
-Date: Wed, 30 May 2018 19:53:02 -0500
-Message-ID: <20180531005302.GA13776@rob-hp-laptop>
-References: <1527234671-31755-1-git-send-email-aisheng.dong@nxp.com>
- <1527234671-31755-7-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: clk: at91: add an I2S mux clock
+Date: Wed, 30 May 2018 19:58:27 -0500
+Message-ID: <20180531005827.GA17203@rob-hp-laptop>
+References: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
+ <1527251668-31396-2-git-send-email-codrin.ciubotariu@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527234671-31755-7-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1527251668-31396-2-git-send-email-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@kernel.org, mturquette@baylibre.com, shawnguo@kernel.org, Anson.Huang@nxp.com, ping.bai@nxp.com, linux-imx@nxp.com, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
+To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, nicolas.ferre@microchip.com, boris.brezillon@bootlin.com, alexandre.belloni@bootlin.com, broonie@kernel.org, Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 03:51:08PM +0800, Dong Aisheng wrote:
-> i.MX7ULP Clock functions are under joint control of the System
-> Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
-> modules, and Core Mode Controller (CMC)1 blocks
+On Fri, May 25, 2018 at 03:34:22PM +0300, Codrin Ciubotariu wrote:
+> The I2S mux clock can be used to select the I2S input clock. The
+> available parents are the peripheral and the generated clocks.
 > 
-> Note IMX7ULP has two clock domains: M4 and A7. This binding doc
-> is only for A7 clock domain.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Anson Huang <Anson.Huang@nxp.com>
-> Cc: Bai Ping <ping.bai@nxp.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 > ---
-> ChangeLog:
-> v2->v3:
->  * no changes
-> v1->v2: no changes
-> ---
->  .../devicetree/bindings/clock/imx7ulp-clock.txt    |  62 ++++++++++++
->  include/dt-bindings/clock/imx7ulp-clock.h          | 105 +++++++++++++++++++++
->  2 files changed, 167 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
->  create mode 100644 include/dt-bindings/clock/imx7ulp-clock.h
+>  .../devicetree/bindings/clock/at91-clock.txt       | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> new file mode 100644
-> index 0000000..76ea3c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx7ulp-clock.txt
-> @@ -0,0 +1,62 @@
-> +* Clock bindings for Freescale i.MX7ULP
-> +
-> +i.MX7ULP Clock functions are under joint control of the System
-> +Clock Generation (SCG) modules, Peripheral Clock Control (PCC)
-> +modules, and Core Mode Controller (CMC)1 blocks
-> +
-> +The clocking scheme provides clear separation between M4 domain
-> +and A7 domain. Except for a few clock sources shared between two
-> +domains, such as the System Oscillator clock, the Slow IRC (SIRC),
-> +and and the Fast IRC clock (FIRCLK), clock sources and clock
-> +management are separated and contained within each domain.
-> +
-> +M4 clock management consists of SCG0, PCC0, PCC1, and CMC0 modules.
-> +A7 clock management consists of SCG1, PCC2, PCC3, and CMC1 modules.
-> +
-> +Note: this binding doc is only for A7 clock domain.
-> +
-> +Required properties:
-> +
-> +- compatible:	Should be "fsl,imx7ulp-clock".
-> +- reg : 	Should contain registers location and length for scg1,
-> +		pcc2 and pcc3.
-> +- reg-names:	Should contain the according reg names "scg1", "pcc2"
-> +		and "pcc3".
+> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+> index 51c259a..1c46b3c 100644
+> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+> @@ -90,6 +90,8 @@ Required properties:
+>  	"atmel,sama5d2-clk-audio-pll-pmc"
+>  		at91 audio pll output on AUDIOPLLCLK that feeds the PMC
+>  		and can be used by peripheral clock or generic clock
+> +	"atmel,sama5d2-clk-i2s-mux":
+> +		at91 I2S clock source selection
 
-Sounds like separate blocks. These should each be their own node and 
-binding.
+Is this boolean or takes some values. If latter, what are valid values?
+
+>  
+>  Required properties for SCKC node:
+>  - reg : defines the IO memory reserved for the SCKC.
+> @@ -507,3 +509,35 @@ For example:
+>  			atmel,clk-output-range = <0 83000000>;
+>  		};
+>  	};
+> +
+> +Required properties for I2S mux clocks:
+> +- #size-cells : shall be 0 (reg is used to encode I2S bus id).
+> +- #address-cells : shall be 1 (reg is used to encode I2S bus id).
+> +- name: device tree node describing a specific mux clock.
+> +	* #clock-cells : from common clock binding; shall be set to 0.
+> +	* clocks : shall be the mux clock parent phandles; shall be 2 phandles:
+> +	  peripheral and generated clock; the first phandle shall belong to the
+> +	  peripheral clock and the second one shall belong to the generated
+> +	  clock; "clock-indices" property can be user to specify
+> +	  the correct order.
+> +	* reg: I2S bus id of the corresponding mux clock.
+> +	  e.g. reg = <0>; for i2s0, reg = <1>; for i2s1
+> +
+> +For example:
+> +	i2s_clkmux {
+
+What is this a child of?
+
+> +		compatible = "atmel,sama5d2-clk-i2s-mux";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+
+How do you address this block? My guess is you don't because it is just 
+part of some other block and you are just creating this node to 
+instantiate a driver. Just make the node for the actual h/w block a 
+clock provider and define the clock ids (0 and 1).
+
+> +
+> +		i2s0muxck: i2s0_muxclk {
+> +			clocks = <&i2s0_clk>, <&i2s0_gclk>;
+> +			#clock-cells = <0>;
+> +			reg = <0>;
+> +		};
+> +
+> +		i2s1muxck: i2s1_muxclk {
+> +			clocks = <&i2s1_clk>, <&i2s1_gclk>;
+> +			#clock-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
