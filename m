@@ -1,58 +1,27 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v4 2/2] regulator: add QCOM RPMh regulator driver
-Date: Wed, 30 May 2018 16:58:54 -0700
-Message-ID: <5e65b713-6d45-4b33-d05e-6ebe2c6b6cec@codeaurora.org>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <7489cd65fedb8a31488cf8188885759bcd4820ce.1527040878.git.collinsd@codeaurora.org>
- <CAD=FV=WF+onhAAWrbmwcHiWyCjuZ=6vvnhodUsia=Ps-da6_4A@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 2/5] dt-bindings: scsi: ufs: add document for hisi-ufs
+Date: Wed, 30 May 2018 19:10:38 -0500
+Message-ID: <20180531001038.GA1081@rob-hp-laptop>
+References: <20180525091712.37227-1-liwei213@huawei.com>
+ <20180525091712.37227-3-liwei213@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WF+onhAAWrbmwcHiWyCjuZ=6vvnhodUsia=Ps-da6_4A@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180525091712.37227-3-liwei213@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: Li Wei <liwei213@huawei.com>
+Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org, zangleigang@hisilicon.com, gengjianfeng@hisilicon.com, guodong.xu@linaro.org, puck.chen@hisilicon.com, john.stultz@linaro.org, fengbaopeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
-
-On 05/29/2018 10:32 PM, Doug Anderson wrote:
-> On Tue, May 22, 2018 at 7:43 PM, David Collins <collinsd@codeaurora.org> wrote:
->> + * @ever_enabled:              Boolean indicating that the regulator has been
->> + *                             explicitly enabled at least once.  Voltage
->> + *                             requests should be cached when this flag is not
->> + *                             set.
+On Fri, May 25, 2018 at 05:17:09PM +0800, Li Wei wrote:
+> add ufs node document for Hisilicon.
 > 
-> Do you really need this extra boolean?  Can't you just check if
-> "enabled" is still "-EINVAL"?  If it is then you don't pass the
-> voltage along.
-> 
-> ...this would mean that you'd also need to send the voltage vote when
-> the regulator core tries to disable unused regulators at the end of
-> bootup, but that should be OK right?  If we never touched a regulator
-> anywhere at probe time and we're about to vote to disable it, we know
-> there's nobody requiring it to still be on.  We can vote for the
-> voltage now without fear of messing up a vote that the BIOS left in
-> place.
-> 
-> In theory this should also allow you to assert your vote about the
-> voltage of a regulator that has never been enabled, which (if I
-> understand correctly) you consider to be a feature.
+> Signed-off-by: Li Wei <liwei213@huawei.com>
+> ---
+>  Documentation/devicetree/bindings/ufs/ufs-hisi.txt | 41 ++++++++++++++++++++++
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 10 ++++--
+>  2 files changed, 48 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-hisi.txt
 
-Removing 'ever_enabled' and caching the voltage when 'enabled == -EINVAL'
-seems workable.  I'm a little concerned about this resulting in voltage =
-regulator-min-microvolt requests being sent for all regulators that are
-not explicitly enabled by Linux consumers before late_initcall_sync().
-Theoretically all of the boot loader hand-off cases should be taken care
-of by this point so it should be safe.
-
-I'll make this change.
-
-Take care,
-David
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Rob Herring <robh@kernel.org>
