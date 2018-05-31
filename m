@@ -1,33 +1,61 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 07/15] arm: dts: exynos: Add missing cooling device
- properties for CPUs
-Date: Thu, 31 May 2018 10:52:34 +0530
-Message-ID: <20180531052234.tp6pw45ftsf3g2el@vireshk-i7>
-References: <cover.1527244200.git.viresh.kumar@linaro.org>
- <cfd8de4b2ad1cfd7b0f1a0706c0b6b918e1ebffc.1527244201.git.viresh.kumar@linaro.org>
- <CAJKOXPcyV=fdRu7oLXHMimSFR9ktJ23uBriswTStkEkAMbTaNw@mail.gmail.com>
- <20180530043806.ksen4xyh3x3x4fqn@vireshk-i7>
- <CAJKOXPftrzwLMSDeTBBxG-nvpsriBuPEwQAViTcE3DYRYsnzmg@mail.gmail.com>
+From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
+Subject: [PATCHv<8> 0/3] Intel FPGA Video and Image Processing Suite
+Date: Thu, 31 May 2018 13:50:48 +0800
+Message-ID: <1527745851-3339-1-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPftrzwLMSDeTBBxG-nvpsriBuPEwQAViTcE3DYRYsnzmg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, yves.vandervennet@intel.com, hean.loong.ong@intel.com, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 30-05-18, 14:32, Krzysztof Kozlowski wrote:
-> OK, I see the possibility although it is still far away from use
-> cases. You cannot hotplug booting CPU (CPU0) on Exynos kernels. It
-> never worked. Strictly speaking - offlining will work. But bringing it
-> online will likely hang the system.
-
-True and I used the following out of tree patch for a long time for my
-dual A15 exynos to make hotplug work.
-
-https://git.linaro.org/people/vireshk/backup/linux.git/commit/?h=bkp/exynos/hotplug&id=aab8a906a70b8f1fb15a4b7bd2ee27e6dcabf79d
-
--- 
-viresh
+RnJvbTogT25nLCBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+CgpUaGUgRlBH
+QSBGcmFtZUJ1ZmZlciBTb2Z0IElQIGNvdWxkIGJlIHNlZW4gIGFzIHRoZSBHUFUgYW5kIHRoZSBE
+Uk0gZHJpdmVyIHBhdGNoIGhlcmUgaXMgYWxsb2NhdGluZyBtZW1vcnkgZm9yIGluZm9ybWF0aW9u
+IHRvIGJlIHN0cmVhbWVkIGZyb20gdGhlIEFSTS9MaW51eCB0byB0aGUgZGlzcGxheSBwb3J0LgpC
+YXNpY2FsbHkgdGhlIGRyaXZlciBqdXN0IHdyYXBzIHRoZSBpbmZvcm1hdGlvbiBzdWNoIGFzIHRo
+ZSBwaXhlbHMgdG8gYmUgZHJhd24gYnkgdGhlIEZQR0EgRnJhbWVCdWZmZXIgMi4KClRoZSBwaWVj
+ZSBvZiBoYXJkd2FyZSBpbiBkaXNjdXNzaW9uIGlzIHRoZSBTb0MgRlBHQSB3aGVyZSBMaW51eCBy
+dW5zIG9uIHRoZSBBUk0gY2hpcCBhbmQgdGhlIEZHUEEgaXMgZHJpdmVuIGJ5IGl0cyBOSU9TIHNv
+ZnQgY29yZSB3aXRoIGl0cyBvd24gcHJvcHJpZXRhcnkgZmlybXdhcmUuCgpGb3IgZXhhbXBsZSB0
+aGUgYXBwbGljYXRpb24gZnJvbSB0aGUgQVJNIExpbnV4IHdvdWxkIGhhdmUgdG8gd3JpdGUgaW5m
+b3JtYXRpb24gb24gdGhlIC9kZXYvZmIwIHdpdGggdGhlIGluZm9ybWF0aW9uIHN0b3JlZCBpbiB0
+aGUgU0RSQU0gdG8gYmUgZmV0Y2hlZCBieSB0aGUgRlBHQSBmcmFtZWJ1ZmZlciBJUCBhbmQgZGlz
+cGxheWVkIG9uIHRoZSBEaXNwbGF5IFBvcnQgTW9uaXRvci4KCk9uZyBIZWFuIExvb25nICgzKToK
+ICBBUk06ZHQtYmluZGluZ3M6ZGlzcGxheSBJbnRlbCBGUEdBIFZpZGVvIGFuZCBJbWFnZSBQcm9j
+ZXNzaW5nIFN1aXRlCiAgQVJNOnNvY2ZwZ2EtZGVmY29uZmlnIEludGVsIEZQR0EgVmlkZW8gYW5k
+IEltYWdlIFByb2Nlc3NpbmcgU3VpdGUKICBBUk06ZHJtIGl2aXAgSW50ZWwgRlBHQSBWaWRlbyBh
+bmQgSW1hZ2UgUHJvY2Vzc2luZyBTdWl0ZQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYWx0cix2aXAtZmIyLnR4dCAgIHwgIDExMiArKysrKysrKysrKwogYXJjaC9hcm0vY29uZmln
+cy9zb2NmcGdhX2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgfCAgICA1ICsKIGRyaXZlcnMvZ3B1
+L2RybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArCiBkcml2ZXJz
+L2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwogZHJp
+dmVycy9ncHUvZHJtL2l2aXAvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDE0ICsr
+CiBkcml2ZXJzL2dwdS9kcm0vaXZpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAg
+IDkgKwogZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX2Nvbm4uYyAgICAgICAgICAgICAg
+fCAgIDk2ICsrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9jb3JlLmMg
+ICAgICAgICAgICAgIHwgIDE2MiArKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vaXZp
+cC9pbnRlbF92aXBfZHJ2LmggICAgICAgICAgICAgICB8ICAgNTIgKysrKysrCiBkcml2ZXJzL2dw
+dS9kcm0vaXZpcC9pbnRlbF92aXBfb2YuYyAgICAgICAgICAgICAgICB8ICAxOTMgKysrKysrKysr
+KysrKysrKysrKysKIDEwIGZpbGVzIGNoYW5nZWQsIDY0NiBpbnNlcnRpb25zKCspLCAwIGRlbGV0
+aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vaXZpcC9LY29uZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L2l2aXAvTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9p
+bnRlbF92aXBfY29ubi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAv
+aW50ZWxfdmlwX2NvcmUuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlw
+L2ludGVsX3ZpcF9kcnYuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlw
+L2ludGVsX3ZpcF9vZi5jCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
