@@ -1,309 +1,72 @@
-Return-Path: <SRS0=kFcS=IJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-by2nam01on0042.outbound.protection.outlook.com ([104.47.34.42]:36496
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=hnDX=IS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:35432
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751060AbeEVJG2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 May 2018 05:06:28 -0400
-From: Alan Douglas <adouglas@cadence.com>
-Subject: [PATCH v2 2/4] PCI: cadence: Add generic PHY support to host and EP
- drivers
-Date: Tue, 22 May 2018 09:06:26 +0000
-Message-ID: <SN6PR07MB4512B35B884093D58EE5EA9AD8940@SN6PR07MB4512.namprd07.prod.outlook.com>
+        id S932570AbeEaCAq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 30 May 2018 22:00:46 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Date: Thu, 31 May 2018 01:58:12 +0000
+Message-ID: <AM6PR0402MB3382A63FF2884BAD8AF6080BE2630@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+References: <20180525111920.24498-1-wen.he_1@nxp.com>
+ <20180525111920.24498-2-wen.he_1@nxp.com> <20180529070724.GE5666@vkoul-mobl>
+ <AM6PR0402MB3382D42C76332B98D53D001AE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+ <20180529101954.GJ5666@vkoul-mobl>
+ <AM6PR0402MB3382F92D1123CDCA0E0075EDE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+ <20180530102744.GE16230@vkoul-mobl>
+In-Reply-To: <20180530102744.GE16230@vkoul-mobl>
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "bhelgaas@google.com" <bhelgaas@google.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "nsekhar@ti.com" <nsekhar@ti.com>
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Alan Douglas <adouglas@cadence.com>
-
-If PHYs are present, they will be initialized and enabled in driver probe,
-and disabled in driver shutdown.
-
-Signed-off-by: Alan Douglas <adouglas@cadence.com>
----
- drivers/pci/cadence/pcie-cadence-ep.c   | 14 ++++-
- drivers/pci/cadence/pcie-cadence-host.c | 31 +++++++++++
- drivers/pci/cadence/pcie-cadence.c      | 93 +++++++++++++++++++++++++++++=
-++++
- drivers/pci/cadence/pcie-cadence.h      |  7 +++
- 4 files changed, 144 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/cadence/pcie-cadence-ep.c b/drivers/pci/cadence/pc=
-ie-cadence-ep.c
-index 3d8283e..2581caf 100644
---- a/drivers/pci/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/cadence/pcie-cadence-ep.c
-@@ -439,6 +439,7 @@ static int cdns_pcie_ep_probe(struct platform_device *p=
-dev)
- 	struct pci_epc *epc;
- 	struct resource *res;
- 	int ret;
-+	int phy_count;
-=20
- 	ep =3D devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
- 	if (!ep)
-@@ -472,6 +473,12 @@ static int cdns_pcie_ep_probe(struct platform_device *=
-pdev)
- 	if (!ep->ob_addr)
- 		return -ENOMEM;
-=20
-+	ret =3D cdns_pcie_init_phy(dev, pcie);
-+	if (ret) {
-+		dev_err(dev, "failed to init phy\n");
-+		return ret;
-+	}
-+	platform_set_drvdata(pdev, pcie);
- 	pm_runtime_enable(dev);
- 	ret =3D pm_runtime_get_sync(dev);
- 	if (ret < 0) {
-@@ -520,6 +527,10 @@ static int cdns_pcie_ep_probe(struct platform_device *=
-pdev)
-=20
-  err_get_sync:
- 	pm_runtime_disable(dev);
-+	cdns_pcie_disable_phy(pcie);
-+	phy_count =3D pcie->phy_count;
-+	while (phy_count--)
-+		device_link_del(pcie->link[phy_count]);
-=20
- 	return ret;
- }
-@@ -527,6 +538,7 @@ static int cdns_pcie_ep_probe(struct platform_device *p=
-dev)
- static void cdns_pcie_ep_shutdown(struct platform_device *pdev)
- {
- 	struct device *dev =3D &pdev->dev;
-+	struct cdns_pcie *pcie =3D dev_get_drvdata(dev);
- 	int ret;
-=20
- 	ret =3D pm_runtime_put_sync(dev);
-@@ -535,7 +547,7 @@ static void cdns_pcie_ep_shutdown(struct platform_devic=
-e *pdev)
-=20
- 	pm_runtime_disable(dev);
-=20
--	/* The PCIe controller can't be disabled. */
-+	cdns_pcie_disable_phy(pcie);
- }
-=20
- static struct platform_driver cdns_pcie_ep_driver =3D {
-diff --git a/drivers/pci/cadence/pcie-cadence-host.c b/drivers/pci/cadence/=
-pcie-cadence-host.c
-index a4ebbd3..7536926a 100644
---- a/drivers/pci/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/cadence/pcie-cadence-host.c
-@@ -58,6 +58,9 @@ static void __iomem *cdns_pci_map_bus(struct pci_bus *bus=
-, unsigned int devfn,
-=20
- 		return pcie->reg_base + (where & 0xfff);
- 	}
-+	/* Check that the link is up */
-+	if (!(cdns_pcie_readl(pcie, CDNS_PCIE_LM_BASE) & 0x1))
-+		return NULL;
-=20
- 	/* Update Output registers for AXI region 0. */
- 	addr0 =3D CDNS_PCIE_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
-@@ -239,6 +242,7 @@ static int cdns_pcie_host_probe(struct platform_device =
-*pdev)
- 	struct cdns_pcie *pcie;
- 	struct resource *res;
- 	int ret;
-+	int phy_count;
-=20
- 	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*rc));
- 	if (!bridge)
-@@ -290,6 +294,13 @@ static int cdns_pcie_host_probe(struct platform_device=
- *pdev)
- 	}
- 	pcie->mem_res =3D res;
-=20
-+	ret =3D cdns_pcie_init_phy(dev, pcie);
-+	if (ret) {
-+		dev_err(dev, "failed to init phy\n");
-+		return ret;
-+	}
-+	platform_set_drvdata(pdev, pcie);
-+
- 	pm_runtime_enable(dev);
- 	ret =3D pm_runtime_get_sync(dev);
- 	if (ret < 0) {
-@@ -322,15 +333,35 @@ static int cdns_pcie_host_probe(struct platform_devic=
-e *pdev)
-=20
-  err_get_sync:
- 	pm_runtime_disable(dev);
-+	cdns_pcie_disable_phy(pcie);
-+	phy_count =3D pcie->phy_count;
-+	while (phy_count--)
-+		device_link_del(pcie->link[phy_count]);
-=20
- 	return ret;
- }
-=20
-+static void cdns_pcie_shutdown(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct cdns_pcie *pcie =3D dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret =3D pm_runtime_put_sync(dev);
-+	if (ret < 0)
-+		dev_dbg(dev, "pm_runtime_put_sync failed\n");
-+
-+	pm_runtime_disable(dev);
-+	cdns_pcie_disable_phy(pcie);
-+}
-+
-+
- static struct platform_driver cdns_pcie_host_driver =3D {
- 	.driver =3D {
- 		.name =3D "cdns-pcie-host",
- 		.of_match_table =3D cdns_pcie_host_of_match,
- 	},
- 	.probe =3D cdns_pcie_host_probe,
-+	.shutdown =3D cdns_pcie_shutdown,
- };
- builtin_platform_driver(cdns_pcie_host_driver);
-diff --git a/drivers/pci/cadence/pcie-cadence.c b/drivers/pci/cadence/pcie-=
-cadence.c
-index 138d113..681609a 100644
---- a/drivers/pci/cadence/pcie-cadence.c
-+++ b/drivers/pci/cadence/pcie-cadence.c
-@@ -124,3 +124,96 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie =
-*pcie, u32 r)
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), 0);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), 0);
- }
-+
-+void cdns_pcie_disable_phy(struct cdns_pcie *pcie)
-+{
-+	int i =3D pcie->phy_count;
-+
-+	while (i--) {
-+		phy_power_off(pcie->phy[i]);
-+		phy_exit(pcie->phy[i]);
-+	}
-+}
-+
-+int cdns_pcie_enable_phy(struct cdns_pcie *pcie)
-+{
-+	int ret;
-+	int i;
-+
-+	for (i =3D 0; i < pcie->phy_count; i++) {
-+		ret =3D phy_init(pcie->phy[i]);
-+		if (ret < 0)
-+			goto err_phy;
-+
-+		ret =3D phy_power_on(pcie->phy[i]);
-+		if (ret < 0) {
-+			phy_exit(pcie->phy[i]);
-+			goto err_phy;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_phy:
-+	while (--i >=3D 0) {
-+		phy_power_off(pcie->phy[i]);
-+		phy_exit(pcie->phy[i]);
-+	}
-+
-+	return ret;
-+}
-+
-+int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie)
-+{
-+	struct device_node *np =3D dev->of_node;
-+	int phy_count;
-+	struct phy **phy;
-+	struct device_link **link;
-+	int i;
-+	int ret;
-+	const char *name;
-+
-+	phy_count =3D of_property_count_strings(np, "phy-names");
-+	if (phy_count < 1) {
-+		dev_err(dev, "no phy-names.  PHY will not be initialized\n");
-+		pcie->phy_count =3D 0;
-+		return 0;
-+	}
-+
-+	phy =3D devm_kzalloc(dev, sizeof(*phy) * phy_count, GFP_KERNEL);
-+	if (!phy)
-+		return -ENOMEM;
-+
-+	link =3D devm_kzalloc(dev, sizeof(*link) * phy_count, GFP_KERNEL);
-+	if (!link)
-+		return -ENOMEM;
-+
-+	for (i =3D 0; i < phy_count; i++) {
-+		of_property_read_string_index(np, "phy-names", i, &name);
-+		phy[i] =3D devm_phy_get(dev, name);
-+		if (IS_ERR(phy))
-+			return PTR_ERR(phy);
-+
-+		link[i] =3D device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
-+		if (!link[i]) {
-+			ret =3D -EINVAL;
-+			goto err_link;
-+		}
-+	}
-+
-+	pcie->phy_count =3D phy_count;
-+	pcie->phy =3D phy;
-+	pcie->link =3D link;
-+
-+	ret =3D  cdns_pcie_enable_phy(pcie);
-+	if (ret)
-+		goto err_link;
-+
-+	return 0;
-+
-+err_link:
-+	while (--i >=3D 0)
-+		device_link_del(link[i]);
-+
-+	return ret;
-+}
-diff --git a/drivers/pci/cadence/pcie-cadence.h b/drivers/pci/cadence/pcie-=
-cadence.h
-index ed336cc..b342c80 100644
---- a/drivers/pci/cadence/pcie-cadence.h
-+++ b/drivers/pci/cadence/pcie-cadence.h
-@@ -8,6 +8,7 @@
-=20
- #include <linux/kernel.h>
- #include <linux/pci.h>
-+#include <linux/phy/phy.h>
-=20
- /*
-  * Local Management Registers
-@@ -229,6 +230,9 @@ struct cdns_pcie {
- 	struct resource		*mem_res;
- 	bool			is_rc;
- 	u8			bus;
-+	int			phy_count;
-+	struct phy		**phy;
-+	struct device_link	**link;
- };
-=20
- /* Register access */
-@@ -307,5 +311,8 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struc=
-t cdns_pcie *pcie, u8 fn,
- 						  u32 r, u64 cpu_addr);
-=20
- void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
-+void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
-+int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
-+int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
-=20
- #endif /* _PCIE_CADENCE_H */
---=20
-2.2.2
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmlub2QgS291bCBbbWFp
+bHRvOnZpbm9kLmtvdWxAbGluYXJvLm9yZ10NCj4gU2VudDogMjAxOMTqNdTCMzDI1SAxODoyOA0K
+PiBUbzogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogZG1hZW5naW5lQHZnZXIua2Vy
+bmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBKaWFmZWkgUGFuDQo+IDxqaWFmZWkucGFu
+QG54cC5jb20+OyBKaWFoZW5nIEZhbiA8amlhaGVuZy5mYW5AbnhwLmNvbT4NCj4gU3ViamVjdDog
+UmU6IFt2NSAyLzZdIGRtYWVuZ2luZTogZnNsLXFkbWE6IEFkZCBxRE1BIGNvbnRyb2xsZXIgZHJp
+dmVyIGZvcg0KPiBMYXllcnNjYXBlIFNvQ3MNCj4gDQo+IE9uIDI5LTA1LTE4LCAxMDozOCwgV2Vu
+IEhlIHdyb3RlOg0KPiANCj4gPiA+ID4gPiA+ICsJLyoNCj4gPiA+ID4gPiA+ICsJICogQ2xlYXIg
+dGhlIGNvbW1hbmQgcXVldWUgaW50ZXJydXB0IGRldGVjdCByZWdpc3RlciBmb3IgYWxsDQo+ID4g
+PiBxdWV1ZXMuDQo+ID4gPiA+ID4gPiArCSAqLw0KPiA+ID4gPiA+ID4gKwlxZG1hX3dyaXRlbChm
+c2xfcWRtYSwgMHhmZmZmZmZmZiwgYmxvY2sgKw0KPiA+ID4gPiA+ID4gK0ZTTF9RRE1BX0JDUUlE
+UigwKSk7DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBidW5jaCBvZiB3cml0ZXMgd2l0aCAweGZmZmZm
+ZmZmLCBjYW4geW91IGV4cGxhaW4gd2h5PyBBbHNvIGhlbHBzDQo+ID4gPiA+ID4gdG8gbWFrZSBh
+IG1hY3JvIGZvciB0aGlzDQo+ID4gPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gTWF5YmUgSSBtaXNz
+ZWQgdGhhdCBJIHNob3VsZCBkZWZpbmVkIHRoZSB2YWx1ZSB0byB0aGUgbWFjcm8gYW5kDQo+ID4g
+PiA+IGFkZA0KPiA+ID4gY29tbWVudC4NCj4gPiA+ID4gUmlnaHQ/DQo+ID4gPg0KPiA+ID4gdGhh
+dCB3b3VsZCBoZWxwLCBidXQgd2h5IGFyZSB5b3Ugd3JpdGluZyAweGZmZmZmZmZmIGF0IGFsbCB0
+aGVzZSBwbGFjZXM/DQo+ID4NCj4gPiBUaGlzIHZhbHVlIGlzIGZyb20gdGhlIGRhdGFzaGVldC4N
+Cj4gPiBTaG91bGQgSSB3cml0ZSBjb21tZW50cyB0byBoZXJlPw0KPiANCj4gWWVzIHRoYXQgd291
+bGQgaGVscCBleHBsYWluaW5nIHdoYXQgdGhpcyBkb2VzLi4NCj4gDQoNCkdvdCBpdC4gVGhhbmtz
+DQoNCj4gPiA+ID4gPiA+ICtzdGF0aWMgdm9pZCBmc2xfcWRtYV9pc3N1ZV9wZW5kaW5nKHN0cnVj
+dCBkbWFfY2hhbiAqY2hhbikgew0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfY2hhbiAq
+ZnNsX2NoYW4gPSB0b19mc2xfcWRtYV9jaGFuKGNoYW4pOw0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3Qg
+ZnNsX3FkbWFfcXVldWUgKmZzbF9xdWV1ZSA9IGZzbF9jaGFuLT5xdWV1ZTsNCj4gPiA+ID4gPiA+
+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJc3Bp
+bl9sb2NrX2lycXNhdmUoJmZzbF9xdWV1ZS0+cXVldWVfbG9jaywgZmxhZ3MpOw0KPiA+ID4gPiA+
+ID4gKwlzcGluX2xvY2soJmZzbF9jaGFuLT52Y2hhbi5sb2NrKTsNCj4gPiA+ID4gPiA+ICsJaWYg
+KHZjaGFuX2lzc3VlX3BlbmRpbmcoJmZzbF9jaGFuLT52Y2hhbikpDQo+ID4gPiA+ID4gPiArCQlm
+c2xfcWRtYV9lbnF1ZXVlX2Rlc2MoZnNsX2NoYW4pOw0KPiA+ID4gPiA+ID4gKwlzcGluX3VubG9j
+aygmZnNsX2NoYW4tPnZjaGFuLmxvY2spOw0KPiA+ID4gPiA+ID4gKwlzcGluX3VubG9ja19pcnFy
+ZXN0b3JlKCZmc2xfcXVldWUtPnF1ZXVlX2xvY2ssIGZsYWdzKTsNCj4gPiA+ID4gPg0KPiA+ID4g
+PiA+IHdoeSBkbyB3ZSBuZWVkIHR3byBsb2NrcywgYW5kIHNpbmNlIHlvdSBhcmUgZG9pbmcgdmNo
+YW4gd2h5DQo+ID4gPiA+ID4gc2hvdWxkIHlvdSBhZGQgeW91ciBvd24gbG9jayBvbiB0b3ANCj4g
+PiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBZZXMsIHdlIG5lZWQgdHdvIGxvY2tzLg0KPiA+ID4g
+PiBBcyB5b3Uga25vdywgdGhlIFFETUEgc3VwcG9ydCBtdWx0aXBsZSB2aXJ0dWFsaXplZCBibG9j
+a3MgZm9yDQo+ID4gPiA+IG11bHRpLWNvcmUNCj4gPiA+IHN1cHBvcnQuDQo+ID4gPiA+IHNvIHdl
+IG5lZWQgdG8gbWFrZSBzdXJlIHRoYXQgbXVsaXRpLWNvcmUgYWNjZXNzIGlzc3Vlcy4NCj4gPiA+
+DQo+ID4gPiBidXQgd2h5IGNhbnQgeW91IHVzZSB2Y2hhbiBsb2NrIGZvciBhbGw/DQo+ID4gPg0K
+PiA+DQo+ID4gV2UgY2FuJ3Qgb25seSB1c2UgdmNoYW4gbG9jayBmb3IgYWxsLiBvdGhlcndpc2Ug
+ZW5xdWV1ZSBhY3Rpb24gd2lsbCBiZQ0KPiBpbnRlcnJ1cHRlZC4NCj4gDQo+IEkgdGhpbmsgaXQg
+aXMgcG9zc2libGUgdG8gdXNlIG9ubHkgdmNoYW4gbG9jaw0KPiANCg0KSSB0cmllZCB0aGF0IGlm
+IEkgdXNlIG9ubHkgdmNoYW4gbG9jayB0aGVuIHFkbWEgd2lsbCBiZSBjYW4ndCB3b3JrLg0KRG8g
+eW91IGhhdmUgYSBvdGhlciBnb29kIGlkZWE/DQoNCkJlc3QgUmVnYXJkcywNCldlbg0KDQo+IC0t
+DQo+IH5WaW5vZA0K
