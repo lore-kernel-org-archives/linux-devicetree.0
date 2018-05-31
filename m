@@ -1,36 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/6] bus: ti-sysc: Add support for using ti-sysc for
- MCAN on dra76x
-Date: Wed, 30 May 2018 23:08:32 -0500
-Message-ID: <20180531040832.GA30763@rob-hp-laptop>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-5-faiz_abbas@ti.com>
+Subject: Re: [PATCH v1] media: dt: bindings: tegra-vde: Document new optional
+ Memory Client reset property
+Date: Wed, 30 May 2018 23:11:29 -0500
+Message-ID: <20180531041129.GA566@rob-hp-laptop>
+References: <20180526143355.24288-1-digetx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180530141133.3711-5-faiz_abbas@ti.com>
+In-Reply-To: <20180526143355.24288-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 07:41:31PM +0530, Faiz Abbas wrote:
-> The dra76x MCAN generic interconnect module has a its own
-> format for the bits in the control registers.
+On Sat, May 26, 2018 at 05:33:55PM +0300, Dmitry Osipenko wrote:
+> Recently binding of the Memory Controller has been extended, exposing
+> the Memory Client reset controls and hence it is now a reset controller.
+> Tegra video-decoder device is among the Memory Controller reset users,
+> document the new optional VDE HW reset property.
 > 
-> Therefore add a new module type, new regbits and new capabilities
-> specific to the MCAN module.
-> 
-> CC: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  .../devicetree/bindings/bus/ti-sysc.txt         |  1 +
->  drivers/bus/ti-sysc.c                           | 17 +++++++++++++++++
->  include/dt-bindings/bus/ti-sysc.h               |  2 ++
->  include/linux/platform_data/ti-sysc.h           |  1 +
->  4 files changed, 21 insertions(+)
-
-For the DT bits:
+>  .../devicetree/bindings/media/nvidia,tegra-vde.txt    | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
