@@ -1,48 +1,36 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 5/6] ARM: dts: Add generic interconnect target module
- node for MCAN
-Date: Thu, 31 May 2018 06:41:09 -0700
-Message-ID: <20180531134109.GJ5705@atomide.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-6-faiz_abbas@ti.com>
- <20180531040638.GA26751@rob-hp-laptop>
- <be0fd711-c44b-dbe2-648f-08aa88c7aec4@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: avifishman70@gmail.com
+Subject: [PATCH v2 3/3] MAINTAINERS: add subfolders for nuvoton *npcm*
+Date: Thu, 31 May 2018 16:40:46 +0300
+Message-ID: <1527774046-7952-4-git-send-email-avifishman70@gmail.com>
+References: <1527774046-7952-1-git-send-email-avifishman70@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <be0fd711-c44b-dbe2-648f-08aa88c7aec4@ti.com>
+In-Reply-To: <1527774046-7952-1-git-send-email-avifishman70@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com
+To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc: avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Avi Fishman <AviFishman70@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180531 11:27]:
-> On Thursday 31 May 2018 09:36 AM, Rob Herring wrote:
-> > On Wed, May 30, 2018 at 07:41:32PM +0530, Faiz Abbas wrote:
-> >> --- a/arch/arm/boot/dts/dra76x.dtsi
-> >> +++ b/arch/arm/boot/dts/dra76x.dtsi
-> >> @@ -11,6 +11,25 @@
-> >>  / {
-> >>  	compatible = "ti,dra762", "ti,dra7";
-> >>  
-> >> +	ocp {
-> >> +
-> >> +		target-module@0x42c00000 {
-> > 
-> > Build your dtb with W=1 and fix warnings you add (drop '0x').
-> 
-> Sure, Will fix this.
-> > 
-> > This is a CAN bus controller? If so, then use 'can' for node name.
-> 
-> Yes but I am using m_can along the lines of dcan in other boards (For
-> example, see arch/arm/boot/dts/am33xx.dtsi:1046). Are you saying all CAN
-> controllers should only be called can?
+From: Avi Fishman <AviFishman70@gmail.com>
 
-The module should be target-module@42c00000 and the child(ren)
-can@1a00 or mcan@1a00 if mcan is different from can.
+Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
+---
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Regards,
-
-Tony
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e0ce3c5f32e5..23c450adad44 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1727,7 +1727,10 @@ F:	arch/arm/mach-npcm/
+ F:	arch/arm/boot/dts/nuvoton-npcm*
+ F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
+ F:	drivers/*/*npcm*
++F:	drivers/*/*/*npcm*
+ F:	Documentation/*/*npcm*
++F:	Documentation/*/*/*npcm*
++F:	Documentation/*/*/*/*npcm*
+ 
+ ARM/NUVOTON W90X900 ARM ARCHITECTURE
+ M:	Wan ZongShun <mcuos.com@gmail.com>
+-- 
+2.14.1
