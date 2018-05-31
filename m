@@ -1,85 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/2] arm64: dts: renesas: condor: add I2C0 support
-Date: Thu, 31 May 2018 23:26:49 +0300
-Message-ID: <2ea2c8bc-2abd-57fa-9c13-2ff55b41e0d4@cogentembedded.com>
-References: <2a88f4e9-0a86-8e6f-0ef2-20913dc9431d@cogentembedded.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RESEND PATCH 2/5] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Thu, 31 May 2018 22:30:27 +0200
+Message-ID: <20180531223027.57e36d0b@bbrezillon>
+References: <cover.1526990589.git.stefan@agner.ch>
+        <86fdf19ec92b732709732fb60199f16488b4b727.1526990589.git.stefan@agner.ch>
+        <20180528000422.7f18dc5f@xps13>
+        <047a9a5e72c8db52858a505865d4f720@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2a88f4e9-0a86-8e6f-0ef2-20913dc9431d@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <047a9a5e72c8db52858a505865d4f720@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, robh+dt@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, thierry.reding@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, dev@lynxeye.de, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define the Condor board dependent part of the I2C0 device node.
+On Thu, 31 May 2018 19:54:08 +0200
+Stefan Agner <stefan@agner.ch> wrote:
 
-The I2C0 bus is populated by 2 ON Semiconductor PCA9654 I/O expanders
-and Analog Devices  ADV7511W HDMI transmitter (but we're only describing
-the former chips now).
+> >> +
+> >> +	mtd->dev.parent = &pdev->dev;
+> >> +	mtd->name = "tegra_nand";  
+> > 
+> > I just figured it was undocumented (yet) but you could have a label
+> > string property in your nand DT node that tells you the name of the
+> > MTD device instead of something too generic like tegra_nand.
+> >   
+> 
+> Using label in the NAND chip subnode actually causes current U-Boot to
+> delete (!!) the chip node and create partitions on the controller node.
+> 
+> See:
+> https://elixir.bootlin.com/u-boot/latest/source/common/fdt_support.c#L757
+> 
+> The code essentially uses the property label to detect whether its a
+> NAND chip or a partition...
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Why not fixing that in uboot? The representation where the NAND device
+and NAND controller are mixed in a single node called nand@xxx is just
+wrong from a HW PoV, and it seems uboot is using this representation,
+which is probably why you have a problem when trying to find the
+partition directly under the NAND controller node.
 
----
-Changes in version 2:
-- added Simon's tag.
+> 
+> At least this is the case when using fdt_fixup_mtdparts and passing the
+> controller compatible ("nvidia,tegra20-nand") in node_info,
 
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts |   27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Just a digression, but I recommend using
+"nvidia,tegra20-nand-controller" for the compatible, because the node
+is describing the NAND controller not the NAND chip. 
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -80,6 +80,28 @@
- 	clock-frequency = <32768>;
- };
- 
-+&i2c0 {
-+	pinctrl-0 = <&i2c0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	io_expander0: gpio@20 {
-+		compatible = "onnn,pca9654";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	io_expander1: gpio@21 {
-+		compatible = "onnn,pca9654";
-+		reg = <0x21>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-0 = <&mmc_pins>;
- 	pinctrl-1 = <&mmc_pins_uhs>;
-@@ -104,6 +126,11 @@
- 		function = "canfd0";
- 	};
- 
-+	i2c0_pins: i2c0 {
-+		groups = "i2c0";
-+		function = "i2c0";
-+	};
-+
- 	mmc_pins: mmc {
- 		groups = "mmc_data8", "mmc_ctrl", "mmc_ds";
- 		function = "mmc";
+> what our
+> downstream U-Boot is currently doing. Maybe we should pass the
+> compatible property of the NAND chip?
+
+Or maybe you should search for partitions in children of the controller
+node instead of searching directly under the controller node itself.
+
+> But afaik, chips do not have a
+> compatible necessarily.
+
+Nope, and it should stay like that.
+
+> 
+> So using label in the chip node is currently a no-go for me.
+
+I hope I'm wrong but I fear this is not the only problem you'll face
+when switching to a controller+chip representation. This is just the
+tip of the iceberg.
+
+> 
+> Will send out v3 soon.
+
+Sure, let's see how v3 looks.
