@@ -1,7 +1,7 @@
 From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: [PATCH v2 1/5] media: venus: add a routine to reset ARM9
-Date: Sat,  2 Jun 2018 01:56:04 +0530
-Message-ID: <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
+Subject: [PATCH v2 3/5] venus: add check to make scm calls
+Date: Sat,  2 Jun 2018 01:56:06 +0530
+Message-ID: <1527884768-22392-4-git-send-email-vgarodia@codeaurora.org>
 References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
@@ -10,81 +10,165 @@ To: hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.co
 Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, vgarodia@codeaurora.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new routine to reset the ARM9 and brings it
-out of reset. This is in preparation to add PIL
-functionality in venus driver.
+Split the boot api into firmware load and hardware
+boot. Also add the checks to invoke scm calls only
+if the platform has the required support.
 
 Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
 ---
- drivers/media/platform/qcom/venus/firmware.c     | 26 ++++++++++++++++++++++++
- drivers/media/platform/qcom/venus/hfi_venus_io.h |  5 +++++
- 2 files changed, 31 insertions(+)
+ drivers/media/platform/qcom/venus/core.c     |  4 +-
+ drivers/media/platform/qcom/venus/firmware.c | 65 ++++++++++++++++++----------
+ drivers/media/platform/qcom/venus/firmware.h |  2 +-
+ 3 files changed, 45 insertions(+), 26 deletions(-)
 
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 1308488..9a95f9a 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -84,7 +84,7 @@ static void venus_sys_error_handler(struct work_struct *work)
+ 
+ 	pm_runtime_get_sync(core->dev);
+ 
+-	ret |= venus_boot(core->dev, core->res->fwname);
++	ret |= venus_boot(core);
+ 
+ 	ret |= hfi_core_resume(core, true);
+ 
+@@ -279,7 +279,7 @@ static int venus_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_runtime_disable;
+ 
+-	ret = venus_boot(dev, core->res->fwname);
++	ret = venus_boot(core);
+ 	if (ret)
+ 		goto err_runtime_disable;
+ 
 diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-index 521d4b3..7d89b5a 100644
+index b4664ed..cb7f48ef 100644
 --- a/drivers/media/platform/qcom/venus/firmware.c
 +++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -14,6 +14,7 @@
+@@ -81,40 +81,35 @@ int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
+ }
+ EXPORT_SYMBOL_GPL(venus_set_hw_state);
  
- #include <linux/device.h>
- #include <linux/firmware.h>
-+#include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/io.h>
- #include <linux/of.h>
-@@ -22,11 +23,36 @@
- #include <linux/sizes.h>
- #include <linux/soc/qcom/mdt_loader.h>
- 
-+#include "core.h"
- #include "firmware.h"
-+#include "hfi_venus_io.h"
- 
- #define VENUS_PAS_ID			9
- #define VENUS_FW_MEM_SIZE		(6 * SZ_1M)
- 
-+static void venus_reset_hw(struct venus_core *core)
-+{
-+	void __iomem *reg_base = core->base;
-+
-+	writel(0, reg_base + WRAPPER_FW_START_ADDR);
-+	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_FW_END_ADDR);
-+	writel(0, reg_base + WRAPPER_CPA_START_ADDR);
-+	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_CPA_END_ADDR);
-+	writel(0x0, reg_base + WRAPPER_CPU_CGC_DIS);
-+	writel(0x0, reg_base + WRAPPER_CPU_CLOCK_CONFIG);
-+
-+	/* Make sure all register writes are committed. */
-+	mb();
-+
-+	/*
-+	 * Need to wait 10 cycles of internal clocks before bringing ARM9
-+	 * out of reset.
-+	 */
-+	udelay(1);
-+
-+	/* Bring Arm9 out of reset */
-+	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
-+}
- int venus_boot(struct device *dev, const char *fwname)
+-int venus_boot(struct device *dev, const char *fwname)
++static int venus_load_fw(struct device *dev, const char *fwname,
++		phys_addr_t *mem_phys, size_t *mem_size)
  {
  	const struct firmware *mdt;
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus_io.h b/drivers/media/platform/qcom/venus/hfi_venus_io.h
-index 76f4793..39afa5d 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus_io.h
-+++ b/drivers/media/platform/qcom/venus/hfi_venus_io.h
-@@ -109,6 +109,11 @@
- #define WRAPPER_CPU_CGC_DIS			(WRAPPER_BASE + 0x2010)
- #define WRAPPER_CPU_STATUS			(WRAPPER_BASE + 0x2014)
- #define WRAPPER_SW_RESET			(WRAPPER_BASE + 0x3000)
-+#define WRAPPER_CPA_START_ADDR		(WRAPPER_BASE + 0x1020)
-+#define WRAPPER_CPA_END_ADDR		(WRAPPER_BASE + 0x1024)
-+#define WRAPPER_FW_START_ADDR		(WRAPPER_BASE + 0x1028)
-+#define WRAPPER_FW_END_ADDR			(WRAPPER_BASE + 0x102C)
-+#define WRAPPER_A9SS_SW_RESET		(WRAPPER_BASE + 0x3000)
+ 	struct device_node *node;
+-	phys_addr_t mem_phys;
+ 	struct resource r;
+ 	ssize_t fw_size;
+-	size_t mem_size;
+ 	void *mem_va;
+ 	int ret;
  
- /* Venus 4xx */
- #define WRAPPER_VCODEC0_MMCC_POWER_STATUS	(WRAPPER_BASE + 0x90)
+-	if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER) || !qcom_scm_is_available())
+-		return -EPROBE_DEFER;
+-
+ 	node = of_parse_phandle(dev->of_node, "memory-region", 0);
+ 	if (!node) {
+ 		dev_err(dev, "no memory-region specified\n");
+ 		return -EINVAL;
+ 	}
+-
+ 	ret = of_address_to_resource(node, 0, &r);
+ 	if (ret)
+ 		return ret;
+ 
+-	mem_phys = r.start;
+-	mem_size = resource_size(&r);
++	*mem_phys = r.start;
++	*mem_size = resource_size(&r);
+ 
+-	if (mem_size < VENUS_FW_MEM_SIZE)
++	if (*mem_size < VENUS_FW_MEM_SIZE)
+ 		return -EINVAL;
+ 
+-	mem_va = memremap(r.start, mem_size, MEMREMAP_WC);
++	mem_va = memremap(r.start, *mem_size, MEMREMAP_WC);
+ 	if (!mem_va) {
+ 		dev_err(dev, "unable to map memory region: %pa+%zx\n",
+-			&r.start, mem_size);
++			&r.start, *mem_size);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -128,25 +123,49 @@ int venus_boot(struct device *dev, const char *fwname)
+ 		release_firmware(mdt);
+ 		goto err_unmap;
+ 	}
+-
+-	ret = qcom_mdt_load(dev, mdt, fwname, VENUS_PAS_ID, mem_va, mem_phys,
+-			    mem_size);
++	if (qcom_scm_is_available())
++		ret = qcom_mdt_load(dev, mdt, fwname, VENUS_PAS_ID, mem_va,
++				*mem_phys, *mem_size, NULL);
++	else
++		ret = qcom_mdt_load_no_init(dev, mdt, fwname, VENUS_PAS_ID,
++				mem_va, *mem_phys, *mem_size, NULL);
+ 
+ 	release_firmware(mdt);
+ 
+-	if (ret)
+-		goto err_unmap;
+-
+-	ret = qcom_scm_pas_auth_and_reset(VENUS_PAS_ID);
+-	if (ret)
+-		goto err_unmap;
+-
+ err_unmap:
+ 	memunmap(mem_va);
+ 	return ret;
+ }
++int venus_boot(struct venus_core *core)
++{
++	phys_addr_t mem_phys;
++	size_t mem_size;
++	int ret;
++	struct device *dev;
++
++	if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER))
++		return -EPROBE_DEFER;
++
++	dev = core->dev;
++
++	ret = venus_load_fw(dev, core->res->fwname, &mem_phys, &mem_size);
++	if (ret) {
++		dev_err(dev, "fail to load video firmware\n");
++		return -EINVAL;
++	}
++
++	if (qcom_scm_is_available())
++		ret = qcom_scm_pas_auth_and_reset(VENUS_PAS_ID);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(venus_boot);
+ 
+ int venus_shutdown(struct device *dev)
+ {
+-	return qcom_scm_pas_shutdown(VENUS_PAS_ID);
++	int ret = 0;
++
++	if (qcom_scm_is_available())
++		ret = qcom_scm_pas_shutdown(VENUS_PAS_ID);
++	return ret;
+ }
+diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
+index 1336729..0916826 100644
+--- a/drivers/media/platform/qcom/venus/firmware.h
++++ b/drivers/media/platform/qcom/venus/firmware.h
+@@ -16,7 +16,7 @@
+ 
+ struct device;
+ 
+-int venus_boot(struct device *dev, const char *fwname);
++int venus_boot(struct venus_core *core);
+ int venus_shutdown(struct device *dev);
+ int venus_set_hw_state(enum tzbsp_video_state, struct venus_core *core);
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
