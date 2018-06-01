@@ -1,102 +1,55 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v2 1/5] media: venus: add a routine to reset ARM9
-Date: Sat, 2 Jun 2018 01:15:59 +0300
-Message-ID: <894ab678-bc1d-da04-b552-d53301bd3980@linaro.org>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 2/8] dt-bindings: media: Document data-enable-active
+ property
+Date: Sat, 2 Jun 2018 01:35:07 +0300
+Message-ID: <20180601223506.n4cbfkm2cxbwixsi@kekkonen.localdomain>
+References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1527606359-19261-3-git-send-email-jacopo+renesas@jmondi.org>
+ <20180601102910.3qhe6bhg3w263chq@paasikivi.fi.intel.com>
+ <20180601145827.GG10472@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, stanimir.varbanov@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180601145827.GG10472@w540>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikash,
-
-On  1.06.2018 23:26, Vikash Garodia wrote:
-> Add a new routine to reset the ARM9 and brings it
-> out of reset. This is in preparation to add PIL
-> functionality in venus driver.
-
-please squash this patch with 4/5. I don't see a reason to add a 
-function which is not used. Shouldn't this produce gcc warnings?
-
+On Fri, Jun 01, 2018 at 04:58:27PM +0200, jacopo mondi wrote:
+> Hi Sakari,
 > 
-> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
-> ---
->   drivers/media/platform/qcom/venus/firmware.c     | 26 ++++++++++++++++++++++++
->   drivers/media/platform/qcom/venus/hfi_venus_io.h |  5 +++++
->   2 files changed, 31 insertions(+)
+> On Fri, Jun 01, 2018 at 01:29:10PM +0300, Sakari Ailus wrote:
+> > Hi Jacopo,
+> >
+> > Thanks for the patch.
+> >
+> > On Tue, May 29, 2018 at 05:05:53PM +0200, Jacopo Mondi wrote:
+> > > Add 'data-enable-active' property to endpoint node properties list.
+> > >
+> > > The property allows to specify the polarity of the data-enable signal, which
+> > > when in active state determinates when data lanes have to sampled for valid
+> > > pixel data.
+> >
+> > Lanes or lines? I understand this is forthe parallel interface.
+> >
 > 
-> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-> index 521d4b3..7d89b5a 100644
-> --- a/drivers/media/platform/qcom/venus/firmware.c
-> +++ b/drivers/media/platform/qcom/venus/firmware.c
-> @@ -14,6 +14,7 @@
->   
->   #include <linux/device.h>
->   #include <linux/firmware.h>
-> +#include <linux/delay.h>
->   #include <linux/kernel.h>
->   #include <linux/io.h>
->   #include <linux/of.h>
-> @@ -22,11 +23,36 @@
->   #include <linux/sizes.h>
->   #include <linux/soc/qcom/mdt_loader.h>
->   
-> +#include "core.h"
->   #include "firmware.h"
-> +#include "hfi_venus_io.h"
->   
->   #define VENUS_PAS_ID			9
->   #define VENUS_FW_MEM_SIZE		(6 * SZ_1M)
->   
-> +static void venus_reset_hw(struct venus_core *core)
+> Now I'm confused. Are the parallel data 'lines' and the CSI-2 one
+> 'lanes'? I thought 'lanes' applies to both.. am I wrong?
 
-can we rename this to venus_reset_cpu? reset_hw sounds like we reset 
-vcodec IPs, so I think we can be more exact here.
+"Lane" is conventionally refer to a differential pair of wires on a serial
+bus such as CSI-2. "Line" is used of a wire on a parallel bus.
 
-> +{
-> +	void __iomem *reg_base = core->base;
-
-just 'base', please.
-
-> +
-> +	writel(0, reg_base + WRAPPER_FW_START_ADDR);
-> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_FW_END_ADDR);
-> +	writel(0, reg_base + WRAPPER_CPA_START_ADDR);
-> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_CPA_END_ADDR);
-> +	writel(0x0, reg_base + WRAPPER_CPU_CGC_DIS);
-> +	writel(0x0, reg_base + WRAPPER_CPU_CLOCK_CONFIG);
-> +
-> +	/* Make sure all register writes are committed. */
-> +	mb();
-
-the comment says "register writes" hence shouldn't this be wmb? Also if 
-we are going to have explicit memory barrier why not use writel_relaxed?
-
-> +
-> +	/*
-> +	 * Need to wait 10 cycles of internal clocks before bringing ARM9
-
-Do we know what is the minimum frequency of the internal ARM9 clocks? 
-I.e does 1us is enough for all venus versions.
-
-> +	 * out of reset.
-> +	 */
-> +	udelay(1);
-> +
-> +	/* Bring Arm9 out of reset */
-
-ARM9
-
-> +	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
-
-in my opinion we should have a wmb here too
-
-regards,
-Stan
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
