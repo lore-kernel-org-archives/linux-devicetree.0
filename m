@@ -1,122 +1,52 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 2/8] dt-bindings: media: Document data-enable-active
- property
-Date: Fri, 1 Jun 2018 16:58:27 +0200
-Message-ID: <20180601145827.GG10472@w540>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
- <1527606359-19261-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180601102910.3qhe6bhg3w263chq@paasikivi.fi.intel.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: allwinner: a64-amarula-relic:
+ Enable AP6330 WiFi support
+Date: Fri, 1 Jun 2018 17:06:28 +0200
+Message-ID: <20180601150628.zqo6jjd6ch5dvqtl@flea>
+References: <20180531165109.8476-1-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3504235763235026476=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180601102910.3qhe6bhg3w263chq@paasikivi.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fdsrlxivdtqrlhbd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5WBYXMAKGQEXZVMOYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180531165109.8476-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============3504235763235026476==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/Zw+/jwnNHcBRYYu"
+--fdsrlxivdtqrlhbd
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
+Hi,
 
---/Zw+/jwnNHcBRYYu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On Thu, May 31, 2018 at 10:21:09PM +0530, Jagan Teki wrote:
+> Enable AP6330 WiFi/BT combo chip on Amarula A64-Relic board:
+> - WiFi SDIO interface is connected to MMC1
+> - WiFi WL-PMU-EN pin connected to gpio PL2: attach to mmc-pwrseq
+> - WiFi WL-WAKE-AP pin connected to gpio PL3
+> - 32kHz external oscillator gate clock from RTC
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+> Changes for v2:
+> - Move external rtc clock nodes into main rtc node definition
+>   of sun50i-a64.dtsi
 
-Hi Sakari,
+Please make that a separate patch.
 
-On Fri, Jun 01, 2018 at 01:29:10PM +0300, Sakari Ailus wrote:
-> Hi Jacopo,
->
-> Thanks for the patch.
->
-> On Tue, May 29, 2018 at 05:05:53PM +0200, Jacopo Mondi wrote:
-> > Add 'data-enable-active' property to endpoint node properties list.
-> >
-> > The property allows to specify the polarity of the data-enable signal, which
-> > when in active state determinates when data lanes have to sampled for valid
-> > pixel data.
->
-> Lanes or lines? I understand this is forthe parallel interface.
->
-
-Now I'm confused. Are the parallel data 'lines' and the CSI-2 one
-'lanes'? I thought 'lanes' applies to both.. am I wrong?
-
-Thanks
-   j
-
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> > v3:
-> > - new patch
-> > ---
-> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index 258b8df..9839d26 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -109,6 +109,8 @@ Optional endpoint properties
-> >    Note, that if HSYNC and VSYNC polarities are not specified, embedded
-> >    synchronization may be required, where supported.
-> >  - data-active: similar to HSYNC and VSYNC, specifies data line polarity.
-> > +- data-enable-active: similar to HSYNC and VSYNC, specifies the data enable
-> > +  signal polarity.
-> >  - field-even-active: field signal level during the even field data transmission.
-> >  - pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
-> >    signal.
->
-> --
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
-
---/Zw+/jwnNHcBRYYu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbEV8TAAoJEHI0Bo8WoVY85bcQALq9QCXDqB94Jyxv6MRl2o8z
-O3sXzppQ7wYp3eNswDFsSOhlXLunaXhJTvgXAeg60wKbeLVRqcxJXxdf9VTfLxoW
-kLo/rmrwy0VDuf38FeujZYMc7u2oYlgGYIsnlSg8g/Jhmjj8AgEOuhUQCzSmuTxV
-BfksqYqyrey2n8G3G3INS51pKIm/IzSeOSucHbzp/s2QiHJNRXqetVMCZejMHT3f
-WV5BE6UmBklUwBL/1dlOzWCzFSAHPV/rPyPhiSjB+QNURBQmszdDXBGmFzu14E8Z
-lOvpq0NUInTmqj9g011MAI7AuJSQrPhXS6v9BbzGxLtZKRjqXvCAyrKS8LOpajXP
-fx23Bt2CS9ZuvBKxFQ/8XwgyGkxjhM8/6gyiJrBzh3UlqdUTsA+yUPvHnKjAn4V7
-YzUT3j2USWumE3rZRxchmp3vj+a5w49rWWOLMbT8e22FLo28k/OPk7muLAYA8NrF
-GRArj8madmoVRe2Ijsj25Sfypf3C07qOzvgLu5jurRgwZXfNOpszvDQwera17uRt
-3goUe0El/pqQt+mkf5UG3UZcaLoJ0pAYOhirrCik/2qZT5CpNT3tTsMoV7BBfTnh
-BtfOwL8BNp0eDtWYvPD+nHyjc6571zVn0F8XzCOu2plP70CxwmtPyd3+PVOYYt+i
-WO8gyTlmVA/LAq7TecCt
-=Ttaf
------END PGP SIGNATURE-----
-
---/Zw+/jwnNHcBRYYu--
-
-
---===============3504235763235026476==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3504235763235026476==--
+Maxime
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--fdsrlxivdtqrlhbd--
