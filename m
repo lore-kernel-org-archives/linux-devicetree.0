@@ -1,82 +1,35 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 05/15] arm: dts: uniphier: Add missing cooling device
- properties for CPUs
-Date: Fri, 1 Jun 2018 12:25:56 +0900
-Message-ID: <CAK7LNATuDC4i1VoA6W7DmPDuiqOWix0SbWa2baOsfAi-Fk7vBw@mail.gmail.com>
-References: <cover.1527244200.git.viresh.kumar@linaro.org> <51ac4a5f0466aeed3f223663d9c34d6345b2a1f2.1527244201.git.viresh.kumar@linaro.org>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v2 0/2] slimbus: Add QCOM SLIMBus NGD driver
+Date: Fri, 1 Jun 2018 10:44:26 +0530
+Message-ID: <20180601051426.GL16230@vkoul-mobl>
+References: <20180525111547.18556-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51ac4a5f0466aeed3f223663d9c34d6345b2a1f2.1527244201.git.viresh.kumar@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180525111547.18556-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm-soc <arm@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, kramasub@codeaurora.org, sdharia@quicinc.com, girishm@quicinc.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-2018-05-25 19:31 GMT+09:00 Viresh Kumar <viresh.kumar@linaro.org>:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
->
-> Add such missing properties.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+On 25-05-18, 12:15, Srinivas Kandagatla wrote:
+> This patchset adds support to basic version of Qualcomm NGD SLIMBus
+> controller driver found SoCs from B family.
+> 
+> This controller is light-weight SLIMBus controller driver responsible for
+> communicating with slave HW directly over the bus using messaging
+> interface, and communicating with master component residing on ADSP
+> for bandwidth and data-channel management.
+> 
+> Tested this patchset on DB820c with WCD9335 codec.
+> I have pushed my working branch to [1] incase someone want to try.
+> 
+> This patch has dependency on https://lkml.org/lkml/2018/5/17/251
 
+Looks good to me know, FWIW:
 
-Applied to linux-uniphier.
-
-I had already sent a PR for v4.18-rc1 before I received this patch.
-Please wait for v4.19-rc1.
-
-Thanks.
-
-
-> ---
->  arch/arm/boot/dts/uniphier-pxs2.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> index debcbd15c24b..40ed15465095 100644
-> --- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> @@ -36,6 +36,7 @@
->                         enable-method = "psci";
->                         next-level-cache = <&l2>;
->                         operating-points-v2 = <&cpu_opp>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu2: cpu@2 {
-> @@ -46,6 +47,7 @@
->                         enable-method = "psci";
->                         next-level-cache = <&l2>;
->                         operating-points-v2 = <&cpu_opp>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 cpu3: cpu@3 {
-> @@ -56,6 +58,7 @@
->                         enable-method = "psci";
->                         next-level-cache = <&l2>;
->                         operating-points-v2 = <&cpu_opp>;
-> +                       #cooling-cells = <2>;
->                 };
->         };
->
-> --
-> 2.15.0.194.g9af6a3dea062
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
 -- 
-Best Regards
-Masahiro Yamada
+~Vinod
