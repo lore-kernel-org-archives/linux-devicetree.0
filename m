@@ -1,55 +1,109 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v3 2/8] dt-bindings: media: Document data-enable-active
- property
-Date: Sat, 2 Jun 2018 01:35:07 +0300
-Message-ID: <20180601223506.n4cbfkm2cxbwixsi@kekkonen.localdomain>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
- <1527606359-19261-3-git-send-email-jacopo+renesas@jmondi.org>
- <20180601102910.3qhe6bhg3w263chq@paasikivi.fi.intel.com>
- <20180601145827.GG10472@w540>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180601145827.GG10472@w540>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] of: platform: stop accessing invalid dev in of_platform_device_destroy
+Date: Fri,  1 Jun 2018 23:58:22 +0100
+Message-ID: <20180601225822.23439-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, frowand.list@gmail.com
+Cc: linux-arm-msm@vger.kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 04:58:27PM +0200, jacopo mondi wrote:
-> Hi Sakari,
-> 
-> On Fri, Jun 01, 2018 at 01:29:10PM +0300, Sakari Ailus wrote:
-> > Hi Jacopo,
-> >
-> > Thanks for the patch.
-> >
-> > On Tue, May 29, 2018 at 05:05:53PM +0200, Jacopo Mondi wrote:
-> > > Add 'data-enable-active' property to endpoint node properties list.
-> > >
-> > > The property allows to specify the polarity of the data-enable signal, which
-> > > when in active state determinates when data lanes have to sampled for valid
-> > > pixel data.
-> >
-> > Lanes or lines? I understand this is forthe parallel interface.
-> >
-> 
-> Now I'm confused. Are the parallel data 'lines' and the CSI-2 one
-> 'lanes'? I thought 'lanes' applies to both.. am I wrong?
+Immediately after the platform_device_unregister() the device will be cleaned up.
+Accessing the freed pointer immediately after that will crash the system.
 
-"Lane" is conventionally refer to a differential pair of wires on a serial
-bus such as CSI-2. "Line" is used of a wire on a parallel bus.
+Found this bug when kernel is built with CONFIG_PAGE_POISONING and testing
+loading/unloading audio drivers in a loop on Qcom platforms.
 
+Fix this by removing accessing the dev pointer.
+Below is the carsh trace:
+
+Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c03
+Mem abort info:
+  ESR = 0x96000021
+  Exception class = DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000021
+  CM = 0, WnR = 0
+[006b6b6b6b6b6c03] address between user and kernel address ranges
+Internal error: Oops: 96000021 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 1784 Comm: sh Tainted: G        W         4.17.0-rc7-02230-ge3a63a7ef641-dirty #204
+Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+pstate: 80000005 (Nzcv daif -PAN -UAO)
+pc : clear_bit+0x18/0x2c
+lr : of_platform_device_destroy+0x64/0xb8
+sp : ffff00000c9c3930
+x29: ffff00000c9c3930 x28: ffff80003d39b200
+x27: ffff000008bb1000 x26: 0000000000000040
+x25: 0000000000000124 x24: ffff80003a9a3080
+x23: 0000000000000060 x22: ffff00000939f518
+x21: ffff80003aa79e98 x20: ffff80003aa3dae0
+x19: ffff80003aa3c890 x18: ffff800009feb794
+x17: 0000000000000000 x16: 0000000000000000
+x15: ffff800009feb790 x14: 0000000000000000
+x13: ffff80003a058778 x12: ffff80003a058728
+x11: ffff80003a058750 x10: 0000000000000000
+x9 : 0000000000000006 x8 : ffff80003a825988
+x7 : bbbbbbbbbbbbbbbb x6 : 0000000000000001
+x5 : 0000000000000000 x4 : 0000000000000001
+x3 : 0000000000000008 x2 : 0000000000000001
+x1 : 6b6b6b6b6b6b6c03 x0 : 0000000000000000
+Process sh (pid: 1784, stack limit = 0x        (ptrval))
+Call trace:
+ clear_bit+0x18/0x2c
+ q6afe_remove+0x20/0x38
+ apr_device_remove+0x30/0x70
+ device_release_driver_internal+0x170/0x208
+ device_release_driver+0x14/0x20
+ bus_remove_device+0xcc/0x150
+ device_del+0x10c/0x310
+ device_unregister+0x1c/0x70
+ apr_remove_device+0xc/0x18
+ device_for_each_child+0x50/0x80
+ apr_remove+0x18/0x20
+ rpmsg_dev_remove+0x38/0x68
+ device_release_driver_internal+0x170/0x208
+ device_release_driver+0x14/0x20
+ bus_remove_device+0xcc/0x150
+ device_del+0x10c/0x310
+ device_unregister+0x1c/0x70
+ qcom_smd_remove_device+0xc/0x18
+ device_for_each_child+0x50/0x80
+ qcom_smd_unregister_edge+0x3c/0x70
+ smd_subdev_remove+0x18/0x28
+ rproc_stop+0x48/0xd8
+ rproc_shutdown+0x60/0xe8
+ state_store+0xbc/0xf8
+ dev_attr_store+0x18/0x28
+ sysfs_kf_write+0x3c/0x50
+ kernfs_fop_write+0x118/0x1e0
+ __vfs_write+0x18/0x110
+ vfs_write+0xa4/0x1a8
+ ksys_write+0x48/0xb0
+ sys_write+0xc/0x18
+ el0_svc_naked+0x30/0x34
+Code: d2800022 8b400c21 f9800031 9ac32043 (c85f7c22)
+---[ end trace 32020935775616a2 ]---
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/of/platform.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index c00d81dfac0b..78c32b93c0e7 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -544,8 +544,6 @@ int of_platform_device_destroy(struct device *dev, void *data)
+ 		amba_device_unregister(to_amba_device(dev));
+ #endif
+ 
+-	of_node_clear_flag(dev->of_node, OF_POPULATED);
+-	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(of_platform_device_destroy);
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.16.2
