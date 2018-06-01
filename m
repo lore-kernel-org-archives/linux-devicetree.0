@@ -1,193 +1,101 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [RFC PATCH 4/8] coresight: platform: Cleanup coresight connection handling
-Date: Fri,  1 Jun 2018 14:16:03 +0100
-Message-ID: <1527858967-16047-5-git-send-email-suzuki.poulose@arm.com>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v9 01/15] ARM: Add Krait L2 register accessor functions
+Date: Fri, 1 Jun 2018 18:50:37 +0530
+Message-ID: <9ca51832-6095-c8a5-1347-f57abf99e8f9@codeaurora.org>
+References: <1520347148-27852-1-git-send-email-sricharan@codeaurora.org>
+ <1520347148-27852-2-git-send-email-sricharan@codeaurora.org>
+ <20180524173926.GC14924@minitux>
+ <664089d4-b30d-99bb-2021-12128b2895ba@codeaurora.org>
+ <152769571081.144038.4314499217001219157@swboyd.mtv.corp.google.com>
+ <9f2e1aa8-21c1-10b0-6193-e6bc16993a0d@codeaurora.org>
+ <152775249799.144038.9269415086304305030@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <152775249799.144038.9269415086304305030@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
+To: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-The platform code parses the component connections and populates
-a platform-description of the output connections in arrays of fields
-(which is never freed). This is later copied in the coresight_register
-to a newly allocated area, represented by coresight_connection(s).
+Hi Stephen,
 
-This patch cleans up the code dealing with connections by making
-use of the "coresight_connection" structure right at the platform
-code and lets the generic driver simply re-use information provided
-by the platform.
+On 5/31/2018 1:11 PM, Stephen Boyd wrote:
+> Quoting Sricharan R (2018-05-30 21:57:20)
+>> Hi Stephen,
+>>
+>> On 5/30/2018 9:25 PM, Stephen Boyd wrote:
+>>> Quoting Sricharan R (2018-05-24 22:40:11)
+>>>> Hi Bjorn,
+>>>>
+>>>> On 5/24/2018 11:09 PM, Bjorn Andersson wrote:
+>>>>> On Tue 06 Mar 06:38 PST 2018, Sricharan R wrote:
+>>>>>
+>>>>>> From: Stephen Boyd <sboyd@codeaurora.org>
+>>>>>>
+>>>>>> Krait CPUs have a handful of L2 cache controller registers that
+>>>>>> live behind a cp15 based indirection register. First you program
+>>>>>> the indirection register (l2cpselr) to point the L2 'window'
+>>>>>> register (l2cpdr) at what you want to read/write.  Then you
+>>>>>> read/write the 'window' register to do what you want. The
+>>>>>> l2cpselr register is not banked per-cpu so we must lock around
+>>>>>> accesses to it to prevent other CPUs from re-pointing l2cpdr
+>>>>>> underneath us.
+>>>>>>
+>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>>>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>>>>>
+>>>>> This should have your signed-off-by here as well.
+>>>>>
+>>>>
+>>>>  ok.
+>>>>
+>>>>> Apart from that:
+>>>>>
+>>>>> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>>>
+>>>>
+>>>
+>>> Will these patches come around again? I'll do a quick sweep on them
+>>> today but I expect them to be resent.
+>>
+>> Sure, i will have to resend them again, fixing couple of Bjorn's
+>> minor comments. Will address your comments that you would give
+>> as well along with that.
+>>
+> 
+> Ok. One general comment is that it would be nice if the bindings for all
+> the nodes that are introduced included 'clocks' properties and also
+> maybe 'clock-names' properties for the clocks that are consumed by each
+> node. Right now, we hide those details from DT and rely on the string
+> names to hook the clk tree up for us. That sort of prevents us from
+> moving away from string easily, so I would just throw the clocks into
+> the binding right now and always have them there just in case we want to
+> use the binding to figure out the hierarchy in the future.
+> 
 
-Thus making it reader friendly as well as avoiding the wastage of
-unused memory.
+ ok, understand that mostly. So will try to revamp those patches with
+ the 'clocks' property in the binding added, reading them in the driver
+ from DT.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/coresight.c    | 21 +---------------
- drivers/hwtracing/coresight/of_coresight.c | 40 +++++++++++-------------------
- include/linux/coresight.h                  |  9 ++-----
- 3 files changed, 17 insertions(+), 53 deletions(-)
+> I've been thinking we need to do something similar for the gcc and other
+> nodes for any clks they use, but I haven't gotten around to it.
+> 
+> Otherwise the patches look mostly ok to me. Not sure I'll have any other
+> comments.
+> 
 
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 389c4ba..3b3756e 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -961,13 +961,11 @@ postcore_initcall(coresight_init);
- 
- struct coresight_device *coresight_register(struct coresight_desc *desc)
- {
--	int i;
- 	int ret;
- 	int link_subtype;
- 	int nr_refcnts = 1;
- 	atomic_t *refcnts = NULL;
- 	struct coresight_device *csdev;
--	struct coresight_connection *conns = NULL;
- 
- 	csdev = kzalloc(sizeof(*csdev), GFP_KERNEL);
- 	if (!csdev) {
-@@ -996,22 +994,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 	csdev->nr_inport = desc->pdata->nr_inport;
- 	csdev->nr_outport = desc->pdata->nr_outport;
- 
--	/* Initialise connections if there is at least one outport */
--	if (csdev->nr_outport) {
--		conns = kcalloc(csdev->nr_outport, sizeof(*conns), GFP_KERNEL);
--		if (!conns) {
--			ret = -ENOMEM;
--			goto err_kzalloc_conns;
--		}
--
--		for (i = 0; i < csdev->nr_outport; i++) {
--			conns[i].outport = desc->pdata->outports[i];
--			conns[i].child_name = desc->pdata->child_names[i];
--			conns[i].child_port = desc->pdata->child_ports[i];
--		}
--	}
--
--	csdev->conns = conns;
-+	csdev->conns = desc->pdata->conns;
- 
- 	csdev->type = desc->type;
- 	csdev->subtype = desc->subtype;
-@@ -1039,8 +1022,6 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 	return csdev;
- 
- err_device_register:
--	kfree(conns);
--err_kzalloc_conns:
- 	kfree(refcnts);
- err_kzalloc_refcnts:
- 	kfree(csdev);
-diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index e0deab0..a3f3416 100644
---- a/drivers/hwtracing/coresight/of_coresight.c
-+++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -77,26 +77,13 @@ static void of_coresight_get_ports(const struct device_node *node,
- static int of_coresight_alloc_memory(struct device *dev,
- 			struct coresight_platform_data *pdata)
- {
--	/* List of output port on this component */
--	pdata->outports = devm_kzalloc(dev, pdata->nr_outport *
--				       sizeof(*pdata->outports),
--				       GFP_KERNEL);
--	if (!pdata->outports)
--		return -ENOMEM;
--
--	/* Children connected to this component via @outports */
--	pdata->child_names = devm_kzalloc(dev, pdata->nr_outport *
--					  sizeof(*pdata->child_names),
--					  GFP_KERNEL);
--	if (!pdata->child_names)
--		return -ENOMEM;
--
--	/* Port number on the child this component is connected to */
--	pdata->child_ports = devm_kzalloc(dev, pdata->nr_outport *
--					  sizeof(*pdata->child_ports),
--					  GFP_KERNEL);
--	if (!pdata->child_ports)
--		return -ENOMEM;
-+	if (pdata->nr_outport) {
-+		pdata->conns = devm_kzalloc(dev, pdata->nr_outport *
-+					    sizeof(*pdata->conns),
-+					    GFP_KERNEL);
-+		if (!pdata->conns)
-+			return -ENOMEM;
-+	}
- 
- 	return 0;
- }
-@@ -122,8 +109,9 @@ struct coresight_platform_data *
- of_get_coresight_platform_data(struct device *dev,
- 			       const struct device_node *node)
- {
--	int i = 0, ret = 0;
-+	int ret = 0;
- 	struct coresight_platform_data *pdata;
-+	struct coresight_connection *conn;
- 	struct of_endpoint endpoint, rendpoint;
- 	struct device *rdev;
- 	struct device_node *ep = NULL;
-@@ -145,6 +133,7 @@ of_get_coresight_platform_data(struct device *dev,
- 		if (ret)
- 			return ERR_PTR(ret);
- 
-+		conn = pdata->conns;
- 		/* Iterate through each port to discover topology */
- 		do {
- 			/* Get a handle on a port */
-@@ -166,7 +155,7 @@ of_get_coresight_platform_data(struct device *dev,
- 				continue;
- 
- 			/* The local out port number */
--			pdata->outports[i] = endpoint.port;
-+			conn->outport = endpoint.port;
- 
- 			/*
- 			 * Get a handle on the remote endpoint and the device
-@@ -186,10 +175,9 @@ of_get_coresight_platform_data(struct device *dev,
- 			if (!rdev)
- 				return ERR_PTR(-EPROBE_DEFER);
- 
--			pdata->child_names[i] = dev_name(rdev);
--			pdata->child_ports[i] = rendpoint.port;
--
--			i++;
-+			conn->child_name = dev_name(rdev);
-+			conn->child_port = rendpoint.port;
-+			conn++;
- 		} while (ep);
- 	}
- 
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 32aaa1c..c2363bb 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -89,20 +89,15 @@ struct coresight_dev_subtype {
-  * @cpu:	the CPU a source belongs to. Only applicable for ETM/PTMs.
-  * @name:	name of the component as shown under sysfs.
-  * @nr_inport:	number of input ports for this component.
-- * @outports:	list of remote endpoint port number.
-- * @child_names:name of all child components connected to this device.
-- * @child_ports:child component port number the current component is
--		connected  to.
-  * @nr_outport:	number of output ports for this component.
-+ * @conns:	Array of nr_outport connections from this component
-  */
- struct coresight_platform_data {
- 	int cpu;
- 	const char *name;
- 	int nr_inport;
--	int *outports;
--	const char **child_names;
--	int *child_ports;
- 	int nr_outport;
-+	struct coresight_connection *conns;
- };
- 
- /**
+ Thanks, will respin.
+
+Regards,
+ Sricharan
+
 -- 
-2.7.4
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
