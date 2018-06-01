@@ -1,7 +1,7 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH v3 4/8] dt-bindings: gnss: add u-blox binding
-Date: Fri,  1 Jun 2018 10:22:55 +0200
-Message-ID: <20180601082259.17563-5-johan@kernel.org>
+Subject: [PATCH v3 2/8] dt-bindings: add generic gnss binding
+Date: Fri,  1 Jun 2018 10:22:53 +0200
+Message-ID: <20180601082259.17563-3-johan@kernel.org>
 References: <20180601082259.17563-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180601082259.17563-1-johan@kernel.org>
@@ -10,56 +10,43 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel
 Cc: Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding for u-blox GNSS receivers.
+Describe generic properties for GNSS receivers.
 
-Note that the u-blox product names encodes form factor (e.g. "neo"),
-chipset (e.g. "8") and variant (e.g. "q"), but that only formfactor and
-chipset is used for the compatible strings (for now).
-
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- .../devicetree/bindings/gnss/u-blox.txt       | 44 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt   |  1 +
- 2 files changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gnss/u-blox.txt
+ .../devicetree/bindings/gnss/gnss.txt         | 36 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gnss/gnss.txt
 
-diff --git a/Documentation/devicetree/bindings/gnss/u-blox.txt b/Documentation/devicetree/bindings/gnss/u-blox.txt
+diff --git a/Documentation/devicetree/bindings/gnss/gnss.txt b/Documentation/devicetree/bindings/gnss/gnss.txt
 new file mode 100644
-index 000000000000..e475659cb85f
+index 000000000000..f1e4a2ff47c5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gnss/u-blox.txt
-@@ -0,0 +1,44 @@
-+u-blox GNSS Receiver DT binding
++++ b/Documentation/devicetree/bindings/gnss/gnss.txt
+@@ -0,0 +1,36 @@
++GNSS Receiver DT binding
 +
-+The u-blox GNSS receivers can use UART, DDC (I2C), SPI and USB interfaces.
++This documents the binding structure and common properties for GNSS receiver
++devices.
 +
-+Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-+properties.
++A GNSS receiver node is a node named "gnss" and typically resides on a serial
++bus (e.g. UART, I2C or SPI).
++
++Please refer to the following documents for generic properties:
++
++	Documentation/devicetree/bindings/serial/slave-device.txt
++	Documentation/devicetree/bindings/spi/spi-bus.txt
 +
 +Required properties:
 +
-+- compatible	: Must be one of
-+
-+			"u-blox,neo-8"
-+			"u-blox,neo-m8"
-+
-+- vcc-supply	: Main voltage regulator
-+
-+Required properties (DDC):
-+- reg		: DDC (I2C) slave address
-+
-+Required properties (SPI):
-+- reg		: SPI chip select address
-+
-+Required properties (USB):
-+- reg		: Number of the USB hub port or the USB host-controller port
-+                  to which this device is attached
++- compatible	: A string reflecting the vendor and specific device the node
++		  represents
 +
 +Optional properties:
-+
++- enable-gpios	: GPIO used to enable the device
 +- timepulse-gpios	: Time pulse GPIO
-+- u-blox,extint-gpios	: GPIO connected to the "external interrupt" input pin
-+- v-bckp-supply	: Backup voltage regulator
 +
 +Example:
 +
@@ -69,21 +56,23 @@ index 000000000000..e475659cb85f
 +	gnss {
 +		compatible = "u-blox,neo-8";
 +
-+		v-bckp-supply = <&gnss_v_bckp_reg>;
-+		vcc-supply = <&gnss_vcc_reg>;
++		vcc-supply = <&gnss_reg>;
++		timepulse-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
++
++		current-speed = <4800>;
 +	};
 +};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index b5f978a4cac6..2128dfdf73f1 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -374,6 +374,7 @@ tronsmart	Tronsmart
- truly	Truly Semiconductors Limited
- tsd	Theobroma Systems Design und Consulting GmbH
- tyan	Tyan Computer Corporation
-+u-blox	u-blox
- ucrobotics	uCRobotics
- ubnt	Ubiquiti Networks
- udoo	Udoo
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dc3df211c1a7..fa219e80a1f8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5965,6 +5965,7 @@ F:	include/uapi/linux/gigaset_dev.h
+ GNSS SUBSYSTEM
+ M:	Johan Hovold <johan@kernel.org>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/gnss/
+ F:	drivers/gnss/
+ F:	include/linux/gnss.h
+ 
 -- 
 2.17.1
