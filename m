@@ -1,53 +1,51 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/2] dt-bindings: power: sbs-battery: re-document
- "ti,bq20z75"
-Date: Fri, 1 Jun 2018 10:35:00 -0700
-Message-ID: <20180601173500.GB22509@roeck-us.net>
-References: <20180601172400.50737-1-briannorris@chromium.org>
- <20180601172400.50737-2-briannorris@chromium.org>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v3 1/2] arm64: allwinner: a64: Add RTC clock to
+ phandle 32kHz external oscillator
+Date: Fri,  1 Jun 2018 23:05:26 +0530
+Message-ID: <20180601173527.18051-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180601172400.50737-2-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>, Alexandru Stan <amstan@chromium.org>, Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB3MHY3MAKGQEZ7ISK4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 10:24:00AM -0700, Brian Norris wrote:
-> This compatible property was documented before the driver was renamed to
-> "SBS" (see commit e57f1b68c406 ("devicetree-bindings: Propagate
-> bq20z75->sbs rename to dt bindings")). The driver has continued to
-> support this property as an alternative to "sbs,sbs-battery", and
-> because we've noticed there are some lingering TI specifics (in the
-> manufacturer-specific portion of the SBS spec), we'd like to start using
-> this property again to differentiate.
-> 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Acked-by: Rhyland Klein <rklein@nvidia.com>
+Outside of SOC few chips need external clock source
+through RTC example Wifi chip. So RTC clock nodes to
+phandle 32kHz external oscillator.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+prefix rtc- with clock-output-names defined in
+dt-binding to avoid confusion with existing osc32k name.
 
-> ---
-> v2: add Rhyland's Acked-by
-> ---
->  .../devicetree/bindings/power/supply/sbs_sbs-battery.txt        | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> index c40e8926facf..a7a9c3366f82 100644
-> --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> @@ -2,7 +2,7 @@ SBS sbs-battery
->  ~~~~~~~~~~
->  
->  Required properties :
-> - - compatible : "sbs,sbs-battery"
-> + - compatible : "sbs,sbs-battery" or "ti,bq20z75"
->  
->  Optional properties :
->   - sbs,i2c-retry-count : The number of times to retry i2c transactions on i2c
-> -- 
-> 2.17.0.921.gf22659ad46-goog
-> 
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v3:
+- squash of previous v2 patch
+
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 1b2ef28c42bd..82516aec4153 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -634,6 +634,9 @@
+ 			reg = <0x01f00000 0x54>;
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++			clock-output-names = "rtc-osc32k", "rtc-osc32k-out";
++			clocks = <&osc32k>;
++			#clock-cells = <1>;
+ 		};
+ 
+ 		r_intc: interrupt-controller@1f00c00 {
+-- 
+2.14.3
