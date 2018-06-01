@@ -1,32 +1,44 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 1/7] clk: msm8996-gcc: Mark halt check as no-op for USB/PCIE
- pipe_clk
-Date: Fri, 01 Jun 2018 11:45:25 -0700
-Message-ID: <152787872536.144038.14465736571389918971@swboyd.mtv.corp.google.com>
-References: <1525295174-15995-1-git-send-email-mgautam@codeaurora.org>
- <1525295174-15995-2-git-send-email-mgautam@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] clk: bcm: Update and add tingray clock entries
+Date: Fri, 1 Jun 2018 14:02:17 -0500
+Message-ID: <CAL_Jsq+YX01CwCycqeu5mxTUiWtnG3HKPJP5mvJO2OHcPF6v6g@mail.gmail.com>
+References: <1527266717-8406-1-git-send-email-ray.jui@broadcom.com>
+ <1527266717-8406-3-git-send-email-ray.jui@broadcom.com> <20180531162556.GA955@rob-hp-laptop>
+ <a354f3d1-051d-8b68-e6b3-ce7a739c10c9@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525295174-15995-2-git-send-email-mgautam@codeaurora.org>
+In-Reply-To: <a354f3d1-051d-8b68-e6b3-ce7a739c10c9@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, robh@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, evgreen@chromium.org, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Manu Gautam (2018-05-02 14:06:08)
-> The USB and PCIE pipe clocks are sourced from external clocks
-> inside the QMP USB/PCIE PHYs. Enabling or disabling of PIPE RCG
-> clocks is dependent on PHY initialization sequence hence
-> update halt_check to BRANCH_HALT_SKIP for these clocks so
-> that clock status bit is not polled when enabling or disabling
-> the clocks. It allows to simplify PHY client driver code which
-> is both user and source of the pipe_clk and avoid error logging
-> related status check on clk_disable/enable.
-> =
+On Fri, Jun 1, 2018 at 12:56 PM, Ray Jui <ray.jui@broadcom.com> wrote:
+> Hi Rob,
+>
+> On 5/31/2018 9:25 AM, Rob Herring wrote:
+>>
+>> On Fri, May 25, 2018 at 09:45:16AM -0700, Ray Jui wrote:
+>>>
+>>> Update and add Stingray clock definitions and tables so they match the
+>>> binding document and the latest ASIC datasheet
+>>>
+>>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>>> ---
+>>>   drivers/clk/bcm/clk-sr.c           | 135
+>>> ++++++++++++++++++++++++++++++++-----
+>>>   include/dt-bindings/clock/bcm-sr.h |  24 +++++--
+>>
+>>
+>> This goes in the 1st patch.
+>
+>
+> Please help to confirm. You want 1st patch and 2nd patch to be combined into
+> a single patch?
 
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
+No. include/dt-bindings/* is part of the DT binding, so it goes with
+patch 1. The driver in patch 2.
 
-Applied to clk-next
+Rob
