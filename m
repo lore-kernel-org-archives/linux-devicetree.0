@@ -1,47 +1,33 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v9 01/15] ARM: Add Krait L2 register accessor functions
-Date: Fri, 01 Jun 2018 10:12:39 -0700
-Message-ID: <152787315975.144038.15271372565967690313@swboyd.mtv.corp.google.com>
-References: <1520347148-27852-1-git-send-email-sricharan@codeaurora.org>
- <1520347148-27852-2-git-send-email-sricharan@codeaurora.org>
- <20180524173926.GC14924@minitux>
- <664089d4-b30d-99bb-2021-12128b2895ba@codeaurora.org>
- <152769571081.144038.4314499217001219157@swboyd.mtv.corp.google.com>
- <9f2e1aa8-21c1-10b0-6193-e6bc16993a0d@codeaurora.org>
- <152775249799.144038.9269415086304305030@swboyd.mtv.corp.google.com>
- <9ca51832-6095-c8a5-1347-f57abf99e8f9@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: "H. Nikolaus Schaller" <hns@computer.org>
+Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
+Date: Fri, 1 Jun 2018 18:37:36 +0200
+Message-ID: <3A356534-FEB0-4E0D-A8C8-922EEF1E0926@computer.org>
+References: <20180601082259.17563-1-johan@kernel.org> <20180601093311.GA31639@amd> <20180601094959.GA13775@localhost> <20180601102612.GC31639@amd> <20180601122217.GB13775@localhost> <20180601162645.GA30792@amd>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9ca51832-6095-c8a5-1347-f57abf99e8f9@codeaurora.org>
+In-Reply-To: <20180601162645.GA30792@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Sricharan R <sricharan@codeaurora.org>
-Cc: robh@kernel.org, viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sricharan R (2018-06-01 06:20:37)
-> Hi Stephen,
-> =
+Hi Pavel,
 
-> On 5/31/2018 1:11 PM, Stephen Boyd wrote:
-> > =
+> Am 01.06.2018 um 18:26 schrieb Pavel Machek <pavel@ucw.cz>:
+> 
+> NMEA would not be my first choice, really. I'd propose something very
+> similar to existing /dev/input/eventX, but with wider data types.
 
-> > Ok. One general comment is that it would be nice if the bindings for all
-> > the nodes that are introduced included 'clocks' properties and also
-> > maybe 'clock-names' properties for the clocks that are consumed by each
-> > node. Right now, we hide those details from DT and rely on the string
-> > names to hook the clk tree up for us. That sort of prevents us from
-> > moving away from string easily, so I would just throw the clocks into
-> > the binding right now and always have them there just in case we want to
-> > use the binding to figure out the hierarchy in the future.
-> > =
+Since even Rome wasn't built in a day, my first choice is NMEA, but I am
+open to anything on higher level to come second.
 
-> =
+What about iio?
 
->  ok, understand that mostly. So will try to revamp those patches with
->  the 'clocks' property in the binding added, reading them in the driver
->  from DT.
+It is quite flexible and extensible and GNSS coordinates are a not very
+different from accelerometer, gyroscope or compass data as all of them
+describe the position and orientation, maybe speed of the device these
+things are built into (at least for mobile devices).
 
-Yeah. You don't even have to actually use the clocks property right now
-from the drivers. Just add the properties in the binding.
+--hns
