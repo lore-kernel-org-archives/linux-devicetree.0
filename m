@@ -1,159 +1,175 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [RFC PATCH 0/8] coresight: Update device tree bindings
-Date: Fri, 1 Jun 2018 15:04:39 -0600
-Message-ID: <20180601210439.GF9838@xps15>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Fri, 1 Jun 2018 15:21:17 -0600
+Message-ID: <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Vikash Garodia <vgarodia@codeaurora.org>
+Cc: hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, stanimir.varbanov@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 02:15:59PM +0100, Suzuki K Poulose wrote:
-> Coresight uses DT graph bindings to describe the connections of the
-> components. However we have some undocumented usage of the bindings
-> to describe some of the properties of the connections.
+On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
+> Add a new routine which abstracts the TZ call to
+> set the video hardware state.
 > 
-> The coresight driver needs to know the hardware ports invovled
-> in the connection and the direction of data flow to effectively
-> manage the trace sessions. So far we have relied on the "port"
-> address (as described by the generic graph bindings) to represent
-> the hardware port of the component for a connection.
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.h      |  5 +++++
+>  drivers/media/platform/qcom/venus/firmware.c  | 28 +++++++++++++++++++++++++++
+>  drivers/media/platform/qcom/venus/firmware.h  |  1 +
+>  drivers/media/platform/qcom/venus/hfi_venus.c | 13 ++++---------
+>  4 files changed, 38 insertions(+), 9 deletions(-)
 > 
-> The hardware uses separate numbering scheme for input and output
-> ports, which implies, we could have two different (input and output)
-> ports with the same port number. This could create problems in the
-> graph bindings where the label of the port wouldn't match the address.
-> 
-> e.g, with the existing bindings we get :
-> 
-> 	port@0{				// Output port 0
-> 		reg = <0>;
-> 		...
-> 	};
-> 
-> 	port@1{
-> 		reg = <0>;		// Input port 0
-> 		endpoint {
-> 			slave-mode;
-> 			...
-> 		};
-> 	};
-> 
-> With the new enforcement in the DT rules, mismatches in label and address
-> are not allowed (as see in the case for port@1). So, we need a new mechanism
-> to describe the hardware port number reliably.
-> 
-> Also, we relied on an undocumented "slave-mode" property (see the above
-> example) to indicate if the port is an input port. Let us formalise and
-> switch to a new property to describe the direction of data flow.
-> 
-> There were three options considered for the hardware port number scheme:
-> 
->  1) Use natural ordering in the DT to infer the hardware port number.
->   i.e, Mandate that the all ports are listed in the DT and in the ascending
->   order for each class (input and output respectively).
->    Pros :
->       - We don't need new properties and if the existing DTS list them in
->         order (which most of them do), they work out of the box.
->    Cons :
->       - We must list all the ports even if the system cannot/shouldn't use
->         it.
->       - It is prone to human errors (if the order is not kept).
-> 
->  2) Use an explicit property to list both the direction and the hw port
->     number and direction. Define "coresight,hwid" as 2 member array of u32,
->     where the members are port number and the direction respectively.
-> 	e.g
-> 
-> 	port@0{
-> 		reg = <0>;
-> 		endpoint {
-> 			coresight,hwid = <0 1>;	// Port # 0, Output
-> 		}
-> 	};
-> 
-> 	port@1{
-> 		reg = <1>;
-> 		endpoint {
-> 			coresight,hwid = <0 0>;	// Port # 0, Input
-> 		};
-> 	};
-> 
-> 	Pros:
-> 	  - The bindings are formal but not so reader friendly and could potentially
-> 	    lead to human errors.
-> 	Cons:
-> 	  - Backward compatiblity is lost.
->  3) Use explicit properties (implemented in the series) for the hardware
->     port id and direction. We define a new property "coresight,hwid" for
->     each endpoint in coresight devices to specify the hardware port number
->     explicitly. Also use a separate property "direction" to specify the
->     direction of the data flow.
-> 
-> 	e.g,
-> 
-> 	port@0{
-> 		reg = <0>;
-> 		endpoint {
-> 			direction = <1>;	// Output
-> 			coresight,hwid = <0>;	// Port # 0
-> 		}
-> 	};
-> 
-> 	port@1{
-> 		reg = <1>;
-> 		endpoint {
-> 			direction = <0>;	// Input
-> 			coresight,hwid = <0>;	// Port # 0
-> 		};
-> 	};
-> 
->     Pros:
->        - The bindings are formal and reader friendly, and less prone to errors.
->     Cons:
->        - Backward compatibility is lost.
-> 
-> 
-> This series achieves implements Option (3) listed above while still retaining
-> the backward compatibility. The driver now issues a warning (once) when it
-> encounters the old bindings.
-> It also cleans up the platform parsing code to reduce the memory usage by
-> reusing the platform description. The series also includes the
-> changes for Juno platform as an example. If there are no objections
-> to the approach, I could post the series, converting all the
-> in-kernel DTS to the new binding.
-> 
-> Suzuki K Poulose (8):
->   dts: binding: coresight: Document graph bindings
->   coresight: Fix remote endpoint parsing
->   coresight: Cleanup platform description data
->   coresight: platform: Cleanup coresight connection handling
->   coresight: Handle errors in finding input/output ports
->   dts: coresight: Clean up the device tree graph bindings
->   dts: coresight: Define new bindings for direction of data flow
->   dts: juno: Update coresight bindings for hw port
-> 
->  .../devicetree/bindings/arm/coresight.txt          |  52 ++++++++--
->  arch/arm64/boot/dts/arm/juno-base.dtsi             |  82 +++++++++++----
->  arch/arm64/boot/dts/arm/juno.dts                   |   5 +-
->  drivers/hwtracing/coresight/coresight.c            |  28 ++----
->  drivers/hwtracing/coresight/of_coresight.c         | 111 ++++++++++++---------
->  include/linux/coresight.h                          |  11 +-
->  6 files changed, 181 insertions(+), 108 deletions(-)
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 85e66e2..e7bfb63 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -35,6 +35,11 @@ struct reg_val {
+>  	u32 value;
+>  };
+>  
+> +enum tzbsp_video_state {
+> +	TZBSP_VIDEO_SUSPEND = 0,
+> +	TZBSP_VIDEO_RESUME
 
-Aside from the comments I've already posted I'm pretty much good with this set.
-Please rebase the next revision on my "next" branch and run checkpatch.pl on the
-set.  Patch 6/8 and 7/8 are generating warnings.
+You should put a comma after the last item to reduce future patch sizes.
 
-Thanks,
-Mathieu
+> +};
+> +
+>  struct venus_resources {
+>  	u64 dma_mask;
+>  	const struct freq_tbl *freq_tbl;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index 7d89b5a..b4664ed 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -53,6 +53,34 @@ static void venus_reset_hw(struct venus_core *core)
+>  	/* Bring Arm9 out of reset */
+>  	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
+>  }
+> +
+> +int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
+> +{
+> +	int ret;
+> +	struct device *dev = core->dev;
 
-> 
-> -- 
-> 2.7.4
-> 
+If you get rid of the log message as you should, you don't need this.
+
+> +	void __iomem *reg_base = core->base;
+> +
+> +	switch (state) {
+> +	case TZBSP_VIDEO_SUSPEND:
+> +		if (qcom_scm_is_available())
+> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
+> +		else
+> +			writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+
+You can just use core->base here and not bother making a local variable for it.
+
+> +		break;
+> +	case TZBSP_VIDEO_RESUME:
+> +		if (qcom_scm_is_available())
+> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
+> +		else
+> +			venus_reset_hw(core);
+> +		break;
+> +	default:
+> +		dev_err(dev, "invalid state\n");
+
+state is a enum - you are highly unlikely to be calling it in your own code with
+a random value.  It is smart to have the default, but you don't need the log
+message - that is just wasted space in the binary.
+
+> +		break;
+> +	}
+
+There are three paths in the switch statement that could end up with 'ret' being
+uninitialized here.  Set it to 0 when you declare it.
+
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
+> +
+>  int venus_boot(struct device *dev, const char *fwname)
+>  {
+>  	const struct firmware *mdt;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
+> index 428efb5..1336729 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.h
+> +++ b/drivers/media/platform/qcom/venus/firmware.h
+> @@ -18,5 +18,6 @@
+>  
+>  int venus_boot(struct device *dev, const char *fwname);
+>  int venus_shutdown(struct device *dev);
+> +int venus_set_hw_state(enum tzbsp_video_state, struct venus_core *core);
+>  
+>  #endif
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index f61d34b..797a9f5 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -19,7 +19,6 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> -#include <linux/qcom_scm.h>
+>  #include <linux/slab.h>
+>  
+>  #include "core.h"
+> @@ -27,6 +26,7 @@
+>  #include "hfi_msgs.h"
+>  #include "hfi_venus.h"
+>  #include "hfi_venus_io.h"
+> +#include "firmware.h"
+>  
+>  #define HFI_MASK_QHDR_TX_TYPE		0xff000000
+>  #define HFI_MASK_QHDR_RX_TYPE		0x00ff0000
+> @@ -55,11 +55,6 @@
+>  #define IFACEQ_VAR_LARGE_PKT_SIZE	512
+>  #define IFACEQ_VAR_HUGE_PKT_SIZE	(1024 * 12)
+>  
+> -enum tzbsp_video_state {
+> -	TZBSP_VIDEO_STATE_SUSPEND = 0,
+> -	TZBSP_VIDEO_STATE_RESUME
+> -};
+> -
+>  struct hfi_queue_table_header {
+>  	u32 version;
+>  	u32 size;
+> @@ -574,7 +569,7 @@ static int venus_power_off(struct venus_hfi_device *hdev)
+>  	if (!hdev->power_enabled)
+>  		return 0;
+>  
+> -	ret = qcom_scm_set_remote_state(TZBSP_VIDEO_STATE_SUSPEND, 0);
+> +	ret = venus_set_hw_state(TZBSP_VIDEO_SUSPEND, hdev->core);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -594,7 +589,7 @@ static int venus_power_on(struct venus_hfi_device *hdev)
+>  	if (hdev->power_enabled)
+>  		return 0;
+>  
+> -	ret = qcom_scm_set_remote_state(TZBSP_VIDEO_STATE_RESUME, 0);
+> +	ret = venus_set_hw_state(TZBSP_VIDEO_RESUME, hdev->core);
+>  	if (ret)
+>  		goto err;
+>  
+> @@ -607,7 +602,7 @@ static int venus_power_on(struct venus_hfi_device *hdev)
+>  	return 0;
+>  
+>  err_suspend:
+> -	qcom_scm_set_remote_state(TZBSP_VIDEO_STATE_SUSPEND, 0);
+> +	venus_set_hw_state(TZBSP_VIDEO_SUSPEND, hdev->core);
+>  err:
+>  	hdev->power_enabled = false;
+>  	return ret;
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
