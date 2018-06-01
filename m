@@ -1,55 +1,69 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 1/6] mtd: rawnand: add Reed-Solomon error correction
- algorithm
-Date: Fri, 1 Jun 2018 15:43:26 +0200
-Message-ID: <20180601154326.6c60c579@bbrezillon>
-References: <20180531221637.6017-1-stefan@agner.ch>
-        <20180531221637.6017-2-stefan@agner.ch>
-        <20180601092600.03c14f53@bbrezillon>
-        <20180601112506.2157e8b0@bbrezillon>
-        <18ce3100aabf42059dbd514fb8c93e84@agner.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: simple-card: make sysclk index
+	configurable
+Date: Fri, 1 Jun 2018 09:21:52 -0500
+Message-ID: <CAL_Jsq+NNpersC0wy1tnoEh3yfSXJ+W_0B0UMHzoEDdZqyUZ=Q@mail.gmail.com>
+References: <20180528193503.18905-1-daniel@zonque.org>
+ <20180528193503.18905-3-daniel@zonque.org>
+ <20180529112447.GC23509@sirena.org.uk>
+ <f130a86f-deca-b5cf-da34-5cf52a9c39fc@zonque.org>
+ <20180531170240.GA29973@rob-hp-laptop>
+ <d5df3c6b-22ae-408b-5727-516fed648b2a@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <18ce3100aabf42059dbd514fb8c93e84@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pgaikwad@nvidia.com, dev@lynxeye.de, mirza.krak@gmail.com, benjamin.lindqvist@endian.se, pdeschrijver@nvidia.com, miquel.raynal@bootlin.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jonathanh@nvidia.com, marek.vasut@gmail.com, thierry.reding@gmail.com, linux-mtd@lists.infradead.org, krzk@kernel.org, richard@nod.at, linux-tegra@vger.kernel.org, digetx@gmail.com, computersforpeace@gmail.com, dwmw2@infradead.org, marcel@ziswiler.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <d5df3c6b-22ae-408b-5727-516fed648b2a@zonque.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 01 Jun 2018 15:34:33 +0200
-Stefan Agner <stefan@agner.ch> wrote:
+On Thu, May 31, 2018 at 3:03 PM, Daniel Mack <daniel@zonque.org> wrote:
+> On Thursday, May 31, 2018 07:02 PM, Rob Herring wrote:
+>>
+>> On Tue, May 29, 2018 at 10:23:48PM +0200, Daniel Mack wrote:
+>
+>
+>>> If that's the case, could you depict how the DT bindings should look like
+>>> by
+>>> example?
+>>
+>>
+>> In clock providers, you just add #clock-cells. Then the consumer side
+>> defines 'clocks'. Which clock(s) comes from the dai is defined by the
+>> index in the 'clocks' property for that node.
+>>
+>> Both ends can be providers, but who is active is determined by defining
+>> the actual connections with 'clocks'. Or perhaps you have both
+>> directions shown and there is some other means to select which one is
+>> active such as solving for who can provide the desired freq.
+>
+>
+> How about entities that are a clock producer and consume their clocks
+> themselves? That's a rather typical thing for DAIs. Is that expressible in
+> DT?
 
-> On 01.06.2018 11:25, Boris Brezillon wrote:
-> > On Fri, 1 Jun 2018 09:26:00 +0200
-> > Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-> >   
-> >> On Fri,  1 Jun 2018 00:16:32 +0200
-> >> Stefan Agner <stefan@agner.ch> wrote:
-> >>  
-> >> > Add Reed-Solomon (RS) to the enumeration of ECC algorithms.
-> >> >
-> >> > Signed-off-by: Stefan Agner <stefan@agner.ch>  
-> >>
-> >> Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> >>  
-> >> > ---
-> >> >  drivers/mtd/nand/raw/nand_base.c | 1 +
-> >> >  include/linux/mtd/rawnand.h      | 1 +  
-> > 
-> > Hm, you forgot to update Documentation/devicetree/bindings/mtd/nand.txt.
-> >   
-> 
-> Yeah I was not sure about that. Currently it says:
-> 
-> - nand-ecc-algo: string, algorithm of NAND ECC.                         
->                                                                    
->                  Supported values are: "hamming", "bch".
-> 
-> Is supported meant by software ECC here? I feel "supported" is a rather
-> strong word since it is clearly controller dependent whether it is
-> actually supported...
+And I assume something else consumes those clocks, too? If not, you
+can just handle all that within the driver and don't need the clock
+binding or clock framework.
 
-I guess "valid values" or "accepted values" would be more appropriate
-here.
+But yes, you can do something like this:
+
+myclk: clock-controller {
+  #clock-cells = <1>;
+  clocks = <&myclk 123>, <&otherclk 1>;
+};
+
+You'll have to handle clk registration and clk_get in the right order
+to avoid deferring probe on yourself.
+
+Rob
