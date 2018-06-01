@@ -1,33 +1,32 @@
-Return-Path: <SRS0=RyeN=I5=st.com=hugues.fruchet@kernel.org>
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH 0/2] OV5640 hflip, vflip and module orientation support
-Date: Mon, 11 Jun 2018 11:29:15 +0200
-Message-ID: <1528709357-7251-1-git-send-email-hugues.fruchet@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, "Hugues Fruchet  <hugues.fruchet@st.com>, Benjamin Gaignard" <benjamin.gaignard@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=/LF/=IT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:40584 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1750718AbeFAI72 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Jun 2018 04:59:28 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 0/2] Dongwoon dw9807
+Date: Fri,  1 Jun 2018 11:59:23 +0300
+Message-Id: <20180601085925.10107-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, bingbu.cao@linux.intel.com, tian.shu.qiu@linux.intel.com, rajmohan.mani@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch serie relates to flip and mirror at sensor level through
-registers "TIMING TC REG20/REG21".
+Just posting this after squashing the vcm-only bit to the compatible string.
 
-The first commit implements HFLIP and VFLIP V4L2 controls
-allowing V4L2 client to change horizontal and vertical flip
-before or during streaming.
+Alan Chiang (2):
+  media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
+  media: dw9807: Add dw9807 vcm driver
 
-The second commit allows to inform driver of the physical
-orientation of the sensor module through devicetree "rotation"
-optional properties as defined by Sakari in media/video-interfaces.txt:
-https://www.mail-archive.com/linux-media@vger.kernel.org/msg132345.html
-
-Hugues Fruchet (2):
-  media: ov5640: add HFLIP/VFLIP controls support
-  media: ov5640: add support of module orientation
-
- .../devicetree/bindings/media/i2c/ov5640.txt       |   3 +
- drivers/media/i2c/ov5640.c                         | 127 ++++++++++++++++++---
- 2 files changed, 112 insertions(+), 18 deletions(-)
+ .../bindings/media/i2c/dongwoon,dw9807.txt         |   9 +
+ MAINTAINERS                                        |   7 +
+ drivers/media/i2c/Kconfig                          |  10 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/dw9807.c                         | 329 +++++++++++++++++++++
+ 5 files changed, 356 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+ create mode 100644 drivers/media/i2c/dw9807.c
 
 -- 
-1.9.1
+2.11.0
+
