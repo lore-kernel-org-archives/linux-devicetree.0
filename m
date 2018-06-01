@@ -1,76 +1,296 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [RFC PATCH 1/8] dts: binding: coresight: Document graph bindings
-Date: Fri,  1 Jun 2018 14:16:00 +0100
-Message-ID: <1527858967-16047-2-git-send-email-suzuki.poulose@arm.com>
+Subject: [RFC PATCH 8/8] dts: juno: Update coresight bindings for hw port
+Date: Fri,  1 Jun 2018 14:16:07 +0100
+Message-ID: <1527858967-16047-9-git-send-email-suzuki.poulose@arm.com>
 References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: mathieu.poirier@linaro.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Liviu Dudau <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Before we updat the bindings, document the current graph bindings
-and usage of additional properties.
+Switch to updated coresight bindings for hw ports.
 
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- .../devicetree/bindings/arm/coresight.txt          | 28 ++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 82 +++++++++++++++++++++++++---------
+ arch/arm64/boot/dts/arm/juno.dts       |  5 ++-
+ 2 files changed, 63 insertions(+), 24 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 15ac8e8..bd36e40 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -52,9 +52,7 @@ its hardware characteristcs.
- 	  clocks the core of that coresight component. The latter clock
- 	  is optional.
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index eb749c5..33b41ba 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -122,15 +122,18 @@
+ 			port@0 {
+ 				reg = <0>;
+ 				etf0_in_port: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&main_funnel_out_port>;
++					coresight,hwid = <0>;
+ 				};
+ 			};
  
--	* port or ports: The representation of the component's port
--	  layout using the generic DT graph presentation found in
--	  "bindings/graph.txt".
-+	* port or ports: see "Graph bindings for Coresight" below
+ 			/* output port */
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				etf0_out_port: endpoint {
++					coresight,hwid = <0>;
++					direction = <1>;
+ 				};
+ 			};
+ 		};
+@@ -145,8 +148,9 @@
+ 		power-domains = <&scpi_devpd 0>;
+ 		port {
+ 			tpiu_in_port: endpoint {
+-				slave-mode;
++				direction = <0>;
+ 				remote-endpoint = <&replicator_out_port0>;
++				coresight,hwid = <0>;
+ 			};
+ 		};
+ 	};
+@@ -168,23 +172,27 @@
+ 				reg = <0>;
+ 				main_funnel_out_port: endpoint {
+ 					remote-endpoint = <&etf0_in_port>;
++					coresight,hwid = <0>;
++					direction = <1>;
+ 				};
+ 			};
  
- * Additional required properties for System Trace Macrocells (STM):
- 	* reg: along with the physical base address and length of the register
-@@ -71,7 +69,7 @@ its hardware characteristcs.
- 	  AMBA markee):
- 		- "arm,coresight-replicator"
+ 			/* input ports */
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				main_funnel_in_port0: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster0_funnel_out_port>;
++					coresight,hwid = <0>;
+ 				};
+ 			};
  
--	* port or ports: same as above.
-+	* port or ports: see "Graph bindings for Coresight" below.
+ 			port@2 {
+-				reg = <1>;
++				reg = <2>;
+ 				main_funnel_in_port1: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster1_funnel_out_port>;
++					coresight,hwid = <1>;
+ 				};
+ 			};
+ 		};
+@@ -200,8 +208,9 @@
+ 		power-domains = <&scpi_devpd 0>;
+ 		port {
+ 			etr_in_port: endpoint {
+-				slave-mode;
++				direction = <0>;
+ 				remote-endpoint = <&replicator_out_port1>;
++				coresight,hwid = <0>;
+ 			};
+ 		};
+ 	};
+@@ -217,6 +226,8 @@
+ 		power-domains = <&scpi_devpd 0>;
+ 		port {
+ 			stm_out_port: endpoint {
++				coresight,hwid = <0>;
++				direction = <1>;
+ 			};
+ 		};
+ 	};
+@@ -240,6 +251,8 @@
+ 		port {
+ 			cluster0_etm0_out_port: endpoint {
+ 				remote-endpoint = <&cluster0_funnel_in_port0>;
++				coresight,hwid = <0>;
++				direction = <1>;
+ 			};
+ 		};
+ 	};
+@@ -259,22 +272,26 @@
+ 				reg = <0>;
+ 				cluster0_funnel_out_port: endpoint {
+ 					remote-endpoint = <&main_funnel_in_port0>;
++					coresight,hwid = <0>;
++					direction = <1>;
+ 				};
+ 			};
  
- * Optional properties for ETM/PTMs:
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				cluster0_funnel_in_port0: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster0_etm0_out_port>;
++					coresight,hwid = <0>;
+ 				};
+ 			};
  
-@@ -86,6 +84,28 @@ its hardware characteristcs.
- 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
- 	 (embedded trace router)
+ 			port@2 {
+-				reg = <1>;
++				reg = <2>;
+ 				cluster0_funnel_in_port1: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster0_etm1_out_port>;
++					coresight,hwid = <1>;
+ 				};
+ 			};
+ 		};
+@@ -299,6 +316,8 @@
+ 		port {
+ 			cluster0_etm1_out_port: endpoint {
+ 				remote-endpoint = <&cluster0_funnel_in_port1>;
++				coresight,hwid = <0>;
++				direction = <1>;
+ 			};
+ 		};
+ 	};
+@@ -322,6 +341,8 @@
+ 		port {
+ 			cluster1_etm0_out_port: endpoint {
+ 				remote-endpoint = <&cluster1_funnel_in_port0>;
++				coresight,hwid = <0>;
++				direction = <1>;
+ 			};
+ 		};
+ 	};
+@@ -341,36 +362,42 @@
+ 				reg = <0>;
+ 				cluster1_funnel_out_port: endpoint {
+ 					remote-endpoint = <&main_funnel_in_port1>;
++					coresight,hwid = <0>;
++					direction = <1>;
+ 				};
+ 			};
  
-+Graph bindings for Coresight
-+-------------------------------
-+
-+Coresight components are interconnected to create a data path for the flow of
-+trace data generated from the "sources" to their collection points "sink". Each
-+coresight component must describe the "input" and "output" connections.
-+The connections must be described via generic DT graph bindings as described
-+by the "bindings/graph.txt", where each "port" along with an "endpoint" component
-+represents a hardware port and the connection.
-+
-+Since it is possible to have multiple connections for any coresight component with
-+a specific direction of data flow, each connection must define the following
-+properties to uniquely identify the connection details.
-+
-+ * Direction of the data flow w.r.t the component :
-+   Each input port must have the following property defined at the "endpoint"
-+   for the port.
-+	"slave-mode"
-+
-+ * Hardware Port number at the component:
-+     -  The hardware port number is assumed to be the address of the "port" component.
-+
+ 			port@1 {
+-				reg = <0>;
++				reg = <1>;
+ 				cluster1_funnel_in_port0: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster1_etm0_out_port>;
++					coresight,hwid = <0>;
+ 				};
+ 			};
  
- Example:
+ 			port@2 {
+-				reg = <1>;
++				reg = <2>;
+ 				cluster1_funnel_in_port1: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster1_etm1_out_port>;
++					coresight,hwid = <1>;
+ 				};
+ 			};
+ 			port@3 {
+-				reg = <2>;
++				reg = <3>;
+ 				cluster1_funnel_in_port2: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster1_etm2_out_port>;
++					coresight,hwid = <2>;
+ 				};
+ 			};
+ 			port@4 {
+-				reg = <3>;
++				reg = <4>;
+ 				cluster1_funnel_in_port3: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&cluster1_etm3_out_port>;
++					coresight,hwid = <3>;
+ 				};
+ 			};
+ 		};
+@@ -395,6 +422,8 @@
+ 		port {
+ 			cluster1_etm1_out_port: endpoint {
+ 				remote-endpoint = <&cluster1_funnel_in_port1>;
++				coresight,hwid = <0>;
++				direction = <1>;
+ 			};
+ 		};
+ 	};
+@@ -418,6 +447,8 @@
+ 		port {
+ 			cluster1_etm2_out_port: endpoint {
+ 				remote-endpoint = <&cluster1_funnel_in_port2>;
++				coresight,hwid = <0>;
++				direction = <1>;
+ 			};
+ 		};
+ 	};
+@@ -441,6 +472,8 @@
+ 		port {
+ 			cluster1_etm3_out_port: endpoint {
+ 				remote-endpoint = <&cluster1_funnel_in_port3>;
++				coresight,hwid = <0>;
++				direction = <1>;
+ 			};
+ 		};
+ 	};
+@@ -462,6 +495,8 @@
+ 				reg = <0>;
+ 				replicator_out_port0: endpoint {
+ 					remote-endpoint = <&tpiu_in_port>;
++					coresight,hwid = <0>;
++					direction = <1>;
+ 				};
+ 			};
  
+@@ -469,14 +504,17 @@
+ 				reg = <1>;
+ 				replicator_out_port1: endpoint {
+ 					remote-endpoint = <&etr_in_port>;
++					coresight,hwid = <1>;
++					direction = <1>;
+ 				};
+ 			};
+ 
+ 			/* replicator input port */
+ 			port@2 {
+-				reg = <0>;
++				reg = <2>;
+ 				replicator_in_port0: endpoint {
+-					slave-mode;
++					direction = <0>;
++					coresight,hwid = <0>;
+ 				};
+ 			};
+ 		};
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index c9236c4..27b8036 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -260,10 +260,11 @@
+ &main_funnel {
+ 	ports {
+ 		port@3 {
+-			reg = <2>;
++			reg = <3>;
+ 			main_funnel_in_port2: endpoint {
+-				slave-mode;
++				direction = <0>;
+ 				remote-endpoint = <&stm_out_port>;
++				coresight,hwid = <2>;
+ 			};
+ 		};
+ 	};
 -- 
 2.7.4
