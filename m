@@ -1,19 +1,13 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 3/6] clk: ti: dra7: Add clkctrl clock data for the mcan
- clocks
-Date: Fri, 1 Jun 2018 12:18:37 +0530
-Message-ID: <d7532c7a-d2ae-5cbf-cfd0-c347b975ed6b@ti.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-4-faiz_abbas@ti.com>
- <20180531040350.GA25132@rob-hp-laptop>
- <e7e3ade1-76b7-f216-ece5-bd64a55cede6@ti.com>
- <678ef467-a235-91db-8bae-f249ad98eac8@ti.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v1 2/4] dt-bindings: mailbox: provide imx-mailbox documentation
+Date: Fri,  1 Jun 2018 08:58:19 +0200
+Message-ID: <20180601065821.28234-3-o.rempel@pengutronix.de>
+References: <20180601065821.28234-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <678ef467-a235-91db-8bae-f249ad98eac8@ti.com>
-Content-Language: en-US
+In-Reply-To: <20180601065821.28234-1-o.rempel@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,33 +17,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, paul@pwsan.com, tony@atomide.com, linux-kernel@vger.kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHVyc2RheSAzMSBNYXkgMjAxOCAwNjo1OSBQTSwgVGVybyBLcmlzdG8gd3JvdGU6
-Cj4gT24gMzEvMDUvMTggMTM6MTQsIEZhaXogQWJiYXMgd3JvdGU6Cj4+IEhpLAo+Pgo+PiBPbiBU
-aHVyc2RheSAzMSBNYXkgMjAxOCAwOTozMyBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+PiBPbiBX
-ZWQsIE1heSAzMCwgMjAxOCBhdCAwNzo0MTozMFBNICswNTMwLCBGYWl6IEFiYmFzIHdyb3RlOgo+
-Pj4+IEFkZCBjbGtjdHJsIGRhdGEgZm9yIHRoZSBtX2NhbiBjbG9ja3MgYW5kIHJlZ2lzdGVyIGl0
-IHdpdGhpbiB0aGUKPj4gLi4uCj4+Pj4gwqAgZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGlu
-Z3MvY2xvY2svZHJhNy5oCj4+Pj4gYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2RyYTcuaAo+
-Pj4+IGluZGV4IDVlMTA2MWIxNWFlZC4uZDc1NDljNTdjYWMzIDEwMDY0NAo+Pj4+IC0tLSBhL2lu
-Y2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svZHJhNy5oCj4+Pj4gKysrIGIvaW5jbHVkZS9kdC1iaW5k
-aW5ncy9jbG9jay9kcmE3LmgKPj4+PiBAQCAtMTY4LDUgKzE2OCw2IEBACj4+Pj4gwqAgI2RlZmlu
-ZSBEUkE3X0NPVU5URVJfMzJLX0NMS0NUUkzCoMKgwqAgRFJBN19DTEtDVFJMX0lOREVYKDB4NTAp
-Cj4+Pj4gwqAgI2RlZmluZSBEUkE3X1VBUlQxMF9DTEtDVFJMwqDCoMKgIERSQTdfQ0xLQ1RSTF9J
-TkRFWCgweDgwKQo+Pj4+IMKgICNkZWZpbmUgRFJBN19EQ0FOMV9DTEtDVFJMwqDCoMKgIERSQTdf
-Q0xLQ1RSTF9JTkRFWCgweDg4KQo+Pj4+ICsjZGVmaW5lIERSQTdfQURDX0NMS0NUUkzCoMKgwqAg
-RFJBN19DTEtDVFJMX0lOREVYKDB4YTApCj4+Pgo+Pj4gQURDIGFuZCBtY2FuIGFyZSB0aGUgc2Ft
-ZSB0aGluZz8KPj4+Cj4+Cj4+IFRoZSByZWdpc3RlciB0byBjb250cm9sIE1DQU4gY2xvY2tzIGlz
-IGNhbGxlZCBBRENfQ0xLQ1RSTCwgWWVzLgo+IAo+IElzIHRoZXJlIGFueSByZWFzb24gZm9yIHRo
-aXMgb3IgaXMgdGhhdCBqdXN0IGEgZG9jdW1lbnRhdGlvbiBidWc/Cj4gCgpMb29rcyBsaWtlIHRo
-ZXkgbWVhbnQgdG8gaGF2ZSBhbiBBREMgaW4gZHJhNzQgb3IgZHJhNzIgYnV0IGRlY2lkZWQKYWdh
-aW5zdCBpdCBhbmQgdGhlbiBtYW55IHllYXJzIGxhdGVyIHVzZWQgdGhlIHNhbWUgcmVnaXN0ZXJz
-IGZvciBNQ0FOCmluc3RlYWQuIFlvdSBjYW4gc2VlIEFEQ19DTEtDVFJMIGV4aXN0cyBpbiBkcmE3
-MiBUUk0gYnV0IGlzIGV4cGxpY2l0bHkKZGlzYWJsZWQuCgpodHRwOi8vd3d3LnRpLmNvbS9saXQv
-dWcvc3BydWljMmIvc3BydWljMmIucGRmIHBnOjE1MjQKCgpUaGFua3MsCkZhaXoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ .../bindings/mailbox/imx-mailbox.txt          | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+
+diff --git a/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+new file mode 100644
+index 000000000000..a45604b33039
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+@@ -0,0 +1,35 @@
++i.MX Messaging Unit
++===================
++
++The i.MX Messaging Unit (MU) contains two register sets: "A" and "B". In most cases
++they are accessible from all Processor Units. On one hand, at least for mailbox functionality,
++it makes no difference which application or processor is using which set of the MU. On
++other hand, the register sets for each of the MU parts are not identical.
++
++Required properties:
++- compatible :	Shell be one of:
++                    "fsl,imx7s-mu-a" and "fsl,imx7s-mu-b" for i.MX7S or i.MX7D
++- reg : 	physical base address of the mailbox and length of
++		memory mapped region.
++- #mbox-cells:	Common mailbox binding property to identify the number
++		of cells required for the mailbox specifier. Should be 1.
++- interrupts :	interrupt number. The interrupt specifier format
++		depends on the interrupt controller parent.
++- clocks     :  phandle to the input clock.
++
++Example:
++	mu0a: mu@30aa0000 {
++		compatible = "fsl,imx7s-mu-a";
++		reg = <0x30aa0000 0x28>;
++		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clks IMX7D_MU_ROOT_CLK>;
++		#mbox-cells = <1>;
++	};
++
++	mu0b: mu@30ab0000 {
++		compatible = "fsl,imx7s-mu-b";
++		reg = <0x30ab0000 0x28>;
++		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clks IMX7D_MU_ROOT_CLK>;
++		#mbox-cells = <1>;
++	};
+-- 
+2.17.1
