@@ -1,107 +1,81 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: Re: [PATCH 05/11] ARM: dts: Reflect change of FSL QSPI driver and
- remove unused properties
-Date: Fri, 1 Jun 2018 11:27:13 +0200
-Message-ID: <d6512adf-2d48-5bdc-d793-a7c1fcabc177@exceet.de>
-References: <1527686082-15142-1-git-send-email-frieder.schrempf@exceet.de>
- <1527686082-15142-6-git-send-email-frieder.schrempf@exceet.de>
- <20180530171057.39f1a2be@bbrezillon>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
+Date: Fri, 1 Jun 2018 11:33:11 +0200
+Message-ID: <20180601093311.GA31639@amd>
+References: <20180601082259.17563-1-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180530171057.39f1a2be@bbrezillon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, yogeshnarayan.gaur@nxp.com, Rob Herring <robh+dt@kernel.org>, richard@nod.at, Sascha Hauer <s.hauer@pengutronix.de>, prabhakar.kushwaha@nxp.com, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-spi@vger.kernel.org, marek.vasut@gmail.com, han.xu@nxp.com, broonie@kernel.org, linux-mtd@lists.infradead.org, Pengutronix Kernel Team <kernel@pengutronix.de>, miquel.raynal@bootlin.com, fabio.estevam@nxp.com, david.wolfe@nxp.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180601082259.17563-1-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
 
-On 30.05.2018 17:10, Boris Brezillon wrote:
-> On Wed, 30 May 2018 15:14:34 +0200
-> Frieder Schrempf <frieder.schrempf@exceet.de> wrote:
-> 
->> The FSL QSPI driver was moved to the SPI framework and it now
->> acts as a SPI controller. Therefore the subnodes need to set
->> spi-[rx/tx]-bus-width = <4>, so quad mode is used just as before.
-> 
-> We should try to keep the current behavior even when
-> spi-[rx/tx]-bus-width are not defined. How about considering
-> spi-[rx/tx]-bus-width as board constraints and then let the core pick
-> the best mode based on these constraints plus the SPI NOR chip
-> limitations.
+--GvXjxJ+pjyke8COw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, I'll try to adjust this, so we can leave spi-[rx/tx]-bus-width 
-undefined and still get quad mode as default if possible.
+Hi!
 
-> 
->>
->> Also the properties 'bus-num', 'fsl,spi-num-chipselects' and
->> 'fsl,spi-flash-chipselects' were never read by the driver and
->> can be removed.
->>
->> The 'reg' properties are adjusted to reflect the what bus and
->> chipselect the flash is connected to, as the new driver needs
->> this information.
->>
->> The property 'fsl,qspi-has-second-chip' is not needed anymore
->> and will be removed after the old driver was disabled to avoid
->> breaking ls1021a-moxa-uc-8410a.dts.
->>
->> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
->> ---
->>   arch/arm/boot/dts/imx6sx-sdb-reva.dts       | 8 ++++++--
->>   arch/arm/boot/dts/imx6sx-sdb.dts            | 8 ++++++--
->>   arch/arm/boot/dts/imx6ul-14x14-evk.dtsi     | 2 ++
->>   arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 5 ++---
->>   4 files changed, 16 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
->> index e3533e7..1a6f680 100644
->> --- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
->> +++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
->> @@ -131,13 +131,17 @@
->>   		#size-cells = <1>;
->>   		compatible = "spansion,s25fl128s", "jedec,spi-nor";
->>   		spi-max-frequency = <66000000>;
->> +		spi-rx-bus-width = <4>;
->> +		spi-tx-bus-width = <4>;
->>   	};
->>   
->> -	flash1: s25fl128s@1 {
->> -		reg = <1>;
->> +	flash1: s25fl128s@2 {
->> +		reg = <2>;
-> 
-> Hm, you're breaking backward compat here. Can we try to re-use the
-> old numbering scheme instead of patching all DTs?
+> This series adds a new subsystem for GNSS receivers (e.g. GPS
+> receivers).
+>=20
+> While GNSS receivers are typically accessed using a UART interface they
+> often also support other I/O interfaces such as I2C, SPI and USB, while
+> yet other devices use iomem or even some form of remote-processor
+> messaging (rpmsg).
+>=20
+> The new GNSS subsystem abstracts the underlying interface and provides a
+> new "gnss" class type, which exposes a character-device interface (e.g.
+> /dev/gnss0) to user space. This allows GNSS receivers to have a
+> representation in the Linux device model, something which is important
+> not least for power management purposes and which also allows for easy
+> detection and identification of GNSS devices.
+>=20
+> Note that the character-device interface provides raw access to whatever
+> protocol the receiver is (currently) using, such as NMEA 0183, UBX or
+> SiRF Binary. These protocols are expected to be continued to be handled
+> by user space for the time being, even if some hybrid solutions are also
+> conceivable (e.g. to have kernel drivers issue management commands).
 
-Unfortunately in the current setup, the definitions for the reg property 
-are already broken.
+So.. while you did good work on serial power management, this is
+grossly misnamed. There's nothing GNSS specific in the code, and you
+are not presenting consistent interface to the userland.
 
-For example imx6sx-sdb.dts seems to have one chip connected on bus A, 
-CS0 and one on bus B, CS0. It has reg set to 0 for the first and 1 for 
-the second chip.
+This is _not_ GNSS subsystem. This is serial power management
+subsystem, or something like that. GPS/GNSS subsystem will need to be
+built on top of this.
 
-While fsl-ls208xa-qds.dtsi uses the same hw setup, but has reg set to 0 
-and 2.
+This will never handle devices like Nokia N900, where GPS is connected
+over netlink.
 
-So either way we need to change the reg property at some place.
-So the best approach in my opinion is to fix the definitions to use a 
-single scheme and while at it also remove the fsl,qspi-has-second-chip 
-property, that is not needed if a single consistent scheme for the reg 
-properties is used.
+> Another possible extension is to add generic 1PPS support.
 
-Regards,
+And there's nothing GNSS specific in the patches.
 
-Frieder
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--GvXjxJ+pjyke8COw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlsREtcACgkQMOfwapXb+vLGZQCfXV8ML69UM59a7/UJ8YKGzNBp
+3C8Aniq+RbMLh3WlvmdTTjzU8spc54ps
+=tkXS
+-----END PGP SIGNATURE-----
+
+--GvXjxJ+pjyke8COw--
