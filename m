@@ -1,29 +1,23 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 3/3] ARM: dts: imx7: correct enet ipg clock
-Date: Fri, 01 Jun 2018 12:18:07 -0700
-Message-ID: <152788068714.225090.5079106153189288626@swboyd.mtv.corp.google.com>
-References: <1526605266-18464-1-git-send-email-Anson.Huang@nxp.com>
- <1526605266-18464-3-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] clk: aspeed: Add 24MHz fixed clock
+Date: Fri, 01 Jun 2018 12:19:38 -0700
+Message-ID: <152788077869.225090.2191512799899111487@swboyd.mtv.corp.google.com>
+References: <1526633822-17138-1-git-send-email-mine260309@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1526605266-18464-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1526633822-17138-1-git-send-email-mine260309@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, adriana.reus@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, rui.silva@linaro.org, shawnguo@kernel.org, stefan@agner.ch
-Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Lei YU <mine260309@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2018-05-17 18:01:06)
-> ENET "ipg" clock should be IMX7D_ENETx_IPG_ROOT_CLK
-> rather than IMX7D_ENET_AXI_ROOT_CLK which is for ENET bus
-> clock.
+Quoting Lei YU (2018-05-18 01:57:02)
+> Add a 24MHz fixed clock.
+> This clock will be used for certain devices, e.g. pwm.
 > =
 
-> Based on Andy Duan's patch from the NXP kernel tree.
-> =
-
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Lei YU <mine260309@gmail.com>
 > ---
 
 Applied to clk-next
