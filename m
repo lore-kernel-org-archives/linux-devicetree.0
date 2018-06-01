@@ -1,48 +1,305 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 3/3] arm64: dts: renesas: v3hsk: specify GEther PHY IRQ
-Date: Fri, 1 Jun 2018 23:47:14 +0300
-Message-ID: <9e6c40eb-71d0-d35b-1cf7-9179e093ed10@cogentembedded.com>
-References: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [RFC PATCH 8/8] dts: juno: Update coresight bindings for hw port
+Date: Fri, 1 Jun 2018 14:59:45 -0600
+Message-ID: <20180601205945.GE9838@xps15>
+References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+ <1527858967-16047-9-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1527858967-16047-9-git-send-email-suzuki.poulose@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Specify GEther PHY IRQ in the V3H Starter Kit board's device tree, now
-that we have the GPIO support (previously phylib had to resort to polling).
+On Fri, Jun 01, 2018 at 02:16:07PM +0100, Suzuki K Poulose wrote:
+> Switch to updated coresight bindings for hw ports.
+> 
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Based on the original (and large) patch by Vladimir Barinov.
+Reviewed-and-tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
- arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts |    2 ++
- 1 file changed, 2 insertions(+)
-
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-@@ -48,6 +48,8 @@
- 
- 	phy0: ethernet-phy@0 {
- 		reg = <0>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
+> ---
+>  arch/arm64/boot/dts/arm/juno-base.dtsi | 82 +++++++++++++++++++++++++---------
+>  arch/arm64/boot/dts/arm/juno.dts       |  5 ++-
+>  2 files changed, 63 insertions(+), 24 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> index eb749c5..33b41ba 100644
+> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> @@ -122,15 +122,18 @@
+>  			port@0 {
+>  				reg = <0>;
+>  				etf0_in_port: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&main_funnel_out_port>;
+> +					coresight,hwid = <0>;
+>  				};
+>  			};
+>  
+>  			/* output port */
+>  			port@1 {
+> -				reg = <0>;
+> +				reg = <1>;
+>  				etf0_out_port: endpoint {
+> +					coresight,hwid = <0>;
+> +					direction = <1>;
+>  				};
+>  			};
+>  		};
+> @@ -145,8 +148,9 @@
+>  		power-domains = <&scpi_devpd 0>;
+>  		port {
+>  			tpiu_in_port: endpoint {
+> -				slave-mode;
+> +				direction = <0>;
+>  				remote-endpoint = <&replicator_out_port0>;
+> +				coresight,hwid = <0>;
+>  			};
+>  		};
+>  	};
+> @@ -168,23 +172,27 @@
+>  				reg = <0>;
+>  				main_funnel_out_port: endpoint {
+>  					remote-endpoint = <&etf0_in_port>;
+> +					coresight,hwid = <0>;
+> +					direction = <1>;
+>  				};
+>  			};
+>  
+>  			/* input ports */
+>  			port@1 {
+> -				reg = <0>;
+> +				reg = <1>;
+>  				main_funnel_in_port0: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster0_funnel_out_port>;
+> +					coresight,hwid = <0>;
+>  				};
+>  			};
+>  
+>  			port@2 {
+> -				reg = <1>;
+> +				reg = <2>;
+>  				main_funnel_in_port1: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster1_funnel_out_port>;
+> +					coresight,hwid = <1>;
+>  				};
+>  			};
+>  		};
+> @@ -200,8 +208,9 @@
+>  		power-domains = <&scpi_devpd 0>;
+>  		port {
+>  			etr_in_port: endpoint {
+> -				slave-mode;
+> +				direction = <0>;
+>  				remote-endpoint = <&replicator_out_port1>;
+> +				coresight,hwid = <0>;
+>  			};
+>  		};
+>  	};
+> @@ -217,6 +226,8 @@
+>  		power-domains = <&scpi_devpd 0>;
+>  		port {
+>  			stm_out_port: endpoint {
+> +				coresight,hwid = <0>;
+> +				direction = <1>;
+>  			};
+>  		};
+>  	};
+> @@ -240,6 +251,8 @@
+>  		port {
+>  			cluster0_etm0_out_port: endpoint {
+>  				remote-endpoint = <&cluster0_funnel_in_port0>;
+> +				coresight,hwid = <0>;
+> +				direction = <1>;
+>  			};
+>  		};
+>  	};
+> @@ -259,22 +272,26 @@
+>  				reg = <0>;
+>  				cluster0_funnel_out_port: endpoint {
+>  					remote-endpoint = <&main_funnel_in_port0>;
+> +					coresight,hwid = <0>;
+> +					direction = <1>;
+>  				};
+>  			};
+>  
+>  			port@1 {
+> -				reg = <0>;
+> +				reg = <1>;
+>  				cluster0_funnel_in_port0: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster0_etm0_out_port>;
+> +					coresight,hwid = <0>;
+>  				};
+>  			};
+>  
+>  			port@2 {
+> -				reg = <1>;
+> +				reg = <2>;
+>  				cluster0_funnel_in_port1: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster0_etm1_out_port>;
+> +					coresight,hwid = <1>;
+>  				};
+>  			};
+>  		};
+> @@ -299,6 +316,8 @@
+>  		port {
+>  			cluster0_etm1_out_port: endpoint {
+>  				remote-endpoint = <&cluster0_funnel_in_port1>;
+> +				coresight,hwid = <0>;
+> +				direction = <1>;
+>  			};
+>  		};
+>  	};
+> @@ -322,6 +341,8 @@
+>  		port {
+>  			cluster1_etm0_out_port: endpoint {
+>  				remote-endpoint = <&cluster1_funnel_in_port0>;
+> +				coresight,hwid = <0>;
+> +				direction = <1>;
+>  			};
+>  		};
+>  	};
+> @@ -341,36 +362,42 @@
+>  				reg = <0>;
+>  				cluster1_funnel_out_port: endpoint {
+>  					remote-endpoint = <&main_funnel_in_port1>;
+> +					coresight,hwid = <0>;
+> +					direction = <1>;
+>  				};
+>  			};
+>  
+>  			port@1 {
+> -				reg = <0>;
+> +				reg = <1>;
+>  				cluster1_funnel_in_port0: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster1_etm0_out_port>;
+> +					coresight,hwid = <0>;
+>  				};
+>  			};
+>  
+>  			port@2 {
+> -				reg = <1>;
+> +				reg = <2>;
+>  				cluster1_funnel_in_port1: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster1_etm1_out_port>;
+> +					coresight,hwid = <1>;
+>  				};
+>  			};
+>  			port@3 {
+> -				reg = <2>;
+> +				reg = <3>;
+>  				cluster1_funnel_in_port2: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster1_etm2_out_port>;
+> +					coresight,hwid = <2>;
+>  				};
+>  			};
+>  			port@4 {
+> -				reg = <3>;
+> +				reg = <4>;
+>  				cluster1_funnel_in_port3: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+>  					remote-endpoint = <&cluster1_etm3_out_port>;
+> +					coresight,hwid = <3>;
+>  				};
+>  			};
+>  		};
+> @@ -395,6 +422,8 @@
+>  		port {
+>  			cluster1_etm1_out_port: endpoint {
+>  				remote-endpoint = <&cluster1_funnel_in_port1>;
+> +				coresight,hwid = <0>;
+> +				direction = <1>;
+>  			};
+>  		};
+>  	};
+> @@ -418,6 +447,8 @@
+>  		port {
+>  			cluster1_etm2_out_port: endpoint {
+>  				remote-endpoint = <&cluster1_funnel_in_port2>;
+> +				coresight,hwid = <0>;
+> +				direction = <1>;
+>  			};
+>  		};
+>  	};
+> @@ -441,6 +472,8 @@
+>  		port {
+>  			cluster1_etm3_out_port: endpoint {
+>  				remote-endpoint = <&cluster1_funnel_in_port3>;
+> +				coresight,hwid = <0>;
+> +				direction = <1>;
+>  			};
+>  		};
+>  	};
+> @@ -462,6 +495,8 @@
+>  				reg = <0>;
+>  				replicator_out_port0: endpoint {
+>  					remote-endpoint = <&tpiu_in_port>;
+> +					coresight,hwid = <0>;
+> +					direction = <1>;
+>  				};
+>  			};
+>  
+> @@ -469,14 +504,17 @@
+>  				reg = <1>;
+>  				replicator_out_port1: endpoint {
+>  					remote-endpoint = <&etr_in_port>;
+> +					coresight,hwid = <1>;
+> +					direction = <1>;
+>  				};
+>  			};
+>  
+>  			/* replicator input port */
+>  			port@2 {
+> -				reg = <0>;
+> +				reg = <2>;
+>  				replicator_in_port0: endpoint {
+> -					slave-mode;
+> +					direction = <0>;
+> +					coresight,hwid = <0>;
+>  				};
+>  			};
+>  		};
+> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+> index c9236c4..27b8036 100644
+> --- a/arch/arm64/boot/dts/arm/juno.dts
+> +++ b/arch/arm64/boot/dts/arm/juno.dts
+> @@ -260,10 +260,11 @@
+>  &main_funnel {
+>  	ports {
+>  		port@3 {
+> -			reg = <2>;
+> +			reg = <3>;
+>  			main_funnel_in_port2: endpoint {
+> -				slave-mode;
+> +				direction = <0>;
+>  				remote-endpoint = <&stm_out_port>;
+> +				coresight,hwid = <2>;
+>  			};
+>  		};
+>  	};
+> -- 
+> 2.7.4
+> 
