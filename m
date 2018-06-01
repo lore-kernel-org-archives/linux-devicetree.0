@@ -1,57 +1,192 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v8 0/7] i2c: Add FSI-attached I2C master algorithm
-Date: Fri, 01 Jun 2018 09:33:49 +1000
-Message-ID: <5683dded80ecabef532d2e285e5fc98e29f59510.camel@kernel.crashing.org>
-References: <1527714464-8642-1-git-send-email-eajames@linux.vnet.ibm.com>
-         <CAHp75VerhOMCTPGz5b8wUNL611AdT1iutRm-wrHfzzT+_GbvWA@mail.gmail.com>
-         <58c1059a91b93a490a7fc8bda2112e67e6513840.camel@kernel.crashing.org>
-         <CAHp75Vec+KZCkjcs3qpB=qLmaTon=yTLyu7S_tDrMGcobHW5eQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Brian Norris <briannorris@chromium.org>
+Subject: [PATCH 1/2] power: supply: sbs-battery: don't assume MANUFACTURER_DATA formats
+Date: Thu, 31 May 2018 17:32:51 -0700
+Message-ID: <20180601003252.42810-1-briannorris@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vec+KZCkjcs3qpB=qLmaTon=yTLyu7S_tDrMGcobHW5eQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Eddie James <eajames@linux.vnet.ibm.com>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-05-31 at 09:29 +0300, Andy Shevchenko wrote:
-> > If you have specific issues with how this is done, please express them
-> > clearly. It's quite possible that there's some better way to do what
-> > Eddie is doing here, but without *construtive* feedback this is
-> > pointless.
-> 
-> It feels like you duplicate approach which is done in OF generic case.
-> That is my concern. Though, if Wolfram is telling that is OK, I have
-> no objections.
+This driver was originally submitted for the TI BQ20Z75 battery IC
+(commit a7640bfa10c5 ("power_supply: Add driver for TI BQ20Z75 gas gauge
+IC")) and later renamed to express generic SBS support. While it's
+mostly true that this driver implemented a standard SBS command set, it
+takes liberties with the REG_MANUFACTURER_DATA register. This register
+is specified in the SBS spec, but it doesn't make any mention of what
+its actual contents are.
 
-THe OF generic case is about discovering slaves underneath a port, not
-ports inside of a mulit-port master.
+We've sort of noticed this optionality previously, with commit
+17c6d3979e5b ("sbs-battery: make writes to ManufacturerAccess
+optional"), where we found that some batteries NAK writes to this
+register.
 
-I am not aware of a generic mechanism for the latter. We *could* make
-the ports sub-devices but it gets messy then to arbitrate the
-communication and deal with the common part. I've seen (and written)
-multi-port masters in the past that use a similar approach to what
-Eddie's doing and it works fine.
+What this really means is that so far, we've just been lucky that most
+batteries have either been compatible with the TI chip, or else at least
+haven't reported highly-unexpected values.
 
-> > I'm disappointed here because we have an example of somebody rather new
-> > producing what is overall pretty damn good code,
-> 
-> That is true. His code much better than many I have seen before
+For instance, one battery I have here seems to report either 0x0000 or
+0x0100 to the MANUFACTURER_ACCESS_STATUS command -- while this seems to
+match either Wake Up (bits[11:8] = 0000b) or Normal Discharge
+(bits[11:8] = 0001b) status for the TI part [1], they don't seem to
+actually correspond to real states (for instance, I never see 0101b =
+Charge, even when charging).
 
-Thanks. Also thanks for taking the time to review.
+On other batteries, I'm getting apparently random data in return, which
+means that occasionally, we interpret this as "battery not present" or
+"battery is not healthy".
 
-> > despite a few corner
-> > issues, and being (again) treated like crap.
-> 
-> Sorry for that, life is harsh.
-> 
-> > This isn't the right way to operate, and I believe this has been made
-> > clear many times before.
-> 
-> Yes.
+All in all, it seems to be a really bad idea to make assumptions about
+REG_MANUFACTURER_DATA, unless we already know what battery we're using.
+Therefore, this patch reimplements the "present" and "health" checks to
+the following on most SBS batteries:
 
+1. HEALTH: report "unknown" -- I couldn't find a standard SBS command
+   that gives us much useful here
+2. PRESENT: just send a REG_STATUS command; if it succeeds, then the
+   battery is present
 
-Cheers,
-Ben.
+Also, we stop sending MANUFACTURER_ACCESS_SLEEP to non-TI parts. I have
+no proof that this is useful and supported.
+
+If someone explicitly provided a 'ti,bq20z75' compatible property, then
+we retain the existing TI command behaviors.
+
+[1] http://www.ti.com/lit/er/sluu265a/sluu265a.pdf
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+ drivers/power/supply/sbs-battery.c | 61 +++++++++++++++++++++++++-----
+ 1 file changed, 52 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+index 83d7b4115857..e15d0ca4729d 100644
+--- a/drivers/power/supply/sbs-battery.c
++++ b/drivers/power/supply/sbs-battery.c
+@@ -23,6 +23,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/power/sbs-battery.h>
+ #include <linux/power_supply.h>
+ #include <linux/slab.h>
+@@ -84,8 +85,9 @@ static const struct chip_data {
+ 	int min_value;
+ 	int max_value;
+ } sbs_data[] = {
++	/* Manuf. data isn't directly useful as a POWER_SUPPLY_PROP */
+ 	[REG_MANUFACTURER_DATA] =
+-		SBS_DATA(POWER_SUPPLY_PROP_PRESENT, 0x00, 0, 65535),
++		SBS_DATA(-1, 0x00, 0, 65535),
+ 	[REG_TEMPERATURE] =
+ 		SBS_DATA(POWER_SUPPLY_PROP_TEMP, 0x08, 0, 65535),
+ 	[REG_VOLTAGE] =
+@@ -156,6 +158,9 @@ static enum power_supply_property sbs_properties[] = {
+ 	POWER_SUPPLY_PROP_MODEL_NAME
+ };
+ 
++/* Supports special manufacturer commands from TI BQ20Z75 IC. */
++#define SBS_FLAGS_TI_BQ20Z75		BIT(0)
++
+ struct sbs_info {
+ 	struct i2c_client		*client;
+ 	struct power_supply		*power_supply;
+@@ -168,6 +173,7 @@ struct sbs_info {
+ 	u32				poll_retry_count;
+ 	struct delayed_work		work;
+ 	struct mutex			mode_lock;
++	u32				flags;
+ };
+ 
+ static char model_name[I2C_SMBUS_BLOCK_MAX + 1];
+@@ -315,6 +321,31 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
+ static int sbs_get_battery_presence_and_health(
+ 	struct i2c_client *client, enum power_supply_property psp,
+ 	union power_supply_propval *val)
++{
++	int ret;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_PRESENT:
++		/* Dummy command; if it succeeds, battery is present. */
++		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
++		if (ret < 0)
++			val->intval = 0; /* battery disconnected */
++		else
++			val->intval = 1; /* battery present */
++		return 0;
++	case POWER_SUPPLY_PROP_HEALTH:
++		/* SBS spec doesn't have a general health command. */
++		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
++		return 0;
++	default:
++		dev_err(&client->dev, "unexpected prop %d\n", psp);
++		return -EINVAL;
++	}
++}
++
++static int sbs_get_ti_battery_presence_and_health(
++	struct i2c_client *client, enum power_supply_property psp,
++	union power_supply_propval *val)
+ {
+ 	s32 ret;
+ 
+@@ -600,7 +631,12 @@ static int sbs_get_property(struct power_supply *psy,
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_PRESENT:
+ 	case POWER_SUPPLY_PROP_HEALTH:
+-		ret = sbs_get_battery_presence_and_health(client, psp, val);
++		if (client->flags & SBS_FLAGS_TI_BQ20Z75)
++			ret = sbs_get_ti_battery_presence_and_health(client,
++								     psp, val);
++		else
++			ret = sbs_get_battery_presence_and_health(client, psp,
++								  val);
+ 		if (psp == POWER_SUPPLY_PROP_PRESENT)
+ 			return 0;
+ 		break;
+@@ -806,6 +842,7 @@ static int sbs_probe(struct i2c_client *client,
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
++	chip->flags = (u32)(uintptr_t)of_device_get_match_data(&client->dev);
+ 	chip->client = client;
+ 	chip->enable_detection = false;
+ 	psy_cfg.of_node = client->dev.of_node;
+@@ -915,12 +952,15 @@ static int sbs_suspend(struct device *dev)
+ 	if (chip->poll_time > 0)
+ 		cancel_delayed_work_sync(&chip->work);
+ 
+-	/*
+-	 * Write to manufacturer access with sleep command.
+-	 * Support is manufacturer dependend, so ignore errors.
+-	 */
+-	sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
+-		MANUFACTURER_ACCESS_SLEEP);
++	if (chip->flags & SBS_FLAGS_TI_BQ20Z75) {
++		/*
++		 * Write to manufacturer access with sleep command.
++		 * Support is manufacturer dependent, so ignore errors.
++		 */
++		sbs_write_word_data(client,
++				    sbs_data[REG_MANUFACTURER_DATA].addr,
++				    MANUFACTURER_ACCESS_SLEEP);
++	}
+ 
+ 	return 0;
+ }
+@@ -941,7 +981,10 @@ MODULE_DEVICE_TABLE(i2c, sbs_id);
+ 
+ static const struct of_device_id sbs_dt_ids[] = {
+ 	{ .compatible = "sbs,sbs-battery" },
+-	{ .compatible = "ti,bq20z75" },
++	{
++		.compatible = "ti,bq20z75",
++		.data = (void *)SBS_FLAGS_TI_BQ20Z75,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sbs_dt_ids);
+-- 
+2.17.0.921.gf22659ad46-goog
