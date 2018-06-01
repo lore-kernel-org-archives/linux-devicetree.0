@@ -1,69 +1,94 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 3/6] clk: ti: dra7: Add clkctrl clock data for the
- mcan clocks
-Date: Fri, 1 Jun 2018 07:26:13 -0700
-Message-ID: <20180601142613.GU5705@atomide.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-4-faiz_abbas@ti.com>
- <20180531040350.GA25132@rob-hp-laptop>
- <e7e3ade1-76b7-f216-ece5-bd64a55cede6@ti.com>
- <678ef467-a235-91db-8bae-f249ad98eac8@ti.com>
- <d7532c7a-d2ae-5cbf-cfd0-c347b975ed6b@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Fri, 1 Jun 2018 09:29:02 -0500
+Message-ID: <CAL_JsqJsGouQjWAu01fR4LpwanKbSj1d_CvyPXyMBe2vVBHqdw@mail.gmail.com>
+References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
+ <1527486084-4636-2-git-send-email-srinath.mannam@broadcom.com>
+ <20180531164820.GA23074@rob-hp-laptop> <CABe79T7=LK=PgaftQeCRE8kmMMztFBNeJ4cdnZhv8ULDO=6+Jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d7532c7a-d2ae-5cbf-cfd0-c347b975ed6b@ti.com>
+In-Reply-To: <CABe79T7=LK=PgaftQeCRE8kmMMztFBNeJ4cdnZhv8ULDO=6+Jw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, bcousson@baylibre.com, paul@pwsan.com
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180601 06:49]:
-> Hi,
-> 
-> On Thursday 31 May 2018 06:59 PM, Tero Kristo wrote:
-> > On 31/05/18 13:14, Faiz Abbas wrote:
-> >> Hi,
-> >>
-> >> On Thursday 31 May 2018 09:33 AM, Rob Herring wrote:
-> >>> On Wed, May 30, 2018 at 07:41:30PM +0530, Faiz Abbas wrote:
-> >>>> Add clkctrl data for the m_can clocks and register it within the
-> >> ...
-> >>>>   diff --git a/include/dt-bindings/clock/dra7.h
-> >>>> b/include/dt-bindings/clock/dra7.h
-> >>>> index 5e1061b15aed..d7549c57cac3 100644
-> >>>> --- a/include/dt-bindings/clock/dra7.h
-> >>>> +++ b/include/dt-bindings/clock/dra7.h
-> >>>> @@ -168,5 +168,6 @@
-> >>>>   #define DRA7_COUNTER_32K_CLKCTRL    DRA7_CLKCTRL_INDEX(0x50)
-> >>>>   #define DRA7_UART10_CLKCTRL    DRA7_CLKCTRL_INDEX(0x80)
-> >>>>   #define DRA7_DCAN1_CLKCTRL    DRA7_CLKCTRL_INDEX(0x88)
-> >>>> +#define DRA7_ADC_CLKCTRL    DRA7_CLKCTRL_INDEX(0xa0)
-> >>>
-> >>> ADC and mcan are the same thing?
-> >>>
-> >>
-> >> The register to control MCAN clocks is called ADC_CLKCTRL, Yes.
-> > 
-> > Is there any reason for this or is that just a documentation bug?
-> > 
-> 
-> Looks like they meant to have an ADC in dra74 or dra72 but decided
-> against it and then many years later used the same registers for MCAN
-> instead. You can see ADC_CLKCTRL exists in dra72 TRM but is explicitly
-> disabled.
-> 
-> http://www.ti.com/lit/ug/spruic2b/spruic2b.pdf pg:1524
+On Fri, Jun 1, 2018 at 3:51 AM, Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+> Hi Rob Herring,
+>
+> Thank you for the review.
+> Please find my answers inline..
+>
+> On Thu, May 31, 2018 at 10:18 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Mon, May 28, 2018 at 11:11:22AM +0530, Srinath Mannam wrote:
+>>> From: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>
+>>> Add binding document for supported thermal implementation
+>>> in Stingray.
+>>>
+>>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>>> ---
+>>>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+>>>  1 file changed, 45 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>> new file mode 100644
+>>> index 0000000..33f9e11
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>> @@ -0,0 +1,45 @@
+>>> +* Broadcom Stingray Thermal
+>>> +
+>>> +This binding describes thermal sensors that is part of Stingray SoCs.
+>>> +
+>>> +Required properties:
+>>> +- compatible : Must be "brcm,sr-thermal"
+>>> +- reg : memory where tmon data will be available.
+>>
+>> What type of memory is this?
+> This is shared memory(cache-able) which is shared between two micro controllers.
 
-How about make add also something like to dra7.h:
+What else is in this shared memory? You should probably be
+representing that as a whole somewhere in DT.
 
-#define DRA7_MCAN_CLKCTRL DRA7_ADC_CLKCTRL
+> One micro controller update temperature of all thermal zones in this
+> shared memory.
+> thermal driver running on another micro controller monitors
+> temperature data of all thermal zones.
+>>
+>>> +
+>>> +Example:
+>>> +     tmons {
+>>> +             compatible = "simple-bus";
+>>> +             #address-cells = <1>;
+>>> +             #size-cells = <1>;
+>>> +             ranges;
+>>> +
+>>> +             tmon_ihost0: thermal@8f100000 {
+>>> +                     compatible = "brcm,sr-thermal";
+>>> +                     reg = <0x8f100000 0x4>;
+>>> +             };
+>>
+>> Convince me that you need a node per register. This can all be
+>> accomplished with a single node and either a single reg entry or a
+>> series of reg entries.
+>>
+> In our system we have 6 different thermal zones. each node belongs to
+> one thermal zone.
+> thermal driver detects each node as separate thermal zone and monitors
+> separately.
+> register entry is only 4byte memory which contains the temperature
+> value of respective thermal zone.
+> Based on requirement we can increase or decrease the number thermal
+> zones need to monitor.
 
-And you can add a comment to the dts file to avoid people
-getting confused with this constantly.
+Still, all this can be accomplished with a single node. Having a node
+per register in DT doesn't scale.
 
-Regards,
-
-Tony
+Rob
