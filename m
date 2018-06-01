@@ -1,136 +1,127 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH 2/3] dts: sunxi: A64: Add PWM controllers
-Date: Fri, 1 Jun 2018 10:31:01 -0700
-Message-ID: <CA+E=qVeAetBCxm3vHjXP8a3H=XSZR+M8X9mKTy3ML9vcW=rn8w@mail.gmail.com>
-References: <20180601062901.8052-1-anarsoul@gmail.com>
- <20180601062901.8052-3-anarsoul@gmail.com>
- <20180601091816.klmc3nfzynxprcso@flea>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+Date: Fri, 1 Jun 2018 12:32:16 -0500
+Message-ID: <CAL_JsqJNMxR=zdwR41iLfWU=u3J_=_VkxVL+g3a12_4vvNwBtw@mail.gmail.com>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <3b05ca98a671a762013c312f8b70543402ee7556.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180531030129.GA16122@rob-hp-laptop> <20180531071717.GG13528@localhost.localdomain>
+ <20180531102315.GA5150@localhost.localdomain> <CAL_Jsq+33G7zMEDOUXHQijxqqbvqykxZENLe1-52ECkXwo2o4g@mail.gmail.com>
+ <20180601062540.GB5150@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180601091816.klmc3nfzynxprcso@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Andre Przywara <andre.przywara@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180601062540.GB5150@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 1, 2018 at 2:18 AM, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> On Thu, May 31, 2018 at 11:29:00PM -0700, Vasily Khoruzhick wrote:
->> From: Andre Przywara <andre.przywara@arm.com>
+On Fri, Jun 1, 2018 at 1:25 AM, Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+> On Thu, May 31, 2018 at 09:07:24AM -0500, Rob Herring wrote:
+>> On Thu, May 31, 2018 at 5:23 AM, Matti Vaittinen
+>> <mazziesaccount@gmail.com> wrote:
+>> > On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
+>> >> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
+>> >> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
+>> >> > > Document devicetree bindings for ROHM BD71837 PMIC MFD.
+>> >> > > + - interrupts            : The interrupt line the device is connected to.
+>> >> > > + - interrupt-controller  : Marks the device node as an interrupt controller.
+>> >> >
+>> >> > What sub blocks have interrupts?
+>> >>
+>> >> The PMIC can generate interrupts from events which cause it to reset.
+>> >> Eg, irq from watchdog line change, power button pushes, reset request
+>> >> via register interface etc. I don't know any generic handling for these
+>> >> interrupts. In "normal" use-case this PMIC is powering the processor
+>> >> where driver is running and I do not see reasonable handling because
+>> >> power-reset is going to follow the irq.
+>> >>
+>> >
+>> > Oh, but when reading this I understand that the interrupt-controller
+>> > property should at least be optional.
 >>
->> The Allwinner A64 SoC features two PWM controllers, which are fully
->> compatible to the one used in the A13 and H3 chips.
->>
->> Add the nodes for the devices (one for the "normal" PWM, the other for
->> the one in the CPUS domain) and the pins their outputs are connected to.
->>
->> On the A64 the "normal" PWM is muxed together with one of the MDIO pins
->> used to communicate with the Ethernet PHY, so it won't be usable on many
->> boards. But the Pinebook laptop uses this pin for controlling the LCD
->> backlight.
->>
->> On Pine64 the CPUS PWM pin however is routed to the "RPi2" header,
->> at the same location as the PWM pin on the RaspberryPi.
->>
->> [vasily: fixed comment message as requested by Stefan Bruens]
->>
->> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->> Tested-by: Vasily Khoruzhick <anarsoul@gmail.com> on Pinebook (only the "normal" PWM)
->> Tested-by: Harald Geyer <harald@ccbib.org> on Teres-I (only the "normal" PWM)
+>> I don't think it should. The h/w either has an interrupt controller or
+>> it doesn't.
 >
-> Same thing, you should have your SoB there. And I'm not sure the
-> Tested-by format is valid. This information would be better in the
-> commit log itself.
-
-OK
-
+> I hope this explains why I did this interrupt controller - please tell
+> me if this is legitimate use-case and what you think of following:
 >
->> ---
->>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 28 +++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> index b5e903ccf0ec..e94bfa8477f6 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> @@ -365,6 +365,11 @@
->>                               bias-pull-up;
->>                       };
->>
->> +                     pwm_pin: pwm_pin {
->> +                             pins = "PD22";
->> +                             function = "pwm";
->> +                     };
->> +
->
-> Is there multiple options for that muxing? If not, add it to the PWM
-> node by default.
+> +Optional properties:
+> + - interrupt-controller        : Marks the device node as an interrupt controller.
+> +                         BD71837MWV can report different power state change
+> +                         events to other devices. Different events can be seen
+> +                         as separate BD71837 domain interrupts.
 
-OK
+To what other devices?
+
+> + - #interrupt-cells    : The number of cells to describe an IRQ should be 1.
+> +                           The first cell is the IRQ number.
+> +                           masks from ../interrupt-controller/interrupts.txt.
+
+I'm still not clear. Generally in a PMIC, you'd define an interrupt
+controller when there's a common set of registers to manage sub-block
+interrupts (typical mask/unmask, ack regs) and the subblocks
+themselves have control of masking/unmasking interrupts. If there's
+not a need to have these 2 levels of interrupt handling, then you
+don't really need to define an interrupt controller.
 
 >
->>                       rmii_pins: rmii_pins {
->>                               pins = "PD10", "PD11", "PD13", "PD14", "PD17",
->>                                      "PD18", "PD19", "PD20", "PD22", "PD23";
->> @@ -630,6 +635,15 @@
->>                       #interrupt-cells = <3>;
->>               };
->>
->> +             pwm: pwm@1c21400 {
->> +                     compatible = "allwinner,sun50i-a64-pwm",
->> +                                  "allwinner,sun5i-a13-pwm";
->> +                     reg = <0x01c21400 0x400>;
->> +                     clocks = <&osc24M>;
->> +                     #pwm-cells = <3>;
->> +                     status = "disabled";
->> +             };
->> +
->>               rtc: rtc@1f00000 {
->>                       compatible = "allwinner,sun6i-a31-rtc";
->>                       reg = <0x01f00000 0x54>;
->> @@ -667,6 +681,15 @@
->>                       #size-cells = <0>;
->>               };
->>
->> +             r_pwm: pwm@1f03800 {
->> +                     compatible = "allwinner,sun50i-a64-pwm",
->> +                                  "allwinner,sun5i-a13-pwm";
->> +                     reg = <0x01f03800 0x400>;
->> +                     clocks = <&osc24M>;
->> +                     #pwm-cells = <3>;
->> +                     status = "disabled";
->> +             };
->> +
->>               r_pio: pinctrl@1f02c00 {
->>                       compatible = "allwinner,sun50i-a64-r-pinctrl";
->>                       reg = <0x01f02c00 0x400>;
->> @@ -687,6 +710,11 @@
->>                               pins = "PL8", "PL9";
->>                               function = "s_i2c";
->>                       };
->> +
->> +                     r_pwm_pin: pwm {
->> +                             pins = "PL10";
->> +                             function = "s_pwm";
->> +                     };
+>> My concern is you added it but nothing uses it which tells
+>> me your binding is incomplete. I'd rather see complete bindings even
+>> if you don't have drivers.
 >
-> Ditto.
+> So this makes me wonder if my use-case for interrupt controller is
+> valid. I thought making this PMIC as interrupt controller is a nice way
+> of hiding the irq register and i2c access from other potential drivers
+> using these interrupts. But as I don't know what could be the potential
+> user for these irqs, I don't know how to complete binding. This is why I
+> also thought of making this optional, so that the potential for using
+> the interrupts would be there but it was not required when interrupts
+> are not needed.
 
-OK
+The only drivers getting these interrupts would be drivers for this
+PMIC. Interrupts are handled by the driver owning the h/w that
+generated the interrupt. I think that is the disconnect here.
 
+Take a power button. We don't create a generic power button interrupt
+and then have some generic power button interrupt handler. We have a
+handler for specifically for that device and then it generates a power
+button press event.
+
+>> For example, as-is, there's not really any
+>> need for the clocks child node. You can just make the parent a clock
+>> provider.
 >
-> Maxime
+> This sounds correct. I just lack of knowledge on how to handle clocks
+> in "standard way" using the clock framework and this was a result of
+> my first attempt. (Funny, I have written clk / synchronization drivers
+> for work in the past but still I have no idea on how to do this in
+> "standard way").
 >
-> --
-> Maxime Ripard, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+>> But we need a complete picture of the h/w to make that
+>> determination.
+>
+> My attempt is to create generic driver for this PMIC. I would rather not
+> limit it's use to any particular board/soc. The example binding is based
+> on my test environment where I simply connected this PMIC break out
+> board to beagle bone black. (I do also have a test board where i.MX8 and
+> peripherials are powered by this PMIC but I rather not limit this driver
+> to such single setup. Besides the linux running on that board is not
+> 'standard')
+
+That's how we design all the PMIC drivers. All the PMIC functions
+should be exposed thru standard class APIs. Though many PMICs are
+pretty tightly coupled to particular SoCs either by design or just
+there's not a lot of boards to create any sort of matrix of
+combinations.
+
+> The PMIC itself just has this 32.768 KHz clock output. Clock can be
+> enabled/disabled via register interface. I think this is intended to be
+> used for RTC but I thought this driver does not need to care about that.
+> I thought it is just a good idea to provide control via clk subsystem
+> and to not make assumptions on use-cases in this driver.
+
+Sure that is fine. No one is saying you shouldn't do that.
+
+Rob
