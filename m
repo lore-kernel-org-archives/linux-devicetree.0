@@ -1,220 +1,108 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] power: supply: sbs-battery: don't assume
- MANUFACTURER_DATA formats
-Date: Thu, 31 May 2018 18:20:27 -0700
-Message-ID: <0b2a6fde-4b5a-bccb-d6bf-18a1feac7632@roeck-us.net>
-References: <20180601003252.42810-1-briannorris@chromium.org>
+From: Levin <djw@t-chip.com.cn>
+Subject: Re: [PATCH v3 2/5] gpio: syscon: rockchip: add GPIO_MUTE support for
+ rk3328
+Date: Fri, 1 Jun 2018 10:05:24 +0800
+Message-ID: <0d08ba26-77f2-6c42-8fb1-214aaf6085e9@t-chip.com.cn>
+References: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
+ <1527737273-8387-3-git-send-email-djw@t-chip.com.cn>
+ <CAL_JsqJK4vrmLBeN_ZeGCXAyqshshL16B0KN_+8uvt+=-O9TEw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601003252.42810-1-briannorris@chromium.org>
+In-Reply-To: <CAL_JsqJK4vrmLBeN_ZeGCXAyqshshL16B0KN_+8uvt+=-O9TEw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>, Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Alexandru Stan <amstan@chromium.org>, Doug Anderson <dianders@chromium.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Levin <djw@t-chip.com.cn>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hi Rob,
 
-On 05/31/2018 05:32 PM, Brian Norris wrote:
-> This driver was originally submitted for the TI BQ20Z75 battery IC
-> (commit a7640bfa10c5 ("power_supply: Add driver for TI BQ20Z75 gas gauge
-> IC")) and later renamed to express generic SBS support. While it's
-> mostly true that this driver implemented a standard SBS command set, it
-> takes liberties with the REG_MANUFACTURER_DATA register. This register
-> is specified in the SBS spec, but it doesn't make any mention of what
-> its actual contents are.
-> 
-> We've sort of noticed this optionality previously, with commit
-> 17c6d3979e5b ("sbs-battery: make writes to ManufacturerAccess
-> optional"), where we found that some batteries NAK writes to this
-> register.
-> 
-> What this really means is that so far, we've just been lucky that most
-> batteries have either been compatible with the TI chip, or else at least
-> haven't reported highly-unexpected values.
-> 
-> For instance, one battery I have here seems to report either 0x0000 or
-> 0x0100 to the MANUFACTURER_ACCESS_STATUS command -- while this seems to
-> match either Wake Up (bits[11:8] = 0000b) or Normal Discharge
-> (bits[11:8] = 0001b) status for the TI part [1], they don't seem to
-> actually correspond to real states (for instance, I never see 0101b =
-> Charge, even when charging).
-> 
-> On other batteries, I'm getting apparently random data in return, which
-> means that occasionally, we interpret this as "battery not present" or
-> "battery is not healthy".
-> 
-> All in all, it seems to be a really bad idea to make assumptions about
-> REG_MANUFACTURER_DATA, unless we already know what battery we're using.
-> Therefore, this patch reimplements the "present" and "health" checks to
-> the following on most SBS batteries:
-> 
-> 1. HEALTH: report "unknown" -- I couldn't find a standard SBS command
->     that gives us much useful here
-> 2. PRESENT: just send a REG_STATUS command; if it succeeds, then the
->     battery is present
-> 
-> Also, we stop sending MANUFACTURER_ACCESS_SLEEP to non-TI parts. I have
-> no proof that this is useful and supported.
-> 
-> If someone explicitly provided a 'ti,bq20z75' compatible property, then
-> we retain the existing TI command behaviors.
-> 
-> [1] http://www.ti.com/lit/er/sluu265a/sluu265a.pdf
-> 
+On 2018-05-31 10:45 PM, Rob Herring wrote:
+> On Wed, May 30, 2018 at 10:27 PM,  <djw@t-chip.com.cn> wrote:
+>> From: Levin Du <djw@t-chip.com.cn>
+>>
+>> In Rockchip RK3328, the output only GPIO_MUTE pin, originally for codec
+>> mute control, can also be used for general purpose. It is manipulated by
+>> the GRF_SOC_CON10 register.
+>>
+>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+>>
+>> ---
+>>
+>> Changes in v3:
+>> - Change from general gpio-syscon to specific rk3328-gpio-mute
+>>
+>> Changes in v2:
+>> - Rename gpio_syscon10 to gpio_mute in doc
+>>
+>> Changes in v1:
+>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
+>> - Add doc rockchip,gpio-syscon.txt
+>>
+>>   .../bindings/gpio/rockchip,rk3328-gpio-mute.txt    | 28 +++++++++++++++++++
+>>   drivers/gpio/gpio-syscon.c                         | 31 ++++++++++++++++++++++
+>>   2 files changed, 59 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+>> new file mode 100644
+>> index 0000000..10bc632
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
+>> @@ -0,0 +1,28 @@
+>> +Rockchip RK3328 GPIO controller dedicated for the GPIO_MUTE pin.
+>> +
+>> +In Rockchip RK3328, the output only GPIO_MUTE pin, originally for codec mute
+>> +control, can also be used for general purpose. It is manipulated by the
+>> +GRF_SOC_CON10 register.
+>> +
+>> +Required properties:
+>> +- compatible: Should contain "rockchip,rk3328-gpio-mute".
+>> +- gpio-controller: Marks the device node as a gpio controller.
+>> +- #gpio-cells: Should be 2. The first cell is the pin number and
+>> +  the second cell is used to specify the gpio polarity:
+>> +    0 = Active high,
+>> +    1 = Active low.
+>> +
+>> +Example:
+>> +
+>> +       grf: syscon@ff100000 {
+>> +               compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
+>> +
+>> +               gpio_mute: gpio-mute {
+> Node names should be generic:
+>
+> gpio {
+>
+> This also means you can't add another GPIO node in the future and
+> you'll have to live with "rockchip,rk3328-gpio-mute" covering more
+> than 1 GPIO if you do need to add more GPIOs.
 
-Excellent idea. Couple of comments below.
+As the first line describes, this GPIO controller is dedicated for the 
+GPIO_MUTE pin.
+There's only one GPIO pin in the GRF_SOC_CON10 register. Therefore the 
+gpio_mute
+name is proper IMHO.
+
+>> +                       compatible = "rockchip,rk3328-gpio-mute";
+>> +                       gpio-controller;
+>> +                       #gpio-cells = <2>;
+>> +               };
+>> +       };
+>> +
+>> +Note: The gpio_mute node should be declared as the child of the GRF (General
+>> +Register File) node. The GPIO_MUTE pin is referred to as <&gpio_mute 0>.
+> This is wrong because you should have 2 cells. The phandle doesn't
+> count as a cell.
+>
+> Rob
+>
+Thanks for pointing that out. So it should be:
+
+    The GPIO_MUTE pin is referred to as <&gpio_mute 0 POLARITY>.
+
 
 Thanks,
-Guenter
-
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
->   drivers/power/supply/sbs-battery.c | 61 +++++++++++++++++++++++++-----
->   1 file changed, 52 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-> index 83d7b4115857..e15d0ca4729d 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -23,6 +23,7 @@
->   #include <linux/kernel.h>
->   #include <linux/module.h>
->   #include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/power/sbs-battery.h>
->   #include <linux/power_supply.h>
->   #include <linux/slab.h>
-> @@ -84,8 +85,9 @@ static const struct chip_data {
->   	int min_value;
->   	int max_value;
->   } sbs_data[] = {
-> +	/* Manuf. data isn't directly useful as a POWER_SUPPLY_PROP */
->   	[REG_MANUFACTURER_DATA] =
-> -		SBS_DATA(POWER_SUPPLY_PROP_PRESENT, 0x00, 0, 65535),
-> +		SBS_DATA(-1, 0x00, 0, 65535),
-
-I don't think this change is necessary. For example, POWER_SUPPLY_PROP_SERIAL_NUMBER
-is also not directly accessed, yet the REG_SERIAL_NUMBER array entry includes
-POWER_SUPPLY_PROP_SERIAL_NUMBER.
-
->   	[REG_TEMPERATURE] =
->   		SBS_DATA(POWER_SUPPLY_PROP_TEMP, 0x08, 0, 65535),
->   	[REG_VOLTAGE] =
-> @@ -156,6 +158,9 @@ static enum power_supply_property sbs_properties[] = {
->   	POWER_SUPPLY_PROP_MODEL_NAME
->   };
->   
-> +/* Supports special manufacturer commands from TI BQ20Z75 IC. */
-> +#define SBS_FLAGS_TI_BQ20Z75		BIT(0)
-> +
->   struct sbs_info {
->   	struct i2c_client		*client;
->   	struct power_supply		*power_supply;
-> @@ -168,6 +173,7 @@ struct sbs_info {
->   	u32				poll_retry_count;
->   	struct delayed_work		work;
->   	struct mutex			mode_lock;
-> +	u32				flags;
->   };
->   
->   static char model_name[I2C_SMBUS_BLOCK_MAX + 1];
-> @@ -315,6 +321,31 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
->   static int sbs_get_battery_presence_and_health(
->   	struct i2c_client *client, enum power_supply_property psp,
->   	union power_supply_propval *val)
-> +{
-> +	int ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_PRESENT:
-> +		/* Dummy command; if it succeeds, battery is present. */
-> +		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
-> +		if (ret < 0)
-> +			val->intval = 0; /* battery disconnected */
-
-I don't know the relevance, but the original code returns the error
-in this situation.
-
-> +		else
-> +			val->intval = 1; /* battery present */
-> +		return 0;
-> +	case POWER_SUPPLY_PROP_HEALTH:
-> +		/* SBS spec doesn't have a general health command. */
-> +		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
-> +		return 0;
-> +	default:
-> +		dev_err(&client->dev, "unexpected prop %d\n", psp);
-> +		return -EINVAL;
-
-Personally I would prefer if/else here, for the simple reason that the default case
-will never be executed and just wastes a bit of code space.
-
-> +	}
-> +}
-> +
-> +static int sbs_get_ti_battery_presence_and_health(
-> +	struct i2c_client *client, enum power_supply_property psp,
-> +	union power_supply_propval *val)
->   {
->   	s32 ret;
->   
-> @@ -600,7 +631,12 @@ static int sbs_get_property(struct power_supply *psy,
->   	switch (psp) {
->   	case POWER_SUPPLY_PROP_PRESENT:
->   	case POWER_SUPPLY_PROP_HEALTH:
-> -		ret = sbs_get_battery_presence_and_health(client, psp, val);
-> +		if (client->flags & SBS_FLAGS_TI_BQ20Z75)
-> +			ret = sbs_get_ti_battery_presence_and_health(client,
-> +								     psp, val);
-> +		else
-> +			ret = sbs_get_battery_presence_and_health(client, psp,
-> +								  val);
->   		if (psp == POWER_SUPPLY_PROP_PRESENT)
->   			return 0;
->   		break;
-> @@ -806,6 +842,7 @@ static int sbs_probe(struct i2c_client *client,
->   	if (!chip)
->   		return -ENOMEM;
->   
-> +	chip->flags = (u32)(uintptr_t)of_device_get_match_data(&client->dev);
->   	chip->client = client;
->   	chip->enable_detection = false;
->   	psy_cfg.of_node = client->dev.of_node;
-> @@ -915,12 +952,15 @@ static int sbs_suspend(struct device *dev)
->   	if (chip->poll_time > 0)
->   		cancel_delayed_work_sync(&chip->work);
->   
-> -	/*
-> -	 * Write to manufacturer access with sleep command.
-> -	 * Support is manufacturer dependend, so ignore errors.
-> -	 */
-> -	sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
-> -		MANUFACTURER_ACCESS_SLEEP);
-> +	if (chip->flags & SBS_FLAGS_TI_BQ20Z75) {
-> +		/*
-> +		 * Write to manufacturer access with sleep command.
-> +		 * Support is manufacturer dependent, so ignore errors.
-> +		 */
-> +		sbs_write_word_data(client,
-> +				    sbs_data[REG_MANUFACTURER_DATA].addr,
-> +				    MANUFACTURER_ACCESS_SLEEP);
-> +	}
->   
->   	return 0;
->   }
-> @@ -941,7 +981,10 @@ MODULE_DEVICE_TABLE(i2c, sbs_id);
->   
->   static const struct of_device_id sbs_dt_ids[] = {
->   	{ .compatible = "sbs,sbs-battery" },
-> -	{ .compatible = "ti,bq20z75" },
-> +	{
-> +		.compatible = "ti,bq20z75",
-> +		.data = (void *)SBS_FLAGS_TI_BQ20Z75,
-> +	},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, sbs_dt_ids);
-> 
+Levin
