@@ -1,67 +1,107 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 1/6] mtd: rawnand: add Reed-Solomon error correction
- algorithm
-Date: Fri, 1 Jun 2018 11:25:06 +0200
-Message-ID: <20180601112506.2157e8b0@bbrezillon>
-References: <20180531221637.6017-1-stefan@agner.ch>
-        <20180531221637.6017-2-stefan@agner.ch>
-        <20180601092600.03c14f53@bbrezillon>
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+Subject: Re: [PATCH 05/11] ARM: dts: Reflect change of FSL QSPI driver and
+ remove unused properties
+Date: Fri, 1 Jun 2018 11:27:13 +0200
+Message-ID: <d6512adf-2d48-5bdc-d793-a7c1fcabc177@exceet.de>
+References: <1527686082-15142-1-git-send-email-frieder.schrempf@exceet.de>
+ <1527686082-15142-6-git-send-email-frieder.schrempf@exceet.de>
+ <20180530171057.39f1a2be@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601092600.03c14f53@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pgaikwad@nvidia.com, dev@lynxeye.de, mirza.krak@gmail.com, benjamin.lindqvist@endian.se, pdeschrijver@nvidia.com, miquel.raynal@bootlin.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jonathanh@nvidia.com, marek.vasut@gmail.com, thierry.reding@gmail.com, linux-mtd@lists.infradead.org, krzk@kernel.org, richard@nod.at, linux-tegra@vger.kernel.org, digetx@gmail.com, computersforpeace@gmail.com, dwmw2@infradead.org, marcel@ziswiler.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180530171057.39f1a2be@bbrezillon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, yogeshnarayan.gaur@nxp.com, Rob Herring <robh+dt@kernel.org>, richard@nod.at, Sascha Hauer <s.hauer@pengutronix.de>, prabhakar.kushwaha@nxp.com, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-spi@vger.kernel.org, marek.vasut@gmail.com, han.xu@nxp.com, broonie@kernel.org, linux-mtd@lists.infradead.org, Pengutronix Kernel Team <kernel@pengutronix.de>, miquel.raynal@bootlin.com, fabio.estevam@nxp.com, david.wolfe@nxp.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 1 Jun 2018 09:26:00 +0200
-Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+Hi Boris,
 
-> On Fri,  1 Jun 2018 00:16:32 +0200
-> Stefan Agner <stefan@agner.ch> wrote:
+On 30.05.2018 17:10, Boris Brezillon wrote:
+> On Wed, 30 May 2018 15:14:34 +0200
+> Frieder Schrempf <frieder.schrempf@exceet.de> wrote:
 > 
-> > Add Reed-Solomon (RS) to the enumeration of ECC algorithms.
-> > 
-> > Signed-off-by: Stefan Agner <stefan@agner.ch>  
+>> The FSL QSPI driver was moved to the SPI framework and it now
+>> acts as a SPI controller. Therefore the subnodes need to set
+>> spi-[rx/tx]-bus-width = <4>, so quad mode is used just as before.
 > 
-> Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> 
-> > ---
-> >  drivers/mtd/nand/raw/nand_base.c | 1 +
-> >  include/linux/mtd/rawnand.h      | 1 +
+> We should try to keep the current behavior even when
+> spi-[rx/tx]-bus-width are not defined. How about considering
+> spi-[rx/tx]-bus-width as board constraints and then let the core pick
+> the best mode based on these constraints plus the SPI NOR chip
+> limitations.
 
-Hm, you forgot to update Documentation/devicetree/bindings/mtd/nand.txt.
+Ok, I'll try to adjust this, so we can leave spi-[rx/tx]-bus-width 
+undefined and still get quad mode as default if possible.
 
-> >  2 files changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> > index f28c3a555861..9eb5678dd6d0 100644
-> > --- a/drivers/mtd/nand/raw/nand_base.c
-> > +++ b/drivers/mtd/nand/raw/nand_base.c
-> > @@ -5744,6 +5744,7 @@ static int of_get_nand_ecc_mode(struct device_node *np)
-> >  static const char * const nand_ecc_algos[] = {
-> >  	[NAND_ECC_HAMMING]	= "hamming",
-> >  	[NAND_ECC_BCH]		= "bch",
-> > +	[NAND_ECC_RS]		= "rs",
-> >  };
-> >  
-> >  static int of_get_nand_ecc_algo(struct device_node *np)
-> > diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-> > index 5dad59b31244..6a82da8c44ce 100644
-> > --- a/include/linux/mtd/rawnand.h
-> > +++ b/include/linux/mtd/rawnand.h
-> > @@ -114,6 +114,7 @@ enum nand_ecc_algo {
-> >  	NAND_ECC_UNKNOWN,
-> >  	NAND_ECC_HAMMING,
-> >  	NAND_ECC_BCH,
-> > +	NAND_ECC_RS,
-> >  };
-> >  
-> >  /*  
 > 
+>>
+>> Also the properties 'bus-num', 'fsl,spi-num-chipselects' and
+>> 'fsl,spi-flash-chipselects' were never read by the driver and
+>> can be removed.
+>>
+>> The 'reg' properties are adjusted to reflect the what bus and
+>> chipselect the flash is connected to, as the new driver needs
+>> this information.
+>>
+>> The property 'fsl,qspi-has-second-chip' is not needed anymore
+>> and will be removed after the old driver was disabled to avoid
+>> breaking ls1021a-moxa-uc-8410a.dts.
+>>
+>> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+>> ---
+>>   arch/arm/boot/dts/imx6sx-sdb-reva.dts       | 8 ++++++--
+>>   arch/arm/boot/dts/imx6sx-sdb.dts            | 8 ++++++--
+>>   arch/arm/boot/dts/imx6ul-14x14-evk.dtsi     | 2 ++
+>>   arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 5 ++---
+>>   4 files changed, 16 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+>> index e3533e7..1a6f680 100644
+>> --- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+>> +++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+>> @@ -131,13 +131,17 @@
+>>   		#size-cells = <1>;
+>>   		compatible = "spansion,s25fl128s", "jedec,spi-nor";
+>>   		spi-max-frequency = <66000000>;
+>> +		spi-rx-bus-width = <4>;
+>> +		spi-tx-bus-width = <4>;
+>>   	};
+>>   
+>> -	flash1: s25fl128s@1 {
+>> -		reg = <1>;
+>> +	flash1: s25fl128s@2 {
+>> +		reg = <2>;
 > 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Hm, you're breaking backward compat here. Can we try to re-use the
+> old numbering scheme instead of patching all DTs?
+
+Unfortunately in the current setup, the definitions for the reg property 
+are already broken.
+
+For example imx6sx-sdb.dts seems to have one chip connected on bus A, 
+CS0 and one on bus B, CS0. It has reg set to 0 for the first and 1 for 
+the second chip.
+
+While fsl-ls208xa-qds.dtsi uses the same hw setup, but has reg set to 0 
+and 2.
+
+So either way we need to change the reg property at some place.
+So the best approach in my opinion is to fix the definitions to use a 
+single scheme and while at it also remove the fsl,qspi-has-second-chip 
+property, that is not needed if a single consistent scheme for the reg 
+properties is used.
+
+Regards,
+
+Frieder
