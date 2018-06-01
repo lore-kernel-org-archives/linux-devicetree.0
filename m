@@ -1,52 +1,90 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: allwinner: a64-amarula-relic:
- Enable AP6330 WiFi support
-Date: Fri, 1 Jun 2018 17:06:28 +0200
-Message-ID: <20180601150628.zqo6jjd6ch5dvqtl@flea>
-References: <20180531165109.8476-1-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 06/15] arm: dts: sun: Add missing cooling device
+ properties for CPUs
+Date: Fri, 1 Jun 2018 17:17:01 +0200
+Message-ID: <20180601151701.sshwfdbflic6mybv@flea>
+References: <cover.1527244200.git.viresh.kumar@linaro.org>
+ <eded393f4b508a1f377f9af6859a3b82a6787e1c.1527244201.git.viresh.kumar@linaro.org>
+ <20180528084446.g24fphqqac2hi3rr@flea>
+ <20180528105734.bkplm7tfaqsurdrn@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fdsrlxivdtqrlhbd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5WBYXMAKGQEXZVMOYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="kyrkd2ck7f6qrool"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180531165109.8476-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180528105734.bkplm7tfaqsurdrn@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---fdsrlxivdtqrlhbd
-Content-Type: text/plain; charset="UTF-8"
+--kyrkd2ck7f6qrool
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Thu, May 31, 2018 at 10:21:09PM +0530, Jagan Teki wrote:
-> Enable AP6330 WiFi/BT combo chip on Amarula A64-Relic board:
-> - WiFi SDIO interface is connected to MMC1
-> - WiFi WL-PMU-EN pin connected to gpio PL2: attach to mmc-pwrseq
-> - WiFi WL-WAKE-AP pin connected to gpio PL3
-> - 32kHz external oscillator gate clock from RTC
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v2:
-> - Move external rtc clock nodes into main rtc node definition
->   of sun50i-a64.dtsi
+On Mon, May 28, 2018 at 04:27:34PM +0530, Viresh Kumar wrote:
+> On 28-05-18, 10:44, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Fri, May 25, 2018 at 04:01:52PM +0530, Viresh Kumar wrote:
+> > > The cooling device properties, like "#cooling-cells" and
+> > > "dynamic-power-coefficient", should either be present for all the CPUs
+> > > of a cluster or none. If these are present only for a subset of CPUs =
+of
+> > > a cluster then things will start falling apart as soon as the CPUs are
+> > > brought online in a different order. For example, this will happen
+> > > because the operating system looks for such properties in the CPU node
+> > > it is trying to bring up, so that it can register a cooling device.
+> > >=20
+> > > Add such missing properties.
+> > >=20
+> > > Fix other missing properties (clocks, OPP, clock latency) as well to
+> > > make it all work.
+> > >=20
+> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >=20
+> > The prefix should be sunxi and not sun, but it looks good to me
+> > otherwise.
+> >=20
+> > Let me know what your preferred merge method is.
+>=20
+> Please pick it up directly and send it as part of your pull request.
+> Do you want me to resend or can you fix the $subject ?
 
-Please make that a separate patch.
+I just tried to apply it, and it failed. We have usually two different
+PR for the H3 SoCs and the others. Could you split the H3 in a
+separate patch (and fix the subject in the process?)
 
+Thanks!
 Maxime
--- 
+
+--=20
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---fdsrlxivdtqrlhbd--
+
+--kyrkd2ck7f6qrool
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsRY2wACgkQ0rTAlCFN
+r3SrDA/+LL4BAKeV5gwtJH+GbspXsxJ5OqCeswBd20Cuw8XFn89xR/6p+BrYVvZP
+24Hv2nd7mhVHW9DjtQ50Gugd6e2wiEk0FaxQPCPki3CViWwEqceWfKJvYzp9iLHT
+We5xrLzr0+WHuRN1ngC9RIO2M2FR6acEJEIPghb7MlQ1V+cgYjaADjTIm4HQa8Ox
+2fkrrrZZmxmICw+eaC1ZTbtVIL49dT0w+J5PtoMtuZwjyxXPUc51nmuHR2YD2JPF
+QNXFJh12MeDTx5kex6b8FYr2j4EWp/lyjUG0UU4/FYqgCqxjqD8FI6aFNsBy0wVV
+Nv8Hxt17jYOggl/m/e+bmntQGwl1u/V5v7TSJ3IOp6QqRuX8w1fGUs1d6PQ+6Dfh
+0Nj7YwmoypOcBygWR/h6gquDw+YIOceGeq65oVReRFIn8ExMSFY0zms/JyYUDl5u
+FjswzaJ3mR7n9ATlPvLdTIXHcNzbGLVRT8kjJdx/DGXSEoddCRdzGftlTt/+YXyD
+0uG2396xwafRM+8g0PZeotuPJRO7hFi/U0bZmxuYH+ZDbY53o/yybciaSdyDo82L
+AqZEAy59RKGk5/ZGuVn2am8GognKw8Akbn4YXBHtxmgKt3uIm/POW8V52tUHXzxT
+QQvkdbME7Im3IoY1yPVoGWjk3/U0OpTMjQO6oOC4an6XAgEWwmU=
+=6pOi
+-----END PGP SIGNATURE-----
+
+--kyrkd2ck7f6qrool--
