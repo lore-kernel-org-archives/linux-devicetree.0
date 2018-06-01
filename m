@@ -1,152 +1,65 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
-Date: Fri, 1 Jun 2018 12:26:12 +0200
-Message-ID: <20180601102612.GC31639@amd>
-References: <20180601082259.17563-1-johan@kernel.org>
- <20180601093311.GA31639@amd>
- <20180601094959.GA13775@localhost>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 2/8] dt-bindings: media: Document data-enable-active
+ property
+Date: Fri, 1 Jun 2018 13:29:10 +0300
+Message-ID: <20180601102910.3qhe6bhg3w263chq@paasikivi.fi.intel.com>
+References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1527606359-19261-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UPT3ojh+0CqEDtpF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180601094959.GA13775@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1527606359-19261-3-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, geert@glider.be, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacopo,
 
---UPT3ojh+0CqEDtpF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the patch.
 
-On Fri 2018-06-01 11:49:59, Johan Hovold wrote:
-> On Fri, Jun 01, 2018 at 11:33:11AM +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > This series adds a new subsystem for GNSS receivers (e.g. GPS
-> > > receivers).
-> > >=20
-> > > While GNSS receivers are typically accessed using a UART interface th=
-ey
-> > > often also support other I/O interfaces such as I2C, SPI and USB, whi=
-le
-> > > yet other devices use iomem or even some form of remote-processor
-> > > messaging (rpmsg).
-> > >=20
-> > > The new GNSS subsystem abstracts the underlying interface and provide=
-s a
-> > > new "gnss" class type, which exposes a character-device interface (e.=
-g.
-> > > /dev/gnss0) to user space. This allows GNSS receivers to have a
-> > > representation in the Linux device model, something which is important
-> > > not least for power management purposes and which also allows for easy
-> > > detection and identification of GNSS devices.
-> > >=20
-> > > Note that the character-device interface provides raw access to whate=
-ver
-> > > protocol the receiver is (currently) using, such as NMEA 0183, UBX or
-> > > SiRF Binary. These protocols are expected to be continued to be handl=
-ed
-> > > by user space for the time being, even if some hybrid solutions are a=
-lso
-> > > conceivable (e.g. to have kernel drivers issue management commands).
-> >=20
-> > So.. while you did good work on serial power management, this is
-> > grossly misnamed. There's nothing GNSS specific in the code, and you
-> > are not presenting consistent interface to the userland.
-> >=20
-> > This is _not_ GNSS subsystem. This is serial power management
-> > subsystem, or something like that. GPS/GNSS subsystem will need to be
-> > built on top of this.
->=20
-> I thought we had this discussion already.
+On Tue, May 29, 2018 at 05:05:53PM +0200, Jacopo Mondi wrote:
+> Add 'data-enable-active' property to endpoint node properties list.
+> 
+> The property allows to specify the polarity of the data-enable signal, which
+> when in active state determinates when data lanes have to sampled for valid
+> pixel data.
 
-I don't remember useful discussion.
+Lanes or lines? I understand this is forthe parallel interface.
 
-> This series adds an abstraction for GNSS receivers so that they can be
-> detected by userspace without resorting to probing hacks. That is GNSS
-> specific.
->=20
-> Furthermore, (since v2) we export a GNSS receiver type, which allows
-> further protocol detection hacks to be dropped, something which is also
-> GNSS specific.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+> v3:
+> - new patch
+> ---
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 258b8df..9839d26 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -109,6 +109,8 @@ Optional endpoint properties
+>    Note, that if HSYNC and VSYNC polarities are not specified, embedded
+>    synchronization may be required, where supported.
+>  - data-active: similar to HSYNC and VSYNC, specifies data line polarity.
+> +- data-enable-active: similar to HSYNC and VSYNC, specifies the data enable
+> +  signal polarity.
+>  - field-even-active: field signal level during the even field data transmission.
+>  - pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+>    signal.
 
-So you have serial line + pm + protocol type. Nothing GNSS specific
-really, it would be useful to (for example) say this is modem with AT
-commands. Or this is QMI modem.
-
-> The two drivers and library added are for GNSS devices and their
-> specific power management needs, while a random serial-connected device
-> may need to manage power differently. Also GNSS specific.
-
-Or maybe it will need to manager power in the same way. How would the
-AT modem be different?
-
-> Finally, the GNSS subsystem is clearly not serial (as in UART) specific
-> and works just as fine with I2C, SPI, USB, iomem, rproc or whatever
-> interface the GNSS uses.
-
-Ok, true. It is "we pass tty-like data across". Again, it would be
-useful for AT commands, too, and yes, they go over serials and usbs
-and more, too.=20
-
-> > This will never handle devices like Nokia N900, where GPS is connected
-> > over netlink.
->=20
-> Marcel already suggested adding a ugnss interface, which would allow
-> feeding GNSS data through the generic GNSS interface from user space for
-> use cases where it's not (yet) feasible to implement a kernel
-> driver.
-
-Yes, and ugnss would be at wrong layer for N900. First, lets take a
-look at N900 gps driver:
-https://github.com/postmarketOS/gps-nokia-n900
-
-Got it? I'll eventually like to see it in the kernel, but your "GNSS"
-subsystem is unsuitable for it, as it does not talk well-known
-protocol.
-
-I'd like to see "datapipe" devices (what you currently call GNSS) and
-"gps" devices, which would have common interface to the userland.
-
-N900 would not have any datapipe devices, but would have /dev/gps0
-exposing common GPS interface.
-
-Droid4 would have /dev/datapipe0 (usb, AT protocol), /dev/datapipe1
-(usb, QMI protocol), /dev/datapipe2 (gsmtty over serial, custom AT
-protocol), /dev/datapipe3 (gsmtty over serial, NMEA wrapped in AT
-protocol) (and more, it is complex hardware). And if we really wanted,
-we'd have /dev/gps0, too, exposing common GPS interface.
-
-Your devices would have /dev/datapipe0 with sirf or ublox or nmea
-protocol. In we really wanted, we'd have /dev/gps0, too, again,
-exposing common GPS interface.
-
-I believe we really want to use your code for AT commands, too. And we
-really should keep GNSS/GPS names for future layer that actually
-provides single interface for userland.
-
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UPT3ojh+0CqEDtpF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlsRH0QACgkQMOfwapXb+vLpJACfX3PKHkTbEnqnKW8n2K9OBw5j
-rqoAoLyZnYQV1o+iTZatpq92jFsoMSua
-=wDg9
------END PGP SIGNATURE-----
-
---UPT3ojh+0CqEDtpF--
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
