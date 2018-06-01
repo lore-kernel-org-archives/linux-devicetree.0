@@ -1,17 +1,15 @@
 From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v2 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
- BlueField SoC
-Date: Fri, 1 Jun 2018 14:31:03 +0000
-Message-ID: <AM2PR05MB0753BBB6F171CE94FCCAE046A1620@AM2PR05MB0753.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1527279436-14773-3-git-send-email-lsun@mellanox.com>
- <20180531034352.GA32666@rob-hp-laptop>
+Subject: [PATCH v3 4/4] MAINTAINERS: Add entry for Mellanox Bluefield Soc
+Date: Fri,  1 Jun 2018 10:31:07 -0400
+Message-ID: <1527863467-45472-4-git-send-email-lsun@mellanox.com>
+References: <1527863467-45472-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180531034352.GA32666@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1527863467-45472-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,78 +19,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, Liming Sun <lsun@mellanox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the comments. Please see response inline.
+Add maintainer information for Mellanox BlueField SoC.
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Wednesday, May 30, 2018 11:44 PM
-> To: Liming Sun <lsun@mellanox.com>
-> Cc: Olof Johansson <olof@lixom.net>; Arnd Bergmann <arnd@arndb.de>;
-> David Woods <dwoods@mellanox.com>; Robin Murphy
-> <robin.murphy@arm.com>; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH v2 3/4] dt-bindings: soc: Add TmFifo binding for
-> Mellanox BlueField SoC
-> 
-> On Fri, May 25, 2018 at 04:17:15PM -0400, Liming Sun wrote:
-> 
-> Commit msg?
+Reviewed-by: David Woods <dwoods@mellanox.com>
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Updated in patch v3 3/4.
-
-> 
-> > Reviewed-by: David Woods <dwoods@mellanox.com>
-> > Signed-off-by: Liming Sun <lsun@mellanox.com>
-> > ---
-> >  .../devicetree/bindings/soc/mellanox/tmfifo.txt      | 20
-> ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> > new file mode 100644
-> > index 0000000..0a362f5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> > @@ -0,0 +1,20 @@
-> > +* Mellanox BlueField SoC TmFifo
-> > +
-> > +BlueField TmFifo provides a shared FIFO between the target and the
-> > +external host machine, which can be accessed via USB or PCIe.
-> 
-> A FIFO for what? I'd like to find a better spot than bindings/soc/
-
-This is a generic HW FIFO which can be accessed by the SoC SW and external Host machine to exchange any data. In the current Linux tmfifo driver, this FIFO has been used (demuxed) to implement a virtual console and network interface based on virtio framework.  
-
-Updated the tmfifo.txt in patch v3 3/4 with the above explanation. Please advise if there is a better place for this file.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 58b9861..85d5639 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1636,6 +1636,14 @@ L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	drivers/phy/mediatek/phy-mtk-tphy.c
  
-> > +
-> > +Required properties:
-> > +
-> > +- compatible:	Should be "mellanox,bf-tmfifo"
-> > +- reg:		Physical base address and length of Rx/Tx block
-> > +- interrupts:	The interrupt number of Rx low water mark, Rx high water
-> mark
-> > +		Tx low water mark, Tx high water mark respectively.
-> > +
-> > +Example:
-> > +
-> > +tmfifo@800a20 {
-> > +	compatible = "mellanox,bf-tmfifo";
-> > +	reg = <0x00800a20 0x00000018
-> > +	       0x00800a40 0x00000018>;
-> > +	interrupts = <41, 42, 43, 44>;
-> > +};
-> > --
-> > 1.8.3.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
++ARM/Mellanox BlueField SoC support
++M:	David Woods <dwoods@mellanox.com>
++M:	Liming Sun <lsun@mellanox.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	drivers/soc/mellanox/*
++F:	Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
++
+ ARM/MICREL KS8695 ARCHITECTURE
+ M:	Greg Ungerer <gerg@uclinux.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-- 
+1.8.3.1
