@@ -1,52 +1,99 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: Re: [PATCH 2/2] dt-bindings: power: sbs-battery: re-document
- "ti,bq20z75"
-Date: Fri, 1 Jun 2018 12:14:04 -0400
-Message-ID: <22411469-af79-604f-c56a-1680359b1629@nvidia.com>
-References: <20180601003252.42810-1-briannorris@chromium.org>
- <20180601003252.42810-2-briannorris@chromium.org>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [RFC PATCH 1/8] dts: binding: coresight: Document graph bindings
+Date: Fri, 1 Jun 2018 10:14:41 -0600
+Message-ID: <20180601161441.GA9838@xps15>
+References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+ <1527858967-16047-2-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601003252.42810-2-briannorris@chromium.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1527858967-16047-2-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>, Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/31/2018 8:32 PM, Brian Norris wrote:
-> This compatible property was documented before the driver was renamed to
-> "SBS" (see commit e57f1b68c406 ("devicetree-bindings: Propagate
-> bq20z75->sbs rename to dt bindings")). The driver has continued to
-> support this property as an alternative to "sbs,sbs-battery", and
-> because we've noticed there are some lingering TI specifics (in the
-> manufacturer-specific portion of the SBS spec), we'd like to start using
-> this property again to differentiate.
+On Fri, Jun 01, 2018 at 02:16:00PM +0100, Suzuki K Poulose wrote:
+> Before we updat the bindings, document the current graph bindings
+
+s/updat/update
+
+> and usage of additional properties.
 > 
-> Cc: Rhyland Klein <rklein@nvidia.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
->  .../devicetree/bindings/power/supply/sbs_sbs-battery.txt        | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/arm/coresight.txt          | 28 ++++++++++++++++++----
+>  1 file changed, 24 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> index c40e8926facf..a7a9c3366f82 100644
-> --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> @@ -2,7 +2,7 @@ SBS sbs-battery
->  ~~~~~~~~~~
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index 15ac8e8..bd36e40 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -52,9 +52,7 @@ its hardware characteristcs.
+>  	  clocks the core of that coresight component. The latter clock
+>  	  is optional.
 >  
->  Required properties :
-> - - compatible : "sbs,sbs-battery"
-> + - compatible : "sbs,sbs-battery" or "ti,bq20z75"
+> -	* port or ports: The representation of the component's port
+> -	  layout using the generic DT graph presentation found in
+> -	  "bindings/graph.txt".
+> +	* port or ports: see "Graph bindings for Coresight" below
 >  
->  Optional properties :
->   - sbs,i2c-retry-count : The number of times to retry i2c transactions on i2c
+>  * Additional required properties for System Trace Macrocells (STM):
+>  	* reg: along with the physical base address and length of the register
+> @@ -71,7 +69,7 @@ its hardware characteristcs.
+>  	  AMBA markee):
+>  		- "arm,coresight-replicator"
+>  
+> -	* port or ports: same as above.
+> +	* port or ports: see "Graph bindings for Coresight" below.
+>  
+>  * Optional properties for ETM/PTMs:
+>  
+> @@ -86,6 +84,28 @@ its hardware characteristcs.
+>  	* arm,buffer-size: size of contiguous buffer space for TMC ETR
+>  	 (embedded trace router)
+>  
+> +Graph bindings for Coresight
+> +-------------------------------
+> +
+> +Coresight components are interconnected to create a data path for the flow of
+> +trace data generated from the "sources" to their collection points "sink". Each
+
+Over 80 characters.
+
+> +coresight component must describe the "input" and "output" connections.
+> +The connections must be described via generic DT graph bindings as described
+> +by the "bindings/graph.txt", where each "port" along with an "endpoint" component
+
+Same here.
+
+> +represents a hardware port and the connection.
+> +
+> +Since it is possible to have multiple connections for any coresight component with
+
+And here.
+
+> +a specific direction of data flow, each connection must define the following
+> +properties to uniquely identify the connection details.
+> +
+> + * Direction of the data flow w.r.t the component :
+> +   Each input port must have the following property defined at the "endpoint"
+> +   for the port.
+> +	"slave-mode"
+> +
+> + * Hardware Port number at the component:
+> +     -  The hardware port number is assumed to be the address of the "port" component.
+
+And here.
+
+Moveover this patches doesn't apply to my next tree. 
+
+> +
+>  
+>  Example:
+>  
+> -- 
+> 2.7.4
 > 
-
-Acked-by: Rhyland Klein <rklein@nvidia.com>
-
--- 
-nvpublic
