@@ -1,58 +1,68 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 5/5] arm64: dts: renesas: r8a7795: add ccree binding
-Date: Fri, 1 Jun 2018 10:12:24 +0200
-Message-ID: <CAMuHMdUX874g6pAz-Ze-yA3S+6aOhzUkfGN9wmQUhy-y0f7dMw@mail.gmail.com>
-References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
- <1527171551-21979-6-git-send-email-gilad@benyossef.com> <20180529161936.prhp4oikzamr6u3n@verge.net.au>
- <CAOtvUMeBCH+23c3FDWncMwPPe5N=7yjRKzhyLmFXrYazgGbcJw@mail.gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 4/8] dt-bindings: gnss: add u-blox binding
+Date: Fri, 1 Jun 2018 10:15:48 +0200
+Message-ID: <20180601081548.GN3259@localhost>
+References: <20180530103242.20773-1-johan@kernel.org>
+ <20180530103242.20773-5-johan@kernel.org>
+ <20180531035805.GA16906@rob-hp-laptop>
+ <20180531082241.GD3259@localhost>
+ <CAL_Jsq+-NBqR8H49oB-XZtH8XSCn_BO92Zf17=KfEXfE5mvjAg@mail.gmail.com>
+ <20180531143428.GK3259@localhost>
+ <CAL_JsqLfqgUbzMWdE_c96DrdgB31gSixbJo+JvsZhoJGJRWYMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOtvUMeBCH+23c3FDWncMwPPe5N=7yjRKzhyLmFXrYazgGbcJw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLfqgUbzMWdE_c96DrdgB31gSixbJo+JvsZhoJGJRWYMw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>L
+To: Rob Herring <robh@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gilad,
+On Thu, May 31, 2018 at 10:58:59AM -0500, Rob Herring wrote:
+> On Thu, May 31, 2018 at 9:34 AM, Johan Hovold <johan@kernel.org> wrote:
+> > On Thu, May 31, 2018 at 08:55:10AM -0500, Rob Herring wrote:
+> >> On Thu, May 31, 2018 at 3:22 AM, Johan Hovold <johan@kernel.org> wrote:
+> >> > On Wed, May 30, 2018 at 10:58:05PM -0500, Rob Herring wrote:
+> >> >> On Wed, May 30, 2018 at 12:32:38PM +0200, Johan Hovold wrote:
+> >> >> > Add binding for u-blox GNSS receivers.
 
-On Thu, May 31, 2018 at 1:55 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> On Tue, May 29, 2018 at 7:19 PM, Simon Horman <horms@verge.net.au> wrote:
->> On Thu, May 24, 2018 at 03:19:10PM +0100, Gilad Ben-Yossef wrote:
->>> Add bindings for CryptoCell instance in the SoC.
->>>
->>> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
->>
->> In so far as I can review the details of this (which is not much) this
->> looks fine to me. I am, however, a little unclear in when it should be
->> accepted.
->
-> Since Herbert Xu ACKed the driver changes, I would say the only gating
-> commit is Geert's CR clock patch.
+> >> >> > +Optional properties:
+> >> >> > +
+> >> >> > +- timepulse-gpios  : Time pulse GPIO
+> >> >> > +- u-blox,extint-gpios      : External interrupt GPIO
+> >> >>
+> >> >> This should be interrupts property instead of a gpio.
+> >> >
+> >> > Contrary to what the name may suggest, this pin is actually an input
+> >> > which can be used to control active power or to provide time or
+> >> > frequency aiding data to the receiver (see section 1.13 in [1]).
+> >> >
+> >> > I only added it for completeness as the driver does not use it
+> >> > currently. Remove, leave as is, or add "input" to the description as in:
+> >> >
+> >> >         - u-blox,extint-gpios   : External interrupt input GPIO
+> >>
+> >> Yes. You should also define the active level.
+> >
+> > The active level appears to be runtime configurable and dependent on the
+> > selected function. For power control it can be used to control force-on
+> > (active high), force-off (active low) or both; and for time aiding
+> > sampling on falling or rising edge is also configurable. And who knows
+> > what else this pin is used for next time they update the firmware. ;)
+> 
+> Okay.
+> 
+> > Shall I remove the property, or just add "input" as suggested above?
+> 
+> Just add "input".
 
-These are queued for v4.19.
+I ended up rewording this as
 
-> If that one is in, than I would say this one should go in as well.
+	u-blox,extint-gpios  : GPIO connected to the "external
+			       interrupt" input pin
 
-As the device node now has a power-domains property, the genpd code will
-try to attach it to the CPG/MSSR PM Domain, which is a clock domain.
-In the absence of the clock patch, the device's module clock cannot be
-found, and dev_pm_domain_attach() and thus platform_drv_probe() will fail,
-before calling the device driver's .probe() function.
+to avoid any confusion about the direction of the GPIO.
 
-So there is no longer a dependency on the clock patch, and the DT patch can
-go in in parallel (although I prefer its subject to be changed
-s/binding/device device/).
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Johan
