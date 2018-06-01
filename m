@@ -1,130 +1,71 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v4 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Fri, 1 Jun 2018 14:41:14 -0700
-Message-ID: <949e1a0c-11d6-1423-caae-834649bd11d0@codeaurora.org>
-References: <cover.1527040878.git.collinsd@codeaurora.org>
- <6d03576cf90f06afb1194301cb41fc31704def1d.1527040878.git.collinsd@codeaurora.org>
- <CAD=FV=VH0bTxPOmRr+jUyV0cGNQHLcwQTV9L-t0bxZOqD8FnHA@mail.gmail.com>
- <20180530103720.GH6920@sirena.org.uk>
- <CAD=FV=WTTKXwPchuWRh-RNTc8=X8Xo28oTqk=3wW4+SiTHhxuA@mail.gmail.com>
- <20180530155044.GR6920@sirena.org.uk>
- <CAD=FV=WVUmvPPd5BxXv9Sa_2CRPrrjQvYFyqroY-3fRr4f0Bzg@mail.gmail.com>
- <20180530162007.GU6920@sirena.org.uk>
- <CAD=FV=WL9enzYCoSx0fT_ny40ciLJU-hhS9joJ6nySXvWPqAxQ@mail.gmail.com>
- <75088820-f20d-32ac-780a-5e7dacdf20ff@codeaurora.org>
- <20180531114816.GC13319@sirena.org.uk>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
+Date: Fri, 1 Jun 2018 23:46:32 +0200
+Message-ID: <20180601214632.GA3234@amd>
+References: <20180601082259.17563-1-johan@kernel.org>
+ <20180601093311.GA31639@amd>
+ <20180601094959.GA13775@localhost>
+ <20180601102612.GC31639@amd>
+ <20180601122217.GB13775@localhost>
+ <20180601162645.GA30792@amd>
+ <3A356534-FEB0-4E0D-A8C8-922EEF1E0926@computer.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531114816.GC13319@sirena.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <3A356534-FEB0-4E0D-A8C8-922EEF1E0926@computer.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
+To: "H. Nikolaus Schaller" <hns@computer.org>
+Cc: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
 
-On 05/31/2018 04:48 AM, Mark Brown wrote:
-> On Wed, May 30, 2018 at 04:39:10PM -0700, David Collins wrote:
->> The DRMS modes to use and max allowed current per mode need to be
->> specified at the board level in device tree instead of hard-coded per
->> regulator type in the driver.  There are at least two use cases driving
->> this need: LDOs shared between RPMh client processors and SMPSes requiring
->> PWM mode in certain circumstances.
-> 
-> Is there really no way to improve the RPM firmware?
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This aggregation takes place in a discrete hardware block, not in a
-general purpose processor.  Theoretically, future chips could have
-redesigned VRM hardware; however, there is no plan to make such a change.
+On Fri 2018-06-01 18:37:36, H. Nikolaus Schaller wrote:
+> Hi Pavel,
+>=20
+> > Am 01.06.2018 um 18:26 schrieb Pavel Machek <pavel@ucw.cz>:
+> >=20
+> > NMEA would not be my first choice, really. I'd propose something very
+> > similar to existing /dev/input/eventX, but with wider data types.
+>=20
+> Since even Rome wasn't built in a day, my first choice is NMEA, but I am
+> open to anything on higher level to come second.
+>=20
+> What about iio?
+>=20
+> It is quite flexible and extensible and GNSS coordinates are a not very
+> different from accelerometer, gyroscope or compass data as all of them
+> describe the position and orientation, maybe speed of the device these
+> things are built into (at least for mobile devices).
 
+As I said, I do not want to have that discussion at the
+moment. Transfering position and orientation is easy, transfering some
+other data (such as sattelites used for fix) might be
+trickier. Anyway, I'm pretty sure reasonable solution exists; and yes
+we could use NMEA.
 
->> Consider the case of a regulator with physical 10 mA LPM max current. Say
->> that modem and application processors each have a load on the regulator
->> that draws 9 mA. If they each respect the 10 mA limit, then they'd each
->> vote for LPM. The VRM block in RPMh hardware will aggregate these requests
-> 
-> This is, of course, why the regulator API aggregates this stuff based on
-> the current not based on having every individual user select a mode.
-> 
->> together using a max function which will result in the regulator being set
->> to LPM, even though the total load is 18 mA (which would require high
->> power mode (HPM)). To get around this corner case, a LPM max current of 1
->> uA can be used for all LDO supplies that have non-application processor
->> consumers. Thus, any non-zero regulator_set_load() current request will
->> result in setting the regulator to HPM (which is always safe).
-> 
-> That's obviously just never going to work well, the best you can do here
-> is just pretend that the other components are always operating at full
-> power (which I assume all the other components are doing too...) or not
-> try to use load based mode switching in the first place.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-I will remove the DT-based mode and max load current mapping support.  In
-its place, I'll implement hard coded LPM current limits for LDOs of 10 mA
-or 30 mA (depending upon subtype) like is done in other regulator drivers.
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-If we actually encounter an issue caused by the APPS processor and another
-RPMh client both voting for LPM when HPM is needed for the combination,
-then we can disable load-based mode control for the affected regulator in
-DT and configure its initial mode as HPM.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iEYEARECAAYFAlsRvrgACgkQMOfwapXb+vJt5QCdF1wx3Dera+wjZN9XGjeFlsnk
+ke0AoIGxXyASL/AEpjOMrOLt+ehaO+ew
+=YiiC
+-----END PGP SIGNATURE-----
 
->> The second situation that needs board-level DRMS mode and current limit
->> specification is SMPS regulator AUTO mode to PWM (HPM) mode switching.
->> SMPS regulators should theoretically always be able to operate in AUTO
->> mode as it switches automatically between PWM mode (which can provide the
->> maximum current) and PFM mode (which supports lower current but has higher
->> efficiency). However, there may be board/system issues that require
->> switching to PWM mode for certain use cases as it has better load
->> regulation (i.e. no PFM ripple for lower loads) and supports more
->> aggressive load current steps (i.e. greater A/ns).
-> 
->> If a Linux consumer requires the ability to force a given SMPS regulator
->> from AUTO mode into PWM mode and that SMPS is shared by other Linux
->> consumers (which may be the case, but at least must be guaranteed to work
->> architecturally), then regulator_set_load() is the only option since it
->> provides aggregation, where as regulator_set_mode() does not.
-> 
-> That's obviously broken though, what you're describing is just clearly
-> nothing to do with load so trying to configure it using load is just
-> going to lead to problems later on.  Honestly it sounds like you just
-> want to force the regulator into forced PWM mode all the time, otherwise
-> you need to look into implementing support for describing the thing
-> you're actually trying to do and add a mechanism for per consumer mode
-> configuration.
-> 
-> This has been a frequent pattern with these RPM drivers, trying to find
-> some way to shoehorn something that happens to work right now into the
-> code.  That's going to make things fragile and hard to maintain, we need
-> code that does the thing it's saying it does so that it's easier to
-> understand and work with - getting things running isn't enough, they
-> need to be clear.
-
-I agree that using regulator_set_load() to handle SMPS AUTO mode to PWM
-mode switching is hacky.  Since there is no natural way to pick SMPS modes
-based on load current, I will remove the functionality completely.  In its
-place, we can configure the SMPSes to have an initial mode of AUTO.  If a
-use case requiring PWM mode arises, then the consumer driver responsible
-for it can call regulator_set_mode() to switch between AUTO and PWM modes
-explicitly.
-
-Since regulator_set_mode() does not support aggregation currently, this
-technique would work only if there is exactly one consumer per regulator
-that needs explicit mode control.  Should we hit a situation that needs
-multiple consumers to have such mode control, then we could simply default
-the SMPS to PWM mode.
-
-I'll also start looking into per-consumer mode configuration and
-regulator_set_mode() aggregation within the regulator framework.  I think
-that we should be able to function without it for now; however, it would
-be good to have going forward.
-
-Take care,
-David
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--wRRV7LY7NUeQGEoC--
