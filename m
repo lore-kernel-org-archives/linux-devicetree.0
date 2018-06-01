@@ -1,81 +1,102 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: Re: [PATCH v2 1/2] power: supply: sbs-battery: don't assume
- MANUFACTURER_DATA formats
-Date: Fri, 1 Jun 2018 18:08:01 -0400
-Message-ID: <10b558c4-9734-061f-c6ed-5b1288d1f23f@nvidia.com>
-References: <20180601172400.50737-1-briannorris@chromium.org>
- <20180601173434.GA22509@roeck-us.net>
- <20180601183126.GA72050@rodete-desktop-imager.corp.google.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v2 1/5] media: venus: add a routine to reset ARM9
+Date: Sat, 2 Jun 2018 01:15:59 +0300
+Message-ID: <894ab678-bc1d-da04-b552-d53301bd3980@linaro.org>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601183126.GA72050@rodete-desktop-imager.corp.google.com>
+In-Reply-To: <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>, Guenter Roeck <linux@roeck-us.net>
-Cc: Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Alexandru Stan <amstan@chromium.org>, Doug Anderson <dianders@chromium.org>
+To: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, stanimir.varbanov@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/1/2018 2:31 PM, Brian Norris wrote:
-> Hi,
-> 
-> On Fri, Jun 01, 2018 at 10:34:34AM -0700, Guenter Roeck wrote:
->> On Fri, Jun 01, 2018 at 10:23:59AM -0700, Brian Norris wrote:
->>>  drivers/power/supply/sbs-battery.c | 54 +++++++++++++++++++++++++-----
->>>  1 file changed, 46 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
->>> index 83d7b4115857..8dea63464a3f 100644
->>> --- a/drivers/power/supply/sbs-battery.c
->>> +++ b/drivers/power/supply/sbs-battery.c
-> ...
-> 
->>> @@ -315,6 +320,27 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
->>>  static int sbs_get_battery_presence_and_health(
->>>  	struct i2c_client *client, enum power_supply_property psp,
->>>  	union power_supply_propval *val)
->>> +{
->>> +	int ret;
->>> +
->>> +	if (psp == POWER_SUPPLY_PROP_PRESENT) {
->>> +		/* Dummy command; if it succeeds, battery is present. */
->>> +		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
->>> +		if (ret < 0)
->>> +			val->intval = 0; /* battery disconnected */
->>> +		else
->>> +			val->intval = 1; /* battery present */
->>> +		return 0;
->>> +	} else { /* POWER_SUPPLY_PROP_HEALTH */
->>
->> Static analyzers may complain that else after return is unnecessary.
-> 
-> I noticed (checkpatch complains) but decided I didn't care. It would be
-> worse to promote the 'else' to top-level (things would look asymmetric).
-> I suppose I could pull the 'return 0' out, but I'm not sure that would
-> make the code any better.
+Hi Vikash,
 
-I generally prefer to make checkpatch happy, so I would vote to move the
-return outside of the if blocks as a minimal way of making it happy. In
-general though,
+On  1.06.2018 23:26, Vikash Garodia wrote:
+> Add a new routine to reset the ARM9 and brings it
+> out of reset. This is in preparation to add PIL
+> functionality in venus driver.
 
-Acked-by: Rhyland Klein <rklein@nvidia.com>
+please squash this patch with 4/5. I don't see a reason to add a 
+function which is not used. Shouldn't this produce gcc warnings?
 
 > 
->> Other than that
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>
->>> +		/* SBS spec doesn't have a general health command. */
->>> +		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
->>> +		return 0;
->>> +	}
->>> +}
->>> +
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> ---
+>   drivers/media/platform/qcom/venus/firmware.c     | 26 ++++++++++++++++++++++++
+>   drivers/media/platform/qcom/venus/hfi_venus_io.h |  5 +++++
+>   2 files changed, 31 insertions(+)
 > 
-> Brian
-> 
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index 521d4b3..7d89b5a 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -14,6 +14,7 @@
+>   
+>   #include <linux/device.h>
+>   #include <linux/firmware.h>
+> +#include <linux/delay.h>
+>   #include <linux/kernel.h>
+>   #include <linux/io.h>
+>   #include <linux/of.h>
+> @@ -22,11 +23,36 @@
+>   #include <linux/sizes.h>
+>   #include <linux/soc/qcom/mdt_loader.h>
+>   
+> +#include "core.h"
+>   #include "firmware.h"
+> +#include "hfi_venus_io.h"
+>   
+>   #define VENUS_PAS_ID			9
+>   #define VENUS_FW_MEM_SIZE		(6 * SZ_1M)
+>   
+> +static void venus_reset_hw(struct venus_core *core)
 
+can we rename this to venus_reset_cpu? reset_hw sounds like we reset 
+vcodec IPs, so I think we can be more exact here.
 
--- 
-nvpublic
+> +{
+> +	void __iomem *reg_base = core->base;
+
+just 'base', please.
+
+> +
+> +	writel(0, reg_base + WRAPPER_FW_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_FW_END_ADDR);
+> +	writel(0, reg_base + WRAPPER_CPA_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, reg_base + WRAPPER_CPA_END_ADDR);
+> +	writel(0x0, reg_base + WRAPPER_CPU_CGC_DIS);
+> +	writel(0x0, reg_base + WRAPPER_CPU_CLOCK_CONFIG);
+> +
+> +	/* Make sure all register writes are committed. */
+> +	mb();
+
+the comment says "register writes" hence shouldn't this be wmb? Also if 
+we are going to have explicit memory barrier why not use writel_relaxed?
+
+> +
+> +	/*
+> +	 * Need to wait 10 cycles of internal clocks before bringing ARM9
+
+Do we know what is the minimum frequency of the internal ARM9 clocks? 
+I.e does 1us is enough for all venus versions.
+
+> +	 * out of reset.
+> +	 */
+> +	udelay(1);
+> +
+> +	/* Bring Arm9 out of reset */
+
+ARM9
+
+> +	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
+
+in my opinion we should have a wmb here too
+
+regards,
+Stan
