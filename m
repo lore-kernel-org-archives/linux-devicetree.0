@@ -1,44 +1,25 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] clk: bcm: Update and add tingray clock entries
-Date: Fri, 1 Jun 2018 14:02:17 -0500
-Message-ID: <CAL_Jsq+YX01CwCycqeu5mxTUiWtnG3HKPJP5mvJO2OHcPF6v6g@mail.gmail.com>
-References: <1527266717-8406-1-git-send-email-ray.jui@broadcom.com>
- <1527266717-8406-3-git-send-email-ray.jui@broadcom.com> <20180531162556.GA955@rob-hp-laptop>
- <a354f3d1-051d-8b68-e6b3-ce7a739c10c9@broadcom.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V2 1/3] clk: imx7d: correct enet phy ref clock gates
+Date: Fri, 01 Jun 2018 12:18:00 -0700
+Message-ID: <152788068032.225090.8543051846810232845@swboyd.mtv.corp.google.com>
+References: <1526605266-18464-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a354f3d1-051d-8b68-e6b3-ce7a739c10c9@broadcom.com>
+In-Reply-To: <1526605266-18464-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Pramod Kumar <pramod.kumar@broadcom.com>
+To: Anson Huang <Anson.Huang@nxp.com>, adriana.reus@nxp.com, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, rui.silva@linaro.org, shawnguo@kernel.org, stefan@agner.ch
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 1, 2018 at 12:56 PM, Ray Jui <ray.jui@broadcom.com> wrote:
-> Hi Rob,
->
-> On 5/31/2018 9:25 AM, Rob Herring wrote:
->>
->> On Fri, May 25, 2018 at 09:45:16AM -0700, Ray Jui wrote:
->>>
->>> Update and add Stingray clock definitions and tables so they match the
->>> binding document and the latest ASIC datasheet
->>>
->>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
->>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>> ---
->>>   drivers/clk/bcm/clk-sr.c           | 135
->>> ++++++++++++++++++++++++++++++++-----
->>>   include/dt-bindings/clock/bcm-sr.h |  24 +++++--
->>
->>
->> This goes in the 1st patch.
->
->
-> Please help to confirm. You want 1st patch and 2nd patch to be combined into
-> a single patch?
+Quoting Anson Huang (2018-05-17 18:01:04)
+> IMX7D_ENET_PHY_REF_ROOT_DIV supplies clock for PHY directly,
+> there is no clock gate after it, rename it to
+> IMX7D_ENET_PHY_REF_ROOT_CLK to avoid device tree change.
+> =
 
-No. include/dt-bindings/* is part of the DT binding, so it goes with
-patch 1. The driver in patch 2.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
 
-Rob
+Applied to clk-next
