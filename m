@@ -1,113 +1,120 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 2/5] gpio: syscon: rockchip: add GPIO_MUTE support for rk3328
-Date: Fri, 1 Jun 2018 12:03:22 -0500
-Message-ID: <CAL_JsqKSy4q5dfVfXbRMLa7koTWufpAt3yNdE-9mwyJ-VzVQRQ@mail.gmail.com>
-References: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
- <1527737273-8387-3-git-send-email-djw@t-chip.com.cn> <CAL_JsqJK4vrmLBeN_ZeGCXAyqshshL16B0KN_+8uvt+=-O9TEw@mail.gmail.com>
- <0d08ba26-77f2-6c42-8fb1-214aaf6085e9@t-chip.com.cn>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v8 2/4] dt-bindings: Add bindings for SPI NAND devices
+Date: Fri, 1 Jun 2018 19:09:02 +0200
+Message-ID: <20180601190902.17cf5f6f@bbrezillon>
+References: <20180601131400.17634-1-boris.brezillon@bootlin.com>
+ <20180601131400.17634-3-boris.brezillon@bootlin.com>
+ <CAMuHMdUyPoDA-7+OT_yT-g7kA+zae8Sjo6PYRFTFfFkQetUqnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0d08ba26-77f2-6c42-8fb1-214aaf6085e9@t-chip.com.cn>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Levin <djw@t-chip.com.cn>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdUyPoDA-7+OT_yT-g7kA+zae8Sjo6PYRFTFfFkQetUqnA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 31, 2018 at 9:05 PM, Levin <djw@t-chip.com.cn> wrote:
-> Hi Rob,
->
->
-> On 2018-05-31 10:45 PM, Rob Herring wrote:
->>
->> On Wed, May 30, 2018 at 10:27 PM,  <djw@t-chip.com.cn> wrote:
->>>
->>> From: Levin Du <djw@t-chip.com.cn>
->>>
->>> In Rockchip RK3328, the output only GPIO_MUTE pin, originally for codec
->>> mute control, can also be used for general purpose. It is manipulated by
->>> the GRF_SOC_CON10 register.
->>>
->>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
->>>
->>> ---
->>>
->>> Changes in v3:
->>> - Change from general gpio-syscon to specific rk3328-gpio-mute
->>>
->>> Changes in v2:
->>> - Rename gpio_syscon10 to gpio_mute in doc
->>>
->>> Changes in v1:
->>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
->>> - Add doc rockchip,gpio-syscon.txt
->>>
->>>   .../bindings/gpio/rockchip,rk3328-gpio-mute.txt    | 28
->>> +++++++++++++++++++
->>>   drivers/gpio/gpio-syscon.c                         | 31
->>> ++++++++++++++++++++++
->>>   2 files changed, 59 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>> b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>> new file mode 100644
->>> index 0000000..10bc632
->>> --- /dev/null
->>> +++
->>> b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>> @@ -0,0 +1,28 @@
->>> +Rockchip RK3328 GPIO controller dedicated for the GPIO_MUTE pin.
->>> +
->>> +In Rockchip RK3328, the output only GPIO_MUTE pin, originally for codec
->>> mute
->>> +control, can also be used for general purpose. It is manipulated by the
->>> +GRF_SOC_CON10 register.
->>> +
->>> +Required properties:
->>> +- compatible: Should contain "rockchip,rk3328-gpio-mute".
->>> +- gpio-controller: Marks the device node as a gpio controller.
->>> +- #gpio-cells: Should be 2. The first cell is the pin number and
->>> +  the second cell is used to specify the gpio polarity:
->>> +    0 = Active high,
->>> +    1 = Active low.
->>> +
->>> +Example:
->>> +
->>> +       grf: syscon@ff100000 {
->>> +               compatible = "rockchip,rk3328-grf", "syscon",
->>> "simple-mfd";
->>> +
->>> +               gpio_mute: gpio-mute {
->>
->> Node names should be generic:
->>
->> gpio {
->>
->> This also means you can't add another GPIO node in the future and
->> you'll have to live with "rockchip,rk3328-gpio-mute" covering more
->> than 1 GPIO if you do need to add more GPIOs.
->
->
-> As the first line describes, this GPIO controller is dedicated for the
-> GPIO_MUTE pin.
-> There's only one GPIO pin in the GRF_SOC_CON10 register. Therefore the
-> gpio_mute
-> name is proper IMHO.
+Hi Geert,
 
-It's how many GPIOs in the GRF, not this register. What I'm saying is
-when you come along later to add another GPIO in the GRF, you had
-better just add it to this same node. I'm not going to accept another
-GPIO controller node within the GRF. You have the cells to support
-more than 1, so it would only be a driver change. The compatible
-string would then not be ideally named at that point. But compatible
-strings are just unique identifiers, so it doesn't really matter what
-the string is.
+On Fri, 1 Jun 2018 16:42:26 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-I'm being told both "this is the only GPIO" and "the GRF has too many
-different functions for us to tell you what they all are". So which is
-it?
+> Hi Boris,
+> 
+> I became interested after reading the cover letter...
+> 
+> On Fri, Jun 1, 2018 at 3:13 PM, Boris Brezillon
+> <boris.brezillon@bootlin.com> wrote:
+> > Add bindings for SPI NAND chips.
+> >
+> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> 
+> Thanks for your patch!
 
-Rob
+And thanks for reviewing it ;-).
+
+> 
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
+> > @@ -0,0 +1,27 @@
+> > +SPI NAND flash
+> > +
+> > +Required properties:
+> > +- compatible: should be "spi-nand"
+> > +- reg: should encode the chip-select line used to access the NAND chip
+> > +
+> > +Optional properties
+> > +- spi-max-frequency: maximum frequency of the SPI bus the chip can operate at.
+> > +                    This should encode board limitations (i.e. max freq can't
+> > +                    be achieved due to crosstalk on IO lines).
+> > +                    When unspecified, the driver assumes the chip can run at
+> > +                    the max frequency defined in the spec (information
+> > +                    extracted chip detection time).
+> 
+> This is a standard property according to
+> Documentation/devicetree/bindings/spi/spi-bus.txt. Can't you just refer
+> to that file, or just omit it, as it applies to all SPI slaves anyway?
+
+The thing is, the maximum frequency supported by a SPI NAND is directly
+encoded in the NAND device ID and can be auto-detected. Why should we
+define spi-max-frequency in the DT when we can automatically detect
+this information? The only reason one might want to override
+spi-max-frequency is when the board design impose such restrictions,
+hence the precision I give here. 
+
+> 
+> > +- spi-tx-bus-width: The bus width (number of data wires) that is used for MOSI.
+> > +                   Only encodes the board constraints (i.e. when not all IO
+> > +                   signals are routed on the board). Device constraints are
+> > +                   extracted when detecting the chip, and controller
+> > +                   constraints are exposed by the SPI mem controller. If this
+> > +                   property is missing that means no constraint at the board
+> > +                   level.
+> > +- spi-rx-bus-width: The bus width (number of data wires) that is used for MISO.
+> > +                   Only encodes the board constraints (i.e. when not all IO
+> > +                   signals are routed on the board). Device constraints are
+> > +                   extracted when detecting the chip, and controller
+> > +                   constraints are exposed by the SPI mem controller. If this
+> > +                   property is missing that means no constraint at the board
+> > +                   level.
+> 
+> This does not match Documentation/devicetree/bindings/spi/spi-bus.txt,
+> which says the default is 1.
+
+Yes, I know.
+
+> 
+> As these properties are handled by the SPI core in of_spi_parse_dt, why
+> would you want to deviate?
+
+Because, again, this information can be extracted from the NAND ID, and
+the only reason we might want to override the information extracted
+from the NAND ID is when the board design adds extra restrictions
+(like, only 2 SIO lines wired on the 4 available).
+
+> 
+> Commenting to the question in the cover letter: what would be the
+> purpose of spi-max-bus-width?
+
+Defining how many IO lines are wired on the board design. If this
+property is missing we would assume all IO lines are wired and the
+restrictions would be negotiated between the controller and the device
+without requiring explicit description in the DT.
+
+Regards,
+
+Boris 
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
