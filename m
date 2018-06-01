@@ -1,33 +1,37 @@
-Return-Path: <SRS0=PaPc=IY=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=Nyxc=IT=cogentembedded.com=sergei.shtylyov@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] gpio-rcar: document R8A77980 bindings
+Message-ID: <529bc49b-e258-20ae-fe97-6d0abcec39ec@cogentembedded.com>
+Date: Fri, 1 Jun 2018 23:13:47 +0300
 MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <529bc49b-e258-20ae-fe97-6d0abcec39ec@cogentembedded.com>
-References: <529bc49b-e258-20ae-fe97-6d0abcec39ec@cogentembedded.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 6 Jun 2018 11:02:21 +0200
-Message-ID: <CAMuHMdUY-_EcZxf1-0m+6-FL5DRc1KQ+hjnektg4FKnoDEgoaA@mail.gmail.com>
-Subject: Re: [PATCH] gpio-rcar: document R8A77980 bindings
-Content-Type: text/plain; charset="UTF-8"
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jun 1, 2018 at 10:13 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Renesas R-Car V3H (R8A77980) SoC also has the R-Car gen3 compatible GPIO
-> controllers, so document the SoC specific bindings.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Renesas R-Car V3H (R8A77980) SoC also has the R-Car gen3 compatible GPIO
+controllers, so document the SoC specific bindings.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Gr{oetje,eeting}s,
+---
+The patch is against the 'devel' branch of Linus Walleij's 'linux-gpio.git'
+repo.
 
-                        Geert
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Index: linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+===================================================================
+--- linux-gpio.orig/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -17,6 +17,7 @@ Required Properties:
+     - "renesas,gpio-r8a7796": for R8A7796 (R-Car M3-W) compatible GPIO controller.
+     - "renesas,gpio-r8a77965": for R8A77965 (R-Car M3-N) compatible GPIO controller.
+     - "renesas,gpio-r8a77970": for R8A77970 (R-Car V3M) compatible GPIO controller.
++    - "renesas,gpio-r8a77980": for R8A77980 (R-Car V3H) compatible GPIO controller.
+     - "renesas,gpio-r8a77990": for R8A77990 (R-Car E3) compatible GPIO controller.
+     - "renesas,gpio-r8a77995": for R8A77995 (R-Car D3) compatible GPIO controller.
+     - "renesas,rcar-gen1-gpio": for a generic R-Car Gen1 GPIO controller.
