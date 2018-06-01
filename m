@@ -1,69 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: simple-card: make sysclk index
-	configurable
-Date: Fri, 1 Jun 2018 09:21:52 -0500
-Message-ID: <CAL_Jsq+NNpersC0wy1tnoEh3yfSXJ+W_0B0UMHzoEDdZqyUZ=Q@mail.gmail.com>
-References: <20180528193503.18905-1-daniel@zonque.org>
- <20180528193503.18905-3-daniel@zonque.org>
- <20180529112447.GC23509@sirena.org.uk>
- <f130a86f-deca-b5cf-da34-5cf52a9c39fc@zonque.org>
- <20180531170240.GA29973@rob-hp-laptop>
- <d5df3c6b-22ae-408b-5727-516fed648b2a@zonque.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 3/6] clk: ti: dra7: Add clkctrl clock data for the
+ mcan clocks
+Date: Fri, 1 Jun 2018 07:26:13 -0700
+Message-ID: <20180601142613.GU5705@atomide.com>
+References: <20180530141133.3711-1-faiz_abbas@ti.com>
+ <20180530141133.3711-4-faiz_abbas@ti.com>
+ <20180531040350.GA25132@rob-hp-laptop>
+ <e7e3ade1-76b7-f216-ece5-bd64a55cede6@ti.com>
+ <678ef467-a235-91db-8bae-f249ad98eac8@ti.com>
+ <d7532c7a-d2ae-5cbf-cfd0-c347b975ed6b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <d5df3c6b-22ae-408b-5727-516fed648b2a@zonque.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d7532c7a-d2ae-5cbf-cfd0-c347b975ed6b@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, bcousson@baylibre.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 31, 2018 at 3:03 PM, Daniel Mack <daniel@zonque.org> wrote:
-> On Thursday, May 31, 2018 07:02 PM, Rob Herring wrote:
->>
->> On Tue, May 29, 2018 at 10:23:48PM +0200, Daniel Mack wrote:
->
->
->>> If that's the case, could you depict how the DT bindings should look like
->>> by
->>> example?
->>
->>
->> In clock providers, you just add #clock-cells. Then the consumer side
->> defines 'clocks'. Which clock(s) comes from the dai is defined by the
->> index in the 'clocks' property for that node.
->>
->> Both ends can be providers, but who is active is determined by defining
->> the actual connections with 'clocks'. Or perhaps you have both
->> directions shown and there is some other means to select which one is
->> active such as solving for who can provide the desired freq.
->
->
-> How about entities that are a clock producer and consume their clocks
-> themselves? That's a rather typical thing for DAIs. Is that expressible in
-> DT?
+* Faiz Abbas <faiz_abbas@ti.com> [180601 06:49]:
+> Hi,
+> 
+> On Thursday 31 May 2018 06:59 PM, Tero Kristo wrote:
+> > On 31/05/18 13:14, Faiz Abbas wrote:
+> >> Hi,
+> >>
+> >> On Thursday 31 May 2018 09:33 AM, Rob Herring wrote:
+> >>> On Wed, May 30, 2018 at 07:41:30PM +0530, Faiz Abbas wrote:
+> >>>> Add clkctrl data for the m_can clocks and register it within the
+> >> ...
+> >>>>   diff --git a/include/dt-bindings/clock/dra7.h
+> >>>> b/include/dt-bindings/clock/dra7.h
+> >>>> index 5e1061b15aed..d7549c57cac3 100644
+> >>>> --- a/include/dt-bindings/clock/dra7.h
+> >>>> +++ b/include/dt-bindings/clock/dra7.h
+> >>>> @@ -168,5 +168,6 @@
+> >>>>   #define DRA7_COUNTER_32K_CLKCTRL    DRA7_CLKCTRL_INDEX(0x50)
+> >>>>   #define DRA7_UART10_CLKCTRL    DRA7_CLKCTRL_INDEX(0x80)
+> >>>>   #define DRA7_DCAN1_CLKCTRL    DRA7_CLKCTRL_INDEX(0x88)
+> >>>> +#define DRA7_ADC_CLKCTRL    DRA7_CLKCTRL_INDEX(0xa0)
+> >>>
+> >>> ADC and mcan are the same thing?
+> >>>
+> >>
+> >> The register to control MCAN clocks is called ADC_CLKCTRL, Yes.
+> > 
+> > Is there any reason for this or is that just a documentation bug?
+> > 
+> 
+> Looks like they meant to have an ADC in dra74 or dra72 but decided
+> against it and then many years later used the same registers for MCAN
+> instead. You can see ADC_CLKCTRL exists in dra72 TRM but is explicitly
+> disabled.
+> 
+> http://www.ti.com/lit/ug/spruic2b/spruic2b.pdf pg:1524
 
-And I assume something else consumes those clocks, too? If not, you
-can just handle all that within the driver and don't need the clock
-binding or clock framework.
+How about make add also something like to dra7.h:
 
-But yes, you can do something like this:
+#define DRA7_MCAN_CLKCTRL DRA7_ADC_CLKCTRL
 
-myclk: clock-controller {
-  #clock-cells = <1>;
-  clocks = <&myclk 123>, <&otherclk 1>;
-};
+And you can add a comment to the dts file to avoid people
+getting confused with this constantly.
 
-You'll have to handle clk registration and clk_get in the right order
-to avoid deferring probe on yourself.
+Regards,
 
-Rob
+Tony
