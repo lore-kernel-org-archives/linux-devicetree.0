@@ -1,41 +1,34 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH 2/2] dt-bindings: power: sbs-battery: re-document "ti,bq20z75"
-Date: Thu, 31 May 2018 17:32:52 -0700
-Message-ID: <20180601003252.42810-2-briannorris@chromium.org>
-References: <20180601003252.42810-1-briannorris@chromium.org>
+From: kbuild test robot <fengguang.wu@intel.com>
+Subject: [RFC PATCH] PCI: mediatek: mtk_pcie_pm_ops can be static
+Date: Fri, 1 Jun 2018 08:42:27 +0800
+Message-ID: <20180601004227.GA98217@lkp-sb05>
+References: <1527647736-19986-1-git-send-email-honghui.zhang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601003252.42810-1-briannorris@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <1527647736-19986-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Rhyland Klein <rklein@nvidia.com>
+Cc: kbuild-all@01.org, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This compatible property was documented before the driver was renamed to
-"SBS" (see commit e57f1b68c406 ("devicetree-bindings: Propagate
-bq20z75->sbs rename to dt bindings")). The driver has continued to
-support this property as an alternative to "sbs,sbs-battery", and
-because we've noticed there are some lingering TI specifics (in the
-manufacturer-specific portion of the SBS spec), we'd like to start using
-this property again to differentiate.
 
-Cc: Rhyland Klein <rklein@nvidia.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
+Fixes: 24dc21cd1e9d ("PCI: mediatek: Add system pm support for MT2712")
+Signed-off-by: kbuild test robot <fengguang.wu@intel.com>
 ---
- .../devicetree/bindings/power/supply/sbs_sbs-battery.txt        | 2 +-
+ pcie-mediatek.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-index c40e8926facf..a7a9c3366f82 100644
---- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-@@ -2,7 +2,7 @@ SBS sbs-battery
- ~~~~~~~~~~
+diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+index e3b16b0..e01cc66 100644
+--- a/drivers/pci/host/pcie-mediatek.c
++++ b/drivers/pci/host/pcie-mediatek.c
+@@ -1256,7 +1256,7 @@ static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
+ 	return 0;
+ }
  
- Required properties :
-- - compatible : "sbs,sbs-battery"
-+ - compatible : "sbs,sbs-battery" or "ti,bq20z75"
- 
- Optional properties :
-  - sbs,i2c-retry-count : The number of times to retry i2c transactions on i2c
--- 
-2.17.0.921.gf22659ad46-goog
+-const struct dev_pm_ops mtk_pcie_pm_ops = {
++static const struct dev_pm_ops mtk_pcie_pm_ops = {
+ 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
+ 				      mtk_pcie_resume_noirq)
+ };
