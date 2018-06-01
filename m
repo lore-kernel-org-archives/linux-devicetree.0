@@ -1,420 +1,152 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/3] pinctrl: actions: Add interrupt support for OWL S900 SoC
-Date: Sat,  2 Jun 2018 22:24:15 +0530
-Message-ID: <20180602165415.30956-4-manivannan.sadhasivam@linaro.org>
-References: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
-Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v8 2/4] dt-bindings: Add bindings for SPI NAND devices
+Date: Fri, 1 Jun 2018 19:40:00 +0200
+Message-ID: <CAMuHMdWqa4++tdrpWCAsdqjqN26CHB1+eudnCtsP2vcrzmkA_w@mail.gmail.com>
+References: <20180601131400.17634-1-boris.brezillon@bootlin.com>
+ <20180601131400.17634-3-boris.brezillon@bootlin.com>
+ <CAMuHMdUyPoDA-7+OT_yT-g7kA+zae8Sjo6PYRFTFfFkQetUqnA@mail.gmail.com>
+ <20180601190902.17cf5f6f@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180601190902.17cf5f6f@bbrezillon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt support for Actions Semi OWL S900 SoC.
+Hi Boris,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pinctrl/actions/Kconfig        |   1 +
- drivers/pinctrl/actions/pinctrl-owl.c  | 231 ++++++++++++++++++++++++-
- drivers/pinctrl/actions/pinctrl-owl.h  |  22 ++-
- drivers/pinctrl/actions/pinctrl-s900.c |  31 ++--
- 4 files changed, 267 insertions(+), 18 deletions(-)
+On Fri, Jun 1, 2018 at 7:09 PM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> On Fri, 1 Jun 2018 16:42:26 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> On Fri, Jun 1, 2018 at 3:13 PM, Boris Brezillon
+>> <boris.brezillon@bootlin.com> wrote:
+>> > Add bindings for SPI NAND chips.
 
-diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-index 490927b4ea76..2397cb0f6011 100644
---- a/drivers/pinctrl/actions/Kconfig
-+++ b/drivers/pinctrl/actions/Kconfig
-@@ -5,6 +5,7 @@ config PINCTRL_OWL
- 	select PINCONF
- 	select GENERIC_PINCONF
- 	select GPIOLIB
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say Y here to enable Actions Semi OWL pinctrl driver
- 
-diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-index 76243caa08c6..d40c61caeea3 100644
---- a/drivers/pinctrl/actions/pinctrl-owl.c
-+++ b/drivers/pinctrl/actions/pinctrl-owl.c
-@@ -45,6 +45,8 @@ struct owl_pinctrl {
- 	struct clk *clk;
- 	const struct owl_pinctrl_soc_data *soc;
- 	void __iomem *base;
-+	struct irq_domain *domain;
-+	int *irq;
- };
- 
- static void owl_update_bits(void __iomem *base, u32 mask, u32 val)
-@@ -701,16 +703,193 @@ static int owl_gpio_direction_output(struct gpio_chip *chip,
- 	return 0;
- }
- 
-+static int owl_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct owl_pinctrl *pctrl = gpiochip_get_data(chip);
-+
-+	return irq_find_mapping(pctrl->domain, offset);
-+}
-+
-+static void owl_gpio_irq_mask(struct irq_data *data)
-+{
-+	struct owl_pinctrl *pctrl = irq_data_get_irq_chip_data(data);
-+	const struct owl_gpio_port *port;
-+	void __iomem *gpio_base;
-+	unsigned long flags;
-+	unsigned int gpio = data->hwirq;
-+	u32 val;
-+
-+	port = owl_gpio_get_port(pctrl, &gpio);
-+	if (WARN_ON(port == NULL))
-+		return;
-+
-+	gpio_base = pctrl->base + port->offset;
-+
-+	raw_spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	owl_gpio_update_reg(gpio_base + port->intc_msk, gpio, false);
-+
-+	/* disable port interrupt if no interrupt pending bit is active */
-+	val = readl_relaxed(gpio_base + port->intc_msk);
-+	if (val == 0)
-+		owl_gpio_update_reg(gpio_base + port->intc_ctl,
-+					OWL_GPIO_CTLR_ENABLE, false);
-+
-+	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static void owl_gpio_irq_unmask(struct irq_data *data)
-+{
-+	struct owl_pinctrl *pctrl = irq_data_get_irq_chip_data(data);
-+	const struct owl_gpio_port *port;
-+	void __iomem *gpio_base;
-+	unsigned long flags;
-+	unsigned int gpio = data->hwirq;
-+	u32 value;
-+
-+	port = owl_gpio_get_port(pctrl, &gpio);
-+	if (WARN_ON(port == NULL))
-+		return;
-+
-+	gpio_base = pctrl->base + port->offset;
-+	raw_spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	/* enable port interrupt */
-+	value = readl_relaxed(gpio_base + port->intc_ctl);
-+	value |= BIT(OWL_GPIO_CTLR_ENABLE) | BIT(OWL_GPIO_CTLR_SAMPLE_CLK_24M);
-+	writel_relaxed(value, gpio_base + port->intc_ctl);
-+
-+	/* enable GPIO interrupt */
-+	owl_gpio_update_reg(gpio_base + port->intc_msk, gpio, true);
-+
-+	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static void owl_gpio_irq_ack(struct irq_data *data)
-+{
-+	struct owl_pinctrl *pctrl = irq_data_get_irq_chip_data(data);
-+	const struct owl_gpio_port *port;
-+	void __iomem *gpio_base;
-+	unsigned long flags;
-+	unsigned int gpio = data->hwirq;
-+
-+	port = owl_gpio_get_port(pctrl, &gpio);
-+	if (WARN_ON(port == NULL))
-+		return;
-+
-+	gpio_base = pctrl->base + port->offset;
-+
-+	raw_spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	owl_gpio_update_reg(gpio_base + port->intc_ctl,
-+				OWL_GPIO_CTLR_PENDING, true);
-+
-+	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
-+
-+static int owl_gpio_irq_set_type(struct irq_data *data, unsigned int type)
-+{
-+	struct owl_pinctrl *pctrl = irq_data_get_irq_chip_data(data);
-+	const struct owl_gpio_port *port;
-+	void __iomem *gpio_base;
-+	unsigned long flags;
-+	unsigned int gpio = data->hwirq;
-+	unsigned int offset, value, irq_type = 0;
-+
-+	port = owl_gpio_get_port(pctrl, &gpio);
-+	if (WARN_ON(port == NULL))
-+		return -ENODEV;
-+
-+	gpio_base = pctrl->base + port->offset;
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		irq_type = OWL_GPIO_INT_EDGE_RISING;
-+		break;
-+
-+	case IRQ_TYPE_EDGE_FALLING:
-+		irq_type = OWL_GPIO_INT_EDGE_FALLING;
-+		break;
-+
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		irq_type = OWL_GPIO_INT_LEVEL_HIGH;
-+		break;
-+
-+	case IRQ_TYPE_LEVEL_LOW:
-+		irq_type = OWL_GPIO_INT_LEVEL_LOW;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	raw_spin_lock_irqsave(&pctrl->lock, flags);
-+
-+	offset = gpio < 16 ? 4 : 0;
-+	value = readl_relaxed(gpio_base + port->intc_type + offset);
-+	value &= ~(OWL_GPIO_INT_MASK << ((gpio % 16) * 2));
-+	value |= irq_type << ((gpio % 16) * 2);
-+	writel_relaxed(value, gpio_base + port->intc_type + offset);
-+
-+	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	if (type & IRQ_TYPE_EDGE_BOTH)
-+		irq_set_handler_locked(data, handle_edge_irq);
-+	else
-+		irq_set_handler_locked(data, handle_level_irq);
-+
-+	return 0;
-+}
-+
-+static void owl_gpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct owl_pinctrl *pctrl = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	const struct owl_gpio_port *port;
-+	void __iomem *base;
-+	unsigned int pin, irq, offset = 0, i;
-+	unsigned long pending_irq;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for (i = 0; i < pctrl->soc->nports; i++) {
-+		port = &pctrl->soc->ports[i];
-+		base = pctrl->base + port->offset;
-+		pending_irq = readl_relaxed(base + port->intc_pd);
-+
-+		for_each_set_bit(pin, &pending_irq, port->pins) {
-+			irq = irq_find_mapping(pctrl->domain, offset + pin);
-+			generic_handle_irq(irq);
-+
-+			/* clear pending interrupt */
-+			owl_gpio_update_reg(base + port->intc_pd, pin, true);
-+		}
-+
-+		offset += port->pins;
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static struct irq_chip owl_gpio_irq_chip = {
-+	.name           = "owlgpio",
-+	.irq_mask       = owl_gpio_irq_mask,
-+	.irq_unmask     = owl_gpio_irq_unmask,
-+	.irq_ack        = owl_gpio_irq_ack,
-+	.irq_set_type   = owl_gpio_irq_set_type,
-+};
-+
- static int owl_gpio_init(struct owl_pinctrl *pctrl)
- {
- 	struct gpio_chip *chip;
--	int ret;
-+	int irqno, ret, i;
- 
- 	chip = &pctrl->chip;
- 	chip->base = -1;
- 	chip->ngpio = pctrl->soc->ngpios;
- 	chip->label = dev_name(pctrl->dev);
- 	chip->parent = pctrl->dev;
-+	chip->to_irq = owl_gpio_to_irq;
- 	chip->owner = THIS_MODULE;
- 	chip->of_node = pctrl->dev->of_node;
- 
-@@ -720,6 +899,29 @@ static int owl_gpio_init(struct owl_pinctrl *pctrl)
- 		return ret;
- 	}
- 
-+	pctrl->domain = irq_domain_add_linear(chip->of_node,
-+					     chip->ngpio,
-+					     &irq_domain_simple_ops,
-+					     NULL);
-+	if (!pctrl->domain) {
-+		dev_err(pctrl->dev, "Couldn't register IRQ domain\n");
-+		gpiochip_remove(&pctrl->chip);
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < chip->ngpio; i++) {
-+		irqno = irq_create_mapping(pctrl->domain, i);
-+		irq_set_chip_and_handler(irqno, &owl_gpio_irq_chip,
-+					 handle_edge_irq);
-+		irq_set_chip_data(irqno, pctrl);
-+	}
-+
-+	for (i = 0; i < pctrl->soc->nports; i++) {
-+		irq_set_chained_handler_and_data(pctrl->irq[i],
-+						owl_gpio_irq_handler,
-+						pctrl);
-+	}
-+
- 	return 0;
- }
- 
-@@ -728,7 +930,7 @@ int owl_pinctrl_probe(struct platform_device *pdev,
- {
- 	struct resource *res;
- 	struct owl_pinctrl *pctrl;
--	int ret;
-+	int ret, i;
- 
- 	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
- 	if (!pctrl)
-@@ -772,14 +974,35 @@ int owl_pinctrl_probe(struct platform_device *pdev,
- 					&owl_pinctrl_desc, pctrl);
- 	if (IS_ERR(pctrl->pctrldev)) {
- 		dev_err(&pdev->dev, "could not register Actions OWL pinmux driver\n");
--		return PTR_ERR(pctrl->pctrldev);
-+		ret = PTR_ERR(pctrl->pctrldev);
-+		goto err_exit;
-+	}
-+
-+	pctrl->irq = devm_kcalloc(&pdev->dev, pctrl->soc->nports,
-+				  sizeof(*pctrl->irq), GFP_KERNEL);
-+	if (!pctrl->irq) {
-+		ret = -ENOMEM;
-+		goto err_exit;
-+	}
-+
-+	for (i = 0; i < pctrl->soc->nports ; i++) {
-+		pctrl->irq[i] = platform_get_irq(pdev, i);
-+		if (pctrl->irq[i] < 0) {
-+			ret = pctrl->irq[i];
-+			goto err_exit;
-+		}
- 	}
- 
- 	ret = owl_gpio_init(pctrl);
- 	if (ret)
--		return ret;
-+		goto err_exit;
- 
- 	platform_set_drvdata(pdev, pctrl);
- 
- 	return 0;
-+
-+err_exit:
-+	clk_disable_unprepare(pctrl->clk);
-+
-+	return ret;
- }
-diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
-index 74342378937c..a724d1d406d4 100644
---- a/drivers/pinctrl/actions/pinctrl-owl.h
-+++ b/drivers/pinctrl/actions/pinctrl-owl.h
-@@ -29,6 +29,18 @@ enum owl_pinconf_drv {
- 	OWL_PINCONF_DRV_12MA,
- };
- 
-+/* GPIO CTRL Bit Definition */
-+#define OWL_GPIO_CTLR_PENDING		0
-+#define OWL_GPIO_CTLR_ENABLE		1
-+#define OWL_GPIO_CTLR_SAMPLE_CLK_24M	2
-+
-+/* GPIO TYPE Bit Definition */
-+#define OWL_GPIO_INT_LEVEL_HIGH		0
-+#define OWL_GPIO_INT_LEVEL_LOW		1
-+#define OWL_GPIO_INT_EDGE_RISING	2
-+#define OWL_GPIO_INT_EDGE_FALLING	3
-+#define OWL_GPIO_INT_MASK		3
-+
- /**
-  * struct owl_pullctl - Actions pad pull control register
-  * @reg: offset to the pull control register
-@@ -121,6 +133,10 @@ struct owl_pinmux_func {
-  * @outen: offset of the output enable register.
-  * @inen: offset of the input enable register.
-  * @dat: offset of the data register.
-+ * @intc_ctl: offset of the interrupt control register.
-+ * @intc_pd: offset of the interrupt pending register.
-+ * @intc_msk: offset of the interrupt mask register.
-+ * @intc_type: offset of the interrupt type register.
-  */
- struct owl_gpio_port {
- 	unsigned int offset;
-@@ -128,6 +144,10 @@ struct owl_gpio_port {
- 	unsigned int outen;
- 	unsigned int inen;
- 	unsigned int dat;
-+	unsigned int intc_ctl;
-+	unsigned int intc_pd;
-+	unsigned int intc_msk;
-+	unsigned int intc_type;
- };
- 
- /**
-@@ -140,7 +160,7 @@ struct owl_gpio_port {
-  * @ngroups: number of entries in @groups.
-  * @padinfo: array describing the pad info of this SoC.
-  * @ngpios: number of pingroups the driver should expose as GPIOs.
-- * @port: array describing all GPIO ports of this SoC.
-+ * @ports: array describing all GPIO ports of this SoC.
-  * @nports: number of GPIO ports in this SoC.
-  */
- struct owl_pinctrl_soc_data {
-diff --git a/drivers/pinctrl/actions/pinctrl-s900.c b/drivers/pinctrl/actions/pinctrl-s900.c
-index 5503c7945764..ea67b14ef93b 100644
---- a/drivers/pinctrl/actions/pinctrl-s900.c
-+++ b/drivers/pinctrl/actions/pinctrl-s900.c
-@@ -1821,22 +1821,27 @@ static struct owl_padinfo s900_padinfo[NUM_PADS] = {
- 	[SGPIO3] = PAD_INFO_PULLCTL_ST(SGPIO3)
- };
- 
--#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat)	\
--	[OWL_GPIO_PORT_##port] = {				\
--		.offset = base,					\
--		.pins = count,					\
--		.outen = _outen,				\
--		.inen = _inen,					\
--		.dat = _dat,					\
-+#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat,		\
-+			_intc_ctl, _intc_pd, _intc_msk, _intc_type)	\
-+	[OWL_GPIO_PORT_##port] = {					\
-+		.offset = base,						\
-+		.pins = count,						\
-+		.outen = _outen,					\
-+		.inen = _inen,						\
-+		.dat = _dat,						\
-+		.intc_ctl = _intc_ctl,					\
-+		.intc_pd = _intc_pd,					\
-+		.intc_msk = _intc_msk,					\
-+		.intc_type = _intc_type,				\
- 	}
- 
- static const struct owl_gpio_port s900_gpio_ports[] = {
--	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8),
--	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8),
--	OWL_GPIO_PORT(C, 0x0018, 12, 0x0, 0x4, 0x8),
--	OWL_GPIO_PORT(D, 0x0024, 30, 0x0, 0x4, 0x8),
--	OWL_GPIO_PORT(E, 0x0030, 32, 0x0, 0x4, 0x8),
--	OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8)
-+	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x240),
-+	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x534, 0x204, 0x208, 0x23C),
-+	OWL_GPIO_PORT(C, 0x0018, 12, 0x0, 0x4, 0x8, 0x52C, 0x200, 0x204, 0x238),
-+	OWL_GPIO_PORT(D, 0x0024, 30, 0x0, 0x4, 0x8, 0x524, 0x1FC, 0x200, 0x234),
-+	OWL_GPIO_PORT(E, 0x0030, 32, 0x0, 0x4, 0x8, 0x51C, 0x1F8, 0x1FC, 0x230),
-+	OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8, 0x460, 0x140, 0x144, 0x178)
- };
- 
- static struct owl_pinctrl_soc_data s900_pinctrl_data = {
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
+>> > @@ -0,0 +1,27 @@
+>> > +SPI NAND flash
+>> > +
+>> > +Required properties:
+>> > +- compatible: should be "spi-nand"
+>> > +- reg: should encode the chip-select line used to access the NAND chip
+>> > +
+>> > +Optional properties
+>> > +- spi-max-frequency: maximum frequency of the SPI bus the chip can operate at.
+>> > +                    This should encode board limitations (i.e. max freq can't
+>> > +                    be achieved due to crosstalk on IO lines).
+>> > +                    When unspecified, the driver assumes the chip can run at
+>> > +                    the max frequency defined in the spec (information
+>> > +                    extracted chip detection time).
+>>
+>> This is a standard property according to
+>> Documentation/devicetree/bindings/spi/spi-bus.txt. Can't you just refer
+>> to that file, or just omit it, as it applies to all SPI slaves anyway?
+>
+> The thing is, the maximum frequency supported by a SPI NAND is directly
+> encoded in the NAND device ID and can be auto-detected. Why should we
+> define spi-max-frequency in the DT when we can automatically detect
+> this information? The only reason one might want to override
+
+Because that's how we dealt with this traditionally. Or at least I thought so.
+But include/linux/spi/spi.h says:
+
+ * @max_speed_hz: Maximum clock rate to be used with this chip
+ *      (on this board); may be changed by the device's driver.
+ *      The spi_transfer.speed_hz can override this for each transfer.
+
+and many drivers seem to do so.
+
+> spi-max-frequency is when the board design impose such restrictions,
+> hence the precision I give here.
+
+Which is exactly the meaning of the standard property, isn't it?
+
+So I think it can just be omitted here anyway.  If it's present, the SPI
+core will make sure it's taken into account.
+
+>> > +- spi-tx-bus-width: The bus width (number of data wires) that is used for MOSI.
+>> > +                   Only encodes the board constraints (i.e. when not all IO
+>> > +                   signals are routed on the board). Device constraints are
+>> > +                   extracted when detecting the chip, and controller
+>> > +                   constraints are exposed by the SPI mem controller. If this
+>> > +                   property is missing that means no constraint at the board
+>> > +                   level.
+>> > +- spi-rx-bus-width: The bus width (number of data wires) that is used for MISO.
+>> > +                   Only encodes the board constraints (i.e. when not all IO
+>> > +                   signals are routed on the board). Device constraints are
+>> > +                   extracted when detecting the chip, and controller
+>> > +                   constraints are exposed by the SPI mem controller. If this
+>> > +                   property is missing that means no constraint at the board
+>> > +                   level.
+>>
+>> This does not match Documentation/devicetree/bindings/spi/spi-bus.txt,
+>> which says the default is 1.
+>
+> Yes, I know.
+>
+>> As these properties are handled by the SPI core in of_spi_parse_dt, why
+>> would you want to deviate?
+>
+> Because, again, this information can be extracted from the NAND ID, and
+> the only reason we might want to override the information extracted
+> from the NAND ID is when the board design adds extra restrictions
+> (like, only 2 SIO lines wired on the 4 available).
+
+In struct spi_device, this is specified using the SPI_[RT]_X_{DUAL,QUAD}
+bits in the mode field. Documentation says:
+
+ * @mode: The spi mode defines how data is clocked out and in.
+ *      This may be changed by the device's driver.
+ *      The "active low" default for chipselect mode can be overridden
+ *      (by specifying SPI_CS_HIGH) as can the "MSB first" default for
+ *      each word in a transfer (by specifying SPI_LSB_FIRST).
+
+So this may also be specified by the device driver, but it seems no driver
+does so for the dual/quad bits, except for drivers/mtd/spi-nor/nxp-spifi.c
+(for rx only).
+
+But here we do have the generic SPI DT bindings saying the default is 1.
+So personally, I wouldn't go for the option of the least surprise, and
+don't deviate from the generic bindings.
+
+>> Commenting to the question in the cover letter: what would be the
+>> purpose of spi-max-bus-width?
+>
+> Defining how many IO lines are wired on the board design. If this
+> property is missing we would assume all IO lines are wired and the
+> restrictions would be negotiated between the controller and the device
+> without requiring explicit description in the DT.
+
+Which is exactly the meaning of the standard property, except for the
+default of all vs. 1.
+
+I'll have to defer to Mark (broonie) for his opinion about deviating from
+the way this is handled traditionally, and assuming different defaults...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
