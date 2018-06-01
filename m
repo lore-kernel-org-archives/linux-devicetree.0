@@ -1,241 +1,144 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH v8 3/4] mtd: spinand: Add initial support for Micron
- MT29F2G01ABAGD
-Date: Fri,  1 Jun 2018 15:13:59 +0200
-Message-ID: <20180601131400.17634-4-boris.brezillon@bootlin.com>
-References: <20180601131400.17634-1-boris.brezillon@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180601131400.17634-1-boris.brezillon@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
-Cc: Peter Pan <peterpandong@micron.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [RFC PATCH 0/8] coresight: Update device tree bindings
+Date: Fri,  1 Jun 2018 14:15:59 +0100
+Message-ID: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mathieu.poirier@linaro.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Pan <peterpandong@micron.com>
+Coresight uses DT graph bindings to describe the connections of the
+components. However we have some undocumented usage of the bindings
+to describe some of the properties of the connections.
 
-Add a basic driver for Micron SPI NANDs. Only one device is supported
-right now, but the driver will be extended to support more devices
-afterwards.
+The coresight driver needs to know the hardware ports invovled
+in the connection and the direction of data flow to effectively
+manage the trace sessions. So far we have relied on the "port"
+address (as described by the generic graph bindings) to represent
+the hardware port of the component for a connection.
 
-Signed-off-by: Peter Pan <peterpandong@micron.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
----
-Changes in v8:
-- Changed the subject prefix
----
- drivers/mtd/nand/spi/Makefile |   2 +-
- drivers/mtd/nand/spi/core.c   |  17 ++++++
- drivers/mtd/nand/spi/micron.c | 133 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/mtd/spinand.h   |   3 +
- 4 files changed, 154 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mtd/nand/spi/micron.c
+The hardware uses separate numbering scheme for input and output
+ports, which implies, we could have two different (input and output)
+ports with the same port number. This could create problems in the
+graph bindings where the label of the port wouldn't match the address.
 
-diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
-index feb79a1d1b46..79a1f1e79221 100644
---- a/drivers/mtd/nand/spi/Makefile
-+++ b/drivers/mtd/nand/spi/Makefile
-@@ -1,2 +1,2 @@
--spinand-objs := core.o
-+spinand-objs := core.o micron.o
- obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index a99ea352eb85..2194a7f9b550 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -751,8 +751,25 @@ static const struct nand_ops spinand_ops = {
- 	.isbad = spinand_isbad,
- };
- 
-+static const struct spinand_manufacturer *spinand_manufacturers[] = {
-+	&micron_spinand_manufacturer,
-+};
-+
- static int spinand_manufacturer_detect(struct spinand_device *spinand)
- {
-+	unsigned int i;
-+	int ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(spinand_manufacturers); i++) {
-+		ret = spinand_manufacturers[i]->ops->detect(spinand);
-+		if (ret > 0) {
-+			spinand->manufacturer = spinand_manufacturers[i];
-+			return 0;
-+		} else if (ret < 0) {
-+			return ret;
-+		}
-+	}
-+
- 	return -ENOTSUPP;
- }
- 
-diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-new file mode 100644
-index 000000000000..9c4381d6847b
---- /dev/null
-+++ b/drivers/mtd/nand/spi/micron.c
-@@ -0,0 +1,133 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2016-2017 Micron Technology, Inc.
-+ *
-+ * Authors:
-+ *	Peter Pan <peterpandong@micron.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/mtd/spinand.h>
-+
-+#define SPINAND_MFR_MICRON		0x2c
-+
-+#define MICRON_STATUS_ECC_MASK		GENMASK(7, 4)
-+#define MICRON_STATUS_ECC_NO_BITFLIPS	(0 << 4)
-+#define MICRON_STATUS_ECC_1TO3_BITFLIPS	(1 << 4)
-+#define MICRON_STATUS_ECC_4TO6_BITFLIPS	(3 << 4)
-+#define MICRON_STATUS_ECC_7TO8_BITFLIPS	(5 << 4)
-+
-+static SPINAND_OP_VARIANTS(read_cache_variants,
-+		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(write_cache_variants,
-+		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(update_cache_variants,
-+		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
-+
-+static int mt29f2g01abagd_ooblayout_ecc(struct mtd_info *mtd, int section,
-+					struct mtd_oob_region *region)
-+{
-+	if (section)
-+		return -ERANGE;
-+
-+	region->offset = 64;
-+	region->length = 64;
-+
-+	return 0;
-+}
-+
-+static int mt29f2g01abagd_ooblayout_free(struct mtd_info *mtd, int section,
-+					 struct mtd_oob_region *region)
-+{
-+	if (section)
-+		return -ERANGE;
-+
-+	/* Reserve 2 bytes for the BBM. */
-+	region->offset = 2;
-+	region->length = 62;
-+
-+	return 0;
-+}
-+
-+static const struct mtd_ooblayout_ops mt29f2g01abagd_ooblayout = {
-+	.ecc = mt29f2g01abagd_ooblayout_ecc,
-+	.free = mt29f2g01abagd_ooblayout_free,
-+};
-+
-+static int mt29f2g01abagd_ecc_get_status(struct spinand_device *spinand,
-+					 u8 status)
-+{
-+	switch (status & MICRON_STATUS_ECC_MASK) {
-+	case STATUS_ECC_NO_BITFLIPS:
-+		return 0;
-+
-+	case STATUS_ECC_UNCOR_ERROR:
-+		return -EBADMSG;
-+
-+	case MICRON_STATUS_ECC_1TO3_BITFLIPS:
-+		return 3;
-+
-+	case MICRON_STATUS_ECC_4TO6_BITFLIPS:
-+		return 6;
-+
-+	case MICRON_STATUS_ECC_7TO8_BITFLIPS:
-+		return 8;
-+
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct spinand_info micron_spinand_table[] = {
-+	SPINAND_INFO("MT29F2G01ABAGD", 0x24,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 2, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&mt29f2g01abagd_ooblayout,
-+				     mt29f2g01abagd_ecc_get_status)),
-+};
-+
-+static int micron_spinand_detect(struct spinand_device *spinand)
-+{
-+	u8 *id = spinand->id.data;
-+	int ret;
-+
-+	/*
-+	 * Micron SPI NAND read ID need a dummy byte,
-+	 * so the first byte in raw_id is dummy.
-+	 */
-+	if (id[1] != SPINAND_MFR_MICRON)
-+		return 0;
-+
-+	ret = spinand_match_and_init(spinand, micron_spinand_table,
-+				     ARRAY_SIZE(micron_spinand_table), id[2]);
-+	if (ret)
-+		return ret;
-+
-+	return 1;
-+}
-+
-+static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
-+	.detect = micron_spinand_detect,
-+};
-+
-+const struct spinand_manufacturer micron_spinand_manufacturer = {
-+	.id = SPINAND_MFR_MICRON,
-+	.name = "Micron",
-+	.ops = &micron_spinand_manuf_ops,
-+};
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 17a4584c0017..11a18c1993e8 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -192,6 +192,9 @@ struct spinand_manufacturer {
- 	const struct spinand_manufacturer_ops *ops;
- };
- 
-+/* SPI NAND manufacturers */
-+extern const struct spinand_manufacturer micron_spinand_manufacturer;
-+
- /**
-  * struct spinand_op_variants - SPI NAND operation variants
-  * @ops: the list of variants for a given operation
+e.g, with the existing bindings we get :
+
+	port@0{				// Output port 0
+		reg = <0>;
+		...
+	};
+
+	port@1{
+		reg = <0>;		// Input port 0
+		endpoint {
+			slave-mode;
+			...
+		};
+	};
+
+With the new enforcement in the DT rules, mismatches in label and address
+are not allowed (as see in the case for port@1). So, we need a new mechanism
+to describe the hardware port number reliably.
+
+Also, we relied on an undocumented "slave-mode" property (see the above
+example) to indicate if the port is an input port. Let us formalise and
+switch to a new property to describe the direction of data flow.
+
+There were three options considered for the hardware port number scheme:
+
+ 1) Use natural ordering in the DT to infer the hardware port number.
+  i.e, Mandate that the all ports are listed in the DT and in the ascending
+  order for each class (input and output respectively).
+   Pros :
+      - We don't need new properties and if the existing DTS list them in
+        order (which most of them do), they work out of the box.
+   Cons :
+      - We must list all the ports even if the system cannot/shouldn't use
+        it.
+      - It is prone to human errors (if the order is not kept).
+
+ 2) Use an explicit property to list both the direction and the hw port
+    number and direction. Define "coresight,hwid" as 2 member array of u32,
+    where the members are port number and the direction respectively.
+	e.g
+
+	port@0{
+		reg = <0>;
+		endpoint {
+			coresight,hwid = <0 1>;	// Port # 0, Output
+		}
+	};
+
+	port@1{
+		reg = <1>;
+		endpoint {
+			coresight,hwid = <0 0>;	// Port # 0, Input
+		};
+	};
+
+	Pros:
+	  - The bindings are formal but not so reader friendly and could potentially
+	    lead to human errors.
+	Cons:
+	  - Backward compatiblity is lost.
+ 3) Use explicit properties (implemented in the series) for the hardware
+    port id and direction. We define a new property "coresight,hwid" for
+    each endpoint in coresight devices to specify the hardware port number
+    explicitly. Also use a separate property "direction" to specify the
+    direction of the data flow.
+
+	e.g,
+
+	port@0{
+		reg = <0>;
+		endpoint {
+			direction = <1>;	// Output
+			coresight,hwid = <0>;	// Port # 0
+		}
+	};
+
+	port@1{
+		reg = <1>;
+		endpoint {
+			direction = <0>;	// Input
+			coresight,hwid = <0>;	// Port # 0
+		};
+	};
+
+    Pros:
+       - The bindings are formal and reader friendly, and less prone to errors.
+    Cons:
+       - Backward compatibility is lost.
+
+
+This series achieves implements Option (3) listed above while still retaining
+the backward compatibility. The driver now issues a warning (once) when it
+encounters the old bindings.
+It also cleans up the platform parsing code to reduce the memory usage by
+reusing the platform description. The series also includes the
+changes for Juno platform as an example. If there are no objections
+to the approach, I could post the series, converting all the
+in-kernel DTS to the new binding.
+
+Suzuki K Poulose (8):
+  dts: binding: coresight: Document graph bindings
+  coresight: Fix remote endpoint parsing
+  coresight: Cleanup platform description data
+  coresight: platform: Cleanup coresight connection handling
+  coresight: Handle errors in finding input/output ports
+  dts: coresight: Clean up the device tree graph bindings
+  dts: coresight: Define new bindings for direction of data flow
+  dts: juno: Update coresight bindings for hw port
+
+ .../devicetree/bindings/arm/coresight.txt          |  52 ++++++++--
+ arch/arm64/boot/dts/arm/juno-base.dtsi             |  82 +++++++++++----
+ arch/arm64/boot/dts/arm/juno.dts                   |   5 +-
+ drivers/hwtracing/coresight/coresight.c            |  28 ++----
+ drivers/hwtracing/coresight/of_coresight.c         | 111 ++++++++++++---------
+ include/linux/coresight.h                          |  11 +-
+ 6 files changed, 181 insertions(+), 108 deletions(-)
+
 -- 
-2.14.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.7.4
