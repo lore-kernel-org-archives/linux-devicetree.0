@@ -1,38 +1,41 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 5/8] gnss: add driver for u-blox receivers
-Date: Sat, 2 Jun 2018 14:07:57 +0800
-Message-ID: <201806021352.JPvCoIwb%fengguang.wu@intel.com>
-References: <20180530103242.20773-6-johan@kernel.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/2] clk: imx6ul: add GPIO clock gates
+Date: Fri, 01 Jun 2018 23:19:23 -0700
+Message-ID: <152792036327.225090.14543251343485084840@swboyd.mtv.corp.google.com>
+References: <1526959560-6014-1-git-send-email-Anson.Huang@nxp.com>
+ <1439344955.9677.1526991935718@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180530103242.20773-6-johan@kernel.org>
+In-Reply-To: <1439344955.9677.1526991935718@email.1und1.de>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Pavel Machek <pavel@ucw.cz>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
+To: Anson Huang <Anson.Huang@nxp.com>, Stefan Wahren <stefan.wahren@i2se.com>, fabio.estevam@nxp.com, kernel@pengutronix.de, mark.rutland@arm.com, matteo.lisi@engicam.com, michael@amarulasolutions.com, mturquette@baylibre.com, robh+dt@kernel.org, shawnguo@kernel.org
+Cc: linux-clk@vger.kernel.org, Linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Johan,
+Quoting Stefan Wahren (2018-05-22 05:25:35)
+> > +++ b/include/dt-bindings/clock/imx6ul-clock.h
+> > @@ -242,20 +242,25 @@
+> >  #define IMX6UL_CLK_CKO2_PODF         229
+> >  #define IMX6UL_CLK_CKO2                      230
+> >  #define IMX6UL_CLK_CKO                       231
+> > +#define IMX6UL_CLK_GPIO1             232
+> > +#define IMX6UL_CLK_GPIO2             233
+> > +#define IMX6UL_CLK_GPIO3             234
+> > +#define IMX6UL_CLK_GPIO4             235
+> > +#define IMX6UL_CLK_GPIO5             236
+> =
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v4.17-rc7 next-20180601]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Johan-Hovold/gnss-add-new-GNSS-subsystem/20180602-020421
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+> this change looks like a breakage of devicetree ABI. You are changing the=
+ mean of the existing clock IDs on i.MX6ULL, which probably regress the com=
+bination of older DTBs with newer kernel.
+> =
 
 
-sparse warnings: (new ones prefixed by >>)
+Agreed. Why can't we just tack on more numbers at the end?
 
->> drivers/gnss/ubx.c:62:30: sparse: symbol 'ubx_gserial_ops' was not declared. Should it be static?
+> >  =
 
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> >  /* For i.MX6ULL */
+> > -#define IMX6ULL_CLK_ESAI_PRED                232
