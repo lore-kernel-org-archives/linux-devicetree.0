@@ -1,219 +1,61 @@
-From: Levin Du <djw@t-chip.com.cn>
-Subject: Re: [PATCH v3 2/5] gpio: syscon: rockchip: add GPIO_MUTE support for
- rk3328
-Date: Sat, 02 Jun 2018 16:40:09 +0800
-Message-ID: <87zi0d8tue.fsf@t-chip.com.cn>
-References: <1527737273-8387-1-git-send-email-djw@t-chip.com.cn>
- <1527737273-8387-3-git-send-email-djw@t-chip.com.cn>
- <CAL_JsqJK4vrmLBeN_ZeGCXAyqshshL16B0KN_+8uvt+=-O9TEw@mail.gmail.com>
- <0d08ba26-77f2-6c42-8fb1-214aaf6085e9@t-chip.com.cn>
- <CAL_JsqKSy4q5dfVfXbRMLa7koTWufpAt3yNdE-9mwyJ-VzVQRQ@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
+ properties for CPUs
+Date: Sat, 2 Jun 2018 01:14:18 -0700
+Message-ID: <20180602081418.jcl2vjc6saoj3z3d@localhost>
+References: <cover.1527225682.git.viresh.kumar@linaro.org>
+ <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
+ <20180525211025.c73zdcdtyuvlewng@localhost>
+ <20180528111358.meyle364fy6wuruf@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <CAL_JsqKSy4q5dfVfXbRMLa7koTWufpAt3yNdE-9mwyJ-VzVQRQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180528111358.meyle364fy6wuruf@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 28, 2018 at 04:43:58PM +0530, Viresh Kumar wrote:
+> On 25-05-18, 14:10, Olof Johansson wrote:
+> > On Fri, May 25, 2018 at 11:10:01AM +0530, Viresh Kumar wrote:
+> > > The cooling device properties, like "#cooling-cells" and
+> > > "dynamic-power-coefficient", should either be present for all the CPUs
+> > > of a cluster or none. If these are present only for a subset of CPUs of
+> > > a cluster then things will start falling apart as soon as the CPUs are
+> > > brought online in a different order. For example, this will happen
+> > > because the operating system looks for such properties in the CPU node
+> > > it is trying to bring up, so that it can register a cooling device.
+> > > 
+> > > Add such missing properties.
+> > 
+> > This seems awkward compared to just having one cooling-cells in the /cpus node
+> > instead.
+> 
+> Well, we don't allow that property to be present in /cpus node right
+> now and it is per device. And then we may not want all the CPUs to be
+> cooling devices really.
 
-Rob Herring <robh+dt@kernel.org> writes:
+And what I am saying is that it sounds like a broken binding if you don't allow
+that, especially since it'll be a super common case that all CPUs will specify
+the same cooling-device specifier.
 
-> On Thu, May 31, 2018 at 9:05 PM, Levin <djw@t-chip.com.cn> 
-> wrote:
->> Hi Rob,
->>
->>
->> On 2018-05-31 10:45 PM, Rob Herring wrote:
->>>
->>> On Wed, May 30, 2018 at 10:27 PM,  <djw@t-chip.com.cn> wrote:
->>>>
->>>> From: Levin Du <djw@t-chip.com.cn>
->>>>
->>>> In Rockchip RK3328, the output only GPIO_MUTE pin, originally 
->>>> for codec
->>>> mute control, can also be used for general purpose. It is 
->>>> manipulated by
->>>> the GRF_SOC_CON10 register.
->>>>
->>>> Signed-off-by: Levin Du <djw@t-chip.com.cn>
->>>>
->>>> ---
->>>>
->>>> Changes in v3:
->>>> - Change from general gpio-syscon to specific 
->>>> rk3328-gpio-mute
->>>>
->>>> Changes in v2:
->>>> - Rename gpio_syscon10 to gpio_mute in doc
->>>>
->>>> Changes in v1:
->>>> - Refactured for general gpio-syscon usage for Rockchip SoCs.
->>>> - Add doc rockchip,gpio-syscon.txt
->>>>
->>>>   .../bindings/gpio/rockchip,rk3328-gpio-mute.txt    | 28
->>>> +++++++++++++++++++
->>>>   drivers/gpio/gpio-syscon.c                         | 31
->>>> ++++++++++++++++++++++
->>>>   2 files changed, 59 insertions(+)
->>>>   create mode 100644
->>>> Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>>> b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>>> new file mode 100644
->>>> index 0000000..10bc632
->>>> --- /dev/null
->>>> +++
->>>> b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-gpio-mute.txt
->>>> @@ -0,0 +1,28 @@
->>>> +Rockchip RK3328 GPIO controller dedicated for the GPIO_MUTE 
->>>> pin.
->>>> +
->>>> +In Rockchip RK3328, the output only GPIO_MUTE pin, 
->>>> originally for codec
->>>> mute
->>>> +control, can also be used for general purpose. It is 
->>>> manipulated by the
->>>> +GRF_SOC_CON10 register.
->>>> +
->>>> +Required properties:
->>>> +- compatible: Should contain "rockchip,rk3328-gpio-mute".
->>>> +- gpio-controller: Marks the device node as a gpio 
->>>> controller.
->>>> +- #gpio-cells: Should be 2. The first cell is the pin number 
->>>> and
->>>> +  the second cell is used to specify the gpio polarity:
->>>> +    0 = Active high,
->>>> +    1 = Active low.
->>>> +
->>>> +Example:
->>>> +
->>>> +       grf: syscon@ff100000 {
->>>> +               compatible = "rockchip,rk3328-grf", "syscon",
->>>> "simple-mfd";
->>>> +
->>>> +               gpio_mute: gpio-mute {
->>>
->>> Node names should be generic:
->>>
->>> gpio {
->>>
->>> This also means you can't add another GPIO node in the future 
->>> and
->>> you'll have to live with "rockchip,rk3328-gpio-mute" covering 
->>> more
->>> than 1 GPIO if you do need to add more GPIOs.
->>
->>
->> As the first line describes, this GPIO controller is dedicated 
->> for the
->> GPIO_MUTE pin.
->> There's only one GPIO pin in the GRF_SOC_CON10 register. 
->> Therefore the
->> gpio_mute
->> name is proper IMHO.
->
-> It's how many GPIOs in the GRF, not this register. What I'm 
-> saying is
-> when you come along later to add another GPIO in the GRF, you 
-> had
-> better just add it to this same node. I'm not going to accept 
-> another
-> GPIO controller node within the GRF. You have the cells to 
-> support
-> more than 1, so it would only be a driver change. The compatible
-> string would then not be ideally named at that point. But 
-> compatible
-> strings are just unique identifiers, so it doesn't really matter 
-> what
-> the string is.
->
+> > What's it used for? I don't see any properties in the device nodes on meson-gxm
+> > that have any cooling-foo cells in them? So why should #cooling-cells be
+> > needed?
+> 
+> This property is required to declare a device as a cooling-device and
+> the device here is CPU. We use it as a cooling device by limiting its
+> higher range of frequencies, so that it doesn't generate too much
+> heat.
+> 
+> It is already there for CPU0 and CPU4, but it should really be there
+> for all the CPUs, like we have clock, supply, caches, etc.
 
-I'll try my best to introduce the situation here. The GRF, 
-GPIO0~GPIO3
-are register blocks in the RK3328 Soc. The GPIO0~GPIO3 contain 
-registers
-for GPIO operations like reading/writing data, setting direction,
-interruption etc, which corresponds to the GPIO banks 
-(gpio0~gpio3)
-defined in rk3328.dtsi:
+You have #cooling-cells in the cpu node, but the actual data is in the
+thermal-zones nodes. Why isn't #cooling-cells under thermal-zones, next to
+cooling-maps?
 
-	pinctrl: pinctrl {
-		compatible = "rockchip,rk3328-pinctrl";
-		rockchip,grf = <&grf>;
-		#address-cells = <2>;
-		#size-cells = <2>;
-		ranges;
 
-		gpio0: gpio0@ff210000 {
-			compatible = "rockchip,gpio-bank";
-			reg = <0x0 0xff210000 0x0 0x100>;
-			interrupts = <GIC_SPI 51 
-			IRQ_TYPE_LEVEL_HIGH>;
-			clocks = <&cru PCLK_GPIO0>;
-
-			gpio-controller;
-			#gpio-cells = <2>;
-
-			interrupt-controller;
-			#interrupt-cells = <2>;
-		};
-
-		gpio1: gpio1@ff220000 {
-                //...
-		};
-
-		gpio2: gpio2@ff230000 {
-                //...
-		};
-
-		gpio3: gpio3@ff240000 {
-                //...
-		};
-         }
-
-However, these general GPIO pins has multiplexed functions and 
-their
-pull up/down and driving strength can also be configured. These 
-settings
-are manipulated by the GRF registers in pinctrl driver. Quoted 
-from the
-TRM, the GRF has the following function:
-
- - IOMUX control
- - Control the state of GPIO in power-down mode
- - GPIO PAD pull down and pull up control
- - Used for common system control
- - Used to record the system state
-
-Therefore the functions of the GRF are messy and scattered in 
-different
-nodes. The so-called GPIO_MUTE does not belong to GPIO0~GPIO3. It 
-is
-manipulated by the GRF_SOC_CON10 register in the GRF block.
-
-> I'm being told both "this is the only GPIO" and "the GRF has too 
-> many
-> different functions for us to tell you what they all are". So 
-> which is
-> it?
->
-> Rob
-
-They are both true, but lack of context. See the above 
-description.
-
-Thanks,
-Levin
+-Olof
