@@ -1,61 +1,54 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
- properties for CPUs
-Date: Sat, 2 Jun 2018 01:14:18 -0700
-Message-ID: <20180602081418.jcl2vjc6saoj3z3d@localhost>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
- <20180525211025.c73zdcdtyuvlewng@localhost>
- <20180528111358.meyle364fy6wuruf@vireshk-i7>
+From: Bhadram Varka <vbhadram@nvidia.com>
+Subject: [PATCH] arm64: tegra: Remove unused interrupt properties
+Date: Sat, 2 Jun 2018 14:41:51 +0530
+Message-ID: <1527930713-4479-1-git-send-email-vbhadram@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180528111358.meyle364fy6wuruf@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, treding@nvidia.com, mperttunen@nvidia.com
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 04:43:58PM +0530, Viresh Kumar wrote:
-> On 25-05-18, 14:10, Olof Johansson wrote:
-> > On Fri, May 25, 2018 at 11:10:01AM +0530, Viresh Kumar wrote:
-> > > The cooling device properties, like "#cooling-cells" and
-> > > "dynamic-power-coefficient", should either be present for all the CPUs
-> > > of a cluster or none. If these are present only for a subset of CPUs of
-> > > a cluster then things will start falling apart as soon as the CPUs are
-> > > brought online in a different order. For example, this will happen
-> > > because the operating system looks for such properties in the CPU node
-> > > it is trying to bring up, so that it can register a cooling device.
-> > > 
-> > > Add such missing properties.
-> > 
-> > This seems awkward compared to just having one cooling-cells in the /cpus node
-> > instead.
-> 
-> Well, we don't allow that property to be present in /cpus node right
-> now and it is per device. And then we may not want all the CPUs to be
-> cooling devices really.
+DWC EQOS on Tegra handles all interrupts through
+common interrupt line. So lets remove unused power
+and per-channel interrupt properties.
 
-And what I am saying is that it sounds like a broken binding if you don't allow
-that, especially since it'll be a super common case that all CPUs will specify
-the same cooling-device specifier.
+Signed-off-by: Bhadram Varka <vbhadram@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-> > What's it used for? I don't see any properties in the device nodes on meson-gxm
-> > that have any cooling-foo cells in them? So why should #cooling-cells be
-> > needed?
-> 
-> This property is required to declare a device as a cooling-device and
-> the device here is CPU. We use it as a cooling device by limiting its
-> higher range of frequencies, so that it doesn't generate too much
-> heat.
-> 
-> It is already there for CPU0 and CPU4, but it should really be there
-> for all the CPUs, like we have clock, supply, caches, etc.
-
-You have #cooling-cells in the cpu node, but the actual data is in the
-thermal-zones nodes. Why isn't #cooling-cells under thermal-zones, next to
-cooling-maps?
-
-
--Olof
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index b762227..252133b 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -41,16 +41,7 @@
+ 		compatible = "nvidia,tegra186-eqos",
+ 			     "snps,dwc-qos-ethernet-4.10";
+ 		reg = <0x0 0x02490000 0x0 0x10000>;
+-		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>, /* common */
+-			     <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>, /* power */
+-			     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>, /* rx0 */
+-			     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>, /* tx0 */
+-			     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>, /* rx1 */
+-			     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>, /* tx1 */
+-			     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>, /* rx2 */
+-			     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>, /* tx2 */
+-			     <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>, /* rx3 */
+-			     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>; /* tx3 */
++		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>; /* common */
+ 		clocks = <&bpmp TEGRA186_CLK_AXI_CBB>,
+ 			 <&bpmp TEGRA186_CLK_EQOS_AXI>,
+ 			 <&bpmp TEGRA186_CLK_EQOS_RX>,
+-- 
+2.7.4
