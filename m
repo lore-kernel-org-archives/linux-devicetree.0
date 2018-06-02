@@ -1,119 +1,80 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v8 2/4] dt-bindings: Add bindings for SPI NAND devices
-Date: Fri, 1 Jun 2018 14:18:35 -0500
-Message-ID: <CAL_JsqKBn9g95irT71fgwWneLCM0jLAKuSPUkNxA_+73Rm8pVA@mail.gmail.com>
-References: <20180601131400.17634-1-boris.brezillon@bootlin.com>
- <20180601131400.17634-3-boris.brezillon@bootlin.com>
- <CAMuHMdUyPoDA-7+OT_yT-g7kA+zae8Sjo6PYRFTFfFkQetUqnA@mail.gmail.com>
- <20180601190902.17cf5f6f@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180601190902.17cf5f6f@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Miquel Raynal <miquel.raynal@bootlin.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2] thermal: qcom: tsens: Allow number of sensors to come from DT
+Date: Sat,  2 Jun 2018 12:32:11 -0700
+Message-ID: <20180602193211.25731-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 1, 2018 at 12:09 PM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> Hi Geert,
->
-> On Fri, 1 Jun 2018 16:42:26 +0200
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
->> Hi Boris,
->>
->> I became interested after reading the cover letter...
->>
->> On Fri, Jun 1, 2018 at 3:13 PM, Boris Brezillon
->> <boris.brezillon@bootlin.com> wrote:
->> > Add bindings for SPI NAND chips.
->> >
->> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
->>
->> Thanks for your patch!
->
-> And thanks for reviewing it ;-).
->
->>
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
->> > @@ -0,0 +1,27 @@
->> > +SPI NAND flash
->> > +
->> > +Required properties:
->> > +- compatible: should be "spi-nand"
+For platforms that has multiple copies of the TSENS hardware block it's
+convenient to specify the number of sensors per block in DeviceTree.
 
-Seems awfully generic if you expect this alone. No chips with quirks
-yet? Is there a standard for detection like jedec?
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org> [binding]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
->> > +- reg: should encode the chip-select line used to access the NAND chip
+Changes since v1:
+- Added comment as suggested by Amit
+- Picked up Amit and Rob's R-b
 
-"see spi.txt" should be enough.
+ .../devicetree/bindings/thermal/qcom-tsens.txt      |  1 +
+ drivers/thermal/qcom/tsens.c                        | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
->> > +
->> > +Optional properties
->> > +- spi-max-frequency: maximum frequency of the SPI bus the chip can operate at.
->> > +                    This should encode board limitations (i.e. max freq can't
->> > +                    be achieved due to crosstalk on IO lines).
->> > +                    When unspecified, the driver assumes the chip can run at
->> > +                    the max frequency defined in the spec (information
->> > +                    extracted chip detection time).
->>
->> This is a standard property according to
->> Documentation/devicetree/bindings/spi/spi-bus.txt. Can't you just refer
->> to that file, or just omit it, as it applies to all SPI slaves anyway?
->
-> The thing is, the maximum frequency supported by a SPI NAND is directly
-> encoded in the NAND device ID and can be auto-detected. Why should we
-> define spi-max-frequency in the DT when we can automatically detect
-> this information? The only reason one might want to override
-> spi-max-frequency is when the board design impose such restrictions,
-> hence the precision I give here.
-
-This should always be the case. The operating frequency should be
-min(host max, device max) unless the board has restrictions and needs
-to set spi-max-frequency (and we really should have used
-'bus-frequency' here). No doubt though, that is not what has been
-done.
-
->> > +- spi-tx-bus-width: The bus width (number of data wires) that is used for MOSI.
->> > +                   Only encodes the board constraints (i.e. when not all IO
->> > +                   signals are routed on the board). Device constraints are
->> > +                   extracted when detecting the chip, and controller
->> > +                   constraints are exposed by the SPI mem controller. If this
->> > +                   property is missing that means no constraint at the board
->> > +                   level.
->> > +- spi-rx-bus-width: The bus width (number of data wires) that is used for MISO.
->> > +                   Only encodes the board constraints (i.e. when not all IO
->> > +                   signals are routed on the board). Device constraints are
->> > +                   extracted when detecting the chip, and controller
->> > +                   constraints are exposed by the SPI mem controller. If this
->> > +                   property is missing that means no constraint at the board
->> > +                   level.
->>
->> This does not match Documentation/devicetree/bindings/spi/spi-bus.txt,
->> which says the default is 1.
->
-> Yes, I know.
-
-Like frequency, this should have been similar. I imagine for the
-common case, the number of host and device lines are 1 so it doesn't
-really apply as this was added later on. Perhaps we can reword the
-common definition to work for both?
-
-Rob
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+index 292ed89d900b..06195e8f35e2 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+@@ -8,6 +8,7 @@ Required properties:
+ 
+ - reg: Address range of the thermal registers
+ - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
++- #qcom,sensors: Number of sensors in tsens block
+ - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+ nvmem cells
+ 
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index 3f9fe6aa51cc..b212bebcfc36 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -116,6 +116,7 @@ static int tsens_probe(struct platform_device *pdev)
+ 	struct tsens_device *tmdev;
+ 	const struct tsens_data *data;
+ 	const struct of_device_id *id;
++	u32 num_sensors;
+ 
+ 	if (pdev->dev.of_node)
+ 		dev = &pdev->dev;
+@@ -130,18 +131,24 @@ static int tsens_probe(struct platform_device *pdev)
+ 	else
+ 		data = &data_8960;
+ 
+-	if (data->num_sensors <= 0) {
++	num_sensors = data->num_sensors;
++
++	/* Override driver provided num_sensors, if specified in DT */
++	if (np)
++		of_property_read_u32(np, "#qcom,sensors", &num_sensors);
++
++	if (num_sensors <= 0) {
+ 		dev_err(dev, "invalid number of sensors\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	tmdev = devm_kzalloc(dev, sizeof(*tmdev) +
+-			     data->num_sensors * sizeof(*s), GFP_KERNEL);
++			     num_sensors * sizeof(*s), GFP_KERNEL);
+ 	if (!tmdev)
+ 		return -ENOMEM;
+ 
+ 	tmdev->dev = dev;
+-	tmdev->num_sensors = data->num_sensors;
++	tmdev->num_sensors = num_sensors;
+ 	tmdev->ops = data->ops;
+ 	for (i = 0;  i < tmdev->num_sensors; i++) {
+ 		if (data->hw_ids)
+-- 
+2.17.0
