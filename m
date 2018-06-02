@@ -1,127 +1,54 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2] of: platform: stop accessing invalid dev in of_platform_device_destroy
-Date: Sat,  2 Jun 2018 01:03:43 +0100
-Message-ID: <20180602000343.20045-1-srinivas.kandagatla@linaro.org>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH 2/3] clk: bcm: Update and add tingray clock entries
+Date: Fri, 1 Jun 2018 17:47:34 -0700
+Message-ID: <fc69e9e4-c223-512f-e76c-d9f1062d9d35@broadcom.com>
+References: <1527266717-8406-1-git-send-email-ray.jui@broadcom.com>
+ <1527266717-8406-3-git-send-email-ray.jui@broadcom.com>
+ <20180531162556.GA955@rob-hp-laptop>
+ <a354f3d1-051d-8b68-e6b3-ce7a739c10c9@broadcom.com>
+ <CAL_Jsq+YX01CwCycqeu5mxTUiWtnG3HKPJP5mvJO2OHcPF6v6g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+YX01CwCycqeu5mxTUiWtnG3HKPJP5mvJO2OHcPF6v6g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com
-Cc: linux-arm-msm@vger.kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Immediately after the platform_device_unregister() the device will be cleaned up.
-Accessing the freed pointer immediately after that will crash the system.
 
-Found this bug when kernel is built with CONFIG_PAGE_POISONING and testing
-loading/unloading audio drivers in a loop on Qcom platforms.
 
-Fix this by removing accessing the dev pointer.
-Below is the carsh trace:
+On 6/1/2018 12:02 PM, Rob Herring wrote:
+> On Fri, Jun 1, 2018 at 12:56 PM, Ray Jui <ray.jui@broadcom.com> wrote:
+>> Hi Rob,
+>>
+>> On 5/31/2018 9:25 AM, Rob Herring wrote:
+>>>
+>>> On Fri, May 25, 2018 at 09:45:16AM -0700, Ray Jui wrote:
+>>>>
+>>>> Update and add Stingray clock definitions and tables so they match the
+>>>> binding document and the latest ASIC datasheet
+>>>>
+>>>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>>>> ---
+>>>>    drivers/clk/bcm/clk-sr.c           | 135
+>>>> ++++++++++++++++++++++++++++++++-----
+>>>>    include/dt-bindings/clock/bcm-sr.h |  24 +++++--
+>>>
+>>>
+>>> This goes in the 1st patch.
+>>
+>>
+>> Please help to confirm. You want 1st patch and 2nd patch to be combined into
+>> a single patch?
+> 
+> No. include/dt-bindings/* is part of the DT binding, so it goes with
+> patch 1. The driver in patch 2.
+> 
+> Rob
+> 
 
-Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c03
-Mem abort info:
-  ESR = 0x96000021
-  Exception class = DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000021
-  CM = 0, WnR = 0
-[006b6b6b6b6b6c03] address between user and kernel address ranges
-Internal error: Oops: 96000021 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 2 PID: 1784 Comm: sh Tainted: G        W         4.17.0-rc7-02230-ge3a63a7ef641-dirty #204
-Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-pstate: 80000005 (Nzcv daif -PAN -UAO)
-pc : clear_bit+0x18/0x2c
-lr : of_platform_device_destroy+0x64/0xb8
-sp : ffff00000c9c3930
-x29: ffff00000c9c3930 x28: ffff80003d39b200
-x27: ffff000008bb1000 x26: 0000000000000040
-x25: 0000000000000124 x24: ffff80003a9a3080
-x23: 0000000000000060 x22: ffff00000939f518
-x21: ffff80003aa79e98 x20: ffff80003aa3dae0
-x19: ffff80003aa3c890 x18: ffff800009feb794
-x17: 0000000000000000 x16: 0000000000000000
-x15: ffff800009feb790 x14: 0000000000000000
-x13: ffff80003a058778 x12: ffff80003a058728
-x11: ffff80003a058750 x10: 0000000000000000
-x9 : 0000000000000006 x8 : ffff80003a825988
-x7 : bbbbbbbbbbbbbbbb x6 : 0000000000000001
-x5 : 0000000000000000 x4 : 0000000000000001
-x3 : 0000000000000008 x2 : 0000000000000001
-x1 : 6b6b6b6b6b6b6c03 x0 : 0000000000000000
-Process sh (pid: 1784, stack limit = 0x        (ptrval))
-Call trace:
- clear_bit+0x18/0x2c
- q6afe_remove+0x20/0x38
- apr_device_remove+0x30/0x70
- device_release_driver_internal+0x170/0x208
- device_release_driver+0x14/0x20
- bus_remove_device+0xcc/0x150
- device_del+0x10c/0x310
- device_unregister+0x1c/0x70
- apr_remove_device+0xc/0x18
- device_for_each_child+0x50/0x80
- apr_remove+0x18/0x20
- rpmsg_dev_remove+0x38/0x68
- device_release_driver_internal+0x170/0x208
- device_release_driver+0x14/0x20
- bus_remove_device+0xcc/0x150
- device_del+0x10c/0x310
- device_unregister+0x1c/0x70
- qcom_smd_remove_device+0xc/0x18
- device_for_each_child+0x50/0x80
- qcom_smd_unregister_edge+0x3c/0x70
- smd_subdev_remove+0x18/0x28
- rproc_stop+0x48/0xd8
- rproc_shutdown+0x60/0xe8
- state_store+0xbc/0xf8
- dev_attr_store+0x18/0x28
- sysfs_kf_write+0x3c/0x50
- kernfs_fop_write+0x118/0x1e0
- __vfs_write+0x18/0x110
- vfs_write+0xa4/0x1a8
- ksys_write+0x48/0xb0
- sys_write+0xc/0x18
- el0_svc_naked+0x30/0x34
-Code: d2800022 8b400c21 f9800031 9ac32043 (c85f7c22)
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-Changes since v1:
-- fixed issue while reprobing.
-
- drivers/of/platform.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index c00d81dfac0b..84c5c899187b 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -529,10 +529,13 @@ arch_initcall_sync(of_platform_default_populate_init);
- 
- int of_platform_device_destroy(struct device *dev, void *data)
- {
-+	struct device_node *np;
-+
- 	/* Do not touch devices not populated from the device tree */
- 	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED))
- 		return 0;
- 
-+	np = dev->of_node;
- 	/* Recurse for any nodes that were treated as busses */
- 	if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
- 		device_for_each_child(dev, NULL, of_platform_device_destroy);
-@@ -544,8 +547,8 @@ int of_platform_device_destroy(struct device *dev, void *data)
- 		amba_device_unregister(to_amba_device(dev));
- #endif
- 
--	of_node_clear_flag(dev->of_node, OF_POPULATED);
--	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
-+	of_node_clear_flag(np, OF_POPULATED);
-+	of_node_clear_flag(np, OF_POPULATED_BUS);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(of_platform_device_destroy);
--- 
-2.16.2
+Okay got it. Thanks!
