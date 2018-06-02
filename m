@@ -1,50 +1,31 @@
-From: Bhadram Varka <vbhadram@nvidia.com>
-Subject: [PATCH V2 3/3] arm64: tegra: Configure DWC EQOS TxPBL for multi-queue
-Date: Sat, 2 Jun 2018 14:50:51 +0530
-Message-ID: <1527931251-4809-3-git-send-email-vbhadram@nvidia.com>
-References: <1527931251-4809-1-git-send-email-vbhadram@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1527931251-4809-1-git-send-email-vbhadram@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, treding@nvidia.com, mperttunen@nvidia.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH 0/2] thermal: tsens: SDM845 support
+Date: Sat,  2 Jun 2018 14:11:11 +0300
+Message-ID: <cover.1527937396.git.amit.kucheria@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, edubezval@gmail.com, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PBL should be limited to half of the Queue size.
+Add SDM845 support in the tsens driver. I've create a separate file
+(tsens-sdm845.c) because I expect it to diverge from the other drivers.
 
-For multi-queue: Total MTL queue size 4KB.
-PBL = 16, PBLx8 = 1 -> This setting would lead
-to an effective burst = 8*16 = 128, which would
-mean 128*16B = 2KB (half of queue size)
+Cleanup the tsens_device structure while we're at it.
 
-Signed-off-by: Bhadram Varka <vbhadram@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 48c6caf..c4d70c5 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -101,7 +101,7 @@
- 		snps,write-requests = <1>;
- 		snps,read-requests = <3>;
- 		snps,burst-map = <0x7>;
--		snps,txpbl = <32>;
-+		snps,txpbl = <16>;
- 		snps,rxpbl = <8>;
- 		snps,mtl-rx-config = <&mtl_rx_setup>;
- 		snps,mtl-tx-config = <&mtl_tx_setup>;
+Amit Kucheria (2):
+  thermal: tsens: Add support for SDM845 platform
+  tsens: Get rid of unused fields in structure
+
+ .../devicetree/bindings/thermal/qcom-tsens.txt     |  1 +
+ drivers/thermal/qcom/Makefile                      |  2 +-
+ drivers/thermal/qcom/tsens-sdm845.c                | 98 ++++++++++++++++++++++
+ drivers/thermal/qcom/tsens.c                       |  3 +
+ drivers/thermal/qcom/tsens.h                       |  3 +-
+ 5 files changed, 104 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/thermal/qcom/tsens-sdm845.c
+
 -- 
 2.7.4
