@@ -1,179 +1,86 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH 1/2] thermal: tsens: Add support for SDM845 platform
-Date: Sat,  2 Jun 2018 14:11:12 +0300
-Message-ID: <7a0f33cff94f41110bdbff14d28d36074fae2a7d.1527937396.git.amit.kucheria@linaro.org>
-References: <cover.1527937396.git.amit.kucheria@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 5/5] arm64: dts: renesas: r8a7795: add ccree binding
+Date: Sat, 2 Jun 2018 09:12:45 -0400
+Message-ID: <20180602131241.5cl4hkbxydvcy6mu@verge.net.au>
+References: <1527171551-21979-1-git-send-email-gilad@benyossef.com>
+ <1527171551-21979-6-git-send-email-gilad@benyossef.com>
+ <20180529161936.prhp4oikzamr6u3n@verge.net.au>
+ <CAOtvUMeBCH+23c3FDWncMwPPe5N=7yjRKzhyLmFXrYazgGbcJw@mail.gmail.com>
+ <CAMuHMdUX874g6pAz-Ze-yA3S+6aOhzUkfGN9wmQUhy-y0f7dMw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1527937396.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1527937396.git.amit.kucheria@linaro.org>
-References: <cover.1527937396.git.amit.kucheria@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUX874g6pAz-Ze-yA3S+6aOhzUkfGN9wmQUhy-y0f7dMw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, edubezval@gmail.com, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Gilad Ben-Yossef <gilad@benyossef.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two tsens blocks on the SDM845. These will be configured through
-the devicetree.
+On Fri, Jun 01, 2018 at 10:12:24AM +0200, Geert Uytterhoeven wrote:
+> Hi Gilad,
+> 
+> On Thu, May 31, 2018 at 1:55 PM, Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> > On Tue, May 29, 2018 at 7:19 PM, Simon Horman <horms@verge.net.au> wrote:
+> >> On Thu, May 24, 2018 at 03:19:10PM +0100, Gilad Ben-Yossef wrote:
+> >>> Add bindings for CryptoCell instance in the SoC.
+> >>>
+> >>> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> >>
+> >> In so far as I can review the details of this (which is not much) this
+> >> looks fine to me. I am, however, a little unclear in when it should be
+> >> accepted.
+> >
+> > Since Herbert Xu ACKed the driver changes, I would say the only gating
+> > commit is Geert's CR clock patch.
+> 
+> These are queued for v4.19.
+> 
+> > If that one is in, than I would say this one should go in as well.
+> 
+> As the device node now has a power-domains property, the genpd code will
+> try to attach it to the CPG/MSSR PM Domain, which is a clock domain.
+> In the absence of the clock patch, the device's module clock cannot be
+> found, and dev_pm_domain_attach() and thus platform_drv_probe() will fail,
+> before calling the device driver's .probe() function.
+> 
+> So there is no longer a dependency on the clock patch, and the DT patch can
+> go in in parallel (although I prefer its subject to be changed
+> s/binding/device device/).
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Thanks, I have applied the following (but may not push until next week).
+
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [PATCH] arm64: dts: renesas: r8a7795: add ccree to device tree
+
+Add bindings for CryptoCell instance in the SoC.
+
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- .../devicetree/bindings/thermal/qcom-tsens.txt     |  1 +
- drivers/thermal/qcom/Makefile                      |  2 +-
- drivers/thermal/qcom/tsens-sdm845.c                | 98 ++++++++++++++++++++++
- drivers/thermal/qcom/tsens.c                       |  3 +
- drivers/thermal/qcom/tsens.h                       |  1 +
- 5 files changed, 104 insertions(+), 1 deletion(-)
- create mode 100644 drivers/thermal/qcom/tsens-sdm845.c
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-index 292ed89..8652499 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-@@ -5,6 +5,7 @@ Required properties:
-  - "qcom,msm8916-tsens" : For 8916 Family of SoCs
-  - "qcom,msm8974-tsens" : For 8974 Family of SoCs
-  - "qcom,msm8996-tsens" : For 8996 Family of SoCs
-+ - "qcom,sdm845-tsens"  : For SDM845 Family of SoCs
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index d842940b2f43..3ac75dbf2d93 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -528,6 +528,15 @@
+ 			status = "disabled";
+ 		};
  
- - reg: Address range of the thermal registers
- - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-diff --git a/drivers/thermal/qcom/Makefile b/drivers/thermal/qcom/Makefile
-index 2cc2193..dc9f169 100644
---- a/drivers/thermal/qcom/Makefile
-+++ b/drivers/thermal/qcom/Makefile
-@@ -1,2 +1,2 @@
- obj-$(CONFIG_QCOM_TSENS)	+= qcom_tsens.o
--qcom_tsens-y			+= tsens.o tsens-common.o tsens-8916.o tsens-8974.o tsens-8960.o tsens-8996.o
-+qcom_tsens-y			+= tsens.o tsens-common.o tsens-8916.o tsens-8974.o tsens-8960.o tsens-8996.o tsens-sdm845.o
-diff --git a/drivers/thermal/qcom/tsens-sdm845.c b/drivers/thermal/qcom/tsens-sdm845.c
-new file mode 100644
-index 0000000..5d78f0b
---- /dev/null
-+++ b/drivers/thermal/qcom/tsens-sdm845.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, Linaro Limited
-+ */
++		arm_cc630p: crypto@e6601000 {
++			compatible = "arm,cryptocell-630p-ree";
++			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x0 0xe6601000 0 0x1000>;
++			clocks = <&cpg CPG_MOD 229>;
++			resets = <&cpg 229>;
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++		};
 +
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include "tsens.h"
-+
-+#define CNTL_OFFSET	4
-+/* CNTL_OFFSET bitmasks */
-+#define EN		BIT(0)
-+#define SW_RST		BIT(1)
-+
-+#define SENSOR0_SHIFT	3
-+
-+#define TRDY_OFFSET     0xe4
-+#define TRDY_READY_BIT  BIT(1)
-+
-+#define STATUS_OFFSET	0xa0
-+#define LAST_TEMP_MASK	0xfff
-+#define STATUS_VALID_BIT	BIT(21)
-+#define CODE_SIGN_BIT		BIT(11)
-+
-+static int get_temp_sdm845(struct tsens_device *tmdev, int id, int *temp)
-+{
-+	struct tsens_sensor *s = &tmdev->sensor[id];
-+	u32 code;
-+	unsigned int sensor_addr;
-+	int last_temp = 0, last_temp2 = 0, last_temp3 = 0, ret;
-+
-+	ret = regmap_read(tmdev->map, TRDY_OFFSET, &code);
-+	if (ret)
-+		return ret;
-+	if (code & TRDY_READY_BIT)
-+		return -ENODATA;
-+
-+	sensor_addr = STATUS_OFFSET + s->hw_id * 4;
-+	ret = regmap_read(tmdev->map, sensor_addr, &code);
-+	if (ret)
-+		return ret;
-+	last_temp = code & LAST_TEMP_MASK;
-+	if (code & STATUS_VALID_BIT)
-+		goto done;
-+
-+	/* Try a second time */
-+	ret = regmap_read(tmdev->map, sensor_addr, &code);
-+	if (ret)
-+		return ret;
-+	if (code & STATUS_VALID_BIT) {
-+		last_temp = code & LAST_TEMP_MASK;
-+		goto done;
-+	} else {
-+		last_temp2 = code & LAST_TEMP_MASK;
-+	}
-+
-+	/* Try a third/last time */
-+	ret = regmap_read(tmdev->map, sensor_addr, &code);
-+	if (ret)
-+		return ret;
-+	if (code & STATUS_VALID_BIT) {
-+		last_temp = code & LAST_TEMP_MASK;
-+		goto done;
-+	} else {
-+		last_temp3 = code & LAST_TEMP_MASK;
-+	}
-+
-+	if (last_temp == last_temp2)
-+		last_temp = last_temp2;
-+	else if (last_temp2 == last_temp3)
-+		last_temp = last_temp3;
-+done:
-+	/* Code sign bit is the sign extension for a negative value */
-+	if (last_temp & CODE_SIGN_BIT)
-+		last_temp |= ~CODE_SIGN_BIT;
-+
-+	/* Temperatures are in deciCelicius */
-+	*temp = last_temp * 100;
-+
-+	return 0;
-+}
-+
-+static const struct regmap_config tsens_config = {
-+	.reg_bits	= 32,
-+	.val_bits	= 32,
-+	.reg_stride	= 4,
-+};
-+
-+
-+static const struct tsens_ops ops_sdm845 = {
-+  	.init		= init_common,
-+	.get_temp	= get_temp_sdm845,
-+};
-+
-+const struct tsens_data data_sdm845 = {
-+	.ops		= &ops_sdm845,
-+};
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 3f9fe6a..314a20f 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -72,6 +72,9 @@ static const struct of_device_id tsens_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8996-tsens",
- 		.data = &data_8996,
-+	}, {
-+		.compatible = "qcom,sdm845-tsens",
-+		.data = &data_sdm845,
- 	},
- 	{}
- };
-diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index 911c197..f15660d 100644
---- a/drivers/thermal/qcom/tsens.h
-+++ b/drivers/thermal/qcom/tsens.h
-@@ -90,5 +90,6 @@ int init_common(struct tsens_device *);
- int get_temp_common(struct tsens_device *, int, int *);
- 
- extern const struct tsens_data data_8916, data_8974, data_8960, data_8996;
-+extern const struct tsens_data data_sdm845;
- 
- #endif /* __QCOM_TSENS_H__ */
+ 		i2c3: i2c@e66d0000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
-2.7.4
+2.11.0
