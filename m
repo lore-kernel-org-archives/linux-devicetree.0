@@ -1,44 +1,105 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v3 2/2] dt-bindings: power: sbs-battery: re-document "ti,bq20z75"
-Date: Fri,  1 Jun 2018 18:29:00 -0700
-Message-ID: <20180602012900.181352-2-briannorris@chromium.org>
-References: <20180602012900.181352-1-briannorris@chromium.org>
+From: David Collins <collinsd@codeaurora.org>
+Subject: [PATCH v5 0/2] regulator: add QCOM RPMh regulator driver
+Date: Fri,  1 Jun 2018 18:34:04 -0700
+Message-ID: <cover.1527901471.git.collinsd@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180602012900.181352-1-briannorris@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
+To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: David Collins <collinsd@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-This compatible property was documented before the driver was renamed to
-"SBS" (see commit e57f1b68c406 ("devicetree-bindings: Propagate
-bq20z75->sbs rename to dt bindings")). The driver has continued to
-support this property as an alternative to "sbs,sbs-battery", and
-because we've noticed there are some lingering TI specifics (in the
-manufacturer-specific portion of the SBS spec), we'd like to start using
-this property again to differentiate.
+This patch series adds a driver and device tree binding documentation for
+PMIC regulator control via Resource Power Manager-hardened (RPMh) on some
+Qualcomm Technologies, Inc. SoCs such as SDM845.  RPMh is a hardware block
+which contains several accelerators which are used to manage various
+hardware resources that are shared between the processors of the SoC.  The
+final hardware state of a regulator is determined within RPMh by performing
+max aggregation of the requests made by all of the processors.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Acked-by: Rhyland Klein <rklein@nvidia.com>
----
-v2: add Rhyland's Acked-by
-v3: no change
----
- .../devicetree/bindings/power/supply/sbs_sbs-battery.txt        | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The RPMh regulator driver depends upon the RPMh driver [1] and command DB
+driver [2] which are both still undergoing review.  It also depends upon
+three recent regulator changes: [3], [4], and [5].
 
-diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-index c40e8926facf..a7a9c3366f82 100644
---- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-@@ -2,7 +2,7 @@ SBS sbs-battery
- ~~~~~~~~~~
- 
- Required properties :
-- - compatible : "sbs,sbs-battery"
-+ - compatible : "sbs,sbs-battery" or "ti,bq20z75"
- 
- Optional properties :
-  - sbs,i2c-retry-count : The number of times to retry i2c transactions on i2c
+Changes since v4 [6]:
+ - Removed support for DT properties qcom,regulator-drms-modes and
+   qcom,drms-mode-max-microamps
+ - Specified fixed DRMS high power mode minimum limits for LDO type
+   regulators
+ - Removed DRMS support for SMPS and BOB type regulators
+ - Simplified voltage caching logic
+
+Changes since v3 [7]:
+ - Removed support for DT properties qcom,regulator-initial-microvolt
+   and qcom,headroom-microvolt
+ - Renamed DT property qcom,allowed-drms-modes to be
+   qcom,regulator-drms-modes
+ - Updated DT binding documentation to mention which common regulator
+   bindings can be used for qcom-rpmh-regulator devices
+ - Added voltage caching so that voltage requests are only sent to RPMh
+   after the regulator has been enabled at least once
+ - Changed 'voltage_selector' default value to be -ENOTRECOVERABLE to
+   interact with [5]
+ - Initialized 'enabled' to -EINVAL so that unused regulators are
+   disabled by regulator_late_cleanup()
+ - Removed rpmh_regulator_load_default_parameters() as it is no longer
+   needed
+ - Updated the mode usage description in qcom,rpmh-regulator.h
+
+Changes since v2 [8]:
+ - Replaced '_' with '-' in device tree supply property names
+ - Renamed qcom_rpmh-regulator.c to be qcom-rpmh-regulator.c
+ - Updated various DT property names to use "microvolt" and "microamp"
+ - Moved allowed modes constraint specification out of the driver [4]
+ - Replaced rpmh_client with device pointer to match new RPMh API [1]
+ - Corrected drms mode threshold checking
+ - Initialized voltage_selector to -EINVAL when not specified in DT
+ - Added constants for PMIC regulator hardware modes
+ - Corrected type sign of mode mapping tables
+ - Made variable names for mode arrays plural
+ - Simplified Kconfig depends on
+ - Removed unnecessary constants and struct fields
+ - Added some descriptive comments
+
+Changes since v1 [9]:
+ - Addressed review feedback from Doug, Mark, and Stephen
+ - Replaced set_voltage()/get_voltage() callbacks with set_voltage_sel()/
+   get_voltage_sel()
+ - Added set_bypass()/get_bypass() callbacks for BOB pass-through mode
+   control
+ - Removed top-level PMIC data structures
+ - Removed initialization variables from structs and passed them as
+   function parameters
+ - Removed various comments and error messages
+ - Simplified mode handling
+ - Refactored per-PMIC rpmh-regulator data specification
+ - Simplified probe function
+ - Moved header into DT patch
+ - Removed redundant property listings from DT binding documentation
+
+[1]: https://lkml.org/lkml/2018/5/9/729
+[2]: https://lkml.org/lkml/2018/4/10/714
+[3]: https://lkml.org/lkml/2018/4/18/556
+[4]: https://lkml.org/lkml/2018/5/11/696
+[5]: https://lkml.org/lkml/2018/5/15/1005
+[6]: https://lkml.org/lkml/2018/5/22/1168
+[7]: https://lkml.org/lkml/2018/5/11/701
+[8]: https://lkml.org/lkml/2018/4/13/687
+[9]: https://lkml.org/lkml/2018/3/16/1431
+
+David Collins (2):
+  regulator: dt-bindings: add QCOM RPMh regulator bindings
+  regulator: add QCOM RPMh regulator driver
+
+ .../bindings/regulator/qcom,rpmh-regulator.txt     | 160 +++++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/qcom-rpmh-regulator.c            | 770 +++++++++++++++++++++
+ .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 +
+ 5 files changed, 976 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+ create mode 100644 drivers/regulator/qcom-rpmh-regulator.c
+ create mode 100644 include/dt-bindings/regulator/qcom,rpmh-regulator.h
+
 -- 
-2.17.1.1185.g55be947832-goog
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
