@@ -1,115 +1,513 @@
-Return-Path: <SRS0=PCtB=IU=zonque.org=daniel@kernel.org>
-Subject: Re: [PATCH v2 2/2] clk: Add driver for MAX9485
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <20180525182058.25969-3-daniel@zonque.org>
 References: <20180525182058.25969-1-daniel@zonque.org>
  <20180525182058.25969-3-daniel@zonque.org>
- <152792003850.225090.13213694533140196613@swboyd.mtv.corp.google.com>
-From: Daniel Mack <daniel@zonque.org>
-Message-ID: <6bcfa930-f317-dd20-b2d7-c708a7be5d6b@zonque.org>
-Date: Sat, 2 Jun 2018 13:14:25 +0200
-MIME-Version: 1.0
-In-Reply-To: <152792003850.225090.13213694533140196613@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Stephen Boyd <sboyd@kernel.org>, mturquette@baylibre.com
+Message-ID: <152792003850.225090.13213694533140196613@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v2 2/2] clk: Add driver for MAX9485
+Date: Fri, 01 Jun 2018 23:13:58 -0700
+To: Daniel Mack <daniel@zonque.org>, mturquette@baylibre.com
 Cc: linux-clk@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Daniel Mack <zonque@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Stephen,
+Quoting Daniel Mack (2018-05-25 11:20:58)
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 34968a381d0f..f8ab54c41d16 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -45,6 +45,14 @@ config COMMON_CLK_MAX77686
+>           This driver supports Maxim 77620/77686/77802 crystal oscillator
+>           clock.
+>  =
 
-Thanks for the review!
+> +config COMMON_CLK_MAX9485
+> +       tristate "Clock driver for Maxim 9485 Programmable Clock Generato=
+r"
+> +       depends on I2C
+> +       depends on OF
 
-On Saturday, June 02, 2018 08:13 AM, Stephen Boyd wrote:
-> Quoting Daniel Mack (2018-05-25 11:20:58)
+Drop this depends? Probably not needed to compile this driver.
 
->> +enum {
->> +       MAX9485_FS_12KHZ        = 0 << 0,
->> +       MAX9485_FS_32KHZ        = 1 << 0,
->> +       MAX9485_FS_44_1KHZ      = 2 << 0,
->> +       MAX9485_FS_48KHZ        = 3 << 0,
->> +};
->> +
->> +enum {
->> +       MAX9485_SCALE_256       = 0 << 2,
->> +       MAX9485_SCALE_384       = 1 << 2,
->> +       MAX9485_SCALE_768       = 2 << 2,
->> +};
-> 
-> Any reason to be an enum? Maybe they can just be #defines.
+> +       depends on GPIOLIB || COMPILE_TEST
 
-No particular reason, but an enum shows these values are grouped 
-together. But I can also turn them into defines, it's just a matter of 
-taste I guess.
+Is this common? I never knew.
 
->> +struct max9485_driver_data {
->> +       struct clk *xclk;
->> +       struct i2c_client *client;
->> +       u8 reg_value;
->> +       unsigned long clkout_rate;
->> +       struct regulator *supply;
->> +       struct gpio_desc *reset_gpio;
->> +       struct max9485_clk_hw hw[MAX9485_NUM_CLKS];
->> +
->> +       struct {
->> +               struct clk_hw_onecell_data data;
->> +               struct clk_hw *hw[MAX9485_NUM_CLKS];
-> 
-> I don't quite understand this one. There's already an array of clk_hw
-> pointers inside of clk_hw_onecell_data so just use that? But then
-> there's also an array of max9485_clk_hw structures, so maybe roll your
-> own clk_hw getter function?
+> +       ---help---
+> +         This driver supports Maxim 9485 Programmable Audio Clock Genera=
+tor
+> +
+>  config COMMON_CLK_RK808
+>         tristate "Clock driver for RK805/RK808/RK818"
+>         depends on MFD_RK808
+> diff --git a/drivers/clk/clk-max9485.c b/drivers/clk/clk-max9485.c
+> new file mode 100644
+> index 000000000000..9bbf2fee49c5
+> --- /dev/null
+> +++ b/drivers/clk/clk-max9485.c
+> @@ -0,0 +1,408 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * clk-max9485.c: MAX9485 Programmable Audio Clock Generator
+> + *
+> + * (c) 2018 Daniel Mack <daniel@zonque.org>
+> + *
+> + * References:
+> + *   MAX9485 Datasheet
+> + *     http://www.maximintegrated.com/datasheet/index.mvp/id/4421
+> + *
+> + * This program is free software; you can redistribute  it and/or modify=
+ it
+> + * under  the terms of  the GNU General  Public License as published by =
+the
+> + * Free Software Foundation;  either version 2 of the  License, or (at y=
+our
+> + * option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/clkdev.h>
 
-Ah, yes. The latter makes most sense. I was somehow stuck with the idea 
-that the onecell helper makes sense here. Thanks for the heads-up.
+Is this used?
 
->> +static int max9485_update_bits(struct max9485_driver_data *drvdata,
->> +                              u8 mask, u8 value)
->> +{
->> +       int ret;
->> +
->> +       drvdata->reg_value &= ~mask;
->> +       drvdata->reg_value |= value;
->> +
->> +       dev_dbg(&drvdata->client->dev,
->> +               "updating mask %02x value %02x -> %02x\n",
->> +               mask, value, drvdata->reg_value);
->> +
->> +       ret = i2c_master_send(drvdata->client,
->> +                             &drvdata->reg_value,
->> +                             sizeof(drvdata->reg_value));
-> 
-> Maybe use a regmap instead? Then you could use regmap_update_bits() in
-> the places you need it.
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <dt-bindings/clock/maxim,max9485.h>
+> +
+> +#define MAX9485_INPUT_FREQ 27000000UL
+> +#define MAX9485_NUM_CLKS 4
+> +
+> +/* This chip has only one register of 8 bit width. */
 
-I wish, but nope, regmap doesn't work for devices that don't actually 
-have registers, like this one. There's no extra byte for a register 
-address or such, just one plain byte of payload.
+So efficient!
 
-[...]
+> +
+> +enum {
+> +       MAX9485_FS_12KHZ        =3D 0 << 0,
+> +       MAX9485_FS_32KHZ        =3D 1 << 0,
+> +       MAX9485_FS_44_1KHZ      =3D 2 << 0,
+> +       MAX9485_FS_48KHZ        =3D 3 << 0,
+> +};
+> +
+> +enum {
+> +       MAX9485_SCALE_256       =3D 0 << 2,
+> +       MAX9485_SCALE_384       =3D 1 << 2,
+> +       MAX9485_SCALE_768       =3D 2 << 2,
+> +};
 
->> +               return -ENOMEM;
->> +
->> +       drvdata->xclk = devm_clk_get(dev, "xclk");
->> +       if (IS_ERR(drvdata->xclk))
->> +               return PTR_ERR(drvdata->xclk);
->> +
->> +       freq = clk_get_rate(drvdata->xclk);
->> +       if (freq != MAX9485_INPUT_FREQ) {
->> +               dev_err(dev, "Illegal xclk frequency of %ld\n", freq);
->> +               return -EINVAL;
->> +       }
-> 
-> Is this necessary? Seems pretty useless to do everywhere to make sure
-> that someone didn't design the hardware incorrectly. It would be better
-> to return the rate of the parent "xclk" by not having a recalc_rate hook
-> and relying on the parent's rate.
+Any reason to be an enum? Maybe they can just be #defines.
 
-Hmm, but the hardware doesn't work if the clock is anything else than 
-27.0MHz. But I'll remove the check no problem. After all, we don't check 
-the regulator voltages either.
+> +
+> +#define MAX9485_DOUBLE         BIT(4)
+> +#define MAX9485_CLKOUT1_ENABLE BIT(5)
+> +#define MAX9485_CLKOUT2_ENABLE BIT(6)
+> +#define MAX9485_MCLK_ENABLE    BIT(7)
+> +#define MAX9485_FREQ_MASK      0x1f
+> +
+> +struct max9485_rate {
+> +       unsigned long out;
+> +       u8 reg_value;
+> +};
+> +
+> +/*
+> + * Ordered by frequency. For frequency the hardware can generate with
+> + * multiple settings, only the one with lowest jitter is listed.
+> + */
+> +static const struct max9485_rate max9485_rates[] =3D {
+> +       {  3072000, MAX9485_FS_12KHZ   | MAX9485_SCALE_256 },
+> +       {  4608000, MAX9485_FS_12KHZ   | MAX9485_SCALE_384 },
+> +       {  8192000, MAX9485_FS_32KHZ   | MAX9485_SCALE_256 },
+> +       {  9126000, MAX9485_FS_12KHZ   | MAX9485_SCALE_768 },
+> +       { 11289600, MAX9485_FS_44_1KHZ | MAX9485_SCALE_256 },
+> +       { 12288000, MAX9485_FS_48KHZ   | MAX9485_SCALE_256 },
+> +       { 16384000, MAX9485_FS_32KHZ   | MAX9485_SCALE_256 | MAX9485_DOUB=
+LE },
+> +       { 16934400, MAX9485_FS_44_1KHZ | MAX9485_SCALE_384 },
+> +       { 18384000, MAX9485_FS_48KHZ   | MAX9485_SCALE_384 },
+> +       { 22579200, MAX9485_FS_44_1KHZ | MAX9485_SCALE_256 | MAX9485_DOUB=
+LE },
+> +       { 24576000, MAX9485_FS_48KHZ   | MAX9485_SCALE_256 | MAX9485_DOUB=
+LE },
+> +       { 33868800, MAX9485_FS_44_1KHZ | MAX9485_SCALE_384 | MAX9485_DOUB=
+LE },
+> +       { 36864000, MAX9485_FS_48KHZ   | MAX9485_SCALE_384 | MAX9485_DOUB=
+LE },
+> +       { 49152000, MAX9485_FS_32KHZ   | MAX9485_SCALE_768 | MAX9485_DOUB=
+LE },
+> +       { 67737600, MAX9485_FS_44_1KHZ | MAX9485_SCALE_768 | MAX9485_DOUB=
+LE },
+> +       { 73728000, MAX9485_FS_48KHZ   | MAX9485_SCALE_768 | MAX9485_DOUB=
+LE },
+> +       { } /* sentinel */
+> +};
+> +
+> +struct max9485_driver_data;
+> +
+> +struct max9485_clk_hw {
+> +       struct clk_hw hw;
+> +       struct clk_init_data init;
+> +       u8 enable_bit;
+> +       struct max9485_driver_data *drvdata;
+> +};
+> +
+> +struct max9485_driver_data {
+> +       struct clk *xclk;
+> +       struct i2c_client *client;
+> +       u8 reg_value;
+> +       unsigned long clkout_rate;
+> +       struct regulator *supply;
+> +       struct gpio_desc *reset_gpio;
+> +       struct max9485_clk_hw hw[MAX9485_NUM_CLKS];
+> +
+> +       struct {
+> +               struct clk_hw_onecell_data data;
+> +               struct clk_hw *hw[MAX9485_NUM_CLKS];
 
-I've addressed all other comments. Will resend v3.
+I don't quite understand this one. There's already an array of clk_hw
+pointers inside of clk_hw_onecell_data so just use that? But then
+there's also an array of max9485_clk_hw structures, so maybe roll your
+own clk_hw getter function?
+
+> +       } onecell;
+> +};
+> +
+> +static int max9485_update_bits(struct max9485_driver_data *drvdata,
+> +                              u8 mask, u8 value)
+> +{
+> +       int ret;
+> +
+> +       drvdata->reg_value &=3D ~mask;
+> +       drvdata->reg_value |=3D value;
+> +
+> +       dev_dbg(&drvdata->client->dev,
+> +               "updating mask %02x value %02x -> %02x\n",
+> +               mask, value, drvdata->reg_value);
+> +
+> +       ret =3D i2c_master_send(drvdata->client,
+> +                             &drvdata->reg_value,
+> +                             sizeof(drvdata->reg_value));
+
+Maybe use a regmap instead? Then you could use regmap_update_bits() in
+the places you need it.
+
+> +
+> +       return (ret < 0) ? ret : 0;
+> +}
+> +
+> +static int max9485_clk_prepare(struct clk_hw *hw)
+> +{
+> +       struct max9485_clk_hw *clk_hw =3D
+> +               container_of(hw, struct max9485_clk_hw, hw);
+
+Please make a static inline function for this line called something like
+to_max8458_clk().
+
+> +
+> +       return max9485_update_bits(clk_hw->drvdata,
+> +                                  clk_hw->enable_bit,
+> +                                  clk_hw->enable_bit);
+> +}
+> +
+> +static void max9485_clk_unprepare(struct clk_hw *hw)
+> +{
+> +       struct max9485_clk_hw *clk_hw =3D
+> +               container_of(hw, struct max9485_clk_hw, hw);
+> +
+> +       max9485_update_bits(clk_hw->drvdata, clk_hw->enable_bit, 0);
+> +}
+> +
+> +/*
+> + * MCLK OUT
+> + */
+> +
+> +/* The MCLK output can only provide the same rate as the input clock */
+> +static unsigned long max9485_mclkout_recalc_rate(struct clk_hw *hw,
+> +                                                unsigned long parent_rat=
+e)
+> +{
+> +       return MAX9485_INPUT_FREQ;
+> +}
+
+This clk_op can be dropped and just rely on parent frequency.
+
+> +
+> +/*
+> + * CLKOUT - configurable clock output
+> + */
+> +static int max9485_clkout_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                                  unsigned long parent_rate)
+> +{
+> +       const struct max9485_rate *entry;
+> +       struct max9485_clk_hw *clk_hw =3D
+> +               container_of(hw, struct max9485_clk_hw, hw);
+> +
+> +       for (entry =3D max9485_rates; entry->out !=3D 0; entry++)
+> +               if (entry->out =3D=3D rate)
+> +                       break;
+> +
+> +       if (entry->out =3D=3D 0)
+> +               return -EINVAL;
+> +
+> +       clk_hw->drvdata->clkout_rate =3D rate;
+> +
+> +       return max9485_update_bits(clk_hw->drvdata,
+> +                                  MAX9485_FREQ_MASK,
+> +                                  entry->reg_value);
+
+Need to unwind clkout_rate on failure? clkout_rate should go away
+actually.
+
+> +}
+> +
+> +static long max9485_clkout_round_rate(struct clk_hw *hw, unsigned long r=
+ate,
+> +                                     unsigned long *parent_rate)
+> +{
+> +       const struct max9485_rate *curr, *prev =3D NULL;
+> +
+> +       for (curr =3D max9485_rates; curr->out !=3D 0; curr++) {
+> +               /* Exact matches */
+> +               if (curr->out =3D=3D rate)
+> +                       return rate;
+> +
+> +               /*
+> +                * Find the first entry that has a frequency higher than =
+the
+> +                * requested one.
+> +                */
+> +               if (curr->out > rate) {
+> +                       unsigned int mid;
+> +
+> +                       /*
+> +                        * If this is the first entry, clamp the value to=
+ the
+> +                        * lowest possible frequency.
+> +                        */
+> +                       if (!prev)
+> +                               return curr->out;
+> +
+> +                       /*
+> +                        * Otherwise, determine whether the previous entr=
+y or
+> +                        * current one is closer.
+> +                        */
+> +                       mid =3D prev->out + ((curr->out - prev->out) / 2);
+> +
+> +                       return (mid > rate) ? prev->out : curr->out;
+> +               }
+> +
+> +               prev =3D curr;
+> +       }
+> +
+> +       /* If the last entry was still too high, clamp the value */
+> +       return prev->out;
+> +}
+> +
+> +static unsigned long max9485_clkout_recalc_rate(struct clk_hw *hw,
+> +                                               unsigned long parent_rate)
+> +{
+> +       struct max9485_clk_hw *clk_hw =3D
+> +               container_of(hw, struct max9485_clk_hw, hw);
+> +
+> +       return clk_hw->drvdata->clkout_rate;
+
+This needs to return the rate of the clk that's determined by reading
+the hardware. Caching the rate yourself is hard and error prone, so you
+should only do it if you really have to.
+
+> +}
+> +
+> +struct max9485_clk {
+> +       const char *name;
+> +       int parent_index;
+> +       const struct clk_ops ops;
+> +       u8 enable_bit;
+> +};
+> +
+> +static const struct max9485_clk max9485_clks[MAX9485_NUM_CLKS] =3D {
+> +       [MAX9485_MCLKOUT] =3D {
+> +               .name =3D "mclkout",
+> +               .parent_index =3D -1,
+> +               .enable_bit =3D MAX9485_MCLK_ENABLE,
+> +               .ops =3D {
+> +                       .prepare        =3D max9485_clk_prepare,
+> +                       .unprepare      =3D max9485_clk_unprepare,
+> +                       .recalc_rate    =3D max9485_mclkout_recalc_rate,
+> +               },
+> +       },
+> +       [MAX9485_CLKOUT] =3D {
+> +               .name =3D "clkout",
+> +               .parent_index =3D -1,
+> +               .ops =3D {
+> +                       .set_rate       =3D max9485_clkout_set_rate,
+> +                       .round_rate     =3D max9485_clkout_round_rate,
+> +                       .recalc_rate    =3D max9485_clkout_recalc_rate,
+> +               },
+> +       },
+> +       [MAX9485_CLKOUT1] =3D {
+> +               .name =3D "clkout1",
+> +               .parent_index =3D MAX9485_CLKOUT,
+> +               .enable_bit =3D MAX9485_CLKOUT1_ENABLE,
+> +               .ops =3D {
+> +                       .prepare        =3D max9485_clk_prepare,
+> +                       .unprepare      =3D max9485_clk_unprepare,
+> +                       .recalc_rate    =3D max9485_clkout_recalc_rate,
+> +               },
+> +       },
+> +       [MAX9485_CLKOUT2] =3D {
+> +               .name =3D "clkout2",
+> +               .parent_index =3D MAX9485_CLKOUT,
+> +               .enable_bit =3D MAX9485_CLKOUT2_ENABLE,
+> +               .ops =3D {
+> +                       .prepare        =3D max9485_clk_prepare,
+> +                       .unprepare      =3D max9485_clk_unprepare,
+> +                       .recalc_rate    =3D max9485_clkout_recalc_rate,
+> +               },
+> +       },
+> +};
+> +
+> +static int max9485_i2c_probe(struct i2c_client *client,
+> +                            const struct i2c_device_id *id)
+> +{
+> +       struct max9485_driver_data *drvdata;
+> +       struct device *dev =3D &client->dev;
+> +       unsigned long freq;
+> +       int i, ret;
+> +
+> +       drvdata =3D devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +       if (drvdata =3D=3D NULL)
+
+More standard form is =
 
 
-Thanks again!
-Daniel
+	if (!drvdata)
+		return -ENOMEM;
+
+> +               return -ENOMEM;
+> +
+> +       drvdata->xclk =3D devm_clk_get(dev, "xclk");
+> +       if (IS_ERR(drvdata->xclk))
+> +               return PTR_ERR(drvdata->xclk);
+> +
+> +       freq =3D clk_get_rate(drvdata->xclk);
+> +       if (freq !=3D MAX9485_INPUT_FREQ) {
+> +               dev_err(dev, "Illegal xclk frequency of %ld\n", freq);
+> +               return -EINVAL;
+> +       }
+
+Is this necessary? Seems pretty useless to do everywhere to make sure
+that someone didn't design the hardware incorrectly. It would be better
+to return the rate of the parent "xclk" by not having a recalc_rate hook
+and relying on the parent's rate.
+
+> +
+> +       drvdata->supply =3D devm_regulator_get(dev, "vdd");
+> +       if (IS_ERR(drvdata->supply))
+> +               return PTR_ERR(drvdata->supply);
+> +
+> +       ret =3D regulator_enable(drvdata->supply);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       drvdata->reset_gpio =3D
+> +               devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +       if (IS_ERR(drvdata->reset_gpio))
+> +               return PTR_ERR(drvdata->reset_gpio);
+> +
+> +       i2c_set_clientdata(client, drvdata);
+> +       drvdata->client =3D client;
+> +
+> +       for (i =3D 0; i < MAX9485_NUM_CLKS; i++) {
+> +               int parent_index =3D max9485_clks[i].parent_index;
+> +               const char *name;
+> +
+> +               if (of_property_read_string_index(dev->of_node,
+> +                                                 "clock-output-names",
+> +                                                 i, &name) =3D=3D 0)
+> +                       drvdata->hw[i].init.name =3D name;
+> +               else
+> +                       drvdata->hw[i].init.name =3D max9485_clks[i].name;
+
+Add braces on both arms please.
+
+> +
+> +               drvdata->hw[i].init.ops =3D &max9485_clks[i].ops;
+> +               drvdata->hw[i].init.flags =3D CLK_IS_BASIC;
+
+Don't use this flag unless you need it. Let me go add a comment to that
+effect to the code right now.
+
+> +
+> +               if (parent_index > 0) {
+> +                       drvdata->hw[i].init.parent_names =3D
+> +                               &drvdata->hw[parent_index].init.name;
+> +                       drvdata->hw[i].init.num_parents =3D 1;
+> +                       drvdata->hw[i].init.flags |=3D CLK_SET_RATE_PAREN=
+T;
+> +               }
+> +
+> +               drvdata->hw[i].enable_bit =3D max9485_clks[i].enable_bit;
+> +               drvdata->hw[i].hw.init =3D &drvdata->hw[i].init;
+> +               drvdata->hw[i].drvdata =3D drvdata;
+> +
+> +               ret =3D devm_clk_hw_register(dev, &drvdata->hw[i].hw);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               drvdata->onecell.hw[i] =3D &drvdata->hw[i].hw;
+> +       }
+> +
+> +       drvdata->onecell.data.num =3D MAX9485_NUM_CLKS;
+> +
+> +       return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+> +                                          &drvdata->onecell.data);
+> +}
+> +
+> +static int __maybe_unused max9485_suspend(struct device *dev)
+> +{
+> +       struct i2c_client *client =3D to_i2c_client(dev);
+> +       struct max9485_driver_data *drvdata =3D i2c_get_clientdata(client=
+);
+> +
+> +       if (drvdata->reset_gpio)
+> +               gpiod_set_value_cansleep(drvdata->reset_gpio, 0);
+
+Looks like you can call this unconditionally if the gpio is not there
+because get_optional will return NULL and this function will bail out
+early if so.
+
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused max9485_resume(struct device *dev)
+> +{
+> +       struct i2c_client *client =3D to_i2c_client(dev);
+> +       struct max9485_driver_data *drvdata =3D i2c_get_clientdata(client=
+);
+> +       int ret;
+> +
+> +       if (drvdata->reset_gpio)
+> +               gpiod_set_value_cansleep(drvdata->reset_gpio, 0);
+> +
+
+Same.
+
+> +       ret =3D i2c_master_send(client, &drvdata->reg_value,
+> +                             sizeof(drvdata->reg_value));
+> +
+> +       return (ret < 0) ? ret : 0;
+
+Drop the extra parenthesis please.
+
+> +}
+> +
