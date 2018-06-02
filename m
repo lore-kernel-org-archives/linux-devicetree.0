@@ -1,41 +1,49 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 5/6] ARM: dts: Add generic interconnect target module node for
- MCAN
-Date: Fri, 01 Jun 2018 23:32:42 -0700
-Message-ID: <152792116258.225090.5279546677198775320@swboyd.mtv.corp.google.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-6-faiz_abbas@ti.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: [PATCH 0/2] gpio: mediatek: driver for gpio chip in MT7621 SoC
+Date: Sat,  2 Jun 2018 09:30:08 +0200
+Message-ID: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180530141133.3711-6-faiz_abbas@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com, faiz_abbas@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: linus.walleij@linaro.org
+Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, driverdev-devel@linuxdriverproject.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, neil@brown.name
 List-Id: devicetree@vger.kernel.org
 
-Quoting Faiz Abbas (2018-05-30 07:11:32)
-> diff --git a/arch/arm/boot/dts/dra76x.dtsi b/arch/arm/boot/dts/dra76x.dtsi
-> index bfc82636999c..57b8dc0fe719 100644
-> --- a/arch/arm/boot/dts/dra76x.dtsi
-> +++ b/arch/arm/boot/dts/dra76x.dtsi
-> @@ -11,6 +11,25 @@
->  / {
->         compatible =3D "ti,dra762", "ti,dra7";
->  =
+This patch series add support for gpio driver in mediatek MT7621 
+SoC. This driver has been in staging for a while and after some
+cleanups cycles we consider to git it a try to get mainlined.
 
-> +       ocp {
-> +
-> +               target-module@0x42c00000 {
+The functionality is presented as a single irq-chip but 3 separate
+gpio-chips, as this seemed simplest. Is this acceptable, or does it
+need to be changed? We'd like to have review comments and feedback 
+specially for this.
 
-Drop the 0x on unit address. Also, it should match the first register
-property. And what is a "target-module"?
+Hope this helps and thanks in advance.
 
-> +                       compatible =3D "ti,sysc-dra7-mcan";
-> +                       ranges =3D <0x0 0x42c00000 0x2000>;
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <1>;
-> +                       reg =3D <0x42c01900 0x4>,
-> +                             <0x42c01904 0x4>,
->=20
+Best regards,
+    Sergio Paracuellos
+
+Sergio Paracuellos (2):
+  gpio: mediatek: add driver for MT7621
+  dt-bindings: document gpio-mt7621 bindings
+
+ .../bindings/gpio/mediatek,mt7621-gpio.txt         |  68 ++++
+ drivers/gpio/Kconfig                               |   7 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-mt7621.c                         | 370 +++++++++++++++++++++
+ 4 files changed, 446 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+ create mode 100644 drivers/gpio/gpio-mt7621.c
+
+-- 
+2.7.4
