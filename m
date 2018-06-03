@@ -1,22 +1,89 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: imx6ul: add GPIO clocks
-Date: Sat, 2 Jun 2018 23:06:38 -0300
-Message-ID: <CAOMZO5BMNhVu6UGmMDzQzEc=r1VkxNshksuuh0YVKcjs1wt41w@mail.gmail.com>
-References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com> <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIHYxMCAwLzVdIHNjc2k6IHVmczogYWRkIHVmcyBkcml2?=
+ =?gb2312?Q?er_code_for_Hisilicon_Hi3660_SoC?=
+Date: Sun, 3 Jun 2018 07:12:53 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA6CD55@DGGEMM506-MBX.china.huawei.com>
+References: <20180525091712.37227-1-liwei213@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, Matteo Lisi <matteo.lisi@engicam.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180525091712.37227-1-liwei213@huawei.com>
+Content-Language: zh-CN
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "liwei (CM)" <liwei213@huawei.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "khilman@baylibre.com" <khilman@baylibre.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "riku.voipio@linaro.org" <riku.voipio@linaro.org>, "treding@nvidia.com" <treding@nvidia.com>, "krzk@kernel.org" <krzk@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-ke
+Cc: "guodong.xu@linaro.org" <guodong.xu@linaro.org>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, Gengjianfeng <gengjianfeng@hisilicon.com>, zangleigang <zangleigang@hisilicon.com>, "Fengbaopeng (kevin,
+ Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, "john.stultz@linaro.org" <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 2, 2018 at 10:44 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> i.MX6UL has GPIO clock gates in CCM CCGR, add
-> clock property for GPIO driver to make sure all
-> GPIO banks work as expected.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+SGksIGFsbA0KU29ycnkgdG8gYm90aGVyIHlvdS4gQW55Ym9keSBlbHNlIGhhdmUgYW55IGNvbW1l
+bnRzPw0KDQpIaSwgUGhpbGlwcGUNClRoaXMgcGF0Y2ggaGFzIGJlZW4gc3VibWl0dGVkIGZvciBh
+IGxvbmcgdGltZSwgY2FuIGl0IGJlIG1lcmdlZD8NCg0KUmV2aWV3cyBhbmQgdGVzdHMgZm9yIHBy
+ZXZpb3VzIHZlcnNpb25zIG9mIHRoZSBwYXRjaCBhcmUgYXMgZm9sbG93czoNCkFja2VkLWJ5OiBX
+ZWkgWHUgPHh1d2VpNUBoaXNpbGljb24uY29tPg0KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+DQpSZXZpZXdlZC1ieTogUGhpbGlwcGUgT21icmVkYW5uZSA8cG9tYnJl
+ZGFubmVAbmV4Yi5jb20+DQpSZXZpZXdlZC1ieTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5k
+ZT4NClRlc3RlZC1ieTogUmlrdSBWb2lwaW8gPHJpa3Uudm9pcGlvQGxpbmFyby5vcmc+DQoNClRo
+YW5rIHlvdSBhbGwgZm9yIHlvdXIgYXR0ZW50aW9uIGFuZCBsb29rIGZvcndhcmQgdG8geW91ciBy
+ZXBseS4NCg0KVGhhbmtzIQ0KDQotLS0tLdPKvP7Urbz+LS0tLS0NCreivP7IyzogbGl3ZWkgKENN
+KSANCreiy83KsbzkOiAyMDE4xOo11MIyNcjVIDE3OjE3DQrK1bz+yMs6IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxs
+LmRlYWNvbkBhcm0uY29tOyB2aW5ob2xpa2F0dGlAZ21haWwuY29tOyBqZWpiQGxpbnV4LnZuZXQu
+aWJtLmNvbTsgbWFydGluLnBldGVyc2VuQG9yYWNsZS5jb207IGtoaWxtYW5AYmF5bGlicmUuY29t
+OyBhcm5kQGFybmRiLmRlOyBncmVnb3J5LmNsZW1lbnRAZnJlZS1lbGVjdHJvbnMuY29tOyB0aG9t
+YXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbTsgeWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4
+dC5jb207IHJpa3Uudm9pcGlvQGxpbmFyby5vcmc7IHRyZWRpbmdAbnZpZGlhLmNvbTsga3J6a0Br
+ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1z
+Y3NpQHZnZXIua2VybmVsLm9yZw0Ks63LzTogemFuZ2xlaWdhbmc7IEdlbmdqaWFuZmVuZzsgZ3Vv
+ZG9uZy54dUBsaW5hcm8ub3JnOyBDaGVuZmVuZyAocHVjayk7IGpvaG4uc3R1bHR6QGxpbmFyby5v
+cmc7IGxpd2VpIChDTSk7IEZlbmdiYW9wZW5nIChrZXZpbiwgS2lyaW4gU29sdXRpb24gRGVwdCkN
+Ctb3zOI6IFtQQVRDSCB2MTAgMC81XSBzY3NpOiB1ZnM6IGFkZCB1ZnMgZHJpdmVyIGNvZGUgZm9y
+IEhpc2lsaWNvbiBIaTM2NjAgU29DDQoNClRoaXMgcGF0Y2hzZXQgYWRkcyBkcml2ZXIgc3VwcG9y
+dCBmb3IgVUZTIGZvciBIaTM2NjAgU29DLiBJdCBpcyB2ZXJpZmllZCBvbiBIaUtleTk2MCBib2Fy
+ZC4NCg0KTGkgV2VpICg1KToNCiAgc2NzaTogdWZzOiBhZGQgSGlzaWxpY29uIHVmcyBkcml2ZXIg
+Y29kZQ0KICBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9jdW1lbnQgZm9yIGhpc2ktdWZz
+DQogIGFybTY0OiBkdHM6IGFkZCB1ZnMgZHRzIG5vZGUNCiAgYXJtNjQ6IGRlZmNvbmZpZzogZW5h
+YmxlIGNvbmZpZ3MgZm9yIEhpc2lsaWNvbiB1ZnMNCiAgYXJtNjQ6IGRlZmNvbmZpZzogZW5hYmxl
+IGYyZnMgYW5kIHNxdWFzaGZzDQoNCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dWZzL3Vmcy1oaXNpLnR4dCB8ICA0MSArKw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91
+ZnNoY2QtcGx0ZnJtLnR4dCAgICAgIHwgIDEwICstDQogYXJjaC9hcm02NC9ib290L2R0cy9oaXNp
+bGljb24vaGkzNjYwLmR0c2kgICAgICAgICAgfCAgMTggKw0KIGFyY2gvYXJtNjQvY29uZmlncy9k
+ZWZjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgIDExICsNCiBkcml2ZXJzL3Njc2kvdWZz
+L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArDQogZHJpdmVycy9zY3Np
+L3Vmcy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMv
+c2NzaS91ZnMvdWZzLWhpc2kuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgNjE5ICsrKysrKysr
+KysrKysrKysrKysrKw0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzLWhpc2kuaCAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgMTE1ICsrKysNCiA4IGZpbGVzIGNoYW5nZWQsIDgyMSBpbnNlcnRpb25zKCsp
+LCAzIGRlbGV0aW9ucygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zY3Np
+L3Vmcy91ZnMtaGlzaS5oDQoNCk1ham9yIGNoYW5nZXMgaW4gdjEwOg0KIC0gc29sdmUgcmV2aWV3
+IGNvbW1lbnRzIGZyb20gUm9iIEhlcnJpbmcuDQogICAqTW9kaWZ5IHRoZSAicmVzZXQtbmFtZXMi
+IGRlc2NyaWJlIGluIHVmcy1oaXNpLnR4dCBiaW5kaW5nIGZpbGUuDQogICAqTGlzdCBjbG9ja3Mg
+aW4gdWZzLWhpc2kudHh0IGJpbmRpbmcgZmlsZS4NCiAgICpyZW1vdmUgdGhlICJhcnN0IiBhbmQg
+a2VlcCBvbmx5ICJyc3QiIGluIHRoZSBiaW5naW5nIGZpbGVzLg0KICAgKnJlbW92ZSB0aGUgImFy
+c3QiIG1lbWJlciBmcm9tIGJvdGggZHRzIGFuZCBjIGNvZGUuIA0KTWFqb3IgY2hhbmdlcyBpbiB2
+OToNCiAtIHNvbHZlIHJldmlldyBjb21tZW50cyBmcm9tIFJvYiBIZXJyaW5nLg0KICAgKnJlbW92
+ZSBmcmVxLXRhYmxlLWh6IGluIHVmcy1oaXNpLnR4dCBiaW5kaW5nIGZpbGUuDQogICAqTW92ZSB0
+aGUgcnN0IHRvIHRoZSB1ZnNoY2RfcGx0Zm0udHh0IGNvbW1vbiBiaW5kaW5nIGZpbGUuDQogICAq
+TW9kaWZ5IHRoZSBtZW1iZXIgImFzc2VydCIgb2YgVUZTIGhvc3Qgc3RydWN0dXJlIHRvICJhcnN0
+Ii4NCk1ham9yIGNoYW5nZXMgaW4gdjg6DQogLSBzb2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSB6
+aGFuZ2ZlaS4NCiAgICpBZGQgVmVyc2lvbiBoaXN0b3J5Lg0KIC0gc29sdmUgcmV2aWV3IGNvbW1l
+bnRzIGZyb20gUm9iIEhlcnJpbmcuDQogICAqcmVtb3ZlIGZyZXEtdGFibGUtaHouDQogLSAgc29s
+dmUgcmV2aWV3IGNvbW1lbnRzIGZyb20gUmlrdSBWb2lwaW8uDQogICAqQWRkIE1PRFVMRV9ERVZJ
+Q0VfVEFCTEUgZm9yIHVmcyBkcml2ZXIuDQotLSANCk1ham9yIGNoYW5nZXMgaW4gdjc6DQogLSBz
+b2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSBQaGlsaXBwZSBPbWJyZWRhbm5lLg0KICAgKnVzZSB0
+aGUgbmV3IFNQRFggbGljZW5zZSBpZHMgaW5zdGVhZCBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGlj
+IExpY2Vuc2UuDQotLSANCjIuMTUuMA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
