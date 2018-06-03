@@ -1,98 +1,22 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 3/3] pinctrl: actions: Add interrupt support for OWL S900
- SoC
-Date: Sun, 3 Jun 2018 22:27:23 +0530
-Message-ID: <20180603165723.GA14907@Mani-XPS-13-9360>
-References: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org>
- <20180602165415.30956-4-manivannan.sadhasivam@linaro.org>
- <CAHp75Ve8ZCbEqnYK0KqtCHQm-EOUWRSyMzi51P+3_7brtXq6dA@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 2/2] ARM: dts: imx6ul: add GPIO clocks
+Date: Sun, 3 Jun 2018 17:57:41 -0300
+Message-ID: <CAOMZO5BZB_t5VYt3aGtjNuyFCwNK6KYnf9=4BN3Pd5oqYr58LQ@mail.gmail.com>
+References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com> <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Ve8ZCbEqnYK0KqtCHQm-EOUWRSyMzi51P+3_7brtXq6dA@mail.gmail.com>
+In-Reply-To: <1527990245-13619-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, =?utf-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, Matteo Lisi <matteo.lisi@engicam.com>, NXP Linux Team <Linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-On Sun, Jun 03, 2018 at 11:37:53AM +0300, Andy Shevchenko wrote:
-> On Sat, Jun 2, 2018 at 7:54 PM, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> > Add interrupt support for Actions Semi OWL S900 SoC.
-> 
-> > +       port = owl_gpio_get_port(pctrl, &gpio);
-> > +       if (WARN_ON(port == NULL))
-> > +               return;
-> 
-> At which circumstances the above possible?
-> 
-
-Only possible when the requested GPIO exceeds chip->ngpio. I know it is
-a kind of redundant check, but it is good to have this during development.
-
-> > +       port = owl_gpio_get_port(pctrl, &gpio);
-> > +       if (WARN_ON(port == NULL))
-> > +               return;
-> 
-> Ditto.
+On Sat, Jun 2, 2018 at 10:44 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> i.MX6UL has GPIO clock gates in CCM CCGR, add
+> clock property for GPIO driver to make sure all
+> GPIO banks work as expected.
 >
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Same as above.
-
-> > +       port = owl_gpio_get_port(pctrl, &gpio);
-> > +       if (WARN_ON(port == NULL))
-> > +               return;
-> 
-> Ditto.
->
-
-Same as above.
-
-> > +       port = owl_gpio_get_port(pctrl, &gpio);
-> > +       if (WARN_ON(port == NULL))
-> > +               return -ENODEV;
-> 
-> Ditto.
->
-
-Same as above.
-
-> 
-> > +       for (i = 0; i < chip->ngpio; i++) {
-> > +               irqno = irq_create_mapping(pctrl->domain, i);
-> > +               irq_set_chip_and_handler(irqno, &owl_gpio_irq_chip,
-> > +                                        handle_edge_irq);
-> > +               irq_set_chip_data(irqno, pctrl);
-> > +       }
-> 
-> I'm not sure the handle_edge_irq() is a correct handler here. It would
-> be handle_bad_irq() until IRQ has been requested properly.
-> No?
->
-
-Hmmm, good question. Since the handler used in irq_set_chip_and_handler
-is superseded by irq_set_chained_handler_and_data, this doesn't matter
-anyway. But I would like to hear what Linus suggests here!
-
-> > +/* GPIO TYPE Bit Definition */
-> > +#define OWL_GPIO_INT_LEVEL_HIGH                0
-> > +#define OWL_GPIO_INT_LEVEL_LOW         1
-> > +#define OWL_GPIO_INT_EDGE_RISING       2
-> > +#define OWL_GPIO_INT_EDGE_FALLING      3
-> 
-> > +#define OWL_GPIO_INT_MASK              3
-> 
-> GENMASK?
->
-
-Ack.
-
-Thanks,
-Mani
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
