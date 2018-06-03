@@ -1,51 +1,81 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/2] clk: imx6ul: add GPIO clock gates
-Date: Sun, 3 Jun 2018 01:36:13 +0000
-Message-ID: <AM3PR04MB1315BD8947467077B61BB2E6F5600@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1526959560-6014-1-git-send-email-Anson.Huang@nxp.com>
- <1439344955.9677.1526991935718@email.1und1.de>
- <152792036327.225090.14543251343485084840@swboyd.mtv.corp.google.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2 1/2] clk: imx6ul: add GPIO clock gates
+Date: Sun,  3 Jun 2018 09:44:04 +0800
+Message-ID: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152792036327.225090.14543251343485084840@swboyd.mtv.corp.google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Fabio Estevam <fabio.estevam@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matteo.lisi@engicam.com" <matteo.lisi@engicam.com>, "michael@amarulasolutions.com" <michael@amarulasolutions.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, michael@amarulasolutions.com, matteo.lisi@engicam.com
+Cc: Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0ZXBoZW4NCg0KQW5zb24gSHVhbmcNCkJlc3QgUmVnYXJkcyENCg0KDQo+IC0tLS0tT3Jp
-Z2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0ZXBoZW4gQm95ZCBbbWFpbHRvOnNib3lkQGtl
-cm5lbC5vcmddDQo+IFNlbnQ6IFNhdHVyZGF5LCBKdW5lIDIsIDIwMTggMjoxOSBQTQ0KPiBUbzog
-QW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+OyBTdGVmYW4gV2FocmVuDQo+IDxzdGVm
-YW4ud2FocmVuQGkyc2UuY29tPjsgRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29t
-PjsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbWF0dGVv
-Lmxpc2lAZW5naWNhbS5jb207DQo+IG1pY2hhZWxAYW1hcnVsYXNvbHV0aW9ucy5jb207IG10dXJx
-dWV0dGVAYmF5bGlicmUuY29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IHNoYXduZ3VvQGtlcm5l
-bC5vcmcNCj4gQ2M6IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGlu
-dXgtaW14QG54cC5jb20+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBjbGs6IGlteDZ1bDogYWRkIEdQSU8gY2xv
-Y2sgZ2F0ZXMNCj4gDQo+IFF1b3RpbmcgU3RlZmFuIFdhaHJlbiAoMjAxOC0wNS0yMiAwNToyNToz
-NSkNCj4gPiA+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14NnVsLWNsb2NrLmgN
-Cj4gPiA+IEBAIC0yNDIsMjAgKzI0MiwyNSBAQA0KPiA+ID4gICNkZWZpbmUgSU1YNlVMX0NMS19D
-S08yX1BPREYgICAgICAgICAyMjkNCj4gPiA+ICAjZGVmaW5lIElNWDZVTF9DTEtfQ0tPMiAgICAg
-ICAgICAgICAgICAgICAgICAyMzANCj4gPiA+ICAjZGVmaW5lIElNWDZVTF9DTEtfQ0tPICAgICAg
-ICAgICAgICAgICAgICAgICAyMzENCj4gPiA+ICsjZGVmaW5lIElNWDZVTF9DTEtfR1BJTzEgICAg
-ICAgICAgICAgMjMyDQo+ID4gPiArI2RlZmluZSBJTVg2VUxfQ0xLX0dQSU8yICAgICAgICAgICAg
-IDIzMw0KPiA+ID4gKyNkZWZpbmUgSU1YNlVMX0NMS19HUElPMyAgICAgICAgICAgICAyMzQNCj4g
-PiA+ICsjZGVmaW5lIElNWDZVTF9DTEtfR1BJTzQgICAgICAgICAgICAgMjM1DQo+ID4gPiArI2Rl
-ZmluZSBJTVg2VUxfQ0xLX0dQSU81ICAgICAgICAgICAgIDIzNg0KPiA+DQo+ID4gdGhpcyBjaGFu
-Z2UgbG9va3MgbGlrZSBhIGJyZWFrYWdlIG9mIGRldmljZXRyZWUgQUJJLiBZb3UgYXJlIGNoYW5n
-aW5nIHRoZQ0KPiBtZWFuIG9mIHRoZSBleGlzdGluZyBjbG9jayBJRHMgb24gaS5NWDZVTEwsIHdo
-aWNoIHByb2JhYmx5IHJlZ3Jlc3MgdGhlDQo+IGNvbWJpbmF0aW9uIG9mIG9sZGVyIERUQnMgd2l0
-aCBuZXdlciBrZXJuZWwuDQo+ID4NCj4gDQo+IEFncmVlZC4gV2h5IGNhbid0IHdlIGp1c3QgdGFj
-ayBvbiBtb3JlIG51bWJlcnMgYXQgdGhlIGVuZD8NCiANCkFoLCB5ZXMsIEkgc2F3IDZVTEwgYXJl
-IGF0IHRoZSBlbmQgb2YgNlVMLCBzbyBhZGRlZCB0aGVtIGluIDZVTCwgYnV0IGRpZCBOT1QgY29u
-c2lkZXIgdGhlIG9sZCBkdGIgc3VwcG9ydC4NCg0KV2lsbCBzZW5kIG91dCBhIFYyIHBhdGNoIHRv
-IGZpeCBpdCwgYW5kIEkgc2F3IEZhYmlvIGFsc28gc2VudCBhIHBhdGNoIHRvIGZpeCB0aGUgY2xr
-bzEvMiBkZWZpbml0aW9uLCBJIHdpbGwgZG8gdGhlDQpWMiBwYXRjaCBiYXNlZCBvbiBoaXMgcGF0
-Y2guDQoNCkFuc29uLg0KDQo+IA0KPiA+ID4NCj4gPiA+ICAvKiBGb3IgaS5NWDZVTEwgKi8NCj4g
-PiA+IC0jZGVmaW5lIElNWDZVTExfQ0xLX0VTQUlfUFJFRCAgICAgICAgICAgICAgICAyMzINCg==
+i.MX6UL has GPIO clock gates in CCM CCGR,
+add them into clock tree for clock management.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+changes since V1:
+	Move IMX6UL_CLK_GPIOx definition to end of clock table;
+	Based on Fabio's patch "[v2] dt-bindings: clock: imx6ul: Do not change the clock definition order".
+ drivers/clk/imx/clk-imx6ul.c             | 5 +++++
+ include/dt-bindings/clock/imx6ul-clock.h | 8 +++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/imx/clk-imx6ul.c b/drivers/clk/imx/clk-imx6ul.c
+index ba563ba..3ea2d97 100644
+--- a/drivers/clk/imx/clk-imx6ul.c
++++ b/drivers/clk/imx/clk-imx6ul.c
+@@ -360,6 +360,7 @@ static void __init imx6ul_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6UL_CLK_UART2_SERIAL]	= imx_clk_gate2("uart2_serial",	"uart_podf",	base + 0x68,	28);
+ 	if (clk_on_imx6ull())
+ 		clks[IMX6UL_CLK_AIPSTZ3]	= imx_clk_gate2("aips_tz3",	"ahb",		 base + 0x80,	18);
++	clks[IMX6UL_CLK_GPIO2]		= imx_clk_gate2("gpio2",	"ipg",		base + 0x68,	30);
+ 
+ 	/* CCGR1 */
+ 	clks[IMX6UL_CLK_ECSPI1]		= imx_clk_gate2("ecspi1",	"ecspi_podf",	base + 0x6c,	0);
+@@ -376,6 +377,8 @@ static void __init imx6ul_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6UL_CLK_GPT1_SERIAL]	= imx_clk_gate2("gpt1_serial",	"perclk",	base + 0x6c,	22);
+ 	clks[IMX6UL_CLK_UART4_IPG]	= imx_clk_gate2("uart4_ipg",	"ipg",		base + 0x6c,	24);
+ 	clks[IMX6UL_CLK_UART4_SERIAL]	= imx_clk_gate2("uart4_serial",	"uart_podf",	base + 0x6c,	24);
++	clks[IMX6UL_CLK_GPIO1]		= imx_clk_gate2("gpio1",	"ipg",		base + 0x6c,	26);
++	clks[IMX6UL_CLK_GPIO5]		= imx_clk_gate2("gpio5",	"ipg",		base + 0x6c,	30);
+ 
+ 	/* CCGR2 */
+ 	if (clk_on_imx6ull()) {
+@@ -389,6 +392,7 @@ static void __init imx6ul_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6UL_CLK_I2C3]		= imx_clk_gate2("i2c3",		"perclk",	base + 0x70,	10);
+ 	clks[IMX6UL_CLK_OCOTP]		= imx_clk_gate2("ocotp",	"ipg",		base + 0x70,	12);
+ 	clks[IMX6UL_CLK_IOMUXC]		= imx_clk_gate2("iomuxc",	"lcdif_podf",	base + 0x70,	14);
++	clks[IMX6UL_CLK_GPIO3]		= imx_clk_gate2("gpio3",	"ipg",		base + 0x70,	26);
+ 	clks[IMX6UL_CLK_LCDIF_APB]	= imx_clk_gate2("lcdif_apb",	"axi",		base + 0x70,	28);
+ 	clks[IMX6UL_CLK_PXP]		= imx_clk_gate2("pxp",		"axi",		base + 0x70,	30);
+ 
+@@ -405,6 +409,7 @@ static void __init imx6ul_clocks_init(struct device_node *ccm_node)
+ 	clks[IMX6UL_CLK_UART6_IPG]	= imx_clk_gate2("uart6_ipg",	"ipg",		base + 0x74,	6);
+ 	clks[IMX6UL_CLK_UART6_SERIAL]	= imx_clk_gate2("uart6_serial",	"uart_podf",	base + 0x74,	6);
+ 	clks[IMX6UL_CLK_LCDIF_PIX]	= imx_clk_gate2("lcdif_pix",	"lcdif_podf",	base + 0x74,	10);
++	clks[IMX6UL_CLK_GPIO4]		= imx_clk_gate2("gpio4",	"ipg",		base + 0x74,	12);
+ 	clks[IMX6UL_CLK_QSPI]		= imx_clk_gate2("qspi1",	"qspi1_podf",	base + 0x74,	14);
+ 	clks[IMX6UL_CLK_WDOG1]		= imx_clk_gate2("wdog1",	"ipg",		base + 0x74,	16);
+ 	clks[IMX6UL_CLK_MMDC_P0_FAST]	= imx_clk_gate("mmdc_p0_fast", "mmdc_podf", base + 0x74,	20);
+diff --git a/include/dt-bindings/clock/imx6ul-clock.h b/include/dt-bindings/clock/imx6ul-clock.h
+index 0aa1d9c..f8e0476 100644
+--- a/include/dt-bindings/clock/imx6ul-clock.h
++++ b/include/dt-bindings/clock/imx6ul-clock.h
+@@ -254,6 +254,12 @@
+ #define IMX6UL_CLK_CKO2_PODF		241
+ #define IMX6UL_CLK_CKO2			242
+ #define IMX6UL_CLK_CKO			243
+-#define IMX6UL_CLK_END			244
++#define IMX6UL_CLK_GPIO1		244
++#define IMX6UL_CLK_GPIO2		245
++#define IMX6UL_CLK_GPIO3		246
++#define IMX6UL_CLK_GPIO4		247
++#define IMX6UL_CLK_GPIO5		248
++
++#define IMX6UL_CLK_END			249
+ 
+ #endif /* __DT_BINDINGS_CLOCK_IMX6UL_H */
+-- 
+2.7.4
