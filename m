@@ -1,67 +1,98 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: actions: Add interrupt support for OWL S900 SoC
-Date: Sun, 3 Jun 2018 11:37:53 +0300
-Message-ID: <CAHp75Ve8ZCbEqnYK0KqtCHQm-EOUWRSyMzi51P+3_7brtXq6dA@mail.gmail.com>
-References: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org> <20180602165415.30956-4-manivannan.sadhasivam@linaro.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 3/3] pinctrl: actions: Add interrupt support for OWL S900
+ SoC
+Date: Sun, 3 Jun 2018 22:27:23 +0530
+Message-ID: <20180603165723.GA14907@Mani-XPS-13-9360>
+References: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org>
+ <20180602165415.30956-4-manivannan.sadhasivam@linaro.org>
+ <CAHp75Ve8ZCbEqnYK0KqtCHQm-EOUWRSyMzi51P+3_7brtXq6dA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180602165415.30956-4-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Ve8ZCbEqnYK0KqtCHQm-EOUWRSyMzi51P+3_7brtXq6dA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, =?utf-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 2, 2018 at 7:54 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Add interrupt support for Actions Semi OWL S900 SoC.
+Hi Andy,
 
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return;
+On Sun, Jun 03, 2018 at 11:37:53AM +0300, Andy Shevchenko wrote:
+> On Sat, Jun 2, 2018 at 7:54 PM, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> > Add interrupt support for Actions Semi OWL S900 SoC.
+> 
+> > +       port = owl_gpio_get_port(pctrl, &gpio);
+> > +       if (WARN_ON(port == NULL))
+> > +               return;
+> 
+> At which circumstances the above possible?
+> 
 
-At which circumstances the above possible?
+Only possible when the requested GPIO exceeds chip->ngpio. I know it is
+a kind of redundant check, but it is good to have this during development.
 
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return;
+> > +       port = owl_gpio_get_port(pctrl, &gpio);
+> > +       if (WARN_ON(port == NULL))
+> > +               return;
+> 
+> Ditto.
+>
 
-Ditto.
+Same as above.
 
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return;
+> > +       port = owl_gpio_get_port(pctrl, &gpio);
+> > +       if (WARN_ON(port == NULL))
+> > +               return;
+> 
+> Ditto.
+>
 
-Ditto.
+Same as above.
 
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return -ENODEV;
+> > +       port = owl_gpio_get_port(pctrl, &gpio);
+> > +       if (WARN_ON(port == NULL))
+> > +               return -ENODEV;
+> 
+> Ditto.
+>
 
-Ditto.
+Same as above.
 
+> 
+> > +       for (i = 0; i < chip->ngpio; i++) {
+> > +               irqno = irq_create_mapping(pctrl->domain, i);
+> > +               irq_set_chip_and_handler(irqno, &owl_gpio_irq_chip,
+> > +                                        handle_edge_irq);
+> > +               irq_set_chip_data(irqno, pctrl);
+> > +       }
+> 
+> I'm not sure the handle_edge_irq() is a correct handler here. It would
+> be handle_bad_irq() until IRQ has been requested properly.
+> No?
+>
 
-> +       for (i = 0; i < chip->ngpio; i++) {
-> +               irqno = irq_create_mapping(pctrl->domain, i);
-> +               irq_set_chip_and_handler(irqno, &owl_gpio_irq_chip,
-> +                                        handle_edge_irq);
-> +               irq_set_chip_data(irqno, pctrl);
-> +       }
+Hmmm, good question. Since the handler used in irq_set_chip_and_handler
+is superseded by irq_set_chained_handler_and_data, this doesn't matter
+anyway. But I would like to hear what Linus suggests here!
 
-I'm not sure the handle_edge_irq() is a correct handler here. It would
-be handle_bad_irq() until IRQ has been requested properly.
-No?
+> > +/* GPIO TYPE Bit Definition */
+> > +#define OWL_GPIO_INT_LEVEL_HIGH                0
+> > +#define OWL_GPIO_INT_LEVEL_LOW         1
+> > +#define OWL_GPIO_INT_EDGE_RISING       2
+> > +#define OWL_GPIO_INT_EDGE_FALLING      3
+> 
+> > +#define OWL_GPIO_INT_MASK              3
+> 
+> GENMASK?
+>
 
-> +/* GPIO TYPE Bit Definition */
-> +#define OWL_GPIO_INT_LEVEL_HIGH                0
-> +#define OWL_GPIO_INT_LEVEL_LOW         1
-> +#define OWL_GPIO_INT_EDGE_RISING       2
-> +#define OWL_GPIO_INT_EDGE_FALLING      3
+Ack.
 
-> +#define OWL_GPIO_INT_MASK              3
+Thanks,
+Mani
 
-GENMASK?
-
--- 
-With Best Regards,
-Andy Shevchenko
+> -- 
+> With Best Regards,
+> Andy Shevchenko
