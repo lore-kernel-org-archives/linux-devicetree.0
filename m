@@ -1,56 +1,46 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v2 0/4] drm/tinydrm: new dirver for ILI9341 displays
-Date: Mon, 4 Jun 2018 00:00:36 +0200
-Message-ID: <8840212b-fd46-e700-58a1-cb1b882c5771@tronnes.org>
-References: <20180525193623.15533-1-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v2 0/5] Tegra20 External Memory Controller driver
+Date: Mon,  4 Jun 2018 01:36:49 +0300
+Message-ID: <20180603223654.23324-1-digetx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525193623.15533-1-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, Nitin Patil <nitin@mindsensors.com>, linux-kernel@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-Den 25.05.2018 21.36, skrev David Lechner:
-> This series adds a new tinydrm driver for the Ilitek ILI9341 controller and
-> a 2.4" display panel that uses this controller.
+Couple years ago the Tegra20 EMC driver was removed from the kernel
+due to incompatible changes in the Tegra's clock driver. This patchset
+introduces a modernized EMC driver. Currently the sole purpose of the
+driver is to initialize DRAM frequency to maximum rate during of the
+kernels boot-up. Later we may consider implementing dynamic memory
+frequency scaling, utilizing functionality provided by this driver.
 
-David, do you have commit rights now?
+Changelog:
 
-Noralf.
+v2:
+	- Minor code cleanups like consistent use of writel_relaxed instead
+	  of non-relaxed version, reworded error messages, etc.
 
-> A few things to note here:
-> * The datasheet for this display[1] doesn't have a vendor mentioned on it
->    anywhere, so I have used "adafruit" as the vendor prefix. If someone has a
->    better suggestion, please speak up.
-> * The MAINTAINERS patch for ili9225 is included so we don't end up with a merge
->    conflict later on.
->
-> v2 changes:
-> * change vendor prefix from "noname" to "adafruit"
-> * new patch for "adafruit" vendor prefix
-> * minor style changes
-> * drop regulator from driver (instead of adding to DT bindings)
->
-> [1]: https://cdn-learn.adafruit.com/assets/assets/000/046/879/original/SPEC-YX240QV29-T_Rev.A__1_.pdf
->
->
-> David Lechner (4):
->    MAINTAINERS: fix path to ilitek,ili9225 device tree bindings
->    dt-bindings: Add vendor prefix for Adafruit
->    dt-bindings: new binding for Ilitek ILI9341 display panels
->    drm/tinydrm: new driver for ILI9341 display panels
->
->   .../bindings/display/ilitek,ili9341.txt       |  27 ++
->   .../devicetree/bindings/vendor-prefixes.txt   |   1 +
->   MAINTAINERS                                   |   8 +-
->   drivers/gpu/drm/tinydrm/Kconfig               |  10 +
->   drivers/gpu/drm/tinydrm/Makefile              |   1 +
->   drivers/gpu/drm/tinydrm/ili9341.c             | 233 ++++++++++++++++++
->   6 files changed, 279 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9341.txt
->   create mode 100644 drivers/gpu/drm/tinydrm/ili9341.c
->
+	- Factored out use_pllm_ud bit checking into a standalone patch for
+	  consistency.
+
+Dmitry Osipenko (5):
+  dt: bindings: tegra20-emc: Document interrupt property
+  ARM: dts: tegra20: Add interrupt to External Memory Controller
+  clk: tegra20: Turn EMC clock gate into divider
+  clk: tegra20: Check whether direct PLLM sourcing is turned off for EMC
+  memory: tegra: Introduce Tegra20 EMC driver
+
+ .../bindings/arm/tegra/nvidia,tegra20-emc.txt |   2 +
+ arch/arm/boot/dts/tegra20.dtsi                |   1 +
+ drivers/clk/tegra/clk-tegra20.c               |  46 +-
+ drivers/memory/tegra/Kconfig                  |  10 +
+ drivers/memory/tegra/Makefile                 |   1 +
+ drivers/memory/tegra/tegra20-emc.c            | 586 ++++++++++++++++++
+ 6 files changed, 636 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/memory/tegra/tegra20-emc.c
+
+-- 
+2.17.0
