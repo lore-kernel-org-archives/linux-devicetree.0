@@ -1,16 +1,15 @@
 From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v3 4/8] dt-bindings: media: rcar-vin: Add
- 'data-enable-active'
-Date: Mon, 4 Jun 2018 14:10:41 +0200
-Message-ID: <20180604121041.GE19674@bigcity.dyn.berto.se>
+Subject: Re: [PATCH v3 5/8] media: rcar-vin: Handle data-enable polarity
+Date: Mon, 4 Jun 2018 14:13:16 +0200
+Message-ID: <20180604121316.GF19674@bigcity.dyn.berto.se>
 References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
- <1527606359-19261-5-git-send-email-jacopo+renesas@jmondi.org>
+ <1527606359-19261-6-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1527606359-19261-5-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1527606359-19261-6-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,41 +25,51 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Jacopo,
 
-Thanks for your patch.
+Thanks for your work.
 
-On 2018-05-29 17:05:55 +0200, Jacopo Mondi wrote:
-> Describe optional endpoint property 'data-enable-active' for R-Car VIN.
+On 2018-05-29 17:05:56 +0200, Jacopo Mondi wrote:
+> Handle data-enable signal polarity. If the polarity is not specifically
+> requested to be active low, use the active high default.
 > =
 
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Reviewed-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
+Acked-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
 
 > ---
 > v3:
-> - new patch
+> - use new property to set the CES bit
 > ---
+>  drivers/media/platform/rcar-vin/rcar-dma.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > =
 
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/p=
+latform/rcar-vin/rcar-dma.c
+> index d2b7002..9145b56 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> @@ -123,6 +123,7 @@
+>  /* Video n Data Mode Register 2 bits */
+>  #define VNDMR2_VPS		(1 << 30)
+>  #define VNDMR2_HPS		(1 << 29)
+> +#define VNDMR2_CES		(1 << 28)
+>  #define VNDMR2_FTEV		(1 << 17)
+>  #define VNDMR2_VLV(n)		((n & 0xf) << 12)
 > =
 
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
-entation/devicetree/bindings/media/rcar_vin.txt
-> index 4d91a36..ff53226 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -58,6 +58,8 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
->        - Optional properties for endpoint nodes of port@0:
->          - hsync-active: see [1] for description. Default is active high.
->          - vsync-active: see [1] for description. Default is active high.
-> +        - data-enable-active: polarity of CLKENB signal, see [1] for
-> +          description. Default is active high.
+> @@ -698,6 +699,10 @@ static int rvin_setup(struct rvin_dev *vin)
+>  		/* Vsync Signal Polarity Select */
+>  		if (!(vin->parallel->mbus_flags & V4L2_MBUS_VSYNC_ACTIVE_LOW))
+>  			dmr2 |=3D VNDMR2_VPS;
+> +
+> +		/* Data Enable Polarity Select */
+> +		if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
+> +			dmr2 |=3D VNDMR2_CES;
+>  	}
 > =
 
->          If both HSYNC and VSYNC polarities are not specified, embedded
->          synchronization is selected.
+>  	/*
 > --
 > 2.7.4
 > =
