@@ -1,110 +1,104 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] of: platform: stop accessing invalid dev in
- of_platform_device_destroy
-Date: Mon, 4 Jun 2018 09:46:48 -0600
-Message-ID: <20180604154648.GA30196@rob-hp-laptop>
-References: <20180604141408.3179-1-srinivas.kandagatla@linaro.org>
+From: rishabhb@codeaurora.org
+Subject: Re: [PATCH v8 0/2] SDM845 System Cache Driver
+Date: Mon, 04 Jun 2018 09:18:20 -0700
+Message-ID: <88e899d928575c59ee5beacd3b3b16f5@codeaurora.org>
+References: <1527122121-31452-1-git-send-email-rishabhb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180604141408.3179-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1527122121-31452-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: frowand.list@gmail.com, linux-arm-msm@vger.kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com
+To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm@lists.infradead.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, evgreen@chromium.org, robh@kernel.org, andy.shevchenko@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 04, 2018 at 03:14:08PM +0100, Srinivas Kandagatla wrote:
-> Immediately after the platform_device_unregister() the device will be
-> cleaned up. Accessing the freed pointer immediately after that will
-> crash the system.
+On 2018-05-23 17:35, Rishabh Bhatnagar wrote:
+> This series implements system cache or LLCC(Last Level Cache 
+> Controller)
+> driver for SDM845 SOC. The purpose of the driver is to partition the
+> system cache and program the settings such as priortiy, lines to probe
+> while doing a look up in the system cache, low power related settings 
+> etc.
+> The partitions are called cache slices. Each cache slice is associated
+> with size and SCID(System Cache ID). The driver also provides API for
+> clients to query the cache slice details,activate and deactivate them.
 > 
-> Found this bug when kernel is built with CONFIG_PAGE_POISONING and testing
-> loading/unloading audio drivers in a loop on Qcom platforms.
+> The driver can be broadly classified into:
+> * SOC specific driver: llcc-sdm845.c: Cache partitioning and cache 
+> slice
+> properties for usecases on sdm845 that need to use system cache.
 > 
-> Fix this by moving of_node_clear_flag() just before the unregister calls.
+> * API : llcc-slice.c: Exports APIs to clients to query cache slice 
+> details,
+> activate and deactivate cache slices.
 > 
-> Below is the crash trace:
+> Changes since v7:
+> * Change the DT node name to cache-controller.
+> * Use the module_platform_driver_macro
+> * Use GENMASK and SZ_* macros
+> * Correct indentation, and remove unnecessary assignemnts.
+> * Addresed all comments by Andy Schevchenko except the comment to 
+> ignore some
+>   lines of code going over 80 characters.
 > 
-> Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c03
-> Mem abort info:
->   ESR = 0x96000021
->   Exception class = DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000021
->   CM = 0, WnR = 0
-> [006b6b6b6b6b6c03] address between user and kernel address ranges
-> Internal error: Oops: 96000021 [#1] PREEMPT SMP
-> Modules linked in:
-> CPU: 2 PID: 1784 Comm: sh Tainted: G        W         4.17.0-rc7-02230-ge3a63a7ef641-dirty #204
-> Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> pstate: 80000005 (Nzcv daif -PAN -UAO)
-> pc : clear_bit+0x18/0x2c
-> lr : of_platform_device_destroy+0x64/0xb8
-> sp : ffff00000c9c3930
-> x29: ffff00000c9c3930 x28: ffff80003d39b200
-> x27: ffff000008bb1000 x26: 0000000000000040
-> x25: 0000000000000124 x24: ffff80003a9a3080
-> x23: 0000000000000060 x22: ffff00000939f518
-> x21: ffff80003aa79e98 x20: ffff80003aa3dae0
-> x19: ffff80003aa3c890 x18: ffff800009feb794
-> x17: 0000000000000000 x16: 0000000000000000
-> x15: ffff800009feb790 x14: 0000000000000000
-> x13: ffff80003a058778 x12: ffff80003a058728
-> x11: ffff80003a058750 x10: 0000000000000000
-> x9 : 0000000000000006 x8 : ffff80003a825988
-> x7 : bbbbbbbbbbbbbbbb x6 : 0000000000000001
-> x5 : 0000000000000000 x4 : 0000000000000001
-> x3 : 0000000000000008 x2 : 0000000000000001
-> x1 : 6b6b6b6b6b6b6c03 x0 : 0000000000000000
-> Process sh (pid: 1784, stack limit = 0x        (ptrval))
-> Call trace:
->  clear_bit+0x18/0x2c
->  q6afe_remove+0x20/0x38
->  apr_device_remove+0x30/0x70
->  device_release_driver_internal+0x170/0x208
->  device_release_driver+0x14/0x20
->  bus_remove_device+0xcc/0x150
->  device_del+0x10c/0x310
->  device_unregister+0x1c/0x70
->  apr_remove_device+0xc/0x18
->  device_for_each_child+0x50/0x80
->  apr_remove+0x18/0x20
->  rpmsg_dev_remove+0x38/0x68
->  device_release_driver_internal+0x170/0x208
->  device_release_driver+0x14/0x20
->  bus_remove_device+0xcc/0x150
->  device_del+0x10c/0x310
->  device_unregister+0x1c/0x70
->  qcom_smd_remove_device+0xc/0x18
->  device_for_each_child+0x50/0x80
->  qcom_smd_unregister_edge+0x3c/0x70
->  smd_subdev_remove+0x18/0x28
->  rproc_stop+0x48/0xd8
->  rproc_shutdown+0x60/0xe8
->  state_store+0xbc/0xf8
->  dev_attr_store+0x18/0x28
->  sysfs_kf_write+0x3c/0x50
->  kernfs_fop_write+0x118/0x1e0
->  __vfs_write+0x18/0x110
->  vfs_write+0xa4/0x1a8
->  ksys_write+0x48/0xb0
->  sys_write+0xc/0x18
->  el0_svc_naked+0x30/0x34
-> Code: d2800022 8b400c21 f9800031 9ac32043 (c85f7c22)
-> ---[ end trace 32020935775616a2 ]---
+> Changes since v6:
+> * Remove the max-slices property from DT.
+> * Make client's slice_ids as macros.
+> * Unlock mutex while returning from function in case of error.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
+> Changes since v5:
+> * Remove client information from DT.
+> * Make the llcc driver data as global.
+> * Check return value of llcc_update_act_ctrl function
+> * Change error returned from -EFAULT to -EINVAL
+> 
+> Changes since v4:
+> * Remove null pointer checks as per comments.
+> * Remove extra blank lines.
+> 
+> Changes since v3:
+> * Use the regmap_read_poll_timeout function
+> * Check for regmap read/write errors.
+> * Remove memory barrier after regmap write
+> * Derive memory bank offsets using stride macro variable
+> * Remove debug statements from code
+> * Remove the qcom_llcc_remove function
+> * Use if IS_ENABLED in place of ifdef for built-in module
+> * Change EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+> * Remove unnecessary free functions
+> * Change the variable names as per review comments
+> 
 > Changes since v2:
->  Move the calls to of_node_clear_flag just before unregister,
->  suggested by Rob.
+> * Corrected the Makefile to fix compilation.
 > 
->  drivers/of/platform.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Changes since v1:
+> * Added Makefile and Kconfig.
+> 
+> Changes since v0:
+> * Removed the syscon and simple-mfd approach
+> * Updated the device tree nodes to mention LLCC as a single HW block
+> * Moved llcc bank offsets from device tree and handled the offset
+>   in the driver.
+> 
+> ckadabi@codeaurora.org (2):
+>   dt-bindings: Documentation for qcom, llcc
+>   drivers: soc: Add LLCC driver
+> 
+>  .../devicetree/bindings/arm/msm/qcom,llcc.txt      |  26 ++
+>  drivers/soc/qcom/Kconfig                           |  17 ++
+>  drivers/soc/qcom/Makefile                          |   2 +
+>  drivers/soc/qcom/llcc-sdm845.c                     |  94 ++++++
+>  drivers/soc/qcom/llcc-slice.c                      | 335 
+> +++++++++++++++++++++
+>  include/linux/soc/qcom/llcc-qcom.h                 | 180 +++++++++++
+>  6 files changed, 654 insertions(+)
+>  create mode 100644 
+> Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>  create mode 100644 drivers/soc/qcom/llcc-sdm845.c
+>  create mode 100644 drivers/soc/qcom/llcc-slice.c
+>  create mode 100644 include/linux/soc/qcom/llcc-qcom.h
 
-Applied, thanks.
-
-Rob
+Does this spin look fine to everyone? If yes can we go ahead and merge 
+this?
