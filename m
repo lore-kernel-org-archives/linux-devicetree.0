@@ -1,33 +1,141 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 3/5] venus: add check to make scm calls
-Date: Mon, 4 Jun 2018 21:58:08 +0900
-Message-ID: <CAAFQd5BSgB0OoqUFckJLXto9FNMYCTQ8ubDftaC-LvFm+A-gxA@mail.gmail.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org> <1527884768-22392-4-git-send-email-vgarodia@codeaurora.org>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v6 6/9] dt-bindings: counter: Document stm32 quadrature encoder
+Date: Mon, 4 Jun 2018 15:03:51 +0200
+Message-ID: <CA+M3ks43RzdhYPwz7i0kB_CPYPLmRfwtALS-bPzuwEQEMcts0Q@mail.gmail.com>
+References: <cover.1526487615.git.vilhelm.gray@gmail.com> <ccdbbfb2833d274b6bfa234aada57e68d9793dd5.1526487615.git.vilhelm.gray@gmail.com>
+ <CAL_Jsq+a4s=5N6wUWifoHWQoornbDBY-UY2xrwj1kggNH4Q5pQ@mail.gmail.com>
+ <CA+M3ks4vjE5JMmLjjPnf6ffD9QYSUmSyrpO+yxADT_8WqAA3Tg@mail.gmail.com> <20180518162815.GA24966@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527884768-22392-4-git-send-email-vgarodia@codeaurora.org>
+In-Reply-To: <20180518162815.GA24966@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vgarodia@codeaurora.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+To: Rob Herring <robh@kernel.org>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikash,
+2018-05-18 18:28 GMT+02:00 Rob Herring <robh@kernel.org>:
+> On Thu, May 17, 2018 at 08:59:40PM +0200, Benjamin Gaignard wrote:
+>> 2018-05-17 18:23 GMT+02:00 Rob Herring <robh+dt@kernel.org>:
+>> > On Wed, May 16, 2018 at 12:51 PM, William Breathitt Gray
+>> > <vilhelm.gray@gmail.com> wrote:
+>> >> From: Benjamin Gaignard <benjamin.gaignard@st.com>
+>> >
+>> > v6? Where's v1-v5?
+>> >
+>> >> Add bindings for STM32 Timer quadrature encoder.
+>> >> It is a sub-node of STM32 Timer which implement the
+>> >> counter part of the hardware.
+>> >>
+>> >> Cc: Rob Herring <robh+dt@kernel.org>
+>> >> Cc: Mark Rutland <mark.rutland@arm.com>
+>> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+>> >> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+>> >> ---
+>> >>  .../bindings/counter/stm32-timer-cnt.txt      | 26 +++++++++++++++++=
+++
+>> >>  .../devicetree/bindings/mfd/stm32-timers.txt  |  7 +++++
+>> >>  2 files changed, 33 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/counter/stm32-t=
+imer-cnt.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cn=
+t.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+>> >> new file mode 100644
+>> >> index 000000000000..377728128bef
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
+>> >> @@ -0,0 +1,26 @@
+>> >> +STMicroelectronics STM32 Timer quadrature encoder
+>> >> +
+>> >> +STM32 Timer provides quadrature encoder counter mode to detect
+>> >
+>> > 'mode' does not sound like a sub-block of the timers block.
+>>
+>> quadrature encoding is one of the counting modes of this hardware
+>> block which is enable to count on other signals/triggers
+>
+> You don't need a child node and compatible to set a mode.
 
-On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
-[snip]
-> +int venus_boot(struct venus_core *core)
-> +{
-> +       phys_addr_t mem_phys;
-> +       size_t mem_size;
-> +       int ret;
-> +       struct device *dev;
-> +
-> +       if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER))
-> +               return -EPROBE_DEFER;
+"mode" isn't the good word here because quadratic encoder enable a
+sub-block of this hardware.
+Timer internal counter input could be internal or external clocks,
+some IIO triggers
+or the output of the quadratic encoder sub-block.
+It is a child like pwm or IIO trigger.
 
-Why are we deferring probe here? The option will not magically become
-enabled after probe is retried.
+>
+>> >> +angular position and direction of rotary elements,
+>> >> +from IN1 and IN2 input signals.
+>> >> +
+>> >> +Must be a sub-node of an STM32 Timer device tree node.
+>> >> +See ../mfd/stm32-timers.txt for details about the parent node.
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible:          Must be "st,stm32-timer-counter".
+>> >> +- pinctrl-names:       Set to "default".
+>> >> +- pinctrl-0:           List of phandles pointing to pin configuratio=
+n nodes,
+>> >> +                       to set IN1/IN2 pins in mode of operation for =
+Low-Power
+>> >> +                       Timer input on external pin.
+>> >> +
+>> >> +Example:
+>> >> +       timers@40010000  {
+>> >> +               compatible =3D "st,stm32-timers";
+>> >> +               ...
+>> >> +               counter {
+>> >> +                       compatible =3D "st,stm32-timer-counter";
+>> >
+>> > Is there only 1? How is the counter addressed?
+>>
+>> Yes there is only one counter per hardware block.
+>> Counter is addressed like the two others sub-nodes and the details
+>> about parent mode are describe in stm32-timers.txt
+>> Should I add them here too ? so example will be like that:
+>
+> No, you should drop the child node and add pinctrl to the parent.
+>
+> Any other functions this block has that you plan on adding? Please make
+> bindings as complete as possible, not what you currently have drivers
+> for.
 
-Best regards,
-Tomasz
+Counter framework didn't exist when I pushed timer node but thanks to
+William's effort
+it will allow us to use this kindf of hardware
+
+Benjamin
+
+>
+>> timers@40010000  {
+>>   #address-cells =3D <1>;
+>>   #size-cells =3D <0>;
+>>   compatible =3D "st,stm32-timers";
+>>   reg =3D <0x40010000 0x400>;
+>>   clocks =3D <&rcc 0 160>;
+>>   clock-names =3D "int";
+>>   counter {
+>>     compatible =3D "st,stm32-timer-counter";
+>>     pinctrl-names =3D "default";
+>>     pinctrl-0 =3D <&tim1_in_pins>;
+>>     };
+>>  };
+>>
+>> Benjamin
+>> >
+>> > _______________________________________________
+>> > linux-arm-kernel mailing list
+>> > linux-arm-kernel@lists.infradead.org
+>> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
