@@ -1,48 +1,99 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: allwinner: a64-amarula-relic:
- Enable AP6330 WiFi support
-Date: Mon, 4 Jun 2018 11:09:19 +0200
-Message-ID: <20180604090919.s2mp7etd2eao3w6b@flea>
-References: <20180601173527.18051-1-jagan@amarulasolutions.com>
- <20180601173527.18051-2-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v4 5/5] ARM: dts: imx6qdl: add missing compatible and
+ clock properties for EPIT
+Date: Mon, 4 Jun 2018 11:10:28 +0200
+Message-ID: <CAJiuCcfUq-aBL9WMmEzDpU5KKCnO0v0O_07BQnAvmkHKptcMLw@mail.gmail.com>
+References: <20180530120327.27681-1-peron.clem@gmail.com> <20180530120327.27681-6-peron.clem@gmail.com>
+ <a4042956-24e1-6132-4606-b5b8f4e30023@mentor.com> <CAJiuCcefvMg6r=06O8m1TYa0hat_dHydcoJ7PN58qUru1K8zMQ@mail.gmail.com>
+ <f71fe02d-23a7-a475-52df-62c17089549b@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="imuw6uj272abzmoe"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQED2TMAKGQE7J77LNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180601173527.18051-2-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f71fe02d-23a7-a475-52df-62c17089549b@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=C3=A9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vladimir,
 
---imuw6uj272abzmoe
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On Thu, 31 May 2018 at 10:54, Vladimir Zapolskiy
+<vladimir_zapolskiy@mentor.com> wrote:
+>
+> Hi Cl=C3=A9ment,
+>
+> On 05/31/2018 11:41 AM, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Vladimir,
+> >
+> > On Thu, 31 May 2018 at 10:33, Vladimir Zapolskiy
+> > <vladimir_zapolskiy@mentor.com> wrote:
+> >>
+> >> On 05/30/2018 03:03 PM, Cl=C3=A9ment P=C3=A9ron wrote:
+> >>> From: Colin Didier <colin.didier@devialet.com>
+> >>>
+> >>> Add missing compatible and clock properties for EPIT node.
+> >>>
+> >>> Signed-off-by: Colin Didier <colin.didier@devialet.com>
+> >>> Signed-off-by: Cl=C3=A9ment Peron <clement.peron@devialet.com>
+> >>> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> >>> ---
+> >>>  arch/arm/boot/dts/imx6qdl.dtsi | 10 ++++++++++
+> >>>  1 file changed, 10 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6q=
+dl.dtsi
+> >>> index c003e62bf290..0feec516847a 100644
+> >>> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> >>> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> >>> @@ -844,13 +844,23 @@
+> >>>                       };
+> >>>
+> >>>                       epit1: epit@20d0000 { /* EPIT1 */
+> >>
+> >> epit1: timer@20d0000 { ...
+> >>
+> >> And /* EPIT1 */ comment can be removed, it is quite clear from the sam=
+e
+> >> line context.
+> >>
+> >> Formally it is a subject to another patch, but I think this can be
+> >> accepted as a part of this one.
+> >
+> > Should I also update other boards ?
+> > I only did it for imx6qdl.dtsi, but the EPIT is present in other boards
+> > but i can't test it myself.
+> >
+>
+> Sure, please do it, why not, it is quite a safe modification.
+>
+> One change per one dtsi file will suffice, and I see that imx25.dtsi
+> already contains the requested change, however probably you may
+> want to update its compatible =3D "fsl,imx25-epit" line.
+>
+> Regarding compatibles for other imx6* SoCs, I think all of them should
+> be documented in fsl,imxepit.txt and then added to the correspondent
+> dtsi files one per SoC.
 
-On Fri, Jun 01, 2018 at 11:05:27PM +0530, Jagan Teki wrote:
-> Enable AP6330 WiFi/BT combo chip on Amarula A64-Relic board:
-> - WiFi SDIO interface is connected to MMC1
-> - WiFi WL-PMU-EN pin connected to gpio PL2: attach to mmc-pwrseq
-> - WiFi WL-WAKE-AP pin connected to gpio PL3
-> - 32kHz external oscillator gate clock from RTC
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Nvidia UART doc did this :
+        - For other Tegra, must contain '"nvidia,<chip>-uart",
+          "nvidia,tegra20-uart"' where <chip> is tegra30, tegra114, tegra12=
+4,
 
-Applied both, thanks
+I will follow this.
 
-Maxime
+>
+> And I forgot the outcome of one former discussion with Uwe Kleine-K=C3=B6=
+nig,
+> but if my bad memory serves me, we agreed that i.MX25 was released later
+> than i.MX31, so the most generic (the last value in the list) compatible
+> should be a compatible with i.MX31 like in
+>
+>         imx25.dtsi:367: compatible =3D "fsl,imx25-gpt", "fsl,imx31-gpt";
+>
+> --
+> With best wishes,
+> Vladimir
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---imuw6uj272abzmoe--
+Regards,
+Clement
