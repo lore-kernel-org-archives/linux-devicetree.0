@@ -1,66 +1,125 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 3/6] clk: ti: dra7: Add clkctrl clock data for the mcan
- clocks
-Date: Mon, 4 Jun 2018 19:28:01 +0530
-Message-ID: <6df7e0cd-5574-aa19-6c99-4438e5e377e0@ti.com>
-References: <20180530141133.3711-1-faiz_abbas@ti.com>
- <20180530141133.3711-4-faiz_abbas@ti.com>
- <20180531040350.GA25132@rob-hp-laptop>
- <e7e3ade1-76b7-f216-ece5-bd64a55cede6@ti.com>
- <678ef467-a235-91db-8bae-f249ad98eac8@ti.com>
- <d7532c7a-d2ae-5cbf-cfd0-c347b975ed6b@ti.com>
- <20180601142613.GU5705@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180601142613.GU5705@atomide.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh@kernel.org>, paul@pwsan.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3] of: platform: stop accessing invalid dev in of_platform_device_destroy
+Date: Mon,  4 Jun 2018 15:14:08 +0100
+Message-ID: <20180604141408.3179-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, frowand.list@gmail.com
+Cc: linux-arm-msm@vger.kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmlkYXkgMDEgSnVuZSAyMDE4IDA3OjU2IFBNLCBUb255IExpbmRncmVuIHdyb3Rl
-Ogo+ICogRmFpeiBBYmJhcyA8ZmFpel9hYmJhc0B0aS5jb20+IFsxODA2MDEgMDY6NDldOgo+PiBI
-aSwKPj4KPj4gT24gVGh1cnNkYXkgMzEgTWF5IDIwMTggMDY6NTkgUE0sIFRlcm8gS3Jpc3RvIHdy
-b3RlOgo+Pj4gT24gMzEvMDUvMTggMTM6MTQsIEZhaXogQWJiYXMgd3JvdGU6Cj4+Pj4gSGksCj4+
-Pj4KPj4+PiBPbiBUaHVyc2RheSAzMSBNYXkgMjAxOCAwOTozMyBBTSwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4+Pj4+IE9uIFdlZCwgTWF5IDMwLCAyMDE4IGF0IDA3OjQxOjMwUE0gKzA1MzAsIEZhaXog
-QWJiYXMgd3JvdGU6Cj4+Pj4+PiBBZGQgY2xrY3RybCBkYXRhIGZvciB0aGUgbV9jYW4gY2xvY2tz
-IGFuZCByZWdpc3RlciBpdCB3aXRoaW4gdGhlCj4+Pj4gLi4uCj4+Pj4+PiDCoCBkaWZmIC0tZ2l0
-IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9kcmE3LmgKPj4+Pj4+IGIvaW5jbHVkZS9kdC1i
-aW5kaW5ncy9jbG9jay9kcmE3LmgKPj4+Pj4+IGluZGV4IDVlMTA2MWIxNWFlZC4uZDc1NDljNTdj
-YWMzIDEwMDY0NAo+Pj4+Pj4gLS0tIGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9kcmE3LmgK
-Pj4+Pj4+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svZHJhNy5oCj4+Pj4+PiBAQCAt
-MTY4LDUgKzE2OCw2IEBACj4+Pj4+PiDCoCAjZGVmaW5lIERSQTdfQ09VTlRFUl8zMktfQ0xLQ1RS
-TMKgwqDCoCBEUkE3X0NMS0NUUkxfSU5ERVgoMHg1MCkKPj4+Pj4+IMKgICNkZWZpbmUgRFJBN19V
-QVJUMTBfQ0xLQ1RSTMKgwqDCoCBEUkE3X0NMS0NUUkxfSU5ERVgoMHg4MCkKPj4+Pj4+IMKgICNk
-ZWZpbmUgRFJBN19EQ0FOMV9DTEtDVFJMwqDCoMKgIERSQTdfQ0xLQ1RSTF9JTkRFWCgweDg4KQo+
-Pj4+Pj4gKyNkZWZpbmUgRFJBN19BRENfQ0xLQ1RSTMKgwqDCoCBEUkE3X0NMS0NUUkxfSU5ERVgo
-MHhhMCkKPj4+Pj4KPj4+Pj4gQURDIGFuZCBtY2FuIGFyZSB0aGUgc2FtZSB0aGluZz8KPj4+Pj4K
-Pj4+Pgo+Pj4+IFRoZSByZWdpc3RlciB0byBjb250cm9sIE1DQU4gY2xvY2tzIGlzIGNhbGxlZCBB
-RENfQ0xLQ1RSTCwgWWVzLgo+Pj4KPj4+IElzIHRoZXJlIGFueSByZWFzb24gZm9yIHRoaXMgb3Ig
-aXMgdGhhdCBqdXN0IGEgZG9jdW1lbnRhdGlvbiBidWc/Cj4+Pgo+Pgo+PiBMb29rcyBsaWtlIHRo
-ZXkgbWVhbnQgdG8gaGF2ZSBhbiBBREMgaW4gZHJhNzQgb3IgZHJhNzIgYnV0IGRlY2lkZWQKPj4g
-YWdhaW5zdCBpdCBhbmQgdGhlbiBtYW55IHllYXJzIGxhdGVyIHVzZWQgdGhlIHNhbWUgcmVnaXN0
-ZXJzIGZvciBNQ0FOCj4+IGluc3RlYWQuIFlvdSBjYW4gc2VlIEFEQ19DTEtDVFJMIGV4aXN0cyBp
-biBkcmE3MiBUUk0gYnV0IGlzIGV4cGxpY2l0bHkKPj4gZGlzYWJsZWQuCj4+Cj4+IGh0dHA6Ly93
-d3cudGkuY29tL2xpdC91Zy9zcHJ1aWMyYi9zcHJ1aWMyYi5wZGYgcGc6MTUyNAo+IAo+IEhvdyBh
-Ym91dCBtYWtlIGFkZCBhbHNvIHNvbWV0aGluZyBsaWtlIHRvIGRyYTcuaDoKPiAKPiAjZGVmaW5l
-IERSQTdfTUNBTl9DTEtDVFJMIERSQTdfQURDX0NMS0NUUkwKPiAKPiBBbmQgeW91IGNhbiBhZGQg
-YSBjb21tZW50IHRvIHRoZSBkdHMgZmlsZSB0byBhdm9pZCBwZW9wbGUKPiBnZXR0aW5nIGNvbmZ1
-c2VkIHdpdGggdGhpcyBjb25zdGFudGx5Lgo+IAoKSSB3b3VsZCBwcmVmZXIgdG8gZm9sbG93IHRo
-ZSBUUk0gc28gdGhhdCBwZW9wbGUgZG9uJ3QgbG9vayBmb3IgcmVnaXN0ZXJzCnRoYXQgZG9uJ3Qg
-ZXhpc3QgYXQgYWxsLgoKVGhhbmtzLApGYWl6CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Immediately after the platform_device_unregister() the device will be
+cleaned up. Accessing the freed pointer immediately after that will
+crash the system.
+
+Found this bug when kernel is built with CONFIG_PAGE_POISONING and testing
+loading/unloading audio drivers in a loop on Qcom platforms.
+
+Fix this by moving of_node_clear_flag() just before the unregister calls.
+
+Below is the crash trace:
+
+Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c03
+Mem abort info:
+  ESR = 0x96000021
+  Exception class = DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000021
+  CM = 0, WnR = 0
+[006b6b6b6b6b6c03] address between user and kernel address ranges
+Internal error: Oops: 96000021 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 1784 Comm: sh Tainted: G        W         4.17.0-rc7-02230-ge3a63a7ef641-dirty #204
+Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+pstate: 80000005 (Nzcv daif -PAN -UAO)
+pc : clear_bit+0x18/0x2c
+lr : of_platform_device_destroy+0x64/0xb8
+sp : ffff00000c9c3930
+x29: ffff00000c9c3930 x28: ffff80003d39b200
+x27: ffff000008bb1000 x26: 0000000000000040
+x25: 0000000000000124 x24: ffff80003a9a3080
+x23: 0000000000000060 x22: ffff00000939f518
+x21: ffff80003aa79e98 x20: ffff80003aa3dae0
+x19: ffff80003aa3c890 x18: ffff800009feb794
+x17: 0000000000000000 x16: 0000000000000000
+x15: ffff800009feb790 x14: 0000000000000000
+x13: ffff80003a058778 x12: ffff80003a058728
+x11: ffff80003a058750 x10: 0000000000000000
+x9 : 0000000000000006 x8 : ffff80003a825988
+x7 : bbbbbbbbbbbbbbbb x6 : 0000000000000001
+x5 : 0000000000000000 x4 : 0000000000000001
+x3 : 0000000000000008 x2 : 0000000000000001
+x1 : 6b6b6b6b6b6b6c03 x0 : 0000000000000000
+Process sh (pid: 1784, stack limit = 0x        (ptrval))
+Call trace:
+ clear_bit+0x18/0x2c
+ q6afe_remove+0x20/0x38
+ apr_device_remove+0x30/0x70
+ device_release_driver_internal+0x170/0x208
+ device_release_driver+0x14/0x20
+ bus_remove_device+0xcc/0x150
+ device_del+0x10c/0x310
+ device_unregister+0x1c/0x70
+ apr_remove_device+0xc/0x18
+ device_for_each_child+0x50/0x80
+ apr_remove+0x18/0x20
+ rpmsg_dev_remove+0x38/0x68
+ device_release_driver_internal+0x170/0x208
+ device_release_driver+0x14/0x20
+ bus_remove_device+0xcc/0x150
+ device_del+0x10c/0x310
+ device_unregister+0x1c/0x70
+ qcom_smd_remove_device+0xc/0x18
+ device_for_each_child+0x50/0x80
+ qcom_smd_unregister_edge+0x3c/0x70
+ smd_subdev_remove+0x18/0x28
+ rproc_stop+0x48/0xd8
+ rproc_shutdown+0x60/0xe8
+ state_store+0xbc/0xf8
+ dev_attr_store+0x18/0x28
+ sysfs_kf_write+0x3c/0x50
+ kernfs_fop_write+0x118/0x1e0
+ __vfs_write+0x18/0x110
+ vfs_write+0xa4/0x1a8
+ ksys_write+0x48/0xb0
+ sys_write+0xc/0x18
+ el0_svc_naked+0x30/0x34
+Code: d2800022 8b400c21 f9800031 9ac32043 (c85f7c22)
+---[ end trace 32020935775616a2 ]---
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+Changes since v2:
+ Move the calls to of_node_clear_flag just before unregister,
+ suggested by Rob.
+
+ drivers/of/platform.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index c00d81dfac0b..9c91f97ffbe1 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -537,6 +537,9 @@ int of_platform_device_destroy(struct device *dev, void *data)
+ 	if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+ 		device_for_each_child(dev, NULL, of_platform_device_destroy);
+ 
++	of_node_clear_flag(dev->of_node, OF_POPULATED);
++	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
++
+ 	if (dev->bus == &platform_bus_type)
+ 		platform_device_unregister(to_platform_device(dev));
+ #ifdef CONFIG_ARM_AMBA
+@@ -544,8 +547,6 @@ int of_platform_device_destroy(struct device *dev, void *data)
+ 		amba_device_unregister(to_amba_device(dev));
+ #endif
+ 
+-	of_node_clear_flag(dev->of_node, OF_POPULATED);
+-	of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(of_platform_device_destroy);
+-- 
+2.16.2
