@@ -1,39 +1,110 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a77990 SoC
-Date: Mon, 4 Jun 2018 10:32:57 -0500
-Message-ID: <CAL_JsqKuFh6-hoaLnkOPcVpHmEaGkN3OaOrFA1WazR-HZeQsOg@mail.gmail.com>
-References: <1526008736-26496-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180511.155942.16024095909155343.davem@davemloft.net> <20180513075803.plrkbwmzksjnz45u@verge.net.au>
- <19e43b97-9235-a752-7cf9-56a5e3bb281a@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] of: platform: stop accessing invalid dev in
+ of_platform_device_destroy
+Date: Mon, 4 Jun 2018 09:46:48 -0600
+Message-ID: <20180604154648.GA30196@rob-hp-laptop>
+References: <20180604141408.3179-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <19e43b97-9235-a752-7cf9-56a5e3bb281a@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180604141408.3179-1-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: frowand.list@gmail.com, linux-arm-msm@vger.kernel.org, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rohkumar@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 15, 2018 at 3:43 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 5/13/2018 10:58 AM, Simon Horman wrote:
->
->>>> Add documentation for r8a77990 compatible string to renesas ravb device
->>>> tree bindings documentation.
->>>>
->>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>>
->>>
->>> I'm assuming this isn't targetted at one of my trees.  Just FYI.
->>
->>
->> Hi Dave,
->>
->> I think this is appropriate for net-next but if not I can take it.
->
->
->    There's also Rob, and IIRC he has taken alike patch recently...
+On Mon, Jun 04, 2018 at 03:14:08PM +0100, Srinivas Kandagatla wrote:
+> Immediately after the platform_device_unregister() the device will be
+> cleaned up. Accessing the freed pointer immediately after that will
+> crash the system.
+> 
+> Found this bug when kernel is built with CONFIG_PAGE_POISONING and testing
+> loading/unloading audio drivers in a loop on Qcom platforms.
+> 
+> Fix this by moving of_node_clear_flag() just before the unregister calls.
+> 
+> Below is the crash trace:
+> 
+> Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c03
+> Mem abort info:
+>   ESR = 0x96000021
+>   Exception class = DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+> Data abort info:
+>   ISV = 0, ISS = 0x00000021
+>   CM = 0, WnR = 0
+> [006b6b6b6b6b6c03] address between user and kernel address ranges
+> Internal error: Oops: 96000021 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 2 PID: 1784 Comm: sh Tainted: G        W         4.17.0-rc7-02230-ge3a63a7ef641-dirty #204
+> Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> pstate: 80000005 (Nzcv daif -PAN -UAO)
+> pc : clear_bit+0x18/0x2c
+> lr : of_platform_device_destroy+0x64/0xb8
+> sp : ffff00000c9c3930
+> x29: ffff00000c9c3930 x28: ffff80003d39b200
+> x27: ffff000008bb1000 x26: 0000000000000040
+> x25: 0000000000000124 x24: ffff80003a9a3080
+> x23: 0000000000000060 x22: ffff00000939f518
+> x21: ffff80003aa79e98 x20: ffff80003aa3dae0
+> x19: ffff80003aa3c890 x18: ffff800009feb794
+> x17: 0000000000000000 x16: 0000000000000000
+> x15: ffff800009feb790 x14: 0000000000000000
+> x13: ffff80003a058778 x12: ffff80003a058728
+> x11: ffff80003a058750 x10: 0000000000000000
+> x9 : 0000000000000006 x8 : ffff80003a825988
+> x7 : bbbbbbbbbbbbbbbb x6 : 0000000000000001
+> x5 : 0000000000000000 x4 : 0000000000000001
+> x3 : 0000000000000008 x2 : 0000000000000001
+> x1 : 6b6b6b6b6b6b6c03 x0 : 0000000000000000
+> Process sh (pid: 1784, stack limit = 0x        (ptrval))
+> Call trace:
+>  clear_bit+0x18/0x2c
+>  q6afe_remove+0x20/0x38
+>  apr_device_remove+0x30/0x70
+>  device_release_driver_internal+0x170/0x208
+>  device_release_driver+0x14/0x20
+>  bus_remove_device+0xcc/0x150
+>  device_del+0x10c/0x310
+>  device_unregister+0x1c/0x70
+>  apr_remove_device+0xc/0x18
+>  device_for_each_child+0x50/0x80
+>  apr_remove+0x18/0x20
+>  rpmsg_dev_remove+0x38/0x68
+>  device_release_driver_internal+0x170/0x208
+>  device_release_driver+0x14/0x20
+>  bus_remove_device+0xcc/0x150
+>  device_del+0x10c/0x310
+>  device_unregister+0x1c/0x70
+>  qcom_smd_remove_device+0xc/0x18
+>  device_for_each_child+0x50/0x80
+>  qcom_smd_unregister_edge+0x3c/0x70
+>  smd_subdev_remove+0x18/0x28
+>  rproc_stop+0x48/0xd8
+>  rproc_shutdown+0x60/0xe8
+>  state_store+0xbc/0xf8
+>  dev_attr_store+0x18/0x28
+>  sysfs_kf_write+0x3c/0x50
+>  kernfs_fop_write+0x118/0x1e0
+>  __vfs_write+0x18/0x110
+>  vfs_write+0xa4/0x1a8
+>  ksys_write+0x48/0xb0
+>  sys_write+0xc/0x18
+>  el0_svc_naked+0x30/0x34
+> Code: d2800022 8b400c21 f9800031 9ac32043 (c85f7c22)
+> ---[ end trace 32020935775616a2 ]---
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> Changes since v2:
+>  Move the calls to of_node_clear_flag just before unregister,
+>  suggested by Rob.
+> 
+>  drivers/of/platform.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Applied.
+Applied, thanks.
 
 Rob
