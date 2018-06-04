@@ -1,106 +1,169 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 07/10] i3c: master: Add driver for Cadence IP
-Date: Mon, 4 Jun 2018 13:26:15 +0200
-Message-ID: <20180604132615.415db91a@bbrezillon>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
-        <20180330074751.25987-8-boris.brezillon@bootlin.com>
-        <9613475C-ECAE-4AD6-9C02-55C9214A6489@cadence.com>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM
+ BD71837 PMIC
+Date: Mon, 4 Jun 2018 14:32:25 +0300
+Message-ID: <20180604113225.GE5150@localhost.localdomain>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <3b05ca98a671a762013c312f8b70543402ee7556.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180531030129.GA16122@rob-hp-laptop>
+ <20180531071717.GG13528@localhost.localdomain>
+ <20180531102315.GA5150@localhost.localdomain>
+ <CAL_Jsq+33G7zMEDOUXHQijxqqbvqykxZENLe1-52ECkXwo2o4g@mail.gmail.com>
+ <20180601062540.GB5150@localhost.localdomain>
+ <CAL_JsqJNMxR=zdwR41iLfWU=u3J_=_VkxVL+g3a12_4vvNwBtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9613475C-ECAE-4AD6-9C02-55C9214A6489@cadence.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJNMxR=zdwR41iLfWU=u3J_=_VkxVL+g3a12_4vvNwBtw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Przemyslaw Gaj <pgaj@cadence.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
+To: Rob Herring <robh@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Przemek,
-
-On Mon, 4 Jun 2018 09:24:51 +0000
-Przemyslaw Gaj <pgaj@cadence.com> wrote:
-
-> Hi Boris,
+On Fri, Jun 01, 2018 at 12:32:16PM -0500, Rob Herring wrote:
+> On Fri, Jun 1, 2018 at 1:25 AM, Matti Vaittinen
+> <mazziesaccount@gmail.com> wrote:
+> > On Thu, May 31, 2018 at 09:07:24AM -0500, Rob Herring wrote:
+> >> On Thu, May 31, 2018 at 5:23 AM, Matti Vaittinen
+> >> <mazziesaccount@gmail.com> wrote:
+> >> > On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
+> >> >> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
+> >> >> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
+> >> >> > > Document devicetree bindings for ROHM BD71837 PMIC MFD.
+> >> >> > > + - interrupts            : The interrupt line the device is connected to.
+> >> >> > > + - interrupt-controller  : Marks the device node as an interrupt controller.
+> >> >> >
+> >> >> > What sub blocks have interrupts?
+> >> >>
+> >> >> The PMIC can generate interrupts from events which cause it to reset.
+> >> >> Eg, irq from watchdog line change, power button pushes, reset request
+> >> >> via register interface etc. I don't know any generic handling for these
+> >> >> interrupts. In "normal" use-case this PMIC is powering the processor
+> >> >> where driver is running and I do not see reasonable handling because
+> >> >> power-reset is going to follow the irq.
+> >> >>
+> >> >
+> >> > Oh, but when reading this I understand that the interrupt-controller
+> >> > property should at least be optional.
+> >>
+> >> I don't think it should. The h/w either has an interrupt controller or
+> >> it doesn't.
+> >
+> > I hope this explains why I did this interrupt controller - please tell
+> > me if this is legitimate use-case and what you think of following:
+> >
+> > +Optional properties:
+> > + - interrupt-controller        : Marks the device node as an interrupt controller.
+> > +                         BD71837MWV can report different power state change
+> > +                         events to other devices. Different events can be seen
+> > +                         as separate BD71837 domain interrupts.
 > 
-> Few things regarding Cadence IP driver:
-> 
-> ﻿On 6/4/18, 9:31 AM, "Boris Brezillon" <boris.brezillon@bootlin.com> wrote:
-> 
->     +static void cdns_i3c_master_handle_ibi(struct cdns_i3c_master *master,
->     +				       u32 ibir)
->     +{
->     +	struct cdns_i3c_i2c_dev_data *data;
->     +	bool data_consumed = false;
->     +	struct i3c_ibi_slot *slot;
->     +	u32 id = IBIR_SLVID(ibir);
->     +	struct i3c_device *dev;
->     +	int len, i, j;
->     +	u8 *buf;
->     +
->     +	/*
->     +	 * FIXME: maybe we should report the FIFO OVF errors to the upper
->     +	 * layer.
->     +	 */
->     +	if (id >= master->ibi.num_slots || (ibir & IBIR_ERROR))
->     +		goto out;
->     +
->     +	dev = master->ibi.slots[id];
->     +	spin_lock(&master->ibi.lock);
->     +
->     +	data = i3c_device_get_master_data(dev);
->     +	slot = i3c_generic_ibi_get_free_slot(data->ibi_pool);
->     +	if (!slot)
->     +		goto out_unlock;
->     +
->     +	buf = slot->data;
->     +
->     +	len = IBIR_XFER_BYTES(ibir);
->     +	for (i = 0; i < IBIR_XFER_BYTES(ibir); i += 4) {
->     +		u32 tmp = readl(master->regs + IBI_DATA_FIFO);
->     +
->     +		for (j = 0; j < 4 && i + j < dev->ibi->max_payload_len; j++)
->     +			buf[i + j] = tmp >> (j * 8);
->     +
->     +	}
->     +	slot->len = min_t(unsigned int, IBIR_XFER_BYTES(ibir),
->     +			  dev->ibi->max_payload_len);
->     +	i3c_master_queue_ibi(dev, slot);
->     +	data_consumed = true;
->     +
->     +out_unlock:
->     +	spin_unlock(&master->ibi.lock);
->     +
->     +out:
->     +	/* Consume data from the FIFO if it's not been done already. */
->     +	if (!data_consumed) {
->     +		for (i = 0; i < IBIR_XFER_BYTES(ibir); i += 4)
->     +			readl(master->regs + IBI_DATA_FIFO);
->     +	}
->     +}
->     
-> len variable is unneeded.
+> To what other devices?
 
-Will get rid of len.
+Would it be better if I wrote "other drivers" instead? I think I've seen
+examples where MFD driver is just providing the interrupts for other
+drivers - like power-button input driver. Currently I have no such "irq
+consumer" drivers written. Still I would like to expose these interrupts
+so that they are ready for using if any platform using PMIC needs them.
 
->     +
->     +	/* Device ID0 is reserved to describe this master. */
->     +	master->maxdevs = CONF_STATUS0_DEVS_NUM(val);
->     +	master->free_rr_slots = GENMASK(master->maxdevs, 1);
->     +
->     +	val = readl(master->regs + CONF_STATUS1);
->     +	master->caps.cmdfifodepth = CONF_STATUS1_CMD_DEPTH(val);
->     +	master->caps.rxfifodepth = CONF_STATUS1_RX_DEPTH(val);
->     +	master->caps.txfifodepth = CONF_STATUS1_TX_DEPTH(val);
->     +	master->caps.ibirfifodepth = 16;
+I think there are other similar drivers in tree. For example TPS6591x
+driver seems to be doing this. (Has MFD driver exposing the interrupts
+but no driver handling those). Maybe explanation like this would help:
+
+"The BD71837 driver only provides the infrastructure for the IRQs. The
+users can write his own driver to convert the IRQ into the event they
+wish. The IRQ can be used with the standard
+request_irq/enable_irq/disable_irq API inside the kernel." (I found this
+text from NXP forums and ruthlessly copied and modified it over here)
+
+If this is not feasible, then I will remove the irq handling from MFD
+(or leave code there but remove the binding information?) as I don't
+know what the irq handles should do in generic case.
+
 > 
-> IBI fifo depth is hardcoded. You can read this value from CONF_STATUS0 register.
+> > + - #interrupt-cells    : The number of cells to describe an IRQ should be 1.
+> > +                           The first cell is the IRQ number.
+> > +                           masks from ../interrupt-controller/interrupts.txt.
+
+Sorry this "masks from ../interrupt-controller/interrupts.txt." was
+accidentally pasted here. I should have deleted it.
+
+> I'm still not clear. Generally in a PMIC, you'd define an interrupt
+> controller when there's a common set of registers to manage sub-block
+> interrupts (typical mask/unmask, ack regs) and the subblocks
+> themselves have control of masking/unmasking interrupts. If there's
+> not a need to have these 2 levels of interrupt handling, then you
+> don't really need to define an interrupt controller.
+
+And to clarify - the PMIC can generate irq via one irq line. This is
+typical ACTIVE_LOW irq with 8 bit "write 1 to clear" status register and
+8 bit mask register. The role of interrupt-controller code here is just
+to allow these 8 irq reasons to be seen as individual BD71837 domain
+interrupts. I just don't have the driver(s) for handling these
+interrupts.
+
+> >> My concern is you added it but nothing uses it which tells
+> >> me your binding is incomplete. I'd rather see complete bindings even
+> >> if you don't have drivers.
+> >
+> > So this makes me wonder if my use-case for interrupt controller is
+> > valid. I thought making this PMIC as interrupt controller is a nice way
+> > of hiding the irq register and i2c access from other potential drivers
+> > using these interrupts. But as I don't know what could be the potential
+> > user for these irqs, I don't know how to complete binding. This is why I
+> > also thought of making this optional, so that the potential for using
+> > the interrupts would be there but it was not required when interrupts
+> > are not needed.
 > 
->     +	master->caps.cmdrfifodepth = 16;
+> The only drivers getting these interrupts would be drivers for this
+> PMIC. Interrupts are handled by the driver owning the h/w that
+> generated the interrupt. I think that is the disconnect here.
 > 
-> CMDR fifo depth is hardcoded. You can read this value from CONF_STATUS0 register also.
+> Take a power button. We don't create a generic power button interrupt
+> and then have some generic power button interrupt handler. We have a
+> handler for specifically for that device and then it generates a power
+> button press event.
 
-Sure, I'll use the FIFO depth exposed in CONF_STATUS0.
+I think I understand this. Here we also have a 'power button' interrupt
+from PMIC (as one of the interrupts) here. But what happens when button
+is pressed depends on PMIC configuration. I guess we might want a power
+button driver here - and this power button driver might be correct user
+for the irq. So are you stating that I should write the power button
+driver (or some other "IRQ consumer") before adding the
+interrupt-controller property to bindings for MFD? Or should I just
+somehow state that irq X in BD71837 is a "power button short push"
+event and power button driver should be the consumer for it? 
 
-Thanks,
+Rest of the interrupts are not so obvious. I have no idea how I should
+handle rest of the interrupts. Those are interrupts which cause the PMIC
+to reset and cut the powers from most of the regulators too. I can
+easily think setup where one processor is controlling PMIC which powers
+for the other processor. And getting IRQ if for example watchdog reset
+the other processor would probably be very usefull. But doing any
+'de-facto' handler for this is hard. Only generally usefull thing would
+be notifying the user-space but I don't think I should invent any new
+kernelspace - userspace interfaces for this. I believe that when such
+are needed those should be implemented by ones knowing the platform.
 
-Boris
+So please bear with me but do you mean I should
+a) document what conditions generate which IRQ
+   or
+b)  should I tell what kind of driver is needed for handling the IRQs
+   or
+c) should I first write code using IRQs before addinf MFD binding?
+
+a) I can do.
+b) I think I can't do this for most of the irqs as in normal use-case
+the processor won't catch these as it is going to be powered down.
+c) I might be able to do this for power button IRQ but it might not be
+what user wants in the end.
+
+> >> My concern is you added it but nothing uses it which tells
+> >> me your binding is incomplete. I'd rather see complete bindings even
+> >> if you don't have drivers.
+
+Can you please tell if I misunderstood this?
+
+Br,
+    Matti Vaittinen
