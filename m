@@ -1,264 +1,385 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v9 5/7] i2c: fsi: Add transfer implementation
-Date: Mon, 4 Jun 2018 21:45:31 +0200
-Message-ID: <92b61473-b5bb-ea2e-56ce-5375641c5242@axentia.se>
-References: <1528138850-18259-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1528138850-18259-6-git-send-email-eajames@linux.vnet.ibm.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Mon, 04 Jun 2018 22:56:20 +0200
+Message-ID: <1702074adb9105a61971a3cb5867b7ed@agner.ch>
+References: <20180531221637.6017-1-stefan@agner.ch>
+ <20180531221637.6017-5-stefan@agner.ch> <1528132590.3048.4.camel@gaireg.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528138850-18259-6-git-send-email-eajames@linux.vnet.ibm.com>
-Content-Language: en-US
+In-Reply-To: <1528132590.3048.4.camel@gaireg.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>, linux-i2c@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com
+To: =?UTF-8?Q?Randolph_Maa=C3=9Fen?= <gaireg@gaireg.de>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-06-04 21:00, Eddie James wrote:
-> Execute I2C transfers from the FSI-attached I2C master. Use polling
-> instead of interrupts as we have no hardware IRQ over FSI.
+Hi Randolph,
+
+On 04.06.2018 19:16, Randolph Maaßen wrote:
+> Am Freitag, den 01.06.2018, 00:16 +0200 schrieb Stefan Agner:
+>> Add support for the NAND flash controller found on NVIDIA
+>> Tegra 2 SoCs. This implementation does not make use of the
+>> command queue feature. Regular operations/data transfers are
+>> done in PIO mode. Page read/writes with hardware ECC make
+>> use of the DMA for data transfer.
+>>
+>> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  MAINTAINERS                       |    7 +
+>>  drivers/mtd/nand/raw/Kconfig      |    6 +
+>>  drivers/mtd/nand/raw/Makefile     |    1 +
+>>  drivers/mtd/nand/raw/tegra_nand.c | 1143
+>> +++++++++++++++++++++++++++++
+>>  4 files changed, 1157 insertions(+)
+>>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+>>
+[...]
+>> +static int tegra_nand_chips_init(struct device *dev,
+>> +				 struct tegra_nand_controller *ctrl)
+>> +{
+>> +	struct device_node *np = dev->of_node;
+>> +	struct device_node *np_nand;
+>> +	int nchips = of_get_child_count(np);
+>> +	struct tegra_nand_chip *nand;
+>> +	struct mtd_info *mtd;
+>> +	struct nand_chip *chip;
+>> +	unsigned long config, bch_config = 0;
+>> +	int bits_per_step;
+>> +	int ret;
+>> +
+>> +	if (nchips != 1) {
+>> +		dev_err(dev, "Currently only one NAND chip
+>> supported\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	np_nand = of_get_next_child(np, NULL);
+>> +
+>> +	nand = devm_kzalloc(dev, sizeof(*nand), GFP_KERNEL);
+>> +	if (!nand)
+>> +		return -ENOMEM;
+>> +
+>> +	nand->wp_gpio = devm_gpiod_get_optional(dev, "wp",
+>> GPIOD_OUT_LOW);
+>> +
+>> +	if (IS_ERR(nand->wp_gpio)) {
+>> +		ret = PTR_ERR(nand->wp_gpio);
+>> +		dev_err(dev, "Failed to request WP GPIO: %d\n",
+>> ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	chip = &nand->chip;
+>> +	chip->controller = &ctrl->controller;
+>> +
+>> +	mtd = nand_to_mtd(chip);
+>> +
+>> +	mtd->dev.parent = dev;
+>> +	if (!mtd->name)
+>> +		mtd->name = "tegra_nand";
+>> +	mtd->owner = THIS_MODULE;
+>> +
+>> +	nand_set_flash_node(chip, np_nand);
 > 
-> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
-> ---
->  drivers/i2c/busses/i2c-fsi.c | 195 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 193 insertions(+), 2 deletions(-)
+> Hi,
+> i just tried this driver and it works great so far, thanks.
+> I just found, that assigning the of node after setting the mtd->name
+> makes it impossible to assign a name via devicetree label. I have read
+> the discussion about the label on this list, so I'm curious if this is
+> intentional? Setting mtd->name after nand_set_flash_node() enables the
+> label parameter.
 > 
-> diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-> index 101b9c5..4e5964e 100644
-> --- a/drivers/i2c/busses/i2c-fsi.c
-> +++ b/drivers/i2c/busses/i2c-fsi.c
-> @@ -150,6 +150,7 @@ struct fsi_i2c_port {
->  	struct i2c_adapter	adapter;
->  	struct fsi_i2c_master	*master;
->  	u16			port;
-> +	u16			xfrd;
->  };
->  
->  static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
-> @@ -225,6 +226,99 @@ static int fsi_i2c_set_port(struct fsi_i2c_port *port)
->  	return fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
->  }
->  
-> +static int fsi_i2c_start(struct fsi_i2c_port *port, struct i2c_msg *msg,
-> +			 bool stop)
-> +{
-> +	struct fsi_i2c_master *i2c = port->master;
-> +	u32 cmd = I2C_CMD_WITH_START | I2C_CMD_WITH_ADDR;
-> +
-> +	port->xfrd = 0;
-> +
-> +	if (msg->flags & I2C_M_RD)
-> +		cmd |= I2C_CMD_READ;
-> +
-> +	if (stop || msg->flags & I2C_M_STOP)
-> +		cmd |= I2C_CMD_WITH_STOP;
-> +
-> +	cmd |= FIELD_PREP(I2C_CMD_ADDR, msg->addr >> 1);
-> +	cmd |= FIELD_PREP(I2C_CMD_LEN, msg->len);
-> +
-> +	return fsi_i2c_write_reg(i2c->fsi, I2C_FSI_CMD, &cmd);
-> +}
-> +
-> +static int fsi_i2c_get_op_bytes(int op_bytes)
-> +{
-> +	/* fsi is limited to max 4 byte aligned ops */
-> +	if (op_bytes > 4)
-> +		return 4;
-> +	else if (op_bytes == 3)
-> +		return 2;
-> +	return op_bytes;
-> +}
-> +
-> +static int fsi_i2c_write_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
-> +			      u8 fifo_count)
-> +{
-> +	int write;
-> +	int rc;
-> +	struct fsi_i2c_master *i2c = port->master;
-> +	int bytes_to_write = i2c->fifo_size - fifo_count;
-> +	int bytes_remaining = msg->len - port->xfrd;
-> +
-> +	bytes_to_write = min(bytes_to_write, bytes_remaining);
-> +
-> +	while (bytes_to_write) {
-> +		write = fsi_i2c_get_op_bytes(bytes_to_write);
-> +
-> +		rc = fsi_device_write(i2c->fsi, I2C_FSI_FIFO,
-> +				      &msg->buf[port->xfrd], write);
-> +		if (rc)
-> +			return rc;
-> +
-> +		port->xfrd += write;
-> +		bytes_to_write -= write;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int fsi_i2c_read_fifo(struct fsi_i2c_port *port, struct i2c_msg *msg,
-> +			     u8 fifo_count)
-> +{
-> +	int read;
-> +	int rc;
-> +	struct fsi_i2c_master *i2c = port->master;
-> +	int bytes_to_read;
-> +	int xfr_remaining = msg->len - port->xfrd;
-> +	u32 dummy;
-> +
-> +	bytes_to_read = min_t(int, fifo_count, xfr_remaining);
-> +
-> +	while (bytes_to_read) {
-> +		read = fsi_i2c_get_op_bytes(bytes_to_read);
-> +
-> +		if (xfr_remaining) {
-> +			rc = fsi_device_read(i2c->fsi, I2C_FSI_FIFO,
-> +					     &msg->buf[port->xfrd], read);
-> +			if (rc)
-> +				return rc;
-> +
-> +			port->xfrd += read;
-> +			xfr_remaining -= read;
-> +		} else {
-> +			/* no more buffer but data in fifo, need to clear it */
-> +			rc = fsi_device_read(i2c->fsi, I2C_FSI_FIFO, &dummy,
-> +					     read);
-> +			if (rc)
-> +				return rc;
-> +		}
-> +
-> +		bytes_to_read -= read;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int fsi_i2c_reset_bus(struct fsi_i2c_master *i2c)
->  {
->  	int i, rc;
-> @@ -388,17 +482,114 @@ static int fsi_i2c_abort(struct fsi_i2c_port *port, u32 status)
->  	return -ETIMEDOUT;
->  }
->  
-> +static int fsi_i2c_handle_status(struct fsi_i2c_port *port,
-> +				 struct i2c_msg *msg, u32 status)
-> +{
-> +	int rc;
-> +	u8 fifo_count;
-> +
-> +	if (status & I2C_STAT_ERR) {
-> +		rc = fsi_i2c_abort(port, status);
-> +		if (rc)
-> +			return rc;
-> +
-> +		if (status & I2C_STAT_INV_CMD)
-> +			return -EINVAL;
-> +
-> +		if (status & (I2C_STAT_PARITY | I2C_STAT_BE_OVERRUN |
-> +		    I2C_STAT_BE_ACCESS))
-> +			return -EPROTO;
-> +
-> +		if (status & I2C_STAT_NACK)
-> +			return -ENXIO;
-> +
-> +		if (status & I2C_STAT_LOST_ARB)
-> +			return -EAGAIN;
-> +
-> +		if (status & I2C_STAT_STOP_ERR)
-> +			return -EBADMSG;
-> +
-> +		return -EIO;
-> +	}
-> +
-> +	if (status & I2C_STAT_DAT_REQ) {
-> +		fifo_count = FIELD_GET(I2C_STAT_FIFO_COUNT, status);
-> +
-> +		if (msg->flags & I2C_M_RD)
-> +			return fsi_i2c_read_fifo(port, msg, fifo_count);
-> +
-> +		return fsi_i2c_write_fifo(port, msg, fifo_count);
-> +	}
-> +
-> +	if (status & I2C_STAT_CMD_COMP) {
-> +		if (port->xfrd < msg->len)
-> +			return -ENODATA;
-> +
-> +		return msg->len;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int fsi_i2c_wait(struct fsi_i2c_port *port, struct i2c_msg *msg,
-> +			unsigned long timeout)
-> +{
-> +	u32 status = 0;
-> +	int rc;
-> +	unsigned long start = jiffies;
-> +
-> +	do {
-> +		rc = fsi_i2c_read_reg(port->master->fsi, I2C_FSI_STAT,
-> +				      &status);
-> +		if (rc)
-> +			return rc;
-> +
-> +		if (status & I2C_STAT_ANY_RESP) {
-> +			rc = fsi_i2c_handle_status(port, msg, status);
-> +			if (rc < 0)
-> +				return rc;
-> +
-> +			/* cmd complete and all data xfrd */
-> +			if (rc == msg->len)
-> +				return 0;
-> +
-> +			/* need to xfr more data, but maybe don't need wait */
-> +			continue;
-> +		}
-> +
-> +		usleep_range(I2C_CMD_SLEEP_MIN_US, I2C_CMD_SLEEP_MAX_US);
-> +	} while (time_after(start + timeout, jiffies));
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
->  static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->  			int num)
->  {
-> -	int rc;
-> +	int i, rc;
-> +	unsigned long start_time;
->  	struct fsi_i2c_port *port = adap->algo_data;
-> +	struct i2c_msg *msg;
->  
->  	rc = fsi_i2c_set_port(port);
->  	if (rc)
->  		return rc;
->  
-> -	return -EOPNOTSUPP;
-> +	for (i = 0; i < num; i++) {
-> +		msg = msgs + i;
-> +		start_time = jiffies;
-> +
-> +		rc = fsi_i2c_start(port, msg, i == num - 1);
-> +		if (rc)
-> +			return rc;
-> +
-> +		rc = fsi_i2c_wait(port, msg,
-> +				  adap->timeout - (jiffies - start_time));
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
 
-Zero is not the return value of success for .master_xfer
+Hm, good catch. No that was not intentional. The name indeed should be
+assigned after the call to nand_set_flash_node. Will fix this in the
+next revision.
 
-Hint, "num" is your friend...
-
-Cheers,
-Peter
-
->  }
->  
->  static u32 fsi_i2c_functionality(struct i2c_adapter *adap)
+>> +
+>> +	chip->options = NAND_NO_SUBPAGE_WRITE |
+>> NAND_USE_BOUNCE_BUFFER;
+>> +	chip->exec_op = tegra_nand_exec_op;
+>> +	chip->select_chip = tegra_nand_select_chip;
+>> +	chip->setup_data_interface =
+>> tegra_nand_setup_data_interface;
+>> +
+>> +	ret = nand_scan_ident(mtd, 1, NULL);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (chip->bbt_options & NAND_BBT_USE_FLASH)
+>> +		chip->bbt_options |= NAND_BBT_NO_OOB;
+>> +
+>> +	chip->ecc.mode = NAND_ECC_HW;
+>> +	chip->ecc.size = 512;
+>> +	chip->ecc.steps = mtd->writesize / chip->ecc.size;
+>> +	if (chip->ecc_step_ds != 512) {
+>> +		dev_err(dev, "Unsupported step size %d\n", chip-
+>> >ecc_step_ds);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	chip->ecc.read_page = tegra_nand_read_page_hwecc;
+>> +	chip->ecc.write_page = tegra_nand_write_page_hwecc;
+>> +
+>> +	config = readl_relaxed(ctrl->regs + CFG);
+>> +	config |= CFG_PIPE_EN | CFG_SKIP_SPARE |
+>> CFG_SKIP_SPARE_SIZE_4;
+>> +
+>> +	if (chip->options & NAND_BUSWIDTH_16)
+>> +		config |= CFG_BUS_WIDTH_16;
+>> +
+>> +	if (chip->ecc.algo == NAND_ECC_UNKNOWN) {
+>> +		if (mtd->writesize < 2048)
+>> +			chip->ecc.algo = NAND_ECC_RS;
+>> +		else
+>> +			chip->ecc.algo = NAND_ECC_BCH;
+>> +	}
+>> +
+>> +	if (chip->ecc.algo == NAND_ECC_BCH && mtd->writesize < 2048)
+>> {
+>> +		dev_err(dev, "BCH supportes 2K or 4K page size
+>> only\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (!chip->ecc.strength) {
+>> +		ret = tegra_nand_select_strength(chip, mtd-
+>> >oobsize);
+>> +		if (ret < 0) {
+>> +			dev_err(dev, "No valid strenght found,
+>> minimum %d\n",
+>> +				chip->ecc_strength_ds);
+>> +			return ret;
+>> +		}
+>> +
+>> +		chip->ecc.strength = ret;
+>> +	}
+>> +
+>> +	switch (chip->ecc.algo) {
+>> +	case NAND_ECC_RS:
+>> +		bits_per_step = BITS_PER_STEP_RS * chip-
+>> >ecc.strength;
+>> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_rs_ops);
+>> +		switch (chip->ecc.strength) {
+>> +		case 4:
+>> +			config |= CFG_ECC_SEL | CFG_TVAL_4;
+>> +			break;
+>> +		case 6:
+>> +			config |= CFG_ECC_SEL | CFG_TVAL_6;
+>> +			break;
+>> +		case 8:
+>> +			config |= CFG_ECC_SEL | CFG_TVAL_8;
+>> +			break;
+>> +		default:
+>> +			dev_err(dev, "ECC strength %d not
+>> supported\n",
+>> +				chip->ecc.strength);
+>> +			return -EINVAL;
+>> +		}
+>> +		break;
+>> +	case NAND_ECC_BCH:
+>> +		bits_per_step = BITS_PER_STEP_BCH * chip-
+>> >ecc.strength;
+>> +		mtd_set_ooblayout(mtd, &tegra_nand_oob_bch_ops);
+>> +		switch (chip->ecc.strength) {
+>> +		case 4:
+>> +			bch_config = BCH_TVAL_4;
+>> +			break;
+>> +		case 8:
+>> +			bch_config = BCH_TVAL_8;
+>> +			break;
+>> +		case 14:
+>> +			bch_config = BCH_TVAL_14;
+>> +			break;
+>> +		case 16:
+>> +			bch_config = BCH_TVAL_16;
+>> +			break;
+>> +		default:
+>> +			dev_err(dev, "ECC strength %d not
+>> supported\n",
+>> +				chip->ecc.strength);
+>> +			return -EINVAL;
+>> +		}
+>> +		break;
+>> +	default:
+>> +		dev_err(dev, "ECC algorithm not supported\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	dev_info(dev, "Using %s with strength %d per 512 byte
+>> step\n",
+>> +			chip->ecc.algo == NAND_ECC_BCH ? "BCH" :
+>> "RS",
+>> +			chip->ecc.strength);
+>> +
+>> +	chip->ecc.bytes = DIV_ROUND_UP(bits_per_step,
+>> BITS_PER_BYTE);
+>> +
+>> +	switch (mtd->writesize) {
+>> +	case 256:
+>> +		config |= CFG_PS_256;
+>> +		break;
+>> +	case 512:
+>> +		config |= CFG_PS_512;
+>> +		break;
+>> +	case 1024:
+>> +		config |= CFG_PS_1024;
+>> +		break;
+>> +	case 2048:
+>> +		config |= CFG_PS_2048;
+>> +		break;
+>> +	case 4096:
+>> +		config |= CFG_PS_4096;
+>> +		break;
+>> +	default:
+>> +		dev_err(dev, "Unsupported writesize %d\n", mtd-
+>> >writesize);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	writel_relaxed(config, ctrl->regs + CFG);
+>> +	writel_relaxed(bch_config, ctrl->regs + BCH_CONFIG);
+>> +
+>> +	ret = nand_scan_tail(mtd);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	mtd_ooblayout_free(mtd, 0, &nand->tag);
+>> +
+>> +	config |= CFG_TAG_BYTE_SIZE(nand->tag.length - 1);
+>> +	writel_relaxed(config, ctrl->regs + CFG);
+>> +
+>> +	ret = mtd_device_register(mtd, NULL, 0);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to register mtd device: %d\n",
+>> ret);
+>> +		nand_cleanup(chip);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ctrl->chip = chip;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_nand_probe(struct platform_device *pdev)
+>> +{
+>> +	struct reset_control *rst;
+>> +	struct tegra_nand_controller *ctrl;
+>> +	struct resource *res;
+>> +	unsigned long reg;
+>> +	int irq, err = 0;
+>> +
+>> +	ctrl = devm_kzalloc(&pdev->dev, sizeof(*ctrl), GFP_KERNEL);
+>> +	if (!ctrl)
+>> +		return -ENOMEM;
+>> +
+>> +	ctrl->dev = &pdev->dev;
+>> +	nand_hw_control_init(&ctrl->controller);
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	ctrl->regs = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(ctrl->regs))
+>> +		return PTR_ERR(ctrl->regs);
+>> +
+>> +	rst = devm_reset_control_get(&pdev->dev, "nand");
+>> +	if (IS_ERR(rst))
+>> +		return PTR_ERR(rst);
+>> +
+>> +	ctrl->clk = devm_clk_get(&pdev->dev, "nand");
+>> +	if (IS_ERR(ctrl->clk))
+>> +		return PTR_ERR(ctrl->clk);
+>> +
+>> +	err = clk_prepare_enable(ctrl->clk);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = reset_control_reset(rst);
+>> +	if (err)
+>> +		goto err_disable_clk;
+>> +
+>> +	reg = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0)
+>> |
+>> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
+>> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
+>> +	writel_relaxed(NAND_CMD_STATUS, ctrl->regs + HWSTATUS_CMD);
+>> +	writel_relaxed(reg, ctrl->regs + HWSTATUS_MASK);
+>> +
+>> +	init_completion(&ctrl->command_complete);
+>> +	init_completion(&ctrl->dma_complete);
+>> +
+>> +	/* clear interrupts */
+>> +	reg = readl_relaxed(ctrl->regs + ISR);
+>> +	writel_relaxed(reg, ctrl->regs + ISR);
+>> +
+>> +	irq = platform_get_irq(pdev, 0);
+>> +	err = devm_request_irq(&pdev->dev, irq, tegra_nand_irq, 0,
+>> +			       dev_name(&pdev->dev), ctrl);
+>> +	if (err)
+>> +		goto err_disable_clk;
+>> +
+>> +	writel_relaxed(DMA_CTRL_IS_DONE, ctrl->regs + DMA_CTRL);
+>> +
+>> +	/* enable interrupts */
+>> +	reg = IER_UND | IER_OVR | IER_CMD_DONE | IER_GIE;
+>> +	writel_relaxed(reg, ctrl->regs + IER);
+>> +
+>> +	/* reset config */
+>> +	writel_relaxed(0, ctrl->regs + CFG);
+>> +
+>> +	err = tegra_nand_chips_init(ctrl->dev, ctrl);
+>> +	if (err)
+>> +		goto err_disable_clk;
+>> +
+>> +	platform_set_drvdata(pdev, ctrl);
+>> +
+>> +	return 0;
+>> +
+>> +err_disable_clk:
+>> +	clk_disable_unprepare(ctrl->clk);
+>> +	return err;
+>> +}
+>> +
+>> +static int tegra_nand_remove(struct platform_device *pdev)
+>> +{
+>> +	struct tegra_nand_controller *ctrl =
+>> platform_get_drvdata(pdev);
+>> +
+>> +	nand_release(nand_to_mtd(ctrl->chip));
+>> +
+>> +	clk_disable_unprepare(ctrl->clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id tegra_nand_of_match[] = {
+>> +	{ .compatible = "nvidia,tegra20-nand" },
+>> +	{ /* sentinel */ }
+>> +};
+>> +
+>> +static struct platform_driver tegra_nand_driver = {
+>> +	.driver = {
+>> +		.name = "tegra-nand",
+>> +		.of_match_table = tegra_nand_of_match,
+>> +	},
+>> +	.probe = tegra_nand_probe,
+>> +	.remove = tegra_nand_remove,
+>> +};
+>> +module_platform_driver(tegra_nand_driver);
+>> +
+>> +MODULE_DESCRIPTION("NVIDIA Tegra NAND driver");
+>> +MODULE_AUTHOR("Thierry Reding <thierry.reding@nvidia.com>");
+>> +MODULE_AUTHOR("Lucas Stach <dev@lynxeye.de>");
+>> +MODULE_AUTHOR("Stefan Agner <stefan@agner.ch>");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DEVICE_TABLE(of, tegra_nand_of_match);
 > 
+> Sorry for any noise/mistake, I'm new to kernel development
+
+That was constructive feedback! Thanks for pointing out!
+
+--
+Stefan
