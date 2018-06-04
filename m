@@ -1,254 +1,150 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v7 0/9] Add support for SAMA5D2 touchscreen
-Date: Mon, 04 Jun 2018 11:04:08 +0100
-Message-ID: <DB1C0B30-BEB4-4FA6-9A13-F87F419CB822@jic23.retrosnub.co.uk>
-References: <1526975559-18966-1-git-send-email-eugen.hristev@microchip.com>
- <20180522185732.0336d29c@archlinux>
- <45ff713b-7811-22c6-2124-4fbcad59b7e8@microchip.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v8 2/4] dt-bindings: Add bindings for SPI NAND devices
+Date: Mon, 4 Jun 2018 12:04:51 +0200
+Message-ID: <20180604120451.70fa75db@bbrezillon>
+References: <20180601131400.17634-1-boris.brezillon@bootlin.com>
+ <20180601131400.17634-3-boris.brezillon@bootlin.com>
+ <CAMuHMdUyPoDA-7+OT_yT-g7kA+zae8Sjo6PYRFTFfFkQetUqnA@mail.gmail.com>
+ <20180601190902.17cf5f6f@bbrezillon>
+ <CAMuHMdWqa4++tdrpWCAsdqjqN26CHB1+eudnCtsP2vcrzmkA_w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <45ff713b-7811-22c6-2124-4fbcad59b7e8@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eugen Hristev <eugen.hristev@microchip.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, robh@kernel.org, linux-iio@vger.kernel.org, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdWqa4++tdrpWCAsdqjqN26CHB1+eudnCtsP2vcrzmkA_w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Mark Brown <broonie@kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 1 Jun 2018 19:40:00 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
+> Hi Boris,
+> 
+> On Fri, Jun 1, 2018 at 7:09 PM, Boris Brezillon
+> <boris.brezillon@bootlin.com> wrote:
+> > On Fri, 1 Jun 2018 16:42:26 +0200
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:  
+> >> On Fri, Jun 1, 2018 at 3:13 PM, Boris Brezillon
+> >> <boris.brezillon@bootlin.com> wrote:  
+> >> > Add bindings for SPI NAND chips.  
+> 
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
+> >> > @@ -0,0 +1,27 @@
+> >> > +SPI NAND flash
+> >> > +
+> >> > +Required properties:
+> >> > +- compatible: should be "spi-nand"
+> >> > +- reg: should encode the chip-select line used to access the NAND chip
+> >> > +
+> >> > +Optional properties
+> >> > +- spi-max-frequency: maximum frequency of the SPI bus the chip can operate at.
+> >> > +                    This should encode board limitations (i.e. max freq can't
+> >> > +                    be achieved due to crosstalk on IO lines).
+> >> > +                    When unspecified, the driver assumes the chip can run at
+> >> > +                    the max frequency defined in the spec (information
+> >> > +                    extracted chip detection time).  
+> >>
+> >> This is a standard property according to
+> >> Documentation/devicetree/bindings/spi/spi-bus.txt. Can't you just refer
+> >> to that file, or just omit it, as it applies to all SPI slaves anyway?  
+> >
+> > The thing is, the maximum frequency supported by a SPI NAND is directly
+> > encoded in the NAND device ID and can be auto-detected. Why should we
+> > define spi-max-frequency in the DT when we can automatically detect
+> > this information? The only reason one might want to override  
+> 
+> Because that's how we dealt with this traditionally. Or at least I thought so.
+> But include/linux/spi/spi.h says:
+> 
+>  * @max_speed_hz: Maximum clock rate to be used with this chip
+>  *      (on this board); may be changed by the device's driver.
+>  *      The spi_transfer.speed_hz can override this for each transfer.
+> 
+> and many drivers seem to do so.
+> 
+> > spi-max-frequency is when the board design impose such restrictions,
+> > hence the precision I give here.  
+> 
+> Which is exactly the meaning of the standard property, isn't it?
+> 
+> So I think it can just be omitted here anyway.  If it's present, the SPI
+> core will make sure it's taken into account.
+> 
+> >> > +- spi-tx-bus-width: The bus width (number of data wires) that is used for MOSI.
+> >> > +                   Only encodes the board constraints (i.e. when not all IO
+> >> > +                   signals are routed on the board). Device constraints are
+> >> > +                   extracted when detecting the chip, and controller
+> >> > +                   constraints are exposed by the SPI mem controller. If this
+> >> > +                   property is missing that means no constraint at the board
+> >> > +                   level.
+> >> > +- spi-rx-bus-width: The bus width (number of data wires) that is used for MISO.
+> >> > +                   Only encodes the board constraints (i.e. when not all IO
+> >> > +                   signals are routed on the board). Device constraints are
+> >> > +                   extracted when detecting the chip, and controller
+> >> > +                   constraints are exposed by the SPI mem controller. If this
+> >> > +                   property is missing that means no constraint at the board
+> >> > +                   level.  
+> >>
+> >> This does not match Documentation/devicetree/bindings/spi/spi-bus.txt,
+> >> which says the default is 1.  
+> >
+> > Yes, I know.
+> >  
+> >> As these properties are handled by the SPI core in of_spi_parse_dt, why
+> >> would you want to deviate?  
+> >
+> > Because, again, this information can be extracted from the NAND ID, and
+> > the only reason we might want to override the information extracted
+> > from the NAND ID is when the board design adds extra restrictions
+> > (like, only 2 SIO lines wired on the 4 available).  
+> 
+> In struct spi_device, this is specified using the SPI_[RT]_X_{DUAL,QUAD}
+> bits in the mode field. Documentation says:
+> 
+>  * @mode: The spi mode defines how data is clocked out and in.
+>  *      This may be changed by the device's driver.
+>  *      The "active low" default for chipselect mode can be overridden
+>  *      (by specifying SPI_CS_HIGH) as can the "MSB first" default for
+>  *      each word in a transfer (by specifying SPI_LSB_FIRST).
+> 
+> So this may also be specified by the device driver, but it seems no driver
+> does so for the dual/quad bits, except for drivers/mtd/spi-nor/nxp-spifi.c
+> (for rx only).
+> 
+> But here we do have the generic SPI DT bindings saying the default is 1.
+> So personally, I wouldn't go for the option of the least surprise, and
+> don't deviate from the generic bindings.
+> 
+> >> Commenting to the question in the cover letter: what would be the
+> >> purpose of spi-max-bus-width?  
+> >
+> > Defining how many IO lines are wired on the board design. If this
+> > property is missing we would assume all IO lines are wired and the
+> > restrictions would be negotiated between the controller and the device
+> > without requiring explicit description in the DT.  
+> 
+> Which is exactly the meaning of the standard property, except for the
+> default of all vs. 1.
+> 
+> I'll have to defer to Mark (broonie) for his opinion about deviating from
+> the way this is handled traditionally, and assuming different defaults...
 
-On 4 June 2018 07:15:57 BST, Eugen Hristev <eugen.hristev@microchip.com> wrote:
->
->
->On 22.05.2018 20:57, Jonathan Cameron wrote:
->> On Tue, 22 May 2018 10:52:30 +0300
->> Eugen Hristev <eugen.hristev@microchip.com> wrote:
->> 
->>> Hello,
->>>
->>> This patch series is a rework of my previous series named:
->>> [PATCH 00/14] iio: triggers: add consumer support
->>>
->>> This is the version 7 of the series, and addresses the received
->feedback
->>> on the v2 series named:
->>> [PATCH v2 00/10]  Add support for SAMA5D2 touchscreen
->>> and the v3 series named
->>> [PATCH v3 00/11]  Add support for SAMA5D2 touchscreen
->>> and the v4 series named
->>> [PATCH v4 0/9]  Add support for SAMA5D2 touchscreen
->>> and fixes one bug found in series named
->>> [PATCH v5 0/9]  Add support for SAMA5D2 touchscreen
->>> and addresses comments in series named
->>> [PATCH v6 0/9]  Add support for SAMA5D2 touchscreen
->>>
->>> This series applies on top of fixes-togreg branch of iio.git,
->>> specifically on top of commit:
->>> "f0c8d1f" : iio: adc: at91-sama5d2_adc:
->>>   fix channel configuration for differential channels
->>>
->>> Jonathan, if you need me to rebase this on top of testing, let me
->know.
->>>
->>> Changes in previous versions are presented at the end of the cover
->letter below.
->>> Thanks everyone for the feedback. Below is the original v2 cover
->letter:
->>>
->>> In few words, this is the implementation of splitting the
->functionality
->>> of the IP block ADC device in SAMA5D2 SoC from ADC with touchscreen
->>> support. In order to avoid having a MFD device, two separate
->>> drivers that would work on same register base and split the IRQ,etc,
->>> as advised on the mailing list, I created a consumer driver for the
->>> channels, that will connect to the ADC as described in the device
->tree.
->>>
->>> I have collected feedback from everyone and here is the result:
->>> I have added a new generic resistive touchscreen driver, which acts
->>> as a iio consumer for the given channels and will create an input
->>> device and report the events. It uses a callback buffer to register
->>> to the IIO device and waits for data to be pushed.
->>> Inside the IIO device, I have kept a similar approach with the first
->version
->>> of the series, except that now the driver can take multiple buffers,
->and
->>> will configure the touchscreen part of the hardware device if the
->specific
->>> channels are requested.
->>>
->>> The SAMA5D2 ADC driver registers three new channels: two for the
->>> position on the X and Y axis, and one for the touch pressure.
->>> When channels are requested, it will check if the touchscreen
->channel mask
->>> includes the requested channels (it is possible that the consumer
->driver
->>> will not request pressure for example). If it's the case, it will
->work
->>> in touchscreen mode, and will refuse to do usual analog-digital
->conversion,
->>> because we have a single trigger and the touchscreen needs it.
->>> When the scan mask will include only old channels, the driver will
->function
->>> in the same way as before. If the scan mask somehow is a mix of the
->two (the
->>> masks intersect), the driver will refuse to work whatsoever (cannot
->have both
->>> in the same time).
->>> The driver allows reading raw data for the new channels, if claim
->direct
->>> mode works: no touchscreen driver requested anything. The new
->channels can
->>> act like the old ones. However, when requesting these channels, the
->usual
->>> trigger will not work and will not be enabled. The touchscreen
->channels
->>> require special trigger and irq configuration: pen detect, no pen
->detect
->>> and a periodic trigger to sample the touchscreen position and
->pressure.
->>> If the user attempts to use another trigger while there is a buffer
->>> that already requested the touchscreen channels (thus the trigger),
->the
->>> driver will refuse to comply.
->>>
->>> In order to have defines for the channel numbers, I added a bindings
->include
->>> file that goes on a separate commit :
->>> dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific
->consumer info
->>> This should go in the same tree with the following commits :
->>>    ARM: dts: at91: sama5d2: add channel cells for ADC device
->>>    ARM: dts: at91: sama5d2: Add resistive touch device
->>>
->>> as build will break because these commits depend on the binding one
->>> which creates the included header file.
->>> V5 update: After discussing with Alexandre Belloni on Mailing list,
->the two
->>> DTS patches are to be taken in the next version after bindings reach
->mainline.
->>>
->>> Changes in v7:
->>>   - Addressed some feedback from Dmitry, explained in input driver
->patch
->>> changelog.
->>>   - Added Acked-by Dmitry.
->>>
->>> Changes in v6:
->>>   - Fixed a crash in ADC driver , explained in driver patch
->changelog.
->>>   - changed a dev_err to dev_dbg in input driver.
->>>   - added Reviewed-by Rob Herring.
->>>
->>> Changes in v5:
->>>   - renamed property touchscreen-threshold-pressure to
->touchscreen-min-pressure
->>>   - added one return in touchscreen driver
->>>
->>> Changes in v4:
->>>   - removed patch for inkern module get/set kref
->>>   - addressed feedback on both the ADC and the touchscreen driver.
->each
->>> patch has a history inside the patch file for the specific changes.
->>>   - patch that fixes the channel fix
->>> [PATCH v3 01/11] iio: adc: at91-sama5d2_adc:
->>>   fix channel configuration for differential channels
->>> was accepted in fixes-togreg branch thus removed from this series.
->>>   - added Reviewed-by for the bindings by Rob Herring
->>>
->>> Changes in v3:
->>>   - changed input driver name according to feedback and reworked in
->commits
->>> to adapt to binding changes and new name.
->>>   - moved channel index fix in at91-sama5d2_adc at the beginning of
->the series
->>> (PATCH 01/11)
->>>   - created a new optional binding for the touchscreen as a separate
->commit
->>> and added it to the series :
->>>   [PATCH v3 04/11] dt-bindings: input: touchscreen: add pressure
->>>   threshold touchscreen property
->>>   - changed at91-sama5d2_adc driver patch to address the comments.
->Exact changes
->>> are in the patch file for the driver source file.
->>>
->>> Eugen Hristev (9):
->>>    MAINTAINERS: add generic resistive touchscreen adc
->>>    iio: Add channel for Position Relative
->>>    dt-bindings: input: touchscreen: add minimum pressure touchscreen
->>>      property
->>>    dt-bindings: input: touchscreen: resistive-adc-touch: create
->bindings
->>>    iio: adc: at91-sama5d2_adc: add support for position and pressure
->>>      channels
->>>    input: touchscreen: resistive-adc-touch: add generic resistive
->ADC
->>>      touchscreen
->>>    dt-bindings: iio: adc: at91-sama5d2_adc: add channel specific
->consumer
->>>      info
->>>    ARM: dts: at91: sama5d2: add channel cells for ADC device
->>>    ARM: dts: at91: sama5d2: Add resistive touch device
->>>
->>>   Documentation/ABI/testing/sysfs-bus-iio            |  12 +
->>>   .../bindings/iio/adc/at91-sama5d2_adc.txt          |   9 +
->>>   .../input/touchscreen/resistive-adc-touch.txt      |  30 +
->>>   .../bindings/input/touchscreen/touchscreen.txt     |   3 +
->>>   MAINTAINERS                                        |   6 +
->>>   arch/arm/boot/dts/sama5d2.dtsi                     |  12 +
->>>   drivers/iio/adc/at91-sama5d2_adc.c                 | 609
->+++++++++++++++++++--
->>>   drivers/iio/industrialio-core.c                    |   1 +
->>>   drivers/input/touchscreen/Kconfig                  |  13 +
->>>   drivers/input/touchscreen/Makefile                 |   1 +
->>>   drivers/input/touchscreen/resistive-adc-touch.c    | 204 +++++++
->>>   include/dt-bindings/iio/adc/at91-sama5d2_adc.h     |  16 +
->>>   include/uapi/linux/iio/types.h                     |   1 +
->>>   tools/iio/iio_event_monitor.c                      |   2 +
->>>   14 files changed, 861 insertions(+), 58 deletions(-)
->>>   create mode 100644
->Documentation/devicetree/bindings/input/touchscreen/resistive-adc-touch.txt
->>>   create mode 100644 drivers/input/touchscreen/resistive-adc-touch.c
->>>   create mode 100644 include/dt-bindings/iio/adc/at91-sama5d2_adc.h
->>>
->> 
->> Hi All,
->> 
->> I'm happy to take this, but there is a slight issue that we have a
->fix working
->> it's way in which this is dependent on.
->> 
->> I'll see if we can get this sorted before the merge window, but we
->may be
->> cutting it fine.
->> 
->> Jonathan
->> 
->
->Hello Jonathan,
->
->I can see the dependency fix made it to 4.17. What is the plan for this
->
->series? Getting into this merge window ?
+I think I'll drop the extra description on spi-max-frequency and
+spi-{rx,tx}-bus-width props for now. Those are anyway not taken into
+account by the SPI NAND driver yet.
 
-Sorry, no. We were to tight on time. Will get it into linux-next in a few weeks, ready for the next merge window.
-
-Jonathan
->
->Thanks,
->Eugen
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo@vger.kernel.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
