@@ -1,74 +1,191 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 0/4] drm/tinydrm: new dirver for ILI9341 displays
-Date: Sun, 3 Jun 2018 20:21:09 -0500
-Message-ID: <d5297fc5-94f2-edcd-5a11-95d7a9dca78d@lechnology.com>
-References: <20180525193623.15533-1-david@lechnology.com>
- <8840212b-fd46-e700-58a1-cb1b882c5771@tronnes.org>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH 1/2] thermal: tsens: Add support for SDM845 platform
+Date: Mon, 4 Jun 2018 09:55:28 +0530
+Message-ID: <31b21293-ae00-0146-c196-6c8e964473f9@codeaurora.org>
+References: <cover.1527937396.git.amit.kucheria@linaro.org>
+ <7a0f33cff94f41110bdbff14d28d36074fae2a7d.1527937396.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8840212b-fd46-e700-58a1-cb1b882c5771@tronnes.org>
+In-Reply-To: <7a0f33cff94f41110bdbff14d28d36074fae2a7d.1527937396.git.amit.kucheria@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, Nitin Patil <nitin@mindsensors.com>, linux-kernel@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>, linux-arm-msm@vger.kernel.org
+Cc: bjorn.andersson@linaro.org, edubezval@gmail.com, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 6/3/18 5:00 PM, Noralf Trønnes wrote:
+On 06/02/2018 04:41 PM, Amit Kucheria wrote:
+> There are two tsens blocks on the SDM845. These will be configured through
+> the devicetree.
 > 
-> Den 25.05.2018 21.36, skrev David Lechner:
->> This series adds a new tinydrm driver for the Ilitek ILI9341 
->> controller and
->> a 2.4" display panel that uses this controller.
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  .../devicetree/bindings/thermal/qcom-tsens.txt     |  1 +
+>  drivers/thermal/qcom/Makefile                      |  2 +-
+>  drivers/thermal/qcom/tsens-sdm845.c                | 98 ++++++++++++++++++++++
+>  drivers/thermal/qcom/tsens.c                       |  3 +
+>  drivers/thermal/qcom/tsens.h                       |  1 +
+>  5 files changed, 104 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/thermal/qcom/tsens-sdm845.c
 > 
-> David, do you have commit rights now?
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> index 292ed89..8652499 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
+>   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
+>   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
+> + - "qcom,sdm845-tsens"  : For SDM845 Family of SoCs
+>  
+>  - reg: Address range of the thermal registers
+>  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> diff --git a/drivers/thermal/qcom/Makefile b/drivers/thermal/qcom/Makefile
+> index 2cc2193..dc9f169 100644
+> --- a/drivers/thermal/qcom/Makefile
+> +++ b/drivers/thermal/qcom/Makefile
+> @@ -1,2 +1,2 @@
+>  obj-$(CONFIG_QCOM_TSENS)	+= qcom_tsens.o
+> -qcom_tsens-y			+= tsens.o tsens-common.o tsens-8916.o tsens-8974.o tsens-8960.o tsens-8996.o
+> +qcom_tsens-y			+= tsens.o tsens-common.o tsens-8916.o tsens-8974.o tsens-8960.o tsens-8996.o tsens-sdm845.o
+> diff --git a/drivers/thermal/qcom/tsens-sdm845.c b/drivers/thermal/qcom/tsens-sdm845.c
+> new file mode 100644
+> index 0000000..5d78f0b
+> --- /dev/null
+> +++ b/drivers/thermal/qcom/tsens-sdm845.c
+> @@ -0,0 +1,98 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, Linaro Limited
+> + */
+> +
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include "tsens.h"
+> +
+> +#define CNTL_OFFSET	4
+> +/* CNTL_OFFSET bitmasks */
+> +#define EN		BIT(0)
+> +#define SW_RST		BIT(1)
+> +
+> +#define SENSOR0_SHIFT	3
+> +
+> +#define TRDY_OFFSET     0xe4
+> +#define TRDY_READY_BIT  BIT(1)
+> +
+> +#define STATUS_OFFSET	0xa0
+> +#define LAST_TEMP_MASK	0xfff
+> +#define STATUS_VALID_BIT	BIT(21)
+> +#define CODE_SIGN_BIT		BIT(11)
+> +
+> +static int get_temp_sdm845(struct tsens_device *tmdev, int id, int *temp)
+> +{
+> +	struct tsens_sensor *s = &tmdev->sensor[id];
+> +	u32 code;
+> +	unsigned int sensor_addr;
+> +	int last_temp = 0, last_temp2 = 0, last_temp3 = 0, ret;
+> +
+> +	ret = regmap_read(tmdev->map, TRDY_OFFSET, &code);
+> +	if (ret)
+> +		return ret;
+> +	if (code & TRDY_READY_BIT)
+> +		return -ENODATA;
+> +
+> +	sensor_addr = STATUS_OFFSET + s->hw_id * 4;
+> +	ret = regmap_read(tmdev->map, sensor_addr, &code);
+> +	if (ret)
+> +		return ret;
+> +	last_temp = code & LAST_TEMP_MASK;
+> +	if (code & STATUS_VALID_BIT)
+> +		goto done;
+> +
+> +	/* Try a second time */
+> +	ret = regmap_read(tmdev->map, sensor_addr, &code);
+> +	if (ret)
+> +		return ret;
+> +	if (code & STATUS_VALID_BIT) {
+> +		last_temp = code & LAST_TEMP_MASK;
+> +		goto done;
+> +	} else {
+> +		last_temp2 = code & LAST_TEMP_MASK;
+> +	}
+> +
+> +	/* Try a third/last time */
+> +	ret = regmap_read(tmdev->map, sensor_addr, &code);
+> +	if (ret)
+> +		return ret;
+> +	if (code & STATUS_VALID_BIT) {
+> +		last_temp = code & LAST_TEMP_MASK;
+> +		goto done;
+> +	} else {
+> +		last_temp3 = code & LAST_TEMP_MASK;
+> +	}
+> +
+> +	if (last_temp == last_temp2)
+> +		last_temp = last_temp2;
+> +	else if (last_temp2 == last_temp3)
+> +		last_temp = last_temp3;
+> +done:
+> +	/* Code sign bit is the sign extension for a negative value */
+> +	if (last_temp & CODE_SIGN_BIT)
+> +		last_temp |= ~CODE_SIGN_BIT;
+> +
+> +	/* Temperatures are in deciCelicius */
+> +	*temp = last_temp * 100;
 
-No. Opened a bug a while back to request access, but I guess the
-right person didn't see it.
+This looks the same as what we do for 8996. Does it make sense to move this
+to tsens-common and reuse in both 8996 and 845?
 
-https://bugs.freedesktop.org/show_bug.cgi?id=105166
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct regmap_config tsens_config = {
+> +	.reg_bits	= 32,
+> +	.val_bits	= 32,
+> +	.reg_stride	= 4,
+> +};
+> +
+> +
+> +static const struct tsens_ops ops_sdm845 = {
+> +  	.init		= init_common,
+> +	.get_temp	= get_temp_sdm845,
+> +};
+> +
+> +const struct tsens_data data_sdm845 = {
+> +	.ops		= &ops_sdm845,
+> +};
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 3f9fe6a..314a20f 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -72,6 +72,9 @@ static const struct of_device_id tsens_table[] = {
+>  	}, {
+>  		.compatible = "qcom,msm8996-tsens",
+>  		.data = &data_8996,
+> +	}, {
+> +		.compatible = "qcom,sdm845-tsens",
+> +		.data = &data_sdm845,
+>  	},
+>  	{}
+>  };
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 911c197..f15660d 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -90,5 +90,6 @@ int init_common(struct tsens_device *);
+>  int get_temp_common(struct tsens_device *, int, int *);
+>  
+>  extern const struct tsens_data data_8916, data_8974, data_8960, data_8996;
+> +extern const struct tsens_data data_sdm845;
+>  
+>  #endif /* __QCOM_TSENS_H__ */
+> 
 
-> 
-> Noralf.
-> 
->> A few things to note here:
->> * The datasheet for this display[1] doesn't have a vendor mentioned on it
->>    anywhere, so I have used "adafruit" as the vendor prefix. If 
->> someone has a
->>    better suggestion, please speak up.
->> * The MAINTAINERS patch for ili9225 is included so we don't end up 
->> with a merge
->>    conflict later on.
->>
->> v2 changes:
->> * change vendor prefix from "noname" to "adafruit"
->> * new patch for "adafruit" vendor prefix
->> * minor style changes
->> * drop regulator from driver (instead of adding to DT bindings)
->>
->> [1]: 
->> https://cdn-learn.adafruit.com/assets/assets/000/046/879/original/SPEC-YX240QV29-T_Rev.A__1_.pdf 
->>
->>
->>
->> David Lechner (4):
->>    MAINTAINERS: fix path to ilitek,ili9225 device tree bindings
->>    dt-bindings: Add vendor prefix for Adafruit
->>    dt-bindings: new binding for Ilitek ILI9341 display panels
->>    drm/tinydrm: new driver for ILI9341 display panels
->>
->>   .../bindings/display/ilitek,ili9341.txt       |  27 ++
->>   .../devicetree/bindings/vendor-prefixes.txt   |   1 +
->>   MAINTAINERS                                   |   8 +-
->>   drivers/gpu/drm/tinydrm/Kconfig               |  10 +
->>   drivers/gpu/drm/tinydrm/Makefile              |   1 +
->>   drivers/gpu/drm/tinydrm/ili9341.c             | 233 ++++++++++++++++++
->>   6 files changed, 279 insertions(+), 1 deletion(-)
->>   create mode 100644 
->> Documentation/devicetree/bindings/display/ilitek,ili9341.txt
->>   create mode 100644 drivers/gpu/drm/tinydrm/ili9341.c
->>
-> 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
