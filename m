@@ -1,15 +1,15 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: add support for Pinebook
-Date: Mon, 4 Jun 2018 10:49:25 +0200
-Message-ID: <20180604084925.wbtz7cdcleyaei62@flea>
+Subject: Re: [PATCH 1/3] arm64: allwinner: a64: add R_I2C controller
+Date: Mon, 4 Jun 2018 10:51:11 +0200
+Message-ID: <20180604085111.s23qamdethe6sr6d@flea>
 References: <20180601062901.8052-1-anarsoul@gmail.com>
- <20180601062901.8052-4-anarsoul@gmail.com>
- <20180601092346.g2iixqupumn7xo7r@flea>
- <CA+E=qVffecgkCG2V_5ptS9oRxo4XwjpQQhWmf8ywpfF78Yy+7A@mail.gmail.com>
+ <20180601062901.8052-2-anarsoul@gmail.com>
+ <20180601091631.wqctilk55fcmggwv@flea>
+ <CA+E=qVfH3wWsSdzGn353q0Jf-PQ8cjU-i5osLOV1c4qWVGrR5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5041387100736168116=="
+Content-Type: multipart/mixed; boundary="===============4215363019226114668=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+E=qVffecgkCG2V_5ptS9oRxo4XwjpQQhWmf8ywpfF78Yy+7A@mail.gmail.com>
+In-Reply-To: <CA+E=qVfH3wWsSdzGn353q0Jf-PQ8cjU-i5osLOV1c4qWVGrR5A@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,123 +20,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 
---===============5041387100736168116==
+--===============4215363019226114668==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2b3wiee55panlvid"
+	protocol="application/pgp-signature"; boundary="5wzuacnj7eo4ub2g"
 Content-Disposition: inline
 
 
---2b3wiee55panlvid
+--5wzuacnj7eo4ub2g
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 01, 2018 at 10:37:29AM -0700, Vasily Khoruzhick wrote:
-> On Fri, Jun 1, 2018 at 2:23 AM, Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> > On Thu, May 31, 2018 at 11:29:01PM -0700, Vasily Khoruzhick wrote:
-> >> From: Icenowy Zheng <icenowy@aosc.xyz>
-> >>
-> >> Pinebook is a A64-based laptop produced by Pine64, with the following
-> >> peripherals:
-> >>
-> >> USB:
-> >> - Two external USB ports (one is directly connected to A64's OTG
-> >> controller, the other is under a internal hub connected to the host-on=
-ly
-> >> controller.)
-> >> - USB HID keyboard and touchpad connected to the internal hub.
-> >> - USB UVC camera connected to the internal hub.
-> >>
-> >> Power-related:
-> >> - A DC IN jack connected to AXP803's DCIN pin.
-> >> - A Li-Polymer battery connected to AXP803's battery pins.
-> >>
-> >> Storage:
-> >> - An eMMC by Foresee on the main board (in the product revision of the
-> >> main board it's designed to be switchable).
-> >> - An external MicroSD card slot.
-> >>
-> >> Display:
-> >> - An eDP LCD panel (1366x768) connected via an ANX6345 RGB-eDP bridge.
-> >> - A mini HDMI port.
-> >>
-> >> Misc:
-> >> - A Hall sensor designed to detect the status of lid, connected to GPI=
-O PL12.
-> >> - A headphone jack connected to the SoC's internal codec.
-> >> - A debug UART port muxed with headphone jack.
-> >>
-> >> This commit adds basical support for it.
-> >>
-> >> [vasily: squashed several commits into one, added simplefb node, added=
- usbphy
-> >>        to ehci0 and ohci0 nodes]
-> >>
-> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> >> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+On Fri, Jun 01, 2018 at 10:30:00AM -0700, Vasily Khoruzhick wrote:
 > >> ---
-> >>  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
-> >>  .../dts/allwinner/sun50i-a64-pinebook.dts     | 285 ++++++++++++++++++
-> >>  2 files changed, 286 insertions(+)
-> >>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.=
-dts
+> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 17 +++++++++++++++++
+> >>  1 file changed, 17 insertions(+)
 > >>
-> >> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/=
-dts/allwinner/Makefile
-> >> index 8bebe7da5ed9..a8c6d0c6f2c5 100644
-> >> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> >> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> >> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-nanopi-a64.dtb
-> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-olinuxino.dtb
-> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-orangepi-win.dtb
-> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-pine64-plus.dtb sun50i-a64-p=
-ine64.dtb
-> >> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-pinebook.dtb
-> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-sopine-baseboard.dtb
-> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-teres-i.dtb
-> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
-> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/a=
-rch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> >> new file mode 100644
-> >> index 000000000000..d952db217702
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> >> @@ -0,0 +1,285 @@
-> >> +/*
-> >> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-> >> + * Copyright (C) 2018 Vasily Khoruzhick <anarsoul@gmail.com>
-> >> + *
-> >> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm6=
+4/boot/dts/allwinner/sun50i-a64.dtsi
+> >> index 1b2ef28c42bd..b5e903ccf0ec 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> >> @@ -46,6 +46,7 @@
+> >>  #include <dt-bindings/clock/sun8i-r-ccu.h>
+> >>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >>  #include <dt-bindings/reset/sun50i-a64-ccu.h>
+> >> +#include <dt-bindings/reset/sun8i-r-ccu.h>
+> >>
+> >>  / {
+> >>       interrupt-parent =3D <&gic>;
+> >> @@ -655,6 +656,17 @@
+> >>                       #reset-cells =3D <1>;
+> >>               };
+> >>
+> >> +             r_i2c: i2c@1f02400 {
+> >> +                     compatible =3D "allwinner,sun6i-a31-i2c";
 > >
-> > The SPDX tag should be the first one.
+> > You should add an a64 compatible here
 >=20
-> OK, but it's not in number of other dts files, e.g.
-> sun50i-a64-teres-i.dts or sun50i-h5-orangepi-zero-plus.dts
+> We don't have it for regular i2c, why should I add it here?
 
-I guess we'd have to fix it then
+We miss some of them. Adding for i2c would make sense too.
 
-> >> +/* The ANX6345 eDP-bridge is on r_i2c. There is no linux (mainline)
-> >> + * driver for this chip at the moment, the bootloader initializes it.
-> >> + * However it can be accessed with the i2c-dev driver from user space.
-> >> + */
+> >> +                     reg =3D <0x01f02400 0x400>;
+> >> +                     interrupts =3D <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                     clocks =3D <&r_ccu CLK_APB0_I2C>;
+> >> +                     resets =3D <&r_ccu RST_APB0_I2C>;
+> >> +                     status =3D "disabled";
+> >> +                     #address-cells =3D <1>;
+> >> +                     #size-cells =3D <0>;
+> >> +             };
+> >> +
+> >>               r_pio: pinctrl@1f02c00 {
+> >>                       compatible =3D "allwinner,sun50i-a64-r-pinctrl";
+> >>                       reg =3D <0x01f02c00 0x400>;
+> >> @@ -670,6 +682,11 @@
+> >>                               pins =3D "PL0", "PL1";
+> >>                               function =3D "s_rsb";
+> >>                       };
+> >> +
+> >> +                     r_i2c_pins_a: i2c-a {
+> >> +                             pins =3D "PL8", "PL9";
+> >> +                             function =3D "s_i2c";
+> >> +                     };
 > >
-> > The comment format is wrong, and the part after r_i2c, about i2c-dev
-> > and the mainline support is not really relevant. The DT describes the
-> > hardware, and is used by several different projects that might or
-> > might not have i2c-dev, an interface similar, or might have or not a
-> > driver for the bridge.
+> > This should be ordered by alphabetical order
 >=20
-> Comment is identical to sun50i-a64-teres-i.dts (which was merged few
-> months ago).
-> I'll remove everything but first sentence.
+> OK
+>=20
+> > If this is the only muxing option, you can also add it to the i2c DT
+> > node.
+>=20
+> It's not the only option, but other option conflicts with rsb. Should
+> I still add it to i2c DT node?
 
-We don't notice everything unfortunately. Feel free to fix it in the
-TERES-I DTS as well.
+I guess you can put it there, the muxing will only be enforced if the
+device is enabled, and there should be only one of RSB or I2C that
+would be.
 
 Maxime
 
@@ -145,30 +109,30 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---2b3wiee55panlvid
+--5wzuacnj7eo4ub2g
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsU/RQACgkQ0rTAlCFN
-r3QwZg/+JHBSDE2O+F87pDwndmAxSBGrO0qgxWbl+uKmhkhc4z0NlIqtgJUoH2qr
-3ojH8Tgv2sHZIqlkCo/QcmBKX4VZYiDRfRklgPYoIfI4EOlLprEQwoVKT1jLt8Kr
-cIjwr6F52/y9+dHyQdJWp0DO6wLBUOTGpPHTzCZ85+A+v3v/fWl3WIXAJuI3lZbR
-OqetyGZUkWXZGNnt26SJ9hmj/6IiBgq2V9uG5bZv/GfR38T2oD24DIXqqopxzIwU
-X/206A4NNujMYP4DoBHvNVl+8wASVkbiR7oXXuFlwAE8iCki31YD1EqKl4lbXU9H
-L8TzwctjCfReEghxCUMhikP3RARXHM7G4qqE/cjBKCBs3XeQ0/80Xhpa0ULtxUy/
-W5Yfdf9KsMsA6Aq6k4RAfOeAZZZ6VMUlRstcJMgUA4CmUCn984zFKd1w4AzDqTqb
-jteXmvX1RrUFvcoGDnq3VKdzuHudxFhE4ggHeOKxZKAnHU3ZLQS3GSFjeyyyy90a
-KF8qEI4fPVZTrdO1zzaBavsDtws4GiAAIyas7f+7xcEW03ftTysWFGdA5kvaW1Ks
-WYRCMOrWVZ1xLAfbYwk+aqmDmzp6vs0aoHwU/5LahMSKzQecjq1IWPTo91LluYdn
-nkO7Ob88CNybztxII6iuruQy873NR/+2rC7Z9RO3oHSv+2hqjNg=
-=IpR7
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsU/X8ACgkQ0rTAlCFN
+r3TeOg/6A6Ixum1kHuqd7HoJ0KciL0xF9UX9zH9ShDOATTcLuPH564mD2rt1X4Ij
+LRLPzTC9tTJORWINfJ8dXsgNVS7FEErUarf0B2BNALrefflrDk5oyyCisEHN5IXf
+0dLNEn8z5+SVzfSEUuSImcOBcVtg1gjL2A1V9JImKhx5A5SlC9plqLlg1bRl/Uf7
+sjDtCrV1pS/EUCi3eqMtjwNFfyT1dqFy+SLoY/8+gq9yMnzuTfyMPBx0R4Atq8ee
+qg+HU/Web88ve03JNZIpxJt8aIJzaUzJ2188BH1uSUWMYcRS+JCdZVfjsrX0hvV6
+dMoK0CyVC3NtU5MsasVJC0IkTgbjgz1h0saTFcsp5L7KEYWs9naFjScptoxxMZyj
+5PEjhtxojDK8ywEOkt7Hkw+na0MNgCNXtxIJromyDI2Q/qFTXsvBszacWEG/SuY1
+ymJIC2wNyKSCUPA8Q89xMaO4ZKjRoMSjbj1Pj0rPFUK3ZZdagdQAJ8Chbuwwk3nN
+zByeeg0HMmZzaBD7O9KUK5R5qYpTzZ3lXJHrhW3vATuVWCBFWIeqDMsf1yjuSeqr
+a7FaZv/JBIdSU6rrvTEL1abiRmOe4i11jUc/ciAeFcXn49Wndt9jClUwvB1DSMlj
+aKSsAz1XCziH35nOJAd28D4K/rTcTgK4qxCsWNWoPu6XK60dvkI=
+=cTZb
 -----END PGP SIGNATURE-----
 
---2b3wiee55panlvid--
+--5wzuacnj7eo4ub2g--
 
 
---===============5041387100736168116==
+--===============4215363019226114668==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -179,4 +143,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============5041387100736168116==--
+--===============4215363019226114668==--
