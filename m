@@ -1,60 +1,102 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] arm64: dts: renesas: condor: specify EtherAVB PHY IRQ
-Date: Mon, 4 Jun 2018 12:33:02 +0200
-Message-ID: <20180604103302.f5kx5fqhbl3ohfpi@verge.net.au>
-References: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
- <21578b79-7ba0-b3a6-ae45-7e9ffbb7c8db@cogentembedded.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [RFC PATCH 2/8] coresight: Fix remote endpoint parsing
+Date: Mon, 4 Jun 2018 11:34:32 +0100
+Message-ID: <005ec90b-6697-1b33-de01-b5f2a6c509cf@arm.com>
+References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+ <1527858967-16047-3-git-send-email-suzuki.poulose@arm.com>
+ <20180601193837.GB9838@xps15>
+ <CANLsYkzY-1z4NBmZECczMisDixgPb2UkJL0k9_LmDNEiqUS1=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <21578b79-7ba0-b3a6-ae45-7e9ffbb7c8db@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkzY-1z4NBmZECczMisDixgPb2UkJL0k9_LmDNEiqUS1=g@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, John Horley <john.horley@arm.com>, Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 11:45:55PM +0300, Sergei Shtylyov wrote:
-> Specify EtherAVB PHY IRQ in the Condor board's device tree, now that
-> we have the GPIO support (previously phylib had to resort to polling).
+On 06/01/2018 08:46 PM, Mathieu Poirier wrote:
+> On 1 June 2018 at 13:38, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+>> On Fri, Jun 01, 2018 at 02:16:01PM +0100, Suzuki K Poulose wrote:
+>>> When parsing the remote endpoint of an output port, we do :
+>>>       rport = of_graph_get_remote_port(ep);
+>>>       rparent = of_graph_get_remote_port_parent(ep);
+>>>
+>>> and then parse the "remote_port" as if it was the remote endpoint,
+>>> which is wrong. The code worked fine because we used endpoint number
+>>> as the port number. Let us fix it and optimise a bit as:
+>>>
+>>>       remote_ep = of_graph_get_remote_endpoint(ep);
+>>>       if (remote_ep)
+>>>          remote_parent = of_graph_get_port_parent(remote_ep);
+>>>
+>>> and then, parse the remote_ep for the port/endpoint details.
+>>>
+>>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> ---
+>>>   drivers/hwtracing/coresight/of_coresight.c | 19 ++++++++++---------
+>>>   1 file changed, 10 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+>>> index 7c37544..e0deab0 100644
+>>> --- a/drivers/hwtracing/coresight/of_coresight.c
+>>> +++ b/drivers/hwtracing/coresight/of_coresight.c
+>>> @@ -128,7 +128,7 @@ of_get_coresight_platform_data(struct device *dev,
+>>>        struct device *rdev;
+>>>        struct device_node *ep = NULL;
+>>>        struct device_node *rparent = NULL;
+>>> -     struct device_node *rport = NULL;
+>>> +     struct device_node *rep = NULL;
+>>>
+>>>        pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>>>        if (!pdata)
+>>> @@ -169,16 +169,17 @@ of_get_coresight_platform_data(struct device *dev,
+>>>                        pdata->outports[i] = endpoint.port;
+>>>
+>>>                        /*
+>>> -                      * Get a handle on the remote port and parent
+>>> -                      * attached to it.
+>>> +                      * Get a handle on the remote endpoint and the device
+>>> +                      * it is attached to.
+>>>                         */
+>>> -                     rparent = of_graph_get_remote_port_parent(ep);
+>>> -                     rport = of_graph_get_remote_port(ep);
+>>> -
+>>> -                     if (!rparent || !rport)
+>>> +                     rep = of_graph_get_remote_endpoint(ep);
+>>> +                     if (!rep)
+>>> +                             continue;
+>>> +                     rparent = of_graph_get_port_parent(rep);
+>>> +                     if (!rparent)
+>>>                                continue;
+>>>
+>>> -                     if (of_graph_parse_endpoint(rport, &rendpoint))
+>>> +                     if (of_graph_parse_endpoint(rep, &rendpoint))
+>>>                                continue;
+>>
+>> You are correct and I'm out to lunch.
+>>
+>>>
+>>>                        rdev = of_coresight_get_endpoint_device(rparent);
+>>> @@ -186,7 +187,7 @@ of_get_coresight_platform_data(struct device *dev,
+>>>                                return ERR_PTR(-EPROBE_DEFER);
+>>>
+>>>                        pdata->child_names[i] = dev_name(rdev);
+>>> -                     pdata->child_ports[i] = rendpoint.id;
+>>> +                     pdata->child_ports[i] = rendpoint.port;
+>>
+>> You need to do a of_node_put() here for both rep and rparent.
 > 
-> Based on the original (and large) patch by Vladimir Barinov.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
->  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> @@ -59,6 +59,8 @@
->  	phy0: ethernet-phy@0 {
->  		rxc-skew-ps = <1500>;
->  		reg = <0>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+> Same thing for the "continue" and error condition above.
 
-I don't see this documented. Perhaps I'm missing something obvious.
-Or you have some extra information or newer documentation?
 
-Also, given Olof Johansson's recent comments in ("Re: [GIT PULL] Renesas
-ARM64 Based SoC DT Updates for v4.18") please consider squashing this patch
-and the following one.
+Mathieu,
 
->  	};
->  };
->  
-> 
+Thanks for pointing that out. I see that we were missing them for the
+existing code as well. I will clean all this up.
+
+Cheers
+Suzuki
