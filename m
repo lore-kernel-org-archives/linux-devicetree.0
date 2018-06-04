@@ -1,43 +1,73 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 6/6] arm64: dts: socionext: Add missing cooling device
- properties for CPUs
-Date: Mon, 4 Jun 2018 12:44:35 +0530
-Message-ID: <20180604071435.moiw5t44yn3wvrvo@vireshk-i7>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <744f4c0a9a6f0d3acfc36e49ef62f17f53831b3b.1527225682.git.viresh.kumar@linaro.org>
- <CAK7LNASv90x3QKPYEy-3Msow0wi99hV8aRiU32aAjS7jMJKydA@mail.gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCHv9 3/3] ARM:drm ivip Intel FPGA Video and Image Processing
+ Suite
+Date: Mon, 4 Jun 2018 00:32:24 -0700
+Message-ID: <06e982ba-3701-b042-21b6-64f6f8744bba@infradead.org>
+References: <1528094404-3542-1-git-send-email-hean.loong.ong@intel.com>
+ <1528094404-3542-4-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASv90x3QKPYEy-3Msow0wi99hV8aRiU32aAjS7jMJKydA@mail.gmail.com>
+In-Reply-To: <1528094404-3542-4-git-send-email-hean.loong.ong@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: arm-soc <arm@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "Hean-Loong, Ong" <hean.loong.ong@intel.com>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 01-06-18, 12:25, Masahiro Yamada wrote:
-> 2018-05-25 14:40 GMT+09:00 Viresh Kumar <viresh.kumar@linaro.org>:
-> > The cooling device properties, like "#cooling-cells" and
-> > "dynamic-power-coefficient", should either be present for all the CPUs
-> > of a cluster or none. If these are present only for a subset of CPUs of
-> > a cluster then things will start falling apart as soon as the CPUs are
-> > brought online in a different order. For example, this will happen
-> > because the operating system looks for such properties in the CPU node
-> > it is trying to bring up, so that it can register a cooling device.
-> >
-> > Add such missing properties.
-> >
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+On 06/03/2018 11:40 PM, Hean-Loong, Ong wrote:
+> From: Ong Hean Loong <hean.loong.ong@intel.com>
 > 
+> Driver for Intel FPGA Video and Image Processing Suite Frame Buffer II.
+> The driver only supports the Intel Arria10 devkit and its variants.
+> This driver can be either loaded staticlly or in modules.
+> The OF device tree binding is located at:
+> Documentation/devicetree/bindings/display/altr,vip-fb2.txt
 > 
-> Applied to linux-uniphier.
+> Signed-off-by: Ong Hean Loong <hean.loong.ong@intel.com>
+> ---
+>  drivers/gpu/drm/Kconfig               |    2 +
+>  drivers/gpu/drm/Makefile              |    1 +
+>  drivers/gpu/drm/ivip/Kconfig          |   14 +++
+>  drivers/gpu/drm/ivip/Makefile         |    9 ++
+>  drivers/gpu/drm/ivip/intel_vip_conn.c |   95 ++++++++++++++++
+>  drivers/gpu/drm/ivip/intel_vip_core.c |  161 +++++++++++++++++++++++++++
+>  drivers/gpu/drm/ivip/intel_vip_drv.h  |   52 +++++++++
+>  drivers/gpu/drm/ivip/intel_vip_of.c   |  193 +++++++++++++++++++++++++++++++++
+>  8 files changed, 527 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/gpu/drm/ivip/Kconfig
+>  create mode 100644 drivers/gpu/drm/ivip/Makefile
+>  create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
+>  create mode 100644 drivers/gpu/drm/ivip/intel_vip_core.c
+>  create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
+>  create mode 100644 drivers/gpu/drm/ivip/intel_vip_of.c
 > 
-> I had already sent a PR for v4.18-rc1 before I received this patch.
-> Please wait for v4.19-rc1.
+> diff --git a/drivers/gpu/drm/ivip/Kconfig b/drivers/gpu/drm/ivip/Kconfig
+> new file mode 100644
+> index 0000000..1d08b90
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ivip/Kconfig
+> @@ -0,0 +1,14 @@
+> +config DRM_IVIP
+> +        tristate "Intel FGPA Video and Image Processing"
+> +        depends on DRM && OF
+> +        select DRM_GEM_CMA_HELPER
+> +        select DRM_KMS_HELPER
+> +        select DRM_KMS_FB_HELPER
+> +        select DRM_KMS_CMA_HELPER
+> +        help
+> +		  Choose this option if you have an Intel FPGA Arria 10 system
+> +		  and above with an Intel Display Port IP. This does not support
+> +		  legacy Intel FPGA Cyclone V display port. Currently only single
+> +		  frame buffer is supported. Note that ACPI and X_86 architecture
+> +		  is not supported for Arria10. If M is selected the module will be
+> +		  called ivip.
 
-Sure, no hurry. Though I thought this kind of fixes can go in 4.18-rc2 as well,
-isn't it ?
+Hi,
 
+Kconfig help text is supposed to be indented with one tab + 2 spaces.
+
+thanks,
 -- 
-viresh
+~Randy
