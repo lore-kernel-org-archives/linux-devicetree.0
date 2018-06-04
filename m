@@ -1,141 +1,86 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v6 6/9] dt-bindings: counter: Document stm32 quadrature encoder
-Date: Mon, 4 Jun 2018 15:03:51 +0200
-Message-ID: <CA+M3ks43RzdhYPwz7i0kB_CPYPLmRfwtALS-bPzuwEQEMcts0Q@mail.gmail.com>
-References: <cover.1526487615.git.vilhelm.gray@gmail.com> <ccdbbfb2833d274b6bfa234aada57e68d9793dd5.1526487615.git.vilhelm.gray@gmail.com>
- <CAL_Jsq+a4s=5N6wUWifoHWQoornbDBY-UY2xrwj1kggNH4Q5pQ@mail.gmail.com>
- <CA+M3ks4vjE5JMmLjjPnf6ffD9QYSUmSyrpO+yxADT_8WqAA3Tg@mail.gmail.com> <20180518162815.GA24966@rob-hp-laptop>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 4/5] media: venus: add no TZ boot and shutdown routine
+Date: Mon, 4 Jun 2018 22:09:05 +0900
+Message-ID: <CAAFQd5AKy8X0Dd47fOKxTUaLuErtWv005_AGbB=O5SP+F+rrgA@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org> <1527884768-22392-5-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180518162815.GA24966@rob-hp-laptop>
+In-Reply-To: <1527884768-22392-5-git-send-email-vgarodia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Jonathan Cameron <jic23@kernel.org>
+To: vgarodia@codeaurora.org
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-05-18 18:28 GMT+02:00 Rob Herring <robh@kernel.org>:
-> On Thu, May 17, 2018 at 08:59:40PM +0200, Benjamin Gaignard wrote:
->> 2018-05-17 18:23 GMT+02:00 Rob Herring <robh+dt@kernel.org>:
->> > On Wed, May 16, 2018 at 12:51 PM, William Breathitt Gray
->> > <vilhelm.gray@gmail.com> wrote:
->> >> From: Benjamin Gaignard <benjamin.gaignard@st.com>
->> >
->> > v6? Where's v1-v5?
->> >
->> >> Add bindings for STM32 Timer quadrature encoder.
->> >> It is a sub-node of STM32 Timer which implement the
->> >> counter part of the hardware.
->> >>
->> >> Cc: Rob Herring <robh+dt@kernel.org>
->> >> Cc: Mark Rutland <mark.rutland@arm.com>
->> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->> >> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
->> >> ---
->> >>  .../bindings/counter/stm32-timer-cnt.txt      | 26 +++++++++++++++++=
-++
->> >>  .../devicetree/bindings/mfd/stm32-timers.txt  |  7 +++++
->> >>  2 files changed, 33 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/counter/stm32-t=
-imer-cnt.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/counter/stm32-timer-cn=
-t.txt b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
->> >> new file mode 100644
->> >> index 000000000000..377728128bef
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/counter/stm32-timer-cnt.txt
->> >> @@ -0,0 +1,26 @@
->> >> +STMicroelectronics STM32 Timer quadrature encoder
->> >> +
->> >> +STM32 Timer provides quadrature encoder counter mode to detect
->> >
->> > 'mode' does not sound like a sub-block of the timers block.
->>
->> quadrature encoding is one of the counting modes of this hardware
->> block which is enable to count on other signals/triggers
+Hi Vikash,
+
+On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+[snip]
+> +int venus_boot_noTZ(struct venus_core *core, phys_addr_t mem_phys,
+> +                                                       size_t mem_size)
+> +{
+> +       struct iommu_domain *iommu;
+> +       struct device *dev;
+> +       int ret;
+> +
+> +       if (!core->fw.dev)
+> +               return -EPROBE_DEFER;
+
+Is it really possible that the device appears after the probe is retried?
+
+> +
+> +       dev = core->fw.dev;
+> +
+> +       iommu = iommu_domain_alloc(&platform_bus_type);
+> +       if (!iommu) {
+> +               dev_err(dev, "Failed to allocate iommu domain\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       ret = iommu_attach_device(iommu, dev);
+> +       if (ret) {
+> +               dev_err(dev, "could not attach device\n");
+> +               goto err_attach;
+> +       }
+> +
+> +       ret = iommu_map(iommu, VENUS_FW_START_ADDR, mem_phys, mem_size,
+> +                       IOMMU_READ|IOMMU_WRITE|IOMMU_PRIV);
+> +       if (ret) {
+> +               dev_err(dev, "could not map video firmware region\n");
+> +               goto err_map;
+> +       }
+
+I'm not very familiar with translation capabilities of ARM SMMU, so
+that might be an elementary question, but could you explain how this
+works? Will this make the firmware device (transfers with firmware
+PASID) use different page directory from the main device (all the
+other PASIDs; used with DMA mapping API)?
+
++Will and Robin, just in case.
+
+> +       core->fw.iommu_domain = iommu;
+> +       venus_reset_hw(core);
+> +
+> +       return 0;
+> +
+> +err_map:
+> +       iommu_detach_device(iommu, dev);
+> +err_attach:
+> +       iommu_domain_free(iommu);
+> +       return ret;
+> +}
+[snip]
+> diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
+> index 0916826..67fdd89 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.h
+> +++ b/drivers/media/platform/qcom/venus/firmware.h
+> @@ -14,10 +14,15 @@
+>  #ifndef __VENUS_FIRMWARE_H__
+>  #define __VENUS_FIRMWARE_H__
 >
-> You don't need a child node and compatible to set a mode.
+> +#define VENUS_PAS_ID                   9
 
-"mode" isn't the good word here because quadratic encoder enable a
-sub-block of this hardware.
-Timer internal counter input could be internal or external clocks,
-some IIO triggers
-or the output of the quadratic encoder sub-block.
-It is a child like pwm or IIO trigger.
+Shouldn't this normally be given in DT?
 
->
->> >> +angular position and direction of rotary elements,
->> >> +from IN1 and IN2 input signals.
->> >> +
->> >> +Must be a sub-node of an STM32 Timer device tree node.
->> >> +See ../mfd/stm32-timers.txt for details about the parent node.
->> >> +
->> >> +Required properties:
->> >> +- compatible:          Must be "st,stm32-timer-counter".
->> >> +- pinctrl-names:       Set to "default".
->> >> +- pinctrl-0:           List of phandles pointing to pin configuratio=
-n nodes,
->> >> +                       to set IN1/IN2 pins in mode of operation for =
-Low-Power
->> >> +                       Timer input on external pin.
->> >> +
->> >> +Example:
->> >> +       timers@40010000  {
->> >> +               compatible =3D "st,stm32-timers";
->> >> +               ...
->> >> +               counter {
->> >> +                       compatible =3D "st,stm32-timer-counter";
->> >
->> > Is there only 1? How is the counter addressed?
->>
->> Yes there is only one counter per hardware block.
->> Counter is addressed like the two others sub-nodes and the details
->> about parent mode are describe in stm32-timers.txt
->> Should I add them here too ? so example will be like that:
->
-> No, you should drop the child node and add pinctrl to the parent.
->
-> Any other functions this block has that you plan on adding? Please make
-> bindings as complete as possible, not what you currently have drivers
-> for.
-
-Counter framework didn't exist when I pushed timer node but thanks to
-William's effort
-it will allow us to use this kindf of hardware
-
-Benjamin
-
->
->> timers@40010000  {
->>   #address-cells =3D <1>;
->>   #size-cells =3D <0>;
->>   compatible =3D "st,stm32-timers";
->>   reg =3D <0x40010000 0x400>;
->>   clocks =3D <&rcc 0 160>;
->>   clock-names =3D "int";
->>   counter {
->>     compatible =3D "st,stm32-timer-counter";
->>     pinctrl-names =3D "default";
->>     pinctrl-0 =3D <&tim1_in_pins>;
->>     };
->>  };
->>
->> Benjamin
->> >
->> > _______________________________________________
->> > linux-arm-kernel mailing list
->> > linux-arm-kernel@lists.infradead.org
->> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
---=20
-Benjamin Gaignard
-
-Graphic Study Group
-
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Tomasz
