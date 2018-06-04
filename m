@@ -1,115 +1,81 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
-Date: Mon, 4 Jun 2018 16:50:24 +0300
-Message-ID: <be5cc865-608b-dabb-2a3c-b5864c387d64@mm-sol.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2] of: platform: stop accessing invalid dev in
+ of_platform_device_destroy
+Date: Mon, 4 Jun 2018 14:54:21 +0100
+Message-ID: <467d5a5d-bb58-299e-a1fc-06e6974b7a0f@linaro.org>
+References: <20180602000343.20045-1-srinivas.kandagatla@linaro.org>
+ <CAL_JsqJ9AMDiYCfgGgHZ=XL_1yJjTdSA4Jb_GqHAZML3jwB6+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+In-Reply-To: <CAL_JsqJ9AMDiYCfgGgHZ=XL_1yJjTdSA4Jb_GqHAZML3jwB6+Q@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, stanimir.varbanov@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Banajit Goswami <bgoswami@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rohit Kumar <rohkumar@qti.qualcomm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikash,
 
-Thanks for the patch!
 
-On  1.06.2018 23:26, Vikash Garodia wrote:
-> Add a new routine which abstracts the TZ call to
-
-Actually the new routine abstracts Venus CPU state, Isn't it?
-
-> set the video hardware state.
+On 04/06/18 14:44, Rob Herring wrote:
+> On Fri, Jun 1, 2018 at 7:03 PM, Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>> Immediately after the platform_device_unregister() the device will be cleaned up.
+>> Accessing the freed pointer immediately after that will crash the system.
+>>
+>> Found this bug when kernel is built with CONFIG_PAGE_POISONING and testing
+>> loading/unloading audio drivers in a loop on Qcom platforms.
 > 
-> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
-> ---
->   drivers/media/platform/qcom/venus/core.h      |  5 +++++
->   drivers/media/platform/qcom/venus/firmware.c  | 28 +++++++++++++++++++++++++++
->   drivers/media/platform/qcom/venus/firmware.h  |  1 +
->   drivers/media/platform/qcom/venus/hfi_venus.c | 13 ++++---------
->   4 files changed, 38 insertions(+), 9 deletions(-)
+> Curious, does the unittest not catch this too?
 > 
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index 85e66e2..e7bfb63 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -35,6 +35,11 @@ struct reg_val {
->   	u32 value;
->   };
->   
-> +enum tzbsp_video_state {
-> +	TZBSP_VIDEO_SUSPEND = 0,
-> +	TZBSP_VIDEO_RESUME
-> +};
+Not sure!
+>>
+>> Fix this by removing accessing the dev pointer.
+>> Below is the carsh trace:
+> 
+> s/carsh/crash/
+Yep.
+> 
+> [...]
+> 
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index c00d81dfac0b..84c5c899187b 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -529,10 +529,13 @@ arch_initcall_sync(of_platform_default_populate_init);
+>>
+>>   int of_platform_device_destroy(struct device *dev, void *data)
+>>   {
+>> +       struct device_node *np;
+>> +
+>>          /* Do not touch devices not populated from the device tree */
+>>          if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED))
+>>                  return 0;
+>>
+>> +       np = dev->of_node;
+>>          /* Recurse for any nodes that were treated as busses */
+>>          if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
+>>                  device_for_each_child(dev, NULL, of_platform_device_destroy);
+>> @@ -544,8 +547,8 @@ int of_platform_device_destroy(struct device *dev, void *data)
+>>                  amba_device_unregister(to_amba_device(dev));
+>>   #endif
+>>
+>> -       of_node_clear_flag(dev->of_node, OF_POPULATED);
+>> -       of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+> 
+> Just move these 2 lines to before unregister calls.
+Make sense.. I will do that in v3.
 
-please move this in firmware.c, for more see below.
+thanks,
+srini
+> 
+>> +       of_node_clear_flag(np, OF_POPULATED);
+>> +       of_node_clear_flag(np, OF_POPULATED_BUS);
+>>          return 0;
+>>   }
+>>   EXPORT_SYMBOL_GPL(of_platform_device_destroy);
 
-> +
->   struct venus_resources {
->   	u64 dma_mask;
->   	const struct freq_tbl *freq_tbl;
-> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-> index 7d89b5a..b4664ed 100644
-> --- a/drivers/media/platform/qcom/venus/firmware.c
-> +++ b/drivers/media/platform/qcom/venus/firmware.c
-> @@ -53,6 +53,34 @@ static void venus_reset_hw(struct venus_core *core)
->   	/* Bring Arm9 out of reset */
->   	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
->   }
-> +
-> +int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
-
-can we put this function this way:
-
-venus_set_state(struct venus_core *core, bool on)
-
-so we set the state to On when we are power-up the venus CPU and Off
-when we power-down.
-
-by this way we really abstract the state, IMO.
-
-> +{
-> +	int ret;
-> +	struct device *dev = core->dev;
-> +	void __iomem *reg_base = core->base;
-
-just 'base' should be enough.
-
-> +
-> +	switch (state) {
-> +	case TZBSP_VIDEO_SUSPEND:
-> +		if (qcom_scm_is_available())
-
-You really shouldn't rely on this function (see the comment from Bjorn
-on first version of this patch series).
-
-I think we have to replace qcom_scm_is_available() with some flag which
-is reflecting does the firmware subnode is exist or not. In case it is
-not exist the we have to go with TZ scm calls.
-
-> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
-> +		else
-> +			writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
-> +		break;
-> +	case TZBSP_VIDEO_RESUME:
-> +		if (qcom_scm_is_available())
-> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
-> +		else
-> +			venus_reset_hw(core);
-> +		break;
-> +	default:
-> +		dev_err(dev, "invalid state\n");
-> +		break;
-> +	}
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
-> +
-
-regards,
-Stan
+>> --
+>> 2.16.2
+>>
