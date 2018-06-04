@@ -1,52 +1,72 @@
-Return-Path: <SRS0=qqtW=JO=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 21/22] [media] tvp5150: initialize subdev before parsing device tree
-Date: Thu, 28 Jun 2018 18:20:53 +0200
-Message-Id: <20180628162054.25613-22-m.felsch@pengutronix.de>
-In-Reply-To: <20180628162054.25613-1-m.felsch@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Return-Path: <SRS0=lPqN=IW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga04.intel.com ([192.55.52.120]:15315 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1750723AbeFDGd2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 4 Jun 2018 02:33:28 -0400
+Subject: Re: [RESEND PATCH V2 2/2] media: ak7375: Add ak7375 lens voice coil
+ driver
+References: <1527242135-22866-1-git-send-email-bingbu.cao@intel.com>
+ <1527242135-22866-2-git-send-email-bingbu.cao@intel.com>
+ <20180601094207.355n2vzpscsgwyc6@paasikivi.fi.intel.com>
+From: Bing Bu Cao <bingbu.cao@linux.intel.com>
+Message-ID: <e898d6bc-f9d3-3f0b-6e93-2e8dd99a047f@linux.intel.com>
+Date: Mon, 4 Jun 2018 14:36:10 +0800
+MIME-Version: 1.0
+In-Reply-To: <20180601094207.355n2vzpscsgwyc6@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Sender: devicetree-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, bingbu.cao@intel.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, tian.shu.qiu@intel.com, rajmohan.mani@intel.com, tfiga@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Tretter <m.tretter@pengutronix.de>
 
-There are several debug prints in the tvp5150_parse_dt() function, which
-do not print the prefix, because the v4l2_subdev is not initialized, yet.
 
-Initialize the v4l2_subdev before parsing the device tree to fix the
-debug messages.
+On 2018年06月01日 17:42, Sakari Ailus wrote:
+> On Fri, May 25, 2018 at 05:55:35PM +0800, bingbu.cao@intel.com wrote:
+>> +static int ak7375_i2c_write(struct ak7375_device *ak7375,
+>> +	u8 addr, u16 data, int size)
+>> +{
+>> +	struct i2c_client *client = v4l2_get_subdevdata(&ak7375->sd);
+>> +	int ret;
+>> +	u8 buf[3];
+>> +
+>> +	if (size != 1 && size != 2)
+>> +		return -EINVAL;
+>> +	buf[0] = addr;
+>> +	buf[2] = data & 0xff;
+>> +	if (size == 2)
+>> +		buf[1] = data >> 8;
+>> +	ret = i2c_master_send(client, (const char *)buf, size + 1);
+> I don't have a data datasheet for this thing, but it looks like buf[1] will
+> be undefined for writes the size of which is 1. And this what appears to be
+> written to the device as well...
+I check the datasheet once again and find out that the logic here for 
+size==1 is
+not correct, I will change it in next version. Thanks.
+Here is the write section in datasheet:
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+------
+After receiving the second byte (register address), AK7375 generates an 
+acknowledge then receives the third
+byte. The third and the following bytes represent control data. Control 
+data consists of 8 bits and is based on
+the MSB-first configuration.
+AK7375 can write multiple bytes of data at a time. After reception of 
+the third byte (control data), AK7375
+generates an acknowledge then receives the next data. If additional data 
+is received instead of the stop
+condition after receiving one byte of data, the address counter inside 
+the LSI chip is automatically
+incremented and the data is written at the next address.
+------
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 6ac29c62d99b..3645d1166118 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1856,6 +1856,9 @@ static int tvp5150_probe(struct i2c_client *c,
- 
- 	core->regmap = map;
- 	sd = &core->sd;
-+	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
-+	sd->internal_ops = &tvp5150_internal_ops;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- 	if (IS_ENABLED(CONFIG_OF) && np) {
- 		res = tvp5150_parse_dt(core, np);
-@@ -1868,10 +1871,6 @@ static int tvp5150_probe(struct i2c_client *c,
- 		core->mbus_type = V4L2_MBUS_BT656;
- 	}
- 
--	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
--	sd->internal_ops = &tvp5150_internal_ops;
--	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
--
- 	res = tvp5150_mc_init(sd);
- 	if (res)
- 		goto err_cleanup_dt;
--- 
-2.17.1
+>
+>> +	if (ret < 0)
+>> +		return ret;
+>> +	if (ret != size + 1)
+>> +		return -EIO;
+>> +	return 0;
+>> +}
+
