@@ -1,76 +1,109 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: [PATCH] drm/panel: simple: Add support for Innolux G070Y2-L01
-Date: Mon, 04 Jun 2018 13:16:48 +0200
-Message-ID: <1528111008.2818.20.camel@googlemail.com>
-Reply-To: chf.fritz@googlemail.com
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
+Date: Mon, 4 Jun 2018 13:24:27 +0200
+Message-ID: <20180604132427.14193577@bbrezillon>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+        <20180330074751.25987-2-boris.brezillon@bootlin.com>
+        <EFF070CA-9C6C-4E9C-9CEF-45AAD02745BB@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <EFF070CA-9C6C-4E9C-9CEF-45AAD02745BB@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Przemyslaw Gaj <pgaj@cadence.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIElubm9sdXggRzA3MFkyLUwwMSA3IiBXVkdBICg4
-MDB4NDgwKSBURlQgTENECnBhbmVsLgoKU2lnbmVkLW9mZi1ieTogQ2hyaXN0b3BoIEZyaXR6IDxj
-aGYuZnJpdHpAZ29vZ2xlbWFpbC5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-aW5ub2x1eCxnMDcweTItbDAxLnR4dCAgfCAxMiArKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysrKysr
-LS0KIDIgZmlsZXMgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC9pbm5vbHV4LGcwNzB5Mi1sMDEudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxnMDcweTItbDAxLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9s
-dXgsZzA3MHkyLWwwMS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uN2My
-MzRjZgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZzA3MHkyLWwwMS50eHQKQEAgLTAsMCArMSwxMiBAQAor
-SW5ub2x1eCBHMDcwWTItTDAxIDciIFdWR0EgKDgwMHg0ODApIFRGVCBMQ0QgcGFuZWwKKworUmVx
-dWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LGcwNzB5
-Mi1sMDEiCistIHBvd2VyLXN1cHBseTogYXMgc3BlY2lmaWVkIGluIHRoZSBiYXNlIGJpbmRpbmcK
-KworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gYmFja2xpZ2h0OiBhcyBzcGVjaWZpZWQgaW4gdGhl
-IGJhc2UgYmluZGluZworLSBlbmFibGUtZ3Bpb3M6IGFzIHNwZWNpZmllZCBpbiB0aGUgYmFzZSBi
-aW5kaW5nCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5l
-bCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhp
-cyBkaXJlY3RvcnkuCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2lt
-cGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggY2JmMWFi
-NC4uYzAzMGFiMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtMTA4Niw2
-ICsxMDg2LDM2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBpbm5vbHV4X2F0MDcw
-dG45MiA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCiB9Owog
-CitzdGF0aWMgY29uc3Qgc3RydWN0IGRpc3BsYXlfdGltaW5nIGlubm9sdXhfZzA3MHkyX2wwMV90
-aW1pbmcgPSB7CisJLnBpeGVsY2xvY2sgPSB7IDI4MDAwMDAwLCAyOTUwMDAwMCwgMzIwMDAwMDAg
-fSwKKwkuaGFjdGl2ZSA9IHsgODAwLCA4MDAsIDgwMCB9LAorCS5oZnJvbnRfcG9yY2ggPSB7IDYx
-LCA5MSwgMTQxIH0sCisJLmhiYWNrX3BvcmNoID0geyA2MCwgOTAsIDE0MCB9LAorCS5oc3luY19s
-ZW4gPSB7IDEyLCAxMiwgMTIgfSwKKwkudmFjdGl2ZSA9IHsgNDgwLCA0ODAsIDQ4MCB9LAorCS52
-ZnJvbnRfcG9yY2ggPSB7IDQsIDksIDMwIH0sCisJLnZiYWNrX3BvcmNoID0geyA0LCA4LCAyOCB9
-LAorCS52c3luY19sZW4gPSB7IDIsIDIsIDIgfSwKKwkuZmxhZ3MgPSBESVNQTEFZX0ZMQUdTX0RF
-X0hJR0gsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgaW5ub2x1eF9nMDcw
-eTJfbDAxID0geworCS50aW1pbmdzID0gJmlubm9sdXhfZzA3MHkyX2wwMV90aW1pbmcsCisJLm51
-bV90aW1pbmdzID0gMSwKKwkuYnBjID0gNiwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMTUyLAor
-CQkuaGVpZ2h0ID0gOTEsCisJfSwKKwkuZGVsYXkgPSB7CisJCS5wcmVwYXJlID0gMTAsCisJCS5l
-bmFibGUgPSAxMDAsCisJCS5kaXNhYmxlID0gMTAwLAorCQkudW5wcmVwYXJlID0gODAwLAorCX0s
-CisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9TUFdHLAorfTsKKwog
-c3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBpbm5vbHV4X2cxMDFpY2VfbDAxX3Rp
-bWluZyA9IHsKIAkucGl4ZWxjbG9jayA9IHsgNjA0MDAwMDAsIDcxMTAwMDAwLCA3NDcwMDAwMCB9
-LAogCS5oYWN0aXZlID0geyAxMjgwLCAxMjgwLCAxMjgwIH0sCkBAIC0yMTU1LDEwICsyMTg1LDEz
-IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10g
-PSB7CiAJCS5jb21wYXRpYmxlID0gImlubm9sdXgsYXQwNzB0bjkyIiwKIAkJLmRhdGEgPSAmaW5u
-b2x1eF9hdDA3MHRuOTIsCiAJfSwgewotCQkuY29tcGF0aWJsZSA9Imlubm9sdXgsZzEwMWljZS1s
-MDEiLAorCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGcwNzB5Mi1sMDEiLAorCQkuZGF0YSA9ICZp
-bm5vbHV4X2cwNzB5Ml9sMDEsCisJfSwgeworCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGcxMDFp
-Y2UtbDAxIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9nMTAxaWNlX2wwMQogCX0sIHsKLQkJLmNvbXBh
-dGlibGUgPSJpbm5vbHV4LGcxMjFpMS1sMDEiLAorCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGcx
-MjFpMS1sMDEiLAogCQkuZGF0YSA9ICZpbm5vbHV4X2cxMjFpMV9sMDEKIAl9LCB7CiAJCS5jb21w
-YXRpYmxlID0gImlubm9sdXgsZzEyMXgxLWwwMyIsCi0tIAoyLjEuNAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, 4 Jun 2018 09:11:25 +0000
+Przemyslaw Gaj <pgaj@cadence.com> wrote:
+
+> Hi Boris
+> 
+> It looks great, just one comment to DEFSLVS command:
+> 
+> ﻿On 6/4/18, 9:32 AM, "Boris Brezillon" <boris.brezillon@bootlin.com> wrote:
+> 
+>     +int i3c_master_defslvs_locked(struct i3c_master_controller *master)
+>     +{
+>     +	struct i3c_ccc_cmd_dest dest = {
+>     +		.addr = I3C_BROADCAST_ADDR,
+>     +	};
+>     +	struct i3c_ccc_cmd cmd = {
+>     +		.id = I3C_CCC_DEFSLVS,
+>     +		.dests = &dest,
+>     +		.ndests = 1,
+>     +	};
+>     +	struct i3c_ccc_defslvs *defslvs;
+>     +	struct i3c_ccc_dev_desc *desc;
+>     +	struct i3c_device *i3cdev;
+>     +	struct i2c_device *i2cdev;
+>     +	struct i3c_bus *bus;
+>     +	bool send = false;
+>     +	int ndevs = 0, ret;
+>     +
+>     +	if (!master)
+>     +		return -EINVAL;
+>     +
+>     +	bus = i3c_master_get_bus(master);
+>     +	i3c_bus_for_each_i3cdev(bus, i3cdev) {
+>     +		ndevs++;
+>     +		if (I3C_BCR_DEVICE_ROLE(i3cdev->info.bcr) == I3C_BCR_I3C_MASTER)
+>     +			send = true;
+>     +	}
+>     +
+>     +	/* No other master on the bus, skip DEFSLVS. */
+>     +	if (!send)
+>     +		return 0;
+>     +
+>     +	i3c_bus_for_each_i2cdev(bus, i2cdev)
+>     +		ndevs++;
+>     +
+>     +	dest.payload.len = sizeof(*defslvs) +
+>     +			   ((ndevs - 1) * sizeof(struct i3c_ccc_dev_desc));
+>     +	defslvs = kzalloc(dest.payload.len, GFP_KERNEL);
+>     +	if (!defslvs)
+>     +		return -ENOMEM;
+>     +
+>     +	dest.payload.data = defslvs;
+>     +
+>     +	defslvs->count = ndevs;
+>     +	defslvs->master.bcr = master->this->info.bcr;
+>     +	defslvs->master.dcr = master->this->info.dcr;
+>     +	defslvs->master.dyn_addr = master->this->info.dyn_addr;
+>     +	defslvs->master.static_addr = I3C_BROADCAST_ADDR;
+>     +
+>     +	desc = defslvs->slaves;
+>     +	i3c_bus_for_each_i2cdev(bus, i2cdev) {
+>     +		desc->lvr = i2cdev->lvr;
+>     +		desc->static_addr = i2cdev->info.addr;
+>     +		desc++;
+>     +	}
+>     +
+>     +	i3c_bus_for_each_i3cdev(bus, i3cdev) {
+>     +		/* Skip the I3C dev representing this master. */
+>     +		if (i3cdev == master->this)
+>     +			continue;
+>     +
+>     +		desc->bcr = i3cdev->info.bcr;
+>     +		desc->dcr = i3cdev->info.dcr;
+>     +		desc->dyn_addr = i3cdev->info.dyn_addr;
+>     +		desc->static_addr = i3cdev->info.static_addr;
+>     +		desc++;
+>     +	}
+>     +
+>     +	ret = i3c_master_send_ccc_cmd_locked(master, &cmd);
+>     +	kfree(defslvs);
+>     +
+>     +	return ret;
+>     +}
+> 
+> You should shift all the addresses (dynamic and static) one bit left. 
+> Addresses are stored on bits [7:1], this is described in MIPI spec, 
+> section 5.1.9.3.7 Define List of Slaves (DEFSLVS)
+
+Oops, indeed. I will fix that.
+
+Thanks,
+
+Boris
