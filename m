@@ -1,67 +1,89 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] of: platform: stop accessing invalid dev in of_platform_device_destroy
-Date: Mon, 4 Jun 2018 08:44:39 -0500
-Message-ID: <CAL_JsqJ9AMDiYCfgGgHZ=XL_1yJjTdSA4Jb_GqHAZML3jwB6+Q@mail.gmail.com>
-References: <20180602000343.20045-1-srinivas.kandagatla@linaro.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 09/10] dpaa_eth: add support for hardware timestamping
+Date: Mon, 4 Jun 2018 06:49:20 -0700
+Message-ID: <20180604134920.ezhe6jz5ntpnqyzj@localhost>
+References: <20180604070837.19265-1-yangbo.lu@nxp.com>
+ <20180604070837.19265-10-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180602000343.20045-1-srinivas.kandagatla@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180604070837.19265-10-yangbo.lu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Banajit Goswami <bgoswami@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rohit Kumar <rohkumar@qti.qualcomm.com>
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: netdev@vger.kernel.org, madalin.bucur@nxp.com, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 1, 2018 at 7:03 PM, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
-> Immediately after the platform_device_unregister() the device will be cleaned up.
-> Accessing the freed pointer immediately after that will crash the system.
->
-> Found this bug when kernel is built with CONFIG_PAGE_POISONING and testing
-> loading/unloading audio drivers in a loop on Qcom platforms.
+On Mon, Jun 04, 2018 at 03:08:36PM +0800, Yangbo Lu wrote:
 
-Curious, does the unittest not catch this too?
+> +if FSL_DPAA_ETH
+> +config FSL_DPAA_ETH_TS
+> +	bool "DPAA hardware timestamping support"
+> +	select PTP_1588_CLOCK_QORIQ
+> +	default n
+> +	help
+> +	  Enable DPAA hardware timestamping support.
+> +	  This option is useful for applications to get
+> +	  hardware time stamps on the Ethernet packets
+> +	  using the SO_TIMESTAMPING API.
+> +endif
 
->
-> Fix this by removing accessing the dev pointer.
-> Below is the carsh trace:
+You should drop this #ifdef.  In general, if a MAC supports time
+stamping and PHC, then the driver support should simply be compiled
+in.
 
-s/carsh/crash/
+[ When time stamping incurs a large run time performance penalty to
+  non-PTP users, then it might make sense to have a Kconfig option to
+  disable it, but that doesn't appear to be the case here. ]
 
-[...]
+> @@ -1615,6 +1635,24 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
+>  	skbh = (struct sk_buff **)phys_to_virt(addr);
+>  	skb = *skbh;
+>  
+> +#ifdef CONFIG_FSL_DPAA_ETH_TS
+> +	if (priv->tx_tstamp &&
+> +	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index c00d81dfac0b..84c5c899187b 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -529,10 +529,13 @@ arch_initcall_sync(of_platform_default_populate_init);
->
->  int of_platform_device_destroy(struct device *dev, void *data)
->  {
-> +       struct device_node *np;
+This condition fits on one line easily.
+
+> +		struct skb_shared_hwtstamps shhwtstamps;
+> +		u64 ns;
+
+Local variables belong at the top of the function.
+
+> +		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
 > +
->         /* Do not touch devices not populated from the device tree */
->         if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED))
->                 return 0;
->
-> +       np = dev->of_node;
->         /* Recurse for any nodes that were treated as busses */
->         if (of_node_check_flag(dev->of_node, OF_POPULATED_BUS))
->                 device_for_each_child(dev, NULL, of_platform_device_destroy);
-> @@ -544,8 +547,8 @@ int of_platform_device_destroy(struct device *dev, void *data)
->                 amba_device_unregister(to_amba_device(dev));
->  #endif
->
-> -       of_node_clear_flag(dev->of_node, OF_POPULATED);
-> -       of_node_clear_flag(dev->of_node, OF_POPULATED_BUS);
+> +		if (!dpaa_get_tstamp_ns(priv->net_dev, &ns,
+> +					priv->mac_dev->port[TX],
+> +					(void *)skbh)) {
+> +			shhwtstamps.hwtstamp = ns_to_ktime(ns);
+> +			skb_tstamp_tx(skb, &shhwtstamps);
+> +		} else {
+> +			dev_warn(dev, "dpaa_get_tstamp_ns failed!\n");
+> +		}
+> +	}
+> +#endif
+>  	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
+>  		nr_frags = skb_shinfo(skb)->nr_frags;
+>  		dma_unmap_single(dev, addr, qm_fd_get_offset(fd) +
+> @@ -2086,6 +2124,14 @@ static int dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
+>  	if (unlikely(err < 0))
+>  		goto skb_to_fd_failed;
+>  
+> +#ifdef CONFIG_FSL_DPAA_ETH_TS
+> +	if (priv->tx_tstamp &&
+> +	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
 
-Just move these 2 lines to before unregister calls.
+One line please.
 
-> +       of_node_clear_flag(np, OF_POPULATED);
-> +       of_node_clear_flag(np, OF_POPULATED_BUS);
->         return 0;
->  }
->  EXPORT_SYMBOL_GPL(of_platform_device_destroy);
-> --
-> 2.16.2
->
+> +		fd.cmd |= FM_FD_CMD_UPD;
+> +		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+> +	}
+> +#endif
+> +
+>  	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) == 0))
+>  		return NETDEV_TX_OK;
+>  
+
+Thanks,
+Richard
