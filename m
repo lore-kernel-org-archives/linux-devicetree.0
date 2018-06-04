@@ -1,196 +1,83 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v3 8/8] ARM: dts: rcar-gen2: Remove unused VIN properties
-Date: Mon, 4 Jun 2018 14:23:25 +0200
-Message-ID: <20180604122325.GH19674@bigcity.dyn.berto.se>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
- <1527606359-19261-9-git-send-email-jacopo+renesas@jmondi.org>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Mon, 4 Jun 2018 21:54:25 +0900
+Message-ID: <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org> <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1527606359-19261-9-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, geert@glider.be, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hi Jordan, Vikash,
 
-Thanks for your work.
+On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
+[snip]
+> > +int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
+> > +{
+> > +     int ret;
+> > +     struct device *dev = core->dev;
+>
+> If you get rid of the log message as you should, you don't need this.
+>
+> > +     void __iomem *reg_base = core->base;
+> > +
+> > +     switch (state) {
+> > +     case TZBSP_VIDEO_SUSPEND:
+> > +             if (qcom_scm_is_available())
+> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
+> > +             else
+> > +                     writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+>
+> You can just use core->base here and not bother making a local variable for it.
+>
+> > +             break;
+> > +     case TZBSP_VIDEO_RESUME:
+> > +             if (qcom_scm_is_available())
+> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
+> > +             else
+> > +                     venus_reset_hw(core);
+> > +             break;
+> > +     default:
+> > +             dev_err(dev, "invalid state\n");
+>
+> state is a enum - you are highly unlikely to be calling it in your own code with
+> a random value.  It is smart to have the default, but you don't need the log
+> message - that is just wasted space in the binary.
+>
+> > +             break;
+> > +     }
+>
+> There are three paths in the switch statement that could end up with 'ret' being
+> uninitialized here.  Set it to 0 when you declare it.
 
-On 2018-05-29 17:05:59 +0200, Jacopo Mondi wrote:
-> The 'bus-width' and 'pclk-sample' properties are not parsed by the VIN
-> driver and only confuse users. Remove them in all Gen2 SoC that use
-> them.
-> =
+Does this actually compile? The compiler should detect that ret is
+used uninitialized. Setting it to 0 at declaration time actually
+prevents compiler from doing that and makes it impossible to catch
+cases when the ret should actually be non-zero, e.g. the invalid enum
+value case.
 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Given that this function is supposed to substitute existing calls into
+qcom_scm_set_remote_state(), why not just do something like this:
 
-The more I think about this the more I lean towards that this patch =
+        if (qcom_scm_is_available())
+                return qcom_scm_set_remote_state(state, 0);
 
-should be dropped. The properties accurately describes the hardware and =
+        switch (state) {
+        case TZBSP_VIDEO_SUSPEND:
+                writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+                break;
+        case TZBSP_VIDEO_RESUME:
+                venus_reset_hw(core);
+                break;
+        }
 
-I think there is value in that. That the driver currently don't parse or =
+        return 0;
 
-make use of them don't in my view reduce there value. Maybe you should =
-
-break out this patch to a separate series?
-
-> ---
-> v3:
-> - remove bus-width from dt-bindings example
-> ---
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 -
->  arch/arm/boot/dts/r8a7790-lager.dts                  | 3 ---
->  arch/arm/boot/dts/r8a7791-koelsch.dts                | 3 ---
->  arch/arm/boot/dts/r8a7791-porter.dts                 | 1 -
->  arch/arm/boot/dts/r8a7793-gose.dts                   | 3 ---
->  arch/arm/boot/dts/r8a7794-alt.dts                    | 1 -
->  arch/arm/boot/dts/r8a7794-silk.dts                   | 1 -
->  7 files changed, 13 deletions(-)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
-entation/devicetree/bindings/media/rcar_vin.txt
-> index 024c109..c6d7f60 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -128,7 +128,6 @@ Board setup example for Gen2 platforms (vin1 composit=
-e video input)
-> =
-
->                  vin1ep0: endpoint {
->                          remote-endpoint =3D <&adv7180>;
-> -                        bus-width =3D <8>;
->                  };
->          };
->  };
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7=
-790-lager.dts
-> index 092610e..9cdabfcf 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -885,10 +885,8 @@
->  	port {
->  		vin0ep2: endpoint {
->  			remote-endpoint =3D <&adv7612_out>;
-> -			bus-width =3D <24>;
->  			hsync-active =3D <0>;
->  			vsync-active =3D <0>;
-> -			pclk-sample =3D <1>;
->  			data-active =3D <1>;
->  		};
->  	};
-> @@ -904,7 +902,6 @@
->  	port {
->  		vin1ep0: endpoint {
->  			remote-endpoint =3D <&adv7180>;
-> -			bus-width =3D <8>;
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8=
-a7791-koelsch.dts
-> index 8ab793d..033c9e3 100644
-> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> @@ -857,10 +857,8 @@
->  	port {
->  		vin0ep2: endpoint {
->  			remote-endpoint =3D <&adv7612_out>;
-> -			bus-width =3D <24>;
->  			hsync-active =3D <0>;
->  			vsync-active =3D <0>;
-> -			pclk-sample =3D <1>;
->  			data-active =3D <1>;
->  		};
->  	};
-> @@ -875,7 +873,6 @@
->  	port {
->  		vin1ep: endpoint {
->  			remote-endpoint =3D <&adv7180>;
-> -			bus-width =3D <8>;
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a=
-7791-porter.dts
-> index a01101b..c16e870 100644
-> --- a/arch/arm/boot/dts/r8a7791-porter.dts
-> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
-> @@ -388,7 +388,6 @@
->  	port {
->  		vin0ep: endpoint {
->  			remote-endpoint =3D <&adv7180>;
-> -			bus-width =3D <8>;
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a77=
-93-gose.dts
-> index aa209f6..60aaddb 100644
-> --- a/arch/arm/boot/dts/r8a7793-gose.dts
-> +++ b/arch/arm/boot/dts/r8a7793-gose.dts
-> @@ -765,10 +765,8 @@
->  	port {
->  		vin0ep2: endpoint {
->  			remote-endpoint =3D <&adv7612_out>;
-> -			bus-width =3D <24>;
->  			hsync-active =3D <0>;
->  			vsync-active =3D <0>;
-> -			pclk-sample =3D <1>;
->  			data-active =3D <1>;
->  		};
->  	};
-> @@ -784,7 +782,6 @@
->  	port {
->  		vin1ep: endpoint {
->  			remote-endpoint =3D <&adv7180_out>;
-> -			bus-width =3D <8>;
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a779=
-4-alt.dts
-> index e170275..8ed7a71 100644
-> --- a/arch/arm/boot/dts/r8a7794-alt.dts
-> +++ b/arch/arm/boot/dts/r8a7794-alt.dts
-> @@ -388,7 +388,6 @@
->  	port {
->  		vin0ep: endpoint {
->  			remote-endpoint =3D <&adv7180>;
-> -			bus-width =3D <8>;
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/r8a7794-silk.dts b/arch/arm/boot/dts/r8a77=
-94-silk.dts
-> index 7808aae..6adfcd6 100644
-> --- a/arch/arm/boot/dts/r8a7794-silk.dts
-> +++ b/arch/arm/boot/dts/r8a7794-silk.dts
-> @@ -477,7 +477,6 @@
->  	port {
->  		vin0ep: endpoint {
->  			remote-endpoint =3D <&adv7180>;
-> -			bus-width =3D <8>;
->  		};
->  	};
->  };
-> --
-> 2.7.4
-> =
-
-
--- =
-
-Regards,
-Niklas S=F6derlund
+Best regards,
+Tomasz
