@@ -1,86 +1,111 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 4/5] media: venus: add no TZ boot and shutdown routine
-Date: Mon, 4 Jun 2018 22:09:05 +0900
-Message-ID: <CAAFQd5AKy8X0Dd47fOKxTUaLuErtWv005_AGbB=O5SP+F+rrgA@mail.gmail.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org> <1527884768-22392-5-git-send-email-vgarodia@codeaurora.org>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v5 0/4] mfd/regulator/clk: bd71837: ROHM BD71837 PMIC driver
+Date: Mon, 4 Jun 2018 16:17:44 +0300
+Message-ID: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527884768-22392-5-git-send-email-vgarodia@codeaurora.org>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: vgarodia@codeaurora.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikash,
+Patch series adding support for ROHM BD71837 PMIC.
 
-On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
-[snip]
-> +int venus_boot_noTZ(struct venus_core *core, phys_addr_t mem_phys,
-> +                                                       size_t mem_size)
-> +{
-> +       struct iommu_domain *iommu;
-> +       struct device *dev;
-> +       int ret;
-> +
-> +       if (!core->fw.dev)
-> +               return -EPROBE_DEFER;
+BD71837 is a programmable Power Management IC for powering single-core,
+dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+low BOM cost and compact solution footprint. It integrates 8 buck
+regulators and 7 LDO’s to provide all the power rails required by the
+SoC and the commonly used peripherals.
 
-Is it really possible that the device appears after the probe is retried?
+The driver aims to not limit the usage of PMIC. Thus the buck and LDO
+naming is generic and not tied to any specific purposes. However there
+is following limitations which make it mostly suitable for use cases
+where the processor where PMIC driver is running is powered by the PMIC:
 
-> +
-> +       dev = core->fw.dev;
-> +
-> +       iommu = iommu_domain_alloc(&platform_bus_type);
-> +       if (!iommu) {
-> +               dev_err(dev, "Failed to allocate iommu domain\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       ret = iommu_attach_device(iommu, dev);
-> +       if (ret) {
-> +               dev_err(dev, "could not attach device\n");
-> +               goto err_attach;
-> +       }
-> +
-> +       ret = iommu_map(iommu, VENUS_FW_START_ADDR, mem_phys, mem_size,
-> +                       IOMMU_READ|IOMMU_WRITE|IOMMU_PRIV);
-> +       if (ret) {
-> +               dev_err(dev, "could not map video firmware region\n");
-> +               goto err_map;
-> +       }
+- The PMIC is not re-initialized if it resets. PMIC may reset as a
+  result of voltage monitoring (over/under voltage) or due to reset
+  request. Driver is only initializing PMIC at probe. This is not
+  problem as long as processor controlling PMIC is powered by PMIC.
 
-I'm not very familiar with translation capabilities of ARM SMMU, so
-that might be an elementary question, but could you explain how this
-works? Will this make the firmware device (transfers with firmware
-PASID) use different page directory from the main device (all the
-other PASIDs; used with DMA mapping API)?
+- The PMIC internal state machine is ignored by driver. Driver assumes
+  the PMIC is wired so that it is always in "run" state when controlled
+  by the driver.
 
-+Will and Robin, just in case.
+Changelog v5
+- dropped regulator patches which are already applied to Mark's tree
+Based on feedback from Rob Herring and Stephen Boyd
+- mfd bindings:	explain why this can be interrupt-controller
+- mfd bindings:	describe interrupts better
+- mfd bindings:	require one cell interrupt specifier
+- mfd bindings:	use generic node names in example
+- mfd driver:	ack masked interrupt once at init
+- clk bindings:	use generic node names in example
+- clk driver:	use devm
+- clk driver:	use of_clk_add_hw_provider
+- clk driver:	change severity of print and how prints are emitted at
+		probe error path.
+- clk driver:	dropped forward declared functions
+- clk configs:	drop unnecessary dependencies
+- clk driver:	other styling issues
+- mfd/clk DT:	drop clk node.
 
-> +       core->fw.iommu_domain = iommu;
-> +       venus_reset_hw(core);
-> +
-> +       return 0;
-> +
-> +err_map:
-> +       iommu_detach_device(iommu, dev);
-> +err_attach:
-> +       iommu_domain_free(iommu);
-> +       return ret;
-> +}
-[snip]
-> diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
-> index 0916826..67fdd89 100644
-> --- a/drivers/media/platform/qcom/venus/firmware.h
-> +++ b/drivers/media/platform/qcom/venus/firmware.h
-> @@ -14,10 +14,15 @@
->  #ifndef __VENUS_FIRMWARE_H__
->  #define __VENUS_FIRMWARE_H__
->
-> +#define VENUS_PAS_ID                   9
+Changelog v4
+- remove mutex from regulator state check as core prevents simultaneous
+  accesses
+- allow voltage change for bucks 1 to 4 when regulator is enabled
+- fix indentiation problems
+- properly correct SPDX comments
 
-Shouldn't this normally be given in DT?
+Changelog v3
+- kill unused variable
+- kill unused definitions
+- use REGMAP_IRQ_REG
 
-Best regards,
-Tomasz
+Changelog v2
+Based on feedback from Mark Brown
+- Squashed code and buildfile changes to same patch
+- Fixed some styling issues
+- Changed SPDX comments to CPP style
+- Error out if voltage is changed when regulator is enabled instead of
+  Disabling the regulator for duration of change
+- Use devm_regulator_register
+- Remove compatible usage from regulators - use parent dev for config
+- Add a note about using regulator-boot-on for BUCK6 and 7
+- fixed warnings from kbuild test robot
+
+patch 1: 
+        MFD driver and definitions bringing interrupt support and
+        enabling clk and regulator subsystems.
+Patches 2 and 3
+
+This patch series is based on for-mfd-next
+
+---
+
+Matti Vaittinen (4):
+  mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+  mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  clk: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  clk: bd71837: Add driver for BD71837 PMIC clock
+
+ .../bindings/clock/rohm,bd71837-clock.txt          |  38 +++
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  76 ++++++
+ drivers/clk/Kconfig                                |   7 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-bd71837.c                          | 146 +++++++++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bd71837.c                              | 223 ++++++++++++++++
+ include/linux/mfd/bd71837.h                        | 288 +++++++++++++++++++++
+ 9 files changed, 793 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 drivers/clk/clk-bd71837.c
+ create mode 100644 drivers/mfd/bd71837.c
+ create mode 100644 include/linux/mfd/bd71837.h
+
+-- 
+2.14.3
