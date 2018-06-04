@@ -1,82 +1,76 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [RFC PATCH 7/8] dts: coresight: Define new bindings for direction
- of data flow
-Date: Mon, 4 Jun 2018 15:20:14 +0100
-Message-ID: <c38e4b05-622e-8747-dee4-990cfbe7633d@arm.com>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
- <1527858967-16047-8-git-send-email-suzuki.poulose@arm.com>
- <20180601203928.GD9838@xps15>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/3] arm64: dts: renesas: condor: specify EtherAVB PHY IRQ
+Date: Mon, 4 Jun 2018 17:22:52 +0300
+Message-ID: <049a712d-7381-c771-c352-6badc2978175@cogentembedded.com>
+References: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
+ <21578b79-7ba0-b3a6-ae45-7e9ffbb7c8db@cogentembedded.com>
+ <20180604103302.f5kx5fqhbl3ohfpi@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601203928.GD9838@xps15>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, robh@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180604103302.f5kx5fqhbl3ohfpi@verge.net.au>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2018 09:39 PM, Mathieu Poirier wrote:
-> On Fri, Jun 01, 2018 at 02:16:06PM +0100, Suzuki K Poulose wrote:
->> So far we have relied on an undocumented property "slave-mode",
->> to indicate if the given port is input or not. Since we are
->> redefining the coresight bindings, define new property for the
->> "direction" of data flow for a given connection endpoint in the
->> device.
+On 06/04/2018 01:33 PM, Simon Horman wrote:
+
+>> Specify EtherAVB PHY IRQ in the Condor board's device tree, now that
+>> we have the GPIO support (previously phylib had to resort to polling).
 >>
->> Each endpoint must define the following property.
+>> Based on the original (and large) patch by Vladimir Barinov.
 >>
->>   - "direction" : 0 => Port is input
->> 		 1 => Port is output
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 >> ---
->>   drivers/hwtracing/coresight/of_coresight.c | 20 ++++++++++++++++----
-> 
-> You haven't documented the binding in bindings/arm/coresight.txt the same way
-> you did with "coresight,hwid".  I'm guessing you simply forgot to do a "git add"
-> on the file when preparing the patchset.
-> 
->>   1 file changed, 16 insertions(+), 4 deletions(-)
+>>  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |    2 ++
+>>  1 file changed, 2 insertions(+)
 >>
->> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
->> index 99d7a9c..63c1668 100644
->> --- a/drivers/hwtracing/coresight/of_coresight.c
->> +++ b/drivers/hwtracing/coresight/of_coresight.c
->> @@ -52,7 +52,19 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
->>   			       endpoint, of_dev_node_match);
->>   }
->>   
->> -static void of_coresight_get_ports(const struct device_node *node,
->> +static bool of_coresight_ep_is_input(struct device *dev, struct device_node *ep_node)
+>> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+>> ===================================================================
+>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+>> @@ -59,6 +59,8 @@
+>>  	phy0: ethernet-phy@0 {
+>>  		rxc-skew-ps = <1500>;
+>>  		reg = <0>;
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
 > 
-> I suggested of_coresight_endpoint_get_port_id() in my review of 6/8.  I'm good
-> with either "ep" or "endpoint", as long as the names are consistent.
+> I don't see this documented. Perhaps I'm missing something obvious.
 
-Yep, that's right. This is what I have for the documentation :
+   Have you looked into the V3H PFC section for where in the GPSRs AVB_PHY_INT
+is mapped?
+   The Condor schematics doesn't explicitly list the GPIO for AVB_PHY_INT
+because that signal is meant to be routed thru the MAC. Unfortunately, the
+sh_eth/ravb drivers don't support the PHY interrupt (the phylib function,
+phy_mac_interrupt() reporting the PHY interrupts routed thru MAC is clearly
+inadequate as it wants the link state as an argument), so we have to resort
+to the GPIO interrupts...
 
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -103,9 +103,11 @@ with a specific direction of data flow, each 
-connection must define the
-  following properties to uniquely identify the connection details.
+> Or you have some extra information or newer documentation?
 
-   * Direction of the data flow w.r.t the component :
--   Each input port must have the following property defined at the 
-"endpoint"
-+   Each hardware port must have the following property defined at the 
-"endpoint"
-     for the port.
--       "slave-mode"
-+       "direction" - 32bit integer, whose values are defined as follows :
-+               0 => the endpoint is an Input port
-+               1 => the endpoint is an Output port.
+   No.
 
+> Also, given Olof Johansson's recent comments in ("Re: [GIT PULL] Renesas
+> ARM64 Based SoC DT Updates for v4.18") please consider squashing this patch
+> and the following one.
 
-and changes to the examples as well..
+   Hm... note that the different Ether cores are involved in these 2 PHY IRQ
+patches. If that's OK, I can merge the patches...
 
+[...]
 
-Cheers
-Suzuki
+MBR< Sergei
