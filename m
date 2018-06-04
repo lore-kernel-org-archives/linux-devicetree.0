@@ -1,73 +1,31 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCHv9 3/3] ARM:drm ivip Intel FPGA Video and Image Processing
- Suite
-Date: Mon, 4 Jun 2018 00:32:24 -0700
-Message-ID: <06e982ba-3701-b042-21b6-64f6f8744bba@infradead.org>
-References: <1528094404-3542-1-git-send-email-hean.loong.ong@intel.com>
- <1528094404-3542-4-git-send-email-hean.loong.ong@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH 0/2] Add display clock controller driver for SDM845
+Date: Mon,  4 Jun 2018 13:26:23 +0530
+Message-ID: <1528098985-3676-1-git-send-email-tdas@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528094404-3542-4-git-send-email-hean.loong.ong@intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hean-Loong, Ong" <hean.loong.ong@intel.com>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh@kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2018 11:40 PM, Hean-Loong, Ong wrote:
-> From: Ong Hean Loong <hean.loong.ong@intel.com>
-> 
-> Driver for Intel FPGA Video and Image Processing Suite Frame Buffer II.
-> The driver only supports the Intel Arria10 devkit and its variants.
-> This driver can be either loaded staticlly or in modules.
-> The OF device tree binding is located at:
-> Documentation/devicetree/bindings/display/altr,vip-fb2.txt
-> 
-> Signed-off-by: Ong Hean Loong <hean.loong.ong@intel.com>
-> ---
->  drivers/gpu/drm/Kconfig               |    2 +
->  drivers/gpu/drm/Makefile              |    1 +
->  drivers/gpu/drm/ivip/Kconfig          |   14 +++
->  drivers/gpu/drm/ivip/Makefile         |    9 ++
->  drivers/gpu/drm/ivip/intel_vip_conn.c |   95 ++++++++++++++++
->  drivers/gpu/drm/ivip/intel_vip_core.c |  161 +++++++++++++++++++++++++++
->  drivers/gpu/drm/ivip/intel_vip_drv.h  |   52 +++++++++
->  drivers/gpu/drm/ivip/intel_vip_of.c   |  193 +++++++++++++++++++++++++++++++++
->  8 files changed, 527 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/gpu/drm/ivip/Kconfig
->  create mode 100644 drivers/gpu/drm/ivip/Makefile
->  create mode 100644 drivers/gpu/drm/ivip/intel_vip_conn.c
->  create mode 100644 drivers/gpu/drm/ivip/intel_vip_core.c
->  create mode 100644 drivers/gpu/drm/ivip/intel_vip_drv.h
->  create mode 100644 drivers/gpu/drm/ivip/intel_vip_of.c
-> 
-> diff --git a/drivers/gpu/drm/ivip/Kconfig b/drivers/gpu/drm/ivip/Kconfig
-> new file mode 100644
-> index 0000000..1d08b90
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ivip/Kconfig
-> @@ -0,0 +1,14 @@
-> +config DRM_IVIP
-> +        tristate "Intel FGPA Video and Image Processing"
-> +        depends on DRM && OF
-> +        select DRM_GEM_CMA_HELPER
-> +        select DRM_KMS_HELPER
-> +        select DRM_KMS_FB_HELPER
-> +        select DRM_KMS_CMA_HELPER
-> +        help
-> +		  Choose this option if you have an Intel FPGA Arria 10 system
-> +		  and above with an Intel Display Port IP. This does not support
-> +		  legacy Intel FPGA Cyclone V display port. Currently only single
-> +		  frame buffer is supported. Note that ACPI and X_86 architecture
-> +		  is not supported for Arria10. If M is selected the module will be
-> +		  called ivip.
+Add support for the display clock controller found on SDM845
+based devices. This would allow display drivers to probe and
+control their clocks.
 
-Hi,
+Taniya Das (2):
+  dt-bindings: clock: Introduce QCOM Display clock bindings
+  clk: qcom: Add display clock controller driver for SDM845
 
-Kconfig help text is supposed to be indented with one tab + 2 spaces.
+ .../devicetree/bindings/clock/qcom,dispcc.txt      |  18 +
+ drivers/clk/qcom/Kconfig                           |  10 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/dispcc-sdm845.c                   | 704 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,dispcc-sdm845.h     |  42 ++
+ 5 files changed, 775 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.txt
+ create mode 100644 drivers/clk/qcom/dispcc-sdm845.c
+ create mode 100644 include/dt-bindings/clock/qcom,dispcc-sdm845.h
 
-thanks,
--- 
-~Randy
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
