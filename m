@@ -1,89 +1,115 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 09/10] dpaa_eth: add support for hardware timestamping
-Date: Mon, 4 Jun 2018 06:49:20 -0700
-Message-ID: <20180604134920.ezhe6jz5ntpnqyzj@localhost>
-References: <20180604070837.19265-1-yangbo.lu@nxp.com>
- <20180604070837.19265-10-yangbo.lu@nxp.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
+Date: Mon, 4 Jun 2018 16:50:24 +0300
+Message-ID: <be5cc865-608b-dabb-2a3c-b5864c387d64@mm-sol.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180604070837.19265-10-yangbo.lu@nxp.com>
+In-Reply-To: <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangbo Lu <yangbo.lu@nxp.com>
-Cc: netdev@vger.kernel.org, madalin.bucur@nxp.com, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, stanimir.varbanov@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 04, 2018 at 03:08:36PM +0800, Yangbo Lu wrote:
+Hi Vikash,
 
-> +if FSL_DPAA_ETH
-> +config FSL_DPAA_ETH_TS
-> +	bool "DPAA hardware timestamping support"
-> +	select PTP_1588_CLOCK_QORIQ
-> +	default n
-> +	help
-> +	  Enable DPAA hardware timestamping support.
-> +	  This option is useful for applications to get
-> +	  hardware time stamps on the Ethernet packets
-> +	  using the SO_TIMESTAMPING API.
-> +endif
+Thanks for the patch!
 
-You should drop this #ifdef.  In general, if a MAC supports time
-stamping and PHC, then the driver support should simply be compiled
-in.
+On  1.06.2018 23:26, Vikash Garodia wrote:
+> Add a new routine which abstracts the TZ call to
 
-[ When time stamping incurs a large run time performance penalty to
-  non-PTP users, then it might make sense to have a Kconfig option to
-  disable it, but that doesn't appear to be the case here. ]
+Actually the new routine abstracts Venus CPU state, Isn't it?
 
-> @@ -1615,6 +1635,24 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
->  	skbh = (struct sk_buff **)phys_to_virt(addr);
->  	skb = *skbh;
->  
-> +#ifdef CONFIG_FSL_DPAA_ETH_TS
-> +	if (priv->tx_tstamp &&
-> +	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
+> set the video hardware state.
+> 
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> ---
+>   drivers/media/platform/qcom/venus/core.h      |  5 +++++
+>   drivers/media/platform/qcom/venus/firmware.c  | 28 +++++++++++++++++++++++++++
+>   drivers/media/platform/qcom/venus/firmware.h  |  1 +
+>   drivers/media/platform/qcom/venus/hfi_venus.c | 13 ++++---------
+>   4 files changed, 38 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 85e66e2..e7bfb63 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -35,6 +35,11 @@ struct reg_val {
+>   	u32 value;
+>   };
+>   
+> +enum tzbsp_video_state {
+> +	TZBSP_VIDEO_SUSPEND = 0,
+> +	TZBSP_VIDEO_RESUME
+> +};
 
-This condition fits on one line easily.
+please move this in firmware.c, for more see below.
 
-> +		struct skb_shared_hwtstamps shhwtstamps;
-> +		u64 ns;
-
-Local variables belong at the top of the function.
-
-> +		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
 > +
-> +		if (!dpaa_get_tstamp_ns(priv->net_dev, &ns,
-> +					priv->mac_dev->port[TX],
-> +					(void *)skbh)) {
-> +			shhwtstamps.hwtstamp = ns_to_ktime(ns);
-> +			skb_tstamp_tx(skb, &shhwtstamps);
-> +		} else {
-> +			dev_warn(dev, "dpaa_get_tstamp_ns failed!\n");
-> +		}
-> +	}
-> +#endif
->  	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
->  		nr_frags = skb_shinfo(skb)->nr_frags;
->  		dma_unmap_single(dev, addr, qm_fd_get_offset(fd) +
-> @@ -2086,6 +2124,14 @@ static int dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
->  	if (unlikely(err < 0))
->  		goto skb_to_fd_failed;
->  
-> +#ifdef CONFIG_FSL_DPAA_ETH_TS
-> +	if (priv->tx_tstamp &&
-> +	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
-
-One line please.
-
-> +		fd.cmd |= FM_FD_CMD_UPD;
-> +		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
-> +	}
-> +#endif
+>   struct venus_resources {
+>   	u64 dma_mask;
+>   	const struct freq_tbl *freq_tbl;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index 7d89b5a..b4664ed 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -53,6 +53,34 @@ static void venus_reset_hw(struct venus_core *core)
+>   	/* Bring Arm9 out of reset */
+>   	writel_relaxed(0, reg_base + WRAPPER_A9SS_SW_RESET);
+>   }
 > +
->  	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) == 0))
->  		return NETDEV_TX_OK;
->  
+> +int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
 
-Thanks,
-Richard
+can we put this function this way:
+
+venus_set_state(struct venus_core *core, bool on)
+
+so we set the state to On when we are power-up the venus CPU and Off
+when we power-down.
+
+by this way we really abstract the state, IMO.
+
+> +{
+> +	int ret;
+> +	struct device *dev = core->dev;
+> +	void __iomem *reg_base = core->base;
+
+just 'base' should be enough.
+
+> +
+> +	switch (state) {
+> +	case TZBSP_VIDEO_SUSPEND:
+> +		if (qcom_scm_is_available())
+
+You really shouldn't rely on this function (see the comment from Bjorn
+on first version of this patch series).
+
+I think we have to replace qcom_scm_is_available() with some flag which
+is reflecting does the firmware subnode is exist or not. In case it is
+not exist the we have to go with TZ scm calls.
+
+> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
+> +		else
+> +			writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
+> +		break;
+> +	case TZBSP_VIDEO_RESUME:
+> +		if (qcom_scm_is_available())
+> +			ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
+> +		else
+> +			venus_reset_hw(core);
+> +		break;
+> +	default:
+> +		dev_err(dev, "invalid state\n");
+> +		break;
+> +	}
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
+> +
+
+regards,
+Stan
