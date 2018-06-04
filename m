@@ -1,156 +1,107 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v4 4/5] clocksource: add driver for i.MX EPIT timer
-Date: Mon, 4 Jun 2018 11:21:30 +0200
-Message-ID: <CAJiuCcfwiut6rN3d_Yn+zCTLChS8kNUYCmpzHQEFmVxan_qfVw@mail.gmail.com>
-References: <20180530120327.27681-1-peron.clem@gmail.com> <20180530120327.27681-5-peron.clem@gmail.com>
- <677be207-67be-ccbc-8bb3-ab90bf9d05a7@mentor.com>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v4 07/10] i3c: master: Add driver for Cadence IP
+Date: Mon, 4 Jun 2018 09:24:51 +0000
+Message-ID: <9613475C-ECAE-4AD6-9C02-55C9214A6489@cadence.com>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+ <20180330074751.25987-8-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <677be207-67be-ccbc-8bb3-ab90bf9d05a7@mentor.com>
+In-Reply-To: <20180330074751.25987-8-boris.brezillon@bootlin.com>
+Content-Language: en-US
+Content-ID: <18ED8795B9B6864F89C11CA99D8CF0B5@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=C3=A9ment_Peron?= <clement.peron@devialet.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vitor Soares <Vitor.Soares@synopsys>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-On Thu, 31 May 2018 at 10:36, Vladimir Zapolskiy
-<vladimir_zapolskiy@mentor.com> wrote:
->
-> Hi Cl=C3=A9ment,
->
-> On 05/30/2018 03:03 PM, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Colin Didier <colin.didier@devialet.com>
-> >
-> > Add driver for NXP's EPIT timer used in i.MX 6 family of SoC.
-> >
-> > Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> > Signed-off-by: Cl=C3=A9ment Peron <clement.peron@devialet.com>
-> > ---
->
-> [snip]
->
-> > +++ b/drivers/clocksource/timer-imx-epit.c
-> > @@ -0,0 +1,281 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * i.MX EPIT Timer
-> > + *
-> > + * Copyright (C) 2010 Sascha Hauer <s.hauer@pengutronix.de>
-> > + * Copyright (C) 2018 Colin Didier <colin.didier@devialet.com>
-> > + * Copyright (C) 2018 Cl=C3=A9ment P=C3=A9ron <clement.peron@devialet.=
-com>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/clockchips.h>
-> > +#include <linux/err.h>
->
-> The included header above still can be removed.
-
-Ok.
-
->
-> I have no more comments about the code, I will try to find time to
-> test the driver, but please don't take it as a promise.
-
-Regarding the clks, i think the management of the ipg clk in the
-driver is useless
-has it is already handled by the imx clk driver.
-
-I remove the ipg clk and test it on i.MX6Q.
-
-My test is limited to disabled the GPT and enabled the EPIT in the device-t=
-ree
-&gpt {
-        status =3D "disabled";
-};
-
-&epit1 {
-        status =3D "okay";
-};
-
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 4.17.0-rc6 (cperon@cperon-Latitude-7490)
-(gcc version 6.4.1 20170707 (Linaro GCC 6.4-2017.08)) #1 SMP PREEMPT
-Mon Jun 4 11:13:41 CEST 2018
-[    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=3D10=
-c5387d
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing
-instruction cache
-[    0.000000] OF: fdt: Machine model: Devialet Aerobase
-[    0.000000] Memory policy: Data cache writealloc
-[    0.000000] On node 0 totalpages: 262144
-[    0.000000]   Normal zone: 2048 pages used for memmap
-[    0.000000]   Normal zone: 0 pages reserved
-[    0.000000]   Normal zone: 262144 pages, LIFO batch:31
-[    0.000000] random: get_random_bytes called from
-start_kernel+0x80/0x398 with crng_init=3D0
-[    0.000000] percpu: Embedded 16 pages/cpu @(ptrval) s35084 r8192
-d22260 u65536
-[    0.000000] pcpu-alloc: s35084 r8192 d22260 u65536 alloc=3D16*4096
-[    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 26009=
-6
-[    0.000000] Kernel command line: console=3Dttymxc0,115200
-root=3D/dev/nfs rw nfsroot=3D192.168.0.4:/opt/nfsroot,v3,tcp ip=3Ddhcp
-[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 by=
-tes)
-[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 byte=
-s)
-[    0.000000] Memory: 1029544K/1048576K available (6144K kernel code,
-194K rwdata, 1312K rodata, 1024K init, 224K bss, 19032K reserved, 0K
-cma-reserved)
-[    0.000000] Virtual kernel memory layout:
-[    0.000000] SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D4, N=
-odes=3D1
-[    0.000000] Preemptible hierarchical RCU implementation.
-[    0.000000]  Tasks RCU enabled.\x00
-[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-[    0.000000] L2C-310 errata 752271 769419 enabled
-[    0.000000] L2C-310 enabling early BRESP for Cortex-A9
-[    0.000000] L2C-310 full line of zeros enabled for Cortex-A9
-[    0.000000] L2C-310 ID prefetch enabled, offset 16 lines
-[    0.000000] L2C-310 dynamic clock gating enabled, standby mode enabled
-[    0.000000] L2C-310 cache controller enabled, 16 ways, 1024 kB
-[    0.000000] L2C-310: CACHE_ID 0x410000c7, AUX_CTRL 0x76470001
-[    0.000012] sched_clock: 32 bits at 66MHz, resolution 15ns, wraps
-every 32537631224ns
-[    0.000032] clocksource: epit: mask: 0xffffffff max_cycles:
-0xffffffff, max_idle_ns: 28958491609 ns
-[    0.001231] Calibrating delay loop... 1560.57 BogoMIPS (lpj=3D780288)
-[    0.008161] pid_max: default: 32768 minimum: 301
-[    0.008336] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes)
-[    0.008360] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 by=
-tes)
-[    0.009042] CPU: Testing write buffer coherency: ok
-[    0.009506] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.014238] Setting up static identity map for 0x10100000 - 0x10100060
-[    0.015207] Hierarchical SRCU implementation.
-[    0.017208] smp: Bringing up secondary CPUs ...
-[    0.029147] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-[    0.041146] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
-[    0.053146] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
-[    0.053321] smp: Brought up 1 node, 4 CPUs
-[    0.053340] SMP: Total of 4 processors activated (6303.74 BogoMIPS).
-[    0.053349] CPU: All CPU(s) started in SVC mode.
-[    0.054441] devtmpfs: initialized
-[    0.063770] VFP support v0.3: implementor 41 architecture 3 part 30
-variant 9 rev 4
-[    0.064454] clocksource: jiffies: mask: 0xffffffff max_cycles:
-0xffffffff, max_idle_ns: 1911260446275000 ns
-[    0.064477] futex hash table entries: 1024 (order: 4, 65536 bytes)
-[    0.064742] pinctrl core: initialized pinctrl subsystem
-[    0.066693] NET: Registered protocol family 16
-[    0.068623] DMA: preallocated 256 KiB pool for atomic coherent allocatio=
-ns
-[    0.071654] cpuidle: using governor menu
-[    0.071802] CPU identified as i.MX6Q, silicon rev 1.2
-
-
->
-> --
-> With best wishes,
-> Vladimir
+SGkgQm9yaXMsDQoNCkZldyB0aGluZ3MgcmVnYXJkaW5nIENhZGVuY2UgSVAgZHJpdmVyOg0KDQrv
+u79PbiA2LzQvMTgsIDk6MzEgQU0sICJCb3JpcyBCcmV6aWxsb24iIDxib3Jpcy5icmV6aWxsb25A
+Ym9vdGxpbi5jb20+IHdyb3RlOg0KDQogICAgK3N0YXRpYyB2b2lkIGNkbnNfaTNjX21hc3Rlcl9o
+YW5kbGVfaWJpKHN0cnVjdCBjZG5zX2kzY19tYXN0ZXIgKm1hc3RlciwNCiAgICArCQkJCSAgICAg
+ICB1MzIgaWJpcikNCiAgICArew0KICAgICsJc3RydWN0IGNkbnNfaTNjX2kyY19kZXZfZGF0YSAq
+ZGF0YTsNCiAgICArCWJvb2wgZGF0YV9jb25zdW1lZCA9IGZhbHNlOw0KICAgICsJc3RydWN0IGkz
+Y19pYmlfc2xvdCAqc2xvdDsNCiAgICArCXUzMiBpZCA9IElCSVJfU0xWSUQoaWJpcik7DQogICAg
+KwlzdHJ1Y3QgaTNjX2RldmljZSAqZGV2Ow0KICAgICsJaW50IGxlbiwgaSwgajsNCiAgICArCXU4
+ICpidWY7DQogICAgKw0KICAgICsJLyoNCiAgICArCSAqIEZJWE1FOiBtYXliZSB3ZSBzaG91bGQg
+cmVwb3J0IHRoZSBGSUZPIE9WRiBlcnJvcnMgdG8gdGhlIHVwcGVyDQogICAgKwkgKiBsYXllci4N
+CiAgICArCSAqLw0KICAgICsJaWYgKGlkID49IG1hc3Rlci0+aWJpLm51bV9zbG90cyB8fCAoaWJp
+ciAmIElCSVJfRVJST1IpKQ0KICAgICsJCWdvdG8gb3V0Ow0KICAgICsNCiAgICArCWRldiA9IG1h
+c3Rlci0+aWJpLnNsb3RzW2lkXTsNCiAgICArCXNwaW5fbG9jaygmbWFzdGVyLT5pYmkubG9jayk7
+DQogICAgKw0KICAgICsJZGF0YSA9IGkzY19kZXZpY2VfZ2V0X21hc3Rlcl9kYXRhKGRldik7DQog
+ICAgKwlzbG90ID0gaTNjX2dlbmVyaWNfaWJpX2dldF9mcmVlX3Nsb3QoZGF0YS0+aWJpX3Bvb2wp
+Ow0KICAgICsJaWYgKCFzbG90KQ0KICAgICsJCWdvdG8gb3V0X3VubG9jazsNCiAgICArDQogICAg
+KwlidWYgPSBzbG90LT5kYXRhOw0KICAgICsNCiAgICArCWxlbiA9IElCSVJfWEZFUl9CWVRFUyhp
+YmlyKTsNCiAgICArCWZvciAoaSA9IDA7IGkgPCBJQklSX1hGRVJfQllURVMoaWJpcik7IGkgKz0g
+NCkgew0KICAgICsJCXUzMiB0bXAgPSByZWFkbChtYXN0ZXItPnJlZ3MgKyBJQklfREFUQV9GSUZP
+KTsNCiAgICArDQogICAgKwkJZm9yIChqID0gMDsgaiA8IDQgJiYgaSArIGogPCBkZXYtPmliaS0+
+bWF4X3BheWxvYWRfbGVuOyBqKyspDQogICAgKwkJCWJ1ZltpICsgal0gPSB0bXAgPj4gKGogKiA4
+KTsNCiAgICArDQogICAgKwl9DQogICAgKwlzbG90LT5sZW4gPSBtaW5fdCh1bnNpZ25lZCBpbnQs
+IElCSVJfWEZFUl9CWVRFUyhpYmlyKSwNCiAgICArCQkJICBkZXYtPmliaS0+bWF4X3BheWxvYWRf
+bGVuKTsNCiAgICArCWkzY19tYXN0ZXJfcXVldWVfaWJpKGRldiwgc2xvdCk7DQogICAgKwlkYXRh
+X2NvbnN1bWVkID0gdHJ1ZTsNCiAgICArDQogICAgK291dF91bmxvY2s6DQogICAgKwlzcGluX3Vu
+bG9jaygmbWFzdGVyLT5pYmkubG9jayk7DQogICAgKw0KICAgICtvdXQ6DQogICAgKwkvKiBDb25z
+dW1lIGRhdGEgZnJvbSB0aGUgRklGTyBpZiBpdCdzIG5vdCBiZWVuIGRvbmUgYWxyZWFkeS4gKi8N
+CiAgICArCWlmICghZGF0YV9jb25zdW1lZCkgew0KICAgICsJCWZvciAoaSA9IDA7IGkgPCBJQklS
+X1hGRVJfQllURVMoaWJpcik7IGkgKz0gNCkNCiAgICArCQkJcmVhZGwobWFzdGVyLT5yZWdzICsg
+SUJJX0RBVEFfRklGTyk7DQogICAgKwl9DQogICAgK30NCiAgICANCmxlbiB2YXJpYWJsZSBpcyB1
+bm5lZWRlZC4NCg0KICAgICtzdGF0aWMgaW50IGNkbnNfaTNjX21hc3Rlcl9wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KICAgICt7DQogICAgKwlzdHJ1Y3QgY2Ruc19pM2NfbWFz
+dGVyICptYXN0ZXI7DQogICAgKwlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCiAgICArCWludCByZXQs
+IGlycTsNCiAgICArCXUzMiB2YWw7DQogICAgKw0KICAgICsJbWFzdGVyID0gZGV2bV9remFsbG9j
+KCZwZGV2LT5kZXYsIHNpemVvZigqbWFzdGVyKSwgR0ZQX0tFUk5FTCk7DQogICAgKwlpZiAoIW1h
+c3RlcikNCiAgICArCQlyZXR1cm4gLUVOT01FTTsNCiAgICArDQogICAgKwlyZXMgPSBwbGF0Zm9y
+bV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOw0KICAgICsJbWFzdGVyLT5y
+ZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKCZwZGV2LT5kZXYsIHJlcyk7DQogICAgKwlpZiAo
+SVNfRVJSKG1hc3Rlci0+cmVncykpDQogICAgKwkJcmV0dXJuIFBUUl9FUlIobWFzdGVyLT5yZWdz
+KTsNCiAgICArDQogICAgKwltYXN0ZXItPnBjbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwg
+InBjbGsiKTsNCiAgICArCWlmIChJU19FUlIobWFzdGVyLT5wY2xrKSkNCiAgICArCQlyZXR1cm4g
+UFRSX0VSUihtYXN0ZXItPnBjbGspOw0KICAgICsNCiAgICArCW1hc3Rlci0+c3lzY2xrID0gZGV2
+bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJzeXNjbGsiKTsNCiAgICArCWlmIChJU19FUlIobWFzdGVy
+LT5wY2xrKSkNCiAgICArCQlyZXR1cm4gUFRSX0VSUihtYXN0ZXItPnBjbGspOw0KICAgICsNCiAg
+ICArCWlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQogICAgKwlpZiAoaXJxIDwgMCkN
+CiAgICArCQlyZXR1cm4gaXJxOw0KICAgICsNCiAgICArCXJldCA9IGNsa19wcmVwYXJlX2VuYWJs
+ZShtYXN0ZXItPnBjbGspOw0KICAgICsJaWYgKHJldCkNCiAgICArCQlyZXR1cm4gcmV0Ow0KICAg
+ICsNCiAgICArCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShtYXN0ZXItPnN5c2Nsayk7DQogICAg
+KwlpZiAocmV0KQ0KICAgICsJCWdvdG8gZXJyX2Rpc2FibGVfcGNsazsNCiAgICArDQogICAgKwlp
+ZiAocmVhZGwobWFzdGVyLT5yZWdzICsgREVWX0lEKSAhPSBERVZfSURfSTNDX01BU1RFUikgew0K
+ICAgICsJCXJldCA9IC1FSU5WQUw7DQogICAgKwkJZ290byBlcnJfZGlzYWJsZV9zeXNjbGs7DQog
+ICAgKwl9DQogICAgKw0KICAgICsJc3Bpbl9sb2NrX2luaXQoJm1hc3Rlci0+eGZlcnF1ZXVlLmxv
+Y2spOw0KICAgICsJSU5JVF9MSVNUX0hFQUQoJm1hc3Rlci0+eGZlcnF1ZXVlLmxpc3QpOw0KICAg
+ICsNCiAgICArCUlOSVRfV09SSygmbWFzdGVyLT5oal93b3JrLCBjZG5zX2kzY19tYXN0ZXJfaGop
+Ow0KICAgICsJd3JpdGVsKDB4ZmZmZmZmZmYsIG1hc3Rlci0+cmVncyArIE1TVF9JRFIpOw0KICAg
+ICsJd3JpdGVsKDB4ZmZmZmZmZmYsIG1hc3Rlci0+cmVncyArIFNMVl9JRFIpOw0KICAgICsJcmV0
+ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBpcnEsIGNkbnNfaTNjX21hc3Rlcl9pbnRl
+cnJ1cHQsIDAsDQogICAgKwkJCSAgICAgICBkZXZfbmFtZSgmcGRldi0+ZGV2KSwgbWFzdGVyKTsN
+CiAgICArCWlmIChyZXQpDQogICAgKwkJZ290byBlcnJfZGlzYWJsZV9zeXNjbGs7DQogICAgKw0K
+ICAgICsJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWFzdGVyKTsNCiAgICArDQogICAgKwl2
+YWwgPSByZWFkbChtYXN0ZXItPnJlZ3MgKyBDT05GX1NUQVRVUzApOw0KICAgICsNCiAgICArCS8q
+IERldmljZSBJRDAgaXMgcmVzZXJ2ZWQgdG8gZGVzY3JpYmUgdGhpcyBtYXN0ZXIuICovDQogICAg
+KwltYXN0ZXItPm1heGRldnMgPSBDT05GX1NUQVRVUzBfREVWU19OVU0odmFsKTsNCiAgICArCW1h
+c3Rlci0+ZnJlZV9ycl9zbG90cyA9IEdFTk1BU0sobWFzdGVyLT5tYXhkZXZzLCAxKTsNCiAgICAr
+DQogICAgKwl2YWwgPSByZWFkbChtYXN0ZXItPnJlZ3MgKyBDT05GX1NUQVRVUzEpOw0KICAgICsJ
+bWFzdGVyLT5jYXBzLmNtZGZpZm9kZXB0aCA9IENPTkZfU1RBVFVTMV9DTURfREVQVEgodmFsKTsN
+CiAgICArCW1hc3Rlci0+Y2Fwcy5yeGZpZm9kZXB0aCA9IENPTkZfU1RBVFVTMV9SWF9ERVBUSCh2
+YWwpOw0KICAgICsJbWFzdGVyLT5jYXBzLnR4Zmlmb2RlcHRoID0gQ09ORl9TVEFUVVMxX1RYX0RF
+UFRIKHZhbCk7DQogICAgKwltYXN0ZXItPmNhcHMuaWJpcmZpZm9kZXB0aCA9IDE2Ow0KDQpJQkkg
+ZmlmbyBkZXB0aCBpcyBoYXJkY29kZWQuIFlvdSBjYW4gcmVhZCB0aGlzIHZhbHVlIGZyb20gQ09O
+Rl9TVEFUVVMwIHJlZ2lzdGVyLg0KDQogICAgKwltYXN0ZXItPmNhcHMuY21kcmZpZm9kZXB0aCA9
+IDE2Ow0KDQpDTURSIGZpZm8gZGVwdGggaXMgaGFyZGNvZGVkLiBZb3UgY2FuIHJlYWQgdGhpcyB2
+YWx1ZSBmcm9tIENPTkZfU1RBVFVTMCByZWdpc3RlciBhbHNvLg0KDQogICAgKw0KICAgICsJc3Bp
+bl9sb2NrX2luaXQoJm1hc3Rlci0+aWJpLmxvY2spOw0KICAgICsJbWFzdGVyLT5pYmkubnVtX3Ns
+b3RzID0gQ09ORl9TVEFUVVMxX0lCSV9IV19SRVModmFsKTsNCiAgICArCW1hc3Rlci0+aWJpLnNs
+b3RzID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsDQogICAgKwkJCQkJIHNpemVvZigqbWFzdGVy
+LT5pYmkuc2xvdHMpICoNCiAgICArCQkJCQkgbWFzdGVyLT5pYmkubnVtX3Nsb3RzLA0KICAgICsJ
+CQkJCSBHRlBfS0VSTkVMKTsNCiAgICArCWlmICghbWFzdGVyLT5pYmkuc2xvdHMpDQogICAgKwkJ
+Z290byBlcnJfZGlzYWJsZV9zeXNjbGs7DQogICAgKw0KICAgICsJd3JpdGVsKElCSVJfVEhSKDEp
+LCBtYXN0ZXItPnJlZ3MgKyBDTURfSUJJX1RIUl9DVFJMKTsNCiAgICArCXdyaXRlbChNU1RfSU5U
+X0lCSVJfVEhSLCBtYXN0ZXItPnJlZ3MgKyBNU1RfSUVSKTsNCiAgICArCXdyaXRlbChERVZTX0NU
+UkxfREVWX0NMUl9BTEwsIG1hc3Rlci0+cmVncyArIERFVlNfQ1RSTCk7DQogICAgKw0KICAgICsJ
+cmV0ID0gaTNjX21hc3Rlcl9yZWdpc3RlcigmbWFzdGVyLT5iYXNlLCAmcGRldi0+ZGV2LA0KICAg
+ICsJCQkJICAmY2Ruc19pM2NfbWFzdGVyX29wcywgZmFsc2UpOw0KICAgICsJaWYgKHJldCkNCiAg
+ICArCQlnb3RvIGVycl9kaXNhYmxlX3N5c2NsazsNCiAgICArDQogICAgKwlyZXR1cm4gMDsNCiAg
+ICArDQogICAgK2Vycl9kaXNhYmxlX3N5c2NsazoNCiAgICArCWNsa19kaXNhYmxlX3VucHJlcGFy
+ZShtYXN0ZXItPnN5c2Nsayk7DQogICAgKw0KICAgICtlcnJfZGlzYWJsZV9wY2xrOg0KICAgICsJ
+Y2xrX2Rpc2FibGVfdW5wcmVwYXJlKG1hc3Rlci0+cGNsayk7DQogICAgKw0KICAgICsJcmV0dXJu
+IHJldDsNCiAgICArfQ0KICAgIA0KUmVnYXJkcywNClByemVteXNsYXcgR2FqDQoNCg==
