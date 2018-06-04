@@ -1,81 +1,101 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v3 5/8] media: rcar-vin: Handle data-enable polarity
-Date: Mon, 4 Jun 2018 14:13:16 +0200
-Message-ID: <20180604121316.GF19674@bigcity.dyn.berto.se>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
- <1527606359-19261-6-git-send-email-jacopo+renesas@jmondi.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
+ info
+Date: Mon, 04 Jun 2018 14:17:22 +0200
+Message-ID: <12153185.srskHYKlqL@phil>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20180118045355.8858-1-architt@codeaurora.org>
+ <20180118045355.8858-3-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1527606359-19261-6-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, geert@glider.be, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180118045355.8858-3-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, tomi.valkeinen@ti.com, briannorris@chromium.org, philippe.cornu@st.com, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-Thanks for your work.
-
-On 2018-05-29 17:05:56 +0200, Jacopo Mondi wrote:
-> Handle data-enable signal polarity. If the polarity is not specifically
-> requested to be active low, use the active high default.
-> =
-
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Acked-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
-> v3:
-> - use new property to set the CES bit
-> ---
->  drivers/media/platform/rcar-vin/rcar-dma.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> =
-
-> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/p=
-latform/rcar-vin/rcar-dma.c
-> index d2b7002..9145b56 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> @@ -123,6 +123,7 @@
->  /* Video n Data Mode Register 2 bits */
->  #define VNDMR2_VPS		(1 << 30)
->  #define VNDMR2_HPS		(1 << 29)
-> +#define VNDMR2_CES		(1 << 28)
->  #define VNDMR2_FTEV		(1 << 17)
->  #define VNDMR2_VLV(n)		((n & 0xf) << 12)
-> =
-
-> @@ -698,6 +699,10 @@ static int rvin_setup(struct rvin_dev *vin)
->  		/* Vsync Signal Polarity Select */
->  		if (!(vin->parallel->mbus_flags & V4L2_MBUS_VSYNC_ACTIVE_LOW))
->  			dmr2 |=3D VNDMR2_VPS;
-> +
-> +		/* Data Enable Polarity Select */
-> +		if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
-> +			dmr2 |=3D VNDMR2_CES;
->  	}
-> =
-
->  	/*
-> --
-> 2.7.4
-> =
-
-
--- =
-
-Regards,
-Niklas S=F6derlund
+QW0gRG9ubmVyc3RhZywgMTguIEphbnVhciAyMDE4LCAwNTo1Mzo1NSBDRVNUIHNjaHJpZWIgQXJj
+aGl0IFRhbmVqYToKPiBBZGQgYmluZGluZyBpbmZvIGZvciBwZXJpcGhlcmFscyB0aGF0IHN1cHBv
+cnQgZHVhbC1jaGFubmVsIERTSS4gQWRkCj4gY29ycmVzcG9uZGluZyBvcHRpb25hbCBiaW5kaW5n
+cyBmb3IgRFNJIGhvc3QgY29udHJvbGxlcnMgdGhhdCBtYXkKPiBiZSBjb25maWd1cmVkIGluIHRo
+aXMgbW9kZS4gQWRkIGFuIGV4YW1wbGUgb2YgYW4gSTJDIGNvbnRyb2xsZWQKPiBkZXZpY2Ugb3Bl
+cmF0aW5nIGluIGR1YWwtY2hhbm5lbCBEU0kgbW9kZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBcmNo
+aXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgoKTG9va3MgbGlrZSBhIGdyZWF0IHNv
+bHV0aW9uIGZvciB0aGF0IHByb2JsZW0sIHNvClJldmlld2VkLWJ5OiBIZWlrbyBTdHVlYm5lciA8
+aGVpa29Ac250ZWNoLmRlPgoKQXMgSSdtIGxvb2tpbmcgaW50byB0aGF0IGZvciBteSByazMzOTkt
+c2NhcmxldCBkZXZpY2UgcmlnaHQgbm93IGFuZApjb3VsZG4ndCBmaW5kIHRoaXMgcGF0Y2hzZXQg
+aW4gdGhlIGtlcm5lbCB5ZXQsIGlzIGl0IHBsYW5uZWQgdG8KbWVyZ2Ugb3IgcmVmcmVzaCB0aGVz
+ZSBiaW5kaW5nIGNoYW5nZXMgb3Igd2VyZSBwcm9ibGVtcyBlbmNvdW50ZXJlZC4KCkF0IGxlYXN0
+IGFuIEFjay9SZXZpZXcgZnJvbSBSb2Igc2VlbXMgdG8gYmUgbWlzc2luZy4KCgpIZWlrbwoKPiAt
+LS0KPiB2MjoKPiAtIFNwZWNpZnkgdGhhdCBjbG9jay1tYXN0ZXIgaXMgYSBib29sZWFuIHByb3Bl
+cnR5Lgo+IC0gRHJvcC9hZGQgdW5pdC1hZGRyZXNzIGFuZCAjKi1jZWxscyB3aGVyZSBhcHBsaWNh
+YmxlLgo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50
+eHQgICB8IDgwICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDgwIGlu
+c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbWlwaS1kc2ktYnVzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQKPiBpbmRleCA5NGZiNzJjYjkxNmYu
+LjdhM2FiYmVkYjNmYSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWlwaS1kc2ktYnVzLnR4dAo+IEBAIC0yOSw2ICsyOSwx
+MyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAtICNzaXplLWNlbGxzOiBTaG91bGQgYmUgMC4g
+VGhlcmUgYXJlIGNhc2VzIHdoZXJlIGl0IG1ha2VzIHNlbnNlIHRvIHVzZSBhCj4gICAgZGlmZmVy
+ZW50IHZhbHVlIGhlcmUuIFNlZSBiZWxvdy4KPiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4g
+Ky0gY2xvY2stbWFzdGVyOiBib29sZWFuLiBTaG91bGQgYmUgZW5hYmxlZCBpZiB0aGUgaG9zdCBp
+cyBiZWluZyB1c2VkIGluCj4gKyAgY29uanVuY3Rpb24gd2l0aCBhbm90aGVyIERTSSBob3N0IHRv
+IGRyaXZlIHRoZSBzYW1lIHBlcmlwaGVyYWwuIEhhcmR3YXJlCj4gKyAgc3VwcG9ydGluZyBzdWNo
+IGEgY29uZmlndXJhdGlvbiBnZW5lcmFsbHkgcmVxdWlyZXMgdGhlIGRhdGEgb24gYm90aCB0aGUg
+YnVzc2VzCj4gKyAgdG8gYmUgZHJpdmVuIGJ5IHRoZSBzYW1lIGNsb2NrLiBPbmx5IHRoZSBEU0kg
+aG9zdCBpbnN0YW5jZSBjb250cm9sbGluZyB0aGlzCj4gKyAgY2xvY2sgc2hvdWxkIGNvbnRhaW4g
+dGhpcyBwcm9wZXJ0eS4KPiArCj4gIERTSSBwZXJpcGhlcmFsCj4gID09PT09PT09PT09PT09Cj4g
+IAo+IEBAIC02Miw2ICs2OSwxNiBAQCBwcmltYXJ5IGNvbnRyb2wgYnVzLCBidXQgYXJlIGFsc28g
+Y29ubmVjdGVkIHRvIGEgRFNJIGJ1cyAobW9zdGx5IGZvciB0aGUgZGF0YQo+ICBwYXRoKS4gQ29u
+bmVjdGlvbnMgYmV0d2VlbiBzdWNoIHBlcmlwaGVyYWxzIGFuZCBhIERTSSBob3N0IGNhbiBiZSBy
+ZXByZXNlbnRlZAo+ICB1c2luZyB0aGUgZ3JhcGggYmluZGluZ3MgWzFdLCBbMl0uCj4gIAo+ICtQ
+ZXJpcGhlcmFscyB0aGF0IHN1cHBvcnQgZHVhbCBjaGFubmVsIERTSQo+ICstLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArUGVyaXBoZXJhbHMgd2l0aCBoaWdo
+ZXIgYmFuZHdpZHRoIHJlcXVpcmVtZW50cyBjYW4gYmUgY29ubmVjdGVkIHRvIDIgRFNJCj4gK2J1
+c3Nlcy4gRWFjaCBEU0kgYnVzL2NoYW5uZWwgZHJpdmVzIHNvbWUgcG9ydGlvbiBvZiB0aGUgcGl4
+ZWwgZGF0YSAoZ2VuZXJhbGx5Cj4gK2xlZnQvcmlnaHQgaGFsZiBvZiBlYWNoIGxpbmUgb2YgdGhl
+IGRpc3BsYXksIG9yIGV2ZW4vb2RkIGxpbmVzIG9mIHRoZSBkaXNwbGF5KS4KPiArVGhlIGdyYXBo
+IGJpbmRpbmdzIHNob3VsZCBiZSB1c2VkIHRvIHJlcHJlc2VudCB0aGUgbXVsdGlwbGUgRFNJIGJ1
+c3NlcyB0aGF0IGFyZQo+ICtjb25uZWN0ZWQgdG8gdGhpcyBwZXJpcGhlcmFsLiBFYWNoIERTSSBo
+b3N0J3Mgb3V0cHV0IGVuZHBvaW50IGNhbiBiZSBsaW5rZWQgdG8KPiArYW4gaW5wdXQgZW5kcG9p
+bnQgb2YgdGhlIERTSSBwZXJpcGhlcmFsLgo+ICsKPiAgWzFdIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiAgWzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAo+ICAKPiBAQCAtNzEsNiArODgsOCBA
+QCBFeGFtcGxlcwo+ICAgIHdpdGggZGlmZmVyZW50IHZpcnR1YWwgY2hhbm5lbCBjb25maWd1cmF0
+aW9ucy4KPiAgLSAoNCkgaXMgYW4gZXhhbXBsZSBvZiBhIHBlcmlwaGVyYWwgb24gYSBJMkMgY29u
+dHJvbCBidXMgY29ubmVjdGVkIHdpdGggdG8KPiAgICBhIERTSSBob3N0IHVzaW5nIG9mLWdyYXBo
+IGJpbmRpbmdzLgo+ICstICg1KSBpcyBhbiBleGFtcGxlIG9mIDIgRFNJIGhvc3RzIGRyaXZpbmcg
+YSBkdWFsLWNoYW5uZWwgRFNJIHBlcmlwaGVyYWwsCj4gKyAgd2hpY2ggdXNlcyBJMkMgYXMgaXRz
+IHByaW1hcnkgY29udHJvbCBidXMuCj4gIAo+ICAxKQo+ICAJZHNpLWhvc3Qgewo+IEBAIC0xNTMs
+MyArMTcyLDY0IEBAIEV4YW1wbGVzCj4gIAkJCX07Cj4gIAkJfTsKPiAgCX07Cj4gKwo+ICs1KQo+
+ICsJaTJjLWhvc3Qgewo+ICsJCWRzaS1icmlkZ2VAMzUgewo+ICsJCQljb21wYXRpYmxlID0gIi4u
+LiI7Cj4gKwkJCXJlZyA9IDwweDM1PjsKPiArCj4gKwkJCXBvcnRzIHsKPiArCQkJCSNhZGRyZXNz
+LWNlbGxzID0gPDE+Owo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQkJcG9ydEAw
+IHsKPiArCQkJCQlyZWcgPSA8MD47Cj4gKwkJCQkJZHNpMF9pbjogZW5kcG9pbnQgewo+ICsJCQkJ
+CQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfb3V0PjsKPiArCQkJCQl9Owo+ICsJCQkJfTsKPiAr
+Cj4gKwkJCQlwb3J0QDEgewo+ICsJCQkJCXJlZyA9IDwxPjsKPiArCQkJCQlkc2kxX2luOiBlbmRw
+b2ludCB7Cj4gKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMV9vdXQ+Owo+ICsJCQkJCX07
+Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArCWRzaTAtaG9zdCB7Cj4g
+KwkJLi4uCj4gKwo+ICsJCS8qCj4gKwkJICogdGhpcyBEU0kgaW5zdGFuY2UgZHJpdmVzIHRoZSBj
+bG9jayBmb3IgYm90aCB0aGUgaG9zdAo+ICsJCSAqIGNvbnRyb2xsZXJzCj4gKwkJICovCj4gKwkJ
+Y2xvY2stbWFzdGVyOwo+ICsKPiArCQlwb3J0cyB7Cj4gKwkJCS4uLgo+ICsKPiArCQkJcG9ydCB7
+Cj4gKwkJCQlkc2kwX291dDogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+ZHNpMF9pbj47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArCWRzaTEt
+aG9zdCB7Cj4gKwkJLi4uCj4gKwo+ICsJCXBvcnRzIHsKPiArCQkJLi4uCj4gKwo+ICsJCQlwb3J0
+IHsKPiArCQkJCWRzaTFfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0g
+PCZkc2kxX2luPjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gCgoKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
