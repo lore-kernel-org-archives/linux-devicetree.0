@@ -1,185 +1,182 @@
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: Re: [PATCH v4 2/7] clk: at91: add I2S clock mux driver
-Date: Mon, 4 Jun 2018 11:20:29 +0300
-Message-ID: <d2558674-9aee-8b08-293f-34754fd2b185@microchip.com>
-References: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
- <1527251668-31396-3-git-send-email-codrin.ciubotariu@microchip.com>
- <152778039660.144038.4743783065942615925@swboyd.mtv.corp.google.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 3/3] arm64: dts: allwinner: add support for Pinebook
+Date: Mon, 4 Jun 2018 10:49:25 +0200
+Message-ID: <20180604084925.wbtz7cdcleyaei62@flea>
+References: <20180601062901.8052-1-anarsoul@gmail.com>
+ <20180601062901.8052-4-anarsoul@gmail.com>
+ <20180601092346.g2iixqupumn7xo7r@flea>
+ <CA+E=qVffecgkCG2V_5ptS9oRxo4XwjpQQhWmf8ywpfF78Yy+7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152778039660.144038.4743783065942615925@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, alexandre.belloni@bootlin.com, alsa-devel@alsa-project.org, boris.brezillon@bootlin.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, robh+dt@kernel.org
-Cc: Cristian.Birsan@microchip.com
+Content-Type: multipart/mixed; boundary="===============5041387100736168116=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+E=qVffecgkCG2V_5ptS9oRxo4XwjpQQhWmf8ywpfF78Yy+7A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31.05.2018 18:26, Stephen Boyd wrote:
-> Quoting Codrin Ciubotariu (2018-05-25 05:34:23)
->> This driver is a simple muxing driver that controls the
->> I2S's clock input by using syscon/regmap to change the parrent.
-> 
-> s/parrent/parent/
 
-I will fix it.
+--===============5041387100736168116==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2b3wiee55panlvid"
+Content-Disposition: inline
 
-> 
->> The available inputs can be Peripheral clock and Generated clock.
-> 
-> Why capitalize peripheral and generated?
 
-In DS, at I2S block these clocks appear defined with capital letters... 
-I will fix it.
+--2b3wiee55panlvid
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->>
->> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
->> ---
->> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
->> index 1254bf9..903f23c 100644
->> --- a/arch/arm/mach-at91/Kconfig
->> +++ b/arch/arm/mach-at91/Kconfig
->> @@ -27,6 +27,7 @@ config SOC_SAMA5D2
->>          select HAVE_AT91_H32MX
->>          select HAVE_AT91_GENERATED_CLK
->>          select HAVE_AT91_AUDIO_PLL
->> +       select HAVE_AT91_I2S_MUX_CLK
->>          select PINCTRL_AT91PIO4
->>          help
->>            Select this if ou are using one of Microchip's SAMA5D2 family SoC.
->> @@ -129,6 +130,9 @@ config HAVE_AT91_GENERATED_CLK
->>   config HAVE_AT91_AUDIO_PLL
->>          bool
->>   
->> +config HAVE_AT91_I2S_MUX_CLK
->> +       bool
->> +
->>   config SOC_SAM_V4_V5
->>          bool
->>   
-> 
-> I guess this is OK.
-> 
->> diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
->> index 082596f..facc169 100644
->> --- a/drivers/clk/at91/Makefile
->> +++ b/drivers/clk/at91/Makefile
->> @@ -13,3 +13,4 @@ obj-$(CONFIG_HAVE_AT91_USB_CLK)               += clk-usb.o
->>   obj-$(CONFIG_HAVE_AT91_SMD)            += clk-smd.o
->>   obj-$(CONFIG_HAVE_AT91_H32MX)          += clk-h32mx.o
->>   obj-$(CONFIG_HAVE_AT91_GENERATED_CLK)  += clk-generated.o
->> +obj-$(CONFIG_HAVE_AT91_I2S_MUX_CLK)    += clk-i2s-mux.o
->> diff --git a/drivers/clk/at91/clk-i2s-mux.c b/drivers/clk/at91/clk-i2s-mux.c
->> new file mode 100644
->> index 0000000..2d56ded
->> --- /dev/null
->> +++ b/drivers/clk/at91/clk-i2s-mux.c
->> @@ -0,0 +1,117 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + *  Copyright (C) 2018 Microchip Technology Inc,
->> + *                     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
->> + *
->> + *
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/of.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slab.h>
->> +
->> +#include <soc/at91/atmel-sfr.h>
->> +
->> +#define        I2S_BUS_NR      2
->> +
->> +struct clk_i2s_mux {
->> +       struct clk_hw hw;
->> +       struct regmap *regmap;
->> +       u32 bus_id;
-> 
-> Can be a u8?
+On Fri, Jun 01, 2018 at 10:37:29AM -0700, Vasily Khoruzhick wrote:
+> On Fri, Jun 1, 2018 at 2:23 AM, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > On Thu, May 31, 2018 at 11:29:01PM -0700, Vasily Khoruzhick wrote:
+> >> From: Icenowy Zheng <icenowy@aosc.xyz>
+> >>
+> >> Pinebook is a A64-based laptop produced by Pine64, with the following
+> >> peripherals:
+> >>
+> >> USB:
+> >> - Two external USB ports (one is directly connected to A64's OTG
+> >> controller, the other is under a internal hub connected to the host-on=
+ly
+> >> controller.)
+> >> - USB HID keyboard and touchpad connected to the internal hub.
+> >> - USB UVC camera connected to the internal hub.
+> >>
+> >> Power-related:
+> >> - A DC IN jack connected to AXP803's DCIN pin.
+> >> - A Li-Polymer battery connected to AXP803's battery pins.
+> >>
+> >> Storage:
+> >> - An eMMC by Foresee on the main board (in the product revision of the
+> >> main board it's designed to be switchable).
+> >> - An external MicroSD card slot.
+> >>
+> >> Display:
+> >> - An eDP LCD panel (1366x768) connected via an ANX6345 RGB-eDP bridge.
+> >> - A mini HDMI port.
+> >>
+> >> Misc:
+> >> - A Hall sensor designed to detect the status of lid, connected to GPI=
+O PL12.
+> >> - A headphone jack connected to the SoC's internal codec.
+> >> - A debug UART port muxed with headphone jack.
+> >>
+> >> This commit adds basical support for it.
+> >>
+> >> [vasily: squashed several commits into one, added simplefb node, added=
+ usbphy
+> >>        to ehci0 and ohci0 nodes]
+> >>
+> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> >> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> >> ---
+> >>  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+> >>  .../dts/allwinner/sun50i-a64-pinebook.dts     | 285 ++++++++++++++++++
+> >>  2 files changed, 286 insertions(+)
+> >>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.=
+dts
+> >>
+> >> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/=
+dts/allwinner/Makefile
+> >> index 8bebe7da5ed9..a8c6d0c6f2c5 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> >> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> >> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-nanopi-a64.dtb
+> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-olinuxino.dtb
+> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-orangepi-win.dtb
+> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-pine64-plus.dtb sun50i-a64-p=
+ine64.dtb
+> >> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-pinebook.dtb
+> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-sopine-baseboard.dtb
+> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-teres-i.dtb
+> >>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/a=
+rch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> >> new file mode 100644
+> >> index 000000000000..d952db217702
+> >> --- /dev/null
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> >> @@ -0,0 +1,285 @@
+> >> +/*
+> >> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
+> >> + * Copyright (C) 2018 Vasily Khoruzhick <anarsoul@gmail.com>
+> >> + *
+> >> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> >
+> > The SPDX tag should be the first one.
+>=20
+> OK, but it's not in number of other dts files, e.g.
+> sun50i-a64-teres-i.dts or sun50i-h5-orangepi-zero-plus.dts
 
-I think so, I will cast out_value parameter of of_property_read_u32() to u8.
+I guess we'd have to fix it then
 
-> 
->> +};
->> +
->> +#define to_clk_i2s_mux(hw) container_of(hw, struct clk_i2s_mux, hw)
->> +
->> +static u8 clk_i2s_mux_get_parent(struct clk_hw *hw)
->> +{
->> +       struct clk_i2s_mux *mux = to_clk_i2s_mux(hw);
->> +       u32 val;
->> +
->> +       regmap_read(mux->regmap, AT91_SFR_I2SCLKSEL, &val);
->> +
->> +       return (val & BIT(mux->bus_id)) >> mux->bus_id;
->> +}
->> +
->> +static int clk_i2s_mux_set_parent(struct clk_hw *hw, u8 index)
->> +{
->> +       struct clk_i2s_mux *mux = to_clk_i2s_mux(hw);
->> +
->> +       return regmap_update_bits(mux->regmap, AT91_SFR_I2SCLKSEL,
->> +                                 BIT(mux->bus_id), index << mux->bus_id);
->> +}
->> +
->> +const struct clk_ops clk_i2s_mux_ops = {
-> 
-> static?
+> >> +/* The ANX6345 eDP-bridge is on r_i2c. There is no linux (mainline)
+> >> + * driver for this chip at the moment, the bootloader initializes it.
+> >> + * However it can be accessed with the i2c-dev driver from user space.
+> >> + */
+> >
+> > The comment format is wrong, and the part after r_i2c, about i2c-dev
+> > and the mainline support is not really relevant. The DT describes the
+> > hardware, and is used by several different projects that might or
+> > might not have i2c-dev, an interface similar, or might have or not a
+> > driver for the bridge.
+>=20
+> Comment is identical to sun50i-a64-teres-i.dts (which was merged few
+> months ago).
+> I'll remove everything but first sentence.
 
-Yes, I will fix it.
+We don't notice everything unfortunately. Feel free to fix it in the
+TERES-I DTS as well.
 
-> 
->> +       .get_parent = clk_i2s_mux_get_parent,
->> +       .set_parent = clk_i2s_mux_set_parent,
->> +       .determine_rate = __clk_mux_determine_rate,
->> +};
->> +
->> +static struct clk_hw * __init
->> +at91_clk_i2s_mux_register(struct regmap *regmap, const char *name,
->> +                         const char * const *parent_names,
->> +                         unsigned int num_parents, u32 bus_id)
->> +{
->> +       struct clk_init_data init = {};
->> +       struct clk_i2s_mux *i2s_ck;
->> +       int ret;
->> +
->> +       i2s_ck = kzalloc(sizeof(*i2s_ck), GFP_KERNEL);
->> +       if (!i2s_ck)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       init.name = name;
->> +       init.ops = &clk_i2s_mux_ops;
->> +       init.parent_names = parent_names;
->> +       init.num_parents = num_parents;
->> +       init.flags = CLK_IGNORE_UNUSED;
-> 
-> Really? Why?
+Maxime
 
-I am thinking that there is no need to gate this clock, since there is 
-no way to gate this clock in HW.
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> 
->> +
->> +       i2s_ck->hw.init = &init;
->> +       i2s_ck->bus_id = bus_id;
->> +       i2s_ck->regmap = regmap;
->> +
->> +       ret = clk_hw_register(NULL, &i2s_ck->hw);
->> +       if (ret) {
->> +               kfree(i2s_ck);
->> +               return ERR_PTR(ret);
->> +       }
->> +
->> +       return &i2s_ck->hw;
->> +}
+--2b3wiee55panlvid
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thank you for your review. I will wait a few more days for more comments 
-on this series and send a V5 afterwards.
+-----BEGIN PGP SIGNATURE-----
 
-Best regards,
-Codrin
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsU/RQACgkQ0rTAlCFN
+r3QwZg/+JHBSDE2O+F87pDwndmAxSBGrO0qgxWbl+uKmhkhc4z0NlIqtgJUoH2qr
+3ojH8Tgv2sHZIqlkCo/QcmBKX4VZYiDRfRklgPYoIfI4EOlLprEQwoVKT1jLt8Kr
+cIjwr6F52/y9+dHyQdJWp0DO6wLBUOTGpPHTzCZ85+A+v3v/fWl3WIXAJuI3lZbR
+OqetyGZUkWXZGNnt26SJ9hmj/6IiBgq2V9uG5bZv/GfR38T2oD24DIXqqopxzIwU
+X/206A4NNujMYP4DoBHvNVl+8wASVkbiR7oXXuFlwAE8iCki31YD1EqKl4lbXU9H
+L8TzwctjCfReEghxCUMhikP3RARXHM7G4qqE/cjBKCBs3XeQ0/80Xhpa0ULtxUy/
+W5Yfdf9KsMsA6Aq6k4RAfOeAZZZ6VMUlRstcJMgUA4CmUCn984zFKd1w4AzDqTqb
+jteXmvX1RrUFvcoGDnq3VKdzuHudxFhE4ggHeOKxZKAnHU3ZLQS3GSFjeyyyy90a
+KF8qEI4fPVZTrdO1zzaBavsDtws4GiAAIyas7f+7xcEW03ftTysWFGdA5kvaW1Ks
+WYRCMOrWVZ1xLAfbYwk+aqmDmzp6vs0aoHwU/5LahMSKzQecjq1IWPTo91LluYdn
+nkO7Ob88CNybztxII6iuruQy873NR/+2rC7Z9RO3oHSv+2hqjNg=
+=IpR7
+-----END PGP SIGNATURE-----
+
+--2b3wiee55panlvid--
+
+
+--===============5041387100736168116==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5041387100736168116==--
