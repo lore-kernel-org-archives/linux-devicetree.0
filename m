@@ -1,39 +1,76 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: v3hsk: specify GEther PHY IRQ
-Date: Mon, 4 Jun 2018 12:34:09 +0200
-Message-ID: <20180604103408.fonnt5qtzne3qfhn@verge.net.au>
-References: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
- <9e6c40eb-71d0-d35b-1cf7-9179e093ed10@cogentembedded.com>
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: [PATCH] drm/panel: simple: Add support for Innolux G070Y2-L01
+Date: Mon, 04 Jun 2018 13:16:48 +0200
+Message-ID: <1528111008.2818.20.camel@googlemail.com>
+Reply-To: chf.fritz@googlemail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <9e6c40eb-71d0-d35b-1cf7-9179e093ed10@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 11:47:14PM +0300, Sergei Shtylyov wrote:
-> Specify GEther PHY IRQ in the V3H Starter Kit board's device tree, now
-> that we have the GPIO support (previously phylib had to resort to polling).
-> 
-> Based on the original (and large) patch by Vladimir Barinov.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-Given Olof Johansson's recent comments in ("Re: [GIT PULL] Renesas      
-ARM64 Based SoC DT Updates for v4.18") please consider squashing this patch
-and the previous one.
-
-Other than that, this patch looks good to me.
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIElubm9sdXggRzA3MFkyLUwwMSA3IiBXVkdBICg4
+MDB4NDgwKSBURlQgTENECnBhbmVsLgoKU2lnbmVkLW9mZi1ieTogQ2hyaXN0b3BoIEZyaXR6IDxj
+aGYuZnJpdHpAZ29vZ2xlbWFpbC5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+aW5ub2x1eCxnMDcweTItbDAxLnR4dCAgfCAxMiArKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysrKysr
+LS0KIDIgZmlsZXMgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9pbm5vbHV4LGcwNzB5Mi1sMDEudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCxnMDcweTItbDAxLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9s
+dXgsZzA3MHkyLWwwMS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uN2My
+MzRjZgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsZzA3MHkyLWwwMS50eHQKQEAgLTAsMCArMSwxMiBAQAor
+SW5ub2x1eCBHMDcwWTItTDAxIDciIFdWR0EgKDgwMHg0ODApIFRGVCBMQ0QgcGFuZWwKKworUmVx
+dWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJpbm5vbHV4LGcwNzB5
+Mi1sMDEiCistIHBvd2VyLXN1cHBseTogYXMgc3BlY2lmaWVkIGluIHRoZSBiYXNlIGJpbmRpbmcK
+KworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gYmFja2xpZ2h0OiBhcyBzcGVjaWZpZWQgaW4gdGhl
+IGJhc2UgYmluZGluZworLSBlbmFibGUtZ3Bpb3M6IGFzIHNwZWNpZmllZCBpbiB0aGUgYmFzZSBi
+aW5kaW5nCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5l
+bCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhp
+cyBkaXJlY3RvcnkuCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2lt
+cGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggY2JmMWFi
+NC4uYzAzMGFiMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtMTA4Niw2
+ICsxMDg2LDM2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBpbm5vbHV4X2F0MDcw
+dG45MiA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCiB9Owog
+CitzdGF0aWMgY29uc3Qgc3RydWN0IGRpc3BsYXlfdGltaW5nIGlubm9sdXhfZzA3MHkyX2wwMV90
+aW1pbmcgPSB7CisJLnBpeGVsY2xvY2sgPSB7IDI4MDAwMDAwLCAyOTUwMDAwMCwgMzIwMDAwMDAg
+fSwKKwkuaGFjdGl2ZSA9IHsgODAwLCA4MDAsIDgwMCB9LAorCS5oZnJvbnRfcG9yY2ggPSB7IDYx
+LCA5MSwgMTQxIH0sCisJLmhiYWNrX3BvcmNoID0geyA2MCwgOTAsIDE0MCB9LAorCS5oc3luY19s
+ZW4gPSB7IDEyLCAxMiwgMTIgfSwKKwkudmFjdGl2ZSA9IHsgNDgwLCA0ODAsIDQ4MCB9LAorCS52
+ZnJvbnRfcG9yY2ggPSB7IDQsIDksIDMwIH0sCisJLnZiYWNrX3BvcmNoID0geyA0LCA4LCAyOCB9
+LAorCS52c3luY19sZW4gPSB7IDIsIDIsIDIgfSwKKwkuZmxhZ3MgPSBESVNQTEFZX0ZMQUdTX0RF
+X0hJR0gsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgaW5ub2x1eF9nMDcw
+eTJfbDAxID0geworCS50aW1pbmdzID0gJmlubm9sdXhfZzA3MHkyX2wwMV90aW1pbmcsCisJLm51
+bV90aW1pbmdzID0gMSwKKwkuYnBjID0gNiwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMTUyLAor
+CQkuaGVpZ2h0ID0gOTEsCisJfSwKKwkuZGVsYXkgPSB7CisJCS5wcmVwYXJlID0gMTAsCisJCS5l
+bmFibGUgPSAxMDAsCisJCS5kaXNhYmxlID0gMTAwLAorCQkudW5wcmVwYXJlID0gODAwLAorCX0s
+CisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9TUFdHLAorfTsKKwog
+c3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBpbm5vbHV4X2cxMDFpY2VfbDAxX3Rp
+bWluZyA9IHsKIAkucGl4ZWxjbG9jayA9IHsgNjA0MDAwMDAsIDcxMTAwMDAwLCA3NDcwMDAwMCB9
+LAogCS5oYWN0aXZlID0geyAxMjgwLCAxMjgwLCAxMjgwIH0sCkBAIC0yMTU1LDEwICsyMTg1LDEz
+IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10g
+PSB7CiAJCS5jb21wYXRpYmxlID0gImlubm9sdXgsYXQwNzB0bjkyIiwKIAkJLmRhdGEgPSAmaW5u
+b2x1eF9hdDA3MHRuOTIsCiAJfSwgewotCQkuY29tcGF0aWJsZSA9Imlubm9sdXgsZzEwMWljZS1s
+MDEiLAorCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGcwNzB5Mi1sMDEiLAorCQkuZGF0YSA9ICZp
+bm5vbHV4X2cwNzB5Ml9sMDEsCisJfSwgeworCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGcxMDFp
+Y2UtbDAxIiwKIAkJLmRhdGEgPSAmaW5ub2x1eF9nMTAxaWNlX2wwMQogCX0sIHsKLQkJLmNvbXBh
+dGlibGUgPSJpbm5vbHV4LGcxMjFpMS1sMDEiLAorCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LGcx
+MjFpMS1sMDEiLAogCQkuZGF0YSA9ICZpbm5vbHV4X2cxMjFpMV9sMDEKIAl9LCB7CiAJCS5jb21w
+YXRpYmxlID0gImlubm9sdXgsZzEyMXgxLWwwMyIsCi0tIAoyLjEuNAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
