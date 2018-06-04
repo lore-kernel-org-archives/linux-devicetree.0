@@ -1,83 +1,33 @@
 From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 2/5] media: venus: add a routine to set venus state
-Date: Mon, 4 Jun 2018 21:54:25 +0900
-Message-ID: <CAAFQd5DH2i+8ZJ+s2XUnmFHwxXKLF6z_=w0Z-RFs=W9oVvrJgw@mail.gmail.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-3-git-send-email-vgarodia@codeaurora.org> <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
+Subject: Re: [PATCH v2 3/5] venus: add check to make scm calls
+Date: Mon, 4 Jun 2018 21:58:08 +0900
+Message-ID: <CAAFQd5BSgB0OoqUFckJLXto9FNMYCTQ8ubDftaC-LvFm+A-gxA@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org> <1527884768-22392-4-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601212117.GD11565@jcrouse-lnx.qualcomm.com>
+In-Reply-To: <1527884768-22392-4-git-send-email-vgarodia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+To: vgarodia@codeaurora.org
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jordan, Vikash,
+Hi Vikash,
 
-On Sat, Jun 2, 2018 at 6:21 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Sat, Jun 02, 2018 at 01:56:05AM +0530, Vikash Garodia wrote:
+On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
 [snip]
-> > +int venus_set_hw_state(enum tzbsp_video_state state, struct venus_core *core)
-> > +{
-> > +     int ret;
-> > +     struct device *dev = core->dev;
->
-> If you get rid of the log message as you should, you don't need this.
->
-> > +     void __iomem *reg_base = core->base;
-> > +
-> > +     switch (state) {
-> > +     case TZBSP_VIDEO_SUSPEND:
-> > +             if (qcom_scm_is_available())
-> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_SUSPEND, 0);
-> > +             else
-> > +                     writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
->
-> You can just use core->base here and not bother making a local variable for it.
->
-> > +             break;
-> > +     case TZBSP_VIDEO_RESUME:
-> > +             if (qcom_scm_is_available())
-> > +                     ret = qcom_scm_set_remote_state(TZBSP_VIDEO_RESUME, 0);
-> > +             else
-> > +                     venus_reset_hw(core);
-> > +             break;
-> > +     default:
-> > +             dev_err(dev, "invalid state\n");
->
-> state is a enum - you are highly unlikely to be calling it in your own code with
-> a random value.  It is smart to have the default, but you don't need the log
-> message - that is just wasted space in the binary.
->
-> > +             break;
-> > +     }
->
-> There are three paths in the switch statement that could end up with 'ret' being
-> uninitialized here.  Set it to 0 when you declare it.
+> +int venus_boot(struct venus_core *core)
+> +{
+> +       phys_addr_t mem_phys;
+> +       size_t mem_size;
+> +       int ret;
+> +       struct device *dev;
+> +
+> +       if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER))
+> +               return -EPROBE_DEFER;
 
-Does this actually compile? The compiler should detect that ret is
-used uninitialized. Setting it to 0 at declaration time actually
-prevents compiler from doing that and makes it impossible to catch
-cases when the ret should actually be non-zero, e.g. the invalid enum
-value case.
-
-Given that this function is supposed to substitute existing calls into
-qcom_scm_set_remote_state(), why not just do something like this:
-
-        if (qcom_scm_is_available())
-                return qcom_scm_set_remote_state(state, 0);
-
-        switch (state) {
-        case TZBSP_VIDEO_SUSPEND:
-                writel_relaxed(1, reg_base + WRAPPER_A9SS_SW_RESET);
-                break;
-        case TZBSP_VIDEO_RESUME:
-                venus_reset_hw(core);
-                break;
-        }
-
-        return 0;
+Why are we deferring probe here? The option will not magically become
+enabled after probe is retried.
 
 Best regards,
 Tomasz
