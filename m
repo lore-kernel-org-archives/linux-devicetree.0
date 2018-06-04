@@ -1,160 +1,66 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware
- device
-Date: Mon, 4 Jun 2018 16:56:34 +0300
-Message-ID: <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
- <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v2 3/6] clk: ti: dra7: Add clkctrl clock data for the mcan
+ clocks
+Date: Mon, 4 Jun 2018 19:28:01 +0530
+Message-ID: <6df7e0cd-5574-aa19-6c99-4438e5e377e0@ti.com>
+References: <20180530141133.3711-1-faiz_abbas@ti.com>
+ <20180530141133.3711-4-faiz_abbas@ti.com>
+ <20180531040350.GA25132@rob-hp-laptop>
+ <e7e3ade1-76b7-f216-ece5-bd64a55cede6@ti.com>
+ <678ef467-a235-91db-8bae-f249ad98eac8@ti.com>
+ <d7532c7a-d2ae-5cbf-cfd0-c347b975ed6b@ti.com>
+ <20180601142613.GU5705@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180601142613.GU5705@atomide.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>, vgarodia@codeaurora.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh@kernel.org>, paul@pwsan.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-On 06/04/2018 04:18 PM, Tomasz Figa wrote:
-> Hi Vikash,
-> 
-> On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
->>
->> A separate child device is added for video firmware.
->> This is needed to
->> [1] configure the firmware context bank with the desired SID.
->> [2] ensure that the iova for firmware region is from 0x0.
->>
->> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
->> ---
->>  .../devicetree/bindings/media/qcom,venus.txt       |  8 +++-
->>  drivers/media/platform/qcom/venus/core.c           | 48 +++++++++++++++++++---
->>  drivers/media/platform/qcom/venus/firmware.c       | 20 ++++++++-
->>  drivers/media/platform/qcom/venus/firmware.h       |  2 +
->>  4 files changed, 71 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
->> index 00d0d1b..701cbe8 100644
->> --- a/Documentation/devicetree/bindings/media/qcom,venus.txt
->> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
->> @@ -53,7 +53,7 @@
->>
->>  * Subnodes
->>  The Venus video-codec node must contain two subnodes representing
->> -video-decoder and video-encoder.
->> +video-decoder and video-encoder, one optional firmware subnode.
->>
->>  Every of video-encoder or video-decoder subnode should have:
->>
->> @@ -79,6 +79,8 @@ Every of video-encoder or video-decoder subnode should have:
->>                     power domain which is responsible for collapsing
->>                     and restoring power to the subcore.
->>
->> +The firmware sub node must contain the iommus specifiers for ARM9.
-> 
-> Please document the compatible string here as well.
-> 
->> +
->>  * An Example
->>         video-codec@1d00000 {
->>                 compatible = "qcom,msm8916-venus";
->> @@ -105,4 +107,8 @@ Every of video-encoder or video-decoder subnode should have:
->>                         clock-names = "core";
->>                         power-domains = <&mmcc VENUS_CORE1_GDSC>;
->>                 };
->> +               venus-firmware {
->> +                       compatible = "qcom,venus-firmware-no-tz";
-> 
-> I don't think "-no-tz" should be mentioned here in DT, since it's a
-> firmware/software detail.
-
-I have to agree with Tomasz, non-tz or tz is a software detail and it
-shouldn't be reflected in compatible string.
-
-Also I'm not sure but what will happen if this video-firmware subnode is
-not added, do you expect that backward compatibility is satisfied for
-older venus versions?
-
-> 
->> +                       iommus = <&apps_smmu 0x10b2 0x0>;
->> +               }
->>         };
->> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->> index 101612b..5cfb3c2 100644
->> --- a/drivers/media/platform/qcom/venus/core.c
->> +++ b/drivers/media/platform/qcom/venus/core.c
->> @@ -179,6 +179,19 @@ static u32 to_v4l2_codec_type(u32 codec)
->>         }
->>  }
->>
->> +static int store_firmware_dev(struct device *dev, void *data)
->> +{
->> +       struct venus_core *core = data;
->> +
->> +       if (!core)
->> +               return -EINVAL;
->> +
-> 
-> No need to check this AFAICT.>
->> +       if (of_device_is_compatible(dev->of_node, "qcom,venus-firmware-no-tz"))
->> +               core->fw.dev = dev;
->> +
->> +       return 0;
->> +}
->> +
->>  static int venus_enumerate_codecs(struct venus_core *core, u32 type)
->>  {
->>         const struct hfi_inst_ops dummy_ops = {};
->> @@ -279,6 +292,13 @@ static int venus_probe(struct platform_device *pdev)
->>         if (ret < 0)
->>                 goto err_runtime_disable;
->>
->> +       ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
->> +       if (ret)
->> +               goto err_runtime_disable;
->> +
->> +       /* Attempt to store firmware device */
->> +       device_for_each_child(dev, core, store_firmware_dev);
->> +
->>         ret = venus_boot(core);
->>         if (ret)
->>                 goto err_runtime_disable;
->> @@ -303,10 +323,6 @@ static int venus_probe(struct platform_device *pdev)
->>         if (ret)
->>                 goto err_core_deinit;
->>
->> -       ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
->> -       if (ret)
->> -               goto err_dev_unregister;
->> -
->>         ret = pm_runtime_put_sync(dev);
->>         if (ret)
->>                 goto err_dev_unregister;
->> @@ -483,7 +499,29 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
->>                 .pm = &venus_pm_ops,
->>         },
->>  };
->> -module_platform_driver(qcom_venus_driver);
->> +
->> +static int __init venus_init(void)
->> +{
->> +       int ret;
->> +
->> +       ret = platform_driver_register(&qcom_video_firmware_driver);
->> +       if (ret)
->> +               return ret;
-> 
-> Do we really need this firmware driver? As far as I can see, the
-> approach used here should work even without any driver bound to the
-> firmware device.
-
-We need device/driver bind because we need to call dma_configure() which
-internally doing iommus sID parsing.
-
--- 
-regards,
-Stan
+SGksCgpPbiBGcmlkYXkgMDEgSnVuZSAyMDE4IDA3OjU2IFBNLCBUb255IExpbmRncmVuIHdyb3Rl
+Ogo+ICogRmFpeiBBYmJhcyA8ZmFpel9hYmJhc0B0aS5jb20+IFsxODA2MDEgMDY6NDldOgo+PiBI
+aSwKPj4KPj4gT24gVGh1cnNkYXkgMzEgTWF5IDIwMTggMDY6NTkgUE0sIFRlcm8gS3Jpc3RvIHdy
+b3RlOgo+Pj4gT24gMzEvMDUvMTggMTM6MTQsIEZhaXogQWJiYXMgd3JvdGU6Cj4+Pj4gSGksCj4+
+Pj4KPj4+PiBPbiBUaHVyc2RheSAzMSBNYXkgMjAxOCAwOTozMyBBTSwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4+Pj4+IE9uIFdlZCwgTWF5IDMwLCAyMDE4IGF0IDA3OjQxOjMwUE0gKzA1MzAsIEZhaXog
+QWJiYXMgd3JvdGU6Cj4+Pj4+PiBBZGQgY2xrY3RybCBkYXRhIGZvciB0aGUgbV9jYW4gY2xvY2tz
+IGFuZCByZWdpc3RlciBpdCB3aXRoaW4gdGhlCj4+Pj4gLi4uCj4+Pj4+PiDCoCBkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9kcmE3LmgKPj4+Pj4+IGIvaW5jbHVkZS9kdC1i
+aW5kaW5ncy9jbG9jay9kcmE3LmgKPj4+Pj4+IGluZGV4IDVlMTA2MWIxNWFlZC4uZDc1NDljNTdj
+YWMzIDEwMDY0NAo+Pj4+Pj4gLS0tIGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9kcmE3LmgK
+Pj4+Pj4+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svZHJhNy5oCj4+Pj4+PiBAQCAt
+MTY4LDUgKzE2OCw2IEBACj4+Pj4+PiDCoCAjZGVmaW5lIERSQTdfQ09VTlRFUl8zMktfQ0xLQ1RS
+TMKgwqDCoCBEUkE3X0NMS0NUUkxfSU5ERVgoMHg1MCkKPj4+Pj4+IMKgICNkZWZpbmUgRFJBN19V
+QVJUMTBfQ0xLQ1RSTMKgwqDCoCBEUkE3X0NMS0NUUkxfSU5ERVgoMHg4MCkKPj4+Pj4+IMKgICNk
+ZWZpbmUgRFJBN19EQ0FOMV9DTEtDVFJMwqDCoMKgIERSQTdfQ0xLQ1RSTF9JTkRFWCgweDg4KQo+
+Pj4+Pj4gKyNkZWZpbmUgRFJBN19BRENfQ0xLQ1RSTMKgwqDCoCBEUkE3X0NMS0NUUkxfSU5ERVgo
+MHhhMCkKPj4+Pj4KPj4+Pj4gQURDIGFuZCBtY2FuIGFyZSB0aGUgc2FtZSB0aGluZz8KPj4+Pj4K
+Pj4+Pgo+Pj4+IFRoZSByZWdpc3RlciB0byBjb250cm9sIE1DQU4gY2xvY2tzIGlzIGNhbGxlZCBB
+RENfQ0xLQ1RSTCwgWWVzLgo+Pj4KPj4+IElzIHRoZXJlIGFueSByZWFzb24gZm9yIHRoaXMgb3Ig
+aXMgdGhhdCBqdXN0IGEgZG9jdW1lbnRhdGlvbiBidWc/Cj4+Pgo+Pgo+PiBMb29rcyBsaWtlIHRo
+ZXkgbWVhbnQgdG8gaGF2ZSBhbiBBREMgaW4gZHJhNzQgb3IgZHJhNzIgYnV0IGRlY2lkZWQKPj4g
+YWdhaW5zdCBpdCBhbmQgdGhlbiBtYW55IHllYXJzIGxhdGVyIHVzZWQgdGhlIHNhbWUgcmVnaXN0
+ZXJzIGZvciBNQ0FOCj4+IGluc3RlYWQuIFlvdSBjYW4gc2VlIEFEQ19DTEtDVFJMIGV4aXN0cyBp
+biBkcmE3MiBUUk0gYnV0IGlzIGV4cGxpY2l0bHkKPj4gZGlzYWJsZWQuCj4+Cj4+IGh0dHA6Ly93
+d3cudGkuY29tL2xpdC91Zy9zcHJ1aWMyYi9zcHJ1aWMyYi5wZGYgcGc6MTUyNAo+IAo+IEhvdyBh
+Ym91dCBtYWtlIGFkZCBhbHNvIHNvbWV0aGluZyBsaWtlIHRvIGRyYTcuaDoKPiAKPiAjZGVmaW5l
+IERSQTdfTUNBTl9DTEtDVFJMIERSQTdfQURDX0NMS0NUUkwKPiAKPiBBbmQgeW91IGNhbiBhZGQg
+YSBjb21tZW50IHRvIHRoZSBkdHMgZmlsZSB0byBhdm9pZCBwZW9wbGUKPiBnZXR0aW5nIGNvbmZ1
+c2VkIHdpdGggdGhpcyBjb25zdGFudGx5Lgo+IAoKSSB3b3VsZCBwcmVmZXIgdG8gZm9sbG93IHRo
+ZSBUUk0gc28gdGhhdCBwZW9wbGUgZG9uJ3QgbG9vayBmb3IgcmVnaXN0ZXJzCnRoYXQgZG9uJ3Qg
+ZXhpc3QgYXQgYWxsLgoKVGhhbmtzLApGYWl6CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
