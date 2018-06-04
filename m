@@ -1,99 +1,63 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v4 5/5] ARM: dts: imx6qdl: add missing compatible and
- clock properties for EPIT
-Date: Mon, 4 Jun 2018 11:10:28 +0200
-Message-ID: <CAJiuCcfUq-aBL9WMmEzDpU5KKCnO0v0O_07BQnAvmkHKptcMLw@mail.gmail.com>
-References: <20180530120327.27681-1-peron.clem@gmail.com> <20180530120327.27681-6-peron.clem@gmail.com>
- <a4042956-24e1-6132-4606-b5b8f4e30023@mentor.com> <CAJiuCcefvMg6r=06O8m1TYa0hat_dHydcoJ7PN58qUru1K8zMQ@mail.gmail.com>
- <f71fe02d-23a7-a475-52df-62c17089549b@mentor.com>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
+Date: Mon, 4 Jun 2018 09:11:25 +0000
+Message-ID: <EFF070CA-9C6C-4E9C-9CEF-45AAD02745BB@cadence.com>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+ <20180330074751.25987-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f71fe02d-23a7-a475-52df-62c17089549b@mentor.com>
+In-Reply-To: <20180330074751.25987-2-boris.brezillon@bootlin.com>
+Content-Language: en-US
+Content-ID: <7577811D7F90ED4B9CA00C0F091F817C@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=C3=A9ment_Peron?= <clement.peron@devialet.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vitor Soares <Vitor.Soares@synopsys>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-On Thu, 31 May 2018 at 10:54, Vladimir Zapolskiy
-<vladimir_zapolskiy@mentor.com> wrote:
->
-> Hi Cl=C3=A9ment,
->
-> On 05/31/2018 11:41 AM, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi Vladimir,
-> >
-> > On Thu, 31 May 2018 at 10:33, Vladimir Zapolskiy
-> > <vladimir_zapolskiy@mentor.com> wrote:
-> >>
-> >> On 05/30/2018 03:03 PM, Cl=C3=A9ment P=C3=A9ron wrote:
-> >>> From: Colin Didier <colin.didier@devialet.com>
-> >>>
-> >>> Add missing compatible and clock properties for EPIT node.
-> >>>
-> >>> Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> >>> Signed-off-by: Cl=C3=A9ment Peron <clement.peron@devialet.com>
-> >>> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
-> >>> ---
-> >>>  arch/arm/boot/dts/imx6qdl.dtsi | 10 ++++++++++
-> >>>  1 file changed, 10 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6q=
-dl.dtsi
-> >>> index c003e62bf290..0feec516847a 100644
-> >>> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> >>> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> >>> @@ -844,13 +844,23 @@
-> >>>                       };
-> >>>
-> >>>                       epit1: epit@20d0000 { /* EPIT1 */
-> >>
-> >> epit1: timer@20d0000 { ...
-> >>
-> >> And /* EPIT1 */ comment can be removed, it is quite clear from the sam=
-e
-> >> line context.
-> >>
-> >> Formally it is a subject to another patch, but I think this can be
-> >> accepted as a part of this one.
-> >
-> > Should I also update other boards ?
-> > I only did it for imx6qdl.dtsi, but the EPIT is present in other boards
-> > but i can't test it myself.
-> >
->
-> Sure, please do it, why not, it is quite a safe modification.
->
-> One change per one dtsi file will suffice, and I see that imx25.dtsi
-> already contains the requested change, however probably you may
-> want to update its compatible =3D "fsl,imx25-epit" line.
->
-> Regarding compatibles for other imx6* SoCs, I think all of them should
-> be documented in fsl,imxepit.txt and then added to the correspondent
-> dtsi files one per SoC.
-
-Nvidia UART doc did this :
-        - For other Tegra, must contain '"nvidia,<chip>-uart",
-          "nvidia,tegra20-uart"' where <chip> is tegra30, tegra114, tegra12=
-4,
-
-I will follow this.
-
->
-> And I forgot the outcome of one former discussion with Uwe Kleine-K=C3=B6=
-nig,
-> but if my bad memory serves me, we agreed that i.MX25 was released later
-> than i.MX31, so the most generic (the last value in the list) compatible
-> should be a compatible with i.MX31 like in
->
->         imx25.dtsi:367: compatible =3D "fsl,imx25-gpt", "fsl,imx31-gpt";
->
-> --
-> With best wishes,
-> Vladimir
-
-Regards,
-Clement
+SGkgQm9yaXMNCg0KSXQgbG9va3MgZ3JlYXQsIGp1c3Qgb25lIGNvbW1lbnQgdG8gREVGU0xWUyBj
+b21tYW5kOg0KDQrvu79PbiA2LzQvMTgsIDk6MzIgQU0sICJCb3JpcyBCcmV6aWxsb24iIDxib3Jp
+cy5icmV6aWxsb25AYm9vdGxpbi5jb20+IHdyb3RlOg0KDQogICAgK2ludCBpM2NfbWFzdGVyX2Rl
+ZnNsdnNfbG9ja2VkKHN0cnVjdCBpM2NfbWFzdGVyX2NvbnRyb2xsZXIgKm1hc3RlcikNCiAgICAr
+ew0KICAgICsJc3RydWN0IGkzY19jY2NfY21kX2Rlc3QgZGVzdCA9IHsNCiAgICArCQkuYWRkciA9
+IEkzQ19CUk9BRENBU1RfQUREUiwNCiAgICArCX07DQogICAgKwlzdHJ1Y3QgaTNjX2NjY19jbWQg
+Y21kID0gew0KICAgICsJCS5pZCA9IEkzQ19DQ0NfREVGU0xWUywNCiAgICArCQkuZGVzdHMgPSAm
+ZGVzdCwNCiAgICArCQkubmRlc3RzID0gMSwNCiAgICArCX07DQogICAgKwlzdHJ1Y3QgaTNjX2Nj
+Y19kZWZzbHZzICpkZWZzbHZzOw0KICAgICsJc3RydWN0IGkzY19jY2NfZGV2X2Rlc2MgKmRlc2M7
+DQogICAgKwlzdHJ1Y3QgaTNjX2RldmljZSAqaTNjZGV2Ow0KICAgICsJc3RydWN0IGkyY19kZXZp
+Y2UgKmkyY2RldjsNCiAgICArCXN0cnVjdCBpM2NfYnVzICpidXM7DQogICAgKwlib29sIHNlbmQg
+PSBmYWxzZTsNCiAgICArCWludCBuZGV2cyA9IDAsIHJldDsNCiAgICArDQogICAgKwlpZiAoIW1h
+c3RlcikNCiAgICArCQlyZXR1cm4gLUVJTlZBTDsNCiAgICArDQogICAgKwlidXMgPSBpM2NfbWFz
+dGVyX2dldF9idXMobWFzdGVyKTsNCiAgICArCWkzY19idXNfZm9yX2VhY2hfaTNjZGV2KGJ1cywg
+aTNjZGV2KSB7DQogICAgKwkJbmRldnMrKzsNCiAgICArCQlpZiAoSTNDX0JDUl9ERVZJQ0VfUk9M
+RShpM2NkZXYtPmluZm8uYmNyKSA9PSBJM0NfQkNSX0kzQ19NQVNURVIpDQogICAgKwkJCXNlbmQg
+PSB0cnVlOw0KICAgICsJfQ0KICAgICsNCiAgICArCS8qIE5vIG90aGVyIG1hc3RlciBvbiB0aGUg
+YnVzLCBza2lwIERFRlNMVlMuICovDQogICAgKwlpZiAoIXNlbmQpDQogICAgKwkJcmV0dXJuIDA7
+DQogICAgKw0KICAgICsJaTNjX2J1c19mb3JfZWFjaF9pMmNkZXYoYnVzLCBpMmNkZXYpDQogICAg
+KwkJbmRldnMrKzsNCiAgICArDQogICAgKwlkZXN0LnBheWxvYWQubGVuID0gc2l6ZW9mKCpkZWZz
+bHZzKSArDQogICAgKwkJCSAgICgobmRldnMgLSAxKSAqIHNpemVvZihzdHJ1Y3QgaTNjX2NjY19k
+ZXZfZGVzYykpOw0KICAgICsJZGVmc2x2cyA9IGt6YWxsb2MoZGVzdC5wYXlsb2FkLmxlbiwgR0ZQ
+X0tFUk5FTCk7DQogICAgKwlpZiAoIWRlZnNsdnMpDQogICAgKwkJcmV0dXJuIC1FTk9NRU07DQog
+ICAgKw0KICAgICsJZGVzdC5wYXlsb2FkLmRhdGEgPSBkZWZzbHZzOw0KICAgICsNCiAgICArCWRl
+ZnNsdnMtPmNvdW50ID0gbmRldnM7DQogICAgKwlkZWZzbHZzLT5tYXN0ZXIuYmNyID0gbWFzdGVy
+LT50aGlzLT5pbmZvLmJjcjsNCiAgICArCWRlZnNsdnMtPm1hc3Rlci5kY3IgPSBtYXN0ZXItPnRo
+aXMtPmluZm8uZGNyOw0KICAgICsJZGVmc2x2cy0+bWFzdGVyLmR5bl9hZGRyID0gbWFzdGVyLT50
+aGlzLT5pbmZvLmR5bl9hZGRyOw0KICAgICsJZGVmc2x2cy0+bWFzdGVyLnN0YXRpY19hZGRyID0g
+STNDX0JST0FEQ0FTVF9BRERSOw0KICAgICsNCiAgICArCWRlc2MgPSBkZWZzbHZzLT5zbGF2ZXM7
+DQogICAgKwlpM2NfYnVzX2Zvcl9lYWNoX2kyY2RldihidXMsIGkyY2Rldikgew0KICAgICsJCWRl
+c2MtPmx2ciA9IGkyY2Rldi0+bHZyOw0KICAgICsJCWRlc2MtPnN0YXRpY19hZGRyID0gaTJjZGV2
+LT5pbmZvLmFkZHI7DQogICAgKwkJZGVzYysrOw0KICAgICsJfQ0KICAgICsNCiAgICArCWkzY19i
+dXNfZm9yX2VhY2hfaTNjZGV2KGJ1cywgaTNjZGV2KSB7DQogICAgKwkJLyogU2tpcCB0aGUgSTND
+IGRldiByZXByZXNlbnRpbmcgdGhpcyBtYXN0ZXIuICovDQogICAgKwkJaWYgKGkzY2RldiA9PSBt
+YXN0ZXItPnRoaXMpDQogICAgKwkJCWNvbnRpbnVlOw0KICAgICsNCiAgICArCQlkZXNjLT5iY3Ig
+PSBpM2NkZXYtPmluZm8uYmNyOw0KICAgICsJCWRlc2MtPmRjciA9IGkzY2Rldi0+aW5mby5kY3I7
+DQogICAgKwkJZGVzYy0+ZHluX2FkZHIgPSBpM2NkZXYtPmluZm8uZHluX2FkZHI7DQogICAgKwkJ
+ZGVzYy0+c3RhdGljX2FkZHIgPSBpM2NkZXYtPmluZm8uc3RhdGljX2FkZHI7DQogICAgKwkJZGVz
+YysrOw0KICAgICsJfQ0KICAgICsNCiAgICArCXJldCA9IGkzY19tYXN0ZXJfc2VuZF9jY2NfY21k
+X2xvY2tlZChtYXN0ZXIsICZjbWQpOw0KICAgICsJa2ZyZWUoZGVmc2x2cyk7DQogICAgKw0KICAg
+ICsJcmV0dXJuIHJldDsNCiAgICArfQ0KDQpZb3Ugc2hvdWxkIHNoaWZ0IGFsbCB0aGUgYWRkcmVz
+c2VzIChkeW5hbWljIGFuZCBzdGF0aWMpIG9uZSBiaXQgbGVmdC4gDQpBZGRyZXNzZXMgYXJlIHN0
+b3JlZCBvbiBiaXRzIFs3OjFdLCB0aGlzIGlzIGRlc2NyaWJlZCBpbiBNSVBJIHNwZWMsIA0Kc2Vj
+dGlvbiA1LjEuOS4zLjcgRGVmaW5lIExpc3Qgb2YgU2xhdmVzIChERUZTTFZTKQ0KDQpSZWdhcmRz
+LA0KUHJ6ZW15c2xhdyBHYWoNCg0K
