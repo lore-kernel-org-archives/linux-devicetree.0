@@ -1,12 +1,14 @@
 From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Subject: [PATCH v8 0/4] Add suppport for sn65dsi86 bridge chip
  and Innolux 2k edp panel
-Date: Tue,  5 Jun 2018 11:10:13 +0530
-Message-ID: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
+Date: Tue,  5 Jun 2018 11:10:14 +0530
+Message-ID: <1528177218-1051-2-git-send-email-spanda@codeaurora.org>
+References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1528177218-1051-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
  <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/freedreno>
