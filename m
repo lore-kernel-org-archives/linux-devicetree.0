@@ -1,82 +1,90 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 3/3] gpio: pca953x: fix address calculation for
- pcal6524
-Date: Tue, 5 Jun 2018 22:39:41 +0200
-Message-ID: <20180605203941.GA28143@amd>
-References: <cover.1526533188.git.hns@goldelico.com>
- <e70e83f07aebaf702fef90a9fac61e41d8b558b0.1526533188.git.hns@goldelico.com>
- <20180523140635.GB27215@amd>
- <CAHp75VfxN1RZBFRK6oJ5AzCe_2ej9eYdwt96X+fJZgFy65eaFg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 13/16] dt-bindings/interrupt-controller: add
+ documentation for Marvell SEI controller
+Date: Tue, 5 Jun 2018 14:51:21 -0600
+Message-ID: <20180605205121.GA19249@rob-hp-laptop>
+References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
+ <20180522094042.24770-14-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfxN1RZBFRK6oJ5AzCe_2ej9eYdwt96X+fJZgFy65eaFg@mail.gmail.com>
+In-Reply-To: <20180522094042.24770-14-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 22, 2018 at 11:40:39AM +0200, Miquel Raynal wrote:
+> Describe the System Error Interrupt (SEI) controller. It aggregates two
+> types of interrupts, wired and MSIs from respectively the AP and the
+> CPs, into a single SPI interrupt.
+> 
+> Suggested-by: Haim Boot <hayim@marvell.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../bindings/interrupt-controller/marvell,sei.txt  | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
+> new file mode 100644
+> index 000000000000..689981036c30
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
+> @@ -0,0 +1,50 @@
+> +Marvell SEI (System Error Interrupt) Controller
+> +-----------------------------------------------
+> +
+> +Marvell SEI (System Error Interrupt) controller is an interrupt
+> +aggregator. It receives interrupts from several sources and aggregates
+> +them to a single interrupt line (an SPI) on the parent interrupt
+> +controller.
+> +
+> +This interrupt controller can handle up to 64 SEIs, a set comes from the
+> +AP and is wired while a second set comes from the CPs by the mean of
+> +MSIs. Each 'domain' is represented as a subnode.
+> +
+> +Required properties:
+> +
+> +- compatible: should be "marvell,armada-8k-sei".
+> +- reg: SEI registers location and length.
+> +- interrupts: identifies the parent IRQ that will be triggered.
+> +
+> +Child node 'sei-wired-controller' required properties:
+> +
+> +- marvell,sei-ranges: ranges of wired interrupts.
+> +- #interrupt-cells: number of cells to define an SEI wired interrupt
+> +                    coming from the AP, should be 1. The cell is the IRQ
+> +                    number.
+> +- interrupt-controller: identifies the node as an interrupt controller.
+> +
+> +Child node 'sei-msi-controller' required properties:
+> +
+> +- marvell,sei-ranges: ranges of non-wired interrupts triggered by way of
+> +                      MSIs.
+> +- msi-controller: identifies the node as an MSI controller.
+> +
+> +Example:
+> +
+> +        sei: sei@3f0200 {
+> +               compatible = "marvell,armada-8k-sei";
+> +               reg = <0x3f0200 0x40>;
+> +               interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +               sei_wired_controller: sei-wired-controller@0 {
+> +                       marvell,sei-ranges = <0 21>;
+> +                       #interrupt-cells = <1>;
+> +                       interrupt-controller;
+> +               };
+> +
+> +               sei_msi_controller: sei-msi-controller@21 {
+> +                       marvell,sei-ranges = <21 43>;
+> +                       msi-controller;
+> +               };
 
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I still think this should just be all one node. There's several examples 
+in the tree of nodes which are both interrupt-controller and 
+msi-controller. Marvell MPIC is one example.
 
-On Tue 2018-06-05 18:37:21, Andy Shevchenko wrote:
-> On Wed, May 23, 2018 at 5:06 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> > On Thu 2018-05-17 06:59:49, H. Nikolaus Schaller wrote:
-> >> The register constants are so far defined in a way that they fit
-> >> for the pcal9555a when shifted by the number of banks, i.e. are
-> >> multiplied by 2 in the accessor function.
-> >>
-> >> Now, the pcal6524 has 3 banks which means the relative offset
-> >> is multiplied by 4 for the standard registers.
-> >>
-> >> Simply applying the bit shift to the extended registers gives
-> >> a wrong result, since the base offset is already included in
-> >> the offset.
-> >>
-> >> Therefore, we have to add code to the 24 bit accessor functions
-> >> that adjusts the register number for these exended registers.
-> >>
-> >> The formula finally used was developed and proposed by
-> >> Andy Shevchenko <andy.shevchenko@gmail.com>.
->=20
-> >>       int bank_shift =3D fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
-> >> +     int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
-> >> +     int pinctrl =3D (reg & PCAL_PINCTRL_MASK) << 1;
->=20
-> > Is this reasonable to do on each register access? Compiler will not be
-> > able to optimize out fls and shifts, right?
->=20
-> On modern CPUs fls() is one assembly command. OTOH, any proposal to do
-> this better?
->=20
-> What I can see is that bank_shift is invariant to the function, and
-> maybe cached.
-
-Yes, I thought that caching bank_shift might be good idea. I thought
-it was constant for given chip...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlsW9Q0ACgkQMOfwapXb+vLnsACfXGg75eku2hgA21L/7YAzxPdY
-nVUAnjrmbHRLIqtsz2vg2HQKeWmv0oei
-=E2tb
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
+Rob
