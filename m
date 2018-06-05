@@ -1,83 +1,44 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [RFC PATCH 4/8] mailbox: ti-msgmgr: Move the memory region name to
- descriptor
-Date: Tue, 5 Jun 2018 01:16:25 -0500
-Message-ID: <20180605061629.4759-5-nm@ti.com>
+Subject: [RFC PATCH 7/8] drivers: mailbox: Make ti-msgmr driver depend on ARCH_K3
+Date: Tue, 5 Jun 2018 01:16:28 -0500
+Message-ID: <20180605061629.4759-8-nm@ti.com>
 References: <20180605061629.4759-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180605061629.4759-1-nm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-For newer generation of the hardware, the naming of the region is
-decided at integration level and there could be additional regions
-as well. Hence move the region naming to be described from compatible
-descriptor.
+ti-msgmr driver can support K3 platforms as well.
 
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- drivers/mailbox/ti-msgmgr.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/mailbox/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
-index 2952339a8446..a37d6a4b392f 100644
---- a/drivers/mailbox/ti-msgmgr.c
-+++ b/drivers/mailbox/ti-msgmgr.c
-@@ -48,6 +48,8 @@ struct ti_msgmgr_valid_queue_desc {
-  * @tx_polled:		Do I need to use polled mechanism for tx
-  * @tx_poll_timeout_ms: Timeout in ms if polled
-  * @valid_queues:	List of Valid queues that the processor can access
-+ * @data_region_name:	Name of the proxy data region
-+ * @status_region_name:	Name of the proxy status region
-  * @num_valid_queues:	Number of valid queues
-  *
-  * This structure is used in of match data to describe how integration
-@@ -63,6 +65,8 @@ struct ti_msgmgr_desc {
- 	bool tx_polled;
- 	int tx_poll_timeout_ms;
- 	const struct ti_msgmgr_valid_queue_desc *valid_queues;
-+	const char *data_region_name;
-+	const char *status_region_name;
- 	int num_valid_queues;
- };
+diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+index 725dce5ba62d..f87a857d21a5 100644
+--- a/drivers/mailbox/Kconfig
++++ b/drivers/mailbox/Kconfig
+@@ -99,12 +99,12 @@ config STI_MBOX
  
-@@ -531,6 +535,8 @@ static const struct ti_msgmgr_desc k2g_desc = {
- 	.queue_count = 64,
- 	.max_message_size = 64,
- 	.max_messages = 128,
-+	.data_region_name = "queue_proxy_region",
-+	.status_region_name = "queue_state_debug_region",
- 	.data_first_reg = 16,
- 	.data_last_reg = 31,
- 	.status_cnt_mask = Q_STATE_ENTRY_COUNT_MASK,
-@@ -582,13 +588,13 @@ static int ti_msgmgr_probe(struct platform_device *pdev)
- 	inst->desc = desc;
+ config TI_MESSAGE_MANAGER
+ 	tristate "Texas Instruments Message Manager Driver"
+-	depends on ARCH_KEYSTONE
++	depends on ARCH_KEYSTONE || ARCH_K3
+ 	help
+ 	  An implementation of Message Manager slave driver for Keystone
+-	  architecture SoCs from Texas Instruments. Message Manager is a
+-	  communication entity found on few of Texas Instrument's keystone
+-	  architecture SoCs. These may be used for communication between
++	  and K3 architecture SoCs from Texas Instruments. Message Manager
++	  is a communication entity found on few of Texas Instrument's keystone
++	  and K3 architecture SoCs. These may be used for communication between
+ 	  multiple processors within the SoC. Select this driver if your
+ 	  platform has support for the hardware block.
  
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--					   "queue_proxy_region");
-+					   desc->data_region_name);
- 	inst->queue_proxy_region = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(inst->queue_proxy_region))
- 		return PTR_ERR(inst->queue_proxy_region);
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--					   "queue_state_debug_region");
-+					   desc->status_region_name);
- 	inst->queue_state_debug_region = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(inst->queue_state_debug_region))
- 		return PTR_ERR(inst->queue_state_debug_region);
 -- 
 2.15.1
