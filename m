@@ -1,74 +1,109 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 8/8] ARM: dts: rcar-gen2: Remove unused VIN properties
-Date: Tue, 5 Jun 2018 10:23:22 +0200
-Message-ID: <CAMuHMdXVF_OZCXJ449TJdm3f7ECMabgpRoWEBSmxJ=7f0zA_7Q@mail.gmail.com>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
- <1527606359-19261-9-git-send-email-jacopo+renesas@jmondi.org>
- <20180604122325.GH19674@bigcity.dyn.berto.se>
- <20180605074938.mljwmgpjlplvkp2v@verge.net.au>
- <20180605081222.GL10472@w540>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180605081222.GL10472@w540>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: [PATCH v8 0/5] arm: Base support for Renesas RZN1D-DB Board
+Date: Tue,  5 Jun 2018 09:29:56 +0100
+Message-ID: <1528187462-47093-1-git-send-email-michel.pollet@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gVHVlLCBKdW4gNSwgMjAxOCBhdCAxMDoxMiBBTSwgamFjb3BvIG1vbmRp
-IDxqYWNvcG9Aam1vbmRpLm9yZz4gd3JvdGU6Cj4gT24gVHVlLCBKdW4gMDUsIDIwMTggYXQgMDk6
-NDk6MzhBTSArMDIwMCwgU2ltb24gSG9ybWFuIHdyb3RlOgo+PiBPbiBNb24sIEp1biAwNCwgMjAx
-OCBhdCAwMjoyMzoyNVBNICswMjAwLCBOaWtsYXMgU8O2ZGVybHVuZCB3cm90ZToKPj4gPiBPbiAy
-MDE4LTA1LTI5IDE3OjA1OjU5ICswMjAwLCBKYWNvcG8gTW9uZGkgd3JvdGU6Cj4+ID4gPiBUaGUg
-J2J1cy13aWR0aCcgYW5kICdwY2xrLXNhbXBsZScgcHJvcGVydGllcyBhcmUgbm90IHBhcnNlZCBi
-eSB0aGUgVklOCj4+ID4gPiBkcml2ZXIgYW5kIG9ubHkgY29uZnVzZSB1c2Vycy4gUmVtb3ZlIHRo
-ZW0gaW4gYWxsIEdlbjIgU29DIHRoYXQgdXNlCj4+ID4gPiB0aGVtLgo+PiA+ID4KPj4gPiA+IFNp
-Z25lZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPj4g
-Pgo+PiA+IFRoZSBtb3JlIEkgdGhpbmsgYWJvdXQgdGhpcyB0aGUgbW9yZSBJIGxlYW4gdG93YXJk
-cyB0aGF0IHRoaXMgcGF0Y2gKPj4gPiBzaG91bGQgYmUgZHJvcHBlZC4gVGhlIHByb3BlcnRpZXMg
-YWNjdXJhdGVseSBkZXNjcmliZXMgdGhlIGhhcmR3YXJlIGFuZAo+PiA+IEkgdGhpbmsgdGhlcmUg
-aXMgdmFsdWUgaW4gdGhhdC4gVGhhdCB0aGUgZHJpdmVyIGN1cnJlbnRseSBkb24ndCBwYXJzZSBv
-cgo+PiA+IG1ha2UgdXNlIG9mIHRoZW0gZG9uJ3QgaW4gbXkgdmlldyByZWR1Y2UgdGhlcmUgdmFs
-dWUuIE1heWJlIHlvdSBzaG91bGQKPj4gPiBicmVhayBvdXQgdGhpcyBwYXRjaCB0byBhIHNlcGFy
-YXRlIHNlcmllcz8KPj4KPj4gSSBhbHNvIHRoaW5rIHRoZXJlIGlzIHZhbHVlIGluIGRlc2NyaWJp
-bmcgdGhlIGhhcmR3YXJlIG5vdCB0aGUgc3RhdGUgb2YgdGhlCj4+IGRyaXZlciBhdCB0aGlzIHRp
-bWUuICBJcyB0aGVyZSBhbnkgbWlzc21hdGNoIGJldHdlZW4gdGhlc2UgcHJvcGVydGllcyBhbmQK
-Pj4gdGhlIGJpbmRpbmdzPwo+Cj4gTmlrbGFzIGFuZCBJIGRpc2N1c3NlZCBhIGJpdCBvZmZsaW5l
-IG9uIHRoaXMgeWVzdGVyZGF5LiBNeSBtYWluCj4gY29uY2VybiwgYW5kIHNvcnJ5IGZvciBiZWlu
-ZyBwZWRhbnQgb24gdGhpcywgaXMgdGhhdCBjaGFuZ2luZyB0aG9zZQo+IHByb3BlcnRpZXMgdmFs
-dWUgZG9lcyBub3QgY2hhbmdlIHRoZSBpbnRlcmZhY2UgYmVoYXZpb3VyLCBhbmQgdGhpcwo+IGNv
-dWxkIGNhdXNlIHRyb3VibGVzIHdoZW4gaW50ZWdyYXRpbmcgaW1hZ2Ugc2Vuc29yIG5vdCBrbm93
-biB0byBiZQo+IHdvcmtpbmcgb24gdGhlIFZJTiBpbnRlcmZhY2UuCj4KPiBUaGlzIHNhaWQsIHRo
-ZSBkb2N1bWVudGF0aW9uIG9mIHRob3NlIChhbmQgYWxsIG90aGVyKSBwcm9wZXJ0aWVzIGlzIGlu
-IHRoZQo+IGdlbmVyaWMgInZpZGVvLWludGVyZmFjZXMudHh0IiBmaWxlIGFuZCBpdCBpcyBteSB1
-bmRlcnN0YW5kaW5nLCBidXQgSSB0aGluawo+IExhdXJlbnQgYW5kIFJvYiBhZ3JlZSBvbiB0aGlz
-IGFzIHdlbGwgZnJvbSB0aGVpciByZXBsaWVzIHRvIG15IHByZXZpb3VzIHNlcmllcywKPiB0aGF0
-IGVhY2ggZHJpdmVyIHNob3VsZCBsaXN0IHdoaWNoIHByb3BlcnRpZXMgaXQgYWN0dWFsbHkgc3Vw
-cG9ydHMsIGFzCgpzL2RyaXZlci9kZXZpY2Utc3BlY2lmaWMgYmluZGluZy8KCj4gc29tZSBhc3Bl
-Y3RzIGFyZSB2ZXJ5IGltcGxlbWVudGF0aW9uIHNwZWNpZmljLCBsaWtlIGRlZmF1bHQgdmFsdWVz
-IGFuZAo+IHdoYXQgaGFwcGVucyBpZiB0aGUgcHJvcGVydHkgaXMgbm90IHNwZWNpZmllZCBbMV0u
-IE5vbmV0aGVsZXNzLCBhbGwKCkluIHNlIGRlZmF1bHRzIGFyZSBub3QgKExpbnV4KSBpbXBsZW1l
-bnRhdGlvbi1zcGVjaWZpYywgYnV0IGZpeGVkIGluIHRoZQpEVCBiaW5kaW5ncy4KCj4gcHJvcGVy
-dGllcyBkZXNjcmliaW5nIGhhcmR3YXJlIGZlYXR1cmVzIGFuZCBkb2N1bWVudGVkIGluIHRoZSBn
-ZW5lcmljCj4gZmlsZSBzaG91bGQgYmUgYWNjZXB0ZWQgaW4gRFRTLCBhcyB0aG9zZSBhaW1zIHRv
-IGJlIE9TLWluZGVwZW5kZW50IGFuZAo+IGV2ZW4gaW5kZXBlbmRlbnQgZnJvbSB0aGUgc2luZ2xl
-IGRyaXZlciBpbXBsZW1lbnRhdGlvbi4KCkdye29ldGplLGVldGluZ31zLAoKICAgICAgICAgICAg
-ICAgICAgICAgICAgR2VlcnQKCi0tIApHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
-IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25h
-bCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhh
-Y2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJv
-Z3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This series adds the plain basic support for booting a bare
+kernel on the RZ/N1D-DB Board. It's been trimmed to the strict
+minimum as a 'base', further patches that could add the
+rest of the support.
+
+Note on the clock driver: Current usage of the clocks on Linux
+involves Linux 'claiming' all of them, disabling the one it doesn't
+need and so on.
+On *this* architecture it can't be done, there is at least one other
+OS running on the CM3 core that claims it's own clock; Linux can claim
+some others but definitely not start disabling stuff it isn't supposed to.
+
+Thanks for the comments on the previous versions!
+
+v8:
+ + Added Reviewed mentions as appropriate.
+ + Moved some of the clocks #defines into the driver
+ + Tweaked the pointer arithmetics in the clock driver.
+ + Removed clk_readl/writel
+ + Use CLK_IS_CRITICAL instead of my own flag
+ + Also added that critical section to the dualgate object.
+ + Few other nitpicks fixed.
+ + Rebased on next-20180604
+v7:
+ + Removed mention of 'rz[/]n1' from everywhere.
+ + Removed unwanted documentation.
+ + Renamed clock node back to sysctrl.
+ + Renamed rzn1-clocks.h to r9a06g032-sysctrl.h to match
+ + Made the clock driver claim the sysctrl node.
+ + Fixed a couple of 'sparse' warning in the clock driver.
+v6:
+ + Fix for suggestion by Geert Uytterhoeven
+ + Removed "renesas,rzn1" from the board bindings
+ + Removed patches already merged.
+ + Removed reboot driver
+ + Added a whole clock infrastructure.
+ + Rebased on next-20180517
+v5:
+ + Given the problems I have with getting in some structure around the
+   sysctrl block, I've removed the MFD, I've now attached the reboot
+   driver on it's  own pair of registers.
+ + Rebased on next-20180417
+v4:
+ + Fixes for suggestions by Simon Horman
+ + Fixes for suggestions by Jacopo Mondi
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Renamed the r9a06g0xx.dtsi file, given up on trying to get a family
+   common file in, so dropped potential RZ/N1S support and now only
+   focus on RZ/N1D for this patchset.
+ + Added 'always-on' to the architected timer node, because it is.
+ + Added ARCH_R9A06G032, to match others patterns like RCAR
+ + Sorted the .dts files, added empty lines as required.
+ + Fixed patch prefixes to match git-log for bindings&dts
+ + Merged board .dts & Makefile changes together
+ + Rebased on next-20180410
+v3:
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Removed SoC Specific renesas,r9a06g032-xxx, as it's not needed for now.
+ + Kept renesas,rzn1 as a family/generic for this family.
+ + Fixed a couple of the commit messages.
+ + Added Geert's Reviewed-By where appropriate.
+v2:
+ + Fixes for suggestions by Simon Horman
+ + Fixes for suggestions by Rob Herring
+ + Fixes for suggestions by Geert Uytterhoeven
+ + Removed the mach file
+ + Added a MFD base for the sysctrl block
+ + Added a regmap based sub driver for the reboot handler
+ + Renamed the files to match shmobile conventions
+ + Adapted the compatible= strings to reflect 'family' vs 'part'
+   distinction.
+ + Removed the sysctrl.h file entirelly.
+ + Fixed every warnings from the DTC compiler on W=12 mode.
+ + Split the device-tree patches from the code.
+
+Michel Pollet (5):
+  dt-bindings: Add the r9a06g032-sysctrl.h file
+  dt-bindings: clock: renesas,r9a06g032-sysctrl: documentation
+  ARM: dts: Renesas R9A06G032 base device tree file
+  ARM: dts: Renesas RZN1D-DB Board base file
+  clk: renesas: Renesas R9A06G032 clock driver
+
+ .../bindings/clock/renesas,r9a06g032-sysctrl.txt   |  32 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts        |  28 +
+ arch/arm/boot/dts/r9a06g032.dtsi                   |  86 +++
+ drivers/clk/renesas/Kconfig                        |   6 +
+ drivers/clk/renesas/Makefile                       |   1 +
+ drivers/clk/renesas/r9a06g032-clocks.c             | 853 +++++++++++++++++++++
+ include/dt-bindings/clock/r9a06g032-sysctrl.h      | 148 ++++
+ 8 files changed, 1155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+ create mode 100644 arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts
+ create mode 100644 arch/arm/boot/dts/r9a06g032.dtsi
+ create mode 100644 drivers/clk/renesas/r9a06g032-clocks.c
+ create mode 100644 include/dt-bindings/clock/r9a06g032-sysctrl.h
+
+-- 
+2.7.4
