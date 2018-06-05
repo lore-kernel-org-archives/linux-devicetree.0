@@ -1,57 +1,157 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: Re: [PATCH v2 00/26] arm64: allwinner: Add A64 DE2
- HDMI support
-Date: Tue, 5 Jun 2018 18:23:57 +0530
-Message-ID: <CAMty3ZC13J+bCWK_=9816Lu-5ctC0UfF4-XR3yNSpHdH8q8Faw@mail.gmail.com>
-References: <20180518094536.17201-1-jagan@amarulasolutions.com> <20180518095913.nzl3sr5wn6cg4ra5@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
+Date: Tue, 5 Jun 2018 18:26:46 +0530
+Message-ID: <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
+ <20180605061919.GQ16230@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBZ4P3LMAKGQEPYUHXUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180518095913.nzl3sr5wn6cg4ra5@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180605061919.GQ16230@vkoul-mobl>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 18, 2018 at 3:29 PM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Fri, May 18, 2018 at 03:15:10PM +0530, Jagan Teki wrote:
->> Allwinner A64 has display engine pipeline like other Allwinner SOC's A83T/H3/H5.
->>
->> A64 behaviour similar to Allwinner A83T where
->> Mixer0 => TCON0 => LVDS/RGB/MIPI-DSI
->> Mixer1 => TCON1 => HDMI
->> as per Display System Block DiagramAllwinner_A64_User_Manual_V1.1.pdf
->>
->> This is second patch-set followed with previous RFC[1] and first series[2]
->> and merely concentrated on HDMI pipeline through TCON1 and rest will add eventually.
->>
->> This series fixed previous version comments
->> - about documenting fallback compatibles
->> - adding new compatible for mixer1
->> - support for multiple DW HDMI PHY clock parents (thanks, to Jernej)
->>
->> Note:
->> Pine64 boards are unable to get edid by default like other A64 boards,
->> but forcing 'video=HDMI-A-1:1920x1080@60D' kernel command line can
->> create edid with display on penel.
->
-> There's no point in trying to push this without the SRAM issue being
-> solved. It is required, and won't be merged unless this is addressed.
+Hi Vinod,
 
-is SRAM issue resolved? if so may be I will try to test it on top.
+On 6/5/2018 11:49 AM, Vinod wrote:
+> On 05-06-18, 11:12, Sricharan R wrote:
+> 
+>> +config QCOM_Q6V5_WCSS
+>> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
+>> +	depends on OF && ARCH_QCOM
+>> +	depends on QCOM_SMEM
+>> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
+>> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+> 
+> Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
+> happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
+> 
+  RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
+  means that it should be corrected here and for ADSP, Q6V5_PIL as well.
+  Bjorn, is that correct ?, should it be, below ?
+ 
+  depends on (RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)) || (RPMSG_QCOM_GLINK_SMEM || (COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n))
 
-Jagan.
+>> +/* QDSP6SS Register Offsets */
+>> +#define QDSP6SS_RESET_REG		0x014
+>> +#define QDSP6SS_GFMUX_CTL_REG		0x020
+>> +#define QDSP6SS_PWR_CTL_REG		0x030
+>> +#define QDSP6SS_MEM_PWR_CTL		0x0B0
+>> +
+>> +/* AXI Halt Register Offsets */
+>> +#define AXI_HALTREQ_REG			0x0
+>> +#define AXI_HALTACK_REG			0x4
+>> +#define AXI_IDLE_REG			0x8
+>> +
+>> +#define HALT_ACK_TIMEOUT_MS		100
+>> +
+>> +/* QDSP6SS_RESET */
+>> +#define Q6SS_STOP_CORE			BIT(0)
+>> +#define Q6SS_CORE_ARES			BIT(1)
+>> +#define Q6SS_BUS_ARES_ENABLE		BIT(2)
+> 
+> Wouldn't it be nice if the defines are all consistent, some of them are
+> QDSP6SS_xxx, some Q6SS_ some are not
+> 
+> Please do pick one and make it consistent :)
+> 
+
+ ok.
+
+>> +/* QDSP6v56 parameters */
+>> +#define QDSP6v56_LDO_BYP		BIT(25)
+>> +#define QDSP6v56_BHS_ON		BIT(24)
+>> +#define QDSP6v56_CLAMP_WL		BIT(21)
+>> +#define QDSP6v56_CLAMP_QMC_MEM		BIT(22)
+>> +#define HALT_CHECK_MAX_LOOPS		200
+>> +#define QDSP6SS_XO_CBCR		0x0038
+> 
+> GENMASK() perhaps?
+> 
+
+ ok.
+
+>> +static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+>> +{
+>> +	int ret;
+>> +	u32 val;
+>> +	int i;
+> 
+>         int ret, i;
+> 
+>> +static int q6v5_wcss_start(struct rproc *rproc)
+>> +{
+>> +	struct q6v5_wcss *wcss = rproc->priv;
+>> +	int ret;
+>> +
+>> +	qcom_q6v5_prepare(&wcss->q6v5);
+>> +
+>> +	/* Release Q6 and WCSS reset */
+>> +	ret = reset_control_deassert(wcss->wcss_reset);
+>> +	if (ret) {
+>> +		dev_err(wcss->dev, "wcss_reset failed\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = reset_control_deassert(wcss->wcss_q6_reset);
+>> +	if (ret) {
+>> +		dev_err(wcss->dev, "wcss_q6_reset failed\n");
+>> +		goto wcss_reset;
+>> +	}
+>> +
+>> +	/* Lithium configuration - clock gating and bus arbitration */
+>> +	ret = regmap_update_bits(wcss->halt_map,
+>> +				 wcss->halt_nc + TCSR_GLOBAL_CFG0,
+>> +				 0x1F, 0x14);
+> 
+> magic numbers??
+> 
+
+ ok, will find out what it is for this one and below.
+ But atleast from register map could not find out and
+ these are sort of hardcoded sequences coming from the hw
+ folks. So will have to reach out to them to find the specifics.
+
+>> +static int q6v5_wcss_powerdown(struct q6v5_wcss *wcss)
+>> +{
+>> +	int ret;
+>> +	u32 val;
+>> +
+>> +	/* 1 - Assert WCSS/Q6 HALTREQ */
+>> +	q6v5_wcss_halt_axi_port(wcss, wcss->halt_map, wcss->halt_wcss);
+>> +
+>> +	/* 2 - Enable WCSSAON_CONFIG */
+>> +	val = readl(wcss->rmb_base + SSCAON_CONFIG);
+>> +	val |= SSCAON_ENABLE;
+>> +	writel(val, wcss->rmb_base + SSCAON_CONFIG);
+>> +
+>> +	/* 3 - Set SSCAON_CONFIG */
+>> +	val |= BIT(15);
+>> +	val &= ~BIT(16);
+>> +	val &= ~BIT(17);
+>> +	val &= ~BIT(18);
+> 
+> wouldn't it be nice to define these bits?
+> 
+>> +static int q6v5_q6_powerdown(struct q6v5_wcss *wcss)
+>> +{
+>> +	int ret;
+>> +	u32 val;
+>> +	int i;
+> 
+>         int ret, i;
+> 
+
+Regards,
+ Sricharan
 
 -- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
