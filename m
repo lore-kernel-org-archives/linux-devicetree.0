@@ -1,50 +1,71 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware device
-Date: Tue, 5 Jun 2018 13:08:44 +0900
-Message-ID: <CAAFQd5BFq+pdEpBmpw5QsO+m+fsAhexhqA_uJg1G39Mpv5E3HQ@mail.gmail.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
- <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com> <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
+ properties for CPUs
+Date: Tue, 5 Jun 2018 10:07:13 +0530
+Message-ID: <20180605043713.p7wxdccniowvbsi3@vireshk-i7>
+References: <cover.1527225682.git.viresh.kumar@linaro.org>
+ <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
+ <20180525211025.c73zdcdtyuvlewng@localhost>
+ <20180528111358.meyle364fy6wuruf@vireshk-i7>
+ <20180602081418.jcl2vjc6saoj3z3d@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180602081418.jcl2vjc6saoj3z3d@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 4, 2018 at 10:56 PM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
->
-> Hi Tomasz,
->
-> On 06/04/2018 04:18 PM, Tomasz Figa wrote:
-> > Hi Vikash,
-> >
-> > On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
-> >> +static int __init venus_init(void)
-> >> +{
-> >> +       int ret;
-> >> +
-> >> +       ret = platform_driver_register(&qcom_video_firmware_driver);
-> >> +       if (ret)
-> >> +               return ret;
-> >
-> > Do we really need this firmware driver? As far as I can see, the
-> > approach used here should work even without any driver bound to the
-> > firmware device.
->
-> We need device/driver bind because we need to call dma_configure() which
-> internally doing iommus sID parsing.
+On 02-06-18, 01:14, Olof Johansson wrote:
+> And what I am saying is that it sounds like a broken binding if you don't allow
+> that, especially since it'll be a super common case that all CPUs will specify
+> the same cooling-device specifier.
 
-I can see some drivers calling of_dma_configure() directly:
-https://elixir.bootlin.com/linux/latest/ident/of_dma_configure
+I am fine with allowing the #cooling-cells property in the cpus node if the DT
+maintainers are fine with it.
 
-I'm not sure if it's more elegant, but should at least require less code.
+@Rob: comments ?
 
-By the way, can we really assume that probe of firmware platform
-device really completes before we call venus_boot()?
+@Olof: What about other properties which are still going to be duplicated for
+the most common cases today, like: clocks, supply information, cache
+information, cpu-idle-states and others. When we can duplicate these properties,
+why not keep following the same for #cpu-cooling property ?
 
-Best regards,
-Tomasz
+Note that the OPP table doesn't really need to get duplicated (for new
+platforms) as the platforms use the v2 bindings now which just duplicates a
+phandle assignment for all CPUs. Its a mess with older platforms which use the
+earlier version of OPP table.
+
+> > This property is required to declare a device as a cooling-device and
+> > the device here is CPU. We use it as a cooling device by limiting its
+> > higher range of frequencies, so that it doesn't generate too much
+> > heat.
+> > 
+> > It is already there for CPU0 and CPU4, but it should really be there
+> > for all the CPUs, like we have clock, supply, caches, etc.
+> 
+> You have #cooling-cells in the cpu node, but the actual data is in the
+> thermal-zones nodes. Why isn't #cooling-cells under thermal-zones, next to
+> cooling-maps?
+
+Actually I thought about that when I worked on these patches initially and this
+is why I felt convinced that the CPU nodes are the right place for this.
+
+We add #interrupt-cells to an Interrupt controller's DT node, #gpio-cells to a
+GPIO controller's DT node, #clock-cells to a clock controller's DT node and
+that's exactly why we should (and we do) add #cooling-cells property to a
+cooling device's DT node. This information is used in two ways, first it enables
+the OS to know that the device is capable of being a cooling device and second
+it tells us how many arguments will be required with a phandle of this device.
+
+And so the cooling-maps always contain two arguments with the cooling device's
+phandle (which is mostly a CPU or a gpio fan) as the #cooling-cells currently
+is fixed to 2.
+
+And so I am not really sure if thermal-zones is the right place to define this
+thing. Is my understanding correct ?
+
+-- 
+viresh
