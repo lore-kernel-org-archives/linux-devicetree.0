@@ -1,192 +1,67 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 15/20] dts: arm: imx7{d,s}: Update coresight binding for hardware ports
-Date: Tue,  5 Jun 2018 22:43:26 +0100
-Message-ID: <1528235011-30691-16-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 06/20] coresight: Handle errors in finding input/output ports
+Date: Tue,  5 Jun 2018 22:43:17 +0100
+Message-ID: <1528235011-30691-7-git-send-email-suzuki.poulose@arm.com>
 References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, coresight@lists.linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, john.horley@arm.com, linux-kernel@vger.kernel.org, arm@kernel.org, sudeep.holla@arm.com, matt.sealey@arm.com, mike.leach@linaro.org, frowand.list@gmail.com, charles.garcia-tobin@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Switch to the updated coresight bindings.
+If we fail to find the input / output port for a LINK component
+while enabling a path, we should fail gracefully rather than
+assuming port "0".
 
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm/boot/dts/imx7d.dtsi |  5 ++++-
- arch/arm/boot/dts/imx7s.dtsi | 41 ++++++++++++++++++++++++++++++-----------
- 2 files changed, 34 insertions(+), 12 deletions(-)
+ drivers/hwtracing/coresight/coresight.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-index 200714e..5faff17 100644
---- a/arch/arm/boot/dts/imx7d.dtsi
-+++ b/arch/arm/boot/dts/imx7d.dtsi
-@@ -87,7 +87,9 @@
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 69e9136..3c1c058 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -107,7 +107,7 @@ static int coresight_find_link_inport(struct coresight_device *csdev,
+ 	dev_err(&csdev->dev, "couldn't find inport, parent: %s, child: %s\n",
+ 		dev_name(&parent->dev), dev_name(&csdev->dev));
  
- 			port {
- 				etm1_out_port: endpoint {
-+					direction = <1>;
- 					remote-endpoint = <&ca_funnel_in_port1>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -174,8 +176,9 @@
- 	port@1 {
- 		reg = <1>;
- 		ca_funnel_in_port1: endpoint {
--			slave-mode;
-+			direction = <0>;
- 			remote-endpoint = <&etm1_out_port>;
-+			coresight,hwid = <1>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 4d42335..8e90915 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -151,23 +151,28 @@
- 			port@0 {
- 				reg = <0>;
- 				replicator_out_port0: endpoint {
-+					direction = <1>;
- 					remote-endpoint = <&tpiu_in_port>;
-+					coresight,hwid = <0>;
- 				};
- 			};
+-	return 0;
++	return -ENODEV;
+ }
  
- 			port@1 {
- 				reg = <1>;
- 				replicator_out_port1: endpoint {
-+					direction = <1>;
- 					remote-endpoint = <&etr_in_port>;
-+					coresight,hwid = <1>;
- 				};
- 			};
+ static int coresight_find_link_outport(struct coresight_device *csdev,
+@@ -125,7 +125,7 @@ static int coresight_find_link_outport(struct coresight_device *csdev,
+ 	dev_err(&csdev->dev, "couldn't find outport, parent: %s, child: %s\n",
+ 		dev_name(&csdev->dev), dev_name(&child->dev));
  
- 			/* replicator input port */
- 			port@2 {
--				reg = <0>;
-+				reg = <2>;
- 				replicator_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&etf_out_port>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -203,16 +208,19 @@
- 				port@0 {
- 					reg = <0>;
- 					ca_funnel_in_port0: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint = <&etm0_out_port>;
-+						coresight,hwid = <0>;
- 					};
- 				};
+-	return 0;
++	return -ENODEV;
+ }
  
- 				/* funnel output port */
- 				port@2 {
--					reg = <0>;
-+					reg = <2>;
- 					ca_funnel_out_port0: endpoint {
-+						direction = <1>;
- 						remote-endpoint = <&hugo_funnel_in_port0>;
-+						coresight,hwid = <0>;
- 					};
- 				};
+ static int coresight_enable_sink(struct coresight_device *csdev, u32 mode)
+@@ -178,6 +178,9 @@ static int coresight_enable_link(struct coresight_device *csdev,
+ 	else
+ 		refport = 0;
  
-@@ -229,7 +237,9 @@
- 
- 			port {
- 				etm0_out_port: endpoint {
-+					direction = <1>;
- 					remote-endpoint = <&ca_funnel_in_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -248,22 +258,26 @@
- 				port@0 {
- 					reg = <0>;
- 					hugo_funnel_in_port0: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint = <&ca_funnel_out_port0>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 
- 				port@1 {
- 					reg = <1>;
- 					hugo_funnel_in_port1: endpoint {
--						slave-mode; /* M4 input */
-+						direction = <0>; /* M4 input */
-+						coresight,hwid = <1>;
- 					};
- 				};
- 
- 				port@2 {
--					reg = <0>;
-+					reg = <2>;
- 					hugo_funnel_out_port0: endpoint {
-+						direction = <1>;
- 						remote-endpoint = <&etf_in_port>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 
-@@ -284,15 +298,18 @@
- 				port@0 {
- 					reg = <0>;
- 					etf_in_port: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint = <&hugo_funnel_out_port0>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 
- 				port@1 {
--					reg = <0>;
-+					reg = <1>;
- 					etf_out_port: endpoint {
-+						direction = <1>;
- 						remote-endpoint = <&replicator_in_port0>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 			};
-@@ -306,8 +323,9 @@
- 
- 			port {
- 				etr_in_port: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&replicator_out_port1>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -320,8 +338,9 @@
- 
- 			port {
- 				tpiu_in_port: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&replicator_out_port1>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
++	if (refport < 0)
++		return refport;
++
+ 	if (atomic_inc_return(&csdev->refcnt[refport]) == 1) {
+ 		if (link_ops(csdev)->enable) {
+ 			ret = link_ops(csdev)->enable(csdev, inport, outport);
 -- 
 2.7.4
