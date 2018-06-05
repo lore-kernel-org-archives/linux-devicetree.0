@@ -1,19 +1,19 @@
-Return-Path: <SRS0=sWS+=IY=agner.ch=stefan@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date: Wed, 06 Jun 2018 18:27:48 +0200
-From: Stefan Agner <stefan@agner.ch>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 5 Jun 2018 15:08:55 -0600
+From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v2] dt-bindings: clock: imx6ul: Do not change the clock
  definition order
-In-Reply-To: <1527948122-32092-1-git-send-email-festevam@gmail.com>
+Message-ID: <20180605210855.GA27408@rob-hp-laptop>
 References: <1527948122-32092-1-git-send-email-festevam@gmail.com>
-Message-ID: <3be11aeea9cd0399837acb201f6226d9@agner.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1527948122-32092-1-git-send-email-festevam@gmail.com>
 To: Fabio Estevam <festevam@gmail.com>
-Cc: sboyd@kernel.org, michael@amarulasolutions.com, stefan.wahren@i2se.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, anson.huang@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: sboyd@kernel.org, michael@amarulasolutions.com, stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, anson.huang@nxp.com, stefan@agner.ch, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 02.06.2018 16:02, Fabio Estevam wrote:
+On Sat, Jun 02, 2018 at 11:02:02AM -0300, Fabio Estevam wrote:
 > From: Fabio Estevam <fabio.estevam@nxp.com>
 > 
 > Commit f5a4670de966 ("clk: imx: Add new clo01 and clo2 controlled
@@ -33,61 +33,5 @@ On 02.06.2018 16:02, Fabio Estevam wrote:
 > 
 >  include/dt-bindings/clock/imx6ul-clock.h | 40 +++++++++++++++-----------------
 >  1 file changed, 19 insertions(+), 21 deletions(-)
-> 
-> diff --git a/include/dt-bindings/clock/imx6ul-clock.h
-> b/include/dt-bindings/clock/imx6ul-clock.h
-> index 9564597..0aa1d9c 100644
-> --- a/include/dt-bindings/clock/imx6ul-clock.h
-> +++ b/include/dt-bindings/clock/imx6ul-clock.h
-> @@ -235,27 +235,25 @@
->  #define IMX6UL_CLK_CSI_PODF		222
->  #define IMX6UL_CLK_PLL3_120M		223
->  #define IMX6UL_CLK_KPP			224
-> -#define IMX6UL_CLK_CKO1_SEL		225
-> -#define IMX6UL_CLK_CKO1_PODF		226
-> -#define IMX6UL_CLK_CKO1			227
-> -#define IMX6UL_CLK_CKO2_SEL		228
-> -#define IMX6UL_CLK_CKO2_PODF		229
-> -#define IMX6UL_CLK_CKO2			230
-> -#define IMX6UL_CLK_CKO			231
-> -
-> -/* For i.MX6ULL */
-> -#define IMX6ULL_CLK_ESAI_PRED		232
-> -#define IMX6ULL_CLK_ESAI_PODF		233
-> -#define IMX6ULL_CLK_ESAI_EXTAL		234
-> -#define IMX6ULL_CLK_ESAI_MEM		235
-> -#define IMX6ULL_CLK_ESAI_IPG		236
-> -#define IMX6ULL_CLK_DCP_CLK		237
-> -#define IMX6ULL_CLK_EPDC_PRE_SEL	238
-> -#define IMX6ULL_CLK_EPDC_SEL		239
-> -#define IMX6ULL_CLK_EPDC_PODF		240
-> -#define IMX6ULL_CLK_EPDC_ACLK		241
-> -#define IMX6ULL_CLK_EPDC_PIX		242
-> -#define IMX6ULL_CLK_ESAI_SEL		243
-> +#define IMX6ULL_CLK_ESAI_PRED		225
-> +#define IMX6ULL_CLK_ESAI_PODF		226
-> +#define IMX6ULL_CLK_ESAI_EXTAL		227
-> +#define IMX6ULL_CLK_ESAI_MEM		228
-> +#define IMX6ULL_CLK_ESAI_IPG		229
-> +#define IMX6ULL_CLK_DCP_CLK		230
-> +#define IMX6ULL_CLK_EPDC_PRE_SEL	231
-> +#define IMX6ULL_CLK_EPDC_SEL		232
-> +#define IMX6ULL_CLK_EPDC_PODF		233
-> +#define IMX6ULL_CLK_EPDC_ACLK		234
-> +#define IMX6ULL_CLK_EPDC_PIX		235
-> +#define IMX6ULL_CLK_ESAI_SEL		236
 
-Nit: Add an empty line here?
-
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-
-> +#define IMX6UL_CLK_CKO1_SEL		237
-> +#define IMX6UL_CLK_CKO1_PODF		238
-> +#define IMX6UL_CLK_CKO1			239
-> +#define IMX6UL_CLK_CKO2_SEL		240
-> +#define IMX6UL_CLK_CKO2_PODF		241
-> +#define IMX6UL_CLK_CKO2			242
-> +#define IMX6UL_CLK_CKO			243
->  #define IMX6UL_CLK_END			244
->  
->  #endif /* __DT_BINDINGS_CLOCK_IMX6UL_H */
+Acked-by: Rob Herring <robh@kernel.org>
