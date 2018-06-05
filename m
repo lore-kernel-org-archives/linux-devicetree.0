@@ -1,365 +1,49 @@
-From: Dennis Gilmore <dennis@ausil.us>
-Subject: [PATCH V3] ARM: dts: armada388-helios4
-Date: Tue,  5 Jun 2018 13:48:10 -0500
-Message-ID: <20180605184810.29602-1-dennis@ausil.us>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Dennis Gilmore <dennis@ausil.us>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
+ bindings
+Date: Tue, 5 Jun 2018 21:57:47 +0300
+Message-ID: <df4d4207-5343-36c0-7ca8-d431999a3f31@cogentembedded.com>
+References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
+ <3941727.PNGxG4XCLb@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3941727.PNGxG4XCLb@avalon>
+Content-Language: en-MW
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The helios4 is a Armada388 based nas board designed by SolidRun and
-based on their SOM. It is sold by kobol.io the dts file came from
-https://raw.githubusercontent.com/armbian/build/master/patch/kernel/mvebu-default/95-helios4-device-tree.patch
-I added a SPDX license line to match the clearfog it says it was based
-on and a compatible line for "kobol,helios4"
-
-Signed-off-by: Dennis Gilmore <dennis@ausil.us>
-
----
-
-changes since first submission
-change solidrun to kobol in compatible line based on feedback
-
-changes since v2
-
-remove commented out nodes based on feedback
----
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/armada-388-helios4.dts | 313 +++++++++++++++++++++++
- 2 files changed, 314 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-388-helios4.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e2424957809..490bfd586198 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1123,6 +1123,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
- 	armada-388-clearfog-pro.dtb \
- 	armada-388-db.dtb \
- 	armada-388-gp.dtb \
-+	armada-388-helios4.dtb \
- 	armada-388-rd.dtb
- dtb-$(CONFIG_MACH_ARMADA_39X) += \
- 	armada-398-db.dtb
-diff --git a/arch/arm/boot/dts/armada-388-helios4.dts b/arch/arm/boot/dts/armada-388-helios4.dts
-new file mode 100644
-index 000000000000..59048740ae06
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-388-helios4.dts
-@@ -0,0 +1,313 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Device Tree file for Helios4
-+ * based on SolidRun Clearfog revision A1 rev 2.0 (88F6828)
-+ *
-+ *  Copyright (C) 2017
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "armada-388.dtsi"
-+#include "armada-38x-solidrun-microsom.dtsi"
-+
-+/ {
-+	model = "Helios4";
-+	compatible = "kobol,helios4", "marvell,armada388",
-+		"marvell,armada385", "marvell,armada380";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000>; /* 2 GB */
-+	};
-+
-+	aliases {
-+		/* So that mvebu u-boot can update the MAC addresses */
-+		ethernet1 = &eth0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_12v: regulator-12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "power_brick_12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&reg_12v>;
-+	};
-+
-+	reg_5p0v_hdd: regulator-5v-hdd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5V_HDD";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&reg_12v>;
-+	};
-+
-+	reg_5p0v_usb: regulator-5v-usb {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB-PWR";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		enable-active-high;
-+		gpio = <&expander0 6 GPIO_ACTIVE_HIGH>;
-+		vin-supply = <&reg_12v>;
-+	};
-+
-+	system-leds {
-+		compatible = "gpio-leds";
-+		status-led {
-+			label = "helios4:green:status";
-+			gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "on";
-+		};
-+
-+		fault-led {
-+			label = "helios4:red:fault";
-+			gpios = <&gpio0 25 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+		};
-+	};
-+
-+	io-leds {
-+		compatible = "gpio-leds";
-+		sata1-led {
-+			label = "helios4:green:ata1";
-+			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "ata1";
-+			default-state = "off";
-+		};
-+		sata2-led {
-+			label = "helios4:green:ata2";
-+			gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "ata2";
-+			default-state = "off";
-+		};
-+		sata3-led {
-+			label = "helios4:green:ata3";
-+			gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "ata3";
-+			default-state = "off";
-+		};
-+		sata4-led {
-+			label = "helios4:green:ata4";
-+			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "ata4";
-+			default-state = "off";
-+		};
-+		usb-led {
-+			label = "helios4:green:usb";
-+			gpios = <&gpio1 22 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "usb-host";
-+			default-state = "off";
-+		};
-+	};
-+
-+	fan1: j10-pwm {
-+		compatible = "pwm-fan";
-+		pwms = <&gpio1 9 40000>;	/* Target freq:25 kHz */
-+	};
-+
-+	fan2: j17-pwm {
-+		compatible = "pwm-fan";
-+		pwms = <&gpio1 23 40000>;	/* Target freq:25 kHz */
-+	};
-+
-+	usb2_phy: usb2-phy {
-+		compatible = "usb-nop-xceiv";
-+		vbus-regulator = <&reg_5p0v_usb>;
-+	};
-+
-+	usb3_phy: usb3-phy {
-+		compatible = "usb-nop-xceiv";
-+	};
-+
-+	soc {
-+		internal-regs {
-+			i2c@11000 {
-+				clock-frequency = <400000>;
-+				pinctrl-0 = <&i2c0_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+
-+				/*
-+				 * PCA9655 GPIO expander, up to 1MHz clock.
-+				 *  0-Board Revision bit 0 #
-+				 *  1-Board Revision bit 1 #
-+				 *  5-USB3 overcurrent
-+				 *  6-USB3 power
-+				 */
-+				expander0: gpio-expander@20 {
-+					/*
-+					 * This is how it should be:
-+					 * compatible = "onnn,pca9655",
-+					 *	 "nxp,pca9555";
-+					 * but you can't do this because of
-+					 * the way I2C works.
-+					 */
-+					compatible = "nxp,pca9555";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					reg = <0x20>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pca0_pins>;
-+					interrupt-parent = <&gpio0>;
-+					interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+
-+					board_rev_bit_0 {
-+						gpio-hog;
-+						gpios = <0 GPIO_ACTIVE_LOW>;
-+						input;
-+						line-name = "board-rev-0";
-+					};
-+					board_rev_bit_1 {
-+						gpio-hog;
-+						gpios = <1 GPIO_ACTIVE_LOW>;
-+						input;
-+						line-name = "board-rev-1";
-+					};
-+					usb3_ilimit {
-+						gpio-hog;
-+						gpios = <5 GPIO_ACTIVE_HIGH>;
-+						input;
-+						line-name = "usb-overcurrent-status";
-+					};
-+				};
-+
-+				temp_sensor: temp@4c {
-+					compatible = "ti,lm75";
-+					reg = <0x4c>;
-+					vcc-supply = <&reg_3p3v>;
-+				};
-+			};
-+
-+			i2c@11100 {
-+				/*
-+				 * External I2C Bus for user peripheral
-+				 */
-+				clock-frequency = <400000>;
-+				pinctrl-0 = <&helios_i2c1_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+			};
-+
-+			sata@a8000 {
-+				status = "okay";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				sata0: sata-port@0 {
-+					reg = <0>;
-+				};
-+
-+				sata1: sata-port@1 {
-+					reg = <1>;
-+				};
-+			};
-+
-+			sata@e0000 {
-+				status = "okay";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				sata2: sata-port@0 {
-+					reg = <0>;
-+				};
-+
-+				sata3: sata-port@1 {
-+					reg = <1>;
-+				};
-+			};
-+
-+			spi@10680 {
-+				pinctrl-0 = <&spi1_pins
-+					     &microsom_spi1_cs_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+			};
-+
-+			sdhci@d8000 {
-+				bus-width = <4>;
-+				cd-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
-+				no-1-8-v;
-+				pinctrl-0 = <&helios_sdhci_pins
-+					     &helios_sdhci_cd_pins>;
-+				pinctrl-names = "default";
-+				status = "okay";
-+				vmmc = <&reg_3p3v>;
-+				wp-inverted;
-+			};
-+
-+			usb@58000 {
-+				usb-phy = <&usb2_phy>;
-+				status = "okay";
-+			};
-+
-+			usb3@f0000 {
-+				status = "okay";
-+			};
-+
-+			usb3@f8000 {
-+				status = "okay";
-+			};
-+
-+			pinctrl@18000 {
-+				pca0_pins: pca0-pins {
-+					marvell,pins = "mpp23";
-+					marvell,function = "gpio";
-+				};
-+				microsom_phy0_int_pins: microsom-phy0-int-pins {
-+					marvell,pins = "mpp18";
-+					marvell,function = "gpio";
-+				};
-+				helios_i2c1_pins: i2c1-pins {
-+					marvell,pins = "mpp26", "mpp27";
-+					marvell,function = "i2c1";
-+				};
-+				helios_sdhci_cd_pins: helios-sdhci-cd-pins {
-+					marvell,pins = "mpp20";
-+					marvell,function = "gpio";
-+				};
-+				helios_sdhci_pins: helios-sdhci-pins {
-+					marvell,pins = "mpp21", "mpp28",
-+						       "mpp37", "mpp38",
-+						       "mpp39", "mpp40";
-+					marvell,function = "sd0";
-+				};
-+				helios_led_pins: helios-led-pins {
-+					marvell,pins = "mpp24", "mpp25",
-+						       "mpp49", "mpp50",
-+						       "mpp52", "mpp53",
-+						       "mpp54";
-+					marvell,function = "gpio";
-+				};
-+				helios_fan_pins: helios-fan-pins {
-+					marvell,pins = "mpp41", "mpp43",
-+						       "mpp48", "mpp55";
-+					marvell,function = "gpio";
-+				};
-+				microsom_spi1_cs_pins: spi1-cs-pins {
-+					marvell,pins = "mpp59";
-+					marvell,function = "spi1";
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-2.17.1
+T24gMDYvMDUvMjAxOCAwMTowOSBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKCj4+IERvY3Vt
+ZW50IHRoZSBSLUNhciBWM0ggKFI4QTc3OTgwKSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRpbmdz
+OyB0aGUgRFUKPj4gaGFyZHdhcmUgc2VlbXMgdGhlIHNhbWUgYXMgaW4gdGhlIFItQ2FyIFYzTSAo
+UjhBNzc5NzApLgo+IAo+IEhvdyBhYm91dCAidGhlIERVIGhhcmR3YXJlIGhhcyB0aGUgc2FtZSB0
+b3BvbG9neSBhcyBpbiB0aGUgUi1DYXIgVjNNIAo+IChSOEE3Nzk3MCkiID8gInNlZW1zIiBzb3Vu
+ZHMgbGlrZSB3ZSdyZSB2ZXJ5IHVuc3VyZSA6LSkKCiAgIFRoYXQncyBwcm9iYWJseSBiZXR0ZXIs
+IGluZGVlZC4KCj4+IFNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2VyZ2VpLnNodHls
+eW92QGNvZ2VudGVtYmVkZGVkLmNvbT4KPj4KPj4gLS0tCj4+IFRoZSBwYXRjaCBpcyBhZ2FpbnN0
+IHRoZSAnZHJtLW5leHQnIGJyYW5jaCBvZiBEYXZpZCBBaXJsaWUncyAnbGludXguZ2l0Jwo+PiBy
+ZXBvLgo+IAo+IFRoZW4geW91IG1pZ2h0IHdhbnQgdG8gc3dpdGNoIHRvIGdpdDovL2Fub25naXQu
+ZnJlZWRlc2t0b3Aub3JnL2RybS9kcm0gOi0pCgogICBObywgdGhlIGNvcnJlc3BvbmRpbmcgTUFJ
+TlRBSU5FUlMgcmVjb3JkcyBkb24ndCBpbmNsdWRlIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1Lwpv
+ciB3b3JzZSB5ZXQsIHRoZSBEVSBiaW5kaW5ncy4gOi0pCiAgU2VyaW91c2x5LCBJIHRob3VnaHQg
+eW91J3ZlIGRvbmUgYSBwYXRjaCB0byByZW1vdmUgeW91ciBkZWFkICdmYmRldicgcmVwbyBtb250
+aHMKYWdvIGFuZCBJTydtIHN0aWxsIHNlZWluZyBpdCBsaXN0ZWQuLi4gOi0vIAoKPiBBcGFydCBm
+cm9tIHRoYXQsCj4gCj4gUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGlu
+Y2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KPiAKPiBJZiB5b3UgYWdyZWUgd2l0aCB0aGUgc21hbGwg
+Y2hhbmdlIHRvIHRoZSBjb21taXQgbWVzc2FnZSBJJ2xsIGZpeCB0aGUgY29uZmxpY3QgCj4gbG9j
+YWxseSwgdGhlcmUncyBubyBuZWVkIHRvIHJlc3VibWl0LgoKICAgSSBkbyBhZ3JlZSwgZXhjZXB0
+IEkgZG9uJ3Qga25vdyB3aGF0IGNvbmZsaWN0IHlvdSBtZWFuLgoKWy4uLl0KCk1CUiwgU2VyZ2Vp
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
