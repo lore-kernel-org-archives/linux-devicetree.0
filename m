@@ -1,66 +1,76 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH v10 0/5] scsi: ufs: add ufs driver code for Hisilicon
- Hi3660 SoC
-Date: Tue, 5 Jun 2018 15:59:28 +0100
-Message-ID: <f9cde7df-2d4d-3d7e-5269-ef879211b2ee@arm.com>
-References: <20180525091712.37227-1-liwei213@huawei.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 0/2] Add Mediatek X20 Development Board support
+Date: Tue, 5 Jun 2018 17:15:06 +0200
+Message-ID: <06a0535a-132e-9466-80e0-9af74b9af07b@gmail.com>
+References: <20180529045258.1415-1-manivannan.sadhasivam@linaro.org>
+ <06dbc5ef-5bba-f3e0-1b57-3eaeab26ed68@gmail.com>
+ <20180529072719.GA5529@Mani-XPS-13-9360>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180525091712.37227-1-liwei213@huawei.com>
+In-Reply-To: <20180529072719.GA5529@Mani-XPS-13-9360>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Li Wei <liwei213@huawei.com>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
-Cc: zangleigang@hisilicon.com, gengjianfeng@hisilicon.com, guodong.xu@linaro.org, puck.chen@hisilicon.com, john.stultz@linaro.org, fengbaopeng@hisilicon.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com, Mars Cheng <mars.cheng@mediatek.com>, Saber Rezvani <irsaber@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 25/05/18 10:17, Li Wei wrote:
-> This patchset adds driver support for UFS for Hi3660 SoC. It is verified on HiKey960 board.
+
+On 29/05/18 09:27, Manivannan Sadhasivam wrote:
+> Hi Matthias,
 > 
-> Li Wei (5):
->   scsi: ufs: add Hisilicon ufs driver code
->   dt-bindings: scsi: ufs: add document for hisi-ufs
->   arm64: dts: add ufs dts node
->   arm64: defconfig: enable configs for Hisilicon ufs
->   arm64: defconfig: enable f2fs and squashfs
+> On Tue, May 29, 2018 at 08:38:27AM +0200, Matthias Brugger wrote:
+>> Hi Manivannan,
+>>
+>> it's nice to see that someone at Linaro cares about upstreaming the 96 board.
+>> From what I can see, your patches add the very same support to the board as
+>> does the mt6797 evaluation board. Do you have plans to upstream more drivers for
+>> the board? Do you have a roadmap or something?
+>>
+>> I'm asking becuase I don't want to have just another dead devicetree in the
+>> kernel which does nothing but provides a boot to rootfs. Especially as this can
+>> be achieved on the same board with the EVB dts.
+>>
 > 
->  Documentation/devicetree/bindings/ufs/ufs-hisi.txt |  41 ++
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  10 +-
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  18 +
->  arch/arm64/configs/defconfig                       |  11 +
->  drivers/scsi/ufs/Kconfig                           |   9 +
->  drivers/scsi/ufs/Makefile                          |   1 +
->  drivers/scsi/ufs/ufs-hisi.c                        | 619 +++++++++++++++++++++
->  drivers/scsi/ufs/ufs-hisi.h                        | 115 ++++
->  8 files changed, 821 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-hisi.txt
->  create mode 100644 drivers/scsi/ufs/ufs-hisi.c
->  create mode 100644 drivers/scsi/ufs/ufs-hisi.h
+> I can understand your concern here. I do have plans to add more drivers
+> in the future for this board but I can't give you any roadmap for that
+> since it mostly falls under the spare time work and I have been doing a
+> similar kind of work for the Bubblegum-96 board in parallel.
 > 
-> Major changes in v10:
->  - solve review comments from Rob Herring.
->    *Modify the "reset-names" describe in ufs-hisi.txt binding file.
->    *List clocks in ufs-hisi.txt binding file.
->    *remove the "arst" and keep only "rst" in the binging files.
->    *remove the "arst" member from both dts and c code. 
-> Major changes in v9:
->  - solve review comments from Rob Herring.
->    *remove freq-table-hz in ufs-hisi.txt binding file.
->    *Move the rst to the ufshcd_pltfm.txt common binding file.
->    *Modify the member "assert" of UFS host structure to "arst".
-> Major changes in v8:
->  - solve review comments from zhangfei.
->    *Add Version history.
->  - solve review comments from Rob Herring.
->    *remove freq-table-hz.
->  -  solve review comments from Riku Voipio.
->    *Add MODULE_DEVICE_TABLE for ufs driver.
+> At most I can guarentee that this board's functionality will be added
+> gradually in upcoming days.
 > 
 
-Tested on top of linux-next (4.17.0-next-20180605), I can reliably load
-my debian userspace flashed on the 'system' fastboot partition.
+Sounds good. Fancy to send a v2 with the comments from Rob?
 
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Regards,
+Matthias
+
+> Thanks,
+> Mani
+> 
+>> Regards,
+>> Matthias
+>>
+>> On 29/05/18 06:52, Manivannan Sadhasivam wrote:
+>>> Add devicetree support for Mediatek X20 Development Board by Archermind.
+>>> This board is based on the Deca-Core MT6797 SoC from Mediatek and is
+>>> one of the 96Boards Consumer Edition platform.
+>>>
+>>> With this devicetree change, board can boot into initramfs.
+>>>
+>>> More information about this board can be found in 96Boards product page:
+>>> https://www.96boards.org/product/mediatek-x20/
+>>>
+>>> Manivannan Sadhasivam (2):
+>>>   dt-bindings: Add vendor prefix for ArcherMind
+>>>   arm64: dts: Add Mediatek X20 Development Board support
+>>>
+>>>  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>>>  arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+>>>  .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
+>>>  3 files changed, 35 insertions(+)
+>>>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+>>>
