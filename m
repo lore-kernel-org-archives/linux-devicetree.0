@@ -1,122 +1,50 @@
-From: "Y.b. Lu" <yangbo.lu@nxp.com>
-Subject: RE: [PATCH 09/10] dpaa_eth: add support for hardware timestamping
-Date: Tue, 5 Jun 2018 03:35:28 +0000
-Message-ID: <DB6PR0401MB2536376432EC481473A5B4A3F8660@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <20180604070837.19265-1-yangbo.lu@nxp.com>
- <20180604070837.19265-10-yangbo.lu@nxp.com>
- <20180604134920.ezhe6jz5ntpnqyzj@localhost>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware device
+Date: Tue, 5 Jun 2018 13:08:44 +0900
+Message-ID: <CAAFQd5BFq+pdEpBmpw5QsO+m+fsAhexhqA_uJg1G39Mpv5E3HQ@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
+ <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com> <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180604134920.ezhe6jz5ntpnqyzj@localhost>
-Content-Language: en-US
+In-Reply-To: <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
-
-> -----Original Message-----
-> From: Richard Cochran [mailto:richardcochran@gmail.com]
-> Sent: Monday, June 4, 2018 9:49 PM
-> To: Y.b. Lu <yangbo.lu@nxp.com>
-> Cc: netdev@vger.kernel.org; Madalin-cristian Bucur
-> <madalin.bucur@nxp.com>; Rob Herring <robh+dt@kernel.org>; Shawn Guo
-> <shawnguo@kernel.org>; David S . Miller <davem@davemloft.net>;
-> devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 09/10] dpaa_eth: add support for hardware timestampin=
-g
->=20
-> On Mon, Jun 04, 2018 at 03:08:36PM +0800, Yangbo Lu wrote:
->=20
-> > +if FSL_DPAA_ETH
-> > +config FSL_DPAA_ETH_TS
-> > +	bool "DPAA hardware timestamping support"
-> > +	select PTP_1588_CLOCK_QORIQ
-> > +	default n
-> > +	help
-> > +	  Enable DPAA hardware timestamping support.
-> > +	  This option is useful for applications to get
-> > +	  hardware time stamps on the Ethernet packets
-> > +	  using the SO_TIMESTAMPING API.
-> > +endif
->=20
-> You should drop this #ifdef.  In general, if a MAC supports time stamping=
- and
-> PHC, then the driver support should simply be compiled in.
->=20
-> [ When time stamping incurs a large run time performance penalty to
->   non-PTP users, then it might make sense to have a Kconfig option to
->   disable it, but that doesn't appear to be the case here. ]
-
-[Y.b. Lu] Actually these timestamping codes affected DPAA networking perfor=
-mance in our previous performance test.
-That's why we used ifdef for it.
-
->=20
-> > @@ -1615,6 +1635,24 @@ static int dpaa_eth_refill_bpools(struct
-> dpaa_priv *priv)
-> >  	skbh =3D (struct sk_buff **)phys_to_virt(addr);
-> >  	skb =3D *skbh;
+On Mon, Jun 4, 2018 at 10:56 PM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+> Hi Tomasz,
+>
+> On 06/04/2018 04:18 PM, Tomasz Figa wrote:
+> > Hi Vikash,
 > >
-> > +#ifdef CONFIG_FSL_DPAA_ETH_TS
-> > +	if (priv->tx_tstamp &&
-> > +	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
->=20
-> This condition fits on one line easily.
-
-[Y.b. Lu] Right. I will use one line in next version.
-
->=20
-> > +		struct skb_shared_hwtstamps shhwtstamps;
-> > +		u64 ns;
->=20
-> Local variables belong at the top of the function.
-
-[Y.b. Lu] Ok, will move them to the top in next verison.
-
->=20
-> > +		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
-> > +
-> > +		if (!dpaa_get_tstamp_ns(priv->net_dev, &ns,
-> > +					priv->mac_dev->port[TX],
-> > +					(void *)skbh)) {
-> > +			shhwtstamps.hwtstamp =3D ns_to_ktime(ns);
-> > +			skb_tstamp_tx(skb, &shhwtstamps);
-> > +		} else {
-> > +			dev_warn(dev, "dpaa_get_tstamp_ns failed!\n");
-> > +		}
-> > +	}
-> > +#endif
-> >  	if (unlikely(qm_fd_get_format(fd) =3D=3D qm_fd_sg)) {
-> >  		nr_frags =3D skb_shinfo(skb)->nr_frags;
-> >  		dma_unmap_single(dev, addr, qm_fd_get_offset(fd) + @@ -2086,6
-> > +2124,14 @@ static int dpaa_start_xmit(struct sk_buff *skb, struct
-> net_device *net_dev)
-> >  	if (unlikely(err < 0))
-> >  		goto skb_to_fd_failed;
+> > On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+> >> +static int __init venus_init(void)
+> >> +{
+> >> +       int ret;
+> >> +
+> >> +       ret = platform_driver_register(&qcom_video_firmware_driver);
+> >> +       if (ret)
+> >> +               return ret;
 > >
-> > +#ifdef CONFIG_FSL_DPAA_ETH_TS
-> > +	if (priv->tx_tstamp &&
-> > +	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
->=20
-> One line please.
+> > Do we really need this firmware driver? As far as I can see, the
+> > approach used here should work even without any driver bound to the
+> > firmware device.
+>
+> We need device/driver bind because we need to call dma_configure() which
+> internally doing iommus sID parsing.
 
-[Y.b. Lu] No problem.
+I can see some drivers calling of_dma_configure() directly:
+https://elixir.bootlin.com/linux/latest/ident/of_dma_configure
 
->=20
-> > +		fd.cmd |=3D FM_FD_CMD_UPD;
-> > +		skb_shinfo(skb)->tx_flags |=3D SKBTX_IN_PROGRESS;
-> > +	}
-> > +#endif
-> > +
-> >  	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) =3D=3D 0=
-))
-> >  		return NETDEV_TX_OK;
-> >
->=20
-> Thanks,
-> Richard
+I'm not sure if it's more elegant, but should at least require less code.
+
+By the way, can we really assume that probe of firmware platform
+device really completes before we call venus_boot()?
+
+Best regards,
+Tomasz
