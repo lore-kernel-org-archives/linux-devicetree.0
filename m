@@ -1,80 +1,41 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
-Date: Tue, 05 Jun 2018 11:58:51 +0200
-Message-ID: <1528192731.4074.7.camel@pengutronix.de>
-References: <20180517133009.26079-1-m.felsch@pengutronix.de>
- <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
- <1526640409.3948.5.camel@pengutronix.de>
- <20180523165352.GA6187@rob-hp-laptop>
- <20180525094724.3f4edofopk52i3v6@pengutronix.de>
- <20180525102609.GK4828@sirena.org.uk>
- <20180525114253.jj6akdazsbxqkbfu@pengutronix.de>
- <20180525145245.GM4828@sirena.org.uk>
- <1527261489.4938.9.camel@pengutronix.de>
- <20180525172441.GN4828@sirena.org.uk>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH] ARM: davinci: da850: Fix interrups property for gpio
+Date: Tue, 5 Jun 2018 15:35:52 +0530
+Message-ID: <1528193152-10657-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180525172441.GN4828@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, kernel@pengutronix.de
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nsekhar@ti.com
+Cc: khilman@kernel.org, robh+dt@kernel.org, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCk9uIEZyaSwgMjAxOC0wNS0yNSBhdCAxODoyNCArMDEwMCwgTWFyayBCcm93biB3
-cm90ZToKPiBPbiBGcmksIE1heSAyNSwgMjAxOCBhdCAwNToxODowOVBNICswMjAwLCBQaGlsaXBw
-IFphYmVsIHdyb3RlOgo+ID4gT24gRnJpLCAyMDE4LTA1LTI1IGF0IDE1OjUyICswMTAwLCBNYXJr
-IEJyb3duIHdyb3RlOgo+ID4gPiBPbiBGcmksIE1heSAyNSwgMjAxOCBhdCAwMTo0Mjo1M1BNICsw
-MjAwLCBNYXJjbyBGZWxzY2ggd3JvdGU6Cj4gPiA+ID4gQWxzbyB0aGUgZm9ybXVsYSBmb3IgdGhl
-IGRlbGF5IHRpbWUgKHQgPSBDIMOXIDI1LDAwMC8zLjUpIGRlcGVuZHMgb25seSBvbgo+ID4gPiA+
-IHRoZSBjYXBhY2l0eSBzaXplLgo+ID4gPiBXaHkgbm90IGp1c3QgaGF2ZSB0aGUgdXNlciBzcGVj
-aWZ5IHRoZSBjYXBhY2l0YW5jZSBvZiB0aGUgY2FwYWNpdG9yIG9uCj4gPiA+IHRoZSByYWlsIHdo
-aWNoIHRoZXkgY2FuIGRpcmVjdGx5IHJlYWQgZnJvbSB0aGUgc2NoZW1hdGljIHJhdGhlciB0aGFu
-Cj4gPiA+IGZvcmNpbmcgdGhlbSB0byBkbyB0aGUgY2FsY3VhbHRpb24/ICBUaGF0IHNlZW1zIGEg
-Yml0IGNsZWFyZXIgYW5kIG1vcmUKPiA+ID4gdXNlciBmcmllbmRseSAocGx1cyBpZiBzb21lb25l
-IGRlY2lkZXMgdGhlIHNwZWMgd2FzIHdyb25nIGl0J3MgZWFzaWVyIHRvCj4gPiA+IHJvbGwgb3V0
-IGZpeGVzKS4KPiA+IFRoZSBleGFjdCBjYXBhY2l0YW5jZSBtYXkgbm90IGJlIGtub3duIG9yIHZh
-cnkgYWJvdmUgdGhlIG5vbWluYWwgdmFsdWUKPiA+IGJlY2F1c2Ugb2YgY2hlYXAgY29tcG9uZW50
-cywgYW5kIHRoZSBmb3JtdWxhIGZyb20gdGhlIGRhdGFzaGVldCBpcyBqdXN0Cj4gPiBhIGd1aWRl
-bGluZS4KPiAKPiBUaGF0IHZhcmlhYmlsaXR5IGlzIGdvaW5nIHRvIGFwcGx5IGp1c3QgYXMgbXVj
-aCB0byB0aGUgY2hhcmdlIHRpbWUKPiBjYWxjdWxhdGlvbnMvbWVhc3VyZW1lbnRzIGFzIGl0IGlz
-IHRvIHRoZSBpbml0aWFsIGNhcGFjaXRhbmNlIHZhbHVlIC0KPiB0aGUgcmVzdWx0cyBhcmUgZ29p
-bmcgdG8gYmUgdmVyeSBtdWNoIGdhcmJhZ2UgaW4sIGdhcmJhZ2Ugb3V0LgoKVHJ1ZS4KCj4gPiBJ
-J2QgZXhwZWN0IHRoZSB1c3VhbCBtZXRob2QgdG8gc2V0IHRoaXMgZGVsYXkgdG8gYmUgc2VtaS1l
-bXBpcmljYWw6Cj4gPiAic3RhcnQgZnJvbSB0aGUgdmFsdWUgY2FsY3VsYXRlZCBmcm9tIGRhdGFz
-aGVldCBhbmQgc2NoZW1hdGljcyBhbmQgdGhlbgo+ID4gaW5jcmVhc2UgdW50aWwgbm8gbW9yZSBh
-dWRpbyBhcnRpZmFjdHMgb24gYSByZXByZXNlbnRhdGl2ZSBzYW1wbGUgb2YKPiA+IGJvYXJkcyIu
-Cj4gPiBJIHRoaW5rIGl0IGlzIGJlIGJldHRlciB0byBzcGVjaWZ5IGEgZGVsYXkgdGhhdCB3b3Jr
-cyB0aGFuIGEgYm9ndXMKPiA+IGNhcGFjaXRhbmNlIHZhbHVlIHRoYXQgaGFwcGVucyB0byBjb3Jy
-ZXNwb25kIHRvIGEgZGVsYXkgdGhhdCB3b3Jrcy4KPiAKPiBJZiB0aGlzIGlzIHZhcnlpbmcgc28g
-ZHJhc3RpY2FsbHkgcGVyIGJvYXJkL3N5c3RlbSB0aGF0IGl0J3MgcmVsZXZhbnQKPiB0aGVuIHdl
-J3JlIGFscmVhZHkgaW50byBwcm9ibGVtYXRpYyB0ZXJyaXRvcnkuICBGb3IgbW9zdCBkZXZpY2Vz
-IHdlIGp1c3QKPiBoYXZlIGEgbnVtYmVyIGZvciB0aGUgcGFydCwgbm90IHNvbWV0aGluZyB0aGF0
-IHZhcmllcyBzbyB3aWxkbHkgdGhhdAo+IGVhY2ggc3lzdGVtIG5lZWRzIHRvIGNvbmZpZ3VyZSBp
-dC4KCkknbSBub3QgYXJndWluZyB0aGlzIHNob3VsZCBiZSBjb25maWd1cmVkIHBlciBpbmRpdmlk
-dWFsIGRldmljZSwganVzdApwZXIgYm9hcmQgRFQuCgpJdCdzIGp1c3QgdGhhdCBteSBleHBlcmll
-bmNlIG9mIG9uZSBkYXRhcG9pbnQgY29uc2lzdHMgb2YgYSBib2FyZCB3aGVyZQpJIGhhZCB0byBp
-bmNyZWFzZSB0aGUgZGVsYXkgdG8gYWJvdXQgdGhyZWUgdGltZXMgdGhlIGRlbGF5IGNhbGN1bGF0
-ZWQKZnJvbSB0aGUgbm9taW5hbCBjYXBhY2l0YW5jZSBhY2NvcmRpbmcgdG8gdGhlIGRhdGFzaGVl
-dCBiZWZvcmUgYXVkaWJsZQphcnRpZmFjdHMgZGlzYXBwZWFyZWQgcmVsaWFibHkgb24gbXVsdGlw
-bGUgZGV2aWNlcy4KUHV0dGluZyB0aGUgZXh0ZW5kZWQgZGVsYXkgaW50byB0aGUgZGV2aWNlIHRy
-ZWUgd2l0aCBhIGNvbW1lbnQKZXhwbGFpbmluZyBpdHMgZW1waXJpY2FsIG5hdHVyZSBzZWVtZWQg
-bW9yZSBzdHJhaWdodGZvcndhcmQgdGhhbiBwdXR0aW5nCmEgYm9ndXMgY2FwYWNpdGFuY2UgdmFs
-dWUsIHRoYXQgZGlmZmVycyBmcm9tIHRoZSBzY2hlbWF0aWNzLCBhbmQgdGhhdCBJCmhhdmUgbmV2
-ZXIgbWVhc3VyZWQuCgpBbHNvLCBieSB1c2luZyB0aGUgY2FwYWNpdGFuY2Ugd2UgYXJlIGd1YXJh
-bnRlZWQgdG8gZW5kIHVwIHdpdGggYSBjb2RlYwpzcGVjaWZpYyBwcm9wZXJ0eSBuYW1lIChhZGks
-dm1pZC1kZWNvdXBsaW5nLWNhcGFjaXRhbmNlID8pIGFzIG9wcG9zZWQgdG8KdGhlIHBvc3NpYmls
-aXR5IG9mIGRlZmluaW5nIGEgY29tbW9uIGRlbGF5IHByb3BlcnR5IHRoYXQgY291bGQgYmUgdXNl
-ZApmb3IgZGlmZmVyZW50IGNvZGVjcy4KCnJlZ2FyZHMKUGhpbGlwcApfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApB
-bHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+The intc #interrupt-cells is equal to 1. Currently gpio
+node has 2 cells per IRQ which is wrong. Remove the additional
+cell for each of the interrupts.
+
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Fixes: 2e38b946dc54 ("ARM: davinci: da850: add GPIO DT node")
+---
+ arch/arm/boot/dts/da850.dtsi | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index f6f1597..0f4f817 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -549,11 +549,7 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			reg = <0x226000 0x1000>;
+-			interrupts = <42 IRQ_TYPE_EDGE_BOTH
+-				43 IRQ_TYPE_EDGE_BOTH 44 IRQ_TYPE_EDGE_BOTH
+-				45 IRQ_TYPE_EDGE_BOTH 46 IRQ_TYPE_EDGE_BOTH
+-				47 IRQ_TYPE_EDGE_BOTH 48 IRQ_TYPE_EDGE_BOTH
+-				49 IRQ_TYPE_EDGE_BOTH 50 IRQ_TYPE_EDGE_BOTH>;
++			interrupts = <42 43 44 45 46 47 48 49 50>;
+ 			ti,ngpio = <144>;
+ 			ti,davinci-gpio-unbanked = <0>;
+ 			status = "disabled";
+-- 
+1.9.1
