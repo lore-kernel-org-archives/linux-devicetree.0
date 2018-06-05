@@ -1,43 +1,45 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v2 0/5] Tegra20 External Memory Controller driver
-Date: Tue, 5 Jun 2018 14:19:11 +0300
-Message-ID: <20180605111911.GD27696@tbergstrom-lnx.Nvidia.com>
-References: <20180603223654.23324-1-digetx@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: [PATCH v4 0/3] Renesas R9A06G032 SMP enabler
+Date: Tue,  5 Jun 2018 12:28:45 +0100
+Message-ID: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180603223654.23324-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Frank Rowand <frank.rowand@sony.com>, Douglas Anderson <dianders@chromium.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@endlessm.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rajendra Nayak <rnayak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 04, 2018 at 01:36:49AM +0300, Dmitry Osipenko wrote:
-> Hello,
-> 
-> Couple years ago the Tegra20 EMC driver was removed from the kernel
-> due to incompatible changes in the Tegra's clock driver. This patchset
-> introduces a modernized EMC driver. Currently the sole purpose of the
-> driver is to initialize DRAM frequency to maximum rate during of the
-> kernels boot-up. Later we may consider implementing dynamic memory
-> frequency scaling, utilizing functionality provided by this driver.
-> 
-> Changelog:
-> 
-> v2:
-> 	- Minor code cleanups like consistent use of writel_relaxed instead
-> 	  of non-relaxed version, reworded error messages, etc.
-> 
-> 	- Factored out use_pllm_ud bit checking into a standalone patch for
-> 	  consistency.
-> 
-> Dmitry Osipenko (5):
->   dt: bindings: tegra20-emc: Document interrupt property
->   ARM: dts: tegra20: Add interrupt to External Memory Controller
->   clk: tegra20: Turn EMC clock gate into divider
->   clk: tegra20: Check whether direct PLLM sourcing is turned off for EMC
->   memory: tegra: Introduce Tegra20 EMC driver
-> 
+*WARNING -- this requires the base R9A06G032 support patches
+already posted
 
-Series Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+This patch series is for enabling the second CA7 of the R9A06G032.
+It's based on a spin_table method, and it reuses the same binding
+property as that driver.
+
+v4:
+  + Geert's comments adressed.
+  + Renamed symbols to r9a06g032 to match the rest of patchset
+  + Rebased on base patch v8
+v3:
+  + Removed mentions of rz/?n1d?
+  + Rebased on base patch v7
+v2:
+  + Added suggestions from Florian Fainelli
+  + Use __pa_symbol()
+  + Simplified logic in prepare_cpu()
+  + Reordered the patches
+  + Rebased on RZN1 Base patch v5
+
+Michel Pollet (3):
+  dt-bindings: cpu: Add Renesas R9A06G032 SMP enable method.
+  arm: shmobile: Add the R9A06G032 SMP enabler driver
+  ARM: dts: Renesas R9A06G032 SMP enable method
+
+ Documentation/devicetree/bindings/arm/cpus.txt |  1 +
+ arch/arm/boot/dts/r9a06g032.dtsi               |  3 +
+ arch/arm/mach-shmobile/Makefile                |  1 +
+ arch/arm/mach-shmobile/smp-r9a06g032.c         | 79 ++++++++++++++++++++++++++
+ 4 files changed, 84 insertions(+)
+ create mode 100644 arch/arm/mach-shmobile/smp-r9a06g032.c
+
+-- 
+2.7.4
