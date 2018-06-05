@@ -1,36 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
-Date: Tue, 5 Jun 2018 13:41:24 -0600
-Message-ID: <20180605194124.GA26885@rob-hp-laptop>
-References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
- <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
+ bindings
+Date: Tue, 5 Jun 2018 22:49:57 +0300
+Message-ID: <50730759-dfda-12c5-a7f3-4e8a9b7b1eb9@cogentembedded.com>
+References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
+ <3941727.PNGxG4XCLb@avalon>
+ <df4d4207-5343-36c0-7ca8-d431999a3f31@cogentembedded.com>
+ <3434502.pBJZTsWR88@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3434502.pBJZTsWR88@avalon>
+Content-Language: en-MW
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 28, 2018 at 11:01:32AM -0700, Ray Jui wrote:
-> Consolidate two SP805 binding documents "arm,sp805.txt" and
-> "sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
-> desired compatible string to be used
-> 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> ---
->  .../devicetree/bindings/watchdog/arm,sp805.txt     | 27 ++++++++++++++-----
->  .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31 ----------------------
->  2 files changed, 20 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-
-Would be good to get a ACK from FSL/NXP person on this. It looks to me 
-like the driver fetches the wrong clock as it gets the first one and the 
-driver really wants 'wdog_clk'. In any case, their dts files should be 
-updated.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-Rob
+T24gMDYvMDUvMjAxOCAxMDoxNiBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKCj4+Pj4gRG9j
+dW1lbnQgdGhlIFItQ2FyIFYzSCAoUjhBNzc5ODApIFNvQyBpbiB0aGUgUi1DYXIgRFUgYmluZGlu
+Z3M7IHRoZSBEVQo+Pj4+IGhhcmR3YXJlIHNlZW1zIHRoZSBzYW1lIGFzIGluIHRoZSBSLUNhciBW
+M00gKFI4QTc3OTcwKS4KPj4+Cj4+PiBIb3cgYWJvdXQgInRoZSBEVSBoYXJkd2FyZSBoYXMgdGhl
+IHNhbWUgdG9wb2xvZ3kgYXMgaW4gdGhlIFItQ2FyIFYzTQo+Pj4gKFI4QTc3OTcwKSIgPyAic2Vl
+bXMiIHNvdW5kcyBsaWtlIHdlJ3JlIHZlcnkgdW5zdXJlIDotKQo+Pgo+PiAgICBUaGF0J3MgcHJv
+YmFibHkgYmV0dGVyLCBpbmRlZWQuCj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogU2VyZ2VpIFNodHls
+eW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1iZWRkZWQuY29tPgo+Pj4+Cj4+Pj4gLS0tCj4+
+Pj4gVGhlIHBhdGNoIGlzIGFnYWluc3QgdGhlICdkcm0tbmV4dCcgYnJhbmNoIG9mIERhdmlkIEFp
+cmxpZSdzICdsaW51eC5naXQnCj4+Pj4gcmVwby4KPj4+Cj4+PiBUaGVuIHlvdSBtaWdodCB3YW50
+IHRvIHN3aXRjaCB0byBnaXQ6Ly9hbm9uZ2l0LmZyZWVkZXNrdG9wLm9yZy9kcm0vZHJtIDotKQo+
+Pgo+PiBObywgdGhlIGNvcnJlc3BvbmRpbmcgTUFJTlRBSU5FUlMgcmVjb3JkcyBkb24ndCBpbmNs
+dWRlCj4+IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1LyBvciB3b3JzZSB5ZXQsIHRoZSBEVSBiaW5k
+aW5ncy4gOi0pCgogICBXZWxsLCB0aGVyZSBpcyBzdGlsbCBubyBjb3JyZXNwb25kaW5nIHJlY29y
+ZCwgYWN0dWFsbHkuLi4gCgo+IE15IHBvaW50IGlzIHRoYXQgRGF2ZSdzIHRyZWUgaGFzIG1vdmVk
+LgoKICAgSG93IGFtIEkgc3VwcG9zZWQgdG8gbGVhcm4gYWJvdXQgaXQsIGZyb20gZ29zc2lwcz8g
+Oi0pCgo+PiBTZXJpb3VzbHksIEkgdGhvdWdodCB5b3UndmUgZG9uZSBhIHBhdGNoIHRvIHJlbW92
+ZSB5b3VyIGRlYWQgJ2ZiZGV2JyByZXBvCj4+IG1vbnRocyBhZ28gYW5kIElPJ20gc3RpbGwgc2Vl
+aW5nIGl0IGxpc3RlZC4uLiA6LS8KPiAKPiBJJ2xsIGFkZHJlc3MgdGhhdCBub3cuCgogICBUSUEu
+CiAKPj4+IEFwYXJ0IGZyb20gdGhhdCwKPj4+Cj4+PiBSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5j
+aGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+Pj4KPj4+IElmIHlvdSBh
+Z3JlZSB3aXRoIHRoZSBzbWFsbCBjaGFuZ2UgdG8gdGhlIGNvbW1pdCBtZXNzYWdlIEknbGwgZml4
+IHRoZQo+Pj4gY29uZmxpY3QgbG9jYWxseSwgdGhlcmUncyBubyBuZWVkIHRvIHJlc3VibWl0Lgo+
+Pgo+PiBJIGRvIGFncmVlLCBleGNlcHQgSSBkb24ndCBrbm93IHdoYXQgY29uZmxpY3QgeW91IG1l
+YW4uCj4+Cj4+IFsuLi5dCj4gCj4gSSBtZWFuIHRoZSBjb25mbGljdCB3aXRoCj4gCj4gY29tbWl0
+IGRjODE0MjkwMWJlZmFiZWE5NzQzOTNkNDliODAzZjEzMTI0M2ZlYjQKPiBBdXRob3I6IEtpZXJh
+biBCaW5naGFtIDxraWVyYW4uYmluZ2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+Cj4gRGF0
+ZTogICBUaHUgQXByIDI2IDE3OjUzOjMxIDIwMTggKzAxMDAKPiAKPiAgICAgZHQtYmluZGluZ3M6
+IGRpc3BsYXk6IHJlbmVzYXM6IGR1OiBEb2N1bWVudCB0aGUgcjhhNzc5NjUgYmluZGluZ3MKPiAK
+PiB0aGF0IGlzIHByZXNlbnQgaW4gRGF2ZSdzIG5ldyB0cmVlLgoKICAgQWguLi4gVElBIGFnYWlu
+LiA6LSkKCk1CUiwgU2VyZ2VpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
