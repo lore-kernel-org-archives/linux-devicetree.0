@@ -1,64 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/4] dt-bindings: timer: add i.MX EPIT timer binding
-Date: Tue, 5 Jun 2018 09:23:23 -0600
-Message-ID: <20180605152323.GA25218@rob-hp-laptop>
-References: <20180604100035.19558-1-peron.clem@gmail.com>
- <20180604100035.19558-3-peron.clem@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 3/3] gpio: pca953x: fix address calculation for pcal6524
+Date: Tue, 5 Jun 2018 18:37:21 +0300
+Message-ID: <CAHp75VfxN1RZBFRK6oJ5AzCe_2ej9eYdwt96X+fJZgFy65eaFg@mail.gmail.com>
+References: <cover.1526533188.git.hns@goldelico.com> <e70e83f07aebaf702fef90a9fac61e41d8b558b0.1526533188.git.hns@goldelico.com>
+ <20180523140635.GB27215@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180604100035.19558-3-peron.clem@gmail.com>
+In-Reply-To: <20180523140635.GB27215@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment?= Peron <clement.peron@devialet.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 04, 2018 at 12:00:33PM +0200, Clément Péron wrote:
-> From: Clément Peron <clement.peron@devialet.com>
-> 
-> Add devicetree binding document for NXP's i.MX SoC specific
-> EPIT timer driver.
-> 
-> Signed-off-by: Clément Peron <clement.peron@devialet.com>
-> ---
->  .../devicetree/bindings/timer/fsl,imxepit.txt | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxepit.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/fsl,imxepit.txt b/Documentation/devicetree/bindings/timer/fsl,imxepit.txt
-> new file mode 100644
-> index 000000000000..de2e6ef68d24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/fsl,imxepit.txt
-> @@ -0,0 +1,21 @@
-> +Binding for the i.MX Enhanced Periodic Interrupt Timer (EPIT)
-> +
-> +The Enhanced Periodic Interrupt Timer (EPIT) is a 32-bit set-and-forget timer
-> +that is capable of providing precise interrupts at regular intervals with
-> +minimal processor intervention.
-> +
-> +Required properties:
-> +- compatible: should be "fsl,<chip>-epit", "fsl,imx31-epit" where <chip> is
-> +  imx25, imx6qdl, imx6sl, imx6sul or imx6sx.
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: Should contain EPIT controller interrupt
-> +- clocks : The clock provided by the SoC to drive the timer.
-> +
-> +Example for i.MX6QDL:
-> +	epit1: epit@20d0000 {
+On Wed, May 23, 2018 at 5:06 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> On Thu 2018-05-17 06:59:49, H. Nikolaus Schaller wrote:
+>> The register constants are so far defined in a way that they fit
+>> for the pcal9555a when shifted by the number of banks, i.e. are
+>> multiplied by 2 in the accessor function.
+>>
+>> Now, the pcal6524 has 3 banks which means the relative offset
+>> is multiplied by 4 for the standard registers.
+>>
+>> Simply applying the bit shift to the extended registers gives
+>> a wrong result, since the base offset is already included in
+>> the offset.
+>>
+>> Therefore, we have to add code to the 24 bit accessor functions
+>> that adjusts the register number for these exended registers.
+>>
+>> The formula finally used was developed and proposed by
+>> Andy Shevchenko <andy.shevchenko@gmail.com>.
 
-I think I already mentioned this, but:
+>>       int bank_shift = fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
+>> +     int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
+>> +     int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
 
-timer@...
+> Is this reasonable to do on each register access? Compiler will not be
+> able to optimize out fls and shifts, right?
 
-> +		compatible = "fsl,imx6qdl-epit", "fsl,imx31-epit";
-> +		reg = <0x020d0000 0x4000>;
-> +		interrupts = <0 56 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clks IMX6QDL_CLK_EPIT1>;
-> +	};
-> -- 
-> 2.17.0
-> 
+On modern CPUs fls() is one assembly command. OTOH, any proposal to do
+this better?
+
+What I can see is that bank_shift is invariant to the function, and
+maybe cached.
+
+-- 
+With Best Regards,
+Andy Shevchenko
