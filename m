@@ -1,75 +1,48 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 2/2] arm64: dts: Add Mediatek X20 Development Board support
-Date: Tue,  5 Jun 2018 22:04:42 +0530
-Message-ID: <20180605163442.4812-3-manivannan.sadhasivam@linaro.org>
-References: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
+From: Vinod Koul <vinod.koul@linaro.org>
+Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
+Date: Tue, 5 Jun 2018 22:10:31 +0530
+Message-ID: <20180605164031.GZ16230@vkoul-mobl>
+References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
+ <20180605061919.GQ16230@vkoul-mobl>
+ <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605163442.4812-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, taiten.peng@linaro.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial device tree support for Mediatek X20 Development Board
-based on MT6797 Deca core SoC. This board is one of the 96Boards
-Consumer Edition platform.
+On 05-06-18, 18:26, Sricharan R wrote:
+> Hi Vinod,
+> 
+> On 6/5/2018 11:49 AM, Vinod wrote:
+> > On 05-06-18, 11:12, Sricharan R wrote:
+> > 
+> >> +config QCOM_Q6V5_WCSS
+> >> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
+> >> +	depends on OF && ARCH_QCOM
+> >> +	depends on QCOM_SMEM
+> >> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
+> >> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+> > 
+> > Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
+> > happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
+> > 
+>   RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/mediatek/Makefile         |  1 +
- .../boot/dts/mediatek/mt6797-x20-dev.dts      | 33 +++++++++++++++++++
- 2 files changed, 34 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
+why would that be a limitation? I am more worried about
+RPMSG_QCOM_GLINK_SMEM=n being the condition here. In new drivers we
+should not typically have dependency on some symbol being not there
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index ac17f60f998c..5b7fd6ad96e4 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-new file mode 100644
-index 000000000000..2c09ca95d9e2
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6797-x20-dev.dts
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for MediaTek X20 Development Board
-+ *
-+ * Copyright (C) 2018, Linaro Ltd.
-+ *
-+ */
-+
-+/dts-v1/;
-+
-+#include "mt6797.dtsi"
-+
-+/ {
-+	model = "Mediatek X20 Development Board";
-+	compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
-+
-+	aliases {
-+		serial0 = &uart1;
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x1e605000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
+>   means that it should be corrected here and for ADSP, Q6V5_PIL as well.
+>   Bjorn, is that correct ?, should it be, below ?
+>  
+>   depends on (RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)) || (RPMSG_QCOM_GLINK_SMEM || (COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n))
+
+that doesnt really sound good :(
+
 -- 
-2.17.0
+~Vinod
