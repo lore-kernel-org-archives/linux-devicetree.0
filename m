@@ -1,80 +1,58 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH V2 2/2] arm: dts: sunxi: Add missing cooling device
- properties for CPUs
-Date: Wed, 6 Jun 2018 08:58:11 +0200
-Message-ID: <20180606065811.moklm4pbrhleasly@flea>
-References: <20180601151701.sshwfdbflic6mybv@flea>
- <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
- <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
- <20180605071139.osu2pgpg3ychdxln@flea>
- <CAGb2v65EX2RwKjxPw+EK4i6rkfgOJoCU2amuFkF-tHQT40isxw@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
+ bindings
+Date: Tue, 5 Jun 2018 10:09:07 +0200
+Message-ID: <20180605080907.kegu2crkszx535a2@verge.net.au>
+References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yyunednjohhozaln"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65EX2RwKjxPw+EK4i6rkfgOJoCU2amuFkF-tHQT40isxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, arm-soc <arm@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+In-Reply-To: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-
---yyunednjohhozaln
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 06, 2018 at 12:02:20AM +0800, Chen-Yu Tsai wrote:
-> On Tue, Jun 5, 2018 at 3:11 PM, Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> > On Tue, Jun 05, 2018 at 10:17:49AM +0530, Viresh Kumar wrote:
-> >> The cooling device properties, like "#cooling-cells" and
-> >> "dynamic-power-coefficient", should either be present for all the CPUs
-> >> of a cluster or none. If these are present only for a subset of CPUs of
-> >> a cluster then things will start falling apart as soon as the CPUs are
-> >> brought online in a different order. For example, this will happen
-> >> because the operating system looks for such properties in the CPU node
-> >> it is trying to bring up, so that it can register a cooling device.
-> >>
-> >> Add such missing properties.
-> >>
-> >> Fix other missing properties (clocks, OPP, clock latency) as well to
-> >> make it all work.
-> >>
-> >> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >
-> > Applied both, thanks!
->=20
-> Please fix the "ARM" prefix when applying. :)
-
-Done, thanks for the reminder :)
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---yyunednjohhozaln
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsXhgIACgkQ0rTAlCFN
-r3SpHw//Q0Tq2mev9+RBCUU4pHRg4oFhrh8cuVYbAENhw3Lsld3QjfDM0OlUubg2
-cJHQNbpZzKmNg3Of2U2BIR2ZWOncQNItn7tCwZ7p6hGtM3AO72Zv1bzwyHnZUIOm
-22biaTtyF5TPO4m4sThbVa0xo2lpYBcNbM4ZZiH5Ss8pObpJeZBysHTAvXb/TKPW
-l5rlTO08NfFSF1XfyUNmJtGQAOSoGC+Wb+0vSxVOsMdSfMvuTbRa8Lx18f2xuMNL
-kTLsrGUir9RjWE/33M0SUEmFONKAmbZUpyEiazBsmIFQ6HqFq+1/oNPg0AKeV2M5
-cJSbRutZl0/hao4Jqu4P4mdsWarTPHyN22Tuh3mORauBcRuM95ro8sNfxCFHRKit
-AOEFGn3MarZymmzVVegctwZfQkSprspmWE9WdH867zViKK1d6nNrl9iN8eYhX6De
-HVTUeyEgVdxxVIT3XBOfuenBr36mnxus0xgRZxrxuyNfcOE8225vPhnfT/xEhSj0
-bPvhLj6oXWPJFkcxd+sXe+LgK7Qogm7Zz55zU6yCzN9zU/LLfiCP2YS3ftl83leY
-gHKp6Al5cpNqeegjMGKiKqzZZAYURooyFcLSe6g4xcRFxoRvYwza+UGxcNhwk38x
-W3ze64MAfwqCYqDvyKVwKHRlOqqu2Dv3PucN3MMhEIOHbHe+fRE=
-=Osr5
------END PGP SIGNATURE-----
-
---yyunednjohhozaln--
+T24gTW9uLCBKdW4gMDQsIDIwMTggYXQgMTA6MDQ6NTlQTSArMDMwMCwgU2VyZ2VpIFNodHlseW92
+IHdyb3RlOgo+IERvY3VtZW50IHRoZSBSLUNhciBWM0ggKFI4QTc3OTgwKSBTb0MgaW4gdGhlIFIt
+Q2FyIERVIGJpbmRpbmdzOyB0aGUgRFUKPiBoYXJkd2FyZSBzZWVtcyB0aGUgc2FtZSBhcyBpbiB0
+aGUgUi1DYXIgVjNNIChSOEE3Nzk3MCkuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2VyZ2VpIFNodHls
+eW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1iZWRkZWQuY29tPgoKUmV2aWV3ZWQtYnk6IFNp
+bW9uIEhvcm1hbiA8aG9ybXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU+Cgo+IAo+IC0tLQo+IFRoZSBw
+YXRjaCBpcyBhZ2FpbnN0IHRoZSAnZHJtLW5leHQnIGJyYW5jaCBvZiBEYXZpZCBBaXJsaWUncyAn
+bGludXguZ2l0JyByZXBvLgo+IAo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9yZW5lc2FzLGR1LnR4dCB8ICAgIDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5z
+ZXJ0aW9ucygrKQo+IAo+IEluZGV4OiBsaW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ID09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiAtLS0gbGludXgub3Jp
+Zy9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4
+dAo+ICsrKyBsaW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
+ZW5lc2FzLGR1LnR4dAo+IEBAIC0xNCw2ICsxNCw3IEBAIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4g
+ICAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTUiIGZvciBSOEE3Nzk1IChSLUNhciBIMykgY29tcGF0
+aWJsZSBEVQo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk2IiBmb3IgUjhBNzc5NiAoUi1DYXIg
+TTMtVykgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk3MCIgZm9yIFI4
+QTc3OTcwIChSLUNhciBWM00pIGNvbXBhdGlibGUgRFUKPiArICAgIC0gInJlbmVzYXMsZHUtcjhh
+Nzc5ODAiIGZvciBSOEE3Nzk4MCAoUi1DYXIgVjNIKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJy
+ZW5lc2FzLGR1LXI4YTc3OTk1IiBmb3IgUjhBNzc5OTUgKFItQ2FyIEQzKSBjb21wYXRpYmxlIERV
+Cj4gIAo+ICAgIC0gcmVnOiB0aGUgbWVtb3J5LW1hcHBlZCBJL08gcmVnaXN0ZXJzIGJhc2UgYWRk
+cmVzcyBhbmQgbGVuZ3RoCj4gQEAgLTYwLDYgKzYxLDcgQEAgY29ycmVzcG9uZGluZyB0byBlYWNo
+IERVIG91dHB1dC4KPiAgIFI4QTc3OTUgKFItQ2FyIEgzKSAgIERQQUQgMCAgICAgICAgIEhETUkg
+MCAgICAgICAgIEhETUkgMSAgICAgICAgIExWRFMgMAo+ICAgUjhBNzc5NiAoUi1DYXIgTTMtVykg
+RFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgTFZEUyAwICAgICAgICAgLQo+ICAgUjhBNzc5
+NzAgKFItQ2FyIFYzTSkgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAgICAgLSAgICAgICAgICAg
+ICAgLQo+ICsgUjhBNzc5ODAgKFItQ2FyIFYzSCkgRFBBRCAwICAgICAgICAgTFZEUyAwICAgICAg
+ICAgLSAgICAgICAgICAgICAgLQo+ICAgUjhBNzc5OTUgKFItQ2FyIEQzKSAgRFBBRCAwICAgICAg
+ICAgTFZEUyAwICAgICAgICAgTFZEUyAxICAgICAgICAgLQo+ICAKPiAgCj4gCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
