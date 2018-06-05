@@ -1,128 +1,67 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 3/6] mtd: rawnand: tegra: add devicetree binding
-Date: Tue, 5 Jun 2018 23:19:14 +0300
-Message-ID: <faa40dac-ab2a-2d43-3a43-2d46cebcd539@gmail.com>
-References: <20180531221637.6017-1-stefan@agner.ch>
- <20180531221637.6017-4-stefan@agner.ch> <20180601093025.2817ff30@bbrezillon>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
+ bindings
+Date: Tue, 05 Jun 2018 23:24:35 +0300
+Message-ID: <4427404.jlkXCGIJ77@avalon>
+References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
+ <3434502.pBJZTsWR88@avalon>
+ <50730759-dfda-12c5-a7f3-4e8a9b7b1eb9@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601093025.2817ff30@bbrezillon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, benjamin.lindqvist@endian.se, pgaikwad@nvidia.com, dev@lynxeye.de, mirza.krak@gmail.com, richard@nod.at, pdeschrijver@nvidia.com, linux-kernel@vger.kernel.org, krzk@kernel.org, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, marcel@ziswiler.com, miquel.raynal@bootlin.com, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <50730759-dfda-12c5-a7f3-4e8a9b7b1eb9@cogentembedded.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01.06.2018 10:30, Boris Brezillon wrote:
-> On Fri,  1 Jun 2018 00:16:34 +0200
-> Stefan Agner <stefan@agner.ch> wrote:
-> 
->> This adds the devicetree binding for the Tegra 2 NAND flash
->> controller.
->>
->> Signed-off-by: Lucas Stach <dev@lynxeye.de>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->>  .../bindings/mtd/nvidia-tegra20-nand.txt      | 64 +++++++++++++++++++
->>  1 file changed, 64 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
->> new file mode 100644
->> index 000000000000..5cd984ef046b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
->> @@ -0,0 +1,64 @@
->> +NVIDIA Tegra NAND Flash controller
->> +
->> +Required properties:
->> +- compatible: Must be one of:
->> +  - "nvidia,tegra20-nand"
-> 
-> As discussed previously, I prefer "nvidia,tegra20-nand-controller" or
-> "nvidia,tegra20-nfc".
-> 
->> +- reg: MMIO address range
->> +- interrupts: interrupt output of the NFC controller
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +  See ../clocks/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +  - nand
->> +- resets: Must contain an entry for each entry in reset-names.
->> +  See ../reset/reset.txt for details.
->> +- reset-names: Must include the following entries:
->> +  - nand
->> +
->> +Optional children nodes:
->> +Individual NAND chips are children of the NAND controller node. Currently
->> +only one NAND chip supported.
->> +
->> +Required children node properties:
->> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
->> +
->> +Optional children node properties:
->> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. Currently only
->> +		 "hw" is supported.
->> +- nand-ecc-algo: string, algorithm of NAND ECC.
->> +		 Supported values with "hw" ECC mode are: "rs", "bch".
->> +- nand-bus-width : See nand.txt
->> +- nand-on-flash-bbt: See nand.txt
->> +- nand-ecc-strength: integer representing the number of bits to correct
->> +		     per ECC step (always 512). Supported strength using HW ECC
->> +		     modes are:
->> +		     - RS: 4, 6, 8
->> +		     - BCH: 4, 8, 14, 16
->> +- nand-ecc-maximize: See nand.txt
->> +- nand-is-boot-medium: Makes sure only ECC strengths supported by the boot ROM
->> +		       are choosen.
->> +- wp-gpios: GPIO specifier for the write protect pin.
->> +
->> +Optional child node of NAND chip nodes:
->> +Partitions: see partition.txt
->> +
->> +  Example:
->> +	nand@70008000 {
-> 
-> 	nand-controller@70008000 {
-> 
->> +		compatible = "nvidia,tegra20-nand";
-> 
-> 		compatible = "nvidia,tegra20-nand-controller";
-> 
-> or
-> 
-> 		compatible = "nvidia,tegra20-nfc";
-> 
-
-Maybe it's just me, but when I'm reading "nfc", my first association is the
-"Near Field Communication". Probably an explicit
-"nvidia,tegra20-nand-controller" variant is more preferable.
-
->> +		reg = <0x70008000 0x100>;
->> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks = <&tegra_car TEGRA20_CLK_NDFLASH>;
->> +		clock-names = "nand";
->> +		resets = <&tegra_car 13>;
->> +		reset-names = "nand";
->> +
->> +		nand-chip@0 {
-> 
-> 		nand@0 {
-> 
->> +			reg = <0>;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			nand-bus-width = <8>;
->> +			nand-on-flash-bbt;
->> +			nand-ecc-algo = "bch";
->> +			nand-ecc-strength = <8>;
->> +			wp-gpios = <&gpio TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;
->> +		};
->> +	};
-> 
-> With this addressed,
-> 
-> Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> 
+SGkgU2VyZ2VpLAoKT24gVHVlc2RheSwgNSBKdW5lIDIwMTggMjI6NDk6NTcgRUVTVCBTZXJnZWkg
+U2h0eWx5b3Ygd3JvdGU6Cj4gT24gMDYvMDUvMjAxOCAxMDoxNiBQTSwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPiA+Pj4+IERvY3VtZW50IHRoZSBSLUNhciBWM0ggKFI4QTc3OTgwKSBTb0MgaW4g
+dGhlIFItQ2FyIERVIGJpbmRpbmdzOyB0aGUgRFUKPiA+Pj4+IGhhcmR3YXJlIHNlZW1zIHRoZSBz
+YW1lIGFzIGluIHRoZSBSLUNhciBWM00gKFI4QTc3OTcwKS4KPiA+Pj4gCj4gPj4+IEhvdyBhYm91
+dCAidGhlIERVIGhhcmR3YXJlIGhhcyB0aGUgc2FtZSB0b3BvbG9neSBhcyBpbiB0aGUgUi1DYXIg
+VjNNCj4gPj4+IChSOEE3Nzk3MCkiID8gInNlZW1zIiBzb3VuZHMgbGlrZSB3ZSdyZSB2ZXJ5IHVu
+c3VyZSA6LSkKPiA+PiAKPiA+PiBUaGF0J3MgcHJvYmFibHkgYmV0dGVyLCBpbmRlZWQuCj4gPj4g
+Cj4gPj4+PiBTaWduZWQtb2ZmLWJ5OiBTZXJnZWkgU2h0eWx5b3YgPHNlcmdlaS5zaHR5bHlvdkBj
+b2dlbnRlbWJlZGRlZC5jb20+Cj4gPj4+PiAKPiA+Pj4+IC0tLQo+ID4+Pj4gVGhlIHBhdGNoIGlz
+IGFnYWluc3QgdGhlICdkcm0tbmV4dCcgYnJhbmNoIG9mIERhdmlkIEFpcmxpZSdzCj4gPj4+PiAn
+bGludXguZ2l0JyByZXBvLgo+ID4+PiAKPiA+Pj4gVGhlbiB5b3UgbWlnaHQgd2FudCB0byBzd2l0
+Y2ggdG8gZ2l0Oi8vYW5vbmdpdC5mcmVlZGVza3RvcC5vcmcvZHJtL2RybQo+ID4+PiA6LSkKPiA+
+PiAKPiA+PiBObywgdGhlIGNvcnJlc3BvbmRpbmcgTUFJTlRBSU5FUlMgcmVjb3JkcyBkb24ndCBp
+bmNsdWRlCj4gPj4gZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvIG9yIHdvcnNlIHlldCwgdGhlIERV
+IGJpbmRpbmdzLiA6LSkKPiAKPiBXZWxsLCB0aGVyZSBpcyBzdGlsbCBubyBjb3JyZXNwb25kaW5n
+IHJlY29yZCwgYWN0dWFsbHkuLi4KPiAKPiA+IE15IHBvaW50IGlzIHRoYXQgRGF2ZSdzIHRyZWUg
+aGFzIG1vdmVkLgo+IAo+IEhvdyBhbSBJIHN1cHBvc2VkIHRvIGxlYXJuIGFib3V0IGl0LCBmcm9t
+IGdvc3NpcHM/IDotKQoKSSBsZWFybnQgaXQgdGhlIGhhcmQgd2F5IHdoZW4gYSBwdWxsIHJlcXVl
+c3QgSSBoYWQgcHJlcGFyZWQgYWdhaW5zdCB0aGUgb2xkIAp0cmVlIGNvbmZsaWN0ZWQgKGF0IGNv
+bXBpbGUgdGltZSkgd2l0aCBwYXRjaGVzIG1lcmdlZCBpbiB0aGUgbmV3IHRyZWUuIFRoaXMgCmJy
+b2tlIHRoZSBidWlsZCwgYW5kIEkgbGVhcm50IGFib3V0IHRoZSBuZXcgdHJlZSBmcm9tIGEga2J1
+aWxkIGJvdCByZXBvcnQuCgo+ID4+IFNlcmlvdXNseSwgSSB0aG91Z2h0IHlvdSd2ZSBkb25lIGEg
+cGF0Y2ggdG8gcmVtb3ZlIHlvdXIgZGVhZCAnZmJkZXYnIHJlcG8KPiA+PiBtb250aHMgYWdvIGFu
+ZCBJTydtIHN0aWxsIHNlZWluZyBpdCBsaXN0ZWQuLi4gOi0vCj4gPiAKPiA+IEknbGwgYWRkcmVz
+cyB0aGF0IG5vdy4KPiAKPiBUSUEuCj4gCj4gPj4+IEFwYXJ0IGZyb20gdGhhdCwKPiA+Pj4gCj4g
+Pj4+IFJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFz
+b25ib2FyZC5jb20+Cj4gPj4+IAo+ID4+PiBJZiB5b3UgYWdyZWUgd2l0aCB0aGUgc21hbGwgY2hh
+bmdlIHRvIHRoZSBjb21taXQgbWVzc2FnZSBJJ2xsIGZpeCB0aGUKPiA+Pj4gY29uZmxpY3QgbG9j
+YWxseSwgdGhlcmUncyBubyBuZWVkIHRvIHJlc3VibWl0Lgo+ID4+IAo+ID4+IEkgZG8gYWdyZWUs
+IGV4Y2VwdCBJIGRvbid0IGtub3cgd2hhdCBjb25mbGljdCB5b3UgbWVhbi4KPiA+PiAKPiA+PiBb
+Li4uXQo+ID4gCj4gPiBJIG1lYW4gdGhlIGNvbmZsaWN0IHdpdGgKPiA+IAo+ID4gY29tbWl0IGRj
+ODE0MjkwMWJlZmFiZWE5NzQzOTNkNDliODAzZjEzMTI0M2ZlYjQKPiA+IEF1dGhvcjogS2llcmFu
+IEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+IERh
+dGU6ICAgVGh1IEFwciAyNiAxNzo1MzozMSAyMDE4ICswMTAwCj4gPiAKPiA+ICAgICBkdC1iaW5k
+aW5nczogZGlzcGxheTogcmVuZXNhczogZHU6IERvY3VtZW50IHRoZSByOGE3Nzk2NSBiaW5kaW5n
+cwo+ID4gCj4gPiB0aGF0IGlzIHByZXNlbnQgaW4gRGF2ZSdzIG5ldyB0cmVlLgo+IAo+IEFoLi4u
+IFRJQSBhZ2Fpbi4gOi0pCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
