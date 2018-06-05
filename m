@@ -1,76 +1,60 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware
- device
-Date: Tue, 5 Jun 2018 11:45:08 +0300
-Message-ID: <fd74c277-e8d3-a026-fbd2-914a029e8efe@linaro.org>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
- <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com>
- <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
- <CAAFQd5BFq+pdEpBmpw5QsO+m+fsAhexhqA_uJg1G39Mpv5E3HQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v9 2/7] i2c: Add FSI-attached I2C master algorithm
+Date: Tue, 5 Jun 2018 12:17:48 +0300
+Message-ID: <CAHp75VeT1aN3Ek5-d2k11V_43gQWz2Yr1YTq__OoQnJzexFm2Q@mail.gmail.com>
+References: <1528138850-18259-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1528138850-18259-3-git-send-email-eajames@linux.vnet.ibm.com>
+ <CAHp75Vd7NvDFmWSzNDz-tgGvMVyXU7Z16LgGCWnHkY-3kE7fwg@mail.gmail.com> <7daf29f643bb0445fceef85b1a7fff71048f2aa6.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAFQd5BFq+pdEpBmpw5QsO+m+fsAhexhqA_uJg1G39Mpv5E3HQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <7daf29f643bb0445fceef85b1a7fff71048f2aa6.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, Arnd Bergmann <arnd@arndb.de>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Eddie James <eajames@linux.vnet.ibm.com>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Arnd
-
-On 06/05/2018 07:08 AM, Tomasz Figa wrote:
-> On Mon, Jun 4, 2018 at 10:56 PM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
+On Tue, Jun 5, 2018 at 2:38 AM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Mon, 2018-06-04 at 22:21 +0300, Andy Shevchenko wrote:
+>> > +#define I2C_INT_ENABLE         0x0000ff80
+>> > +#define I2C_INT_ERR            0x0000fcc0
 >>
->> Hi Tomasz,
+>> Now it looks like a flags combinations.
+>> For me as for reader would be better to see quickly a decoded line.
 >>
->> On 06/04/2018 04:18 PM, Tomasz Figa wrote:
->>> Hi Vikash,
->>>
->>> On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
->>>> +static int __init venus_init(void)
->>>> +{
->>>> +       int ret;
->>>> +
->>>> +       ret = platform_driver_register(&qcom_video_firmware_driver);
->>>> +       if (ret)
->>>> +               return ret;
->>>
->>> Do we really need this firmware driver? As far as I can see, the
->>> approach used here should work even without any driver bound to the
->>> firmware device.
+>> My proposal is to introduce something like following
 >>
->> We need device/driver bind because we need to call dma_configure() which
->> internally doing iommus sID parsing.
-> 
-> I can see some drivers calling of_dma_configure() directly:
-> https://elixir.bootlin.com/linux/latest/ident/of_dma_configure
-> 
-> I'm not sure if it's more elegant, but should at least require less code.
+>> _INT_ALL  GENMASK()
+>> _INT_ENABLE (_INT_ALL & ~(_FOO | _BAR))
+>> _INT_ERR ... similar way as above ...
+>>
+>> What do you think?
+>
+> I don't think this absolutely needs to change but yes, open coding is
+> error prone. However I would think it more readable to use positive
+> logic and just list all the bits that are *set* even if it's a bit more
+> text:
+>
+> #define I2C_INT_ERR     (I2C_INT_INV_CMD        |\
+>  I2C_INT_PARITY         |\
+>                          I2C_INT_BE_OVERRUN     |\
+>                         .../...)
+>
+> #define I2C_INT_ENABLE  (I2C_INT_ERR            |\
+>                          I2C_INT_DAT_REQ        |\
+>                          I2C_INT_CMD_COMP)
 
-I think that in this case of non-TZ where we do iommu mapping by hand we
-can use shared-dma-pool reserved memory see how venus_boot has been
-implemented in the beginning [1].
+Yep, it's fine.
+I prefered though slightly different style (not putting first value on
+the same line with #define), but it doesn't matter.
 
-Arnd what do you think?
+>
+> Note: Eddie, I notice I2C_INT_BUSY is in "ERR" but not in "ENABLE", any
+> reason for that ?
 
-Some background, we have a use-case where the memory for firmware needs
-to be mapped by the venus driver by hand instead of TZ firmware calls.
-I.e. we want to support both, iommu mapping from the driver and mapping
-done by TZ firmware. How we will differentiate what mapping (TZ or
-non-TZ) will be used is a separate issue.
-
-> 
-> By the way, can we really assume that probe of firmware platform
-> device really completes before we call venus_boot()?
-
-I'd say we cannot.
+Exactly the reason why I payid attention on these values.
 
 -- 
-regards,
-Stan
-
-[1] https://lkml.org/lkml/2017/4/28/214
+With Best Regards,
+Andy Shevchenko
