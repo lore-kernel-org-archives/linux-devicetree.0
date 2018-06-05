@@ -1,168 +1,125 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [RFC PATCH 2/8] mailbox: ti-msgmgr: Allocate Rx channel resources only on request
-Date: Tue, 5 Jun 2018 01:16:23 -0500
-Message-ID: <20180605061629.4759-3-nm@ti.com>
-References: <20180605061629.4759-1-nm@ti.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
+Date: Tue, 5 Jun 2018 11:49:19 +0530
+Message-ID: <20180605061919.GQ16230@vkoul-mobl>
+References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605061629.4759-1-nm@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-In a much bigger system SoCs, the number of Rx channels can be
-many and mostly unused based on the system of choice, and not all
-Rx channels need IRQs and allocating all memory at probe will be
-inefficient. Some SoCs could have total threads in the 100s and usage
-would be just 1 Rx thread.
+On 05-06-18, 11:12, Sricharan R wrote:
 
-Thus, request and map the IRQs and allocate memory only when needed.
+> +config QCOM_Q6V5_WCSS
+> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
+> +	depends on OF && ARCH_QCOM
+> +	depends on QCOM_SMEM
+> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
+> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
 
-Since these channels are requested by client drivers on need, our
-utilization will be optimal.
+Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
+happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- drivers/mailbox/ti-msgmgr.c | 91 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 61 insertions(+), 30 deletions(-)
+> +/* QDSP6SS Register Offsets */
+> +#define QDSP6SS_RESET_REG		0x014
+> +#define QDSP6SS_GFMUX_CTL_REG		0x020
+> +#define QDSP6SS_PWR_CTL_REG		0x030
+> +#define QDSP6SS_MEM_PWR_CTL		0x0B0
+> +
+> +/* AXI Halt Register Offsets */
+> +#define AXI_HALTREQ_REG			0x0
+> +#define AXI_HALTACK_REG			0x4
+> +#define AXI_IDLE_REG			0x8
+> +
+> +#define HALT_ACK_TIMEOUT_MS		100
+> +
+> +/* QDSP6SS_RESET */
+> +#define Q6SS_STOP_CORE			BIT(0)
+> +#define Q6SS_CORE_ARES			BIT(1)
+> +#define Q6SS_BUS_ARES_ENABLE		BIT(2)
 
-diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
-index 7cd5f9c9c97f..7221590c409c 100644
---- a/drivers/mailbox/ti-msgmgr.c
-+++ b/drivers/mailbox/ti-msgmgr.c
-@@ -310,6 +310,51 @@ static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
- 	return 0;
- }
- 
-+/**
-+ *  ti_msgmgr_queue_rx_irq_req() - RX IRQ request
-+ *  @dev:	device pointer
-+ *  @qinst:	Queue instance
-+ *  @chan:	Channel pointer
-+ */
-+static int ti_msgmgr_queue_rx_irq_req(struct device *dev,
-+				      struct ti_queue_inst *qinst,
-+				      struct mbox_chan *chan)
-+{
-+	int ret = 0;
-+	char of_rx_irq_name[7];
-+	struct device_node *np;
-+
-+	snprintf(of_rx_irq_name, sizeof(of_rx_irq_name),
-+		 "rx_%03d", qinst->queue_id);
-+
-+	/* Get the IRQ if not found */
-+	if (qinst->irq < 0) {
-+		np = of_node_get(dev->of_node);
-+		if (!np)
-+			return -ENODATA;
-+		qinst->irq = of_irq_get_byname(np, of_rx_irq_name);
-+		of_node_put(np);
-+
-+		if (qinst->irq < 0) {
-+			dev_err(dev,
-+				"QID %d PID %d:No IRQ[%s]: %d\n",
-+				qinst->queue_id, qinst->proxy_id,
-+				of_rx_irq_name, qinst->irq);
-+			return qinst->irq;
-+		}
-+	}
-+
-+	/* With the expectation that the IRQ might be shared in SoC */
-+	ret = request_irq(qinst->irq, ti_msgmgr_queue_rx_interrupt,
-+			  IRQF_SHARED, qinst->name, chan);
-+	if (ret) {
-+		dev_err(dev, "Unable to get IRQ %d on %s(res=%d)\n",
-+			qinst->irq, qinst->name, ret);
-+	}
-+
-+	return ret;
-+}
-+
- /**
-  * ti_msgmgr_queue_startup() - Startup queue
-  * @chan:	Channel pointer
-@@ -318,19 +363,21 @@ static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
-  */
- static int ti_msgmgr_queue_startup(struct mbox_chan *chan)
- {
--	struct ti_queue_inst *qinst = chan->con_priv;
- 	struct device *dev = chan->mbox->dev;
-+	struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
-+	struct ti_queue_inst *qinst = chan->con_priv;
-+	const struct ti_msgmgr_desc *d = inst->desc;
- 	int ret;
- 
- 	if (!qinst->is_tx) {
--		/*
--		 * With the expectation that the IRQ might be shared in SoC
--		 */
--		ret = request_irq(qinst->irq, ti_msgmgr_queue_rx_interrupt,
--				  IRQF_SHARED, qinst->name, chan);
-+		/* Allocate usage buffer for rx */
-+		qinst->rx_buff = kzalloc(d->max_message_size, GFP_KERNEL);
-+		if (!qinst->rx_buff)
-+			return -ENOMEM;
-+		/* Request IRQ */
-+		ret = ti_msgmgr_queue_rx_irq_req(dev, qinst, chan);
- 		if (ret) {
--			dev_err(dev, "Unable to get IRQ %d on %s(res=%d)\n",
--				qinst->irq, qinst->name, ret);
-+			kfree(qinst->rx_buff);
- 			return ret;
- 		}
- 	}
-@@ -346,8 +393,10 @@ static void ti_msgmgr_queue_shutdown(struct mbox_chan *chan)
- {
- 	struct ti_queue_inst *qinst = chan->con_priv;
- 
--	if (!qinst->is_tx)
-+	if (!qinst->is_tx) {
- 		free_irq(qinst->irq, chan);
-+		kfree(qinst->rx_buff);
-+	}
- }
- 
- /**
-@@ -425,27 +474,6 @@ static int ti_msgmgr_queue_setup(int idx, struct device *dev,
- 		 dev_name(dev), qinst->is_tx ? "tx" : "rx", qinst->queue_id,
- 		 qinst->proxy_id);
- 
--	if (!qinst->is_tx) {
--		char of_rx_irq_name[7];
--
--		snprintf(of_rx_irq_name, sizeof(of_rx_irq_name),
--			 "rx_%03d", qinst->queue_id);
--
--		qinst->irq = of_irq_get_byname(np, of_rx_irq_name);
--		if (qinst->irq < 0) {
--			dev_crit(dev,
--				 "[%d]QID %d PID %d:No IRQ[%s]: %d\n",
--				 idx, qinst->queue_id, qinst->proxy_id,
--				 of_rx_irq_name, qinst->irq);
--			return qinst->irq;
--		}
--		/* Allocate usage buffer for rx */
--		qinst->rx_buff = devm_kzalloc(dev,
--					      d->max_message_size, GFP_KERNEL);
--		if (!qinst->rx_buff)
--			return -ENOMEM;
--	}
--
- 	qinst->queue_buff_start = inst->queue_proxy_region +
- 	    Q_DATA_OFFSET(qinst->proxy_id, qinst->queue_id, d->data_first_reg);
- 	qinst->queue_buff_end = inst->queue_proxy_region +
-@@ -454,6 +482,9 @@ static int ti_msgmgr_queue_setup(int idx, struct device *dev,
- 	    Q_STATE_OFFSET(qinst->queue_id);
- 	qinst->chan = chan;
- 
-+	/* Setup an error value for IRQ - Lazy allocation */
-+	qinst->irq = -EINVAL;
-+
- 	chan->con_priv = qinst;
- 
- 	dev_dbg(dev, "[%d] qidx=%d pidx=%d irq=%d q_s=%p q_e = %p\n",
+Wouldn't it be nice if the defines are all consistent, some of them are
+QDSP6SS_xxx, some Q6SS_ some are not
+
+Please do pick one and make it consistent :)
+
+> +/* QDSP6v56 parameters */
+> +#define QDSP6v56_LDO_BYP		BIT(25)
+> +#define QDSP6v56_BHS_ON		BIT(24)
+> +#define QDSP6v56_CLAMP_WL		BIT(21)
+> +#define QDSP6v56_CLAMP_QMC_MEM		BIT(22)
+> +#define HALT_CHECK_MAX_LOOPS		200
+> +#define QDSP6SS_XO_CBCR		0x0038
+
+GENMASK() perhaps?
+
+> +static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+> +{
+> +	int ret;
+> +	u32 val;
+> +	int i;
+
+        int ret, i;
+
+> +static int q6v5_wcss_start(struct rproc *rproc)
+> +{
+> +	struct q6v5_wcss *wcss = rproc->priv;
+> +	int ret;
+> +
+> +	qcom_q6v5_prepare(&wcss->q6v5);
+> +
+> +	/* Release Q6 and WCSS reset */
+> +	ret = reset_control_deassert(wcss->wcss_reset);
+> +	if (ret) {
+> +		dev_err(wcss->dev, "wcss_reset failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = reset_control_deassert(wcss->wcss_q6_reset);
+> +	if (ret) {
+> +		dev_err(wcss->dev, "wcss_q6_reset failed\n");
+> +		goto wcss_reset;
+> +	}
+> +
+> +	/* Lithium configuration - clock gating and bus arbitration */
+> +	ret = regmap_update_bits(wcss->halt_map,
+> +				 wcss->halt_nc + TCSR_GLOBAL_CFG0,
+> +				 0x1F, 0x14);
+
+magic numbers??
+
+> +static int q6v5_wcss_powerdown(struct q6v5_wcss *wcss)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	/* 1 - Assert WCSS/Q6 HALTREQ */
+> +	q6v5_wcss_halt_axi_port(wcss, wcss->halt_map, wcss->halt_wcss);
+> +
+> +	/* 2 - Enable WCSSAON_CONFIG */
+> +	val = readl(wcss->rmb_base + SSCAON_CONFIG);
+> +	val |= SSCAON_ENABLE;
+> +	writel(val, wcss->rmb_base + SSCAON_CONFIG);
+> +
+> +	/* 3 - Set SSCAON_CONFIG */
+> +	val |= BIT(15);
+> +	val &= ~BIT(16);
+> +	val &= ~BIT(17);
+> +	val &= ~BIT(18);
+
+wouldn't it be nice to define these bits?
+
+> +static int q6v5_q6_powerdown(struct q6v5_wcss *wcss)
+> +{
+> +	int ret;
+> +	u32 val;
+> +	int i;
+
+        int ret, i;
 -- 
-2.15.1
+~Vinod
