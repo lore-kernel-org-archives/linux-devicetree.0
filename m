@@ -1,46 +1,64 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v2] ARM: dts: da850: Fix interrups property for gpio
-Date: Tue, 5 Jun 2018 15:37:51 +0530
-Message-ID: <1528193271-10726-1-git-send-email-j-keerthy@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
+ bindings
+Date: Tue, 05 Jun 2018 13:09:53 +0300
+Message-ID: <3941727.PNGxG4XCLb@avalon>
+References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nsekhar@ti.com
-Cc: khilman@kernel.org, robh+dt@kernel.org, j-keerthy@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The intc #interrupt-cells is equal to 1. Currently gpio
-node has 2 cells per IRQ which is wrong. Remove the additional
-cell for each of the interrupts.
-
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Fixes: 2e38b946dc54 ("ARM: davinci: da850: add GPIO DT node")
----
-
-Changes in v2:
-
-  * Fixed $Subject
-
- arch/arm/boot/dts/da850.dtsi | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index f6f1597..0f4f817 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -549,11 +549,7 @@
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			reg = <0x226000 0x1000>;
--			interrupts = <42 IRQ_TYPE_EDGE_BOTH
--				43 IRQ_TYPE_EDGE_BOTH 44 IRQ_TYPE_EDGE_BOTH
--				45 IRQ_TYPE_EDGE_BOTH 46 IRQ_TYPE_EDGE_BOTH
--				47 IRQ_TYPE_EDGE_BOTH 48 IRQ_TYPE_EDGE_BOTH
--				49 IRQ_TYPE_EDGE_BOTH 50 IRQ_TYPE_EDGE_BOTH>;
-+			interrupts = <42 43 44 45 46 47 48 49 50>;
- 			ti,ngpio = <144>;
- 			ti,davinci-gpio-unbanked = <0>;
- 			status = "disabled";
--- 
-1.9.1
+SGkgU2VyZ2VpLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBNb25kYXksIDQgSnVuZSAy
+MDE4IDIyOjA0OjU5IEVFU1QgU2VyZ2VpIFNodHlseW92IHdyb3RlOgo+IERvY3VtZW50IHRoZSBS
+LUNhciBWM0ggKFI4QTc3OTgwKSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRpbmdzOyB0aGUgRFUK
+PiBoYXJkd2FyZSBzZWVtcyB0aGUgc2FtZSBhcyBpbiB0aGUgUi1DYXIgVjNNIChSOEE3Nzk3MCku
+CgpIb3cgYWJvdXQgInRoZSBEVSBoYXJkd2FyZSBoYXMgdGhlIHNhbWUgdG9wb2xvZ3kgYXMgaW4g
+dGhlIFItQ2FyIFYzTSAKKFI4QTc3OTcwKSIgPyAic2VlbXMiIHNvdW5kcyBsaWtlIHdlJ3JlIHZl
+cnkgdW5zdXJlIDotKQoKPiBTaWduZWQtb2ZmLWJ5OiBTZXJnZWkgU2h0eWx5b3YgPHNlcmdlaS5z
+aHR5bHlvdkBjb2dlbnRlbWJlZGRlZC5jb20+Cj4gCj4gLS0tCj4gVGhlIHBhdGNoIGlzIGFnYWlu
+c3QgdGhlICdkcm0tbmV4dCcgYnJhbmNoIG9mIERhdmlkIEFpcmxpZSdzICdsaW51eC5naXQnCj4g
+cmVwby4KClRoZW4geW91IG1pZ2h0IHdhbnQgdG8gc3dpdGNoIHRvIGdpdDovL2Fub25naXQuZnJl
+ZWRlc2t0b3Aub3JnL2RybS9kcm0gOi0pCgpBcGFydCBmcm9tIHRoYXQsCgpSZXZpZXdlZC1ieTog
+TGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoKSWYg
+eW91IGFncmVlIHdpdGggdGhlIHNtYWxsIGNoYW5nZSB0byB0aGUgY29tbWl0IG1lc3NhZ2UgSSds
+bCBmaXggdGhlIGNvbmZsaWN0IApsb2NhbGx5LCB0aGVyZSdzIG5vIG5lZWQgdG8gcmVzdWJtaXQu
+Cgo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1
+LnR4dCB8ICAgIDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+IAo+IElu
+ZGV4OiBsaW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5l
+c2FzLGR1LnR4dAo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT0KPiAtLS0gbGludXgub3JpZy9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ICsrKyBsaW51eC9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+IEBA
+IC0xNCw2ICsxNCw3IEBAIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4gICAgICAtICJyZW5lc2FzLGR1
+LXI4YTc3OTUiIGZvciBSOEE3Nzk1IChSLUNhciBIMykgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAi
+cmVuZXNhcyxkdS1yOGE3Nzk2IiBmb3IgUjhBNzc5NiAoUi1DYXIgTTMtVykgY29tcGF0aWJsZSBE
+VQo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk3MCIgZm9yIFI4QTc3OTcwIChSLUNhciBWM00p
+IGNvbXBhdGlibGUgRFUKPiArICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5ODAiIGZvciBSOEE3Nzk4
+MCAoUi1DYXIgVjNIKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTk1
+IiBmb3IgUjhBNzc5OTUgKFItQ2FyIEQzKSBjb21wYXRpYmxlIERVCj4gCj4gICAgLSByZWc6IHRo
+ZSBtZW1vcnktbWFwcGVkIEkvTyByZWdpc3RlcnMgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgKPiBA
+QCAtNjAsNiArNjEsNyBAQCBjb3JyZXNwb25kaW5nIHRvIGVhY2ggRFUgb3V0cHV0Lgo+ICAgUjhB
+Nzc5NSAoUi1DYXIgSDMpICAgRFBBRCAwICAgICAgICAgSERNSSAwICAgICAgICAgSERNSSAxICAg
+ICAgICAgTFZEUyAwCj4gICBSOEE3Nzk2IChSLUNhciBNMy1XKSBEUEFEIDAgICAgICAgICBIRE1J
+IDAgICAgICAgICBMVkRTIDAgICAgICAgICAtCj4gICBSOEE3Nzk3MCAoUi1DYXIgVjNNKSBEUEFE
+IDAgICAgICAgICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAtCj4gKyBSOEE3Nzk4MCAo
+Ui1DYXIgVjNIKSBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICAtICAgICAgICAgICAgICAt
+Cj4gICBSOEE3Nzk5NSAoUi1DYXIgRDMpICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBM
+VkRTIDEgICAgICAgICAtCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
