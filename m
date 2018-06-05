@@ -1,71 +1,69 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/6] arm64: dts: amlogic: Add missing cooling device
- properties for CPUs
-Date: Tue, 5 Jun 2018 10:07:13 +0530
-Message-ID: <20180605043713.p7wxdccniowvbsi3@vireshk-i7>
-References: <cover.1527225682.git.viresh.kumar@linaro.org>
- <2a2eb28da9fecf129f6bc0ab3d3748d9f4d25a29.1527225682.git.viresh.kumar@linaro.org>
- <20180525211025.c73zdcdtyuvlewng@localhost>
- <20180528111358.meyle364fy6wuruf@vireshk-i7>
- <20180602081418.jcl2vjc6saoj3z3d@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH V2 1/2] arm: dts: sun8i-h3: Add missing cooling device properties for CPUs
+Date: Tue,  5 Jun 2018 10:17:48 +0530
+Message-ID: <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
+References: <20180601151701.sshwfdbflic6mybv@flea>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180602081418.jcl2vjc6saoj3z3d@localhost>
+In-Reply-To: <20180601151701.sshwfdbflic6mybv@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02-06-18, 01:14, Olof Johansson wrote:
-> And what I am saying is that it sounds like a broken binding if you don't allow
-> that, especially since it'll be a super common case that all CPUs will specify
-> the same cooling-device specifier.
+The cooling device properties, like "#cooling-cells" and
+"dynamic-power-coefficient", should either be present for all the CPUs
+of a cluster or none. If these are present only for a subset of CPUs of
+a cluster then things will start falling apart as soon as the CPUs are
+brought online in a different order. For example, this will happen
+because the operating system looks for such properties in the CPU node
+it is trying to bring up, so that it can register a cooling device.
 
-I am fine with allowing the #cooling-cells property in the cpus node if the DT
-maintainers are fine with it.
+Add such missing properties.
 
-@Rob: comments ?
+Fix other missing properties (clocks, clock-names) as well to make it all
+work.
 
-@Olof: What about other properties which are still going to be duplicated for
-the most common cases today, like: clocks, supply information, cache
-information, cpu-idle-states and others. When we can duplicate these properties,
-why not keep following the same for #cpu-cooling property ?
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V2: Separated patch for h3.
 
-Note that the OPP table doesn't really need to get duplicated (for new
-platforms) as the platforms use the v2 bindings now which just duplicates a
-phandle assignment for all CPUs. Its a mess with older platforms which use the
-earlier version of OPP table.
+ arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> > This property is required to declare a device as a cooling-device and
-> > the device here is CPU. We use it as a cooling device by limiting its
-> > higher range of frequencies, so that it doesn't generate too much
-> > heat.
-> > 
-> > It is already there for CPU0 and CPU4, but it should really be there
-> > for all the CPUs, like we have clock, supply, caches, etc.
-> 
-> You have #cooling-cells in the cpu node, but the actual data is in the
-> thermal-zones nodes. Why isn't #cooling-cells under thermal-zones, next to
-> cooling-maps?
-
-Actually I thought about that when I worked on these patches initially and this
-is why I felt convinced that the CPU nodes are the right place for this.
-
-We add #interrupt-cells to an Interrupt controller's DT node, #gpio-cells to a
-GPIO controller's DT node, #clock-cells to a clock controller's DT node and
-that's exactly why we should (and we do) add #cooling-cells property to a
-cooling device's DT node. This information is used in two ways, first it enables
-the OS to know that the device is capable of being a cooling device and second
-it tells us how many arguments will be required with a phandle of this device.
-
-And so the cooling-maps always contain two arguments with the cooling device's
-phandle (which is mostly a CPU or a gpio fan) as the #cooling-cells currently
-is fixed to 2.
-
-And so I am not really sure if thermal-zones is the right place to define this
-thing. Is my understanding correct ?
-
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 41d57c76f290..9dff6887923c 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -84,21 +84,30 @@
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
++			clocks = <&ccu CLK_CPUX>;
++			clock-names = "cpu";
+ 			operating-points-v2 = <&cpu0_opp_table>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
++			clocks = <&ccu CLK_CPUX>;
++			clock-names = "cpu";
+ 			operating-points-v2 = <&cpu0_opp_table>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
++			clocks = <&ccu CLK_CPUX>;
++			clock-names = "cpu";
+ 			operating-points-v2 = <&cpu0_opp_table>;
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
 -- 
-viresh
+2.15.0.194.g9af6a3dea062
