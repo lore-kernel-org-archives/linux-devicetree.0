@@ -1,70 +1,45 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH V2 2/2] arm: dts: sunxi: Add missing cooling device
- properties for CPUs
-Date: Tue, 5 Jun 2018 09:11:39 +0200
-Message-ID: <20180605071139.osu2pgpg3ychdxln@flea>
-References: <20180601151701.sshwfdbflic6mybv@flea>
- <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
- <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 8/8] ARM: dts: rcar-gen2: Remove unused VIN properties
+Date: Tue, 5 Jun 2018 09:49:38 +0200
+Message-ID: <20180605074938.mljwmgpjlplvkp2v@verge.net.au>
+References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1527606359-19261-9-git-send-email-jacopo+renesas@jmondi.org>
+ <20180604122325.GH19674@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="g37vwftiwjlvzocz"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180604122325.GH19674@bigcity.dyn.berto.se>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, hans.verkuil@cisco.com, geert@glider.be, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---g37vwftiwjlvzocz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 05, 2018 at 10:17:49AM +0530, Viresh Kumar wrote:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
->=20
-> Add such missing properties.
->=20
-> Fix other missing properties (clocks, OPP, clock latency) as well to
-> make it all work.
->=20
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-Applied both, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---g37vwftiwjlvzocz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsWN6oACgkQ0rTAlCFN
-r3RYNBAAhAy9CYd+HioBknOi0g02dQTivylpf7IQXq/OvfawoEfYs2MF11HoLGZc
-F+TjUgg722eZAqbsnEUpLFfjQr77bR5AZrjek3/rm/vS8ah48xIHAI8ODNHXk1U1
-Qehh4slf9Qeblbo1rdlpJCmu/O1UT3cNUc4CfB+lHzWlN7CcH6CZosV8ZkzIOmPN
-Y6W2F0EdQt4Rr7HDenxu8r8N62/HrLANqB8khrduUHeq0SBUSUDLVPe+/ql7Ay5Q
-BaYVPDD8I3hjLEXuE7yRY9/lvBrA0U8nWORt6Ezt7orH0nhrhKmPJbgHd7q02Av+
-b82HbYEcR5lVrMECuLmqeWEYVB/oeVFxZ7plsQczVUzuVTUfVc2DBx7gDmrV/oUX
-6ItUrlGUoyeqjYlI/ITa/8WLvk0c79eUOreHeAtM0BFD1fPKb8sx0w4v+zeingk+
-h6xmhUcSncSpA17hw/G/lAsJLMJMFnUnFB59/xC8PF++w3utRqSqlo2lqutcgrqV
-9lIsem+TDuuhMVkcqoU+BrqhJBOcFOrk6WgATXPs9SbnPiMDjJWGNuWg26o3jRAR
-v4R25wOV6h6ZCRUAmhiuZzRjyCtYJGoe3BuHSYE/4hD88gCbQwmKbY8IWRHDydrF
-Xboroz/plM4F1vclt91Z9e6VSIWFKPgDmoSZtq6bIM8xEGZILKU=
-=8AIo
------END PGP SIGNATURE-----
-
---g37vwftiwjlvzocz--
+T24gTW9uLCBKdW4gMDQsIDIwMTggYXQgMDI6MjM6MjVQTSArMDIwMCwgTmlrbGFzIFPDtmRlcmx1
+bmQgd3JvdGU6Cj4gSGkgSmFjb3BvLAo+IAo+IFRoYW5rcyBmb3IgeW91ciB3b3JrLgo+IAo+IE9u
+IDIwMTgtMDUtMjkgMTc6MDU6NTkgKzAyMDAsIEphY29wbyBNb25kaSB3cm90ZToKPiA+IFRoZSAn
+YnVzLXdpZHRoJyBhbmQgJ3BjbGstc2FtcGxlJyBwcm9wZXJ0aWVzIGFyZSBub3QgcGFyc2VkIGJ5
+IHRoZSBWSU4KPiA+IGRyaXZlciBhbmQgb25seSBjb25mdXNlIHVzZXJzLiBSZW1vdmUgdGhlbSBp
+biBhbGwgR2VuMiBTb0MgdGhhdCB1c2UKPiA+IHRoZW0uCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
+IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPiAKPiBUaGUgbW9yZSBJ
+IHRoaW5rIGFib3V0IHRoaXMgdGhlIG1vcmUgSSBsZWFuIHRvd2FyZHMgdGhhdCB0aGlzIHBhdGNo
+IAo+IHNob3VsZCBiZSBkcm9wcGVkLiBUaGUgcHJvcGVydGllcyBhY2N1cmF0ZWx5IGRlc2NyaWJl
+cyB0aGUgaGFyZHdhcmUgYW5kIAo+IEkgdGhpbmsgdGhlcmUgaXMgdmFsdWUgaW4gdGhhdC4gVGhh
+dCB0aGUgZHJpdmVyIGN1cnJlbnRseSBkb24ndCBwYXJzZSBvciAKPiBtYWtlIHVzZSBvZiB0aGVt
+IGRvbid0IGluIG15IHZpZXcgcmVkdWNlIHRoZXJlIHZhbHVlLiBNYXliZSB5b3Ugc2hvdWxkIAo+
+IGJyZWFrIG91dCB0aGlzIHBhdGNoIHRvIGEgc2VwYXJhdGUgc2VyaWVzPwoKSSBhbHNvIHRoaW5r
+IHRoZXJlIGlzIHZhbHVlIGluIGRlc2NyaWJpbmcgdGhlIGhhcmR3YXJlIG5vdCB0aGUgc3RhdGUg
+b2YgdGhlCmRyaXZlciBhdCB0aGlzIHRpbWUuICBJcyB0aGVyZSBhbnkgbWlzc21hdGNoIGJldHdl
+ZW4gdGhlc2UgcHJvcGVydGllcyBhbmQKdGhlIGJpbmRpbmdzPwoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
