@@ -1,47 +1,163 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 1/2] dt-bindings: display: renesas: lvds: document R8A77980
- bindings
-Date: Tue, 5 Jun 2018 23:28:58 +0300
-Message-ID: <bd7295cd-ac3c-a01a-683a-f2e324469bcb@cogentembedded.com>
-References: <ef3c6b7e-98f2-7012-71c5-6693e6e48999@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 12/16] dt-bindings/interrupt-controller: update
+ Marvell ICU bindings
+Date: Tue, 5 Jun 2018 14:29:02 -0600
+Message-ID: <20180605202902.GA8875@rob-hp-laptop>
+References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
+ <20180522094042.24770-13-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <ef3c6b7e-98f2-7012-71c5-6693e6e48999@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180522094042.24770-13-miquel.raynal@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIFItQ2FyIFYzSCAoUjhBNzc5ODApIFNvQyBpbiB0aGUgUi1DYXIgTFZEUyBi
-aW5kaW5ncy4KClNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2VyZ2VpLnNodHlseW92
-QGNvZ2VudGVtYmVkZGVkLmNvbT4KCi0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgfCAgICAxICsKIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKQoKSW5kZXg6IGRybS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAo9PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBk
-cm0ub3JpZy9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-cmVuZXNhcyxsdmRzLnR4dAorKysgZHJtL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0CkBAIC0xNCw2ICsxNCw3IEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6CiAgIC0gInJlbmVzYXMscjhhNzc5NS1sdmRzIiBmb3IgUjhBNzc5NSAo
-Ui1DYXIgSDMpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycwogICAtICJyZW5lc2FzLHI4YTc3OTYt
-bHZkcyIgZm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycwog
-ICAtICJyZW5lc2FzLHI4YTc3OTcwLWx2ZHMiIGZvciBSOEE3Nzk3MCAoUi1DYXIgVjNNKSBjb21w
-YXRpYmxlIExWRFMgZW5jb2RlcnMKKyAgLSAicmVuZXNhcyxyOGE3Nzk4MC1sdmRzIiBmb3IgUjhB
-Nzc5ODAgKFItQ2FyIFYzSCkgY29tcGF0aWJsZSBMVkRTIGVuY29kZXJzCiAgIC0gInJlbmVzYXMs
-cjhhNzc5OTUtbHZkcyIgZm9yIFI4QTc3OTk1IChSLUNhciBEMykgY29tcGF0aWJsZSBMVkRTIGVu
-Y29kZXJzCiAKIC0gcmVnOiBCYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBmb3IgdGhlIG1lbW9yeS1t
-YXBwZWQgcmVnaXN0ZXJzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Tue, May 22, 2018 at 11:40:38AM +0200, Miquel Raynal wrote:
+> Change the documentation to reflect the new bindings used for Marvell
+> ICU. This involves describing each interrupt group as a subnode of the
+> ICU node. Each of them having their own compatible.
+
+Need to explain why you need to do this and why breaking backwards 
+compatibility is okay.
+
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../bindings/interrupt-controller/marvell,icu.txt  | 81 ++++++++++++++++++----
+>  1 file changed, 69 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> index 649b7ec9d9b1..6f7e4355b3d8 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> @@ -5,6 +5,8 @@ The Marvell ICU (Interrupt Consolidation Unit) controller is
+>  responsible for collecting all wired-interrupt sources in the CP and
+>  communicating them to the GIC in the AP, the unit translates interrupt
+>  requests on input wires to MSG memory mapped transactions to the GIC.
+> +These messages will access a different GIC memory area depending on
+> +their type (NSR, SR, SEI, REI, etc).
+>  
+>  Required properties:
+>  
+> @@ -12,20 +14,19 @@ Required properties:
+>  
+>  - reg: Should contain ICU registers location and length.
+>  
+> +Subnodes: Each group of interrupt is declared as a subnode of the ICU,
+> +with their own compatible.
+> +
+> +Required properties for the icu_nsr/icu_sei subnodes:
+> +
+> +- compatible: Should be "marvell,cp110-icu-nsr" or "marvell,cp110-icu-sei".
+> +
+>  - #interrupt-cells: Specifies the number of cells needed to encode an
+> -  interrupt source. The value shall be 3.
+> +  interrupt source. The value shall be 2.
+>  
+> -  The 1st cell is the group type of the ICU interrupt. Possible group
+> -  types are:
+> +  The 1st cell is the index of the interrupt in the ICU unit.
+>  
+> -   ICU_GRP_NSR (0x0) : Shared peripheral interrupt, non-secure
+> -   ICU_GRP_SR  (0x1) : Shared peripheral interrupt, secure
+> -   ICU_GRP_SEI (0x4) : System error interrupt
+> -   ICU_GRP_REI (0x5) : RAM error interrupt
+
+What happens to SR and REI interrupts?
+
+> -
+> -  The 2nd cell is the index of the interrupt in the ICU unit.
+> -
+> -  The 3rd cell is the type of the interrupt. See arm,gic.txt for
+> +  The 2nd cell is the type of the interrupt. See arm,gic.txt for
+>    details.
+>  
+>  - interrupt-controller: Identifies the node as an interrupt
+> @@ -35,17 +36,73 @@ Required properties:
+>    that allows to trigger interrupts using MSG memory mapped
+>    transactions.
+>  
+> +Note: each 'interrupts' property referring to any 'icu_xxx' node shall
+> +      have a different number within [0:206].
+> +
+>  Example:
+>  
+>  icu: interrupt-controller@1e0000 {
+>  	compatible = "marvell,cp110-icu";
+>  	reg = <0x1e0000 0x440>;
+> +
+> +	CP110_LABEL(icu_nsr): icu-nsr {
+
+'interrupt-controller' is the proper node name. Is there no register 
+range associated sub nodes?
+
+> +		compatible = "marvell,cp110-icu-nsr";
+> +		#interrupt-cells = <2>;
+> +		interrupt-controller;
+> +		msi-parent = <&gicp>;
+> +	};
+> +
+> +        CP110_LABEL(icu_sei): icu-sei {
+> +                compatible = "marvell,cp110-icu-sei";
+> +                #interrupt-cells = <2>;
+> +                interrupt-controller;
+> +                msi-parent = <&sei>;
+> +        };
+
+Mixture of tabs and spaces.
+
+> +};
+> +
+> +node1 {
+> +	interrupt-parent = <&icu_nsr>;
+> +	interrupts = <106 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> +
+> +node2 {
+> +	interrupt-parent = <&icu_sei>;
+> +	interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> +
+> +/* Would not work with the above nodes */
+> +node3 {
+> +	interrupt-parent = <&icu_nsr>;
+> +	interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> +
+> +Note on legacy bindings:
+> +Before using a subnode for each domain, only NSR were
+> +supported. Bindings were different in this way:
+> +
+> +- #interrupt-cells: The value was 3.
+> +	The 1st cell was the group type of the ICU interrupt. Possible
+> +	group types were:
+> +	ICU_GRP_NSR (0x0) : Shared peripheral interrupt, non-secure
+> +	ICU_GRP_SR  (0x1) : Shared peripheral interrupt, secure
+> +	ICU_GRP_SEI (0x4) : System error interrupt
+> +	ICU_GRP_REI (0x5) : RAM error interrupt
+> +	The 2nd cell was the index of the interrupt in the ICU unit.
+> +	The 3rd cell was the type of the interrupt. See arm,gic.txt for
+> +	details.
+> +
+> +Example:
+> +
+> +icu: interrupt-controller@1e0000 {
+> +	compatible = "marvell,cp110-icu";
+> +	reg = <0x1e0000 0x440>;
+> +
+>  	#interrupt-cells = <3>;
+>  	interrupt-controller;
+>  	msi-parent = <&gicp>;
+>  };
+>  
+> -usb3h0: usb3@500000 {
+> +node1 {
+>  	interrupt-parent = <&icu>;
+>  	interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
+>  };
+> -- 
+> 2.14.1
+> 
