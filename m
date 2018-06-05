@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
 Subject: Re: [PATCH v4 3/3] ARM: dts: Renesas R9A06G032 SMP enable method
-Date: Tue, 5 Jun 2018 15:24:20 +0200
-Message-ID: <CAMuHMdVPfE=0EynQg1syOiPCMbvtK9ooWo+_hvtY=VEMKMPXHw@mail.gmail.com>
+Date: Tue, 5 Jun 2018 15:24:55 +0200
+Message-ID: <CAMuHMdU1n0tQgPaEXAn6W1aVCDBjk-h0Mz2kgh2vu4e9CEi0XQ@mail.gmail.com>
 References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com> <1528198148-23308-4-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -20,6 +20,17 @@ On Tue, Jun 5, 2018 at 1:28 PM, Michel Pollet
 > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/arch/arm/boot/dts/r9a06g032.dtsi
+> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> @@ -1,3 +1,4 @@
+> +
+
+Bogus change
+
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Base Device Tree Source for the Renesas RZ/N1D (R9A06G032)
 
 Gr{oetje,eeting}s,
 
