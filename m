@@ -1,60 +1,118 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v9 2/7] i2c: Add FSI-attached I2C master algorithm
-Date: Tue, 5 Jun 2018 12:17:48 +0300
-Message-ID: <CAHp75VeT1aN3Ek5-d2k11V_43gQWz2Yr1YTq__OoQnJzexFm2Q@mail.gmail.com>
-References: <1528138850-18259-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1528138850-18259-3-git-send-email-eajames@linux.vnet.ibm.com>
- <CAHp75Vd7NvDFmWSzNDz-tgGvMVyXU7Z16LgGCWnHkY-3kE7fwg@mail.gmail.com> <7daf29f643bb0445fceef85b1a7fff71048f2aa6.camel@kernel.crashing.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [reset-control] How to initialize hardware state with the
+ shared reset line?
+Date: Tue, 05 Jun 2018 11:37:33 +0200
+Message-ID: <1528191453.4074.4.camel@pengutronix.de>
+References: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
+         <CAFBinCADQsXoc6CUKabH6VX3ZBYb5apo-xBbe1w0BiO8wBAsPw@mail.gmail.com>
+         <CAK7LNAR1b_F_eLEWAdQc3L=daGz=ttKq0mQP78BkjzTOssaXvw@mail.gmail.com>
+         <CAFBinCBTTmPqD0UP8zzMBjsjzP9fJx9_pmhGz0_Vy-V+wmhLXQ@mail.gmail.com>
+         <1526997879.3671.27.camel@pengutronix.de>
+         <CAFBinCBAoRebScz+DTSKSgiU5DjeSHS1F3=2vt8KM-yCv+2A8g@mail.gmail.com>
+         <CAK7LNAQ56ND=6=7swD3ioKwNsGJCxN1SibkH==n24xPX6SdBBQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7daf29f643bb0445fceef85b1a7fff71048f2aa6.camel@kernel.crashing.org>
+In-Reply-To: <CAK7LNAQ56ND=6=7swD3ioKwNsGJCxN1SibkH==n24xPX6SdBBQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Eddie James <eajames@linux.vnet.ibm.com>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 5, 2018 at 2:38 AM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Mon, 2018-06-04 at 22:21 +0300, Andy Shevchenko wrote:
->> > +#define I2C_INT_ENABLE         0x0000ff80
->> > +#define I2C_INT_ERR            0x0000fcc0
->>
->> Now it looks like a flags combinations.
->> For me as for reader would be better to see quickly a decoded line.
->>
->> My proposal is to introduce something like following
->>
->> _INT_ALL  GENMASK()
->> _INT_ENABLE (_INT_ALL & ~(_FOO | _BAR))
->> _INT_ERR ... similar way as above ...
->>
->> What do you think?
->
-> I don't think this absolutely needs to change but yes, open coding is
-> error prone. However I would think it more readable to use positive
-> logic and just list all the bits that are *set* even if it's a bit more
-> text:
->
-> #define I2C_INT_ERR     (I2C_INT_INV_CMD        |\
->  I2C_INT_PARITY         |\
->                          I2C_INT_BE_OVERRUN     |\
->                         .../...)
->
-> #define I2C_INT_ENABLE  (I2C_INT_ERR            |\
->                          I2C_INT_DAT_REQ        |\
->                          I2C_INT_CMD_COMP)
+Hi Masahiro,
 
-Yep, it's fine.
-I prefered though slightly different style (not putting first value on
-the same line with #define), but it doesn't matter.
+On Wed, 2018-05-30 at 14:57 +0900, Masahiro Yamada wrote:
+> One more thing.
+> 
+> I want to remove reset_control_reset() entirely.
 
+reset_control_reset is for those cases where "the reset controller
+knows" how to reset us. There are hardware reset controllers that can
+control a bunch of actual reset signals in the right order and with the
+right timings necessary for the connected IP cores by triggering a
+single bit.
+In that case it wouldn't make much sense to do assert / delay / deassert
+in the driver, as the information about the delay is contained in the
+reset controller hardware.
+
+> [1] Some reset consumers (e.g. drivers/ata/sata_gemini.c)
+>     use reset_control_reset() to reset the HW.
+> 
+> [2] Some reset consumers (e.g. drivers/input/keyboard/tegra-kbc.c)
+>     use the combination of reset_control_assert() and reset_control_deassert()
+>     to reset the HW.
+> 
+> [1] is the only way if the reset controller only supports the pulse reset.
+> 
+> [2] is the only way if the reset controller only supports the level reset.
+> 
+> So, this is another strangeness because
+> the implementation of reset controller
+> affects reset consumers.
+> 
+> We do not need [1].
+> 
+> [2] is more flexible than [1] because hardware usually specifies
+> how long the reset line should be kept asserted.
+
+This is not always the case.
+
+> For all reset consumers,
+> replace
+>   reset_control_reset();
+> with
+>   reset_control_assert();
+>   reset_control_deassert();
+
+To be honest, it doesn't make sense to me. If the intention in the
+driver is just to reset our internal state, and we have a system reset
+controller that can reset us by writing a single bit, I'd prefer to call
+a reset function over two assert/deassert functions, one of which ends
+up doing nothing.
+
+How about moving in the other direction, and allowing to replace
+
+	reset_control_assert(rstc);
+	udelay(delay);
+	reset_control_deassert(rstc);
+
+and variants with calls like
+
+	reset_control_reset_udelay(rstc, delay);
+
+? If the reset controller knows better, or can't change the delay in
+hardware, it may ignore the delay parameter.
+
+> and deprecate reset_control_reset().
 >
-> Note: Eddie, I notice I2C_INT_BUSY is in "ERR" but not in "ENABLE", any
-> reason for that ?
+> I think this is the right thing to do.
 
-Exactly the reason why I payid attention on these values.
+I don't think this helps the API, as with that change we have to remove
+a guarantee it currently makes: This either only works for shared resets
+or we have to accept that reset_control_assert for exclusive resets does
+not guarantee to return with the reset line asserted anymore.
+Also, for drivers that do deassert in probe and assert in remove, we
+would have to issue the reset in deassert and let assert be the no-op,
+instead of the other way around.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> The reset controller side should be implemented like this:
+> 
+> If your reset controller only supports the pulse reset,
+>    .deassert hook should be no-op.
+>    .assert hook should pulse the reset
+> 
+> Then .reset hook should be removed.
+
+There is hardware where assert, deassert, and reset are three different
+operations. See for example the tegra/reset-bpmp.c driver. Both assert /
+deassert and module reset messages are part of the firmware ABI.
+
+> Or, we can keep the reset drivers as they are.
+> drivers/reset/core.c can take care of the proper fallback logic.
+
+I prefer to keep assert, deassert and reset separate for those cases
+where the hardware actually supports both variants.
+
+regards
+Philipp
