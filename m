@@ -1,70 +1,65 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] dt: bindings: add bindings for msa memory region
-Date: Tue, 5 Jun 2018 16:18:16 -0700
-Message-ID: <20180605231814.GB194157@rodete-desktop-imager.corp.google.com>
-References: <20180605123616.528-1-govinds@codeaurora.org>
+From: Saravana Kannan <skannan@codeaurora.org>
+Subject: Re: [PATCH 2/2] PM / devfreq: Generic cpufreq governor
+Date: Tue, 5 Jun 2018 16:26:31 -0700
+Message-ID: <7a7f2e59-1109-eb49-e26f-ed052fccd5c7@codeaurora.org>
+References: <1526631889-5084-3-git-send-email-skannan@codeaurora.org>
+ <1526631889-5084-1-git-send-email-skannan@codeaurora.org>
+ <CGME20180518082505epcas2p265038f51fc070a4aada4c692a71ebc3c@epcms1p8>
+ <20180528060014epcms1p87ec68a4d44f9447b06f979a87e545b7d@epcms1p8>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180605123616.528-1-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180528060014epcms1p87ec68a4d44f9447b06f979a87e545b7d@epcms1p8>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Rajendra Nayak <rjendra@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Rob
 
-On Tue, Jun 05, 2018 at 06:06:16PM +0530, Govind Singh wrote:
-> Add device tree binding documentation details of msa
-> memory region for ath10k qmi client for SDM845/APQ8098
-> SoC into "qcom,ath10k.txt".
-> 
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 7fd4e8ce4149..0efc47f4ba34 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -56,6 +56,8 @@ Optional properties:
->  				     the length can vary between hw versions.
->  - <supply-name>-supply: handle to the regulator device tree node
->  			   optional "supply-name" is "vdd-0.8-cx-mx".
-> +- msa-fixed-region: phandle, specifier to children of reserved MSA memory.
 
-As in reserved-memory/reserved-memory.txt? Might refer to that doc here.
-Or is this some other kind of reserved memory?
+On 05/27/2018 11:00 PM, MyungJoo Ham wrote:
+>> Many CPU architectures have caches that can scale independent of the CPUs.
+>> Frequency scaling of the caches is necessary to make sure the cache is not
+>> a performance bottleneck that leads to poor performance and power. The same
+>> idea applies for RAM/DDR.
+>>
+>> To achieve this, this patch series adds a generic devfreq governor that can
+>> listen to the frequency transitions of each CPU frequency domain and then
+>> adjusts the frequency of the cache (or any devfreq device) based on the
+>> frequency of the CPUs.
+> I agree that we have some hardware pieces that want to configure
+> frequencies based on the CPUfreq.
+>
+> Creating a devfreq governor that configures devfreq-freq
+> based on incoming events (CPUFreq-transition-event in this case)
+> is indeed a good idea.
+>
+> However, I would like to ask the followings:
+> The overall code appears to be overly complex compared what you need.
+> - Do you really need to revive "CPUFREQ POLICY" events for this?
+> especially when you are going to look at "first CPU" only?
+>
+>
+> Cheers,
+> MyungJoo
+>
+Sorry, didn't notice this email earlier. My message filters seem to be 
+messed up.
 
-If the former, it's normally called just "memory-region", although
-that does seem somewhat non-descriptive...
+The POLICY notifiers are necessary for cases when all CPUs in a policy 
+are hotplugged off -- we need to ignore their frequencies to avoid 
+getting the devfreq device stuck at a high frequency. Looking at "first 
+CPU" is just an optimization to ignore multiple transition notifiers for 
+the each CPU in a policy -- we'd want to do that even if we don't have 
+policy notifiers. Not having policy notifier won't really simplify the 
+code by much. We'd be forced to check for policy->related_cpus for every 
+transition notifier call if the CPU state hasn't been already initialized.
 
-> +- msa-size: MSA memory size for fw internal use.
+-Saravana
 
-Do you really need both of these? It seems like your code uses one or
-the other, not both. In which case, this is not a very good description,
-because it sounds like they would go together.
-
-Also, if you're not using standard/generic properties (e.g., the
-aforementioned "memory-region" binding), you typically should use a
-vendor prefix, like "qcom,msa-size".
-
-Brian
-
->  
->  Example (to supply the calibration data alone):
->  
-> @@ -133,6 +135,8 @@ wifi@18000000 {
->  		compatible = "qcom,wcn3990-wifi";
->  		reg = <0x18800000 0x800000>;
->  		reg-names = "membase";
-> +		msa-fixed-region = <&wlan_msa_mem>;
-> +		msa-size = <0x100000>;
->  		clocks = <&clock_gcc clk_aggre2_noc_clk>;
->  		clock-names = "smmu_aggre2_noc_clk"
->  		interrupts =
-> -- 
-> 2.17.0
-> 
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
