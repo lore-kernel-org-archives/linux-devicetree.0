@@ -1,86 +1,47 @@
-Return-Path: <SRS0=8793=I5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0071.outbound.protection.outlook.com ([104.47.1.71]:38736
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1754039AbeFKIOm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Jun 2018 04:14:42 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
- Layerscape SoCs
-Date: Mon, 11 Jun 2018 08:14:37 +0000
-Message-ID: <AM6PR0402MB3382F265C3DEAE6FD8A9FF26E2780@AM6PR0402MB3382.eurprd04.prod.outlook.com>
-References: <20180525111920.24498-1-wen.he_1@nxp.com>
- <20180525111920.24498-2-wen.he_1@nxp.com> <20180529070724.GE5666@vkoul-mobl>
- <AM6PR0402MB3382D42C76332B98D53D001AE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180529101954.GJ5666@vkoul-mobl>
- <AM6PR0402MB3382F92D1123CDCA0E0075EDE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180530102744.GE16230@vkoul-mobl>
- <AM6PR0402MB3382A63FF2884BAD8AF6080BE2630@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180605162854.GW16230@vkoul-mobl>
-In-Reply-To: <20180605162854.GW16230@vkoul-mobl>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=7ujo=IX=gmail.com=pku.leo@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
+In-Reply-To: <20180605163043.GX16230@vkoul-mobl>
+References: <20180525111920.24498-1-wen.he_1@nxp.com> <20180525111920.24498-2-wen.he_1@nxp.com>
+ <CADRPPNRx2ePL1eteMboAZ7ZvoxrVO1Jn+Koo7TatLQyquymTiQ@mail.gmail.com>
+ <AM6PR0402MB3382F4C81800D91761DA619FE2670@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+ <20180605163043.GX16230@vkoul-mobl>
+From: Li Yang <leoyang.li@nxp.com>
+Date: Tue, 5 Jun 2018 12:24:56 -0500
+Message-ID: <CADRPPNQzn=1Nvp0h3xdTU7DdwFKN1grxyUKhESCV5u8V9FeMjg@mail.gmail.com>
+Subject: Re: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Content-Type: text/plain; charset="UTF-8"
 To: Vinod <vkoul@kernel.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
+Cc: Wen He <wen.he_1@nxp.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZG1hZW5naW5lLW93bmVy
-QHZnZXIua2VybmVsLm9yZw0KPiBbbWFpbHRvOmRtYWVuZ2luZS1vd25lckB2Z2VyLmtlcm5lbC5v
-cmddIE9uIEJlaGFsZiBPZiBWaW5vZA0KPiBTZW50OiAyMDE4xOo21MI2yNUgMDoyOQ0KPiBUbzog
-V2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogZG1hZW5naW5lQHZnZXIua2VybmVsLm9y
-Zzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTGVv
-IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBKaWFmZWkgUGFuDQo+IDxqaWFmZWkucGFuQG54cC5j
-b20+OyBKaWFoZW5nIEZhbiA8amlhaGVuZy5mYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFt2
-NSAyLzZdIGRtYWVuZ2luZTogZnNsLXFkbWE6IEFkZCBxRE1BIGNvbnRyb2xsZXIgZHJpdmVyIGZv
-cg0KPiBMYXllcnNjYXBlIFNvQ3MNCj4gDQo+IE9uIDMxLTA1LTE4LCAwMTo1OCwgV2VuIEhlIHdy
-b3RlOg0KPiA+ID4gPiA+ID4gPiA+ICtzdGF0aWMgdm9pZCBmc2xfcWRtYV9pc3N1ZV9wZW5kaW5n
-KHN0cnVjdCBkbWFfY2hhbiAqY2hhbikgew0KPiA+ID4gPiA+ID4gPiA+ICsJc3RydWN0IGZzbF9x
-ZG1hX2NoYW4gKmZzbF9jaGFuID0gdG9fZnNsX3FkbWFfY2hhbihjaGFuKTsNCj4gPiA+ID4gPiA+
-ID4gPiArCXN0cnVjdCBmc2xfcWRtYV9xdWV1ZSAqZnNsX3F1ZXVlID0gZnNsX2NoYW4tPnF1ZXVl
-Ow0KPiA+ID4gPiA+ID4gPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiA+ID4gPiA+ID4g
-PiArDQo+ID4gPiA+ID4gPiA+ID4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmZnNsX3F1ZXVlLT5xdWV1
-ZV9sb2NrLCBmbGFncyk7DQo+ID4gPiA+ID4gPiA+ID4gKwlzcGluX2xvY2soJmZzbF9jaGFuLT52
-Y2hhbi5sb2NrKTsNCj4gPiA+ID4gPiA+ID4gPiArCWlmICh2Y2hhbl9pc3N1ZV9wZW5kaW5nKCZm
-c2xfY2hhbi0+dmNoYW4pKQ0KPiA+ID4gPiA+ID4gPiA+ICsJCWZzbF9xZG1hX2VucXVldWVfZGVz
-Yyhmc2xfY2hhbik7DQo+ID4gPiA+ID4gPiA+ID4gKwlzcGluX3VubG9jaygmZnNsX2NoYW4tPnZj
-aGFuLmxvY2spOw0KPiA+ID4gPiA+ID4gPiA+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZnNs
-X3F1ZXVlLT5xdWV1ZV9sb2NrLCBmbGFncyk7DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+
-IHdoeSBkbyB3ZSBuZWVkIHR3byBsb2NrcywgYW5kIHNpbmNlIHlvdSBhcmUgZG9pbmcgdmNoYW4g
-d2h5DQo+ID4gPiA+ID4gPiA+IHNob3VsZCB5b3UgYWRkIHlvdXIgb3duIGxvY2sgb24gdG9wDQo+
-ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gWWVzLCB3ZSBuZWVkIHR3byBs
-b2Nrcy4NCj4gPiA+ID4gPiA+IEFzIHlvdSBrbm93LCB0aGUgUURNQSBzdXBwb3J0IG11bHRpcGxl
-IHZpcnR1YWxpemVkIGJsb2NrcyBmb3INCj4gPiA+ID4gPiA+IG11bHRpLWNvcmUNCj4gPiA+ID4g
-PiBzdXBwb3J0Lg0KPiA+ID4gPiA+ID4gc28gd2UgbmVlZCB0byBtYWtlIHN1cmUgdGhhdCBtdWxp
-dGktY29yZSBhY2Nlc3MgaXNzdWVzLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gYnV0IHdoeSBjYW50
-IHlvdSB1c2UgdmNoYW4gbG9jayBmb3IgYWxsPw0KPiA+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+
-IFdlIGNhbid0IG9ubHkgdXNlIHZjaGFuIGxvY2sgZm9yIGFsbC4gb3RoZXJ3aXNlIGVucXVldWUg
-YWN0aW9uDQo+ID4gPiA+IHdpbGwgYmUNCj4gPiA+IGludGVycnVwdGVkLg0KPiA+ID4NCj4gPiA+
-IEkgdGhpbmsgaXQgaXMgcG9zc2libGUgdG8gdXNlIG9ubHkgdmNoYW4gbG9jaw0KPiA+DQo+ID4g
-SSB0cmllZCB0aGF0IGlmIEkgdXNlIG9ubHkgdmNoYW4gbG9jayB0aGVuIHFkbWEgd2lsbCBiZSBj
-YW4ndCB3b3JrLg0KPiA+IERvIHlvdSBoYXZlIGEgb3RoZXIgZ29vZCBpZGVhPw0KPiANCj4gY2Fu
-IHlvdSBleHBsYWluIHRoZSBzY2VuYXJpby4uLg0KPiANCkFsbCByaWdodC4gDQpXaGVuIERNQSBj
-bGllbnQgc3RhcnQgdHJhbnNtaXQsIHdpbGwgYmUgY2FsbCBmdW5jdGlvbiBkbWFfYXN5bmNfaXNz
-dWVfcGVuZGluZygpLCB0aGUgZG1hX2FzeW5jX2lzc3VlX3BlbmRpbmcoKSBjYWxsIHRoZSBob29r
-IHBvaW50ZXINCmRldmljZV9pc3N1ZV9wZW5kaW5nLiBUaGUgZnVuY3Rpb24gZnNsX3FkbWFfaXNz
-dWVfcGVuZGluZygpIGlzIHVzZWQgdG8gZmlsbCB0aGUgZGV2aWNlX2lzc3VlX3BlbmRpbmcgZmll
-bGQuDQoNClRoZSBmdW5jdGlvbiBmc2xfcWRtYV9pc3N1ZV9wZW5kaW5nKCkgY2FsbCB0aGUgZnVu
-Y3Rpb24gZnNsX3FkbWFfZW5xdWV1ZV9kZXNjKCkuDQoNClRoZSBmdW5jdGlvbiBmc2xfcWRtYV9l
-bnF1ZXVlX2Rlc2MoKSBpbmNsdWRlcyAzIHN0ZXBzLg0KMS4gcGVlayBhdCB0aGUgbmV4dCBkZXNj
-cmlwdG9yIHRvIGJlIHByb2Nlc3NlZC4NCjIuIGlmIG5leHQgZGVzY3JpcHRvciBleGlzdCwgdGhl
-biBpbnNlcnQgdG8gbGlua2VkIGxpc3QodXNlZCB0byBnZXQgaXQgd2hlbiB0aGlzIGRlc2NyaXB0
-b3IgdHJhbnNmZXIgY29tcGxldGUpLg0KMy4gaWYgbmV4dCBkZXNjcmlwdG9yIGV4aXN0LCB0aGVu
-IHdyaXRpbmcgdG8gcWRtYS4NCg0KSW4gYWJvdmUgc3RlcHMsIHdlIHdpbGwgdXNlIHN0cnVjdCBm
-c2xfcWRtYV9jaGFuIGFuZCBzdHJ1Y3QgZnNsX3FkbWFfcXVldWUsIHNvIHdlIG5lZWQgdHdvIGxv
-Y2tzIHRvIHByb3RlY3RlZCBpdC4NCg0KQmVzdCBSZWdhcmRzLA0KV2VuDQoNCj4gLS0NCj4gflZp
-bm9kDQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5l
-ICJ1bnN1YnNjcmliZSBkbWFlbmdpbmUiIGluIHRoZQ0KPiBib2R5IG9mIGEgbWVzc2FnZSB0byBt
-YWpvcmRvbW9Admdlci5rZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vIGluZm8gYXQNCj4gaHR0cHM6
-Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJG
-JTJGdmdlci4NCj4ga2VybmVsLm9yZyUyRm1ham9yZG9tby1pbmZvLmh0bWwmZGF0YT0wMiU3QzAx
-JTdDd2VuLmhlXzElNDBueHAuY28NCj4gbSU3QzBmN2NjNTMzZDZiZjRkZTA2N2QwMDhkNWNiMDE3
-NDJjJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTkNCj4gYzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY2
-MzgxMjk0NjY2NTAzMjEmc2RhdGE9enJjMFBmJTJCcTBwcWl4cW0NCj4gTEM1amhqTHZ2VjVNaVNV
-TTY4WHRhbkp4Z01iUSUzRCZyZXNlcnZlZD0wDQo=
+On Tue, Jun 5, 2018 at 11:30 AM, Vinod <vkoul@kernel.org> wrote:
+> On 04-06-18, 09:53, Wen He wrote:
+>
+>>
+>> > > +// SPDX-License-Identifier: GPL-2.0
+>> > > +// Copyright 2018 NXP
+>> >
+>> > I know the SPDX tag is recommended to be the 1st line, but copyright normally
+>> > goes below the file description not above.
+>
+> I do not think that is specified anywhere.. can you point it?
+
+No.  It is not documented.  But the majority of the source files in
+Linux are using this header format like below, so I assume it is
+something like a convention.
+
+/*
+ * {filename --} file description
+ *
+ * Copyright ...
+ *
+ * License ...
+ */
+
+The Documentation/process/license-rules.rst only mentioned about the
+requirement for SPDX tags.  So I think we should keep the format for
+other part of the header.
+
+Regards,
+Leo
