@@ -1,116 +1,38 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [RFC PATCH 2/3] firmware: ti_sci: Provide host-id as an optional dt parameter
-Date: Tue, 5 Jun 2018 01:26:39 -0500
-Message-ID: <20180605062640.3356-3-nm@ti.com>
-References: <20180605062640.3356-1-nm@ti.com>
+From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
+Date: Tue, 5 Jun 2018 09:07:00 +0200
+Message-ID: <717f24e1-3846-7685-b440-0754da883c2a@armadeus.com>
+References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
+ <20180523042953.kcp2h5xtwjrjponn@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605062640.3356-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180523042953.kcp2h5xtwjrjponn@vireshk-i7>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Texas Instrument's System Control Interface (TISCI) permits the
-ability for Operating Systems to running in virtual machines to be
-able to independently communicate with the firmware without the need
-going through an hypervisor.
-
-The "host-id" in effect is the hardware representation of the
-host (example: VMs locked to a core) as identified to the System
-Controller.
-
-Provide support as an optional parameter implementation and use the compatible
-data as default if one is not provided by device tree.
-
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- drivers/firmware/ti_sci.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index b74a533ef35b..6b08ee815b24 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -66,14 +66,14 @@ struct ti_sci_xfers_info {
- 
- /**
-  * struct ti_sci_desc - Description of SoC integration
-- * @host_id:		Host identifier representing the compute entity
-+ * @default_host_id:	Host identifier representing the compute entity
-  * @max_rx_timeout_ms:	Timeout for communication with SoC (in Milliseconds)
-  * @max_msgs: Maximum number of messages that can be pending
-  *		  simultaneously in the system
-  * @max_msg_size: Maximum size of data per message that can be handled.
-  */
- struct ti_sci_desc {
--	u8 host_id;
-+	u8 default_host_id;
- 	int max_rx_timeout_ms;
- 	int max_msgs;
- 	int max_msg_size;
-@@ -94,6 +94,7 @@ struct ti_sci_desc {
-  * @chan_rx:	Receive mailbox channel
-  * @minfo:	Message info
-  * @node:	list head
-+ * @host_id:	Host ID
-  * @users:	Number of users of this instance
-  */
- struct ti_sci_info {
-@@ -110,6 +111,7 @@ struct ti_sci_info {
- 	struct mbox_chan *chan_rx;
- 	struct ti_sci_xfers_info minfo;
- 	struct list_head node;
-+	u8 host_id;
- 	/* protected by ti_sci_list_mutex */
- 	int users;
- 
-@@ -370,7 +372,7 @@ static struct ti_sci_xfer *ti_sci_get_one_xfer(struct ti_sci_info *info,
- 
- 	hdr->seq = xfer_id;
- 	hdr->type = msg_type;
--	hdr->host = info->desc->host_id;
-+	hdr->host = info->host_id;
- 	hdr->flags = msg_flags;
- 
- 	return xfer;
-@@ -1793,7 +1795,7 @@ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
- 
- /* Description for K2G */
- static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
--	.host_id = 2,
-+	.default_host_id = 2,
- 	/* Conservative duration */
- 	.max_rx_timeout_ms = 1000,
- 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
-@@ -1819,6 +1821,7 @@ static int ti_sci_probe(struct platform_device *pdev)
- 	int ret = -EINVAL;
- 	int i;
- 	int reboot = 0;
-+	u32 h_id;
- 
- 	of_id = of_match_device(ti_sci_of_match, dev);
- 	if (!of_id) {
-@@ -1833,6 +1836,19 @@ static int ti_sci_probe(struct platform_device *pdev)
- 
- 	info->dev = dev;
- 	info->desc = desc;
-+	ret = of_property_read_u32(dev->of_node, "ti,host-id", &h_id);
-+	/* if the property is not present in DT, use a default from desc */
-+	if (ret < 0) {
-+		info->host_id = info->desc->default_host_id;
-+	} else {
-+		if (!h_id) {
-+			dev_warn(dev, "Host ID 0 is reserved for firmware\n");
-+			info->host_id = info->desc->default_host_id;
-+		} else {
-+			info->host_id = h_id;
-+		}
-+	}
-+
- 	reboot = of_property_read_bool(dev->of_node,
- 				       "ti,system-reboot-controller");
- 	INIT_LIST_HEAD(&info->node);
--- 
-2.15.1
+T24gMDUvMjMvMjAxOCAwNjoyOSBBTSwgVmlyZXNoIEt1bWFyIHdyb3RlOgo+IE9uIDIyLTA1LTE4
+LCAwODoyOCwgU8OpYmFzdGllbiBTenltYW5za2kgd3JvdGU6Cj4+IENoZWNrIHRoZSBtYXggc3Bl
+ZWQgc3VwcG9ydGVkIGZyb20gdGhlIGZ1c2VzIGZvciBpLk1YNlVMTCBhbmQgdXBkYXRlIHRoZQo+
+PiBvcGVyYXRpbmcgcG9pbnRzIHRhYmxlIGFjY29yZGluZ2x5Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
+OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+
+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGZvciB2MzoKPj4gIC0gbm9uZQo+IAo+IEBTYXNjaGEgYW5k
+IFNoYXduOiBDYW4geW91IGd1eXMgcGxlYXNlIEFjayB0aGlzIHNlcmllcyBpZiB0aGVyZSBpcwo+
+IG5vdGhpbmcgd3Jvbmcgd2l0aCBpdCA/Cj4gCgpwaW5nLi4uCgotLSAKU8OpYmFzdGllbiBTenlt
+YW5za2kKU29mdHdhcmUgZW5naW5lZXIsIEFybWFkZXVzIFN5c3RlbXMKVGVsOiArMzMgKDApOSA3
+MiAyOSA0MSA0NApGYXg6ICszMyAoMCk5IDcyIDI4IDc5IDI2CgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
