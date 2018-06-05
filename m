@@ -1,36 +1,84 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Tue, 5 Jun 2018 07:14:30 -0700
-Message-ID: <20180605141430.GE5738@atomide.com>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm: sun4i: Add support for Pengpod 1000 tablet
+Date: Tue, 5 Jun 2018 16:50:38 +0200
+Message-ID: <20180605145038.qptdlcphdbnw6jyg@flea>
+References: <20180602160313.26763-1-rah@settrans.net>
+ <20180604081302.hcn7j36gt6xeyquq@flea>
+ <313a74ea-0be6-cff1-6b2f-06a4b0b7ba8d@settrans.net>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zazi7f7zkd74w65t"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQGG3LMAKGQESVTVXSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <313a74ea-0be6-cff1-6b2f-06a4b0b7ba8d-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Bob Ham <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh+dt@kernel.org> [180605 14:08]:
-> On Tue, Jun 5, 2018 at 1:05 AM, Nishanth Menon <nm@ti.com> wrote:
-> > +       soc0: soc0 {
-> > +               compatible = "simple-bus";
-> > +               #address-cells = <2>;
-> > +               #size-cells = <2>;
-> > +               ranges;
+
+--zazi7f7zkd74w65t
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Jun 04, 2018 at 06:33:02PM +0100, Bob Ham wrote:
+> On 04/06/18 09:13, Maxime Ripard wrote:
+> > On Sat, Jun 02, 2018 at 05:03:13PM +0100, Bob Ham wrote:
 > 
-> Really need 64-bit addresses and sizes? Use ranges to limit the
-> address space if possible.
+> >> + * This file is dual-licensed: you can use it either under the terms
+> >> + * of the GPL or the X11 license, at your option. Note that this dual
+> >> + * licensing only applies to this file, and not this project as a
+> >> + * whole.
+> 
+> >> + *     The above copyright notice and this permission notice shall be
+> >> + *     included in all copies or substantial portions of the Software.
+> 
+> > And this is redundant with the SPDX header.
+> 
+> The X11 license notice states explicitly that the notice has to be
+> included in the file.  Wouldn't removing it be a violation of the license?
 
-And in addition to using ranges, please set up separate bus instances
-for the interconnects. This will then allow you to probe WKUP or
-similar instance first and the other bus instances after. And that
-pretty much allows you to get rid of the annoying -EPROBE_DEFER
-ping pong and allows making clocks proper device drivers ;)
+The SPDX header is explicitly here to remove the license text and
+create a tag that is in a indirect reference to the license text in
+LICENSES. It's not going away.
 
-Regards,
+> >> +		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+> > 
+> > Each step should increase the perceived brightness by roughly 1/Nth, N
+> > being the number of steps. Usually PWM backlights don't work like that.
+> 
+> FYI, this was copied from another .dts file.  All of the other
+> brightness-levels settings in sun{4,5,7}i .dts files follow similar
+> patterns:
+> 
+> sun4i-a10-dserve-dsrv9703c.dts:               brightness-levels = <0 10
+> 20 30 40 50 60 70 80 90 100>;
+> sun4i-a10-inet1.dts:          brightness-levels = <0 10 20 30 40 50 60
+> 70 80 90 100>;
+> sun4i-a10-pov-protab2-ips9.dts:               brightness-levels = <0 10
+> 20 30 40 50 60 70 80 90 100>;
+> sun5i-a13-empire-electronix-d709.dts:         brightness-levels = <0 10
+> 20 30 40 50 60 70 80 90 100>;
+> sun5i-a13-utoo-p66.dts:       brightness-levels = <0 30 40 50 60 70 80
+> 90 100>;
+> sun5i-gr8-evb.dts:            brightness-levels = <0 10 20 30 40 50 60
+> 70 80 90 100>;
+> sun7i-a20-wexler-tab7200.dts:         brightness-levels = <0 10 20 30 40
+> 50 60 70 80 90 100>;
 
-Tony
+I never said we were perfect reviewers. Feel free to help in the process.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--zazi7f7zkd74w65t--
