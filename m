@@ -1,327 +1,208 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 11/20] dts: hisilicon: Update coresight bindings for hw ports
-Date: Tue,  5 Jun 2018 22:43:22 +0100
-Message-ID: <1528235011-30691-12-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 09/20] coresight: dts: Define new bindings for direction of data flow
+Date: Tue,  5 Jun 2018 22:43:20 +0100
+Message-ID: <1528235011-30691-10-git-send-email-suzuki.poulose@arm.com>
 References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, xuwei5@hisilicon.com, lipengcheng8@huawei.com
+Cc: mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch to updated coresight bindings for hw ports.
+So far we have relied on an undocumented property "slave-mode",
+to indicate if the given port is input or not. Since we are
+redefining the coresight bindings, define new property for the
+"direction" of data flow for a given connection endpoint in the
+device.
 
-Cc: xuwei5@hisilicon.com
-Cc: lipengcheng8@huawei.com
+Each endpoint must define the following property.
+
+ - "direction" : 0 => Port is input
+		 1 => Port is output
+
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rob Herring <robh@kernel.org>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- .../arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 89 ++++++++++++++++------
- 1 file changed, 64 insertions(+), 25 deletions(-)
+ .../devicetree/bindings/arm/coresight.txt          | 24 ++++++++++++++--------
+ drivers/hwtracing/coresight/of_coresight.c         | 22 ++++++++++++++++----
+ 2 files changed, 34 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-index 7afee5d..a394a65 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-@@ -27,17 +27,20 @@
- 				port@0 {
- 					reg = <0>;
- 					soc_funnel_out: endpoint {
-+						direction = <1>;
- 						remote-endpoint =
- 							<&etf_in>;
-+						coresight,hwid = <0>;
- 					};
- 				};
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index bf75ab3..ff382bc 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -103,9 +103,11 @@ with a specific direction of data flow, each connection must define the
+ following properties to uniquely identify the connection details.
  
- 				port@1 {
--					reg = <0>;
-+					reg = <1>;
- 					soc_funnel_in: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&acpu_funnel_out>;
-+						coresight,hwid = <0>;
- 					};
- 				};
+  * Direction of the data flow w.r.t the component :
+-   Each input port must have the following property defined at the "endpoint"
++   Each hardware port must have the following property defined at the "endpoint"
+    for the port.
+-	"slave-mode"
++	"direction" - 32bit integer, whose values are defined as follows :
++		0 => the endpoint is an Input port
++		1 => the endpoint is an Output port.
+ 
+  * Hardware Port number at the component:
+      - Each "endpoint" must define the hardware port of the local end of the
+@@ -129,7 +131,7 @@ Example:
+ 		clock-names = "apb_pclk";
+ 		port {
+ 			etb_in_port: endpoint@0 {
+-				slave-mode;
++				direction = <0>;
+ 				remote-endpoint = <&replicator_out_port0>;
+ 				coresight,hwid = <0>;
  			};
-@@ -56,17 +59,20 @@
- 				port@0 {
- 					reg = <0>;
- 					etf_in: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&soc_funnel_out>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 
- 				port@1 {
--					reg = <0>;
-+					reg = <1>;
- 					etf_out: endpoint {
-+						direction = <1>;
- 						remote-endpoint =
- 							<&replicator_in>;
-+						coresight,hwid = <0>;
- 					};
- 				};
+@@ -144,7 +146,7 @@ Example:
+ 		clock-names = "apb_pclk";
+ 		port {
+ 			tpiu_in_port: endpoint@0 {
+-				slave-mode;
++				direction = <0>;
+ 				remote-endpoint = <&replicator_out_port1>;
+ 				coresight,hwid = <0>;
  			};
-@@ -84,25 +90,30 @@
- 				port@0 {
- 					reg = <0>;
- 					replicator_in: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etf_out>;
-+						coresight,hwid = <0>;
- 					};
+@@ -166,6 +168,7 @@ Example:
+ 			port@0 {
+ 				reg = <0>;
+ 				replicator_out_port0: endpoint {
++					direction = <1>;
+ 					remote-endpoint = <&etb_in_port>;
+ 					coresight,hwid = <0>;
  				};
- 
- 				port@1 {
--					reg = <0>;
-+					reg = <1>;
- 					replicator_out0: endpoint {
-+						direction = <1>;
- 						remote-endpoint =
- 							<&etr_in>;
-+						coresight,hwid = <0>;
- 					};
+@@ -174,6 +177,7 @@ Example:
+ 			port@1 {
+ 				reg = <1>;
+ 				replicator_out_port1: endpoint {
++					direction = <1>;
+ 					remote-endpoint = <&tpiu_in_port>;
+ 					coresight,hwid = <1>;
  				};
- 
- 				port@2 {
--					reg = <1>;
-+					reg = <2>;
- 					replicator_out1: endpoint {
-+						direction = <1>;
- 						remote-endpoint =
- 							<&tpiu_in>;
-+						coresight,hwid = <1>;
- 					};
+@@ -183,7 +187,7 @@ Example:
+ 			port@2 {
+ 				reg = <1>;
+ 				replicator_in_port0: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&funnel_out_port0>;
+ 					coresight,hwid = <0>;
  				};
- 			};
-@@ -121,9 +132,10 @@
- 				port@0 {
- 					reg = <0>;
- 					etr_in: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&replicator_out0>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 			};
-@@ -142,9 +154,10 @@
- 				port@0 {
- 					reg = <0>;
- 					tpiu_in: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&replicator_out1>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 			};
-@@ -163,80 +176,90 @@
- 				port@0 {
- 					reg = <0>;
- 					acpu_funnel_out: endpoint {
-+						direction = <1>;
- 						remote-endpoint =
- 							<&soc_funnel_in>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 
- 				port@1 {
--					reg = <0>;
-+					reg = <1>;
- 					acpu_funnel_in0: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm0_out>;
-+						coresight,hwid = <0>;
- 					};
- 				};
- 
- 				port@2 {
--					reg = <1>;
-+					reg = <2>;
- 					acpu_funnel_in1: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm1_out>;
-+						coresight,hwid = <1>;
- 					};
- 				};
- 
- 				port@3 {
--					reg = <2>;
-+					reg = <3>;
- 					acpu_funnel_in2: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm2_out>;
-+						coresight,hwid = <2>;
- 					};
- 				};
- 
- 				port@4 {
--					reg = <3>;
-+					reg = <4>;
- 					acpu_funnel_in3: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm3_out>;
-+						coresight,hwid = <3>;
- 					};
- 				};
- 
- 				port@5 {
--					reg = <4>;
-+					reg = <5>;
- 					acpu_funnel_in4: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm4_out>;
-+						coresight,hwid = <4>;
- 					};
- 				};
- 
- 				port@6 {
--					reg = <5>;
-+					reg = <6>;
- 					acpu_funnel_in5: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm5_out>;
-+						coresight,hwid = <5>;
- 					};
- 				};
- 
- 				port@7 {
--					reg = <6>;
-+					reg = <7>;
- 					acpu_funnel_in6: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm6_out>;
-+						coresight,hwid = <6>;
- 					};
- 				};
- 
- 				port@8 {
--					reg = <7>;
-+					reg = <8>;
- 					acpu_funnel_in7: endpoint {
--						slave-mode;
-+						direction = <0>;
- 						remote-endpoint =
- 							<&etm7_out>;
-+						coresight,hwid = <7>;
- 					};
- 				};
- 			};
-@@ -253,8 +276,10 @@
- 
- 			port {
- 				etm0_out: endpoint {
+@@ -205,6 +209,7 @@ Example:
+ 			port@0 {
+ 				reg = <0>;
+ 				funnel_out_port0: endpoint {
 +					direction = <1>;
  					remote-endpoint =
- 						<&acpu_funnel_in0>;
-+					coresight,hwid = <0>;
+ 							<&replicator_in_port0>;
+ 					coresight,hwid = <0>;
+@@ -215,7 +220,7 @@ Example:
+ 			port@1 {
+ 				reg = <1>;
+ 				funnel_in_port0: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&ptm0_out_port>;
+ 					coresight,hwid = <0>;
  				};
+@@ -224,7 +229,7 @@ Example:
+ 			port@2 {
+ 				reg = <2>;
+ 				funnel_in_port1: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&ptm1_out_port>;
+ 					coresight,hwid = <1>;
+ 				};
+@@ -233,7 +238,7 @@ Example:
+ 			port@3 {
+ 				reg = <3>;
+ 				funnel_in_port2: endpoint {
+-					slave-mode;
++					direction = <0>;
+ 					remote-endpoint = <&etm0_out_port>;
+ 					coresight,hwid = <2>;
+ 				};
+@@ -252,6 +257,7 @@ Example:
+ 		clock-names = "apb_pclk";
+ 		port {
+ 			ptm0_out_port: endpoint {
++				direction = <1>;
+ 				remote-endpoint = <&funnel_in_port0>;
+ 				coresight,hwid = <0>;
  			};
- 		};
-@@ -270,8 +295,10 @@
+@@ -267,6 +273,7 @@ Example:
+ 		clock-names = "apb_pclk";
+ 		port {
+ 			ptm1_out_port: endpoint {
++				direction = <1>;
+ 				remote-endpoint = <&funnel_in_port1>;
+ 				coresight,hwid = <0>;
+ 			};
+@@ -284,6 +291,7 @@ Example:
+ 		clock-names = "apb_pclk";
+ 		port {
+ 			stm_out_port: endpoint {
++				direction = <1>;
+ 				remote-endpoint = <&main_funnel_in_port2>;
+ 				coresight,hwid = <0>;
+ 			};
+diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+index d23d7dd..0d6e6a9 100644
+--- a/drivers/hwtracing/coresight/of_coresight.c
++++ b/drivers/hwtracing/coresight/of_coresight.c
+@@ -45,7 +45,20 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
+ 			       endpoint, of_dev_node_match);
+ }
  
- 			port {
- 				etm1_out: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&acpu_funnel_in1>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -287,8 +314,10 @@
+-static void of_coresight_get_ports(const struct device_node *node,
++static bool of_coresight_endpoint_is_input(struct device *dev,
++					   struct device_node *ep_node)
++{
++	u32 dir;
++
++	if (!of_property_read_u32(ep_node, "direction", &dir))
++		return dir == 0;
++
++	dev_warn_once(dev, "Missing mandatory \"direction\" property!\n");
++	return of_property_read_bool(ep_node, "slave-mode");
++}
++
++static void of_coresight_get_ports(struct device *dev,
++				   const struct device_node *node,
+ 				   int *nr_inport, int *nr_outport)
+ {
+ 	struct device_node *ep = NULL;
+@@ -56,7 +69,7 @@ static void of_coresight_get_ports(const struct device_node *node,
+ 		if (!ep)
+ 			break;
  
- 			port {
- 				etm2_out: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&acpu_funnel_in2>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -304,8 +333,10 @@
+-		if (of_property_read_bool(ep, "slave-mode"))
++		if (of_coresight_endpoint_is_input(dev, ep))
+ 			in++;
+ 		else
+ 			out++;
+@@ -149,7 +162,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 		 * No need to deal with input ports, processing for as
+ 		 * processing for output ports will deal with them.
+ 		 */
+-		if (of_find_property(ep, "slave-mode", NULL))
++		if (of_coresight_endpoint_is_input(dev, ep))
+ 			break;
  
- 			port {
- 				etm3_out: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&acpu_funnel_in3>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -321,8 +352,10 @@
+ 		/* Parse the local port details */
+@@ -212,7 +225,8 @@ of_get_coresight_platform_data(struct device *dev,
+ 	pdata->cpu = of_coresight_get_cpu(node);
  
- 			port {
- 				etm4_out: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&acpu_funnel_in4>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -338,8 +371,10 @@
+ 	/* Get the number of input and output port for this component */
+-	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
++	of_coresight_get_ports(dev, node,
++			       &pdata->nr_inport, &pdata->nr_outport);
  
- 			port {
- 				etm5_out: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&acpu_funnel_in5>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -355,8 +390,10 @@
- 
- 			port {
- 				etm6_out: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&acpu_funnel_in6>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -372,8 +409,10 @@
- 
- 			port {
- 				etm7_out: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&acpu_funnel_in7>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
+ 	/* If there are not output connections, we are done */
+ 	if (!pdata->nr_outport)
 -- 
 2.7.4
