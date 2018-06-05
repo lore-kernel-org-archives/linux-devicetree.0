@@ -1,10 +1,11 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V2 1/2] arm: dts: sun8i-h3: Add missing cooling device properties for CPUs
-Date: Tue,  5 Jun 2018 10:17:48 +0530
-Message-ID: <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
+Subject: [PATCH V2 2/2] arm: dts: sunxi: Add missing cooling device properties for CPUs
+Date: Tue,  5 Jun 2018 10:17:49 +0530
+Message-ID: <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
 References: <20180601151701.sshwfdbflic6mybv@flea>
+ <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601151701.sshwfdbflic6mybv@flea>
+In-Reply-To: <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
@@ -20,24 +21,105 @@ it is trying to bring up, so that it can register a cooling device.
 
 Add such missing properties.
 
-Fix other missing properties (clocks, clock-names) as well to make it all
-work.
+Fix other missing properties (clocks, OPP, clock latency) as well to
+make it all work.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
-V2: Separated patch for h3.
+V2:
+- Separated patch for h3
+- Fixed subject s/sun/sunxi/
 
- arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 30 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/sun8i-a33.dtsi |  9 +++++++++
+ 3 files changed, 52 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 41d57c76f290..9dff6887923c 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -84,21 +84,30 @@
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index c72992556a86..debc0bf22ea3 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -119,18 +119,48 @@
  			compatible = "arm,cortex-a7";
  			device_type = "cpu";
  			reg = <1>;
++			clocks = <&ccu CLK_CPU>;
++			clock-latency = <244144>; /* 8 32k periods */
++			operating-points = <
++				/* kHz	  uV */
++				1008000	1200000
++				864000	1200000
++				720000	1100000
++				480000	1000000
++				>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
++			clocks = <&ccu CLK_CPU>;
++			clock-latency = <244144>; /* 8 32k periods */
++			operating-points = <
++				/* kHz	  uV */
++				1008000	1200000
++				864000	1200000
++				720000	1100000
++				480000	1000000
++				>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
++			clocks = <&ccu CLK_CPU>;
++			clock-latency = <244144>; /* 8 32k periods */
++			operating-points = <
++				/* kHz	  uV */
++				1008000	1200000
++				864000	1200000
++				720000	1100000
++				480000	1000000
++				>;
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e529e4ff2174..35372a0cfc8d 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -122,6 +122,19 @@
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
++			clocks = <&ccu CLK_CPU>;
++			clock-latency = <244144>; /* 8 32k periods */
++			operating-points = <
++				/* kHz	  uV */
++				960000	1400000
++				912000	1400000
++				864000	1300000
++				720000	1200000
++				528000	1100000
++				312000	1000000
++				144000	1000000
++				>;
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index 8d278ee001e9..4e92741b24a7 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -132,21 +132,30 @@
+ 		};
+ 
+ 		cpu@1 {
 +			clocks = <&ccu CLK_CPUX>;
 +			clock-names = "cpu";
  			operating-points-v2 = <&cpu0_opp_table>;
