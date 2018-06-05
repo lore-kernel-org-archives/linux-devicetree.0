@@ -1,72 +1,43 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v8 1/4] drm/bridge: add support for sn65dsi86 bridge driver
-Date: Tue, 5 Jun 2018 16:47:15 +0530
-Message-ID: <20180605111715.GV16230@vkoul-mobl>
-References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
- <1528177218-1051-3-git-send-email-spanda@codeaurora.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v2 0/5] Tegra20 External Memory Controller driver
+Date: Tue, 5 Jun 2018 14:19:11 +0300
+Message-ID: <20180605111911.GD27696@tbergstrom-lnx.Nvidia.com>
+References: <20180603223654.23324-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1528177218-1051-3-git-send-email-spanda@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>
-Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
+In-Reply-To: <20180603223654.23324-1-digetx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUtMDYtMTgsIDExOjEwLCBTYW5kZWVwIFBhbmRhIHdyb3RlOgo+IEFkZCBzdXBwb3J0IGZv
-ciBUSSdzIHNuNjVkc2k4NiBkc2kyZWRwIGJyaWRnZSBjaGlwLgo+IFRoZSBjaGlwIGNvbnZlcnRz
-IERTSSB0cmFuc21pdHRlZCBzaWduYWwgdG8gZURQIHNpZ25hbCwKPiB3aGljaCBpcyBmZWQgdG8g
-dGhlIGNvbm5lY3RlZCBlRFAgcGFuZWwuCj4gCj4gVGhpcyBjaGlwIGNhbiBiZSBjb250cm9sbGVk
-IHZpYSBlaXRoZXIgaTJjIGludGVyZmFjZSBvcgo+IGRzaSBpbnRlcmZhY2UuIEN1cnJlbnRseSBp
-biBkcml2ZXIgYWxsIHRoZSBjb250cm9sIHJlZ2lzdGVycwo+IGFyZSBiZWluZyBhY2Nlc3NlZCB0
-aHJvdWdoIGkyYyBpbnRlcmZhY2Ugb25seS4KPiBBbHNvIGFzIG9mIG5vdyBIUEQgc3VwcG9ydCBo
-YXMgbm90IGJlZW4gYWRkZWQgdG8gYnJpZGdlCj4gY2hpcCBkcml2ZXIuCj4gCj4gQ2hhbmdlcyBp
-biB2MToKPiAgLSBTcGxpdCB0aGUgZHQtYmluZGluZ3MgYW5kIHRoZSBkcml2ZXIgc3VwcG9ydCBp
-bnRvIHNlcGFyYXRlIHBhdGNoZXMKPiAgICAoQW5kcnplaiBIYWpkYSkuCj4gIC0gVXNlIG9mIGdw
-aW9kIEFQSXMgdG8gcGFyc2UgYW5kIGNvbmZpZ3VyZSBncGlvcyBpbnN0ZWFkIG9mIG9ic29sZXRl
-IG9uZXMKPiAgICAoQW5kcnplaiBIYWpkYSkuCj4gIC0gVXNlIG1hY3JvcyB0byBkZWZpbmUgdGhl
-IHJlZ2lzdGVyIG9mZnNldHMgKEFuZHJ6ZWogSGFqZGEpLgoKVGhpcyBpcyBwcmV0dHkgdXNlbGVz
-cyBmb3IgY2hhbmdlbG9nLiBUaGlzIGlzIHVzZWZ1bCBmb3IgcmV2aWV3IGJ1dCBub3QKZG93biB0
-aGUgbGluZSB3aGVuIHRoaXMgaXMgYXBwbGllZAoKU2luY2UgeW91IGhhdmUgY292ZXIgbGV0dGVy
-LCB5b3UgbWF5IGFkZCBpdCB0aGVyZS4gT3IgYWZ0ZXIgc29iIGFuZCAtLS0KdGFnIGluIHRoZSBw
-YXRjaCwgdGhhdCB3YXkgaXQgaXMgc2tpcHBlZCB3aGlsZSBhcHBseWluZy4uCgo+ICsjZGVmaW5l
-IFNOX0VOQUJMRV9WSURfU1RSRUFNX0JJVAlCSVQoMykKPiArI2RlZmluZSBTTl9EU0lBX05VTV9M
-QU5FU19CSVRTCQkoQklUKDQpIHwgQklUKDMpKQo+ICsjZGVmaW5lIFNOX0RQX05VTV9MQU5FU19C
-SVRTCQkoQklUKDUpIHwgQklUKDQpKQo+ICsjZGVmaW5lIFNOX0RQX0RBVEFfUkFURV9CSVRTCQko
-QklUKDcpIHwgQklUKDYpIHwgQklUKDUpKQoKR0VOTUFTSyg3LCA1KQoKPiArc3RhdGljIGludCBf
-X21heWJlX3VudXNlZCB0aV9zbl9icmlkZ2VfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPiAr
-ewo+ICsJc3RydWN0IHRpX3NuX2JyaWRnZSAqcGRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsK
-PiArCWludCByZXQgPSAwOwoKc3VwZXJmbHVvdXMgaW5pdGlhbGl6YXRpb24KCj4gK3N0YXRpYyBp
-bnQgX19tYXliZV91bnVzZWQgdGlfc25fYnJpZGdlX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2
-KQo+ICt7Cj4gKwlzdHJ1Y3QgdGlfc25fYnJpZGdlICpwZGF0YSA9IGRldl9nZXRfZHJ2ZGF0YShk
-ZXYpOwo+ICsJaW50IHJldCA9IDA7CgpoZXJlIGFzIHdlbGwKCj4gK3N0YXRpYyBpbnQgdGlfc25f
-YnJpZGdlX2Nvbm5lY3Rvcl9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
-cikKPiArewo+ICsJc3RydWN0IHRpX3NuX2JyaWRnZSAqcGRhdGEgPSBjb25uZWN0b3JfdG9fdGlf
-c25fYnJpZGdlKGNvbm5lY3Rvcik7Cj4gKwlzdHJ1Y3QgZWRpZCAqZWRpZDsKPiArCXUzMiBudW1f
-bW9kZXM7Cj4gKwo+ICsJaWYgKHBkYXRhLT5wYW5lbCkgewo+ICsJCURSTV9ERUJVR19LTVMoImdl
-dCBtb2RlIGZyb20gY29ubmVjdGVkIGRybV9wYW5lbFxuIik7Cj4gKwkJcmV0dXJuIGRybV9wYW5l
-bF9nZXRfbW9kZXMocGRhdGEtPnBhbmVsKTsKPiArCX0KPiArCj4gKwlpZiAoIXBkYXRhLT5kZGMp
-Cj4gKwkJcmV0dXJuIDA7Cj4gKwo+ICsJcG1fcnVudGltZV9nZXRfc3luYyhwZGF0YS0+ZGV2KTsK
-CnlvdSBzaG91bGQgY2hlY2sgcmV0dXJuIG9mIHRoaXMKCj4gK3N0YXRpYyB2b2lkIHRpX3NuX2Jy
-aWRnZV9zZXRfcmVmY2xrKHN0cnVjdCB0aV9zbl9icmlkZ2UgKnBkYXRhKQo+ICt7Cj4gKwlpbnQg
-aSA9IDA7CgpzdXBlcmZsdW91cyBpbml0aWFsaXphdGlvbgoKPiArc3RhdGljIHZvaWQgdGlfc25f
-YnJpZGdlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlzdHJ1Y3Qg
-dGlfc25fYnJpZGdlICpwZGF0YSA9IGJyaWRnZV90b190aV9zbl9icmlkZ2UoYnJpZGdlKTsKPiAr
-CXVuc2lnbmVkIGludCB2YWwgPSAwOwoKaGVyZSBhcyB3ZWxsCgo+ICtzdGF0aWMgdm9pZCB0aV9z
-bl9icmlkZ2VfcHJlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlz
-dHJ1Y3QgdGlfc25fYnJpZGdlICpwZGF0YSA9IGJyaWRnZV90b190aV9zbl9icmlkZ2UoYnJpZGdl
-KTsKPiArCj4gKwlwbV9ydW50aW1lX2dldF9zeW5jKHBkYXRhLT5kZXYpOwoKZXJyb3IgY2hlY2sg
-cmVxdWlyZWQKLS0gCn5WaW5vZApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On Mon, Jun 04, 2018 at 01:36:49AM +0300, Dmitry Osipenko wrote:
+> Hello,
+> 
+> Couple years ago the Tegra20 EMC driver was removed from the kernel
+> due to incompatible changes in the Tegra's clock driver. This patchset
+> introduces a modernized EMC driver. Currently the sole purpose of the
+> driver is to initialize DRAM frequency to maximum rate during of the
+> kernels boot-up. Later we may consider implementing dynamic memory
+> frequency scaling, utilizing functionality provided by this driver.
+> 
+> Changelog:
+> 
+> v2:
+> 	- Minor code cleanups like consistent use of writel_relaxed instead
+> 	  of non-relaxed version, reworded error messages, etc.
+> 
+> 	- Factored out use_pllm_ud bit checking into a standalone patch for
+> 	  consistency.
+> 
+> Dmitry Osipenko (5):
+>   dt: bindings: tegra20-emc: Document interrupt property
+>   ARM: dts: tegra20: Add interrupt to External Memory Controller
+>   clk: tegra20: Turn EMC clock gate into divider
+>   clk: tegra20: Check whether direct PLLM sourcing is turned off for EMC
+>   memory: tegra: Introduce Tegra20 EMC driver
+> 
+
+Series Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
