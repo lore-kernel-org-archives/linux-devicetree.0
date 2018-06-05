@@ -1,38 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/4] clk: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Tue, 5 Jun 2018 09:49:32 -0600
-Message-ID: <20180605154932.GA20204@rob-hp-laptop>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <da121dede6d79460c5653a5bc360d413cb988c74.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
+ iec958 controls
+Date: Tue, 5 Jun 2018 17:50:57 +0200
+Message-ID: <2ae6c5b6-872a-9aaa-6ca4-e29adb7c8bc0@st.com>
+References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+ <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
+ <20180417111733.GG8973@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <da121dede6d79460c5653a5bc360d413cb988c74.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180417111733.GG8973@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Olivier MOYSAN <olivier.moysan@st.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jsarha@ti.com" <jsarha@ti.com>, "tiwai@suse.com" <tiwai@suse.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 04, 2018 at 04:18:53PM +0300, Matti Vaittinen wrote:
-> Document devicetree bindings for ROHM BD71837 PMIC clock output.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  .../bindings/clock/rohm,bd71837-clock.txt          | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt b/Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
-> new file mode 100644
-> index 000000000000..771acfe34114
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/rohm,bd71837-clock.txt
-> @@ -0,0 +1,38 @@
-> +ROHM BD71837 Power Management Integrated Circuit clock bindings
+Hi Takashi,
 
-This needs to be added to the MFD doc. One node should be covered by at 
-most 1 document.
+On 04/17/2018 01:17 PM, Mark Brown wrote:
+> On Tue, Apr 17, 2018 at 08:29:17AM +0000, Olivier MOYSAN wrote:
+> =
 
-Rob
+>> I guess the blocking patch in this patchset is the patch "add IEC958 =
+
+>> channel status control helper". This patch has been reviewed several =
+
+>> times, but did not get a ack so far.
+>> If you think these helpers will not be merged, I will reintegrate the =
+
+>> corresponding code in stm driver.
+>> Please let me know, if I need to prepare a v2 without helpers, or if we =
+
+>> can go further in the review of iec helpers patch ?
+> =
+
+> I don't mind either way but you're right here, I'm waiting for Takashi
+> to review the first patch.=A0 I'd probably be OK with it just integrated
+> into the driver if we have to go that way though.
+
+Gentlemen reminder for this patch set. We would appreciate to have your
+feedback on iec helper.
+>From our point of view it could be useful to have a generic management
+of the iec controls based on helpers instead of redefining them in DAIs.
+Having the same behavior for these controls could be useful to ensure
+coherence of the control management used by application (for instance
+Gstreamer uses it to determine iec raw mode capability for iec61937 streams)
+
+
+Thanks,
+Arnaud
