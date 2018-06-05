@@ -1,58 +1,36 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
- bindings
-Date: Tue, 05 Jun 2018 22:16:20 +0300
-Message-ID: <3434502.pBJZTsWR88@avalon>
-References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
- <3941727.PNGxG4XCLb@avalon>
- <df4d4207-5343-36c0-7ca8-d431999a3f31@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
+Date: Tue, 5 Jun 2018 13:41:24 -0600
+Message-ID: <20180605194124.GA26885@rob-hp-laptop>
+References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
+ <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <df4d4207-5343-36c0-7ca8-d431999a3f31@cogentembedded.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VyZ2VpLAoKT24gVHVlc2RheSwgNSBKdW5lIDIwMTggMjE6NTc6NDcgRUVTVCBTZXJnZWkg
-U2h0eWx5b3Ygd3JvdGU6Cj4gT24gMDYvMDUvMjAxOCAwMTowOSBQTSwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiA+PiBEb2N1bWVudCB0aGUgUi1DYXIgVjNIIChSOEE3Nzk4MCkgU29DIGluIHRo
-ZSBSLUNhciBEVSBiaW5kaW5nczsgdGhlIERVCj4gPj4gaGFyZHdhcmUgc2VlbXMgdGhlIHNhbWUg
-YXMgaW4gdGhlIFItQ2FyIFYzTSAoUjhBNzc5NzApLgo+ID4gCj4gPiBIb3cgYWJvdXQgInRoZSBE
-VSBoYXJkd2FyZSBoYXMgdGhlIHNhbWUgdG9wb2xvZ3kgYXMgaW4gdGhlIFItQ2FyIFYzTQo+ID4g
-KFI4QTc3OTcwKSIgPyAic2VlbXMiIHNvdW5kcyBsaWtlIHdlJ3JlIHZlcnkgdW5zdXJlIDotKQo+
-IAo+ICAgIFRoYXQncyBwcm9iYWJseSBiZXR0ZXIsIGluZGVlZC4KPiAKPiA+PiBTaWduZWQtb2Zm
-LWJ5OiBTZXJnZWkgU2h0eWx5b3YgPHNlcmdlaS5zaHR5bHlvdkBjb2dlbnRlbWJlZGRlZC5jb20+
-Cj4gPj4gCj4gPj4gLS0tCj4gPj4gVGhlIHBhdGNoIGlzIGFnYWluc3QgdGhlICdkcm0tbmV4dCcg
-YnJhbmNoIG9mIERhdmlkIEFpcmxpZSdzICdsaW51eC5naXQnCj4gPj4gcmVwby4KPiA+IAo+ID4g
-VGhlbiB5b3UgbWlnaHQgd2FudCB0byBzd2l0Y2ggdG8gZ2l0Oi8vYW5vbmdpdC5mcmVlZGVza3Rv
-cC5vcmcvZHJtL2RybSA6LSkKPiAKPiBObywgdGhlIGNvcnJlc3BvbmRpbmcgTUFJTlRBSU5FUlMg
-cmVjb3JkcyBkb24ndCBpbmNsdWRlCj4gZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvIG9yIHdvcnNl
-IHlldCwgdGhlIERVIGJpbmRpbmdzLiA6LSkKCk15IHBvaW50IGlzIHRoYXQgRGF2ZSdzIHRyZWUg
-aGFzIG1vdmVkLgoKPiBTZXJpb3VzbHksIEkgdGhvdWdodCB5b3UndmUgZG9uZSBhIHBhdGNoIHRv
-IHJlbW92ZSB5b3VyIGRlYWQgJ2ZiZGV2JyByZXBvCj4gbW9udGhzIGFnbyBhbmQgSU8nbSBzdGls
-bCBzZWVpbmcgaXQgbGlzdGVkLi4uIDotLwoKSSdsbCBhZGRyZXNzIHRoYXQgbm93LgoKPiA+IEFw
-YXJ0IGZyb20gdGhhdCwKPiA+IAo+ID4gUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxh
-dXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KPiA+IAo+ID4gSWYgeW91IGFncmVlIHdp
-dGggdGhlIHNtYWxsIGNoYW5nZSB0byB0aGUgY29tbWl0IG1lc3NhZ2UgSSdsbCBmaXggdGhlCj4g
-PiBjb25mbGljdCBsb2NhbGx5LCB0aGVyZSdzIG5vIG5lZWQgdG8gcmVzdWJtaXQuCj4gCj4gSSBk
-byBhZ3JlZSwgZXhjZXB0IEkgZG9uJ3Qga25vdyB3aGF0IGNvbmZsaWN0IHlvdSBtZWFuLgo+IAo+
-IFsuLi5dCgpJIG1lYW4gdGhlIGNvbmZsaWN0IHdpdGgKCmNvbW1pdCBkYzgxNDI5MDFiZWZhYmVh
-OTc0MzkzZDQ5YjgwM2YxMzEyNDNmZWI0CkF1dGhvcjogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5i
-aW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KRGF0ZTogICBUaHUgQXByIDI2IDE3OjUz
-OjMxIDIwMTggKzAxMDAKCiAgICBkdC1iaW5kaW5nczogZGlzcGxheTogcmVuZXNhczogZHU6IERv
-Y3VtZW50IHRoZSByOGE3Nzk2NSBiaW5kaW5ncwoKdGhhdCBpcyBwcmVzZW50IGluIERhdmUncyBu
-ZXcgdHJlZS4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, May 28, 2018 at 11:01:32AM -0700, Ray Jui wrote:
+> Consolidate two SP805 binding documents "arm,sp805.txt" and
+> "sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
+> desired compatible string to be used
+> 
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> ---
+>  .../devicetree/bindings/watchdog/arm,sp805.txt     | 27 ++++++++++++++-----
+>  .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31 ----------------------
+>  2 files changed, 20 insertions(+), 38 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+
+Would be good to get a ACK from FSL/NXP person on this. It looks to me 
+like the driver fetches the wrong clock as it gets the first one and the 
+driver really wants 'wdog_clk'. In any case, their dts files should be 
+updated.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Rob
