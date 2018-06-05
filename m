@@ -1,65 +1,45 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v9 2/7] i2c: Add FSI-attached I2C master algorithm
-Date: Tue, 5 Jun 2018 08:31:16 -0500
-Message-ID: <adbc4f16-326c-1cc8-a293-cfd5e2d8a070@linux.vnet.ibm.com>
-References: <1528138850-18259-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1528138850-18259-3-git-send-email-eajames@linux.vnet.ibm.com>
- <CAHp75Vd7NvDFmWSzNDz-tgGvMVyXU7Z16LgGCWnHkY-3kE7fwg@mail.gmail.com>
- <7daf29f643bb0445fceef85b1a7fff71048f2aa6.camel@kernel.crashing.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v7 1/5] drm/rockchip: add transfer function for cdn-dp
+Date: Tue, 05 Jun 2018 15:42:11 +0200
+Message-ID: <2246202.0LhvmkcTbg@diego>
+References: <1527061353-16902-1-git-send-email-hl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7daf29f643bb0445fceef85b1a7fff71048f2aa6.camel@kernel.crashing.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1527061353-16902-1-git-send-email-hl@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lin Huang <hl@rock-chips.com>
+Cc: devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, briannorris@chromium.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, kishon@ti.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, zyw@rock-chips.com, daniel.vetter@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/04/2018 06:38 PM, Benjamin Herrenschmidt wrote:
-> On Mon, 2018-06-04 at 22:21 +0300, Andy Shevchenko wrote:
->>> +#define I2C_INT_ENABLE         0x0000ff80
->>> +#define I2C_INT_ERR            0x0000fcc0
->> Now it looks like a flags combinations.
->> For me as for reader would be better to see quickly a decoded line.
->>
->> My proposal is to introduce something like following
->>
->> _INT_ALL  GENMASK()
->> _INT_ENABLE (_INT_ALL & ~(_FOO | _BAR))
->> _INT_ERR ... similar way as above ...
->>
->> What do you think?
-> I don't think this absolutely needs to change but yes, open coding is
-> error prone. However I would think it more readable to use positive
-> logic and just list all the bits that are *set* even if it's a bit more
-> text:
->
-> #define I2C_INT_ERR	(I2C_INT_INV_CMD	|\                			
->   I2C_INT_PARITY         |\
-> 			 I2C_INT_BE_OVERRUN	|\
-> 			.../...)
->
-> #define I2C_INT_ENABLE	(I2C_INT_ERR		|\
-> 			 I2C_INT_DAT_REQ	|\
-> 			 I2C_INT_CMD_COMP)
->
-> Note: Eddie, I notice I2C_INT_BUSY is in "ERR" but not in "ENABLE", any
-> reason for that ?
-
-Yes, we don't want to enable an interrupt if I2C gets into the busy 
-state, as that happens during every transfer.  However it would likely 
-be an error condition if we get that when the transfer is supposed to be 
-complete. These were from the legacy driver... I just realized that 
-neither are actually being used in this driver, so I will drop them.
-
-Thanks,
-Eddie
-
->
-> Cheers,
-> Ben.
->
+SGksCgpBbSBNaXR0d29jaCwgMjMuIE1haSAyMDE4LCAwOTo0MjoyOSBDRVNUIHNjaHJpZWIgTGlu
+IEh1YW5nOgo+IEZyb206IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+Cj4gCj4gV2Ug
+bWF5IHN1cHBvcnQgdHJhaW5pbmcgb3V0c2lkZSBmaXJtd2FyZSwgc28gd2UgbmVlZCBzdXBwb3J0
+Cj4gZHBjZCByZWFkL3dyaXRlIHRvIGdldCB0aGUgbWVzc2FnZSBvciBkbyBzb21lIHNldHRpbmcg
+d2l0aAo+IGRpc3BsYXkuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2Nr
+LWNoaXBzLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBMaW4gSHVhbmcgPGhsQHJvY2stY2hpcHMuY29t
+Pgo+IFJldmlld2VkLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiBSZXZp
+ZXdlZC1ieTogRW5yaWMgQmFsbGV0Ym8gPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+Cgo+
+IEBAIC0xMDMwLDYgKzEwNjQsMTMgQEAgc3RhdGljIGludCBjZG5fZHBfYmluZChzdHJ1Y3QgZGV2
+aWNlICpkZXYsIHN0cnVjdAo+IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKSBkcC0+YWN0aXZl
+ID0gZmFsc2U7Cj4gIAlkcC0+YWN0aXZlX3BvcnQgPSAtMTsKPiAgCWRwLT5md19sb2FkZWQgPSBm
+YWxzZTsKPiArCWRwLT5hdXgubmFtZSA9ICJEUC1BVVgiOwo+ICsJZHAtPmF1eC50cmFuc2ZlciA9
+IGNkbl9kcF9hdXhfdHJhbnNmZXI7Cj4gKwlkcC0+YXV4LmRldiA9IGRldjsKPiArCj4gKwlyZXQg
+PSBkcm1fZHBfYXV4X3JlZ2lzdGVyKCZkcC0+YXV4KTsKPiArCWlmIChyZXQpCj4gKwkJcmV0dXJu
+IHJldDsKCnRoaXMgaXMgbWlzc2luZyBtYXRjaGluZyBkcm1fZHBfYXV4X3VucmVnaXN0ZXIgY2Fs
+bHMgYm90aCBpbiB0aGUgZXJyb3IgcGF0aCBhcyAKd2VsbCBhcyBpbiB0aGUgdW5iaW5kIGNhbGxi
+YWNrLgoKV2l0aCB0aGUgY29kZSBhcyBpcywgdGhlIGtlcm5lbCBnaXZlcyB3YXJuaW5ncyBhYm91
+dCBpdCB0cnlpbmcgdG8gaW5pdGlhbGl6ZSAKYW4gYWxyZWFkeSBpbml0aWFsaXplZCBvYmplY3Qg
+Li4uIGluIGNhc2VzIGxpa2UgcHJvYmUtZGVmZXJyYWxzLgoKCkhlaWtvCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
