@@ -1,29 +1,125 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 09/10] dpaa_eth: add support for hardware timestamping
-Date: Tue, 5 Jun 2018 06:57:49 -0700
-Message-ID: <20180605135748.mlarwiyzf2oe27ax@localhost>
-References: <20180604070837.19265-1-yangbo.lu@nxp.com>
- <20180604070837.19265-10-yangbo.lu@nxp.com>
- <20180604134920.ezhe6jz5ntpnqyzj@localhost>
- <DB6PR0401MB2536376432EC481473A5B4A3F8660@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 6/6] regulator: bd71837: BD71837 PMIC regulator driver
+Date: Tue, 5 Jun 2018 16:58:43 +0300
+Message-ID: <CAHp75VeVSbZd12vXew9f0z2m1=BFz+cOKomga3SZEzg=kx9CFw@mail.gmail.com>
+References: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com> <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DB6PR0401MB2536376432EC481473A5B4A3F8660@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+In-Reply-To: <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Y.b. Lu" <yangbo.lu@nxp.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 05, 2018 at 03:35:28AM +0000, Y.b. Lu wrote:
-> [Y.b. Lu] Actually these timestamping codes affected DPAA networking performance in our previous performance test.
-> That's why we used ifdef for it.
+On Tue, May 29, 2018 at 1:02 PM, Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+> Support for controlling the 8 bucks and 7 LDOs the PMIC contains.
 
-How much does time stamping hurt performance?
+> +#include <linux/kernel.h>
 
-If the time stamping is compiled in but not enabled at run time, does
-it still affect performace?
+> +#include <linux/module.h>
+> +#include <linux/init.h>
 
-Thanks,
-Richard
+One of these is redundant.
+
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/delay.h>
+> +#include <linux/slab.h>
+> +#include <linux/gpio.h>
+> +#include <linux/mfd/bd71837.h>
+> +#include <linux/regulator/of_regulator.h>
+
+Can you keep the list ordered?
+
+> +       dev_dbg(&(pmic->pdev->dev), "Buck[%d] Set Ramp = %d\n", id + 1,
+> +               ramp_delay);
+
+Redundant parens.
+
+> +static int bd71837_regulator_set_regmap(struct regulator_dev *rdev, int set)
+> +{
+
+> +       int ret = -EINVAL;
+
+Redundant assignment.
+
+> +       if (!set)
+> +               ret = regulator_disable_regmap(rdev);
+> +       else
+> +               ret = regulator_enable_regmap(rdev);
+
+> +       return ret;
+> +}
+
+> +static int bd71837_probe(struct platform_device *pdev)
+> +{
+
+> +       pmic = devm_kzalloc(&pdev->dev, sizeof(struct bd71837_pmic),
+> +                           GFP_KERNEL);
+
+sizeof(*pmic) and one line as result?
+
+> +       if (!pmic)
+> +               return -ENOMEM;
+
+> +       if (!pmic->mfd) {
+> +               dev_err(&pdev->dev, "No MFD driver data\n");
+
+> +               err = -EINVAL;
+> +               goto err;
+
+Plain return?
+
+> +       }
+
+> +               dev_dbg(&pmic->pdev->dev, "%s: Unlocked lock register 0x%x\n",
+> +                       __func__, BD71837_REG_REGLOCK);
+
+__func__ part is redundant.
+
+> +       for (i = 0; i < ARRAY_SIZE(pmic_regulator_inits); i++) {
+
+> +
+
+Redundant blank line.
+
+> +               rdev = devm_regulator_register(&pdev->dev, desc, &config);
+> +               if (IS_ERR(rdev)) {
+> +                       dev_err(pmic->mfd->dev,
+> +                               "failed to register %s regulator\n",
+> +                               desc->name);
+
+> +                       err = PTR_ERR(rdev);
+> +                       goto err;
+
+Plain return ...
+
+> +err:
+> +       return err;
+
+Redundant.
+
+> +}
+
+> +static struct platform_driver bd71837_regulator = {
+> +       .driver = {
+> +                  .name = "bd71837-pmic",
+
+> +                  .owner = THIS_MODULE,
+
+This done by macro you are using below. Thus, redundant.
+
+> +                  },
+> +       .probe = bd71837_probe,
+> +};
+> +
+> +module_platform_driver(bd71837_regulator);
+
+-- 
+With Best Regards,
+Andy Shevchenko
