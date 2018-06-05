@@ -1,174 +1,66 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 0/8] gnss: add new GNSS subsystem
-Date: Tue, 5 Jun 2018 23:47:52 +0200
-Message-ID: <20180605214752.GB28143@amd>
-References: <20180601082259.17563-1-johan@kernel.org>
- <20180601093311.GA31639@amd>
- <20180601094959.GA13775@localhost>
- <20180601102612.GC31639@amd>
- <20180601122217.GB13775@localhost>
- <20180601162645.GA30792@amd>
- <20180604102238.GC13775@localhost>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 3/4] drm/panel: add Innolux TV123WAM
+ panel driver support
+Date: Tue, 5 Jun 2018 18:14:48 -0400
+Message-ID: <20180605221448.GA3373@art_vandelay>
+References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
+ <1528177218-1051-5-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="TakKZr9L6Hm6aLOc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180604102238.GC13775@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas Kemnade <andreas@kemnade.info>, Arnd Bergmann <arnd@arndb.de>, "H . Nikolaus Schaller" <hns@goldelico.com>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1528177218-1051-5-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---TakKZr9L6Hm6aLOc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > udev solves device discovery pretty well; I don't think that's good
-> > thing to optimize for.
->=20
-> It's about grouping related devices together, devices which share some
-> common functionality. In this case, providing location data from some
-> satellite system. I really don't understand how you can find having a
-> class type named "gnss" for this to be controversial in any way.
-
-We normally group devices by interface, not by functionality.
-
-> > (And.. I'd really prefer /dev/nmeaX and /dev/sirfX in that situation;
-> > and yes that makes it _even easier_ for location service to find right
-> > devices).=20
->=20
-> As I've already explained, you may not know which protocol is currently
-> active when the device start and you typically switch from NMEA to a
-> vendor protocol during runtime (e.g. for configuration or to access raw
-> GNSS data).
->=20
-> Trying to encode the GNSS protocol in the character-device node name is
-> just a bad idea.
-
-I thought idea was to switch to the "best" protocol in kernel.
-
-> > > Point is, you can't write a subsystem for everything. If it later tur=
-ns
-> > > out some part of the code can be shared internally, fine.
-> >=20
-> > True. But you can pick reasonable name for the subsystem :-).
->=20
-> I find naming a subsystem for GNSS receivers "gnss" to be very
-> reasonable. ;)
-
-I don't. I'll explain why below.
-
-> > Well, these days AT modems really have separate channels for commands
-> > and data.
-> >=20
-> > > As mentioned in the cover letter, we may eventually want to add suppo=
-rt
-> > > for some kinds of configuration from within the kernel (e.g. protocol
-> > > and line speed changes).
-> >=20
-> > I believe we'll eventually want "real" GPS drivers, with common
-> > interface. input was in this situation before...
->=20
-> As we also already discussed, there's nothing preventing you from trying
-> to move gpsd into the kernel later. I doubt this is something we want,
-> and it may turn out not to be feasible for other reasons.
-
-Well -- I believe we want "gpsd in kernel". If you take /dev/gnss0 and
-drivers/gnss now, where do I put them?
-
-> And as you already acknowledged, this series does solve a problem we
-> have today.
-
-Yes. I'm not disputing that.
-
-> > Anyway, it is trivial binary protocol over packets that are used for
-> > modem communication. Handling it is like 40? lines of code.
->=20
-> Ok, so I did read the damn thing along with the overview of the N900 GPS
-> hardware and reverse-engineered protocol (why didn't you point me to
-> those instead?) and I'm still not sure what the point you're trying to
-> make is.
-
-Umm. Where did you find the hardware overview/protocol overview?
-
-> The n900 service you link to above, parses phonet data, does some
-> *floating point* calculations and generates NMEA sentences which it
-> feeds to a pseudo terminal whose slave side is opened by gpsd.
->=20
-> That NMEA data could just as easily be fed through a different kernel
-> subsystem, namely gnss instead of tty, where it could be accessed
-> through a common interface (for now, a raw gnss interface, with some
-> associated meta data). [ And from what I can tell, ugnss would also
-> allow you to get rid of some hacks related to finding out when the GNSS
-> is opened and needs to be powered on. ]
->=20
-> So the ugnss interface looks like it will work for N900 just as it will
-> for other phones.
-
-Not NMEA please. First, NMEA has strange format of latitude/longitude
--- that's those calculations IIRC. NMEA has other problems, too --
-like not atomically providing speeds and accuracies. Plus it is crazy
-text protoco with CRCs.
-
-> > NMEA would not be my first choice, really. I'd propose something very
-> > similar to existing /dev/input/eventX, but with wider data types.
->=20
-> Fine, you pursue that idea if you want then. I can see many problems
-> with trying to so, but the point is, this series doesn't prevent you
-> from doing so.
-
-> If you think you'll one day be able to parse and repackage the various
-> vendor protocols within the kernel, you can consider the raw gnss
-> interface as an intermediate step (which may continue to exist in
-> parallel just as say hidraw).
->=20
-> As I've already mentioned, I considered naming the device nodes
-> /dev/gnssraw0 partly because it would leave /dev/gnss namespace free for
-> any such future development. I ultimately found that idea to be too
-> implausible for it to be worth the potential confusion arising from the
-> fact that "raw" GNSS data is already has an established meaning.
->=20
-> But in the end, this is just name bike shedding.
-
-So I agree /dev/gnssraw is not great. But /dev/gnss is even worse. And
-yes, it is "just" a naming, but it will be impossible to fix later.
-
-/dev/serdev? /dev/gnssproto?
-
-> > Maybe we don't want to move _every_ GNSS protocol handler into kernel,
-> > but I'm pretty sure we need to move _some_ of them there. It is
-> > certainly best place for Nokia N900's protocol.
-> >=20
-> > And I'm trying to make sure we have suitable names available when that
-> > happens.
->=20
-> If that's the concern, we could reconsider naming the raw protocol
-> interface /dev/gnnsraw0 as mentioned above.
-
-I prfer /dev/gnssraw0 to /dev/gnss0.
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---TakKZr9L6Hm6aLOc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlsXBQgACgkQMOfwapXb+vIj6wCfSK+BIeSgiZRHGxC/UuDND3Px
-Cr8AoKqhgmRGZWrH/5VQPyZIg0v2bet2
-=k/LH
------END PGP SIGNATURE-----
-
---TakKZr9L6Hm6aLOc--
+T24gVHVlLCBKdW4gMDUsIDIwMTggYXQgMTE6MTA6MTdBTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
+cm90ZToKPiBBZGQgc3VwcG9ydCBmb3IgSW5ub2x1eCBUVjEyM1dBTSwgd2hpY2ggaXMgYSAxMi4z
+IiBlRFAKPiBkaXNwbGF5IHBhbmVsIHdpdGggMjE2MHgxNDQwIHJlc29sdXRpb24uCj4gCj4gQ2hh
+bmdlcyBpbiB2MToKPiAgLSBBZGQgdGhlIGNvbXBhdGliaWxpdHkgc3RyaW5nLCBkaXNwbGF5X21v
+ZGUgYW5kIHBhbmVsX2Rlc2MKPiAgICBzdHJ1Y3R1cmVzIGluIGFscGhhYmV0aWNhbCBvcmRlciAo
+U2VhbiBQYXVsKS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29k
+ZWF1cm9yYS5vcmc+CgpSZXZpZXdlZC1ieTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5v
+cmc+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgfCAyNyAr
+KysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlv
+bnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggMjM0YWY4
+MS4uOGM3MjI3MCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2lt
+cGxlLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPiBAQCAt
+MTE5MCw2ICsxMTkwLDMwIEBAIHN0YXRpYyB2b2lkIHBhbmVsX3NpbXBsZV9zaHV0ZG93bihzdHJ1
+Y3QgZGV2aWNlICpkZXYpCj4gIAl9LAo+ICB9Owo+ICAKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBk
+cm1fZGlzcGxheV9tb2RlIGlubm9sdXhfdHYxMjN3YW1fbW9kZSA9IHsKPiArCS5jbG9jayA9IDIw
+NjAxNiwKPiArCS5oZGlzcGxheSA9IDIxNjAsCj4gKwkuaHN5bmNfc3RhcnQgPSAyMTYwICsgNDgs
+Cj4gKwkuaHN5bmNfZW5kID0gMjE2MCArIDQ4ICsgMzIsCj4gKwkuaHRvdGFsID0gMjE2MCArIDQ4
+ICsgMzIgKyA4MCwKPiArCS52ZGlzcGxheSA9IDE0NDAsCj4gKwkudnN5bmNfc3RhcnQgPSAxNDQw
+ICsgMywKPiArCS52c3luY19lbmQgPSAxNDQwICsgMyArIDEwLAo+ICsJLnZ0b3RhbCA9IDE0NDAg
+KyAzICsgMTAgKyAyNywKPiArCS52cmVmcmVzaCA9IDYwLAo+ICsJLmZsYWdzID0gRFJNX01PREVf
+RkxBR19QSFNZTkMgfCBEUk1fTU9ERV9GTEFHX1BWU1lOQywKPiArfTsKPiArCj4gK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBpbm5vbHV4X3R2MTIzd2FtID0gewo+ICsJLm1vZGVzID0g
+Jmlubm9sdXhfdHYxMjN3YW1fbW9kZSwKPiArCS5udW1fbW9kZXMgPSAxLAo+ICsJLmJwYyA9IDgs
+Cj4gKwkuc2l6ZSA9IHsKPiArCQkud2lkdGggPSAyNTksCj4gKwkJLmhlaWdodCA9IDE3MywKPiAr
+CX0sCj4gK307Cj4gKwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgaW5u
+b2x1eF96ajA3MG5hXzAxcF9tb2RlID0gewo+ICAJLmNsb2NrID0gNTE1MDEsCj4gIAkuaGRpc3Bs
+YXkgPSAxMDI0LAo+IEBAIC0yMDM3LDYgKzIwNjEsOSBAQCBzdGF0aWMgdm9pZCBwYW5lbF9zaW1w
+bGVfc2h1dGRvd24oc3RydWN0IGRldmljZSAqZGV2KQo+ICAJCS5jb21wYXRpYmxlID0gImlubm9s
+dXgsbjE1NmJnZS1sMjEiLAo+ICAJCS5kYXRhID0gJmlubm9sdXhfbjE1NmJnZV9sMjEsCj4gIAl9
+LCB7Cj4gKwkJLmNvbXBhdGlibGUgPSAiaW5ub2x1eCx0djEyM3dhbSIsCj4gKwkJLmRhdGEgPSAm
+aW5ub2x1eF90djEyM3dhbSwKPiArCX0sIHsKPiAgCQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LHpq
+MDcwbmEtMDFwIiwKPiAgCQkuZGF0YSA9ICZpbm5vbHV4X3pqMDcwbmFfMDFwLAo+ICAJfSwgewo+
+IC0tIAo+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBv
+ZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRp
+dmUgUHJvamVjdAo+IAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAv
+IENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVu
+bwo=
