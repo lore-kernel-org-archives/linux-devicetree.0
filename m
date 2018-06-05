@@ -1,38 +1,70 @@
-From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
-Date: Tue, 5 Jun 2018 09:07:00 +0200
-Message-ID: <717f24e1-3846-7685-b440-0754da883c2a@armadeus.com>
-References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
- <20180523042953.kcp2h5xtwjrjponn@vireshk-i7>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH V2 2/2] arm: dts: sunxi: Add missing cooling device
+ properties for CPUs
+Date: Tue, 5 Jun 2018 09:11:39 +0200
+Message-ID: <20180605071139.osu2pgpg3ychdxln@flea>
+References: <20180601151701.sshwfdbflic6mybv@flea>
+ <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
+ <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180523042953.kcp2h5xtwjrjponn@vireshk-i7>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="g37vwftiwjlvzocz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMjMvMjAxOCAwNjoyOSBBTSwgVmlyZXNoIEt1bWFyIHdyb3RlOgo+IE9uIDIyLTA1LTE4
-LCAwODoyOCwgU8OpYmFzdGllbiBTenltYW5za2kgd3JvdGU6Cj4+IENoZWNrIHRoZSBtYXggc3Bl
-ZWQgc3VwcG9ydGVkIGZyb20gdGhlIGZ1c2VzIGZvciBpLk1YNlVMTCBhbmQgdXBkYXRlIHRoZQo+
-PiBvcGVyYXRpbmcgcG9pbnRzIHRhYmxlIGFjY29yZGluZ2x5Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
-OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+
-Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGZvciB2MzoKPj4gIC0gbm9uZQo+IAo+IEBTYXNjaGEgYW5k
-IFNoYXduOiBDYW4geW91IGd1eXMgcGxlYXNlIEFjayB0aGlzIHNlcmllcyBpZiB0aGVyZSBpcwo+
-IG5vdGhpbmcgd3Jvbmcgd2l0aCBpdCA/Cj4gCgpwaW5nLi4uCgotLSAKU8OpYmFzdGllbiBTenlt
-YW5za2kKU29mdHdhcmUgZW5naW5lZXIsIEFybWFkZXVzIFN5c3RlbXMKVGVsOiArMzMgKDApOSA3
-MiAyOSA0MSA0NApGYXg6ICszMyAoMCk5IDcyIDI4IDc5IDI2CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+--g37vwftiwjlvzocz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 05, 2018 at 10:17:49AM +0530, Viresh Kumar wrote:
+> The cooling device properties, like "#cooling-cells" and
+> "dynamic-power-coefficient", should either be present for all the CPUs
+> of a cluster or none. If these are present only for a subset of CPUs of
+> a cluster then things will start falling apart as soon as the CPUs are
+> brought online in a different order. For example, this will happen
+> because the operating system looks for such properties in the CPU node
+> it is trying to bring up, so that it can register a cooling device.
+>=20
+> Add such missing properties.
+>=20
+> Fix other missing properties (clocks, OPP, clock latency) as well to
+> make it all work.
+>=20
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+Applied both, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--g37vwftiwjlvzocz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsWN6oACgkQ0rTAlCFN
+r3RYNBAAhAy9CYd+HioBknOi0g02dQTivylpf7IQXq/OvfawoEfYs2MF11HoLGZc
+F+TjUgg722eZAqbsnEUpLFfjQr77bR5AZrjek3/rm/vS8ah48xIHAI8ODNHXk1U1
+Qehh4slf9Qeblbo1rdlpJCmu/O1UT3cNUc4CfB+lHzWlN7CcH6CZosV8ZkzIOmPN
+Y6W2F0EdQt4Rr7HDenxu8r8N62/HrLANqB8khrduUHeq0SBUSUDLVPe+/ql7Ay5Q
+BaYVPDD8I3hjLEXuE7yRY9/lvBrA0U8nWORt6Ezt7orH0nhrhKmPJbgHd7q02Av+
+b82HbYEcR5lVrMECuLmqeWEYVB/oeVFxZ7plsQczVUzuVTUfVc2DBx7gDmrV/oUX
+6ItUrlGUoyeqjYlI/ITa/8WLvk0c79eUOreHeAtM0BFD1fPKb8sx0w4v+zeingk+
+h6xmhUcSncSpA17hw/G/lAsJLMJMFnUnFB59/xC8PF++w3utRqSqlo2lqutcgrqV
+9lIsem+TDuuhMVkcqoU+BrqhJBOcFOrk6WgATXPs9SbnPiMDjJWGNuWg26o3jRAR
+v4R25wOV6h6ZCRUAmhiuZzRjyCtYJGoe3BuHSYE/4hD88gCbQwmKbY8IWRHDydrF
+Xboroz/plM4F1vclt91Z9e6VSIWFKPgDmoSZtq6bIM8xEGZILKU=
+=8AIo
+-----END PGP SIGNATURE-----
+
+--g37vwftiwjlvzocz--
