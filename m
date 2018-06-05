@@ -1,69 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware
- device
-Date: Tue, 5 Jun 2018 15:07:58 -0600
-Message-ID: <20180605210758.GA19888@rob-hp-laptop>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
+Subject: Re: [PATCH V2 1/2] clk: imx6ul: add GPIO clock gates
+Date: Tue, 5 Jun 2018 15:10:09 -0600
+Message-ID: <20180605211009.GA28373@rob-hp-laptop>
+References: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
+In-Reply-To: <1527990245-13619-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>
-Cc: hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, stanimir.varbanov@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, michael@amarulasolutions.com, matteo.lisi@engicam.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 02, 2018 at 01:56:08AM +0530, Vikash Garodia wrote:
-> A separate child device is added for video firmware.
-> This is needed to
-> [1] configure the firmware context bank with the desired SID.
-> [2] ensure that the iova for firmware region is from 0x0.
+On Sun, Jun 03, 2018 at 09:44:04AM +0800, Anson Huang wrote:
+> i.MX6UL has GPIO clock gates in CCM CCGR,
+> add them into clock tree for clock management.
 > 
-> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../devicetree/bindings/media/qcom,venus.txt       |  8 +++-
->  drivers/media/platform/qcom/venus/core.c           | 48 +++++++++++++++++++---
->  drivers/media/platform/qcom/venus/firmware.c       | 20 ++++++++-
->  drivers/media/platform/qcom/venus/firmware.h       |  2 +
->  4 files changed, 71 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> index 00d0d1b..701cbe8 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,venus.txt
-> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> @@ -53,7 +53,7 @@
->  
->  * Subnodes
->  The Venus video-codec node must contain two subnodes representing
-> -video-decoder and video-encoder.
-> +video-decoder and video-encoder, one optional firmware subnode.
->  
->  Every of video-encoder or video-decoder subnode should have:
->  
-> @@ -79,6 +79,8 @@ Every of video-encoder or video-decoder subnode should have:
->  		    power domain which is responsible for collapsing
->  		    and restoring power to the subcore.
->  
-> +The firmware sub node must contain the iommus specifiers for ARM9.
-> +
->  * An Example
->  	video-codec@1d00000 {
->  		compatible = "qcom,msm8916-venus";
-> @@ -105,4 +107,8 @@ Every of video-encoder or video-decoder subnode should have:
->  			clock-names = "core";
->  			power-domains = <&mmcc VENUS_CORE1_GDSC>;
->  		};
-> +		venus-firmware {
-> +			compatible = "qcom,venus-firmware-no-tz";
-> +			iommus = <&apps_smmu 0x10b2 0x0>;
+> changes since V1:
+> 	Move IMX6UL_CLK_GPIOx definition to end of clock table;
+> 	Based on Fabio's patch "[v2] dt-bindings: clock: imx6ul: Do not change the clock definition order".
+>  drivers/clk/imx/clk-imx6ul.c             | 5 +++++
+>  include/dt-bindings/clock/imx6ul-clock.h | 8 +++++++-
+>  2 files changed, 12 insertions(+), 1 deletion(-)
 
-This mostly looks like you are adding a node in order to create a 
-platform device. DT is not the only way to create platform devices and 
-shouldn't be used when the device is not really a separate h/w device. 
-Plus it seems like it is debatable that you even need a driver.
-
-For iommus, just move it up to the parent (or add to existing prop).
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
