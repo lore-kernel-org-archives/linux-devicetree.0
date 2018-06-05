@@ -1,15 +1,17 @@
-From: jacopo mondi <jacopo@jmondi.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 Subject: Re: [PATCH v3 8/8] ARM: dts: rcar-gen2: Remove unused VIN properties
-Date: Tue, 5 Jun 2018 10:12:22 +0200
-Message-ID: <20180605081222.GL10472@w540>
+Date: Tue, 5 Jun 2018 10:23:22 +0200
+Message-ID: <CAMuHMdXVF_OZCXJ449TJdm3f7ECMabgpRoWEBSmxJ=7f0zA_7Q@mail.gmail.com>
 References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
  <1527606359-19261-9-git-send-email-jacopo+renesas@jmondi.org>
  <20180604122325.GH19674@bigcity.dyn.berto.se>
  <20180605074938.mljwmgpjlplvkp2v@verge.net.au>
+ <20180605081222.GL10472@w540>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7884403499857249573=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180605074938.mljwmgpjlplvkp2v@verge.net.au>
+In-Reply-To: <20180605081222.GL10472@w540>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,123 +21,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, hans.verkuil@cisco.com, geert@glider.be, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============7884403499857249573==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RNRUMt0ZF5Yaq/Aq"
-Content-Disposition: inline
-
-
---RNRUMt0ZF5Yaq/Aq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Simon,
-
-On Tue, Jun 05, 2018 at 09:49:38AM +0200, Simon Horman wrote:
-> On Mon, Jun 04, 2018 at 02:23:25PM +0200, Niklas S=C3=B6derlund wrote:
-> > Hi Jacopo,
-> >
-> > Thanks for your work.
-> >
-> > On 2018-05-29 17:05:59 +0200, Jacopo Mondi wrote:
-> > > The 'bus-width' and 'pclk-sample' properties are not parsed by the VIN
-> > > driver and only confuse users. Remove them in all Gen2 SoC that use
-> > > them.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >
-> > The more I think about this the more I lean towards that this patch
-> > should be dropped. The properties accurately describes the hardware and
-> > I think there is value in that. That the driver currently don't parse or
-> > make use of them don't in my view reduce there value. Maybe you should
-> > break out this patch to a separate series?
->
-> I also think there is value in describing the hardware not the state of t=
-he
-> driver at this time.  Is there any missmatch between these properties and
-> the bindings?
-
-Niklas and I discussed a bit offline on this yesterday. My main
-concern, and sorry for being pedant on this, is that changing those
-properties value does not change the interface behaviour, and this
-could cause troubles when integrating image sensor not known to be
-working on the VIN interface.
-
-This said, the documentation of those (and all other) properties is in the
-generic "video-interfaces.txt" file and it is my understanding, but I think
-Laurent and Rob agree on this as well from their replies to my previous ser=
-ies,
-that each driver should list which properties it actually supports, as
-some aspects are very implementation specific, like default values and
-what happens if the property is not specified [1]. Nonetheless, all
-properties describing hardware features and documented in the generic
-file should be accepted in DTS, as those aims to be OS-independent and
-even independent from the single driver implementation.
-
-A possible middle-ground would be documenting in the VIN device tree
-bindings description properties whose values actually affect the VIN
-interface configuration and state in bindings that all generic properties
-described in 'video-interfaces.txt' are valid ones but if not
-explicitly listed there their value won't affect the interface
-configuration. Niklas suggested this, and I quite like the fact it
-makes clear that, say, changing the 'pclk-sample' property won't
-change how the VIN interface would sample data but at the same time
-allows for extensive description of the hardware.
-
-Would something like this work in your opinion?
-
-As a consequence, this patch should be dropped as Niklas and you
-suggested.
-
-Thanks
-   j
-
-[1] Ie. An interface that supports BT.656 encoding will use it if
-'hsync-active' and 'vsync-active' are not specified. One that does not
-support embedded synchronization would instead use defaults for those
-two properties. This is specific to the single interface (or even the
-single driver implementation actually) and should be listed in the single
-driver's bindings description imo.
-
---RNRUMt0ZF5Yaq/Aq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbFkXlAAoJEHI0Bo8WoVY8KhcQAJUL6ug4xkvU0gsP/lLtKDPV
-hV7G9VpjtOeN4LBpBEjdLb4wxrcsvUv97S8wu5TzGtiwoNwXZOp1+I7fFvP3sJ5h
-W57kWkPmYAoKAHJeenNaAk5Lq9wMNg/zqwq7ujE6o+ioqGUH7hirh99H4I220XmW
-KCFfvm477tT1OL5y8V6hRXMJPLjYKJ6yA0XABjBfSiHr3cTZhqxSw7stXNeS1yfA
-3A6HhrxivRD4YLM2BO5eWS6Ja1/NrFXaOcvESE1DpItJ3CpxJy8rFXkpb02cNw8x
-yoRRvSOeY7Aoycs3KCDJFErcSif7CL+pxn4YbmxWMJuXR8vbDjHyhvaMog7qr9jr
-ADlqSf7pB3u8G7K8MwZy/P0gaTNfdANAEVRcHaXTLMGQdCCWOsEQQ00Mq95fMIZM
-IZL9YVjsLEJByj/I6LDuoM9fABb3Zxb43YVD2fErV29St1pFSGEFl8w20rngcHPy
-XXsgCPkEsiR0+2XZsuT+C/gTZf9c4FQWdlaSmyfMNP4EmLHBsTW9r9+FKEhY6tir
-KV12XPZSXr5j7zpH0yE1Me0ztpdURTSnDk0om+X+z0Xs74NnAZq5MjLbN0jLqhMq
-fKGdLEHRc147xZAx/1U+qo/n0CsuFv+wl7st8UcSgnL/In1BJ+TmHXK2Dyi6zk5G
-WScx8jfe/TOYAbbLmfIz
-=4MDZ
------END PGP SIGNATURE-----
-
---RNRUMt0ZF5Yaq/Aq--
-
-
---===============7884403499857249573==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7884403499857249573==--
+SGkgSmFjb3BvLAoKT24gVHVlLCBKdW4gNSwgMjAxOCBhdCAxMDoxMiBBTSwgamFjb3BvIG1vbmRp
+IDxqYWNvcG9Aam1vbmRpLm9yZz4gd3JvdGU6Cj4gT24gVHVlLCBKdW4gMDUsIDIwMTggYXQgMDk6
+NDk6MzhBTSArMDIwMCwgU2ltb24gSG9ybWFuIHdyb3RlOgo+PiBPbiBNb24sIEp1biAwNCwgMjAx
+OCBhdCAwMjoyMzoyNVBNICswMjAwLCBOaWtsYXMgU8O2ZGVybHVuZCB3cm90ZToKPj4gPiBPbiAy
+MDE4LTA1LTI5IDE3OjA1OjU5ICswMjAwLCBKYWNvcG8gTW9uZGkgd3JvdGU6Cj4+ID4gPiBUaGUg
+J2J1cy13aWR0aCcgYW5kICdwY2xrLXNhbXBsZScgcHJvcGVydGllcyBhcmUgbm90IHBhcnNlZCBi
+eSB0aGUgVklOCj4+ID4gPiBkcml2ZXIgYW5kIG9ubHkgY29uZnVzZSB1c2Vycy4gUmVtb3ZlIHRo
+ZW0gaW4gYWxsIEdlbjIgU29DIHRoYXQgdXNlCj4+ID4gPiB0aGVtLgo+PiA+ID4KPj4gPiA+IFNp
+Z25lZC1vZmYtYnk6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KPj4g
+Pgo+PiA+IFRoZSBtb3JlIEkgdGhpbmsgYWJvdXQgdGhpcyB0aGUgbW9yZSBJIGxlYW4gdG93YXJk
+cyB0aGF0IHRoaXMgcGF0Y2gKPj4gPiBzaG91bGQgYmUgZHJvcHBlZC4gVGhlIHByb3BlcnRpZXMg
+YWNjdXJhdGVseSBkZXNjcmliZXMgdGhlIGhhcmR3YXJlIGFuZAo+PiA+IEkgdGhpbmsgdGhlcmUg
+aXMgdmFsdWUgaW4gdGhhdC4gVGhhdCB0aGUgZHJpdmVyIGN1cnJlbnRseSBkb24ndCBwYXJzZSBv
+cgo+PiA+IG1ha2UgdXNlIG9mIHRoZW0gZG9uJ3QgaW4gbXkgdmlldyByZWR1Y2UgdGhlcmUgdmFs
+dWUuIE1heWJlIHlvdSBzaG91bGQKPj4gPiBicmVhayBvdXQgdGhpcyBwYXRjaCB0byBhIHNlcGFy
+YXRlIHNlcmllcz8KPj4KPj4gSSBhbHNvIHRoaW5rIHRoZXJlIGlzIHZhbHVlIGluIGRlc2NyaWJp
+bmcgdGhlIGhhcmR3YXJlIG5vdCB0aGUgc3RhdGUgb2YgdGhlCj4+IGRyaXZlciBhdCB0aGlzIHRp
+bWUuICBJcyB0aGVyZSBhbnkgbWlzc21hdGNoIGJldHdlZW4gdGhlc2UgcHJvcGVydGllcyBhbmQK
+Pj4gdGhlIGJpbmRpbmdzPwo+Cj4gTmlrbGFzIGFuZCBJIGRpc2N1c3NlZCBhIGJpdCBvZmZsaW5l
+IG9uIHRoaXMgeWVzdGVyZGF5LiBNeSBtYWluCj4gY29uY2VybiwgYW5kIHNvcnJ5IGZvciBiZWlu
+ZyBwZWRhbnQgb24gdGhpcywgaXMgdGhhdCBjaGFuZ2luZyB0aG9zZQo+IHByb3BlcnRpZXMgdmFs
+dWUgZG9lcyBub3QgY2hhbmdlIHRoZSBpbnRlcmZhY2UgYmVoYXZpb3VyLCBhbmQgdGhpcwo+IGNv
+dWxkIGNhdXNlIHRyb3VibGVzIHdoZW4gaW50ZWdyYXRpbmcgaW1hZ2Ugc2Vuc29yIG5vdCBrbm93
+biB0byBiZQo+IHdvcmtpbmcgb24gdGhlIFZJTiBpbnRlcmZhY2UuCj4KPiBUaGlzIHNhaWQsIHRo
+ZSBkb2N1bWVudGF0aW9uIG9mIHRob3NlIChhbmQgYWxsIG90aGVyKSBwcm9wZXJ0aWVzIGlzIGlu
+IHRoZQo+IGdlbmVyaWMgInZpZGVvLWludGVyZmFjZXMudHh0IiBmaWxlIGFuZCBpdCBpcyBteSB1
+bmRlcnN0YW5kaW5nLCBidXQgSSB0aGluawo+IExhdXJlbnQgYW5kIFJvYiBhZ3JlZSBvbiB0aGlz
+IGFzIHdlbGwgZnJvbSB0aGVpciByZXBsaWVzIHRvIG15IHByZXZpb3VzIHNlcmllcywKPiB0aGF0
+IGVhY2ggZHJpdmVyIHNob3VsZCBsaXN0IHdoaWNoIHByb3BlcnRpZXMgaXQgYWN0dWFsbHkgc3Vw
+cG9ydHMsIGFzCgpzL2RyaXZlci9kZXZpY2Utc3BlY2lmaWMgYmluZGluZy8KCj4gc29tZSBhc3Bl
+Y3RzIGFyZSB2ZXJ5IGltcGxlbWVudGF0aW9uIHNwZWNpZmljLCBsaWtlIGRlZmF1bHQgdmFsdWVz
+IGFuZAo+IHdoYXQgaGFwcGVucyBpZiB0aGUgcHJvcGVydHkgaXMgbm90IHNwZWNpZmllZCBbMV0u
+IE5vbmV0aGVsZXNzLCBhbGwKCkluIHNlIGRlZmF1bHRzIGFyZSBub3QgKExpbnV4KSBpbXBsZW1l
+bnRhdGlvbi1zcGVjaWZpYywgYnV0IGZpeGVkIGluIHRoZQpEVCBiaW5kaW5ncy4KCj4gcHJvcGVy
+dGllcyBkZXNjcmliaW5nIGhhcmR3YXJlIGZlYXR1cmVzIGFuZCBkb2N1bWVudGVkIGluIHRoZSBn
+ZW5lcmljCj4gZmlsZSBzaG91bGQgYmUgYWNjZXB0ZWQgaW4gRFRTLCBhcyB0aG9zZSBhaW1zIHRv
+IGJlIE9TLWluZGVwZW5kZW50IGFuZAo+IGV2ZW4gaW5kZXBlbmRlbnQgZnJvbSB0aGUgc2luZ2xl
+IGRyaXZlciBpbXBsZW1lbnRhdGlvbi4KCkdye29ldGplLGVldGluZ31zLAoKICAgICAgICAgICAg
+ICAgICAgICAgICAgR2VlcnQKCi0tIApHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
+IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25h
+bCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhh
+Y2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJv
+Z3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
