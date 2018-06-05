@@ -1,151 +1,47 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V2 2/2] arm: dts: sunxi: Add missing cooling device properties for CPUs
-Date: Tue,  5 Jun 2018 10:17:49 +0530
-Message-ID: <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
-References: <20180601151701.sshwfdbflic6mybv@flea>
- <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v8 0/4] Add suppport for sn65dsi86 bridge chip
+ and Innolux 2k edp panel
+Date: Tue,  5 Jun 2018 11:10:13 +0530
+Message-ID: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The cooling device properties, like "#cooling-cells" and
-"dynamic-power-coefficient", should either be present for all the CPUs
-of a cluster or none. If these are present only for a subset of CPUs of
-a cluster then things will start falling apart as soon as the CPUs are
-brought online in a different order. For example, this will happen
-because the operating system looks for such properties in the CPU node
-it is trying to bring up, so that it can register a cooling device.
-
-Add such missing properties.
-
-Fix other missing properties (clocks, OPP, clock latency) as well to
-make it all work.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-V2:
-- Separated patch for h3
-- Fixed subject s/sun/sunxi/
-
- arch/arm/boot/dts/sun6i-a31.dtsi | 30 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi | 13 +++++++++++++
- arch/arm/boot/dts/sun8i-a33.dtsi |  9 +++++++++
- 3 files changed, 52 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index c72992556a86..debc0bf22ea3 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -119,18 +119,48 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <1>;
-+			clocks = <&ccu CLK_CPU>;
-+			clock-latency = <244144>; /* 8 32k periods */
-+			operating-points = <
-+				/* kHz	  uV */
-+				1008000	1200000
-+				864000	1200000
-+				720000	1100000
-+				480000	1000000
-+				>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <2>;
-+			clocks = <&ccu CLK_CPU>;
-+			clock-latency = <244144>; /* 8 32k periods */
-+			operating-points = <
-+				/* kHz	  uV */
-+				1008000	1200000
-+				864000	1200000
-+				720000	1100000
-+				480000	1000000
-+				>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <3>;
-+			clocks = <&ccu CLK_CPU>;
-+			clock-latency = <244144>; /* 8 32k periods */
-+			operating-points = <
-+				/* kHz	  uV */
-+				1008000	1200000
-+				864000	1200000
-+				720000	1100000
-+				480000	1000000
-+				>;
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index e529e4ff2174..35372a0cfc8d 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -122,6 +122,19 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <1>;
-+			clocks = <&ccu CLK_CPU>;
-+			clock-latency = <244144>; /* 8 32k periods */
-+			operating-points = <
-+				/* kHz	  uV */
-+				960000	1400000
-+				912000	1400000
-+				864000	1300000
-+				720000	1200000
-+				528000	1100000
-+				312000	1000000
-+				144000	1000000
-+				>;
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 8d278ee001e9..4e92741b24a7 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -132,21 +132,30 @@
- 		};
- 
- 		cpu@1 {
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-names = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <2>;
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-names = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <3>;
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-names = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
--- 
-2.15.0.194.g9af6a3dea062
+Q2hhbmdlcyBpbiBjdXJyZW50IHBhdGNoc2V0OgogLSBNb3ZlZCBkc2kgcmVnaXN0ZXIvYXR0YWNo
+IGZ1bmN0aW9uIHRvIGJyaWRnZSBwcm9iZS4KIC0gUmVuYW1lcyBhbmQgYWRkZWQgbW9yZSBkZXNj
+cmlwdGlvbiB0byBsYW5lLW1hcHBpbmcgZHQgcHJvcGVydHkuCiAtIFJlbW92ZWQgc29tZSB1bm5l
+Y2Vzc2FyeSBoZWFkZXJzL21hY3JvcyBmcm9tIGRyaXZlci4KClNhbmRlZXAgUGFuZGEgKDQpOgog
+IGRybS9icmlkZ2U6IGFkZCBzdXBwb3J0IGZvciBzbjY1ZHNpODYgYnJpZGdlIGRyaXZlcgogIGR0
+LWJpbmRpbmdzOiBkcm0vYnJpZGdlOiBEb2N1bWVudCBzbjY1ZHNpODYgYnJpZGdlIGJpbmRpbmdz
+CiAgZHJtL3BhbmVsOiBhZGQgSW5ub2x1eCBUVjEyM1dBTSBwYW5lbCBkcml2ZXIgc3VwcG9ydAog
+IGR0LWJpbmRpbmdzOiBkcm0vcGFuZWw6IERvY3VtZW50IElubm9sdXggVFYxMjNXQU0gcGFuZWwg
+YmluZGluZ3MKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAg
+ICAgICB8IDEwOSArKysrCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIz
+d2FtLnR4dCAgICB8ICAyMCArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAg
+ICAgICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAg
+ICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVk
+c2k4Ni5jICAgICAgICAgICAgICB8IDY2NiArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgIDI3ICsKIDYgZmls
+ZXMgY2hhbmdlZCwgODMyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4
+dAogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYwoKLS0gClRoZSBRdWFsY29tbSBJbm5v
+dmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0s
+CmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QK
+RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
