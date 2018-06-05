@@ -1,25 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 RESEND 1/9] mfd: madera: Add register definitions for
- Cirrus Logic Madera codecs
-Date: Tue, 5 Jun 2018 12:15:55 +0100
-Message-ID: <20180605111555.GS21163@dell>
-References: <20180521100002.11094-1-rf@opensource.cirrus.com>
- <20180521100002.11094-2-rf@opensource.cirrus.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v8 1/4] drm/bridge: add support for sn65dsi86 bridge driver
+Date: Tue, 5 Jun 2018 16:47:15 +0530
+Message-ID: <20180605111715.GV16230@vkoul-mobl>
+References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
+ <1528177218-1051-3-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180521100002.11094-2-rf@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linus.walleij@linaro.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1528177218-1051-3-git-send-email-spanda@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandeep Panda <spanda@codeaurora.org>
+Cc: devicetree@vger.kernel.org, ryadav@codeaurora.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-All applied.  Thanks for bearing with.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gMDUtMDYtMTgsIDExOjEwLCBTYW5kZWVwIFBhbmRhIHdyb3RlOgo+IEFkZCBzdXBwb3J0IGZv
+ciBUSSdzIHNuNjVkc2k4NiBkc2kyZWRwIGJyaWRnZSBjaGlwLgo+IFRoZSBjaGlwIGNvbnZlcnRz
+IERTSSB0cmFuc21pdHRlZCBzaWduYWwgdG8gZURQIHNpZ25hbCwKPiB3aGljaCBpcyBmZWQgdG8g
+dGhlIGNvbm5lY3RlZCBlRFAgcGFuZWwuCj4gCj4gVGhpcyBjaGlwIGNhbiBiZSBjb250cm9sbGVk
+IHZpYSBlaXRoZXIgaTJjIGludGVyZmFjZSBvcgo+IGRzaSBpbnRlcmZhY2UuIEN1cnJlbnRseSBp
+biBkcml2ZXIgYWxsIHRoZSBjb250cm9sIHJlZ2lzdGVycwo+IGFyZSBiZWluZyBhY2Nlc3NlZCB0
+aHJvdWdoIGkyYyBpbnRlcmZhY2Ugb25seS4KPiBBbHNvIGFzIG9mIG5vdyBIUEQgc3VwcG9ydCBo
+YXMgbm90IGJlZW4gYWRkZWQgdG8gYnJpZGdlCj4gY2hpcCBkcml2ZXIuCj4gCj4gQ2hhbmdlcyBp
+biB2MToKPiAgLSBTcGxpdCB0aGUgZHQtYmluZGluZ3MgYW5kIHRoZSBkcml2ZXIgc3VwcG9ydCBp
+bnRvIHNlcGFyYXRlIHBhdGNoZXMKPiAgICAoQW5kcnplaiBIYWpkYSkuCj4gIC0gVXNlIG9mIGdw
+aW9kIEFQSXMgdG8gcGFyc2UgYW5kIGNvbmZpZ3VyZSBncGlvcyBpbnN0ZWFkIG9mIG9ic29sZXRl
+IG9uZXMKPiAgICAoQW5kcnplaiBIYWpkYSkuCj4gIC0gVXNlIG1hY3JvcyB0byBkZWZpbmUgdGhl
+IHJlZ2lzdGVyIG9mZnNldHMgKEFuZHJ6ZWogSGFqZGEpLgoKVGhpcyBpcyBwcmV0dHkgdXNlbGVz
+cyBmb3IgY2hhbmdlbG9nLiBUaGlzIGlzIHVzZWZ1bCBmb3IgcmV2aWV3IGJ1dCBub3QKZG93biB0
+aGUgbGluZSB3aGVuIHRoaXMgaXMgYXBwbGllZAoKU2luY2UgeW91IGhhdmUgY292ZXIgbGV0dGVy
+LCB5b3UgbWF5IGFkZCBpdCB0aGVyZS4gT3IgYWZ0ZXIgc29iIGFuZCAtLS0KdGFnIGluIHRoZSBw
+YXRjaCwgdGhhdCB3YXkgaXQgaXMgc2tpcHBlZCB3aGlsZSBhcHBseWluZy4uCgo+ICsjZGVmaW5l
+IFNOX0VOQUJMRV9WSURfU1RSRUFNX0JJVAlCSVQoMykKPiArI2RlZmluZSBTTl9EU0lBX05VTV9M
+QU5FU19CSVRTCQkoQklUKDQpIHwgQklUKDMpKQo+ICsjZGVmaW5lIFNOX0RQX05VTV9MQU5FU19C
+SVRTCQkoQklUKDUpIHwgQklUKDQpKQo+ICsjZGVmaW5lIFNOX0RQX0RBVEFfUkFURV9CSVRTCQko
+QklUKDcpIHwgQklUKDYpIHwgQklUKDUpKQoKR0VOTUFTSyg3LCA1KQoKPiArc3RhdGljIGludCBf
+X21heWJlX3VudXNlZCB0aV9zbl9icmlkZ2VfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPiAr
+ewo+ICsJc3RydWN0IHRpX3NuX2JyaWRnZSAqcGRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsK
+PiArCWludCByZXQgPSAwOwoKc3VwZXJmbHVvdXMgaW5pdGlhbGl6YXRpb24KCj4gK3N0YXRpYyBp
+bnQgX19tYXliZV91bnVzZWQgdGlfc25fYnJpZGdlX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2
+KQo+ICt7Cj4gKwlzdHJ1Y3QgdGlfc25fYnJpZGdlICpwZGF0YSA9IGRldl9nZXRfZHJ2ZGF0YShk
+ZXYpOwo+ICsJaW50IHJldCA9IDA7CgpoZXJlIGFzIHdlbGwKCj4gK3N0YXRpYyBpbnQgdGlfc25f
+YnJpZGdlX2Nvbm5lY3Rvcl9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
+cikKPiArewo+ICsJc3RydWN0IHRpX3NuX2JyaWRnZSAqcGRhdGEgPSBjb25uZWN0b3JfdG9fdGlf
+c25fYnJpZGdlKGNvbm5lY3Rvcik7Cj4gKwlzdHJ1Y3QgZWRpZCAqZWRpZDsKPiArCXUzMiBudW1f
+bW9kZXM7Cj4gKwo+ICsJaWYgKHBkYXRhLT5wYW5lbCkgewo+ICsJCURSTV9ERUJVR19LTVMoImdl
+dCBtb2RlIGZyb20gY29ubmVjdGVkIGRybV9wYW5lbFxuIik7Cj4gKwkJcmV0dXJuIGRybV9wYW5l
+bF9nZXRfbW9kZXMocGRhdGEtPnBhbmVsKTsKPiArCX0KPiArCj4gKwlpZiAoIXBkYXRhLT5kZGMp
+Cj4gKwkJcmV0dXJuIDA7Cj4gKwo+ICsJcG1fcnVudGltZV9nZXRfc3luYyhwZGF0YS0+ZGV2KTsK
+CnlvdSBzaG91bGQgY2hlY2sgcmV0dXJuIG9mIHRoaXMKCj4gK3N0YXRpYyB2b2lkIHRpX3NuX2Jy
+aWRnZV9zZXRfcmVmY2xrKHN0cnVjdCB0aV9zbl9icmlkZ2UgKnBkYXRhKQo+ICt7Cj4gKwlpbnQg
+aSA9IDA7CgpzdXBlcmZsdW91cyBpbml0aWFsaXphdGlvbgoKPiArc3RhdGljIHZvaWQgdGlfc25f
+YnJpZGdlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlzdHJ1Y3Qg
+dGlfc25fYnJpZGdlICpwZGF0YSA9IGJyaWRnZV90b190aV9zbl9icmlkZ2UoYnJpZGdlKTsKPiAr
+CXVuc2lnbmVkIGludCB2YWwgPSAwOwoKaGVyZSBhcyB3ZWxsCgo+ICtzdGF0aWMgdm9pZCB0aV9z
+bl9icmlkZ2VfcHJlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlz
+dHJ1Y3QgdGlfc25fYnJpZGdlICpwZGF0YSA9IGJyaWRnZV90b190aV9zbl9icmlkZ2UoYnJpZGdl
+KTsKPiArCj4gKwlwbV9ydW50aW1lX2dldF9zeW5jKHBkYXRhLT5kZXYpOwoKZXJyb3IgY2hlY2sg
+cmVxdWlyZWQKLS0gCn5WaW5vZApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
