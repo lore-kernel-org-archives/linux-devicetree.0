@@ -1,56 +1,83 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [RFC PATCH 1/8] mailbox: ti-msgmgr: Get rid of unused structure members
-Date: Tue, 5 Jun 2018 01:16:22 -0500
-Message-ID: <20180605061629.4759-2-nm@ti.com>
+Subject: [RFC PATCH 4/8] mailbox: ti-msgmgr: Move the memory region name to
+ descriptor
+Date: Tue, 5 Jun 2018 01:16:25 -0500
+Message-ID: <20180605061629.4759-5-nm@ti.com>
 References: <20180605061629.4759-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180605061629.4759-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Though q_proxies and q_slices do describe the hardware configuration,
-they are not necessary for operation given that the values are
-always default. Hence drop the same.
+For newer generation of the hardware, the naming of the region is
+decided at integration level and there could be additional regions
+as well. Hence move the region naming to be described from compatible
+descriptor.
 
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- drivers/mailbox/ti-msgmgr.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/mailbox/ti-msgmgr.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
-index 78753a87ba4d..7cd5f9c9c97f 100644
+index 2952339a8446..a37d6a4b392f 100644
 --- a/drivers/mailbox/ti-msgmgr.c
 +++ b/drivers/mailbox/ti-msgmgr.c
-@@ -42,8 +42,6 @@ struct ti_msgmgr_valid_queue_desc {
-  * @queue_count:	Number of Queues
-  * @max_message_size:	Message size in bytes
-  * @max_messages:	Number of messages
-- * @q_slices:		Number of queue engines
-- * @q_proxies:		Number of queue proxies per page
-  * @data_first_reg:	First data register for proxy data region
-  * @data_last_reg:	Last data register for proxy data region
+@@ -48,6 +48,8 @@ struct ti_msgmgr_valid_queue_desc {
   * @tx_polled:		Do I need to use polled mechanism for tx
-@@ -58,8 +56,6 @@ struct ti_msgmgr_desc {
- 	u8 queue_count;
- 	u8 max_message_size;
- 	u8 max_messages;
--	u8 q_slices;
--	u8 q_proxies;
- 	u8 data_first_reg;
- 	u8 data_last_reg;
+  * @tx_poll_timeout_ms: Timeout in ms if polled
+  * @valid_queues:	List of Valid queues that the processor can access
++ * @data_region_name:	Name of the proxy data region
++ * @status_region_name:	Name of the proxy status region
+  * @num_valid_queues:	Number of valid queues
+  *
+  * This structure is used in of match data to describe how integration
+@@ -63,6 +65,8 @@ struct ti_msgmgr_desc {
  	bool tx_polled;
-@@ -494,8 +490,6 @@ static const struct ti_msgmgr_desc k2g_desc = {
+ 	int tx_poll_timeout_ms;
+ 	const struct ti_msgmgr_valid_queue_desc *valid_queues;
++	const char *data_region_name;
++	const char *status_region_name;
+ 	int num_valid_queues;
+ };
+ 
+@@ -531,6 +535,8 @@ static const struct ti_msgmgr_desc k2g_desc = {
  	.queue_count = 64,
  	.max_message_size = 64,
  	.max_messages = 128,
--	.q_slices = 1,
--	.q_proxies = 1,
++	.data_region_name = "queue_proxy_region",
++	.status_region_name = "queue_state_debug_region",
  	.data_first_reg = 16,
  	.data_last_reg = 31,
- 	.tx_polled = false,
+ 	.status_cnt_mask = Q_STATE_ENTRY_COUNT_MASK,
+@@ -582,13 +588,13 @@ static int ti_msgmgr_probe(struct platform_device *pdev)
+ 	inst->desc = desc;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-					   "queue_proxy_region");
++					   desc->data_region_name);
+ 	inst->queue_proxy_region = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(inst->queue_proxy_region))
+ 		return PTR_ERR(inst->queue_proxy_region);
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-					   "queue_state_debug_region");
++					   desc->status_region_name);
+ 	inst->queue_state_debug_region = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(inst->queue_state_debug_region))
+ 		return PTR_ERR(inst->queue_state_debug_region);
 -- 
 2.15.1
