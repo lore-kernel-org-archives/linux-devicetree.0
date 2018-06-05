@@ -1,125 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 6/6] regulator: bd71837: BD71837 PMIC regulator driver
-Date: Tue, 5 Jun 2018 16:58:43 +0300
-Message-ID: <CAHp75VeVSbZd12vXew9f0z2m1=BFz+cOKomga3SZEzg=kx9CFw@mail.gmail.com>
-References: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com> <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 00/26] arm64: allwinner: Add A64 DE2 HDMI support
+Date: Tue, 05 Jun 2018 21:58:46 +0800
+Message-ID: <3B82C42E-31DE-4CD2-AA51-B27FED56C43D@aosc.io>
+References: <20180518094536.17201-1-jagan@amarulasolutions.com> <20180518095913.nzl3sr5wn6cg4ra5@flea> <CAMty3ZC13J+bCWK_=9816Lu-5ctC0UfF4-XR3yNSpHdH8q8Faw@mail.gmail.com> <20180605132539.m54xwfzfs6btrmtc@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20180605132539.m54xwfzfs6btrmtc@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 1:02 PM, Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
-> Support for controlling the 8 bucks and 7 LDOs the PMIC contains.
 
-> +#include <linux/kernel.h>
 
-> +#include <linux/module.h>
-> +#include <linux/init.h>
+于 2018年6月5日 GMT+08:00 下午9:25:39, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
+>On Tue, Jun 05, 2018 at 06:23:57PM +0530, Jagan Teki wrote:
+>> On Fri, May 18, 2018 at 3:29 PM, Maxime Ripard
+>> <maxime.ripard@bootlin.com> wrote:
+>> > On Fri, May 18, 2018 at 03:15:10PM +0530, Jagan Teki wrote:
+>> >> Allwinner A64 has display engine pipeline like other Allwinner
+>SOC's A83T/H3/H5.
+>> >>
+>> >> A64 behaviour similar to Allwinner A83T where
+>> >> Mixer0 => TCON0 => LVDS/RGB/MIPI-DSI
+>> >> Mixer1 => TCON1 => HDMI
+>> >> as per Display System Block
+>DiagramAllwinner_A64_User_Manual_V1.1.pdf
+>> >>
+>> >> This is second patch-set followed with previous RFC[1] and first
+>series[2]
+>> >> and merely concentrated on HDMI pipeline through TCON1 and rest
+>will add eventually.
+>> >>
+>> >> This series fixed previous version comments
+>> >> - about documenting fallback compatibles
+>> >> - adding new compatible for mixer1
+>> >> - support for multiple DW HDMI PHY clock parents (thanks, to
+>Jernej)
+>> >>
+>> >> Note:
+>> >> Pine64 boards are unable to get edid by default like other A64
+>boards,
+>> >> but forcing 'video=HDMI-A-1:1920x1080@60D' kernel command line can
+>> >> create edid with display on penel.
+>> >
+>> > There's no point in trying to push this without the SRAM issue
+>being
+>> > solved. It is required, and won't be merged unless this is
+>addressed.
+>> 
+>> is SRAM issue resolved? if so may be I will try to test it on top.
+>
+>I'd expect the one working on this to push a solution to solve this.
 
-One of these is redundant.
+I'll do it soon. Currently I'm a little busy.
 
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/machine.h>
-> +#include <linux/delay.h>
-> +#include <linux/slab.h>
-> +#include <linux/gpio.h>
-> +#include <linux/mfd/bd71837.h>
-> +#include <linux/regulator/of_regulator.h>
-
-Can you keep the list ordered?
-
-> +       dev_dbg(&(pmic->pdev->dev), "Buck[%d] Set Ramp = %d\n", id + 1,
-> +               ramp_delay);
-
-Redundant parens.
-
-> +static int bd71837_regulator_set_regmap(struct regulator_dev *rdev, int set)
-> +{
-
-> +       int ret = -EINVAL;
-
-Redundant assignment.
-
-> +       if (!set)
-> +               ret = regulator_disable_regmap(rdev);
-> +       else
-> +               ret = regulator_enable_regmap(rdev);
-
-> +       return ret;
-> +}
-
-> +static int bd71837_probe(struct platform_device *pdev)
-> +{
-
-> +       pmic = devm_kzalloc(&pdev->dev, sizeof(struct bd71837_pmic),
-> +                           GFP_KERNEL);
-
-sizeof(*pmic) and one line as result?
-
-> +       if (!pmic)
-> +               return -ENOMEM;
-
-> +       if (!pmic->mfd) {
-> +               dev_err(&pdev->dev, "No MFD driver data\n");
-
-> +               err = -EINVAL;
-> +               goto err;
-
-Plain return?
-
-> +       }
-
-> +               dev_dbg(&pmic->pdev->dev, "%s: Unlocked lock register 0x%x\n",
-> +                       __func__, BD71837_REG_REGLOCK);
-
-__func__ part is redundant.
-
-> +       for (i = 0; i < ARRAY_SIZE(pmic_regulator_inits); i++) {
-
-> +
-
-Redundant blank line.
-
-> +               rdev = devm_regulator_register(&pdev->dev, desc, &config);
-> +               if (IS_ERR(rdev)) {
-> +                       dev_err(pmic->mfd->dev,
-> +                               "failed to register %s regulator\n",
-> +                               desc->name);
-
-> +                       err = PTR_ERR(rdev);
-> +                       goto err;
-
-Plain return ...
-
-> +err:
-> +       return err;
-
-Redundant.
-
-> +}
-
-> +static struct platform_driver bd71837_regulator = {
-> +       .driver = {
-> +                  .name = "bd71837-pmic",
-
-> +                  .owner = THIS_MODULE,
-
-This done by macro you are using below. Thus, redundant.
-
-> +                  },
-> +       .probe = bd71837_probe,
-> +};
-> +
-> +module_platform_driver(bd71837_regulator);
-
--- 
-With Best Regards,
-Andy Shevchenko
+>
+>Maxime
