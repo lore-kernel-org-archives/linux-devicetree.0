@@ -1,36 +1,24 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v2 1/5] media: venus: add a routine to reset ARM9
-Date: Tue, 5 Jun 2018 16:27:16 +0530
-Message-ID: <20180605105716.GT16230@vkoul-mobl>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
- <894ab678-bc1d-da04-b552-d53301bd3980@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
+Date: Tue, 5 Jun 2018 08:01:47 -0300
+Message-ID: <CAOMZO5CsX-oiUXGicL1P61PcT67S9mhTTO5ibuXsQNd+UGt-Kg@mail.gmail.com>
+References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <894ab678-bc1d-da04-b552-d53301bd3980@linaro.org>
+In-Reply-To: <20180522062853.24799-1-sebastien.szymanski@armadeus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel <linux-kernel@vger.kernel.org>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02-06-18, 01:15, Stanimir Varbanov wrote:
-> Hi Vikash,
-> 
-> On  1.06.2018 23:26, Vikash Garodia wrote:
-> > Add a new routine to reset the ARM9 and brings it
-> > out of reset. This is in preparation to add PIL
-> > functionality in venus driver.
-> 
-> please squash this patch with 4/5. I don't see a reason to add a function
-> which is not used. Shouldn't this produce gcc warnings?
+On Tue, May 22, 2018 at 3:28 AM, S=C3=A9bastien Szymanski
+<sebastien.szymanski@armadeus.com> wrote:
+> Check the max speed supported from the fuses for i.MX6ULL and update the
+> operating points table accordingly.
+>
+> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
+>
 
-Yes this would but in a multi patch series that is okay as subsequent
-patches would use that and end result in no warning.
-
-Splitting logically is good and typical practice in kernel to add the
-routine followed by usages..
-
--- 
-~Vinod
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
