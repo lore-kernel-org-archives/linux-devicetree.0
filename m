@@ -1,153 +1,80 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 02/11] PM / devfreq: Fix handling of min/max_freq == 0
-Date: Tue, 05 Jun 2018 18:40:13 +0900
-Message-ID: <5B165A7D.90004@samsung.com>
-References: <20180525203043.249193-1-mka@chromium.org>
-        <CGME20180525203323epcas4p45ba35c38413e227f76f68fe331011b19@epcas4p4.samsung.com>
-        <20180525203043.249193-3-mka@chromium.org> <5B0BA3BB.8060505@samsung.com>
-        <20180529185758.GG168650@google.com> <5B0E5AFE.8090703@samsung.com>
-        <20180530211301.GA194977@google.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] ASoC: ssm2602: Fix ADC powerup sequencing
+Date: Tue, 05 Jun 2018 11:58:51 +0200
+Message-ID: <1528192731.4074.7.camel@pengutronix.de>
+References: <20180517133009.26079-1-m.felsch@pengutronix.de>
+ <CAL_JsqKhkVOYf+XEA3MYpK4JYfMrZTbHZtoXgaH=wCBRoU6cfQ@mail.gmail.com>
+ <1526640409.3948.5.camel@pengutronix.de>
+ <20180523165352.GA6187@rob-hp-laptop>
+ <20180525094724.3f4edofopk52i3v6@pengutronix.de>
+ <20180525102609.GK4828@sirena.org.uk>
+ <20180525114253.jj6akdazsbxqkbfu@pengutronix.de>
+ <20180525145245.GM4828@sirena.org.uk>
+ <1527261489.4938.9.camel@pengutronix.de>
+ <20180525172441.GN4828@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180530211301.GA194977@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, =?UTF-8?B?w5hyamFuIEVpZGU=?= <orjan.eide@arm.com>, John Einar Reitan <john.reitan@arm.com>
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180525172441.GN4828@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2018년 05월 31일 06:13, Matthias Kaehlcke wrote:
-> On Wed, May 30, 2018 at 05:04:14PM +0900, Chanwoo Choi wrote:
->> Hi,
->>
->> On 2018년 05월 30일 03:57, Matthias Kaehlcke wrote:
->>> On Mon, May 28, 2018 at 03:37:47PM +0900, Chanwoo Choi wrote:
->>>> Hi,
->>>>
->>>> On 2018년 05월 26일 05:30, Matthias Kaehlcke wrote:
->>>>> Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding the
->>>>> devfreq device") initializes df->min/max_freq with the min/max OPP when
->>>>> the device is added. Later commit f1d981eaecf8 ("PM / devfreq: Use the
->>>>> available min/max frequency") adds df->scaling_min/max_freq and the
->>>>> following to the frequency adjustment code:
->>>>>
->>>>>   max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
->>>>>
->>>>> With the current handling of min/max_freq this is incorrect:
->>>>>
->>>>> Even though df->max_freq is now initialized to a value != 0 user space
->>>>> can still set it to 0, in this case max_freq would be 0 instead of
->>>>> df->scaling_max_freq as intended. In consequence the frequency adjustment
->>>>> is not performed:
->>>>>
->>>>>   if (max_freq && freq > max_freq) {
->>>>> 	freq = max_freq;
->>>>>
->>>>> To fix this set df->min/max freq to the min/max OPP in max/max_freq_store,
->>>>> when the user passes a value of 0. This also prevents df->max_freq from
->>>>> being set below the min OPP when df->min_freq is 0, and similar for
->>>>> min_freq. Since it is now guaranteed that df->min/max_freq can't be 0 the
->>>>> checks for this case can be removed.
->>>>>
->>>>> Fixes: f1d981eaecf8 ("PM / devfreq: Use the available min/max frequency")
->>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>>>> ---
->>>>>  drivers/devfreq/devfreq.c | 30 ++++++++++++++++++------------
->>>>>  1 file changed, 18 insertions(+), 12 deletions(-)
->>>>>
->>>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>>>> index 0057ef5b0a98..67da4e7b486b 100644
->>>>> --- a/drivers/devfreq/devfreq.c
->>>>> +++ b/drivers/devfreq/devfreq.c
->>>>> @@ -283,11 +283,11 @@ int update_devfreq(struct devfreq *devfreq)
->>>>>  	max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
->>>>>  	min_freq = MAX(devfreq->scaling_min_freq, devfreq->min_freq);
->>>>>  
->>>>> -	if (min_freq && freq < min_freq) {
->>>>> +	if (freq < min_freq) {
->>>>>  		freq = min_freq;
->>>>>  		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
->>>>>  	}
->>>>> -	if (max_freq && freq > max_freq) {
->>>>> +	if (freq > max_freq) {
->>>>>  		freq = max_freq;
->>>>>  		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
->>>>>  	}
->>>>> @@ -1123,17 +1123,20 @@ static ssize_t min_freq_store(struct device *dev, struct device_attribute *attr,
->>>>>  	struct devfreq *df = to_devfreq(dev);
->>>>>  	unsigned long value;
->>>>>  	int ret;
->>>>> -	unsigned long max;
->>>>>  
->>>>>  	ret = sscanf(buf, "%lu", &value);
->>>>>  	if (ret != 1)
->>>>>  		return -EINVAL;
->>>>>  
->>>>>  	mutex_lock(&df->lock);
->>>>> -	max = df->max_freq;
->>>>> -	if (value && max && value > max) {
->>>>> -		ret = -EINVAL;
->>>>> -		goto unlock;
->>>>> +
->>>>> +	if (value) {
->>>>> +		if (value > df->max_freq) {
->>>>> +			ret = -EINVAL;
->>>>> +			goto unlock;
->>>>> +		}
->>>>> +	} else {
->>>>> +		value = df->profile->freq_table[df->profile->max_state - 1];
->>>>>  	}
->>>>
->>>> If you want to prevent that df->min_freq is zero, 
->>>> you should reinitialize 'value' as following.
->>>> Because freq_table must be in ascending order.
->>>> 	value = df->profile->freq_table[0];
->>>
->>> Thanks for pointing this out!
->>>
->>> The devfreq device I tested with (a Mali GPU) uses descending order
->>> for some reason, and I assumed that's the usual order.
->>>
->>> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.4/drivers/gpu/arm/midgard/backend/gpu/mali_kbase_devfreq.c#208
->>>
->>> It seems the ordering doesn't have any impact beyond this patch. If
->>> the order isn't mandatory for drivers that set up their own freq_table
->>> we should probably support both cases to be safe.
->>
->> Prior to that 'freq_table' is optional. So, patch[1] initialize the 'freq_table'
->> by using OPP interface if 'freq_table' is NULL.
->> [1] commit 0ec09ac2cebe ("PM / devfreq: Set the freq_table of devfreq device")
->>
->> Current devfreq recommend the ascending order for 'freq_table'.
->> But, as you know, it might be not enough to support them.
->>
->> I agree that we should support the both cases (ascending or descending order).
->>
->> Maybe, it might be not proper to access the freq_table[] directly
->> because we don't know the ordering style of 'freq_table'
->> if 'freq_table' is made by devfreq user instead of devfreq core.
-> 
-> If we can assume that it is either ascending or descending, but not
-> random order than a simple check if freq_table[0] <
-> freq_table[max_state - 1] would be sufficient.
-
-Also, we should consider the order way of freq_table on available_frequency
-because available_frequency have to show the frequency as the ascending order
-even if freq_table uses the descending order.
-
-> 
-> Otherwise we could also determine the min/max after initialization and
-> save the result, though that would leave us with yet another frequency
-> pair, which might be confusing, especially if we don't come up with
-> good names to distinguish between them.
-
-IMO, it might make the confusion if devfreq device has the two frequency
-table.
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+SGkgTWFyaywKCk9uIEZyaSwgMjAxOC0wNS0yNSBhdCAxODoyNCArMDEwMCwgTWFyayBCcm93biB3
+cm90ZToKPiBPbiBGcmksIE1heSAyNSwgMjAxOCBhdCAwNToxODowOVBNICswMjAwLCBQaGlsaXBw
+IFphYmVsIHdyb3RlOgo+ID4gT24gRnJpLCAyMDE4LTA1LTI1IGF0IDE1OjUyICswMTAwLCBNYXJr
+IEJyb3duIHdyb3RlOgo+ID4gPiBPbiBGcmksIE1heSAyNSwgMjAxOCBhdCAwMTo0Mjo1M1BNICsw
+MjAwLCBNYXJjbyBGZWxzY2ggd3JvdGU6Cj4gPiA+ID4gQWxzbyB0aGUgZm9ybXVsYSBmb3IgdGhl
+IGRlbGF5IHRpbWUgKHQgPSBDIMOXIDI1LDAwMC8zLjUpIGRlcGVuZHMgb25seSBvbgo+ID4gPiA+
+IHRoZSBjYXBhY2l0eSBzaXplLgo+ID4gPiBXaHkgbm90IGp1c3QgaGF2ZSB0aGUgdXNlciBzcGVj
+aWZ5IHRoZSBjYXBhY2l0YW5jZSBvZiB0aGUgY2FwYWNpdG9yIG9uCj4gPiA+IHRoZSByYWlsIHdo
+aWNoIHRoZXkgY2FuIGRpcmVjdGx5IHJlYWQgZnJvbSB0aGUgc2NoZW1hdGljIHJhdGhlciB0aGFu
+Cj4gPiA+IGZvcmNpbmcgdGhlbSB0byBkbyB0aGUgY2FsY3VhbHRpb24/ICBUaGF0IHNlZW1zIGEg
+Yml0IGNsZWFyZXIgYW5kIG1vcmUKPiA+ID4gdXNlciBmcmllbmRseSAocGx1cyBpZiBzb21lb25l
+IGRlY2lkZXMgdGhlIHNwZWMgd2FzIHdyb25nIGl0J3MgZWFzaWVyIHRvCj4gPiA+IHJvbGwgb3V0
+IGZpeGVzKS4KPiA+IFRoZSBleGFjdCBjYXBhY2l0YW5jZSBtYXkgbm90IGJlIGtub3duIG9yIHZh
+cnkgYWJvdmUgdGhlIG5vbWluYWwgdmFsdWUKPiA+IGJlY2F1c2Ugb2YgY2hlYXAgY29tcG9uZW50
+cywgYW5kIHRoZSBmb3JtdWxhIGZyb20gdGhlIGRhdGFzaGVldCBpcyBqdXN0Cj4gPiBhIGd1aWRl
+bGluZS4KPiAKPiBUaGF0IHZhcmlhYmlsaXR5IGlzIGdvaW5nIHRvIGFwcGx5IGp1c3QgYXMgbXVj
+aCB0byB0aGUgY2hhcmdlIHRpbWUKPiBjYWxjdWxhdGlvbnMvbWVhc3VyZW1lbnRzIGFzIGl0IGlz
+IHRvIHRoZSBpbml0aWFsIGNhcGFjaXRhbmNlIHZhbHVlIC0KPiB0aGUgcmVzdWx0cyBhcmUgZ29p
+bmcgdG8gYmUgdmVyeSBtdWNoIGdhcmJhZ2UgaW4sIGdhcmJhZ2Ugb3V0LgoKVHJ1ZS4KCj4gPiBJ
+J2QgZXhwZWN0IHRoZSB1c3VhbCBtZXRob2QgdG8gc2V0IHRoaXMgZGVsYXkgdG8gYmUgc2VtaS1l
+bXBpcmljYWw6Cj4gPiAic3RhcnQgZnJvbSB0aGUgdmFsdWUgY2FsY3VsYXRlZCBmcm9tIGRhdGFz
+aGVldCBhbmQgc2NoZW1hdGljcyBhbmQgdGhlbgo+ID4gaW5jcmVhc2UgdW50aWwgbm8gbW9yZSBh
+dWRpbyBhcnRpZmFjdHMgb24gYSByZXByZXNlbnRhdGl2ZSBzYW1wbGUgb2YKPiA+IGJvYXJkcyIu
+Cj4gPiBJIHRoaW5rIGl0IGlzIGJlIGJldHRlciB0byBzcGVjaWZ5IGEgZGVsYXkgdGhhdCB3b3Jr
+cyB0aGFuIGEgYm9ndXMKPiA+IGNhcGFjaXRhbmNlIHZhbHVlIHRoYXQgaGFwcGVucyB0byBjb3Jy
+ZXNwb25kIHRvIGEgZGVsYXkgdGhhdCB3b3Jrcy4KPiAKPiBJZiB0aGlzIGlzIHZhcnlpbmcgc28g
+ZHJhc3RpY2FsbHkgcGVyIGJvYXJkL3N5c3RlbSB0aGF0IGl0J3MgcmVsZXZhbnQKPiB0aGVuIHdl
+J3JlIGFscmVhZHkgaW50byBwcm9ibGVtYXRpYyB0ZXJyaXRvcnkuICBGb3IgbW9zdCBkZXZpY2Vz
+IHdlIGp1c3QKPiBoYXZlIGEgbnVtYmVyIGZvciB0aGUgcGFydCwgbm90IHNvbWV0aGluZyB0aGF0
+IHZhcmllcyBzbyB3aWxkbHkgdGhhdAo+IGVhY2ggc3lzdGVtIG5lZWRzIHRvIGNvbmZpZ3VyZSBp
+dC4KCkknbSBub3QgYXJndWluZyB0aGlzIHNob3VsZCBiZSBjb25maWd1cmVkIHBlciBpbmRpdmlk
+dWFsIGRldmljZSwganVzdApwZXIgYm9hcmQgRFQuCgpJdCdzIGp1c3QgdGhhdCBteSBleHBlcmll
+bmNlIG9mIG9uZSBkYXRhcG9pbnQgY29uc2lzdHMgb2YgYSBib2FyZCB3aGVyZQpJIGhhZCB0byBp
+bmNyZWFzZSB0aGUgZGVsYXkgdG8gYWJvdXQgdGhyZWUgdGltZXMgdGhlIGRlbGF5IGNhbGN1bGF0
+ZWQKZnJvbSB0aGUgbm9taW5hbCBjYXBhY2l0YW5jZSBhY2NvcmRpbmcgdG8gdGhlIGRhdGFzaGVl
+dCBiZWZvcmUgYXVkaWJsZQphcnRpZmFjdHMgZGlzYXBwZWFyZWQgcmVsaWFibHkgb24gbXVsdGlw
+bGUgZGV2aWNlcy4KUHV0dGluZyB0aGUgZXh0ZW5kZWQgZGVsYXkgaW50byB0aGUgZGV2aWNlIHRy
+ZWUgd2l0aCBhIGNvbW1lbnQKZXhwbGFpbmluZyBpdHMgZW1waXJpY2FsIG5hdHVyZSBzZWVtZWQg
+bW9yZSBzdHJhaWdodGZvcndhcmQgdGhhbiBwdXR0aW5nCmEgYm9ndXMgY2FwYWNpdGFuY2UgdmFs
+dWUsIHRoYXQgZGlmZmVycyBmcm9tIHRoZSBzY2hlbWF0aWNzLCBhbmQgdGhhdCBJCmhhdmUgbmV2
+ZXIgbWVhc3VyZWQuCgpBbHNvLCBieSB1c2luZyB0aGUgY2FwYWNpdGFuY2Ugd2UgYXJlIGd1YXJh
+bnRlZWQgdG8gZW5kIHVwIHdpdGggYSBjb2RlYwpzcGVjaWZpYyBwcm9wZXJ0eSBuYW1lIChhZGks
+dm1pZC1kZWNvdXBsaW5nLWNhcGFjaXRhbmNlID8pIGFzIG9wcG9zZWQgdG8KdGhlIHBvc3NpYmls
+aXR5IG9mIGRlZmluaW5nIGEgY29tbW9uIGRlbGF5IHByb3BlcnR5IHRoYXQgY291bGQgYmUgdXNl
+ZApmb3IgZGlmZmVyZW50IGNvZGVjcy4KCnJlZ2FyZHMKUGhpbGlwcApfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApB
+bHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
