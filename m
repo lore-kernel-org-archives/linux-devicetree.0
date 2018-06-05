@@ -1,118 +1,153 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [reset-control] How to initialize hardware state with the
- shared reset line?
-Date: Tue, 05 Jun 2018 11:37:33 +0200
-Message-ID: <1528191453.4074.4.camel@pengutronix.de>
-References: <CAK7LNATZgJ4MxOFLUCNARWv3Zz=gpL-jGReDnBnArquiaXRWoQ@mail.gmail.com>
-         <CAFBinCADQsXoc6CUKabH6VX3ZBYb5apo-xBbe1w0BiO8wBAsPw@mail.gmail.com>
-         <CAK7LNAR1b_F_eLEWAdQc3L=daGz=ttKq0mQP78BkjzTOssaXvw@mail.gmail.com>
-         <CAFBinCBTTmPqD0UP8zzMBjsjzP9fJx9_pmhGz0_Vy-V+wmhLXQ@mail.gmail.com>
-         <1526997879.3671.27.camel@pengutronix.de>
-         <CAFBinCBAoRebScz+DTSKSgiU5DjeSHS1F3=2vt8KM-yCv+2A8g@mail.gmail.com>
-         <CAK7LNAQ56ND=6=7swD3ioKwNsGJCxN1SibkH==n24xPX6SdBBQ@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 02/11] PM / devfreq: Fix handling of min/max_freq == 0
+Date: Tue, 05 Jun 2018 18:40:13 +0900
+Message-ID: <5B165A7D.90004@samsung.com>
+References: <20180525203043.249193-1-mka@chromium.org>
+        <CGME20180525203323epcas4p45ba35c38413e227f76f68fe331011b19@epcas4p4.samsung.com>
+        <20180525203043.249193-3-mka@chromium.org> <5B0BA3BB.8060505@samsung.com>
+        <20180529185758.GG168650@google.com> <5B0E5AFE.8090703@samsung.com>
+        <20180530211301.GA194977@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQ56ND=6=7swD3ioKwNsGJCxN1SibkH==n24xPX6SdBBQ@mail.gmail.com>
+In-reply-to: <20180530211301.GA194977@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, =?UTF-8?B?w5hyamFuIEVpZGU=?= <orjan.eide@arm.com>, John Einar Reitan <john.reitan@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+Hi,
 
-On Wed, 2018-05-30 at 14:57 +0900, Masahiro Yamada wrote:
-> One more thing.
+On 2018년 05월 31일 06:13, Matthias Kaehlcke wrote:
+> On Wed, May 30, 2018 at 05:04:14PM +0900, Chanwoo Choi wrote:
+>> Hi,
+>>
+>> On 2018년 05월 30일 03:57, Matthias Kaehlcke wrote:
+>>> On Mon, May 28, 2018 at 03:37:47PM +0900, Chanwoo Choi wrote:
+>>>> Hi,
+>>>>
+>>>> On 2018년 05월 26일 05:30, Matthias Kaehlcke wrote:
+>>>>> Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding the
+>>>>> devfreq device") initializes df->min/max_freq with the min/max OPP when
+>>>>> the device is added. Later commit f1d981eaecf8 ("PM / devfreq: Use the
+>>>>> available min/max frequency") adds df->scaling_min/max_freq and the
+>>>>> following to the frequency adjustment code:
+>>>>>
+>>>>>   max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
+>>>>>
+>>>>> With the current handling of min/max_freq this is incorrect:
+>>>>>
+>>>>> Even though df->max_freq is now initialized to a value != 0 user space
+>>>>> can still set it to 0, in this case max_freq would be 0 instead of
+>>>>> df->scaling_max_freq as intended. In consequence the frequency adjustment
+>>>>> is not performed:
+>>>>>
+>>>>>   if (max_freq && freq > max_freq) {
+>>>>> 	freq = max_freq;
+>>>>>
+>>>>> To fix this set df->min/max freq to the min/max OPP in max/max_freq_store,
+>>>>> when the user passes a value of 0. This also prevents df->max_freq from
+>>>>> being set below the min OPP when df->min_freq is 0, and similar for
+>>>>> min_freq. Since it is now guaranteed that df->min/max_freq can't be 0 the
+>>>>> checks for this case can be removed.
+>>>>>
+>>>>> Fixes: f1d981eaecf8 ("PM / devfreq: Use the available min/max frequency")
+>>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>>>>> ---
+>>>>>  drivers/devfreq/devfreq.c | 30 ++++++++++++++++++------------
+>>>>>  1 file changed, 18 insertions(+), 12 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>>>> index 0057ef5b0a98..67da4e7b486b 100644
+>>>>> --- a/drivers/devfreq/devfreq.c
+>>>>> +++ b/drivers/devfreq/devfreq.c
+>>>>> @@ -283,11 +283,11 @@ int update_devfreq(struct devfreq *devfreq)
+>>>>>  	max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
+>>>>>  	min_freq = MAX(devfreq->scaling_min_freq, devfreq->min_freq);
+>>>>>  
+>>>>> -	if (min_freq && freq < min_freq) {
+>>>>> +	if (freq < min_freq) {
+>>>>>  		freq = min_freq;
+>>>>>  		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
+>>>>>  	}
+>>>>> -	if (max_freq && freq > max_freq) {
+>>>>> +	if (freq > max_freq) {
+>>>>>  		freq = max_freq;
+>>>>>  		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+>>>>>  	}
+>>>>> @@ -1123,17 +1123,20 @@ static ssize_t min_freq_store(struct device *dev, struct device_attribute *attr,
+>>>>>  	struct devfreq *df = to_devfreq(dev);
+>>>>>  	unsigned long value;
+>>>>>  	int ret;
+>>>>> -	unsigned long max;
+>>>>>  
+>>>>>  	ret = sscanf(buf, "%lu", &value);
+>>>>>  	if (ret != 1)
+>>>>>  		return -EINVAL;
+>>>>>  
+>>>>>  	mutex_lock(&df->lock);
+>>>>> -	max = df->max_freq;
+>>>>> -	if (value && max && value > max) {
+>>>>> -		ret = -EINVAL;
+>>>>> -		goto unlock;
+>>>>> +
+>>>>> +	if (value) {
+>>>>> +		if (value > df->max_freq) {
+>>>>> +			ret = -EINVAL;
+>>>>> +			goto unlock;
+>>>>> +		}
+>>>>> +	} else {
+>>>>> +		value = df->profile->freq_table[df->profile->max_state - 1];
+>>>>>  	}
+>>>>
+>>>> If you want to prevent that df->min_freq is zero, 
+>>>> you should reinitialize 'value' as following.
+>>>> Because freq_table must be in ascending order.
+>>>> 	value = df->profile->freq_table[0];
+>>>
+>>> Thanks for pointing this out!
+>>>
+>>> The devfreq device I tested with (a Mali GPU) uses descending order
+>>> for some reason, and I assumed that's the usual order.
+>>>
+>>> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.4/drivers/gpu/arm/midgard/backend/gpu/mali_kbase_devfreq.c#208
+>>>
+>>> It seems the ordering doesn't have any impact beyond this patch. If
+>>> the order isn't mandatory for drivers that set up their own freq_table
+>>> we should probably support both cases to be safe.
+>>
+>> Prior to that 'freq_table' is optional. So, patch[1] initialize the 'freq_table'
+>> by using OPP interface if 'freq_table' is NULL.
+>> [1] commit 0ec09ac2cebe ("PM / devfreq: Set the freq_table of devfreq device")
+>>
+>> Current devfreq recommend the ascending order for 'freq_table'.
+>> But, as you know, it might be not enough to support them.
+>>
+>> I agree that we should support the both cases (ascending or descending order).
+>>
+>> Maybe, it might be not proper to access the freq_table[] directly
+>> because we don't know the ordering style of 'freq_table'
+>> if 'freq_table' is made by devfreq user instead of devfreq core.
 > 
-> I want to remove reset_control_reset() entirely.
+> If we can assume that it is either ascending or descending, but not
+> random order than a simple check if freq_table[0] <
+> freq_table[max_state - 1] would be sufficient.
 
-reset_control_reset is for those cases where "the reset controller
-knows" how to reset us. There are hardware reset controllers that can
-control a bunch of actual reset signals in the right order and with the
-right timings necessary for the connected IP cores by triggering a
-single bit.
-In that case it wouldn't make much sense to do assert / delay / deassert
-in the driver, as the information about the delay is contained in the
-reset controller hardware.
+Also, we should consider the order way of freq_table on available_frequency
+because available_frequency have to show the frequency as the ascending order
+even if freq_table uses the descending order.
 
-> [1] Some reset consumers (e.g. drivers/ata/sata_gemini.c)
->     use reset_control_reset() to reset the HW.
 > 
-> [2] Some reset consumers (e.g. drivers/input/keyboard/tegra-kbc.c)
->     use the combination of reset_control_assert() and reset_control_deassert()
->     to reset the HW.
-> 
-> [1] is the only way if the reset controller only supports the pulse reset.
-> 
-> [2] is the only way if the reset controller only supports the level reset.
-> 
-> So, this is another strangeness because
-> the implementation of reset controller
-> affects reset consumers.
-> 
-> We do not need [1].
-> 
-> [2] is more flexible than [1] because hardware usually specifies
-> how long the reset line should be kept asserted.
+> Otherwise we could also determine the min/max after initialization and
+> save the result, though that would leave us with yet another frequency
+> pair, which might be confusing, especially if we don't come up with
+> good names to distinguish between them.
 
-This is not always the case.
+IMO, it might make the confusion if devfreq device has the two frequency
+table.
 
-> For all reset consumers,
-> replace
->   reset_control_reset();
-> with
->   reset_control_assert();
->   reset_control_deassert();
-
-To be honest, it doesn't make sense to me. If the intention in the
-driver is just to reset our internal state, and we have a system reset
-controller that can reset us by writing a single bit, I'd prefer to call
-a reset function over two assert/deassert functions, one of which ends
-up doing nothing.
-
-How about moving in the other direction, and allowing to replace
-
-	reset_control_assert(rstc);
-	udelay(delay);
-	reset_control_deassert(rstc);
-
-and variants with calls like
-
-	reset_control_reset_udelay(rstc, delay);
-
-? If the reset controller knows better, or can't change the delay in
-hardware, it may ignore the delay parameter.
-
-> and deprecate reset_control_reset().
->
-> I think this is the right thing to do.
-
-I don't think this helps the API, as with that change we have to remove
-a guarantee it currently makes: This either only works for shared resets
-or we have to accept that reset_control_assert for exclusive resets does
-not guarantee to return with the reset line asserted anymore.
-Also, for drivers that do deassert in probe and assert in remove, we
-would have to issue the reset in deassert and let assert be the no-op,
-instead of the other way around.
-
-> The reset controller side should be implemented like this:
-> 
-> If your reset controller only supports the pulse reset,
->    .deassert hook should be no-op.
->    .assert hook should pulse the reset
-> 
-> Then .reset hook should be removed.
-
-There is hardware where assert, deassert, and reset are three different
-operations. See for example the tegra/reset-bpmp.c driver. Both assert /
-deassert and module reset messages are part of the firmware ABI.
-
-> Or, we can keep the reset drivers as they are.
-> drivers/reset/core.c can take care of the proper fallback logic.
-
-I prefer to keep assert, deassert and reset separate for those cases
-where the hardware actually supports both variants.
-
-regards
-Philipp
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
