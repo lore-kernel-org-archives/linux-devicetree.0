@@ -1,40 +1,45 @@
-Return-Path: <SRS0=QZ+J=IY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-vk0-f65.google.com ([209.85.213.65]:43909 "EHLO
-        mail-vk0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752109AbeFFNeN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Jun 2018 09:34:13 -0400
-MIME-Version: 1.0
-In-Reply-To: <1526475979-13891-2-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1526475979-13891-1-git-send-email-ulrich.hecht+renesas@gmail.com> <1526475979-13891-2-git-send-email-ulrich.hecht+renesas@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 6 Jun 2018 15:34:12 +0200
-Message-ID: <CAMuHMdW22odSNj=aAaxQ_FwH-WJqoCUkEJMmphyOVxay=TLpLQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dmaengine: rcar-dmac: Document R8A77990 bindings
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Return-Path: <robherring2@gmail.com>
+Received: from localhost.localdomain (24-223-123-72.static.usa-companies.net. [24.223.123.72])
+        by smtp.googlemail.com with ESMTPSA id s63-v6sm4148871ywg.65.2018.06.05.15.50.05
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Jun 2018 15:50:05 -0700 (PDT)
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: submitting-patches: add guidance on patch content and subject
+Date: Tue,  5 Jun 2018 16:50:04 -0600
+Message-Id: <20180605225004.3015-1-robh@kernel.org>
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, May 16, 2018 at 3:06 PM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
->
-> Renesas R-Car E3 (R8A77990) SoC also has the R-Car gen2/3 compatible DMA
-> controllers, so document the SoC specific binding.
->
-> Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Clarify that binding patches should also include include/dt-bindings/*
+as part of them. The binding doc defines the ABI and the includes are
+part of that. Add some details on the preferred subject prefix and
+contents.
 
- Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/submitting-patches.txt | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+index 274058c583dd..de0d6090c0fd 100644
+--- a/Documentation/devicetree/bindings/submitting-patches.txt
++++ b/Documentation/devicetree/bindings/submitting-patches.txt
+@@ -6,7 +6,14 @@ I. For patch submitters
+   0) Normal patch submission rules from Documentation/process/submitting-patches.rst
+      applies.
+ 
+-  1) The Documentation/ portion of the patch should be a separate patch.
++  1) The Documentation/ and include/dt-bindings/ portion of the patch should
++     be a separate patch. The preferred subject prefix for binding patches is:
++
++       "dt-bindings: <binding dir>: ..."
++
++     The 80 characters of the subject are precious. It is recommended to not
++     use "Documentation" or "doc" because that is implied. All bindings are
++     docs. Repeating "binding" again should also be avoided.
+ 
+   2) Submit the entire series to the devicetree mailinglist at
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.17.0
