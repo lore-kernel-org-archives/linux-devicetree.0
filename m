@@ -1,644 +1,207 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 14/20] dts: arm: hisilicon: Update coresight bindings for hardware port
-Date: Tue,  5 Jun 2018 22:43:25 +0100
-Message-ID: <1528235011-30691-15-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 02/20] coresight: of: Fix refcounting for graph nodes
+Date: Tue,  5 Jun 2018 22:43:13 +0100
+Message-ID: <1528235011-30691-3-git-send-email-suzuki.poulose@arm.com>
 References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Wei Xu <xuwei5@hisilicon.com>
+Cc: mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, coresight@lists.linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, john.horley@arm.com, linux-kernel@vger.kernel.org, arm@kernel.org, sudeep.holla@arm.com, matt.sealey@arm.com, mike.leach@linaro.org, frowand.list@gmail.com, charles.garcia-tobin@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Switch to the new the hardware port bindings.
+The coresight driver doesn't drop the references on the
+remote endpoint/port nodes. Add the missing of_node_put()
+calls. To make it easier to handle different corner cases
+cleanly, move the parsing of an endpoint to separate
+function.
 
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reported-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm/boot/dts/hip04.dtsi | 195 +++++++++++++++++++++++++++++++------------
- 1 file changed, 141 insertions(+), 54 deletions(-)
+ drivers/hwtracing/coresight/of_coresight.c | 139 +++++++++++++++++------------
+ 1 file changed, 84 insertions(+), 55 deletions(-)
 
-diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
-index 44044f2..dfd82be 100644
---- a/arch/arm/boot/dts/hip04.dtsi
-+++ b/arch/arm/boot/dts/hip04.dtsi
-@@ -279,8 +279,9 @@
- 		clock-names = "apb_pclk";
- 		port {
- 			etb0_in_port: endpoint@0 {
--				slave-mode;
-+				direction = <0>;
- 				remote-endpoint = <&replicator0_out_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -293,8 +294,9 @@
- 		clock-names = "apb_pclk";
- 		port {
- 			etb1_in_port: endpoint@0 {
--				slave-mode;
-+				direction = <0>;
- 				remote-endpoint = <&replicator1_out_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -307,8 +309,9 @@
- 		clock-names = "apb_pclk";
- 		port {
- 			etb2_in_port: endpoint@0 {
--				slave-mode;
-+				direction = <0>;
- 				remote-endpoint = <&replicator2_out_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -321,8 +324,9 @@
- 		clock-names = "apb_pclk";
- 		port {
- 			etb3_in_port: endpoint@0 {
--				slave-mode;
-+				direction = <0>;
- 				remote-endpoint = <&replicator3_out_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -335,8 +339,9 @@
- 		clock-names = "apb_pclk";
- 		port {
- 			tpiu_in_port: endpoint@0 {
--				slave-mode;
-+				direction = <0>;
- 				remote-endpoint = <&funnel4_out_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -356,6 +361,8 @@
- 				reg = <0>;
- 				replicator0_out_port0: endpoint {
- 					remote-endpoint = <&etb0_in_port>;
-+					coresight,hwid = <0>;
-+					direction = <1>;
- 				};
- 			};
+diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+index a33a92e..8a23c63 100644
+--- a/drivers/hwtracing/coresight/of_coresight.c
++++ b/drivers/hwtracing/coresight/of_coresight.c
+@@ -111,17 +111,80 @@ int of_coresight_get_cpu(const struct device_node *node)
+ }
+ EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
  
-@@ -363,15 +370,18 @@
- 				reg = <1>;
- 				replicator0_out_port1: endpoint {
- 					remote-endpoint = <&funnel4_in_port0>;
-+					coresight,hwid = <1>;
-+					direction = <1>;
- 				};
- 			};
++/*
++ * of_coresight_parse_endpoint : Parse the given output endpoint @ep
++ * and fill the connection information in @pdata[*@i].
++ *
++ * Parses the local port, remote device name and the remote port. Also
++ * updates *@i to point to the next index, when an entry is added.
++ *
++ * Returns :
++ *	 0	- If the parsing completed without any fatal errors.
++ *	-Errno	- Fatal error, abort the scanning.
++ */
++static int of_coresight_parse_endpoint(struct device_node *ep,
++				       struct coresight_platform_data *pdata,
++				       int *i)
++{
++	int ret = 0;
++	struct of_endpoint endpoint, rendpoint;
++	struct device_node *rparent = NULL;
++	struct device_node *rport = NULL;
++	struct device *rdev = NULL;
++
++	do {
++		/*
++		 * No need to deal with input ports, processing for as
++		 * processing for output ports will deal with them.
++		 */
++		if (of_find_property(ep, "slave-mode", NULL))
++			break;
++
++		/* Parse the local port details */
++		if (of_graph_parse_endpoint(ep, &endpoint))
++			break;
++		/*
++		 * Get a handle on the remote port and parent
++		 * attached to it.
++		 */
++		rparent = of_graph_get_remote_port_parent(ep);
++		if (!rparent)
++			break;
++		rport = of_graph_get_remote_port(ep);
++		if (!rport)
++			break;
++		if (of_graph_parse_endpoint(rport, &rendpoint))
++			break;
++
++		/* If the remote device is not available, defer probing */
++		rdev = of_coresight_get_endpoint_device(rparent);
++		if (!rdev) {
++			ret = -EPROBE_DEFER;
++			break;
++		}
++
++		pdata->outports[*i] = endpoint.port;
++		pdata->child_names[*i] = dev_name(rdev);
++		pdata->child_ports[*i] = rendpoint.id;
++		/* Move the index */
++		(*i)++;
++	} while (0);
++
++	if (rparent)
++		of_node_put(rparent);
++	if (rport)
++		of_node_put(rport);
++
++	return ret;
++}
++
+ struct coresight_platform_data *
+ of_get_coresight_platform_data(struct device *dev,
+ 			       const struct device_node *node)
+ {
+ 	int i = 0, ret = 0;
+ 	struct coresight_platform_data *pdata;
+-	struct of_endpoint endpoint, rendpoint;
+-	struct device *rdev;
+ 	struct device_node *ep = NULL;
+-	struct device_node *rparent = NULL;
+-	struct device_node *rport = NULL;
  
- 			/* replicator input port */
- 			port@2 {
--				reg = <0>;
-+				reg = <2>;
- 				replicator0_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&funnel0_out_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -392,6 +402,8 @@
- 				reg = <0>;
- 				replicator1_out_port0: endpoint {
- 					remote-endpoint = <&etb1_in_port>;
-+					coresight,hwid = <0>;
-+					direction = <1>;
- 				};
- 			};
+ 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+ 	if (!pdata)
+@@ -129,63 +192,29 @@ of_get_coresight_platform_data(struct device *dev,
  
-@@ -399,15 +411,18 @@
- 				reg = <1>;
- 				replicator1_out_port1: endpoint {
- 					remote-endpoint = <&funnel4_in_port1>;
-+					coresight,hwid = <1>;
-+					direction = <1>;
- 				};
- 			};
+ 	/* Use device name as sysfs handle */
+ 	pdata->name = dev_name(dev);
++	pdata->cpu = of_coresight_get_cpu(node);
  
- 			/* replicator input port */
- 			port@2 {
--				reg = <0>;
-+				reg = <2>;
- 				replicator1_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&funnel1_out_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -428,22 +443,27 @@
- 				reg = <0>;
- 				replicator2_out_port0: endpoint {
- 					remote-endpoint = <&etb2_in_port>;
-+					coresight,hwid = <0>;
-+					direction = <1>;
- 				};
- 			};
+ 	/* Get the number of input and output port for this component */
+ 	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
  
- 			port@1 {
- 				reg = <1>;
--					replicator2_out_port1: endpoint {
-+				replicator2_out_port1: endpoint {
- 					remote-endpoint = <&funnel4_in_port2>;
-+					coresight,hwid = <1>;
-+					direction = <1>;
- 				};
- 			};
+-	if (pdata->nr_outport) {
+-		ret = of_coresight_alloc_memory(dev, pdata);
++	/* If there are not output connections, we are done */
++	if (!pdata->nr_outport)
++		return pdata;
++
++	ret = of_coresight_alloc_memory(dev, pdata);
++	if (ret)
++		return ERR_PTR(ret);
++
++	/* Iterate through each port to discover topology */
++	do {
++		/* Get a handle on a port */
++		ep = of_graph_get_next_endpoint(node, ep);
++		if (!ep)
++			break;
++		ret = of_coresight_parse_endpoint(ep, pdata, &i);
+ 		if (ret)
+ 			return ERR_PTR(ret);
+-
+-		/* Iterate through each port to discover topology */
+-		do {
+-			/* Get a handle on a port */
+-			ep = of_graph_get_next_endpoint(node, ep);
+-			if (!ep)
+-				break;
+-
+-			/*
+-			 * No need to deal with input ports, processing for as
+-			 * processing for output ports will deal with them.
+-			 */
+-			if (of_find_property(ep, "slave-mode", NULL))
+-				continue;
+-
+-			/* Get a handle on the local endpoint */
+-			ret = of_graph_parse_endpoint(ep, &endpoint);
+-
+-			if (ret)
+-				continue;
+-
+-			/* The local out port number */
+-			pdata->outports[i] = endpoint.port;
+-
+-			/*
+-			 * Get a handle on the remote port and parent
+-			 * attached to it.
+-			 */
+-			rparent = of_graph_get_remote_port_parent(ep);
+-			rport = of_graph_get_remote_port(ep);
+-
+-			if (!rparent || !rport)
+-				continue;
+-
+-			if (of_graph_parse_endpoint(rport, &rendpoint))
+-				continue;
+-
+-			rdev = of_coresight_get_endpoint_device(rparent);
+-			if (!rdev)
+-				return ERR_PTR(-EPROBE_DEFER);
+-
+-			pdata->child_names[i] = dev_name(rdev);
+-			pdata->child_ports[i] = rendpoint.id;
+-
+-			i++;
+-		} while (ep);
+-	}
+-
+-	pdata->cpu = of_coresight_get_cpu(node);
++	} while (ep);
  
- 			/* replicator input port */
- 			port@2 {
--				reg = <0>;
-+				reg = <2>;
- 				replicator2_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&funnel2_out_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -464,6 +484,8 @@
- 				reg = <0>;
- 				replicator3_out_port0: endpoint {
- 					remote-endpoint = <&etb3_in_port>;
-+					coresight,hwid = <0>;
-+					direction = <1>;
- 				};
- 			};
- 
-@@ -471,15 +493,18 @@
- 				reg = <1>;
- 				replicator3_out_port1: endpoint {
- 					remote-endpoint = <&funnel4_in_port3>;
-+					coresight,hwid = <1>;
-+					direction = <1>;
- 				};
- 			};
- 
- 			/* replicator input port */
- 			port@2 {
--				reg = <0>;
-+				reg = <2>;
- 				replicator3_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&funnel3_out_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 		};
-@@ -501,39 +526,45 @@
- 				funnel0_out_port0: endpoint {
- 					remote-endpoint =
- 						<&replicator0_in_port0>;
-+					coresight,hwid = <0>;
-+					direction = <1>;
- 				};
- 			};
- 
- 			/* funnel input ports */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				funnel0_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm0_out_port>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				funnel0_in_port1: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm1_out_port>;
-+					coresight,hwid = <1>;
- 				};
- 			};
- 
- 			port@3 {
--				reg = <2>;
-+				reg = <3>;
- 				funnel0_in_port2: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm2_out_port>;
-+					coresight,hwid = <2>;
- 				};
- 			};
- 
- 			port@4 {
--				reg = <3>;
-+				reg = <4>;
- 				funnel0_in_port3: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm3_out_port>;
-+					coresight,hwid = <3>;
- 				};
- 			};
- 		};
-@@ -553,41 +584,47 @@
- 			port@0 {
- 				reg = <0>;
- 				funnel1_out_port0: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&replicator1_in_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			/* funnel input ports */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				funnel1_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm4_out_port>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				funnel1_in_port1: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm5_out_port>;
-+					coresight,hwid = <1>;
- 				};
- 			};
- 
- 			port@3 {
--				reg = <2>;
-+				reg = <3>;
- 				funnel1_in_port2: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm6_out_port>;
-+					coresight,hwid = <2>;
- 				};
- 			};
- 
- 			port@4 {
--				reg = <3>;
-+				reg = <4>;
- 				funnel1_in_port3: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm7_out_port>;
-+					coresight,hwid = <3>;
- 				};
- 			};
- 		};
-@@ -607,41 +644,47 @@
- 			port@0 {
- 				reg = <0>;
- 				funnel2_out_port0: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&replicator2_in_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			/* funnel input ports */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				funnel2_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm8_out_port>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				funnel2_in_port1: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm9_out_port>;
-+					coresight,hwid = <1>;
- 				};
- 			};
- 
- 			port@3 {
--				reg = <2>;
-+				reg = <3>;
- 				funnel2_in_port2: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm10_out_port>;
-+					coresight,hwid = <2>;
- 				};
- 			};
- 
- 			port@4 {
--				reg = <3>;
-+				reg = <4>;
- 				funnel2_in_port3: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm11_out_port>;
-+					coresight,hwid = <3>;
- 				};
- 			};
- 		};
-@@ -661,41 +704,47 @@
- 			port@0 {
- 				reg = <0>;
- 				funnel3_out_port0: endpoint {
-+					direction = <1>;
- 					remote-endpoint =
- 						<&replicator3_in_port0>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			/* funnel input ports */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				funnel3_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm12_out_port>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				funnel3_in_port1: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm13_out_port>;
-+					coresight,hwid = <1>;
- 				};
- 			};
- 
- 			port@3 {
--				reg = <2>;
-+				reg = <3>;
- 				funnel3_in_port2: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm14_out_port>;
-+					coresight,hwid = <2>;
- 				};
- 			};
- 
- 			port@4 {
--				reg = <3>;
-+				reg = <4>;
- 				funnel3_in_port3: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint = <&ptm15_out_port>;
-+					coresight,hwid = <3>;
- 				};
- 			};
- 		};
-@@ -715,44 +764,50 @@
- 			port@0 {
- 				reg = <0>;
- 				funnel4_out_port0: endpoint {
-+					direction = <1>;
- 					remote-endpoint = <&tpiu_in_port>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			/* funnel input ports */
- 			port@1 {
--				reg = <0>;
-+				reg = <1>;
- 				funnel4_in_port0: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint =
- 						<&replicator0_out_port1>;
-+					coresight,hwid = <0>;
- 				};
- 			};
- 
- 			port@2 {
--				reg = <1>;
-+				reg = <2>;
- 				funnel4_in_port1: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint =
- 						<&replicator1_out_port1>;
-+					coresight,hwid = <1>;
- 				};
- 			};
- 
- 			port@3 {
--				reg = <2>;
-+				reg = <3>;
- 				funnel4_in_port2: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint =
- 						<&replicator2_out_port1>;
-+					coresight,hwid = <2>;
- 				};
- 			};
- 
- 			port@4 {
--				reg = <3>;
-+				reg = <4>;
- 				funnel4_in_port3: endpoint {
--					slave-mode;
-+					direction = <0>;
- 					remote-endpoint =
- 						<&replicator3_out_port1>;
-+					coresight,hwid = <3>;
- 				};
- 			};
- 		};
-@@ -767,7 +822,9 @@
- 		cpu = <&CPU0>;
- 		port {
- 			ptm0_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel0_in_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -781,7 +838,9 @@
- 		cpu = <&CPU1>;
- 		port {
- 			ptm1_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel0_in_port1>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -795,7 +854,9 @@
- 		cpu = <&CPU2>;
- 		port {
- 			ptm2_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel0_in_port2>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -809,7 +870,9 @@
- 		cpu = <&CPU3>;
- 		port {
- 			ptm3_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel0_in_port3>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -823,7 +886,9 @@
- 		cpu = <&CPU4>;
- 		port {
- 			ptm4_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel1_in_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -837,7 +902,9 @@
- 		cpu = <&CPU5>;
- 		port {
- 			ptm5_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel1_in_port1>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -851,7 +918,9 @@
- 		cpu = <&CPU6>;
- 		port {
- 			ptm6_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel1_in_port2>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -865,7 +934,9 @@
- 		cpu = <&CPU7>;
- 		port {
- 			ptm7_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel1_in_port3>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -879,7 +950,9 @@
- 		cpu = <&CPU8>;
- 		port {
- 			ptm8_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel2_in_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -892,7 +965,9 @@
- 		cpu = <&CPU9>;
- 		port {
- 			ptm9_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel2_in_port1>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -906,7 +981,9 @@
- 		cpu = <&CPU10>;
- 		port {
- 			ptm10_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel2_in_port2>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -920,7 +997,9 @@
- 		cpu = <&CPU11>;
- 		port {
- 			ptm11_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel2_in_port3>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -934,7 +1013,9 @@
- 		cpu = <&CPU12>;
- 		port {
- 			ptm12_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel3_in_port0>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -948,7 +1029,9 @@
- 		cpu = <&CPU13>;
- 		port {
- 			ptm13_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel3_in_port1>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -962,7 +1045,9 @@
- 		cpu = <&CPU14>;
- 		port {
- 			ptm14_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel3_in_port2>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
-@@ -976,7 +1061,9 @@
- 		cpu = <&CPU15>;
- 		port {
- 			ptm15_out_port: endpoint {
-+				direction = <1>;
- 				remote-endpoint = <&funnel3_in_port3>;
-+				coresight,hwid = <0>;
- 			};
- 		};
- 	};
+ 	return pdata;
+ }
 -- 
 2.7.4
