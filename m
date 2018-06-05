@@ -1,30 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/4] mfd: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Tue, 5 Jun 2018 09:47:57 -0600
-Message-ID: <20180605154757.GA26812@rob-hp-laptop>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <6509bbe0238c20c16930c9f23d63656b1d5f4af2.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v2 0/4] drm/tinydrm: new dirver for ILI9341 displays
+Date: Tue, 5 Jun 2018 17:49:23 +0200
+Message-ID: <ecd75b89-14a6-12f7-0ec4-222b1f984e49@tronnes.org>
+References: <20180525193623.15533-1-david@lechnology.com>
+ <8840212b-fd46-e700-58a1-cb1b882c5771@tronnes.org>
+ <d5297fc5-94f2-edcd-5a11-95d7a9dca78d@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6509bbe0238c20c16930c9f23d63656b1d5f4af2.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <d5297fc5-94f2-edcd-5a11-95d7a9dca78d@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Nitin Patil <nitin@mindsensors.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 04, 2018 at 04:18:30PM +0300, Matti Vaittinen wrote:
-> Document devicetree bindings for ROHM BD71837 PMIC MFD.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-
-I've replied on the prior version discussion. Please don't send new 
-versions if the last one is still under discussion.
-
-Rob
+KGNjOiBkcm0tbWlzYyBtYWludGFpbmVycykKCgpEZW4gMDQuMDYuMjAxOCAwMy4yMSwgc2tyZXYg
+RGF2aWQgTGVjaG5lcjoKPgo+Cj4gT24gNi8zLzE4IDU6MDAgUE0sIE5vcmFsZiBUcsO4bm5lcyB3
+cm90ZToKPj4KPj4gRGVuIDI1LjA1LjIwMTggMjEuMzYsIHNrcmV2IERhdmlkIExlY2huZXI6Cj4+
+PiBUaGlzIHNlcmllcyBhZGRzIGEgbmV3IHRpbnlkcm0gZHJpdmVyIGZvciB0aGUgSWxpdGVrIElM
+STkzNDEgCj4+PiBjb250cm9sbGVyIGFuZAo+Pj4gYSAyLjQiIGRpc3BsYXkgcGFuZWwgdGhhdCB1
+c2VzIHRoaXMgY29udHJvbGxlci4KPj4KPj4gRGF2aWQsIGRvIHlvdSBoYXZlIGNvbW1pdCByaWdo
+dHMgbm93Pwo+Cj4gTm8uIE9wZW5lZCBhIGJ1ZyBhIHdoaWxlIGJhY2sgdG8gcmVxdWVzdCBhY2Nl
+c3MsIGJ1dCBJIGd1ZXNzIHRoZQo+IHJpZ2h0IHBlcnNvbiBkaWRuJ3Qgc2VlIGl0Lgo+Cj4gaHR0
+cHM6Ly9idWdzLmZyZWVkZXNrdG9wLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTA1MTY2Cj4KCkNvdWxk
+IHNvbWVvbmUgcGxlYXNlIGxvb2sgYXQgdGhpcz8KCk5vcmFsZi4KCj4+Cj4+IE5vcmFsZi4KPj4K
+Pj4+IEEgZmV3IHRoaW5ncyB0byBub3RlIGhlcmU6Cj4+PiAqIFRoZSBkYXRhc2hlZXQgZm9yIHRo
+aXMgZGlzcGxheVsxXSBkb2Vzbid0IGhhdmUgYSB2ZW5kb3IgbWVudGlvbmVkIAo+Pj4gb24gaXQK
+Pj4+IMKgwqAgYW55d2hlcmUsIHNvIEkgaGF2ZSB1c2VkICJhZGFmcnVpdCIgYXMgdGhlIHZlbmRv
+ciBwcmVmaXguIElmIAo+Pj4gc29tZW9uZSBoYXMgYQo+Pj4gwqDCoCBiZXR0ZXIgc3VnZ2VzdGlv
+biwgcGxlYXNlIHNwZWFrIHVwLgo+Pj4gKiBUaGUgTUFJTlRBSU5FUlMgcGF0Y2ggZm9yIGlsaTky
+MjUgaXMgaW5jbHVkZWQgc28gd2UgZG9uJ3QgZW5kIHVwIAo+Pj4gd2l0aCBhIG1lcmdlCj4+PiDC
+oMKgIGNvbmZsaWN0IGxhdGVyIG9uLgo+Pj4KPj4+IHYyIGNoYW5nZXM6Cj4+PiAqIGNoYW5nZSB2
+ZW5kb3IgcHJlZml4IGZyb20gIm5vbmFtZSIgdG8gImFkYWZydWl0Igo+Pj4gKiBuZXcgcGF0Y2gg
+Zm9yICJhZGFmcnVpdCIgdmVuZG9yIHByZWZpeAo+Pj4gKiBtaW5vciBzdHlsZSBjaGFuZ2VzCj4+
+PiAqIGRyb3AgcmVndWxhdG9yIGZyb20gZHJpdmVyIChpbnN0ZWFkIG9mIGFkZGluZyB0byBEVCBi
+aW5kaW5ncykKPj4+Cj4+PiBbMV06IAo+Pj4gaHR0cHM6Ly9jZG4tbGVhcm4uYWRhZnJ1aXQuY29t
+L2Fzc2V0cy9hc3NldHMvMDAwLzA0Ni84Nzkvb3JpZ2luYWwvU1BFQy1ZWDI0MFFWMjktVF9SZXYu
+QV9fMV8ucGRmIAo+Pj4KPj4+Cj4+Pgo+Pj4gRGF2aWQgTGVjaG5lciAoNCk6Cj4+PiDCoMKgIE1B
+SU5UQUlORVJTOiBmaXggcGF0aCB0byBpbGl0ZWssaWxpOTIyNSBkZXZpY2UgdHJlZSBiaW5kaW5n
+cwo+Pj4gwqDCoCBkdC1iaW5kaW5nczogQWRkIHZlbmRvciBwcmVmaXggZm9yIEFkYWZydWl0Cj4+
+PiDCoMKgIGR0LWJpbmRpbmdzOiBuZXcgYmluZGluZyBmb3IgSWxpdGVrIElMSTkzNDEgZGlzcGxh
+eSBwYW5lbHMKPj4+IMKgwqAgZHJtL3Rpbnlkcm06IG5ldyBkcml2ZXIgZm9yIElMSTkzNDEgZGlz
+cGxheSBwYW5lbHMKPj4+Cj4+PiDCoCAuLi4vYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTM0
+MS50eHTCoMKgwqDCoMKgwqAgfMKgIDI3ICsrCj4+PiDCoCAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy92ZW5kb3ItcHJlZml4ZXMudHh0wqDCoCB8wqDCoCAxICsKPj4+IMKgIE1BSU5UQUlORVJTwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfMKgwqAgOCArLQo+Pj4gwqAgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vS2NvbmZp
+Z8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDEwICsKPj4+IMKgIGRyaXZlcnMvZ3B1
+L2RybS90aW55ZHJtL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMSAr
+Cj4+PiDCoCBkcml2ZXJzL2dwdS9kcm0vdGlueWRybS9pbGk5MzQxLmPCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfCAyMzMgCj4+PiArKysrKysrKysrKysrKysrKysKPj4+IMKgIDYgZmlsZXMgY2hh
+bmdlZCwgMjc5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPj4+IMKgIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCAKPj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ls
+aXRlayxpbGk5MzQxLnR4dAo+Pj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS90aW55ZHJtL2lsaTkzNDEuYwo+Pj4KPj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
