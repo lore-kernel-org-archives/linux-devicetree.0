@@ -1,40 +1,43 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v4 3/3] ARM: dts: Renesas R9A06G032 SMP enable method
-Date: Tue,  5 Jun 2018 12:28:48 +0100
-Message-ID: <1528198148-23308-4-git-send-email-michel.pollet@bp.renesas.com>
-References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Carlo Caione <carlo@endlessm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Frank Rowand <frank.rowand@sony.com>, Rajendra Nayak <rnayak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 3/6] dt: bindings: add bindings for msa memory region
+Date: Tue,  5 Jun 2018 18:06:16 +0530
+Message-ID: <20180605123616.528-1-govinds@codeaurora.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a special enable method for the second CA7 of the R9A06G032
-as well as the default value for the "cpu-release-addr" property.
+Add device tree binding documentation details of msa
+memory region for ath10k qmi client for SDM845/APQ8098
+SoC into "qcom,ath10k.txt".
 
-Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r9a06g032.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-index 40827bb..9d7e74a 100644
---- a/arch/arm/boot/dts/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/r9a06g032.dtsi
-@@ -1,3 +1,4 @@
-+
- // SPDX-License-Identifier: GPL-2.0
- /*
-  * Base Device Tree Source for the Renesas RZ/N1D (R9A06G032)
-@@ -30,6 +31,8 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <1>;
- 			clocks = <&sysctrl R9A06G032_CLK_A7MP>;
-+			enable-method = "renesas,r9a06g032-smp";
-+			cpu-release-addr = <0x4000c204>;
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+index 7fd4e8ce4149..0efc47f4ba34 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -56,6 +56,8 @@ Optional properties:
+ 				     the length can vary between hw versions.
+ - <supply-name>-supply: handle to the regulator device tree node
+ 			   optional "supply-name" is "vdd-0.8-cx-mx".
++- msa-fixed-region: phandle, specifier to children of reserved MSA memory.
++- msa-size: MSA memory size for fw internal use.
  
+ Example (to supply the calibration data alone):
+ 
+@@ -133,6 +135,8 @@ wifi@18000000 {
+ 		compatible = "qcom,wcn3990-wifi";
+ 		reg = <0x18800000 0x800000>;
+ 		reg-names = "membase";
++		msa-fixed-region = <&wlan_msa_mem>;
++		msa-size = <0x100000>;
+ 		clocks = <&clock_gcc clk_aggre2_noc_clk>;
+ 		clock-names = "smmu_aggre2_noc_clk"
+ 		interrupts =
 -- 
-2.7.4
+2.17.0
