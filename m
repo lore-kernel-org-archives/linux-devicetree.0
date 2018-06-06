@@ -1,9 +1,9 @@
 Return-Path: <SRS0=uY07=IY=roeck-us.net=linux@kernel.org>
-Date: Wed, 6 Jun 2018 09:24:04 -0700
+Date: Wed, 6 Jun 2018 09:21:03 -0700
 From: Guenter Roeck <linux@roeck-us.net>
 Subject: Re: dt-bindings: watchdog: renesas-wdt: Add support for the R8A77990
  wdt
-Message-ID: <20180606162404.GA10066@roeck-us.net>
+Message-ID: <20180606162103.GA9740@roeck-us.net>
 References: <1528219113-29014-1-git-send-email-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -24,9 +24,7 @@ On Tue, Jun 05, 2018 at 07:18:33PM +0200, Geert Uytterhoeven wrote:
 > Signed-off-by: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This refuses to apply for me. What tree is it based on ?
-
-Guenter
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
 >  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
