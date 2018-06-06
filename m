@@ -1,676 +1,353 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2 5/5] memory: tegra: Introduce Tegra20 EMC driver
-Date: Wed, 6 Jun 2018 16:42:01 +0300
-Message-ID: <c17a1edf-f87d-e5f6-b446-34505a2bbc07@gmail.com>
-References: <20180603223654.23324-1-digetx@gmail.com>
- <20180603223654.23324-6-digetx@gmail.com> <20180606110258.GL11810@ulmo>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+Date: Wed, 6 Jun 2018 10:16:37 -0500
+Message-ID: <CAL_JsqKjwtq+7CSDKiaWGa011oqdsrc-XjOyfuBPOQ9UB=EtWQ@mail.gmail.com>
+References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <3b05ca98a671a762013c312f8b70543402ee7556.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180531030129.GA16122@rob-hp-laptop> <20180531071717.GG13528@localhost.localdomain>
+ <20180531102315.GA5150@localhost.localdomain> <CAL_Jsq+33G7zMEDOUXHQijxqqbvqykxZENLe1-52ECkXwo2o4g@mail.gmail.com>
+ <20180601062540.GB5150@localhost.localdomain> <CAL_JsqJNMxR=zdwR41iLfWU=u3J_=_VkxVL+g3a12_4vvNwBtw@mail.gmail.com>
+ <20180604113225.GE5150@localhost.localdomain> <CAL_JsqL3Z_o2CFeYDvb3PqgiskTSHuOVqwdUP+gFymLDTKhn2g@mail.gmail.com>
+ <20180606073449.GD20078@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180606110258.GL11810@ulmo>
-Content-Language: en-US
+In-Reply-To: <20180606073449.GD20078@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On 06.06.2018 14:02, Thierry Reding wrote:
-> On Mon, Jun 04, 2018 at 01:36:54AM +0300, Dmitry Osipenko wrote:
->> Introduce driver for the External Memory Controller (EMC) found on Tegra20
->> chips, which controls the external DRAM on the board. The purpose of this
->> driver is to program memory timing for external memory on the EMC clock
->> rate change.
+On Wed, Jun 6, 2018 at 2:34 AM, Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+> On Tue, Jun 05, 2018 at 10:46:14AM -0500, Rob Herring wrote:
+>> On Mon, Jun 4, 2018 at 6:32 AM, Matti Vaittinen
+>> <mazziesaccount@gmail.com> wrote:
+>> > On Fri, Jun 01, 2018 at 12:32:16PM -0500, Rob Herring wrote:
+>> >> On Fri, Jun 1, 2018 at 1:25 AM, Matti Vaittinen
+>> >> <mazziesaccount@gmail.com> wrote:
+>> >> > On Thu, May 31, 2018 at 09:07:24AM -0500, Rob Herring wrote:
+>> >> >> On Thu, May 31, 2018 at 5:23 AM, Matti Vaittinen
+>> >> >> <mazziesaccount@gmail.com> wrote:
+>> >> >> > On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
+>> >> >> >> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
+>> >> >> >> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
+>> >> >> >> > > Document devicetree bindings for ROHM BD71837 PMIC MFD.
+>> >> >> >> > > + - interrupts            : The interrupt line the device is connected to.
+>> >> >> >> > > + - interrupt-controller  : Marks the device node as an interrupt controller.
+>> >> >> >> >
+>> >> >> >> > What sub blocks have interrupts?
+>> >> >> >>
+>> >> >> >> The PMIC can generate interrupts from events which cause it to reset.
+>> >> >> >> Eg, irq from watchdog line change, power button pushes, reset request
+>> >> >> >> via register interface etc. I don't know any generic handling for these
+>> >> >> >> interrupts. In "normal" use-case this PMIC is powering the processor
+>> >> >> >> where driver is running and I do not see reasonable handling because
+>> >> >> >> power-reset is going to follow the irq.
+>> >> >> >>
+>> >> >> >
+>> >> >> > Oh, but when reading this I understand that the interrupt-controller
+>> >> >> > property should at least be optional.
+>> >> >>
+>> >> >> I don't think it should. The h/w either has an interrupt controller or
+>> >> >> it doesn't.
+>> >> >
+>> >> > I hope this explains why I did this interrupt controller - please tell
+>> >> > me if this is legitimate use-case and what you think of following:
+>> >> >
+>> >> > +Optional properties:
+>> >> > + - interrupt-controller        : Marks the device node as an interrupt controller.
+>> >> > +                         BD71837MWV can report different power state change
+>> >> > +                         events to other devices. Different events can be seen
+>> >> > +                         as separate BD71837 domain interrupts.
+>> >>
+>> >> To what other devices?
+>> >
+>> > Would it be better if I wrote "other drivers" instead? I think I've seen
+>> > examples where MFD driver is just providing the interrupts for other
+>> > drivers - like power-button input driver. Currently I have no such "irq
+>> > consumer" drivers written. Still I would like to expose these interrupts
+>> > so that they are ready for using if any platform using PMIC needs them.
 >>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/memory/tegra/Kconfig       |  10 +
->>  drivers/memory/tegra/Makefile      |   1 +
->>  drivers/memory/tegra/tegra20-emc.c | 586 +++++++++++++++++++++++++++++
->>  3 files changed, 597 insertions(+)
->>  create mode 100644 drivers/memory/tegra/tegra20-emc.c
+>> No, worse. Interrupt binding describes interrupt connections between a
+>> controller and devices (which could be sub-blocks in a device), not to
+>> drivers.
+>
+> Ok.
+>
+>> I'm just curious as to what sub-blocks/devices there are. You don't
+>> have to have a driver (yet) to define the devices.
+>
+> Right. I should have done this from the start. I just thought everyone
+> is busy with other things and pushing people to read data sheets might
+> be considered as lazines. "Go and read from data sheet what my driver
+> does, I am too lazy to try to explain what I am doing" - type of thing
+> you know... But as people asked me for more information about HW:
+>
+> Datasheet:
+> https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
+> (Would it be good idea to add this link to comments in MFD driver or to
+> binding document(s)?)
+
+Yes, it would.
+
+> Page 8 contains roughly the same picture I drew
+> below. Page 69 shows the interrupt registers. And for interested ones,
+> HW state transitions are described on page 24.
+>
+>                     +--------------------------------------------------+
+>                     |                                                  |
+> VSYS           +-----------------+                    +-----------+    |
+>                     |            |                    |           |    |
+>                     |  +-------+ |                    | BUCKS 1-4 +-------->
+>                     |  |       | |                    |           |    |
+> I2C IF         +------->   H   | +--------------------+  DVS      +-------->
+>                     |  |   O   | |                    |  Support  |    |
+> PWRON_B        +------->   S   | |                    |           +-------->
+>                     |  |   T   | |                    |           |    |
+> PMIC_STBY_REQ  +------->       | |                    |           +-------->
+>                     |  |   I   | |                    |           |    |
+> PMIC_ON_REQ    +------->   /   | |                    +-----------+    |
+>                     |  |   F   | |                                     |
+> WDOG_B         +------->       | |                    +-----------+    |
+>                     |  |       | |                    |           +-------->
+>                     |  |       | +--------------------+ BUCKS 5,8 |    |
+>                     |  |       | |                    |           +-------->
+>                     |  |       | |                    +-----------+    |
+>                     |  |       | |                                     |
+>                     |  |       | |                     +----------+    |
+> IRQ_OUT        <-------+       | |                     |          |    |
+>                     |  |       | +---------------------+ LDO1     +-------->
+> C32K_OUT       <-------+       | |                     |          |    |
+>                     |  |       | |                     +----------+    |
+>                     |  |       | |                                     |
+>                     |  |       | |                     +----------+    |
+>                     |  |       | |                     |          |    |
+>                     |  |       | +---------------------+ LDO2     +-------->
+>                     |  |       | |                     |          |    |
+>                     |  |       | |                     +----------+    |
+>                     |  |       | |                                     |
+>                     |  |       | |                     +----------+    |
+>                     |  |       | |                     |          |    |
+>                     |  |       | +---------------------+ LDO7     +-------->
+>                     |  +-------+ |                     |          |    |
+>                     |            |                     +----------+    |
+>                     |            |                                     |
+>                     |            | +----------+ +-------------------------->
+>                     |            | |          | |                      |
+>                     |            +-+ BUCK6    +-+      +----------+    |
+>                     |            | |          | |      |          |    |
+>                     |            | +----------+ +------> LDO5     +-------->
+>                     |            |              |      |          |    |
+>                     |            |              |      +----------+    |
+>                     |            |              |                      |
+>                     |  +-------+ |              |      +----------+    |
+>                     |  |       | |              o      |          |    |
+>  XIN         +---------+ 32K   | |               \-----> LDO3     +-------->
+>                     |  |Crystal| +--------------o      |          |    |
+>                     |  |Driver | |  +---------+        +----------+    |
+>  XOUT        +---------+       | |  |         |                        |
+>                     |  |       | +--+ BUCK7   +-+-------------------------->
+>                     |  +-------+ |  |         | |                      |
+>                     |            |  +---------+ |      +-----------+   |
+>                     |            |              |      |           |   |
+>                     |            |              +------>   LDO6    +------->
+>                     |            |              |      |           |   |
+>                     |            |              |      +-----------+   |
+>                     |            |              |                      |
+>                     |            |              |      +-----------+   |
+>                     |            |              o      |           |   |
+>                     |            |               \----->   LDO4    +------->
+>                     |            +--------------o      |           |   |
+>                     |                                  +-----------+   |
+>                     |                                                  |
+>                     +--------------------------------------------------+
+>
+> On the left we see input lines to PMIC. PWRON_B intended to be connected
+> to power button. PMIC_STBY_REQ and PMIC_ON_REQ lines for controlling HW
+> state machine PMIC has. And WDOG_B from watch dog.
+>
+> PMIC has control register for controlling what happens to BUCK/LDO
+> outputs when input line states change. PMIC reports change in input
+> lines via the IRQ_OUT line and IRQ status register.
+
+So it looks like this is just regulators with a few other signals to handle.
+
+> So HW mapping for interrup(s) from PMIC would be:
+>
+> (HW) event => BD71837 domain IRQ
+>
+> PMIC_STBY_REQ line level change         => 0
+> PMIC_ON_REQ line level change           => 1
+
+I'm not really clear how these would have s/w handling. They look like
+handshake signals for the processor to enter and exit standby/suspend.
+H/w designers don't always know what to do with things and may have
+just said lets have an interrupt for every input signal. I'd think you
+would just want DT properties to configure what action to take (and
+perhaps polarity?).
+
+> PMIC_WDOG_B line level change           => 2
+
+Ah, this is an input signal, not a watchdog block within the PMIC. I
+think this should just be handled by the core driver. If you need to
+configure what this does, then we can add a property to handle that.
+
+> PMIC_PWRON_B line level change          => 3
+> PMIC_PWRON_B line/long push detected    => 4
+> PMIC_PWRON_B line/short push detected   => 5
+
+So you need a power button driver (or maybe not even a separate
+driver) for this, but I don't think that warrants a child node. I
+think some PMIC drivers just generate a power key press (which just
+gets punted to userspace), but some will do an actual power down. Or
+maybe a combination of those based on short/long press.
+
+I think there's already some DT properties defined to control the
+behavior as well.
+
+> SWRESET register on PMIC written        => 6
+
+Probably this can be handled within the core driver. Seems like you'd
+only use this if you have separate entities that write and read this.
+If you don't know, then just ignore it for now.
+
+>> > "The BD71837 driver only provides the infrastructure for the IRQs. The
+>> > users can write his own driver to convert the IRQ into the event they
+>> > wish. The IRQ can be used with the standard
+>> > request_irq/enable_irq/disable_irq API inside the kernel." (I found this
+>> > text from NXP forums and ruthlessly copied and modified it over here)
 >>
->> diff --git a/drivers/memory/tegra/Kconfig b/drivers/memory/tegra/Kconfig
->> index 6d74e499e18d..34e0b70f5c5f 100644
->> --- a/drivers/memory/tegra/Kconfig
->> +++ b/drivers/memory/tegra/Kconfig
->> @@ -6,6 +6,16 @@ config TEGRA_MC
->>  	  This driver supports the Memory Controller (MC) hardware found on
->>  	  NVIDIA Tegra SoCs.
->>  
->> +config TEGRA20_EMC
->> +	bool "NVIDIA Tegra20 External Memory Controller driver"
->> +	default y
->> +	depends on ARCH_TEGRA_2x_SOC
->> +	help
->> +	  This driver is for the External Memory Controller (EMC) found on
->> +	  Tegra20 chips. The EMC controls the external DRAM on the board.
->> +	  This driver is required to change memory timings / clock rate for
->> +	  external memory.
->> +
->>  config TEGRA124_EMC
->>  	bool "NVIDIA Tegra124 External Memory Controller driver"
->>  	default y
->> diff --git a/drivers/memory/tegra/Makefile b/drivers/memory/tegra/Makefile
->> index 94ab16ba075b..3971a6b7c487 100644
->> --- a/drivers/memory/tegra/Makefile
->> +++ b/drivers/memory/tegra/Makefile
->> @@ -10,5 +10,6 @@ tegra-mc-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210.o
->>  
->>  obj-$(CONFIG_TEGRA_MC) += tegra-mc.o
->>  
->> +obj-$(CONFIG_TEGRA20_EMC)  += tegra20-emc.o
->>  obj-$(CONFIG_TEGRA124_EMC) += tegra124-emc.o
->>  obj-$(CONFIG_ARCH_TEGRA_186_SOC) += tegra186.o
->> diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
->> new file mode 100644
->> index 000000000000..26a18b5e7941
->> --- /dev/null
->> +++ b/drivers/memory/tegra/tegra20-emc.c
->> @@ -0,0 +1,586 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Tegra20 External Memory Controller driver
->> + *
->> + * Author: Dmitry Osipenko <digetx@gmail.com>
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/completion.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/sort.h>
->> +#include <linux/types.h>
->> +
->> +#include <soc/tegra/fuse.h>
->> +
->> +#define EMC_INTSTATUS				0x000
->> +#define EMC_INTMASK				0x004
->> +#define EMC_TIMING_CONTROL			0x028
->> +#define EMC_RC					0x02c
->> +#define EMC_RFC					0x030
->> +#define EMC_RAS					0x034
->> +#define EMC_RP					0x038
->> +#define EMC_R2W					0x03c
->> +#define EMC_W2R					0x040
->> +#define EMC_R2P					0x044
->> +#define EMC_W2P					0x048
->> +#define EMC_RD_RCD				0x04c
->> +#define EMC_WR_RCD				0x050
->> +#define EMC_RRD					0x054
->> +#define EMC_REXT				0x058
->> +#define EMC_WDV					0x05c
->> +#define EMC_QUSE				0x060
->> +#define EMC_QRST				0x064
->> +#define EMC_QSAFE				0x068
->> +#define EMC_RDV					0x06c
->> +#define EMC_REFRESH				0x070
->> +#define EMC_BURST_REFRESH_NUM			0x074
->> +#define EMC_PDEX2WR				0x078
->> +#define EMC_PDEX2RD				0x07c
->> +#define EMC_PCHG2PDEN				0x080
->> +#define EMC_ACT2PDEN				0x084
->> +#define EMC_AR2PDEN				0x088
->> +#define EMC_RW2PDEN				0x08c
->> +#define EMC_TXSR				0x090
->> +#define EMC_TCKE				0x094
->> +#define EMC_TFAW				0x098
->> +#define EMC_TRPAB				0x09c
->> +#define EMC_TCLKSTABLE				0x0a0
->> +#define EMC_TCLKSTOP				0x0a4
->> +#define EMC_TREFBW				0x0a8
->> +#define EMC_QUSE_EXTRA				0x0ac
->> +#define EMC_ODT_WRITE				0x0b0
->> +#define EMC_ODT_READ				0x0b4
->> +#define EMC_FBIO_CFG5				0x104
->> +#define EMC_FBIO_CFG6				0x114
->> +#define EMC_AUTO_CAL_INTERVAL			0x2a8
->> +#define EMC_CFG_2				0x2b8
->> +#define EMC_CFG_DIG_DLL				0x2bc
->> +#define EMC_DLL_XFORM_DQS			0x2c0
->> +#define EMC_DLL_XFORM_QUSE			0x2c4
->> +#define EMC_ZCAL_REF_CNT			0x2e0
->> +#define EMC_ZCAL_WAIT_CNT			0x2e4
->> +#define EMC_CFG_CLKTRIM_0			0x2d0
->> +#define EMC_CFG_CLKTRIM_1			0x2d4
->> +#define EMC_CFG_CLKTRIM_2			0x2d8
->> +
->> +#define EMC_CLKCHANGE_REQ_ENABLE		BIT(0)
->> +#define EMC_CLKCHANGE_PD_ENABLE			BIT(1)
->> +#define EMC_CLKCHANGE_SR_ENABLE			BIT(2)
->> +
->> +#define EMC_TIMING_UPDATE			BIT(0)
->> +
->> +#define EMC_CLKCHANGE_COMPLETE_INT		BIT(4)
->> +
->> +static const unsigned long emc_timing_registers[] = {
->> +	EMC_RC,
->> +	EMC_RFC,
->> +	EMC_RAS,
->> +	EMC_RP,
->> +	EMC_R2W,
->> +	EMC_W2R,
->> +	EMC_R2P,
->> +	EMC_W2P,
->> +	EMC_RD_RCD,
->> +	EMC_WR_RCD,
->> +	EMC_RRD,
->> +	EMC_REXT,
->> +	EMC_WDV,
->> +	EMC_QUSE,
->> +	EMC_QRST,
->> +	EMC_QSAFE,
->> +	EMC_RDV,
->> +	EMC_REFRESH,
->> +	EMC_BURST_REFRESH_NUM,
->> +	EMC_PDEX2WR,
->> +	EMC_PDEX2RD,
->> +	EMC_PCHG2PDEN,
->> +	EMC_ACT2PDEN,
->> +	EMC_AR2PDEN,
->> +	EMC_RW2PDEN,
->> +	EMC_TXSR,
->> +	EMC_TCKE,
->> +	EMC_TFAW,
->> +	EMC_TRPAB,
->> +	EMC_TCLKSTABLE,
->> +	EMC_TCLKSTOP,
->> +	EMC_TREFBW,
->> +	EMC_QUSE_EXTRA,
->> +	EMC_FBIO_CFG6,
->> +	EMC_ODT_WRITE,
->> +	EMC_ODT_READ,
->> +	EMC_FBIO_CFG5,
->> +	EMC_CFG_DIG_DLL,
->> +	EMC_DLL_XFORM_DQS,
->> +	EMC_DLL_XFORM_QUSE,
->> +	EMC_ZCAL_REF_CNT,
->> +	EMC_ZCAL_WAIT_CNT,
->> +	EMC_AUTO_CAL_INTERVAL,
->> +	EMC_CFG_CLKTRIM_0,
->> +	EMC_CFG_CLKTRIM_1,
->> +	EMC_CFG_CLKTRIM_2,
->> +};
->> +
->> +struct emc_timing {
->> +	unsigned long rate;
->> +	u32 emc_registers_data[ARRAY_SIZE(emc_timing_registers)];
->> +};
-> 
-> Nit: this seems like a very long variable name for something that is
-> really just "values" or "data" written into a set of registers.
-> 
+>> That's all OS details that have nothing to do with the binding. The
+>> binding describes the h/w.
+>
+> Right. I'll drop it.
+>
+>>
+>> > If this is not feasible, then I will remove the irq handling from MFD
+>> > (or leave code there but remove the binding information?) as I don't
+>> > know what the irq handles should do in generic case.
+>>
+>> I don't understand what you mean by generic. An IRQ has to be wired to
+>> something. The only generic IRQs are GPIOs.
+>
+> By generic case I mean for example when PMIC_WDOG_B line changes. In
+> example use-case I have seen, this would be cutting the power from
+> processor. But this is not necessarily the case. This can be configured
+> from PMIC register so that action can be warm or cold reset, or no
+> action. Finally, I'd rather not expect that the BUCKs are supplying
+> power to processor which is controlling the PMIC. Thus I do not know how
+> to do generic _handler_ for these interrupts.
+>
+> So from PMIC HW point of view I know that the interrupt is tied to
+> PMIC_WDOG_B line change. And this can be described in binding document.
+> (I tried doing this to v5 patch). Still from system/SW point of view I
+> don't know what action should be taken (or by which driver) when such
+> change happens. Hence I liked the idea of hiding the irq register
+> details in MFD driver by declaring it as interrupt controller - and
+> leaving the interrupts to be used by what ever drivers need the change
+> information is system the PMIC is used.
 
-Ok.
+This can still be done but doesn't have to be in DT.
 
->> +struct tegra_emc {
->> +	struct device *dev;
->> +	struct notifier_block clk_nb;
->> +	struct clk *backup_clk;
->> +	struct clk *emc_mux;
->> +	struct clk *pll_m;
->> +	struct clk *clk;
->> +	void __iomem *regs;
->> +
->> +	struct completion clk_handshake_complete;
->> +	int irq;
->> +
->> +	struct emc_timing *timings;
->> +	unsigned int num_timings;
->> +};
->> +
->> +static irqreturn_t tegra_emc_isr(int irq, void *data)
->> +{
->> +	struct tegra_emc *emc = data;
->> +	u32 intmask = EMC_CLKCHANGE_COMPLETE_INT;
->> +	u32 status;
->> +
->> +	status = readl_relaxed(emc->regs + EMC_INTSTATUS) & intmask;
->> +	if (!status)
->> +		return IRQ_NONE;
->> +
->> +	/* clear interrupts */
->> +	writel_relaxed(status, emc->regs + EMC_INTSTATUS);
-> 
-> Do we really want to just clear the handshake complete interrupt or do
-> we want to clear all of them? Perhaps we should also warn if there are
-> other interrupts that we're not handling? Currently we'd only get some
-> warning if another interrupt triggered without the handshake complete
-> one triggering at the same time, but couldn't there be others asserted
-> along with the handshake complete interrupt? In which case we'd just
-> be ignoring them. Or perhaps not clearing it would get the ISR run
-> immediately again and produce the "nobody cared" warning?
-> 
+>> >> > + - #interrupt-cells    : The number of cells to describe an IRQ should be 1.
+>> >> > +                           The first cell is the IRQ number.
+>> >> > +                           masks from ../interrupt-controller/interrupts.txt.
+>> >
+>> > Sorry this "masks from ../interrupt-controller/interrupts.txt." was
+>> > accidentally pasted here. I should have deleted it.
+>> >
+>> >> I'm still not clear. Generally in a PMIC, you'd define an interrupt
+>> >> controller when there's a common set of registers to manage sub-block
+>> >> interrupts (typical mask/unmask, ack regs) and the subblocks
+>> >> themselves have control of masking/unmasking interrupts. If there's
+>> >> not a need to have these 2 levels of interrupt handling, then you
+>> >> don't really need to define an interrupt controller.
+>> >
+>> > And to clarify - the PMIC can generate irq via one irq line. This is
+>> > typical ACTIVE_LOW irq with 8 bit "write 1 to clear" status register and
+>> > 8 bit mask register. The role of interrupt-controller code here is just
+>> > to allow these 8 irq reasons to be seen as individual BD71837 domain
+>> > interrupts. I just don't have the driver(s) for handling these
+>> > interrupts.
+>>
+>> If what I'm asking for above is still not clear, what are the 8 bits
+>> defined as or what are those 8 lines connected to?
+>
+> I am sorry - there were only 7 bits. One bit was unused. I hope my
+> explanation abowe did clarify this.
+>
+>> >  Or should I just
+>> > somehow state that irq X in BD71837 is a "power button short push"
+>> > event and power button driver should be the consumer for it?
+>>
+>> Yes, at least, but who is the consumer is an OS detail that is not
+>> relevant to the binding. Ideally, you would describe the node with the
+>> interrupts property for "irq X".
+>
+> I think I need to try changing my mind set. I tend to think the DT nodes
+> are for drivers so that drivers can get the information they need. An as
+> I don't know what kind of driver would be handling the irq, I don't know
+> what kind of DT node would be good for it. Hence I would rather leave
+> constructing the node who consumes the IRQ to someone who knows what
+> they want to do with this IRQ information.
+>
+>>
+>> > Rest of the interrupts are not so obvious. I have no idea how I should
+>> > handle rest of the interrupts. Those are interrupts which cause the PMIC
+>> > to reset and cut the powers from most of the regulators too. I can
+>> > easily think setup where one processor is controlling PMIC which powers
+>> > for the other processor. And getting IRQ if for example watchdog reset
+>> > the other processor would probably be very usefull. But doing any
+>> > 'de-facto' handler for this is hard. Only generally usefull thing would
+>> > be notifying the user-space but I don't think I should invent any new
+>> > kernelspace - userspace interfaces for this. I believe that when such
+>> > are needed those should be implemented by ones knowing the platform.
+>>
+>> Don't think about the OS or driver details. Think about sub-blocks of
+>> the hardware and the connections between them (like irqs) and to board
+>> that need to be described in DT.
+>>
+>> If you can't describe that, then you just probably shouldn't have
+>> sub-nodes in DT (ever).
+>
+> This is why I did not add any "irq consumer" nodes in example DT. But I
+> believe someone can think of a board/setup where such are needed. Thus I
+> liked the idea of providing the interrupt-controller.
+>
+>> >
+>> > So please bear with me but do you mean I should
+>> > a) document what conditions generate which IRQ
+>> >    or
+>> > b)  should I tell what kind of driver is needed for handling the IRQs
+>> >    or
+>> > c) should I first write code using IRQs before addinf MFD binding?
+>>
+>> A.
+>
+>
+> So what do you think of this:
+>
+> +Optional properties:
+> + - interrupt-controller        : Marks the device node as an interrupt controller.
+> +                         BD71837MWV can report input line state change and SW
+> +                         reset events via interrupts. Different events can be seen
+> +                         as separate BD71837 domain interrupts.
+> + - #interrupt-cells    : The number of cells to describe an IRQ should be 1.
+> +                         The value in cell is the IRQ number.
+> +                           Meaningfull numbers are:
+> +                             0 => PMIC_STBY_REQ level change
+> +                             1 => PMIC_ON_REQ level change
+> +                             2 => WDOG_B level change
+> +                             3 => Power Button level change
+> +                             4 => Power Button Long Push
+> +                             5 => Power Button Short Push
+> +                             6 => SWRESET register is written 1
+>
+> Would this be getting closer to what is needed from binding document?
 
-Yes, we really want to just clear the handshake-complete interrupt. No, we
-shouldn't warn about other interrupts because IRQ subsys does it for us. Other
-interrupts shouldn't be asserted because we disabled them with the interrupts
-masking in emc_setup_hw(). Other interrupts can only be asserted in a case of a
-bug, there will be a "nobody cared" warning and interrupt will be disabled, this
-is exactly what we want in that case.
+I don't think any of this needs to live in DT. All you really need a
+separate driver (and hence irq) for is really just the power button.
+You can just define the interrupts within the kernel.
 
->> +
->> +	/* notify about EMC-CAR handshake completion */
->> +	complete(&emc->clk_handshake_complete);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static struct emc_timing *tegra_emc_find_timing(struct tegra_emc *emc,
->> +						unsigned long rate)
->> +{
->> +	struct emc_timing *timing = NULL;
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < emc->num_timings; i++) {
->> +		if (emc->timings[i].rate >= rate) {
->> +			timing = &emc->timings[i];
->> +			break;
->> +		}
->> +	}
->> +
->> +	if (!timing) {
->> +		dev_err(emc->dev, "no timing for rate %lu\n", rate);
->> +		return NULL;
->> +	}
->> +
->> +	return timing;
->> +}
->> +
->> +static int emc_prepare_timing_change(struct tegra_emc *emc, unsigned long rate)
->> +{
->> +	struct emc_timing *timing = tegra_emc_find_timing(emc, rate);
->> +	unsigned int i;
->> +
->> +	if (!timing)
->> +		return -ENOENT;
->> +
->> +	dev_dbg(emc->dev, "%s: timing rate %lu emc rate %lu\n",
->> +		__func__, timing->rate, rate);
->> +
->> +	/* program shadow registers */
->> +	for (i = 0; i < ARRAY_SIZE(timing->emc_registers_data); i++)
->> +		writel_relaxed(timing->emc_registers_data[i],
->> +			       emc->regs + emc_timing_registers[i]);
->> +
->> +	/* wait until programming has settled */
->> +	readl_relaxed(emc->regs + emc_timing_registers[0]);
->> +
->> +	if (emc->irq < 0)
->> +		writel_relaxed(EMC_CLKCHANGE_COMPLETE_INT,
->> +			       emc->regs + EMC_INTMASK);
->> +	else
->> +		reinit_completion(&emc->clk_handshake_complete);
->> +
->> +	return 0;
->> +}
->> +
->> +static int emc_complete_timing_change(struct tegra_emc *emc, bool flush)
->> +{
->> +	long timeout;
->> +	u32 value;
->> +	int err;
->> +
->> +	dev_dbg(emc->dev, "%s: flush %d\n", __func__, flush);
->> +
->> +	if (flush) {
->> +		/* manually initiate memory timing update */
->> +		writel_relaxed(EMC_TIMING_UPDATE,
->> +			       emc->regs + EMC_TIMING_CONTROL);
->> +		return 0;
->> +	}
->> +
->> +	if (emc->irq < 0) {
->> +		/* poll interrupt status if IRQ isn't available */
->> +		err = readl_relaxed_poll_timeout(emc->regs + EMC_INTSTATUS,
->> +				value, value & EMC_CLKCHANGE_COMPLETE_INT,
->> +				1, 100);
->> +		if (err) {
->> +			dev_err(emc->dev, "EMC-CAR handshake failed\n");
->> +			return -EIO;
->> +		}
->> +
->> +		return 0;
->> +	}
->> +
->> +	timeout = wait_for_completion_timeout(&emc->clk_handshake_complete,
->> +					      usecs_to_jiffies(100));
->> +	if (timeout == 0) {
->> +		dev_err(emc->dev, "EMC handshake failed\n");
->> +		return -EIO;
->> +	} else if (timeout < 0) {
->> +		dev_err(emc->dev, "failed to wait for EMC-CAR handshake: %ld\n",
->> +			timeout);
->> +		return timeout;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int load_one_timing_from_dt(struct tegra_emc *emc,
->> +				   struct emc_timing *timing,
->> +				   struct device_node *node)
->> +{
->> +	u32 rate;
->> +	int err;
->> +
->> +	if (!of_device_is_compatible(node, "nvidia,tegra20-emc-table")) {
->> +		dev_err(emc->dev, "incompatible DT node \"%s\"\n",
->> +			node->name);
->> +		return -EINVAL;
->> +	}
->> +
->> +	err = of_property_read_u32(node, "clock-frequency", &rate);
->> +	if (err) {
->> +		dev_err(emc->dev, "timing %s: failed to read rate: %d\n",
->> +			node->name, err);
->> +		return err;
->> +	}
->> +
->> +	err = of_property_read_u32_array(node, "nvidia,emc-registers",
->> +					 timing->emc_registers_data,
->> +					 ARRAY_SIZE(emc_timing_registers));
->> +	if (err) {
->> +		dev_err(emc->dev,
->> +			"timing %s: failed to read emc timing data: %d\n",
->> +			node->name, err);
->> +		return err;
->> +	}
->> +
->> +	/*
->> +	 * The EMC clock rate is twice the bus rate, and the bus rate is
->> +	 * measured in kHz.
->> +	 */
->> +	timing->rate = rate * 2 * 1000;
->> +
->> +	dev_dbg(emc->dev, "%s: emc rate %ld\n", __func__, timing->rate);
-> 
-> Nit: %lu for timing->rate?
-> 
-
-Yes.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static int cmp_timings(const void *_a, const void *_b)
->> +{
->> +	const struct emc_timing *a = _a;
->> +	const struct emc_timing *b = _b;
->> +
->> +	if (a->rate < b->rate)
->> +		return -1;
->> +	else if (a->rate == b->rate)
->> +		return 0;
->> +	else
->> +		return 1;
-> 
-> Nit, I tend to 
-> 
-
-Tend to..?
-
->> +}
->> +
->> +static int tegra_emc_load_timings_from_dt(struct tegra_emc *emc,
->> +					  struct device_node *node)
->> +{
->> +	struct device_node *child;
->> +	struct emc_timing *timing;
->> +	int child_count;
->> +	int err;
->> +
->> +	child_count = of_get_child_count(node);
-> 
-> It's unfortunate that of_get_child_count() doesn't return unsigned int,
-> there's no reason why this would have to be signed.
-> 
-
-Patches are welcome ;)
-
->> +	if (!child_count) {
->> +		dev_err(emc->dev, "no memory timings in DT node\n");
->> +		return -ENOENT;
->> +	}
->> +
->> +	emc->timings = devm_kcalloc(emc->dev, child_count, sizeof(*timing),
->> +				    GFP_KERNEL);
->> +	if (!emc->timings)
->> +		return -ENOMEM;
->> +
->> +	emc->num_timings = child_count;
->> +	timing = emc->timings;
->> +
->> +	for_each_child_of_node(node, child) {
->> +		err = load_one_timing_from_dt(emc, timing++, child);
->> +		if (err) {
->> +			of_node_put(child);
->> +			return err;
->> +		}
->> +	}
->> +
->> +	sort(emc->timings, emc->num_timings, sizeof(*timing), cmp_timings,
->> +	     NULL);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct device_node *
->> +tegra_emc_find_node_by_ram_code(struct tegra_emc *emc, u32 ram_code)
->> +{
->> +	struct device_node *np;
->> +	int err;
->> +
->> +	for_each_child_of_node(emc->dev->of_node, np) {
->> +		u32 value;
->> +
->> +		err = of_property_read_u32(np, "nvidia,ram-code", &value);
->> +		if (err || value != ram_code)
->> +			continue;
->> +
->> +		return np;
->> +	}
->> +
->> +	dev_info(emc->dev, "no memory timings for RAM code %u found in DT\n",
->> +		 ram_code);
-> 
-> This seems like it should be dev_warn() or perhaps even dev_err() given
-> that the result of it is the driver failing to probe. dev_info() may go
-> unnoticed.
-> 
-
-Absence of memory timings is a valid case, hence dev_info() suit well here.
-
-I can't see anything wrong with returning a errno if driver has nothing to do
-and prefer to keep it because in that case managed resources would be free'd by
-the driver core, though returning '0' also would work.
-
->> +
->> +	return NULL;
->> +}
->> +
->> +static int tegra_emc_clk_change_notify(struct notifier_block *nb,
->> +				       unsigned long msg, void *data)
->> +{
->> +	struct tegra_emc *emc = container_of(nb, struct tegra_emc, clk_nb);
->> +	struct clk_notifier_data *cnd = data;
->> +	int err;
->> +
->> +	switch (msg) {
->> +	case PRE_RATE_CHANGE:
->> +		err = emc_prepare_timing_change(emc, cnd->new_rate);
->> +		break;
->> +
->> +	case ABORT_RATE_CHANGE:
->> +		err = emc_prepare_timing_change(emc, cnd->old_rate);
->> +		if (err)
->> +			break;
->> +
->> +		err = emc_complete_timing_change(emc, true);
->> +		break;
->> +
->> +	case POST_RATE_CHANGE:
->> +		err = emc_complete_timing_change(emc, false);
->> +		break;
->> +
->> +	default:
->> +		return NOTIFY_DONE;
->> +	}
->> +
->> +	return notifier_from_errno(err);
->> +}
->> +
->> +static int emc_setup_hw(struct tegra_emc *emc)
->> +{
->> +	u32 emc_cfg;
->> +
->> +	emc_cfg = readl_relaxed(emc->regs + EMC_CFG_2);
->> +
->> +	/*
->> +	 * Depending on a memory type, DRAM should enter either self-refresh
->> +	 * or power-down state on EMC clock change.
->> +	 */
->> +	if (!(emc_cfg & EMC_CLKCHANGE_PD_ENABLE) &&
->> +	    !(emc_cfg & EMC_CLKCHANGE_SR_ENABLE))
->> +	{
->> +		dev_err(emc->dev,
->> +			"bootloader didn't specify DRAM auto-suspend mode\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* allow EMC and CAR to handshake on PLL divider/source changes */
->> +	emc_cfg |= EMC_CLKCHANGE_REQ_ENABLE;
->> +	writel_relaxed(emc_cfg, emc->regs + EMC_CFG_2);
->> +
->> +	/* initialize interrupt */
->> +	writel_relaxed(EMC_CLKCHANGE_COMPLETE_INT, emc->regs + EMC_INTMASK);
->> +	writel_relaxed(EMC_CLKCHANGE_COMPLETE_INT, emc->regs + EMC_INTSTATUS);
->> +
->> +	return 0;
->> +}
->> +
->> +static int emc_init(struct tegra_emc *emc, unsigned long rate)
->> +{
->> +	int err;
->> +
->> +	err = clk_set_parent(emc->emc_mux, emc->backup_clk);
->> +	if (err) {
->> +		dev_err(emc->dev,
->> +			"failed to reparent to backup source: %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	err = clk_set_rate(emc->pll_m, rate);
->> +	if (err)
->> +		dev_err(emc->dev,
->> +			"failed to change pll_m rate: %d\n", err);
->> +
->> +	err = clk_set_parent(emc->emc_mux, emc->pll_m);
->> +	if (err) {
->> +		dev_err(emc->dev,
->> +			"failed to reparent to pll_m: %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_emc_probe(struct platform_device *pdev)
->> +{
->> +	struct device_node *np;
->> +	struct tegra_emc *emc;
->> +	struct resource *res;
->> +	u32 ram_code;
->> +	int err;
->> +
->> +	emc = devm_kzalloc(&pdev->dev, sizeof(*emc), GFP_KERNEL);
->> +	if (!emc)
->> +		return -ENOMEM;
->> +
->> +	emc->dev = &pdev->dev;
->> +
->> +	ram_code = tegra_read_ram_code();
->> +
->> +	np = tegra_emc_find_node_by_ram_code(emc, ram_code);
->> +	if (!np)
->> +		return -ENOENT;
->> +
->> +	err = tegra_emc_load_timings_from_dt(emc, np);
->> +	of_node_put(np);
->> +	if (err)
->> +		return err;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	emc->regs = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(emc->regs))
->> +		return PTR_ERR(emc->regs);
->> +
->> +	err = emc_setup_hw(emc);
->> +	if (err)
->> +		return err;
->> +
->> +	emc->irq = platform_get_irq(pdev, 0);
->> +	if (emc->irq < 0) {
->> +		dev_warn(&pdev->dev, "interrupt not specified\n");
->> +		dev_warn(&pdev->dev, "continuing, but please update your DT\n");
-> 
-> Do we really need this? I think this is a case where we don't have to
-> keep backwards-compatibility because this driver hasn't "worked" in a
-> very long time (because it was absent). Therefore, if we error out in
-> the absence of an interrupt we don't break anything.
-> 
-> There's a few places in this driver that are awkward just because the
-> interrupt isn't mandatory. I don't think it's warranted in this case.
-> 
-
-Backwards compatibility is always nice to have, but I don't really mind dropping it.
-
->> +	} else {
->> +		init_completion(&emc->clk_handshake_complete);
->> +
->> +		err = devm_request_irq(&pdev->dev, emc->irq, tegra_emc_isr, 0,
->> +				       dev_name(&pdev->dev), emc);
->> +		if (err < 0) {
->> +			dev_err(&pdev->dev, "failed to request IRQ#%u: %d\n",
->> +				emc->irq, err);
->> +			return err;
->> +		}
->> +	}
->> +
->> +	emc->pll_m = clk_get_sys(NULL, "pll_m");
->> +	if (IS_ERR(emc->pll_m)) {
->> +		err = PTR_ERR(emc->pll_m);
->> +		dev_err(&pdev->dev, "failed to get pll_m: %d\n", err);
->> +		return err;
->> +	}
->> +
->> +	emc->backup_clk = clk_get_sys(NULL, "pll_p");
->> +	if (IS_ERR(emc->backup_clk)) {
->> +		err = PTR_ERR(emc->backup_clk);
->> +		dev_err(&pdev->dev, "failed to get pll_p: %d\n", err);
->> +		goto put_pll_m;
->> +	}
->> +
->> +	emc->clk = clk_get_sys(NULL, "emc");
->> +	if (IS_ERR(emc->clk)) {
->> +		err = PTR_ERR(emc->clk);
->> +		dev_err(&pdev->dev, "failed to get emc: %d\n", err);
->> +		goto put_backup;
->> +	}
-> 
-> Instead of using clk_get_sys(), why not specify these in the DT with
-> proper names for context ("emc", "pll", "backup")? Again, I don't think
-> we have to worry about backwards-compatibility here since there can be
-> no regression.
-> 
-
-I don't think that "pll" and "backup" could be placed in DT because it is a pure
-software-driver description.
-
-"emc" could be retrieved from DT if we don't care about backwards compatibility.
+Rob
