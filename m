@@ -1,61 +1,80 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
-Date: Wed, 6 Jun 2018 12:19:09 +0530
-Message-ID: <20180606064909.GC16230@vkoul-mobl>
-References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
- <20180605061919.GQ16230@vkoul-mobl>
- <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
- <20180605164031.GZ16230@vkoul-mobl>
- <1b376fc2-6a1b-1457-ffff-332954d1bef8@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH V2 2/2] arm: dts: sunxi: Add missing cooling device
+ properties for CPUs
+Date: Wed, 6 Jun 2018 08:58:11 +0200
+Message-ID: <20180606065811.moklm4pbrhleasly@flea>
+References: <20180601151701.sshwfdbflic6mybv@flea>
+ <d894f425b7c32bce4dc4a982db8f4dface2db31d.1528173943.git.viresh.kumar@linaro.org>
+ <a313ec0be4104494de319e8318e05614fb97b2fd.1528173943.git.viresh.kumar@linaro.org>
+ <20180605071139.osu2pgpg3ychdxln@flea>
+ <CAGb2v65EX2RwKjxPw+EK4i6rkfgOJoCU2amuFkF-tHQT40isxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yyunednjohhozaln"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1b376fc2-6a1b-1457-ffff-332954d1bef8@codeaurora.org>
+In-Reply-To: <CAGb2v65EX2RwKjxPw+EK4i6rkfgOJoCU2amuFkF-tHQT40isxw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, arm-soc <arm@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sricharan,
 
-On 06-06-18, 12:09, Sricharan R wrote:
+--yyunednjohhozaln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >>>> +config QCOM_Q6V5_WCSS
-> >>>> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
-> >>>> +	depends on OF && ARCH_QCOM
-> >>>> +	depends on QCOM_SMEM
-> >>>> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
-> >>>> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
-> >>>
-> >>> Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
-> >>> happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
-> >>>
-> >>   RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
-> > 
-> > why would that be a limitation? I am more worried about
-> > RPMSG_QCOM_GLINK_SMEM=n being the condition here. In new drivers we
-> > should not typically have dependency on some symbol being not there
-> 
-> Without that, if RPMSG_QCOM_GLINK_SMEM=m is compiled as a module, then
-> it would break the build.
+On Wed, Jun 06, 2018 at 12:02:20AM +0800, Chen-Yu Tsai wrote:
+> On Tue, Jun 5, 2018 at 3:11 PM, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > On Tue, Jun 05, 2018 at 10:17:49AM +0530, Viresh Kumar wrote:
+> >> The cooling device properties, like "#cooling-cells" and
+> >> "dynamic-power-coefficient", should either be present for all the CPUs
+> >> of a cluster or none. If these are present only for a subset of CPUs of
+> >> a cluster then things will start falling apart as soon as the CPUs are
+> >> brought online in a different order. For example, this will happen
+> >> because the operating system looks for such properties in the CPU node
+> >> it is trying to bring up, so that it can register a cooling device.
+> >>
+> >> Add such missing properties.
+> >>
+> >> Fix other missing properties (clocks, OPP, clock latency) as well to
+> >> make it all work.
+> >>
+> >> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >
+> > Applied both, thanks!
+>=20
+> Please fix the "ARM" prefix when applying. :)
 
-Okay I do not know the details, but that doesn't sound correct to me.
-Breaking build sounds a bit extreme to me. Can you give details on this
-part..
+Done, thanks for the reminder :)
 
-> >>   means that it should be corrected here and for ADSP, Q6V5_PIL as well.
-> >>   Bjorn, is that correct ?, should it be, below ?
-> >>  
-> >>   depends on (RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)) || (RPMSG_QCOM_GLINK_SMEM || (COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n))
-> > 
-> > that doesnt really sound good :(
-> 
->  Hmm, but i was thinking it should functionally depend on either SMD or GLINK and not both.
+Maxime
 
-If you are depedent upon a symbol provided by a module you should say
-depends on. If a machine is not supposed to have both SMD or GLINK then
-the driver will not get probed.
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
--- 
-~Vinod
+--yyunednjohhozaln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsXhgIACgkQ0rTAlCFN
+r3SpHw//Q0Tq2mev9+RBCUU4pHRg4oFhrh8cuVYbAENhw3Lsld3QjfDM0OlUubg2
+cJHQNbpZzKmNg3Of2U2BIR2ZWOncQNItn7tCwZ7p6hGtM3AO72Zv1bzwyHnZUIOm
+22biaTtyF5TPO4m4sThbVa0xo2lpYBcNbM4ZZiH5Ss8pObpJeZBysHTAvXb/TKPW
+l5rlTO08NfFSF1XfyUNmJtGQAOSoGC+Wb+0vSxVOsMdSfMvuTbRa8Lx18f2xuMNL
+kTLsrGUir9RjWE/33M0SUEmFONKAmbZUpyEiazBsmIFQ6HqFq+1/oNPg0AKeV2M5
+cJSbRutZl0/hao4Jqu4P4mdsWarTPHyN22Tuh3mORauBcRuM95ro8sNfxCFHRKit
+AOEFGn3MarZymmzVVegctwZfQkSprspmWE9WdH867zViKK1d6nNrl9iN8eYhX6De
+HVTUeyEgVdxxVIT3XBOfuenBr36mnxus0xgRZxrxuyNfcOE8225vPhnfT/xEhSj0
+bPvhLj6oXWPJFkcxd+sXe+LgK7Qogm7Zz55zU6yCzN9zU/LLfiCP2YS3ftl83leY
+gHKp6Al5cpNqeegjMGKiKqzZZAYURooyFcLSe6g4xcRFxoRvYwza+UGxcNhwk38x
+W3ze64MAfwqCYqDvyKVwKHRlOqqu2Dv3PucN3MMhEIOHbHe+fRE=
+=Osr5
+-----END PGP SIGNATURE-----
+
+--yyunednjohhozaln--
