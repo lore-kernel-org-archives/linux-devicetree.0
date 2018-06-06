@@ -1,39 +1,52 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v2 1/1] ARM: dts: cygnus: enable iproc-hwrng
-Date: Wed,  6 Jun 2018 11:21:31 -0700
-Message-ID: <1528309291-25579-1-git-send-email-scott.branden@broadcom.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 0/6] Enhance support for the SP805 WDT
+Date: Wed, 6 Jun 2018 12:29:06 -0700
+Message-ID: <e3f657f1-bd7e-cadb-9cfe-dee6cf8c1668@gmail.com>
+References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Clement Peron <peron.clem@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>, Scott Branden <scott.branden@broadcom.com>
+To: Ray Jui <ray.jui@broadcom.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-From: Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
+On 05/28/2018 11:01 AM, Ray Jui wrote:
+> This patch series enhances the support for the SP805 watchdog timer.
+> First of all, 'timeout-sec' devicetree property is added. In addition,
+> support is also added to allow the driver to reset the watchdog if it
+> has been detected that watchdot has been started in the bootloader. In
+> this case, the driver will initiate the ping service from the kernel
+> watchdog subsystem, before a user mode daemon takes over. This series
+> also enables SP805 in the default ARM64 defconfig
+> 
+> This patch series is based off v4.17-rc5 and is available on GIHUB:
+> repo: https://github.com/Broadcom/arm64-linux.git
+> branch: sp805-wdt-v4
+> 
+> Changes since v3:
+>  - Improve description of 'timeout-sec' in the binding document, per
+> recommendation from Guenter Roeck
+> 
+> Changes since v2:
+>  - Fix indent and format to make them consistent within arm,sp805.txt
+> 
+> Changes since v1:
+>  - Consolidate two duplicated SP805 binding documents into one
+>  - Slight change of the wdt_is_running implementation per discussion
+> 
+> Ray Jui (6):
+>   Documentation: DT: Consolidate SP805 binding docs
+>   Documentation: DT: Add optional 'timeout-sec' property for sp805
+>   watchdog: sp805: add 'timeout-sec' DT property support
+>   watchdog: sp805: set WDOG_HW_RUNNING when appropriate
+>   arm64: dt: set initial SR watchdog timeout to 60 seconds
+>   arm64: defconfig: add CONFIG_ARM_SP805_WATCHDOG
 
-Enable the HW rng driver "iproc-rng200" for all cygnus platforms.
-
-Signed-off-by: Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 9fe4f5a..b0e38fa 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -417,6 +417,11 @@
- 			status = "disabled";
- 		};
- 
-+		rng: rng@18032000 {
-+			compatible = "brcm,iproc-rng200";
-+			reg = <0x18032000 0x28>;
-+		};
-+
- 		sdhci0: sdhci@18041000 {
- 			compatible = "brcm,sdhci-iproc-cygnus";
- 			reg = <0x18041000 0x100>;
+I can take the last two patches and Guenter would take the first 4 or
+would you want to proceed differently?
 -- 
-2.5.0
+Florian
