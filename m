@@ -1,168 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 5/5] arm64: dts: renesas: condor: add DU/LVDS/HDMI support
-Date: Wed, 6 Jun 2018 19:59:35 +0300
-Message-ID: <67b499db-c8de-eff8-0547-1063c8ebd358@cogentembedded.com>
-References: <4fbd0895-c1ec-41fc-912d-8306dd933997@cogentembedded.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH] ARM: dts: cygnus: Add HWRNG node
+Date: Wed, 6 Jun 2018 19:06:51 +0200
+Message-ID: <CAJiuCcdfmrdHf10JkVOGQXD77JN=_FUv2ysEGTzyvwON31HX_A@mail.gmail.com>
+References: <20180606093441.16483-1-peron.clem@gmail.com> <c8836130-1d96-b813-4e87-5011db679ba8@broadcom.com>
+ <c7990001-00e6-d828-bafd-3d472fcfee20@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4fbd0895-c1ec-41fc-912d-8306dd933997@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c7990001-00e6-d828-bafd-3d472fcfee20@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: scott.branden@broadcom.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?Cl=C3=A9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the Condor board dependent part of the DU and  LVDS device nodes.
-Also add the device nodes for Thine THC63LVD1024 LVDS decoder and Analog
-Devices ADV7511W HDMI transmitter...
+Hi Scott, Florian,
 
-Based on the original (and large) patch by Vladimir Barinov.
+On Wed, 6 Jun 2018 at 18:47, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 06/06/201 8 09:03 AM, Scott Branden wrote:
+> > Hi Clement,
+> >
+> >
+> > On 18-06-06 02:34 AM, Cl=C3=A9ment P=C3=A9ron wrote:
+> >> From: Cl=C3=A9ment Peron <clement.peron@devialet.com>
+> >>
+> >> There is a HWRNG in Broadcom Cygnus SoC, so enable it.
+> >>
+> >> Signed-off-by: Cl=C3=A9ment Peron <clement.peron@devialet.com>
+> > Thanks for upstreaming some missing Cygnus components.
+> >
+> > But, the problem is the tarball release from Broadcom you are extractin=
+g
+> > these changes from does not contain git history; so, you are missing th=
+e
+> > original authors and signed-off's.
+> > I checked our internal git repository and for this commit the author is=
+:
+> > Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
+> >
+> > Please adjust author and signed-off appropriately.  If there are other
+> > changes you are extracting from the source tarballs you have please
+> > contact me so we can construct patch appropriately.
+>
+> If you want the original author's Signed-off-by to be preserved, why
+> don't you extract it from your internal git tree and submit the patch on
+> Mohamed's behalf?
+>
+> AFAICT what Clement is doing here is permissible given the Linux
+> developer certificate of origin though I am not a lawyer of course.
+> --
+> Florian
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Totally not my goal to steal the author and agree to keep track of the
+original author
+as soon as it's possible. I didn't though it was important for this
+patch as the same
+code is available in the dt-bindings documentation.
 
----
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 ++++++++++++++++++++++++
- 1 file changed, 106 insertions(+)
+Actually there are still some buggy components like DSA (Arun proposed
+a patch this morning)
+the PWM (config and delay aren't correct) and I2C. These are mainlined
+but can't be used
+and need a minimal effort to correctly work on Cygnus.
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -45,6 +45,56 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	d1_8v: regulator-2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "D1.8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
-+
-+	lvds-decoder {
-+		compatible = "thine,thc63lvd1024";
-+		vcc-supply = <&d3_3v>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				thc63lvd1024_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				thc63lvd1024_out: endpoint {
-+					remote-endpoint = <&adv7511_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	x1_clk: x1-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <148500000>;
-+	};
- };
- 
- &avb {
-@@ -74,6 +124,13 @@
- 	};
- };
- 
-+&du {
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&x1_clk>;
-+	clock-names = "du.0", "dclkin.0";
-+	status = "okay";
-+};
-+
- &extal_clk {
- 	clock-frequency = <16666666>;
- };
-@@ -102,6 +159,55 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 	};
-+
-+	hdmi@39{
-+		compatible = "adi,adv7511w";
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-+		avdd-supply = <&d1_8v>;
-+		dvdd-supply = <&d1_8v>;
-+		pvdd-supply = <&d1_8v>;
-+		bgvdd-supply = <&d1_8v>;
-+		dvdd-3v-supply = <&d3_3v>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&thc63lvd1024_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&lvds0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&thc63lvd1024_in>;
-+			};
-+		};
-+	};
- };
- 
- &mmc0 {
+Also there are some important components like USB Phy or Mailbox that
+were proposed and
+almost made it, but just need a small modification to be accepted.
+
+My idea was just to submit small patches that are trivial to review.
+In order to avoid keeping
+lots of patches in our kernel and also have something functional when
+building a mainline kernel.
+
+Regards,
+Clement
