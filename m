@@ -1,86 +1,43 @@
-From: "liwei (CM)" <liwei213@huawei.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjEwIDAvNV0gc2NzaTogdWZzOiBhZGQgdWZzIGRy?=
- =?utf-8?Q?iver_code_for_Hisilicon_Hi3660_SoC?=
-Date: Wed, 6 Jun 2018 00:48:13 +0000
-Message-ID: <1699CE87DE933F49876AD744B5DC140FA70129__18209.5839096748$1528246007$gmane$org@DGGEMM506-MBX.china.huawei.com>
-References: <20180525091712.37227-1-liwei213@huawei.com>
- <f9cde7df-2d4d-3d7e-5269-ef879211b2ee@arm.com>
+From: Alexandre Courbot <acourbot@chromium.org>
+Subject: Re: [PATCH v2 1/5] media: venus: add a routine to reset ARM9
+Date: Wed, 6 Jun 2018 10:34:45 +0900
+Message-ID: <CAPBb6MWSOFQT0ZuV_MJhjPzTYUhoPgRXUhT_dawTqDCtVXEmBA@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-2-git-send-email-vgarodia@codeaurora.org>
+ <894ab678-bc1d-da04-b552-d53301bd3980@linaro.org> <20180605105716.GT16230@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f9cde7df-2d4d-3d7e-5269-ef879211b2ee@arm.com>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Valentin Schneider <valentin.schneider@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "khilman@baylibre.com" <khilman@baylibre.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "riku.voipio@linaro.org" <riku.voipio@linaro.org>, "treding@nvidia.com" <treding@nvidia.com>, "krzk@kernel.org" <krzk@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.or>
-Cc: "guodong.xu@linaro.org" <guodong.xu@linaro.org>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, Gengjianfeng <gengjianfeng@hisilicon.com>, zangleigang <zangleigang@hisilicon.com>, "Fengbaopeng (kevin,
- Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, "john.stultz@linaro.org" <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180605105716.GT16230@vkoul-mobl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vkoul@kernel.org
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFZhbGVudGluDQoNClRoYW5rIHlvdSBmb3IgeW91ciBhdHRlbnRpb24gYW5kIHdvcmsuDQoN
-ClRoYW5rcyENCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBWYWxlbnRpbiBT
-Y2huZWlkZXIgW21haWx0bzp2YWxlbnRpbi5zY2huZWlkZXJAYXJtLmNvbV0gDQrlj5HpgIHml7bp
-l7Q6IDIwMTjlubQ25pyINeaXpSAyMjo1OQ0K5pS25Lu25Lq6OiBsaXdlaSAoQ00pOyByb2JoK2R0
-QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBjYXRhbGluLm1hcmluYXNAYXJtLmNv
-bTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgdmluaG9saWthdHRpQGdtYWlsLmNvbTsgamVqYkBsaW51
-eC52bmV0LmlibS5jb207IG1hcnRpbi5wZXRlcnNlbkBvcmFjbGUuY29tOyBraGlsbWFuQGJheWxp
-YnJlLmNvbTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ29yeS5jbGVtZW50QGZyZWUtZWxlY3Ryb25zLmNv
-bTsgdGhvbWFzLnBldGF6em9uaUBmcmVlLWVsZWN0cm9ucy5jb207IHlhbWFkYS5tYXNhaGlyb0Bz
-b2Npb25leHQuY29tOyByaWt1LnZvaXBpb0BsaW5hcm8ub3JnOyB0cmVkaW5nQG52aWRpYS5jb207
-IGtyemtAa2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
-bGludXgtc2NzaUB2Z2VyLmtlcm5lbC5vcmcNCuaKhOmAgTogemFuZ2xlaWdhbmc7IEdlbmdqaWFu
-ZmVuZzsgZ3VvZG9uZy54dUBsaW5hcm8ub3JnOyBDaGVuZmVuZyAocHVjayk7IGpvaG4uc3R1bHR6
-QGxpbmFyby5vcmc7IEZlbmdiYW9wZW5nIChrZXZpbiwgS2lyaW4gU29sdXRpb24gRGVwdCkNCuS4
-u+mimDogUmU6IFtQQVRDSCB2MTAgMC81XSBzY3NpOiB1ZnM6IGFkZCB1ZnMgZHJpdmVyIGNvZGUg
-Zm9yIEhpc2lsaWNvbiBIaTM2NjAgU29DDQoNCkhpLA0KDQpPbiAyNS8wNS8xOCAxMDoxNywgTGkg
-V2VpIHdyb3RlOg0KPiBUaGlzIHBhdGNoc2V0IGFkZHMgZHJpdmVyIHN1cHBvcnQgZm9yIFVGUyBm
-b3IgSGkzNjYwIFNvQy4gSXQgaXMgdmVyaWZpZWQgb24gSGlLZXk5NjAgYm9hcmQuDQo+IA0KPiBM
-aSBXZWkgKDUpOg0KPiAgIHNjc2k6IHVmczogYWRkIEhpc2lsaWNvbiB1ZnMgZHJpdmVyIGNvZGUN
-Cj4gICBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9jdW1lbnQgZm9yIGhpc2ktdWZzDQo+
-ICAgYXJtNjQ6IGR0czogYWRkIHVmcyBkdHMgbm9kZQ0KPiAgIGFybTY0OiBkZWZjb25maWc6IGVu
-YWJsZSBjb25maWdzIGZvciBIaXNpbGljb24gdWZzDQo+ICAgYXJtNjQ6IGRlZmNvbmZpZzogZW5h
-YmxlIGYyZnMgYW5kIHNxdWFzaGZzDQo+IA0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQgfCAgNDEgKysNCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Vmcy91ZnNoY2QtcGx0ZnJtLnR4dCAgICAgIHwgIDEwICstDQo+ICBhcmNoL2FybTY0L2Jv
-b3QvZHRzL2hpc2lsaWNvbi9oaTM2NjAuZHRzaSAgICAgICAgICB8ICAxOCArDQo+ICBhcmNoL2Fy
-bTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArDQo+ICBk
-cml2ZXJzL3Njc2kvdWZzL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSAr
-DQo+ICBkcml2ZXJzL3Njc2kvdWZzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMSArDQo+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMgICAgICAgICAgICAgICAgICAg
-ICAgICB8IDYxOSArKysrKysrKysrKysrKysrKysrKysNCj4gIGRyaXZlcnMvc2NzaS91ZnMvdWZz
-LWhpc2kuaCAgICAgICAgICAgICAgICAgICAgICAgIHwgMTE1ICsrKysNCj4gIDggZmlsZXMgY2hh
-bmdlZCwgODIxIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQN
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMNCj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmgNCj4gDQo+IE1ham9y
-IGNoYW5nZXMgaW4gdjEwOg0KPiAgLSBzb2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSBSb2IgSGVy
-cmluZy4NCj4gICAgKk1vZGlmeSB0aGUgInJlc2V0LW5hbWVzIiBkZXNjcmliZSBpbiB1ZnMtaGlz
-aS50eHQgYmluZGluZyBmaWxlLg0KPiAgICAqTGlzdCBjbG9ja3MgaW4gdWZzLWhpc2kudHh0IGJp
-bmRpbmcgZmlsZS4NCj4gICAgKnJlbW92ZSB0aGUgImFyc3QiIGFuZCBrZWVwIG9ubHkgInJzdCIg
-aW4gdGhlIGJpbmdpbmcgZmlsZXMuDQo+ICAgICpyZW1vdmUgdGhlICJhcnN0IiBtZW1iZXIgZnJv
-bSBib3RoIGR0cyBhbmQgYyBjb2RlLiANCj4gTWFqb3IgY2hhbmdlcyBpbiB2OToNCj4gIC0gc29s
-dmUgcmV2aWV3IGNvbW1lbnRzIGZyb20gUm9iIEhlcnJpbmcuDQo+ICAgICpyZW1vdmUgZnJlcS10
-YWJsZS1oeiBpbiB1ZnMtaGlzaS50eHQgYmluZGluZyBmaWxlLg0KPiAgICAqTW92ZSB0aGUgcnN0
-IHRvIHRoZSB1ZnNoY2RfcGx0Zm0udHh0IGNvbW1vbiBiaW5kaW5nIGZpbGUuDQo+ICAgICpNb2Rp
-ZnkgdGhlIG1lbWJlciAiYXNzZXJ0IiBvZiBVRlMgaG9zdCBzdHJ1Y3R1cmUgdG8gImFyc3QiLg0K
-PiBNYWpvciBjaGFuZ2VzIGluIHY4Og0KPiAgLSBzb2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSB6
-aGFuZ2ZlaS4NCj4gICAgKkFkZCBWZXJzaW9uIGhpc3RvcnkuDQo+ICAtIHNvbHZlIHJldmlldyBj
-b21tZW50cyBmcm9tIFJvYiBIZXJyaW5nLg0KPiAgICAqcmVtb3ZlIGZyZXEtdGFibGUtaHouDQo+
-ICAtICBzb2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSBSaWt1IFZvaXBpby4NCj4gICAgKkFkZCBN
-T0RVTEVfREVWSUNFX1RBQkxFIGZvciB1ZnMgZHJpdmVyLg0KPiANCg0KVGVzdGVkIG9uIHRvcCBv
-ZiBsaW51eC1uZXh0ICg0LjE3LjAtbmV4dC0yMDE4MDYwNSksIEkgY2FuIHJlbGlhYmx5IGxvYWQN
-Cm15IGRlYmlhbiB1c2Vyc3BhY2UgZmxhc2hlZCBvbiB0aGUgJ3N5c3RlbScgZmFzdGJvb3QgcGFy
-dGl0aW9uLg0KDQpUZXN0ZWQtYnk6IFZhbGVudGluIFNjaG5laWRlciA8dmFsZW50aW4uc2NobmVp
-ZGVyQGFybS5jb20+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+On Tue, Jun 5, 2018 at 7:57 PM Vinod <vkoul@kernel.org> wrote:
+>
+> On 02-06-18, 01:15, Stanimir Varbanov wrote:
+> > Hi Vikash,
+> >
+> > On  1.06.2018 23:26, Vikash Garodia wrote:
+> > > Add a new routine to reset the ARM9 and brings it
+> > > out of reset. This is in preparation to add PIL
+> > > functionality in venus driver.
+> >
+> > please squash this patch with 4/5. I don't see a reason to add a function
+> > which is not used. Shouldn't this produce gcc warnings?
+>
+> Yes this would but in a multi patch series that is okay as subsequent
+> patches would use that and end result in no warning.
+
+Except during bisect.
+
+>
+> Splitting logically is good and typical practice in kernel to add the
+> routine followed by usages..
+
+Is it in this case though? If this code was shared across multiple
+users I could understand but this function is only used locally (and
+only in one place IIUC). Also the patch is not so big that the code
+would become confusing if this was squashed into 4/5. I don't see any
+reason to keep this separate.
