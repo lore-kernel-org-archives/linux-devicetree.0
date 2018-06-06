@@ -1,82 +1,155 @@
-From: Tomasz Figa <tfiga@google.com>
-Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware device
-Date: Wed, 6 Jun 2018 13:46:20 +0900
-Message-ID: <CAAFQd5DGKnU15pjF2+eyMUaSuE0FCr2FMF90WrJb+kXt80xBCw@mail.gmail.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org> <20180605210758.GA19888@rob-hp-laptop>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v8 2/4] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Wed, 06 Jun 2018 10:20:16 +0530
+Message-ID: <75aab08baeecd381f573603a253dbbf1@codeaurora.org>
+References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
+ <1528177218-1051-4-git-send-email-spanda@codeaurora.org>
+ <20180605152050.GA9677@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605210758.GA19888@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180605152050.GA9677@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, Jun 6, 2018 at 6:08 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, Jun 02, 2018 at 01:56:08AM +0530, Vikash Garodia wrote:
-> > A separate child device is added for video firmware.
-> > This is needed to
-> > [1] configure the firmware context bank with the desired SID.
-> > [2] ensure that the iova for firmware region is from 0x0.
-> >
-> > Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
-> > ---
-> >  .../devicetree/bindings/media/qcom,venus.txt       |  8 +++-
-> >  drivers/media/platform/qcom/venus/core.c           | 48 +++++++++++++++++++---
-> >  drivers/media/platform/qcom/venus/firmware.c       | 20 ++++++++-
-> >  drivers/media/platform/qcom/venus/firmware.h       |  2 +
-> >  4 files changed, 71 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> > index 00d0d1b..701cbe8 100644
-> > --- a/Documentation/devicetree/bindings/media/qcom,venus.txt
-> > +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> > @@ -53,7 +53,7 @@
-> >
-> >  * Subnodes
-> >  The Venus video-codec node must contain two subnodes representing
-> > -video-decoder and video-encoder.
-> > +video-decoder and video-encoder, one optional firmware subnode.
-> >
-> >  Every of video-encoder or video-decoder subnode should have:
-> >
-> > @@ -79,6 +79,8 @@ Every of video-encoder or video-decoder subnode should have:
-> >                   power domain which is responsible for collapsing
-> >                   and restoring power to the subcore.
-> >
-> > +The firmware sub node must contain the iommus specifiers for ARM9.
-> > +
-> >  * An Example
-> >       video-codec@1d00000 {
-> >               compatible = "qcom,msm8916-venus";
-> > @@ -105,4 +107,8 @@ Every of video-encoder or video-decoder subnode should have:
-> >                       clock-names = "core";
-> >                       power-domains = <&mmcc VENUS_CORE1_GDSC>;
-> >               };
-> > +             venus-firmware {
-> > +                     compatible = "qcom,venus-firmware-no-tz";
-> > +                     iommus = <&apps_smmu 0x10b2 0x0>;
->
-> This mostly looks like you are adding a node in order to create a
-> platform device. DT is not the only way to create platform devices and
-> shouldn't be used when the device is not really a separate h/w device.
-> Plus it seems like it is debatable that you even need a driver.
->
-> For iommus, just move it up to the parent (or add to existing prop).
-
-As far as I understood the issue from reading this series and also
-talking a bit with Stanimir, there are multiple (physical?) ports from
-the Venus hardware block and that includes one dedicated for firmware
-loading, which has IOVA range restrictions up to 6 MiBs or something
-like that.
-
-If we add the firmware port to the iommus property of the main node,
-we would bind it to the same IOVA address space as the other ports and
-so it would be part of the main full 32-bit IOMMU domain.
-
-Best regards,
-Tomasz
+T24gMjAxOC0wNi0wNSAyMDo1MCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBKdW4gMDUs
+IDIwMTggYXQgMTE6MTA6MTZBTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3cm90ZToKPj4gRG9jdW1l
+bnQgdGhlIGJpbmRpbmdzIHVzZWQgZm9yIHRoZSBzbjY1ZHNpODYgRFNJIHRvIGVEUCBicmlkZ2Uu
+Cj4+IAo+PiBDaGFuZ2VzIGluIHYxOgo+PiAgLSBSZXBocmFzZSB0aGUgZHQtYmluZGluZyBkZXNj
+cmlwdGlvbnMgdG8gYmUgbW9yZSBpbmxpbmUgd2l0aCAKPj4gZXhpc3RpbmcKPj4gICAgYmluZGlu
+Z3MgKEFuZHJ6ZWogSGFqZGEpLgo+PiAgLSBBZGQgbWlzc2luZyBkdC1iaW5kaW5nIHRoYXQgYXJl
+IHBhcnNlZCBieSBjb3JyZXNwb25kaW5nIGRyaXZlcgo+PiAgICAoQW5kcnplaiBIYWpkYSkuCj4+
+IAo+PiBDaGFuZ2VzIGluIHYyOgo+PiAgLSBSZW1vdmUgZWRwIHBhbmVsIHNwZWNpZmljIGR0LWJp
+bmRpbmcgZW50cmllcy4gT25seSBrZWVwIGJyaWRnZQo+PiAgICBzcGVjaWZpYyBlbnRyaWVzIChT
+ZWFuIFBhdWwpLgo+PiAgLSBSZW1vdmUgY3VzdG9tLW1vZGVzIGR0IGVudHJ5IHNpbmNlIGl0cyB1
+c2FnZSBpcyByZW1vdmVkIGZyb20gZHJpdmVyIAo+PiBhbHNvIChTZWFuIFBhdWwpLgo+PiAgLSBS
+ZW1vdmUgaXMtcGx1Z2dhYmxlIGR0IGVudHJ5IHNpbmNlIHRoaXMgd2lsbCBub3QgYmUgbmVlZGVk
+IGFueW1vcmUgCj4+IChTZWFuIFBhdWwpLgo+PiAKPj4gQ2hhbmdlcyBpbiB2MzoKPj4gIC0gUmVt
+b3ZlIGlycS1ncGlvIGR0IGVudHJ5IGFuZCBpbnN0ZWFkIHBvcHVsYXRlIGlzIGFuIGludGVycnVw
+dAo+PiAgICBwcm9wZXJ0eSAoUm9iIEhlcnJpbmcpLgo+PiAKPj4gQ2hhbmdlcyBpbiB2NDoKPj4g
+IC0gQWRkIGxpbmsgdG8gYnJpZGdlIGNoaXAgZGF0YXNoZWV0IChTdGVwaGVuIEJveWQpCj4+ICAt
+IEFkZCB2cGxsIGFuZCB2Y2MgcmVndWxhdG9yIHN1cHBseSBiaW5kaW5ncyAoU3RlcGhlbiBCb3lk
+KQo+PiAgLSBBZGQgcmVmIGNsayBvcHRpb25hbCBkdCBiaW5kaW5nIChTdGVwaGVuIEJveWQpCj4+
+ICAtIEFkZCBncGlvLWNvbnRyb2xsZXIgb3B0aW9uYWwgZHQgYmluZGluZyAoU3RlcGhlbiBCb3lk
+KQo+PiAKPj4gQ2hhbmdlcyBpbiB2NToKPj4gIC0gVXNlIGNsb2NrIHByb3BlcnR5IHRvIHNwZWNp
+ZnkgdGhlIGlucHV0IHJlZmNsayAoU3RlcGhlbiBCb3lkKS4KPj4gIC0gVXBkYXRlIGdwaW8gY2Vs
+bCBhbmQgcHdtIGNlbGwgbnVtYmVycyAoU3RlcGhlbiBCb3lkKS4KPj4gCj4+IENoYW5nZXMgaW4g
+djY6Cj4+ICAtIEFkZCBwcm9wZXJ0eSB0byBtZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2NoZW1l
+IGFuZCBwb2xhcml0eSAKPj4gaW52ZXJzaW9uCj4+ICAgIChTdGVwaGVuIEJveWQpLgo+PiAKPj4g
+Q2hhbmdlcyBpbiB2NzoKPj4gIC0gRGV0YWlsIGRlc2NyaXB0aW9uIG9mIGxhbmUgbWFwcGluZyBz
+Y2hlbWUgZHQgcHJvcGVydHkgKEFuZHJ6ZWoKPj4gICAgSGFqZGEvIFJvYiBIZXJyaW5nKS4KPj4g
+IC0gUmVtb3ZlZCBIRFAgZ3BpbyBiaW5kaW5nLCBzaW5jZSB0aGUgYnJpZGdlIHVzZXMgSVJRIHNp
+Z25hbCB0bwo+PiAgICBkZXRlcm1pbmUgSFBELCBhbmQgSVJRIHByb3BlcnR5IGlzIGFscmVhZHkg
+ZG9jdW1lbnRlZCBpbiBiaW5kaW5nLgo+PiAKPj4gU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5k
+YSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgo+PiAtLS0KPj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0ICAgICAgIHwgMTA5IAo+PiArKysrKysrKysrKysrKysr
+KysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMDkgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IAo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvdGksc242NWRzaTg2LnR4dAo+PiAKPj4gZGlmZiAtLWdpdCAKPj4gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAK
+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGks
+c242NWRzaTg2LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi4z
+MzMyOWY5Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4+IEBAIC0wLDAg
+KzEsMTA5IEBACj4+ICtTTjY1RFNJODYgRFNJIHRvIGVEUCBicmlkZ2UgY2hpcAo+PiArLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gKwo+PiArVGhpcyBpcyB0aGUgYmluZGluZyBm
+b3IgVGV4YXMgSW5zdHJ1bWVudHMgU042NURTSTg2IGJyaWRnZS4KPj4gK2h0dHA6Ly93d3cudGku
+Y29tL2dlbmVyYWwvZG9jcy9saXQvZ2V0bGl0ZXJhdHVyZS50c3A/Z2VuZXJpY1BhcnROdW1iZXI9
+c242NWRzaTg2JmZpbGVUeXBlPXBkZgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAr
+LSBjb21wYXRpYmxlOiBNdXN0IGJlICJ0aSxzbjY1ZHNpODYiCj4+ICstIHJlZzogaTJjIGFkZHJl
+c3Mgb2YgdGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+PiArLSBlbmFibGUtZ3Bpb3M6
+IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgYnJpZGdlX2VuIHBpbiAKPj4g
+KGFjdGl2ZSBoaWdoKQo+PiArCj4+ICstIHZjY2lvLXN1cHBseTogQSAxLjhWIHN1cHBseSB0aGF0
+IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBJT3MuCj4+ICstIHZwbGwtc3VwcGx5OiBBIDEuOFYgc3Vw
+cGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBkaXNwbGF5cG9ydCBQTEwuCj4+ICstIHZjY2Etc3VwcGx5
+OiBBIDEuMlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBhbmFsb2cgY2lyY3VpdHMuCj4+ICst
+IHZjYy1zdXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIGRpZ2l0YWwgY29y
+ZS4KPj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKy0gaW50ZXJydXB0czogU3BlY2lm
+aWVyIGZvciB0aGUgU042NURTSTg2IGludGVycnVwdCBsaW5lLgo+PiArCj4+ICstIGRkYy1pMmMt
+YnVzOiBwaGFuZGxlIG9mIHRoZSBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCAKPj4g
+cHJvYmluZwo+PiArCj4+ICstIGdwaW8tY29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMg
+YSBHUElPIGNvbnRyb2xsZXIuCj4+ICstICNncGlvLWNlbGxzICAgIDogU2hvdWxkIGJlIHR3by4g
+VGhlIGZpcnN0IGNlbGwgaXMgdGhlIHBpbiBudW1iZXIgCj4+IGFuZAo+PiArICAgICAgICAgICAg
+ICAgICAgIHRoZSBzZWNvbmQgY2VsbCBpcyB1c2VkIHRvIHNwZWNpZnkgZmxhZ3MuCj4+ICsgICAg
+ICAgICAgICAgICAgICAgU2VlIC4uLy4uL2dwaW8vZ3Bpby50eHQgZm9yIG1vcmUgaW5mb3JtYXRp
+b24uCj4+ICstICNwd20tY2VsbHMgOiBTaG91bGQgYmUgb25lLiBTZWUgLi4vLi4vcHdtL3B3bS50
+eHQgZm9yIGRlc2NyaXB0aW9uIAo+PiBvZgo+PiArICAgICAgICAgICAgICAgdGhlIGNlbGwgZm9y
+bWF0cy4KPj4gKwo+PiArLSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJyZWZjbGsiCj4+ICstIGNs
+b2NrczogU3BlY2lmaWNhdGlvbiBmb3IgaW5wdXQgcmVmZXJlbmNlIGNsb2NrLiBUaGUgcmVmZXJl
+bmNlCj4+ICsJICBjbG9jayByYXRlIG11c3QgYmUgMTIgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCAy
+NyBNSHogb3IgMzguNCBNSHouCj4+ICsKPj4gKy0gbGFuZS1tYXBwaW5nOiBTcGVjaWZpY2F0aW9u
+IHRvIGRlc2NyaWJlIHRoZSBsb2dpY2FsIHRvIHBoeXNpY2FsIAo+PiBsYW5lCj4gCj4gQXMgSSBt
+ZW50aW9uZWQgaW4gdjcsIHdlIGFscmVhZHkgaGF2ZSBhIHByb3BlcnR5IGZvciB0aGlzLiBJdCdz
+IGNhbGxlZAo+ICdkYXRhLWxhbmVzJyBhbmQgZGVmaW5lZCBpbiBtZWRpYS92aWRlby1pbnRlcmZh
+Y2VzLnR4dC4gVXNlIHRoYXQuIElmIAo+IHlvdQo+IG5lZWQgcG9sYXJpdHkgdG9vLCB0aGVuIGFk
+ZCBhIHByb3BlcnR5IGZvciB0aGF0LiBBbmQgYWRkIGl0IHRvCj4gdmlkZW8taW50ZXJmYWNlcy50
+eHQuCgpUaGUgZGF0YS1sYW5lcyBwcm9wZXJ0eSBtZW50aW9uZWQgaW4gbWVkaWEvdmlkZW8taW50
+ZXJmYWNlcy50eHQgaXMgCnJlZmVycmluZwp0byBEU0kvQ1NJIGxhbmVzIHdoZXJlIGFzc3VtcHRp
+b24gaXMgY2xvY2sgbGFuZSBpcyBmaXhlZCBhdCBpbmRleCAwLiBCdXQgCmhlcmUKdGhlIHdlIHdh
+bnQgdG8gbWVudGlvbiBhYm91dCBlRFAgbGFuZXMgd2hpY2ggZG8gbm90IGhhdmUgZGVkaWNhdGVk
+IGNsb2NrIApsYW5lLgpTbyBjYW4gd2Ugc3RpbGwgdXNlIHRoZSBleGlzdGluZyBkYXRhLWxhbmVz
+IHByb3BlcnR5IGhlcmU/Cgo+IAo+PiArCQltYXBwaW5nIHNjaGVtZSBhbmQgcG9sYXJpdHkgaW52
+ZXJzaW9uIG9mIGVEUCBsYW5lcyBvbiBQQ0IuCj4+ICsJCUVhY2ggcGFpciBwcmVzZW50IGF0IGlu
+ZGV4IG4gKHdoZXJlIG4gbGllcyBiZXR3ZWVuIDAgYW5kIDMpCj4+ICsJCWRlc2NyaWJlcyB0aGUg
+bGFuZSBtYXBwaW5nIG9mIGxvZ2ljYWwgbGFuZSB0byBwaHlzaWNhbCBsYW5lIG4KPj4gKwkJYW5k
+IHRoZSBwb2xhcml0eShpdCBzaG91bGQgYmUgZWl0aGVyIDEgb3IgMCkgb2YgdGhlIHBoeXNpY2Fs
+IGxhbmUgCj4+IG4uCj4+ICsKPj4gKwkJRm9yIGV4YW1wbGU6Cj4+ICsJCWxhbmUtbWFwcGluZyA9
+IDwyIDE+LAo+PiArCQkJCTwxIDA+LAo+PiArCQkJCTwzIDE+LAo+PiArCQkJCTwwIDA+Owo+PiAr
+Cj4+ICsJCVRoZSBhYm92ZSBtYXBwaW5nIGRlc2NyaWJlcyB0aGF0IGxvZ2ljYWwgbGFuZSAyIGlz
+IG1hcHBlZCB0bwo+PiArCQlwaHlzaWNhbCBsYW5lIDAgYW5kIHBvbGFyaXR5IG9mIHBoeXNpY2Fs
+IGxhbmUgMCBpcyBpbnZlcnRlZCwKPj4gKwkJbG9naWNhbCBsYW5lIDEgaXMgbWFwcGVkIHRvIHBo
+eXNpY2FsIGxhbmUgMSBhbmQgcG9sYXJpdHkgb2YKPj4gKwkJcGh5c2ljYWwgbGFuZSAxIGlzIG5v
+cm1hbCwgbG9naWNhbCBsYW5lIDMgaXMgbWFwcGVkIHRvIHBoeXNpY2FsCj4+ICsJCWxhbmUgMiBh
+bmQgcG9sYXJpdHkgb2YgcGh5c2ljYWwgbGFuZSAyIGlzIGludmVydGVkLCBsb2dpY2FsIGxhbmUg
+MAo+PiArCQlpcyBtYXBwZWQgdG8gcGh5c2ljYWwgbGFuZSA0IGFuZCBwb2xhcml0eSBvZiBwaHlz
+aWNhbCBsYW5lIDMgaXMgCj4+IG5vcm1hbC4KPj4gKwo+PiArCQlJZiB0aGlzIHByb3BlcnR5IGlz
+IG5vdCBtZW50aW9uZWQgdGhlbiBpdCBpcyBhc3N1bWVkIHRoYXQgcGh5c2ljYWwKPj4gKwkJbGFu
+ZXMgMCB0aHJvdWdoIDMgYXJlIG1hcHBlZCB0byBsb2dpY2FsIGxhbmVzIDAgdGhyb3VnaCAzIGFu
+ZCAKPj4gcG9sYXJpdHkKPj4gKwkJb2YgYWxsIHBoeXNpY2FsIGxhbmVzIGlzIG5vcm1hbC4KPj4g
+Kwo+PiArUmVxdWlyZWQgbm9kZXM6Cj4+ICtUaGlzIGRldmljZSBoYXMgdHdvIHZpZGVvIHBvcnRz
+LiBUaGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxsZWQgdXNpbmcgCj4+IHRoZQo+PiArT0YgZ3Jh
+cGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIAo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZ3JhcGgudHh0Lgo+PiArCj4+ICstIFZpZGVvIHBvcnQgMCBmb3IgRFNJIGlucHV0Cj4+
+ICstIFZpZGVvIHBvcnQgMSBmb3IgZURQIG91dHB1dAo+PiArCj4+ICtFeGFtcGxlCj4+ICstLS0t
+LS0tCj4+ICsKPj4gK2VkcC1icmlkZ2VAMmQgewo+PiArCWNvbXBhdGlibGUgPSAidGksc242NWRz
+aTg2IjsKPj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsK
+Pj4gKwlyZWcgPSA8MHgyZD47Cj4+ICsKPj4gKwllbmFibGUtZ3Bpb3MgPSA8Jm1zbWdwaW8gMzMg
+R1BJT19BQ1RJVkVfSElHSD47Cj4+ICsJaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzM+Owo+PiAr
+CWludGVycnVwdHMgPSA8NCBJUlFfVFlQRV9FREdFX0ZBTExJTkc+Owo+PiArCj4+ICsJdmNjaW8t
+c3VwcGx5ID0gPCZwbTg5MTZfbDE3PjsKPj4gKwl2Y2NhLXN1cHBseSA9IDwmcG04OTE2X2w2PjsK
+Pj4gKwl2cGxsLXN1cHBseSA9IDwmcG04OTE2X2wxNz47Cj4+ICsJdmNjLXN1cHBseSA9IDwmcG04
+OTE2X2w2PjsKPj4gKwo+PiArCWNsb2NrLW5hbWVzID0gInJlZmNsayI7Cj4+ICsJY2xvY2tzID0g
+PCZpbnB1dF9yZWZjbGs+Owo+PiArCj4+ICsJbGFuZS1tYXBwaW5nID0gPDAgMD4sIC8qIExvZ2lj
+YWwgbGFuZSAwIGlzIHJvdXRlZCB0byAgcGh5c2ljYWwgbGFuZSAKPj4gMCAoIWludikgKi8KPj4g
+KwkJICAgICAgPDEgMT4sIC8qIExvZ2ljYWwgbGFuZSAxIGlzIHJvdXRlZCB0byBwaHlzaWNhbCBs
+YW5lIDEgKGludikgCj4+ICovCj4+ICsJCSAgICAgIDwyIDA+LCAvKiBMb2dpY2FsIGxhbmUgMiBp
+cyByb3V0ZWQgdG8gcGh5c2ljYWwgbGFuZSAyICghaW52KSAKPj4gKi8KPj4gKwkJICAgICAgPDMg
+MT47IC8qIExvZ2ljYWwgbGFuZSAzIGlzIHJvdXRlZCB0byBwaHlzaWNhbCBsYW5lIDMgKGludikg
+Cj4+ICovCj4+ICsKPj4gKwlwb3J0cyB7Cj4+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiAr
+CQkjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwo+PiArCQlwb3J0QDAgewo+PiArCQkJcmVnID0gPDA+
+Owo+PiArCj4+ICsJCQllZHBfYnJpZGdlX2luOiBlbmRwb2ludCB7Cj4+ICsJCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZkc2lfb3V0PjsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsKPj4gKwkJcG9ydEAx
+IHsKPj4gKwkJCXJlZyA9IDwxPjsKPj4gKwo+PiArCQkJZWRwX2JyaWRnZV9vdXQ6IGVuZHBvaW50
+IHsKPj4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmVkcF9wYW5lbF9pbj47Cj4+ICsJCQl9Owo+
+PiArCQl9Owo+PiArCX07Cj4+ICt9Cj4+IC0tCj4+IFRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENl
+bnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgCj4+IEZvcnVtLAo+PiBh
+IExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4+IAo+PiAtLQo+PiBUbyB1
+bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2
+aWNldHJlZSIgCj4+IGluCj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdl
+ci5rZXJuZWwub3JnCj4+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5l
+bC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9mcmVlZHJlbm8K
