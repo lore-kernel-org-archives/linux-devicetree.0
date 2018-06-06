@@ -1,56 +1,47 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware
- device
-Date: Wed, 6 Jun 2018 09:46:28 -0700
-Message-ID: <20180606164628.GF510@tuxbook-pro>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
- <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com>
- <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] ARM: dts: cygnus: Add HWRNG node
+Date: Wed, 6 Jun 2018 09:47:12 -0700
+Message-ID: <c7990001-00e6-d828-bafd-3d472fcfee20@gmail.com>
+References: <20180606093441.16483-1-peron.clem@gmail.com>
+ <c8836130-1d96-b813-4e87-5011db679ba8@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
+In-Reply-To: <c8836130-1d96-b813-4e87-5011db679ba8@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Tomasz Figa <tfiga@chromium.org>, vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
+To: Scott Branden <scott.branden@broadcom.com>, =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 04 Jun 06:56 PDT 2018, Stanimir Varbanov wrote:
-> On 06/04/2018 04:18 PM, Tomasz Figa wrote:
-> > On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
-[..]
-> >> +               venus-firmware {
-> >> +                       compatible = "qcom,venus-firmware-no-tz";
-> > 
-> > I don't think "-no-tz" should be mentioned here in DT, since it's a
-> > firmware/software detail.
+On 06/06/2018 09:03 AM, Scott Branden wrote:
+> Hi Clement,
 > 
-> I have to agree with Tomasz, non-tz or tz is a software detail and it
-> shouldn't be reflected in compatible string.
 > 
-
-While it is software, the alternative boot and security configuration
-does imply different requirements on how the driver deals with the
-hardware. I'm not sure how you expect the kernel to be informed about
-the abilities of the boot/security capabilities if it's not passed
-through DT.
-
-
-In the other cases of firmware loading for co-processors this means that
-a number of additional resources (clocks, resets) needs to be specified
-in the DT node; something it seems like Venus doesn't have to do.
-
-> Also I'm not sure but what will happen if this video-firmware subnode is
-> not added, do you expect that backward compatibility is satisfied for
-> older venus versions?
+> On 18-06-06 02:34 AM, Clément Péron wrote:
+>> From: Clément Peron <clement.peron@devialet.com>
+>>
+>> There is a HWRNG in Broadcom Cygnus SoC, so enable it.
+>>
+>> Signed-off-by: Clément Peron <clement.peron@devialet.com>
+> Thanks for upstreaming some missing Cygnus components.
 > 
+> But, the problem is the tarball release from Broadcom you are extracting
+> these changes from does not contain git history; so, you are missing the
+> original authors and signed-off's.
+> I checked our internal git repository and for this commit the author is:
+> Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
+> 
+> Please adjust author and signed-off appropriately.  If there are other
+> changes you are extracting from the source tarballs you have please
+> contact me so we can construct patch appropriately.
 
-I do expect that the driver should be possible to run on a 845 with the
-normal TZ based security model we've seen on e.g. 820. I don't know the
-details of Venus well enough to see if this differentiation would be
-sufficient.
+If you want the original author's Signed-off-by to be preserved, why
+don't you extract it from your internal git tree and submit the patch on
+Mohamed's behalf?
 
-Regards,
-Bjorn
+AFAICT what Clement is doing here is permissible given the Linux
+developer certificate of origin though I am not a lawyer of course.
+-- 
+Florian
