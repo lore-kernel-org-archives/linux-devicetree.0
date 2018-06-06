@@ -1,48 +1,33 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2 0/5] Tegra20 External Memory Controller driver
-Date: Wed, 6 Jun 2018 15:41:03 +0300
-Message-ID: <9ef678f2-2046-373f-5de4-dcfff5dfe6a6@gmail.com>
-References: <20180603223654.23324-1-digetx@gmail.com>
- <20180606104550.GK11810@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Michal Simek <monstr@monstr.eu>
+Subject: [PATCH] dt-bindings: Add bitmain vendor prefix
+Date: Wed,  6 Jun 2018 14:49:48 +0200
+Message-ID: <20173c07cc538544c9e6780a8ef558b97a3fe2cb.1528289384.git.monstr@monstr.eu>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180606104550.GK11810@ulmo>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, SZ Lin <sz.lin@moxa.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06.06.2018 13:45, Thierry Reding wrote:
-> On Mon, Jun 04, 2018 at 01:36:49AM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> Couple years ago the Tegra20 EMC driver was removed from the kernel
->> due to incompatible changes in the Tegra's clock driver. This patchset
->> introduces a modernized EMC driver. Currently the sole purpose of the
->> driver is to initialize DRAM frequency to maximum rate during of the
->> kernels boot-up. Later we may consider implementing dynamic memory
->> frequency scaling, utilizing functionality provided by this driver.
->>
->> Changelog:
->>
->> v2:
->> 	- Minor code cleanups like consistent use of writel_relaxed instead
->> 	  of non-relaxed version, reworded error messages, etc.
->>
->> 	- Factored out use_pllm_ud bit checking into a standalone patch for
->> 	  consistency.
->>
->> Dmitry Osipenko (5):
->>   dt: bindings: tegra20-emc: Document interrupt property
->>   ARM: dts: tegra20: Add interrupt to External Memory Controller
->>   clk: tegra20: Turn EMC clock gate into divider
->>   clk: tegra20: Check whether direct PLLM sourcing is turned off for EMC
->>   memory: tegra: Introduce Tegra20 EMC driver
-> 
-> I took a brief look and didn't spot any dependencies between the clk and
-> memory patches. Is it correct that these can be applied separately?
+Bitmain (https://www.bitmain.com) is a vendor of cryptocurrency
+hardware.
 
-Yes, it is correct.
+Signed-off-by: Michal Simek <monstr@monstr.eu>
+---
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 36003832c2a8..ddb52511a583 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -51,6 +51,7 @@ axentia	Axentia Technologies AB
+ axis	Axis Communications AB
+ bananapi BIPAI KEJI LIMITED
+ bhf	Beckhoff Automation GmbH & Co. KG
++bitmain	Bitmain Technologies
+ boe	BOE Technology Group Co., Ltd.
+ bosch	Bosch Sensortec GmbH
+ boundary	Boundary Devices Inc.
+-- 
+1.9.1
