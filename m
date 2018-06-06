@@ -1,853 +1,104 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V2 4/4] mmc: host: Register changes for sdcc V5
-Date: Wed, 6 Jun 2018 09:31:35 +0300
-Message-ID: <12fe9a2d-af74-bc84-3b2c-c150e8768b86@intel.com>
-References: <1527587561-27448-1-git-send-email-vviswana@codeaurora.org>
- <1527587561-27448-5-git-send-email-vviswana@codeaurora.org>
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: RE: [PATCH v4 2/3] arm: shmobile: Add the R9A06G032 SMP enabler
+ driver
+Date: Wed, 6 Jun 2018 06:36:24 +0000
+Message-ID: <OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528198148-23308-3-git-send-email-michel.pollet@bp.renesas.com>
+ <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527587561-27448-5-git-send-email-vviswana@codeaurora.org>
+In-Reply-To: <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
+To: Frank Rowand <frowand.list@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
+Cc: Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Douglas Anderson <dianders@chromium.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@endlessm.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Frank Rowand <frank.rowand@sony.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/05/18 12:52, Vijay Viswanath wrote:
-> Add support to use the new compatible string "qcom,sdhci-msm-v5".
-> 
-> Based on the msm variant, pick the relevant variant data and
-> use it for register read/write to msm specific registers.
-> 
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-msm.c | 347 +++++++++++++++++++++++++++----------------
->  1 file changed, 221 insertions(+), 126 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 2a66aa0..4d0fd2d 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -33,16 +33,11 @@
->  #define CORE_MCI_GENERICS		0x70
->  #define SWITCHABLE_SIGNALING_VOLTAGE	BIT(29)
->  
-> -#define CORE_HC_MODE		0x78
->  #define HC_MODE_EN		0x1
->  #define CORE_POWER		0x0
->  #define CORE_SW_RST		BIT(7)
->  #define FF_CLK_SW_RST_DIS	BIT(13)
->  
-> -#define CORE_PWRCTL_STATUS	0xdc
-> -#define CORE_PWRCTL_MASK	0xe0
-> -#define CORE_PWRCTL_CLEAR	0xe4
-> -#define CORE_PWRCTL_CTL		0xe8
->  #define CORE_PWRCTL_BUS_OFF	BIT(0)
->  #define CORE_PWRCTL_BUS_ON	BIT(1)
->  #define CORE_PWRCTL_IO_LOW	BIT(2)
-> @@ -63,17 +58,13 @@
->  #define CORE_CDR_EXT_EN		BIT(19)
->  #define CORE_DLL_PDN		BIT(29)
->  #define CORE_DLL_RST		BIT(30)
-> -#define CORE_DLL_CONFIG		0x100
->  #define CORE_CMD_DAT_TRACK_SEL	BIT(0)
-> -#define CORE_DLL_STATUS		0x108
->  
-> -#define CORE_DLL_CONFIG_2	0x1b4
->  #define CORE_DDR_CAL_EN		BIT(0)
->  #define CORE_FLL_CYCLE_CNT	BIT(18)
->  #define CORE_DLL_CLOCK_DISABLE	BIT(21)
->  
-> -#define CORE_VENDOR_SPEC	0x10c
-> -#define CORE_VENDOR_SPEC_POR_VAL	0xa1c
-> +#define CORE_VENDOR_SPEC_POR_VAL 0xa1c
->  #define CORE_CLK_PWRSAVE	BIT(1)
->  #define CORE_HC_MCLK_SEL_DFLT	(2 << 8)
->  #define CORE_HC_MCLK_SEL_HS400	(3 << 8)
-> @@ -111,17 +102,14 @@
->  #define CORE_CDC_SWITCH_BYPASS_OFF	BIT(0)
->  #define CORE_CDC_SWITCH_RC_EN		BIT(1)
->  
-> -#define CORE_DDR_200_CFG		0x184
->  #define CORE_CDC_T4_DLY_SEL		BIT(0)
->  #define CORE_CMDIN_RCLK_EN		BIT(1)
->  #define CORE_START_CDC_TRAFFIC		BIT(6)
-> -#define CORE_VENDOR_SPEC3	0x1b0
-> +
->  #define CORE_PWRSAVE_DLL	BIT(3)
->  
-> -#define CORE_DDR_CONFIG		0x1b8
->  #define DDR_CONFIG_POR_VAL	0x80040853
->  
-> -#define CORE_VENDOR_SPEC_CAPABILITIES0	0x11c
->  
->  #define INVALID_TUNING_PHASE	-1
->  #define SDHCI_MSM_MIN_CLOCK	400000
-> @@ -137,6 +125,12 @@
->  /* Timeout value to avoid infinite waiting for pwr_irq */
->  #define MSM_PWR_IRQ_TIMEOUT_MS 5000
->  
-> +#define MSM_HOST_READL(msm_host, host, offset) \
-> +	msm_host->var_ops->msm_readl_relaxed(host, offset)
-> +
-> +#define MSM_HOST_WRITEL(msm_host, val, host, offset) \
-> +	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
-> +
->  struct sdhci_msm_offset {
->  	u32 core_hc_mode;
->  	u32 core_mci_data_cnt;
-> @@ -268,6 +262,14 @@ struct sdhci_msm_host {
->  	const struct sdhci_msm_offset *offset;
->  };
->  
-> +const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	return msm_host->offset;
-> +}
-> +
->  /*
->   * APIs to read/write to vendor specific registers which were there in the
->   * core_mem region before MCI was removed.
-> @@ -349,10 +351,12 @@ static inline int msm_dll_poll_ck_out_en(struct sdhci_host *host, u8 poll)
->  	u32 wait_cnt = 50;
->  	u8 ck_out_en;
->  	struct mmc_host *mmc = host->mmc;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					sdhci_priv_msm_offset(host);
->  
->  	/* Poll for CK_OUT_EN bit.  max. poll time = 50us */
-> -	ck_out_en = !!(readl_relaxed(host->ioaddr + CORE_DLL_CONFIG) &
-> -			CORE_CK_OUT_EN);
-> +	ck_out_en = !!(readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config) & CORE_CK_OUT_EN);
->  
->  	while (ck_out_en != poll) {
->  		if (--wait_cnt == 0) {
-> @@ -362,8 +366,8 @@ static inline int msm_dll_poll_ck_out_en(struct sdhci_host *host, u8 poll)
->  		}
->  		udelay(1);
->  
-> -		ck_out_en = !!(readl_relaxed(host->ioaddr + CORE_DLL_CONFIG) &
-> -				CORE_CK_OUT_EN);
-> +		ck_out_en = !!(readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config) & CORE_CK_OUT_EN);
->  	}
->  
->  	return 0;
-> @@ -379,16 +383,18 @@ static int msm_config_cm_dll_phase(struct sdhci_host *host, u8 phase)
->  	unsigned long flags;
->  	u32 config;
->  	struct mmc_host *mmc = host->mmc;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					sdhci_priv_msm_offset(host);
->  
->  	if (phase > 0xf)
->  		return -EINVAL;
->  
->  	spin_lock_irqsave(&host->lock, flags);
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_dll_config);
->  	config &= ~(CORE_CDR_EN | CORE_CK_OUT_EN);
->  	config |= (CORE_CDR_EXT_EN | CORE_DLL_EN);
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config);
->  
->  	/* Wait until CK_OUT_EN bit of DLL_CONFIG register becomes '0' */
->  	rc = msm_dll_poll_ck_out_en(host, 0);
-> @@ -399,24 +405,24 @@ static int msm_config_cm_dll_phase(struct sdhci_host *host, u8 phase)
->  	 * Write the selected DLL clock output phase (0 ... 15)
->  	 * to CDR_SELEXT bit field of DLL_CONFIG register.
->  	 */
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_dll_config);
->  	config &= ~CDR_SELEXT_MASK;
->  	config |= grey_coded_phase_table[phase] << CDR_SELEXT_SHIFT;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config);
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_dll_config);
->  	config |= CORE_CK_OUT_EN;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config);
->  
->  	/* Wait until CK_OUT_EN bit of DLL_CONFIG register becomes '1' */
->  	rc = msm_dll_poll_ck_out_en(host, 1);
->  	if (rc)
->  		goto err_out;
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_dll_config);
->  	config |= CORE_CDR_EN;
->  	config &= ~CORE_CDR_EXT_EN;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config);
->  	goto out;
->  
->  err_out:
-> @@ -542,6 +548,8 @@ static int msm_find_most_appropriate_phase(struct sdhci_host *host,
->  static inline void msm_cm_dll_set_freq(struct sdhci_host *host)
->  {
->  	u32 mclk_freq = 0, config;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					sdhci_priv_msm_offset(host);
->  
->  	/* Program the MCLK value to MCLK_FREQ bit field */
->  	if (host->clock <= 112000000)
-> @@ -561,10 +569,10 @@ static inline void msm_cm_dll_set_freq(struct sdhci_host *host)
->  	else if (host->clock <= 200000000)
->  		mclk_freq = 7;
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_dll_config);
->  	config &= ~CMUX_SHIFT_PHASE_MASK;
->  	config |= mclk_freq << CMUX_SHIFT_PHASE_SHIFT;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config);
->  }
->  
->  /* Initialize the DLL (Programmable Delay Line) */
-> @@ -576,6 +584,8 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->  	int wait_cnt = 50;
->  	unsigned long flags;
->  	u32 config;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	spin_lock_irqsave(&host->lock, flags);
->  
-> @@ -584,34 +594,43 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->  	 * tuning is in progress. Keeping PWRSAVE ON may
->  	 * turn off the clock.
->  	 */
-> -	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec);
->  	config &= ~CORE_CLK_PWRSAVE;
-> -	writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec);
->  
->  	if (msm_host->use_14lpp_dll_reset) {
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config);
->  		config &= ~CORE_CK_OUT_EN;
-> -		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_dll_config);
->  
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config_2);
->  		config |= CORE_DLL_CLOCK_DISABLE;
-> -		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_dll_config_2);
->  	}
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config);
->  	config |= CORE_DLL_RST;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr +
-> +			msm_offset->core_dll_config);
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config);
->  	config |= CORE_DLL_PDN;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr +
-> +			msm_offset->core_dll_config);
->  	msm_cm_dll_set_freq(host);
->  
->  	if (msm_host->use_14lpp_dll_reset &&
->  	    !IS_ERR_OR_NULL(msm_host->xo_clk)) {
->  		u32 mclk_freq = 0;
->  
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config_2);
->  		config &= CORE_FLL_CYCLE_CNT;
->  		if (config)
->  			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 8),
-> @@ -620,40 +639,52 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->  			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 4),
->  					clk_get_rate(msm_host->xo_clk));
->  
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config_2);
->  		config &= ~(0xFF << 10);
->  		config |= mclk_freq << 10;
->  
-> -		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_dll_config_2);
->  		/* wait for 5us before enabling DLL clock */
->  		udelay(5);
->  	}
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config);
->  	config &= ~CORE_DLL_RST;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr +
-> +			msm_offset->core_dll_config);
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config);
->  	config &= ~CORE_DLL_PDN;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr +
-> +			msm_offset->core_dll_config);
->  
->  	if (msm_host->use_14lpp_dll_reset) {
->  		msm_cm_dll_set_freq(host);
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config_2);
->  		config &= ~CORE_DLL_CLOCK_DISABLE;
-> -		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_dll_config_2);
->  	}
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config);
->  	config |= CORE_DLL_EN;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr +
-> +			msm_offset->core_dll_config);
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr +
-> +			msm_offset->core_dll_config);
->  	config |= CORE_CK_OUT_EN;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr +
-> +			msm_offset->core_dll_config);
->  
->  	/* Wait until DLL_LOCK bit of DLL_STATUS register becomes '1' */
-> -	while (!(readl_relaxed(host->ioaddr + CORE_DLL_STATUS) &
-> +	while (!(readl_relaxed(host->ioaddr + msm_offset->core_dll_status) &
->  		 CORE_DLL_LOCK)) {
->  		/* max. wait for 50us sec for LOCK bit to be set */
->  		if (--wait_cnt == 0) {
-> @@ -674,19 +705,21 @@ static void msm_hc_select_default(struct sdhci_host *host)
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->  	u32 config;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	if (!msm_host->use_cdclp533) {
->  		config = readl_relaxed(host->ioaddr +
-> -				CORE_VENDOR_SPEC3);
-> +				msm_offset->core_vendor_spec3);
->  		config &= ~CORE_PWRSAVE_DLL;
->  		writel_relaxed(config, host->ioaddr +
-> -				CORE_VENDOR_SPEC3);
-> +				msm_offset->core_vendor_spec3);
->  	}
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec);
->  	config &= ~CORE_HC_MCLK_SEL_MASK;
->  	config |= CORE_HC_MCLK_SEL_DFLT;
-> -	writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec);
->  
->  	/*
->  	 * Disable HC_SELECT_IN to be able to use the UHS mode select
-> @@ -695,10 +728,10 @@ static void msm_hc_select_default(struct sdhci_host *host)
->  	 * Write 0 to HC_SELECT_IN and HC_SELECT_IN_EN field
->  	 * in VENDOR_SPEC_FUNC
->  	 */
-> -	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec);
->  	config &= ~CORE_HC_SELECT_IN_EN;
->  	config &= ~CORE_HC_SELECT_IN_MASK;
-> -	writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec);
->  
->  	/*
->  	 * Make sure above writes impacting free running MCLK are completed
-> @@ -714,32 +747,36 @@ static void msm_hc_select_hs400(struct sdhci_host *host)
->  	struct mmc_ios ios = host->mmc->ios;
->  	u32 config, dll_lock;
->  	int rc;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	/* Select the divided clock (free running MCLK/2) */
-> -	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec);
->  	config &= ~CORE_HC_MCLK_SEL_MASK;
->  	config |= CORE_HC_MCLK_SEL_HS400;
->  
-> -	writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec);
->  	/*
->  	 * Select HS400 mode using the HC_SELECT_IN from VENDOR SPEC
->  	 * register
->  	 */
->  	if ((msm_host->tuning_done || ios.enhanced_strobe) &&
->  	    !msm_host->calibration_done) {
-> -		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_vendor_spec);
->  		config |= CORE_HC_SELECT_IN_HS400;
->  		config |= CORE_HC_SELECT_IN_EN;
-> -		writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_vendor_spec);
->  	}
->  	if (!msm_host->clk_rate && !msm_host->use_cdclp533) {
->  		/*
->  		 * Poll on DLL_LOCK or DDR_DLL_LOCK bits in
-> -		 * CORE_DLL_STATUS to be set.  This should get set
-> +		 * core_dll_status to be set. This should get set
->  		 * within 15 us at 200 MHz.
->  		 */
->  		rc = readl_relaxed_poll_timeout(host->ioaddr +
-> -						CORE_DLL_STATUS,
-> +						msm_offset->core_dll_status,
->  						dll_lock,
->  						(dll_lock &
->  						(CORE_DLL_LOCK |
-> @@ -791,6 +828,8 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
->  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->  	u32 config, calib_done;
->  	int ret;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	pr_debug("%s: %s: Enter\n", mmc_hostname(host->mmc), __func__);
->  
-> @@ -807,13 +846,13 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
->  	if (ret)
->  		goto out;
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_dll_config);
->  	config |= CORE_CMD_DAT_TRACK_SEL;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config);
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DDR_200_CFG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_ddr_200_cfg);
->  	config &= ~CORE_CDC_T4_DLY_SEL;
-> -	writel_relaxed(config, host->ioaddr + CORE_DDR_200_CFG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_ddr_200_cfg);
->  
->  	config = readl_relaxed(host->ioaddr + CORE_CSR_CDC_GEN_CFG);
->  	config &= ~CORE_CDC_SWITCH_BYPASS_OFF;
-> @@ -823,9 +862,9 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
->  	config |= CORE_CDC_SWITCH_RC_EN;
->  	writel_relaxed(config, host->ioaddr + CORE_CSR_CDC_GEN_CFG);
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DDR_200_CFG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_ddr_200_cfg);
->  	config &= ~CORE_START_CDC_TRAFFIC;
-> -	writel_relaxed(config, host->ioaddr + CORE_DDR_200_CFG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_ddr_200_cfg);
->  
->  	/* Perform CDC Register Initialization Sequence */
->  
-> @@ -877,9 +916,9 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
->  		goto out;
->  	}
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DDR_200_CFG);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_ddr_200_cfg);
->  	config |= CORE_START_CDC_TRAFFIC;
-> -	writel_relaxed(config, host->ioaddr + CORE_DDR_200_CFG);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_ddr_200_cfg);
->  out:
->  	pr_debug("%s: %s: Exit, ret %d\n", mmc_hostname(host->mmc),
->  		 __func__, ret);
-> @@ -891,32 +930,38 @@ static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
->  	struct mmc_host *mmc = host->mmc;
->  	u32 dll_status, config;
->  	int ret;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					sdhci_priv_msm_offset(host);
->  
->  	pr_debug("%s: %s: Enter\n", mmc_hostname(host->mmc), __func__);
->  
->  	/*
-> -	 * Currently the CORE_DDR_CONFIG register defaults to desired
-> +	 * Currently the core_ddr_config register defaults to desired
->  	 * configuration on reset. Currently reprogramming the power on
->  	 * reset (POR) value in case it might have been modified by
->  	 * bootloaders. In the future, if this changes, then the desired
->  	 * values will need to be programmed appropriately.
->  	 */
-> -	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr + CORE_DDR_CONFIG);
-> +	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr +
-> +			msm_offset->core_ddr_config);
->  
->  	if (mmc->ios.enhanced_strobe) {
-> -		config = readl_relaxed(host->ioaddr + CORE_DDR_200_CFG);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_ddr_200_cfg);
->  		config |= CORE_CMDIN_RCLK_EN;
-> -		writel_relaxed(config, host->ioaddr + CORE_DDR_200_CFG);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_ddr_200_cfg);
->  	}
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_dll_config_2);
->  	config |= CORE_DDR_CAL_EN;
-> -	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_dll_config_2);
->  
-> -	ret = readl_relaxed_poll_timeout(host->ioaddr + CORE_DLL_STATUS,
-> -					 dll_status,
-> -					 (dll_status & CORE_DDR_DLL_LOCK),
-> -					 10, 1000);
-> +	ret = readl_relaxed_poll_timeout(host->ioaddr +
-> +					msm_offset->core_dll_status,
-> +					dll_status,
-> +					(dll_status & CORE_DDR_DLL_LOCK),
-> +					10, 1000);
->  
->  	if (ret == -ETIMEDOUT) {
->  		pr_err("%s: %s: CM_DLL_SDC4 calibration was not completed\n",
-> @@ -924,9 +969,9 @@ static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
->  		goto out;
->  	}
->  
-> -	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC3);
-> +	config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec3);
->  	config |= CORE_PWRSAVE_DLL;
-> -	writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC3);
-> +	writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec3);
->  
->  	/*
->  	 * Drain writebuffer to ensure above DLL calibration
-> @@ -946,6 +991,8 @@ static int sdhci_msm_hs400_dll_calibration(struct sdhci_host *host)
->  	struct mmc_host *mmc = host->mmc;
->  	int ret;
->  	u32 config;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	pr_debug("%s: %s: Enter\n", mmc_hostname(host->mmc), __func__);
->  
-> @@ -963,9 +1010,11 @@ static int sdhci_msm_hs400_dll_calibration(struct sdhci_host *host)
->  					      msm_host->saved_tuning_phase);
->  		if (ret)
->  			goto out;
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config);
->  		config |= CORE_CMD_DAT_TRACK_SEL;
-> -		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_dll_config);
->  	}
->  
->  	if (msm_host->use_cdclp533)
-> @@ -1095,6 +1144,8 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->  	u16 ctrl_2;
->  	u32 config;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->  	/* Select Bus Speed Mode for host */
-> @@ -1135,13 +1186,17 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->  		 * DLL is not required for clock <= 100MHz
->  		 * Thus, make sure DLL it is disabled when not required
->  		 */
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config);
->  		config |= CORE_DLL_RST;
-> -		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_dll_config);
->  
-> -		config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_dll_config);
->  		config |= CORE_DLL_PDN;
-> -		writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_dll_config);
->  
->  		/*
->  		 * The DLL needs to be restored and CDCLP533 recalibrated
-> @@ -1183,7 +1238,9 @@ static void sdhci_msm_check_power_status(struct sdhci_host *host, u32 req_type)
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->  	bool done = false;
-> -	u32 val;
-> +	u32 val = SWITCHABLE_SIGNALING_VOLTAGE;
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	pr_debug("%s: %s: request %d curr_pwr_state %x curr_io_level %x\n",
->  			mmc_hostname(host->mmc), __func__, req_type,
-> @@ -1192,8 +1249,12 @@ static void sdhci_msm_check_power_status(struct sdhci_host *host, u32 req_type)
->  	/*
->  	 * The power interrupt will not be generated for signal voltage
->  	 * switches if SWITCHABLE_SIGNALING_VOLTAGE in MCI_GENERICS is not set.
-> +	 * Since sdhci-msm-v5, this bit has been removed and SW must consider
-> +	 * it as always set.
->  	 */
-> -	val = readl(msm_host->core_mem + CORE_MCI_GENERICS);
-> +	if (!msm_host->mci_removed)
-> +		val = MSM_HOST_READL(msm_host, host,
-> +				msm_offset->core_generics);
->  	if ((req_type & REQ_IO_HIGH || req_type & REQ_IO_LOW) &&
->  	    !(val & SWITCHABLE_SIGNALING_VOLTAGE)) {
->  		return;
-> @@ -1241,12 +1302,14 @@ static void sdhci_msm_dump_pwr_ctrl_regs(struct sdhci_host *host)
->  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	const struct sdhci_msm_offset *msm_offset =
-> +					msm_host->offset;
->  
->  	pr_err("%s: PWRCTL_STATUS: 0x%08x | PWRCTL_MASK: 0x%08x | PWRCTL_CTL: 0x%08x\n",
-> -			mmc_hostname(host->mmc),
-> -			readl_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS),
-> -			readl_relaxed(msm_host->core_mem + CORE_PWRCTL_MASK),
-> -			readl_relaxed(msm_host->core_mem + CORE_PWRCTL_CTL));
-> +		mmc_hostname(host->mmc),
-> +		MSM_HOST_READL(msm_host, host, msm_offset->core_pwrctl_status),
-> +		MSM_HOST_READL(msm_host, host, msm_offset->core_pwrctl_mask),
-> +		MSM_HOST_READL(msm_host, host, msm_offset->core_pwrctl_ctl));
->  }
->  
->  static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
-> @@ -1257,11 +1320,14 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  	int retry = 10;
->  	u32 pwr_state = 0, io_level = 0;
->  	u32 config;
-> +	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
->  
-> -	irq_status = readl_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS);
-> +	irq_status = MSM_HOST_READL(msm_host, host,
-> +			msm_offset->core_pwrctl_status);
->  	irq_status &= INT_MASK;
->  
-> -	writel_relaxed(irq_status, msm_host->core_mem + CORE_PWRCTL_CLEAR);
-> +	MSM_HOST_WRITEL(msm_host, irq_status, host,
-> +			msm_offset->core_pwrctl_clear);
->  
->  	/*
->  	 * There is a rare HW scenario where the first clear pulse could be
-> @@ -1270,8 +1336,8 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  	 * sure status register is cleared. Otherwise, this will result in
->  	 * a spurious power IRQ resulting in system instability.
->  	 */
-> -	while (irq_status & readl_relaxed(msm_host->core_mem +
-> -				CORE_PWRCTL_STATUS)) {
-> +	while (irq_status & MSM_HOST_READL(msm_host, host,
-> +				msm_offset->core_pwrctl_status)) {
->  		if (retry == 0) {
->  			pr_err("%s: Timedout clearing (0x%x) pwrctl status register\n",
->  					mmc_hostname(host->mmc), irq_status);
-> @@ -1279,8 +1345,8 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  			WARN_ON(1);
->  			break;
->  		}
-> -		writel_relaxed(irq_status,
-> -				msm_host->core_mem + CORE_PWRCTL_CLEAR);
-> +		MSM_HOST_WRITEL(msm_host, irq_status, host,
-> +			msm_offset->core_pwrctl_clear);
->  		retry--;
->  		udelay(10);
->  	}
-> @@ -1311,7 +1377,8 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  	 * report back if it succeded or not to this register. The voltage
->  	 * switches are handled by the sdhci core, so just report success.
->  	 */
-> -	writel_relaxed(irq_ack, msm_host->core_mem + CORE_PWRCTL_CTL);
-> +	MSM_HOST_WRITEL(msm_host, irq_ack, host,
-> +			msm_offset->core_pwrctl_ctl);
->  
->  	/*
->  	 * If we don't have info regarding the voltage levels supported by
-> @@ -1330,7 +1397,8 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  		 * controllers with only 1.8V, we will set the IO PAD bit
->  		 * without waiting for a REQ_IO_LOW.
->  		 */
-> -		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_vendor_spec);
->  		new_config = config;
->  
->  		if ((io_level & REQ_IO_HIGH) &&
-> @@ -1341,8 +1409,8 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->  			new_config |= CORE_IO_PAD_PWR_SWITCH;
->  
->  		if (config ^ new_config)
-> -			writel_relaxed(new_config,
-> -					host->ioaddr + CORE_VENDOR_SPEC);
-> +			writel_relaxed(new_config, host->ioaddr +
-> +					msm_offset->core_vendor_spec);
->  	}
->  
->  	if (pwr_state)
-> @@ -1503,6 +1571,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	struct regulator *supply = mmc->supply.vqmmc;
->  	u32 caps = 0, config;
->  	struct sdhci_host *host = mmc_priv(mmc);
-> +	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
->  
->  	if (!IS_ERR(mmc->supply.vqmmc)) {
->  		if (regulator_is_supported_voltage(supply, 1700000, 1950000))
-> @@ -1522,7 +1591,8 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  		 */
->  		u32 io_level = msm_host->curr_io_level;
->  
-> -		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_vendor_spec);
->  		config |= CORE_IO_PAD_PWR_SWITCH_EN;
->  
->  		if ((io_level & REQ_IO_HIGH) && (caps &	CORE_3_0V_SUPPORT))
-> @@ -1530,7 +1600,8 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  		else if ((io_level & REQ_IO_LOW) || (caps & CORE_1_8V_SUPPORT))
->  			config |= CORE_IO_PAD_PWR_SWITCH;
->  
-> -		writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
-> +		writel_relaxed(config,
-> +				host->ioaddr + msm_offset->core_vendor_spec);
->  	}
->  	msm_host->caps_0 |= caps;
->  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
-> @@ -1559,7 +1630,8 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  };
->  
->  static const struct of_device_id sdhci_msm_dt_match[] = {
-> -	{ .compatible = "qcom,sdhci-msm-v4" },
-> +	{.compatible = "qcom,sdhci-msm-v4", .data = &sdhci_msm_mci_var},
-> +	{.compatible = "qcom,sdhci-msm-v5", .data = &sdhci_msm_v5_var},
->  	{},
->  };
->  
-> @@ -1596,6 +1668,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	u16 host_version, core_minor;
->  	u32 core_version, config;
->  	u8 core_major;
-> +	const struct sdhci_msm_offset *msm_offset;
-> +	const struct sdhci_msm_variant_info *var_info;
->  
->  	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
->  	if (IS_ERR(host))
-> @@ -1611,6 +1685,18 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto pltfm_free;
->  
-> +	/*
-> +	 * Based on the compatible string, load the required msm host info from
-> +	 * the data associated with the version info.
-> +	 */
-> +	var_info = of_device_get_match_data(&pdev->dev);
-> +
-> +	msm_host->mci_removed = var_info->mci_removed;
-> +	msm_host->var_ops = var_info->var_ops;
-> +	msm_host->offset = var_info->offset;
-> +
-> +	msm_offset = msm_host->offset;
-> +
->  	sdhci_get_of_property(pdev);
->  
->  	msm_host->saved_tuning_phase = INVALID_TUNING_PHASE;
-> @@ -1675,32 +1761,40 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
->  	}
->  
-> -	core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -	msm_host->core_mem = devm_ioremap_resource(&pdev->dev, core_memres);
-> +	if (!msm_host->mci_removed) {
-> +		core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +		msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
-> +				core_memres);
->  
-> -	if (IS_ERR(msm_host->core_mem)) {
-> -		dev_err(&pdev->dev, "Failed to remap registers\n");
-> -		ret = PTR_ERR(msm_host->core_mem);
-> -		goto clk_disable;
-> +		if (IS_ERR(msm_host->core_mem)) {
-> +			dev_err(&pdev->dev, "Failed to remap registers\n");
-> +			ret = PTR_ERR(msm_host->core_mem);
-> +			goto clk_disable;
-> +		}
->  	}
->  
->  	/* Reset the vendor spec register to power on reset state */
->  	writel_relaxed(CORE_VENDOR_SPEC_POR_VAL,
-> -		       host->ioaddr + CORE_VENDOR_SPEC);
-> -
-> -	/* Set HC_MODE_EN bit in HC_MODE register */
-> -	writel_relaxed(HC_MODE_EN, (msm_host->core_mem + CORE_HC_MODE));
-> -
-> -	config = readl_relaxed(msm_host->core_mem + CORE_HC_MODE);
-> -	config |= FF_CLK_SW_RST_DIS;
-> -	writel_relaxed(config, msm_host->core_mem + CORE_HC_MODE);
-> +			host->ioaddr + msm_offset->core_vendor_spec);
-> +
-> +	if (!msm_host->mci_removed) {
-> +		/* Set HC_MODE_EN bit in HC_MODE register */
-> +		MSM_HOST_WRITEL(msm_host, HC_MODE_EN, host,
-> +				msm_offset->core_hc_mode);
-> +		config = MSM_HOST_READL(msm_host, host,
-> +				msm_offset->core_hc_mode);
-> +		config |= FF_CLK_SW_RST_DIS;
-> +		MSM_HOST_WRITEL(msm_host, config, host,
-> +				msm_offset->core_hc_mode);
-> +	}
->  
->  	host_version = readw_relaxed((host->ioaddr + SDHCI_HOST_VERSION));
->  	dev_dbg(&pdev->dev, "Host Version: 0x%x Vendor Version 0x%x\n",
->  		host_version, ((host_version & SDHCI_VENDOR_VER_MASK) >>
->  			       SDHCI_VENDOR_VER_SHIFT));
->  
-> -	core_version = readl_relaxed(msm_host->core_mem + CORE_MCI_VERSION);
-> +	core_version = MSM_HOST_READL(msm_host, host,
-> +			msm_offset->core_mci_version);
->  	core_major = (core_version & CORE_VERSION_MAJOR_MASK) >>
->  		      CORE_VERSION_MAJOR_SHIFT;
->  	core_minor = core_version & CORE_VERSION_MINOR_MASK;
-> @@ -1725,7 +1819,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  		config = readl_relaxed(host->ioaddr + SDHCI_CAPABILITIES);
->  		config |= SDHCI_CAN_VDD_300 | SDHCI_CAN_DO_8BIT;
->  		writel_relaxed(config, host->ioaddr +
-> -			       CORE_VENDOR_SPEC_CAPABILITIES0);
-> +				msm_offset->core_vendor_spec_capabilities0);
->  	}
->  
->  	/*
-> @@ -1754,7 +1848,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  
->  	sdhci_msm_init_pwr_irq_wait(msm_host);
->  	/* Enable pwr irq interrupts */
-> -	writel_relaxed(INT_MASK, msm_host->core_mem + CORE_PWRCTL_MASK);
-> +	MSM_HOST_WRITEL(msm_host, INT_MASK, host,
-> +		msm_offset->core_pwrctl_mask);
->  
->  	ret = devm_request_threaded_irq(&pdev->dev, msm_host->pwr_irq, NULL,
->  					sdhci_msm_pwr_irq, IRQF_ONESHOT,
-> 
+SGkgRnJhbmssDQoNCk9uIDA1IEp1bmUgMjAxOCAxODozNCwgRnJhbmsgd3JvdGU6DQo+IE9uIDA2
+LzA1LzE4IDA0OjI4LCBNaWNoZWwgUG9sbGV0IHdyb3RlOg0KPiA+IFRoZSBSZW5lc2FzIFI5QTA2
+RzAzMiBzZWNvbmQgQ0E3IGlzIHBhcmtlZCBpbiBhIFJPTSBwZW4gYXQgYm9vdCB0aW1lLA0KPiA+
+IGl0IHJlcXVpcmVzIGEgc3BlY2lhbCBlbmFibGUgbWV0aG9kIHRvIGdldCBpdCBzdGFydGVkLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWljaGVsIFBvbGxldCA8bWljaGVsLnBvbGxldEBicC5y
+ZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9NYWtlZmls
+ZSAgICAgICAgfCAgMSArDQo+ID4gIGFyY2gvYXJtL21hY2gtc2htb2JpbGUvc21wLXI5YTA2ZzAz
+Mi5jIHwgNzkNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIg
+ZmlsZXMgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+YXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9zbXAtcjlhMDZnMDMyLmMNCj4gPg0KPiA+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9tYWNoLXNobW9iaWxlL01ha2VmaWxlDQo+ID4gYi9hcmNoL2FybS9tYWNo
+LXNobW9iaWxlL01ha2VmaWxlIGluZGV4IDE5MzlmNTIuLmQ3ZmM5OGYgMTAwNjQ0DQo+ID4gLS0t
+IGEvYXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL21h
+Y2gtc2htb2JpbGUvTWFrZWZpbGUNCj4gPiBAQCAtMzQsNiArMzQsNyBAQCBzbXAtJChDT05GSUdf
+QVJDSF9TSDczQTApKz0gc21wLXNoNzNhMC5vDQo+IGhlYWRzbXAtc2N1Lm8gcGxhdHNtcC1zY3Uu
+bw0KPiA+ICBzbXAtJChDT05GSUdfQVJDSF9SOEE3Nzc5KSs9IHNtcC1yOGE3Nzc5Lm8gaGVhZHNt
+cC1zY3Uubw0KPiBwbGF0c21wLXNjdS5vDQo+ID4gIHNtcC0kKENPTkZJR19BUkNIX1I4QTc3OTAp
+Kz0gc21wLXI4YTc3OTAubw0KPiA+ICBzbXAtJChDT05GSUdfQVJDSF9SOEE3NzkxKSs9IHNtcC1y
+OGE3NzkxLm8NCj4gPiArc21wLSQoQ09ORklHX0FSQ0hfUjlBMDZHMDMyKSs9IHNtcC1yOWEwNmcw
+MzIubw0KPiA+ICBzbXAtJChDT05GSUdfQVJDSF9FTUVWMikrPSBzbXAtZW1ldjIubyBoZWFkc21w
+LXNjdS5vDQo+IHBsYXRzbXAtc2N1Lm8NCj4gPg0KPiA+ICAjIFBNIG9iamVjdHMNCj4gPiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9zbXAtcjlhMDZnMDMyLmMNCj4gPiBiL2Fy
+Y2gvYXJtL21hY2gtc2htb2JpbGUvc21wLXI5YTA2ZzAzMi5jDQo+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5jZDQwZTZlDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ICsrKyBiL2FyY2gvYXJtL21hY2gtc2htb2JpbGUvc21wLXI5YTA2ZzAzMi5jDQo+ID4gQEAgLTAs
+MCArMSw3OSBAQA0KPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+
+ICsvKg0KPiA+ICsgKiBSOUEwNkcwMzIgU2Vjb25kIENBNyBlbmFibGVyLg0KPiA+ICsgKg0KPiA+
+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTGltaXRl
+ZA0KPiA+ICsgKg0KPiA+ICsgKiBNaWNoZWwgUG9sbGV0IDxtaWNoZWwucG9sbGV0QGJwLnJlbmVz
+YXMuY29tPiwNCj4gPGJ1c2Vycm9yQGdtYWlsLmNvbT4NCj4gPiArICogRGVyaXZlZCBmcm9tIGFj
+dGlvbixzNTAwLXNtcA0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5o
+Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2Fk
+ZHJlc3MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3NtcC5oPg0KPiA+ICsNCj4gPiArLyoNCj4g
+PiArICogVGhlIHNlY29uZCBDUFUgaXMgcGFya2VkIGluIFJPTSBhdCBib290IHRpbWUuIEl0IHJl
+cXVpcmVzIHdha2luZw0KPiA+ICtpdCBhZnRlcg0KPiA+ICsgKiB3cml0aW5nIGFuIGFkZHJlc3Mg
+aW50byB0aGUgQk9PVEFERFIgcmVnaXN0ZXIgb2Ygc3lzY3RybC4NCj4gPiArICoNCj4gPiArICog
+U28gdGhlIGRlZmF1bHQgdmFsdWUgb2YgdGhlICJjcHUtcmVsZWFzZS1hZGRyIiBjb3JyZXNwb25k
+cyB0bw0KPiBCT09UQUREUi4uLg0KPiA+ICsgKg0KPiA+ICsgKiAqSG93ZXZlciogdGhlIEJPT1RB
+RERSIHJlZ2lzdGVyIGlzIG5vdCBhdmFpbGFibGUgd2hlbiB0aGUga2VybmVsDQo+ID4gKyAqIHN0
+YXJ0cyBpbiBOT05TRUMgbW9kZS4NCj4gPiArICoNCj4gPiArICogU28gZm9yIE5PTlNFQyBtb2Rl
+LCB0aGUgYm9vdGxvYWRlciByZS1wYXJrcyB0aGUgc2Vjb25kIENQVSBpbnRvIGENCj4gPiArcGVu
+DQo+ID4gKyAqIGluIFNSQU0sIGFuZCBjaGFuZ2VzIHRoZSAiY3B1LXJlbGVhc2UtYWRkciIgb2Yg
+bGludXgncyBEVCB0byBhDQo+ID4gK1NSQU0gYWRkcmVzcywNCj4gPiArICogd2hpY2ggaXMgbm90
+IHJlc3RyaWN0ZWQuDQo+DQo+IFRoZSBiaW5kaW5nIGRvY3VtZW50IGZvciBjcHUtcmVsZWFzZS1h
+ZGRyIGRvZXMgbm90IGhhdmUgYSBkZWZpbml0aW9uIGZvciAzMg0KPiBiaXQgYXJtLiAgVGhlIGV4
+aXN0aW5nIGRlZmluaXRpb24gaXMgb25seSA2NCBiaXQgYXJtLiAgUGxlYXNlIGFkZCB0aGUgZGVm
+aW5pdGlvbg0KPiBmb3IgMzIgYml0IGFybSB0byBwYXRjaCAxLg0KDQpIbW1tIEkgZG8gZmluZCBh
+IGRlZmluaXRpb24gaW4NCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1
+cy50eHQgLS0ganVzdCB1bmRlciB3aGVyZSBJDQphZGRlZCBteSAnZW5hYmxlLW1ldGhvZCcgLS0g
+QW5kIGl0IGlzIGFscmVhZHkgdXNlZCBhcyAzMiBiaXRzIGluIGF0IGxlYXN0DQphcmNoL2FybS9i
+b290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpLg0KDQpXaGF0IGRvIHlvdSB3YW50IG1lIHRvIGFk
+ZCB0byB0aGlzIGV4YWN0bHk/IERvIHlvdSB3YW50IG1lIHRvIGp1c3QNCmNoYW5nZSAicmVxdWly
+ZWQgZm9yIHN5c3RlbXMgdGhhdCBoYXZlIGFuICJlbmFibGUtbWV0aG9kIiBwcm9wZXJ0eQ0KdmFs
+dWUgb2YgInNwaW4tdGFibGUiIHRvIGFsc28gc3BlY2lmeSByZW5lc2FzLHI5YTA2ZzAzMiA/DQoN
+ClRoYW5rcyENCk1pY2hlbA0KDQo+DQo+IC1GcmFuaw0KPg0KPg0KPiA+ICsgKi8NCj4gPiArDQo+
+ID4gK3N0YXRpYyB2b2lkIF9faW9tZW0gKmNwdV9ib290YWRkcjsNCj4gPiArDQo+ID4gK3N0YXRp
+YyBERUZJTkVfU1BJTkxPQ0soY3B1X2xvY2spOw0KPiA+ICsNCj4gPiArc3RhdGljIGludCByOWEw
+NmcwMzJfc21wX2Jvb3Rfc2Vjb25kYXJ5KHVuc2lnbmVkIGludCBjcHUsIHN0cnVjdA0KPiA+ICt0
+YXNrX3N0cnVjdCAqaWRsZSkgew0KPiA+ICtpZiAoIWNwdV9ib290YWRkcikNCj4gPiArcmV0dXJu
+IC1FTk9ERVY7DQo+ID4gKw0KPiA+ICtzcGluX2xvY2soJmNwdV9sb2NrKTsNCj4gPiArDQo+ID4g
+K3dyaXRlbChfX3BhX3N5bWJvbChzZWNvbmRhcnlfc3RhcnR1cCksIGNwdV9ib290YWRkcik7DQo+
+ID4gK2FyY2hfc2VuZF93YWtldXBfaXBpX21hc2soY3B1bWFza19vZihjcHUpKTsNCj4gPiArDQo+
+ID4gK3NwaW5fdW5sb2NrKCZjcHVfbG9jayk7DQo+ID4gKw0KPiA+ICtyZXR1cm4gMDsNCj4gPiAr
+fQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgX19pbml0IHI5YTA2ZzAzMl9zbXBfcHJlcGFyZV9j
+cHVzKHVuc2lnbmVkIGludCBtYXhfY3B1cykNCj4gPiArew0KPiA+ICtzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKmRuOw0KPiA+ICtpbnQgcmV0Ow0KPiA+ICt1MzIgYm9vdGFkZHI7DQo+ID4gKw0KPiA+ICtk
+biA9IG9mX2dldF9jcHVfbm9kZSgxLCBOVUxMKTsNCj4gPiAraWYgKCFkbikgew0KPiA+ICtwcl9l
+cnIoIkNQVSMxOiBtaXNzaW5nIGRldmljZSB0cmVlIG5vZGVcbiIpOw0KPiA+ICtyZXR1cm47DQo+
+ID4gK30NCj4gPiArLyoNCj4gPiArICogRGV0ZXJtaW5lIHRoZSBhZGRyZXNzIGZyb20gd2hpY2gg
+dGhlIENQVSBpcyBwb2xsaW5nLg0KPiA+ICsgKiBUaGUgYm9vdGxvYWRlciAqZG9lcyogY2hhbmdl
+IHRoaXMgcHJvcGVydHkNCj4gPiArICovDQo+ID4gK3JldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMy
+KGRuLCAiY3B1LXJlbGVhc2UtYWRkciIsICZib290YWRkcik7DQo+ID4gK29mX25vZGVfcHV0KGRu
+KTsNCj4gPiAraWYgKHJldCkgew0KPiA+ICtwcl9lcnIoIkNQVSMxOiBpbnZhbGlkIGNwdS1yZWxl
+YXNlLWFkZHIgcHJvcGVydHlcbiIpOw0KPiA+ICtyZXR1cm47DQo+ID4gK30NCj4gPiArcHJfaW5m
+bygiQ1BVIzE6IGNwdS1yZWxlYXNlLWFkZHIgJTA4eFxuIiwgYm9vdGFkZHIpOw0KPiA+ICsNCj4g
+PiArY3B1X2Jvb3RhZGRyID0gaW9yZW1hcChib290YWRkciwgc2l6ZW9mKGJvb3RhZGRyKSk7IH0N
+Cj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc21wX29wZXJhdGlvbnMgcjlhMDZnMDMy
+X3NtcF9vcHMgX19pbml0Y29uc3QgPSB7DQo+ID4gKy5zbXBfcHJlcGFyZV9jcHVzID0gcjlhMDZn
+MDMyX3NtcF9wcmVwYXJlX2NwdXMsDQo+ID4gKy5zbXBfYm9vdF9zZWNvbmRhcnkgPSByOWEwNmcw
+MzJfc21wX2Jvb3Rfc2Vjb25kYXJ5LCB9Ow0KPiA+ICtDUFVfTUVUSE9EX09GX0RFQ0xBUkUocjlh
+MDZnMDMyX3NtcCwgInJlbmVzYXMscjlhMDZnMDMyLXNtcCIsDQo+ID4gKyZyOWEwNmcwMzJfc21w
+X29wcyk7DQo+ID4NCg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtl
+cyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNM
+OCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVk
+IE5vLiAwNDU4NjcwOS4NCg==
