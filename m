@@ -1,31 +1,86 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v3 6/6] regulator: bd71837: BD71837 PMIC regulator driver
-Date: Wed, 6 Jun 2018 10:44:34 +0300
-Message-ID: <20180606074434.GE20078@localhost.localdomain>
-References: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
- <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
- <CAHp75VeVSbZd12vXew9f0z2m1=BFz+cOKomga3SZEzg=kx9CFw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: condor: add I2C0 support
+Date: Wed, 6 Jun 2018 09:46:30 +0200
+Message-ID: <CAMuHMdVRTCOmVz2wkq5SnqEUH4PAdAEp8PVj06JxgC2zLs=wow@mail.gmail.com>
+References: <e9c94553-be9d-0eec-a1ee-1713bb97fbab@cogentembedded.com>
+ <61f6f4a4-e55c-06e0-cba1-7d90a556950a@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeVSbZd12vXew9f0z2m1=BFz+cOKomga3SZEzg=kx9CFw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <61f6f4a4-e55c-06e0-cba1-7d90a556950a@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sergei,
 
-On Tue, Jun 05, 2018 at 04:58:43PM +0300, Andy Shevchenko wrote:
-> On Tue, May 29, 2018 at 1:02 PM, Matti Vaittinen
-> <matti.vaittinen@fi.rohmeurope.com> wrote:
-> > Support for controlling the 8 bucks and 7 LDOs the PMIC contains.
-> 
+On Mon, May 28, 2018 at 10:14 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the Condor board dependent part of the I2C0 device node.
+>
+> The I2C0 bus is populated by 2 ON Semiconductor PCA9654 I/O expanders
+> and Analog Devices  ADV7511W HDMI transmitter (but we're only describing
+> the former chips now).
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks for the comments Andy. The regulator part of patch set v4 was
-already applied by Mark but I am going to do some further work on this
-afer I get the MFD and clk portions done. I'll store these comments and
-address issues in next set of patches.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Br,
-	Matti Vaittinen
+Suggestion for future improvement below.
+
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+> @@ -80,6 +80,28 @@
+>         clock-frequency = <32768>;
+>  };
+>
+> +&i2c0 {
+> +       pinctrl-0 = <&i2c0_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +       clock-frequency = <400000>;
+> +
+> +       io_expander0: gpio@20 {
+> +               compatible = "onnn,pca9654";
+> +               reg = <0x20>;
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+
+The bindings don't mention this (the example does have it) the optional
+interrupts prototype. As this is wired to INTC-EX IRQ4, you may want to
+add that. Perhaps later, as r8a77980.dtsi doesn't have INTC-EX yet.
+
+> +       };
+> +
+> +       io_expander1: gpio@21 {
+> +               compatible = "onnn,pca9654";
+> +               reg = <0x21>;
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+
+Same for IRQ5.
+
+> +       };
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
