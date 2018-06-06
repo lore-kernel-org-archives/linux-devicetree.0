@@ -1,243 +1,218 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
- info
-Date: Wed, 06 Jun 2018 12:46:21 +0200
-Message-ID: <14557207.bzvjUjXvdQ@diego>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <1719302.7h5mBFHA8i@diego>
- <fc1dfb22-efda-77b7-5f2f-fa188f6e4471@codeaurora.org>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH v5 6/6] tty/serial: atmel: changed the driver to work
+ under at91-usart mfd
+Date: Wed, 6 Jun 2018 13:02:21 +0200
+Message-ID: <91db9d80-d530-9a00-3b40-80e335869ff4@sorico.fr>
+References: <20180604165943.31381-1-radu.pirea@microchip.com>
+ <20180604165943.31381-7-radu.pirea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <fc1dfb22-efda-77b7-5f2f-fa188f6e4471@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, tomi.valkeinen@ti.com, briannorris@chromium.org, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180604165943.31381-7-radu.pirea@microchip.com>
+Content-Language: fr
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKQW0gTWl0dHdvY2gsIDYuIEp1bmkgMjAxOCwgMTI6MjE6MTYgQ0VTVCBzY2hy
-aWViIEFyY2hpdCBUYW5lamE6Cj4gT24gV2VkbmVzZGF5IDA2IEp1bmUgMjAxOCAwMjowMCBQTSwg
-SGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gPiBBbSBNaXR0d29jaCwgNi4gSnVuaSAyMDE4LCAwNzo1
-OToyOSBDRVNUIHNjaHJpZWIgQXJjaGl0IFRhbmVqYToKPiA+PiBPbiBNb25kYXkgMDQgSnVuZSAy
-MDE4IDA1OjQ3IFBNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiA+Pj4gQW0gRG9ubmVyc3RhZywg
-MTguIEphbnVhciAyMDE4LCAwNTo1Mzo1NSBDRVNUIHNjaHJpZWIgQXJjaGl0IFRhbmVqYToKPiA+
-Pj4+IEFkZCBiaW5kaW5nIGluZm8gZm9yIHBlcmlwaGVyYWxzIHRoYXQgc3VwcG9ydCBkdWFsLWNo
-YW5uZWwgRFNJLiBBZGQKPiA+Pj4+IGNvcnJlc3BvbmRpbmcgb3B0aW9uYWwgYmluZGluZ3MgZm9y
-IERTSSBob3N0IGNvbnRyb2xsZXJzIHRoYXQgbWF5Cj4gPj4+PiBiZSBjb25maWd1cmVkIGluIHRo
-aXMgbW9kZS4gQWRkIGFuIGV4YW1wbGUgb2YgYW4gSTJDIGNvbnRyb2xsZWQKPiA+Pj4+IGRldmlj
-ZSBvcGVyYXRpbmcgaW4gZHVhbC1jaGFubmVsIERTSSBtb2RlLgo+ID4+Pj4gCj4gPj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+ID4+PiAK
-PiA+Pj4gTG9va3MgbGlrZSBhIGdyZWF0IHNvbHV0aW9uIGZvciB0aGF0IHByb2JsZW0sIHNvCj4g
-Pj4+IFJldmlld2VkLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+ID4+PiAK
-PiA+Pj4gQXMgSSdtIGxvb2tpbmcgaW50byB0aGF0IGZvciBteSByazMzOTktc2NhcmxldCBkZXZp
-Y2UgcmlnaHQgbm93IGFuZAo+ID4+PiBjb3VsZG4ndCBmaW5kIHRoaXMgcGF0Y2hzZXQgaW4gdGhl
-IGtlcm5lbCB5ZXQsIGlzIGl0IHBsYW5uZWQgdG8KPiA+Pj4gbWVyZ2Ugb3IgcmVmcmVzaCB0aGVz
-ZSBiaW5kaW5nIGNoYW5nZXMgb3Igd2VyZSBwcm9ibGVtcyBlbmNvdW50ZXJlZC4KPiA+Pj4gCj4g
-Pj4+IEF0IGxlYXN0IGFuIEFjay9SZXZpZXcgZnJvbSBSb2Igc2VlbXMgdG8gYmUgbWlzc2luZy4K
-PiA+PiAKPiA+PiBJIGZvcmdvdCBhYm91dCB0aGVzZSBwYXRjaGVzLiBSb2IgaGFkIHJldmlld2Vk
-IHRoZSBmaXJzdCBvbmUgaW4KPiA+PiB0aGUgc2V0IHRoZSBzZWNvbmQgb25lIHN0aWxsIG5lZWRl
-ZCBhbiBBY2suIEknbGwgcG9zdCBhIHYzCj4gPj4gdGhhdCBhZGRzIHRoZSBSZXZpZXdlZC1ieXMg
-YW5kIGZpeGVzIGEgc21hbGwgdHlwby4KPiA+IAo+ID4gdmVyeSBuaWNlIC4uLiBiZWNhdXNlIGl0
-IGxvb2tzIGxpa2UgeWVzdGVyZGF5IEkgbWFuYWdlZCB0byBtYWtlIHRoZQo+ID4gUm9ja2NoaXAg
-ZHNpIHdvcmsgaW4gZHVhbCBtb2RlIGZvbGxvd2luZyB0aGlzLgo+ID4gCj4gPiBCdXQgb25lIHF1
-ZXN0aW9uIGNhbWUgdXAsIGRvIHlvdSByZWFsbHkgd2FudCB0d28gaW5wdXQgcG9ydHMgb24gdGhl
-IHBhbmVsCj4gPiBzaWRlPyBJLmUuIGhhcmR3YXJlLXdpc2UsIEkgZ3Vlc3MgdGhlIHBhbmVsIHdp
-bGwgaGF2ZSBvbmUgOC1sYW5lIG9yIHNvCj4gPiBpbnB1dCB0aGF0b25seSBnZXRzIHNwbGl0IHVw
-IG9uIHRoZSBzb2Mgc2lkZSBvbnRvIDIgZHNpIGNvbnRyb2xsZXJzPwo+IAo+IEkgdGhpbmsgYWxs
-IGR1YWwgRFNJIHBhbmVscyBhY3R1YWxseSBoYXZlIDIgRFNJIGNvbnRyb2xsZXJzL3BhcnNlcnMK
-PiB3aXRoaW4gdGhlbSwgb25lIG9uIGVhY2ggcG9ydC4gVGhlIE1JUEkgRFNJIHNwZWMgZG9lc24n
-dCBzdXBwb3J0IDgKPiBsYW5lcy4gQWxzbywgdGhlIHBpeGVscyBjb21pbmcgb3V0IG9mIHRoZSBo
-b3N0IGFyZSBkaXN0cmlidXRlZCBhbW9uZwo+IHRoZSBsYW5lcyBkaWZmZXJlbnRseSB0aGFuIHdo
-YXQgd291bGQgaGF2ZSBiZWVuIHRoZSBjYXNlIHdpdGggYQo+ICd0aGVvcmV0aWNhbCcgOCBsYW5l
-IHJlY2VpdmVyLgo+IAo+IE90aGVyIHRoYW4gdGhhdCwgc29tZSBkdWFsIERTSSBwYW5lbHMgb25s
-eSBhY2NlcHQgRFNJIGNvbW1hbmRzIG9uIHRoZQo+ICdtYXN0ZXInIHBvcnQsIHdoZXJlIGFzIG90
-aGVycyBleHBlY3QgdGhlIHNhbWUgY29tbWFuZCB0byBiZSBzZW50IGFjcm9zcwo+IGJvdGggdGhl
-IHBvcnRzLgo+IAo+IFRoZXJlZm9yZSwgSSB0aGluayBpdCdzIGJldHRlciB0byByZXByZXNlbnQg
-ZHVhbCBEU0kgcGFuZWxzIGhhdmluZyAyCj4gRFNJIGlucHV0IHBvcnRzLgo+IAo+IFlvdXIgRFQg
-bG9va3MgZ29vZCB0byBtZS4KCkhtbSwgdGhhdCBkb2Vzbid0IG1hdGNoIHVwIHRoZW4gOy0pIC4u
-LiBhcyBteSBkdCB1c2VzIDIgZW5kcG9pbnRzCmluIG9uZSBwb3J0IGZvciB0aGUgZHNpLWxpbmtz
-LgoKVGhlIGlzc3VlIEkgc2VlIHdpdGggdXNpbmcgcG9ydHMgYW5kIG5vdCBlbmRwb2ludHMgZm9y
-IGR1YWwtZHNpIGxpbmtzCmlzIHdpdGggZGlzdGluZ3Vpc2hpbmcgYmV0d2VlbiBpbnB1dCBhbmQg
-b3V0cHV0IHBvcnRzLgoKRm9yIGEgcGFuZWwgdGhhdCdzIGVhc3ksIGFzIHlvdSBldmVyeSBwb3J0
-IHdpbGwgYmUgYW4gaW5wdXQgcG9ydCBhbmQgaWYKeW91IGhhdmUgMiwgaXQncyBzdXBwb3NlZCBk
-dWFsLWRzaS4gQnV0IGZvciBleGFtcGxlIEkgZ3Vlc3MgdGhlcmUgbWlnaHQKZXhpc3Qgc29tZSBk
-dWFsLWRzaS10by1zb21ldGhpbmcgYnJpZGdlcywgd2hlcmUgeW91IHdvdWxkIGVuZCB1cAp3aXRo
-IHNheSAzIChvciBldmVuIG1vcmUpIHBvcnRzIC4uLiB0d28gZHVhbC1kc2kgaW5wdXRzIGFuZCAx
-IG9yIG1vcmUKb3V0cHV0cy4KCgpXaGlsZSB0aGUgZm9sbG93aW5nIGFyZ3VtZW50IG1pZ2h0IG5v
-dCBiZSAxMDAlIHZhbGlkIGZyb20gYSBkdC1wdXJpdHkKc3RhbmRwb2ludCBpbXBsZW1lbnRpbmcg
-dGhpcyBtaWdodCBnZXQgaGFpcnkgZm9yIF9hbnlfIG9wZXJhdGluZyBzeXN0ZW0sCmFzIHlvdSB3
-aWxsIG5lZWQgZWFjaCBwYW5lbC9icmlkZ2UgdG8gdGVsbCB3aGF0IHRoZSBwb3J0cyBhcmUgdXNl
-ZCBmb3IuCgpJLmUuIGluIG15IGVuZHBvaW50IGJhc2VkIG1hcHBpbmcsIHJpZ2h0IG5vdyBJIGhh
-dmUgdGhpcyBuaWNlIGFuZCBnZW5lcmljCldJUCBmdW5jdGlvbiB0byBwYXJzZSB0aGUgb2ZfZ3Jh
-cGggYW5kIGdldCB0aGUgbWFzdGVyK3NsYXZlIG5vZGVzOgoKaHR0cHM6Ly9naXRodWIuY29tL21t
-aW5kL2xpbnV4LXJvY2tjaGlwL2Jsb2IvdG1wL3JrMzM5OS1ncnUtYm9iLXNjYXJsZXQvZHJpdmVy
-cy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLXJvY2tjaGlwLmMjTDY5NwpbMF0KClNvIEkg
-Z3Vlc3MgbXkgcHJvcG9zYWwgd291bGQgYmUgdG8gaGF2ZSBvbmUgcG9ydCBmb3IgaW5wdXRzCmFu
-ZCBvbmUgcG9ydCBmb3Igb3V0cHV0cyBmb3IgZHNpIHBlcmlwaGVyYWxzLCB3aXRoIHBvc3NpYmx5
-Cm11bHRpcGxlIGVuZHBvaW50cyBpbiBlYWNoLgoKCkhlaWtvCgoKWzBdIGdpdGh1YiBzZWVtcyB0
-byBoYXZlIHJlbGlhYmlsaXR5IHByb2JsZW1zLCBzbyBmb3IgcmVmZXJlbmNlIG15CnBhcnNpbmcg
-ZnVuY3Rpb246CgpzdGF0aWMgaW50IGR3X21pcGlfZHNpX2lzX2R1YWwoc3RydWN0IGR3X21pcGlf
-ZHNpX3JvY2tjaGlwICpkc2ksCgkJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqKm1hc3Rlciwgc3RydWN0
-IGRldmljZV9ub2RlICoqc2xhdmUpCnsKCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbG9jYWxfZXAsICpy
-ZW1vdGVfcG9ydCwgKmVwOwoJc3RydWN0IGRldmljZV9ub2RlICpjdHJsc1syXSA9IHsgTlVMTCwg
-TlVMTCB9OwoJaW50IG51bSA9IDAsIHJldCA9IDAsIGlkeDsKCgkvKiBnZXQgbG9jYWwgcGFuZWwg
-ZW5kcG9pbnQgb2YgdGhlIGRzaSBjb250cm9sbGVyICovCglsb2NhbF9lcCA9IG9mX2dyYXBoX2dl
-dF9lbmRwb2ludF9ieV9yZWdzKGRzaS0+ZGV2LT5vZl9ub2RlLCAxLCAwKTsKCWlmICghbG9jYWxf
-ZXApIHsKCQlEUk1fREVWX0VSUk9SKGRzaS0+ZGV2LCAiY291bGRuJ3QgZmluZCBsb2NhbCBwYW5l
-bCBlbmRwb2ludFxuIik7CgkJcmV0dXJuIC1FTlhJTzsKCX0KCgkvKiBnZXQgcGFuZWwgcG9ydCAq
-LwoJcmVtb3RlX3BvcnQgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGxvY2FsX2Vw
-KTsKCW9mX25vZGVfcHV0KGxvY2FsX2VwKTsKCWlmICghcmVtb3RlX3BvcnQpIHsKCQlEUk1fREVW
-X0VSUk9SKGRzaS0+ZGV2LCAiY291bGRuJ3QgZmluZCBwYW5lbCBwb3J0XG4iKTsKCQlyZXR1cm4g
-LUVOWElPOwoJfQoKCS8qIGNoZWNrIG90aGVyIGVuZHBvaW50cyAqLwoJZm9yX2VhY2hfZW5kcG9p
-bnRfb2Zfbm9kZShyZW1vdGVfcG9ydCwgZXApIHsKCQlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0g
-b2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChlcCk7CgoJCWlmICghbnApCgkJCWNvbnRp
-bnVlOwoKCQlpZHggPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJjbG9jay1tYXN0ZXIiKTsK
-CgkJLyoKCQkgKiBFaXRoZXIgbWFzdGVyIG9yIHNsYXZlIGFscmVhZHkgZGVmaW5lZCwgZHJvcCBy
-ZWZjbnQKCQkgKiBidXQgY2F0Y2ggZXJyb3JzIG9ubHkgYWZ0ZXIgdGhlIGZ1bGwgbG9vcC4KCQkg
-Ki8KCQlpZiAoY3RybHNbaWR4XSkKCQkJb2Zfbm9kZV9wdXQobnApOwoJCWVsc2UKCQkJY3RybHNb
-aWR4XSA9IG5wOwoKCQludW0rKzsKCX0KCW9mX25vZGVfcHV0KHJlbW90ZV9wb3J0KTsKCglpZiAo
-bnVtID4gMikgewoJCURSTV9ERVZfRVJST1IoZHNpLT5kZXYsICJ0b28gbWFueSBkc2kgZGV2aWNl
-cyBsaW5rZWRcbiIpOwoJCXJldCA9IC1FSU5WQUw7CgkJZ290byBjbGVhbnVwOwoJfQoKCS8qIG5v
-dGhpbmcgdG8gZG8gKi8KCWlmIChudW0gPCAxKSB7CgkJcmV0ID0gMDsKCQlnb3RvIGNsZWFudXA7
-Cgl9CgoJaWYgKCFjdHJsc1sxXSkgewoJCURSTV9ERVZfRVJST1IoZHNpLT5kZXYsICJubyBtYXN0
-ZXIgZGVmaW5lZCBpbiBkdWFsLWRzaVxuIik7CgkJcmV0ID0gLUVOT0RFVjsKCQlnb3RvIGNsZWFu
-dXA7Cgl9CgoJaWYgKCFjdHJsc1swXSkgewoJCURSTV9ERVZfRVJST1IoZHNpLT5kZXYsICJubyBz
-bGF2ZSBkZWZpbmVkIGluIGR1YWwtZHNpXG4iKTsKCQlyZXQgPSAtRU5PREVWOwoJCWdvdG8gY2xl
-YW51cDsKCX0KCgkqbWFzdGVyID0gY3RybHNbMV07Cgkqc2xhdmUgPSBjdHJsc1swXTsKCglyZXR1
-cm4gMTsKCmNsZWFudXA6Cglmb3IgKGlkeCA9IDA7IGlkeCA8IDI7IGlkeCsrKQoJCWlmIChjdHJs
-c1tpZHhdKQoJCQlvZl9ub2RlX3B1dChjdHJsc1tpZHhdKTsKCXJldHVybiByZXQ7Cn0KCj4gPiBT
-byByaWdodCBub3cgSSdtIG9wZXJhdGluZyB3aXRoIGEgZGV2aWNldHJlZSBsaWtlCj4gPiAKPiA+
-ICZtaXBpX2RzaSB7Cj4gPiAKPiA+ICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiA+ICAgICAg
-ICAgIGNsb2NrLW1hc3RlcjsKPiA+ICAgICAgICAgIAo+ID4gICAgICAgICAgcG9ydHMgewo+ID4g
-ICAgICAgICAgCj4gPiAgICAgICAgICAgICAgICAgIG1pcGlfb3V0OiBwb3J0QDEgewo+ID4gICAg
-ICAgICAgICAgICAgICAKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-bWlwaV9vdXRfcGFuZWw6IGVuZHBvaW50IHsKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAK
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwm
-bWlwaV9pbl9wYW5lbD47Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgCj4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfTsKPiA+ICAgICAgICAgICAgICAgICAgCj4gPiAgICAgICAgICAg
-ICAgICAgIH07Cj4gPiAgICAgICAgICAKPiA+ICAgICAgICAgIH07Cj4gPiAgICAgICAgICAKPiA+
-ICAgICAgICAgIG1pcGlfcGFuZWw6IHBhbmVsQDAgewo+ID4gCQkgIAo+ID4gCQkgIGNvbXBhdGli
-bGUgPSAiaW5ub2x1eCxwMDk3cGZnIjsKPiA+IAkJICAKPiA+ICAgICAgICAgICAgICAgICAgcmVn
-ID0gPDA+Owo+ID4gICAgICAgICAgICAgICAgICBiYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4g
-PiAgICAgICAgICAgICAgICAgIGVuYWJsZS1ncGlvcyA9IDwmZ3BpbzQgMjUgR1BJT19BQ1RJVkVf
-SElHSD47Cj4gPiAgICAgICAgICAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4g
-PiAgICAgICAgICAgICAgICAgIHBpbmN0cmwtMCA9IDwmZGlzcGxheV9yc3RfbD47Cj4gPiAgICAg
-ICAgICAgICAgICAgIAo+ID4gICAgICAgICAgICAgICAgICBwb3J0IHsKPiA+ICAgICAgICAgICAg
-ICAgICAgCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgbWlwaV9p
-bl9wYW5lbDogZW5kcG9pbnRAMCB7Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgCj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfb3V0X3BhbmVs
-PjsKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAKPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICB9Owo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIAo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgIG1pcGkxX2luX3BhbmVsOiBlbmRwb2ludEAxIHsKPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwx
-PjsKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9
-IDwmbWlwaTFfb3V0X3BhbmVsPjsKPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAKPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gICAgICAgICAgICAgICAgICAKPiA+ICAgICAg
-ICAgICAgICAgICAgfTsKPiA+ICAgICAgICAgIAo+ID4gICAgICAgICAgfTsKPiA+IAo+ID4gfTsK
-PiA+IAo+ID4gJm1pcGlfZHNpMSB7Cj4gPiAKPiA+ICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsK
-PiA+ICAgICAgICAgIAo+ID4gICAgICAgICAgcG9ydHMgewo+ID4gICAgICAgICAgCj4gPiAgICAg
-ICAgICAgICAgICAgIG1pcGkxX291dDogcG9ydEAxIHsKPiA+ICAgICAgICAgICAgICAgICAgCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Owo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgIAo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIG1pcGkxX291dF9wYW5lbDog
-ZW5kcG9pbnQgewo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIAo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZtaXBpMV9pbl9wYW5lbD47
-Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfTsKPiA+ICAgICAgICAgICAgICAgICAgCj4gPiAgICAgICAgICAgICAgICAgIH07Cj4gPiAg
-ICAgICAgICAKPiA+ICAgICAgICAgIH07Cj4gPiAKPiA+IH07Cj4gPiAKPiA+IAo+ID4gSSBndWVz
-cyBpdCBpcyBhIG1hdHRlciBvZiBwcmVmZXJlbmNlIG9uIHdoYXQgcmVmbGVjdHMgdGhlIGhhcmR3
-YXJlCj4gPiBiZXN0LCBzbyBtYXliZSB0aGF0J3MgUm9icyBjYWxsPwo+ID4gCj4gPiAKPiA+IEhl
-aWtvCj4gPiAKPiA+Pj4+IC0tLQo+ID4+Pj4gdjI6Cj4gPj4+PiAtIFNwZWNpZnkgdGhhdCBjbG9j
-ay1tYXN0ZXIgaXMgYSBib29sZWFuIHByb3BlcnR5Lgo+ID4+Pj4gLSBEcm9wL2FkZCB1bml0LWFk
-ZHJlc3MgYW5kICMqLWNlbGxzIHdoZXJlIGFwcGxpY2FibGUuCj4gPj4+PiAKPiA+Pj4+ICAgIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWlwaS1kc2ktYnVzLnR4dCAgIHwgODAKPiA+
-Pj4+ICAgICsrKysrKysrKysrKysrKysrKysrKysgMSBmaWxlIGNoYW5nZWQsIDgwIGluc2VydGlv
-bnMoKykKPiA+Pj4+IAo+ID4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQKPiA+Pj4+IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWlwaS1kc2ktYnVzLnR4dCBpbmRleAo+ID4+
-Pj4gOTRmYjcyY2I5MTZmLi43YTNhYmJlZGIzZmEgMTAwNjQ0Cj4gPj4+PiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0Cj4gPj4+
-PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9taXBpLWRz
-aS1idXMudHh0Cj4gPj4+PiAKPiA+Pj4+IEBAIC0yOSw2ICsyOSwxMyBAQCBSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgo+ID4+Pj4gICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDAuIFRoZXJlIGFyZSBj
-YXNlcyB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0bwo+ID4+Pj4gICAgdXNlCj4gPj4+PiAgICBhCj4g
-Pj4+PiAgICAKPiA+Pj4+ICAgICAgZGlmZmVyZW50IHZhbHVlIGhlcmUuIFNlZSBiZWxvdy4KPiA+
-Pj4+IAo+ID4+Pj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPj4+PiArLSBjbG9jay1tYXN0ZXI6
-IGJvb2xlYW4uIFNob3VsZCBiZSBlbmFibGVkIGlmIHRoZSBob3N0IGlzIGJlaW5nIHVzZWQKPiA+
-Pj4+IGluCj4gPj4+PiArICBjb25qdW5jdGlvbiB3aXRoIGFub3RoZXIgRFNJIGhvc3QgdG8gZHJp
-dmUgdGhlIHNhbWUgcGVyaXBoZXJhbC4KPiA+Pj4+IEhhcmR3YXJlCj4gPj4+PiArICBzdXBwb3J0
-aW5nIHN1Y2ggYSBjb25maWd1cmF0aW9uIGdlbmVyYWxseSByZXF1aXJlcyB0aGUgZGF0YSBvbiBi
-b3RoCj4gPj4+PiB0aGUgYnVzc2VzICsgIHRvIGJlIGRyaXZlbiBieSB0aGUgc2FtZSBjbG9jay4g
-T25seSB0aGUgRFNJIGhvc3QKPiA+Pj4+IGluc3RhbmNlCj4gPj4+PiBjb250cm9sbGluZyB0aGlz
-ICsgIGNsb2NrIHNob3VsZCBjb250YWluIHRoaXMgcHJvcGVydHkuCj4gPj4+PiArCj4gPj4+PiAK
-PiA+Pj4+ICAgIERTSSBwZXJpcGhlcmFsCj4gPj4+PiAgICA9PT09PT09PT09PT09PQo+ID4+Pj4g
-Cj4gPj4+PiBAQCAtNjIsNiArNjksMTYgQEAgcHJpbWFyeSBjb250cm9sIGJ1cywgYnV0IGFyZSBh
-bHNvIGNvbm5lY3RlZCB0byBhIERTSQo+ID4+Pj4gYnVzIChtb3N0bHkgZm9yIHRoZSBkYXRhPj4K
-PiA+Pj4+IAo+ID4+Pj4gICAgcGF0aCkuIENvbm5lY3Rpb25zIGJldHdlZW4gc3VjaCBwZXJpcGhl
-cmFscyBhbmQgYSBEU0kgaG9zdCBjYW4gYmUKPiA+Pj4+ICAgIHJlcHJlc2VudGVkIHVzaW5nIHRo
-ZSBncmFwaCBiaW5kaW5ncyBbMV0sIFsyXS4KPiA+Pj4+IAo+ID4+Pj4gK1BlcmlwaGVyYWxzIHRo
-YXQgc3VwcG9ydCBkdWFsIGNoYW5uZWwgRFNJCj4gPj4+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+Pj4+ICsKPiA+Pj4+ICtQZXJpcGhlcmFscyB3aXRoIGhp
-Z2hlciBiYW5kd2lkdGggcmVxdWlyZW1lbnRzIGNhbiBiZSBjb25uZWN0ZWQgdG8gMgo+ID4+Pj4g
-RFNJCj4gPj4+PiArYnVzc2VzLiBFYWNoIERTSSBidXMvY2hhbm5lbCBkcml2ZXMgc29tZSBwb3J0
-aW9uIG9mIHRoZSBwaXhlbCBkYXRhCj4gPj4+PiAoZ2VuZXJhbGx5ICtsZWZ0L3JpZ2h0IGhhbGYg
-b2YgZWFjaCBsaW5lIG9mIHRoZSBkaXNwbGF5LCBvciBldmVuL29kZAo+ID4+Pj4gbGluZXMgb2Yg
-dGhlIGRpc3BsYXkpLiArVGhlIGdyYXBoIGJpbmRpbmdzIHNob3VsZCBiZSB1c2VkIHRvIHJlcHJl
-c2VudAo+ID4+Pj4gdGhlIG11bHRpcGxlIERTSSBidXNzZXMgdGhhdCBhcmUgK2Nvbm5lY3RlZCB0
-byB0aGlzIHBlcmlwaGVyYWwuIEVhY2gKPiA+Pj4+IERTSQo+ID4+Pj4gaG9zdCdzIG91dHB1dCBl
-bmRwb2ludCBjYW4gYmUgbGlua2VkIHRvICthbiBpbnB1dCBlbmRwb2ludCBvZiB0aGUgRFNJCj4g
-Pj4+PiBwZXJpcGhlcmFsLgo+ID4+Pj4gKwo+ID4+Pj4gCj4gPj4+PiAgICBbMV0gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+ID4+Pj4gICAgWzJdIERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAo+ID4+
-Pj4gCj4gPj4+PiBAQCAtNzEsNiArODgsOCBAQCBFeGFtcGxlcwo+ID4+Pj4gCj4gPj4+PiAgICAg
-IHdpdGggZGlmZmVyZW50IHZpcnR1YWwgY2hhbm5lbCBjb25maWd1cmF0aW9ucy4KPiA+Pj4+ICAg
-IAo+ID4+Pj4gICAgLSAoNCkgaXMgYW4gZXhhbXBsZSBvZiBhIHBlcmlwaGVyYWwgb24gYSBJMkMg
-Y29udHJvbCBidXMgY29ubmVjdGVkCj4gPj4+PiAgICB3aXRoCj4gPj4+PiAgICB0bwo+ID4+Pj4g
-ICAgCj4gPj4+PiAgICAgIGEgRFNJIGhvc3QgdXNpbmcgb2YtZ3JhcGggYmluZGluZ3MuCj4gPj4+
-PiAKPiA+Pj4+ICstICg1KSBpcyBhbiBleGFtcGxlIG9mIDIgRFNJIGhvc3RzIGRyaXZpbmcgYSBk
-dWFsLWNoYW5uZWwgRFNJCj4gPj4+PiBwZXJpcGhlcmFsLAo+ID4+Pj4gKyAgd2hpY2ggdXNlcyBJ
-MkMgYXMgaXRzIHByaW1hcnkgY29udHJvbCBidXMuCj4gPj4+PiAKPiA+Pj4+ICAgIDEpCj4gPj4+
-PiAgICAKPiA+Pj4+ICAgIAlkc2ktaG9zdCB7Cj4gPj4+PiAKPiA+Pj4+IEBAIC0xNTMsMyArMTcy
-LDY0IEBAIEV4YW1wbGVzCj4gPj4+PiAKPiA+Pj4+ICAgIAkJCX07Cj4gPj4+PiAgICAJCQo+ID4+
-Pj4gICAgCQl9Owo+ID4+Pj4gICAgCQo+ID4+Pj4gICAgCX07Cj4gPj4+PiAKPiA+Pj4+ICsKPiA+
-Pj4+ICs1KQo+ID4+Pj4gKwlpMmMtaG9zdCB7Cj4gPj4+PiArCQlkc2ktYnJpZGdlQDM1IHsKPiA+
-Pj4+ICsJCQljb21wYXRpYmxlID0gIi4uLiI7Cj4gPj4+PiArCQkJcmVnID0gPDB4MzU+Owo+ID4+
-Pj4gKwo+ID4+Pj4gKwkJCXBvcnRzIHsKPiA+Pj4+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gPj4+PiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ID4+Pj4gKwo+ID4+Pj4gKwkJCQlwb3J0
-QDAgewo+ID4+Pj4gKwkJCQkJcmVnID0gPDA+Owo+ID4+Pj4gKwkJCQkJZHNpMF9pbjogZW5kcG9p
-bnQgewo+ID4+Pj4gKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMF9vdXQ+Owo+ID4+Pj4g
-KwkJCQkJfTsKPiA+Pj4+ICsJCQkJfTsKPiA+Pj4+ICsKPiA+Pj4+ICsJCQkJcG9ydEAxIHsKPiA+
-Pj4+ICsJCQkJCXJlZyA9IDwxPjsKPiA+Pj4+ICsJCQkJCWRzaTFfaW46IGVuZHBvaW50IHsKPiA+
-Pj4+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTFfb3V0PjsKPiA+Pj4+ICsJCQkJCX07
-Cj4gPj4+PiArCQkJCX07Cj4gPj4+PiArCQkJfTsKPiA+Pj4+ICsJCX07Cj4gPj4+PiArCX07Cj4g
-Pj4+PiArCj4gPj4+PiArCWRzaTAtaG9zdCB7Cj4gPj4+PiArCQkuLi4KPiA+Pj4+ICsKPiA+Pj4+
-ICsJCS8qCj4gPj4+PiArCQkgKiB0aGlzIERTSSBpbnN0YW5jZSBkcml2ZXMgdGhlIGNsb2NrIGZv
-ciBib3RoIHRoZSBob3N0Cj4gPj4+PiArCQkgKiBjb250cm9sbGVycwo+ID4+Pj4gKwkJICovCj4g
-Pj4+PiArCQljbG9jay1tYXN0ZXI7Cj4gPj4+PiArCj4gPj4+PiArCQlwb3J0cyB7Cj4gPj4+PiAr
-CQkJLi4uCj4gPj4+PiArCj4gPj4+PiArCQkJcG9ydCB7Cj4gPj4+PiArCQkJCWRzaTBfb3V0OiBl
-bmRwb2ludCB7Cj4gPj4+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfaW4+Owo+ID4+
-Pj4gKwkJCQl9Owo+ID4+Pj4gKwkJCX07Cj4gPj4+PiArCQl9Owo+ID4+Pj4gKwl9Owo+ID4+Pj4g
-Kwo+ID4+Pj4gKwlkc2kxLWhvc3Qgewo+ID4+Pj4gKwkJLi4uCj4gPj4+PiArCj4gPj4+PiArCQlw
-b3J0cyB7Cj4gPj4+PiArCQkJLi4uCj4gPj4+PiArCj4gPj4+PiArCQkJcG9ydCB7Cj4gPj4+PiAr
-CQkJCWRzaTFfb3V0OiBlbmRwb2ludCB7Cj4gPj4+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
-JmRzaTFfaW4+Owo+ID4+Pj4gKwkJCQl9Owo+ID4+Pj4gKwkJCX07Cj4gPj4+PiArCQl9Owo+ID4+
-Pj4gKwl9Owo+ID4+PiAKPiA+Pj4gLS0KPiA+Pj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxp
-c3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWFybS1tc20iCj4gPj4+IGluCj4g
-Pj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4g
-Pj4+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jk
-b21vLWluZm8uaHRtbAoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Typo in the subject:
+changed->change
+
+
+On 04/06/2018 18:59, Radu Pirea wrote:
+> This patch modifies the place where resources and device tree properties
+> are searched.
+> 
+> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
+> ---
+>  drivers/tty/serial/Kconfig        |  1 +
+>  drivers/tty/serial/atmel_serial.c | 41 ++++++++++++++++++-------------
+>  2 files changed, 25 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 3682fd3e960c..25e55332f8b1 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -119,6 +119,7 @@ config SERIAL_ATMEL
+>  	depends on ARCH_AT91 || COMPILE_TEST
+>  	select SERIAL_CORE
+>  	select SERIAL_MCTRL_GPIO if GPIOLIB
+> +	select MFD_AT91_USART
+>  	help
+>  	  This enables the driver for the on-chip UARTs of the Atmel
+>  	  AT91 processors.
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index df46a9e88c34..5c74e03396ef 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -193,8 +193,8 @@ static struct console atmel_console;
+>  
+>  #if defined(CONFIG_OF)
+>  static const struct of_device_id atmel_serial_dt_ids[] = {
+> -	{ .compatible = "atmel,at91rm9200-usart" },
+> -	{ .compatible = "atmel,at91sam9260-usart" },
+> +	{ .compatible = "atmel,at91rm9200-usart-serial" },
+> +	{ .compatible = "atmel,at91sam9260-usart-serial" },
+Sorry, I didn't catch that before, but we can drop "atmel,at91sam9260-usart-serial" don't we ?
+Only "atmel,at91rm9200-usart-serial" is used in the MFD driver.
+
+>  	{ /* sentinel */ }
+>  };
+>  #endif
+> @@ -915,6 +915,7 @@ static void atmel_tx_dma(struct uart_port *port)
+>  static int atmel_prepare_tx_dma(struct uart_port *port)
+>  {
+>  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+> +	struct device *mfd_dev = port->dev->parent;
+>  	dma_cap_mask_t		mask;
+>  	struct dma_slave_config config;
+>  	int ret, nent;
+> @@ -922,7 +923,7 @@ static int atmel_prepare_tx_dma(struct uart_port *port)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_SLAVE, mask);
+>  
+> -	atmel_port->chan_tx = dma_request_slave_channel(port->dev, "tx");
+> +	atmel_port->chan_tx = dma_request_slave_channel(mfd_dev, "tx");
+>  	if (atmel_port->chan_tx == NULL)
+>  		goto chan_err;
+>  	dev_info(port->dev, "using %s for tx DMA transfers\n",
+> @@ -1093,6 +1094,7 @@ static void atmel_rx_from_dma(struct uart_port *port)
+>  static int atmel_prepare_rx_dma(struct uart_port *port)
+>  {
+>  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+> +	struct device *mfd_dev = port->dev->parent;
+>  	struct dma_async_tx_descriptor *desc;
+>  	dma_cap_mask_t		mask;
+>  	struct dma_slave_config config;
+> @@ -1104,7 +1106,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_CYCLIC, mask);
+>  
+> -	atmel_port->chan_rx = dma_request_slave_channel(port->dev, "rx");
+> +	atmel_port->chan_rx = dma_request_slave_channel(mfd_dev, "rx");
+>  	if (atmel_port->chan_rx == NULL)
+>  		goto chan_err;
+>  	dev_info(port->dev, "using %s for rx DMA transfers\n",
+> @@ -1631,7 +1633,7 @@ static void atmel_tasklet_tx_func(unsigned long data)
+>  static void atmel_init_property(struct atmel_uart_port *atmel_port,
+>  				struct platform_device *pdev)
+>  {
+> -	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *np = pdev->dev.parent->of_node;
+I think this is not needed anymore (cf atmel_probe())
+
+>  
+>  	/* DMA/PDC usage specification */
+>  	if (of_property_read_bool(np, "atmel,use-dma-rx")) {
+> @@ -2222,8 +2224,8 @@ static const char *atmel_type(struct uart_port *port)
+>   */
+>  static void atmel_release_port(struct uart_port *port)
+>  {
+> -	struct platform_device *pdev = to_platform_device(port->dev);
+> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
+> +	struct platform_device *mpdev = to_platform_device(port->dev->parent);
+> +	int size = resource_size(mpdev->resource);
+>  
+>  	release_mem_region(port->mapbase, size);
+>  
+> @@ -2238,8 +2240,8 @@ static void atmel_release_port(struct uart_port *port)
+>   */
+>  static int atmel_request_port(struct uart_port *port)
+>  {
+> -	struct platform_device *pdev = to_platform_device(port->dev);
+> -	int size = pdev->resource[0].end - pdev->resource[0].start + 1;
+> +	struct platform_device *mpdev = to_platform_device(port->dev->parent);
+> +	int size = resource_size(mpdev->resource);
+>  
+>  	if (!request_mem_region(port->mapbase, size, "atmel_serial"))
+>  		return -EBUSY;
+> @@ -2341,27 +2343,28 @@ static int atmel_init_port(struct atmel_uart_port *atmel_port,
+>  {
+>  	int ret;
+>  	struct uart_port *port = &atmel_port->uart;
+> +	struct platform_device *mpdev = to_platform_device(pdev->dev.parent);
+>  
+>  	atmel_init_property(atmel_port, pdev);
+>  	atmel_set_ops(port);
+>  
+> -	uart_get_rs485_mode(&pdev->dev, &port->rs485);
+> +	uart_get_rs485_mode(&mpdev->dev, &port->rs485);
+>  
+>  	port->iotype		= UPIO_MEM;
+>  	port->flags		= UPF_BOOT_AUTOCONF | UPF_IOREMAP;
+>  	port->ops		= &atmel_pops;
+>  	port->fifosize		= 1;
+>  	port->dev		= &pdev->dev;
+> -	port->mapbase	= pdev->resource[0].start;
+> -	port->irq	= pdev->resource[1].start;
+> +	port->mapbase		= mpdev->resource[0].start;
+> +	port->irq		= mpdev->resource[1].start;
+>  	port->rs485_config	= atmel_config_rs485;
+> -	port->membase	= NULL;
+> +	port->membase		= NULL;
+>  
+>  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
+>  
+>  	/* for console, the clock could already be configured */
+>  	if (!atmel_port->clk) {
+> -		atmel_port->clk = clk_get(&pdev->dev, "usart");
+> +		atmel_port->clk = clk_get(&mpdev->dev, "usart");
+>  		if (IS_ERR(atmel_port->clk)) {
+>  			ret = PTR_ERR(atmel_port->clk);
+>  			atmel_port->clk = NULL;
+> @@ -2652,11 +2655,13 @@ static int atmel_serial_resume(struct platform_device *pdev)
+>  static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
+>  				     struct platform_device *pdev)
+>  {
+> +	struct device *dev = pdev->dev.parent;
+> +
+Ditto
+
+>  	atmel_port->fifo_size = 0;
+>  	atmel_port->rts_low = 0;
+>  	atmel_port->rts_high = 0;
+>  
+> -	if (of_property_read_u32(pdev->dev.of_node,
+> +	if (of_property_read_u32(dev->of_node,
+Ditto
+>  				 "atmel,fifo-size",
+>  				 &atmel_port->fifo_size))
+>  		return;
+> @@ -2694,13 +2699,15 @@ static void atmel_serial_probe_fifos(struct atmel_uart_port *atmel_port,
+>  static int atmel_serial_probe(struct platform_device *pdev)
+>  {
+>  	struct atmel_uart_port *atmel_port;
+> -	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *np = pdev->dev.parent->of_node;
+>  	void *data;
+>  	int ret = -ENODEV;
+>  	bool rs485_enabled;
+>  
+>  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
+>  
+> +	pdev->dev.of_node = np;
+> +
+As atmel_serial device's of_node is now the parent node, the changes
+in atmel_init_property() and atmel_serial_probe_fifos() are not needed anymore.
+And maybe add a comment to explain that this is part of a MFD and all
+the attributes are in the parent node, so we're using the MFD device node
+instead of this device node.
+
+>  	ret = of_alias_get_id(np, "serial");
+>  	if (ret < 0)
+>  		/* port id not found in platform data nor device-tree aliases:
+> @@ -2845,7 +2852,7 @@ static struct platform_driver atmel_serial_driver = {
+>  	.suspend	= atmel_serial_suspend,
+>  	.resume		= atmel_serial_resume,
+>  	.driver		= {
+> -		.name			= "atmel_usart",
+> +		.name			= "atmel_usart_serial",
+>  		.of_match_table		= of_match_ptr(atmel_serial_dt_ids),
+>  	},
+>  };
+> 
+
+Thanks !
+
+Richard.
