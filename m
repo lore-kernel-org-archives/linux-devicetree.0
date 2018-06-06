@@ -1,48 +1,60 @@
-Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Mon, 11 Jun 2018 15:32:16 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 03/15] staging: typec: tcpci: add compatible string
- for nxp ptn5110
-Message-ID: <20180611123216.GL17155@kuha.fi.intel.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
- <1527475967-15201-4-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=yCjh=IY=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 0/4] arm64: dts: renesas: r8a77990 and ebisu: Enable
+ USB2.0 host
+Date: Wed, 6 Jun 2018 09:31:32 +0000
+Message-ID: <OSBPR01MB2293C8F61DAE97C1DADF6DFFD8650@OSBPR01MB2293.jpnprd01.prod.outlook.com>
+References: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20180606091606.ac5lqgknevfrcq57@verge.net.au>
+In-Reply-To: <20180606091606.ac5lqgknevfrcq57@verge.net.au>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1527475967-15201-4-git-send-email-jun.li@nxp.com>
-To: Li Jun <jun.li@nxp.com>
-Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+To: Simon Horman <horms@verge.net.au>
+Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 28, 2018 at 10:52:35AM +0800, Li Jun wrote:
-> Add nxp ptn5110 typec controller compatible string: "nxp,ptn5110",
-> which is a standard tcpci chip with power delivery support. Meanwhile
-> remove "usb,tcpci" because it doesn't follow the binding format rule
-> and has not been used yet.
-> 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
+Hi Simon-san,
 
-FWIW:
+> From: Simon Horman, Sent: Wednesday, June 6, 2018 6:16 PM
+>=20
+> On Wed, Jun 06, 2018 at 03:56:07PM +0900, Yoshihiro Shimoda wrote:
+> > This patch set is based on renesas-drivers.git /
+> > renesas-drivers-2018-06-05-v4.17 tag.
+> >
+> > About dt-bindings of "renesas,usb2-phy-r8a77990", I submitted a patch:
+> > https://patchwork.kernel.org/patch/10449723/
+> >
+> > But, the phy-rcar-gen3-usb2 driver works on the board without the bindi=
+ngs
+> > because "renesas,rcar-gen3-usb2-phy" can bind the driver.
+> >
+> > Also, for now, I don't try to add/enable USB2.0 peripheral on the board
+> > because the phy driver needs some modifications.
+> >
+> > Yoshihiro Shimoda (4):
+> >   arm64: dts: renesas: r8a77990: add usb2_phy device node
+> >   arm64: dts: renesas: r8a77990: add USB2.0 host device nodes
+> >   arm64: dts: renesas: r8a77990: ebisu: enable usb2_phy0
+> >   arm64: dts: renesas: r8a77990: ebisu: enable USB2.0 host
+> >
+> >  arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 20 ++++++++++++++
+> >  arch/arm64/boot/dts/renesas/r8a77990.dtsi      | 37 ++++++++++++++++++=
+++++++++
+> >  2 files changed, 57 insertions(+)
+>=20
+> Hi Shomoda-san,
+>=20
+> the contents of this series looks good to me.  However, given Olof
+> Johansson's recent comments in ("Re: [GIT PULL] Renesas ARM64 Based SoC D=
+T
+> Updates for v4.18") please consider squashing this series into a single
+> patch and reposting.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Sure. I'll resubmit v2 patch as a single patch.
 
-> ---
->  drivers/staging/typec/tcpci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index 076d97e..dd29288 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -575,7 +575,7 @@ MODULE_DEVICE_TABLE(i2c, tcpci_id);
->  
->  #ifdef CONFIG_OF
->  static const struct of_device_id tcpci_of_match[] = {
-> -	{ .compatible = "usb,tcpci", },
-> +	{ .compatible = "nxp,ptn5110", },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, tcpci_of_match);
+Best regards,
+Yoshihiro Shimoda
 
--- 
-heikki
+> Thanks!
