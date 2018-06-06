@@ -1,11 +1,13 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 0/5] Add R8A77980/Condor LVDS/HDMI support
-Date: Wed, 6 Jun 2018 19:53:31 +0300
-Message-ID: <4fbd0895-c1ec-41fc-912d-8306dd933997@cogentembedded.com>
+Subject: [PATCH 1/5] arm64: dts: renesas: r8a77980: add FCPVD support
+Date: Wed, 6 Jun 2018 19:54:20 +0300
+Message-ID: <710fddfa-f1d5-9be1-62de-d42f19a2f1a9@cogentembedded.com>
+References: <4fbd0895-c1ec-41fc-912d-8306dd933997@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4fbd0895-c1ec-41fc-912d-8306dd933997@cogentembedded.com>
 Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,21 +22,34 @@ To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin
 Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Describe FCPVD0 in the R8A77980 device tree; it will be used by VSPD0 in
+the next patch...
 
-Reposting with the correct subject... Sorry! :-]
+Based on the original (and large) patch by Vladimir Barinov.
 
-Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
-'renesas-devel-20180604-v4.17-rc7' tag. We're adding the R8A77980 FCPVD/VSPD/
-DU/LVDS device nodes and then describing the LVDS decoder and HDMI encoder
-connected to the LVDS output. These patches depend on the Thine THC63LVD1024
-driver and the R8A77980 LVDS support patch in order to work, and R8A77980 GPIO
-DT patches in order to apply/compile...
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/5] arm64: dts: renesas: r8a77980: add FCPVD support
-[2/5] arm64: dts: renesas: r8a77980: add VSPD support
-[3/5] arm64: dts: renesas: r8a77980: add DU support
-[4/5] arm64: dts: renesas: r8a77980: add LVDS support
-[5/5] arm64: dts: renesas: condor: add DU/LVDS/HDMI support
+---
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-WBR, Sergei
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -653,6 +653,14 @@
+ 			resets = <&cpg 408>;
+ 		};
+ 
++		fcpvd0: fcp@fea27000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea27000 0 0x200>;
++			clocks = <&cpg CPG_MOD 603>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 603>;
++		};
++
+ 		prr: chipid@fff00044 {
+ 			compatible = "renesas,prr";
+ 			reg = <0 0xfff00044 0 4>;
