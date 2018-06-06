@@ -1,42 +1,33 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Switch to SPDX identifier.
-Date: Wed, 6 Jun 2018 17:35:49 +0200
-Message-ID: <a0b5807f-54c4-d2a7-00ed-bb8fad87acf0@collabora.com>
-References: <20180606152109.12359-1-enric.balletbo@collabora.com>
- <DCD2814D-35CD-4856-9479-3A09922586DD@theobroma-systems.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] Documentation: devicetree: tilcdc: fix spelling mistake "suppors" -> "supports"
+Date: Wed,  6 Jun 2018 17:39:42 +0200
+Message-ID: <20180606153942.18839-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DCD2814D-35CD-4856-9479-3A09922586DD@theobroma-systems.com>
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: klaus.goger@theobroma-systems.com
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com, Simon Xue <xxm@rock-chips.com>, Yakir Yang <kuankuan.y@gmail.com>, Liang Chen <cl@rock-chips.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Shawn Lin <shawn.lin@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Vicente Bergas <vicencb@gmail.com>, David Wu <david.wu@rock-chips.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, Finley Xiao <finley.xiao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Jacob Chen <jacob-chen@iotwrt.com>, William Wu <william.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Jaehoon Chung <jh80.chung@samsung.com>, linux-rockchip@lists.infradead.org, Douglas
+To: linux-kernel@vger.kernel.org
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Mark Rutland <mark.rutland@arm.com>, Jyri Sarha <jsarha@ti.com>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
+Trivial fix to spelling mistake in tilcdc.txt devicetree documentation.
 
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-On 06/06/18 17:31, klaus.goger@theobroma-systems.com wrote:
-> Hi Enric,
-> 
->> On 06.06.2018, at 17:21, Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
->>
->> Adopt the SPDX license identifier headers to ease license compliance
->> management.
-> 
-> [snip]
-> 
-> Heiko merged a similar patch 2 days ago
-> http://lists.infradead.org/pipermail/linux-rockchip/2018-June/020939.html
-> 
+ Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nice, then forget this patch. I had this in my list of patches to send and I did
-not noticed that another patch was send.
-
-Cheers,
- Enric
-
-> Cheers,
-> Klaus
-> 
+diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+index 6fddb4f4f71a..3055d5c2c04e 100644
+--- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
++++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+@@ -36,7 +36,7 @@ Optional nodes:
+ 
+  - port/ports: to describe a connection to an external encoder. The
+    binding follows Documentation/devicetree/bindings/graph.txt and
+-   suppors a single port with a single endpoint.
++   supports a single port with a single endpoint.
+ 
+  - See also Documentation/devicetree/bindings/display/tilcdc/panel.txt and
+    Documentation/devicetree/bindings/display/tilcdc/tfp410.txt for connecting
+-- 
+2.17.1
