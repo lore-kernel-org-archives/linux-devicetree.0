@@ -1,62 +1,55 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
-Date: Wed, 6 Jun 2018 09:17:33 -0700
-Message-ID: <20180606161733.GE510@tuxbook-pro>
-References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
- <20180605061919.GQ16230@vkoul-mobl>
- <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
+Date: Wed, 6 Jun 2018 09:19:19 -0700
+Message-ID: <e91c75f3-f7a4-6f51-9911-7e22d5d05084@roeck-us.net>
+References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
+ <1527530497-10392-2-git-send-email-ray.jui@broadcom.com>
+ <20180605194124.GA26885@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+In-Reply-To: <20180605194124.GA26885@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: Vinod <vkoul@kernel.org>, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
+To: Rob Herring <robh@kernel.org>, Ray Jui <ray.jui@broadcom.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 05 Jun 05:56 PDT 2018, Sricharan R wrote:
-
-> Hi Vinod,
+On 06/05/2018 12:41 PM, Rob Herring wrote:
+> On Mon, May 28, 2018 at 11:01:32AM -0700, Ray Jui wrote:
+>> Consolidate two SP805 binding documents "arm,sp805.txt" and
+>> "sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
+>> desired compatible string to be used
+>>
+>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+>> ---
+>>   .../devicetree/bindings/watchdog/arm,sp805.txt     | 27 ++++++++++++++-----
+>>   .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31 ----------------------
+>>   2 files changed, 20 insertions(+), 38 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
 > 
-> On 6/5/2018 11:49 AM, Vinod wrote:
-> > On 05-06-18, 11:12, Sricharan R wrote:
-> > 
-> >> +config QCOM_Q6V5_WCSS
-> >> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
-> >> +	depends on OF && ARCH_QCOM
-> >> +	depends on QCOM_SMEM
-> >> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
-> >> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
-> > 
-> > Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
-> > happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
-> > 
+> Would be good to get a ACK from FSL/NXP person on this. It looks to me
+> like the driver fetches the wrong clock as it gets the first one and the
+> driver really wants 'wdog_clk'. In any case, their dts files should be
+> updated.
+>
 
-It says that QCOM_Q6V5_WCSS either must have a compatible state (i.e.
-builtin vs builtin, module vs builtin, but not builtin vs module) or
-that it's disabled, in which case we will hit the stub functions in
-qcom_glink.h.
+This is really confusing, since he deleted file lists apb_pclk first.
+Does the watchdog driver need apb_pclk or wdog_clk ? That isn't clear to me.
+arch/arm64/boot/dts/hisilicon/hi3660.dtsi only provides apb_pclk, or at least
+it says so. The fsl dts files all have apb_pclk first.
 
-I.e. this prevents QCOM_Q6V5_WCSS to be compiled builtin when
-RPMSG_QCOM_GLINK_SMEM is module, as this would give us both stubs and
-the module.
+Either case, why are two clocks asked for in the first place ? Are there
+situations where the second clock is actually used/useful ?
 
->   RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
->   means that it should be corrected here and for ADSP, Q6V5_PIL as well.
->   Bjorn, is that correct ?, should it be, below ?
->  
+Guenter
 
-There are platforms with SMD, those with GLINK-SMEM and those with both.
-For the two first we want it to be possible only compile the specific
-transport being used and the other being stubbed.
-
-As Sricharan's particular platform uses GLINK for communicating with the
-WCSS it's perfectly fine to run this particular driver with
-RPMSG_QCOM_SMD=n RPMSG_QCOM_GLINK_SMEM=y/m
-
-
-As such I would recommend that you drop COMPILE_TEST from above.
-
-Regards,
-Bjorn
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
