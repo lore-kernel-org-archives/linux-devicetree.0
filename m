@@ -1,94 +1,31 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 3/3] gpio: pca953x: fix address calculation for
- pcal6524
-Date: Wed, 6 Jun 2018 09:35:25 +0200
-Message-ID: <20180606073525.GA18743@amd>
-References: <cover.1526533188.git.hns@goldelico.com>
- <e70e83f07aebaf702fef90a9fac61e41d8b558b0.1526533188.git.hns@goldelico.com>
- <20180523140635.GB27215@amd>
- <CAHp75VfxN1RZBFRK6oJ5AzCe_2ej9eYdwt96X+fJZgFy65eaFg@mail.gmail.com>
- <20180605203941.GA28143@amd>
- <A639885E-0E5D-4FB0-BE51-AFF35BF4F76B@computer.org>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v3 6/6] regulator: bd71837: BD71837 PMIC regulator driver
+Date: Wed, 6 Jun 2018 10:44:34 +0300
+Message-ID: <20180606074434.GE20078@localhost.localdomain>
+References: <cover.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
+ <68b0cf2c7ab5578eef2f71a33315bc8ab9a68a39.1527587295.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAHp75VeVSbZd12vXew9f0z2m1=BFz+cOKomga3SZEzg=kx9CFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <A639885E-0E5D-4FB0-BE51-AFF35BF4F76B@computer.org>
+In-Reply-To: <CAHp75VeVSbZd12vXew9f0z2m1=BFz+cOKomga3SZEzg=kx9CFw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@computer.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 05, 2018 at 04:58:43PM +0300, Andy Shevchenko wrote:
+> On Tue, May 29, 2018 at 1:02 PM, Matti Vaittinen
+> <matti.vaittinen@fi.rohmeurope.com> wrote:
+> > Support for controlling the 8 bucks and 7 LDOs the PMIC contains.
+> 
 
-On Wed 2018-06-06 07:33:32, H. Nikolaus Schaller wrote:
-> Hi,
->=20
-> > Am 05.06.2018 um 22:39 schrieb Pavel Machek <pavel@ucw.cz>:
-> >=20
-> > On Tue 2018-06-05 18:37:21, Andy Shevchenko wrote:
-> >> On Wed, May 23, 2018 at 5:06 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> >>> On Thu 2018-05-17 06:59:49, H. Nikolaus Schaller wrote:
-> >>>> The register constants are so far defined in a way that they fit
-> >>>> for the pcal9555a when shifted by the number of banks, i.e. are
-> >>>> multiplied by 2 in the accessor function.
-> >>>>=20
-> >>>> Now, the pcal6524 has 3 banks which means the relative offset
-> >>>> is multiplied by 4 for the standard registers.
-> >>>>=20
-> >>>> Simply applying the bit shift to the extended registers gives
-> >>>> a wrong result, since the base offset is already included in
-> >>>> the offset.
-> >>>>=20
-> >>>> Therefore, we have to add code to the 24 bit accessor functions
-> >>>> that adjusts the register number for these exended registers.
-> >>>>=20
-> >>>> The formula finally used was developed and proposed by
-> >>>> Andy Shevchenko <andy.shevchenko@gmail.com>.
-> >>=20
-> >>>>      int bank_shift =3D fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
-> >>>> +     int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
-> >>>> +     int pinctrl =3D (reg & PCAL_PINCTRL_MASK) << 1;
-> >>=20
-> >>> Is this reasonable to do on each register access? Compiler will not be
-> >>> able to optimize out fls and shifts, right?
-> >>=20
-> >> On modern CPUs fls() is one assembly command. OTOH, any proposal to do
-> >> this better?
-> >>=20
-> >> What I can see is that bank_shift is invariant to the function, and
-> >> maybe cached.
-> >=20
-> > Yes, I thought that caching bank_shift might be good idea. I thought
-> > it was constant for given chip...
->=20
-> Yes, it is an f(chip), but the question that comes to my mind is if
-> optimization is worth any effort. This is an accessor method over
+Thanks for the comments Andy. The regulator part of patch set v4 was
+already applied by Mark but I am going to do some further work on this
+afer I get the MFD and clk portions done. I'll store these comments and
+address issues in next set of patches.
 
-It will also be less ugly. Copy&pasted complex exprepsion all over the
-driver is not nice.
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlsXjr0ACgkQMOfwapXb+vIc1wCggj6eiSaPQ5SgwApWF99NsdKs
-vqoAoMPTlFh+Gg+YVlfFIoV6TYdftu6l
-=1hdR
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
+Br,
+	Matti Vaittinen
