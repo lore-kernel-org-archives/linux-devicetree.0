@@ -1,190 +1,91 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v4 2/3] arm: shmobile: Add the R9A06G032 SMP enabler
- driver
-Date: Wed, 6 Jun 2018 12:30:10 -0700
-Message-ID: <bbbd287c-437e-d7bd-d40f-6bb914d96860@gmail.com>
-References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528198148-23308-3-git-send-email-michel.pollet@bp.renesas.com>
- <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com>
- <OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 1/3] arm64: dts: allwinner: a64: add R_I2C controller
+Date: Wed, 6 Jun 2018 21:32:11 +0200
+Message-ID: <20180606193211.4prhpzn2mbuy6eng@flea>
+References: <20180606051702.6478-1-anarsoul@gmail.com>
+ <20180606051702.6478-2-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
-Cc: Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Douglas Anderson <dianders@chromium.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@endlessm.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Frank Rowand <frank.rowand@sony.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180606051702.6478-2-anarsoul@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michel,
+On Tue, Jun 05, 2018 at 10:17:00PM -0700, Vasily Khoruzhick wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+> 
+> Allwinner A64 has a I2C controller, which is in the R_ MMIO zone and has
+> two groups of pinmuxes on PL bank, so it's called R_I2C.
+> 
+> Add support for this I2C controller and the pinmux which doesn't conflict
+> with RSB.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 1b2ef28c42bd..dcf957b2e7c8 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -46,6 +46,7 @@
+>  #include <dt-bindings/clock/sun8i-r-ccu.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/reset/sun50i-a64-ccu.h>
+> +#include <dt-bindings/reset/sun8i-r-ccu.h>
+>  
+>  / {
+>  	interrupt-parent = <&gic>;
+> @@ -655,6 +656,18 @@
+>  			#reset-cells = <1>;
+>  		};
+>  
+> +		r_i2c: i2c@1f02400 {
+> +			compatible = "allwinner,sun50i-a64-i2c",
+> +				     "allwinner,sun6i-a31-i2c";
+> +			reg = <0x01f02400 0x400>;
+> +			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&r_ccu CLK_APB0_I2C>;
+> +			resets = <&r_ccu RST_APB0_I2C>;
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+>  		r_pio: pinctrl@1f02c00 {
+>  			compatible = "allwinner,sun50i-a64-r-pinctrl";
+>  			reg = <0x01f02c00 0x400>;
+> @@ -666,6 +679,17 @@
+>  			interrupt-controller;
+>  			#interrupt-cells = <3>;
+>  
+> +
+> +			r_i2c_pins: i2c {
+> +				pins = "PL0", "PL1";
+> +				function = "s_i2c";
+> +			};
+> +
 
-On 06/05/18 23:36, Michel Pollet wrote:
-> Hi Frank,
-> 
-> On 05 June 2018 18:34, Frank wrote:
->> On 06/05/18 04:28, Michel Pollet wrote:
->>> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot time,
->>> it requires a special enable method to get it started.
->>>
->>> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
->>> ---
->>>  arch/arm/mach-shmobile/Makefile        |  1 +
->>>  arch/arm/mach-shmobile/smp-r9a06g032.c | 79
->>> ++++++++++++++++++++++++++++++++++
->>>  2 files changed, 80 insertions(+)
->>>  create mode 100644 arch/arm/mach-shmobile/smp-r9a06g032.c
->>>
->>> diff --git a/arch/arm/mach-shmobile/Makefile
->>> b/arch/arm/mach-shmobile/Makefile index 1939f52..d7fc98f 100644
->>> --- a/arch/arm/mach-shmobile/Makefile
->>> +++ b/arch/arm/mach-shmobile/Makefile
->>> @@ -34,6 +34,7 @@ smp-$(CONFIG_ARCH_SH73A0)+= smp-sh73a0.o
->> headsmp-scu.o platsmp-scu.o
->>>  smp-$(CONFIG_ARCH_R8A7779)+= smp-r8a7779.o headsmp-scu.o
->> platsmp-scu.o
->>>  smp-$(CONFIG_ARCH_R8A7790)+= smp-r8a7790.o
->>>  smp-$(CONFIG_ARCH_R8A7791)+= smp-r8a7791.o
->>> +smp-$(CONFIG_ARCH_R9A06G032)+= smp-r9a06g032.o
->>>  smp-$(CONFIG_ARCH_EMEV2)+= smp-emev2.o headsmp-scu.o
->> platsmp-scu.o
->>>
->>>  # PM objects
->>> diff --git a/arch/arm/mach-shmobile/smp-r9a06g032.c
->>> b/arch/arm/mach-shmobile/smp-r9a06g032.c
->>> new file mode 100644
->>> index 0000000..cd40e6e
->>> --- /dev/null
->>> +++ b/arch/arm/mach-shmobile/smp-r9a06g032.c
->>> @@ -0,0 +1,79 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * R9A06G032 Second CA7 enabler.
->>> + *
->>> + * Copyright (C) 2018 Renesas Electronics Europe Limited
->>> + *
->>> + * Michel Pollet <michel.pollet@bp.renesas.com>,
->> <buserror@gmail.com>
->>> + * Derived from action,s500-smp
->>> + */
->>> +
->>> +#include <linux/io.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/smp.h>
->>> +
->>> +/*
->>> + * The second CPU is parked in ROM at boot time. It requires waking
->>> +it after
->>> + * writing an address into the BOOTADDR register of sysctrl.
->>> + *
->>> + * So the default value of the "cpu-release-addr" corresponds to
->> BOOTADDR...
->>> + *
->>> + * *However* the BOOTADDR register is not available when the kernel
->>> + * starts in NONSEC mode.
->>> + *
->>> + * So for NONSEC mode, the bootloader re-parks the second CPU into a
->>> +pen
->>> + * in SRAM, and changes the "cpu-release-addr" of linux's DT to a
->>> +SRAM address,
->>> + * which is not restricted.
->>
->> The binding document for cpu-release-addr does not have a definition for 32
->> bit arm.  The existing definition is only 64 bit arm.  Please add the definition
->> for 32 bit arm to patch 1.
-> 
-> Hmmm I do find a definition in
-> Documentation/devicetree/bindings/arm/cpus.txt -- just under where I
-> added my 'enable-method' -- And it is already used as 32 bits in at least
-> arch/arm/boot/dts/stih407-family.dtsi.
+We usually don't have pin groups that are not used by any boards. I've
+removed it and applied.
 
->From cpus.txt:
+Maxime
 
-        - cpu-release-addr
-                Usage: required for systems that have an "enable-method"
-                       property value of "spin-table".
-                Value type: <prop-encoded-array>
-                Definition:
-                        # On ARM v8 64-bit systems must be a two cell
-                          property identifying a 64-bit zero-initialised
-                          memory location.
-
-The definition specifies a two cell property for 64-bit systems.
-
-Please add to the definition that cpu-release-addr is a one cell property
-for 32-bit systems.
-
--Frank
-
-> 
-> What do you want me to add to this exactly? Do you want me to just
-> change "required for systems that have an "enable-method" property
-> value of "spin-table" to also specify renesas,r9a06g032 ?
-> 
-> Thanks!
-> Michel
-> 
->>
->> -Frank
->>
->>
->>> + */
->>> +
->>> +static void __iomem *cpu_bootaddr;
->>> +
->>> +static DEFINE_SPINLOCK(cpu_lock);
->>> +
->>> +static int r9a06g032_smp_boot_secondary(unsigned int cpu, struct
->>> +task_struct *idle) {
->>> +if (!cpu_bootaddr)
->>> +return -ENODEV;
->>> +
->>> +spin_lock(&cpu_lock);
->>> +
->>> +writel(__pa_symbol(secondary_startup), cpu_bootaddr);
->>> +arch_send_wakeup_ipi_mask(cpumask_of(cpu));
->>> +
->>> +spin_unlock(&cpu_lock);
->>> +
->>> +return 0;
->>> +}
->>> +
->>> +static void __init r9a06g032_smp_prepare_cpus(unsigned int max_cpus)
->>> +{
->>> +struct device_node *dn;
->>> +int ret;
->>> +u32 bootaddr;
->>> +
->>> +dn = of_get_cpu_node(1, NULL);
->>> +if (!dn) {
->>> +pr_err("CPU#1: missing device tree node\n");
->>> +return;
->>> +}
->>> +/*
->>> + * Determine the address from which the CPU is polling.
->>> + * The bootloader *does* change this property
->>> + */
->>> +ret = of_property_read_u32(dn, "cpu-release-addr", &bootaddr);
->>> +of_node_put(dn);
->>> +if (ret) {
->>> +pr_err("CPU#1: invalid cpu-release-addr property\n");
->>> +return;
->>> +}
->>> +pr_info("CPU#1: cpu-release-addr %08x\n", bootaddr);
->>> +
->>> +cpu_bootaddr = ioremap(bootaddr, sizeof(bootaddr)); }
->>> +
->>> +static const struct smp_operations r9a06g032_smp_ops __initconst = {
->>> +.smp_prepare_cpus = r9a06g032_smp_prepare_cpus,
->>> +.smp_boot_secondary = r9a06g032_smp_boot_secondary, };
->>> +CPU_METHOD_OF_DECLARE(r9a06g032_smp, "renesas,r9a06g032-smp",
->>> +&r9a06g032_smp_ops);
->>>
-> 
-> 
-> 
-> 
-> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
-> 
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
