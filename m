@@ -1,54 +1,51 @@
-Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Mon, 11 Jun 2018 16:15:09 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 14/15] staging: typec: tcpci: Only touch target bit
- when enable vconn
-Message-ID: <20180611131509.GR17155@kuha.fi.intel.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
- <1527475967-15201-15-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=QZ+J=IY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relmlor1.renesas.com ([210.160.252.171]:31369 "EHLO
+        relmlie4.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S932239AbeFFG5C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Jun 2018 02:57:02 -0400
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 1/4] arm64: dts: renesas: r8a77990: add usb2_phy device node
+Date: Wed,  6 Jun 2018 15:56:08 +0900
+Message-Id: <1528268171-19276-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1527475967-15201-15-git-send-email-jun.li@nxp.com>
-To: Li Jun <jun.li@nxp.com>
-Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 28, 2018 at 10:52:46AM +0800, Li Jun wrote:
-> We need regmap_update_bits to avoid touch any other bits when
-> enable or disable vconn.
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Li Jun <jun.li@nxp.com>
+This patch adds USB2.0 phy device node for r8a77990.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a77990.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> ---
->  drivers/staging/typec/tcpci.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index 11c2d37..ac6b418 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -218,12 +218,9 @@ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
->  			return ret;
->  	}
->  
-> -	ret = regmap_write(tcpci->regmap, TCPC_POWER_CTRL,
-> -			   enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	return 0;
-> +	return regmap_update_bits(tcpci->regmap, TCPC_POWER_CTRL,
-> +				TCPC_POWER_CTRL_VCONN_ENABLE,
-> +				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
->  }
->  
->  static int tcpci_set_roles(struct tcpc_dev *tcpc, bool attached,
-
-Thanks,
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+index be4f519..121c4a0 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+@@ -248,6 +248,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		usb2_phy0: usb-phy@ee080200 {
++			compatible = "renesas,usb2-phy-r8a77990",
++				     "renesas,rcar-gen3-usb2-phy";
++			reg = <0 0xee080200 0 0x700>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 703>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@f1010000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
 -- 
-heikki
+1.9.1
+
