@@ -1,74 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] Documentation: DT: Consolidate SP805 binding docs
-Date: Wed, 6 Jun 2018 11:33:04 -0500
-Message-ID: <CABGGisxEvWDy16SKE2RG-vhUHBZHSCCHyfwJsPY16B1fQS-=cA@mail.gmail.com>
-References: <1527530497-10392-1-git-send-email-ray.jui@broadcom.com>
- <1527530497-10392-2-git-send-email-ray.jui@broadcom.com> <20180605194124.GA26885@rob-hp-laptop>
- <e91c75f3-f7a4-6f51-9911-7e22d5d05084@roeck-us.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware
+ device
+Date: Wed, 6 Jun 2018 09:46:28 -0700
+Message-ID: <20180606164628.GF510@tuxbook-pro>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
+ <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com>
+ <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e91c75f3-f7a4-6f51-9911-7e22d5d05084@roeck-us.net>
+Content-Disposition: inline
+In-Reply-To: <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>, Ray Jui <ray.jui@broadcom.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Tomasz Figa <tfiga@chromium.org>, vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, andy.gross@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 6, 2018 at 11:19 AM, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 06/05/2018 12:41 PM, Rob Herring wrote:
->>
->> On Mon, May 28, 2018 at 11:01:32AM -0700, Ray Jui wrote:
->>>
->>> Consolidate two SP805 binding documents "arm,sp805.txt" and
->>> "sp805-wdt.txt" into "arm,sp805.txt" that matches the naming of the
->>> desired compatible string to be used
->>>
->>> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->>> ---
->>>   .../devicetree/bindings/watchdog/arm,sp805.txt     | 27
->>> ++++++++++++++-----
->>>   .../devicetree/bindings/watchdog/sp805-wdt.txt     | 31
->>> ----------------------
->>>   2 files changed, 20 insertions(+), 38 deletions(-)
->>>   delete mode 100644
->>> Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
->>
->>
->> Would be good to get a ACK from FSL/NXP person on this. It looks to me
->> like the driver fetches the wrong clock as it gets the first one and the
->> driver really wants 'wdog_clk'. In any case, their dts files should be
->> updated.
->>
->
-> This is really confusing, since he deleted file lists apb_pclk first.
-> Does the watchdog driver need apb_pclk or wdog_clk ? That isn't clear to me.
-> arch/arm64/boot/dts/hisilicon/hi3660.dtsi only provides apb_pclk, or at
-> least
-> it says so.
+On Mon 04 Jun 06:56 PDT 2018, Stanimir Varbanov wrote:
+> On 06/04/2018 04:18 PM, Tomasz Figa wrote:
+> > On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+[..]
+> >> +               venus-firmware {
+> >> +                       compatible = "qcom,venus-firmware-no-tz";
+> > 
+> > I don't think "-no-tz" should be mentioned here in DT, since it's a
+> > firmware/software detail.
+> 
+> I have to agree with Tomasz, non-tz or tz is a software detail and it
+> shouldn't be reflected in compatible string.
+> 
 
-Note that that clock source is 32KHz. That is obviously a mistake
-because no one clocks their bus/register interface at 32KHz. Someone
-just filled in something that happened to work.
+While it is software, the alternative boot and security configuration
+does imply different requirements on how the driver deals with the
+hardware. I'm not sure how you expect the kernel to be informed about
+the abilities of the boot/security capabilities if it's not passed
+through DT.
 
-> The fsl dts files all have apb_pclk first.
 
-It's all kind of a mess, but fortunately one we should be able to clean-up.
+In the other cases of firmware loading for co-processors this means that
+a number of additional resources (clocks, resets) needs to be specified
+in the DT node; something it seems like Venus doesn't have to do.
 
-The compatible string changes too, but AMBA bus devices don't actually
-use the compatible string as they use the ID registers to match. I
-suppose some other OS could do things differently. Worth the risk to
-clean-up IMO.
+> Also I'm not sure but what will happen if this video-firmware subnode is
+> not added, do you expect that backward compatibility is satisfied for
+> older venus versions?
+> 
 
->
-> Either case, why are two clocks asked for in the first place ? Are there
-> situations where the second clock is actually used/useful ?
+I do expect that the driver should be possible to run on a 845 with the
+normal TZ based security model we've seen on e.g. 820. I don't know the
+details of Venus well enough to see if this differentiation would be
+sufficient.
 
-For clocks, the bus needs "apb_pclk" and the driver just gets the
-first clock. The driver is obviously going to want the functional
-clock that determines the counter rate. That should
-
-Primecell peripherals are about the only ones that have clear specs
-WRT clock inputs. Yet we've still managed to screw them up. There are
-2 clocks in the spec, so the DT has (or should have) 2 clocks.
-
-Rob
+Regards,
+Bjorn
