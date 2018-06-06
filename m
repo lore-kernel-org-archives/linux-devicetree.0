@@ -1,66 +1,51 @@
-Return-Path: <SRS0=pME0=JL=nxp.com=jun.li@kernel.org>
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v7 11/14] typec: tcpm: add starting value for drp toggling
-Date: Mon, 25 Jun 2018 16:08:43 +0800
-Message-Id: <1529914126-22550-12-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
-References: <1529914126-22550-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=QZ+J=IY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relmlor1.renesas.com ([210.160.252.171]:30444 "EHLO
+        relmlie4.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S932239AbeFFG5G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Jun 2018 02:57:06 -0400
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4/4] arm64: dts: renesas: r8a77990: ebisu: enable USB2.0 host
+Date: Wed,  6 Jun 2018 15:56:11 +0900
+Message-Id: <1528268171-19276-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Sender: devicetree-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-As DRP port autonomously toggles the Rp/Rd need a start value to
-begin with, so add one parameter for it in tcpm_start_drp_toggling.
+This patch enables USB2.0 host (EHCI/OHCI) for r8a77990 Ebisu board.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/usb/typec/tcpm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 0454654..c80f1a4 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -2431,15 +2431,15 @@ static int tcpm_set_charge(struct tcpm_port *port, bool charge)
- 	return 0;
- }
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+index 1be10c9..76fa244 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+@@ -47,10 +47,18 @@
+ 	};
+ };
  
--static bool tcpm_start_drp_toggling(struct tcpm_port *port)
-+static bool tcpm_start_drp_toggling(struct tcpm_port *port,
-+				    enum typec_cc_status cc)
- {
- 	int ret;
++&ehci0 {
++	status = "okay";
++};
++
+ &extal_clk {
+ 	clock-frequency = <48000000>;
+ };
  
- 	if (port->tcpc->start_drp_toggling &&
- 	    port->port_type == TYPEC_PORT_DRP) {
- 		tcpm_log_force(port, "Start DRP toggling");
--		ret = port->tcpc->start_drp_toggling(port->tcpc,
--						     tcpm_rp_cc(port));
-+		ret = port->tcpc->start_drp_toggling(port->tcpc, cc);
- 		if (!ret)
- 			return true;
- 	}
-@@ -2747,7 +2747,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		if (!port->non_pd_role_swap)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_src_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, tcpm_rp_cc(port))) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
-@@ -2922,7 +2922,7 @@ static void run_state_machine(struct tcpm_port *port)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_pps_complete(port, -ENOTCONN);
- 		tcpm_snk_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, TYPEC_CC_RD)) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
++&ohci0 {
++	status = "okay";
++};
++
+ &pfc {
+ 	avb_pins: avb {
+ 		mux {
 -- 
-2.7.4
+1.9.1
+
