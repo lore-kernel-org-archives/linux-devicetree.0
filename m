@@ -1,171 +1,149 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
- info
-Date: Wed, 6 Jun 2018 15:51:16 +0530
-Message-ID: <fc1dfb22-efda-77b7-5f2f-fa188f6e4471@codeaurora.org>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <12153185.srskHYKlqL@phil>
- <4df7aa3e-e693-a94a-e9bb-7323e6d62cd2@codeaurora.org>
- <1719302.7h5mBFHA8i@diego>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 3/6] mtd: rawnand: tegra: add devicetree binding
+Date: Wed, 6 Jun 2018 12:39:03 +0200
+Message-ID: <20180606103903.GJ11810@ulmo>
+References: <20180531221637.6017-1-stefan@agner.ch>
+ <20180531221637.6017-4-stefan@agner.ch>
+ <20180601093025.2817ff30@bbrezillon>
+ <faa40dac-ab2a-2d43-3a43-2d46cebcd539@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1719302.7h5mBFHA8i@diego>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, tomi.valkeinen@ti.com, briannorris@chromium.org, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="C7PTD44AewjTsiSV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <faa40dac-ab2a-2d43-3a43-2d46cebcd539@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Stefan Agner <stefan@agner.ch>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, benjamin.lindqvist@endian.se, pgaikwad@nvidia.com, dev@lynxeye.de, mirza.krak@gmail.com, richard@nod.at, pdeschrijver@nvidia.com, linux-kernel@vger.kernel.org, krzk@kernel.org, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, marcel@ziswiler.com, miquel.raynal@bootlin.com, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiBXZWRuZXNkYXkgMDYgSnVuZSAyMDE4IDAyOjAwIFBNLCBIZWlrbyBTdMO8Ym5lciB3cm90
-ZToKPiBBbSBNaXR0d29jaCwgNi4gSnVuaSAyMDE4LCAwNzo1OToyOSBDRVNUIHNjaHJpZWIgQXJj
-aGl0IFRhbmVqYToKPj4gT24gTW9uZGF5IDA0IEp1bmUgMjAxOCAwNTo0NyBQTSwgSGVpa28gU3R1
-ZWJuZXIgd3JvdGU6Cj4+PiBBbSBEb25uZXJzdGFnLCAxOC4gSmFudWFyIDIwMTgsIDA1OjUzOjU1
-IENFU1Qgc2NocmllYiBBcmNoaXQgVGFuZWphOgo+Pj4+IEFkZCBiaW5kaW5nIGluZm8gZm9yIHBl
-cmlwaGVyYWxzIHRoYXQgc3VwcG9ydCBkdWFsLWNoYW5uZWwgRFNJLiBBZGQKPj4+PiBjb3JyZXNw
-b25kaW5nIG9wdGlvbmFsIGJpbmRpbmdzIGZvciBEU0kgaG9zdCBjb250cm9sbGVycyB0aGF0IG1h
-eQo+Pj4+IGJlIGNvbmZpZ3VyZWQgaW4gdGhpcyBtb2RlLiBBZGQgYW4gZXhhbXBsZSBvZiBhbiBJ
-MkMgY29udHJvbGxlZAo+Pj4+IGRldmljZSBvcGVyYXRpbmcgaW4gZHVhbC1jaGFubmVsIERTSSBt
-b2RlLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2Rl
-YXVyb3JhLm9yZz4KPj4+Cj4+PiBMb29rcyBsaWtlIGEgZ3JlYXQgc29sdXRpb24gZm9yIHRoYXQg
-cHJvYmxlbSwgc28KPj4+IFJldmlld2VkLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNo
-LmRlPgo+Pj4KPj4+IEFzIEknbSBsb29raW5nIGludG8gdGhhdCBmb3IgbXkgcmszMzk5LXNjYXJs
-ZXQgZGV2aWNlIHJpZ2h0IG5vdyBhbmQKPj4+IGNvdWxkbid0IGZpbmQgdGhpcyBwYXRjaHNldCBp
-biB0aGUga2VybmVsIHlldCwgaXMgaXQgcGxhbm5lZCB0bwo+Pj4gbWVyZ2Ugb3IgcmVmcmVzaCB0
-aGVzZSBiaW5kaW5nIGNoYW5nZXMgb3Igd2VyZSBwcm9ibGVtcyBlbmNvdW50ZXJlZC4KPj4+Cj4+
-PiBBdCBsZWFzdCBhbiBBY2svUmV2aWV3IGZyb20gUm9iIHNlZW1zIHRvIGJlIG1pc3NpbmcuCj4+
-Cj4+IEkgZm9yZ290IGFib3V0IHRoZXNlIHBhdGNoZXMuIFJvYiBoYWQgcmV2aWV3ZWQgdGhlIGZp
-cnN0IG9uZSBpbgo+PiB0aGUgc2V0IHRoZSBzZWNvbmQgb25lIHN0aWxsIG5lZWRlZCBhbiBBY2su
-IEknbGwgcG9zdCBhIHYzCj4+IHRoYXQgYWRkcyB0aGUgUmV2aWV3ZWQtYnlzIGFuZCBmaXhlcyBh
-IHNtYWxsIHR5cG8uCj4gCj4gdmVyeSBuaWNlIC4uLiBiZWNhdXNlIGl0IGxvb2tzIGxpa2UgeWVz
-dGVyZGF5IEkgbWFuYWdlZCB0byBtYWtlIHRoZSBSb2NrY2hpcAo+IGRzaSB3b3JrIGluIGR1YWwg
-bW9kZSBmb2xsb3dpbmcgdGhpcy4KPiAKPiBCdXQgb25lIHF1ZXN0aW9uIGNhbWUgdXAsIGRvIHlv
-dSByZWFsbHkgd2FudCB0d28gaW5wdXQgcG9ydHMgb24gdGhlIHBhbmVsCj4gc2lkZT8gSS5lLiBo
-YXJkd2FyZS13aXNlLCBJIGd1ZXNzIHRoZSBwYW5lbCB3aWxsIGhhdmUgb25lIDgtbGFuZSBvciBz
-byBpbnB1dAo+IHRoYXRvbmx5IGdldHMgc3BsaXQgdXAgb24gdGhlIHNvYyBzaWRlIG9udG8gMiBk
-c2kgY29udHJvbGxlcnM/CgpJIHRoaW5rIGFsbCBkdWFsIERTSSBwYW5lbHMgYWN0dWFsbHkgaGF2
-ZSAyIERTSSBjb250cm9sbGVycy9wYXJzZXJzCndpdGhpbiB0aGVtLCBvbmUgb24gZWFjaCBwb3J0
-LiBUaGUgTUlQSSBEU0kgc3BlYyBkb2Vzbid0IHN1cHBvcnQgOApsYW5lcy4gQWxzbywgdGhlIHBp
-eGVscyBjb21pbmcgb3V0IG9mIHRoZSBob3N0IGFyZSBkaXN0cmlidXRlZCBhbW9uZwp0aGUgbGFu
-ZXMgZGlmZmVyZW50bHkgdGhhbiB3aGF0IHdvdWxkIGhhdmUgYmVlbiB0aGUgY2FzZSB3aXRoIGEK
-J3RoZW9yZXRpY2FsJyA4IGxhbmUgcmVjZWl2ZXIuCgpPdGhlciB0aGFuIHRoYXQsIHNvbWUgZHVh
-bCBEU0kgcGFuZWxzIG9ubHkgYWNjZXB0IERTSSBjb21tYW5kcyBvbiB0aGUKJ21hc3RlcicgcG9y
-dCwgd2hlcmUgYXMgb3RoZXJzIGV4cGVjdCB0aGUgc2FtZSBjb21tYW5kIHRvIGJlIHNlbnQgYWNy
-b3NzCmJvdGggdGhlIHBvcnRzLgoKVGhlcmVmb3JlLCBJIHRoaW5rIGl0J3MgYmV0dGVyIHRvIHJl
-cHJlc2VudCBkdWFsIERTSSBwYW5lbHMgaGF2aW5nIDIKRFNJIGlucHV0IHBvcnRzLgoKWW91ciBE
-VCBsb29rcyBnb29kIHRvIG1lLgoKVGhhbmtzLApBcmNoaXQKCj4gCj4gU28gcmlnaHQgbm93IEkn
-bSBvcGVyYXRpbmcgd2l0aCBhIGRldmljZXRyZWUgbGlrZQo+IAo+ICZtaXBpX2RzaSB7Cj4gICAg
-ICAgICAgc3RhdHVzID0gIm9rYXkiOwo+ICAgICAgICAgIGNsb2NrLW1hc3RlcjsKPiAKPiAgICAg
-ICAgICBwb3J0cyB7Cj4gICAgICAgICAgICAgICAgICBtaXBpX291dDogcG9ydEAxIHsKPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDE+Owo+IAo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICBtaXBpX291dF9wYW5lbDogZW5kcG9pbnQgewo+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmbWlwaV9pbl9wYW5lbD47Cj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgIH07Cj4g
-Cj4gICAgICAgICAgbWlwaV9wYW5lbDogcGFuZWxAMCB7Cj4gCQkgIGNvbXBhdGlibGUgPSAiaW5u
-b2x1eCxwMDk3cGZnIjsKPiAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPiAgICAgICAgICAg
-ICAgICAgIGJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKPiAgICAgICAgICAgICAgICAgIGVuYWJs
-ZS1ncGlvcyA9IDwmZ3BpbzQgMjUgR1BJT19BQ1RJVkVfSElHSD47Cj4gICAgICAgICAgICAgICAg
-ICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICAgICAgICAgICAgICAgICAgcGluY3RybC0w
-ID0gPCZkaXNwbGF5X3JzdF9sPjsKPiAKPiAgICAgICAgICAgICAgICAgIHBvcnQgewo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgIG1pcGlfaW5fcGFuZWw6IGVuZHBvaW50QDAgewo+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZyA9IDwwPjsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
-ZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfb3V0X3BhbmVsPjsKPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfTsKPiAKPiAgICAgICAgICAgICAgICAgICAgICAgICAgbWlwaTFfaW5fcGFuZWw6IGVu
-ZHBvaW50QDEgewo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsK
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm1p
-cGkxX291dF9wYW5lbD47Cj4gICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAg
-ICAgICAgICB9Owo+ICAgICAgICAgIH07Cj4gfTsKPiAKPiAmbWlwaV9kc2kxIHsKPiAgICAgICAg
-ICBzdGF0dXMgPSAib2theSI7Cj4gCj4gICAgICAgICAgcG9ydHMgewo+ICAgICAgICAgICAgICAg
-ICAgbWlwaTFfb3V0OiBwb3J0QDEgewo+ICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-MT47Cj4gCj4gICAgICAgICAgICAgICAgICAgICAgICAgIG1pcGkxX291dF9wYW5lbDogZW5kcG9p
-bnQgewo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9
-IDwmbWlwaTFfaW5fcGFuZWw+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAg
-ICAgICAgICAgICAgfTsKPiAgICAgICAgICB9Owo+IH07Cj4gCj4gCj4gSSBndWVzcyBpdCBpcyBh
-IG1hdHRlciBvZiBwcmVmZXJlbmNlIG9uIHdoYXQgcmVmbGVjdHMgdGhlIGhhcmR3YXJlCj4gYmVz
-dCwgc28gbWF5YmUgdGhhdCdzIFJvYnMgY2FsbD8KPiAKPiAKPiBIZWlrbwo+IAo+Pj4+IC0tLQo+
-Pj4+IHYyOgo+Pj4+IC0gU3BlY2lmeSB0aGF0IGNsb2NrLW1hc3RlciBpcyBhIGJvb2xlYW4gcHJv
-cGVydHkuCj4+Pj4gLSBEcm9wL2FkZCB1bml0LWFkZHJlc3MgYW5kICMqLWNlbGxzIHdoZXJlIGFw
-cGxpY2FibGUuCj4+Pj4KPj4+PiAgICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21p
-cGktZHNpLWJ1cy50eHQgICB8IDgwCj4+Pj4gICAgKysrKysrKysrKysrKysrKysrKysrKyAxIGZp
-bGUgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQKPj4+
-PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1
-cy50eHQgaW5kZXgKPj4+PiA5NGZiNzJjYjkxNmYuLjdhM2FiYmVkYjNmYSAxMDA2NDQKPj4+PiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9taXBpLWRzaS1i
-dXMudHh0Cj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvbWlwaS1kc2ktYnVzLnR4dAo+Pj4+Cj4+Pj4gQEAgLTI5LDYgKzI5LDEzIEBAIFJlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4+Pj4gICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDAuIFRoZXJlIGFy
-ZSBjYXNlcyB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0byB1c2UKPj4+PiAgICBhCj4+Pj4gICAgCj4+
-Pj4gICAgICBkaWZmZXJlbnQgdmFsdWUgaGVyZS4gU2VlIGJlbG93Lgo+Pj4+Cj4+Pj4gK09wdGlv
-bmFsIHByb3BlcnRpZXM6Cj4+Pj4gKy0gY2xvY2stbWFzdGVyOiBib29sZWFuLiBTaG91bGQgYmUg
-ZW5hYmxlZCBpZiB0aGUgaG9zdCBpcyBiZWluZyB1c2VkIGluCj4+Pj4gKyAgY29uanVuY3Rpb24g
-d2l0aCBhbm90aGVyIERTSSBob3N0IHRvIGRyaXZlIHRoZSBzYW1lIHBlcmlwaGVyYWwuCj4+Pj4g
-SGFyZHdhcmUKPj4+PiArICBzdXBwb3J0aW5nIHN1Y2ggYSBjb25maWd1cmF0aW9uIGdlbmVyYWxs
-eSByZXF1aXJlcyB0aGUgZGF0YSBvbiBib3RoCj4+Pj4gdGhlIGJ1c3NlcyArICB0byBiZSBkcml2
-ZW4gYnkgdGhlIHNhbWUgY2xvY2suIE9ubHkgdGhlIERTSSBob3N0IGluc3RhbmNlCj4+Pj4gY29u
-dHJvbGxpbmcgdGhpcyArICBjbG9jayBzaG91bGQgY29udGFpbiB0aGlzIHByb3BlcnR5Lgo+Pj4+
-ICsKPj4+Pgo+Pj4+ICAgIERTSSBwZXJpcGhlcmFsCj4+Pj4gICAgPT09PT09PT09PT09PT0KPj4+
-Pgo+Pj4+IEBAIC02Miw2ICs2OSwxNiBAQCBwcmltYXJ5IGNvbnRyb2wgYnVzLCBidXQgYXJlIGFs
-c28gY29ubmVjdGVkIHRvIGEgRFNJCj4+Pj4gYnVzIChtb3N0bHkgZm9yIHRoZSBkYXRhPj4KPj4+
-PiAgICBwYXRoKS4gQ29ubmVjdGlvbnMgYmV0d2VlbiBzdWNoIHBlcmlwaGVyYWxzIGFuZCBhIERT
-SSBob3N0IGNhbiBiZQo+Pj4+ICAgIHJlcHJlc2VudGVkIHVzaW5nIHRoZSBncmFwaCBiaW5kaW5n
-cyBbMV0sIFsyXS4KPj4+Pgo+Pj4+ICtQZXJpcGhlcmFscyB0aGF0IHN1cHBvcnQgZHVhbCBjaGFu
-bmVsIERTSQo+Pj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
-Pj4+ICsKPj4+PiArUGVyaXBoZXJhbHMgd2l0aCBoaWdoZXIgYmFuZHdpZHRoIHJlcXVpcmVtZW50
-cyBjYW4gYmUgY29ubmVjdGVkIHRvIDIgRFNJCj4+Pj4gK2J1c3Nlcy4gRWFjaCBEU0kgYnVzL2No
-YW5uZWwgZHJpdmVzIHNvbWUgcG9ydGlvbiBvZiB0aGUgcGl4ZWwgZGF0YQo+Pj4+IChnZW5lcmFs
-bHkgK2xlZnQvcmlnaHQgaGFsZiBvZiBlYWNoIGxpbmUgb2YgdGhlIGRpc3BsYXksIG9yIGV2ZW4v
-b2RkCj4+Pj4gbGluZXMgb2YgdGhlIGRpc3BsYXkpLiArVGhlIGdyYXBoIGJpbmRpbmdzIHNob3Vs
-ZCBiZSB1c2VkIHRvIHJlcHJlc2VudAo+Pj4+IHRoZSBtdWx0aXBsZSBEU0kgYnVzc2VzIHRoYXQg
-YXJlICtjb25uZWN0ZWQgdG8gdGhpcyBwZXJpcGhlcmFsLiBFYWNoIERTSQo+Pj4+IGhvc3QncyBv
-dXRwdXQgZW5kcG9pbnQgY2FuIGJlIGxpbmtlZCB0byArYW4gaW5wdXQgZW5kcG9pbnQgb2YgdGhl
-IERTSQo+Pj4+IHBlcmlwaGVyYWwuCj4+Pj4gKwo+Pj4+Cj4+Pj4gICAgWzFdIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPj4+PiAgICBbMl0gRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4+Pj4KPj4+
-PiBAQCAtNzEsNiArODgsOCBAQCBFeGFtcGxlcwo+Pj4+Cj4+Pj4gICAgICB3aXRoIGRpZmZlcmVu
-dCB2aXJ0dWFsIGNoYW5uZWwgY29uZmlndXJhdGlvbnMuCj4+Pj4gICAgCj4+Pj4gICAgLSAoNCkg
-aXMgYW4gZXhhbXBsZSBvZiBhIHBlcmlwaGVyYWwgb24gYSBJMkMgY29udHJvbCBidXMgY29ubmVj
-dGVkIHdpdGgKPj4+PiAgICB0bwo+Pj4+ICAgIAo+Pj4+ICAgICAgYSBEU0kgaG9zdCB1c2luZyBv
-Zi1ncmFwaCBiaW5kaW5ncy4KPj4+Pgo+Pj4+ICstICg1KSBpcyBhbiBleGFtcGxlIG9mIDIgRFNJ
-IGhvc3RzIGRyaXZpbmcgYSBkdWFsLWNoYW5uZWwgRFNJCj4+Pj4gcGVyaXBoZXJhbCwKPj4+PiAr
-ICB3aGljaCB1c2VzIEkyQyBhcyBpdHMgcHJpbWFyeSBjb250cm9sIGJ1cy4KPj4+Pgo+Pj4+ICAg
-IDEpCj4+Pj4gICAgCj4+Pj4gICAgCWRzaS1ob3N0IHsKPj4+Pgo+Pj4+IEBAIC0xNTMsMyArMTcy
-LDY0IEBAIEV4YW1wbGVzCj4+Pj4KPj4+PiAgICAJCQl9Owo+Pj4+ICAgIAkJCj4+Pj4gICAgCQl9
-Owo+Pj4+ICAgIAkKPj4+PiAgICAJfTsKPj4+Pgo+Pj4+ICsKPj4+PiArNSkKPj4+PiArCWkyYy1o
-b3N0IHsKPj4+PiArCQlkc2ktYnJpZGdlQDM1IHsKPj4+PiArCQkJY29tcGF0aWJsZSA9ICIuLi4i
-Owo+Pj4+ICsJCQlyZWcgPSA8MHgzNT47Cj4+Pj4gKwo+Pj4+ICsJCQlwb3J0cyB7Cj4+Pj4gKwkJ
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+PiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+Pj4+
-ICsKPj4+PiArCQkJCXBvcnRAMCB7Cj4+Pj4gKwkJCQkJcmVnID0gPDA+Owo+Pj4+ICsJCQkJCWRz
-aTBfaW46IGVuZHBvaW50IHsKPj4+PiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2kwX291
-dD47Cj4+Pj4gKwkJCQkJfTsKPj4+PiArCQkJCX07Cj4+Pj4gKwo+Pj4+ICsJCQkJcG9ydEAxIHsK
-Pj4+PiArCQkJCQlyZWcgPSA8MT47Cj4+Pj4gKwkJCQkJZHNpMV9pbjogZW5kcG9pbnQgewo+Pj4+
-ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTFfb3V0PjsKPj4+PiArCQkJCQl9Owo+Pj4+
-ICsJCQkJfTsKPj4+PiArCQkJfTsKPj4+PiArCQl9Owo+Pj4+ICsJfTsKPj4+PiArCj4+Pj4gKwlk
-c2kwLWhvc3Qgewo+Pj4+ICsJCS4uLgo+Pj4+ICsKPj4+PiArCQkvKgo+Pj4+ICsJCSAqIHRoaXMg
-RFNJIGluc3RhbmNlIGRyaXZlcyB0aGUgY2xvY2sgZm9yIGJvdGggdGhlIGhvc3QKPj4+PiArCQkg
-KiBjb250cm9sbGVycwo+Pj4+ICsJCSAqLwo+Pj4+ICsJCWNsb2NrLW1hc3RlcjsKPj4+PiArCj4+
-Pj4gKwkJcG9ydHMgewo+Pj4+ICsJCQkuLi4KPj4+PiArCj4+Pj4gKwkJCXBvcnQgewo+Pj4+ICsJ
-CQkJZHNpMF9vdXQ6IGVuZHBvaW50IHsKPj4+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRz
-aTBfaW4+Owo+Pj4+ICsJCQkJfTsKPj4+PiArCQkJfTsKPj4+PiArCQl9Owo+Pj4+ICsJfTsKPj4+
-PiArCj4+Pj4gKwlkc2kxLWhvc3Qgewo+Pj4+ICsJCS4uLgo+Pj4+ICsKPj4+PiArCQlwb3J0cyB7
-Cj4+Pj4gKwkJCS4uLgo+Pj4+ICsKPj4+PiArCQkJcG9ydCB7Cj4+Pj4gKwkJCQlkc2kxX291dDog
-ZW5kcG9pbnQgewo+Pj4+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMV9pbj47Cj4+Pj4g
-KwkJCQl9Owo+Pj4+ICsJCQl9Owo+Pj4+ICsJCX07Cj4+Pj4gKwl9Owo+Pj4KPj4+IC0tCj4+PiBU
-byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUg
-bGludXgtYXJtLW1zbSIKPj4+IGluCj4+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jk
-b21vQHZnZXIua2VybmVsLm9yZwo+Pj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3Zn
-ZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4gCj4gCj4gCj4gCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--C7PTD44AewjTsiSV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 05, 2018 at 11:19:14PM +0300, Dmitry Osipenko wrote:
+> On 01.06.2018 10:30, Boris Brezillon wrote:
+> > On Fri,  1 Jun 2018 00:16:34 +0200
+> > Stefan Agner <stefan@agner.ch> wrote:
+> >=20
+> >> This adds the devicetree binding for the Tegra 2 NAND flash
+> >> controller.
+> >>
+> >> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> >> ---
+> >>  .../bindings/mtd/nvidia-tegra20-nand.txt      | 64 +++++++++++++++++++
+> >>  1 file changed, 64 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra=
+20-nand.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand=
+=2Etxt b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+> >> new file mode 100644
+> >> index 000000000000..5cd984ef046b
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+> >> @@ -0,0 +1,64 @@
+> >> +NVIDIA Tegra NAND Flash controller
+> >> +
+> >> +Required properties:
+> >> +- compatible: Must be one of:
+> >> +  - "nvidia,tegra20-nand"
+> >=20
+> > As discussed previously, I prefer "nvidia,tegra20-nand-controller" or
+> > "nvidia,tegra20-nfc".
+> >=20
+> >> +- reg: MMIO address range
+> >> +- interrupts: interrupt output of the NFC controller
+> >> +- clocks: Must contain an entry for each entry in clock-names.
+> >> +  See ../clocks/clock-bindings.txt for details.
+> >> +- clock-names: Must include the following entries:
+> >> +  - nand
+> >> +- resets: Must contain an entry for each entry in reset-names.
+> >> +  See ../reset/reset.txt for details.
+> >> +- reset-names: Must include the following entries:
+> >> +  - nand
+> >> +
+> >> +Optional children nodes:
+> >> +Individual NAND chips are children of the NAND controller node. Curre=
+ntly
+> >> +only one NAND chip supported.
+> >> +
+> >> +Required children node properties:
+> >> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
+> >> +
+> >> +Optional children node properties:
+> >> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. Current=
+ly only
+> >> +		 "hw" is supported.
+> >> +- nand-ecc-algo: string, algorithm of NAND ECC.
+> >> +		 Supported values with "hw" ECC mode are: "rs", "bch".
+> >> +- nand-bus-width : See nand.txt
+> >> +- nand-on-flash-bbt: See nand.txt
+> >> +- nand-ecc-strength: integer representing the number of bits to corre=
+ct
+> >> +		     per ECC step (always 512). Supported strength using HW ECC
+> >> +		     modes are:
+> >> +		     - RS: 4, 6, 8
+> >> +		     - BCH: 4, 8, 14, 16
+> >> +- nand-ecc-maximize: See nand.txt
+> >> +- nand-is-boot-medium: Makes sure only ECC strengths supported by the=
+ boot ROM
+> >> +		       are choosen.
+> >> +- wp-gpios: GPIO specifier for the write protect pin.
+> >> +
+> >> +Optional child node of NAND chip nodes:
+> >> +Partitions: see partition.txt
+> >> +
+> >> +  Example:
+> >> +	nand@70008000 {
+> >=20
+> > 	nand-controller@70008000 {
+> >=20
+> >> +		compatible =3D "nvidia,tegra20-nand";
+> >=20
+> > 		compatible =3D "nvidia,tegra20-nand-controller";
+> >=20
+> > or
+> >=20
+> > 		compatible =3D "nvidia,tegra20-nfc";
+> >=20
+>=20
+> Maybe it's just me, but when I'm reading "nfc", my first association is t=
+he
+> "Near Field Communication". Probably an explicit
+> "nvidia,tegra20-nand-controller" variant is more preferable.
+
+We don't really use a -controller suffix for any of the other
+controllers because it is kind of implied. "nfc" is also not something
+that is ever referred to in the technical documentation.
+
+"nvidia,tegra20-nand" would be most consistent with all the rest of
+Tegra (c.f. "nvidia,tegra*-ahci", "nvidia,tegra*-pci",
+"nvidia,tegra*-hda", "nvidia,tegra*-gmi", ...).
+
+Thierry
+
+--C7PTD44AewjTsiSV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlsXucMACgkQ3SOs138+
+s6GOsQ/+P8gS5IrroBpzAwxFRbZlyPPj/3aDsFLrE/fNJTmO1q6w2rS+9WdTvoju
+TdVzh0ljfD/HLvav4uMBKcnDwhy4izEdL7qDE/lnU6zelFoRRayzGOKg3wrFK8LT
+2+aGutUIHrGZpLNyINDpeeRd1G2KF7nVvAb2LkBlqpgpB3Eqt6Y5LXQRsC2WzIN6
+ZYH/1QFDMtX6xj5rfvBWG+fcV86WJw032YUKaW3sWIrE3Vio9/RQ9m++BqXcCPdC
+f1m4EVSbfBMwVJRvWDngRL8pO+MdkyawNCeoTzjf/cb54GKYTdY4ENWUBf0YKNKb
+tZpe70dUBYnRB8VJIGZEoTgRvW8qqbRxk04AltmhDIKqIld6T8Zfst47/DHq44H+
+JgmBnnEKC2HYq0L0KlzRmQ7Az/4AZtmgQhLYdL3/8B5KuJrPQQE5M6GEpSp/KBQW
+LhGMMk2YDVriI4Yb3w+yt5E9ftuTQ1vrtXkrMazTkfImKQIe+qz+W4eJaX45KefV
+WhNRu68OvcE+Oa0VO8k7PKUSe0B+79yzsHEqgsyQwH4EmEwAtf7BOC0aOTrJBRMR
+dTXCvmkjK8bxSk36YT/IynfcqqJSyGlDEUqKbazxVqTWDogO7fO/zghebY9Lb+Fv
+sF7o97IyifBg5+Ow7o00oY37SaKGB3nO7Dcqv5nqWDYjqodPwec=
+=7lox
+-----END PGP SIGNATURE-----
+
+--C7PTD44AewjTsiSV--
