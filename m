@@ -1,15 +1,14 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77990: ebisu: Enable watchdog
- timer
-Date: Wed, 6 Jun 2018 11:04:00 +0200
-Message-ID: <20180606090359.zi46cq5ddftdaps7@verge.net.au>
-References: <1528219234-29348-1-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: initial V3HSK board device tree
+Date: Wed, 6 Jun 2018 09:52:24 +0200
+Message-ID: <CAMuHMdXQMkzunWf=z3NpQvKTuKL_j7q_HStfb_2NU2G-npDPNw@mail.gmail.com>
+References: <3923fc5f-103c-94c9-57ba-cb29e8c55d05@cogentembedded.com>
+ <50de037c-7560-c261-f96a-f86065674c9b@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1528219234-29348-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <50de037c-7560-c261-f96a-f86065674c9b@cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,23 +18,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 05, 2018 at 07:20:34PM +0200, Geert Uytterhoeven wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> 
-> Add a device node for the Watchdog Timer (WDT) controller on the
-> R8A77990 SoC, and enable the watchdog on the Ebisu board.
-> 
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> [geert: Squashed 2 commits]
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Thu, May 10, 2018 at 8:12 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add the initial device  tree for  the V3H Starter Kit board.
+> The board has 1 debug serial port (SCIF0); include support for it,
+> so that the serial console can work.
+>
+> Based on the original (and large) patch by Vladimir Barinov.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Hi,
+FTR:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
+> --- /dev/null
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> +&pfc {
+> +       scif0_pins: scif0 {
+> +               groups = "scif0_data";
+> +               function = "scif0";
+> +       };
+
+JFYI, hscif0 can be routed to the same pins, if higher performance is needed.
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
