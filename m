@@ -1,45 +1,101 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3] arm64: dts: renesas: r8a77980: add GPIO support
-Date: Wed, 6 Jun 2018 11:07:27 +0200
-Message-ID: <CAMuHMdU4smhy0Z6YUVP2wr+YnJof=eW86Q9jN47r0yo3VEsB9A@mail.gmail.com>
-References: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
- <3c195d53-be0f-ad15-92e6-8ba43b14f076@cogentembedded.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
+ iec958 controls
+Date: Wed, 6 Jun 2018 11:31:45 +0200
+Message-ID: <c4b2d22f-320d-a415-6328-b33f9c03aafe@st.com>
+References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+ <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
+ <20180417111733.GG8973@sirena.org.uk>
+ <2ae6c5b6-872a-9aaa-6ca4-e29adb7c8bc0@st.com> <s5hpo15xf1q.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3c195d53-be0f-ad15-92e6-8ba43b14f076@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <s5hpo15xf1q.wl-tiwai@suse.de>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Olivier MOYSAN <olivier.moysan@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "jsarha@ti.com" <jsarha@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 1, 2018 at 10:44 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Describe all 6 GPIO controllers in the R8A77980 device tree.
->
-> Based on the original (and large) patch by Vladimir Barinov.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+CgpPbiAwNi8wNS8yMDE4IDA4OjI5IFBNLCBUYWthc2hpIEl3YWkgd3JvdGU6Cj4gT24gVHVlLCAw
+NSBKdW4gMjAxOCAxNzo1MDo1NyArMDIwMCwKPiBBcm5hdWQgUG91bGlxdWVuIHdyb3RlOgo+PiAK
+Pj4gSGkgVGFrYXNoaSwKPj4gCj4+IE9uIDA0LzE3LzIwMTggMDE6MTcgUE0sIE1hcmsgQnJvd24g
+d3JvdGU6Cj4+ID4gT24gVHVlLCBBcHIgMTcsIDIwMTggYXQgMDg6Mjk6MTdBTSArMDAwMCwgT2xp
+dmllciBNT1lTQU4gd3JvdGU6Cj4+ID4gCj4+ID4+IEkgZ3Vlc3MgdGhlIGJsb2NraW5nIHBhdGNo
+IGluIHRoaXMgcGF0Y2hzZXQgaXMgdGhlIHBhdGNoICJhZGQgSUVDOTU4IAo+PiA+PiBjaGFubmVs
+IHN0YXR1cyBjb250cm9sIGhlbHBlciIuIFRoaXMgcGF0Y2ggaGFzIGJlZW4gcmV2aWV3ZWQgc2V2
+ZXJhbCAKPj4gPj4gdGltZXMsIGJ1dCBkaWQgbm90IGdldCBhIGFjayBzbyBmYXIuCj4+ID4+IElm
+IHlvdSB0aGluayB0aGVzZSBoZWxwZXJzIHdpbGwgbm90IGJlIG1lcmdlZCwgSSB3aWxsIHJlaW50
+ZWdyYXRlIHRoZSAKPj4gPj4gY29ycmVzcG9uZGluZyBjb2RlIGluIHN0bSBkcml2ZXIuCj4+ID4+
+IFBsZWFzZSBsZXQgbWUga25vdywgaWYgSSBuZWVkIHRvIHByZXBhcmUgYSB2MiB3aXRob3V0IGhl
+bHBlcnMsIG9yIGlmIHdlIAo+PiA+PiBjYW4gZ28gZnVydGhlciBpbiB0aGUgcmV2aWV3IG9mIGll
+YyBoZWxwZXJzIHBhdGNoID8KPj4gPiAKPj4gPiBJIGRvbid0IG1pbmQgZWl0aGVyIHdheSBidXQg
+eW91J3JlIHJpZ2h0IGhlcmUsIEknbSB3YWl0aW5nIGZvciBUYWthc2hpCj4+ID4gdG8gcmV2aWV3
+IHRoZSBmaXJzdCBwYXRjaC7CoCBJJ2QgcHJvYmFibHkgYmUgT0sgd2l0aCBpdCBqdXN0IGludGVn
+cmF0ZWQKPj4gPiBpbnRvIHRoZSBkcml2ZXIgaWYgd2UgaGF2ZSB0byBnbyB0aGF0IHdheSB0aG91
+Z2guCj4+IAo+PiBHZW50bGVtZW4gcmVtaW5kZXIgZm9yIHRoaXMgcGF0Y2ggc2V0LiBXZSB3b3Vs
+ZCBhcHByZWNpYXRlIHRvIGhhdmUgeW91cgo+PiBmZWVkYmFjayBvbiBpZWMgaGVscGVyLgo+PiBG
+cm9tIG91ciBwb2ludCBvZiB2aWV3IGl0IGNvdWxkIGJlIHVzZWZ1bCB0byBoYXZlIGEgZ2VuZXJp
+YyBtYW5hZ2VtZW50Cj4+IG9mIHRoZSBpZWMgY29udHJvbHMgYmFzZWQgb24gaGVscGVycyBpbnN0
+ZWFkIG9mIHJlZGVmaW5pbmcgdGhlbSBpbiBEQUlzLgo+PiBIYXZpbmcgdGhlIHNhbWUgYmVoYXZp
+b3IgZm9yIHRoZXNlIGNvbnRyb2xzIGNvdWxkIGJlIHVzZWZ1bCB0byBlbnN1cmUKPj4gY29oZXJl
+bmNlIG9mIHRoZSBjb250cm9sIG1hbmFnZW1lbnQgdXNlZCBieSBhcHBsaWNhdGlvbiAoZm9yIGlu
+c3RhbmNlCj4+IEdzdHJlYW1lciB1c2VzIGl0IHRvIGRldGVybWluZSBpZWMgcmF3IG1vZGUgY2Fw
+YWJpbGl0eSBmb3IgaWVjNjE5Mzcgc3RyZWFtcykKPiAKPiBPaCBzb3JyeSBmb3IgdGhlIGxhdGUg
+cmVwbHksIEkndmUgdG90YWxseSBvdmVybG9va2VkIHRoZSB0aHJlYWQuCj4gCj4gQW5kLCBhbm90
+aGVyIHNvcnJ5OiB0aGUgcGF0Y2hzZXQgZG9lc24ndCBsb29rIGNvbnZpbmNpbmcgZW5vdWdoIHRv
+Cj4gbWUuCj4gCj4gRmlyc3Qgb2ZmLCB0aGUgcHJvdmlkZWQgQVBJIGRlZmluaXRpb24gYXBwZWFy
+cyBzb21ld2hhdAo+IHVuY29udmVudGlvbmFsLCB0aGUgbWl4dHVyZSBvZiB0aGUgb3BzLCB0aGUg
+c3RhdGljIGRhdGEgYW5kIHRoZQo+IGR5bmFtaWMgZGF0YS4KU29ycnkgaSBjYW4ndCBmaWd1cmUg
+b3V0IHlvdXIgcG9pbnQuIEkgc3VwcG9zZSB0aGF0IHlvdSBzcGVhayBhYm91dCB0aGUKc25kX3Bj
+bV9pZWM5NThfcGFyYW1zLgp3aGF0IHdvdWxkIGJlIGEgbW9yZSBjb252ZW50aW9uYWwgQVBJPwoK
+PiAKPiBNb3Jlb3ZlciwgdGhpcyBpcyBvbmx5IGZvciB5b3VyIGRyaXZlciwgQVRNLsKgIApJdCBp
+cyBhbHNvIGNvbXBhdGlibGUgd2l0aCB0aGUgc291bmQvc3RpIGRyaXZlciwgZXZlbiBpZiB3ZSBk
+b2VzIG5vdApwcm9wb3NlIHBhdGNoIHlldC4gV2UgYWxzbyBwbGFuIHRvIHByb3Bvc2UgYW4gaW1w
+bGVtZW50YXRpb24sIGZvciB0aGUKSERNSV9jb2RlYyB0aGF0IHdvdWxkIG5lZWQgdG8gZXhwb3J0
+IGEgY29udHJvbCB0byBhbGxvdyBub25lLWF1ZGlvIG1vZGUuCgo+SWYgaXQgd2VyZSBhbiBBUEkg
+dGhhdAo+IGRvZXMgY2xlYW4gdXAgdGhlIGFscmVhZHkgZXhpc3RpbmcgdXNhZ2VzLCBJJ2QgaGFw
+cGlseSBhcHBseSBpdC4gVGhlcmUKPiBhcmUgbG90cyBvZiBkcml2ZXJzIGNyZWF0aW5nIGFuZCBj
+b250cm9sbGluZyB0aGUgSUVDOTU4IGN0bHMgZXZlbgo+IG5vdy4KPiAKPiBBbHNvLCB0aGUgcGF0
+Y2hzZXQgcmVxdWlyZXMgbW9yZSBmaW5lLXR1bmluZywgaW4gYW55d2F5cy7CoCBUaGUgY2hhbmdl
+cwo+IGluIGNyZWF0ZV9pZWM5NThfY29uc3VtcmUoKSBhcmUgYmFzaWNhbGx5IGlycmVsZXZhbnQs
+IHNob3VsZCBiZSBzcGxpdAo+IG9mZiBhcyBhbiBpbmRpdmlkdWFsIGZpeC7CoCBpdCBpcyBsaW5r
+ZWQgdG8gdGhlIGNvbnRyb2wsIGFzIG5vdCBwb3NzaWJsZSBpbiBleGlzdGluZyBpbXBsZW1lbnRh
+dGlvbgoocmF0ZSBhbmQgd2lkdGggYXJlIGdldCBmcm9tIGh3cGFyYW0gb3IgcnVudGltZSkuIEJ1
+dCBubyBwcm9ibGVtIHdlIGNhbgpzcGxpdCBpdCBpbiBhIHNlcGFyYXRlIHBhdGNoLgoKQWxzbywg
+dGhlIG5ldyBmdW5jdGlvbiBkb2Vzbid0IGNyZWF0ZSB0aGUKPiAiWFhYIE1hc2siIGNvbnRyb2xz
+LsKgIEFuZCB0aGUgYnl0ZSBjb21wYXJpc29uIHNob3VsZCBiZSByZXBsYWNlZCB3aXRoCj4gbWVt
+Y21wKCksIGV0YywgZXRjLgpZZXMgbWFzayBhcmUgbWlzc2luZywgY2FuIGJlIGFkZGVkLiBGb3Ig
+dGhlIHJlc3QgY291bGQgeW91IGNvbW1lbnQKZGlyZWN0bHkgaW4gY29kZT8gaSBzdXBwb3NlIHRo
+YXQgeW91IHdhbnQgdG8gcmVwbGFjZSB0aGUgZm9yIGxvb3BzIGJ5Cm1lbWNtcCwgbWVtY3B5Li4u
+Cj4gCj4gU28sIHBsZWFzZSBwcm9jZWVkIHJhdGhlciB3aXRoIHRoZSBvcGVuIGNvZGVzIGZvciBu
+b3cuwqAgSWYgeW91IGNhbgo+IHByb3ZpZGUgYSBwYXRjaCB0aGF0IGNsZWFucyB1cCB0aGUgKm11
+bHRpcGxlKiBkcml2ZXIgY29kZXMsIGFnYWluLAo+IEknbGwgaGFwcGlseSB0YWtlIGl0LsKgIEJ1
+dCBpdCBjYW4gYmUgZG9uZSBhbnl0aW1lIGxhdGVyLCB0b28uCk5vdCBzaW1wbGUgdG8gY2xlYW4g
+dXAgdGhlIG90aGVyIGRyaXZlcnMgYXMgdGhpcyBjb250cm9sIGlzIGEgUENNCmNvbnRyb2wsIHRo
+YXQgaXMgbWFpbmx5IGltcGxlbWVudGVkIGFzIGEgbWl4ZXIgb3IgY2FyZCBjb250cm9sLgpUaGlz
+IG1lYW5zIHRoYXQgaXQgc2hvdWxkIGJlIHJlZ2lzdGVyZWQgb24gdGhlIHBjbV9uZXcgaW4gQ1BV
+IERBSSBvciBpbgp0aGUgREFJIGNvZGVjLCB0byBiZSBhYmxlIHRvIGJpbmQgaXQgdG8gdGhlIFBD
+TSBkZXZpY2UuCklucGFjdCBpcyBub3Qgc3RyYWlndGhmb3J3YXJkIGFzIHRoaXMgY291bGQgZ2Vu
+ZXJhdGUgcmVncmVzc2lvbiBvbiBkcml2ZXIuCgpGb3Igbm93IFdlIGNhbiBhZGQgdGhlIGNsZWFu
+IHVwIG9uIHRoZSBzdGkgZHJpdmVyIGJhc2VkIG9uIHRoaXMgaGVscGVyLAphbmQgd2UgYXJlIHdv
+cmtpbmcgb24gdGhlIEhETUlfY29kZWMsIHdlIGNvdWxkIGFsc28gdXNlIHRoaXMgaGVscGVyIHRv
+CmV4cG9ydCB0aGUgY29udHJvbC4uLi4KClNvIGlmIHlvdSBlc3RpbWF0ZSB0aGF0IGl0IGlzIGlu
+dGVyZXN0aW5nIHRvIHB1cmNoYXNlIG9uIHRoaXMgaGVscGVyIHdlCmNhbiB0cnkgdG8gY29tZSBi
+YWNrIHdpdGggYSBwYXRjaCBzZXQgdGhhdCBpbXBsZW1lbnRzIHRoZSBoZWxwZXIgZm9yCnRoZSAz
+IGRyaXZlcnMuCgpUaGUgb3RoZXIgb3B0aW9uLCBpcyB0aGF0IHdlIGRyb3AgdGhlIGhlbHBlcnMs
+IGFuZCBpbXBsZW1lbnQgdGhlIGNvbnRyb2wKZGlyZWN0bHkgaW4gb3VyIGRyaXZlcnMuCgpQbGVh
+c2UganVzdCB0ZWxsIHVzIGlmIHdlIHNob3VsZCBjb250aW51ZSB0byBwcm9wb3NlIHRoZSBoZWxw
+ZXJzIG9yIG5vdC4KClRoYW5rcywKQXJuYXVkCgo+IAo+IAo+IHRoYW5rcywKPiAKPiBUYWthc2hp
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2
+ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1h
+bi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
