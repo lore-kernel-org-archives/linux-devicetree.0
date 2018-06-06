@@ -1,320 +1,94 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Wed, 6 Jun 2018 10:34:49 +0300
-Message-ID: <20180606073449.GD20078@localhost.localdomain>
-References: <cover.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
- <3b05ca98a671a762013c312f8b70543402ee7556.1527669443.git.matti.vaittinen@fi.rohmeurope.com>
- <20180531030129.GA16122@rob-hp-laptop>
- <20180531071717.GG13528@localhost.localdomain>
- <20180531102315.GA5150@localhost.localdomain>
- <CAL_Jsq+33G7zMEDOUXHQijxqqbvqykxZENLe1-52ECkXwo2o4g@mail.gmail.com>
- <20180601062540.GB5150@localhost.localdomain>
- <CAL_JsqJNMxR=zdwR41iLfWU=u3J_=_VkxVL+g3a12_4vvNwBtw@mail.gmail.com>
- <20180604113225.GE5150@localhost.localdomain>
- <CAL_JsqL3Z_o2CFeYDvb3PqgiskTSHuOVqwdUP+gFymLDTKhn2g@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 3/3] gpio: pca953x: fix address calculation for
+ pcal6524
+Date: Wed, 6 Jun 2018 09:35:25 +0200
+Message-ID: <20180606073525.GA18743@amd>
+References: <cover.1526533188.git.hns@goldelico.com>
+ <e70e83f07aebaf702fef90a9fac61e41d8b558b0.1526533188.git.hns@goldelico.com>
+ <20180523140635.GB27215@amd>
+ <CAHp75VfxN1RZBFRK6oJ5AzCe_2ej9eYdwt96X+fJZgFy65eaFg@mail.gmail.com>
+ <20180605203941.GA28143@amd>
+ <A639885E-0E5D-4FB0-BE51-AFF35BF4F76B@computer.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL3Z_o2CFeYDvb3PqgiskTSHuOVqwdUP+gFymLDTKhn2g@mail.gmail.com>
+In-Reply-To: <A639885E-0E5D-4FB0-BE51-AFF35BF4F76B@computer.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: "H. Nikolaus Schaller" <hns@computer.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 05, 2018 at 10:46:14AM -0500, Rob Herring wrote:
-> On Mon, Jun 4, 2018 at 6:32 AM, Matti Vaittinen
-> <mazziesaccount@gmail.com> wrote:
-> > On Fri, Jun 01, 2018 at 12:32:16PM -0500, Rob Herring wrote:
-> >> On Fri, Jun 1, 2018 at 1:25 AM, Matti Vaittinen
-> >> <mazziesaccount@gmail.com> wrote:
-> >> > On Thu, May 31, 2018 at 09:07:24AM -0500, Rob Herring wrote:
-> >> >> On Thu, May 31, 2018 at 5:23 AM, Matti Vaittinen
-> >> >> <mazziesaccount@gmail.com> wrote:
-> >> >> > On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
-> >> >> >> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
-> >> >> >> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
-> >> >> >> > > Document devicetree bindings for ROHM BD71837 PMIC MFD.
-> >> >> >> > > + - interrupts            : The interrupt line the device is connected to.
-> >> >> >> > > + - interrupt-controller  : Marks the device node as an interrupt controller.
-> >> >> >> >
-> >> >> >> > What sub blocks have interrupts?
-> >> >> >>
-> >> >> >> The PMIC can generate interrupts from events which cause it to reset.
-> >> >> >> Eg, irq from watchdog line change, power button pushes, reset request
-> >> >> >> via register interface etc. I don't know any generic handling for these
-> >> >> >> interrupts. In "normal" use-case this PMIC is powering the processor
-> >> >> >> where driver is running and I do not see reasonable handling because
-> >> >> >> power-reset is going to follow the irq.
-> >> >> >>
-> >> >> >
-> >> >> > Oh, but when reading this I understand that the interrupt-controller
-> >> >> > property should at least be optional.
-> >> >>
-> >> >> I don't think it should. The h/w either has an interrupt controller or
-> >> >> it doesn't.
-> >> >
-> >> > I hope this explains why I did this interrupt controller - please tell
-> >> > me if this is legitimate use-case and what you think of following:
-> >> >
-> >> > +Optional properties:
-> >> > + - interrupt-controller        : Marks the device node as an interrupt controller.
-> >> > +                         BD71837MWV can report different power state change
-> >> > +                         events to other devices. Different events can be seen
-> >> > +                         as separate BD71837 domain interrupts.
-> >>
-> >> To what other devices?
-> >
-> > Would it be better if I wrote "other drivers" instead? I think I've seen
-> > examples where MFD driver is just providing the interrupts for other
-> > drivers - like power-button input driver. Currently I have no such "irq
-> > consumer" drivers written. Still I would like to expose these interrupts
-> > so that they are ready for using if any platform using PMIC needs them.
-> 
-> No, worse. Interrupt binding describes interrupt connections between a
-> controller and devices (which could be sub-blocks in a device), not to
-> drivers.
 
-Ok.
- 
-> I'm just curious as to what sub-blocks/devices there are. You don't
-> have to have a driver (yet) to define the devices.
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right. I should have done this from the start. I just thought everyone
-is busy with other things and pushing people to read data sheets might
-be considered as lazines. "Go and read from data sheet what my driver
-does, I am too lazy to try to explain what I am doing" - type of thing
-you know... But as people asked me for more information about HW:
+On Wed 2018-06-06 07:33:32, H. Nikolaus Schaller wrote:
+> Hi,
+>=20
+> > Am 05.06.2018 um 22:39 schrieb Pavel Machek <pavel@ucw.cz>:
+> >=20
+> > On Tue 2018-06-05 18:37:21, Andy Shevchenko wrote:
+> >> On Wed, May 23, 2018 at 5:06 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> >>> On Thu 2018-05-17 06:59:49, H. Nikolaus Schaller wrote:
+> >>>> The register constants are so far defined in a way that they fit
+> >>>> for the pcal9555a when shifted by the number of banks, i.e. are
+> >>>> multiplied by 2 in the accessor function.
+> >>>>=20
+> >>>> Now, the pcal6524 has 3 banks which means the relative offset
+> >>>> is multiplied by 4 for the standard registers.
+> >>>>=20
+> >>>> Simply applying the bit shift to the extended registers gives
+> >>>> a wrong result, since the base offset is already included in
+> >>>> the offset.
+> >>>>=20
+> >>>> Therefore, we have to add code to the 24 bit accessor functions
+> >>>> that adjusts the register number for these exended registers.
+> >>>>=20
+> >>>> The formula finally used was developed and proposed by
+> >>>> Andy Shevchenko <andy.shevchenko@gmail.com>.
+> >>=20
+> >>>>      int bank_shift =3D fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
+> >>>> +     int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
+> >>>> +     int pinctrl =3D (reg & PCAL_PINCTRL_MASK) << 1;
+> >>=20
+> >>> Is this reasonable to do on each register access? Compiler will not be
+> >>> able to optimize out fls and shifts, right?
+> >>=20
+> >> On modern CPUs fls() is one assembly command. OTOH, any proposal to do
+> >> this better?
+> >>=20
+> >> What I can see is that bank_shift is invariant to the function, and
+> >> maybe cached.
+> >=20
+> > Yes, I thought that caching bank_shift might be good idea. I thought
+> > it was constant for given chip...
+>=20
+> Yes, it is an f(chip), but the question that comes to my mind is if
+> optimization is worth any effort. This is an accessor method over
 
-Datasheet:
-https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
-(Would it be good idea to add this link to comments in MFD driver or to
-binding document(s)?) Page 8 contains roughly the same picture I drew
-below. Page 69 shows the interrupt registers. And for interested ones,
-HW state transitions are described on page 24.
+It will also be less ugly. Copy&pasted complex exprepsion all over the
+driver is not nice.
+									Pavel
 
-                    +--------------------------------------------------+
-                    |                                                  |
-VSYS           +-----------------+                    +-----------+    |
-                    |            |                    |           |    |
-                    |  +-------+ |                    | BUCKS 1-4 +-------->
-                    |  |       | |                    |           |    |
-I2C IF         +------->   H   | +--------------------+  DVS      +-------->
-                    |  |   O   | |                    |  Support  |    |
-PWRON_B        +------->   S   | |                    |           +-------->
-                    |  |   T   | |                    |           |    |
-PMIC_STBY_REQ  +------->       | |                    |           +-------->
-                    |  |   I   | |                    |           |    |
-PMIC_ON_REQ    +------->   /   | |                    +-----------+    |
-                    |  |   F   | |                                     |
-WDOG_B         +------->       | |                    +-----------+    |
-                    |  |       | |                    |           +-------->
-                    |  |       | +--------------------+ BUCKS 5,8 |    |
-                    |  |       | |                    |           +-------->
-                    |  |       | |                    +-----------+    |
-                    |  |       | |                                     |
-                    |  |       | |                     +----------+    |
-IRQ_OUT        <-------+       | |                     |          |    |
-                    |  |       | +---------------------+ LDO1     +-------->
-C32K_OUT       <-------+       | |                     |          |    |
-                    |  |       | |                     +----------+    |
-                    |  |       | |                                     |
-                    |  |       | |                     +----------+    |
-                    |  |       | |                     |          |    |
-                    |  |       | +---------------------+ LDO2     +-------->
-                    |  |       | |                     |          |    |
-                    |  |       | |                     +----------+    |
-                    |  |       | |                                     |
-                    |  |       | |                     +----------+    |
-                    |  |       | |                     |          |    |
-                    |  |       | +---------------------+ LDO7     +-------->
-                    |  +-------+ |                     |          |    |
-                    |            |                     +----------+    |
-                    |            |                                     |
-                    |            | +----------+ +-------------------------->
-                    |            | |          | |                      |
-                    |            +-+ BUCK6    +-+      +----------+    |
-                    |            | |          | |      |          |    |
-                    |            | +----------+ +------> LDO5     +-------->
-                    |            |              |      |          |    |
-                    |            |              |      +----------+    |
-                    |            |              |                      |
-                    |  +-------+ |              |      +----------+    |
-                    |  |       | |              o      |          |    |
- XIN         +---------+ 32K   | |               \-----> LDO3     +-------->
-                    |  |Crystal| +--------------o      |          |    |
-                    |  |Driver | |  +---------+        +----------+    |
- XOUT        +---------+       | |  |         |                        |
-                    |  |       | +--+ BUCK7   +-+-------------------------->
-                    |  +-------+ |  |         | |                      |
-                    |            |  +---------+ |      +-----------+   |
-                    |            |              |      |           |   |
-                    |            |              +------>   LDO6    +------->
-                    |            |              |      |           |   |
-                    |            |              |      +-----------+   |
-                    |            |              |                      |
-                    |            |              |      +-----------+   |
-                    |            |              o      |           |   |
-                    |            |               \----->   LDO4    +------->
-                    |            +--------------o      |           |   |
-                    |                                  +-----------+   |
-                    |                                                  |
-                    +--------------------------------------------------+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-On the left we see input lines to PMIC. PWRON_B intended to be connected
-to power button. PMIC_STBY_REQ and PMIC_ON_REQ lines for controlling HW
-state machine PMIC has. And WDOG_B from watch dog.
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-PMIC has control register for controlling what happens to BUCK/LDO
-outputs when input line states change. PMIC reports change in input
-lines via the IRQ_OUT line and IRQ status register.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-So HW mapping for interrup(s) from PMIC would be:
+iEYEARECAAYFAlsXjr0ACgkQMOfwapXb+vIc1wCggj6eiSaPQ5SgwApWF99NsdKs
+vqoAoMPTlFh+Gg+YVlfFIoV6TYdftu6l
+=1hdR
+-----END PGP SIGNATURE-----
 
-(HW) event => BD71837 domain IRQ
-
-PMIC_STBY_REQ line level change		=> 0
-PMIC_ON_REQ line level change		=> 1
-PMIC_WDOG_B line level change		=> 2
-PMIC_PWRON_B line level change		=> 3
-PMIC_PWRON_B line/long push detected	=> 4
-PMIC_PWRON_B line/short push detected	=> 5
-SWRESET register on PMIC written	=> 6
-
-> > "The BD71837 driver only provides the infrastructure for the IRQs. The
-> > users can write his own driver to convert the IRQ into the event they
-> > wish. The IRQ can be used with the standard
-> > request_irq/enable_irq/disable_irq API inside the kernel." (I found this
-> > text from NXP forums and ruthlessly copied and modified it over here)
-> 
-> That's all OS details that have nothing to do with the binding. The
-> binding describes the h/w.
-
-Right. I'll drop it.
-
-> 
-> > If this is not feasible, then I will remove the irq handling from MFD
-> > (or leave code there but remove the binding information?) as I don't
-> > know what the irq handles should do in generic case.
-> 
-> I don't understand what you mean by generic. An IRQ has to be wired to
-> something. The only generic IRQs are GPIOs.
-
-By generic case I mean for example when PMIC_WDOG_B line changes. In
-example use-case I have seen, this would be cutting the power from
-processor. But this is not necessarily the case. This can be configured
-from PMIC register so that action can be warm or cold reset, or no
-action. Finally, I'd rather not expect that the BUCKs are supplying
-power to processor which is controlling the PMIC. Thus I do not know how
-to do generic _handler_ for these interrupts.
-
-So from PMIC HW point of view I know that the interrupt is tied to
-PMIC_WDOG_B line change. And this can be described in binding document.
-(I tried doing this to v5 patch). Still from system/SW point of view I
-don't know what action should be taken (or by which driver) when such
-change happens. Hence I liked the idea of hiding the irq register
-details in MFD driver by declaring it as interrupt controller - and
-leaving the interrupts to be used by what ever drivers need the change
-information is system the PMIC is used.
-
-> >> > + - #interrupt-cells    : The number of cells to describe an IRQ should be 1.
-> >> > +                           The first cell is the IRQ number.
-> >> > +                           masks from ../interrupt-controller/interrupts.txt.
-> >
-> > Sorry this "masks from ../interrupt-controller/interrupts.txt." was
-> > accidentally pasted here. I should have deleted it.
-> >
-> >> I'm still not clear. Generally in a PMIC, you'd define an interrupt
-> >> controller when there's a common set of registers to manage sub-block
-> >> interrupts (typical mask/unmask, ack regs) and the subblocks
-> >> themselves have control of masking/unmasking interrupts. If there's
-> >> not a need to have these 2 levels of interrupt handling, then you
-> >> don't really need to define an interrupt controller.
-> >
-> > And to clarify - the PMIC can generate irq via one irq line. This is
-> > typical ACTIVE_LOW irq with 8 bit "write 1 to clear" status register and
-> > 8 bit mask register. The role of interrupt-controller code here is just
-> > to allow these 8 irq reasons to be seen as individual BD71837 domain
-> > interrupts. I just don't have the driver(s) for handling these
-> > interrupts.
-> 
-> If what I'm asking for above is still not clear, what are the 8 bits
-> defined as or what are those 8 lines connected to?
-
-I am sorry - there were only 7 bits. One bit was unused. I hope my
-explanation abowe did clarify this.
-
-> >  Or should I just
-> > somehow state that irq X in BD71837 is a "power button short push"
-> > event and power button driver should be the consumer for it?
-> 
-> Yes, at least, but who is the consumer is an OS detail that is not
-> relevant to the binding. Ideally, you would describe the node with the
-> interrupts property for "irq X".
-
-I think I need to try changing my mind set. I tend to think the DT nodes
-are for drivers so that drivers can get the information they need. An as
-I don't know what kind of driver would be handling the irq, I don't know
-what kind of DT node would be good for it. Hence I would rather leave
-constructing the node who consumes the IRQ to someone who knows what
-they want to do with this IRQ information.
-
-> 
-> > Rest of the interrupts are not so obvious. I have no idea how I should
-> > handle rest of the interrupts. Those are interrupts which cause the PMIC
-> > to reset and cut the powers from most of the regulators too. I can
-> > easily think setup where one processor is controlling PMIC which powers
-> > for the other processor. And getting IRQ if for example watchdog reset
-> > the other processor would probably be very usefull. But doing any
-> > 'de-facto' handler for this is hard. Only generally usefull thing would
-> > be notifying the user-space but I don't think I should invent any new
-> > kernelspace - userspace interfaces for this. I believe that when such
-> > are needed those should be implemented by ones knowing the platform.
-> 
-> Don't think about the OS or driver details. Think about sub-blocks of
-> the hardware and the connections between them (like irqs) and to board
-> that need to be described in DT.
-> 
-> If you can't describe that, then you just probably shouldn't have
-> sub-nodes in DT (ever).
-
-This is why I did not add any "irq consumer" nodes in example DT. But I
-believe someone can think of a board/setup where such are needed. Thus I
-liked the idea of providing the interrupt-controller.
-
-> >
-> > So please bear with me but do you mean I should
-> > a) document what conditions generate which IRQ
-> >    or
-> > b)  should I tell what kind of driver is needed for handling the IRQs
-> >    or
-> > c) should I first write code using IRQs before addinf MFD binding?
-> 
-> A.
-
-
-So what do you think of this:
-
-+Optional properties:
-+ - interrupt-controller	: Marks the device node as an interrupt controller.
-+			  BD71837MWV can report input line state change and SW
-+			  reset events via interrupts. Different events can be seen
-+			  as separate BD71837 domain interrupts.
-+ - #interrupt-cells	: The number of cells to describe an IRQ should be 1.
-+			  The value in cell is the IRQ number.
-+			    Meaningfull numbers are:
-+			      0 => PMIC_STBY_REQ level change
-+			      1 => PMIC_ON_REQ level change
-+			      2 => WDOG_B level change
-+			      3 => Power Button level change
-+			      4 => Power Button Long Push
-+			      5 => Power Button Short Push
-+			      6 => SWRESET register is written 1
-
-Would this be getting closer to what is needed from binding document?
-
-Oh, and thanks for the patience =)
-
-Br,
-	Matti Vaittinen
+--4Ckj6UjgE2iN1+kY--
