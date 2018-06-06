@@ -1,62 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
- bindings
-Date: Wed, 6 Jun 2018 09:04:32 +0200
-Message-ID: <CAMuHMdW=qy6+2iXz6arSfcoXjbgrySxutCKqgT5_6oyCL_XugA@mail.gmail.com>
-References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
- <3434502.pBJZTsWR88@avalon>
- <50730759-dfda-12c5-a7f3-4e8a9b7b1eb9@cogentembedded.com>
- <4427404.jlkXCGIJ77@avalon>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v3 2/6] mtd: rawnand: add an option to specify NAND chip
+ as a boot device
+Date: Wed, 6 Jun 2018 09:28:44 +0200
+Message-ID: <20180606092844.3ab746b2@bbrezillon>
+References: <20180531221637.6017-1-stefan@agner.ch>
+        <20180531221637.6017-3-stefan@agner.ch>
+        <20180605201102.GA22487@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4427404.jlkXCGIJ77@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180605201102.GA22487@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Stefan Agner <stefan@agner.ch>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFR1ZSwgSnVuIDUsIDIwMTggYXQgMTA6MjQgUE0sIExhdXJlbnQgUGlu
-Y2hhcnQKPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4gT24gVHVl
-c2RheSwgNSBKdW5lIDIwMTggMjI6NDk6NTcgRUVTVCBTZXJnZWkgU2h0eWx5b3Ygd3JvdGU6Cj4+
-IE9uIDA2LzA1LzIwMTggMTA6MTYgUE0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+ID4+Pj4g
-RG9jdW1lbnQgdGhlIFItQ2FyIFYzSCAoUjhBNzc5ODApIFNvQyBpbiB0aGUgUi1DYXIgRFUgYmlu
-ZGluZ3M7IHRoZSBEVQo+PiA+Pj4+IGhhcmR3YXJlIHNlZW1zIHRoZSBzYW1lIGFzIGluIHRoZSBS
-LUNhciBWM00gKFI4QTc3OTcwKS4KPj4gPj4+Cj4+ID4+PiBIb3cgYWJvdXQgInRoZSBEVSBoYXJk
-d2FyZSBoYXMgdGhlIHNhbWUgdG9wb2xvZ3kgYXMgaW4gdGhlIFItQ2FyIFYzTQo+PiA+Pj4gKFI4
-QTc3OTcwKSIgPyAic2VlbXMiIHNvdW5kcyBsaWtlIHdlJ3JlIHZlcnkgdW5zdXJlIDotKQo+PiA+
-Pgo+PiA+PiBUaGF0J3MgcHJvYmFibHkgYmV0dGVyLCBpbmRlZWQuCj4+ID4+Cj4+ID4+Pj4gU2ln
-bmVkLW9mZi1ieTogU2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1iZWRk
-ZWQuY29tPgo+PiA+Pj4+Cj4+ID4+Pj4gLS0tCj4+ID4+Pj4gVGhlIHBhdGNoIGlzIGFnYWluc3Qg
-dGhlICdkcm0tbmV4dCcgYnJhbmNoIG9mIERhdmlkIEFpcmxpZSdzCj4+ID4+Pj4gJ2xpbnV4Lmdp
-dCcgcmVwby4KPj4gPj4+Cj4+ID4+PiBUaGVuIHlvdSBtaWdodCB3YW50IHRvIHN3aXRjaCB0byBn
-aXQ6Ly9hbm9uZ2l0LmZyZWVkZXNrdG9wLm9yZy9kcm0vZHJtCj4+ID4+PiA6LSkKPj4gPj4KPj4g
-Pj4gTm8sIHRoZSBjb3JyZXNwb25kaW5nIE1BSU5UQUlORVJTIHJlY29yZHMgZG9uJ3QgaW5jbHVk
-ZQo+PiA+PiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS8gb3Igd29yc2UgeWV0LCB0aGUgRFUgYmlu
-ZGluZ3MuIDotKQo+Pgo+PiBXZWxsLCB0aGVyZSBpcyBzdGlsbCBubyBjb3JyZXNwb25kaW5nIHJl
-Y29yZCwgYWN0dWFsbHkuLi4KPj4KPj4gPiBNeSBwb2ludCBpcyB0aGF0IERhdmUncyB0cmVlIGhh
-cyBtb3ZlZC4KPj4KPj4gSG93IGFtIEkgc3VwcG9zZWQgdG8gbGVhcm4gYWJvdXQgaXQsIGZyb20g
-Z29zc2lwcz8gOi0pCj4KPiBJIGxlYXJudCBpdCB0aGUgaGFyZCB3YXkgd2hlbiBhIHB1bGwgcmVx
-dWVzdCBJIGhhZCBwcmVwYXJlZCBhZ2FpbnN0IHRoZSBvbGQKPiB0cmVlIGNvbmZsaWN0ZWQgKGF0
-IGNvbXBpbGUgdGltZSkgd2l0aCBwYXRjaGVzIG1lcmdlZCBpbiB0aGUgbmV3IHRyZWUuIFRoaXMK
-PiBicm9rZSB0aGUgYnVpbGQsIGFuZCBJIGxlYXJudCBhYm91dCB0aGUgbmV3IHRyZWUgZnJvbSBh
-IGtidWlsZCBib3QgcmVwb3J0LgoKVXBkYXRlZCByZXBvIGxpc3QgZm9yIHJlbmVzYXMtZHJpdmVy
-cy4KVGhhbmtzIGZvciBsZXR0aW5nIG1lIGtub3chCgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAg
-ICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLSAKR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJl
-J3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoKSW4g
-cGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNl
-bGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBz
-YXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Rob,
+
+On Tue, 5 Jun 2018 14:11:02 -0600
+Rob Herring <robh@kernel.org> wrote:
+
+> On Fri, Jun 01, 2018 at 12:16:33AM +0200, Stefan Agner wrote:
+> > Allow to define a NAND chip as a boot device. This can be helpful
+> > for the selection of the ECC algorithm and strength in case the boot
+> > ROM supports only a subset of controller provided options.
+> > 
+> > Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/nand.txt | 4 ++++
+> >  drivers/mtd/nand/raw/nand_base.c               | 3 +++
+> >  include/linux/mtd/rawnand.h                    | 6 ++++++
+> >  3 files changed, 13 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+> > index 8bb11d809429..8daf81b9748c 100644
+> > --- a/Documentation/devicetree/bindings/mtd/nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+> > @@ -43,6 +43,10 @@ Optional NAND chip properties:
+> >  		     This is particularly useful when only the in-band area is
+> >  		     used by the upper layers, and you want to make your NAND
+> >  		     as reliable as possible.
+> > +- nand-is-boot-medium: Whether the NAND chip is a boot medium. Drivers might use
+> > +		       this information to select ECC algorithms supported by
+> > +		       the boot ROM or similar restrictions.
+> > +  
+> 
+> Shouldn't this be a partition level option? You could conceivably do one 
+> ECC type for boot area and something else for the rest of the NAND.
+
+I tried that a long time ago [1]. The result was far from perfect. I'm
+not saying it's impossible to do it, but it definitely requires a lot
+of work if we want to do it properly.
+
+Also, what about boards that are not defining their partitions in the
+DT but through the command line (using mtdparts)? That means patching
+the mtdparts part parser to also take the ECC setup into account.
+
+Regards,
+
+Boris
+
+[1]http://lists.infradead.org/pipermail/linux-mtd/2015-July/060600.html
