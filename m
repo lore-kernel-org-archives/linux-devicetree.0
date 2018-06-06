@@ -1,88 +1,71 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: cygnus: Add HWRNG node
-Date: Wed, 6 Jun 2018 10:32:50 -0700
-Message-ID: <d2d81ba8-5e25-0b23-339a-fd079daa120c@gmail.com>
-References: <20180606093441.16483-1-peron.clem@gmail.com>
- <c8836130-1d96-b813-4e87-5011db679ba8@broadcom.com>
- <c7990001-00e6-d828-bafd-3d472fcfee20@gmail.com>
- <676106a4-d763-725c-2342-f8d215fbd169@broadcom.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v3 2/2] gpu: drm/panel: Add DLC DLC0700YZG-1 panel
+Date: Wed, 06 Jun 2018 10:38:32 -0700
+Message-ID: <87efhj24tj.fsf@anholt.net>
+References: <20180523092504.5142-1-m.felsch@pengutronix.de>
+ <20180523092504.5142-3-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <676106a4-d763-725c-2342-f8d215fbd169@broadcom.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
+Content-Type: multipart/mixed; boundary="===============0033489046=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180523092504.5142-3-m.felsch@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marco Felsch <m.felsch@pengutronix.de>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2018 10:14 AM, Scott Branden wrote:
-> 
-> 
-> On 18-06-06 09:47 AM, Florian Fainelli wrote:
->> On 06/06/2018 09:03 AM, Scott Branden wrote:
->>> Hi Clement,
->>>
->>>
->>> On 18-06-06 02:34 AM, Clément Péron wrote:
->>>> From: Clément Peron <clement.peron@devialet.com>
->>>>
->>>> There is a HWRNG in Broadcom Cygnus SoC, so enable it.
->>>>
->>>> Signed-off-by: Clément Peron <clement.peron@devialet.com>
->>> Thanks for upstreaming some missing Cygnus components.
->>>
->>> But, the problem is the tarball release from Broadcom you are extracting
->>> these changes from does not contain git history; so, you are missing the
->>> original authors and signed-off's.
->>> I checked our internal git repository and for this commit the author is:
->>> Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
->>>
->>> Please adjust author and signed-off appropriately.  If there are other
->>> changes you are extracting from the source tarballs you have please
->>> contact me so we can construct patch appropriately.
->> If you want the original author's Signed-off-by to be preserved, why
->> don't you extract it from your internal git tree and submit the patch on
->> Mohamed's behalf?
-> Sure, I can submit the original patch to keep things simple and avoid
-> finding a lawyer right now.
->>
->> AFAICT what Clement is doing here is permissible given the Linux
->> developer certificate of origin though I am not a lawyer of course.
-> But, It would be great to get some guidance and clarification on this
-> for sure.
-> I'm reading:
-> https://www.kernel.org/doc/html/v4.16/process/submitting-patches.html
-> 
-> The change was created entirely by Broadcom, so seems difficult for
-> somebody else to upstream change without appropriate authorship and
-> signed off from copyright holder.
+--===============0033489046==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Indeed, but it is effectively Broadcom's fault for not providing a git
-tree for the customer to pull from in order to preserve the original
-authorship, if what was distributed is a tarball of changes against a
-vanilla kernel (which is likely to be the case), then all author
-attributions are lost.
+--=-=-=
+Content-Type: text/plain
 
-Not suggesting you change how you deliver code to customers, we have the
-same issue in the STB/CM group, except maybe customers care less about
-upstreaming so we can do it ourselves at our own pace and using our own
-attributions.
+Marco Felsch <m.felsch@pengutronix.de> writes:
 
-> Point a) and b) are not met in
-> Developer's Certificate of Origin while point c) is being attempted
-> (without a or b being certified).
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+>
+> This patch adds support for DLC DLC0700YZG-1 1024x600 LVDS panels
+> to the simple-panel driver.
 
-I would think that point a) and b) are met by the very fact that the
-Cygnus kernel port is GPLv2 code, being a derivative work of the Linux
-kernel, and that should be enough.
+Reviewed-by: Eric Anholt <eric@anholt.net>
 
-This is kind of well established things, this has happened for many
-Broadcom product lines unfortunately because not everyone is active like
-you in getting things upstreamed. Those contributions were still
-entirely valid and acceptable for the kernel community.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Maybe we do need a lawyer, Saul Goodman, are you here?
--- 
-Florian
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlsYHBkACgkQtdYpNtH8
+nuiGwQ/+PWjT7kO92ZkLujCRrDFEskZRBLFntQLpv1jNO1dv6N3r6oBz/HzWFgMZ
+zGAiOjP/J5LvFN+MUm8LWF6lTOdo2y4phHe7te/K2S6Ce73qxRzElnLCBhoOppmK
+irBNR8U+np8JoZqPs/t3fgAz2yaBcjdLq9d7YekdMJAZhcPGCZO7uXAF9mEeJwhf
+R3AdOOk6qQjQcDYBpILzkcX8bq/iRUIQtpuK4vE9IA6n7/KHiKgIrY9fyGRfrqRo
+WZHaDYEfRW8gmQWdVqo5vYli8K03GRb8CJzGB+1Aq1VXNRkrrPy5vDmdlkzXhGnH
+awQ4Xl7Ue3Gm91lFRGityZ7F5TBZihwEFzQdGaXwMmhuetUhdhh9jVVTLAubosLr
+sxZbbS7sCn86H0WqMqEInEzNF8hLII/HKMSGA+Z/u2H4ya8nYNU7xcT1OBDKK0zI
+xCqWbjKtejEkvZOIY79Ed2pvRvUS1GRfDICycfDivwdOn5yOyTsDdpqWOic7DTGw
+cJ1KCZ7Q7+/eEODhfAlthRJqPlsqhAi3r7Clwl0JhKTwfsHRnSFdOlWkmbxF/OA9
+PycCq5nV4jKiSIxzfOAqV8gSs1zhwqvq3VidZtIxXSjVGlh0q6v3RNAUP0PSJ8TB
+65A4LUoYqlpJLzDiTOD+GtgfE9Zg8AzoBQzCnnIK02x/pcy//j0=
+=9RBn
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============0033489046==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0033489046==--
