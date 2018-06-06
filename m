@@ -1,67 +1,34 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
-Date: Wed, 6 Jun 2018 12:09:55 +0530
-Message-ID: <1b376fc2-6a1b-1457-ffff-332954d1bef8@codeaurora.org>
-References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
- <20180605061919.GQ16230@vkoul-mobl>
- <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
- <20180605164031.GZ16230@vkoul-mobl>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] dt-bindings: rcar-gen3-phy-usb2: Add bindings for r8a77990
+Date: Wed,  6 Jun 2018 15:42:28 +0900
+Message-ID: <1528267348-18960-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605164031.GZ16230@vkoul-mobl>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linaro.org>
-Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
+To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+This patch adds suuport for r8a77990 (R-Car E3).
 
-On 6/5/2018 10:10 PM, Vinod Koul wrote:
-> On 05-06-18, 18:26, Sricharan R wrote:
->> Hi Vinod,
->>
->> On 6/5/2018 11:49 AM, Vinod wrote:
->>> On 05-06-18, 11:12, Sricharan R wrote:
->>>
->>>> +config QCOM_Q6V5_WCSS
->>>> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
->>>> +	depends on OF && ARCH_QCOM
->>>> +	depends on QCOM_SMEM
->>>> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
->>>> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
->>>
->>> Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
->>> happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
->>>
->>   RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
-> 
-> why would that be a limitation? I am more worried about
-> RPMSG_QCOM_GLINK_SMEM=n being the condition here. In new drivers we
-> should not typically have dependency on some symbol being not there
-> 
-
-Without that, if RPMSG_QCOM_GLINK_SMEM=m is compiled as a module, then
-it would break the build.
-
->>   means that it should be corrected here and for ADSP, Q6V5_PIL as well.
->>   Bjorn, is that correct ?, should it be, below ?
->>  
->>   depends on (RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)) || (RPMSG_QCOM_GLINK_SMEM || (COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n))
-> 
-> that doesnt really sound good :(
-> 
-
- Hmm, but i was thinking it should functionally depend on either SMD or GLINK and not both.
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+index dbd137c..fb4a204 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+@@ -10,6 +10,8 @@ Required properties:
+ 	      SoC.
+ 	      "renesas,usb2-phy-r8a77965" if the device is a part of an
+ 	      R8A77965 SoC.
++	      "renesas,usb2-phy-r8a77990" if the device is a part of an
++	      R8A77990 SoC.
+ 	      "renesas,usb2-phy-r8a77995" if the device is a part of an
+ 	      R8A77995 SoC.
+ 	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3 compatible device.
+-- 
+1.9.1
