@@ -1,86 +1,41 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
-Date: Wed, 6 Jun 2018 15:21:17 +0530
-Message-ID: <dbcbdb1c-7721-62ea-8f97-f0952a490052@codeaurora.org>
-References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
- <20180605061919.GQ16230@vkoul-mobl>
- <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
- <20180605164031.GZ16230@vkoul-mobl>
- <1b376fc2-6a1b-1457-ffff-332954d1bef8@codeaurora.org>
- <20180606064909.GC16230@vkoul-mobl>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 0/6] Add MCAN Support for dra76x
+Date: Wed, 6 Jun 2018 03:09:37 -0700
+Message-ID: <20180606100937.GF5738@atomide.com>
+References: <20180606060826.14671-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180606064909.GC16230@vkoul-mobl>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180606060826.14671-1-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, paul@pwsan.com, t-kristo@ti.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+* Faiz Abbas <faiz_abbas@ti.com> [180606 06:09]:
+> The following patches add dts and sysconfig support
+> for MCAN on TI's dra76 SOCs
+> 
+> The patches depend on the following series:
+> https://patchwork.kernel.org/patch/10221105/
+> 
+> Changes in v3:
+>  1. Added reset functionality to the ti-sysc
+>     driver. This enables me to drop the hwmod
+>     data patch as everything is being done in dt.
+>
+>  2. Dropped ti,hwmods from the dts nodes
 
-On 6/6/2018 12:19 PM, Vinod wrote:
-> Hi Sricharan,
-> 
-> On 06-06-18, 12:09, Sricharan R wrote:
-> 
->>>>>> +config QCOM_Q6V5_WCSS
->>>>>> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
->>>>>> +	depends on OF && ARCH_QCOM
->>>>>> +	depends on QCOM_SMEM
->>>>>> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
->>>>>> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
->>>>>
->>>>> Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
->>>>> happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
->>>>>
->>>>   RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
->>>
->>> why would that be a limitation? I am more worried about
->>> RPMSG_QCOM_GLINK_SMEM=n being the condition here. In new drivers we
->>> should not typically have dependency on some symbol being not there
->>
->> Without that, if RPMSG_QCOM_GLINK_SMEM=m is compiled as a module, then
->> it would break the build.
-> 
-> Okay I do not know the details, but that doesn't sound correct to me.
-> Breaking build sounds a bit extreme to me. Can you give details on this
-> part..
-> 
+Cool good to hear that works :)
 
- Having, just, depends on RPMSG_QCOM_GLINK_SMEM || COMPILE_TEST,
- is going to break when RPMSG_QCOM_GLINK_SMEM=m and COMPILE_TEST=y.
- Hence the COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n.
+>  4. Removed the status="disabled" in dtsi
+>     followed by status="okay" in dts.
 
- Having said that, COMPILE_TEST is getting tested for RPMSG_QCOM_SMD=n in
- the previous line. So that's the reason for not having it in below line for
- RPMSG_QCOM_GLINK_SMEM.
-
->>>>   means that it should be corrected here and for ADSP, Q6V5_PIL as well.
->>>>   Bjorn, is that correct ?, should it be, below ?
->>>>  
->>>>   depends on (RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)) || (RPMSG_QCOM_GLINK_SMEM || (COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n))
->>>
->>> that doesnt really sound good :(
->>
->>  Hmm, but i was thinking it should functionally depend on either SMD or GLINK and not both.
-> 
-> If you are depedent upon a symbol provided by a module you should say
-> depends on. If a machine is not supposed to have both SMD or GLINK then
-> the driver will not get probed.
-> 
-
-This is where, i was thinking, it should be functional if either of SMD or GLINK
-is there, but should not require both.
+Hmm okay is the default and is not needed. I did not notice
+okay in this set based on a quick glance so maybe you already
+dropped it?
 
 Regards,
- Sricharan
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+Tony
