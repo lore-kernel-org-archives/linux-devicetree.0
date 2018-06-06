@@ -1,33 +1,88 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: [PATCH] dt-bindings: Add bitmain vendor prefix
-Date: Wed,  6 Jun 2018 14:49:48 +0200
-Message-ID: <20173c07cc538544c9e6780a8ef558b97a3fe2cb.1528289384.git.monstr@monstr.eu>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware device
+Date: Wed, 6 Jun 2018 07:53:45 -0500
+Message-ID: <CAL_Jsq+c1EbDGKhKov8cgB5r7SAeXZkXzJ96za2e3ukc8yOyZA@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
+ <20180605210758.GA19888@rob-hp-laptop> <CAAFQd5DGKnU15pjF2+eyMUaSuE0FCr2FMF90WrJb+kXt80xBCw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAFQd5DGKnU15pjF2+eyMUaSuE0FCr2FMF90WrJb+kXt80xBCw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, SZ Lin <sz.lin@moxa.com>
+To: Tomasz Figa <tfiga@google.com>
+Cc: Vikash Garodia <vgarodia@codeaurora.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Bitmain (https://www.bitmain.com) is a vendor of cryptocurrency
-hardware.
+On Tue, Jun 5, 2018 at 11:46 PM, Tomasz Figa <tfiga@google.com> wrote:
+> Hi Rob,
+>
+> On Wed, Jun 6, 2018 at 6:08 AM Rob Herring <robh@kernel.org> wrote:
+>>
+>> On Sat, Jun 02, 2018 at 01:56:08AM +0530, Vikash Garodia wrote:
+>> > A separate child device is added for video firmware.
+>> > This is needed to
+>> > [1] configure the firmware context bank with the desired SID.
+>> > [2] ensure that the iova for firmware region is from 0x0.
+>> >
+>> > Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+>> > ---
+>> >  .../devicetree/bindings/media/qcom,venus.txt       |  8 +++-
+>> >  drivers/media/platform/qcom/venus/core.c           | 48 +++++++++++++++++++---
+>> >  drivers/media/platform/qcom/venus/firmware.c       | 20 ++++++++-
+>> >  drivers/media/platform/qcom/venus/firmware.h       |  2 +
+>> >  4 files changed, 71 insertions(+), 7 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+>> > index 00d0d1b..701cbe8 100644
+>> > --- a/Documentation/devicetree/bindings/media/qcom,venus.txt
+>> > +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+>> > @@ -53,7 +53,7 @@
+>> >
+>> >  * Subnodes
+>> >  The Venus video-codec node must contain two subnodes representing
+>> > -video-decoder and video-encoder.
+>> > +video-decoder and video-encoder, one optional firmware subnode.
+>> >
+>> >  Every of video-encoder or video-decoder subnode should have:
+>> >
+>> > @@ -79,6 +79,8 @@ Every of video-encoder or video-decoder subnode should have:
+>> >                   power domain which is responsible for collapsing
+>> >                   and restoring power to the subcore.
+>> >
+>> > +The firmware sub node must contain the iommus specifiers for ARM9.
+>> > +
+>> >  * An Example
+>> >       video-codec@1d00000 {
+>> >               compatible = "qcom,msm8916-venus";
+>> > @@ -105,4 +107,8 @@ Every of video-encoder or video-decoder subnode should have:
+>> >                       clock-names = "core";
+>> >                       power-domains = <&mmcc VENUS_CORE1_GDSC>;
+>> >               };
+>> > +             venus-firmware {
+>> > +                     compatible = "qcom,venus-firmware-no-tz";
+>> > +                     iommus = <&apps_smmu 0x10b2 0x0>;
+>>
+>> This mostly looks like you are adding a node in order to create a
+>> platform device. DT is not the only way to create platform devices and
+>> shouldn't be used when the device is not really a separate h/w device.
+>> Plus it seems like it is debatable that you even need a driver.
+>>
+>> For iommus, just move it up to the parent (or add to existing prop).
+>
+> As far as I understood the issue from reading this series and also
+> talking a bit with Stanimir, there are multiple (physical?) ports from
+> the Venus hardware block and that includes one dedicated for firmware
+> loading, which has IOVA range restrictions up to 6 MiBs or something
+> like that.
+>
+> If we add the firmware port to the iommus property of the main node,
+> we would bind it to the same IOVA address space as the other ports and
+> so it would be part of the main full 32-bit IOMMU domain.
 
-Signed-off-by: Michal Simek <monstr@monstr.eu>
----
+Sounds like an OS limitation, not a DT problem.
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+That being said, I suppose we can live with having this sub-node if we
+can't fix or work-around this limitation.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 36003832c2a8..ddb52511a583 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -51,6 +51,7 @@ axentia	Axentia Technologies AB
- axis	Axis Communications AB
- bananapi BIPAI KEJI LIMITED
- bhf	Beckhoff Automation GmbH & Co. KG
-+bitmain	Bitmain Technologies
- boe	BOE Technology Group Co., Ltd.
- bosch	Bosch Sensortec GmbH
- boundary	Boundary Devices Inc.
--- 
-1.9.1
+Rob
