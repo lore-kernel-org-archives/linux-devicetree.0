@@ -1,104 +1,67 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: RE: [PATCH v4 2/3] arm: shmobile: Add the R9A06G032 SMP enabler
- driver
-Date: Wed, 6 Jun 2018 06:36:24 +0000
-Message-ID: <OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528198148-23308-3-git-send-email-michel.pollet@bp.renesas.com>
- <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
+Date: Wed, 6 Jun 2018 12:09:55 +0530
+Message-ID: <1b376fc2-6a1b-1457-ffff-332954d1bef8@codeaurora.org>
+References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
+ <20180605061919.GQ16230@vkoul-mobl>
+ <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+ <20180605164031.GZ16230@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com>
+In-Reply-To: <20180605164031.GZ16230@vkoul-mobl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
-Cc: Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Douglas Anderson <dianders@chromium.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@endlessm.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Frank Rowand <frank.rowand@sony.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Vinod Koul <vinod.koul@linaro.org>
+Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssDQoNCk9uIDA1IEp1bmUgMjAxOCAxODozNCwgRnJhbmsgd3JvdGU6DQo+IE9uIDA2
-LzA1LzE4IDA0OjI4LCBNaWNoZWwgUG9sbGV0IHdyb3RlOg0KPiA+IFRoZSBSZW5lc2FzIFI5QTA2
-RzAzMiBzZWNvbmQgQ0E3IGlzIHBhcmtlZCBpbiBhIFJPTSBwZW4gYXQgYm9vdCB0aW1lLA0KPiA+
-IGl0IHJlcXVpcmVzIGEgc3BlY2lhbCBlbmFibGUgbWV0aG9kIHRvIGdldCBpdCBzdGFydGVkLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWljaGVsIFBvbGxldCA8bWljaGVsLnBvbGxldEBicC5y
-ZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9NYWtlZmls
-ZSAgICAgICAgfCAgMSArDQo+ID4gIGFyY2gvYXJtL21hY2gtc2htb2JpbGUvc21wLXI5YTA2ZzAz
-Mi5jIHwgNzkNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIg
-ZmlsZXMgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-YXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9zbXAtcjlhMDZnMDMyLmMNCj4gPg0KPiA+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9tYWNoLXNobW9iaWxlL01ha2VmaWxlDQo+ID4gYi9hcmNoL2FybS9tYWNo
-LXNobW9iaWxlL01ha2VmaWxlIGluZGV4IDE5MzlmNTIuLmQ3ZmM5OGYgMTAwNjQ0DQo+ID4gLS0t
-IGEvYXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL21h
-Y2gtc2htb2JpbGUvTWFrZWZpbGUNCj4gPiBAQCAtMzQsNiArMzQsNyBAQCBzbXAtJChDT05GSUdf
-QVJDSF9TSDczQTApKz0gc21wLXNoNzNhMC5vDQo+IGhlYWRzbXAtc2N1Lm8gcGxhdHNtcC1zY3Uu
-bw0KPiA+ICBzbXAtJChDT05GSUdfQVJDSF9SOEE3Nzc5KSs9IHNtcC1yOGE3Nzc5Lm8gaGVhZHNt
-cC1zY3Uubw0KPiBwbGF0c21wLXNjdS5vDQo+ID4gIHNtcC0kKENPTkZJR19BUkNIX1I4QTc3OTAp
-Kz0gc21wLXI4YTc3OTAubw0KPiA+ICBzbXAtJChDT05GSUdfQVJDSF9SOEE3NzkxKSs9IHNtcC1y
-OGE3NzkxLm8NCj4gPiArc21wLSQoQ09ORklHX0FSQ0hfUjlBMDZHMDMyKSs9IHNtcC1yOWEwNmcw
-MzIubw0KPiA+ICBzbXAtJChDT05GSUdfQVJDSF9FTUVWMikrPSBzbXAtZW1ldjIubyBoZWFkc21w
-LXNjdS5vDQo+IHBsYXRzbXAtc2N1Lm8NCj4gPg0KPiA+ICAjIFBNIG9iamVjdHMNCj4gPiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1zaG1vYmlsZS9zbXAtcjlhMDZnMDMyLmMNCj4gPiBiL2Fy
-Y2gvYXJtL21hY2gtc2htb2JpbGUvc21wLXI5YTA2ZzAzMi5jDQo+ID4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5jZDQwZTZlDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
-ICsrKyBiL2FyY2gvYXJtL21hY2gtc2htb2JpbGUvc21wLXI5YTA2ZzAzMi5jDQo+ID4gQEAgLTAs
-MCArMSw3OSBAQA0KPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+
-ICsvKg0KPiA+ICsgKiBSOUEwNkcwMzIgU2Vjb25kIENBNyBlbmFibGVyLg0KPiA+ICsgKg0KPiA+
-ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTGltaXRl
-ZA0KPiA+ICsgKg0KPiA+ICsgKiBNaWNoZWwgUG9sbGV0IDxtaWNoZWwucG9sbGV0QGJwLnJlbmVz
-YXMuY29tPiwNCj4gPGJ1c2Vycm9yQGdtYWlsLmNvbT4NCj4gPiArICogRGVyaXZlZCBmcm9tIGFj
-dGlvbixzNTAwLXNtcA0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2Fk
-ZHJlc3MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3NtcC5oPg0KPiA+ICsNCj4gPiArLyoNCj4g
-PiArICogVGhlIHNlY29uZCBDUFUgaXMgcGFya2VkIGluIFJPTSBhdCBib290IHRpbWUuIEl0IHJl
-cXVpcmVzIHdha2luZw0KPiA+ICtpdCBhZnRlcg0KPiA+ICsgKiB3cml0aW5nIGFuIGFkZHJlc3Mg
-aW50byB0aGUgQk9PVEFERFIgcmVnaXN0ZXIgb2Ygc3lzY3RybC4NCj4gPiArICoNCj4gPiArICog
-U28gdGhlIGRlZmF1bHQgdmFsdWUgb2YgdGhlICJjcHUtcmVsZWFzZS1hZGRyIiBjb3JyZXNwb25k
-cyB0bw0KPiBCT09UQUREUi4uLg0KPiA+ICsgKg0KPiA+ICsgKiAqSG93ZXZlciogdGhlIEJPT1RB
-RERSIHJlZ2lzdGVyIGlzIG5vdCBhdmFpbGFibGUgd2hlbiB0aGUga2VybmVsDQo+ID4gKyAqIHN0
-YXJ0cyBpbiBOT05TRUMgbW9kZS4NCj4gPiArICoNCj4gPiArICogU28gZm9yIE5PTlNFQyBtb2Rl
-LCB0aGUgYm9vdGxvYWRlciByZS1wYXJrcyB0aGUgc2Vjb25kIENQVSBpbnRvIGENCj4gPiArcGVu
-DQo+ID4gKyAqIGluIFNSQU0sIGFuZCBjaGFuZ2VzIHRoZSAiY3B1LXJlbGVhc2UtYWRkciIgb2Yg
-bGludXgncyBEVCB0byBhDQo+ID4gK1NSQU0gYWRkcmVzcywNCj4gPiArICogd2hpY2ggaXMgbm90
-IHJlc3RyaWN0ZWQuDQo+DQo+IFRoZSBiaW5kaW5nIGRvY3VtZW50IGZvciBjcHUtcmVsZWFzZS1h
-ZGRyIGRvZXMgbm90IGhhdmUgYSBkZWZpbml0aW9uIGZvciAzMg0KPiBiaXQgYXJtLiAgVGhlIGV4
-aXN0aW5nIGRlZmluaXRpb24gaXMgb25seSA2NCBiaXQgYXJtLiAgUGxlYXNlIGFkZCB0aGUgZGVm
-aW5pdGlvbg0KPiBmb3IgMzIgYml0IGFybSB0byBwYXRjaCAxLg0KDQpIbW1tIEkgZG8gZmluZCBh
-IGRlZmluaXRpb24gaW4NCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1
-cy50eHQgLS0ganVzdCB1bmRlciB3aGVyZSBJDQphZGRlZCBteSAnZW5hYmxlLW1ldGhvZCcgLS0g
-QW5kIGl0IGlzIGFscmVhZHkgdXNlZCBhcyAzMiBiaXRzIGluIGF0IGxlYXN0DQphcmNoL2FybS9i
-b290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpLg0KDQpXaGF0IGRvIHlvdSB3YW50IG1lIHRvIGFk
-ZCB0byB0aGlzIGV4YWN0bHk/IERvIHlvdSB3YW50IG1lIHRvIGp1c3QNCmNoYW5nZSAicmVxdWly
-ZWQgZm9yIHN5c3RlbXMgdGhhdCBoYXZlIGFuICJlbmFibGUtbWV0aG9kIiBwcm9wZXJ0eQ0KdmFs
-dWUgb2YgInNwaW4tdGFibGUiIHRvIGFsc28gc3BlY2lmeSByZW5lc2FzLHI5YTA2ZzAzMiA/DQoN
-ClRoYW5rcyENCk1pY2hlbA0KDQo+DQo+IC1GcmFuaw0KPg0KPg0KPiA+ICsgKi8NCj4gPiArDQo+
-ID4gK3N0YXRpYyB2b2lkIF9faW9tZW0gKmNwdV9ib290YWRkcjsNCj4gPiArDQo+ID4gK3N0YXRp
-YyBERUZJTkVfU1BJTkxPQ0soY3B1X2xvY2spOw0KPiA+ICsNCj4gPiArc3RhdGljIGludCByOWEw
-NmcwMzJfc21wX2Jvb3Rfc2Vjb25kYXJ5KHVuc2lnbmVkIGludCBjcHUsIHN0cnVjdA0KPiA+ICt0
-YXNrX3N0cnVjdCAqaWRsZSkgew0KPiA+ICtpZiAoIWNwdV9ib290YWRkcikNCj4gPiArcmV0dXJu
-IC1FTk9ERVY7DQo+ID4gKw0KPiA+ICtzcGluX2xvY2soJmNwdV9sb2NrKTsNCj4gPiArDQo+ID4g
-K3dyaXRlbChfX3BhX3N5bWJvbChzZWNvbmRhcnlfc3RhcnR1cCksIGNwdV9ib290YWRkcik7DQo+
-ID4gK2FyY2hfc2VuZF93YWtldXBfaXBpX21hc2soY3B1bWFza19vZihjcHUpKTsNCj4gPiArDQo+
-ID4gK3NwaW5fdW5sb2NrKCZjcHVfbG9jayk7DQo+ID4gKw0KPiA+ICtyZXR1cm4gMDsNCj4gPiAr
-fQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgX19pbml0IHI5YTA2ZzAzMl9zbXBfcHJlcGFyZV9j
-cHVzKHVuc2lnbmVkIGludCBtYXhfY3B1cykNCj4gPiArew0KPiA+ICtzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKmRuOw0KPiA+ICtpbnQgcmV0Ow0KPiA+ICt1MzIgYm9vdGFkZHI7DQo+ID4gKw0KPiA+ICtk
-biA9IG9mX2dldF9jcHVfbm9kZSgxLCBOVUxMKTsNCj4gPiAraWYgKCFkbikgew0KPiA+ICtwcl9l
-cnIoIkNQVSMxOiBtaXNzaW5nIGRldmljZSB0cmVlIG5vZGVcbiIpOw0KPiA+ICtyZXR1cm47DQo+
-ID4gK30NCj4gPiArLyoNCj4gPiArICogRGV0ZXJtaW5lIHRoZSBhZGRyZXNzIGZyb20gd2hpY2gg
-dGhlIENQVSBpcyBwb2xsaW5nLg0KPiA+ICsgKiBUaGUgYm9vdGxvYWRlciAqZG9lcyogY2hhbmdl
-IHRoaXMgcHJvcGVydHkNCj4gPiArICovDQo+ID4gK3JldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMy
-KGRuLCAiY3B1LXJlbGVhc2UtYWRkciIsICZib290YWRkcik7DQo+ID4gK29mX25vZGVfcHV0KGRu
-KTsNCj4gPiAraWYgKHJldCkgew0KPiA+ICtwcl9lcnIoIkNQVSMxOiBpbnZhbGlkIGNwdS1yZWxl
-YXNlLWFkZHIgcHJvcGVydHlcbiIpOw0KPiA+ICtyZXR1cm47DQo+ID4gK30NCj4gPiArcHJfaW5m
-bygiQ1BVIzE6IGNwdS1yZWxlYXNlLWFkZHIgJTA4eFxuIiwgYm9vdGFkZHIpOw0KPiA+ICsNCj4g
-PiArY3B1X2Jvb3RhZGRyID0gaW9yZW1hcChib290YWRkciwgc2l6ZW9mKGJvb3RhZGRyKSk7IH0N
-Cj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc21wX29wZXJhdGlvbnMgcjlhMDZnMDMy
-X3NtcF9vcHMgX19pbml0Y29uc3QgPSB7DQo+ID4gKy5zbXBfcHJlcGFyZV9jcHVzID0gcjlhMDZn
-MDMyX3NtcF9wcmVwYXJlX2NwdXMsDQo+ID4gKy5zbXBfYm9vdF9zZWNvbmRhcnkgPSByOWEwNmcw
-MzJfc21wX2Jvb3Rfc2Vjb25kYXJ5LCB9Ow0KPiA+ICtDUFVfTUVUSE9EX09GX0RFQ0xBUkUocjlh
-MDZnMDMyX3NtcCwgInJlbmVzYXMscjlhMDZnMDMyLXNtcCIsDQo+ID4gKyZyOWEwNmcwMzJfc21w
-X29wcyk7DQo+ID4NCg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtl
-cyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNM
-OCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVk
-IE5vLiAwNDU4NjcwOS4NCg==
+Hi Vinod,
+
+On 6/5/2018 10:10 PM, Vinod Koul wrote:
+> On 05-06-18, 18:26, Sricharan R wrote:
+>> Hi Vinod,
+>>
+>> On 6/5/2018 11:49 AM, Vinod wrote:
+>>> On 05-06-18, 11:12, Sricharan R wrote:
+>>>
+>>>> +config QCOM_Q6V5_WCSS
+>>>> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
+>>>> +	depends on OF && ARCH_QCOM
+>>>> +	depends on QCOM_SMEM
+>>>> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
+>>>> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+>>>
+>>> Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
+>>> happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
+>>>
+>>   RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
+> 
+> why would that be a limitation? I am more worried about
+> RPMSG_QCOM_GLINK_SMEM=n being the condition here. In new drivers we
+> should not typically have dependency on some symbol being not there
+> 
+
+Without that, if RPMSG_QCOM_GLINK_SMEM=m is compiled as a module, then
+it would break the build.
+
+>>   means that it should be corrected here and for ADSP, Q6V5_PIL as well.
+>>   Bjorn, is that correct ?, should it be, below ?
+>>  
+>>   depends on (RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)) || (RPMSG_QCOM_GLINK_SMEM || (COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n))
+> 
+> that doesnt really sound good :(
+> 
+
+ Hmm, but i was thinking it should functionally depend on either SMD or GLINK and not both.
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
