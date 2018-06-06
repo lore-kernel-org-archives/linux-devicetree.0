@@ -1,216 +1,82 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Wed, 6 Jun 2018 10:12:38 +0530
-Message-ID: <20180606044238.qquy2hkwdm3muhoj@vireshk-i7>
-References: <1528109194-16864-1-git-send-email-tdas@codeaurora.org>
- <1528109194-16864-2-git-send-email-tdas@codeaurora.org>
+From: Tomasz Figa <tfiga@google.com>
+Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware device
+Date: Wed, 6 Jun 2018 13:46:20 +0900
+Message-ID: <CAAFQd5DGKnU15pjF2+eyMUaSuE0FCr2FMF90WrJb+kXt80xBCw@mail.gmail.com>
+References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
+ <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org> <20180605210758.GA19888@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528109194-16864-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <20180605210758.GA19888@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org
+To: Rob Herring <robh@kernel.org>
+Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04-06-18, 16:16, Taniya Das wrote:
-> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
-> SoCs. This is required for managing the cpu frequency transitions which are
-> controlled by firmware.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../bindings/cpufreq/cpufreq-qcom-fw.txt           | 173 +++++++++++++++++++++
->  1 file changed, 173 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> new file mode 100644
-> index 0000000..e3087ec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> @@ -0,0 +1,173 @@
-> +Qualcomm Technologies, Inc. CPUFREQ Bindings
-> +
-> +CPUFREQ FW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
-> +SoCs to manage frequency in hardware. It is capable of controlling frequency
-> +for multiple clusters.
-> +
-> +Properties:
-> +- compatible
-> +	Usage:		required
-> +	Value type:	<string>
-> +	Definition:	must be "qcom,cpufreq-fw".
-> +
-> +* Property qcom,freq-domain
-> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
-> +phandle to a freq_domain_table in their DT node.
-> +
-> +* Frequency Domain Table Node
-> +
-> +This describes the frequency domain belonging to a device.
-> +This node can have following properties:
-> +
-> +- reg
-> +	Usage:		required
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Addresses and sizes for the memory of the perf
-> +			, lut and enable bases.
-> +			perf - indicates the base address for the desired
-> +			performance state to be set.
-> +			lut - indicates the look up table base address for the
-> +			cpufreq	driver to read frequencies.
-> +			enable - indicates the enable register for firmware.
-> +- reg-names
-> +	Usage:		required
-> +	Value type:	<stringlist>
-> +	Definition:	Address names. Must be "perf", "lut", "enable".
-> +			Must be specified in the same order as the reg property.
-> +
-> +Example:
-> +
-> +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
-> +DCVS state together.
-> +
-> +/ {
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +			qcom,freq-domain = <&freq_domain_table0>;
-> +			L2_0: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +				L3_0: l3-cache {
-> +				      compatible = "cache";
-> +				};
-> +			};
-> +		};
-> +
-> +		CPU1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_100>;
-> +			qcom,freq-domain = <&freq_domain_table0>;
-> +			L2_100: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x200>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_200>;
-> +			qcom,freq-domain = <&freq_domain_table0>;
-> +			L2_200: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x300>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_300>;
-> +			qcom,freq-domain = <&freq_domain_table0>;
-> +			L2_300: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU4: cpu@400 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x400>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_400>;
-> +			qcom,freq-domain = <&freq_domain_table1>;
-> +			L2_400: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU5: cpu@500 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x500>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_500>;
-> +			qcom,freq-domain = <&freq_domain_table1>;
-> +			L2_500: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU6: cpu@600 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x600>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_600>;
-> +			qcom,freq-domain = <&freq_domain_table1>;
-> +			L2_600: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU7: cpu@700 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x700>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_700>;
-> +			qcom,freq-domain = <&freq_domain_table1>;
-> +			L2_700: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +	};
-> +
-> +	qcom,cpufreq-fw {
-> +		compatible = "qcom,cpufreq-fw";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		freq_domain_table0 : freq_table0 {
-> +			reg = <0x17d43920 0x4>, <0x17d43110 0x500>,
-> +				 <0x17d41000 0x4>;
-> +			reg-names = "perf", "lut", "enable";
-> +		};
-> +
-> +		freq_domain_table1 : freq_table1 {
-> +			reg = <0x17d46120 0x4>, <0x17d45910 0x500>,
-> +				<0x17d45800 0x4> ;
-> +			reg-names = "perf", "lut", "enable";
-> +		};
-> +	};
+Hi Rob,
 
-Looks better now from design point of view now, no ugly CPU lists :)
+On Wed, Jun 6, 2018 at 6:08 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, Jun 02, 2018 at 01:56:08AM +0530, Vikash Garodia wrote:
+> > A separate child device is added for video firmware.
+> > This is needed to
+> > [1] configure the firmware context bank with the desired SID.
+> > [2] ensure that the iova for firmware region is from 0x0.
+> >
+> > Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> > ---
+> >  .../devicetree/bindings/media/qcom,venus.txt       |  8 +++-
+> >  drivers/media/platform/qcom/venus/core.c           | 48 +++++++++++++++++++---
+> >  drivers/media/platform/qcom/venus/firmware.c       | 20 ++++++++-
+> >  drivers/media/platform/qcom/venus/firmware.h       |  2 +
+> >  4 files changed, 71 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+> > index 00d0d1b..701cbe8 100644
+> > --- a/Documentation/devicetree/bindings/media/qcom,venus.txt
+> > +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+> > @@ -53,7 +53,7 @@
+> >
+> >  * Subnodes
+> >  The Venus video-codec node must contain two subnodes representing
+> > -video-decoder and video-encoder.
+> > +video-decoder and video-encoder, one optional firmware subnode.
+> >
+> >  Every of video-encoder or video-decoder subnode should have:
+> >
+> > @@ -79,6 +79,8 @@ Every of video-encoder or video-decoder subnode should have:
+> >                   power domain which is responsible for collapsing
+> >                   and restoring power to the subcore.
+> >
+> > +The firmware sub node must contain the iommus specifiers for ARM9.
+> > +
+> >  * An Example
+> >       video-codec@1d00000 {
+> >               compatible = "qcom,msm8916-venus";
+> > @@ -105,4 +107,8 @@ Every of video-encoder or video-decoder subnode should have:
+> >                       clock-names = "core";
+> >                       power-domains = <&mmcc VENUS_CORE1_GDSC>;
+> >               };
+> > +             venus-firmware {
+> > +                     compatible = "qcom,venus-firmware-no-tz";
+> > +                     iommus = <&apps_smmu 0x10b2 0x0>;
+>
+> This mostly looks like you are adding a node in order to create a
+> platform device. DT is not the only way to create platform devices and
+> shouldn't be used when the device is not really a separate h/w device.
+> Plus it seems like it is debatable that you even need a driver.
+>
+> For iommus, just move it up to the parent (or add to existing prop).
 
-Unless Rob finds something wrong with the bindings:
+As far as I understood the issue from reading this series and also
+talking a bit with Stanimir, there are multiple (physical?) ports from
+the Venus hardware block and that includes one dedicated for firmware
+loading, which has IOVA range restrictions up to 6 MiBs or something
+like that.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+If we add the firmware port to the iommus property of the main node,
+we would bind it to the same IOVA address space as the other ports and
+so it would be part of the main full 32-bit IOMMU domain.
 
--- 
-viresh
+Best regards,
+Tomasz
