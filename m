@@ -1,39 +1,44 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v5 2/4] mfd: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Wed, 6 Jun 2018 08:14:36 +0300
-Message-ID: <20180606051436.GC20078@localhost.localdomain>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <6509bbe0238c20c16930c9f23d63656b1d5f4af2.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <20180605154757.GA26812@rob-hp-laptop>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH v2 0/3] arm64: allwinner: a64: Add initial support for Pinebook
+Date: Tue,  5 Jun 2018 22:16:59 -0700
+Message-ID: <20180606051702.6478-1-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180605154757.GA26812@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 05, 2018 at 09:47:57AM -0600, Rob Herring wrote:
-> On Mon, Jun 04, 2018 at 04:18:30PM +0300, Matti Vaittinen wrote:
-> > Document devicetree bindings for ROHM BD71837 PMIC MFD.
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > ---
-> >  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  | 76 ++++++++++++++++++++++
-> >  1 file changed, 76 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
-> 
-> I've replied on the prior version discussion. Please don't send new 
-> versions if the last one is still under discussion.
+This series adds dts for Pinebook with few prerequisites - PWM and R_I2C
+devices nodes.
 
-Allright. I thought this was a good way to suggest something which I
-thought might address your concerns. But you are correct, it is better
-to continue discussion in one emai thread. Sorry for adding this
-version. I'll write further replies in v4 thread untill we get some
-conclusion.
+v2: - add my signoff
+    - add default pinmux option for PWM
+    - add alternate pinmux option for R_I2C controller
+    - add A64 compatible for R_I2C controller
 
-Br,
-	Matti Vaittinen
+Andre Przywara (1):
+  arm64: dts: allwinner: a64: Add PWM controllers
+
+Icenowy Zheng (2):
+  arm64: dts: allwinner: a64: add R_I2C controller
+  arm64: dts: allwinner: add support for Pinebook
+
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../dts/allwinner/sun50i-a64-pinebook.dts     | 280 ++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  56 ++++
+ 3 files changed, 337 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+
+-- 
+2.17.1
