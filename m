@@ -1,52 +1,31 @@
-Return-Path: <SRS0=r166=I2=verge.net.au=horms@kernel.org>
-Date: Fri, 8 Jun 2018 10:18:51 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: dts: renesas: r8a77990: Enable USB2.0 Host for
- Ebisu board
-Message-ID: <20180608081850.zj5g77zzhbbgk5lp@verge.net.au>
-References: <1528278726-2910-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1528278726-2910-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-List-ID: <devicetree@vger.kernel.org>
-
-On Wed, Jun 06, 2018 at 06:52:06PM +0900, Yoshihiro Shimoda wrote:
-> This patch adds USB2.0 PHY and Host(EHCI/OHCI) nodes and
-> enables them for R-Car E3 Ebisu board.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
-> This patch set is based on renesas-drivers.git /
-> renesas-drivers-2018-06-05-v4.17 tag.
-> 
-> Changes from v1:
->  - Squash 4 patches into a single patch.
-
-Thanks Shimoda-san, I have applied this for v4.19.
-
-I had to do so manually to resolve a trivial conflict in
-r8a779980-ebisu.dts. The result is below. Please check to make
-sure that I got it right.
-
+Return-Path: <>
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a77990: Enable USB2.0 Host for Ebisu
- board
+Subject: [PATCH v2] arm64: dts: renesas: r8a77990: Enable USB2.0 Host for Ebisu board
+Date: Wed,  6 Jun 2018 18:52:06 +0900
+Message-Id: <1528278726-2910-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+List-ID: <devicetree@vger.kernel.org>
 
 This patch adds USB2.0 PHY and Host(EHCI/OHCI) nodes and
 enables them for R-Car E3 Ebisu board.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 ---
+This patch set is based on renesas-drivers.git /
+renesas-drivers-2018-06-05-v4.17 tag.
+
+Changes from v1:
+ - Squash 4 patches into a single patch.
+
  arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 20 ++++++++++++++
  arch/arm64/boot/dts/renesas/r8a77990.dtsi      | 37 ++++++++++++++++++++++++++
  2 files changed, 57 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-index 28945a8b9800..5e28c1b94b77 100644
+index 7a09d05..76fa244 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
 @@ -47,10 +47,18 @@
@@ -68,7 +47,7 @@ index 28945a8b9800..5e28c1b94b77 100644
  &pfc {
  	avb_pins: avb {
  		mux {
-@@ -58,6 +66,11 @@
+@@ -58,8 +66,20 @@
  			function = "avb";
  		};
  	};
@@ -79,8 +58,6 @@ index 28945a8b9800..5e28c1b94b77 100644
 +	};
  };
  
- &rwdt {
-@@ -68,3 +81,10 @@
  &scif2 {
  	status = "okay";
  };
@@ -92,10 +69,10 @@ index 28945a8b9800..5e28c1b94b77 100644
 +	status = "okay";
 +};
 diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-index 735881d4e57a..f8004608c595 100644
+index be4f519..0b2bec3 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -267,6 +267,43 @@
+@@ -248,6 +248,43 @@
  			status = "disabled";
  		};
  
@@ -140,4 +117,4 @@ index 735881d4e57a..f8004608c595 100644
  			compatible = "arm,gic-400";
  			#interrupt-cells = <3>;
 -- 
-2.11.0
+1.9.1
