@@ -1,65 +1,86 @@
-From: Saravana Kannan <skannan@codeaurora.org>
-Subject: Re: [PATCH 2/2] PM / devfreq: Generic cpufreq governor
-Date: Tue, 5 Jun 2018 16:26:31 -0700
-Message-ID: <7a7f2e59-1109-eb49-e26f-ed052fccd5c7@codeaurora.org>
-References: <1526631889-5084-3-git-send-email-skannan@codeaurora.org>
- <1526631889-5084-1-git-send-email-skannan@codeaurora.org>
- <CGME20180518082505epcas2p265038f51fc070a4aada4c692a71ebc3c@epcms1p8>
- <20180528060014epcms1p87ec68a4d44f9447b06f979a87e545b7d@epcms1p8>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjEwIDAvNV0gc2NzaTogdWZzOiBhZGQgdWZzIGRy?=
+ =?utf-8?Q?iver_code_for_Hisilicon_Hi3660_SoC?=
+Date: Wed, 6 Jun 2018 00:48:13 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA70129__18209.5839096748$1528246007$gmane$org@DGGEMM506-MBX.china.huawei.com>
+References: <20180525091712.37227-1-liwei213@huawei.com>
+ <f9cde7df-2d4d-3d7e-5269-ef879211b2ee@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180528060014epcms1p87ec68a4d44f9447b06f979a87e545b7d@epcms1p8>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rjendra@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f9cde7df-2d4d-3d7e-5269-ef879211b2ee@arm.com>
+Content-Language: zh-CN
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Valentin Schneider <valentin.schneider@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "khilman@baylibre.com" <khilman@baylibre.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "riku.voipio@linaro.org" <riku.voipio@linaro.org>, "treding@nvidia.com" <treding@nvidia.com>, "krzk@kernel.org" <krzk@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.or>
+Cc: "guodong.xu@linaro.org" <guodong.xu@linaro.org>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, Gengjianfeng <gengjianfeng@hisilicon.com>, zangleigang <zangleigang@hisilicon.com>, "Fengbaopeng (kevin,
+ Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, "john.stultz@linaro.org" <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/27/2018 11:00 PM, MyungJoo Ham wrote:
->> Many CPU architectures have caches that can scale independent of the CPUs.
->> Frequency scaling of the caches is necessary to make sure the cache is not
->> a performance bottleneck that leads to poor performance and power. The same
->> idea applies for RAM/DDR.
->>
->> To achieve this, this patch series adds a generic devfreq governor that can
->> listen to the frequency transitions of each CPU frequency domain and then
->> adjusts the frequency of the cache (or any devfreq device) based on the
->> frequency of the CPUs.
-> I agree that we have some hardware pieces that want to configure
-> frequencies based on the CPUfreq.
->
-> Creating a devfreq governor that configures devfreq-freq
-> based on incoming events (CPUFreq-transition-event in this case)
-> is indeed a good idea.
->
-> However, I would like to ask the followings:
-> The overall code appears to be overly complex compared what you need.
-> - Do you really need to revive "CPUFREQ POLICY" events for this?
-> especially when you are going to look at "first CPU" only?
->
->
-> Cheers,
-> MyungJoo
->
-Sorry, didn't notice this email earlier. My message filters seem to be 
-messed up.
-
-The POLICY notifiers are necessary for cases when all CPUs in a policy 
-are hotplugged off -- we need to ignore their frequencies to avoid 
-getting the devfreq device stuck at a high frequency. Looking at "first 
-CPU" is just an optimization to ignore multiple transition notifiers for 
-the each CPU in a policy -- we'd want to do that even if we don't have 
-policy notifiers. Not having policy notifier won't really simplify the 
-code by much. We'd be forced to check for policy->related_cpus for every 
-transition notifier call if the CPU state hasn't been already initialized.
-
--Saravana
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGksIFZhbGVudGluDQoNClRoYW5rIHlvdSBmb3IgeW91ciBhdHRlbnRpb24gYW5kIHdvcmsuDQoN
+ClRoYW5rcyENCg0KLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0K5Y+R5Lu25Lq6OiBWYWxlbnRpbiBT
+Y2huZWlkZXIgW21haWx0bzp2YWxlbnRpbi5zY2huZWlkZXJAYXJtLmNvbV0gDQrlj5HpgIHml7bp
+l7Q6IDIwMTjlubQ25pyINeaXpSAyMjo1OQ0K5pS25Lu25Lq6OiBsaXdlaSAoQ00pOyByb2JoK2R0
+QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBjYXRhbGluLm1hcmluYXNAYXJtLmNv
+bTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgdmluaG9saWthdHRpQGdtYWlsLmNvbTsgamVqYkBsaW51
+eC52bmV0LmlibS5jb207IG1hcnRpbi5wZXRlcnNlbkBvcmFjbGUuY29tOyBraGlsbWFuQGJheWxp
+YnJlLmNvbTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ29yeS5jbGVtZW50QGZyZWUtZWxlY3Ryb25zLmNv
+bTsgdGhvbWFzLnBldGF6em9uaUBmcmVlLWVsZWN0cm9ucy5jb207IHlhbWFkYS5tYXNhaGlyb0Bz
+b2Npb25leHQuY29tOyByaWt1LnZvaXBpb0BsaW5hcm8ub3JnOyB0cmVkaW5nQG52aWRpYS5jb207
+IGtyemtAa2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsg
+bGludXgtc2NzaUB2Z2VyLmtlcm5lbC5vcmcNCuaKhOmAgTogemFuZ2xlaWdhbmc7IEdlbmdqaWFu
+ZmVuZzsgZ3VvZG9uZy54dUBsaW5hcm8ub3JnOyBDaGVuZmVuZyAocHVjayk7IGpvaG4uc3R1bHR6
+QGxpbmFyby5vcmc7IEZlbmdiYW9wZW5nIChrZXZpbiwgS2lyaW4gU29sdXRpb24gRGVwdCkNCuS4
+u+mimDogUmU6IFtQQVRDSCB2MTAgMC81XSBzY3NpOiB1ZnM6IGFkZCB1ZnMgZHJpdmVyIGNvZGUg
+Zm9yIEhpc2lsaWNvbiBIaTM2NjAgU29DDQoNCkhpLA0KDQpPbiAyNS8wNS8xOCAxMDoxNywgTGkg
+V2VpIHdyb3RlOg0KPiBUaGlzIHBhdGNoc2V0IGFkZHMgZHJpdmVyIHN1cHBvcnQgZm9yIFVGUyBm
+b3IgSGkzNjYwIFNvQy4gSXQgaXMgdmVyaWZpZWQgb24gSGlLZXk5NjAgYm9hcmQuDQo+IA0KPiBM
+aSBXZWkgKDUpOg0KPiAgIHNjc2k6IHVmczogYWRkIEhpc2lsaWNvbiB1ZnMgZHJpdmVyIGNvZGUN
+Cj4gICBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9jdW1lbnQgZm9yIGhpc2ktdWZzDQo+
+ICAgYXJtNjQ6IGR0czogYWRkIHVmcyBkdHMgbm9kZQ0KPiAgIGFybTY0OiBkZWZjb25maWc6IGVu
+YWJsZSBjb25maWdzIGZvciBIaXNpbGljb24gdWZzDQo+ICAgYXJtNjQ6IGRlZmNvbmZpZzogZW5h
+YmxlIGYyZnMgYW5kIHNxdWFzaGZzDQo+IA0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQgfCAgNDEgKysNCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3Vmcy91ZnNoY2QtcGx0ZnJtLnR4dCAgICAgIHwgIDEwICstDQo+ICBhcmNoL2FybTY0L2Jv
+b3QvZHRzL2hpc2lsaWNvbi9oaTM2NjAuZHRzaSAgICAgICAgICB8ICAxOCArDQo+ICBhcmNoL2Fy
+bTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArDQo+ICBk
+cml2ZXJzL3Njc2kvdWZzL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSAr
+DQo+ICBkcml2ZXJzL3Njc2kvdWZzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMSArDQo+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMgICAgICAgICAgICAgICAgICAg
+ICAgICB8IDYxOSArKysrKysrKysrKysrKysrKysrKysNCj4gIGRyaXZlcnMvc2NzaS91ZnMvdWZz
+LWhpc2kuaCAgICAgICAgICAgICAgICAgICAgICAgIHwgMTE1ICsrKysNCj4gIDggZmlsZXMgY2hh
+bmdlZCwgODIxIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQN
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMNCj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmgNCj4gDQo+IE1ham9y
+IGNoYW5nZXMgaW4gdjEwOg0KPiAgLSBzb2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSBSb2IgSGVy
+cmluZy4NCj4gICAgKk1vZGlmeSB0aGUgInJlc2V0LW5hbWVzIiBkZXNjcmliZSBpbiB1ZnMtaGlz
+aS50eHQgYmluZGluZyBmaWxlLg0KPiAgICAqTGlzdCBjbG9ja3MgaW4gdWZzLWhpc2kudHh0IGJp
+bmRpbmcgZmlsZS4NCj4gICAgKnJlbW92ZSB0aGUgImFyc3QiIGFuZCBrZWVwIG9ubHkgInJzdCIg
+aW4gdGhlIGJpbmdpbmcgZmlsZXMuDQo+ICAgICpyZW1vdmUgdGhlICJhcnN0IiBtZW1iZXIgZnJv
+bSBib3RoIGR0cyBhbmQgYyBjb2RlLiANCj4gTWFqb3IgY2hhbmdlcyBpbiB2OToNCj4gIC0gc29s
+dmUgcmV2aWV3IGNvbW1lbnRzIGZyb20gUm9iIEhlcnJpbmcuDQo+ICAgICpyZW1vdmUgZnJlcS10
+YWJsZS1oeiBpbiB1ZnMtaGlzaS50eHQgYmluZGluZyBmaWxlLg0KPiAgICAqTW92ZSB0aGUgcnN0
+IHRvIHRoZSB1ZnNoY2RfcGx0Zm0udHh0IGNvbW1vbiBiaW5kaW5nIGZpbGUuDQo+ICAgICpNb2Rp
+ZnkgdGhlIG1lbWJlciAiYXNzZXJ0IiBvZiBVRlMgaG9zdCBzdHJ1Y3R1cmUgdG8gImFyc3QiLg0K
+PiBNYWpvciBjaGFuZ2VzIGluIHY4Og0KPiAgLSBzb2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSB6
+aGFuZ2ZlaS4NCj4gICAgKkFkZCBWZXJzaW9uIGhpc3RvcnkuDQo+ICAtIHNvbHZlIHJldmlldyBj
+b21tZW50cyBmcm9tIFJvYiBIZXJyaW5nLg0KPiAgICAqcmVtb3ZlIGZyZXEtdGFibGUtaHouDQo+
+ICAtICBzb2x2ZSByZXZpZXcgY29tbWVudHMgZnJvbSBSaWt1IFZvaXBpby4NCj4gICAgKkFkZCBN
+T0RVTEVfREVWSUNFX1RBQkxFIGZvciB1ZnMgZHJpdmVyLg0KPiANCg0KVGVzdGVkIG9uIHRvcCBv
+ZiBsaW51eC1uZXh0ICg0LjE3LjAtbmV4dC0yMDE4MDYwNSksIEkgY2FuIHJlbGlhYmx5IGxvYWQN
+Cm15IGRlYmlhbiB1c2Vyc3BhY2UgZmxhc2hlZCBvbiB0aGUgJ3N5c3RlbScgZmFzdGJvb3QgcGFy
+dGl0aW9uLg0KDQpUZXN0ZWQtYnk6IFZhbGVudGluIFNjaG5laWRlciA8dmFsZW50aW4uc2NobmVp
+ZGVyQGFybS5jb20+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
