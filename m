@@ -1,56 +1,61 @@
-From: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Subject: Re: [PATCH 01/20] coresight: Fix memory leak in coresight_register
-Date: Wed, 6 Jun 2018 12:14:33 +0530
-Message-ID: <b0100f00-c706-3a41-ca55-3c1329c53aa3@gmail.com>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-2-git-send-email-suzuki.poulose@arm.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
+Date: Wed, 6 Jun 2018 12:19:09 +0530
+Message-ID: <20180606064909.GC16230@vkoul-mobl>
+References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
+ <20180605061919.GQ16230@vkoul-mobl>
+ <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+ <20180605164031.GZ16230@vkoul-mobl>
+ <1b376fc2-6a1b-1457-ffff-332954d1bef8@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528235011-30691-2-git-send-email-suzuki.poulose@arm.com>
+Content-Disposition: inline
+In-Reply-To: <1b376fc2-6a1b-1457-ffff-332954d1bef8@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
+Hi Sricharan,
 
+On 06-06-18, 12:09, Sricharan R wrote:
 
-On Wednesday 06 June 2018 03:13 AM, Suzuki K Poulose wrote:
-> commit 6403587a930c ("coresight: use put_device() instead of kfree()")
-> introduced a memory leak where, if we fail to register the device
-> for coresight_device, we don't free the "coresight_device" object,
-> which was allocated via kzalloc(). Fix this by jumping to the
-> appropriate error path.
-put_device() will decrement the last reference and then
-free the memory by calling dev->release.  Internally
-put_device() -> kobject_put() -> kobject_cleanup() which is
-responsible to call 'dev -> release' and also free other kobject
-resources. If you will see the coresight_device_release. There
-we are releasing all allocated memory. Still if you call kfree() again
-then it'll be redundancy.
+> >>>> +config QCOM_Q6V5_WCSS
+> >>>> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
+> >>>> +	depends on OF && ARCH_QCOM
+> >>>> +	depends on QCOM_SMEM
+> >>>> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
+> >>>> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+> >>>
+> >>> Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
+> >>> happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
+> >>>
+> >>   RPMSG_QCOM_GLINK_SMEM=n should be for the COMPILE_TEST. Probably that
+> > 
+> > why would that be a limitation? I am more worried about
+> > RPMSG_QCOM_GLINK_SMEM=n being the condition here. In new drivers we
+> > should not typically have dependency on some symbol being not there
+> 
+> Without that, if RPMSG_QCOM_GLINK_SMEM=m is compiled as a module, then
+> it would break the build.
 
-~arvind
->
-> Fixes: commit 6403587a930c ("coresight: use put_device() instead of kfree()")
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Arvind Yadav <arvind.yadav.cs@gmail.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->   drivers/hwtracing/coresight/coresight.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index 4969b32..2893cfe 100644
-> --- a/drivers/hwtracing/coresight/coresight.c
-> +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -1020,7 +1020,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
->   	ret = device_register(&csdev->dev);
->   	if (ret) {
->   		put_device(&csdev->dev);
-> -		goto err_kzalloc_csdev;
-> +		goto err_kzalloc_refcnts;
->   	}
->   
->   	mutex_lock(&coresight_mutex);
+Okay I do not know the details, but that doesn't sound correct to me.
+Breaking build sounds a bit extreme to me. Can you give details on this
+part..
+
+> >>   means that it should be corrected here and for ADSP, Q6V5_PIL as well.
+> >>   Bjorn, is that correct ?, should it be, below ?
+> >>  
+> >>   depends on (RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)) || (RPMSG_QCOM_GLINK_SMEM || (COMPILE_TEST && RPMSG_QCOM_GLINK_SMEM=n))
+> > 
+> > that doesnt really sound good :(
+> 
+>  Hmm, but i was thinking it should functionally depend on either SMD or GLINK and not both.
+
+If you are depedent upon a symbol provided by a module you should say
+depends on. If a machine is not supposed to have both SMD or GLINK then
+the driver will not get probed.
+
+-- 
+~Vinod
