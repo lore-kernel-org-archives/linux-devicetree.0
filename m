@@ -1,209 +1,216 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v3 1/2] power: supply: sbs-battery: don't assume
- MANUFACTURER_DATA formats
-Date: Wed, 6 Jun 2018 10:03:59 +0800
-Message-ID: <7cbe27cf-2917-a17b-07bf-e5fdeb5fef15@electromag.com.au>
-References: <20180602012900.181352-1-briannorris@chromium.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
+ bindings
+Date: Wed, 6 Jun 2018 10:12:38 +0530
+Message-ID: <20180606044238.qquy2hkwdm3muhoj@vireshk-i7>
+References: <1528109194-16864-1-git-send-email-tdas@codeaurora.org>
+ <1528109194-16864-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180602012900.181352-1-briannorris@chromium.org>
-Content-Language: en-AU
+Content-Disposition: inline
+In-Reply-To: <1528109194-16864-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>, Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-G'day Brian,
-
-One comment below.
-
-On 2/06/2018 09:28, Brian Norris wrote:
-> This driver was originally submitted for the TI BQ20Z75 battery IC
-> (commit a7640bfa10c5 ("power_supply: Add driver for TI BQ20Z75 gas gauge
-> IC")) and later renamed to express generic SBS support. While it's
-> mostly true that this driver implemented a standard SBS command set, it
-> takes liberties with the REG_MANUFACTURER_DATA register. This register
-> is specified in the SBS spec, but it doesn't make any mention of what
-> its actual contents are.
+On 04-06-18, 16:16, Taniya Das wrote:
+> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> SoCs. This is required for managing the cpu frequency transitions which are
+> controlled by firmware.
 > 
-> We've sort of noticed this optionality previously, with commit
-> 17c6d3979e5b ("sbs-battery: make writes to ManufacturerAccess
-> optional"), where we found that some batteries NAK writes to this
-> register.
-> 
-> What this really means is that so far, we've just been lucky that most
-> batteries have either been compatible with the TI chip, or else at least
-> haven't reported highly-unexpected values.
-> 
-> For instance, one battery I have here seems to report either 0x0000 or
-> 0x0100 to the MANUFACTURER_ACCESS_STATUS command -- while this seems to
-> match either Wake Up (bits[11:8] = 0000b) or Normal Discharge
-> (bits[11:8] = 0001b) status for the TI part [1], they don't seem to
-> actually correspond to real states (for instance, I never see 0101b =
-> Charge, even when charging).
-> 
-> On other batteries, I'm getting apparently random data in return, which
-> means that occasionally, we interpret this as "battery not present" or
-> "battery is not healthy".
-> 
-> All in all, it seems to be a really bad idea to make assumptions about
-> REG_MANUFACTURER_DATA, unless we already know what battery we're using.
-> Therefore, this patch reimplements the "present" and "health" checks to
-> the following on most SBS batteries:
-> 
-> 1. HEALTH: report "unknown" -- I couldn't find a standard SBS command
->     that gives us much useful here
-> 2. PRESENT: just send a REG_STATUS command; if it succeeds, then the
->     battery is present
-> 
-> Also, we stop sending MANUFACTURER_ACCESS_SLEEP to non-TI parts. I have
-> no proof that this is useful and supported.
-> 
-> If someone explicitly provided a 'ti,bq20z75' compatible property, then
-> we retain the existing TI command behaviors.
-> 
-> [1] http://www.ti.com/lit/er/sluu265a/sluu265a.pdf
-> 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Acked-by: Rhyland Klein <rklein@nvidia.com>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
-> v2:
->   * don't stub out POWER_SUPPLY_PROP_PRESENT from sbs_data[]
->   * use if/else instead of switch/case
+>  .../bindings/cpufreq/cpufreq-qcom-fw.txt           | 173 +++++++++++++++++++++
+>  1 file changed, 173 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
 > 
-> v3:
->   * pull 'return 0' out of if/else, to satisfy braindead tooling
-> ---
->   drivers/power/supply/sbs-battery.c | 54 +++++++++++++++++++++++++-----
->   1 file changed, 46 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-> index 83d7b4115857..a9691ea42f44 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -23,6 +23,7 @@
->   #include <linux/kernel.h>
->   #include <linux/module.h>
->   #include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/power/sbs-battery.h>
->   #include <linux/power_supply.h>
->   #include <linux/slab.h>
-> @@ -156,6 +157,9 @@ static enum power_supply_property sbs_properties[] = {
->   	POWER_SUPPLY_PROP_MODEL_NAME
->   };
->   
-> +/* Supports special manufacturer commands from TI BQ20Z75 IC. */
-> +#define SBS_FLAGS_TI_BQ20Z75		BIT(0)
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
+> new file mode 100644
+> index 0000000..e3087ec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
+> @@ -0,0 +1,173 @@
+> +Qualcomm Technologies, Inc. CPUFREQ Bindings
 > +
->   struct sbs_info {
->   	struct i2c_client		*client;
->   	struct power_supply		*power_supply;
-> @@ -168,6 +172,7 @@ struct sbs_info {
->   	u32				poll_retry_count;
->   	struct delayed_work		work;
->   	struct mutex			mode_lock;
-> +	u32				flags;
->   };
->   
->   static char model_name[I2C_SMBUS_BLOCK_MAX + 1];
-> @@ -315,6 +320,27 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
->   static int sbs_get_battery_presence_and_health(
->   	struct i2c_client *client, enum power_supply_property psp,
->   	union power_supply_propval *val)
-> +{
-> +	int ret;
+> +CPUFREQ FW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
+> +SoCs to manage frequency in hardware. It is capable of controlling frequency
+> +for multiple clusters.
 > +
-> +	if (psp == POWER_SUPPLY_PROP_PRESENT) {
-> +		/* Dummy command; if it succeeds, battery is present. */
-> +		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
-> +		if (ret < 0)
-> +			val->intval = 0; /* battery disconnected */
-> +		else
-> +			val->intval = 1; /* battery present */
-> +	} else { /* POWER_SUPPLY_PROP_HEALTH */
-> +		/* SBS spec doesn't have a general health command. */
-> +		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
-> +	}
+> +Properties:
+> +- compatible
+> +	Usage:		required
+> +	Value type:	<string>
+> +	Definition:	must be "qcom,cpufreq-fw".
 > +
-> +	return 0;
-> +}
+> +* Property qcom,freq-domain
+> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
+> +phandle to a freq_domain_table in their DT node.
 > +
-> +static int sbs_get_ti_battery_presence_and_health(
-> +	struct i2c_client *client, enum power_supply_property psp,
-> +	union power_supply_propval *val)
->   {
->   	s32 ret;
->   
-> @@ -600,7 +626,12 @@ static int sbs_get_property(struct power_supply *psy,
->   	switch (psp) {
->   	case POWER_SUPPLY_PROP_PRESENT:
->   	case POWER_SUPPLY_PROP_HEALTH:
-> -		ret = sbs_get_battery_presence_and_health(client, psp, val);
-> +		if (client->flags & SBS_FLAGS_TI_BQ20Z75)
-> +			ret = sbs_get_ti_battery_presence_and_health(client,
-> +								     psp, val);
-> +		else
-> +			ret = sbs_get_battery_presence_and_health(client, psp,
-> +								  val);
->   		if (psp == POWER_SUPPLY_PROP_PRESENT)
->   			return 0;
->   		break;
-> @@ -806,6 +837,7 @@ static int sbs_probe(struct i2c_client *client,
->   	if (!chip)
->   		return -ENOMEM;
->   
-> +	chip->flags = (u32)(uintptr_t)of_device_get_match_data(&client->dev);
->   	chip->client = client;
->   	chip->enable_detection = false;
->   	psy_cfg.of_node = client->dev.of_node;
-> @@ -915,12 +947,15 @@ static int sbs_suspend(struct device *dev)
->   	if (chip->poll_time > 0)
->   		cancel_delayed_work_sync(&chip->work);
->   
-> -	/*
-> -	 * Write to manufacturer access with sleep command.
-> -	 * Support is manufacturer dependend, so ignore errors.
-> -	 */
-> -	sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
-> -		MANUFACTURER_ACCESS_SLEEP);
-> +	if (chip->flags & SBS_FLAGS_TI_BQ20Z75) {
-> +		/*
-> +		 * Write to manufacturer access with sleep command.
-> +		 * Support is manufacturer dependent, so ignore errors.
-> +		 */
-> +		sbs_write_word_data(client,
-> +				    sbs_data[REG_MANUFACTURER_DATA].addr,
-> +				    MANUFACTURER_ACCESS_SLEEP);
-> +	}
+> +* Frequency Domain Table Node
+> +
+> +This describes the frequency domain belonging to a device.
+> +This node can have following properties:
+> +
+> +- reg
+> +	Usage:		required
+> +	Value type:	<prop-encoded-array>
+> +	Definition:	Addresses and sizes for the memory of the perf
+> +			, lut and enable bases.
+> +			perf - indicates the base address for the desired
+> +			performance state to be set.
+> +			lut - indicates the look up table base address for the
+> +			cpufreq	driver to read frequencies.
+> +			enable - indicates the enable register for firmware.
+> +- reg-names
+> +	Usage:		required
+> +	Value type:	<stringlist>
+> +	Definition:	Address names. Must be "perf", "lut", "enable".
+> +			Must be specified in the same order as the reg property.
+> +
+> +Example:
+> +
+> +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
+> +DCVS state together.
+> +
+> +/ {
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +			qcom,freq-domain = <&freq_domain_table0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +				L3_0: l3-cache {
+> +				      compatible = "cache";
+> +				};
+> +			};
+> +		};
+> +
+> +		CPU1: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_100>;
+> +			qcom,freq-domain = <&freq_domain_table0>;
+> +			L2_100: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU2: cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x200>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_200>;
+> +			qcom,freq-domain = <&freq_domain_table0>;
+> +			L2_200: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU3: cpu@300 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x300>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_300>;
+> +			qcom,freq-domain = <&freq_domain_table0>;
+> +			L2_300: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU4: cpu@400 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x400>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_400>;
+> +			qcom,freq-domain = <&freq_domain_table1>;
+> +			L2_400: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@500 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x500>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_500>;
+> +			qcom,freq-domain = <&freq_domain_table1>;
+> +			L2_500: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU6: cpu@600 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x600>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_600>;
+> +			qcom,freq-domain = <&freq_domain_table1>;
+> +			L2_600: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU7: cpu@700 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x700>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_700>;
+> +			qcom,freq-domain = <&freq_domain_table1>;
+> +			L2_700: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	qcom,cpufreq-fw {
+> +		compatible = "qcom,cpufreq-fw";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		freq_domain_table0 : freq_table0 {
+> +			reg = <0x17d43920 0x4>, <0x17d43110 0x500>,
+> +				 <0x17d41000 0x4>;
+> +			reg-names = "perf", "lut", "enable";
+> +		};
+> +
+> +		freq_domain_table1 : freq_table1 {
+> +			reg = <0x17d46120 0x4>, <0x17d45910 0x500>,
+> +				<0x17d45800 0x4> ;
+> +			reg-names = "perf", "lut", "enable";
+> +		};
+> +	};
 
-Now that this is only being done for only TI devices that support this I would think the comment
-about ignoring errors needs to go, and errors checks added.
-Ditto in the new sbs_get_ti_battery_presence_and_health()
+Looks better now from design point of view now, no ugly CPU lists :)
 
+Unless Rob finds something wrong with the bindings:
 
-
->   
->   	return 0;
->   }
-> @@ -941,7 +976,10 @@ MODULE_DEVICE_TABLE(i2c, sbs_id);
->   
->   static const struct of_device_id sbs_dt_ids[] = {
->   	{ .compatible = "sbs,sbs-battery" },
-> -	{ .compatible = "ti,bq20z75" },
-> +	{
-> +		.compatible = "ti,bq20z75",
-> +		.data = (void *)SBS_FLAGS_TI_BQ20Z75,
-> +	},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, sbs_dt_ids);
-> 
-
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-Regards
-Phil Reid
+viresh
