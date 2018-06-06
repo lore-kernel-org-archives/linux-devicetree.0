@@ -1,43 +1,156 @@
-From: "Y.b. Lu" <yangbo.lu@nxp.com>
-Subject: RE: [PATCH 09/10] dpaa_eth: add support for hardware timestamping
-Date: Wed, 6 Jun 2018 11:48:31 +0000
-Message-ID: <DB6PR0401MB2536C69465964BB0BD1A4203F8650@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <20180604070837.19265-1-yangbo.lu@nxp.com>
- <20180604070837.19265-10-yangbo.lu@nxp.com>
- <20180604134920.ezhe6jz5ntpnqyzj@localhost>
- <DB6PR0401MB2536376432EC481473A5B4A3F8660@DB6PR0401MB2536.eurprd04.prod.outlook.com>
- <20180605135748.mlarwiyzf2oe27ax@localhost>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 3/6] mtd: rawnand: tegra: add devicetree binding
+Date: Wed, 06 Jun 2018 14:14:23 +0200
+Message-ID: <c687fc59e2662d07568f94efb55bc250@agner.ch>
+References: <20180531221637.6017-1-stefan@agner.ch>
+ <20180531221637.6017-4-stefan@agner.ch> <20180601093025.2817ff30@bbrezillon>
+ <faa40dac-ab2a-2d43-3a43-2d46cebcd539@gmail.com>
+ <20180606103903.GJ11810@ulmo> <20180606124540.46bfa00b@bbrezillon>
+ <20180606110735.GM11810@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605135748.mlarwiyzf2oe27ax@localhost>
-Content-Language: en-US
+In-Reply-To: <20180606110735.GM11810@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, benjamin.lindqvist@endian.se, pgaikwad@nvidia.com, dev@lynxeye.de, mirza.krak@gmail.com, richard@nod.at, pdeschrijver@nvidia.com, linux-kernel@vger.kernel.org, krzk@kernel.org, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, marcel@ziswiler.com, miquel.raynal@bootlin.com, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUmljaGFyZCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNo
-YXJkIENvY2hyYW4gW21haWx0bzpyaWNoYXJkY29jaHJhbkBnbWFpbC5jb21dDQo+IFNlbnQ6IFR1
-ZXNkYXksIEp1bmUgNSwgMjAxOCA5OjU4IFBNDQo+IFRvOiBZLmIuIEx1IDx5YW5nYm8ubHVAbnhw
-LmNvbT4NCj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IE1hZGFsaW4tY3Jpc3RpYW4gQnVj
-dXINCj4gPG1hZGFsaW4uYnVjdXJAbnhwLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5l
-bC5vcmc+OyBTaGF3biBHdW8NCj4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBEYXZpZCBTIC4gTWls
-bGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0PjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCAwOS8xMF0gZHBhYV9ldGg6IGFkZCBzdXBwb3J0IGZvciBoYXJkd2FyZSB0aW1l
-c3RhbXBpbmcNCj4gDQo+IE9uIFR1ZSwgSnVuIDA1LCAyMDE4IGF0IDAzOjM1OjI4QU0gKzAwMDAs
-IFkuYi4gTHUgd3JvdGU6DQo+ID4gW1kuYi4gTHVdIEFjdHVhbGx5IHRoZXNlIHRpbWVzdGFtcGlu
-ZyBjb2RlcyBhZmZlY3RlZCBEUEFBIG5ldHdvcmtpbmcNCj4gcGVyZm9ybWFuY2UgaW4gb3VyIHBy
-ZXZpb3VzIHBlcmZvcm1hbmNlIHRlc3QuDQo+ID4gVGhhdCdzIHdoeSB3ZSB1c2VkIGlmZGVmIGZv
-ciBpdC4NCj4gDQo+IEhvdyBtdWNoIGRvZXMgdGltZSBzdGFtcGluZyBodXJ0IHBlcmZvcm1hbmNl
-Pw0KPiANCj4gSWYgdGhlIHRpbWUgc3RhbXBpbmcgaXMgY29tcGlsZWQgaW4gYnV0IG5vdCBlbmFi
-bGVkIGF0IHJ1biB0aW1lLCBkb2VzIGl0IHN0aWxsDQo+IGFmZmVjdCBwZXJmb3JtYWNlPw0KDQpb
-WS5iLiBMdV0gSSBjYW4ndCByZW1lbWJlciBhbmQgZmluZCB0aGUgb2xkIGRhdGEgc2luY2UgaXQg
-aGFkIGJlZW4gYSBsb25nIHRpbWUuDQpJIGp1c3QgZGlkIHRoZSBpcGVyZiB0ZXN0IHRvZGF5IGJl
-dHdlZW4gdHdvIDEwRyBwb3J0cy4gSSBkaWRu4oCZdCBzZWUgYW55IHBlcmZvcm1hbmNlIGNoYW5n
-ZXMgd2l0aCB0aW1lc3RhbXBpbmcgY29kZSDwn5iKDQpTbywgbGV0J3MgbWUgcmVtb3ZlIHRoZSBp
-ZmRlZiBpbiBuZXh0IHZlcnNpb24uDQpUaGFua3MgYSBsb3QuDQoNCg0KPiANCj4gVGhhbmtzLA0K
-PiBSaWNoYXJkDQo=
+On 06.06.2018 13:07, Thierry Reding wrote:
+> On Wed, Jun 06, 2018 at 12:45:40PM +0200, Boris Brezillon wrote:
+>> Hi Thierry,
+>>
+>> On Wed, 6 Jun 2018 12:39:03 +0200
+>> Thierry Reding <thierry.reding@gmail.com> wrote:
+>>
+>> > On Tue, Jun 05, 2018 at 11:19:14PM +0300, Dmitry Osipenko wrote:
+>> > > On 01.06.2018 10:30, Boris Brezillon wrote:
+>> > > > On Fri,  1 Jun 2018 00:16:34 +0200
+>> > > > Stefan Agner <stefan@agner.ch> wrote:
+>> > > >
+>> > > >> This adds the devicetree binding for the Tegra 2 NAND flash
+>> > > >> controller.
+>> > > >>
+>> > > >> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+>> > > >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> > > >> ---
+>> > > >>  .../bindings/mtd/nvidia-tegra20-nand.txt      | 64 +++++++++++++++++++
+>> > > >>  1 file changed, 64 insertions(+)
+>> > > >>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+>> > > >>
+>> > > >> diff --git a/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+>> > > >> new file mode 100644
+>> > > >> index 000000000000..5cd984ef046b
+>> > > >> --- /dev/null
+>> > > >> +++ b/Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+>> > > >> @@ -0,0 +1,64 @@
+>> > > >> +NVIDIA Tegra NAND Flash controller
+>> > > >> +
+>> > > >> +Required properties:
+>> > > >> +- compatible: Must be one of:
+>> > > >> +  - "nvidia,tegra20-nand"
+>> > > >
+>> > > > As discussed previously, I prefer "nvidia,tegra20-nand-controller" or
+>> > > > "nvidia,tegra20-nfc".
+>> > > >
+>> > > >> +- reg: MMIO address range
+>> > > >> +- interrupts: interrupt output of the NFC controller
+>> > > >> +- clocks: Must contain an entry for each entry in clock-names.
+>> > > >> +  See ../clocks/clock-bindings.txt for details.
+>> > > >> +- clock-names: Must include the following entries:
+>> > > >> +  - nand
+>> > > >> +- resets: Must contain an entry for each entry in reset-names.
+>> > > >> +  See ../reset/reset.txt for details.
+>> > > >> +- reset-names: Must include the following entries:
+>> > > >> +  - nand
+>> > > >> +
+>> > > >> +Optional children nodes:
+>> > > >> +Individual NAND chips are children of the NAND controller node. Currently
+>> > > >> +only one NAND chip supported.
+>> > > >> +
+>> > > >> +Required children node properties:
+>> > > >> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
+>> > > >> +
+>> > > >> +Optional children node properties:
+>> > > >> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. Currently only
+>> > > >> +		 "hw" is supported.
+>> > > >> +- nand-ecc-algo: string, algorithm of NAND ECC.
+>> > > >> +		 Supported values with "hw" ECC mode are: "rs", "bch".
+>> > > >> +- nand-bus-width : See nand.txt
+>> > > >> +- nand-on-flash-bbt: See nand.txt
+>> > > >> +- nand-ecc-strength: integer representing the number of bits to correct
+>> > > >> +		     per ECC step (always 512). Supported strength using HW ECC
+>> > > >> +		     modes are:
+>> > > >> +		     - RS: 4, 6, 8
+>> > > >> +		     - BCH: 4, 8, 14, 16
+>> > > >> +- nand-ecc-maximize: See nand.txt
+>> > > >> +- nand-is-boot-medium: Makes sure only ECC strengths supported by the boot ROM
+>> > > >> +		       are choosen.
+>> > > >> +- wp-gpios: GPIO specifier for the write protect pin.
+>> > > >> +
+>> > > >> +Optional child node of NAND chip nodes:
+>> > > >> +Partitions: see partition.txt
+>> > > >> +
+>> > > >> +  Example:
+>> > > >> +	nand@70008000 {
+>> > > >
+>> > > > 	nand-controller@70008000 {
+>> > > >
+>> > > >> +		compatible = "nvidia,tegra20-nand";
+>> > > >
+>> > > > 		compatible = "nvidia,tegra20-nand-controller";
+>> > > >
+>> > > > or
+>> > > >
+>> > > > 		compatible = "nvidia,tegra20-nfc";
+>> > > >
+>> > >
+>> > > Maybe it's just me, but when I'm reading "nfc", my first association is the
+>> > > "Near Field Communication". Probably an explicit
+>> > > "nvidia,tegra20-nand-controller" variant is more preferable.
+>>
+>> I also prefer nvidia,tegra20-nand-controller.
+>>
+>> >
+>> > We don't really use a -controller suffix for any of the other
+>> > controllers because it is kind of implied. "nfc" is also not something
+>> > that is ever referred to in the technical documentation.
+>> >
+>> > "nvidia,tegra20-nand" would be most consistent with all the rest of
+>> > Tegra (c.f. "nvidia,tegra*-ahci", "nvidia,tegra*-pci",
+>> > "nvidia,tegra*-hda", "nvidia,tegra*-gmi", ...).
+>>
+>> People get confused about what this node represents when you just have
+>> "nvidia,tegra20-nand", and then you start seeing NAND related props or
+>> partition nodes being defined under the NAND controller node.
+>> I really prefer to have the "-controller" prefix here to avoid such
+>> confusions.
+> 
+> Hmm... odd. I mean, the node is already called nand-controller@...,
+> which makes it pretty obvious to me that this represents a controller
+> rather than a NAND chip. Also, the placement of this in the DT hierarchy
+> should make it pretty obvious that it is a controller since you can't
+> just put a NAND chip directly on the CPU's address bus.
+> 
+> In addition I think the nvidia,tegra* part already pretty strongly
+> suggests that this is part of an SoC, so further implies "controller".
+
+The reference manual states:
+"16.0 NAND FLASH CONTROLLER
+
+The NAND flash controller allows Tegra 2 Processor to access NAND flash
+memories for mass storage."
+
+So I guess "nvidia,tegra20-nand-flash-controller" would be most
+explicit. But the manual also has "GPIO controller" and we use
+"nvidia,tegra20-gpio" as compatible string.
+
+I dislike nfc since it is an increasingly less known abbreviation and
+not used in the reference manual at all.
+
+"nvidia,tegra20-nand" or "nvidia,tegra20-nand-flash-controller" is fine
+for me...
+
+--
+Stefan
