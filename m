@@ -1,73 +1,59 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 2/8] ARM: dts: am335x-sl50: use phy-phandle declarations
-Date: Wed,  6 Jun 2018 17:54:07 +0200
-Message-ID: <20180606155413.23542-2-enric.balletbo@collabora.com>
-References: <20180606155413.23542-1-enric.balletbo@collabora.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] ARM: dts: cygnus: Add HWRNG node
+Date: Wed, 6 Jun 2018 09:03:55 -0700
+Message-ID: <c8836130-1d96-b813-4e87-5011db679ba8@broadcom.com>
+References: <20180606093441.16483-1-peron.clem@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180606155413.23542-1-enric.balletbo@collabora.com>
+In-Reply-To: <20180606093441.16483-1-peron.clem@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-phy-phandle is now a preferred method to reference a PHY device. The new
-method also allows you to specify a reset gpio which is required for
-this board.
+Hi Clement,
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
 
- arch/arm/boot/dts/am335x-sl50.dts | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+On 18-06-06 02:34 AM, Clément Péron wrote:
+> From: Clément Peron <clement.peron@devialet.com>
+>
+> There is a HWRNG in Broadcom Cygnus SoC, so enable it.
+>
+> Signed-off-by: Clément Peron <clement.peron@devialet.com>
+Thanks for upstreaming some missing Cygnus components.
 
-diff --git a/arch/arm/boot/dts/am335x-sl50.dts b/arch/arm/boot/dts/am335x-sl50.dts
-index 6d78bf828bbf..58fe84f2ec8b 100644
---- a/arch/arm/boot/dts/am335x-sl50.dts
-+++ b/arch/arm/boot/dts/am335x-sl50.dts
-@@ -253,6 +253,8 @@
- 			/* MDIO */
- 			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
- 			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-+			/* Ethernet */
-+			AM33XX_IOPAD(0x838, PIN_INPUT_PULLUP | MUX_MODE7)	/* Ethernet_nRST - gpmc_ad14.gpio1_14 */
- 		>;
- 	};
- 
-@@ -324,7 +326,6 @@
- 			AM33XX_IOPAD(0x828, PIN_OUTPUT | MUX_MODE7)	/* nKbdOnC - gpmc_ad10.gpio0_26 */
- 			AM33XX_IOPAD(0x830, PIN_INPUT_PULLUP | MUX_MODE7)	/* nKbdInt - gpmc_ad12.gpio1_12 */
- 			AM33XX_IOPAD(0x834, PIN_INPUT_PULLUP | MUX_MODE7)	/* nKbdReset - gpmc_ad13.gpio1_13 */
--			AM33XX_IOPAD(0x838, PIN_INPUT_PULLUP | MUX_MODE7)	/* nDispReset - gpmc_ad14.gpio1_14 */
- 			AM33XX_IOPAD(0x844, PIN_INPUT_PULLUP | MUX_MODE7)	/* USB1_enPower - gpmc_a1.gpio1_17 */
- 			/* PDI Bus - Battery system */
- 			AM33XX_IOPAD(0x840, PIN_INPUT_PULLUP | MUX_MODE7)	/* nBattReset  gpmc_a0.gpio1_16 */
-@@ -553,13 +554,8 @@
- };
- 
- &cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
--	phy-mode = "mii";
--};
--
--&cpsw_emac1 {
--	phy_id = <&davinci_mdio>, <1>;
- 	phy-mode = "mii";
-+	phy-handle = <&ethphy0>;
- };
- 
- &mac {
-@@ -574,6 +570,12 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
-+	reset-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-+	reset-delay-us = <100>;   /* PHY datasheet states 100us min */
-+
-+	ethphy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
- };
- 
- &sham {
--- 
-2.17.1
+But, the problem is the tarball release from Broadcom you are extracting 
+these changes from does not contain git history; so, you are missing the 
+original authors and signed-off's.
+I checked our internal git repository and for this commit the author is:
+Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
+
+Please adjust author and signed-off appropriately.  If there are other 
+changes you are extracting from the source tarballs you have please 
+contact me so we can construct patch appropriately.
+
+Regards,
+Scott
+> ---
+>   arch/arm/boot/dts/bcm-cygnus.dtsi | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 1cee40ac4613..b7178e84d56d 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -452,6 +452,11 @@
+>   			status = "disabled";
+>   		};
+>   
+> +		hwrng: hwrng@18032000 {
+> +			compatible = "brcm,iproc-rng200";
+> +			reg = <0x18032000 0x28>;
+> +		};
+> +
+>   		sdhci0: sdhci@18041000 {
+>   			compatible = "brcm,sdhci-iproc-cygnus";
+>   			reg = <0x18041000 0x100>;
