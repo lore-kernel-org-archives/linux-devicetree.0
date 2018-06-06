@@ -1,90 +1,113 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v2 5/5] venus: register separate driver for firmware device
-Date: Wed, 6 Jun 2018 14:41:38 +0900
-Message-ID: <CAAFQd5AtjVdB2uZrvYs=VBr-0XfwmUc4NhD1yHv9L4sAOtZD2Q@mail.gmail.com>
-References: <1527884768-22392-1-git-send-email-vgarodia@codeaurora.org>
- <1527884768-22392-6-git-send-email-vgarodia@codeaurora.org>
- <CAAFQd5D39CkA=GucUs7YOHwsdj0gbk55BiY_gSvArY_RH4uDkg@mail.gmail.com>
- <2cf4f7e8-f9e6-d62b-45a8-2c348af4aafe@linaro.org> <CAAFQd5BFq+pdEpBmpw5QsO+m+fsAhexhqA_uJg1G39Mpv5E3HQ@mail.gmail.com>
- <fd74c277-e8d3-a026-fbd2-914a029e8efe@linaro.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
+ info
+Date: Wed, 6 Jun 2018 11:29:29 +0530
+Message-ID: <4df7aa3e-e693-a94a-e9bb-7323e6d62cd2@codeaurora.org>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20180118045355.8858-1-architt@codeaurora.org>
+ <20180118045355.8858-3-architt@codeaurora.org> <12153185.srskHYKlqL@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fd74c277-e8d3-a026-fbd2-914a029e8efe@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <acourbot@chromium.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <12153185.srskHYKlqL@phil>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, tomi.valkeinen@ti.com, briannorris@chromium.org, philippe.cornu@st.com, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 5, 2018 at 5:45 PM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
->
-> Cc: Arnd
->
-> On 06/05/2018 07:08 AM, Tomasz Figa wrote:
-> > On Mon, Jun 4, 2018 at 10:56 PM Stanimir Varbanov
-> > <stanimir.varbanov@linaro.org> wrote:
-> >>
-> >> Hi Tomasz,
-> >>
-> >> On 06/04/2018 04:18 PM, Tomasz Figa wrote:
-> >>> Hi Vikash,
-> >>>
-> >>> On Sat, Jun 2, 2018 at 5:27 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
-> >>>> +static int __init venus_init(void)
-> >>>> +{
-> >>>> +       int ret;
-> >>>> +
-> >>>> +       ret = platform_driver_register(&qcom_video_firmware_driver);
-> >>>> +       if (ret)
-> >>>> +               return ret;
-> >>>
-> >>> Do we really need this firmware driver? As far as I can see, the
-> >>> approach used here should work even without any driver bound to the
-> >>> firmware device.
-> >>
-> >> We need device/driver bind because we need to call dma_configure() which
-> >> internally doing iommus sID parsing.
-> >
-> > I can see some drivers calling of_dma_configure() directly:
-> > https://elixir.bootlin.com/linux/latest/ident/of_dma_configure
-> >
-> > I'm not sure if it's more elegant, but should at least require less code.
->
-> I think that in this case of non-TZ where we do iommu mapping by hand we
-> can use shared-dma-pool reserved memory see how venus_boot has been
-> implemented in the beginning [1].
-
-I might have misunderstood something, but wasn't the shared-dma-pool
-about reserving physical memory, while the venus firmware problem is
-about reserving certain range of IOVA?
-
->
-> Arnd what do you think?
->
-> Some background, we have a use-case where the memory for firmware needs
-> to be mapped by the venus driver by hand instead of TZ firmware calls.
-> I.e. we want to support both, iommu mapping from the driver and mapping
-> done by TZ firmware. How we will differentiate what mapping (TZ or
-> non-TZ) will be used is a separate issue.
->
-> >
-> > By the way, can we really assume that probe of firmware platform
-> > device really completes before we call venus_boot()?
->
-> I'd say we cannot.
-
-Looking at current implementation in driver core,
-of_platform_populate() would actually trigger a synchronous probe, so
-I guess it could work. However, I'm not sure if this is a general
-guarantee here or it's an implementation detail that shouldn't be
-relied on.
-
-If we end up really need to have this platform_driver, I guess we
-could call platform_driver_probe() after of_platform_populate(),
-rather than pre-registering the driver. That seems to be the way to
-ensure that the probe is synchronous and we can also check that a
-matching device was found by the return value.
-
-Best regards,
-Tomasz
+CgpPbiBNb25kYXkgMDQgSnVuZSAyMDE4IDA1OjQ3IFBNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToK
+PiBBbSBEb25uZXJzdGFnLCAxOC4gSmFudWFyIDIwMTgsIDA1OjUzOjU1IENFU1Qgc2NocmllYiBB
+cmNoaXQgVGFuZWphOgo+PiBBZGQgYmluZGluZyBpbmZvIGZvciBwZXJpcGhlcmFscyB0aGF0IHN1
+cHBvcnQgZHVhbC1jaGFubmVsIERTSS4gQWRkCj4+IGNvcnJlc3BvbmRpbmcgb3B0aW9uYWwgYmlu
+ZGluZ3MgZm9yIERTSSBob3N0IGNvbnRyb2xsZXJzIHRoYXQgbWF5Cj4+IGJlIGNvbmZpZ3VyZWQg
+aW4gdGhpcyBtb2RlLiBBZGQgYW4gZXhhbXBsZSBvZiBhbiBJMkMgY29udHJvbGxlZAo+PiBkZXZp
+Y2Ugb3BlcmF0aW5nIGluIGR1YWwtY2hhbm5lbCBEU0kgbW9kZS4KPj4KPj4gU2lnbmVkLW9mZi1i
+eTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPiAKPiBMb29rcyBsaWtl
+IGEgZ3JlYXQgc29sdXRpb24gZm9yIHRoYXQgcHJvYmxlbSwgc28KPiBSZXZpZXdlZC1ieTogSGVp
+a28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiAKPiBBcyBJJ20gbG9va2luZyBpbnRvIHRo
+YXQgZm9yIG15IHJrMzM5OS1zY2FybGV0IGRldmljZSByaWdodCBub3cgYW5kCj4gY291bGRuJ3Qg
+ZmluZCB0aGlzIHBhdGNoc2V0IGluIHRoZSBrZXJuZWwgeWV0LCBpcyBpdCBwbGFubmVkIHRvCj4g
+bWVyZ2Ugb3IgcmVmcmVzaCB0aGVzZSBiaW5kaW5nIGNoYW5nZXMgb3Igd2VyZSBwcm9ibGVtcyBl
+bmNvdW50ZXJlZC4KPiAKPiBBdCBsZWFzdCBhbiBBY2svUmV2aWV3IGZyb20gUm9iIHNlZW1zIHRv
+IGJlIG1pc3NpbmcuCj4gCgpJIGZvcmdvdCBhYm91dCB0aGVzZSBwYXRjaGVzLiBSb2IgaGFkIHJl
+dmlld2VkIHRoZSBmaXJzdCBvbmUgaW4KdGhlIHNldCB0aGUgc2Vjb25kIG9uZSBzdGlsbCBuZWVk
+ZWQgYW4gQWNrLiBJJ2xsIHBvc3QgYSB2Mwp0aGF0IGFkZHMgdGhlIFJldmlld2VkLWJ5cyBhbmQg
+Zml4ZXMgYSBzbWFsbCB0eXBvLgoKQXJjaGl0Cgo+IAo+IEhlaWtvCj4gCj4+IC0tLQo+PiB2MjoK
+Pj4gLSBTcGVjaWZ5IHRoYXQgY2xvY2stbWFzdGVyIGlzIGEgYm9vbGVhbiBwcm9wZXJ0eS4KPj4g
+LSBEcm9wL2FkZCB1bml0LWFkZHJlc3MgYW5kICMqLWNlbGxzIHdoZXJlIGFwcGxpY2FibGUuCj4+
+Cj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0ICAg
+fCA4MCArKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDgwIGluc2Vy
+dGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0Cj4+IGluZGV4IDk0ZmI3MmNiOTE2Zi4u
+N2EzYWJiZWRiM2ZhIDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQKPj4gQEAgLTI5LDYgKzI5
+LDEzIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJl
+IDAuIFRoZXJlIGFyZSBjYXNlcyB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0byB1c2UgYQo+PiAgICAg
+ZGlmZmVyZW50IHZhbHVlIGhlcmUuIFNlZSBiZWxvdy4KPj4gICAKPj4gK09wdGlvbmFsIHByb3Bl
+cnRpZXM6Cj4+ICstIGNsb2NrLW1hc3RlcjogYm9vbGVhbi4gU2hvdWxkIGJlIGVuYWJsZWQgaWYg
+dGhlIGhvc3QgaXMgYmVpbmcgdXNlZCBpbgo+PiArICBjb25qdW5jdGlvbiB3aXRoIGFub3RoZXIg
+RFNJIGhvc3QgdG8gZHJpdmUgdGhlIHNhbWUgcGVyaXBoZXJhbC4gSGFyZHdhcmUKPj4gKyAgc3Vw
+cG9ydGluZyBzdWNoIGEgY29uZmlndXJhdGlvbiBnZW5lcmFsbHkgcmVxdWlyZXMgdGhlIGRhdGEg
+b24gYm90aCB0aGUgYnVzc2VzCj4+ICsgIHRvIGJlIGRyaXZlbiBieSB0aGUgc2FtZSBjbG9jay4g
+T25seSB0aGUgRFNJIGhvc3QgaW5zdGFuY2UgY29udHJvbGxpbmcgdGhpcwo+PiArICBjbG9jayBz
+aG91bGQgY29udGFpbiB0aGlzIHByb3BlcnR5Lgo+PiArCj4+ICAgRFNJIHBlcmlwaGVyYWwKPj4g
+ICA9PT09PT09PT09PT09PQo+PiAgIAo+PiBAQCAtNjIsNiArNjksMTYgQEAgcHJpbWFyeSBjb250
+cm9sIGJ1cywgYnV0IGFyZSBhbHNvIGNvbm5lY3RlZCB0byBhIERTSSBidXMgKG1vc3RseSBmb3Ig
+dGhlIGRhdGEKPj4gICBwYXRoKS4gQ29ubmVjdGlvbnMgYmV0d2VlbiBzdWNoIHBlcmlwaGVyYWxz
+IGFuZCBhIERTSSBob3N0IGNhbiBiZSByZXByZXNlbnRlZAo+PiAgIHVzaW5nIHRoZSBncmFwaCBi
+aW5kaW5ncyBbMV0sIFsyXS4KPj4gICAKPj4gK1BlcmlwaGVyYWxzIHRoYXQgc3VwcG9ydCBkdWFs
+IGNoYW5uZWwgRFNJCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQo+PiArCj4+ICtQZXJpcGhlcmFscyB3aXRoIGhpZ2hlciBiYW5kd2lkdGggcmVxdWlyZW1lbnRz
+IGNhbiBiZSBjb25uZWN0ZWQgdG8gMiBEU0kKPj4gK2J1c3Nlcy4gRWFjaCBEU0kgYnVzL2NoYW5u
+ZWwgZHJpdmVzIHNvbWUgcG9ydGlvbiBvZiB0aGUgcGl4ZWwgZGF0YSAoZ2VuZXJhbGx5Cj4+ICts
+ZWZ0L3JpZ2h0IGhhbGYgb2YgZWFjaCBsaW5lIG9mIHRoZSBkaXNwbGF5LCBvciBldmVuL29kZCBs
+aW5lcyBvZiB0aGUgZGlzcGxheSkuCj4+ICtUaGUgZ3JhcGggYmluZGluZ3Mgc2hvdWxkIGJlIHVz
+ZWQgdG8gcmVwcmVzZW50IHRoZSBtdWx0aXBsZSBEU0kgYnVzc2VzIHRoYXQgYXJlCj4+ICtjb25u
+ZWN0ZWQgdG8gdGhpcyBwZXJpcGhlcmFsLiBFYWNoIERTSSBob3N0J3Mgb3V0cHV0IGVuZHBvaW50
+IGNhbiBiZSBsaW5rZWQgdG8KPj4gK2FuIGlucHV0IGVuZHBvaW50IG9mIHRoZSBEU0kgcGVyaXBo
+ZXJhbC4KPj4gKwo+PiAgIFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Jh
+cGgudHh0Cj4+ICAgWzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92
+aWRlby1pbnRlcmZhY2VzLnR4dAo+PiAgIAo+PiBAQCAtNzEsNiArODgsOCBAQCBFeGFtcGxlcwo+
+PiAgICAgd2l0aCBkaWZmZXJlbnQgdmlydHVhbCBjaGFubmVsIGNvbmZpZ3VyYXRpb25zLgo+PiAg
+IC0gKDQpIGlzIGFuIGV4YW1wbGUgb2YgYSBwZXJpcGhlcmFsIG9uIGEgSTJDIGNvbnRyb2wgYnVz
+IGNvbm5lY3RlZCB3aXRoIHRvCj4+ICAgICBhIERTSSBob3N0IHVzaW5nIG9mLWdyYXBoIGJpbmRp
+bmdzLgo+PiArLSAoNSkgaXMgYW4gZXhhbXBsZSBvZiAyIERTSSBob3N0cyBkcml2aW5nIGEgZHVh
+bC1jaGFubmVsIERTSSBwZXJpcGhlcmFsLAo+PiArICB3aGljaCB1c2VzIEkyQyBhcyBpdHMgcHJp
+bWFyeSBjb250cm9sIGJ1cy4KPj4gICAKPj4gICAxKQo+PiAgIAlkc2ktaG9zdCB7Cj4+IEBAIC0x
+NTMsMyArMTcyLDY0IEBAIEV4YW1wbGVzCj4+ICAgCQkJfTsKPj4gICAJCX07Cj4+ICAgCX07Cj4+
+ICsKPj4gKzUpCj4+ICsJaTJjLWhvc3Qgewo+PiArCQlkc2ktYnJpZGdlQDM1IHsKPj4gKwkJCWNv
+bXBhdGlibGUgPSAiLi4uIjsKPj4gKwkJCXJlZyA9IDwweDM1PjsKPj4gKwo+PiArCQkJcG9ydHMg
+ewo+PiArCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJCSNzaXplLWNlbGxzID0gPDA+
+Owo+PiArCj4+ICsJCQkJcG9ydEAwIHsKPj4gKwkJCQkJcmVnID0gPDA+Owo+PiArCQkJCQlkc2kw
+X2luOiBlbmRwb2ludCB7Cj4+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfb3V0PjsK
+Pj4gKwkJCQkJfTsKPj4gKwkJCQl9Owo+PiArCj4+ICsJCQkJcG9ydEAxIHsKPj4gKwkJCQkJcmVn
+ID0gPDE+Owo+PiArCQkJCQlkc2kxX2luOiBlbmRwb2ludCB7Cj4+ICsJCQkJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JmRzaTFfb3V0PjsKPj4gKwkJCQkJfTsKPj4gKwkJCQl9Owo+PiArCQkJfTsKPj4g
+KwkJfTsKPj4gKwl9Owo+PiArCj4+ICsJZHNpMC1ob3N0IHsKPj4gKwkJLi4uCj4+ICsKPj4gKwkJ
+LyoKPj4gKwkJICogdGhpcyBEU0kgaW5zdGFuY2UgZHJpdmVzIHRoZSBjbG9jayBmb3IgYm90aCB0
+aGUgaG9zdAo+PiArCQkgKiBjb250cm9sbGVycwo+PiArCQkgKi8KPj4gKwkJY2xvY2stbWFzdGVy
+Owo+PiArCj4+ICsJCXBvcnRzIHsKPj4gKwkJCS4uLgo+PiArCj4+ICsJCQlwb3J0IHsKPj4gKwkJ
+CQlkc2kwX291dDogZW5kcG9pbnQgewo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBf
+aW4+Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCX07Cj4+ICsKPj4gKwlkc2kx
+LWhvc3Qgewo+PiArCQkuLi4KPj4gKwo+PiArCQlwb3J0cyB7Cj4+ICsJCQkuLi4KPj4gKwo+PiAr
+CQkJcG9ydCB7Cj4+ICsJCQkJZHNpMV9vdXQ6IGVuZHBvaW50IHsKPj4gKwkJCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZkc2kxX2luPjsKPj4gKwkJCQl9Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9
+Owo+Pgo+IAo+IAo+IAo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNl
+bmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWFybS1tc20iIGluCj4gdGhlIGJvZHkgb2Yg
+YSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBp
+bmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPiAKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
