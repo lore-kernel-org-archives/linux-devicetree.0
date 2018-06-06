@@ -1,24 +1,41 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 1/3] dt-bindings: cpu: Add Renesas R9A06G032 SMP
- enable method.
-Date: Wed, 6 Jun 2018 10:47:48 +0200
-Message-ID: <20180606084748.jjjw3pzfzuipegns@verge.net.au>
-References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528198148-23308-2-git-send-email-michel.pollet@bp.renesas.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77990: ebisu: Enable watchdog
+ timer
+Date: Wed, 6 Jun 2018 11:04:00 +0200
+Message-ID: <20180606090359.zi46cq5ddftdaps7@verge.net.au>
+References: <1528219234-29348-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1528198148-23308-2-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Carlo Caione <carlo@endlessm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Douglas Anderson <dianders@chromium.org>, Kevin Hilman <khilman@baylibre.com>, Frank Rowand <frank.rowand@sony.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1528219234-29348-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 05, 2018 at 12:28:46PM +0100, Michel Pollet wrote:
-> Add a special enable method for second CA7 of the R9A06G032
+On Tue, Jun 05, 2018 at 07:20:34PM +0200, Geert Uytterhoeven wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 > 
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Add a device node for the Watchdog Timer (WDT) controller on the
+> R8A77990 SoC, and enable the watchdog on the Ebisu board.
+> 
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> [geert: Squashed 2 commits]
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Hi,
+
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
