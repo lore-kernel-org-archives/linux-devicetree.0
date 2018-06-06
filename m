@@ -1,113 +1,459 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
- info
-Date: Wed, 6 Jun 2018 11:29:29 +0530
-Message-ID: <4df7aa3e-e693-a94a-e9bb-7323e6d62cd2@codeaurora.org>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <20180118045355.8858-1-architt@codeaurora.org>
- <20180118045355.8858-3-architt@codeaurora.org> <12153185.srskHYKlqL@phil>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/2] cpufreq: qcom-fw: Add support for QCOM cpufreq FW
+ driver
+Date: Wed, 6 Jun 2018 11:31:19 +0530
+Message-ID: <20180606060119.yzl24vhqff6btvrk@vireshk-i7>
+References: <1528109194-16864-1-git-send-email-tdas@codeaurora.org>
+ <1528109194-16864-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <12153185.srskHYKlqL@phil>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, tomi.valkeinen@ti.com, briannorris@chromium.org, philippe.cornu@st.com, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1528109194-16864-3-git-send-email-tdas@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiBNb25kYXkgMDQgSnVuZSAyMDE4IDA1OjQ3IFBNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToK
-PiBBbSBEb25uZXJzdGFnLCAxOC4gSmFudWFyIDIwMTgsIDA1OjUzOjU1IENFU1Qgc2NocmllYiBB
-cmNoaXQgVGFuZWphOgo+PiBBZGQgYmluZGluZyBpbmZvIGZvciBwZXJpcGhlcmFscyB0aGF0IHN1
-cHBvcnQgZHVhbC1jaGFubmVsIERTSS4gQWRkCj4+IGNvcnJlc3BvbmRpbmcgb3B0aW9uYWwgYmlu
-ZGluZ3MgZm9yIERTSSBob3N0IGNvbnRyb2xsZXJzIHRoYXQgbWF5Cj4+IGJlIGNvbmZpZ3VyZWQg
-aW4gdGhpcyBtb2RlLiBBZGQgYW4gZXhhbXBsZSBvZiBhbiBJMkMgY29udHJvbGxlZAo+PiBkZXZp
-Y2Ugb3BlcmF0aW5nIGluIGR1YWwtY2hhbm5lbCBEU0kgbW9kZS4KPj4KPj4gU2lnbmVkLW9mZi1i
-eTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPiAKPiBMb29rcyBsaWtl
-IGEgZ3JlYXQgc29sdXRpb24gZm9yIHRoYXQgcHJvYmxlbSwgc28KPiBSZXZpZXdlZC1ieTogSGVp
-a28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiAKPiBBcyBJJ20gbG9va2luZyBpbnRvIHRo
-YXQgZm9yIG15IHJrMzM5OS1zY2FybGV0IGRldmljZSByaWdodCBub3cgYW5kCj4gY291bGRuJ3Qg
-ZmluZCB0aGlzIHBhdGNoc2V0IGluIHRoZSBrZXJuZWwgeWV0LCBpcyBpdCBwbGFubmVkIHRvCj4g
-bWVyZ2Ugb3IgcmVmcmVzaCB0aGVzZSBiaW5kaW5nIGNoYW5nZXMgb3Igd2VyZSBwcm9ibGVtcyBl
-bmNvdW50ZXJlZC4KPiAKPiBBdCBsZWFzdCBhbiBBY2svUmV2aWV3IGZyb20gUm9iIHNlZW1zIHRv
-IGJlIG1pc3NpbmcuCj4gCgpJIGZvcmdvdCBhYm91dCB0aGVzZSBwYXRjaGVzLiBSb2IgaGFkIHJl
-dmlld2VkIHRoZSBmaXJzdCBvbmUgaW4KdGhlIHNldCB0aGUgc2Vjb25kIG9uZSBzdGlsbCBuZWVk
-ZWQgYW4gQWNrLiBJJ2xsIHBvc3QgYSB2Mwp0aGF0IGFkZHMgdGhlIFJldmlld2VkLWJ5cyBhbmQg
-Zml4ZXMgYSBzbWFsbCB0eXBvLgoKQXJjaGl0Cgo+IAo+IEhlaWtvCj4gCj4+IC0tLQo+PiB2MjoK
-Pj4gLSBTcGVjaWZ5IHRoYXQgY2xvY2stbWFzdGVyIGlzIGEgYm9vbGVhbiBwcm9wZXJ0eS4KPj4g
-LSBEcm9wL2FkZCB1bml0LWFkZHJlc3MgYW5kICMqLWNlbGxzIHdoZXJlIGFwcGxpY2FibGUuCj4+
-Cj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0ICAg
-fCA4MCArKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDgwIGluc2Vy
-dGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0Cj4+IGluZGV4IDk0ZmI3MmNiOTE2Zi4u
-N2EzYWJiZWRiM2ZhIDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21pcGktZHNpLWJ1cy50eHQKPj4gQEAgLTI5LDYgKzI5
-LDEzIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJl
-IDAuIFRoZXJlIGFyZSBjYXNlcyB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0byB1c2UgYQo+PiAgICAg
-ZGlmZmVyZW50IHZhbHVlIGhlcmUuIFNlZSBiZWxvdy4KPj4gICAKPj4gK09wdGlvbmFsIHByb3Bl
-cnRpZXM6Cj4+ICstIGNsb2NrLW1hc3RlcjogYm9vbGVhbi4gU2hvdWxkIGJlIGVuYWJsZWQgaWYg
-dGhlIGhvc3QgaXMgYmVpbmcgdXNlZCBpbgo+PiArICBjb25qdW5jdGlvbiB3aXRoIGFub3RoZXIg
-RFNJIGhvc3QgdG8gZHJpdmUgdGhlIHNhbWUgcGVyaXBoZXJhbC4gSGFyZHdhcmUKPj4gKyAgc3Vw
-cG9ydGluZyBzdWNoIGEgY29uZmlndXJhdGlvbiBnZW5lcmFsbHkgcmVxdWlyZXMgdGhlIGRhdGEg
-b24gYm90aCB0aGUgYnVzc2VzCj4+ICsgIHRvIGJlIGRyaXZlbiBieSB0aGUgc2FtZSBjbG9jay4g
-T25seSB0aGUgRFNJIGhvc3QgaW5zdGFuY2UgY29udHJvbGxpbmcgdGhpcwo+PiArICBjbG9jayBz
-aG91bGQgY29udGFpbiB0aGlzIHByb3BlcnR5Lgo+PiArCj4+ICAgRFNJIHBlcmlwaGVyYWwKPj4g
-ICA9PT09PT09PT09PT09PQo+PiAgIAo+PiBAQCAtNjIsNiArNjksMTYgQEAgcHJpbWFyeSBjb250
-cm9sIGJ1cywgYnV0IGFyZSBhbHNvIGNvbm5lY3RlZCB0byBhIERTSSBidXMgKG1vc3RseSBmb3Ig
-dGhlIGRhdGEKPj4gICBwYXRoKS4gQ29ubmVjdGlvbnMgYmV0d2VlbiBzdWNoIHBlcmlwaGVyYWxz
-IGFuZCBhIERTSSBob3N0IGNhbiBiZSByZXByZXNlbnRlZAo+PiAgIHVzaW5nIHRoZSBncmFwaCBi
-aW5kaW5ncyBbMV0sIFsyXS4KPj4gICAKPj4gK1BlcmlwaGVyYWxzIHRoYXQgc3VwcG9ydCBkdWFs
-IGNoYW5uZWwgRFNJCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQo+PiArCj4+ICtQZXJpcGhlcmFscyB3aXRoIGhpZ2hlciBiYW5kd2lkdGggcmVxdWlyZW1lbnRz
-IGNhbiBiZSBjb25uZWN0ZWQgdG8gMiBEU0kKPj4gK2J1c3Nlcy4gRWFjaCBEU0kgYnVzL2NoYW5u
-ZWwgZHJpdmVzIHNvbWUgcG9ydGlvbiBvZiB0aGUgcGl4ZWwgZGF0YSAoZ2VuZXJhbGx5Cj4+ICts
-ZWZ0L3JpZ2h0IGhhbGYgb2YgZWFjaCBsaW5lIG9mIHRoZSBkaXNwbGF5LCBvciBldmVuL29kZCBs
-aW5lcyBvZiB0aGUgZGlzcGxheSkuCj4+ICtUaGUgZ3JhcGggYmluZGluZ3Mgc2hvdWxkIGJlIHVz
-ZWQgdG8gcmVwcmVzZW50IHRoZSBtdWx0aXBsZSBEU0kgYnVzc2VzIHRoYXQgYXJlCj4+ICtjb25u
-ZWN0ZWQgdG8gdGhpcyBwZXJpcGhlcmFsLiBFYWNoIERTSSBob3N0J3Mgb3V0cHV0IGVuZHBvaW50
-IGNhbiBiZSBsaW5rZWQgdG8KPj4gK2FuIGlucHV0IGVuZHBvaW50IG9mIHRoZSBEU0kgcGVyaXBo
-ZXJhbC4KPj4gKwo+PiAgIFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Jh
-cGgudHh0Cj4+ICAgWzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92
-aWRlby1pbnRlcmZhY2VzLnR4dAo+PiAgIAo+PiBAQCAtNzEsNiArODgsOCBAQCBFeGFtcGxlcwo+
-PiAgICAgd2l0aCBkaWZmZXJlbnQgdmlydHVhbCBjaGFubmVsIGNvbmZpZ3VyYXRpb25zLgo+PiAg
-IC0gKDQpIGlzIGFuIGV4YW1wbGUgb2YgYSBwZXJpcGhlcmFsIG9uIGEgSTJDIGNvbnRyb2wgYnVz
-IGNvbm5lY3RlZCB3aXRoIHRvCj4+ICAgICBhIERTSSBob3N0IHVzaW5nIG9mLWdyYXBoIGJpbmRp
-bmdzLgo+PiArLSAoNSkgaXMgYW4gZXhhbXBsZSBvZiAyIERTSSBob3N0cyBkcml2aW5nIGEgZHVh
-bC1jaGFubmVsIERTSSBwZXJpcGhlcmFsLAo+PiArICB3aGljaCB1c2VzIEkyQyBhcyBpdHMgcHJp
-bWFyeSBjb250cm9sIGJ1cy4KPj4gICAKPj4gICAxKQo+PiAgIAlkc2ktaG9zdCB7Cj4+IEBAIC0x
-NTMsMyArMTcyLDY0IEBAIEV4YW1wbGVzCj4+ICAgCQkJfTsKPj4gICAJCX07Cj4+ICAgCX07Cj4+
-ICsKPj4gKzUpCj4+ICsJaTJjLWhvc3Qgewo+PiArCQlkc2ktYnJpZGdlQDM1IHsKPj4gKwkJCWNv
-bXBhdGlibGUgPSAiLi4uIjsKPj4gKwkJCXJlZyA9IDwweDM1PjsKPj4gKwo+PiArCQkJcG9ydHMg
-ewo+PiArCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJCSNzaXplLWNlbGxzID0gPDA+
-Owo+PiArCj4+ICsJCQkJcG9ydEAwIHsKPj4gKwkJCQkJcmVnID0gPDA+Owo+PiArCQkJCQlkc2kw
-X2luOiBlbmRwb2ludCB7Cj4+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfb3V0PjsK
-Pj4gKwkJCQkJfTsKPj4gKwkJCQl9Owo+PiArCj4+ICsJCQkJcG9ydEAxIHsKPj4gKwkJCQkJcmVn
-ID0gPDE+Owo+PiArCQkJCQlkc2kxX2luOiBlbmRwb2ludCB7Cj4+ICsJCQkJCQlyZW1vdGUtZW5k
-cG9pbnQgPSA8JmRzaTFfb3V0PjsKPj4gKwkJCQkJfTsKPj4gKwkJCQl9Owo+PiArCQkJfTsKPj4g
-KwkJfTsKPj4gKwl9Owo+PiArCj4+ICsJZHNpMC1ob3N0IHsKPj4gKwkJLi4uCj4+ICsKPj4gKwkJ
-LyoKPj4gKwkJICogdGhpcyBEU0kgaW5zdGFuY2UgZHJpdmVzIHRoZSBjbG9jayBmb3IgYm90aCB0
-aGUgaG9zdAo+PiArCQkgKiBjb250cm9sbGVycwo+PiArCQkgKi8KPj4gKwkJY2xvY2stbWFzdGVy
-Owo+PiArCj4+ICsJCXBvcnRzIHsKPj4gKwkJCS4uLgo+PiArCj4+ICsJCQlwb3J0IHsKPj4gKwkJ
-CQlkc2kwX291dDogZW5kcG9pbnQgewo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBf
-aW4+Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCX07Cj4+ICsKPj4gKwlkc2kx
-LWhvc3Qgewo+PiArCQkuLi4KPj4gKwo+PiArCQlwb3J0cyB7Cj4+ICsJCQkuLi4KPj4gKwo+PiAr
-CQkJcG9ydCB7Cj4+ICsJCQkJZHNpMV9vdXQ6IGVuZHBvaW50IHsKPj4gKwkJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZkc2kxX2luPjsKPj4gKwkJCQl9Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9
-Owo+Pgo+IAo+IAo+IAo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNl
-bmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWFybS1tc20iIGluCj4gdGhlIGJvZHkgb2Yg
-YSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBp
-bmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPiAKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 04-06-18, 16:16, Taniya Das wrote:
+> The CPUfreq FW present in some QCOM chipsets offloads the steps necessary
+> for changing the frequency of CPUs. The driver implements the cpufreq
+> driver interface for this firmware.
+> 
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm       |   9 ++
+>  drivers/cpufreq/Makefile          |   1 +
+>  drivers/cpufreq/qcom-cpufreq-fw.c | 316 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 326 insertions(+)
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-fw.c
+> 
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index c7ce928..82c391e 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -312,3 +312,12 @@ config ARM_PXA2xx_CPUFREQ
+>  	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+> 
+>  	  If in doubt, say N.
+> +
+> +config ARM_QCOM_CPUFREQ_FW
+> +	bool "QCOM CPUFreq FW driver"
+> +	help
+> +	 Support for the CPUFreq FW driver.
+> +	 The CPUfreq FW preset in some QCOM chipsets offloads the steps
+> +	 necessary for changing the frequency of CPUs. The driver
+> +	 implements the cpufreq driver interface for this firmware.
+> +	 Say Y if you want to support CPUFreq FW.
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index fb4a2ec..34691a2 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -86,6 +86,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+>  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_FW)	+= qcom-cpufreq-fw.o
+> 
+> 
+>  ##################################################################################
+> diff --git a/drivers/cpufreq/qcom-cpufreq-fw.c b/drivers/cpufreq/qcom-cpufreq-fw.c
+> new file mode 100644
+> index 0000000..2135a08
+> --- /dev/null
+> +++ b/drivers/cpufreq/qcom-cpufreq-fw.c
+> @@ -0,0 +1,316 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/cpufreq.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define INIT_RATE			300000000UL
+> +#define XO_RATE				19200000UL
+> +#define LUT_MAX_ENTRIES			40U
+> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
+> +#define LUT_ROW_SIZE			32
+> +
+> +struct cpufreq_qcom {
+> +	struct cpufreq_frequency_table *table;
+> +	struct device *dev;
+> +	void __iomem *perf_base;
+> +	void __iomem *lut_base;
+> +	cpumask_t related_cpus;
+> +	unsigned int max_cores;
+> +};
+> +
+> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+> +
+> +static int
+> +qcom_cpufreq_fw_target_index(struct cpufreq_policy *policy,
+> +			     unsigned int index)
+> +{
+> +	struct cpufreq_qcom *c = policy->driver_data;
+> +
+> +	writel_relaxed(index, c->perf_base);
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned int qcom_cpufreq_fw_get(unsigned int cpu)
+> +{
+> +	struct cpufreq_qcom *c;
+> +	unsigned int index;
+> +
+> +	c = qcom_freq_domain_map[cpu];
+> +	if (!c)
+> +		return 0;
+> +
+> +	index = readl_relaxed(c->perf_base);
+> +	index = min(index, LUT_MAX_ENTRIES - 1);
+> +
+> +	return c->table[index].frequency;
+> +}
+> +
+> +static int qcom_cpufreq_fw_cpu_init(struct cpufreq_policy *policy)
+> +{
+> +	struct cpufreq_qcom *c;
+> +
+> +	c = qcom_freq_domain_map[policy->cpu];
+> +	if (!c) {
+> +		pr_err("No scaling support for CPU%d\n", policy->cpu);
+> +		return -ENODEV;
+> +	}
+> +
+> +	cpumask_copy(policy->cpus, &c->related_cpus);
+> +
+> +	policy->freq_table = c->table;
+> +	policy->driver_data = c;
+
+What about fast cpufreq switching ? I think you can enable that option as well
+here..
+
+> +
+> +	return 0;
+> +}
+> +
+> +static struct freq_attr *qcom_cpufreq_fw_attr[] = {
+> +	&cpufreq_freq_attr_scaling_available_freqs,
+> +	&cpufreq_freq_attr_scaling_boost_freqs,
+> +	NULL
+> +};
+> +
+> +static struct cpufreq_driver cpufreq_qcom_fw_driver = {
+> +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
+> +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
+> +	.verify		= cpufreq_generic_frequency_table_verify,
+> +	.target_index	= qcom_cpufreq_fw_target_index,
+> +	.get		= qcom_cpufreq_fw_get,
+> +	.init		= qcom_cpufreq_fw_cpu_init,
+
+What about CPU hotplug ? We can still do that, right ? So what will happen if
+all CPUs of a freq-domain are removed (hence cpufreq policy is removed) and then
+someone calls qcom_cpufreq_fw_get() ? You should really work on cpufreq_policy
+there to get 'c'.
+
+> +	.name		= "qcom-cpufreq-fw",
+> +	.attr		= qcom_cpufreq_fw_attr,
+> +	.boost_enabled	= true,
+> +};
+> +
+> +static int qcom_read_lut(struct platform_device *pdev,
+> +			 struct cpufreq_qcom *c)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
+> +
+> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
+> +				sizeof(*c->table), GFP_KERNEL);
+> +	if (!c->table)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> +		data = readl_relaxed(c->lut_base + i * LUT_ROW_SIZE);
+> +		src = ((data & GENMASK(31, 30)) >> 30);
+> +		lval = (data & GENMASK(7, 0));
+> +		core_count = CORE_COUNT_VAL(data);
+> +
+> +		if (!src)
+> +			c->table[i].frequency = INIT_RATE / 1000;
+> +		else
+> +			c->table[i].frequency = XO_RATE * lval / 1000;
+> +
+> +		cur_freq = c->table[i].frequency;
+> +
+> +		dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
+> +			i, c->table[i].frequency, core_count);
+> +
+> +		if (core_count != c->max_cores)
+> +			cur_freq = CPUFREQ_ENTRY_INVALID;
+> +
+> +		/*
+> +		 * Two of the same frequencies with the same core counts means
+> +		 * end of table.
+> +		 */
+> +		if (i > 0 && c->table[i - 1].frequency ==
+> +		   c->table[i].frequency && prev_cc == core_count) {
+> +			struct cpufreq_frequency_table *prev = &c->table[i - 1];
+> +
+> +			if (prev_freq == CPUFREQ_ENTRY_INVALID)
+> +				prev->flags = CPUFREQ_BOOST_FREQ;
+> +			break;
+> +		}
+> +		prev_cc = core_count;
+> +		prev_freq = cur_freq;
+> +	}
+> +
+> +	c->table[i].frequency = CPUFREQ_TABLE_END;
+> +
+> +	return 0;
+> +}
+
+Looks like there are many problems here.
+- You are assigning prev_freq with cur_freq (which may be uninitialized local
+  variable here).
+- In this version, you never write CPUFREQ_ENTRY_INVALID to table[i].frequency,
+  which looks wrong as well.
+
+> +
+> +static int qcom_get_related_cpus(struct device_node *np, struct cpumask *m)
+> +{
+> +	struct device_node  *cpu_dev;
+
+s/cpu_dev/cpu_np/
+
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		cpu_dev = of_cpu_device_node_get(cpu);
+> +		if (!cpu_dev)
+> +			continue;
+> +		cpu_dev = of_parse_phandle(cpu_dev, "qcom,freq-domain", 0);
+
+What's returned here is a pointer to the qcom,freq-domain node, and you assign
+that to a variable named cpu_dev. Either use two variables for different node
+types, or rename it to temp_np or something similar.
+
+> +		if (!cpu_dev)
+> +			continue;
+> +		if (cpu_dev == np)
+> +			cpumask_set_cpu(cpu, m);
+> +	}
+> +
+> +	if (cpumask_empty(m))
+> +		return -ENOENT;
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_cpu_resources_init(struct platform_device *pdev,
+> +				   struct device_node *np)
+> +{
+> +	struct cpufreq_qcom *c;
+> +	struct resource res;
+> +	struct device *dev = &pdev->dev;
+> +	void __iomem *en_base;
+> +	int cpu, index, ret;
+> +
+> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+> +	if (!c)
+> +		return -ENOMEM;
+> +
+> +	index = of_property_match_string(np, "reg-names", "enable");
+> +	if (index < 0)
+> +		return index;
+> +
+> +	if (of_address_to_resource(np, index, &res))
+> +		return -ENOMEM;
+> +
+> +	en_base = devm_ioremap(dev, res.start, resource_size(&res));
+> +	if (!en_base) {
+> +		dev_err(dev, "Unable to map %s enable-base\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* FW should be in enabled state to proceed */
+> +	if (!(readl_relaxed(en_base) & 0x1)) {
+> +		dev_err(dev, "%s firmware not enabled\n", np->name);
+> +		return -ENODEV;
+> +	}
+> +	devm_iounmap(&pdev->dev, en_base);
+> +
+> +	index = of_property_match_string(np, "reg-names", "perf");
+> +	if (index < 0)
+> +		return index;
+> +
+> +	if (of_address_to_resource(np, index, &res))
+> +		return -ENOMEM;
+> +
+> +	c->perf_base = devm_ioremap(dev, res.start, resource_size(&res));
+> +	if (!c->perf_base) {
+> +		dev_err(dev, "Unable to map %s perf-base\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	index = of_property_match_string(np, "reg-names", "lut");
+> +	if (index < 0)
+> +		return index;
+> +
+> +	if (of_address_to_resource(np, index, &res))
+> +		return -ENOMEM;
+> +
+> +	c->lut_base = devm_ioremap(dev, res.start, resource_size(&res));
+> +	if (!c->lut_base) {
+> +		dev_err(dev, "Unable to map %s lut-base\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = qcom_get_related_cpus(np, &c->related_cpus);
+> +	if (ret) {
+> +		dev_err(dev, "%s failed to get core phandles\n", np->name);
+
+Maybe write a more relevant error message here ?
+
+> +		return ret;
+> +	}
+> +
+> +	c->max_cores = cpumask_weight(&c->related_cpus);
+
+Maybe remove the error checking conditional from qcom_get_related_cpus() and
+check !c->max_cores here for the same.
+
+> +
+> +	ret = qcom_read_lut(pdev, c);
+> +	if (ret) {
+> +		dev_err(dev, "%s failed to read LUT\n", np->name);
+> +		return ret;
+> +	}
+
+Enter a blank line here.
+
+> +	for_each_cpu(cpu, &c->related_cpus)
+> +		qcom_freq_domain_map[cpu] = c;
+
+This whole setup looks a bit confusing to me. This is what you are doing
+essentially:
+
+qcom_resources_init()
+{
+        for_each_possible_cpu() {
+                qcom_cpu_resources_init()
+                {
+                        populate c->related_cpus;
+
+                        for_each_related_cpu() {
+                                qcom_freq_domain_map[cpu] = c;
+                        }
+                }
+        }
+}
+
+So if there are 4 CPUs that share a freq domain, then you are allocating 'c' 4
+times and (over)writing qcom_freq_domain_map[] for all these CPUs 4 times and
+finally keeping value of 'c' only once.
+
+You must be running most of the work done in qcom_resources_init() only once per
+freq-domain.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_resources_init(struct platform_device *pdev)
+> +{
+> +	struct device_node *np, *cpu_dev;
+
+cpu_dev is normally used in kernel for struct device *, maybe use cpu_np ?
+
+> +	unsigned int cpu;
+> +	int ret;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		cpu_dev = of_cpu_device_node_get(cpu);
+> +		if (!cpu_dev) {
+> +			dev_err(&pdev->dev, "Failed to get cpu %d device\n",
+> +				cpu);
+> +			continue;
+> +		}
+> +
+> +		np = of_parse_phandle(cpu_dev, "qcom,freq-domain", 0);
+> +		if (!np) {
+> +			dev_err(&pdev->dev, "Failed to get freq-domain device\n");
+> +			continue;
+
+I am not sure if we should continue or error out here. Why would you want only a
+group of CPUs to have this property set ? Or if you really have a case for that
+currently ?
+
+> +		}
+> +
+> +		of_node_put(cpu_dev);
+> +
+> +		ret = qcom_cpu_resources_init(pdev, np);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_cpufreq_fw_driver_probe(struct platform_device *pdev)
+> +{
+> +	int rc;
+> +
+> +	/* Get the bases of cpufreq for domains */
+> +	rc = qcom_resources_init(pdev);
+> +	if (rc) {
+> +		dev_err(&pdev->dev, "CPUFreq resource init failed\n");
+> +		return rc;
+> +	}
+> +
+> +	rc = cpufreq_register_driver(&cpufreq_qcom_fw_driver);
+> +	if (rc) {
+> +		dev_err(&pdev->dev, "CPUFreq FW driver failed to register\n");
+> +		return rc;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "QCOM CPUFreq FW driver inited\n");
+
+s/inited/initialized/ ?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id match_table[] = {
+> +	{ .compatible = "qcom,cpufreq-fw" },
+> +	{}
+> +};
+> +
+> +static struct platform_driver qcom_cpufreq_fw_driver = {
+> +	.probe = qcom_cpufreq_fw_driver_probe,
+> +	.driver = {
+> +		.name = "qcom-cpufreq-fw",
+> +		.of_match_table = match_table,
+> +		.owner = THIS_MODULE,
+> +	},
+> +};
+> +
+> +static int __init qcom_cpufreq_fw_init(void)
+> +{
+> +	return platform_driver_register(&qcom_cpufreq_fw_driver);
+> +}
+> +subsys_initcall(qcom_cpufreq_fw_init);
+> +
+> +MODULE_DESCRIPTION("QCOM CPU Frequency FW");
+> +MODULE_LICENSE("GPL v2");
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+
+-- 
+viresh
