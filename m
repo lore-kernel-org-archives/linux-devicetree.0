@@ -1,135 +1,52 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
- iec958 controls
-Date: Thu, 7 Jun 2018 18:02:36 +0200
-Message-ID: <5ab41e6d-eccf-df75-4c17-9dbadf05b5b7@st.com>
-References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
- <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
- <20180417111733.GG8973@sirena.org.uk>
- <2ae6c5b6-872a-9aaa-6ca4-e29adb7c8bc0@st.com> <s5hpo15xf1q.wl-tiwai@suse.de>
- <c4b2d22f-320d-a415-6328-b33f9c03aafe@st.com> <s5hpo14w8k6.wl-tiwai@suse.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 1/1] ARM: dts: cygnus: enable iproc-hwrng
+Date: Thu, 7 Jun 2018 09:35:42 -0700
+Message-ID: <c0b4d69d-2826-320e-974e-c7cdbf341747@gmail.com>
+References: <1528309291-25579-1-git-send-email-scott.branden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <s5hpo14w8k6.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528309291-25579-1-git-send-email-scott.branden@broadcom.com>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Olivier MOYSAN <olivier.moysan@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "jsarha@ti.com" <jsarha@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <scott.branden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Clement Peron <peron.clem@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNi8wNi8yMDE4IDExOjQ3IEFNLCBUYWthc2hpIEl3YWkgd3JvdGU6Cj4gT24gV2VkLCAw
-NiBKdW4gMjAxOCAxMTozMTo0NSArMDIwMCwKPiBBcm5hdWQgUG91bGlxdWVuIHdyb3RlOgo+PiAK
-Pj4gCj4+IAo+PiBPbiAwNi8wNS8yMDE4IDA4OjI5IFBNLCBUYWthc2hpIEl3YWkgd3JvdGU6Cj4+
-ID4gT24gVHVlLCAwNSBKdW4gMjAxOCAxNzo1MDo1NyArMDIwMCwKPj4gPiBBcm5hdWQgUG91bGlx
-dWVuIHdyb3RlOgo+PiA+PiAKPj4gPj4gSGkgVGFrYXNoaSwKPj4gPj4gCj4+ID4+IE9uIDA0LzE3
-LzIwMTggMDE6MTcgUE0sIE1hcmsgQnJvd24gd3JvdGU6Cj4+ID4+ID4gT24gVHVlLCBBcHIgMTcs
-IDIwMTggYXQgMDg6Mjk6MTdBTSArMDAwMCwgT2xpdmllciBNT1lTQU4gd3JvdGU6Cj4+ID4+ID4g
-Cj4+ID4+ID4+IEkgZ3Vlc3MgdGhlIGJsb2NraW5nIHBhdGNoIGluIHRoaXMgcGF0Y2hzZXQgaXMg
-dGhlIHBhdGNoICJhZGQgSUVDOTU4IAo+PiA+PiA+PiBjaGFubmVsIHN0YXR1cyBjb250cm9sIGhl
-bHBlciIuIFRoaXMgcGF0Y2ggaGFzIGJlZW4gcmV2aWV3ZWQgc2V2ZXJhbCAKPj4gPj4gPj4gdGlt
-ZXMsIGJ1dCBkaWQgbm90IGdldCBhIGFjayBzbyBmYXIuCj4+ID4+ID4+IElmIHlvdSB0aGluayB0
-aGVzZSBoZWxwZXJzIHdpbGwgbm90IGJlIG1lcmdlZCwgSSB3aWxsIHJlaW50ZWdyYXRlIHRoZSAK
-Pj4gPj4gPj4gY29ycmVzcG9uZGluZyBjb2RlIGluIHN0bSBkcml2ZXIuCj4+ID4+ID4+IFBsZWFz
-ZSBsZXQgbWUga25vdywgaWYgSSBuZWVkIHRvIHByZXBhcmUgYSB2MiB3aXRob3V0IGhlbHBlcnMs
-IG9yIGlmIHdlIAo+PiA+PiA+PiBjYW4gZ28gZnVydGhlciBpbiB0aGUgcmV2aWV3IG9mIGllYyBo
-ZWxwZXJzIHBhdGNoID8KPj4gPj4gPiAKPj4gPj4gPiBJIGRvbid0IG1pbmQgZWl0aGVyIHdheSBi
-dXQgeW91J3JlIHJpZ2h0IGhlcmUsIEknbSB3YWl0aW5nIGZvciBUYWthc2hpCj4+ID4+ID4gdG8g
-cmV2aWV3IHRoZSBmaXJzdCBwYXRjaC7CoCBJJ2QgcHJvYmFibHkgYmUgT0sgd2l0aCBpdCBqdXN0
-IGludGVncmF0ZWQKPj4gPj4gPiBpbnRvIHRoZSBkcml2ZXIgaWYgd2UgaGF2ZSB0byBnbyB0aGF0
-IHdheSB0aG91Z2guCj4+ID4+IAo+PiA+PiBHZW50bGVtZW4gcmVtaW5kZXIgZm9yIHRoaXMgcGF0
-Y2ggc2V0LiBXZSB3b3VsZCBhcHByZWNpYXRlIHRvIGhhdmUgeW91cgo+PiA+PiBmZWVkYmFjayBv
-biBpZWMgaGVscGVyLgo+PiA+PiBGcm9tIG91ciBwb2ludCBvZiB2aWV3IGl0IGNvdWxkIGJlIHVz
-ZWZ1bCB0byBoYXZlIGEgZ2VuZXJpYyBtYW5hZ2VtZW50Cj4+ID4+IG9mIHRoZSBpZWMgY29udHJv
-bHMgYmFzZWQgb24gaGVscGVycyBpbnN0ZWFkIG9mIHJlZGVmaW5pbmcgdGhlbSBpbiBEQUlzLgo+
-PiA+PiBIYXZpbmcgdGhlIHNhbWUgYmVoYXZpb3IgZm9yIHRoZXNlIGNvbnRyb2xzIGNvdWxkIGJl
-IHVzZWZ1bCB0byBlbnN1cmUKPj4gPj4gY29oZXJlbmNlIG9mIHRoZSBjb250cm9sIG1hbmFnZW1l
-bnQgdXNlZCBieSBhcHBsaWNhdGlvbiAoZm9yIGluc3RhbmNlCj4+ID4+IEdzdHJlYW1lciB1c2Vz
-IGl0IHRvIGRldGVybWluZSBpZWMgcmF3IG1vZGUgY2FwYWJpbGl0eSBmb3IgaWVjNjE5Mzcgc3Ry
-ZWFtcykKPj4gPiAKPj4gPiBPaCBzb3JyeSBmb3IgdGhlIGxhdGUgcmVwbHksIEkndmUgdG90YWxs
-eSBvdmVybG9va2VkIHRoZSB0aHJlYWQuCj4+ID4gCj4+ID4gQW5kLCBhbm90aGVyIHNvcnJ5OiB0
-aGUgcGF0Y2hzZXQgZG9lc24ndCBsb29rIGNvbnZpbmNpbmcgZW5vdWdoIHRvCj4+ID4gbWUuCj4+
-ID4gCj4+ID4gRmlyc3Qgb2ZmLCB0aGUgcHJvdmlkZWQgQVBJIGRlZmluaXRpb24gYXBwZWFycyBz
-b21ld2hhdAo+PiA+IHVuY29udmVudGlvbmFsLCB0aGUgbWl4dHVyZSBvZiB0aGUgb3BzLCB0aGUg
-c3RhdGljIGRhdGEgYW5kIHRoZQo+PiA+IGR5bmFtaWMgZGF0YS4KPj4gU29ycnkgaSBjYW4ndCBm
-aWd1cmUgb3V0IHlvdXIgcG9pbnQuIEkgc3VwcG9zZSB0aGF0IHlvdSBzcGVhayBhYm91dCB0aGUK
-Pj4gc25kX3BjbV9pZWM5NThfcGFyYW1zLgo+PiB3aGF0IHdvdWxkIGJlIGEgbW9yZSBjb252ZW50
-aW9uYWwgQVBJPwo+IAo+IEltYWdpbmUgeW91J2Qgd2FudCB0byBwdXQgYSBjb25zdCB0byB0aGUg
-ZGF0YSBwYXNzZWQgdG8gdGhlIEFQSSBmb3IKPiBoYXJkZW5pbmcuwqAgVGhlIGN1cnJlbnQgc3Ry
-dWN0IGlzIGEgbWl4dHVyZSBvZiBzdGF0aWMgYW5kIGR5bmFtaWMKPiBkYXRhLgo+IAo+IAo+PiA+
-IE1vcmVvdmVyLCB0aGlzIGlzIG9ubHkgZm9yIHlvdXIgZHJpdmVyLCBBVE0uwqAgCj4+IEl0IGlz
-IGFsc28gY29tcGF0aWJsZSB3aXRoIHRoZSBzb3VuZC9zdGkgZHJpdmVyLCBldmVuIGlmIHdlIGRv
-ZXMgbm90Cj4+IHByb3Bvc2UgcGF0Y2ggeWV0LiBXZSBhbHNvIHBsYW4gdG8gcHJvcG9zZSBhbiBp
-bXBsZW1lbnRhdGlvbiwgZm9yIHRoZQo+PiBIRE1JX2NvZGVjIHRoYXQgd291bGQgbmVlZCB0byBl
-eHBvcnQgYSBjb250cm9sIHRvIGFsbG93IG5vbmUtYXVkaW8gbW9kZS4KPj4gCj4+ID5JZiBpdCB3
-ZXJlIGFuIEFQSSB0aGF0Cj4+ID4gZG9lcyBjbGVhbiB1cCB0aGUgYWxyZWFkeSBleGlzdGluZyB1
-c2FnZXMsIEknZCBoYXBwaWx5IGFwcGx5IGl0LiBUaGVyZQo+PiA+IGFyZSBsb3RzIG9mIGRyaXZl
-cnMgY3JlYXRpbmcgYW5kIGNvbnRyb2xsaW5nIHRoZSBJRUM5NTggY3RscyBldmVuCj4+ID4gbm93
-Lgo+PiA+IAo+PiA+IEFsc28sIHRoZSBwYXRjaHNldCByZXF1aXJlcyBtb3JlIGZpbmUtdHVuaW5n
-LCBpbiBhbnl3YXlzLsKgIFRoZSBjaGFuZ2VzCj4+ID4gaW4gY3JlYXRlX2llYzk1OF9jb25zdW1y
-ZSgpIGFyZSBiYXNpY2FsbHkgaXJyZWxldmFudCwgc2hvdWxkIGJlIHNwbGl0Cj4+ID4gb2ZmIGFz
-IGFuIGluZGl2aWR1YWwgZml4LsKgIGl0IGlzIGxpbmtlZCB0byB0aGUgY29udHJvbCwgYXMgbm90
-IHBvc3NpYmxlIGluIGV4aXN0aW5nIGltcGxlbWVudGF0aW9uCj4+IChyYXRlIGFuZCB3aWR0aCBh
-cmUgZ2V0IGZyb20gaHdwYXJhbSBvciBydW50aW1lKS4gQnV0IG5vIHByb2JsZW0gd2UgY2FuCj4+
-IHNwbGl0IGl0IGluIGEgc2VwYXJhdGUgcGF0Y2guCj4+IAo+PiBBbHNvLCB0aGUgbmV3IGZ1bmN0
-aW9uIGRvZXNuJ3QgY3JlYXRlIHRoZQo+PiA+ICJYWFggTWFzayIgY29udHJvbHMuwqAgQW5kIHRo
-ZSBieXRlIGNvbXBhcmlzb24gc2hvdWxkIGJlIHJlcGxhY2VkIHdpdGgKPj4gPiBtZW1jbXAoKSwg
-ZXRjLCBldGMuCj4+IFllcyBtYXNrIGFyZSBtaXNzaW5nLCBjYW4gYmUgYWRkZWQuIEZvciB0aGUg
-cmVzdCBjb3VsZCB5b3UgY29tbWVudAo+PiBkaXJlY3RseSBpbiBjb2RlPyBpIHN1cHBvc2UgdGhh
-dCB5b3Ugd2FudCB0byByZXBsYWNlIHRoZSBmb3IgbG9vcHMgYnkKPj4gbWVtY21wLCBtZW1jcHku
-Li4KPiAKPiBSaWdodC4KPiAKPj4gPiBTbywgcGxlYXNlIHByb2NlZWQgcmF0aGVyIHdpdGggdGhl
-IG9wZW4gY29kZXMgZm9yIG5vdy7CoCBJZiB5b3UgY2FuCj4+ID4gcHJvdmlkZSBhIHBhdGNoIHRo
-YXQgY2xlYW5zIHVwIHRoZSAqbXVsdGlwbGUqIGRyaXZlciBjb2RlcywgYWdhaW4sCj4+ID4gSSds
-bCBoYXBwaWx5IHRha2UgaXQuwqAgQnV0IGl0IGNhbiBiZSBkb25lIGFueXRpbWUgbGF0ZXIsIHRv
-by4KPj4gTm90IHNpbXBsZSB0byBjbGVhbiB1cCB0aGUgb3RoZXIgZHJpdmVycyBhcyB0aGlzIGNv
-bnRyb2wgaXMgYSBQQ00KPj4gY29udHJvbCwgdGhhdCBpcyBtYWlubHkgaW1wbGVtZW50ZWQgYXMg
-YSBtaXhlciBvciBjYXJkIGNvbnRyb2wuCj4+IFRoaXMgbWVhbnMgdGhhdCBpdCBzaG91bGQgYmUg
-cmVnaXN0ZXJlZCBvbiB0aGUgcGNtX25ldyBpbiBDUFUgREFJIG9yIGluCj4+IHRoZSBEQUkgY29k
-ZWMsIHRvIGJlIGFibGUgdG8gYmluZCBpdCB0byB0aGUgUENNIGRldmljZS4KPj4gSW5wYWN0IGlz
-IG5vdCBzdHJhaWd0aGZvcndhcmQgYXMgdGhpcyBjb3VsZCBnZW5lcmF0ZSByZWdyZXNzaW9uIG9u
-IGRyaXZlci4KPiAKPiBZZXMsIGFuZCB0aGF0J3MgbXkgcG9pbnQuwqAgVGhlIGFwcGxpY2F0aW9u
-IG9mIEFQSSBpcyByZWxhdGl2ZWx5Cj4gbGltaXRlZCAtLSBhbHRob3VnaCB0aGUgQVBJIGl0c2Vs
-ZiBoYXMgbm90aGluZyB0byBkbyB3aXRoIEFTb0MgYXQKPiBhbGwuCj4gCj4+IEZvciBub3cgV2Ug
-Y2FuIGFkZCB0aGUgY2xlYW4gdXAgb24gdGhlIHN0aSBkcml2ZXIgYmFzZWQgb24gdGhpcyBoZWxw
-ZXIsCj4+IGFuZCB3ZSBhcmUgd29ya2luZyBvbiB0aGUgSERNSV9jb2RlYywgd2UgY291bGQgYWxz
-byB1c2UgdGhpcyBoZWxwZXIgdG8KPj4gZXhwb3J0IHRoZSBjb250cm9sLi4uLgo+PiAKPj4gU28g
-aWYgeW91IGVzdGltYXRlIHRoYXQgaXQgaXMgaW50ZXJlc3RpbmcgdG8gcHVyY2hhc2Ugb24gdGhp
-cyBoZWxwZXIgd2UKPj4gY2FuIHRyeSB0byBjb21lIGJhY2sgd2l0aCBhIHBhdGNoIHNldCB0aGF0
-IGltcGxlbWVudHMgdGhlIGhlbHBlciBmb3IKPj4gdGhlIDMgZHJpdmVycy4KPiAKPiBSaWdodC7C
-oCBCYXNpY2FsbHkgdGhlcmUgYXJlIHR3byBjYXNlcyB3ZSBhZGQgYSBuZXcgQVBJOgo+IAo+IDEu
-IEl0J3MgYWJzb2x1dGVseSBuZXcgYW5kIG5vdGhpbmcgZWxzZSBjYW4gZG8gaXQKPiAyLiBBUEkg
-c2ltcGxpZmllcyB0aGUgd2hvbGUgdHJlZSwgbm90IG9ubHkgb25lIHlvdSdyZSB0cnlpbmcgdG8g
-YWRkLgo+IAo+IEFuZCBpbiB0aGlzIGNhc2UsIGxldCdzIHByb3ZlIDIgYXQgZmlyc3QsIHRoYXQg
-dGhlIEFQSSAqaXMqIGFjdHVhbGx5Cj4gdXNlZnVsIGluIG11bHRpcGxlIHNpdHVhdGlvbnMgd2Ug
-YWxyZWFkeSBoYXZlLsKgIFRoZW4gSSdsbCBoYXBwaWx5IGFjawo+IGZvciB0aGF0LsKgIE1vcmUg
-ZHJpdmVycyBjbGVhbnVwLCBiZXR0ZXIuwqAgQXQgYmVzdCwgdGhpbmsgb2YgbW9yZQo+IHJhbmdl
-IGFib3ZlIEFTb0MsIGFzIHlvdSdyZSBwcm9wb3NpbmcgQUxTQSBjb3JlIEFQSSwgbm90IHRoZSBB
-U29DCj4gb25lLgo+IAo+PiBUaGUgb3RoZXIgb3B0aW9uLCBpcyB0aGF0IHdlIGRyb3AgdGhlIGhl
-bHBlcnMsIGFuZCBpbXBsZW1lbnQgdGhlIGNvbnRyb2wKPj4gZGlyZWN0bHkgaW4gb3VyIGRyaXZl
-cnMuCj4gCj4gVGhpcyBpcyBvZiBjb3Vyc2UgYW5vdGhlciwgbWF5YmUgZWFzaWVyIG9wdGlvbi4K
-PiAKPj4gUGxlYXNlIGp1c3QgdGVsbCB1cyBpZiB3ZSBzaG91bGQgY29udGludWUgdG8gcHJvcG9z
-ZSB0aGUgaGVscGVycyBvciBub3QuCj4gCj4gSSBoYXZlIG5vIHByZWZlcmVuY2Ugb3ZlciB0d28g
-d2F5cywgYnV0IGFtIG9ubHkgaW50ZXJlc3RlZCBpbiB0aGUKPiByZXN1bHRpbmcgcGF0Y2hlcyA6
-KQoKTXkgdGVudGF0aXZlIGhlcmUgd2FzIHRvIHN0YXJ0IHRvIGludHJvZHVjZSBoZWxwZXJzIGF0
-IEFMU0EgbGV2ZWwgKG5vdApvbmx5IEFTb0MpIHRvIGhhdmUgYSBnZW5lcmljIGltcGxlbWVudGF0
-aW9uIG9mIHRoZSB0aGlzIGdlbmVyaWMgY29udHJvbC4KVG9kYXkgdGhlIHNuZF9wY21fY3JlYXRl
-X2llYzk1OF9jb25zdW1lcl9od19wYXJhbXMganVzdCBhbGxvdyB0byBmaWxsCkFFUyBiYXNlZCBv
-biBydW50aW1lIHBhcmFtZXRlcnMsIGJ1dCBub3QgdG8gb2ZmZXIgYSBnZW5lcmljIG1hbmFnZW1l
-bnQKb2YgaWVjIGNvbnRyb2wuCk5vdyB5b3UgYXJlIHJpZ2h0IGknbSBkZXZlbG9waW5nIHVuZGVy
-IEFTb0MgYW5kIGkgaGF2ZSBub3QgdGhlIHdob2xlCmtub3dsZWRnZSBvZiB0aGUgQUxTQSBkcml2
-ZXJzLCBhbiBwcm9iYWJseSB0b28gbGltaXRlZCB2aWV3IG9mIHRoZSBpZWMKY29udHJvbHMgdXNh
-Z2UuCgpCYXNlZCBvbiB5b3VyIGZlZWRiYWNrIGkgdGhpbmsgKGF0IGxlYXN0IGluIGEgZmlyc3Qg
-c3RlcCkgd2Ugd2lsbCBjaG9vc2UKdGhlIGVhc2llc3Qgb3B0aW9uIGZvciB0aGUgU1RNIGRyaXZl
-ci4uLgoKVGhhbmtzCkFybmF1ZAoKCj4gCj4gCj4gdGhhbmtzLAo+IAo+IFRha2FzaGkKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWls
-aW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2Et
-cHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+On 06/06/2018 11:21 AM, Scott Branden wrote:
+> From: Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
+> 
+> Enable the HW rng driver "iproc-rng200" for all cygnus platforms.
+> 
+> Signed-off-by: Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+
+Clement, do you want to test this and reported back?
+
+> ---
+>  arch/arm/boot/dts/bcm-cygnus.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 9fe4f5a..b0e38fa 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -417,6 +417,11 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		rng: rng@18032000 {
+> +			compatible = "brcm,iproc-rng200";
+> +			reg = <0x18032000 0x28>;
+> +		};
+> +
+>  		sdhci0: sdhci@18041000 {
+>  			compatible = "brcm,sdhci-iproc-cygnus";
+>  			reg = <0x18041000 0x100>;
+> 
+
+
+-- 
+Florian
