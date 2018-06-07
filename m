@@ -1,244 +1,608 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
- info
-Date: Fri, 08 Jun 2018 00:50:00 +0200
-Message-ID: <2266365.DG6g2hf2fP@phil>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <1813015.RLn0WF0aGX@diego>
- <20180607211018.GA104075@rodete-desktop-imager.corp.google.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
+Date: Thu, 7 Jun 2018 18:38:53 -0500
+Message-ID: <20180607233853.p7iw7nlxxuyi66og@kahuna>
+References: <20180605060510.32473-1-nm@ti.com>
+ <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180607211018.GA104075@rodete-desktop-imager.corp.google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: boris.brezillon@free-electrons.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, nickey.yang@rock-chips.com, tomi.valkeinen@ti.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgNy4gSnVuaSAyMDE4LCAyMzoxMDoyMCBDRVNUIHNjaHJpZWIgQnJpYW4g
-Tm9ycmlzOgo+IEhpLAo+IAo+IEkgb25seSBoYXZlIGEgbGl0dGxlIGJpdCB0byBhZGQsIGJ1dCBI
-ZWlrbyBkaWQgc29saWNpdCBteSBvcGluaW9uLgoKeWVwIC4uLiBhbmQgSSByZWFsaXplZCB0aGF0
-IEkgYW0vd2FzIHdheSB0byBhdHRhY2hlZCB0byBteSAod29ya2luZykKZW5kcG9pbnQtYmFzZWQg
-dGhpbmd5IHRvIHJlYWxseSBhcHByZWNpYXRlIHRoZSBvdGhlciBhcmd1bWVudHMgOy0pCgpBbmQg
-eW91ciBEU0ktcmVsYXRlZCB3cml0aW5ncyBiZWxvdywgZGlkIHByb3ZpZGUgc29tZSBuZXcgdGhv
-dWdodC0KZGlyZWN0aW9ucyBmb3IgbWUsIHNvIHRoYW5rcyBmb3IgdGhhdC4KCj4gT24gVGh1LCBK
-dW4gMDcsIDIwMTggYXQgMDM6MjU6MThQTSArMDIwMCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4g
-PiBBbSBEb25uZXJzdGFnLCA3LiBKdW5pIDIwMTgsIDEyOjM5OjAzIENFU1Qgc2NocmllYiBBbmRy
-emVqIEhhamRhOgo+ID4gPiBPbiAwNy4wNi4yMDE4IDAxOjA4LCBIZWlrbyBTdHVlYm5lciB3cm90
-ZToKPiA+ID4gPiBBbSBNaXR0d29jaCwgNi4gSnVuaSAyMDE4LCAxODowNzo0NiBDRVNUIHNjaHJp
-ZWIgQXJjaGl0IFRhbmVqYToKPiA+ID4gPj4gT24gV2VkbmVzZGF5IDA2IEp1bmUgMjAxOCAwNDox
-NiBQTSwgSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gPiA+ID4+PiBBbSBNaXR0d29jaCwgNi4gSnVu
-aSAyMDE4LCAxMjoyMToxNiBDRVNUIHNjaHJpZWIgQXJjaGl0IFRhbmVqYToKPiA+ID4gPj4+PiBP
-biBXZWRuZXNkYXkgMDYgSnVuZSAyMDE4IDAyOjAwIFBNLCBIZWlrbyBTdMO8Ym5lciB3cm90ZToK
-PiA+ID4gPj4+Pj4gQW0gTWl0dHdvY2gsIDYuIEp1bmkgMjAxOCwgMDc6NTk6MjkgQ0VTVCBzY2hy
-aWViIEFyY2hpdCBUYW5lamE6Cj4gPiA+ID4+Pj4+PiBPbiBNb25kYXkgMDQgSnVuZSAyMDE4IDA1
-OjQ3IFBNLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiA+ID4gPj4+Pj4+PiBBbSBEb25uZXJzdGFn
-LCAxOC4gSmFudWFyIDIwMTgsIDA1OjUzOjU1IENFU1Qgc2NocmllYiBBcmNoaXQgVGFuZWphOgo+
-ID4gPiA+Pj4+Pj4+PiBBZGQgYmluZGluZyBpbmZvIGZvciBwZXJpcGhlcmFscyB0aGF0IHN1cHBv
-cnQgZHVhbC1jaGFubmVsIERTSS4gQWRkCj4gPiA+ID4+Pj4+Pj4+IGNvcnJlc3BvbmRpbmcgb3B0
-aW9uYWwgYmluZGluZ3MgZm9yIERTSSBob3N0IGNvbnRyb2xsZXJzIHRoYXQgbWF5Cj4gPiA+ID4+
-Pj4+Pj4+IGJlIGNvbmZpZ3VyZWQgaW4gdGhpcyBtb2RlLiBBZGQgYW4gZXhhbXBsZSBvZiBhbiBJ
-MkMgY29udHJvbGxlZAo+ID4gPiA+Pj4+Pj4+PiBkZXZpY2Ugb3BlcmF0aW5nIGluIGR1YWwtY2hh
-bm5lbCBEU0kgbW9kZS4KPiA+ID4gPj4+Pj4+Pj4gCj4gPiA+ID4+Pj4+Pj4+IFNpZ25lZC1vZmYt
-Ynk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4gPiA+ID4+Pj4+Pj4g
-Cj4gPiA+ID4+Pj4+Pj4gTG9va3MgbGlrZSBhIGdyZWF0IHNvbHV0aW9uIGZvciB0aGF0IHByb2Js
-ZW0sIHNvCj4gPiA+ID4+Pj4+Pj4gUmV2aWV3ZWQtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0Bz
-bnRlY2guZGU+Cj4gPiA+ID4+Pj4+Pj4gCj4gPiA+ID4+Pj4+Pj4gQXMgSSdtIGxvb2tpbmcgaW50
-byB0aGF0IGZvciBteSByazMzOTktc2NhcmxldCBkZXZpY2UgcmlnaHQgbm93IGFuZAo+ID4gPiA+
-Pj4+Pj4+IGNvdWxkbid0IGZpbmQgdGhpcyBwYXRjaHNldCBpbiB0aGUga2VybmVsIHlldCwgaXMg
-aXQgcGxhbm5lZCB0bwo+ID4gPiA+Pj4+Pj4+IG1lcmdlIG9yIHJlZnJlc2ggdGhlc2UgYmluZGlu
-ZyBjaGFuZ2VzIG9yIHdlcmUgcHJvYmxlbXMgZW5jb3VudGVyZWQuCj4gPiA+ID4+Pj4+Pj4gCj4g
-PiA+ID4+Pj4+Pj4gQXQgbGVhc3QgYW4gQWNrL1JldmlldyBmcm9tIFJvYiBzZWVtcyB0byBiZSBt
-aXNzaW5nLgo+ID4gPiA+Pj4+Pj4gCj4gPiA+ID4+Pj4+PiBJIGZvcmdvdCBhYm91dCB0aGVzZSBw
-YXRjaGVzLiBSb2IgaGFkIHJldmlld2VkIHRoZSBmaXJzdCBvbmUgaW4KPiA+ID4gPj4+Pj4+IHRo
-ZSBzZXQgdGhlIHNlY29uZCBvbmUgc3RpbGwgbmVlZGVkIGFuIEFjay4gSSdsbCBwb3N0IGEgdjMK
-PiA+ID4gPj4+Pj4+IHRoYXQgYWRkcyB0aGUgUmV2aWV3ZWQtYnlzIGFuZCBmaXhlcyBhIHNtYWxs
-IHR5cG8uCj4gPiA+ID4+Pj4+IAo+ID4gPiA+Pj4+PiB2ZXJ5IG5pY2UgLi4uIGJlY2F1c2UgaXQg
-bG9va3MgbGlrZSB5ZXN0ZXJkYXkgSSBtYW5hZ2VkIHRvIG1ha2UgdGhlCj4gPiA+ID4+Pj4+IFJv
-Y2tjaGlwIGRzaSB3b3JrIGluIGR1YWwgbW9kZSBmb2xsb3dpbmcgdGhpcy4KPiA+ID4gPj4+Pj4g
-Cj4gPiA+ID4+Pj4+IEJ1dCBvbmUgcXVlc3Rpb24gY2FtZSB1cCwgZG8geW91IHJlYWxseSB3YW50
-IHR3byBpbnB1dCBwb3J0cyBvbiB0aGUKPiA+ID4gPj4+Pj4gcGFuZWwKPiA+ID4gPj4+Pj4gc2lk
-ZT8gSS5lLiBoYXJkd2FyZS13aXNlLCBJIGd1ZXNzIHRoZSBwYW5lbCB3aWxsIGhhdmUgb25lIDgt
-bGFuZSBvciBzbwo+ID4gPiA+Pj4+PiBpbnB1dCB0aGF0b25seSBnZXRzIHNwbGl0IHVwIG9uIHRo
-ZSBzb2Mgc2lkZSBvbnRvIDIgZHNpIGNvbnRyb2xsZXJzPwo+ID4gPiA+Pj4+IAo+ID4gPiA+Pj4+
-IEkgdGhpbmsgYWxsIGR1YWwgRFNJIHBhbmVscyBhY3R1YWxseSBoYXZlIDIgRFNJIGNvbnRyb2xs
-ZXJzL3BhcnNlcnMKPiA+ID4gPj4+PiB3aXRoaW4gdGhlbSwgb25lIG9uIGVhY2ggcG9ydC4gVGhl
-IE1JUEkgRFNJIHNwZWMgZG9lc24ndCBzdXBwb3J0IDgKPiA+ID4gPj4+PiBsYW5lcy4gQWxzbywg
-dGhlIHBpeGVscyBjb21pbmcgb3V0IG9mIHRoZSBob3N0IGFyZSBkaXN0cmlidXRlZCBhbW9uZwo+
-ID4gPiA+Pj4+IHRoZSBsYW5lcyBkaWZmZXJlbnRseSB0aGFuIHdoYXQgd291bGQgaGF2ZSBiZWVu
-IHRoZSBjYXNlIHdpdGggYQo+ID4gPiA+Pj4+ICd0aGVvcmV0aWNhbCcgOCBsYW5lIHJlY2VpdmVy
-Lgo+ID4gPiA+Pj4+IAo+ID4gPiA+Pj4+IE90aGVyIHRoYW4gdGhhdCwgc29tZSBkdWFsIERTSSBw
-YW5lbHMgb25seSBhY2NlcHQgRFNJIGNvbW1hbmRzIG9uIHRoZQo+ID4gPiA+Pj4+ICdtYXN0ZXIn
-IHBvcnQsIHdoZXJlIGFzIG90aGVycyBleHBlY3QgdGhlIHNhbWUgY29tbWFuZCB0byBiZSBzZW50
-Cj4gPiA+ID4+Pj4gYWNyb3NzCj4gPiA+ID4+Pj4gYm90aCB0aGUgcG9ydHMuCj4gPiA+ID4+Pj4g
-Cj4gPiA+ID4+Pj4gVGhlcmVmb3JlLCBJIHRoaW5rIGl0J3MgYmV0dGVyIHRvIHJlcHJlc2VudCBk
-dWFsIERTSSBwYW5lbHMgaGF2aW5nIDIKPiA+ID4gPj4+PiBEU0kgaW5wdXQgcG9ydHMuCj4gPiA+
-ID4+Pj4gCj4gPiA+ID4+Pj4gWW91ciBEVCBsb29rcyBnb29kIHRvIG1lLgo+ID4gPiA+Pj4gCj4g
-PiA+ID4+PiBIbW0sIHRoYXQgZG9lc24ndCBtYXRjaCB1cCB0aGVuIDstKSAuLi4gYXMgbXkgZHQg
-dXNlcyAyIGVuZHBvaW50cwo+ID4gPiA+Pj4gaW4gb25lIHBvcnQgZm9yIHRoZSBkc2ktbGlua3Mu
-Cj4gPiA+ID4+IAo+ID4gPiA+PiBTb3JyeSwgSSBkaWRuJ3Qgbm90aWNlIHlvdSdkIGNyZWF0ZWQg
-dHdvIGVuZHBvaW50cyB3aXRoaW4gYSBzaW5nbGUgcG9ydC4KPiA+ID4gPj4gCj4gPiA+ID4+IEkg
-ZG9uJ3QgdGhpbmsgSSdtIHBhcnRpY3VsYXIgYWJvdXQgMiBwb3J0cyB2cyAxIHBvcnQgd2l0aCAy
-IGVuZHBvaW50cy4KPiA+ID4gPj4gVGhleSBib3RoIHNlZW0gb2theSB0byBtZSBhcyBsb25nIGFz
-IHdlIGZvbGxvdyBpdCBjb25zaXN0ZW50bHkuIEknbQo+ID4gPiA+PiBteXNlbGYgbm90IDEwMCUg
-c3VyZSBvZiBob3cgdG8gZmlndXJlIHdoZXJlIG9uZSBzaG91bGQgcHJlZmVyIGVuZHBvaW50cwo+
-ID4gPiA+PiBvdmVyIHBvcnRzLiBNYXliZSBzb21lb25lIG1vcmUgZmFtaWxpYXIgd2l0aCB0aGUg
-b2YgZ3JhcGggYmluZGluZ3MKPiA+ID4gPj4gY291bGQgY29tbWVudCBoZXJlLgo+ID4gPiAKPiA+
-ID4gUG9ydCBzaG91bGQgZGVzY3JpYmUgcGh5c2ljYWwgcG9ydCwgZW5kcG9pbnQgYXJlIHVzZWQg
-dG8gZGVzY3JpYmUKPiA+ID4gbXVsdGlwbGUgbGlua3MgdG8gdGhlIHNhbWUgcG9ydC4gSWYgdGhl
-IHBhbmVsIGhhcyB0d28gcGh5c2ljYWwgRFNJCj4gPiA+IGludGVyZmFjZXMgaXQgc2hvdWxkIHVz
-ZSB0d28gcG9ydHMuCj4gPiAKPiA+IFRoYXQgYWdhaW4gbGVhdmVzIGEgYml0IG9mIHNwYWNlIGZv
-ciBpbnRlcnByZXRhdGlvbiA7LSkgLgo+IAo+IERvZXMgaXQgcmVhbGx5PyBEU0kgbWF4ZXMgb3V0
-IGF0IDQgbGFuZXMsIHNvIG1vcmUgdGhhbiA0IGxhbmVzIGlzCj4gY2xlYXJseSBub3QgYSBzaW5n
-bGUgc3RhbmRhcmQgcG9ydC4gQWRkaXRpb25hbGx5LCB0aGUgY29kZSB3ZSdyZQo+IGN1cnJlbnRs
-eSB1c2luZyBpbiBDaHJvbWUgT1MgYWN0dWFsbHkgc2VuZHMgdGhlIHNhbWUgY29tbWFuZHMgdG8g
-ZWFjaAo+IERTSSBzZXBhcmF0ZWx5IChJJ20gbm90IHN1cmUgaWYgaXQncyBhY3R1YWxseSByZXF1
-aXJlZCBieSB0aGUgcGFuZWxzCj4gd2VyZSB1c2luZyksIHNvIGFnYWluLCB0aGV5IGFyZSB0byBz
-b21lIGV4dGVudCBsb2dpY2FsbHkgaW5kZXBlbmRlbnQuCj4KPiA+IEEgZHVhbC1kc2kgZGlzcGxh
-eSBpcyBwcm9iYWJseSBwcmV0dHkgdXNlbGVzcyB3aXRoIG9ubHkgb25lIGNvbnRyb2xsZXIKPiA+
-IGNvbm5lY3RlZCB0byBpdCwgYXMgaXRzIDQgbGFuZXMgY2Fubm90IHNhdGlzZnkgdGhlIHJlcXVp
-cmVkIDggbGFuZXMKPiA+IG9mIHRoZSBwYW5lbC4KPiAKPiBQcm9iYWJseSwgYWx0aG91Z2ggdGVj
-aG5pY2FsbHkgeW91IGNhbiB1c3VhbGx5IGRpc3BsYXkgb24gaGFsZiB0aGUKPiBzY3JlZW4sIGlm
-IHlvdSBoYXZlIG9ubHkgaGF2ZSAxIHdvcmtpbmcgRFNJLgo+Cj4gPiBTZWUgWzBdIGZvciBjdXJy
-ZW50IFdJUCBwYW5lbCBhZGRpdGlvbi4KPiA+IFtXYXMgYWxyZWFkeSBvbiB0aGUgbGlzdHMgYnV0
-IG5lZWRzIGNsZWFudXBdCj4gPiAKPiA+IAo+ID4gCj4gPiBbMF0gaHR0cHM6Ly9naXRodWIuY29t
-L21taW5kL2xpbnV4LXJvY2tjaGlwL2NvbW1pdC80NTliYzFhMTU5OTM3N2MyYzU0MDg3MjRlODI2
-MTlhNDYwMmE5NTNkI2RpZmYtNWQ2ZDZkZGFiNGZkMjgyMTAyZDIzZDJjMDJlODM1ZjhSMzgxCj4g
-PiAKPiA+IAo+ID4gPiA+Pj4gVGhlIGlzc3VlIEkgc2VlIHdpdGggdXNpbmcgcG9ydHMgYW5kIG5v
-dCBlbmRwb2ludHMgZm9yIGR1YWwtZHNpIGxpbmtzCj4gPiA+ID4+PiBpcyB3aXRoIGRpc3Rpbmd1
-aXNoaW5nIGJldHdlZW4gaW5wdXQgYW5kIG91dHB1dCBwb3J0cy4KPiA+ID4gPj4+IAo+ID4gPiA+
-Pj4gRm9yIGEgcGFuZWwgdGhhdCdzIGVhc3ksIGFzIHlvdSBldmVyeSBwb3J0IHdpbGwgYmUgYW4g
-aW5wdXQgcG9ydCBhbmQgaWYKPiA+ID4gPj4+IHlvdSBoYXZlIDIsIGl0J3Mgc3VwcG9zZWQgZHVh
-bC1kc2kuIEJ1dCBmb3IgZXhhbXBsZSBJIGd1ZXNzIHRoZXJlIG1pZ2h0Cj4gPiA+ID4+PiBleGlz
-dCBzb21lIGR1YWwtZHNpLXRvLXNvbWV0aGluZyBicmlkZ2VzLCB3aGVyZSB5b3Ugd291bGQgZW5k
-IHVwCj4gPiA+ID4+PiB3aXRoIHNheSAzIChvciBldmVuIG1vcmUpIHBvcnRzIC4uLiB0d28gZHVh
-bC1kc2kgaW5wdXRzIGFuZCAxIG9yIG1vcmUKPiA+ID4gPj4+IG91dHB1dHMuCj4gPiA+ID4+IAo+
-ID4gPiA+PiBPa2F5LCBJIGdldCB5b3VyIHBvaW50IGhlcmUuIEFsdGhvdWdoLCBldmVuIGlmIHRo
-ZSByZW1vdGUgZGV2aWNlIGhhZAo+ID4gPiA+PiBleGFjdGx5IDIgcG9ydHMuIElzIGl0IHNhZmUg
-dG8gYXNzdW1lIHRoYXQgcG9ydCAjMCBpcyBhbiBpbnB1dCBwb3J0IGFuZAo+ID4gPiA+PiBwb3J0
-ICMxIGlzIGFuIG91dHB1dCBwb3J0PyBJcyB0aGF0IHRoZSBub3JtPwo+ID4gPiA+IAo+ID4gPiA+
-IEkgZG9uJ3QgdGhpbmsgdGhhdCBhbnl0aGluZyBsaWtlIHRoYXQgaXMgc3BlY2lmaWVkIGFueXdo
-ZXJlLCBzbyB5b3UgY2Fubm90Cj4gPiA+ID4gYXNzdW1lIGFueXRoaW5nIGFib3V0IHdoYXQgYSBw
-b3J0IGNvbnRhaW5zLgo+ID4gPiAKPiA+ID4gUG9ydHMgYXJlIGRlZmluZWQgcGVyIGRldmljZS1u
-b2RlIGFuZCBwb3J0IG51bWJlciBhc3NpZ25tZW50IHNob3VsZCBiZQo+ID4gPiBkZXNjcmliZWQg
-aW4gcGFydGljdWxhciBkZXZpY2UgYmluZGluZ3MuIFNvIGRldmljZSBkcml2ZXIga25vd3Mgd2Vs
-bAo+ID4gPiB3aGljaCBmdW5jdGlvbnMgc2hvdWxkIGJlIGFzc2lnbmVkIHRvIHdoaWNoIHBvcnQu
-IEJ1dCBpdCBpcyBwcml2YXRlCj4gPiA+IG1hdHRlciBvZiB0aGUgZGV2aWNlL2RldmljZSBkcml2
-ZXIuIERpZmZlcmVudCBkZXZpY2UgYmluZGluZ3MgY2FuIGFzc2lnbgo+ID4gPiBkaWZmZXJlbnQg
-bnVtYmVyIGZvciBpbnB1dCBhbmQgb3V0cHV0IHBvcnRzLCBidXQgc2luY2UgcG9ydHMgYXJlIHBy
-aXZhdGUKPiA+ID4gdGhpbmcgZm9yIGRldmljZXMgaXQgc2hvdWxkIG5vdCBiZSBhIHByb2JsZW0u
-Cj4gCj4gQWdyZWVkLiBBbmQgaWYgSGVpa28gbmVlZHMgYSBzcGVjaWZpYyBleGFtcGxlIGNsb3Nl
-IHRvIGhvbWU6IGFsbCB0aGUKPiBSb2NrY2hpcCBkaXNwbGF5IGJpbmRpbmdzIGRvIHRoaXMgc2lt
-aWxhcmx5OyBmb3IgZXhhbXBsZQo+IGRpc3BsYXkvcm9ja2NoaXAvYW5hbG9naXhfZHAtcm9ja2No
-aXAudHh0IGRlc2NyaWJlcyBleGFjdGx5IHdoaWNoIHBvcnQKPiBudW1iZXJzIGFuZCBlbnBvaW50
-cyBtZWFuIHdoYXQ6Cj4gCj4gLSBwb3J0czogdGhlcmUgYXJlIDIgcG9ydCBub2RlcyB3aXRoIGVu
-ZHBvaW50IGRlZmluaXRpb25zIGFzIGRlZmluZWQgaW4KPiAgIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4KPiAgICAgUG9ydCAwOiBj
-b250YWluZWQgMiBlbmRwb2ludHMsIGNvbm5lY3RpbmcgdG8gdGhlIG91dHB1dCBvZiB2b3AuCj4g
-ICAgIFBvcnQgMTogY29udGFpbmVkIDEgZW5kcG9pbnQsIGNvbm5lY3RpbmcgdG8gdGhlIGlucHV0
-IG9mIHBhbmVsLgoKQWdyZWVkIGhlcmUuIE15IGNvbmZ1c2lvbiBzdGVtcyBmcm9tIHRoZSBpc3N1
-ZSB0aGF0IHdpdGggdGhlIHdheQp0aGUgY29kZSBpcyByaWdodCBub3csIHRoZSBkc2kgY29udHJv
-bGxlciB3b3VsZCBuZWVkIHRvIGtub3cgaG93CnRoZSBwb3J0cyBvZiB0aGUgcGFuZWwgYXJlIHN0
-cnVjdHVyZWQsIHRvIGZpbmQgaXRzIHdheSB0byB0aGUgMm5kCmNvbnRyb2xsZXIuCgpCdXQgdGhl
-biBhZ2FpbiwgbWF5YmUgdGhlIGltcGxlbWVudGF0aW9uIGp1c3QgbmVlZHMgdG8gY2hhbmdlIDst
-KSAuCgoKPiA+ID4gSSBkbyBub3Qgc2VlIHdoeSBkbyB5b3UgaGF2ZSBzdWNoIGlzc3VlLCBjb3Vs
-ZCB5b3UgZGVzY3JpYmUgaXQgbW9yZS4KPiA+ID4gCj4gPiA+ID4+IEkndmUgYXQgbGVhc3Qgc2Vl
-biBvbmUgZGV2aWNlICh0b3NoaWJhLHRjMzU4NzY3IGJyaWRnZSkgdGhhdCBjYW4KPiA+ID4gPj4g
-YWN0dWFsbHkgdGFrZSBlaXRoZXIgRFBJIGFzIGlucHV0IG9yIERTSSBiYXNlZCBvbiBob3cgeW91
-IGNvbmZpZ3VyZSBpdC4KPiA+ID4gPj4gVGhlcmUgYXJlIDIgaW5wdXQgcG9ydHMgaGVyZSwgcG9y
-dCAjMCBmb3IgRFNJIGFuZCBwb3J0ICMxIGZvciBEUEkuIFdvdWxkCj4gPiA+ID4+IGl0IGhhdmUg
-bWFkZSBzZW5zZSBoZXJlIHRvIGhhdmUgYSBzaW5nbGUgcG9ydCBhbmQgMiBlbmRwb2ludHMgaGVy
-ZSB0b28/Cj4gPiA+ID4gCj4gPiA+ID4gTm9wZSwgSSBndWVzcyBoYXZpbmcgYSBwb3J0IGZvciBE
-UEkgaW5wdXQsIG9uZSBwb3J0IGZvciBEU0kgaW5wdXQgbWFrZXMKPiA+ID4gPiBxdWl0ZSBhIGxv
-dCBvZiBzZW5zZS4gQW5kIHRoZW4geW91IGNhbiBoYXZlIHRoZSBpbnB1dC1zcGVjaWZpY3MgbGl2
-aW5nIGluCj4gPiA+ID4gdGhlIGVuZHBvaW50cyBsaWtlIGR1YWwgbGlua3Mgb3Igc28uCj4gPiA+
-ID4gCj4gPiA+ID4+PiBXaGlsZSB0aGUgZm9sbG93aW5nIGFyZ3VtZW50IG1pZ2h0IG5vdCBiZSAx
-MDAlIHZhbGlkIGZyb20gYSBkdC1wdXJpdHkKPiA+ID4gPj4+IHN0YW5kcG9pbnQgaW1wbGVtZW50
-aW5nIHRoaXMgbWlnaHQgZ2V0IGhhaXJ5IGZvciBfYW55XyBvcGVyYXRpbmcgc3lzdGVtLAo+ID4g
-PiA+Pj4gYXMgeW91IHdpbGwgbmVlZCBlYWNoIHBhbmVsL2JyaWRnZSB0byB0ZWxsIHdoYXQgdGhl
-IHBvcnRzIGFyZSB1c2VkIGZvci4KPiA+ID4gPj4gCj4gPiA+ID4+IFllYWguCj4gPiA+IAo+ID4g
-PiBFYWNoIHBhbmVsL2JyaWRnZSBzaG91bGQga25vdyB3aGF0IGhpcyBwb3J0cyBhcmUgdXNlZCBm
-b3IsIGJ1dCB0byB3aG8KPiA+ID4gYW5kIHdoeSB5b3Ugd2FudCB0byBjb21tdW5pY2F0ZSBpdD8K
-PiA+IAo+ID4gSSdsbCBkbyB0aGF0IGJlbG93IDotKQo+ID4gCj4gPiAKPiA+ID4gPj4+IEkuZS4g
-aW4gbXkgZW5kcG9pbnQgYmFzZWQgbWFwcGluZywgcmlnaHQgbm93IEkgaGF2ZSB0aGlzIG5pY2Ug
-YW5kCj4gPiA+ID4+PiBnZW5lcmljCj4gPiA+ID4+PiBXSVAgZnVuY3Rpb24gdG8gcGFyc2UgdGhl
-IG9mX2dyYXBoIGFuZCBnZXQgdGhlIG1hc3RlcitzbGF2ZSBub2RlczoKPiA+ID4gPj4+IAo+ID4g
-PiA+Pj4gaHR0cHM6Ly9naXRodWIuY29tL21taW5kL2xpbnV4LXJvY2tjaGlwL2Jsb2IvdG1wL3Jr
-MzM5OS1ncnUtYm9iLXNjYXJsZXQvCj4gPiA+ID4+PiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
-ZHctbWlwaS1kc2ktcm9ja2NoaXAuYyNMNjk3IFswXQo+ID4gPiA+PiAKPiA+ID4gPj4gSSdkIHRy
-aWVkIG91dCBzb21ldGhpbmcgbG9jYWxseSBiZWZvcmUgcG9zdGluZyB0aGlzIHBhdGNoLCBJIGRv
-bid0IGhhdmUKPiA+ID4gPj4gdGhlIGNvZGUgZm9yIGl0LCBidXQgSSBjYW4gZGVzY3JpYmUgdGhl
-IHN0ZXBzIEkgdG9vay4gVGhpcyBjb2RlIGV4cGVjdHMKPiA+ID4gPj4gdGhlIHBhbmVsL2JyaWRn
-ZSB0byBoYXZlIDIgaW5wdXQgcG9ydHMuCj4gPiA+ID4gCj4gPiA+ID4gV2hpY2ggYWdhaW4gd291
-bGQgYmUgdmVyeSBtdWNoIHBhbmVsLXNwZWNpZmljIGFzIHlvdSBjYW5ub3QgYXNzdW1lCj4gPiA+
-ID4gdG8gbXVjaCBhYm91dCB0aGUgcG9ydHMuCj4gPiA+ID4gCj4gPiA+ID4+IDEuIERTSTAgaG9z
-dCBkcml2ZXIgbG9va3MgdXAgaXRzIG91dHB1dCBwb3J0LCBnZXRzIHRoZSByZW1vdGUgZW5kcG9p
-bnQsCj4gPiA+ID4+IGFuZCBnZXQgdGhpcyBlbmRwb2ludCdzIHBhcmVudCAodXNpbmcKPiA+ID4g
-Pj4gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudCgpKS4gS2VlcHMgdGhlIHBhcmVudCBk
-ZXZpY2Ugbm9kZSBpbiBhCj4gPiA+ID4+IHRlbXAgdmFyaWFibGUuCj4gPiA+ID4+IAo+ID4gPiA+
-PiAyLiBEU0kxIGhvc3QgZHJpdmVyIGRvZXMgdGhlIHNhbWUgdGhpbmcuCj4gPiA+ID4+IAo+ID4g
-PiA+PiAzLiBEU0kwIGFuZCBEU0kxIGNoZWNrIHdoZXRoZXIgdGhlaXIgb3V0cHV0cyBhcmUgY29u
-bmVjdGVkIHRvIHRoZQo+ID4gPiA+PiBzYW1lIGRldmljZS4gSWYgc28sIHRoZXkncmUgaW4gZHVh
-bCBEU0kgbW9kZS4gSWYgbm90LCB0aGV5IGFyZQo+ID4gPiA+PiBvcGVyYXRpbmcgaW5kZXBlbmRl
-bnRseS4KPiA+ID4gPj4gCj4gPiA+ID4+IFRoZSBwb3NpdGl2ZSBvZiB0aGlzIGFwcHJvYWNoIGlz
-IHRoYXQgd2UgZG9uJ3QgbmVlZCB0byBtYWtlIGFueQo+ID4gPiA+PiBhc3N1bXB0aW9ucyBhYm91
-dCB0aGUgcGFuZWwvYnJpZGdlJ3MgcG9ydCBudW1iZXJzLCB3aGljaCBpcyBncmVhdC4KPiA+ID4g
-Pj4gVGhlIG5lZ2F0aXZlIGlzIHRoYXQgb3VyIERTSSBjb250cm9sbGVyIGluc3RhbmNlcyBub3cg
-bmVlZCB0byBxdWVyeQo+ID4gPiA+PiBlYWNoIG90aGVyLCB3aGljaCBjYW4gYmUgbWVzc3ksIGJ1
-dCBub3QgdG9vIGhhcmQgdG8gaW1wbGVtZW50Lgo+Cj4gPiA+IEkgdGhpbmsgZGV0ZWN0aW9uIG9m
-IGR1YWwgZHNpIGFuZCB3aG9sZSBjb25maWd1cmF0aW9uIHRoaW5nIG9mIGR1YWwtZHNpCj4gPiA+
-IHNob3VsZCBiZSBkb25lIHVzaW5nIGluLWtlcm5lbCBmcmFtZXdvcmtzIChtYXliZSBuZXcgb25l
-cyA6KSApLgo+ID4gPiBDb3VsZCB5b3UgZGVzY3JpYmUgbmVjZXNzYXJ5IGNvbmZpZ3VyYXRpb24g
-c3RlcHMgdG8gYmUgcGVyZm9ybWVkLCB3aGF0Cj4gPiA+IGluZm8gc2hvdWxkIGJlIHBhc3NlZCBm
-cm9tIHdobyB0byB3aG8sIGV0Yy4gSXQgd291bGQgYmUgZWFzaWVyIHRvIGRpc2N1c3MuCj4gPiAK
-PiA+IFRoZSBiYXNlIHNldHVwIGlzIHRoZSByazMzOTkgc29jLCB3aGljaCBoYXMgMiBjb21wbGV0
-ZWx5IHNlcGFyYXRlCj4gPiBkdy1taXBpLWRzaSBjb250cm9sbGVycy4KPiA+IAo+ID4gR3J1LVNj
-YXJsZXQgKGEgQ2hyb21lT1MgdGFibGV0IGRldmljZSkgdXNlcyBhIGhpZ2gtcmVzIGR1YWwtRFNJ
-IGRpc3BsYXkKPiA+ICgyNTAweDE1MDAgcGl4ZWxzIG9yIHNvKSB3aGljaCBpcyBkcml2ZW4gYnkg
-Ym90aCBjb250cm9sbGVycyB0b2dldGhlciB0bwo+ID4gYWNoaWV2ZSB0aGUgcmVxdWlyZWQgbnVt
-YmVyIG9mIGxhbmVzIHRvIGl0Lgo+ID4gCj4gPiBTbyB5b3UgZW5kIHVwIHdpdGggb25lIChzcGVj
-aWZpYykgY29udHJvbGxlciBiZWluZyB0aGUgbWFzdGVyIGFuZCB0aGUKPiA+IG90aGVyIGJlaW5n
-IHRoZSBzbGF2ZSwgZGVmZXJyaW5nIHRvIHRoZSBtYXN0ZXIgZm9yIG1vc3QgZXZlcnl0aGluZy4K
-PiA+IEFzIHRoZSBjb250cm9sbGVycyBhcmUgc29tZWhvdyBidWlsZCB0byB3b3JrIHRvZ2V0aGVy
-IGluIHRoYXQgY2FzZQo+ID4gdmlhIHNwZWNpYWwgc29jLXNwZWNpZmljIHNldHRpbmdzLgo+ID4g
-Cj4gPiBTZWUgWzFdIGZvciBjdXJyZW50IFdJUCBjb2RlLCBJIGxpZnRlZCBvdXQgb2YgdGhlIGNo
-cm9tZW9zIGtlcm5lbCBhbmQKPiA+IG1vZGlmaWVkIHRvIG5vdCBoYXZlIHRoYXQgc3BlY2lhbCBy
-b2NrY2hpcCxkdWFsLWNoYW5uZWwgPTwmLi4uPjsgcHJvcGVydHkuCj4gPiBUaGF0IHBhdGNoIHdh
-cyBvbiB0aGUgbGlzdHMgYWxyZWFkeSBsYXN0IHllYXIgSSB0aGluay4KPiA+IAo+ID4gU28gZWFj
-aCBkdy1taXBpLWRzaSBpbnN0YW5jZSBuZWVkcyB0byBhdCBsZWFzdCBrbm93IHRoYXQgaXQgaXMg
-aW4gYQo+ID4gbWFzdGVyLXNsYXZlLXJlbGF0aW9uc2hpcCBhbmQgcmlnaHQgbm93IGFsc28gbmVl
-ZHMgYWNjZXNzIHRvIHRoZSBvdGhlcgo+ID4gZHJpdmVyIGluc3RhbmNlLiBEb2luZyB0aGUgbWFz
-dGVyLT5zbGF2ZSBhY2Nlc3Mgc2hvdWxkIGJlIGZpbmUgaW4gdGhhdAo+ID4gc3BlY2lhbCBjYXNl
-LCBhcyB0aGUgSVAgaXMgdGhlIHNhbWUgdHlwZS4KPiA+IAo+ID4gQWxzbyB0aGUgY3J0YzwtPmRz
-aSBpbnRlcmFjdGlvbiBpcyBxdWl0ZSBhIGJpdCBvZiBoYW5kbGluZy1kaWZmZXJlbnQgYmV0d2Vl
-bgo+ID4gb25lIGNydGMgdGFsa2luZyB0byAyIERTSXMgb3IgMiBjcnRjIHRhbGtpbmcgdG8gdGhl
-IDIgRFNJcyBzZXBhcmF0ZWx5Lgo+IAo+IFRoYXQncyBwcm9iYWJseSB0aGUgYmlnZ2VyIGtleTog
-dG8gdHJlYXQgdGhlbSBhcyBjb21wbGV0ZWx5IHNlcGFyYXRlCj4gcG9ydHMgbWVhbnMgdGhhdCB5
-b3UgZ2V0IHNlcGFyYXRlIENSVENzLCBJSVVDIChJJ2xsIGFkbWl0LCBJJ20gc3RpbGwgYQo+IGJp
-dCBydXN0eSBvbiBuYXZpZ2F0aW5nIHNvbWUgRFJNIGNvbmNlcHRzKS4KCk9uZSB0aGluZyBJIHJl
-YWxpemVkIHdpdGggeW91ciBtZW50aW9uIG9mIERTSSBtYXhpbmcgb3V0IGF0IDQgbGFuZXMgaXMs
-CnRoYXQgdGhpcyBtYWtlcyBpdCBlYXN5IHRvIGRldGVjdCB0aGUgZXhpc3RlbmNlIG9mIGEgZHVh
-bC1kc2kgc2l0dWF0aW9uIC4uLgpzaW1wbHkgd2hlbiB0aGUgZGV2aWNlIHJlcG9ydHMgOCBsYW5l
-cy4KKHZpYSBvZl9maW5kX21pcGlfZHNpX2RldmljZV9ieV9ub2RlIHByZXN1bWFibHkpCgpBcyBh
-IGR1YWwtZHNpIHNpdHVhdGlvbiByZXF1aXJlcyBhIGNsb2NrLW1hc3RlciBwcm9wZXJ0eSBpbiBv
-bmUsCmJvdGggbWFzdGVyIGFuZCBzbGF2ZSBhbHNvIHdvdWxkIGJlIGFibGUgdG8gZGV0ZXJtaW5l
-IHRoZWlyCm1hc3RlciBvciBzbGF2ZSBzdGF0dXMsIHRodXMgdGhlIGdsb2JhbCBkdWFsLWRzaSBj
-b25maWcgY291bGQgYmUKZG9uZSBieSB0aGUgbWFzdGVyIChHUkYgc3R1ZmYgaW4gdGhlIFJvY2tj
-aGlwIGNhc2UpCgoKVGhlIG9ubHkgdGhpbmcgdGhhdCBtYWtlcyBteSBoZWFkIGV4cGxvZGUgbm93
-LCBpcyBob3cgdG8KbWFrZSB0aGUgc2xhdmUgYWN0dWFsbHkgcmVhY3QgdG8gc2V0dGluZ3Mgc2Vu
-dCB0byB0aGUgbWFzdGVyCmluIGEgc2FuZSB3YXkuCgpCdXQgdGhhdCBpcyBhIGRybS1zcGVjaWZp
-YyBpbXBsZW1lbnRhdGlvbi1kZXRhaWwsIEkgZ3Vlc3MgOy0pIC4KQW5kIGhvcGVmdWxseSBzb21l
-b25lIG1pZ2h0IGhhdmUgYSBncmVhdCBpZGVhIGhvdyB0aGlzCmNvdWxkIGJlIGRvbmUgYmV0dGVy
-IHRoYW4gaW4gbXkgY3VycmVudCBpbXBsZW1lbnRhdGlvbi4KCgpIZWlrbwoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 14:05-20180605, Rob Herring wrote:
+> On Tue, Jun 5, 2018 at 1:05 AM, Nishanth Menon <nm@ti.com> wrote:
+[...]
+
+> > +       soc0: soc0 {
+> > +               compatible = "simple-bus";
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               ranges;
+> 
+> Really need 64-bit addresses and sizes? Use ranges to limit the
+> address space if possible.
+
+Done -> overall the addresses are really in the 64bit addresses, but
+used bus segments and ranges to reduce to 32bit maps where possible.
+
+OSPI, PCIE, FSS (Flash subsystem) , CPTS are some of the ones that
+probably will need some level of cleanups when those are introduced
+later.
+
+Unfortunately, there is a lot of interleaved addressing between bus
+segments themselves, I have tried to keep the ranges as clean as
+reasonably possible. I also tried to use 1-1 map for children nodes to
+maintain some level of sanity as we add more device nodes. There might
+be a few exceptions, but overall the ranges currently map 1-1 physical
+32bit address - OSPI, CPTS, FSS will however have to have a different
+mapping.
+
+See [1]
+> 
+> > +
+> > +               a53_timer0: timer-cl0-cpu0 {
+> > +                       compatible = "arm,armv8-timer";
+> > +                       interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* cntpsirq */
+> > +                                    <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* cntpnsirq */
+> > +                                    <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* cntvirq */
+> > +                                    <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* cnthpirq */
+> > +               };
+> > +
+> > +               pmu: pmu {
+> > +                       compatible = "arm,armv8-pmuv3";
+> > +                       /* Recommendation from GIC500 TRM Table A.3 */
+> > +                       interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> > +               };
+> 
+> These 2 nodes aren't on the bus, so move them up a level.
+
+Thanks. oversight on my end. I have fixed it (see [1])
+> 
+> > +
+> > +               gic: interrupt-controller@1800000 {
+> > +                       compatible = "arm,gic-v3";
+> 
+> gic-500?
+
+Yes, GIC500.
+
+> 
+> > +                       #address-cells = <2>;
+> > +                       #size-cells = <2>;
+> > +                       ranges;
+> > +                       #interrupt-cells = <3>;
+> > +                       interrupt-controller;
+> > +                       /*
+> > +                        * NOTE: we are NOT gicv2 backward compat, so no GICC,
+> > +                        * GICH or GICV
+> 
+> The compatible should imply this.
+
+GIC500 at SoC design instantiation takes a parameter
+"are_option" -> this is set to no-compatibility for V2 for AM6. This is indeed
+discovered by the driver, However,
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+just notes that GICC, GICH, GICV as optional.. With backward
+compatibility disabled, these are'nt even present.
+
+I have dropped the comment, was helpful for me when I was first
+adding support for GIC500, It is pretty common knowledge now for other
+ARMV8 developers, so no point in retaining newbie info as comment.
+
+[...]
+> > diff --git a/arch/arm64/boot/dts/ti/k3-am654.dtsi b/arch/arm64/boot/dts/ti/k3-am654.dtsi
+> > new file mode 100644
+> > index 000000000000..d9b70081daba
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/ti/k3-am654.dtsi
+> > @@ -0,0 +1,117 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for AM6 SoC family in Quad core configuration
+> > + *
+> > + * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
+> > + */
+> > +
+> > +#include "k3-am6.dtsi"
+> > +
+> > +/ {
+> > +       cpus: cpus {
+> 
+> Really need a label?
+
+Thanks. Dropped.
+
+> 
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +               cpu-map {
+> 
+> IIRC, this goes at the top level.
+
+Documentation/devicetree/bindings/arm/topology.txt
+States to keep in cpus node. Quote:
+
+| The ARM CPU topology is defined within the cpu-map node, which is a direct
+| child of the cpus node and provides a container where the actual topology
+| nodes are listed.
+
+Retained as is to stay in sync with binding.
+
+> > +               cpu0: cpu@0 {
+> > +                       compatible = "arm,cortex-a53","arm,armv8";
+> 
+> space between compatibles.
+
+Oops. Fixed. thanks.
+
+> 
+> > +                       reg = <0x000>;
+> > +                       device_type = "cpu";
+> > +                       enable-method = "psci";
+> 
+> > +                       i-cache-size = <0x8000>;
+> > +                       i-cache-line-size = <64>;
+> > +                       i-cache-sets = <256>;
+> > +                       d-cache-size = <0x8000>;
+> > +                       d-cache-line-size = <64>;
+> > +                       d-cache-sets = <128>;
+> 
+> All this should be discoverable.
+
+Unfortunately no.
+Previously CCSIDR_EL1 was a good place to lookup this data.
+But as Sudeep pointed me offline:
+commit a8d4636f96ad ("arm64: cacheinfo: Remove CCSIDR-based cache information probing")
+and commit 9a802431c527 ("arm64: cacheinfo: add support to override cache levels via device tree")
+had already provided options to override cache information from the device tree.
+
+This is what I am using.
+Quote from commit:
+The architecture explicitly states:
+
+| You cannot make any inference about the actual sizes of caches based
+| on these parameters.
+
+[...]
+> > +
+> > +&soc0 {
+> > +       L2_0: l2-cache0 {
+> > +               compatible = "cache";
+> 
+> Is this documented?
+
+Just what Documentation/devicetree/bindings/arm/cpu-capacity.txt states
+as an example. We dont seem to have anything similar to
+Documentation/devicetree/bindings/arm/l2c2x0.txt in armv8 as per the
+comments in the document at least.
+
+> 
+> > +               cache-level = <2>;
+> > +               cache-size = <0x80000>;
+> > +               cache-line-size = <64>;
+> > +               cache-sets = <512>;
+> 
+> Discoverable?
+
+Same comment as L1 cache details.
+
+> 
+> > +               next-level-cache = <&msmc_l3>;
+> > +       };
+> > +
+> > +       L2_1: l2-cache1 {
+> > +               compatible = "cache";
+> > +               cache-level = <2>;
+> > +               cache-size = <0x80000>;
+> > +               cache-line-size = <64>;
+> > +               cache-sets = <512>;
+> > +               next-level-cache = <&msmc_l3>;
+> > +       };
+> > +
+> > +       msmc_l3: l3-cache0 {
+> > +               compatible = "cache";
+> 
+> Is this something TI specific or follows the (ARM) architecture?
+
+ARM Architecture permits an L3 Cache. TI implements it differently (we
+dont use CCI), instead an L3 Cache is always active in our
+implementation - backing memory is configurable and is designed to be
+completely transparent to s/w running on ARMv8.
+
+Description here is to meet the hardware description of cache topology
+to be accurate.
+
+[...]
+> > diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
+> > index 92770d84a288..be4570baad96 100644
+> > --- a/drivers/soc/ti/Kconfig
+> > +++ b/drivers/soc/ti/Kconfig
+> > @@ -1,3 +1,17 @@
+> > +# 64-bit ARM SoCs from TI
+> > +if ARM64
+> > +
+> > +if ARCH_K3
+> > +
+> > +config ARCH_K3_AM6_SOC
+> 
+> This should be in another patch (or dropped?).
+
+Agreed and split off into another patch.
+
+[1]
+Here is how the patch looks now (after incorporating changes suggested
+by Tony as well) - Thoughts please:
+https://github.com/nmenon/linux-2.6-playground/tree/upstream/next-20180604/k3-5-defconfig/arch/arm64/boot/dts/ti
+has everything consolidated.
+
+8<--
+>From 88857a8241fc67d63021e5c9070092b11398d11f Mon Sep 17 00:00:00 2001
+From: Nishanth Menon <nm@ti.com>
+Date: Wed, 14 Sep 2016 19:12:42 -0500
+Subject: [RFC V2 PATCH] arm64: dts: ti: Add Support for AM654 SoC
+
+The AM654 SoC is a lead device of the K3 Multicore SoC architecture
+platform, targeted for broad market and industrial control with aim to
+meet the complex processing needs of modern embedded products.
+
+Some highlights of this SoC are:
+* Quad ARMv8 A53 cores split over two clusters
+* GICv3 compliant GIC500
+* Configurable L3 Cache and IO-coherent architecture
+* Dual lock-step capable R5F uC for safety-critical applications
+* High data throughput capable distributed DMA architecture under NAVSS
+* Three Gigabit Industrial Communication Subsystems (ICSSG), each with dual
+  PRUs and dual RTUs
+* Hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
+* Centralized System Controller for Security, Power, and Resource
+  management.
+* Dual ADCSS, eQEP/eCAP, eHRPWM, dual CAN-FD
+* Flash subystem with OSPI and Hyperbus interfaces
+* Multimedia capability with CAL, DSS7-UL, SGX544, McASP
+* Peripheral connectivity including USB3, PCIE, MMC/SD, GPMC, I2C, SPI,
+  GPIO
+
+See AM65x Technical Reference Manual (SPRUID7, April 2018)
+for further details: http://www.ti.com/lit/pdf/spruid7
+
+We introduce the Kconfig symbol for the SoC along with this patch since
+it is logically relevant point, however the usage is in subsequent
+patches.
+
+NOTE: AM654 is the first of the device variants, hence we introduce a
+generic am6.dtsi.
+
+Signed-off-by: Benjamin Fair <b-fair@ti.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ MAINTAINERS                          |   1 +
+ arch/arm64/boot/dts/ti/k3-am6.dtsi   | 172 +++++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am654.dtsi | 117 ++++++++++++++++++++++++
+ 3 files changed, 290 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am654.dtsi
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cfb35b252ac7..5f5c4eddec7a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2092,6 +2092,7 @@ M:	Nishanth Menon <nm@ti.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+ F:	Documentation/devicetree/bindings/arm/ti/k3.txt
++F:	arch/arm64/boot/dts/ti/k3-*
+ 
+ ARM/TEXAS INSTRUMENT KEYSTONE ARCHITECTURE
+ M:	Santosh Shilimkar <ssantosh@kernel.org>
+diff --git a/arch/arm64/boot/dts/ti/k3-am6.dtsi b/arch/arm64/boot/dts/ti/k3-am6.dtsi
+new file mode 100644
+index 000000000000..700c56eda12d
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am6.dtsi
+@@ -0,0 +1,172 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for AM6 SoC Family
++ *
++ * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	model = "Texas Instruments K3 AM654 SoC";
++	compatible = "ti,am654";
++	interrupt-parent = <&gic500>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	aliases {
++		serial0 = &wkup_uart0;
++		serial1 = &mcu_uart0;
++		serial2 = &main_uart0;
++		serial3 = &main_uart1;
++		serial4 = &main_uart2;
++	};
++
++	chosen { };
++
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++
++		psci: psci {
++			compatible = "arm,psci-1.0";
++			method = "smc";
++		};
++	};
++
++	a53_timer0: timer-cl0-cpu0 {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* cntpsirq */
++			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* cntpnsirq */
++			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* cntvirq */
++			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* cnthpirq */
++	};
++
++	pmu: pmu {
++		compatible = "arm,armv8-pmuv3";
++		/* Recommendation from GIC500 TRM Table A.3 */
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	soc0: soc0 {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		main_domain: cbass@100000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x00100000 0x00 0x00100000 0x00020000>, /* ctrl mmr */
++				 <0x00600000 0x00 0x00600000 0x00001100>, /* GPIO */
++				 <0x00900000 0x00 0x00900000 0x00012000>, /* serdes */
++				 <0x01000000 0x00 0x01000000 0x0AF02400>, /* Most peripherals */
++				 <0x30800000 0x00 0x30800000 0x0BC00000>; /* MAIN NAVSS */
++
++			gic500: interrupt-controller@1800000 {
++				compatible = "arm,gic-v3";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges;
++				#interrupt-cells = <3>;
++				interrupt-controller;
++				reg = <0x01800000 0x10000>,	/* GICD */
++				      <0x01880000 0x90000>;	/* GICR */
++
++				/*
++				 * vcpumntirq:
++				 * virtual CPU interface maintenance interrupt
++				 */
++				interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++
++				gic_its: gic-its@18200000 {
++					compatible = "arm,gic-v3-its";
++					reg = <0x01820000 0x10000>;
++					msi-controller;
++					#msi-cells = <1>;
++				};
++			};
++
++			main_uart0: serial@2800000 {
++				compatible = "ti,am654-uart", "ti,omap4-uart", "ns16550a";
++				reg = <0x02800000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <48000000>;
++				current-speed = <115200>;
++				status = "disabled";
++			};
++
++			main_uart1: serial@2810000 {
++				compatible = "ti,am654-uart", "ti,omap4-uart", "ns16550a";
++				reg = <0x02810000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <48000000>;
++				current-speed = <115200>;
++				status = "disabled";
++			};
++
++			main_uart2: serial@2820000 {
++				compatible = "ti,am654-uart", "ti,omap4-uart", "ns16550a";
++				reg = <0x02820000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <48000000>;
++				current-speed = <115200>;
++				status = "disabled";
++			};
++		};
++
++		wkup_domain: cbass@42040000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x42040000 0x00 0x42040000 0x03AC2400>; /* Basic peripherals */
++
++			wkup_uart0: serial@42300000 {
++				compatible = "ti,am654-uart", "ti,omap4-uart", "ns16550a";
++				reg = <0x42300000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				interrupts = <GIC_SPI 697 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <48000000>;
++				current-speed = <115200>;
++				status = "disabled";
++			};
++
++		};
++
++		mcu_domain: cbass@28380000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x28380000 0x00 0x28380000 0x03880000>, /* MCU NAVSS*/
++				 <0x40200000 0x00 0x40200000 0x00900100>, /* First peripheral window */
++				 <0x45100000 0x00 0x45100000 0x00c24000>, /* MMRs, remaining NAVSS */
++				 <0x46000000 0x00 0x46000000 0x00200000>, /* CPSW */
++				 <0x47000000 0x00 0x47000000 0x00068400>; /* OSPI space 1 */
++
++			mcu_uart0: serial@40a00000 {
++				compatible = "ti,am654-uart", "ti,omap4-uart", "ns16550a";
++				reg = <0x40a00000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++				interrupts = <GIC_SPI 565 IRQ_TYPE_LEVEL_HIGH>;
++				clock-frequency = <96000000>;
++				current-speed = <115200>;
++				status = "disabled";
++			};
++
++		};
++
++	};
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-am654.dtsi b/arch/arm64/boot/dts/ti/k3-am654.dtsi
+new file mode 100644
+index 000000000000..bffa414180ea
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am654.dtsi
+@@ -0,0 +1,117 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for AM6 SoC family in Quad core configuration
++ *
++ * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++#include "k3-am6.dtsi"
++
++/ {
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu-map {
++			cluster0: cluster0 {
++				core0 {
++					cpu = <&cpu0>;
++				};
++
++				core1 {
++					cpu = <&cpu1>;
++				};
++			};
++
++			cluster1: cluster1 {
++				core0 {
++					cpu = <&cpu2>;
++				};
++
++				core1 {
++					cpu = <&cpu3>;
++				};
++			};
++		};
++
++		cpu0: cpu@0 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x000>;
++			device_type = "cpu";
++			enable-method = "psci";
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			next-level-cache = <&L2_0>;
++		};
++
++		cpu1: cpu@1 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x001>;
++			device_type = "cpu";
++			enable-method = "psci";
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			next-level-cache = <&L2_0>;
++		};
++
++		cpu2: cpu@100 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x100>;
++			device_type = "cpu";
++			enable-method = "psci";
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			next-level-cache = <&L2_1>;
++		};
++
++		cpu3: cpu@101 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x101>;
++			device_type = "cpu";
++			enable-method = "psci";
++			i-cache-size = <0x8000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <128>;
++			next-level-cache = <&L2_1>;
++		};
++	};
++};
++
++&soc0 {
++	L2_0: l2-cache0 {
++		compatible = "cache";
++		cache-level = <2>;
++		cache-size = <0x80000>;
++		cache-line-size = <64>;
++		cache-sets = <512>;
++		next-level-cache = <&msmc_l3>;
++	};
++
++	L2_1: l2-cache1 {
++		compatible = "cache";
++		cache-level = <2>;
++		cache-size = <0x80000>;
++		cache-line-size = <64>;
++		cache-sets = <512>;
++		next-level-cache = <&msmc_l3>;
++	};
++
++	msmc_l3: l3-cache0 {
++		compatible = "cache";
++		cache-level = <3>;
++	};
++};
+-- 
+2.15.1
+
+-- 
+Regards,
+Nishanth Menon
