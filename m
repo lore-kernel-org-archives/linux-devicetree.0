@@ -1,35 +1,58 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 0/4] Fix suspend resume on at91sam9261 and at91sam9263
-Date: Thu,  7 Jun 2018 10:41:03 +0200
-Message-ID: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
+Date: Thu, 7 Jun 2018 14:13:48 +0530
+Message-ID: <20180607084348.GG16230@vkoul-mobl>
+References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
+ <20180605061919.GQ16230@vkoul-mobl>
+ <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+ <20180606161733.GE510@tuxbook-pro>
+ <20180607041134.GF16230@vkoul-mobl>
+ <20180607042443.GK510@tuxbook-pro>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180607042443.GK510@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Sricharan R <sricharan@codeaurora.org>, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-USB clock detection may not work properly on at91sam9261 and at91sam9263
-because they currently use the same bit mask as at91rm9200 instead of
-the one for at91sam9260.
+On 06-06-18, 21:24, Bjorn Andersson wrote:
+> On Wed 06 Jun 21:11 PDT 2018, Vinod wrote:
+> 
+> > So, wouldn't Kconfig syntax something like where we say:
+> >         M if RPMSG_QCOM_GLINK_SMEM=m
+> >         bool if RPMSG_QCOM_GLINK_SMEM=y
+> > 
+> 
+> If we ignore SMD for a while we have the following combinations:
+> 
+> glink/wcss
+> y     y - valid
+> y     m - valid
+> y     n - valid
+> m     y - link failure (invalid)
+> m     m - valid
+> m     n - valid
+> n     y - valid (platform uses wcss, but not glink)
+> n     m - valid (-----"-----)
+> n     n - valid
+> 
+> So to distill this we have the two valid cases:
+> module/no if RPMSG_QCOM_GLINK_SMEM=m
+> yes/module/no if RPMSG_QCOM_GLINK_SMEM=y
+> 
+> and the way you express that in Kconfig is the somewhat awkward
+> 
+>   depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
 
-Take the opportunity to also change the PMC compatible strings for all
-the other SoCs in preparation for the new clock bindings.
+Understood now :) Yes it is awkward..
 
-Alexandre Belloni (4):
-  dt-bindings: arm: remove PMC bindings
-  dt-bindings: clk: at91: Document all the PMC compatibles
-  ARM: at91: fix USB clock detection handling
-  ARM: dts: fix PMC compatible
+Btw we seem to have issue with link fail here when glink is m and wcss
+is y. Why don't we see link fail for glink being n? Yes I understand that
+platform uses wcss but am curious how that works out :)
 
- .../devicetree/bindings/arm/atmel-pmc.txt          | 14 --------------
- .../devicetree/bindings/clock/at91-clock.txt       |  9 ++++-----
- arch/arm/boot/dts/at91sam9261.dtsi                 |  2 +-
- arch/arm/boot/dts/at91sam9263.dtsi                 |  2 +-
- arch/arm/boot/dts/at91sam9rl.dtsi                  |  2 +-
- arch/arm/boot/dts/sama5d4.dtsi                     |  2 +-
- arch/arm/mach-at91/pm.c                            |  5 +++++
- 7 files changed, 13 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/atmel-pmc.txt
-
+Thanks
 -- 
-2.17.1
+~Vinod
