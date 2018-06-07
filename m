@@ -1,127 +1,90 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v2 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
-Date: Thu, 7 Jun 2018 16:11:05 +0300
-Message-ID: <1528377065-647-1-git-send-email-stefan.popa@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 0/6] Driver for at91 usart in spi mode
+Date: Thu, 7 Jun 2018 16:18:02 +0300
+Message-ID: <CAHp75Vf=CC=UximfkB5a0-PHLiT6ugR4jH3NKdU3w=k=-kPnSA@mail.gmail.com>
+References: <20180607110020.20565-1-radu.pirea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180607110020.20565-1-radu.pirea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, Michael.Hennerich@analog.com, lars@metafoo.de
-Cc: knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Radu Pirea <radu.pirea@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, alexandre.belloni@bootlin.com, Lee Jones <lee.jones@linaro.org>, Richard Genoud <richard.genoud@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
-Changes in v2:
-	- Nothing changed, just to follow the patch set version.
+On Thu, Jun 7, 2018 at 2:00 PM, Radu Pirea <radu.pirea@microchip.com> wrote:
+> Hello,
+>
+> This is the second version of driver. I added a mfd driver which by
+> default probes atmel_serial driver and if in dt is specified to probe
+> the spi driver, then the spi-at91-usart driver will be probed. The
+> compatible for atmel_serial is now the compatible for at91-usart mfd
+> driver and compatilbe for atmel_serial driver was changed in order to
+> keep the bindings for serial as they are.
+>
 
- .../devicetree/bindings/iio/dac/ad5758.txt         | 84 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-new file mode 100644
-index 0000000..75fff6c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-@@ -0,0 +1,84 @@
-+Analog Devices AD5758 DAC device driver
-+
-+Required properties for the AD5758:
-+	- compatible: Must be "adi,ad5758"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use (< 50000000)
-+	- spi-cpha: is the only mode that is supported
-+
-+Optional properties:
-+
-+ - adi,dc-dc-mode: Mode of operation of the dc-to-dc converter
-+		   The following values are currently supported:
-+		   	* 0: DC-to-DC converter powered off
-+			* 1: DPC current mode
-+			* 2: DPC voltage mode
-+			* 3: PPC current mode
-+
-+ - adi,dc-dc-ilim: The dc-to-dc converter current limit
-+		   The following values are currently supported [mA]:
-+		   	* 150
-+			* 200
-+			* 250
-+			* 300
-+			* 350
-+			* 400
-+
-+ - adi,slew: Array of slewrate settings should contain 3 fields:
-+	1: Should be either 0 or 1 in order to enable or disable slewrate.
-+	2: Slew rate clock:
-+		Valid values for the slew rate update frequency [Hz]:
-+		* 240000
-+		* 200000
-+		* 150000
-+		* 128000
-+		* 64000
-+		* 32000
-+		* 16000
-+		* 8000
-+		* 4000
-+		* 2000
-+		* 1000
-+		* 512
-+		* 256
-+		* 128
-+		* 64
-+		* 16
-+	3: Slew rate step:
-+		Defines by how much the output value changes at each update.
-+		Valid values for the step size LSBs:
-+		* 4
-+		* 12
-+		* 64
-+		* 120
-+		* 256
-+		* 500
-+		* 1820
-+		* 2048
-+
-+ - adi,range: The output range
-+	      The following values are currently supported:
-+	      	* 0: 0 V to 5 V voltage range
-+		* 1: 0 V to 10 V voltage range
-+		* 2: ±5 V voltage range
-+		* 3: ±10 V voltage range
-+		* 8: 0 mA to 20 mA current range
-+		* 9: 0 mA to 24 mA current range
-+		* 10: 4 mA to 20 mA current range
-+		* 11: ±20 mA current range
-+		* 12: ±24 mA current range
-+		* 13: −1 mA to +22 mA current range
-+
-+AD5758 Example:
-+
-+	ad5758@0 {
-+		compatible = "adi,ad5758";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpha;
-+
-+		adi,dc-dc-mode = <2>;
-+		adi,dc-dc-ilim = <200>;
-+		adi,slew = <1 200000 12>;
-+		adi,range = <1>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1993779..f640146 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -808,6 +808,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/dac/ad5758.c
-+F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
- 
- ANALOG DEVICES INC AD9389B DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
+for patches 3, 5, 6 only.
+
+> Changes in v1:
+> - added spi-at91-usart driver
+>
+> Changes in v2:
+> - added at91-usart mfd driver
+> - modified spi-at91-usart driver to work as mfd driver child
+> - modified atmel_serial driver to work as mfd driver child
+>
+> Changes in v3:
+> - fixed spi slaves probing
+>
+> Changes in v4:
+> - modified the spi driver to use cs gpio support form spi subsystem
+> - fixed dma transfers for serial driver
+> - squashed binding for spi and serial and moved them to mfd/atmel-usart.txt
+>
+> Changes in v5:
+> - fixed usage of stdout-path property with atmel_serial driver
+>
+> Changes in v6:
+> - removed unused compatible strings from serial and spi drivers
+>
+> Radu Pirea (6):
+>   MAINTAINERS: add at91 usart mfd driver
+>   dt-bindings: add binding for atmel-usart in SPI mode
+>   mfd: at91-usart: added mfd driver for usart
+>   MAINTAINERS: add at91 usart spi driver
+>   spi: at91-usart: add driver for at91-usart as spi
+>   tty/serial: atmel: change the driver to work under at91-usart mfd
+>
+>  .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
+>  MAINTAINERS                                   |  16 +
+>  drivers/mfd/Kconfig                           |   9 +
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/at91-usart.c                      |  68 +++
+>  drivers/spi/Kconfig                           |   9 +
+>  drivers/spi/Makefile                          |   1 +
+>  drivers/spi/spi-at91-usart.c                  | 434 ++++++++++++++++++
+>  drivers/tty/serial/Kconfig                    |   1 +
+>  drivers/tty/serial/atmel_serial.c             |  42 +-
+>  include/dt-bindings/mfd/at91-usart.h          |  17 +
+>  11 files changed, 606 insertions(+), 17 deletions(-)
+>  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
+>  create mode 100644 drivers/mfd/at91-usart.c
+>  create mode 100644 drivers/spi/spi-at91-usart.c
+>  create mode 100644 include/dt-bindings/mfd/at91-usart.h
+>
+> --
+> 2.17.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
