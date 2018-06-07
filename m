@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 03/10] dt-binding: ptp_qoriq: add DPAA FMan support
-Date: Thu,  7 Jun 2018 11:22:49 +0800
-Message-ID: <20180607032256.39802-4-yangbo.lu@nxp.com>
+Subject: [v2, 05/10] arm64: dts: fsl: move ptp timer out of fman
+Date: Thu,  7 Jun 2018 11:22:51 +0800
+Message-ID: <20180607032256.39802-6-yangbo.lu@nxp.com>
 References: <20180607032256.39802-1-yangbo.lu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180607032256.39802-1-yangbo.lu@nxp.com>
@@ -10,93 +10,54 @@ To: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochr
 Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add bindings description for DPAA
-FMan 1588 timer, and also remove its description in
-fsl-fman dt-bindings document.
+This patch is to move ptp timer node out of fman.
+Because ptp timer will be probed by ptp_qoriq driver,
+it should be an independent device in case of conflict
+memory mapping.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
-	- None.
+	- Fixed address-cells for ptp-timer.
 ---
- Documentation/devicetree/bindings/net/fsl-fman.txt |   25 +-------------------
- .../devicetree/bindings/ptp/ptp-qoriq.txt          |   15 +++++++++--
- 2 files changed, 13 insertions(+), 27 deletions(-)
+ arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi |   14 ++++++++------
+ 1 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fman.txt b/Documentation/devicetree/bindings/net/fsl-fman.txt
-index df873d1..74603dd 100644
---- a/Documentation/devicetree/bindings/net/fsl-fman.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fman.txt
-@@ -356,30 +356,7 @@ ethernet@e0000 {
- ============================================================================
- FMan IEEE 1588 Node
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
+index 4dd0676..a56a408 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
+@@ -11,13 +11,14 @@ fman0: fman@1a00000 {
+ 	#size-cells = <1>;
+ 	cell-index = <0>;
+ 	compatible = "fsl,fman";
+-	ranges = <0x0 0x0 0x1a00000 0x100000>;
+-	reg = <0x0 0x1a00000 0x0 0x100000>;
++	ranges = <0x0 0x0 0x1a00000 0xfe000>;
++	reg = <0x0 0x1a00000 0x0 0xfe000>;
+ 	interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
+ 		     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 	clocks = <&clockgen 3 0>;
+ 	clock-names = "fmanclk";
+ 	fsl,qman-channel-range = <0x800 0x10>;
++	ptimer-handle = <&ptp_timer0>;
  
--DESCRIPTION
--
--The FMan interface to support IEEE 1588
--
--
--PROPERTIES
--
--- compatible
--		Usage: required
--		Value type: <stringlist>
--		Definition: A standard property.
--		Must include "fsl,fman-ptp-timer".
--
--- reg
--		Usage: required
--		Value type: <prop-encoded-array>
--		Definition: A standard property.
--
--EXAMPLE
--
--ptp-timer@fe000 {
--	compatible = "fsl,fman-ptp-timer";
--	reg = <0xfe000 0x1000>;
--};
-+Refer to Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
+ 	muram@0 {
+ 		compatible = "fsl,fman-muram";
+@@ -73,9 +74,10 @@ fman0: fman@1a00000 {
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xfd000 0x1000>;
+ 	};
++};
  
- =============================================================================
- FMan MDIO Node
-diff --git a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-index 0f569d8..c5d0e79 100644
---- a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-+++ b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-@@ -2,7 +2,8 @@
- 
- General Properties:
- 
--  - compatible   Should be "fsl,etsec-ptp"
-+  - compatible   Should be "fsl,etsec-ptp" for eTSEC
-+                 Should be "fsl,fman-ptp-timer" for DPAA FMan
-   - reg          Offset and length of the register set for the device
-   - interrupts   There should be at least two interrupts. Some devices
-                  have as many as four PTP related interrupts.
-@@ -43,14 +44,22 @@ Clock Properties:
-   value, which will be directly written in those bits, that is why,
-   according to reference manual, the next clock sources can be used:
- 
-+  For eTSEC,
-   <0> - external high precision timer reference clock (TSEC_TMR_CLK
-         input is used for this purpose);
-   <1> - eTSEC system clock;
-   <2> - eTSEC1 transmit clock;
-   <3> - RTC clock input.
- 
--  When this attribute is not used, eTSEC system clock will serve as
--  IEEE 1588 timer reference clock.
-+  For DPAA FMan,
-+  <0> - external high precision timer reference clock (TMR_1588_CLK)
-+  <1> - MAC system clock (1/2 FMan clock)
-+  <2> - reserved
-+  <3> - RTC clock oscillator
-+
-+  When this attribute is not used, the IEEE 1588 timer reference clock
-+  will use the eTSEC system clock (for Gianfar) or the MAC system
-+  clock (for DPAA).
- 
- Example:
- 
+-	ptp_timer0: ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
++ptp_timer0: ptp-timer@1afe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0x0 0x1afe000 0x0 0x1000>;
++	interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ };
 -- 
 1.7.1
