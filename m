@@ -1,69 +1,52 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
-Date: Thu, 7 Jun 2018 15:02:12 +0530
-Message-ID: <f5b05d4f-29d6-c698-3618-4ad6e42aef54@codeaurora.org>
-References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
- <20180605061919.GQ16230@vkoul-mobl>
- <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
- <20180606161733.GE510@tuxbook-pro> <20180607041134.GF16230@vkoul-mobl>
- <20180607042443.GK510@tuxbook-pro> <20180607084348.GG16230@vkoul-mobl>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v3 4/6] bus: ti-sysc: Add support for software reset
+Date: Thu, 7 Jun 2018 15:54:01 +0530
+Message-ID: <a169ba7f-53f2-cf9a-a9ee-daffd6b53279@ti.com>
+References: <20180606060826.14671-1-faiz_abbas@ti.com>
+ <20180606060826.14671-5-faiz_abbas@ti.com>
+ <20180607073530.GH5738@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607084348.GG16230@vkoul-mobl>
+In-Reply-To: <20180607073530.GH5738@atomide.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mark.rutland@arm.com, paul@pwsan.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Hi,
 
-On 6/7/2018 2:13 PM, Vinod wrote:
-> On 06-06-18, 21:24, Bjorn Andersson wrote:
->> On Wed 06 Jun 21:11 PDT 2018, Vinod wrote:
->>
->>> So, wouldn't Kconfig syntax something like where we say:
->>>         M if RPMSG_QCOM_GLINK_SMEM=m
->>>         bool if RPMSG_QCOM_GLINK_SMEM=y
->>>
->>
->> If we ignore SMD for a while we have the following combinations:
->>
->> glink/wcss
->> y     y - valid
->> y     m - valid
->> y     n - valid
->> m     y - link failure (invalid)
->> m     m - valid
->> m     n - valid
->> n     y - valid (platform uses wcss, but not glink)
->> n     m - valid (-----"-----)
->> n     n - valid
->>
->> So to distill this we have the two valid cases:
->> module/no if RPMSG_QCOM_GLINK_SMEM=m
->> yes/module/no if RPMSG_QCOM_GLINK_SMEM=y
->>
->> and the way you express that in Kconfig is the somewhat awkward
->>
->>   depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+On Thursday 07 June 2018 01:05 PM, Tony Lindgren wrote:
+> * Faiz Abbas <faiz_abbas@ti.com> [180606 06:14]:
+>> +static int sysc_reset(struct sysc *ddata)
+>> +{
+>> +	int offset = ddata->offsets[SYSC_SYSCONFIG];
+>> +	int val = sysc_read(ddata, offset);
+>> +
+>> +	val |= (0x1 << ddata->cap->regbits->srst_shift);
+>> +	sysc_write(ddata, offset, val);
+>> +
+>> +	/* Poll on reset status */
+>> +	if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
+>> +		offset = ddata->offsets[SYSC_SYSSTATUS];
+>> +
+>> +		return readl_poll_timeout(ddata->module_va + offset, val,
+>> +				(val & ddata->cfg.syss_mask) == 0x0,
+>> +				100, MAX_MODULE_SOFTRESET_WAIT);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
 > 
-> Understood now :) Yes it is awkward..
-> 
-> Btw we seem to have issue with link fail here when glink is m and wcss
-> is y. Why don't we see link fail for glink being n? Yes I understand that
-> platform uses wcss but am curious how that works out :)
- 
-For glink being n, the stub functions gets linked, and not for glink=m.
+> I wonder if we should also add SYSS_QUIRK_RESET_STATUS in
+> addition to SYSC_QUIRK_RESET status to make it easy to
+> read the right register?
 
-Regards,
- Sricharan
+I assumed SYSC_QUIRK is the prefix to indicate the ti-sysc driver not
+the register. Are there layouts in which the reset status bit is in the
+sysconfig register rather than the sysstatus register?
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+Thanks,
+Faiz
