@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 09/10] dpaa_eth: add support for hardware timestamping
-Date: Thu,  7 Jun 2018 11:22:55 +0800
-Message-ID: <20180607032256.39802-10-yangbo.lu@nxp.com>
+Subject: [v2, 04/10] powerpc/mpc85xx: move ptp timer out of fman in dts
+Date: Thu,  7 Jun 2018 11:22:50 +0800
+Message-ID: <20180607032256.39802-5-yangbo.lu@nxp.com>
 References: <20180607032256.39802-1-yangbo.lu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180607032256.39802-1-yangbo.lu@nxp.com>
@@ -10,213 +10,197 @@ To: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochr
 Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add hardware timestamping support
-for dpaa_eth. On Rx, timestamping is enabled for
-all frames. On Tx, we only instruct the hardware
-to timestamp the frames marked accordingly by the
-stack.
+This patch is to move ptp timer node out of fman.
+Because ptp timer will be probed by ptp_qoriq driver,
+it should be an independent device in case of conflict
+memory mapping.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
-	- Removed ifdef for timestamp code.
-	- Minor fixes for code style.
+	- None.
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |  101 ++++++++++++++++++++++-
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.h |    3 +
- 2 files changed, 99 insertions(+), 5 deletions(-)
+ arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi   |   14 ++++++++------
+ arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi   |   14 ++++++++------
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi  |   14 ++++++++------
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi  |   14 ++++++++------
+ arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi |   14 ++++++++------
+ 5 files changed, 40 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index fd43f98..bd589ac 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1168,7 +1168,7 @@ static int dpaa_eth_init_tx_port(struct fman_port *port, struct dpaa_fq *errq,
- 	buf_prefix_content.priv_data_size = buf_layout->priv_data_size;
- 	buf_prefix_content.pass_prs_result = true;
- 	buf_prefix_content.pass_hash_result = true;
--	buf_prefix_content.pass_time_stamp = false;
-+	buf_prefix_content.pass_time_stamp = true;
- 	buf_prefix_content.data_align = DPAA_FD_DATA_ALIGNMENT;
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi
+index abd01d4..6b124f7 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi
+@@ -37,12 +37,13 @@ fman0: fman@400000 {
+ 	#size-cells = <1>;
+ 	cell-index = <0>;
+ 	compatible = "fsl,fman";
+-	ranges = <0 0x400000 0x100000>;
+-	reg = <0x400000 0x100000>;
++	ranges = <0 0x400000 0xfe000>;
++	reg = <0x400000 0xfe000>;
+ 	interrupts = <96 2 0 0>, <16 2 1 1>;
+ 	clocks = <&clockgen 3 0>;
+ 	clock-names = "fmanclk";
+ 	fsl,qman-channel-range = <0x40 0xc>;
++	ptimer-handle = <&ptp_timer0>;
  
- 	params.specific_params.non_rx_params.err_fqid = errq->fqid;
-@@ -1210,7 +1210,7 @@ static int dpaa_eth_init_rx_port(struct fman_port *port, struct dpaa_bp **bps,
- 	buf_prefix_content.priv_data_size = buf_layout->priv_data_size;
- 	buf_prefix_content.pass_prs_result = true;
- 	buf_prefix_content.pass_hash_result = true;
--	buf_prefix_content.pass_time_stamp = false;
-+	buf_prefix_content.pass_time_stamp = true;
- 	buf_prefix_content.data_align = DPAA_FD_DATA_ALIGNMENT;
+ 	muram@0 {
+ 		compatible = "fsl,fman-muram";
+@@ -93,9 +94,10 @@ fman0: fman@400000 {
+ 		reg = <0x87000 0x1000>;
+ 		status = "disabled";
+ 	};
++};
  
- 	rx_p = &params.specific_params.rx_params;
-@@ -1592,6 +1592,16 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
- 	return 0;
- }
- 
-+static int dpaa_get_tstamp_ns(struct net_device *net_dev, u64 *ns,
-+			      struct fman_port *port, const void *data)
-+{
-+	if (!fman_port_get_tstamp_field(port, data, ns)) {
-+		be64_to_cpus(ns);
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
- /* Cleanup function for outgoing frame descriptors that were built on Tx path,
-  * either contiguous frames or scatter/gather ones.
-  * Skb freeing is not handled here.
-@@ -1607,14 +1617,29 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
- {
- 	const enum dma_data_direction dma_dir = DMA_TO_DEVICE;
- 	struct device *dev = priv->net_dev->dev.parent;
-+	struct skb_shared_hwtstamps shhwtstamps;
- 	dma_addr_t addr = qm_fd_addr(fd);
- 	const struct qm_sg_entry *sgt;
- 	struct sk_buff **skbh, *skb;
- 	int nr_frags, i;
-+	u64 ns;
- 
- 	skbh = (struct sk_buff **)phys_to_virt(addr);
- 	skb = *skbh;
- 
-+	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
-+		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
-+
-+		if (!dpaa_get_tstamp_ns(priv->net_dev, &ns,
-+					priv->mac_dev->port[TX],
-+					(void *)skbh)) {
-+			shhwtstamps.hwtstamp = ns_to_ktime(ns);
-+			skb_tstamp_tx(skb, &shhwtstamps);
-+		} else {
-+			dev_warn(dev, "dpaa_get_tstamp_ns failed!\n");
-+		}
-+	}
-+
- 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
- 		nr_frags = skb_shinfo(skb)->nr_frags;
- 		dma_unmap_single(dev, addr, qm_fd_get_offset(fd) +
-@@ -2086,6 +2111,11 @@ static int dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- 	if (unlikely(err < 0))
- 		goto skb_to_fd_failed;
- 
-+	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
-+		fd.cmd |= FM_FD_CMD_UPD;
-+		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
-+	}
-+
- 	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) == 0))
- 		return NETDEV_TX_OK;
- 
-@@ -2227,6 +2257,7 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
- 						struct qman_fq *fq,
- 						const struct qm_dqrr_entry *dq)
- {
-+	struct skb_shared_hwtstamps *shhwtstamps;
- 	struct rtnl_link_stats64 *percpu_stats;
- 	struct dpaa_percpu_priv *percpu_priv;
- 	const struct qm_fd *fd = &dq->fd;
-@@ -2240,6 +2271,7 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
- 	struct sk_buff *skb;
- 	int *count_ptr;
- 	void *vaddr;
-+	u64 ns;
- 
- 	fd_status = be32_to_cpu(fd->status);
- 	fd_format = qm_fd_get_format(fd);
-@@ -2304,6 +2336,18 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
- 	if (!skb)
- 		return qman_cb_dqrr_consume;
- 
-+	if (priv->rx_tstamp) {
-+		shhwtstamps = skb_hwtstamps(skb);
-+		memset(shhwtstamps, 0, sizeof(*shhwtstamps));
-+
-+		if (!dpaa_get_tstamp_ns(priv->net_dev, &ns,
-+					priv->mac_dev->port[RX],
-+					vaddr))
-+			shhwtstamps->hwtstamp = ns_to_ktime(ns);
-+		else
-+			dev_warn(net_dev->dev.parent, "dpaa_get_tstamp_ns failed!\n");
-+	}
-+
- 	skb->protocol = eth_type_trans(skb, net_dev);
- 
- 	if (net_dev->features & NETIF_F_RXHASH && priv->keygen_in_use &&
-@@ -2523,11 +2567,58 @@ static int dpaa_eth_stop(struct net_device *net_dev)
- 	return err;
- }
- 
-+static int dpaa_ts_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
-+{
-+	struct dpaa_priv *priv = netdev_priv(dev);
-+	struct hwtstamp_config config;
-+
-+	if (copy_from_user(&config, rq->ifr_data, sizeof(config)))
-+		return -EFAULT;
-+
-+	switch (config.tx_type) {
-+	case HWTSTAMP_TX_OFF:
-+		/* Couldn't disable rx/tx timestamping separately.
-+		 * Do nothing here.
-+		 */
-+		priv->tx_tstamp = false;
-+		break;
-+	case HWTSTAMP_TX_ON:
-+		priv->mac_dev->set_tstamp(priv->mac_dev->fman_mac, true);
-+		priv->tx_tstamp = true;
-+		break;
-+	default:
-+		return -ERANGE;
-+	}
-+
-+	if (config.rx_filter == HWTSTAMP_FILTER_NONE) {
-+		/* Couldn't disable rx/tx timestamping separately.
-+		 * Do nothing here.
-+		 */
-+		priv->rx_tstamp = false;
-+	} else {
-+		priv->mac_dev->set_tstamp(priv->mac_dev->fman_mac, true);
-+		priv->rx_tstamp = true;
-+		/* TS is set for all frame types, not only those requested */
-+		config.rx_filter = HWTSTAMP_FILTER_ALL;
-+	}
-+
-+	return copy_to_user(rq->ifr_data, &config, sizeof(config)) ?
-+			-EFAULT : 0;
-+}
-+
- static int dpaa_ioctl(struct net_device *net_dev, struct ifreq *rq, int cmd)
- {
--	if (!net_dev->phydev)
--		return -EINVAL;
--	return phy_mii_ioctl(net_dev->phydev, rq, cmd);
-+	int ret = -EINVAL;
-+
-+	if (cmd == SIOCGMIIREG) {
-+		if (net_dev->phydev)
-+			return phy_mii_ioctl(net_dev->phydev, rq, cmd);
-+	}
-+
-+	if (cmd == SIOCSHWTSTAMP)
-+		return dpaa_ts_ioctl(net_dev, rq, cmd);
-+
-+	return ret;
- }
- 
- static const struct net_device_ops dpaa_ops = {
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
-index bd94220..af320f8 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.h
-@@ -182,6 +182,9 @@ struct dpaa_priv {
- 
- 	struct dpaa_buffer_layout buf_layout[2];
- 	u16 rx_headroom;
-+
-+	bool tx_tstamp; /* Tx timestamping enabled */
-+	bool rx_tstamp; /* Rx timestamping enabled */
+-	ptp_timer0: ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
++ptp_timer0: ptp-timer@4fe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0x4fe000 0x1000>;
++	interrupts = <96 2 0 0>;
  };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi
+index debea75..b80aaf5 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi
+@@ -37,12 +37,13 @@ fman1: fman@500000 {
+ 	#size-cells = <1>;
+ 	cell-index = <1>;
+ 	compatible = "fsl,fman";
+-	ranges = <0 0x500000 0x100000>;
+-	reg = <0x500000 0x100000>;
++	ranges = <0 0x500000 0xfe000>;
++	reg = <0x500000 0xfe000>;
+ 	interrupts = <97 2 0 0>, <16 2 1 0>;
+ 	clocks = <&clockgen 3 1>;
+ 	clock-names = "fmanclk";
+ 	fsl,qman-channel-range = <0x60 0xc>;
++	ptimer-handle = <&ptp_timer1>;
  
- /* from dpaa_ethtool.c */
+ 	muram@0 {
+ 		compatible = "fsl,fman-muram";
+@@ -93,9 +94,10 @@ fman1: fman@500000 {
+ 		reg = <0x87000 0x1000>;
+ 		status = "disabled";
+ 	};
++};
+ 
+-	ptp_timer1: ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
++ptp_timer1: ptp-timer@5fe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0x5fe000 0x1000>;
++	interrupts = <97 2 0 0>;
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi
+index 3a20e0d..d3720fd 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi
+@@ -37,12 +37,13 @@ fman0: fman@400000 {
+ 	#size-cells = <1>;
+ 	cell-index = <0>;
+ 	compatible = "fsl,fman";
+-	ranges = <0 0x400000 0x100000>;
+-	reg = <0x400000 0x100000>;
++	ranges = <0 0x400000 0xfe000>;
++	reg = <0x400000 0xfe000>;
+ 	interrupts = <96 2 0 0>, <16 2 1 1>;
+ 	clocks = <&clockgen 3 0>;
+ 	clock-names = "fmanclk";
+ 	fsl,qman-channel-range = <0x800 0x10>;
++	ptimer-handle = <&ptp_timer0>;
+ 
+ 	muram@0 {
+ 		compatible = "fsl,fman-muram";
+@@ -98,9 +99,10 @@ fman0: fman@400000 {
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xfd000 0x1000>;
+ 	};
++};
+ 
+-	ptp_timer0: ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
++ptp_timer0: ptp-timer@4fe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0x4fe000 0x1000>;
++	interrupts = <96 2 0 0>;
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi
+index 82750ac..ae34c20 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi
+@@ -37,12 +37,13 @@ fman1: fman@500000 {
+ 	#size-cells = <1>;
+ 	cell-index = <1>;
+ 	compatible = "fsl,fman";
+-	ranges = <0 0x500000 0x100000>;
+-	reg = <0x500000 0x100000>;
++	ranges = <0 0x500000 0xfe000>;
++	reg = <0x500000 0xfe000>;
+ 	interrupts = <97 2 0 0>, <16 2 1 0>;
+ 	clocks = <&clockgen 3 1>;
+ 	clock-names = "fmanclk";
+ 	fsl,qman-channel-range = <0x820 0x10>;
++	ptimer-handle = <&ptp_timer1>;
+ 
+ 	muram@0 {
+ 		compatible = "fsl,fman-muram";
+@@ -98,9 +99,10 @@ fman1: fman@500000 {
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xfd000 0x1000>;
+ 	};
++};
+ 
+-	ptp_timer1: ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
++ptp_timer1: ptp-timer@5fe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0x5fe000 0x1000>;
++	interrupts = <97 2 0 0>;
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi
+index 7f60b60..02f2755 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi
+@@ -37,12 +37,13 @@ fman0: fman@400000 {
+ 	#size-cells = <1>;
+ 	cell-index = <0>;
+ 	compatible = "fsl,fman";
+-	ranges = <0 0x400000 0x100000>;
+-	reg = <0x400000 0x100000>;
++	ranges = <0 0x400000 0xfe000>;
++	reg = <0x400000 0xfe000>;
+ 	interrupts = <96 2 0 0>, <16 2 1 1>;
+ 	clocks = <&clockgen 3 0>;
+ 	clock-names = "fmanclk";
+ 	fsl,qman-channel-range = <0x800 0x10>;
++	ptimer-handle = <&ptp_timer0>;
+ 
+ 	muram@0 {
+ 		compatible = "fsl,fman-muram";
+@@ -86,9 +87,10 @@ fman0: fman@400000 {
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xfd000 0x1000>;
+ 	};
++};
+ 
+-	ptp_timer0: ptp-timer@fe000 {
+-		compatible = "fsl,fman-ptp-timer";
+-		reg = <0xfe000 0x1000>;
+-	};
++ptp_timer0: ptp-timer@4fe000 {
++	compatible = "fsl,fman-ptp-timer";
++	reg = <0x4fe000 0x1000>;
++	interrupts = <96 2 0 0>;
+ };
 -- 
 1.7.1
