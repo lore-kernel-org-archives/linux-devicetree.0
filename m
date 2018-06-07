@@ -1,55 +1,35 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 1/4] dt-bindings: arm: remove PMC bindings
-Date: Thu,  7 Jun 2018 10:41:04 +0200
-Message-ID: <20180607084107.4461-2-alexandre.belloni@bootlin.com>
-References: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 0/4] Fix suspend resume on at91sam9261 and at91sam9263
+Date: Thu,  7 Jun 2018 10:41:03 +0200
+Message-ID: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The PMC bindings are fully described in
-Documentation/devicetree/bindings/clock/at91-clock.txt. Remove the
-duplicate and incomplete documentation.
+USB clock detection may not work properly on at91sam9261 and at91sam9263
+because they currently use the same bit mask as at91rm9200 instead of
+the one for at91sam9260.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
+Take the opportunity to also change the PMC compatible strings for all
+the other SoCs in preparation for the new clock bindings.
+
+Alexandre Belloni (4):
+  dt-bindings: arm: remove PMC bindings
+  dt-bindings: clk: at91: Document all the PMC compatibles
+  ARM: at91: fix USB clock detection handling
+  ARM: dts: fix PMC compatible
+
  .../devicetree/bindings/arm/atmel-pmc.txt          | 14 --------------
- 1 file changed, 14 deletions(-)
+ .../devicetree/bindings/clock/at91-clock.txt       |  9 ++++-----
+ arch/arm/boot/dts/at91sam9261.dtsi                 |  2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi                 |  2 +-
+ arch/arm/boot/dts/at91sam9rl.dtsi                  |  2 +-
+ arch/arm/boot/dts/sama5d4.dtsi                     |  2 +-
+ arch/arm/mach-at91/pm.c                            |  5 +++++
+ 7 files changed, 13 insertions(+), 23 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/arm/atmel-pmc.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-pmc.txt b/Documentation/devicetree/bindings/arm/atmel-pmc.txt
-deleted file mode 100644
-index 795cc78543fe..000000000000
---- a/Documentation/devicetree/bindings/arm/atmel-pmc.txt
-+++ /dev/null
-@@ -1,14 +0,0 @@
--* Power Management Controller (PMC)
--
--Required properties:
--- compatible: Should be "atmel,<chip>-pmc".
--	<chip> can be: at91rm9200, at91sam9260, at91sam9g45, at91sam9n12,
--	at91sam9x5, sama5d3
--
--- reg: Should contain PMC registers location and length
--
--Examples:
--	pmc: pmc@fffffc00 {
--		compatible = "atmel,at91rm9200-pmc";
--		reg = <0xfffffc00 0x100>;
--	};
 -- 
 2.17.1
