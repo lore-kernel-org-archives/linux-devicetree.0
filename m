@@ -1,115 +1,135 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
-Date: Thu, 7 Jun 2018 10:54:52 -0500
-Message-ID: <CAL_JsqLn+x0JCkjwABU7XkPsgvyVdiCRq=gZTfUBbbR4-c+1bQ@mail.gmail.com>
-References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528198148-23308-3-git-send-email-michel.pollet@bp.renesas.com>
- <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com> <OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
- <9cef7124-3020-5741-f3a2-6925a6c8f0f3@gmail.com> <79c0899e-7df1-1fe7-9681-ad3bd51feda7@gmail.com>
- <OSBPR01MB205442B483C792125E6A6AF7D2640@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 0/3] ASoC: stm32: sai: add support of
+ iec958 controls
+Date: Thu, 7 Jun 2018 18:02:36 +0200
+Message-ID: <5ab41e6d-eccf-df75-4c17-9dbadf05b5b7@st.com>
+References: <1520958428-10930-1-git-send-email-olivier.moysan@st.com>
+ <a0552849-47fa-dc72-a512-a3e075adb07f@st.com>
+ <20180417111733.GG8973@sirena.org.uk>
+ <2ae6c5b6-872a-9aaa-6ca4-e29adb7c8bc0@st.com> <s5hpo15xf1q.wl-tiwai@suse.de>
+ <c4b2d22f-320d-a415-6328-b33f9c03aafe@st.com> <s5hpo14w8k6.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OSBPR01MB205442B483C792125E6A6AF7D2640@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Douglas Anderson <dianders@chromium.org>, Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@endlessm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>Fr
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <s5hpo14w8k6.wl-tiwai@suse.de>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Olivier MOYSAN <olivier.moysan@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "jsarha@ti.com" <jsarha@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "rmk@arm.linux.org.uk" <rmk@arm.linux.org.uk>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 7, 2018 at 1:59 AM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> On 06 June 2018 22:53, Frank wrote:
->> On 06/06/18 14:48, Frank Rowand wrote:
->> > On 06/05/18 23:36, Michel Pollet wrote:
->> >> Hi Frank,
->> >>
->> >> On 05 June 2018 18:34, Frank wrote:
->> >>> On 06/05/18 04:28, Michel Pollet wrote:
->> >>>> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot
->> >>>> time, it requires a special enable method to get it started.
-
-[...]
-
->> >>>> + * The second CPU is parked in ROM at boot time. It requires
->> >>>> +waking it after
->> >>>> + * writing an address into the BOOTADDR register of sysctrl.
->> >>>> + *
->> >>>> + * So the default value of the "cpu-release-addr" corresponds to
->> >>> BOOTADDR...
->> >>>> + *
->> >>>> + * *However* the BOOTADDR register is not available when the
->> >>>> +kernel
->> >>>> + * starts in NONSEC mode.
->> >>>> + *
->> >>>> + * So for NONSEC mode, the bootloader re-parks the second CPU into
->> >>>> +a pen
->> >>>> + * in SRAM, and changes the "cpu-release-addr" of linux's DT to a
->> >>>> +SRAM address,
->> >>>> + * which is not restricted.
->> >>>
->> >>> The binding document for cpu-release-addr does not have a definition
->> >>> for 32 bit arm.  The existing definition is only 64 bit arm.  Please
->> >>> add the definition for 32 bit arm to patch 1.
->> >>
->> >> Hmmm I do find a definition in
->> >> Documentation/devicetree/bindings/arm/cpus.txt -- just under where I
->> >> added my 'enable-method' -- And it is already used as 32 bits in at
->> >> least arch/arm/boot/dts/stih407-family.dtsi.
->> >
->> > If the correct answer is for cpu-release-addr to be 64 bits in certain
->> > cases (that discussion is ongoing further downthread) then one
->> > approach to maintain compatibility _and_ to fix the devicetree source
->> > files is to change the source code that currently gets
->> > cpu-release-addr as a
->> > 32 bit object to check the size of the property and get it as either a
->> > 32 bit or 64 bit object, based on the actual size of the property in
->> > the device tree and then change the value in the devicetree source
->> > files to be two cells.  BUT this does not consider the bootloader
->> > complication.  arch/arm/boot/dts/axm5516-cpus.dtsi has a note "//
->> > Fixed by the boot loader", so the boot loader also has to be modified
->> > to be able to handle the possibility that the property could be either
->> > 32 bits or 64 bits.  I don't know how to maintain compatibility with
->> > the boot loader since we can't force it to change synchronously with
->> > changes in the kernel.
->> >
->> > You can consider this comment to be a drive-by observation.  I think
->> > Rob and Geert and people like that are likely to be more helpful with
->> > what to actually do, and you can treat my comment more as pointing out
->> > the issue than as providing the perfect solution.
->>
->> Darn it, hit <send> too quickly.
->>
->> I meant to mention that there are several devicetree source files that have a
->> single cell value for cpu-release-addr, and thus potentially face the same
->> situation, depending on what the final decision is on the proper size for cpu-
->> release-addr. As of v4.17, a git grep shows one cell values in:
->>
->>   arch/arm/boot/dts/axm5516-cpus.dtsi
->>   arch/arm/boot/dts/stih407-family.dtsi
->>   arch/arm/boot/dts/stih418.dtsi
->
-> Yes, I had grepped before I used 32 bits on mine...
->
-> Now, what is the decision here? Our bootloader is already modified to set it to 32 bits, so I propose that
-
-And too late to fix the bootloader?
-
->
-> + I change the driver to handle 32 and 64 bits properties
-
-That's fine if you can't fix the bootloader.
-
-> + I add this to the cpu.txt, as a separate patch:
-> # On other systems, the property can be either
->   32 bits or 64 bits, it is the driver's responsibility
->   to deal with either sizes.
-
-That is definitely not what we want to say. Use of 32-bit should be
-considered out of spec. Yes, we have a few platforms in that category,
-but they already handle that themselves. Would be nice to fix them,
-but at least the STi platforms don't seem too active.
-
-IMO, we should delete whatever text we can here and at most just refer
-to the spec.
-
-Rob
+CgpPbiAwNi8wNi8yMDE4IDExOjQ3IEFNLCBUYWthc2hpIEl3YWkgd3JvdGU6Cj4gT24gV2VkLCAw
+NiBKdW4gMjAxOCAxMTozMTo0NSArMDIwMCwKPiBBcm5hdWQgUG91bGlxdWVuIHdyb3RlOgo+PiAK
+Pj4gCj4+IAo+PiBPbiAwNi8wNS8yMDE4IDA4OjI5IFBNLCBUYWthc2hpIEl3YWkgd3JvdGU6Cj4+
+ID4gT24gVHVlLCAwNSBKdW4gMjAxOCAxNzo1MDo1NyArMDIwMCwKPj4gPiBBcm5hdWQgUG91bGlx
+dWVuIHdyb3RlOgo+PiA+PiAKPj4gPj4gSGkgVGFrYXNoaSwKPj4gPj4gCj4+ID4+IE9uIDA0LzE3
+LzIwMTggMDE6MTcgUE0sIE1hcmsgQnJvd24gd3JvdGU6Cj4+ID4+ID4gT24gVHVlLCBBcHIgMTcs
+IDIwMTggYXQgMDg6Mjk6MTdBTSArMDAwMCwgT2xpdmllciBNT1lTQU4gd3JvdGU6Cj4+ID4+ID4g
+Cj4+ID4+ID4+IEkgZ3Vlc3MgdGhlIGJsb2NraW5nIHBhdGNoIGluIHRoaXMgcGF0Y2hzZXQgaXMg
+dGhlIHBhdGNoICJhZGQgSUVDOTU4IAo+PiA+PiA+PiBjaGFubmVsIHN0YXR1cyBjb250cm9sIGhl
+bHBlciIuIFRoaXMgcGF0Y2ggaGFzIGJlZW4gcmV2aWV3ZWQgc2V2ZXJhbCAKPj4gPj4gPj4gdGlt
+ZXMsIGJ1dCBkaWQgbm90IGdldCBhIGFjayBzbyBmYXIuCj4+ID4+ID4+IElmIHlvdSB0aGluayB0
+aGVzZSBoZWxwZXJzIHdpbGwgbm90IGJlIG1lcmdlZCwgSSB3aWxsIHJlaW50ZWdyYXRlIHRoZSAK
+Pj4gPj4gPj4gY29ycmVzcG9uZGluZyBjb2RlIGluIHN0bSBkcml2ZXIuCj4+ID4+ID4+IFBsZWFz
+ZSBsZXQgbWUga25vdywgaWYgSSBuZWVkIHRvIHByZXBhcmUgYSB2MiB3aXRob3V0IGhlbHBlcnMs
+IG9yIGlmIHdlIAo+PiA+PiA+PiBjYW4gZ28gZnVydGhlciBpbiB0aGUgcmV2aWV3IG9mIGllYyBo
+ZWxwZXJzIHBhdGNoID8KPj4gPj4gPiAKPj4gPj4gPiBJIGRvbid0IG1pbmQgZWl0aGVyIHdheSBi
+dXQgeW91J3JlIHJpZ2h0IGhlcmUsIEknbSB3YWl0aW5nIGZvciBUYWthc2hpCj4+ID4+ID4gdG8g
+cmV2aWV3IHRoZSBmaXJzdCBwYXRjaC7CoCBJJ2QgcHJvYmFibHkgYmUgT0sgd2l0aCBpdCBqdXN0
+IGludGVncmF0ZWQKPj4gPj4gPiBpbnRvIHRoZSBkcml2ZXIgaWYgd2UgaGF2ZSB0byBnbyB0aGF0
+IHdheSB0aG91Z2guCj4+ID4+IAo+PiA+PiBHZW50bGVtZW4gcmVtaW5kZXIgZm9yIHRoaXMgcGF0
+Y2ggc2V0LiBXZSB3b3VsZCBhcHByZWNpYXRlIHRvIGhhdmUgeW91cgo+PiA+PiBmZWVkYmFjayBv
+biBpZWMgaGVscGVyLgo+PiA+PiBGcm9tIG91ciBwb2ludCBvZiB2aWV3IGl0IGNvdWxkIGJlIHVz
+ZWZ1bCB0byBoYXZlIGEgZ2VuZXJpYyBtYW5hZ2VtZW50Cj4+ID4+IG9mIHRoZSBpZWMgY29udHJv
+bHMgYmFzZWQgb24gaGVscGVycyBpbnN0ZWFkIG9mIHJlZGVmaW5pbmcgdGhlbSBpbiBEQUlzLgo+
+PiA+PiBIYXZpbmcgdGhlIHNhbWUgYmVoYXZpb3IgZm9yIHRoZXNlIGNvbnRyb2xzIGNvdWxkIGJl
+IHVzZWZ1bCB0byBlbnN1cmUKPj4gPj4gY29oZXJlbmNlIG9mIHRoZSBjb250cm9sIG1hbmFnZW1l
+bnQgdXNlZCBieSBhcHBsaWNhdGlvbiAoZm9yIGluc3RhbmNlCj4+ID4+IEdzdHJlYW1lciB1c2Vz
+IGl0IHRvIGRldGVybWluZSBpZWMgcmF3IG1vZGUgY2FwYWJpbGl0eSBmb3IgaWVjNjE5Mzcgc3Ry
+ZWFtcykKPj4gPiAKPj4gPiBPaCBzb3JyeSBmb3IgdGhlIGxhdGUgcmVwbHksIEkndmUgdG90YWxs
+eSBvdmVybG9va2VkIHRoZSB0aHJlYWQuCj4+ID4gCj4+ID4gQW5kLCBhbm90aGVyIHNvcnJ5OiB0
+aGUgcGF0Y2hzZXQgZG9lc24ndCBsb29rIGNvbnZpbmNpbmcgZW5vdWdoIHRvCj4+ID4gbWUuCj4+
+ID4gCj4+ID4gRmlyc3Qgb2ZmLCB0aGUgcHJvdmlkZWQgQVBJIGRlZmluaXRpb24gYXBwZWFycyBz
+b21ld2hhdAo+PiA+IHVuY29udmVudGlvbmFsLCB0aGUgbWl4dHVyZSBvZiB0aGUgb3BzLCB0aGUg
+c3RhdGljIGRhdGEgYW5kIHRoZQo+PiA+IGR5bmFtaWMgZGF0YS4KPj4gU29ycnkgaSBjYW4ndCBm
+aWd1cmUgb3V0IHlvdXIgcG9pbnQuIEkgc3VwcG9zZSB0aGF0IHlvdSBzcGVhayBhYm91dCB0aGUK
+Pj4gc25kX3BjbV9pZWM5NThfcGFyYW1zLgo+PiB3aGF0IHdvdWxkIGJlIGEgbW9yZSBjb252ZW50
+aW9uYWwgQVBJPwo+IAo+IEltYWdpbmUgeW91J2Qgd2FudCB0byBwdXQgYSBjb25zdCB0byB0aGUg
+ZGF0YSBwYXNzZWQgdG8gdGhlIEFQSSBmb3IKPiBoYXJkZW5pbmcuwqAgVGhlIGN1cnJlbnQgc3Ry
+dWN0IGlzIGEgbWl4dHVyZSBvZiBzdGF0aWMgYW5kIGR5bmFtaWMKPiBkYXRhLgo+IAo+IAo+PiA+
+IE1vcmVvdmVyLCB0aGlzIGlzIG9ubHkgZm9yIHlvdXIgZHJpdmVyLCBBVE0uwqAgCj4+IEl0IGlz
+IGFsc28gY29tcGF0aWJsZSB3aXRoIHRoZSBzb3VuZC9zdGkgZHJpdmVyLCBldmVuIGlmIHdlIGRv
+ZXMgbm90Cj4+IHByb3Bvc2UgcGF0Y2ggeWV0LiBXZSBhbHNvIHBsYW4gdG8gcHJvcG9zZSBhbiBp
+bXBsZW1lbnRhdGlvbiwgZm9yIHRoZQo+PiBIRE1JX2NvZGVjIHRoYXQgd291bGQgbmVlZCB0byBl
+eHBvcnQgYSBjb250cm9sIHRvIGFsbG93IG5vbmUtYXVkaW8gbW9kZS4KPj4gCj4+ID5JZiBpdCB3
+ZXJlIGFuIEFQSSB0aGF0Cj4+ID4gZG9lcyBjbGVhbiB1cCB0aGUgYWxyZWFkeSBleGlzdGluZyB1
+c2FnZXMsIEknZCBoYXBwaWx5IGFwcGx5IGl0LiBUaGVyZQo+PiA+IGFyZSBsb3RzIG9mIGRyaXZl
+cnMgY3JlYXRpbmcgYW5kIGNvbnRyb2xsaW5nIHRoZSBJRUM5NTggY3RscyBldmVuCj4+ID4gbm93
+Lgo+PiA+IAo+PiA+IEFsc28sIHRoZSBwYXRjaHNldCByZXF1aXJlcyBtb3JlIGZpbmUtdHVuaW5n
+LCBpbiBhbnl3YXlzLsKgIFRoZSBjaGFuZ2VzCj4+ID4gaW4gY3JlYXRlX2llYzk1OF9jb25zdW1y
+ZSgpIGFyZSBiYXNpY2FsbHkgaXJyZWxldmFudCwgc2hvdWxkIGJlIHNwbGl0Cj4+ID4gb2ZmIGFz
+IGFuIGluZGl2aWR1YWwgZml4LsKgIGl0IGlzIGxpbmtlZCB0byB0aGUgY29udHJvbCwgYXMgbm90
+IHBvc3NpYmxlIGluIGV4aXN0aW5nIGltcGxlbWVudGF0aW9uCj4+IChyYXRlIGFuZCB3aWR0aCBh
+cmUgZ2V0IGZyb20gaHdwYXJhbSBvciBydW50aW1lKS4gQnV0IG5vIHByb2JsZW0gd2UgY2FuCj4+
+IHNwbGl0IGl0IGluIGEgc2VwYXJhdGUgcGF0Y2guCj4+IAo+PiBBbHNvLCB0aGUgbmV3IGZ1bmN0
+aW9uIGRvZXNuJ3QgY3JlYXRlIHRoZQo+PiA+ICJYWFggTWFzayIgY29udHJvbHMuwqAgQW5kIHRo
+ZSBieXRlIGNvbXBhcmlzb24gc2hvdWxkIGJlIHJlcGxhY2VkIHdpdGgKPj4gPiBtZW1jbXAoKSwg
+ZXRjLCBldGMuCj4+IFllcyBtYXNrIGFyZSBtaXNzaW5nLCBjYW4gYmUgYWRkZWQuIEZvciB0aGUg
+cmVzdCBjb3VsZCB5b3UgY29tbWVudAo+PiBkaXJlY3RseSBpbiBjb2RlPyBpIHN1cHBvc2UgdGhh
+dCB5b3Ugd2FudCB0byByZXBsYWNlIHRoZSBmb3IgbG9vcHMgYnkKPj4gbWVtY21wLCBtZW1jcHku
+Li4KPiAKPiBSaWdodC4KPiAKPj4gPiBTbywgcGxlYXNlIHByb2NlZWQgcmF0aGVyIHdpdGggdGhl
+IG9wZW4gY29kZXMgZm9yIG5vdy7CoCBJZiB5b3UgY2FuCj4+ID4gcHJvdmlkZSBhIHBhdGNoIHRo
+YXQgY2xlYW5zIHVwIHRoZSAqbXVsdGlwbGUqIGRyaXZlciBjb2RlcywgYWdhaW4sCj4+ID4gSSds
+bCBoYXBwaWx5IHRha2UgaXQuwqAgQnV0IGl0IGNhbiBiZSBkb25lIGFueXRpbWUgbGF0ZXIsIHRv
+by4KPj4gTm90IHNpbXBsZSB0byBjbGVhbiB1cCB0aGUgb3RoZXIgZHJpdmVycyBhcyB0aGlzIGNv
+bnRyb2wgaXMgYSBQQ00KPj4gY29udHJvbCwgdGhhdCBpcyBtYWlubHkgaW1wbGVtZW50ZWQgYXMg
+YSBtaXhlciBvciBjYXJkIGNvbnRyb2wuCj4+IFRoaXMgbWVhbnMgdGhhdCBpdCBzaG91bGQgYmUg
+cmVnaXN0ZXJlZCBvbiB0aGUgcGNtX25ldyBpbiBDUFUgREFJIG9yIGluCj4+IHRoZSBEQUkgY29k
+ZWMsIHRvIGJlIGFibGUgdG8gYmluZCBpdCB0byB0aGUgUENNIGRldmljZS4KPj4gSW5wYWN0IGlz
+IG5vdCBzdHJhaWd0aGZvcndhcmQgYXMgdGhpcyBjb3VsZCBnZW5lcmF0ZSByZWdyZXNzaW9uIG9u
+IGRyaXZlci4KPiAKPiBZZXMsIGFuZCB0aGF0J3MgbXkgcG9pbnQuwqAgVGhlIGFwcGxpY2F0aW9u
+IG9mIEFQSSBpcyByZWxhdGl2ZWx5Cj4gbGltaXRlZCAtLSBhbHRob3VnaCB0aGUgQVBJIGl0c2Vs
+ZiBoYXMgbm90aGluZyB0byBkbyB3aXRoIEFTb0MgYXQKPiBhbGwuCj4gCj4+IEZvciBub3cgV2Ug
+Y2FuIGFkZCB0aGUgY2xlYW4gdXAgb24gdGhlIHN0aSBkcml2ZXIgYmFzZWQgb24gdGhpcyBoZWxw
+ZXIsCj4+IGFuZCB3ZSBhcmUgd29ya2luZyBvbiB0aGUgSERNSV9jb2RlYywgd2UgY291bGQgYWxz
+byB1c2UgdGhpcyBoZWxwZXIgdG8KPj4gZXhwb3J0IHRoZSBjb250cm9sLi4uLgo+PiAKPj4gU28g
+aWYgeW91IGVzdGltYXRlIHRoYXQgaXQgaXMgaW50ZXJlc3RpbmcgdG8gcHVyY2hhc2Ugb24gdGhp
+cyBoZWxwZXIgd2UKPj4gY2FuIHRyeSB0byBjb21lIGJhY2sgd2l0aCBhIHBhdGNoIHNldCB0aGF0
+IGltcGxlbWVudHMgdGhlIGhlbHBlciBmb3IKPj4gdGhlIDMgZHJpdmVycy4KPiAKPiBSaWdodC7C
+oCBCYXNpY2FsbHkgdGhlcmUgYXJlIHR3byBjYXNlcyB3ZSBhZGQgYSBuZXcgQVBJOgo+IAo+IDEu
+IEl0J3MgYWJzb2x1dGVseSBuZXcgYW5kIG5vdGhpbmcgZWxzZSBjYW4gZG8gaXQKPiAyLiBBUEkg
+c2ltcGxpZmllcyB0aGUgd2hvbGUgdHJlZSwgbm90IG9ubHkgb25lIHlvdSdyZSB0cnlpbmcgdG8g
+YWRkLgo+IAo+IEFuZCBpbiB0aGlzIGNhc2UsIGxldCdzIHByb3ZlIDIgYXQgZmlyc3QsIHRoYXQg
+dGhlIEFQSSAqaXMqIGFjdHVhbGx5Cj4gdXNlZnVsIGluIG11bHRpcGxlIHNpdHVhdGlvbnMgd2Ug
+YWxyZWFkeSBoYXZlLsKgIFRoZW4gSSdsbCBoYXBwaWx5IGFjawo+IGZvciB0aGF0LsKgIE1vcmUg
+ZHJpdmVycyBjbGVhbnVwLCBiZXR0ZXIuwqAgQXQgYmVzdCwgdGhpbmsgb2YgbW9yZQo+IHJhbmdl
+IGFib3ZlIEFTb0MsIGFzIHlvdSdyZSBwcm9wb3NpbmcgQUxTQSBjb3JlIEFQSSwgbm90IHRoZSBB
+U29DCj4gb25lLgo+IAo+PiBUaGUgb3RoZXIgb3B0aW9uLCBpcyB0aGF0IHdlIGRyb3AgdGhlIGhl
+bHBlcnMsIGFuZCBpbXBsZW1lbnQgdGhlIGNvbnRyb2wKPj4gZGlyZWN0bHkgaW4gb3VyIGRyaXZl
+cnMuCj4gCj4gVGhpcyBpcyBvZiBjb3Vyc2UgYW5vdGhlciwgbWF5YmUgZWFzaWVyIG9wdGlvbi4K
+PiAKPj4gUGxlYXNlIGp1c3QgdGVsbCB1cyBpZiB3ZSBzaG91bGQgY29udGludWUgdG8gcHJvcG9z
+ZSB0aGUgaGVscGVycyBvciBub3QuCj4gCj4gSSBoYXZlIG5vIHByZWZlcmVuY2Ugb3ZlciB0d28g
+d2F5cywgYnV0IGFtIG9ubHkgaW50ZXJlc3RlZCBpbiB0aGUKPiByZXN1bHRpbmcgcGF0Y2hlcyA6
+KQoKTXkgdGVudGF0aXZlIGhlcmUgd2FzIHRvIHN0YXJ0IHRvIGludHJvZHVjZSBoZWxwZXJzIGF0
+IEFMU0EgbGV2ZWwgKG5vdApvbmx5IEFTb0MpIHRvIGhhdmUgYSBnZW5lcmljIGltcGxlbWVudGF0
+aW9uIG9mIHRoZSB0aGlzIGdlbmVyaWMgY29udHJvbC4KVG9kYXkgdGhlIHNuZF9wY21fY3JlYXRl
+X2llYzk1OF9jb25zdW1lcl9od19wYXJhbXMganVzdCBhbGxvdyB0byBmaWxsCkFFUyBiYXNlZCBv
+biBydW50aW1lIHBhcmFtZXRlcnMsIGJ1dCBub3QgdG8gb2ZmZXIgYSBnZW5lcmljIG1hbmFnZW1l
+bnQKb2YgaWVjIGNvbnRyb2wuCk5vdyB5b3UgYXJlIHJpZ2h0IGknbSBkZXZlbG9waW5nIHVuZGVy
+IEFTb0MgYW5kIGkgaGF2ZSBub3QgdGhlIHdob2xlCmtub3dsZWRnZSBvZiB0aGUgQUxTQSBkcml2
+ZXJzLCBhbiBwcm9iYWJseSB0b28gbGltaXRlZCB2aWV3IG9mIHRoZSBpZWMKY29udHJvbHMgdXNh
+Z2UuCgpCYXNlZCBvbiB5b3VyIGZlZWRiYWNrIGkgdGhpbmsgKGF0IGxlYXN0IGluIGEgZmlyc3Qg
+c3RlcCkgd2Ugd2lsbCBjaG9vc2UKdGhlIGVhc2llc3Qgb3B0aW9uIGZvciB0aGUgU1RNIGRyaXZl
+ci4uLgoKVGhhbmtzCkFybmF1ZAoKCj4gCj4gCj4gdGhhbmtzLAo+IAo+IFRha2FzaGkKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWls
+aW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2Et
+cHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
