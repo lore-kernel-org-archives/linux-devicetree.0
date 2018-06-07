@@ -1,57 +1,42 @@
-From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 1/5] clk: imx6: add EPIT clock support
-Date: Thu,  7 Jun 2018 16:05:40 +0200
-Message-ID: <20180607140544.22268-2-peron.clem@gmail.com>
-References: <20180607140544.22268-1-peron.clem@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: avifishman70@gmail.com
+Subject: [PATCH v4 0/3] USB host: Add USB ehci support for nuvoton npcm7xx
+Date: Thu,  7 Jun 2018 17:58:18 +0300
+Message-ID: <20180607145821.322979-1-avifishman70@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607140544.22268-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>
+To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc: avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Avi Fishman <AviFishman70@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Didier <colin.didier@devialet.com>
+From: Avi Fishman <AviFishman70@gmail.com>
 
-Please ignore this commit.
+Changes since version 3:
+- Follow Rob Herring comments to change dt-bindings commit subject
 
-It has already been merged in clk-next.
+Changes since version 2:
+- Follow Sergei Shtylyov comments to rename the node name in in device tree 
+  documentation
 
-Leave it here to avoid error with automatic CI.
+Changes since version 1:
+- Follow Rob Herring comments in device tree documentation
+- minor log error fix in ehci-npcm7xx.c
+   
+This patch adds support for ehci controller for the Nuvoton npcm7xx platform.
+Most of the code was taken from ehci-spear.c + specific initialization code
 
----
- drivers/clk/imx/clk-imx6q.c               | 2 ++
- include/dt-bindings/clock/imx6qdl-clock.h | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Avi Fishman (3):
+  USB host: Add USB ehci support for nuvoton npcm7xx platform
+  dt-bindings: usb: new ehci-npcm7xx dt
+  MAINTAINERS: add subfolders for nuvoton *npcm*
 
-diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-index 8d518ad5dc13..b9ea7037e193 100644
---- a/drivers/clk/imx/clk-imx6q.c
-+++ b/drivers/clk/imx/clk-imx6q.c
-@@ -753,6 +753,8 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
- 	else
- 		clk[IMX6Q_CLK_ECSPI5] = imx_clk_gate2("ecspi5",        "ecspi_root",        base + 0x6c, 8);
- 	clk[IMX6QDL_CLK_ENET]         = imx_clk_gate2("enet",          "ipg",               base + 0x6c, 10);
-+	clk[IMX6QDL_CLK_EPIT1]        = imx_clk_gate2("epit1",         "ipg",               base + 0x6c, 12);
-+	clk[IMX6QDL_CLK_EPIT2]        = imx_clk_gate2("epit2",         "ipg",               base + 0x6c, 14);
- 	clk[IMX6QDL_CLK_ESAI_EXTAL]   = imx_clk_gate2_shared("esai_extal",   "esai_podf",   base + 0x6c, 16, &share_count_esai);
- 	clk[IMX6QDL_CLK_ESAI_IPG]     = imx_clk_gate2_shared("esai_ipg",   "ahb",           base + 0x6c, 16, &share_count_esai);
- 	clk[IMX6QDL_CLK_ESAI_MEM]     = imx_clk_gate2_shared("esai_mem", "ahb",             base + 0x6c, 16, &share_count_esai);
-diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
-index da59fd9cdb5e..7ad171b8f3bf 100644
---- a/include/dt-bindings/clock/imx6qdl-clock.h
-+++ b/include/dt-bindings/clock/imx6qdl-clock.h
-@@ -271,6 +271,8 @@
- #define IMX6QDL_CLK_PRE_AXI			258
- #define IMX6QDL_CLK_MLB_SEL			259
- #define IMX6QDL_CLK_MLB_PODF			260
--#define IMX6QDL_CLK_END				261
-+#define IMX6QDL_CLK_EPIT1			261
-+#define IMX6QDL_CLK_EPIT2			262
-+#define IMX6QDL_CLK_END				263
- 
- #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
+ .../devicetree/bindings/usb/npcm7xx-usb.txt        |  17 ++
+ MAINTAINERS                                        |   3 +
+ drivers/usb/host/Kconfig                           |   8 +
+ drivers/usb/host/Makefile                          |   1 +
+ drivers/usb/host/ehci-npcm7xx.c                    | 212 +++++++++++++++++++++
+ 5 files changed, 241 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+ create mode 100644 drivers/usb/host/ehci-npcm7xx.c
+
 -- 
-2.17.1
+2.14.1
