@@ -1,206 +1,57 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 04/10] powerpc/mpc85xx: move ptp timer out of fman in dts
-Date: Thu,  7 Jun 2018 11:22:50 +0800
-Message-ID: <20180607032256.39802-5-yangbo.lu@nxp.com>
-References: <20180607032256.39802-1-yangbo.lu@nxp.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] remoteproc: qcom: Introduce Hexagon V5 based WCSS driver
+Date: Thu, 7 Jun 2018 09:41:34 +0530
+Message-ID: <20180607041134.GF16230@vkoul-mobl>
+References: <1528177361-8883-1-git-send-email-sricharan@codeaurora.org>
+ <20180605061919.GQ16230@vkoul-mobl>
+ <3a4c102b-7228-153a-c588-b1bf00291fa8@codeaurora.org>
+ <20180606161733.GE510@tuxbook-pro>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607032256.39802-1-yangbo.lu@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20180606161733.GE510@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Sricharan R <sricharan@codeaurora.org>, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This patch is to move ptp timer node out of fman.
-Because ptp timer will be probed by ptp_qoriq driver,
-it should be an independent device in case of conflict
-memory mapping.
+On 06-06-18, 09:17, Bjorn Andersson wrote:
+> On Tue 05 Jun 05:56 PDT 2018, Sricharan R wrote:
+> 
+> > Hi Vinod,
+> > 
+> > On 6/5/2018 11:49 AM, Vinod wrote:
+> > > On 05-06-18, 11:12, Sricharan R wrote:
+> > > 
+> > >> +config QCOM_Q6V5_WCSS
+> > >> +	tristate "Qualcomm Hexagon based WCSS Peripheral Image Loader"
+> > >> +	depends on OF && ARCH_QCOM
+> > >> +	depends on QCOM_SMEM
+> > >> +	depends on RPMSG_QCOM_SMD || (COMPILE_TEST && RPMSG_QCOM_SMD=n)
+> > >> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
+> > > 
+> > > Is there a reason why it depends on RPMSG_QCOM_GLINK_SMEM=n? What would
+> > > happen if distro wants both this and RPMSG_QCOM_GLINK_SMEM
+> > > 
+> 
+> It says that QCOM_Q6V5_WCSS either must have a compatible state (i.e.
+> builtin vs builtin, module vs builtin, but not builtin vs module) or
+> that it's disabled, in which case we will hit the stub functions in
+> qcom_glink.h.
+> 
+> I.e. this prevents QCOM_Q6V5_WCSS to be compiled builtin when
+> RPMSG_QCOM_GLINK_SMEM is module, as this would give us both stubs and
+> the module.
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Changes for v2:
-	- None.
----
- arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi   |   14 ++++++++------
- arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi   |   14 ++++++++------
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi  |   14 ++++++++------
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi  |   14 ++++++++------
- arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi |   14 ++++++++------
- 5 files changed, 40 insertions(+), 30 deletions(-)
+IIUC, you want to have QCOM_Q6V5_WCSS and RPMSG_QCOM_GLINK_SMEM as
+modules or builtin
 
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi
-index abd01d4..6b124f7 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi
-@@ -37,12 +37,13 @@ fman0: fman@400000 {
- 	#size-cells = <1>;
- 	cell-index = <0>;
- 	compatible = "fsl,fman";
--	ranges = <0 0x400000 0x100000>;
--	reg = <0x400000 0x100000>;
-+	ranges = <0 0x400000 0xfe000>;
-+	reg = <0x400000 0xfe000>;
- 	interrupts = <96 2 0 0>, <16 2 1 1>;
- 	clocks = <&clockgen 3 0>;
- 	clock-names = "fmanclk";
- 	fsl,qman-channel-range = <0x40 0xc>;
-+	ptimer-handle = <&ptp_timer0>;
- 
- 	muram@0 {
- 		compatible = "fsl,fman-muram";
-@@ -93,9 +94,10 @@ fman0: fman@400000 {
- 		reg = <0x87000 0x1000>;
- 		status = "disabled";
- 	};
-+};
- 
--	ptp_timer0: ptp-timer@fe000 {
--		compatible = "fsl,fman-ptp-timer";
--		reg = <0xfe000 0x1000>;
--	};
-+ptp_timer0: ptp-timer@4fe000 {
-+	compatible = "fsl,fman-ptp-timer";
-+	reg = <0x4fe000 0x1000>;
-+	interrupts = <96 2 0 0>;
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi
-index debea75..b80aaf5 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi
-@@ -37,12 +37,13 @@ fman1: fman@500000 {
- 	#size-cells = <1>;
- 	cell-index = <1>;
- 	compatible = "fsl,fman";
--	ranges = <0 0x500000 0x100000>;
--	reg = <0x500000 0x100000>;
-+	ranges = <0 0x500000 0xfe000>;
-+	reg = <0x500000 0xfe000>;
- 	interrupts = <97 2 0 0>, <16 2 1 0>;
- 	clocks = <&clockgen 3 1>;
- 	clock-names = "fmanclk";
- 	fsl,qman-channel-range = <0x60 0xc>;
-+	ptimer-handle = <&ptp_timer1>;
- 
- 	muram@0 {
- 		compatible = "fsl,fman-muram";
-@@ -93,9 +94,10 @@ fman1: fman@500000 {
- 		reg = <0x87000 0x1000>;
- 		status = "disabled";
- 	};
-+};
- 
--	ptp_timer1: ptp-timer@fe000 {
--		compatible = "fsl,fman-ptp-timer";
--		reg = <0xfe000 0x1000>;
--	};
-+ptp_timer1: ptp-timer@5fe000 {
-+	compatible = "fsl,fman-ptp-timer";
-+	reg = <0x5fe000 0x1000>;
-+	interrupts = <97 2 0 0>;
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi
-index 3a20e0d..d3720fd 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi
-@@ -37,12 +37,13 @@ fman0: fman@400000 {
- 	#size-cells = <1>;
- 	cell-index = <0>;
- 	compatible = "fsl,fman";
--	ranges = <0 0x400000 0x100000>;
--	reg = <0x400000 0x100000>;
-+	ranges = <0 0x400000 0xfe000>;
-+	reg = <0x400000 0xfe000>;
- 	interrupts = <96 2 0 0>, <16 2 1 1>;
- 	clocks = <&clockgen 3 0>;
- 	clock-names = "fmanclk";
- 	fsl,qman-channel-range = <0x800 0x10>;
-+	ptimer-handle = <&ptp_timer0>;
- 
- 	muram@0 {
- 		compatible = "fsl,fman-muram";
-@@ -98,9 +99,10 @@ fman0: fman@400000 {
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xfd000 0x1000>;
- 	};
-+};
- 
--	ptp_timer0: ptp-timer@fe000 {
--		compatible = "fsl,fman-ptp-timer";
--		reg = <0xfe000 0x1000>;
--	};
-+ptp_timer0: ptp-timer@4fe000 {
-+	compatible = "fsl,fman-ptp-timer";
-+	reg = <0x4fe000 0x1000>;
-+	interrupts = <96 2 0 0>;
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi
-index 82750ac..ae34c20 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi
-@@ -37,12 +37,13 @@ fman1: fman@500000 {
- 	#size-cells = <1>;
- 	cell-index = <1>;
- 	compatible = "fsl,fman";
--	ranges = <0 0x500000 0x100000>;
--	reg = <0x500000 0x100000>;
-+	ranges = <0 0x500000 0xfe000>;
-+	reg = <0x500000 0xfe000>;
- 	interrupts = <97 2 0 0>, <16 2 1 0>;
- 	clocks = <&clockgen 3 1>;
- 	clock-names = "fmanclk";
- 	fsl,qman-channel-range = <0x820 0x10>;
-+	ptimer-handle = <&ptp_timer1>;
- 
- 	muram@0 {
- 		compatible = "fsl,fman-muram";
-@@ -98,9 +99,10 @@ fman1: fman@500000 {
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xfd000 0x1000>;
- 	};
-+};
- 
--	ptp_timer1: ptp-timer@fe000 {
--		compatible = "fsl,fman-ptp-timer";
--		reg = <0xfe000 0x1000>;
--	};
-+ptp_timer1: ptp-timer@5fe000 {
-+	compatible = "fsl,fman-ptp-timer";
-+	reg = <0x5fe000 0x1000>;
-+	interrupts = <97 2 0 0>;
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi
-index 7f60b60..02f2755 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi
-@@ -37,12 +37,13 @@ fman0: fman@400000 {
- 	#size-cells = <1>;
- 	cell-index = <0>;
- 	compatible = "fsl,fman";
--	ranges = <0 0x400000 0x100000>;
--	reg = <0x400000 0x100000>;
-+	ranges = <0 0x400000 0xfe000>;
-+	reg = <0x400000 0xfe000>;
- 	interrupts = <96 2 0 0>, <16 2 1 1>;
- 	clocks = <&clockgen 3 0>;
- 	clock-names = "fmanclk";
- 	fsl,qman-channel-range = <0x800 0x10>;
-+	ptimer-handle = <&ptp_timer0>;
- 
- 	muram@0 {
- 		compatible = "fsl,fman-muram";
-@@ -86,9 +87,10 @@ fman0: fman@400000 {
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xfd000 0x1000>;
- 	};
-+};
- 
--	ptp_timer0: ptp-timer@fe000 {
--		compatible = "fsl,fman-ptp-timer";
--		reg = <0xfe000 0x1000>;
--	};
-+ptp_timer0: ptp-timer@4fe000 {
-+	compatible = "fsl,fman-ptp-timer";
-+	reg = <0x4fe000 0x1000>;
-+	interrupts = <96 2 0 0>;
- };
+So, wouldn't Kconfig syntax something like where we say:
+        M if RPMSG_QCOM_GLINK_SMEM=m
+        bool if RPMSG_QCOM_GLINK_SMEM=y
+
+Which makes it clear that both these have to be same type?
+
 -- 
-1.7.1
+~Vinod
