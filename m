@@ -1,319 +1,1089 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 5/5] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI
- support
-Date: Thu, 7 Jun 2018 23:24:09 +0300
-Message-ID: <b72e7fde-0b04-b9dd-586d-cb1f8c5577a6@cogentembedded.com>
-References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/2] arm64: dts: qcom: sdm845: Add I2C, SPI, and UART9 nodes
+Date: Thu,  7 Jun 2018 13:46:07 -0700
+Message-ID: <20180607204608.27688-1-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, kramasub@codeaurora.org, sdharia@codeaurora.org, swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
-nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
-Analog Devices ADV7511W HDMI transmitter...
+This adds nodes to SDM845-dtsi for all the I2C ports, all the SPI
+ports, and UART9.  Note that I2C / SPI / UART are a bit strange on
+sdm845 because each "serial engine" has 4 pins associated with it and
+depending on which firmware has been loaded into the serial engine
+(loaded by the BIOS) the serial engine can behave like an I2C port, a
+SPI port, or a UART.  As per the landed bindings that means that we
+need to create one node for each possible mode that the port could be
+in.  With 16 serial engines that means 16 x 3 = 48 nodes.
 
-Based on the original (and large) patch by Vladimir Barinov.
+We get away with only creating 33 nodes for now because it seems very
+likely that SDM845-based boards will actually all use the same UART
+(UART 9) for debug purposes.  While another UART could be used for
+something like Bluetooth communication we can cross that path when we
+come to it.  Some documentation that I saw implied that using a UART
+for "high speed" communications actually needs yet another different
+serial engine firmware anyway.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Note that quick measurements adding all these nodes adds ~10k of extra
+space per dtb that they're included with.  If this becomes a problem
+we may need to think of a different way to structure this so that
+boards only get the nodes they need (or figure out how to get dtc to
+strip 'disabled' nodes).  For now it seems OK.
 
+These nodes were programmatically generated with a fairly dumb python
+script.  See http://crosreview.com/1091631 for the source.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-Changes in version 2:
-- added the V3HSK DT update, reworded the description, renamed the patch;
-- added a space between the HDMI node name and a brace.
 
- arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 +++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  120 ++++++++++++++++++++++++
- 2 files changed, 226 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 1013 ++++++++++++++++++++++++++
+ 1 file changed, 1013 insertions(+)
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-@@ -45,6 +45,56 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	d1_8v: regulator-2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "D1.8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index cdaabeb3c995..2dc5c7dcc9aa 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -5,6 +5,7 @@
+  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+  */
+ 
++#include <dt-bindings/clock/qcom,gcc-sdm845.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+@@ -13,6 +14,41 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++		i2c4 = &i2c4;
++		i2c5 = &i2c5;
++		i2c6 = &i2c6;
++		i2c7 = &i2c7;
++		i2c8 = &i2c8;
++		i2c9 = &i2c9;
++		i2c10 = &i2c10;
++		i2c11 = &i2c11;
++		i2c12 = &i2c12;
++		i2c13 = &i2c13;
++		i2c14 = &i2c14;
++		i2c15 = &i2c15;
++		spi0 = &spi0;
++		spi1 = &spi1;
++		spi2 = &spi2;
++		spi3 = &spi3;
++		spi4 = &spi4;
++		spi5 = &spi5;
++		spi6 = &spi6;
++		spi7 = &spi7;
++		spi8 = &spi8;
++		spi9 = &spi9;
++		spi10 = &spi10;
++		spi11 = &spi11;
++		spi12 = &spi12;
++		spi13 = &spi13;
++		spi14 = &spi14;
++		spi15 = &spi15;
 +	};
 +
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
-+
-+	lvds-decoder {
-+		compatible = "thine,thc63lvd1024";
-+		vcc-supply = <&d3_3v>;
-+
-+		ports {
+ 	chosen { };
+ 
+ 	memory@80000000 {
+@@ -206,6 +242,489 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		qupv3_id_0: geniqup@8c0000 {
++			compatible = "qcom,geni-se-qup";
++			reg = <0x8c0000 0x6000>;
++			clock-names = "m-ahb", "s-ahb";
++			clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
++				 <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
 +			#address-cells = <1>;
-+			#size-cells = <0>;
++			#size-cells = <1>;
++			ranges;
 +
-+			port@0 {
-+				reg = <0>;
-+				thc63lvd1024_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
++			i2c0: i2c@880000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x880000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c0_default>;
++				pinctrl-1 = <&qup_i2c0_sleep>;
++				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
 +			};
 +
-+			port@2 {
-+				reg = <2>;
-+				thc63lvd1024_out: endpoint {
-+					remote-endpoint = <&adv7511_in>;
-+				};
++			spi0: spi@880000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x880000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi0_default>;
++				pinctrl-1 = <&qup_spi0_sleep>;
++				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c1: i2c@884000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x884000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c1_default>;
++				pinctrl-1 = <&qup_i2c1_sleep>;
++				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi1: spi@884000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x884000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi1_default>;
++				pinctrl-1 = <&qup_spi1_sleep>;
++				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c2: i2c@888000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x888000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c2_default>;
++				pinctrl-1 = <&qup_i2c2_sleep>;
++				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi2: spi@888000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x888000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi2_default>;
++				pinctrl-1 = <&qup_spi2_sleep>;
++				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c3: i2c@88c000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x88c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c3_default>;
++				pinctrl-1 = <&qup_i2c3_sleep>;
++				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi3: spi@88c000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x88c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi3_default>;
++				pinctrl-1 = <&qup_spi3_sleep>;
++				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c4: i2c@890000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x890000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c4_default>;
++				pinctrl-1 = <&qup_i2c4_sleep>;
++				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi4: spi@890000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x890000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi4_default>;
++				pinctrl-1 = <&qup_spi4_sleep>;
++				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c5: i2c@894000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x894000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c5_default>;
++				pinctrl-1 = <&qup_i2c5_sleep>;
++				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi5: spi@894000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x894000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi5_default>;
++				pinctrl-1 = <&qup_spi5_sleep>;
++				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c6: i2c@898000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x898000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S6_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c6_default>;
++				pinctrl-1 = <&qup_i2c6_sleep>;
++				interrupts = <GIC_SPI 607 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi6: spi@898000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x898000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S6_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi6_default>;
++				pinctrl-1 = <&qup_spi6_sleep>;
++				interrupts = <GIC_SPI 607 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c7: i2c@89c000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0x89c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S7_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c7_default>;
++				pinctrl-1 = <&qup_i2c7_sleep>;
++				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi7: spi@89c000 {
++				compatible = "qcom,geni-spi";
++				reg = <0x89c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP0_S7_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi7_default>;
++				pinctrl-1 = <&qup_spi7_sleep>;
++				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
 +			};
 +		};
-+	};
 +
-+	x1_clk: x1-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <148500000>;
-+	};
- };
- 
- &avb {
-@@ -74,6 +124,13 @@
- 	};
- };
- 
-+&du {
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&x1_clk>;
-+	clock-names = "du.0", "dclkin.0";
-+	status = "okay";
-+};
-+
- &extal_clk {
- 	clock-frequency = <16666666>;
- };
-@@ -102,6 +159,55 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 	};
-+
-+	hdmi@39 {
-+		compatible = "adi,adv7511w";
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-+		avdd-supply = <&d1_8v>;
-+		dvdd-supply = <&d1_8v>;
-+		pvdd-supply = <&d1_8v>;
-+		bgvdd-supply = <&d1_8v>;
-+		dvdd-3v-supply = <&d3_3v>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
++		qupv3_id_1: geniqup@ac0000 {
++			compatible = "qcom,geni-se-qup";
++			reg = <0xac0000 0x6000>;
++			clock-names = "m-ahb", "s-ahb";
++			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
++				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
 +			#address-cells = <1>;
-+			#size-cells = <0>;
++			#size-cells = <1>;
++			ranges;
++			status = "disabled";
 +
-+			port@0 {
-+				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&thc63lvd1024_out>;
++			i2c8: i2c@a80000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa80000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c8_default>;
++				pinctrl-1 = <&qup_i2c8_sleep>;
++				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi8: spi@a80000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa80000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi8_default>;
++				pinctrl-1 = <&qup_spi8_sleep>;
++				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c9: i2c@a84000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa84000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c9_default>;
++				pinctrl-1 = <&qup_i2c9_sleep>;
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi9: spi@a84000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa84000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi9_default>;
++				pinctrl-1 = <&qup_spi9_sleep>;
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			uart9: serial@a84000 {
++				compatible = "qcom,geni-debug-uart";
++				reg = <0xa84000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_uart9_default>;
++				pinctrl-1 = <&qup_uart9_sleep>;
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++				status = "disabled";
++			};
++
++			i2c10: i2c@a88000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa88000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c10_default>;
++				pinctrl-1 = <&qup_i2c10_sleep>;
++				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi10: spi@a88000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa88000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi10_default>;
++				pinctrl-1 = <&qup_spi10_sleep>;
++				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c11: i2c@a8c000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa8c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c11_default>;
++				pinctrl-1 = <&qup_i2c11_sleep>;
++				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi11: spi@a8c000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa8c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi11_default>;
++				pinctrl-1 = <&qup_spi11_sleep>;
++				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c12: i2c@a90000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa90000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c12_default>;
++				pinctrl-1 = <&qup_i2c12_sleep>;
++				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi12: spi@a90000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa90000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi12_default>;
++				pinctrl-1 = <&qup_spi12_sleep>;
++				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c13: i2c@a94000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa94000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c13_default>;
++				pinctrl-1 = <&qup_i2c13_sleep>;
++				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi13: spi@a94000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa94000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi13_default>;
++				pinctrl-1 = <&qup_spi13_sleep>;
++				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c14: i2c@a98000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa98000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S6_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c14_default>;
++				pinctrl-1 = <&qup_i2c14_sleep>;
++				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi14: spi@a98000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa98000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S6_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi14_default>;
++				pinctrl-1 = <&qup_spi14_sleep>;
++				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			i2c15: i2c@a9c000 {
++				compatible = "qcom,geni-i2c";
++				reg = <0xa9c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S7_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_i2c15_default>;
++				pinctrl-1 = <&qup_i2c15_sleep>;
++				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spi15: spi@a9c000 {
++				compatible = "qcom,geni-spi";
++				reg = <0xa9c000 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc GCC_QUPV3_WRAP1_S7_CLK>;
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&qup_spi15_default>;
++				pinctrl-1 = <&qup_spi15_sleep>;
++				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++		};
++
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+ 			reg = <0x1f40000 0x40000>;
+@@ -219,6 +738,500 @@
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++
++			qup_i2c0_default: qup-i2c0-default {
++				pinmux {
++					pins = "gpio0", "gpio1";
++					function = "qup0";
 +				};
 +			};
 +
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
++			qup_i2c0_sleep: qup-i2c0-sleep {
++				pinmux {
++					pins = "gpio0", "gpio1";
++					function = "gpio";
 +				};
 +			};
-+		};
-+	};
-+};
 +
-+&lvds0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&thc63lvd1024_in>;
++			qup_i2c1_default: qup-i2c1-default {
++				pinmux {
++					pins = "gpio17", "gpio18";
++					function = "qup1";
++				};
 +			};
-+		};
-+	};
- };
++
++			qup_i2c1_sleep: qup-i2c1-sleep {
++				pinmux {
++					pins = "gpio17", "gpio18";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c2_default: qup-i2c2-default {
++				pinmux {
++					pins = "gpio27", "gpio28";
++					function = "qup2";
++				};
++			};
++
++			qup_i2c2_sleep: qup-i2c2-sleep {
++				pinmux {
++					pins = "gpio27", "gpio28";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c3_default: qup-i2c3-default {
++				pinmux {
++					pins = "gpio41", "gpio42";
++					function = "qup3";
++				};
++			};
++
++			qup_i2c3_sleep: qup-i2c3-sleep {
++				pinmux {
++					pins = "gpio41", "gpio42";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c4_default: qup-i2c4-default {
++				pinmux {
++					pins = "gpio89", "gpio90";
++					function = "qup4";
++				};
++			};
++
++			qup_i2c4_sleep: qup-i2c4-sleep {
++				pinmux {
++					pins = "gpio89", "gpio90";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c5_default: qup-i2c5-default {
++				pinmux {
++					pins = "gpio85", "gpio86";
++					function = "qup5";
++				};
++			};
++
++			qup_i2c5_sleep: qup-i2c5-sleep {
++				pinmux {
++					pins = "gpio85", "gpio86";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c6_default: qup-i2c6-default {
++				pinmux {
++					pins = "gpio45", "gpio46";
++					function = "qup6";
++				};
++			};
++
++			qup_i2c6_sleep: qup-i2c6-sleep {
++				pinmux {
++					pins = "gpio45", "gpio46";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c7_default: qup-i2c7-default {
++				pinmux {
++					pins = "gpio93", "gpio94";
++					function = "qup7";
++				};
++			};
++
++			qup_i2c7_sleep: qup-i2c7-sleep {
++				pinmux {
++					pins = "gpio93", "gpio94";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c8_default: qup-i2c8-default {
++				pinmux {
++					pins = "gpio65", "gpio66";
++					function = "qup8";
++				};
++			};
++
++			qup_i2c8_sleep: qup-i2c8-sleep {
++				pinmux {
++					pins = "gpio65", "gpio66";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c9_default: qup-i2c9-default {
++				pinmux {
++					pins = "gpio6", "gpio7";
++					function = "qup9";
++				};
++			};
++
++			qup_i2c9_sleep: qup-i2c9-sleep {
++				pinmux {
++					pins = "gpio6", "gpio7";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c10_default: qup-i2c10-default {
++				pinmux {
++					pins = "gpio55", "gpio56";
++					function = "qup10";
++				};
++			};
++
++			qup_i2c10_sleep: qup-i2c10-sleep {
++				pinmux {
++					pins = "gpio55", "gpio56";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c11_default: qup-i2c11-default {
++				pinmux {
++					pins = "gpio31", "gpio32";
++					function = "qup11";
++				};
++			};
++
++			qup_i2c11_sleep: qup-i2c11-sleep {
++				pinmux {
++					pins = "gpio31", "gpio32";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c12_default: qup-i2c12-default {
++				pinmux {
++					pins = "gpio49", "gpio50";
++					function = "qup12";
++				};
++			};
++
++			qup_i2c12_sleep: qup-i2c12-sleep {
++				pinmux {
++					pins = "gpio49", "gpio50";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c13_default: qup-i2c13-default {
++				pinmux {
++					pins = "gpio105", "gpio106";
++					function = "qup13";
++				};
++			};
++
++			qup_i2c13_sleep: qup-i2c13-sleep {
++				pinmux {
++					pins = "gpio105", "gpio106";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c14_default: qup-i2c14-default {
++				pinmux {
++					pins = "gpio33", "gpio34";
++					function = "qup14";
++				};
++			};
++
++			qup_i2c14_sleep: qup-i2c14-sleep {
++				pinmux {
++					pins = "gpio33", "gpio34";
++					function = "gpio";
++				};
++			};
++
++			qup_i2c15_default: qup-i2c15-default {
++				pinmux {
++					pins = "gpio81", "gpio82";
++					function = "qup15";
++				};
++			};
++
++			qup_i2c15_sleep: qup-i2c15-sleep {
++				pinmux {
++					pins = "gpio81", "gpio82";
++					function = "gpio";
++				};
++			};
++
++			qup_spi0_default: qup-spi0-default {
++				pinmux {
++					pins = "gpio0", "gpio1",
++					       "gpio2", "gpio3";
++					function = "qup0";
++				};
++			};
++
++			qup_spi0_sleep: qup-spi0-sleep {
++				pinmux {
++					pins = "gpio0", "gpio1",
++					       "gpio2", "gpio3";
++					function = "gpio";
++				};
++			};
++
++			qup_spi1_default: qup-spi1-default {
++				pinmux {
++					pins = "gpio17", "gpio18",
++					       "gpio19", "gpio20";
++					function = "qup1";
++				};
++			};
++
++			qup_spi1_sleep: qup-spi1-sleep {
++				pinmux {
++					pins = "gpio17", "gpio18",
++					       "gpio19", "gpio20";
++					function = "gpio";
++				};
++			};
++
++			qup_spi2_default: qup-spi2-default {
++				pinmux {
++					pins = "gpio27", "gpio28",
++					       "gpio29", "gpio30";
++					function = "qup2";
++				};
++			};
++
++			qup_spi2_sleep: qup-spi2-sleep {
++				pinmux {
++					pins = "gpio27", "gpio28",
++					       "gpio29", "gpio30";
++					function = "gpio";
++				};
++			};
++
++			qup_spi3_default: qup-spi3-default {
++				pinmux {
++					pins = "gpio41", "gpio42",
++					       "gpio43", "gpio44";
++					function = "qup3";
++				};
++			};
++
++			qup_spi3_sleep: qup-spi3-sleep {
++				pinmux {
++					pins = "gpio41", "gpio42",
++					       "gpio43", "gpio44";
++					function = "gpio";
++				};
++			};
++
++			qup_spi4_default: qup-spi4-default {
++				pinmux {
++					pins = "gpio89", "gpio90",
++					       "gpio91", "gpio92";
++					function = "qup4";
++				};
++			};
++
++			qup_spi4_sleep: qup-spi4-sleep {
++				pinmux {
++					pins = "gpio89", "gpio90",
++					       "gpio91", "gpio92";
++					function = "gpio";
++				};
++			};
++
++			qup_spi5_default: qup-spi5-default {
++				pinmux {
++					pins = "gpio85", "gpio86",
++					       "gpio87", "gpio88";
++					function = "qup5";
++				};
++			};
++
++			qup_spi5_sleep: qup-spi5-sleep {
++				pinmux {
++					pins = "gpio85", "gpio86",
++					       "gpio87", "gpio88";
++					function = "gpio";
++				};
++			};
++
++			qup_spi6_default: qup-spi6-default {
++				pinmux {
++					pins = "gpio45", "gpio46",
++					       "gpio47", "gpio48";
++					function = "qup6";
++				};
++			};
++
++			qup_spi6_sleep: qup-spi6-sleep {
++				pinmux {
++					pins = "gpio45", "gpio46",
++					       "gpio47", "gpio48";
++					function = "gpio";
++				};
++			};
++
++			qup_spi7_default: qup-spi7-default {
++				pinmux {
++					pins = "gpio93", "gpio94",
++					       "gpio95", "gpio96";
++					function = "qup7";
++				};
++			};
++
++			qup_spi7_sleep: qup-spi7-sleep {
++				pinmux {
++					pins = "gpio93", "gpio94",
++					       "gpio95", "gpio96";
++					function = "gpio";
++				};
++			};
++
++			qup_spi8_default: qup-spi8-default {
++				pinmux {
++					pins = "gpio65", "gpio66",
++					       "gpio67", "gpio68";
++					function = "qup8";
++				};
++			};
++
++			qup_spi8_sleep: qup-spi8-sleep {
++				pinmux {
++					pins = "gpio65", "gpio66",
++					       "gpio67", "gpio68";
++					function = "gpio";
++				};
++			};
++
++			qup_spi9_default: qup-spi9-default {
++				pinmux {
++					pins = "gpio6", "gpio7",
++					       "gpio4", "gpio5";
++					function = "qup9";
++				};
++			};
++
++			qup_spi9_sleep: qup-spi9-sleep {
++				pinmux {
++					pins = "gpio6", "gpio7",
++					       "gpio4", "gpio5";
++					function = "gpio";
++				};
++			};
++
++			qup_spi10_default: qup-spi10-default {
++				pinmux {
++					pins = "gpio55", "gpio56",
++					       "gpio53", "gpio54";
++					function = "qup10";
++				};
++			};
++
++			qup_spi10_sleep: qup-spi10-sleep {
++				pinmux {
++					pins = "gpio55", "gpio56",
++					       "gpio53", "gpio54";
++					function = "gpio";
++				};
++			};
++
++			qup_spi11_default: qup-spi11-default {
++				pinmux {
++					pins = "gpio31", "gpio32",
++					       "gpio33", "gpio34";
++					function = "qup11";
++				};
++			};
++
++			qup_spi11_sleep: qup-spi11-sleep {
++				pinmux {
++					pins = "gpio31", "gpio32",
++					       "gpio33", "gpio34";
++					function = "gpio";
++				};
++			};
++
++			qup_spi12_default: qup-spi12-default {
++				pinmux {
++					pins = "gpio49", "gpio50",
++					       "gpio51", "gpio52";
++					function = "qup12";
++				};
++			};
++
++			qup_spi12_sleep: qup-spi12-sleep {
++				pinmux {
++					pins = "gpio49", "gpio50",
++					       "gpio51", "gpio52";
++					function = "gpio";
++				};
++			};
++
++			qup_spi13_default: qup-spi13-default {
++				pinmux {
++					pins = "gpio105", "gpio106",
++					       "gpio107", "gpio108";
++					function = "qup13";
++				};
++			};
++
++			qup_spi13_sleep: qup-spi13-sleep {
++				pinmux {
++					pins = "gpio105", "gpio106",
++					       "gpio107", "gpio108";
++					function = "gpio";
++				};
++			};
++
++			qup_spi14_default: qup-spi14-default {
++				pinmux {
++					pins = "gpio33", "gpio34",
++					       "gpio31", "gpio32";
++					function = "qup14";
++				};
++			};
++
++			qup_spi14_sleep: qup-spi14-sleep {
++				pinmux {
++					pins = "gpio33", "gpio34",
++					       "gpio31", "gpio32";
++					function = "gpio";
++				};
++			};
++
++			qup_spi15_default: qup-spi15-default {
++				pinmux {
++					pins = "gpio81", "gpio82",
++					       "gpio83", "gpio84";
++					function = "qup15";
++				};
++			};
++
++			qup_spi15_sleep: qup-spi15-sleep {
++				pinmux {
++					pins = "gpio81", "gpio82",
++					       "gpio83", "gpio84";
++					function = "gpio";
++				};
++			};
++
++			qup_uart9_default: qup-uart9-default {
++				pinmux {
++					pins = "gpio4", "gpio5";
++					function = "qup9";
++				};
++			};
++
++			qup_uart9_sleep: qup-uart9-sleep {
++				pinmux {
++					pins = "gpio4", "gpio5";
++					function = "gpio";
++				};
++			};
+ 		};
  
- &mmc0 {
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-@@ -27,6 +27,63 @@
- 		/* first 128MB is reserved for secure area. */
- 		reg = <0 0x48000000 0 0x78000000>;
- 	};
-+
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
-+
-+	lvds-decoder {
-+		compatible = "thine,thc63lvd1024";
-+		vcc-supply = <&vcc3v3_d5>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				thc63lvd1024_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				thc63lvd1024_out: endpoint {
-+					remote-endpoint = <&adv7511_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	vcc1v8_d4: regulator-0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC1V8_D4";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc3v3_d5: regulator-1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC3V3_D5";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
-+
-+&du {
-+	status = "okay";
- };
- 
- &extal_clk {
-@@ -53,6 +110,64 @@
- 	};
- };
- 
-+&lvds0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&thc63lvd1024_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-0 = <&i2c0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	hdmi@39 {
-+		compatible = "adi,adv7511w";
-+		#sound-dai-cells = <0>;
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-+		avdd-supply = <&vcc1v8_d4>;
-+		dvdd-supply = <&vcc1v8_d4>;
-+		pvdd-supply = <&vcc1v8_d4>;
-+		bgvdd-supply = <&vcc1v8_d4>;
-+		dvdd-3v-supply = <&vcc3v3_d5>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&thc63lvd1024_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &pfc {
- 	gether_pins: gether {
- 		groups = "gether_mdio_a", "gether_rgmii",
-@@ -60,6 +175,11 @@
- 		function = "gether";
- 	};
- 
-+	i2c0_pins: i2c0 {
-+		groups = "i2c0";
-+		function = "i2c0";
-+	};
-+
- 	scif0_pins: scif0 {
- 		groups = "scif0_data";
- 		function = "scif0";
+ 		spmi_bus: spmi@c440000 {
+-- 
+2.17.1.1185.g55be947832-goog
