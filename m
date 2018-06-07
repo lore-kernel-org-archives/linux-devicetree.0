@@ -1,49 +1,88 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/4] ARM: at91: fix USB clock detection handling
-Date: Thu,  7 Jun 2018 10:41:06 +0200
-Message-ID: <20180607084107.4461-4-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/4] ARM: dts: fix PMC compatible
+Date: Thu,  7 Jun 2018 10:41:07 +0200
+Message-ID: <20180607084107.4461-5-alexandre.belloni@bootlin.com>
 References: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add more compatibles to be able to correct the USB clock detection.
-
-at91sam9261 and at91sam9263 have the same PMC_SCSR layout as at91sam9260.
-at91sam9rl doesn't have any USB clock.
+Make each SoC dtsi use its soc specific PMc compatible string. This solves
+a potential issue on at91sam9261 and at91sam9263 when using suspend to RAM
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- arch/arm/mach-at91/pm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/at91sam9261.dtsi | 2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+ arch/arm/boot/dts/at91sam9rl.dtsi  | 2 +-
+ arch/arm/boot/dts/sama5d4.dtsi     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 849014c01cf4..563f34d01ce4 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -559,15 +559,20 @@ static const struct pmc_info pmc_infos[] __initconst = {
- 	{ .uhp_udp_mask = AT91RM9200_PMC_UHP | AT91RM9200_PMC_UDP },
- 	{ .uhp_udp_mask = AT91SAM926x_PMC_UHP | AT91SAM926x_PMC_UDP },
- 	{ .uhp_udp_mask = AT91SAM926x_PMC_UHP },
-+	{ .uhp_udp_mask = 0 },
- };
+diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+index 53c63d0a418a..33f09d5ea020 100644
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -590,7 +590,7 @@
+ 			};
  
- static const struct of_device_id atmel_pmc_ids[] __initconst = {
- 	{ .compatible = "atmel,at91rm9200-pmc", .data = &pmc_infos[0] },
- 	{ .compatible = "atmel,at91sam9260-pmc", .data = &pmc_infos[1] },
-+	{ .compatible = "atmel,at91sam9261-pmc", .data = &pmc_infos[1] },
-+	{ .compatible = "atmel,at91sam9263-pmc", .data = &pmc_infos[1] },
- 	{ .compatible = "atmel,at91sam9g45-pmc", .data = &pmc_infos[2] },
- 	{ .compatible = "atmel,at91sam9n12-pmc", .data = &pmc_infos[1] },
-+	{ .compatible = "atmel,at91sam9rl-pmc", .data = &pmc_infos[3] },
- 	{ .compatible = "atmel,at91sam9x5-pmc", .data = &pmc_infos[1] },
- 	{ .compatible = "atmel,sama5d3-pmc", .data = &pmc_infos[1] },
-+	{ .compatible = "atmel,sama5d4-pmc", .data = &pmc_infos[1] },
- 	{ .compatible = "atmel,sama5d2-pmc", .data = &pmc_infos[1] },
- 	{ /* sentinel */ },
- };
+ 			pmc: pmc@fffffc00 {
+-				compatible = "atmel,at91rm9200-pmc", "syscon";
++				compatible = "atmel,at91sam9261-pmc", "syscon";
+ 				reg = <0xfffffc00 0x100>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+ 				interrupt-controller;
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 87fb0660ab5d..af68a86c9973 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -93,7 +93,7 @@
+ 			};
+ 
+ 			pmc: pmc@fffffc00 {
+-				compatible = "atmel,at91rm9200-pmc", "syscon";
++				compatible = "atmel,at91sam9263-pmc", "syscon";
+ 				reg = <0xfffffc00 0x100>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+ 				interrupt-controller;
+diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
+index bd001cca25a4..8fb22030f00b 100644
+--- a/arch/arm/boot/dts/at91sam9rl.dtsi
++++ b/arch/arm/boot/dts/at91sam9rl.dtsi
+@@ -832,7 +832,7 @@
+ 			};
+ 
+ 			pmc: pmc@fffffc00 {
+-				compatible = "atmel,at91sam9g45-pmc", "syscon";
++				compatible = "atmel,at91sam9rl-pmc", "syscon";
+ 				reg = <0xfffffc00 0x100>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+ 				interrupt-controller;
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 0cf9beddd556..92a35a1942b6 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -392,7 +392,7 @@
+ 			};
+ 
+ 			pmc: pmc@f0018000 {
+-				compatible = "atmel,sama5d3-pmc", "syscon";
++				compatible = "atmel,sama5d4-pmc", "syscon";
+ 				reg = <0xf0018000 0x120>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+ 				interrupt-controller;
 -- 
 2.17.1
