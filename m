@@ -1,45 +1,110 @@
 Return-Path: <SRS0=13PW=IZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32815 "EHLO
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37891 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753283AbeFGKPF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Jun 2018 06:15:05 -0400
-Subject: Re: [PATCH RESEND 2/2] ARM: dts: imx: add cooling-cells for cpufreq
- cooling device
+        with ESMTP id S1753107AbeFGJv2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 7 Jun 2018 05:51:28 -0400
 From: Bastian Stender <bst@pengutronix.de>
+Subject: [PATCH RESEND 2/2] ARM: dts: imx: add cooling-cells for cpufreq cooling device
+Date: Thu,  7 Jun 2018 11:51:05 +0200
+Message-Id: <20180607095105.5185-2-bst@pengutronix.de>
+In-Reply-To: <20180607095105.5185-1-bst@pengutronix.de>
 References: <20180607095105.5185-1-bst@pengutronix.de>
- <20180607095105.5185-2-bst@pengutronix.de>
-Message-ID: <71c51ff9-9986-740f-21ca-b7840703b44f@pengutronix.de>
-Date: Thu, 7 Jun 2018 12:15:00 +0200
-MIME-Version: 1.0
-In-Reply-To: <20180607095105.5185-2-bst@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-imx@nxp.com, Anson Huang <Anson.Huang@nxp.com>, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-imx@nxp.com, Anson Huang <anson.huang@nxp.com>, kernel@pengutronix.de, Anson Huang <Anson.Huang@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+From: Anson Huang <Anson.Huang@nxp.com>
 
-On 06/07/2018 11:51 AM, Bastian Stender wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Add #cooling-cells for i.MX6/7 SoCs for cpufreq
-> cooling device usage.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Add #cooling-cells for i.MX6/7 SoCs for cpufreq
+cooling device usage.
 
-I forgot my SoB here, so:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+This is a resend of id:1526285359-17978-3-git-send-email-Anson.Huang@nxp.com
+The rest of Huang's series was a duplicate of my original series and was
+skipped (as requested by Huang) in favor of the prior v2 patch.
+---
+ arch/arm/boot/dts/imx6dl.dtsi | 1 +
+ arch/arm/boot/dts/imx6q.dtsi  | 1 +
+ arch/arm/boot/dts/imx6sl.dtsi | 1 +
+ arch/arm/boot/dts/imx6sx.dtsi | 1 +
+ arch/arm/boot/dts/imx6ul.dtsi | 1 +
+ arch/arm/boot/dts/imx7d.dtsi  | 1 +
+ 6 files changed, 6 insertions(+)
 
-Signed-off-by: Bastian Stender <bst@pengutronix.de>
-
-Regards,
-Bastian
-
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 558bce81209d..b830dfd74ad3 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -39,6 +39,7 @@
+ 				396000	1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6QDL_CLK_ARM>,
+ 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+ 				 <&clks IMX6QDL_CLK_STEP>,
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index ae7b3f107893..ac9f5cb65dec 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -44,6 +44,7 @@
+ 				396000	1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6QDL_CLK_ARM>,
+ 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+ 				 <&clks IMX6QDL_CLK_STEP>,
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index ab6a7e2e7e8f..d35d4e93236a 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -65,6 +65,7 @@
+ 				396000          1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6SL_CLK_ARM>, <&clks IMX6SL_CLK_PLL2_PFD2>,
+ 					<&clks IMX6SL_CLK_STEP>, <&clks IMX6SL_CLK_PLL1_SW>,
+ 					<&clks IMX6SL_CLK_PLL1_SYS>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 49c7205b8db8..966e39a99792 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -83,6 +83,7 @@
+ 				198000	    1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6SX_CLK_ARM>,
+ 				 <&clks IMX6SX_CLK_PLL2_PFD2>,
+ 				 <&clks IMX6SX_CLK_STEP>,
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 1241972b16ba..14b6ac78d323 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -66,6 +66,7 @@
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			operating-points = <
+ 				/* kHz	uV */
+ 				696000	1275000
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 200714e3feea..4991371734d9 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -53,6 +53,7 @@
+ 				792000	975000
+ 			>;
+ 			clock-frequency = <996000000>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
 -- 
-Pengutronix e.K.
-Industrial Linux Solutions
-http://www.pengutronix.de/
-Peiner Str. 6-8, 31137 Hildesheim, Germany
-Amtsgericht Hildesheim, HRA 2686
+2.17.1
+
