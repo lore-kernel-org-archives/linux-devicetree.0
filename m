@@ -1,63 +1,38 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v5 2/4] power: supply: Add support for the Qualcomm
- Battery Monitoring System
-Date: Thu, 7 Jun 2018 12:08:20 -0700
-Message-ID: <e1a78fe3-593d-d39c-05b3-a1cc2b948e90@infradead.org>
-References: <20180407135934.26122-1-ctatlor97@gmail.com>
- <20180607181306.9766-1-ctatlor97@gmail.com>
- <20180607181306.9766-2-ctatlor97@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/5] Add R8A77980/Condor/V3HSK LVDS/HDMI support
+Date: Thu, 7 Jun 2018 23:17:03 +0300
+Message-ID: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607181306.9766-2-ctatlor97@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2018 11:12 AM, Craig Tatlor wrote:
-> This patch adds a driver for the BMS (Battery Monitoring System)
-> block of the PM8941 PMIC, it uses a lookup table defined in the
-> device tree to generate a capacity from the BMS supplied OCV, it
-> then ammends the coulomb counter to that to increase the accuracy
+Hello!
 
-       amends
+Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180604-v4.17' tag. We're adding the R8A77980 FCPVD/VSPD/
+DU/LVDS device nodes and then describing the LVDS decoder and HDMI encoder
+connected to the LVDS output. These patches depend on the Thine THC63LVD1024
+driver and the R8A77980 LVDS support patch in order to work, and R8A77980 GPIO
+DT patches in order to apply/compile...
 
-> of the estimated capacity.
-> 
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-> ---
+[1/5] arm64: dts: renesas: r8a77980: add FCPVD support
+[2/5] arm64: dts: renesas: r8a77980: add VSPD support
+[3/5] arm64: dts: renesas: r8a77980: add DU support
+[4/5] arm64: dts: renesas: r8a77980: add LVDS support
+[5/5] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI support
 
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index 428b426842f4..6c354c37bc55 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -82,6 +82,15 @@ config BATTERY_ACT8945A
->  	  Say Y here to enable support for power supply provided by
->  	  Active-semi ActivePath ACT8945A charger.
->  
-> +config BATTERY_BMS
-> +	tristate "Qualcomm Battery Monitoring System driver"
-> +	depends on MFD_SPMI_PMIC || COMPILE_TEST
-> +	depends on OF
-> +	depends on REGMAP_SPMI
-
-	select REGMAP_SPMI
-
-I'm not a fan of "select", but it does not have a prompt string so it isn't
-user settable (not directly; it can be set indirectly).
-And all other uses of it in Kconfig files use "select".
-
-> +	help
-> +	  Say Y to include support for the Battery Monitoring hardware
-> +	  found in some Qualcomm PM series PMICs.
-> +
->  config BATTERY_CPCAP
->  	tristate "Motorola CPCAP PMIC battery driver"
->  	depends on MFD_CPCAP && IIO
-
-
--- 
-~Randy
+WBR, Sergei
