@@ -1,52 +1,105 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v3 4/6] bus: ti-sysc: Add support for software reset
-Date: Thu, 7 Jun 2018 15:54:01 +0530
-Message-ID: <a169ba7f-53f2-cf9a-a9ee-daffd6b53279@ti.com>
-References: <20180606060826.14671-1-faiz_abbas@ti.com>
- <20180606060826.14671-5-faiz_abbas@ti.com>
- <20180607073530.GH5738@atomide.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: clk: at91: add an I2S mux clock
+Date: Thu, 7 Jun 2018 13:30:14 +0300
+Message-ID: <18f6871e-794d-3ea2-487e-32399a8b89b4@microchip.com>
+References: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
+ <1527251668-31396-2-git-send-email-codrin.ciubotariu@microchip.com>
+ <20180531005827.GA17203@rob-hp-laptop>
+ <4f2e6e6a-df3a-b645-093c-b4467b3aa843@microchip.com>
+ <CAL_JsqJ=T0p17hHg6=obtydt7T-yrAeOr7C2XAEnDFQ-c0b5XQ@mail.gmail.com>
+ <152778070837.144038.4555982304713569160@swboyd.mtv.corp.google.com>
+ <CAL_JsqJu6=ORfutZ5tAyNp2q2rH6P+fgJMRKw750RyFy=ptjPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607073530.GH5738@atomide.com>
+In-Reply-To: <CAL_JsqJu6=ORfutZ5tAyNp2q2rH6P+fgJMRKw750RyFy=ptjPw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mark.rutland@arm.com, paul@pwsan.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
+To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Cristian.Birsan@microchip.com, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thursday 07 June 2018 01:05 PM, Tony Lindgren wrote:
-> * Faiz Abbas <faiz_abbas@ti.com> [180606 06:14]:
->> +static int sysc_reset(struct sysc *ddata)
->> +{
->> +	int offset = ddata->offsets[SYSC_SYSCONFIG];
->> +	int val = sysc_read(ddata, offset);
->> +
->> +	val |= (0x1 << ddata->cap->regbits->srst_shift);
->> +	sysc_write(ddata, offset, val);
->> +
->> +	/* Poll on reset status */
->> +	if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
->> +		offset = ddata->offsets[SYSC_SYSSTATUS];
->> +
->> +		return readl_poll_timeout(ddata->module_va + offset, val,
->> +				(val & ddata->cfg.syss_mask) == 0x0,
->> +				100, MAX_MODULE_SOFTRESET_WAIT);
->> +	}
->> +
->> +	return 0;
->> +}
+On 31.05.2018 18:56, Rob Herring wrote:
+> On Thu, May 31, 2018 at 10:31 AM, Stephen Boyd <sboyd@kernel.org> wrote:
+>> Quoting Rob Herring (2018-05-31 07:20:57)
+>>> On Thu, May 31, 2018 at 5:25 AM, Codrin Ciubotariu
+>>> <codrin.ciubotariu@microchip.com> wrote:
+>>>> On 31.05.2018 03:58, Rob Herring wrote:
+>>>>>
+>>>>> On Fri, May 25, 2018 at 03:34:22PM +0300, Codrin Ciubotariu wrote:
+>>>>>>
+>>>>>> The I2S mux clock can be used to select the I2S input clock. The
+>>>>>> available parents are the peripheral and the generated clocks.
+>>>>>>
+>>>>>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>>>>>> ---
+>>>>>>    .../devicetree/bindings/clock/at91-clock.txt       | 34
+>>>>>> ++++++++++++++++++++++
+>>>>>>    1 file changed, 34 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt
+>>>>>> b/Documentation/devicetree/bindings/clock/at91-clock.txt
+>>>>>> index 51c259a..1c46b3c 100644
+>>>>>> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+>>>>>> @@ -90,6 +90,8 @@ Required properties:
+>>>>>>          "atmel,sama5d2-clk-audio-pll-pmc"
+>>>>>>                  at91 audio pll output on AUDIOPLLCLK that feeds the PMC
+>>>>>>                  and can be used by peripheral clock or generic clock
+>>>>>> +       "atmel,sama5d2-clk-i2s-mux":
+>>>>>> +               at91 I2S clock source selection
+>>>>>
+>>>>>
+>>>>> Is this boolean or takes some values. If latter, what are valid values?
+>>>>
+>>>>
+>>>> This is the compatible string of the clock driver.
+>>>
+>>> Ah, now I remember. AT91 uses fine grained clock nodes in DT. Is there
+>>> still a plan to fix this?
+>>
+>> I'm also interested in a plan.
+>>
+>>>>>
+>>>>>> +               compatible = "atmel,sama5d2-clk-i2s-mux";
+>>>>>> +               #address-cells = <1>;
+>>>>>> +               #size-cells = <0>;
+>>>>>
+>>>>>
+>>>>> How do you address this block? My guess is you don't because it is just
+>>>>> part of some other block and you are just creating this node to
+>>>>> instantiate a driver. Just make the node for the actual h/w block a
+>>>>> clock provider and define the clock ids (0 and 1).
+>>>>
+>>>>
+>>>> This block is not addressed, but its children are. The register we access in
+>>>> this driver is not part of other block. It's a SFR register, accessed
+>>>> through syscon and it has nothing to do with the I2S IP (see SAMA5D2 DS,
+>>>> page 1256, fig. 44-1: I2SC Block Diagram) that is the consumer of this
+>>>> clock. Adding a clock-id property in the I2S node would be just like v3 of
+>>>> this series, with the difference that we use clock-id instead of alias id to
+>>>> set the clock parent, which is not how you suggested back then.
+>>>
+>>> I wasn't suggesting a clock-id property, but a clock specifier (i.e.
+>>> make #clock-cells 1).
+>>>
+>>> But AT91 clocks are all a mess, so I don't know what to tell you.
+>>>
+>>
+>> If #clock-cells of 1 works then we should go with that. It's still weird
+>> that we need random nodes to add more clks, but I guess that's how it's
+>> going to be for each at91 clk driver until it changes to be one big
+>> provider node.
 > 
-> I wonder if we should also add SYSS_QUIRK_RESET_STATUS in
-> addition to SYSC_QUIRK_RESET status to make it easy to
-> read the right register?
+> Seems to me that clock additions could use a new binding and we start
+> with a new driver that handles these few clocks initially. But I
+> haven't looked whether both can coexist.
 
-I assumed SYSC_QUIRK is the prefix to indicate the ti-sysc driver not
-the register. Are there layouts in which the reset status bit is in the
-sysconfig register rather than the sysstatus register?
+Mark already applied to broonie/sound.git the I2S bindings that have a 
+phandle to this clock. If I am to change #clock-cells to 1, I will have 
+to change the bindings to include the clock-id.
+Which approach should I take now?
 
-Thanks,
-Faiz
+Thanks and best regards,
+Codrin
