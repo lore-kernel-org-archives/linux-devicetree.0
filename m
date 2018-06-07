@@ -1,130 +1,63 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
- for the cells list
-Date: Thu, 7 Jun 2018 18:41:55 +0200
-Message-ID: <20180607184155.6da38a01@tock>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
-        <1521933899-362-2-git-send-email-albeu@free.fr>
-        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
-        <20180417165420.423a691b@avionic-0020>
-        <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
-        <20180417180040.04f53495@avionic-0020>
-        <20180418134119.2e587621@avionic-0020>
-        <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
-        <20180418143243.3c23493c@avionic-0020>
-        <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
-        <20180418153440.187ed16e@avionic-0020>
-        <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v2 1/1] ARM: dts: cygnus: enable iproc-hwrng
+Date: Thu, 7 Jun 2018 18:52:42 +0200
+Message-ID: <CAJiuCcefDycphDfTM1a=Dz7vaHMQy4Bq=b4mKTiVZhRTKmWhoQ@mail.gmail.com>
+References: <1528309291-25579-1-git-send-email-scott.branden@broadcom.com> <c0b4d69d-2826-320e-974e-c7cdbf341747@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9Ob2lgq1f9qUa+6V9nvLT5a"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
+In-Reply-To: <c0b4d69d-2826-320e-974e-c7cdbf341747@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Aban Bedel <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: scott.branden@broadcom.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mohamed-ismail.abdul@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
---Sig_/9Ob2lgq1f9qUa+6V9nvLT5a
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Florian,
 
-On Tue, 1 May 2018 17:49:03 +0100
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+On Thu, 7 Jun 2018 at 18:35, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 06/06/2018 11:21 AM, Scott Branden wrote:
+> > From: Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdul@broadco=
+m.com>
+> >
+> > Enable the HW rng driver "iproc-rng200" for all cygnus platforms.
+> >
+> > Signed-off-by: Mohamed Ismail Abdul Packir Mohamed <mohamed-ismail.abdu=
+l@broadcom.com>
+> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>
+> Clement, do you want to test this and reported back?
 
-> On 18/04/18 14:34, Alban wrote:
-> > On Wed, 18 Apr 2018 13:53:56 +0100
-> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
-> >  =20
-> >> On 18/04/18 13:32, Alban wrote: =20
-> >>>> I was also suggesting you to use nvmem-cell subnode, but make it a
-> >>>> proper nvmem provider device, rather than reusing its parent device.
-> >>>>
-> >>>> You would end up some thing like this in dt.
-> >>>>
-> >>>> flash@0 {
-> >>>> 	#address-cells =3D <1>;
-> >>>> 	#size-cells =3D <1>;
-> >>>> 	compatible =3D "s25sl064a";
-> >>>> 	reg =3D <0>;
-> >>>>
-> >>>> 	nvmem-cells {
-> >>>> 		compatible =3D "mtd-nvmem";
-> >>>> 		#address-cells =3D <1>;
-> >>>> 		#size-cells =3D <1>;
-> >>>>
-> >>>> 		calibration: calib@404 {
-> >>>> 			reg =3D <0x404 0x10>;
-> >>>> 		};
-> >>>> 	};
-> >>>> }; =20
-> >>> But the root cause is in the nvmem binding, this conflict could exist=
-s =20
-> >> No, the root cause is because of passing wrong device instance to nvmem
-> >> core. And trying to workaround is the actual issue. =20
-> >=20
-> > The data is stored on the MTD, so the nvmem provider is the MTD device.
-> > I don't think it is a good idea to have a virtual device in the DT to
-> > accommodate the nvmem API.
-> >  =20
-> Yep, I agree! this is same issue if we make nvmem-cells a child of nvmem=
-=20
-> provider too.
->=20
-> However, I would like to see this moving forward.
->=20
-> I can think of one possible solution here, which is, adding=20
-> "nvmem-mtd-cell" or "nvmem-cell" compatible string to each cell.
+Tested v1 and works fine on bcm58305
 
-I would definitely use "nvmem-cell", from the binding point of view it
-doesn't matter what the underlaying storage is.
+Tested-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 
-> The problem you mentioned regarding #address-cells and #size-cells with=20
-> provider need to be addressed in nvmem core.
->=20
-> Currently nvmem core only support offsets of 32 bits, if you are=20
-> expecting a 64 bit offsets then we should add that as a feature to nvmem=
-=20
-> core.
->=20
-> nvmem core as it is today should work fine with 32 bit offsets for mtd=20
-> cases.
-
-That's not what I meant, 32 bit should be more that enough for now.
-What I meant is that if a binding already has children nodes using
-unit-address, then we would end up with two different uses of the same
-"address space".
-
-> what do you think?
-
-AFAIU the only thing that we disagree on now is if the nodes
-representing the cells should be direct children of the provider
-or in a dedicated subnode. For the MTD case both solution would solve
-the binding clash. I would really appreciate if the DT people could
-chip in so that we can settle this and get the MTD support merged.
-
-Alban
-
---Sig_/9Ob2lgq1f9qUa+6V9nvLT5a
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJbGWBUAAoJEHSUmkuduC28HyQP/37V7eIFgwwnql9bvJM/LoQ+
-knLG6mpQ1AciuobA4k0xtid3zQk6M5EaU/fUMak72hvlLteUWEALn85ahNS1LDFN
-T19+lm97gtNywFzkD4OF1tQheLPdfMD/0N2pV3E2JNp5heDwgKp8HroCtVCnQ73S
-SaFZJNv2GmOHAeNkaHlyvVT+4P/HhQgL4nRQ0PL/7R4w36d4Jbn0Xo78GnE9whY0
-YEZpc4LWQV7NxQFUZJvNjIoWN4CKp0Snb9XQbs3LEDidtwIo8eydt424ourL7X5U
-csf3naDC5oNumYgV5rqTjbLKVsm663LY6LkdnaxtNZU44EdlQWIYhNzay/kKmkc3
-hXND24daaamwT61nujRLkQwdWESKaHvfbxAmw9RpOueagA0nMuKynInDv3Dx5PIq
-Ha8aQtdUP947HSARUDiwIrbdFJmdQsgUJfKsVAZX6FC8WBA2xPKtZ+9Vq8+HeiFI
-PewOuBWnZ8DhsmY9NuO+CYRvQVX61qQBwbrVmRvSFSRdeJ4ubMdqasVr/u5jPz9e
-8+CTAQKTRKSIloa5upcuI2oQG+PtzMzcVoykpmroq3kzhKfJ89gEKGdM+zREtSjE
-chPWiMaiv4amq+B3Asd33YuGA0KIFVW807hQJQa09E/sAVHIOsKbxiqbmRKx3ObH
-x1C64XnN3OSZYbx2qH1q
-=c3AR
------END PGP SIGNATURE-----
-
---Sig_/9Ob2lgq1f9qUa+6V9nvLT5a--
+>
+> > ---
+> >  arch/arm/boot/dts/bcm-cygnus.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-=
+cygnus.dtsi
+> > index 9fe4f5a..b0e38fa 100644
+> > --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> > +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> > @@ -417,6 +417,11 @@
+> >                       status =3D "disabled";
+> >               };
+> >
+> > +             rng: rng@18032000 {
+> > +                     compatible =3D "brcm,iproc-rng200";
+> > +                     reg =3D <0x18032000 0x28>;
+> > +             };
+> > +
+> >               sdhci0: sdhci@18041000 {
+> >                       compatible =3D "brcm,sdhci-iproc-cygnus";
+> >                       reg =3D <0x18041000 0x100>;
+> >
+>
+>
+> --
+> Florian
