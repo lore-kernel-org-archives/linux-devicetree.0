@@ -1,36 +1,39 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/3] ARM: dts: imx6qdl-icore: Fix wrong reg_2p5 regulator node name
-Date: Thu,  7 Jun 2018 19:21:33 +0530
-Message-ID: <20180607135133.3104-3-jagan@amarulasolutions.com>
-References: <20180607135133.3104-1-jagan@amarulasolutions.com>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v6 2/5] ARM: imx: remove inexistant EPIT timer init
+Date: Thu,  7 Jun 2018 16:05:41 +0200
+Message-ID: <20180607140544.22268-3-peron.clem@gmail.com>
+References: <20180607140544.22268-1-peron.clem@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607135133.3104-1-jagan@amarulasolutions.com>
+In-Reply-To: <20180607140544.22268-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?q?Cl=C3=A9ment=20Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-- in reg_2p5, fix regulator node name as regulator-2p5v
-- remove exctra line
+From: Clément Peron <clement.peron@devialet.com>
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+i.MX EPIT timer has been removed but not the init function declaration.
+
+Signed-off-by: Clément Peron <clement.peron@devialet.com>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/mach-imx/common.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index be8aa55c973e..9ce993776160 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -65,8 +65,7 @@
- 		regulator-always-on;
- 	};
- 
--
--	reg_2p5v: regulator-3p3v {
-+	reg_2p5v: regulator-2p5v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "2P5V";
- 		regulator-min-microvolt = <2500000>;
+diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+index c8d68e918b2f..18aae76fa2da 100644
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -38,7 +38,6 @@ void imx21_soc_init(void);
+ void imx27_soc_init(void);
+ void imx31_soc_init(void);
+ void imx35_soc_init(void);
+-void epit_timer_init(void __iomem *base, int irq);
+ int mx21_clocks_init(unsigned long lref, unsigned long fref);
+ int mx27_clocks_init(unsigned long fref);
+ int mx31_clocks_init(unsigned long fref);
 -- 
-2.14.3
+2.17.1
