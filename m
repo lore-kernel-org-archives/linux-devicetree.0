@@ -1,349 +1,63 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH] arm64: dts: stingray: use NUM_SATA to configure number of
- sata ports
-Date: Thu, 7 Jun 2018 11:53:13 -0700
-Message-ID: <395f1fe8-76f1-8310-d09e-63e25bca23d2@broadcom.com>
-References: <1526668446-20048-1-git-send-email-scott.branden@broadcom.com>
- <d35afa1f-e0fd-84f1-7d42-60595e22cc77@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5 2/4] power: supply: Add support for the Qualcomm
+ Battery Monitoring System
+Date: Thu, 7 Jun 2018 12:08:20 -0700
+Message-ID: <e1a78fe3-593d-d39c-05b3-a1cc2b948e90@infradead.org>
+References: <20180407135934.26122-1-ctatlor97@gmail.com>
+ <20180607181306.9766-1-ctatlor97@gmail.com>
+ <20180607181306.9766-2-ctatlor97@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d35afa1f-e0fd-84f1-7d42-60595e22cc77@gmail.com>
+In-Reply-To: <20180607181306.9766-2-ctatlor97@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 06/07/2018 11:12 AM, Craig Tatlor wrote:
+> This patch adds a driver for the BMS (Battery Monitoring System)
+> block of the PM8941 PMIC, it uses a lookup table defined in the
+> device tree to generate a capacity from the BMS supplied OCV, it
+> then ammends the coulomb counter to that to increase the accuracy
 
-Could you please kindly comment on change below.
+       amends
 
-It allows board variants to be added easily via a simple define for 
-different number of SATA ports.
+> of the estimated capacity.
+> 
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> ---
+
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index 428b426842f4..6c354c37bc55 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -82,6 +82,15 @@ config BATTERY_ACT8945A
+>  	  Say Y here to enable support for power supply provided by
+>  	  Active-semi ActivePath ACT8945A charger.
+>  
+> +config BATTERY_BMS
+> +	tristate "Qualcomm Battery Monitoring System driver"
+> +	depends on MFD_SPMI_PMIC || COMPILE_TEST
+> +	depends on OF
+> +	depends on REGMAP_SPMI
+
+	select REGMAP_SPMI
+
+I'm not a fan of "select", but it does not have a prompt string so it isn't
+user settable (not directly; it can be set indirectly).
+And all other uses of it in Kconfig files use "select".
+
+> +	help
+> +	  Say Y to include support for the Battery Monitoring hardware
+> +	  found in some Qualcomm PM series PMICs.
+> +
+>  config BATTERY_CPCAP
+>  	tristate "Motorola CPCAP PMIC battery driver"
+>  	depends on MFD_CPCAP && IIO
 
 
-On 18-06-04 09:22 AM, Florian Fainelli wrote:
-> On 05/18/2018 11:34 AM, Scott Branden wrote:
->> Move remaining sata configuration to stingray-sata.dtsi and enable
->> ports based on NUM_SATA defined.
->> Now, all that needs to be done is define NUM_SATA per board.
-> Rob could you review this and let us know if this approach is okay or
-> not? Thank you!
->
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 64 --------------------
->>   .../boot/dts/broadcom/stingray/bcm958742k.dts      |  2 +
->>   .../boot/dts/broadcom/stingray/bcm958742t.dts      |  2 +
->>   .../boot/dts/broadcom/stingray/stingray-sata.dtsi  | 68 ++++++++++++++++++++++
->>   4 files changed, 72 insertions(+), 64 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->> index 8862ec9..cacc25e 100644
->> --- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->> +++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
->> @@ -72,70 +72,6 @@
->>   	      <0x00000008 0x80000000 0x1 0x80000000>; /* 6G @ 34G */
->>   };
->>   
->> -&sata0 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy0{
->> -	status = "okay";
->> -};
->> -
->> -&sata1 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy1{
->> -	status = "okay";
->> -};
->> -
->> -&sata2 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy2{
->> -	status = "okay";
->> -};
->> -
->> -&sata3 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy3{
->> -	status = "okay";
->> -};
->> -
->> -&sata4 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy4{
->> -	status = "okay";
->> -};
->> -
->> -&sata5 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy5{
->> -	status = "okay";
->> -};
->> -
->> -&sata6 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy6{
->> -	status = "okay";
->> -};
->> -
->> -&sata7 {
->> -	status = "okay";
->> -};
->> -
->> -&sata_phy7{
->> -	status = "okay";
->> -};
->> -
->>   &mdio_mux_iproc {
->>   	mdio@10 {
->>   		gphy0: eth-phy@10 {
->> diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts b/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
->> index 77efa28..a515346 100644
->> --- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
->> +++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dts
->> @@ -32,6 +32,8 @@
->>   
->>   /dts-v1/;
->>   
->> +#define NUM_SATA	8
->> +
->>   #include "bcm958742-base.dtsi"
->>   
->>   / {
->> diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts b/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
->> index 5084b03..6a4d19e 100644
->> --- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
->> +++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dts
->> @@ -32,6 +32,8 @@
->>   
->>   /dts-v1/;
->>   
->> +#define NUM_SATA	8
->> +
->>   #include "bcm958742-base.dtsi"
->>   
->>   / {
->> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->> index 8c68e0c..7f6d176 100644
->> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->> @@ -43,7 +43,11 @@
->>   			interrupts = <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 0)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata0_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -58,7 +62,11 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 0)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata0_phy0: sata-phy@0 {
->>   				reg = <0>;
->> @@ -73,7 +81,11 @@
->>   			interrupts = <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 1)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata1_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -88,7 +100,11 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 1)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata1_phy0: sata-phy@0 {
->>   				reg = <0>;
->> @@ -103,7 +119,11 @@
->>   			interrupts = <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 2)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata2_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -118,7 +138,11 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 2)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata2_phy0: sata-phy@0 {
->>   				reg = <0>;
->> @@ -133,7 +157,11 @@
->>   			interrupts = <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 3)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata3_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -148,7 +176,11 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 3)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata3_phy0: sata-phy@0 {
->>   				reg = <0>;
->> @@ -163,7 +195,11 @@
->>   			interrupts = <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 4)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata4_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -178,7 +214,11 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 4)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata4_phy0: sata-phy@0 {
->>   				reg = <0>;
->> @@ -193,7 +233,11 @@
->>   			interrupts = <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 5)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata5_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -208,7 +252,11 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 5)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata5_phy0: sata-phy@0 {
->>   				reg = <0>;
->> @@ -223,7 +271,11 @@
->>   			interrupts = <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 6)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata6_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -238,7 +290,11 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 6)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata6_phy0: sata-phy@0 {
->>   				reg = <0>;
->> @@ -253,7 +309,11 @@
->>   			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>;
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 7)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata7_port0: sata-port@0 {
->>   				reg = <0>;
->> @@ -268,11 +328,19 @@
->>   			reg-names = "phy";
->>   			#address-cells = <1>;
->>   			#size-cells = <0>;
->> +#if (NUM_SATA > 7)
->> +			status = "okay";
->> +#else
->>   			status = "disabled";
->> +#endif
->>   
->>   			sata7_phy0: sata-phy@0 {
->>   				reg = <0>;
->>   				#phy-cells = <0>;
->>   			};
->>   		};
->> +
->> +#if (NUM_SATA > 8)
->> +#error "NUM_SATA > 8"
->> +#endif
->>   	};
->>
->
+-- 
+~Randy
