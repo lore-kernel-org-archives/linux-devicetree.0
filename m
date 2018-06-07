@@ -1,34 +1,69 @@
-Return-Path: <SRS0=8793=I5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:49261 "EHLO mga04.intel.com"
+Return-Path: <SRS0=13PW=IZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga06.intel.com ([134.134.136.31]:9347 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932910AbeFKMjE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 11 Jun 2018 08:39:04 -0400
-Date: Mon, 11 Jun 2018 15:38:48 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Add bindings for AKM ak7375 voice
- coil lens
-Message-ID: <20180611123847.fyaluiqqjcqmnezd@kekkonen.localdomain>
-References: <1528343433-2475-1-git-send-email-bingbu.cao@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1528343433-2475-1-git-send-email-bingbu.cao@intel.com>
+        id S1753066AbeFGDrt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 6 Jun 2018 23:47:49 -0400
+From: bingbu.cao@intel.com
+Subject: [PATCH v4 1/2] dt-bindings: Add bindings for AKM ak7375 voice coil lens
+Date: Thu,  7 Jun 2018 11:50:32 +0800
+Message-Id: <1528343433-2475-1-git-send-email-bingbu.cao@intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: bingbu.cao@intel.com
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, tfiga@google.com, jacopo@jmondi.org, rajmohan.mani@intel.com, bingbu.cao@linux.intel.com, tian.shu.qiu@intel.com, jian.xu.zheng@intel.com
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sakari.ailus@linux.intel.com, tfiga@google.com, jacopo@jmondi.org, rajmohan.mani@intel.com, bingbu.cao@linux.intel.com, tian.shu.qiu@intel.com, jian.xu.zheng@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jun 07, 2018 at 11:50:32AM +0800, bingbu.cao@intel.com wrote:
-> From: Bingbu Cao <bingbu.cao@intel.com>
-> 
-> Add device tree bindings for AKM ak7375 voice coil lens
-> driver. This chip is used to drive a lens in a camera module.
-> 
-> Signed-off-by: Tianshu Qiu <tian.shu.qiu@intel.com>
-> Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+From: Bingbu Cao <bingbu.cao@intel.com>
 
-Please remember to add acks you've received in the future.
+Add device tree bindings for AKM ak7375 voice coil lens
+driver. This chip is used to drive a lens in a camera module.
 
+Signed-off-by: Tianshu Qiu <tian.shu.qiu@intel.com>
+Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+
+---
+Changes since v1:
+    - add the MAINTAINERS change
+    - correct the vendor prefix from akm to asahi-kasei
+---
+---
+ Documentation/devicetree/bindings/media/i2c/ak7375.txt | 8 ++++++++
+ MAINTAINERS                                            | 8 ++++++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ak7375.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ak7375.txt b/Documentation/devicetree/bindings/media/i2c/ak7375.txt
+new file mode 100644
+index 000000000000..aa3e24b41241
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ak7375.txt
+@@ -0,0 +1,8 @@
++Asahi Kasei Microdevices AK7375 voice coil lens driver
++
++AK7375 is a camera voice coil lens.
++
++Mandatory properties:
++
++- compatible: "asahi-kasei,ak7375"
++- reg: I2C slave address
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea362219c4aa..ad68d75abc84 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2258,6 +2258,14 @@ L:	linux-leds@vger.kernel.org
+ S:	Maintained
+ F:	drivers/leds/leds-as3645a.c
+ 
++ASAHI KASEI AK7375 LENS VOICE COIL DRIVER
++M:	Tianshu Qiu <tian.shu.qiu@intel.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	drivers/media/i2c/ak7375.c
++F:	Documentation/devicetree/bindings/media/i2c/ak7375.txt
++
+ ASAHI KASEI AK8974 DRIVER
+ M:	Linus Walleij <linus.walleij@linaro.org>
+ L:	linux-iio@vger.kernel.org
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+1.9.1
+
