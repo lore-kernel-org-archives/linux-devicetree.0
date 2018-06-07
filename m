@@ -1,109 +1,254 @@
-From: Radu Pirea <radu.pirea@microchip.com>
-Subject: [PATCH v6 2/6] dt-bindings: add binding for atmel-usart in SPI mode
-Date: Thu, 7 Jun 2018 14:00:16 +0300
-Message-ID: <20180607110020.20565-3-radu.pirea@microchip.com>
-References: <20180607110020.20565-1-radu.pirea@microchip.com>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v4 2/6] mfd: bd71837: Devicetree bindings for ROHM
+ BD71837 PMIC
+Date: Thu, 7 Jun 2018 14:12:18 +0300
+Message-ID: <20180607111218.GF20078@localhost.localdomain>
+References: <20180531030129.GA16122@rob-hp-laptop>
+ <20180531071717.GG13528@localhost.localdomain>
+ <20180531102315.GA5150@localhost.localdomain>
+ <CAL_Jsq+33G7zMEDOUXHQijxqqbvqykxZENLe1-52ECkXwo2o4g@mail.gmail.com>
+ <20180601062540.GB5150@localhost.localdomain>
+ <CAL_JsqJNMxR=zdwR41iLfWU=u3J_=_VkxVL+g3a12_4vvNwBtw@mail.gmail.com>
+ <20180604113225.GE5150@localhost.localdomain>
+ <CAL_JsqL3Z_o2CFeYDvb3PqgiskTSHuOVqwdUP+gFymLDTKhn2g@mail.gmail.com>
+ <20180606073449.GD20078@localhost.localdomain>
+ <CAL_JsqKjwtq+7CSDKiaWGa011oqdsrc-XjOyfuBPOQ9UB=EtWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180607110020.20565-1-radu.pirea@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Radu Pirea <radu.pirea@microchip.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKjwtq+7CSDKiaWGa011oqdsrc-XjOyfuBPOQ9UB=EtWQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-This patch moves the bindings for serial from serial/atmel-usart.txt to
-mfd/atmel-usart.txt and adds bindings for USART in SPI mode.
+On Wed, Jun 06, 2018 at 10:16:37AM -0500, Rob Herring wrote:
+> On Wed, Jun 6, 2018 at 2:34 AM, Matti Vaittinen
+> <mazziesaccount@gmail.com> wrote:
+> > On Tue, Jun 05, 2018 at 10:46:14AM -0500, Rob Herring wrote:
+> >> On Mon, Jun 4, 2018 at 6:32 AM, Matti Vaittinen
+> >> <mazziesaccount@gmail.com> wrote:
+> >> > On Fri, Jun 01, 2018 at 12:32:16PM -0500, Rob Herring wrote:
+> >> >> On Fri, Jun 1, 2018 at 1:25 AM, Matti Vaittinen
+> >> >> <mazziesaccount@gmail.com> wrote:
+> >> >> > On Thu, May 31, 2018 at 09:07:24AM -0500, Rob Herring wrote:
+> >> >> >> On Thu, May 31, 2018 at 5:23 AM, Matti Vaittinen
+> >> >> >> <mazziesaccount@gmail.com> wrote:
+> >> >> >> > On Thu, May 31, 2018 at 10:17:17AM +0300, Matti Vaittinen wrote:
+> >> >> >> >> On Wed, May 30, 2018 at 10:01:29PM -0500, Rob Herring wrote:
+> >> >> >> >> > On Wed, May 30, 2018 at 11:42:03AM +0300, Matti Vaittinen wrote:
+> > Datasheet:
+> > https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
+> > (Would it be good idea to add this link to comments in MFD driver or to
+> > binding document(s)?)
+> 
+> Yes, it would.
 
-Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/{serial => mfd}/atmel-usart.txt  | 25 +++++++++++++++++--
- include/dt-bindings/mfd/at91-usart.h          | 17 +++++++++++++
- 2 files changed, 40 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
- create mode 100644 include/dt-bindings/mfd/at91-usart.h
+I will add this then. I don't really like adding links like this as urls
+tend to change and links become dead - but I guess this is something we
+just must live with.
 
-diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-similarity index 76%
-rename from Documentation/devicetree/bindings/serial/atmel-usart.txt
-rename to Documentation/devicetree/bindings/mfd/atmel-usart.txt
-index 7c0d6b2f53e4..3b9e18642c3b 100644
---- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
-+++ b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-@@ -1,6 +1,6 @@
- * Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
- 
--Required properties:
-+Required properties for USART:
- - compatible: Should be "atmel,<chip>-usart" or "atmel,<chip>-dbgu"
-   The compatible <chip> indicated will be the first SoC to support an
-   additional mode or an USART new feature.
-@@ -11,7 +11,13 @@ Required properties:
- 	Required elements: "usart"
- - clocks: phandles to input clocks.
- 
--Optional properties:
-+Required properties for USART in SPI mode:
-+- #size-cells      : Must be <0>
-+- #address-cells   : Must be <1>
-+- cs-gpios: chipselects (internal cs not supported)
-+- atmel,usart-mode : Must be <USART_MODE_SPI> (found in dt-bindings/mfd/at91-usart.h)
-+
-+Optional properties in serial mode:
- - atmel,use-dma-rx: use of PDC or DMA for receiving data
- - atmel,use-dma-tx: use of PDC or DMA for transmitting data
- - {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD line respectively.
-@@ -62,3 +68,18 @@ Example:
- 		dma-names = "tx", "rx";
- 		atmel,fifo-size = <32>;
- 	};
-+
-+- SPI mode:
-+	#include <dt-bindings/mfd/at91-usart.h>
-+
-+	spi0: spi@f001c000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "atmel,at91rm9200-usart", "atmel,at91sam9260-usart";
-+		atmel,usart-mode = <USART_MODE_SPI>;
-+		reg = <0xf001c000 0x100>;
-+		interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&usart0_clk>;
-+		clock-names = "usart";
-+		cs-gpios = <&pioB 3 0>;
-+	};
-diff --git a/include/dt-bindings/mfd/at91-usart.h b/include/dt-bindings/mfd/at91-usart.h
-new file mode 100644
-index 000000000000..ac811628a42d
---- /dev/null
-+++ b/include/dt-bindings/mfd/at91-usart.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides macros for AT91 USART DT bindings.
-+ *
-+ * Copyright (C) 2018 Microchip Technology
-+ *
-+ * Author: Radu Pirea <radu.pirea@microchip.com>
-+ *
-+ */
-+
-+#ifndef __DT_BINDINGS_AT91_USART_H__
-+#define __DT_BINDINGS_AT91_USART_H__
-+
-+#define AT91_USART_MODE_SERIAL	1
-+#define AT91_USART_MODE_SPI	2
-+
-+#endif /* __DT_BINDINGS_AT91_USART_H__ */
--- 
-2.17.1
+> >                     +--------------------------------------------------+
+> >                     |                                                  |
+> > VSYS           +-----------------+                    +-----------+    |
+> >                     |            |                    |           |    |
+> >                     |  +-------+ |                    | BUCKS 1-4 +-------->
+> >                     |  |       | |                    |           |    |
+> > I2C IF         +------->   H   | +--------------------+  DVS      +-------->
+> >                     |  |   O   | |                    |  Support  |    |
+> > PWRON_B        +------->   S   | |                    |           +-------->
+> >                     |  |   T   | |                    |           |    |
+> > PMIC_STBY_REQ  +------->       | |                    |           +-------->
+
+Do you think this ASCII art picture in MFD or regulator driver comments would
+be an overkill?
+
+> > On the left we see input lines to PMIC. PWRON_B intended to be connected
+> > to power button. PMIC_STBY_REQ and PMIC_ON_REQ lines for controlling HW
+> > state machine PMIC has. And WDOG_B from watch dog.
+> >
+> > PMIC has control register for controlling what happens to BUCK/LDO
+> > outputs when input line states change. PMIC reports change in input
+> > lines via the IRQ_OUT line and IRQ status register.
+> 
+> So it looks like this is just regulators with a few other signals to handle.
+
+Yes. Regulators and the HW state machine which is currently mostly
+bypassed by drivers. And while we are at it - is there some standard
+device-tree properties for describing the voltages for different PMIC states
+(idle, run, standby) so that the driver could configure voltages the
+bucks should use when PMIC state is changed. Or do you think I should
+use custom ones like:
+
+bd71837,pmic-buck1-dvs-voltage = <900000>, <850000>, <800000>; /* VDD_SOC: Run-Idle-Suspend */
+bd71837,pmic-buck2-dvs-voltage = <1000000>, <900000>, <0>; /* VDD_ARM: Run-Idle */
+bd71837,pmic-buck3-dvs-voltage = <1000000>, <0>, <0>; /* VDD_GPU: Run */
+bd71837,pmic-buck4-dvs-voltage = <1000000>, <0>, <0>; /* VDD_VPU: Run */
+
+I think this is not the only PMIC with configurable voltages for
+different states so someone has probably already invented a way to
+provide this information - is the DT correct place to search for this?
+
+> 
+> > So HW mapping for interrup(s) from PMIC would be:
+> >
+> > (HW) event => BD71837 domain IRQ
+> >
+> > PMIC_STBY_REQ line level change         => 0
+> > PMIC_ON_REQ line level change           => 1
+> 
+> I'm not really clear how these would have s/w handling. They look like
+> handshake signals for the processor to enter and exit standby/suspend.
+> H/w designers don't always know what to do with things and may have
+> just said lets have an interrupt for every input signal.
+
+The PMIC_ON_REQ can be used to switch the PMIC from 'READY' to 'SNVS'
+and from 'SNVS' to 'RUN' states. But same transitions can be configured
+to be done by power button presses too.
+
+I think I in some earlier mail said that I can't think how to handle
+other but power button interrupts - when PMIC is used to power the
+processor controlling PMIC. But I also mentioned another use case
+which I can think of - but I am not sure if it is relevant or not. In
+this other use case we have a 'slave processor' powered by PMIC doing
+some specific tasks - and a 'control processor' which is not powered by
+this PMIC - but which may be controlling it (and thus also controls power
+for the slave). In such setup all these interrupts mmight become
+meaningfull - but handling should be platform specific then. (The
+control processor could for example detect slave processor resets or
+wake-ups via these interrupts and initiate any platform specific
+activities based on this). I have no system design experience so I don't
+know if this sounds reasonable or not - but thats why I liked the idea
+of providing access to all interrupts via this interrupt-controller.
+
+> I'd think you
+> would just want DT properties to configure what action to take (and
+> perhaps polarity?).
+
+Currently the driver is not configuring what happens when state of these
+signals change. But it could as you say. And it would be nice to get the
+configuration from DT. I think the polarity is fixed.
+
+
+> > PMIC_WDOG_B line level change           => 2
+> 
+> Ah, this is an input signal, not a watchdog block within the PMIC. I
+> think this should just be handled by the core driver. If you need to
+> configure what this does, then we can add a property to handle that.
+
+Action taken when WDOG_B is asserted is indeed configurable. PMIC can do
+cold reset, warm reset of take no action. But here I again fail to think
+how this should be handled - especially because HW default for action is
+cold reset. But as I said abowe - it may be there is use case for this
+interrupt even though I can't provide generic one. ...and this is why I
+liked the idea of having it available via DT... :)
+
+> 
+> > PMIC_PWRON_B line level change          => 3
+> > PMIC_PWRON_B line/long push detected    => 4
+> > PMIC_PWRON_B line/short push detected   => 5
+> 
+> So you need a power button driver (or maybe not even a separate
+> driver) for this, but I don't think that warrants a child node. I
+> think some PMIC drivers just generate a power key press (which just
+> gets punted to userspace), but some will do an actual power down. Or
+> maybe a combination of those based on short/long press.
+
+I agree with you on this. A power button driver could consume these
+IRQs. And yes, (input?) event to user-space sounds reasonable. Maybe
+also a power-off handler if "system-power-controller" property is given.
+
+Whether this is something crying for own DT node is not my decision. I
+just know that having own sub nodes and relying on irq-controller xlate
+callbacks eould make driver side really simple.
+
+> 
+> I think there's already some DT properties defined to control the
+> behavior as well.
+> 
+> > SWRESET register on PMIC written        => 6
+> 
+> Probably this can be handled within the core driver. Seems like you'd
+> only use this if you have separate entities that write and read this.
+> If you don't know, then just ignore it for now.
+
+Yep. My plan was not to implement handling for any of these interrupts
+for now. I just wanted to make them easily available for any future use.
+
+> > Hence I liked the idea of hiding the irq register
+> > details in MFD driver by declaring it as interrupt controller - and
+> > leaving the interrupts to be used by what ever drivers need the change
+> > information is system the PMIC is used.
+> 
+> This can still be done but doesn't have to be in DT.
+
+I think this is my weak spot. I don't know how to do this easily without
+DT. How do I bring the irq to power-button driver or to WDOG
+irq handler (or XXX-driver invented by one who needs these IRQs) without
+DT. Options I can think of are:
+
+1. getting the GPIO irq (from MFD parent) and making the IRQ registers
+   visible to power button/XXX drivers. Possibly ending up with shared
+   IRQ hanlder.
+2. Keeping the IRQ register accesses in MFD driver and providing some
+   handler callback registration interface from MFD driver to power
+   button/XXX drivers
+3. Using this interrupt-controller approach.
+
+I dislike option 1 because all drivers using IRQs need to be aware of
+IRQ registers.
+
+I dislike option 2 because inventing such IRQ callbacks just feel wrong.
+There must be better way - I just don't know it =)
+
+I would like to use option 3 - but I don't know how to do it without DT?
+Specifically I don't know how to provide the irq number and interrupt
+parent to power-button/XXX drivers if they are not brought from DT. And
+why to invent some parallel mechanism for this when DT usage already
+provides this. I would be really gratefull for any tips how to do this
+correctly if DT is not used.
+
+> > So what do you think of this:
+> >
+> > +Optional properties:
+> > + - interrupt-controller        : Marks the device node as an interrupt controller.
+> > +                         BD71837MWV can report input line state change and SW
+> > +                         reset events via interrupts. Different events can be seen
+> > +                         as separate BD71837 domain interrupts.
+> > + - #interrupt-cells    : The number of cells to describe an IRQ should be 1.
+> > +                         The value in cell is the IRQ number.
+> > +                           Meaningfull numbers are:
+> > +                             0 => PMIC_STBY_REQ level change
+> > +                             1 => PMIC_ON_REQ level change
+> > +                             2 => WDOG_B level change
+> > +                             3 => Power Button level change
+> > +                             4 => Power Button Long Push
+> > +                             5 => Power Button Short Push
+> > +                             6 => SWRESET register is written 1
+> >
+> > Would this be getting closer to what is needed from binding document?
+> 
+> I don't think any of this needs to live in DT. All you really need a
+> separate driver (and hence irq) for is really just the power button.
+> You can just define the interrupts within the kernel.
+
+So I tried to argue that all of the IRQs should be usable and we should
+not limit the HW capabilities by design (I like the idea of exposing all
+HW functionality because I only rarely know what should be usable better
+than the user). Are you sure my dual processor use-case is not
+convincing you we should provide these interrupts via DT?
+
+If so - as I already said, I would be gratefull for any suggestions on
+how to provide access to irqs without DT. I just can't help feeling that
+DT would have been the best way for cleanest and most
+understandable/usable end result.
+
+Meanwhile I will prepare a patch where the interrupt handling is
+completely ripped from MFD and binding documents as I don't have power
+button driver tested (I drafted something though). Maybe such a patch
+could be acceptable in order to enable regulator usage (and
+compilation). Is that Ok?
+
+Best Regards
+    Matti Vaittinen
