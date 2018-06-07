@@ -1,278 +1,115 @@
-From: avifishman70@gmail.com
-Subject: [PATCH v4 1/3] USB host: Add USB ehci support for nuvoton npcm7xx platform
-Date: Thu,  7 Jun 2018 17:58:19 +0300
-Message-ID: <20180607145821.322979-2-avifishman70@gmail.com>
-References: <20180607145821.322979-1-avifishman70@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
+Date: Thu, 7 Jun 2018 10:54:52 -0500
+Message-ID: <CAL_JsqLn+x0JCkjwABU7XkPsgvyVdiCRq=gZTfUBbbR4-c+1bQ@mail.gmail.com>
+References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528198148-23308-3-git-send-email-michel.pollet@bp.renesas.com>
+ <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com> <OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+ <9cef7124-3020-5741-f3a2-6925a6c8f0f3@gmail.com> <79c0899e-7df1-1fe7-9681-ad3bd51feda7@gmail.com>
+ <OSBPR01MB205442B483C792125E6A6AF7D2640@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607145821.322979-1-avifishman70@gmail.com>
+In-Reply-To: <OSBPR01MB205442B483C792125E6A6AF7D2640@OSBPR01MB2054.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc: avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Avi Fishman <AviFishman70@gmail.com>
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Douglas Anderson <dianders@chromium.org>, Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@endlessm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>Fr
 List-Id: devicetree@vger.kernel.org
 
-From: Avi Fishman <AviFishman70@gmail.com>
+On Thu, Jun 7, 2018 at 1:59 AM, Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> On 06 June 2018 22:53, Frank wrote:
+>> On 06/06/18 14:48, Frank Rowand wrote:
+>> > On 06/05/18 23:36, Michel Pollet wrote:
+>> >> Hi Frank,
+>> >>
+>> >> On 05 June 2018 18:34, Frank wrote:
+>> >>> On 06/05/18 04:28, Michel Pollet wrote:
+>> >>>> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot
+>> >>>> time, it requires a special enable method to get it started.
 
-This patch adds support for ehci controller for the Nuvoton
-npcm7xx platform.
-Most of the code was taken from ehci-spear.c + specific initialization
-code
+[...]
 
-Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
----
- drivers/usb/host/Kconfig        |   8 ++
- drivers/usb/host/Makefile       |   1 +
- drivers/usb/host/ehci-npcm7xx.c | 212 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 221 insertions(+)
- create mode 100644 drivers/usb/host/ehci-npcm7xx.c
+>> >>>> + * The second CPU is parked in ROM at boot time. It requires
+>> >>>> +waking it after
+>> >>>> + * writing an address into the BOOTADDR register of sysctrl.
+>> >>>> + *
+>> >>>> + * So the default value of the "cpu-release-addr" corresponds to
+>> >>> BOOTADDR...
+>> >>>> + *
+>> >>>> + * *However* the BOOTADDR register is not available when the
+>> >>>> +kernel
+>> >>>> + * starts in NONSEC mode.
+>> >>>> + *
+>> >>>> + * So for NONSEC mode, the bootloader re-parks the second CPU into
+>> >>>> +a pen
+>> >>>> + * in SRAM, and changes the "cpu-release-addr" of linux's DT to a
+>> >>>> +SRAM address,
+>> >>>> + * which is not restricted.
+>> >>>
+>> >>> The binding document for cpu-release-addr does not have a definition
+>> >>> for 32 bit arm.  The existing definition is only 64 bit arm.  Please
+>> >>> add the definition for 32 bit arm to patch 1.
+>> >>
+>> >> Hmmm I do find a definition in
+>> >> Documentation/devicetree/bindings/arm/cpus.txt -- just under where I
+>> >> added my 'enable-method' -- And it is already used as 32 bits in at
+>> >> least arch/arm/boot/dts/stih407-family.dtsi.
+>> >
+>> > If the correct answer is for cpu-release-addr to be 64 bits in certain
+>> > cases (that discussion is ongoing further downthread) then one
+>> > approach to maintain compatibility _and_ to fix the devicetree source
+>> > files is to change the source code that currently gets
+>> > cpu-release-addr as a
+>> > 32 bit object to check the size of the property and get it as either a
+>> > 32 bit or 64 bit object, based on the actual size of the property in
+>> > the device tree and then change the value in the devicetree source
+>> > files to be two cells.  BUT this does not consider the bootloader
+>> > complication.  arch/arm/boot/dts/axm5516-cpus.dtsi has a note "//
+>> > Fixed by the boot loader", so the boot loader also has to be modified
+>> > to be able to handle the possibility that the property could be either
+>> > 32 bits or 64 bits.  I don't know how to maintain compatibility with
+>> > the boot loader since we can't force it to change synchronously with
+>> > changes in the kernel.
+>> >
+>> > You can consider this comment to be a drive-by observation.  I think
+>> > Rob and Geert and people like that are likely to be more helpful with
+>> > what to actually do, and you can treat my comment more as pointing out
+>> > the issue than as providing the perfect solution.
+>>
+>> Darn it, hit <send> too quickly.
+>>
+>> I meant to mention that there are several devicetree source files that have a
+>> single cell value for cpu-release-addr, and thus potentially face the same
+>> situation, depending on what the final decision is on the proper size for cpu-
+>> release-addr. As of v4.17, a git grep shows one cell values in:
+>>
+>>   arch/arm/boot/dts/axm5516-cpus.dtsi
+>>   arch/arm/boot/dts/stih407-family.dtsi
+>>   arch/arm/boot/dts/stih418.dtsi
+>
+> Yes, I had grepped before I used 32 bits on mine...
+>
+> Now, what is the decision here? Our bootloader is already modified to set it to 32 bits, so I propose that
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 9f0aeb068acb..e3100b249f0f 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -185,6 +185,14 @@ config USB_EHCI_MXC
- 	---help---
- 	  Variation of ARC USB block used in some Freescale chips.
- 
-+config USB_EHCI_HCD_NPCM7XX
-+	tristate "Support for Nuvoton NPCM7XX on-chip EHCI USB controller"
-+	depends on (USB_EHCI_HCD && ARCH_NPCM7XX) || COMPILE_TEST
-+	default y
-+	help
-+	  Enables support for the on-chip EHCI controller on
-+	  Nuvoton NPCM7XX chips.
-+
- config USB_EHCI_HCD_OMAP
- 	tristate "EHCI support for OMAP3 and later chips"
- 	depends on ARCH_OMAP
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index 8a8cffe0b445..fcf5dab5efa4 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
- obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
- obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
- obj-$(CONFIG_USB_EHCI_MXC)	+= ehci-mxc.o
-+obj-$(CONFIG_USB_EHCI_HCD_NPCM7XX)	+= ehci-npcm7xx.o
- obj-$(CONFIG_USB_EHCI_HCD_OMAP)	+= ehci-omap.o
- obj-$(CONFIG_USB_EHCI_HCD_ORION)	+= ehci-orion.o
- obj-$(CONFIG_USB_EHCI_HCD_SPEAR)	+= ehci-spear.o
-diff --git a/drivers/usb/host/ehci-npcm7xx.c b/drivers/usb/host/ehci-npcm7xx.c
-new file mode 100644
-index 000000000000..c80a8792d3b0
---- /dev/null
-+++ b/drivers/usb/host/ehci-npcm7xx.c
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Nuvoton NPCM7xx driver for EHCI HCD
-+ *
-+ * Copyright (C) 2018 Nuvoton Technologies,
-+ * Avi Fishman <avi.fishman@nuvoton.com> <avifishman70@gmail.com>
-+ * Tomer Maimon <tomer.maimon@nuvoton.com> <tmaimon77@gmail.com>
-+ *
-+ * Based on various ehci-spear.c driver
-+ */
-+
-+
-+#include <linux/dma-mapping.h>
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
-+
-+#include "ehci.h"
-+
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+
-+#define DRIVER_DESC "EHCI npcm7xx driver"
-+
-+static const char hcd_name[] = "npcm7xx-ehci";
-+
-+#define  USB2PHYCTL_OFFSET 0x144
-+
-+#define  IPSRST2_OFFSET 0x24
-+#define  IPSRST3_OFFSET 0x34
-+
-+
-+static struct hc_driver __read_mostly ehci_npcm7xx_hc_driver;
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int ehci_npcm7xx_drv_suspend(struct device *dev)
-+{
-+	struct usb_hcd *hcd = dev_get_drvdata(dev);
-+	bool do_wakeup = device_may_wakeup(dev);
-+
-+	return ehci_suspend(hcd, do_wakeup);
-+}
-+
-+static int ehci_npcm7xx_drv_resume(struct device *dev)
-+{
-+	struct usb_hcd *hcd = dev_get_drvdata(dev);
-+
-+	ehci_resume(hcd, false);
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static SIMPLE_DEV_PM_OPS(ehci_npcm7xx_pm_ops, ehci_npcm7xx_drv_suspend,
-+		ehci_npcm7xx_drv_resume);
-+
-+static int npcm7xx_ehci_hcd_drv_probe(struct platform_device *pdev)
-+{
-+	struct usb_hcd *hcd;
-+	struct resource *res;
-+	struct regmap *gcr_regmap;
-+	struct regmap *rst_regmap;
-+	const struct hc_driver *driver = &ehci_npcm7xx_hc_driver;
-+	int irq;
-+	int retval;
-+
-+	dev_dbg(&pdev->dev,	"initializing npcm7xx ehci USB Controller\n");
-+
-+	gcr_regmap = syscon_regmap_lookup_by_compatible("nuvoton,npcm750-gcr");
-+	if (IS_ERR(gcr_regmap)) {
-+		dev_err(&pdev->dev, "%s: failed to find nuvoton,npcm750-gcr\n",
-+			__func__);
-+		return IS_ERR(gcr_regmap);
-+	}
-+
-+	rst_regmap = syscon_regmap_lookup_by_compatible("nuvoton,npcm750-rst");
-+	if (IS_ERR(rst_regmap)) {
-+		dev_err(&pdev->dev, "%s: failed to find nuvoton,npcm750-rst\n",
-+			__func__);
-+		return IS_ERR(rst_regmap);
-+	}
-+
-+	/********* phy init  ******/
-+	// reset usb host
-+	regmap_update_bits(rst_regmap, IPSRST2_OFFSET,
-+			(0x1 << 26), (0x1 << 26));
-+	regmap_update_bits(rst_regmap, IPSRST3_OFFSET,
-+			(0x1 << 25), (0x1 << 25));
-+	regmap_update_bits(gcr_regmap, USB2PHYCTL_OFFSET,
-+			(0x1 << 28), 0);
-+
-+	udelay(1);
-+
-+	// enable phy
-+	regmap_update_bits(rst_regmap, IPSRST3_OFFSET,
-+			(0x1 << 25), 0);
-+
-+	udelay(50); // enable phy
-+
-+	regmap_update_bits(gcr_regmap, USB2PHYCTL_OFFSET,
-+			(0x1 << 28), (0x1 << 28));
-+
-+	// enable host
-+	regmap_update_bits(rst_regmap, IPSRST2_OFFSET,
-+			(0x1 << 26), 0);
-+
-+	if (usb_disabled())
-+		return -ENODEV;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		retval = irq;
-+		goto fail;
-+	}
-+
-+	/*
-+	 * Right now device-tree probed devices don't get dma_mask set.
-+	 * Since shared usb code relies on it, set it here for now.
-+	 * Once we have dma capability bindings this can go away.
-+	 */
-+	retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (retval)
-+		goto fail;
-+
-+	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
-+	if (!hcd) {
-+		retval = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(hcd->regs)) {
-+		retval = PTR_ERR(hcd->regs);
-+		goto err_put_hcd;
-+	}
-+	hcd->rsrc_start = res->start;
-+	hcd->rsrc_len = resource_size(res);
-+
-+	/* registers start at offset 0x0 */
-+	hcd_to_ehci(hcd)->caps = hcd->regs;
-+
-+	retval = usb_add_hcd(hcd, irq, IRQF_SHARED);
-+	if (retval)
-+		goto err_put_hcd;
-+
-+	device_wakeup_enable(hcd->self.controller);
-+	return retval;
-+
-+err_put_hcd:
-+	usb_put_hcd(hcd);
-+fail:
-+	dev_err(&pdev->dev, "init fail, %d\n", retval);
-+
-+	return retval;
-+}
-+
-+static int npcm7xx_ehci_hcd_drv_remove(struct platform_device *pdev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(pdev);
-+
-+	usb_remove_hcd(hcd);
-+
-+	usb_put_hcd(hcd);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id npcm7xx_ehci_id_table[] = {
-+	{ .compatible = "nuvoton,npcm750-ehci" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, npcm7xx_ehci_id_table);
-+
-+static struct platform_driver npcm7xx_ehci_hcd_driver = {
-+	.probe		= npcm7xx_ehci_hcd_drv_probe,
-+	.remove		= npcm7xx_ehci_hcd_drv_remove,
-+	.shutdown	= usb_hcd_platform_shutdown,
-+	.driver		= {
-+		.name = "npcm7xx-ehci",
-+		.bus = &platform_bus_type,
-+		.pm = &ehci_npcm7xx_pm_ops,
-+		.of_match_table = npcm7xx_ehci_id_table,
-+	}
-+};
-+
-+static int __init ehci_npcm7xx_init(void)
-+{
-+	if (usb_disabled())
-+		return -ENODEV;
-+
-+	pr_info("%s: " DRIVER_DESC "\n", hcd_name);
-+
-+	ehci_init_driver(&ehci_npcm7xx_hc_driver, NULL);
-+	return platform_driver_register(&npcm7xx_ehci_hcd_driver);
-+}
-+module_init(ehci_npcm7xx_init);
-+
-+static void __exit ehci_npcm7xx_cleanup(void)
-+{
-+	platform_driver_unregister(&npcm7xx_ehci_hcd_driver);
-+}
-+module_exit(ehci_npcm7xx_cleanup);
-+
-+MODULE_DESCRIPTION(DRIVER_DESC);
-+MODULE_ALIAS("platform:npcm7xx-ehci");
-+MODULE_AUTHOR("Avi Fishman");
-+MODULE_LICENSE("GPL v2");
--- 
-2.14.1
+And too late to fix the bootloader?
+
+>
+> + I change the driver to handle 32 and 64 bits properties
+
+That's fine if you can't fix the bootloader.
+
+> + I add this to the cpu.txt, as a separate patch:
+> # On other systems, the property can be either
+>   32 bits or 64 bits, it is the driver's responsibility
+>   to deal with either sizes.
+
+That is definitely not what we want to say. Use of 32-bit should be
+considered out of spec. Yes, we have a few platforms in that category,
+but they already handle that themselves. Would be nice to fix them,
+but at least the STi platforms don't seem too active.
+
+IMO, we should delete whatever text we can here and at most just refer
+to the spec.
+
+Rob
