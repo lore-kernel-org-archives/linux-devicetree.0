@@ -1,130 +1,127 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Thu, 7 Jun 2018 13:57:41 +0100
-Message-ID: <4128f86b-5d03-a0e1-b483-8acc7417b190@arm.com>
-References: <1528109194-16864-1-git-send-email-tdas@codeaurora.org>
- <1528109194-16864-2-git-send-email-tdas@codeaurora.org>
- <20180604105531.GB13977@e107155-lin>
- <17e458c1-872a-08f0-c67d-15bc8352055b@codeaurora.org>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v2 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
+Date: Thu, 7 Jun 2018 16:11:05 +0300
+Message-ID: <1528377065-647-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <17e458c1-872a-08f0-c67d-15bc8352055b@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org
+To: jic23@kernel.org, Michael.Hennerich@analog.com, lars@metafoo.de
+Cc: knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v2:
+	- Nothing changed, just to follow the patch set version.
 
+ .../devicetree/bindings/iio/dac/ad5758.txt         | 84 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt
 
-On 07/06/18 08:20, Taniya Das wrote:
-> Hello Sudeep,
-> 
-> Thanks for the review comments.
-> 
-> On 6/4/2018 4:25 PM, Sudeep Holla wrote:
->> On Mon, Jun 04, 2018 at 04:16:33PM +0530, Taniya Das wrote:
->>> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
->>> SoCs. This is required for managing the cpu frequency transitions
->>> which are
->>> controlled by firmware.
->>>
->>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->>> ---
->>>   .../bindings/cpufreq/cpufreq-qcom-fw.txt           | 173
->>> +++++++++++++++++++++
->>>   1 file changed, 173 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->>> b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->>> new file mode 100644
->>> index 0000000..e3087ec
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
->>> @@ -0,0 +1,173 @@
->>> +Qualcomm Technologies, Inc. CPUFREQ Bindings
->>> +
->>> +CPUFREQ FW is a hardware engine used by some Qualcomm Technologies,
->>> Inc. (QTI)
->>> +SoCs to manage frequency in hardware. It is capable of controlling
->>> frequency
->>> +for multiple clusters.
->>> +
->>> +Properties:
->>> +- compatible
->>> +    Usage:        required
->>> +    Value type:    <string>
->>> +    Definition:    must be "qcom,cpufreq-fw".
->>> +
->>> +* Property qcom,freq-domain
->>> +Devices supporting freq-domain must set their "qcom,freq-domain"
->>> property with
->>> +phandle to a freq_domain_table in their DT node.
->>> +
->>> +* Frequency Domain Table Node
->>> +
->>> +This describes the frequency domain belonging to a device.
->>> +This node can have following properties:
->>> +
->>> +- reg
->>> +    Usage:        required
->>> +    Value type:    <prop-encoded-array>
->>> +    Definition:    Addresses and sizes for the memory of the perf
->>> +            , lut and enable bases.
->>> +            perf - indicates the base address for the desired
->>> +            performance state to be set.
->>> +            lut - indicates the look up table base address for the
->>> +            cpufreq    driver to read frequencies.
->>> +            enable - indicates the enable register for firmware.
->>> +- reg-names
->>> +    Usage:        required
->>> +    Value type:    <stringlist>
->>> +    Definition:    Address names. Must be "perf", "lut", "enable".
->>> +            Must be specified in the same order as the reg property.
->>> +
->>
->> [...]
->>
->>> +
->>> +    qcom,cpufreq-fw {
->>> +        compatible = "qcom,cpufreq-fw";
->>> +
->>> +        #address-cells = <1>;
->>> +        #size-cells = <1>;
->>> +
->>> +        freq_domain_table0 : freq_table0 {
->>> +            reg = <0x17d43920 0x4>, <0x17d43110 0x500>,
->>> +                 <0x17d41000 0x4>;
->>
->> Are "perf", "lut", "enable" registers part of single IP block / share
->> memory ?
->> I am just trying to understand the reason for separate entries in this
->> fashion
->> as part of DT register property. I am wondering if there will be multiple
->> entries that fall with the page size.
->>
-> 
-> They are part of the same IP block and these are the only register
-> offsets which is required to be accessed by HLOS.
-> 
-
-HLOS ?
-
-Anyways, OS might touch one or 2 registers in lots of IP blocks. I am
-not sure why those are any different from these. Are you trying to align
-with any other bindings or specification. Are you trying to make this
-binding generic here ? I understand if it was trying to generalize the
-firmware interface, but you state it's a hardware engine. So I fail to
-see the need for such specificity here. Why not define the whole IP
-block and the driver knows where to access these specific ones as they
-are specific to this hardware block.
-
+diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+new file mode 100644
+index 0000000..75fff6c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+@@ -0,0 +1,84 @@
++Analog Devices AD5758 DAC device driver
++
++Required properties for the AD5758:
++	- compatible: Must be "adi,ad5758"
++	- reg: SPI chip select number for the device
++	- spi-max-frequency: Max SPI frequency to use (< 50000000)
++	- spi-cpha: is the only mode that is supported
++
++Optional properties:
++
++ - adi,dc-dc-mode: Mode of operation of the dc-to-dc converter
++		   The following values are currently supported:
++		   	* 0: DC-to-DC converter powered off
++			* 1: DPC current mode
++			* 2: DPC voltage mode
++			* 3: PPC current mode
++
++ - adi,dc-dc-ilim: The dc-to-dc converter current limit
++		   The following values are currently supported [mA]:
++		   	* 150
++			* 200
++			* 250
++			* 300
++			* 350
++			* 400
++
++ - adi,slew: Array of slewrate settings should contain 3 fields:
++	1: Should be either 0 or 1 in order to enable or disable slewrate.
++	2: Slew rate clock:
++		Valid values for the slew rate update frequency [Hz]:
++		* 240000
++		* 200000
++		* 150000
++		* 128000
++		* 64000
++		* 32000
++		* 16000
++		* 8000
++		* 4000
++		* 2000
++		* 1000
++		* 512
++		* 256
++		* 128
++		* 64
++		* 16
++	3: Slew rate step:
++		Defines by how much the output value changes at each update.
++		Valid values for the step size LSBs:
++		* 4
++		* 12
++		* 64
++		* 120
++		* 256
++		* 500
++		* 1820
++		* 2048
++
++ - adi,range: The output range
++	      The following values are currently supported:
++	      	* 0: 0 V to 5 V voltage range
++		* 1: 0 V to 10 V voltage range
++		* 2: ±5 V voltage range
++		* 3: ±10 V voltage range
++		* 8: 0 mA to 20 mA current range
++		* 9: 0 mA to 24 mA current range
++		* 10: 4 mA to 20 mA current range
++		* 11: ±20 mA current range
++		* 12: ±24 mA current range
++		* 13: −1 mA to +22 mA current range
++
++AD5758 Example:
++
++	ad5758@0 {
++		compatible = "adi,ad5758";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpha;
++
++		adi,dc-dc-mode = <2>;
++		adi,dc-dc-ilim = <200>;
++		adi,slew = <1 200000 12>;
++		adi,range = <1>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1993779..f640146 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -808,6 +808,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/dac/ad5758.c
++F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
+ 
+ ANALOG DEVICES INC AD9389B DRIVER
+ M:	Hans Verkuil <hans.verkuil@cisco.com>
 -- 
-Regards,
-Sudeep
+2.7.4
