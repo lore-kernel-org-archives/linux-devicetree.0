@@ -1,74 +1,202 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 11/17] arm64: dts: r8a77965: Add VSP instances
-Date: Fri, 08 Jun 2018 14:00:36 +0300
-Message-ID: <7269469.ESYJcRDGIc@avalon>
-References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com> <1787243.JuNJAuBqMb@avalon> <CAMuHMdU7OyUvgNqbkjtHyb0LPjgTdPp_BBcGNbjiqfQUgCdMuw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Sayali Lokhande <sayalil@codeaurora.org>
+Subject: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
+Date: Fri,  8 Jun 2018 16:36:28 +0530
+Message-ID: <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
+References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU7OyUvgNqbkjtHyb0LPjgTdPp_BBcGNbjiqfQUgCdMuw@mail.gmail.com>
+In-Reply-To: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Will Deacon <will.deacon@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+To: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org
+Cc: linux-scsi@vger.kernel.org, Sayali Lokhande <sayalil@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+From: Subhash Jadavani <subhashj@codeaurora.org>
 
-On Friday, 8 June 2018 12:29:29 EEST Geert Uytterhoeven wrote:
-> On Thu, Apr 26, 2018 at 11:11 PM, Laurent Pinchart wrote:
-> > On Thursday, 26 April 2018 19:53:40 EEST Kieran Bingham wrote:
-> >> The r8a77965 has 4 VSP instances.
-> >> 
-> >> Based on a similar patch of the R8A7796 device tree
-> >> by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
-> >> 
-> >> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >> [Kieran: Rebased to top of tree, fixed sort orders]
-> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> >> ---
-> >> 
-> >>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 44 +++++++++++++++++++++++
-> >>  1 file changed, 44 insertions(+)
-> >> 
-> >> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> >> b/arch/arm64/boot/dts/renesas/r8a77965.dtsi index
-> >> 1f44ed7c1b1c..e92e6b03333a 100644
-> >> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> >> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> >> @@ -1025,6 +1047,17 @@
-> >>                       resets = <&cpg 611>;
-> >>               };
-> >> 
-> >> +             vspd0: vsp@fea20000 {
-> >> +                     compatible = "renesas,vsp2";
-> >> +                     reg = <0 0xfea20000 0 0x4000>;
-> > 
-> > RFP2 has a CLUT so the register range needs to be extended. I'd recommend
-> > covering the entire space (0x8000) even if no LUT or CLU module is
-> > present.
-> 
-> Even on V3H/V3M, which have some part of the CLUT, and could do
-> with 0x5000?
-> 
-> Note that this makes it overlap with fcpvd0 on all R-Car Gen3 SoCs,
-> as mentioned by Simon on IRC.
+UFS host supplies the reference clock to UFS device and UFS device
+specification allows host to provide one of the 4 frequencies (19.2 MHz,
+26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
+device reference clock frequency setting in the device based on what
+frequency it is supplying to UFS device.
 
-My bad :-/ I'll submit fixes shortly.
+Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+---
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
+ drivers/scsi/ufs/ufs.h                             |  9 ++++
+ drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
+ drivers/scsi/ufs/ufshcd.c                          | 52 ++++++++++++++++++++++
+ drivers/scsi/ufs/ufshcd.h                          |  1 +
+ 5 files changed, 93 insertions(+)
 
-> >> +                     interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                     clocks = <&cpg CPG_MOD 623>;
-> >> +                     power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> >> +                     resets = <&cpg 623>;
-> >> +
-> >> +                     renesas,fcp = <&fcpvd0>;
-> >> +             };
-> >> +
-> >>               fcpvd0: fcp@fea27000 {
-> >>                       compatible = "renesas,fcpv";
-> >>                       reg = <0 0xfea27000 0 0x200>;
-
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+index c39dfef..4522434 100644
+--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -41,6 +41,12 @@ Optional properties:
+ -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
+ 			  Note that it is assume same number of lanes is used both
+ 			  directions at once. If not specified, default is 2 lanes per direction.
++- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
++			  0: 19.2 MHz
++			  1: 26 MHz
++			  2: 38.4 MHz
++			  3: 52 MHz
++			  Defaults to 26 MHz if not specified.
+ 
+ Note: If above properties are not defined it can be assumed that the supply
+ regulators or clocks are always on.
+@@ -66,4 +72,5 @@ Example:
+ 		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
+ 		phys = <&ufsphy1>;
+ 		phy-names = "ufsphy";
++		dev-ref-clk-freq = <0>; /* reference clock freq: 19.2 MHz */
+ 	};
+diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+index 14e5bf7..e15deb0 100644
+--- a/drivers/scsi/ufs/ufs.h
++++ b/drivers/scsi/ufs/ufs.h
+@@ -378,6 +378,15 @@ enum query_opcode {
+ 	UPIU_QUERY_OPCODE_TOGGLE_FLAG	= 0x8,
+ };
+ 
++/* bRefClkFreq attribute values */
++enum ref_clk_freq {
++	REF_CLK_FREQ_19_2_MHZ	= 0x0,
++	REF_CLK_FREQ_26_MHZ	= 0x1,
++	REF_CLK_FREQ_38_4_MHZ	= 0x2,
++	REF_CLK_FREQ_52_MHZ	= 0x3,
++	REF_CLK_FREQ_MAX	= REF_CLK_FREQ_52_MHZ,
++};
++
+ /* Query response result code */
+ enum {
+ 	QUERY_RESULT_SUCCESS                    = 0x00,
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+index e82bde0..6c877f3 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.c
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+@@ -221,6 +221,28 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
+ 	return err;
+ }
+ 
++static void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba)
++{
++	struct device *dev = hba->dev;
++	struct device_node *np = dev->of_node;
++	int ret;
++
++	if (!np)
++		return;
++
++	ret = of_property_read_u32(np, "dev-ref-clk-freq",
++				   &hba->dev_ref_clk_freq);
++	if (ret ||
++	    (hba->dev_ref_clk_freq < 0) ||
++	    (hba->dev_ref_clk_freq > REF_CLK_FREQ_52_MHZ)) {
++		dev_err(hba->dev,
++		"%s: invalid ref_clk setting = %d, set to default\n",
++		__func__, hba->dev_ref_clk_freq);
++		/* default setting */
++		hba->dev_ref_clk_freq = REF_CLK_FREQ_26_MHZ;
++	}
++}
++
+ #ifdef CONFIG_PM
+ /**
+  * ufshcd_pltfrm_suspend - suspend power management function
+@@ -343,6 +365,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 
++	ufshcd_parse_dev_ref_clk_freq(hba);
++
+ 	ufshcd_init_lanes_per_dir(hba);
+ 
+ 	err = ufshcd_init(hba, mmio_base, irq);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c5b1bf1..4abc7ae 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6297,6 +6297,53 @@ static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
+ }
+ 
+ /**
++ * ufshcd_set_dev_ref_clk - set the device bRefClkFreq
++ * @hba: per-adapter instance
++ *
++ * Read the current value of the bRefClkFreq attribute from device and update it
++ * if host is supplying different reference clock frequency than one mentioned
++ * in bRefClkFreq attribute.
++ *
++ * Returns zero on success, non-zero error value on failure.
++ */
++static int ufshcd_set_dev_ref_clk(struct ufs_hba *hba)
++{
++	int err = 0;
++	int ref_clk = -1;
++	static const char * const ref_clk_freqs[] = {"19.2 MHz", "26 MHz",
++						     "38.4 MHz", "52 MHz"};
++
++	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
++			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0, &ref_clk);
++
++	if (err) {
++		dev_err(hba->dev, "%s: failed reading bRefClkFreq. err = %d\n",
++			 __func__, err);
++		goto out;
++	}
++
++	if (ref_clk == hba->dev_ref_clk_freq)
++		goto out; /* nothing to update */
++
++	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
++			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0,
++			&hba->dev_ref_clk_freq);
++
++	if (err)
++		dev_err(hba->dev, "%s: bRefClkFreq setting to %s failed\n",
++			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
++	/*
++	 * It is good to print this out here to debug any later failures
++	 * related to gear switch.
++	 */
++	dev_dbg(hba->dev, "%s: bRefClkFreq setting to %s succeeded\n",
++			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
++
++out:
++	return err;
++}
++
++/**
+  * ufshcd_probe_hba - probe hba to detect device and initialize
+  * @hba: per-adapter instance
+  *
+@@ -6361,6 +6408,11 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+ 			"%s: Failed getting max supported power mode\n",
+ 			__func__);
+ 	} else {
++		/*
++		 * Set the right value to bRefClkFreq before attempting to
++		 * switch to HS gears.
++		 */
++		ufshcd_set_dev_ref_clk(hba);
+ 		ret = ufshcd_config_pwr_mode(hba, &hba->max_pwr_info.info);
+ 		if (ret) {
+ 			dev_err(hba->dev, "%s: Failed setting power mode, err = %d\n",
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 8110dcd..b026ad8 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -548,6 +548,7 @@ struct ufs_hba {
+ 	void *priv;
+ 	unsigned int irq;
+ 	bool is_irq_enabled;
++	u32 dev_ref_clk_freq;
+ 
+ 	/* Interrupt aggregation support is broken */
+ 	#define UFSHCD_QUIRK_BROKEN_INTR_AGGR			0x1
 -- 
-Regards,
-
-Laurent Pinchart
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
