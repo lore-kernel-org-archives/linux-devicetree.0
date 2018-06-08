@@ -1,67 +1,79 @@
-Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Mon, 11 Jun 2018 16:14:33 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 13/15] staging: typec: tcpci: keep the disconnected cc
- line open
-Message-ID: <20180611131433.GQ17155@kuha.fi.intel.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
- <1527475967-15201-14-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
+From: Argus Lin <argus.lin@mediatek.com>
+Subject: [PATCH V5 1/4] dt-bindings: pwrap: mediatek: add pwrap support for MT6797
+Date: Fri, 8 Jun 2018 16:17:06 +0800
+Message-ID: <1528445829-8866-2-git-send-email-argus.lin@mediatek.com>
+In-Reply-To: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
+References: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1527475967-15201-14-git-send-email-jun.li@nxp.com>
-To: Li Jun <jun.li@nxp.com>
-Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_003_791056119.842681394"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 28, 2018 at 10:52:45AM +0800, Li Jun wrote:
-> While set polarity, we should keep the disconnected cc line to be
-> open.
-> 
-> Signed-off-by: Li Jun <jun.li@nxp.com>
+--__=_Part_Boundary_003_791056119.842681394
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_004_441826459.767823649"
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+--__=_Part_Boundary_004_441826459.767823649
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-> ---
->  drivers/staging/typec/tcpci.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index 4d3b0ae..11c2d37 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -185,15 +185,25 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
->  			      enum typec_cc_polarity polarity)
->  {
->  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> +	unsigned int reg;
->  	int ret;
->  
-> -	ret = regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
-> -			   (polarity == TYPEC_POLARITY_CC2) ?
-> -			   TCPC_TCPC_CTRL_ORIENTATION : 0);
-> +	/* Keep the disconnect cc line open */
-> +	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
->  	if (ret < 0)
->  		return ret;
->  
-> -	return 0;
-> +	if (polarity == TYPEC_POLARITY_CC2)
-> +		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
-> +	else
-> +		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC2_SHIFT;
-> +	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
-> +			   (polarity == TYPEC_POLARITY_CC2) ?
-> +			   TCPC_TCPC_CTRL_ORIENTATION : 0);
->  }
->  
->  static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
+PHByZT4NCkFkZCBiaW5kaW5nIGRvY3VtZW50IG9mIHB3cmFwIGZvciBNVDY3OTcgU29Dcy4NCg0K
+U2lnbmVkLW9mZi1ieTogQXJndXMgTGluICZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0Ow0K
+LS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3Jh
+cC50eHQgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3Jh
+cC50eHQNCmluZGV4IGJmODBlM2YuLmY5OTg3YzMgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCkBAIC0x
+OSw2ICsxOSw3IEBAIElQIFBhaXJpbmcNCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHB3cmFwIGRl
+dmljZSBub2RlLg0KIC0gY29tcGF0aWJsZToNCiAJJnF1b3Q7bWVkaWF0ZWssbXQyNzAxLXB3cmFw
+JnF1b3Q7IGZvciBNVDI3MDEvNzYyMyBTb0NzDQorCSZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3Jh
+cCZxdW90OyBmb3IgTVQ2Nzk3IFNvQ3MNCiAJJnF1b3Q7bWVkaWF0ZWssbXQ3NjIyLXB3cmFwJnF1
+b3Q7IGZvciBNVDc2MjIgU29Dcw0KIAkmcXVvdDttZWRpYXRlayxtdDgxMzUtcHdyYXAmcXVvdDsg
+Zm9yIE1UODEzNSBTb0NzDQogCSZxdW90O21lZGlhdGVrLG10ODE3My1wd3JhcCZxdW90OyBmb3Ig
+TVQ4MTczIFNvQ3MNCi0tIA0KMS44LjEuMS5kaXJ0eQ0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0LS0+
+PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZQ0K
+ICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMg
+ZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZp
+ZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZy
+b20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJl
+IA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2Us
+IGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNv
+cHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5p
+bnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUg
+dW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUt
+bWFpbCwgb3IgYmVsaWV2ZQ0KIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBp
+biBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5
+aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMg
+ZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQg
+ZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIg
+cGVyc29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
 
-Thanks,
+--__=_Part_Boundary_004_441826459.767823649
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
--- 
-heikki
+QWRkIGJpbmRpbmcgZG9jdW1lbnQgb2YgcHdyYXAgZm9yIE1UNjc5NyBTb0NzLg0KDQpTaWduZWQt
+b2ZmLWJ5OiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCB8IDEgKw0K
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KaW5kZXgg
+YmY4MGUzZi4uZjk5ODdjMyAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KQEAgLTE5LDYgKzE5LDcgQEAg
+SVAgUGFpcmluZw0KIFJlcXVpcmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQog
+LSBjb21wYXRpYmxlOg0KIAkibWVkaWF0ZWssbXQyNzAxLXB3cmFwIiBmb3IgTVQyNzAxLzc2MjMg
+U29Dcw0KKwkibWVkaWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCiAJIm1lZGlh
+dGVrLG10NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdy
+YXAiIGZvciBNVDgxMzUgU29Dcw0KIAkibWVkaWF0ZWssbXQ4MTczLXB3cmFwIiBmb3IgTVQ4MTcz
+IFNvQ3MNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+
+--__=_Part_Boundary_004_441826459.767823649--
+
+--__=_Part_Boundary_003_791056119.842681394--
