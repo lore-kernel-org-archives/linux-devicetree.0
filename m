@@ -1,23 +1,23 @@
 Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
 From: Argus Lin <argus.lin@mediatek.com>
 Subject: [PATCH V5 1/4] dt-bindings: pwrap: mediatek: add pwrap support for MT6797
-Date: Fri, 8 Jun 2018 16:17:06 +0800
-Message-ID: <1528445829-8866-2-git-send-email-argus.lin@mediatek.com>
-In-Reply-To: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
-References: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
+Date: Fri, 8 Jun 2018 15:39:51 +0800
+Message-ID: <1528443594-6978-2-git-send-email-argus.lin@mediatek.com>
+In-Reply-To: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
+References: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_003_791056119.842681394"
+	boundary="__=_Part_Boundary_007_995168431.251057831"
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, "Sean Wang  <sean.wang@mediatek.com>, <wsd_upstream@mediatek.com>," <henryc.chen@mediatek.com>, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_003_791056119.842681394
+--__=_Part_Boundary_007_995168431.251057831
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_004_441826459.767823649"
+	boundary="__=_Part_Boundary_008_692783642.698590314"
 
---__=_Part_Boundary_004_441826459.767823649
+--__=_Part_Boundary_008_692783642.698590314
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -54,7 +54,7 @@ ZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQg
 ZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIg
 cGVyc29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
 
---__=_Part_Boundary_004_441826459.767823649
+--__=_Part_Boundary_008_692783642.698590314
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -74,6 +74,6 @@ dGVrLG10NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdy
 YXAiIGZvciBNVDgxMzUgU29Dcw0KIAkibWVkaWF0ZWssbXQ4MTczLXB3cmFwIiBmb3IgTVQ4MTcz
 IFNvQ3MNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
 
---__=_Part_Boundary_004_441826459.767823649--
+--__=_Part_Boundary_008_692783642.698590314--
 
---__=_Part_Boundary_003_791056119.842681394--
+--__=_Part_Boundary_007_995168431.251057831--
