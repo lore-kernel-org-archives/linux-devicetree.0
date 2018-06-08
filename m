@@ -1,134 +1,75 @@
-From: Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH] ASoC: rockchip: add config for rockchip dmaengine pcm register
-Date: Fri,  8 Jun 2018 16:31:09 +0800
-Message-ID: <1528446669-18141-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, jay.xu@rock-chips.com, broonie@kernel.org
-Cc: shawn.lin@rock-chips.com, kever.yang@rock-chips.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: Re: [PATCH v4 8/9] drm/mediatek: add third ddp path
+Date: Fri, 8 Jun 2018 16:31:24 +0800
+Message-ID: <1528446684.11190.22.camel@mtksdccf07>
+References: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
+ <1527489507-24453-9-git-send-email-stu.hsieh@mediatek.com>
+ <1527493677.24367.10.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1527493677.24367.10.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch makes the rockchip i2s pcm configurable by adding
-rockchip pcm config for devm_snd_dmaengine_pcm_register.
-
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- sound/soc/rockchip/Makefile       |  3 ++-
- sound/soc/rockchip/rockchip_i2s.c |  3 ++-
- sound/soc/rockchip/rockchip_pcm.c | 45 +++++++++++++++++++++++++++++++++++++++
- sound/soc/rockchip/rockchip_pcm.h | 14 ++++++++++++
- 4 files changed, 63 insertions(+), 2 deletions(-)
- create mode 100644 sound/soc/rockchip/rockchip_pcm.c
- create mode 100644 sound/soc/rockchip/rockchip_pcm.h
-
-diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
-index 05b078e..65e814d 100644
---- a/sound/soc/rockchip/Makefile
-+++ b/sound/soc/rockchip/Makefile
-@@ -1,10 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0
- # ROCKCHIP Platform Support
- snd-soc-rockchip-i2s-objs := rockchip_i2s.o
-+snd-soc-rockchip-pcm-objs := rockchip_pcm.o
- snd-soc-rockchip-pdm-objs := rockchip_pdm.o
- snd-soc-rockchip-spdif-objs := rockchip_spdif.o
- 
--obj-$(CONFIG_SND_SOC_ROCKCHIP_I2S) += snd-soc-rockchip-i2s.o
-+obj-$(CONFIG_SND_SOC_ROCKCHIP_I2S) += snd-soc-rockchip-i2s.o snd-soc-rockchip-pcm.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_PDM) += snd-soc-rockchip-pdm.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_SPDIF) += snd-soc-rockchip-spdif.o
- 
-diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
-index 908211e..5e60181 100644
---- a/sound/soc/rockchip/rockchip_i2s.c
-+++ b/sound/soc/rockchip/rockchip_i2s.c
-@@ -22,6 +22,7 @@
- #include <sound/dmaengine_pcm.h>
- 
- #include "rockchip_i2s.h"
-+#include "rockchip_pcm.h"
- 
- #define DRV_NAME "rockchip-i2s"
- 
-@@ -667,7 +668,7 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
- 		goto err_suspend;
- 	}
- 
--	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
-+	ret = rockchip_pcm_platform_register(&pdev->dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register PCM\n");
- 		return ret;
-diff --git a/sound/soc/rockchip/rockchip_pcm.c b/sound/soc/rockchip/rockchip_pcm.c
-new file mode 100644
-index 0000000..f775383
---- /dev/null
-+++ b/sound/soc/rockchip/rockchip_pcm.c
-@@ -0,0 +1,45 @@
-+/*
-+ * Copyright (c) 2018 Rockchip Electronics Co. Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+
-+#include <sound/core.h>
-+#include <sound/pcm.h>
-+#include <sound/soc.h>
-+#include <sound/dmaengine_pcm.h>
-+
-+#include "rockchip_pcm.h"
-+
-+static const struct snd_pcm_hardware snd_rockchip_hardware = {
-+	.info			= SNDRV_PCM_INFO_MMAP |
-+				  SNDRV_PCM_INFO_MMAP_VALID |
-+				  SNDRV_PCM_INFO_PAUSE |
-+				  SNDRV_PCM_INFO_RESUME,
-+	.period_bytes_min	= 32,
-+	.period_bytes_max	= 8192,
-+	.periods_min		= 1,
-+	.periods_max		= 52,
-+	.buffer_bytes_max	= 64 * 1024,
-+	.fifo_size		= 32,
-+};
-+
-+static const struct snd_dmaengine_pcm_config rk_dmaengine_pcm_config = {
-+	.pcm_hardware = &snd_rockchip_hardware,
-+	.prealloc_buffer_size = 32 * 1024,
-+};
-+
-+int rockchip_pcm_platform_register(struct device *dev)
-+{
-+	return devm_snd_dmaengine_pcm_register(dev, &rk_dmaengine_pcm_config,
-+		SND_DMAENGINE_PCM_FLAG_COMPAT);
-+}
-+EXPORT_SYMBOL_GPL(rockchip_pcm_platform_register);
-+
-+MODULE_LICENSE("GPL v2");
-diff --git a/sound/soc/rockchip/rockchip_pcm.h b/sound/soc/rockchip/rockchip_pcm.h
-new file mode 100644
-index 0000000..d6c3611
---- /dev/null
-+++ b/sound/soc/rockchip/rockchip_pcm.h
-@@ -0,0 +1,14 @@
-+/*
-+ * Copyright (c) 2018 Rockchip Electronics Co. Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef _ROCKCHIP_PCM_H
-+#define _ROCKCHIP_PCM_H
-+
-+int rockchip_pcm_platform_register(struct device *dev);
-+
-+#endif
--- 
-1.9.1
+T24gTW9uLCAyMDE4LTA1LTI4IGF0IDE1OjQ3ICswODAwLCBDSyBIdSB3cm90ZToKPiBIaSwgU3R1
+Ogo+IAo+IE9uZSBpbmxpbmUgY29tbWVudC4KPiAKPiBPbiBNb24sIDIwMTgtMDUtMjggYXQgMTQ6
+MzggKzA4MDAsIFN0dSBIc2llaCB3cm90ZToKPiA+IFRoaXMgcGF0Y2ggY3JlYXRlIHRoaXJkIGNy
+dGMgYnkgdGhpcmQgZGRwIHBhdGgKPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogU3R1IEhzaWVoIDxz
+dHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fY3J0Yy5jIHwgMyArKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kcnYuYyAgfCA1ICsrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZHJ2LmggIHwgNyArKysrKy0tCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRp
+b25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fY3J0Yy5jCj4gPiBpbmRleCA2NThiOGRkNDViODMuLjJkNmFhMTUwYTlmZiAxMDA2NDQK
+PiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYwo+ID4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jCj4gPiBAQCAtNTM5LDYg
+KzUzOSw5IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1f
+ZGV2LAo+ID4gIAlpbnQgcmV0Owo+ID4gIAlpbnQgaTsKPiA+ICAKPiA+ICsJaWYgKCFwYXRoKQo+
+ID4gKwkJcmV0dXJuIDA7Cj4gPiArCj4gPiAgCWZvciAoaSA9IDA7IGkgPCBwYXRoX2xlbjsgaSsr
+KSB7Cj4gPiAgCQllbnVtIG10a19kZHBfY29tcF9pZCBjb21wX2lkID0gcGF0aFtpXTsKPiA+ICAJ
+CXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZTsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2Rydi5jCj4gPiBpbmRleCAwOGQ1ZDBiNDdiZmUuLjNkMjc5YTI5OTM4MyAxMDA2NDQKPiA+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4gPiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYwo+ID4gQEAgLTIzMiw2ICsyMzIs
+MTEgQEAgc3RhdGljIGludCBtdGtfZHJtX2ttc19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0p
+Cj4gPiAgCWlmIChyZXQgPCAwKQo+ID4gIAkJZ290byBlcnJfY29tcG9uZW50X3VuYmluZDsKPiA+
+ICAKPiA+ICsJcmV0ID0gbXRrX2RybV9jcnRjX2NyZWF0ZShkcm0sIHByaXZhdGUtPmRhdGEtPnRo
+aXJkX3BhdGgsCj4gPiArCQkJCSAgcHJpdmF0ZS0+ZGF0YS0+dGhpcmRfbGVuKTsKPiA+ICsJaWYg
+KHJldCA8IDApCj4gPiArCQlnb3RvIGVycl9jb21wb25lbnRfdW5iaW5kOwo+ID4gKwo+ID4gIAkv
+KiBVc2UgT1ZMIGRldmljZSBmb3IgYWxsIERNQSBtZW1vcnkgYWxsb2NhdGlvbnMgKi8KPiA+ICAJ
+bnAgPSBwcml2YXRlLT5jb21wX25vZGVbcHJpdmF0ZS0+ZGF0YS0+bWFpbl9wYXRoWzBdXSA/Ogo+
+ID4gIAkgICAgIHByaXZhdGUtPmNvbXBfbm9kZVtwcml2YXRlLT5kYXRhLT5leHRfcGF0aFswXV07
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2Lmgg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaAo+ID4gaW5kZXggYzMzNzhj
+NDUyYzBhLi5kODY3ZTI2ODM5MjMgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kcnYuaAo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZHJ2LmgKPiA+IEBAIC0xNyw4ICsxNyw4IEBACj4gPiAgI2luY2x1ZGUgPGxpbnV4L2lv
+Lmg+Cj4gPiAgI2luY2x1ZGUgIm10a19kcm1fZGRwX2NvbXAuaCIKPiA+ICAKPiA+IC0jZGVmaW5l
+IE1BWF9DUlRDCTIKPiA+IC0jZGVmaW5lIE1BWF9DT05ORUNUT1IJMgo+ID4gKyNkZWZpbmUgTUFY
+X0NSVEMJMwo+ID4gKyNkZWZpbmUgTUFYX0NPTk5FQ1RPUgkzCj4gCj4gTUFYX0NPTk5FQ1RPUiBp
+cyB1c2VsZXNzLCBtYXliZSB3ZSBqdXN0IG5lZWQgdG8gcmVtb3ZlIGl0IGluIGEgY2xlYW4gdXAK
+PiBwYXRjaC4gT3IgeW91IGNvdWxkIGtlZXAgaXRzIHZhbHVlLgpvawpGb3IgdGhpcyBwYXRjaCwg
+SSB3b3VsZCBrZWVwIGl0cyB2YWx1ZS4KClJlZ2FyZHMsClN0dQoKPiAKPiBSZWdhcmRzLAo+IENL
+Cj4gCj4gPiAgCj4gPiAgc3RydWN0IGRldmljZTsKPiA+ICBzdHJ1Y3QgZGV2aWNlX25vZGU7Cj4g
+PiBAQCAtMzMsNiArMzMsOSBAQCBzdHJ1Y3QgbXRrX21tc3lzX2RyaXZlcl9kYXRhIHsKPiA+ICAJ
+dW5zaWduZWQgaW50IG1haW5fbGVuOwo+ID4gIAljb25zdCBlbnVtIG10a19kZHBfY29tcF9pZCAq
+ZXh0X3BhdGg7Cj4gPiAgCXVuc2lnbmVkIGludCBleHRfbGVuOwo+ID4gKwljb25zdCBlbnVtIG10
+a19kZHBfY29tcF9pZCAqdGhpcmRfcGF0aDsKPiA+ICsJdW5zaWduZWQgaW50IHRoaXJkX2xlbjsK
+PiA+ICsKPiA+ICAJYm9vbCBzaGFkb3dfcmVnaXN0ZXI7Cj4gPiAgfTsKPiA+ICAKPiAKPiAKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
