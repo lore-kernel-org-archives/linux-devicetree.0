@@ -1,46 +1,110 @@
-Return-Path: <SRS0=0B+L=JF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl0-f67.google.com ([209.85.160.67]:32939 "EHLO
-        mail-pl0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1756374AbeFSJGp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 19 Jun 2018 05:06:45 -0400
-Received: by mail-pl0-f67.google.com with SMTP id 6-v6so10065641plb.0
-        for <devicetree@vger.kernel.org>; Tue, 19 Jun 2018 02:06:44 -0700 (PDT)
-Date: Tue, 19 Jun 2018 14:36:42 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: imx: add cooling-cells for cpufreq
- cooling device
-Message-ID: <20180619090642.oi6xzr5ymqvqi4dh@vireshk-i7>
+Return-Path: <SRS0=zHxe=I2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45385 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751064AbeFHJHH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 8 Jun 2018 05:07:07 -0400
+From: Bastian Stender <bst@pengutronix.de>
+Subject: [PATCH v3 2/2] ARM: dts: imx: add cooling-cells for cpufreq cooling device
+Date: Fri,  8 Jun 2018 11:06:40 +0200
+Message-Id: <20180608090640.29076-2-bst@pengutronix.de>
+In-Reply-To: <20180608090640.29076-1-bst@pengutronix.de>
 References: <20180608090640.29076-1-bst@pengutronix.de>
- <20180608090640.29076-2-bst@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180608090640.29076-2-bst@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Bastian Stender <bst@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-imx@nxp.com, Anson Huang <anson.huang@nxp.com>, kernel@pengutronix.de
+To: Shawn Guo <shawnguo@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-imx@nxp.com, Anson Huang <anson.huang@nxp.com>, kernel@pengutronix.de, Anson Huang <Anson.Huang@nxp.com>, Bastian Stender <bst@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-On 08-06-18, 11:06, Bastian Stender wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Add #cooling-cells for i.MX6/7 SoCs for cpufreq cooling device usage.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Signed-off-by: Bastian Stender <bst@pengutronix.de>
-> ---
-> Changes since (implicit) v1:
-> 
-> - add Signed-off-by
-> ---
->  arch/arm/boot/dts/imx6dl.dtsi | 1 +
->  arch/arm/boot/dts/imx6q.dtsi  | 1 +
->  arch/arm/boot/dts/imx6sl.dtsi | 1 +
->  arch/arm/boot/dts/imx6sx.dtsi | 1 +
->  arch/arm/boot/dts/imx6ul.dtsi | 1 +
->  arch/arm/boot/dts/imx7d.dtsi  | 1 +
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Add #cooling-cells for i.MX6/7 SoCs for cpufreq cooling device usage.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Bastian Stender <bst@pengutronix.de>
+---
+Changes since (implicit) v1:
+
+- add Signed-off-by
+---
+ arch/arm/boot/dts/imx6dl.dtsi | 1 +
+ arch/arm/boot/dts/imx6q.dtsi  | 1 +
+ arch/arm/boot/dts/imx6sl.dtsi | 1 +
+ arch/arm/boot/dts/imx6sx.dtsi | 1 +
+ arch/arm/boot/dts/imx6ul.dtsi | 1 +
+ arch/arm/boot/dts/imx7d.dtsi  | 1 +
+ 6 files changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 558bce81209d..b830dfd74ad3 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -39,6 +39,7 @@
+ 				396000	1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6QDL_CLK_ARM>,
+ 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+ 				 <&clks IMX6QDL_CLK_STEP>,
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index ae7b3f107893..ac9f5cb65dec 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -44,6 +44,7 @@
+ 				396000	1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6QDL_CLK_ARM>,
+ 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+ 				 <&clks IMX6QDL_CLK_STEP>,
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index ab6a7e2e7e8f..d35d4e93236a 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -65,6 +65,7 @@
+ 				396000          1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6SL_CLK_ARM>, <&clks IMX6SL_CLK_PLL2_PFD2>,
+ 					<&clks IMX6SL_CLK_STEP>, <&clks IMX6SL_CLK_PLL1_SW>,
+ 					<&clks IMX6SL_CLK_PLL1_SYS>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 49c7205b8db8..966e39a99792 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -83,6 +83,7 @@
+ 				198000	    1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6SX_CLK_ARM>,
+ 				 <&clks IMX6SX_CLK_PLL2_PFD2>,
+ 				 <&clks IMX6SX_CLK_STEP>,
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 1241972b16ba..14b6ac78d323 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -66,6 +66,7 @@
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			operating-points = <
+ 				/* kHz	uV */
+ 				696000	1275000
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 200714e3feea..4991371734d9 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -53,6 +53,7 @@
+ 				792000	975000
+ 			>;
+ 			clock-frequency = <996000000>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
 -- 
-viresh
+2.17.1
+
