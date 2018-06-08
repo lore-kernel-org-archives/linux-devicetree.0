@@ -1,80 +1,116 @@
-From: Krzysztof Witos <kwitos@cadence.com>
-Subject: [PATCH 1/2] csirx updated doc for csirx with dphy supported
-Date: Fri, 8 Jun 2018 11:33:03 +0100
-Message-ID: <20180608103304.16054-2-kwitos@cadence.com>
-References: <20180608103304.16054-1-kwitos@cadence.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
+ for the cells list
+Date: Fri, 8 Jun 2018 12:59:38 +0200
+Message-ID: <20180608125938.4fd457a0@tock>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+        <1521933899-362-2-git-send-email-albeu@free.fr>
+        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
+        <20180417165420.423a691b@avionic-0020>
+        <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
+        <20180417180040.04f53495@avionic-0020>
+        <20180418134119.2e587621@avionic-0020>
+        <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
+        <20180418143243.3c23493c@avionic-0020>
+        <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
+        <20180418153440.187ed16e@avionic-0020>
+        <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
+        <20180607184155.6da38a01@tock>
+        <0fb0e8e9-e7b8-10c3-fcdd-399c73a33878@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/4e/V8.qtwWgCC02QHOtNyeP"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608103304.16054-1-kwitos@cadence.com>
+In-Reply-To: <0fb0e8e9-e7b8-10c3-fcdd-399c73a33878@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Krzysztof Witos <kwitos@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:CADENCE MIPI-CSI2 BRIDGES" <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Aban Bedel <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Krzysztof Witos <kwitos@cadence.com>
----
- .../devicetree/bindings/media/cdns,csi2rx.txt      | 32 +++++++++++++++++++---
- 1 file changed, 28 insertions(+), 4 deletions(-)
+--Sig_/4e/V8.qtwWgCC02QHOtNyeP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-index 6b02a0657ad9..753b967863c0 100644
---- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-@@ -13,8 +13,7 @@ Required properties:
-     * p_clk: register bank clock
-     * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-                          implemented in hardware, between 0 and 3
--
--Optional properties:
-+    * hs_clock: dphy module clock
-   - phys: phandle to the external D-PHY, phy-names must be provided
-   - phy-names: must contain "dphy", if the implementation uses an
-                external D-PHY
-@@ -38,18 +37,43 @@ Required subnodes:
-            in the design.Since there is only one endpoint per port,
-            the endpoints are not numbered.
- 
-+Cadence DPHY
-+============
-+
-+Cadence DPHY block.
-+
-+Required properties:
-+- compatible: should be set to "cdns,dphy".
-+- reg: physical base address and length of the DPHY registers.
-+- clocks: DPHY reference clocks.
-+- clock-names: must contain "psm" and "hs_clk".
-+- #phy-cells: must be set to 0.
-+
- 
- Example:
- 
-+dphy1:  dphy@fd0d0000 {
-+	compatible = "cdns,dphy";
-+	reg = <0x0 0xfd0d0000 0x0 0x1000>;
-+	clocks = <&dphy_psm_clk>;
-+	clock-names = "psm";
-+	clock-output-names = "hs_clk";
-+	#phy-cells = <0>;
-+
- csi2rx: csi-bridge@0d060000 {
- 	compatible = "cdns,csi2rx";
- 	reg = <0x0d060000 0x1000>;
- 	clocks = <&byteclock>, <&byteclock>
- 		 <&coreclock>, <&coreclock>,
--		 <&coreclock>, <&coreclock>;
-+		 <&coreclock>, <&coreclock>,
-+		 <&dphy_rx_byte_hs_clk>;
- 	clock-names = "sys_clk", "p_clk",
- 		      "pixel_if0_clk", "pixel_if1_clk",
--		      "pixel_if2_clk", "pixel_if3_clk";
-+		      "pixel_if2_clk", "pixel_if3_clk",
-+		      "hs_clk";	
-+
-+	phys = <&dphy1>;
-+	phy-names = "dphy";
- 
- 	ports {
- 		#address-cells = <1>;
--- 
-2.15.0
+On Thu, 7 Jun 2018 18:03:16 +0100
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+
+> On 07/06/18 17:41, Alban wrote:
+> > AFAIU the only thing that we disagree on now is if the nodes
+> > representing the cells should be direct children of the provider
+> > or in a dedicated subnode. For the MTD case both solution would solve
+> > the binding clash. I would really appreciate if the DT people could =20
+> Am reluctant in changing the nvmem generic bindings for a special case.
+
+Where I think the generic binding is fundamentally flawed, as this
+problem will most probably appear again. But do note that my proposal
+doesn't require updating the dts using the original binding, both are
+still supported. I proposed deprecating the current binding because I
+think it is flawed, but we could also "officially" support both style.
+
+> Can you try this with your original subnode proposal:
+> just pass the subnode node pointer in np of nvmem_config:
+>=20
+> ------------------------->cut<------------------------------------ =20
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index b05aa8e81303..c9621632bbfb 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -472,7 +472,11 @@ struct nvmem_device *nvmem_register(const struct=20
+> nvmem_config *config)
+>          nvmem->priv =3D config->priv;
+>          nvmem->reg_read =3D config->reg_read;
+>          nvmem->reg_write =3D config->reg_write;
+> -       nvmem->dev.of_node =3D config->dev->of_node;
+> +
+> +       if (config->np)
+> +               nvmem->dev.of_node =3D config->np;
+> +       else
+> +               nvmem->dev.of_node =3D config->dev->of_node;
+>=20
+>          if (config->id =3D=3D -1 && config->name) {
+>                  dev_set_name(&nvmem->dev, "%s", config->name);
+> diff --git a/include/linux/nvmem-provider.h
+> b/include/linux/nvmem-provider.h index f89598bc4e1c..743345ffe2c8
+> 100644 --- a/include/linux/nvmem-provider.h
+> +++ b/include/linux/nvmem-provider.h
+> @@ -49,6 +49,7 @@ typedef int (*nvmem_reg_write_t)(void *priv,
+> unsigned int offset,nvmem_device_get(
+>    */
+>   struct nvmem_config {
+>          struct device           *dev;
+> +       struct device_node      *np;
+>          const char              *name;
+>          int                     id;
+>          struct module           *owner;
+>=20
+> ------------------------->cut<------------------------------------ =20
+
+That should work just fine to allow next to any kind of binding.
+I'll do a new patch using this approach for the code side and leaving
+the generic binding as it is.
+
+Alban
+
+--Sig_/4e/V8.qtwWgCC02QHOtNyeP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJbGmGaAAoJEHSUmkuduC28bpsQAOMfOXhboUrCBmyohY7223ev
+QVvZKeMaCg4/9f5Ask/+nW7GE2bng9aL3CPPcp5C8zzfDJW9VPtZ6aqdQBxOS/GV
+7WwnKaIc3qzBvmIyqFWEoZal4dv2C+AUW58CpukTPSo+upgLPD+L6stoXMWTK4ek
+c1GVu4EDLCov7W2HGrdXI12sx9d/9yIEyNn8GnQtQYuYU2dZnSDuIvKIL/qeRKP1
+T9k7IDyneRHx4XIQj58wZll9UUYfE5PfkRx2mYGkxO8BttTFRHjtQIfgw9mmb3/s
+KCwVyHQGjV0r6ixja0hEdczVz4VnRxmCs/Q58dF3FZDzfmKrPuXEphWTtjlouieK
+sKZWtQ5ZcU2IcQ9YSjVojHczbO5wyWpIuhj9ZTOOsRn/BbfMKtm08+VvUlaw0s4L
+pu7LNW066bCr/PxcDdTL8OPGvImrCQJABUFAiclw/OOyF/ZL93/+vrX2uDoHUZfe
+MRhSKApkFholQ63q5pj+1Xutr4hSdEVLip500sAUVjdEz53xDqJJuHADlGHBpbu5
+NEW+ic33Tdkga+tR7mseq/JRcB9tVmkBreea7ytulSx86At1GWgfUVNx+ni/DzcT
+DNCDc5/Ia9BTKd1tuaSMXIghsdW++oIHZPh1tDi9DbC4IxdsjhMWyacAROXzoBmw
+QfvuT4yaKCg6aldCYddf
+=E5vJ
+-----END PGP SIGNATURE-----
+
+--Sig_/4e/V8.qtwWgCC02QHOtNyeP--
