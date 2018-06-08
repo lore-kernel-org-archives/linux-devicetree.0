@@ -1,202 +1,115 @@
-From: Sayali Lokhande <sayalil@codeaurora.org>
-Subject: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
-Date: Fri,  8 Jun 2018 16:36:28 +0530
-Message-ID: <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
-References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode for
+ the cells list
+Date: Fri, 8 Jun 2018 12:34:12 +0100
+Message-ID: <cd7a0085-66cd-308e-a950-cd0eb96db945@linaro.org>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+ <1521933899-362-2-git-send-email-albeu@free.fr>
+ <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
+ <20180417165420.423a691b@avionic-0020>
+ <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
+ <20180417180040.04f53495@avionic-0020> <20180418134119.2e587621@avionic-0020>
+ <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
+ <20180418143243.3c23493c@avionic-0020>
+ <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
+ <20180418153440.187ed16e@avionic-0020>
+ <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
+ <20180607184155.6da38a01@tock>
+ <0fb0e8e9-e7b8-10c3-fcdd-399c73a33878@linaro.org>
+ <20180608125938.4fd457a0@tock>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
+In-Reply-To: <20180608125938.4fd457a0@tock>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org
-Cc: linux-scsi@vger.kernel.org, Sayali Lokhande <sayalil@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Alban <albeu@free.fr>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
 
-UFS host supplies the reference clock to UFS device and UFS device
-specification allows host to provide one of the 4 frequencies (19.2 MHz,
-26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-device reference clock frequency setting in the device based on what
-frequency it is supplying to UFS device.
 
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
----
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
- drivers/scsi/ufs/ufs.h                             |  9 ++++
- drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
- drivers/scsi/ufs/ufshcd.c                          | 52 ++++++++++++++++++++++
- drivers/scsi/ufs/ufshcd.h                          |  1 +
- 5 files changed, 93 insertions(+)
+On 08/06/18 11:59, Alban wrote:
+> On Thu, 7 Jun 2018 18:03:16 +0100
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+> 
+>> On 07/06/18 17:41, Alban wrote:
+>>> AFAIU the only thing that we disagree on now is if the nodes
+>>> representing the cells should be direct children of the provider
+>>> or in a dedicated subnode. For the MTD case both solution would solve
+>>> the binding clash. I would really appreciate if the DT people could
+>> Am reluctant in changing the nvmem generic bindings for a special case.
+> 
+> Where I think the generic binding is fundamentally flawed, as this
+> problem will most probably appear again. But do note that my proposal
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index c39dfef..4522434 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -41,6 +41,12 @@ Optional properties:
- -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
- 			  Note that it is assume same number of lanes is used both
- 			  directions at once. If not specified, default is 2 lanes per direction.
-+- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
-+			  0: 19.2 MHz
-+			  1: 26 MHz
-+			  2: 38.4 MHz
-+			  3: 52 MHz
-+			  Defaults to 26 MHz if not specified.
- 
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-@@ -66,4 +72,5 @@ Example:
- 		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
-+		dev-ref-clk-freq = <0>; /* reference clock freq: 19.2 MHz */
- 	};
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 14e5bf7..e15deb0 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -378,6 +378,15 @@ enum query_opcode {
- 	UPIU_QUERY_OPCODE_TOGGLE_FLAG	= 0x8,
- };
- 
-+/* bRefClkFreq attribute values */
-+enum ref_clk_freq {
-+	REF_CLK_FREQ_19_2_MHZ	= 0x0,
-+	REF_CLK_FREQ_26_MHZ	= 0x1,
-+	REF_CLK_FREQ_38_4_MHZ	= 0x2,
-+	REF_CLK_FREQ_52_MHZ	= 0x3,
-+	REF_CLK_FREQ_MAX	= REF_CLK_FREQ_52_MHZ,
-+};
-+
- /* Query response result code */
- enum {
- 	QUERY_RESULT_SUCCESS                    = 0x00,
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index e82bde0..6c877f3 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -221,6 +221,28 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
- 	return err;
- }
- 
-+static void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba)
-+{
-+	struct device *dev = hba->dev;
-+	struct device_node *np = dev->of_node;
-+	int ret;
-+
-+	if (!np)
-+		return;
-+
-+	ret = of_property_read_u32(np, "dev-ref-clk-freq",
-+				   &hba->dev_ref_clk_freq);
-+	if (ret ||
-+	    (hba->dev_ref_clk_freq < 0) ||
-+	    (hba->dev_ref_clk_freq > REF_CLK_FREQ_52_MHZ)) {
-+		dev_err(hba->dev,
-+		"%s: invalid ref_clk setting = %d, set to default\n",
-+		__func__, hba->dev_ref_clk_freq);
-+		/* default setting */
-+		hba->dev_ref_clk_freq = REF_CLK_FREQ_26_MHZ;
-+	}
-+}
-+
- #ifdef CONFIG_PM
- /**
-  * ufshcd_pltfrm_suspend - suspend power management function
-@@ -343,6 +365,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	ufshcd_parse_dev_ref_clk_freq(hba);
-+
- 	ufshcd_init_lanes_per_dir(hba);
- 
- 	err = ufshcd_init(hba, mmio_base, irq);
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index c5b1bf1..4abc7ae 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6297,6 +6297,53 @@ static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
- }
- 
- /**
-+ * ufshcd_set_dev_ref_clk - set the device bRefClkFreq
-+ * @hba: per-adapter instance
-+ *
-+ * Read the current value of the bRefClkFreq attribute from device and update it
-+ * if host is supplying different reference clock frequency than one mentioned
-+ * in bRefClkFreq attribute.
-+ *
-+ * Returns zero on success, non-zero error value on failure.
-+ */
-+static int ufshcd_set_dev_ref_clk(struct ufs_hba *hba)
-+{
-+	int err = 0;
-+	int ref_clk = -1;
-+	static const char * const ref_clk_freqs[] = {"19.2 MHz", "26 MHz",
-+						     "38.4 MHz", "52 MHz"};
-+
-+	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-+			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0, &ref_clk);
-+
-+	if (err) {
-+		dev_err(hba->dev, "%s: failed reading bRefClkFreq. err = %d\n",
-+			 __func__, err);
-+		goto out;
-+	}
-+
-+	if (ref_clk == hba->dev_ref_clk_freq)
-+		goto out; /* nothing to update */
-+
-+	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
-+			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0,
-+			&hba->dev_ref_clk_freq);
-+
-+	if (err)
-+		dev_err(hba->dev, "%s: bRefClkFreq setting to %s failed\n",
-+			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-+	/*
-+	 * It is good to print this out here to debug any later failures
-+	 * related to gear switch.
-+	 */
-+	dev_dbg(hba->dev, "%s: bRefClkFreq setting to %s succeeded\n",
-+			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-+
-+out:
-+	return err;
-+}
-+
-+/**
-  * ufshcd_probe_hba - probe hba to detect device and initialize
-  * @hba: per-adapter instance
-  *
-@@ -6361,6 +6408,11 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 			"%s: Failed getting max supported power mode\n",
- 			__func__);
- 	} else {
-+		/*
-+		 * Set the right value to bRefClkFreq before attempting to
-+		 * switch to HS gears.
-+		 */
-+		ufshcd_set_dev_ref_clk(hba);
- 		ret = ufshcd_config_pwr_mode(hba, &hba->max_pwr_info.info);
- 		if (ret) {
- 			dev_err(hba->dev, "%s: Failed setting power mode, err = %d\n",
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 8110dcd..b026ad8 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -548,6 +548,7 @@ struct ufs_hba {
- 	void *priv;
- 	unsigned int irq;
- 	bool is_irq_enabled;
-+	u32 dev_ref_clk_freq;
- 
- 	/* Interrupt aggregation support is broken */
- 	#define UFSHCD_QUIRK_BROKEN_INTR_AGGR			0x1
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+It depends from which side you are looking at this!!
+
+There are more than 16 nvmem providers in kernel which use this bindings 
+and they are fine!!
+
+I obviously take some of your concerns w.r.t bindings and there is a 
+scope of making the bindings much robust, most importantly the #address 
+and #size-cells. But having a subnode still sounds very fragile to me, 
+and this could be much specific case of MTD provider. We might have 
+instances where this could be sub-sub node of the the original provider 
+for other providers. Also I do not want to bring in Provider specifics 
+into this bindings. If single level of subnode works for your case and 
+the below patch works for you then I would recommend lets move on and 
+try to get this going.
+
+> doesn't require updating the dts using the original binding, both are
+> still supported. I proposed deprecating the current binding because I
+> think it is flawed, but we could also "officially" support both style.
+> 
+>> Can you try this with your original subnode proposal:
+>> just pass the subnode node pointer in np of nvmem_config:
+>>
+>> ------------------------->cut<------------------------------------
+>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>> index b05aa8e81303..c9621632bbfb 100644
+>> --- a/drivers/nvmem/core.c
+>> +++ b/drivers/nvmem/core.c
+>> @@ -472,7 +472,11 @@ struct nvmem_device *nvmem_register(const struct
+>> nvmem_config *config)
+>>           nvmem->priv = config->priv;
+>>           nvmem->reg_read = config->reg_read;
+>>           nvmem->reg_write = config->reg_write;
+>> -       nvmem->dev.of_node = config->dev->of_node;
+>> +
+>> +       if (config->np)
+>> +               nvmem->dev.of_node = config->np;
+>> +       else
+>> +               nvmem->dev.of_node = config->dev->of_node;
+>>
+>>           if (config->id == -1 && config->name) {
+>>                   dev_set_name(&nvmem->dev, "%s", config->name);
+>> diff --git a/include/linux/nvmem-provider.h
+>> b/include/linux/nvmem-provider.h index f89598bc4e1c..743345ffe2c8
+>> 100644 --- a/include/linux/nvmem-provider.h
+>> +++ b/include/linux/nvmem-provider.h
+>> @@ -49,6 +49,7 @@ typedef int (*nvmem_reg_write_t)(void *priv,
+>> unsigned int offset,nvmem_device_get(
+>>     */
+>>    struct nvmem_config {
+>>           struct device           *dev;
+>> +       struct device_node      *np;
+>>           const char              *name;
+>>           int                     id;
+>>           struct module           *owner;
+>>
+>> ------------------------->cut<------------------------------------
+> 
+> That should work just fine to allow next to any kind of binding.
+> I'll do a new patch using this approach for the code side and leaving
+> the generic binding as it is.
+Sure!!
+This will give more flexibility to other provider drivers!
+
+
+thanks,
+srini
+> 
+> Alban
+> 
