@@ -1,76 +1,217 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/5] arm64: dts: renesas: r8a77980: add VSPD support
-Date: Fri, 08 Jun 2018 17:01:57 +0300
-Message-ID: <5881797.ZzEO2jGKGA@avalon>
-References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
- <5f151ec5-bec7-ed06-cb94-4f0cfe8e43dc@cogentembedded.com>
- <20180608135456.cathgcuyp24csbwx@verge.net.au>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v2 11/11] misc: throttler: Add Chrome OS EC throttler
+Date: Fri, 8 Jun 2018 16:09:18 +0200
+Message-ID: <e1681e0f-2141-12a7-bed1-4d27a43ac9e8@collabora.com>
+References: <20180607181214.30338-1-mka@chromium.org>
+ <20180607181214.30338-12-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180608135456.cathgcuyp24csbwx@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180607181214.30338-12-mka@chromium.org>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+Hi Matthias,
 
-On Friday, 8 June 2018 16:54:56 EEST Simon Horman wrote:
-> [CC Laurent, Geert]
+On 07/06/18 20:12, Matthias Kaehlcke wrote:
+> The driver subscribes to throttling events from the Chrome OS
+> embedded controller and enables/disables system throttling based
+> on these events.
 > 
-> On Thu, Jun 07, 2018 at 11:20:47PM +0300, Sergei Shtylyov wrote:
-> > Describe VSPD0 in the R8A77980 device tree; it will be used by DU in
-> > the next patch...
-> > 
-> > Based on the original (and large) patch by Vladimir Barinov.
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > ---
-> > 
-> >  arch/arm64/boot/dts/renesas/r8a77980.dtsi |   10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> > ===================================================================
-> > --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> > +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> > @@ -653,6 +653,16 @@
-> >  			resets = <&cpg 408>;
-> >  		};
-> > 
-> > +		vspd0: vsp@fea20000 {
-> > +			compatible = "renesas,vsp2";
-> > +			reg = <0 0xfea20000 0 0x4000>;
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> Changes in v2:
+> - added SPDX line instead of license boiler-plate
+> - use macro to avoid splitting line
+> - changed variable name for throttler from 'cte' to 'ce_thr'
+> - formatting fixes
+> - Kconfig: removed odd dashes around 'help'
+> - added 'Reviewed-by' tag
 > 
-> As per "[PATCH] arm64: dts: renesas: Fix VSPD registers range"
-> I think the width of the range should be 0x5000.
+> Note: I finally decided to keep 'Chrome OS' instead of changing it
+> to 'ChromeOS'. Both are currently used in the kernel, the latter is
+> currently more prevalent, however the official name is 'Chrome OS',
+> so there is no good reason to keep introducing the 'alternative' name.
+> 
 
-I agree with that.
+I am pretty sure that somebody from Google told me the contrary, so
 
-> > +			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&cpg CPG_MOD 623>;
-> > +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> > +			resets = <&cpg 623>;
-> > +			renesas,fcp = <&fcpvd0>;
-> > +		};
-> > +
-> >  		fcpvd0: fcp@fea27000 {
-> >  			compatible = "renesas,fcpv";
-> >  			reg = <0 0xfea27000 0 0x200>;
+¯\_(ツ)_/¯
 
--- 
-Regards,
+Anyway, you will probably know better than me :)
 
-Laurent Pinchart
+>  drivers/misc/throttler/Kconfig             |  14 +++
+>  drivers/misc/throttler/Makefile            |   1 +
+>  drivers/misc/throttler/cros_ec_throttler.c | 116 +++++++++++++++++++++
+>  3 files changed, 131 insertions(+)
+>  create mode 100644 drivers/misc/throttler/cros_ec_throttler.c
+> 
+> diff --git a/drivers/misc/throttler/Kconfig b/drivers/misc/throttler/Kconfig
+> index e561f1df5085..da6fb70b96d9 100644
+> --- a/drivers/misc/throttler/Kconfig
+> +++ b/drivers/misc/throttler/Kconfig
+> @@ -12,3 +12,17 @@ menuconfig THROTTLER
+>  	  Note that you also need a event monitor module usually called
+>  	  *_throttler.
+>  
+> +if THROTTLER
+> +
+> +config CROS_EC_THROTTLER
+> +	tristate "Throttler event monitor for the Chrome OS Embedded Controller"
+> +	depends on MFD_CROS_EC
+> +	help
+> +	  This driver adds support to throttle the system in reaction to
+> +	  Chrome OS EC events.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called cros_ec_throttler.
+> +
+> +endif # THROTTLER
+> +
+> diff --git a/drivers/misc/throttler/Makefile b/drivers/misc/throttler/Makefile
+> index c8d920cee315..d9b2a77dabc9 100644
+> --- a/drivers/misc/throttler/Makefile
+> +++ b/drivers/misc/throttler/Makefile
+> @@ -1 +1,2 @@
+>  obj-$(CONFIG_THROTTLER)		+= core.o
+> +obj-$(CONFIG_CROS_EC_THROTTLER)	+= cros_ec_throttler.o
+> diff --git a/drivers/misc/throttler/cros_ec_throttler.c b/drivers/misc/throttler/cros_ec_throttler.c
+> new file mode 100644
+> index 000000000000..432135c55600
+> --- /dev/null
+> +++ b/drivers/misc/throttler/cros_ec_throttler.c
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for throttling triggered by events from the Chrome OS Embedded
+> + * Controller.
+> + *
+> + * Copyright (C) 2018 Google, Inc.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/cros_ec.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/throttler.h>
+> +
+> +#define nb_to_ce_thr(nb) container_of(nb, struct cros_ec_throttler, nb)
+> +
+> +struct cros_ec_throttler {
+> +	struct cros_ec_device *ec;
+> +	struct throttler *throttler;
+> +	struct notifier_block nb;
+> +};
+> +
+> +static int cros_ec_throttler_event(struct notifier_block *nb,
+> +	unsigned long queued_during_suspend, void *_notify)
+> +{
+> +	struct cros_ec_throttler *ce_thr = nb_to_ce_thr(nb);
+> +	u32 host_event;
+> +
+> +	host_event = cros_ec_get_host_event(ce_thr->ec);
+> +	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_THROTTLE_START)) {
+> +		throttler_set_level(ce_thr->throttler, 1);
+> +
+> +		return NOTIFY_OK;
+> +	} else if (host_event &
+> +		   EC_HOST_EVENT_MASK(EC_HOST_EVENT_THROTTLE_STOP)) {
+> +		throttler_set_level(ce_thr->throttler, 0);
+> +
+> +		return NOTIFY_OK;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static int cros_ec_throttler_probe(struct platform_device *pdev)
+> +{
+> +	struct cros_ec_throttler *ce_thr;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int ret;
+> +
+> +	if (!np) {
+> +		/* should never happen */
+> +		return -EINVAL;
+> +	}
+> +
+> +	ce_thr = devm_kzalloc(dev, sizeof(*ce_thr), GFP_KERNEL);
+> +	if (!ce_thr)
+> +		return -ENOMEM;
+> +
+> +	ce_thr->ec = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	ce_thr->throttler = throttler_setup(dev);
+> +	if (IS_ERR(ce_thr->throttler))
+> +		return PTR_ERR(ce_thr->throttler);
+> +
+> +	dev_set_drvdata(dev, ce_thr);
+> +
+> +	ce_thr->nb.notifier_call = cros_ec_throttler_event;
+> +	ret = blocking_notifier_chain_register(&ce_thr->ec->event_notifier,
+> +					       &ce_thr->nb);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to register notifier\n");
+> +		throttler_teardown(ce_thr->throttler);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cros_ec_throttler_remove(struct platform_device *pdev)
+> +{
+> +	struct cros_ec_throttler *ce_thr = platform_get_drvdata(pdev);
+> +
+> +	blocking_notifier_chain_unregister(&ce_thr->ec->event_notifier,
+> +					   &ce_thr->nb);
+> +
+> +	throttler_teardown(ce_thr->throttler);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id cros_ec_throttler_of_match[] = {
+> +	{ .compatible = "google,cros-ec-throttler" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, cros_ec_throttler_of_match);
+> +#endif /* CONFIG_OF */
+> +
+> +static struct platform_driver cros_ec_throttler_driver = {
+> +	.driver = {
+> +		.name = "cros-ec-throttler",
+> +		.of_match_table = of_match_ptr(cros_ec_throttler_of_match),
+> +	},
+> +	.probe		= cros_ec_throttler_probe,
+> +	.remove		= cros_ec_throttler_remove,
+> +};
+> +
+> +module_platform_driver(cros_ec_throttler_driver);
+> +
+> +MODULE_LICENSE("GPL");
+
+Something that I learnt recently. To match the SPDX-license tag you should set
+this to "GPL v2" [1]
+
+ *	"GPL"				[GNU Public License v2 or later]
+ *	"GPL v2"			[GNU Public License v2]
+
+[1] https://elixir.bootlin.com/linux/v4.17/source/include/linux/module.h#L172
+
+> +MODULE_AUTHOR("Matthias Kaehlcke <mka@chromium.org>");
+> +MODULE_DESCRIPTION("Chrome OS EC Throttler");
+> 
+
+Best regards,
+ Enric
