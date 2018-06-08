@@ -1,154 +1,129 @@
-Return-Path: <SRS0=Mmip=JE=linaro.org=vinod.koul@kernel.org>
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: [PATCH 2/5] power: reset: qcom-pon: Add Qcom PON driver
-Date: Mon, 18 Jun 2018 20:05:45 +0530
-Message-Id: <20180618143548.29900-3-vkoul@kernel.org>
-In-Reply-To: <20180618143548.29900-1-vkoul@kernel.org>
-References: <20180618143548.29900-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
+From: Argus Lin <argus.lin@mediatek.com>
+Subject: [PATCH V5 4/4] soc: mediatek: pwrap: add mt6351 driver for mt6797 SoCs
+Date: Fri, 8 Jun 2018 16:17:09 +0800
+Message-ID: <1528445829-8866-5-git-send-email-argus.lin@mediatek.com>
+In-Reply-To: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
+References: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_001_1022131234.1407835220"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support Qualcomm PM8xxx PON which is responsible for reboot
-mode support.
+--__=_Part_Boundary_001_1022131234.1407835220
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_002_1244576623.502077435"
 
-Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/power/reset/Kconfig    |  8 ++++
- drivers/power/reset/Makefile   |  1 +
- drivers/power/reset/qcom-pon.c | 91 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 100 insertions(+)
- create mode 100644 drivers/power/reset/qcom-pon.c
+--__=_Part_Boundary_002_1244576623.502077435
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index df58fc878b3e..1572b2d3ad3d 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -104,6 +104,14 @@ config POWER_RESET_MSM
- 	help
- 	  Power off and restart support for Qualcomm boards.
- 
-+config POWER_RESET_QCOM_PON
-+	bool "Qualcomm power-on driver"
-+	depends on ARCH_QCOM
-+	depends on MFD_SPMI_PMIC
-+	select REBOOT_MODE
-+	help
-+	  Power On support for Qualcomm boards.
-+
- config POWER_RESET_OCELOT_RESET
- 	bool "Microsemi Ocelot reset driver"
- 	depends on MSCC_OCELOT || COMPILE_TEST
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 7778c7485cf1..0aebee954ac1 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
- obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
- obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
- obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
-+obj-$(CONFIG_POWER_RESET_QCOM_PON) += qcom-pon.o
- obj-$(CONFIG_POWER_RESET_OCELOT_RESET) += ocelot-reset.o
- obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
- obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
-diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
-new file mode 100644
-index 000000000000..0c4caaa7e88f
---- /dev/null
-+++ b/drivers/power/reset/qcom-pon.c
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2017-18 Linaro Limited
-+
-+#include <linux/delay.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/reboot-mode.h>
-+#include <linux/regmap.h>
-+
-+#define PON_SOFT_RB_SPARE		0x8f
-+
-+struct pm8916_pon {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	u32 baseaddr;
-+	struct reboot_mode_driver reboot_mode;
-+};
-+
-+static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
-+				    unsigned int magic)
-+{
-+	struct pm8916_pon *pon = container_of
-+			(reboot, struct pm8916_pon, reboot_mode);
-+	int ret;
-+
-+	ret = regmap_update_bits(pon->regmap,
-+				 pon->baseaddr + PON_SOFT_RB_SPARE,
-+				 0xfc, magic << 2);
-+	if (ret < 0)
-+		dev_err(pon->dev, "update reboot mode bits failed\n");
-+
-+	return ret;
-+}
-+
-+static int pm8916_pon_probe(struct platform_device *pdev)
-+{
-+	struct pm8916_pon *pon;
-+	int error;
-+
-+	pon = devm_kzalloc(&pdev->dev, sizeof(*pon), GFP_KERNEL);
-+	if (!pon)
-+		return -ENOMEM;
-+
-+	pon->dev = &pdev->dev;
-+
-+	pon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!pon->regmap) {
-+		dev_err(&pdev->dev, "failed to locate regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	error = of_property_read_u32(pdev->dev.of_node, "reg",
-+				     &pon->baseaddr);
-+	if (error)
-+		return error;
-+
-+	pon->reboot_mode.dev = &pdev->dev;
-+	pon->reboot_mode.write = pm8916_reboot_mode_write;
-+	error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
-+	if (error) {
-+		dev_err(&pdev->dev, "can't register reboot mode\n");
-+		return error;
-+	}
-+
-+	platform_set_drvdata(pdev, pon);
-+
-+	return devm_of_platform_populate(&pdev->dev);
-+}
-+
-+static const struct of_device_id pm8916_pon_id_table[] = {
-+	{ .compatible = "qcom,pm8916-pon" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
-+
-+static struct platform_driver pm8916_pon_driver = {
-+	.probe = pm8916_pon_probe,
-+	.driver = {
-+		.name = "pm8916-pon",
-+		.of_match_table = of_match_ptr(pm8916_pon_id_table),
-+	},
-+};
-+module_platform_driver(pm8916_pon_driver);
-+
-+MODULE_DESCRIPTION("pm8916 Power On driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.14.4
+PHByZT4NCk1UNjM1MSBpcyBhIG5ldyBwb3dlciBtYW5hZ2VtZW50IElDIGFuZCBpdCBpcyB1c2Vk
+IGZvciBtdDY3OTcgU29Dcy4gVG8gZGVmaW5lDQptdDYzNTFfcmVncyBmb3IgcG1pYyByZWdpc3Rl
+ciBtYXBwaW5nIGFuZCBwbWljX210NjM1MSBmb3INCmFjY2Vzc2luZyByZWdpc3Rlci4NCg0KU2ln
+bmVkLW9mZi1ieTogQXJndXMgTGluICZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0Ow0KLS0t
+DQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgMjkgKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKQ0KDQpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIGIvZHJpdmVy
+cy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQppbmRleCBkMDNlMmQ0Li40Y2Y5NDk2IDEw
+MDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQorKysgYi9k
+cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCkBAIC0xNDYsNiArMTQ2LDIxIEBA
+IGVudW0gZGV3X3JlZ3Mgew0KIAlbUFdSQVBfREVXX0NJUEhFUl9TV1JTVF0gPQkweGJjMjQsDQog
+fTsNCiANCitzdGF0aWMgY29uc3QgdTMyIG10NjM1MV9yZWdzW10gPSB7DQorCVtQV1JBUF9ERVdf
+RElPX0VOXSA9CQkweDAyRjIsDQorCVtQV1JBUF9ERVdfUkVBRF9URVNUXSA9CQkweDAyRjQsDQor
+CVtQV1JBUF9ERVdfV1JJVEVfVEVTVF0gPQkweDAyRjYsDQorCVtQV1JBUF9ERVdfQ1JDX0VOXSA9
+CQkweDAyRkEsDQorCVtQV1JBUF9ERVdfQ1JDX1ZBTF0gPQkJMHgwMkZDLA0KKwlbUFdSQVBfREVX
+X0NJUEhFUl9LRVlfU0VMXSA9CTB4MDMwMCwNCisJW1BXUkFQX0RFV19DSVBIRVJfSVZfU0VMXSA9
+CTB4MDMwMiwNCisJW1BXUkFQX0RFV19DSVBIRVJfRU5dID0JCTB4MDMwNCwNCisJW1BXUkFQX0RF
+V19DSVBIRVJfUkRZXSA9CTB4MDMwNiwNCisJW1BXUkFQX0RFV19DSVBIRVJfTU9ERV0gPQkweDAz
+MDgsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSA9CTB4MDMwQSwNCisJW1BXUkFQX0RFV19S
+RERNWV9OT10gPQkJMHgwMzBDLA0KK307DQorDQogZW51bSBwd3JhcF9yZWdzIHsNCiAJUFdSQVBf
+TVVYX1NFTCwNCiAJUFdSQVBfV1JBUF9FTiwNCkBAIC02NjgsNiArNjgzLDcgQEAgZW51bSBwd3Jh
+cF9yZWdzIHsNCiANCiBlbnVtIHBtaWNfdHlwZSB7DQogCVBNSUNfTVQ2MzIzLA0KKwlQTUlDX01U
+NjM1MSwNCiAJUE1JQ19NVDYzODAsDQogCVBNSUNfTVQ2Mzk3LA0KIH07DQpAQCAtMTEyNCw2ICsx
+MTQwLDcgQEAgc3RhdGljIGludCBwd3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVy
+ICp3cnApDQogCQkJICAgIDB4MSk7DQogCQlicmVhazsNCiAJY2FzZSBQTUlDX01UNjMyMzoNCisJ
+Y2FzZSBQTUlDX01UNjM1MToNCiAJCXB3cmFwX3dyaXRlKHdycCwgd3JwLSZndDtzbGF2ZS0mZ3Q7
+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9FTl0sDQogCQkJICAgIDB4MSk7DQogCQlicmVhazsN
+CkBAIC0xNDAwLDYgKzE0MTcsMTUgQEAgc3RhdGljIGlycXJldHVybl90IHB3cmFwX2ludGVycnVw
+dChpbnQgaXJxbm8sIHZvaWQgKmRldl9pZCkNCiAJLnB3cmFwX3dyaXRlID0gcHdyYXBfd3JpdGUx
+NiwNCiB9Ow0KIA0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcHdyYXBfc2x2X3R5cGUgcG1pY19tdDYz
+NTEgPSB7DQorCS5kZXdfcmVncyA9IG10NjM1MV9yZWdzLA0KKwkudHlwZSA9IFBNSUNfTVQ2MzUx
+LA0KKwkucmVnbWFwID0gJmFtcDtwd3JhcF9yZWdtYXBfY29uZmlnMTYsDQorCS5jYXBzID0gMCwN
+CisJLnB3cmFwX3JlYWQgPSBwd3JhcF9yZWFkMTYsDQorCS5wd3JhcF93cml0ZSA9IHB3cmFwX3dy
+aXRlMTYsDQorfTsNCisNCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBvZl9zbGF2
+ZV9tYXRjaF90YmxbXSA9IHsNCiAJew0KIAkJLmNvbXBhdGlibGUgPSAmcXVvdDttZWRpYXRlayxt
+dDYzMjMmcXVvdDssDQpAQCAtMTQxNCw2ICsxNDQwLDkgQEAgc3RhdGljIGlycXJldHVybl90IHB3
+cmFwX2ludGVycnVwdChpbnQgaXJxbm8sIHZvaWQgKmRldl9pZCkNCiAJCS5jb21wYXRpYmxlID0g
+JnF1b3Q7bWVkaWF0ZWssbXQ2Mzk3JnF1b3Q7LA0KIAkJLmRhdGEgPSAmYW1wO3BtaWNfbXQ2Mzk3
+LA0KIAl9LCB7DQorCQkuY29tcGF0aWJsZSA9ICZxdW90O21lZGlhdGVrLG10NjM1MSZxdW90OywN
+CisJCS5kYXRhID0gJmFtcDtwbWljX210NjM1MSwNCisJfSwgew0KIAkJLyogc2VudGluZWwgKi8N
+CiAJfQ0KIH07DQotLSANCjEuOC4xLjEuZGlydHkNCg0KPC9wcmU+PCEtLXR5cGU6dGV4dC0tPjwh
+LS17LS0+PHByZT4qKioqKioqKioqKioqIEVtYWlsIENvbmZpZGVudGlhbGl0eSBOb3RpY2UNCiAq
+KioqKioqKioqKioqKioqKioqKg0KVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIGUt
+bWFpbCBtZXNzYWdlIChpbmNsdWRpbmcgYW55IA0KYXR0YWNobWVudHMpIG1heSBiZSBjb25maWRl
+bnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2VkLCBvciBvdGhlcndpc2UNCmV4ZW1wdCBmcm9t
+IGRpc2Nsb3N1cmUgdW5kZXIgYXBwbGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCB0byBiZSAN
+CmNvbnZleWVkIG9ubHkgdG8gdGhlIGRlc2lnbmF0ZWQgcmVjaXBpZW50KHMpLiBBbnkgdXNlLCBk
+aXNzZW1pbmF0aW9uLCANCmRpc3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBvciBjb3B5
+aW5nIG9mIHRoaXMgZS1tYWlsIChpbmNsdWRpbmcgaXRzIA0KYXR0YWNobWVudHMpIGJ5IHVuaW50
+ZW5kZWQgcmVjaXBpZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSANCmJlIHVu
+bGF3ZnVsLiBJZiB5b3UgYXJlIG5vdCBhbiBpbnRlbmRlZCByZWNpcGllbnQgb2YgdGhpcyBlLW1h
+aWwsIG9yIGJlbGlldmUNCiANCnRoYXQgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4g
+ZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWlu
+ZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUt
+bWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRv
+IG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBl
+cnNvbi4gVGhhbmsNCiB5b3UhPC9wcmU+PCEtLX0tLT4=
+
+--__=_Part_Boundary_002_1244576623.502077435
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+
+TVQ2MzUxIGlzIGEgbmV3IHBvd2VyIG1hbmFnZW1lbnQgSUMgYW5kIGl0IGlzIHVzZWQgZm9yIG10
+Njc5NyBTb0NzLiBUbyBkZWZpbmUNCm10NjM1MV9yZWdzIGZvciBwbWljIHJlZ2lzdGVyIG1hcHBp
+bmcgYW5kIHBtaWNfbXQ2MzUxIGZvcg0KYWNjZXNzaW5nIHJlZ2lzdGVyLg0KDQpTaWduZWQtb2Zm
+LWJ5OiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Nv
+Yy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRl
+ay9tdGstcG1pYy13cmFwLmMNCmluZGV4IGQwM2UyZDQuLjRjZjk0OTYgMTAwNjQ0DQotLS0gYS9k
+cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCisrKyBiL2RyaXZlcnMvc29jL21l
+ZGlhdGVrL210ay1wbWljLXdyYXAuYw0KQEAgLTE0Niw2ICsxNDYsMjEgQEAgZW51bSBkZXdfcmVn
+cyB7DQogCVtQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSA9CTB4YmMyNCwNCiB9Ow0KIA0KK3N0YXRp
+YyBjb25zdCB1MzIgbXQ2MzUxX3JlZ3NbXSA9IHsNCisJW1BXUkFQX0RFV19ESU9fRU5dID0JCTB4
+MDJGMiwNCisJW1BXUkFQX0RFV19SRUFEX1RFU1RdID0JCTB4MDJGNCwNCisJW1BXUkFQX0RFV19X
+UklURV9URVNUXSA9CTB4MDJGNiwNCisJW1BXUkFQX0RFV19DUkNfRU5dID0JCTB4MDJGQSwNCisJ
+W1BXUkFQX0RFV19DUkNfVkFMXSA9CQkweDAyRkMsDQorCVtQV1JBUF9ERVdfQ0lQSEVSX0tFWV9T
+RUxdID0JMHgwMzAwLA0KKwlbUFdSQVBfREVXX0NJUEhFUl9JVl9TRUxdID0JMHgwMzAyLA0KKwlb
+UFdSQVBfREVXX0NJUEhFUl9FTl0gPQkJMHgwMzA0LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9SRFld
+ID0JMHgwMzA2LA0KKwlbUFdSQVBfREVXX0NJUEhFUl9NT0RFXSA9CTB4MDMwOCwNCisJW1BXUkFQ
+X0RFV19DSVBIRVJfU1dSU1RdID0JMHgwMzBBLA0KKwlbUFdSQVBfREVXX1JERE1ZX05PXSA9CQkw
+eDAzMEMsDQorfTsNCisNCiBlbnVtIHB3cmFwX3JlZ3Mgew0KIAlQV1JBUF9NVVhfU0VMLA0KIAlQ
+V1JBUF9XUkFQX0VOLA0KQEAgLTY2OCw2ICs2ODMsNyBAQCBlbnVtIHB3cmFwX3JlZ3Mgew0KIA0K
+IGVudW0gcG1pY190eXBlIHsNCiAJUE1JQ19NVDYzMjMsDQorCVBNSUNfTVQ2MzUxLA0KIAlQTUlD
+X01UNjM4MCwNCiAJUE1JQ19NVDYzOTcsDQogfTsNCkBAIC0xMTI0LDYgKzExNDAsNyBAQCBzdGF0
+aWMgaW50IHB3cmFwX2luaXRfY2lwaGVyKHN0cnVjdCBwbWljX3dyYXBwZXIgKndycCkNCiAJCQkg
+ICAgMHgxKTsNCiAJCWJyZWFrOw0KIAljYXNlIFBNSUNfTVQ2MzIzOg0KKwljYXNlIFBNSUNfTVQ2
+MzUxOg0KIAkJcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdf
+Q0lQSEVSX0VOXSwNCiAJCQkgICAgMHgxKTsNCiAJCWJyZWFrOw0KQEAgLTE0MDAsNiArMTQxNywx
+NSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgcHdyYXBfaW50ZXJydXB0KGludCBpcnFubywgdm9pZCAq
+ZGV2X2lkKQ0KIAkucHdyYXBfd3JpdGUgPSBwd3JhcF93cml0ZTE2LA0KIH07DQogDQorc3RhdGlj
+IGNvbnN0IHN0cnVjdCBwd3JhcF9zbHZfdHlwZSBwbWljX210NjM1MSA9IHsNCisJLmRld19yZWdz
+ID0gbXQ2MzUxX3JlZ3MsDQorCS50eXBlID0gUE1JQ19NVDYzNTEsDQorCS5yZWdtYXAgPSAmcHdy
+YXBfcmVnbWFwX2NvbmZpZzE2LA0KKwkuY2FwcyA9IDAsDQorCS5wd3JhcF9yZWFkID0gcHdyYXBf
+cmVhZDE2LA0KKwkucHdyYXBfd3JpdGUgPSBwd3JhcF93cml0ZTE2LA0KK307DQorDQogc3RhdGlj
+IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb2Zfc2xhdmVfbWF0Y2hfdGJsW10gPSB7DQogCXsN
+CiAJCS5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjMyMyIsDQpAQCAtMTQxNCw2ICsxNDQwLDkg
+QEAgc3RhdGljIGlycXJldHVybl90IHB3cmFwX2ludGVycnVwdChpbnQgaXJxbm8sIHZvaWQgKmRl
+dl9pZCkNCiAJCS5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjM5NyIsDQogCQkuZGF0YSA9ICZw
+bWljX210NjM5NywNCiAJfSwgew0KKwkJLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzUxIiwN
+CisJCS5kYXRhID0gJnBtaWNfbXQ2MzUxLA0KKwl9LCB7DQogCQkvKiBzZW50aW5lbCAqLw0KIAl9
+DQogfTsNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+
+--__=_Part_Boundary_002_1244576623.502077435--
+
+--__=_Part_Boundary_001_1022131234.1407835220--
