@@ -1,167 +1,32 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v6 2/2] regulator: add QCOM RPMh regulator driver
-Date: Thu, 7 Jun 2018 17:26:53 -0700
-Message-ID: <20180608002653.GD88063@google.com>
-References: <cover.1528138319.git.collinsd@codeaurora.org>
- <6d7abf248493cf81d62eb17ecb5030783aa85f72.1528138319.git.collinsd@codeaurora.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [v3, 00/10] Support DPAA PTP clock and timestamping
+Date: Thu, 7 Jun 2018 21:27:06 -0700
+Message-ID: <20180608042706.7gfg5p6574ntc2lq@localhost>
+References: <20180607092050.46128-1-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6d7abf248493cf81d62eb17ecb5030783aa85f72.1528138319.git.collinsd@codeaurora.org>
+In-Reply-To: <20180607092050.46128-1-yangbo.lu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: netdev@vger.kernel.org, madalin.bucur@nxp.com, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Thu, Jun 07, 2018 at 05:20:40PM +0800, Yangbo Lu wrote:
+> This patchset is to support DPAA FMAN PTP clock and HW timestamping.
+> It had been verified on both ARM platform and PPC platform.
+> - The patch #1 to patch #5 are to support DPAA FMAN 1588 timer in
+>   ptp_qoriq driver.
+> - The patch #6 to patch #10 are to add HW timestamping support in
+>   DPAA ethernet driver.
 
-On Mon, Jun 04, 2018 at 12:15:12PM -0700, David Collins wrote:
-> Add the QCOM RPMh regulator driver to manage PMIC regulators
-> which are controlled via RPMh on some Qualcomm Technologies, Inc.
-> SoCs.  RPMh is a hardware block which contains several
-> accelerators which are used to manage various hardware resources
-> that are shared between the processors of the SoC.  The final
-> hardware state of a regulator is determined within RPMh by
-> performing max aggregation of the requests made by all of the
-> processors.
-> 
-> Add support for PMIC regulator control via the voltage regulator
-> manager (VRM) and oscillator buffer (XOB) RPMh accelerators.
-> VRM supports manipulation of enable state, voltage, and mode.
-> XOB supports manipulation of enable state.
-> 
-> Signed-off-by: David Collins <collinsd@codeaurora.org>
-> ---
->  drivers/regulator/Kconfig               |   9 +
->  drivers/regulator/Makefile              |   1 +
->  drivers/regulator/qcom-rpmh-regulator.c | 767 ++++++++++++++++++++++++++++++++
->  3 files changed, 777 insertions(+)
->  create mode 100644 drivers/regulator/qcom-rpmh-regulator.c
->
-> ...
->
-> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-> new file mode 100644
-> index 0000000..a7fffb6
-> --- /dev/null
-> +++ b/drivers/regulator/qcom-rpmh-regulator.c
->
-> ...
-> static int rpmh_regulator_send_request(struct rpmh_vreg *vreg,
-> +                       struct tcs_cmd *cmd, int count, bool wait_for_ack)
->
+Right now, net-next is closed for new stuff.  You will have to post
+the series again after the merge window closes.  You can check the
+status here:
 
-nit: as of now this is only called with a single command. If you
-anticipate that this is unlikely to change consider removing 'count',
-not having it in the calls slightly improves readability.
+    http://vger.kernel.org/~davem/net-next.html
 
-> ...
-> +static int _rpmh_regulator_vrm_set_voltage_sel(struct regulator_dev *rdev,
-> +				unsigned int selector, bool wait_for_ack)
-> +{
-> +	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
-> +	struct tcs_cmd cmd = {
-> +		.addr = vreg->addr + RPMH_REGULATOR_REG_VRM_VOLTAGE,
-> +	};
-> +	int ret;
-> +
-> +	/* VRM voltage control register is set with voltage in millivolts. */
-> +	cmd.data = DIV_ROUND_UP(regulator_list_voltage_linear_range(rdev,
-> +							selector), 1000);
-> +
-> +	ret = rpmh_regulator_send_request(vreg, &cmd, 1, wait_for_ack);
-> +	if (!ret)
-> +		vreg->voltage_selector = selector;
-> +
-> +	return 0;
+When you do re-post, you can add my:
 
-Shouldn't this return 'ret'?
-
-> +static int rpmh_regulator_enable(struct regulator_dev *rdev)
-> +{
-> +	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
-> +	struct tcs_cmd cmd = {
-> +		.addr = vreg->addr + RPMH_REGULATOR_REG_ENABLE,
-> +		.data = 1,
-> +	};
-> +	int ret;
-> +
-> +	if (vreg->enabled == -EINVAL &&
-> +	    vreg->voltage_selector != -ENOTRECOVERABLE) {
-> +		ret = _rpmh_regulator_vrm_set_voltage_sel(rdev,
-> +						vreg->voltage_selector, true);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	ret = rpmh_regulator_send_request(vreg, &cmd, 1, true);
-> +	if (!ret)
-> +		vreg->enabled = true;
-> +
-> +	return ret;
-> +}
-> +
-> +static int rpmh_regulator_disable(struct regulator_dev *rdev)
-> +{
-> +	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
-> +	struct tcs_cmd cmd = {
-> +		.addr = vreg->addr + RPMH_REGULATOR_REG_ENABLE,
-> +		.data = 0,
-> +	};
-> +	int ret;
-> +
-> +	if (vreg->enabled == -EINVAL &&
-> +	    vreg->voltage_selector != -ENOTRECOVERABLE) {
-> +		ret = _rpmh_regulator_vrm_set_voltage_sel(rdev,
-> +						vreg->voltage_selector, true);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	ret = rpmh_regulator_send_request(vreg, &cmd, 1, false);
-> +	if (!ret)
-> +		vreg->enabled = false;
-> +
-> +	return ret;
-> +}
-
-nit: rpmh_regulator_enable() and rpmh_regulator_disable() are
-essentially the same code, consider introducing a helper like
-_rpmh_regulator_enable(struct regulator_dev *rdev, bool enable).
-
-> +/**
-> + * rpmh_regulator_init_vreg() - initialize all attributes of an rpmh-regulator
-> + * vreg:		Pointer to the individual rpmh-regulator resource
-> + * dev:			Pointer to the top level rpmh-regulator PMIC device
-> + * node:		Pointer to the individual rpmh-regulator resource
-> + *			device node
-> + * pmic_id:		String used to identify the top level rpmh-regulator
-> + *			PMIC device on the board
-> + * rpmh_data:		Pointer to a null-terminated array of rpmh-regulator
-> + *			resources defined for the top level PMIC device
-> + *
-> + * Return: 0 on success, errno on failure
-> + */
-> +static int rpmh_regulator_init_vreg(struct rpmh_vreg *vreg, struct device *dev,
-> +				struct device_node *node, const char *pmic_id,
-> +				const struct rpmh_vreg_init_data *rpmh_data)
-> +{
-> +	struct regulator_config reg_config = {};
-> +	char rpmh_resource_name[20] = "";
-> +	struct regulator_dev *rdev;
-> +	struct regulator_init_data *init_data;
-> +	int ret;
-> +
-> +	vreg->dev = dev;
-> +
-> +	for (; rpmh_data->name; rpmh_data++)
-> +		if (!strcmp(rpmh_data->name, node->name))
-> +			break;
-
-nit: it's a bit odd to use the parameter itself for iteration, but I
-guess it's a matter of preferences.
-
-Thanks
-
-Matthias
+Acked-by: Richard Cochran <richardcochran@gmail.com>
