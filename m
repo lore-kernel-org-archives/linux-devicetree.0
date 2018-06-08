@@ -1,14 +1,14 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 3/5] arm64: dts: renesas: r8a77980: add DU support
-Date: Fri, 08 Jun 2018 17:21:08 +0300
-Message-ID: <2730856.67CqOl6nIY@avalon>
+Subject: Re: [PATCH v2 1/5] arm64: dts: renesas: r8a77980: add FCPVD support
+Date: Fri, 08 Jun 2018 17:22:32 +0300
+Message-ID: <2406394.UFm6YmyhWF@avalon>
 References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
- <842200af-095f-7096-a542-1d2865543264@cogentembedded.com>
+ <73f61c34-d0ec-75cd-b6fd-a41cfb39078f@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <842200af-095f-7096-a542-1d2865543264@cogentembedded.com>
+In-Reply-To: <73f61c34-d0ec-75cd-b6fd-a41cfb39078f@cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,8 +26,9 @@ Hi Sergei,
 
 Thank you for the patch.
 
-On Thursday, 7 June 2018 23:21:38 EEST Sergei Shtylyov wrote:
-> Define the generic R8A77980 part of the DU device node.
+On Thursday, 7 June 2018 23:19:31 EEST Sergei Shtylyov wrote:
+> Describe FCPVD0 in the R8A77980 device tree; it will be used by VSPD0 in
+> the next patch...
 > 
 > Based on the original (and large) patch by Vladimir Barinov.
 > 
@@ -37,45 +38,23 @@ On Thursday, 7 June 2018 23:21:38 EEST Sergei Shtylyov wrote:
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  arch/arm64/boot/dts/renesas/r8a77980.dtsi |   30 ++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+>  arch/arm64/boot/dts/renesas/r8a77980.dtsi |    8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
 > Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
 > ===================================================================
 > --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
 > +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -671,6 +671,36 @@
->  			resets = <&cpg 603>;
+> @@ -653,6 +653,14 @@
+>  			resets = <&cpg 408>;
 >  		};
 > 
-> +		du: display@feb00000 {
-> +			compatible = "renesas,du-r8a77980",
-> +				     "renesas,du-r8a77970";
-> +			reg = <0 0xfeb00000 0 0x80000>;
-> +			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 724>;
-> +			clock-names = "du.0";
+> +		fcpvd0: fcp@fea27000 {
+> +			compatible = "renesas,fcpv";
+> +			reg = <0 0xfea27000 0 0x200>;
+> +			clocks = <&cpg CPG_MOD 603>;
 > +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 724>;
-> +			vsps = <&vspd0>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					du_out_rgb: endpoint {
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					du_out_lvds0: endpoint {
-> +					};
-> +				};
-> +			};
+> +			resets = <&cpg 603>;
 > +		};
 > +
 >  		prr: chipid@fff00044 {
