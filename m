@@ -1,14 +1,14 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/5] arm64: dts: renesas: r8a77980: add FCPVD support
-Date: Fri, 08 Jun 2018 17:22:32 +0300
-Message-ID: <2406394.UFm6YmyhWF@avalon>
+Subject: Re: [PATCH v2 4/5] arm64: dts: renesas: r8a77980: add LVDS support
+Date: Fri, 08 Jun 2018 17:24:24 +0300
+Message-ID: <9345530.G21j7jBrXu@avalon>
 References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
- <73f61c34-d0ec-75cd-b6fd-a41cfb39078f@cogentembedded.com>
+ <3e46c70c-c6be-d019-95a9-bf09c888c9c0@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <73f61c34-d0ec-75cd-b6fd-a41cfb39078f@cogentembedded.com>
+In-Reply-To: <3e46c70c-c6be-d019-95a9-bf09c888c9c0@cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,40 +26,57 @@ Hi Sergei,
 
 Thank you for the patch.
 
-On Thursday, 7 June 2018 23:19:31 EEST Sergei Shtylyov wrote:
-> Describe FCPVD0 in the R8A77980 device tree; it will be used by VSPD0 in
-> the next patch...
+On Thursday, 7 June 2018 23:23:06 EEST Sergei Shtylyov wrote:
+> Define the generic R8A77980 part of the LVDS device node.
 > 
-> Based on the original (and large) patch by Vladimir Barinov.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  arch/arm64/boot/dts/renesas/r8a77980.dtsi |    8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/arm64/boot/dts/renesas/r8a77980.dtsi |   29 ++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
 > Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
 > ===================================================================
 > --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
 > +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -653,6 +653,14 @@
->  			resets = <&cpg 408>;
->  		};
-> 
-> +		fcpvd0: fcp@fea27000 {
-> +			compatible = "renesas,fcpv";
-> +			reg = <0 0xfea27000 0 0x200>;
-> +			clocks = <&cpg CPG_MOD 603>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 603>;
+> @@ -696,6 +696,35 @@
+>  				port@1 {
+>  					reg = <1>;
+>  					du_out_lvds0: endpoint {
+> +						remote-endpoint = <&lvds0_in>;
+> +					};
+> +				};
+> +			};
 > +		};
 > +
->  		prr: chipid@fff00044 {
->  			compatible = "renesas,prr";
->  			reg = <0 0xfff00044 0 4>;
+> +		lvds0: lvds-encoder@feb90000 {
+> +			compatible = "renesas,r8a77980-lvds";
+> +			reg = <0 0xfeb90000 0 0x14>;
+> +			clocks = <&cpg CPG_MOD 727>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 727>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					lvds0_in: endpoint {
+> +						remote-endpoint =
+> +							<&du_out_lvds0>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					lvds0_out: endpoint {
+>  					};
+>  				};
+>  			};
 
 -- 
 Regards,
