@@ -1,21 +1,21 @@
 Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
 From: Argus Lin <argus.lin@mediatek.com>
 Subject: [PATCH V5 0/4] Pwrap: Mediatek pwrap driver for mt6797
-Date: Fri, 8 Jun 2018 16:17:05 +0800
-Message-ID: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
+Date: Fri, 8 Jun 2018 15:39:50 +0800
+Message-ID: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_006_1211740634.1870433334"
+	boundary="__=_Part_Boundary_003_264417201.1842417185"
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_006_1211740634.1870433334
+--__=_Part_Boundary_003_264417201.1842417185
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_007_1733761680.1899577589"
+	boundary="__=_Part_Boundary_004_159338866.723701663"
 
---__=_Part_Boundary_007_1733761680.1899577589
+--__=_Part_Boundary_004_159338866.723701663
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -68,7 +68,7 @@ dHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9m
 IHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19
 LS0+
 
---__=_Part_Boundary_007_1733761680.1899577589
+--__=_Part_Boundary_004_159338866.723701663
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -104,6 +104,6 @@ YXRlay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDgxICsrKysrKysrKysrKysrKysr
 KysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
 DQoNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
 
---__=_Part_Boundary_007_1733761680.1899577589--
+--__=_Part_Boundary_004_159338866.723701663--
 
---__=_Part_Boundary_006_1211740634.1870433334--
+--__=_Part_Boundary_003_264417201.1842417185--
