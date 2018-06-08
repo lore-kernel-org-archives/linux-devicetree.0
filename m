@@ -1,146 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
-Date: Fri, 8 Jun 2018 10:47:18 +0200
-Message-ID: <CAMuHMdUOqLhmb8kXOxriQ5mt_4rDQJbUqGsQiJBSkq5J5FWG7w@mail.gmail.com>
-References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528198148-23308-3-git-send-email-michel.pollet@bp.renesas.com>
- <0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com> <OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
- <9cef7124-3020-5741-f3a2-6925a6c8f0f3@gmail.com> <79c0899e-7df1-1fe7-9681-ad3bd51feda7@gmail.com>
- <OSBPR01MB205442B483C792125E6A6AF7D2640@OSBPR01MB2054.jpnprd01.prod.outlook.com>
- <CAL_JsqLn+x0JCkjwABU7XkPsgvyVdiCRq=gZTfUBbbR4-c+1bQ@mail.gmail.com> <OSBPR01MB2054A701CF65784FAB947692D27B0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 0/5] Add R8A77980/Condor/V3HSK LVDS/HDMI support
+Date: Fri, 8 Jun 2018 11:51:17 +0300
+Message-ID: <12b910a6-d7c6-8d8a-07f2-989e26a010e0@cogentembedded.com>
+References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
+ <20180608082125.tjnd6jayecv26csv@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OSBPR01MB2054A701CF65784FAB947692D27B0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Douglas Anderson <dianders@chromium.org>, Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@endlessm.com>, =?UTF-8?Q?Andreas_F=
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180608082125.tjnd6jayecv26csv@verge.net.au>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 8, 2018 at 8:50 AM, Michel Pollet
-<michel.pollet@bp.renesas.com> wrote:
-> On 07 June 2018 16:55, Rob wrote:
->> On Thu, Jun 7, 2018 at 1:59 AM, Michel Pollet
->> <michel.pollet@bp.renesas.com> wrote:
->> > On 06 June 2018 22:53, Frank wrote:
->> >> On 06/06/18 14:48, Frank Rowand wrote:
->> >> > On 06/05/18 23:36, Michel Pollet wrote:
->> >> >> On 05 June 2018 18:34, Frank wrote:
->> >> >>> On 06/05/18 04:28, Michel Pollet wrote:
->> >> >>>> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot
->> >> >>>> time, it requires a special enable method to get it started.
->>
->> [...]
->>
->> >> >>>> + * The second CPU is parked in ROM at boot time. It requires
->> >> >>>> +waking it after
->> >> >>>> + * writing an address into the BOOTADDR register of sysctrl.
->> >> >>>> + *
->> >> >>>> + * So the default value of the "cpu-release-addr" corresponds
->> >> >>>> +to
->> >> >>> BOOTADDR...
->> >> >>>> + *
->> >> >>>> + * *However* the BOOTADDR register is not available when the
->> >> >>>> +kernel
->> >> >>>> + * starts in NONSEC mode.
->> >> >>>> + *
->> >> >>>> + * So for NONSEC mode, the bootloader re-parks the second CPU
->> >> >>>> +into a pen
->> >> >>>> + * in SRAM, and changes the "cpu-release-addr" of linux's DT to
->> >> >>>> +a SRAM address,
->> >> >>>> + * which is not restricted.
->> >> >>>
->> >> >>> The binding document for cpu-release-addr does not have a
->> >> >>> definition for 32 bit arm.  The existing definition is only 64
->> >> >>> bit arm.  Please add the definition for 32 bit arm to patch 1.
->> >> >>
->> >> >> Hmmm I do find a definition in
->> >> >> Documentation/devicetree/bindings/arm/cpus.txt -- just under where
->> >> >> I added my 'enable-method' -- And it is already used as 32 bits in
->> >> >> at least arch/arm/boot/dts/stih407-family.dtsi.
->> >> >
->> >> > If the correct answer is for cpu-release-addr to be 64 bits in
->> >> > certain cases (that discussion is ongoing further downthread) then
->> >> > one approach to maintain compatibility _and_ to fix the devicetree
->> >> > source files is to change the source code that currently gets
->> >> > cpu-release-addr as a
->> >> > 32 bit object to check the size of the property and get it as
->> >> > either a
->> >> > 32 bit or 64 bit object, based on the actual size of the property
->> >> > in the device tree and then change the value in the devicetree
->> >> > source files to be two cells.  BUT this does not consider the
->> >> > bootloader complication.  arch/arm/boot/dts/axm5516-cpus.dtsi has a
->> >> > note "// Fixed by the boot loader", so the boot loader also has to
->> >> > be modified to be able to handle the possibility that the property
->> >> > could be either
->> >> > 32 bits or 64 bits.  I don't know how to maintain compatibility
->> >> > with the boot loader since we can't force it to change
->> >> > synchronously with changes in the kernel.
->> >> >
->> >> > You can consider this comment to be a drive-by observation.  I
->> >> > think Rob and Geert and people like that are likely to be more
->> >> > helpful with what to actually do, and you can treat my comment more
->> >> > as pointing out the issue than as providing the perfect solution.
->> >>
->> >> Darn it, hit <send> too quickly.
->> >>
->> >> I meant to mention that there are several devicetree source files
->> >> that have a single cell value for cpu-release-addr, and thus
->> >> potentially face the same situation, depending on what the final
->> >> decision is on the proper size for cpu- release-addr. As of v4.17, a git grep
->> shows one cell values in:
->> >>
->> >>   arch/arm/boot/dts/axm5516-cpus.dtsi
->> >>   arch/arm/boot/dts/stih407-family.dtsi
->> >>   arch/arm/boot/dts/stih418.dtsi
->> >
->> > Yes, I had grepped before I used 32 bits on mine...
->> >
->> > Now, what is the decision here? Our bootloader is already modified to
->> > set it to 32 bits, so I propose that
->>
->> And too late to fix the bootloader?
->
->
-> Well not too late, but read further on...
->
->>
->> >
->> > + I change the driver to handle 32 and 64 bits properties
->>
->> That's fine if you can't fix the bootloader.
->>
->> > + I add this to the cpu.txt, as a separate patch:
->> > # On other systems, the property can be either
->> >   32 bits or 64 bits, it is the driver's responsibility
->> >   to deal with either sizes.
->>
->> That is definitely not what we want to say. Use of 32-bit should be
->> considered out of spec. Yes, we have a few platforms in that category, but
->> they already handle that themselves. Would be nice to fix them, but at least
->> the STi platforms don't seem too active.
->>
->> IMO, we should delete whatever text we can here and at most just refer to
->> the spec.
->
-> So actually I didn't use 32 bits by plain chance, I read the cpu.txt file which says
-> that 64 bits systems use 64 bits property, concluded that in my case I ought to
-> use 32 bits, then grepped around and found other systems using 32 bits, therefore
-> I went forward and used it..
->
-> Nothing said here that it should be 64 bits everywhere -- So the documentation
-> needs fixing somehow. Right now it certainly led me wrong.
+On 6/8/2018 11:21 AM, Simon Horman wrote:
 
-Perhaps we should add to Documentation/devicetree/bindings/ the standard
-bindings from ePAPR and successors, too?
+>> Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
+>> 'renesas-devel-20180604-v4.17' tag. We're adding the R8A77980 FCPVD/VSPD/
+>> DU/LVDS device nodes and then describing the LVDS decoder and HDMI encoder
+>> connected to the LVDS output. These patches depend on the Thine THC63LVD1024
+>> driver and the R8A77980 LVDS support patch in order to work, and R8A77980 GPIO
+>> DT patches in order to apply/compile...
+>>
+>> [1/5] arm64: dts: renesas: r8a77980: add FCPVD support
+>> [2/5] arm64: dts: renesas: r8a77980: add VSPD support
+>> [3/5] arm64: dts: renesas: r8a77980: add DU support
+>> [4/5] arm64: dts: renesas: r8a77980: add LVDS support
+>> [5/5] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI support
+> 
+> Sergei,
+> 
+> what are the changes in this series between v1 and v2?
 
-Gr{oetje,eeting}s,
+    See patch #5. I've added the V3HSK DT update there...
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+MBR, Sergei
