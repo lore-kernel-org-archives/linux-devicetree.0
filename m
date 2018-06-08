@@ -1,66 +1,145 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/5] arm64: dts: renesas: r8a77980: add VSPD support
-Date: Fri, 8 Jun 2018 15:54:56 +0200
-Message-ID: <20180608135456.cathgcuyp24csbwx@verge.net.au>
-References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
- <5f151ec5-bec7-ed06-cb94-4f0cfe8e43dc@cogentembedded.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 12/16] dt-bindings/interrupt-controller: update
+ Marvell ICU bindings
+Date: Fri, 8 Jun 2018 16:00:58 +0200
+Message-ID: <20180608160058.04db4613@xps13>
+References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
+        <20180522094042.24770-13-miquel.raynal@bootlin.com>
+        <20180605202902.GA8875@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5f151ec5-bec7-ed06-cb94-4f0cfe8e43dc@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180605202902.GA8875@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[CC Laurent, Geert]
+Hi Rob,
 
-On Thu, Jun 07, 2018 at 11:20:47PM +0300, Sergei Shtylyov wrote:
-> Describe VSPD0 in the R8A77980 device tree; it will be used by DU in
-> the next patch...
-> 
-> Based on the original (and large) patch by Vladimir Barinov.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
->  arch/arm64/boot/dts/renesas/r8a77980.dtsi |   10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -653,6 +653,16 @@
->  			resets = <&cpg 408>;
->  		};
->  
-> +		vspd0: vsp@fea20000 {
-> +			compatible = "renesas,vsp2";
-> +			reg = <0 0xfea20000 0 0x4000>;
+Thanks for reviewing.
 
-As per "[PATCH] arm64: dts: renesas: Fix VSPD registers range"
-I think the width of the range should be 0x5000.
+On Tue, 5 Jun 2018 14:29:02 -0600, Rob Herring <robh@kernel.org> wrote:
 
-> +			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 623>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 623>;
-> +			renesas,fcp = <&fcpvd0>;
-> +		};
-> +
->  		fcpvd0: fcp@fea27000 {
->  			compatible = "renesas,fcpv";
->  			reg = <0 0xfea27000 0 0x200>;
+> On Tue, May 22, 2018 at 11:40:38AM +0200, Miquel Raynal wrote:
+> > Change the documentation to reflect the new bindings used for Marvell
+> > ICU. This involves describing each interrupt group as a subnode of the
+> > ICU node. Each of them having their own compatible.  
 > 
+> Need to explain why you need to do this and why breaking backwards 
+> compatibility is okay.
+
+As explained by Thomas, backward compatibility is not broken as old
+bindings are still documented and supported.
+
+I will update the commit message to reflect that point.
+
+> 
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >  .../bindings/interrupt-controller/marvell,icu.txt  | 81 ++++++++++++++++++----
+> >  1 file changed, 69 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> > index 649b7ec9d9b1..6f7e4355b3d8 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+> > @@ -5,6 +5,8 @@ The Marvell ICU (Interrupt Consolidation Unit) controller is
+> >  responsible for collecting all wired-interrupt sources in the CP and
+> >  communicating them to the GIC in the AP, the unit translates interrupt
+> >  requests on input wires to MSG memory mapped transactions to the GIC.
+> > +These messages will access a different GIC memory area depending on
+> > +their type (NSR, SR, SEI, REI, etc).
+> >  
+> >  Required properties:
+> >  
+> > @@ -12,20 +14,19 @@ Required properties:
+> >  
+> >  - reg: Should contain ICU registers location and length.
+> >  
+> > +Subnodes: Each group of interrupt is declared as a subnode of the ICU,
+> > +with their own compatible.
+> > +
+> > +Required properties for the icu_nsr/icu_sei subnodes:
+> > +
+> > +- compatible: Should be "marvell,cp110-icu-nsr" or "marvell,cp110-icu-sei".
+> > +
+> >  - #interrupt-cells: Specifies the number of cells needed to encode an
+> > -  interrupt source. The value shall be 3.
+> > +  interrupt source. The value shall be 2.
+> >  
+> > -  The 1st cell is the group type of the ICU interrupt. Possible group
+> > -  types are:
+> > +  The 1st cell is the index of the interrupt in the ICU unit.
+> >  
+> > -   ICU_GRP_NSR (0x0) : Shared peripheral interrupt, non-secure
+> > -   ICU_GRP_SR  (0x1) : Shared peripheral interrupt, secure
+> > -   ICU_GRP_SEI (0x4) : System error interrupt
+> > -   ICU_GRP_REI (0x5) : RAM error interrupt  
+> 
+> What happens to SR and REI interrupts?
+
+They were unused since the beginning.
+
+These values are still detailed below (in the legacy section).
+
+[...]
+
+> 
+> > -
+> > -  The 2nd cell is the index of the interrupt in the ICU unit.
+> > -
+> > -  The 3rd cell is the type of the interrupt. See arm,gic.txt for
+> > +  The 2nd cell is the type of the interrupt. See arm,gic.txt for
+> >    details.
+> >  
+> >  - interrupt-controller: Identifies the node as an interrupt
+> > @@ -35,17 +36,73 @@ Required properties:
+> >    that allows to trigger interrupts using MSG memory mapped
+> >    transactions.
+> >  
+> > +Note: each 'interrupts' property referring to any 'icu_xxx' node shall
+> > +      have a different number within [0:206].
+> > +
+> >  Example:
+> >  
+> >  icu: interrupt-controller@1e0000 {
+> >  	compatible = "marvell,cp110-icu";
+> >  	reg = <0x1e0000 0x440>;
+> > +
+> > +	CP110_LABEL(icu_nsr): icu-nsr {  
+> 
+> 'interrupt-controller' is the proper node name. Is there no register 
+> range associated sub nodes?
+
+I will update the name.
+
+A few are used only for NSR, a few only for SEI and others are used for
+both. But ok, I will add register ranges.
+
+> 
+> > +		compatible = "marvell,cp110-icu-nsr";
+> > +		#interrupt-cells = <2>;
+> > +		interrupt-controller;
+> > +		msi-parent = <&gicp>;
+> > +	};
+> > +
+> > +        CP110_LABEL(icu_sei): icu-sei {
+> > +                compatible = "marvell,cp110-icu-sei";
+> > +                #interrupt-cells = <2>;
+> > +                interrupt-controller;
+> > +                msi-parent = <&sei>;
+> > +        };  
+> 
+> Mixture of tabs and spaces.
+
+Oops.
+
+> 
+> > +};
+> > +
+
+Thanks,
+Miquèl
