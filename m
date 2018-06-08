@@ -1,116 +1,74 @@
-From: Alban <albeu@free.fr>
-Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
- for the cells list
-Date: Fri, 8 Jun 2018 12:59:38 +0200
-Message-ID: <20180608125938.4fd457a0@tock>
-References: <1521933899-362-1-git-send-email-albeu@free.fr>
-        <1521933899-362-2-git-send-email-albeu@free.fr>
-        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
-        <20180417165420.423a691b@avionic-0020>
-        <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
-        <20180417180040.04f53495@avionic-0020>
-        <20180418134119.2e587621@avionic-0020>
-        <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
-        <20180418143243.3c23493c@avionic-0020>
-        <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
-        <20180418153440.187ed16e@avionic-0020>
-        <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
-        <20180607184155.6da38a01@tock>
-        <0fb0e8e9-e7b8-10c3-fcdd-399c73a33878@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 11/17] arm64: dts: r8a77965: Add VSP instances
+Date: Fri, 08 Jun 2018 14:00:36 +0300
+Message-ID: <7269469.ESYJcRDGIc@avalon>
+References: <20180426165346.494-1-kieran.bingham+renesas@ideasonboard.com> <1787243.JuNJAuBqMb@avalon> <CAMuHMdU7OyUvgNqbkjtHyb0LPjgTdPp_BBcGNbjiqfQUgCdMuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/4e/V8.qtwWgCC02QHOtNyeP"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0fb0e8e9-e7b8-10c3-fcdd-399c73a33878@linaro.org>
+In-Reply-To: <CAMuHMdU7OyUvgNqbkjtHyb0LPjgTdPp_BBcGNbjiqfQUgCdMuw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Aban Bedel <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Will Deacon <will.deacon@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/4e/V8.qtwWgCC02QHOtNyeP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Geert,
 
-On Thu, 7 Jun 2018 18:03:16 +0100
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+On Friday, 8 June 2018 12:29:29 EEST Geert Uytterhoeven wrote:
+> On Thu, Apr 26, 2018 at 11:11 PM, Laurent Pinchart wrote:
+> > On Thursday, 26 April 2018 19:53:40 EEST Kieran Bingham wrote:
+> >> The r8a77965 has 4 VSP instances.
+> >> 
+> >> Based on a similar patch of the R8A7796 device tree
+> >> by Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>.
+> >> 
+> >> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> >> [Kieran: Rebased to top of tree, fixed sort orders]
+> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> ---
+> >> 
+> >>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 44 +++++++++++++++++++++++
+> >>  1 file changed, 44 insertions(+)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> >> b/arch/arm64/boot/dts/renesas/r8a77965.dtsi index
+> >> 1f44ed7c1b1c..e92e6b03333a 100644
+> >> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> >> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> >> @@ -1025,6 +1047,17 @@
+> >>                       resets = <&cpg 611>;
+> >>               };
+> >> 
+> >> +             vspd0: vsp@fea20000 {
+> >> +                     compatible = "renesas,vsp2";
+> >> +                     reg = <0 0xfea20000 0 0x4000>;
+> > 
+> > RFP2 has a CLUT so the register range needs to be extended. I'd recommend
+> > covering the entire space (0x8000) even if no LUT or CLU module is
+> > present.
+> 
+> Even on V3H/V3M, which have some part of the CLUT, and could do
+> with 0x5000?
+> 
+> Note that this makes it overlap with fcpvd0 on all R-Car Gen3 SoCs,
+> as mentioned by Simon on IRC.
 
-> On 07/06/18 17:41, Alban wrote:
-> > AFAIU the only thing that we disagree on now is if the nodes
-> > representing the cells should be direct children of the provider
-> > or in a dedicated subnode. For the MTD case both solution would solve
-> > the binding clash. I would really appreciate if the DT people could =20
-> Am reluctant in changing the nvmem generic bindings for a special case.
+My bad :-/ I'll submit fixes shortly.
 
-Where I think the generic binding is fundamentally flawed, as this
-problem will most probably appear again. But do note that my proposal
-doesn't require updating the dts using the original binding, both are
-still supported. I proposed deprecating the current binding because I
-think it is flawed, but we could also "officially" support both style.
+> >> +                     interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                     clocks = <&cpg CPG_MOD 623>;
+> >> +                     power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+> >> +                     resets = <&cpg 623>;
+> >> +
+> >> +                     renesas,fcp = <&fcpvd0>;
+> >> +             };
+> >> +
+> >>               fcpvd0: fcp@fea27000 {
+> >>                       compatible = "renesas,fcpv";
+> >>                       reg = <0 0xfea27000 0 0x200>;
 
-> Can you try this with your original subnode proposal:
-> just pass the subnode node pointer in np of nvmem_config:
->=20
-> ------------------------->cut<------------------------------------ =20
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index b05aa8e81303..c9621632bbfb 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -472,7 +472,11 @@ struct nvmem_device *nvmem_register(const struct=20
-> nvmem_config *config)
->          nvmem->priv =3D config->priv;
->          nvmem->reg_read =3D config->reg_read;
->          nvmem->reg_write =3D config->reg_write;
-> -       nvmem->dev.of_node =3D config->dev->of_node;
-> +
-> +       if (config->np)
-> +               nvmem->dev.of_node =3D config->np;
-> +       else
-> +               nvmem->dev.of_node =3D config->dev->of_node;
->=20
->          if (config->id =3D=3D -1 && config->name) {
->                  dev_set_name(&nvmem->dev, "%s", config->name);
-> diff --git a/include/linux/nvmem-provider.h
-> b/include/linux/nvmem-provider.h index f89598bc4e1c..743345ffe2c8
-> 100644 --- a/include/linux/nvmem-provider.h
-> +++ b/include/linux/nvmem-provider.h
-> @@ -49,6 +49,7 @@ typedef int (*nvmem_reg_write_t)(void *priv,
-> unsigned int offset,nvmem_device_get(
->    */
->   struct nvmem_config {
->          struct device           *dev;
-> +       struct device_node      *np;
->          const char              *name;
->          int                     id;
->          struct module           *owner;
->=20
-> ------------------------->cut<------------------------------------ =20
+-- 
+Regards,
 
-That should work just fine to allow next to any kind of binding.
-I'll do a new patch using this approach for the code side and leaving
-the generic binding as it is.
-
-Alban
-
---Sig_/4e/V8.qtwWgCC02QHOtNyeP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJbGmGaAAoJEHSUmkuduC28bpsQAOMfOXhboUrCBmyohY7223ev
-QVvZKeMaCg4/9f5Ask/+nW7GE2bng9aL3CPPcp5C8zzfDJW9VPtZ6aqdQBxOS/GV
-7WwnKaIc3qzBvmIyqFWEoZal4dv2C+AUW58CpukTPSo+upgLPD+L6stoXMWTK4ek
-c1GVu4EDLCov7W2HGrdXI12sx9d/9yIEyNn8GnQtQYuYU2dZnSDuIvKIL/qeRKP1
-T9k7IDyneRHx4XIQj58wZll9UUYfE5PfkRx2mYGkxO8BttTFRHjtQIfgw9mmb3/s
-KCwVyHQGjV0r6ixja0hEdczVz4VnRxmCs/Q58dF3FZDzfmKrPuXEphWTtjlouieK
-sKZWtQ5ZcU2IcQ9YSjVojHczbO5wyWpIuhj9ZTOOsRn/BbfMKtm08+VvUlaw0s4L
-pu7LNW066bCr/PxcDdTL8OPGvImrCQJABUFAiclw/OOyF/ZL93/+vrX2uDoHUZfe
-MRhSKApkFholQ63q5pj+1Xutr4hSdEVLip500sAUVjdEz53xDqJJuHADlGHBpbu5
-NEW+ic33Tdkga+tR7mseq/JRcB9tVmkBreea7ytulSx86At1GWgfUVNx+ni/DzcT
-DNCDc5/Ia9BTKd1tuaSMXIghsdW++oIHZPh1tDi9DbC4IxdsjhMWyacAROXzoBmw
-QfvuT4yaKCg6aldCYddf
-=E5vJ
------END PGP SIGNATURE-----
-
---Sig_/4e/V8.qtwWgCC02QHOtNyeP--
+Laurent Pinchart
