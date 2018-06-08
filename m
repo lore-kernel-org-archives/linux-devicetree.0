@@ -1,178 +1,176 @@
-From: attitokes@gmail.com
-Subject: [PATCH] Bluetooth: hci_bcm: Configure SCO routing automatically
-Date: Fri,  8 Jun 2018 19:20:09 +0300
-Message-ID: <20180608162009.22762-1-attitokes@gmail.com>
-References: <280FCB2C-6DF1-4790-A89F-AF5BE3513AE5@holtmann.org>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH v3 1/3] nvmem: Update the OF binding to use a subnode
+ for the cells list
+Date: Fri, 8 Jun 2018 19:07:17 +0200
+Message-ID: <20180608190717.55cb185c@tock>
+References: <1521933899-362-1-git-send-email-albeu@free.fr>
+        <1521933899-362-2-git-send-email-albeu@free.fr>
+        <344e0087-7410-aebb-8a66-c6976064df10@linaro.org>
+        <20180417165420.423a691b@avionic-0020>
+        <8c4b48ad-e99e-030a-a4ee-b6df0fa59c79@linaro.org>
+        <20180417180040.04f53495@avionic-0020>
+        <20180418134119.2e587621@avionic-0020>
+        <9f7d2987-b33e-79b5-ae58-2985fd7334e4@linaro.org>
+        <20180418143243.3c23493c@avionic-0020>
+        <e34619a4-e9b6-9945-a1cc-a3680aac6819@linaro.org>
+        <20180418153440.187ed16e@avionic-0020>
+        <d30656d6-f17e-6ed0-251f-2b59d02cd202@linaro.org>
+        <20180607184155.6da38a01@tock>
+        <0fb0e8e9-e7b8-10c3-fcdd-399c73a33878@linaro.org>
+        <20180608125938.4fd457a0@tock>
+        <cd7a0085-66cd-308e-a950-cd0eb96db945@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/1vWlee8hPcRrge=jA.imybo"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <280FCB2C-6DF1-4790-A89F-AF5BE3513AE5@holtmann.org>
+In-Reply-To: <cd7a0085-66cd-308e-a950-cd0eb96db945@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: =?UTF-8?q?Attila=20T=C5=91k=C3=A9s?= <attitokes@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Artiom Vaskov <velemas@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Aban Bedel <albeu@free.fr>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Attila Tőkés <attitokes@gmail.com>
+--Sig_/1vWlee8hPcRrge=jA.imybo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Added support to automatically configure the SCO packet routing at the device setup. The SCO packets are used with the HSP / HFP profiles, but in some devices (ex. CYW43438) they are routed to a PCM output by default. This change allows sending the vendor specific HCI command to configure the SCO routing. The parameters of the command are loaded from the device tree.
+On Fri, 8 Jun 2018 12:34:12 +0100
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
 
-Signed-off-by: Attila Tőkés <attitokes@gmail.com>
----
- .../bindings/net/broadcom-bluetooth.txt       |  7 ++
- drivers/bluetooth/hci_bcm.c                   | 72 +++++++++++++++++++
- 2 files changed, 79 insertions(+)
+> >> Can you try this with your original subnode proposal:
+> >> just pass the subnode node pointer in np of nvmem_config:
+> >> =20
+> >> ------------------------->cut<------------------------------------ =20
+> >> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> >> index b05aa8e81303..c9621632bbfb 100644
+> >> --- a/drivers/nvmem/core.c
+> >> +++ b/drivers/nvmem/core.c
+> >> @@ -472,7 +472,11 @@ struct nvmem_device *nvmem_register(const struct
+> >> nvmem_config *config)
+> >>           nvmem->priv =3D config->priv;
+> >>           nvmem->reg_read =3D config->reg_read;
+> >>           nvmem->reg_write =3D config->reg_write;
+> >> -       nvmem->dev.of_node =3D config->dev->of_node;
+> >> +
+> >> +       if (config->np)
+> >> +               nvmem->dev.of_node =3D config->np;
+> >> +       else
+> >> +               nvmem->dev.of_node =3D config->dev->of_node;
+> >>
+> >>           if (config->id =3D=3D -1 && config->name) {
+> >>                   dev_set_name(&nvmem->dev, "%s", config->name);
+> >> diff --git a/include/linux/nvmem-provider.h
+> >> b/include/linux/nvmem-provider.h index f89598bc4e1c..743345ffe2c8
+> >> 100644 --- a/include/linux/nvmem-provider.h
+> >> +++ b/include/linux/nvmem-provider.h
+> >> @@ -49,6 +49,7 @@ typedef int (*nvmem_reg_write_t)(void *priv,
+> >> unsigned int offset,nvmem_device_get(
+> >>     */
+> >>    struct nvmem_config {
+> >>           struct device           *dev;
+> >> +       struct device_node      *np;
+> >>           const char              *name;
+> >>           int                     id;
+> >>           struct module           *owner;
+> >> =20
+> >> ------------------------->cut<------------------------------------ =20
+> >=20
+> > That should work just fine to allow next to any kind of binding.
+> > I'll do a new patch using this approach for the code side and leaving
+> > the generic binding as it is. =20
+> Sure!!
+> This will give more flexibility to other provider drivers!
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index 4194ff7e..aea3a094 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -21,6 +21,12 @@ Optional properties:
-  - clocks: clock specifier if external clock provided to the controller
-  - clock-names: should be "extclk"
- 
-+ SCO routing parameters:
-+ - sco-routing: 0-3 (PCM, Transport, Codec, I2S)
-+ - pcm-interface-rate: 0-4 (128 Kbps - 2048 Kbps)
-+ - pcm-frame-type: 0 (short), 1 (long)
-+ - pcm-sync-mode: 0 (slave), 1 (master)
-+ - pcm-clock-mode: 0 (slave), 1 (master)
- 
- Example:
- 
-@@ -31,5 +37,6 @@ Example:
-        bluetooth {
-                compatible = "brcm,bcm43438-bt";
-                max-speed = <921600>;
-+               sco-routing = <1>; /* 1 = transport (UART) */
+I looked into this. It would work fine for the cells but not so nicely
+for the nvmem device API. The phandle for the nvmem device would have
+to reference the node passed here and not the real device. We would end
+up with a DT like this:
+
+flash@0 {
+	compatible =3D "mtd";
+	...
+	nvmem_dev: nvmem-cells {
+		compatible =3D "nvmem-cells";
+		...
         };
- };
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index ddbd8c6a..0e729534 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -83,6 +83,16 @@
-  * @hu: pointer to HCI UART controller struct,
-  *	used to disable flow control during runtime suspend and system sleep
-  * @is_suspended: whether flow control is currently disabled
-+ *
-+ *  SCO routing parameters:
-+ *   used as the parameters for the bcm_set_pcm_int_params command
-+ *	@sco_routing:
-+ *	 >= 255 (skip SCO routing configuration)
-+ *	 0-3 (PCM, Transport, Codec, I2S)
-+ *	@pcm_interface_rate: 0-4 (128 Kbps - 2048 Kbps)
-+ *	@pcm_frame_type: 0 (short), 1 (long)
-+ *	@pcm_sync_mode: 0 (slave), 1 (master)
-+ *	@pcm_clock_mode: 0 (slave), 1 (master)
-  */
- struct bcm_device {
- 	/* Must be the first member, hci_serdev.c expects this. */
-@@ -114,6 +124,13 @@ struct bcm_device {
- 	struct hci_uart		*hu;
- 	bool			is_suspended;
- #endif
+};
+
+other-device@10 {
+	...
+	nvmem =3D <&nvmem_dev>;
+};
+
+Now if there is no cell defined we have this empty child node that make
+very little sense, it is just there to accommodate the nvmem API.
+
+What I would suggest now is to just change the wording. We don't
+deprecate the current binding, but we extend it to allow grouping the
+cells in a child node if required. The code to support this is trivial,
+(4 lines including error handling) so even if we expect very few
+bindings to make use of it it is not going to be maintenance drag.
+That would look like this:
+
+diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.txt b/Documentat=
+ion/devicetree/bindings/nvmem/nvmem.txt
+index fd06c09..085d042 100644
+--- a/Documentation/devicetree/bindings/nvmem/nvmem.txt
++++ b/Documentation/devicetree/bindings/nvmem/nvmem.txt
+@@ -19,7 +19,10 @@ Optional properties:
+=20
+ =3D Data cells =3D
+ These are the child nodes of the provider which contain data cell
+-information like offset and size in nvmem provider.
++information like offset and size in nvmem provider. Alternatively the data
++cells can be grouped in a node that has a compatible property set to
++"nvmem-cells".
 +
-+	/* SCO routing parameters */
-+	u8			sco_routing;
-+	u8			pcm_interface_rate;
-+	u8			pcm_frame_type;
-+	u8			pcm_sync_mode;
-+	u8			pcm_clock_mode;
- };
- 
- /* generic bcm uart resources */
-@@ -189,6 +206,40 @@ static int bcm_set_baudrate(struct hci_uart *hu, unsigned int speed)
- 	return 0;
- }
- 
-+static int bcm_configure_sco_routing(struct hci_uart *hu, struct bcm_device *bcm_dev)
-+{
-+	struct hci_dev *hdev = hu->hdev;
-+	struct sk_buff *skb;
-+	struct bcm_set_pcm_int_params params;
+=20
+ Required properties:
+ reg:   specifies the offset in byte within the storage device.
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 4e94a78..3e1369c 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -859,6 +859,14 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_nod=
+e *np,
+        if (!nvmem_np)
+                return ERR_PTR(-EINVAL);
+=20
++       /* bindings that already have anonymous child nodes can instead put
++        * their cells in a child node with an nvmem-cells compatible. */
++       if (of_device_is_compatible(nvmem_np, "nvmem-cells")) {
++               nvmem_np =3D of_get_next_parent(nvmem_np);
++               if (!nvmem_np)
++                       return ERR_PTR(-EINVAL);
++       }
 +
-+	if (bcm_dev->sco_routing >= 0xff) {
-+		/* SCO routing configuration should be skipped */
-+		return 0;
-+	}
-+
-+	bt_dev_dbg(hdev, "BCM: Configuring SCO routing (%d %d %d %d %d)",
-+			bcm_dev->sco_routing, bcm_dev->pcm_interface_rate, bcm_dev->pcm_frame_type,
-+			bcm_dev->pcm_sync_mode,	bcm_dev->pcm_clock_mode);
-+
-+	params.routing = bcm_dev->sco_routing;
-+	params.rate = bcm_dev->pcm_interface_rate;
-+	params.frame_sync = bcm_dev->pcm_frame_type;
-+	params.sync_mode = bcm_dev->pcm_sync_mode;
-+	params.clock_mode = bcm_dev->pcm_clock_mode;
-+
-+	/* Send the SCO routing configuration command */
-+	skb = __hci_cmd_sync(hdev, 0xfc1c, sizeof(params), &params, HCI_CMD_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		int err = PTR_ERR(skb);
-+		bt_dev_err(hdev, "BCM: failed to configure SCO routing (%d)", err);
-+		return err;
-+	}
-+
-+	kfree_skb(skb);
-+
-+	return 0;
-+}
-+
- /* bcm_device_exists should be protected by bcm_device_lock */
- static bool bcm_device_exists(struct bcm_device *device)
- {
-@@ -534,6 +585,9 @@ static int bcm_setup(struct hci_uart *hu)
- 			host_set_baudrate(hu, speed);
- 	}
- 
-+	/* Configure SCO routing if needed */
-+	bcm_configure_sco_routing(hu, bcm->dev);
-+
- finalize:
- 	release_firmware(fw);
- 
-@@ -1004,9 +1058,21 @@ static int bcm_acpi_probe(struct bcm_device *dev)
- }
- #endif /* CONFIG_ACPI */
- 
-+static void read_u8_device_property(struct device *device, const char *property, u8 *destination) {
-+	u32 temp;
-+	if (device_property_read_u32(device, property, &temp) == 0) {
-+		*destination = temp & 0xff;
-+	}
-+}
-+
- static int bcm_of_probe(struct bcm_device *bdev)
- {
- 	device_property_read_u32(bdev->dev, "max-speed", &bdev->oper_speed);
-+	read_u8_device_property(bdev->dev, "sco-routing", &bdev->sco_routing);
-+	read_u8_device_property(bdev->dev, "pcm-interface-rate", &bdev->pcm_interface_rate);
-+	read_u8_device_property(bdev->dev, "pcm-frame-type", &bdev->pcm_frame_type);
-+	read_u8_device_property(bdev->dev, "pcm-sync-mode", &bdev->pcm_sync_mode);
-+	read_u8_device_property(bdev->dev, "pcm-clock-mode", &bdev->pcm_clock_mode);
- 	return 0;
- }
- 
-@@ -1022,6 +1088,9 @@ static int bcm_probe(struct platform_device *pdev)
- 	dev->dev = &pdev->dev;
- 	dev->irq = platform_get_irq(pdev, 0);
- 
-+	/* SCO routing configuration is disabled by default */
-+	dev->sco_routing = 0xff;
-+
- 	if (has_acpi_companion(&pdev->dev)) {
- 		ret = bcm_acpi_probe(dev);
- 		if (ret)
-@@ -1281,6 +1350,9 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
- 	bcmdev->serdev_hu.serdev = serdev;
- 	serdev_device_set_drvdata(serdev, bcmdev);
- 
-+	/* SCO routing configuration is disabled by default */
-+	bcmdev->sco_routing = 0xff;
-+
- 	if (has_acpi_companion(&serdev->dev))
- 		err = bcm_acpi_probe(bcmdev);
- 	else
--- 
-2.17.0
+        nvmem =3D __nvmem_device_get(nvmem_np, NULL, NULL);
+        of_node_put(nvmem_np);
+        if (IS_ERR(nvmem))
+
+What about it?
+
+Alban
+
+--Sig_/1vWlee8hPcRrge=jA.imybo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJbGrfFAAoJEHSUmkuduC2858QQALNCfJfDeDgJ4UflIREPgTjM
+tOAZb2U4VRG2yYPimmsg3K9TLvIoI/xk4as0wTalJyKlT1zQBwGOZ4Wwvije9d1Q
+OHxatgrDPhA5tcvD7SadXasxkYJD8MVLjhIZCGIZ90sdikZibzWr78uFEaRYJ601
+B41dCr13rkgHlrNYdVS9zfxNrZ6liE/+Tr+q2L7q6YDC73Oz5S2lAm85AkUBbEEi
+HmwowmBPA2HPNJOhG7e6l4M+dxHGJydOWY3SDJE98OnEXvNKqgt3NGiMyhfMunm1
+nkrUSclBN/HrZh7a6tQ2TaDFUJ9drMWRwdvqnspNW5l8KpwJhWHxeXajAZkGoe/W
+MNorpVMlD8rmjTLx+73VwOby43YwAcDyG60g4E4p3hmb2Wi1sHM0ABp8hItk5lYg
+q0ioG1fO3g2GCJc5QxtCPJS1I7HP+AhPiKwz7cmRyLcxr1TRJOKW6z45gjMs++rQ
+huEQb8AD2HPBOW0VvrgBJl9OXoGxHpouV2P+sWoL/cEUj/TcljRImUcryTzxJdab
+ga6R9MXAYyDYq0hfbBfEAzACWMGez65qG5zMolMR/VcoSAX01S7xeAOisdXqdQbR
+JHVs3OGEduv8r8MgG0ISasoeAth3+MCcFu4/hD/92iI7r6kjMZdzlRe8b3X4x4wq
+I76qSh15tQeDkIaM23S8
+=xWJ5
+-----END PGP SIGNATURE-----
+
+--Sig_/1vWlee8hPcRrge=jA.imybo--
