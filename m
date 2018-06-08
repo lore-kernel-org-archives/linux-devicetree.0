@@ -1,28 +1,142 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] imx_v6_v7_defconfig: Enable imx6qdl-sabreauto sensors
-Date: Fri, 8 Jun 2018 14:28:57 -0300
-Message-ID: <CAOMZO5Anr6BQ=7XWB8hQSaV6m5b1fwji1RBwSj7vZU2zdAVnTw@mail.gmail.com>
-References: <b31ca3ff50566c193003614d0bbf5e0a0e95901c.1528390418.git.leonard.crestez@nxp.com>
- <70b90919f98a6941425b39065dc8d37c95f0fd9f.1528390418.git.leonard.crestez@nxp.com>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: [PATCH v6 2/2] regulator: add QCOM RPMh regulator driver
+Date: Fri, 8 Jun 2018 11:05:53 -0700
+Message-ID: <a062ede9-20de-22e3-24a5-1aba8cf3740d@codeaurora.org>
+References: <cover.1528138319.git.collinsd@codeaurora.org>
+ <6d7abf248493cf81d62eb17ecb5030783aa85f72.1528138319.git.collinsd@codeaurora.org>
+ <20180608002653.GD88063@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <70b90919f98a6941425b39065dc8d37c95f0fd9f.1528390418.git.leonard.crestez@nxp.com>
+In-Reply-To: <20180608002653.GD88063@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Fugang Duan <fugang.duan@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 7, 2018 at 2:00 PM, Leonard Crestez <leonard.crestez@nxp.com> wrote:
-> CONFIG_SENSORS_ISL29018 supports isil,il29023 light sensor
-> CONFIG_MMA8452 supports fsl,mma8451 accelerometer
->
-> CONFIG_MAG3110 for fsl,mag3110 is already enabled
->
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Hello Matthias,
 
-Just a minor nit in the Subject. The "ARM" prefix is missing.
+On 06/07/2018 05:26 PM, Matthias Kaehlcke wrote:
+> On Mon, Jun 04, 2018 at 12:15:12PM -0700, David Collins wrote:
+>> static int rpmh_regulator_send_request(struct rpmh_vreg *vreg,
+>> +                       struct tcs_cmd *cmd, int count, bool wait_for_ack)
+>>
+> 
+> nit: as of now this is only called with a single command. If you
+> anticipate that this is unlikely to change consider removing 'count',
+> not having it in the calls slightly improves readability.
 
-Maybe Shawn can adjust it when applying the patch.
+The count parameter was needed in the original version of the patch.  That
+need is no longer present after removing features in subsequent versions.
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+I'll remove this parameter.
+
+
+>> +static int _rpmh_regulator_vrm_set_voltage_sel(struct regulator_dev *rdev,
+>> +				unsigned int selector, bool wait_for_ack)
+>> +{
+>> +	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
+>> +	struct tcs_cmd cmd = {
+>> +		.addr = vreg->addr + RPMH_REGULATOR_REG_VRM_VOLTAGE,
+>> +	};
+>> +	int ret;
+>> +
+>> +	/* VRM voltage control register is set with voltage in millivolts. */
+>> +	cmd.data = DIV_ROUND_UP(regulator_list_voltage_linear_range(rdev,
+>> +							selector), 1000);
+>> +
+>> +	ret = rpmh_regulator_send_request(vreg, &cmd, 1, wait_for_ack);
+>> +	if (!ret)
+>> +		vreg->voltage_selector = selector;
+>> +
+>> +	return 0;
+> 
+> Shouldn't this return 'ret'?
+
+Yes; good catch.  I'll fix it.
+
+
+>> +static int rpmh_regulator_enable(struct regulator_dev *rdev)
+>> +{
+>> +	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
+>> +	struct tcs_cmd cmd = {
+>> +		.addr = vreg->addr + RPMH_REGULATOR_REG_ENABLE,
+>> +		.data = 1,
+>> +	};
+>> +	int ret;
+>> +
+>> +	if (vreg->enabled == -EINVAL &&
+>> +	    vreg->voltage_selector != -ENOTRECOVERABLE) {
+>> +		ret = _rpmh_regulator_vrm_set_voltage_sel(rdev,
+>> +						vreg->voltage_selector, true);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>> +	ret = rpmh_regulator_send_request(vreg, &cmd, 1, true);
+>> +	if (!ret)
+>> +		vreg->enabled = true;
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int rpmh_regulator_disable(struct regulator_dev *rdev)
+>> +{
+>> +	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
+>> +	struct tcs_cmd cmd = {
+>> +		.addr = vreg->addr + RPMH_REGULATOR_REG_ENABLE,
+>> +		.data = 0,
+>> +	};
+>> +	int ret;
+>> +
+>> +	if (vreg->enabled == -EINVAL &&
+>> +	    vreg->voltage_selector != -ENOTRECOVERABLE) {
+>> +		ret = _rpmh_regulator_vrm_set_voltage_sel(rdev,
+>> +						vreg->voltage_selector, true);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>> +	ret = rpmh_regulator_send_request(vreg, &cmd, 1, false);
+>> +	if (!ret)
+>> +		vreg->enabled = false;
+>> +
+>> +	return ret;
+>> +}
+> 
+> nit: rpmh_regulator_enable() and rpmh_regulator_disable() are
+> essentially the same code, consider introducing a helper like
+> _rpmh_regulator_enable(struct regulator_dev *rdev, bool enable).
+
+Sure, I'll add a helper function.
+
+
+>> +static int rpmh_regulator_init_vreg(struct rpmh_vreg *vreg, struct device *dev,
+>> +				struct device_node *node, const char *pmic_id,
+>> +				const struct rpmh_vreg_init_data *rpmh_data)
+>> +{
+>> +	struct regulator_config reg_config = {};
+>> +	char rpmh_resource_name[20] = "";
+>> +	struct regulator_dev *rdev;
+>> +	struct regulator_init_data *init_data;
+>> +	int ret;
+>> +
+>> +	vreg->dev = dev;
+>> +
+>> +	for (; rpmh_data->name; rpmh_data++)
+>> +		if (!strcmp(rpmh_data->name, node->name))
+>> +			break;
+> 
+> nit: it's a bit odd to use the parameter itself for iteration, but I
+> guess it's a matter of preferences.
+
+I'll change this to add a specific iterator so that it is less surprising.
+
+Thanks,
+David
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
