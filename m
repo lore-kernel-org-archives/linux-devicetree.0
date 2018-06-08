@@ -1,391 +1,214 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH 10/20] dts: juno: Update coresight bindings for hw port
-Date: Fri, 8 Jun 2018 15:52:58 -0600
-Message-ID: <CANLsYkxNakRGCWT6O0JRKz+N1OTU3-XreC_FiB8Fiv+jEoPEbQ@mail.gmail.com>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-11-git-send-email-suzuki.poulose@arm.com> <20180608214946.GI30587@xps15>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v4 1/2] power: supply: sbs-battery: don't assume MANUFACTURER_DATA formats
+Date: Fri,  8 Jun 2018 15:36:54 -0700
+Message-ID: <20180608223655.33565-1-briannorris@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608214946.GI30587@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Sealey <matt.sealey@arm.com>, John Horley <john.horley@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, coresight@lists.linaro.org, devicetree@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>, Phil Reid <preid@electromag.com.au>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 June 2018 at 15:49, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
-> On Tue, Jun 05, 2018 at 10:43:21PM +0100, Suzuki K Poulose wrote:
->> Switch to updated coresight bindings for hw ports.
->>
->> Cc: Sudeep Holla <sudeep.holla@arm.com>
->> Cc: Liviu Dudau <liviu.dudau@arm.com>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->> Changes since V1:
->>   - Add support Juno for r1 & r2.
->> ---
->
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+This driver was originally submitted for the TI BQ20Z75 battery IC
+(commit a7640bfa10c5 ("power_supply: Add driver for TI BQ20Z75 gas gauge
+IC")) and later renamed to express generic SBS support. While it's
+mostly true that this driver implemented a standard SBS command set, it
+takes liberties with the REG_MANUFACTURER_DATA register. This register
+is specified in the SBS spec, but it doesn't make any mention of what
+its actual contents are.
 
-Sudeep please hold on before applying this as there is more work to be
-done on this set.
+We've sort of noticed this optionality previously, with commit
+17c6d3979e5b ("sbs-battery: make writes to ManufacturerAccess
+optional"), where we found that some batteries NAK writes to this
+register.
 
->
->>  arch/arm64/boot/dts/arm/juno-base.dtsi    | 82 ++++++++++++++++++++++---------
->>  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi | 26 +++++++---
->>  arch/arm64/boot/dts/arm/juno.dts          |  5 +-
->>  3 files changed, 81 insertions(+), 32 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> index eb749c5..33b41ba 100644
->> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
->> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> @@ -122,15 +122,18 @@
->>                       port@0 {
->>                               reg = <0>;
->>                               etf0_in_port: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&main_funnel_out_port>;
->> +                                     coresight,hwid = <0>;
->>                               };
->>                       };
->>
->>                       /* output port */
->>                       port@1 {
->> -                             reg = <0>;
->> +                             reg = <1>;
->>                               etf0_out_port: endpoint {
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                               };
->>                       };
->>               };
->> @@ -145,8 +148,9 @@
->>               power-domains = <&scpi_devpd 0>;
->>               port {
->>                       tpiu_in_port: endpoint {
->> -                             slave-mode;
->> +                             direction = <0>;
->>                               remote-endpoint = <&replicator_out_port0>;
->> +                             coresight,hwid = <0>;
->>                       };
->>               };
->>       };
->> @@ -168,23 +172,27 @@
->>                               reg = <0>;
->>                               main_funnel_out_port: endpoint {
->>                                       remote-endpoint = <&etf0_in_port>;
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                               };
->>                       };
->>
->>                       /* input ports */
->>                       port@1 {
->> -                             reg = <0>;
->> +                             reg = <1>;
->>                               main_funnel_in_port0: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster0_funnel_out_port>;
->> +                                     coresight,hwid = <0>;
->>                               };
->>                       };
->>
->>                       port@2 {
->> -                             reg = <1>;
->> +                             reg = <2>;
->>                               main_funnel_in_port1: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster1_funnel_out_port>;
->> +                                     coresight,hwid = <1>;
->>                               };
->>                       };
->>               };
->> @@ -200,8 +208,9 @@
->>               power-domains = <&scpi_devpd 0>;
->>               port {
->>                       etr_in_port: endpoint {
->> -                             slave-mode;
->> +                             direction = <0>;
->>                               remote-endpoint = <&replicator_out_port1>;
->> +                             coresight,hwid = <0>;
->>                       };
->>               };
->>       };
->> @@ -217,6 +226,8 @@
->>               power-domains = <&scpi_devpd 0>;
->>               port {
->>                       stm_out_port: endpoint {
->> +                             coresight,hwid = <0>;
->> +                             direction = <1>;
->>                       };
->>               };
->>       };
->> @@ -240,6 +251,8 @@
->>               port {
->>                       cluster0_etm0_out_port: endpoint {
->>                               remote-endpoint = <&cluster0_funnel_in_port0>;
->> +                             coresight,hwid = <0>;
->> +                             direction = <1>;
->>                       };
->>               };
->>       };
->> @@ -259,22 +272,26 @@
->>                               reg = <0>;
->>                               cluster0_funnel_out_port: endpoint {
->>                                       remote-endpoint = <&main_funnel_in_port0>;
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                               };
->>                       };
->>
->>                       port@1 {
->> -                             reg = <0>;
->> +                             reg = <1>;
->>                               cluster0_funnel_in_port0: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster0_etm0_out_port>;
->> +                                     coresight,hwid = <0>;
->>                               };
->>                       };
->>
->>                       port@2 {
->> -                             reg = <1>;
->> +                             reg = <2>;
->>                               cluster0_funnel_in_port1: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster0_etm1_out_port>;
->> +                                     coresight,hwid = <1>;
->>                               };
->>                       };
->>               };
->> @@ -299,6 +316,8 @@
->>               port {
->>                       cluster0_etm1_out_port: endpoint {
->>                               remote-endpoint = <&cluster0_funnel_in_port1>;
->> +                             coresight,hwid = <0>;
->> +                             direction = <1>;
->>                       };
->>               };
->>       };
->> @@ -322,6 +341,8 @@
->>               port {
->>                       cluster1_etm0_out_port: endpoint {
->>                               remote-endpoint = <&cluster1_funnel_in_port0>;
->> +                             coresight,hwid = <0>;
->> +                             direction = <1>;
->>                       };
->>               };
->>       };
->> @@ -341,36 +362,42 @@
->>                               reg = <0>;
->>                               cluster1_funnel_out_port: endpoint {
->>                                       remote-endpoint = <&main_funnel_in_port1>;
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                               };
->>                       };
->>
->>                       port@1 {
->> -                             reg = <0>;
->> +                             reg = <1>;
->>                               cluster1_funnel_in_port0: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster1_etm0_out_port>;
->> +                                     coresight,hwid = <0>;
->>                               };
->>                       };
->>
->>                       port@2 {
->> -                             reg = <1>;
->> +                             reg = <2>;
->>                               cluster1_funnel_in_port1: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster1_etm1_out_port>;
->> +                                     coresight,hwid = <1>;
->>                               };
->>                       };
->>                       port@3 {
->> -                             reg = <2>;
->> +                             reg = <3>;
->>                               cluster1_funnel_in_port2: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster1_etm2_out_port>;
->> +                                     coresight,hwid = <2>;
->>                               };
->>                       };
->>                       port@4 {
->> -                             reg = <3>;
->> +                             reg = <4>;
->>                               cluster1_funnel_in_port3: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->>                                       remote-endpoint = <&cluster1_etm3_out_port>;
->> +                                     coresight,hwid = <3>;
->>                               };
->>                       };
->>               };
->> @@ -395,6 +422,8 @@
->>               port {
->>                       cluster1_etm1_out_port: endpoint {
->>                               remote-endpoint = <&cluster1_funnel_in_port1>;
->> +                             coresight,hwid = <0>;
->> +                             direction = <1>;
->>                       };
->>               };
->>       };
->> @@ -418,6 +447,8 @@
->>               port {
->>                       cluster1_etm2_out_port: endpoint {
->>                               remote-endpoint = <&cluster1_funnel_in_port2>;
->> +                             coresight,hwid = <0>;
->> +                             direction = <1>;
->>                       };
->>               };
->>       };
->> @@ -441,6 +472,8 @@
->>               port {
->>                       cluster1_etm3_out_port: endpoint {
->>                               remote-endpoint = <&cluster1_funnel_in_port3>;
->> +                             coresight,hwid = <0>;
->> +                             direction = <1>;
->>                       };
->>               };
->>       };
->> @@ -462,6 +495,8 @@
->>                               reg = <0>;
->>                               replicator_out_port0: endpoint {
->>                                       remote-endpoint = <&tpiu_in_port>;
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                               };
->>                       };
->>
->> @@ -469,14 +504,17 @@
->>                               reg = <1>;
->>                               replicator_out_port1: endpoint {
->>                                       remote-endpoint = <&etr_in_port>;
->> +                                     coresight,hwid = <1>;
->> +                                     direction = <1>;
->>                               };
->>                       };
->>
->>                       /* replicator input port */
->>                       port@2 {
->> -                             reg = <0>;
->> +                             reg = <2>;
->>                               replicator_in_port0: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->> +                                     coresight,hwid = <0>;
->>                               };
->>                       };
->>               };
->> diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
->> index 0c43fb3..146a5d9 100644
->> --- a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
->> +++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
->> @@ -15,15 +15,18 @@
->>                       port@0 {
->>                               reg = <0>;
->>                               csys1_funnel_out_port: endpoint {
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                                       remote-endpoint = <&etf1_in_port>;
->>                               };
->>                       };
->>
->>                       /* input port */
->>                       port@1 {
->> -                             reg = <0>;
->> +                             reg = <1>;
->>                               csys1_funnel_in_port0: endpoint {
->> -                                     slave-mode;
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <0>;
->>                               };
->>                       };
->>
->> @@ -45,15 +48,18 @@
->>                       port@0 {
->>                               reg = <0>;
->>                               etf1_in_port: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->> +                                     coresight,hwid = <0>;
->>                                       remote-endpoint = <&csys1_funnel_out_port>;
->>                               };
->>                       };
->>
->>                       /* output port */
->>                       port@1 {
->> -                             reg = <0>;
->> +                             reg = <1>;
->>                               etf1_out_port: endpoint {
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                                       remote-endpoint = <&csys2_funnel_in_port1>;
->>                               };
->>                       };
->> @@ -75,23 +81,27 @@
->>                       port@0 {
->>                               reg = <0>;
->>                               csys2_funnel_out_port: endpoint {
->> +                                     coresight,hwid = <0>;
->> +                                     direction = <1>;
->>                                       remote-endpoint = <&replicator_in_port0>;
->>                               };
->>                       };
->>
->>                       /* input ports */
->>                       port@1 {
->> -                             reg = <0>;
->> +                             reg = <1>;
->>                               csys2_funnel_in_port0: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->> +                                     coresight,hwid = <0>;
->>                                       remote-endpoint = <&etf0_out_port>;
->>                               };
->>                       };
->>
->>                       port@2 {
->> -                             reg = <1>;
->> +                             reg = <2>;
->>                               csys2_funnel_in_port1: endpoint {
->> -                                     slave-mode;
->> +                                     direction = <0>;
->> +                                     coresight,hwid = <1>;
->>                                       remote-endpoint = <&etf1_out_port>;
->>                               };
->>                       };
->> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
->> index c9236c4..27b8036 100644
->> --- a/arch/arm64/boot/dts/arm/juno.dts
->> +++ b/arch/arm64/boot/dts/arm/juno.dts
->> @@ -260,10 +260,11 @@
->>  &main_funnel {
->>       ports {
->>               port@3 {
->> -                     reg = <2>;
->> +                     reg = <3>;
->>                       main_funnel_in_port2: endpoint {
->> -                             slave-mode;
->> +                             direction = <0>;
->>                               remote-endpoint = <&stm_out_port>;
->> +                             coresight,hwid = <2>;
->>                       };
->>               };
->>       };
->> --
->> 2.7.4
->>
+What this really means is that so far, we've just been lucky that most
+batteries have either been compatible with the TI chip, or else at least
+haven't reported highly-unexpected values.
+
+For instance, one battery I have here seems to report either 0x0000 or
+0x0100 to the MANUFACTURER_ACCESS_STATUS command -- while this seems to
+match either Wake Up (bits[11:8] = 0000b) or Normal Discharge
+(bits[11:8] = 0001b) status for the TI part [1], they don't seem to
+actually correspond to real states (for instance, I never see 0101b =
+Charge, even when charging).
+
+On other batteries, I'm getting apparently random data in return, which
+means that occasionally, we interpret this as "battery not present" or
+"battery is not healthy".
+
+All in all, it seems to be a really bad idea to make assumptions about
+REG_MANUFACTURER_DATA, unless we already know what battery we're using.
+Therefore, this patch reimplements the "present" and "health" checks to
+the following on most SBS batteries:
+
+1. HEALTH: report "unknown" -- I couldn't find a standard SBS command
+   that gives us much useful here
+2. PRESENT: just send a REG_STATUS command; if it succeeds, then the
+   battery is present
+
+Also, we stop sending MANUFACTURER_ACCESS_SLEEP to non-TI parts. I have
+no proof that this is useful and supported.
+
+If someone explicitly provided a 'ti,bq20z75' compatible property, then
+we continue to use the existing TI command behaviors, and we effectively
+revert commit 17c6d3979e5b ("sbs-battery: make writes to
+ManufacturerAccess optional") to again make these commands required.
+
+[1] http://www.ti.com/lit/er/sluu265a/sluu265a.pdf
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Rhyland Klein <rklein@nvidia.com>
+---
+v2:
+ * don't stub out POWER_SUPPLY_PROP_PRESENT from sbs_data[]
+ * use if/else instead of switch/case
+
+v3:
+ * pull 'return 0' out of if/else, to satisfy braindead tooling
+
+v4:
+ * make ManufacturerAccess non-optional for TI parts again
+---
+ drivers/power/supply/sbs-battery.c | 67 ++++++++++++++++++++++++------
+ 1 file changed, 54 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
+index 83d7b4115857..8ba6abf584de 100644
+--- a/drivers/power/supply/sbs-battery.c
++++ b/drivers/power/supply/sbs-battery.c
+@@ -23,6 +23,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/power/sbs-battery.h>
+ #include <linux/power_supply.h>
+ #include <linux/slab.h>
+@@ -156,6 +157,9 @@ static enum power_supply_property sbs_properties[] = {
+ 	POWER_SUPPLY_PROP_MODEL_NAME
+ };
+ 
++/* Supports special manufacturer commands from TI BQ20Z75 IC. */
++#define SBS_FLAGS_TI_BQ20Z75		BIT(0)
++
+ struct sbs_info {
+ 	struct i2c_client		*client;
+ 	struct power_supply		*power_supply;
+@@ -168,6 +172,7 @@ struct sbs_info {
+ 	u32				poll_retry_count;
+ 	struct delayed_work		work;
+ 	struct mutex			mode_lock;
++	u32				flags;
+ };
+ 
+ static char model_name[I2C_SMBUS_BLOCK_MAX + 1];
+@@ -315,17 +320,41 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
+ static int sbs_get_battery_presence_and_health(
+ 	struct i2c_client *client, enum power_supply_property psp,
+ 	union power_supply_propval *val)
++{
++	int ret;
++
++	if (psp == POWER_SUPPLY_PROP_PRESENT) {
++		/* Dummy command; if it succeeds, battery is present. */
++		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
++		if (ret < 0)
++			val->intval = 0; /* battery disconnected */
++		else
++			val->intval = 1; /* battery present */
++	} else { /* POWER_SUPPLY_PROP_HEALTH */
++		/* SBS spec doesn't have a general health command. */
++		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
++	}
++
++	return 0;
++}
++
++static int sbs_get_ti_battery_presence_and_health(
++	struct i2c_client *client, enum power_supply_property psp,
++	union power_supply_propval *val)
+ {
+ 	s32 ret;
+ 
+ 	/*
+ 	 * Write to ManufacturerAccess with ManufacturerAccess command
+-	 * and then read the status. Do not check for error on the write
+-	 * since not all batteries implement write access to this command,
+-	 * while others mandate it.
++	 * and then read the status.
+ 	 */
+-	sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
+-			    MANUFACTURER_ACCESS_STATUS);
++	ret = sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
++				  MANUFACTURER_ACCESS_STATUS);
++	if (ret < 0) {
++		if (psp == POWER_SUPPLY_PROP_PRESENT)
++			val->intval = 0; /* battery removed */
++		return ret;
++	}
+ 
+ 	ret = sbs_read_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr);
+ 	if (ret < 0) {
+@@ -600,7 +629,12 @@ static int sbs_get_property(struct power_supply *psy,
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_PRESENT:
+ 	case POWER_SUPPLY_PROP_HEALTH:
+-		ret = sbs_get_battery_presence_and_health(client, psp, val);
++		if (client->flags & SBS_FLAGS_TI_BQ20Z75)
++			ret = sbs_get_ti_battery_presence_and_health(client,
++								     psp, val);
++		else
++			ret = sbs_get_battery_presence_and_health(client, psp,
++								  val);
+ 		if (psp == POWER_SUPPLY_PROP_PRESENT)
+ 			return 0;
+ 		break;
+@@ -806,6 +840,7 @@ static int sbs_probe(struct i2c_client *client,
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
++	chip->flags = (u32)(uintptr_t)of_device_get_match_data(&client->dev);
+ 	chip->client = client;
+ 	chip->enable_detection = false;
+ 	psy_cfg.of_node = client->dev.of_node;
+@@ -911,16 +946,19 @@ static int sbs_suspend(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct sbs_info *chip = i2c_get_clientdata(client);
++	int ret;
+ 
+ 	if (chip->poll_time > 0)
+ 		cancel_delayed_work_sync(&chip->work);
+ 
+-	/*
+-	 * Write to manufacturer access with sleep command.
+-	 * Support is manufacturer dependend, so ignore errors.
+-	 */
+-	sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
+-		MANUFACTURER_ACCESS_SLEEP);
++	if (chip->flags & SBS_FLAGS_TI_BQ20Z75) {
++		/* Write to manufacturer access with sleep command. */
++		ret = sbs_write_word_data(client,
++					  sbs_data[REG_MANUFACTURER_DATA].addr,
++					  MANUFACTURER_ACCESS_SLEEP);
++		if (chip->is_present && ret < 0)
++			return ret;
++	}
+ 
+ 	return 0;
+ }
+@@ -941,7 +979,10 @@ MODULE_DEVICE_TABLE(i2c, sbs_id);
+ 
+ static const struct of_device_id sbs_dt_ids[] = {
+ 	{ .compatible = "sbs,sbs-battery" },
+-	{ .compatible = "ti,bq20z75" },
++	{
++		.compatible = "ti,bq20z75",
++		.data = (void *)SBS_FLAGS_TI_BQ20Z75,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sbs_dt_ids);
+-- 
+2.18.0.rc1.242.g61856ae69a-goog
