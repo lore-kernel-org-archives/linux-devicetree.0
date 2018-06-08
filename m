@@ -1,162 +1,66 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 11/16] irqchip/irq-mvebu-icu: add support for System
- Error Interrupts (SEI)
-Date: Fri, 8 Jun 2018 15:08:08 +0200
-Message-ID: <20180608150808.7af98f18@xps13>
-References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
-        <20180522094042.24770-12-miquel.raynal@bootlin.com>
-        <cd000f57-e01f-e5b9-77f6-baf4e8f45551@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/5] arm64: dts: renesas: r8a77980: add VSPD support
+Date: Fri, 8 Jun 2018 15:54:56 +0200
+Message-ID: <20180608135456.cathgcuyp24csbwx@verge.net.au>
+References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
+ <5f151ec5-bec7-ed06-cb94-4f0cfe8e43dc@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cd000f57-e01f-e5b9-77f6-baf4e8f45551@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <5f151ec5-bec7-ed06-cb94-4f0cfe8e43dc@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+[CC Laurent, Geert]
 
-Thank you for the review.
-
-On Wed, 23 May 2018 15:23:48 +0100, Marc Zyngier <marc.zyngier@arm.com>
-wrote:
-
-> On 22/05/18 10:40, Miquel Raynal wrote:
-> > An SEI driver provides an MSI domain through which it is possible to
-> > raise SEIs.
-> > 
-> > Handle the NSR probe function in a more generic way to support other
-> > type of interrupts (ie. the SEIs).
-> > 
-> > For clarity we do not use tree IRQ domains for now but linear ones
-> > instead, allocating the 207 ICU lines for each interrupt group.  
+On Thu, Jun 07, 2018 at 11:20:47PM +0300, Sergei Shtylyov wrote:
+> Describe VSPD0 in the R8A77980 device tree; it will be used by DU in
+> the next patch...
 > 
-> What's the rational for not using trees? Because that's effectively a
-> 100% overhead...
-
-There is none.
-
-I had a look at how to do it.
-
-In the ICU driver I would like to just drop the nvec parameter (number
-of interrupts in the domain) when calling
-platform_msi_create_device_domain().
-
-The above function would call irq_domain_create_hierarchy() which would
-create a tree domain instead of a linear one because of nvec being 0.
-
-However, there is a check in platform_msi_alloc_priv_data() (also
-called by platform_msi_create_device_domain()) that will error out if
-nvec is null.
-
-I'm not 100% sure this is safe but I don't see the point of
-prohibiting nvec to be null here. So would you accept this
-change?
-
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -203,7 +203,7 @@ platform_msi_alloc_priv_data(struct device *dev,
-unsigned int nvec,
-         * accordingly (which would impact the max number of MSI
-         * capable devices).
-         */
--       if (!dev->msi_domain || !write_msi_msg || !nvec || nvec > MAX_DEV_MSIS)
-+       if (!dev->msi_domain || !write_msi_msg || nvec > MAX_DEV_MSIS)
-                return ERR_PTR(-EINVAL);
- 
-        if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-
+> Based on the original (and large) patch by Vladimir Barinov.
 > 
-> > Reallocating an ICU slot is prevented by the use of an ICU-wide bitmap.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > ---
-
-[...]
-
-> > @@ -131,7 +160,8 @@ static int
-> >  mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
-> >  			       unsigned long *hwirq, unsigned int *type)
-> >  {
-> > -	struct mvebu_icu *icu = platform_msi_get_host_data(d);
-> > +	struct mvebu_icu_msi_data *msi_data = platform_msi_get_host_data(d);
-> > +	struct mvebu_icu *icu = msi_data->icu;
-> >  	unsigned int param_count = icu->legacy_bindings ? 3 : 2;
-> >  
-> >  	/* Check the count of the parameters in dt */
-> > @@ -172,7 +202,9 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> >  	int err;
-> >  	unsigned long hwirq;
-> >  	struct irq_fwspec *fwspec = args;
-> > -	struct mvebu_icu *icu = platform_msi_get_host_data(domain);
-> > +	struct mvebu_icu_msi_data *msi_data =
-> > +		platform_msi_get_host_data(domain);
-> > +	struct mvebu_icu *icu = msi_data->icu;
-> >  	struct mvebu_icu_irq_data *icu_irqd;
-> >  
-> >  	icu_irqd = kmalloc(sizeof(*icu_irqd), GFP_KERNEL);
-> > @@ -186,16 +218,22 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> >  		goto free_irqd;
-> >  	}
-> >  
-> > +	spin_lock(&icu->msi_lock);
-> > +	err = bitmap_allocate_region(icu->msi_bitmap, hwirq, 0);
-> > +	spin_unlock(&icu->msi_lock);  
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> This (and the freeing counterpart) could deserve a couple of helpers.
-
-Sure.
-
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77980.dtsi |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> > +	if (err < 0)
-> > +		goto free_irqd;
-> > +
-> >  	if (icu->legacy_bindings)
-> >  		icu_irqd->icu_group = fwspec->param[0];
-> >  	else
-> > -		icu_irqd->icu_group = ICU_GRP_NSR;
-> > +		icu_irqd->icu_group = msi_data->subset_data->icu_group;
-> >  	icu_irqd->icu = icu;
-> >  
-> >  	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
-> >  	if (err) {
-> >  		dev_err(icu->dev, "failed to allocate ICU interrupt in parent domain\n");
-> > -		goto free_irqd;
-> > +		goto free_bitmap;
-> >  	}
-> >  
-> >  	/* Make sure there is no interrupt left pending by the firmware */
+> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> @@ -653,6 +653,16 @@
+>  			resets = <&cpg 408>;
+>  		};
+>  
+> +		vspd0: vsp@fea20000 {
+> +			compatible = "renesas,vsp2";
+> +			reg = <0 0xfea20000 0 0x4000>;
 
-[...]
+As per "[PATCH] arm64: dts: renesas: Fix VSPD registers range"
+I think the width of the range should be 0x5000.
 
-> > @@ -268,9 +332,30 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
-> >  	return 0;
-> >  }
-> >  
-> > +static const struct mvebu_icu_subset_data mvebu_icu_nsr_subset_data = {
-> > +	.icu_group = ICU_GRP_NSR,
-> > +	.offset_set_ah = ICU_SETSPI_NSR_AH,
-> > +	.offset_set_al = ICU_SETSPI_NSR_AL,
-> > +	.offset_clr_ah = ICU_CLRSPI_NSR_AH,
-> > +	.offset_clr_al = ICU_CLRSPI_NSR_AL,
-> > +};
-> > +
-> > +static const struct mvebu_icu_subset_data mvebu_icu_sei_subset_data = {
-> > +	.icu_group = ICU_GRP_SEI,
-> > +	.offset_set_ah = ICU_SET_SEI_AH,
-> > +	.offset_set_al = ICU_SET_SEI_AL,
-> > +	.offset_clr_ah = ICU_CLR_SEI_AH,
-> > +	.offset_clr_al = ICU_CLR_SEI_AL,  
+> +			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 623>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 623>;
+> +			renesas,fcp = <&fcpvd0>;
+> +		};
+> +
+>  		fcpvd0: fcp@fea27000 {
+>  			compatible = "renesas,fcpv";
+>  			reg = <0 0xfea27000 0 0x200>;
 > 
-> I thought SEI was edge only, given what you do in mvebu_icu_init.
-> Confused...
-
-AFAIK, the ICU can produce both level and edge MSI. Currently,
-when it comes to SEI, we don't use the .offset_clr_a[hl] entries
-because the SEI block expects edge-MSIs, but I thought useful to fill
-them anyway. I will remove them both to avoid the confusion.
-
-Thanks,
-Miquèl
