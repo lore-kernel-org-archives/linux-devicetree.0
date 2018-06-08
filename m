@@ -1,406 +1,831 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 05/11] PM / devfreg: Add support for policy notifiers
-Date: Sat, 9 Jun 2018 07:21:43 +0800
-Message-ID: <201806090710.wNpNsIgy%fengguang.wu@intel.com>
-References: <20180607181214.30338-6-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="rwEMma7ioTxnRzrJ"
+From: David Collins <collinsd@codeaurora.org>
+Subject: [PATCH v7 2/2] regulator: add QCOM RPMh regulator driver
+Date: Fri,  8 Jun 2018 16:44:15 -0700
+Message-ID: <36e91ad9edeeee2adfe7a4d92675a1d6950f5002.1528498807.git.collinsd@codeaurora.org>
+References: <cover.1528498807.git.collinsd@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180607181214.30338-6-mka@chromium.org>
+In-Reply-To: <cover.1528498807.git.collinsd@codeaurora.org>
+In-Reply-To: <cover.1528498807.git.collinsd@codeaurora.org>
+References: <cover.1528498807.git.collinsd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Matthias Kaehlcke <mka@chromium.org>
+To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: David Collins <collinsd@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, dianders@chromium.org, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+Add the QCOM RPMh regulator driver to manage PMIC regulators
+which are controlled via RPMh on some Qualcomm Technologies, Inc.
+SoCs.  RPMh is a hardware block which contains several
+accelerators which are used to manage various hardware resources
+that are shared between the processors of the SoC.  The final
+hardware state of a regulator is determined within RPMh by
+performing max aggregation of the requests made by all of the
+processors.
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add support for PMIC regulator control via the voltage regulator
+manager (VRM) and oscillator buffer (XOB) RPMh accelerators.
+VRM supports manipulation of enable state, voltage, and mode.
+XOB supports manipulation of enable state.
 
-Hi Matthias,
-
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v4.17 next-20180608]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Matthias-Kaehlcke/Add-throttler-driver-for-non-thermal-throttling/20180609-061437
-config: ia64-defconfig (attached as .config)
-compiler: ia64-linux-gcc (GCC) 8.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        GCC_VERSION=8.1.0 make.cross ARCH=ia64 
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/trace/events/thermal.h:8,
-                    from drivers//thermal/thermal_core.c:30:
->> include/linux/devfreq.h:446:56: warning: 'struct defreq_policy' declared inside parameter list will not be visible outside of this definition or declaration
-    static inline void devfreq_verify_within_limits(struct defreq_policy *policy,
-                                                           ^~~~~~~~~~~~~
->> include/linux/devfreq.h:452:41: warning: 'struct cpufreq_policy' declared inside parameter list will not be visible outside of this definition or declaration
-    devfreq_verify_within_dev_limits(struct cpufreq_policy *policy)
-                                            ^~~~~~~~~~~~~~
-
-vim +446 include/linux/devfreq.h
-
-   445	
- > 446	static inline void devfreq_verify_within_limits(struct defreq_policy *policy,
-   447			unsigned int min, unsigned int max)
-   448	{
-   449	}
-   450	
-   451	static inline void
- > 452	devfreq_verify_within_dev_limits(struct cpufreq_policy *policy)
-   453	{
-   454	}
-   455	
-
+Signed-off-by: David Collins <collinsd@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/regulator/Kconfig               |   9 +
+ drivers/regulator/Makefile              |   1 +
+ drivers/regulator/qcom-rpmh-regulator.c | 753 ++++++++++++++++++++++++++++++++
+ 3 files changed, 763 insertions(+)
+ create mode 100644 drivers/regulator/qcom-rpmh-regulator.c
 
---rwEMma7ioTxnRzrJ
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-QNH3FiYBAA==
-
---rwEMma7ioTxnRzrJ--
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 5dbccf5..96b701f 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -682,6 +682,15 @@ config REGULATOR_QCOM_RPM
+ 	  Qualcomm RPM as a module. The module will be named
+ 	  "qcom_rpm-regulator".
+ 
++config REGULATOR_QCOM_RPMH
++	tristate "Qualcomm Technologies, Inc. RPMh regulator driver"
++	depends on QCOM_RPMH || COMPILE_TEST
++	help
++	  This driver supports control of PMIC regulators via the RPMh hardware
++	  block found on Qualcomm Technologies Inc. SoCs.  RPMh regulator
++	  control allows for voting on regulator state between multiple
++	  processors within the SoC.
++
+ config REGULATOR_QCOM_SMD_RPM
+ 	tristate "Qualcomm SMD based RPM regulator driver"
+ 	depends on QCOM_SMD_RPM
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index bd818ce..06e76a6 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -78,6 +78,7 @@ obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
+ obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
+ obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
++obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SPMI) += qcom_spmi-regulator.o
+ obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
+diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+new file mode 100644
+index 0000000..6f61625
+--- /dev/null
++++ b/drivers/regulator/qcom-rpmh-regulator.c
+@@ -0,0 +1,753 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
++
++#define pr_fmt(fmt) "%s: " fmt, __func__
++
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++
++#include <soc/qcom/cmd-db.h>
++#include <soc/qcom/rpmh.h>
++
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++
++/**
++ * enum rpmh_regulator_type - supported RPMh accelerator types
++ * %VRM:	RPMh VRM accelerator which supports voting on enable, voltage,
++ *		and mode of LDO, SMPS, and BOB type PMIC regulators.
++ * %XOB:	RPMh XOB accelerator which supports voting on the enable state
++ *		of PMIC regulators.
++ */
++enum rpmh_regulator_type {
++	VRM,
++	XOB,
++};
++
++#define RPMH_REGULATOR_REG_VRM_VOLTAGE		0x0
++#define RPMH_REGULATOR_REG_ENABLE		0x4
++#define RPMH_REGULATOR_REG_VRM_MODE		0x8
++
++#define RPMH_REGULATOR_MODE_COUNT		4
++
++#define PMIC4_LDO_MODE_RETENTION		4
++#define PMIC4_LDO_MODE_LPM			5
++#define PMIC4_LDO_MODE_HPM			7
++
++#define PMIC4_SMPS_MODE_RETENTION		4
++#define PMIC4_SMPS_MODE_PFM			5
++#define PMIC4_SMPS_MODE_AUTO			6
++#define PMIC4_SMPS_MODE_PWM			7
++
++#define PMIC4_BOB_MODE_PASS			0
++#define PMIC4_BOB_MODE_PFM			1
++#define PMIC4_BOB_MODE_AUTO			2
++#define PMIC4_BOB_MODE_PWM			3
++
++/**
++ * struct rpmh_vreg_hw_data - RPMh regulator hardware configurations
++ * @regulator_type:		RPMh accelerator type used to manage this
++ *				regulator
++ * @ops:			Pointer to regulator ops callback structure
++ * @voltage_range:		The single range of voltages supported by this
++ *				PMIC regulator type
++ * @n_voltages:			The number of unique voltage set points defined
++ *				by voltage_range
++ * @hpm_min_load_uA:		Minimum load current in microamps that requires
++ *				high power mode (HPM) operation.  This is used
++ *				for LDO hardware type regulators only.
++ * @pmic_mode_map:		Array indexed by regulator framework mode
++ *				containing PMIC hardware modes.  Must be large
++ *				enough to index all framework modes supported
++ *				by this regulator hardware type.
++ * @of_map_mode:		Maps an RPMH_REGULATOR_MODE_* mode value defined
++ *				in device tree to a regulator framework mode
++ */
++struct rpmh_vreg_hw_data {
++	enum rpmh_regulator_type		regulator_type;
++	const struct regulator_ops		*ops;
++	const struct regulator_linear_range	voltage_range;
++	int					n_voltages;
++	int					hpm_min_load_uA;
++	const int				*pmic_mode_map;
++	unsigned int			      (*of_map_mode)(unsigned int mode);
++};
++
++/**
++ * struct rpmh_vreg - individual RPMh regulator data structure encapsulating a
++ *		single regulator device
++ * @dev:			Device pointer for the top-level PMIC RPMh
++ *				regulator parent device.  This is used as a
++ *				handle in RPMh write requests.
++ * @addr:			Base address of the regulator resource within
++ *				an RPMh accelerator
++ * @rdesc:			Regulator descriptor
++ * @hw_data:			PMIC regulator configuration data for this RPMh
++ *				regulator
++ * @always_wait_for_ack:	Boolean flag indicating if a request must always
++ *				wait for an ACK from RPMh before continuing even
++ *				if it corresponds to a strictly lower power
++ *				state (e.g. enabled --> disabled).
++ * @enabled:			Flag indicating if the regulator is enabled or
++ *				not
++ * @bypassed:			Boolean indicating if the regulator is in
++ *				bypass (pass-through) mode or not.  This is
++ *				only used by BOB rpmh-regulator resources.
++ * @voltage_selector:		Selector used for get_voltage_sel() and
++ *				set_voltage_sel() callbacks
++ * @mode:			RPMh VRM regulator current framework mode
++ */
++struct rpmh_vreg {
++	struct device			*dev;
++	u32				addr;
++	struct regulator_desc		rdesc;
++	const struct rpmh_vreg_hw_data	*hw_data;
++	bool				always_wait_for_ack;
++
++	int				enabled;
++	bool				bypassed;
++	int				voltage_selector;
++	unsigned int			mode;
++};
++
++/**
++ * struct rpmh_vreg_init_data - initialization data for an RPMh regulator
++ * @name:			Name for the regulator which also corresponds
++ *				to the device tree subnode name of the regulator
++ * @resource_name:		RPMh regulator resource name format string.
++ *				This must include exactly one field: '%s' which
++ *				is filled at run-time with the PMIC ID provided
++ *				by device tree property qcom,pmic-id.  Example:
++ *				"ldo%s1" for RPMh resource "ldoa1".
++ * @supply_name:		Parent supply regulator name
++ * @hw_data:			Configuration data for this PMIC regulator type
++ */
++struct rpmh_vreg_init_data {
++	const char			*name;
++	const char			*resource_name;
++	const char			*supply_name;
++	const struct rpmh_vreg_hw_data	*hw_data;
++};
++
++/**
++ * rpmh_regulator_send_request() - send the request to RPMh
++ * @vreg:		Pointer to the RPMh regulator
++ * @cmd:		Pointer to the RPMh command to send
++ * @wait_for_ack:	Boolean indicating if execution must wait until the
++ *			request has been acknowledged as complete
++ *
++ * Return: 0 on success, errno on failure
++ */
++static int rpmh_regulator_send_request(struct rpmh_vreg *vreg,
++			struct tcs_cmd *cmd, bool wait_for_ack)
++{
++	int ret;
++
++	if (wait_for_ack || vreg->always_wait_for_ack)
++		ret = rpmh_write(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd, 1);
++	else
++		ret = rpmh_write_async(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd,
++					1);
++
++	return ret;
++}
++
++static int _rpmh_regulator_vrm_set_voltage_sel(struct regulator_dev *rdev,
++				unsigned int selector, bool wait_for_ack)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++	struct tcs_cmd cmd = {
++		.addr = vreg->addr + RPMH_REGULATOR_REG_VRM_VOLTAGE,
++	};
++	int ret;
++
++	/* VRM voltage control register is set with voltage in millivolts. */
++	cmd.data = DIV_ROUND_UP(regulator_list_voltage_linear_range(rdev,
++							selector), 1000);
++
++	ret = rpmh_regulator_send_request(vreg, &cmd, wait_for_ack);
++	if (!ret)
++		vreg->voltage_selector = selector;
++
++	return ret;
++}
++
++static int rpmh_regulator_vrm_set_voltage_sel(struct regulator_dev *rdev,
++					unsigned int selector)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++
++	if (vreg->enabled == -EINVAL) {
++		/*
++		 * Cache the voltage and send it later when the regulator is
++		 * enabled or disabled.
++		 */
++		vreg->voltage_selector = selector;
++		return 0;
++	}
++
++	return _rpmh_regulator_vrm_set_voltage_sel(rdev, selector,
++					selector > vreg->voltage_selector);
++}
++
++static int rpmh_regulator_vrm_get_voltage_sel(struct regulator_dev *rdev)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++
++	return vreg->voltage_selector;
++}
++
++static int rpmh_regulator_is_enabled(struct regulator_dev *rdev)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++
++	return vreg->enabled;
++}
++
++static int rpmh_regulator_set_enable_state(struct regulator_dev *rdev,
++					bool enable)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++	struct tcs_cmd cmd = {
++		.addr = vreg->addr + RPMH_REGULATOR_REG_ENABLE,
++		.data = enable,
++	};
++	int ret;
++
++	if (vreg->enabled == -EINVAL &&
++	    vreg->voltage_selector != -ENOTRECOVERABLE) {
++		ret = _rpmh_regulator_vrm_set_voltage_sel(rdev,
++						vreg->voltage_selector, true);
++		if (ret < 0)
++			return ret;
++	}
++
++	ret = rpmh_regulator_send_request(vreg, &cmd, enable);
++	if (!ret)
++		vreg->enabled = enable;
++
++	return ret;
++}
++
++static int rpmh_regulator_enable(struct regulator_dev *rdev)
++{
++	return rpmh_regulator_set_enable_state(rdev, true);
++}
++
++static int rpmh_regulator_disable(struct regulator_dev *rdev)
++{
++	return rpmh_regulator_set_enable_state(rdev, false);
++}
++
++static int rpmh_regulator_vrm_set_mode_bypass(struct rpmh_vreg *vreg,
++					unsigned int mode, bool bypassed)
++{
++	struct tcs_cmd cmd = {
++		.addr = vreg->addr + RPMH_REGULATOR_REG_VRM_MODE,
++	};
++	int pmic_mode;
++
++	if (mode > REGULATOR_MODE_STANDBY)
++		return -EINVAL;
++
++	pmic_mode = vreg->hw_data->pmic_mode_map[mode];
++	if (pmic_mode < 0)
++		return pmic_mode;
++
++	cmd.data = bypassed ? PMIC4_BOB_MODE_PASS : pmic_mode;
++
++	return rpmh_regulator_send_request(vreg, &cmd, true);
++}
++
++static int rpmh_regulator_vrm_set_mode(struct regulator_dev *rdev,
++					unsigned int mode)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++	int ret;
++
++	if (mode == vreg->mode)
++		return 0;
++
++	ret = rpmh_regulator_vrm_set_mode_bypass(vreg, mode, vreg->bypassed);
++	if (!ret)
++		vreg->mode = mode;
++
++	return ret;
++}
++
++static unsigned int rpmh_regulator_vrm_get_mode(struct regulator_dev *rdev)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++
++	return vreg->mode;
++}
++
++/**
++ * rpmh_regulator_vrm_set_load() - set the regulator mode based upon the load
++ *		current requested
++ * @rdev:		Regulator device pointer for the rpmh-regulator
++ * @load_uA:		Aggregated load current in microamps
++ *
++ * This function is used in the regulator_ops for VRM type RPMh regulator
++ * devices.
++ *
++ * Return: 0 on success, errno on failure
++ */
++static int rpmh_regulator_vrm_set_load(struct regulator_dev *rdev, int load_uA)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++	unsigned int mode;
++
++	if (load_uA >= vreg->hw_data->hpm_min_load_uA)
++		mode = REGULATOR_MODE_FAST;
++	else
++		mode = REGULATOR_MODE_IDLE;
++
++	return rpmh_regulator_vrm_set_mode(rdev, mode);
++}
++
++static int rpmh_regulator_vrm_set_bypass(struct regulator_dev *rdev,
++				bool enable)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++	int ret;
++
++	if (vreg->bypassed == enable)
++		return 0;
++
++	ret = rpmh_regulator_vrm_set_mode_bypass(vreg, vreg->mode, enable);
++	if (!ret)
++		vreg->bypassed = enable;
++
++	return ret;
++}
++
++static int rpmh_regulator_vrm_get_bypass(struct regulator_dev *rdev,
++				bool *enable)
++{
++	struct rpmh_vreg *vreg = rdev_get_drvdata(rdev);
++
++	*enable = vreg->bypassed;
++
++	return 0;
++}
++
++static const struct regulator_ops rpmh_regulator_vrm_ops = {
++	.enable			= rpmh_regulator_enable,
++	.disable		= rpmh_regulator_disable,
++	.is_enabled		= rpmh_regulator_is_enabled,
++	.set_voltage_sel	= rpmh_regulator_vrm_set_voltage_sel,
++	.get_voltage_sel	= rpmh_regulator_vrm_get_voltage_sel,
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.set_mode		= rpmh_regulator_vrm_set_mode,
++	.get_mode		= rpmh_regulator_vrm_get_mode,
++};
++
++static const struct regulator_ops rpmh_regulator_vrm_drms_ops = {
++	.enable			= rpmh_regulator_enable,
++	.disable		= rpmh_regulator_disable,
++	.is_enabled		= rpmh_regulator_is_enabled,
++	.set_voltage_sel	= rpmh_regulator_vrm_set_voltage_sel,
++	.get_voltage_sel	= rpmh_regulator_vrm_get_voltage_sel,
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.set_mode		= rpmh_regulator_vrm_set_mode,
++	.get_mode		= rpmh_regulator_vrm_get_mode,
++	.set_load		= rpmh_regulator_vrm_set_load,
++};
++
++static const struct regulator_ops rpmh_regulator_vrm_bypass_ops = {
++	.enable			= rpmh_regulator_enable,
++	.disable		= rpmh_regulator_disable,
++	.is_enabled		= rpmh_regulator_is_enabled,
++	.set_voltage_sel	= rpmh_regulator_vrm_set_voltage_sel,
++	.get_voltage_sel	= rpmh_regulator_vrm_get_voltage_sel,
++	.list_voltage		= regulator_list_voltage_linear_range,
++	.set_mode		= rpmh_regulator_vrm_set_mode,
++	.get_mode		= rpmh_regulator_vrm_get_mode,
++	.set_bypass		= rpmh_regulator_vrm_set_bypass,
++	.get_bypass		= rpmh_regulator_vrm_get_bypass,
++};
++
++static const struct regulator_ops rpmh_regulator_xob_ops = {
++	.enable			= rpmh_regulator_enable,
++	.disable		= rpmh_regulator_disable,
++	.is_enabled		= rpmh_regulator_is_enabled,
++};
++
++/**
++ * rpmh_regulator_init_vreg() - initialize all attributes of an rpmh-regulator
++ * vreg:		Pointer to the individual rpmh-regulator resource
++ * dev:			Pointer to the top level rpmh-regulator PMIC device
++ * node:		Pointer to the individual rpmh-regulator resource
++ *			device node
++ * pmic_id:		String used to identify the top level rpmh-regulator
++ *			PMIC device on the board
++ * pmic_rpmh_data:	Pointer to a null-terminated array of rpmh-regulator
++ *			resources defined for the top level PMIC device
++ *
++ * Return: 0 on success, errno on failure
++ */
++static int rpmh_regulator_init_vreg(struct rpmh_vreg *vreg, struct device *dev,
++			struct device_node *node, const char *pmic_id,
++			const struct rpmh_vreg_init_data *pmic_rpmh_data)
++{
++	struct regulator_config reg_config = {};
++	char rpmh_resource_name[20] = "";
++	const struct rpmh_vreg_init_data *rpmh_data;
++	struct regulator_init_data *init_data;
++	struct regulator_dev *rdev;
++	int ret;
++
++	vreg->dev = dev;
++
++	for (rpmh_data = pmic_rpmh_data; rpmh_data->name; rpmh_data++)
++		if (!strcmp(rpmh_data->name, node->name))
++			break;
++
++	if (!rpmh_data->name) {
++		dev_err(dev, "Unknown regulator %s\n", node->name);
++		return -EINVAL;
++	}
++
++	scnprintf(rpmh_resource_name, sizeof(rpmh_resource_name),
++		rpmh_data->resource_name, pmic_id);
++
++	vreg->addr = cmd_db_read_addr(rpmh_resource_name);
++	if (!vreg->addr) {
++		dev_err(dev, "%s: could not find RPMh address for resource %s\n",
++			node->name, rpmh_resource_name);
++		return -ENODEV;
++	}
++
++	vreg->rdesc.name = rpmh_data->name;
++	vreg->rdesc.supply_name = rpmh_data->supply_name;
++	vreg->hw_data = rpmh_data->hw_data;
++
++	vreg->enabled = -EINVAL;
++	vreg->voltage_selector = -ENOTRECOVERABLE;
++	vreg->mode = REGULATOR_MODE_INVALID;
++
++	if (rpmh_data->hw_data->n_voltages) {
++		vreg->rdesc.linear_ranges = &rpmh_data->hw_data->voltage_range;
++		vreg->rdesc.n_linear_ranges = 1;
++		vreg->rdesc.n_voltages = rpmh_data->hw_data->n_voltages;
++	}
++
++	vreg->always_wait_for_ack = of_property_read_bool(node,
++						"qcom,always-wait-for-ack");
++
++	vreg->rdesc.owner	= THIS_MODULE;
++	vreg->rdesc.type	= REGULATOR_VOLTAGE;
++	vreg->rdesc.ops		= vreg->hw_data->ops;
++	vreg->rdesc.of_map_mode	= vreg->hw_data->of_map_mode;
++
++	init_data = of_get_regulator_init_data(dev, node, &vreg->rdesc);
++	if (!init_data)
++		return -ENOMEM;
++
++	if (rpmh_data->hw_data->regulator_type == XOB &&
++	    init_data->constraints.min_uV &&
++	    init_data->constraints.min_uV == init_data->constraints.max_uV) {
++		vreg->rdesc.fixed_uV = init_data->constraints.min_uV;
++		vreg->rdesc.n_voltages = 1;
++	}
++
++	reg_config.dev		= dev;
++	reg_config.init_data	= init_data;
++	reg_config.of_node	= node;
++	reg_config.driver_data	= vreg;
++
++	rdev = devm_regulator_register(dev, &vreg->rdesc, &reg_config);
++	if (IS_ERR(rdev)) {
++		ret = PTR_ERR(rdev);
++		dev_err(dev, "%s: devm_regulator_register() failed, ret=%d\n",
++			node->name, ret);
++		return ret;
++	}
++
++	dev_dbg(dev, "%s regulator registered for RPMh resource %s @ 0x%05X\n",
++		node->name, rpmh_resource_name, vreg->addr);
++
++	return 0;
++}
++
++static const int pmic_mode_map_pmic4_ldo[REGULATOR_MODE_STANDBY + 1] = {
++	[REGULATOR_MODE_INVALID] = -EINVAL,
++	[REGULATOR_MODE_STANDBY] = PMIC4_LDO_MODE_RETENTION,
++	[REGULATOR_MODE_IDLE]    = PMIC4_LDO_MODE_LPM,
++	[REGULATOR_MODE_NORMAL]  = -EINVAL,
++	[REGULATOR_MODE_FAST]    = PMIC4_LDO_MODE_HPM,
++};
++
++static unsigned int rpmh_regulator_pmic4_ldo_of_map_mode(unsigned int mode)
++{
++	static const unsigned int of_mode_map[RPMH_REGULATOR_MODE_COUNT] = {
++		[RPMH_REGULATOR_MODE_RET]  = REGULATOR_MODE_STANDBY,
++		[RPMH_REGULATOR_MODE_LPM]  = REGULATOR_MODE_IDLE,
++		[RPMH_REGULATOR_MODE_AUTO] = REGULATOR_MODE_INVALID,
++		[RPMH_REGULATOR_MODE_HPM]  = REGULATOR_MODE_FAST,
++	};
++
++	if (mode >= RPMH_REGULATOR_MODE_COUNT)
++		return -EINVAL;
++
++	return of_mode_map[mode];
++}
++
++static const int pmic_mode_map_pmic4_smps[REGULATOR_MODE_STANDBY + 1] = {
++	[REGULATOR_MODE_INVALID] = -EINVAL,
++	[REGULATOR_MODE_STANDBY] = PMIC4_SMPS_MODE_RETENTION,
++	[REGULATOR_MODE_IDLE]    = PMIC4_SMPS_MODE_PFM,
++	[REGULATOR_MODE_NORMAL]  = PMIC4_SMPS_MODE_AUTO,
++	[REGULATOR_MODE_FAST]    = PMIC4_SMPS_MODE_PWM,
++};
++
++static unsigned int rpmh_regulator_pmic4_smps_of_map_mode(unsigned int mode)
++{
++	static const unsigned int of_mode_map[RPMH_REGULATOR_MODE_COUNT] = {
++		[RPMH_REGULATOR_MODE_RET]  = REGULATOR_MODE_STANDBY,
++		[RPMH_REGULATOR_MODE_LPM]  = REGULATOR_MODE_IDLE,
++		[RPMH_REGULATOR_MODE_AUTO] = REGULATOR_MODE_NORMAL,
++		[RPMH_REGULATOR_MODE_HPM]  = REGULATOR_MODE_FAST,
++	};
++
++	if (mode >= RPMH_REGULATOR_MODE_COUNT)
++		return -EINVAL;
++
++	return of_mode_map[mode];
++}
++
++static const int pmic_mode_map_pmic4_bob[REGULATOR_MODE_STANDBY + 1] = {
++	[REGULATOR_MODE_INVALID] = -EINVAL,
++	[REGULATOR_MODE_STANDBY] = -EINVAL,
++	[REGULATOR_MODE_IDLE]    = PMIC4_BOB_MODE_PFM,
++	[REGULATOR_MODE_NORMAL]  = PMIC4_BOB_MODE_AUTO,
++	[REGULATOR_MODE_FAST]    = PMIC4_BOB_MODE_PWM,
++};
++
++static unsigned int rpmh_regulator_pmic4_bob_of_map_mode(unsigned int mode)
++{
++	static const unsigned int of_mode_map[RPMH_REGULATOR_MODE_COUNT] = {
++		[RPMH_REGULATOR_MODE_RET]  = REGULATOR_MODE_INVALID,
++		[RPMH_REGULATOR_MODE_LPM]  = REGULATOR_MODE_IDLE,
++		[RPMH_REGULATOR_MODE_AUTO] = REGULATOR_MODE_NORMAL,
++		[RPMH_REGULATOR_MODE_HPM]  = REGULATOR_MODE_FAST,
++	};
++
++	if (mode >= RPMH_REGULATOR_MODE_COUNT)
++		return -EINVAL;
++
++	return of_mode_map[mode];
++}
++
++static const struct rpmh_vreg_hw_data pmic4_pldo = {
++	.regulator_type = VRM,
++	.ops = &rpmh_regulator_vrm_drms_ops,
++	.voltage_range = REGULATOR_LINEAR_RANGE(1664000, 0, 255, 8000),
++	.n_voltages = 256,
++	.hpm_min_load_uA = 10000,
++	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
++	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
++};
++
++static const struct rpmh_vreg_hw_data pmic4_pldo_lv = {
++	.regulator_type = VRM,
++	.ops = &rpmh_regulator_vrm_drms_ops,
++	.voltage_range = REGULATOR_LINEAR_RANGE(1256000, 0, 127, 8000),
++	.n_voltages = 128,
++	.hpm_min_load_uA = 10000,
++	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
++	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
++};
++
++static const struct rpmh_vreg_hw_data pmic4_nldo = {
++	.regulator_type = VRM,
++	.ops = &rpmh_regulator_vrm_drms_ops,
++	.voltage_range = REGULATOR_LINEAR_RANGE(312000, 0, 127, 8000),
++	.n_voltages = 128,
++	.hpm_min_load_uA = 30000,
++	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
++	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
++};
++
++static const struct rpmh_vreg_hw_data pmic4_hfsmps3 = {
++	.regulator_type = VRM,
++	.ops = &rpmh_regulator_vrm_ops,
++	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
++	.n_voltages = 216,
++	.pmic_mode_map = pmic_mode_map_pmic4_smps,
++	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
++};
++
++static const struct rpmh_vreg_hw_data pmic4_ftsmps426 = {
++	.regulator_type = VRM,
++	.ops = &rpmh_regulator_vrm_ops,
++	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 258, 4000),
++	.n_voltages = 259,
++	.pmic_mode_map = pmic_mode_map_pmic4_smps,
++	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
++};
++
++static const struct rpmh_vreg_hw_data pmic4_bob = {
++	.regulator_type = VRM,
++	.ops = &rpmh_regulator_vrm_bypass_ops,
++	.voltage_range = REGULATOR_LINEAR_RANGE(1824000, 0, 83, 32000),
++	.n_voltages = 84,
++	.pmic_mode_map = pmic_mode_map_pmic4_bob,
++	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
++};
++
++static const struct rpmh_vreg_hw_data pmic4_lvs = {
++	.regulator_type = XOB,
++	.ops = &rpmh_regulator_xob_ops,
++	/* LVS hardware does not support voltage or mode configuration. */
++};
++
++#define RPMH_VREG(_name, _resource_name, _hw_data, _supply_name) \
++{ \
++	.name		= _name, \
++	.resource_name	= _resource_name, \
++	.hw_data	= _hw_data, \
++	.supply_name	= _supply_name, \
++}
++
++static const struct rpmh_vreg_init_data pm8998_vreg_data[] = {
++	RPMH_VREG("smps1",  "smp%s1",  &pmic4_ftsmps426, "vdd-s1"),
++	RPMH_VREG("smps2",  "smp%s2",  &pmic4_ftsmps426, "vdd-s2"),
++	RPMH_VREG("smps3",  "smp%s3",  &pmic4_hfsmps3,   "vdd-s3"),
++	RPMH_VREG("smps4",  "smp%s4",  &pmic4_hfsmps3,   "vdd-s4"),
++	RPMH_VREG("smps5",  "smp%s5",  &pmic4_hfsmps3,   "vdd-s5"),
++	RPMH_VREG("smps6",  "smp%s6",  &pmic4_ftsmps426, "vdd-s6"),
++	RPMH_VREG("smps7",  "smp%s7",  &pmic4_ftsmps426, "vdd-s7"),
++	RPMH_VREG("smps8",  "smp%s8",  &pmic4_ftsmps426, "vdd-s8"),
++	RPMH_VREG("smps9",  "smp%s9",  &pmic4_ftsmps426, "vdd-s9"),
++	RPMH_VREG("smps10", "smp%s10", &pmic4_ftsmps426, "vdd-s10"),
++	RPMH_VREG("smps11", "smp%s11", &pmic4_ftsmps426, "vdd-s11"),
++	RPMH_VREG("smps12", "smp%s12", &pmic4_ftsmps426, "vdd-s12"),
++	RPMH_VREG("smps13", "smp%s13", &pmic4_ftsmps426, "vdd-s13"),
++	RPMH_VREG("ldo1",   "ldo%s1",  &pmic4_nldo,      "vdd-l1-l27"),
++	RPMH_VREG("ldo2",   "ldo%s2",  &pmic4_nldo,      "vdd-l2-l8-l17"),
++	RPMH_VREG("ldo3",   "ldo%s3",  &pmic4_nldo,      "vdd-l3-l11"),
++	RPMH_VREG("ldo4",   "ldo%s4",  &pmic4_nldo,      "vdd-l4-l5"),
++	RPMH_VREG("ldo5",   "ldo%s5",  &pmic4_nldo,      "vdd-l4-l5"),
++	RPMH_VREG("ldo6",   "ldo%s6",  &pmic4_pldo,      "vdd-l6"),
++	RPMH_VREG("ldo7",   "ldo%s7",  &pmic4_pldo_lv,   "vdd-l7-l12-l14-l15"),
++	RPMH_VREG("ldo8",   "ldo%s8",  &pmic4_nldo,      "vdd-l2-l8-l17"),
++	RPMH_VREG("ldo9",   "ldo%s9",  &pmic4_pldo,      "vdd-l9"),
++	RPMH_VREG("ldo10",  "ldo%s10", &pmic4_pldo,      "vdd-l10-l23-l25"),
++	RPMH_VREG("ldo11",  "ldo%s11", &pmic4_nldo,      "vdd-l3-l11"),
++	RPMH_VREG("ldo12",  "ldo%s12", &pmic4_pldo_lv,   "vdd-l7-l12-l14-l15"),
++	RPMH_VREG("ldo13",  "ldo%s13", &pmic4_pldo,      "vdd-l13-l19-l21"),
++	RPMH_VREG("ldo14",  "ldo%s14", &pmic4_pldo_lv,   "vdd-l7-l12-l14-l15"),
++	RPMH_VREG("ldo15",  "ldo%s15", &pmic4_pldo_lv,   "vdd-l7-l12-l14-l15"),
++	RPMH_VREG("ldo16",  "ldo%s16", &pmic4_pldo,      "vdd-l16-l28"),
++	RPMH_VREG("ldo17",  "ldo%s17", &pmic4_nldo,      "vdd-l2-l8-l17"),
++	RPMH_VREG("ldo18",  "ldo%s18", &pmic4_pldo,      "vdd-l18-l22"),
++	RPMH_VREG("ldo19",  "ldo%s19", &pmic4_pldo,      "vdd-l13-l19-l21"),
++	RPMH_VREG("ldo20",  "ldo%s20", &pmic4_pldo,      "vdd-l20-l24"),
++	RPMH_VREG("ldo21",  "ldo%s21", &pmic4_pldo,      "vdd-l13-l19-l21"),
++	RPMH_VREG("ldo22",  "ldo%s22", &pmic4_pldo,      "vdd-l18-l22"),
++	RPMH_VREG("ldo23",  "ldo%s23", &pmic4_pldo,      "vdd-l10-l23-l25"),
++	RPMH_VREG("ldo24",  "ldo%s24", &pmic4_pldo,      "vdd-l20-l24"),
++	RPMH_VREG("ldo25",  "ldo%s25", &pmic4_pldo,      "vdd-l10-l23-l25"),
++	RPMH_VREG("ldo26",  "ldo%s26", &pmic4_nldo,      "vdd-l26"),
++	RPMH_VREG("ldo27",  "ldo%s27", &pmic4_nldo,      "vdd-l1-l27"),
++	RPMH_VREG("ldo28",  "ldo%s28", &pmic4_pldo,      "vdd-l16-l28"),
++	RPMH_VREG("lvs1",   "vs%s1",   &pmic4_lvs,       "vin-lvs-1-2"),
++	RPMH_VREG("lvs2",   "vs%s2",   &pmic4_lvs,       "vin-lvs-1-2"),
++	{},
++};
++
++static const struct rpmh_vreg_init_data pmi8998_vreg_data[] = {
++	RPMH_VREG("bob",    "bob%s1",  &pmic4_bob,       "vdd-bob"),
++	{},
++};
++
++static const struct rpmh_vreg_init_data pm8005_vreg_data[] = {
++	RPMH_VREG("smps1",  "smp%s1",  &pmic4_ftsmps426, "vdd-s1"),
++	RPMH_VREG("smps2",  "smp%s2",  &pmic4_ftsmps426, "vdd-s2"),
++	RPMH_VREG("smps3",  "smp%s3",  &pmic4_ftsmps426, "vdd-s3"),
++	RPMH_VREG("smps4",  "smp%s4",  &pmic4_ftsmps426, "vdd-s4"),
++	{},
++};
++
++static int rpmh_regulator_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct rpmh_vreg_init_data *vreg_data;
++	struct device_node *node;
++	struct rpmh_vreg *vreg;
++	const char *pmic_id;
++	int ret;
++
++	ret = cmd_db_ready();
++	if (ret < 0) {
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "Command DB not available, ret=%d\n", ret);
++		return ret;
++	}
++
++	vreg_data = of_device_get_match_data(dev);
++	if (!vreg_data)
++		return -ENODEV;
++
++	ret = of_property_read_string(dev->of_node, "qcom,pmic-id", &pmic_id);
++	if (ret < 0) {
++		dev_err(dev, "qcom,pmic-id missing in DT node\n");
++		return ret;
++	}
++
++	for_each_available_child_of_node(dev->of_node, node) {
++		vreg = devm_kzalloc(dev, sizeof(*vreg), GFP_KERNEL);
++		if (!vreg) {
++			of_node_put(node);
++			return -ENOMEM;
++		}
++
++		ret = rpmh_regulator_init_vreg(vreg, dev, node, pmic_id,
++						vreg_data);
++		if (ret < 0) {
++			of_node_put(node);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct of_device_id rpmh_regulator_match_table[] = {
++	{
++		.compatible = "qcom,pm8998-rpmh-regulators",
++		.data = pm8998_vreg_data,
++	},
++	{
++		.compatible = "qcom,pmi8998-rpmh-regulators",
++		.data = pmi8998_vreg_data,
++	},
++	{
++		.compatible = "qcom,pm8005-rpmh-regulators",
++		.data = pm8005_vreg_data,
++	},
++	{}
++};
++MODULE_DEVICE_TABLE(of, rpmh_regulator_match_table);
++
++static struct platform_driver rpmh_regulator_driver = {
++	.driver = {
++		.name = "qcom-rpmh-regulator",
++		.of_match_table	= of_match_ptr(rpmh_regulator_match_table),
++	},
++	.probe = rpmh_regulator_probe,
++};
++module_platform_driver(rpmh_regulator_driver);
++
++MODULE_DESCRIPTION("Qualcomm RPMh regulator driver");
++MODULE_LICENSE("GPL v2");
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
