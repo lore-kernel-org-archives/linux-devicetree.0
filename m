@@ -1,214 +1,110 @@
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH 02/20] coresight: of: Fix refcounting for graph nodes
-Date: Fri, 8 Jun 2018 13:55:30 -0600
-Message-ID: <20180608195530.GB30587@xps15>
+Subject: Re: [PATCH 03/20] coresight: Fix remote endpoint parsing
+Date: Fri, 8 Jun 2018 14:05:03 -0600
+Message-ID: <20180608200503.GC30587@xps15>
 References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-3-git-send-email-suzuki.poulose@arm.com>
+ <1528235011-30691-4-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1528235011-30691-3-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1528235011-30691-4-git-send-email-suzuki.poulose@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org
+Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, coresight@lists.linaro.org, john.horley@arm.com, linux-kernel@vger.kernel.org, arm@kernel.org, sudeep.holla@arm.com, matt.sealey@arm.com, mike.leach@linaro.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org, charles.garcia-tobin@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 05, 2018 at 10:43:13PM +0100, Suzuki K Poulose wrote:
-> The coresight driver doesn't drop the references on the
-> remote endpoint/port nodes. Add the missing of_node_put()
-> calls. To make it easier to handle different corner cases
-> cleanly, move the parsing of an endpoint to separate
-> function.
-
-Please split this as those are two different things.
-
+On Tue, Jun 05, 2018 at 10:43:14PM +0100, Suzuki K Poulose wrote:
+> When parsing the remote endpoint of an output port, we do :
+>      rport = of_graph_get_remote_port(ep);
+>      rparent = of_graph_get_remote_port_parent(ep);
 > 
-> Reported-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> and then parse the "remote_port" as if it was the remote endpoint,
+> which is wrong. The code worked fine because we used endpoint number
+> as the port number. Let us fix it and optimise a bit as:
+> 
+>      remote_ep = of_graph_get_remote_endpoint(ep);
+>      if (remote_ep)
+>         remote_parent = of_graph_get_port_parent(remote_ep);
+> 
+> and then, parse the remote_ep for the port/endpoint details.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
->  drivers/hwtracing/coresight/of_coresight.c | 139 +++++++++++++++++------------
->  1 file changed, 84 insertions(+), 55 deletions(-)
+>  drivers/hwtracing/coresight/of_coresight.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 > 
 > diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> index a33a92e..8a23c63 100644
+> index 8a23c63..ada4f07 100644
 > --- a/drivers/hwtracing/coresight/of_coresight.c
 > +++ b/drivers/hwtracing/coresight/of_coresight.c
-> @@ -111,17 +111,80 @@ int of_coresight_get_cpu(const struct device_node *node)
->  }
->  EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
->  
-> +/*
-> + * of_coresight_parse_endpoint : Parse the given output endpoint @ep
-> + * and fill the connection information in @pdata[*@i].
-> + *
-> + * Parses the local port, remote device name and the remote port. Also
-> + * updates *@i to point to the next index, when an entry is added.
-> + *
-> + * Returns :
-> + *	 0	- If the parsing completed without any fatal errors.
-> + *	-Errno	- Fatal error, abort the scanning.
-> + */
-> +static int of_coresight_parse_endpoint(struct device_node *ep,
-> +				       struct coresight_platform_data *pdata,
-> +				       int *i)
-> +{
-> +	int ret = 0;
-> +	struct of_endpoint endpoint, rendpoint;
-> +	struct device_node *rparent = NULL;
-> +	struct device_node *rport = NULL;
-> +	struct device *rdev = NULL;
-> +
-> +	do {
-> +		/*
-> +		 * No need to deal with input ports, processing for as
-> +		 * processing for output ports will deal with them.
-> +		 */
-> +		if (of_find_property(ep, "slave-mode", NULL))
-> +			break;
-> +
-> +		/* Parse the local port details */
-> +		if (of_graph_parse_endpoint(ep, &endpoint))
-> +			break;
-> +		/*
-> +		 * Get a handle on the remote port and parent
-> +		 * attached to it.
-> +		 */
-> +		rparent = of_graph_get_remote_port_parent(ep);
-> +		if (!rparent)
-> +			break;
-> +		rport = of_graph_get_remote_port(ep);
-> +		if (!rport)
-> +			break;
-> +		if (of_graph_parse_endpoint(rport, &rendpoint))
-> +			break;
-> +
-> +		/* If the remote device is not available, defer probing */
-> +		rdev = of_coresight_get_endpoint_device(rparent);
-> +		if (!rdev) {
-> +			ret = -EPROBE_DEFER;
-> +			break;
-> +		}
-> +
-> +		pdata->outports[*i] = endpoint.port;
-> +		pdata->child_names[*i] = dev_name(rdev);
-> +		pdata->child_ports[*i] = rendpoint.id;
-> +		/* Move the index */
-> +		(*i)++;
-> +	} while (0);
-
-That's a clever way of coding a classic 'goto' block.
-
-> +
-> +	if (rparent)
-> +		of_node_put(rparent);
-> +	if (rport)
-> +		of_node_put(rport);
-
-Perfect - thank you for that.
-
-> +
-> +	return ret;
-> +}
-> +
->  struct coresight_platform_data *
->  of_get_coresight_platform_data(struct device *dev,
->  			       const struct device_node *node)
->  {
->  	int i = 0, ret = 0;
->  	struct coresight_platform_data *pdata;
-> -	struct of_endpoint endpoint, rendpoint;
-> -	struct device *rdev;
->  	struct device_node *ep = NULL;
-> -	struct device_node *rparent = NULL;
+> @@ -129,7 +129,7 @@ static int of_coresight_parse_endpoint(struct device_node *ep,
+>  	int ret = 0;
+>  	struct of_endpoint endpoint, rendpoint;
+>  	struct device_node *rparent = NULL;
 > -	struct device_node *rport = NULL;
+> +	struct device_node *rep = NULL;
+>  	struct device *rdev = NULL;
 >  
->  	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->  	if (!pdata)
-> @@ -129,63 +192,29 @@ of_get_coresight_platform_data(struct device *dev,
->  
->  	/* Use device name as sysfs handle */
->  	pdata->name = dev_name(dev);
-> +	pdata->cpu = of_coresight_get_cpu(node);
->  
->  	/* Get the number of input and output port for this component */
->  	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
->  
-> -	if (pdata->nr_outport) {
-> -		ret = of_coresight_alloc_memory(dev, pdata);
-> +	/* If there are not output connections, we are done */
-
-/not/no
-
-> +	if (!pdata->nr_outport)
-> +		return pdata;
-> +
-> +	ret = of_coresight_alloc_memory(dev, pdata);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	/* Iterate through each port to discover topology */
-> +	do {
-> +		/* Get a handle on a port */
-> +		ep = of_graph_get_next_endpoint(node, ep);
-> +		if (!ep)
+>  	do {
+> @@ -144,16 +144,16 @@ static int of_coresight_parse_endpoint(struct device_node *ep,
+>  		if (of_graph_parse_endpoint(ep, &endpoint))
+>  			break;
+>  		/*
+> -		 * Get a handle on the remote port and parent
+> -		 * attached to it.
+> +		 * Get a handle on the remote endpoint and the device it is
+> +		 * attached to.
+>  		 */
+> -		rparent = of_graph_get_remote_port_parent(ep);
+> +		rep = of_graph_get_remote_endpoint(ep);
+> +		if (!rep)
 > +			break;
-> +		ret = of_coresight_parse_endpoint(ep, pdata, &i);
->  		if (ret)
->  			return ERR_PTR(ret);
-> -
-> -		/* Iterate through each port to discover topology */
-> -		do {
-> -			/* Get a handle on a port */
-> -			ep = of_graph_get_next_endpoint(node, ep);
-> -			if (!ep)
-> -				break;
-> -
-> -			/*
-> -			 * No need to deal with input ports, processing for as
-> -			 * processing for output ports will deal with them.
-> -			 */
-> -			if (of_find_property(ep, "slave-mode", NULL))
-> -				continue;
-> -
-> -			/* Get a handle on the local endpoint */
-> -			ret = of_graph_parse_endpoint(ep, &endpoint);
-> -
-> -			if (ret)
-> -				continue;
-> -
-> -			/* The local out port number */
-> -			pdata->outports[i] = endpoint.port;
-> -
-> -			/*
-> -			 * Get a handle on the remote port and parent
-> -			 * attached to it.
-> -			 */
-> -			rparent = of_graph_get_remote_port_parent(ep);
-> -			rport = of_graph_get_remote_port(ep);
-> -
-> -			if (!rparent || !rport)
-> -				continue;
-> -
-> -			if (of_graph_parse_endpoint(rport, &rendpoint))
-> -				continue;
-> -
-> -			rdev = of_coresight_get_endpoint_device(rparent);
-> -			if (!rdev)
-> -				return ERR_PTR(-EPROBE_DEFER);
-> -
-> -			pdata->child_names[i] = dev_name(rdev);
-> -			pdata->child_ports[i] = rendpoint.id;
-> -
-> -			i++;
-> -		} while (ep);
-> -	}
-> -
-> -	pdata->cpu = of_coresight_get_cpu(node);
-> +	} while (ep);
+> +		rparent = of_graph_get_port_parent(rep);
+>  		if (!rparent)
+>  			break;
+> -		rport = of_graph_get_remote_port(ep);
+> -		if (!rport)
+> -			break;
+> -		if (of_graph_parse_endpoint(rport, &rendpoint))
+> +		if (of_graph_parse_endpoint(rep, &rendpoint))
+>  			break;
 >  
->  	return pdata;
+>  		/* If the remote device is not available, defer probing */
+> @@ -165,15 +165,15 @@ static int of_coresight_parse_endpoint(struct device_node *ep,
+>  
+>  		pdata->outports[*i] = endpoint.port;
+>  		pdata->child_names[*i] = dev_name(rdev);
+> -		pdata->child_ports[*i] = rendpoint.id;
+> +		pdata->child_ports[*i] = rendpoint.port;
+>  		/* Move the index */
+>  		(*i)++;
+>  	} while (0);
+>  
+>  	if (rparent)
+>  		of_node_put(rparent);
+> -	if (rport)
+> -		of_node_put(rport);
+> +	if (rep)
+> +		of_node_put(rep);
+>  
+>  	return ret;
 >  }
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+(Please add to the next iteration so that I don't have to review again)
+
 > -- 
 > 2.7.4
 > 
