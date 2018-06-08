@@ -1,209 +1,146 @@
-Return-Path: <SRS0=7S3Z=IW=holtmann.org=marcel@kernel.org>
-Content-Type: text/plain;
-	charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.4 \(3445.8.2\))
-Subject: Re: [PATCH 01/13] dt-bindings: net: bluetooth: add support for
- Realtek Bluetooth chips
-From: Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <0d99e890-b93c-df55-ae43-8fc910778243@redhat.com>
-Date: Mon, 4 Jun 2018 12:17:25 +0200
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <14D10B2C-319C-4676-AE84-1D76AA603C3B@holtmann.org>
-References: <20180527190457.2632-1-hdegoede@redhat.com>
- <20180527190457.2632-2-hdegoede@redhat.com>
- <7A22F14E-9F45-4779-B7E5-CEB330A5601E@holtmann.org>
- <16b7e10b-6816-f441-00e5-9e86d1df33a7@redhat.com>
- <20180531164214.GA12210@rob-hp-laptop>
- <0d99e890-b93c-df55-ae43-8fc910778243@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Rob Herring <robh@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jeremy Cline <jeremy@jcline.org>, BlueZ development <linux-bluetooth@vger.kernel.org>, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+MIME-Version: 1.0
+In-Reply-To: <OSBPR01MB2054A701CF65784FAB947692D27B0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+References: <1528198148-23308-1-git-send-email-michel.pollet@bp.renesas.com>
+	<1528198148-23308-3-git-send-email-michel.pollet@bp.renesas.com>
+	<0481173f-6384-98d6-707c-89dc5ef103f0@gmail.com>
+	<OSBPR01MB2054E3A1E383495F3534B551D2650@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+	<9cef7124-3020-5741-f3a2-6925a6c8f0f3@gmail.com>
+	<79c0899e-7df1-1fe7-9681-ad3bd51feda7@gmail.com>
+	<OSBPR01MB205442B483C792125E6A6AF7D2640@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+	<CAL_JsqLn+x0JCkjwABU7XkPsgvyVdiCRq=gZTfUBbbR4-c+1bQ@mail.gmail.com>
+	<OSBPR01MB2054A701CF65784FAB947692D27B0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+Date: Fri, 8 Jun 2018 11:31:01 -0600
+Message-ID: <CAL_JsqK=i1Yr+v7YnK0=jWEZTUQLwi8fBpe5Lw+SOOhFd9-Ftg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] arm: shmobile: Add the R9A06G032 SMP enabler driver
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Michel Pollet <buserror+upstream@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Douglas Anderson <dianders@chromium.org>, Chen-Yu Tsai <wens@csie.org>, Carlo Caione <carlo@endlessm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Frank Rowand <frank.rowand@sony.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Hans,
-
->>>>> This adds the documentation for Bluetooth functionality of the =
-Realtek
->>>>> RTL8723BS and RTL8723DS.
->>>>> Both are SDIO wifi chips with an additional Bluetooth module which =
-is
->>>>> connected via UART to the host.
->>>>>=20
->>>>> Signed-off-by: Martin Blumenstingl =
-<martin.blumenstingl@googlemail.com>
->>>>> Signed-off-by: Jeremy Cline <jeremy@jcline.org>
->>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>> ---
->>>>> .../bindings/net/realtek-bluetooth.txt        | 41 =
-+++++++++++++++++++
->>>>> 1 file changed, 41 insertions(+)
->>>>> create mode 100644 =
-Documentation/devicetree/bindings/net/realtek-bluetooth.txt
->>>>>=20
->>>>> diff --git =
-a/Documentation/devicetree/bindings/net/realtek-bluetooth.txt =
-b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
->>>>> new file mode 100644
->>>>> index 000000000000..1491329c4cd1
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
->>>>> @@ -0,0 +1,41 @@
->>>>> +Realtek Bluetooth Chips
->>>>> +-----------------------
->>>>> +
->>>>> +This documents the binding structure and common properties for =
-serial
->>>>> +attached Realtek devices.
->>>>> +
->>>>> +Serial attached Realtek devices shall be a child node of the host =
-UART
->>>>> +device the slave device is attached to. See =
-../serial/slave-device.txt
->>>>> +for more information
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: should contain one of the following:
->>>>> +    * "realtek,rtl8723bs-bluetooth"
->>>>> +    * "realtek,rtl8723ds-bluetooth"
->>>>> +
->>>>> +Optional properties:
->>>>> +- realtek,config-data: Bluetooth chipset configuration data which =
-is
->>>>> +			needed for communication (it typically contains
->>>>> +			board specific settings like the baudrate and
->>>>> +			whether flow-control is used).
->>>>> +			This is an array of u8 values.
->>>>> +- enable-gpios: GPIO specifier, used to enable/disable the BT =
-module
->>>>> +- reset-gpios: GPIO specifier, used to reset the BT module
->>>>> +
->>>>> +
->>>>> +Example:
->>>>> +
->>>>> +&uart {
->>>>> +	...
->>>>> +
->>>>> +	bluetooth {
->>>>> +		compatible =3D "realtek,rtl8723bs-bluetooth";
->>>>> +		enable-gpios =3D <&gpio 20 GPIO_ACTIVE_HIGH>;
->>>>> +		reset-gpios =3D <&gpio 11 GPIO_ACTIVE_HIGH>;
->>>>> +		realtek,config-data =3D /bits/ 8 <
->>>>> +			0x55 0xab 0x23 0x87 0x29 0x00 0xf4 0x00 0x01 =
-0x01 0xf6 0x00
->>>>> +			0x02 0x81 0x00 0xfa 0x00 0x02 0x12 0x80 0x0c =
-0x00 0x10 0x02
->>>>> +			0x80 0x92 0x04 0x50 0xc5 0xea 0x19 0xe1 0x1b =
-0xfd 0xaf 0x5f
->>>>> +			0x01 0xa4 0x0b 0xd9 0x00 0x01 0x0f 0xe4 0x00 =
-0x01 0x08>;
->>>>> +	};
->>>>> +};
->>>>=20
->>>> we actually need to agree on this config-data. As I wrote in an =
-earlier email some time ago, the actual config-data files are just =
-memory portions that will overload the default config area. I wrote =
-tools/rtlfw.c to parse these.
->>>>=20
->>>> So now I wonder if we can just read the current configuration and =
-run with that when no extra blob is provided. That way it would always =
-work and we might just give the config-data filename here. Mostly this =
-is the for PCM and UART settings anyway.
->>>=20
->>> I've been thinking about this too and 2 different solutions come to =
-mind.
->>>=20
->>> Note this is all x86 specific, I think it best to solve this for x86 =
-first
->>> and then we can apply the lessons learned there to ARM/devicetree =
-when
->>> someone comes along who wants to hook-up things on ARM.
->>>=20
->>> My first idea was to stick with a config blob using the =
-firmware_load
->>> mechanism, but to add a postfix to the filename based on the ACPI
->>> HID (hardware-id) of the serdev device, so in practice this means
->>> we would try to load:
->>>=20
->>> /lib/firmware/rtl_bt/rtl8723bs_config-OBDA8723.bin
->>>=20
->>> On most x86 devices, so far all my testing on a bunch of different
->>> devices has shown that the same config works for all x86 devices
->>> (I took the config from a Chuwi Vi8 tablet which uses 3000000bps
->>> + hardware flowcontrol).
->>>=20
->>> This way we can put the config in linux-firmware, without it
->>> getting loaded on ARM boards where it might very well be wrong.
->>>=20
->>>=20
->>> My second idea is to include a default config inside the driver,
->>> which can be optionally overridden by a file in
->>> /lib/firmware/rtl_bt and/or dt. Combined with module-options to
->>> override the baudrate and flowcontrol setting (and patch the
->>> builtin config accordingly).
->>>=20
->>>=20
->>> Your idea to read back the config from the device is also
->>> interesting, but I don't think that will gain us anything because
->>> AFAIK the whole purpose of the board specific config file
->>> bits is that the chip lack eeprom space to store this info,
->>> so we will just always get some generic defaults.
->>>=20
->>>=20
->>> I've run your rtlfw tool on a bunch of different config files and
->>> there are a lot of unknown fields, and even of the known fields
->>> I don't think we understand all the bits. So all in all the
->>> config file is a bit of a black box and as such I believe it
->>> would be best to just treat it as such and I personally
->>> prefer my first idea, which is to add a postfix to the
->>> firmware filename request, so on x86 load:
->>>=20
->>> /lib/firmware/rtl_bt/rtl8723bs_config-OBDA8723.bin
->>>=20
->>> And on devicetree we could postfix things with the machine
->>> model string (as returned by  of_flat_dt_get_machine_name())
->> If the firmware file is going to depend on the DT, then you might as
->> well just put the data into the DT.
->=20
-> Ok, note we don't need the entire firmware in DT, just a (binary
-> format) config file for the firmware. The question is if we are
-> going to try and break up the info from the config-file and then
-> regenerate it inside the kernel driver. Or if we are just going
-> to put the say 60 bytes in DT as an u8 array as the original
-> binding proposed by Martin Blumenstingl suggests.
->=20
-> Since we only know the meaning for a couple of the bytes in
-> the file, which is typically 40 - 60 bytes big, I think it
-> is probably best to just treat it as a blob.
-
-wouldn=E2=80=99t it be still better to then just reference the firmware =
-file or an identifier to build it? Putting the pure binary blob into the =
-DT seems kinda counterproductive and hardware to update. After all it =
-most likely depends on the firmware loaded since it is the config ram =
-space that this changes.
-
-As a note, there are some hints that the config file is required for =
-some firmware since it changes some memory around to make it successful =
-boot.
-
->> There's a similar issue on QCom Dragonboards. The WiFi (and BT?)
->> firmware files are supposedly board specific, so folks don't want to =
-put
->> them into linux-firmware. But it also seems to be unknown as to which
->> parts are board specific are not.
->=20
-> In my experience with broadcom and now the rtl8723bs the
-> actual firmware and the needed config data are separate.
->=20
-> Hmm that is actually no entirely true, for broadcom the
-> bluetooth patchram file depends on the clockcrystal freq
-> used on the board, so there are 2 versions of it for a
-> single chip, 1 for each of the 2 different freqs used.
-
-are you using .hex or .hcd files for Broadcom? The .hex files are pure =
-patchram, while the .hcd can actually contain extra HCI commands. I =
-remember that some .hcd files contain also HCI commands to do extra =
-settings. Maybe we need a tool that shows the details of these files. We =
-have this for nokfw and rtlfw now.
-
-Regards
-
-Marcel
+On Fri, Jun 8, 2018 at 12:50 AM, Michel Pollet <michel.pollet@bp.renesas.com> wrote:
+>
+> On 07 June 2018 16:55, Rob wrote:
+>>
+>> On Thu, Jun 7, 2018 at 1:59 AM, Michel Pollet
+>> <michel.pollet@bp.renesas.com> wrote:
+>> > On 06 June 2018 22:53, Frank wrote:
+>> >> On 06/06/18 14:48, Frank Rowand wrote:
+>> >> > On 06/05/18 23:36, Michel Pollet wrote:
+>> >> >> Hi Frank,
+>> >> >>
+>> >> >> On 05 June 2018 18:34, Frank wrote:
+>> >> >>> On 06/05/18 04:28, Michel Pollet wrote:
+>> >> >>>> The Renesas R9A06G032 second CA7 is parked in a ROM pen at boot
+>> >> >>>> time, it requires a special enable method to get it started.
+>>
+>> [...]
+>>
+>> >> >>>> + * The second CPU is parked in ROM at boot time. It requires
+>> >> >>>> +waking it after
+>> >> >>>> + * writing an address into the BOOTADDR register of sysctrl.
+>> >> >>>> + *
+>> >> >>>> + * So the default value of the "cpu-release-addr" corresponds
+>> >> >>>> +to
+>> >> >>> BOOTADDR...
+>> >> >>>> + *
+>> >> >>>> + * *However* the BOOTADDR register is not available when the
+>> >> >>>> +kernel
+>> >> >>>> + * starts in NONSEC mode.
+>> >> >>>> + *
+>> >> >>>> + * So for NONSEC mode, the bootloader re-parks the second CPU
+>> >> >>>> +into a pen
+>> >> >>>> + * in SRAM, and changes the "cpu-release-addr" of linux's DT to
+>> >> >>>> +a SRAM address,
+>> >> >>>> + * which is not restricted.
+>> >> >>>
+>> >> >>> The binding document for cpu-release-addr does not have a
+>> >> >>> definition for 32 bit arm.  The existing definition is only 64
+>> >> >>> bit arm.  Please add the definition for 32 bit arm to patch 1.
+>> >> >>
+>> >> >> Hmmm I do find a definition in
+>> >> >> Documentation/devicetree/bindings/arm/cpus.txt -- just under where
+>> >> >> I added my 'enable-method' -- And it is already used as 32 bits in
+>> >> >> at least arch/arm/boot/dts/stih407-family.dtsi.
+>> >> >
+>> >> > If the correct answer is for cpu-release-addr to be 64 bits in
+>> >> > certain cases (that discussion is ongoing further downthread) then
+>> >> > one approach to maintain compatibility _and_ to fix the devicetree
+>> >> > source files is to change the source code that currently gets
+>> >> > cpu-release-addr as a
+>> >> > 32 bit object to check the size of the property and get it as
+>> >> > either a
+>> >> > 32 bit or 64 bit object, based on the actual size of the property
+>> >> > in the device tree and then change the value in the devicetree
+>> >> > source files to be two cells.  BUT this does not consider the
+>> >> > bootloader complication.  arch/arm/boot/dts/axm5516-cpus.dtsi has a
+>> >> > note "// Fixed by the boot loader", so the boot loader also has to
+>> >> > be modified to be able to handle the possibility that the property
+>> >> > could be either
+>> >> > 32 bits or 64 bits.  I don't know how to maintain compatibility
+>> >> > with the boot loader since we can't force it to change
+>> >> > synchronously with changes in the kernel.
+>> >> >
+>> >> > You can consider this comment to be a drive-by observation.  I
+>> >> > think Rob and Geert and people like that are likely to be more
+>> >> > helpful with what to actually do, and you can treat my comment more
+>> >> > as pointing out the issue than as providing the perfect solution.
+>> >>
+>> >> Darn it, hit <send> too quickly.
+>> >>
+>> >> I meant to mention that there are several devicetree source files
+>> >> that have a single cell value for cpu-release-addr, and thus
+>> >> potentially face the same situation, depending on what the final
+>> >> decision is on the proper size for cpu- release-addr. As of v4.17, a git grep
+>> shows one cell values in:
+>> >>
+>> >>   arch/arm/boot/dts/axm5516-cpus.dtsi
+>> >>   arch/arm/boot/dts/stih407-family.dtsi
+>> >>   arch/arm/boot/dts/stih418.dtsi
+>> >
+>> > Yes, I had grepped before I used 32 bits on mine...
+>> >
+>> > Now, what is the decision here? Our bootloader is already modified to
+>> > set it to 32 bits, so I propose that
+>>
+>> And too late to fix the bootloader?
+>
+>
+> Well not too late, but read further on...
+>
+>>
+>> >
+>> > + I change the driver to handle 32 and 64 bits properties
+>>
+>> That's fine if you can't fix the bootloader.
+>>
+>> > + I add this to the cpu.txt, as a separate patch:
+>> > # On other systems, the property can be either
+>> >   32 bits or 64 bits, it is the driver's responsibility
+>> >   to deal with either sizes.
+>>
+>> That is definitely not what we want to say. Use of 32-bit should be
+>> considered out of spec. Yes, we have a few platforms in that category, but
+>> they already handle that themselves. Would be nice to fix them, but at least
+>> the STi platforms don't seem too active.
+>>
+>> IMO, we should delete whatever text we can here and at most just refer to
+>> the spec.
+>
+> So actually I didn't use 32 bits by plain chance, I read the cpu.txt file which says
+> that 64 bits systems use 64 bits property, concluded that in my case I ought to
+> use 32 bits, then grepped around and found other systems using 32 bits, therefore
+> I went forward and used it..
+>
+> Nothing said here that it should be 64 bits everywhere -- So the documentation
+> needs fixing somehow. Right now it certainly led me wrong.
+>
+>>
+>> Rob
+>
+> Michel
+>
+>
+>
+>
+> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
