@@ -1,63 +1,35 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 4/6] bus: ti-sysc: Add support for software reset
-Date: Thu, 7 Jun 2018 23:21:58 -0700
-Message-ID: <20180608062158.GI5738@atomide.com>
-References: <20180606060826.14671-1-faiz_abbas@ti.com>
- <20180606060826.14671-5-faiz_abbas@ti.com>
- <20180607073530.GH5738@atomide.com>
- <a169ba7f-53f2-cf9a-a9ee-daffd6b53279@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v2 0/4] clk: rockchip: support clock controller for px30 SoC
+Date: Fri,  8 Jun 2018 14:31:55 +0800
+Message-ID: <1528439519-30135-1-git-send-email-zhangqing@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a169ba7f-53f2-cf9a-a9ee-daffd6b53279@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mark.rutland@arm.com, paul@pwsan.com, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com
+To: heiko@sntech.de
+Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [180607 10:24]:
-> Hi,
-> 
-> On Thursday 07 June 2018 01:05 PM, Tony Lindgren wrote:
-> > * Faiz Abbas <faiz_abbas@ti.com> [180606 06:14]:
-> >> +static int sysc_reset(struct sysc *ddata)
-> >> +{
-> >> +	int offset = ddata->offsets[SYSC_SYSCONFIG];
-> >> +	int val = sysc_read(ddata, offset);
-> >> +
-> >> +	val |= (0x1 << ddata->cap->regbits->srst_shift);
-> >> +	sysc_write(ddata, offset, val);
-> >> +
-> >> +	/* Poll on reset status */
-> >> +	if (ddata->cfg.quirks & SYSC_QUIRK_RESET_STATUS) {
-> >> +		offset = ddata->offsets[SYSC_SYSSTATUS];
-> >> +
-> >> +		return readl_poll_timeout(ddata->module_va + offset, val,
-> >> +				(val & ddata->cfg.syss_mask) == 0x0,
-> >> +				100, MAX_MODULE_SOFTRESET_WAIT);
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> > 
-> > I wonder if we should also add SYSS_QUIRK_RESET_STATUS in
-> > addition to SYSC_QUIRK_RESET status to make it easy to
-> > read the right register?
-> 
-> I assumed SYSC_QUIRK is the prefix to indicate the ti-sysc driver not
-> the register. Are there layouts in which the reset status bit is in the
-> sysconfig register rather than the sysstatus register?
+Change in V2:
+[PATCH v2 2/4]: modify the Author name
+[PATCH v2 3/4]: provide a bit more explanation for commit message
 
-Yes we can have reset status bit in either syss or syssconfig register.
-We detect that in sysc_init_syss_mask() but we should also set something
-at that point to make it clear which reset to use. But as we don't need
-the quirk flag, it's probably set a function pointer after the detection.
-So how about let's have two functions sysc_reset() and sysc_syss_reset()
-and then we can implement sysc_syss_reset() in a separate patch after
-testing it when we have a non-platform data using example for
-sysc_syss_reset().
+Elaine Zhang (4):
+  dt-bindings: add bindings for px30 clock controller
+  clk: rockchip: add dt-binding header for px30
+  clk: rockchip: add support for half divider
+  clk: rockchip: add clock controller for px30
 
-Regards,
+ .../bindings/clock/rockchip,px30-cru.txt           |   67 ++
+ drivers/clk/rockchip/Makefile                      |    2 +
+ drivers/clk/rockchip/clk-half-divider.c            |  235 +++++
+ drivers/clk/rockchip/clk-px30.c                    | 1080 ++++++++++++++++++++
+ drivers/clk/rockchip/clk.c                         |   10 +
+ drivers/clk/rockchip/clk.h                         |   86 +-
+ include/dt-bindings/clock/px30-cru.h               |  402 ++++++++
+ 7 files changed, 1881 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
+ create mode 100644 drivers/clk/rockchip/clk-half-divider.c
+ create mode 100644 drivers/clk/rockchip/clk-px30.c
+ create mode 100644 include/dt-bindings/clock/px30-cru.h
 
-Tony
+-- 
+1.9.1
