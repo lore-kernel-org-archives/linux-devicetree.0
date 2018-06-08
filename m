@@ -1,23 +1,23 @@
 Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
 From: Argus Lin <argus.lin@mediatek.com>
 Subject: [PATCH V5 3/4] soc: mediatek: pwrap: add pwrap driver for mt6797 SoCs
-Date: Fri, 8 Jun 2018 16:17:08 +0800
-Message-ID: <1528445829-8866-4-git-send-email-argus.lin@mediatek.com>
-In-Reply-To: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
-References: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
+Date: Fri, 8 Jun 2018 15:39:53 +0800
+Message-ID: <1528443594-6978-4-git-send-email-argus.lin@mediatek.com>
+In-Reply-To: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
+References: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_008_757788191.841521843"
+	boundary="__=_Part_Boundary_007_260659621.607134291"
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_008_757788191.841521843
+--__=_Part_Boundary_007_260659621.607134291
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_009_1341963364.360382054"
+	boundary="__=_Part_Boundary_008_556418710.1370348721"
 
---__=_Part_Boundary_009_1341963364.360382054
+--__=_Part_Boundary_008_556418710.1370348721
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -98,7 +98,7 @@ ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QNCmRpc2Ns
 b3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24uIFRoYW5r
 DQogeW91ITwvcHJlPjwhLS19LS0+
 
---__=_Part_Boundary_009_1341963364.360382054
+--__=_Part_Boundary_008_556418710.1370348721
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -162,6 +162,6 @@ LA0KKwkJLmRhdGEgPSAmcHdyYXBfbXQ2Nzk3LA0KKwl9LCB7DQogCQkuY29tcGF0aWJsZSA9ICJt
 ZWRpYXRlayxtdDc2MjItcHdyYXAiLA0KIAkJLmRhdGEgPSAmcHdyYXBfbXQ3NjIyLA0KIAl9LCB7
 DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
---__=_Part_Boundary_009_1341963364.360382054--
+--__=_Part_Boundary_008_556418710.1370348721--
 
---__=_Part_Boundary_008_757788191.841521843--
+--__=_Part_Boundary_007_260659621.607134291--
