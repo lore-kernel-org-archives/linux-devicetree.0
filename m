@@ -1,75 +1,188 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: Re: [PATCH v4 8/9] drm/mediatek: add third ddp path
-Date: Fri, 8 Jun 2018 16:31:24 +0800
-Message-ID: <1528446684.11190.22.camel@mtksdccf07>
+Subject: Re: [PATCH v4 9/9] drm/mediatek: Add support for mediatek SOC MT2712
+Date: Fri, 8 Jun 2018 16:38:18 +0800
+Message-ID: <1528447098.11190.26.camel@mtksdccf07>
 References: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
- <1527489507-24453-9-git-send-email-stu.hsieh@mediatek.com>
- <1527493677.24367.10.camel@mtksdaap41>
+         <1527489507-24453-10-git-send-email-stu.hsieh@mediatek.com>
+         <1527494014.24367.14.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1527493677.24367.10.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1527494014.24367.14.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
 To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE4LTA1LTI4IGF0IDE1OjQ3ICswODAwLCBDSyBIdSB3cm90ZToKPiBIaSwgU3R1
-Ogo+IAo+IE9uZSBpbmxpbmUgY29tbWVudC4KPiAKPiBPbiBNb24sIDIwMTgtMDUtMjggYXQgMTQ6
-MzggKzA4MDAsIFN0dSBIc2llaCB3cm90ZToKPiA+IFRoaXMgcGF0Y2ggY3JlYXRlIHRoaXJkIGNy
-dGMgYnkgdGhpcmQgZGRwIHBhdGgKPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogU3R1IEhzaWVoIDxz
-dHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fY3J0Yy5jIHwgMyArKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kcnYuYyAgfCA1ICsrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZHJ2LmggIHwgNyArKysrKy0tCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRp
-b25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fY3J0Yy5jCj4gPiBpbmRleCA2NThiOGRkNDViODMuLjJkNmFhMTUwYTlmZiAxMDA2NDQK
-PiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYwo+ID4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jCj4gPiBAQCAtNTM5LDYg
-KzUzOSw5IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1f
-ZGV2LAo+ID4gIAlpbnQgcmV0Owo+ID4gIAlpbnQgaTsKPiA+ICAKPiA+ICsJaWYgKCFwYXRoKQo+
-ID4gKwkJcmV0dXJuIDA7Cj4gPiArCj4gPiAgCWZvciAoaSA9IDA7IGkgPCBwYXRoX2xlbjsgaSsr
-KSB7Cj4gPiAgCQllbnVtIG10a19kZHBfY29tcF9pZCBjb21wX2lkID0gcGF0aFtpXTsKPiA+ICAJ
-CXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZTsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2Rydi5jCj4gPiBpbmRleCAwOGQ1ZDBiNDdiZmUuLjNkMjc5YTI5OTM4MyAxMDA2NDQKPiA+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4gPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYwo+ID4gQEAgLTIzMiw2ICsyMzIs
-MTEgQEAgc3RhdGljIGludCBtdGtfZHJtX2ttc19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0p
-Cj4gPiAgCWlmIChyZXQgPCAwKQo+ID4gIAkJZ290byBlcnJfY29tcG9uZW50X3VuYmluZDsKPiA+
-ICAKPiA+ICsJcmV0ID0gbXRrX2RybV9jcnRjX2NyZWF0ZShkcm0sIHByaXZhdGUtPmRhdGEtPnRo
-aXJkX3BhdGgsCj4gPiArCQkJCSAgcHJpdmF0ZS0+ZGF0YS0+dGhpcmRfbGVuKTsKPiA+ICsJaWYg
-KHJldCA8IDApCj4gPiArCQlnb3RvIGVycl9jb21wb25lbnRfdW5iaW5kOwo+ID4gKwo+ID4gIAkv
-KiBVc2UgT1ZMIGRldmljZSBmb3IgYWxsIERNQSBtZW1vcnkgYWxsb2NhdGlvbnMgKi8KPiA+ICAJ
-bnAgPSBwcml2YXRlLT5jb21wX25vZGVbcHJpdmF0ZS0+ZGF0YS0+bWFpbl9wYXRoWzBdXSA/Ogo+
-ID4gIAkgICAgIHByaXZhdGUtPmNvbXBfbm9kZVtwcml2YXRlLT5kYXRhLT5leHRfcGF0aFswXV07
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2Lmgg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaAo+ID4gaW5kZXggYzMzNzhj
-NDUyYzBhLi5kODY3ZTI2ODM5MjMgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kcnYuaAo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZHJ2LmgKPiA+IEBAIC0xNyw4ICsxNyw4IEBACj4gPiAgI2luY2x1ZGUgPGxpbnV4L2lv
-Lmg+Cj4gPiAgI2luY2x1ZGUgIm10a19kcm1fZGRwX2NvbXAuaCIKPiA+ICAKPiA+IC0jZGVmaW5l
-IE1BWF9DUlRDCTIKPiA+IC0jZGVmaW5lIE1BWF9DT05ORUNUT1IJMgo+ID4gKyNkZWZpbmUgTUFY
-X0NSVEMJMwo+ID4gKyNkZWZpbmUgTUFYX0NPTk5FQ1RPUgkzCj4gCj4gTUFYX0NPTk5FQ1RPUiBp
-cyB1c2VsZXNzLCBtYXliZSB3ZSBqdXN0IG5lZWQgdG8gcmVtb3ZlIGl0IGluIGEgY2xlYW4gdXAK
-PiBwYXRjaC4gT3IgeW91IGNvdWxkIGtlZXAgaXRzIHZhbHVlLgpvawpGb3IgdGhpcyBwYXRjaCwg
-SSB3b3VsZCBrZWVwIGl0cyB2YWx1ZS4KClJlZ2FyZHMsClN0dQoKPiAKPiBSZWdhcmRzLAo+IENL
-Cj4gCj4gPiAgCj4gPiAgc3RydWN0IGRldmljZTsKPiA+ICBzdHJ1Y3QgZGV2aWNlX25vZGU7Cj4g
-PiBAQCAtMzMsNiArMzMsOSBAQCBzdHJ1Y3QgbXRrX21tc3lzX2RyaXZlcl9kYXRhIHsKPiA+ICAJ
-dW5zaWduZWQgaW50IG1haW5fbGVuOwo+ID4gIAljb25zdCBlbnVtIG10a19kZHBfY29tcF9pZCAq
-ZXh0X3BhdGg7Cj4gPiAgCXVuc2lnbmVkIGludCBleHRfbGVuOwo+ID4gKwljb25zdCBlbnVtIG10
-a19kZHBfY29tcF9pZCAqdGhpcmRfcGF0aDsKPiA+ICsJdW5zaWduZWQgaW50IHRoaXJkX2xlbjsK
-PiA+ICsKPiA+ICAJYm9vbCBzaGFkb3dfcmVnaXN0ZXI7Cj4gPiAgfTsKPiA+ICAKPiAKPiAKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi, CK:
+
+
+On Mon, 2018-05-28 at 15:53 +0800, CK Hu wrote:
+> Hi, Stu:
+> 
+> Two inline comment.
+> 
+> On Mon, 2018-05-28 at 14:38 +0800, Stu Hsieh wrote:
+> > This patch add support for the Mediatek MT2712 DISP subsystem.
+> > There are two OVL engine and three disp output in MT2712.
+> > 
+> > Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 39 ++++++++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 38 +++++++++++++++++++++++++++++++++
+> >  2 files changed, 77 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > index 8bfc0debd2c2..3b22b48a6022 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> > @@ -61,6 +61,24 @@
+> >  #define MT8173_MUTEX_MOD_DISP_PWM1		24
+> >  #define MT8173_MUTEX_MOD_DISP_OD		25
+> >  
+> > +#define MT2712_MUTEX_MOD_DISP_PWM2		10
+> > +#define MT2712_MUTEX_MOD_DISP_OVL0		11
+> > +#define MT2712_MUTEX_MOD_DISP_OVL1		12
+> > +#define MT2712_MUTEX_MOD_DISP_RDMA0		13
+> > +#define MT2712_MUTEX_MOD_DISP_RDMA1		14
+> > +#define MT2712_MUTEX_MOD_DISP_RDMA2		15
+> > +#define MT2712_MUTEX_MOD_DISP_WDMA0		16
+> > +#define MT2712_MUTEX_MOD_DISP_WDMA1		17
+> > +#define MT2712_MUTEX_MOD_DISP_COLOR0		18
+> > +#define MT2712_MUTEX_MOD_DISP_COLOR1		19
+> > +#define MT2712_MUTEX_MOD_DISP_AAL0		20
+> > +#define MT2712_MUTEX_MOD_DISP_UFOE		22
+> > +#define MT2712_MUTEX_MOD_DISP_PWM0		23
+> > +#define MT2712_MUTEX_MOD_DISP_PWM1		24
+> > +#define MT2712_MUTEX_MOD_DISP_OD0		25
+> > +#define MT2712_MUTEX_MOD2_DISP_AAL1		33
+> > +#define MT2712_MUTEX_MOD2_DISP_OD1		34
+> > +
+> >  #define MT2701_MUTEX_MOD_DISP_OVL		3
+> >  #define MT2701_MUTEX_MOD_DISP_WDMA		6
+> >  #define MT2701_MUTEX_MOD_DISP_COLOR		7
+> > @@ -110,6 +128,26 @@ static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+> >  	[DDP_COMPONENT_WDMA0] = MT2701_MUTEX_MOD_DISP_WDMA,
+> >  };
+> >  
+> > +static const unsigned int mt2712_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+> > +	[DDP_COMPONENT_AAL0] = MT2712_MUTEX_MOD_DISP_AAL0,
+> > +	[DDP_COMPONENT_AAL1] = MT2712_MUTEX_MOD2_DISP_AAL1,
+> > +	[DDP_COMPONENT_COLOR0] = MT2712_MUTEX_MOD_DISP_COLOR0,
+> > +	[DDP_COMPONENT_COLOR1] = MT2712_MUTEX_MOD_DISP_COLOR1,
+> > +	[DDP_COMPONENT_OD0] = MT2712_MUTEX_MOD_DISP_OD0,
+> > +	[DDP_COMPONENT_OD1] = MT2712_MUTEX_MOD2_DISP_OD1,
+> > +	[DDP_COMPONENT_OVL0] = MT2712_MUTEX_MOD_DISP_OVL0,
+> > +	[DDP_COMPONENT_OVL1] = MT2712_MUTEX_MOD_DISP_OVL1,
+> > +	[DDP_COMPONENT_PWM0] = MT2712_MUTEX_MOD_DISP_PWM0,
+> > +	[DDP_COMPONENT_PWM1] = MT2712_MUTEX_MOD_DISP_PWM1,
+> > +	[DDP_COMPONENT_PWM2] = MT2712_MUTEX_MOD_DISP_PWM2,
+> > +	[DDP_COMPONENT_RDMA0] = MT2712_MUTEX_MOD_DISP_RDMA0,
+> > +	[DDP_COMPONENT_RDMA1] = MT2712_MUTEX_MOD_DISP_RDMA1,
+> > +	[DDP_COMPONENT_RDMA2] = MT2712_MUTEX_MOD_DISP_RDMA2,
+> > +	[DDP_COMPONENT_UFOE] = MT2712_MUTEX_MOD_DISP_UFOE,
+> > +	[DDP_COMPONENT_WDMA0] = MT2712_MUTEX_MOD_DISP_WDMA0,
+> > +	[DDP_COMPONENT_WDMA1] = MT2712_MUTEX_MOD_DISP_WDMA1,
+> > +};
+> > +
+> >  static const unsigned int mt8173_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+> >  	[DDP_COMPONENT_AAL0] = MT8173_MUTEX_MOD_DISP_AAL,
+> >  	[DDP_COMPONENT_COLOR0] = MT8173_MUTEX_MOD_DISP_COLOR0,
+> > @@ -430,6 +468,7 @@ static int mtk_ddp_remove(struct platform_device *pdev)
+> >  
+> >  static const struct of_device_id ddp_driver_dt_match[] = {
+> >  	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+> > +	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
+> >  	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
+> >  	{},
+> >  };
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> > index 3d279a299383..3a866e1d6af4 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> > @@ -146,6 +146,32 @@ static const enum mtk_ddp_comp_id mt2701_mtk_ddp_ext[] = {
+> >  	DDP_COMPONENT_DPI0,
+> >  };
+> >  
+> > +static const enum mtk_ddp_comp_id mt2712_mtk_ddp_main[] = {
+> > +	DDP_COMPONENT_OVL0,
+> > +	DDP_COMPONENT_COLOR0,
+> > +	DDP_COMPONENT_AAL0,
+> > +	DDP_COMPONENT_OD0,
+> > +	DDP_COMPONENT_RDMA0,
+> > +	DDP_COMPONENT_DPI0,
+> > +	DDP_COMPONENT_PWM0,
+> > +};
+> > +
+> > +static const enum mtk_ddp_comp_id mt2712_mtk_ddp_ext[] = {
+> > +	DDP_COMPONENT_OVL1,
+> > +	DDP_COMPONENT_COLOR1,
+> > +	DDP_COMPONENT_AAL1,
+> > +	DDP_COMPONENT_OD1,
+> > +	DDP_COMPONENT_RDMA1,
+> > +	DDP_COMPONENT_DPI1,
+> 
+> Where do you define DDP_COMPONENT_DPI1?
+> 
+> > +	DDP_COMPONENT_PWM1,
+> > +};
+> > +
+> > +static const enum mtk_ddp_comp_id mt2712_mtk_ddp_third[] = {
+> > +	DDP_COMPONENT_RDMA2,
+> > +	DDP_COMPONENT_DSI2,
+> 
+> Where do you define DDP_COMPONENT_DSI2?
+> 
+
+I would add another patch for these component in next version patch
+series.And add some connection patch from RDMAx to
+DPI0/DPI1/DSI1/DSI2/DSI3.
+
+Regards,
+Stu
+
+> Regards,
+> CK
+> 
+> > +	DDP_COMPONENT_PWM2,
+> > +};
+> > +
+> >  static const enum mtk_ddp_comp_id mt8173_mtk_ddp_main[] = {
+> >  	DDP_COMPONENT_OVL0,
+> >  	DDP_COMPONENT_COLOR0,
+> > @@ -173,6 +199,15 @@ static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
+> >  	.shadow_register = true,
+> >  };
+> >  
+> > +static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
+> > +	.main_path = mt2712_mtk_ddp_main,
+> > +	.main_len = ARRAY_SIZE(mt2712_mtk_ddp_main),
+> > +	.ext_path = mt2712_mtk_ddp_ext,
+> > +	.ext_len = ARRAY_SIZE(mt2712_mtk_ddp_ext),
+> > +	.third_path = mt2712_mtk_ddp_third,
+> > +	.third_len = ARRAY_SIZE(mt2712_mtk_ddp_third),
+> > +};
+> > +
+> >  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
+> >  	.main_path = mt8173_mtk_ddp_main,
+> >  	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
+> > @@ -379,6 +414,7 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
+> >  	{ .compatible = "mediatek,mt8173-dsi",        .data = (void *)MTK_DSI },
+> >  	{ .compatible = "mediatek,mt8173-dpi",        .data = (void *)MTK_DPI },
+> >  	{ .compatible = "mediatek,mt2701-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
+> > +	{ .compatible = "mediatek,mt2712-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
+> >  	{ .compatible = "mediatek,mt8173-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
+> >  	{ .compatible = "mediatek,mt2701-disp-pwm",   .data = (void *)MTK_DISP_BLS },
+> >  	{ .compatible = "mediatek,mt8173-disp-pwm",   .data = (void *)MTK_DISP_PWM },
+> > @@ -557,6 +593,8 @@ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
+> >  static const struct of_device_id mtk_drm_of_ids[] = {
+> >  	{ .compatible = "mediatek,mt2701-mmsys",
+> >  	  .data = &mt2701_mmsys_driver_data},
+> > +	{ .compatible = "mediatek,mt2712-mmsys",
+> > +	  .data = &mt2712_mmsys_driver_data},
+> >  	{ .compatible = "mediatek,mt8173-mmsys",
+> >  	  .data = &mt8173_mmsys_driver_data},
+> >  	{ }
+> 
+> 
