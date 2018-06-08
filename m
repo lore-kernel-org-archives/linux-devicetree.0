@@ -1,39 +1,60 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] ARM: dts: igep: Relicense the IGEP boards under
- GPLv2/X11
-Date: Thu, 7 Jun 2018 23:41:00 -0700
-Message-ID: <20180608064100.GM5738@atomide.com>
-References: <20180606152500.14034-1-enric.balletbo@collabora.com>
- <20180608063222.GL5738@atomide.com>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v6 1/3] phy: Update PHY power control sequence
+Date: Fri, 8 Jun 2018 12:15:55 +0530
+Message-ID: <9954c362-c144-9e5f-8b06-687c856ed25a@codeaurora.org>
+References: <20180529043751.10580-1-cang@codeaurora.org>
+ <20180529043751.10580-2-cang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180608063222.GL5738@atomide.com>
+In-Reply-To: <20180529043751.10580-2-cang@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: linux-kernel@vger.kernel.org, kernel@collabora.com, devicetree@vger.kernel.org, Javier Martinez Canillas <javier@dowhile0.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Enric Balletbo i Serra <eballetbo@gmail.com>
+To: Can Guo <cang@codeaurora.org>, subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [180607 23:32]:
-> Hi,
-> 
-> * Enric Balletbo i Serra <enric.balletbo@collabora.com> [180606 08:27]:
-> > The current GPLv2 only licensing on IGEP boards makes it very impractical
-> > for other software components licensed under another license.
-> > 
-> > In order to make it easier for them to reuse our device trees, relicense
-> > all boards under a GPLv2/X11 dual-license. Also switch to use the SPDX
-> > identifiers and remove the boiler plate license text.
-> 
-> I don't think you have all the people in Cc who have already
-> contributed patches to these files, can you please check the
-> files with git log?
+Hi,
 
-Oh and these still include omap3.dtsi and other GPL 2.0 licensed
-files so this relicensing may not work out without lots of emails
-and and acks from all the contributors.
+On 5/29/2018 10:07 AM, Can Guo wrote:
+> All PHYs should be powered on before register configuration starts. And
+> only PCIe PHYs need an extra power control before deasserts reset state.
+>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 97ef942..f779b0f 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -982,6 +982,8 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+>  	if (cfg->has_phy_com_ctrl)
+>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>  			     SW_PWRDN);
+> +	else
+> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
 
-Regards,
+We should power-up PHYs after following dp_com_ctrl programming which
+powers-off USB-DP combo PHY when it brings DP_COM block out of reset reset.
 
-Tony
+
+>  
+>  	if (cfg->has_phy_dp_com_ctrl) {
+>  		qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
+> @@ -1127,7 +1129,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>  	 * Pull out PHY from POWER DOWN state.
+>  	 * This is active low enable signal to power-down PHY.
+>  	 */
+> -	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+> +	if (cfg->type == PHY_TYPE_PCIE)
+> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+>  
+>  	if (cfg->has_pwrdn_delay)
+>  		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
