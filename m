@@ -1,188 +1,68 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: Re: [PATCH v4 9/9] drm/mediatek: Add support for mediatek SOC MT2712
-Date: Fri, 8 Jun 2018 16:38:18 +0800
-Message-ID: <1528447098.11190.26.camel@mtksdccf07>
-References: <1527489507-24453-1-git-send-email-stu.hsieh@mediatek.com>
-         <1527489507-24453-10-git-send-email-stu.hsieh@mediatek.com>
-         <1527494014.24367.14.camel@mtksdaap41>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [v3, 07/10] fsl/fman_port: support getting timestamp
+Date: Fri, 8 Jun 2018 16:39:41 +0800
+Message-ID: <201806081628.UCdhDsEg%fengguang.wu@intel.com>
+References: <20180607092050.46128-8-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527494014.24367.14.camel@mtksdaap41>
+Content-Disposition: inline
+In-Reply-To: <20180607092050.46128-8-yangbo.lu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Cc: kbuild-all@01.org, netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, CK:
+Hi Yangbo,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on net-next/master]
+[also build test WARNING on next-20180608]
+[cannot apply to v4.17]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Yangbo-Lu/Support-DPAA-PTP-clock-and-timestamping/20180608-131649
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
 
-On Mon, 2018-05-28 at 15:53 +0800, CK Hu wrote:
-> Hi, Stu:
-> 
-> Two inline comment.
-> 
-> On Mon, 2018-05-28 at 14:38 +0800, Stu Hsieh wrote:
-> > This patch add support for the Mediatek MT2712 DISP subsystem.
-> > There are two OVL engine and three disp output in MT2712.
-> > 
-> > Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 39 ++++++++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 38 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 77 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> > index 8bfc0debd2c2..3b22b48a6022 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> > @@ -61,6 +61,24 @@
-> >  #define MT8173_MUTEX_MOD_DISP_PWM1		24
-> >  #define MT8173_MUTEX_MOD_DISP_OD		25
-> >  
-> > +#define MT2712_MUTEX_MOD_DISP_PWM2		10
-> > +#define MT2712_MUTEX_MOD_DISP_OVL0		11
-> > +#define MT2712_MUTEX_MOD_DISP_OVL1		12
-> > +#define MT2712_MUTEX_MOD_DISP_RDMA0		13
-> > +#define MT2712_MUTEX_MOD_DISP_RDMA1		14
-> > +#define MT2712_MUTEX_MOD_DISP_RDMA2		15
-> > +#define MT2712_MUTEX_MOD_DISP_WDMA0		16
-> > +#define MT2712_MUTEX_MOD_DISP_WDMA1		17
-> > +#define MT2712_MUTEX_MOD_DISP_COLOR0		18
-> > +#define MT2712_MUTEX_MOD_DISP_COLOR1		19
-> > +#define MT2712_MUTEX_MOD_DISP_AAL0		20
-> > +#define MT2712_MUTEX_MOD_DISP_UFOE		22
-> > +#define MT2712_MUTEX_MOD_DISP_PWM0		23
-> > +#define MT2712_MUTEX_MOD_DISP_PWM1		24
-> > +#define MT2712_MUTEX_MOD_DISP_OD0		25
-> > +#define MT2712_MUTEX_MOD2_DISP_AAL1		33
-> > +#define MT2712_MUTEX_MOD2_DISP_OD1		34
-> > +
-> >  #define MT2701_MUTEX_MOD_DISP_OVL		3
-> >  #define MT2701_MUTEX_MOD_DISP_WDMA		6
-> >  #define MT2701_MUTEX_MOD_DISP_COLOR		7
-> > @@ -110,6 +128,26 @@ static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-> >  	[DDP_COMPONENT_WDMA0] = MT2701_MUTEX_MOD_DISP_WDMA,
-> >  };
-> >  
-> > +static const unsigned int mt2712_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-> > +	[DDP_COMPONENT_AAL0] = MT2712_MUTEX_MOD_DISP_AAL0,
-> > +	[DDP_COMPONENT_AAL1] = MT2712_MUTEX_MOD2_DISP_AAL1,
-> > +	[DDP_COMPONENT_COLOR0] = MT2712_MUTEX_MOD_DISP_COLOR0,
-> > +	[DDP_COMPONENT_COLOR1] = MT2712_MUTEX_MOD_DISP_COLOR1,
-> > +	[DDP_COMPONENT_OD0] = MT2712_MUTEX_MOD_DISP_OD0,
-> > +	[DDP_COMPONENT_OD1] = MT2712_MUTEX_MOD2_DISP_OD1,
-> > +	[DDP_COMPONENT_OVL0] = MT2712_MUTEX_MOD_DISP_OVL0,
-> > +	[DDP_COMPONENT_OVL1] = MT2712_MUTEX_MOD_DISP_OVL1,
-> > +	[DDP_COMPONENT_PWM0] = MT2712_MUTEX_MOD_DISP_PWM0,
-> > +	[DDP_COMPONENT_PWM1] = MT2712_MUTEX_MOD_DISP_PWM1,
-> > +	[DDP_COMPONENT_PWM2] = MT2712_MUTEX_MOD_DISP_PWM2,
-> > +	[DDP_COMPONENT_RDMA0] = MT2712_MUTEX_MOD_DISP_RDMA0,
-> > +	[DDP_COMPONENT_RDMA1] = MT2712_MUTEX_MOD_DISP_RDMA1,
-> > +	[DDP_COMPONENT_RDMA2] = MT2712_MUTEX_MOD_DISP_RDMA2,
-> > +	[DDP_COMPONENT_UFOE] = MT2712_MUTEX_MOD_DISP_UFOE,
-> > +	[DDP_COMPONENT_WDMA0] = MT2712_MUTEX_MOD_DISP_WDMA0,
-> > +	[DDP_COMPONENT_WDMA1] = MT2712_MUTEX_MOD_DISP_WDMA1,
-> > +};
-> > +
-> >  static const unsigned int mt8173_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-> >  	[DDP_COMPONENT_AAL0] = MT8173_MUTEX_MOD_DISP_AAL,
-> >  	[DDP_COMPONENT_COLOR0] = MT8173_MUTEX_MOD_DISP_COLOR0,
-> > @@ -430,6 +468,7 @@ static int mtk_ddp_remove(struct platform_device *pdev)
-> >  
-> >  static const struct of_device_id ddp_driver_dt_match[] = {
-> >  	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
-> > +	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
-> >  	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
-> >  	{},
-> >  };
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> > index 3d279a299383..3a866e1d6af4 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> > @@ -146,6 +146,32 @@ static const enum mtk_ddp_comp_id mt2701_mtk_ddp_ext[] = {
-> >  	DDP_COMPONENT_DPI0,
-> >  };
-> >  
-> > +static const enum mtk_ddp_comp_id mt2712_mtk_ddp_main[] = {
-> > +	DDP_COMPONENT_OVL0,
-> > +	DDP_COMPONENT_COLOR0,
-> > +	DDP_COMPONENT_AAL0,
-> > +	DDP_COMPONENT_OD0,
-> > +	DDP_COMPONENT_RDMA0,
-> > +	DDP_COMPONENT_DPI0,
-> > +	DDP_COMPONENT_PWM0,
-> > +};
-> > +
-> > +static const enum mtk_ddp_comp_id mt2712_mtk_ddp_ext[] = {
-> > +	DDP_COMPONENT_OVL1,
-> > +	DDP_COMPONENT_COLOR1,
-> > +	DDP_COMPONENT_AAL1,
-> > +	DDP_COMPONENT_OD1,
-> > +	DDP_COMPONENT_RDMA1,
-> > +	DDP_COMPONENT_DPI1,
-> 
-> Where do you define DDP_COMPONENT_DPI1?
-> 
-> > +	DDP_COMPONENT_PWM1,
-> > +};
-> > +
-> > +static const enum mtk_ddp_comp_id mt2712_mtk_ddp_third[] = {
-> > +	DDP_COMPONENT_RDMA2,
-> > +	DDP_COMPONENT_DSI2,
-> 
-> Where do you define DDP_COMPONENT_DSI2?
-> 
+sparse warnings: (new ones prefixed by >>)
 
-I would add another patch for these component in next version patch
-series.And add some connection patch from RDMAx to
-DPI0/DPI1/DSI1/DSI2/DSI3.
+   drivers/net/ethernet/freescale/fman/fman_port.c:879:26: sparse: expression using sizeof(void)
+   drivers/net/ethernet/freescale/fman/fman_port.c:879:26: sparse: expression using sizeof(void)
+   drivers/net/ethernet/freescale/fman/fman_port.c:1035:36: sparse: expression using sizeof(void)
+   drivers/net/ethernet/freescale/fman/fman_port.c:1247:17: sparse: expression using sizeof(void)
+   drivers/net/ethernet/freescale/fman/fman_port.c:1249:17: sparse: expression using sizeof(void)
+   drivers/net/ethernet/freescale/fman/fman_port.c:1249:17: sparse: expression using sizeof(void)
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
+>> drivers/net/ethernet/freescale/fman/fman_port.c:1739:19: sparse: cast to restricted __be64
 
-Regards,
-Stu
+vim +1739 drivers/net/ethernet/freescale/fman/fman_port.c
 
-> Regards,
-> CK
-> 
-> > +	DDP_COMPONENT_PWM2,
-> > +};
-> > +
-> >  static const enum mtk_ddp_comp_id mt8173_mtk_ddp_main[] = {
-> >  	DDP_COMPONENT_OVL0,
-> >  	DDP_COMPONENT_COLOR0,
-> > @@ -173,6 +199,15 @@ static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
-> >  	.shadow_register = true,
-> >  };
-> >  
-> > +static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
-> > +	.main_path = mt2712_mtk_ddp_main,
-> > +	.main_len = ARRAY_SIZE(mt2712_mtk_ddp_main),
-> > +	.ext_path = mt2712_mtk_ddp_ext,
-> > +	.ext_len = ARRAY_SIZE(mt2712_mtk_ddp_ext),
-> > +	.third_path = mt2712_mtk_ddp_third,
-> > +	.third_len = ARRAY_SIZE(mt2712_mtk_ddp_third),
-> > +};
-> > +
-> >  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
-> >  	.main_path = mt8173_mtk_ddp_main,
-> >  	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
-> > @@ -379,6 +414,7 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
-> >  	{ .compatible = "mediatek,mt8173-dsi",        .data = (void *)MTK_DSI },
-> >  	{ .compatible = "mediatek,mt8173-dpi",        .data = (void *)MTK_DPI },
-> >  	{ .compatible = "mediatek,mt2701-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
-> > +	{ .compatible = "mediatek,mt2712-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
-> >  	{ .compatible = "mediatek,mt8173-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
-> >  	{ .compatible = "mediatek,mt2701-disp-pwm",   .data = (void *)MTK_DISP_BLS },
-> >  	{ .compatible = "mediatek,mt8173-disp-pwm",   .data = (void *)MTK_DISP_PWM },
-> > @@ -557,6 +593,8 @@ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
-> >  static const struct of_device_id mtk_drm_of_ids[] = {
-> >  	{ .compatible = "mediatek,mt2701-mmsys",
-> >  	  .data = &mt2701_mmsys_driver_data},
-> > +	{ .compatible = "mediatek,mt2712-mmsys",
-> > +	  .data = &mt2712_mmsys_driver_data},
-> >  	{ .compatible = "mediatek,mt8173-mmsys",
-> >  	  .data = &mt8173_mmsys_driver_data},
-> >  	{ }
-> 
-> 
+  1733	
+  1734	int fman_port_get_tstamp(struct fman_port *port, const void *data, u64 *tstamp)
+  1735	{
+  1736		if (port->buffer_offsets.time_stamp_offset == ILLEGAL_BASE)
+  1737			return -EINVAL;
+  1738	
+> 1739		*tstamp = be64_to_cpu(*(u64 *)(data +
+  1740				port->buffer_offsets.time_stamp_offset));
+  1741	
+  1742		return 0;
+  1743	}
+  1744	EXPORT_SYMBOL(fman_port_get_tstamp);
+  1745	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
