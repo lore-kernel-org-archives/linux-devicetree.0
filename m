@@ -1,109 +1,73 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 13/16] dt-bindings/interrupt-controller: add
- documentation for Marvell SEI controller
-Date: Fri, 8 Jun 2018 16:46:23 +0200
-Message-ID: <20180608164623.0175fc05@xps13>
-References: <20180522094042.24770-1-miquel.raynal@bootlin.com>
-        <20180522094042.24770-14-miquel.raynal@bootlin.com>
-        <20180605205121.GA19249@rob-hp-laptop>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 11/11] misc: throttler: Add Chrome OS EC throttler
+Date: Fri, 8 Jun 2018 08:56:44 -0700
+Message-ID: <20180608155644.GE88063@google.com>
+References: <20180607181214.30338-1-mka@chromium.org>
+ <20180607181214.30338-12-mka@chromium.org>
+ <e1681e0f-2141-12a7-bed1-4d27a43ac9e8@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180605205121.GA19249@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <e1681e0f-2141-12a7-bed1-4d27a43ac9e8@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Haim Boot <hayim@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Marc,
+Hi Enric,
 
-On Tue, 5 Jun 2018 14:51:21 -0600, Rob Herring <robh@kernel.org> wrote:
+On Fri, Jun 08, 2018 at 04:09:18PM +0200, Enric Balletbo i Serra wrote:
 
-> On Tue, May 22, 2018 at 11:40:39AM +0200, Miquel Raynal wrote:
-> > Describe the System Error Interrupt (SEI) controller. It aggregates two
-> > types of interrupts, wired and MSIs from respectively the AP and the
-> > CPs, into a single SPI interrupt.
+> On 07/06/18 20:12, Matthias Kaehlcke wrote:
+> > The driver subscribes to throttling events from the Chrome OS
+> > embedded controller and enables/disables system throttling based
+> > on these events.
 > > 
-> > Suggested-by: Haim Boot <hayim@marvell.com>
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > > ---
-> >  .../bindings/interrupt-controller/marvell,sei.txt  | 50 ++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
+> > Changes in v2:
+> > - added SPDX line instead of license boiler-plate
+> > - use macro to avoid splitting line
+> > - changed variable name for throttler from 'cte' to 'ce_thr'
+> > - formatting fixes
+> > - Kconfig: removed odd dashes around 'help'
+> > - added 'Reviewed-by' tag
 > > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
-> > new file mode 100644
-> > index 000000000000..689981036c30
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
-> > @@ -0,0 +1,50 @@
-> > +Marvell SEI (System Error Interrupt) Controller
-> > +-----------------------------------------------
-> > +
-> > +Marvell SEI (System Error Interrupt) controller is an interrupt
-> > +aggregator. It receives interrupts from several sources and aggregates
-> > +them to a single interrupt line (an SPI) on the parent interrupt
-> > +controller.
-> > +
-> > +This interrupt controller can handle up to 64 SEIs, a set comes from the
-> > +AP and is wired while a second set comes from the CPs by the mean of
-> > +MSIs. Each 'domain' is represented as a subnode.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: should be "marvell,armada-8k-sei".
-> > +- reg: SEI registers location and length.
-> > +- interrupts: identifies the parent IRQ that will be triggered.
-> > +
-> > +Child node 'sei-wired-controller' required properties:
-> > +
-> > +- marvell,sei-ranges: ranges of wired interrupts.
-> > +- #interrupt-cells: number of cells to define an SEI wired interrupt
-> > +                    coming from the AP, should be 1. The cell is the IRQ
-> > +                    number.
-> > +- interrupt-controller: identifies the node as an interrupt controller.
-> > +
-> > +Child node 'sei-msi-controller' required properties:
-> > +
-> > +- marvell,sei-ranges: ranges of non-wired interrupts triggered by way of
-> > +                      MSIs.
-> > +- msi-controller: identifies the node as an MSI controller.
-> > +
-> > +Example:
-> > +
-> > +        sei: sei@3f0200 {
-> > +               compatible = "marvell,armada-8k-sei";
-> > +               reg = <0x3f0200 0x40>;
-> > +               interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> > +
-> > +               sei_wired_controller: sei-wired-controller@0 {
-> > +                       marvell,sei-ranges = <0 21>;
-> > +                       #interrupt-cells = <1>;
-> > +                       interrupt-controller;
-> > +               };
-> > +
-> > +               sei_msi_controller: sei-msi-controller@21 {
-> > +                       marvell,sei-ranges = <21 43>;
-> > +                       msi-controller;
-> > +               };  
+> > Note: I finally decided to keep 'Chrome OS' instead of changing it
+> > to 'ChromeOS'. Both are currently used in the kernel, the latter is
+> > currently more prevalent, however the official name is 'Chrome OS',
+> > so there is no good reason to keep introducing the 'alternative' name.
+> > 
 > 
-> I still think this should just be all one node. There's several examples 
-> in the tree of nodes which are both interrupt-controller and 
-> msi-controller. Marvell MPIC is one example.
+> I am pretty sure that somebody from Google told me the contrary, so
+> 
+> ¯\_(ツ)_/¯
+> 
+> Anyway, you will probably know better than me :)
 
-I checked Marvell MPIC example (armada 370 XP), it does not use
-hierarchy domains, so I totally understand your point but I'm not sure
-how I could get inspired by this driver (I'm looking for others).
+The different names in the kernel code indicate that even folks at
+Google disagree on this ;-) The name might have evolved over time.
 
-Here I'm stuck. I know from a pure DT point of view the following is
-not a valid argument. But from Linux, there is no easy way to handle
-this situation without two different device nodes due to the internals
-of the irqchip subsystem. There is simply no easy solution and having
-only one node would require consequent changes in the core.
+chrome://chrome on a Chromebook names it 'Chrome OS', as do official
+pages like https://www.google.com/chromebook/ and
+https://www.chromium.org/chromium-os so I think it is better to use
+this name.
 
-Maybe Marc will have an idea, but I think we already gave up on this
-topic :/
+> > +MODULE_LICENSE("GPL");
+> 
+> Something that I learnt recently. To match the SPDX-license tag you should set
+> this to "GPL v2" [1]
+> 
+>  *	"GPL"				[GNU Public License v2 or later]
+>  *	"GPL v2"			[GNU Public License v2]
+> 
+> [1] https://elixir.bootlin.com/linux/v4.17/source/include/linux/module.h#L172
 
-Regards,
-Miquèl
+Will update in the next revision
+
+Thanks!
+
+Matthias
