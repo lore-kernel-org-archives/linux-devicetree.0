@@ -1,75 +1,109 @@
-Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Mon, 11 Jun 2018 15:35:21 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 09/15] staging: typec: tcpci: register port before
- request irq
-Message-ID: <20180611123521.GO17155@kuha.fi.intel.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
- <1527475967-15201-10-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
+From: Argus Lin <argus.lin@mediatek.com>
+Subject: [PATCH V5 0/4] Pwrap: Mediatek pwrap driver for mt6797
+Date: Fri, 8 Jun 2018 16:17:05 +0800
+Message-ID: <1528445829-8866-1-git-send-email-argus.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1527475967-15201-10-git-send-email-jun.li@nxp.com>
-To: Li Jun <jun.li@nxp.com>
-Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_006_1211740634.1870433334"
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 28, 2018 at 10:52:41AM +0800, Li Jun wrote:
-> From: Peter Chen <peter.chen@nxp.com>
-> 
-> With that we can clear any pending events and the port is registered
-> so driver can be ready to handle typec events once we request irq.
-> 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> Signed-off-by: Li Jun <jun.li@nxp.com>
+--__=_Part_Boundary_006_1211740634.1870433334
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_007_1733761680.1899577589"
 
-FWIW:
+--__=_Part_Boundary_007_1733761680.1899577589
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+PHByZT4NCkhlcmUmIzM5O3MgdmVyc2lvbiA1IG9mIHRoZSBwYXRjaCBzZXJpZXMsIGluY2x1ZGUg
+NCBwYXRjaGVzOg0KMS4gRml4IGJ1ZyBhdCBjaXBoZXIgaW5pdCBmb3INCjVhZTQ4MDQwYWE0NyAo
+JnF1b3Q7c29jOiBtZWRpYXRlazogUE1JQyB3cmFwOiBhZGQgbXQ2MzIzIHNsYXZlIHN1cHBvcnQm
+cXVvdDspDQoyLiBBZGQgcHdyYXAgZHJpdmVyIGZvciBtdDY3OTcgU29Dcy4NCjMuIEFkZCBtdDYz
+NTEgc3VwcG9ydCBmb3IgbXQ2Nzk3IFNvQ3MuDQo0LiBBIGJpZyBjaGFuZ2UgZnJvbSBWNCB0byBW
+NSBpcyB3ZSByZW1vdmUgSU5UMSBpbnRlcnJ1cHQgZGVjbGFyYXRpb24gc2luY2UNCml0IGlzIG9u
+bHkgZm9yIGRlYnVnIHB1cnBvc2UuIFRoZSBQV1JBUF9SRERNWSwgUkVTRVQgYW5kIERDTSBjYW4g
+dXNlIGxlZ2FjeQ0Kc2V0dGluZywgaXQgaXMgYmFja3dhcmRzIGNvbXBhdGlibGUuIFRoZSBuZXcg
+Y2FwcyBmbGFnIGRlY2xhcmF0aW9uIGlzIG5vdA0KbmVlZGVkLCBqdXN0IHJlbW92ZSBpdC4NCg0K
+Q2hhbmdlcyBmcm9tIHYzIHRvIHY0Og0KMSlhZGQgY2FwcyBmbGFnIGZvciBwd3JhcCB0byBleHBs
+YWluIHB3cmFwJiMzOTtzIGNhcGFiaWxpdHkuDQoyKXJlbW92ZSBoYXNfYnJpZGdlIGZsYWcsIHJl
+cGxhY2UgYnkgY2FwcyBmbGFnLg0KMylhZGQgaW50MV9lbl9hbGwgZmxhZyBmb3IgbmV3IGludGVy
+cnVwdC4NCjQpYWRkIHB3cmFwIGRyaXZlcnMgZm9yIG10Njc5NyBTb0NzLg0KNSlmaXggYnVnIGF0
+IGNpcGhlciBpbml0IGZvcg0KNWFlNDgwNDBhYTQ3ICgmcXVvdDtzb2M6IG1lZGlhdGVrOiBQTUlD
+IHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCZxdW90OykNCjYpYWRkIG10NjM1MSBzdXBw
+b3J0IGZvciBtdDY3OTcgU29Dcy4NCg0KQ2hhbmdlcyBmcm9tIHYyIHRvIHYzOg0KMSlhZGp1c3Qg
+dXBzdHJlYW0gcGF0Y2ggc2VxdWVuY2UuDQoyKWZpeCBidWlsZCBlcnJvciBmb3IgbmV3IGZpbGVk
+IGF0IHBtaWNfd3JhcHBlcl90eXBlLg0KMylhZGp1c3QgcG1pY190eXBlIGVudW0gc2VxdWVuY2Uu
+DQoNCkNoYW5nZXMgZnJvbSB2MSB0byB2MjoNCjEpIGFkZCBuZXcgY2FwYWJpbGl0eSBmaWVsZCBh
+bmQgTUFSQ08gZm9yIGRpZmZlcmVudCBwd3JhcCBzZXJpZXMsIHRoZSBjYXBhYmlsaXR5IGluY2x1
+ZGUgQlJJREdFLCBSRVNFVCwgRENNLCBQUklPUklUWV9TRUwgYW5kIElOVDFfRU4uDQoyKSBhZGQg
+c3RhcnZhY3Rpb24gZm9yIG10Njc5NyBwd3JhcC4NCjMpIGFkZCBJTlQxIGludGVycnVwdCB0byBo
+YW5kbGUgc3RhcnZhY3Rpb24gYW5kIHJlcXVlc3QgZXhjZXB0aW9uLg0KDQoNCg0KQXJndXMgTGlu
+ICg0KToNCiAgZHQtYmluZGluZ3M6IHB3cmFwOiBtZWRpYXRlazogYWRkIHB3cmFwIHN1cHBvcnQg
+Zm9yIE1UNjc5Nw0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDogZml4IGNpcGhlciBpbml0IHNldHRp
+bmcgZXJyb3INCiAgc29jOiBtZWRpYXRlazogcHdyYXA6IGFkZCBwd3JhcCBkcml2ZXIgZm9yIG10
+Njc5NyBTb0NzDQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBhZGQgbXQ2MzUxIGRyaXZlciBmb3Ig
+bXQ2Nzk3IFNvQ3MNCg0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3Jh
+cC50eHQgICAgIHwgIDEgKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyAg
+ICAgICAgICAgICAgIHwgODEgKysrKysrKysrKysrKysrKysrKysrLQ0KIDIgZmlsZXMgY2hhbmdl
+ZCwgODAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCg0KLS0gDQoxLjguMS4xLmRpcnR5
+DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFp
+bCBDb25maWRlbnRpYWxpdHkgTm90aWNlDQogKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZv
+cm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSAN
+CmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdl
+ZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUg
+bGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25h
+dGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24s
+IHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5n
+IGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3Rs
+eSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50
+ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlDQogDQp0aGF0IHlvdSBo
+YXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5k
+ZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55
+IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVu
+dHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9m
+IHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19
+LS0+
 
-> ---
->  drivers/staging/typec/tcpci.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index b63f147..3b35fce 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -537,24 +537,27 @@ static int tcpci_probe(struct i2c_client *client,
->  	if (IS_ERR(chip->data.regmap))
->  		return PTR_ERR(chip->data.regmap);
->  
-> +	i2c_set_clientdata(client, chip);
-> +
->  	/* Disable chip interrupts before requesting irq */
->  	err = regmap_raw_write(chip->data.regmap, TCPC_ALERT_MASK, &val,
->  			       sizeof(u16));
->  	if (err < 0)
->  		return err;
->  
-> +	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
-> +	if (IS_ERR(chip->tcpci))
-> +		return PTR_ERR(chip->tcpci);
-> +
->  	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
->  					_tcpci_irq,
->  					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
->  					dev_name(&client->dev), chip);
-> -	if (err < 0)
-> +	if (err < 0) {
-> +		tcpci_unregister_port(chip->tcpci);
->  		return err;
-> +	}
->  
-> -	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
-> -	if (IS_ERR(chip->tcpci))
-> -		return PTR_ERR(chip->tcpci);
-> -
-> -	i2c_set_clientdata(client, chip);
->  	return 0;
->  }
+--__=_Part_Boundary_007_1733761680.1899577589
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
 
-Thanks,
+SGVyZSdzIHZlcnNpb24gNSBvZiB0aGUgcGF0Y2ggc2VyaWVzLCBpbmNsdWRlIDQgcGF0Y2hlczoN
+CjEuIEZpeCBidWcgYXQgY2lwaGVyIGluaXQgZm9yDQo1YWU0ODA0MGFhNDcgKCJzb2M6IG1lZGlh
+dGVrOiBQTUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCIpDQoyLiBBZGQgcHdyYXAg
+ZHJpdmVyIGZvciBtdDY3OTcgU29Dcy4NCjMuIEFkZCBtdDYzNTEgc3VwcG9ydCBmb3IgbXQ2Nzk3
+IFNvQ3MuDQo0LiBBIGJpZyBjaGFuZ2UgZnJvbSBWNCB0byBWNSBpcyB3ZSByZW1vdmUgSU5UMSBp
+bnRlcnJ1cHQgZGVjbGFyYXRpb24gc2luY2UNCml0IGlzIG9ubHkgZm9yIGRlYnVnIHB1cnBvc2Uu
+IFRoZSBQV1JBUF9SRERNWSwgUkVTRVQgYW5kIERDTSBjYW4gdXNlIGxlZ2FjeQ0Kc2V0dGluZywg
+aXQgaXMgYmFja3dhcmRzIGNvbXBhdGlibGUuIFRoZSBuZXcgY2FwcyBmbGFnIGRlY2xhcmF0aW9u
+IGlzIG5vdA0KbmVlZGVkLCBqdXN0IHJlbW92ZSBpdC4NCg0KQ2hhbmdlcyBmcm9tIHYzIHRvIHY0
+Og0KMSlhZGQgY2FwcyBmbGFnIGZvciBwd3JhcCB0byBleHBsYWluIHB3cmFwJ3MgY2FwYWJpbGl0
+eS4NCjIpcmVtb3ZlIGhhc19icmlkZ2UgZmxhZywgcmVwbGFjZSBieSBjYXBzIGZsYWcuDQozKWFk
+ZCBpbnQxX2VuX2FsbCBmbGFnIGZvciBuZXcgaW50ZXJydXB0Lg0KNClhZGQgcHdyYXAgZHJpdmVy
+cyBmb3IgbXQ2Nzk3IFNvQ3MuDQo1KWZpeCBidWcgYXQgY2lwaGVyIGluaXQgZm9yDQo1YWU0ODA0
+MGFhNDcgKCJzb2M6IG1lZGlhdGVrOiBQTUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9y
+dCIpDQo2KWFkZCBtdDYzNTEgc3VwcG9ydCBmb3IgbXQ2Nzk3IFNvQ3MuDQoNCkNoYW5nZXMgZnJv
+bSB2MiB0byB2MzoNCjEpYWRqdXN0IHVwc3RyZWFtIHBhdGNoIHNlcXVlbmNlLg0KMilmaXggYnVp
+bGQgZXJyb3IgZm9yIG5ldyBmaWxlZCBhdCBwbWljX3dyYXBwZXJfdHlwZS4NCjMpYWRqdXN0IHBt
+aWNfdHlwZSBlbnVtIHNlcXVlbmNlLg0KDQpDaGFuZ2VzIGZyb20gdjEgdG8gdjI6DQoxKSBhZGQg
+bmV3IGNhcGFiaWxpdHkgZmllbGQgYW5kIE1BUkNPIGZvciBkaWZmZXJlbnQgcHdyYXAgc2VyaWVz
+LCB0aGUgY2FwYWJpbGl0eSBpbmNsdWRlIEJSSURHRSwgUkVTRVQsIERDTSwgUFJJT1JJVFlfU0VM
+IGFuZCBJTlQxX0VOLg0KMikgYWRkIHN0YXJ2YWN0aW9uIGZvciBtdDY3OTcgcHdyYXAuDQozKSBh
+ZGQgSU5UMSBpbnRlcnJ1cHQgdG8gaGFuZGxlIHN0YXJ2YWN0aW9uIGFuZCByZXF1ZXN0IGV4Y2Vw
+dGlvbi4NCg0KDQoNCkFyZ3VzIExpbiAoNCk6DQogIGR0LWJpbmRpbmdzOiBwd3JhcDogbWVkaWF0
+ZWs6IGFkZCBwd3JhcCBzdXBwb3J0IGZvciBNVDY3OTcNCiAgc29jOiBtZWRpYXRlazogcHdyYXA6
+IGZpeCBjaXBoZXIgaW5pdCBzZXR0aW5nIGVycm9yDQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBh
+ZGQgcHdyYXAgZHJpdmVyIGZvciBtdDY3OTcgU29Dcw0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDog
+YWRkIG10NjM1MSBkcml2ZXIgZm9yIG10Njc5NyBTb0NzDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAxICsNCiBkcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDgxICsrKysrKysrKysrKysrKysr
+KysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+DQoNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
 
--- 
-heikki
+--__=_Part_Boundary_007_1733761680.1899577589--
+
+--__=_Part_Boundary_006_1211740634.1870433334--
