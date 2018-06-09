@@ -1,45 +1,73 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Sat, 9 Jun 2018 07:55:29 +0200
-Message-ID: <20180609075529.23be0658@bbrezillon>
-References: <20180531221637.6017-1-stefan@agner.ch>
-        <20180531221637.6017-5-stefan@agner.ch>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH 1/2] gpio: mediatek: add driver for MT7621
+Date: Sat, 9 Jun 2018 08:17:14 +0200
+Message-ID: <CAMhs-H83Q44=arvKJSOyOAsq=7DV3j6rptJannSVCMVREQnW-Q@mail.gmail.com>
+References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
+ <1527924610-13135-2-git-send-email-sergio.paracuellos@gmail.com>
+ <CACRpkdaw9O6TbZie5AOTmQJ9-3=yHETFFX7YVkPBEL72EZzZ=g@mail.gmail.com>
+ <CACRpkdbeXkTUir=Ar+x5jsSow_NiNwu1w_4Fewv8N7jcgbMinQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531221637.6017-5-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CACRpkdbeXkTUir=Ar+x5jsSow_NiNwu1w_4Fewv8N7jcgbMinQ@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, driverdev-devel@linuxdriverproject.org, Greg KH <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  1 Jun 2018 00:16:35 +0200
-Stefan Agner <stefan@agner.ch> wrote:
+On Fri, Jun 8, 2018 at 2:17 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> A second thought:
 
-> +
-> +static const struct of_device_id tegra_nand_of_match[] = {
-> +	{ .compatible = "nvidia,tegra20-nand" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver tegra_nand_driver = {
-> +	.driver = {
-> +		.name = "tegra-nand",
-> +		.of_match_table = tegra_nand_of_match,
-> +	},
-> +	.probe = tegra_nand_probe,
-> +	.remove = tegra_nand_remove,
-> +};
-> +module_platform_driver(tegra_nand_driver);
-> +
-> +MODULE_DESCRIPTION("NVIDIA Tegra NAND driver");
-> +MODULE_AUTHOR("Thierry Reding <thierry.reding@nvidia.com>");
-> +MODULE_AUTHOR("Lucas Stach <dev@lynxeye.de>");
-> +MODULE_AUTHOR("Stefan Agner <stefan@agner.ch>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DEVICE_TABLE(of, tegra_nand_of_match);
+Second thought is always a good thing :-)
 
-Just a nitpick: can you move this MODULE_DEVICE_TABLE() just after the
-tegra_nand_of_match declaration?
+>
+> On Fri, Jun 8, 2018 at 1:59 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+>>> +       select GPIOLIB_IRQCHIP
+>>
+>> You are not using this so I guess remove that line.
+> (...)
+>>> +static int
+>>> +mediatek_gpio_to_irq(struct gpio_chip *chip, unsigned int pin)
+>>> +{
+>>> +       struct mtk_data *gpio_data = gpiochip_get_data(chip);
+>>> +       struct mtk_gc *rg = to_mediatek_gpio(chip);
+>>> +
+>>> +       return irq_create_mapping(gpio_data->gpio_irq_domain,
+>>> +                                 pin + (rg->bank * MTK_BANK_WIDTH));
+>>> +}
+>>
+>> So this is the result of a custom IRQdomain because you
+>> can't use the generic GPIO IRQ lib.  Oh well, we have to live
+>> with it I guess.
+>
+> I think maybe you can actually use the generic GPIO IRQCHIP.
+>
+> It is OK to call gpiochip_set_chained_irqchip() several times.
+> If you just mark the line with IRQF_SHARED then the handler
+> will just loop over all three banks until you find a hit, provided
+> you code it up properly.
+
+Ok, I'll give it a try to use this also.
+
+>
+> There were some problems with removing an irqchip like
+> that but your driver is anyway a bool so I think it might work
+> just fine.
+>
+> Yours,
+> Linus Walleij
+
+Thanks again.
+
+Best regards,
+    Sergio Paracuellos
