@@ -1,73 +1,70 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH 1/2] gpio: mediatek: add driver for MT7621
-Date: Sat, 9 Jun 2018 08:17:14 +0200
-Message-ID: <CAMhs-H83Q44=arvKJSOyOAsq=7DV3j6rptJannSVCMVREQnW-Q@mail.gmail.com>
-References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
- <1527924610-13135-2-git-send-email-sergio.paracuellos@gmail.com>
- <CACRpkdaw9O6TbZie5AOTmQJ9-3=yHETFFX7YVkPBEL72EZzZ=g@mail.gmail.com>
- <CACRpkdbeXkTUir=Ar+x5jsSow_NiNwu1w_4Fewv8N7jcgbMinQ@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Sat, 09 Jun 2018 08:23:51 +0200
+Message-ID: <792ee71847f6f4752b8bcba65d22bf81@agner.ch>
+References: <20180531221637.6017-1-stefan@agner.ch>
+ <20180531221637.6017-5-stefan@agner.ch>
+ <cdca329f-0b8d-0604-4cfb-b95baf84c867@gmail.com>
+ <d625dd8ca816543e03668b74921563c1@agner.ch>
+ <20180609075256.725354d6@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CACRpkdbeXkTUir=Ar+x5jsSow_NiNwu1w_4Fewv8N7jcgbMinQ@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, driverdev-devel@linuxdriverproject.org, Greg KH <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NeilBrown <neil@brown.name>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180609075256.725354d6@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 8, 2018 at 2:17 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> A second thought:
-
-Second thought is always a good thing :-)
-
->
-> On Fri, Jun 8, 2018 at 1:59 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
->
->>> +       select GPIOLIB_IRQCHIP
+On 09.06.2018 07:52, Boris Brezillon wrote:
+> On Fri, 08 Jun 2018 23:51:01 +0200
+> Stefan Agner <stefan@agner.ch> wrote:
+> 
+> 
+>> >
+>> > void tegra_nand_controller_reset(struct tegra_nand_controller *ctrl)
+>> > {
+>> > 	int err;
+>> >
+>> > 	disable_irq(ctrl->irq);
+>> >
+>> > 	err = reset_control_reset(ctrl->rst);
+>> > 	if (err) {
+>> > 		dev_err(ctrl->dev, "Failed to reset HW: %d\n", err);
+>> > 		msleep(HW_TIMEOUT);
+>> > 	}
+>> >
+>> > 	writel_relaxed(NAND_CMD_STATUS, ctrl->regs + HWSTATUS_CMD);
+>> > 	writel_relaxed(HWSTATUS_MASK, ctrl->regs + HWSTATUS_MASK);
+>> > 	writel_relaxed(INT_MASK, ctrl->regs + ISR);
 >>
->> You are not using this so I guess remove that line.
-> (...)
->>> +static int
->>> +mediatek_gpio_to_irq(struct gpio_chip *chip, unsigned int pin)
->>> +{
->>> +       struct mtk_data *gpio_data = gpiochip_get_data(chip);
->>> +       struct mtk_gc *rg = to_mediatek_gpio(chip);
->>> +
->>> +       return irq_create_mapping(gpio_data->gpio_irq_domain,
->>> +                                 pin + (rg->bank * MTK_BANK_WIDTH));
->>> +}
+>> If we do a controller reset, there is much more state than that which
+>> needs to be restored. A lot of it is not readily available currently
+>> (timing, ECC settings...)
+> 
+> This is actually a good test to detect what is not properly initialized
+> by the driver. Timings should be configured correctly through
+> ->setup_data_interface(). ECC engine should be disabled by default and
+> only enabled when ->{read,write}_page() is called.
+> 
+
+Is setup_data_interface guaranteed to be called after a failed
+->exec_op()/{read,write}_page()?
+
 >>
->> So this is the result of a custom IRQdomain because you
->> can't use the generic GPIO IRQ lib.  Oh well, we have to live
->> with it I guess.
->
-> I think maybe you can actually use the generic GPIO IRQCHIP.
->
-> It is OK to call gpiochip_set_chained_irqchip() several times.
-> If you just mark the line with IRQF_SHARED then the handler
-> will just loop over all three banks until you find a hit, provided
-> you code it up properly.
+>> That seems a lot of work for a code path I do not intend to ever use :-)
+>>
+> 
+> Not so sure it's a lot of work. If ECC and timing settings are the
+> only thing you need to initialize then it should work just fine.
+> Try with a controller reset and you'll know if you miss something ;-).
 
-Ok, I'll give it a try to use this also.
+Currently the setting gets written directly to the registers. Only the
+enable flag is set in the HW ECC {read,write}_page() functions. So I
+will have to store the complete register in the chip structure and write
+them on every {read,write}_page()?
 
->
-> There were some problems with removing an irqchip like
-> that but your driver is anyway a bool so I think it might work
-> just fine.
->
-> Yours,
-> Linus Walleij
-
-Thanks again.
-
-Best regards,
-    Sergio Paracuellos
+--
+Stefan
