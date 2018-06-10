@@ -1,113 +1,169 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv2 05/17] dt-bindings: display: add HPD gpio to DVI
- connector
-Date: Sun, 10 Jun 2018 15:54:00 +0200
-Message-ID: <20180610135400.lruifesy2l3cx5bi@earth.universe>
-References: <1519817174-20714-1-git-send-email-tomi.valkeinen@ti.com>
- <1519817174-20714-6-git-send-email-tomi.valkeinen@ti.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
+Date: Sun, 10 Jun 2018 14:59:23 +0100
+Message-ID: <20180610145923.3b767ad4@archlinux>
+References: <1528377065-647-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1429024452=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1519817174-20714-6-git-send-email-tomi.valkeinen@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528377065-647-1-git-send-email-stefan.popa@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: Michael.Hennerich@analog.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 7 Jun 2018 16:11:05 +0300
+Stefan Popa <stefan.popa@analog.com> wrote:
 
---===============1429024452==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ghhn52jl3jnmfexr"
-Content-Disposition: inline
-
-
---ghhn52jl3jnmfexr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Feb 28, 2018 at 01:26:02PM +0200, Tomi Valkeinen wrote:
-> Add hpd-gpios property to dvi-connector.txt.
->=20
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-
--- Sebastian
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Hmm. The first part number I've ever googled where the top hit has
+been a flight number.=20
+Rio de Janeiro to Campinas is apparently on time today.
 
 > ---
->  Documentation/devicetree/bindings/display/connector/dvi-connector.txt | =
-1 +
->  1 file changed, 1 insertion(+)
+> Changes in v2:
+> 	- Nothing changed, just to follow the patch set version.
 >=20
-> diff --git a/Documentation/devicetree/bindings/display/connector/dvi-conn=
-ector.txt b/Documentation/devicetree/bindings/display/connector/dvi-connect=
-or.txt
-> index fc53f7c60bc6..207e42e9eba0 100644
-> --- a/Documentation/devicetree/bindings/display/connector/dvi-connector.t=
-xt
-> +++ b/Documentation/devicetree/bindings/display/connector/dvi-connector.t=
-xt
-> @@ -10,6 +10,7 @@ Optional properties:
->  - analog: the connector has DVI analog pins
->  - digital: the connector has DVI digital pins
->  - dual-link: the connector has pins for DVI dual-link
-> +- hpd-gpios: HPD GPIO number
+>  .../devicetree/bindings/iio/dac/ad5758.txt         | 84 ++++++++++++++++=
+++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Docum=
+entation/devicetree/bindings/iio/dac/ad5758.txt
+> new file mode 100644
+> index 0000000..75fff6c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+> @@ -0,0 +1,84 @@
+> +Analog Devices AD5758 DAC device driver
+> +
+> +Required properties for the AD5758:
+> +	- compatible: Must be "adi,ad5758"
+> +	- reg: SPI chip select number for the device
+> +	- spi-max-frequency: Max SPI frequency to use (< 50000000)
+> +	- spi-cpha: is the only mode that is supported
+> +
+> +Optional properties:
+> +
+> + - adi,dc-dc-mode: Mode of operation of the dc-to-dc converter
+> +		   The following values are currently supported:
+> +		   	* 0: DC-to-DC converter powered off
+> +			* 1: DPC current mode
+Perhaps expand those acronyms?
+Dynamic Power Control  and perhaps a bit of explanation so people
+who are ready DT files don't have to go find the data sheet to have
+some idea of what these are?
+
+Otherwise, binding is fine.
+
+> +			* 2: DPC voltage mode
+> +			* 3: PPC current mode
+> +
+> + - adi,dc-dc-ilim: The dc-to-dc converter current limit
+> +		   The following values are currently supported [mA]:
+Unit should be in the name.
+adi,dc-dc-ilim_ma
+> +		   	* 150
+> +			* 200
+> +			* 250
+> +			* 300
+> +			* 350
+> +			* 400
+> +
+> + - adi,slew: Array of slewrate settings should contain 3 fields:
+> +	1: Should be either 0 or 1 in order to enable or disable slewrate.
+
+If it is disabled, why not just detect that as the 'not here' version
+and then you can drop this element?
+
+> +	2: Slew rate clock:
+> +		Valid values for the slew rate update frequency [Hz]:
+> +		* 240000
+> +		* 200000
+> +		* 150000
+> +		* 128000
+> +		* 64000
+> +		* 32000
+> +		* 16000
+> +		* 8000
+> +		* 4000
+> +		* 2000
+> +		* 1000
+> +		* 512
+> +		* 256
+> +		* 128
+> +		* 64
+> +		* 16
+> +	3: Slew rate step:
+> +		Defines by how much the output value changes at each update.
+> +		Valid values for the step size LSBs:
+> +		* 4
+> +		* 12
+> +		* 64
+> +		* 120
+> +		* 256
+> +		* 500
+> +		* 1820
+> +		* 2048
+
+I think these last two are kind of separate parameters, would be interested
+to hear if Rob thinks this should be separate or not.  They are both
+related to slew rate, but different elements that add up to it.
+
+> +
+> + - adi,range: The output range
+> +	      The following values are currently supported:
+> +	      	* 0: 0 V to 5 V voltage range
+> +		* 1: 0 V to 10 V voltage range
+> +		* 2: =C2=B15 V voltage range
+> +		* 3: =C2=B110 V voltage range
+> +		* 8: 0 mA to 20 mA current range
+> +		* 9: 0 mA to 24 mA current range
+> +		* 10: 4 mA to 20 mA current range
+> +		* 11: =C2=B120 mA current range
+> +		* 12: =C2=B124 mA current range
+> +		* 13: =E2=88=921 mA to +22 mA current range
+
+Not sure if we can't represent this better.  It's either
+a current or voltage output device.
+
+adi,voltage_output or something like that or use
+
+adi,voltage_range_v =3D <0 5>
+adi,current_range_ma =3D <-1 22> etc
+with it only being valid to specify one or the other.
+
+I much prefer DT elements that don't require looking
+at the docs where possible.
+
+Again, Rob's input on this would be good.
+
+> +
+> +AD5758 Example:
+> +
+> +	ad5758@0 {
+> +		compatible =3D "adi,ad5758";
+> +		reg =3D <0>;
+> +		spi-max-frequency =3D <1000000>;
+> +		spi-cpha;
+> +
+> +		adi,dc-dc-mode =3D <2>;
+> +		adi,dc-dc-ilim =3D <200>;
+> +		adi,slew =3D <1 200000 12>;
+> +		adi,range =3D <1>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1993779..f640146 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -808,6 +808,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/dac/ad5758.c
+> +F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
 > =20
->  Required nodes:
->  - Video port for DVI input
-> --=20
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---ghhn52jl3jnmfexr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlsdLXgACgkQ2O7X88g7
-+pq7Gg//TLgoiGmiRZ0pFFZYjbb04OCR50If9//35KCX38m7iE1b3mTwzJszJVyi
-BQ6TZhMy8lh4MpiZKHdR2y/Q5sb7PNjTeZ/Q4NlDtEQdr3nGt7rZOZQ2y5QOOS5T
-uoLlypUegFPJ3YsavDh0RZvizoe5nt0Pvj7GjZBZw5w8DnQzKp6brBwJieyR5SpU
-WKidREJGacnrKgb/tCKuBQYlGTIPevSLXO9ezlRt+Wl2sqkSAviRzpHmq7q8wkxk
-sj0j0oArOkU8pvMPq5TTYBpYSo71qMeO0cqlE3EdeBQs933lesJlM2iseTPgoTJC
-uFRZNLI5TkPf9qQru0CAUthi2V6lG95UAQIUCJcLshgHuCabmd8Ncxob9M7VnoRu
-UseqT4tHH8UaJDEh/AFh0z2rTDTX5+KeprKQKhX/LJ1JPN63G/WUP3VjxDky/doW
-D/I6WeBs4635D4YE6bOuWbfVt3J8zEqu6xFDbIe/z5UFnCD4c4T5qcjuwbTVC7RT
-9ICRMTg1kCg1JJmTiDtVPwl35/C4O0AmQ0SfaALtPXPjTmFiTLNV4ydDGt9ITDOO
-qYxhE0F+QKuosAsrTR7psVhtrxwnHJUlUwZLaad0isHTfyJK6yhKH7cMClEnVpnI
-o17AD7NU4iaXb/8OJnx5myRKQzbJAaZd85SElFBA2kkDEFoNRw4=
-=LkcP
------END PGP SIGNATURE-----
-
---ghhn52jl3jnmfexr--
-
---===============1429024452==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1429024452==--
+>  ANALOG DEVICES INC AD9389B DRIVER
+>  M:	Hans Verkuil <hans.verkuil@cisco.com>
