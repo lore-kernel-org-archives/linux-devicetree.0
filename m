@@ -1,15 +1,16 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/5] Add R8A77980/Condor/V3HSK LVDS/HDMI support
-Date: Mon, 11 Jun 2018 10:15:32 +0200
-Message-ID: <20180611081531.xaax5ouvffnarhq5@verge.net.au>
-References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
- <4069170.tduNOXLj45@avalon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v7 2/2] ARM: dts: imx: Add basic dts support for imx6sll
+ EVK board
+Date: Mon, 11 Jun 2018 16:24:13 +0800
+Message-ID: <20180611082411.GH16091@dragon>
+References: <1527234127-11991-1-git-send-email-ping.bai@nxp.com>
+ <1527234127-11991-2-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <4069170.tduNOXLj45@avalon>
+In-Reply-To: <1527234127-11991-2-git-send-email-ping.bai@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,34 +20,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Bai Ping <ping.bai@nxp.com>
+Cc: aisheng.dong@nxp.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, jacky.baip@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 08, 2018 at 05:27:19PM +0300, Laurent Pinchart wrote:
-> Hi Sergei,
+On Fri, May 25, 2018 at 03:42:07PM +0800, Bai Ping wrote:
+> Add dts file support for imx6sll EVK board.
 > 
-> On Thursday, 7 June 2018 23:17:03 EEST Sergei Shtylyov wrote:
-> > Hello!
-> > 
-> > Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
-> > 'renesas-devel-20180604-v4.17' tag. We're adding the R8A77980 FCPVD/VSPD/
-> > DU/LVDS device nodes and then describing the LVDS decoder and HDMI encoder
-> > connected to the LVDS output. These patches depend on the Thine THC63LVD1024
-> > driver and the R8A77980 LVDS support patch in order to work, and R8A77980
-> > GPIO DT patches in order to apply/compile...
-> > 
-> > [1/5] arm64: dts: renesas: r8a77980: add FCPVD support
-> > [2/5] arm64: dts: renesas: r8a77980: add VSPD support
-> > [3/5] arm64: dts: renesas: r8a77980: add DU support
-> > [4/5] arm64: dts: renesas: r8a77980: add LVDS support
-> 
-> Based on the recent request of the ARM SoC maintainers to avoid a plethora of 
-> small patches, I think you can squash 1/5 to 4/5 all together.
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
+> ---
+>  change v3->v4
+>  - update the license indentifier
+>  - remove leading zero of node
+>  - remove unused pin from hog group
+>  change v4->v5
+>  - use generic name for device node
+>  - remove unnecessary hog pin group
+>  change v5->v6
+>  - no
+>  change v6->v7
+>  - move the iomuxc node to the end of dts file
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+>  arch/arm/boot/dts/Makefile                    |   2 +
+>  arch/arm/boot/dts/imx6sll-evk.dts             | 317 ++++++++++++++++++++++++++
+>  3 files changed, 323 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6sll-evk.dts
 
-Agreed.
+<snip>
 
-Seregi could you please post a v2 with patches 1 - 4 squashed and the
-register range for VSPD0 reduced to 0x5000? Thanks!
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6SLL_PAD_I2C1_SCL__I2C1_SCL	 0x4001b8b1
+> +			MX6SLL_PAD_I2C1_SDA__I2C1_SDA	 0x4001b8b1
+> +		>;
+> +	};
+> +};
+> +
+> +
 
-> > [5/5] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI support
+The new blank line at EOF should be dropped.
+
+
+I fixed it up and applied both patches.
+
+Shawn
