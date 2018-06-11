@@ -1,27 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt: bindings: tegra20-emc: Document interrupt
- property
-Date: Mon, 11 Jun 2018 12:26:46 -0600
-Message-ID: <20180611182646.GA16835@rob-hp-laptop>
-References: <20180603223654.23324-1-digetx@gmail.com>
- <20180603223654.23324-2-digetx@gmail.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: usb: new ehci-npcm7xx dt
+Date: Mon, 11 Jun 2018 12:55:47 -0600
+Message-ID: <CAL_JsqJYafGzpr8+VQSYJcE5EMo1xZ8NrXTyGBS-7GhU-X+PVg@mail.gmail.com>
+References: <20180607145821.322979-1-avifishman70@gmail.com>
+ <20180607145821.322979-3-avifishman70@gmail.com> <20180611181646.GA5537@rob-hp-laptop>
+ <CAKKbWA4gm1x8VazdMjZ6a9bwGmt=_mZYS2S3FnB2x36Ng+cjCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180603223654.23324-2-digetx@gmail.com>
+In-Reply-To: <CAKKbWA4gm1x8VazdMjZ6a9bwGmt=_mZYS2S3FnB2x36Ng+cjCQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Avi Fishman <avifishman70@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Tomer Maimon <tmaimon77@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, James Hogan <jhogan@kernel.org>, Alban <albeu@free.fr>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Tony Lindgren <tony@atomide.com>, baolu.lu@linux.intel.com, Alex Elder <elder@linaro.org>, Dmitry Osipenko <digetx@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>OpenBMC Maillist <o>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 04, 2018 at 01:36:50AM +0300, Dmitry Osipenko wrote:
-> EMC has a dedicated interrupt that is used to notify about completion of
-> HW operations. Document the interrupt property.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt        | 2 ++
->  1 file changed, 2 insertions(+)
+On Mon, Jun 11, 2018 at 12:24 PM, Avi Fishman <avifishman70@gmail.com> wrote:
+> On Mon, Jun 11, 2018 at 9:16 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Thu, Jun 07, 2018 at 05:58:20PM +0300, avifishman70@gmail.com wrote:
+>>> From: Avi Fishman <AviFishman70@gmail.com>
+>>>
+>>> Device Tree documentation for Nuvoton npcm7xx EHCI.
+>>>
+>>> Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Rob, if I understand you want me to add another version (v5) with the
+> above line (only on the dt)?
 
-Acked-by: Rob Herring <robh@kernel.org>
+No need to *only* do that. Maintainers will collect them on the last
+version when they apply patches. You just can't expect that
+maintainers will go look at prior versions and collect them.
+
+>>> ---
+>>>  Documentation/devicetree/bindings/usb/npcm7xx-usb.txt | 17 +++++++++++++++++
+>>>  1 file changed, 17 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+>>
+>> Please add acks/reviewed-bys when posting new versions.
+>>
+>> Rob
