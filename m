@@ -1,142 +1,86 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH 02/28] drm/mediatek: support maximum 64 mutex mod
-Date: Mon, 11 Jun 2018 11:25:54 +0800
-Message-ID: <1528687580-549-3-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 04/28] drm/mediatek: add ddp component OD1
+Date: Mon, 11 Jun 2018 11:25:56 +0800
+Message-ID: <1528687580-549-5-git-send-email-stu.hsieh@mediatek.com>
 References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch support that if modules more than 32,
-add index more than 31 when using DISP_REG_MUTEX_MOD2 bit
-
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 75 +++++++++++++++++++++-------------
- 1 file changed, 47 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 8130f3dab661..47ffa240bd25 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -41,31 +41,32 @@
- #define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
- #define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
- #define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
-+#define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
- 
- #define INT_MUTEX				BIT(1)
- 
--#define MT8173_MUTEX_MOD_DISP_OVL0		BIT(11)
--#define MT8173_MUTEX_MOD_DISP_OVL1		BIT(12)
--#define MT8173_MUTEX_MOD_DISP_RDMA0		BIT(13)
--#define MT8173_MUTEX_MOD_DISP_RDMA1		BIT(14)
--#define MT8173_MUTEX_MOD_DISP_RDMA2		BIT(15)
--#define MT8173_MUTEX_MOD_DISP_WDMA0		BIT(16)
--#define MT8173_MUTEX_MOD_DISP_WDMA1		BIT(17)
--#define MT8173_MUTEX_MOD_DISP_COLOR0		BIT(18)
--#define MT8173_MUTEX_MOD_DISP_COLOR1		BIT(19)
--#define MT8173_MUTEX_MOD_DISP_AAL		BIT(20)
--#define MT8173_MUTEX_MOD_DISP_GAMMA		BIT(21)
--#define MT8173_MUTEX_MOD_DISP_UFOE		BIT(22)
--#define MT8173_MUTEX_MOD_DISP_PWM0		BIT(23)
--#define MT8173_MUTEX_MOD_DISP_PWM1		BIT(24)
--#define MT8173_MUTEX_MOD_DISP_OD		BIT(25)
--
--#define MT2701_MUTEX_MOD_DISP_OVL		BIT(3)
--#define MT2701_MUTEX_MOD_DISP_WDMA		BIT(6)
--#define MT2701_MUTEX_MOD_DISP_COLOR		BIT(7)
--#define MT2701_MUTEX_MOD_DISP_BLS		BIT(9)
--#define MT2701_MUTEX_MOD_DISP_RDMA0		BIT(10)
--#define MT2701_MUTEX_MOD_DISP_RDMA1		BIT(12)
-+#define MT8173_MUTEX_MOD_DISP_OVL0		11
-+#define MT8173_MUTEX_MOD_DISP_OVL1		12
-+#define MT8173_MUTEX_MOD_DISP_RDMA0		13
-+#define MT8173_MUTEX_MOD_DISP_RDMA1		14
-+#define MT8173_MUTEX_MOD_DISP_RDMA2		15
-+#define MT8173_MUTEX_MOD_DISP_WDMA0		16
-+#define MT8173_MUTEX_MOD_DISP_WDMA1		17
-+#define MT8173_MUTEX_MOD_DISP_COLOR0		18
-+#define MT8173_MUTEX_MOD_DISP_COLOR1		19
-+#define MT8173_MUTEX_MOD_DISP_AAL		20
-+#define MT8173_MUTEX_MOD_DISP_GAMMA		21
-+#define MT8173_MUTEX_MOD_DISP_UFOE		22
-+#define MT8173_MUTEX_MOD_DISP_PWM0		23
-+#define MT8173_MUTEX_MOD_DISP_PWM1		24
-+#define MT8173_MUTEX_MOD_DISP_OD		25
-+
-+#define MT2701_MUTEX_MOD_DISP_OVL		3
-+#define MT2701_MUTEX_MOD_DISP_WDMA		6
-+#define MT2701_MUTEX_MOD_DISP_COLOR		7
-+#define MT2701_MUTEX_MOD_DISP_BLS		9
-+#define MT2701_MUTEX_MOD_DISP_RDMA0		10
-+#define MT2701_MUTEX_MOD_DISP_RDMA1		12
- 
- #define MUTEX_SOF_SINGLE_MODE		0
- #define MUTEX_SOF_DSI0			1
-@@ -278,6 +279,7 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
- 	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
- 					   mutex[mutex->id]);
- 	unsigned int reg;
-+	unsigned int offset;
- 
- 	WARN_ON(&ddp->mutex[mutex->id] != mutex);
- 
-@@ -292,9 +294,17 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
- 		reg = MUTEX_SOF_DPI0;
- 		break;
- 	default:
--		reg = readl_relaxed(ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
--		reg |= ddp->mutex_mod[id];
--		writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
-+		if (ddp->mutex_mod[id] < 32) {
-+			offset = DISP_REG_MUTEX_MOD(mutex->id);
-+			reg = readl_relaxed(ddp->regs + offset);
-+			reg |= 1 << ddp->mutex_mod[id];
-+			writel_relaxed(reg, ddp->regs + offset);
-+		} else {
-+			offset = DISP_REG_MUTEX_MOD2(mutex->id);
-+			reg = readl_relaxed(ddp->regs + offset);
-+			reg |= 1 << (ddp->mutex_mod[id] - 32);
-+			writel_relaxed(reg, ddp->regs + offset);
-+		}
- 		return;
- 	}
- 
-@@ -307,6 +317,7 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 	struct mtk_ddp *ddp = container_of(mutex, struct mtk_ddp,
- 					   mutex[mutex->id]);
- 	unsigned int reg;
-+	unsigned int offset;
- 
- 	WARN_ON(&ddp->mutex[mutex->id] != mutex);
- 
-@@ -318,9 +329,17 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
- 		break;
- 	default:
--		reg = readl_relaxed(ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
--		reg &= ~(ddp->mutex_mod[id]);
--		writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
-+		if (ddp->mutex_mod[id] < 32) {
-+			offset = DISP_REG_MUTEX_MOD(mutex->id);
-+			reg = readl_relaxed(ddp->regs + offset);
-+			reg &= ~(1 << ddp->mutex_mod[id]);
-+			writel_relaxed(reg, ddp->regs + offset);
-+		} else {
-+			offset = DISP_REG_MUTEX_MOD2(mutex->id);
-+			reg = readl_relaxed(ddp->regs + offset);
-+			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
-+			writel_relaxed(reg, ddp->regs + offset);
-+		}
- 		break;
- 	}
- }
--- 
-2.12.5
+VGhpcyBwYXRjaCBhZGQgdGhlIGNvbXBvbmVudCBPRDEgYW5kCnJlbmFtZSB0aGUgT0QgdG8gT0Qw
+CgpTaWduZWQtb2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQog
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8IDQgKystLQogZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDMgKystCiBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIHwgMyArKy0KIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgfCAyICstCiA0IGZpbGVzIGNoYW5nZWQs
+IDcgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcC5jCmluZGV4IDcyMTc2NjVmNGI1ZC4uNThlNDQzNDllMzE1IDEwMDY0NAotLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYworKysgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwpAQCAtMTE0LDcgKzExNCw3IEBAIHN0YXRpYyBj
+b25zdCB1bnNpZ25lZCBpbnQgbXQ4MTczX211dGV4X21vZFtERFBfQ09NUE9ORU5UX0lEX01BWF0g
+PSB7CiAJW0REUF9DT01QT05FTlRfQ09MT1IwXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9DT0xP
+UjAsCiAJW0REUF9DT01QT05FTlRfQ09MT1IxXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9DT0xP
+UjEsCiAJW0REUF9DT01QT05FTlRfR0FNTUFdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX0dBTU1B
+LAotCVtERFBfQ09NUE9ORU5UX09EXSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9PRCwKKwlbRERQ
+X0NPTVBPTkVOVF9PRDBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX09ELAogCVtERFBfQ09NUE9O
+RU5UX09WTDBdID0gTVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDAsCiAJW0REUF9DT01QT05FTlRf
+T1ZMMV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfT1ZMMSwKIAlbRERQX0NPTVBPTkVOVF9QV00w
+XSA9IE1UODE3M19NVVRFWF9NT0RfRElTUF9QV00wLApAQCAtMTM5LDcgKzEzOSw3IEBAIHN0YXRp
+YyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwK
+IAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09WTDAgJiYgbmV4dCA9PSBERFBfQ09N
+UE9ORU5UX1JETUEwKSB7CiAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfT1ZMX01PVVRf
+RU47CiAJCXZhbHVlID0gT1ZMX01PVVRfRU5fUkRNQTsKLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBf
+Q09NUE9ORU5UX09EICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCkgeworCX0gZWxzZSBp
+ZiAoY3VyID09IEREUF9DT01QT05FTlRfT0QwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9SRE1B
+MCkgewogCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX09EX01PVVRfRU47CiAJCXZhbHVl
+ID0gT0RfTU9VVF9FTl9SRE1BMDsKIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1VG
+T0UgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTApIHsKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCmluZGV4IDA5MTkwMzk4MDVhYS4uODdhY2Y2YmU4N2Y2
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5j
+CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMKQEAgLTIy
+Nyw3ICsyMjcsOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9tYXRjaCBtdGtf
+ZGRwX21hdGNoZXNbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0gewogCVtERFBfQ09NUE9ORU5UX0RT
+STBdCT0geyBNVEtfRFNJLAkJMCwgTlVMTCB9LAogCVtERFBfQ09NUE9ORU5UX0RTSTFdCT0geyBN
+VEtfRFNJLAkJMSwgTlVMTCB9LAogCVtERFBfQ09NUE9ORU5UX0dBTU1BXQk9IHsgTVRLX0RJU1Bf
+R0FNTUEsCTAsICZkZHBfZ2FtbWEgfSwKLQlbRERQX0NPTVBPTkVOVF9PRF0JPSB7IE1US19ESVNQ
+X09ELAkwLCAmZGRwX29kIH0sCisJW0REUF9DT01QT05FTlRfT0QwXQk9IHsgTVRLX0RJU1BfT0Qs
+CTAsICZkZHBfb2QgfSwKKwlbRERQX0NPTVBPTkVOVF9PRDFdCT0geyBNVEtfRElTUF9PRCwJMSwg
+JmRkcF9vZCB9LAogCVtERFBfQ09NUE9ORU5UX09WTDBdCT0geyBNVEtfRElTUF9PVkwsCTAsIE5V
+TEwgfSwKIAlbRERQX0NPTVBPTkVOVF9PVkwxXQk9IHsgTVRLX0RJU1BfT1ZMLAkxLCBOVUxMIH0s
+CiAJW0REUF9DT01QT05FTlRfUFdNMF0JPSB7IE1US19ESVNQX1BXTSwJMCwgTlVMTCB9LApkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaCBiL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKaW5kZXggZWVlM2MwY2My
+NjMyLi45YjE5ZmM0NDIzZjEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHJtX2RkcF9jb21wLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZGRwX2NvbXAuaApAQCAtNTAsNyArNTAsOCBAQCBlbnVtIG10a19kZHBfY29tcF9pZCB7CiAJRERQ
+X0NPTVBPTkVOVF9EU0kwLAogCUREUF9DT01QT05FTlRfRFNJMSwKIAlERFBfQ09NUE9ORU5UX0dB
+TU1BLAotCUREUF9DT01QT05FTlRfT0QsCisJRERQX0NPTVBPTkVOVF9PRDAsCisJRERQX0NPTVBP
+TkVOVF9PRDEsCiAJRERQX0NPTVBPTkVOVF9PVkwwLAogCUREUF9DT01QT05FTlRfT1ZMMSwKIAlE
+RFBfQ09NUE9ORU5UX1BXTTAsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCmlu
+ZGV4IGE0MTUyNjBmM2Q1Zi4uMDhkNWQwYjQ3YmZlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kcnYuYwpAQCAtMTUwLDcgKzE1MCw3IEBAIHN0YXRpYyBjb25zdCBlbnVtIG10a19k
+ZHBfY29tcF9pZCBtdDgxNzNfbXRrX2RkcF9tYWluW10gPSB7CiAJRERQX0NPTVBPTkVOVF9PVkww
+LAogCUREUF9DT01QT05FTlRfQ09MT1IwLAogCUREUF9DT01QT05FTlRfQUFMMCwKLQlERFBfQ09N
+UE9ORU5UX09ELAorCUREUF9DT01QT05FTlRfT0QwLAogCUREUF9DT01QT05FTlRfUkRNQTAsCiAJ
+RERQX0NPTVBPTkVOVF9VRk9FLAogCUREUF9DT01QT05FTlRfRFNJMCwKLS0gCjIuMTIuNQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
