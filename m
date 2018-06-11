@@ -1,87 +1,58 @@
-Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
-From: Argus Lin <argus.lin@mediatek.com>
-Subject: [PATCH V5 2/4] soc: mediatek: pwrap: fix cipher init setting error
-Date: Fri, 8 Jun 2018 15:39:52 +0800
-Message-ID: <1528443594-6978-3-git-send-email-argus.lin@mediatek.com>
-In-Reply-To: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
-References: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
+Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Mon, 11 Jun 2018 15:34:44 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 08/15] staging: typec: tcpci: use IS_ERR() instead of
+ PTR_ERR_OR_ZERO()
+Message-ID: <20180611123444.GN17155@kuha.fi.intel.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+ <1527475967-15201-9-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_005_1037877699.1923602379"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1527475967-15201-9-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>
+Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_005_1037877699.1923602379
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_006_1884060606.358307590"
+On Mon, May 28, 2018 at 10:52:40AM +0800, Li Jun wrote:
+> As tcpm_register_port() and tcpci_register_port() never return
+> NULL and NULL is not a success in this case, use IS_ERR() to check
+> the return value of both.
+> 
+> Signed-off-by: Li Jun <jun.li@nxp.com>
 
---__=_Part_Boundary_006_1884060606.358307590
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+FWIW:
 
-PHByZT4NClBXUkFQX0RFV19DSVBIRVJfTE9BRCBhbmQgUFdSQVBfREVXX0NJUEhFUl9TVEFSVCBv
-bmx5IGV4aXN0IGF0DQpQTUlDX210NjM5NyBkYXRhc2hlZXQuIFdlIGZpeCBpdCBiZWZvcmUgbWVy
-Z2UgUE1JQ19tdDYzNTEgZHJpdmVyLg0KDQpGaXhlczogNWFlNDgwNDBhYTQ3ICgmcXVvdDtzb2M6
-IG1lZGlhdGVrOiBQTUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCZxdW90OykNCg0K
-U2lnbmVkLW9mZi1ieTogQXJndXMgTGluICZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0Ow0K
-LS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jIHwgMiAtLQ0KIDEgZmls
-ZSBjaGFuZ2VkLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVk
-aWF0ZWsvbXRrLXBtaWMtd3JhcC5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3Jh
-cC5jDQppbmRleCBlOWUwNTRhLi45YTAxZTMwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVk
-aWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1p
-Yy13cmFwLmMNCkBAIC0xMDgwLDggKzEwODAsNiBAQCBzdGF0aWMgaW50IHB3cmFwX2luaXRfY2lw
-aGVyKHN0cnVjdCBwbWljX3dyYXBwZXIgKndycCkNCiAJcHdyYXBfd3JpdGUod3JwLCB3cnAtJmd0
-O3NsYXZlLSZndDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX1NXUlNUXSwgMHgwKTsNCiAJcHdy
-YXBfd3JpdGUod3JwLCB3cnAtJmd0O3NsYXZlLSZndDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVS
-X0tFWV9TRUxdLCAweDEpOw0KIAlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rl
-d19yZWdzW1BXUkFQX0RFV19DSVBIRVJfSVZfU0VMXSwgMHgyKTsNCi0JcHdyYXBfd3JpdGUod3Jw
-LCB3cnAtJmd0O3NsYXZlLSZndDtkZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0xPQURdLCAweDEp
-Ow0KLQlwd3JhcF93cml0ZSh3cnAsIHdycC0mZ3Q7c2xhdmUtJmd0O2Rld19yZWdzW1BXUkFQX0RF
-V19DSVBIRVJfU1RBUlRdLCAweDEpOw0KIA0KIAlzd2l0Y2ggKHdycC0mZ3Q7c2xhdmUtJmd0O3R5
-cGUpIHsNCiAJY2FzZSBQTUlDX01UNjM5NzoNCi0tIA0KMS44LjEuMS5kaXJ0eQ0KDQo8L3ByZT48
-IS0tdHlwZTp0ZXh0LS0+PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50
-aWFsaXR5IE5vdGljZQ0KICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29u
-dGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50
-cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVy
-d2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlz
-IGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGll
-bnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywg
-cmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRh
-Y2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRl
-ZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lw
-aWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZQ0KIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZl
-ZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRp
-YXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNv
-cGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlv
-dXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFp
-bCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
---__=_Part_Boundary_006_1884060606.358307590
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+> ---
+>  drivers/staging/typec/tcpci.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index 076498a..b63f147 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -509,7 +509,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
+>  		return ERR_PTR(err);
+>  
+>  	tcpci->port = tcpm_register_port(tcpci->dev, &tcpci->tcpc);
+> -	if (PTR_ERR_OR_ZERO(tcpci->port))
+> +	if (IS_ERR(tcpci->port))
+>  		return ERR_CAST(tcpci->port);
+>  
+>  	return tcpci;
+> @@ -551,7 +551,7 @@ static int tcpci_probe(struct i2c_client *client,
+>  		return err;
+>  
+>  	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
+> -	if (PTR_ERR_OR_ZERO(chip->tcpci))
+> +	if (IS_ERR(chip->tcpci))
+>  		return PTR_ERR(chip->tcpci);
+>  
+>  	i2c_set_clientdata(client, chip);
 
-UFdSQVBfREVXX0NJUEhFUl9MT0FEIGFuZCBQV1JBUF9ERVdfQ0lQSEVSX1NUQVJUIG9ubHkgZXhp
-c3QgYXQNClBNSUNfbXQ2Mzk3IGRhdGFzaGVldC4gV2UgZml4IGl0IGJlZm9yZSBtZXJnZSBQTUlD
-X210NjM1MSBkcml2ZXIuDQoNCkZpeGVzOiA1YWU0ODA0MGFhNDcgKCJzb2M6IG1lZGlhdGVrOiBQ
-TUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCIpDQoNClNpZ25lZC1vZmYtYnk6IEFy
-Z3VzIExpbiA8YXJndXMubGluQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1wbWljLXdyYXAuYyB8IDIgLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMo
-LSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyBi
-L2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0KaW5kZXggZTllMDU0YS4uOWEw
-MWUzMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYw0K
-KysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMtd3JhcC5jDQpAQCAtMTA4MCw4ICsx
-MDgwLDYgQEAgc3RhdGljIGludCBwd3JhcF9pbml0X2NpcGhlcihzdHJ1Y3QgcG1pY193cmFwcGVy
-ICp3cnApDQogCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVX
-X0NJUEhFUl9TV1JTVF0sIDB4MCk7DQogCXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3
-X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9LRVlfU0VMXSwgMHgxKTsNCiAJcHdyYXBfd3JpdGUod3Jw
-LCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQV1JBUF9ERVdfQ0lQSEVSX0lWX1NFTF0sIDB4Mik7DQot
-CXB3cmFwX3dyaXRlKHdycCwgd3JwLT5zbGF2ZS0+ZGV3X3JlZ3NbUFdSQVBfREVXX0NJUEhFUl9M
-T0FEXSwgMHgxKTsNCi0JcHdyYXBfd3JpdGUod3JwLCB3cnAtPnNsYXZlLT5kZXdfcmVnc1tQV1JB
-UF9ERVdfQ0lQSEVSX1NUQVJUXSwgMHgxKTsNCiANCiAJc3dpdGNoICh3cnAtPnNsYXZlLT50eXBl
-KSB7DQogCWNhc2UgUE1JQ19NVDYzOTc6DQotLSANCjEuOC4xLjEuZGlydHkNCg==
+Thanks,
 
---__=_Part_Boundary_006_1884060606.358307590--
-
---__=_Part_Boundary_005_1037877699.1923602379--
+-- 
+heikki
