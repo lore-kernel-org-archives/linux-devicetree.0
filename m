@@ -1,53 +1,65 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH 23/28] drm/mediatek: add DPI1 support for mutex
-Date: Mon, 11 Jun 2018 11:26:15 +0800
-Message-ID: <1528687580-549-24-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 15/28] drm/mediatek: add connection from RDMA1 to DSI1
+Date: Mon, 11 Jun 2018 11:26:07 +0800
+Message-ID: <1528687580-549-16-git-send-email-stu.hsieh@mediatek.com>
 References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the DPI1 support for mutex
-
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 5a8569fa6505..5916fc11693a 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -76,6 +76,7 @@
- #define MUTEX_SOF_DSI0			1
- #define MUTEX_SOF_DSI1			2
- #define MUTEX_SOF_DPI0			3
-+#define MUTEX_SOF_DPI1			4
- 
- #define OVL0_MOUT_EN_COLOR0		0x1
- #define OD_MOUT_EN_RDMA0		0x1
-@@ -385,6 +386,9 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
- 	case DDP_COMPONENT_DPI0:
- 		reg = MUTEX_SOF_DPI0;
- 		break;
-+	case DDP_COMPONENT_DPI1:
-+		reg = MUTEX_SOF_DPI1;
-+		break;
- 	default:
- 		if (ddp->mutex_mod[id] < 32) {
- 			offset = DISP_REG_MUTEX_MOD(mutex->id);
-@@ -417,6 +421,7 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 	case DDP_COMPONENT_DSI0:
- 	case DDP_COMPONENT_DSI1:
- 	case DDP_COMPONENT_DPI0:
-+	case DDP_COMPONENT_DPI1:
- 		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
- 			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
- 		break;
--- 
-2.12.5
+VGhpcyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEU0kxCgpTaWduZWQt
+b2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCA5ICsrKysrKysrKwogMSBmaWxlIGNoYW5n
+ZWQsIDkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMK
+aW5kZXggNGFiZDVkYWJlY2NmLi43ZTRhZDU1ODBjZjYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcC5jCkBAIC0yOCw2ICsyOCw3IEBACiAjZGVmaW5lIERJU1BfUkVHX0NPTkZJ
+R19ESVNQX1VGT0VfTU9VVF9FTgkweDA1MAogI2RlZmluZSBESVNQX1JFR19DT05GSUdfRElTUF9D
+T0xPUjBfU0VMX0lOCTB4MDg0CiAjZGVmaW5lIERJU1BfUkVHX0NPTkZJR19ESVNQX0NPTE9SMV9T
+RUxfSU4JMHgwODgKKyNkZWZpbmUgRElTUF9SRUdfQ09ORklHX0RTSU9fU0VMX0lOCQkweDBhOAog
+I2RlZmluZSBESVNQX1JFR19DT05GSUdfRFBJX1NFTF9JTgkJMHgwYWMKICNkZWZpbmUgRElTUF9S
+RUdfQ09ORklHX0RJU1BfUkRNQTBfTU9VVF9FTgkweDBjNAogI2RlZmluZSBESVNQX1JFR19DT05G
+SUdfRElTUF9SRE1BMV9NT1VUX0VOCTB4MGM4CkBAIC04NCwxMCArODUsMTIgQEAKICNkZWZpbmUg
+UkRNQTBfTU9VVF9EUEkwCQkJMHgyCiAjZGVmaW5lIFJETUEwX01PVVRfRFNJMgkJCTB4NAogI2Rl
+ZmluZSBSRE1BMF9NT1VUX0RTSTMJCQkweDUKKyNkZWZpbmUgUkRNQTFfTU9VVF9EU0kxCQkJMHgx
+CiAjZGVmaW5lIFJETUExX01PVVRfRFBJMAkJCTB4MgogI2RlZmluZSBSRE1BMV9NT1VUX0RQSTEJ
+CQkweDMKICNkZWZpbmUgRFBJMF9TRUxfSU5fUkRNQTEJCTB4MQogI2RlZmluZSBEUEkxX1NFTF9J
+Tl9SRE1BMQkJKDB4MSA8PCA4KQorI2RlZmluZSBEU0kxX1NFTF9JTl9SRE1BMQkJMHgxCiAjZGVm
+aW5lIENPTE9SMV9TRUxfSU5fT1ZMMQkJMHgxCiAKICNkZWZpbmUgT1ZMX01PVVRfRU5fUkRNQQkJ
+MHgxCkBAIC0xNzAsNiArMTczLDkgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX21vdXRf
+ZW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAogCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01Q
+T05FTlRfUkRNQTAgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTMpIHsKIAkJKmFkZHIgPSBE
+SVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9NT1VUX0VOOwogCQl2YWx1ZSA9IFJETUEwX01PVVRf
+RFNJMzsKKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0g
+RERQX0NPTVBPTkVOVF9EU0kxKSB7CisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRN
+QTFfTU9VVF9FTjsKKwkJdmFsdWUgPSBSRE1BMV9NT1VUX0RTSTE7CiAJfSBlbHNlIGlmIChjdXIg
+PT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewog
+CQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX01PVVRfRU47CiAJCXZhbHVlID0g
+UkRNQTFfTU9VVF9EUEkwOwpAQCAtMTk4LDYgKzIwNCw5IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQg
+bXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAogCX0gZWxzZSBpZiAoY3Vy
+ID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsK
+IAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFBJX1NFTF9JTjsKIAkJdmFsdWUgPSBEUEkxX1NF
+TF9JTl9SRE1BMTsKKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5l
+eHQgPT0gRERQX0NPTVBPTkVOVF9EU0kxKSB7CisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RT
+SU9fU0VMX0lOOworCQl2YWx1ZSA9IERTSTFfU0VMX0lOX1JETUExOwogCX0gZWxzZSBpZiAoY3Vy
+ID09IEREUF9DT01QT05FTlRfT1ZMMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfQ09MT1IxKSB7
+CiAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfQ09MT1IxX1NFTF9JTjsKIAkJdmFsdWUg
+PSBDT0xPUjFfU0VMX0lOX09WTDE7Ci0tIAoyLjEyLjUKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
