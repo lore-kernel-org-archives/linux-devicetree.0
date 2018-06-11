@@ -1,31 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/6] clk: ti: dra7: Add clkctrl clock data for the
- mcan clocks
-Date: Mon, 11 Jun 2018 12:22:43 -0600
-Message-ID: <20180611182243.GA12727@rob-hp-laptop>
-References: <20180606060826.14671-1-faiz_abbas@ti.com>
- <20180606060826.14671-3-faiz_abbas@ti.com>
+From: Avi Fishman <avifishman70@gmail.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: usb: new ehci-npcm7xx dt
+Date: Mon, 11 Jun 2018 21:24:35 +0300
+Message-ID: <CAKKbWA4gm1x8VazdMjZ6a9bwGmt=_mZYS2S3FnB2x36Ng+cjCQ@mail.gmail.com>
+References: <20180607145821.322979-1-avifishman70@gmail.com>
+ <20180607145821.322979-3-avifishman70@gmail.com> <20180611181646.GA5537@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180606060826.14671-3-faiz_abbas@ti.com>
+In-Reply-To: <20180611181646.GA5537@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, paul@pwsan.com, t-kristo@ti.com, mark.rutland@arm.com
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Tomer Maimon <tmaimon77@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, Tony Lindgren <tony@atomide.com>, baolu.lu@linux.intel.com, Alex Elder <elder@linaro.org>, Dmitry Osipenko <digetx@gmail.com>, Kate Stewart <kstewart@linuxfoundation.org>, hdegoede@redhat.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 06, 2018 at 11:38:22AM +0530, Faiz Abbas wrote:
-> Add clkctrl data for the m_can clocks and register it within the
-> clkctrl driver
-> 
-> CC: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/clk/ti/clk-7xx.c         | 1 +
->  include/dt-bindings/clock/dra7.h | 1 +
+On Mon, Jun 11, 2018 at 9:16 PM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Jun 07, 2018 at 05:58:20PM +0300, avifishman70@gmail.com wrote:
+>> From: Avi Fishman <AviFishman70@gmail.com>
+>>
+>> Device Tree documentation for Nuvoton npcm7xx EHCI.
+>>
+>> Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Rob, if I understand you want me to add another version (v5) with the
+above line (only on the dt)?
 
->  2 files changed, 2 insertions(+)
-> 
+>> ---
+>>  Documentation/devicetree/bindings/usb/npcm7xx-usb.txt | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+>
+> Please add acks/reviewed-bys when posting new versions.
+>
+> Rob
