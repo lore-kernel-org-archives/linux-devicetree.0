@@ -1,51 +1,99 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v6 2/6] dt-bindings: add binding for atmel-usart in SPI
- mode
-Date: Mon, 11 Jun 2018 17:37:58 +0200
-Message-ID: <20180611153758.GH10521@piout.net>
-References: <20180607110020.20565-1-radu.pirea@microchip.com>
- <20180607110020.20565-3-radu.pirea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH] Bluetooth: hci_bcm: Configure SCO routing automatically
+Date: Mon, 11 Jun 2018 17:47:14 +0200
+Message-ID: <4F0D6729-AE77-47D4-9765-FBC44181D4DE@holtmann.org>
+References: <280FCB2C-6DF1-4790-A89F-AF5BE3513AE5@holtmann.org>
+ <20180608162009.22762-1-attitokes@gmail.com>
+ <CAL_JsqKGeCEBBLNQNdymQovknRM7zt4+nNJy0YSkxRicOxkCSg@mail.gmail.com>
+ <CAMoM21HshLyv+Np1vOKYTAunsPCazyP-WESiaheNXHsC078S8g@mail.gmail.com>
+ <CAL_Jsq+a93Rpf3UAPBQ5QmA8KavberGXz76WCiZ7feHH5GgcDA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.4 \(3445.8.2\))
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180607110020.20565-3-radu.pirea@microchip.com>
+In-Reply-To: <CAL_Jsq+a93Rpf3UAPBQ5QmA8KavberGXz76WCiZ7feHH5GgcDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu.pirea@microchip.com>
-Cc: broonie@kernel.org, nicolas.ferre@microchip.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: =?utf-8?B?QXR0aWxhIFTFkWvDqXM=?= <attitokes@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, Artiom Vaskov <velemas@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On 07/06/2018 14:00:16+0300, Radu Pirea wrote:
-> diff --git a/include/dt-bindings/mfd/at91-usart.h b/include/dt-bindings/mfd/at91-usart.h
-> new file mode 100644
-> index 000000000000..ac811628a42d
-> --- /dev/null
-> +++ b/include/dt-bindings/mfd/at91-usart.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides macros for AT91 USART DT bindings.
-> + *
-> + * Copyright (C) 2018 Microchip Technology
-> + *
-> + * Author: Radu Pirea <radu.pirea@microchip.com>
-> + *
-> + */
-> +
-> +#ifndef __DT_BINDINGS_AT91_USART_H__
-> +#define __DT_BINDINGS_AT91_USART_H__
-> +
-> +#define AT91_USART_MODE_SERIAL	1
-> +#define AT91_USART_MODE_SPI	2
-> +
+>>>> Added support to automatically configure the SCO packet routing at the
+>>>> device setup. The SCO packets are used with the HSP / HFP profiles, but in
+>>>> some devices (ex. CYW43438) they are routed to a PCM output by default. This
+>>>> change allows sending the vendor specific HCI command to configure the SCO
+>>>> routing. The parameters of the command are loaded from the device tree.
+>>> 
+>>> Please wrap your commit msg.
+>> 
+>> 
+>> Sure.
+>>> 
+>>> 
+>>>> 
+>>>> Signed-off-by: Attila Tőkés <attitokes@gmail.com>
+>>>> ---
+>>>> .../bindings/net/broadcom-bluetooth.txt       |  7 ++
+>>> 
+>>> Please split bindings to separate patch.
+>> 
+>> 
+>> Ok, I will split this in two.
+>>> 
+>>> 
+>>> 
+>>> 
+>>>> drivers/bluetooth/hci_bcm.c                   | 72 +++++++++++++++++++
+>>>> 2 files changed, 79 insertions(+)
+>>>> 
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>> b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>> index 4194ff7e..aea3a094 100644
+>>>> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>> @@ -21,6 +21,12 @@ Optional properties:
+>>>>  - clocks: clock specifier if external clock provided to the controller
+>>>>  - clock-names: should be "extclk"
+>>>> 
+>>>> + SCO routing parameters:
+>>>> + - sco-routing: 0-3 (PCM, Transport, Codec, I2S)
+>>>> + - pcm-interface-rate: 0-4 (128 Kbps - 2048 Kbps)
+>>>> + - pcm-frame-type: 0 (short), 1 (long)
+>>>> + - pcm-sync-mode: 0 (slave), 1 (master)
+>>>> + - pcm-clock-mode: 0 (slave), 1 (master)
+>>> 
+>>> Are these Broadcom specific? Properties need either vendor prefix or
+>>> to be documented in a common location. I think these look like the
+>>> latter.
+>> 
+>> 
+>> These will be used as parameters of a vendor specific (Broadcom/Cypress)
+>> command configuring the SCO packet routing. See the Write_SCO_PCM_Int_Param
+>> command from: http://www.cypress.com/file/298311/download.
+> 
+> The DT should just describe how the h/w is hooked-up. What the s/w has
+> to do based on that is the driver's problem which is certainly
+> vendor/chip specific, but that is all irrelevant to the binding.
+> 
+>> What would be the property names with a Broadcom / Cypress vendor prefix?
+>> 
+>>    brcm,sco-routing
+>>    brcm,pcm-interface-rate
+>>    brcm,pcm-frame-type
+>>    brcm,pcm-sync-mode
+>>    brcm,pcm-clock-mode
+>> 
+>> ?
+> 
+> Yes.
 
-Nitpick, I'd make that 0 and 1 instead of 1 and 2. That would feel more
-natural to me regarding the default value.
+we can do this. However all pcm-* are optional if you switch the HCI transport. And sco-routing should default to HCI if that is not present. Meaning a driver should actively trying to change this. Nevertheless, it would be good if a driver reads the current settings.
 
+In theory we could make sco-routing generic, but so many vendors have different modes, that we better keep this vendor specific.
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards
+
+Marcel
