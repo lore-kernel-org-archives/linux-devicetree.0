@@ -1,197 +1,121 @@
-From: Raju P L S S S N <rplsssn@codeaurora.org>
-Subject: [PATCH v10 02/10] dt-bindings: introduce RPMH RSC bindings for Qualcomm SoCs
-Date: Mon, 11 Jun 2018 22:55:41 +0530
-Message-ID: <1528737949-17495-3-git-send-email-rplsssn@codeaurora.org>
-References: <1528737949-17495-1-git-send-email-rplsssn@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] Bluetooth: hci_bcm: Configure SCO routing automatically
+Date: Mon, 11 Jun 2018 11:54:17 -0600
+Message-ID: <CAL_JsqL2StWgA9gkL9i3o85-C3TNixBLmbTXzFQW8bts4phJqQ@mail.gmail.com>
+References: <280FCB2C-6DF1-4790-A89F-AF5BE3513AE5@holtmann.org>
+ <20180608162009.22762-1-attitokes@gmail.com> <CAL_JsqKGeCEBBLNQNdymQovknRM7zt4+nNJy0YSkxRicOxkCSg@mail.gmail.com>
+ <CAMoM21HshLyv+Np1vOKYTAunsPCazyP-WESiaheNXHsC078S8g@mail.gmail.com>
+ <CAL_Jsq+a93Rpf3UAPBQ5QmA8KavberGXz76WCiZ7feHH5GgcDA@mail.gmail.com> <4F0D6729-AE77-47D4-9765-FBC44181D4DE@holtmann.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528737949-17495-1-git-send-email-rplsssn@codeaurora.org>
+In-Reply-To: <4F0D6729-AE77-47D4-9765-FBC44181D4DE@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: =?UTF-8?B?QXR0aWxhIFTFkWvDqXM=?= <attitokes@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, Artiom Vaskov <velemas@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lina Iyer <ilina@codeaurora.org>
+On Mon, Jun 11, 2018 at 9:47 AM, Marcel Holtmann <marcel@holtmann.org> wrot=
+e:
+> Hi Rob,
+>
+>>>>> Added support to automatically configure the SCO packet routing at th=
+e
+>>>>> device setup. The SCO packets are used with the HSP / HFP profiles, b=
+ut in
+>>>>> some devices (ex. CYW43438) they are routed to a PCM output by defaul=
+t. This
+>>>>> change allows sending the vendor specific HCI command to configure th=
+e SCO
+>>>>> routing. The parameters of the command are loaded from the device tre=
+e.
+>>>>
+>>>> Please wrap your commit msg.
+>>>
+>>>
+>>> Sure.
+>>>>
+>>>>
+>>>>>
+>>>>> Signed-off-by: Attila T=C5=91k=C3=A9s <attitokes@gmail.com>
+>>>>> ---
+>>>>> .../bindings/net/broadcom-bluetooth.txt       |  7 ++
+>>>>
+>>>> Please split bindings to separate patch.
+>>>
+>>>
+>>> Ok, I will split this in two.
+>>>>
+>>>>
+>>>>
+>>>>
+>>>>> drivers/bluetooth/hci_bcm.c                   | 72 ++++++++++++++++++=
++
+>>>>> 2 files changed, 79 insertions(+)
+>>>>>
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>>> b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>>> index 4194ff7e..aea3a094 100644
+>>>>> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>>> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+>>>>> @@ -21,6 +21,12 @@ Optional properties:
+>>>>>  - clocks: clock specifier if external clock provided to the controll=
+er
+>>>>>  - clock-names: should be "extclk"
+>>>>>
+>>>>> + SCO routing parameters:
+>>>>> + - sco-routing: 0-3 (PCM, Transport, Codec, I2S)
+>>>>> + - pcm-interface-rate: 0-4 (128 Kbps - 2048 Kbps)
+>>>>> + - pcm-frame-type: 0 (short), 1 (long)
+>>>>> + - pcm-sync-mode: 0 (slave), 1 (master)
+>>>>> + - pcm-clock-mode: 0 (slave), 1 (master)
+>>>>
+>>>> Are these Broadcom specific? Properties need either vendor prefix or
+>>>> to be documented in a common location. I think these look like the
+>>>> latter.
+>>>
+>>>
+>>> These will be used as parameters of a vendor specific (Broadcom/Cypress=
+)
+>>> command configuring the SCO packet routing. See the Write_SCO_PCM_Int_P=
+aram
+>>> command from: http://www.cypress.com/file/298311/download.
+>>
+>> The DT should just describe how the h/w is hooked-up. What the s/w has
+>> to do based on that is the driver's problem which is certainly
+>> vendor/chip specific, but that is all irrelevant to the binding.
+>>
+>>> What would be the property names with a Broadcom / Cypress vendor prefi=
+x?
+>>>
+>>>    brcm,sco-routing
+>>>    brcm,pcm-interface-rate
+>>>    brcm,pcm-frame-type
+>>>    brcm,pcm-sync-mode
+>>>    brcm,pcm-clock-mode
+>>>
+>>> ?
+>>
+>> Yes.
+>
+> we can do this. However all pcm-* are optional if you switch the HCI tran=
+sport. And sco-routing should default to HCI if that is not present. Meanin=
+g a driver should actively trying to change this. Nevertheless, it would be=
+ good if a driver reads the current settings.
+>
+> In theory we could make sco-routing generic, but so many vendors have dif=
+ferent modes, that we better keep this vendor specific.
 
-Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
-driver. The driver is used for communicating resource state requests for
-shared resources.
+Even if vendor specific, the properties for not HCI transport case are
+still incomplete IMO.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in v8:
-	- Describe IRQ for all DRVs
+By modes, you mean PCM vs. I2S and all the flavors of timings you can
+have within those or something else? For the former, that's often
+going to be a process of solving what each end support and if that
+doesn't work, then IIRC we already have properties for setting
+modes/timing. All the same issues exist with audio codecs and this is
+really not any different.
 
-Changes in v7:
-	- Fix example
-
-Changes in v6:
-	- Address comments from Stephen Boyd
-
-Changes in v3:
-	- Move to soc/qcom
-	- Amend text per Stephen's suggestions
-
-Changes in v2:
-	- Amend text to describe the registers in reg property
-	- Add reg-names for the registers
-	- Update examples to use GIC_SPI in interrupts instead of 0
-	- Rephrase incorrect description
-
-Changes in v3:
-	- Fix unwanted capitalization
-	- Remove clients from the examples, this doc does not describe
-	  them
-	- Rephrase introductory paragraph
-	- Remove hardware specifics from DT bindings
----
- .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      | 137 +++++++++++++++++++++
- 1 file changed, 137 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-new file mode 100644
-index 0000000..e15c100
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-@@ -0,0 +1,137 @@
-+RPMH RSC:
-+------------
-+
-+Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
-+the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
-+can be written to the Trigger Command Set (TCS)  registers and using a (addr,
-+val) pair and triggered. Messages in the TCS are then sent in sequence over an
-+internal bus.
-+
-+The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
-+(Resource State Coordinator a.k.a RSC) that can handle multiple sleep and
-+active/wake resource requests. Multiple such DRVs can exist in a SoC and can
-+be written to from Linux. The structure of each DRV follows the same template
-+with a few variations that are captured by the properties here.
-+
-+A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
-+have powered off to facilitate idle power saving. TCS could be classified as -
-+
-+	SLEEP   /* Triggered by F/W */
-+	WAKE    /* Triggered by F/W */
-+	ACTIVE  /* Triggered by Linux */
-+	CONTROL /* Triggered by F/W */
-+
-+The order in which they are described in the DT, should match the hardware
-+configuration.
-+
-+Requests can be made for the state of a resource, when the subsystem is active
-+or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
-+will be an aggregate of the sleep votes from each of those subsystems. Clients
-+may request a sleep value for their shared resources in addition to the active
-+mode requests.
-+
-+Properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "qcom,rpmh-rsc".
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: The first register specifies the base address of the
-+		    DRV(s). The number of DRVs in the dependent on the RSC.
-+	            The tcs-offset specifies the start address of the
-+	            TCS in the DRVs.
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Maps the register specified in the reg property. Must be
-+	            "drv-0", "drv-1", "drv-2" etc and "tcs-offset". The
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-interrupt>
-+	Definition: The interrupt that trips when a message complete/response
-+	           is received for this DRV from the accelerators.
-+
-+- qcom,drv-id:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: The id of the DRV in the RSC block that will be used by
-+		    this controller.
-+
-+- qcom,tcs-config:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: The tuple defining the configuration of TCS.
-+	            Must have 2 cells which describe each TCS type.
-+	            <type number_of_tcs>.
-+	            The order of the TCS must match the hardware
-+	            configuration.
-+	- Cell #1 (TCS Type): TCS types to be specified -
-+	            SLEEP_TCS
-+	            WAKE_TCS
-+	            ACTIVE_TCS
-+	            CONTROL_TCS
-+	- Cell #2 (Number of TCS): <u32>
-+
-+- label:
-+	Usage: optional
-+	Value type: <string>
-+	Definition: Name for the RSC. The name would be used in trace logs.
-+
-+Drivers that want to use the RSC to communicate with RPMH must specify their
-+bindings as child nodes of the RSC controllers they wish to communicate with.
-+
-+Example 1:
-+
-+For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
-+register offsets for DRV2 start at 0D00, the register calculations are like
-+this -
-+DRV0: 0x179C0000
-+DRV2: 0x179C0000 + 0x10000 = 0x179D0000
-+DRV2: 0x179C0000 + 0x10000 * 2 = 0x179E0000
-+TCS-OFFSET: 0xD00
-+
-+	apps_rsc: rsc@179c0000 {
-+		label = "apps_rsc";
-+		compatible = "qcom,rpmh-rsc";
-+		reg = <0x179c0000 0x10000>,
-+		      <0x179d0000 0x10000>,
-+		      <0x179e0000 0x10000>;
-+		reg-names = "drv-0", "drv-1", "drv-2";
-+		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+		qcom,tcs-offset = <0xd00>;
-+		qcom,drv-id = <2>;
-+		qcom,tcs-config = <SLEEP_TCS   3>,
-+				  <WAKE_TCS    3>,
-+				  <ACTIVE_TCS  2>,
-+				  <CONTROL_TCS 1>;
-+	};
-+
-+Example 2:
-+
-+For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
-+register offsets for DRV0 start at 01C00, the register calculations are like
-+this -
-+DRV0: 0xAF20000
-+TCS-OFFSET: 0x1C00
-+
-+	disp_rsc: rsc@af20000 {
-+		label = "disp_rsc";
-+		compatible = "qcom,rpmh-rsc";
-+		reg = <0xaf20000 0x10000>;
-+		reg-names = "drv-0";
-+		interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
-+		qcom,tcs-offset = <0x1c00>;
-+		qcom,drv-id = <0>;
-+		qcom,tcs-config = <SLEEP_TCS   1>,
-+				  <WAKE_TCS    1>,
-+				  <ACTIVE_TCS  0>,
-+				  <CONTROL_TCS 0>;
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Rob
