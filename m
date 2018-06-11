@@ -1,79 +1,94 @@
-Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
-From: Argus Lin <argus.lin@mediatek.com>
-Subject: [PATCH V5 1/4] dt-bindings: pwrap: mediatek: add pwrap support for MT6797
-Date: Fri, 8 Jun 2018 15:39:51 +0800
-Message-ID: <1528443594-6978-2-git-send-email-argus.lin@mediatek.com>
-In-Reply-To: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
-References: <1528443594-6978-1-git-send-email-argus.lin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_007_995168431.251057831"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, argus.lin@mediatek.com, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-Path: <SRS0=l9FG=I5=holtmann.org=marcel@kernel.org>
+Content-Type: text/plain;
+	charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.4 \(3445.8.2\))
+Subject: Re: [PATCH 01/13] dt-bindings: net: bluetooth: add support for
+ Realtek Bluetooth chips
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <3bac3b64-21cb-82a2-4470-71b4816c5c99@redhat.com>
+Date: Mon, 11 Jun 2018 15:32:50 +0200
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A054D5CF-0EE4-4667-9E99-D05FFBB20009@holtmann.org>
+References: <20180527190457.2632-1-hdegoede@redhat.com>
+ <20180527190457.2632-2-hdegoede@redhat.com>
+ <7A22F14E-9F45-4779-B7E5-CEB330A5601E@holtmann.org>
+ <16b7e10b-6816-f441-00e5-9e86d1df33a7@redhat.com>
+ <20180531164214.GA12210@rob-hp-laptop>
+ <0d99e890-b93c-df55-ae43-8fc910778243@redhat.com>
+ <14D10B2C-319C-4676-AE84-1D76AA603C3B@holtmann.org>
+ <94b57c4a-985e-250a-f91f-e0f0cd97be1e@redhat.com>
+ <9F05431A-7FEF-4EFB-B35C-AA0E1BAA98EE@holtmann.org>
+ <3bac3b64-21cb-82a2-4470-71b4816c5c99@redhat.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Rob Herring <robh@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jeremy Cline <jeremy@jcline.org>, BlueZ development <linux-bluetooth@vger.kernel.org>, linux-serial@vger.kernel.org, linux-acpi <linux-acpi@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_007_995168431.251057831
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_008_692783642.698590314"
+Hi Hans,
 
---__=_Part_Boundary_008_692783642.698590314
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+>>>>> Hmm that is actually no entirely true, for broadcom the
+>>>>> bluetooth patchram file depends on the clockcrystal freq
+>>>>> used on the board, so there are 2 versions of it for a
+>>>>> single chip, 1 for each of the 2 different freqs used.
+>>>> are you using .hex or .hcd files for Broadcom? The .hex files are =
+pure patchram, while the .hcd can actually contain extra HCI commands. I =
+remember that some .hcd files contain also HCI commands to do extra =
+settings. Maybe we need a tool that shows the details of these files. We =
+have this for nokfw and rtlfw now.
+>>>=20
+>>> I'm using hcd files for broadcom.
+>> so I added tools/bcmfw to analyze HCD files. We might also need a =
+compare HCD files option. However you might be able to compare the HCD =
+files that you think are different for some of your hardware.
+>=20
+> The problem is that I don't think I can get the exact same
+> version / build of the patchram in 26MHz and 37.4 Mhz versions
+> and comparing different versions is not really going to be useful.
+>=20
+> All I really know here is that I can usually take any 37.4MHz build,
+> as indicated by the build string in the hcd file, e.g. :
+>=20
+> BCM43438A1 37.4MHz Raspberry Pi 3-0043O
+>=20
+> And use that on a board where the wifi nvram file says the
+> crystal is 37.4MHz and things will work fine. Where as any
+> hcd with 26Mhz in the buildstring will not work.
+>=20
+> My work on the brcm bluetooth code has left me to believe
+> that the ACPI HID is (supposed to be) unique per board.
 
-PHByZT4NCkFkZCBiaW5kaW5nIGRvY3VtZW50IG9mIHB3cmFwIGZvciBNVDY3OTcgU29Dcy4NCg0K
-U2lnbmVkLW9mZi1ieTogQXJndXMgTGluICZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0Ow0K
-LS0tDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3Jh
-cC50eHQgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3Jh
-cC50eHQNCmluZGV4IGJmODBlM2YuLmY5OTg3YzMgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCkBAIC0x
-OSw2ICsxOSw3IEBAIElQIFBhaXJpbmcNCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGluIHB3cmFwIGRl
-dmljZSBub2RlLg0KIC0gY29tcGF0aWJsZToNCiAJJnF1b3Q7bWVkaWF0ZWssbXQyNzAxLXB3cmFw
-JnF1b3Q7IGZvciBNVDI3MDEvNzYyMyBTb0NzDQorCSZxdW90O21lZGlhdGVrLG10Njc5Ny1wd3Jh
-cCZxdW90OyBmb3IgTVQ2Nzk3IFNvQ3MNCiAJJnF1b3Q7bWVkaWF0ZWssbXQ3NjIyLXB3cmFwJnF1
-b3Q7IGZvciBNVDc2MjIgU29Dcw0KIAkmcXVvdDttZWRpYXRlayxtdDgxMzUtcHdyYXAmcXVvdDsg
-Zm9yIE1UODEzNSBTb0NzDQogCSZxdW90O21lZGlhdGVrLG10ODE3My1wd3JhcCZxdW90OyBmb3Ig
-TVQ4MTczIFNvQ3MNCi0tIA0KMS44LjEuMS5kaXJ0eQ0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0LS0+
-PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZQ0K
-ICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMg
-ZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZp
-ZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZy
-b20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJl
-IA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2Us
-IGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNv
-cHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5p
-bnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUg
-dW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUt
-bWFpbCwgb3IgYmVsaWV2ZQ0KIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBp
-biBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5
-aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMg
-ZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQg
-ZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIg
-cGVyc29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
+for ACPI it is really suppose to be unique. Do you happen to have a link =
+for a good download of the latest Broadcom firmware?
 
---__=_Part_Boundary_008_692783642.698590314
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+> I'm thinking of adding a postfix string as driver_data
+> in the acpi_match_id table for ACPI HIDs which I can test
+> and then make the bcm-bt code first try e.g. firmware_request
+> BCM4356A2-26M.hcd before calling BCM4356A2.hcd .
+>=20
+> I could instead simply postfix the ACPI HID (as I plan to
+> do for the realtek btconfig) but as said in all my testing
+> simply using the latest build, with the right crystal
+> freq seems to work best. So I would prefer to go with
+> e.g. BCM4356A2-26M.hcd rather then BCM4356A2-BCM2E74.hcd
+> this way we will only need 2 hcd files (26M and 37.4M) per
+> chipset rather a whole lot of them.
+>=20
+> Marcel, what do you think of this, would you accept a (to-be-written)
+> patchset adding -26M / -37.4M postfixes as described above?
 
-QWRkIGJpbmRpbmcgZG9jdW1lbnQgb2YgcHdyYXAgZm9yIE1UNjc5NyBTb0NzLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCB8IDEgKw0K
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KaW5kZXgg
-YmY4MGUzZi4uZjk5ODdjMyAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KQEAgLTE5LDYgKzE5LDcgQEAg
-SVAgUGFpcmluZw0KIFJlcXVpcmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQog
-LSBjb21wYXRpYmxlOg0KIAkibWVkaWF0ZWssbXQyNzAxLXB3cmFwIiBmb3IgTVQyNzAxLzc2MjMg
-U29Dcw0KKwkibWVkaWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCiAJIm1lZGlh
-dGVrLG10NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQogCSJtZWRpYXRlayxtdDgxMzUtcHdy
-YXAiIGZvciBNVDgxMzUgU29Dcw0KIAkibWVkaWF0ZWssbXQ4MTczLXB3cmFwIiBmb3IgTVQ4MTcz
-IFNvQ3MNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+I am not in favor of it. I prefer giving the vendor the chance to list =
+the right firmware for their hardware instead of us guessing. Whatever =
+comes out of the Broadcom Windows driver should be all least passed =
+certification.
 
---__=_Part_Boundary_008_692783642.698590314--
+> This is all aimed at getting the hcd files into linux-firmware,
+> where less files definitely would be more. Note I'm only talking
+> about serdev attached bcm-bt devices here. For usb we can keep
+> using the existing scheme or come up with a new scheme.
 
---__=_Part_Boundary_007_995168431.251057831--
+Seems that Broadcom opted for per ACPI HID firmware files. This is in =
+contrast to Intel for example where we read hardware information and =
+pick the firmware based on that information.
+
+Regards
+
+Marcel
