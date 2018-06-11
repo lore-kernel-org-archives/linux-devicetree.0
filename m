@@ -1,59 +1,50 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH 13/28] drm/mediatek: add connection from RDMA0 to DSI3
-Date: Mon, 11 Jun 2018 11:26:05 +0800
-Message-ID: <1528687580-549-14-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 08/28] drm/mediatek: add component DSI2
+Date: Mon, 11 Jun 2018 11:26:00 +0800
+Message-ID: <1528687580-549-9-git-send-email-stu.hsieh@mediatek.com>
 References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the connection from RDMA0 to DSI3
-
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c      | 4 ++++
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index c08aed8dae44..fed1b5704355 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -83,6 +83,7 @@
- #define GAMMA_MOUT_EN_RDMA1		0x1
- #define RDMA0_MOUT_DPI0			0x2
- #define RDMA0_MOUT_DSI2			0x4
-+#define RDMA0_MOUT_DSI3			0x5
- #define RDMA1_MOUT_DPI0			0x2
- #define DPI0_SEL_IN_RDMA1		0x1
- #define COLOR1_SEL_IN_OVL1		0x1
-@@ -164,6 +165,9 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
- 	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
- 		*addr = DISP_REG_CONFIG_DISP_RDMA0_MOUT_EN;
- 		value = RDMA0_MOUT_DSI2;
-+	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
-+		*addr = DISP_REG_CONFIG_DISP_RDMA0_MOUT_EN;
-+		value = RDMA0_MOUT_DSI3;
- 	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
- 		*addr = DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN;
- 		value = RDMA1_MOUT_DPI0;
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index fe6fdc021fc7..22f4c72fa785 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -228,7 +228,7 @@ static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_ID_MAX] = {
- 	[DDP_COMPONENT_DSI0]	= { MTK_DSI,		0, NULL },
- 	[DDP_COMPONENT_DSI1]	= { MTK_DSI,		1, NULL },
- 	[DDP_COMPONENT_DSI2]	= { MTK_DSI,		2, NULL },
--	[DDP_COMPONENT_DSI2]	= { MTK_DSI,		3, NULL },
-+	[DDP_COMPONENT_DSI3]	= { MTK_DSI,		3, NULL },
- 	[DDP_COMPONENT_GAMMA]	= { MTK_DISP_GAMMA,	0, &ddp_gamma },
- 	[DDP_COMPONENT_OD0]	= { MTK_DISP_OD,	0, &ddp_od },
- 	[DDP_COMPONENT_OD1]	= { MTK_DISP_OD,	1, &ddp_od },
--- 
-2.12.5
+VGhpcyBwYXRjaCBhZGQgdGhlIGNvbXBvbmVudCBEU0kyCgpTaWduZWQtb2ZmLWJ5OiBTdHUgSHNp
+ZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZGRwX2NvbXAuYyB8IDEgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwX2NvbXAuaCB8IDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwppbmRleCA0ZjlkODEw
+MjVkNjkuLjE5MmY3Mzc0ZDk4OCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZGRwX2NvbXAuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHBfY29tcC5jCkBAIC0yMjcsNiArMjI3LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
+ZGRwX2NvbXBfbWF0Y2ggbXRrX2RkcF9tYXRjaGVzW0REUF9DT01QT05FTlRfSURfTUFYXSA9IHsK
+IAlbRERQX0NPTVBPTkVOVF9EUEkxXQk9IHsgTVRLX0RQSSwJCTEsIE5VTEwgfSwKIAlbRERQX0NP
+TVBPTkVOVF9EU0kwXQk9IHsgTVRLX0RTSSwJCTAsIE5VTEwgfSwKIAlbRERQX0NPTVBPTkVOVF9E
+U0kxXQk9IHsgTVRLX0RTSSwJCTEsIE5VTEwgfSwKKwlbRERQX0NPTVBPTkVOVF9EU0kyXQk9IHsg
+TVRLX0RTSSwJCTIsIE5VTEwgfSwKIAlbRERQX0NPTVBPTkVOVF9HQU1NQV0JPSB7IE1US19ESVNQ
+X0dBTU1BLAkwLCAmZGRwX2dhbW1hIH0sCiAJW0REUF9DT01QT05FTlRfT0QwXQk9IHsgTVRLX0RJ
+U1BfT0QsCTAsICZkZHBfb2QgfSwKIAlbRERQX0NPTVBPTkVOVF9PRDFdCT0geyBNVEtfRElTUF9P
+RCwJMSwgJmRkcF9vZCB9LApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9j
+b21wLmgKaW5kZXggNTRjOTljMTY5MDkzLi44ZDE1MmIzMzdmMTUgMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaApAQCAtNTAsNiArNTAsNyBAQCBlbnVtIG10
+a19kZHBfY29tcF9pZCB7CiAJRERQX0NPTVBPTkVOVF9EUEkxLAogCUREUF9DT01QT05FTlRfRFNJ
+MCwKIAlERFBfQ09NUE9ORU5UX0RTSTEsCisJRERQX0NPTVBPTkVOVF9EU0kyLAogCUREUF9DT01Q
+T05FTlRfR0FNTUEsCiAJRERQX0NPTVBPTkVOVF9PRDAsCiAJRERQX0NPTVBPTkVOVF9PRDEsCi0t
+IAoyLjEyLjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
