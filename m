@@ -1,49 +1,34 @@
-From: Andrea Greco <andrea.greco.gapmilano@gmail.com>
-Subject: [PATCH 4/6] arcnet: com20020: bindings for smsc com20020
-Date: Mon, 11 Jun 2018 16:28:53 +0200
-Message-ID: <20180611142856.21307-1-andrea.greco.gapmilano@gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH v6 0/5] Reintroduce i.MX EPIT Timer
+Date: Mon, 11 Jun 2018 17:39:38 +0300
+Message-ID: <74959a6a-60bb-f854-6ef2-21c3c60d3451@mleia.com>
+References: <20180607140544.22268-1-peron.clem@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180607140544.22268-1-peron.clem@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net
-Cc: tobin@apporbit.com, Andrea Greco <a.greco@4sigma.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?Q?Cl=c3=a9ment_Peron?= <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrea Greco <a.greco@4sigma.it>
+Hi Clément,
 
-Add devicetree bindings for smsc com20020
+On 06/07/2018 05:05 PM, Clément Péron wrote:
+> From: Clément Peron <clement.peron@devialet.com>
+> 
+> As suggested in the commit message we have added the device tree support,
+> proper bindings and we moved the driver into the correct folder.
+> 
+> Moreover we made some changes like use of relaxed IO accesor,
+> implement sched_clock, delay_timer and reduce the clockevents min_delta.
+> 
 
-Signed-off-by: Andrea Greco <a.greco@4sigma.it>
----
- .../devicetree/bindings/net/smsc-com20020.txt       | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/smsc-com20020.txt
+I reviewed and tested the driver on i.MX31, as expected it works fine,
+and I'll give my tags per a commit, please add them to v7 changes.
 
-diff --git a/Documentation/devicetree/bindings/net/smsc-com20020.txt b/Documentation/devicetree/bindings/net/smsc-com20020.txt
-new file mode 100644
-index 000000000000..660a4a751f29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/smsc-com20020.txt
-@@ -0,0 +1,21 @@
-+SMSC com20020 Arcnet network controller
-+
-+Required property:
-+- timeout-ns: Arcnet bus timeout, Idle Time (328000 - 20500)
-+- bus-speed-bps: Arcnet bus speed (10000000 - 156250)
-+- smsc,xtal-mhz: External oscillator frequency
-+- smsc,backplane-enabled: Controller use backplane mode
-+- reset-gpios: Chip reset pin
-+- interrupts: Should contain controller interrupt
-+
-+arcnet@28000000 {
-+	compatible = "smsc,com20020";
-+
-+	timeout-ns = <20500>;
-+	bus-speed-hz = <10000000>;
-+	smsc,xtal-mhz = <20>;
-+	smsc,backplane-enabled;
-+
-+	reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-+	interrupts = <&gpio2 10 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.14.4
+--
+Best wishes,
+Vladimir
