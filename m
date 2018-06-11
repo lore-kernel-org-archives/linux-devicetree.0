@@ -1,33 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v3, 03/10] dt-binding: ptp_qoriq: add DPAA FMan support
-Date: Mon, 11 Jun 2018 12:25:27 -0600
-Message-ID: <20180611182527.GA13639@rob-hp-laptop>
-References: <20180607092050.46128-1-yangbo.lu@nxp.com>
- <20180607092050.46128-4-yangbo.lu@nxp.com>
+Subject: Re: [PATCH v2 1/5] dt: bindings: tegra20-emc: Document interrupt
+ property
+Date: Mon, 11 Jun 2018 12:26:46 -0600
+Message-ID: <20180611182646.GA16835@rob-hp-laptop>
+References: <20180603223654.23324-1-digetx@gmail.com>
+ <20180603223654.23324-2-digetx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180607092050.46128-4-yangbo.lu@nxp.com>
+In-Reply-To: <20180603223654.23324-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangbo Lu <yangbo.lu@nxp.com>
-Cc: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochran@gmail.com>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 07, 2018 at 05:20:43PM +0800, Yangbo Lu wrote:
-> This patch is to add bindings description for DPAA
-> FMan 1588 timer, and also remove its description in
-> fsl-fman dt-bindings document.
+On Mon, Jun 04, 2018 at 01:36:50AM +0300, Dmitry Osipenko wrote:
+> EMC has a dedicated interrupt that is used to notify about completion of
+> HW operations. Document the interrupt property.
 > 
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
-> Changes for v2:
-> 	- None.
-> Changes for v3:
-> 	- None.
-> ---
->  Documentation/devicetree/bindings/net/fsl-fman.txt |   25 +-------------------
->  .../devicetree/bindings/ptp/ptp-qoriq.txt          |   15 +++++++++--
->  2 files changed, 13 insertions(+), 27 deletions(-)
+>  .../devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt        | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
