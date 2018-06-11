@@ -1,106 +1,89 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2 5/5] memory: tegra: Introduce Tegra20 EMC driver
-Date: Mon, 11 Jun 2018 16:38:52 +0300
-Message-ID: <2038303.qe2mJgr7in@dimapc>
-References: <20180603223654.23324-1-digetx@gmail.com> <20180611113503.GC31977@ulmo> <20180611114133.GD31977@ulmo>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [RFC v2 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
+ info
+Date: Mon, 11 Jun 2018 15:47:02 +0200
+Message-ID: <4373650.yKzqCoXnEb@phil>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <2266365.DG6g2hf2fP@phil>
+ <20180608084710eucas1p2cc8f5717a4be9253c5d604dd03910317~2IwWTgRsg2794227942eucas1p24@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180611114133.GD31977@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180608084710eucas1p2cc8f5717a4be9253c5d604dd03910317~2IwWTgRsg2794227942eucas1p24@eucas1p2.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, linux-arm-msm@vger.kernel.org, Brian Norris <briannorris@chromium.org>, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, nickey.yang@rock-chips.com, tomi.valkeinen@ti.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday, 11 June 2018 14:41:33 MSK Thierry Reding wrote:
-> On Mon, Jun 11, 2018 at 01:35:03PM +0200, Thierry Reding wrote:
-> > On Wed, Jun 06, 2018 at 04:42:01PM +0300, Dmitry Osipenko wrote:
-> > > On 06.06.2018 14:02, Thierry Reding wrote:
-> > > > On Mon, Jun 04, 2018 at 01:36:54AM +0300, Dmitry Osipenko wrote:
-> [...]
-> 
-> > > >> +	if (!child_count) {
-> > > >> +		dev_err(emc->dev, "no memory timings in DT node\n");
-> > > >> +		return -ENOENT;
-> > > >> +	}
-> > > >> +
-> > > >> +	emc->timings = devm_kcalloc(emc->dev, child_count, 
-sizeof(*timing),
-> > > >> +				    GFP_KERNEL);
-> > > >> +	if (!emc->timings)
-> > > >> +		return -ENOMEM;
-> > > >> +
-> > > >> +	emc->num_timings = child_count;
-> > > >> +	timing = emc->timings;
-> > > >> +
-> > > >> +	for_each_child_of_node(node, child) {
-> > > >> +		err = load_one_timing_from_dt(emc, timing++, child);
-> > > >> +		if (err) {
-> > > >> +			of_node_put(child);
-> > > >> +			return err;
-> > > >> +		}
-> > > >> +	}
-> > > >> +
-> > > >> +	sort(emc->timings, emc->num_timings, sizeof(*timing), 
-cmp_timings,
-> > > >> +	     NULL);
-> > > >> +
-> > > >> +	return 0;
-> > > >> +}
-> > > >> +
-> > > >> +static struct device_node *
-> > > >> +tegra_emc_find_node_by_ram_code(struct tegra_emc *emc, u32 ram_code)
-> > > >> +{
-> > > >> +	struct device_node *np;
-> > > >> +	int err;
-> > > >> +
-> > > >> +	for_each_child_of_node(emc->dev->of_node, np) {
-> > > >> +		u32 value;
-> > > >> +
-> > > >> +		err = of_property_read_u32(np, "nvidia,ram-code", &value);
-> > > >> +		if (err || value != ram_code)
-> > > >> +			continue;
-> > > >> +
-> > > >> +		return np;
-> > > >> +	}
-> > > >> +
-> > > >> +	dev_info(emc->dev, "no memory timings for RAM code %u found in
-> > > >> DT\n",
-> > > >> +		 ram_code);
-> > > > 
-> > > > This seems like it should be dev_warn() or perhaps even dev_err()
-> > > > given
-> > > > that the result of it is the driver failing to probe. dev_info() may
-> > > > go
-> > > > unnoticed.
-> > > 
-> > > Absence of memory timings is a valid case, hence dev_info() suit well
-> > > here.
-> > > 
-> > > I can't see anything wrong with returning a errno if driver has nothing
-> > > to do and prefer to keep it because in that case managed resources
-> > > would be free'd by the driver core, though returning '0' also would
-> > > work.
-> > 
-> > I disagree. A driver failing to probe will show up as a kernel log entry
-> > and is something that people will have to whitelist if they're filtering
-> > for error messages in the boot log.
-> > 
-> > I think it's more user-friendly to just let the driver succeed the probe
-> > in an expected case, even if that means there's really nothing to do. If
-> > you're really concerned about the managed resources staying around, I
-> > think you could probably get rid of them explicitly. By the looks of it
-> > devres_release_all() isn't an exported symbol, so it can't be called
-> > from driver code, but perhaps that's something that we can change.
-> 
-> Maybe an easier way to avoid keeping the managed resources around would
-> be to move the check a little further up. That way, we can abort earlier
-> if no EMC timings are available, before any resources are even
-> allocated.
-> 
-> The tegra_emc_find_node_by_ram_code() function would need to take a
-> struct device * instead of struct tegra_emc *, but otherwise it should
-> work fine.
-
-Good point, thank you!
+SGkgQW5kcnplaiBldCBhbGwsCgpqdXN0IHNvIHdlIGRvbid0IGRpc2N1c3MgaW4gYSB0aGVvcmV0
+aWMgd2F5IG11Y2ggbG9uZ2VyIEkndmUganVzdApzZW50IGEgUkZDIHdpdGggbXkgY3VycmVudCBz
+dGF0ZSBvZiB3b3JrIGZvciB0aGUgZHctbWlwaS1kc2kgZHVhbC1kc2kKc3VwcG9ydCAtIGFrYSB0
+aGUgb2xkICJsZXQgY29kZSBzcGVhayIgOy0pCgpJJ3ZlIGZvdW5kIGEgc29tZXdoYXQgbmljZSB3
+YXkgdG8gZ2V0IGZyb20gb25lIGRzaS1jb250cm9sbGVyIG5vZGUKdG8gdGhlIG5vZGUgb2YgdGhl
+IG90aGVyIGR1YWwtZHNpIHBhcnQgdmlhIHNlcGFyYXRlIHBvcnRzIGFzIHdlbGwuClNvIG5vIG1v
+cmUgaGFja2VyeSB3aXRoIGVuZHBvaW50cyBhbmQgSSBjYW4ganVzdCBmb2xsb3cgQXJjaGl0J3MK
+ZHVhbC1kc2kgYmluZGluZyB0ZXh0LgoKCkFtIEZyZWl0YWcsIDguIEp1bmkgMjAxOCwgMTA6NDc6
+MDUgQ0VTVCBzY2hyaWViIEFuZHJ6ZWogSGFqZGE6Cj4gT24gMDguMDYuMjAxOCAwMDo1MCwgSGVp
+a28gU3R1ZWJuZXIgd3JvdGU6Cj4gPiBBbSBEb25uZXJzdGFnLCA3LiBKdW5pIDIwMTgsIDIzOjEw
+OjIwIENFU1Qgc2NocmllYiBCcmlhbiBOb3JyaXM6Cj4gPj4gSGksCj4gPj4KPiA+PiBJIG9ubHkg
+aGF2ZSBhIGxpdHRsZSBiaXQgdG8gYWRkLCBidXQgSGVpa28gZGlkIHNvbGljaXQgbXkgb3Bpbmlv
+bi4KPiA+IHllcCAuLi4gYW5kIEkgcmVhbGl6ZWQgdGhhdCBJIGFtL3dhcyB3YXkgdG8gYXR0YWNo
+ZWQgdG8gbXkgKHdvcmtpbmcpCj4gPiBlbmRwb2ludC1iYXNlZCB0aGluZ3kgdG8gcmVhbGx5IGFw
+cHJlY2lhdGUgdGhlIG90aGVyIGFyZ3VtZW50cyA7LSkKPiA+Cj4gPiBBbmQgeW91ciBEU0ktcmVs
+YXRlZCB3cml0aW5ncyBiZWxvdywgZGlkIHByb3ZpZGUgc29tZSBuZXcgdGhvdWdodC0KPiA+IGRp
+cmVjdGlvbnMgZm9yIG1lLCBzbyB0aGFua3MgZm9yIHRoYXQuCgpbLi4uXQoKPiA+PiBPbiBUaHUs
+IEp1biAwNywgMjAxOCBhdCAwMzoyNToxOFBNICswMjAwLCBIZWlrbyBTdHVlYm5lciB3cm90ZToK
+PiA+Pj4gQW0gRG9ubmVyc3RhZywgNy4gSnVuaSAyMDE4LCAxMjozOTowMyBDRVNUIHNjaHJpZWIg
+QW5kcnplaiBIYWpkYToKPiA+Pj4+IE9uIDA3LjA2LjIwMTggMDE6MDgsIEhlaWtvIFN0dWVibmVy
+IHdyb3RlOgo+ID4+PiBBbHNvIHRoZSBjcnRjPC0+ZHNpIGludGVyYWN0aW9uIGlzIHF1aXRlIGEg
+Yml0IG9mIGhhbmRsaW5nLWRpZmZlcmVudCBiZXR3ZWVuCj4gPj4+IG9uZSBjcnRjIHRhbGtpbmcg
+dG8gMiBEU0lzIG9yIDIgY3J0YyB0YWxraW5nIHRvIHRoZSAyIERTSXMgc2VwYXJhdGVseS4KPiA+
+PiBUaGF0J3MgcHJvYmFibHkgdGhlIGJpZ2dlciBrZXk6IHRvIHRyZWF0IHRoZW0gYXMgY29tcGxl
+dGVseSBzZXBhcmF0ZQo+ID4+IHBvcnRzIG1lYW5zIHRoYXQgeW91IGdldCBzZXBhcmF0ZSBDUlRD
+cywgSUlVQyAoSSdsbCBhZG1pdCwgSSdtIHN0aWxsIGEKPiA+PiBiaXQgcnVzdHkgb24gbmF2aWdh
+dGluZyBzb21lIERSTSBjb25jZXB0cykuCj4gPiBPbmUgdGhpbmcgSSByZWFsaXplZCB3aXRoIHlv
+dXIgbWVudGlvbiBvZiBEU0kgbWF4aW5nIG91dCBhdCA0IGxhbmVzIGlzLAo+ID4gdGhhdCB0aGlz
+IG1ha2VzIGl0IGVhc3kgdG8gZGV0ZWN0IHRoZSBleGlzdGVuY2Ugb2YgYSBkdWFsLWRzaSBzaXR1
+YXRpb24gLi4uCj4gPiBzaW1wbHkgd2hlbiB0aGUgZGV2aWNlIHJlcG9ydHMgOCBsYW5lcy4KPiA+
+ICh2aWEgb2ZfZmluZF9taXBpX2RzaV9kZXZpY2VfYnlfbm9kZSBwcmVzdW1hYmx5KQo+Cj4gSG1t
+LCBkZXZpY2UgaGFzIHR3byBEU0kgaW50ZXJmYWNlcywgb24gZWFjaCBpdCBoYXMgNCBsYW5lcywg
+c28gaXQgcmVwb3J0Cj4gNCBsYW5lcy4KCk9rIC4uLiB0aGF0IGlzIHdoYXQgVGVncmEgc2VlbXMg
+dG8gZG8gYXMgd2VsbC4gVGhlIHBhbmVsIHJlcG9ydGluZwo0IGxhbmVzLCBhbmQgdGhpcyBnZXR0
+aW5ncyBhc3NpZ25lZCB0byBlYWNoIG9mIHRoZSB0d28gZHNpIGNvbnRyb2xsZXJzLgpTbyBJJ2xs
+IG5lZWQgdG8gY2hhbmdlIHRoYXQgaW4gbXkgdjIgYXMgd2VsbC4KCgo+IFRoZXJlIGlzIGRpZmZl
+cmVudCBwcm9ibGVtIHdpdGggY3VycmVudCBpbXBsZW1lbnRhdGlvbiBvZiBwYW5lbCBsb29rdXAK
+PiBjb2RlIC0gZHJtX3BhbmVsIGlzIGlkZW50aWZpZWQgYnkgZGV2aWNlX25vZGUgb2YgcGh5c2lj
+YWwgZGV2aWNlLCBhcyBhCj4gcmVzdWx0IHRoZXJlIGNhbiBiZSBvbmx5IG9uZSBwYW5lbCBwZXIg
+ZGV2aWNlLgo+IEkgdGhpbmsgcHJvcGVyIGlkZW50aWZpY2F0aW9uIHNob3VsZCBiZSBieSBkZXZp
+Y2Vfbm9kZSBvZiBPRiBncmFwaCBwb3J0LAo+IG9yIGJ5IHBhaXI6IGRldmljZV9ub2RlIG9mIHBo
+eXNpY2FsIGRldmljZSBhbmQgcG9ydCBudW1iZXIgKHByYWN0aWNhbGx5Cj4gaXQgaXMgdGhlIHNh
+bWUpLgo+IEkgdGhpbmsgZml4aW5nIGl0IHNob3VsZCBub3QgYmUgYSBiaWcgZGVhbC4KClJpZ2h0
+IG5vdyBpbiBteSBSRkMgaXQgc2VlbXMgdG8gd29yayB3aXRob3V0IG5lZWRpbmcgY2hhbmdlcyB0
+byBwYW5lbAp0eXBlcyBvciBpZGVudGlmaWNhdGlvbiwgc28gSSBndWVzcyB3ZSBjYW4gZGlzY3Vz
+cyBjaGFuZ2VzIHlvdSB3b3VsZCBsaWtlCnRvIHNlZSBvdmVyIHRoZXJlLgoKCkhlaWtvCgo+ID4g
+QXMgYSBkdWFsLWRzaSBzaXR1YXRpb24gcmVxdWlyZXMgYSBjbG9jay1tYXN0ZXIgcHJvcGVydHkg
+aW4gb25lLAo+ID4gYm90aCBtYXN0ZXIgYW5kIHNsYXZlIGFsc28gd291bGQgYmUgYWJsZSB0byBk
+ZXRlcm1pbmUgdGhlaXIKPiA+IG1hc3RlciBvciBzbGF2ZSBzdGF0dXMsIHRodXMgdGhlIGdsb2Jh
+bCBkdWFsLWRzaSBjb25maWcgY291bGQgYmUKPiA+IGRvbmUgYnkgdGhlIG1hc3RlciAoR1JGIHN0
+dWZmIGluIHRoZSBSb2NrY2hpcCBjYXNlKQo+ID4KPiA+Cj4gPiBUaGUgb25seSB0aGluZyB0aGF0
+IG1ha2VzIG15IGhlYWQgZXhwbG9kZSBub3csIGlzIGhvdyB0bwo+ID4gbWFrZSB0aGUgc2xhdmUg
+YWN0dWFsbHkgcmVhY3QgdG8gc2V0dGluZ3Mgc2VudCB0byB0aGUgbWFzdGVyCj4gPiBpbiBhIHNh
+bmUgd2F5Lgo+IAo+IFdvdWxkbid0IGJlIGVub3VnaCBpZiB0aGUgcGFuZWwgcGFzc2VzIGRpZmZl
+cmVudCBidXMgaW5mbyBvbiBEU0kwIGFuZCBEU0kxPwo+IAo+IFJlZ2FyZHMKPiBBbmRyemVqCj4g
+Cj4gPgo+ID4gQnV0IHRoYXQgaXMgYSBkcm0tc3BlY2lmaWMgaW1wbGVtZW50YXRpb24tZGV0YWls
+LCBJIGd1ZXNzIDstKSAuCj4gPiBBbmQgaG9wZWZ1bGx5IHNvbWVvbmUgbWlnaHQgaGF2ZSBhIGdy
+ZWF0IGlkZWEgaG93IHRoaXMKPiA+IGNvdWxkIGJlIGRvbmUgYmV0dGVyIHRoYW4gaW4gbXkgY3Vy
+cmVudCBpbXBsZW1lbnRhdGlvbi4KPiA+Cj4gPgo+ID4gSGVpa28KPiA+Cj4gPgo+ID4KPiA+Cj4g
+Pgo+IAo+IAo+IAoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
