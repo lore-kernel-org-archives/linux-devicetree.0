@@ -1,108 +1,144 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
-Date: Mon, 11 Jun 2018 16:10:21 +0300
-Message-ID: <6764263.x6FQro3A0J@dimapc>
-References: <20180531221637.6017-1-stefan@agner.ch> <1862022.905gDpZtpO@dimapc> <20180611135013.7bb5b59b@bbrezillon>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 7/8] drm/bridge/synopsys: dsi: add dual-dsi support
+Date: Mon, 11 Jun 2018 15:35:01 +0200
+Message-ID: <20180611133502.1292-8-heiko@sntech.de>
+References: <20180611133502.1292-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180611135013.7bb5b59b@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Stefan Agner <stefan@agner.ch>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180611133502.1292-1-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, 11 June 2018 14:50:13 MSK Boris Brezillon wrote:
-> On Mon, 11 Jun 2018 14:45:45 +0300
-> 
-> Dmitry Osipenko <digetx@gmail.com> wrote:
-> > On Sunday, 10 June 2018 18:32:02 MSK Boris Brezillon wrote:
-> > > On Sun, 10 Jun 2018 18:00:06 +0300
-> > > 
-> > > Dmitry Osipenko <digetx@gmail.com> wrote:
-> > > > > >> That seems a lot of work for a code path I do not intend to ever
-> > > > > >> use
-> > > > > >> 
-> > > > > >> :-)
-> > > > > > 
-> > > > > > Are you sure that resetting HW resets the timing and other
-> > > > > > registers
-> > > > > > configuration? Reset implementation is HW-specific, like for
-> > > > > > example
-> > > > > > in a
-> > > > > > case of a video decoder the registers state is re-intialized on HW
-> > > > > > reset,
-> > > > > > but registers configuration is untouched in a case of resetting
-> > > > > > GPU.
-> > > > > > I'd
-> > > > > > suggest to check whether NAND controller resetting affects the HW
-> > > > > > configuration.
-> > > > > 
-> > > > > It seems all registers are set back to their documented reset value:
-> > > > > 
-> > > > > [boot loader/ROM initialized values]
-> > > > > [    1.270253] tegra-nand 70008000.nand: Tegra NAND controller
-> > > > > register
-> > > > > dump
-> > > > > [    1.277051] tegra-nand 70008000.nand: COMMAND: 0x66880104
-> > > > > [    1.282457] tegra-nand 70008000.nand: STATUS: 0x00000101
-> > > > > [    1.287763] tegra-nand 70008000.nand: ISR: 0x01000120
-> > > > > [    1.292818] tegra-nand 70008000.nand: IER: 0x00000000
-> > > > > [    1.297863] tegra-nand 70008000.nand: CONFIG: 0x00840000
-> > > > > [    1.303181] tegra-nand 70008000.nand: TIMING: 0x05040000
-> > > > > [    1.308486] tegra-nand 70008000.nand: TIMING2: 0x00000003
-> > > > > [    1.313897] tegra-nand 70008000.nand: CMD_REG1: 0x00000000
-> > > > > [    1.319377] tegra-nand 70008000.nand: CMD_REG2: 0x00000030
-> > > > > [    1.324868] tegra-nand 70008000.nand: ADDR_REG1: 0x03000000
-> > > > > [    1.330435] tegra-nand 70008000.nand: ADDR_REG2: 0x00000000
-> > > > > [    1.336011] tegra-nand 70008000.nand: DMA_MST_CTRL: 0x04100004
-> > > > > [    1.341838] tegra-nand 70008000.nand: DMA_CFG_A: 0x00000fff
-> > > > > [    1.347415] tegra-nand 70008000.nand: DMA_CFG_B: 0x0000001b
-> > > > > [    1.352991] tegra-nand 70008000.nand: FIFO_CTRL: 0x0000aa00
-> > > > > [reset]
-> > > > > [    1.358559] tegra-nand 70008000.nand: Tegra NAND controller
-> > > > > register
-> > > > > dump
-> > > > > [    1.365352] tegra-nand 70008000.nand: COMMAND: 0x00800004
-> > > > > [    1.370744] tegra-nand 70008000.nand: STATUS: 0x00000101
-> > > > > [    1.376060] tegra-nand 70008000.nand: ISR: 0x00000100
-> > > > > [    1.381105] tegra-nand 70008000.nand: IER: 0x00000000
-> > > > > [    1.386161] tegra-nand 70008000.nand: CONFIG: 0x10030000
-> > > > > [    1.391466] tegra-nand 70008000.nand: TIMING: 0x00000000
-> > > > > [    1.396782] tegra-nand 70008000.nand: TIMING2: 0x00000000
-> > > > > [    1.402174] tegra-nand 70008000.nand: CMD_REG1: 0x00000000
-> > > > > [    1.407664] tegra-nand 70008000.nand: CMD_REG2: 0x00000000
-> > > > > [    1.413156] tegra-nand 70008000.nand: ADDR_REG1: 0x00000000
-> > > > > [    1.418722] tegra-nand 70008000.nand: ADDR_REG2: 0x00000000
-> > > > > [    1.424297] tegra-nand 70008000.nand: DMA_MST_CTRL: 0x24000000
-> > > > > [    1.430123] tegra-nand 70008000.nand: DMA_CFG_A: 0x00000000
-> > > > > [    1.435698] tegra-nand 70008000.nand: DMA_CFG_B: 0x00000000
-> > > > > [    1.441264] tegra-nand 70008000.nand: FIFO_CTRL: 0x0000aa00
-> > > > 
-> > > > Alright, then indeed it's not really worth to bother with HW resetting
-> > > > here. Probably only a kernel module reload or a reboot will help if HW
-> > > > is
-> > > > hung. Maybe NAND controller / chip recovering is something that NAND
-> > > > core
-> > > > should be handling in a such case by providing a
-> > > > nand_controller_reset()
-> > > > hook?
-> > > 
-> > > I don't see what the core could do to help with that. We'd end up with
-> > > a new hook implemented by the controller that would be called by the
-> > > controller driver when it knows it's safe to reset the controller. So,
-> > > why bother exposing that in the core?
-> > 
-> > Giving a driver more flexibility is always a good thing. I'm not really
-> > familiar with mtd/ and maybe indeed it doesn't make much sense to move HW
-> > resetting to NAND core, though it looked to me that it should be always
-> > safe for NAND core to initiate HW resetting after IO failure and hence
-> > would be cleaner and nicer to have a unified HW reset management rather
-> > than to have each driver to do its own thing.
-> 
-> No really, the NAND core can't know when it's appropriate to reset the
-> controller, and what this reset will do, hence it doesn't know if the
-> chips connected to the controller should also be reset.
-
-Okay!
+RnJvbTogTmlja2V5IFlhbmcgPG5pY2tleS55YW5nQHJvY2stY2hpcHMuY29tPgoKQWxsb3cgdG8g
+YWxzbyBkcml2ZSBhIHNsYXZlIGR3LW1pcGktZHNpIGNvbnRyb2xsZXIgaW4gYSBkdWFsLWRzaQpz
+ZXR1cC4gVGhpcyB3aWxsIHJlcXVpcmUgYWRkaXRpb25hbCBpbXBsZW1lbnRhdGlvbi1zcGVjaWZp
+Ywpjb2RlIHRvIGxvb2sgdXAgdGhlIHNsYXZlIGluc3RhbmNlIGFuZCBkbyBzcGVjaWZpYyBzZXR1
+cC4KQWxzbyB3aWxsIHByb2JhYmx5IG5lZWQgY29kZSBpbiB0aGUgc3BlY2lmaWMgY3J0Y3MgYXMg
+ZHVhbC1kc2kKZG9lcyBub3QgZXF1YWwgdHdvIHNlcGFyYXRlIGRzaSBvdXRwdXRzLgoKVG8gYWN0
+aXZhdGUsIHRoZSBpbXBsZW1lbnRhdGlvbi1zcGVjaWZpYyBjb2RlIHNob3VsZCBzZXQgdGhlIHNs
+YXZlCnVzaW5nIGR3X21pcGlfZHNpX3NldF9zbGF2ZSgpIGJlZm9yZSBjYWxsaW5nIF9fZHdfbWlw
+aV9kc2lfYmluZCgpLgoKU2lnbmVkLW9mZi1ieTogTmlja2V5IFlhbmcgPG5pY2tleS55YW5nQHJv
+Y2stY2hpcHMuY29tPgpTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNo
+LmRlPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyB8
+IDkzICsrKysrKysrKysrKysrKysrLS0KIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5o
+ICAgICAgICAgICAgICB8ICAxICsKIDIgZmlsZXMgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKSwg
+OCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9w
+c3lzL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1p
+cGktZHNpLmMKaW5kZXggMWI0ZjZiYjdlYTU5Li5mNmZlNTJkYjRiMDIgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYworKysgYi9kcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMKQEAgLTIzNCw5ICsyMzQsMTcg
+QEAgc3RydWN0IGR3X21pcGlfZHNpIHsKIAl1MzIgZm9ybWF0OwogCXVuc2lnbmVkIGxvbmcgbW9k
+ZV9mbGFnczsKIAorCXN0cnVjdCBkd19taXBpX2RzaSAqc2xhdmU7IC8qIGR1YWwtZHNpIHNsYXZl
+IHB0ciAqLworCWJvb2wgaXNfc2xhdmU7IC8qIGR1YWwtZHNpIHNsYXZlIHN0YXRlICovCisKIAlj
+b25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhICpwbGF0X2RhdGE7CiB9OwogCitzdGF0
+aWMgaW5saW5lIGJvb2wgZHdfbWlwaV9pc19kdWFsX21vZGUoc3RydWN0IGR3X21pcGlfZHNpICpk
+c2kpCit7CisJcmV0dXJuIGRzaS0+c2xhdmUgfHwgZHNpLT5pc19zbGF2ZTsKK30KKwogLyoKICAq
+IFRoZSBjb250cm9sbGVyIHNob3VsZCBnZW5lcmF0ZSAyIGZyYW1lcyBiZWZvcmUKICAqIHByZXBh
+cmluZyB0aGUgcGVyaXBoZXJhbC4KQEAgLTI3NiwxOSArMjg0LDM3IEBAIHN0YXRpYyBpbnQgZHdf
+bWlwaV9kc2lfaG9zdF9hdHRhY2goc3RydWN0IG1pcGlfZHNpX2hvc3QgKmhvc3QsCiAJc3RydWN0
+IGR3X21pcGlfZHNpICpkc2kgPSBob3N0X3RvX2RzaShob3N0KTsKIAlzdHJ1Y3QgZHJtX2JyaWRn
+ZSAqYnJpZGdlOwogCXN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsOworCXN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqbnA7CiAJaW50IHJldDsKKwlpbnQgbGFuZXMgPSBkZXZpY2UtPmxhbmVzOworCisJLyogY2hl
+Y2sgZm9yIGR1YWwtZHNpICovCisJbnAgPSBvZl9taXBpX2RzaV9maW5kX3NlY29uZF9ob3N0KGRz
+aS0+ZGV2LT5vZl9ub2RlLCAxLCAwKTsKKwlpZiAoSVNfRVJSKG5wKSkKKwkJcmV0dXJuIFBUUl9F
+UlIobnApOworCWlmIChucCkgeworCQlvZl9ub2RlX3B1dChucCk7CisJCWxhbmVzIC89IDI7CisJ
+fQogCi0JaWYgKGRldmljZS0+bGFuZXMgPiBkc2ktPnBsYXRfZGF0YS0+bWF4X2RhdGFfbGFuZXMp
+IHsKKwlpZiAobGFuZXMgPiBkc2ktPnBsYXRfZGF0YS0+bWF4X2RhdGFfbGFuZXMpIHsKIAkJZGV2
+X2Vycihkc2ktPmRldiwgInRoZSBudW1iZXIgb2YgZGF0YSBsYW5lcygldSkgaXMgdG9vIG1hbnlc
+biIsCiAJCQlkZXZpY2UtPmxhbmVzKTsKIAkJcmV0dXJuIC1FSU5WQUw7CiAJfQogCi0JZHNpLT5s
+YW5lcyA9IGRldmljZS0+bGFuZXM7CisJZHNpLT5sYW5lcyA9IGxhbmVzOwogCWRzaS0+Y2hhbm5l
+bCA9IGRldmljZS0+Y2hhbm5lbDsKIAlkc2ktPmZvcm1hdCA9IGRldmljZS0+Zm9ybWF0OwogCWRz
+aS0+bW9kZV9mbGFncyA9IGRldmljZS0+bW9kZV9mbGFnczsKIAorCWlmIChkc2ktPnNsYXZlKSB7
+CisJCWRzaS0+c2xhdmUtPmxhbmVzID0gZHNpLT5sYW5lczsKKwkJZHNpLT5zbGF2ZS0+Y2hhbm5l
+bCA9IGRzaS0+Y2hhbm5lbDsKKwkJZHNpLT5zbGF2ZS0+Zm9ybWF0ID0gZHNpLT5mb3JtYXQ7CisJ
+CWRzaS0+c2xhdmUtPm1vZGVfZmxhZ3MgPSBkc2ktPm1vZGVfZmxhZ3M7CisJfQorCiAJcmV0ID0g
+ZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGhvc3QtPmRldi0+b2Zfbm9kZSwgMSwgMCwKIAkJ
+CQkJICAmcGFuZWwsICZicmlkZ2UpOwogCWlmIChyZXQpCkBAIC00NDUsMTAgKzQ3MSwxNyBAQCBz
+dGF0aWMgc3NpemVfdCBkd19taXBpX2RzaV9ob3N0X3RyYW5zZmVyKHN0cnVjdCBtaXBpX2RzaV9o
+b3N0ICpob3N0LAogCX0KIAogCWR3X21pcGlfbWVzc2FnZV9jb25maWcoZHNpLCBtc2cpOworCWlm
+IChkc2ktPnNsYXZlKQorCQlkd19taXBpX21lc3NhZ2VfY29uZmlnKGRzaS0+c2xhdmUsIG1zZyk7
+CiAKIAlyZXQgPSBkd19taXBpX2RzaV93cml0ZShkc2ksICZwYWNrZXQpOwogCWlmIChyZXQpCiAJ
+CXJldHVybiByZXQ7CisJaWYgKGRzaS0+c2xhdmUpIHsKKwkJcmV0ID0gZHdfbWlwaV9kc2lfd3Jp
+dGUoZHNpLT5zbGF2ZSwgJnBhY2tldCk7CisJCWlmIChyZXQpCisJCQlyZXR1cm4gcmV0OworCX0K
+IAogCWlmIChtc2ctPnJ4X2J1ZiAmJiBtc2ctPnJ4X2xlbikgewogCQlyZXQgPSBkd19taXBpX2Rz
+aV9yZWFkKGRzaSwgbXNnKTsKQEAgLTU4Nyw3ICs2MjAsMTUgQEAgc3RhdGljIHZvaWQgZHdfbWlw
+aV9kc2lfdmlkZW9fcGFja2V0X2NvbmZpZyhzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSwKIAkgKiBE
+U0lfVk5QQ1IuTlBTSVpFLi4uIGVzcGVjaWFsbHkgYmVjYXVzZSB0aGlzIGRyaXZlciBzdXBwb3J0
+cwogCSAqIG5vbi1idXJzdCB2aWRlbyBtb2Rlcywgc2VlIGR3X21pcGlfZHNpX3ZpZGVvX21vZGVf
+Y29uZmlnKCkuLi4KIAkgKi8KLQlkc2lfd3JpdGUoZHNpLCBEU0lfVklEX1BLVF9TSVpFLCBWSURf
+UEtUX1NJWkUobW9kZS0+aGRpc3BsYXkpKTsKKworCWludCBwa3Rfc2l6ZTsKKworCWlmIChkd19t
+aXBpX2lzX2R1YWxfbW9kZShkc2kpKQorCQlwa3Rfc2l6ZSA9IFZJRF9QS1RfU0laRShtb2RlLT5o
+ZGlzcGxheSAvIDIpOworCWVsc2UKKwkJcGt0X3NpemUgPSBWSURfUEtUX1NJWkUobW9kZS0+aGRp
+c3BsYXkpOworCisJZHNpX3dyaXRlKGRzaSwgRFNJX1ZJRF9QS1RfU0laRSwgcGt0X3NpemUpOwog
+fQogCiBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9jb21tYW5kX21vZGVfY29uZmlnKHN0cnVjdCBk
+d19taXBpX2RzaSAqZHNpKQpAQCAtNzYwLDIzICs4MDEsMzMgQEAgc3RhdGljIHZvaWQgZHdfbWlw
+aV9kc2lfYnJpZGdlX3Bvc3RfZGlzYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQogCWRz
+aS0+cGFuZWxfYnJpZGdlLT5mdW5jcy0+cG9zdF9kaXNhYmxlKGRzaS0+cGFuZWxfYnJpZGdlKTsK
+IAogCWR3X21pcGlfZHNpX2Rpc2FibGUoZHNpKTsKKwlpZiAoZHNpLT5zbGF2ZSkgeworCQlkd19t
+aXBpX2RzaV9kaXNhYmxlKGRzaS0+c2xhdmUpOworCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNp
+LT5zbGF2ZS0+cGNsayk7CisJCXBtX3J1bnRpbWVfcHV0KGRzaS0+c2xhdmUtPmRldik7CisJfQor
+CiAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGNsayk7CiAJcG1fcnVudGltZV9wdXQoZHNp
+LT5kZXYpOwogfQogCi1zdGF0aWMgdm9pZCBkd19taXBpX2RzaV9icmlkZ2VfbW9kZV9zZXQoc3Ry
+dWN0IGRybV9icmlkZ2UgKmJyaWRnZSwKLQkJCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1v
+ZGUsCi0JCQkJCXN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICphZGp1c3RlZF9tb2RlKQorc3RhdGlj
+IHZvaWQgZHdfbWlwaV9kc2lfbW9kZV9zZXQoc3RydWN0IGR3X21pcGlfZHNpICpkc2ksCisJCQkJ
+c3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCiB7Ci0Jc3RydWN0IGR3X21pcGlfZHNpICpk
+c2kgPSBicmlkZ2VfdG9fZHNpKGJyaWRnZSk7CiAJY29uc3Qgc3RydWN0IGR3X21pcGlfZHNpX3Bo
+eV9vcHMgKnBoeV9vcHMgPSBkc2ktPnBsYXRfZGF0YS0+cGh5X29wczsKIAl2b2lkICpwcml2X2Rh
+dGEgPSBkc2ktPnBsYXRfZGF0YS0+cHJpdl9kYXRhOwogCWludCByZXQ7CisJdTMyIGxhbmVzOwog
+CiAJY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+cGNsayk7CiAKKwlpZiAoZHdfbWlwaV9pc19kdWFs
+X21vZGUoZHNpKSkKKwkJbGFuZXMgPSBkc2ktPmxhbmVzICogMjsKKwllbHNlCisJCWxhbmVzID0g
+ZHNpLT5sYW5lczsKKwogCXJldCA9IHBoeV9vcHMtPmdldF9sYW5lX21icHMocHJpdl9kYXRhLCBt
+b2RlLCBkc2ktPm1vZGVfZmxhZ3MsCi0JCQkJICAgICBkc2ktPmxhbmVzLCBkc2ktPmZvcm1hdCwg
+JmRzaS0+bGFuZV9tYnBzKTsKKwkJCQkgICAgIGxhbmVzLCBkc2ktPmZvcm1hdCwgJmRzaS0+bGFu
+ZV9tYnBzKTsKIAlpZiAocmV0KQogCQlEUk1fREVCVUdfRFJJVkVSKCJQaHkgZ2V0X2xhbmVfbWJw
+cygpIGZhaWxlZFxuIik7CiAKQEAgLTgwOCwxMiArODU5LDI1IEBAIHN0YXRpYyB2b2lkIGR3X21p
+cGlfZHNpX2JyaWRnZV9tb2RlX3NldChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLAogCWR3X21p
+cGlfZHNpX3NldF9tb2RlKGRzaSwgMCk7CiB9CiAKK3N0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2Jy
+aWRnZV9tb2RlX3NldChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLAorCQkJCQlzdHJ1Y3QgZHJt
+X2Rpc3BsYXlfbW9kZSAqbW9kZSwKKwkJCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmFkanVz
+dGVkX21vZGUpCit7CisJc3RydWN0IGR3X21pcGlfZHNpICpkc2kgPSBicmlkZ2VfdG9fZHNpKGJy
+aWRnZSk7CisKKwlkd19taXBpX2RzaV9tb2RlX3NldChkc2ksIG1vZGUpOworCWlmIChkc2ktPnNs
+YXZlKQorCQlkd19taXBpX2RzaV9tb2RlX3NldChkc2ktPnNsYXZlLCBtb2RlKTsKK30KKwogc3Rh
+dGljIHZvaWQgZHdfbWlwaV9kc2lfYnJpZGdlX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJp
+ZGdlKQogewogCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gYnJpZGdlX3RvX2RzaShicmlkZ2Up
+OwogCiAJLyogU3dpdGNoIHRvIHZpZGVvIG1vZGUgZm9yIHBhbmVsLWJyaWRnZSBlbmFibGUgJiBw
+YW5lbCBlbmFibGUgKi8KIAlkd19taXBpX2RzaV9zZXRfbW9kZShkc2ksIE1JUElfRFNJX01PREVf
+VklERU8pOworCWlmIChkc2ktPnNsYXZlKQorCQlkd19taXBpX2RzaV9zZXRfbW9kZShkc2ktPnNs
+YXZlLCBNSVBJX0RTSV9NT0RFX1ZJREVPKTsKIH0KIAogc3RhdGljIGVudW0gZHJtX21vZGVfc3Rh
+dHVzCkBAIC05NTMsNiArMTAxNywxOSBAQCBzdGF0aWMgdm9pZCBfX2R3X21pcGlfZHNpX3JlbW92
+ZShzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKIAlwbV9ydW50aW1lX2Rpc2FibGUoZHNpLT5kZXYp
+OwogfQogCit2b2lkIGR3X21pcGlfZHNpX3NldF9zbGF2ZShzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRz
+aSwgc3RydWN0IGR3X21pcGlfZHNpICpzbGF2ZSkKK3sKKwlkc2ktPnNsYXZlID0gc2xhdmU7CisK
+KwkvKiBtaWdyYXRlIHNldHRpbmdzIGZvciBhbHJlYWR5IGF0dGFjaGVkIGRpc3BsYXlzICovCisJ
+ZHNpLT5zbGF2ZS0+aXNfc2xhdmUgPSB0cnVlOworCWRzaS0+c2xhdmUtPmxhbmVzID0gZHNpLT5s
+YW5lczsKKwlkc2ktPnNsYXZlLT5jaGFubmVsID0gZHNpLT5jaGFubmVsOworCWRzaS0+c2xhdmUt
+PmZvcm1hdCA9IGRzaS0+Zm9ybWF0OworCWRzaS0+c2xhdmUtPm1vZGVfZmxhZ3MgPSBkc2ktPm1v
+ZGVfZmxhZ3M7Cit9CitFWFBPUlRfU1lNQk9MX0dQTChkd19taXBpX2RzaV9zZXRfc2xhdmUpOwor
+CiAvKgogICogUHJvYmUvcmVtb3ZlIEFQSSwgdXNlZCBmcm9tIHBsYXRmb3JtcyBiYXNlZCBvbiB0
+aGUgRFJNIGJyaWRnZSBBUEkuCiAgKi8KZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2JyaWRnZS9k
+d19taXBpX2RzaS5oIGIvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgKaW5kZXggNmQ3
+ZjhlYjVkOWYyLi41ZmQ5OTdjZGYyODEgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvZHJtL2JyaWRnZS9k
+d19taXBpX2RzaS5oCisrKyBiL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oCkBAIC0z
+Nyw1ICszNyw2IEBAIHN0cnVjdCBkd19taXBpX2RzaSAqZHdfbWlwaV9kc2lfcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldiwKIHZvaWQgZHdfbWlwaV9kc2lfcmVtb3ZlKHN0cnVjdCBk
+d19taXBpX2RzaSAqZHNpKTsKIGludCBkd19taXBpX2RzaV9iaW5kKHN0cnVjdCBkd19taXBpX2Rz
+aSAqZHNpLCBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpOwogdm9pZCBkd19taXBpX2RzaV91
+bmJpbmQoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpOwordm9pZCBkd19taXBpX2RzaV9zZXRfc2xh
+dmUoc3RydWN0IGR3X21pcGlfZHNpICpkc2ksIHN0cnVjdCBkd19taXBpX2RzaSAqc2xhdmUpOwog
+CiAjZW5kaWYgLyogX19EV19NSVBJX0RTSV9fICovCi0tIAoyLjE3LjAKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
