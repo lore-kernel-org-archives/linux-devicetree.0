@@ -1,50 +1,78 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH 09/28] drm/mediatek: add component DSI3
-Date: Mon, 11 Jun 2018 11:26:01 +0800
-Message-ID: <1528687580-549-10-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 27/28] drm/mediatek: add third ddp path
+Date: Mon, 11 Jun 2018 11:26:19 +0800
+Message-ID: <1528687580-549-28-git-send-email-stu.hsieh@mediatek.com>
 References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgdGhlIGNvbXBvbmVudCBEU0kzCgpTaWduZWQtb2ZmLWJ5OiBTdHUgSHNp
-ZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZGRwX2NvbXAuYyB8IDEgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwX2NvbXAuaCB8IDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwppbmRleCAxOTJmNzM3
-NGQ5ODguLmZlNmZkYzAyMWZjNyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZGRwX2NvbXAuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHBfY29tcC5jCkBAIC0yMjgsNiArMjI4LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
-ZGRwX2NvbXBfbWF0Y2ggbXRrX2RkcF9tYXRjaGVzW0REUF9DT01QT05FTlRfSURfTUFYXSA9IHsK
-IAlbRERQX0NPTVBPTkVOVF9EU0kwXQk9IHsgTVRLX0RTSSwJCTAsIE5VTEwgfSwKIAlbRERQX0NP
-TVBPTkVOVF9EU0kxXQk9IHsgTVRLX0RTSSwJCTEsIE5VTEwgfSwKIAlbRERQX0NPTVBPTkVOVF9E
-U0kyXQk9IHsgTVRLX0RTSSwJCTIsIE5VTEwgfSwKKwlbRERQX0NPTVBPTkVOVF9EU0kyXQk9IHsg
-TVRLX0RTSSwJCTMsIE5VTEwgfSwKIAlbRERQX0NPTVBPTkVOVF9HQU1NQV0JPSB7IE1US19ESVNQ
-X0dBTU1BLAkwLCAmZGRwX2dhbW1hIH0sCiAJW0REUF9DT01QT05FTlRfT0QwXQk9IHsgTVRLX0RJ
-U1BfT0QsCTAsICZkZHBfb2QgfSwKIAlbRERQX0NPTVBPTkVOVF9PRDFdCT0geyBNVEtfRElTUF9P
-RCwJMSwgJmRkcF9vZCB9LApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kcm1fZGRwX2NvbXAuaCBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9j
-b21wLmgKaW5kZXggOGQxNTJiMzM3ZjE1Li43NDEzZmZlYjNjOWQgMTAwNjQ0Ci0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaApAQCAtNTEsNiArNTEsNyBAQCBlbnVtIG10
-a19kZHBfY29tcF9pZCB7CiAJRERQX0NPTVBPTkVOVF9EU0kwLAogCUREUF9DT01QT05FTlRfRFNJ
-MSwKIAlERFBfQ09NUE9ORU5UX0RTSTIsCisJRERQX0NPTVBPTkVOVF9EU0kzLAogCUREUF9DT01Q
-T05FTlRfR0FNTUEsCiAJRERQX0NPTVBPTkVOVF9PRDAsCiAJRERQX0NPTVBPTkVOVF9PRDEsCi0t
-IAoyLjEyLjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch create third crtc by third ddp path
+
+Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 3 +++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 5 +++++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h  | 5 ++++-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 658b8dd45b83..2d6aa150a9ff 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -539,6 +539,9 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 	int ret;
+ 	int i;
+ 
++	if (!path)
++		return 0;
++
+ 	for (i = 0; i < path_len; i++) {
+ 		enum mtk_ddp_comp_id comp_id = path[i];
+ 		struct device_node *node;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 08d5d0b47bfe..3d279a299383 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -232,6 +232,11 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 	if (ret < 0)
+ 		goto err_component_unbind;
+ 
++	ret = mtk_drm_crtc_create(drm, private->data->third_path,
++				  private->data->third_len);
++	if (ret < 0)
++		goto err_component_unbind;
++
+ 	/* Use OVL device for all DMA memory allocations */
+ 	np = private->comp_node[private->data->main_path[0]] ?:
+ 	     private->comp_node[private->data->ext_path[0]];
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index c3378c452c0a..ecc00ca3221d 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -17,7 +17,7 @@
+ #include <linux/io.h>
+ #include "mtk_drm_ddp_comp.h"
+ 
+-#define MAX_CRTC	2
++#define MAX_CRTC	3
+ #define MAX_CONNECTOR	2
+ 
+ struct device;
+@@ -33,6 +33,9 @@ struct mtk_mmsys_driver_data {
+ 	unsigned int main_len;
+ 	const enum mtk_ddp_comp_id *ext_path;
+ 	unsigned int ext_len;
++	const enum mtk_ddp_comp_id *third_path;
++	unsigned int third_len;
++
+ 	bool shadow_register;
+ };
+ 
+-- 
+2.12.5
