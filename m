@@ -1,104 +1,138 @@
-Return-Path: <SRS0=RyeN=I5=st.com=hugues.fruchet@kernel.org>
-From: Hugues FRUCHET <hugues.fruchet@st.com>
+Return-Path: <SRS0=d2ME=I5=retiisi.org.uk=sakari.ailus@kernel.org>
+Date: Mon, 11 Jun 2018 13:10:23 +0300
+From: Sakari Ailus <sakari.ailus@iki.fi>
 Subject: Re: [PATCH 2/2] media: ov5640: add support of module orientation
-Date: Mon, 11 Jun 2018 10:19:25 +0000
-Message-ID: <fe88c2e1-123b-7d31-6eb7-25a682ea116f@st.com>
+Message-ID: <20180611101023.3dzihbwvwcopiqdh@valkosipuli.retiisi.org.uk>
 References: <1528709357-7251-1-git-send-email-hugues.fruchet@st.com>
  <1528709357-7251-3-git-send-email-hugues.fruchet@st.com>
- <20180611101023.3dzihbwvwcopiqdh@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20180611101023.3dzihbwvwcopiqdh@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7C88D1882750304C89B540BA7BE10EDC@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Benjamin Gaignard  <benjamin.gaignard@linaro.org>, Maxime Ripard" <maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1528709357-7251-3-git-send-email-hugues.fruchet@st.com>
+To: Hugues Fruchet <hugues.fruchet@st.com>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgU2FrYXJpLA0KDQpJJ20gZmluZSB3aXRoIHRoZSBjaGFuZ2UgdG8gZGV2X2Z3bm9kZSgmY2xp
-ZW50LT5kZXYpLg0KDQpNYW55IHRoYW5rcyBTYWthcmksDQoNCkh1Z3Vlcy4NCg0KT24gMDYvMTEv
-MjAxOCAxMjoxMCBQTSwgU2FrYXJpIEFpbHVzIHdyb3RlOg0KPiBPbiBNb24sIEp1biAxMSwgMjAx
-OCBhdCAxMToyOToxN0FNICswMjAwLCBIdWd1ZXMgRnJ1Y2hldCB3cm90ZToNCj4+IEFkZCBzdXBw
-b3J0IG9mIG1vZHVsZSBiZWluZyBwaHlzaWNhbGx5IG1vdW50ZWQgdXBzaWRlIGRvd24uDQo+PiBJ
-biB0aGlzIGNhc2UsIG1pcnJvciBhbmQgZmxpcCBhcmUgZW5hYmxlZCB0byBmaXggY2FwdHVyZWQg
-aW1hZ2VzDQo+PiBvcmllbnRhdGlvbi4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBIdWd1ZXMgRnJ1
-Y2hldCA8aHVndWVzLmZydWNoZXRAc3QuY29tPg0KPj4gLS0tDQo+PiAgIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lZGlhL2kyYy9vdjU2NDAudHh0ICAgICAgIHwgIDMgKysrDQo+PiAgIGRyaXZl
-cnMvbWVkaWEvaTJjL292NTY0MC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjggKysrKysr
-KysrKysrKysrKysrKystLQ0KPj4gICAyIGZpbGVzIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyks
-IDIgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Y1NjQwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Y1NjQwLnR4dA0KPj4gaW5kZXggOGUzNmRhMC4uZjc2
-ZWI3ZSAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-ZWRpYS9pMmMvb3Y1NjQwLnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21lZGlhL2kyYy9vdjU2NDAudHh0DQo+PiBAQCAtMTMsNiArMTMsOCBAQCBPcHRpb25h
-bCBQcm9wZXJ0aWVzOg0KPj4gICAJICAgICAgIFRoaXMgaXMgYW4gYWN0aXZlIGxvdyBzaWduYWwg
-dG8gdGhlIE9WNTY0MC4NCj4+ICAgLSBwb3dlcmRvd24tZ3Bpb3M6IHJlZmVyZW5jZSB0byB0aGUg
-R1BJTyBjb25uZWN0ZWQgdG8gdGhlIHBvd2VyZG93biBwaW4sDQo+PiAgIAkJICAgaWYgYW55LiBU
-aGlzIGlzIGFuIGFjdGl2ZSBoaWdoIHNpZ25hbCB0byB0aGUgT1Y1NjQwLg0KPj4gKy0gcm90YXRp
-b246IGludGVnZXIgcHJvcGVydHk7IHZhbGlkIHZhbHVlcyBhcmUgMCAoc2Vuc29yIG1vdW50ZWQg
-dXByaWdodCkNCj4+ICsJICAgIGFuZCAxODAgKHNlbnNvciBtb3VudGVkIHVwc2lkZSBkb3duKS4N
-Cj4+ICAgDQo+PiAgIFRoZSBkZXZpY2Ugbm9kZSBtdXN0IGNvbnRhaW4gb25lICdwb3J0JyBjaGls
-ZCBub2RlIGZvciBpdHMgZGlnaXRhbCBvdXRwdXQNCj4+ICAgdmlkZW8gcG9ydCwgaW4gYWNjb3Jk
-YW5jZSB3aXRoIHRoZSB2aWRlbyBpbnRlcmZhY2UgYmluZGluZ3MgZGVmaW5lZCBpbg0KPj4gQEAg
-LTUxLDYgKzUzLDcgQEAgRXhhbXBsZXM6DQo+PiAgIAkJRFZERC1zdXBwbHkgPSA8JnZnZW4yX3Jl
-Zz47ICAvKiAxLjV2ICovDQo+PiAgIAkJcG93ZXJkb3duLWdwaW9zID0gPCZncGlvMSAxOSBHUElP
-X0FDVElWRV9ISUdIPjsNCj4+ICAgCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzEgMjAgR1BJT19BQ1RJ
-VkVfTE9XPjsNCj4+ICsJCXJvdGF0aW9uID0gPDE4MD47DQo+PiAgIA0KPj4gICAJCXBvcnQgew0K
-Pj4gICAJCQkvKiBNSVBJIENTSS0yIGJ1cyBlbmRwb2ludCAqLw0KPj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbWVkaWEvaTJjL292NTY0MC5jIGIvZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMNCj4+
-IGluZGV4IDQxMDM5ZTUuLjU1MjliMTQgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL21lZGlhL2ky
-Yy9vdjU2NDAuYw0KPj4gKysrIGIvZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMNCj4+IEBAIC0y
-MTUsNiArMjE1LDcgQEAgc3RydWN0IG92NTY0MF9kZXYgew0KPj4gICAJc3RydWN0IHJlZ3VsYXRv
-cl9idWxrX2RhdGEgc3VwcGxpZXNbT1Y1NjQwX05VTV9TVVBQTElFU107DQo+PiAgIAlzdHJ1Y3Qg
-Z3Bpb19kZXNjICpyZXNldF9ncGlvOw0KPj4gICAJc3RydWN0IGdwaW9fZGVzYyAqcHdkbl9ncGlv
-Ow0KPj4gKwlib29sICAgdXBzaWRlX2Rvd247DQo+PiAgIA0KPj4gICAJLyogbG9jayB0byBwcm90
-ZWN0IGFsbCBtZW1iZXJzIGJlbG93ICovDQo+PiAgIAlzdHJ1Y3QgbXV0ZXggbG9jazsNCj4+IEBA
-IC0yMjIyLDYgKzIyMjMsOCBAQCBzdGF0aWMgaW50IG92NTY0MF9zZXRfY3RybF9saWdodF9mcmVx
-KHN0cnVjdCBvdjU2NDBfZGV2ICpzZW5zb3IsIGludCB2YWx1ZSkNCj4+ICAgc3RhdGljIGludCBv
-djU2NDBfc2V0X2N0cmxfaGZsaXAoc3RydWN0IG92NTY0MF9kZXYgKnNlbnNvciwgaW50IHZhbHVl
-KQ0KPj4gICB7DQo+PiAgIAkvKg0KPj4gKwkgKiBJZiBzZW5zb3IgaXMgbW91bnRlZCB1cHNpZGUg
-ZG93biwgbWlycm9yIGxvZ2ljIGlzIGludmVyc2VkLg0KPj4gKwkgKg0KPj4gICAJICogU2Vuc29y
-IGlzIGEgQlNJIChCYWNrIFNpZGUgSWxsdW1pbmF0ZWQpIG9uZSwNCj4+ICAgCSAqIHNvIGltYWdl
-IGNhcHR1cmVkIGlzIHBoeXNpY2FsbHkgbWlycm9yZWQuDQo+PiAgIAkgKiBUaGlzIGlzIHdoeSBt
-aXJyb3IgbG9naWMgaXMgaW52ZXJzZWQgaW4NCj4+IEBAIC0yMjM1LDExICsyMjM4LDE0IEBAIHN0
-YXRpYyBpbnQgb3Y1NjQwX3NldF9jdHJsX2hmbGlwKHN0cnVjdCBvdjU2NDBfZGV2ICpzZW5zb3Is
-IGludCB2YWx1ZSkNCj4+ICAgCSAqLw0KPj4gICAJcmV0dXJuIG92NTY0MF9tb2RfcmVnKHNlbnNv
-ciwgT1Y1NjQwX1JFR19USU1JTkdfVENfUkVHMjEsDQo+PiAgIAkJCSAgICAgIEJJVCgyKSB8IEJJ
-VCgxKSwNCj4+IC0JCQkgICAgICAoIXZhbHVlKSA/IChCSVQoMikgfCBCSVQoMSkpIDogMCk7DQo+
-PiArCQkJICAgICAgKCEodmFsdWUgXiBzZW5zb3ItPnVwc2lkZV9kb3duKSkgPw0KPj4gKwkJCSAg
-ICAgIChCSVQoMikgfCBCSVQoMSkpIDogMCk7DQo+PiAgIH0NCj4+ICAgDQo+PiAgIHN0YXRpYyBp
-bnQgb3Y1NjQwX3NldF9jdHJsX3ZmbGlwKHN0cnVjdCBvdjU2NDBfZGV2ICpzZW5zb3IsIGludCB2
-YWx1ZSkNCj4+ICAgew0KPj4gKwkvKiBJZiBzZW5zb3IgaXMgbW91bnRlZCB1cHNpZGUgZG93biwg
-ZmxpcCBsb2dpYyBpcyBpbnZlcnNlZCAqLw0KPj4gKw0KPj4gICAJLyoNCj4+ICAgCSAqIFRJTUlO
-RyBUQyBSRUcyMDoNCj4+ICAgCSAqIC0gWzJdOglJU1AgdmZsaXANCj4+IEBAIC0yMjQ3LDcgKzIy
-NTMsOCBAQCBzdGF0aWMgaW50IG92NTY0MF9zZXRfY3RybF92ZmxpcChzdHJ1Y3Qgb3Y1NjQwX2Rl
-diAqc2Vuc29yLCBpbnQgdmFsdWUpDQo+PiAgIAkgKi8NCj4+ICAgCXJldHVybiBvdjU2NDBfbW9k
-X3JlZyhzZW5zb3IsIE9WNTY0MF9SRUdfVElNSU5HX1RDX1JFRzIwLA0KPj4gICAJCQkgICAgICBC
-SVQoMikgfCBCSVQoMSksDQo+PiAtCQkJICAgICAgdmFsdWUgPyAoQklUKDIpIHwgQklUKDEpKSA6
-IDApOw0KPj4gKwkJCSAgICAgICh2YWx1ZSBeIHNlbnNvci0+dXBzaWRlX2Rvd24pID8NCj4+ICsJ
-CQkgICAgICAoQklUKDIpIHwgQklUKDEpKSA6IDApOw0KPj4gICB9DQo+PiAgIA0KPj4gICBzdGF0
-aWMgaW50IG92NTY0MF9nX3ZvbGF0aWxlX2N0cmwoc3RydWN0IHY0bDJfY3RybCAqY3RybCkNCj4+
-IEBAIC0yNjI1LDYgKzI2MzIsNyBAQCBzdGF0aWMgaW50IG92NTY0MF9wcm9iZShzdHJ1Y3QgaTJj
-X2NsaWVudCAqY2xpZW50LA0KPj4gICAJc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmVuZHBvaW50Ow0K
-Pj4gICAJc3RydWN0IG92NTY0MF9kZXYgKnNlbnNvcjsNCj4+ICAgCXN0cnVjdCB2NGwyX21idXNf
-ZnJhbWVmbXQgKmZtdDsNCj4+ICsJdTMyIHJvdGF0aW9uOw0KPj4gICAJaW50IHJldDsNCj4+ICAg
-DQo+PiAgIAlzZW5zb3IgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnNlbnNvciksIEdGUF9L
-RVJORUwpOw0KPj4gQEAgLTI2NTAsNiArMjY1OCwyMiBAQCBzdGF0aWMgaW50IG92NTY0MF9wcm9i
-ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPj4gICANCj4+ICAgCXNlbnNvci0+YWVfdGFy
-Z2V0ID0gNTI7DQo+PiAgIA0KPj4gKwkvKiBvcHRpb25hbCBpbmRpY2F0aW9uIG9mIHBoeXNpY2Fs
-IHJvdGF0aW9uIG9mIHNlbnNvciAqLw0KPj4gKwlyZXQgPSBmd25vZGVfcHJvcGVydHlfcmVhZF91
-MzIob2ZfZndub2RlX2hhbmRsZShjbGllbnQtPmRldi5vZl9ub2RlKSwNCj4gDQo+IEluc3RlYWQg
-b2Ygb2ZfZndub2RlX2hhbmRsZSgpLCBwbGVhc2UgdXNlIGRldl9md25vZGUoJmNsaWVudC0+ZGV2
-KSAtLS0gYXMgdGhlDQo+IGRyaXZlciBhbHJlYWR5IGRvZXMgZWxzZXdoZXJlLg0KPiANCj4gSSBj
-YW4gbWFrZSB0aGUgY2hhbmdlIGlmIHlvdSdyZSBoYXBweSB3aXRoIHRoYXQ7IHRoZSBwYXRjaGVz
-IHNlZW0gZmluZQ0KPiBvdGhlcndpc2UuDQo+IA0KPj4gKwkJCQkgICAgICAgInJvdGF0aW9uIiwg
-JnJvdGF0aW9uKTsNCj4+ICsJaWYgKCFyZXQpIHsNCj4+ICsJCXN3aXRjaCAocm90YXRpb24pIHsN
-Cj4+ICsJCWNhc2UgMTgwOg0KPj4gKwkJCXNlbnNvci0+dXBzaWRlX2Rvd24gPSB0cnVlOw0KPj4g
-KwkJCS8qIGZhbGwgdGhyb3VnaCAqLw0KPj4gKwkJY2FzZSAwOg0KPj4gKwkJCWJyZWFrOw0KPj4g
-KwkJZGVmYXVsdDoNCj4+ICsJCQlkZXZfd2FybihkZXYsICIldSBkZWdyZWVzIHJvdGF0aW9uIGlz
-IG5vdCBzdXBwb3J0ZWQsIGlnbm9yaW5nLi4uXG4iLA0KPj4gKwkJCQkgcm90YXRpb24pOw0KPj4g
-KwkJfQ0KPj4gKwl9DQo+PiArDQo+PiAgIAllbmRwb2ludCA9IGZ3bm9kZV9ncmFwaF9nZXRfbmV4
-dF9lbmRwb2ludChkZXZfZndub2RlKCZjbGllbnQtPmRldiksDQo+PiAgIAkJCQkJCSAgTlVMTCk7
-DQo+PiAgIAlpZiAoIWVuZHBvaW50KSB7DQo+IA==
+On Mon, Jun 11, 2018 at 11:29:17AM +0200, Hugues Fruchet wrote:
+> Add support of module being physically mounted upside down.
+> In this case, mirror and flip are enabled to fix captured images
+> orientation.
+> 
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5640.txt       |  3 +++
+>  drivers/media/i2c/ov5640.c                         | 28 ++++++++++++++++++++--
+>  2 files changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> index 8e36da0..f76eb7e 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> @@ -13,6 +13,8 @@ Optional Properties:
+>  	       This is an active low signal to the OV5640.
+>  - powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+>  		   if any. This is an active high signal to the OV5640.
+> +- rotation: integer property; valid values are 0 (sensor mounted upright)
+> +	    and 180 (sensor mounted upside down).
+>  
+>  The device node must contain one 'port' child node for its digital output
+>  video port, in accordance with the video interface bindings defined in
+> @@ -51,6 +53,7 @@ Examples:
+>  		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+>  		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+>  		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> +		rotation = <180>;
+>  
+>  		port {
+>  			/* MIPI CSI-2 bus endpoint */
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index 41039e5..5529b14 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -215,6 +215,7 @@ struct ov5640_dev {
+>  	struct regulator_bulk_data supplies[OV5640_NUM_SUPPLIES];
+>  	struct gpio_desc *reset_gpio;
+>  	struct gpio_desc *pwdn_gpio;
+> +	bool   upside_down;
+>  
+>  	/* lock to protect all members below */
+>  	struct mutex lock;
+> @@ -2222,6 +2223,8 @@ static int ov5640_set_ctrl_light_freq(struct ov5640_dev *sensor, int value)
+>  static int ov5640_set_ctrl_hflip(struct ov5640_dev *sensor, int value)
+>  {
+>  	/*
+> +	 * If sensor is mounted upside down, mirror logic is inversed.
+> +	 *
+>  	 * Sensor is a BSI (Back Side Illuminated) one,
+>  	 * so image captured is physically mirrored.
+>  	 * This is why mirror logic is inversed in
+> @@ -2235,11 +2238,14 @@ static int ov5640_set_ctrl_hflip(struct ov5640_dev *sensor, int value)
+>  	 */
+>  	return ov5640_mod_reg(sensor, OV5640_REG_TIMING_TC_REG21,
+>  			      BIT(2) | BIT(1),
+> -			      (!value) ? (BIT(2) | BIT(1)) : 0);
+> +			      (!(value ^ sensor->upside_down)) ?
+> +			      (BIT(2) | BIT(1)) : 0);
+>  }
+>  
+>  static int ov5640_set_ctrl_vflip(struct ov5640_dev *sensor, int value)
+>  {
+> +	/* If sensor is mounted upside down, flip logic is inversed */
+> +
+>  	/*
+>  	 * TIMING TC REG20:
+>  	 * - [2]:	ISP vflip
+> @@ -2247,7 +2253,8 @@ static int ov5640_set_ctrl_vflip(struct ov5640_dev *sensor, int value)
+>  	 */
+>  	return ov5640_mod_reg(sensor, OV5640_REG_TIMING_TC_REG20,
+>  			      BIT(2) | BIT(1),
+> -			      value ? (BIT(2) | BIT(1)) : 0);
+> +			      (value ^ sensor->upside_down) ?
+> +			      (BIT(2) | BIT(1)) : 0);
+>  }
+>  
+>  static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+> @@ -2625,6 +2632,7 @@ static int ov5640_probe(struct i2c_client *client,
+>  	struct fwnode_handle *endpoint;
+>  	struct ov5640_dev *sensor;
+>  	struct v4l2_mbus_framefmt *fmt;
+> +	u32 rotation;
+>  	int ret;
+>  
+>  	sensor = devm_kzalloc(dev, sizeof(*sensor), GFP_KERNEL);
+> @@ -2650,6 +2658,22 @@ static int ov5640_probe(struct i2c_client *client,
+>  
+>  	sensor->ae_target = 52;
+>  
+> +	/* optional indication of physical rotation of sensor */
+> +	ret = fwnode_property_read_u32(of_fwnode_handle(client->dev.of_node),
+
+Instead of of_fwnode_handle(), please use dev_fwnode(&client->dev) --- as the
+driver already does elsewhere.
+
+I can make the change if you're happy with that; the patches seem fine
+otherwise.
+
+> +				       "rotation", &rotation);
+> +	if (!ret) {
+> +		switch (rotation) {
+> +		case 180:
+> +			sensor->upside_down = true;
+> +			/* fall through */
+> +		case 0:
+> +			break;
+> +		default:
+> +			dev_warn(dev, "%u degrees rotation is not supported, ignoring...\n",
+> +				 rotation);
+> +		}
+> +	}
+> +
+>  	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+>  						  NULL);
+>  	if (!endpoint) {
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
