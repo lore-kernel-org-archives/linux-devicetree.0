@@ -1,130 +1,92 @@
-Return-Path: <SRS0=01D+=I2=mediatek.com=argus.lin@kernel.org>
-Message-ID: <1528440446.31010.6.camel@mtkswgap22>
-Subject: [PATCH V5 0/4] Pwrap: Mediatek pwrap driver for mt6797
-From: Argus Lin <argus.lin@mediatek.com>
-Date: Fri, 8 Jun 2018 14:47:26 +0800
-In-Reply-To: <1528439766-1480-1-git-send-email-argus.lin@mediatek.com>
-References: <1528439766-1480-1-git-send-email-argus.lin@mediatek.com>
-Content-Transfer-Encoding: 7bit
+Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Mon, 11 Jun 2018 14:44:05 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 04/15] usb: typec: add fwnode to tcpc
+Message-ID: <20180611114405.GH17155@kuha.fi.intel.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+ <1527475967-15201-5-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_007_986617577.112517821"
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Arvind Yadav <arvind.yadav.cs@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1527475967-15201-5-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>
+Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_007_986617577.112517821
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_008_1956794176.1128838909"
+On Mon, May 28, 2018 at 10:52:36AM +0800, Li Jun wrote:
+> Add fwnode handle to get the fwnode so we can get typec configs
+> it contains.
+> 
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
 
---__=_Part_Boundary_008_1956794176.1128838909
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-PHByZT4NCkhlcmUmIzM5O3MmIzMyO3ZlcnNpb24mIzMyOzUmIzMyO29mJiMzMjt0aGUmIzMyO3Bh
-dGNoJiMzMjtzZXJpZXMsJiMzMjtpbmNsdWRlJiMzMjs0JiMzMjtwYXRjaGVzOg0KMS4mIzMyO0Zp
-eCYjMzI7YnVnJiMzMjthdCYjMzI7Y2lwaGVyJiMzMjtpbml0JiMzMjtmb3INCjVhZTQ4MDQwYWE0
-NyYjMzI7KCZxdW90O3NvYzomIzMyO21lZGlhdGVrOiYjMzI7UE1JQyYjMzI7d3JhcDomIzMyO2Fk
-ZCYjMzI7bXQ2MzIzJiMzMjtzbGF2ZSYjMzI7c3VwcG9ydCZxdW90OykNCjIuJiMzMjtBZGQmIzMy
-O3B3cmFwJiMzMjtkcml2ZXImIzMyO2ZvciYjMzI7bXQ2Nzk3JiMzMjtTb0NzLg0KMy4mIzMyO0Fk
-ZCYjMzI7bXQ2MzUxJiMzMjtzdXBwb3J0JiMzMjtmb3ImIzMyO210Njc5NyYjMzI7U29Dcy4NCjQu
-JiMzMjtBJiMzMjtiaWcmIzMyO2NoYW5nZSYjMzI7ZnJvbSYjMzI7VjQmIzMyO3RvJiMzMjtWNSYj
-MzI7aXMmIzMyO3dlJiMzMjtyZW1vdmUmIzMyO0lOVDEmIzMyO2ludGVycnVwdCYjMzI7ZGVjbGFy
-YXRpb24mIzMyO3NpbmNlDQppdCYjMzI7aXMmIzMyO29ubHkmIzMyO2ZvciYjMzI7ZGVidWcmIzMy
-O3B1cnBvc2UuJiMzMjtUaGUmIzMyO1BXUkFQX1JERE1ZLCYjMzI7UkVTRVQmIzMyO2FuZCYjMzI7
-RENNJiMzMjtjYW4mIzMyO3VzZSYjMzI7bGVnYWN5DQpzZXR0aW5nLCYjMzI7aXQmIzMyO2lzJiMz
-MjtiYWNrd2FyZHMmIzMyO2NvbXBhdGlibGUuJiMzMjtUaGUmIzMyO25ldyYjMzI7Y2FwcyYjMzI7
-ZmxhZyYjMzI7ZGVjbGFyYXRpb24mIzMyO2lzJiMzMjtub3QNCm5lZWRlZCwmIzMyO2p1c3QmIzMy
-O3JlbW92ZSYjMzI7aXQuDQoNCkNoYW5nZXMmIzMyO2Zyb20mIzMyO3YzJiMzMjt0byYjMzI7djQ6
-DQoxKWFkZCYjMzI7Y2FwcyYjMzI7ZmxhZyYjMzI7Zm9yJiMzMjtwd3JhcCYjMzI7dG8mIzMyO2V4
-cGxhaW4mIzMyO3B3cmFwJiMzOTtzJiMzMjtjYXBhYmlsaXR5Lg0KMilyZW1vdmUmIzMyO2hhc19i
-cmlkZ2UmIzMyO2ZsYWcsJiMzMjtyZXBsYWNlJiMzMjtieSYjMzI7Y2FwcyYjMzI7ZmxhZy4NCjMp
-YWRkJiMzMjtpbnQxX2VuX2FsbCYjMzI7ZmxhZyYjMzI7Zm9yJiMzMjtuZXcmIzMyO2ludGVycnVw
-dC4NCjQpYWRkJiMzMjtwd3JhcCYjMzI7ZHJpdmVycyYjMzI7Zm9yJiMzMjttdDY3OTcmIzMyO1Nv
-Q3MuDQo1KWZpeCYjMzI7YnVnJiMzMjthdCYjMzI7Y2lwaGVyJiMzMjtpbml0JiMzMjtmb3INCjVh
-ZTQ4MDQwYWE0NyYjMzI7KCZxdW90O3NvYzomIzMyO21lZGlhdGVrOiYjMzI7UE1JQyYjMzI7d3Jh
-cDomIzMyO2FkZCYjMzI7bXQ2MzIzJiMzMjtzbGF2ZSYjMzI7c3VwcG9ydCZxdW90OykNCjYpYWRk
-JiMzMjttdDYzNTEmIzMyO3N1cHBvcnQmIzMyO2ZvciYjMzI7bXQ2Nzk3JiMzMjtTb0NzLg0KDQpD
-aGFuZ2VzJiMzMjtmcm9tJiMzMjt2MiYjMzI7dG8mIzMyO3YzOg0KMSlhZGp1c3QmIzMyO3Vwc3Ry
-ZWFtJiMzMjtwYXRjaCYjMzI7c2VxdWVuY2UuDQoyKWZpeCYjMzI7YnVpbGQmIzMyO2Vycm9yJiMz
-Mjtmb3ImIzMyO25ldyYjMzI7ZmlsZWQmIzMyO2F0JiMzMjtwbWljX3dyYXBwZXJfdHlwZS4NCjMp
-YWRqdXN0JiMzMjtwbWljX3R5cGUmIzMyO2VudW0mIzMyO3NlcXVlbmNlLg0KDQpDaGFuZ2VzJiMz
-Mjtmcm9tJiMzMjt2MSYjMzI7dG8mIzMyO3YyOg0KMSkmIzMyO2FkZCYjMzI7bmV3JiMzMjtjYXBh
-YmlsaXR5JiMzMjtmaWVsZCYjMzI7YW5kJiMzMjtNQVJDTyYjMzI7Zm9yJiMzMjtkaWZmZXJlbnQm
-IzMyO3B3cmFwJiMzMjtzZXJpZXMsJiMzMjt0aGUmIzMyO2NhcGFiaWxpdHkmIzMyO2luY2x1ZGUm
-IzMyO0JSSURHRSwmIzMyO1JFU0VULCYjMzI7RENNLCYjMzI7UFJJT1JJVFlfU0VMJiMzMjthbmQm
-IzMyO0lOVDFfRU4uDQoyKSYjMzI7YWRkJiMzMjtzdGFydmFjdGlvbiYjMzI7Zm9yJiMzMjttdDY3
-OTcmIzMyO3B3cmFwLg0KMykmIzMyO2FkZCYjMzI7SU5UMSYjMzI7aW50ZXJydXB0JiMzMjt0byYj
-MzI7aGFuZGxlJiMzMjtzdGFydmFjdGlvbiYjMzI7YW5kJiMzMjtyZXF1ZXN0JiMzMjtleGNlcHRp
-b24uDQoNCg0KDQpBcmd1cyYjMzI7TGluJiMzMjsoNCk6DQomIzMyOyYjMzI7ZHQtYmluZGluZ3M6
-JiMzMjtwd3JhcDomIzMyO21lZGlhdGVrOiYjMzI7YWRkJiMzMjtwd3JhcCYjMzI7c3VwcG9ydCYj
-MzI7Zm9yJiMzMjtNVDY3OTcNCiYjMzI7JiMzMjtzb2M6JiMzMjttZWRpYXRlazomIzMyO3B3cmFw
-OiYjMzI7Zml4JiMzMjtjaXBoZXImIzMyO2luaXQmIzMyO3NldHRpbmcmIzMyO2Vycm9yDQomIzMy
-OyYjMzI7c29jOiYjMzI7bWVkaWF0ZWs6JiMzMjtwd3JhcDomIzMyO2FkZCYjMzI7cHdyYXAmIzMy
-O2RyaXZlciYjMzI7Zm9yJiMzMjttdDY3OTcmIzMyO1NvQ3MNCiYjMzI7JiMzMjtzb2M6JiMzMjtt
-ZWRpYXRlazomIzMyO3B3cmFwOiYjMzI7YWRkJiMzMjttdDYzNTEmIzMyO2RyaXZlciYjMzI7Zm9y
-JiMzMjttdDY3OTcmIzMyO1NvQ3MNCg0KJiMzMjsuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2Mv
-bWVkaWF0ZWsvcHdyYXAudHh0JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyO3wmIzMyOyYjMzI7MSYj
-MzI7Kw0KJiMzMjtkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMmIzMyOyYjMzI7
-JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyOyYj
-MzI7JiMzMjt8JiMzMjs4MSYjMzI7KysrKysrKysrKysrKysrKysrKysrLQ0KJiMzMjsyJiMzMjtm
-aWxlcyYjMzI7Y2hhbmdlZCwmIzMyOzgwJiMzMjtpbnNlcnRpb25zKCspLCYjMzI7MiYjMzI7ZGVs
-ZXRpb25zKC0pDQoNCg0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0LS0+PCEtLXstLT48cHJlPioqKioq
-KioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGljZQ0KICoqKioqKioqKioqKioqKioq
-KioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGlu
-Y2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRh
-cnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRl
-ciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0
-byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0K
-ZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1h
-aWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQo
-cykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBh
-cmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZQ0K
-IA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5v
-dGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWls
-KSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcg
-YW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0
-aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuaw0KIHlv
-dSE8L3ByZT48IS0tfS0tPg==
+> ---
+>  drivers/staging/typec/tcpci.c | 7 +++++++
+>  drivers/usb/typec/tcpm.c      | 1 +
+>  include/linux/usb/tcpm.h      | 2 ++
+>  3 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index dd29288..e59547a 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/property.h>
+>  #include <linux/regmap.h>
+>  #include <linux/usb/pd.h>
+>  #include <linux/usb/tcpm.h>
+> @@ -474,6 +475,12 @@ static int tcpci_parse_config(struct tcpci *tcpci)
+>  
+>  	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+>  	tcpci->tcpc.config = &tcpci_tcpc_config;
+> +	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
+> +							 "connector");
+> +	if (!tcpci->tcpc.fwnode) {
+> +		dev_err(tcpci->dev, "Can't find connector node.\n");
+> +		return -EINVAL;
+> +	}
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+> index 0ccd2ce..fcd22e8 100644
+> --- a/drivers/usb/typec/tcpm.c
+> +++ b/drivers/usb/typec/tcpm.c
+> @@ -4581,6 +4581,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
+>  	else
+>  		port->try_role = TYPEC_NO_PREFERRED_ROLE;
+>  
+> +	port->typec_caps.fwnode = tcpc->fwnode;
+>  	port->typec_caps.prefer_role = tcpc->config->default_role;
+>  	port->typec_caps.type = tcpc->config->type;
+>  	port->typec_caps.data = tcpc->config->data;
+> diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+> index b231b93..193920a 100644
+> --- a/include/linux/usb/tcpm.h
+> +++ b/include/linux/usb/tcpm.h
+> @@ -110,6 +110,7 @@ enum tcpc_mux_mode {
+>  /**
+>   * struct tcpc_dev - Port configuration and callback functions
+>   * @config:	Pointer to port configuration
+> + * @fwnode:	Pointer to port fwnode
+>   * @get_vbus:	Called to read current VBUS state
+>   * @get_current_limit:
+>   *		Optional; called by the tcpm core when configured as a snk
+> @@ -138,6 +139,7 @@ enum tcpc_mux_mode {
+>   */
+>  struct tcpc_dev {
+>  	const struct tcpc_config *config;
+> +	struct fwnode_handle *fwnode;
+>  
+>  	int (*init)(struct tcpc_dev *dev);
+>  	int (*get_vbus)(struct tcpc_dev *dev);
+> -- 
+> 2.7.4
 
---__=_Part_Boundary_008_1956794176.1128838909
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-SGVyZSdzIHZlcnNpb24gNSBvZiB0aGUgcGF0Y2ggc2VyaWVzLCBpbmNsdWRlIDQgcGF0Y2hlczoN
-CjEuIEZpeCBidWcgYXQgY2lwaGVyIGluaXQgZm9yDQo1YWU0ODA0MGFhNDcgKCJzb2M6IG1lZGlh
-dGVrOiBQTUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9ydCIpDQoyLiBBZGQgcHdyYXAg
-ZHJpdmVyIGZvciBtdDY3OTcgU29Dcy4NCjMuIEFkZCBtdDYzNTEgc3VwcG9ydCBmb3IgbXQ2Nzk3
-IFNvQ3MuDQo0LiBBIGJpZyBjaGFuZ2UgZnJvbSBWNCB0byBWNSBpcyB3ZSByZW1vdmUgSU5UMSBp
-bnRlcnJ1cHQgZGVjbGFyYXRpb24gc2luY2UNCml0IGlzIG9ubHkgZm9yIGRlYnVnIHB1cnBvc2Uu
-IFRoZSBQV1JBUF9SRERNWSwgUkVTRVQgYW5kIERDTSBjYW4gdXNlIGxlZ2FjeQ0Kc2V0dGluZywg
-aXQgaXMgYmFja3dhcmRzIGNvbXBhdGlibGUuIFRoZSBuZXcgY2FwcyBmbGFnIGRlY2xhcmF0aW9u
-IGlzIG5vdA0KbmVlZGVkLCBqdXN0IHJlbW92ZSBpdC4NCg0KQ2hhbmdlcyBmcm9tIHYzIHRvIHY0
-Og0KMSlhZGQgY2FwcyBmbGFnIGZvciBwd3JhcCB0byBleHBsYWluIHB3cmFwJ3MgY2FwYWJpbGl0
-eS4NCjIpcmVtb3ZlIGhhc19icmlkZ2UgZmxhZywgcmVwbGFjZSBieSBjYXBzIGZsYWcuDQozKWFk
-ZCBpbnQxX2VuX2FsbCBmbGFnIGZvciBuZXcgaW50ZXJydXB0Lg0KNClhZGQgcHdyYXAgZHJpdmVy
-cyBmb3IgbXQ2Nzk3IFNvQ3MuDQo1KWZpeCBidWcgYXQgY2lwaGVyIGluaXQgZm9yDQo1YWU0ODA0
-MGFhNDcgKCJzb2M6IG1lZGlhdGVrOiBQTUlDIHdyYXA6IGFkZCBtdDYzMjMgc2xhdmUgc3VwcG9y
-dCIpDQo2KWFkZCBtdDYzNTEgc3VwcG9ydCBmb3IgbXQ2Nzk3IFNvQ3MuDQoNCkNoYW5nZXMgZnJv
-bSB2MiB0byB2MzoNCjEpYWRqdXN0IHVwc3RyZWFtIHBhdGNoIHNlcXVlbmNlLg0KMilmaXggYnVp
-bGQgZXJyb3IgZm9yIG5ldyBmaWxlZCBhdCBwbWljX3dyYXBwZXJfdHlwZS4NCjMpYWRqdXN0IHBt
-aWNfdHlwZSBlbnVtIHNlcXVlbmNlLg0KDQpDaGFuZ2VzIGZyb20gdjEgdG8gdjI6DQoxKSBhZGQg
-bmV3IGNhcGFiaWxpdHkgZmllbGQgYW5kIE1BUkNPIGZvciBkaWZmZXJlbnQgcHdyYXAgc2VyaWVz
-LCB0aGUgY2FwYWJpbGl0eSBpbmNsdWRlIEJSSURHRSwgUkVTRVQsIERDTSwgUFJJT1JJVFlfU0VM
-IGFuZCBJTlQxX0VOLg0KMikgYWRkIHN0YXJ2YWN0aW9uIGZvciBtdDY3OTcgcHdyYXAuDQozKSBh
-ZGQgSU5UMSBpbnRlcnJ1cHQgdG8gaGFuZGxlIHN0YXJ2YWN0aW9uIGFuZCByZXF1ZXN0IGV4Y2Vw
-dGlvbi4NCg0KDQoNCkFyZ3VzIExpbiAoNCk6DQogIGR0LWJpbmRpbmdzOiBwd3JhcDogbWVkaWF0
-ZWs6IGFkZCBwd3JhcCBzdXBwb3J0IGZvciBNVDY3OTcNCiAgc29jOiBtZWRpYXRlazogcHdyYXA6
-IGZpeCBjaXBoZXIgaW5pdCBzZXR0aW5nIGVycm9yDQogIHNvYzogbWVkaWF0ZWs6IHB3cmFwOiBh
-ZGQgcHdyYXAgZHJpdmVyIGZvciBtdDY3OTcgU29Dcw0KICBzb2M6IG1lZGlhdGVrOiBwd3JhcDog
-YWRkIG10NjM1MSBkcml2ZXIgZm9yIG10Njc5NyBTb0NzDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0ICAgICB8ICAxICsNCiBkcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstcG1pYy13cmFwLmMgICAgICAgICAgICAgICB8IDgxICsrKysrKysrKysrKysrKysr
-KysrKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-DQoNCg0K
-
---__=_Part_Boundary_008_1956794176.1128838909--
-
---__=_Part_Boundary_007_986617577.112517821--
+-- 
+heikki
