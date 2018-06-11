@@ -1,120 +1,75 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2] arm64: dts: renesas: r8a77990: Enable USB2.0 Host for Ebisu board
-Date: Wed,  6 Jun 2018 18:52:06 +0900
-Message-Id: <1528278726-2910-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Mon, 11 Jun 2018 15:35:21 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 09/15] staging: typec: tcpci: register port before
+ request irq
+Message-ID: <20180611123521.GO17155@kuha.fi.intel.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+ <1527475967-15201-10-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1527475967-15201-10-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>
+Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds USB2.0 PHY and Host(EHCI/OHCI) nodes and
-enables them for R-Car E3 Ebisu board.
+On Mon, May 28, 2018 at 10:52:41AM +0800, Li Jun wrote:
+> From: Peter Chen <peter.chen@nxp.com>
+> 
+> With that we can clear any pending events and the port is registered
+> so driver can be ready to handle typec events once we request irq.
+> 
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
-This patch set is based on renesas-drivers.git /
-renesas-drivers-2018-06-05-v4.17 tag.
+FWIW:
 
-Changes from v1:
- - Squash 4 patches into a single patch.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 20 ++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77990.dtsi      | 37 ++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
+> ---
+>  drivers/staging/typec/tcpci.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index b63f147..3b35fce 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -537,24 +537,27 @@ static int tcpci_probe(struct i2c_client *client,
+>  	if (IS_ERR(chip->data.regmap))
+>  		return PTR_ERR(chip->data.regmap);
+>  
+> +	i2c_set_clientdata(client, chip);
+> +
+>  	/* Disable chip interrupts before requesting irq */
+>  	err = regmap_raw_write(chip->data.regmap, TCPC_ALERT_MASK, &val,
+>  			       sizeof(u16));
+>  	if (err < 0)
+>  		return err;
+>  
+> +	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
+> +	if (IS_ERR(chip->tcpci))
+> +		return PTR_ERR(chip->tcpci);
+> +
+>  	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+>  					_tcpci_irq,
+>  					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+>  					dev_name(&client->dev), chip);
+> -	if (err < 0)
+> +	if (err < 0) {
+> +		tcpci_unregister_port(chip->tcpci);
+>  		return err;
+> +	}
+>  
+> -	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
+> -	if (IS_ERR(chip->tcpci))
+> -		return PTR_ERR(chip->tcpci);
+> -
+> -	i2c_set_clientdata(client, chip);
+>  	return 0;
+>  }
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-index 7a09d05..76fa244 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-@@ -47,10 +47,18 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &extal_clk {
- 	clock-frequency = <48000000>;
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &pfc {
- 	avb_pins: avb {
- 		mux {
-@@ -58,8 +66,20 @@
- 			function = "avb";
- 		};
- 	};
-+
-+	usb0_pins: usb {
-+		groups = "usb0_b";
-+		function = "usb0";
-+	};
- };
- 
- &scif2 {
- 	status = "okay";
- };
-+
-+&usb2_phy0 {
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-index be4f519..0b2bec3 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -248,6 +248,43 @@
- 			status = "disabled";
- 		};
- 
-+		ohci0: usb@ee080000 {
-+			compatible = "generic-ohci";
-+			reg = <0 0xee080000 0 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			phys = <&usb2_phy0>;
-+			phy-names = "usb";
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 703>;
-+			status = "disabled";
-+		};
-+
-+		ehci0: usb@ee080100 {
-+			compatible = "generic-ehci";
-+			reg = <0 0xee080100 0 0x100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			phys = <&usb2_phy0>;
-+			phy-names = "usb";
-+			companion = <&ohci0>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 703>;
-+			status = "disabled";
-+		};
-+
-+		usb2_phy0: usb-phy@ee080200 {
-+			compatible = "renesas,usb2-phy-r8a77990",
-+				     "renesas,rcar-gen3-usb2-phy";
-+			reg = <0 0xee080200 0 0x700>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 703>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@f1010000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
+Thanks,
+
 -- 
-1.9.1
+heikki
