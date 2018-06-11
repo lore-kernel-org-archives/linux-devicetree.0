@@ -1,118 +1,156 @@
-From: Kenneth Lee <liguozhu@hisilicon.com>
-Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
-Date: Tue, 12 Jun 2018 00:32:10 +0800
-Message-ID: <20180611163210.GA55075@Turing-Arch-b>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
- <20180511190641.23008-4-jean-philippe.brucker@arm.com>
- <20180516163117.622693ea@jacob-builder>
- <de478769-9f7a-d40b-a55e-e2c63ad883e8@arm.com>
- <20180522094334.71f0e36b@jacob-builder>
- <f73b4a0e-669e-8483-88d7-1b2c8a2b9934@arm.com>
- <20180524115039.GA10260@apalos>
- <19e82a74-429a-3f86-119e-32b12082d0ff@arm.com>
- <20180525063311.GA11605@apalos>
- <20180525093959.000040a7@huawei.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH 08/20] coresight: dts: Cleanup device tree graph bindings
+Date: Mon, 11 Jun 2018 10:52:26 -0600
+Message-ID: <CANLsYkwGmUpHKRZYJ=pGbEKOAGT6O=+u0_mpAJOyoONuqpXO4g@mail.gmail.com>
+References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
+ <1528235011-30691-9-git-send-email-suzuki.poulose@arm.com>
+ <20180608212211.GG30587@xps15> <f616c825-b459-397d-3e61-70c1f1790f4f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180525093959.000040a7@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f616c825-b459-397d-3e61-70c1f1790f4f@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Sealey <matt.sealey@arm.com>, John Horley <john.horley@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, coresight@lists.linaro.org, devicetree@vger.kernel.org, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25, 2018 at 09:39:59AM +0100, Jonathan Cameron wrote:
-> Date: Fri, 25 May 2018 09:39:59 +0100
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> CC: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
->  "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "kvm@vger.kernel.org"
->  <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org"
->  <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>,
->  Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org"
->  <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
->  "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com"
->  <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>,
->  "joro@8bytes.org" <joro@8bytes.org>, "robdclark@gmail.com"
->  <robdclark@gmail.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>,
->  "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
->  "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com"
->  <rfranz@cavium.com>, "devicetree@vger.kernel.org"
->  <devicetree@vger.kernel.org>, "kevin.tian@intel.com"
->  <kevin.tian@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
->  "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
->  "rgummal@xilinx.com" <rgummal@xilinx.com>, "thunder.leizhen@huawei.com"
->  <thunder.leizhen@huawei.com>, "linux-arm-kernel@lists.infradead.org"
->  <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com"
->  <shunyong.yang@hxt-semitech.com>, "dwmw2@infradead.org"
->  <dwmw2@infradead.org>, "liubo95@huawei.com" <liubo95@huawei.com>,
->  "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>,
->  "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
->  Robin Murphy <Robin.Murphy@arm.com>, "christian.koenig@amd.com"
->  <christian.koenig@amd.com>, "nwatters@codeaurora.org"
->  <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com"
->  <baolu.lu@linux.intel.com>, liguozhu@hisilicon.com,
->  kenneth-lee-2012@foxmail.com
-> Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
-> Message-ID: <20180525093959.000040a7@huawei.com>
-> Organization: Huawei
-> X-Mailer: Claws Mail 3.15.0 (GTK+ 2.24.31; x86_64-w64-mingw32)
-> 
-> +CC Kenneth Lee
-> 
-> On Fri, 25 May 2018 09:33:11 +0300
-> Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> 
-> > On Thu, May 24, 2018 at 04:04:39PM +0100, Jean-Philippe Brucker wrote:
-> > > On 24/05/18 12:50, Ilias Apalodimas wrote:  
-> > > >> Interesting, I hadn't thought about this use-case before. At first I
-> > > >> thought you were talking about mdev devices assigned to VMs, but I think
-> > > >> you're referring to mdevs assigned to userspace drivers instead? Out of
-> > > >> curiosity, is it only theoretical or does someone actually need this?  
-> > > > 
-> > > > There has been some non upstreamed efforts to have mdev and produce userspace
-> > > > drivers. Huawei is using it on what they call "wrapdrive" for crypto devices and
-> > > > we did a proof of concept for ethernet interfaces. At the time we choose not to
-> > > > involve the IOMMU for the reason you mentioned, but having it there would be
-> > > > good.  
-> > > 
-> > > I'm guessing there were good reasons to do it that way but I wonder, is
-> > > it not simpler to just have the kernel driver create a /dev/foo, with a
-> > > standard ioctl/mmap/poll interface? Here VFIO adds a layer of
-> > > indirection, and since the mediating driver has to implement these
-> > > operations already, what is gained?  
-> > The best reason i can come up with is "common code". You already have one API
-> > doing that for you so we replicate it in a /dev file?
-> > The mdev approach still needs extentions to support what we tried to do (i.e
-> > mdev bus might need yo have access on iommu_ops), but as far as i undestand it's
-> > a possible case.
+On 11 June 2018 at 03:22, Suzuki K Poulose <Suzuki.Poulose@arm.com> wrote:
+> On 08/06/18 22:22, Mathieu Poirier wrote:
+>>
+>> On Tue, Jun 05, 2018 at 10:43:19PM +0100, Suzuki K Poulose wrote:
+>>>
+>>> The coresight drivers relied on default bindings for graph
+>>> in DT, while reusing the "reg" field of the "ports" to indicate
+>>> the actual hardware port number for the connections. However,
+>>> with the rules getting stricter w.r.t to the address mismatch
+>>> with the label, it is no longer possible to use the port address
+>>> field for the hardware port number. Hence, we add an explicit
+>>> property to denote the hardware port number, "coresight,hwid"
+>>> which must be specified for each "endpoint".
+>>>
+>>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> Cc: Sudeep Holla <sudeep.holla@arm.com>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> ---
+>>>   .../devicetree/bindings/arm/coresight.txt          | 29 ++++++++++---
+>>>   drivers/hwtracing/coresight/of_coresight.c         | 49
+>>> +++++++++++++++++-----
+>>>   2 files changed, 62 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt
+>>> b/Documentation/devicetree/bindings/arm/coresight.txt
+>>> index ed6b555..bf75ab3 100644
+>>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>>> @@ -108,8 +108,13 @@ following properties to uniquely identify the
+>>> connection details.
+>>>         "slave-mode"
+>
+>
+>
+>>>         };
+>>
+>>
+>> For the binding part:
+>> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>
+>>> diff --git a/drivers/hwtracing/coresight/of_coresight.c
+>>> b/drivers/hwtracing/coresight/of_coresight.c
+>>> index d01a9ce..d23d7dd 100644
+>>> --- a/drivers/hwtracing/coresight/of_coresight.c
+>>> +++ b/drivers/hwtracing/coresight/of_coresight.c
+>
+>
+> ...
+>
+>>> +/*
+>>>    * of_coresight_parse_endpoint : Parse the given output endpoint @ep
+>>>    * and fill the connection information in *@pconn.
+>>>    *
+>>> @@ -109,11 +134,11 @@ EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+>>>    *     0      - If the parsing completed without any fatal errors.
+>
+>
+> Please note the return value description here. Further comments below.
+>
+>>>    *    -Errno  - Fatal error, abort the scanning.
+>>>    */
+>>> -static int of_coresight_parse_endpoint(struct device_node *ep,
+>>> +static int of_coresight_parse_endpoint(struct device *dev,
+>>> +                                      struct device_node *ep,
+>>>                                        struct coresight_connection
+>>> **pconn)
+>>>   {
+>>> -       int ret = 0;
+>>> -       struct of_endpoint endpoint, rendpoint;
+>>> +       int ret = 0, local_port, child_port;
+>>>         struct device_node *rparent = NULL;
+>>>         struct device_node *rep = NULL;
+>>>         struct device *rdev = NULL;
+>>> @@ -128,7 +153,8 @@ static int of_coresight_parse_endpoint(struct
+>>> device_node *ep,
+>>>                         break;
+>>>                 /* Parse the local port details */
+>>> -               if (of_graph_parse_endpoint(ep, &endpoint))
+>>> +               local_port = of_coresight_endpoint_get_port_id(dev, ep);
+>>> +               if (local_port < 0)
+>>>                         break;
+>>>                 /*
+>>>                  * Get a handle on the remote endpoint and the device it
+>>> is
+>>> @@ -140,9 +166,6 @@ static int of_coresight_parse_endpoint(struct
+>>> device_node *ep,
+>>>                 rparent = of_graph_get_port_parent(rep);
+>>>                 if (!rparent)
+>>>                         break;
+>>> -               if (of_graph_parse_endpoint(rep, &rendpoint))
+>>> -                       break;
+>>> -
+>>>                 /* If the remote device is not available, defer probing
+>>> */
+>>>                 rdev = of_coresight_get_endpoint_device(rparent);
+>>>                 if (!rdev) {
+>>> @@ -150,9 +173,15 @@ static int of_coresight_parse_endpoint(struct
+>>> device_node *ep,
+>>>                         break;
+>>>                 }
+>>>   -             conn->outport = endpoint.port;
+>>> +               child_port = of_coresight_endpoint_get_port_id(rdev,
+>>> rep);
+>>> +               if (child_port < 0) {
+>>> +                       ret = 0;
+>>
+>>
+>> Why returning '0' on an error condition?  Same for 'local_port' above.
+>>
+>
+> If we are unable to parse a port, we can simply ignore the port and
+> continue, which
+> is what we have today with the existing code. I didn't change it and still
+> think
+> it is the best effort thing. We could spit a warning for such cases, if
+> really needed.
+> Also, the parsing code almost never fails at the moment. If it fails to find
+> "reg" field,
+> it is assumed to be '0'. Either way ignoring it seems harmless. That said I
+> am open
+> to suggestions.
 
-Hi, Jean, Please allow me to share my understanding here:
-https://zhuanlan.zhihu.com/p/35489035
+Looking at the original code I remember not mandating enpoints to be
+valid for debugging purposes.  That certainly helps when building up a
+device tree file but also has the side effect of silently overlooking
+specification problems.  Fortunately the revamping you did on that
+part of the code makes it very easy to change that, something I think
+we should take advantage of (it can only lead to positive scenarios
+where defective specifications get pointed out).
 
-The reason we do not use the /dev/foo scheme is that the devices to be
-shared are programmable accelerators. We cannot fix up the kernel driver for
-them.
+That being said and because the original behaviour is just as
+permissive, you can leave as is.
 
-> > > 
-> > > Thanks,
-> > > Jean  
-> 
-> 
+Thanks,
+Mathieu
 
-(p.s. I sent this mail on May 26 from my public email count. But it
-seems the email server is blocked. I resent it from my company count until my
-colleague told me just now. Sorry for inconvenience)
-
--- 
-			-Kenneth(Hisilicon)
+>
+> Cheers
+> Suzuki
