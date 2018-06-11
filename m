@@ -1,47 +1,57 @@
-Return-Path: <SRS0=/LF/=IT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:40586 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750732AbeFAI72 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Jun 2018 04:59:28 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 1/2] media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
-Date: Fri,  1 Jun 2018 11:59:24 +0300
-Message-Id: <20180601085925.10107-2-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180601085925.10107-1-sakari.ailus@linux.intel.com>
-References: <20180601085925.10107-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, bingbu.cao@linux.intel.com, tian.shu.qiu@linux.intel.com, rajmohan.mani@intel.com
+Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Mon, 11 Jun 2018 15:33:35 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 07/15] staging: typec: tcpci: remove unused
+ tcpci_tcpc_config
+Message-ID: <20180611123335.GM17155@kuha.fi.intel.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+ <1527475967-15201-8-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1527475967-15201-8-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>
+Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Alan Chiang <alanx.chiang@intel.com>
+On Mon, May 28, 2018 at 10:52:39AM +0800, Li Jun wrote:
+> Since we will use config settings via device properties, so
+> remove the hard code tcpci_tcpc_config.
+> 
+> Signed-off-by: Li Jun <jun.li@nxp.com>
 
-Dongwoon DW9807 is a voice coil lens driver.
+FWIW:
 
-Signed-off-by: Alan Chiang <alanx.chiang@intel.com>
-Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-new file mode 100644
-index 000000000000..c4701f1eaaf6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-@@ -0,0 +1,9 @@
-+Dongwoon Anatech DW9807 voice coil lens driver
-+
-+DW9807 is a 10-bit DAC with current sink capability. It is intended for
-+controlling voice coil lenses.
-+
-+Mandatory properties:
-+
-+- compatible: "dongwoon,dw9807-vcm"
-+- reg: I2C slave address
+> ---
+>  drivers/staging/typec/tcpci.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index e59547a..076498a 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -464,17 +464,10 @@ static const struct regmap_config tcpci_regmap_config = {
+>  	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+>  };
+>  
+> -static const struct tcpc_config tcpci_tcpc_config = {
+> -	.type = TYPEC_PORT_DFP,
+> -	.default_role = TYPEC_SINK,
+> -};
+> -
+>  static int tcpci_parse_config(struct tcpci *tcpci)
+>  {
+>  	tcpci->controls_vbus = true; /* XXX */
+>  
+> -	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+> -	tcpci->tcpc.config = &tcpci_tcpc_config;
+>  	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
+>  							 "connector");
+>  	if (!tcpci->tcpc.fwnode) {
+> -- 
+> 2.7.4
+
 -- 
-2.11.0
-
+heikki
