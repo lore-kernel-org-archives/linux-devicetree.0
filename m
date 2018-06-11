@@ -1,90 +1,69 @@
-Return-Path: <SRS0=ZNx7=I7=nxp.com=jun.li@kernel.org>
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v6 12/15] usb: typec: tcpm: set cc for drp toggling attach
-Date: Wed, 13 Jun 2018 11:06:50 +0000
-Message-ID: 
- <VI1PR0402MB39176B1C940D3081930304BB897E0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Return-Path: <SRS0=a9T3=I5=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH v6 12/15] usb: typec: tcpm: set cc for drp toggling attach
 References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
  <1527475967-15201-13-git-send-email-jun.li@nxp.com>
  <20180611122958.GK17155@kuha.fi.intel.com>
- <dcdf2575-c77b-62a8-48d6-ff1d490f0c23@roeck-us.net>
-In-Reply-To: <dcdf2575-c77b-62a8-48d6-ff1d490f0c23@roeck-us.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Guenter Roeck <linux@roeck-us.net>
+Message-ID: <dcdf2575-c77b-62a8-48d6-ff1d490f0c23@roeck-us.net>
+Date: Mon, 11 Jun 2018 06:35:02 -0700
 MIME-Version: 1.0
-To: Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <20180611122958.GK17155@kuha.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Li Jun <jun.li@nxp.com>
+Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGksDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEd1ZW50ZXIgUm9lY2sg
-W21haWx0bzpncm9lY2s3QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIEd1ZW50ZXIgUm9lY2sNCj4g
-U2VudDogMjAxOOW5tDbmnIgxMeaXpSAyMTozNQ0KPiBUbzogSGVpa2tpIEtyb2dlcnVzIDxoZWlr
-a2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tPjsgSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4g
-Q2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGN3MDAu
-Y2hvaUBzYW1zdW5nLmNvbTsNCj4gYS5oYWpkYUBzYW1zdW5nLmNvbTsgc2h1ZmFuX2xlZUByaWNo
-dGVrLmNvbTsgUGV0ZXIgQ2hlbg0KPiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgZ2Fyc2lsdmFAZW1i
-ZWRkZWRvci5jb207IGdzb21sb0BnbWFpbC5jb207DQo+IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5v
-cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlt
-eEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDEyLzE1XSB1c2I6IHR5cGVjOiB0
-Y3BtOiBzZXQgY2MgZm9yIGRycCB0b2dnbGluZyBhdHRhY2gNCj4gDQo+IE9uIDA2LzExLzIwMTgg
-MDU6MjkgQU0sIEhlaWtraSBLcm9nZXJ1cyB3cm90ZToNCj4gPiBPbiBNb24sIE1heSAyOCwgMjAx
-OCBhdCAxMDo1Mjo0NEFNICswODAwLCBMaSBKdW4gd3JvdGU6DQo+ID4+IEluIGNhc2Ugb2YgZHJw
-IHRvZ2dsaW5nLCB3ZSBtYXkgbmVlZCBzZXQgY29ycmVjdCBjYyB2YWx1ZSBmb3Igcm9sZQ0KPiA+
-PiBjb250cm9sIGFmdGVyIGF0dGFjaCBhcyBpdCBtYXkgbmV2ZXIgYmVlbiBzZXQuDQo+ID4NCj4g
-PiBJcyB0aGlzIHNvbWV0aGluZyB0aGF0IHNob3VsZCBiZSBjb25zaWRlcmVkIGFzIGEgZml4Pw0K
-PiA+DQo+IA0KPiBUaGUgcHJvYmxlbSB3aXRoIHRoaXMgcGF0Y2ggaXMgdGhhdCBpdCBoaWRlcyBh
-IHByb2JsZW0uIENDIHNob3VsZCBoYXZlIGJlZW4gc2V0DQo+IGJ5IHRoZSB0aW1lIGEgcG9ydCBy
-ZWFjaGVzIHRoZSBhdHRhY2hlZCBzdGF0ZS4gVGhlIHBhdGNoIG1lYW5zIHRoYXQgdGhlcmUgaXMg
-YQ0KPiBzdGF0ZSBtYWNoaW5lIHBhdGggd2hlcmUgdGhpcyBkb2VzIG5vdCBoYXBwZW4uIEknZCBy
-YXRoZXIgdW5kZXJzdGFuZCB0aGF0IHBhdGgNCj4gYW5kIGZpeCB0aGUgcHJvYmxlbSB3aGVyZSBp
-dCBoYXBwZW5zLg0KDQpIZXJlIGlzIG15IHByZXZpb3VzIGV4cGxhbmF0aW9uIGFib3V0IHRoaXMg
-c3RhdGUgbWFjaGluZSBwYXRoWzFdDQoNClsxXWh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3Rz
-L2xpbnV4LXVzYi9tc2cxNjc0NjcuaHRtbA0KDQpUaGUgcGh5c2ljYWwgQ0MgbGluZSBzdGF0ZSBp
-cyBjb3JyZWN0LCBqdXN0IHRoZSBSb2xlIENvbnRyb2wgcmVnaXN0ZXIgdmFsdWUNCm1heSBtaXNt
-YXRjaCBvbiBzb21lKGUuZy4gc2h1ZmFuJ3MpIEhXLCBpZiB0aGUgY29tbW9uIGNoYW5nZSBpbiB0
-Y3BtDQppcyBub3QgdGhlIHJpZ2h0IHdheSwgSSBoYXZlIHRvIGFzayBzaHVmYW4gdG8gdHJ5IHJl
-c29sdmUgdGhpcyBpbiBoaXMgY3VzdG9tDQpydDE3MTFoIGRyaXZlci4NCg0KSSB1bmRlcnN0YW5k
-IHRoZSBjb25jZXJuIG9mIHNldHRpbmcgY2MgYXQgYXR0YWNoZWQgc3RhdGUgaXMgbGF0ZSwgc2hv
-dWxkIGJlDQpkb25lIGJlZm9yZSB0aGF0LCBob3cgYWJvdXQgSSBtb3ZlIHRoaXMgaW4gY2NfY2hh
-bmdlIGxpa2UgYmVsb3c6DQoNCkBAIC0zNDkyLDEwICszNDkyLDEzIEBAIHN0YXRpYyB2b2lkIF90
-Y3BtX2NjX2NoYW5nZShzdHJ1Y3QgdGNwbV9wb3J0ICpwb3J0LCBlbnVtIHR5cGVjX2NjX3N0YXR1
-cyBjYzEsDQogICAgICAgIHN3aXRjaCAocG9ydC0+c3RhdGUpIHsNCiAgICAgICAgY2FzZSBEUlBf
-VE9HR0xJTkc6DQogICAgICAgICAgICAgICAgaWYgKHRjcG1fcG9ydF9pc19kZWJ1Zyhwb3J0KSB8
-fCB0Y3BtX3BvcnRfaXNfYXVkaW8ocG9ydCkgfHwNCi0gICAgICAgICAgICAgICAgICAgdGNwbV9w
-b3J0X2lzX3NvdXJjZShwb3J0KSkNCisgICAgICAgICAgICAgICAgICAgdGNwbV9wb3J0X2lzX3Nv
-dXJjZShwb3J0KSkgew0KKyAgICAgICAgICAgICAgICAgICAgICAgdGNwbV9zZXRfY2MocG9ydCwg
-dGNwbV9ycF9jYyhwb3J0KSk7DQogICAgICAgICAgICAgICAgICAgICAgICB0Y3BtX3NldF9zdGF0
-ZShwb3J0LCBTUkNfQVRUQUNIX1dBSVQsIDApOw0KLSAgICAgICAgICAgICAgIGVsc2UgaWYgKHRj
-cG1fcG9ydF9pc19zaW5rKHBvcnQpKQ0KKyAgICAgICAgICAgICAgIH0gZWxzZSBpZiAodGNwbV9w
-b3J0X2lzX3NpbmsocG9ydCkpIHsNCisgICAgICAgICAgICAgICAgICAgICAgIGlmIChwb3J0LT5j
-Y19yZXEgPT0gVFlQRUNfQ0NfT1BFTikNCiAgICAgICAgICAgICAgICAgICAgICAgIHRjcG1fc2V0
-X3N0YXRlKHBvcnQsIFNOS19BVFRBQ0hfV0FJVCwgMCk7DQorICAgICAgICAgICAgICAgfQ0KICAg
-ICAgICAgICAgICAgIGJyZWFrOw0KICAgICAgICBjYXNlIFNSQ19VTkFUVEFDSEVEOg0KICAgICAg
-ICBjYXNlIEFDQ19VTkFUVEFDSEVEOg0KDQp0aGFua3MNCkxpIEp1bg0KDQo+IA0KPiBHdWVudGVy
-DQo+IA0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAuY29tPg0KPiA+PiAt
-LS0NCj4gPj4gICBkcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMgfCA1ICsrKysrDQo+ID4+ICAgMSBm
-aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy91c2IvdHlwZWMvdGNwbS5jIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jDQo+ID4+IGlu
-ZGV4IGQ4ODViZmYuLjk4ZWE5MTYgMTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvdXNiL3R5cGVj
-L3RjcG0uYw0KPiA+PiArKysgYi9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMNCj4gPj4gQEAgLTI1
-OTksNiArMjU5OSw3IEBAIHN0YXRpYyB2b2lkIHRjcG1fcmVzZXRfcG9ydChzdHJ1Y3QgdGNwbV9w
-b3J0ICpwb3J0KQ0KPiA+PiAgIAl0Y3BtX3NldF9hdHRhY2hlZF9zdGF0ZShwb3J0LCBmYWxzZSk7
-DQo+ID4+ICAgCXBvcnQtPnRyeV9zcmNfY291bnQgPSAwOw0KPiA+PiAgIAlwb3J0LT50cnlfc25r
-X2NvdW50ID0gMDsNCj4gPj4gKwlwb3J0LT5jY19yZXEgPSBUWVBFQ19DQ19PUEVOOw0KPiA+PiAg
-IAlwb3J0LT5zdXBwbHlfdm9sdGFnZSA9IDA7DQo+ID4+ICAgCXBvcnQtPmN1cnJlbnRfbGltaXQg
-PSAwOw0KPiA+PiAgIAlwb3J0LT51c2JfdHlwZSA9IFBPV0VSX1NVUFBMWV9VU0JfVFlQRV9DOyBA
-QCAtMjgzMSw2ICsyODMyLDgNCj4gQEANCj4gPj4gc3RhdGljIHZvaWQgcnVuX3N0YXRlX21hY2hp
-bmUoc3RydWN0IHRjcG1fcG9ydCAqcG9ydCkNCj4gPj4gICAJCWJyZWFrOw0KPiA+Pg0KPiA+PiAg
-IAljYXNlIFNSQ19BVFRBQ0hFRDoNCj4gPj4gKwkJaWYgKHBvcnQtPmNjX3JlcSA9PSBUWVBFQ19D
-Q19PUEVOKQ0KPiA+PiArCQkJdGNwbV9zZXRfY2MocG9ydCwgdGNwbV9ycF9jYyhwb3J0KSk7DQo+
-ID4+ICAgCQlyZXQgPSB0Y3BtX3NyY19hdHRhY2gocG9ydCk7DQo+ID4+ICAgCQl0Y3BtX3NldF9z
-dGF0ZShwb3J0LCBTUkNfVU5BVFRBQ0hFRCwNCj4gPj4gICAJCQkgICAgICAgcmV0IDwgMCA/IDAg
-OiBQRF9UX1BTX1NPVVJDRV9PTik7IEBAIC0zMDA0LDYNCj4gKzMwMDcsOCBAQA0KPiA+PiBzdGF0
-aWMgdm9pZCBydW5fc3RhdGVfbWFjaGluZShzdHJ1Y3QgdGNwbV9wb3J0ICpwb3J0KQ0KPiA+PiAg
-IAkJdGNwbV9zZXRfc3RhdGUocG9ydCwgU05LX1VOQVRUQUNIRUQsDQo+IFBEX1RfUERfREVCT1VO
-Q0UpOw0KPiA+PiAgIAkJYnJlYWs7DQo+ID4+ICAgCWNhc2UgU05LX0FUVEFDSEVEOg0KPiA+PiAr
-CQlpZiAocG9ydC0+Y2NfcmVxID09IFRZUEVDX0NDX09QRU4pDQo+ID4+ICsJCQl0Y3BtX3NldF9j
-Yyhwb3J0LCBUWVBFQ19DQ19SRCk7DQo+ID4+ICAgCQlyZXQgPSB0Y3BtX3Nua19hdHRhY2gocG9y
-dCk7DQo+ID4+ICAgCQlpZiAocmV0IDwgMCkNCj4gPj4gICAJCQl0Y3BtX3NldF9zdGF0ZShwb3J0
-LCBTTktfVU5BVFRBQ0hFRCwgMCk7DQo+ID4NCg0K
+On 06/11/2018 05:29 AM, Heikki Krogerus wrote:
+> On Mon, May 28, 2018 at 10:52:44AM +0800, Li Jun wrote:
+>> In case of drp toggling, we may need set correct cc value for role control
+>> after attach as it may never been set.
+> 
+> Is this something that should be considered as a fix?
+> 
+
+The problem with this patch is that it hides a problem. CC should have been set
+by the time a port reaches the attached state. The patch means that there is
+a state machine path where this does not happen. I'd rather understand that
+path and fix the problem where it happens.
+
+Guenter
+
+>> Signed-off-by: Li Jun <jun.li@nxp.com>
+>> ---
+>>   drivers/usb/typec/tcpm.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+>> index d885bff..98ea916 100644
+>> --- a/drivers/usb/typec/tcpm.c
+>> +++ b/drivers/usb/typec/tcpm.c
+>> @@ -2599,6 +2599,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+>>   	tcpm_set_attached_state(port, false);
+>>   	port->try_src_count = 0;
+>>   	port->try_snk_count = 0;
+>> +	port->cc_req = TYPEC_CC_OPEN;
+>>   	port->supply_voltage = 0;
+>>   	port->current_limit = 0;
+>>   	port->usb_type = POWER_SUPPLY_USB_TYPE_C;
+>> @@ -2831,6 +2832,8 @@ static void run_state_machine(struct tcpm_port *port)
+>>   		break;
+>>   
+>>   	case SRC_ATTACHED:
+>> +		if (port->cc_req == TYPEC_CC_OPEN)
+>> +			tcpm_set_cc(port, tcpm_rp_cc(port));
+>>   		ret = tcpm_src_attach(port);
+>>   		tcpm_set_state(port, SRC_UNATTACHED,
+>>   			       ret < 0 ? 0 : PD_T_PS_SOURCE_ON);
+>> @@ -3004,6 +3007,8 @@ static void run_state_machine(struct tcpm_port *port)
+>>   		tcpm_set_state(port, SNK_UNATTACHED, PD_T_PD_DEBOUNCE);
+>>   		break;
+>>   	case SNK_ATTACHED:
+>> +		if (port->cc_req == TYPEC_CC_OPEN)
+>> +			tcpm_set_cc(port, TYPEC_CC_RD);
+>>   		ret = tcpm_snk_attach(port);
+>>   		if (ret < 0)
+>>   			tcpm_set_state(port, SNK_UNATTACHED, 0);
+> 
