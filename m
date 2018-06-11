@@ -1,121 +1,44 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH 08/20] coresight: dts: Cleanup device tree graph bindings
-Date: Mon, 11 Jun 2018 10:22:43 +0100
-Message-ID: <f616c825-b459-397d-3e61-70c1f1790f4f@arm.com>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-9-git-send-email-suzuki.poulose@arm.com>
- <20180608212211.GG30587@xps15>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH V2 13/15] arm: dts: r8a77xx: Add missing OPP properties
+ for CPUs
+Date: Mon, 11 Jun 2018 11:26:40 +0200
+Message-ID: <CAMuHMdWbnBJuozvCE_Zt=08d06L6CynRw94qtOzeydTE_q5RLQ@mail.gmail.com>
+References: <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
+ <c6254ebb1f177468db6b8ac560ffb5a4a0b864f0.1527655562.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608212211.GG30587@xps15>
-Content-Language: en-US
+In-Reply-To: <c6254ebb1f177468db6b8ac560ffb5a4a0b864f0.1527655562.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh@kernel.org, frowand.list@gmail.com, mark.rutland@arm.com, sudeep.holla@arm.com, arm@kernel.org, linux-kernel@vger.kernel.org, matt.sealey@arm.com, john.horley@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, devicetree@vger.kernel.org, mike.leach@linaro.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: arm@kernel.org, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/18 22:22, Mathieu Poirier wrote:
-> On Tue, Jun 05, 2018 at 10:43:19PM +0100, Suzuki K Poulose wrote:
->> The coresight drivers relied on default bindings for graph
->> in DT, while reusing the "reg" field of the "ports" to indicate
->> the actual hardware port number for the connections. However,
->> with the rules getting stricter w.r.t to the address mismatch
->> with the label, it is no longer possible to use the port address
->> field for the hardware port number. Hence, we add an explicit
->> property to denote the hardware port number, "coresight,hwid"
->> which must be specified for each "endpoint".
->>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: Sudeep Holla <sudeep.holla@arm.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   .../devicetree/bindings/arm/coresight.txt          | 29 ++++++++++---
->>   drivers/hwtracing/coresight/of_coresight.c         | 49 +++++++++++++++++-----
->>   2 files changed, 62 insertions(+), 16 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
->> index ed6b555..bf75ab3 100644
->> --- a/Documentation/devicetree/bindings/arm/coresight.txt
->> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
->> @@ -108,8 +108,13 @@ following properties to uniquely identify the connection details.
->>   	"slave-mode"
+On Wed, May 30, 2018 at 6:47 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> The OPP properties, like "operating-points", should either be present
+> for all the CPUs of a cluster or none. If these are present only for a
+> subset of CPUs of a cluster then things will start falling apart as soon
+> as the CPUs are brought online in a different order. For example, this
+> will happen because the operating system looks for such properties in
+> the CPU node it is trying to bring up, so that it can create an OPP
+> table.
+>
+> Add such missing properties.
+>
+> Fix other missing properties (like, clock latency, voltage tolerance,
+> etc) as well to make it all work.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->>   	};
-> 
-> For the binding part:
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
->> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
->> index d01a9ce..d23d7dd 100644
->> --- a/drivers/hwtracing/coresight/of_coresight.c
->> +++ b/drivers/hwtracing/coresight/of_coresight.c
+Gr{oetje,eeting}s,
 
-...
+                        Geert
 
->> +/*
->>    * of_coresight_parse_endpoint : Parse the given output endpoint @ep
->>    * and fill the connection information in *@pconn.
->>    *
->> @@ -109,11 +134,11 @@ EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
->>    *	 0	- If the parsing completed without any fatal errors.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Please note the return value description here. Further comments below.
-
->>    *	-Errno	- Fatal error, abort the scanning.
->>    */
->> -static int of_coresight_parse_endpoint(struct device_node *ep,
->> +static int of_coresight_parse_endpoint(struct device *dev,
->> +				       struct device_node *ep,
->>   				       struct coresight_connection **pconn)
->>   {
->> -	int ret = 0;
->> -	struct of_endpoint endpoint, rendpoint;
->> +	int ret = 0, local_port, child_port;
->>   	struct device_node *rparent = NULL;
->>   	struct device_node *rep = NULL;
->>   	struct device *rdev = NULL;
->> @@ -128,7 +153,8 @@ static int of_coresight_parse_endpoint(struct device_node *ep,
->>   			break;
->>   
->>   		/* Parse the local port details */
->> -		if (of_graph_parse_endpoint(ep, &endpoint))
->> +		local_port = of_coresight_endpoint_get_port_id(dev, ep);
->> +		if (local_port < 0)
->>   			break;
->>   		/*
->>   		 * Get a handle on the remote endpoint and the device it is
->> @@ -140,9 +166,6 @@ static int of_coresight_parse_endpoint(struct device_node *ep,
->>   		rparent = of_graph_get_port_parent(rep);
->>   		if (!rparent)
->>   			break;
->> -		if (of_graph_parse_endpoint(rep, &rendpoint))
->> -			break;
->> -
->>   		/* If the remote device is not available, defer probing */
->>   		rdev = of_coresight_get_endpoint_device(rparent);
->>   		if (!rdev) {
->> @@ -150,9 +173,15 @@ static int of_coresight_parse_endpoint(struct device_node *ep,
->>   			break;
->>   		}
->>   
->> -		conn->outport = endpoint.port;
->> +		child_port = of_coresight_endpoint_get_port_id(rdev, rep);
->> +		if (child_port < 0) {
->> +			ret = 0;
-> 
-> Why returning '0' on an error condition?  Same for 'local_port' above.
-> 
-
-If we are unable to parse a port, we can simply ignore the port and continue, which
-is what we have today with the existing code. I didn't change it and still think
-it is the best effort thing. We could spit a warning for such cases, if really needed.
-Also, the parsing code almost never fails at the moment. If it fails to find "reg" field,
-it is assumed to be '0'. Either way ignoring it seems harmless. That said I am open
-to suggestions.
-
-Cheers
-Suzuki
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
