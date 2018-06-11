@@ -1,236 +1,68 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v4 1/2] power: supply: sbs-battery: don't assume
- MANUFACTURER_DATA formats
-Date: Mon, 11 Jun 2018 10:27:46 +0800
-Message-ID: <977e492a-13b1-6888-d030-e55595a844f2@electromag.com.au>
-References: <20180608223655.33565-1-briannorris@chromium.org>
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: [PATCH v5 00/28] Add support for mediatek SOC MT2712
+Date: Mon, 11 Jun 2018 11:25:52 +0800
+Message-ID: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608223655.33565-1-briannorris@chromium.org>
-Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>, Sebastian Reichel <sre@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/06/2018 06:36, Brian Norris wrote:
-> This driver was originally submitted for the TI BQ20Z75 battery IC
-> (commit a7640bfa10c5 ("power_supply: Add driver for TI BQ20Z75 gas gauge
-> IC")) and later renamed to express generic SBS support. While it's
-> mostly true that this driver implemented a standard SBS command set, it
-> takes liberties with the REG_MANUFACTURER_DATA register. This register
-> is specified in the SBS spec, but it doesn't make any mention of what
-> its actual contents are.
-> 
-> We've sort of noticed this optionality previously, with commit
-> 17c6d3979e5b ("sbs-battery: make writes to ManufacturerAccess
-> optional"), where we found that some batteries NAK writes to this
-> register.
-> 
-> What this really means is that so far, we've just been lucky that most
-> batteries have either been compatible with the TI chip, or else at least
-> haven't reported highly-unexpected values.
-> 
-> For instance, one battery I have here seems to report either 0x0000 or
-> 0x0100 to the MANUFACTURER_ACCESS_STATUS command -- while this seems to
-> match either Wake Up (bits[11:8] = 0000b) or Normal Discharge
-> (bits[11:8] = 0001b) status for the TI part [1], they don't seem to
-> actually correspond to real states (for instance, I never see 0101b =
-> Charge, even when charging).
-> 
-> On other batteries, I'm getting apparently random data in return, which
-> means that occasionally, we interpret this as "battery not present" or
-> "battery is not healthy".
-> 
-> All in all, it seems to be a really bad idea to make assumptions about
-> REG_MANUFACTURER_DATA, unless we already know what battery we're using.
-> Therefore, this patch reimplements the "present" and "health" checks to
-> the following on most SBS batteries:
-> 
-> 1. HEALTH: report "unknown" -- I couldn't find a standard SBS command
->     that gives us much useful here
-> 2. PRESENT: just send a REG_STATUS command; if it succeeds, then the
->     battery is present
-> 
-> Also, we stop sending MANUFACTURER_ACCESS_SLEEP to non-TI parts. I have
-> no proof that this is useful and supported.
-> 
-> If someone explicitly provided a 'ti,bq20z75' compatible property, then
-> we continue to use the existing TI command behaviors, and we effectively
-> revert commit 17c6d3979e5b ("sbs-battery: make writes to
-> ManufacturerAccess optional") to again make these commands required.
-> 
-> [1] http://www.ti.com/lit/er/sluu265a/sluu265a.pdf
-> 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Acked-by: Rhyland Klein <rklein@nvidia.com>
-Reviewed-by: Phil Reid <preid@electromag.com.au>
-> ---
-> v2:
->   * don't stub out POWER_SUPPLY_PROP_PRESENT from sbs_data[]
->   * use if/else instead of switch/case
-> 
-> v3:
->   * pull 'return 0' out of if/else, to satisfy braindead tooling
-> 
-> v4:
->   * make ManufacturerAccess non-optional for TI parts again
-> ---
->   drivers/power/supply/sbs-battery.c | 67 ++++++++++++++++++++++++------
->   1 file changed, 54 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-> index 83d7b4115857..8ba6abf584de 100644
-> --- a/drivers/power/supply/sbs-battery.c
-> +++ b/drivers/power/supply/sbs-battery.c
-> @@ -23,6 +23,7 @@
->   #include <linux/kernel.h>
->   #include <linux/module.h>
->   #include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/power/sbs-battery.h>
->   #include <linux/power_supply.h>
->   #include <linux/slab.h>
-> @@ -156,6 +157,9 @@ static enum power_supply_property sbs_properties[] = {
->   	POWER_SUPPLY_PROP_MODEL_NAME
->   };
->   
-> +/* Supports special manufacturer commands from TI BQ20Z75 IC. */
-> +#define SBS_FLAGS_TI_BQ20Z75		BIT(0)
-> +
->   struct sbs_info {
->   	struct i2c_client		*client;
->   	struct power_supply		*power_supply;
-> @@ -168,6 +172,7 @@ struct sbs_info {
->   	u32				poll_retry_count;
->   	struct delayed_work		work;
->   	struct mutex			mode_lock;
-> +	u32				flags;
->   };
->   
->   static char model_name[I2C_SMBUS_BLOCK_MAX + 1];
-> @@ -315,17 +320,41 @@ static int sbs_status_correct(struct i2c_client *client, int *intval)
->   static int sbs_get_battery_presence_and_health(
->   	struct i2c_client *client, enum power_supply_property psp,
->   	union power_supply_propval *val)
-> +{
-> +	int ret;
-> +
-> +	if (psp == POWER_SUPPLY_PROP_PRESENT) {
-> +		/* Dummy command; if it succeeds, battery is present. */
-> +		ret = sbs_read_word_data(client, sbs_data[REG_STATUS].addr);
-> +		if (ret < 0)
-> +			val->intval = 0; /* battery disconnected */
-> +		else
-> +			val->intval = 1; /* battery present */
-> +	} else { /* POWER_SUPPLY_PROP_HEALTH */
-> +		/* SBS spec doesn't have a general health command. */
-> +		val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sbs_get_ti_battery_presence_and_health(
-> +	struct i2c_client *client, enum power_supply_property psp,
-> +	union power_supply_propval *val)
->   {
->   	s32 ret;
->   
->   	/*
->   	 * Write to ManufacturerAccess with ManufacturerAccess command
-> -	 * and then read the status. Do not check for error on the write
-> -	 * since not all batteries implement write access to this command,
-> -	 * while others mandate it.
-> +	 * and then read the status.
->   	 */
-> -	sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
-> -			    MANUFACTURER_ACCESS_STATUS);
-> +	ret = sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
-> +				  MANUFACTURER_ACCESS_STATUS);
-> +	if (ret < 0) {
-> +		if (psp == POWER_SUPPLY_PROP_PRESENT)
-> +			val->intval = 0; /* battery removed */
-> +		return ret;
-> +	}
->   
->   	ret = sbs_read_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr);
->   	if (ret < 0) {
-> @@ -600,7 +629,12 @@ static int sbs_get_property(struct power_supply *psy,
->   	switch (psp) {
->   	case POWER_SUPPLY_PROP_PRESENT:
->   	case POWER_SUPPLY_PROP_HEALTH:
-> -		ret = sbs_get_battery_presence_and_health(client, psp, val);
-> +		if (client->flags & SBS_FLAGS_TI_BQ20Z75)
-> +			ret = sbs_get_ti_battery_presence_and_health(client,
-> +								     psp, val);
-> +		else
-> +			ret = sbs_get_battery_presence_and_health(client, psp,
-> +								  val);
->   		if (psp == POWER_SUPPLY_PROP_PRESENT)
->   			return 0;
->   		break;
-> @@ -806,6 +840,7 @@ static int sbs_probe(struct i2c_client *client,
->   	if (!chip)
->   		return -ENOMEM;
->   
-> +	chip->flags = (u32)(uintptr_t)of_device_get_match_data(&client->dev);
->   	chip->client = client;
->   	chip->enable_detection = false;
->   	psy_cfg.of_node = client->dev.of_node;
-> @@ -911,16 +946,19 @@ static int sbs_suspend(struct device *dev)
->   {
->   	struct i2c_client *client = to_i2c_client(dev);
->   	struct sbs_info *chip = i2c_get_clientdata(client);
-> +	int ret;
->   
->   	if (chip->poll_time > 0)
->   		cancel_delayed_work_sync(&chip->work);
->   
-> -	/*
-> -	 * Write to manufacturer access with sleep command.
-> -	 * Support is manufacturer dependend, so ignore errors.
-> -	 */
-> -	sbs_write_word_data(client, sbs_data[REG_MANUFACTURER_DATA].addr,
-> -		MANUFACTURER_ACCESS_SLEEP);
-> +	if (chip->flags & SBS_FLAGS_TI_BQ20Z75) {
-> +		/* Write to manufacturer access with sleep command. */
-> +		ret = sbs_write_word_data(client,
-> +					  sbs_data[REG_MANUFACTURER_DATA].addr,
-> +					  MANUFACTURER_ACCESS_SLEEP);
-> +		if (chip->is_present && ret < 0)
-> +			return ret;
-> +	}
->   
->   	return 0;
->   }
-> @@ -941,7 +979,10 @@ MODULE_DEVICE_TABLE(i2c, sbs_id);
->   
->   static const struct of_device_id sbs_dt_ids[] = {
->   	{ .compatible = "sbs,sbs-battery" },
-> -	{ .compatible = "ti,bq20z75" },
-> +	{
-> +		.compatible = "ti,bq20z75",
-> +		.data = (void *)SBS_FLAGS_TI_BQ20Z75,
-> +	},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, sbs_dt_ids);
-> 
+This patch add support for the Mediatek MT2712 DISP subsystem.
+MT2712 is base on MT8173, there are some difference as following:
+MT2712 support three disp output(two ovl and one rdma)
 
+Change in v5:
+- Keep the value of MAX_CONNECTOR, because it is useless
+- Add the new patch for component DPI1
+- Add the new patch for component DSI2
+- Add the new patch for component DSI3
+- Add some connection from RDMA0/RDMA1/RDMA2 to 
+  DPI0/DPI1/DSI1/DSI2/DSI3
+- Add the new patch about DPI1/DSI2/DSI3 support for mutex
+- Add the new patch about DPI1/DSI1/DSI2/DSI3 in comp_init
+- Change ddp path DSI2 to DSI3 in third path
+
+Stu Hsieh (28):
+  drm/mediatek: update dt-bindings for mt2712
+  drm/mediatek: support maximum 64 mutex mod
+  drm/mediatek: add ddp component AAL1
+  drm/mediatek: add ddp component OD1
+  drm/mediatek: add ddp component PWM1
+  drm/mediatek: add ddp component PWM2
+  drm/mediatek: add component DPI1
+  drm/mediatek: add component DSI2
+  drm/mediatek: add component DSI3
+  drm/mediatek: add connection from OD1 to RDMA1
+  drm/mediatek: add connection from RDMA0 to DPI0
+  drm/mediatek: add connection from RDMA0 to DSI2
+  drm/mediatek: add connection from RDMA0 to DSI3
+  drm/mediatek: add connection from RDMA1 to DPI1
+  drm/mediatek: add connection from RDMA1 to DSI1
+  drm/mediatek: add connection from RDMA1 to DSI2
+  drm/mediatek: add connection from RDMA1 to DSI3
+  drm/mediatek: add connection from RDMA2 to DPI0
+  drm/mediatek: add connection from RDMA2 to DPI1
+  drm/mediatek: add connection from RDMA2 to DSI1
+  drm/mediatek: add connection from RDMA2 to DSI2
+  drm/mediatek: add connection from RDMA2 to DSI3
+  drm/mediatek: add DPI1 support for mutex
+  drm/mediatek: add DSI2 support for mutex
+  drm/mediatek: add DSI3 support for mutex
+  drm/mediatek: add DPI1/DSI1/DSI2/DSI3 in comp_init
+  drm/mediatek: add third ddp path
+  drm/mediatek: Add support for mediatek SOC MT2712
+
+ .../bindings/display/mediatek/mediatek,disp.txt    |   2 +-
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |   3 +
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 227 ++++++++++++++++++---
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  15 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  10 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  47 ++++-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   5 +-
+ 7 files changed, 270 insertions(+), 39 deletions(-)
 
 -- 
-Regards
-Phil Reid
-
-ElectroMagnetic Imaging Technology Pty Ltd
-Development of Geophysical Instrumentation & Software
-www.electromag.com.au
-
-3 The Avenue, Midland WA 6056, AUSTRALIA
-Ph: +61 8 9250 8100
-Fax: +61 8 9250 7100
-Email: preid@electromag.com.au
+2.12.5
