@@ -1,36 +1,44 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V2 13/15] arm: dts: r8a77xx: Add missing OPP properties
- for CPUs
-Date: Mon, 11 Jun 2018 11:26:40 +0200
-Message-ID: <CAMuHMdWbnBJuozvCE_Zt=08d06L6CynRw94qtOzeydTE_q5RLQ@mail.gmail.com>
-References: <5821a6dbe413b5a217ca1e24ddf8ebfa63ba6ef0.1527244201.git.viresh.kumar@linaro.org>
- <c6254ebb1f177468db6b8ac560ffb5a4a0b864f0.1527655562.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH v8 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl: documentation
+Date: Mon, 11 Jun 2018 12:00:39 +0200
+Message-ID: <CAMuHMdWoE=+sEUtFdPKk4eBGtOn8f7bUPV-HLAvEETuqgVMeVw@mail.gmail.com>
+References: <1528187462-47093-1-git-send-email-michel.pollet@bp.renesas.com> <1528187462-47093-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c6254ebb1f177468db6b8ac560ffb5a4a0b864f0.1527655562.git.viresh.kumar@linaro.org>
+In-Reply-To: <1528187462-47093-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 30, 2018 at 6:47 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> The OPP properties, like "operating-points", should either be present
-> for all the CPUs of a cluster or none. If these are present only for a
-> subset of CPUs of a cluster then things will start falling apart as soon
-> as the CPUs are brought online in a different order. For example, this
-> will happen because the operating system looks for such properties in
-> the CPU node it is trying to bring up, so that it can create an OPP
-> table.
->
-> Add such missing properties.
->
-> Fix other missing properties (like, clock latency, voltage tolerance,
-> etc) as well to make it all work.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Hi Michel,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Jun 5, 2018 at 10:36 AM Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> The Renesas R9A06G032 SYSCTRL node description.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt
+> @@ -0,0 +1,32 @@
+> +* Renesas R9A06G032 SYSCTRL
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must be:
+> +    - "renesas,r9a06g032-sysctrl"
+> +  - reg: Base address and length of the SYSCTRL IO block.
+> +  - #clock-cells: Must be 1
+
+(repeating myself) No clocks/clock-names for the external clock inputs?
+
+"RZ/N1 has 3 clock sources, 1 reference clock inputs for RGMII, and 2
+ reference clock outputs for RMII/MII."
+
+The rest looks fine to me.
+Thanks!
 
 Gr{oetje,eeting}s,
 
