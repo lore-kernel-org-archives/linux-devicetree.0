@@ -1,35 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Documentation: devicetree: tilcdc: fix spelling mistake
- "suppors" -> "supports"
-Date: Mon, 11 Jun 2018 09:16:01 -0600
-Message-ID: <20180611151601.GA9300@rob-hp-laptop>
-References: <20180606153942.18839-1-enric.balletbo@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180606153942.18839-1-enric.balletbo@collabora.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, kernel@collabora.com
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 1/2] dt-bindings: media: i2c: Document MT9V111 bindings
+Date: Mon, 11 Jun 2018 17:17:32 +0200
+Message-ID: <1528730253-25135-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1528730253-25135-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528730253-25135-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMDYsIDIwMTggYXQgMDU6Mzk6NDJQTSArMDIwMCwgRW5yaWMgQmFsbGV0Ym8g
-aSBTZXJyYSB3cm90ZToKPiBUcml2aWFsIGZpeCB0byBzcGVsbGluZyBtaXN0YWtlIGluIHRpbGNk
-Yy50eHQgZGV2aWNldHJlZSBkb2N1bWVudGF0aW9uLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEVucmlj
-IEJhbGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+Cj4gLS0tCj4g
-Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90aWxj
-ZGMudHh0IHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
-b24oLSkKCkFwcGxpZWQsIHRoYW5rcy4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Add documentation for Aptina MT9V111 image sensor.
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ .../bindings/media/i2c/aptina,mt9v111.txt          | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
+new file mode 100644
+index 0000000..bac4bf0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
+@@ -0,0 +1,46 @@
++* Aptina MT9V111 CMOS sensor
++----------------------------
++
++The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
++based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
++
++The sensor has an active pixel array of 649x489 pixels and can output a number
++of image resolution and formats controllable through a simple two-wires
++interface.
++
++Required properties:
++--------------------
++
++- compatible: shall be "aptina,mt9v111".
++- clocks: reference to the system clock input provider.
++
++Optional properties:
++--------------------
++
++- enable-gpios: output enable signal, pin name "OE#". Active low.
++- standby-gpios: low power state control signal, pin name "STANDBY".
++  Active high.
++- reset-gpios: chip reset signal, pin name "RESET#". Active low.
++
++The device node must contain one 'port' child node with one 'endpoint' child
++sub-node for its digital output video port, in accordance with the video
++interface bindings defined in:
++Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++--------
++
++        &i2c1 {
++                camera@48 {
++                        compatible = "aptina,mt9v111";
++                        reg = <0x48>;
++
++                        clocks = <&camera_clk>;
++
++                        port {
++                                mt9v111_out: endpoint {
++                                        remote-endpoint = <&ceu_in>;
++                                };
++                        };
++                };
++        };
+--
+2.7.4
