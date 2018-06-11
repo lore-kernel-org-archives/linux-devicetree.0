@@ -1,123 +1,147 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 6/8] drm/dsi: add helper function to find the second host in a
- dual-dsi setup
-Date: Mon, 11 Jun 2018 15:35:00 +0200
-Message-ID: <20180611133502.1292-7-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 8/8] drm/rockchip: dsi: add dual mipi support
+Date: Mon, 11 Jun 2018 15:35:02 +0200
+Message-ID: <20180611133502.1292-9-heiko@sntech.de>
 References: <20180611133502.1292-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180611133502.1292-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, yannick.fertre-qxv4g6HH51o@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180611133502.1292-1-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
->From a specified output port of one dsi controller this function allows to
-iterate over the list of registered dsi controllers trying to find a second
-instance connected to the same display, like it is used in dual-dsi setups.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- drivers/gpu/drm/drm_mipi_dsi.c | 56 ++++++++++++++++++++++++++++++++++
- include/drm/drm_mipi_dsi.h     |  2 ++
- 2 files changed, 58 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-index bc73b7f5b9fc..ac457d02389c 100644
---- a/drivers/gpu/drm/drm_mipi_dsi.c
-+++ b/drivers/gpu/drm/drm_mipi_dsi.c
-@@ -30,6 +30,7 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/of_graph.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
- 
-@@ -282,6 +283,61 @@ struct mipi_dsi_host *of_find_mipi_dsi_host_by_node(struct device_node *node)
- }
- EXPORT_SYMBOL(of_find_mipi_dsi_host_by_node);
- 
-+struct device_node *of_mipi_dsi_find_second_host(struct device_node *first_np,
-+						 int port, int endpoint)
-+{
-+	struct mipi_dsi_host *first, *host;
-+	struct device_node *remote, *np, *second_np = NULL;
-+	int num = 0;
-+
-+	first = of_find_mipi_dsi_host_by_node(first_np);
-+	if (!first) {
-+		pr_err("no dsi-host for node %s\n", first_np->full_name);
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	/* output-node of the known dsi-host */
-+	remote = of_graph_get_remote_node(first_np, port, endpoint);
-+	if (!remote) {
-+		dev_err(first->dev, "no output node found\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	mutex_lock(&host_lock);
-+
-+	list_for_each_entry(host, &host_list, list) {
-+		np = of_graph_get_remote_node(host->dev->of_node,
-+					      port, endpoint);
-+
-+		/* found a host connected to this panel */
-+		if (np == remote)
-+			num++;
-+
-+		/* found one second host */
-+		if (host->dev->of_node != first_np)
-+			second_np = host->dev->of_node;
-+
-+		of_node_put(np);
-+	}
-+
-+	/* of_node_get the node under host_lock */
-+	if (num == 2)
-+		of_node_get(second_np);
-+
-+	mutex_unlock(&host_lock);
-+
-+	of_node_put(remote);
-+
-+	if (num > 2) {
-+		dev_err(first->dev,
-+			      "too many DSI links for output: %d links\n", num);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return second_np;
-+}
-+EXPORT_SYMBOL(of_mipi_dsi_find_second_host);
-+
- int mipi_dsi_host_register(struct mipi_dsi_host *host)
- {
- 	struct device_node *node;
-diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-index 4fef19064b0f..89532ae69c91 100644
---- a/include/drm/drm_mipi_dsi.h
-+++ b/include/drm/drm_mipi_dsi.h
-@@ -107,6 +107,8 @@ struct mipi_dsi_host {
- int mipi_dsi_host_register(struct mipi_dsi_host *host);
- void mipi_dsi_host_unregister(struct mipi_dsi_host *host);
- struct mipi_dsi_host *of_find_mipi_dsi_host_by_node(struct device_node *node);
-+struct device_node *of_mipi_dsi_find_second_host(struct device_node *first_np,
-+						 int port, int endpoint);
- 
- /* DSI mode flags */
- 
--- 
-2.17.0
+QWRkIHRoZSBSb2NrY2hpcC1zZXBjaWZpYyBkdWFsLWRzaSBzZXR1cCBhbmQgaG9vayBpdCBpbnRv
+IHRoZSBWT1AgYXMgd2VsbC4KQXMgZGVzY3JpYmVkIGluIHRoZSBnZW5lcmFsIGR1YWwtZHNpIGRl
+dmljZXRyZWUgYmluZGluZywgdGhlIHBhbmVsIHNob3VsZApkZWZpbmUgdHdvIGlucHV0IHBvcnRz
+IGFuZCBwb2ludCBlYWNoIG9mIHRoZW0gdG8gb25lIG9mIHRoZSB1c2VkIGRzaS0KY29udHJvbGxl
+cnMsIGFzIHdlbGwgYXMgZGVjbGFyZSBvbmUgb2YgdGhlbSBhcyBjbG9jay1tYXN0ZXIuClRoaXMg
+aXMgdXNlZCB0byBkZXRlcm1pbmUgdGhlIGR1YWwtZHNpIHN0YXRlIGFuZCBnZXQgYWNjZXNzIHRv
+IGJvdGgKY29udHJvbGxlciBpbnN0YW5jZXMuCgpTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5l
+ciA8aGVpa29Ac250ZWNoLmRlPgotLS0KIC4uLi9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNp
+LXJvY2tjaGlwLmMgICB8IDY3ICsrKysrKysrKysrKysrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9y
+b2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmggICB8ICAxICsKIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
+Y2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMgICB8ICAzICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
+cC9yb2NrY2hpcF9kcm1fdm9wLmggICB8ICA0ICsrCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+cm9ja2NoaXBfdm9wX3JlZy5jICAgfCAgMSArCiA1IGZpbGVzIGNoYW5nZWQsIDc1IGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvZHctbWlwaS1kc2ktcm9ja2NoaXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
+aXBpLWRzaS1yb2NrY2hpcC5jCmluZGV4IDkzYjAxOTQ4MjI3Ni4uY2M0NzYxMGQ1YmRmIDEwMDY0
+NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2ktcm9ja2NoaXAuYwor
+KysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2ktcm9ja2NoaXAuYwpAQCAt
+MjI3LDYgKzIyNywxMCBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcm9ja2NoaXAgewogCXN0cnVjdCBj
+bGsgKmdyZl9jbGs7CiAJc3RydWN0IGNsayAqcGh5X2NmZ19jbGs7CiAKKwkvKiBkdWFsLWNoYW5u
+ZWwgKi8KKwlib29sIGlzX3NsYXZlOworCXN0cnVjdCBkd19taXBpX2RzaV9yb2NrY2hpcCAqc2xh
+dmU7CisKIAl1bnNpZ25lZCBpbnQgbGFuZV9tYnBzOyAvKiBwZXIgbGFuZSAqLwogCXUxNiBpbnB1
+dF9kaXY7CiAJdTE2IGZlZWRiYWNrX2RpdjsKQEAgLTYxMyw2ICs2MTcsOCBAQCBzdGF0aWMgdm9p
+ZCBkd19taXBpX2RzaV9lbmNvZGVyX21vZGVfc2V0KHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rl
+ciwKIAl9CiAKIAlkd19taXBpX2RzaV9yb2NrY2hpcF9jb25maWcoZHNpLCBtdXgpOworCWlmIChk
+c2ktPnNsYXZlKQorCQlkd19taXBpX2RzaV9yb2NrY2hpcF9jb25maWcoZHNpLT5zbGF2ZSwgbXV4
+KTsKIAogCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPmdyZl9jbGspOwogfQpAQCAtNjQxLDYg
+KzY0Nyw4IEBAIGR3X21pcGlfZHNpX2VuY29kZXJfYXRvbWljX2NoZWNrKHN0cnVjdCBkcm1fZW5j
+b2RlciAqZW5jb2RlciwKIAl9CiAKIAlzLT5vdXRwdXRfdHlwZSA9IERSTV9NT0RFX0NPTk5FQ1RP
+Ul9EU0k7CisJaWYgKGRzaS0+c2xhdmUpCisJCXMtPm91dHB1dF9mbGFncyA9IFJPQ0tDSElQX09V
+VFBVVF9EU0lfRFVBTDsKIAogCXJldHVybiAwOwogfQpAQCAtNjUwLDYgKzY1OCw4IEBAIHN0YXRp
+YyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJfZGlzYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVu
+Y29kZXIpCiAJc3RydWN0IGR3X21pcGlfZHNpX3JvY2tjaGlwICpkc2kgPSB0b19kc2koZW5jb2Rl
+cik7CiAKIAlwbV9ydW50aW1lX3B1dChkc2ktPmRldik7CisJaWYgKGRzaS0+c2xhdmUpCisJCXBt
+X3J1bnRpbWVfcHV0KGRzaS0+c2xhdmUtPmRldik7CiB9CiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+ZHJtX2VuY29kZXJfaGVscGVyX2Z1bmNzCkBAIC02OTAsMTggKzcwMCw3MCBAQCBzdGF0aWMgaW50
+IGR3X21pcGlfZHNpX3JvY2tjaGlwX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LAogewogCXN0cnVj
+dCBkd19taXBpX2RzaV9yb2NrY2hpcCAqZHNpID0gZGV2X2dldF9kcnZkYXRhKGRldik7CiAJc3Ry
+dWN0IGRybV9kZXZpY2UgKmRybV9kZXYgPSBkYXRhOworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqc2Vj
+b25kX25wOwogCXN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2U7CiAJc3RydWN0IGRybV9wYW5lbCAq
+cGFuZWw7CisJYm9vbCBtYXN0ZXIxLCBtYXN0ZXIyOwogCWludCByZXQ7CiAKIAkvKgotCSAqIEhh
+bmRsZSBwcm9iZS1kZWZlcnJhbHMgZHVlIHRvIG1pc3NpbmcgZGlzcGxheS4KKwkgKiBBdCB0aGlz
+IHBvaW50IGJvdGggRFNJcyAoaWYgaW4gdXNlKSBzaG91bGQgaGF2ZSBwcm9iZWQgYW5kIGZvdW5k
+CisJICogYW55IGNvbm5lY3RlZCBkaXNwbGF5cyBvciBicmlkZ2VzLgorCSAqIFRoaXMgYWxzbyB0
+YWtlcyBjYXJlIG9mIGhhbmRsaW5nIHBvc3NpYmxlIHByb2JlLWRlZmVycmFscy4KIAkgKi8KIAly
+ZXQgPSBkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlkZ2UoZHNpLT5kZXYtPm9mX25vZGUsIDEsIDAs
+CiAJCQkJCSAgJnBhbmVsLCAmYnJpZGdlKTsKIAlpZiAocmV0KQogCQlyZXR1cm4gcmV0OwogCisJ
+c2Vjb25kX25wID0gb2ZfbWlwaV9kc2lfZmluZF9zZWNvbmRfaG9zdChkc2ktPmRldi0+b2Zfbm9k
+ZSwgMSwgMCk7CisJaWYgKElTX0VSUihzZWNvbmRfbnApKQorCQlyZXR1cm4gUFRSX0VSUihzZWNv
+bmRfbnApOworCisJaWYgKHNlY29uZF9ucCkgeworCQlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2OworCisJCW1hc3RlcjEgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2woZHNpLT5kZXYtPm9mX25v
+ZGUsCisJCQkJCQkiY2xvY2stbWFzdGVyIik7CisJCW1hc3RlcjIgPSBvZl9wcm9wZXJ0eV9yZWFk
+X2Jvb2woc2Vjb25kX25wLCAiY2xvY2stbWFzdGVyIik7CisKKwkJaWYgKG1hc3RlcjEgJiYgbWFz
+dGVyMikgeworCQkJRFJNX0RFVl9FUlJPUihkc2ktPmRldiwgIm9ubHkgb25lIGNsb2NrLW1hc3Rl
+ciBhbGxvd2VkXG4iKTsKKwkJCW9mX25vZGVfcHV0KHNlY29uZF9ucCk7CisJCQlyZXR1cm4gLUVJ
+TlZBTDsKKwkJfQorCisJCWlmICghbWFzdGVyMSAmJiAhbWFzdGVyMikgeworCQkJRFJNX0RFVl9F
+UlJPUihkc2ktPmRldiwgIm5vIGNsb2NrLW1hc3RlciBkZWZpbmVkXG4iKTsKKwkJCW9mX25vZGVf
+cHV0KHNlY29uZF9ucCk7CisJCQlyZXR1cm4gLUVJTlZBTDsKKwkJfQorCisJCS8qIHdlIGFyZSB0
+aGUgc2xhdmUgaW4gZHVhbC1EU0kgKi8KKwkJaWYgKCFtYXN0ZXIxKSB7CisJCQlkc2ktPmlzX3Ns
+YXZlID0gdHJ1ZTsKKwkJCW9mX25vZGVfcHV0KHNlY29uZF9ucCk7CisJCQlyZXR1cm4gMDsKKwkJ
+fQorCisJCXBkZXYgPSBvZl9maW5kX2RldmljZV9ieV9ub2RlKHNlY29uZF9ucCk7CisJCWlmICgh
+cGRldikgeworCQkJRFJNX0RFVl9FUlJPUihkZXYsICJjb3VsZCBub3QgZmluZCBzbGF2ZSBjb250
+cm9sbGVyXG4iKTsKKwkJCXJldHVybiAtRU5PREVWOworCQl9CisKKwkJZHNpLT5zbGF2ZSA9IHBs
+YXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOworCQlpZiAoIWRzaS0+c2xhdmUpIHsKKwkJCURSTV9E
+RVZfRVJST1IoZGV2LCAiY291bGQgbm90IGdldCBzbGF2ZXMgcGxhdGZvcm0tZGF0YVxuIik7CisJ
+CQlyZXR1cm4gLUVOT0RFVjsKKwkJfQorCisJCWRzaS0+c2xhdmUtPmlzX3NsYXZlID0gdHJ1ZTsK
+KwkJZHdfbWlwaV9kc2lfc2V0X3NsYXZlKGRzaS0+ZG1kLCBkc2ktPnNsYXZlLT5kbWQpOworCisJ
+CW9mX25vZGVfcHV0KHNlY29uZF9ucCk7CisJfQorCiAJcmV0ID0gcm9ja2NoaXBfZHNpX2RybV9j
+cmVhdGVfZW5jb2Rlcihkc2ksIGRybV9kZXYpOwogCWlmIChyZXQpIHsKIAkJRFJNX0RFVl9FUlJP
+UihkZXYsICJGYWlsZWQgdG8gY3JlYXRlIGRybSBlbmNvZGVyXG4iKTsKQEAgLTcyMyw2ICs3ODUs
+OSBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9yb2NrY2hpcF91bmJpbmQoc3RydWN0IGRldmlj
+ZSAqZGV2LAogewogCXN0cnVjdCBkd19taXBpX2RzaV9yb2NrY2hpcCAqZHNpID0gZGV2X2dldF9k
+cnZkYXRhKGRldik7CiAKKwlpZiAoZHNpLT5pc19zbGF2ZSkKKwkJcmV0dXJuOworCiAJZHdfbWlw
+aV9kc2lfdW5iaW5kKGRzaS0+ZG1kKTsKIH0KIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9y
+b2NrY2hpcF9kcm1fZHJ2LmgKaW5kZXggMzAxMzk5MmQwODhkLi5mODg2MWJhM2MwMjUgMTAwNjQ0
+Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmgKKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuaApAQCAtMzYsNiArMzYs
+NyBAQCBzdHJ1Y3Qgcm9ja2NoaXBfY3J0Y19zdGF0ZSB7CiAJc3RydWN0IGRybV9jcnRjX3N0YXRl
+IGJhc2U7CiAJaW50IG91dHB1dF90eXBlOwogCWludCBvdXRwdXRfbW9kZTsKKwlpbnQgb3V0cHV0
+X2ZsYWdzOwogfTsKICNkZWZpbmUgdG9fcm9ja2NoaXBfY3J0Y19zdGF0ZShzKSBcCiAJCWNvbnRh
+aW5lcl9vZihzLCBzdHJ1Y3Qgcm9ja2NoaXBfY3J0Y19zdGF0ZSwgYmFzZSkKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jCmluZGV4IDcxOTJlMTAxYmI0NC4uMmY2
+ZWFjN2VkNTEwIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBf
+ZHJtX3ZvcC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9w
+LmMKQEAgLTkwNSw2ICs5MDUsNyBAQCBzdGF0aWMgdm9pZCB2b3BfY3J0Y19hdG9taWNfZW5hYmxl
+KHN0cnVjdCBkcm1fY3J0YyAqY3J0YywKIAlwaW5fcG9sIHw9IChhZGp1c3RlZF9tb2RlLT5mbGFn
+cyAmIERSTV9NT0RFX0ZMQUdfUFZTWU5DKSA/CiAJCSAgIEJJVChWU1lOQ19QT1NJVElWRSkgOiAw
+OwogCVZPUF9SRUdfU0VUKHZvcCwgb3V0cHV0LCBwaW5fcG9sLCBwaW5fcG9sKTsKKwlWT1BfUkVH
+X1NFVCh2b3AsIG91dHB1dCwgbWlwaV9kdWFsX2NoYW5uZWxfZW4sIDApOwogCiAJc3dpdGNoIChz
+LT5vdXRwdXRfdHlwZSkgewogCWNhc2UgRFJNX01PREVfQ09OTkVDVE9SX0xWRFM6CkBAIC05MjIs
+NiArOTIzLDggQEAgc3RhdGljIHZvaWQgdm9wX2NydGNfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJt
+X2NydGMgKmNydGMsCiAJY2FzZSBEUk1fTU9ERV9DT05ORUNUT1JfRFNJOgogCQlWT1BfUkVHX1NF
+VCh2b3AsIG91dHB1dCwgbWlwaV9waW5fcG9sLCBwaW5fcG9sKTsKIAkJVk9QX1JFR19TRVQodm9w
+LCBvdXRwdXQsIG1pcGlfZW4sIDEpOworCQlWT1BfUkVHX1NFVCh2b3AsIG91dHB1dCwgbWlwaV9k
+dWFsX2NoYW5uZWxfZW4sCisJCQkgICAgISEocy0+b3V0cHV0X2ZsYWdzICYgUk9DS0NISVBfT1VU
+UFVUX0RTSV9EVUFMKSk7CiAJCWJyZWFrOwogCWNhc2UgRFJNX01PREVfQ09OTkVDVE9SX0Rpc3Bs
+YXlQb3J0OgogCQlwaW5fcG9sICY9IH5CSVQoRENMS19JTlZFUlQpOwpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuaCBiL2RyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmgKaW5kZXggNTZiYmQyZTJhOGVmLi5hNDYyN2Qy
+MzQzYTMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1f
+dm9wLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuaApA
+QCAtNjAsNiArNjAsNyBAQCBzdHJ1Y3Qgdm9wX291dHB1dCB7CiAJc3RydWN0IHZvcF9yZWcgZWRw
+X2VuOwogCXN0cnVjdCB2b3BfcmVnIGhkbWlfZW47CiAJc3RydWN0IHZvcF9yZWcgbWlwaV9lbjsK
+KwlzdHJ1Y3Qgdm9wX3JlZyBtaXBpX2R1YWxfY2hhbm5lbF9lbjsKIAlzdHJ1Y3Qgdm9wX3JlZyBy
+Z2JfZW47CiB9OwogCkBAIC0yMTIsNiArMjEzLDkgQEAgc3RydWN0IHZvcF9kYXRhIHsKIC8qIGZv
+ciB1c2Ugc3BlY2lhbCBvdXRmYWNlICovCiAjZGVmaW5lIFJPQ0tDSElQX09VVF9NT0RFX0FBQUEJ
+MTUKIAorLyogb3V0cHV0IGZsYWdzICovCisjZGVmaW5lIFJPQ0tDSElQX09VVFBVVF9EU0lfRFVB
+TAlCSVQoMCkKKwogZW51bSBhbHBoYV9tb2RlIHsKIAlBTFBIQV9TVFJBSUdIVCwKIAlBTFBIQV9J
+TlZFUlNFLApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX3Zv
+cF9yZWcuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMKaW5k
+ZXggMmU0ZWVhMzQ1OWZlLi43ZDI5NDI5MGVmMTEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL3JvY2tjaGlwX3ZvcF9yZWcuYwpAQCAtNDIwLDYgKzQyMCw3IEBAIHN0YXRpYyBjb25zdCBz
+dHJ1Y3Qgdm9wX291dHB1dCByazMzOTlfb3V0cHV0ID0gewogCS5oZG1pX2VuID0gVk9QX1JFRyhS
+SzMyODhfU1lTX0NUUkwsIDB4MSwgMTMpLAogCS5lZHBfZW4gPSBWT1BfUkVHKFJLMzI4OF9TWVNf
+Q1RSTCwgMHgxLCAxNCksCiAJLm1pcGlfZW4gPSBWT1BfUkVHKFJLMzI4OF9TWVNfQ1RSTCwgMHgx
+LCAxNSksCisJLm1pcGlfZHVhbF9jaGFubmVsX2VuID0gVk9QX1JFRyhSSzMyODhfU1lTX0NUUkws
+IDB4MSwgMyksCiB9OwogCiBzdGF0aWMgY29uc3Qgc3RydWN0IHZvcF9kYXRhIHJrMzM5OV92b3Bf
+YmlnID0gewotLSAKMi4xNy4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
