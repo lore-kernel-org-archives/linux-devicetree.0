@@ -1,121 +1,59 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] Bluetooth: hci_bcm: Configure SCO routing automatically
-Date: Mon, 11 Jun 2018 11:54:17 -0600
-Message-ID: <CAL_JsqL2StWgA9gkL9i3o85-C3TNixBLmbTXzFQW8bts4phJqQ@mail.gmail.com>
-References: <280FCB2C-6DF1-4790-A89F-AF5BE3513AE5@holtmann.org>
- <20180608162009.22762-1-attitokes@gmail.com> <CAL_JsqKGeCEBBLNQNdymQovknRM7zt4+nNJy0YSkxRicOxkCSg@mail.gmail.com>
- <CAMoM21HshLyv+Np1vOKYTAunsPCazyP-WESiaheNXHsC078S8g@mail.gmail.com>
- <CAL_Jsq+a93Rpf3UAPBQ5QmA8KavberGXz76WCiZ7feHH5GgcDA@mail.gmail.com> <4F0D6729-AE77-47D4-9765-FBC44181D4DE@holtmann.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/6] arcnet: com20020: bindings for smsc com20020
+Date: Mon, 11 Jun 2018 12:09:29 -0600
+Message-ID: <20180611180929.GA28695@rob-hp-laptop>
+References: <20180611142705.20849-1-andrea.greco.gapmilano@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F0D6729-AE77-47D4-9765-FBC44181D4DE@holtmann.org>
+Content-Disposition: inline
+In-Reply-To: <20180611142705.20849-1-andrea.greco.gapmilano@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: =?UTF-8?B?QXR0aWxhIFTFkWvDqXM=?= <attitokes@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, Artiom Vaskov <velemas@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>
+To: Andrea Greco <andrea.greco.gapmilano@gmail.com>
+Cc: davem@davemloft.net, tobin@apporbit.com, Andrea Greco <a.greco@4sigma.it>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 11, 2018 at 9:47 AM, Marcel Holtmann <marcel@holtmann.org> wrot=
-e:
-> Hi Rob,
->
->>>>> Added support to automatically configure the SCO packet routing at th=
-e
->>>>> device setup. The SCO packets are used with the HSP / HFP profiles, b=
-ut in
->>>>> some devices (ex. CYW43438) they are routed to a PCM output by defaul=
-t. This
->>>>> change allows sending the vendor specific HCI command to configure th=
-e SCO
->>>>> routing. The parameters of the command are loaded from the device tre=
-e.
->>>>
->>>> Please wrap your commit msg.
->>>
->>>
->>> Sure.
->>>>
->>>>
->>>>>
->>>>> Signed-off-by: Attila T=C5=91k=C3=A9s <attitokes@gmail.com>
->>>>> ---
->>>>> .../bindings/net/broadcom-bluetooth.txt       |  7 ++
->>>>
->>>> Please split bindings to separate patch.
->>>
->>>
->>> Ok, I will split this in two.
->>>>
->>>>
->>>>
->>>>
->>>>> drivers/bluetooth/hci_bcm.c                   | 72 ++++++++++++++++++=
-+
->>>>> 2 files changed, 79 insertions(+)
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
->>>>> b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
->>>>> index 4194ff7e..aea3a094 100644
->>>>> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
->>>>> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
->>>>> @@ -21,6 +21,12 @@ Optional properties:
->>>>>  - clocks: clock specifier if external clock provided to the controll=
-er
->>>>>  - clock-names: should be "extclk"
->>>>>
->>>>> + SCO routing parameters:
->>>>> + - sco-routing: 0-3 (PCM, Transport, Codec, I2S)
->>>>> + - pcm-interface-rate: 0-4 (128 Kbps - 2048 Kbps)
->>>>> + - pcm-frame-type: 0 (short), 1 (long)
->>>>> + - pcm-sync-mode: 0 (slave), 1 (master)
->>>>> + - pcm-clock-mode: 0 (slave), 1 (master)
->>>>
->>>> Are these Broadcom specific? Properties need either vendor prefix or
->>>> to be documented in a common location. I think these look like the
->>>> latter.
->>>
->>>
->>> These will be used as parameters of a vendor specific (Broadcom/Cypress=
-)
->>> command configuring the SCO packet routing. See the Write_SCO_PCM_Int_P=
-aram
->>> command from: http://www.cypress.com/file/298311/download.
->>
->> The DT should just describe how the h/w is hooked-up. What the s/w has
->> to do based on that is the driver's problem which is certainly
->> vendor/chip specific, but that is all irrelevant to the binding.
->>
->>> What would be the property names with a Broadcom / Cypress vendor prefi=
-x?
->>>
->>>    brcm,sco-routing
->>>    brcm,pcm-interface-rate
->>>    brcm,pcm-frame-type
->>>    brcm,pcm-sync-mode
->>>    brcm,pcm-clock-mode
->>>
->>> ?
->>
->> Yes.
->
-> we can do this. However all pcm-* are optional if you switch the HCI tran=
-sport. And sco-routing should default to HCI if that is not present. Meanin=
-g a driver should actively trying to change this. Nevertheless, it would be=
- good if a driver reads the current settings.
->
-> In theory we could make sco-routing generic, but so many vendors have dif=
-ferent modes, that we better keep this vendor specific.
+On Mon, Jun 11, 2018 at 04:27:01PM +0200, Andrea Greco wrote:
+> From: Andrea Greco <a.greco@4sigma.it>
+> 
+> Add devicetree bindings for smsc com20020
+> 
+> Signed-off-by: Andrea Greco <a.greco@4sigma.it>
+> ---
+>  .../devicetree/bindings/net/smsc-com20020.txt       | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/smsc-com20020.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/smsc-com20020.txt b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+> new file mode 100644
+> index 000000000000..660a4a751f29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/smsc-com20020.txt
+> @@ -0,0 +1,21 @@
+> +SMSC com20020 Arcnet network controller
+> +
+> +Required property:
+> +- timeout-ns: Arcnet bus timeout, Idle Time (328000 - 20500)
+> +- bus-speed-bps: Arcnet bus speed (10000000 - 156250)
+> +- smsc,xtal-mhz: External oscillator frequency
+> +- smsc,backplane-enabled: Controller use backplane mode
+> +- reset-gpios: Chip reset pin
+> +- interrupts: Should contain controller interrupt
+> +
+> +arcnet@28000000 {
+> +	compatible = "smsc,com20020";
+> +
+> +	timeout-ns = <20500>;
+> +	bus-speed-hz = <10000000>;
 
-Even if vendor specific, the properties for not HCI transport case are
-still incomplete IMO.
+You have hz here and bps above.
 
-By modes, you mean PCM vs. I2S and all the flavors of timings you can
-have within those or something else? For the former, that's often
-going to be a process of solving what each end support and if that
-doesn't work, then IIRC we already have properties for setting
-modes/timing. All the same issues exist with audio codecs and this is
-really not any different.
-
-Rob
+> +	smsc,xtal-mhz = <20>;
+> +	smsc,backplane-enabled;
+> +
+> +	reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
+> +	interrupts = <&gpio2 10 GPIO_ACTIVE_LOW>;
+> +};
+> -- 
+> 2.14.4
+> 
