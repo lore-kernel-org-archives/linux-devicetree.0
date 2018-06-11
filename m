@@ -1,43 +1,282 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: [RFC] Configure i.MX6 RGMII pad group control registers from device
- tree
-Date: Mon, 11 Jun 2018 14:36:22 +0200
-Message-ID: <f5a01de5-fc81-52c1-c2ea-edb77ecff076@ysoft.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v6 4/5] clocksource: add driver for i.MX EPIT timer
+Date: Mon, 11 Jun 2018 14:42:04 +0200
+Message-ID: <CAJiuCcdHKpfCkLhV=rZcLHx2k9BAh7bnDQMWDkquXJOYiQoTeA@mail.gmail.com>
+References: <20180607140544.22268-1-peron.clem@gmail.com> <20180607140544.22268-5-peron.clem@gmail.com>
+ <5df13d8f6422d9099c1692dd2091d9ca@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5df13d8f6422d9099c1692dd2091d9ca@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stefan@agner.ch
+Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, =?UTF-8?Q?Cl=C3=A9ment_Peron?= <clement.peron@devialet.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Thomas Gleixner <tglx@linutronix.de>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Ahoj,
+Hi Stefan,
 
-To configure individual pad's characteristics on i.MX6 SoC a
-fsl,pins = <PIN_FUNC_ID CONFIG> property can be used. Is there any convenient
-way to configure the pad group control registers?
 
-The issue is that some bits (DDR_SEL and ODT) in the individual RGMII pad
-control registers are read-only. To tweak those parameters (signal voltage and
-termination resistors) one need to write to the pad group control registers for
-the whole RGMII pad group. Namely IOMUXC_SW_PAD_CTL_GRP_DDR_TYPE_RGMII and
-IOMUXC_SW_PAD_CTL_GRP_RGMII_TERM. The group registers in general are not
-accessible from the list in arch/arm/boot/dts/imx6dl-pinfunc.h.
+> > +
+> > +#define EPITCR                               0x00
+> > +#define EPITSR                               0x04
+> > +#define EPITLR                               0x08
+> > +#define EPITCMPR                     0x0c
+> > +#define EPITCNR                              0x10
+> > +
+> > +#define EPITCR_EN                    BIT(0)
+> > +#define EPITCR_ENMOD                 BIT(1)
+> > +#define EPITCR_OCIEN                 BIT(2)
+> > +#define EPITCR_RLD                   BIT(3)
+> > +#define EPITCR_PRESC(x)                      (((x) & 0xfff) << 4)
+> > +#define EPITCR_SWR                   BIT(16)
+> > +#define EPITCR_IOVW                  BIT(17)
+> > +#define EPITCR_DBGEN                 BIT(18)
+> > +#define EPITCR_WAITEN                        BIT(19)
+> > +#define EPITCR_RES                   BIT(20)
+> > +#define EPITCR_STOPEN                        BIT(21)
+> > +#define EPITCR_OM_DISCON             (0 << 22)
+> > +#define EPITCR_OM_TOGGLE             (1 << 22)
+> > +#define EPITCR_OM_CLEAR                      (2 << 22)
+> > +#define EPITCR_OM_SET                        (3 << 22)
+> > +#define EPITCR_CLKSRC_OFF            (0 << 24)
+> > +#define EPITCR_CLKSRC_PERIPHERAL     (1 << 24)
+> > +#define EPITCR_CLKSRC_REF_HIGH               (2 << 24)
+> > +#define EPITCR_CLKSRC_REF_LOW                (3 << 24)
+> > +
+> > +#define EPITSR_OCIF                  BIT(0)
+> > +
+> > +struct epit_timer {
+> > +     void __iomem *base;
+> > +     int irq;
+> > +     struct clk *clk;
+> > +     struct clock_event_device ced;
+> > +     struct irqaction act;
+> > +};
+> > +
+> > +static void __iomem *sched_clock_reg;
+> > +
+> > +static inline struct epit_timer *to_epit_timer(struct clock_event_device *ced)
+> > +{
+> > +     return container_of(ced, struct epit_timer, ced);
+> > +}
+> > +
+> > +static inline void epit_irq_disable(struct epit_timer *epittm)
+> > +{
+> > +     u32 val;
+> > +
+> > +     val = readl_relaxed(epittm->base + EPITCR);
+> > +     writel_relaxed(val & ~EPITCR_OCIEN, epittm->base + EPITCR);
+> > +}
+> > +
+> > +static inline void epit_irq_enable(struct epit_timer *epittm)
+> > +{
+> > +     u32 val;
+> > +
+> > +     val = readl_relaxed(epittm->base + EPITCR);
+> > +     writel_relaxed(val | EPITCR_OCIEN, epittm->base + EPITCR);
+> > +}
+> > +
+> > +static void epit_irq_acknowledge(struct epit_timer *epittm)
+> > +{
+> > +     writel_relaxed(EPITSR_OCIF, epittm->base + EPITSR);
+> > +}
+> > +
+> > +static u64 notrace epit_read_sched_clock(void)
+> > +{
+> > +     return ~readl_relaxed(sched_clock_reg);
+> > +}
+> > +
+> > +static int epit_set_next_event(unsigned long cycles,
+> > +                            struct clock_event_device *ced)
+> > +{
+> > +     struct epit_timer *epittm = to_epit_timer(ced);
+> > +     unsigned long tcmp;
+> > +
+> > +     tcmp = readl_relaxed(epittm->base + EPITCNR) - cycles;
+> > +     writel_relaxed(tcmp, epittm->base + EPITCMPR);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/* Left event sources disabled, no more interrupts appear */
+> > +static int epit_shutdown(struct clock_event_device *ced)
+> > +{
+> > +     struct epit_timer *epittm = to_epit_timer(ced);
+> > +     unsigned long flags;
+> > +
+> > +     /*
+> > +      * The timer interrupt generation is disabled at least
+> > +      * for enough time to call epit_set_next_event()
+> > +      */
+> > +     local_irq_save(flags);
+> > +
+> > +     /* Disable interrupt in EPIT module */
+> > +     epit_irq_disable(epittm);
+> > +
+> > +     /* Clear pending interrupt */
+> > +     epit_irq_acknowledge(epittm);
+> > +
+> > +     local_irq_restore(flags);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int epit_set_oneshot(struct clock_event_device *ced)
+> > +{
+> > +     struct epit_timer *epittm = to_epit_timer(ced);
+> > +     unsigned long flags;
+> > +
+> > +     /*
+> > +      * The timer interrupt generation is disabled at least
+> > +      * for enough time to call epit_set_next_event()
+> > +      */
+> > +     local_irq_save(flags);
+> > +
+> > +     /* Disable interrupt in EPIT module */
+> > +     epit_irq_disable(epittm);
+> > +
+> > +     /* Clear pending interrupt, only while switching mode */
+> > +     if (!clockevent_state_oneshot(ced))
+> > +             epit_irq_acknowledge(epittm);
+> > +
+> > +     /*
+> > +      * Do not put overhead of interrupt enable/disable into
+> > +      * epit_set_next_event(), the core has about 4 minutes
+> > +      * to call epit_set_next_event() or shutdown clock after
+> > +      * mode switching
+> > +      */
+> > +     epit_irq_enable(epittm);
+> > +     local_irq_restore(flags);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static irqreturn_t epit_timer_interrupt(int irq, void *dev_id)
+> > +{
+> > +     struct clock_event_device *ced = dev_id;
+> > +     struct epit_timer *epittm = to_epit_timer(ced);
+> > +
+> > +     epit_irq_acknowledge(epittm);
+> > +
+> > +     ced->event_handler(ced);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int __init epit_clocksource_init(struct epit_timer *epittm)
+> > +{
+> > +     unsigned int c = clk_get_rate(epittm->clk);
+> > +
+> > +     sched_clock_reg = epittm->base + EPITCNR;
+> > +     sched_clock_register(epit_read_sched_clock, 32, c);
+> > +
+> > +     return clocksource_mmio_init(epittm->base + EPITCNR, "epit", c, 200, 32,
+> > +                                  clocksource_mmio_readl_down);
+> > +}
+> > +
+> > +static int __init epit_clockevent_init(struct epit_timer *epittm)
+> > +{
+> > +     struct clock_event_device *ced = &epittm->ced;
+> > +     struct irqaction *act = &epittm->act;
+> > +
+> > +     ced->name = "epit";
+> > +     ced->features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
+> > +     ced->set_state_shutdown = epit_shutdown;
+> > +     ced->tick_resume = epit_shutdown;
+> > +     ced->set_state_oneshot = epit_set_oneshot;
+> > +     ced->set_next_event = epit_set_next_event;
+> > +     ced->rating = 200;
+> > +     ced->cpumask = cpumask_of(0);
+> > +     ced->irq = epittm->irq;
+> > +     clockevents_config_and_register(ced, clk_get_rate(epittm->clk),
+> > +                                     0xff, 0xfffffffe);
+> > +
+> > +     act->name = "i.MX EPIT Timer Tick",
+> > +     act->flags = IRQF_TIMER | IRQF_IRQPOLL;
+> > +     act->handler = epit_timer_interrupt;
+> > +     act->dev_id = ced;
+> > +
+> > +     /* Make irqs happen */
+> > +     return setup_irq(epittm->irq, act);
+> > +}
+> > +
+> > +static int __init epit_timer_init(struct device_node *np)
+> > +{
+> > +     struct epit_timer *epittm;
+> > +     int ret;
+> > +
+> > +     epittm = kzalloc(sizeof(*epittm), GFP_KERNEL);
+> > +     if (!epittm)
+> > +             return -ENOMEM;
+> > +
+> > +     epittm->base = of_iomap(np, 0);
+> > +     if (!epittm->base) {
+> > +             ret = -ENXIO;
+> > +             goto out_kfree;
+> > +     }
+> > +
+> > +     epittm->irq = irq_of_parse_and_map(np, 0);
+> > +     if (!epittm->irq) {
+> > +             ret = -EINVAL;
+> > +             goto out_iounmap;
+> > +     }
+> > +
+> > +        /* Get EPIT clock */
+> > +        epittm->clk = of_clk_get(np, 0);
+> > +        if (IS_ERR(epittm->clk)) {
+> > +             pr_err("i.MX EPIT: unable to get clk\n");
+> > +             ret = PTR_ERR(epittm->clk);
+> > +             goto out_iounmap;
+> > +        }
+>
+> There is something off with indent here.
+Thanks for pointing out that, I will fix it.
 
-I could not find any other way to change the group registers than hacking-in
-some lines into the imx6q_init_machine(void) function in
-arch/arm/mach-imx/mach-imx6q.c source. As I work towards upstreaming my board
-this should be done from my device tree or solved in some universal way.
+>
+> There is a helper library in drivers/clocksource/timer-of.c which might
+> be useful for this driver.
+Indeed, but will require a bit of rewrite.
 
-Any hints will be much appreciated.
-Michal
+Clement
+
+>
+> --
+> Stefan
+>
+> > +
+> > +     ret = clk_prepare_enable(epittm->clk);
+> > +     if (ret) {
+> > +             pr_err("i.MX EPIT: unable to prepare+enable clk\n");
+> > +             goto out_iounmap;
+> > +     }
+> > +
+> > +     /* Initialise to a known state (all timers off, and timing reset) */
+> > +     writel_relaxed(0x0, epittm->base + EPITCR);
+> > +     writel_relaxed(0xffffffff, epittm->base + EPITLR);
+> > +     writel_relaxed(EPITCR_EN | EPITCR_CLKSRC_REF_HIGH | EPITCR_WAITEN,
+> > +                    epittm->base + EPITCR);
+> > +
+> > +     ret = epit_clocksource_init(epittm);
+> > +     if (ret) {
+> > +             pr_err("i.MX EPIT: failed to init clocksource\n");
+> > +             goto out_clk_disable;
+> > +     }
+> > +
+> > +     ret = epit_clockevent_init(epittm);
+> > +     if (ret) {
+> > +             pr_err("i.MX EPIT: failed to init clockevent\n");
+> > +             goto out_clk_disable;
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +out_clk_disable:
+> > +     clk_disable_unprepare(epittm->clk);
+> > +out_iounmap:
+> > +     iounmap(epittm->base);
+> > +out_kfree:
+> > +     kfree(epittm);
+> > +
+> > +     return ret;
+> > +}
+> > +TIMER_OF_DECLARE(epit_timer, "fsl,imx31-epit", epit_timer_init);
