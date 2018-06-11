@@ -1,78 +1,55 @@
 From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: [PATCH 27/28] drm/mediatek: add third ddp path
-Date: Mon, 11 Jun 2018 11:26:19 +0800
-Message-ID: <1528687580-549-28-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH 14/28] drm/mediatek: add connection from RDMA1 to DPI1
+Date: Mon, 11 Jun 2018 11:26:06 +0800
+Message-ID: <1528687580-549-15-git-send-email-stu.hsieh@mediatek.com>
 References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Stu Hsieh <stu.hsieh@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch create third crtc by third ddp path
-
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 3 +++
- drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 5 +++++
- drivers/gpu/drm/mediatek/mtk_drm_drv.h  | 5 ++++-
- 3 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 658b8dd45b83..2d6aa150a9ff 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -539,6 +539,9 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 	int ret;
- 	int i;
- 
-+	if (!path)
-+		return 0;
-+
- 	for (i = 0; i < path_len; i++) {
- 		enum mtk_ddp_comp_id comp_id = path[i];
- 		struct device_node *node;
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 08d5d0b47bfe..3d279a299383 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -232,6 +232,11 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 	if (ret < 0)
- 		goto err_component_unbind;
- 
-+	ret = mtk_drm_crtc_create(drm, private->data->third_path,
-+				  private->data->third_len);
-+	if (ret < 0)
-+		goto err_component_unbind;
-+
- 	/* Use OVL device for all DMA memory allocations */
- 	np = private->comp_node[private->data->main_path[0]] ?:
- 	     private->comp_node[private->data->ext_path[0]];
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-index c3378c452c0a..ecc00ca3221d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-@@ -17,7 +17,7 @@
- #include <linux/io.h>
- #include "mtk_drm_ddp_comp.h"
- 
--#define MAX_CRTC	2
-+#define MAX_CRTC	3
- #define MAX_CONNECTOR	2
- 
- struct device;
-@@ -33,6 +33,9 @@ struct mtk_mmsys_driver_data {
- 	unsigned int main_len;
- 	const enum mtk_ddp_comp_id *ext_path;
- 	unsigned int ext_len;
-+	const enum mtk_ddp_comp_id *third_path;
-+	unsigned int third_len;
-+
- 	bool shadow_register;
- };
- 
--- 
-2.12.5
+VGhpcyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEUEkxCgpTaWduZWQt
+b2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCA4ICsrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgOCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwpp
+bmRleCBmZWQxYjU3MDQzNTUuLjRhYmQ1ZGFiZWNjZiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZGRwLmMKQEAgLTg1LDcgKzg1LDkgQEAKICNkZWZpbmUgUkRNQTBfTU9VVF9EU0ky
+CQkJMHg0CiAjZGVmaW5lIFJETUEwX01PVVRfRFNJMwkJCTB4NQogI2RlZmluZSBSRE1BMV9NT1VU
+X0RQSTAJCQkweDIKKyNkZWZpbmUgUkRNQTFfTU9VVF9EUEkxCQkJMHgzCiAjZGVmaW5lIERQSTBf
+U0VMX0lOX1JETUExCQkweDEKKyNkZWZpbmUgRFBJMV9TRUxfSU5fUkRNQTEJCSgweDEgPDwgOCkK
+ICNkZWZpbmUgQ09MT1IxX1NFTF9JTl9PVkwxCQkweDEKIAogI2RlZmluZSBPVkxfTU9VVF9FTl9S
+RE1BCQkweDEKQEAgLTE3MSw2ICsxNzMsOSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBf
+bW91dF9lbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCiAJfSBlbHNlIGlmIChjdXIgPT0gRERQ
+X0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewogCQkqYWRk
+ciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX01PVVRfRU47CiAJCXZhbHVlID0gUkRNQTFf
+TU9VVF9EUEkwOworCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4
+dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsKKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElT
+UF9SRE1BMV9NT1VUX0VOOworCQl2YWx1ZSA9IFJETUExX01PVVRfRFBJMTsKIAl9IGVsc2Ugewog
+CQl2YWx1ZSA9IDA7CiAJfQpAQCAtMTkwLDYgKzE5NSw5IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQg
+bXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAogCX0gZWxzZSBpZiAoY3Vy
+ID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsK
+IAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFBJX1NFTF9JTjsKIAkJdmFsdWUgPSBEUEkwX1NF
+TF9JTl9SRE1BMTsKKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5l
+eHQgPT0gRERQX0NPTVBPTkVOVF9EUEkxKSB7CisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RQ
+SV9TRUxfSU47CisJCXZhbHVlID0gRFBJMV9TRUxfSU5fUkRNQTE7CiAJfSBlbHNlIGlmIChjdXIg
+PT0gRERQX0NPTVBPTkVOVF9PVkwxICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9DT0xPUjEpIHsK
+IAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9DT0xPUjFfU0VMX0lOOwogCQl2YWx1ZSA9
+IENPTE9SMV9TRUxfSU5fT1ZMMTsKLS0gCjIuMTIuNQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
