@@ -1,95 +1,106 @@
-Return-Path: <SRS0=0VYT=I7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60067.outbound.protection.outlook.com ([40.107.6.67]:57713
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S934617AbeFMJry (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Jun 2018 05:47:54 -0400
-From: Jun Li <jun.li@nxp.com>
-Subject: RE: [PATCH v6 05/15] usb: typec: add API to get typec basic port
+Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
+Date: Mon, 11 Jun 2018 14:08:47 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 05/15] usb: typec: add API to get typec basic port
  power and data config
-Date: Wed, 13 Jun 2018 09:47:49 +0000
-Message-ID: <VI1PR0402MB391704C10EF7F2C94274C8EB897E0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Message-ID: <20180611110847.GG17155@kuha.fi.intel.com>
 References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
  <1527475967-15201-6-git-send-email-jun.li@nxp.com>
- <20180611110847.GG17155@kuha.fi.intel.com>
-In-Reply-To: <20180611110847.GG17155@kuha.fi.intel.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1527475967-15201-6-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>
+Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgSGVpa2tpLA0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIZWlra2kg
-S3JvZ2VydXMgW21haWx0bzpoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tXQ0KPiBTZW50
-OiAyMDE4xOo21MIxMcjVIDE5OjA5DQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiBD
-Yzogcm9iaCtkdEBrZXJuZWwub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgbGludXhA
-cm9lY2stdXMubmV0Ow0KPiBjdzAwLmNob2lAc2Ftc3VuZy5jb207IGEuaGFqZGFAc2Ftc3VuZy5j
-b207IHNodWZhbl9sZWVAcmljaHRlay5jb207DQo+IFBldGVyIENoZW4gPHBldGVyLmNoZW5Abnhw
-LmNvbT47IGdhcnNpbHZhQGVtYmVkZGVkb3IuY29tOw0KPiBnc29tbG9AZ21haWwuY29tOyBsaW51
-eC11c2JAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gZGwt
-bGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAw
-NS8xNV0gdXNiOiB0eXBlYzogYWRkIEFQSSB0byBnZXQgdHlwZWMgYmFzaWMgcG9ydCBwb3dlcg0K
-PiBhbmQgZGF0YSBjb25maWcNCj4gDQo+IEhpIEp1biwNCj4gDQo+IE9uIE1vbiwgTWF5IDI4LCAy
-MDE4IGF0IDEwOjUyOjM3QU0gKzA4MDAsIExpIEp1biB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFk
-ZHMgMyBBUElzIHRvIGdldCB0aGUgdHlwZWMgcG9ydCBwb3dlciBhbmQgZGF0YSB0eXBlLCBhbmQN
-Cj4gPiBwcmVmZXJyZWQgcG93ZXIgcm9sZSBieSBpdHMgbmFtZSBzdHJpbmcuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2
-ZXJzL3VzYi90eXBlYy9jbGFzcy5jIHwgNTANCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L3VzYi90eXBlYy5oIHwg
-IDMgKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNTMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3R5cGVjL2NsYXNzLmMgYi9kcml2ZXJzL3VzYi90eXBl
-Yy9jbGFzcy5jDQo+ID4gaW5kZXggNTNkZjEwZC4uNGM3ZDE4YyAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL3VzYi90eXBlYy9jbGFzcy5jDQo+ID4gKysrIGIvZHJpdmVycy91c2IvdHlwZWMvY2xh
-c3MuYw0KPiA+IEBAIC04MDIsNiArODAyLDEyIEBAIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3Qg
-dHlwZWNfcG9ydF90eXBlc1tdID0gew0KPiA+ICAJW1RZUEVDX1BPUlRfRFJQXSA9ICJkdWFsIiwN
-Cj4gPiAgfTsNCj4gPg0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHR5cGVjX2RhdGFf
-Y2Fwc1tdID0gew0KPiA+ICsJW1RZUEVDX1BPUlRfREZQXSA9ICJob3N0IiwNCj4gPiArCVtUWVBF
-Q19QT1JUX1VGUF0gPSAiZGV2aWNlIiwNCj4gPiArCVtUWVBFQ19QT1JUX0RSRF0gPSAiZHVhbCIs
-DQo+ID4gK307DQo+IA0KPiBTaW5jZSBJIGd1ZXNzIHlvdSBuZWVkIHRvIGZpeCB0aGlzIHBhdGNo
-IGluIGFueSBjYXNlLCBjb3VsZCB5b3UgcmVuYW1lIHRoYXQgdG8NCj4gInR5cGVjX3BvcnRfZGF0
-YV9yb2xlcyIuDQoNCk9LLg0KDQo+IA0KPiBBbmQgd2hpbGUgYXQgaXQsIGhvdyBhYm91dCB1c2lu
-ZyB0aGlzIGFzIGFuIG9wcG9ydHVuaXR5IHRvIHJlbmFtZQ0KPiB0eXBlY19wb3J0X3R5cGVzIHRv
-IHR5cGVjX3BvcnRfcG93ZXJfcm9sZXM/DQo+IA0KPiBTbyB0aGlzIGp1c3QgYSBzdWdnZXN0aW9u
-LCBubyBuZWVkIHRvIGFjdHVhbGx5IGNoYW5nZSBpdCA6LSkgOg0KDQpBbHNvIE9LIGZvciBtZSwg
-SSBjYW4gcmVuYW1lIGl0IGJ5IHRoaXMgY2hhbmNlLg0KDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy91c2IvdHlwZWMvY2xhc3MuYyBiL2RyaXZlcnMvdXNiL3R5cGVjL2NsYXNzLmMgaW5kZXgN
-Cj4gYWJiZDMzOTM5MTA5Li45N2Y3ZWIwZTk4NzkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNi
-L3R5cGVjL2NsYXNzLmMNCj4gKysrIGIvZHJpdmVycy91c2IvdHlwZWMvY2xhc3MuYw0KPiBAQCAt
-OTE4LDEyICs5MTgsMTggQEAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCB0eXBlY19kYXRhX3Jv
-bGVzW10gPSB7DQo+ICAgICAgICAgW1RZUEVDX0hPU1RdICAgID0gImhvc3QiLA0KPiAgfTsNCj4g
-DQo+IC1zdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHR5cGVjX3BvcnRfdHlwZXNbXSA9IHsNCj4g
-K3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgdHlwZWNfcG9ydF9wb3dlcl9yb2xlc1tdID0gew0K
-PiAgICAgICAgIFtUWVBFQ19QT1JUX1NSQ10gPSAic291cmNlIiwNCj4gICAgICAgICBbVFlQRUNf
-UE9SVF9TTktdID0gInNpbmsiLA0KPiAgICAgICAgIFtUWVBFQ19QT1JUX0RSUF0gPSAiZHVhbCIs
-DQo+ICB9Ow0KPiANCj4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgdHlwZWNfcG9ydF9kYXRh
-X3JvbGVzW10gPSB7DQo+ICsgICAgICAgW1RZUEVDX1BPUlRfREZQXSA9ICJob3N0IiwNCj4gKyAg
-ICAgICBbVFlQRUNfUE9SVF9VRlBdID0gImRldmljZSIsDQo+ICsgICAgICAgW1RZUEVDX1BPUlRf
-RFJEXSA9ICJkdWFsIiwNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3Qg
-dHlwZWNfcG9ydF90eXBlc19kcnBbXSA9IHsNCj4gICAgICAgICBbVFlQRUNfUE9SVF9TUkNdID0g
-ImR1YWwgW3NvdXJjZV0gc2luayIsDQo+ICAgICAgICAgW1RZUEVDX1BPUlRfU05LXSA9ICJkdWFs
-IHNvdXJjZSBbc2lua10iLCBAQCAtMTA1NCw3ICsxMDYwLDcgQEANCj4gc3RhdGljIHNzaXplX3Qg
-cG93ZXJfcm9sZV9zdG9yZShzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ICAgICAgICAgbXV0ZXhfbG9j
-aygmcG9ydC0+cG9ydF90eXBlX2xvY2spOw0KPiAgICAgICAgIGlmIChwb3J0LT5wb3J0X3R5cGUg
-IT0gVFlQRUNfUE9SVF9EUlApIHsNCj4gICAgICAgICAgICAgICAgIGRldl9kYmcoZGV2LCAicG9y
-dCB0eXBlIGZpeGVkIGF0IFwiJXNcIiIsDQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-dHlwZWNfcG9ydF90eXBlc1twb3J0LT5wb3J0X3R5cGVdKTsNCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgdHlwZWNfcG9ydF9wb3dlcl9yb2xlc1twb3J0LT5wb3J0X3R5cGVdKTsNCj4gICAgICAg
-ICAgICAgICAgIHJldCA9IC1FT1BOT1RTVVBQOw0KPiAgICAgICAgICAgICAgICAgZ290byB1bmxv
-Y2tfYW5kX3JldDsNCj4gICAgICAgICB9DQo+IEBAIC0xMDk1LDcgKzExMDEsNyBAQCBwb3J0X3R5
-cGVfc3RvcmUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QNCj4gZGV2aWNlX2F0dHJpYnV0ZSAq
-YXR0ciwNCj4gICAgICAgICAgICAgICAgIHJldHVybiAtRU9QTk9UU1VQUDsNCj4gICAgICAgICB9
-DQo+IA0KPiAtICAgICAgIHJldCA9IHN5c2ZzX21hdGNoX3N0cmluZyh0eXBlY19wb3J0X3R5cGVz
-LCBidWYpOw0KPiArICAgICAgIHJldCA9IHN5c2ZzX21hdGNoX3N0cmluZyh0eXBlY19wb3J0X3Bv
-d2VyX3JvbGVzLCBidWYpOw0KPiAgICAgICAgIGlmIChyZXQgPCAwKQ0KPiAgICAgICAgICAgICAg
-ICAgcmV0dXJuIHJldDsNCj4gDQo+IEBAIC0xMTI5LDcgKzExMzUsNyBAQCBwb3J0X3R5cGVfc2hv
-dyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdA0KPiBkZXZpY2VfYXR0cmlidXRlICphdHRyLA0K
-PiAgICAgICAgICAgICAgICAgcmV0dXJuIHNwcmludGYoYnVmLCAiJXNcbiIsDQo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB0eXBlY19wb3J0X3R5cGVzX2RycFtwb3J0LT5wb3J0X3R5
-cGVdKTsNCj4gDQo+IC0gICAgICAgcmV0dXJuIHNwcmludGYoYnVmLCAiWyVzXVxuIiwgdHlwZWNf
-cG9ydF90eXBlc1twb3J0LT5jYXAtPnR5cGVdKTsNCj4gKyAgICAgICByZXR1cm4gc3ByaW50Zihi
-dWYsICJbJXNdXG4iLA0KPiArIHR5cGVjX3BvcnRfcG93ZXJfcm9sZXNbcG9ydC0+Y2FwLT50eXBl
-XSk7DQo+ICB9DQo+ICBzdGF0aWMgREVWSUNFX0FUVFJfUlcocG9ydF90eXBlKTsNCj4gDQo+IA0K
-PiBUaGFua3MsDQo+IA0KPiAtLQ0KPiBoZWlra2kNCg==
+Hi Jun,
+
+On Mon, May 28, 2018 at 10:52:37AM +0800, Li Jun wrote:
+> This patch adds 3 APIs to get the typec port power and data type,
+> and preferred power role by its name string.
+> 
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+>  drivers/usb/typec/class.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/usb/typec.h |  3 +++
+>  2 files changed, 53 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index 53df10d..4c7d18c 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -802,6 +802,12 @@ static const char * const typec_port_types[] = {
+>  	[TYPEC_PORT_DRP] = "dual",
+>  };
+>  
+> +static const char * const typec_data_caps[] = {
+> +	[TYPEC_PORT_DFP] = "host",
+> +	[TYPEC_PORT_UFP] = "device",
+> +	[TYPEC_PORT_DRD] = "dual",
+> +};
+
+Since I guess you need to fix this patch in any case, could you rename
+that to "typec_port_data_roles".
+
+And while at it, how about using this as an opportunity to rename
+typec_port_types to typec_port_power_roles?
+
+So this just a suggestion, no need to actually change it :-) :
+
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index abbd33939109..97f7eb0e9879 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -918,12 +918,18 @@ static const char * const typec_data_roles[] = {
+        [TYPEC_HOST]    = "host",
+ };
+
+-static const char * const typec_port_types[] = {
++static const char * const typec_port_power_roles[] = {
+        [TYPEC_PORT_SRC] = "source",
+        [TYPEC_PORT_SNK] = "sink",
+        [TYPEC_PORT_DRP] = "dual",
+ };
+
++static const char * const typec_port_data_roles[] = {
++       [TYPEC_PORT_DFP] = "host",
++       [TYPEC_PORT_UFP] = "device",
++       [TYPEC_PORT_DRD] = "dual",
++};
++
+ static const char * const typec_port_types_drp[] = {
+        [TYPEC_PORT_SRC] = "dual [source] sink",
+        [TYPEC_PORT_SNK] = "dual source [sink]",
+@@ -1054,7 +1060,7 @@ static ssize_t power_role_store(struct device *dev,
+        mutex_lock(&port->port_type_lock);
+        if (port->port_type != TYPEC_PORT_DRP) {
+                dev_dbg(dev, "port type fixed at \"%s\"",
+-                            typec_port_types[port->port_type]);
++                       typec_port_power_roles[port->port_type]);
+                ret = -EOPNOTSUPP;
+                goto unlock_and_ret;
+        }
+@@ -1095,7 +1101,7 @@ port_type_store(struct device *dev, struct device_attribute *attr,
+                return -EOPNOTSUPP;
+        }
+
+-       ret = sysfs_match_string(typec_port_types, buf);
++       ret = sysfs_match_string(typec_port_power_roles, buf);
+        if (ret < 0)
+                return ret;
+
+@@ -1129,7 +1135,7 @@ port_type_show(struct device *dev, struct device_attribute *attr,
+                return sprintf(buf, "%s\n",
+                               typec_port_types_drp[port->port_type]);
+
+-       return sprintf(buf, "[%s]\n", typec_port_types[port->cap->type]);
++       return sprintf(buf, "[%s]\n", typec_port_power_roles[port->cap->type]);
+ }
+ static DEVICE_ATTR_RW(port_type);
+
+
+Thanks,
+
+-- 
+heikki
