@@ -1,69 +1,157 @@
-Return-Path: <SRS0=9BnR=I7=chromium.org=mka@kernel.org>
-Date: Wed, 13 Jun 2018 12:37:00 -0700
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v6 3/4] dt-bindings: power: supply: qcom_bms: Add bindings
-Message-ID: <20180613193700.GL88063@google.com>
-References: <20180407135934.26122-1-ctatlor97@gmail.com>
- <20180613160643.12638-1-ctatlor97@gmail.com>
- <20180613160643.12638-3-ctatlor97@gmail.com>
+Return-Path: <SRS0=Rbo1=I5=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
+Message-ID: <5b1e9f59.1c69fb81.5ad1.6ed2SMTPIN_ADDED_BROKEN@mx.google.com>
+Date: Tue, 12 Jun 2018 00:10:55 +0800
+From: Kenneth Lee <Kenneth-Lee-2012@foxmail.com>
+Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+References: <20180511190641.23008-4-jean-philippe.brucker@arm.com>
+ <20180516163117.622693ea@jacob-builder>
+ <de478769-9f7a-d40b-a55e-e2c63ad883e8@arm.com>
+ <20180522094334.71f0e36b@jacob-builder>
+ <f73b4a0e-669e-8483-88d7-1b2c8a2b9934@arm.com>
+ <20180524115039.GA10260@apalos>
+ <19e82a74-429a-3f86-119e-32b12082d0ff@arm.com>
+ <20180525063311.GA11605@apalos>
+ <20180525093959.000040a7@huawei.com> <20180526022445.GA6069@kllp05>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20180613160643.12638-3-ctatlor97@gmail.com>
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180526022445.GA6069@kllp05>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, liguozhu@hisilicon.com, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kevin.tian@intel.com" <kevin.tian@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "rgummal@xilinx.com" <rgummal@xilinx.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com" <shunyong.yang@hxt-semitech.com>, Robin Murphy <Robin.Murphy@arm.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>, "robdclark@gmail.com" <robdclark@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "christian.koenig@amd.com" <christian.koenig@amd.com>, "nwatters@codeaurora.org" <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Craig,
-
-On Wed, Jun 13, 2018 at 05:06:24PM +0100, Craig Tatlor wrote:
-> Add bindings for the Qualcomm Battery Monitoring system.
+On Sat, May 26, 2018 at 10:24:45AM +0800, Kenneth Lee wrote:
+> Date: Sat, 26 May 2018 10:24:45 +0800
+> From: Kenneth Lee <Kenneth-Lee-2012@foxmail.com>
+> To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>, Jean-Philippe Brucker
+>  <jean-philippe.brucker@arm.com>, "xieyisheng1@huawei.com"
+>  <xieyisheng1@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+>  "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+>  "xuzaibo@huawei.com" <xuzaibo@huawei.com>, Will Deacon
+>  <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>,
+>  "linux-mm@kvack.org" <linux-mm@kvack.org>, "yi.l.liu@intel.com"
+>  <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>,
+>  "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>,
+>  "robdclark@gmail.com" <robdclark@gmail.com>, "bharatku@xilinx.com"
+>  <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org"
+>  <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com"
+>  <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>,
+>  "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+>  "kevin.tian@intel.com" <kevin.tian@intel.com>, Jacob Pan
+>  <jacob.jun.pan@linux.intel.com>, "alex.williamson@redhat.com"
+>  <alex.williamson@redhat.com>, "rgummal@xilinx.com" <rgummal@xilinx.com>,
+>  "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>,
+>  "linux-arm-kernel@lists.infradead.org"
+>  <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com"
+>  <shunyong.yang@hxt-semitech.com>, "dwmw2@infradead.org"
+>  <dwmw2@infradead.org>, "liubo95@huawei.com" <liubo95@huawei.com>,
+>  "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>,
+>  "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+>  Robin Murphy <Robin.Murphy@arm.com>, "christian.koenig@amd.com"
+>  <christian.koenig@amd.com>, "nwatters@codeaurora.org"
+>  <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com"
+>  <baolu.lu@linux.intel.com>, liguozhu@hisilicon.com
+> Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+> Message-ID: <20180526022445.GA6069@kllp05>
 > 
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-> ---
+> On Fri, May 25, 2018 at 09:39:59AM +0100, Jonathan Cameron wrote:
+> > Date: Fri, 25 May 2018 09:39:59 +0100
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > To: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> > CC: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+> >  "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "kvm@vger.kernel.org"
+> >  <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org"
+> >  <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>,
+> >  Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org"
+> >  <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+> >  "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com"
+> >  <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>,
+> >  "joro@8bytes.org" <joro@8bytes.org>, "robdclark@gmail.com"
+> >  <robdclark@gmail.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>,
+> >  "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+> >  "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com"
+> >  <rfranz@cavium.com>, "devicetree@vger.kernel.org"
+> >  <devicetree@vger.kernel.org>, "kevin.tian@intel.com"
+> >  <kevin.tian@intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+> >  "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+> >  "rgummal@xilinx.com" <rgummal@xilinx.com>, "thunder.leizhen@huawei.com"
+> >  <thunder.leizhen@huawei.com>, "linux-arm-kernel@lists.infradead.org"
+> >  <linux-arm-kernel@lists.infradead.org>, "shunyong.yang@hxt-semitech.com"
+> >  <shunyong.yang@hxt-semitech.com>, "dwmw2@infradead.org"
+> >  <dwmw2@infradead.org>, "liubo95@huawei.com" <liubo95@huawei.com>,
+> >  "jcrouse@codeaurora.org" <jcrouse@codeaurora.org>,
+> >  "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+> >  Robin Murphy <Robin.Murphy@arm.com>, "christian.koenig@amd.com"
+> >  <christian.koenig@amd.com>, "nwatters@codeaurora.org"
+> >  <nwatters@codeaurora.org>, "baolu.lu@linux.intel.com"
+> >  <baolu.lu@linux.intel.com>, liguozhu@hisilicon.com,
+> >  kenneth-lee-2012@foxmail.com
+> > Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+> > Message-ID: <20180525093959.000040a7@huawei.com>
+> > 
+> > +CC Kenneth Lee
+> > 
+> > On Fri, 25 May 2018 09:33:11 +0300
+> > Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
+> > 
+> > > On Thu, May 24, 2018 at 04:04:39PM +0100, Jean-Philippe Brucker wrote:
+> > > > On 24/05/18 12:50, Ilias Apalodimas wrote:  
+> > > > >> Interesting, I hadn't thought about this use-case before. At first I
+> > > > >> thought you were talking about mdev devices assigned to VMs, but I think
+> > > > >> you're referring to mdevs assigned to userspace drivers instead? Out of
+> > > > >> curiosity, is it only theoretical or does someone actually need this?  
+> > > > > 
+> > > > > There has been some non upstreamed efforts to have mdev and produce userspace
+> > > > > drivers. Huawei is using it on what they call "wrapdrive" for crypto devices and
+> > > > > we did a proof of concept for ethernet interfaces. At the time we choose not to
+> > > > > involve the IOMMU for the reason you mentioned, but having it there would be
+> > > > > good.  
+> > > > 
+> > > > I'm guessing there were good reasons to do it that way but I wonder, is
+> > > > it not simpler to just have the kernel driver create a /dev/foo, with a
+> > > > standard ioctl/mmap/poll interface? Here VFIO adds a layer of
+> > > > indirection, and since the mediating driver has to implement these
+> > > > operations already, what is gained?  
+> > > The best reason i can come up with is "common code". You already have one API
+> > > doing that for you so we replicate it in a /dev file?
+> > > The mdev approach still needs extentions to support what we tried to do (i.e
+> > > mdev bus might need yo have access on iommu_ops), but as far as i undestand it's
+> > > a possible case.
 > 
-> * Changes from v5:
->   Mentions which values are 8 bit.
+> Hi, Jean, Please allow me to share my understanding here:
+> https://zhuanlan.zhihu.com/p/35489035
 > 
-> * Changes from v4:
->   Uses proper units and expands some definitions,
->   along with changing vadc@ to adc@.
->  .../bindings/power/supply/qcom_bms.txt        | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> The reason we do not use the /dev/foo scheme is that the devices to be
+> shared are programmable accelerators. We cannot fix up the kernel driver for them.
+> > > > 
+> > > > Thanks,
+> > > > Jean  
+> > 
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/qcom_bms.txt b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
-> new file mode 100644
-> index 000000000000..9a29a2eb9f04
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
-> @@ -0,0 +1,92 @@
-> +Qualcomm Battery Monitoring System
-> +
-> +The Qualcomm Battery Monitoring System is found inside of Qualcomm PM8941
-> +PMICs. It provides open circuit voltage (OCV) and coulomb counter registers
-> +that allow the OS to infer a capacity level.
-> +
-> +Required properties:
-> +- compatible:                   Should contain "qcom,pm8941-bms".
-> +- reg:                          Specifies the SPMI address and length of the
-> +				controller's registers.
-> +- interrupts:                   OCV threshold interrupt.
-> +- io-channels:                  Should contain IIO channel specifier for the
-> +				ADC channel that reports battery temperature.
-> +- io-channel-names:             Should contain "temp".
-> +- qcom,fcc-temp-legend-celcius: An 8 bit array containing the temperature,
-> +				in degC, for each column of the full charge
-> +				capacity lookup table.
+> -- 
+> 			-Kenneth Lee (Hisilicon)
 
-s/celcius/celsius/
+I just found this mail was missed in the mailing list. I tried it once
+again.
 
-same for qcom,ocv-temp-legend-celcius
+-- 
+			-Kenneth Lee (Hisilicon)
 
-> +- qcom,fcc-lut-microamp-hours:  An array of full charge capacity values in uah,
 
-nit: s/uah/uAh/
 
-Thanks
-
-Matthias
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
