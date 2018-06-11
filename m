@@ -1,7 +1,7 @@
 From: Andrea Greco <andrea.greco.gapmilano@gmail.com>
 Subject: [PATCH 4/6] arcnet: com20020: bindings for smsc com20020
-Date: Mon, 11 Jun 2018 16:27:01 +0200
-Message-ID: <20180611142705.20849-1-andrea.greco.gapmilano@gmail.com>
+Date: Mon, 11 Jun 2018 16:28:53 +0200
+Message-ID: <20180611142856.21307-1-andrea.greco.gapmilano@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: davem@davemloft.net
