@@ -1,81 +1,502 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 1/2] gpio: mediatek: add driver for MT7621
-Date: Mon, 11 Jun 2018 11:29:29 +0800
-Message-ID: <1528687769.21593.19.camel@mtkswgap22>
-References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
- <1527924610-13135-2-git-send-email-sergio.paracuellos@gmail.com>
- <CACRpkdaw9O6TbZie5AOTmQJ9-3=yHETFFX7YVkPBEL72EZzZ=g@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards
+ from K+P
+Date: Mon, 11 Jun 2018 13:13:58 +0800
+Message-ID: <20180611051357.GA16091@dragon>
+References: <20180509153428.1440-1-lukma@denx.de>
+ <20180519121506.32344-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CACRpkdaw9O6TbZie5AOTmQJ9-3=yHETFFX7YVkPBEL72EZzZ=g@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, driverdev-devel@linuxdriverproject.org, Sergio Paracuellos <sergio.paracuellos@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180519121506.32344-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, 2018-06-08 at 13:59 +0200, Linus Walleij wrote:
-> Hi Sergio!
+On Sat, May 19, 2018 at 02:15:06PM +0200, Lukasz Majewski wrote:
+> This commit provides support for HSC and DDC boards from
+> Kieback&Peter GmbH vendor.
 > 
-> Thanks for your patch!
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+> Changes for v2:
 > 
-> Given that we have combined pin control and GPIO drivers for
-> almost all Mediatek chips in drivers/pinctrl/mediatek/*
-> I would ideally like to have some input from the Mediatek
-> maintainers (especially Sean Wang) on this, especially:
+> - Remove not needed #address-cells and #size-cells in
+>   the gpio_buttons node to pass make W=1
+> - Rename button@{12} to button_{kalt|pwr} nodes to pass make W=1
+> - Include #include <dt-bindings/input/input.h> to use KEY_F6|F7 directly
 > 
-> - Is MT7621 a non-pincontrol GPIO controller, or can it
->   eventually use pin control as a back-end? Will a separate
->   pin control driver appear later for this SoC?
+> ---
+>  arch/arm/boot/dts/Makefile         |   2 +
+>  arch/arm/boot/dts/imx53-kp-ddc.dts | 146 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx53-kp-hsc.dts |  51 ++++++++++
+>  arch/arm/boot/dts/imx53-kp.dtsi    | 190 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 389 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx53-kp-ddc.dts
+>  create mode 100644 arch/arm/boot/dts/imx53-kp-hsc.dts
+>  create mode 100644 arch/arm/boot/dts/imx53-kp.dtsi
 > 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index fbc04b0db781..00854a5b6ac4 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -360,6 +360,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
+>  dtb-$(CONFIG_SOC_IMX53) += \
+>  	imx53-ard.dtb \
+>  	imx53-cx9020.dtb \
+> +	imx53-kp-ddc.dtb \
+> +	imx53-kp-hsc.dtb \
+>  	imx53-m53evk.dtb \
+>  	imx53-mba53.dtb \
+>  	imx53-ppd.dtb \
+> diff --git a/arch/arm/boot/dts/imx53-kp-ddc.dts b/arch/arm/boot/dts/imx53-kp-ddc.dts
+> new file mode 100644
+> index 000000000000..acaf477a52c5
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-kp-ddc.dts
+> @@ -0,0 +1,146 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx53-kp.dtsi"
+> +
+> +/ {
+> +	model = "K+P imx53 DDC";
+> +	compatible = "kiebackpeter,imx53-ddc", "fsl,imx53";
+> +
+> +	backlight_lcd: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm2 0 50000>;
+> +		power-supply = <&reg_backlight>;
+> +		brightness-levels = <0 24 28 32 36
+> +				     40 44 48 52 56
+> +				     60 64 68 72 76
+> +				     80 84 88 92 96 100>;
+> +		default-brightness-level = <20>;
+> +	};
+> +
+> +	lcd_display: disp1 {
 
-MT7621 also have the circuit for pad setup tweaking Tx driving and mux
-setup switching to either gpio mode or specific hardware mode, but the
-circuit for all of them is being accessed in a different register range
-from gpio controller being implemented here.
+display for node node.
 
-the part of pad or mux control for MT7621 I thought that is really
-simple, so it seems worth joining pinmux and pinconf together into a
-single driver to become a full function about pin setup. 
+> +		compatible = "fsl,imx-parallel-display";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		interface-pix-fmt = "rgb24";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_disp>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			display1_in: endpoint {
+> +				remote-endpoint = <&ipu_di1_disp1>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			lcd_display_out: endpoint {
+> +				remote-endpoint = <&lcd_panel_in>;
+> +			};
+> +		};
+> +	};
+> +
+> +	lcd_panel: lcd-panel {
+> +		compatible = "koe,tx14d24vm1bpa";
 
-> - Would it make sense to have a combined driver just like
->   for the other Mediatek SoCs in drivers/pinctrl/mediatek?
->   If this GPIO controller does not do pin control I understand
->   why it is submitted as a GPIO driver only.
+Undefined compatible?
+
+> +		backlight = <&backlight_lcd>;
+> +		power-supply = <&reg_3v3>;
+> +
+> +		port {
+> +			lcd_panel_in: endpoint {
+> +				remote-endpoint = <&lcd_display_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_backlight: regulator-backlight {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "backlight-supply";
+> +		regulator-min-microvolt = <15000000>;
+> +		regulator-max-microvolt = <15000000>;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&i2c3 {
+> +	adc@48 {
+> +		compatible = "ti,ads1015";
+> +		reg = <0x48>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		channel@4 {
+> +			reg = <4>;
+> +			ti,gain = <2>;
+> +			ti,datarate = <4>;
+> +		};
+> +
+> +		channel@6 {
+> +			reg = <6>;
+> +			ti,gain = <2>;
+> +			ti,datarate = <4>;
+> +		};
+> +	};
+> +
+> +	gpio_expander2@21 {
+
+Use hyphen instead of underscore in node name.
+
+> +		compatible = "nxp,pcf8574";
+> +		reg = <0x21>;
+> +		interrupts = <109>;
+> +		#gpio-cells = <2>;
+> +		gpio-controller;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	imx53-kp-ddc {
+> +		pinctrl_disp: dispgrp {
+> +			fsl,pins = <
+> +				MX53_PAD_EIM_A16__IPU_DI1_DISP_CLK      0x4
+> +				MX53_PAD_EIM_DA10__IPU_DI1_PIN15        0x4
+> +				MX53_PAD_EIM_DA9__IPU_DISP1_DAT_0       0x4
+> +				MX53_PAD_EIM_DA8__IPU_DISP1_DAT_1       0x4
+> +				MX53_PAD_EIM_DA7__IPU_DISP1_DAT_2       0x4
+> +				MX53_PAD_EIM_DA6__IPU_DISP1_DAT_3       0x4
+> +				MX53_PAD_EIM_DA5__IPU_DISP1_DAT_4       0x4
+> +				MX53_PAD_EIM_DA4__IPU_DISP1_DAT_5       0x4
+> +				MX53_PAD_EIM_DA3__IPU_DISP1_DAT_6       0x4
+> +				MX53_PAD_EIM_DA2__IPU_DISP1_DAT_7       0x4
+> +				MX53_PAD_EIM_DA1__IPU_DISP1_DAT_8       0x4
+> +				MX53_PAD_EIM_DA0__IPU_DISP1_DAT_9       0x4
+> +				MX53_PAD_EIM_EB1__IPU_DISP1_DAT_10      0x4
+> +				MX53_PAD_EIM_EB0__IPU_DISP1_DAT_11      0x4
+> +				MX53_PAD_EIM_A17__IPU_DISP1_DAT_12      0x4
+> +				MX53_PAD_EIM_A18__IPU_DISP1_DAT_13      0x4
+> +				MX53_PAD_EIM_A19__IPU_DISP1_DAT_14      0x4
+> +				MX53_PAD_EIM_A20__IPU_DISP1_DAT_15      0x4
+> +				MX53_PAD_EIM_A21__IPU_DISP1_DAT_16      0x4
+> +				MX53_PAD_EIM_A22__IPU_DISP1_DAT_17      0x4
+> +				MX53_PAD_EIM_A23__IPU_DISP1_DAT_18      0x4
+> +				MX53_PAD_EIM_A24__IPU_DISP1_DAT_19      0x4
+> +				MX53_PAD_EIM_D31__IPU_DISP1_DAT_20      0x4
+> +				MX53_PAD_EIM_D30__IPU_DISP1_DAT_21      0x4
+> +				MX53_PAD_EIM_D26__IPU_DISP1_DAT_22      0x4
+> +				MX53_PAD_EIM_D27__IPU_DISP1_DAT_23      0x4
+> +				MX53_PAD_GPIO_1__PWM2_PWMO 0x4
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +&ipu_di1_disp1 {
+> +	remote-endpoint = <&display1_in>;
+> +};
+> +
+> +&fec {
+> +	status = "okay";
+> +};
+
+Sort the labeled nodes alphabetically in label name.
+
+> +
+> +&pmic {
+> +	fsl,mc13xxx-uses-touch;
+> +};
+> diff --git a/arch/arm/boot/dts/imx53-kp-hsc.dts b/arch/arm/boot/dts/imx53-kp-hsc.dts
+> new file mode 100644
+> index 000000000000..d68cdd5da819
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-kp-hsc.dts
+> @@ -0,0 +1,51 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx53-kp.dtsi"
+> +
+> +/ {
+> +	model = "K+P imx53 HSC";
+> +	compatible = "kiebackpeter,imx53-hsc", "fsl,imx53";
+> +};
+> +
+> +&fec {
+> +	status = "okay";
+
+Have a newline between property list and child node.
+
+> +	fixed-link { /* RMII fixed link to LAN9303 */
+> +		speed = <100>;
+> +		full-duplex;
+> +	};
+> +};
+> +
+> +&i2c3 {
+> +	switch: switch@a {
+> +		compatible = "smsc,lan9303-i2c";
+> +		reg = <0xa>;
+> +		reset-gpios = <&gpio7 6 GPIO_ACTIVE_LOW>;
+> +		reset-duration = <400>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 { /* RMII fixed link to master */
+> +				reg = <0>;
+> +				label = "cpu";
+> +				ethernet = <&fec>;
+> +			};
+> +
+> +			port@1 { /* external port 1 */
+> +				reg = <1>;
+> +				label = "lan1";
+> +			};
+> +
+> +			port@2 { /* external port 2 */
+> +				reg = <2>;
+> +				label = "lan2";
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx53-kp.dtsi b/arch/arm/boot/dts/imx53-kp.dtsi
+> new file mode 100644
+> index 000000000000..f87266843842
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-kp.dtsi
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx53-tqma53.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	buzzer {
+> +		compatible = "pwm-beeper";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_buzzer>;
+> +
+
+Drop this newline.
+
+> +		pwms = <&pwm1 0 500000>;
+> +	};
+> +
+> +	gpio_buttons {
+
+Use hyphen.
+
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpiobuttons>;
+> +
+> +		button_kalt {
+
+Ditto
+
+> +			label = "Kaltstart";
+> +			linux,code = <KEY_F6>;
+> +			gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		button_pwr {
+
+Ditto
+
+> +			label = "PowerFailInterrupt";
+> +			linux,code = <KEY_F7>;
+> +			gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_leds>;
+> +
+> +		led_bus {
+
+Ditto
+
+> +			label = "bus";
+> +			gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "gpio";
+> +			default-state = "off";
+> +		};
+> +
+> +		led_error {
+
+Ditto
+
+> +			label = "error";
+> +			gpios = <&gpio3 28 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "gpio";
+> +			default-state = "off";
+> +		};
+> +
+> +		led_flash {
+
+Ditto
+
+> +			label = "flash";
+> +			gpios = <&gpio5 0 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +
+> +	reg_3v3: regulator-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&can1 {
+> +	status = "okay";
+> +};
+> +
+> +&can2 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	status = "okay";
+> +
+> +	gpio_expander1@22 {
+
+Ditto
+
+Shawn
+
+> +		compatible = "nxp,pcf8574";
+> +		reg = <0x22>;
+> +		interrupts = <109>;
+> +		#gpio-cells = <2>;
+> +		gpio-controller;
+> +	};
+> +
+> +	rtc@51 {
+> +		compatible = "nxp,pcf8563";
+> +		reg = <0x51>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_kp_common>;
+> +
+> +	imx53-kp-common {
+> +		pinctrl_buzzer: buzzergrp {
+> +			fsl,pins = <
+> +				MX53_PAD_SD1_DATA3__PWM1_PWMO 0x1e4
+> +			>;
+> +		};
+> +
+> +		pinctrl_gpiobuttons: gpiobuttonsgrp {
+> +			fsl,pins = <
+> +				MX53_PAD_EIM_RW__GPIO2_26 0x1e4
+> +				MX53_PAD_EIM_D22__GPIO3_22 0x1e4
+> +			>;
+> +		};
+> +
+> +		pinctrl_kp_common: kpcommongrp {
+> +			fsl,pins = <
+> +				MX53_PAD_EIM_CS0__GPIO2_23 0x1e4
+> +				MX53_PAD_GPIO_19__GPIO4_5  0x1e4
+> +				MX53_PAD_PATA_DATA6__GPIO2_6 0x1e4
+> +				MX53_PAD_PATA_DATA7__GPIO2_7 0xe0
+> +				MX53_PAD_CSI0_DAT14__GPIO6_0 0x1e4
+> +				MX53_PAD_CSI0_DAT16__GPIO6_2 0x1e4
+> +				MX53_PAD_CSI0_DAT18__GPIO6_4 0x1e4
+> +				MX53_PAD_EIM_D17__GPIO3_17 0x1e4
+> +				MX53_PAD_EIM_D18__GPIO3_18 0x1e4
+> +				MX53_PAD_EIM_D21__GPIO3_21 0x1e4
+> +				MX53_PAD_EIM_D29__GPIO3_29 0x1e4
+> +				MX53_PAD_EIM_DA11__GPIO3_11 0x1e4
+> +				MX53_PAD_EIM_DA13__GPIO3_13 0x1e4
+> +				MX53_PAD_EIM_DA14__GPIO3_14 0x1e4
+> +				MX53_PAD_SD1_DATA0__GPIO1_16 0x1e4
+> +				MX53_PAD_SD1_CMD__GPIO1_18 0x1e4
+> +				MX53_PAD_SD1_CLK__GPIO1_20 0x1e4
+> +			>;
+> +		};
+> +
+> +		pinctrl_leds: ledgrp {
+> +			fsl,pins = <
+> +				MX53_PAD_EIM_EB2__GPIO2_30 0x1d4
+> +				MX53_PAD_EIM_D28__GPIO3_28 0x1d4
+> +				MX53_PAD_EIM_WAIT__GPIO5_0 0x1d4
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart4: uart4grp {
+> +			fsl,pins = <
+> +				MX53_PAD_CSI0_DAT12__UART4_TXD_MUX 0x1e4
+> +				MX53_PAD_CSI0_DAT13__UART4_RXD_MUX 0x1e4
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +&pinctrl_uart1 {
+> +	fsl,pins = <
+> +		MX53_PAD_EIM_D23__GPIO3_23 0x1e4
+> +		MX53_PAD_EIM_EB3__GPIO2_31 0x1e4
+> +		MX53_PAD_EIM_D24__GPIO3_24 0x1e4
+> +		MX53_PAD_EIM_D25__GPIO3_25 0x1e4
+> +		MX53_PAD_EIM_D19__GPIO3_19 0x1e4
+> +		MX53_PAD_EIM_D20__GPIO3_20 0x1e4
+> +	>;
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	status = "okay";
+> +};
+> +
+> +&usbh1 {
+> +	status = "okay";
+> +};
+> +
+> +&usbphy0 {
+> +	status = "disabled";
+> +};
+> -- 
+> 2.11.0
 > 
-> drivers/pinctrl/mediatek/pinctrl-mt7622.c is suspiciously
-> similarly named. Is this a relative or just as different as
-> night and day?
-> 
-
-The MT7621 is just as completely different as night and day from MT7622.
-
-MT7622 pinctrl originate from MediaTek IPs but MT7621 pinctrl originate
-from Ralink IPs and even MT7621 should be the last one machine using the
-Ralink pinctrl IPs. And for these machine MT762x appearing later MT7622,
-they all will be developed based on pinctrl-mt7622 architecture .
-
-> Also you can see that this driver has a built-in GPIO driver,
-> using an external interrupt.
-> 
-> On Sat, Jun 2, 2018 at 9:30 AM, Sergio Paracuellos
-
-[ ... ]
-
-> I guess you want to use
-> builtin_platform_driver()?
-> 
-> Yours,
-> Linus Walleij
