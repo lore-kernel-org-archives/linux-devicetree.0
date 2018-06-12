@@ -1,60 +1,38 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Tue, 12 Jun 2018 01:31:30 -0700
-Message-ID: <152879229054.16708.14050561301794900607@swboyd.mtv.corp.google.com>
-References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
- <1528177218-1051-4-git-send-email-spanda@codeaurora.org>
- <20180605152050.GA9677@rob-hp-laptop>
- <75aab08baeecd381f573603a253dbbf1@codeaurora.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Tue, 12 Jun 2018 11:35:17 +0300
+Message-ID: <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <75aab08baeecd381f573603a253dbbf1-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBzcGFuZGFAY29kZWF1cm9yYS5vcmcgKDIwMTgtMDYtMDUgMjE6NTA6MTYpCj4gT24g
-MjAxOC0wNi0wNSAyMDo1MCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiBPbiBUdWUsIEp1biAwNSwg
-MjAxOCBhdCAxMToxMDoxNkFNICswNTMwLCBTYW5kZWVwIFBhbmRhIHdyb3RlOgo+ID4+IERvY3Vt
-ZW50IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERTSSB0byBlRFAgYnJpZGdl
-LgpbLi4uXQo+ID4+IGFuZAo+ID4+ICsgICAgICAgICAgICAgICAgICAgdGhlIHNlY29uZCBjZWxs
-IGlzIHVzZWQgdG8gc3BlY2lmeSBmbGFncy4KPiA+PiArICAgICAgICAgICAgICAgICAgIFNlZSAu
-Li8uLi9ncGlvL2dwaW8udHh0IGZvciBtb3JlIGluZm9ybWF0aW9uLgo+ID4+ICstICNwd20tY2Vs
-bHMgOiBTaG91bGQgYmUgb25lLiBTZWUgLi4vLi4vcHdtL3B3bS50eHQgZm9yIGRlc2NyaXB0aW9u
-IAo+ID4+IG9mCj4gPj4gKyAgICAgICAgICAgICAgIHRoZSBjZWxsIGZvcm1hdHMuCj4gPj4gKwo+
-ID4+ICstIGNsb2NrLW5hbWVzOiBzaG91bGQgYmUgInJlZmNsayIKPiA+PiArLSBjbG9ja3M6IFNw
-ZWNpZmljYXRpb24gZm9yIGlucHV0IHJlZmVyZW5jZSBjbG9jay4gVGhlIHJlZmVyZW5jZQo+ID4+
-ICsgICAgICBjbG9jayByYXRlIG11c3QgYmUgMTIgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCAyNyBN
-SHogb3IgMzguNCBNSHouCj4gPj4gKwo+ID4+ICstIGxhbmUtbWFwcGluZzogU3BlY2lmaWNhdGlv
-biB0byBkZXNjcmliZSB0aGUgbG9naWNhbCB0byBwaHlzaWNhbCAKPiA+PiBsYW5lCj4gPiAKPiA+
-IEFzIEkgbWVudGlvbmVkIGluIHY3LCB3ZSBhbHJlYWR5IGhhdmUgYSBwcm9wZXJ0eSBmb3IgdGhp
-cy4gSXQncyBjYWxsZWQKPiA+ICdkYXRhLWxhbmVzJyBhbmQgZGVmaW5lZCBpbiBtZWRpYS92aWRl
-by1pbnRlcmZhY2VzLnR4dC4gVXNlIHRoYXQuIElmIAo+ID4geW91Cj4gPiBuZWVkIHBvbGFyaXR5
-IHRvbywgdGhlbiBhZGQgYSBwcm9wZXJ0eSBmb3IgdGhhdC4gQW5kIGFkZCBpdCB0bwo+ID4gdmlk
-ZW8taW50ZXJmYWNlcy50eHQuCj4gCj4gVGhlIGRhdGEtbGFuZXMgcHJvcGVydHkgbWVudGlvbmVk
-IGluIG1lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0IGlzIAo+IHJlZmVycmluZwo+IHRvIERTSS9D
-U0kgbGFuZXMgd2hlcmUgYXNzdW1wdGlvbiBpcyBjbG9jayBsYW5lIGlzIGZpeGVkIGF0IGluZGV4
-IDAuIEJ1dCAKPiBoZXJlCj4gdGhlIHdlIHdhbnQgdG8gbWVudGlvbiBhYm91dCBlRFAgbGFuZXMg
-d2hpY2ggZG8gbm90IGhhdmUgZGVkaWNhdGVkIGNsb2NrIAo+IGxhbmUuCj4gU28gY2FuIHdlIHN0
-aWxsIHVzZSB0aGUgZXhpc3RpbmcgZGF0YS1sYW5lcyBwcm9wZXJ0eSBoZXJlPwoKV2h5IGlzIHRo
-YXQgYSBwcm9ibGVtPyBJdCdzIGp1c3QgYSBwcm9wZXJ0eSBuYW1lLgoKVGhlcmUgYXJlIGRhdGEt
-bGFuZXMgYW5kIGNsb2NrLWxhbmVzIHByb3BlcnRpZXMgaW4gdGhlCnZpZGVvLWludGVyZmFjZXMu
-dHh0IGZpbGUgYnkgdGhlIHdheS4gSXQgd291bGQgYmUgbmljZSBpZiB0aGF0IGRvY3VtZW50CmNv
-dWxkIGJlIHVwZGF0ZWQgZm9yIGRpc3BsYXlwb3J0IGFuZCBEU0kgKGUuZy4gIGNsb2NrLW5vbmNv
-bnRpbnVvdXMgb3IKbGluay1mcmVxdWVuY2llcykgb3IgZXZlbiBqdXN0IG1lbnRpb24gaW4gdGhl
-cmUgdGhhdCB0aGVzZSBjYW4gYXBwbHkgdG8KRFNJIGFuZCBkaXNwbGF5cG9ydCB0b28uCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
-bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Tue, Jun 12, 2018 at 3:01 AM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> There are still quite a few cases where a device might want to get to a
+> different node of the device-tree, obtain the resources and map them.
+>
+> Drivers doing that currently open code the whole thing, which is error
+> proe.
+
+prone
+
+>
+> We have of_iomap() and of_io_request_and_map() but they both have shortcomings,
+> such as not returning the size of the resource found (which can be necessary)
+> and not being "managed".
+>
+> This adds a devm_of_iomap() that provides all of these and should probably
+> replace uses of the above in most drivers.
+
+It feels like a wrong approach.
+Can OF graph help here? Would it be better approach?
+
+-- 
+With Best Regards,
+Andy Shevchenko
