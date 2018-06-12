@@ -1,62 +1,55 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] arm64: dts: stingray: use NUM_SATA to configure number of
- sata ports
-Date: Tue, 12 Jun 2018 16:54:55 -0600
-Message-ID: <CAL_JsqJEFLXFf-Vq9c9XC41vBpisQwxkd06_v8Fmt6X=gp=2_g@mail.gmail.com>
-References: <1526668446-20048-1-git-send-email-scott.branden@broadcom.com>
- <d35afa1f-e0fd-84f1-7d42-60595e22cc77@gmail.com> <395f1fe8-76f1-8310-d09e-63e25bca23d2@broadcom.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Wed, 13 Jun 2018 08:58:34 +1000
+Message-ID: <5d932502d9985cdfa6540480ea5ce6b0730502a1.camel@kernel.crashing.org>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+         <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
+         <53ef03b26a17738dc1465ce85562c9611ad415f8.camel@kernel.crashing.org>
+         <CAHp75Vcdaejn=eq740YNdscSv9zX9xj3RzYp=AFs8HFprw34_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <395f1fe8-76f1-8310-d09e-63e25bca23d2@broadcom.com>
+In-Reply-To: <CAHp75Vcdaejn=eq740YNdscSv9zX9xj3RzYp=AFs8HFprw34_Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 7, 2018 at 12:53 PM, Scott Branden
-<scott.branden@broadcom.com> wrote:
-> Hi Rob,
->
-> Could you please kindly comment on change below.
->
-> It allows board variants to be added easily via a simple define for
-> different number of SATA ports.
->
->
->
-> On 18-06-04 09:22 AM, Florian Fainelli wrote:
->>
->> On 05/18/2018 11:34 AM, Scott Branden wrote:
->>>
->>> Move remaining sata configuration to stingray-sata.dtsi and enable
->>> ports based on NUM_SATA defined.
->>> Now, all that needs to be done is define NUM_SATA per board.
->>
->> Rob could you review this and let us know if this approach is okay or
->> not? Thank you!
->>
->>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->>> ---
+On Tue, 2018-06-12 at 19:53 +0300, Andy Shevchenko wrote:
+> 
+> > > It feels like a wrong approach.
+> > > Can OF graph help here? Would it be better approach?
+> > 
+> > I don't quite understand what your objection is nor what "OF graph"
+> > is...
+> 
+> There is no objection per se, just a doubt that this is a right thing to do.
+> I might be wrong, of course.
+> 
+> OF graph nodes is a special API that allows you to access like you
+> said "different node of device-tree".
+> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/graph.txt
 
->>> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>> b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>> index 8c68e0c..7f6d176 100644
->>> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>> @@ -43,7 +43,11 @@
->>>                         interrupts = <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
->>>                         #address-cells = <1>;
->>>                         #size-cells = <0>;
->>> +#if (NUM_SATA > 0)
->>> +                       status = "okay";
->>> +#else
->>>                         status = "disabled";
->>> +#endif
+So I had a look and this is just an example on how to use phandles to
+link ports and endpoints... I fail to see how that relates to what this
+patch does.
 
-This only works if ports are contiguously enabled (0-N). You might not
-care, but it is not a pattern that works in general. And I'm not a fan
-of C preprocessing in DT files in general beyond just defines for
-single numbers.
+In the driver I'm doing for example, I do use a similar technique to
+"point" to the other node. In this case, this is a coprocessor in the
+SoC and I'm linking to the node that represent its interrupt controller
+(and its not a full fledged OS running there so we don't have a full
+interrupt tree for it).
 
-Rob
+But once you have such a "graph", the question of mapping whatever
+memory resources (ie. "reg" properties) remains.
+
+Today, people will use of_address_to_resource() with ioremap, or
+of_iomap () to do that ...
+
+This patch just provides a devm_ variant of the latter, which also does
+a request_mem_resource() on it (which is missing from of_iomap), so
+generally is a better alternative.
+
+Cheers,
+Ben.
