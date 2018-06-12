@@ -1,44 +1,62 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 10/20] dts: juno: Update coresight bindings for hw port
-Date: Tue, 12 Jun 2018 11:42:21 +0100
-Message-ID: <20180612104221.GA26029@e107155-lin>
-References: <1528235011-30691-1-git-send-email-suzuki.poulose@arm.com>
- <1528235011-30691-11-git-send-email-suzuki.poulose@arm.com>
- <20180608214946.GI30587@xps15>
- <CANLsYkxNakRGCWT6O0JRKz+N1OTU3-XreC_FiB8Fiv+jEoPEbQ@mail.gmail.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: mtd: document Broadcom's TRX firmware format
+ binding
+Date: Tue, 12 Jun 2018 12:44:33 +0200
+Message-ID: <20180612104434.15232-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANLsYkxNakRGCWT6O0JRKz+N1OTU3-XreC_FiB8Fiv+jEoPEbQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, arm@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Sealey <matt.sealey@arm.com>, John Horley <john.horley@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, coresight@lists.linaro.org, devicetree@vger.kernel.org, Mike Leach <mike.leach@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Jonas Gorski <jonas.gorski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 08, 2018 at 03:52:58PM -0600, Mathieu Poirier wrote:
-> On 8 June 2018 at 15:49, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
-> > On Tue, Jun 05, 2018 at 10:43:21PM +0100, Suzuki K Poulose wrote:
-> >> Switch to updated coresight bindings for hw ports.
-> >>
-> >> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> >> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> >> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >> ---
-> >> Changes since V1:
-> >>   - Add support Juno for r1 & r2.
-> >> ---
-> >
-> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->
-> Sudeep please hold on before applying this as there is more work to be
-> done on this set.
->
-Sure, I plan to apply the DT changes only after the driver changes are
-queued by you or whichever tree it's channelled through. I was already
-told the same to Suzuki.
-
---
-Regards,
-Sudeep
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKQnJvYWRjb20gYmFzZWQg
+aG9tZSByb3V0ZXIgZGV2aWNlcyB1c2UgVFJYIGZpcm13YXJlIGZvcm1hdC4gSXQncyBhCmNvbnRh
+aW5lciB0aGF0IGNhbiBob2xkIGZldyBwYXJ0aXRpb25zLiBJZiBvcGVyYXRpbmcgc3lzdGVtIGlz
+IGV4cGVjdGVkCnRvIGFjY2VzcyB0aGVtIGl0IGhhcyB0byB1bmRlcnN0YW5kIHRoYXQgZm9ybWF0
+IGFuZCBwYXJzZSBmbGFzaCBkYXRhCmFjY29yZGluZ2x5LgoKU2lnbmVkLW9mZi1ieTogUmFmYcWC
+IE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgotLS0KIC4uLi9iaW5kaW5ncy9tdGQvcGFydGl0
+aW9ucy9icmNtLHRyeC50eHQgICAgICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwog
+MSBmaWxlIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbnMvYnJjbSx0cngudHh0
+CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0
+aXRpb25zL2JyY20sdHJ4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+dGQvcGFydGl0aW9ucy9icmNtLHRyeC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAw
+MDAwMDAwMDAwLi5lNTkwYjg4NGU1YWMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3BhcnRpdGlvbnMvYnJjbSx0cngudHh0CkBAIC0wLDAg
+KzEsMzUgQEAKK0Jyb2FkY29tIFRSWCBDb250YWluZXIgUGFydGl0aW9uCis9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PQorCitUUlggaXMgQnJvYWRjb20ncyBvZmZpY2lhbCBmaXJtd2Fy
+ZSBmb3JtYXQgZm9yIHRoZSBCQ005NDd4eCBib2FyZHMuIEl0J3MgdXNlZCBieQorbW9zdCBvZiB0
+aGUgdmVuZG9ycyBidWlsZGluZyBkZXZpY2VzIGJhc2VkIG9uIEJyb2FkY29tJ3MgQkNNNDd4eCBT
+b0NzIGFuZCBpcworc3VwcG9ydGVkIGJ5IHRoZSBDRkUgYm9vdGxvYWRlci4KKworRGVzaWduIG9m
+IHRoZSBUUlggZm9ybWF0IGlzIHZlcnkgbWluaW1hbGlzdGljLiBJdHMgaGVhZGVyIGNvbnRhaW5z
+CitpZGVudGlmaWNhdGlvbiBmaWVsZHMsIENSQzMyIGNoZWNrc3VtIGFuZCB0aGUgbG9jYXRpb25z
+IG9mIGVtYmVkZGVkIHBhcnRpdGlvbnMuCitJdHMgcHVycG9zZSBpcyB0byBzdG9yZSBhIGZldyBw
+YXJ0aXRpb25zIGluIGEgZm9ybWF0IHRoYXQgY2FuIGJlIGRpc3RyaWJ1dGVkIGFzCithIHN0YW5k
+YWxvbmUgZmlsZSBhbmQgd3JpdHRlbiBpbiBhIGZsYXNoIG1lbW9yeS4KKworQ29udGFpbmVyIGNh
+biBob2xkIHVwIHRvIDQgcGFydGl0aW9ucy4gVGhlIGZpcnN0IHBhcnRpdGlvbiBoYXMgdG8gY29u
+dGFpbiBhCitkZXZpY2UgZXhlY3V0YWJsZSBiaW5hcnkgKGUuZy4gYSBrZXJuZWwpIGFzIGl0J3Mg
+d2hhdCB0aGUgQ0ZFIGJvb3Rsb2FkZXIgc3RhcnRzCitleGVjdXRpbmcuIE90aGVyIHBhcnRpdGlv
+bnMgY2FuIGJlIHVzZWQgZm9yIG9wZXJhdGluZyBzeXN0ZW0gcHVycG9zZXMuIFRoaXMgaXMKK3Vz
+ZWZ1bCBmb3Igc3lzdGVtcyB0aGF0IGtlZXAga2VybmVsIGFuZCByb290ZnMgc2VwYXJhdGVkLgor
+CitUUlggZG9lc24ndCBlbmZvcmNlIGFueSBzdHJpY3QgcGFydGl0aW9uIGJvdW5kYXJpZXMgb3Ig
+c2l6ZSBsaW1pdHMuIEFsbAorcGFydGl0aW9ucyBoYXZlIHRvIGJlIGxlc3MgdGhhbiB0aGUgNEdp
+QiBtYXggc2l6ZSBsaW1pdC4KKworVGhlcmUgYXJlIHR3byBleGlzdGluZy9rbm93biBUUlggdmFy
+aWFudHM6CisxKSB2MSB3aGljaCBjb250YWlucyAzIHBhcnRpdGlvbnMKKzIpIHYyIHdoaWNoIGNv
+bnRhaW5zIDQgcGFydGl0aW9ucworCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxl
+IDogKHJlcXVpcmVkKSBtdXN0IGJlIGVpdGhlcjogImJyY20sdHJ4LXYxIiBvciAiYnJjbSx0cngt
+djIiCisJZm9sbG93ZWQgYnkgImJyY20sdHJ4IgorCitFeGFtcGxlOgorCitmbGFzaEAwIHsKKwlw
+YXJ0aXRpb25zIHsKKwkJY29tcGF0aWJsZSA9ICJicmNtLHRyeC12MSIsICJicmNtLHRyeCI7CisJ
+fTsKK307Ci0tIAoyLjEzLjcKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
