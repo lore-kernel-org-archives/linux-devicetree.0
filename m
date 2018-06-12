@@ -1,12 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 19/27] drm/sun4i: Enable DW HDMI PHY clock
-Date: Tue, 12 Jun 2018 22:00:28 +0200
-Message-ID: <20180612200036.21483-20-jernej.skrabec@siol.net>
+Subject: [PATCH v2 20/27] drm/sun4i: Don't change clock bits in
+ DW HDMI PHY driver
+Date: Tue, 12 Jun 2018 22:00:29 +0200
+Message-ID: <20180612200036.21483-21-jernej.skrabec@siol.net>
 References: <20180612200036.21483-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBXWNQDMQKGQEHVTYC2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBYGNQDMQKGQELLZL7DQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180612200036.21483-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,55 +20,58 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Current DW HDMI PHY code never prepares and enables PHY clock after it is
-created. It's just used as it is. This may work in some cases, but it's
-clearly wrong. Fix it by adding proper calls to enable/disable PHY
-clock.
-
-Fixes: 4f86e81748fe ("drm/sun4i: Add support for H3 HDMI PHY variant")
+DW HDMI PHY driver and PHY clock driver share same registers. Make sure
+that DW HDMI PHY setup code doesn't change any clock related bits and
+set them to 0 during initialization.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h  |  2 +-
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 12 +++++++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+index 79154f0f674a..3ba71aff92fc 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -98,7 +98,7 @@
+ #define SUN8I_HDMI_PHY_PLL_CFG1_LDO2_EN		BIT(29)
+ #define SUN8I_HDMI_PHY_PLL_CFG1_LDO1_EN		BIT(28)
+ #define SUN8I_HDMI_PHY_PLL_CFG1_HV_IS_33	BIT(27)
+-#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL	BIT(26)
++#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK	BIT(26)
+ #define SUN8I_HDMI_PHY_PLL_CFG1_PLLEN		BIT(25)
+ #define SUN8I_HDMI_PHY_PLL_CFG1_LDO_VSET(x)	((x) << 22)
+ #define SUN8I_HDMI_PHY_PLL_CFG1_UNKNOWN(x)	((x) << 20)
 diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-index 5a52fc489a9d..966688f04741 100644
+index 966688f04741..cd07ceb71601 100644
 --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
 +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-@@ -477,13 +477,15 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node)
- 			dev_err(dev, "Couldn't create the PHY clock\n");
- 			goto err_put_clk_pll0;
- 		}
+@@ -183,7 +183,13 @@ static int sun8i_hdmi_phy_config_h3(struct dw_hdmi *hdmi,
+ 	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_ANA_CFG1_REG,
+ 			   SUN8I_HDMI_PHY_ANA_CFG1_TXEN_MASK, 0);
+ 
+-	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, pll_cfg1_init);
++	/*
++	 * NOTE: We have to be careful not to overwrite PHY parent
++	 * clock selection bit and clock divider.
++	 */
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG,
++			   (u32)~SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK,
++			   pll_cfg1_init);
+ 	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG2_REG,
+ 			   (u32)~SUN8I_HDMI_PHY_PLL_CFG2_PREDIV_MSK,
+ 			   pll_cfg2_init);
+@@ -352,6 +358,10 @@ static void sun8i_hdmi_phy_init_h3(struct sun8i_hdmi_phy *phy)
+ 			   SUN8I_HDMI_PHY_ANA_CFG3_SCLEN |
+ 			   SUN8I_HDMI_PHY_ANA_CFG3_SDAEN);
+ 
++	/* reset PLL clock configuration */
++	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, 0);
++	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG2_REG, 0);
 +
-+		clk_prepare_enable(phy->clk_phy);
- 	}
- 
- 	phy->rst_phy = of_reset_control_get_shared(node, "phy");
- 	if (IS_ERR(phy->rst_phy)) {
- 		dev_err(dev, "Could not get phy reset control\n");
- 		ret = PTR_ERR(phy->rst_phy);
--		goto err_put_clk_pll0;
-+		goto err_disable_clk_phy;
- 	}
- 
- 	ret = reset_control_deassert(phy->rst_phy);
-@@ -514,6 +516,8 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node)
- 	reset_control_assert(phy->rst_phy);
- err_put_rst_phy:
- 	reset_control_put(phy->rst_phy);
-+err_disable_clk_phy:
-+	clk_disable_unprepare(phy->clk_phy);
- err_put_clk_pll0:
- 	if (phy->variant->has_phy_clk)
- 		clk_put(phy->clk_pll0);
-@@ -531,6 +535,7 @@ void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi *hdmi)
- 
- 	clk_disable_unprepare(phy->clk_mod);
- 	clk_disable_unprepare(phy->clk_bus);
-+	clk_disable_unprepare(phy->clk_phy);
- 
- 	reset_control_assert(phy->rst_phy);
+ 	/* set HW control of CEC pins */
+ 	regmap_write(phy->regs, SUN8I_HDMI_PHY_CEC_REG, 0);
  
 -- 
 2.17.1
