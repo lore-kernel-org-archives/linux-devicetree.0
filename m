@@ -1,240 +1,171 @@
-From: poza@codeaurora.org
-Subject: Re: [PATCH 2/6] PCI: iproc: Add INTx support with better modeling
-Date: Tue, 12 Jun 2018 14:22:07 +0530
-Message-ID: <3ecc33ebe3db1f010f5c8938dfb87677@codeaurora.org>
-References: <1527631130-20045-1-git-send-email-ray.jui@broadcom.com>
- <1527631130-20045-3-git-send-email-ray.jui@broadcom.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v4 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Tue, 12 Jun 2018 11:17:09 +0200
+Message-ID: <53e36cff80e38e489959aa18471d0782@agner.ch>
+References: <20180611205224.23340-1-stefan@agner.ch>
+ <20180611205224.23340-5-stefan@agner.ch> <4258393.O1xtUOGbca@dimapc>
+ <cb6f2ef0a5a41e001a2019caa1a18c23@agner.ch>
+ <20180612102734.0ea3bfa5@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527631130-20045-3-git-send-email-ray.jui@broadcom.com>
+In-Reply-To: <20180612102734.0ea3bfa5@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, axboe@kernel.dk
+Cc: Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-05-30 03:28, Ray Jui wrote:
-> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
-> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
-> INTD share the same interrupt line connected to the GIC in the system,
-> while the status of each INTx can be obtained through the INTX CSR
-> register
-> 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> ---
->  drivers/pci/host/pcie-iproc-platform.c |  2 +
->  drivers/pci/host/pcie-iproc.c          | 95 
-> +++++++++++++++++++++++++++++++++-
->  drivers/pci/host/pcie-iproc.h          |  6 +++
->  3 files changed, 101 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pcie-iproc-platform.c
-> b/drivers/pci/host/pcie-iproc-platform.c
-> index e764a2a..7a51e6c 100644
-> --- a/drivers/pci/host/pcie-iproc-platform.c
-> +++ b/drivers/pci/host/pcie-iproc-platform.c
-> @@ -70,6 +70,8 @@ static int iproc_pcie_pltfm_probe(struct
-> platform_device *pdev)
->  	}
->  	pcie->base_addr = reg.start;
-> 
-> +	pcie->irq = platform_get_irq(pdev, 0);
-> +
->  	if (of_property_read_bool(np, "brcm,pcie-ob")) {
->  		u32 val;
-> 
-> diff --git a/drivers/pci/host/pcie-iproc.c 
-> b/drivers/pci/host/pcie-iproc.c
-> index 14f374d..0bd2c14 100644
-> --- a/drivers/pci/host/pcie-iproc.c
-> +++ b/drivers/pci/host/pcie-iproc.c
-> @@ -14,6 +14,7 @@
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <linux/irqchip/arm-gic-v3.h>
-> +#include <linux/irqchip/chained_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> @@ -264,6 +265,7 @@ enum iproc_pcie_reg {
-> 
->  	/* enable INTx */
->  	IPROC_PCIE_INTX_EN,
-> +	IPROC_PCIE_INTX_CSR,
-> 
->  	/* outbound address mapping */
->  	IPROC_PCIE_OARR0,
-> @@ -305,6 +307,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
->  };
-> 
-> @@ -316,6 +319,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -332,6 +336,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -782,9 +787,90 @@ static int iproc_pcie_check_link(struct iproc_pcie 
-> *pcie)
->  	return link_is_active ? 0 : -ENODEV;
->  }
-> 
-> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
-> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int 
-> irq,
-> +			       irq_hw_number_t hwirq)
->  {
-> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = iproc_pcie_intx_map,
-> +};
-> +
-> +static void iproc_pcie_isr(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct iproc_pcie *pcie;
-> +	struct device *dev;
-> +	unsigned long status;
-> +	u32 bit, virq;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	pcie = irq_desc_get_handler_data(desc);
-> +	dev = pcie->dev;
-> +
-> +	/* go through INTx A, B, C, D until all interrupts are handled */
-> +	while ((status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR) &
-> +		SYS_RC_INTX_MASK) != 0) {
-> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> +			virq = irq_find_mapping(pcie->irq_domain, bit + 1);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err(dev, "unexpected INTx%u\n", bit);
-> +		}
-> +	}
-> +
+[also added Jens Axboe]
 
-Are these level or edge interrupts ? although I see DT says: 
-IRQ_TYPE_NONE
-do you not need to clear interrupt status bits in IPROC_PCIE_INTX_CSR ?
+On 12.06.2018 10:27, Boris Brezillon wrote:
+> On Tue, 12 Jun 2018 10:06:42 +0200
+> Stefan Agner <stefan@agner.ch> wrote:
+> 
+>> On 12.06.2018 02:03, Dmitry Osipenko wrote:
+>> > On Monday, 11 June 2018 23:52:22 MSK Stefan Agner wrote:
+>> >> Add support for the NAND flash controller found on NVIDIA
+>> >> Tegra 2 SoCs. This implementation does not make use of the
+>> >> command queue feature. Regular operations/data transfers are
+>> >> done in PIO mode. Page read/writes with hardware ECC make
+>> >> use of the DMA for data transfer.
+>> >>
+>> >> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+>> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> >> ---
+>> >>  MAINTAINERS                       |    7 +
+>> >>  drivers/mtd/nand/raw/Kconfig      |    6 +
+>> >>  drivers/mtd/nand/raw/Makefile     |    1 +
+>> >>  drivers/mtd/nand/raw/tegra_nand.c | 1248 +++++++++++++++++++++++++++++
+>> >>  4 files changed, 1262 insertions(+)
+>> >>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+>> >>
+>> [snip]
+>> >> +static int tegra_nand_cmd(struct nand_chip *chip,
+>> >> +			 const struct nand_subop *subop)
+>> >> +{
+>> >> +	const struct nand_op_instr *instr;
+>> >> +	const struct nand_op_instr *instr_data_in = NULL;
+>> >> +	struct tegra_nand_controller *ctrl = to_tegra_ctrl(chip->controller);
+>> >> +	unsigned int op_id, size = 0, offset = 0;
+>> >> +	bool first_cmd = true;
+>> >> +	u32 reg, cmd = 0;
+>> >> +	int ret;
+>> >> +
+>> >> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
+>> >> +		unsigned int naddrs, i;
+>> >> +		const u8 *addrs;
+>> >> +		u32 addr1 = 0, addr2 = 0;
+>> >> +
+>> >> +		instr = &subop->instrs[op_id];
+>> >> +
+>> >> +		switch (instr->type) {
+>> >> +		case NAND_OP_CMD_INSTR:
+>> >> +			if (first_cmd) {
+>> >> +				cmd |= COMMAND_CLE;
+>> >> +				writel_relaxed(instr->ctx.cmd.opcode,
+>> >> +					       ctrl->regs + CMD_REG1);
+>> >> +			} else {
+>> >> +				cmd |= COMMAND_SEC_CMD;
+>> >> +				writel_relaxed(instr->ctx.cmd.opcode,
+>> >> +					       ctrl->regs + CMD_REG2);
+>> >> +			}
+>> >> +			first_cmd = false;
+>> >> +			break;
+>> >> +		case NAND_OP_ADDR_INSTR:
+>> >> +			offset = nand_subop_get_addr_start_off(subop, op_id);
+>> >> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
+>> >> +			addrs = &instr->ctx.addr.addrs[offset];
+>> >> +
+>> >> +			cmd |= COMMAND_ALE | COMMAND_ALE_SIZE(naddrs);
+>> >> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+>> >> +				addr1 |= *addrs++ << (BITS_PER_BYTE * i);
+>> >> +			naddrs -= i;
+>> >> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+>> >> +				addr2 |= *addrs++ << (BITS_PER_BYTE * i);
+>> >> +			writel_relaxed(addr1, ctrl->regs + ADDR_REG1);
+>> >> +			writel_relaxed(addr2, ctrl->regs + ADDR_REG2);
+>> >> +			break;
+>> >> +
+>> >> +		case NAND_OP_DATA_IN_INSTR:
+>> >> +			size = nand_subop_get_data_len(subop, op_id);
+>> >> +			offset = nand_subop_get_data_start_off(subop, op_id);
+>> >> +
+>> >> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
+>> >> +				COMMAND_RX | COMMAND_A_VALID;
+>> >> +
+>> >> +			instr_data_in = instr;
+>> >> +			break;
+>> >> +
+>> >> +		case NAND_OP_DATA_OUT_INSTR:
+>> >> +			size = nand_subop_get_data_len(subop, op_id);
+>> >> +			offset = nand_subop_get_data_start_off(subop, op_id);
+>> >> +
+>> >> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
+>> >> +				COMMAND_TX | COMMAND_A_VALID;
+>> >> +
+>> >> +			memcpy(&reg, instr->ctx.data.buf.out + offset, size);
+>> >> +			writel_relaxed(reg, ctrl->regs + RESP);
+>> >> +
+>> >> +			break;
+>> >> +		case NAND_OP_WAITRDY_INSTR:
+>> >> +			cmd |= COMMAND_RBSY_CHK;
+>> >> +			break;
+>> >> +
+>> >> +		}
+>> >> +	}
+>> >> +
+>> >> +	cmd |= COMMAND_GO | COMMAND_CE(ctrl->cur_cs);
+>> >> +	writel_relaxed(cmd, ctrl->regs + COMMAND);
+>> >> +	ret = wait_for_completion_io_timeout(&ctrl->command_complete,
+>> >> +					     msecs_to_jiffies(500));
+>> >
+>> > It's not obvious to me whether _io_ variant is appropriate to use here, would
+>> > be nice if somebody could clarify that. Maybe block/ already does the IO
+>> > accounting itself and hence the IO time would be counted twice in that case.
+>>
+>> Good that you bring this up.
+>>
+>> I don't think that there is any higher layer which could take care of
+>> accounting. Usually, with raw nand there is no block layer involved
+>> anyway.
+>>
+>> In a quick test it seems that only when using wait_for_completion_io I/O
+>> is properly accounted in the "wait" section of top.
+>>
+>> So far only a single driver (omap2) used the _io variant, but I think it
+>> is the right thing to do! After all, it is I/O...
+>>
+>> Boris or any other MTD maintainer, any comment on this?
+> 
+> Given this definition of io_schedule_timeout() [1] (which is used when
+> you call wait_for_completion_io_timeout()), I'd say it's not useful to
+> use the _io_ version, simply because MTD devs are not exposed as blk
+> devices, and thus don't need the blk_schedule_flush_plug() that is done
+> is io_schedule_prepare(). But that also means MTD I/Os are not
+> accounted as I/Os :-(.
 
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	struct device_node *node = dev->of_node;
-> +	int ret;
-> +
->  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
-> +
-> +	/*
-> +	 * BCMA devices do not map INTx the same way as platform devices. All
-> +	 * BCMA needs is the above code to enable INTx
-> +	 */
-> +	if (pcie->irq <= 0)
-> +		return 0;
-> +
-> +	/* set IRQ handler */
-> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
-> +
-> +	/* add IRQ domain for INTx */
-> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX + 1,
-> +						 &intx_domain_ops, pcie);
-> +	if (!pcie->irq_domain) {
-> +		dev_err(dev, "failed to add INTx IRQ domain\n");
-> +		ret = -ENOMEM;
-> +		goto err_rm_handler_data;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_rm_handler_data:
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-> +
-> +	return ret;
-> +}
-> +
-> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
-> +{
-> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
-> +
-> +	if (pcie->irq <= 0)
-> +		return;
-> +
-> +	irq_domain_remove(pcie->irq_domain);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
->  }
+Documentation of wait_for_completion_io says:
+"The caller is accounted as waiting for IO (which traditionally means
+blkio only)."
+
+Which sounds as if it using _io is only an accounting thing...
+
+The hint about blkio might suggest that there is more to it.
+
+Is calling blk_schedule_flush_plug a problem for MTD?
+https://elixir.bootlin.com/linux/v4.17.1/source/include/linux/blkdev.h#L1355
+
 > 
->  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
-> @@ -1410,7 +1496,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie,
-> struct list_head *res)
->  		goto err_power_off_phy;
->  	}
+> Let's go for the non-io version for now, since all drivers except omap2
+> seem to use this function.
 > 
-> -	iproc_pcie_enable(pcie);
-> +	ret = iproc_pcie_intx_enable(pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable INTx\n");
-> +		goto err_power_off_phy;
-> +	}
-> 
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		if (iproc_pcie_msi_enable(pcie))
-> @@ -1455,6 +1545,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
->  	pci_remove_root_bus(pcie->root_bus);
-> 
->  	iproc_pcie_msi_disable(pcie);
-> +	iproc_pcie_intx_disable(pcie);
-> 
->  	phy_power_off(pcie->phy);
->  	phy_exit(pcie->phy);
-> diff --git a/drivers/pci/host/pcie-iproc.h 
-> b/drivers/pci/host/pcie-iproc.h
-> index 67081cb..cbcaf9d 100644
-> --- a/drivers/pci/host/pcie-iproc.h
-> +++ b/drivers/pci/host/pcie-iproc.h
-> @@ -72,6 +72,9 @@ struct iproc_msi;
->   * @ib: inbound mapping related parameters
->   * @ib_map: outbound mapping region related parameters
->   *
-> + * @irq: interrupt line wired to the generic GIC for INTx
-> + * @irq_domain: IRQ domain for INTx
-> + *
->   * @need_msi_steer: indicates additional configuration of the iProc 
-> PCIe
->   * controller is required to steer MSI writes to external interrupt 
-> controller
->   * @msi: MSI data
-> @@ -99,6 +102,9 @@ struct iproc_pcie {
->  	struct iproc_pcie_ib ib;
->  	const struct iproc_pcie_ib_map *ib_map;
-> 
-> +	int irq;
-> +	struct irq_domain *irq_domain;
-> +
->  	bool need_msi_steer;
->  	struct iproc_msi *msi;
->  };
+
+I still think it would be nice and "the right thing" from a user
+perspective...
+
+--
+Stefan
+
+> [1]https://elixir.bootlin.com/linux/v4.17.1/source/kernel/sched/core.c#L5164
