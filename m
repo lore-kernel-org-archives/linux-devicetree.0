@@ -1,71 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 7/7] tty: serial: lantiq: Add CCF support
-Date: Tue, 12 Jun 2018 16:39:53 -0600
-Message-ID: <20180612223953.GA21621@rob-hp-laptop>
-References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
- <20180612054034.4969-8-songjun.wu@linux.intel.com>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Add basic SoC support for MT6765
+Date: Wed, 13 Jun 2018 06:40:41 +0800
+Message-ID: <1528843243-29782-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180612054034.4969-8-songjun.wu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@linux.intel.com>
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com, linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mars Cheng <mars.cheng@mediatek.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 01:40:34PM +0800, Songjun Wu wrote:
-> Previous implementation uses platform-dependent API to get the clock.
-> Those functions are not available for other SoC which uses the same IP.
-> The CCF (Common Clock Framework) have an abstraction based APIs
-> for clock.
-> Change to use CCF APIs to get clock and rate.
-> So that different SoCs can use the same driver.
-> Clocks and clock-names are updated in device tree binding.
-> 
-> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
-> 
-> ---
-> 
->  .../devicetree/bindings/serial/lantiq_asc.txt      |  15 +++
 
-Please split bindings to separate patch.
+This patch adds basic SoC support for Mediatek's new 8-core SoC,
+MT6765, which is mainly for smartphone application.
 
->  drivers/tty/serial/Kconfig                         |   2 +-
->  drivers/tty/serial/lantiq.c                        | 101 +++++++++++++++++----
->  3 files changed, 98 insertions(+), 20 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.txt b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-> index 3acbd309ab9d..608f0c87a4af 100644
-> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-> @@ -6,6 +6,10 @@ Required properties:
->  - interrupts: the 3 (tx rx err) interrupt numbers. The interrupt specifier
->    depends on the interrupt-parent interrupt controller.
->  
-> +Optional properties:
-> +- clocks: Should contain frequency clock and gate clock
-> +- clock-names: Should be "freq" and "asc"
-> +
->  Example:
->  
->  asc1: serial@e100c00 {
-> @@ -14,3 +18,14 @@ asc1: serial@e100c00 {
->  	interrupt-parent = <&icu0>;
->  	interrupts = <112 113 114>;
->  };
-> +
-> +asc0: serial@600000 {
-> +	compatible = "lantiq,asc";
-> +	reg = <0x600000 0x100000>;
+We are going to add more drivers of it in the next weeks.
 
-1MB of address space? That wastes a lot of virtual space on 32-bit 
-systems. Just make the size the actual used range.
+Mars Cheng (2):
+  ndings: mediatek: Add bindings for mediatek MT6765 Platform
+  arm64: dts: mediatek: add mt6765 support
 
-> +	interrupt-parent = <&gic>;
-> +	interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
-> +	<GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
-> +	<GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&pll0aclk SSX4_CLK>, <&clkgate1 GATE_URT_CLK>;
-> +	clock-names = "freq", "asc";
-> +};
+ Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |   1 +
+ .../devicetree/bindings/serial/mtk-uart.txt        |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+ arch/arm64/boot/dts/mediatek/mt6765-evb.dts        |  39 ++++++
+ arch/arm64/boot/dts/mediatek/mt6765.dtsi           | 148 +++++++++++++++++++++
+ 6 files changed, 194 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6765-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6765.dtsi
