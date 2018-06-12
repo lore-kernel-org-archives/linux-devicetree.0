@@ -1,70 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
-Date: Tue, 12 Jun 2018 12:21:33 -0600
-Message-ID: <20180612182133.GA3118@rob-hp-laptop>
-References: <1528377065-647-1-git-send-email-stefan.popa@analog.com>
- <20180610145923.3b767ad4@archlinux>
+Subject: Re: [PATCH v7 3/5] dt-bindings: timer: add i.MX EPIT timer binding
+Date: Tue, 12 Jun 2018 12:27:31 -0600
+Message-ID: <20180612182731.GA11378@rob-hp-laptop>
+References: <20180611155001.3506-1-peron.clem@gmail.com>
+ <20180611155001.3506-4-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180610145923.3b767ad4@archlinux>
+In-Reply-To: <20180611155001.3506-4-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linus.walleij@linaro.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment?= Peron <clement.peron@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 10, 2018 at 02:59:23PM +0100, Jonathan Cameron wrote:
-> On Thu, 7 Jun 2018 16:11:05 +0300
-> Stefan Popa <stefan.popa@analog.com> wrote:
+On Mon, Jun 11, 2018 at 05:49:59PM +0200, Clément Péron wrote:
+> From: Clément Peron <clement.peron@devialet.com>
 > 
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> Hmm. The first part number I've ever googled where the top hit has
-> been a flight number. 
-> Rio de Janeiro to Campinas is apparently on time today.
+> Add devicetree binding document for NXP's i.MX SoC specific
+> EPIT timer driver.
 > 
-> > ---
-> > Changes in v2:
-> > 	- Nothing changed, just to follow the patch set version.
-> > 
-> >  .../devicetree/bindings/iio/dac/ad5758.txt         | 84 ++++++++++++++++++++++
-> >  MAINTAINERS                                        |  1 +
-> >  2 files changed, 85 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5758.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-> > new file mode 100644
-> > index 0000000..75fff6c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-> > @@ -0,0 +1,84 @@
-> > +Analog Devices AD5758 DAC device driver
-> > +
-> > +Required properties for the AD5758:
-> > +	- compatible: Must be "adi,ad5758"
-> > +	- reg: SPI chip select number for the device
-> > +	- spi-max-frequency: Max SPI frequency to use (< 50000000)
-> > +	- spi-cpha: is the only mode that is supported
-> > +
-> > +Optional properties:
-> > +
-> > + - adi,dc-dc-mode: Mode of operation of the dc-to-dc converter
-> > +		   The following values are currently supported:
-> > +		   	* 0: DC-to-DC converter powered off
-> > +			* 1: DPC current mode
-> Perhaps expand those acronyms?
-> Dynamic Power Control  and perhaps a bit of explanation so people
-> who are ready DT files don't have to go find the data sheet to have
-> some idea of what these are?
-> 
-> Otherwise, binding is fine.
-> 
-> > +			* 2: DPC voltage mode
-> > +			* 3: PPC current mode
-> > +
-> > + - adi,dc-dc-ilim: The dc-to-dc converter current limit
-> > +		   The following values are currently supported [mA]:
-> Unit should be in the name.
-> adi,dc-dc-ilim_ma
+> Signed-off-by: Clément Peron <clement.peron@devialet.com>
+> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+> ---
+>  .../devicetree/bindings/timer/fsl,imxepit.txt | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxepit.txt
 
-Yes, but don't use '_' and follow what is in property-units.txt.
+Reviewed-by: Rob Herring <robh@kernel.org>
