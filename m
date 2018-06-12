@@ -1,200 +1,110 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 09/11] misc: throttler: Add core support for
- non-thermal throttling
-Date: Tue, 12 Jun 2018 13:00:14 -0700
-Message-ID: <20180612200012.GA99983@rodete-desktop-imager.corp.google.com>
-References: <20180607181214.30338-1-mka@chromium.org>
- <20180607181214.30338-10-mka@chromium.org>
- <20180612014911.GA35749@rodete-desktop-imager.corp.google.com>
- <20180612171140.GH88063@google.com>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH v2 00/27] Add support for R40 HDMI pipeline
+Date: Tue, 12 Jun 2018 22:00:09 +0200
+Message-ID: <20180612200036.21483-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180612171140.GH88063@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBLONQDMQKGQEAR5XVNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series adds support for R40 HDMI pipeline. It is a bit special
+than other already supported pipelines because it has additional unit
+called TCON TOP responsible for relationship configuration between
+mixers, TCONs and HDMI. Additionally, it has additional gates for DSI
+and TV TCONs, TV encoder clock settings and pin muxing between LCD
+and TV encoders.
 
-On Tue, Jun 12, 2018 at 10:11:40AM -0700, Matthias Kaehlcke wrote:
-> On Mon, Jun 11, 2018 at 06:49:13PM -0700, Brian Norris wrote:
-> > On Thu, Jun 07, 2018 at 11:12:12AM -0700, Matthias Kaehlcke wrote:
-> > > The purpose of the throttler is to provide support for non-thermal
-> > > throttling. Throttling is triggered by external event, e.g. the
-> > > detection of a high battery discharge current, close to the OCP limit
-> > > of the battery. The throttler is only in charge of the throttling, not
-> > > the monitoring, which is done by another (possibly platform specific)
-> > > driver.
-> > > 
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Changes in v2:
-> > > - completely reworked the driver to support configuration through OPPs, which
-> > >   requires a more dynamic handling
-> > > - added sysfs attribute to set the level for debugging and testing
-> > > - Makefile: depend on Kconfig option to traverse throttler directory
-> > > - Kconfig: removed 'default n'
-> > > - added SPDX line instead of license boiler-plate
-> > > - added entry to MAINTAINERS file
-> > > 
-> > > 
-> > >  MAINTAINERS                     |   7 +
-> > >  drivers/misc/Kconfig            |   1 +
-> > >  drivers/misc/Makefile           |   1 +
-> > >  drivers/misc/throttler/Kconfig  |  14 +
-> > >  drivers/misc/throttler/Makefile |   1 +
-> > >  drivers/misc/throttler/core.c   | 642 ++++++++++++++++++++++++++++++++
-> > >  include/linux/throttler.h       |  11 +
-> > >  7 files changed, 677 insertions(+)
-> > >  create mode 100644 drivers/misc/throttler/Kconfig
-> > >  create mode 100644 drivers/misc/throttler/Makefile
-> > >  create mode 100644 drivers/misc/throttler/core.c
-> > >  create mode 100644 include/linux/throttler.h
-> > > 
+However, it seems that TCON TOP will become a norm, since newer
+Allwinner SoCs like H6 also have this unit.
 
-...
+I tested different possible configurations:
+- mixer0 <> TCON-TV0 <> HDMI
+- mixer0 <> TCON-TV1 <> HDMI
+- mixer1 <> TCON-TV0 <> HDMI
+- mixer1 <> TCON-TV1 <> HDMI
 
-> > > diff --git a/drivers/misc/throttler/Kconfig b/drivers/misc/throttler/Kconfig
-> > > new file mode 100644
-> > > index 000000000000..e561f1df5085
-> > > --- /dev/null
-> > > +++ b/drivers/misc/throttler/Kconfig
-> > > @@ -0,0 +1,14 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +menuconfig THROTTLER
-> > > +	bool "Throttler support"
-> > > +	depends on OF
-> > > +	select CPU_FREQ
-> > > +	select PM_DEVFREQ
-> > 
-> > I'm curious whether we're actually truly compile-time dependent on
-> > {CPU,DEV}FREQ? It seems like those subsystems mostly stub out stuff so
-> > they fall back to no-ops if not built in.
-> >
-> > I know that's not very useful for your existing throttler, since it
-> > wouldn't be very effective if one or both were disabled.
-> 
-> The idea is not to depend on both options being enabled, since
-> throttling of one type might be all that is needed.
+Please review.
 
-OK, then if you fix the build errors...don't do these 'select's here?
+Best regards,
+Jernej
 
-> As the build bot pointed out cpufreq doesn't stub out all functions.
-> Probably the cleanest way to work around this is to define a stub for
-> cpufreq_update_policy() in the throttler when CONFIG_CPU_FREQ is not
-> defined.
+Changes from v1:
+- Split DT bindings patch and updated description
+- Split HDMI PHY patch
+- Move header file from TCON TOP patch to dt bindings patch
+- Added Rob reviewed-by tag
+- Used clk_hw_register_gate() instead of custom gate registration code
+- Reworked TCON TOP to be part of of-graph. Because of that, a lot of
+  new patches were added.
+- Droped mixer index quirk patch
+- Reworked TCON support for TCON TOP
+- Updated commit messages
 
-Might make sense.
+Jernej Skrabec (27):
+  clk: sunxi-ng: r40: Add minimal rate for video PLLs
+  clk: sunxi-ng: r40: Allow setting parent rate to display related
+    clocks
+  clk: sunxi-ng: r40: Export video PLLs
+  dt-bindings: display: sunxi-drm: Add TCON TOP description
+  drm/sun4i: Add TCON TOP driver
+  drm/sun4i: Fix releasing node when enumerating enpoints
+  drm/sun4i: Split out code for enumerating endpoints in output port
+  drm/sun4i: Add support for traversing graph with TCON TOP
+  drm/sun4i: Don't skip TCONs if they don't have channel 0
+  dt-bindings: display: sun4i-drm: Add R40 TV TCON description
+  drm/sun4i: tcon: Add support for tcon-top gate
+  drm/sun4i: tcon: Generalize engine search algorithm
+  drm/sun4i: Don't check for LVDS and RGB when TCON has only ch1
+  drm/sun4i: Don't check for panel or bridge on TV TCONs
+  drm/sun4i: Add support for R40 TV TCON
+  dt-bindings: display: sun4i-drm: Add R40 mixer compatibles
+  drm/sun4i: Add support for R40 mixers
+  dt-bindings: display: sun4i-drm: Add description of A64 HDMI PHY
+  drm/sun4i: Enable DW HDMI PHY clock
+  drm/sun4i: Don't change clock bits in DW HDMI PHY driver
+  drm/sun4i: DW HDMI PHY: Add support for second PLL
+  drm/sun4i: Add support for second clock parent to DW HDMI PHY clk
+    driver
+  drm/sun4i: Add support for A64 HDMI PHY
+  drm: of: Export drm_crtc_port_mask()
+  drm/sun4i: DW HDMI: Expand algorithm for possible crtcs
+  ARM: dts: sun8i: r40: Add HDMI pipeline
+  ARM: dts: sun8i: r40: Enable HDMI output on BananaPi M2 Ultra
 
-Also, how is it that CONFIG_CPU_FREQ managed to not be defined, even
-though you 'select'ed it? Was the kbuild error on some oddball
-architecture that doesn't support CPU_FREQ?
+ .../bindings/display/sunxi/sun4i-drm.txt      |  56 +++-
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  45 +++
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 257 ++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.c          |  58 ++--
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.h          |   8 +-
+ drivers/gpu/drm/drm_of.c                      |   4 +-
+ drivers/gpu/drm/sun4i/Makefile                |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c             | 121 ++++++---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  83 ++++--
+ drivers/gpu/drm/sun4i/sun4i_tcon.h            |   4 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  46 +++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   8 +-
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c        |  54 +++-
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c    |  90 ++++--
+ drivers/gpu/drm/sun4i/sun8i_mixer.c           |  24 ++
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c        | 248 +++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.h        |  38 +++
+ include/drm/drm_of.h                          |   8 +
+ include/dt-bindings/clock/sun8i-r40-ccu.h     |   4 +
+ include/dt-bindings/clock/sun8i-tcon-top.h    |  11 +
+ 20 files changed, 1047 insertions(+), 123 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_tcon_top.h
+ create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
 
-> > > diff --git a/drivers/misc/throttler/core.c b/drivers/misc/throttler/core.c
-> > > new file mode 100644
-> > > index 000000000000..15b50c111032
-> > > --- /dev/null
-> > > +++ b/drivers/misc/throttler/core.c
-> > > ...
-> > > +// #define DEBUG_THROTTLER
-> > 
-> > Did you mean to leave your debug code in? Seems like you have some
-> > related dead code under #ifdefs.
-> 
-> Yes, I left it in intentionally.
-> 
-> > (If you do want this, maybe it'd be better under debugfs, until somebody
-> > really wants to formalize and document it.)
-> 
-> Since it is code that is never enabled in an official kernel build I
-> found it simpler to use sysfs with a direct association with the
-> device, instead of having <debugfs>/throttler/<throttler_name>/level.
-> 
-> If folks have strong opinions about using debugfs or not having the
-> debug code at all I'm fine with changing/dropping it.
-
-If you ever expect this to actually get merged, I'd think we should go
-with one way or the other. Dead code is not appreciated in mainline, so
-either make it something people can actually have a chance of using
-(e.g., a CONFIG_* option or debugfs), or else drop it.
-
-> > > +static int thr_init_freq_table(struct throttler *thr, struct device *opp_dev,
-> > > +			       struct thr_freq_table *ft)
-> > > +{
-> > > +	struct device_node *np_opp_desc, *np_opp;
-> > > +	int nchilds;
-> > > +	uint32_t *freqs;
-> > > +	int nfreqs = 0;
-> > > +	int err = 0;
-> > > +
-> > > +	np_opp_desc = dev_pm_opp_of_get_opp_desc_node(opp_dev);
-> > > +	if (!np_opp_desc)
-> > > +		return -EINVAL;
-> > > +
-> > > +	nchilds = of_get_child_count(np_opp_desc);
-> > > +	if (!nchilds) {
-> > > +		err = -EINVAL;
-> > > +		goto out_node_put;
-> > > +	}
-> > > +
-> > > +	freqs = kzalloc(nchilds * sizeof(uint32_t), GFP_KERNEL);
-> > > +	if (!freqs) {
-> > > +		err = -ENOMEM;
-> > > +		goto out_node_put;
-> > > +	}
-> > > +
-> > > +	/* determine which OPPs are used by this throttler (if any) */
-> > > +	for_each_child_of_node(np_opp_desc, np_opp) {
-> > > +		int num_thr;
-> > > +		int i;
-> > > +
-> > > +		num_thr = of_property_count_u32_elems(np_opp, "opp-throttlers");
-> > > +		if (num_thr < 0)
-> > > +			continue;
-> > > +
-> > > +		for (i = 0; i < num_thr; i++) {
-> > > +			struct device_node *np_thr;
-> > > +			struct platform_device *pdev;
-> > > +
-> > > +			np_thr = of_parse_phandle(np_opp, "opp-throttlers", i);
-> > > +			if (!np_thr) {
-> > > +				dev_err(thr->dev,
-> > > +					"failed to parse phandle %d: %s\n", i,
-> > > +					np_opp->full_name);
-> > > +				continue;
-> > > +			}
-> > > +
-> > > +			pdev = of_find_device_by_node(np_thr);
-> > > +			if (!pdev) {
-> > > +				dev_err(thr->dev,
-> > > +					"could not find throttler dev: %s\n",
-> > > +					 np_thr->full_name);
-> > > +				of_node_put(np_thr);
-> > > +				continue;
-> > > +			}
-> > > +
-> > > +			/* OPP is used by this throttler */
-> > > +			if (&pdev->dev == thr->dev) {
-> > 
-> > So you're assuming that all throttlers are platform devices? Seems
-> > slightly shaky; I could easily imagine a similar device that's a SPI or
-> > I2C device.
-> 
-> As of now that's the only existing throttler. Adding handling for
-> throttlers on other buses that might never be implemented seems
-> premature. If throttlers with other bus types are added the core
-> code can be extended to support this using
-> of_find_i2c_device_by_node(), of_find_spi_device_by_node(), etc
-
-I suppose...but it feels like there should be a better way to do this
-that isn't specific to a particular bus.
-
-If you're not going to fix this, then maybe you should force callers to
-pass a plaform_device instead of device, to make it extra clear that
-other devices are not supported.
-
-Brian
+-- 
+2.17.1
