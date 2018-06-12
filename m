@@ -1,49 +1,247 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Tue, 12 Jun 2018 01:20:44 -0700
-Message-ID: <152879164462.16708.9963016200597283450@swboyd.mtv.corp.google.com>
-References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
- <1528177218-1051-4-git-send-email-spanda@codeaurora.org>
- <20180605152050.GA9677@rob-hp-laptop>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
+Date: Tue, 12 Jun 2018 11:23:54 +0300
+Message-ID: <20180612082354.GG20078@localhost.localdomain>
+References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180605152050.GA9677@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mazziesaccount@gmail.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBSb2IgSGVycmluZyAoMjAxOC0wNi0wNSAwODoyMDo1MCkKPiA+ICsKPiA+ICstIGRk
-Yy1pMmMtYnVzOiBwaGFuZGxlIG9mIHRoZSBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJ
-RCBwcm9iaW5nCj4gPiArCj4gPiArLSBncGlvLWNvbnRyb2xsZXI6IE1hcmtzIHRoZSBkZXZpY2Ug
-aGFzIGEgR1BJTyBjb250cm9sbGVyLgo+ID4gKy0gI2dwaW8tY2VsbHMgICAgOiBTaG91bGQgYmUg
-dHdvLiBUaGUgZmlyc3QgY2VsbCBpcyB0aGUgcGluIG51bWJlciBhbmQKPiA+ICsgICAgICAgICAg
-ICAgICAgICAgdGhlIHNlY29uZCBjZWxsIGlzIHVzZWQgdG8gc3BlY2lmeSBmbGFncy4KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgU2VlIC4uLy4uL2dwaW8vZ3Bpby50eHQgZm9yIG1vcmUgaW5mb3Jt
-YXRpb24uCj4gPiArLSAjcHdtLWNlbGxzIDogU2hvdWxkIGJlIG9uZS4gU2VlIC4uLy4uL3B3bS9w
-d20udHh0IGZvciBkZXNjcmlwdGlvbiBvZgo+ID4gKyAgICAgICAgICAgICAgIHRoZSBjZWxsIGZv
-cm1hdHMuCj4gPiArCj4gPiArLSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJyZWZjbGsiCj4gPiAr
-LSBjbG9ja3M6IFNwZWNpZmljYXRpb24gZm9yIGlucHV0IHJlZmVyZW5jZSBjbG9jay4gVGhlIHJl
-ZmVyZW5jZQo+ID4gKyAgICAgICBjbG9jayByYXRlIG11c3QgYmUgMTIgTUh6LCAxOS4yIE1Ieiwg
-MjYgTUh6LCAyNyBNSHogb3IgMzguNCBNSHouCj4gPiArCj4gPiArLSBsYW5lLW1hcHBpbmc6IFNw
-ZWNpZmljYXRpb24gdG8gZGVzY3JpYmUgdGhlIGxvZ2ljYWwgdG8gcGh5c2ljYWwgbGFuZQo+IAo+
-IEFzIEkgbWVudGlvbmVkIGluIHY3LCB3ZSBhbHJlYWR5IGhhdmUgYSBwcm9wZXJ0eSBmb3IgdGhp
-cy4gSXQncyBjYWxsZWQKPiAnZGF0YS1sYW5lcycgYW5kIGRlZmluZWQgaW4gbWVkaWEvdmlkZW8t
-aW50ZXJmYWNlcy50eHQuIFVzZSB0aGF0LiBJZiB5b3UgCj4gbmVlZCBwb2xhcml0eSB0b28sIHRo
-ZW4gYWRkIGEgcHJvcGVydHkgZm9yIHRoYXQuIEFuZCBhZGQgaXQgdG8gCj4gdmlkZW8taW50ZXJm
-YWNlcy50eHQuCgpMb29rcyBsaWtlIGludmVyc2lvbiBpcyBhbHJlYWR5IGhhbmRsZWQgYnkgdGhl
-ICdsYW5lLXBvbGFyaXRpZXMnCnByb3BlcnR5LgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZnJlZWRyZW5vCg==
+Hello Stephen,
+
+Thanks again for the review. I'll do new patch which fixes these issues.
+
+On Tue, Jun 12, 2018 at 12:44:11AM -0700, Stephen Boyd wrote:
+> Quoting Matti Vaittinen (2018-06-04 06:19:13)
+> > +config COMMON_CLK_BD71837
+> > +       tristate "Clock driver for ROHM BD71837 PMIC MFD"
+> > +       depends on MFD_BD71837
+> > +       help
+> > +         This driver supports ROHM BD71837 PMIC clock.
+> > +
+> > +
+> 
+> Drop one newline above.
+Right.
+
+> 
+> > +++ b/drivers/clk/clk-bd71837.c
+> > +#include <linux/mfd/bd71837.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/clkdev.h>
+> > +
+> > +
+> 
+> Drop one newline above.
+Right.
+
+> 
+> > +struct bd71837_clk {
+> > +       struct clk_hw hw;
+> > +       uint8_t reg;
+> > +       uint8_t mask;
+> 
+> Use u8 instead of uint8_t.
+I can do that but I am afraid I have missed the reason for this. Why u8
+is preferred? I would have assumed the standard uint8_t would be
+preferred - can you please educate me as to what is this reason?
+
+> > +       unsigned long rate;
+> > +       struct platform_device *pdev;
+> > +       struct bd71837 *mfd;
+> > +};
+> > +
+> > +static int bd71837_clk_set(struct clk_hw *hw, int status)
+> > +{
+> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
+> > +
+> > +       return bd71837_update_bits(c->mfd, c->reg, c->mask, status);
+> 
+> Any reason we can't use a regmap?
+
+Not really. These wrappers might become handy if the next chip in series
+requires some quirks for access but at the moment I see no reason for
+the wrappers. I could switch to direct regmap calls but that change
+should then be done to all subdevices and not just for clk one. This
+means I should rework also the already applied regulator part. I have
+some other changes pending for regulators (adding support for next chip,
+renaming bd71837 to bd718x7 or bd718xx, and few comments from  Andy
+Shevchenko and Rob Herring). I would rather switch to direct regmap usage
+for all subdevices at the same time. So if it is acceptable to keep the
+wrappers for now (and then create own patch set to remove them from all
+subdevices and the header) I would like to do so.
+
+> 
+> > +}
+> > +
+> > +static void bd71837_clk_disable(struct clk_hw *hw)
+> > +{
+> > +       int rv;
+> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
+> > +
+> > +       rv = bd71837_clk_set(hw, 0);
+> > +       if (rv)
+> > +               dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n", rv);
+> > +}
+> > +
+> > +static int bd71837_clk_enable(struct clk_hw *hw)
+> > +{
+> > +       return bd71837_clk_set(hw, 1);
+> > +}
+> > +
+> > +static int bd71837_clk_is_enabled(struct clk_hw *hw)
+> > +{
+> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
+> > +
+> > +       return c->mask & bd71837_reg_read(c->mfd, c->reg);
+> 
+> Didn't I ask for local variable for reg_read result?
+
+Yes! Sorry! And thanks for pointing this out again. It seems I missed
+this one.
+
+> 
+> > +}
+> > +
+> > +static unsigned long bd71837_clk_recalc_rate(struct clk_hw *hw,
+> > +                                            unsigned long parent_rate)
+> > +{
+> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
+> > +
+> > +       return c->rate;
+> > +}
+> > +
+> > +static const struct clk_ops bd71837_clk_ops = {
+> > +       .recalc_rate = &bd71837_clk_recalc_rate,
+> > +       .prepare = &bd71837_clk_enable,
+> > +       .unprepare = &bd71837_clk_disable,
+> > +       .is_prepared = &bd71837_clk_is_enabled,
+> > +};
+> > +
+> > +static int bd71837_clk_probe(struct platform_device *pdev)
+> > +{
+> > +       struct bd71837_clk *c;
+> > +       int rval = -ENOMEM;
+> > +       struct bd71837 *mfd = dev_get_drvdata(pdev->dev.parent);
+> > +       struct clk_init_data init = {
+> > +               .name = "bd71837-32k-out",
+> > +               .ops = &bd71837_clk_ops,
+> > +       };
+> > +
+> > +       c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
+> > +       if (!c)
+> > +               goto err_out;
+> > +
+> > +       c->reg = BD71837_REG_OUT32K;
+> > +       c->mask = BD71837_OUT32K_EN;
+> > +       c->rate = BD71837_CLK_RATE;
+> 
+> The PMIC has an 'XIN' pin that would be the clk input for this chip, and
+> the output clk, this driver, would specify that xin clock as the parent.
+> The 'xin' clock would then be listed in DT as a fixed-rate clock. That
+> way this driver doesn't hardcode the frequency.
+
+I see. This makes sense. I need to verify from HW colleagues whether
+this chip has internal oscillator or not. I originally thought we have
+on-chip oscillator - but as you say, we do have XIN pin in documentation.
+So now I am not sure if the test board I have contains oscillator driving
+the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify this.
+
+> > +       c->mfd = mfd;
+> > +       c->pdev = pdev;
+> > +
+> > +       of_property_read_string_index(pdev->dev.parent->of_node,
+> > +                                             "clock-output-names", 0,
+> > +                                             &init.name);
+> > +
+> > +       c->hw.init = &init;
+> 
+> Do this next to all the other c-> things?
+
+I can do so. I just like the idea of assigning pointers to objects only
+after the objects have been initialized. Eg, in this case I add pointer
+to init only after I have filled the init.name (if it is given).
+
+> 
+> > +
+> > +       rval = devm_clk_hw_register(&pdev->dev, &c->hw);
+> > +       if (rval) {
+> > +               dev_err(&pdev->dev, "failed to register 32K clk");
+> > +               goto err_out;
+> > +       }
+> > +
+> > +       if (pdev->dev.parent->of_node) {
+> > +               rval = of_clk_add_hw_provider(pdev->dev.parent->of_node,
+> > +                                            of_clk_hw_simple_get,
+> > +                                            &c->hw);
+> > +               if (rval) {
+> > +                       dev_err(&pdev->dev, "adding clk provider failed\n");
+> > +                       goto err_out;
+> 
+> Just return rval instead of goto and then remove err_out label.
+
+Is this 'hard requirement'? I prefer single point of exit from functions
+(when easily doable) because I have done so many errors with locks /
+resources being reserved when exiting from some error branch. For my
+personal taste maintaining the one nice cleanup sequence is easier. But
+if this is 'hard requirement' this can of course be changed.
+
+> 
+> > +               }
+> > +       }
+> > +
+> > +       rval = clk_hw_register_clkdev(&c->hw, init.name, NULL);
+> 
+> This leaks a clkdev lookup. Sad we don't have a devm version. Maybe it
+> should be added. But I really doubt this chip will be used with clkdev
+> lookups so please remove clkdev until you have a user who needs it.
+
+Yep. It leaks. I tried to look for an example where the clkdev was
+nicely freed at remove - but I didn't find any. Every example I spotted
+did leak the clkdev in same way as this does :( And I agree, devm
+variant for freeing would be nice - or freeing routines based on hw.
+
+As the leaked clkdev can cause oops at module unload/reload/use your
+suggestion about removing it for now makes sense. I'll drop it.
+
+> 
+> > +       if (rval) {
+> > +               dev_err(&pdev->dev, "failed to register clkdev for bd71837");
+> > +               goto err_clean_provider;
+> > +       }
+> > +
+> > +       platform_set_drvdata(pdev, c);
+> > +
+> > +       return 0;
+> > +
+> > +err_clean_provider:
+> > +       of_clk_del_provider(pdev->dev.parent->of_node);
+> > +err_out:
+> > +       return rval;
+> > +}
+> > +
+> > +static int bd71837_clk_remove(struct platform_device *pdev)
+> > +{
+> > +       if (pdev->dev.parent->of_node)
+> > +               of_clk_del_provider(pdev->dev.parent->of_node);
+> 
+> Use devm so this can go away. Or is devm not used because the parent
+> of_node is the provider? That's annoying.
+
+What would be the correct workaround for this?
+
+> 
+> > +       return 0;
+> > +}
+> > +
+
+Br,
+    Matti Vaittinen
