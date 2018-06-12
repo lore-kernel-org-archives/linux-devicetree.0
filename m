@@ -1,76 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] resource: Move reparent_resources() to
- kernel/resource.c and make it public
-Date: Tue, 12 Jun 2018 11:29:00 +0300
-Message-ID: <CAHp75Vd6v4+RTq-5uw_BJpT6=w2KGjTfU+rEst6+8igs2cyntw@mail.gmail.com>
-References: <20180612032831.29747-1-bhe@redhat.com>
- <20180612032831.29747-2-bhe@redhat.com>
+From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 2/4] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Tue, 12 Jun 2018 01:31:30 -0700
+Message-ID: <152879229054.16708.14050561301794900607@swboyd.mtv.corp.google.com>
+References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
+ <1528177218-1051-4-git-send-email-spanda@codeaurora.org>
+ <20180605152050.GA9677@rob-hp-laptop>
+ <75aab08baeecd381f573603a253dbbf1@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20180612032831.29747-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, KY Srinivasan <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1561eoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <75aab08baeecd381f573603a253dbbf1-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 6:28 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
-> and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
-> so that it's shared. Later its code also need be updated using list_head
-> to replace singly linked list.
-
-While this is a good deduplication of the code, some requirements for
-public functions would be good to satisfy.
-
-> +/*
-> + * Reparent resource children of pr that conflict with res
-> + * under res, and make res replace those children.
-> + */
-
-kernel doc format, though...
-
-> +static int reparent_resources(struct resource *parent,
-> +                                    struct resource *res)
-
-...is it really public with static keyword?!
-
-
-
-> +{
-
-> +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
-> +               if (p->end < res->start)
-> +                       continue;
-> +               if (res->end < p->start)
-> +                       break;
-
-> +               if (p->start < res->start || p->end > res->end)
-> +                       return -1;      /* not completely contained */
-
-Usually we are expecting real eeror codes.
-
-> +               if (firstpp == NULL)
-> +                       firstpp = pp;
-> +       }
-
-> +       if (firstpp == NULL)
-> +               return -1;      /* didn't find any conflicting entries? */
-
-Ditto.
-
-> +}
-> +EXPORT_SYMBOL(reparent_resources);
-
--- 
-With Best Regards,
-Andy Shevchenko
+UXVvdGluZyBzcGFuZGFAY29kZWF1cm9yYS5vcmcgKDIwMTgtMDYtMDUgMjE6NTA6MTYpCj4gT24g
+MjAxOC0wNi0wNSAyMDo1MCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiBPbiBUdWUsIEp1biAwNSwg
+MjAxOCBhdCAxMToxMDoxNkFNICswNTMwLCBTYW5kZWVwIFBhbmRhIHdyb3RlOgo+ID4+IERvY3Vt
+ZW50IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgc242NWRzaTg2IERTSSB0byBlRFAgYnJpZGdl
+LgpbLi4uXQo+ID4+IGFuZAo+ID4+ICsgICAgICAgICAgICAgICAgICAgdGhlIHNlY29uZCBjZWxs
+IGlzIHVzZWQgdG8gc3BlY2lmeSBmbGFncy4KPiA+PiArICAgICAgICAgICAgICAgICAgIFNlZSAu
+Li8uLi9ncGlvL2dwaW8udHh0IGZvciBtb3JlIGluZm9ybWF0aW9uLgo+ID4+ICstICNwd20tY2Vs
+bHMgOiBTaG91bGQgYmUgb25lLiBTZWUgLi4vLi4vcHdtL3B3bS50eHQgZm9yIGRlc2NyaXB0aW9u
+IAo+ID4+IG9mCj4gPj4gKyAgICAgICAgICAgICAgIHRoZSBjZWxsIGZvcm1hdHMuCj4gPj4gKwo+
+ID4+ICstIGNsb2NrLW5hbWVzOiBzaG91bGQgYmUgInJlZmNsayIKPiA+PiArLSBjbG9ja3M6IFNw
+ZWNpZmljYXRpb24gZm9yIGlucHV0IHJlZmVyZW5jZSBjbG9jay4gVGhlIHJlZmVyZW5jZQo+ID4+
+ICsgICAgICBjbG9jayByYXRlIG11c3QgYmUgMTIgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCAyNyBN
+SHogb3IgMzguNCBNSHouCj4gPj4gKwo+ID4+ICstIGxhbmUtbWFwcGluZzogU3BlY2lmaWNhdGlv
+biB0byBkZXNjcmliZSB0aGUgbG9naWNhbCB0byBwaHlzaWNhbCAKPiA+PiBsYW5lCj4gPiAKPiA+
+IEFzIEkgbWVudGlvbmVkIGluIHY3LCB3ZSBhbHJlYWR5IGhhdmUgYSBwcm9wZXJ0eSBmb3IgdGhp
+cy4gSXQncyBjYWxsZWQKPiA+ICdkYXRhLWxhbmVzJyBhbmQgZGVmaW5lZCBpbiBtZWRpYS92aWRl
+by1pbnRlcmZhY2VzLnR4dC4gVXNlIHRoYXQuIElmIAo+ID4geW91Cj4gPiBuZWVkIHBvbGFyaXR5
+IHRvbywgdGhlbiBhZGQgYSBwcm9wZXJ0eSBmb3IgdGhhdC4gQW5kIGFkZCBpdCB0bwo+ID4gdmlk
+ZW8taW50ZXJmYWNlcy50eHQuCj4gCj4gVGhlIGRhdGEtbGFuZXMgcHJvcGVydHkgbWVudGlvbmVk
+IGluIG1lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0IGlzIAo+IHJlZmVycmluZwo+IHRvIERTSS9D
+U0kgbGFuZXMgd2hlcmUgYXNzdW1wdGlvbiBpcyBjbG9jayBsYW5lIGlzIGZpeGVkIGF0IGluZGV4
+IDAuIEJ1dCAKPiBoZXJlCj4gdGhlIHdlIHdhbnQgdG8gbWVudGlvbiBhYm91dCBlRFAgbGFuZXMg
+d2hpY2ggZG8gbm90IGhhdmUgZGVkaWNhdGVkIGNsb2NrIAo+IGxhbmUuCj4gU28gY2FuIHdlIHN0
+aWxsIHVzZSB0aGUgZXhpc3RpbmcgZGF0YS1sYW5lcyBwcm9wZXJ0eSBoZXJlPwoKV2h5IGlzIHRo
+YXQgYSBwcm9ibGVtPyBJdCdzIGp1c3QgYSBwcm9wZXJ0eSBuYW1lLgoKVGhlcmUgYXJlIGRhdGEt
+bGFuZXMgYW5kIGNsb2NrLWxhbmVzIHByb3BlcnRpZXMgaW4gdGhlCnZpZGVvLWludGVyZmFjZXMu
+dHh0IGZpbGUgYnkgdGhlIHdheS4gSXQgd291bGQgYmUgbmljZSBpZiB0aGF0IGRvY3VtZW50CmNv
+dWxkIGJlIHVwZGF0ZWQgZm9yIGRpc3BsYXlwb3J0IGFuZCBEU0kgKGUuZy4gIGNsb2NrLW5vbmNv
+bnRpbnVvdXMgb3IKbGluay1mcmVxdWVuY2llcykgb3IgZXZlbiBqdXN0IG1lbnRpb24gaW4gdGhl
+cmUgdGhhdCB0aGVzZSBjYW4gYXBwbHkgdG8KRFNJIGFuZCBkaXNwbGF5cG9ydCB0b28uCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
+bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
