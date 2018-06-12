@@ -1,12 +1,12 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 2/6] dt-bindings: media: Document data-enable-active
- property
-Date: Tue, 12 Jun 2018 16:26:02 +0200
-Message-ID: <1528813566-17927-3-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v4 1/6] dt-bindings: media: rcar-vin: Describe optional ep
+ properties
+Date: Tue, 12 Jun 2018 16:26:01 +0200
+Message-ID: <1528813566-17927-2-git-send-email-jacopo+renesas@jmondi.org>
 References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -22,30 +22,40 @@ To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verg
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add 'data-enable-active' property to endpoint node properties list.
-
-The property allows to specify the polarity of the data-enable signal, which
-when in active state determinates when data lines have to sampled for valid
-pixel data.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 258b8df..9839d26 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -109,6 +109,8 @@ Optional endpoint properties
-   Note, that if HSYNC and VSYNC polarities are not specified, embedded
-   synchronization may be required, where supported.
- - data-active: similar to HSYNC and VSYNC, specifies data line polarity.
-+- data-enable-active: similar to HSYNC and VSYNC, specifies the data enable
-+  signal polarity.
- - field-even-active: field signal level during the even field data transmission.
- - pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
-   signal.
--- 
-2.7.4
+RGVzY3JpYmUgdGhlIG9wdGlvbmFsIGVuZHBvaW50IHByb3BlcnRpZXMgZm9yIGVuZHBvaW50IG5v
+ZGVzIG9mIHBvcnRAMAphbmQgcG9ydEAxIG9mIHRoZSBSLUNhciBWSU4gZHJpdmVyIGRldmljZSB0
+cmVlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkg
+PGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+CkFja2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8
+bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KUmV2aWV3ZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21lZGlhL3JjYXJfdmluLnR4dCB8IDEwICsrKysrKysrKysKIDEgZmlsZSBjaGFuZ2Vk
+LCAxMCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL3JjYXJfdmluLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZWRpYS9yY2FyX3Zpbi50eHQKaW5kZXggYTE5NTE3ZTEuLjg3ZjkzZWMgMTAwNjQ0
+Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9yY2FyX3Zpbi50
+eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3JjYXJfdmlu
+LnR4dApAQCAtNTMsNiArNTMsMTQgQEAgZnJvbSBsb2NhbCBTb0MgQ1NJLTIgcmVjZWl2ZXJzIChw
+b3J0MSkgZGVwZW5kaW5nIG9uIFNvQy4KICAgICAgIGZyb20gZXh0ZXJuYWwgU29DIHBpbnMgZGVz
+Y3JpYmVkIGluIHZpZGVvLWludGVyZmFjZXMudHh0WzFdLgogICAgICAgRGVzY3JpYmluZyBtb3Jl
+IHRoZW4gb25lIGVuZHBvaW50IGluIHBvcnQgMCBpcyBpbnZhbGlkLiBPbmx5IFZJTgogICAgICAg
+aW5zdGFuY2VzIHRoYXQgYXJlIGNvbm5lY3RlZCB0byBleHRlcm5hbCBwaW5zIHNob3VsZCBoYXZl
+IHBvcnQgMC4KKworICAgICAgLSBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBlbmRwb2ludCBub2Rl
+cyBvZiBwb3J0QDA6CisgICAgICAgIC0gaHN5bmMtYWN0aXZlOiBzZWUgWzFdIGZvciBkZXNjcmlw
+dGlvbi4gRGVmYXVsdCBpcyBhY3RpdmUgaGlnaC4KKyAgICAgICAgLSB2c3luYy1hY3RpdmU6IHNl
+ZSBbMV0gZm9yIGRlc2NyaXB0aW9uLiBEZWZhdWx0IGlzIGFjdGl2ZSBoaWdoLgorCisgICAgICAg
+IElmIGJvdGggSFNZTkMgYW5kIFZTWU5DIHBvbGFyaXRpZXMgYXJlIG5vdCBzcGVjaWZpZWQsIGVt
+YmVkZGVkCisgICAgICAgIHN5bmNocm9uaXphdGlvbiBpcyBzZWxlY3RlZC4KKwogICAgIC0gcG9y
+dCAxIC0gc3ViLW5vZGVzIGRlc2NyaWJpbmcgb25lIG9yIG1vcmUgZW5kcG9pbnRzIGNvbm5lY3Rl
+ZCB0bwogICAgICAgdGhlIFZJTiBmcm9tIGxvY2FsIFNvQyBDU0ktMiByZWNlaXZlcnMuIFRoZSBl
+bmRwb2ludCBudW1iZXJzIG11c3QKICAgICAgIHVzZSB0aGUgZm9sbG93aW5nIHNjaGVtYS4KQEAg
+LTYyLDYgKzcwLDggQEAgZnJvbSBsb2NhbCBTb0MgQ1NJLTIgcmVjZWl2ZXJzIChwb3J0MSkgZGVw
+ZW5kaW5nIG9uIFNvQy4KICAgICAgICAgLSBFbmRwb2ludCAyIC0gc3ViLW5vZGUgZGVzY3JpYmlu
+ZyB0aGUgZW5kcG9pbnQgY29ubmVjdGVkIHRvIENTSTQwCiAgICAgICAgIC0gRW5kcG9pbnQgMyAt
+IHN1Yi1ub2RlIGRlc2NyaWJpbmcgdGhlIGVuZHBvaW50IGNvbm5lY3RlZCB0byBDU0k0MQogCisg
+ICAgICBFbmRwb2ludCBub2RlcyBvZiBwb3J0QDEgZG8gbm90IHN1cHBvcnQgYW55IG9wdGlvbmFs
+IGVuZHBvaW50IHByb3BlcnR5LgorCiBEZXZpY2Ugbm9kZSBleGFtcGxlIGZvciBHZW4yIHBsYXRm
+b3JtcwogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIAotLSAKMi43LjQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
