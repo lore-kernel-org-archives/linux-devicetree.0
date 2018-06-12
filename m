@@ -1,139 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] pinctrl: actions: Add interrupt support for OWL S900 SoC
-Date: Tue, 12 Jun 2018 10:38:11 +0200
-Message-ID: <CACRpkdbRYQ7Wf48Ff-n-OiheW+Dv1yyJQ3NNzGdBx5dvM51YPA@mail.gmail.com>
-References: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org> <20180602165415.30956-4-manivannan.sadhasivam@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 2/3] dt-bindings: usb: new ehci-npcm7xx dt
+Date: Tue, 12 Jun 2018 11:46:22 +0300
+Message-ID: <e12a159a-53ff-0c5e-9ce0-4fa9f93dd429@cogentembedded.com>
+References: <20180611195837.251551-1-avifishman70@gmail.com>
+ <20180611195837.251551-3-avifishman70@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180602165415.30956-4-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20180611195837.251551-3-avifishman70@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
+To: avifishman70@gmail.com, gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc: tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mathias.nyman@linux.intel.com, bjorn.andersson@linaro.org, jhogan@kernel.org, albeu@free.fr, chunfeng.yun@mediatek.com, tony@atomide.com, baolu.lu@linux.intel.com, elder@linaro.org, digetx@gmail.com, kstewart@linuxfoundation.org, hdegoede@redhat.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 2, 2018 at 6:54 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+Hello!
 
-> Add interrupt support for Actions Semi OWL S900 SoC.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-(...)
+On 6/11/2018 10:58 PM, avifishman70@gmail.com wrote:
 
-> +++ b/drivers/pinctrl/actions/Kconfig
-> @@ -5,6 +5,7 @@ config PINCTRL_OWL
->         select PINCONF
->         select GENERIC_PINCONF
->         select GPIOLIB
-> +       select GPIOLIB_IRQCHIP
-
-I don't think you're really using that (certain sign: you're implementing
-.to_irq().)
-
-GPIOLIB_IRQCHIP is nice, but can only be used when there is
-a 1-1 correspondence betweem GPIO line offsets and
-IRQ lines and they are numbered 0..n.
-
-However I think you can use it! Look below for my reference
-to the tegra186 and how you can probably cut out the custom
-irqdomain with some manouvers.
-
-> +       struct owl_pinctrl *pctrl = irq_data_get_irq_chip_data(data);
-> +       const struct owl_gpio_port *port;
-(...)
-> +       unsigned int gpio = data->hwirq;
+> From: Avi Fishman <AviFishman70@gmail.com>
+> 
+> Device Tree documentation for Nuvoton npcm7xx EHCI.
+> 
+> Signed-off-by: Avi Fishman <AviFishman70@gmail.com>
+> Reviewed-by:   Rob Herring <robh@kernel.org>
+> ---
+>   Documentation/devicetree/bindings/usb/npcm7xx-usb.txt | 17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt b/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+> new file mode 100644
+> index 000000000000..b682bec103f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/npcm7xx-usb.txt
+> @@ -0,0 +1,17 @@
+> +Nuvoton NPCM7XX SoC USB controllers:
+> +-----------------------------
 > +
-> +       port = owl_gpio_get_port(pctrl, &gpio);
+> +EHCI:
+> +-----
 > +
-> +       gpio_base = pctrl->base + port->offset;
+> +Required properties:
+> +- compatible: "nuvoton,npcm750-ehci"
+> +- interrupts: Should contain the EHCI interrupt
 
-It is all about this calculation really.
+    How about "reg"?
 
-> +static int owl_gpio_irq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +       struct owl_pinctrl *pctrl = irq_data_get_irq_chip_data(data);
-> +       const struct owl_gpio_port *port;
-> +       void __iomem *gpio_base;
-> +       unsigned long flags;
-> +       unsigned int gpio = data->hwirq;
-> +       unsigned int offset, value, irq_type = 0;
 > +
-> +       port = owl_gpio_get_port(pctrl, &gpio);
-> +       if (WARN_ON(port == NULL))
-> +               return -ENODEV;
+> +Example:
 > +
-> +       gpio_base = pctrl->base + port->offset;
-> +
-> +       switch (type) {
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               irq_type = OWL_GPIO_INT_EDGE_RISING;
-> +               break;
-> +
-> +       case IRQ_TYPE_EDGE_FALLING:
-> +               irq_type = OWL_GPIO_INT_EDGE_FALLING;
-> +               break;
+> +	ehci1: usb@f0806000 {
+> +		compatible = "nuvoton,npcm750-ehci";
+> +		reg = <0xf0806000 0x1000>;
+> +		interrupts = <0 61 4>;
+> +	};
+> 
 
-Very often things such as keys will request trigger on
-both edges. This means IRQ_TYPE_EDGE_RISING
-and IRQ_TYPE_EDGE_FALLING are both set, which
-will cause you problems here, since it is unhandled.
-
-I guess it is fine to set both?
-
-> +       offset = gpio < 16 ? 4 : 0;
-
-I think even the compiler should suggest putting he (gpio < 16)
-expression in paranthesis.
-
-> +       value = readl_relaxed(gpio_base + port->intc_type + offset);
-> +       value &= ~(OWL_GPIO_INT_MASK << ((gpio % 16) * 2));
-> +       value |= irq_type << ((gpio % 16) * 2);
-> +       writel_relaxed(value, gpio_base + port->intc_type + offset);
-> +
-> +       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +
-> +       if (type & IRQ_TYPE_EDGE_BOTH)
-> +               irq_set_handler_locked(data, handle_edge_irq);
-> +       else
-> +               irq_set_handler_locked(data, handle_level_irq);
-
-Here you handle both edges, but not in the switch clause.
-
-> +static void owl_gpio_irq_handler(struct irq_desc *desc)
-
-This looks fine.
-
-> +static struct irq_chip owl_gpio_irq_chip = {
-> +       .name           = "owlgpio",
-> +       .irq_mask       = owl_gpio_irq_mask,
-> +       .irq_unmask     = owl_gpio_irq_unmask,
-> +       .irq_ack        = owl_gpio_irq_ack,
-> +       .irq_set_type   = owl_gpio_irq_set_type,
-> +};
-
-If you implement your own irqchip you need to implement
-.irq_request_resources and .irq_free_resources locking the GPIO
-lines for interrupt, see other drivers that do this or the
-gpiolib core code in gpiolib.c.
-
-It would be really neat if you could instead use the
-GPIOLIB_IRQCHIP though, but I know it will be a bit tricky
-and maybe not possible.
-
-> +       for (i = 0; i < pctrl->soc->nports; i++) {
-> +               irq_set_chained_handler_and_data(pctrl->irq[i],
-> +                                               owl_gpio_irq_handler,
-> +                                               pctrl);
-> +       }
-
-If you use GPIOLIB_IRQCHIP with several parent IRQs.
-See Thierry's work in drivers/gpio/gpio-tegra186.c for the
-only example.
-
-I think that is what you want to do here.
-
-We do want to add helpers in gpiolib to do this in a more
-organized and easy-to-use fashion. Patches welcome ;)
-
-Yours,
-Linus Walleij
+MBR, Sergei
