@@ -1,84 +1,58 @@
-From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8 1/4] drm/bridge: add support for
- sn65dsi86 bridge driver
-Date: Mon, 11 Jun 2018 16:35:46 -0700
-Message-ID: <152876014663.16708.2127612105617872452@swboyd.mtv.corp.google.com>
-References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
- <1528177218-1051-3-git-send-email-spanda@codeaurora.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH] drivers/of: Make of_io_request_and_map() "name" argument
+ optional
+Date: Tue, 12 Jun 2018 10:01:07 +1000
+Message-ID: <22064afa92ed2e4b33a93685aabb1d07c7c8846d.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1528177218-1051-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBTYW5kZWVwIFBhbmRhICgyMDE4LTA2LTA0IDIyOjQwOjE1KQo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jIGIvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS90aS1zbjY1ZHNpODYuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAw
-MDAwMC4uYWRkNmUwZgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3RpLXNuNjVkc2k4Ni5jCj4gQEAgLTAsMCArMSw2NjYgQEAKPiArLy8gU1BEWC1MaWNlbnNl
-LUlkZW50aWZpZXI6IEdQTC0yLjAKPiArLyoKPiArICogQ29weXJpZ2h0IChjKSAyMDE4LCBUaGUg
-TGludXggRm91bmRhdGlvbi4gQWxsIHJpZ2h0cyByZXNlcnZlZC4KPiArICovCj4gKwpbLi4uXQo+
-ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfY29uZmlnIHRpX3NuX2JyaWRnZV9yZWdt
-YXBfY29uZmlnID0gewo+ICsgICAgICAgLnJlZ19iaXRzID0gOCwKPiArICAgICAgIC52YWxfYml0
-cyA9IDgsCj4gKyAgICAgICAudm9sYXRpbGVfdGFibGUgPSAmdGlfc25fYnJpZGdlX3ZvbGF0aWxl
-X3RhYmxlLAo+ICsgICAgICAgLmNhY2hlX3R5cGUgPSBSRUdDQUNIRV9OT05FLAo+ICt9Owo+ICsK
-PiArc3RhdGljIHZvaWQgdGlfc25fYnJpZGdlX3dyaXRlX3UxNihzdHJ1Y3QgdGlfc25fYnJpZGdl
-ICpwZGF0YSwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGlu
-dCByZWcsIHUxNiB2YWwpCj4gK3sKPiArICAgICAgIHJlZ21hcF93cml0ZShwZGF0YS0+cmVnbWFw
-LCByZWcsIHZhbCAmIDB4RkYpOwo+ICsgICAgICAgcmVnbWFwX3dyaXRlKHBkYXRhLT5yZWdtYXAs
-IHJlZyArIDEsIHZhbCA+PiA4KTsKPiArfQo+ICsKPiArc3RhdGljIGludCBfX21heWJlX3VudXNl
-ZCB0aV9zbl9icmlkZ2VfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPiArewo+ICsgICAgICAg
-c3RydWN0IHRpX3NuX2JyaWRnZSAqcGRhdGEgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiArICAg
-ICAgIGludCByZXQgPSAwOwoKUGxlYXNlIGRvbid0IGFzc2lnbiB2YXJpYWJsZXMgYW5kIHRoZW4g
-cmVhc3NpZ24gdGhlbSBhZ2FpbiBpbW1lZGlhdGVseQphZnRlci4gSXQgaGlkZXMgdXNlIGJlZm9y
-ZSByZWFsIGluaXRpYWxpemF0aW9uIGJ1Z3MuCgo+ICsKPiArICAgICAgIHJldCA9IHJlZ3VsYXRv
-cl9idWxrX2VuYWJsZShTTl9SRUdVTEFUT1JfU1VQUExZX05VTSwgcGRhdGEtPnN1cHBsaWVzKTsK
-Wy4uLl0KPiArCj4gK3N0YXRpYyBpbnQgdGlfc25fYnJpZGdlX3Byb2JlKHN0cnVjdCBpMmNfY2xp
-ZW50ICpjbGllbnQsCj4gKyAgICAgICAgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgKmlkKQo+
-ICt7Cj4gKyAgICAgICBzdHJ1Y3QgdGlfc25fYnJpZGdlICpwZGF0YTsKPiArICAgICAgIHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqZGRjX25vZGU7Cj4gKyAgICAgICBzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAq
-aG9zdDsKPiArICAgICAgIHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaTsKPiArICAgICAgIGlu
-dCByZXQgPSAwOwo+ICsgICAgICAgY29uc3Qgc3RydWN0IG1pcGlfZHNpX2RldmljZV9pbmZvIGlu
-Zm8gPSB7IC50eXBlID0gInRpX3NuX2JyaWRnZSIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgLmNoYW5uZWwgPSAwLAo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5ub2RlID0gTlVMTCwKPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArCj4gKyAg
-ICAgICBpZiAoIWkyY19jaGVja19mdW5jdGlvbmFsaXR5KGNsaWVudC0+YWRhcHRlciwgSTJDX0ZV
-TkNfSTJDKSkgewo+ICsgICAgICAgICAgICAgICBEUk1fRVJST1IoImRldmljZSBkb2Vzbid0IHN1
-cHBvcnQgSTJDXG4iKTsKPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7Cj4gKyAgICAg
-ICB9Cj4gKwo+ICsgICAgICAgcmV0ID0gdGlfc25fYnJpZGdlX3BhcnNlX2RzaV9ob3N0KHBkYXRh
-KTsKPiArICAgICAgIGlmIChyZXQpCj4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4gKwo+
-ICsgICAgICAgaG9zdCA9IG9mX2ZpbmRfbWlwaV9kc2lfaG9zdF9ieV9ub2RlKHBkYXRhLT5ob3N0
-X25vZGUpOwo+ICsgICAgICAgaWYgKCFob3N0KSB7Cj4gKyAgICAgICAgICAgICAgIERSTV9FUlJP
-UigiZmFpbGVkIHRvIGZpbmQgZHNpIGhvc3RcbiIpOwoKTm90IHN1cmUgd2Ugd2FudCB0byBwcmlu
-dCBhbiBlcnJvciBhbmQgdGhlbiByZXR1cm4gLUVQUk9CRV9ERUZFUi4KVXN1YWxseSBFUFJPQkVf
-REVGRVIgaXMgc2lsZW50LgoKPiArICAgICAgICAgICAgICAgcmV0ID0gLUVQUk9CRV9ERUZFUjsK
-PiArICAgICAgICAgICAgICAgZ290byBlcnJfZHNpX2hvc3Q7Cj4gKyAgICAgICB9Cj4gKwpbLi4u
-XQo+ICsKPiArICAgICAgIC8qIFRPRE86IHNldHRpbmcgdG8gNCBsYW5lcyBhbHdheXMgZm9yIG5v
-dyAqLwo+ICsgICAgICAgZHNpLT5sYW5lcyA9IDQ7Cj4gKyAgICAgICBkc2ktPmZvcm1hdCA9IE1J
-UElfRFNJX0ZNVF9SR0I4ODg7Cj4gKyAgICAgICBkc2ktPm1vZGVfZmxhZ3MgPSBNSVBJX0RTSV9N
-T0RFX1ZJREVPIHwgTUlQSV9EU0lfTU9ERV9WSURFT19TWU5DX1BVTFNFIHwKPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgIE1JUElfRFNJX01PREVfRU9UX1BBQ0tFVCB8IE1JUElfRFNJX01PREVf
-VklERU9fSFNFOwo+ICsKPiArICAgICAgIHJldCA9IG1pcGlfZHNpX2F0dGFjaChkc2kpOwo+ICsg
-ICAgICAgaWYgKHJldCA8IDApIHsKPiArICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJmYWlsZWQg
-dG8gYXR0YWNoIGRzaSB0byBob3N0XG4iKTsKPiArICAgICAgICAgICAgICAgZ290byBlcnJfZHNp
-X2F0dGFjaDsKPiArICAgICAgIH0KPiArICAgICAgIHBkYXRhLT5kc2kgPSBkc2k7Cj4gKwo+ICsg
-ICAgICAgcGRhdGEtPnJlZmNsayA9IGRldm1fY2xrX2dldChwZGF0YS0+ZGV2LCAicmVmY2xrIik7
-CgpXZSBuZWVkIHRvIGNoZWNrIGZvciBlcnJvcgoKCWlmIChJU19FUlIocGRhdGEtPnJlZmNsaykp
-CgkJCkFuZCB0aGVuIGlmIGl0J3MgRVBST0JFX0RFRkVSIEkgc3VwcG9zZSB3ZSB3b3VsZCBiYWls
-IG91dCwgb3RoZXJ3aXNlCmFzc3VtZSBpdCdzIG5vdCBwcmVzZW50PwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApG
-cmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+These days of_address_to_resource() puts a reasonable name
+in the resource struct, thus make the "name" argument an
+optional override.
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+
+Just something I noticed ... we should probably update the
+callers to stop passing stupid names..
+
+ drivers/of/address.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 580bbf6ca2b1..cf83c05f5650 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -774,7 +774,7 @@ EXPORT_SYMBOL(of_iomap);
+  *			   for a given device_node
+  * @device:	the device whose io range will be mapped
+  * @index:	index of the io range
+- * @name:	name of the resource
++ * @name:	name "override" for the memory region request or NULL
+  *
+  * Returns a pointer to the requested and mapped memory or an ERR_PTR() encoded
+  * error code on failure. Usage example:
+@@ -784,7 +784,7 @@ EXPORT_SYMBOL(of_iomap);
+  *		return PTR_ERR(base);
+  */
+ void __iomem *of_io_request_and_map(struct device_node *np, int index,
+-					const char *name)
++				    const char *name)
+ {
+ 	struct resource res;
+ 	void __iomem *mem;
+@@ -792,6 +792,8 @@ void __iomem *of_io_request_and_map(struct device_node *np, int index,
+ 	if (of_address_to_resource(np, index, &res))
+ 		return IOMEM_ERR_PTR(-EINVAL);
+ 
++	if (!name)
++		name = res.name;
+ 	if (!request_mem_region(res.start, resource_size(&res), name))
+ 		return IOMEM_ERR_PTR(-EBUSY);
+ 
