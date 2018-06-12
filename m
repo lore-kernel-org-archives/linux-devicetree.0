@@ -1,139 +1,165 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH 03/19] mmc: mmci: add datactrl block size variant property
-Date: Tue, 12 Jun 2018 15:14:24 +0200
-Message-ID: <1528809280-31116-4-git-send-email-ludovic.Barre@st.com>
-References: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v3 6/8] dt-bindings: rcar-vin: Add 'hsync-as-de' custom
+ prop
+Date: Tue, 12 Jun 2018 15:29:49 +0200
+Message-ID: <20180612132949.GB4952@w540>
+References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1527606359-19261-7-git-send-email-jacopo+renesas@jmondi.org>
+ <20180604121933.GG19674@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528809280-31116-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: multipart/mixed; boundary="===============8787796467708955830=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180604121933.GG19674@bigcity.dyn.berto.se>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch allows to define a datactrl block size
-by variant, requested by STM32 sdmmc variant.
+--===============8787796467708955830==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ylS2wUBXLOxYXZFQ"
+Content-Disposition: inline
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci.c | 13 +++++++++++--
- drivers/mmc/host/mmci.h |  2 ++
- 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 7a15afd..9b25714 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -52,6 +52,7 @@ static struct variant_data variant_arm = {
- 	.fifosize		= 16 * 4,
- 	.fifohalfsize		= 8 * 4,
- 	.datalength_bits	= 16,
-+	.datactrl_blocksz	= 11,
- 	.pwrreg_powerup		= MCI_PWR_UP,
- 	.f_max			= 100000000,
- 	.reversed_irq_handling	= true,
-@@ -65,6 +66,7 @@ static struct variant_data variant_arm_extended_fifo = {
- 	.fifosize		= 128 * 4,
- 	.fifohalfsize		= 64 * 4,
- 	.datalength_bits	= 16,
-+	.datactrl_blocksz	= 11,
- 	.pwrreg_powerup		= MCI_PWR_UP,
- 	.f_max			= 100000000,
- 	.mmcimask1		= true,
-@@ -78,6 +80,7 @@ static struct variant_data variant_arm_extended_fifo_hwfc = {
- 	.fifohalfsize		= 64 * 4,
- 	.clkreg_enable		= MCI_ARM_HWFCEN,
- 	.datalength_bits	= 16,
-+	.datactrl_blocksz	= 11,
- 	.pwrreg_powerup		= MCI_PWR_UP,
- 	.f_max			= 100000000,
- 	.mmcimask1		= true,
-@@ -92,6 +95,7 @@ static struct variant_data variant_u300 = {
- 	.clkreg_enable		= MCI_ST_U300_HWFCEN,
- 	.clkreg_8bit_bus_enable = MCI_ST_8BIT_BUS,
- 	.datalength_bits	= 16,
-+	.datactrl_blocksz	= 11,
- 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
- 	.st_sdio			= true,
- 	.pwrreg_powerup		= MCI_PWR_ON,
-@@ -111,6 +115,7 @@ static struct variant_data variant_nomadik = {
- 	.clkreg			= MCI_CLK_ENABLE,
- 	.clkreg_8bit_bus_enable = MCI_ST_8BIT_BUS,
- 	.datalength_bits	= 24,
-+	.datactrl_blocksz	= 11,
- 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
- 	.st_sdio		= true,
- 	.st_clkdiv		= true,
-@@ -133,6 +138,7 @@ static struct variant_data variant_ux500 = {
- 	.clkreg_8bit_bus_enable = MCI_ST_8BIT_BUS,
- 	.clkreg_neg_edge_enable	= MCI_ST_UX500_NEG_EDGE,
- 	.datalength_bits	= 24,
-+	.datactrl_blocksz	= 11,
- 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
- 	.st_sdio		= true,
- 	.st_clkdiv		= true,
-@@ -160,6 +166,7 @@ static struct variant_data variant_ux500v2 = {
- 	.clkreg_neg_edge_enable	= MCI_ST_UX500_NEG_EDGE,
- 	.datactrl_mask_ddrmode	= MCI_DPSM_ST_DDRMODE,
- 	.datalength_bits	= 24,
-+	.datactrl_blocksz	= 11,
- 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
- 	.st_sdio		= true,
- 	.st_clkdiv		= true,
-@@ -187,6 +194,7 @@ static struct variant_data variant_stm32 = {
- 	.clkreg_8bit_bus_enable = MCI_ST_8BIT_BUS,
- 	.clkreg_neg_edge_enable	= MCI_ST_UX500_NEG_EDGE,
- 	.datalength_bits	= 24,
-+	.datactrl_blocksz	= 11,
- 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
- 	.st_sdio		= true,
- 	.st_clkdiv		= true,
-@@ -208,6 +216,7 @@ static struct variant_data variant_qcom = {
- 	.data_cmd_enable	= MCI_CPSM_QCOM_DATCMD,
- 	.blksz_datactrl4	= true,
- 	.datalength_bits	= 24,
-+	.datactrl_blocksz	= 11,
- 	.pwrreg_powerup		= MCI_PWR_UP,
- 	.f_max			= 208000000,
- 	.explicit_mclk_control	= true,
-@@ -1399,13 +1408,13 @@ static int mmci_probe(struct amba_device *dev,
- 	/*
- 	 * Block size can be up to 2048 bytes, but must be a power of two.
- 	 */
--	mmc->max_blk_size = 1 << 11;
-+	mmc->max_blk_size = 1 << variant->datactrl_blocksz;
- 
- 	/*
- 	 * Limit the number of blocks transferred so that we don't overflow
- 	 * the maximum request size.
- 	 */
--	mmc->max_blk_count = mmc->max_req_size >> 11;
-+	mmc->max_blk_count = mmc->max_req_size >> variant->datactrl_blocksz;
- 
- 	spin_lock_init(&host->lock);
- 
-diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index f7cba35..27a2236 100644
---- a/drivers/mmc/host/mmci.h
-+++ b/drivers/mmc/host/mmci.h
-@@ -252,6 +252,7 @@ struct dma_chan;
-  * @blksz_datactrl4: true if Block size is at b4..b16 position in datactrl
-  *		     register
-  * @datactrl_mask_sdio: SDIO enable mask in datactrl register
-+ * @datactrl_blksz: block size in power of two
-  * @pwrreg_powerup: power up value for MMCIPOWER register
-  * @f_max: maximum clk frequency supported by the controller.
-  * @signal_direction: input/out direction of bus signals can be indicated
-@@ -284,6 +285,7 @@ struct variant_data {
- 	unsigned int		data_cmd_enable;
- 	unsigned int		datactrl_mask_ddrmode;
- 	unsigned int		datactrl_mask_sdio;
-+	unsigned int		datactrl_blocksz;
- 	bool			st_sdio;
- 	bool			st_clkdiv;
- 	bool			blksz_datactrl16;
--- 
-2.7.4
+--ylS2wUBXLOxYXZFQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Niklas,
+
+On Mon, Jun 04, 2018 at 02:19:33PM +0200, Niklas S=C3=B6derlund wrote:
+> Hi Jacopo,
+>
+> Thanks for your work.
+>
+> On 2018-05-29 17:05:57 +0200, Jacopo Mondi wrote:
+> > Document the boolean custom property 'renesas,hsync-as-de' that indicat=
+es
+> > that the HSYNC signal is internally used as data-enable, when the
+> > CLKENB signal is not connected.
+> >
+> > As this is a VIN specificity create a custom property specific to the R=
+-Car
+> > VIN driver.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> > v3:
+> > - new patch
+> > ---
+> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Doc=
+umentation/devicetree/bindings/media/rcar_vin.txt
+> > index ff53226..024c109 100644
+> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > @@ -60,6 +60,9 @@ from local SoC CSI-2 receivers (port1) depending on S=
+oC.
+> >          - vsync-active: see [1] for description. Default is active hig=
+h.
+> >          - data-enable-active: polarity of CLKENB signal, see [1] for
+> >            description. Default is active high.
+> > +        - renesas,hsync-as-de: a boolean property to indicate that HSY=
+NC signal
+> > +          is internally used as data-enable when the CLKENB signal is
+> > +          not available.
+>
+> I'm not sure I like this, is there really a need to add a custom
+> property for this? The datasheet states that when the CLKENB pin is not
+> connected the driver should enable 'Clock Enable Hsync Select (CHS)'.
+> With the new generic property 'data-enable-active' which describes the
+> polarity of the CLKENB pin we also gain the knowledge if the CLKENB pin
+> is connected or not.
+
+That was my first proposal, we discussed that in
+Re: [PATCH 3/6] media: rcar-vin: Handle data-active property
+Re: [PATCH 2/6] dt-bindings: media: rcar-vin: Document data-active
+
+Let's sum it up in this way:
+Instead of having to deal again with the "what happens if there is no
+data-enable-active and we're running on BT.656 where there is no HSYNC sign=
+al"[1]
+I decided to go with a custom property.
+
+>
+> I propose we drop this custom property and instead let the driver check
+> if the CLKENB polarity is described or not and use that to determine if
+> CHS bit should be set or not. IMHO that is much simpler then having two
+> properties describing the same pin.
+>
+
+It is my understanding that both Gen2 and Gen3 boards CVBS input are
+BT.656 and none of them has CLKENB input. So 'data-enable-active' is
+never there but in this case we should not set CHS. So the absence of
+'data-enable-active' has different consequences if we're running on
+parallel or BT.656 bus, and that feels confusing to me, so I decided
+to make it an explicit property.
+
+Also, as the interface manual describes the "use HSYNC in place of CLKENB"
+when on parallel bus as a design choice, that should imo be documented.
+
+Again, this is very minor stuff. I'll leave this out from next
+version, maybe we can talk about this f2f next week.
+
+Thanks
+  j
+
+> >
+> >          If both HSYNC and VSYNC polarities are not specified, embedded
+> >          synchronization is selected.
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
+
+--ylS2wUBXLOxYXZFQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbH8rNAAoJEHI0Bo8WoVY8wMEQALpFZlqVlYoYO/BkQNg3kluS
+8O4wCsG6lWDr92nKrDdo/vPpyfkgD8NkTUQrXl6pSjDyazPDq9MgIyuHvoxy4VYR
+BV3bbb6RAbYB2uSXa0O58T0C0qfeskmEsHE7e1EY/sZSBGYcNbOsUHyX1rl+LNZp
+6ZpslMtOb15z+P5UHAPIOQmMf+YKq6uijXpv2e7VHvK2Y4MplvRqBISMgl2fMbdx
+qCkiI0caiTC9AZ3YPnMJnOjm8z5OyZnDp5rxCRpX4/vIwMZUqJ3Bk8KzXmVt9s/j
+ByeOjjRX4i5HPSiEkfUrXO6Xv74QCWzTSFXyOoWTXZWeEEmkTlRIeBxiLdFMcYjm
+7GaE2Y56HFnf5LuLp6Rhr31HyyIVhu3YcB/1DtTpGTQtlJdn/snx5jr4KFtDlOgD
+YlsCqYOHKlwZJbkD3WseL688rjMyUKCgdl3AVKnOR9TI6U54Z65MEXxAm7RasSA6
+9NIcdM2KvF/DRc4iHSVt2kncObdCtqLIvhTsQgxhDihXAdE51Ar0Ad5p3hyd1Khh
+UltIPE7S8yvfepr1mDiCARMJdNZ7o44SO55bfpMgz3hpxJOE4/6NO+6K1gKk3LUG
+kgeVBkJfDBpkM9uMjTMTct0v7YVgzvVuf8zv4vvqYkoESfew8jwqbK9QXTi4VDfi
+1+tLtGULd7VL1TL+TSdX
+=2aNA
+-----END PGP SIGNATURE-----
+
+--ylS2wUBXLOxYXZFQ--
+
+
+--===============8787796467708955830==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8787796467708955830==--
