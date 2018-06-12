@@ -1,104 +1,62 @@
-Return-Path: <SRS0=mOcJ=JA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0069.outbound.protection.outlook.com ([104.47.1.69]:25856
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S935633AbeFNCPM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 13 Jun 2018 22:15:12 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
- Layerscape SoCs
-Date: Thu, 14 Jun 2018 02:15:08 +0000
-Message-ID: <AM6PR0402MB3382FAB085347CC5FD3C6273E27D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
-References: <20180525111920.24498-1-wen.he_1@nxp.com>
- <20180525111920.24498-2-wen.he_1@nxp.com> <20180529070724.GE5666@vkoul-mobl>
- <AM6PR0402MB3382D42C76332B98D53D001AE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180529101954.GJ5666@vkoul-mobl>
- <AM6PR0402MB3382F92D1123CDCA0E0075EDE26D0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180530102744.GE16230@vkoul-mobl>
- <AM6PR0402MB3382A63FF2884BAD8AF6080BE2630@AM6PR0402MB3382.eurprd04.prod.outlook.com>
- <20180605162854.GW16230@vkoul-mobl>
- <AM6PR0402MB3382F265C3DEAE6FD8A9FF26E2780@AM6PR0402MB3382.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR0402MB3382F265C3DEAE6FD8A9FF26E2780@AM6PR0402MB3382.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=nuAk=I6=gmail.com=pku.leo@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>, Vinod <vkoul@kernel.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
+In-Reply-To: <20180612040031.GI2452@vkoul-mobl>
+References: <20180525111920.24498-1-wen.he_1@nxp.com> <20180525111920.24498-2-wen.he_1@nxp.com>
+ <CADRPPNRx2ePL1eteMboAZ7ZvoxrVO1Jn+Koo7TatLQyquymTiQ@mail.gmail.com>
+ <AM6PR0402MB3382F4C81800D91761DA619FE2670@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+ <20180605163043.GX16230@vkoul-mobl> <CADRPPNQzn=1Nvp0h3xdTU7DdwFKN1grxyUKhESCV5u8V9FeMjg@mail.gmail.com>
+ <20180612040031.GI2452@vkoul-mobl>
+From: Li Yang <leoyang.li@nxp.com>
+Date: Tue, 12 Jun 2018 11:32:10 -0500
+Message-ID: <CADRPPNRif6wMsFmYF2a3xVHc0yRHjjkAfPxiOHF+z_kgWq8ovg@mail.gmail.com>
+Subject: Re: [v5 2/6] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Content-Type: text/plain; charset="UTF-8"
+To: Vinod <vkoul@kernel.org>
+Cc: Wen He <wen.he_1@nxp.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZG1hZW5naW5lLW93bmVy
-QHZnZXIua2VybmVsLm9yZw0KPiBbbWFpbHRvOmRtYWVuZ2luZS1vd25lckB2Z2VyLmtlcm5lbC5v
-cmddIE9uIEJlaGFsZiBPZiBXZW4gSGUNCj4gU2VudDogMjAxOOW5tDbmnIgxMeaXpSAxNjoxNQ0K
-PiBUbzogVmlub2QgPHZrb3VsQGtlcm5lbC5vcmc+DQo+IENjOiBkbWFlbmdpbmVAdmdlci5rZXJu
-ZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IEppYWZlaSBQYW4NCj4gPGppYWZlaS5wYW5A
-bnhwLmNvbT47IEppYWhlbmcgRmFuIDxqaWFoZW5nLmZhbkBueHAuY29tPg0KPiBTdWJqZWN0OiBS
-RTogW3Y1IDIvNl0gZG1hZW5naW5lOiBmc2wtcWRtYTogQWRkIHFETUEgY29udHJvbGxlciBkcml2
-ZXIgZm9yDQo+IExheWVyc2NhcGUgU29Dcw0KPiANCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogZG1hZW5naW5lLW93bmVyQHZnZXIua2VybmVsLm9yZw0K
-PiA+IFttYWlsdG86ZG1hZW5naW5lLW93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9m
-IFZpbm9kDQo+ID4gU2VudDogMjAxOOW5tDbmnIg25pelIDA6MjkNCj4gPiBUbzogV2VuIEhlIDx3
-ZW4uaGVfMUBueHAuY29tPg0KPiA+IENjOiBkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnOyByb2Jo
-K2R0QGtlcm5lbC5vcmc7DQo+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsgSmlhZmVpIFBhbg0KPiA+IDxqaWFmZWkucGFuQG54cC5jb20+
-OyBKaWFoZW5nIEZhbiA8amlhaGVuZy5mYW5AbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBSZTogW3Y1
-IDIvNl0gZG1hZW5naW5lOiBmc2wtcWRtYTogQWRkIHFETUEgY29udHJvbGxlciBkcml2ZXINCj4g
-PiBmb3IgTGF5ZXJzY2FwZSBTb0NzDQo+ID4NCj4gPiBPbiAzMS0wNS0xOCwgMDE6NTgsIFdlbiBI
-ZSB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiA+ICtzdGF0aWMgdm9pZCBmc2xfcWRtYV9pc3N1ZV9w
-ZW5kaW5nKHN0cnVjdCBkbWFfY2hhbiAqY2hhbikgew0KPiA+ID4gPiA+ID4gPiA+ID4gKwlzdHJ1
-Y3QgZnNsX3FkbWFfY2hhbiAqZnNsX2NoYW4gPQ0KPiB0b19mc2xfcWRtYV9jaGFuKGNoYW4pOw0K
-PiA+ID4gPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgZnNsX3FkbWFfcXVldWUgKmZzbF9xdWV1ZSA9IGZz
-bF9jaGFuLT5xdWV1ZTsNCj4gPiA+ID4gPiA+ID4gPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsN
-Cj4gPiA+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gPiA+ICsJc3Bpbl9sb2NrX2lycXNh
-dmUoJmZzbF9xdWV1ZS0+cXVldWVfbG9jaywgZmxhZ3MpOw0KPiA+ID4gPiA+ID4gPiA+ID4gKwlz
-cGluX2xvY2soJmZzbF9jaGFuLT52Y2hhbi5sb2NrKTsNCj4gPiA+ID4gPiA+ID4gPiA+ICsJaWYg
-KHZjaGFuX2lzc3VlX3BlbmRpbmcoJmZzbF9jaGFuLT52Y2hhbikpDQo+ID4gPiA+ID4gPiA+ID4g
-PiArCQlmc2xfcWRtYV9lbnF1ZXVlX2Rlc2MoZnNsX2NoYW4pOw0KPiA+ID4gPiA+ID4gPiA+ID4g
-KwlzcGluX3VubG9jaygmZnNsX2NoYW4tPnZjaGFuLmxvY2spOw0KPiA+ID4gPiA+ID4gPiA+ID4g
-KwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZmc2xfcXVldWUtPnF1ZXVlX2xvY2ssIGZsYWdzKTsN
-Cj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IHdoeSBkbyB3ZSBuZWVkIHR3byBsb2Nr
-cywgYW5kIHNpbmNlIHlvdSBhcmUgZG9pbmcgdmNoYW4NCj4gPiA+ID4gPiA+ID4gPiB3aHkgc2hv
-dWxkIHlvdSBhZGQgeW91ciBvd24gbG9jayBvbiB0b3ANCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBZZXMsIHdlIG5lZWQgdHdvIGxvY2tzLg0KPiA+ID4gPiA+
-ID4gPiBBcyB5b3Uga25vdywgdGhlIFFETUEgc3VwcG9ydCBtdWx0aXBsZSB2aXJ0dWFsaXplZCBi
-bG9ja3MNCj4gPiA+ID4gPiA+ID4gZm9yIG11bHRpLWNvcmUNCj4gPiA+ID4gPiA+IHN1cHBvcnQu
-DQo+ID4gPiA+ID4gPiA+IHNvIHdlIG5lZWQgdG8gbWFrZSBzdXJlIHRoYXQgbXVsaXRpLWNvcmUg
-YWNjZXNzIGlzc3Vlcy4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBidXQgd2h5IGNhbnQgeW91
-IHVzZSB2Y2hhbiBsb2NrIGZvciBhbGw/DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gV2UgY2FuJ3Qgb25seSB1c2UgdmNoYW4gbG9jayBmb3IgYWxsLiBvdGhlcndpc2UgZW5xdWV1
-ZSBhY3Rpb24NCj4gPiA+ID4gPiB3aWxsIGJlDQo+ID4gPiA+IGludGVycnVwdGVkLg0KPiA+ID4g
-Pg0KPiA+ID4gPiBJIHRoaW5rIGl0IGlzIHBvc3NpYmxlIHRvIHVzZSBvbmx5IHZjaGFuIGxvY2sN
-Cj4gPiA+DQo+ID4gPiBJIHRyaWVkIHRoYXQgaWYgSSB1c2Ugb25seSB2Y2hhbiBsb2NrIHRoZW4g
-cWRtYSB3aWxsIGJlIGNhbid0IHdvcmsuDQo+ID4gPiBEbyB5b3UgaGF2ZSBhIG90aGVyIGdvb2Qg
-aWRlYT8NCj4gPg0KPiA+IGNhbiB5b3UgZXhwbGFpbiB0aGUgc2NlbmFyaW8uLi4NCj4gPg0KPiBB
-bGwgcmlnaHQuDQo+IFdoZW4gRE1BIGNsaWVudCBzdGFydCB0cmFuc21pdCwgd2lsbCBiZSBjYWxs
-IGZ1bmN0aW9uDQo+IGRtYV9hc3luY19pc3N1ZV9wZW5kaW5nKCksIHRoZSBkbWFfYXN5bmNfaXNz
-dWVfcGVuZGluZygpIGNhbGwgdGhlIGhvb2sNCj4gcG9pbnRlciBkZXZpY2VfaXNzdWVfcGVuZGlu
-Zy4gVGhlIGZ1bmN0aW9uIGZzbF9xZG1hX2lzc3VlX3BlbmRpbmcoKSBpcyB1c2VkDQo+IHRvIGZp
-bGwgdGhlIGRldmljZV9pc3N1ZV9wZW5kaW5nIGZpZWxkLg0KPiANCj4gVGhlIGZ1bmN0aW9uIGZz
-bF9xZG1hX2lzc3VlX3BlbmRpbmcoKSBjYWxsIHRoZSBmdW5jdGlvbg0KPiBmc2xfcWRtYV9lbnF1
-ZXVlX2Rlc2MoKS4NCj4gDQo+IFRoZSBmdW5jdGlvbiBmc2xfcWRtYV9lbnF1ZXVlX2Rlc2MoKSBp
-bmNsdWRlcyAzIHN0ZXBzLg0KPiAxLiBwZWVrIGF0IHRoZSBuZXh0IGRlc2NyaXB0b3IgdG8gYmUg
-cHJvY2Vzc2VkLg0KPiAyLiBpZiBuZXh0IGRlc2NyaXB0b3IgZXhpc3QsIHRoZW4gaW5zZXJ0IHRv
-IGxpbmtlZCBsaXN0KHVzZWQgdG8gZ2V0IGl0IHdoZW4gdGhpcw0KPiBkZXNjcmlwdG9yIHRyYW5z
-ZmVyIGNvbXBsZXRlKS4NCj4gMy4gaWYgbmV4dCBkZXNjcmlwdG9yIGV4aXN0LCB0aGVuIHdyaXRp
-bmcgdG8gcWRtYS4NCj4gDQo+IEluIGFib3ZlIHN0ZXBzLCB3ZSB3aWxsIHVzZSBzdHJ1Y3QgZnNs
-X3FkbWFfY2hhbiBhbmQgc3RydWN0IGZzbF9xZG1hX3F1ZXVlLA0KPiBzbyB3ZSBuZWVkIHR3byBs
-b2NrcyB0byBwcm90ZWN0ZWQgaXQuDQo+IA0KPiBCZXN0IFJlZ2FyZHMsDQo+IFdlbg0KPiANCg0K
-SGkgVmlub2QsDQoNCkRvIHlvdSBoYXZlIGFueSBvdGhlciBjb21tZW50cyBiZXNpZGVzIHdlIGRp
-c2N1c3NlZD8NCkNhbiBJIHN1Ym1pdCBuZXh0IHZlcnNpb24gcGF0Y2g/DQoNCkxvb2tpbmcgZm9y
-d2FyZCB0byB5b3VyIHJlcGx5Lg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW4NCg0KPiA+IC0tDQo+ID4g
-flZpbm9kDQo+ID4gLS0NCj4gPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0
-aGUgbGluZSAidW5zdWJzY3JpYmUgZG1hZW5naW5lIg0KPiA+IGluIHRoZSBib2R5IG9mIGEgbWVz
-c2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnIE1vcmUgbWFqb3Jkb21vDQo+ID4gaW5m
-byBhdA0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/
-dXJsPWh0dHAlM0ElMkYlMkZ2Z2VyLg0KPiA+DQo+IGtlcm5lbC5vcmclMkZtYWpvcmRvbW8taW5m
-by5odG1sJmRhdGE9MDIlN0MwMSU3Q3dlbi5oZV8xJTQwbnhwLmNvDQo+ID4NCj4gbSU3QzBmN2Nj
-NTMzZDZiZjRkZTA2N2QwMDhkNWNiMDE3NDJjJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTkNCj4g
-Pg0KPiBjNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjYzODEyOTQ2NjY1MDMyMSZzZGF0YT16cmMwUGYl
-MkJxMHBxaXhxbQ0KPiA+IExDNWpoakx2dlY1TWlTVU02OFh0YW5KeGdNYlElM0QmcmVzZXJ2ZWQ9
-MA0KPiAT44ik5peDPz/ov4Y/P+eRrCst6YGN6I27F+6aj3fnloTol7PnrJTpiJPpj7Vp54y35aab
-7paD6LGdbuWZkOKWoO6boD/kvoJo5quS55KAP+KFpx7nk73nj7QNCj4g6ZaUPyjuhaLmrqDlqLju
-lZAi5r+fGj9tP+mjpui1h3rnvZDmnojluLxm77yC56mQ5q6Y7p2E5Z2iDQo=
+On Mon, Jun 11, 2018 at 11:00 PM, Vinod <vkoul@kernel.org> wrote:
+> On 05-06-18, 12:24, Li Yang wrote:
+>> On Tue, Jun 5, 2018 at 11:30 AM, Vinod <vkoul@kernel.org> wrote:
+>> > On 04-06-18, 09:53, Wen He wrote:
+>> >
+>> >>
+>> >> > > +// SPDX-License-Identifier: GPL-2.0
+>> >> > > +// Copyright 2018 NXP
+>> >> >
+>> >> > I know the SPDX tag is recommended to be the 1st line, but copyright normally
+>> >> > goes below the file description not above.
+>> >
+>> > I do not think that is specified anywhere.. can you point it?
+>>
+>> No.  It is not documented.  But the majority of the source files in
+>> Linux are using this header format like below, so I assume it is
+>> something like a convention.
+>>
+>> /*
+>>  * {filename --} file description
+>>  *
+>>  * Copyright ...
+>>  *
+>>  * License ...
+>>  */
+>>
+>> The Documentation/process/license-rules.rst only mentioned about the
+>> requirement for SPDX tags.  So I think we should keep the format for
+>> other part of the header.
+>
+> And Linus said this https://lkml.org/lkml/2017/11/25/133
+
+Thanks for the information.  It is new to me.  So probably we can keep
+the original template but just change * based comment to // based
+comment, like:
+
+// SPDX-License-Identifier: ...
+//
+// {filename --} file description
+//
+// Copyright ....
+
+Regards,
+Leo
