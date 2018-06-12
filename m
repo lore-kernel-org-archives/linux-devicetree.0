@@ -1,13 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 21/27] drm/sun4i: DW HDMI PHY: Add support
- for second PLL
-Date: Tue, 12 Jun 2018 22:00:30 +0200
-Message-ID: <20180612200036.21483-22-jernej.skrabec@siol.net>
+Subject: [PATCH v2 23/27] drm/sun4i: Add support for A64 HDMI PHY
+Date: Tue, 12 Jun 2018 22:00:32 +0200
+Message-ID: <20180612200036.21483-24-jernej.skrabec@siol.net>
 References: <20180612200036.21483-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBY6NQDMQKGQEUG5PBFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB2GNQDMQKGQEI2YABVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180612200036.21483-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,85 +19,43 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some DW HDMI PHYs, like those found in A64 and R40 SoCs, can select
-between two clock parents.
-
-Add code which reads second PLL from DT.
+PHY is the same as in H3, except it can switch between two clock
+parents.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h  |  2 ++
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 20 +++++++++++++++-----
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 3ba71aff92fc..46a3aa6a53a9 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -147,6 +147,7 @@ struct sun8i_hdmi_phy;
- 
- struct sun8i_hdmi_phy_variant {
- 	bool has_phy_clk;
-+	bool has_second_pll;
- 	void (*phy_init)(struct sun8i_hdmi_phy *phy);
- 	void (*phy_disable)(struct dw_hdmi *hdmi,
- 			    struct sun8i_hdmi_phy *phy);
-@@ -160,6 +161,7 @@ struct sun8i_hdmi_phy {
- 	struct clk			*clk_mod;
- 	struct clk			*clk_phy;
- 	struct clk			*clk_pll0;
-+	struct clk			*clk_pll1;
- 	unsigned int			rcal;
- 	struct regmap			*regs;
- 	struct reset_control		*rst_phy;
 diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-index cd07ceb71601..f50072ae054a 100644
+index e1b7196d4587..457f0a121684 100644
 --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
 +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-@@ -482,10 +482,19 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node)
- 			goto err_put_clk_mod;
- 		}
+@@ -396,6 +396,14 @@ static struct regmap_config sun8i_hdmi_phy_regmap_config = {
+ 	.name		= "phy"
+ };
  
-+		if (phy->variant->has_second_pll) {
-+			phy->clk_pll1 = of_clk_get_by_name(node, "pll-1");
-+			if (IS_ERR(phy->clk_pll1)) {
-+				dev_err(dev, "Could not get pll-1 clock\n");
-+				ret = PTR_ERR(phy->clk_pll1);
-+				goto err_put_clk_pll0;
-+			}
-+		}
++static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
++	.has_phy_clk = true,
++	.has_second_pll = true,
++	.phy_init = &sun8i_hdmi_phy_init_h3,
++	.phy_disable = &sun8i_hdmi_phy_disable_h3,
++	.phy_config = &sun8i_hdmi_phy_config_h3,
++};
 +
- 		ret = sun8i_phy_clk_create(phy, dev);
- 		if (ret) {
- 			dev_err(dev, "Couldn't create the PHY clock\n");
--			goto err_put_clk_pll0;
-+			goto err_put_clk_pll1;
- 		}
+ static const struct sun8i_hdmi_phy_variant sun8i_a83t_hdmi_phy = {
+ 	.phy_init = &sun8i_hdmi_phy_init_a83t,
+ 	.phy_disable = &sun8i_hdmi_phy_disable_a83t,
+@@ -410,6 +418,10 @@ static const struct sun8i_hdmi_phy_variant sun8i_h3_hdmi_phy = {
+ };
  
- 		clk_prepare_enable(phy->clk_phy);
-@@ -528,9 +537,10 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node)
- 	reset_control_put(phy->rst_phy);
- err_disable_clk_phy:
- 	clk_disable_unprepare(phy->clk_phy);
-+err_put_clk_pll1:
-+	clk_put(phy->clk_pll1);
- err_put_clk_pll0:
--	if (phy->variant->has_phy_clk)
--		clk_put(phy->clk_pll0);
-+	clk_put(phy->clk_pll0);
- err_put_clk_mod:
- 	clk_put(phy->clk_mod);
- err_put_clk_bus:
-@@ -551,8 +561,8 @@ void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi *hdmi)
- 
- 	reset_control_put(phy->rst_phy);
- 
--	if (phy->variant->has_phy_clk)
--		clk_put(phy->clk_pll0);
-+	clk_put(phy->clk_pll0);
-+	clk_put(phy->clk_pll1);
- 	clk_put(phy->clk_mod);
- 	clk_put(phy->clk_bus);
- }
+ static const struct of_device_id sun8i_hdmi_phy_of_table[] = {
++	{
++		.compatible = "allwinner,sun50i-a64-hdmi-phy",
++		.data = &sun50i_a64_hdmi_phy,
++	},
+ 	{
+ 		.compatible = "allwinner,sun8i-a83t-hdmi-phy",
+ 		.data = &sun8i_a83t_hdmi_phy,
 -- 
 2.17.1
