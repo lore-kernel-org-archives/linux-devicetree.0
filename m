@@ -1,61 +1,78 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 1/6] dt-bindings: media: rcar-vin: Describe optional ep
- properties
-Date: Tue, 12 Jun 2018 16:26:01 +0200
-Message-ID: <1528813566-17927-2-git-send-email-jacopo+renesas@jmondi.org>
-References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Madalin-cristian Bucur <madalin.bucur@nxp.com>
+Subject: RE: [v3, 00/10] Support DPAA PTP clock and timestamping
+Date: Tue, 12 Jun 2018 14:27:35 +0000
+Message-ID: <AM6PR04MB400853DACF980BE0E117D9C6EC7F0@AM6PR04MB4008.eurprd04.prod.outlook.com>
+References: <20180607092050.46128-1-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verge.net.au, geert@glider.be
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180607092050.46128-1-yangbo.lu@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-RGVzY3JpYmUgdGhlIG9wdGlvbmFsIGVuZHBvaW50IHByb3BlcnRpZXMgZm9yIGVuZHBvaW50IG5v
-ZGVzIG9mIHBvcnRAMAphbmQgcG9ydEAxIG9mIHRoZSBSLUNhciBWSU4gZHJpdmVyIGRldmljZSB0
-cmVlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBKYWNvcG8gTW9uZGkg
-PGphY29wbytyZW5lc2FzQGptb25kaS5vcmc+CkFja2VkLWJ5OiBOaWtsYXMgU8O2ZGVybHVuZCA8
-bmlrbGFzLnNvZGVybHVuZCtyZW5lc2FzQHJhZ25hdGVjaC5zZT4KUmV2aWV3ZWQtYnk6IFJvYiBI
-ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21lZGlhL3JjYXJfdmluLnR4dCB8IDEwICsrKysrKysrKysKIDEgZmlsZSBjaGFuZ2Vk
-LCAxMCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lZGlhL3JjYXJfdmluLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS9yY2FyX3Zpbi50eHQKaW5kZXggYTE5NTE3ZTEuLjg3ZjkzZWMgMTAwNjQ0
-Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9yY2FyX3Zpbi50
-eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3JjYXJfdmlu
-LnR4dApAQCAtNTMsNiArNTMsMTQgQEAgZnJvbSBsb2NhbCBTb0MgQ1NJLTIgcmVjZWl2ZXJzIChw
-b3J0MSkgZGVwZW5kaW5nIG9uIFNvQy4KICAgICAgIGZyb20gZXh0ZXJuYWwgU29DIHBpbnMgZGVz
-Y3JpYmVkIGluIHZpZGVvLWludGVyZmFjZXMudHh0WzFdLgogICAgICAgRGVzY3JpYmluZyBtb3Jl
-IHRoZW4gb25lIGVuZHBvaW50IGluIHBvcnQgMCBpcyBpbnZhbGlkLiBPbmx5IFZJTgogICAgICAg
-aW5zdGFuY2VzIHRoYXQgYXJlIGNvbm5lY3RlZCB0byBleHRlcm5hbCBwaW5zIHNob3VsZCBoYXZl
-IHBvcnQgMC4KKworICAgICAgLSBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBlbmRwb2ludCBub2Rl
-cyBvZiBwb3J0QDA6CisgICAgICAgIC0gaHN5bmMtYWN0aXZlOiBzZWUgWzFdIGZvciBkZXNjcmlw
-dGlvbi4gRGVmYXVsdCBpcyBhY3RpdmUgaGlnaC4KKyAgICAgICAgLSB2c3luYy1hY3RpdmU6IHNl
-ZSBbMV0gZm9yIGRlc2NyaXB0aW9uLiBEZWZhdWx0IGlzIGFjdGl2ZSBoaWdoLgorCisgICAgICAg
-IElmIGJvdGggSFNZTkMgYW5kIFZTWU5DIHBvbGFyaXRpZXMgYXJlIG5vdCBzcGVjaWZpZWQsIGVt
-YmVkZGVkCisgICAgICAgIHN5bmNocm9uaXphdGlvbiBpcyBzZWxlY3RlZC4KKwogICAgIC0gcG9y
-dCAxIC0gc3ViLW5vZGVzIGRlc2NyaWJpbmcgb25lIG9yIG1vcmUgZW5kcG9pbnRzIGNvbm5lY3Rl
-ZCB0bwogICAgICAgdGhlIFZJTiBmcm9tIGxvY2FsIFNvQyBDU0ktMiByZWNlaXZlcnMuIFRoZSBl
-bmRwb2ludCBudW1iZXJzIG11c3QKICAgICAgIHVzZSB0aGUgZm9sbG93aW5nIHNjaGVtYS4KQEAg
-LTYyLDYgKzcwLDggQEAgZnJvbSBsb2NhbCBTb0MgQ1NJLTIgcmVjZWl2ZXJzIChwb3J0MSkgZGVw
-ZW5kaW5nIG9uIFNvQy4KICAgICAgICAgLSBFbmRwb2ludCAyIC0gc3ViLW5vZGUgZGVzY3JpYmlu
-ZyB0aGUgZW5kcG9pbnQgY29ubmVjdGVkIHRvIENTSTQwCiAgICAgICAgIC0gRW5kcG9pbnQgMyAt
-IHN1Yi1ub2RlIGRlc2NyaWJpbmcgdGhlIGVuZHBvaW50IGNvbm5lY3RlZCB0byBDU0k0MQogCisg
-ICAgICBFbmRwb2ludCBub2RlcyBvZiBwb3J0QDEgZG8gbm90IHN1cHBvcnQgYW55IG9wdGlvbmFs
-IGVuZHBvaW50IHByb3BlcnR5LgorCiBEZXZpY2Ugbm9kZSBleGFtcGxlIGZvciBHZW4yIHBsYXRm
-b3JtcwogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIAotLSAKMi43LjQK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+> -----Original Message-----
+> From: Yangbo Lu [mailto:yangbo.lu@nxp.com]
+> Sent: Thursday, June 7, 2018 12:21 PM
+> To: netdev@vger.kernel.org; Madalin-cristian Bucur
+> <madalin.bucur@nxp.com>; Richard Cochran <richardcochran@gmail.com>;
+> Rob Herring <robh+dt@kernel.org>; Shawn Guo <shawnguo@kernel.org>;
+> David S . Miller <davem@davemloft.net>
+> Cc: devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Y.b. Lu
+> <yangbo.lu@nxp.com>
+> Subject: [v3, 00/10] Support DPAA PTP clock and timestamping
+>=20
+> This patchset is to support DPAA FMAN PTP clock and HW timestamping.
+> It had been verified on both ARM platform and PPC platform.
+> - The patch #1 to patch #5 are to support DPAA FMAN 1588 timer in
+>   ptp_qoriq driver.
+> - The patch #6 to patch #10 are to add HW timestamping support in
+>   DPAA ethernet driver.
+>=20
+> Yangbo Lu (10):
+>   fsl/fman: share the event interrupt
+>   ptp: support DPAA FMan 1588 timer in ptp_qoriq
+>   dt-binding: ptp_qoriq: add DPAA FMan support
+>   powerpc/mpc85xx: move ptp timer out of fman in dts
+>   arm64: dts: fsl: move ptp timer out of fman
+>   fsl/fman: add set_tstamp interface
+>   fsl/fman_port: support getting timestamp
+>   fsl/fman: define frame description command UPD
+>   dpaa_eth: add support for hardware timestamping
+>   dpaa_eth: add the get_ts_info interface for ethtool
+>=20
+>  Documentation/devicetree/bindings/net/fsl-fman.txt |   25 +-----
+>  .../devicetree/bindings/ptp/ptp-qoriq.txt          |   15 +++-
+>  arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi   |   14 ++-
+>  arch/powerpc/boot/dts/fsl/qoriq-fman-0.dtsi        |   14 ++-
+>  arch/powerpc/boot/dts/fsl/qoriq-fman-1.dtsi        |   14 ++-
+>  arch/powerpc/boot/dts/fsl/qoriq-fman3-0.dtsi       |   14 ++-
+>  arch/powerpc/boot/dts/fsl/qoriq-fman3-1.dtsi       |   14 ++-
+>  arch/powerpc/boot/dts/fsl/qoriq-fman3l-0.dtsi      |   14 ++-
+>  drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     |   88
+> ++++++++++++++++-
+>  drivers/net/ethernet/freescale/dpaa/dpaa_eth.h     |    3 +
+>  drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c |   39 ++++++++
+>  drivers/net/ethernet/freescale/fman/fman.c         |    3 +-
+>  drivers/net/ethernet/freescale/fman/fman.h         |    1 +
+>  drivers/net/ethernet/freescale/fman/fman_dtsec.c   |   27 +++++
+>  drivers/net/ethernet/freescale/fman/fman_dtsec.h   |    1 +
+>  drivers/net/ethernet/freescale/fman/fman_memac.c   |    5 +
+>  drivers/net/ethernet/freescale/fman/fman_memac.h   |    1 +
+>  drivers/net/ethernet/freescale/fman/fman_port.c    |   12 +++
+>  drivers/net/ethernet/freescale/fman/fman_port.h    |    2 +
+>  drivers/net/ethernet/freescale/fman/fman_tgec.c    |   21 ++++
+>  drivers/net/ethernet/freescale/fman/fman_tgec.h    |    1 +
+>  drivers/net/ethernet/freescale/fman/mac.c          |    3 +
+>  drivers/net/ethernet/freescale/fman/mac.h          |    1 +
+>  drivers/ptp/Kconfig                                |    2 +-
+>  drivers/ptp/ptp_qoriq.c                            |  104 ++++++++++++--=
+-----
+>  include/linux/fsl/ptp_qoriq.h                      |   38 ++++++--
+>  26 files changed, 361 insertions(+), 115 deletions(-)
+
+Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
