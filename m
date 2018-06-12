@@ -1,49 +1,60 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH 0/4] Fix suspend resume on at91sam9261 and at91sam9263
-Date: Tue, 12 Jun 2018 12:24:08 +0200
-Message-ID: <fb9ed9bf-52b9-4a46-cd70-469d933deefd@microchip.com>
-References: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Tue, 12 Jun 2018 20:28:48 +1000
+Message-ID: <53ef03b26a17738dc1465ce85562c9611ad415f8.camel@kernel.crashing.org>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+         <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
-Content-Language: en-US
+In-Reply-To: <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/2018 at 10:41, Alexandre Belloni wrote:
-> USB clock detection may not work properly on at91sam9261 and at91sam9263
-> because they currently use the same bit mask as at91rm9200 instead of
-> the one for at91sam9260.
+On Tue, 2018-06-12 at 11:35 +0300, Andy Shevchenko wrote:
+> On Tue, Jun 12, 2018 at 3:01 AM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> > There are still quite a few cases where a device might want to get to a
+> > different node of the device-tree, obtain the resources and map them.
+> > 
+> > Drivers doing that currently open code the whole thing, which is error
+> > proe.
 > 
-> Take the opportunity to also change the PMC compatible strings for all
-> the other SoCs in preparation for the new clock bindings.
+> prone
 > 
-> Alexandre Belloni (4):
->    dt-bindings: arm: remove PMC bindings
->    dt-bindings: clk: at91: Document all the PMC compatibles
->    ARM: at91: fix USB clock detection handling
->    ARM: dts: fix PMC compatible
-
-To the whole series:
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-
-Thanks, best regards.
-
->   .../devicetree/bindings/arm/atmel-pmc.txt          | 14 --------------
->   .../devicetree/bindings/clock/at91-clock.txt       |  9 ++++-----
->   arch/arm/boot/dts/at91sam9261.dtsi                 |  2 +-
->   arch/arm/boot/dts/at91sam9263.dtsi                 |  2 +-
->   arch/arm/boot/dts/at91sam9rl.dtsi                  |  2 +-
->   arch/arm/boot/dts/sama5d4.dtsi                     |  2 +-
->   arch/arm/mach-at91/pm.c                            |  5 +++++
->   7 files changed, 13 insertions(+), 23 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/arm/atmel-pmc.txt
+> > 
+> > We have of_iomap() and of_io_request_and_map() but they both have shortcomings,
+> > such as not returning the size of the resource found (which can be necessary)
+> > and not being "managed".
+> > 
+> > This adds a devm_of_iomap() that provides all of these and should probably
+> > replace uses of the above in most drivers.
 > 
+> It feels like a wrong approach.
+> Can OF graph help here? Would it be better approach?
 
+I don't quite understand what your objection is nor what "OF graph"
+is...
 
--- 
-Nicolas Ferre
+This is a direct replacement for the open coded equivalent that a
+number of drivers do, almost always without using devm_* or forgetting
+to request the resources etc... Ie, a less bug-prone tool in the
+toolbox.
+
+So there's a real use case here.
+
+In fact a driver I'm going to submit soon uses it, which is why I wrote
+it in the first place, rather than adding yet another open-coded case.
+
+And to reply to the inevitable next reaction, NO this is not a case for
+creating yet another 237 layers of abstractions. Sometimes, a driver
+needs to directly access (no regmap overhead please) some regions
+represented by a specific DT node (it could be a child of the device
+for example representing a portion of its register space, or it could
+be a separate piece of HW that needs to be used by the device but
+doesn't fit in any abstract model and shouldn't).
+
+Ben.
