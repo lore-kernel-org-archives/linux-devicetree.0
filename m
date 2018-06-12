@@ -1,74 +1,57 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 6/6] dt-bindings: media: rcar-vin: Clarify optional
- props
-Date: Tue, 12 Jun 2018 19:15:06 +0300
-Message-ID: <2802458.0ZPzlQSr2q@avalon>
-References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
- <1528813566-17927-7-git-send-email-jacopo+renesas@jmondi.org>
- <20180612154553.kgqnqkwv3y6srivg@kekkonen.localdomain>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 2/7] clk: at91: add I2S clock mux driver
+Date: Tue, 12 Jun 2018 09:33:24 -0700
+Message-ID: <152882120419.16708.16947882037246176868@swboyd.mtv.corp.google.com>
+References: <1527251668-31396-1-git-send-email-codrin.ciubotariu@microchip.com>
+ <1527251668-31396-3-git-send-email-codrin.ciubotariu@microchip.com>
+ <152778039660.144038.4743783065942615925@swboyd.mtv.corp.google.com>
+ <d2558674-9aee-8b08-293f-34754fd2b185@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180612154553.kgqnqkwv3y6srivg@kekkonen.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, niklas.soderlund@ragnatech.se, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d2558674-9aee-8b08-293f-34754fd2b185@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>, alexandre.belloni@bootlin.com, alsa-devel@alsa-project.org, boris.brezillon@bootlin.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, robh+dt@kernel.org
+Cc: Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Quoting Codrin Ciubotariu (2018-06-04 01:20:29)
+> On 31.05.2018 18:26, Stephen Boyd wrote:
+> > Quoting Codrin Ciubotariu (2018-05-25 05:34:23)
+> > =
 
-On Tuesday, 12 June 2018 18:45:53 EEST Sakari Ailus wrote:
-> On Tue, Jun 12, 2018 at 04:26:06PM +0200, Jacopo Mondi wrote:
-> > Add a note to the R-Car VIN interface bindings to clarify that all
-> > properties listed as generic properties in video-interfaces.txt can
-> > be included in port@0 endpoint, but if not explicitly listed in the
-> > interface bindings documentation, they do not modify it behaviour.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > b/Documentation/devicetree/bindings/media/rcar_vin.txt index
-> > 8130849..03544c7 100644
-> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > @@ -55,6 +55,12 @@ from local SoC CSI-2 receivers (port1) depending on
-> > SoC.
-> > 
-> >        instances that are connected to external pins should have port 0.
-> > 
-> >        - Optional properties for endpoint nodes of port@0:
-> > +
-> > +        All properties described in [1] and which apply to the selected
-> > +        media bus type could be optionally listed here to better describe
-> > +        the current hardware configuration, but only the following ones
-> > do
-> > +        actually modify the VIN interface behaviour:
-> > +
-> 
-> I don't think this should be needed. You should only have properties that
-> describe the hardware configuration in a given system.
+> >> +       .get_parent =3D clk_i2s_mux_get_parent,
+> >> +       .set_parent =3D clk_i2s_mux_set_parent,
+> >> +       .determine_rate =3D __clk_mux_determine_rate,
+> >> +};
+> >> +
+> >> +static struct clk_hw * __init
+> >> +at91_clk_i2s_mux_register(struct regmap *regmap, const char *name,
+> >> +                         const char * const *parent_names,
+> >> +                         unsigned int num_parents, u32 bus_id)
+> >> +{
+> >> +       struct clk_init_data init =3D {};
+> >> +       struct clk_i2s_mux *i2s_ck;
+> >> +       int ret;
+> >> +
+> >> +       i2s_ck =3D kzalloc(sizeof(*i2s_ck), GFP_KERNEL);
+> >> +       if (!i2s_ck)
+> >> +               return ERR_PTR(-ENOMEM);
+> >> +
+> >> +       init.name =3D name;
+> >> +       init.ops =3D &clk_i2s_mux_ops;
+> >> +       init.parent_names =3D parent_names;
+> >> +       init.num_parents =3D num_parents;
+> >> +       init.flags =3D CLK_IGNORE_UNUSED;
+> > =
 
-I agree. Please list explicitly all properties that are applicable for this 
-device, and don't tell which one(s) are used by the driver.
+> > Really? Why?
+> =
 
-> >          - hsync-active: see [1] for description. Default is active high.
-> >          - vsync-active: see [1] for description. Default is active high.
-> >          - data-enable-active: polarity of CLKENB signal, see [1] for
+> I am thinking that there is no need to gate this clock, since there is =
 
--- 
-Regards,
+> no way to gate this clock in HW.
 
-Laurent Pinchart
+This flag is not necessary if the clk can't be gated via hardware
+control registers. Please remove the flag.
