@@ -1,58 +1,25 @@
-Return-Path: <SRS0=sliF=I4=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: phy: Renesas R-Car Gen3 PCIe PHY bindings
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <04384ce6-b696-715d-2072-345654e3fccf@cogentembedded.com>
-Message-ID: <9293ae00-8684-962a-346e-13cb12e5cddb@cogentembedded.com>
-Date: Sun, 10 Jun 2018 21:22:46 +0300
+Return-Path: <SRS0=6uym=I6=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <04384ce6-b696-715d-2072-345654e3fccf@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <529bc49b-e258-20ae-fe97-6d0abcec39ec@cogentembedded.com>
+References: <529bc49b-e258-20ae-fe97-6d0abcec39ec@cogentembedded.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 12 Jun 2018 15:07:54 +0200
+Message-ID: <CACRpkdZo1tCAq1mfCpE_5rYJFO95QPv0WKF3Tp6Y=GDnUWj=Aw@mail.gmail.com>
+Subject: Re: [PATCH] gpio-rcar: document R8A77980 bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This PHY is  still  mostly undocumented --  the only documented registers
-exist on R-Car V3H (R8A77980) SoC.  Add the corresponding device tree
-bindings.
+On Fri, Jun 1, 2018 at 10:13 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Renesas R-Car V3H (R8A77980) SoC also has the R-Car gen3 compatible GPIO
+> controllers, so document the SoC specific bindings.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
----
-Changes in version 2:
-- split from the big driver/bindings patch;
-- got rid of the generic R-Car gen3 "compatible" prop value.
+Patch applied with Geert's review tag.
 
- Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt |   24 +++++++++++
- 1 file changed, 24 insertions(+)
-
-Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
-===================================================================
---- /dev/null
-+++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt
-@@ -0,0 +1,24 @@
-+* Renesas R-Car generation 3 PCIe PHY
-+
-+This file provides information on what the device node for the R-Car
-+generation 3 PCIe PHY contains.
-+
-+Required properties:
-+- compatible: "renesas,r8a77980-pcie-phy" if the device is a part of the
-+	      R8A77980 SoC.
-+- reg: offset and length of the register block.
-+- clocks: clock phandle and specifier pair.
-+- power-domains: power domain phandle and specifier pair.
-+- resets: reset phandle and specifier pair.
-+- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
-+
-+Example (R-Car V3H):
-+
-+	pcie-phy@e65d0000 {
-+		compatible = "renesas,r8a77980-pcie-phy";
-+		reg = <0 0xe65d0000 0 0x8000>;
-+		#phy-cells = <0>;
-+		clocks = <&cpg CPG_MOD 319>;
-+		power-domains = <&sysc 32>;
-+		resets = <&cpg 319>;
-+	};
+Yours,
+Linus Walleij
