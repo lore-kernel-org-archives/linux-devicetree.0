@@ -1,13 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 14/27] drm/sun4i: Don't check for panel or
- bridge on TV TCONs
-Date: Tue, 12 Jun 2018 22:00:23 +0200
-Message-ID: <20180612200036.21483-15-jernej.skrabec@siol.net>
+Subject: [PATCH v2 15/27] drm/sun4i: Add support for R40 TV TCON
+Date: Tue, 12 Jun 2018 22:00:24 +0200
+Message-ID: <20180612200036.21483-16-jernej.skrabec@siol.net>
 References: <20180612200036.21483-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBUONQDMQKGQE64OYTCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBWGNQDMQKGQEXAU6UNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180612200036.21483-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,43 +19,39 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TV TCONs are always connected to TV or HDMI encoder, so it doesn't make
-sense to check if panel or bridge is connected to them.
+R40 TV TCON is similar to the A83T TV TCON, except that it needs
+additional gate to be enabled.
 
-Check if TCON has channel 0 and only then check for connected panel or
-bridges.
+Add support for it.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index b1205a7bc20f..c9ffa5381185 100644
+index c9ffa5381185..f20da2aa2165 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -1189,13 +1189,19 @@ static const struct component_ops sun4i_tcon_ops = {
- static int sun4i_tcon_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
-+	const struct sun4i_tcon_quirks *quirks;
- 	struct drm_bridge *bridge;
- 	struct drm_panel *panel;
- 	int ret;
+@@ -1326,6 +1326,11 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+ 	.has_channel_1		= true,
+ };
  
--	ret = drm_of_find_panel_or_bridge(node, 1, 0, &panel, &bridge);
--	if (ret == -EPROBE_DEFER)
--		return ret;
-+	quirks = of_device_get_match_data(&pdev->dev);
++static const struct sun4i_tcon_quirks sun8i_r40_tv_quirks = {
++	.has_channel_1		= true,
++	.has_tcon_top_gate	= true,
++};
 +
-+	/* panels and bridges are present only on TCONs with channel 0 */
-+	if (quirks->has_channel_0) {
-+		ret = drm_of_find_panel_or_bridge(node, 1, 0, &panel, &bridge);
-+		if (ret == -EPROBE_DEFER)
-+			return ret;
-+	}
- 
- 	return component_add(&pdev->dev, &sun4i_tcon_ops);
- }
+ static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+ 	.has_channel_0		= true,
+ };
+@@ -1350,6 +1355,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
+ 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
+ 	{ .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data = &sun8i_a83t_lcd_quirks },
+ 	{ .compatible = "allwinner,sun8i-a83t-tcon-tv", .data = &sun8i_a83t_tv_quirks },
++	{ .compatible = "allwinner,sun8i-r40-tcon-tv", .data = &sun8i_r40_tv_quirks },
+ 	{ .compatible = "allwinner,sun8i-v3s-tcon", .data = &sun8i_v3s_quirks },
+ 	{ .compatible = "allwinner,sun9i-a80-tcon-lcd", .data = &sun9i_a80_tcon_lcd_quirks },
+ 	{ .compatible = "allwinner,sun9i-a80-tcon-tv", .data = &sun9i_a80_tcon_tv_quirks },
 -- 
 2.17.1
