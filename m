@@ -1,165 +1,463 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 6/8] dt-bindings: rcar-vin: Add 'hsync-as-de' custom
- prop
-Date: Tue, 12 Jun 2018 15:29:49 +0200
-Message-ID: <20180612132949.GB4952@w540>
-References: <1527606359-19261-1-git-send-email-jacopo+renesas@jmondi.org>
- <1527606359-19261-7-git-send-email-jacopo+renesas@jmondi.org>
- <20180604121933.GG19674@bigcity.dyn.berto.se>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8787796467708955830=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180604121933.GG19674@bigcity.dyn.berto.se>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v3] ARM: DTS: imx53: Add support for imx53 HSC/DDC boards from K+P
+Date: Tue, 12 Jun 2018 15:32:08 +0200
+Message-ID: <20180612133208.22458-1-lukma@denx.de>
+References: <20180509153428.1440-1-lukma@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180509153428.1440-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
+This commit provides support for HSC and DDC boards from
+Kieback&Peter GmbH vendor.
 
---===============8787796467708955830==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ylS2wUBXLOxYXZFQ"
-Content-Disposition: inline
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
+Changes for v3:
 
+- Add Reviewed-by tag
+- The &fec label moved to proper position
+- Newline between property list and child node
+- Remove not needed blank line
+- Change name from underscore to hypen in the 'led' and 'button' node names
+- Change the 'gpio_expanderX' name to 'gpio-expander'
 
---ylS2wUBXLOxYXZFQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes for v2:
 
-Hi Niklas,
+- Remove not needed #address-cells and #size-cells in
+  the gpio_buttons node to pass make W=1
+- Rename button@{12} to button_{kalt|pwr} nodes to pass make W=1
+- Include #include <dt-bindings/input/input.h> to use KEY_F6|F7 directly
+---
+ arch/arm/boot/dts/Makefile         |   2 +
+ arch/arm/boot/dts/imx53-kp-ddc.dts | 146 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx53-kp-hsc.dts |  52 ++++++++++
+ arch/arm/boot/dts/imx53-kp.dtsi    | 189 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 389 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx53-kp-ddc.dts
+ create mode 100644 arch/arm/boot/dts/imx53-kp-hsc.dts
+ create mode 100644 arch/arm/boot/dts/imx53-kp.dtsi
 
-On Mon, Jun 04, 2018 at 02:19:33PM +0200, Niklas S=C3=B6derlund wrote:
-> Hi Jacopo,
->
-> Thanks for your work.
->
-> On 2018-05-29 17:05:57 +0200, Jacopo Mondi wrote:
-> > Document the boolean custom property 'renesas,hsync-as-de' that indicat=
-es
-> > that the HSYNC signal is internally used as data-enable, when the
-> > CLKENB signal is not connected.
-> >
-> > As this is a VIN specificity create a custom property specific to the R=
--Car
-> > VIN driver.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> > v3:
-> > - new patch
-> > ---
-> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Doc=
-umentation/devicetree/bindings/media/rcar_vin.txt
-> > index ff53226..024c109 100644
-> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> > @@ -60,6 +60,9 @@ from local SoC CSI-2 receivers (port1) depending on S=
-oC.
-> >          - vsync-active: see [1] for description. Default is active hig=
-h.
-> >          - data-enable-active: polarity of CLKENB signal, see [1] for
-> >            description. Default is active high.
-> > +        - renesas,hsync-as-de: a boolean property to indicate that HSY=
-NC signal
-> > +          is internally used as data-enable when the CLKENB signal is
-> > +          not available.
->
-> I'm not sure I like this, is there really a need to add a custom
-> property for this? The datasheet states that when the CLKENB pin is not
-> connected the driver should enable 'Clock Enable Hsync Select (CHS)'.
-> With the new generic property 'data-enable-active' which describes the
-> polarity of the CLKENB pin we also gain the knowledge if the CLKENB pin
-> is connected or not.
-
-That was my first proposal, we discussed that in
-Re: [PATCH 3/6] media: rcar-vin: Handle data-active property
-Re: [PATCH 2/6] dt-bindings: media: rcar-vin: Document data-active
-
-Let's sum it up in this way:
-Instead of having to deal again with the "what happens if there is no
-data-enable-active and we're running on BT.656 where there is no HSYNC sign=
-al"[1]
-I decided to go with a custom property.
-
->
-> I propose we drop this custom property and instead let the driver check
-> if the CLKENB polarity is described or not and use that to determine if
-> CHS bit should be set or not. IMHO that is much simpler then having two
-> properties describing the same pin.
->
-
-It is my understanding that both Gen2 and Gen3 boards CVBS input are
-BT.656 and none of them has CLKENB input. So 'data-enable-active' is
-never there but in this case we should not set CHS. So the absence of
-'data-enable-active' has different consequences if we're running on
-parallel or BT.656 bus, and that feels confusing to me, so I decided
-to make it an explicit property.
-
-Also, as the interface manual describes the "use HSYNC in place of CLKENB"
-when on parallel bus as a design choice, that should imo be documented.
-
-Again, this is very minor stuff. I'll leave this out from next
-version, maybe we can talk about this f2f next week.
-
-Thanks
-  j
-
-> >
-> >          If both HSYNC and VSYNC polarities are not specified, embedded
-> >          synchronization is selected.
-> > --
-> > 2.7.4
-> >
->
-> --
-> Regards,
-> Niklas S=C3=B6derlund
-
---ylS2wUBXLOxYXZFQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbH8rNAAoJEHI0Bo8WoVY8wMEQALpFZlqVlYoYO/BkQNg3kluS
-8O4wCsG6lWDr92nKrDdo/vPpyfkgD8NkTUQrXl6pSjDyazPDq9MgIyuHvoxy4VYR
-BV3bbb6RAbYB2uSXa0O58T0C0qfeskmEsHE7e1EY/sZSBGYcNbOsUHyX1rl+LNZp
-6ZpslMtOb15z+P5UHAPIOQmMf+YKq6uijXpv2e7VHvK2Y4MplvRqBISMgl2fMbdx
-qCkiI0caiTC9AZ3YPnMJnOjm8z5OyZnDp5rxCRpX4/vIwMZUqJ3Bk8KzXmVt9s/j
-ByeOjjRX4i5HPSiEkfUrXO6Xv74QCWzTSFXyOoWTXZWeEEmkTlRIeBxiLdFMcYjm
-7GaE2Y56HFnf5LuLp6Rhr31HyyIVhu3YcB/1DtTpGTQtlJdn/snx5jr4KFtDlOgD
-YlsCqYOHKlwZJbkD3WseL688rjMyUKCgdl3AVKnOR9TI6U54Z65MEXxAm7RasSA6
-9NIcdM2KvF/DRc4iHSVt2kncObdCtqLIvhTsQgxhDihXAdE51Ar0Ad5p3hyd1Khh
-UltIPE7S8yvfepr1mDiCARMJdNZ7o44SO55bfpMgz3hpxJOE4/6NO+6K1gKk3LUG
-kgeVBkJfDBpkM9uMjTMTct0v7YVgzvVuf8zv4vvqYkoESfew8jwqbK9QXTi4VDfi
-1+tLtGULd7VL1TL+TSdX
-=2aNA
------END PGP SIGNATURE-----
-
---ylS2wUBXLOxYXZFQ--
-
-
---===============8787796467708955830==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8787796467708955830==--
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index fbc04b0db781..00854a5b6ac4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -360,6 +360,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
+ dtb-$(CONFIG_SOC_IMX53) += \
+ 	imx53-ard.dtb \
+ 	imx53-cx9020.dtb \
++	imx53-kp-ddc.dtb \
++	imx53-kp-hsc.dtb \
+ 	imx53-m53evk.dtb \
+ 	imx53-mba53.dtb \
+ 	imx53-ppd.dtb \
+diff --git a/arch/arm/boot/dts/imx53-kp-ddc.dts b/arch/arm/boot/dts/imx53-kp-ddc.dts
+new file mode 100644
+index 000000000000..0e7f071fd10e
+--- /dev/null
++++ b/arch/arm/boot/dts/imx53-kp-ddc.dts
+@@ -0,0 +1,146 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2018
++ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
++ */
++
++/dts-v1/;
++#include "imx53-kp.dtsi"
++
++/ {
++	model = "K+P imx53 DDC";
++	compatible = "kiebackpeter,imx53-ddc", "fsl,imx53";
++
++	backlight_lcd: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm2 0 50000>;
++		power-supply = <&reg_backlight>;
++		brightness-levels = <0 24 28 32 36
++				     40 44 48 52 56
++				     60 64 68 72 76
++				     80 84 88 92 96 100>;
++		default-brightness-level = <20>;
++	};
++
++	lcd_display: display {
++		compatible = "fsl,imx-parallel-display";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interface-pix-fmt = "rgb24";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_disp>;
++
++		port@0 {
++			reg = <0>;
++
++			display1_in: endpoint {
++				remote-endpoint = <&ipu_di1_disp1>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
++
++	lcd_panel: lcd-panel {
++		compatible = "koe,tx14d24vm1bpa";
++		backlight = <&backlight_lcd>;
++		power-supply = <&reg_3v3>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++
++	reg_backlight: regulator-backlight {
++		compatible = "regulator-fixed";
++		regulator-name = "backlight-supply";
++		regulator-min-microvolt = <15000000>;
++		regulator-max-microvolt = <15000000>;
++		regulator-always-on;
++	};
++};
++
++&fec {
++	status = "okay";
++};
++
++&i2c3 {
++	adc@48 {
++		compatible = "ti,ads1015";
++		reg = <0x48>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		channel@4 {
++			reg = <4>;
++			ti,gain = <2>;
++			ti,datarate = <4>;
++		};
++
++		channel@6 {
++			reg = <6>;
++			ti,gain = <2>;
++			ti,datarate = <4>;
++		};
++	};
++
++	gpio-expander2@21 {
++		compatible = "nxp,pcf8574";
++		reg = <0x21>;
++		interrupts = <109>;
++		#gpio-cells = <2>;
++		gpio-controller;
++	};
++};
++
++&iomuxc {
++	imx53-kp-ddc {
++		pinctrl_disp: dispgrp {
++			fsl,pins = <
++				MX53_PAD_EIM_A16__IPU_DI1_DISP_CLK      0x4
++				MX53_PAD_EIM_DA10__IPU_DI1_PIN15        0x4
++				MX53_PAD_EIM_DA9__IPU_DISP1_DAT_0       0x4
++				MX53_PAD_EIM_DA8__IPU_DISP1_DAT_1       0x4
++				MX53_PAD_EIM_DA7__IPU_DISP1_DAT_2       0x4
++				MX53_PAD_EIM_DA6__IPU_DISP1_DAT_3       0x4
++				MX53_PAD_EIM_DA5__IPU_DISP1_DAT_4       0x4
++				MX53_PAD_EIM_DA4__IPU_DISP1_DAT_5       0x4
++				MX53_PAD_EIM_DA3__IPU_DISP1_DAT_6       0x4
++				MX53_PAD_EIM_DA2__IPU_DISP1_DAT_7       0x4
++				MX53_PAD_EIM_DA1__IPU_DISP1_DAT_8       0x4
++				MX53_PAD_EIM_DA0__IPU_DISP1_DAT_9       0x4
++				MX53_PAD_EIM_EB1__IPU_DISP1_DAT_10      0x4
++				MX53_PAD_EIM_EB0__IPU_DISP1_DAT_11      0x4
++				MX53_PAD_EIM_A17__IPU_DISP1_DAT_12      0x4
++				MX53_PAD_EIM_A18__IPU_DISP1_DAT_13      0x4
++				MX53_PAD_EIM_A19__IPU_DISP1_DAT_14      0x4
++				MX53_PAD_EIM_A20__IPU_DISP1_DAT_15      0x4
++				MX53_PAD_EIM_A21__IPU_DISP1_DAT_16      0x4
++				MX53_PAD_EIM_A22__IPU_DISP1_DAT_17      0x4
++				MX53_PAD_EIM_A23__IPU_DISP1_DAT_18      0x4
++				MX53_PAD_EIM_A24__IPU_DISP1_DAT_19      0x4
++				MX53_PAD_EIM_D31__IPU_DISP1_DAT_20      0x4
++				MX53_PAD_EIM_D30__IPU_DISP1_DAT_21      0x4
++				MX53_PAD_EIM_D26__IPU_DISP1_DAT_22      0x4
++				MX53_PAD_EIM_D27__IPU_DISP1_DAT_23      0x4
++				MX53_PAD_GPIO_1__PWM2_PWMO 0x4
++			>;
++		};
++	};
++};
++
++&ipu_di1_disp1 {
++	remote-endpoint = <&display1_in>;
++};
++
++&pmic {
++	fsl,mc13xxx-uses-touch;
++};
+diff --git a/arch/arm/boot/dts/imx53-kp-hsc.dts b/arch/arm/boot/dts/imx53-kp-hsc.dts
+new file mode 100644
+index 000000000000..6e3d71baac0f
+--- /dev/null
++++ b/arch/arm/boot/dts/imx53-kp-hsc.dts
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2018
++ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
++ */
++
++/dts-v1/;
++#include "imx53-kp.dtsi"
++
++/ {
++	model = "K+P imx53 HSC";
++	compatible = "kiebackpeter,imx53-hsc", "fsl,imx53";
++};
++
++&fec {
++	status = "okay";
++
++	fixed-link { /* RMII fixed link to LAN9303 */
++		speed = <100>;
++		full-duplex;
++	};
++};
++
++&i2c3 {
++	switch: switch@a {
++		compatible = "smsc,lan9303-i2c";
++		reg = <0xa>;
++		reset-gpios = <&gpio7 6 GPIO_ACTIVE_LOW>;
++		reset-duration = <400>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 { /* RMII fixed link to master */
++				reg = <0>;
++				label = "cpu";
++				ethernet = <&fec>;
++			};
++
++			port@1 { /* external port 1 */
++				reg = <1>;
++				label = "lan1";
++			};
++
++			port@2 { /* external port 2 */
++				reg = <2>;
++				label = "lan2";
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/imx53-kp.dtsi b/arch/arm/boot/dts/imx53-kp.dtsi
+new file mode 100644
+index 000000000000..8b25416a5303
+--- /dev/null
++++ b/arch/arm/boot/dts/imx53-kp.dtsi
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2018
++ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
++ */
++
++/dts-v1/;
++#include "imx53-tqma53.dtsi"
++#include <dt-bindings/input/input.h>
++
++/ {
++	buzzer {
++		compatible = "pwm-beeper";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_buzzer>;
++		pwms = <&pwm1 0 500000>;
++	};
++
++	gpio-buttons {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpiobuttons>;
++
++		button-kalt {
++			label = "Kaltstart";
++			linux,code = <KEY_F6>;
++			gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
++		};
++
++		button-pwr {
++			label = "PowerFailInterrupt";
++			linux,code = <KEY_F7>;
++			gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_leds>;
++
++		led-bus {
++			label = "bus";
++			gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "gpio";
++			default-state = "off";
++		};
++
++		led-error {
++			label = "error";
++			gpios = <&gpio3 28 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "gpio";
++			default-state = "off";
++		};
++
++		led-flash {
++			label = "flash";
++			gpios = <&gpio5 0 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	reg_3v3: regulator-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++};
++
++&can1 {
++	status = "okay";
++};
++
++&can2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++
++	gpio-expander1@22 {
++		compatible = "nxp,pcf8574";
++		reg = <0x22>;
++		interrupts = <109>;
++		#gpio-cells = <2>;
++		gpio-controller;
++	};
++
++	rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_kp_common>;
++
++	imx53-kp-common {
++		pinctrl_buzzer: buzzergrp {
++			fsl,pins = <
++				MX53_PAD_SD1_DATA3__PWM1_PWMO 0x1e4
++			>;
++		};
++
++		pinctrl_gpiobuttons: gpiobuttonsgrp {
++			fsl,pins = <
++				MX53_PAD_EIM_RW__GPIO2_26 0x1e4
++				MX53_PAD_EIM_D22__GPIO3_22 0x1e4
++			>;
++		};
++
++		pinctrl_kp_common: kpcommongrp {
++			fsl,pins = <
++				MX53_PAD_EIM_CS0__GPIO2_23 0x1e4
++				MX53_PAD_GPIO_19__GPIO4_5  0x1e4
++				MX53_PAD_PATA_DATA6__GPIO2_6 0x1e4
++				MX53_PAD_PATA_DATA7__GPIO2_7 0xe0
++				MX53_PAD_CSI0_DAT14__GPIO6_0 0x1e4
++				MX53_PAD_CSI0_DAT16__GPIO6_2 0x1e4
++				MX53_PAD_CSI0_DAT18__GPIO6_4 0x1e4
++				MX53_PAD_EIM_D17__GPIO3_17 0x1e4
++				MX53_PAD_EIM_D18__GPIO3_18 0x1e4
++				MX53_PAD_EIM_D21__GPIO3_21 0x1e4
++				MX53_PAD_EIM_D29__GPIO3_29 0x1e4
++				MX53_PAD_EIM_DA11__GPIO3_11 0x1e4
++				MX53_PAD_EIM_DA13__GPIO3_13 0x1e4
++				MX53_PAD_EIM_DA14__GPIO3_14 0x1e4
++				MX53_PAD_SD1_DATA0__GPIO1_16 0x1e4
++				MX53_PAD_SD1_CMD__GPIO1_18 0x1e4
++				MX53_PAD_SD1_CLK__GPIO1_20 0x1e4
++			>;
++		};
++
++		pinctrl_leds: ledgrp {
++			fsl,pins = <
++				MX53_PAD_EIM_EB2__GPIO2_30 0x1d4
++				MX53_PAD_EIM_D28__GPIO3_28 0x1d4
++				MX53_PAD_EIM_WAIT__GPIO5_0 0x1d4
++			>;
++		};
++
++		pinctrl_uart4: uart4grp {
++			fsl,pins = <
++				MX53_PAD_CSI0_DAT12__UART4_TXD_MUX 0x1e4
++				MX53_PAD_CSI0_DAT13__UART4_RXD_MUX 0x1e4
++			>;
++		};
++	};
++};
++
++&pinctrl_uart1 {
++	fsl,pins = <
++		MX53_PAD_EIM_D23__GPIO3_23 0x1e4
++		MX53_PAD_EIM_EB3__GPIO2_31 0x1e4
++		MX53_PAD_EIM_D24__GPIO3_24 0x1e4
++		MX53_PAD_EIM_D25__GPIO3_25 0x1e4
++		MX53_PAD_EIM_D19__GPIO3_19 0x1e4
++		MX53_PAD_EIM_D20__GPIO3_20 0x1e4
++	>;
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&usbh1 {
++	status = "okay";
++};
++
++&usbphy0 {
++	status = "disabled";
++};
+-- 
+2.11.0
