@@ -1,96 +1,66 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH 3/6] arm: dts: Change PCIe INTx mapping for Cygnus
-Date: Mon, 11 Jun 2018 17:27:20 -0700
-Message-ID: <522816f9-c33f-ee58-619e-84ee86dba418@broadcom.com>
-References: <1527631130-20045-1-git-send-email-ray.jui@broadcom.com>
- <1527631130-20045-4-git-send-email-ray.jui@broadcom.com>
- <f5aa804e-3174-affd-1117-31b0a5b59fc5@gmail.com>
+From: cang@codeaurora.org
+Subject: Re: [PATCH v6 1/3] phy: Update PHY power control sequence
+Date: Tue, 12 Jun 2018 08:27:34 +0800
+Message-ID: <7b5f62c60cc3a2c3b9d7c4e99dcde01b@codeaurora.org>
+References: <20180529043751.10580-1-cang@codeaurora.org>
+ <20180529043751.10580-2-cang@codeaurora.org>
+ <9954c362-c144-9e5f-8b06-687c856ed25a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f5aa804e-3174-affd-1117-31b0a5b59fc5@gmail.com>
-Content-Language: en-US
+In-Reply-To: <9954c362-c144-9e5f-8b06-687c856ed25a@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 6/11/2018 3:36 PM, Florian Fainelli wrote:
-> On 05/29/2018 02:58 PM, Ray Jui wrote:
->> Change the PCIe INTx mapping to model the 4 INTx interrupts in the
->> IRQ domain of the iProc PCIe controller itself
->>
->> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+On 2018-06-08 14:45, Manu Gautam wrote:
+> Hi,
+> 
+> On 5/29/2018 10:07 AM, Can Guo wrote:
+>> All PHYs should be powered on before register configuration starts. 
+>> And
+>> only PCIe PHYs need an extra power control before deasserts reset 
+>> state.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
 >> ---
->>   arch/arm/boot/dts/bcm-cygnus.dtsi | 18 ++++++++++++++----
->>   1 file changed, 14 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
->> index 699fdf9..6de21ef 100644
->> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
->> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
->> @@ -254,9 +254,14 @@
->>   			compatible = "brcm,iproc-pcie";
->>   			reg = <0x18012000 0x1000>;
->>   
->> +			interrupt-controller;
->>   			#interrupt-cells = <1>;
->> -			interrupt-map-mask = <0 0 0 0>;
->> -			interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
->> +			interrupt-map-mask = <0 0 0 7>;
->> +			interrupt-map = <0 0 0 1 &pcie0 1>,
->> +					<0 0 0 2 &pcie0 2>,
->> +					<0 0 0 3 &pcie0 3>,
->> +					<0 0 0 4 &pcie0 4>;
->> +			interrupts = <GIC_SPI 100 IRQ_TYPE_NONE>;
+>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c 
+>> b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> index 97ef942..f779b0f 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> @@ -982,6 +982,8 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp 
+>> *qmp)
+>>  	if (cfg->has_phy_com_ctrl)
+>>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>>  			     SW_PWRDN);
+>> +	else
+>> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
 > 
-> You would want to fix those IRQ_TYPE_NONE values as well because since
-> commit 83a86fbb5b56b5eed8a476cc3fe214077d7c4f49 ("irqchip/gic: Loudly
-> complain about the use of IRQ_TYPE_NONE") this is going to create some
-> nice warnings on boot.
-> 
-> I am about to send fixes for NSP and HR2 since that's what I have access
-> to at the moment, but it would be good if you could send updates to the
-> Cygnus and NS2 DTS files?
-> 
-> Thanks
-> 
-
-Okay. Thanks for letting me know. How do you want this to be done for 
-Cygnus and NS2?
-
-I guess I should have the fix patches to DTS done and sent out first, 
-and then rebase this INTx patch series against the patches with the fix.
-
-Does that make sense to you?
-
-Thanks,
-
-Ray
-
->>   
->>   			linux,pci-domain = <0>;
->>   
->> @@ -289,9 +294,14 @@
->>   			compatible = "brcm,iproc-pcie";
->>   			reg = <0x18013000 0x1000>;
->>   
->> +			interrupt-controller;
->>   			#interrupt-cells = <1>;
->> -			interrupt-map-mask = <0 0 0 0>;
->> -			interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
->> +			interrupt-map-mask = <0 0 0 7>;
->> +			interrupt-map = <0 0 0 1 &pcie1 1>,
->> +					<0 0 0 2 &pcie1 2>,
->> +					<0 0 0 3 &pcie1 3>,
->> +					<0 0 0 4 &pcie1 4>;
->> +			interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
->>   
->>   			linux,pci-domain = <1>;
->>   
->>
+> We should power-up PHYs after following dp_com_ctrl programming which
+> powers-off USB-DP combo PHY when it brings DP_COM block out of reset 
+> reset.
 > 
 > 
+
+Sure Manu
+
+>> 
+>>  	if (cfg->has_phy_dp_com_ctrl) {
+>>  		qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
+>> @@ -1127,7 +1129,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>>  	 * Pull out PHY from POWER DOWN state.
+>>  	 * This is active low enable signal to power-down PHY.
+>>  	 */
+>> -	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+>> +	if (cfg->type == PHY_TYPE_PCIE)
+>> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+>> 
+>>  	if (cfg->has_pwrdn_delay)
+>>  		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
