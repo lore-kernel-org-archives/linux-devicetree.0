@@ -1,77 +1,159 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 0/7] Add powerdomain driver for corners on msm8996/sdm845
-Date: Tue, 12 Jun 2018 09:47:25 +0200
-Message-ID: <CAPDyKFppkycq0d53eiBVErHh5C6TwGcUrqaiagY_165Xcpux7w@mail.gmail.com>
-References: <20180612044052.4402-1-rnayak@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: Add display clock controller driver for SDM845
+Date: Tue, 12 Jun 2018 00:55:41 -0700
+Message-ID: <152879014163.16708.9093599796057889104@swboyd.mtv.corp.google.com>
+References: <1528098985-3676-1-git-send-email-tdas@codeaurora.org>
+ <1528098985-3676-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612044052.4402-1-rnayak@codeaurora.org>
+In-Reply-To: <1528098985-3676-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>, robh@kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12 June 2018 at 06:40, Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> Changes in v3:
-> * Bindings split into seperate patches
-> * Bindings updated to remove duplicate OPP table phandles
-> * DT headers defining macros for Power domain indexes and OPP levels
-> * Optimisations to use rpmh_write_async() whereever applicable
-> * Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
-> * Fixed the vlvl to hlvl conversions in set_performance
-> * Other minor fixes based on review of v2
-> * TODO: This series does not handle the case where all VDD_MX votes
-> should be higher than VDD_CX from APPs, as pointed out
-> by David Collins in v2. This needs support at genpd to propogate performance
-> state up the parents, if we model these as Parent/Child to handle the
-> interdependency.
->
-> Changes in v2:
-> * added a powerdomain driver for sdm845 which supports communicating to RPMh
-> * dropped the changes to sdhc driver to move over to using OPP
-> as there is active discussion on using OPP as the interface vs
-> handling all of it in clock drivers
-> * Other minor binding updates based on review of v1
->
-> With performance state support for genpd/OPP merged, this is an effort
-> to model a powerdomain driver to communicate corner/level
-> values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
->
-> Rajendra Nayak (7):
->   dt-bindings: power: Add qcom rpm power domain driver bindings
->   soc: qcom: rpmpd: Add a Power domain driver to model corners
->   soc: qcom: rpmpd: Add support for get/set performance state
->   arm64: dts: msm8996: Add rpmpd device node
->   dt-bindings: power: Add qcom rpmh power domain driver bindings
->   soc: qcom: Add RPMh Power domain driver
->   soc: qcom: rpmpd/rpmhpd: Add a max vote on all corners at init
->
->  .../devicetree/bindings/power/qcom,rpmhpd.txt |  65 +++
->  .../devicetree/bindings/power/qcom,rpmpd.txt  |  49 ++
->  arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
->  drivers/soc/qcom/Kconfig                      |  18 +
->  drivers/soc/qcom/Makefile                     |   2 +
->  drivers/soc/qcom/rpmhpd.c                     | 437 ++++++++++++++++++
->  drivers/soc/qcom/rpmpd.c                      | 356 ++++++++++++++
->  include/dt-bindings/power/qcom-rpmhpd.h       |  31 ++
->  include/dt-bindings/power/qcom-rpmpd.h        |  16 +
->  9 files changed, 1008 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->  create mode 100644 drivers/soc/qcom/rpmhpd.c
->  create mode 100644 drivers/soc/qcom/rpmpd.c
->  create mode 100644 include/dt-bindings/power/qcom-rpmhpd.h
->  create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+Quoting Taniya Das (2018-06-04 00:56:25)
+> diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispcc-s=
+dm845.c
+> new file mode 100644
+> index 0000000..317ab33
+> --- /dev/null
+> +++ b/drivers/clk/qcom/dispcc-sdm845.c
+> @@ -0,0 +1,679 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+> +
+> +#include "clk-alpha-pll.h"
+> +#include "clk-branch.h"
+> +#include "clk-pll.h"
+> +#include "clk-rcg.h"
+> +#include "clk-regmap.h"
+> +#include "clk-regmap-divider.h"
 
-For the series:
+Used?
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> +#include "common.h"
+> +#include "gdsc.h"
+> +#include "reset.h"
+> +
+> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
 
-Kind regards
-Uffe
+We really need to move this into the header file.
+
+$ git grep '#define F(' -- drivers/clk/qcom/ | wc -l
+13
+
+> +
+[...]
+> +static const char * const disp_cc_parent_names_4[] =3D {
+> +       "bi_tcxo",
+> +       "dsi0_phy_pll_out_dsiclk",
+> +       "dsi1_phy_pll_out_dsiclk",
+> +       "core_bi_pll_test_se",
+> +};
+> +
+> +static const struct alpha_pll_config disp_cc_pll0_config =3D {
+> +       .l =3D 0x2c,
+> +       .alpha =3D 0xcaaa,
+> +};
+
+Any reason this can't be put on the stack in the probe function?
+
+> +
+> +static struct clk_alpha_pll disp_cc_pll0 =3D {
+> +       .offset =3D 0x0,
+> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
+> +       .clkr =3D {
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "disp_cc_pll0",
+> +                       .parent_names =3D (const char *[]){ "bi_tcxo" },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_alpha_pll_fabia_ops,
+> +               },
+> +       },
+> +};
+[...]
+> +
+> +static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src =3D {
+> +       .cmd_rcgr =3D 0x2058,
+> +       .mnd_width =3D 8,
+> +       .hid_width =3D 5,
+> +       .parent_map =3D disp_cc_parent_map_4,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "disp_cc_mdss_pclk0_clk_src",
+> +               .parent_names =3D disp_cc_parent_names_4,
+> +               .num_parents =3D 4,
+> +               .flags =3D CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
+
+Why is the nocache flag needed? Applies to all clks in this file.
+
+> +               .ops =3D &clk_pixel_ops,
+> +       },
+> +};
+> +
+> +static struct clk_rcg2 disp_cc_mdss_pclk1_clk_src =3D {
+> +       .cmd_rcgr =3D 0x2070,
+> +       .mnd_width =3D 8,
+> +       .hid_width =3D 5,
+> +       .parent_map =3D disp_cc_parent_map_4,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+[...]
+> +
+> +static const struct regmap_config disp_cc_sdm845_regmap_config =3D {
+> +       .reg_bits       =3D 32,
+> +       .reg_stride     =3D 4,
+> +       .val_bits       =3D 32,
+> +       .max_register   =3D 0x10000,
+
+This seems arbitrarily large. List the actual end?
+
+> +       .fast_io        =3D true,
+> +};
+> +
+> +static const struct qcom_cc_desc disp_cc_sdm845_desc =3D {
+> +       .config =3D &disp_cc_sdm845_regmap_config,
+> +       .clks =3D disp_cc_sdm845_clocks,
+> +       .num_clks =3D ARRAY_SIZE(disp_cc_sdm845_clocks),
+> +       .resets =3D disp_cc_sdm845_resets,
+> +       .num_resets =3D ARRAY_SIZE(disp_cc_sdm845_resets),
+> +       .gdscs =3D disp_cc_sdm845_gdscs,
+> +       .num_gdscs =3D ARRAY_SIZE(disp_cc_sdm845_gdscs),
+> +};
+> +
+> +static const struct of_device_id disp_cc_sdm845_match_table[] =3D {
+> +       { .compatible =3D "qcom,sdm845-dispcc" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, disp_cc_sdm845_match_table);
+> +
+> +static int disp_cc_sdm845_probe(struct platform_device *pdev)
+> +{
+> +       struct regmap *regmap;
+> +
+> +       regmap =3D qcom_cc_map(pdev, &disp_cc_sdm845_desc);
+> +       if (IS_ERR(regmap))
+> +               return PTR_ERR(regmap);
+> +
+> +       clk_fabia_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_conf=
+ig);
+> +
+> +       /* Enable clock gating for DSI and MDP clocks */
+
+Hardware clock gating? What does this mean.
+
+> +       regmap_update_bits(regmap, 0x8000, 0x7f0, 0x7f0);
+> +
+> +       return qcom_cc_really_probe(pdev, &disp_cc_sdm845_desc, regmap);
+> +}
