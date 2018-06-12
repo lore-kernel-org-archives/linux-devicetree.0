@@ -1,52 +1,53 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
-Date: Wed, 13 Jun 2018 02:16:05 +0300
-Message-ID: <CAHp75VfV7actoXkMUbh9KwAXR1FKR_VZ5RAuaL-pKLSynFi-3g@mail.gmail.com>
-References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
- <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
- <53ef03b26a17738dc1465ce85562c9611ad415f8.camel@kernel.crashing.org>
- <CAHp75Vcdaejn=eq740YNdscSv9zX9xj3RzYp=AFs8HFprw34_Q@mail.gmail.com> <5d932502d9985cdfa6540480ea5ce6b0730502a1.camel@kernel.crashing.org>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH V2 4/4] mmc: host: Register changes for sdcc V5
+Date: Tue, 12 Jun 2018 16:25:23 -0700
+Message-ID: <152884592336.16708.2751337614926643627@swboyd.mtv.corp.google.com>
+References: <1527587561-27448-1-git-send-email-vviswana@codeaurora.org>
+ <1527587561-27448-5-git-send-email-vviswana@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d932502d9985cdfa6540480ea5ce6b0730502a1.camel@kernel.crashing.org>
+In-Reply-To: <1527587561-27448-5-git-send-email-vviswana@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: adrian.hunter@intel.com, mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, vviswana@codeaurora.org, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 1:58 AM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Tue, 2018-06-12 at 19:53 +0300, Andy Shevchenko wrote:
->>
->> > > It feels like a wrong approach.
->> > > Can OF graph help here? Would it be better approach?
->> >
->> > I don't quite understand what your objection is nor what "OF graph"
->> > is...
->>
->> There is no objection per se, just a doubt that this is a right thing to do.
->> I might be wrong, of course.
->>
->> OF graph nodes is a special API that allows you to access like you
->> said "different node of device-tree".
->> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/graph.txt
->
-> So I had a look and this is just an example on how to use phandles to
-> link ports and endpoints... I fail to see how that relates to what this
-> patch does.
+Quoting Vijay Viswanath (2018-05-29 02:52:41)
+> @@ -137,6 +125,12 @@
+>  /* Timeout value to avoid infinite waiting for pwr_irq */
+>  #define MSM_PWR_IRQ_TIMEOUT_MS 5000
+>  =
 
-Because your patch does nothing except another layring of the existing APIs.
+> +#define MSM_HOST_READL(msm_host, host, offset) \
+> +       msm_host->var_ops->msm_readl_relaxed(host, offset)
+> +
+> +#define MSM_HOST_WRITEL(msm_host, val, host, offset) \
+> +       msm_host->var_ops->msm_writel_relaxed(val, host, offset)
 
-> In the driver I'm doing for example, I do use a similar technique to
-> "point" to the other node. In this case, this is a coprocessor in the
-> SoC and I'm linking to the node that represent its interrupt controller
-> (and its not a full fledged OS running there so we don't have a full
-> interrupt tree for it).
+Is there a reason these macros are capitalized? We don't have READL and
+WRITEL macros in the kernel because function-like macros are typically
+lowercase.
 
-Hmm... So, you are trying to solve problem with other methods which
-might be not so suitable at all?
+> +
+>  struct sdhci_msm_offset {
+>         u32 core_hc_mode;
+>         u32 core_mci_data_cnt;
+> @@ -268,6 +262,14 @@ struct sdhci_msm_host {
+>         const struct sdhci_msm_offset *offset;
+>  };
+>  =
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *=
+host)
+
+static?
+
+> +{
+> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_msm_host *msm_host =3D sdhci_pltfm_priv(pltfm_host);
+> +
+> +       return msm_host->offset;
+> +}
+> +
