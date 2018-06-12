@@ -1,50 +1,32 @@
-Return-Path: <SRS0=H8ko=JG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr0-f195.google.com ([209.85.128.195]:42040 "EHLO
-        mail-wr0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750982AbeFTMBn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 20 Jun 2018 08:01:43 -0400
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH resend] dmaengine: rcar-dmac: Document R8A77990 bindings
-Date: Wed, 20 Jun 2018 14:01:37 +0200
-Message-Id: <1529496097-10629-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org
-Cc: horms@verge.net.au, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, vinod.koul@linaro.org, Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 12 Jun 2018 13:28:13 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Renesas R-Car Gen3 PCIe PHY
+ bindings
+Message-ID: <20180612192813.GA13278@rob-hp-laptop>
+References: <04384ce6-b696-715d-2072-345654e3fccf@cogentembedded.com>
+ <9293ae00-8684-962a-346e-13cb12e5cddb@cogentembedded.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9293ae00-8684-962a-346e-13cb12e5cddb@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+On Sun, Jun 10, 2018 at 09:22:46PM +0300, Sergei Shtylyov wrote:
+> This PHY is  still  mostly undocumented --  the only documented registers
+> exist on R-Car V3H (R8A77980) SoC.  Add the corresponding device tree
+> bindings.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> Changes in version 2:
+> - split from the big driver/bindings patch;
+> - got rid of the generic R-Car gen3 "compatible" prop value.
+> 
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-pcie.txt |   24 +++++++++++
+>  1 file changed, 24 insertions(+)
 
-Renesas R-Car E3 (R8A77990) SoC also has the R-Car gen2/3 compatible DMA
-controllers, so document the SoC specific binding.
-
-Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This didn't apply for Vinod before, but now it seems to. If it still does
-not, please tell me what tree to base this on.
-
-CU
-Uli
-
-
- Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-index b1ba6395..946229c 100644
---- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-+++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-@@ -29,6 +29,7 @@ Required Properties:
- 		- "renesas,dmac-r8a77965" (R-Car M3-N)
- 		- "renesas,dmac-r8a77970" (R-Car V3M)
- 		- "renesas,dmac-r8a77980" (R-Car V3H)
-+		- "renesas,dmac-r8a77990" (R-Car E3)
- 		- "renesas,dmac-r8a77995" (R-Car D3)
- 
- - reg: base address and length of the registers block for the DMAC
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
