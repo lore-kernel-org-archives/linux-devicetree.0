@@ -1,112 +1,91 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 5/7] dt-bindings: power: Add qcom rpmh power domain
- driver bindings
-Date: Mon, 11 Jun 2018 22:39:53 -0700
-Message-ID: <20180612053953.GA18050@builder>
-References: <20180612044052.4402-1-rnayak@codeaurora.org>
- <20180612044052.4402-6-rnayak@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Songjun Wu <songjun.wu@linux.intel.com>
+Subject: [PATCH 0/7] MIPS: intel: add initial support for Intel MIPS SoCs
+Date: Tue, 12 Jun 2018 13:40:27 +0800
+Message-ID: <20180612054034.4969-1-songjun.wu@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180612044052.4402-6-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com
+Cc: linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Songjun Wu <songjun.wu@linux.intel.com>, Michael Turquette <mturquette@baylibre.com>, James Hogan <jhogan@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 11 Jun 21:40 PDT 2018, Rajendra Nayak wrote:
+This patch series is for adding the support for Intel MIPS interAptiv SoC GRX500 family.
+It includes CCF support, serial driver optimization and DTS modification.
 
-> Add DT bindings to describe the rpmh powerdomains found on Qualcomm
-> Technologies, Inc. SoCs. These power domains communicate a performance
-> state to RPMh, which then translates it into corresponding voltage on
-> a PMIC rail.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  .../devicetree/bindings/power/qcom,rpmhpd.txt | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
-> new file mode 100644
-> index 000000000000..41ef7afa6b24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
-> @@ -0,0 +1,65 @@
-> +Qualcomm RPMh Power domains
-> +
-> +For RPMh Power domains, we communicate a performance state to RPMh
-> +which then translates it into a corresponding voltage on a rail
-> +
-> +Required Properties:
-> + - compatible: Should be one of the following
-> +	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
+This patch series is applied on top of v4.17.1. Basic verification is performed on GRX500 board.
+Any comments on this would be appreciated.
 
-Afaict this binding is identical to the one introduced in patch 1, so I
-would suggest that you just add the compatible there.
+We propose merging this patch series into MIPS Linux tree.
 
-Regards,
-Bjorn
 
-> + - power-domain-cells: number of cells in power domain specifier
-> +	must be 1
-> + - operating-points-v2: Phandle to the OPP table for the power-domain.
-> +	Refer to Documentation/devicetree/bindings/power/power_domain.txt
-> +	and Documentation/devicetree/bindings/opp/qcom-opp.txt for more details
-> +
-> +Example:
-> +
-> +	rpmhpd: power-controller {
-> +		compatible = "qcom,sdm845-rpmhpd";
-> +		#power-domain-cells = <1>;
-> +		operating-points-v2 = <&rpmhpd_opp_table>;
-> +	};
-> +
-> +	rpmhpd_opp_table: opp-table {
-> +		compatible = "operating-points-v2-qcom-level";
-> +
-> +		rpmhpd_opp_ret: opp1 {
-> +			qcom-level = <16>;
-> +		};
-> +
-> +		rpmhpd_opp_min_svs: opp2 {
-> +			qcom-level = <48>;
-> +		};
-> +
-> +		rpmhpd_opp_low_svs: opp3 {
-> +			qcom-level = <64>;
-> +		};
-> +
-> +		rpmhpd_opp_svs: opp4 {
-> +			qcom-level = <128>;
-> +		};
-> +
-> +		rpmhpd_opp_svs_l1: opp5 {
-> +			qcom-level = <192>;
-> +		};
-> +
-> +		rpmhpd_opp_nom: opp6 {
-> +			qcom-level = <256>;
-> +		};
-> +
-> +		rpmhpd_opp_nom_l1: opp7 {
-> +			qcom-level = <320>;
-> +		};
-> +
-> +		rpmhpd_opp_nom_l2: opp8 {
-> +			qcom-level = <336>;
-> +		};
-> +
-> +		rpmhpd_opp_turbo: opp9 {
-> +			qcom-level = <384>;
-> +		};
-> +
-> +		rpmhpd_opp_turbo_l1: opp10 {
-> +			qcom-level = <416>;
-> +		};
-> +	};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+Hua Ma (1):
+  MIPS: intel: Add initial support for Intel MIPS SoCs
+
+Songjun Wu (5):
+  MIPS: dts: Add aliases node for lantiq danube serial
+  tty: serial: lantiq: Always use readl()/writel()
+  tty: serial: lantiq: Convert global lock to per device lock
+  tty: serial: lantiq: Remove unneeded header includes and macros
+  tty: serial: lantiq: Add CCF support
+
+Yixin Zhu (1):
+  clk: intel: Add clock driver for GRX500 SoC
+
+ .../devicetree/bindings/clock/intel,grx500-clk.txt |  46 ++
+ .../devicetree/bindings/serial/lantiq_asc.txt      |  15 +
+ arch/mips/Kbuild.platforms                         |   1 +
+ arch/mips/Kconfig                                  |  37 +-
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/intel-mips/Makefile             |   3 +
+ arch/mips/boot/dts/intel-mips/easy350_anywan.dts   |  20 +
+ arch/mips/boot/dts/intel-mips/xrx500.dtsi          | 196 ++++++
+ arch/mips/boot/dts/lantiq/danube.dtsi              |   6 +-
+ arch/mips/configs/grx500_defconfig                 | 165 +++++
+ .../asm/mach-intel-mips/cpu-feature-overrides.h    |  61 ++
+ arch/mips/include/asm/mach-intel-mips/ioremap.h    |  39 ++
+ arch/mips/include/asm/mach-intel-mips/irq.h        |  17 +
+ .../asm/mach-intel-mips/kernel-entry-init.h        |  76 +++
+ arch/mips/include/asm/mach-intel-mips/spaces.h     |  29 +
+ arch/mips/include/asm/mach-intel-mips/war.h        |  18 +
+ arch/mips/intel-mips/Kconfig                       |  22 +
+ arch/mips/intel-mips/Makefile                      |   3 +
+ arch/mips/intel-mips/Platform                      |  11 +
+ arch/mips/intel-mips/irq.c                         |  36 ++
+ arch/mips/intel-mips/prom.c                        | 184 ++++++
+ arch/mips/intel-mips/time.c                        |  56 ++
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/intel/Kconfig                          |  21 +
+ drivers/clk/intel/Makefile                         |   7 +
+ drivers/clk/intel/clk-cgu-api.c                    | 676 +++++++++++++++++++++
+ drivers/clk/intel/clk-cgu-api.h                    | 120 ++++
+ drivers/clk/intel/clk-grx500.c                     | 236 +++++++
+ drivers/tty/serial/Kconfig                         |   2 +-
+ drivers/tty/serial/lantiq.c                        | 415 ++++++++-----
+ include/dt-bindings/clock/intel,grx500-clk.h       |  61 ++
+ 32 files changed, 2418 insertions(+), 164 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
+ create mode 100644 arch/mips/boot/dts/intel-mips/Makefile
+ create mode 100644 arch/mips/boot/dts/intel-mips/easy350_anywan.dts
+ create mode 100644 arch/mips/boot/dts/intel-mips/xrx500.dtsi
+ create mode 100644 arch/mips/configs/grx500_defconfig
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/cpu-feature-overrides.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/ioremap.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/irq.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/kernel-entry-init.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/spaces.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/war.h
+ create mode 100644 arch/mips/intel-mips/Kconfig
+ create mode 100644 arch/mips/intel-mips/Makefile
+ create mode 100644 arch/mips/intel-mips/Platform
+ create mode 100644 arch/mips/intel-mips/irq.c
+ create mode 100644 arch/mips/intel-mips/prom.c
+ create mode 100644 arch/mips/intel-mips/time.c
+ create mode 100644 drivers/clk/intel/Kconfig
+ create mode 100644 drivers/clk/intel/Makefile
+ create mode 100644 drivers/clk/intel/clk-cgu-api.c
+ create mode 100644 drivers/clk/intel/clk-cgu-api.h
+ create mode 100644 drivers/clk/intel/clk-grx500.c
+ create mode 100644 include/dt-bindings/clock/intel,grx500-clk.h
+
+-- 
+2.11.0
