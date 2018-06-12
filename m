@@ -1,31 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 3/5] dt-bindings: timer: add i.MX EPIT timer binding
-Date: Tue, 12 Jun 2018 12:27:31 -0600
-Message-ID: <20180612182731.GA11378@rob-hp-laptop>
-References: <20180611155001.3506-1-peron.clem@gmail.com>
- <20180611155001.3506-4-peron.clem@gmail.com>
+Subject: Re: [PATCH v4 1/6] mtd: rawnand: add Reed-Solomon error correction
+ algorithm
+Date: Tue, 12 Jun 2018 12:37:12 -0600
+Message-ID: <20180612183712.GA24397@rob-hp-laptop>
+References: <20180611205224.23340-1-stefan@agner.ch>
+ <20180611205224.23340-2-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180611155001.3506-4-peron.clem@gmail.com>
+In-Reply-To: <20180611205224.23340-2-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc: Colin Didier <colin.didier@devialet.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?iso-8859-1?Q?Cl=E9ment?= Peron <clement.peron@devialet.com>
+To: Stefan Agner <stefan@agner.ch>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 11, 2018 at 05:49:59PM +0200, Clément Péron wrote:
-> From: Clément Peron <clement.peron@devialet.com>
+On Mon, Jun 11, 2018 at 10:52:19PM +0200, Stefan Agner wrote:
+> Add Reed-Solomon (RS) to the enumeration of ECC algorithms.
 > 
-> Add devicetree binding document for NXP's i.MX SoC specific
-> EPIT timer driver.
-> 
-> Signed-off-by: Clément Peron <clement.peron@devialet.com>
-> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
 > ---
->  .../devicetree/bindings/timer/fsl,imxepit.txt | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/fsl,imxepit.txt
+>  Documentation/devicetree/bindings/mtd/nand.txt | 2 +-
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/mtd/nand/raw/nand_base.c               | 1 +
+>  include/linux/mtd/rawnand.h                    | 1 +
+>  3 files changed, 3 insertions(+), 1 deletion(-)
