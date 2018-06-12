@@ -1,86 +1,96 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v6 1/3] phy: Update PHY power control sequence
-Date: Tue, 12 Jun 2018 17:04:18 +0530
-Message-ID: <261d2697-ed21-1562-0e6b-f9858108f2b4@codeaurora.org>
-References: <20180529043751.10580-1-cang@codeaurora.org>
- <20180529043751.10580-2-cang@codeaurora.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v4 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
+Date: Tue, 12 Jun 2018 15:17:09 +0300
+Message-ID: <1545813.ZRopxvRBbF@dimapc>
+References: <20180611205224.23340-1-stefan@agner.ch> <20180611205224.23340-5-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180529043751.10580-2-cang@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20180611205224.23340-5-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Can Guo <cang@codeaurora.org>, subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Can,
-
-
-On 5/29/2018 10:07 AM, Can Guo wrote:
-> All PHYs should be powered on before register configuration starts. And
-> only PCIe PHYs need an extra power control before deasserts reset state.
->
-> Signed-off-by: Can Guo <cang@codeaurora.org>
+On Monday, 11 June 2018 23:52:22 MSK Stefan Agner wrote:
+> Add support for the NAND flash controller found on NVIDIA
+> Tegra 2 SoCs. This implementation does not make use of the
+> command queue feature. Regular operations/data transfers are
+> done in PIO mode. Page read/writes with hardware ECC make
+> use of the DMA for data transfer.
+> 
+> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > ---
->   drivers/phy/qualcomm/phy-qcom-qmp.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 97ef942..f779b0f 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -982,6 +982,8 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
->   	if (cfg->has_phy_com_ctrl)
->   		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->   			     SW_PWRDN);
-> +	else
-> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+>  MAINTAINERS                       |    7 +
+>  drivers/mtd/nand/raw/Kconfig      |    6 +
+>  drivers/mtd/nand/raw/Makefile     |    1 +
+>  drivers/mtd/nand/raw/tegra_nand.c | 1248 +++++++++++++++++++++++++++++
+>  4 files changed, 1262 insertions(+)
+>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 58b9861ccf99..c2e5571c85d4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13844,6 +13844,13 @@ M:	Laxman Dewangan <ldewangan@nvidia.com>
+>  S:	Supported
+>  F:	drivers/input/keyboard/tegra-kbc.c
+> 
+> +TEGRA NAND DRIVER
+> +M:	Stefan Agner <stefan@agner.ch>
+> +M:	Lucas Stach <dev@lynxeye.de>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
+> +F:	drivers/mtd/nand/raw/tegra_nand.c
+> +
+>  TEGRA PWM DRIVER
+>  M:	Thierry Reding <thierry.reding@gmail.com>
+>  S:	Supported
+> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+> index 19a2b283fbbe..e9093f52371e 100644
+> --- a/drivers/mtd/nand/raw/Kconfig
+> +++ b/drivers/mtd/nand/raw/Kconfig
+> @@ -534,4 +534,10 @@ config MTD_NAND_MTK
+>  	  Enables support for NAND controller on MTK SoCs.
+>  	  This controller is found on mt27xx, mt81xx, mt65xx SoCs.
+> 
+> +config MTD_NAND_TEGRA
+> +	tristate "Support for NAND controller on NVIDIA Tegra"
+> +	depends on ARCH_TEGRA || COMPILE_TEST
+> +	help
+> +	  Enables support for NAND flash controller on NVIDIA Tegra SoC.
+> +
+>  endif # MTD_NAND
+> diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
+> index 165b7ef9e9a1..d5a5f9832b88 100644
+> --- a/drivers/mtd/nand/raw/Makefile
+> +++ b/drivers/mtd/nand/raw/Makefile
+> @@ -56,6 +56,7 @@ obj-$(CONFIG_MTD_NAND_HISI504)	        += 
+hisi504_nand.o
+>  obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= brcmnand/
+>  obj-$(CONFIG_MTD_NAND_QCOM)		+= qcom_nandc.o
+>  obj-$(CONFIG_MTD_NAND_MTK)		+= mtk_ecc.o mtk_nand.o
+> +obj-$(CONFIG_MTD_NAND_TEGRA)		+= tegra_nand.o
+> 
+>  nand-objs := nand_base.o nand_bbt.o nand_timings.o nand_ids.o
+>  nand-objs += nand_amd.o
+> diff --git a/drivers/mtd/nand/raw/tegra_nand.c
+> b/drivers/mtd/nand/raw/tegra_nand.c new file mode 100644
+> index 000000000000..dd23a5eb6af3
+> --- /dev/null
+> +++ b/drivers/mtd/nand/raw/tegra_nand.c
+> @@ -0,0 +1,1248 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Stefan Agner <stefan@agner.ch>
+> + * Copyright (C) 2014-2015 Lucas Stach <dev@lynxeye.de>
+> + * Copyright (C) 2012 Avionic Design GmbH
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
 
-No definition of 'pcs' in this function. You are doing that in the 
-second patch.
-But, we should add this definition here.
-
-Also instead of having the change like this:
-
-+	struct qmp_phy *qphy = qmp->phys[0];
-  	void __iomem *serdes = qmp->serdes;
-+	void __iomem *pcs = qphy->pcs;
-
-Let's pass 'struct qmp_phy' to qcom_qmp_phy_com_init(), and then get
-'struct qcom_qmp' and 'void __iomem *pcs' from that.
-
-So,
-
--static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
-+static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
-  {
-+       struct qcom_qmp *qmp = qphy->qmp;
-         const struct qmp_phy_cfg *cfg = qmp->cfg;
-         void __iomem *serdes = qmp->serdes;
-         void __iomem *dp_com = qmp->dp_com;
-+       void __iomem *pcs = qphy->pcs;
-
-and
-
--       ret = qcom_qmp_phy_com_init(qmp);
-+       ret = qcom_qmp_phy_com_init(qphy);
-
-That looks cleaner than extracting from the 0th phys.
-
-BRs
-Vivek
->   
->   	if (cfg->has_phy_dp_com_ctrl) {
->   		qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
-> @@ -1127,7 +1129,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
->   	 * Pull out PHY from POWER DOWN state.
->   	 * This is active low enable signal to power-down PHY.
->   	 */
-> -	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-> +	if (cfg->type == PHY_TYPE_PCIE)
-> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
->   
->   	if (cfg->has_pwrdn_delay)
->   		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
+The "delay.h" looks obsolete now, maybe you could drop it.
