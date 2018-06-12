@@ -1,7 +1,7 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 1/7] dt-bindings: power: Add qcom rpm power domain driver bindings
-Date: Tue, 12 Jun 2018 10:10:46 +0530
-Message-ID: <20180612044052.4402-2-rnayak@codeaurora.org>
+Subject: [PATCH v3 3/7] soc: qcom: rpmpd: Add support for get/set performance state
+Date: Tue, 12 Jun 2018 10:10:48 +0530
+Message-ID: <20180612044052.4402-4-rnayak@codeaurora.org>
 References: <20180612044052.4402-1-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180612044052.4402-1-rnayak@codeaurora.org>
@@ -10,73 +10,93 @@ To: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansso
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings to describe the rpm power domains found on Qualcomm
-Technologies, Inc. SoCs. These power domains communicate a performance
-state to RPM, which then translates it into corresponding voltage on a
-PMIC rail.
+Add support for the .set_performace_state() and .opp_to_performance_state()
+callbacks in the rpmpd driver.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- .../devicetree/bindings/power/qcom,rpmpd.txt  | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+ drivers/soc/qcom/rpmpd.c | 46 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-new file mode 100644
-index 000000000000..61a0e2687940
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-@@ -0,0 +1,49 @@
-+Qualcomm RPM Power domains
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index c5e7a91f278c..53209454c1f3 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -12,6 +12,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_opp.h>
+ #include <linux/soc/qcom/smd-rpm.h>
+ 
+ #include <dt-bindings/mfd/qcom-rpm.h>
+@@ -28,6 +29,8 @@
+ #define KEY_ENABLE		0x6e657773 /* swen */
+ #define KEY_FLOOR_CORNER	0x636676   /* vfc */
+ 
++#define MAX_RPMPD_STATE		6
 +
-+For RPM Power domains, we communicate a performance state to RPM
-+which then translates it into a corresponding voltage on a rail
+ #define DEFINE_RPMPD_CORN_SMPA(_platform, _name, _active, r_id)		\
+ 	static struct rpmpd _platform##_##_active;			\
+ 	static struct rpmpd _platform##_##_name = {			\
+@@ -221,6 +224,47 @@ static int rpmpd_power_off(struct generic_pm_domain *domain)
+ 	return ret;
+ }
+ 
++static int rpmpd_set_performance(struct generic_pm_domain *domain,
++				 unsigned int state)
++{
++	int ret = 0;
++	struct rpmpd *pd = domain_to_rpmpd(domain);
 +
-+Required Properties:
-+ - compatible: Should be one of the following
-+	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
-+ - power-domain-cells: number of cells in Power domain specifier
-+	must be 1.
-+ - operating-points-v2: Phandle to the OPP table for the Power domain.
-+	Refer to Documentation/devicetree/bindings/power/power_domain.txt
-+	and Documentation/devicetree/bindings/opp/qcom-opp.txt for more details
++	mutex_lock(&rpmpd_lock);
 +
-+Example:
++	if (state > MAX_RPMPD_STATE)
++		goto out;
 +
-+	rpmpd: power-controller {
-+		compatible = "qcom,msm8996-rpmpd";
-+		#power-domain-cells = <1>;
-+		operating-points-v2 = <&rpmpd_opp_table>;
-+	};
++	pd->corner = state;
 +
-+	rpmpd_opp_table: opp-table {
-+		compatible = "operating-points-v2-qcom-level";
++	if (!pd->enabled && (pd->key != KEY_FLOOR_CORNER))
++		goto out;
 +
-+		rpmpd_opp1: opp1 {
-+			qcom,level = <1>;
-+		};
++	ret = rpmpd_aggregate_corner(pd);
 +
-+		rpmpd_opp2: opp2 {
-+			qcom,level = <2>;
-+		};
++out:
++	mutex_unlock(&rpmpd_lock);
 +
-+		rpmpd_opp3: opp3 {
-+			qcom,level = <3>;
-+		};
++	return ret;
++}
 +
-+		rpmpd_opp4: opp4 {
-+			qcom,level = <4>;
-+		};
++static unsigned int rpmpd_get_performance(struct generic_pm_domain *genpd,
++					  struct dev_pm_opp *opp)
++{
++	struct device_node *np;
++	unsigned int corner = 0;
 +
-+		rpmpd_opp5: opp5 {
-+			qcom,level = <5>;
-+		};
++	np = dev_pm_opp_get_of_node(opp);
++	if (of_property_read_u32(np, "qcom,level", &corner)) {
++		pr_err("%s: missing 'qcom,level' property\n", __func__);
++		return 0;
++	}
 +
-+		rpmpd_opp6: opp6 {
-+			qcom,level = <6>;
-+		};
-+	};
++	of_node_put(np);
++
++	return corner;
++}
++
+ static int rpmpd_probe(struct platform_device *pdev)
+ {
+ 	int i;
+@@ -261,6 +305,8 @@ static int rpmpd_probe(struct platform_device *pdev)
+ 		rpmpds[i]->rpm = rpm;
+ 		rpmpds[i]->pd.power_off = rpmpd_power_off;
+ 		rpmpds[i]->pd.power_on = rpmpd_power_on;
++		rpmpds[i]->pd.set_performance_state = rpmpd_set_performance;
++		rpmpds[i]->pd.opp_to_performance_state = rpmpd_get_performance;
+ 		pm_genpd_init(&rpmpds[i]->pd, NULL, true);
+ 
+ 		data->domains[i] = &rpmpds[i]->pd;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
