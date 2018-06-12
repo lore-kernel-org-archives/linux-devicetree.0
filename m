@@ -1,105 +1,57 @@
-From: Songjun Wu <songjun.wu@linux.intel.com>
-Subject: [PATCH 6/7] tty: serial: lantiq: Remove unneeded header includes and macros
-Date: Tue, 12 Jun 2018 13:40:33 +0800
-Message-ID: <20180612054034.4969-7-songjun.wu@linux.intel.com>
-References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 2/2] nvmem: Add Spreadtrum SC27XX efuse support
+Date: Tue, 12 Jun 2018 13:41:27 +0800
+Message-ID: <CAMz4kuKmDYBgtqNfWtbB+vLAufR1r7oXtEZGp76H8cyWONyxfg@mail.gmail.com>
+References: <0a5444dd0646f4e1f1d8ce51870afe6cc864219e.1528780670.git.baolin.wang@linaro.org>
+ <0ebf526fa755231c8871a57baab641cebaed7820.1528780670.git.baolin.wang@linaro.org>
+ <70fffa09-5c70-be61-49b8-e78015fff547@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+In-Reply-To: <70fffa09-5c70-be61-49b8-e78015fff547@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com
-Cc: linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Songjun Wu <songjun.wu@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, freeman.liu@spreadtrum.com, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the author list with Intel Corporation.
-Sort the header includes in alphabetical orders.
-Remove unneeded header includes and macros.
+Hi Randy,
 
-Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
----
+On 12 June 2018 at 13:27, Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 06/11/2018 10:24 PM, Baolin Wang wrote:
+>> From: Freeman Liu <freeman.liu@spreadtrum.com>
+>>
+>> This patch add the efuse driver which is embeded in Spreadtrum SC27XX
+>> series PMICs. The sc27xx efuse contains 32 blocks and each block's
+>> data width is 16 bits.
+>>
+>> Signed-off-by: Freeman Liu <freeman.liu@spreadtrum.com>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>>  drivers/nvmem/Kconfig        |   11 ++
+>>  drivers/nvmem/Makefile       |    3 +-
+>>  drivers/nvmem/sc27xx-efuse.c |  263 ++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 276 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/nvmem/sc27xx-efuse.c
+>>
+>> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+>> index 54a3c29..3dca608 100644
+>> --- a/drivers/nvmem/Kconfig
+>> +++ b/drivers/nvmem/Kconfig
+>> @@ -181,4 +181,15 @@ config RAVE_SP_EEPROM
+>>       help
+>>         Say y here to enable Rave SP EEPROM support.
+>>
+>> +config SC27XX_EFUSE
+>> +     tristate "Spreadtrum SC27XX eFuse Support"
+>> +     depends on MFD_SC27XX_PMIC || COMPILE_TEST
+>> +     depends on HAS_IOMEM
+>> +     help
+>> +       This is a simple drive to dump specified values of Spreadtrum
+>
+>                            driver
 
- drivers/tty/serial/lantiq.c | 29 +++++++++++------------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
+Sorry for the typo and will fix in next version. Thanks.
 
-diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-index 72aab1b05265..cc33208c93ac 100644
---- a/drivers/tty/serial/lantiq.c
-+++ b/drivers/tty/serial/lantiq.c
-@@ -6,24 +6,23 @@
-  * Copyright (C) 2007 Felix Fietkau <nbd@openwrt.org>
-  * Copyright (C) 2007 John Crispin <john@phrozen.org>
-  * Copyright (C) 2010 Thomas Langer, <thomas.langer@lantiq.com>
-+ * Copyright (C) 2017 Intel Corporation.
-  */
- 
--#include <linux/slab.h>
--#include <linux/ioport.h>
--#include <linux/init.h>
-+#include <linux/clk.h>
- #include <linux/console.h>
--#include <linux/sysrq.h>
- #include <linux/device.h>
--#include <linux/tty.h>
--#include <linux/tty_flip.h>
--#include <linux/serial_core.h>
--#include <linux/serial.h>
-+#include <linux/init.h>
-+#include <linux/ioport.h>
-+#include <linux/io.h>
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
--#include <linux/io.h>
--#include <linux/clk.h>
--#include <linux/gpio.h>
-+#include <linux/serial_core.h>
-+#include <linux/serial.h>
-+#include <linux/sysrq.h>
-+#include <linux/tty.h>
-+#include <linux/tty_flip.h>
- 
- #include <lantiq_soc.h>
- 
-@@ -43,7 +42,6 @@
- #define LTQ_ASC_STATE		0x0014
- #define LTQ_ASC_IRNCR		0x00F8
- #define LTQ_ASC_CLC		0x0000
--#define LTQ_ASC_ID		0x0008
- #define LTQ_ASC_PISEL		0x0004
- #define LTQ_ASC_TXFCON		0x0044
- #define LTQ_ASC_RXFCON		0x0040
-@@ -51,16 +49,12 @@
- #define LTQ_ASC_BG		0x0050
- #define LTQ_ASC_FDV		0x0058
- #define LTQ_ASC_IRNEN		0x00F4
--
- #define ASC_IRNREN_TX		0x1
- #define ASC_IRNREN_RX		0x2
- #define ASC_IRNREN_ERR		0x4
--#define ASC_IRNREN_TX_BUF	0x8
- #define ASC_IRNCR_TIR		0x1
- #define ASC_IRNCR_RIR		0x2
- #define ASC_IRNCR_EIR		0x4
--
--#define ASCOPT_CSIZE		0x3
- #define TXFIFO_FL		1
- #define RXFIFO_FL		1
- #define ASCCLC_DISR		0x1
-@@ -71,7 +65,6 @@
- #define ASCCON_M_7ASYNC		0x2
- #define ASCCON_ODD		0x00000020
- #define ASCCON_STP		0x00000080
--#define ASCCON_BRS		0x00000100
- #define ASCCON_FDE		0x00000200
- #define ASCCON_R		0x00008000
- #define ASCCON_FEN		0x00020000
-@@ -80,7 +73,7 @@
- #define ASCSTATE_PE		0x00010000
- #define ASCSTATE_FE		0x00020000
- #define ASCSTATE_ROE		0x00080000
--#define ASCSTATE_ANY		(ASCSTATE_ROE|ASCSTATE_PE|ASCSTATE_FE)
-+#define ASCSTATE_ANY		(ASCSTATE_ROE | ASCSTATE_PE | ASCSTATE_FE)
- #define ASCWHBSTATE_CLRREN	0x00000001
- #define ASCWHBSTATE_SETREN	0x00000002
- #define ASCWHBSTATE_CLRPE	0x00000004
 -- 
-2.11.0
+Baolin.wang
+Best Regards
