@@ -1,13 +1,11 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 3/6] media: v4l2-fwnode: parse 'data-enable-active' prop
-Date: Tue, 12 Jun 2018 16:26:03 +0200
-Message-ID: <1528813566-17927-4-git-send-email-jacopo+renesas@jmondi.org>
-References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v4 0/6] media: rcar-vin: Brush endpoint properties
+Date: Tue, 12 Jun 2018 16:26:00 +0200
+Message-ID: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,32 +19,43 @@ To: niklas.soderlund@ragnatech.se, laurent.pinchart@ideasonboard.com, horms@verg
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UGFyc2UgdGhlIG5ld2x5IGRlZmluZWQgJ2RhdGEtZW5hYmxlLWFjdGl2ZScgcHJvcGVydHkgaW4g
-cGFyYWxsZWwgZW5kcG9pbnQKcGFyc2luZyBmdW5jdGlvbi4KClNpZ25lZC1vZmYtYnk6IEphY29w
-byBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1vbmRpLm9yZz4KUmV2aWV3ZWQtYnk6IE5pa2xhcyBT
-w7ZkZXJsdW5kIDxuaWtsYXMuc29kZXJsdW5kK3JlbmVzYXNAcmFnbmF0ZWNoLnNlPgotLS0KIGRy
-aXZlcnMvbWVkaWEvdjRsMi1jb3JlL3Y0bDItZndub2RlLmMgfCA0ICsrKysKIGluY2x1ZGUvbWVk
-aWEvdjRsMi1tZWRpYWJ1cy5oICAgICAgICAgfCAyICsrCiAyIGZpbGVzIGNoYW5nZWQsIDYgaW5z
-ZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvdjRsMi1jb3JlL3Y0bDItZndu
-b2RlLmMgYi9kcml2ZXJzL21lZGlhL3Y0bDItY29yZS92NGwyLWZ3bm9kZS5jCmluZGV4IDNmNzdh
-YTMuLjYxMDUxOTEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWVkaWEvdjRsMi1jb3JlL3Y0bDItZndu
-b2RlLmMKKysrIGIvZHJpdmVycy9tZWRpYS92NGwyLWNvcmUvdjRsMi1md25vZGUuYwpAQCAtMTU0
-LDYgKzE1NCwxMCBAQCBzdGF0aWMgdm9pZCB2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9wYXJh
-bGxlbF9idXMoCiAJCWZsYWdzIHw9IHYgPyBWNEwyX01CVVNfVklERU9fU09HX0FDVElWRV9ISUdI
-IDoKIAkJCVY0TDJfTUJVU19WSURFT19TT0dfQUNUSVZFX0xPVzsKIAorCWlmICghZndub2RlX3By
-b3BlcnR5X3JlYWRfdTMyKGZ3bm9kZSwgImRhdGEtZW5hYmxlLWFjdGl2ZSIsICZ2KSkKKwkJZmxh
-Z3MgfD0gdiA/IFY0TDJfTUJVU19EQVRBX0VOQUJMRV9ISUdIIDoKKwkJCVY0TDJfTUJVU19EQVRB
-X0VOQUJMRV9MT1c7CisKIAlidXMtPmZsYWdzID0gZmxhZ3M7CiAKIH0KZGlmZiAtLWdpdCBhL2lu
-Y2x1ZGUvbWVkaWEvdjRsMi1tZWRpYWJ1cy5oIGIvaW5jbHVkZS9tZWRpYS92NGwyLW1lZGlhYnVz
-LmgKaW5kZXggNGQ4NjI2Yy4uNGJiYjVmMyAxMDA2NDQKLS0tIGEvaW5jbHVkZS9tZWRpYS92NGwy
-LW1lZGlhYnVzLmgKKysrIGIvaW5jbHVkZS9tZWRpYS92NGwyLW1lZGlhYnVzLmgKQEAgLTQ1LDYg
-KzQ1LDggQEAKIC8qIEFjdGl2ZSBzdGF0ZSBvZiBTeW5jLW9uLWdyZWVuIChTb0cpIHNpZ25hbCwg
-MC8xIGZvciBMT1cvSElHSCByZXNwZWN0aXZlbHkuICovCiAjZGVmaW5lIFY0TDJfTUJVU19WSURF
-T19TT0dfQUNUSVZFX0hJR0gJCUJJVCgxMikKICNkZWZpbmUgVjRMMl9NQlVTX1ZJREVPX1NPR19B
-Q1RJVkVfTE9XCQlCSVQoMTMpCisjZGVmaW5lIFY0TDJfTUJVU19EQVRBX0VOQUJMRV9ISUdICQlC
-SVQoMTQpCisjZGVmaW5lIFY0TDJfTUJVU19EQVRBX0VOQUJMRV9MT1cJCUJJVCgxNSkKIAogLyog
-U2VyaWFsIGZsYWdzICovCiAvKiBIb3cgbWFueSBsYW5lcyB0aGUgY2xpZW50IGNhbiB1c2UgKi8K
-LS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+Hello,
+  4th round for the VIN endpoint brushing series.
+
+Slightly enlarged the linux-media receiver list, as this new version
+introduces a common property in 'video-interfaces.txt'.
+
+Compared to v3 I have dropped the last controversial parts:
+
+- The custom 'renesas,hsync-as-de' property has been dropped: do not handle
+  CHS bit for the moment.
+- Do not remove properties not parsed by the driver and not listed in the
+  interface bindings from Gen2 boards. As this lead to a long discussion, I
+  have now proposed a patch to clearly state that properties not listed in the
+  interface bindings can be optionally specified, but they don't affect the
+  interface behaviour. To avoid more discussions this patch may be dropped
+  and things will stay the way they are now.
+
+For the common 'data-enable-active' property, I guess with Rob's ack we should
+be fine there and I hope the rest of the series won't slow down its acceptance.
+
+Thanks
+   j
+
+Jacopo Mondi (6):
+  dt-bindings: media: rcar-vin: Describe optional ep properties
+  dt-bindings: media: Document data-enable-active property
+  media: v4l2-fwnode: parse 'data-enable-active' prop
+  dt-bindings: media: rcar-vin: Add 'data-enable-active'
+  media: rcar-vin: Handle data-enable polarity
+  dt-bindings: media: rcar-vin: Clarify optional props
+
+ Documentation/devicetree/bindings/media/rcar_vin.txt   | 18 ++++++++++++++++++
+ .../devicetree/bindings/media/video-interfaces.txt     |  2 ++
+ drivers/media/platform/rcar-vin/rcar-dma.c             |  5 +++++
+ drivers/media/v4l2-core/v4l2-fwnode.c                  |  4 ++++
+ include/media/v4l2-mediabus.h                          |  2 ++
+ 5 files changed, 31 insertions(+)
+
+--
+2.7.4
