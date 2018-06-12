@@ -1,41 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] dt-bindings: display: rockchip: update DSI controller
-Date: Tue, 12 Jun 2018 16:08:06 -0600
-Message-ID: <20180612220806.GA20995@rob-hp-laptop>
-References: <20180611133502.1292-1-heiko@sntech.de>
- <20180611133502.1292-5-heiko@sntech.de>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 1/3] Documentation: dt: keystone: ti-sci: Add
+ optional host-id parameter
+Date: Tue, 12 Jun 2018 17:09:18 -0500
+Message-ID: <20180612220918.7cchihtcmmta6pm5@kahuna>
+References: <20180605062640.3356-1-nm@ti.com> <20180605062640.3356-2-nm@ti.com>
+ <20180612213922.GA26791@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180611133502.1292-5-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, yannick.fertre-qxv4g6HH51o@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <20180612213922.GA26791@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Santosh Shilimkar <ssantosh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 11, 2018 at 03:34:58PM +0200, Heiko Stuebner wrote:
-> From: Nickey Yang <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On 21:39-20180612, Rob Herring wrote:
+> On Tue, Jun 05, 2018 at 01:26:38AM -0500, Nishanth Menon wrote:
+> > Texas Instrument's System Control Interface (TISCI) permits the
+> > ability for Operating Systems to running in virtual machines to be
 > 
-> This patch update describe panel/port links, including
-> unit addresses in documentation of device tree bindings
-> for the rockchip DSI controller based on the Synopsys
-> DesignWare MIPI DSI host controller.
-> 
-> Signed-off-by: Nickey Yang <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  .../display/rockchip/dw_mipi_dsi_rockchip.txt | 23 +++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
+> ...for OSs running in virtual...
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Ack. thanks.
+
+> 
+> > able to independently communicate with the firmware without the need
+> > going through an hypervisor.
+> > 
+> > The "host-id" in effect is the hardware representation of the
+> > host (example: VMs locked to a core) as identified to the System
+> > Controller.
+> 
+> So the hypervisor will fill in host-id's for each VM instance?
+
+Yes OR have it's own device tree blobs representation of it's own host
+IDs assigned by system firmware. This provides complete independence of
+VMs to communicate with the system controller (once the host-id is
+provided) without switching to hyp for arbitration (and yes, verified
+ability with jailhouse hypervisor and multiple linux instances operating
+simultaneously). This also has the added benefit of:
+1. The burden of hypervisor from being involved in PM functionality as each
+of the VMs can operate autonomously.
+2. In TI SoCs which are heterogeneous, the system firmware plays the role
+of system master communicating with multiple firmware(running on various
+uCs) and OSes running on bigger cores.
+
+-- 
+Regards,
+Nishanth Menon
