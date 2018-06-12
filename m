@@ -1,247 +1,149 @@
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
-Date: Tue, 12 Jun 2018 11:23:54 +0300
-Message-ID: <20180612082354.GG20078@localhost.localdomain>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Tue, 12 Jun 2018 10:27:34 +0200
+Message-ID: <20180612102734.0ea3bfa5@bbrezillon>
+References: <20180611205224.23340-1-stefan@agner.ch>
+        <20180611205224.23340-5-stefan@agner.ch>
+        <4258393.O1xtUOGbca@dimapc>
+        <cb6f2ef0a5a41e001a2019caa1a18c23@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
+In-Reply-To: <cb6f2ef0a5a41e001a2019caa1a18c23@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mazziesaccount@gmail.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Stefan Agner <stefan@agner.ch>
+Cc: Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
+On Tue, 12 Jun 2018 10:06:42 +0200
+Stefan Agner <stefan@agner.ch> wrote:
 
-Thanks again for the review. I'll do new patch which fixes these issues.
-
-On Tue, Jun 12, 2018 at 12:44:11AM -0700, Stephen Boyd wrote:
-> Quoting Matti Vaittinen (2018-06-04 06:19:13)
-> > +config COMMON_CLK_BD71837
-> > +       tristate "Clock driver for ROHM BD71837 PMIC MFD"
-> > +       depends on MFD_BD71837
-> > +       help
-> > +         This driver supports ROHM BD71837 PMIC clock.
-> > +
-> > +
+> On 12.06.2018 02:03, Dmitry Osipenko wrote:
+> > On Monday, 11 June 2018 23:52:22 MSK Stefan Agner wrote:  
+> >> Add support for the NAND flash controller found on NVIDIA
+> >> Tegra 2 SoCs. This implementation does not make use of the
+> >> command queue feature. Regular operations/data transfers are
+> >> done in PIO mode. Page read/writes with hardware ECC make
+> >> use of the DMA for data transfer.
+> >>
+> >> Signed-off-by: Lucas Stach <dev@lynxeye.de>
+> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> >> ---
+> >>  MAINTAINERS                       |    7 +
+> >>  drivers/mtd/nand/raw/Kconfig      |    6 +
+> >>  drivers/mtd/nand/raw/Makefile     |    1 +
+> >>  drivers/mtd/nand/raw/tegra_nand.c | 1248 +++++++++++++++++++++++++++++
+> >>  4 files changed, 1262 insertions(+)
+> >>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
+> >>  
+> [snip]
+> >> +static int tegra_nand_cmd(struct nand_chip *chip,
+> >> +			 const struct nand_subop *subop)
+> >> +{
+> >> +	const struct nand_op_instr *instr;
+> >> +	const struct nand_op_instr *instr_data_in = NULL;
+> >> +	struct tegra_nand_controller *ctrl = to_tegra_ctrl(chip->controller);
+> >> +	unsigned int op_id, size = 0, offset = 0;
+> >> +	bool first_cmd = true;
+> >> +	u32 reg, cmd = 0;
+> >> +	int ret;
+> >> +
+> >> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
+> >> +		unsigned int naddrs, i;
+> >> +		const u8 *addrs;
+> >> +		u32 addr1 = 0, addr2 = 0;
+> >> +
+> >> +		instr = &subop->instrs[op_id];
+> >> +
+> >> +		switch (instr->type) {
+> >> +		case NAND_OP_CMD_INSTR:
+> >> +			if (first_cmd) {
+> >> +				cmd |= COMMAND_CLE;
+> >> +				writel_relaxed(instr->ctx.cmd.opcode,
+> >> +					       ctrl->regs + CMD_REG1);
+> >> +			} else {
+> >> +				cmd |= COMMAND_SEC_CMD;
+> >> +				writel_relaxed(instr->ctx.cmd.opcode,
+> >> +					       ctrl->regs + CMD_REG2);
+> >> +			}
+> >> +			first_cmd = false;
+> >> +			break;
+> >> +		case NAND_OP_ADDR_INSTR:
+> >> +			offset = nand_subop_get_addr_start_off(subop, op_id);
+> >> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
+> >> +			addrs = &instr->ctx.addr.addrs[offset];
+> >> +
+> >> +			cmd |= COMMAND_ALE | COMMAND_ALE_SIZE(naddrs);
+> >> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+> >> +				addr1 |= *addrs++ << (BITS_PER_BYTE * i);
+> >> +			naddrs -= i;
+> >> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
+> >> +				addr2 |= *addrs++ << (BITS_PER_BYTE * i);
+> >> +			writel_relaxed(addr1, ctrl->regs + ADDR_REG1);
+> >> +			writel_relaxed(addr2, ctrl->regs + ADDR_REG2);
+> >> +			break;
+> >> +
+> >> +		case NAND_OP_DATA_IN_INSTR:
+> >> +			size = nand_subop_get_data_len(subop, op_id);
+> >> +			offset = nand_subop_get_data_start_off(subop, op_id);
+> >> +
+> >> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
+> >> +				COMMAND_RX | COMMAND_A_VALID;
+> >> +
+> >> +			instr_data_in = instr;
+> >> +			break;
+> >> +
+> >> +		case NAND_OP_DATA_OUT_INSTR:
+> >> +			size = nand_subop_get_data_len(subop, op_id);
+> >> +			offset = nand_subop_get_data_start_off(subop, op_id);
+> >> +
+> >> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
+> >> +				COMMAND_TX | COMMAND_A_VALID;
+> >> +
+> >> +			memcpy(&reg, instr->ctx.data.buf.out + offset, size);
+> >> +			writel_relaxed(reg, ctrl->regs + RESP);
+> >> +
+> >> +			break;
+> >> +		case NAND_OP_WAITRDY_INSTR:
+> >> +			cmd |= COMMAND_RBSY_CHK;
+> >> +			break;
+> >> +
+> >> +		}
+> >> +	}
+> >> +
+> >> +	cmd |= COMMAND_GO | COMMAND_CE(ctrl->cur_cs);
+> >> +	writel_relaxed(cmd, ctrl->regs + COMMAND);
+> >> +	ret = wait_for_completion_io_timeout(&ctrl->command_complete,
+> >> +					     msecs_to_jiffies(500));  
+> > 
+> > It's not obvious to me whether _io_ variant is appropriate to use here, would 
+> > be nice if somebody could clarify that. Maybe block/ already does the IO 
+> > accounting itself and hence the IO time would be counted twice in that case.  
 > 
-> Drop one newline above.
-Right.
-
+> Good that you bring this up.
 > 
-> > +++ b/drivers/clk/clk-bd71837.c
-> > +#include <linux/mfd/bd71837.h>
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/clkdev.h>
-> > +
-> > +
+> I don't think that there is any higher layer which could take care of
+> accounting. Usually, with raw nand there is no block layer involved
+> anyway.
 > 
-> Drop one newline above.
-Right.
-
+> In a quick test it seems that only when using wait_for_completion_io I/O
+> is properly accounted in the "wait" section of top.
 > 
-> > +struct bd71837_clk {
-> > +       struct clk_hw hw;
-> > +       uint8_t reg;
-> > +       uint8_t mask;
+> So far only a single driver (omap2) used the _io variant, but I think it
+> is the right thing to do! After all, it is I/O...
 > 
-> Use u8 instead of uint8_t.
-I can do that but I am afraid I have missed the reason for this. Why u8
-is preferred? I would have assumed the standard uint8_t would be
-preferred - can you please educate me as to what is this reason?
+> Boris or any other MTD maintainer, any comment on this?
 
-> > +       unsigned long rate;
-> > +       struct platform_device *pdev;
-> > +       struct bd71837 *mfd;
-> > +};
-> > +
-> > +static int bd71837_clk_set(struct clk_hw *hw, int status)
-> > +{
-> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
-> > +
-> > +       return bd71837_update_bits(c->mfd, c->reg, c->mask, status);
-> 
-> Any reason we can't use a regmap?
+Given this definition of io_schedule_timeout() [1] (which is used when
+you call wait_for_completion_io_timeout()), I'd say it's not useful to
+use the _io_ version, simply because MTD devs are not exposed as blk
+devices, and thus don't need the blk_schedule_flush_plug() that is done
+is io_schedule_prepare(). But that also means MTD I/Os are not
+accounted as I/Os :-(.
 
-Not really. These wrappers might become handy if the next chip in series
-requires some quirks for access but at the moment I see no reason for
-the wrappers. I could switch to direct regmap calls but that change
-should then be done to all subdevices and not just for clk one. This
-means I should rework also the already applied regulator part. I have
-some other changes pending for regulators (adding support for next chip,
-renaming bd71837 to bd718x7 or bd718xx, and few comments from  Andy
-Shevchenko and Rob Herring). I would rather switch to direct regmap usage
-for all subdevices at the same time. So if it is acceptable to keep the
-wrappers for now (and then create own patch set to remove them from all
-subdevices and the header) I would like to do so.
+Let's go for the non-io version for now, since all drivers except omap2
+seem to use this function.
 
-> 
-> > +}
-> > +
-> > +static void bd71837_clk_disable(struct clk_hw *hw)
-> > +{
-> > +       int rv;
-> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
-> > +
-> > +       rv = bd71837_clk_set(hw, 0);
-> > +       if (rv)
-> > +               dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n", rv);
-> > +}
-> > +
-> > +static int bd71837_clk_enable(struct clk_hw *hw)
-> > +{
-> > +       return bd71837_clk_set(hw, 1);
-> > +}
-> > +
-> > +static int bd71837_clk_is_enabled(struct clk_hw *hw)
-> > +{
-> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
-> > +
-> > +       return c->mask & bd71837_reg_read(c->mfd, c->reg);
-> 
-> Didn't I ask for local variable for reg_read result?
-
-Yes! Sorry! And thanks for pointing this out again. It seems I missed
-this one.
-
-> 
-> > +}
-> > +
-> > +static unsigned long bd71837_clk_recalc_rate(struct clk_hw *hw,
-> > +                                            unsigned long parent_rate)
-> > +{
-> > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
-> > +
-> > +       return c->rate;
-> > +}
-> > +
-> > +static const struct clk_ops bd71837_clk_ops = {
-> > +       .recalc_rate = &bd71837_clk_recalc_rate,
-> > +       .prepare = &bd71837_clk_enable,
-> > +       .unprepare = &bd71837_clk_disable,
-> > +       .is_prepared = &bd71837_clk_is_enabled,
-> > +};
-> > +
-> > +static int bd71837_clk_probe(struct platform_device *pdev)
-> > +{
-> > +       struct bd71837_clk *c;
-> > +       int rval = -ENOMEM;
-> > +       struct bd71837 *mfd = dev_get_drvdata(pdev->dev.parent);
-> > +       struct clk_init_data init = {
-> > +               .name = "bd71837-32k-out",
-> > +               .ops = &bd71837_clk_ops,
-> > +       };
-> > +
-> > +       c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
-> > +       if (!c)
-> > +               goto err_out;
-> > +
-> > +       c->reg = BD71837_REG_OUT32K;
-> > +       c->mask = BD71837_OUT32K_EN;
-> > +       c->rate = BD71837_CLK_RATE;
-> 
-> The PMIC has an 'XIN' pin that would be the clk input for this chip, and
-> the output clk, this driver, would specify that xin clock as the parent.
-> The 'xin' clock would then be listed in DT as a fixed-rate clock. That
-> way this driver doesn't hardcode the frequency.
-
-I see. This makes sense. I need to verify from HW colleagues whether
-this chip has internal oscillator or not. I originally thought we have
-on-chip oscillator - but as you say, we do have XIN pin in documentation.
-So now I am not sure if the test board I have contains oscillator driving
-the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify this.
-
-> > +       c->mfd = mfd;
-> > +       c->pdev = pdev;
-> > +
-> > +       of_property_read_string_index(pdev->dev.parent->of_node,
-> > +                                             "clock-output-names", 0,
-> > +                                             &init.name);
-> > +
-> > +       c->hw.init = &init;
-> 
-> Do this next to all the other c-> things?
-
-I can do so. I just like the idea of assigning pointers to objects only
-after the objects have been initialized. Eg, in this case I add pointer
-to init only after I have filled the init.name (if it is given).
-
-> 
-> > +
-> > +       rval = devm_clk_hw_register(&pdev->dev, &c->hw);
-> > +       if (rval) {
-> > +               dev_err(&pdev->dev, "failed to register 32K clk");
-> > +               goto err_out;
-> > +       }
-> > +
-> > +       if (pdev->dev.parent->of_node) {
-> > +               rval = of_clk_add_hw_provider(pdev->dev.parent->of_node,
-> > +                                            of_clk_hw_simple_get,
-> > +                                            &c->hw);
-> > +               if (rval) {
-> > +                       dev_err(&pdev->dev, "adding clk provider failed\n");
-> > +                       goto err_out;
-> 
-> Just return rval instead of goto and then remove err_out label.
-
-Is this 'hard requirement'? I prefer single point of exit from functions
-(when easily doable) because I have done so many errors with locks /
-resources being reserved when exiting from some error branch. For my
-personal taste maintaining the one nice cleanup sequence is easier. But
-if this is 'hard requirement' this can of course be changed.
-
-> 
-> > +               }
-> > +       }
-> > +
-> > +       rval = clk_hw_register_clkdev(&c->hw, init.name, NULL);
-> 
-> This leaks a clkdev lookup. Sad we don't have a devm version. Maybe it
-> should be added. But I really doubt this chip will be used with clkdev
-> lookups so please remove clkdev until you have a user who needs it.
-
-Yep. It leaks. I tried to look for an example where the clkdev was
-nicely freed at remove - but I didn't find any. Every example I spotted
-did leak the clkdev in same way as this does :( And I agree, devm
-variant for freeing would be nice - or freeing routines based on hw.
-
-As the leaked clkdev can cause oops at module unload/reload/use your
-suggestion about removing it for now makes sense. I'll drop it.
-
-> 
-> > +       if (rval) {
-> > +               dev_err(&pdev->dev, "failed to register clkdev for bd71837");
-> > +               goto err_clean_provider;
-> > +       }
-> > +
-> > +       platform_set_drvdata(pdev, c);
-> > +
-> > +       return 0;
-> > +
-> > +err_clean_provider:
-> > +       of_clk_del_provider(pdev->dev.parent->of_node);
-> > +err_out:
-> > +       return rval;
-> > +}
-> > +
-> > +static int bd71837_clk_remove(struct platform_device *pdev)
-> > +{
-> > +       if (pdev->dev.parent->of_node)
-> > +               of_clk_del_provider(pdev->dev.parent->of_node);
-> 
-> Use devm so this can go away. Or is devm not used because the parent
-> of_node is the provider? That's annoying.
-
-What would be the correct workaround for this?
-
-> 
-> > +       return 0;
-> > +}
-> > +
-
-Br,
-    Matti Vaittinen
+[1]https://elixir.bootlin.com/linux/v4.17.1/source/kernel/sched/core.c#L5164
