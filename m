@@ -1,89 +1,218 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 2/7] soc: qcom: rpmpd: Add a Power domain driver to
- model corners
-Date: Tue, 12 Jun 2018 09:39:08 +0200
-Message-ID: <CAPDyKFpJPUiBfzkM__niwnbHd_BDYYXpvEJCwfDxKp-L0nLOvQ@mail.gmail.com>
-References: <20180612044052.4402-1-rnayak@codeaurora.org> <20180612044052.4402-3-rnayak@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
+Date: Tue, 12 Jun 2018 00:44:11 -0700
+Message-ID: <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
+References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612044052.4402-3-rnayak@codeaurora.org>
+In-Reply-To: <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mazziesaccount@gmail.com, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-[...]
+Quoting Matti Vaittinen (2018-06-04 06:19:13)
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 41492e980ef4..e693496f202a 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -279,6 +279,13 @@ config COMMON_CLK_STM32H7
+>         ---help---
+>           Support for stm32h7 SoC family clocks
+>  =
 
-> +static int rpmpd_probe(struct platform_device *pdev)
+> +config COMMON_CLK_BD71837
+> +       tristate "Clock driver for ROHM BD71837 PMIC MFD"
+> +       depends on MFD_BD71837
+> +       help
+> +         This driver supports ROHM BD71837 PMIC clock.
+> +
+> +
+
+Drop one newline above.
+
+>  source "drivers/clk/bcm/Kconfig"
+>  source "drivers/clk/hisilicon/Kconfig"
+>  source "drivers/clk/imgtec/Kconfig"
+> diff --git a/drivers/clk/clk-bd71837.c b/drivers/clk/clk-bd71837.c
+> new file mode 100644
+> index 000000000000..5ba6c05c5a98
+> --- /dev/null
+> +++ b/drivers/clk/clk-bd71837.c
+> @@ -0,0 +1,146 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 ROHM Semiconductors
+> +// bd71837.c  -- ROHM BD71837MWV clock driver
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/mfd/bd71837.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +
+> +
+
+Drop one newline above.
+
+> +struct bd71837_clk {
+> +       struct clk_hw hw;
+> +       uint8_t reg;
+> +       uint8_t mask;
+
+Use u8 instead of uint8_t.
+
+> +       unsigned long rate;
+> +       struct platform_device *pdev;
+> +       struct bd71837 *mfd;
+> +};
+> +
+> +static int bd71837_clk_set(struct clk_hw *hw, int status)
 > +{
-> +       int i;
-> +       size_t num;
-> +       struct genpd_onecell_data *data;
-> +       struct qcom_smd_rpm *rpm;
-> +       struct rpmpd **rpmpds;
-> +       const struct rpmpd_desc *desc;
+> +       struct bd71837_clk *c =3D container_of(hw, struct bd71837_clk, hw=
+);
 > +
-> +       rpm = dev_get_drvdata(pdev->dev.parent);
-> +       if (!rpm) {
-> +               dev_err(&pdev->dev, "Unable to retrieve handle to RPM\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       desc = of_device_get_match_data(&pdev->dev);
-> +       if (!desc)
-> +               return -EINVAL;
-> +
-> +       rpmpds = desc->rpmpds;
-> +       num = desc->num_pds;
-> +
-> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
-> +                                    GFP_KERNEL);
-> +       data->num_domains = num;
-> +
-> +       for (i = 0; i < num; i++) {
-> +               if (!rpmpds[i]) {
-> +                       dev_warn(&pdev->dev, "rpmpds[] with empty entry at index=%d\n",
-> +                                i);
-> +                       continue;
-> +               }
-> +
-> +               rpmpds[i]->rpm = rpm;
-> +               rpmpds[i]->pd.power_off = rpmpd_power_off;
-> +               rpmpds[i]->pd.power_on = rpmpd_power_on;
-> +               pm_genpd_init(&rpmpds[i]->pd, NULL, true);
-> +
-> +               data->domains[i] = &rpmpds[i]->pd;
-> +       }
-> +
-> +       return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+> +       return bd71837_update_bits(c->mfd, c->reg, c->mask, status);
+
+Any reason we can't use a regmap?
+
 > +}
 > +
-> +static int rpmpd_remove(struct platform_device *pdev)
+> +static void bd71837_clk_disable(struct clk_hw *hw)
 > +{
-> +       of_genpd_del_provider(pdev->dev.of_node);
+> +       int rv;
+> +       struct bd71837_clk *c =3D container_of(hw, struct bd71837_clk, hw=
+);
+> +
+> +       rv =3D bd71837_clk_set(hw, 0);
+> +       if (rv)
+> +               dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n"=
+, rv);
+> +}
+> +
+> +static int bd71837_clk_enable(struct clk_hw *hw)
+> +{
+> +       return bd71837_clk_set(hw, 1);
+> +}
+> +
+> +static int bd71837_clk_is_enabled(struct clk_hw *hw)
+> +{
+> +       struct bd71837_clk *c =3D container_of(hw, struct bd71837_clk, hw=
+);
+> +
+> +       return c->mask & bd71837_reg_read(c->mfd, c->reg);
 
-In principle what you need, additionally to the above, is something like this:
+Didn't I ask for local variable for reg_read result?
 
-while (!IS_ERR(of_genpd_remove_last(pdev->dev.of_node));
+> +}
+> +
+> +static unsigned long bd71837_clk_recalc_rate(struct clk_hw *hw,
+> +                                            unsigned long parent_rate)
+> +{
+> +       struct bd71837_clk *c =3D container_of(hw, struct bd71837_clk, hw=
+);
+> +
+> +       return c->rate;
+> +}
+> +
+> +static const struct clk_ops bd71837_clk_ops =3D {
+> +       .recalc_rate =3D &bd71837_clk_recalc_rate,
+> +       .prepare =3D &bd71837_clk_enable,
+> +       .unprepare =3D &bd71837_clk_disable,
+> +       .is_prepared =3D &bd71837_clk_is_enabled,
+> +};
+> +
+> +static int bd71837_clk_probe(struct platform_device *pdev)
+> +{
+> +       struct bd71837_clk *c;
+> +       int rval =3D -ENOMEM;
+> +       struct bd71837 *mfd =3D dev_get_drvdata(pdev->dev.parent);
+> +       struct clk_init_data init =3D {
+> +               .name =3D "bd71837-32k-out",
+> +               .ops =3D &bd71837_clk_ops,
+> +       };
+> +
+> +       c =3D devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
+> +       if (!c)
+> +               goto err_out;
+> +
+> +       c->reg =3D BD71837_REG_OUT32K;
+> +       c->mask =3D BD71837_OUT32K_EN;
+> +       c->rate =3D BD71837_CLK_RATE;
 
-Then in the ->probe() function, use dev_set_drvdata() to store the
-pointers for the allocated data, such you can use dev_get_drvdata() to
-get them back here to kfree() them.
+The PMIC has an 'XIN' pin that would be the clk input for this chip, and
+the output clk, this driver, would specify that xin clock as the parent.
+The 'xin' clock would then be listed in DT as a fixed-rate clock. That
+way this driver doesn't hardcode the frequency.
 
-However, running the ->remove() path for this driver doesn't really
-make sense. As we can't remove a genpd that has devices attached to it
-anyways.
+> +       c->mfd =3D mfd;
+> +       c->pdev =3D pdev;
+> +
+> +       of_property_read_string_index(pdev->dev.parent->of_node,
+> +                                             "clock-output-names", 0,
+> +                                             &init.name);
+> +
+> +       c->hw.init =3D &init;
 
-Perhaps make this a built in driver, if possible?
+Do this next to all the other c-> things?
 
-[...]
+> +
+> +       rval =3D devm_clk_hw_register(&pdev->dev, &c->hw);
+> +       if (rval) {
+> +               dev_err(&pdev->dev, "failed to register 32K clk");
+> +               goto err_out;
+> +       }
+> +
+> +       if (pdev->dev.parent->of_node) {
+> +               rval =3D of_clk_add_hw_provider(pdev->dev.parent->of_node,
+> +                                            of_clk_hw_simple_get,
+> +                                            &c->hw);
+> +               if (rval) {
+> +                       dev_err(&pdev->dev, "adding clk provider failed\n=
+");
+> +                       goto err_out;
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Just return rval instead of goto and then remove err_out label.
 
-Kind regards
-Uffe
+> +               }
+> +       }
+> +
+> +       rval =3D clk_hw_register_clkdev(&c->hw, init.name, NULL);
+
+This leaks a clkdev lookup. Sad we don't have a devm version. Maybe it
+should be added. But I really doubt this chip will be used with clkdev
+lookups so please remove clkdev until you have a user who needs it.
+
+> +       if (rval) {
+> +               dev_err(&pdev->dev, "failed to register clkdev for bd7183=
+7");
+> +               goto err_clean_provider;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, c);
+> +
+> +       return 0;
+> +
+> +err_clean_provider:
+> +       of_clk_del_provider(pdev->dev.parent->of_node);
+> +err_out:
+> +       return rval;
+> +}
+> +
+> +static int bd71837_clk_remove(struct platform_device *pdev)
+> +{
+> +       if (pdev->dev.parent->of_node)
+> +               of_clk_del_provider(pdev->dev.parent->of_node);
+
+Use devm so this can go away. Or is devm not used because the parent
+of_node is the provider? That's annoying.
+
+> +       return 0;
+> +}
+> +
