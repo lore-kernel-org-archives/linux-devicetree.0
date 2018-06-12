@@ -1,7 +1,7 @@
 From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH 4/5] ARM64: dts: ns2: Fix PCIe controller interrupt type
-Date: Tue, 12 Jun 2018 13:21:30 -0700
-Message-ID: <1528834891-17807-5-git-send-email-ray.jui@broadcom.com>
+Subject: [PATCH 2/5] ARM: dts: cygnus: Fix PCIe controller interrupt type
+Date: Tue, 12 Jun 2018 13:21:28 -0700
+Message-ID: <1528834891-17807-3-git-send-email-ray.jui@broadcom.com>
 References: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
@@ -10,38 +10,71 @@ To: linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix PCIe controller interrupt to use IRQ_TYPE_LEVEL_HIGH for
-Broadcom NS2 SoC
+Fix PCIe controller interrupt to use IRQ_TYPE_LEVEL_HIGH for Broadcom
+Cygnus SoC
 
-Fixes: fd5e5dd56a2f ("arm64: dts: Add PCIe0 and PCIe4 DT nodes for NS2")
-Fixes: 63a913c157f5 ("arm64: dts: move ns2 into northstar2 directory")
+Fixes: cd590b50a936 ("ARM: dts: enable PCIe support for Cygnus")
+Fixes: 0f0b21a83ad2 ("ARM: dts: Move all Cygnus peripherals into axi
+bus")
+Fixes: 9c5101f7a253 ("ARM: dts: Reorder Cygnus peripherals")
+Fixes: f6b889358a82 ("ARM: dts: Enable MSI support for Broadcom Cygnus")
 
 Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 ---
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index c0e4896..4057197 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -118,7 +118,7 @@
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index 835a6f7..2c4df2d 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -256,7 +256,7 @@
  
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 281 IRQ_TYPE_NONE>;
-+		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
++			interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
  
- 		linux,pci-domain = <0>;
+ 			linux,pci-domain = <0>;
  
-@@ -149,7 +149,7 @@
+@@ -278,10 +278,10 @@
+ 				compatible = "brcm,iproc-msi";
+ 				msi-controller;
+ 				interrupt-parent = <&gic>;
+-				interrupts = <GIC_SPI 96 IRQ_TYPE_NONE>,
+-					     <GIC_SPI 97 IRQ_TYPE_NONE>,
+-					     <GIC_SPI 98 IRQ_TYPE_NONE>,
+-					     <GIC_SPI 99 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 		};
  
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 305 IRQ_TYPE_NONE>;
-+		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+@@ -291,7 +291,7 @@
  
- 		linux,pci-domain = <4>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
++			interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			linux,pci-domain = <1>;
+ 
+@@ -313,10 +313,10 @@
+ 				compatible = "brcm,iproc-msi";
+ 				msi-controller;
+ 				interrupt-parent = <&gic>;
+-				interrupts = <GIC_SPI 102 IRQ_TYPE_NONE>,
+-					     <GIC_SPI 103 IRQ_TYPE_NONE>,
+-					     <GIC_SPI 104 IRQ_TYPE_NONE>,
+-					     <GIC_SPI 105 IRQ_TYPE_NONE>;
++				interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 		};
  
 -- 
 2.1.4
