@@ -1,168 +1,200 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v3 6/7] soc: qcom: Add RPMh Power domain driver
-Date: Tue, 12 Jun 2018 12:42:26 -0700
-Message-ID: <20180612194226.GI88063@google.com>
-References: <20180612044052.4402-1-rnayak@codeaurora.org>
- <20180612044052.4402-7-rnayak@codeaurora.org>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v2 09/11] misc: throttler: Add core support for
+ non-thermal throttling
+Date: Tue, 12 Jun 2018 13:00:14 -0700
+Message-ID: <20180612200012.GA99983@rodete-desktop-imager.corp.google.com>
+References: <20180607181214.30338-1-mka@chromium.org>
+ <20180607181214.30338-10-mka@chromium.org>
+ <20180612014911.GA35749@rodete-desktop-imager.corp.google.com>
+ <20180612171140.GH88063@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180612044052.4402-7-rnayak@codeaurora.org>
+In-Reply-To: <20180612171140.GH88063@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tue, Jun 12, 2018 at 10:10:51AM +0530, Rajendra Nayak wrote:
-> The RPMh Power domain driver aggregates the corner votes from various
-> consumers for the ARC resources and communicates it to RPMh.
+On Tue, Jun 12, 2018 at 10:11:40AM -0700, Matthias Kaehlcke wrote:
+> On Mon, Jun 11, 2018 at 06:49:13PM -0700, Brian Norris wrote:
+> > On Thu, Jun 07, 2018 at 11:12:12AM -0700, Matthias Kaehlcke wrote:
+> > > The purpose of the throttler is to provide support for non-thermal
+> > > throttling. Throttling is triggered by external event, e.g. the
+> > > detection of a high battery discharge current, close to the OCP limit
+> > > of the battery. The throttler is only in charge of the throttling, not
+> > > the monitoring, which is done by another (possibly platform specific)
+> > > driver.
+> > > 
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > ---
+> > > Changes in v2:
+> > > - completely reworked the driver to support configuration through OPPs, which
+> > >   requires a more dynamic handling
+> > > - added sysfs attribute to set the level for debugging and testing
+> > > - Makefile: depend on Kconfig option to traverse throttler directory
+> > > - Kconfig: removed 'default n'
+> > > - added SPDX line instead of license boiler-plate
+> > > - added entry to MAINTAINERS file
+> > > 
+> > > 
+> > >  MAINTAINERS                     |   7 +
+> > >  drivers/misc/Kconfig            |   1 +
+> > >  drivers/misc/Makefile           |   1 +
+> > >  drivers/misc/throttler/Kconfig  |  14 +
+> > >  drivers/misc/throttler/Makefile |   1 +
+> > >  drivers/misc/throttler/core.c   | 642 ++++++++++++++++++++++++++++++++
+> > >  include/linux/throttler.h       |  11 +
+> > >  7 files changed, 677 insertions(+)
+> > >  create mode 100644 drivers/misc/throttler/Kconfig
+> > >  create mode 100644 drivers/misc/throttler/Makefile
+> > >  create mode 100644 drivers/misc/throttler/core.c
+> > >  create mode 100644 include/linux/throttler.h
+> > > 
+
+...
+
+> > > diff --git a/drivers/misc/throttler/Kconfig b/drivers/misc/throttler/Kconfig
+> > > new file mode 100644
+> > > index 000000000000..e561f1df5085
+> > > --- /dev/null
+> > > +++ b/drivers/misc/throttler/Kconfig
+> > > @@ -0,0 +1,14 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +menuconfig THROTTLER
+> > > +	bool "Throttler support"
+> > > +	depends on OF
+> > > +	select CPU_FREQ
+> > > +	select PM_DEVFREQ
+> > 
+> > I'm curious whether we're actually truly compile-time dependent on
+> > {CPU,DEV}FREQ? It seems like those subsystems mostly stub out stuff so
+> > they fall back to no-ops if not built in.
+> >
+> > I know that's not very useful for your existing throttler, since it
+> > wouldn't be very effective if one or both were disabled.
 > 
-> We also add data for all power domains on sdm845 SoC as part of the patch.
-> The driver can be extended to support other SoCs which support RPMh
+> The idea is not to depend on both options being enabled, since
+> throttling of one type might be all that is needed.
+
+OK, then if you fix the build errors...don't do these 'select's here?
+
+> As the build bot pointed out cpufreq doesn't stub out all functions.
+> Probably the cleanest way to work around this is to define a stub for
+> cpufreq_update_policy() in the throttler when CONFIG_CPU_FREQ is not
+> defined.
+
+Might make sense.
+
+Also, how is it that CONFIG_CPU_FREQ managed to not be defined, even
+though you 'select'ed it? Was the kbuild error on some oddball
+architecture that doesn't support CPU_FREQ?
+
+> > > diff --git a/drivers/misc/throttler/core.c b/drivers/misc/throttler/core.c
+> > > new file mode 100644
+> > > index 000000000000..15b50c111032
+> > > --- /dev/null
+> > > +++ b/drivers/misc/throttler/core.c
+> > > ...
+> > > +// #define DEBUG_THROTTLER
+> > 
+> > Did you mean to leave your debug code in? Seems like you have some
+> > related dead code under #ifdefs.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/soc/qcom/Kconfig                |   9 +
->  drivers/soc/qcom/Makefile               |   1 +
->  drivers/soc/qcom/rpmhpd.c               | 427 ++++++++++++++++++++++++
->  include/dt-bindings/power/qcom-rpmhpd.h |  31 ++
->  4 files changed, 468 insertions(+)
->  create mode 100644 drivers/soc/qcom/rpmhpd.c
->  create mode 100644 include/dt-bindings/power/qcom-rpmhpd.h
+> Yes, I left it in intentionally.
 > 
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index 5c54931a7b99..7cb7eba2b997 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -74,6 +74,15 @@ config QCOM_RMTFS_MEM
->  
->  	  Say y here if you intend to boot the modem remoteproc.
->  
-> +config QCOM_RPMHPD
-> +	tristate "Qualcomm RPMh Power domain driver"
-> +	depends on QCOM_RPMH && QCOM_COMMAND_DB
-> +	help
-> +	  QCOM RPMh Power domain driver to support power-domains with
-> +	  performance states. The driver communicates a performance state
-> +	  value to RPMh which then translates it into corresponding voltage
-> +	  for the voltage rail.
-> +
->  config QCOM_RPMPD
->  	tristate "Qualcomm RPM Power domain driver"
->  	depends on MFD_QCOM_RPM && QCOM_SMD_RPM
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index 9550c170de93..499513f63bef 100644
-> --- a/drivers/soc/qcom/Makefile
-> +++ b/drivers/soc/qcom/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
->  obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
->  obj-$(CONFIG_QCOM_APR) += apr.o
->  obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
-> +obj-$(CONFIG_QCOM_RPMHPD) += rpmhpd.o
-> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-> new file mode 100644
-> index 000000000000..7083ec1590ff
-> --- /dev/null
-> +++ b/drivers/soc/qcom/rpmhpd.c
-> @@ -0,0 +1,427 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2018, The Linux Foundation. All rights reserved.*/
-> +
-> +#include <linux/err.h>
-> +#include <linux/export.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-> +#include <soc/qcom/cmd-db.h>
-> +#include <soc/qcom/rpmh.h>
-> +#include <dt-bindings/power/qcom-rpmhpd.h>
-> +
-> +#define domain_to_rpmhpd(domain) container_of(domain, struct rpmhpd, pd)
-> +
-> +#define DEFINE_RPMHPD_AO(_platform, _name, _active)			\
-> +	static struct rpmhpd _platform##_##_active;			\
-> +	static struct rpmhpd _platform##_##_name = {			\
-> +		.pd = {	.name = #_name,	},				\
-> +		.peer = &_platform##_##_active,				\
-> +		.res_name = #_name".lvl",				\
-> +		.valid_state_mask = (BIT(RPMH_ACTIVE_ONLY_STATE) |	\
-> +					BIT(RPMH_WAKE_ONLY_STATE) |	\
-> +					BIT(RPMH_SLEEP_STATE)),		\
-> +	};								\
-> +	static struct rpmhpd _platform##_##_active = {			\
-> +		.pd = { .name = #_active, },				\
-> +		.peer = &_platform##_##_name,				\
-> +		.active_only = true,					\
-> +		.res_name = #_name".lvl",				\
-> +		.valid_state_mask = (BIT(RPMH_ACTIVE_ONLY_STATE) |	\
-> +					BIT(RPMH_WAKE_ONLY_STATE) |	\
-> +					BIT(RPMH_SLEEP_STATE)),		\
-> +	}
-> +
-> +#define DEFINE_RPMHPD(_platform, _name)					\
-> +	static struct rpmhpd _platform##_##_name = {			\
-> +		.pd = { .name = #_name, },				\
-> +		.res_name = #_name".lvl",				\
-> +		.valid_state_mask = BIT(RPMH_ACTIVE_ONLY_STATE),	\
-> +	}
+> > (If you do want this, maybe it'd be better under debugfs, until somebody
+> > really wants to formalize and document it.)
+> 
+> Since it is code that is never enabled in an official kernel build I
+> found it simpler to use sysfs with a direct association with the
+> device, instead of having <debugfs>/throttler/<throttler_name>/level.
+> 
+> If folks have strong opinions about using debugfs or not having the
+> debug code at all I'm fine with changing/dropping it.
 
-Perhaps describe briefly the concept of an AO (active-only) and a peer
-domain. It is not necessarily evident why an AO domain would have
-WAKE_ONLY and SLEEP_ONLY as valid states, while the non-AO domain has
-ACTIVE_ONLY as it's only state.
+If you ever expect this to actually get merged, I'd think we should go
+with one way or the other. Dead code is not appreciated in mainline, so
+either make it something people can actually have a chance of using
+(e.g., a CONFIG_* option or debugfs), or else drop it.
 
-> +/*
-> + * This function is used to aggregate the votes across the active only
-> + * resources and its peers. The aggregated votes are send to RPMh as
+> > > +static int thr_init_freq_table(struct throttler *thr, struct device *opp_dev,
+> > > +			       struct thr_freq_table *ft)
+> > > +{
+> > > +	struct device_node *np_opp_desc, *np_opp;
+> > > +	int nchilds;
+> > > +	uint32_t *freqs;
+> > > +	int nfreqs = 0;
+> > > +	int err = 0;
+> > > +
+> > > +	np_opp_desc = dev_pm_opp_of_get_opp_desc_node(opp_dev);
+> > > +	if (!np_opp_desc)
+> > > +		return -EINVAL;
+> > > +
+> > > +	nchilds = of_get_child_count(np_opp_desc);
+> > > +	if (!nchilds) {
+> > > +		err = -EINVAL;
+> > > +		goto out_node_put;
+> > > +	}
+> > > +
+> > > +	freqs = kzalloc(nchilds * sizeof(uint32_t), GFP_KERNEL);
+> > > +	if (!freqs) {
+> > > +		err = -ENOMEM;
+> > > +		goto out_node_put;
+> > > +	}
+> > > +
+> > > +	/* determine which OPPs are used by this throttler (if any) */
+> > > +	for_each_child_of_node(np_opp_desc, np_opp) {
+> > > +		int num_thr;
+> > > +		int i;
+> > > +
+> > > +		num_thr = of_property_count_u32_elems(np_opp, "opp-throttlers");
+> > > +		if (num_thr < 0)
+> > > +			continue;
+> > > +
+> > > +		for (i = 0; i < num_thr; i++) {
+> > > +			struct device_node *np_thr;
+> > > +			struct platform_device *pdev;
+> > > +
+> > > +			np_thr = of_parse_phandle(np_opp, "opp-throttlers", i);
+> > > +			if (!np_thr) {
+> > > +				dev_err(thr->dev,
+> > > +					"failed to parse phandle %d: %s\n", i,
+> > > +					np_opp->full_name);
+> > > +				continue;
+> > > +			}
+> > > +
+> > > +			pdev = of_find_device_by_node(np_thr);
+> > > +			if (!pdev) {
+> > > +				dev_err(thr->dev,
+> > > +					"could not find throttler dev: %s\n",
+> > > +					 np_thr->full_name);
+> > > +				of_node_put(np_thr);
+> > > +				continue;
+> > > +			}
+> > > +
+> > > +			/* OPP is used by this throttler */
+> > > +			if (&pdev->dev == thr->dev) {
+> > 
+> > So you're assuming that all throttlers are platform devices? Seems
+> > slightly shaky; I could easily imagine a similar device that's a SPI or
+> > I2C device.
+> 
+> As of now that's the only existing throttler. Adding handling for
+> throttlers on other buses that might never be implemented seems
+> premature. If throttlers with other bus types are added the core
+> code can be extended to support this using
+> of_find_i2c_device_by_node(), of_find_spi_device_by_node(), etc
 
-s/send/sent/
+I suppose...but it feels like there should be a better way to do this
+that isn't specific to a particular bus.
 
-> + * ACTIVE_ONLY votes (which take effect immediately), as WAKE_ONLY votes
-> + * (applied by RPMh on system wakeup) and as SLEEP votes (applied by RPMh
-> + * on system sleep).
-> + * We send ACTIVE_ONLY votes for resources without any peers. For others,
-> + * which have an active only peer, all 3 Votes are sent.
+If you're not going to fix this, then maybe you should force callers to
+pass a plaform_device instead of device, to make it extra clear that
+other devices are not supported.
 
-s/Votes/votes/
-
-> +static int rpmhpd_probe(struct platform_device *pdev)
-> +{
-> +	int i, ret;
-> +	size_t num;
-
-nit: naming this num_pds would slightly improve readability (e.g. make
-it evident that the for loop iterates over the PDs).
-
-> +	struct genpd_onecell_data *data;
-> +	struct rpmhpd **rpmhpds;
-> +	const struct rpmhpd_desc *desc;
-> +
-> +	desc = of_device_get_match_data(&pdev->dev);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	rpmhpds = desc->rpmhpds;
-> +	num = desc->num_pds;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
-> +				     GFP_KERNEL);
-
-Check for NULL?
-
-Thanks
-
-Matthias
+Brian
