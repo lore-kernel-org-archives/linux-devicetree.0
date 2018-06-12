@@ -1,163 +1,198 @@
-From: Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v4 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Tue, 12 Jun 2018 09:24:31 -0600
-Message-ID: <1fcde0fa-d1e8-1cc3-8c3d-0e8c4097cb91@kernel.dk>
-References: <20180611205224.23340-1-stefan@agner.ch>
- <20180611205224.23340-5-stefan@agner.ch> <4258393.O1xtUOGbca@dimapc>
- <cb6f2ef0a5a41e001a2019caa1a18c23@agner.ch>
- <20180612102734.0ea3bfa5@bbrezillon>
- <53e36cff80e38e489959aa18471d0782@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH] ARM64: dts: rockchip: add some pins to rk3399
+Date: Tue, 12 Jun 2018 23:25:44 +0800
+Message-ID: <20180612152544.3812-1-ayaka@soulik.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53e36cff80e38e489959aa18471d0782@agner.ch>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, heiko@sntech.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-On 6/12/18 3:17 AM, Stefan Agner wrote:
-> [also added Jens Axboe]
-> 
-> On 12.06.2018 10:27, Boris Brezillon wrote:
->> On Tue, 12 Jun 2018 10:06:42 +0200
->> Stefan Agner <stefan@agner.ch> wrote:
->>
->>> On 12.06.2018 02:03, Dmitry Osipenko wrote:
->>>> On Monday, 11 June 2018 23:52:22 MSK Stefan Agner wrote:
->>>>> Add support for the NAND flash controller found on NVIDIA
->>>>> Tegra 2 SoCs. This implementation does not make use of the
->>>>> command queue feature. Regular operations/data transfers are
->>>>> done in PIO mode. Page read/writes with hardware ECC make
->>>>> use of the DMA for data transfer.
->>>>>
->>>>> Signed-off-by: Lucas Stach <dev@lynxeye.de>
->>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
->>>>> ---
->>>>>  MAINTAINERS                       |    7 +
->>>>>  drivers/mtd/nand/raw/Kconfig      |    6 +
->>>>>  drivers/mtd/nand/raw/Makefile     |    1 +
->>>>>  drivers/mtd/nand/raw/tegra_nand.c | 1248 +++++++++++++++++++++++++++++
->>>>>  4 files changed, 1262 insertions(+)
->>>>>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
->>>>>
->>> [snip]
->>>>> +static int tegra_nand_cmd(struct nand_chip *chip,
->>>>> +			 const struct nand_subop *subop)
->>>>> +{
->>>>> +	const struct nand_op_instr *instr;
->>>>> +	const struct nand_op_instr *instr_data_in = NULL;
->>>>> +	struct tegra_nand_controller *ctrl = to_tegra_ctrl(chip->controller);
->>>>> +	unsigned int op_id, size = 0, offset = 0;
->>>>> +	bool first_cmd = true;
->>>>> +	u32 reg, cmd = 0;
->>>>> +	int ret;
->>>>> +
->>>>> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
->>>>> +		unsigned int naddrs, i;
->>>>> +		const u8 *addrs;
->>>>> +		u32 addr1 = 0, addr2 = 0;
->>>>> +
->>>>> +		instr = &subop->instrs[op_id];
->>>>> +
->>>>> +		switch (instr->type) {
->>>>> +		case NAND_OP_CMD_INSTR:
->>>>> +			if (first_cmd) {
->>>>> +				cmd |= COMMAND_CLE;
->>>>> +				writel_relaxed(instr->ctx.cmd.opcode,
->>>>> +					       ctrl->regs + CMD_REG1);
->>>>> +			} else {
->>>>> +				cmd |= COMMAND_SEC_CMD;
->>>>> +				writel_relaxed(instr->ctx.cmd.opcode,
->>>>> +					       ctrl->regs + CMD_REG2);
->>>>> +			}
->>>>> +			first_cmd = false;
->>>>> +			break;
->>>>> +		case NAND_OP_ADDR_INSTR:
->>>>> +			offset = nand_subop_get_addr_start_off(subop, op_id);
->>>>> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
->>>>> +			addrs = &instr->ctx.addr.addrs[offset];
->>>>> +
->>>>> +			cmd |= COMMAND_ALE | COMMAND_ALE_SIZE(naddrs);
->>>>> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
->>>>> +				addr1 |= *addrs++ << (BITS_PER_BYTE * i);
->>>>> +			naddrs -= i;
->>>>> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
->>>>> +				addr2 |= *addrs++ << (BITS_PER_BYTE * i);
->>>>> +			writel_relaxed(addr1, ctrl->regs + ADDR_REG1);
->>>>> +			writel_relaxed(addr2, ctrl->regs + ADDR_REG2);
->>>>> +			break;
->>>>> +
->>>>> +		case NAND_OP_DATA_IN_INSTR:
->>>>> +			size = nand_subop_get_data_len(subop, op_id);
->>>>> +			offset = nand_subop_get_data_start_off(subop, op_id);
->>>>> +
->>>>> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
->>>>> +				COMMAND_RX | COMMAND_A_VALID;
->>>>> +
->>>>> +			instr_data_in = instr;
->>>>> +			break;
->>>>> +
->>>>> +		case NAND_OP_DATA_OUT_INSTR:
->>>>> +			size = nand_subop_get_data_len(subop, op_id);
->>>>> +			offset = nand_subop_get_data_start_off(subop, op_id);
->>>>> +
->>>>> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
->>>>> +				COMMAND_TX | COMMAND_A_VALID;
->>>>> +
->>>>> +			memcpy(&reg, instr->ctx.data.buf.out + offset, size);
->>>>> +			writel_relaxed(reg, ctrl->regs + RESP);
->>>>> +
->>>>> +			break;
->>>>> +		case NAND_OP_WAITRDY_INSTR:
->>>>> +			cmd |= COMMAND_RBSY_CHK;
->>>>> +			break;
->>>>> +
->>>>> +		}
->>>>> +	}
->>>>> +
->>>>> +	cmd |= COMMAND_GO | COMMAND_CE(ctrl->cur_cs);
->>>>> +	writel_relaxed(cmd, ctrl->regs + COMMAND);
->>>>> +	ret = wait_for_completion_io_timeout(&ctrl->command_complete,
->>>>> +					     msecs_to_jiffies(500));
->>>>
->>>> It's not obvious to me whether _io_ variant is appropriate to use here, would
->>>> be nice if somebody could clarify that. Maybe block/ already does the IO
->>>> accounting itself and hence the IO time would be counted twice in that case.
->>>
->>> Good that you bring this up.
->>>
->>> I don't think that there is any higher layer which could take care of
->>> accounting. Usually, with raw nand there is no block layer involved
->>> anyway.
->>>
->>> In a quick test it seems that only when using wait_for_completion_io I/O
->>> is properly accounted in the "wait" section of top.
->>>
->>> So far only a single driver (omap2) used the _io variant, but I think it
->>> is the right thing to do! After all, it is I/O...
->>>
->>> Boris or any other MTD maintainer, any comment on this?
->>
->> Given this definition of io_schedule_timeout() [1] (which is used when
->> you call wait_for_completion_io_timeout()), I'd say it's not useful to
->> use the _io_ version, simply because MTD devs are not exposed as blk
->> devices, and thus don't need the blk_schedule_flush_plug() that is done
->> is io_schedule_prepare(). But that also means MTD I/Os are not
->> accounted as I/Os :-(.
-> 
-> Documentation of wait_for_completion_io says:
-> "The caller is accounted as waiting for IO (which traditionally means
-> blkio only)."
-> 
-> Which sounds as if it using _io is only an accounting thing...
+Those pins would be used by many boards.
 
-Yes, you should only use it for waiting for IO off a system call
-read path. So block IO, or file system IO. Don't use it for internal
-IO that isn't related to that.
+Signed-off-by: Randy Li <ayaka@soulik.info>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 97 +++++++++++++++++++++++++++-----
+ 1 file changed, 83 insertions(+), 14 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index e0040b648f43..9fa629857929 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -160,7 +160,7 @@
+ 		};
+ 	};
+ 
+-	display-subsystem {
++	display_subsystem: display-subsystem {
+ 		compatible = "rockchip,display-subsystem";
+ 		ports = <&vopl_out>, <&vopb_out>;
+ 	};
+@@ -1936,19 +1936,49 @@
+ 			drive-strength = <12>;
+ 		};
+ 
++		pcfg_pull_none_13ma: pcfg-pull-none-13ma {
++			bias-disable;
++			drive-strength = <13>;
++		};
++
++		pcfg_pull_none_18ma: pcfg-pull-none-18ma {
++			bias-disable;
++			drive-strength = <18>;
++		};
++
++		pcfg_pull_none_20ma: pcfg-pull-none-20ma {
++			bias-disable;
++			drive-strength = <20>;
++		};
++
++		pcfg_pull_up_2ma: pcfg-pull-up-2ma {
++			bias-pull-up;
++			drive-strength = <2>;
++		};
++
+ 		pcfg_pull_up_8ma: pcfg-pull-up-8ma {
+ 			bias-pull-up;
+ 			drive-strength = <8>;
+ 		};
+ 
++		pcfg_pull_up_18ma: pcfg-pull-up-18ma {
++			bias-pull-up;
++			drive-strength = <18>;
++		};
++
++		pcfg_pull_up_20ma: pcfg-pull-up-20ma {
++			bias-pull-up;
++			drive-strength = <20>;
++		};
++
+ 		pcfg_pull_down_4ma: pcfg-pull-down-4ma {
+ 			bias-pull-down;
+ 			drive-strength = <4>;
+ 		};
+ 
+-		pcfg_pull_up_2ma: pcfg-pull-up-2ma {
+-			bias-pull-up;
+-			drive-strength = <2>;
++		pcfg_pull_down_8ma: pcfg-pull-down-8ma {
++			bias-pull-down;
++			drive-strength = <8>;
+ 		};
+ 
+ 		pcfg_pull_down_12ma: pcfg-pull-down-12ma {
+@@ -1956,9 +1986,22 @@
+ 			drive-strength = <12>;
+ 		};
+ 
+-		pcfg_pull_none_13ma: pcfg-pull-none-13ma {
+-			bias-disable;
+-			drive-strength = <13>;
++		pcfg_pull_down_18ma: pcfg-pull-down-18ma {
++			bias-pull-down;
++			drive-strength = <18>;
++		};
++
++		pcfg_pull_down_20ma: pcfg-pull-down-20ma {
++			bias-pull-down;
++			drive-strength = <18>;
++		};
++
++		pcfg_output_high: pcfg-output-high {
++			output-high;	
++		};
++
++		pcfg_output_low: pcfg-output-low {
++			output-low;	
+ 		};
+ 
+ 		clock {
+@@ -2484,10 +2527,21 @@
+ 					<4 18 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 
++			pwm0_pin_pull_down: pwm0-pin-pull-down {
++				rockchip,pins =
++					<4 18 RK_FUNC_1 &pcfg_pull_down>;
++			};
++
+ 			vop0_pwm_pin: vop0-pwm-pin {
+ 				rockchip,pins =
+ 					<4 18 RK_FUNC_2 &pcfg_pull_none>;
+ 			};
++
++			vop1_pwm_pin: vop1-pwm-pin {
++				rockchip,pins =
++					<4 18 RK_FUNC_3 &pcfg_pull_none>;
++			};
++
+ 		};
+ 
+ 		pwm1 {
+@@ -2496,9 +2550,9 @@
+ 					<4 22 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 
+-			vop1_pwm_pin: vop1-pwm-pin {
++			pwm1_pin_pull_down: pwm1-pin-pull-down {
+ 				rockchip,pins =
+-					<4 18 RK_FUNC_3 &pcfg_pull_none>;
++					<4 22 RK_FUNC_1 &pcfg_pull_down>;
+ 			};
+ 		};
+ 
+@@ -2507,6 +2561,11 @@
+ 				rockchip,pins =
+ 					<1 19 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
++
++			pwm2_pin_pull_down: pwm2-pin-pull-down {
++				rockchip,pins =
++					<1 19 RK_FUNC_1 &pcfg_pull_none>;
++			};
+ 		};
+ 
+ 		pwm3a {
+@@ -2526,25 +2585,35 @@
+ 		hdmi {
+ 			hdmi_i2c_xfer: hdmi-i2c-xfer {
+ 				rockchip,pins =
+-					<4 RK_PC1 RK_FUNC_3 &pcfg_pull_none>,
+-					<4 RK_PC0 RK_FUNC_3 &pcfg_pull_none>;
++					<4 17 RK_FUNC_3 &pcfg_pull_none>,
++					<4 16 RK_FUNC_3 &pcfg_pull_none>;
+ 			};
+ 
+ 			hdmi_cec: hdmi-cec {
+ 				rockchip,pins =
+-					<4 RK_PC7 RK_FUNC_1 &pcfg_pull_none>;
++					<4 23 RK_FUNC_1 &pcfg_pull_none>;
+ 			};
+ 		};
+ 
+ 		pcie {
++			pcie_clkreqn: pci-clkreqn {
++				rockchip,pins =
++					<2 26 RK_FUNC_2 &pcfg_pull_none>;
++			};
++
++			pcie_clkreqnb: pci-clkreqnb {
++				rockchip,pins =
++					<4 24 RK_FUNC_1 &pcfg_pull_none>;
++			};
++
+ 			pcie_clkreqn_cpm: pci-clkreqn-cpm {
+ 				rockchip,pins =
+-					<2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
++					<2 26 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
+ 
+ 			pcie_clkreqnb_cpm: pci-clkreqnb-cpm {
+ 				rockchip,pins =
+-					<4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
++					<4 24 RK_FUNC_GPIO &pcfg_pull_none>;
+ 			};
+ 		};
+ 
 -- 
-Jens Axboe
+2.14.4
