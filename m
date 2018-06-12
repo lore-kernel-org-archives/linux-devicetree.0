@@ -1,37 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: renesas: du: document R8A77980
- bindings
-Date: Tue, 12 Jun 2018 15:02:26 -0600
-Message-ID: <20180612210226.GA14893@rob-hp-laptop>
-References: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
+Subject: Re: [RFC PATCH 1/3] Documentation: dt: keystone: ti-sci: Add
+ optional host-id parameter
+Date: Tue, 12 Jun 2018 15:39:22 -0600
+Message-ID: <20180612213922.GA26791@rob-hp-laptop>
+References: <20180605062640.3356-1-nm@ti.com>
+ <20180605062640.3356-2-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2a775652-604c-6379-b807-19979f164f84@cogentembedded.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20180605062640.3356-2-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMDQsIDIwMTggYXQgMTA6MDQ6NTlQTSArMDMwMCwgU2VyZ2VpIFNodHlseW92
-IHdyb3RlOgo+IERvY3VtZW50IHRoZSBSLUNhciBWM0ggKFI4QTc3OTgwKSBTb0MgaW4gdGhlIFIt
-Q2FyIERVIGJpbmRpbmdzOyB0aGUgRFUKPiBoYXJkd2FyZSBzZWVtcyB0aGUgc2FtZSBhcyBpbiB0
-aGUgUi1DYXIgVjNNIChSOEE3Nzk3MCkuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2VyZ2VpIFNodHls
-eW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1iZWRkZWQuY29tPgo+IAo+IC0tLQo+IFRoZSBw
-YXRjaCBpcyBhZ2FpbnN0IHRoZSAnZHJtLW5leHQnIGJyYW5jaCBvZiBEYXZpZCBBaXJsaWUncyAn
-bGludXguZ2l0JyByZXBvLgo+IAo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9yZW5lc2FzLGR1LnR4dCB8ICAgIDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5z
-ZXJ0aW9ucygrKQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Jun 05, 2018 at 01:26:38AM -0500, Nishanth Menon wrote:
+> Texas Instrument's System Control Interface (TISCI) permits the
+> ability for Operating Systems to running in virtual machines to be
+
+...for OSs running in virtual...
+
+> able to independently communicate with the firmware without the need
+> going through an hypervisor.
+> 
+> The "host-id" in effect is the hardware representation of the
+> host (example: VMs locked to a core) as identified to the System
+> Controller.
+
+So the hypervisor will fill in host-id's for each VM instance?
+
+> 
+> This is introduced as an optional parameter to maintain consistency
+> with legacy device tree blobs.
+> 
+> We call this with a vendor prefix to prevent any possible confusion
+> with SCSI ID (m68k) kernel option.
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/keystone/ti,sci.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> index 31f5f9a104cc..b56a02c10ae6 100644
+> --- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> +++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> @@ -45,11 +45,15 @@ Optional Properties:
+>  	debug_messages - Map the Debug message region
+>  - reg:  register space corresponding to the debug_messages
+>  - ti,system-reboot-controller: If system reboot can be triggered by SoC reboot
+> +- ti,host-id: Integer value corresponding to the host ID assigned by Firmware
+> +	for identification of host processing entities such as virtual
+> +	machines
+>  
+>  Example (K2G):
+>  -------------
+>  	pmmc: pmmc {
+>  		compatible = "ti,k2g-sci";
+> +		ti,host-id = <2>;
+>  		mbox-names = "rx", "tx";
+>  		mboxes= <&msgmgr &msgmgr_proxy_pmmc_rx>,
+>  			<&msgmgr &msgmgr_proxy_pmmc_tx>;
+> -- 
+> 2.15.1
+> 
