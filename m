@@ -1,49 +1,39 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: Re: [RFC PATCH 3/6] serial: 8250_omap: Add support for AM654 UART
- controller
-Date: Tue, 12 Jun 2018 17:03:33 -0500
-Message-ID: <20180612220333.4odussbccwmup26v@kahuna>
-References: <20180605060125.9518-1-nm@ti.com> <20180605060125.9518-4-nm@ti.com>
- <20180612210640.GA20728@rob-hp-laptop>
+Subject: Re: [RFC PATCH 5/8] dt-bindings: mailbox: ti,message-manager: Add
+ support for secure proxy threads
+Date: Tue, 12 Jun 2018 17:04:06 -0500
+Message-ID: <20180612220406.t4mkcht3ubwo3hej@kahuna>
+References: <20180605061629.4759-1-nm@ti.com>
+ <20180605061629.4759-6-nm@ti.com>
+ <20180612211128.GA22038@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180612210640.GA20728@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <20180612211128.GA22038@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21:06-20180612, Rob Herring wrote:
-> > diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
-> > index 4b0f05adb228..c35d5ece1156 100644
-> > --- a/Documentation/devicetree/bindings/serial/omap_serial.txt
-> > +++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
-> > @@ -1,6 +1,7 @@
-> >  OMAP UART controller
+On 21:11-20180612, Rob Herring wrote:
+[...]
+> > diff --git a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+> > index ebf0e3710cee..de796e90cac6 100644
+> > --- a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+> > +++ b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+> > @@ -7,22 +7,40 @@ manager is broken up into queues in different address regions that are called
+> >  "proxies" - each instance is unidirectional and is instantiated at SoC
+> >  integration level to indicate receive or transmit path.
 > >  
-> >  Required properties:
-> > +- compatible : should be "ti,am654-uart" for AM654 controllers
+> > +This can also be used to describe Texas Instrument's Secure Proxy
+> > +controller that allows for individually configurable "threads" or
+> > +"proxies" which allow for independent communication scheme.
 > 
-> Not compatible with any existing TI 8250 UARTs?
+> There seems to be very little re-use here. I think I would make this 
+> its own doc.
 
-Base is compatible, however there are differences in DMA operation and
-few additional bits. omap4-uart is sufficient for a basic PIO mode of
-operation given initialization a bootloader might do for base console.
-
-I will split the bindings off into it's own patch to keep the confusion
-to a minimum and allowing serial driver change to go in independently.
-
+Agreed. will do the same in the formal series. Thanks.
 -- 
 Regards,
 Nishanth Menon
