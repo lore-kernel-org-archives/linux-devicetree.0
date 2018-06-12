@@ -1,55 +1,62 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
-Date: Wed, 13 Jun 2018 08:58:34 +1000
-Message-ID: <5d932502d9985cdfa6540480ea5ce6b0730502a1.camel@kernel.crashing.org>
-References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
-         <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
-         <53ef03b26a17738dc1465ce85562c9611ad415f8.camel@kernel.crashing.org>
-         <CAHp75Vcdaejn=eq740YNdscSv9zX9xj3RzYp=AFs8HFprw34_Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH] pinctrl: qcom: spmi-gpio: Add pm8998 and pm8005 to binding
+Date: Tue, 12 Jun 2018 16:06:04 -0700
+Message-ID: <20180612230604.137880-1-swboyd@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vcdaejn=eq740YNdscSv9zX9xj3RzYp=AFs8HFprw34_Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-06-12 at 19:53 +0300, Andy Shevchenko wrote:
-> 
-> > > It feels like a wrong approach.
-> > > Can OF graph help here? Would it be better approach?
-> > 
-> > I don't quite understand what your objection is nor what "OF graph"
-> > is...
-> 
-> There is no objection per se, just a doubt that this is a right thing to do.
-> I might be wrong, of course.
-> 
-> OF graph nodes is a special API that allows you to access like you
-> said "different node of device-tree".
-> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/graph.txt
+Update the binding for two more PMICs supported by the same driver.
+While we're here, remove the duplicate pmi8994 lines because that
+support got merged twice.
 
-So I had a look and this is just an example on how to use phandles to
-link ports and endpoints... I fail to see how that relates to what this
-patch does.
+Cc: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt          | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-In the driver I'm doing for example, I do use a similar technique to
-"point" to the other node. In this case, this is a coprocessor in the
-SoC and I'm linking to the node that represent its interrupt controller
-(and its not a full fledged OS running there so we don't have a full
-interrupt tree for it).
-
-But once you have such a "graph", the question of mapping whatever
-memory resources (ie. "reg" properties) remains.
-
-Today, people will use of_address_to_resource() with ioremap, or
-of_iomap () to do that ...
-
-This patch just provides a devm_ variant of the latter, which also does
-a request_mem_resource() on it (which is missing from of_iomap), so
-generally is a better alternative.
-
-Cheers,
-Ben.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+index 5c25fcb29fb5..ffd4345415f3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+@@ -7,6 +7,7 @@ PMIC's from Qualcomm.
+ 	Usage: required
+ 	Value type: <string>
+ 	Definition: must be one of:
++		    "qcom,pm8005-gpio"
+ 		    "qcom,pm8018-gpio"
+ 		    "qcom,pm8038-gpio"
+ 		    "qcom,pm8058-gpio"
+@@ -15,7 +16,7 @@ PMIC's from Qualcomm.
+ 		    "qcom,pm8921-gpio"
+ 		    "qcom,pm8941-gpio"
+ 		    "qcom,pm8994-gpio"
+-		    "qcom,pmi8994-gpio"
++		    "qcom,pm8998-gpio"
+ 		    "qcom,pma8084-gpio"
+ 		    "qcom,pmi8994-gpio"
+ 
+@@ -78,6 +79,7 @@ to specify in a pin configuration subnode:
+ 	Value type: <string-array>
+ 	Definition: List of gpio pins affected by the properties specified in
+ 		    this subnode.  Valid pins are:
++		    gpio1-gpio4 for pm8005
+ 		    gpio1-gpio6 for pm8018
+ 		    gpio1-gpio12 for pm8038
+ 		    gpio1-gpio40 for pm8058
+@@ -86,7 +88,7 @@ to specify in a pin configuration subnode:
+ 		    gpio1-gpio44 for pm8921
+ 		    gpio1-gpio36 for pm8941
+ 		    gpio1-gpio22 for pm8994
+-		    gpio1-gpio10 for pmi8994
++		    gpio1-gpio26 for pm8998
+ 		    gpio1-gpio22 for pma8084
+ 		    gpio1-gpio10 for pmi8994
+ 
+-- 
+Sent by a computer through tubes
