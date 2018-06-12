@@ -1,25 +1,58 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v3 1/3] cpufreq: imx6q: check speed grades for i.MX6ULL
-Date: Tue, 12 Jun 2018 16:57:43 +0200
-Message-ID: <1843576.EaGtSTJKjV@aspire.rjw.lan>
-References: <20180522062853.24799-1-sebastien.szymanski@armadeus.com> <20180611053826.GC16091@dragon>
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Subject: Re: [RFC] Configure i.MX6 RGMII pad group control registers from
+ device tree
+Date: Tue, 12 Jun 2018 17:09:30 +0200
+Message-ID: <5ab5c58a-dc44-d1bc-2132-8704d05bf1de@ysoft.com>
+References: <f5a01de5-fc81-52c1-c2ea-edb77ecff076@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180611053826.GC16091@dragon>
+In-Reply-To: <f5a01de5-fc81-52c1-c2ea-edb77ecff076@ysoft.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, =?ISO-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+To: linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 11, 2018 7:38:27 AM CEST Shawn Guo wrote:
-> On Tue, May 22, 2018 at 08:28:51AM +0200, Sébastien Szymanski wrote:
-> > Check the max speed supported from the fuses for i.MX6ULL and update the
-> > operating points table accordingly.
-> > 
-> > Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+On 11.6.2018 14:36, Michal VokÃ¡Ä wrote:
+> Ahoj,
 > 
-> Acked-by: Shawn Guo <shawnguo@kernel.org>
+> To configure individual pad's characteristics on i.MX6 SoC a
+> fsl,pins = <PIN_FUNC_ID CONFIG> property can be used. Is there any convenient
+> way to configure the pad group control registers?
+> 
+> The issue is that some bits (DDR_SEL and ODT) in the individual RGMII pad
+> control registers are read-only. To tweak those parameters (signal voltage and
+> termination resistors) one need to write to the pad group control registers for
+> the whole RGMII pad group. Namely IOMUXC_SW_PAD_CTL_GRP_DDR_TYPE_RGMII and
+> IOMUXC_SW_PAD_CTL_GRP_RGMII_TERM. The group registers in general are not
+> accessible from the list in arch/arm/boot/dts/imx6dl-pinfunc.h.
+> 
+> I could not find any other way to change the group registers than hacking-in
+> some lines into the imx6q_init_machine(void) function in
+> arch/arm/mach-imx/mach-imx6q.c source. As I work towards upstreaming my board
+> this should be done from my device tree or solved in some universal way.
+> 
+> Any hints will be much appreciated.
+> Michal
 
-Patch applied, thanks!
+I figured out this is more "pinctrl-imx.c" than "device-tree" related
+so I am kindly adding maintainers of that file in hope somebody will
+shed some light to it.
+
+I am diving deeper into the code and it seems there really is no generic
+option to set the i.MX6 pad group control registers from device tree.
+Or am I looking at the problem from a wrong angle?
+
+How should we deal with boards that need to configure some pad
+characteristics available only through the pad group control registers?
+
+I also raised this question at the NXP community forum [1] and get quite
+unsatisfying answer so far. I would love to find/implement a proper
+and universal solution.
+
+Thanks in advance for your time,
+Michal
+
+[1] https://community.nxp.com/thread/477464
