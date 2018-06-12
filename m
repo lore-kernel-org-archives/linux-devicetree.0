@@ -1,378 +1,121 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 09/11] misc: throttler: Add core support for
- non-thermal throttling
-Date: Mon, 11 Jun 2018 18:49:13 -0700
-Message-ID: <20180612014911.GA35749@rodete-desktop-imager.corp.google.com>
-References: <20180607181214.30338-1-mka@chromium.org>
- <20180607181214.30338-10-mka@chromium.org>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 0/4] resource: Use list_head to link sibling resource
+Date: Tue, 12 Jun 2018 11:28:27 +0800
+Message-ID: <20180612032831.29747-1-bhe@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180607181214.30338-10-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org
+Cc: brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, linuxppc-dev@lists.o
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+This patchset is doing:
+1) Replace struct resource's sibling list from singly linked list to
+list_head. Clearing out those pointer operation within singly linked
+list for better code readability.
+2) Based on list_head replacement, add a new function
+walk_system_ram_res_rev() which can does reversed iteration on
+iomem_resource's siblings.
+3) Change kexec_file loading to search system RAM top down for kernel
+loadin, using walk_system_ram_res_rev().
 
-A few comments, but I didn't get to finish a thorough review yet.
+Note:
+This patchset passed testing on my kvm guest, x86_64 arch with network
+enabling. The thing we need pay attetion to is that a root resource's
+child member need be initialized specifically with LIST_HEAD_INIT() if
+statically defined or INIT_LIST_HEAD() for dynamically definition. Here
+Just like we do for iomem_resource/ioport_resource, or the change in
+get_pci_domain_busn_res().
 
 
-On Thu, Jun 07, 2018 at 11:12:12AM -0700, Matthias Kaehlcke wrote:
-> The purpose of the throttler is to provide support for non-thermal
-> throttling. Throttling is triggered by external event, e.g. the
-> detection of a high battery discharge current, close to the OCP limit
-> of the battery. The throttler is only in charge of the throttling, not
-> the monitoring, which is done by another (possibly platform specific)
-> driver.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v2:
-> - completely reworked the driver to support configuration through OPPs, which
->   requires a more dynamic handling
-> - added sysfs attribute to set the level for debugging and testing
-> - Makefile: depend on Kconfig option to traverse throttler directory
-> - Kconfig: removed 'default n'
-> - added SPDX line instead of license boiler-plate
-> - added entry to MAINTAINERS file
-> 
-> 
->  MAINTAINERS                     |   7 +
->  drivers/misc/Kconfig            |   1 +
->  drivers/misc/Makefile           |   1 +
->  drivers/misc/throttler/Kconfig  |  14 +
->  drivers/misc/throttler/Makefile |   1 +
->  drivers/misc/throttler/core.c   | 642 ++++++++++++++++++++++++++++++++
->  include/linux/throttler.h       |  11 +
->  7 files changed, 677 insertions(+)
->  create mode 100644 drivers/misc/throttler/Kconfig
->  create mode 100644 drivers/misc/throttler/Makefile
->  create mode 100644 drivers/misc/throttler/core.c
->  create mode 100644 include/linux/throttler.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 92e47b5b0480..f9550e5680ce 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13938,6 +13938,13 @@ T:	git git://repo.or.cz/linux-2.6/linux-acpi-2.6/ibm-acpi-2.6.git
->  S:	Maintained
->  F:	drivers/platform/x86/thinkpad_acpi.c
->  
-> +THROTTLER DRIVERS
-> +M:	Matthias Kaehlcke <mka@chromium.org>
-> +L:	linux-pm@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/misc/throttler/
-> +F:	include/linux/throttler.h
-> +
->  THUNDERBOLT DRIVER
->  M:	Andreas Noever <andreas.noever@gmail.com>
->  M:	Michael Jamet <michael.jamet@intel.com>
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 5d713008749b..691d9625d83c 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -513,4 +513,5 @@ source "drivers/misc/echo/Kconfig"
->  source "drivers/misc/cxl/Kconfig"
->  source "drivers/misc/ocxl/Kconfig"
->  source "drivers/misc/cardreader/Kconfig"
-> +source "drivers/misc/throttler/Kconfig"
->  endmenu
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index 20be70c3f118..b549ccad5215 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -57,3 +57,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
->  obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
->  obj-$(CONFIG_OCXL)		+= ocxl/
->  obj-$(CONFIG_MISC_RTSX)		+= cardreader/
-> +obj-$(CONFIG_THROTTLER)		+= throttler/
-> diff --git a/drivers/misc/throttler/Kconfig b/drivers/misc/throttler/Kconfig
-> new file mode 100644
-> index 000000000000..e561f1df5085
-> --- /dev/null
-> +++ b/drivers/misc/throttler/Kconfig
-> @@ -0,0 +1,14 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +menuconfig THROTTLER
-> +	bool "Throttler support"
-> +	depends on OF
-> +	select CPU_FREQ
-> +	select PM_DEVFREQ
+Links of the old post (Boris pointed out that we should use
+https://lkml.kernel.org/r/Message-ID, while it can't be opened from
+my side, so paste all of them here.):
+v4:
+https://lkml.kernel.org/r/20180507063224.24229-1-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+https://lkml.org/lkml/2018/5/7/36
 
-I'm curious whether we're actually truly compile-time dependent on
-{CPU,DEV}FREQ? It seems like those subsystems mostly stub out stuff so
-they fall back to no-ops if not built in.
+v3:
+https://lkml.kernel.org/r/20180419001848.3041-1-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+https://lkml.org/lkml/2018/4/18/767
 
-I know that's not very useful for your existing throttler, since it
-wouldn't be very effective if one or both were disabled.
+v2:
+https://lkml.kernel.org/r/20180408024724.16812-1-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+https://lkml.org/lkml/2018/4/7/169
 
-> +	help
-> +	  This option enables core support for non-thermal throttling of CPUs
-> +	  and devfreq devices.
-> +
-> +	  Note that you also need a event monitor module usually called
-> +	  *_throttler.
-> +
-> diff --git a/drivers/misc/throttler/Makefile b/drivers/misc/throttler/Makefile
-> new file mode 100644
-> index 000000000000..c8d920cee315
-> --- /dev/null
-> +++ b/drivers/misc/throttler/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_THROTTLER)		+= core.o
-> diff --git a/drivers/misc/throttler/core.c b/drivers/misc/throttler/core.c
-> new file mode 100644
-> index 000000000000..15b50c111032
-> --- /dev/null
-> +++ b/drivers/misc/throttler/core.c
-> @@ -0,0 +1,642 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Core code for non-thermal throttling
-> + *
-> + * Copyright (C) 2018 Google, Inc.
-> + */
-> +
-> +#include <linux/cpufreq.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/devfreq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/list.h>
-> +#include <linux/mutex.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-> +#include <linux/sort.h>
-> +#include <linux/slab.h>
-> +#include <linux/throttler.h>
-> +
-> +/*
-> + * Non-thermal throttling: throttling of system components in response to
-> + * external events (e.g. high battery discharge current).
-> + *
-> + * The throttler supports throttling through cpufreq and devfreq. Multiple
-> + * levels of throttling can be configured. At level 0 no throttling is
-> + * active on behalf of the throttler, for values > 0 throttling is typically
-> + * configured to be increasingly aggressive with each level.
-> + * The number of throttling levels is not limited by the throttler (though
-> + * it is likely limited by the throttling devices). It is not necessary to
-> + * configure the same number of levels for all throttling devices. If the
-> + * requested throttling level for a device is higher than the maximum level
-> + * of the device the throttler will select the maximum throttling level of
-> + * the device.
-> + *
-> + * Non-thermal throttling is split in two parts:
-> + *
-> + * - throttler core
-> + *   - parses the thermal policy
-> + *   - applies throttling settings for a requested level of throttling
-> + *
-> + * - event monitor driver
-> + *   - monitors events that trigger throttling
-> + *   - determines the throttling level (often limited to on/off)
-> + *   - asks throttler core to apply throttling settings
-> + *
-> + * It is possible for a system to have more than one throttler and the
-> + * throttlers may make use of the same throttling devices, in case of
-> + * conflicting settings for a device the more aggressive values will be
-> + * applied.
-> + *
-> + */
-> +
-> +#define ci_to_throttler(ci) \
-> +	container_of(ci, struct throttler, devfreq.class_iface)
-> +
-> +// #define DEBUG_THROTTLER
+v1:
+https://lkml.kernel.org/r/20180322033722.9279-1-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+https://lkml.org/lkml/2018/3/21/952
 
-Did you mean to leave your debug code in? Seems like you have some
-related dead code under #ifdefs.
+Changelog:
+v4->v5:
+  Add new patch 0001 to move duplicated reparent_resources() to
+  kernel/resource.c to make it be shared by different ARCH-es.
 
-(If you do want this, maybe it'd be better under debugfs, until somebody
-really wants to formalize and document it.)
+  Fix several code bugs reported by test robot on ARCH powerpc and
+  microblaze.
+v3->v4:
+  Fix several bugs test robot reported. Rewrite cover letter and patch
+  log according to reviewer's comment.
 
-> +
-> +struct thr_freq_table {
-> +	uint32_t *freqs;
-> +	int n_entries;
-> +};
-> +
-> +struct cpufreq_thrdev {
-> +	uint32_t cpu;
-> +	struct thr_freq_table freq_table;
-> +	struct list_head node;
-> +};
-> +
-> +struct devfreq_thrdev {
-> +	struct devfreq *devfreq;
-> +	struct thr_freq_table freq_table;
-> +	struct throttler *thr;
-> +	struct notifier_block nb;
-> +	struct list_head node;
-> +};
-> +
-> +struct __thr_cpufreq {
-> +	struct list_head list;
-> +	cpumask_t cm_initialized;
-> +	cpumask_t cm_ignore;
-> +	struct notifier_block nb;
-> +};
-> +
-> +struct __thr_devfreq {
-> +	struct list_head list;
-> +	struct class_interface class_iface;
-> +};
-> +
-> +struct throttler {
-> +	struct device *dev;
-> +	int level;
-> +	struct __thr_cpufreq cpufreq;
-> +	struct __thr_devfreq devfreq;
-> +	struct mutex lock;
-> +};
-> +
-> +static inline int cmp_freqs(const void *a, const void *b)
-> +{
-> +	const uint32_t *pa = a, *pb = b;
-> +
-> +	if (*pa < *pb)
-> +		return 1;
-> +	else if (*pa > *pb)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int thr_handle_devfreq_event(struct notifier_block *nb,
-> +				    unsigned long event, void *data);
-> +
-> +static unsigned long thr_get_throttling_freq(struct thr_freq_table *ft,
-> +					     int level)
-> +{
-> +	if (level == 0) {
-> +		WARN(true, "level == 0");
-> +		return ULONG_MAX;
-> +	}
-> +
-> +	if (level <= ft->n_entries)
-> +		return ft->freqs[level - 1];
-> +	else
-> +		return ft->freqs[ft->n_entries - 1];
-> +}
-> +
-> +static int thr_init_freq_table(struct throttler *thr, struct device *opp_dev,
-> +			       struct thr_freq_table *ft)
-> +{
-> +	struct device_node *np_opp_desc, *np_opp;
-> +	int nchilds;
-> +	uint32_t *freqs;
-> +	int nfreqs = 0;
-> +	int err = 0;
-> +
-> +	np_opp_desc = dev_pm_opp_of_get_opp_desc_node(opp_dev);
-> +	if (!np_opp_desc)
-> +		return -EINVAL;
-> +
-> +	nchilds = of_get_child_count(np_opp_desc);
-> +	if (!nchilds) {
-> +		err = -EINVAL;
-> +		goto out_node_put;
-> +	}
-> +
-> +	freqs = kzalloc(nchilds * sizeof(uint32_t), GFP_KERNEL);
-> +	if (!freqs) {
-> +		err = -ENOMEM;
-> +		goto out_node_put;
-> +	}
-> +
-> +	/* determine which OPPs are used by this throttler (if any) */
-> +	for_each_child_of_node(np_opp_desc, np_opp) {
-> +		int num_thr;
-> +		int i;
-> +
-> +		num_thr = of_property_count_u32_elems(np_opp, "opp-throttlers");
-> +		if (num_thr < 0)
-> +			continue;
-> +
-> +		for (i = 0; i < num_thr; i++) {
-> +			struct device_node *np_thr;
-> +			struct platform_device *pdev;
-> +
-> +			np_thr = of_parse_phandle(np_opp, "opp-throttlers", i);
-> +			if (!np_thr) {
-> +				dev_err(thr->dev,
-> +					"failed to parse phandle %d: %s\n", i,
-> +					np_opp->full_name);
-> +				continue;
-> +			}
-> +
-> +			pdev = of_find_device_by_node(np_thr);
-> +			if (!pdev) {
-> +				dev_err(thr->dev,
-> +					"could not find throttler dev: %s\n",
-> +					 np_thr->full_name);
-> +				of_node_put(np_thr);
-> +				continue;
-> +			}
-> +
-> +			/* OPP is used by this throttler */
-> +			if (&pdev->dev == thr->dev) {
+v2->v3:
+  Rename resource functions first_child() and sibling() to
+  resource_first_chils() and resource_sibling(). Dan suggested this.
 
-So you're assuming that all throttlers are platform devices? Seems
-slightly shaky; I could easily imagine a similar device that's a SPI or
-I2C device.
+  Move resource_first_chils() and resource_sibling() to linux/ioport.h
+  and make them as inline function. Rob suggested this. Accordingly add
+  linux/list.h including in linux/ioport.h, please help review if this
+  bring efficiency degradation or code redundancy.
 
-> +				u64 rate;
-> +
-> +				err = of_property_read_u64(np_opp, "opp-hz",
-> +							   &rate);
-> +				if (!err) {
-> +					freqs[nfreqs] = rate;
-> +					nfreqs++;
-> +				} else {
-> +					dev_err(thr->dev,
-> +						"opp-hz not found: %s\n",
-> +						np_opp->full_name);
-> +				}
-> +			}
-> +
-> +			of_node_put(np_thr);
-> +			put_device(&pdev->dev);
-> +		}
-> +	}
-> +
-> +	if (nfreqs > 0) {
-> +		/* sort frequencies in descending order */
-> +		sort(freqs, nfreqs, sizeof(*freqs), cmp_freqs, NULL);
-> +
-> +		ft->n_entries = nfreqs;
-> +		ft->freqs = devm_kzalloc(thr->dev,
-> +				  nfreqs * sizeof(*freqs), GFP_KERNEL);
-> +		if (!ft->freqs) {
-> +			err = -ENOMEM;
-> +			goto out_free;
-> +		}
-> +
-> +		memcpy(ft->freqs, freqs, nfreqs * sizeof(*freqs));
-> +	} else {
-> +		err = -ENODEV;
-> +	}
-> +
-> +out_free:
-> +	kfree(freqs);
-> +
-> +out_node_put:
-> +	of_node_put(np_opp_desc);
-> +
-> +	return err;
-> +}
+  The change on struct resource {} bring two pointers of size increase,
+  mention this in git log to make it more specifically, Rob suggested
+  this.
 
-[...]
+v1->v2:
+  Use list_head instead to link resource siblings. This is suggested by
+  Andrew.
 
-Brian
+  Rewrite walk_system_ram_res_rev() after list_head is taken to link
+  resouce siblings.
+
+Baoquan He (4):
+  resource: Move reparent_resources() to kernel/resource.c and make it
+    public
+  resource: Use list_head to link sibling resource
+  resource: add walk_system_ram_res_rev()
+  kexec_file: Load kernel at top of system RAM if required
+
+ arch/arm/plat-samsung/pm-check.c            |   6 +-
+ arch/microblaze/pci/pci-common.c            |  41 +----
+ arch/powerpc/kernel/pci-common.c            |  39 +----
+ arch/sparc/kernel/ioport.c                  |   2 +-
+ arch/xtensa/include/asm/pci-bridge.h        |   4 +-
+ drivers/eisa/eisa-bus.c                     |   2 +
+ drivers/gpu/drm/drm_memory.c                |   3 +-
+ drivers/gpu/drm/gma500/gtt.c                |   5 +-
+ drivers/hv/vmbus_drv.c                      |  52 +++---
+ drivers/input/joystick/iforce/iforce-main.c |   4 +-
+ drivers/nvdimm/namespace_devs.c             |   6 +-
+ drivers/nvdimm/nd.h                         |   5 +-
+ drivers/of/address.c                        |   4 +-
+ drivers/parisc/lba_pci.c                    |   4 +-
+ drivers/pci/host/vmd.c                      |   8 +-
+ drivers/pci/probe.c                         |   2 +
+ drivers/pci/setup-bus.c                     |   2 +-
+ include/linux/ioport.h                      |  21 ++-
+ kernel/kexec_file.c                         |   2 +
+ kernel/resource.c                           | 259 ++++++++++++++++++----------
+ 20 files changed, 244 insertions(+), 227 deletions(-)
+
+-- 
+2.13.6
