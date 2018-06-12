@@ -1,399 +1,77 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v4 2/2] cpufreq: qcom-fw: Add support for QCOM cpufreq FW driver
-Date: Tue, 12 Jun 2018 16:32:35 +0530
-Message-ID: <1528801355-18719-3-git-send-email-tdas@codeaurora.org>
-References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 2/2] mtd: rawnand: denali: add more clocks
+Date: Tue, 12 Jun 2018 13:03:29 +0200
+Message-ID: <20180612130329.1c17311f@bbrezillon>
+References: <1528799515-1356-1-git-send-email-yamada.masahiro@socionext.com>
+        <1528799515-1356-2-git-send-email-yamada.masahiro@socionext.com>
+        <CAK7LNASM53scdd-OZOj_7404Eru3a98uNLagip_GdkrSSaG3-Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <CAK7LNASM53scdd-OZOj_7404Eru3a98uNLagip_GdkrSSaG3-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, Taniya Das <tdas@codeaurora.org>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mtd <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Brian Norris <computersforpeace@gmail.com>, DTML <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Philipp Rosenberger <p.rosenberger@linutronix.de>, Richard Weinberger <richard@sigma-star.at>, David Woodhouse <dwmw2@infradead.org>, Marek Vasut <marek.vasut@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The CPUfreq FW present in some QCOM chipsets offloads the steps necessary
-for changing the frequency of CPUs. The driver implements the cpufreq
-driver interface for this firmware.
+On Tue, 12 Jun 2018 19:36:06 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/cpufreq/Kconfig.arm       |   9 +
- drivers/cpufreq/Makefile          |   1 +
- drivers/cpufreq/qcom-cpufreq-fw.c | 336 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 346 insertions(+)
- create mode 100644 drivers/cpufreq/qcom-cpufreq-fw.c
+> Maybe, the commit title should be:
+> 
+> mtd: rawnand: denali: add more clocks and improve setup_data_interface
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 52f5f1a..2683716 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -312,3 +312,12 @@ config ARM_PXA2xx_CPUFREQ
- 	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+Or you split that in 2 commits, one retrieving the new clks, and the
+other one fixing/improving ->setup_data_interface().
 
- 	  If in doubt, say N.
-+
-+config ARM_QCOM_CPUFREQ_FW
-+	bool "QCOM CPUFreq FW driver"
-+	help
-+	 Support for the CPUFreq FW driver.
-+	 The CPUfreq FW preset in some QCOM chipsets offloads the steps
-+	 necessary for changing the frequency of CPUs. The driver
-+	 implements the cpufreq driver interface for this firmware.
-+	 Say Y if you want to support CPUFreq FW.
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index fb4a2ec..34691a2 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -86,6 +86,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
- obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
- obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
- obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
-+obj-$(CONFIG_ARM_QCOM_CPUFREQ_FW)	+= qcom-cpufreq-fw.o
-
-
- ##################################################################################
-diff --git a/drivers/cpufreq/qcom-cpufreq-fw.c b/drivers/cpufreq/qcom-cpufreq-fw.c
-new file mode 100644
-index 0000000..62f4452
---- /dev/null
-+++ b/drivers/cpufreq/qcom-cpufreq-fw.c
-@@ -0,0 +1,336 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/cpufreq.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+
-+#define INIT_RATE			300000000UL
-+#define XO_RATE				19200000UL
-+#define LUT_MAX_ENTRIES			40U
-+#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
-+#define LUT_ROW_SIZE			32
-+
-+struct cpufreq_qcom {
-+	struct cpufreq_frequency_table *table;
-+	struct device *dev;
-+	void __iomem *perf_base;
-+	void __iomem *lut_base;
-+	cpumask_t related_cpus;
-+	unsigned int max_cores;
-+};
-+
-+static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
-+
-+static int
-+qcom_cpufreq_fw_target_index(struct cpufreq_policy *policy,
-+			     unsigned int index)
-+{
-+	struct cpufreq_qcom *c = policy->driver_data;
-+
-+	writel_relaxed(index, c->perf_base);
-+
-+	return 0;
-+}
-+
-+static unsigned int qcom_cpufreq_fw_get(unsigned int cpu)
-+{
-+	struct cpufreq_qcom *c;
-+	struct cpufreq_policy *policy;
-+	unsigned int index;
-+
-+	policy = cpufreq_cpu_get_raw(cpu);
-+	if (!policy)
-+		return 0;
-+
-+	c = policy->driver_data;
-+
-+	index = readl_relaxed(c->perf_base);
-+	index = min(index, LUT_MAX_ENTRIES - 1);
-+
-+	return policy->freq_table[index].frequency;
-+}
-+
-+static unsigned int
-+qcom_cpufreq_fw_fast_switch(struct cpufreq_policy *policy,
-+			    unsigned int target_freq)
-+{
-+	struct cpufreq_qcom *c = policy->driver_data;
-+	int index;
-+
-+	index = cpufreq_table_find_index_l(policy, target_freq);
-+	if (index < 0)
-+		return 0;
-+
-+	writel_relaxed(index, c->perf_base);
-+
-+	return policy->freq_table[index].frequency;
-+}
-+
-+static int qcom_cpufreq_fw_cpu_init(struct cpufreq_policy *policy)
-+{
-+	struct cpufreq_qcom *c;
-+
-+	c = qcom_freq_domain_map[policy->cpu];
-+	if (!c) {
-+		pr_err("No scaling support for CPU%d\n", policy->cpu);
-+		return -ENODEV;
-+	}
-+
-+	cpumask_copy(policy->cpus, &c->related_cpus);
-+
-+	policy->fast_switch_possible = true;
-+	policy->freq_table = c->table;
-+	policy->driver_data = c;
-+
-+	return 0;
-+}
-+
-+static struct freq_attr *qcom_cpufreq_fw_attr[] = {
-+	&cpufreq_freq_attr_scaling_available_freqs,
-+	&cpufreq_freq_attr_scaling_boost_freqs,
-+	NULL
-+};
-+
-+static struct cpufreq_driver cpufreq_qcom_fw_driver = {
-+	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
-+			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
-+	.verify		= cpufreq_generic_frequency_table_verify,
-+	.target_index	= qcom_cpufreq_fw_target_index,
-+	.get		= qcom_cpufreq_fw_get,
-+	.init		= qcom_cpufreq_fw_cpu_init,
-+	.fast_switch    = qcom_cpufreq_fw_fast_switch,
-+	.name		= "qcom-cpufreq-fw",
-+	.attr		= qcom_cpufreq_fw_attr,
-+	.boost_enabled	= true,
-+};
-+
-+static int qcom_read_lut(struct platform_device *pdev,
-+			 struct cpufreq_qcom *c)
-+{
-+	struct device *dev = &pdev->dev;
-+	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
-+
-+	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
-+				sizeof(*c->table), GFP_KERNEL);
-+	if (!c->table)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-+		data = readl_relaxed(c->lut_base + i * LUT_ROW_SIZE);
-+		src = ((data & GENMASK(31, 30)) >> 30);
-+		lval = (data & GENMASK(7, 0));
-+		core_count = CORE_COUNT_VAL(data);
-+
-+		if (!src)
-+			c->table[i].frequency = INIT_RATE / 1000;
-+		else
-+			c->table[i].frequency = XO_RATE * lval / 1000;
-+
-+		cur_freq = c->table[i].frequency;
-+
-+		dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
-+			i, c->table[i].frequency, core_count);
-+
-+		if (core_count != c->max_cores)
-+			cur_freq = CPUFREQ_ENTRY_INVALID;
-+
-+		/*
-+		 * Two of the same frequencies with the same core counts means
-+		 * end of table.
-+		 */
-+		if (i > 0 && c->table[i - 1].frequency ==
-+		   c->table[i].frequency && prev_cc == core_count) {
-+			struct cpufreq_frequency_table *prev = &c->table[i - 1];
-+
-+			if (prev_freq == CPUFREQ_ENTRY_INVALID)
-+				prev->flags = CPUFREQ_BOOST_FREQ;
-+			break;
-+		}
-+		prev_cc = core_count;
-+		prev_freq = cur_freq;
-+	}
-+
-+	c->table[i].frequency = CPUFREQ_TABLE_END;
-+
-+	return 0;
-+}
-+
-+static int qcom_get_related_cpus(struct device_node *np, struct cpumask *m)
-+{
-+	struct device_node *cpu_np, *freq_np;
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		cpu_np = of_cpu_device_node_get(cpu);
-+		if (!cpu_np)
-+			continue;
-+		freq_np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
-+		if (!freq_np)
-+			continue;
-+		if (freq_np == np)
-+			cpumask_set_cpu(cpu, m);
-+	}
-+
-+	return 0;
-+}
-+
-+static int qcom_cpu_resources_init(struct platform_device *pdev,
-+				   struct device_node *np, unsigned int cpu)
-+{
-+	struct cpufreq_qcom *c;
-+	struct resource res;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *en_base;
-+	int index, ret;
-+
-+	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
-+	if (!c)
-+		return -ENOMEM;
-+
-+	index = of_property_match_string(np, "reg-names", "enable");
-+	if (index < 0)
-+		return index;
-+
-+	if (of_address_to_resource(np, index, &res))
-+		return -ENOMEM;
-+
-+	en_base = devm_ioremap(dev, res.start, resource_size(&res));
-+	if (!en_base) {
-+		dev_err(dev, "Unable to map %s enable-base\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	/* FW should be in enabled state to proceed */
-+	if (!(readl_relaxed(en_base) & 0x1)) {
-+		dev_err(dev, "%s firmware not enabled\n", np->name);
-+		return -ENODEV;
-+	}
-+	devm_iounmap(&pdev->dev, en_base);
-+
-+	index = of_property_match_string(np, "reg-names", "perf");
-+	if (index < 0)
-+		return index;
-+
-+	if (of_address_to_resource(np, index, &res))
-+		return -ENOMEM;
-+
-+	c->perf_base = devm_ioremap(dev, res.start, resource_size(&res));
-+	if (!c->perf_base) {
-+		dev_err(dev, "Unable to map %s perf-base\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	index = of_property_match_string(np, "reg-names", "lut");
-+	if (index < 0)
-+		return index;
-+
-+	if (of_address_to_resource(np, index, &res))
-+		return -ENOMEM;
-+
-+	c->lut_base = devm_ioremap(dev, res.start, resource_size(&res));
-+	if (!c->lut_base) {
-+		dev_err(dev, "Unable to map %s lut-base\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	ret = qcom_get_related_cpus(np, &c->related_cpus);
-+	if (ret) {
-+		dev_err(dev, "%s failed to get related CPUs\n", np->name);
-+		return ret;
-+	}
-+
-+	c->max_cores = cpumask_weight(&c->related_cpus);
-+	if (!c->max_cores)
-+		return -ENOENT;
-+
-+	ret = qcom_read_lut(pdev, c);
-+	if (ret) {
-+		dev_err(dev, "%s failed to read LUT\n", np->name);
-+		return ret;
-+	}
-+
-+	qcom_freq_domain_map[cpu] = c;
-+
-+	return 0;
-+}
-+
-+static int qcom_resources_init(struct platform_device *pdev)
-+{
-+	struct device_node *np, *cpu_np;
-+	unsigned int cpu;
-+	int ret;
-+
-+	for_each_possible_cpu(cpu) {
-+		cpu_np = of_cpu_device_node_get(cpu);
-+		if (!cpu_np) {
-+			dev_err(&pdev->dev, "Failed to get cpu %d device\n",
-+				cpu);
-+			continue;
-+		}
-+
-+		np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
-+		if (!np) {
-+			dev_err(&pdev->dev, "Failed to get freq-domain device\n");
-+			return -EINVAL;
-+		}
-+
-+		of_node_put(cpu_np);
-+
-+		ret = qcom_cpu_resources_init(pdev, np, cpu);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int qcom_cpufreq_fw_driver_probe(struct platform_device *pdev)
-+{
-+	int rc;
-+
-+	/* Get the bases of cpufreq for domains */
-+	rc = qcom_resources_init(pdev);
-+	if (rc) {
-+		dev_err(&pdev->dev, "CPUFreq resource init failed\n");
-+		return rc;
-+	}
-+
-+	rc = cpufreq_register_driver(&cpufreq_qcom_fw_driver);
-+	if (rc) {
-+		dev_err(&pdev->dev, "CPUFreq FW driver failed to register\n");
-+		return rc;
-+	}
-+
-+	dev_info(&pdev->dev, "QCOM CPUFreq FW driver initialized\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id match_table[] = {
-+	{ .compatible = "qcom,cpufreq-fw" },
-+	{}
-+};
-+
-+static struct platform_driver qcom_cpufreq_fw_driver = {
-+	.probe = qcom_cpufreq_fw_driver_probe,
-+	.driver = {
-+		.name = "qcom-cpufreq-fw",
-+		.of_match_table = match_table,
-+		.owner = THIS_MODULE,
-+	},
-+};
-+
-+static int __init qcom_cpufreq_fw_init(void)
-+{
-+	return platform_driver_register(&qcom_cpufreq_fw_driver);
-+}
-+subsys_initcall(qcom_cpufreq_fw_init);
-+
-+MODULE_DESCRIPTION("QCOM CPU Frequency FW");
-+MODULE_LICENSE("GPL v2");
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
+> 
+> 
+> 2018-06-12 19:31 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> > According to the Denali User's Guide, this IP needs three clock inputs:
+> >
+> >  - clk: controller core clock
+> >
+> >  - clk_x: bus interface clock
+> >
+> >  - ecc_clk: clock at which ECC circuitry is run
+> >
+> > Currently, denali_dt.c requires a single anonymous clock and its
+> > frequency.  However, the driver needs to get the frequency of "clk_x"
+> > not "clk".  This is confusing because people tend to assume the
+> > anonymous clock means the core clock.
+> >
+> > Instead of the cheesy implementation, the clocks in the real hardware
+> > should be represented in the driver code and the DT-binding.
+> >
+> > I improved the ->setup_data_interface() hook as well.
+> >
+> > The denali_setup_data_interface() needs the frequency of clk_x
+> > and the ratio of clk_x / clk.
+> >
+> > The latter is currently hardcoded in the driver, like this:
+> >
+> >   #define DENALI_CLK_X_MULT       6
+> >
+> > The IP datasheet specifies that clk_x / clk should be 4, 5, or 6.
+> > I just chose 6 because it is the most defensive value, but it is not
+> > very nice.  By getting the clock rate of both "clk" and "clk_x", the
+> > driver can compute the timing values more precisely.
+> >
+> > Adding new clocks would break the existing platforms.  For the backward
+> > compatibility, the driver still accepts the single clock just as before.
+> > Also, ->clk_rate and ->clk_x_rate are set to hardcoded values if clk_x
+> > is missing.
+> >
+> > It should work for all upstreamed platforms because Intel Moorestown,
+> > Altera (Intel) SOCFPGA, Socionext UniPhier use the following clock
+> > frequency:
+> >
+> >   clk = 50 MHz
+> >   clk_x = ecc_clk = 200 MHz
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---  
+> 
+> 
