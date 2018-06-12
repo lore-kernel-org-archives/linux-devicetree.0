@@ -1,12 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 03/27] clk: sunxi-ng: r40: Export video PLLs
-Date: Tue, 12 Jun 2018 22:00:12 +0200
-Message-ID: <20180612200036.21483-4-jernej.skrabec@siol.net>
+Subject: [PATCH v2 04/27] dt-bindings: display: sunxi-drm: Add
+ TCON TOP description
+Date: Tue, 12 Jun 2018 22:00:13 +0200
+Message-ID: <20180612200036.21483-5-jernej.skrabec@siol.net>
 References: <20180612200036.21483-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBNGNQDMQKGQENVRS44Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBN6NQDMQKGQE5R5GWFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180612200036.21483-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,57 +20,90 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Video PLLs need to be referenced in R40 DT as possible HDMI PHY parent.
+TCON TOP main purpose is to configure whole display pipeline. It
+determines relationships between mixers and TCONs, selects source TCON
+for HDMI, muxes LCD and TV encoder GPIO output, selects TV encoder
+clock source and contains additional TV TCON and DSI gates.
 
-Export them.
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-r40.h      | 8 ++++++--
- include/dt-bindings/clock/sun8i-r40-ccu.h | 4 ++++
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ .../bindings/display/sunxi/sun4i-drm.txt      | 45 +++++++++++++++++++
+ include/dt-bindings/clock/sun8i-tcon-top.h    | 11 +++++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.h b/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
-index 0db8e1e97af8..db2a1243f9ff 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.h
-@@ -25,7 +25,9 @@
- #define CLK_PLL_AUDIO_2X	4
- #define CLK_PLL_AUDIO_4X	5
- #define CLK_PLL_AUDIO_8X	6
--#define CLK_PLL_VIDEO0		7
-+
-+/* PLL_VIDEO0 is exported */
-+
- #define CLK_PLL_VIDEO0_2X	8
- #define CLK_PLL_VE		9
- #define CLK_PLL_DDR0		10
-@@ -34,7 +36,9 @@
- #define CLK_PLL_PERIPH0_2X	13
- #define CLK_PLL_PERIPH1		14
- #define CLK_PLL_PERIPH1_2X	15
--#define CLK_PLL_VIDEO1		16
-+
-+/* PLL_VIDEO1 is exported */
-+
- #define CLK_PLL_VIDEO1_2X	17
- #define CLK_PLL_SATA		18
- #define CLK_PLL_SATA_OUT	19
-diff --git a/include/dt-bindings/clock/sun8i-r40-ccu.h b/include/dt-bindings/clock/sun8i-r40-ccu.h
-index 4fa5f69fc297..f9e15a235626 100644
---- a/include/dt-bindings/clock/sun8i-r40-ccu.h
-+++ b/include/dt-bindings/clock/sun8i-r40-ccu.h
-@@ -43,6 +43,10 @@
- #ifndef _DT_BINDINGS_CLK_SUN8I_R40_H_
- #define _DT_BINDINGS_CLK_SUN8I_R40_H_
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 3346c1e2a7a0..ef64c589a4b3 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -187,6 +187,51 @@ And on the A23, A31, A31s and A33, you need one more clock line:
+    - 'lvds-alt': An alternative clock source, separate from the TCON channel 0
+                  clock, that can be used to drive the LVDS clock
  
-+#define CLK_PLL_VIDEO0		7
++TCON TOP
++--------
 +
-+#define CLK_PLL_VIDEO1		16
++TCON TOPs main purpose is to configure whole display pipeline. It determines
++relationships between mixers and TCONs, selects source TCON for HDMI, muxes
++LCD and TV encoder GPIO output, selects TV encoder clock source and contains
++additional TV TCON and DSI gates.
 +
- #define CLK_CPU			24
++It allows display pipeline to be configured in very different ways:
++
++                             / LCD0/LVDS0
++                 / TCON-LCD0
++                 |           \ MIPI DSI
++ mixer0          |
++        \        / TCON-LCD1 - LCD1/LVDS1
++         TCON-TOP
++        /        \ TCON-TV0 - TVE0/RGB
++ mixer1          |          \
++                 |           TCON-TOP - HDMI
++                 |          /
++                 \ TCON-TV1 - TVE1/RGB
++
++Note that both TCON TOP references same physical unit.
++
++Required properties:
++  - compatible: value must be one of:
++    * allwinner,sun8i-r40-tcon-top
++  - reg: base address and size of the memory-mapped region.
++  - clocks: phandle to the clocks feeding the TCON TOP
++    * bus: TCON TOP interface clock
++  - clock-names: clock name mentioned above
++  - resets: phandle to the reset line driving the DRC
++    * rst: TCON TOP reset line
++  - reset-names: reset name mentioned above
++  - #clock-cells : must contain 1
++
++- ports: A ports node with endpoint definitions as defined in
++    Documentation/devicetree/bindings/media/video-interfaces.txt. The first port
++    should be the input for mixer0 mux. The second should be the output for that
++    mux. Third port should be input for mixer1 mux. Fourth port should be output
++    for mixer1 mux. Fifth port should be input for HDMI mux. Sixth port should
++    be output for it. All output endpoints should have reg property with the id
++    of the target TCON. All ports should have only one enpoint connected to
++    remote endpoint.
++
+ DRC
+ ---
  
- #define CLK_BUS_MIPI_DSI	29
+diff --git a/include/dt-bindings/clock/sun8i-tcon-top.h b/include/dt-bindings/clock/sun8i-tcon-top.h
+new file mode 100644
+index 000000000000..c05e92770402
+--- /dev/null
++++ b/include/dt-bindings/clock/sun8i-tcon-top.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
++/* Copyright (C) 2018 Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> */
++
++#ifndef _DT_BINDINGS_CLOCK_SUN8I_TCON_TOP_H_
++#define _DT_BINDINGS_CLOCK_SUN8I_TCON_TOP_H_
++
++#define CLK_BUS_TCON_TOP_DSI	0
++#define CLK_BUS_TCON_TOP_TV0	1
++#define CLK_BUS_TCON_TOP_TV1	2
++
++#endif /* _DT_BINDINGS_CLOCK_SUN8I_TCON_TOP_H_ */
 -- 
 2.17.1
