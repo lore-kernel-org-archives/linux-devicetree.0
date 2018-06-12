@@ -1,80 +1,47 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: [PATCH 2/5] ARM: dts: cygnus: Fix PCIe controller interrupt type
-Date: Tue, 12 Jun 2018 13:21:28 -0700
-Message-ID: <1528834891-17807-3-git-send-email-ray.jui@broadcom.com>
-References: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 1/2] power: supply: sbs-battery: don't assume
+ MANUFACTURER_DATA formats
+Date: Tue, 12 Jun 2018 13:23:25 -0700
+Message-ID: <CA+ASDXMuohDxvAXdnea8xAZyq6Nn4JThQFGTPPtxTzvf-2dJ0Q@mail.gmail.com>
+References: <20180612202042.107603-1-briannorris@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
+In-Reply-To: <20180612202042.107603-1-briannorris@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Doug Anderson <dianders@chromium.org>, Phil Reid <preid@electromag.com.au>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix PCIe controller interrupt to use IRQ_TYPE_LEVEL_HIGH for Broadcom
-Cygnus SoC
+Eek, sorry this series should have subjects "[PATCH v5 X/2] ...". I
+can resend if really needed, but hopefully by now this is ready to
+go...
 
-Fixes: cd590b50a936 ("ARM: dts: enable PCIe support for Cygnus")
-Fixes: 0f0b21a83ad2 ("ARM: dts: Move all Cygnus peripherals into axi
-bus")
-Fixes: 9c5101f7a253 ("ARM: dts: Reorder Cygnus peripherals")
-Fixes: f6b889358a82 ("ARM: dts: Enable MSI support for Broadcom Cygnus")
+Brian
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+On Tue, Jun 12, 2018 at 1:20 PM, Brian Norris <briannorris@chromium.org> wrote:
+> This driver was originally submitted for the TI BQ20Z75 battery IC
+> (commit a7640bfa10c5 ("power_supply: Add driver for TI BQ20Z75 gas gauge
+> IC")) and later renamed to express generic SBS support. While it's
+> mostly true that this driver implemented a standard SBS command set, it
+> takes liberties with the REG_MANUFACTURER_DATA register. This register
+> is specified in the SBS spec, but it doesn't make any mention of what
+> its actual contents are.
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 835a6f7..2c4df2d 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -256,7 +256,7 @@
- 
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0>;
--			interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			linux,pci-domain = <0>;
- 
-@@ -278,10 +278,10 @@
- 				compatible = "brcm,iproc-msi";
- 				msi-controller;
- 				interrupt-parent = <&gic>;
--				interrupts = <GIC_SPI 96 IRQ_TYPE_NONE>,
--					     <GIC_SPI 97 IRQ_TYPE_NONE>,
--					     <GIC_SPI 98 IRQ_TYPE_NONE>,
--					     <GIC_SPI 99 IRQ_TYPE_NONE>;
-+				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
- 
-@@ -291,7 +291,7 @@
- 
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0>;
--			interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			linux,pci-domain = <1>;
- 
-@@ -313,10 +313,10 @@
- 				compatible = "brcm,iproc-msi";
- 				msi-controller;
- 				interrupt-parent = <&gic>;
--				interrupts = <GIC_SPI 102 IRQ_TYPE_NONE>,
--					     <GIC_SPI 103 IRQ_TYPE_NONE>,
--					     <GIC_SPI 104 IRQ_TYPE_NONE>,
--					     <GIC_SPI 105 IRQ_TYPE_NONE>;
-+				interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
- 
--- 
-2.1.4
+...
+
+> ---
+> v2:
+>  * don't stub out POWER_SUPPLY_PROP_PRESENT from sbs_data[]
+>  * use if/else instead of switch/case
+>
+> v3:
+>  * pull 'return 0' out of if/else, to satisfy braindead tooling
+>
+> v4:
+>  * make ManufacturerAccess non-optional for TI parts again
+>
+> v5: no change
+> ---
+>  drivers/power/supply/sbs-battery.c | 67 ++++++++++++++++++++++++------
+>  1 file changed, 54 insertions(+), 13 deletions(-)
