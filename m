@@ -1,34 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drivers/of: Make of_io_request_and_map() "name" argument
- optional
-Date: Tue, 12 Jun 2018 16:18:15 -0600
-Message-ID: <20180612221815.GA28761@rob-hp-laptop>
-References: <22064afa92ed2e4b33a93685aabb1d07c7c8846d.camel@kernel.crashing.org>
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: Add Spreadtrum SC27XX efuse
+ controller documentation
+Date: Tue, 12 Jun 2018 16:19:30 -0600
+Message-ID: <20180612221930.GA678@rob-hp-laptop>
+References: <0a5444dd0646f4e1f1d8ce51870afe6cc864219e.1528780670.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <22064afa92ed2e4b33a93685aabb1d07c7c8846d.camel@kernel.crashing.org>
+In-Reply-To: <0a5444dd0646f4e1f1d8ce51870afe6cc864219e.1528780670.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: srinivas.kandagatla@linaro.org, mark.rutland@arm.com, broonie@kernel.org, freeman.liu@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 10:01:07AM +1000, Benjamin Herrenschmidt wrote:
-> These days of_address_to_resource() puts a reasonable name
-> in the resource struct, thus make the "name" argument an
-> optional override.
+On Tue, Jun 12, 2018 at 01:24:01PM +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum SC27XX series
+> PMICs efuse controller device.
 > 
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
-> 
-> Just something I noticed ... we should probably update the
-> callers to stop passing stupid names..
+>  .../devicetree/bindings/nvmem/sc27xx-efuse.txt     |   52 ++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/sc27xx-efuse.txt
 
-Sounds like a coccinelle patch.
-
-When do we need an actual name passed in? It does get exposed to 
-userspace, but no one seemed to care when names changed from full path 
-(which is commonly used) to just the node name.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
