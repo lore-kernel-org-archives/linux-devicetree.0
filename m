@@ -1,55 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
-Date: Tue, 12 Jun 2018 13:26:36 -0600
-Message-ID: <20180612192636.GA31725@rob-hp-laptop>
-References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
- <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
+Subject: Re: [PATCH v2 4/5] thermal: tsens: Add support for SDM845
+Date: Tue, 12 Jun 2018 13:28:59 -0600
+Message-ID: <20180612192859.GA14933@rob-hp-laptop>
+References: <cover.1528799892.git.amit.kucheria@linaro.org>
+ <f048a97d1599a54aef3d00126a379f4e5c937057.1528799892.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
+In-Reply-To: <f048a97d1599a54aef3d00126a379f4e5c937057.1528799892.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sayali Lokhande <sayalil@codeaurora.org>
-Cc: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 08, 2018 at 04:36:28PM +0530, Sayali Lokhande wrote:
-> From: Subhash Jadavani <subhashj@codeaurora.org>
+On Tue, Jun 12, 2018 at 01:54:56PM +0300, Amit Kucheria wrote:
+> SDM845 uses the TSENS v2 IP block
 > 
-> UFS host supplies the reference clock to UFS device and UFS device
-> specification allows host to provide one of the 4 frequencies (19.2 MHz,
-> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-> device reference clock frequency setting in the device based on what
-> frequency it is supplying to UFS device.
-> 
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
->  drivers/scsi/ufs/ufs.h                             |  9 ++++
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
->  drivers/scsi/ufs/ufshcd.c                          | 52 ++++++++++++++++++++++
->  drivers/scsi/ufs/ufshcd.h                          |  1 +
->  5 files changed, 93 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index c39dfef..4522434 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -41,6 +41,12 @@ Optional properties:
->  -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
->  			  Note that it is assume same number of lanes is used both
->  			  directions at once. If not specified, default is 2 lanes per direction.
-> +- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
-> +			  0: 19.2 MHz
-> +			  1: 26 MHz
-> +			  2: 38.4 MHz
-> +			  3: 52 MHz
-> +			  Defaults to 26 MHz if not specified.
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.txt |  1 +
 
-I must have misunderstood your last response. I thought you could handle 
-things without DT. If not, my question remains.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rob
+>  drivers/thermal/qcom/Makefile                            |  2 +-
+>  drivers/thermal/qcom/tsens-sdm845.c                      | 15 +++++++++++++++
+>  drivers/thermal/qcom/tsens.c                             |  3 +++
+>  drivers/thermal/qcom/tsens.h                             |  5 ++++-
+>  5 files changed, 24 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/thermal/qcom/tsens-sdm845.c
