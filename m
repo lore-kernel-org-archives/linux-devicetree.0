@@ -1,92 +1,168 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 2/4] dt-bindings: mailbox: provide imx-mailbox
- documentation
-Date: Tue, 12 Jun 2018 13:41:42 -0600
-Message-ID: <20180612194142.GA16521@rob-hp-laptop>
-References: <20180601065821.28234-1-o.rempel@pengutronix.de>
- <20180601065821.28234-3-o.rempel@pengutronix.de>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 6/7] soc: qcom: Add RPMh Power domain driver
+Date: Tue, 12 Jun 2018 12:42:26 -0700
+Message-ID: <20180612194226.GI88063@google.com>
+References: <20180612044052.4402-1-rnayak@codeaurora.org>
+ <20180612044052.4402-7-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180601065821.28234-3-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180612044052.4402-7-rnayak@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 08:58:19AM +0200, Oleksij Rempel wrote:
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Hi,
+
+On Tue, Jun 12, 2018 at 10:10:51AM +0530, Rajendra Nayak wrote:
+> The RPMh Power domain driver aggregates the corner votes from various
+> consumers for the ARC resources and communicates it to RPMh.
+> 
+> We also add data for all power domains on sdm845 SoC as part of the patch.
+> The driver can be extended to support other SoCs which support RPMh
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 > ---
->  .../bindings/mailbox/imx-mailbox.txt          | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+>  drivers/soc/qcom/Kconfig                |   9 +
+>  drivers/soc/qcom/Makefile               |   1 +
+>  drivers/soc/qcom/rpmhpd.c               | 427 ++++++++++++++++++++++++
+>  include/dt-bindings/power/qcom-rpmhpd.h |  31 ++
+>  4 files changed, 468 insertions(+)
+>  create mode 100644 drivers/soc/qcom/rpmhpd.c
+>  create mode 100644 include/dt-bindings/power/qcom-rpmhpd.h
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index 5c54931a7b99..7cb7eba2b997 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -74,6 +74,15 @@ config QCOM_RMTFS_MEM
+>  
+>  	  Say y here if you intend to boot the modem remoteproc.
+>  
+> +config QCOM_RPMHPD
+> +	tristate "Qualcomm RPMh Power domain driver"
+> +	depends on QCOM_RPMH && QCOM_COMMAND_DB
+> +	help
+> +	  QCOM RPMh Power domain driver to support power-domains with
+> +	  performance states. The driver communicates a performance state
+> +	  value to RPMh which then translates it into corresponding voltage
+> +	  for the voltage rail.
+> +
+>  config QCOM_RPMPD
+>  	tristate "Qualcomm RPM Power domain driver"
+>  	depends on MFD_QCOM_RPM && QCOM_SMD_RPM
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index 9550c170de93..499513f63bef 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -16,3 +16,4 @@ obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
+>  obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
+>  obj-$(CONFIG_QCOM_APR) += apr.o
+>  obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
+> +obj-$(CONFIG_QCOM_RPMHPD) += rpmhpd.o
+> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
 > new file mode 100644
-> index 000000000000..a45604b33039
+> index 000000000000..7083ec1590ff
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
-> @@ -0,0 +1,35 @@
-> +i.MX Messaging Unit
-> +===================
+> +++ b/drivers/soc/qcom/rpmhpd.c
+> @@ -0,0 +1,427 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2018, The Linux Foundation. All rights reserved.*/
 > +
-> +The i.MX Messaging Unit (MU) contains two register sets: "A" and "B". In most cases
-> +they are accessible from all Processor Units. On one hand, at least for mailbox functionality,
-> +it makes no difference which application or processor is using which set of the MU. On
-
-Please wrap lines correctly (<80).
-
-> +other hand, the register sets for each of the MU parts are not identical.
+> +#include <linux/err.h>
+> +#include <linux/export.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+> +#include <soc/qcom/cmd-db.h>
+> +#include <soc/qcom/rpmh.h>
+> +#include <dt-bindings/power/qcom-rpmhpd.h>
 > +
-> +Required properties:
-> +- compatible :	Shell be one of:
-> +                    "fsl,imx7s-mu-a" and "fsl,imx7s-mu-b" for i.MX7S or i.MX7D
-> +- reg : 	physical base address of the mailbox and length of
-
-Mix of space and tab.
-
-> +		memory mapped region.
-> +- #mbox-cells:	Common mailbox binding property to identify the number
-> +		of cells required for the mailbox specifier. Should be 1.
-> +- interrupts :	interrupt number. The interrupt specifier format
-> +		depends on the interrupt controller parent.
-
-Just need to say how many interrupts and what they are if more than 1.
-
-> +- clocks     :  phandle to the input clock.
+> +#define domain_to_rpmhpd(domain) container_of(domain, struct rpmhpd, pd)
 > +
-> +Example:
-> +	mu0a: mu@30aa0000 {
-
-mailbox@...
-
-> +		compatible = "fsl,imx7s-mu-a";
-> +		reg = <0x30aa0000 0x28>;
-> +		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clks IMX7D_MU_ROOT_CLK>;
-> +		#mbox-cells = <1>;
-> +	};
+> +#define DEFINE_RPMHPD_AO(_platform, _name, _active)			\
+> +	static struct rpmhpd _platform##_##_active;			\
+> +	static struct rpmhpd _platform##_##_name = {			\
+> +		.pd = {	.name = #_name,	},				\
+> +		.peer = &_platform##_##_active,				\
+> +		.res_name = #_name".lvl",				\
+> +		.valid_state_mask = (BIT(RPMH_ACTIVE_ONLY_STATE) |	\
+> +					BIT(RPMH_WAKE_ONLY_STATE) |	\
+> +					BIT(RPMH_SLEEP_STATE)),		\
+> +	};								\
+> +	static struct rpmhpd _platform##_##_active = {			\
+> +		.pd = { .name = #_active, },				\
+> +		.peer = &_platform##_##_name,				\
+> +		.active_only = true,					\
+> +		.res_name = #_name".lvl",				\
+> +		.valid_state_mask = (BIT(RPMH_ACTIVE_ONLY_STATE) |	\
+> +					BIT(RPMH_WAKE_ONLY_STATE) |	\
+> +					BIT(RPMH_SLEEP_STATE)),		\
+> +	}
 > +
-> +	mu0b: mu@30ab0000 {
+> +#define DEFINE_RPMHPD(_platform, _name)					\
+> +	static struct rpmhpd _platform##_##_name = {			\
+> +		.pd = { .name = #_name, },				\
+> +		.res_name = #_name".lvl",				\
+> +		.valid_state_mask = BIT(RPMH_ACTIVE_ONLY_STATE),	\
+> +	}
 
-mailbox@...
+Perhaps describe briefly the concept of an AO (active-only) and a peer
+domain. It is not necessarily evident why an AO domain would have
+WAKE_ONLY and SLEEP_ONLY as valid states, while the non-AO domain has
+ACTIVE_ONLY as it's only state.
 
-> +		compatible = "fsl,imx7s-mu-b";
-> +		reg = <0x30ab0000 0x28>;
-> +		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clks IMX7D_MU_ROOT_CLK>;
-> +		#mbox-cells = <1>;
-> +	};
-> -- 
-> 2.17.1
-> 
+> +/*
+> + * This function is used to aggregate the votes across the active only
+> + * resources and its peers. The aggregated votes are send to RPMh as
+
+s/send/sent/
+
+> + * ACTIVE_ONLY votes (which take effect immediately), as WAKE_ONLY votes
+> + * (applied by RPMh on system wakeup) and as SLEEP votes (applied by RPMh
+> + * on system sleep).
+> + * We send ACTIVE_ONLY votes for resources without any peers. For others,
+> + * which have an active only peer, all 3 Votes are sent.
+
+s/Votes/votes/
+
+> +static int rpmhpd_probe(struct platform_device *pdev)
+> +{
+> +	int i, ret;
+> +	size_t num;
+
+nit: naming this num_pds would slightly improve readability (e.g. make
+it evident that the for loop iterates over the PDs).
+
+> +	struct genpd_onecell_data *data;
+> +	struct rpmhpd **rpmhpds;
+> +	const struct rpmhpd_desc *desc;
+> +
+> +	desc = of_device_get_match_data(&pdev->dev);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	rpmhpds = desc->rpmhpds;
+> +	num = desc->num_pds;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
+> +				     GFP_KERNEL);
+
+Check for NULL?
+
+Thanks
+
+Matthias
