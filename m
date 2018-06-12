@@ -1,110 +1,129 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph
- bindings
-Date: Tue, 12 Jun 2018 14:48:02 -0600
-Message-ID: <20180612204802.GA15817@rob-hp-laptop>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
- <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
+Subject: Re: [PATCH 2/2] dt-bindings: document gpio-mt7621 bindings
+Date: Tue, 12 Jun 2018 14:56:38 -0600
+Message-ID: <20180612205638.GA2404@rob-hp-laptop>
+References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
+ <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, sudeep.holla@arm.com, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, driverdev-devel@linuxdriverproject.org, linux-gpio@vger.kernel.org, neil@brown.name
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 01, 2018 at 02:16:05PM +0100, Suzuki K Poulose wrote:
-> The coresight drivers relied on default bindings for graph
-> in DT, while reusing the "reg" field of the "ports" to indicate
-> the actual hardware port number for the connections. However,
-> with the rules getting stricter w.r.t to the address mismatch
-> with the label, it is no longer possible to use the port address
-> field for the hardware port number. Hence, we add an explicit
-> property to denote the hardware port number, "coresight,hwid"
-> which must be specified for each "endpoint".
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  .../devicetree/bindings/arm/coresight.txt          | 26 +++++++++---
->  drivers/hwtracing/coresight/of_coresight.c         | 46 ++++++++++++++++------
->  2 files changed, 54 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index bd36e40..385581a 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -104,7 +104,11 @@ properties to uniquely identify the connection details.
->  	"slave-mode"
->  
->   * Hardware Port number at the component:
-> -     -  The hardware port number is assumed to be the address of the "port" component.
-> +   - (Obsolete) The hardware port number is assumed to be the address of the "port" component.
-> +   - Each "endpoint" must define the hardware port of the local end of the
-> +     connection using the following property:
-> +	"coresight,hwid" - 32bit integer, hardware port number at the local end.
+On Sat, Jun 02, 2018 at 09:30:10AM +0200, Sergio Paracuellos wrote:
+> Add a devicetree binding documentation for the mt7621 driver.
 
-"coresight" is not a vendor and properties are in the form 
-[<vendor>,]<prop-name>.
+Bindings are for h/w, not a driver.
+
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> Reviewed-by: NeilBrown <neil@brown.name>
+
+Space              ^
+
+> ---
+>  .../bindings/gpio/mediatek,mt7621-gpio.txt         | 68 ++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> new file mode 100644
+> index 0000000..30d8a02
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+> @@ -0,0 +1,68 @@
+> +Mediatek SoC GPIO controller bindings
+> +
+> +The IP core used inside these SoCs has 3 banks of 32 GPIOs each.
+> +The registers of all the banks are interwoven inside one single IO range.
+> +We load one GPIO controller instance per bank. To make this possible
+> +we support 2 types of nodes. The parent node defines the memory I/O range and
+> +has 3 children each describing a single bank. Also the GPIO controller can receive
+> +interrupts on any of the GPIOs, either edge or level. It then interrupts the CPU
+> +using GIC INT12.
+> +
+> +Required properties for the top level node:
+> +- compatible:
+> +  - "mediatek,mt7621-gpio" for Mediatek controllers
+> +- reg : Physical base address and length of the controller's registers
+> +- interrupt-parent : phandle of the parent interrupt controller.
+> +- interrupts : Interrupt specifier for the controllers interrupt.
+> +- interrupt-controller : Mark the device node as an interrupt controller.
+> +- #interrupt-cells : Should be 2. The first cell defines the interrupt number.
+> +   The second cell bits[3:0] is used to specify trigger type as follows:
+> +	- 1 = low-to-high edge triggered.
+> +	- 2 = high-to-low edge triggered.
+> +	- 4 = active high level-sensitive.
+> +	- 8 = active low level-sensitive.
+
+Just refer to the common definition.
 
 > +
->  
->  
->  Example:
-> @@ -120,6 +124,7 @@ Example:
->  			etb_in_port: endpoint@0 {
+> +
+> +Required properties for the GPIO bank node:
+> +- compatible:
+> +  - "mediatek,mt7621-gpio-bank" for Mediatek banks
+> +- #gpio-cells : Should be two. The first cell is the GPIO pin number and the
 
-There shouldn't be a unit address here because there is no reg property.
+So interrupt numbers and gpio numbers are different? 0-95 and 3x 0-31
 
->  				slave-mode;
->  				remote-endpoint = <&replicator_out_port0>;
-> +				coresight,hwid = <0>;
+That doesn't seem ideal.
 
-It doesn't make sense for these to be in the endpoint. If you had 
-multiple endpoints, then you would have to duplicate it. "ports" are 
-a single data stream. "endpoints" are connections to that stream. So if 
-you have a muxed (input) or fanout/1-to-many (output) connection, then 
-you have multiple endpoints. 
+> +   second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
+> +   Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +- reg : The id of the bank that the node describes.
 
-The same applied to the slave-mode property, but that ship has sailed. 
-No reason to continue that though.
+I'd prefer to not have banks defined in DT. Do you have a variable 
+number or resources that are per bank? If not, then you don't need them.
 
->  			};
->  		};
->  	};
-> @@ -134,6 +139,7 @@ Example:
->  			tpiu_in_port: endpoint@0 {
->  				slave-mode;
->  				remote-endpoint = <&replicator_out_port1>;
-> +				coresight,hwid = <0>;
->  			};
->  		};
->  	};
-> @@ -154,6 +160,7 @@ Example:
->  				reg = <0>;
->  				replicator_out_port0: endpoint {
->  					remote-endpoint = <&etb_in_port>;
-> +					coresight,hwid = <0>;
->  				};
->  			};
->  
-> @@ -161,15 +168,17 @@ Example:
->  				reg = <1>;
->  				replicator_out_port1: endpoint {
->  					remote-endpoint = <&tpiu_in_port>;
-> +					coresight,hwid = <1>;
->  				};
->  			};
->  
->  			/* replicator input port */
->  			port@2 {
-> -				reg = <0>;
-> +				reg = <1>;
-
-This will still get flagged as an error. reg must be 2 here.
-
-Rob
+> +
+> +Example:
+> +	gpio@600 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		compatible = "mediatek,mt7621-gpio";
+> +		reg = <0x600 0x100>;
+> +
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SHARED 12 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +
+> +		gpio0: bank@0 {
+> +			reg = <0>;
+> +			compatible = "mediatek,mt7621-gpio-bank";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +		};
+> +
+> +		gpio1: bank@1 {
+> +			reg = <1>;
+> +			compatible = "mediatek,mt7621-gpio-bank";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +		};
+> +
+> +		gpio2: bank@2 {
+> +			reg = <2>;
+> +			compatible = "mediatek,mt7621-gpio-bank";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
