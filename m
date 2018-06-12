@@ -1,343 +1,588 @@
-From: James Hogan <jhogan@kernel.org>
-Subject: Re: [PATCH 3/7] MIPS: intel: Add initial support for Intel MIPS SoCs
-Date: Tue, 12 Jun 2018 12:23:48 +0100
-Message-ID: <20180612112346.GA8748@jamesdev>
-References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
- <20180612054034.4969-4-songjun.wu@linux.intel.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v2] ARM: DTS: imx53: Add support for imx53 HSC/DDC
+ boards from K+P
+Date: Tue, 12 Jun 2018 13:28:09 +0200
+Message-ID: <20180612132809.03234c7d@jawa>
+References: <20180509153428.1440-1-lukma@denx.de>
+        <20180519121506.32344-1-lukma@denx.de>
+        <20180611051357.GA16091@dragon>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+ boundary="Sig_/LBm94ZtV.5QfxqQaGW3nOfC"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180612054034.4969-4-songjun.wu@linux.intel.com>
+In-Reply-To: <20180611051357.GA16091@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@linux.intel.com>
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com, linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/LBm94ZtV.5QfxqQaGW3nOfC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Hi Shawn,
 
-Hi,
+Thanks for you review.
 
-Good to see this patch!
+> On Sat, May 19, 2018 at 02:15:06PM +0200, Lukasz Majewski wrote:
+> > This commit provides support for HSC and DDC boards from
+> > Kieback&Peter GmbH vendor.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > ---
+> > Changes for v2:
+> >=20
+> > - Remove not needed #address-cells and #size-cells in
+> >   the gpio_buttons node to pass make W=3D1
+> > - Rename button@{12} to button_{kalt|pwr} nodes to pass make W=3D1
+> > - Include #include <dt-bindings/input/input.h> to use KEY_F6|F7
+> > directly
+> >=20
+> > ---
+> >  arch/arm/boot/dts/Makefile         |   2 +
+> >  arch/arm/boot/dts/imx53-kp-ddc.dts | 146
+> > ++++++++++++++++++++++++++++ arch/arm/boot/dts/imx53-kp-hsc.dts |
+> > 51 ++++++++++ arch/arm/boot/dts/imx53-kp.dtsi    | 190
+> > +++++++++++++++++++++++++++++++++++++ 4 files changed, 389
+> > insertions(+) create mode 100644 arch/arm/boot/dts/imx53-kp-ddc.dts
+> >  create mode 100644 arch/arm/boot/dts/imx53-kp-hsc.dts
+> >  create mode 100644 arch/arm/boot/dts/imx53-kp.dtsi
+> >=20
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index fbc04b0db781..00854a5b6ac4 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -360,6 +360,8 @@ dtb-$(CONFIG_SOC_IMX51) +=3D \
+> >  dtb-$(CONFIG_SOC_IMX53) +=3D \
+> >  	imx53-ard.dtb \
+> >  	imx53-cx9020.dtb \
+> > +	imx53-kp-ddc.dtb \
+> > +	imx53-kp-hsc.dtb \
+> >  	imx53-m53evk.dtb \
+> >  	imx53-mba53.dtb \
+> >  	imx53-ppd.dtb \
+> > diff --git a/arch/arm/boot/dts/imx53-kp-ddc.dts
+> > b/arch/arm/boot/dts/imx53-kp-ddc.dts new file mode 100644
+> > index 000000000000..acaf477a52c5
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx53-kp-ddc.dts
+> > @@ -0,0 +1,146 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright 2018
+> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "imx53-kp.dtsi"
+> > +
+> > +/ {
+> > +	model =3D "K+P imx53 DDC";
+> > +	compatible =3D "kiebackpeter,imx53-ddc", "fsl,imx53";
+> > +
+> > +	backlight_lcd: backlight {
+> > +		compatible =3D "pwm-backlight";
+> > +		pwms =3D <&pwm2 0 50000>;
+> > +		power-supply =3D <&reg_backlight>;
+> > +		brightness-levels =3D <0 24 28 32 36
+> > +				     40 44 48 52 56
+> > +				     60 64 68 72 76
+> > +				     80 84 88 92 96 100>;
+> > +		default-brightness-level =3D <20>;
+> > +	};
+> > +
+> > +	lcd_display: disp1 { =20
+>=20
+> display for node node.
 
-On Tue, Jun 12, 2018 at 01:40:30PM +0800, Songjun Wu wrote:
-> diff --git a/arch/mips/Kbuild.platforms b/arch/mips/Kbuild.platforms
-> index ac7ad54f984f..bcd647060f3e 100644
-> --- a/arch/mips/Kbuild.platforms
-> +++ b/arch/mips/Kbuild.platforms
-> @@ -12,6 +12,7 @@ platforms += cobalt
->  platforms += dec
->  platforms += emma
->  platforms += generic
-> +platforms += intel-mips
+I assume that I shall change disp1 -> display ?
 
-What are the main things preventing this from moving to the generic
-platform? Is it mainly the use of EVA (which generic doesn't yet
-support)?
+>=20
+> > +		compatible =3D "fsl,imx-parallel-display";
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <0>;
+> > +		interface-pix-fmt =3D "rgb24";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_disp>;
+> > +
+> > +		port@0 {
+> > +			reg =3D <0>;
+> > +
+> > +			display1_in: endpoint {
+> > +				remote-endpoint =3D <&ipu_di1_disp1>;
+> > +			};
+> > +		};
+> > +
+> > +		port@1 {
+> > +			reg =3D <1>;
+> > +
+> > +			lcd_display_out: endpoint {
+> > +				remote-endpoint =3D <&lcd_panel_in>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	lcd_panel: lcd-panel {
+> > +		compatible =3D "koe,tx14d24vm1bpa"; =20
+>=20
+> Undefined compatible?
 
-> diff --git a/arch/mips/include/asm/mach-intel-mips/kernel-entry-init.h b/arch/mips/include/asm/mach-intel-mips/kernel-entry-init.h
-> new file mode 100644
-> index 000000000000..3893855b60c6
-> --- /dev/null
-> +++ b/arch/mips/include/asm/mach-intel-mips/kernel-entry-init.h
-...
-> +	/*
-> +	 * Get Config.K0 value and use it to program
-> +	 * the segmentation registers
+The display's in question "koe,tx14d24vm1bpa" compatible has been
+ack'ed by Rob Herring and Thierry promised to apply it to his tree:
 
-Please can you describe (maybe with a table) the segment layout in human
-readable terms so the reader doesn't need to decode the SegCtl registers
-to understand where everything is in the virtual address space?
-
-> diff --git a/arch/mips/boot/dts/intel-mips/Makefile b/arch/mips/boot/dts/intel-mips/Makefile
-> new file mode 100644
-> index 000000000000..b16c0081639c
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/intel-mips/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_DTB_INTEL_MIPS_GRX500)	+= easy350_anywan.dtb
-> +obj-y	+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-
-This needs updating to obj-$(CONFIG_BUILTIN_DTB) as per commit
-fca3aa166422 ("MIPS: dts: Avoid unneeded built-in.a in DTS dirs") in
-linux-next.
-
-> diff --git a/arch/mips/intel-mips/Makefile b/arch/mips/intel-mips/Makefile
-> new file mode 100644
-> index 000000000000..9f272d06eecd
-> --- /dev/null
-> +++ b/arch/mips/intel-mips/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-$(CONFIG_INTEL_MIPS)	+= prom.o irq.o time.o
-
-You can use obj-y, since this Makefile is only included if
-CONFIG_INTEL_MIPS=y (i.e. via the platform-$(CONFIG_INTEL_MIPS) below).
-
-Also please split each file onto separate "obj-y += whatever.o" lines.
-
-> diff --git a/arch/mips/intel-mips/Platform b/arch/mips/intel-mips/Platform
-> new file mode 100644
-> index 000000000000..b34750eeaeb0
-> --- /dev/null
-> +++ b/arch/mips/intel-mips/Platform
-> @@ -0,0 +1,11 @@
-> +#
-> +# MIPs SoC platform
-> +#
-> +
-> +platform-$(CONFIG_INTEL_MIPS)			+= intel-mips/
-
-^^^ (this is what ensures the Makefile is only included for this
-platform)
-
-> diff --git a/arch/mips/intel-mips/irq.c b/arch/mips/intel-mips/irq.c
-> new file mode 100644
-> index 000000000000..00637a5cdd20
-> --- /dev/null
-> +++ b/arch/mips/intel-mips/irq.c
-> @@ -0,0 +1,36 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2016 Intel Corporation.
-> + */
-> +#include <linux/init.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/of_irq.h>
-> +#include <asm/irq.h>
-> +
-> +#include <asm/irq_cpu.h>
-> +
-> +void __init arch_init_irq(void)
-> +{
-> +	struct device_node *intc_node;
-> +
-> +	pr_info("EIC is %s\n", cpu_has_veic ? "on" : "off");
-> +	pr_info("VINT is %s\n", cpu_has_vint ? "on" : "off");
-> +
-> +	intc_node = of_find_compatible_node(NULL, NULL,
-> +					    "mti,cpu-interrupt-controller");
-> +	if (!cpu_has_veic && !intc_node)
-> +		mips_cpu_irq_init();
-> +
-> +	irqchip_init();
-> +}
-> +
-> +int get_c0_perfcount_int(void)
-> +{
-> +	return gic_get_c0_perfcount_int();
-> +}
-> +EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
-> +
-> +unsigned int get_c0_compare_int(void)
-> +{
-> +	return gic_get_c0_compare_int();
-> +}
-
-Worth having get_c0_fdc_int() too for the "Fast Debug Channel"?
-
-> diff --git a/arch/mips/intel-mips/prom.c b/arch/mips/intel-mips/prom.c
-> new file mode 100644
-> index 000000000000..9407858ddc94
-> --- /dev/null
-> +++ b/arch/mips/intel-mips/prom.c
-> @@ -0,0 +1,184 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2014 Lei Chuanhua <Chuanhua.lei@lantiq.com>
-> + * Copyright (C) 2016 Intel Corporation.
-> + */
-> +#include <linux/init.h>
-> +#include <linux/export.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <asm/mips-cps.h>
-> +#include <asm/smp-ops.h>
-> +#include <asm/dma-coherence.h>
-> +#include <asm/prom.h>
-> +
-> +#define IOPORT_RESOURCE_START   0x10000000
-> +#define IOPORT_RESOURCE_END     0xffffffff
-> +#define IOMEM_RESOURCE_START    0x10000000
-> +#define IOMEM_RESOURCE_END      0xffffffff
-
-The _END ones seem to be unused?
-
-> +static void __init prom_init_cmdline(void)
-> +{
-> +	int i;
-> +	int argc;
-> +	char **argv;
-> +
-> +	/*
-> +	 * If u-boot pass parameters, it is ok, however, if without u-boot
-> +	 * JTAG or other tool has to reset all register value before it goes
-> +	 * emulation most likely belongs to this category
-> +	 */
-> +	if (fw_arg0 == 0 || fw_arg1 == 0)
-> +		return;
-> +
-> +	argc = fw_arg0;
-> +	argv = (char **)KSEG1ADDR(fw_arg1);
-> +
-> +	arcs_cmdline[0] = '\0';
-> +
-> +	for (i = 0; i < argc; i++) {
-> +		char *p = (char *)KSEG1ADDR(argv[i]);
-> +
-> +		if (argv[i] && *p) {
-> +			strlcat(arcs_cmdline, p, sizeof(arcs_cmdline));
-> +			strlcat(arcs_cmdline, " ", sizeof(arcs_cmdline));
-> +		}
-> +	}
-
-Please describe the boot register protocol in the commit message and/or
-a comment in this function.
-
-Is it compatible with the UHI boot protocol, such that this could
-potentially be converted to use the generic platform in future?
-
-> +}
-> +
-> +static int __init plat_enable_iocoherency(void)
-> +{
-> +	int supported = 0;
-> +
-> +	if (mips_cps_numiocu(0) != 0) {
-> +		/* Nothing special needs to be done to enable coherency */
-> +		pr_info("Coherence Manager IOCU detected\n");
-> +		/* Second IOCU for MPE or other master access register */
-> +		write_gcr_reg0_base(0xa0000000);
-> +		write_gcr_reg0_mask(0xf8000000 | CM_GCR_REGn_MASK_CMTGT_IOCU1);
-> +		supported = 1;
-> +	}
-> +
-> +	/* hw_coherentio = supported; */
-> +
-> +	return supported;
-> +}
-> +
-> +static void __init plat_setup_iocoherency(void)
-> +{
-> +#ifdef CONFIG_DMA_NONCOHERENT
-> +	/*
-> +	 * Kernel has been configured with software coherency
-> +	 * but we might choose to turn it off and use hardware
-> +	 * coherency instead.
-
-That sounds a big risky. Software coherency will I think perform cache
-line invalidation when syncing buffers from device to CPU (see
-__dma_sync_virtual), so that the underlying RAM written by the
-supposedly incoherent DMA is visible. If its coherent afterall then it
-may be sat in a dirty line in the cache, and not have been written back
-to RAM yet before it gets invalidated?
-
-> +	 */
-> +	if (plat_enable_iocoherency()) {
-> +		if (coherentio == IO_COHERENCE_DISABLED)
-> +			pr_info("Hardware DMA cache coherency disabled\n");
-> +		else
-> +			pr_info("Hardware DMA cache coherency enabled\n");
-> +	} else {
-> +		if (coherentio == IO_COHERENCE_ENABLED)
-> +			pr_info("Hardware DMA cache coherency unsupported, but enabled from command line!\n");
-> +		else
-> +			pr_info("Software DMA cache coherency enabled\n");
-> +	}
-> +#else
-> +	if (!plat_enable_iocoherency())
-> +		panic("Hardware DMA cache coherency not supported!");
-> +#endif
-> +}
+https://patchwork.kernel.org/patch/10391589/
 
 
-> +void __init device_tree_init(void)
-> +{
-> +	if (!initial_boot_params)
-> +		return;
+The v2 of this patch:
+https://patchwork.kernel.org/patch/10436007/
 
-Redundant check. unflatten_and_copy_device_tree() now handles that and
-emits a message.
+>=20
+> > +		backlight =3D <&backlight_lcd>;
+> > +		power-supply =3D <&reg_3v3>;
+> > +
+> > +		port {
+> > +			lcd_panel_in: endpoint {
+> > +				remote-endpoint =3D
+> > <&lcd_display_out>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	reg_backlight: regulator-backlight {
+> > +		compatible =3D "regulator-fixed";
+> > +		regulator-name =3D "backlight-supply";
+> > +		regulator-min-microvolt =3D <15000000>;
+> > +		regulator-max-microvolt =3D <15000000>;
+> > +		regulator-always-on;
+> > +	};
+> > +};
+> > +
+> > +&i2c3 {
+> > +	adc@48 {
+> > +		compatible =3D "ti,ads1015";
+> > +		reg =3D <0x48>;
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <0>;
+> > +
+> > +		channel@4 {
+> > +			reg =3D <4>;
+> > +			ti,gain =3D <2>;
+> > +			ti,datarate =3D <4>;
+> > +		};
+> > +
+> > +		channel@6 {
+> > +			reg =3D <6>;
+> > +			ti,gain =3D <2>;
+> > +			ti,datarate =3D <4>;
+> > +		};
+> > +	};
+> > +
+> > +	gpio_expander2@21 { =20
+>=20
+> Use hyphen instead of underscore in node name.
 
-> +
-> +	unflatten_and_copy_device_tree();
-> +}
-> +
-> +#define CPC_BASE_ADDR		0x12310000
+Ok. I will change this globally. And send v3.
 
-Please put this at the top of the file with other #defines.
+>=20
+> > +		compatible =3D "nxp,pcf8574";
+> > +		reg =3D <0x21>;
+> > +		interrupts =3D <109>;
+> > +		#gpio-cells =3D <2>;
+> > +		gpio-controller;
+> > +	};
+> > +};
+> > +
+> > +&iomuxc {
+> > +	imx53-kp-ddc {
+> > +		pinctrl_disp: dispgrp {
+> > +			fsl,pins =3D <
+> > +
+> > MX53_PAD_EIM_A16__IPU_DI1_DISP_CLK      0x4
+> > +
+> > MX53_PAD_EIM_DA10__IPU_DI1_PIN15        0x4
+> > +
+> > MX53_PAD_EIM_DA9__IPU_DISP1_DAT_0       0x4
+> > +
+> > MX53_PAD_EIM_DA8__IPU_DISP1_DAT_1       0x4
+> > +
+> > MX53_PAD_EIM_DA7__IPU_DISP1_DAT_2       0x4
+> > +
+> > MX53_PAD_EIM_DA6__IPU_DISP1_DAT_3       0x4
+> > +
+> > MX53_PAD_EIM_DA5__IPU_DISP1_DAT_4       0x4
+> > +
+> > MX53_PAD_EIM_DA4__IPU_DISP1_DAT_5       0x4
+> > +
+> > MX53_PAD_EIM_DA3__IPU_DISP1_DAT_6       0x4
+> > +
+> > MX53_PAD_EIM_DA2__IPU_DISP1_DAT_7       0x4
+> > +
+> > MX53_PAD_EIM_DA1__IPU_DISP1_DAT_8       0x4
+> > +
+> > MX53_PAD_EIM_DA0__IPU_DISP1_DAT_9       0x4
+> > +
+> > MX53_PAD_EIM_EB1__IPU_DISP1_DAT_10      0x4
+> > +
+> > MX53_PAD_EIM_EB0__IPU_DISP1_DAT_11      0x4
+> > +
+> > MX53_PAD_EIM_A17__IPU_DISP1_DAT_12      0x4
+> > +
+> > MX53_PAD_EIM_A18__IPU_DISP1_DAT_13      0x4
+> > +
+> > MX53_PAD_EIM_A19__IPU_DISP1_DAT_14      0x4
+> > +
+> > MX53_PAD_EIM_A20__IPU_DISP1_DAT_15      0x4
+> > +
+> > MX53_PAD_EIM_A21__IPU_DISP1_DAT_16      0x4
+> > +
+> > MX53_PAD_EIM_A22__IPU_DISP1_DAT_17      0x4
+> > +
+> > MX53_PAD_EIM_A23__IPU_DISP1_DAT_18      0x4
+> > +
+> > MX53_PAD_EIM_A24__IPU_DISP1_DAT_19      0x4
+> > +
+> > MX53_PAD_EIM_D31__IPU_DISP1_DAT_20      0x4
+> > +
+> > MX53_PAD_EIM_D30__IPU_DISP1_DAT_21      0x4
+> > +
+> > MX53_PAD_EIM_D26__IPU_DISP1_DAT_22      0x4
+> > +
+> > MX53_PAD_EIM_D27__IPU_DISP1_DAT_23      0x4
+> > +				MX53_PAD_GPIO_1__PWM2_PWMO 0x4
+> > +			>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&ipu_di1_disp1 {
+> > +	remote-endpoint =3D <&display1_in>;
+> > +};
+> > +
+> > +&fec {
+> > +	status =3D "okay";
+> > +}; =20
+>=20
+> Sort the labeled nodes alphabetically in label name.
+>=20
+> > +
+> > +&pmic {
+> > +	fsl,mc13xxx-uses-touch;
+> > +};
+> > diff --git a/arch/arm/boot/dts/imx53-kp-hsc.dts
+> > b/arch/arm/boot/dts/imx53-kp-hsc.dts new file mode 100644
+> > index 000000000000..d68cdd5da819
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx53-kp-hsc.dts
+> > @@ -0,0 +1,51 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright 2018
+> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "imx53-kp.dtsi"
+> > +
+> > +/ {
+> > +	model =3D "K+P imx53 HSC";
+> > +	compatible =3D "kiebackpeter,imx53-hsc", "fsl,imx53";
+> > +};
+> > +
+> > +&fec {
+> > +	status =3D "okay"; =20
+>=20
+> Have a newline between property list and child node.
+>=20
+> > +	fixed-link { /* RMII fixed link to LAN9303 */
+> > +		speed =3D <100>;
+> > +		full-duplex;
+> > +	};
+> > +};
+> > +
+> > +&i2c3 {
+> > +	switch: switch@a {
+> > +		compatible =3D "smsc,lan9303-i2c";
+> > +		reg =3D <0xa>;
+> > +		reset-gpios =3D <&gpio7 6 GPIO_ACTIVE_LOW>;
+> > +		reset-duration =3D <400>;
+> > +
+> > +		ports {
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > +
+> > +			port@0 { /* RMII fixed link to master */
+> > +				reg =3D <0>;
+> > +				label =3D "cpu";
+> > +				ethernet =3D <&fec>;
+> > +			};
+> > +
+> > +			port@1 { /* external port 1 */
+> > +				reg =3D <1>;
+> > +				label =3D "lan1";
+> > +			};
+> > +
+> > +			port@2 { /* external port 2 */
+> > +				reg =3D <2>;
+> > +				label =3D "lan2";
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > diff --git a/arch/arm/boot/dts/imx53-kp.dtsi
+> > b/arch/arm/boot/dts/imx53-kp.dtsi new file mode 100644
+> > index 000000000000..f87266843842
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx53-kp.dtsi
+> > @@ -0,0 +1,190 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright 2018
+> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "imx53-tqma53.dtsi"
+> > +#include <dt-bindings/input/input.h>
+> > +
+> > +/ {
+> > +	buzzer {
+> > +		compatible =3D "pwm-beeper";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_buzzer>;
+> > + =20
+>=20
+> Drop this newline.
+>=20
+> > +		pwms =3D <&pwm1 0 500000>;
+> > +	};
+> > +
+> > +	gpio_buttons { =20
+>=20
+> Use hyphen.
+>=20
+> > +		compatible =3D "gpio-keys";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_gpiobuttons>;
+> > +
+> > +		button_kalt { =20
+>=20
+> Ditto
+>=20
+> > +			label =3D "Kaltstart";
+> > +			linux,code =3D <KEY_F6>;
+> > +			gpios =3D <&gpio2 26 GPIO_ACTIVE_HIGH>;
+> > +		};
+> > +
+> > +		button_pwr { =20
+>=20
+> Ditto
+>=20
+> > +			label =3D "PowerFailInterrupt";
+> > +			linux,code =3D <KEY_F7>;
+> > +			gpios =3D <&gpio3 22 GPIO_ACTIVE_HIGH>;
+> > +		};
+> > +	};
+> > +
+> > +	leds {
+> > +		compatible =3D "gpio-leds";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_leds>;
+> > +
+> > +		led_bus { =20
+>=20
+> Ditto
+>=20
+> > +			label =3D "bus";
+> > +			gpios =3D <&gpio2 30 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger =3D "gpio";
+> > +			default-state =3D "off";
+> > +		};
+> > +
+> > +		led_error { =20
+>=20
+> Ditto
+>=20
+> > +			label =3D "error";
+> > +			gpios =3D <&gpio3 28 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger =3D "gpio";
+> > +			default-state =3D "off";
+> > +		};
+> > +
+> > +		led_flash { =20
+>=20
+> Ditto
+>=20
+> > +			label =3D "flash";
+> > +			gpios =3D <&gpio5 0 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger =3D "heartbeat";
+> > +		};
+> > +	};
+> > +
+> > +	reg_3v3: regulator-3v3 {
+> > +		compatible =3D "regulator-fixed";
+> > +		regulator-name =3D "3V3";
+> > +		regulator-min-microvolt =3D <3300000>;
+> > +		regulator-max-microvolt =3D <3300000>;
+> > +		regulator-always-on;
+> > +	};
+> > +};
+> > +
+> > +&can1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&can2 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&i2c3 {
+> > +	status =3D "okay";
+> > +
+> > +	gpio_expander1@22 { =20
+>=20
+> Ditto
+>=20
+> Shawn
+>=20
+> > +		compatible =3D "nxp,pcf8574";
+> > +		reg =3D <0x22>;
+> > +		interrupts =3D <109>;
+> > +		#gpio-cells =3D <2>;
+> > +		gpio-controller;
+> > +	};
+> > +
+> > +	rtc@51 {
+> > +		compatible =3D "nxp,pcf8563";
+> > +		reg =3D <0x51>;
+> > +	};
+> > +};
+> > +
+> > +&iomuxc {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_kp_common>;
+> > +
+> > +	imx53-kp-common {
+> > +		pinctrl_buzzer: buzzergrp {
+> > +			fsl,pins =3D <
+> > +				MX53_PAD_SD1_DATA3__PWM1_PWMO 0x1e4
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_gpiobuttons: gpiobuttonsgrp {
+> > +			fsl,pins =3D <
+> > +				MX53_PAD_EIM_RW__GPIO2_26 0x1e4
+> > +				MX53_PAD_EIM_D22__GPIO3_22 0x1e4
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_kp_common: kpcommongrp {
+> > +			fsl,pins =3D <
+> > +				MX53_PAD_EIM_CS0__GPIO2_23 0x1e4
+> > +				MX53_PAD_GPIO_19__GPIO4_5  0x1e4
+> > +				MX53_PAD_PATA_DATA6__GPIO2_6 0x1e4
+> > +				MX53_PAD_PATA_DATA7__GPIO2_7 0xe0
+> > +				MX53_PAD_CSI0_DAT14__GPIO6_0 0x1e4
+> > +				MX53_PAD_CSI0_DAT16__GPIO6_2 0x1e4
+> > +				MX53_PAD_CSI0_DAT18__GPIO6_4 0x1e4
+> > +				MX53_PAD_EIM_D17__GPIO3_17 0x1e4
+> > +				MX53_PAD_EIM_D18__GPIO3_18 0x1e4
+> > +				MX53_PAD_EIM_D21__GPIO3_21 0x1e4
+> > +				MX53_PAD_EIM_D29__GPIO3_29 0x1e4
+> > +				MX53_PAD_EIM_DA11__GPIO3_11 0x1e4
+> > +				MX53_PAD_EIM_DA13__GPIO3_13 0x1e4
+> > +				MX53_PAD_EIM_DA14__GPIO3_14 0x1e4
+> > +				MX53_PAD_SD1_DATA0__GPIO1_16 0x1e4
+> > +				MX53_PAD_SD1_CMD__GPIO1_18 0x1e4
+> > +				MX53_PAD_SD1_CLK__GPIO1_20 0x1e4
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_leds: ledgrp {
+> > +			fsl,pins =3D <
+> > +				MX53_PAD_EIM_EB2__GPIO2_30 0x1d4
+> > +				MX53_PAD_EIM_D28__GPIO3_28 0x1d4
+> > +				MX53_PAD_EIM_WAIT__GPIO5_0 0x1d4
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_uart4: uart4grp {
+> > +			fsl,pins =3D <
+> > +				MX53_PAD_CSI0_DAT12__UART4_TXD_MUX
+> > 0x1e4
+> > +				MX53_PAD_CSI0_DAT13__UART4_RXD_MUX
+> > 0x1e4
+> > +			>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&pinctrl_uart1 {
+> > +	fsl,pins =3D <
+> > +		MX53_PAD_EIM_D23__GPIO3_23 0x1e4
+> > +		MX53_PAD_EIM_EB3__GPIO2_31 0x1e4
+> > +		MX53_PAD_EIM_D24__GPIO3_24 0x1e4
+> > +		MX53_PAD_EIM_D25__GPIO3_25 0x1e4
+> > +		MX53_PAD_EIM_D19__GPIO3_19 0x1e4
+> > +		MX53_PAD_EIM_D20__GPIO3_20 0x1e4
+> > +	>;
+> > +};
+> > +
+> > +&uart1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&uart2 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&uart3 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&uart4 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_uart4>;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&usbh1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&usbphy0 {
+> > +	status =3D "disabled";
+> > +};
+> > --=20
+> > 2.11.0
+> >  =20
 
-> +
-> +phys_addr_t mips_cpc_default_phys_base(void)
-> +{
-> +	return CPC_BASE_ADDR;
-> +}
 
-> diff --git a/arch/mips/intel-mips/time.c b/arch/mips/intel-mips/time.c
-> new file mode 100644
-> index 000000000000..77ad4014fe9d
-> --- /dev/null
-> +++ b/arch/mips/intel-mips/time.c
-> @@ -0,0 +1,56 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2016 Intel Corporation.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/of.h>
-> +
-> +#include <asm/time.h>
-> +
-> +static inline u32 get_counter_resolution(void)
-> +{
-> +	u32 res;
-> +
-> +	__asm__ __volatile__(".set	push\n"
 
-Preferably each line of asm should end \n\t and the final line doesn't
-need \n or \t. Look at the .s compiler output to see the difference.
 
-> +			     ".set	mips32r2\n"
-> +			     "rdhwr	%0, $3\n"
+Best regards,
 
-Hmm, it'd be nice to abstract this in mipsregs.h, but that can always
-wait. You could use MIPS_HWR_CCRES though (i.e. off top of my head
-something like "%0, $%1\n" and have a "i" (MIPS_HWR_CCRES) input.
+Lukasz Majewski
 
-> +			     ".set pop\n"
-> +			     : "=&r" (res)
+--
 
-I don't think you strictly need an early clobber there since there are
-no register inputs, "=r" should do fine.
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
 
-> +			     : /* no input */
-> +			     : "memory");
-
-I don't think that operation clobbers any memory?
-
-Thanks
-James
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/LBm94ZtV.5QfxqQaGW3nOfC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYIAB0WIQS7lRNBWUYtqfDOVL41zuSGKxAj8gUCWx+tQQAKCRA1zuSGKxAj
-8mCmAP0YcFeLhdWqRmrKx1Kj4nfiSw+n/mHL8icm7Xm3VueBfQD7Biu4QqJeSQjd
-BFlbigIdSVe9+Xuw1j0TVLxMMvws7Q4=
-=Em5k
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlsfrkkACgkQAR8vZIA0
+zr22pAgAuUDnodR569siVph07sJVwy70lE3vPZtmSFPZ8Dh4HTtWkd/R4WIyd+9Q
+KsMbLtsFeIQk7Yg7iyx6JHYiOIemoHqNLDQC7DUwnJZcesBktrv2rDT8y2XRvtQB
+EZg2OAsDr2wPMKZ0tp/TeFAnwu93pz0Azzv+DAe9GI4hYNAsxr/6VBa0sVqe8puq
+p2KV3lEpbPu3C2n3V7XA2qZ4RyMyYfQ5/MvBuQvkRWokG/ayilTJdvoB4kt6zl+H
+Phl2mqZND42X3Pzbwc5FtoYJOtFPEdbX606AgfPGaLbILfu+zdBDcSWAQrQJ9woC
+h5Xp2+qSS9wrjD9Jp4as5MMaXARNrw==
+=62ik
 -----END PGP SIGNATURE-----
 
---J2SCkAp4GZ/dPZZf--
+--Sig_/LBm94ZtV.5QfxqQaGW3nOfC--
