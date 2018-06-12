@@ -1,152 +1,100 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH 2/6] PCI: iproc: Add INTx support with better modeling
-Date: Tue, 12 Jun 2018 10:06:34 -0700
-Message-ID: <89adfced-75d6-9ad2-0a39-1fbdf9a33cb0@broadcom.com>
-References: <1527631130-20045-1-git-send-email-ray.jui@broadcom.com>
- <1527631130-20045-3-git-send-email-ray.jui@broadcom.com>
- <3ecc33ebe3db1f010f5c8938dfb87677@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Subject: [PATCH v7 0/4] Introduce GENI SE Controller Driver
+Date: Tue, 12 Jun 2018 11:09:04 -0600
+Message-ID: <1528823348-30532-1-git-send-email-kramasub@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3ecc33ebe3db1f010f5c8938dfb87677@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: poza@codeaurora.org
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+Generic Interface (GENI) firmware based Qualcomm Universal Peripheral (QUP)
+Wrapper is a next generation programmable module for supporting a wide
+range of serial interfaces like UART, SPI, I2C, I3C, etc. A single QUP
+module can provide upto 8 Serial Interfaces using its internal Serial
+Engines (SE). The protocol supported by each interface is determined by
+the firmware loaded to the Serial Engine.
 
+This patch series introduces GENI SE Driver to manage the GENI based QUP
+Wrapper and the common aspects of all SEs inside the QUP Wrapper. This
+patch series also introduces the UART and I2C Controller drivers to
+drive the SEs that are programmed with the respective protocols.
 
-On 6/12/2018 1:52 AM, poza@codeaurora.org wrote:
-> On 2018-05-30 03:28, Ray Jui wrote:
->> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
->> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
->> INTD share the same interrupt line connected to the GIC in the system,
->> while the status of each INTx can be obtained through the INTX CSR
->> register
->>
->> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
->> ---
->>  drivers/pci/host/pcie-iproc-platform.c |  2 +
->>  drivers/pci/host/pcie-iproc.c          | 95 
->> +++++++++++++++++++++++++++++++++-
->>  drivers/pci/host/pcie-iproc.h          |  6 +++
->>  3 files changed, 101 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/host/pcie-iproc-platform.c
->> b/drivers/pci/host/pcie-iproc-platform.c
->> index e764a2a..7a51e6c 100644
->> --- a/drivers/pci/host/pcie-iproc-platform.c
->> +++ b/drivers/pci/host/pcie-iproc-platform.c
->> @@ -70,6 +70,8 @@ static int iproc_pcie_pltfm_probe(struct
->> platform_device *pdev)
->>      }
->>      pcie->base_addr = reg.start;
->>
->> +    pcie->irq = platform_get_irq(pdev, 0);
->> +
->>      if (of_property_read_bool(np, "brcm,pcie-ob")) {
->>          u32 val;
->>
->> diff --git a/drivers/pci/host/pcie-iproc.c 
->> b/drivers/pci/host/pcie-iproc.c
->> index 14f374d..0bd2c14 100644
->> --- a/drivers/pci/host/pcie-iproc.c
->> +++ b/drivers/pci/host/pcie-iproc.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/delay.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/irqchip/arm-gic-v3.h>
->> +#include <linux/irqchip/chained_irq.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_pci.h>
->> @@ -264,6 +265,7 @@ enum iproc_pcie_reg {
->>
->>      /* enable INTx */
->>      IPROC_PCIE_INTX_EN,
->> +    IPROC_PCIE_INTX_CSR,
->>
->>      /* outbound address mapping */
->>      IPROC_PCIE_OARR0,
->> @@ -305,6 +307,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
->>      [IPROC_PCIE_CFG_ADDR]        = 0x1f8,
->>      [IPROC_PCIE_CFG_DATA]        = 0x1fc,
->>      [IPROC_PCIE_INTX_EN]        = 0x330,
->> +    [IPROC_PCIE_INTX_CSR]        = 0x334,
->>      [IPROC_PCIE_LINK_STATUS]    = 0xf0c,
->>  };
->>
->> @@ -316,6 +319,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
->>      [IPROC_PCIE_CFG_ADDR]        = 0x1f8,
->>      [IPROC_PCIE_CFG_DATA]        = 0x1fc,
->>      [IPROC_PCIE_INTX_EN]        = 0x330,
->> +    [IPROC_PCIE_INTX_CSR]        = 0x334,
->>      [IPROC_PCIE_OARR0]        = 0xd20,
->>      [IPROC_PCIE_OMAP0]        = 0xd40,
->>      [IPROC_PCIE_OARR1]        = 0xd28,
->> @@ -332,6 +336,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
->>      [IPROC_PCIE_CFG_ADDR]        = 0x1f8,
->>      [IPROC_PCIE_CFG_DATA]        = 0x1fc,
->>      [IPROC_PCIE_INTX_EN]        = 0x330,
->> +    [IPROC_PCIE_INTX_CSR]        = 0x334,
->>      [IPROC_PCIE_OARR0]        = 0xd20,
->>      [IPROC_PCIE_OMAP0]        = 0xd40,
->>      [IPROC_PCIE_OARR1]        = 0xd28,
->> @@ -782,9 +787,90 @@ static int iproc_pcie_check_link(struct 
->> iproc_pcie *pcie)
->>      return link_is_active ? 0 : -ENODEV;
->>  }
->>
->> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
->> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned 
->> int irq,
->> +                   irq_hw_number_t hwirq)
->>  {
->> +    irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
->> +    irq_set_chip_data(irq, domain->host_data);
->> +
->> +    return 0;
->> +}
->> +
->> +static const struct irq_domain_ops intx_domain_ops = {
->> +    .map = iproc_pcie_intx_map,
->> +};
->> +
->> +static void iproc_pcie_isr(struct irq_desc *desc)
->> +{
->> +    struct irq_chip *chip = irq_desc_get_chip(desc);
->> +    struct iproc_pcie *pcie;
->> +    struct device *dev;
->> +    unsigned long status;
->> +    u32 bit, virq;
->> +
->> +    chained_irq_enter(chip, desc);
->> +    pcie = irq_desc_get_handler_data(desc);
->> +    dev = pcie->dev;
->> +
->> +    /* go through INTx A, B, C, D until all interrupts are handled */
->> +    while ((status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR) &
->> +        SYS_RC_INTX_MASK) != 0) {
->> +        for_each_set_bit(bit, &status, PCI_NUM_INTX) {
->> +            virq = irq_find_mapping(pcie->irq_domain, bit + 1);
->> +            if (virq)
->> +                generic_handle_irq(virq);
->> +            else
->> +                dev_err(dev, "unexpected INTx%u\n", bit);
->> +        }
->> +    }
->> +
-> 
-> Are these level or edge interrupts ? although I see DT says: IRQ_TYPE_NONE
+[v7]
+ * Return appropriate error codes as idenitified in i2c fault-codes
+ * Add Maintainer details for I2C controller driver
+ * Fix an incorrect conditional check in DMA mode
+ * Drop the patches in the series that got accepted
 
-DT entries should be fixed to trigger on level HIGH like Florian and I 
-discussed on the mailing list yesterday. It looks like you are missing a 
-lot of discussions on the mailing list. Could you please help to make 
-sure you read all the existing discussions when commenting on a patch?
+[v6]
+ * Move the I2C clock-frequency configuration to the SDM845 board file
+ * Remove a redundant comment in the I2C driver
 
-> do you not need to clear interrupt status bits in IPROC_PCIE_INTX_CSR ?
-> 
+[v5]
+ * Remove Linux specific property from the device tree binding
+ * Clarify I2C SCL time period documentation
+ * Remove redundant checks in I2C controller driver during timeout
+ * Use 100kHz as the default clock frequency in the I2C controller driver
+ * Disable Wrapper controller by default in the SDM845 device tree and
+   enable it explicitly for SDM845 MTP
+ * Specify I2C clock frequency in the SDM845 device tree
+ * Remove bias configuration for I2C pins under sleep state in device tree
+ * Drop the serial driver from the patch series since it is merged
+ * Specify the UART port options in the SDM845 device tree
 
-RO
+[v4]
+ * Add SPI controller information in device tree binding
+ * Add support for debug UART & I2C controllers in SDM845 device tree
+ * Remove any unnecessary parenthesis & casting
+ * Identify break character in UART line and pass it to the framework
+ * Transmit data from fault handler reliably in debug UART
+ * Map the register block when the UART port is requested
+ * Move concise exported functions as macros or inlines in public header
+ * Move the clock performance table from the wrapper to serial engines
+ * Add a lock to synchronize between IRQ & error handling in I2C controller
+ * Remove any compiler optimization hints like likely/unlikely
+ * Update documentation to clarify tables and hardware blocks
+
+[v3]
+ * Update the driver dependencies
+ * Use the SPDX License Expression
+ * Squash all the controller device tree bindings together
+ * Use kernel doc format for documentation
+ * Add additional documentation for packing configuration
+ * Use clk_bulk_* API for related clocks
+ * Remove driver references to pinctrl and their states
+ * Replace magic numbers with appropriate macros
+ * Update memory barrier usage and associated comments
+ * Reduce interlacing of register reads/writes
+ * Fix poll_get_char() operation in console UART driver under polling mode
+ * Address other comments from Bjorn Andersson to improve code readability
+
+[v2]
+ * Updated device tree bindings to describe the hardware
+ * Updated SE DT node as child node of QUP Wrapper DT node
+ * Moved common AHB clocks to QUP Wrapper DT node
+ * Use the standard "clock-frequency" I2C property
+ * Update compatible field in UART Controller to reflect hardware manual
+ * Addressed other device tree binding specific comments from Rob Herring
+
+Karthikeyan Ramasubramanian (3):
+  i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C
+    controller
+  MAINTAINERS: Add Qualcomm Generic Interface I2C driver maintainer
+  arm64: dts: sdm845: Add support for an instance of I2C controller
+
+Rajendra Nayak (1):
+  arm64: dts: sdm845: Add serial console support
+
+ MAINTAINERS                             |   8 +
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  60 +++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi    |  67 ++++
+ drivers/i2c/busses/Kconfig              |  13 +
+ drivers/i2c/busses/Makefile             |   1 +
+ drivers/i2c/busses/i2c-qcom-geni.c      | 649 ++++++++++++++++++++++++++++++++
+ 6 files changed, 798 insertions(+)
+ create mode 100644 drivers/i2c/busses/i2c-qcom-geni.c
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
