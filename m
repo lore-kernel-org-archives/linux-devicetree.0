@@ -1,26 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add gpio interrupt bindings
- for Actions S900 SoC
-Date: Tue, 12 Jun 2018 14:58:06 -0600
-Message-ID: <20180612205806.GA11511@rob-hp-laptop>
-References: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org>
- <20180602165415.30956-2-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: Introduce QCOM Display clock
+ bindings
+Date: Tue, 12 Jun 2018 14:59:07 -0600
+Message-ID: <20180612205907.GA12993@rob-hp-laptop>
+References: <1528098985-3676-1-git-send-email-tdas@codeaurora.org>
+ <1528098985-3676-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180602165415.30956-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1528098985-3676-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linus.walleij@linaro.org, afaerber@suse.de, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
+To: Taniya Das <tdas@codeaurora.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 02, 2018 at 10:24:13PM +0530, Manivannan Sadhasivam wrote:
-> Add gpio interrupt bindings for Actions Semi S900 SoC.
+On Mon, Jun 04, 2018 at 01:26:24PM +0530, Taniya Das wrote:
+> Add device tree bindings for display clock controller for Qualcomm
+> Technology Inc's SoCs.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
->  .../bindings/pinctrl/actions,s900-pinctrl.txt          | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  .../devicetree/bindings/clock/qcom,dispcc.txt      | 19 +++++++++
+>  include/dt-bindings/clock/qcom,dispcc-sdm845.h     | 45 ++++++++++++++++++++++
+>  2 files changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,dispcc.txt
+>  create mode 100644 include/dt-bindings/clock/qcom,dispcc-sdm845.h
 
 Reviewed-by: Rob Herring <robh@kernel.org>
