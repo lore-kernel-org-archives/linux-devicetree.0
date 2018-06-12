@@ -1,392 +1,129 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 2/7] soc: qcom: rpmpd: Add a Power domain driver to model corners
-Date: Tue, 12 Jun 2018 10:10:47 +0530
-Message-ID: <20180612044052.4402-3-rnayak@codeaurora.org>
-References: <20180612044052.4402-1-rnayak@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612044052.4402-1-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] resource: Use list_head to link sibling resource
+Date: Tue, 12 Jun 2018 12:49:55 +0800
+Message-ID: <201806121251.hDRqpKgN%fengguang.wu@intel.com>
+References: <20180612032831.29747-3-bhe@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180612032831.29747-3-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWMP3drIcvDWNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Power domains for corners just pass the performance state set by the
-consumers to the RPM (Remote Power manager) which then takes care
-of setting the appropriate voltage on the corresponding rails to
-meet the performance needs.
+Hi Baoquan,
 
-We add all Power domain data needed on msm8996 here. This driver can easily
-be extended by adding data for other qualcomm SoCs as well.
+I love your patch! Perhaps something to improve:
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.17 next-20180608]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180612-113600
+config: x86_64-randconfig-x011-201823 (attached as .config)
+compiler: gcc-7 (Debian 7.3.0-16) 7.3.0
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=x86_64 
+
+All warnings (new ones prefixed by >>):
+
+   kernel/resource.c: In function 'reparent_resources':
+   kernel/resource.c:1005:26: error: passing argument 2 of 'list_add' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     list_add(&res->sibling, &p->sibling.prev);
+                             ^
+   In file included from include/linux/ioport.h:15:0,
+                    from kernel/resource.c:14:
+   include/linux/list.h:77:20: note: expected 'struct list_head *' but argument is of type 'struct list_head **'
+    static inline void list_add(struct list_head *new, struct list_head *head)
+                       ^~~~~~~~
+   In file included from include/linux/list.h:9:0,
+                    from include/linux/ioport.h:15,
+                    from kernel/resource.c:14:
+   kernel/resource.c:1013:26: error: 'new' undeclared (first use in this function); did you mean 'net'?
+     list_for_each_entry(p, &new->child, sibling) {
+                             ^
+   include/linux/kernel.h:963:26: note: in definition of macro 'container_of'
+     void *__mptr = (void *)(ptr);     \
+                             ^~~
+   include/linux/list.h:377:2: note: in expansion of macro 'list_entry'
+     list_entry((ptr)->next, type, member)
+     ^~~~~~~~~~
+   include/linux/list.h:464:13: note: in expansion of macro 'list_first_entry'
+     for (pos = list_first_entry(head, typeof(*pos), member); \
+                ^~~~~~~~~~~~~~~~
+>> kernel/resource.c:1013:2: note: in expansion of macro 'list_for_each_entry'
+     list_for_each_entry(p, &new->child, sibling) {
+     ^~~~~~~~~~~~~~~~~~~
+   kernel/resource.c:1013:26: note: each undeclared identifier is reported only once for each function it appears in
+     list_for_each_entry(p, &new->child, sibling) {
+                             ^
+   include/linux/kernel.h:963:26: note: in definition of macro 'container_of'
+     void *__mptr = (void *)(ptr);     \
+                             ^~~
+   include/linux/list.h:377:2: note: in expansion of macro 'list_entry'
+     list_entry((ptr)->next, type, member)
+     ^~~~~~~~~~
+   include/linux/list.h:464:13: note: in expansion of macro 'list_first_entry'
+     for (pos = list_first_entry(head, typeof(*pos), member); \
+                ^~~~~~~~~~~~~~~~
+>> kernel/resource.c:1013:2: note: in expansion of macro 'list_for_each_entry'
+     list_for_each_entry(p, &new->child, sibling) {
+     ^~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+vim +/list_for_each_entry +1013 kernel/resource.c
+
+   983	
+   984	/*
+   985	 * Reparent resource children of pr that conflict with res
+   986	 * under res, and make res replace those children.
+   987	 */
+   988	int reparent_resources(struct resource *parent, struct resource *res)
+   989	{
+   990		struct resource *p, *first = NULL;
+   991	
+   992		list_for_each_entry(p, &parent->child, sibling) {
+   993			if (p->end < res->start)
+   994				continue;
+   995			if (res->end < p->start)
+   996				break;
+   997			if (p->start < res->start || p->end > res->end)
+   998				return -1;	/* not completely contained */
+   999			if (first == NULL)
+  1000				first = p;
+  1001		}
+  1002		if (first == NULL)
+  1003			return -1;	/* didn't find any conflicting entries? */
+  1004		res->parent = parent;
+  1005		list_add(&res->sibling, &p->sibling.prev);
+  1006		INIT_LIST_HEAD(&res->child);
+  1007	
+  1008		/*
+  1009		 * From first to p's previous sibling, they all fall into
+  1010		 * res's region, change them as res's children.
+  1011		 */
+  1012		list_cut_position(&res->child, first->sibling.prev, res->sibling.prev);
+> 1013		list_for_each_entry(p, &new->child, sibling) {
+  1014	                p->parent = new;
+  1015			pr_debug("PCI: Reparented %s %pR under %s\n",
+  1016				 p->name, p, res->name);
+  1017		}
+  1018		return 0;
+  1019	}
+  1020	EXPORT_SYMBOL(reparent_resources);
+  1021	
+
 ---
- drivers/soc/qcom/Kconfig               |   9 +
- drivers/soc/qcom/Makefile              |   1 +
- drivers/soc/qcom/rpmpd.c               | 301 +++++++++++++++++++++++++
- include/dt-bindings/power/qcom-rpmpd.h |  16 ++
- 4 files changed, 327 insertions(+)
- create mode 100644 drivers/soc/qcom/rpmpd.c
- create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
-
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 9dc02f390ba3..5c54931a7b99 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -74,6 +74,15 @@ config QCOM_RMTFS_MEM
- 
- 	  Say y here if you intend to boot the modem remoteproc.
- 
-+config QCOM_RPMPD
-+	tristate "Qualcomm RPM Power domain driver"
-+	depends on MFD_QCOM_RPM && QCOM_SMD_RPM
-+	help
-+	  QCOM RPM Power domain driver to support power-domains with
-+	  performance states. The driver communicates a performance state
-+	  value to RPM which then translates it into corresponding voltage
-+	  for the voltage rail.
-+
- config QCOM_SMEM
- 	tristate "Qualcomm Shared Memory Manager (SMEM)"
- 	depends on ARCH_QCOM
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index 19dcf957cb3a..9550c170de93 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
- obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
- obj-$(CONFIG_QCOM_APR) += apr.o
-+obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
-diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
-new file mode 100644
-index 000000000000..c5e7a91f278c
---- /dev/null
-+++ b/drivers/soc/qcom/rpmpd.c
-@@ -0,0 +1,301 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2017-2018, The Linux Foundation. All rights reserved. */
-+
-+#include <linux/err.h>
-+#include <linux/export.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pm_domain.h>
-+#include <linux/mfd/qcom_rpm.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/soc/qcom/smd-rpm.h>
-+
-+#include <dt-bindings/mfd/qcom-rpm.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
-+
-+#define domain_to_rpmpd(domain) container_of(domain, struct rpmpd, pd)
-+
-+/* Resource types */
-+#define RPMPD_SMPA 0x61706d73
-+#define RPMPD_LDOA 0x616f646c
-+
-+/* Operation Keys */
-+#define KEY_CORNER		0x6e726f63 /* corn */
-+#define KEY_ENABLE		0x6e657773 /* swen */
-+#define KEY_FLOOR_CORNER	0x636676   /* vfc */
-+
-+#define DEFINE_RPMPD_CORN_SMPA(_platform, _name, _active, r_id)		\
-+	static struct rpmpd _platform##_##_active;			\
-+	static struct rpmpd _platform##_##_name = {			\
-+		.pd = {	.name = #_name,	},				\
-+		.peer = &_platform##_##_active,				\
-+		.res_type = RPMPD_SMPA,					\
-+		.res_id = r_id,						\
-+		.key = KEY_CORNER,					\
-+	};								\
-+	static struct rpmpd _platform##_##_active = {			\
-+		.pd = { .name = #_active, },				\
-+		.peer = &_platform##_##_name,				\
-+		.active_only = true,					\
-+		.res_type = RPMPD_SMPA,					\
-+		.res_id = r_id,						\
-+		.key = KEY_CORNER,					\
-+	}
-+
-+#define DEFINE_RPMPD_CORN_LDOA(_platform, _name, r_id)			\
-+	static struct rpmpd _platform##_##_name = {			\
-+		.pd = { .name = #_name, },				\
-+		.res_type = RPMPD_LDOA,					\
-+		.res_id = r_id,						\
-+		.key = KEY_CORNER,					\
-+	}
-+
-+#define DEFINE_RPMPD_VFC(_platform, _name, r_id, r_type)		\
-+	static struct rpmpd _platform##_##_name = {			\
-+		.pd = { .name = #_name, },				\
-+		.res_type = r_type,					\
-+		.res_id = r_id,						\
-+		.key = KEY_FLOOR_CORNER,				\
-+	}
-+
-+#define DEFINE_RPMPD_VFC_SMPA(_platform, _name, r_id)			\
-+	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_SMPA)
-+
-+#define DEFINE_RPMPD_VFC_LDOA(_platform, _name, r_id)			\
-+	DEFINE_RPMPD_VFC(_platform, _name, r_id, RPMPD_LDOA)
-+
-+struct rpmpd_req {
-+	__le32 key;
-+	__le32 nbytes;
-+	__le32 value;
-+};
-+
-+struct rpmpd {
-+	struct generic_pm_domain pd;
-+	struct rpmpd *peer;
-+	const bool active_only;
-+	unsigned int corner;
-+	bool enabled;
-+	const char *res_name;
-+	const int res_type;
-+	const int res_id;
-+	struct qcom_smd_rpm *rpm;
-+	__le32 key;
-+};
-+
-+struct rpmpd_desc {
-+	struct rpmpd **rpmpds;
-+	size_t num_pds;
-+};
-+
-+static DEFINE_MUTEX(rpmpd_lock);
-+
-+/* msm8996 RPM Power domains */
-+DEFINE_RPMPD_CORN_SMPA(msm8996, vddcx, vddcx_ao, 1);
-+DEFINE_RPMPD_CORN_SMPA(msm8996, vddmx, vddmx_ao, 2);
-+DEFINE_RPMPD_CORN_LDOA(msm8996, vddsscx, 26);
-+
-+DEFINE_RPMPD_VFC_SMPA(msm8996, vddcx_vfc, 1);
-+DEFINE_RPMPD_VFC_LDOA(msm8996, vddsscx_vfc, 26);
-+
-+static struct rpmpd *msm8996_rpmpds[] = {
-+	[MSM8996_VDDCX] =	&msm8996_vddcx,
-+	[MSM8996_VDDCX_AO] =	&msm8996_vddcx_ao,
-+	[MSM8996_VDDCX_VFC] =	&msm8996_vddcx_vfc,
-+	[MSM8996_VDDMX] =	&msm8996_vddmx,
-+	[MSM8996_VDDMX_AO] =	&msm8996_vddmx_ao,
-+	[MSM8996_VDDSSCX] =	&msm8996_vddsscx,
-+	[MSM8996_VDDSSCX_VFC] =	&msm8996_vddsscx_vfc,
-+};
-+
-+static const struct rpmpd_desc msm8996_desc = {
-+	.rpmpds = msm8996_rpmpds,
-+	.num_pds = ARRAY_SIZE(msm8996_rpmpds),
-+};
-+
-+static const struct of_device_id rpmpd_match_table[] = {
-+	{ .compatible = "qcom,msm8996-rpmpd", .data = &msm8996_desc },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rpmpd_match_table);
-+
-+static int rpmpd_send_enable(struct rpmpd *pd, bool enable)
-+{
-+	struct rpmpd_req req = {
-+		.key = KEY_ENABLE,
-+		.nbytes = cpu_to_le32(sizeof(u32)),
-+		.value = cpu_to_le32(enable),
-+	};
-+
-+	return qcom_rpm_smd_write(pd->rpm, QCOM_RPM_ACTIVE_STATE, pd->res_type,
-+				  pd->res_id, &req, sizeof(req));
-+}
-+
-+static int rpmpd_send_corner(struct rpmpd *pd, int state, unsigned int corner)
-+{
-+	struct rpmpd_req req = {
-+		.key = pd->key,
-+		.nbytes = cpu_to_le32(sizeof(u32)),
-+		.value = cpu_to_le32(corner),
-+	};
-+
-+	return qcom_rpm_smd_write(pd->rpm, state, pd->res_type, pd->res_id,
-+				  &req, sizeof(req));
-+};
-+
-+static void to_active_sleep(struct rpmpd *pd, unsigned int corner,
-+			    unsigned int *active, unsigned int *sleep)
-+{
-+	*active = corner;
-+
-+	if (pd->active_only)
-+		*sleep = 0;
-+	else
-+		*sleep = *active;
-+}
-+
-+static int rpmpd_aggregate_corner(struct rpmpd *pd)
-+{
-+	int ret;
-+	struct rpmpd *peer = pd->peer;
-+	unsigned int active_corner, sleep_corner;
-+	unsigned int this_active_corner = 0, this_sleep_corner = 0;
-+	unsigned int peer_active_corner = 0, peer_sleep_corner = 0;
-+
-+	to_active_sleep(pd, pd->corner, &this_active_corner, &this_sleep_corner);
-+
-+	if (peer && peer->enabled)
-+		to_active_sleep(peer, peer->corner, &peer_active_corner,
-+				&peer_sleep_corner);
-+
-+	active_corner = max(this_active_corner, peer_active_corner);
-+
-+	ret = rpmpd_send_corner(pd, QCOM_RPM_ACTIVE_STATE, active_corner);
-+	if (ret)
-+		return ret;
-+
-+	sleep_corner = max(this_sleep_corner, peer_sleep_corner);
-+
-+	return rpmpd_send_corner(pd, QCOM_RPM_SLEEP_STATE, sleep_corner);
-+}
-+
-+static int rpmpd_power_on(struct generic_pm_domain *domain)
-+{
-+	int ret;
-+	struct rpmpd *pd = domain_to_rpmpd(domain);
-+
-+	mutex_lock(&rpmpd_lock);
-+
-+	ret = rpmpd_send_enable(pd, true);
-+	if (ret)
-+		goto out;
-+
-+	pd->enabled = true;
-+
-+	if (pd->corner)
-+		ret = rpmpd_aggregate_corner(pd);
-+
-+out:
-+	mutex_unlock(&rpmpd_lock);
-+
-+	return ret;
-+}
-+
-+static int rpmpd_power_off(struct generic_pm_domain *domain)
-+{
-+	int ret;
-+	struct rpmpd *pd = domain_to_rpmpd(domain);
-+
-+	mutex_lock(&rpmpd_lock);
-+
-+	ret = rpmpd_send_enable(pd, false);
-+	if (!ret)
-+		pd->enabled = false;
-+
-+	mutex_unlock(&rpmpd_lock);
-+
-+	return ret;
-+}
-+
-+static int rpmpd_probe(struct platform_device *pdev)
-+{
-+	int i;
-+	size_t num;
-+	struct genpd_onecell_data *data;
-+	struct qcom_smd_rpm *rpm;
-+	struct rpmpd **rpmpds;
-+	const struct rpmpd_desc *desc;
-+
-+	rpm = dev_get_drvdata(pdev->dev.parent);
-+	if (!rpm) {
-+		dev_err(&pdev->dev, "Unable to retrieve handle to RPM\n");
-+		return -ENODEV;
-+	}
-+
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	rpmpds = desc->rpmpds;
-+	num = desc->num_pds;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
-+				     GFP_KERNEL);
-+	data->num_domains = num;
-+
-+	for (i = 0; i < num; i++) {
-+		if (!rpmpds[i]) {
-+			dev_warn(&pdev->dev, "rpmpds[] with empty entry at index=%d\n",
-+				 i);
-+			continue;
-+		}
-+
-+		rpmpds[i]->rpm = rpm;
-+		rpmpds[i]->pd.power_off = rpmpd_power_off;
-+		rpmpds[i]->pd.power_on = rpmpd_power_on;
-+		pm_genpd_init(&rpmpds[i]->pd, NULL, true);
-+
-+		data->domains[i] = &rpmpds[i]->pd;
-+	}
-+
-+	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
-+}
-+
-+static int rpmpd_remove(struct platform_device *pdev)
-+{
-+	of_genpd_del_provider(pdev->dev.of_node);
-+	return 0;
-+}
-+
-+static struct platform_driver rpmpd_driver = {
-+	.driver = {
-+		.name = "qcom-rpmpd",
-+		.of_match_table = rpmpd_match_table,
-+	},
-+	.probe = rpmpd_probe,
-+	.remove = rpmpd_remove,
-+};
-+
-+static int __init rpmpd_init(void)
-+{
-+	return platform_driver_register(&rpmpd_driver);
-+}
-+core_initcall(rpmpd_init);
-+
-+static void __exit rpmpd_exit(void)
-+{
-+	platform_driver_unregister(&rpmpd_driver);
-+}
-+module_exit(rpmpd_exit);
-+
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPM Power Domain Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:qcom-rpmpd");
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-new file mode 100644
-index 000000000000..59f47317b81f
---- /dev/null
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
-+
-+#ifndef _DT_BINDINGS_POWER_QCOM_RPMPD_H
-+#define _DT_BINDINGS_POWER_QCOM_RPMPD_H
-+
-+/* MSM8996 Power Domain Indexes */
-+#define MSM8996_VDDCX		0
-+#define MSM8996_VDDCX_AO	1
-+#define MSM8996_VDDCX_VFC	2
-+#define MSM8996_VDDMX		3
-+#define MSM8996_VDDMX_AO	4
-+#define MSM8996_VDDSSCX		5
-+#define MSM8996_VDDSSCX_VFC	6
-+
-+#endif
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
