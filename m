@@ -1,88 +1,110 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 10/11] dt-bindings: misc: add bindings for
- cros_ec_throttler
-Date: Tue, 12 Jun 2018 13:40:22 -0700
-Message-ID: <20180612204018.GB99983@rodete-desktop-imager.corp.google.com>
-References: <20180607181214.30338-1-mka@chromium.org>
- <20180607181214.30338-11-mka@chromium.org>
- <20180612191011.GA26266@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph
+ bindings
+Date: Tue, 12 Jun 2018 14:48:02 -0600
+Message-ID: <20180612204802.GA15817@rob-hp-laptop>
+References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+ <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180612191011.GA26266@rob-hp-laptop>
+In-Reply-To: <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, sudeep.holla@arm.com, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Jun 12, 2018 at 01:10:11PM -0600, Rob Herring wrote:
-> On Thu, Jun 07, 2018 at 11:12:13AM -0700, Matthias Kaehlcke wrote:
-> > The cros_ec_throttler monitors events from the Chrome OS Embedded
-> > Controller to throttle the system if needed, using the mechanisms
-> > provided by the throttler core.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > Changes in v2:
-> > - patch added to series
-> > 
-> >  Documentation/devicetree/bindings/misc/cros_ec_throttler.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt b/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> > new file mode 100644
-> > index 000000000000..7316dcc0ef75
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> > @@ -0,0 +1,4 @@
-> > +* cros_ec_throttler driver
+On Fri, Jun 01, 2018 at 02:16:05PM +0100, Suzuki K Poulose wrote:
+> The coresight drivers relied on default bindings for graph
+> in DT, while reusing the "reg" field of the "ports" to indicate
+> the actual hardware port number for the connections. However,
+> with the rules getting stricter w.r.t to the address mismatch
+> with the label, it is no longer possible to use the port address
+> field for the hardware port number. Hence, we add an explicit
+> property to denote the hardware port number, "coresight,hwid"
+> which must be specified for each "endpoint".
 > 
-> Bindings are for h/w, not drivers.
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  .../devicetree/bindings/arm/coresight.txt          | 26 +++++++++---
+>  drivers/hwtracing/coresight/of_coresight.c         | 46 ++++++++++++++++------
+>  2 files changed, 54 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index bd36e40..385581a 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -104,7 +104,11 @@ properties to uniquely identify the connection details.
+>  	"slave-mode"
+>  
+>   * Hardware Port number at the component:
+> -     -  The hardware port number is assumed to be the address of the "port" component.
+> +   - (Obsolete) The hardware port number is assumed to be the address of the "port" component.
+> +   - Each "endpoint" must define the hardware port of the local end of the
+> +     connection using the following property:
+> +	"coresight,hwid" - 32bit integer, hardware port number at the local end.
 
-(OK, sure, don't call this "driver". And maybe this could use some more
-description about what kind of events are emitted by this sort of
-device.)
+"coresight" is not a vendor and properties are in the form 
+[<vendor>,]<prop-name>.
 
-> I continue to fail to see why this needs to be in DT. There are other 
-> ways to instantiate drivers.
+> +
+>  
+>  
+>  Example:
+> @@ -120,6 +124,7 @@ Example:
+>  			etb_in_port: endpoint@0 {
 
-This is mostly relevant to:
-[PATCH v2 08/11] dt-bindings: PM / OPP: add opp-throttlers property
+There shouldn't be a unit address here because there is no reg property.
 
-so it's probably good to take a look at that one too.
+>  				slave-mode;
+>  				remote-endpoint = <&replicator_out_port0>;
+> +				coresight,hwid = <0>;
 
-The primary purpose is to have a target to point at when determining who
-is the source of throttling. This is similar to other CrOS EC subdevices
-(e.g., PWM) where we technically don't require a subnode (the EC
-firmware can its own PWM hardware without DT), but it is important that,
-e.g., a backlight device has something to point at when it's using a PWM
-attached to the EC. So we have a PWM subnode.
+It doesn't make sense for these to be in the endpoint. If you had 
+multiple endpoints, then you would have to duplicate it. "ports" are 
+a single data stream. "endpoints" are connections to that stream. So if 
+you have a muxed (input) or fanout/1-to-many (output) connection, then 
+you have multiple endpoints. 
 
-In this case, we're a little vague about what exactly the hardware is
-here, but there *is* hardware that's emitting "throttle" events (hint:
-here, it's related to sensing too high of system current). This is all
-abstracted by firmware, which simply tells us we need to scale back our
-power usage.
+The same applied to the slave-mode property, but that ship has sailed. 
+No reason to continue that though.
 
-So, what do you think of patch 8? Should OPPs have phandles to such a
-throttler? If so, should the phandle just point at the main EC device
-(see mfd/cros-ec.txt), or is it reasonable to have a subnode to
-represent something more specific?
+>  			};
+>  		};
+>  	};
+> @@ -134,6 +139,7 @@ Example:
+>  			tpiu_in_port: endpoint@0 {
+>  				slave-mode;
+>  				remote-endpoint = <&replicator_out_port1>;
+> +				coresight,hwid = <0>;
+>  			};
+>  		};
+>  	};
+> @@ -154,6 +160,7 @@ Example:
+>  				reg = <0>;
+>  				replicator_out_port0: endpoint {
+>  					remote-endpoint = <&etb_in_port>;
+> +					coresight,hwid = <0>;
+>  				};
+>  			};
+>  
+> @@ -161,15 +168,17 @@ Example:
+>  				reg = <1>;
+>  				replicator_out_port1: endpoint {
+>  					remote-endpoint = <&tpiu_in_port>;
+> +					coresight,hwid = <1>;
+>  				};
+>  			};
+>  
+>  			/* replicator input port */
+>  			port@2 {
+> -				reg = <0>;
+> +				reg = <1>;
 
-Or maybe this is entirely on the wrong track. But this is the resulting
-proposal after your comments on v1, so it's probably best we have a
-clearer overall review of what makes sense here, so we don't just go in
-cycles on new proposals that get rejected.
+This will still get flagged as an error. reg must be 2 here.
 
-Brian
-
-> > +
-> > +Required properties:
-> > +- compatible: "google,cros-ec-throttler"
-> > -- 
-> > 2.18.0.rc1.242.g61856ae69a-goog
-> > 
+Rob
