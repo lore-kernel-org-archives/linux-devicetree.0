@@ -1,129 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: document gpio-mt7621 bindings
-Date: Tue, 12 Jun 2018 14:56:38 -0600
-Message-ID: <20180612205638.GA2404@rob-hp-laptop>
-References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
- <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add gpio interrupt bindings
+ for Actions S900 SoC
+Date: Tue, 12 Jun 2018 14:58:06 -0600
+Message-ID: <20180612205806.GA11511@rob-hp-laptop>
+References: <20180602165415.30956-1-manivannan.sadhasivam@linaro.org>
+ <20180602165415.30956-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, driverdev-devel@linuxdriverproject.org, linux-gpio@vger.kernel.org, neil@brown.name
+In-Reply-To: <20180602165415.30956-2-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linus.walleij@linaro.org, afaerber@suse.de, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 02, 2018 at 09:30:10AM +0200, Sergio Paracuellos wrote:
-> Add a devicetree binding documentation for the mt7621 driver.
-
-Bindings are for h/w, not a driver.
-
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> Reviewed-by: NeilBrown <neil@brown.name>
-
-Space              ^
-
+On Sat, Jun 02, 2018 at 10:24:13PM +0530, Manivannan Sadhasivam wrote:
+> Add gpio interrupt bindings for Actions Semi S900 SoC.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  .../bindings/gpio/mediatek,mt7621-gpio.txt         | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> new file mode 100644
-> index 0000000..30d8a02
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> @@ -0,0 +1,68 @@
-> +Mediatek SoC GPIO controller bindings
-> +
-> +The IP core used inside these SoCs has 3 banks of 32 GPIOs each.
-> +The registers of all the banks are interwoven inside one single IO range.
-> +We load one GPIO controller instance per bank. To make this possible
-> +we support 2 types of nodes. The parent node defines the memory I/O range and
-> +has 3 children each describing a single bank. Also the GPIO controller can receive
-> +interrupts on any of the GPIOs, either edge or level. It then interrupts the CPU
-> +using GIC INT12.
-> +
-> +Required properties for the top level node:
-> +- compatible:
-> +  - "mediatek,mt7621-gpio" for Mediatek controllers
-> +- reg : Physical base address and length of the controller's registers
-> +- interrupt-parent : phandle of the parent interrupt controller.
-> +- interrupts : Interrupt specifier for the controllers interrupt.
-> +- interrupt-controller : Mark the device node as an interrupt controller.
-> +- #interrupt-cells : Should be 2. The first cell defines the interrupt number.
-> +   The second cell bits[3:0] is used to specify trigger type as follows:
-> +	- 1 = low-to-high edge triggered.
-> +	- 2 = high-to-low edge triggered.
-> +	- 4 = active high level-sensitive.
-> +	- 8 = active low level-sensitive.
+>  .../bindings/pinctrl/actions,s900-pinctrl.txt          | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 
-Just refer to the common definition.
-
-> +
-> +
-> +Required properties for the GPIO bank node:
-> +- compatible:
-> +  - "mediatek,mt7621-gpio-bank" for Mediatek banks
-> +- #gpio-cells : Should be two. The first cell is the GPIO pin number and the
-
-So interrupt numbers and gpio numbers are different? 0-95 and 3x 0-31
-
-That doesn't seem ideal.
-
-> +   second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
-> +   Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
-> +- gpio-controller : Marks the device node as a GPIO controller.
-> +- reg : The id of the bank that the node describes.
-
-I'd prefer to not have banks defined in DT. Do you have a variable 
-number or resources that are per bank? If not, then you don't need them.
-
-> +
-> +Example:
-> +	gpio@600 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		compatible = "mediatek,mt7621-gpio";
-> +		reg = <0x600 0x100>;
-> +
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SHARED 12 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +
-> +		gpio0: bank@0 {
-> +			reg = <0>;
-> +			compatible = "mediatek,mt7621-gpio-bank";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +		};
-> +
-> +		gpio1: bank@1 {
-> +			reg = <1>;
-> +			compatible = "mediatek,mt7621-gpio-bank";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +		};
-> +
-> +		gpio2: bank@2 {
-> +			reg = <2>;
-> +			compatible = "mediatek,mt7621-gpio-bank";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
