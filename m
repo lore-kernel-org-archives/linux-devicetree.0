@@ -1,149 +1,76 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v4 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Tue, 12 Jun 2018 10:27:34 +0200
-Message-ID: <20180612102734.0ea3bfa5@bbrezillon>
-References: <20180611205224.23340-1-stefan@agner.ch>
-        <20180611205224.23340-5-stefan@agner.ch>
-        <4258393.O1xtUOGbca@dimapc>
-        <cb6f2ef0a5a41e001a2019caa1a18c23@agner.ch>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] resource: Move reparent_resources() to
+ kernel/resource.c and make it public
+Date: Tue, 12 Jun 2018 11:29:00 +0300
+Message-ID: <CAHp75Vd6v4+RTq-5uw_BJpT6=w2KGjTfU+rEst6+8igs2cyntw@mail.gmail.com>
+References: <20180612032831.29747-1-bhe@redhat.com>
+ <20180612032831.29747-2-bhe@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cb6f2ef0a5a41e001a2019caa1a18c23@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20180612032831.29747-2-bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, KY Srinivasan <kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Hemminger <sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Patrik Jakobsson <patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tom Lendacky <thomas.lendacky-5C7GfCeVMHo@public.gmane.org>, Haiyang Zhang <haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1561eoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Jun 2018 10:06:42 +0200
-Stefan Agner <stefan@agner.ch> wrote:
+On Tue, Jun 12, 2018 at 6:28 AM, Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> reparent_resources() is duplicated in arch/microblaze/pci/pci-common.c
+> and arch/powerpc/kernel/pci-common.c, so move it to kernel/resource.c
+> so that it's shared. Later its code also need be updated using list_head
+> to replace singly linked list.
 
-> On 12.06.2018 02:03, Dmitry Osipenko wrote:
-> > On Monday, 11 June 2018 23:52:22 MSK Stefan Agner wrote:  
-> >> Add support for the NAND flash controller found on NVIDIA
-> >> Tegra 2 SoCs. This implementation does not make use of the
-> >> command queue feature. Regular operations/data transfers are
-> >> done in PIO mode. Page read/writes with hardware ECC make
-> >> use of the DMA for data transfer.
-> >>
-> >> Signed-off-by: Lucas Stach <dev@lynxeye.de>
-> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> >> ---
-> >>  MAINTAINERS                       |    7 +
-> >>  drivers/mtd/nand/raw/Kconfig      |    6 +
-> >>  drivers/mtd/nand/raw/Makefile     |    1 +
-> >>  drivers/mtd/nand/raw/tegra_nand.c | 1248 +++++++++++++++++++++++++++++
-> >>  4 files changed, 1262 insertions(+)
-> >>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
-> >>  
-> [snip]
-> >> +static int tegra_nand_cmd(struct nand_chip *chip,
-> >> +			 const struct nand_subop *subop)
-> >> +{
-> >> +	const struct nand_op_instr *instr;
-> >> +	const struct nand_op_instr *instr_data_in = NULL;
-> >> +	struct tegra_nand_controller *ctrl = to_tegra_ctrl(chip->controller);
-> >> +	unsigned int op_id, size = 0, offset = 0;
-> >> +	bool first_cmd = true;
-> >> +	u32 reg, cmd = 0;
-> >> +	int ret;
-> >> +
-> >> +	for (op_id = 0; op_id < subop->ninstrs; op_id++) {
-> >> +		unsigned int naddrs, i;
-> >> +		const u8 *addrs;
-> >> +		u32 addr1 = 0, addr2 = 0;
-> >> +
-> >> +		instr = &subop->instrs[op_id];
-> >> +
-> >> +		switch (instr->type) {
-> >> +		case NAND_OP_CMD_INSTR:
-> >> +			if (first_cmd) {
-> >> +				cmd |= COMMAND_CLE;
-> >> +				writel_relaxed(instr->ctx.cmd.opcode,
-> >> +					       ctrl->regs + CMD_REG1);
-> >> +			} else {
-> >> +				cmd |= COMMAND_SEC_CMD;
-> >> +				writel_relaxed(instr->ctx.cmd.opcode,
-> >> +					       ctrl->regs + CMD_REG2);
-> >> +			}
-> >> +			first_cmd = false;
-> >> +			break;
-> >> +		case NAND_OP_ADDR_INSTR:
-> >> +			offset = nand_subop_get_addr_start_off(subop, op_id);
-> >> +			naddrs = nand_subop_get_num_addr_cyc(subop, op_id);
-> >> +			addrs = &instr->ctx.addr.addrs[offset];
-> >> +
-> >> +			cmd |= COMMAND_ALE | COMMAND_ALE_SIZE(naddrs);
-> >> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
-> >> +				addr1 |= *addrs++ << (BITS_PER_BYTE * i);
-> >> +			naddrs -= i;
-> >> +			for (i = 0; i < min_t(unsigned int, 4, naddrs); i++)
-> >> +				addr2 |= *addrs++ << (BITS_PER_BYTE * i);
-> >> +			writel_relaxed(addr1, ctrl->regs + ADDR_REG1);
-> >> +			writel_relaxed(addr2, ctrl->regs + ADDR_REG2);
-> >> +			break;
-> >> +
-> >> +		case NAND_OP_DATA_IN_INSTR:
-> >> +			size = nand_subop_get_data_len(subop, op_id);
-> >> +			offset = nand_subop_get_data_start_off(subop, op_id);
-> >> +
-> >> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
-> >> +				COMMAND_RX | COMMAND_A_VALID;
-> >> +
-> >> +			instr_data_in = instr;
-> >> +			break;
-> >> +
-> >> +		case NAND_OP_DATA_OUT_INSTR:
-> >> +			size = nand_subop_get_data_len(subop, op_id);
-> >> +			offset = nand_subop_get_data_start_off(subop, op_id);
-> >> +
-> >> +			cmd |= COMMAND_TRANS_SIZE(size) | COMMAND_PIO |
-> >> +				COMMAND_TX | COMMAND_A_VALID;
-> >> +
-> >> +			memcpy(&reg, instr->ctx.data.buf.out + offset, size);
-> >> +			writel_relaxed(reg, ctrl->regs + RESP);
-> >> +
-> >> +			break;
-> >> +		case NAND_OP_WAITRDY_INSTR:
-> >> +			cmd |= COMMAND_RBSY_CHK;
-> >> +			break;
-> >> +
-> >> +		}
-> >> +	}
-> >> +
-> >> +	cmd |= COMMAND_GO | COMMAND_CE(ctrl->cur_cs);
-> >> +	writel_relaxed(cmd, ctrl->regs + COMMAND);
-> >> +	ret = wait_for_completion_io_timeout(&ctrl->command_complete,
-> >> +					     msecs_to_jiffies(500));  
-> > 
-> > It's not obvious to me whether _io_ variant is appropriate to use here, would 
-> > be nice if somebody could clarify that. Maybe block/ already does the IO 
-> > accounting itself and hence the IO time would be counted twice in that case.  
-> 
-> Good that you bring this up.
-> 
-> I don't think that there is any higher layer which could take care of
-> accounting. Usually, with raw nand there is no block layer involved
-> anyway.
-> 
-> In a quick test it seems that only when using wait_for_completion_io I/O
-> is properly accounted in the "wait" section of top.
-> 
-> So far only a single driver (omap2) used the _io variant, but I think it
-> is the right thing to do! After all, it is I/O...
-> 
-> Boris or any other MTD maintainer, any comment on this?
+While this is a good deduplication of the code, some requirements for
+public functions would be good to satisfy.
 
-Given this definition of io_schedule_timeout() [1] (which is used when
-you call wait_for_completion_io_timeout()), I'd say it's not useful to
-use the _io_ version, simply because MTD devs are not exposed as blk
-devices, and thus don't need the blk_schedule_flush_plug() that is done
-is io_schedule_prepare(). But that also means MTD I/Os are not
-accounted as I/Os :-(.
+> +/*
+> + * Reparent resource children of pr that conflict with res
+> + * under res, and make res replace those children.
+> + */
 
-Let's go for the non-io version for now, since all drivers except omap2
-seem to use this function.
+kernel doc format, though...
 
-[1]https://elixir.bootlin.com/linux/v4.17.1/source/kernel/sched/core.c#L5164
+> +static int reparent_resources(struct resource *parent,
+> +                                    struct resource *res)
+
+...is it really public with static keyword?!
+
+
+
+> +{
+
+> +       for (pp = &parent->child; (p = *pp) != NULL; pp = &p->sibling) {
+> +               if (p->end < res->start)
+> +                       continue;
+> +               if (res->end < p->start)
+> +                       break;
+
+> +               if (p->start < res->start || p->end > res->end)
+> +                       return -1;      /* not completely contained */
+
+Usually we are expecting real eeror codes.
+
+> +               if (firstpp == NULL)
+> +                       firstpp = pp;
+> +       }
+
+> +       if (firstpp == NULL)
+> +               return -1;      /* didn't find any conflicting entries? */
+
+Ditto.
+
+> +}
+> +EXPORT_SYMBOL(reparent_resources);
+
+-- 
+With Best Regards,
+Andy Shevchenko
