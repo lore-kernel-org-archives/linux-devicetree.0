@@ -1,26 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: clk: at91: Document all the PMC
- compatibles
-Date: Tue, 12 Jun 2018 15:54:22 -0600
-Message-ID: <20180612215422.GA7376@rob-hp-laptop>
-References: <20180607084107.4461-1-alexandre.belloni@bootlin.com>
- <20180607084107.4461-3-alexandre.belloni@bootlin.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 1/6] Documentation: arm: ti: Add bindings for AM654 SoC
+Date: Tue, 12 Jun 2018 17:01:25 -0500
+Message-ID: <20180612220125.3scgr6by62wifirp@kahuna>
+References: <20180605060125.9518-1-nm@ti.com> <20180605060125.9518-2-nm@ti.com>
+ <20180612210519.GA17653@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180607084107.4461-3-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180612210519.GA17653@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 07, 2018 at 10:41:05AM +0200, Alexandre Belloni wrote:
-> Add missing PMC compatibles to the list of available compatibles.
+On 21:05-20180612, Rob Herring wrote:
+> On Tue, Jun 05, 2018 at 01:01:20AM -0500, Nishanth Menon wrote:
+[...]
+> > +Boards based on K3 Multicore SoC architecture shall have the following property:
+> > +- compatible: Every hardware block introduced in K3 Multicore SoC
+> > +  architecture shall be of the form:
+> > +  "ti,XXX-YYY", where:
+> > +     'XXX' represents the specific SoC part for which the support is added.
+> > +     'YYY' represents the corresponding peripheral in SoC being supported.
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/clock/at91-clock.txt | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+> No need to explain standard DT convention here. (But I don't think we 
+> have this convention documented anywhere, so patches welcome. :))
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks. Will drop off from my series (will skip the generic dts
+convention for now ;) ).
+-- 
+Regards,
+Nishanth Menon
