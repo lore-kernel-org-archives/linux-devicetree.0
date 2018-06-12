@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 25/27] drm/sun4i: DW HDMI: Expand algorithm
- for possible crtcs
-Date: Tue, 12 Jun 2018 22:00:34 +0200
-Message-ID: <20180612200036.21483-26-jernej.skrabec@siol.net>
+Subject: [PATCH v2 27/27] ARM: dts: sun8i: r40: Enable HDMI
+ output on BananaPi M2 Ultra
+Date: Tue, 12 Jun 2018 22:00:36 +0200
+Message-ID: <20180612200036.21483-28-jernej.skrabec@siol.net>
 References: <20180612200036.21483-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB3ONQDMQKGQE4JEXDXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB4WNQDMQKGQEK2SHUEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180612200036.21483-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,87 +20,90 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-drm_of_find_possible_crtcs() doesn't work when DW HDMI encoder is
-connected to TCON (crtc) through mux in TCON TOP.
-
-In that case TCON TOP HDMI mux input port has to be manually traversed
-and checked if it matches any known crtc.
+Since HDMI can be considered as main output, most capable mixer is
+connected to it (mixer0).
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 46 ++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 9f40a44b456b..d443886e055b 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -12,6 +12,7 @@
- #include <drm/drm_crtc_helper.h>
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 27d9ccd0ef2f..0ebc2f9a980e 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -58,6 +58,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- #include "sun8i_dw_hdmi.h"
-+#include "sun8i_tcon_top.h"
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
  
- static void sun8i_dw_hdmi_encoder_mode_set(struct drm_encoder *encoder,
- 					   struct drm_display_mode *mode,
-@@ -41,6 +42,48 @@ sun8i_dw_hdmi_mode_valid(struct drm_connector *connector,
- 	return MODE_OK;
- }
+@@ -93,6 +104,10 @@
+ 	};
+ };
  
-+static bool sun8i_dw_hdmi_node_is_tcon_top(struct device_node *node)
-+{
-+	return !!of_match_node(sun8i_tcon_top_of_table, node);
-+}
++&de {
++	status = "okay";
++};
 +
-+static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
-+					     struct device_node *node)
-+{
-+	struct device_node *port, *ep, *remote, *remote_port;
-+	u32 crtcs = 0;
-+
-+	port = of_graph_get_port_by_id(node, 0);
-+	if (!port)
-+		return 0;
-+
-+	ep = of_get_next_available_child(port, NULL);
-+	if (!ep)
-+		return 0;
-+
-+	remote = of_graph_get_remote_port_parent(ep);
-+	if (!remote)
-+		return 0;
-+
-+	if (sun8i_dw_hdmi_node_is_tcon_top(remote)) {
-+		port = of_graph_get_port_by_id(remote, 4);
-+		if (!port)
-+			return 0;
-+
-+		for_each_child_of_node(port, ep) {
-+			remote_port = of_graph_get_remote_port(ep);
-+			if (remote_port) {
-+				crtcs |= drm_crtc_port_mask(drm, remote_port);
-+				of_node_put(remote_port);
-+			}
-+		}
-+	} else {
-+		crtcs = drm_of_find_possible_crtcs(drm, node);
-+	}
-+
-+	return crtcs;
-+}
-+
- static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
-@@ -63,7 +106,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	hdmi->dev = &pdev->dev;
- 	encoder = &hdmi->encoder;
+ &ehci1 {
+ 	status = "okay";
+ };
+@@ -101,6 +116,16 @@
+ 	status = "okay";
+ };
  
--	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-+	encoder->possible_crtcs =
-+		sun8i_dw_hdmi_find_possible_crtcs(drm, dev->of_node);
- 	/*
- 	 * If we failed to find the CRTC(s) which this encoder is
- 	 * supposed to be connected to, it's because the CRTC has
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -195,6 +220,26 @@
+ 	status = "okay";
+ };
+ 
++&tcon_top_hdmi_in_tcon_tv0 {
++	remote-endpoint = <&tcon_tv0_out_tcon_top>;
++};
++
++&tcon_top_mixer0_out_tcon_tv0 {
++	remote-endpoint = <&tcon_tv0_in_tcon_top>;
++};
++
++&tcon_tv0_in {
++	tcon_tv0_in_tcon_top: endpoint {
++		remote-endpoint = <&tcon_top_mixer0_out_tcon_tv0>;
++	};
++};
++
++&tcon_tv0_out {
++	tcon_tv0_out_tcon_top: endpoint {
++		remote-endpoint = <&tcon_top_hdmi_in_tcon_tv0>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
 2.17.1
