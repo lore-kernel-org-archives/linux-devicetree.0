@@ -1,60 +1,112 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 2/2] nvmem: Add Spreadtrum SC27XX efuse support
-Date: Mon, 11 Jun 2018 22:27:59 -0700
-Message-ID: <70fffa09-5c70-be61-49b8-e78015fff547@infradead.org>
-References: <0a5444dd0646f4e1f1d8ce51870afe6cc864219e.1528780670.git.baolin.wang@linaro.org>
- <0ebf526fa755231c8871a57baab641cebaed7820.1528780670.git.baolin.wang@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 5/7] dt-bindings: power: Add qcom rpmh power domain
+ driver bindings
+Date: Mon, 11 Jun 2018 22:39:53 -0700
+Message-ID: <20180612053953.GA18050@builder>
+References: <20180612044052.4402-1-rnayak@codeaurora.org>
+ <20180612044052.4402-6-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0ebf526fa755231c8871a57baab641cebaed7820.1528780670.git.baolin.wang@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180612044052.4402-6-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: broonie@kernel.org, freeman.liu@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2018 10:24 PM, Baolin Wang wrote:
-> From: Freeman Liu <freeman.liu@spreadtrum.com>
+On Mon 11 Jun 21:40 PDT 2018, Rajendra Nayak wrote:
+
+> Add DT bindings to describe the rpmh powerdomains found on Qualcomm
+> Technologies, Inc. SoCs. These power domains communicate a performance
+> state to RPMh, which then translates it into corresponding voltage on
+> a PMIC rail.
 > 
-> This patch add the efuse driver which is embeded in Spreadtrum SC27XX
-> series PMICs. The sc27xx efuse contains 32 blocks and each block's
-> data width is 16 bits.
-> 
-> Signed-off-by: Freeman Liu <freeman.liu@spreadtrum.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 > ---
->  drivers/nvmem/Kconfig        |   11 ++
->  drivers/nvmem/Makefile       |    3 +-
->  drivers/nvmem/sc27xx-efuse.c |  263 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 276 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/nvmem/sc27xx-efuse.c
+>  .../devicetree/bindings/power/qcom,rpmhpd.txt | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
 > 
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 54a3c29..3dca608 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -181,4 +181,15 @@ config RAVE_SP_EEPROM
->  	help
->  	  Say y here to enable Rave SP EEPROM support.
->  
-> +config SC27XX_EFUSE
-> +	tristate "Spreadtrum SC27XX eFuse Support"
-> +	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	help
-> +	  This is a simple drive to dump specified values of Spreadtrum
-
-	                   driver
-
-> +	  SC27XX PMICs from eFuse.
+> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
+> new file mode 100644
+> index 000000000000..41ef7afa6b24
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/qcom,rpmhpd.txt
+> @@ -0,0 +1,65 @@
+> +Qualcomm RPMh Power domains
 > +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem-sc27xx-efuse.
+> +For RPMh Power domains, we communicate a performance state to RPMh
+> +which then translates it into a corresponding voltage on a rail
 > +
->  endif
+> +Required Properties:
+> + - compatible: Should be one of the following
+> +	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
 
+Afaict this binding is identical to the one introduced in patch 1, so I
+would suggest that you just add the compatible there.
 
--- 
-~Randy
+Regards,
+Bjorn
+
+> + - power-domain-cells: number of cells in power domain specifier
+> +	must be 1
+> + - operating-points-v2: Phandle to the OPP table for the power-domain.
+> +	Refer to Documentation/devicetree/bindings/power/power_domain.txt
+> +	and Documentation/devicetree/bindings/opp/qcom-opp.txt for more details
+> +
+> +Example:
+> +
+> +	rpmhpd: power-controller {
+> +		compatible = "qcom,sdm845-rpmhpd";
+> +		#power-domain-cells = <1>;
+> +		operating-points-v2 = <&rpmhpd_opp_table>;
+> +	};
+> +
+> +	rpmhpd_opp_table: opp-table {
+> +		compatible = "operating-points-v2-qcom-level";
+> +
+> +		rpmhpd_opp_ret: opp1 {
+> +			qcom-level = <16>;
+> +		};
+> +
+> +		rpmhpd_opp_min_svs: opp2 {
+> +			qcom-level = <48>;
+> +		};
+> +
+> +		rpmhpd_opp_low_svs: opp3 {
+> +			qcom-level = <64>;
+> +		};
+> +
+> +		rpmhpd_opp_svs: opp4 {
+> +			qcom-level = <128>;
+> +		};
+> +
+> +		rpmhpd_opp_svs_l1: opp5 {
+> +			qcom-level = <192>;
+> +		};
+> +
+> +		rpmhpd_opp_nom: opp6 {
+> +			qcom-level = <256>;
+> +		};
+> +
+> +		rpmhpd_opp_nom_l1: opp7 {
+> +			qcom-level = <320>;
+> +		};
+> +
+> +		rpmhpd_opp_nom_l2: opp8 {
+> +			qcom-level = <336>;
+> +		};
+> +
+> +		rpmhpd_opp_turbo: opp9 {
+> +			qcom-level = <384>;
+> +		};
+> +
+> +		rpmhpd_opp_turbo_l1: opp10 {
+> +			qcom-level = <416>;
+> +		};
+> +	};
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
