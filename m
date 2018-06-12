@@ -1,50 +1,110 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 10/11] dt-bindings: misc: add bindings for
- cros_ec_throttler
-Date: Tue, 12 Jun 2018 13:10:11 -0600
-Message-ID: <20180612191011.GA26266@rob-hp-laptop>
-References: <20180607181214.30338-1-mka@chromium.org>
- <20180607181214.30338-11-mka@chromium.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: add bindings for px30 clock
+ controller
+Date: Tue, 12 Jun 2018 13:12:20 -0600
+Message-ID: <20180612191220.GA27984@rob-hp-laptop>
+References: <1528439519-30135-1-git-send-email-zhangqing@rock-chips.com>
+ <1528439519-30135-2-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180607181214.30338-11-mka@chromium.org>
+In-Reply-To: <1528439519-30135-2-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: heiko@sntech.de, sboyd@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 07, 2018 at 11:12:13AM -0700, Matthias Kaehlcke wrote:
-> The cros_ec_throttler monitors events from the Chrome OS Embedded
-> Controller to throttle the system if needed, using the mechanisms
-> provided by the throttler core.
+On Fri, Jun 08, 2018 at 02:31:56PM +0800, Elaine Zhang wrote:
+> Add devicetree bindings for Rockchip cru which found on
+> Rockchip SoCs.
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 > ---
-> Changes in v2:
-> - patch added to series
+>  .../bindings/clock/rockchip,px30-cru.txt           | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
 > 
->  Documentation/devicetree/bindings/misc/cros_ec_throttler.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt b/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
 > new file mode 100644
-> index 000000000000..7316dcc0ef75
+> index 000000000000..af5a45b680d0
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> @@ -0,0 +1,4 @@
-> +* cros_ec_throttler driver
-
-Bindings are for h/w, not drivers.
-
-I continue to fail to see why this needs to be in DT. There are other 
-ways to instantiate drivers.
-
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
+> @@ -0,0 +1,67 @@
+> +* Rockchip PX30 Clock and Reset Unit
 > +
-> +Required properties:
-> +- compatible: "google,cros-ec-throttler"
+> +The PX30 clock controller generates and supplies clock to various
+> +controllers within the SoC and also implements a reset controller for SoC
+> +peripherals.
+> +
+> +Required Properties:
+> +
+> +- compatible: PMU for CRU should be "rockchip,px30-pmu-cru"
+> +- compatible: CRU should be "rockchip,px30-cru"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Optional Properties:
+> +
+> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> +  If missing, pll rates are not changeable, due to the missing pll lock status.
+> +
+> +Each clock is assigned an identifier and client nodes can use this identifier
+> +to specify the clock which they consume. All available clocks are defined as
+> +preprocessor macros in the dt-bindings/clock/px30-cru.h headers and can be
+> +used in device tree sources. Similar macros exist for the reset sources in
+> +these files.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the SoC. It is expected
+> +that they are defined using standard clock bindings with following
+> +clock-output-names:
+> + - "xin24m" - crystal input - required,
+> + - "xin32k" - rtc clock - optional,
+> + - "i2sx_clkin" - external I2S clock - optional,
+> + - "gmac_clkin" - external GMAC clock - optional
+> +
+> +Example: Clock controller node:
+> +
+> +	pmucru: pmu-clock-controller@ff2bc000 {
+
+s/pmu-clock-controller/clock-controller/
+
+> +		compatible = "rockchip,px30-pmucru";
+> +		reg = <0x0 0xff2bc000 0x0 0x1000>;
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
+> +
+> +	cru: clock-controller@ff2b0000 {
+> +		compatible = "rockchip,px30-cru";
+> +		reg = <0x0 0xff2b0000 0x0 0x1000>;
+> +		rockchip,grf = <&grf>;
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
+> +
+> +Example: UART controller node that consumes the clock generated by the clock
+> +  controller:
+> +
+> +	uart0: serial@ff030000 {
+> +		compatible = "rockchip,px30-uart", "snps,dw-apb-uart";
+> +		reg = <0x0 0xff030000 0x0 0x100>;
+> +		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&pmucru SCLK_UART0_PMU>, <&pmucru PCLK_UART0_PMU>;
+> +		clock-names = "baudclk", "apb_pclk";
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +		status = "disabled";
+
+Don't show status in examples.
+
+> +	};
+> +
 > -- 
-> 2.18.0.rc1.242.g61856ae69a-goog
+> 1.9.1
+> 
 > 
