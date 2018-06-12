@@ -1,30 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] mtd: rawnand: add Reed-Solomon error correction
- algorithm
-Date: Tue, 12 Jun 2018 12:37:12 -0600
-Message-ID: <20180612183712.GA24397@rob-hp-laptop>
-References: <20180611205224.23340-1-stefan@agner.ch>
- <20180611205224.23340-2-stefan@agner.ch>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: BCM5301X: Make usb3 phy use mdio phy driver
+Date: Tue, 12 Jun 2018 11:49:39 -0700
+Message-ID: <20180612184939.9095-1-f.fainelli@gmail.com>
+References: <20180315135647.48456-1-npcomplete13@gmail.com> <20180409223153.41893-1-npcomplete13@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180611205224.23340-2-stefan@agner.ch>
+In-Reply-To: <20180409223153.41893-1-npcomplete13@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: bcm-kernel-feedback-list@broadcom.com, Vivek Unune <npcomplete13@gmail.com>, florian.fainelli@broadcom.com, hauke@hauke-m.de, zajec5@gmail.com, jonmason@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 11, 2018 at 10:52:19PM +0200, Stefan Agner wrote:
-> Add Reed-Solomon (RS) to the enumeration of ECC algorithms.
+On Mon,  9 Apr 2018 18:31:53 -0400, Vivek Unune <npcomplete13@gmail.com> wrote:
+> Currently, usb3 phy in bcm5301x.dtsi uses platform driver which
+> requires register range "ccb-mii" <0x18003000 0x1000>. This range
+> overlaps with mdio cmd and param registers (<0x18003000 0x8>).
+> Essentially, the platform driver partly acts like a mdio bus
+> driver, hence to use of this register range.
 > 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> In some Northstar devices like Linksys EA9500, secondary switch
+> is connected via external mdio. The only way to access and
+> configure the external switch is via mdio bus. When we enable the
+> mdio bus in it's current state, the mdio bus and any child buses
+> fail to register because of the register range overlap.
+> 
+> On Northstar, the usb3 phy is connected at address 0x10 on the
+> internal mdio bus. This change moves the usb3_phy node and makes
+> it a child node of internal mdio bus.
+> 
+> Thanks to Rafał Miłecki's commit af850e14a7ae
+> ("phy: bcm-ns-usb3: add MDIO driver using proper bus layer") the
+> same usb3 platform driver can now act as usb3 phy mdio driver.
+> 
+> Tested on Linksys Panamera (EA9500)
+> 
+> Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
 > ---
->  Documentation/devicetree/bindings/mtd/nand.txt | 2 +-
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/mtd/nand/raw/nand_base.c               | 1 +
->  include/linux/mtd/rawnand.h                    | 1 +
->  3 files changed, 3 insertions(+), 1 deletion(-)
+Applied to devicetree/next, thanks!
+--
+Florian
