@@ -1,248 +1,415 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v7 5/6] regulator: pfuze100-regulator: provide
- pm_power_off_prepare handler
-Date: Wed, 13 Jun 2018 14:03:01 +0200
-Message-ID: <503b7af3-6a6a-1ed9-e2b6-609da537c855@pengutronix.de>
-References: <20180517055014.6607-1-o.rempel@pengutronix.de>
- <20180517055014.6607-6-o.rempel@pengutronix.de>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v1 4/4] mailbox: Add support for i.MX7D messaging unit
+Date: Wed, 13 Jun 2018 20:21:10 +0800
+Message-ID: <CAA+hA=RpoRXUK+jB18F4OeYE9PG73SDa_NLYeN5Q2G3B1bC-JA@mail.gmail.com>
+References: <20180601065821.28234-1-o.rempel@pengutronix.de>
+ <20180601065821.28234-5-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180517055014.6607-6-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180601065821.28234-5-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP
-Content-Type: multipart/mixed; boundary="ebaSKat60fCA9TqMPHx77ey6XsIur2bCf";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
- Russell King <linux@armlinux.org.uk>
-Message-ID: <503b7af3-6a6a-1ed9-e2b6-609da537c855@pengutronix.de>
-Subject: Re: [PATCH v7 5/6] regulator: pfuze100-regulator: provide
- pm_power_off_prepare handler
-References: <20180517055014.6607-1-o.rempel@pengutronix.de>
- <20180517055014.6607-6-o.rempel@pengutronix.de>
-In-Reply-To: <20180517055014.6607-6-o.rempel@pengutronix.de>
+Hi Oleksij,
 
---ebaSKat60fCA9TqMPHx77ey6XsIur2bCf
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 1, 2018 at 2:58 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> The Mailbox controller is able to send messages (up to 4 32 bit words)
+> between the endpoints.
 
-Hi Mark,
+Could we really be able to send up to 4 42bit words with this driver?
 
-Rob ACKed DT bindings, Rafael ACKed export of pm_power_off_prepare. I
-need your OK for regulator patch.
+It looks to me the current Mailbox framework is more designed for share mem
+transfer which does not fit i.MX MU well.
 
-On 17.05.2018 07:50, Oleksij Rempel wrote:
-> On some boards the SoC can use one pin "PMIC_STBY_REQ" to notify th PMI=
-C
-> about state changes. In this case internal state of PMIC must be
-> preconfigured for upcomming state change.
-> It works fine with the current regulator framework, except with the
-> power-off case.
->=20
-> This patch is providing an optional pm_power_off_prepare handler
-> which will configure standby state of the PMIC to disable all power lin=
-es.
->=20
-> In my power consumption test on RIoTBoard, I got the following results:=
+>
+> This driver was tested using the mailbox-test driver sending messages
+> between the Cortex-A7 and the Cortex-M4.
 
-> power off without this patch:	320 mA
-> power off with this patch:	2   mA
-> suspend to ram:			40  mA
->=20
+Would you please provide a guide on how to test it quickly?
+I may want to give a test.
+
+>
 > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
->  drivers/regulator/pfuze100-regulator.c | 92 ++++++++++++++++++++++++++=
-
->  1 file changed, 92 insertions(+)
->=20
-> diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator=
-/pfuze100-regulator.c
-> index 63922a2167e5..f6c276ed91d8 100644
-> --- a/drivers/regulator/pfuze100-regulator.c
-> +++ b/drivers/regulator/pfuze100-regulator.c
-> @@ -28,6 +28,7 @@
->  #include <linux/regulator/pfuze100.h>
->  #include <linux/i2c.h>
->  #include <linux/slab.h>
-> +#include <linux/kallsyms.h>
->  #include <linux/regmap.h>
-> =20
->  #define PFUZE_NUMREGS		128
-> @@ -42,11 +43,17 @@
-> =20
->  #define PFUZE100_COINVOL	0x1a
->  #define PFUZE100_SW1ABVOL	0x20
-> +#define PFUZE100_SW1ABMODE	0x23
->  #define PFUZE100_SW1CVOL	0x2e
-> +#define PFUZE100_SW1CMODE	0x31
->  #define PFUZE100_SW2VOL		0x35
-> +#define PFUZE100_SW2MODE	0x38
->  #define PFUZE100_SW3AVOL	0x3c
-> +#define PFUZE100_SW3AMODE	0x3f
->  #define PFUZE100_SW3BVOL	0x43
-> +#define PFUZE100_SW3BMODE	0x46
->  #define PFUZE100_SW4VOL		0x4a
-> +#define PFUZE100_SW4MODE	0x4d
->  #define PFUZE100_SWBSTCON1	0x66
->  #define PFUZE100_VREFDDRCON	0x6a
->  #define PFUZE100_VSNVSVOL	0x6b
-> @@ -57,6 +64,13 @@
->  #define PFUZE100_VGEN5VOL	0x70
->  #define PFUZE100_VGEN6VOL	0x71
-> =20
-> +#define PFUZE100_SWxMODE_MASK	0xf
-> +#define PFUZE100_SWxMODE_APS_APS	0x8
-> +#define PFUZE100_SWxMODE_APS_OFF	0x4
+>  drivers/mailbox/Kconfig       |   6 +
+>  drivers/mailbox/Makefile      |   2 +
+>  drivers/mailbox/imx-mailbox.c | 289 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 297 insertions(+)
+>  create mode 100644 drivers/mailbox/imx-mailbox.c
+>
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index a2bb27446dce..e1d2738a2e4c 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -15,6 +15,12 @@ config ARM_MHU
+>           The controller has 3 mailbox channels, the last of which can be
+>           used in Secure mode only.
+>
+> +config IMX_MBOX
+> +       tristate "iMX Mailbox"
+> +       depends on SOC_IMX7D || COMPILE_TEST
+> +       help
+> +         Mailbox implementation for iMX7D Messaging Unit (MU).
 > +
-> +#define PFUZE100_VGENxLPWR	BIT(6)
-> +#define PFUZE100_VGENxSTBY	BIT(5)
+>  config PLATFORM_MHU
+>         tristate "Platform MHU Mailbox"
+>         depends on OF
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index cc23c3a43fcd..ba2fe1b6dd62 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)      += mailbox-test.o
+>
+>  obj-$(CONFIG_ARM_MHU)  += arm_mhu.o
+>
+> +obj-$(CONFIG_IMX_MBOX) += imx-mailbox.o
 > +
->  enum chips { PFUZE100, PFUZE200, PFUZE3000 =3D 3 };
-> =20
->  struct pfuze_regulator {
-> @@ -489,6 +503,69 @@ static inline struct device_node *match_of_node(in=
-t index)
->  }
->  #endif
-> =20
-> +static struct pfuze_chip *syspm_pfuze_chip;
+>  obj-$(CONFIG_PLATFORM_MHU)     += platform_mhu.o
+>
+>  obj-$(CONFIG_PL320_MBOX)       += pl320-ipc.o
+> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+> new file mode 100644
+> index 000000000000..2bc9f11393b1
+> --- /dev/null
+> +++ b/drivers/mailbox/imx-mailbox.c
+> @@ -0,0 +1,289 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 Pengutronix, Oleksij Rempel <o.rempel@pengutronix.de>
+> + */
 > +
-> +static void pfuze_power_off_prepare(void)
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +
+> +/* Transmit Register */
+> +#define IMX_MU_xTRn(x)         (0x00 + 4 * (x))
+> +/* Receive Register */
+> +#define IMX_MU_xRRn(x)         (0x10 + 4 * (x))
+> +/* Status Register */
+> +#define IMX_MU_xSR             0x20
+> +#define IMX_MU_xSR_TEn(x)      BIT(20 + (x))
+> +#define IMX_MU_xSR_RFn(x)      BIT(24 + (x))
+> +#define IMX_MU_xSR_BRDIP       BIT(9)
+> +
+> +/* Control Register */
+> +#define IMX_MU_xCR             0x24
+> +/* Transmit Interrupt Enable */
+> +#define IMX_MU_xCR_TIEn(x)     BIT(20 + (x))
+> +/* Receive Interrupt Enable */
+> +#define IMX_MU_xCR_RIEn(x)     BIT(24 + (x))
+> +
+> +#define IMX_MU_MAX_CHANS       4u
+> +
+> +struct imx_mu_priv;
+> +
+> +struct imx_mu_cfg {
+> +       unsigned int            chans;
+> +       void (*init_hw)(struct imx_mu_priv *priv);
+> +};
+> +
+> +struct imx_mu_con_priv {
+> +       int                     irq;
+> +       unsigned int            bidx;
+> +       unsigned int            idx;
+> +};
+> +
+> +struct imx_mu_priv {
+> +       struct device           *dev;
+> +       const struct imx_mu_cfg *dcfg;
+> +       void __iomem            *base;
+> +
+> +       struct mbox_controller  mbox;
+> +       struct mbox_chan        mbox_chans[IMX_MU_MAX_CHANS];
+> +
+> +       struct imx_mu_con_priv  con_priv[IMX_MU_MAX_CHANS];
+> +       struct clk              *clk;
+> +};
+> +
+> +static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
 > +{
-> +	dev_info(syspm_pfuze_chip->dev, "Configure standy mode for power off"=
-);
-> +
-> +	/* Switch from default mode: APS/APS to APS/Off */
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW1ABMODE,
-> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW1CMODE,
-> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW2MODE,
-> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW3AMODE,
-> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW3BMODE,
-> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW4MODE,
-> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
-> +
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN1VOL,
-> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
-> +			   PFUZE100_VGENxSTBY);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN2VOL,
-> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
-> +			   PFUZE100_VGENxSTBY);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN3VOL,
-> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
-> +			   PFUZE100_VGENxSTBY);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN4VOL,
-> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
-> +			   PFUZE100_VGENxSTBY);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN5VOL,
-> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
-> +			   PFUZE100_VGENxSTBY);
-> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN6VOL,
-> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
-> +			   PFUZE100_VGENxSTBY);
+> +       return container_of(mbox, struct imx_mu_priv, mbox);
 > +}
 > +
-> +static int pfuze_power_off_prepare_init(struct pfuze_chip *pfuze_chip)=
-
+> +static void imx_mu_write(struct imx_mu_priv *priv, u32 val, u32 offs)
 > +{
-> +	if (pfuze_chip->chip_id !=3D PFUZE100) {
-> +		dev_warn(pfuze_chip->dev, "Requested pm_power_off_prepare handler fo=
-r not supported chip\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (pm_power_off_prepare) {
-> +		dev_warn(pfuze_chip->dev, "pm_power_off_prepare is already registere=
-d.\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	if (syspm_pfuze_chip) {
-> +		dev_warn(pfuze_chip->dev, "syspm_pfuze_chip is already set.\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	syspm_pfuze_chip =3D pfuze_chip;
-> +	pm_power_off_prepare =3D pfuze_power_off_prepare;
-> +
-> +	return 0;
+> +       iowrite32(val, priv->base + offs);
 > +}
 > +
->  static int pfuze_identify(struct pfuze_chip *pfuze_chip)
->  {
->  	unsigned int value;
-> @@ -659,6 +736,20 @@ static int pfuze100_regulator_probe(struct i2c_cli=
-ent *client,
->  		}
->  	}
-> =20
-> +	if (of_property_read_bool(client->dev.of_node,
-> +				  "fsl,pmic-stby-poweroff"))
-> +		return pfuze_power_off_prepare_init(pfuze_chip);
-> +
-> +	return 0;
+> +static u32 imx_mu_read(struct imx_mu_priv *priv, u32 offs)
+> +{
+> +       return ioread32(priv->base + offs);
 > +}
 > +
-> +static int pfuze100_regulator_remove(struct i2c_client *client)
+> +static u32 imx_mu_rmw(struct imx_mu_priv *priv, u32 offs, u32 set, u32 clr)
 > +{
-> +	if (syspm_pfuze_chip) {
-> +		syspm_pfuze_chip =3D NULL;
-> +		pm_power_off_prepare =3D NULL;
-> +	}
+> +       u32 val;
 > +
->  	return 0;
->  }
-> =20
-> @@ -669,6 +760,7 @@ static struct i2c_driver pfuze_driver =3D {
->  		.of_match_table =3D pfuze_dt_ids,
->  	},
->  	.probe =3D pfuze100_regulator_probe,
-> +	.remove =3D pfuze100_regulator_remove,
->  };
->  module_i2c_driver(pfuze_driver);
-> =20
->=20
+> +       val = imx_mu_read(priv, offs);
+> +       val &= ~clr;
+> +       val |= set;
+> +       imx_mu_write(priv, val, offs);
+> +
+> +       return val;
+> +}
+> +
+> +static irqreturn_t imx_mu_isr(int irq, void *p)
+> +{
+> +       struct mbox_chan *chan = p;
+> +       struct imx_mu_con_priv *cp = chan->con_priv;
+> +       struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
 
+Please do in reversed order from long to short
 
---ebaSKat60fCA9TqMPHx77ey6XsIur2bCf--
+> +
+> +       u32 val, dat;
+> +
+> +       val = imx_mu_read(priv, IMX_MU_xSR);
+> +       val &= IMX_MU_xSR_TEn(cp->bidx) | IMX_MU_xSR_RFn(cp->bidx);
+> +       if (!val)
+> +               return IRQ_NONE;
+> +
+> +       if (val & IMX_MU_xSR_TEn(cp->bidx)) {
+> +               imx_mu_rmw(priv, IMX_MU_xCR, 0, IMX_MU_xCR_TIEn(cp->bidx));
+> +               mbox_chan_txdone(chan, 0);
+> +       }
+> +
+> +       if (val & IMX_MU_xSR_RFn(cp->bidx)) {
+> +               dat = imx_mu_read(priv, IMX_MU_xRRn(cp->idx));
+> +               mbox_chan_received_data(chan, (void *)&dat);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static bool imx_mu_last_tx_done(struct mbox_chan *chan)
+> +{
+> +       struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+> +       struct imx_mu_con_priv *cp = chan->con_priv;
+> +       u32 val;
+> +
+> +       val = imx_mu_read(priv, IMX_MU_xSR);
+> +       /* test if transmit register is empty */
+> +       return (!(val & IMX_MU_xSR_TEn(cp->bidx)));
+> +}
+> +
+> +static int imx_mu_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +       struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+> +       struct imx_mu_con_priv *cp = chan->con_priv;
+> +       u32 *arg = data;
+> +
+> +       if (imx_mu_last_tx_done(chan))
 
---PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+return true for tx_done?
+Or maybe better imx_mu_is_busy?
 
------BEGIN PGP SIGNATURE-----
+> +               return -EBUSY;
+> +
+> +       imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
+> +       imx_mu_rmw(priv, IMX_MU_xCR, IMX_MU_xSR_TEn(cp->bidx), 0);
+> +
+> +       return 0;
+> +}
+> +
+> +static int imx_mu_startup(struct mbox_chan *chan)
+> +{
+> +       struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+> +       struct imx_mu_con_priv *cp = chan->con_priv;
+> +       int ret;
+> +
+> +       ret = request_irq(cp->irq, imx_mu_isr,
+> +                         IRQF_SHARED, "imx_mu_chan", chan);
 
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlshB/UACgkQdQOiSHVI
-77TuZAgAtvxSvuq8V8Sv8A3kPzH5oxmZVqSxDGgjskOHCS4rZ6AAcw7zCxBC8xcH
-wrtXLKhetE1PmBn3qP78U3gS/VMdVdXuGV7qItRrprlmgO45cJ4EJ2fYVIMijHb2
-K4q3GPZZJhgwRd3s/Fs3JVZneWYWnPtqEbQeAxro+iJ1oPSr1foHmqQAJpkaWhN0
-CnSyDGHD9JER8p+KFg8BsUb3c5ypw/C0WPD0gjQLlPhID2fkgylpFuuFpWzngl4B
-v34Uh9Z51aKoXxLpOcVaSnp7UFX5ME7HVQjFsAkqi2Xq08oq3nFg1zc+e+9Jz8t3
-v79GIIzFPLIsasLHTd0vWCT0veApLQ==
-=yIkj
------END PGP SIGNATURE-----
+This looks me to a bit strange as all virtual channels interrupts
+line actually are the same. And we request that same irq line
+repeatedly here with the same irq handler.
 
---PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP--
+> +       if (ret) {
+> +               dev_err(chan->mbox->dev,
+> +                       "Unable to acquire IRQ %d\n", cp->irq);
+> +               return ret;
+> +       }
+> +
+> +       imx_mu_rmw(priv, IMX_MU_xCR, IMX_MU_xCR_RIEn(cp->bidx), 0);
+> +
+> +       return 0;
+> +}
+> +
+> +static void imx_mu_shutdown(struct mbox_chan *chan)
+> +{
+> +       struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+> +       struct imx_mu_con_priv *cp = chan->con_priv;
+> +
+> +       imx_mu_rmw(priv, IMX_MU_xCR, 0,
+> +                  IMX_MU_xCR_TIEn(cp->bidx) | IMX_MU_xCR_RIEn(cp->bidx));
+> +
+> +       free_irq(cp->irq, chan);
+> +}
+> +
+> +static const struct mbox_chan_ops imx_mu_ops = {
+> +       .send_data = imx_mu_send_data,
+> +       .startup = imx_mu_startup,
+> +       .shutdown = imx_mu_shutdown,
+> +       .last_tx_done = imx_mu_last_tx_done,
+
+Do we really need this?
+Looking at the code, it seems .last_tx_done() is only called for polling mode.
+But what you set below is:
+priv->mbox.txdone_irq = true;
+
+Or am i missed something?
+
+> +};
+> +
+> +static int imx_mu_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct resource *iomem;
+> +       struct imx_mu_priv *priv;
+> +       const struct imx_mu_cfg *dcfg;
+> +       unsigned int i, chans;
+> +       int irq, ret;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       dcfg = of_device_get_match_data(dev);
+> +       if (!dcfg)
+> +               return -EINVAL;
+> +
+> +       priv->dcfg = dcfg;
+> +       priv->dev = dev;
+> +
+> +       iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       priv->base = devm_ioremap_resource(&pdev->dev, iomem);
+> +       if (IS_ERR(priv->base))
+> +               return PTR_ERR(priv->base);
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq <= 0)
+> +               return irq < 0 ? irq : -EINVAL;
+
+Is it possible == 0?
+
+> +
+> +       priv->clk = devm_clk_get(dev, NULL);
+> +       if (IS_ERR(priv->clk)) {
+> +               if (PTR_ERR(priv->clk) == -ENOENT) {
+> +                       priv->clk = NULL;
+> +               } else {
+> +                       dev_err(dev, "Failed to get clock\n");
+
+The line looks not be quite meaningful as it may be defer probe.
+
+> +                       return PTR_ERR(priv->clk);
+> +               }
+> +       }
+> +
+> +       ret = clk_prepare_enable(priv->clk);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to enable clock\n");
+> +               return ret;
+> +       }
+> +
+> +       chans = min(dcfg->chans, IMX_MU_MAX_CHANS);
+> +       /* Initialize channel identifiers */
+> +       for (i = 0; i < chans; i++) {
+> +               struct imx_mu_con_priv *cp = &priv->con_priv[i];
+> +
+> +               cp->bidx = 3 - i;
+> +               cp->idx = i;
+> +               cp->irq = irq;
+> +               priv->mbox_chans[i].con_priv = cp;
+> +       }
+> +
+> +       priv->mbox.dev = dev;
+> +       priv->mbox.ops = &imx_mu_ops;
+> +       priv->mbox.chans = priv->mbox_chans;
+> +       priv->mbox.num_chans = chans;
+> +       priv->mbox.txdone_irq = true;
+> +
+> +       platform_set_drvdata(pdev, priv);
+> +
+> +       if (priv->dcfg->init_hw)
+> +               priv->dcfg->init_hw(priv);
+> +
+> +       return mbox_controller_register(&priv->mbox);
+> +}
+> +
+> +static int imx_mu_remove(struct platform_device *pdev)
+> +{
+> +       struct imx_mu_priv *priv = platform_get_drvdata(pdev);
+> +
+> +       mbox_controller_unregister(&priv->mbox);
+> +       clk_disable_unprepare(priv->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +
+> +static void imx_mu_init_imx7d_a(struct imx_mu_priv *priv)
+> +{
+> +       /* Set default config */
+> +       imx_mu_write(priv, 0, IMX_MU_xCR);
+> +}
+> +
+> +static const struct imx_mu_cfg imx_mu_cfg_imx7d_a = {
+> +       .chans = IMX_MU_MAX_CHANS,
+> +       .init_hw = imx_mu_init_imx7d_a,
+> +};
+> +
+> +static const struct imx_mu_cfg imx_mu_cfg_imx7d_b = {
+> +       .chans = IMX_MU_MAX_CHANS,
+> +};
+> +
+> +static const struct of_device_id imx_mu_dt_ids[] = {
+> +       { .compatible = "fsl,imx7s-mu-a", .data = &imx_mu_cfg_imx7d_a },
+> +       { .compatible = "fsl,imx7s-mu-b", .data = &imx_mu_cfg_imx7d_b },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+> +
+> +static struct platform_driver imx_mu_driver = {
+> +       .probe          = imx_mu_probe,
+> +       .remove         = imx_mu_remove,
+> +       .driver = {
+> +               .name   = "imx_mu",
+> +               .of_match_table = imx_mu_dt_ids,
+> +       },
+> +};
+> +module_platform_driver(imx_mu_driver);
+> +
+> +MODULE_AUTHOR("Oleksij Rempel <o.rempel@pengutronix.de>");
+> +MODULE_DESCRIPTION("Message Unit driver for i.MX7");
+
+s/i.MX7/i.MX
+
+Regards
+Dong Aisheng
+
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.17.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
