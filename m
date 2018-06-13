@@ -1,43 +1,84 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] arm64: dts: renesas: condor/v3hsk: specify Ethernet
- PHY IRQs
-Date: Wed, 13 Jun 2018 19:44:02 +0300
-Message-ID: <9d6f18ad-47d1-eb81-1a86-d124ca03e1c9@cogentembedded.com>
-References: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
- <42861d8f-3570-03b9-987c-bb15fa92a9c7@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <42861d8f-3570-03b9-987c-bb15fa92a9c7@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v2 2/2] arm64: dts: qcom: sdm845: Enable debug UART and I2C10 on sdm845-mtp
+Date: Wed, 13 Jun 2018 09:53:52 -0700
+Message-ID: <20180613165352.139060-2-dianders@chromium.org>
+References: <20180613165352.139060-1-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180613165352.139060-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, kramasub@codeaurora.org, sdharia@codeaurora.org, swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2018 07:42 PM, Sergei Shtylyov wrote:
+The debug UART is very useful to have.  I2C10 is enabled as an example
+of a I2C port we can talk on for now.  Eventually we'll want to put
+peripherals under it.
 
-> Specify Ethernet PHY IRQs in the Condor/V3HSK board device trees, now that
-> we have the GPIO support (previously phylib had  to resort to polling).
-> 
-> Based on the original (and large) patch by Vladimir Barinov.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-   Forgot to add the the patch is against the 'renesas-devel-20180613-v4.17' tag.
+Changes in v2:
+- Got rid of all sleep pinctrl states for now
+- Add Bjorn's tags.
 
-[...]
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 45 +++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-MBR, Sergei
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index 979ab49913f1..6d651f314193 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -12,4 +12,49 @@
+ / {
+ 	model = "Qualcomm Technologies, Inc. SDM845 MTP";
+ 	compatible = "qcom,sdm845-mtp";
++
++	aliases {
++		serial0 = &uart9;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&i2c10 {
++	status = "okay";
++	clock-frequency = <400000>;
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&uart9 {
++	status = "okay";
++};
++
++/* PINCTRL - additions to nodes defined in sdm845.dtsi */
++
++&qup_i2c10_default {
++	pinconf {
++		pins = "gpio55", "gpio56";
++		drive-strength = <2>;
++		bias-disable;
++	};
++};
++
++&qup_uart9_default {
++	pinconf-tx {
++		pins = "gpio4";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	pinconf-rx {
++		pins = "gpio5";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
+ };
+-- 
+2.18.0.rc1.244.gcf134e6275-goog
