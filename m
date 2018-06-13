@@ -1,78 +1,69 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 5/6] i2c: Add Actions Semiconductor Owl family S900 I2C driver
-Date: Sun, 1 Jul 2018 00:11:00 +0300
-Message-ID: <CAHp75VcVNb51tJzKbCU3pqf0XYPCUZWpv38nfaV1711vyf2S0Q@mail.gmail.com>
-References: <20180630133330.23858-1-manivannan.sadhasivam@linaro.org> <20180630133330.23858-6-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180630133330.23858-6-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linus Walleij <linus.walleij@linaro.org>, linux-i2c <linux-i2c@vger.kernel.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Mani Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, jeff.chen@actions-semi.com
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=9BnR=I7=chromium.org=mka@kernel.org>
+Date: Wed, 13 Jun 2018 12:37:00 -0700
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: power: supply: qcom_bms: Add bindings
+Message-ID: <20180613193700.GL88063@google.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com>
+ <20180613160643.12638-1-ctatlor97@gmail.com>
+ <20180613160643.12638-3-ctatlor97@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20180613160643.12638-3-ctatlor97@gmail.com>
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Jun 30, 2018 at 4:33 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Add Actions Semiconductor Owl family S900 I2C driver.
+Hi Craig,
 
-Thanks for an update. Few left comments and it would LGTM.
-
-> +static int owl_i2c_reset(struct owl_i2c_dev *i2c_dev)
-> +{
-
-> +       mdelay(1);
-
-But now, since it's not used in atomic context, we may switch to
-usleep_range() / msleep() instead.
-
-> +       owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
-> +                               OWL_I2C_CTL_EN, true);
+On Wed, Jun 13, 2018 at 05:06:24PM +0100, Craig Tatlor wrote:
+> Add bindings for the Qualcomm Battery Monitoring system.
+> 
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> ---
+> 
+> * Changes from v5:
+>   Mentions which values are 8 bit.
+> 
+> * Changes from v4:
+>   Uses proper units and expands some definitions,
+>   along with changing vadc@ to adc@.
+>  .../bindings/power/supply/qcom_bms.txt        | 92 +++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/qcom_bms.txt b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> new file mode 100644
+> index 000000000000..9a29a2eb9f04
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> @@ -0,0 +1,92 @@
+> +Qualcomm Battery Monitoring System
 > +
+> +The Qualcomm Battery Monitoring System is found inside of Qualcomm PM8941
+> +PMICs. It provides open circuit voltage (OCV) and coulomb counter registers
+> +that allow the OS to infer a capacity level.
+> +
+> +Required properties:
+> +- compatible:                   Should contain "qcom,pm8941-bms".
+> +- reg:                          Specifies the SPMI address and length of the
+> +				controller's registers.
+> +- interrupts:                   OCV threshold interrupt.
+> +- io-channels:                  Should contain IIO channel specifier for the
+> +				ADC channel that reports battery temperature.
+> +- io-channel-names:             Should contain "temp".
+> +- qcom,fcc-temp-legend-celcius: An 8 bit array containing the temperature,
+> +				in degC, for each column of the full charge
+> +				capacity lookup table.
 
-> +       /* Wait 50ms for FIFO reset complete */
-> +       do {
+s/celcius/celsius/
 
-> +               mdelay(1);
+same for qcom,ocv-temp-legend-celcius
 
-Especially in this case it's very important.
+> +- qcom,fcc-lut-microamp-hours:  An array of full charge capacity values in uah,
 
-> +       } while (timeout++ < OWL_I2C_MAX_RETRIES);
+nit: s/uah/uAh/
 
-> +}
+Thanks
 
-> +       val = (i2c_dev->clk_rate + i2c_dev->bus_freq * 16 - 1) /
-> +                               (i2c_dev->bus_freq * 16);
-
-This is effectively DIV_ROUND_UP(->clk_rate, ->bus_freq * 16).
-
-> +       /*
-> +        * By default, 0 will be returned if interrupt occurred but no
-> +        * read or write happened. Else if msg_ptr equals to message length,
-> +        * message count will be returned.
-> +        */
-
-> +       if (i2c_dev->msg_ptr == msg->len)
-> +               ret = num;
-
-I dunno if
-
-ret = ->msg_ptr == len ? num : 0;
-
-would be slightly more explicit (yes, I aware about ret == 0).
-
-Up to you to choose.
-
-> +       /* We support only frequencies of 100k and 400k for now */
-> +       if (i2c_dev->bus_freq != OWL_I2C_DEF_SPEED_HZ &&
-> +                       i2c_dev->bus_freq > OWL_I2C_MAX_SPEED_HZ) {
-
-I think it should be != in the second case as well.
-
-> +               dev_err(dev, "invalid clock-frequency %d\n", i2c_dev->bus_freq);
-> +               return -EINVAL;
-> +       }
-
--- 
-With Best Regards,
-Andy Shevchenko
+Matthias
