@@ -1,138 +1,80 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH V2 2/4] mmc: sdhci-msm: Add msm version specific ops and data
- structures
-Date: Tue, 12 Jun 2018 16:36:26 -0700
-Message-ID: <152884658650.16708.8327586252448186103@swboyd.mtv.corp.google.com>
-References: <1527587561-27448-1-git-send-email-vviswana@codeaurora.org>
- <1527587561-27448-3-git-send-email-vviswana@codeaurora.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Wed, 13 Jun 2018 10:18:24 +1000
+Message-ID: <ddc9a616517f8c4255efe2f57d13d3b3ba81ee89.camel@kernel.crashing.org>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+         <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
+         <53ef03b26a17738dc1465ce85562c9611ad415f8.camel@kernel.crashing.org>
+         <CAHp75Vcdaejn=eq740YNdscSv9zX9xj3RzYp=AFs8HFprw34_Q@mail.gmail.com>
+         <5d932502d9985cdfa6540480ea5ce6b0730502a1.camel@kernel.crashing.org>
+         <CAHp75VfV7actoXkMUbh9KwAXR1FKR_VZ5RAuaL-pKLSynFi-3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1527587561-27448-3-git-send-email-vviswana@codeaurora.org>
+In-Reply-To: <CAHp75VfV7actoXkMUbh9KwAXR1FKR_VZ5RAuaL-pKLSynFi-3g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, vviswana@codeaurora.org, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vijay Viswanath (2018-05-29 02:52:39)
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 4050c99..2a66aa0 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -226,6 +226,24 @@ struct sdhci_msm_offset {
->         .core_ddr_config_2 =3D 0x1bc,
->  };
->  =
+On Wed, 2018-06-13 at 02:16 +0300, Andy Shevchenko wrote:
+> On Wed, Jun 13, 2018 at 1:58 AM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> > On Tue, 2018-06-12 at 19:53 +0300, Andy Shevchenko wrote:
+> > > 
+> > > > > It feels like a wrong approach.
+> > > > > Can OF graph help here? Would it be better approach?
+> > > > 
+> > > > I don't quite understand what your objection is nor what "OF graph"
+> > > > is...
+> > > 
+> > > There is no objection per se, just a doubt that this is a right thing to do.
+> > > I might be wrong, of course.
+> > > 
+> > > OF graph nodes is a special API that allows you to access like you
+> > > said "different node of device-tree".
+> > > https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/graph.txt
+> > 
+> > So I had a look and this is just an example on how to use phandles to
+> > link ports and endpoints... I fail to see how that relates to what this
+> > patch does.
+> 
+> Because your patch does nothing except another layring of the existing APIs.
 
-> +struct sdhci_msm_variant_ops {
-> +       u8 (*msm_readb_relaxed)(struct sdhci_host *host, u32 offset);
-> +       u32 (*msm_readl_relaxed)(struct sdhci_host *host, u32 offset);
-> +       void (*msm_writeb_relaxed)(u8 val, struct sdhci_host *host, u32 o=
-ffset);
-> +       void (*msm_writel_relaxed)(u32 val, struct sdhci_host *host,
-> +                       u32 offset);
-> +};
-> +
-> +/*
-> + * From V5, register spaces have changed. Wrap this info in a structure
-> + * and choose the data_structure based on version info mentioned in DT.
-> + */
+I'm really having a hard time understanding what you are going on
+about..
 
-This is sort of odd. Usually we have a read/write function that swizzles
-based on register variants, and that's contained with that function. Now
-it's the other way.
+Yes, it's a helper that combines two existing API functions, the goal
+being to generally replace the use of the existing of_iomap whenever
+possible. It makes sense and makes callers simpler and less bug prone.
 
-> +struct sdhci_msm_variant_info {
-> +       bool mci_removed;
-> +       const struct sdhci_msm_variant_ops *var_ops;
-> +       const struct sdhci_msm_offset *offset;
-> +};
-> +
->  struct sdhci_msm_host {
->         struct platform_device *pdev;
->         void __iomem *core_mem; /* MSM SDCC mapped address */
-> @@ -245,8 +263,45 @@ struct sdhci_msm_host {
->         wait_queue_head_t pwr_irq_wait;
->         bool pwr_irq_flag;
->         u32 caps_0;
-> +       bool mci_removed;
-> +       const struct sdhci_msm_variant_ops *var_ops;
-> +       const struct sdhci_msm_offset *offset;
->  };
->  =
+> 
+> > In the driver I'm doing for example, I do use a similar technique to
+> > "point" to the other node. In this case, this is a coprocessor in the
+> > SoC and I'm linking to the node that represent its interrupt controller
+> > (and its not a full fledged OS running there so we don't have a full
+> > interrupt tree for it).
+> 
+> Hmm... So, you are trying to solve problem with other methods which
+> might be not so suitable at all?
 
-> +/*
-> + * APIs to read/write to vendor specific registers which were there in t=
-he
-> + * core_mem region before MCI was removed.
-> + */
-> +static u32 sdhci_msm_mci_variant_readl_relaxed(struct sdhci_host *host,
-> +               u32 offset)
-> +{
-> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +       struct sdhci_msm_host *msm_host =3D sdhci_pltfm_priv(pltfm_host);
-> +
-> +       return readl_relaxed(msm_host->core_mem + offset);
+Again, I cannot understand what you are going on about, what is "not
+suitable" to what purpose ?
 
-Is core_mem assigned in the new hardware? Maybe that needs to be
-'repurposed' for vendor specific registers on v5 and renamed to
-something like msm_host::vendor_base or something like that.
+It's fairly common for nodes to point to each other. We've been doing
+that since the dawn of the device-tree.
 
-> +}
-> +
-> +static u32 sdhci_msm_v5_variant_readl_relaxed(struct sdhci_host *host,
-> +               u32 offset)
-> +{
-> +       return readl_relaxed(host->ioaddr + offset);
-> +}
-> +
-> +static void sdhci_msm_mci_variant_writel_relaxed(u32 val,
-> +               struct sdhci_host *host, u32 offset)
-> +{
-> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +       struct sdhci_msm_host *msm_host =3D sdhci_pltfm_priv(pltfm_host);
-> +
-> +       writel_relaxed(val, msm_host->core_mem + offset);
-> +}
-> +
-> +static void sdhci_msm_v5_variant_writel_relaxed(u32 val,
-> +               struct sdhci_host *host, u32 offset)
-> +{
-> +       writel_relaxed(val, host->ioaddr + offset);
-> +}
-> +
->  static unsigned int msm_get_clock_rate_for_bus_mode(struct sdhci_host *h=
-ost,
->                                                     unsigned int clock)
->  {
-> @@ -1481,6 +1536,28 @@ static void sdhci_msm_set_regulator_caps(struct sd=
-hci_msm_host *msm_host)
->         pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->  }
->  =
+In this case, we have a coprocessor bound to a device and pointing to
+its interrupt controller, and we need to get to that and map it, I fail
+to see what the issue is and in what way this is "not suitable".
 
-> +static const struct sdhci_msm_variant_ops mci_var_ops =3D {
-> +       .msm_readl_relaxed =3D sdhci_msm_mci_variant_readl_relaxed,
-> +       .msm_writel_relaxed =3D sdhci_msm_mci_variant_writel_relaxed,
-> +};
-> +
-> +static const struct sdhci_msm_variant_ops v5_var_ops =3D {
-> +       .msm_readl_relaxed =3D sdhci_msm_v5_variant_readl_relaxed,
-> +       .msm_writel_relaxed =3D sdhci_msm_v5_variant_writel_relaxed,
-> +};
-> +
-> +static const struct sdhci_msm_variant_info sdhci_msm_mci_var =3D {
-> +       .mci_removed =3D 0,
+But there are many other uses of things like of_iomap() which could
+benefit from switching to devm_of_iomap() and thus getting the
+automated cleanup on exit and appropriate request of the memory
+resource.
 
-Please use true and false instead of 0 and 1 when the type is bool.
+(hint: I wrote of_iomap and a good bulk of what's in
+drivers/of/address.c...
 
-> +       .var_ops =3D &mci_var_ops,
-> +       .offset =3D &sdhci_msm_mci_offset,
-> +};
-> +
-> +static const struct sdhci_msm_variant_info sdhci_msm_v5_var =3D {
-> +       .mci_removed =3D 1,
-> +       .var_ops =3D &v5_var_ops,
-> +       .offset =3D &sdhci_msm_v5_offset,
-> +};
+Ben.
