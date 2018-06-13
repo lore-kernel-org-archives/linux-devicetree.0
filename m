@@ -1,92 +1,187 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 19/28] drm/mediatek: add connection from RDMA2 to DPI1
-Date: Wed, 13 Jun 2018 17:01:01 +0800
-Message-ID: <1528880461.18148.1.camel@mtksdaap41>
-References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
- <1528687580-549-20-git-send-email-stu.hsieh@mediatek.com>
- <1528874037.30263.6.camel@mtksdaap41>
- <1528876862.11190.35.camel@mtksdccf07>
- <1528877675.30263.27.camel@mtksdaap41>
- <1528880291.11190.45.camel@mtksdccf07>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH 2/2] clk: qcom: Add display clock controller driver for
+ SDM845
+Date: Wed, 13 Jun 2018 14:48:59 +0530
+Message-ID: <a397c3f9-1e4e-b6db-299b-0ecfd1726226@codeaurora.org>
+References: <1528098985-3676-1-git-send-email-tdas@codeaurora.org>
+ <1528098985-3676-3-git-send-email-tdas@codeaurora.org>
+ <152879014163.16708.9093599796057889104@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1528880291.11190.45.camel@mtksdccf07>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <152879014163.16708.9093599796057889104@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh@kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0dToKCk9uIFdlZCwgMjAxOC0wNi0xMyBhdCAxNjo1OCArMDgwMCwgU3R1IEhzaWVoIHdy
-b3RlOgo+IEhpLCBDSzoKPiAKPiBPbiBXZWQsIDIwMTgtMDYtMTMgYXQgMTY6MTQgKzA4MDAsIENL
-IEh1IHdyb3RlOgo+ID4gSGksIFN0dToKPiA+IAo+ID4gT24gV2VkLCAyMDE4LTA2LTEzIGF0IDE2
-OjAxICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gPiA+IEhpLCBDSzoKPiA+ID4gCj4gPiA+IAo+
-ID4gPiBPbiBXZWQsIDIwMTgtMDYtMTMgYXQgMTU6MTMgKzA4MDAsIENLIEh1IHdyb3RlOgo+ID4g
-PiA+IEhpLCBTdHU6Cj4gPiA+ID4gCj4gPiA+ID4gT24gTW9uLCAyMDE4LTA2LTExIGF0IDExOjI2
-ICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gPiA+ID4gPiBUaGlzIHBhdGNoIGFkZCB0aGUgY29u
-bmVjdGlvbiBmcm9tIFJETUEyIHRvIERQSTEKPiA+ID4gPiA+IAo+ID4gPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogU3R1IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+ID4gPiA+ID4gLS0tCj4g
-PiA+ID4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCA4ICsrKysr
-KysrCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQo+ID4gPiA+ID4g
-Cj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-ZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ID4gPiA+ID4g
-aW5kZXggMzFhMDgzMmVmOWVjLi4yZDg4MzgxNWQ3OWMgMTAwNjQ0Cj4gPiA+ID4gPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ID4gPiA+ID4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiA+ID4gPiA+IEBAIC05Myw5ICs5
-MywxMSBAQAo+ID4gPiA+ID4gICNkZWZpbmUgUkRNQTFfTU9VVF9EUEkwCQkJMHgyCj4gPiA+ID4g
-PiAgI2RlZmluZSBSRE1BMV9NT1VUX0RQSTEJCQkweDMKPiA+ID4gPiA+ICAjZGVmaW5lIFJETUEy
-X01PVVRfRFBJMAkJCTB4Mgo+ID4gPiA+ID4gKyNkZWZpbmUgUkRNQTJfTU9VVF9EUEkxCQkJMHgz
-Cj4gPiA+ID4gCj4gPiA+ID4gVXN1YWxseSwgZWFjaCBiaXQgb2YgYSBtb3V0IHJlZ2lzdGVyIHJl
-cHJlc2VudCBhIG91dHB1dCBlbmFibGUuIElzIHRoaXMKPiA+ID4gPiB2YWx1ZSAweDMgYSBjb3Jy
-ZWN0IHZhbHVlPwo+ID4gPiA+IAo+ID4gPiA+IFJlZ2FyZHMsCj4gPiA+ID4gQ0sKPiA+ID4gPiAK
-PiA+ID4gSW4gSFcgQ09ORklHIFNQRUMgb3IgTVQyNzEyX0UyX01NU1lTX0NoYW5nZV9ub3RlIHNo
-b3cgYXMgZm9sbG93aW5nOgo+ID4gPiAKPiA+ID4gQml0KHMpCU5hbWUJCQlEZXNjcmlwdGlvbgo+
-ID4gPiAyOjAJRElTUF9SRE1BMl9TT1VUX1NFTF9JTgkwOiBvdXRwdXQgdG8gZHNpMAo+ID4gPiAJ
-CQkJMTogb3V0cHR1IHRvIGRzaTEKPiA+ID4gCQkJCTI6IG91dHB1dCB0byBkcGkwCj4gPiA+IAkJ
-CQkzOiBvdXRwdXQgdG8gZHBpMQo+ID4gPiAJCQkJNDogb3V0cHV0IHRvIGRzaTIKPiA+ID4gCQkJ
-CTU6IG91dHB1dCB0byBkc2kzCj4gPiA+IAo+ID4gPiBTbywgMHgzIGlzIGNvcnJlY3QgdmFsdWUu
-Cj4gPiAKPiA+IFRoZSBkYXRhIHNoZWV0IHVzZSB0aGUgdGVybSBTT1VUIG1hdGNoIGl0cyBmdW5j
-dGlvbiwgc28gSSB0aGluayBkcml2ZXIKPiA+IGhhdmUgYmV0dGVyIGNoYW5nZSB0aGUgbmFtaW5n
-IHRvIFNPVVQuCj4gPiAKPiA+IFJlZ2FyZHMsCj4gPiBDSwo+ID4gCj4gCj4gVGhlIGRlZmluaXRp
-b24gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVCBpcyB1c2UgdGVybSBTT1VUIGluIHRo
-aXMKPiBwYXRjaC4KPiAKCkkga25vdywgYnV0IFJETUEyX01PVVRfRFBJMSBzaG91bGQgYmUgY2hh
-bmdlZCB0byBSRE1BMl9TT1VUX0RQSTEuCgpSZWdhcmRzLApDSwoKPiBSZWdhcmQsCj4gU3R1Cj4g
-Cj4gPiA+IAo+ID4gPiBSZWdhcmQsCj4gPiA+IFN0dQo+ID4gPiAKPiA+ID4gPiA+ICAjZGVmaW5l
-IERQSTBfU0VMX0lOX1JETUExCQkweDEKPiA+ID4gPiA+ICAjZGVmaW5lIERQSTBfU0VMX0lOX1JE
-TUEyCQkweDMKPiA+ID4gPiA+ICAjZGVmaW5lIERQSTFfU0VMX0lOX1JETUExCQkoMHgxIDw8IDgp
-Cj4gPiA+ID4gPiArI2RlZmluZSBEUEkxX1NFTF9JTl9SRE1BMgkJKDB4MyA8PCA4KQo+ID4gPiA+
-ID4gICNkZWZpbmUgRFNJMV9TRUxfSU5fUkRNQTEJCTB4MQo+ID4gPiA+ID4gICNkZWZpbmUgRFNJ
-Ml9TRUxfSU5fUkRNQTEJCSgweDEgPDwgMTYpCj4gPiA+ID4gPiAgI2RlZmluZSBEU0kzX1NFTF9J
-Tl9SRE1BMQkJKDB4MSA8PCAxNikKPiA+ID4gPiA+IEBAIC0xOTksNiArMjAxLDkgQEAgc3RhdGlj
-IHVuc2lnbmVkIGludCBtdGtfZGRwX21vdXRfZW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAo+
-ID4gPiA+ID4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQg
-PT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gPiA+ID4gPiAgCQkqYWRkciA9IERJU1BfUkVHX0NP
-TkZJR19ESVNQX1JETUEyX1NPVVQ7Cj4gPiA+ID4gPiAgCQl2YWx1ZSA9IFJETUEyX01PVVRfRFBJ
-MDsKPiA+ID4gPiA+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBu
-ZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkgewo+ID4gPiA+ID4gKwkJKmFkZHIgPSBESVNQX1JF
-R19DT05GSUdfRElTUF9SRE1BMl9TT1VUOwo+ID4gPiA+ID4gKwkJdmFsdWUgPSBSRE1BMl9NT1VU
-X0RQSTE7Cj4gPiA+ID4gPiAgCX0gZWxzZSB7Cj4gPiA+ID4gPiAgCQl2YWx1ZSA9IDA7Cj4gPiA+
-ID4gPiAgCX0KPiA+ID4gPiA+IEBAIC0yMzMsNiArMjM4LDkgQEAgc3RhdGljIHVuc2lnbmVkIGlu
-dCBtdGtfZGRwX3NlbF9pbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gPiA+ID4gPiAgCX0g
-ZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9PSBERFBfQ09NUE9O
-RU5UX0RQSTApIHsKPiA+ID4gPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RQSV9TRUxf
-SU47Cj4gPiA+ID4gPiAgCQl2YWx1ZSA9IERQSTBfU0VMX0lOX1JETUEyOwo+ID4gPiA+ID4gKwl9
-IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBP
-TkVOVF9EUEkxKSB7Cj4gPiA+ID4gPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19EUElfU0VM
-X0lOOwo+ID4gPiA+ID4gKwkJdmFsdWUgPSBEUEkxX1NFTF9JTl9SRE1BMjsKPiA+ID4gPiA+ICAJ
-fSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9PVkwxICYmIG5leHQgPT0gRERQX0NPTVBP
-TkVOVF9DT0xPUjEpIHsKPiA+ID4gPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1Bf
-Q09MT1IxX1NFTF9JTjsKPiA+ID4gPiA+ICAJCXZhbHVlID0gQ09MT1IxX1NFTF9JTl9PVkwxOwo+
-ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiAKPiA+ID4gCj4gPiAKPiA+IAo+IAo+IAoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello Stephen,
+
+Thanks for review.
+
+On 6/12/2018 1:25 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2018-06-04 00:56:25)
+>> diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispcc-sdm845.c
+>> new file mode 100644
+>> index 0000000..317ab33
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/dispcc-sdm845.c
+>> @@ -0,0 +1,679 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/reset-controller.h>
+>> +
+>> +#include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+>> +
+>> +#include "clk-alpha-pll.h"
+>> +#include "clk-branch.h"
+>> +#include "clk-pll.h"
+>> +#include "clk-rcg.h"
+>> +#include "clk-regmap.h"
+>> +#include "clk-regmap-divider.h"
+> 
+> Used?
+>
+Unused ones I would clean up.
+
+>> +#include "common.h"
+>> +#include "gdsc.h"
+>> +#include "reset.h"
+>> +
+>> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
+> 
+> We really need to move this into the header file.
+> 
+> $ git grep '#define F(' -- drivers/clk/qcom/ | wc -l
+> 13
+> 
+Sure, will move this in a header and submit the patch.
+
+>> +
+> [...]
+>> +static const char * const disp_cc_parent_names_4[] = {
+>> +       "bi_tcxo",
+>> +       "dsi0_phy_pll_out_dsiclk",
+>> +       "dsi1_phy_pll_out_dsiclk",
+>> +       "core_bi_pll_test_se",
+>> +};
+>> +
+>> +static const struct alpha_pll_config disp_cc_pll0_config = {
+>> +       .l = 0x2c,
+>> +       .alpha = 0xcaaa,
+>> +};
+> 
+> Any reason this can't be put on the stack in the probe function?
+> 
+I would move it.
+>> +
+>> +static struct clk_alpha_pll disp_cc_pll0 = {
+>> +       .offset = 0x0,
+>> +       .regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
+>> +       .clkr = {
+>> +               .hw.init = &(struct clk_init_data){
+>> +                       .name = "disp_cc_pll0",
+>> +                       .parent_names = (const char *[]){ "bi_tcxo" },
+>> +                       .num_parents = 1,
+>> +                       .ops = &clk_alpha_pll_fabia_ops,
+>> +               },
+>> +       },
+>> +};
+> [...]
+>> +
+>> +static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
+>> +       .cmd_rcgr = 0x2058,
+>> +       .mnd_width = 8,
+>> +       .hid_width = 5,
+>> +       .parent_map = disp_cc_parent_map_4,
+>> +       .clkr.hw.init = &(struct clk_init_data){
+>> +               .name = "disp_cc_mdss_pclk0_clk_src",
+>> +               .parent_names = disp_cc_parent_names_4,
+>> +               .num_parents = 4,
+>> +               .flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
+> 
+> Why is the nocache flag needed? Applies to all clks in this file.
+> 
+
+This flag is required for all RCGs whose PLLs are controlled outside the 
+clock controller. The display code would require the recalculated rate 
+always.
+
+>> +               .ops = &clk_pixel_ops,
+>> +       },
+>> +};
+>> +
+>> +static struct clk_rcg2 disp_cc_mdss_pclk1_clk_src = {
+>> +       .cmd_rcgr = 0x2070,
+>> +       .mnd_width = 8,
+>> +       .hid_width = 5,
+>> +       .parent_map = disp_cc_parent_map_4,
+>> +       .clkr.hw.init = &(struct clk_init_data){
+> [...]
+>> +
+>> +static const struct regmap_config disp_cc_sdm845_regmap_config = {
+>> +       .reg_bits       = 32,
+>> +       .reg_stride     = 4,
+>> +       .val_bits       = 32,
+>> +       .max_register   = 0x10000,
+> 
+> This seems arbitrarily large. List the actual end?
+> 
+The actual end is larger than this :( , I have listed the range till the 
+register offset are used here.
+
+>> +       .fast_io        = true,
+>> +};
+>> +
+>> +static const struct qcom_cc_desc disp_cc_sdm845_desc = {
+>> +       .config = &disp_cc_sdm845_regmap_config,
+>> +       .clks = disp_cc_sdm845_clocks,
+>> +       .num_clks = ARRAY_SIZE(disp_cc_sdm845_clocks),
+>> +       .resets = disp_cc_sdm845_resets,
+>> +       .num_resets = ARRAY_SIZE(disp_cc_sdm845_resets),
+>> +       .gdscs = disp_cc_sdm845_gdscs,
+>> +       .num_gdscs = ARRAY_SIZE(disp_cc_sdm845_gdscs),
+>> +};
+>> +
+>> +static const struct of_device_id disp_cc_sdm845_match_table[] = {
+>> +       { .compatible = "qcom,sdm845-dispcc" },
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, disp_cc_sdm845_match_table);
+>> +
+>> +static int disp_cc_sdm845_probe(struct platform_device *pdev)
+>> +{
+>> +       struct regmap *regmap;
+>> +
+>> +       regmap = qcom_cc_map(pdev, &disp_cc_sdm845_desc);
+>> +       if (IS_ERR(regmap))
+>> +               return PTR_ERR(regmap);
+>> +
+>> +       clk_fabia_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);
+>> +
+>> +       /* Enable clock gating for DSI and MDP clocks */
+> 
+> Hardware clock gating? What does this mean.
+> 
+These are used for deciding whether to enable HW based Clock gating or 
+not. Setting these bit will enable HW based Clock gating.
+
+>> +       regmap_update_bits(regmap, 0x8000, 0x7f0, 0x7f0);
+>> +
+>> +       return qcom_cc_really_probe(pdev, &disp_cc_sdm845_desc, regmap);
+>> +}
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
