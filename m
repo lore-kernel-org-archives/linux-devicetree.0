@@ -1,187 +1,86 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH 2/2] clk: qcom: Add display clock controller driver for
- SDM845
-Date: Wed, 13 Jun 2018 14:48:59 +0530
-Message-ID: <a397c3f9-1e4e-b6db-299b-0ecfd1726226@codeaurora.org>
-References: <1528098985-3676-1-git-send-email-tdas@codeaurora.org>
- <1528098985-3676-3-git-send-email-tdas@codeaurora.org>
- <152879014163.16708.9093599796057889104@swboyd.mtv.corp.google.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v1 0/4] add mailbox support for i.MX7D
+Date: Wed, 13 Jun 2018 09:36:39 +0000
+Message-ID: <AM0PR04MB4211ABBDBEE2982312E15F6F807E0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180601065821.28234-1-o.rempel@pengutronix.de>
+ <20180601083411.s35c2floqdas6qni@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <152879014163.16708.9093599796057889104@swboyd.mtv.corp.google.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180601083411.s35c2floqdas6qni@pengutronix.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh@kernel.org
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Schwebel <r.schwebel@pengutronix.de>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
+Hi Robert,
 
-Thanks for review.
+Thanks for the forwarding.
 
-On 6/12/2018 1:25 PM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-06-04 00:56:25)
->> diff --git a/drivers/clk/qcom/dispcc-sdm845.c b/drivers/clk/qcom/dispcc-sdm845.c
->> new file mode 100644
->> index 0000000..317ab33
->> --- /dev/null
->> +++ b/drivers/clk/qcom/dispcc-sdm845.c
->> @@ -0,0 +1,679 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reset-controller.h>
->> +
->> +#include <dt-bindings/clock/qcom,dispcc-sdm845.h>
->> +
->> +#include "clk-alpha-pll.h"
->> +#include "clk-branch.h"
->> +#include "clk-pll.h"
->> +#include "clk-rcg.h"
->> +#include "clk-regmap.h"
->> +#include "clk-regmap-divider.h"
+> -----Original Message-----
+> From: Robert Schwebel [mailto:r.schwebel@pengutronix.de]
+> Sent: Friday, June 1, 2018 4:34 PM
+> To: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
+> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
+> Rutland <mark.rutland@arm.com>; linux-clk@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; kernel@pengutronix.de;
+> devicetree@vger.kernel.org; A.s. Dong <aisheng.dong@nxp.com>; dl-linux-
+> imx <linux-imx@nxp.com>
+> Subject: Re: [PATCH v1 0/4] add mailbox support for i.MX7D
 > 
-> Used?
->
-Unused ones I would clean up.
+> On Fri, Jun 01, 2018 at 08:58:17AM +0200, Oleksij Rempel wrote:
+> > This patches are providing support for mailbox (Messaging Unit) for
+> > i.MX7D. Functionality was tested on PHYTEC phyBOARD-Zeta i.MX7D with
+> > Linux running on all cores: ARM Cortex-A7 and ARM Cortex-M4.
+> >
 
->> +#include "common.h"
->> +#include "gdsc.h"
->> +#include "reset.h"
->> +
->> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
-> 
-> We really need to move this into the header file.
-> 
-> $ git grep '#define F(' -- drivers/clk/qcom/ | wc -l
-> 13
-> 
-Sure, will move this in a header and submit the patch.
+Thanks for the patch.
 
->> +
-> [...]
->> +static const char * const disp_cc_parent_names_4[] = {
->> +       "bi_tcxo",
->> +       "dsi0_phy_pll_out_dsiclk",
->> +       "dsi1_phy_pll_out_dsiclk",
->> +       "core_bi_pll_test_se",
->> +};
->> +
->> +static const struct alpha_pll_config disp_cc_pll0_config = {
->> +       .l = 0x2c,
->> +       .alpha = 0xcaaa,
->> +};
-> 
-> Any reason this can't be put on the stack in the probe function?
-> 
-I would move it.
->> +
->> +static struct clk_alpha_pll disp_cc_pll0 = {
->> +       .offset = 0x0,
->> +       .regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
->> +       .clkr = {
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "disp_cc_pll0",
->> +                       .parent_names = (const char *[]){ "bi_tcxo" },
->> +                       .num_parents = 1,
->> +                       .ops = &clk_alpha_pll_fabia_ops,
->> +               },
->> +       },
->> +};
-> [...]
->> +
->> +static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
->> +       .cmd_rcgr = 0x2058,
->> +       .mnd_width = 8,
->> +       .hid_width = 5,
->> +       .parent_map = disp_cc_parent_map_4,
->> +       .clkr.hw.init = &(struct clk_init_data){
->> +               .name = "disp_cc_mdss_pclk0_clk_src",
->> +               .parent_names = disp_cc_parent_names_4,
->> +               .num_parents = 4,
->> +               .flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-> 
-> Why is the nocache flag needed? Applies to all clks in this file.
-> 
+> > Both parts of i.MX messaging Unit are visible for all CPUs available
+> > on i.MX7D. Communication worked independent of MU side in
+> combination
+> > with CPU. For example MU-A used on ARM Cortex-A7 and MU-B used on
+> ARM
+> > Cortex-M4 or other ways around.
+> >
+> > The question to NXP developers: are there are limitations or
+> > recommendations about MU vs CPU combination? The i.MX7D
+> documentation
+> > talks about "Processor A" and "Processor B". It is not quite clear
+> > what processor it actually is (A7 or M4).
 
-This flag is required for all RCGs whose PLLs are controlled outside the 
-clock controller. The display code would require the recalculated rate 
-always.
+The MU vs CPU combination usually are defined by HW design.
+It, MU Side A/B,  can either be used by both CPU (A core and M core)
+or fixed to one side.
+For MX7D case, both side memory map can be accessed by both CPU
+Including Interrupt signals. But the recommendation is A core using
+MU side A and M core using MU side B.
 
->> +               .ops = &clk_pixel_ops,
->> +       },
->> +};
->> +
->> +static struct clk_rcg2 disp_cc_mdss_pclk1_clk_src = {
->> +       .cmd_rcgr = 0x2070,
->> +       .mnd_width = 8,
->> +       .hid_width = 5,
->> +       .parent_map = disp_cc_parent_map_4,
->> +       .clkr.hw.init = &(struct clk_init_data){
-> [...]
->> +
->> +static const struct regmap_config disp_cc_sdm845_regmap_config = {
->> +       .reg_bits       = 32,
->> +       .reg_stride     = 4,
->> +       .val_bits       = 32,
->> +       .max_register   = 0x10000,
+Regards
+Dong Aisheng
+
 > 
-> This seems arbitrarily large. List the actual end?
+> Adding Dong Aisheng and NXP linux team to Cc:.
 > 
-The actual end is larger than this :( , I have listed the range till the 
-register offset are used here.
-
->> +       .fast_io        = true,
->> +};
->> +
->> +static const struct qcom_cc_desc disp_cc_sdm845_desc = {
->> +       .config = &disp_cc_sdm845_regmap_config,
->> +       .clks = disp_cc_sdm845_clocks,
->> +       .num_clks = ARRAY_SIZE(disp_cc_sdm845_clocks),
->> +       .resets = disp_cc_sdm845_resets,
->> +       .num_resets = ARRAY_SIZE(disp_cc_sdm845_resets),
->> +       .gdscs = disp_cc_sdm845_gdscs,
->> +       .num_gdscs = ARRAY_SIZE(disp_cc_sdm845_gdscs),
->> +};
->> +
->> +static const struct of_device_id disp_cc_sdm845_match_table[] = {
->> +       { .compatible = "qcom,sdm845-dispcc" },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, disp_cc_sdm845_match_table);
->> +
->> +static int disp_cc_sdm845_probe(struct platform_device *pdev)
->> +{
->> +       struct regmap *regmap;
->> +
->> +       regmap = qcom_cc_map(pdev, &disp_cc_sdm845_desc);
->> +       if (IS_ERR(regmap))
->> +               return PTR_ERR(regmap);
->> +
->> +       clk_fabia_pll_configure(&disp_cc_pll0, regmap, &disp_cc_pll0_config);
->> +
->> +       /* Enable clock gating for DSI and MDP clocks */
-> 
-> Hardware clock gating? What does this mean.
-> 
-These are used for deciding whether to enable HW based Clock gating or 
-not. Setting these bit will enable HW based Clock gating.
-
->> +       regmap_update_bits(regmap, 0x8000, 0x7f0, 0x7f0);
->> +
->> +       return qcom_cc_really_probe(pdev, &disp_cc_sdm845_desc, regmap);
->> +}
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+> rsc
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 |
+> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fww
+> w.pengutronix.de%2F&data=02%7C01%7Caisheng.dong%40nxp.com%7Cf53
+> d9c9cdd744878740f08d5c79a7a1e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
+> C0%7C0%7C636634388645464924&sdata=2ehh92tNbfwf3fJTp%2Fx7IUOgGSU
+> h6pyrc2XsdRJkTw4%3D&reserved=0  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
