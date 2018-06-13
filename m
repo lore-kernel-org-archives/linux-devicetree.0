@@ -1,78 +1,73 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 15/28] drm/mediatek: add connection from RDMA1 to DSI1
-Date: Wed, 13 Jun 2018 14:44:02 +0800
-Message-ID: <1528872242.27532.0.camel@mtksdaap41>
-References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-         <1528687580-549-16-git-send-email-stu.hsieh@mediatek.com>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] resource: Use list_head to link sibling resource
+Date: Wed, 13 Jun 2018 14:55:47 +0800
+Message-ID: <20180613065547.GH1820@MiWiFi-R3L-srv>
+References: <alpine.DEB.2.20.1806121708070.3334@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528687580-549-16-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.1806121708070.3334@hadrien>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Cc: brijesh.singh-5C7GfCeVMHo@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ebiederm-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, devel-tBiZLqfeLfOHmIFyCCdPziST3g8Odh+X@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtJq0hI55+XSNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stu:
-
-On Mon, 2018-06-11 at 11:26 +0800, Stu Hsieh wrote:
-> This patch add the connection from RDMA1 to DSI1
+On 06/12/18 at 05:10pm, Julia Lawall wrote:
+> This looks wrong.  After a list iterator, the index variable points to a
+> dummy structure.
 > 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> julia
+> 
+> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/resource-Use-list_head-to-link-sibling-resource/20180612-113600
+> :::::: branch date: 7 hours ago
+> :::::: commit date: 7 hours ago
+> 
+> >> kernel/resource.c:265:17-20: ERROR: invalid reference to the index variable of the iterator on line 253
+> 
+> # https://github.com/0day-ci/linux/commit/e906f15906750a86913ba2b1f08bad99129d3dfc
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout e906f15906750a86913ba2b1f08bad99129d3dfc
+> vim +265 kernel/resource.c
+> 
+> ^1da177e4 Linus Torvalds 2005-04-16  247
+> 5eeec0ec9 Yinghai Lu     2009-12-22  248  static void __release_child_resources(struct resource *r)
+> 5eeec0ec9 Yinghai Lu     2009-12-22  249  {
+> e906f1590 Baoquan He     2018-06-12  250  	struct resource *tmp, *next;
+> 5eeec0ec9 Yinghai Lu     2009-12-22  251  	resource_size_t size;
+> 5eeec0ec9 Yinghai Lu     2009-12-22  252
+> e906f1590 Baoquan He     2018-06-12 @253  	list_for_each_entry_safe(tmp, next, &r->child, sibling) {
+> 5eeec0ec9 Yinghai Lu     2009-12-22  254  		tmp->parent = NULL;
+> e906f1590 Baoquan He     2018-06-12  255  		INIT_LIST_HEAD(&tmp->sibling);
+
+							list_del_init(&tmp->sibling);
+
+Thanks, Julia. Here I should use list_del_init(&op->list) to
+replace INIT_LIST_HEAD(&tmp->sibling). 
+
+> 5eeec0ec9 Yinghai Lu     2009-12-22  256  		__release_child_resources(tmp);
+> 5eeec0ec9 Yinghai Lu     2009-12-22  257
+> 5eeec0ec9 Yinghai Lu     2009-12-22  258  		printk(KERN_DEBUG "release child resource %pR\n", tmp);
+> 5eeec0ec9 Yinghai Lu     2009-12-22  259  		/* need to restore size, and keep flags */
+> 5eeec0ec9 Yinghai Lu     2009-12-22  260  		size = resource_size(tmp);
+> 5eeec0ec9 Yinghai Lu     2009-12-22  261  		tmp->start = 0;
+> 5eeec0ec9 Yinghai Lu     2009-12-22  262  		tmp->end = size - 1;
+> 5eeec0ec9 Yinghai Lu     2009-12-22  263  	}
+> e906f1590 Baoquan He     2018-06-12  264
+> e906f1590 Baoquan He     2018-06-12 @265  	INIT_LIST_HEAD(&tmp->child);
+> 5eeec0ec9 Yinghai Lu     2009-12-22  266  }
+> 5eeec0ec9 Yinghai Lu     2009-12-22  267
+> 
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 4abd5dabeccf..7e4ad5580cf6 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -28,6 +28,7 @@
->  #define DISP_REG_CONFIG_DISP_UFOE_MOUT_EN	0x050
->  #define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN	0x084
->  #define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN	0x088
-> +#define DISP_REG_CONFIG_DSIO_SEL_IN		0x0a8
->  #define DISP_REG_CONFIG_DPI_SEL_IN		0x0ac
->  #define DISP_REG_CONFIG_DISP_RDMA0_MOUT_EN	0x0c4
->  #define DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN	0x0c8
-> @@ -84,10 +85,12 @@
->  #define RDMA0_MOUT_DPI0			0x2
->  #define RDMA0_MOUT_DSI2			0x4
->  #define RDMA0_MOUT_DSI3			0x5
-> +#define RDMA1_MOUT_DSI1			0x1
->  #define RDMA1_MOUT_DPI0			0x2
->  #define RDMA1_MOUT_DPI1			0x3
->  #define DPI0_SEL_IN_RDMA1		0x1
->  #define DPI1_SEL_IN_RDMA1		(0x1 << 8)
-> +#define DSI1_SEL_IN_RDMA1		0x1
->  #define COLOR1_SEL_IN_OVL1		0x1
->  
->  #define OVL_MOUT_EN_RDMA		0x1
-> @@ -170,6 +173,9 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
->  		*addr = DISP_REG_CONFIG_DISP_RDMA0_MOUT_EN;
->  		value = RDMA0_MOUT_DSI3;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN;
-> +		value = RDMA1_MOUT_DSI1;
->  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
->  		*addr = DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN;
->  		value = RDMA1_MOUT_DPI0;
-> @@ -198,6 +204,9 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
->  		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
->  		value = DPI1_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
-
-Does data sheet use the naming 'DSI0'? You use this register to select
-DSI1 input.
-
-Regards,
-CK
-
-> +		value = DSI1_SEL_IN_RDMA1;
->  	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
->  		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
->  		value = COLOR1_SEL_IN_OVL1;
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
