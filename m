@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 01/27] clk: sunxi-ng: r40: Add minimal
- rate for video PLLs
-Date: Wed, 13 Jun 2018 11:18:45 +0800
-Message-ID: <CAGb2v66rUqqUrqmq09hHcGHF1buZieYmu1zOkUXZyyQPtyUZew@mail.gmail.com>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net> <20180612200036.21483-2-jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 02/27] clk: sunxi-ng: r40: Allow setting
+ parent rate to display related clocks
+Date: Wed, 13 Jun 2018 11:19:59 +0800
+Message-ID: <CAGb2v65PyFjC9vQjLj4wGqZ4ETuZd5dF664gwbCRf66=wKOH0w@mail.gmail.com>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net> <20180612200036.21483-3-jernej.skrabec@siol.net>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBLE2QLMQKGQEAXYFN7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB5U2QLMQKGQEYCQRR4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180612200036.21483-2-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+In-Reply-To: <20180612200036.21483-3-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,10 +21,9 @@ Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Jun 13, 2018 at 4:00 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> According to documentation and experience with other similar SoCs, video
-> PLLs don't work stable if their output frequency is set below 192 MHz.
+> Display related peripherals need precise clocks to operate correctly.
 >
-> Because of that, set minimal rate to both R40 video PLLs to 192 MHz.
+> Allow DE2, TCONs and HDMI to set parent clock.
 >
 > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
