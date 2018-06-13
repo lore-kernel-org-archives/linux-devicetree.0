@@ -1,82 +1,120 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v2] arm: sun4i: Add support for Pengpod
- 1000 tablet
-Date: Wed, 13 Jun 2018 09:28:16 +0200
-Message-ID: <4d041794-ba90-a9a6-0886-0ca18dab62b9@redhat.com>
-References: <20180602160313.26763-1-rah@settrans.net>
- <20180604081302.hcn7j36gt6xeyquq@flea>
- <313a74ea-0be6-cff1-6b2f-06a4b0b7ba8d@settrans.net>
- <20180605145038.qptdlcphdbnw6jyg@flea>
- <e2787b2a-230d-ea3c-89b9-316ddcd20f67@settrans.net>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 04/27] dt-bindings: display: sunxi-drm:
+ Add TCON TOP description
+Date: Wed, 13 Jun 2018 09:34:56 +0200
+Message-ID: <20180613073456.jk72zw4rt4ysjco7@flea>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net>
+ <20180612200036.21483-5-jernej.skrabec@siol.net>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBEUPQPMQKGQE36L3WVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uzd22rhmxyob4kzr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIMSQPMQKGQEWUMIALI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <e2787b2a-230d-ea3c-89b9-316ddcd20f67-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180612200036.21483-5-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Bob Ham <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+
+--uzd22rhmxyob4kzr
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
 Hi,
 
-On 05-06-18 20:18, Bob Ham wrote:
-> On 05/06/18 15:50, Maxime Ripard wrote:
->> On Mon, Jun 04, 2018 at 06:33:02PM +0100, Bob Ham wrote:
->>> On 04/06/18 09:13, Maxime Ripard wrote:
->>>> On Sat, Jun 02, 2018 at 05:03:13PM +0100, Bob Ham wrote:
->>>
->>>>> + * This file is dual-licensed: you can use it either under the terms
->>>>> + * of the GPL or the X11 license, at your option. Note that this dual
->>>>> + * licensing only applies to this file, and not this project as a
->>>>> + * whole.
->>>
->>>>> + *     The above copyright notice and this permission notice shall be
->>>>> + *     included in all copies or substantial portions of the Software.
->>>
->>>> And this is redundant with the SPDX header.
->>>
->>> The X11 license notice states explicitly that the notice has to be
->>> included in the file.  Wouldn't removing it be a violation of the license?
->>
->> The SPDX header is explicitly here to remove the license text and
->> create a tag that is in a indirect reference to the license text in
->> LICENSES. It's not going away.
+Thanks for working on this!
+
+On Tue, Jun 12, 2018 at 10:00:13PM +0200, Jernej Skrabec wrote:
+> TCON TOP main purpose is to configure whole display pipeline. It
+> determines relationships between mixers and TCONs, selects source TCON
+> for HDMI, muxes LCD and TV encoder GPIO output, selects TV encoder
+> clock source and contains additional TV TCON and DSI gates.
 > 
-> Well, the top bit that I quoted above says that the licenses refer to
-> only that one file in particular and not the project as a whole.  Then
-> the X11 license states that the notice can't be removed from 'this
-> software and associated documentation files (the "Software")' which
-> would seem to refer to the single file.  Therefore, removing the notice
-> from the single file and replacing it with an SPDX header would seem to
-> violate the license.
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  .../bindings/display/sunxi/sun4i-drm.txt      | 45 +++++++++++++++++++
+>  include/dt-bindings/clock/sun8i-tcon-top.h    | 11 +++++
+>  2 files changed, 56 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
 > 
-> It's a fine point but it makes me nervous.  I originally based my .dts
-> on sun4i-a10-inet1.dts.  I've CC'd the original copyright holder, Hans
-> de Goede.  Hans, are you willing to give permission for the license
-> notice to be replaced with just an SPDX header indicating the dual
-> licensing?
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> index 3346c1e2a7a0..ef64c589a4b3 100644
+> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> @@ -187,6 +187,51 @@ And on the A23, A31, A31s and A33, you need one more clock line:
+>     - 'lvds-alt': An alternative clock source, separate from the TCON channel 0
+>                   clock, that can be used to drive the LVDS clock
+>  
+> +TCON TOP
+> +--------
+> +
+> +TCON TOPs main purpose is to configure whole display pipeline. It determines
+> +relationships between mixers and TCONs, selects source TCON for HDMI, muxes
+> +LCD and TV encoder GPIO output, selects TV encoder clock source and contains
+> +additional TV TCON and DSI gates.
+> +
+> +It allows display pipeline to be configured in very different ways:
+> +
+> +                             / LCD0/LVDS0
+> +                 / TCON-LCD0
+> +                 |           \ MIPI DSI
+> + mixer0          |
+> +        \        / TCON-LCD1 - LCD1/LVDS1
+> +         TCON-TOP
+> +        /        \ TCON-TV0 - TVE0/RGB
+> + mixer1          |          \
+> +                 |           TCON-TOP - HDMI
+> +                 |          /
+> +                 \ TCON-TV1 - TVE1/RGB
+> +
+> +Note that both TCON TOP references same physical unit.
+> +
+> +Required properties:
+> +  - compatible: value must be one of:
+> +    * allwinner,sun8i-r40-tcon-top
+> +  - reg: base address and size of the memory-mapped region.
+> +  - clocks: phandle to the clocks feeding the TCON TOP
+> +    * bus: TCON TOP interface clock
+> +  - clock-names: clock name mentioned above
+> +  - resets: phandle to the reset line driving the DRC
 
-Yes that is fine by me and you've my permission to switch to using
-just the SPDX header.
+s/DRC/TCON TOP/ ?
 
-FWIW I do not believe the "can't be removed from 'this software and
-associated documentation files (the "Software")'" language
-applies to the software as a whole and not individual files.
+> +    * rst: TCON TOP reset line
 
-> While we're at it, there are a number of other files with the same
-> license text.  Hans, are you prepared to give permission for your other
-> license notices to be replaced with SPDX headers?
+Remaining consistent with the clock name would be great
 
-Yes you may make the same change to all files with my copyright.
+> +  - reset-names: reset name mentioned above
+> +  - #clock-cells : must contain 1
 
-Regards,
+An example would be nice here
 
-Hans
+> +- ports: A ports node with endpoint definitions as defined in
+> +    Documentation/devicetree/bindings/media/video-interfaces.txt. The first port
+> +    should be the input for mixer0 mux. The second should be the output for that
+> +    mux. Third port should be input for mixer1 mux. Fourth port should be output
+> +    for mixer1 mux. Fifth port should be input for HDMI mux. Sixth port should
+> +    be output for it. All output endpoints should have reg property with the id
+> +    of the target TCON. All ports should have only one enpoint connected to
+
+                                                          ^ endpoint
+
+I guess it would me more readable if you were to make it a bullet
+list, but this works for me otherwise.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--uzd22rhmxyob4kzr--
