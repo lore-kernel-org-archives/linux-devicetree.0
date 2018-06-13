@@ -1,69 +1,78 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 14/27] drm/sun4i: Don't check for panel
- or bridge on TV TCONs
-Date: Wed, 13 Jun 2018 09:46:21 +0200
-Message-ID: <20180613074621.5phumovcyymbkfbn@flea>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
- <20180612200036.21483-15-jernej.skrabec@siol.net>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Stu Hsieh <stu.hsieh@mediatek.com>
+Subject: Re: [PATCH 13/28] drm/mediatek: add connection from RDMA0 to DSI3
+Date: Wed, 13 Jun 2018 15:46:23 +0800
+Message-ID: <1528875983.11190.29.camel@mtksdccf07>
+References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
+ <1528687580-549-14-git-send-email-stu.hsieh@mediatek.com>
+ <1528868751.15127.10.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="on6p3lb7ylr4gu64"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTUXQPMQKGQEMHLEKSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180612200036.21483-15-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1528868751.15127.10.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---on6p3lb7ylr4gu64
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Jun 12, 2018 at 10:00:23PM +0200, Jernej Skrabec wrote:
-> TV TCONs are always connected to TV or HDMI encoder, so it doesn't make
-> sense to check if panel or bridge is connected to them.
-> 
-> Check if TCON has channel 0 and only then check for connected panel or
-> bridges.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_tcon.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> index b1205a7bc20f..c9ffa5381185 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -1189,13 +1189,19 @@ static const struct component_ops sun4i_tcon_ops = {
->  static int sun4i_tcon_probe(struct platform_device *pdev)
->  {
->  	struct device_node *node = pdev->dev.of_node;
-> +	const struct sun4i_tcon_quirks *quirks;
->  	struct drm_bridge *bridge;
->  	struct drm_panel *panel;
->  	int ret;
->  
-> -	ret = drm_of_find_panel_or_bridge(node, 1, 0, &panel, &bridge);
-> -	if (ret == -EPROBE_DEFER)
-> -		return ret;
-> +	quirks = of_device_get_match_data(&pdev->dev);
-
-We should probably check ofr the pointer value before dereferencing it.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---on6p3lb7ylr4gu64--
+SGksIENLOgoKT24gV2VkLCAyMDE4LTA2LTEzIGF0IDEzOjQ1ICswODAwLCBDSyBIdSB3cm90ZToK
+PiBIaSwgU3R1Ogo+IAo+IFR3byBpbmxpbmUgY29tbWVudC4KPiAKPiBPbiBNb24sIDIwMTgtMDYt
+MTEgYXQgMTE6MjYgKzA4MDAsIFN0dSBIc2llaCB3cm90ZToKPiA+IFRoaXMgcGF0Y2ggYWRkIHRo
+ZSBjb25uZWN0aW9uIGZyb20gUkRNQTAgdG8gRFNJMwo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBT
+dHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5jb20+Cj4gPiAtLS0KPiA+ICBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgICAgIHwgNCArKysrCj4gPiAgZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDIgKy0KPiA+ICAyIGZpbGVzIGNo
+YW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ID4gaW5kZXggYzA4YWVkOGRhZTQ0Li5mZWQxYjU3
+MDQzNTUgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+ZHAuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiA+
+IEBAIC04Myw2ICs4Myw3IEBACj4gPiAgI2RlZmluZSBHQU1NQV9NT1VUX0VOX1JETUExCQkweDEK
+PiA+ICAjZGVmaW5lIFJETUEwX01PVVRfRFBJMAkJCTB4Mgo+ID4gICNkZWZpbmUgUkRNQTBfTU9V
+VF9EU0kyCQkJMHg0Cj4gPiArI2RlZmluZSBSRE1BMF9NT1VUX0RTSTMJCQkweDUKPiAKPiBVc3Vh
+bGx5LCBlYWNoIGJpdCBvZiBhIG1vdXQgcmVnaXN0ZXIgcmVwcmVzZW50IGEgb3V0cHV0IGVuYWJs
+ZS4gSXMgdGhpcwo+IHZhbHVlIDB4NSBpcyBhIGNvcnJlY3QgdmFsdWU/CgpJbiBodyBDT05GSUcg
+U1BFQyBzaG93IGFzIGZvbGxvd2luZzoKQml0KHMpCU5hbWUJCQlEZXNjcmlwdGlvbgoyOjAJRElT
+UF9QQVRIMF9TT1VUX1NFTF9JTgkwIDogT3V0cHV0IHRvIERTSTAKCQkJCTE6ICBPb3V0cHV0IHRv
+IERTSTEKCQkJCTI6ICBPb3V0cHV0IHRvIERQSQoJCQkJMzogIE9vdXRwdXQgdG8gRFBJMQoJCQkJ
+NDogIE9vdXRwdXQgdG8gRFNJMgoJCQkJNTogIE9vdXRwdXQgdG8gRFNJMwoJCQkJNiA6IHJlc2Vy
+dmVkCgkJCQk3OiAgT291dHB1dCB0byBESVNQX1VGT0UKU28sIHRoZSB2YWx1ZSAweDUgaXMgY29y
+cmVjdCB2YWx1ZS4KClJlZ2FyZCwKU3R1Cgo+IAo+ID4gICNkZWZpbmUgUkRNQTFfTU9VVF9EUEkw
+CQkJMHgyCj4gPiAgI2RlZmluZSBEUEkwX1NFTF9JTl9SRE1BMQkJMHgxCj4gPiAgI2RlZmluZSBD
+T0xPUjFfU0VMX0lOX09WTDEJCTB4MQo+ID4gQEAgLTE2NCw2ICsxNjUsOSBAQCBzdGF0aWMgdW5z
+aWduZWQgaW50IG10a19kZHBfbW91dF9lbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gPiAg
+CX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAgJiYgbmV4dCA9PSBERFBfQ09N
+UE9ORU5UX0RTSTIpIHsKPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBf
+TU9VVF9FTjsKPiA+ICAJCXZhbHVlID0gUkRNQTBfTU9VVF9EU0kyOwo+ID4gKwl9IGVsc2UgaWYg
+KGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kz
+KSB7Cj4gPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX01PVVRfRU47Cj4g
+PiArCQl2YWx1ZSA9IFJETUEwX01PVVRfRFNJMzsKPiA+ICAJfSBlbHNlIGlmIChjdXIgPT0gRERQ
+X0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewo+ID4gIAkJ
+KmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9NT1VUX0VOOwo+ID4gIAkJdmFsdWUg
+PSBSRE1BMV9NT1VUX0RQSTA7Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZGRwX2NvbXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcF9jb21wLmMKPiA+IGluZGV4IGZlNmZkYzAyMWZjNy4uMjJmNGM3MmZhNzg1IDEwMDY0NAo+
+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+ID4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+ID4gQEAg
+LTIyOCw3ICsyMjgsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9tYXRjaCBt
+dGtfZGRwX21hdGNoZXNbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0gewo+ID4gIAlbRERQX0NPTVBP
+TkVOVF9EU0kwXQk9IHsgTVRLX0RTSSwJCTAsIE5VTEwgfSwKPiA+ICAJW0REUF9DT01QT05FTlRf
+RFNJMV0JPSB7IE1US19EU0ksCQkxLCBOVUxMIH0sCj4gPiAgCVtERFBfQ09NUE9ORU5UX0RTSTJd
+CT0geyBNVEtfRFNJLAkJMiwgTlVMTCB9LAo+ID4gLQlbRERQX0NPTVBPTkVOVF9EU0kyXQk9IHsg
+TVRLX0RTSSwJCTMsIE5VTEwgfSwKPiA+ICsJW0REUF9DT01QT05FTlRfRFNJM10JPSB7IE1US19E
+U0ksCQkzLCBOVUxMIH0sCj4gCj4gSSB0aGluayB0aGlzIGlzIG5vdCByZWxhdGVkIHRvIHRoaXMg
+cGF0Y2guCk9LCgo+IAo+IFJlZ2FyZHMsCj4gQ0sKPiAKPiA+ICAJW0REUF9DT01QT05FTlRfR0FN
+TUFdCT0geyBNVEtfRElTUF9HQU1NQSwJMCwgJmRkcF9nYW1tYSB9LAo+ID4gIAlbRERQX0NPTVBP
+TkVOVF9PRDBdCT0geyBNVEtfRElTUF9PRCwJMCwgJmRkcF9vZCB9LAo+ID4gIAlbRERQX0NPTVBP
+TkVOVF9PRDFdCT0geyBNVEtfRElTUF9PRCwJMSwgJmRkcF9vZCB9LAo+IAo+IAoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
