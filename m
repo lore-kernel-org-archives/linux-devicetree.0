@@ -1,62 +1,79 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 19/28] drm/mediatek: add connection from RDMA2 to DPI1
-Date: Wed, 13 Jun 2018 15:13:57 +0800
-Message-ID: <1528874037.30263.6.camel@mtksdaap41>
-References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
- <1528687580-549-20-git-send-email-stu.hsieh@mediatek.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v8 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl: documentation
+Date: Wed, 13 Jun 2018 09:17:24 +0200
+Message-ID: <CAMuHMdUtdRB_L-WsphJYBd9m-3tth3KHGK1wWdr_UJF18S9Z5A@mail.gmail.com>
+References: <1528187462-47093-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528187462-47093-3-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdWoE=+sEUtFdPKk4eBGtOn8f7bUPV-HLAvEETuqgVMeVw@mail.gmail.com> <OSBPR01MB2054D7F35A31A8331B906E05D27E0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1528687580-549-20-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <OSBPR01MB2054D7F35A31A8331B906E05D27E0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0dToKCk9uIE1vbiwgMjAxOC0wNi0xMSBhdCAxMToyNiArMDgwMCwgU3R1IEhzaWVoIHdy
-b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIHRoZSBjb25uZWN0aW9uIGZyb20gUkRNQTIgdG8gRFBJMQo+
-IAo+IFNpZ25lZC1vZmYtYnk6IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiAt
-LS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCA4ICsrKysrKysr
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHAuYwo+IGluZGV4IDMxYTA4MzJlZjllYy4uMmQ4ODM4MTVkNzljIDEw
-MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBAQCAtOTMsOSArOTMs
-MTEgQEAKPiAgI2RlZmluZSBSRE1BMV9NT1VUX0RQSTAJCQkweDIKPiAgI2RlZmluZSBSRE1BMV9N
-T1VUX0RQSTEJCQkweDMKPiAgI2RlZmluZSBSRE1BMl9NT1VUX0RQSTAJCQkweDIKPiArI2RlZmlu
-ZSBSRE1BMl9NT1VUX0RQSTEJCQkweDMKClVzdWFsbHksIGVhY2ggYml0IG9mIGEgbW91dCByZWdp
-c3RlciByZXByZXNlbnQgYSBvdXRwdXQgZW5hYmxlLiBJcyB0aGlzCnZhbHVlIDB4MyBhIGNvcnJl
-Y3QgdmFsdWU/CgpSZWdhcmRzLApDSwoKPiAgI2RlZmluZSBEUEkwX1NFTF9JTl9SRE1BMQkJMHgx
-Cj4gICNkZWZpbmUgRFBJMF9TRUxfSU5fUkRNQTIJCTB4Mwo+ICAjZGVmaW5lIERQSTFfU0VMX0lO
-X1JETUExCQkoMHgxIDw8IDgpCj4gKyNkZWZpbmUgRFBJMV9TRUxfSU5fUkRNQTIJCSgweDMgPDwg
-OCkKPiAgI2RlZmluZSBEU0kxX1NFTF9JTl9SRE1BMQkJMHgxCj4gICNkZWZpbmUgRFNJMl9TRUxf
-SU5fUkRNQTEJCSgweDEgPDwgMTYpCj4gICNkZWZpbmUgRFNJM19TRUxfSU5fUkRNQTEJCSgweDEg
-PDwgMTYpCj4gQEAgLTE5OSw2ICsyMDEsOSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBf
-bW91dF9lbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBE
-RFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gIAkJ
-KmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMl9TT1VUOwo+ICAJCXZhbHVlID0gUkRN
-QTJfTU9VVF9EUEkwOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAm
-JiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkgewo+ICsJCSphZGRyID0gRElTUF9SRUdfQ09O
-RklHX0RJU1BfUkRNQTJfU09VVDsKPiArCQl2YWx1ZSA9IFJETUEyX01PVVRfRFBJMTsKPiAgCX0g
-ZWxzZSB7Cj4gIAkJdmFsdWUgPSAwOwo+ICAJfQo+IEBAIC0yMzMsNiArMjM4LDkgQEAgc3RhdGlj
-IHVuc2lnbmVkIGludCBtdGtfZGRwX3NlbF9pbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4g
-IAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NP
-TVBPTkVOVF9EUEkwKSB7Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFBJX1NFTF9JTjsK
-PiAgCQl2YWx1ZSA9IERQSTBfU0VMX0lOX1JETUEyOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQ
-X0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkgewo+ICsJCSph
-ZGRyID0gRElTUF9SRUdfQ09ORklHX0RQSV9TRUxfSU47Cj4gKwkJdmFsdWUgPSBEUEkxX1NFTF9J
-Tl9SRE1BMjsKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfT1ZMMSAmJiBuZXh0
-ID09IEREUF9DT01QT05FTlRfQ09MT1IxKSB7Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdf
-RElTUF9DT0xPUjFfU0VMX0lOOwo+ICAJCXZhbHVlID0gQ09MT1IxX1NFTF9JTl9PVkwxOwoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Michel,
+
+On Wed, Jun 13, 2018 at 8:38 AM Michel Pollet
+<michel.pollet@bp.renesas.com> wrote:
+> On 11 June 2018 11:01, Geert wrote:
+> > On Tue, Jun 5, 2018 at 10:36 AM Michel Pollet
+> > <michel.pollet@bp.renesas.com> wrote:
+> > > The Renesas R9A06G032 SYSCTRL node description.
+> > >
+> > > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-
+> > sysctr
+> > > +++ l.txt
+> > > @@ -0,0 +1,32 @@
+> > > +* Renesas R9A06G032 SYSCTRL
+> > > +
+> > > +Required Properties:
+> > > +
+> > > +  - compatible: Must be:
+> > > +    - "renesas,r9a06g032-sysctrl"
+> > > +  - reg: Base address and length of the SYSCTRL IO block.
+> > > +  - #clock-cells: Must be 1
+> >
+> > (repeating myself) No clocks/clock-names for the external clock inputs?
+> >
+> > "RZ/N1 has 3 clock sources, 1 reference clock inputs for RGMII, and 2
+> > reference clock outputs for RMII/MII."
+>
+> Well, I'm trying to keep the binding as simple as possible, to dodge any
+> further discussion. Adding these will be possible later, I don't need them
+> for the moment anyway.
+
+Don't you? The external clock inputs are at the root of the clock tree, so I'd
+say you need them. Bolting them on later may become complicated, especially
+if you care about DTB backwards compatibility.
+
+The reset controller subsystem is optional anyway, and used only by a small
+number of drivers, so support for resets can definitely be postponed.
+
+> Did you have a chance to review the clock driver proper? I'm pondering
+> sending a v9 since it's been a week (with very minor changes) -- but I
+> don't want to interrupt if you were in the process of reviewing...
+
+I had a quick glance. Looks OK mostly, so it's definitely heading for the right
+direction!
+One remaining question: do you need CLK_OF_DECLARE()?
+Is there any reason your clock driver cannot be a platform driver, which is
+the recommended way?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
