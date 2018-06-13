@@ -1,94 +1,58 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Wed, 13 Jun 2018 12:26:53 +0100
-Message-ID: <0f3f0223-3539-dc66-5300-8f30d827445d@arm.com>
-References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
- <1528801355-18719-2-git-send-email-tdas@codeaurora.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] dmaengine: rcar-dmac: don't use DMAC error interrupt
+Date: Wed, 13 Jun 2018 13:36:39 +0200
+Message-ID: <CAMuHMdV-MoVnfJarHc9xZX_ZN7sHmKjGKxnhHyYUBof_P6R9ew@mail.gmail.com>
+References: <8736xrkrci.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528801355-18719-2-git-send-email-tdas@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <8736xrkrci.wl%kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: vkoul@kernel.org, Dan Williams <dan.j.williams@intel.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran@ksquared.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Morimoto-san,
 
+Thanks for your patch!
 
-On 12/06/18 12:02, Taniya Das wrote:
-> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
-> SoCs. This is required for managing the cpu frequency transitions which are
-> controlled by firmware.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../bindings/cpufreq/cpufreq-qcom-fw.txt           | 173 +++++++++++++++++++++
->  1 file changed, 173 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> new file mode 100644
-> index 0000000..e3087ec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-fw.txt
-> @@ -0,0 +1,173 @@
-> +Qualcomm Technologies, Inc. CPUFREQ Bindings
-> +
-> +CPUFREQ FW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
-> +SoCs to manage frequency in hardware. It is capable of controlling frequency
-> +for multiple clusters.
-> +
+On Wed, Jun 13, 2018 at 10:49 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>
+> Current rcar-dmac is using DMAC error interrupt which will handle all
+> channel's error. But in this design, error handling itself will be
+> issue if user want to use virtualization, multi OS, etc.
+> This patch removes current DMAC error interrupt handling, and handle it
+> on each channel interrupt handler.
 
-You are bit inconsistent on the wordings. Some places you refer this as
-hardware engine. If so, please drop all references to firmware/FW. If
-it's firmware then update accordingly.
+Just wondering, what's the usage pattern where this causes a problem?
+Do you plan to export part of a SYS-DMAC instance to a guest?
+How to maintain host/guest isolation?
 
-> +Properties:
-> +- compatible
-> +	Usage:		required
-> +	Value type:	<string>
-> +	Definition:	must be "qcom,cpufreq-fw".
-> +
-> +* Property qcom,freq-domain
-> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
-> +phandle to a freq_domain_table in their DT node.
-> +
-> +* Frequency Domain Table Node
-> +
-> +This describes the frequency domain belonging to a device.
-> +This node can have following properties:
-> +
-> +- reg
-> +	Usage:		required
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Addresses and sizes for the memory of the perf
-> +			, lut and enable bases.
-> +			perf - indicates the base address for the desired
-> +			performance state to be set.
-> +			lut - indicates the look up table base address for the
-> +			cpufreq	driver to read frequencies.
-> +			enable - indicates the enable register for firmware.
+> --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> @@ -38,6 +38,7 @@ Required Properties:
+>  - interrupt-names: one entry for the error interrupt, named "error", plus one
+>    entry per channel, named "ch%u", where %u is the channel number ranging from
+>    zero to the number of channels minus one.
+> +  # "error" interrupt will be ignored, so far
 
+Again, DT describes hardware, not software policy.
+So please drop all changes to the bindings.
 
-You still didn't answer my earlier question.
+With that fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-OS might touch one or 2 registers in lots of IP blocks. I am not sure
-why those are any different from these. Are you trying to align with any
-other bindings or specification. Are you trying to make this binding
-generic here ? I understand if it was trying to generalize the firmware
-interface, but you also state it's a hardware engine. So I fail to see
-the need for such specificity here. Why not define the whole IP block
-and the driver knows where to access these specific ones as they are
-specific to this hardware block. In that way if you decide to add more
-data, it's extensible easily without the need for patching DT.
+Thanks!
 
-Eg. Suppose you need some information on power curve for EAS energy
-model, I really hate to update DT for that or even do a mix with DT just
-because f/w is no longer modifiable.
+Gr{oetje,eeting}s,
 
--- 
-Regards,
-Sudeep
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
