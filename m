@@ -1,83 +1,78 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v2 2/5] dt: qcom: 8996: thermal: Move to DT initialisation
-Date: Wed, 13 Jun 2018 11:13:10 +0300
-Message-ID: <CAHLCerOaQ6LmuGkBNu6SuVXXX8hQ+yJJ9-N6NAyLhtTp_yCK-w@mail.gmail.com>
-References: <cover.1528799892.git.amit.kucheria@linaro.org>
- <683ceb9a7d283bcad47fc6e8e4fcfbd7e76c1018.1528799892.git.amit.kucheria@linaro.org>
- <20180612193507.GO14924@minitux>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 19/28] drm/mediatek: add connection from RDMA2 to DPI1
+Date: Wed, 13 Jun 2018 16:14:35 +0800
+Message-ID: <1528877675.30263.27.camel@mtksdaap41>
+References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
+ <1528687580-549-20-git-send-email-stu.hsieh@mediatek.com>
+ <1528874037.30263.6.camel@mtksdaap41>
+ <1528876862.11190.35.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612193507.GO14924@minitux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1528876862.11190.35.camel@mtksdccf07>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 10:35 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Tue 12 Jun 03:54 PDT 2018, Amit Kucheria wrote:
->
->> We also split up the regmap address space into two, one for the TM
->> registers, the other for the SROT registers. This was required to deal with
->> different address offsets for the TM and SROT registers across different
->> SoC families.
->>
->> Since tsens-common.c/init_common() currently only registers one address space, the order is important (TM before SROT).This is OK since the code doesn't really use the SROT functionality yet.
->
-> Please line wrap this.
->
->>
->> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
->> ---
->>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 12 +++++++++++-
->>  drivers/thermal/qcom/tsens-8996.c     |  1 -
->>  2 files changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> index 410ae78..b4aab18 100644
->> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
->> @@ -451,7 +451,17 @@
->>
->>               tsens0: thermal-sensor@4a8000 {
->>                       compatible = "qcom,msm8996-tsens";
->> -                     reg = <0x4a8000 0x2000>;
->> +                     reg = <0x4a9000 0x1000>, /* TM */
->> +                           <0x4a8000 0x1000>; /* SROT */
->> +                     #qcom,sensors = <13>;
->> +                     #thermal-sensor-cells = <1>;
->> +             };
->> +
->> +             tsens1: thermal-sensor@4ac000 {
->> +                     compatible = "qcom,msm8996-tsens";
->> +                     reg = <0x4ad000 0x1000>, /* TM */
->> +                           <0x4ac000 0x1000>; /* SROT */
->> +                     #qcom,sensors = <8>;
->>                       #thermal-sensor-cells = <1>;
->>               };
->>
->> diff --git a/drivers/thermal/qcom/tsens-8996.c b/drivers/thermal/qcom/tsens-8996.c
->> index e1f7781..6e59078 100644
->> --- a/drivers/thermal/qcom/tsens-8996.c
->> +++ b/drivers/thermal/qcom/tsens-8996.c
->> @@ -79,6 +79,5 @@ static const struct tsens_ops ops_8996 = {
->>  };
->>
->>  const struct tsens_data data_8996 = {
->> -     .num_sensors    = 13,
->
-> This will cause the current 8996 dts to fail probing the tsens. I think
-> you should just leave this as is, because specifying qcom,sensors in dts
-> will overwrite this number regardless.
-
-Ack, I didn't consider backword compatility of the code with the
-current dts. Will fix.
-
-> It also would make this change dts specific, which is convenient as it
-> breaks the interdependency between the different subsystems.
->
->>       .ops            = &ops_8996,
->
-> Regards,
-> Bjorn
+SGksIFN0dToKCk9uIFdlZCwgMjAxOC0wNi0xMyBhdCAxNjowMSArMDgwMCwgU3R1IEhzaWVoIHdy
+b3RlOgo+IEhpLCBDSzoKPiAKPiAKPiBPbiBXZWQsIDIwMTgtMDYtMTMgYXQgMTU6MTMgKzA4MDAs
+IENLIEh1IHdyb3RlOgo+ID4gSGksIFN0dToKPiA+IAo+ID4gT24gTW9uLCAyMDE4LTA2LTExIGF0
+IDExOjI2ICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gPiA+IFRoaXMgcGF0Y2ggYWRkIHRoZSBj
+b25uZWN0aW9uIGZyb20gUkRNQTIgdG8gRFBJMQo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTog
+U3R1IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+ID4gPiAtLS0KPiA+ID4gIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIHwgOCArKysrKysrKwo+ID4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQo+ID4gPiAKPiA+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIGIvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZGRwLmMKPiA+ID4gaW5kZXggMzFhMDgzMmVmOWVjLi4yZDg4MzgxNWQ3
+OWMgMTAwNjQ0Cj4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cC5jCj4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4g
+PiA+IEBAIC05Myw5ICs5MywxMSBAQAo+ID4gPiAgI2RlZmluZSBSRE1BMV9NT1VUX0RQSTAJCQkw
+eDIKPiA+ID4gICNkZWZpbmUgUkRNQTFfTU9VVF9EUEkxCQkJMHgzCj4gPiA+ICAjZGVmaW5lIFJE
+TUEyX01PVVRfRFBJMAkJCTB4Mgo+ID4gPiArI2RlZmluZSBSRE1BMl9NT1VUX0RQSTEJCQkweDMK
+PiA+IAo+ID4gVXN1YWxseSwgZWFjaCBiaXQgb2YgYSBtb3V0IHJlZ2lzdGVyIHJlcHJlc2VudCBh
+IG91dHB1dCBlbmFibGUuIElzIHRoaXMKPiA+IHZhbHVlIDB4MyBhIGNvcnJlY3QgdmFsdWU/Cj4g
+PiAKPiA+IFJlZ2FyZHMsCj4gPiBDSwo+ID4gCj4gSW4gSFcgQ09ORklHIFNQRUMgb3IgTVQyNzEy
+X0UyX01NU1lTX0NoYW5nZV9ub3RlIHNob3cgYXMgZm9sbG93aW5nOgo+IAo+IEJpdChzKQlOYW1l
+CQkJRGVzY3JpcHRpb24KPiAyOjAJRElTUF9SRE1BMl9TT1VUX1NFTF9JTgkwOiBvdXRwdXQgdG8g
+ZHNpMAo+IAkJCQkxOiBvdXRwdHUgdG8gZHNpMQo+IAkJCQkyOiBvdXRwdXQgdG8gZHBpMAo+IAkJ
+CQkzOiBvdXRwdXQgdG8gZHBpMQo+IAkJCQk0OiBvdXRwdXQgdG8gZHNpMgo+IAkJCQk1OiBvdXRw
+dXQgdG8gZHNpMwo+IAo+IFNvLCAweDMgaXMgY29ycmVjdCB2YWx1ZS4KClRoZSBkYXRhIHNoZWV0
+IHVzZSB0aGUgdGVybSBTT1VUIG1hdGNoIGl0cyBmdW5jdGlvbiwgc28gSSB0aGluayBkcml2ZXIK
+aGF2ZSBiZXR0ZXIgY2hhbmdlIHRoZSBuYW1pbmcgdG8gU09VVC4KClJlZ2FyZHMsCkNLCgo+IAo+
+IFJlZ2FyZCwKPiBTdHUKPiAKPiA+ID4gICNkZWZpbmUgRFBJMF9TRUxfSU5fUkRNQTEJCTB4MQo+
+ID4gPiAgI2RlZmluZSBEUEkwX1NFTF9JTl9SRE1BMgkJMHgzCj4gPiA+ICAjZGVmaW5lIERQSTFf
+U0VMX0lOX1JETUExCQkoMHgxIDw8IDgpCj4gPiA+ICsjZGVmaW5lIERQSTFfU0VMX0lOX1JETUEy
+CQkoMHgzIDw8IDgpCj4gPiA+ICAjZGVmaW5lIERTSTFfU0VMX0lOX1JETUExCQkweDEKPiA+ID4g
+ICNkZWZpbmUgRFNJMl9TRUxfSU5fUkRNQTEJCSgweDEgPDwgMTYpCj4gPiA+ICAjZGVmaW5lIERT
+STNfU0VMX0lOX1JETUExCQkoMHgxIDw8IDE2KQo+ID4gPiBAQCAtMTk5LDYgKzIwMSw5IEBAIHN0
+YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1
+ciwKPiA+ID4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQg
+PT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklH
+X0RJU1BfUkRNQTJfU09VVDsKPiA+ID4gIAkJdmFsdWUgPSBSRE1BMl9NT1VUX0RQSTA7Cj4gPiA+
+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9D
+T01QT05FTlRfRFBJMSkgewo+ID4gPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JE
+TUEyX1NPVVQ7Cj4gPiA+ICsJCXZhbHVlID0gUkRNQTJfTU9VVF9EUEkxOwo+ID4gPiAgCX0gZWxz
+ZSB7Cj4gPiA+ICAJCXZhbHVlID0gMDsKPiA+ID4gIAl9Cj4gPiA+IEBAIC0yMzMsNiArMjM4LDkg
+QEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX3NlbF9pbihlbnVtIG10a19kZHBfY29tcF9p
+ZCBjdXIsCj4gPiA+ICAJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBu
+ZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewo+ID4gPiAgCQkqYWRkciA9IERJU1BfUkVHX0NP
+TkZJR19EUElfU0VMX0lOOwo+ID4gPiAgCQl2YWx1ZSA9IERQSTBfU0VMX0lOX1JETUEyOwo+ID4g
+PiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9PSBERFBf
+Q09NUE9ORU5UX0RQSTEpIHsKPiA+ID4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFBJX1NF
+TF9JTjsKPiA+ID4gKwkJdmFsdWUgPSBEUEkxX1NFTF9JTl9SRE1BMjsKPiA+ID4gIAl9IGVsc2Ug
+aWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09WTDEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0NP
+TE9SMSkgewo+ID4gPiAgCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX0NPTE9SMV9TRUxf
+SU47Cj4gPiA+ICAJCXZhbHVlID0gQ09MT1IxX1NFTF9JTl9PVkwxOwo+ID4gCj4gPiAKPiAKPiAK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
