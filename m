@@ -1,54 +1,83 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: Re: [PATCH 26/28] drm/mediatek: add DPI1/DSI1/DSI2/DSI3 in comp_init
-Date: Wed, 13 Jun 2018 16:05:55 +0800
-Message-ID: <1528877155.11190.36.camel@mtksdccf07>
-References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
- <1528687580-549-27-git-send-email-stu.hsieh@mediatek.com>
- <1528875305.30263.14.camel@mtksdaap41>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2 2/5] dt: qcom: 8996: thermal: Move to DT initialisation
+Date: Wed, 13 Jun 2018 11:13:10 +0300
+Message-ID: <CAHLCerOaQ6LmuGkBNu6SuVXXX8hQ+yJJ9-N6NAyLhtTp_yCK-w@mail.gmail.com>
+References: <cover.1528799892.git.amit.kucheria@linaro.org>
+ <683ceb9a7d283bcad47fc6e8e4fcfbd7e76c1018.1528799892.git.amit.kucheria@linaro.org>
+ <20180612193507.GO14924@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1528875305.30263.14.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180612193507.GO14924@minitux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIENLOgoKT24gV2VkLCAyMDE4LTA2LTEzIGF0IDE1OjM1ICswODAwLCBDSyBIdSB3cm90ZToK
-PiBIaSwgU3R1Ogo+IAo+IE9uIE1vbiwgMjAxOC0wNi0xMSBhdCAxMToyNiArMDgwMCwgU3R1IEhz
-aWVoIHdyb3RlOgo+ID4gVGhpcyBwYXRjaCBhZGQgY29tcG9uZW50cyBEUEkxL0RTSTEvRFNJMi9E
-U0kzIGluIGNvbXBfaW5pdC4KPiA+IEJlY2F1c2UgdGhlIHNvbWUgcGFyYW1ldGVyIGZvciB0aGVz
-ZSBjb21wb25lbnRzIGluaXRpYWxpemVkCj4gPiBpbiB0aGVpciBkcml2ZXIuCj4gPiAKPiA+IFNp
-Z25lZC1vZmYtYnk6IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+
-ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgfCA0ICsrKysK
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+ID4gaW5kZXggMjJmNGM3MmZhNzg1
-Li5mZjk3NGQ4MmE0YTYgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kZHBfY29tcC5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHBfY29tcC5jCj4gPiBAQCAtMjc4LDcgKzI3OCwxMSBAQCBpbnQgbXRrX2RkcF9jb21w
-X2luaXQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsCj4gPiAg
-Cj4gPiAgCWlmIChjb21wX2lkID09IEREUF9DT01QT05FTlRfQkxTIHx8Cj4gPiAgCSAgICBjb21w
-X2lkID09IEREUF9DT01QT05FTlRfRFBJMCB8fAo+ID4gKwkgICAgY29tcF9pZCA9PSBERFBfQ09N
-UE9ORU5UX0RQSTEgfHwKPiAKPiBXaHkgbm90IG1vdmUgdGhpcyBtb2RpZmljYXRpb24gdG8gdGhl
-IHBhdGNoICdhZGQgY29tcG9uZW50IERQSTEnPwo+IAo+ID4gIAkgICAgY29tcF9pZCA9PSBERFBf
-Q09NUE9ORU5UX0RTSTAgfHwKPiA+ICsJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EU0kx
-IHx8Cj4gPiArCSAgICBjb21wX2lkID09IEREUF9DT01QT05FTlRfRFNJMiB8fAo+IAo+IFdoeSBu
-b3QgbW92ZSB0aGlzIG1vZGlmaWNhdGlvbiB0byB0aGUgcGF0Y2ggJ2FkZCBjb21wb25lbnQgRFNJ
-Mic/Cj4gCj4gPiArCSAgICBjb21wX2lkID09IEREUF9DT01QT05FTlRfRFNJMyB8fAo+IAo+IFdo
-eSBub3QgbW92ZSB0aGlzIG1vZGlmaWNhdGlvbiB0byB0aGUgcGF0Y2ggJ2FkZCBjb21wb25lbnQg
-RFNJMyc/Cj4gCj4gUmVnYXJkcywKPiBDSwo+IApvawoKUmVnYXJkLApTdHUKPiA+ICAJICAgIGNv
-bXBfaWQgPT0gRERQX0NPTVBPTkVOVF9QV00wKSB7Cj4gPiAgCQljb21wLT5yZWdzID0gTlVMTDsK
-PiA+ICAJCWNvbXAtPmNsayA9IE5VTEw7Cj4gCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Jun 12, 2018 at 10:35 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Tue 12 Jun 03:54 PDT 2018, Amit Kucheria wrote:
+>
+>> We also split up the regmap address space into two, one for the TM
+>> registers, the other for the SROT registers. This was required to deal with
+>> different address offsets for the TM and SROT registers across different
+>> SoC families.
+>>
+>> Since tsens-common.c/init_common() currently only registers one address space, the order is important (TM before SROT).This is OK since the code doesn't really use the SROT functionality yet.
+>
+> Please line wrap this.
+>
+>>
+>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 12 +++++++++++-
+>>  drivers/thermal/qcom/tsens-8996.c     |  1 -
+>>  2 files changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> index 410ae78..b4aab18 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+>> @@ -451,7 +451,17 @@
+>>
+>>               tsens0: thermal-sensor@4a8000 {
+>>                       compatible = "qcom,msm8996-tsens";
+>> -                     reg = <0x4a8000 0x2000>;
+>> +                     reg = <0x4a9000 0x1000>, /* TM */
+>> +                           <0x4a8000 0x1000>; /* SROT */
+>> +                     #qcom,sensors = <13>;
+>> +                     #thermal-sensor-cells = <1>;
+>> +             };
+>> +
+>> +             tsens1: thermal-sensor@4ac000 {
+>> +                     compatible = "qcom,msm8996-tsens";
+>> +                     reg = <0x4ad000 0x1000>, /* TM */
+>> +                           <0x4ac000 0x1000>; /* SROT */
+>> +                     #qcom,sensors = <8>;
+>>                       #thermal-sensor-cells = <1>;
+>>               };
+>>
+>> diff --git a/drivers/thermal/qcom/tsens-8996.c b/drivers/thermal/qcom/tsens-8996.c
+>> index e1f7781..6e59078 100644
+>> --- a/drivers/thermal/qcom/tsens-8996.c
+>> +++ b/drivers/thermal/qcom/tsens-8996.c
+>> @@ -79,6 +79,5 @@ static const struct tsens_ops ops_8996 = {
+>>  };
+>>
+>>  const struct tsens_data data_8996 = {
+>> -     .num_sensors    = 13,
+>
+> This will cause the current 8996 dts to fail probing the tsens. I think
+> you should just leave this as is, because specifying qcom,sensors in dts
+> will overwrite this number regardless.
+
+Ack, I didn't consider backword compatility of the code with the
+current dts. Will fix.
+
+> It also would make this change dts specific, which is convenient as it
+> breaks the interdependency between the different subsystems.
+>
+>>       .ops            = &ops_8996,
+>
+> Regards,
+> Bjorn
