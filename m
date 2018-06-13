@@ -1,24 +1,62 @@
-From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH 0/2] Enable VDMA S2MM vertical flip support
-Date: Wed, 13 Jun 2018 13:04:46 +0530
-Message-ID: <1528875288-9140-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 24/27] drm: of: Export drm_crtc_port_mask()
+Date: Wed, 13 Jun 2018 09:36:05 +0200
+Message-ID: <20180613073605.gnhcwrywooxhyryj@flea>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net>
+ <20180612200036.21483-25-jernej.skrabec@siol.net>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, dan.j.williams@intel.com, appana.durga.rao@xilinx.com, lars@metafoo.de
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fqk45ekyxbgy3joq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZUSQPMQKGQE5GIJO4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180612200036.21483-25-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXI VDMA core supports Vertical Flip with S2MM as the path when
-Enable Vertical Flip (Advanced tab) is selected. This patch series add
-DT property for vertical flip and program its state in VDMA start_transfer.
 
-Radhey Shyam Pandey (2):
-  dt-bindings: dmaengine: xilinx_dma: Add VDMA vertical flip property
-  dmaengine: xilinx_dma: Enable VDMA S2MM vertical flip support
+--fqk45ekyxbgy3joq
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
- .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |    2 +
- drivers/dma/xilinx/xilinx_dma.c                    |   22 ++++++++++++++++++++
- include/linux/dma/xilinx_dma.h                     |    2 +
- 3 files changed, 26 insertions(+), 0 deletions(-)
+On Tue, Jun 12, 2018 at 10:00:33PM +0200, Jernej Skrabec wrote:
+> Function is useful when drm_of_find_possible_crtcs() can't be used and
+> custom parsing is needed. This can happen for example when there is a
+> node with multiple muxes between crtc and encoder.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  drivers/gpu/drm/drm_of.c | 4 ++--
+>  include/drm/drm_of.h     | 8 ++++++++
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+> index 1fe122461298..2e9cea3287b2 100644
+> --- a/drivers/gpu/drm/drm_of.c
+> +++ b/drivers/gpu/drm/drm_of.c
+> @@ -22,8 +22,8 @@ static void drm_release_of(struct device *dev, void *data)
+>   * Given a port OF node, return the possible mask of the corresponding
+>   * CRTC within a device's list of CRTCs.  Returns zero if not found.
+>   */
+> -static uint32_t drm_crtc_port_mask(struct drm_device *dev,
+> -				   struct device_node *port)
+> +uint32_t drm_crtc_port_mask(struct drm_device *dev,
+> +			    struct device_node *port)
+
+It should probably be exported too?
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--fqk45ekyxbgy3joq--
