@@ -1,82 +1,104 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
-Date: Wed, 13 Jun 2018 09:00:17 -0600
-Message-ID: <CAL_JsqJtL0HMPxv5vMv2+LOyvyVtYusu3Ja-NikCy2RQSo7f0Q@mail.gmail.com>
-References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
- <CAL_Jsq+dHVN+Y7xczf_Oxcn=BiJ6N9WzovRbSujgLLTYHMEh0g@mail.gmail.com> <f5e71bac1bc23f96b7dae64bbdad8e2154c339aa.camel@kernel.crashing.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 2/4] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Wed, 13 Jun 2018 09:03:53 -0600
+Message-ID: <CAL_JsqKFDwkf4+J2=sev3Dxj-hwB_7VTBa8ASDFL53s1dSc4Ug@mail.gmail.com>
+References: <1528888127-31954-1-git-send-email-spanda@codeaurora.org>
+ <1528888127-31954-3-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f5e71bac1bc23f96b7dae64bbdad8e2154c339aa.camel@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1528888127-31954-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 4:53 PM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Tue, 2018-06-12 at 11:42 -0600, Rob Herring wrote:
->> On Mon, Jun 11, 2018 at 6:01 PM, Benjamin Herrenschmidt
->> <benh@kernel.crashing.org> wrote:
->> > There are still quite a few cases where a device might want to get to a
->> > different node of the device-tree, obtain the resources and map them.
->> >
->> > Drivers doing that currently open code the whole thing, which is error
->> > proe.
->> >
->> > We have of_iomap() and of_io_request_and_map() but they both have shortcomings,
->> > such as not returning the size of the resource found (which can be necessary)
->> > and not being "managed".
->> >
->> > This adds a devm_of_iomap() that provides all of these and should probably
->> > replace uses of the above in most drivers.
->> >
->> > Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> > ---
->> >
->> > I'm cooking a driver that uses this, if there's no objection I'd like
->> > to carry it in my pull request for that driver (it can also exist in
->> > the DT tree of course). Just let me know.
->>
->> We generally only use of_iomap when there is no struct device for any
->> new driver. Why can't you use devm_ioremap_resource? Is this a
->> non-platform bus device?
->
-> This is just a wrapper on devm_ioremap_resource :-) Basically it's a
-> "fixed" version of of_iomap, that has the devm* management and will
-> mark the resource busy.
->
-> My thinking was to then replace most of_iomap users with this.
->
-> As for the specific case of the driver I'm cooking, it's a case where
-> the SoC contains a little coprocessor (a ColdFire even !) alongside the
-
-Wow. Must be the 1 licensee.
-
-> main ARM core. I have a driver that offloads the bitbanging of some
-> GPIOs to it (to implement the FSI bus). I use devm_of_iomap() to map
-> the registers of the interrupt controller of the coprocessor, it's not
-> really part of the interrupt tree, it doesn't distribute interrupts to
-> the ARM or to Linux, it's just a device-node pointed to by a handle.
-
-Accessing another processor's interrupt controller. What could go
-wrong with that.
-
-I guess this is fine. There's another problem though. This doesn't
-work on Sparc because address.c is not built. I'd suggest moving to
-of/device.c or a new file.
-
-
-> BTW. Another thing that I find a bit annoying is "allocated" reserved-
-> memory, there's no API to get to it other than via the DMA APIs or a
-> CMA, which is overkill in a few circumstances (such as the one here
-> where I just want to dedicate a bit of memory to the coprocessor).
-> Right now I'm using a fixed reservation (with a reg property) and go to
-> it "manually" but that somewhat sucks.
-
-But that's not really a DT problem. It's a kernel problem if you can't
-reserve a contiguous range of unmapped pages. But why not just get
-coherent allocation and ignore that it is mapped. That seems better to
-me than working around it in DT.
-
-Rob
+T24gV2VkLCBKdW4gMTMsIDIwMTggYXQgNTowOCBBTSwgU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
+ZGVhdXJvcmEub3JnPiB3cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhl
+IHNuNjVkc2k4NiBEU0kgdG8gZURQIGJyaWRnZS4KPgo+IENoYW5nZXMgaW4gdjE6Cj4gIC0gUmVw
+aHJhc2UgdGhlIGR0LWJpbmRpbmcgZGVzY3JpcHRpb25zIHRvIGJlIG1vcmUgaW5saW5lIHdpdGgg
+ZXhpc3RpbmcKPiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpkYSkuCj4gIC0gQWRkIG1pc3Npbmcg
+ZHQtYmluZGluZyB0aGF0IGFyZSBwYXJzZWQgYnkgY29ycmVzcG9uZGluZyBkcml2ZXIKPiAgICAo
+QW5kcnplaiBIYWpkYSkuCj4KPiBDaGFuZ2VzIGluIHYyOgo+ICAtIFJlbW92ZSBlZHAgcGFuZWwg
+c3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5IGtlZXAgYnJpZGdlCj4gICAgc3BlY2lm
+aWMgZW50cmllcyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUgY3VzdG9tLW1vZGVzIGR0IGVudHJ5
+IHNpbmNlIGl0cyB1c2FnZSBpcyByZW1vdmVkIGZyb20gZHJpdmVyIGFsc28gKFNlYW4gUGF1bCku
+Cj4gIC0gUmVtb3ZlIGlzLXBsdWdnYWJsZSBkdCBlbnRyeSBzaW5jZSB0aGlzIHdpbGwgbm90IGJl
+IG5lZWRlZCBhbnltb3JlIChTZWFuIFBhdWwpLgo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBSZW1v
+dmUgaXJxLWdwaW8gZHQgZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0
+Cj4gICAgcHJvcGVydHkgKFJvYiBIZXJyaW5nKS4KPgo+IENoYW5nZXMgaW4gdjQ6Cj4gIC0gQWRk
+IGxpbmsgdG8gYnJpZGdlIGNoaXAgZGF0YXNoZWV0IChTdGVwaGVuIEJveWQpCj4gIC0gQWRkIHZw
+bGwgYW5kIHZjYyByZWd1bGF0b3Igc3VwcGx5IGJpbmRpbmdzIChTdGVwaGVuIEJveWQpCj4gIC0g
+QWRkIHJlZiBjbGsgb3B0aW9uYWwgZHQgYmluZGluZyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCBn
+cGlvLWNvbnRyb2xsZXIgb3B0aW9uYWwgZHQgYmluZGluZyAoU3RlcGhlbiBCb3lkKQo+Cj4gQ2hh
+bmdlcyBpbiB2NToKPiAgLSBVc2UgY2xvY2sgcHJvcGVydHkgdG8gc3BlY2lmeSB0aGUgaW5wdXQg
+cmVmY2xrIChTdGVwaGVuIEJveWQpLgo+ICAtIFVwZGF0ZSBncGlvIGNlbGwgYW5kIHB3bSBjZWxs
+IG51bWJlcnMgKFN0ZXBoZW4gQm95ZCkuCj4KPiBDaGFuZ2VzIGluIHY2Ogo+ICAtIEFkZCBwcm9w
+ZXJ0eSB0byBtZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2NoZW1lIGFuZCBwb2xhcml0eSBpbnZl
+cnNpb24KPiAgICAoU3RlcGhlbiBCb3lkKS4KPgo+IENoYW5nZXMgaW4gdjc6Cj4gIC0gRGV0YWls
+IGRlc2NyaXB0aW9uIG9mIGxhbmUgbWFwcGluZyBzY2hlbWUgZHQgcHJvcGVydHkgKEFuZHJ6ZWoK
+PiAgICBIYWpkYS8gUm9iIEhlcnJpbmcpLgo+ICAtIFJlbW92ZWQgSERQIGdwaW8gYmluZGluZywg
+c2luY2UgdGhlIGJyaWRnZSB1c2VzIElSUSBzaWduYWwgdG8KPiAgICBkZXRlcm1pbmUgSFBELCBh
+bmQgSVJRIHByb3BlcnR5IGlzIGFscmVhZHkgZG9jdW1lbnRlZCBpbiBiaW5kaW5nLgo+Cj4gQ2hh
+bmdlcyBpbiB2ODoKPiAgLSBSZW1vdmVkIHVubmVjZXNzYXJ5IGV4cGxhbmF0aW9uIG9mIGxhbmUg
+bWFwcGluZyBhbmQgcG9sYXJpdHkgZHQKPiAgICBwcm9wZXJ0eSwgc2luY2UgdGhlc2UgYXJlIGFs
+cmVhZHkgZXhwbGFpbmVkIGluIG1lZGlhL3ZpZGVvLWludGVyZmFjZQo+ICAgIGR0IGJpbmlkbmcg
+KFJvYiBIZXJyaW5nKS4KPgo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBj
+b2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNu
+NjVkc2k4Ni50eHQgICAgICAgfCA5MCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA5MCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NAo+IGluZGV4IDAwMDAwMDAuLjYwMTQ1NGMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50
+eHQKPiBAQCAtMCwwICsxLDkwIEBACj4gK1NONjVEU0k4NiBEU0kgdG8gZURQIGJyaWRnZSBjaGlw
+Cj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKwo+ICtUaGlzIGlzIHRoZSBi
+aW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBTTjY1RFNJODYgYnJpZGdlLgo+ICtodHRwOi8v
+d3d3LnRpLmNvbS9nZW5lcmFsL2RvY3MvbGl0L2dldGxpdGVyYXR1cmUudHNwP2dlbmVyaWNQYXJ0
+TnVtYmVyPXNuNjVkc2k4NiZmaWxlVHlwZT1wZGYKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+Cj4gKy0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksc242NWRzaTg2Igo+ICstIHJlZzogaTJjIGFk
+ZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+ICstIGVuYWJsZS1ncGlv
+czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBicmlkZ2VfZW4gcGluIChh
+Y3RpdmUgaGlnaCkKPiArCj4gKy0gdmNjaW8tc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93
+ZXJzIHVwIHRoZSBkaWdpdGFsIElPcy4KPiArLSB2cGxsLXN1cHBseTogQSAxLjhWIHN1cHBseSB0
+aGF0IHBvd2VycyB1cCB0aGUgZGlzcGxheXBvcnQgUExMLgo+ICstIHZjY2Etc3VwcGx5OiBBIDEu
+MlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBhbmFsb2cgY2lyY3VpdHMuCj4gKy0gdmNjLXN1
+cHBseTogQSAxLjJWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBjb3JlLgo+ICsK
+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSBpbnRlcnJ1cHRzOiBTcGVjaWZpZXIgZm9yIHRo
+ZSBTTjY1RFNJODYgaW50ZXJydXB0IGxpbmUuCj4gKwo+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxl
+IG9mIHRoZSBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCj4gKwo+ICst
+IGdwaW8tY29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xsZXIu
+Cj4gKy0gI2dwaW8tY2VsbHMgICAgOiBTaG91bGQgYmUgdHdvLiBUaGUgZmlyc3QgY2VsbCBpcyB0
+aGUgcGluIG51bWJlciBhbmQKPiArICAgICAgICAgICAgICAgICAgIHRoZSBzZWNvbmQgY2VsbCBp
+cyB1c2VkIHRvIHNwZWNpZnkgZmxhZ3MuCj4gKyAgICAgICAgICAgICAgICAgICBTZWUgLi4vLi4v
+Z3Bpby9ncGlvLnR4dCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KPiArLSAjcHdtLWNlbGxzIDogU2hv
+dWxkIGJlIG9uZS4gU2VlIC4uLy4uL3B3bS9wd20udHh0IGZvciBkZXNjcmlwdGlvbiBvZgo+ICsg
+ICAgICAgICAgICAgICB0aGUgY2VsbCBmb3JtYXRzLgo+ICsKPiArLSBjbG9jay1uYW1lczogc2hv
+dWxkIGJlICJyZWZjbGsiCj4gKy0gY2xvY2tzOiBTcGVjaWZpY2F0aW9uIGZvciBpbnB1dCByZWZl
+cmVuY2UgY2xvY2suIFRoZSByZWZlcmVuY2UKPiArICAgICAgICAgY2xvY2sgcmF0ZSBtdXN0IGJl
+IDEyIE1IeiwgMTkuMiBNSHosIDI2IE1IeiwgMjcgTUh6IG9yIDM4LjQgTUh6Lgo+ICsKPiArLSBk
+YXRhLWxhbmVzOiBTcGVjaWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBsb2dpY2FsIHRvIHBoeXNp
+Y2FsIGxhbmUKPiArICAgICAgICAgICAgIG1hcHBpbmcgc2NoZW1lLiBTZWUgLi4vLi4vbWVkaWEv
+dmlkZW8taW50ZXJmYWNlLnR4dCBmb3IgbW9yZQo+ICsgICAgICAgICAgICAgaW5mb3JtYXRpb24u
+Cj4gKy0gbGFuZS1wb2xhcml0aWVzOiBTcGVjaWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBwb2xh
+cml0eSBvZiBwaHlzaWNhbCBsYW5lcy4KPiArICAgICAgICAgICAgICAgICAgU2VlIC4uLy4uL21l
+ZGlhL3ZpZGVvLWludGVyZmFjZS50eHQgZm9yIG1vcmUgaW5mb3JtYXRpb24uCgpZb3UgYXJlIHN0
+aWxsIGRlZmluaW5nIHRoZSBwcm9wZXJ0aWVzIGhlcmUuIEFsbCB5b3UgbmVlZCBpczoKCmRhdGEt
+bGFuZXM6IFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZhY2UudHh0CgpQZXJoYXBzIHlvdSBu
+ZWVkIHRvIHNheSBzaG91bGQgYmUgNCBsYW5lcywgYnV0IE9UT0ggZXZlcnl0aGluZyB0ZW5kcwp0
+byBiZSA0IGxhbmVzLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
+ZWVkcmVubwo=
