@@ -1,104 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Wed, 13 Jun 2018 09:03:53 -0600
-Message-ID: <CAL_JsqKFDwkf4+J2=sev3Dxj-hwB_7VTBa8ASDFL53s1dSc4Ug@mail.gmail.com>
-References: <1528888127-31954-1-git-send-email-spanda@codeaurora.org>
- <1528888127-31954-3-git-send-email-spanda@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1528888127-31954-3-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Ryan Grachek <ryan@edited.us>
+Subject: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
+Date: Wed, 13 Jun 2018 10:13:05 -0500
+Message-ID: <20180613151305.17240-1-ryan@edited.us>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTMsIDIwMTggYXQgNTowOCBBTSwgU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
-ZGVhdXJvcmEub3JnPiB3cm90ZToKPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBmb3IgdGhl
-IHNuNjVkc2k4NiBEU0kgdG8gZURQIGJyaWRnZS4KPgo+IENoYW5nZXMgaW4gdjE6Cj4gIC0gUmVw
-aHJhc2UgdGhlIGR0LWJpbmRpbmcgZGVzY3JpcHRpb25zIHRvIGJlIG1vcmUgaW5saW5lIHdpdGgg
-ZXhpc3RpbmcKPiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpkYSkuCj4gIC0gQWRkIG1pc3Npbmcg
-ZHQtYmluZGluZyB0aGF0IGFyZSBwYXJzZWQgYnkgY29ycmVzcG9uZGluZyBkcml2ZXIKPiAgICAo
-QW5kcnplaiBIYWpkYSkuCj4KPiBDaGFuZ2VzIGluIHYyOgo+ICAtIFJlbW92ZSBlZHAgcGFuZWwg
-c3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5IGtlZXAgYnJpZGdlCj4gICAgc3BlY2lm
-aWMgZW50cmllcyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUgY3VzdG9tLW1vZGVzIGR0IGVudHJ5
-IHNpbmNlIGl0cyB1c2FnZSBpcyByZW1vdmVkIGZyb20gZHJpdmVyIGFsc28gKFNlYW4gUGF1bCku
-Cj4gIC0gUmVtb3ZlIGlzLXBsdWdnYWJsZSBkdCBlbnRyeSBzaW5jZSB0aGlzIHdpbGwgbm90IGJl
-IG5lZWRlZCBhbnltb3JlIChTZWFuIFBhdWwpLgo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBSZW1v
-dmUgaXJxLWdwaW8gZHQgZW50cnkgYW5kIGluc3RlYWQgcG9wdWxhdGUgaXMgYW4gaW50ZXJydXB0
-Cj4gICAgcHJvcGVydHkgKFJvYiBIZXJyaW5nKS4KPgo+IENoYW5nZXMgaW4gdjQ6Cj4gIC0gQWRk
-IGxpbmsgdG8gYnJpZGdlIGNoaXAgZGF0YXNoZWV0IChTdGVwaGVuIEJveWQpCj4gIC0gQWRkIHZw
-bGwgYW5kIHZjYyByZWd1bGF0b3Igc3VwcGx5IGJpbmRpbmdzIChTdGVwaGVuIEJveWQpCj4gIC0g
-QWRkIHJlZiBjbGsgb3B0aW9uYWwgZHQgYmluZGluZyAoU3RlcGhlbiBCb3lkKQo+ICAtIEFkZCBn
-cGlvLWNvbnRyb2xsZXIgb3B0aW9uYWwgZHQgYmluZGluZyAoU3RlcGhlbiBCb3lkKQo+Cj4gQ2hh
-bmdlcyBpbiB2NToKPiAgLSBVc2UgY2xvY2sgcHJvcGVydHkgdG8gc3BlY2lmeSB0aGUgaW5wdXQg
-cmVmY2xrIChTdGVwaGVuIEJveWQpLgo+ICAtIFVwZGF0ZSBncGlvIGNlbGwgYW5kIHB3bSBjZWxs
-IG51bWJlcnMgKFN0ZXBoZW4gQm95ZCkuCj4KPiBDaGFuZ2VzIGluIHY2Ogo+ICAtIEFkZCBwcm9w
-ZXJ0eSB0byBtZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2NoZW1lIGFuZCBwb2xhcml0eSBpbnZl
-cnNpb24KPiAgICAoU3RlcGhlbiBCb3lkKS4KPgo+IENoYW5nZXMgaW4gdjc6Cj4gIC0gRGV0YWls
-IGRlc2NyaXB0aW9uIG9mIGxhbmUgbWFwcGluZyBzY2hlbWUgZHQgcHJvcGVydHkgKEFuZHJ6ZWoK
-PiAgICBIYWpkYS8gUm9iIEhlcnJpbmcpLgo+ICAtIFJlbW92ZWQgSERQIGdwaW8gYmluZGluZywg
-c2luY2UgdGhlIGJyaWRnZSB1c2VzIElSUSBzaWduYWwgdG8KPiAgICBkZXRlcm1pbmUgSFBELCBh
-bmQgSVJRIHByb3BlcnR5IGlzIGFscmVhZHkgZG9jdW1lbnRlZCBpbiBiaW5kaW5nLgo+Cj4gQ2hh
-bmdlcyBpbiB2ODoKPiAgLSBSZW1vdmVkIHVubmVjZXNzYXJ5IGV4cGxhbmF0aW9uIG9mIGxhbmUg
-bWFwcGluZyBhbmQgcG9sYXJpdHkgZHQKPiAgICBwcm9wZXJ0eSwgc2luY2UgdGhlc2UgYXJlIGFs
-cmVhZHkgZXhwbGFpbmVkIGluIG1lZGlhL3ZpZGVvLWludGVyZmFjZQo+ICAgIGR0IGJpbmlkbmcg
-KFJvYiBIZXJyaW5nKS4KPgo+IFNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBj
-b2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNu
-NjVkc2k4Ni50eHQgICAgICAgfCA5MCArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA5MCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dAo+
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0
-NAo+IGluZGV4IDAwMDAwMDAuLjYwMTQ1NGMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNuNjVkc2k4Ni50
-eHQKPiBAQCAtMCwwICsxLDkwIEBACj4gK1NONjVEU0k4NiBEU0kgdG8gZURQIGJyaWRnZSBjaGlw
-Cj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKwo+ICtUaGlzIGlzIHRoZSBi
-aW5kaW5nIGZvciBUZXhhcyBJbnN0cnVtZW50cyBTTjY1RFNJODYgYnJpZGdlLgo+ICtodHRwOi8v
-d3d3LnRpLmNvbS9nZW5lcmFsL2RvY3MvbGl0L2dldGxpdGVyYXR1cmUudHNwP2dlbmVyaWNQYXJ0
-TnVtYmVyPXNuNjVkc2k4NiZmaWxlVHlwZT1wZGYKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
-Cj4gKy0gY29tcGF0aWJsZTogTXVzdCBiZSAidGksc242NWRzaTg2Igo+ICstIHJlZzogaTJjIGFk
-ZHJlc3Mgb2YgdGhlIGNoaXAsIDB4MmQgYXMgcGVyIGRhdGFzaGVldAo+ICstIGVuYWJsZS1ncGlv
-czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBicmlkZ2VfZW4gcGluIChh
-Y3RpdmUgaGlnaCkKPiArCj4gKy0gdmNjaW8tc3VwcGx5OiBBIDEuOFYgc3VwcGx5IHRoYXQgcG93
-ZXJzIHVwIHRoZSBkaWdpdGFsIElPcy4KPiArLSB2cGxsLXN1cHBseTogQSAxLjhWIHN1cHBseSB0
-aGF0IHBvd2VycyB1cCB0aGUgZGlzcGxheXBvcnQgUExMLgo+ICstIHZjY2Etc3VwcGx5OiBBIDEu
-MlYgc3VwcGx5IHRoYXQgcG93ZXJzIHVwIHRoZSBhbmFsb2cgY2lyY3VpdHMuCj4gKy0gdmNjLXN1
-cHBseTogQSAxLjJWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBjb3JlLgo+ICsK
-PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSBpbnRlcnJ1cHRzOiBTcGVjaWZpZXIgZm9yIHRo
-ZSBTTjY1RFNJODYgaW50ZXJydXB0IGxpbmUuCj4gKwo+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxl
-IG9mIHRoZSBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCj4gKwo+ICst
-IGdwaW8tY29udHJvbGxlcjogTWFya3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xsZXIu
-Cj4gKy0gI2dwaW8tY2VsbHMgICAgOiBTaG91bGQgYmUgdHdvLiBUaGUgZmlyc3QgY2VsbCBpcyB0
-aGUgcGluIG51bWJlciBhbmQKPiArICAgICAgICAgICAgICAgICAgIHRoZSBzZWNvbmQgY2VsbCBp
-cyB1c2VkIHRvIHNwZWNpZnkgZmxhZ3MuCj4gKyAgICAgICAgICAgICAgICAgICBTZWUgLi4vLi4v
-Z3Bpby9ncGlvLnR4dCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KPiArLSAjcHdtLWNlbGxzIDogU2hv
-dWxkIGJlIG9uZS4gU2VlIC4uLy4uL3B3bS9wd20udHh0IGZvciBkZXNjcmlwdGlvbiBvZgo+ICsg
-ICAgICAgICAgICAgICB0aGUgY2VsbCBmb3JtYXRzLgo+ICsKPiArLSBjbG9jay1uYW1lczogc2hv
-dWxkIGJlICJyZWZjbGsiCj4gKy0gY2xvY2tzOiBTcGVjaWZpY2F0aW9uIGZvciBpbnB1dCByZWZl
-cmVuY2UgY2xvY2suIFRoZSByZWZlcmVuY2UKPiArICAgICAgICAgY2xvY2sgcmF0ZSBtdXN0IGJl
-IDEyIE1IeiwgMTkuMiBNSHosIDI2IE1IeiwgMjcgTUh6IG9yIDM4LjQgTUh6Lgo+ICsKPiArLSBk
-YXRhLWxhbmVzOiBTcGVjaWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBsb2dpY2FsIHRvIHBoeXNp
-Y2FsIGxhbmUKPiArICAgICAgICAgICAgIG1hcHBpbmcgc2NoZW1lLiBTZWUgLi4vLi4vbWVkaWEv
-dmlkZW8taW50ZXJmYWNlLnR4dCBmb3IgbW9yZQo+ICsgICAgICAgICAgICAgaW5mb3JtYXRpb24u
-Cj4gKy0gbGFuZS1wb2xhcml0aWVzOiBTcGVjaWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBwb2xh
-cml0eSBvZiBwaHlzaWNhbCBsYW5lcy4KPiArICAgICAgICAgICAgICAgICAgU2VlIC4uLy4uL21l
-ZGlhL3ZpZGVvLWludGVyZmFjZS50eHQgZm9yIG1vcmUgaW5mb3JtYXRpb24uCgpZb3UgYXJlIHN0
-aWxsIGRlZmluaW5nIHRoZSBwcm9wZXJ0aWVzIGhlcmUuIEFsbCB5b3UgbmVlZCBpczoKCmRhdGEt
-bGFuZXM6IFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZhY2UudHh0CgpQZXJoYXBzIHlvdSBu
-ZWVkIHRvIHNheSBzaG91bGQgYmUgNCBsYW5lcywgYnV0IE9UT0ggZXZlcnl0aGluZyB0ZW5kcwp0
-byBiZSA0IGxhbmVzLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
-ZWVkcmVubwo=
+These properties are required for compatibility with runtime PM.
+Without these properties, MMC host controller will not be aware
+of power capabilities. When the wlcore driver attempts to power
+on the device, it will erroneously fail with -EACCES.
+
+Signed-off-by: Ryan Grachek <ryan@edited.us>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 38f881955217..c5feca8cd10b 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -323,6 +323,8 @@
+ 			bus-width = <0x4>;
+ 			cap-sd-highspeed;
+ 			non-removable;
++			cap-power-off-card;
++			keep-power-in-suspend;
+ 			vmmc-supply = <&reg_vdd_3v3>;
+ 			mmc-pwrseq = <&wl1835_pwrseq>;
+ 
+-- 
+2.11.0
