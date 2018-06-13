@@ -1,31 +1,90 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 1/4] fixp-arith: add a linear interpolation function
-Date: Wed, 13 Jun 2018 13:06:35 +0200
-Message-ID: <CACRpkdaKMr0qm91Q4LyjBGyKG_H4vvMr7bnRJeai+f2Eg-9r0Q@mail.gmail.com>
-References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180607181306.9766-1-ctatlor97@gmail.com>
+From: spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v8 1/4] drm/bridge: add support for
+ sn65dsi86 bridge driver
+Date: Wed, 13 Jun 2018 16:36:51 +0530
+Message-ID: <eda4f13e7a7c9be94a22dee2e81fd114@codeaurora.org>
+References: <1528177218-1051-1-git-send-email-spanda@codeaurora.org>
+ <1528177218-1051-3-git-send-email-spanda@codeaurora.org>
+ <152876014663.16708.2127612105617872452@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180607181306.9766-1-ctatlor97@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <152876014663.16708.2127612105617872452-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 7, 2018 at 8:12 PM, Craig Tatlor <ctatlor97@gmail.com> wrote:
-
-> Adds a function to interpolate against two points,
-> this is carried arount as a helper function by tons of drivers.
->
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-
-The linear formula seems to fit the most natural form of linear
-interpolation.
-
-I bet some John Carmack algorithm type people will soon
-start to optimize this... :D
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+T24gMjAxOC0wNi0xMiAwNTowNSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgU2FuZGVl
+cCBQYW5kYSAoMjAxOC0wNi0wNCAyMjo0MDoxNSkKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvdGktc242NWRzaTg2LmMgCj4+IGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90
+aS1zbjY1ZHNpODYuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5h
+ZGQ2ZTBmCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90
+aS1zbjY1ZHNpODYuYwo+PiBAQCAtMCwwICsxLDY2NiBAQAo+PiArLy8gU1BEWC1MaWNlbnNlLUlk
+ZW50aWZpZXI6IEdQTC0yLjAKPj4gKy8qCj4+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTgsIFRoZSBM
+aW51eCBGb3VuZGF0aW9uLiBBbGwgcmlnaHRzIHJlc2VydmVkLgo+PiArICovCj4+ICsKPiBbLi4u
+XQo+PiArCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9jb25maWcgdGlfc25fYnJpZGdl
+X3JlZ21hcF9jb25maWcgPSB7Cj4+ICsgICAgICAgLnJlZ19iaXRzID0gOCwKPj4gKyAgICAgICAu
+dmFsX2JpdHMgPSA4LAo+PiArICAgICAgIC52b2xhdGlsZV90YWJsZSA9ICZ0aV9zbl9icmlkZ2Vf
+dm9sYXRpbGVfdGFibGUsCj4+ICsgICAgICAgLmNhY2hlX3R5cGUgPSBSRUdDQUNIRV9OT05FLAo+
+PiArfTsKPj4gKwo+PiArc3RhdGljIHZvaWQgdGlfc25fYnJpZGdlX3dyaXRlX3UxNihzdHJ1Y3Qg
+dGlfc25fYnJpZGdlICpwZGF0YSwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB1bnNpZ25lZCBpbnQgcmVnLCB1MTYgdmFsKQo+PiArewo+PiArICAgICAgIHJlZ21hcF93cml0
+ZShwZGF0YS0+cmVnbWFwLCByZWcsIHZhbCAmIDB4RkYpOwo+PiArICAgICAgIHJlZ21hcF93cml0
+ZShwZGF0YS0+cmVnbWFwLCByZWcgKyAxLCB2YWwgPj4gOCk7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRp
+YyBpbnQgX19tYXliZV91bnVzZWQgdGlfc25fYnJpZGdlX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpk
+ZXYpCj4+ICt7Cj4+ICsgICAgICAgc3RydWN0IHRpX3NuX2JyaWRnZSAqcGRhdGEgPSBkZXZfZ2V0
+X2RydmRhdGEoZGV2KTsKPj4gKyAgICAgICBpbnQgcmV0ID0gMDsKPiAKPiBQbGVhc2UgZG9uJ3Qg
+YXNzaWduIHZhcmlhYmxlcyBhbmQgdGhlbiByZWFzc2lnbiB0aGVtIGFnYWluIGltbWVkaWF0ZWx5
+Cj4gYWZ0ZXIuIEl0IGhpZGVzIHVzZSBiZWZvcmUgcmVhbCBpbml0aWFsaXphdGlvbiBidWdzLgo+
+IApPay4KCj4+ICsKPj4gKyAgICAgICByZXQgPSByZWd1bGF0b3JfYnVsa19lbmFibGUoU05fUkVH
+VUxBVE9SX1NVUFBMWV9OVU0sIAo+PiBwZGF0YS0+c3VwcGxpZXMpOwo+IFsuLi5dCj4+ICsKPj4g
+K3N0YXRpYyBpbnQgdGlfc25fYnJpZGdlX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQs
+Cj4+ICsgICAgICAgIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkKPj4gK3sKPj4gKyAg
+ICAgICBzdHJ1Y3QgdGlfc25fYnJpZGdlICpwZGF0YTsKPj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNl
+X25vZGUgKmRkY19ub2RlOwo+PiArICAgICAgIHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0Owo+
+PiArICAgICAgIHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRzaTsKPj4gKyAgICAgICBpbnQgcmV0
+ID0gMDsKPj4gKyAgICAgICBjb25zdCBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlX2luZm8gaW5mbyA9
+IHsgLnR5cGUgPSAKPj4gInRpX3NuX2JyaWRnZSIsCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5jaGFubmVsID0gMCwKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLm5vZGUgPSBOVUxMLAo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4gKwo+
+PiArICAgICAgIGlmICghaTJjX2NoZWNrX2Z1bmN0aW9uYWxpdHkoY2xpZW50LT5hZGFwdGVyLCBJ
+MkNfRlVOQ19JMkMpKSB7Cj4+ICsgICAgICAgICAgICAgICBEUk1fRVJST1IoImRldmljZSBkb2Vz
+bid0IHN1cHBvcnQgSTJDXG4iKTsKPj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOwo+
+PiArICAgICAgIH0KPj4gKwo+PiArICAgICAgIHJldCA9IHRpX3NuX2JyaWRnZV9wYXJzZV9kc2lf
+aG9zdChwZGF0YSk7Cj4+ICsgICAgICAgaWYgKHJldCkKPj4gKyAgICAgICAgICAgICAgIHJldHVy
+biByZXQ7Cj4+ICsKPj4gKyAgICAgICBob3N0ID0gb2ZfZmluZF9taXBpX2RzaV9ob3N0X2J5X25v
+ZGUocGRhdGEtPmhvc3Rfbm9kZSk7Cj4+ICsgICAgICAgaWYgKCFob3N0KSB7Cj4+ICsgICAgICAg
+ICAgICAgICBEUk1fRVJST1IoImZhaWxlZCB0byBmaW5kIGRzaSBob3N0XG4iKTsKPiAKPiBOb3Qg
+c3VyZSB3ZSB3YW50IHRvIHByaW50IGFuIGVycm9yIGFuZCB0aGVuIHJldHVybiAtRVBST0JFX0RF
+RkVSLgo+IFVzdWFsbHkgRVBST0JFX0RFRkVSIGlzIHNpbGVudC4KPiAKPj4gKyAgICAgICAgICAg
+ICAgIHJldCA9IC1FUFJPQkVfREVGRVI7Cj4+ICsgICAgICAgICAgICAgICBnb3RvIGVycl9kc2lf
+aG9zdDsKPj4gKyAgICAgICB9Cj4+ICsKPiBbLi4uXQo+PiArCj4+ICsgICAgICAgLyogVE9ETzog
+c2V0dGluZyB0byA0IGxhbmVzIGFsd2F5cyBmb3Igbm93ICovCj4+ICsgICAgICAgZHNpLT5sYW5l
+cyA9IDQ7Cj4+ICsgICAgICAgZHNpLT5mb3JtYXQgPSBNSVBJX0RTSV9GTVRfUkdCODg4Owo+PiAr
+ICAgICAgIGRzaS0+bW9kZV9mbGFncyA9IE1JUElfRFNJX01PREVfVklERU8gfCAKPj4gTUlQSV9E
+U0lfTU9ERV9WSURFT19TWU5DX1BVTFNFIHwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICBN
+SVBJX0RTSV9NT0RFX0VPVF9QQUNLRVQgfCAKPj4gTUlQSV9EU0lfTU9ERV9WSURFT19IU0U7Cj4+
+ICsKPj4gKyAgICAgICByZXQgPSBtaXBpX2RzaV9hdHRhY2goZHNpKTsKPj4gKyAgICAgICBpZiAo
+cmV0IDwgMCkgewo+PiArICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJmYWlsZWQgdG8gYXR0YWNo
+IGRzaSB0byBob3N0XG4iKTsKPj4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyX2RzaV9hdHRhY2g7
+Cj4+ICsgICAgICAgfQo+PiArICAgICAgIHBkYXRhLT5kc2kgPSBkc2k7Cj4+ICsKPj4gKyAgICAg
+ICBwZGF0YS0+cmVmY2xrID0gZGV2bV9jbGtfZ2V0KHBkYXRhLT5kZXYsICJyZWZjbGsiKTsKPiAK
+PiBXZSBuZWVkIHRvIGNoZWNrIGZvciBlcnJvcgo+IAo+IAlpZiAoSVNfRVJSKHBkYXRhLT5yZWZj
+bGspKQo+IAo+IEFuZCB0aGVuIGlmIGl0J3MgRVBST0JFX0RFRkVSIEkgc3VwcG9zZSB3ZSB3b3Vs
+ZCBiYWlsIG91dCwgb3RoZXJ3aXNlCj4gYXNzdW1lIGl0J3Mgbm90IHByZXNlbnQ/CgpZZXMgZm91
+bmQgdGhpcyBpc3N1ZSB3aGlsZSB0ZXN0aW5nIHRoZSBkcml2ZXIgb24gYWN0dWFsIHNuNjVkc2k4
+NiBIVywgaSAKd2lsbCBmaXggdGhpcyBpbiBuZXh0IHBhdGNoc2V0LgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
+ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
