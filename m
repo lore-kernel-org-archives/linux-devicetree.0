@@ -1,97 +1,35 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/5] ARM: dts: cygnus: Fix PCIe controller interrupt type
-Date: Wed, 13 Jun 2018 12:50:19 -0700
-Message-ID: <99e3ab78-a639-5244-75a6-af39e56e7c67@gmail.com>
-References: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
- <1528834891-17807-3-git-send-email-ray.jui@broadcom.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/2] Add R8A77980/Condor/V3HSK LVDS/HDMI support
+Date: Wed, 13 Jun 2018 23:09:33 +0300
+Message-ID: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528834891-17807-3-git-send-email-ray.jui@broadcom.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2018 01:21 PM, Ray Jui wrote:
-> Fix PCIe controller interrupt to use IRQ_TYPE_LEVEL_HIGH for Broadcom
-> Cygnus SoC
-> 
-> Fixes: cd590b50a936 ("ARM: dts: enable PCIe support for Cygnus")
+Hello!
 
-This one is valid
+Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180613-v4.17' tag and the Condor/V3HSK TD patches adding
+Ethernet PHY IRQs. We're adding the R8A77980 FCPVD/VSPD/DU/LVDS device nodes
+and then describing the LVDS decoder and HDMI encoder connected to the LVDS
+output on the Condor and V3HSK boards.  These patches depend on the Thine
+THC63LVD1024 driver and the R8A77980 LVDS support patch in order to work...
 
-> Fixes: 0f0b21a83ad2 ("ARM: dts: Move all Cygnus peripherals into axi
-> bus")
-> Fixes: 9c5101f7a253 ("ARM: dts: Reorder Cygnus peripherals")
-> Fixes: f6b889358a82 ("ARM: dts: Enable MSI support for Broadcom Cygnus")
+[1/2] arm64: dts: renesas: r8a77980: add FCPVD/VSPD/DU/LVDS support
+[2/2] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI support
 
-And this one too, but the two others, I would probably drop them so we
-can get the backports to be possibly applicable as far as when these two
-commits can be resolved, does that work?
-
-> 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> ---
->  arch/arm/boot/dts/bcm-cygnus.dtsi | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> index 835a6f7..2c4df2d 100644
-> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> @@ -256,7 +256,7 @@
->  
->  			#interrupt-cells = <1>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
-> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
->  
->  			linux,pci-domain = <0>;
->  
-> @@ -278,10 +278,10 @@
->  				compatible = "brcm,iproc-msi";
->  				msi-controller;
->  				interrupt-parent = <&gic>;
-> -				interrupts = <GIC_SPI 96 IRQ_TYPE_NONE>,
-> -					     <GIC_SPI 97 IRQ_TYPE_NONE>,
-> -					     <GIC_SPI 98 IRQ_TYPE_NONE>,
-> -					     <GIC_SPI 99 IRQ_TYPE_NONE>;
-> +				interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->  			};
->  		};
->  
-> @@ -291,7 +291,7 @@
->  
->  			#interrupt-cells = <1>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
-> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
->  
->  			linux,pci-domain = <1>;
->  
-> @@ -313,10 +313,10 @@
->  				compatible = "brcm,iproc-msi";
->  				msi-controller;
->  				interrupt-parent = <&gic>;
-> -				interrupts = <GIC_SPI 102 IRQ_TYPE_NONE>,
-> -					     <GIC_SPI 103 IRQ_TYPE_NONE>,
-> -					     <GIC_SPI 104 IRQ_TYPE_NONE>,
-> -					     <GIC_SPI 105 IRQ_TYPE_NONE>;
-> +				interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
->  			};
->  		};
->  
-> 
-
-
--- 
-Florian
+WBR, Sergei
