@@ -1,49 +1,106 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH] arm64: dts: hikey960: Define wl1837 power capabilities
-Date: Wed, 13 Jun 2018 22:47:54 +0100
-Message-ID: <91404bb0-4fa8-4e00-0b21-c104a5171833@arm.com>
-References: <20180613180321.16745-1-ryan@edited.us>
+From: Rob Herring <rob.herring@linaro.org>
+Subject: Re: [PATCH] arm64: dts: stingray: use NUM_SATA to configure number of
+ sata ports
+Date: Wed, 13 Jun 2018 16:06:51 -0600
+Message-ID: <CABGGiszcTNw23e_qA7EiGb_2hc6kHfVQJq02pQjbpTnv1CNksg@mail.gmail.com>
+References: <1526668446-20048-1-git-send-email-scott.branden@broadcom.com>
+ <d35afa1f-e0fd-84f1-7d42-60595e22cc77@gmail.com> <395f1fe8-76f1-8310-d09e-63e25bca23d2@broadcom.com>
+ <CAL_JsqJEFLXFf-Vq9c9XC41vBpisQwxkd06_v8Fmt6X=gp=2_g@mail.gmail.com>
+ <f20222ea-47ac-ca05-a8d3-69f28932de94@gmail.com> <0bf3c57c-dac8-8ece-6b8a-3b4d024140fc@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613180321.16745-1-ryan@edited.us>
-Content-Language: en-US
+In-Reply-To: <0bf3c57c-dac8-8ece-6b8a-3b4d024140fc@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryan Grachek <ryan@edited.us>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Scott Branden <scott.branden@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/18 19:03, Ryan Grachek wrote:
-> These properties are required for compatibility with runtime PM.
-> Without these properties, MMC host controller will not be aware
-> of power capabilities. When the wlcore driver attempts to power
-> on the device, it will erroneously fail with -EACCES. This fixes
-> a regression found here: https://lkml.org/lkml/2018/6/12/930
-> 
+On Wed, Jun 13, 2018 at 2:18 PM, Scott Branden
+<scott.branden@broadcom.com> wrote:
+> Hi Rob,
+>
+> Thanks for comment - reply inline.
+>
+>
+>
+> On 18-06-13 12:31 PM, Florian Fainelli wrote:
+>>
+>> On 06/12/2018 03:54 PM, Rob Herring wrote:
+>>>
+>>> On Thu, Jun 7, 2018 at 12:53 PM, Scott Branden
+>>> <scott.branden@broadcom.com> wrote:
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> Could you please kindly comment on change below.
+>>>>
+>>>> It allows board variants to be added easily via a simple define for
+>>>> different number of SATA ports.
+>>>>
+>>>>
+>>>>
+>>>> On 18-06-04 09:22 AM, Florian Fainelli wrote:
+>>>>>
+>>>>> On 05/18/2018 11:34 AM, Scott Branden wrote:
+>>>>>>
+>>>>>> Move remaining sata configuration to stingray-sata.dtsi and enable
+>>>>>> ports based on NUM_SATA defined.
+>>>>>> Now, all that needs to be done is define NUM_SATA per board.
+>>>>>
+>>>>> Rob could you review this and let us know if this approach is okay or
+>>>>> not? Thank you!
+>>>>>
+>>>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>>>>>> ---
+>>>>>> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+>>>>>> b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+>>>>>> index 8c68e0c..7f6d176 100644
+>>>>>> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+>>>>>> @@ -43,7 +43,11 @@
+>>>>>>                          interrupts = <GIC_SPI 321
+>>>>>> IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>                          #address-cells = <1>;
+>>>>>>                          #size-cells = <0>;
+>>>>>> +#if (NUM_SATA > 0)
+>>>>>> +                       status = "okay";
+>>>>>> +#else
+>>>>>>                          status = "disabled";
+>>>>>> +#endif
+>>>
+>>> This only works if ports are contiguously enabled (0-N). You might not
+>>> care, but it is not a pattern that works in general.
+>
+> Correct - all board designs that include this dtsi file follow such
+> commonality (ie. design with SATA0 first, etc).  By having common board
+> designs it allows for commonality in dts files rather than duplicating
+> information everywhere.  If somebody designs a bizarro board they are free
+> to create their own dts file of course.
+>>>
+>>>   And I'm not a fan
+>>> of C preprocessing in DT files in general beyond just defines for
+>>> single numbers.
+>
+> The use of a define to specify the number of SATA ports in the board design
+> meets our requirements of being able to maintain many boards.  We need a
+> method to specify the number of ports in the board design rather than
+> copying and pasting the information in many dts files.  If you have an
+> alternative upstreamable mechanism to manage the configuration of many
+> boards without copy and paste that would be ideal?
 
-Thanks! As mentioned in the above thread, this lets wlan0 come up properly,
-which otherwise doesn't come up and spits out:
-[    8.466097] wl1271_sdio mmc1:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
+Is this really the only problem with maintaining lots of boards? What
+about all the other nodes that are conditionally enabled? Really, I
+don't see the problem with 3 lines per node.
 
-Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Does having an unused port enabled cause problems? If not, you could
+handle it all at run-time and just shutdown ports which have no link.
+You'd want to do that anyway for boards with a port, but is not
+connected to a drive (except for hotplug capable ports).
 
-> Signed-off-by: Ryan Grachek <ryan@edited.us>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index c6999624ed8a..68c5a6c819ae 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -585,6 +585,8 @@
->  	vmmc-supply = <&wlan_en>;
->  	ti,non-removable;
->  	non-removable;
-> +	cap-power-off-card;
-> +	keep-power-in-suspend;
->  	#address-cells = <0x1>;
->  	#size-cells = <0x0>;
->  	status = "ok";
-> 
+Maybe we could add a property in /chosen that is a list of nodes to
+enable and either the bootloader or kernel could update their
+'status'. Or It could even be done in dtc perhaps with some
+/directive/.
+
+Rob
