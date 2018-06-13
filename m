@@ -1,56 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 0/5] Add R8A77980/Condor/V3HSK LVDS/HDMI support
-Date: Wed, 13 Jun 2018 22:07:20 +0300
-Message-ID: <b6cb139a-b984-fdb3-2b06-30c630659776@cogentembedded.com>
-References: <390fabf0-4caf-1600-3780-1893207d94f7@cogentembedded.com>
- <4069170.tduNOXLj45@avalon> <20180611081531.xaax5ouvffnarhq5@verge.net.au>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v4 2/2] iio: add ISL29033 Ultra-Low Lux
+ ambient-light-sensor
+Date: Thu, 14 Jun 2018 03:23:53 +0800
+Message-ID: <201806140109.tvP88cyu%fengguang.wu@intel.com>
+References: <20180613140043.5802-2-borys.movchan@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180611081531.xaax5ouvffnarhq5@verge.net.au>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180613140043.5802-2-borys.movchan@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borys Movchan <borys.movchan@axis.com>
+Cc: kbuild-all@01.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Borys Movchan <borysmn@axis.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jeff LaBundy <jeff@labundy.com>, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Brian Masney <masneyb@onstation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2018 11:15 AM, Simon Horman wrote:
+Hi Borys,
 
->>> Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
->>> 'renesas-devel-20180604-v4.17' tag. We're adding the R8A77980 FCPVD/VSPD/
->>> DU/LVDS device nodes and then describing the LVDS decoder and HDMI encoder
->>> connected to the LVDS output. These patches depend on the Thine THC63LVD1024
->>> driver and the R8A77980 LVDS support patch in order to work, and R8A77980
->>> GPIO DT patches in order to apply/compile...
->>>
->>> [1/5] arm64: dts: renesas: r8a77980: add FCPVD support
->>> [2/5] arm64: dts: renesas: r8a77980: add VSPD support
->>> [3/5] arm64: dts: renesas: r8a77980: add DU support
->>> [4/5] arm64: dts: renesas: r8a77980: add LVDS support
->>
->> Based on the recent request of the ARM SoC maintainers to avoid a plethora of 
->> small patches, I think you can squash 1/5 to 4/5 all together.
-> 
-> Agreed.
-> 
-> Seregi could you please post a v2 with patches 1 - 4 squashed and the
+Thank you for the patch! Perhaps something to improve:
 
-   It's going to be v3 already. :-)
+[auto build test WARNING on iio/togreg]
+[also build test WARNING on v4.17 next-20180613]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-> register range for VSPD0 reduced to 0x5000? Thanks!
+url:    https://github.com/0day-ci/linux/commits/Borys-Movchan/dt-bindings-iio-light-add-ISL29033-device-bindings/20180613-220725
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
-   More like increased. :-)
-   Working on it...
 
->>> [5/5] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI support
+sparse warnings: (new ones prefixed by >>)
 
-MBR, Sergei
+>> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
+>> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
+>> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
+>> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
+
+vim +235 drivers/iio/light/isl29033.c
+
+   220	
+   221	static int isl29033_read_sensor_input(struct isl29033_chip *chip)
+   222	{
+   223		int ret;
+   224		u16 val;
+   225		struct device *dev = regmap_get_device(chip->regmap);
+   226	
+   227		ret = regmap_bulk_read(chip->regmap, ISL29033_REG_ADD_DATA_LSB,
+   228					(u8 *)&val, 2);
+   229		if (ret < 0) {
+   230			dev_err(dev,
+   231				"Data bulk read error %d\n", ret);
+   232			return ret;
+   233		}
+   234	
+ > 235		val = be16_to_cpu(val);
+   236		dev_vdbg(dev, "Data read: %x\n", val);
+   237	
+   238		return val;
+   239	}
+   240	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
