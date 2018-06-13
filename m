@@ -1,35 +1,303 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: hikey960: Define wl1837 power capabilities
-Date: Wed, 13 Jun 2018 12:36:40 -0700
-Message-ID: <CALAqxLWuUJYfXszaO01KODbom8WykKQKm0X3fzPTwSRK+G3zqw@mail.gmail.com>
-References: <20180613180321.16745-1-ryan@edited.us>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180613180321.16745-1-ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Valentin Schneider <valentin.schneider-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v10 2/7] i2c: Add FSI-attached I2C master algorithm
+Date: Wed, 13 Jun 2018 14:36:14 -0500
+Message-ID: <1528918579-27602-3-git-send-email-eajames@linux.vnet.ibm.com>
+References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 11:03 AM, Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org> wrote:
-> These properties are required for compatibility with runtime PM.
-> Without these properties, MMC host controller will not be aware
-> of power capabilities. When the wlcore driver attempts to power
-> on the device, it will erroneously fail with -EACCES. This fixes
-> a regression found here: https://lkml.org/lkml/2018/6/12/930
->
-> Signed-off-by: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>
+Add register definitions for FSI-attached I2C master and functions to
+access those registers over FSI. Add an FSI driver so that our I2C bus
+is probed up during an FSI scan.
 
-Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
-Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+---
+ drivers/i2c/busses/Kconfig   |  11 ++
+ drivers/i2c/busses/Makefile  |   1 +
+ drivers/i2c/busses/i2c-fsi.c | 240 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 252 insertions(+)
+ create mode 100644 drivers/i2c/busses/i2c-fsi.c
 
-Wei Xu: This also fixes a functional regression with wifi on the
-HiKey960 board that was introduced in 4.18-rc with commit 60f36637bbbd
-("wlcore: sdio: allow pm to handle sdio power").
-
-Could you please be sure to queue this for the 4.18-rc too?
-
-thanks
--john
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 4f8df2e..cddd159 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -1330,4 +1330,15 @@ config I2C_ZX2967
+ 	  This driver can also be built as a module. If so, the module will be
+ 	  called i2c-zx2967.
+ 
++config I2C_FSI
++	tristate "FSI I2C driver"
++	depends on FSI
++	help
++	  Driver for FSI bus attached I2C masters. These are I2C masters that
++	  are connected to the system over an FSI bus, instead of the more
++	  common PCI or MMIO interface.
++
++	  This driver can also be built as a module. If so, the module will be
++	  called as i2c-fsi.
++
+ endmenu
+diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+index 5a86914..4909fd6 100644
+--- a/drivers/i2c/busses/Makefile
++++ b/drivers/i2c/busses/Makefile
+@@ -137,5 +137,6 @@ obj-$(CONFIG_I2C_PCA_ISA)	+= i2c-pca-isa.o
+ obj-$(CONFIG_I2C_SIBYTE)	+= i2c-sibyte.o
+ obj-$(CONFIG_I2C_XGENE_SLIMPRO) += i2c-xgene-slimpro.o
+ obj-$(CONFIG_SCx200_ACB)	+= scx200_acb.o
++obj-$(CONFIG_I2C_FSI)		+= i2c-fsi.o
+ 
+ ccflags-$(CONFIG_I2C_DEBUG_BUS) := -DDEBUG
+diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+new file mode 100644
+index 0000000..694bbb4
+--- /dev/null
++++ b/drivers/i2c/busses/i2c-fsi.c
+@@ -0,0 +1,240 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * FSI-attached I2C master algorithm
++ *
++ * Copyright 2018 IBM Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/fsi.h>
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++
++#define FSI_ENGID_I2C		0x7
++
++#define I2C_DEFAULT_CLK_DIV	6
++
++/* i2c registers */
++#define I2C_FSI_FIFO		0x00
++#define I2C_FSI_CMD		0x04
++#define I2C_FSI_MODE		0x08
++#define I2C_FSI_WATER_MARK	0x0C
++#define I2C_FSI_INT_MASK	0x10
++#define I2C_FSI_INT_COND	0x14
++#define I2C_FSI_OR_INT_MASK	0x14
++#define I2C_FSI_INTS		0x18
++#define I2C_FSI_AND_INT_MASK	0x18
++#define I2C_FSI_STAT		0x1C
++#define I2C_FSI_RESET_I2C	0x1C
++#define I2C_FSI_ESTAT		0x20
++#define I2C_FSI_RESET_ERR	0x20
++#define I2C_FSI_RESID_LEN	0x24
++#define I2C_FSI_SET_SCL		0x24
++#define I2C_FSI_PORT_BUSY	0x28
++#define I2C_FSI_RESET_SCL	0x2C
++#define I2C_FSI_SET_SDA		0x30
++#define I2C_FSI_RESET_SDA	0x34
++
++/* cmd register */
++#define I2C_CMD_WITH_START	BIT(31)
++#define I2C_CMD_WITH_ADDR	BIT(30)
++#define I2C_CMD_RD_CONT		BIT(29)
++#define I2C_CMD_WITH_STOP	BIT(28)
++#define I2C_CMD_FORCELAUNCH	BIT(27)
++#define I2C_CMD_ADDR		GENMASK(23, 17)
++#define I2C_CMD_READ		BIT(16)
++#define I2C_CMD_LEN		GENMASK(15, 0)
++
++/* mode register */
++#define I2C_MODE_CLKDIV		GENMASK(31, 16)
++#define I2C_MODE_PORT		GENMASK(15, 10)
++#define I2C_MODE_ENHANCED	BIT(3)
++#define I2C_MODE_DIAG		BIT(2)
++#define I2C_MODE_PACE_ALLOW	BIT(1)
++#define I2C_MODE_WRAP		BIT(0)
++
++/* watermark register */
++#define I2C_WATERMARK_HI	GENMASK(15, 12)
++#define I2C_WATERMARK_LO	GENMASK(7, 4)
++
++#define I2C_FIFO_HI_LVL		4
++#define I2C_FIFO_LO_LVL		4
++
++/* interrupt register */
++#define I2C_INT_INV_CMD		BIT(15)
++#define I2C_INT_PARITY		BIT(14)
++#define I2C_INT_BE_OVERRUN	BIT(13)
++#define I2C_INT_BE_ACCESS	BIT(12)
++#define I2C_INT_LOST_ARB	BIT(11)
++#define I2C_INT_NACK		BIT(10)
++#define I2C_INT_DAT_REQ		BIT(9)
++#define I2C_INT_CMD_COMP	BIT(8)
++#define I2C_INT_STOP_ERR	BIT(7)
++#define I2C_INT_BUSY		BIT(6)
++#define I2C_INT_IDLE		BIT(5)
++
++/* status register */
++#define I2C_STAT_INV_CMD	BIT(31)
++#define I2C_STAT_PARITY		BIT(30)
++#define I2C_STAT_BE_OVERRUN	BIT(29)
++#define I2C_STAT_BE_ACCESS	BIT(28)
++#define I2C_STAT_LOST_ARB	BIT(27)
++#define I2C_STAT_NACK		BIT(26)
++#define I2C_STAT_DAT_REQ	BIT(25)
++#define I2C_STAT_CMD_COMP	BIT(24)
++#define I2C_STAT_STOP_ERR	BIT(23)
++#define I2C_STAT_MAX_PORT	GENMASK(19, 16)
++#define I2C_STAT_ANY_INT	BIT(15)
++#define I2C_STAT_SCL_IN		BIT(11)
++#define I2C_STAT_SDA_IN		BIT(10)
++#define I2C_STAT_PORT_BUSY	BIT(9)
++#define I2C_STAT_SELF_BUSY	BIT(8)
++#define I2C_STAT_FIFO_COUNT	GENMASK(7, 0)
++
++#define I2C_STAT_ERR		(I2C_STAT_INV_CMD |			\
++				 I2C_STAT_PARITY |			\
++				 I2C_STAT_BE_OVERRUN |			\
++				 I2C_STAT_BE_ACCESS |			\
++				 I2C_STAT_LOST_ARB |			\
++				 I2C_STAT_NACK |			\
++				 I2C_STAT_STOP_ERR)
++#define I2C_STAT_ANY_RESP	(I2C_STAT_ERR |				\
++				 I2C_STAT_DAT_REQ |			\
++				 I2C_STAT_CMD_COMP)
++
++/* extended status register */
++#define I2C_ESTAT_FIFO_SZ	GENMASK(31, 24)
++#define I2C_ESTAT_SCL_IN_SY	BIT(15)
++#define I2C_ESTAT_SDA_IN_SY	BIT(14)
++#define I2C_ESTAT_S_SCL		BIT(13)
++#define I2C_ESTAT_S_SDA		BIT(12)
++#define I2C_ESTAT_M_SCL		BIT(11)
++#define I2C_ESTAT_M_SDA		BIT(10)
++#define I2C_ESTAT_HI_WATER	BIT(9)
++#define I2C_ESTAT_LO_WATER	BIT(8)
++#define I2C_ESTAT_PORT_BUSY	BIT(7)
++#define I2C_ESTAT_SELF_BUSY	BIT(6)
++#define I2C_ESTAT_VERSION	GENMASK(4, 0)
++
++struct fsi_i2c_master {
++	struct fsi_device	*fsi;
++	u8			fifo_size;
++};
++
++static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
++			    u32 *data)
++{
++	int rc;
++	__be32 data_be;
++
++	rc = fsi_device_read(fsi, reg, &data_be, sizeof(data_be));
++	if (rc)
++		return rc;
++
++	*data = be32_to_cpu(data_be);
++
++	return 0;
++}
++
++static int fsi_i2c_write_reg(struct fsi_device *fsi, unsigned int reg,
++			     u32 *data)
++{
++	__be32 data_be = cpu_to_be32p(data);
++
++	return fsi_device_write(fsi, reg, &data_be, sizeof(data_be));
++}
++
++static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
++{
++	int rc;
++	u32 mode = I2C_MODE_ENHANCED, extended_status, watermark;
++	u32 interrupt = 0;
++
++	/* since we use polling, disable interrupts */
++	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_INT_MASK, &interrupt);
++	if (rc)
++		return rc;
++
++	mode |= FIELD_PREP(I2C_MODE_CLKDIV, I2C_DEFAULT_CLK_DIV);
++	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
++	if (rc)
++		return rc;
++
++	rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_ESTAT, &extended_status);
++	if (rc)
++		return rc;
++
++	i2c->fifo_size = FIELD_GET(I2C_ESTAT_FIFO_SZ, extended_status);
++	watermark = FIELD_PREP(I2C_WATERMARK_HI,
++			       i2c->fifo_size - I2C_FIFO_HI_LVL);
++	watermark |= FIELD_PREP(I2C_WATERMARK_LO, I2C_FIFO_LO_LVL);
++
++	return fsi_i2c_write_reg(i2c->fsi, I2C_FSI_WATER_MARK, &watermark);
++}
++
++static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
++			int num)
++{
++	return -EOPNOTSUPP;
++}
++
++static u32 fsi_i2c_functionality(struct i2c_adapter *adap)
++{
++	return I2C_FUNC_I2C | I2C_FUNC_PROTOCOL_MANGLING |
++		I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_EMUL |
++		I2C_FUNC_SMBUS_BLOCK_DATA;
++}
++
++static const struct i2c_algorithm fsi_i2c_algorithm = {
++	.master_xfer = fsi_i2c_xfer,
++	.functionality = fsi_i2c_functionality,
++};
++
++static int fsi_i2c_probe(struct device *dev)
++{
++	struct fsi_i2c_master *i2c;
++	int rc;
++
++	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
++	if (!i2c)
++		return -ENOMEM;
++
++	i2c->fsi = to_fsi_dev(dev);
++
++	rc = fsi_i2c_dev_init(i2c);
++	if (rc)
++		return rc;
++
++	dev_set_drvdata(dev, i2c);
++
++	return 0;
++}
++
++static const struct fsi_device_id fsi_i2c_ids[] = {
++	{ FSI_ENGID_I2C, FSI_VERSION_ANY },
++	{ }
++};
++
++static struct fsi_driver fsi_i2c_driver = {
++	.id_table = fsi_i2c_ids,
++	.drv = {
++		.name = "i2c-fsi",
++		.bus = &fsi_bus_type,
++		.probe = fsi_i2c_probe,
++	},
++};
++
++module_fsi_driver(fsi_i2c_driver);
++
++MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
++MODULE_DESCRIPTION("FSI attached I2C master");
++MODULE_LICENSE("GPL");
+-- 
+1.8.3.1
