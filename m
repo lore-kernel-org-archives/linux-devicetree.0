@@ -1,93 +1,72 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH v3 7/7] soc: qcom: rpmpd/rpmhpd: Add a max vote on all
- corners at init
-Date: Wed, 13 Jun 2018 15:28:08 -0700
-Message-ID: <414598de-00a1-9ce7-3a7e-4a95fd1bd35d@codeaurora.org>
-References: <20180612044052.4402-1-rnayak@codeaurora.org>
- <20180612044052.4402-8-rnayak@codeaurora.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: power: supply: qcom_bms: Add bindings
+Date: Wed, 13 Jun 2018 15:53:23 -0700
+Message-ID: <20180613225323.GM88063@google.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com>
+ <20180613160643.12638-1-ctatlor97@gmail.com>
+ <20180613160643.12638-3-ctatlor97@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612044052.4402-8-rnayak@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180613160643.12638-3-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rajendra,
+(sorry if you receive two variants of this mail, I sent one earlier
+today but for some reason it didn't make it to the lists)
 
-On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
-> As we move from no clients/consumers in kernel voting on corners,
-> to *some* voting and some not voting, we might end up in a situation
-> where the clients which remove votes can adversly impact others
-
-s/adversly/adversely/
-
-> who still don't have a way to vote.
+On Wed, Jun 13, 2018 at 05:06:24PM +0100, Craig Tatlor wrote:
+> Add bindings for the Qualcomm Battery Monitoring system.
 > 
-> To avoid this situation, have a max vote on all corners at init.
-> This should/can be removed once we have all clients moved to
-> be able to vote/unvote for themselves.
-
-This change seems like a hack.  Do you intend for it to be merged and then
-later reverted in Linus's tree?  Could it instead be implemented in a way
-that does not require reverting and instead is enabled by some DT
-property?  Alternatively, could this feature be added to the power domain
-core since it is relatively generic?
-
-
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 > ---
->  drivers/soc/qcom/rpmhpd.c | 12 +++++++++++-
->  drivers/soc/qcom/rpmpd.c  |  9 +++++++++
->  2 files changed, 20 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-> index 7083ec1590ff..3c753d33aeee 100644
-> --- a/drivers/soc/qcom/rpmhpd.c
-> +++ b/drivers/soc/qcom/rpmhpd.c
-> @@ -329,7 +329,7 @@ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
->  
->  static int rpmhpd_probe(struct platform_device *pdev)
->  {
-> -	int i, ret;
-> +	int i, ret, max_level;
->  	size_t num;
->  	struct genpd_onecell_data *data;
->  	struct rpmhpd **rpmhpds;
-> @@ -390,6 +390,16 @@ static int rpmhpd_probe(struct platform_device *pdev)
->  		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
->  
->  		data->domains[i] = &rpmhpds[i]->pd;
+> * Changes from v5:
+>   Mentions which values are 8 bit.
+> 
+> * Changes from v4:
+>   Uses proper units and expands some definitions,
+>   along with changing vadc@ to adc@.
+>  .../bindings/power/supply/qcom_bms.txt        | 92 +++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/qcom_bms.txt b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> new file mode 100644
+> index 000000000000..9a29a2eb9f04
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/qcom_bms.txt
+> @@ -0,0 +1,92 @@
+> +Qualcomm Battery Monitoring System
 > +
-> +		/*
-> +		 * Until we have all consumers voting on corners
-> +		 * just vote the max corner on all PDs
-> +		 * This should ideally be *removed* once we have
-> +		 * all (most) consumers being able to vote
-> +		 */
-> +		max_level = rpmhpds[i]->level_count - 1;
-> +		rpmhpd_set_performance(&rpmhpds[i]->pd, rpmhpds[i]->level[max_level]);
-> +		rpmhpd_power_on(&rpmhpds[i]->pd);
+> +The Qualcomm Battery Monitoring System is found inside of Qualcomm PM8941
+> +PMICs. It provides open circuit voltage (OCV) and coulomb counter registers
+> +that allow the OS to infer a capacity level.
+> +
+> +Required properties:
+> +- compatible:                   Should contain "qcom,pm8941-bms".
+> +- reg:                          Specifies the SPMI address and length of the
+> +				controller's registers.
+> +- interrupts:                   OCV threshold interrupt.
+> +- io-channels:                  Should contain IIO channel specifier for the
+> +				ADC channel that reports battery temperature.
+> +- io-channel-names:             Should contain "temp".
+> +- qcom,fcc-temp-legend-celcius: An 8 bit array containing the temperature,
+> +				in degC, for each column of the full charge
+> +				capacity lookup table.
 
-Clearly these calls will result in max level requests being sent for all
-power domains at probe time.  However, it isn't clear that this will
-actually help at runtime in these two cases:
+s/celcius/celsius/
 
-1. A consumer enables and then disables a power domain.
-	- It seems like the PD would just be disabled in this case.
+same for qcom,ocv-temp-legend-celcius
 
-2. A consumer sets a non-max performance state of a power domain.
-	- It seems like the PD would just be set to the new lower
-	  performance state since the max vote isn't known to the
-	  PD core for aggregation purposes.
+> +- qcom,fcc-lut-microamp-hours:  An array of full charge capacity values in uah,
+> +				one entry for each temperature defined in in
 
-Thanks,
-David
+nit: s/uah/uAh/
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks
+
+Matthias
