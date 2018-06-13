@@ -1,64 +1,89 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 14/27] drm/sun4i: Don't check for panel
- or bridge on TV TCONs
-Date: Wed, 13 Jun 2018 16:04:20 +0800
-Message-ID: <CAGb2v66QWr2CQhcfQ9BQds-0xeG=pS4MDzaNn7_HGz+q3gfkWA@mail.gmail.com>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
- <20180612200036.21483-15-jernej.skrabec@siol.net> <20180613074621.5phumovcyymbkfbn@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 13/28] drm/mediatek: add connection from RDMA0 to DSI3
+Date: Wed, 13 Jun 2018 16:05:12 +0800
+Message-ID: <1528877112.30263.24.camel@mtksdaap41>
+References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
+ <1528687580-549-14-git-send-email-stu.hsieh@mediatek.com>
+ <1528868751.15127.10.camel@mtksdaap41>
+ <1528875983.11190.29.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBGVAQPMQKGQE3NXKPBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180613074621.5phumovcyymbkfbn@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1528875983.11190.29.camel@mtksdccf07>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 3:46 PM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Tue, Jun 12, 2018 at 10:00:23PM +0200, Jernej Skrabec wrote:
->> TV TCONs are always connected to TV or HDMI encoder, so it doesn't make
->> sense to check if panel or bridge is connected to them.
->>
->> Check if TCON has channel 0 and only then check for connected panel or
->> bridges.
->>
->> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
->> ---
->>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 12 +++++++++---
->>  1 file changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> index b1205a7bc20f..c9ffa5381185 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> @@ -1189,13 +1189,19 @@ static const struct component_ops sun4i_tcon_ops = {
->>  static int sun4i_tcon_probe(struct platform_device *pdev)
->>  {
->>       struct device_node *node = pdev->dev.of_node;
->> +     const struct sun4i_tcon_quirks *quirks;
->>       struct drm_bridge *bridge;
->>       struct drm_panel *panel;
->>       int ret;
->>
->> -     ret = drm_of_find_panel_or_bridge(node, 1, 0, &panel, &bridge);
->> -     if (ret == -EPROBE_DEFER)
->> -             return ret;
->> +     quirks = of_device_get_match_data(&pdev->dev);
->
-> We should probably check ofr the pointer value before dereferencing it.
-
-I think we've discussed this before. If the driver has data structures
-for all the supported compatible strings, and it is device tree only,
-then we should just let it blow up in the user's face, since they are
-obviously doing something they shouldn't be doing to get the driver
-to probe without a compatible string match.
-
-ChenYu
+SGksIFN0dToKCk9uIFdlZCwgMjAxOC0wNi0xMyBhdCAxNTo0NiArMDgwMCwgU3R1IEhzaWVoIHdy
+b3RlOgo+IEhpLCBDSzoKPiAKPiBPbiBXZWQsIDIwMTgtMDYtMTMgYXQgMTM6NDUgKzA4MDAsIENL
+IEh1IHdyb3RlOgo+ID4gSGksIFN0dToKPiA+IAo+ID4gVHdvIGlubGluZSBjb21tZW50Lgo+ID4g
+Cj4gPiBPbiBNb24sIDIwMTgtMDYtMTEgYXQgMTE6MjYgKzA4MDAsIFN0dSBIc2llaCB3cm90ZToK
+PiA+ID4gVGhpcyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBSRE1BMCB0byBEU0kzCj4g
+PiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBTdHUgSHNpZWggPHN0dS5oc2llaEBtZWRpYXRlay5j
+b20+Cj4gPiA+IC0tLQo+ID4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
+LmMgICAgICB8IDQgKysrKwo+ID4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZGRwX2NvbXAuYyB8IDIgKy0KPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHAuYwo+ID4gPiBpbmRleCBjMDhhZWQ4ZGFlNDQuLmZlZDFiNTcwNDM1NSAxMDA2NDQKPiA+
+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiA+ID4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiA+ID4gQEAgLTgzLDYg
+KzgzLDcgQEAKPiA+ID4gICNkZWZpbmUgR0FNTUFfTU9VVF9FTl9SRE1BMQkJMHgxCj4gPiA+ICAj
+ZGVmaW5lIFJETUEwX01PVVRfRFBJMAkJCTB4Mgo+ID4gPiAgI2RlZmluZSBSRE1BMF9NT1VUX0RT
+STIJCQkweDQKPiA+ID4gKyNkZWZpbmUgUkRNQTBfTU9VVF9EU0kzCQkJMHg1Cj4gPiAKPiA+IFVz
+dWFsbHksIGVhY2ggYml0IG9mIGEgbW91dCByZWdpc3RlciByZXByZXNlbnQgYSBvdXRwdXQgZW5h
+YmxlLiBJcyB0aGlzCj4gPiB2YWx1ZSAweDUgaXMgYSBjb3JyZWN0IHZhbHVlPwo+IAo+IEluIGh3
+IENPTkZJRyBTUEVDIHNob3cgYXMgZm9sbG93aW5nOgo+IEJpdChzKQlOYW1lCQkJRGVzY3JpcHRp
+b24KPiAyOjAJRElTUF9QQVRIMF9TT1VUX1NFTF9JTgkwIDogT3V0cHV0IHRvIERTSTAKPiAJCQkJ
+MTogIE9vdXRwdXQgdG8gRFNJMQo+IAkJCQkyOiAgT291dHB1dCB0byBEUEkKPiAJCQkJMzogIE9v
+dXRwdXQgdG8gRFBJMQo+IAkJCQk0OiAgT291dHB1dCB0byBEU0kyCj4gCQkJCTU6ICBPb3V0cHV0
+IHRvIERTSTMKPiAJCQkJNiA6IHJlc2VydmVkCj4gCQkJCTc6ICBPb3V0cHV0IHRvIERJU1BfVUZP
+RQo+IFNvLCB0aGUgdmFsdWUgMHg1IGlzIGNvcnJlY3QgdmFsdWUuCj4gCgpGcm9tIHRoZSBkZWZp
+bml0aW9uLCBpdCBsb29rcyBsaWtlIHRoYXQgUkRNQTAgY291bGQgb25seSBzaW5nbGUgb3V0cHV0
+CihvdXRwdXQgdG8gb25seSBvbmUgZGVzdGluYXRpb24gYXQgb25lIG1vbWVudCkuIFRoZSByZWdp
+c3RlciBuYW1pbmcKJ0RJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX01PVVRfRU4nIChNT1VUIG1l
+YW5zIG91dHB1dCB0byBtdWx0aXBsZQpkZXN0aW5hdGlvbiBzaW11bHRhbmVvdXNseSkgd291bGQg
+Y29uZnVzZSBtZS4gSWYgdGhlIGRhdGEgc2hlZXQgdXNlIHRoZQpjb25mdXNlZCBuYW1pbmcsIEkg
+dGhpbmsgSSBjb3VsZCBqdXN0IGFjY2VwdCBpdC4KClJlZ2FyZHMsCkNLCgo+IFJlZ2FyZCwKPiBT
+dHUKPiAKPiA+IAo+ID4gPiAgI2RlZmluZSBSRE1BMV9NT1VUX0RQSTAJCQkweDIKPiA+ID4gICNk
+ZWZpbmUgRFBJMF9TRUxfSU5fUkRNQTEJCTB4MQo+ID4gPiAgI2RlZmluZSBDT0xPUjFfU0VMX0lO
+X09WTDEJCTB4MQo+ID4gPiBAQCAtMTY0LDYgKzE2NSw5IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQg
+bXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiA+ID4gIAl9IGVsc2Ug
+aWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9E
+U0kyKSB7Cj4gPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBfTU9VVF9F
+TjsKPiA+ID4gIAkJdmFsdWUgPSBSRE1BMF9NT1VUX0RTSTI7Cj4gPiA+ICsJfSBlbHNlIGlmIChj
+dXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMykg
+ewo+ID4gPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX01PVVRfRU47Cj4g
+PiA+ICsJCXZhbHVlID0gUkRNQTBfTU9VVF9EU0kzOwo+ID4gPiAgCX0gZWxzZSBpZiAoY3VyID09
+IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsKPiA+
+ID4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9NT1VUX0VOOwo+ID4gPiAg
+CQl2YWx1ZSA9IFJETUExX01PVVRfRFBJMDsKPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gPiA+IGluZGV4IGZlNmZkYzAyMWZjNy4uMjJmNGM3MmZh
+Nzg1IDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+ZHBfY29tcC5jCj4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmMKPiA+ID4gQEAgLTIyOCw3ICsyMjgsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10
+a19kZHBfY29tcF9tYXRjaCBtdGtfZGRwX21hdGNoZXNbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0g
+ewo+ID4gPiAgCVtERFBfQ09NUE9ORU5UX0RTSTBdCT0geyBNVEtfRFNJLAkJMCwgTlVMTCB9LAo+
+ID4gPiAgCVtERFBfQ09NUE9ORU5UX0RTSTFdCT0geyBNVEtfRFNJLAkJMSwgTlVMTCB9LAo+ID4g
+PiAgCVtERFBfQ09NUE9ORU5UX0RTSTJdCT0geyBNVEtfRFNJLAkJMiwgTlVMTCB9LAo+ID4gPiAt
+CVtERFBfQ09NUE9ORU5UX0RTSTJdCT0geyBNVEtfRFNJLAkJMywgTlVMTCB9LAo+ID4gPiArCVtE
+RFBfQ09NUE9ORU5UX0RTSTNdCT0geyBNVEtfRFNJLAkJMywgTlVMTCB9LAo+ID4gCj4gPiBJIHRo
+aW5rIHRoaXMgaXMgbm90IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaC4KPiBPSwo+IAo+ID4gCj4gPiBS
+ZWdhcmRzLAo+ID4gQ0sKPiA+IAo+ID4gPiAgCVtERFBfQ09NUE9ORU5UX0dBTU1BXQk9IHsgTVRL
+X0RJU1BfR0FNTUEsCTAsICZkZHBfZ2FtbWEgfSwKPiA+ID4gIAlbRERQX0NPTVBPTkVOVF9PRDBd
+CT0geyBNVEtfRElTUF9PRCwJMCwgJmRkcF9vZCB9LAo+ID4gPiAgCVtERFBfQ09NUE9ORU5UX09E
+MV0JPSB7IE1US19ESVNQX09ELAkxLCAmZGRwX29kIH0sCj4gPiAKPiA+IAo+IAo+IAoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
