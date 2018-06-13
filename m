@@ -1,67 +1,63 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 20/28] drm/mediatek: add connection from RDMA2 to DSI1
-Date: Wed, 13 Jun 2018 15:17:35 +0800
-Message-ID: <1528874255.30263.7.camel@mtksdaap41>
+Subject: Re: [PATCH 21/28] drm/mediatek: add connection from RDMA2 to DSI2
+Date: Wed, 13 Jun 2018 15:18:32 +0800
+Message-ID: <1528874312.30263.8.camel@mtksdaap41>
 References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-         <1528687580-549-21-git-send-email-stu.hsieh@mediatek.com>
+ <1528687580-549-22-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528687580-549-21-git-send-email-stu.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1528687580-549-22-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stu:
-
-On Mon, 2018-06-11 at 11:26 +0800, Stu Hsieh wrote:
-> This patch add the connection from RDMA2 to DSI1
-> 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
-
-Reviewed-by: CK Hu <ck.hu at mediatek.com>
-
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 2d883815d79c..ae10f8f1e140 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -94,11 +94,13 @@
->  #define RDMA1_MOUT_DPI1			0x3
->  #define RDMA2_MOUT_DPI0			0x2
->  #define RDMA2_MOUT_DPI1			0x3
-> +#define RDMA2_MOUT_DSI1			0x1
->  #define DPI0_SEL_IN_RDMA1		0x1
->  #define DPI0_SEL_IN_RDMA2		0x3
->  #define DPI1_SEL_IN_RDMA1		(0x1 << 8)
->  #define DPI1_SEL_IN_RDMA2		(0x3 << 8)
->  #define DSI1_SEL_IN_RDMA1		0x1
-> +#define DSI1_SEL_IN_RDMA2		0x4
->  #define DSI2_SEL_IN_RDMA1		(0x1 << 16)
->  #define DSI3_SEL_IN_RDMA1		(0x1 << 16)
->  #define COLOR1_SEL_IN_OVL1		0x1
-> @@ -198,6 +200,9 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
->  		*addr = DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN;
->  		value = RDMA1_MOUT_DPI1;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
-> +		value = RDMA2_MOUT_DSI1;
->  	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
->  		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
->  		value = RDMA2_MOUT_DPI0;
-> @@ -241,6 +246,9 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
->  		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
->  		value = DPI1_SEL_IN_RDMA2;
-> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
-> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
-> +		value = DSI1_SEL_IN_RDMA2;
->  	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
->  		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
->  		value = COLOR1_SEL_IN_OVL1;
+SGksIFN0dToKCk9uIE1vbiwgMjAxOC0wNi0xMSBhdCAxMToyNiArMDgwMCwgU3R1IEhzaWVoIHdy
+b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIHRoZSBjb25uZWN0aW9uIGZyb20gUkRNQTIgdG8gRFNJMgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IFN0dSBIc2llaCA8c3R1LmhzaWVoQG1lZGlhdGVrLmNvbT4KClJl
+dmlld2VkLWJ5OiBDSyBIdSA8Y2suaHUgYXQgbWVkaWF0ZWsuY29tPgoKPiAtLS0KPiAgZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCA4ICsrKysrKysrCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA4IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHAuYwo+IGluZGV4IGFlMTBmOGYxZTE0MC4uY2U4OWExZDg2YjkzIDEwMDY0NAo+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBAQCAtOTUsNiArOTUsNyBAQAo+ICAjZGVm
+aW5lIFJETUEyX01PVVRfRFBJMAkJCTB4Mgo+ICAjZGVmaW5lIFJETUEyX01PVVRfRFBJMQkJCTB4
+Mwo+ICAjZGVmaW5lIFJETUEyX01PVVRfRFNJMQkJCTB4MQo+ICsjZGVmaW5lIFJETUEyX01PVVRf
+RFNJMgkJCTB4NAo+ICAjZGVmaW5lIERQSTBfU0VMX0lOX1JETUExCQkweDEKPiAgI2RlZmluZSBE
+UEkwX1NFTF9JTl9SRE1BMgkJMHgzCj4gICNkZWZpbmUgRFBJMV9TRUxfSU5fUkRNQTEJCSgweDEg
+PDwgOCkKPiBAQCAtMTAyLDYgKzEwMyw3IEBACj4gICNkZWZpbmUgRFNJMV9TRUxfSU5fUkRNQTEJ
+CTB4MQo+ICAjZGVmaW5lIERTSTFfU0VMX0lOX1JETUEyCQkweDQKPiAgI2RlZmluZSBEU0kyX1NF
+TF9JTl9SRE1BMQkJKDB4MSA8PCAxNikKPiArI2RlZmluZSBEU0kyX1NFTF9JTl9SRE1BMgkJKDB4
+NCA8PCAxNikKPiAgI2RlZmluZSBEU0kzX1NFTF9JTl9SRE1BMQkJKDB4MSA8PCAxNikKPiAgI2Rl
+ZmluZSBDT0xPUjFfU0VMX0lOX09WTDEJCTB4MQo+ICAKPiBAQCAtMjA5LDYgKzIxMSw5IEBAIHN0
+YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1
+ciwKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9PSBE
+RFBfQ09NUE9ORU5UX0RQSTEpIHsKPiAgCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JE
+TUEyX1NPVVQ7Cj4gIAkJdmFsdWUgPSBSRE1BMl9NT1VUX0RQSTE7Cj4gKwl9IGVsc2UgaWYgKGN1
+ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kyKSB7
+Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMl9TT1VUOwo+ICsJCXZhbHVl
+ID0gUkRNQTJfTU9VVF9EU0kyOwo+ICAJfSBlbHNlIHsKPiAgCQl2YWx1ZSA9IDA7Cj4gIAl9Cj4g
+QEAgLTI0OSw2ICsyNTQsOSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc2VsX2luKGVu
+dW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05F
+TlRfUkRNQTIgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTEpIHsKPiAgCQkqYWRkciA9IERJ
+U1BfUkVHX0NPTkZJR19EU0lFX1NFTF9JTjsKPiAgCQl2YWx1ZSA9IERTSTFfU0VMX0lOX1JETUEy
+Owo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IERE
+UF9DT01QT05FTlRfRFNJMikgewo+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RTSUVfU0VM
+X0lOOwo+ICsJCXZhbHVlID0gRFNJMl9TRUxfSU5fUkRNQTI7Cj4gIAl9IGVsc2UgaWYgKGN1ciA9
+PSBERFBfQ09NUE9ORU5UX09WTDEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0NPTE9SMSkgewo+
+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfQ09MT1IxX1NFTF9JTjsKPiAgCQl2YWx1
+ZSA9IENPTE9SMV9TRUxfSU5fT1ZMMTsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
