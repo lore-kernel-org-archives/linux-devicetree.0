@@ -1,67 +1,82 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 14/28] drm/mediatek: add connection from RDMA1 to DPI1
-Date: Wed, 13 Jun 2018 14:13:30 +0800
-Message-ID: <1528870410.15127.11.camel@mtksdaap41>
-References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
-         <1528687580-549-15-git-send-email-stu.hsieh@mediatek.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH linux-next v5 07/13] dt-bindings: mfd: Add a document for
+ PECI client mfd
+Date: Wed, 13 Jun 2018 07:16:37 +0100
+Message-ID: <20180613061637.GI5278@dell>
+References: <20180601182216.23894-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528687580-549-15-git-send-email-stu.hsieh@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20180601182216.23894-1-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stu:
+All s/mfd/MFD/
 
-On Mon, 2018-06-11 at 11:26 +0800, Stu Hsieh wrote:
-> This patch add the connection from RDMA1 to DPI1
-> 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> This commit adds a dt-bindings document for PECI client multi-function
+> device.
+
+Multi-Function Device
+
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: James Feist <james.feist@linux.intel.com>
+> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../devicetree/bindings/mfd/peci-client.txt   | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/peci-client.txt
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index fed1b5704355..4abd5dabeccf 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -85,7 +85,9 @@
->  #define RDMA0_MOUT_DSI2			0x4
->  #define RDMA0_MOUT_DSI3			0x5
->  #define RDMA1_MOUT_DPI0			0x2
-> +#define RDMA1_MOUT_DPI1			0x3
+> diff --git a/Documentation/devicetree/bindings/mfd/peci-client.txt b/Documentation/devicetree/bindings/mfd/peci-client.txt
+> new file mode 100644
+> index 000000000000..4eb8f6bb6ca4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/peci-client.txt
+> @@ -0,0 +1,23 @@
+> +* Intel PECI client bindings
 
-Usually, each bit of a mout register represent a output enable. Is this
-value 0x3 a correct value?
+Now it the time to expand on what a "PECI client" is.
 
-Regards,
-CK
+> +Required properties:
+> +- compatible : Should be "intel,peci-client", "simple-mfd".
+> +- reg        : Should contain address of a client CPU. Address range of CPU
+> +	       clients is starting from 0x30 based on PECI specification.
 
->  #define DPI0_SEL_IN_RDMA1		0x1
-> +#define DPI1_SEL_IN_RDMA1		(0x1 << 8)
->  #define COLOR1_SEL_IN_OVL1		0x1
->  
->  #define OVL_MOUT_EN_RDMA		0x1
-> @@ -171,6 +173,9 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
->  		*addr = DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN;
->  		value = RDMA1_MOUT_DPI0;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_MOUT_EN;
-> +		value = RDMA1_MOUT_DPI1;
->  	} else {
->  		value = 0;
->  	}
-> @@ -190,6 +195,9 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
->  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
->  		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
->  		value = DPI0_SEL_IN_RDMA1;
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
-> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
-> +		value = DPI1_SEL_IN_RDMA1;
->  	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
->  		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
->  		value = COLOR1_SEL_IN_OVL1;
+s/is starting/start/
+
+> +Example:
+> +	peci-bus@0 {
+
+0?
+
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+
+No 'reg' property?
+
+> +		< more properties >
+
+Remove this.
+
+> +		peci-client@30 {
+> +			compatible = "intel,peci-client", "simple-mfd";
+> +			reg = <0x30>;
+> +		};
+> +
+> +		peci-client@31 {
+> +			compatible = "intel,peci-client", "simple-mfd";
+> +			reg = <0x31>;
+> +		};
+> +	};
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
