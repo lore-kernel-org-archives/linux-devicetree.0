@@ -1,51 +1,82 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 25/28] drm/mediatek: add DSI3 support for mutex
-Date: Wed, 13 Jun 2018 15:22:58 +0800
-Message-ID: <1528874578.30263.12.camel@mtksdaap41>
-References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
- <1528687580-549-26-git-send-email-stu.hsieh@mediatek.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v2] arm: sun4i: Add support for Pengpod
+ 1000 tablet
+Date: Wed, 13 Jun 2018 09:28:16 +0200
+Message-ID: <4d041794-ba90-a9a6-0886-0ca18dab62b9@redhat.com>
+References: <20180602160313.26763-1-rah@settrans.net>
+ <20180604081302.hcn7j36gt6xeyquq@flea>
+ <313a74ea-0be6-cff1-6b2f-06a4b0b7ba8d@settrans.net>
+ <20180605145038.qptdlcphdbnw6jyg@flea>
+ <e2787b2a-230d-ea3c-89b9-316ddcd20f67@settrans.net>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1528687580-549-26-git-send-email-stu.hsieh@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stu Hsieh <stu.hsieh@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBEUPQPMQKGQE36L3WVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <e2787b2a-230d-ea3c-89b9-316ddcd20f67-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Bob Ham <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0dToKCk9uIE1vbiwgMjAxOC0wNi0xMSBhdCAxMToyNiArMDgwMCwgU3R1IEhzaWVoIHdy
-b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIHRoZSBEU0kzIHN1cHBvcnQgZm9yIG11dGV4Cj4gCj4gU2ln
-bmVkLW9mZi1ieTogU3R1IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgoKUmV2aWV3ZWQt
-Ynk6IENLIEh1IDxjay5odSBhdCBtZWRpYXRlay5jb20+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyB8IDUgKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUg
-aW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4g
-aW5kZXggMWU3ZTM4NzJlY2NjLi4yOGRkODUzMWE3ZGUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHAuYwo+IEBAIC03OCw2ICs3OCw3IEBACj4gICNkZWZpbmUgTVVURVhf
-U09GX0RQSTAJCQkzCj4gICNkZWZpbmUgTVVURVhfU09GX0RQSTEJCQk0Cj4gICNkZWZpbmUgTVVU
-RVhfU09GX0RTSTIJCQk1Cj4gKyNkZWZpbmUgTVVURVhfU09GX0RTSTMJCQk2Cj4gIAo+ICAjZGVm
-aW5lIE9WTDBfTU9VVF9FTl9DT0xPUjAJCTB4MQo+ICAjZGVmaW5lIE9EX01PVVRfRU5fUkRNQTAJ
-CTB4MQo+IEBAIC0zODcsNiArMzg4LDkgQEAgdm9pZCBtdGtfZGlzcF9tdXRleF9hZGRfY29tcChz
-dHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4LAo+ICAJY2FzZSBERFBfQ09NUE9ORU5UX0RTSTI6
-Cj4gIAkJcmVnID0gTVVURVhfU09GX0RTSTI7Cj4gIAkJYnJlYWs7Cj4gKwljYXNlIEREUF9DT01Q
-T05FTlRfRFNJMzoKPiArCQlyZWcgPSBNVVRFWF9TT0ZfRFNJMzsKPiArCQlicmVhazsKPiAgCWNh
-c2UgRERQX0NPTVBPTkVOVF9EUEkwOgo+ICAJCXJlZyA9IE1VVEVYX1NPRl9EUEkwOwo+ICAJCWJy
-ZWFrOwo+IEBAIC00MjUsNiArNDI5LDcgQEAgdm9pZCBtdGtfZGlzcF9tdXRleF9yZW1vdmVfY29t
-cChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4LAo+ICAJY2FzZSBERFBfQ09NUE9ORU5UX0RT
-STA6Cj4gIAljYXNlIEREUF9DT01QT05FTlRfRFNJMToKPiAgCWNhc2UgRERQX0NPTVBPTkVOVF9E
-U0kyOgo+ICsJY2FzZSBERFBfQ09NUE9ORU5UX0RTSTM6Cj4gIAljYXNlIEREUF9DT01QT05FTlRf
-RFBJMDoKPiAgCWNhc2UgRERQX0NPTVBPTkVOVF9EUEkxOgo+ICAJCXdyaXRlbF9yZWxheGVkKE1V
-VEVYX1NPRl9TSU5HTEVfTU9ERSwKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+Hi,
+
+On 05-06-18 20:18, Bob Ham wrote:
+> On 05/06/18 15:50, Maxime Ripard wrote:
+>> On Mon, Jun 04, 2018 at 06:33:02PM +0100, Bob Ham wrote:
+>>> On 04/06/18 09:13, Maxime Ripard wrote:
+>>>> On Sat, Jun 02, 2018 at 05:03:13PM +0100, Bob Ham wrote:
+>>>
+>>>>> + * This file is dual-licensed: you can use it either under the terms
+>>>>> + * of the GPL or the X11 license, at your option. Note that this dual
+>>>>> + * licensing only applies to this file, and not this project as a
+>>>>> + * whole.
+>>>
+>>>>> + *     The above copyright notice and this permission notice shall be
+>>>>> + *     included in all copies or substantial portions of the Software.
+>>>
+>>>> And this is redundant with the SPDX header.
+>>>
+>>> The X11 license notice states explicitly that the notice has to be
+>>> included in the file.  Wouldn't removing it be a violation of the license?
+>>
+>> The SPDX header is explicitly here to remove the license text and
+>> create a tag that is in a indirect reference to the license text in
+>> LICENSES. It's not going away.
+> 
+> Well, the top bit that I quoted above says that the licenses refer to
+> only that one file in particular and not the project as a whole.  Then
+> the X11 license states that the notice can't be removed from 'this
+> software and associated documentation files (the "Software")' which
+> would seem to refer to the single file.  Therefore, removing the notice
+> from the single file and replacing it with an SPDX header would seem to
+> violate the license.
+> 
+> It's a fine point but it makes me nervous.  I originally based my .dts
+> on sun4i-a10-inet1.dts.  I've CC'd the original copyright holder, Hans
+> de Goede.  Hans, are you willing to give permission for the license
+> notice to be replaced with just an SPDX header indicating the dual
+> licensing?
+
+Yes that is fine by me and you've my permission to switch to using
+just the SPDX header.
+
+FWIW I do not believe the "can't be removed from 'this software and
+associated documentation files (the "Software")'" language
+applies to the software as a whole and not individual files.
+
+> While we're at it, there are a number of other files with the same
+> license text.  Hans, are you prepared to give permission for your other
+> license notices to be replaced with SPDX headers?
+
+Yes you may make the same change to all files with my copyright.
+
+Regards,
+
+Hans
