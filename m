@@ -1,58 +1,35 @@
-From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v9 2/4] dt-bindings: drm/bridge: Document
- sn65dsi86 bridge bindings
-Date: Wed, 13 Jun 2018 10:59:42 -0700
-Message-ID: <152891278222.16708.8028018309924537824@swboyd.mtv.corp.google.com>
-References: <1528888127-31954-1-git-send-email-spanda@codeaurora.org>
- <1528888127-31954-3-git-send-email-spanda@codeaurora.org>
- <CAL_JsqKFDwkf4+J2=sev3Dxj-hwB_7VTBa8ASDFL53s1dSc4Ug@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAL_JsqKFDwkf4+J2=sev3Dxj-hwB_7VTBa8ASDFL53s1dSc4Ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Ryan Grachek <ryan@edited.us>
+Subject: [PATCH] arm64: dts: hikey960: Define wl1837 power capabilities
+Date: Wed, 13 Jun 2018 13:03:21 -0500
+Message-ID: <20180613180321.16745-1-ryan@edited.us>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: valentin.schneider@arm.com, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBSb2IgSGVycmluZyAoMjAxOC0wNi0xMyAwODowMzo1MykKPiBPbiBXZWQsIEp1biAx
-MywgMjAxOCBhdCA1OjA4IEFNLCBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+
-IHdyb3RlOgo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiArLSBpbnRlcnJ1cHRzOiBTcGVj
-aWZpZXIgZm9yIHRoZSBTTjY1RFNJODYgaW50ZXJydXB0IGxpbmUuCj4gPiArCj4gPiArLSBkZGMt
-aTJjLWJ1czogcGhhbmRsZSBvZiB0aGUgSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQg
-cHJvYmluZwo+ID4gKwo+ID4gKy0gZ3Bpby1jb250cm9sbGVyOiBNYXJrcyB0aGUgZGV2aWNlIGhh
-cyBhIEdQSU8gY29udHJvbGxlci4KPiA+ICstICNncGlvLWNlbGxzICAgIDogU2hvdWxkIGJlIHR3
-by4gVGhlIGZpcnN0IGNlbGwgaXMgdGhlIHBpbiBudW1iZXIgYW5kCj4gPiArICAgICAgICAgICAg
-ICAgICAgIHRoZSBzZWNvbmQgY2VsbCBpcyB1c2VkIHRvIHNwZWNpZnkgZmxhZ3MuCj4gPiArICAg
-ICAgICAgICAgICAgICAgIFNlZSAuLi8uLi9ncGlvL2dwaW8udHh0IGZvciBtb3JlIGluZm9ybWF0
-aW9uLgo+ID4gKy0gI3B3bS1jZWxscyA6IFNob3VsZCBiZSBvbmUuIFNlZSAuLi8uLi9wd20vcHdt
-LnR4dCBmb3IgZGVzY3JpcHRpb24gb2YKPiA+ICsgICAgICAgICAgICAgICB0aGUgY2VsbCBmb3Jt
-YXRzLgo+ID4gKwo+ID4gKy0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAicmVmY2xrIgo+ID4gKy0g
-Y2xvY2tzOiBTcGVjaWZpY2F0aW9uIGZvciBpbnB1dCByZWZlcmVuY2UgY2xvY2suIFRoZSByZWZl
-cmVuY2UKPiA+ICsgICAgICAgICBjbG9jayByYXRlIG11c3QgYmUgMTIgTUh6LCAxOS4yIE1Ieiwg
-MjYgTUh6LCAyNyBNSHogb3IgMzguNCBNSHouCj4gPiArCj4gPiArLSBkYXRhLWxhbmVzOiBTcGVj
-aWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBsb2dpY2FsIHRvIHBoeXNpY2FsIGxhbmUKPiA+ICsg
-ICAgICAgICAgICAgbWFwcGluZyBzY2hlbWUuIFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZh
-Y2UudHh0IGZvciBtb3JlCj4gPiArICAgICAgICAgICAgIGluZm9ybWF0aW9uLgo+ID4gKy0gbGFu
-ZS1wb2xhcml0aWVzOiBTcGVjaWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBwb2xhcml0eSBvZiBw
-aHlzaWNhbCBsYW5lcy4KPiA+ICsgICAgICAgICAgICAgICAgICBTZWUgLi4vLi4vbWVkaWEvdmlk
-ZW8taW50ZXJmYWNlLnR4dCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KPiAKPiBZb3UgYXJlIHN0aWxs
-IGRlZmluaW5nIHRoZSBwcm9wZXJ0aWVzIGhlcmUuIEFsbCB5b3UgbmVlZCBpczoKPiAKPiBkYXRh
-LWxhbmVzOiBTZWUgLi4vLi4vbWVkaWEvdmlkZW8taW50ZXJmYWNlLnR4dAo+IAo+IFBlcmhhcHMg
-eW91IG5lZWQgdG8gc2F5IHNob3VsZCBiZSA0IGxhbmVzLCBidXQgT1RPSCBldmVyeXRoaW5nIHRl
-bmRzCj4gdG8gYmUgNCBsYW5lcy4KPiAKCk1heWJlIGFsc28gaW5kaWNhdGUgd2hhdCBsb2dpY2Fs
-IHRvIHBoeXNpY2FsIGRhdGEgbGFuZXMgYXJlIGJlaW5nCnJlbWFwcGVkIGJ5IHNheWluZyBzb21l
-dGhpbmcgdG8gdGhlIGVmZmVjdCBvZiAibG9naWNhbCB0byBwaHlzaWNhbCBEU0kKbGFuZSBtYXBw
-aW5nIHNjaGVtZSIuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJl
-bm8K
+These properties are required for compatibility with runtime PM.
+Without these properties, MMC host controller will not be aware
+of power capabilities. When the wlcore driver attempts to power
+on the device, it will erroneously fail with -EACCES. This fixes
+a regression found here: https://lkml.org/lkml/2018/6/12/930
+
+Signed-off-by: Ryan Grachek <ryan@edited.us>
+---
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index c6999624ed8a..68c5a6c819ae 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -585,6 +585,8 @@
+ 	vmmc-supply = <&wlan_en>;
+ 	ti,non-removable;
+ 	non-removable;
++	cap-power-off-card;
++	keep-power-in-suspend;
+ 	#address-cells = <0x1>;
+ 	#size-cells = <0x0>;
+ 	status = "ok";
+-- 
+2.11.0
