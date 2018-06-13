@@ -1,69 +1,35 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v10 1/7] dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
-Date: Wed, 13 Jun 2018 14:36:13 -0500
-Message-ID: <1528918579-27602-2-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se, Eddie James <eajames@linux.vnet.ibm.com>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: hikey960: Define wl1837 power capabilities
+Date: Wed, 13 Jun 2018 12:36:40 -0700
+Message-ID: <CALAqxLWuUJYfXszaO01KODbom8WykKQKm0X3fzPTwSRK+G3zqw@mail.gmail.com>
+References: <20180613180321.16745-1-ryan@edited.us>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180613180321.16745-1-ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Valentin Schneider <valentin.schneider-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings.
+On Wed, Jun 13, 2018 at 11:03 AM, Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org> wrote:
+> These properties are required for compatibility with runtime PM.
+> Without these properties, MMC host controller will not be aware
+> of power capabilities. When the wlcore driver attempts to power
+> on the device, it will erroneously fail with -EACCES. This fixes
+> a regression found here: https://lkml.org/lkml/2018/6/12/930
+>
+> Signed-off-by: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>
 
-Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/i2c/i2c-fsi.txt | 40 +++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
+Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
+Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-fsi.txt b/Documentation/devicetree/bindings/i2c/i2c-fsi.txt
-new file mode 100644
-index 0000000..b1be2ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-fsi.txt
-@@ -0,0 +1,40 @@
-+Device-tree bindings for FSI-attached I2C master and busses
-+-----------------------------------------------------------
-+
-+Required properties:
-+ - compatible = "ibm,i2c-fsi";
-+ - reg = < address size >;		: The FSI CFAM address and address
-+					  space size.
-+ - #address-cells = <1>;		: Number of address cells in child
-+					  nodes.
-+ - #size-cells = <0>;			: Number of size cells in child nodes.
-+ - child nodes				: Nodes to describe busses off the I2C
-+					  master.
-+
-+Child node required properties:
-+ - reg = < port number >		: The port number on the I2C master.
-+
-+Child node optional properties:
-+ - child nodes				: Nodes to describe devices on the I2C
-+					  bus.
-+
-+Examples:
-+
-+    i2c@1800 {
-+        compatible = "ibm,i2c-fsi";
-+        reg = < 0x1800 0x400 >;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        i2c-bus@0 {
-+            reg = <0>;
-+        };
-+
-+        i2c-bus@1 {
-+            reg = <1>;
-+
-+            eeprom@50 {
-+                compatible = "vendor,dev-name";
-+            };
-+        };
-+    };
--- 
-1.8.3.1
+Wei Xu: This also fixes a functional regression with wifi on the
+HiKey960 board that was introduced in 4.18-rc with commit 60f36637bbbd
+("wlcore: sdio: allow pm to handle sdio power").
+
+Could you please be sure to queue this for the 4.18-rc too?
+
+thanks
+-john
