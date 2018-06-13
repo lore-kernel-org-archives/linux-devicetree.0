@@ -1,111 +1,141 @@
-From: M P <buserror@gmail.com>
-Subject: Re: [PATCH v8 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl: documentation
-Date: Wed, 13 Jun 2018 09:53:35 +0100
-Message-ID: <CAMMfpEwhpoBvO+JGPFYeNznns9W=+6iZoUec5Ffk-ppUH_9BFg@mail.gmail.com>
-References: <1528187462-47093-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528187462-47093-3-git-send-email-michel.pollet@bp.renesas.com>
- <CAMuHMdWoE=+sEUtFdPKk4eBGtOn8f7bUPV-HLAvEETuqgVMeVw@mail.gmail.com>
- <OSBPR01MB2054D7F35A31A8331B906E05D27E0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
- <CAMuHMdUtdRB_L-WsphJYBd9m-3tth3KHGK1wWdr_UJF18S9Z5A@mail.gmail.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v4 6/6] dt-bindings: media: rcar-vin: Clarify optional
+ props
+Date: Wed, 13 Jun 2018 10:54:55 +0200
+Message-ID: <20180613085455.GC4952@w540>
+References: <1528813566-17927-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1528813566-17927-7-git-send-email-jacopo+renesas@jmondi.org>
+ <20180612154553.kgqnqkwv3y6srivg@kekkonen.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUtdRB_L-WsphJYBd9m-3tth3KHGK1wWdr_UJF18S9Z5A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: michel.pollet@bp.renesas.com, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, buserror+upstream@gmail.com, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0835768482596142969=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180612154553.kgqnqkwv3y6srivg@kekkonen.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@glider.be, laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-hi Geert,
 
-On Wed, 13 Jun 2018 at 08:17, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+--===============0835768482596142969==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BQPnanjtCNWHyqYD"
+Content-Disposition: inline
+
+
+--BQPnanjtCNWHyqYD
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Sakari,
+
+On Tue, Jun 12, 2018 at 06:45:53PM +0300, Sakari Ailus wrote:
+> Hi Jacopo,
 >
-> Hi Michel,
->
-> On Wed, Jun 13, 2018 at 8:38 AM Michel Pollet
-> <michel.pollet@bp.renesas.com> wrote:
-> > On 11 June 2018 11:01, Geert wrote:
-> > > On Tue, Jun 5, 2018 at 10:36 AM Michel Pollet
-> > > <michel.pollet@bp.renesas.com> wrote:
-> > > > The Renesas R9A06G032 SYSCTRL node description.
-> > > >
-> > > > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> > >
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-
-> > > sysctr
-> > > > +++ l.txt
-> > > > @@ -0,0 +1,32 @@
-> > > > +* Renesas R9A06G032 SYSCTRL
-> > > > +
-> > > > +Required Properties:
-> > > > +
-> > > > +  - compatible: Must be:
-> > > > +    - "renesas,r9a06g032-sysctrl"
-> > > > +  - reg: Base address and length of the SYSCTRL IO block.
-> > > > +  - #clock-cells: Must be 1
-> > >
-> > > (repeating myself) No clocks/clock-names for the external clock inputs?
-> > >
-> > > "RZ/N1 has 3 clock sources, 1 reference clock inputs for RGMII, and 2
-> > > reference clock outputs for RMII/MII."
+> On Tue, Jun 12, 2018 at 04:26:06PM +0200, Jacopo Mondi wrote:
+> > Add a note to the R-Car VIN interface bindings to clarify that all
+> > properties listed as generic properties in video-interfaces.txt can
+> > be included in port@0 endpoint, but if not explicitly listed in the
+> > interface bindings documentation, they do not modify it behaviour.
 > >
-> > Well, I'm trying to keep the binding as simple as possible, to dodge any
-> > further discussion. Adding these will be possible later, I don't need them
-> > for the moment anyway.
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > index 8130849..03544c7 100644
+> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > @@ -55,6 +55,12 @@ from local SoC CSI-2 receivers (port1) depending on SoC.
+> >        instances that are connected to external pins should have port 0.
+> >
+> >        - Optional properties for endpoint nodes of port@0:
+> > +
+> > +        All properties described in [1] and which apply to the selected
+> > +        media bus type could be optionally listed here to better describe
+> > +        the current hardware configuration, but only the following ones do
+> > +        actually modify the VIN interface behaviour:
+> > +
 >
-> Don't you? The external clock inputs are at the root of the clock tree, so I'd
-> say you need them. Bolting them on later may become complicated, especially
-> if you care about DTB backwards compatibility.
-
-Well the input is fixed frequency -- and there is a clock (gate)
-created for it in the driver
-(CLK_RGMII_REF) so you can turn it on/off if you like...
-
-The only configurable bit is a *nightmare* as the selection bit for
-whether it is coming
-from CLKOUT_D8 or from an external input is in a *completely different
-IP block*. I'd
-need another iomap() and all that stuff, and a custom driver for it.
-
-If I were to implement it, I'd have to add a custom driver for that
-clock, use the current
-gate as a parent, iomap the selection bit register etc -- basically.
-All of that for a use
-case of *none ever* as most people would probably tweak that bit in
-the bootloader
-anyway -- also, I'd have zero capability for testing it.
-
-As far as the output, they also have their own gates (already
-created). They are also fixed
-frequency and the only thing that matters to them is the pinmux
-settings. So (soon) with the
-pinmux driver, you can enable that clock properly without a special
-driver, just by adding
-that gate to your ethernet, and add the pinmux config for it.
-
-So what do I go with that?
-
+> I don't think this should be needed. You should only have properties that
+> describe the hardware configuration in a given system.
 >
-> The reset controller subsystem is optional anyway, and used only by a small
-> number of drivers, so support for resets can definitely be postponed.
->
-> > Did you have a chance to review the clock driver proper? I'm pondering
-> > sending a v9 since it's been a week (with very minor changes) -- but I
-> > don't want to interrupt if you were in the process of reviewing...
->
-> I had a quick glance. Looks OK mostly, so it's definitely heading for the right
-> direction!
-> One remaining question: do you need CLK_OF_DECLARE()?
-> Is there any reason your clock driver cannot be a platform driver, which is
-> the recommended way?
 
-I copied it straight out of clk-rcar-gen2.c -- I don't 'need' anything more than
-instantiating my driver; does it make a difference? ie a one liner macro vs
-adding an extra struct, 2 functions to do the same thing?
-Just curious, sometime I lose track of that the goalpost is -- for
-years I understood
-that having OF was simpler and better all around?
+There has been quite some debate on this, and please bear with me
+here for re-proposing it: I started by removing properties in some DT
+files for older Renesas board which listed endpoint properties not
+documented in the VIN's bindings and not parsed by the VIN driver [1]
+Niklas (but Simon and Geert seems to agree here) opposed to that
+patch, as those properties where described in 'video-interfaces.txt' and
+even if not parsed by the current driver implementation, they actually
+describe hardware. I rebated that only properties listed in the device
+bindings documentation should actually be used, and having properties
+not parsed by the driver confuses users, which may expect changing
+them modifies the interface configuration, which does not happens at
+the moment.
 
-Thanks!
-Michel
+This came out as a middle ground from a discussion with Niklas. As
+stated in the cover letter if this patch makes someone uncomfortable, feel
+free to drop it not to hold back the rest of the series which has been
+well received instead.
+
+Thanks
+   j
+
+[1] https://www.spinics.net/lists/arm-kernel/msg656302.html
+
+> >          - hsync-active: see [1] for description. Default is active high.
+> >          - vsync-active: see [1] for description. Default is active high.
+> >          - data-enable-active: polarity of CLKENB signal, see [1] for
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+
+--BQPnanjtCNWHyqYD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbINvfAAoJEHI0Bo8WoVY860oP/3rcThxRrX7Jg1BEvvHG9TO9
+Hm4m9hR0+jhSaAiKYOsaGVdTcsvN3Y6PJ4SNfqiR7QXpkNq+QGY/XRkMGPX59vMS
+z1QaAQM/RgGu7OM0tyJ3nU3tnzmEqb6YIi9FeRPYLmDMRqywUC28qLxKyNLEBUWa
+AJ3QMFzBzROHVZSPLw4fV90zZOzlZPNcR0vLKS3j93S/nrBnOvwBwuztVHUVMnyE
+PNhD6GGYVZ9XiWTEyG/6vles1fDFtSKIiN7NrmL/OWCFx1kdoX1JdEdygpyszwjQ
+5+RhVfXl/oUy/oPoR9gh3+t0cDdE4O70G+MMUt4IOKjEVr41Ti7/eWGF9hpaGkF0
+hYCtKgl1U8eAmwlaybnIWDAVnuNEe2TFyEXmwx8N8PRQ7eSZBhK5leWNrLidsub3
+LTNTxBYy5fpnjHNQEivcTmkKiyh2TUHTUEiGbgCdzE/luhkxWXILJnNcr7si8fLy
+d8dcSjxfUYd/WeeBS5BCSroxnR6Cs9LzYeh4V3y0wUKFfpu//3zdlz0KLqvg/Y3o
+u4iHBIYBl8PwX3HIo3wR/9zJOwkoo865aucvlm8+oMvhf23cd1l3PTsy+aGOiWR4
+ehXr+x1Xd5d3un7lkdT+12o/+eVmcQjvWrnfKrQRNrwITgGjAUAeHR6Bp4WqYZKP
+6lk4qIpMerFDGteEOjkH
+=Xx+b
+-----END PGP SIGNATURE-----
+
+--BQPnanjtCNWHyqYD--
+
+
+--===============0835768482596142969==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0835768482596142969==--
