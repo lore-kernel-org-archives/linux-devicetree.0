@@ -1,66 +1,92 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM64: dts: rockchip: add some pins to rk3399
-Date: Wed, 13 Jun 2018 14:56:43 +0200
-Message-ID: <6575089.GrJ2ErpgXD@diego>
-References: <20180612152544.3812-1-ayaka@soulik.info> <B649911B-28E0-4466-B3F0-15875FFB9D43@theobroma-systems.com>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
+Date: Wed, 13 Jun 2018 16:03:38 +0300
+Message-ID: <20180613130338.GH20078@localhost.localdomain>
+References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
+ <20180612082354.GG20078@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B649911B-28E0-4466-B3F0-15875FFB9D43@theobroma-systems.com>
+Content-Disposition: inline
+In-Reply-To: <20180612082354.GG20078@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: klaus.goger@theobroma-systems.com
-Cc: Randy Li <ayaka@soulik.info>, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Shawn Lin <shawn.lin@rock-chips.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 12. Juni 2018, 20:21:06 CEST schrieb klaus.goger@theobroma-
-systems.com:
-> Hi Randy,
+On Tue, Jun 12, 2018 at 11:23:54AM +0300, Matti Vaittinen wrote:
+> Hello Stephen,
 > 
-> > On 12.06.2018, at 17:25, Randy Li <ayaka@soulik.info> wrote:
-> > 
-> > Those pins would be used by many boards.
-> > 
-> > Signed-off-by: Randy Li <ayaka@soulik.info>
-
-agree to everything Klaus said ;-) .
-
-[...]
-
-> > +			pcie_clkreqn: pci-clkreqn {
-> > +				rockchip,pins =
-> > +					<2 26 RK_FUNC_2 &pcfg_pull_none>;
-> > +			};
-> > +
-> > +			pcie_clkreqnb: pci-clkreqnb {
-> > +				rockchip,pins =
-> > +					<4 24 RK_FUNC_1 &pcfg_pull_none>;
-> > +			};
-> > +
+> Thanks again for the review. I'll do new patch which fixes these issues.
 > 
-> I’m not sure if pci-clkreqn is functional at all. If not I’m not sure if we
-> should add it to the dtsi. Shawn may know more about it.
-
-Yep, wasn't there a big change away from clkreqn, due it
-not being functional?
-
-
-> > 			pcie_clkreqnb_cpm: pci-clkreqnb-cpm {
-> > 			
-> > 				rockchip,pins =
+> On Tue, Jun 12, 2018 at 12:44:11AM -0700, Stephen Boyd wrote:
+> > Quoting Matti Vaittinen (2018-06-04 06:19:13)
+> > > +}
+> > > +
+> > > +static unsigned long bd71837_clk_recalc_rate(struct clk_hw *hw,
+> > > +                                            unsigned long parent_rate)
+> > > +{
+> > > +       struct bd71837_clk *c = container_of(hw, struct bd71837_clk, hw);
+> > > +
+> > > +       return c->rate;
+> > > +}
+> > > +
+> > > +static const struct clk_ops bd71837_clk_ops = {
+> > > +       .recalc_rate = &bd71837_clk_recalc_rate,
+> > > +       .prepare = &bd71837_clk_enable,
+> > > +       .unprepare = &bd71837_clk_disable,
+> > > +       .is_prepared = &bd71837_clk_is_enabled,
+> > > +};
+> > > +
+> > > +static int bd71837_clk_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct bd71837_clk *c;
+> > > +       int rval = -ENOMEM;
+> > > +       struct bd71837 *mfd = dev_get_drvdata(pdev->dev.parent);
+> > > +       struct clk_init_data init = {
+> > > +               .name = "bd71837-32k-out",
+> > > +               .ops = &bd71837_clk_ops,
+> > > +       };
+> > > +
+> > > +       c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
+> > > +       if (!c)
+> > > +               goto err_out;
+> > > +
+> > > +       c->reg = BD71837_REG_OUT32K;
+> > > +       c->mask = BD71837_OUT32K_EN;
+> > > +       c->rate = BD71837_CLK_RATE;
 > > 
-> > -					<4 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
-> > +					<4 24 RK_FUNC_GPIO &pcfg_pull_none>;
-> > 
-> > 			};
-> > 		
-> > 		};
+> > The PMIC has an 'XIN' pin that would be the clk input for this chip, and
+> > the output clk, this driver, would specify that xin clock as the parent.
+> > The 'xin' clock would then be listed in DT as a fixed-rate clock. That
+> > way this driver doesn't hardcode the frequency.
 > 
-> Could we actually use RK_Pxx for all new pin definitions? Would increase
-> readability a lot.
+> I see. This makes sense. I need to verify from HW colleagues whether
+> this chip has internal oscillator or not. I originally thought we have
+> on-chip oscillator - but as you say, we do have XIN pin in documentation.
+> So now I am not sure if the test board I have contains oscillator driving
+> the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify this.
 
-Especially as the above change really only seems to change RK_PD0 back
-to 24, so this block (and some others) will go away entirely.
+It really turned out that the PMIC just acts as a clock buffer. So I do
+as you suggested and add lookup for parent clock to the driver. I
+planned to do it so that if no parent is found from DT - then we assume
+the 32.768KHz clock (as described in documentation). Eg, something along
+the lines:
 
+        init.parent_names = of_clk_get_parent_name(pdev->dev.parent->of_node, 0);
+        if (init.parent_names) {
+                init.num_parents = 1;
+        } else {
+                /* If parent is not given from DT we assume the typical use-case with
+                 * 32.768 KHz oscillator for RTC (Maybe we could just error out here?)
+                 */
+                c->rate = BD71837_CLK_RATE;
+                bd71837_clk_ops.recalc_rate = &bd71837_clk_recalc_rate;
+        }
 
-Heiko
+Does this make sense?
+
+Br,
+    Matti Vaittinen 
