@@ -1,101 +1,31 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH v1 2/4] dt-bindings: mailbox: provide imx-mailbox
- documentation
-Date: Wed, 13 Jun 2018 19:05:25 +0800
-Message-ID: <CAA+hA=RNxUHro_92YdORw7FOHba=ZSv4q697npCNKwoMG-_HMw@mail.gmail.com>
-References: <20180601065821.28234-1-o.rempel@pengutronix.de>
- <20180601065821.28234-3-o.rempel@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 1/4] fixp-arith: add a linear interpolation function
+Date: Wed, 13 Jun 2018 13:06:35 +0200
+Message-ID: <CACRpkdaKMr0qm91Q4LyjBGyKG_H4vvMr7bnRJeai+f2Eg-9r0Q@mail.gmail.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180607181306.9766-1-ctatlor97@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180601065821.28234-3-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180607181306.9766-1-ctatlor97@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleksij,
+On Thu, Jun 7, 2018 at 8:12 PM, Craig Tatlor <ctatlor97@gmail.com> wrote:
 
-Some more comments besides Rob's:
-
-On Fri, Jun 1, 2018 at 2:58 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  .../bindings/mailbox/imx-mailbox.txt          | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+> Adds a function to interpolate against two points,
+> this is carried arount as a helper function by tons of drivers.
 >
-> diff --git a/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
-> new file mode 100644
-> index 000000000000..a45604b33039
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
-> @@ -0,0 +1,35 @@
-> +i.MX Messaging Unit
-> +===================
-> +
-> +The i.MX Messaging Unit (MU) contains two register sets: "A" and "B". In most cases
-> +they are accessible from all Processor Units. On one hand, at least for mailbox functionality,
-> +it makes no difference which application or processor is using which set of the MU. On
-> +other hand, the register sets for each of the MU parts are not identical.
-> +
-> +Required properties:
-> +- compatible : Shell be one of:
-> +                    "fsl,imx7s-mu-a" and "fsl,imx7s-mu-b" for i.MX7S or i.MX7D
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 
-What's current requirement to distinguish Side A and B?
-I see current code, side A only does extra clear of xCR register but none for B.
-Is this a generic approach or something customized?
+The linear formula seems to fit the most natural form of linear
+interpolation.
 
-BTW can we name it more generically?e.g. fsl,imx7s-mu.
-And using a property to indicate whether it's side A or B if really required.
+I bet some John Carmack algorithm type people will soon
+start to optimize this... :D
 
-Furthermore, AFAIK MX7 MU is derived from MX6SX.
-Should we add and use fsl,imx6sx-mu instead?
-e.g.
- - compatible : Shell be one of:
-                       "fsl,imx6sx-mu" and "fsl,imx7s-mu".
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Regards
-Dong Aisheng
-
-> +- reg :        physical base address of the mailbox and length of
-> +               memory mapped region.
-> +- #mbox-cells: Common mailbox binding property to identify the number
-> +               of cells required for the mailbox specifier. Should be 1.
-> +- interrupts : interrupt number. The interrupt specifier format
-> +               depends on the interrupt controller parent.
-> +- clocks     :  phandle to the input clock.
-> +
-> +Example:
-> +       mu0a: mu@30aa0000 {
-> +               compatible = "fsl,imx7s-mu-a";
-> +               reg = <0x30aa0000 0x28>;
-> +               interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&clks IMX7D_MU_ROOT_CLK>;
-> +               #mbox-cells = <1>;
-> +       };
-> +
-> +       mu0b: mu@30ab0000 {
-> +               compatible = "fsl,imx7s-mu-b";
-> +               reg = <0x30ab0000 0x28>;
-> +               interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&clks IMX7D_MU_ROOT_CLK>;
-> +               #mbox-cells = <1>;
-> +       };
-> --
-> 2.17.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
