@@ -1,69 +1,69 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] arm64: dts: stingray: use NUM_SATA to configure number of
- sata ports
-Date: Wed, 13 Jun 2018 12:31:04 -0700
-Message-ID: <f20222ea-47ac-ca05-a8d3-69f28932de94@gmail.com>
-References: <1526668446-20048-1-git-send-email-scott.branden@broadcom.com>
- <d35afa1f-e0fd-84f1-7d42-60595e22cc77@gmail.com>
- <395f1fe8-76f1-8310-d09e-63e25bca23d2@broadcom.com>
- <CAL_JsqJEFLXFf-Vq9c9XC41vBpisQwxkd06_v8Fmt6X=gp=2_g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v10 0/7] i2c: Add FSI-attached I2C master algorithm
+Date: Wed, 13 Jun 2018 14:36:12 -0500
+Message-ID: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJEFLXFf-Vq9c9XC41vBpisQwxkd06_v8Fmt6X=gp=2_g@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Scott Branden <scott.branden@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-i2c@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, benh@kernel.crashing.org, joel@jms.id.au, mark.rutland@arm.com, gregkh@linuxfoundation.org, rdunlap@infradead.org, andy.shevchenko@gmail.com, peda@axentia.se, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2018 03:54 PM, Rob Herring wrote:
-> On Thu, Jun 7, 2018 at 12:53 PM, Scott Branden
-> <scott.branden@broadcom.com> wrote:
->> Hi Rob,
->>
->> Could you please kindly comment on change below.
->>
->> It allows board variants to be added easily via a simple define for
->> different number of SATA ports.
->>
->>
->>
->> On 18-06-04 09:22 AM, Florian Fainelli wrote:
->>>
->>> On 05/18/2018 11:34 AM, Scott Branden wrote:
->>>>
->>>> Move remaining sata configuration to stingray-sata.dtsi and enable
->>>> ports based on NUM_SATA defined.
->>>> Now, all that needs to be done is define NUM_SATA per board.
->>>
->>> Rob could you review this and let us know if this approach is okay or
->>> not? Thank you!
->>>
->>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->>>> ---
-> 
->>>> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>> b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>> index 8c68e0c..7f6d176 100644
->>>> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>> @@ -43,7 +43,11 @@
->>>>                         interrupts = <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
->>>>                         #address-cells = <1>;
->>>>                         #size-cells = <0>;
->>>> +#if (NUM_SATA > 0)
->>>> +                       status = "okay";
->>>> +#else
->>>>                         status = "disabled";
->>>> +#endif
-> 
-> This only works if ports are contiguously enabled (0-N). You might not
-> care, but it is not a pattern that works in general. And I'm not a fan
-> of C preprocessing in DT files in general beyond just defines for
-> single numbers.
+This series adds an algorithm for an I2C master physically located on an FSI
+slave device. The I2C master has multiple ports, each of which may be connected
+to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
 
-Should we interpret this as a formal NAK?
+Due to the multi-port nature of the I2C master, the driver instantiates a new
+I2C adapter for each port connected to a slave. The connected ports should be
+defined in the device tree under the I2C master device.
+
+Changes since v9
+ - Switch the status masks to use a combination of bits rather than directly
+   coding the value
+ - Remove the interrupt mask definition as it was unused
+ - Fixed return value of master_xfer function (return number of xfrs, not 0)
+
+Changes since v8
+ - Drop unecessary else statements
+ - Use i++ instead of ++i
+ - Use kzalloc/kfree instead of devm_kzalloc/devm_kfree for port structure
+ - Drop the list_empty check in remove
+
+Changes since v7
+ - Fix grammer in Kconfig (a -> an)
+ - Change I2C registers to use BIT and GENMASK
+ - Remove custom macros and use FIELD_PREP and FIELD_GET
+ - Fix a few unecessary initializations and "return rc" that are always zero
+ - Clean up the read/write fifo functions a bit
+ - Few other clean-up items
+
+Changes since v6
+ - Remove spinlock for reset functionality; it's unecessary and doesn't work
+   with the latest FSI core.
+ - Use a mutex instead of a semaphore, and don't wait for timeout to get the
+   lock.
+ - Use usleeps instead of schedule_timeout; it's not worth the overhead when
+   the wait should be very short in between sending the command and receiving
+   the response.
+
+Changes since v5
+ - Fix reset functionality and do a reset after every transfer failure
+
+Eddie James (7):
+  dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
+  i2c: Add FSI-attached I2C master algorithm
+  i2c: fsi: Add port structures
+  i2c: fsi: Add abort and hardware reset procedures
+  i2c: fsi: Add transfer implementation
+  i2c: fsi: Add I2C master locking
+  i2c: fsi: Add bus recovery
+
+ Documentation/devicetree/bindings/i2c/i2c-fsi.txt |  40 ++
+ drivers/i2c/busses/Kconfig                        |  11 +
+ drivers/i2c/busses/Makefile                       |   1 +
+ drivers/i2c/busses/i2c-fsi.c                      | 727 ++++++++++++++++++++++
+ 4 files changed, 779 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
+ create mode 100644 drivers/i2c/busses/i2c-fsi.c
+
 -- 
-Florian
+1.8.3.1
