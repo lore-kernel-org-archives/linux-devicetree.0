@@ -1,42 +1,58 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] dt-bindings: soc: qcom: Fix default clock-freq for qcom,geni-i2c
-Date: Wed, 13 Jun 2018 10:50:11 -0700
-Message-ID: <20180613175011.217585-1-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, bjorn.andersson@linaro.org
-Cc: kramasub@codeaurora.org, wsa@the-dreams.de, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v9 2/4] dt-bindings: drm/bridge: Document
+ sn65dsi86 bridge bindings
+Date: Wed, 13 Jun 2018 10:59:42 -0700
+Message-ID: <152891278222.16708.8028018309924537824@swboyd.mtv.corp.google.com>
+References: <1528888127-31954-1-git-send-email-spanda@codeaurora.org>
+ <1528888127-31954-3-git-send-email-spanda@codeaurora.org>
+ <CAL_JsqKFDwkf4+J2=sev3Dxj-hwB_7VTBa8ASDFL53s1dSc4Ug@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAL_JsqKFDwkf4+J2=sev3Dxj-hwB_7VTBa8ASDFL53s1dSc4Ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In an early version of the I2C patch that was posted to the list the
-default I2C frequency (if none was specified) was 400 kHz.  There was
-debate on the list and we decided that it would be more consistent
-with the rest of i2c if we defaulted to 100 kHz.  ...but we never
-updated the bindings.  Let's fix this.
-
-NOTE: since the i2c driver itself hasn't actually landed yet and the
-SoC here is very new it seems terribly unlikely that anyone was
-relying on the old 400 kHz number, so I'll assume this is an OK
-"incompatible" device tree change.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-index d330c73de9a2..68b7d6207e3d 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-@@ -39,7 +39,7 @@ Required properties:
- 
- Optional property:
- - clock-frequency:	Desired I2C bus clock frequency in Hz.
--			When missing default to 400000Hz.
-+			When missing default to 100000Hz.
- 
- Child nodes should conform to I2C bus binding as described in i2c.txt.
- 
--- 
-2.18.0.rc1.244.gcf134e6275-goog
+UXVvdGluZyBSb2IgSGVycmluZyAoMjAxOC0wNi0xMyAwODowMzo1MykKPiBPbiBXZWQsIEp1biAx
+MywgMjAxOCBhdCA1OjA4IEFNLCBTYW5kZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+
+IHdyb3RlOgo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiArLSBpbnRlcnJ1cHRzOiBTcGVj
+aWZpZXIgZm9yIHRoZSBTTjY1RFNJODYgaW50ZXJydXB0IGxpbmUuCj4gPiArCj4gPiArLSBkZGMt
+aTJjLWJ1czogcGhhbmRsZSBvZiB0aGUgSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQg
+cHJvYmluZwo+ID4gKwo+ID4gKy0gZ3Bpby1jb250cm9sbGVyOiBNYXJrcyB0aGUgZGV2aWNlIGhh
+cyBhIEdQSU8gY29udHJvbGxlci4KPiA+ICstICNncGlvLWNlbGxzICAgIDogU2hvdWxkIGJlIHR3
+by4gVGhlIGZpcnN0IGNlbGwgaXMgdGhlIHBpbiBudW1iZXIgYW5kCj4gPiArICAgICAgICAgICAg
+ICAgICAgIHRoZSBzZWNvbmQgY2VsbCBpcyB1c2VkIHRvIHNwZWNpZnkgZmxhZ3MuCj4gPiArICAg
+ICAgICAgICAgICAgICAgIFNlZSAuLi8uLi9ncGlvL2dwaW8udHh0IGZvciBtb3JlIGluZm9ybWF0
+aW9uLgo+ID4gKy0gI3B3bS1jZWxscyA6IFNob3VsZCBiZSBvbmUuIFNlZSAuLi8uLi9wd20vcHdt
+LnR4dCBmb3IgZGVzY3JpcHRpb24gb2YKPiA+ICsgICAgICAgICAgICAgICB0aGUgY2VsbCBmb3Jt
+YXRzLgo+ID4gKwo+ID4gKy0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAicmVmY2xrIgo+ID4gKy0g
+Y2xvY2tzOiBTcGVjaWZpY2F0aW9uIGZvciBpbnB1dCByZWZlcmVuY2UgY2xvY2suIFRoZSByZWZl
+cmVuY2UKPiA+ICsgICAgICAgICBjbG9jayByYXRlIG11c3QgYmUgMTIgTUh6LCAxOS4yIE1Ieiwg
+MjYgTUh6LCAyNyBNSHogb3IgMzguNCBNSHouCj4gPiArCj4gPiArLSBkYXRhLWxhbmVzOiBTcGVj
+aWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBsb2dpY2FsIHRvIHBoeXNpY2FsIGxhbmUKPiA+ICsg
+ICAgICAgICAgICAgbWFwcGluZyBzY2hlbWUuIFNlZSAuLi8uLi9tZWRpYS92aWRlby1pbnRlcmZh
+Y2UudHh0IGZvciBtb3JlCj4gPiArICAgICAgICAgICAgIGluZm9ybWF0aW9uLgo+ID4gKy0gbGFu
+ZS1wb2xhcml0aWVzOiBTcGVjaWZpY2F0aW9uIHRvIGRlc2NyaWJlIHRoZSBwb2xhcml0eSBvZiBw
+aHlzaWNhbCBsYW5lcy4KPiA+ICsgICAgICAgICAgICAgICAgICBTZWUgLi4vLi4vbWVkaWEvdmlk
+ZW8taW50ZXJmYWNlLnR4dCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KPiAKPiBZb3UgYXJlIHN0aWxs
+IGRlZmluaW5nIHRoZSBwcm9wZXJ0aWVzIGhlcmUuIEFsbCB5b3UgbmVlZCBpczoKPiAKPiBkYXRh
+LWxhbmVzOiBTZWUgLi4vLi4vbWVkaWEvdmlkZW8taW50ZXJmYWNlLnR4dAo+IAo+IFBlcmhhcHMg
+eW91IG5lZWQgdG8gc2F5IHNob3VsZCBiZSA0IGxhbmVzLCBidXQgT1RPSCBldmVyeXRoaW5nIHRl
+bmRzCj4gdG8gYmUgNCBsYW5lcy4KPiAKCk1heWJlIGFsc28gaW5kaWNhdGUgd2hhdCBsb2dpY2Fs
+IHRvIHBoeXNpY2FsIGRhdGEgbGFuZXMgYXJlIGJlaW5nCnJlbWFwcGVkIGJ5IHNheWluZyBzb21l
+dGhpbmcgdG8gdGhlIGVmZmVjdCBvZiAibG9naWNhbCB0byBwaHlzaWNhbCBEU0kKbGFuZSBtYXBw
+aW5nIHNjaGVtZSIuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJl
+bm8K
