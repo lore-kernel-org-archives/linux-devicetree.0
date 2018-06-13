@@ -1,80 +1,43 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH] arm64: dts: stingray: use NUM_SATA to configure number of
- sata ports
-Date: Wed, 13 Jun 2018 13:18:35 -0700
-Message-ID: <0bf3c57c-dac8-8ece-6b8a-3b4d024140fc@broadcom.com>
-References: <1526668446-20048-1-git-send-email-scott.branden@broadcom.com>
- <d35afa1f-e0fd-84f1-7d42-60595e22cc77@gmail.com>
- <395f1fe8-76f1-8310-d09e-63e25bca23d2@broadcom.com>
- <CAL_JsqJEFLXFf-Vq9c9XC41vBpisQwxkd06_v8Fmt6X=gp=2_g@mail.gmail.com>
- <f20222ea-47ac-ca05-a8d3-69f28932de94@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 0/2] Add R8A77980/Condor/V3HSK LVDS/HDMI support
+Date: Wed, 13 Jun 2018 23:24:46 +0300
+Message-ID: <9ab1470b-6c10-9d1f-e992-cc46234bae98@cogentembedded.com>
+References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f20222ea-47ac-ca05-a8d3-69f28932de94@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 06/13/2018 11:09 PM, Sergei Shtylyov wrote:
 
-Thanks for comment - reply inline.
+> Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
 
+   Only 2, not 5 anymore. :-)
 
-On 18-06-13 12:31 PM, Florian Fainelli wrote:
-> On 06/12/2018 03:54 PM, Rob Herring wrote:
->> On Thu, Jun 7, 2018 at 12:53 PM, Scott Branden
->> <scott.branden@broadcom.com> wrote:
->>> Hi Rob,
->>>
->>> Could you please kindly comment on change below.
->>>
->>> It allows board variants to be added easily via a simple define for
->>> different number of SATA ports.
->>>
->>>
->>>
->>> On 18-06-04 09:22 AM, Florian Fainelli wrote:
->>>> On 05/18/2018 11:34 AM, Scott Branden wrote:
->>>>> Move remaining sata configuration to stingray-sata.dtsi and enable
->>>>> ports based on NUM_SATA defined.
->>>>> Now, all that needs to be done is define NUM_SATA per board.
->>>> Rob could you review this and let us know if this approach is okay or
->>>> not? Thank you!
->>>>
->>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->>>>> ---
->>>>> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>> b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>> index 8c68e0c..7f6d176 100644
->>>>> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>> @@ -43,7 +43,11 @@
->>>>>                          interrupts = <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
->>>>>                          #address-cells = <1>;
->>>>>                          #size-cells = <0>;
->>>>> +#if (NUM_SATA > 0)
->>>>> +                       status = "okay";
->>>>> +#else
->>>>>                          status = "disabled";
->>>>> +#endif
->> This only works if ports are contiguously enabled (0-N). You might not
->> care, but it is not a pattern that works in general.
-Correct - all board designs that include this dtsi file follow such 
-commonality (ie. design with SATA0 first, etc).  By having common board 
-designs it allows for commonality in dts files rather than duplicating 
-information everywhere.  If somebody designs a bizarro board they are 
-free to create their own dts file of course.
->>   And I'm not a fan
->> of C preprocessing in DT files in general beyond just defines for
->> single numbers.
-The use of a define to specify the number of SATA ports in the board 
-design meets our requirements of being able to maintain many boards.  We 
-need a method to specify the number of ports in the board design rather 
-than copying and pasting the information in many dts files.  If you have 
-an alternative upstreamable mechanism to manage the configuration of 
-many boards without copy and paste that would be ideal?
-> Should we interpret this as a formal NAK?
+> 'renesas-devel-20180613-v4.17' tag and the Condor/V3HSK TD patches adding
+
+   Only 1 DT patch, not 2 anymore. :-)
+
+> Ethernet PHY IRQs. We're adding the R8A77980 FCPVD/VSPD/DU/LVDS device nodes
+> and then describing the LVDS decoder and HDMI encoder connected to the LVDS
+> output on the Condor and V3HSK boards.  These patches depend on the Thine
+> THC63LVD1024 driver and the R8A77980 LVDS support patch in order to work...
+> 
+> [1/2] arm64: dts: renesas: r8a77980: add FCPVD/VSPD/DU/LVDS support
+> [2/2] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI support
+
+WBR, Sergei
