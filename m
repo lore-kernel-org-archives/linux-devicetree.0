@@ -1,51 +1,42 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
-Date: Wed, 13 Jun 2018 18:34:45 +0100
-Message-ID: <521dd38a-29b8-5670-4296-84b300921b3d@arm.com>
-References: <20180613151305.17240-1-ryan@edited.us>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] dt-bindings: soc: qcom: Fix default clock-freq for qcom,geni-i2c
+Date: Wed, 13 Jun 2018 10:50:11 -0700
+Message-ID: <20180613175011.217585-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613151305.17240-1-ryan@edited.us>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryan Grachek <ryan@edited.us>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+To: andy.gross@linaro.org, bjorn.andersson@linaro.org
+Cc: kramasub@codeaurora.org, wsa@the-dreams.de, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+In an early version of the I2C patch that was posted to the list the
+default I2C frequency (if none was specified) was 400 kHz.  There was
+debate on the list and we decided that it would be more consistent
+with the rest of i2c if we defaulted to 100 kHz.  ...but we never
+updated the bindings.  Let's fix this.
 
-On 13/06/18 16:13, Ryan Grachek wrote:
-> These properties are required for compatibility with runtime PM.
-> Without these properties, MMC host controller will not be aware
-> of power capabilities. When the wlcore driver attempts to power
-> on the device, it will erroneously fail with -EACCES.
-> 
+NOTE: since the i2c driver itself hasn't actually landed yet and the
+SoC here is very new it seems terribly unlikely that anyone was
+relying on the old 400 kHz number, so I'll assume this is an OK
+"incompatible" device tree change.
 
-I don't have a hikey620 to test this, but the hikey960 is suffering from the
-same issue (see [1]). I added these properties to the dwmmc2 node of the
-hikey960 (see snippet) and wlan0 does show up. Would you mind sending a
-similar patch for that board ?
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Thanks !
+ Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Valentin
-
-[1]: https://lkml.org/lkml/2018/6/12/930
-
---->8
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index 85aadf1b..c706f70 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -613,6 +613,8 @@
-        vmmc-supply = <&wlan_en>;
-        ti,non-removable;
-        non-removable;
-+       cap-power-off-card;
-+       keep-power-in-suspend;
-        #address-cells = <0x1>;
-        #size-cells = <0x0>;
-        status = "ok";
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+index d330c73de9a2..68b7d6207e3d 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+@@ -39,7 +39,7 @@ Required properties:
+ 
+ Optional property:
+ - clock-frequency:	Desired I2C bus clock frequency in Hz.
+-			When missing default to 400000Hz.
++			When missing default to 100000Hz.
+ 
+ Child nodes should conform to I2C bus binding as described in i2c.txt.
+ 
+-- 
+2.18.0.rc1.244.gcf134e6275-goog
