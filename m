@@ -1,40 +1,128 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: Re: [PATCH v5 1/4] fixp-arith: add a linear interpolation function
-Date: Wed, 13 Jun 2018 17:01:29 +0100
-Message-ID: <20180613160129.GC10090@arch>
-References: <20180407135934.26122-1-ctatlor97@gmail.com>
- <20180607181306.9766-1-ctatlor97@gmail.com>
- <CACRpkdaKMr0qm91Q4LyjBGyKG_H4vvMr7bnRJeai+f2Eg-9r0Q@mail.gmail.com>
- <CACRpkdb-GeOUSPQeJoMe-My-ZugdPWn0DDVQST5e7XFzt1TmHw@mail.gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [PATCH v2 04/27] dt-bindings: display:
+ sunxi-drm: Add TCON TOP description
+Date: Wed, 13 Jun 2018 18:03:21 +0200
+Message-ID: <2481282.yoIGH2ksVh@jernej-laptop>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net> <20180612200036.21483-5-jernej.skrabec@siol.net> <20180613073456.jk72zw4rt4ysjco7@flea>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb-GeOUSPQeJoMe-My-ZugdPWn0DDVQST5e7XFzt1TmHw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBCUBQXMQKGQE6JBQMMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180613073456.jk72zw4rt4ysjco7@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 01:12:45PM +0200, Linus Walleij wrote:
-> On Wed, Jun 13, 2018 at 1:06 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Thu, Jun 7, 2018 at 8:12 PM, Craig Tatlor <ctatlor97@gmail.com> wrote:
-> >
-> >> Adds a function to interpolate against two points,
-> >> this is carried arount as a helper function by tons of drivers.
-> >>
-> >> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-> >
-> > The linear formula seems to fit the most natural form of linear
-> > interpolation.
-> >
-> > I bet some John Carmack algorithm type people will soon
-> > start to optimize this... :D
-> 
-> For your entertainment here is some sunday reading:
-> https://fgiesen.wordpress.com/2012/08/15/linear-interpolation-past-present-and-future/
-> 
-> Yours,
-> Linus Walleij
+Hi,
 
-Thanks, interesting read.
+Dne sreda, 13. junij 2018 ob 09:34:56 CEST je Maxime Ripard napisal(a):
+> Hi,
+> 
+> Thanks for working on this!
+> 
+> On Tue, Jun 12, 2018 at 10:00:13PM +0200, Jernej Skrabec wrote:
+> > TCON TOP main purpose is to configure whole display pipeline. It
+> > determines relationships between mixers and TCONs, selects source TCON
+> > for HDMI, muxes LCD and TV encoder GPIO output, selects TV encoder
+> > clock source and contains additional TV TCON and DSI gates.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  .../bindings/display/sunxi/sun4i-drm.txt      | 45 +++++++++++++++++++
+> >  include/dt-bindings/clock/sun8i-tcon-top.h    | 11 +++++
+> >  2 files changed, 56 insertions(+)
+> >  create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
+> > 3346c1e2a7a0..ef64c589a4b3 100644
+> > --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > 
+> > @@ -187,6 +187,51 @@ And on the A23, A31, A31s and A33, you need one more 
+clock line:
+> >     - 'lvds-alt': An alternative clock source, separate from the TCON
+> >     channel 0
+> >     
+> >                   clock, that can be used to drive the LVDS clock
+> > 
+> > +TCON TOP
+> > +--------
+> > +
+> > +TCON TOPs main purpose is to configure whole display pipeline. It
+> > determines +relationships between mixers and TCONs, selects source TCON
+> > for HDMI, muxes +LCD and TV encoder GPIO output, selects TV encoder clock
+> > source and contains +additional TV TCON and DSI gates.
+> > +
+> > +It allows display pipeline to be configured in very different ways:
+> > +
+> > +                             / LCD0/LVDS0
+> > +                 / TCON-LCD0
+> > +                 |           \ MIPI DSI
+> > + mixer0          |
+> > +        \        / TCON-LCD1 - LCD1/LVDS1
+> > +         TCON-TOP
+> > +        /        \ TCON-TV0 - TVE0/RGB
+> > + mixer1          |          \
+> > +                 |           TCON-TOP - HDMI
+> > +                 |          /
+> > +                 \ TCON-TV1 - TVE1/RGB
+> > +
+> > +Note that both TCON TOP references same physical unit.
+> > +
+> > +Required properties:
+> > +  - compatible: value must be one of:
+> > +    * allwinner,sun8i-r40-tcon-top
+> > +  - reg: base address and size of the memory-mapped region.
+> > +  - clocks: phandle to the clocks feeding the TCON TOP
+> > +    * bus: TCON TOP interface clock
+> > +  - clock-names: clock name mentioned above
+> > +  - resets: phandle to the reset line driving the DRC
+> 
+> s/DRC/TCON TOP/ ?
+
+Yes, copy & paste issue
+
+> 
+> > +    * rst: TCON TOP reset line
+> 
+> Remaining consistent with the clock name would be great
+
+You mean "ahb"? I noticed that most other nodes with reset lines don't have a 
+name associated. Maybe I could just drop it and use first specified reset?
+
+> 
+> > +  - reset-names: reset name mentioned above
+> > +  - #clock-cells : must contain 1
+> 
+> An example would be nice here
+
+You mean node example? with ports? In the past, Rob was against examples 
+unless really necessary. Node from R40 DTSI can serve as an example.
+
+> 
+> > +- ports: A ports node with endpoint definitions as defined in
+> > +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> > first port +    should be the input for mixer0 mux. The second should be
+> > the output for that +    mux. Third port should be input for mixer1 mux.
+> > Fourth port should be output +    for mixer1 mux. Fifth port should be
+> > input for HDMI mux. Sixth port should +    be output for it. All output
+> > endpoints should have reg property with the id +    of the target TCON.
+> > All ports should have only one enpoint connected to
+>                                                           ^ endpoint
+> 
+> I guess it would me more readable if you were to make it a bullet
+> list, but this works for me otherwise.
+
+Since I have to fix this patch anyway, I can refactor this text.
+
+Best regards,
+Jernej
