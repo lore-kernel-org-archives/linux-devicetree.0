@@ -1,146 +1,141 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph
- bindings
-Date: Wed, 13 Jun 2018 10:45:49 +0100
-Message-ID: <a1c0749b-9c97-b45f-716f-a62ae07af278@arm.com>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
- <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
- <20180612204802.GA15817@rob-hp-laptop>
+From: Bob Ham <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: Re: [PATCH v2] arm: sun4i: Add support for Pengpod
+ 1000 tablet
+Date: Wed, 13 Jun 2018 10:53:47 +0100
+Message-ID: <94669083-3729-ba6b-cede-40b380cf2440@settrans.net>
+References: <20180602160313.26763-1-rah@settrans.net>
+ <20180604081302.hcn7j36gt6xeyquq@flea>
+ <313a74ea-0be6-cff1-6b2f-06a4b0b7ba8d@settrans.net>
+ <20180605145038.qptdlcphdbnw6jyg@flea>
+ <e2787b2a-230d-ea3c-89b9-316ddcd20f67@settrans.net>
+ <4d041794-ba90-a9a6-0886-0ca18dab62b9@redhat.com>
+Reply-To: rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612204802.GA15817@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, sudeep.holla@arm.com, mark.rutland@arm.com, frowand.list@gmail.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, mike.leach@linaro.org, coresight@lists.linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="seX7YoAhObCgIOpbJSwDy9sXI4ucIbBbu"
+Return-path: <linux-sunxi+bncBDB3RAHOSIJBBN6TQPMQKGQEFANZNSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <4d041794-ba90-a9a6-0886-0ca18dab62b9-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--seX7YoAhObCgIOpbJSwDy9sXI4ucIbBbu
+Content-Type: multipart/mixed; boundary="MuQfhw3gHqhFSjADgagDwndjWs0OUCHpe";
+ protected-headers="v1"
+From: Bob Ham <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
+ Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+ linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Message-ID: <94669083-3729-ba6b-cede-40b380cf2440-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v2] arm: sun4i: Add support for Pengpod
+ 1000 tablet
+References: <20180602160313.26763-1-rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+ <20180604081302.hcn7j36gt6xeyquq@flea>
+ <313a74ea-0be6-cff1-6b2f-06a4b0b7ba8d-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+ <20180605145038.qptdlcphdbnw6jyg@flea>
+ <e2787b2a-230d-ea3c-89b9-316ddcd20f67-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
+ <4d041794-ba90-a9a6-0886-0ca18dab62b9-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <4d041794-ba90-a9a6-0886-0ca18dab62b9-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-On 12/06/18 21:48, Rob Herring wrote:
-> On Fri, Jun 01, 2018 at 02:16:05PM +0100, Suzuki K Poulose wrote:
->> The coresight drivers relied on default bindings for graph
->> in DT, while reusing the "reg" field of the "ports" to indicate
->> the actual hardware port number for the connections. However,
->> with the rules getting stricter w.r.t to the address mismatch
->> with the label, it is no longer possible to use the port address
->> field for the hardware port number. Hence, we add an explicit
->> property to denote the hardware port number, "coresight,hwid"
->> which must be specified for each "endpoint".
->>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: Sudeep Holla <sudeep.holla@arm.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   .../devicetree/bindings/arm/coresight.txt          | 26 +++++++++---
->>   drivers/hwtracing/coresight/of_coresight.c         | 46 ++++++++++++++++------
->>   2 files changed, 54 insertions(+), 18 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
->> index bd36e40..385581a 100644
->> --- a/Documentation/devicetree/bindings/arm/coresight.txt
->> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
->> @@ -104,7 +104,11 @@ properties to uniquely identify the connection details.
->>   	"slave-mode"
->>   
->>    * Hardware Port number at the component:
->> -     -  The hardware port number is assumed to be the address of the "port" component.
->> +   - (Obsolete) The hardware port number is assumed to be the address of the "port" component.
->> +   - Each "endpoint" must define the hardware port of the local end of the
->> +     connection using the following property:
->> +	"coresight,hwid" - 32bit integer, hardware port number at the local end.
-> 
-> "coresight" is not a vendor and properties are in the form
-> [<vendor>,]<prop-name>.
+--MuQfhw3gHqhFSjADgagDwndjWs0OUCHpe
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-OK. The issue here is that a coresight component could be an Arm IP or
-a custom partner IP. So, the vendor could be either arm or the partner id.
-However, this property is kind of a generic one for the Coresight family,
-which is why we opted for "coresight". What is the guideline for such
-cases ?
+On 13/06/18 08:28, Hans de Goede wrote:
+> On 05-06-18 20:18, Bob Ham wrote:
 
-Or in other words I see the following possible options :
+>> It's a fine point but it makes me nervous.=C2=A0 I originally based my .=
+dts
+>> on sun4i-a10-inet1.dts.=C2=A0 I've CC'd the original copyright holder, H=
+ans
+>> de Goede.=C2=A0 Hans, are you willing to give permission for the license
+>> notice to be replaced with just an SPDX header indicating the dual
+>> licensing?
+>=20
+> Yes that is fine by me and you've my permission to switch to using
+> just the SPDX header.
 
-1) coresight,hwid	- coresight generic
-2) arm,coresight-hwid	- arm vendor, however the device could be from any vendor.
-3) hwid			- Generic
-4) none of the above, something completely different.
+Excellent, thanks! :-)
 
-What do you recommend from the above ?
 
->> +
->>   
->>   
->>   Example:
->> @@ -120,6 +124,7 @@ Example:
->>   			etb_in_port: endpoint@0 {
-> 
-> There shouldn't be a unit address here because there is no reg property.
-> 
->>   				slave-mode;
->>   				remote-endpoint = <&replicator_out_port0>;
->> +				coresight,hwid = <0>;
-> 
-> It doesn't make sense for these to be in the endpoint. If you had
-> multiple endpoints, then you would have to duplicate it. "ports" are
-> a single data stream. "endpoints" are connections to that stream. So if
-> you have a muxed (input) or fanout/1-to-many (output) connection, then
-> you have multiple endpoints.
+--=20
+Bob Ham <rah-2mWpNWY8JZLk1uMJSBkQmQ@public.gmane.org>
 
-We do have many-to-1 input (e.g, funnels) and 1-to-many outputs
-(e.g replicators). However, we have (so far) used only one endpoint per
-port.
+for (;;) { ++pancakes; }
 
-Also we could potentially have multiple data streams flowing through
-the ports, which gets filtered to different ports in 1-to-many components
-(read programmable-replicator).
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-So the point is we have a shared path which carries different data
-streams with mux/demux components. I am open for suggestions based on
-the above facts.
+--MuQfhw3gHqhFSjADgagDwndjWs0OUCHpe--
 
-> 
-> The same applied to the slave-mode property, but that ship has sailed.
-> No reason to continue that though.
-> 
->>   			};
->>   		};
->>   	};
->> @@ -134,6 +139,7 @@ Example:
->>   			tpiu_in_port: endpoint@0 {
->>   				slave-mode;
->>   				remote-endpoint = <&replicator_out_port1>;
->> +				coresight,hwid = <0>;
->>   			};
->>   		};
->>   	};
->> @@ -154,6 +160,7 @@ Example:
->>   				reg = <0>;
->>   				replicator_out_port0: endpoint {
->>   					remote-endpoint = <&etb_in_port>;
->> +					coresight,hwid = <0>;
->>   				};
->>   			};
->>   
->> @@ -161,15 +168,17 @@ Example:
->>   				reg = <1>;
->>   				replicator_out_port1: endpoint {
->>   					remote-endpoint = <&tpiu_in_port>;
->> +					coresight,hwid = <1>;
->>   				};
->>   			};
->>   
->>   			/* replicator input port */
->>   			port@2 {
->> -				reg = <0>;
->> +				reg = <1>;
-> 
-> This will still get flagged as an error. reg must be 2 here.
+--seX7YoAhObCgIOpbJSwDy9sXI4ucIbBbu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Sorry, thats a mistake. I will fix it.
+-----BEGIN PGP SIGNATURE-----
 
-Cheers
-Suzuki
+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
+=tFlK
+-----END PGP SIGNATURE-----
+
+--seX7YoAhObCgIOpbJSwDy9sXI4ucIbBbu--
