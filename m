@@ -1,71 +1,34 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v2 5/6] soc: qcom: rpmh powerdomain driver
-Date: Wed, 13 Jun 2018 12:29:00 -0600
-Message-ID: <20180613182900.GB22824@codeaurora.org>
-References: <20180525100121.28214-1-rnayak@codeaurora.org>
- <20180525100121.28214-6-rnayak@codeaurora.org>
- <215deee5-6472-d587-9a90-f7158162ed82@codeaurora.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
+Date: Wed, 13 Jun 2018 11:30:00 -0700
+Message-ID: <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
+References: <20180613151305.17240-1-ryan@edited.us>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <215deee5-6472-d587-9a90-f7158162ed82@codeaurora.org>
+In-Reply-To: <20180613151305.17240-1-ryan@edited.us>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ryan Grachek <ryan@edited.us>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalr@ti.com>, Tony Lindgren <tony@atomide.com>, Valentin Schneider <Valentin.Schneider@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 25 2018 at 19:08 -0600, David Collins wrote:
->Hello Rajendra,
+On Wed, Jun 13, 2018 at 8:13 AM, Ryan Grachek <ryan@edited.us> wrote:
+> These properties are required for compatibility with runtime PM.
+> Without these properties, MMC host controller will not be aware
+> of power capabilities. When the wlcore driver attempts to power
+> on the device, it will erroneously fail with -EACCES.
 >
->On 05/25/2018 03:01 AM, Rajendra Nayak wrote:
->> +
->> +	to_active_sleep(pd, pd->corner, &this_corner, &this_sleep_corner);
->> +
->> +	if (peer && peer->enabled)
->> +		to_active_sleep(peer, peer->corner, &peer_corner,
->> +				&peer_sleep_corner);
->> +
->> +	active_corner = max(this_corner, peer_corner);
->> +
->> +	ret = rpmhpd_send_corner(pd, RPMH_ACTIVE_ONLY_STATE, active_corner);
->> +	if (ret)
->> +		return ret;
->> +
->> +	sleep_corner = max(this_sleep_corner, peer_sleep_corner);
->> +
->> +	return rpmhpd_send_corner(pd, RPMH_SLEEP_STATE, sleep_corner);
->> +}
->
->This aggregation function as well as the rpmhpd_send_corner() calls below
->are not sufficient for RPMh.  There are 3 states that must all be used:
->RPMH_ACTIVE_ONLY_STATE, RPMH_WAKE_ONLY_STATE, and RPMH_SLEEP_STATE.  The
->naming is somewhat confusing as rpmhpd is defining a different concept of
->active-only.
->
->For power domains without active-only or peers, only
->RPMH_ACTIVE_ONLY_STATE should be used.  This instructs RPMh to issue the
->request immediately.
->
->For power domains with active-only, requests will need to be made for all
->three.  active_corner would be sent for both RPMH_ACTIVE_ONLY_STATE (so
->that the request takes effect immediately) and RPMH_WAKE_ONLY_STATE (so
->that the request is inserted into the wake TCS).  sleep_corner would be
->sent for RPMH_SLEEP_STATE (so that the request is inserted into the sleep
->TCS).
->
->You can see how this is handled in the RPMh clock driver in patch [3].
->
->You may be able to get away with using only RPMH_SLEEP_STATE and
->RPMH_ACTIVE_ONLY_STATE assuming that you issue the RPMH_SLEEP_STATE
->request first due to the rpmh driver caching behavior added in the
->cache_rpm_request() function in [4].  However, could you please confirm
->with Lina that this usage will continue to work in the future?  I'm not
->sure what guarantees are made at the rpmh API level.
->
-We expect to cache all active values into wake if there was a sleep
-value already defined. Expect to continue this behavior in the future
-as well. But it would be safer for you to send sleep and wake votes in
-addition to active votes. It shouldn't add too much of an overhead.
+> Signed-off-by: Ryan Grachek <ryan@edited.us>
 
--- Lina
+Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
+Tested-by: John Stultz <john.stultz@linaro.org>
+Acked-by: John Stultz <john.stultz@linaro.org>
+
+Wei Xu: This fixes a functional regression with wifi on the HiKey
+board that was introduced in 4.18-rc with commit 60f36637bbbd
+("wlcore: sdio: allow pm to handle sdio power").
+
+Could you please be sure to queue this for the 4.18-rc ?
+
+thanks
+-john
