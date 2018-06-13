@@ -1,152 +1,32 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
-Date: Wed, 13 Jun 2018 16:13:13 +0000
-Message-ID: <20180613161314.14894-2-yixun.lan@amlogic.com>
-References: <20180613161314.14894-1-yixun.lan@amlogic.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Wed, 13 Jun 2018 11:18:51 +0300
+Message-ID: <CAHp75Vey4sVb=VHRXCB3WHDwuwBUM24gbnjt+hHTJuTmUoQgQA@mail.gmail.com>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+ <CAHp75VfJNrviiiam9p49+6_oSjW+YH8vwjcZ2hn5Ux5mHgDCQw@mail.gmail.com>
+ <53ef03b26a17738dc1465ce85562c9611ad415f8.camel@kernel.crashing.org>
+ <CAHp75Vcdaejn=eq740YNdscSv9zX9xj3RzYp=AFs8HFprw34_Q@mail.gmail.com>
+ <5d932502d9985cdfa6540480ea5ce6b0730502a1.camel@kernel.crashing.org>
+ <CAHp75VfV7actoXkMUbh9KwAXR1FKR_VZ5RAuaL-pKLSynFi-3g@mail.gmail.com> <ddc9a616517f8c4255efe2f57d13d3b3ba81ee89.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613161314.14894-1-yixun.lan@amlogic.com>
+In-Reply-To: <ddc9a616517f8c4255efe2f57d13d3b3ba81ee89.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Liang Yang <liang.yang@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Liang Yang <liang.yang@amlogic.com>
+On Wed, Jun 13, 2018 at 3:18 AM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
 
-Add Amlogic NAND controller dt-bindings for Meson SoC,
-Current this driver support GXBB/GXL/AXG platform.
+> But there are many other uses of things like of_iomap() which could
+> benefit from switching to devm_of_iomap() and thus getting the
+> automated cleanup on exit and appropriate request of the memory
+> resource.
 
-Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- .../bindings/mtd/amlogic,meson-nand.txt       | 118 ++++++++++++++++++
- 1 file changed, 118 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+Fine, fine.
 
-diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-new file mode 100644
-index 000000000000..eac9f9433d5d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-@@ -0,0 +1,118 @@
-+Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
-+
-+This file documents the properties in addition to those available in
-+the MTD NAND bindings.
-+
-+Required properties:
-+- compatible : contains one of:
-+  - "amlogic,meson-gxl-nfc"
-+  - "amlogic,meson-axg-nfc"
-+- clocks     :
-+	A list of phandle + clock-specifier pairs for the clocks listed
-+	in clock-names.
-+
-+- clock-names: Should contain the following:
-+	"core" - NFC module gate clock
-+	"clkin0" - Parent clock of internal mux
-+	"clkin1" - Other parent clock of internal mux
-+
-+- pins     : Select pins which NFC need.
-+- nand_pins: Detail NAND pins information.
-+		nand_pins: nand {
-+			mux {
-+				groups = "emmc_nand_d0",
-+					"emmc_nand_d1",
-+					"emmc_nand_d2",
-+					"emmc_nand_d3",
-+					"emmc_nand_d4",
-+					"emmc_nand_d5",
-+					"emmc_nand_d6",
-+					"emmc_nand_d7",
-+					"nand_ce0",
-+					"nand_rb0",
-+					"nand_ale",
-+					"nand_cle",
-+					"nand_wen_clk",
-+					"nand_ren_wr";
-+				function = "nand";
-+			};
-+		};
-+
-+- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
-+				controller port C
-+
-+Optional children nodes:
-+Children nodes represent the available nand chips.
-+
-+Optional properties:
-+- meson-nand-user-mode :
-+	only set 2 or 16 which mean the way of reading OOB bytes by NFC.
-+- meson-nand-ran-mode :
-+	setting 0 or 1, means disable/enable scrambler which keeps the balence
-+	of 0 and 1
-+
-+Other properties:
-+see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+
-+Example demonstrate on AXG SoC:
-+
-+	sd_emmc_c: mmc@7000 {
-+		compatible = "simple-bus", "syscon";
-+		reg = <0x0 0x7000 0x0 0x800>;
-+		status = "okay";
-+	};
-+
-+	nand: nfc@7800 {
-+		compatible = "amlogic,meson-axg-nfc";
-+		reg = <0x0 0x7800 0x0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+		clocks = <&clkc CLKID_SD_EMMC_C>,
-+				<&clkc CLKID_SD_EMMC_C_CLK0>,
-+				<&clkc CLKID_FCLK_DIV2>;
-+		clock-names = "core", "clkin0", "clkin1";
-+		amlogic,mmc-syscon = <&sd_mmc_c>;
-+
-+		status = "okay";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&nand_pins>;
-+
-+		nand@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			nand-on-flash-bbt;
-+			nand-ecc-mode = "hw";
-+			nand-ecc-strength = <8>;
-+			nand-ecc-step-size = <1024>;
-+
-+			meson-nand-user-mode = <2>;
-+			meson-nand-ran-mode = <1>;
-+
-+			partition@0 {
-+				label = "boot";
-+				reg = <0x00000000 0x00200000>;
-+				read-only;
-+			};
-+			partition@200000 {
-+				label = "env";
-+				reg = <0x00200000 0x00400000>;
-+			};
-+			partition@600000 {
-+				label = "system";
-+				reg = <0x00600000 0x00a00000>;
-+			};
-+			partition@1000000 {
-+				label = "rootfs";
-+				reg = <0x01000000 0x03000000>;
-+			};
-+			partition@4000000 {
-+				label = "media";
-+				reg = <0x04000000 0x8000000>;
-+			};
-+		};
-+	};
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
