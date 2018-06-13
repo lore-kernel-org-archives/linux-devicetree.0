@@ -1,84 +1,111 @@
-From: Stu Hsieh <stu.hsieh@mediatek.com>
-Subject: Re: [PATCH 14/28] drm/mediatek: add connection from RDMA1 to DPI1
-Date: Wed, 13 Jun 2018 16:53:31 +0800
-Message-ID: <1528880011.11190.41.camel@mtksdccf07>
-References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
- <1528687580-549-15-git-send-email-stu.hsieh@mediatek.com>
- <1528870410.15127.11.camel@mtksdaap41>
- <1528876574.11190.32.camel@mtksdccf07>
- <1528878446.30263.30.camel@mtksdaap41>
+From: M P <buserror@gmail.com>
+Subject: Re: [PATCH v8 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl: documentation
+Date: Wed, 13 Jun 2018 09:53:35 +0100
+Message-ID: <CAMMfpEwhpoBvO+JGPFYeNznns9W=+6iZoUec5Ffk-ppUH_9BFg@mail.gmail.com>
+References: <1528187462-47093-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528187462-47093-3-git-send-email-michel.pollet@bp.renesas.com>
+ <CAMuHMdWoE=+sEUtFdPKk4eBGtOn8f7bUPV-HLAvEETuqgVMeVw@mail.gmail.com>
+ <OSBPR01MB2054D7F35A31A8331B906E05D27E0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
+ <CAMuHMdUtdRB_L-WsphJYBd9m-3tth3KHGK1wWdr_UJF18S9Z5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1528878446.30263.30.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUtdRB_L-WsphJYBd9m-3tth3KHGK1wWdr_UJF18S9Z5A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: michel.pollet@bp.renesas.com, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, buserror+upstream@gmail.com, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIENLOgoKT24gV2VkLCAyMDE4LTA2LTEzIGF0IDE2OjI3ICswODAwLCBDSyBIdSB3cm90ZToK
-PiBIaSwgU3R1Ogo+IAo+IE9uIFdlZCwgMjAxOC0wNi0xMyBhdCAxNTo1NiArMDgwMCwgU3R1IEhz
-aWVoIHdyb3RlOgo+ID4gSGksIENLOgo+ID4gCj4gPiBPbiBXZWQsIDIwMTgtMDYtMTMgYXQgMTQ6
-MTMgKzA4MDAsIENLIEh1IHdyb3RlOgo+ID4gPiBIaSwgU3R1Ogo+ID4gPiAKPiA+ID4gT24gTW9u
-LCAyMDE4LTA2LTExIGF0IDExOjI2ICswODAwLCBTdHUgSHNpZWggd3JvdGU6Cj4gPiA+ID4gVGhp
-cyBwYXRjaCBhZGQgdGhlIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEUEkxCj4gPiA+ID4gCj4g
-PiA+ID4gU2lnbmVkLW9mZi1ieTogU3R1IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+
-ID4gPiA+IC0tLQo+ID4gPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAu
-YyB8IDggKysrKysrKysKPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQo+
-ID4gPiA+IAo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gPiA+
-ID4gaW5kZXggZmVkMWI1NzA0MzU1Li40YWJkNWRhYmVjY2YgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiA+ID4gPiArKysgYi9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ID4gPiA+IEBAIC04NSw3ICs4NSw5
-IEBACj4gPiA+ID4gICNkZWZpbmUgUkRNQTBfTU9VVF9EU0kyCQkJMHg0Cj4gPiA+ID4gICNkZWZp
-bmUgUkRNQTBfTU9VVF9EU0kzCQkJMHg1Cj4gPiA+ID4gICNkZWZpbmUgUkRNQTFfTU9VVF9EUEkw
-CQkJMHgyCj4gPiA+ID4gKyNkZWZpbmUgUkRNQTFfTU9VVF9EUEkxCQkJMHgzCj4gPiA+IAo+ID4g
-PiBVc3VhbGx5LCBlYWNoIGJpdCBvZiBhIG1vdXQgcmVnaXN0ZXIgcmVwcmVzZW50IGEgb3V0cHV0
-IGVuYWJsZS4gSXMgdGhpcwo+ID4gPiB2YWx1ZSAweDMgYSBjb3JyZWN0IHZhbHVlPwo+ID4gPiAK
-PiA+ID4gUmVnYXJkcywKPiA+ID4gQ0sKPiA+ID4gCj4gPiBJbiBIVyBDT05GSUcgU1BFQyBzaG93
-IGFzIGZvbGxvd2luZwo+ID4gCj4gPiBCaXQocykJTmFtZQkJCURlc2NyaXB0aW9uCj4gPiAyOjAJ
-RElTUF9QQVRIMV9TT1VUX1NFTF9JTgkwIDogT3V0cHV0IHRvIERTSTAKPiA+IAkJCQkxOiAgT291
-dHB1dCB0byBEU0kxCj4gPiAJCQkJMjogIE9vdXRwdXQgdG8gRFBJCj4gPiAJCQkJMzogIE9vdXRw
-dXQgdG8gRFBJMQo+ID4gCQkJCTQ6ICBPb3V0cHV0IHRvIERTSTIKPiA+IAkJCQk1OiAgT291dHB1
-dCB0byBEU0kzCj4gPiAJCQkJNiA6IHJlc2VydmVkCj4gPiAJCQkJNzogIE9vdXRwdXQgdG8gRElT
-UF9VRk9FCj4gPiAKPiA+IFNvLCAweDMgaXMgY29ycmVjdCB2YWx1ZQo+IAo+IEl0IGxvb2tzIGxp
-a2UgdGhhdCBSRE1BMSBvdXRwdXQgaXMgYWxzbyBTT1VULCB1c2UgdGhlIG5hbWluZyBTT1VUIHdv
-dWxkCj4gYmUgYmV0dGVyLiAKPiAKPiBSZWdhcmRzLAo+IENLCj4gCk9LLCBJIHdvdWxkIGNoYW5n
-ZSB0aGUgZGVmaW5pdGlvbiBuYW1lIGZyb20KRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfTU9V
-VF9FTiB0byBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOCgpSZWdhcmQsClNUdQoK
-PiA+IAo+ID4gUmVnYXJkLAo+ID4gU3R1Cj4gPiAKPiA+IAo+ID4gPiA+ICAjZGVmaW5lIERQSTBf
-U0VMX0lOX1JETUExCQkweDEKPiA+ID4gPiArI2RlZmluZSBEUEkxX1NFTF9JTl9SRE1BMQkJKDB4
-MSA8PCA4KQo+ID4gPiA+ICAjZGVmaW5lIENPTE9SMV9TRUxfSU5fT1ZMMQkJMHgxCj4gPiA+ID4g
-IAo+ID4gPiA+ICAjZGVmaW5lIE9WTF9NT1VUX0VOX1JETUEJCTB4MQo+ID4gPiA+IEBAIC0xNzEs
-NiArMTczLDkgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX21vdXRfZW4oZW51bSBtdGtf
-ZGRwX2NvbXBfaWQgY3VyLAo+ID4gPiA+ICAJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVO
-VF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewo+ID4gPiA+ICAJCSphZGRy
-ID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfTU9VVF9FTjsKPiA+ID4gPiAgCQl2YWx1ZSA9
-IFJETUExX01PVVRfRFBJMDsKPiA+ID4gPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05F
-TlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsKPiA+ID4gPiArCQkqYWRk
-ciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX01PVVRfRU47Cj4gPiA+ID4gKwkJdmFsdWUg
-PSBSRE1BMV9NT1VUX0RQSTE7Cj4gPiA+ID4gIAl9IGVsc2Ugewo+ID4gPiA+ICAJCXZhbHVlID0g
-MDsKPiA+ID4gPiAgCX0KPiA+ID4gPiBAQCAtMTkwLDYgKzE5NSw5IEBAIHN0YXRpYyB1bnNpZ25l
-ZCBpbnQgbXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAo+ID4gPiA+ICAJ
-fSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01Q
-T05FTlRfRFBJMCkgewo+ID4gPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RQSV9TRUxf
-SU47Cj4gPiA+ID4gIAkJdmFsdWUgPSBEUEkwX1NFTF9JTl9SRE1BMTsKPiA+ID4gPiArCX0gZWxz
-ZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5U
-X0RQSTEpIHsKPiA+ID4gPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19EUElfU0VMX0lOOwo+
-ID4gPiA+ICsJCXZhbHVlID0gRFBJMV9TRUxfSU5fUkRNQTE7Cj4gPiA+ID4gIAl9IGVsc2UgaWYg
-KGN1ciA9PSBERFBfQ09NUE9ORU5UX09WTDEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0NPTE9S
-MSkgewo+ID4gPiA+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfQ09MT1IxX1NFTF9J
-TjsKPiA+ID4gPiAgCQl2YWx1ZSA9IENPTE9SMV9TRUxfSU5fT1ZMMTsKPiA+ID4gCj4gPiA+IAo+
-ID4gCj4gPiAKPiAKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+hi Geert,
+
+On Wed, 13 Jun 2018 at 08:17, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Michel,
+>
+> On Wed, Jun 13, 2018 at 8:38 AM Michel Pollet
+> <michel.pollet@bp.renesas.com> wrote:
+> > On 11 June 2018 11:01, Geert wrote:
+> > > On Tue, Jun 5, 2018 at 10:36 AM Michel Pollet
+> > > <michel.pollet@bp.renesas.com> wrote:
+> > > > The Renesas R9A06G032 SYSCTRL node description.
+> > > >
+> > > > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> > >
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-
+> > > sysctr
+> > > > +++ l.txt
+> > > > @@ -0,0 +1,32 @@
+> > > > +* Renesas R9A06G032 SYSCTRL
+> > > > +
+> > > > +Required Properties:
+> > > > +
+> > > > +  - compatible: Must be:
+> > > > +    - "renesas,r9a06g032-sysctrl"
+> > > > +  - reg: Base address and length of the SYSCTRL IO block.
+> > > > +  - #clock-cells: Must be 1
+> > >
+> > > (repeating myself) No clocks/clock-names for the external clock inputs?
+> > >
+> > > "RZ/N1 has 3 clock sources, 1 reference clock inputs for RGMII, and 2
+> > > reference clock outputs for RMII/MII."
+> >
+> > Well, I'm trying to keep the binding as simple as possible, to dodge any
+> > further discussion. Adding these will be possible later, I don't need them
+> > for the moment anyway.
+>
+> Don't you? The external clock inputs are at the root of the clock tree, so I'd
+> say you need them. Bolting them on later may become complicated, especially
+> if you care about DTB backwards compatibility.
+
+Well the input is fixed frequency -- and there is a clock (gate)
+created for it in the driver
+(CLK_RGMII_REF) so you can turn it on/off if you like...
+
+The only configurable bit is a *nightmare* as the selection bit for
+whether it is coming
+from CLKOUT_D8 or from an external input is in a *completely different
+IP block*. I'd
+need another iomap() and all that stuff, and a custom driver for it.
+
+If I were to implement it, I'd have to add a custom driver for that
+clock, use the current
+gate as a parent, iomap the selection bit register etc -- basically.
+All of that for a use
+case of *none ever* as most people would probably tweak that bit in
+the bootloader
+anyway -- also, I'd have zero capability for testing it.
+
+As far as the output, they also have their own gates (already
+created). They are also fixed
+frequency and the only thing that matters to them is the pinmux
+settings. So (soon) with the
+pinmux driver, you can enable that clock properly without a special
+driver, just by adding
+that gate to your ethernet, and add the pinmux config for it.
+
+So what do I go with that?
+
+>
+> The reset controller subsystem is optional anyway, and used only by a small
+> number of drivers, so support for resets can definitely be postponed.
+>
+> > Did you have a chance to review the clock driver proper? I'm pondering
+> > sending a v9 since it's been a week (with very minor changes) -- but I
+> > don't want to interrupt if you were in the process of reviewing...
+>
+> I had a quick glance. Looks OK mostly, so it's definitely heading for the right
+> direction!
+> One remaining question: do you need CLK_OF_DECLARE()?
+> Is there any reason your clock driver cannot be a platform driver, which is
+> the recommended way?
+
+I copied it straight out of clk-rcar-gen2.c -- I don't 'need' anything more than
+instantiating my driver; does it make a difference? ie a one liner macro vs
+adding an extra struct, 2 functions to do the same thing?
+Just curious, sometime I lose track of that the goalpost is -- for
+years I understood
+that having OF was simpler and better all around?
+
+Thanks!
+Michel
