@@ -1,97 +1,110 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 12 Jun 2018 16:02:51 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] csirx updated doc for csirx with dphy supported
-Message-ID: <20180612220251.GA14085@rob-hp-laptop>
-References: <20180608103304.16054-1-kwitos@cadence.com>
- <20180608103304.16054-2-kwitos@cadence.com>
+Return-Path: <SRS0=ZNx7=I7=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v6 12/15] usb: typec: tcpm: set cc for drp toggling attach
+Date: Wed, 13 Jun 2018 11:14:34 +0000
+Message-ID: 
+ <VI1PR0402MB39172628CBED03119794A61A897E0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
+ <1527475967-15201-13-git-send-email-jun.li@nxp.com>
+ <20180611122958.GK17155@kuha.fi.intel.com>
+ <dcdf2575-c77b-62a8-48d6-ff1d490f0c23@roeck-us.net>
+ <VI1PR0402MB39176B1C940D3081930304BB897E0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+In-Reply-To: 
+ <VI1PR0402MB39176B1C940D3081930304BB897E0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180608103304.16054-2-kwitos@cadence.com>
-To: Krzysztof Witos <kwitos@cadence.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:CADENCE MIPI-CSI2 BRIDGES" <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "gsomlo@gmail.com" <gsomlo@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jun 08, 2018 at 11:33:03AM +0100, Krzysztof Witos wrote:
-
-Commit message?
-
-And the subject prefix should be "dt-bindings: media: ..."
-
-> Signed-off-by: Krzysztof Witos <kwitos@cadence.com>
-> ---
->  .../devicetree/bindings/media/cdns,csi2rx.txt      | 32 +++++++++++++++++++---
->  1 file changed, 28 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> index 6b02a0657ad9..753b967863c0 100644
-> --- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> @@ -13,8 +13,7 @@ Required properties:
->      * p_clk: register bank clock
->      * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
->                           implemented in hardware, between 0 and 3
-> -
-> -Optional properties:
-
-phys is no longer optional? That's not backwards compatible and needs an 
-explanation if in fact intentional.
-
-> +    * hs_clock: dphy module clock
->    - phys: phandle to the external D-PHY, phy-names must be provided
->    - phy-names: must contain "dphy", if the implementation uses an
->                 external D-PHY
-> @@ -38,18 +37,43 @@ Required subnodes:
->             in the design.Since there is only one endpoint per port,
->             the endpoints are not numbered.
->  
-> +Cadence DPHY
-> +============
-> +
-> +Cadence DPHY block.
-> +
-> +Required properties:
-> +- compatible: should be set to "cdns,dphy".
-> +- reg: physical base address and length of the DPHY registers.
-> +- clocks: DPHY reference clocks.
-> +- clock-names: must contain "psm" and "hs_clk".
-> +- #phy-cells: must be set to 0.
-> +
->  
->  Example:
->  
-> +dphy1:  dphy@fd0d0000 {
-> +	compatible = "cdns,dphy";
-> +	reg = <0x0 0xfd0d0000 0x0 0x1000>;
-> +	clocks = <&dphy_psm_clk>;
-> +	clock-names = "psm";
-> +	clock-output-names = "hs_clk";
-> +	#phy-cells = <0>;
-> +
->  csi2rx: csi-bridge@0d060000 {
->  	compatible = "cdns,csi2rx";
->  	reg = <0x0d060000 0x1000>;
->  	clocks = <&byteclock>, <&byteclock>
->  		 <&coreclock>, <&coreclock>,
-> -		 <&coreclock>, <&coreclock>;
-> +		 <&coreclock>, <&coreclock>,
-> +		 <&dphy_rx_byte_hs_clk>;
->  	clock-names = "sys_clk", "p_clk",
->  		      "pixel_if0_clk", "pixel_if1_clk",
-> -		      "pixel_if2_clk", "pixel_if3_clk";
-> +		      "pixel_if2_clk", "pixel_if3_clk",
-> +		      "hs_clk";	
-> +
-> +	phys = <&dphy1>;
-> +	phy-names = "dphy";
->  
->  	ports {
->  		#address-cells = <1>;
-> -- 
-> 2.15.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSnVuIExpDQo+IFNlbnQ6
+IDIwMTjlubQ25pyIMTPml6UgMTk6MDcNCj4gVG86IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNr
+LXVzLm5ldD47IEhlaWtraSBLcm9nZXJ1cw0KPiA8aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVs
+LmNvbT47IHNodWZhbl9sZWVAcmljaHRlay5jb20NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsg
+Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGN3MDAuY2hvaUBzYW1zdW5nLmNvbTsNCj4gYS5o
+YWpkYUBzYW1zdW5nLmNvbTsgUGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAuY29tPjsNCj4gZ2Fy
+c2lsdmFAZW1iZWRkZWRvci5jb207IGdzb21sb0BnbWFpbC5jb207IGxpbnV4LXVzYkB2Z2VyLmtl
+cm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxp
+bnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHY2IDEyLzE1XSB1c2I6IHR5
+cGVjOiB0Y3BtOiBzZXQgY2MgZm9yIGRycCB0b2dnbGluZyBhdHRhY2gNCj4gDQo+IEhpLA0KPiA+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogR3VlbnRlciBSb2VjayBbbWFp
+bHRvOmdyb2VjazdAZ21haWwuY29tXSBPbiBCZWhhbGYgT2YgR3VlbnRlcg0KPiA+IFJvZWNrDQo+
+ID4gU2VudDogMjAxOOW5tDbmnIgxMeaXpSAyMTozNQ0KPiA+IFRvOiBIZWlra2kgS3JvZ2VydXMg
+PGhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb20+OyBKdW4gTGkNCj4gPiA8anVuLmxpQG54
+cC5jb20+DQo+ID4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlv
+bi5vcmc7DQo+ID4gY3cwMC5jaG9pQHNhbXN1bmcuY29tOyBhLmhhamRhQHNhbXN1bmcuY29tOyBz
+aHVmYW5fbGVlQHJpY2h0ZWsuY29tOw0KPiA+IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNv
+bT47IGdhcnNpbHZhQGVtYmVkZGVkb3IuY29tOw0KPiA+IGdzb21sb0BnbWFpbC5jb207IGxpbnV4
+LXVzYkB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGRs
+LWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2
+NiAxMi8xNV0gdXNiOiB0eXBlYzogdGNwbTogc2V0IGNjIGZvciBkcnANCj4gPiB0b2dnbGluZyBh
+dHRhY2gNCj4gPg0KPiA+IE9uIDA2LzExLzIwMTggMDU6MjkgQU0sIEhlaWtraSBLcm9nZXJ1cyB3
+cm90ZToNCj4gPiA+IE9uIE1vbiwgTWF5IDI4LCAyMDE4IGF0IDEwOjUyOjQ0QU0gKzA4MDAsIExp
+IEp1biB3cm90ZToNCj4gPiA+PiBJbiBjYXNlIG9mIGRycCB0b2dnbGluZywgd2UgbWF5IG5lZWQg
+c2V0IGNvcnJlY3QgY2MgdmFsdWUgZm9yIHJvbGUNCj4gPiA+PiBjb250cm9sIGFmdGVyIGF0dGFj
+aCBhcyBpdCBtYXkgbmV2ZXIgYmVlbiBzZXQuDQo+ID4gPg0KPiA+ID4gSXMgdGhpcyBzb21ldGhp
+bmcgdGhhdCBzaG91bGQgYmUgY29uc2lkZXJlZCBhcyBhIGZpeD8NCj4gPiA+DQo+ID4NCj4gPiBU
+aGUgcHJvYmxlbSB3aXRoIHRoaXMgcGF0Y2ggaXMgdGhhdCBpdCBoaWRlcyBhIHByb2JsZW0uIEND
+IHNob3VsZCBoYXZlDQo+ID4gYmVlbiBzZXQgYnkgdGhlIHRpbWUgYSBwb3J0IHJlYWNoZXMgdGhl
+IGF0dGFjaGVkIHN0YXRlLiBUaGUgcGF0Y2gNCj4gPiBtZWFucyB0aGF0IHRoZXJlIGlzIGEgc3Rh
+dGUgbWFjaGluZSBwYXRoIHdoZXJlIHRoaXMgZG9lcyBub3QgaGFwcGVuLg0KPiA+IEknZCByYXRo
+ZXIgdW5kZXJzdGFuZCB0aGF0IHBhdGggYW5kIGZpeCB0aGUgcHJvYmxlbSB3aGVyZSBpdCBoYXBw
+ZW5zLg0KPiANCj4gSGVyZSBpcyBteSBwcmV2aW91cyBleHBsYW5hdGlvbiBhYm91dCB0aGlzIHN0
+YXRlIG1hY2hpbmUgcGF0aFsxXQ0KPiANCj4gWzFdaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlz
+dHMvbGludXgtdXNiL21zZzE2NzQ2Ny5odG1sDQo+IA0KPiBUaGUgcGh5c2ljYWwgQ0MgbGluZSBz
+dGF0ZSBpcyBjb3JyZWN0LCBqdXN0IHRoZSBSb2xlIENvbnRyb2wgcmVnaXN0ZXIgdmFsdWUgbWF5
+DQo+IG1pc21hdGNoIG9uIHNvbWUoZS5nLiBzaHVmYW4ncykgSFcsIGlmIHRoZSBjb21tb24gY2hh
+bmdlIGluIHRjcG0gaXMgbm90IHRoZQ0KPiByaWdodCB3YXksIEkgaGF2ZSB0byBhc2sgc2h1ZmFu
+IHRvIHRyeSByZXNvbHZlIHRoaXMgaW4gaGlzIGN1c3RvbSBydDE3MTFoIGRyaXZlci4NCj4gDQo+
+IEkgdW5kZXJzdGFuZCB0aGUgY29uY2VybiBvZiBzZXR0aW5nIGNjIGF0IGF0dGFjaGVkIHN0YXRl
+IGlzIGxhdGUsIHNob3VsZCBiZSBkb25lDQo+IGJlZm9yZSB0aGF0LCBob3cgYWJvdXQgSSBtb3Zl
+IHRoaXMgaW4gY2NfY2hhbmdlIGxpa2UgYmVsb3c6DQo+IA0KPiBAQCAtMzQ5MiwxMCArMzQ5Miwx
+MyBAQCBzdGF0aWMgdm9pZCBfdGNwbV9jY19jaGFuZ2Uoc3RydWN0IHRjcG1fcG9ydCAqcG9ydCwN
+Cj4gZW51bSB0eXBlY19jY19zdGF0dXMgY2MxLA0KPiAgICAgICAgIHN3aXRjaCAocG9ydC0+c3Rh
+dGUpIHsNCj4gICAgICAgICBjYXNlIERSUF9UT0dHTElORzoNCj4gICAgICAgICAgICAgICAgIGlm
+ICh0Y3BtX3BvcnRfaXNfZGVidWcocG9ydCkgfHwgdGNwbV9wb3J0X2lzX2F1ZGlvKHBvcnQpIHx8
+DQo+IC0gICAgICAgICAgICAgICAgICAgdGNwbV9wb3J0X2lzX3NvdXJjZShwb3J0KSkNCj4gKyAg
+ICAgICAgICAgICAgICAgICB0Y3BtX3BvcnRfaXNfc291cmNlKHBvcnQpKSB7DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIHRjcG1fc2V0X2NjKHBvcnQsIHRjcG1fcnBfY2MocG9ydCkpOw0KPiAg
+ICAgICAgICAgICAgICAgICAgICAgICB0Y3BtX3NldF9zdGF0ZShwb3J0LCBTUkNfQVRUQUNIX1dB
+SVQsIDApOw0KPiAtICAgICAgICAgICAgICAgZWxzZSBpZiAodGNwbV9wb3J0X2lzX3NpbmsocG9y
+dCkpDQo+ICsgICAgICAgICAgICAgICB9IGVsc2UgaWYgKHRjcG1fcG9ydF9pc19zaW5rKHBvcnQp
+KSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChwb3J0LT5jY19yZXEgPT0gVFlQRUNf
+Q0NfT1BFTikNCg0KU29ycnksIGhlcmUgc2hvdWxkIGJlOg0KDQorICAgICAgICAgICAgICAgfSBl
+bHNlIGlmICh0Y3BtX3BvcnRfaXNfc2luayhwb3J0KSkgew0KKyAgICAgICAgICAgICAgICAgICAg
+ICAgdGNwbV9zZXRfY2MocG9ydCwgVFlQRUNfQ0NfUkQpOw0KICAgICAgICAgICAgICAgICAgICAg
+ICAgdGNwbV9zZXRfc3RhdGUocG9ydCwgU05LX0FUVEFDSF9XQUlULCAwKTsNCisgICAgICAgICAg
+ICAgICB9DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHRjcG1fc2V0X3N0YXRlKHBvcnQsIFNO
+S19BVFRBQ0hfV0FJVCwgMCk7DQo+ICsgICAgICAgICAgICAgICB9DQo+ICAgICAgICAgICAgICAg
+ICBicmVhazsNCj4gICAgICAgICBjYXNlIFNSQ19VTkFUVEFDSEVEOg0KPiAgICAgICAgIGNhc2Ug
+QUNDX1VOQVRUQUNIRUQ6DQo+IA0KPiB0aGFua3MNCj4gTGkgSnVuDQo+IA0KPiA+DQo+ID4gR3Vl
+bnRlcg0KPiA+DQo+ID4gPj4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4N
+Cj4gPiA+PiAtLS0NCj4gPiA+PiAgIGRyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYyB8IDUgKysrKysN
+Cj4gPiA+PiAgIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4gPiA+Pg0KPiA+ID4+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMgYi9kcml2ZXJzL3VzYi90eXBl
+Yy90Y3BtLmMNCj4gPiA+PiBpbmRleCBkODg1YmZmLi45OGVhOTE2IDEwMDY0NA0KPiA+ID4+IC0t
+LSBhL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYw0KPiA+ID4+ICsrKyBiL2RyaXZlcnMvdXNiL3R5
+cGVjL3RjcG0uYw0KPiA+ID4+IEBAIC0yNTk5LDYgKzI1OTksNyBAQCBzdGF0aWMgdm9pZCB0Y3Bt
+X3Jlc2V0X3BvcnQoc3RydWN0IHRjcG1fcG9ydA0KPiAqcG9ydCkNCj4gPiA+PiAgIAl0Y3BtX3Nl
+dF9hdHRhY2hlZF9zdGF0ZShwb3J0LCBmYWxzZSk7DQo+ID4gPj4gICAJcG9ydC0+dHJ5X3NyY19j
+b3VudCA9IDA7DQo+ID4gPj4gICAJcG9ydC0+dHJ5X3Nua19jb3VudCA9IDA7DQo+ID4gPj4gKwlw
+b3J0LT5jY19yZXEgPSBUWVBFQ19DQ19PUEVOOw0KPiA+ID4+ICAgCXBvcnQtPnN1cHBseV92b2x0
+YWdlID0gMDsNCj4gPiA+PiAgIAlwb3J0LT5jdXJyZW50X2xpbWl0ID0gMDsNCj4gPiA+PiAgIAlw
+b3J0LT51c2JfdHlwZSA9IFBPV0VSX1NVUFBMWV9VU0JfVFlQRV9DOyBAQCAtMjgzMSw2ICsyODMy
+LDgNCj4gPiBAQA0KPiA+ID4+IHN0YXRpYyB2b2lkIHJ1bl9zdGF0ZV9tYWNoaW5lKHN0cnVjdCB0
+Y3BtX3BvcnQgKnBvcnQpDQo+ID4gPj4gICAJCWJyZWFrOw0KPiA+ID4+DQo+ID4gPj4gICAJY2Fz
+ZSBTUkNfQVRUQUNIRUQ6DQo+ID4gPj4gKwkJaWYgKHBvcnQtPmNjX3JlcSA9PSBUWVBFQ19DQ19P
+UEVOKQ0KPiA+ID4+ICsJCQl0Y3BtX3NldF9jYyhwb3J0LCB0Y3BtX3JwX2NjKHBvcnQpKTsNCj4g
+PiA+PiAgIAkJcmV0ID0gdGNwbV9zcmNfYXR0YWNoKHBvcnQpOw0KPiA+ID4+ICAgCQl0Y3BtX3Nl
+dF9zdGF0ZShwb3J0LCBTUkNfVU5BVFRBQ0hFRCwNCj4gPiA+PiAgIAkJCSAgICAgICByZXQgPCAw
+ID8gMCA6IFBEX1RfUFNfU09VUkNFX09OKTsgQEAgLTMwMDQsNg0KPiA+ICszMDA3LDggQEANCj4g
+PiA+PiBzdGF0aWMgdm9pZCBydW5fc3RhdGVfbWFjaGluZShzdHJ1Y3QgdGNwbV9wb3J0ICpwb3J0
+KQ0KPiA+ID4+ICAgCQl0Y3BtX3NldF9zdGF0ZShwb3J0LCBTTktfVU5BVFRBQ0hFRCwNCj4gPiBQ
+RF9UX1BEX0RFQk9VTkNFKTsNCj4gPiA+PiAgIAkJYnJlYWs7DQo+ID4gPj4gICAJY2FzZSBTTktf
+QVRUQUNIRUQ6DQo+ID4gPj4gKwkJaWYgKHBvcnQtPmNjX3JlcSA9PSBUWVBFQ19DQ19PUEVOKQ0K
+PiA+ID4+ICsJCQl0Y3BtX3NldF9jYyhwb3J0LCBUWVBFQ19DQ19SRCk7DQo+ID4gPj4gICAJCXJl
+dCA9IHRjcG1fc25rX2F0dGFjaChwb3J0KTsNCj4gPiA+PiAgIAkJaWYgKHJldCA8IDApDQo+ID4g
+Pj4gICAJCQl0Y3BtX3NldF9zdGF0ZShwb3J0LCBTTktfVU5BVFRBQ0hFRCwgMCk7DQo+ID4gPg0K
+DQo=
