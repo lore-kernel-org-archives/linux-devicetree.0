@@ -1,52 +1,63 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: RE: [PATCH v8 2/5] dt-bindings: clock: renesas,r9a06g032-sysctrl:
- documentation
-Date: Wed, 13 Jun 2018 06:38:25 +0000
-Message-ID: <OSBPR01MB2054D7F35A31A8331B906E05D27E0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-References: <1528187462-47093-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528187462-47093-3-git-send-email-michel.pollet@bp.renesas.com>
- <CAMuHMdWoE=+sEUtFdPKk4eBGtOn8f7bUPV-HLAvEETuqgVMeVw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: iio: Add Spreadtrum SC27XX PMICs ADC controller documentation
+Date: Wed, 13 Jun 2018 14:39:47 +0800
+Message-ID: <9b6743bb6782041b7fec9ed0e166faf2b6456de4.1528871668.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWoE=+sEUtFdPKk4eBGtOn8f7bUPV-HLAvEETuqgVMeVw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: baolin.wang@linaro.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIDExIEp1bmUgMjAxOCAxMTowMSwgR2VlcnQgd3JvdGU6DQo+IEhpIE1p
-Y2hlbCwNCj4NCj4gT24gVHVlLCBKdW4gNSwgMjAxOCBhdCAxMDozNiBBTSBNaWNoZWwgUG9sbGV0
-DQo+IDxtaWNoZWwucG9sbGV0QGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBUaGUgUmVuZXNh
-cyBSOUEwNkcwMzIgU1lTQ1RSTCBub2RlIGRlc2NyaXB0aW9uLg0KPiA+DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogTWljaGVsIFBvbGxldCA8bWljaGVsLnBvbGxldEBicC5yZW5lc2FzLmNvbT4NCj4NCj4g
-PiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Nsb2NrL3JlbmVzYXMscjlhMDZnMDMyLQ0KPiBzeXNjdHINCj4gPiArKysgbC50eHQNCj4g
-PiBAQCAtMCwwICsxLDMyIEBADQo+ID4gKyogUmVuZXNhcyBSOUEwNkcwMzIgU1lTQ1RSTA0KPiA+
-ICsNCj4gPiArUmVxdWlyZWQgUHJvcGVydGllczoNCj4gPiArDQo+ID4gKyAgLSBjb21wYXRpYmxl
-OiBNdXN0IGJlOg0KPiA+ICsgICAgLSAicmVuZXNhcyxyOWEwNmcwMzItc3lzY3RybCINCj4gPiAr
-ICAtIHJlZzogQmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIFNZU0NUUkwgSU8gYmxvY2su
-DQo+ID4gKyAgLSAjY2xvY2stY2VsbHM6IE11c3QgYmUgMQ0KPg0KPiAocmVwZWF0aW5nIG15c2Vs
-ZikgTm8gY2xvY2tzL2Nsb2NrLW5hbWVzIGZvciB0aGUgZXh0ZXJuYWwgY2xvY2sgaW5wdXRzPw0K
-Pg0KPiAiUlovTjEgaGFzIDMgY2xvY2sgc291cmNlcywgMSByZWZlcmVuY2UgY2xvY2sgaW5wdXRz
-IGZvciBSR01JSSwgYW5kIDINCj4gcmVmZXJlbmNlIGNsb2NrIG91dHB1dHMgZm9yIFJNSUkvTUlJ
-LiINCg0KV2VsbCwgSSdtIHRyeWluZyB0byBrZWVwIHRoZSBiaW5kaW5nIGFzIHNpbXBsZSBhcyBw
-b3NzaWJsZSwgdG8gZG9kZ2UgYW55DQpmdXJ0aGVyIGRpc2N1c3Npb24uIEFkZGluZyB0aGVzZSB3
-aWxsIGJlIHBvc3NpYmxlIGxhdGVyLCBJIGRvbid0IG5lZWQgdGhlbQ0KZm9yIHRoZSBtb21lbnQg
-YW55d2F5Lg0KDQo+DQo+IFRoZSByZXN0IGxvb2tzIGZpbmUgdG8gbWUuDQo+IFRoYW5rcyENCg0K
-RGlkIHlvdSBoYXZlIGEgY2hhbmNlIHRvIHJldmlldyB0aGUgY2xvY2sgZHJpdmVyIHByb3Blcj8g
-SSdtIHBvbmRlcmluZw0Kc2VuZGluZyBhIHY5IHNpbmNlIGl0J3MgYmVlbiBhIHdlZWsgKHdpdGgg
-dmVyeSBtaW5vciBjaGFuZ2VzKSAtLSBidXQgSQ0KZG9uJ3Qgd2FudCB0byBpbnRlcnJ1cHQgaWYg
-eW91IHdlcmUgaW4gdGhlIHByb2Nlc3Mgb2YgcmV2aWV3aW5nLi4uDQoNCkNoZWVycywNCk1pY2hl
-bA0KDQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9m
-IExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBw
-ZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2Vs
-ZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0
-IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVj
-dHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUg
-RW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQg
-JiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+This patch adds the binding documentation for Spreadtrum SC27XX series
+PMICs ADC controller device.
+
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ .../bindings/iio/adc/sprd,sc27xx-adc.txt           |   36 ++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+new file mode 100644
+index 0000000..8aad960
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+@@ -0,0 +1,36 @@
++Spreadtrum SC27XX series PMICs ADC binding
++
++Required properties:
++- compatible: Should be one of the following.
++	"sprd,sc2720-adc"
++	"sprd,sc2721-adc"
++	"sprd,sc2723-adc"
++	"sprd,sc2730-adc"
++	"sprd,sc2731-adc"
++- reg: The address offset of ADC controller.
++- interrupt-parent: The interrupt controller.
++- interrupts: The interrupt number for the ADC device.
++- #io-channel-cells: Number of cells in an IIO specifier.
++- hwlocks: Reference to a phandle of a hwlock provider node.
++
++Example:
++
++	sc2731_pmic: pmic@0 {
++		compatible = "sprd,sc2731";
++		reg = <0>;
++		spi-max-frequency = <26000000>;
++		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pmic_adc: adc@480 {
++			compatible = "sprd,sc2731-adc";
++			reg = <0x480>;
++			interrupt-parent = <&sc2731_pmic>;
++			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++			#io-channel-cells = <1>;
++			hwlocks = <&hwlock 4>;
++		};
++	};
+-- 
+1.7.9.5
