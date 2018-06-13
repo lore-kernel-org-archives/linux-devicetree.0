@@ -1,55 +1,83 @@
-Return-Path: <SRS0=Z3/K=JB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from inva020.nxp.com ([92.121.34.13]:43672 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S965553AbeFOKY0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Jun 2018 06:24:26 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v6 5/7] arm64: dts: ls1043a: add qdma device tree nodes
-Date: Fri, 15 Jun 2018 18:22:34 +0800
-Message-Id: <20180615102236.32859-5-wen.he_1@nxp.com>
-In-Reply-To: <20180615102236.32859-1-wen.he_1@nxp.com>
-References: <20180615102236.32859-1-wen.he_1@nxp.com>
-Sender: devicetree-owner@vger.kernel.org
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <SRS0=hJib=I7=retiisi.org.uk=sakari.ailus@kernel.org>
+Date: Wed, 13 Jun 2018 15:11:15 +0300
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 2/2] media: ov5640: add support of module orientation
+Message-ID: <20180613121115.jnnbtxxegdbzss3j@valkosipuli.retiisi.org.uk>
+References: <1528709357-7251-1-git-send-email-hugues.fruchet@st.com>
+ <1528709357-7251-3-git-send-email-hugues.fruchet@st.com>
+ <20180612220628.GA18467@rob-hp-laptop>
+ <0701a0f6-bc39-1754-55e2-1de9b9394b5b@st.com>
+ <20180613082438.j7w5knhxtjcdjxng@valkosipuli.retiisi.org.uk>
+ <c109edf3-53f0-d80a-5d06-f56b49284045@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c109edf3-53f0-d80a-5d06-f56b49284045@st.com>
+To: Hugues FRUCHET <hugues.fruchet@st.com>
+Cc: Rob Herring <robh@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-add the qDMA device tree nodes for LS1043A devices.
+On Wed, Jun 13, 2018 at 10:09:58AM +0000, Hugues FRUCHET wrote:
+> Hi Sakari, Rob,
+> 
+> Find a new proposal below:
+> 
+> On 06/13/2018 10:24 AM, Sakari Ailus wrote:
+> > On Wed, Jun 13, 2018 at 08:10:02AM +0000, Hugues FRUCHET wrote:
+> >> Hi Rob, thanks for review,
+> >>
+> >> On 06/13/2018 12:06 AM, Rob Herring wrote:
+> >>> On Mon, Jun 11, 2018 at 11:29:17AM +0200, Hugues Fruchet wrote:
+> >>>> Add support of module being physically mounted upside down.
+> >>>> In this case, mirror and flip are enabled to fix captured images
+> >>>> orientation.
+> >>>>
+> >>>> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> >>>> ---
+> >>>>    .../devicetree/bindings/media/i2c/ov5640.txt       |  3 +++
+> >>>
+> >>> Please split bindings to separate patches.
+> >>
+> >> OK, will do in next patchset.
+> >>
+> >>>
+> >>>>    drivers/media/i2c/ov5640.c                         | 28 ++++++++++++++++++++--
+> >>>>    2 files changed, 29 insertions(+), 2 deletions(-)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> >>>> index 8e36da0..f76eb7e 100644
+> >>>> --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> >>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> >>>> @@ -13,6 +13,8 @@ Optional Properties:
+> >>>>    	       This is an active low signal to the OV5640.
+> >>>>    - powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+> >>>>    		   if any. This is an active high signal to the OV5640.
+> >>>> +- rotation: integer property; valid values are 0 (sensor mounted upright)
+> >>>> +	    and 180 (sensor mounted upside down).
+> >>>
+> >>> Didn't we just add this as a common property? If so, just reference the
+> >>> common definition. If not, it needs a common definition.
+> >>>
+> >>
+> >> A common definition has been introduced by Sakari, I'm reusing it, see:
+> >> https://www.mail-archive.com/linux-media@vger.kernel.org/msg132517.html
+> >>
+> >> I would so propose:
+> >>   >> +- rotation: as defined in
+> >>   >> +	Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > 
+> > Shouldn't the description still include the valid values? As far as I can
+> > tell, these are ultimately device specific albeit more or less the same for
+> > *this kind* of sensors.
+> 
+> Yes you're right, let's put both together:
+> +- rotation: as defined in
+> +	Documentation/devicetree/bindings/media/video-interfaces.txt,
+> +	valid values are 0 (sensor mounted upright) and 180 (sensor
+> +	mounted upside down).
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
-change in v6:
-	- no
+I'll improve the description for smiapp as well.
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 1109f22..48f9165 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -673,6 +673,21 @@
- 			dma-coherent;
- 		};
- 
-+		qdma: dma-controller@8380000 {
-+			compatible = "fsl,ls1021a-qdma", "fsl,ls1043a-qdma";
-+			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
-+				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
-+			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error", "qdma-queue";
-+			dma-channels = <8>;
-+			fsl,queues = <2>;
-+			status-sizes = <64>;
-+			queue-sizes = <64 64>;
-+			big-endian;
-+		};
-+
- 		msi1: msi-controller1@1571000 {
- 			compatible = "fsl,ls1043a-msi";
- 			reg = <0x0 0x1571000 0x0 0x8>;
 -- 
-1.7.1
-
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
