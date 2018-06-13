@@ -1,49 +1,71 @@
-Return-Path: <SRS0=joJZ=I7=st.com=hugues.fruchet@kernel.org>
-From: Hugues FRUCHET <hugues.fruchet@st.com>
+Return-Path: <SRS0=0VYT=I7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:35588 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1754452AbeFMHnl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 13 Jun 2018 03:43:41 -0400
+Date: Wed, 13 Jun 2018 10:43:39 +0300
+From: Sakari Ailus <sakari.ailus@iki.fi>
 Subject: Re: [PATCH 2/2] media: ov5640: add support of module orientation
-Date: Wed, 13 Jun 2018 08:10:02 +0000
-Message-ID: <0701a0f6-bc39-1754-55e2-1de9b9394b5b@st.com>
+Message-ID: <20180613074339.xfyxguj6jo56kqnz@valkosipuli.retiisi.org.uk>
 References: <1528709357-7251-1-git-send-email-hugues.fruchet@st.com>
  <1528709357-7251-3-git-send-email-hugues.fruchet@st.com>
  <20180612220628.GA18467@rob-hp-laptop>
-In-Reply-To: <20180612220628.GA18467@rob-hp-laptop>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B5918F1678A0F74FB02965DD628498AF@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180612220628.GA18467@rob-hp-laptop>
+Sender: devicetree-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Mark Rutland" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Benjamin Gaignard  <benjamin.gaignard@linaro.org>, Maxime Ripard" <maxime.ripard@bootlin.com>
+Cc: Hugues Fruchet <hugues.fruchet@st.com>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgUm9iLCB0aGFua3MgZm9yIHJldmlldywNCg0KT24gMDYvMTMvMjAxOCAxMjowNiBBTSwgUm9i
-IEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1vbiwgSnVuIDExLCAyMDE4IGF0IDExOjI5OjE3QU0gKzAy
-MDAsIEh1Z3VlcyBGcnVjaGV0IHdyb3RlOg0KPj4gQWRkIHN1cHBvcnQgb2YgbW9kdWxlIGJlaW5n
-IHBoeXNpY2FsbHkgbW91bnRlZCB1cHNpZGUgZG93bi4NCj4+IEluIHRoaXMgY2FzZSwgbWlycm9y
-IGFuZCBmbGlwIGFyZSBlbmFibGVkIHRvIGZpeCBjYXB0dXJlZCBpbWFnZXMNCj4+IG9yaWVudGF0
-aW9uLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEh1Z3VlcyBGcnVjaGV0IDxodWd1ZXMuZnJ1Y2hl
-dEBzdC5jb20+DQo+PiAtLS0NCj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJj
-L292NTY0MC50eHQgICAgICAgfCAgMyArKysNCj4gDQo+IFBsZWFzZSBzcGxpdCBiaW5kaW5ncyB0
-byBzZXBhcmF0ZSBwYXRjaGVzLg0KDQpPSywgd2lsbCBkbyBpbiBuZXh0IHBhdGNoc2V0Lg0KDQo+
-IA0KPj4gICBkcml2ZXJzL21lZGlhL2kyYy9vdjU2NDAuYyAgICAgICAgICAgICAgICAgICAgICAg
-ICB8IDI4ICsrKysrKysrKysrKysrKysrKysrLS0NCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCAyOSBp
-bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL292NTY0MC50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL292NTY0MC50eHQNCj4+IGluZGV4
-IDhlMzZkYTAuLmY3NmViN2UgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvaTJjL292NTY0MC50eHQNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Y1NjQwLnR4dA0KPj4gQEAgLTEzLDYgKzEz
-LDggQEAgT3B0aW9uYWwgUHJvcGVydGllczoNCj4+ICAgCSAgICAgICBUaGlzIGlzIGFuIGFjdGl2
-ZSBsb3cgc2lnbmFsIHRvIHRoZSBPVjU2NDAuDQo+PiAgIC0gcG93ZXJkb3duLWdwaW9zOiByZWZl
-cmVuY2UgdG8gdGhlIEdQSU8gY29ubmVjdGVkIHRvIHRoZSBwb3dlcmRvd24gcGluLA0KPj4gICAJ
-CSAgIGlmIGFueS4gVGhpcyBpcyBhbiBhY3RpdmUgaGlnaCBzaWduYWwgdG8gdGhlIE9WNTY0MC4N
-Cj4+ICstIHJvdGF0aW9uOiBpbnRlZ2VyIHByb3BlcnR5OyB2YWxpZCB2YWx1ZXMgYXJlIDAgKHNl
-bnNvciBtb3VudGVkIHVwcmlnaHQpDQo+PiArCSAgICBhbmQgMTgwIChzZW5zb3IgbW91bnRlZCB1
-cHNpZGUgZG93bikuDQo+IA0KPiBEaWRuJ3Qgd2UganVzdCBhZGQgdGhpcyBhcyBhIGNvbW1vbiBw
-cm9wZXJ0eT8gSWYgc28sIGp1c3QgcmVmZXJlbmNlIHRoZQ0KPiBjb21tb24gZGVmaW5pdGlvbi4g
-SWYgbm90LCBpdCBuZWVkcyBhIGNvbW1vbiBkZWZpbml0aW9uLg0KPiANCg0KQSBjb21tb24gZGVm
-aW5pdGlvbiBoYXMgYmVlbiBpbnRyb2R1Y2VkIGJ5IFNha2FyaSwgSSdtIHJldXNpbmcgaXQsIHNl
-ZToNCmh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwu
-b3JnL21zZzEzMjUxNy5odG1sDQoNCkkgd291bGQgc28gcHJvcG9zZToNCiA+PiArLSByb3RhdGlv
-bjogYXMgZGVmaW5lZCBpbg0KID4+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Lg0KDQoNCkJlc3QgcmVnYXJkcywNCkh1Z3Vlcy4=
+Hi Rob, Hugues,
+
+On Tue, Jun 12, 2018 at 04:06:28PM -0600, Rob Herring wrote:
+> On Mon, Jun 11, 2018 at 11:29:17AM +0200, Hugues Fruchet wrote:
+> > Add support of module being physically mounted upside down.
+> > In this case, mirror and flip are enabled to fix captured images
+> > orientation.
+> > 
+> > Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> > ---
+> >  .../devicetree/bindings/media/i2c/ov5640.txt       |  3 +++
+> 
+> Please split bindings to separate patches.
+> 
+> >  drivers/media/i2c/ov5640.c                         | 28 ++++++++++++++++++++--
+> >  2 files changed, 29 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > index 8e36da0..f76eb7e 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > @@ -13,6 +13,8 @@ Optional Properties:
+> >  	       This is an active low signal to the OV5640.
+> >  - powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+> >  		   if any. This is an active high signal to the OV5640.
+> > +- rotation: integer property; valid values are 0 (sensor mounted upright)
+> > +	    and 180 (sensor mounted upside down).
+> 
+> Didn't we just add this as a common property? If so, just reference the 
+> common definition. If not, it needs a common definition.
+
+The common definition is there --- and this text is actually the same as
+for the smiapp DT bindings --- which you acked. :-) I thought this would be
+fine as well, and this patch is actually already in a pull request to
+Mauro.
+
+I put the smiapp bindings to the same patch with the driver change as they
+were pretty small both but we'll split these in the future.
+
+I've marked the pull request as deferred for now; let me know whether
+you're still ok with this going in as such.
+
+Thanks.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
