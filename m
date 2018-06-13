@@ -1,66 +1,65 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 2/2] iio: add ISL29033 Ultra-Low Lux
- ambient-light-sensor
-Date: Thu, 14 Jun 2018 03:23:53 +0800
-Message-ID: <201806140109.tvP88cyu%fengguang.wu@intel.com>
-References: <20180613140043.5802-2-borys.movchan@axis.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: document gpio-mt7621 bindings
+Date: Wed, 13 Jun 2018 13:28:35 -0600
+Message-ID: <CAL_Jsq+0bnEmE2n-O3a7ecSXOsjTfZD3AqJDQunO6xzUF_W-=A@mail.gmail.com>
+References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
+ <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
+ <20180612205638.GA2404@rob-hp-laptop>
+ <CAMhs-H8GYut-7hopEb0Oe0DYz0sjSwcw_rQ4hzipu9LMz-zWFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180613140043.5802-2-borys.movchan@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borys Movchan <borys.movchan@axis.com>
-Cc: kbuild-all@01.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Borys Movchan <borysmn@axis.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jeff LaBundy <jeff@labundy.com>, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>, Brian Masney <masneyb@onstation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAMhs-H8GYut-7hopEb0Oe0DYz0sjSwcw_rQ4hzipu9LMz-zWFg@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, driverdev-devel@linuxdriverproject.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-Hi Borys,
+On Wed, Jun 13, 2018 at 10:23 AM, Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
+> Hi Rob,
+>
+> Thanks for your time in reviewing this.
+>
+> On Tue, Jun 12, 2018 at 10:56 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Sat, Jun 02, 2018 at 09:30:10AM +0200, Sergio Paracuellos wrote:
+>>> Add a devicetree binding documentation for the mt7621 driver.
+>>
 
-Thank you for the patch! Perhaps something to improve:
+>>> +   second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
+>>> +   Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+>>> +- gpio-controller : Marks the device node as a GPIO controller.
+>>> +- reg : The id of the bank that the node describes.
+>>
+>> I'd prefer to not have banks defined in DT. Do you have a variable
+>> number or resources that are per bank? If not, then you don't need them.
+>
+> Mmmm, That's what I understood from documentation:
+>
+> "Some system-on-chips (SoCs) use the concept of GPIO banks. ...
+> Usually each such bank is
+> exposed in the device tree as an individual gpio-controller node. ..."
 
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on v4.17 next-20180613]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+This should be conditioned on being able to divide up the registers by
+bank which seems like you can't. Or there's the case like the DW GPIO
+block and the number of banks is configurable.
 
-url:    https://github.com/0day-ci/linux/commits/Borys-Movchan/dt-bindings-iio-light-add-ISL29033-device-bindings/20180613-220725
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+> If this is not a good approach, could you please me point me out to a
+> device tree example where
+> the correct approach is being used?
 
+I'm not sure offhand. There are lots of examples of single nodes I'm
+sure. Which ones have banks I haven't a clue. IIRC, there were some
+cases where the bank # was part of the GPIO cells, but I seem to
+recall Linus prefers not having 3 cells.
 
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
->> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
->> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
->> drivers/iio/light/isl29033.c:235:15: sparse: cast to restricted __be16
-
-vim +235 drivers/iio/light/isl29033.c
-
-   220	
-   221	static int isl29033_read_sensor_input(struct isl29033_chip *chip)
-   222	{
-   223		int ret;
-   224		u16 val;
-   225		struct device *dev = regmap_get_device(chip->regmap);
-   226	
-   227		ret = regmap_bulk_read(chip->regmap, ISL29033_REG_ADD_DATA_LSB,
-   228					(u8 *)&val, 2);
-   229		if (ret < 0) {
-   230			dev_err(dev,
-   231				"Data bulk read error %d\n", ret);
-   232			return ret;
-   233		}
-   234	
- > 235		val = be16_to_cpu(val);
-   236		dev_vdbg(dev, "Data read: %x\n", val);
-   237	
-   238		return val;
-   239	}
-   240	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Rob
