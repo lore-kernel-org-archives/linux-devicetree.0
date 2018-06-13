@@ -1,85 +1,31 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 10/11] dt-bindings: misc: add bindings for
- cros_ec_throttler
-Date: Tue, 12 Jun 2018 19:00:37 -0700
-Message-ID: <20180613020037.GK88063@google.com>
-References: <20180607181214.30338-1-mka@chromium.org>
- <20180607181214.30338-11-mka@chromium.org>
- <20180612191011.GA26266@rob-hp-laptop>
- <20180612204018.GB99983@rodete-desktop-imager.corp.google.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 01/27] clk: sunxi-ng: r40: Add minimal
+ rate for video PLLs
+Date: Wed, 13 Jun 2018 11:18:45 +0800
+Message-ID: <CAGb2v66rUqqUrqmq09hHcGHF1buZieYmu1zOkUXZyyQPtyUZew@mail.gmail.com>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net> <20180612200036.21483-2-jernej.skrabec@siol.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180612204018.GB99983@rodete-desktop-imager.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLE2QLMQKGQEAXYFN7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180612200036.21483-2-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 12, 2018 at 01:40:22PM -0700, Brian Norris wrote:
-> Hi Rob,
-> 
-> On Tue, Jun 12, 2018 at 01:10:11PM -0600, Rob Herring wrote:
-> > On Thu, Jun 07, 2018 at 11:12:13AM -0700, Matthias Kaehlcke wrote:
-> > > The cros_ec_throttler monitors events from the Chrome OS Embedded
-> > > Controller to throttle the system if needed, using the mechanisms
-> > > provided by the throttler core.
-> > > 
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > ---
-> > > Changes in v2:
-> > > - patch added to series
-> > > 
-> > >  Documentation/devicetree/bindings/misc/cros_ec_throttler.txt | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt b/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> > > new file mode 100644
-> > > index 000000000000..7316dcc0ef75
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/misc/cros_ec_throttler.txt
-> > > @@ -0,0 +1,4 @@
-> > > +* cros_ec_throttler driver
-> > 
-> > Bindings are for h/w, not drivers.
-> 
-> (OK, sure, don't call this "driver". And maybe this could use some more
-> description about what kind of events are emitted by this sort of
-> device.)
-> 
-> > I continue to fail to see why this needs to be in DT. There are other 
-> > ways to instantiate drivers.
-> 
-> This is mostly relevant to:
-> [PATCH v2 08/11] dt-bindings: PM / OPP: add opp-throttlers property
-> 
-> so it's probably good to take a look at that one too.
-> 
-> The primary purpose is to have a target to point at when determining who
-> is the source of throttling. This is similar to other CrOS EC subdevices
-> (e.g., PWM) where we technically don't require a subnode (the EC
-> firmware can its own PWM hardware without DT), but it is important that,
-> e.g., a backlight device has something to point at when it's using a PWM
-> attached to the EC. So we have a PWM subnode.
-> 
-> In this case, we're a little vague about what exactly the hardware is
-> here, but there *is* hardware that's emitting "throttle" events (hint:
-> here, it's related to sensing too high of system current). This is all
-> abstracted by firmware, which simply tells us we need to scale back our
-> power usage.
-> 
-> So, what do you think of patch 8? Should OPPs have phandles to such a
-> throttler? If so, should the phandle just point at the main EC device
-> (see mfd/cros-ec.txt), or is it reasonable to have a subnode to
-> represent something more specific?
+On Wed, Jun 13, 2018 at 4:00 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+> According to documentation and experience with other similar SoCs, video
+> PLLs don't work stable if their output frequency is set below 192 MHz.
 >
-> Or maybe this is entirely on the wrong track. But this is the resulting
-> proposal after your comments on v1, so it's probably best we have a
-> clearer overall review of what makes sense here, so we don't just go in
-> cycles on new proposals that get rejected.
+> Because of that, set minimal rate to both R40 video PLLs to 192 MHz.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
-I also think we need to clarify if this is the right direction. Since
-Rob proposed the OPP hints and didn't object when I replied with the
-opp-throttlers example I assumed he was ok with it.
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
