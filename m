@@ -1,167 +1,248 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v1 2/4] dt-bindings: mailbox: provide imx-mailbox
- documentation
-Date: Wed, 13 Jun 2018 13:59:30 +0200
-Message-ID: <034f77a2-88b5-716b-d9c8-10d73beec9d4@pengutronix.de>
-References: <20180601065821.28234-1-o.rempel@pengutronix.de>
- <20180601065821.28234-3-o.rempel@pengutronix.de>
- <20180612194142.GA16521@rob-hp-laptop>
+Subject: Re: [PATCH v7 5/6] regulator: pfuze100-regulator: provide
+ pm_power_off_prepare handler
+Date: Wed, 13 Jun 2018 14:03:01 +0200
+Message-ID: <503b7af3-6a6a-1ed9-e2b6-609da537c855@pengutronix.de>
+References: <20180517055014.6607-1-o.rempel@pengutronix.de>
+ <20180517055014.6607-6-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8290693526165266376=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180612194142.GA16521@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180517055014.6607-6-o.rempel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============8290693526165266376==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="xuj5q6BFURq7uLv6iHKz5G9mUEdcWpaMa"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---xuj5q6BFURq7uLv6iHKz5G9mUEdcWpaMa
-Content-Type: multipart/mixed; boundary="UARG5G5UM8s9o4uOrIrWHpGcmIMxuDahX";
+--PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP
+Content-Type: multipart/mixed; boundary="ebaSKat60fCA9TqMPHx77ey6XsIur2bCf";
  protected-headers="v1"
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
- kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>,
- Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Message-ID: <034f77a2-88b5-716b-d9c8-10d73beec9d4@pengutronix.de>
-Subject: Re: [PATCH v1 2/4] dt-bindings: mailbox: provide imx-mailbox
- documentation
-References: <20180601065821.28234-1-o.rempel@pengutronix.de>
- <20180601065821.28234-3-o.rempel@pengutronix.de>
- <20180612194142.GA16521@rob-hp-laptop>
-In-Reply-To: <20180612194142.GA16521@rob-hp-laptop>
+To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
+ Russell King <linux@armlinux.org.uk>
+Message-ID: <503b7af3-6a6a-1ed9-e2b6-609da537c855@pengutronix.de>
+Subject: Re: [PATCH v7 5/6] regulator: pfuze100-regulator: provide
+ pm_power_off_prepare handler
+References: <20180517055014.6607-1-o.rempel@pengutronix.de>
+ <20180517055014.6607-6-o.rempel@pengutronix.de>
+In-Reply-To: <20180517055014.6607-6-o.rempel@pengutronix.de>
 
---UARG5G5UM8s9o4uOrIrWHpGcmIMxuDahX
+--ebaSKat60fCA9TqMPHx77ey6XsIur2bCf
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
+Hi Mark,
+
+Rob ACKed DT bindings, Rafael ACKed export of pm_power_off_prepare. I
+need your OK for regulator patch.
+
+On 17.05.2018 07:50, Oleksij Rempel wrote:
+> On some boards the SoC can use one pin "PMIC_STBY_REQ" to notify th PMI=
+C
+> about state changes. In this case internal state of PMIC must be
+> preconfigured for upcomming state change.
+> It works fine with the current regulator framework, except with the
+> power-off case.
+>=20
+> This patch is providing an optional pm_power_off_prepare handler
+> which will configure standby state of the PMIC to disable all power lin=
+es.
+>=20
+> In my power consumption test on RIoTBoard, I got the following results:=
+
+> power off without this patch:	320 mA
+> power off with this patch:	2   mA
+> suspend to ram:			40  mA
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/regulator/pfuze100-regulator.c | 92 ++++++++++++++++++++++++++=
+
+>  1 file changed, 92 insertions(+)
+>=20
+> diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator=
+/pfuze100-regulator.c
+> index 63922a2167e5..f6c276ed91d8 100644
+> --- a/drivers/regulator/pfuze100-regulator.c
+> +++ b/drivers/regulator/pfuze100-regulator.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/regulator/pfuze100.h>
+>  #include <linux/i2c.h>
+>  #include <linux/slab.h>
+> +#include <linux/kallsyms.h>
+>  #include <linux/regmap.h>
+> =20
+>  #define PFUZE_NUMREGS		128
+> @@ -42,11 +43,17 @@
+> =20
+>  #define PFUZE100_COINVOL	0x1a
+>  #define PFUZE100_SW1ABVOL	0x20
+> +#define PFUZE100_SW1ABMODE	0x23
+>  #define PFUZE100_SW1CVOL	0x2e
+> +#define PFUZE100_SW1CMODE	0x31
+>  #define PFUZE100_SW2VOL		0x35
+> +#define PFUZE100_SW2MODE	0x38
+>  #define PFUZE100_SW3AVOL	0x3c
+> +#define PFUZE100_SW3AMODE	0x3f
+>  #define PFUZE100_SW3BVOL	0x43
+> +#define PFUZE100_SW3BMODE	0x46
+>  #define PFUZE100_SW4VOL		0x4a
+> +#define PFUZE100_SW4MODE	0x4d
+>  #define PFUZE100_SWBSTCON1	0x66
+>  #define PFUZE100_VREFDDRCON	0x6a
+>  #define PFUZE100_VSNVSVOL	0x6b
+> @@ -57,6 +64,13 @@
+>  #define PFUZE100_VGEN5VOL	0x70
+>  #define PFUZE100_VGEN6VOL	0x71
+> =20
+> +#define PFUZE100_SWxMODE_MASK	0xf
+> +#define PFUZE100_SWxMODE_APS_APS	0x8
+> +#define PFUZE100_SWxMODE_APS_OFF	0x4
+> +
+> +#define PFUZE100_VGENxLPWR	BIT(6)
+> +#define PFUZE100_VGENxSTBY	BIT(5)
+> +
+>  enum chips { PFUZE100, PFUZE200, PFUZE3000 =3D 3 };
+> =20
+>  struct pfuze_regulator {
+> @@ -489,6 +503,69 @@ static inline struct device_node *match_of_node(in=
+t index)
+>  }
+>  #endif
+> =20
+> +static struct pfuze_chip *syspm_pfuze_chip;
+> +
+> +static void pfuze_power_off_prepare(void)
+> +{
+> +	dev_info(syspm_pfuze_chip->dev, "Configure standy mode for power off"=
+);
+> +
+> +	/* Switch from default mode: APS/APS to APS/Off */
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW1ABMODE,
+> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW1CMODE,
+> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW2MODE,
+> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW3AMODE,
+> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW3BMODE,
+> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW4MODE,
+> +			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
+> +
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN1VOL,
+> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+> +			   PFUZE100_VGENxSTBY);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN2VOL,
+> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+> +			   PFUZE100_VGENxSTBY);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN3VOL,
+> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+> +			   PFUZE100_VGENxSTBY);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN4VOL,
+> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+> +			   PFUZE100_VGENxSTBY);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN5VOL,
+> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+> +			   PFUZE100_VGENxSTBY);
+> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN6VOL,
+> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+> +			   PFUZE100_VGENxSTBY);
+> +}
+> +
+> +static int pfuze_power_off_prepare_init(struct pfuze_chip *pfuze_chip)=
+
+> +{
+> +	if (pfuze_chip->chip_id !=3D PFUZE100) {
+> +		dev_warn(pfuze_chip->dev, "Requested pm_power_off_prepare handler fo=
+r not supported chip\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (pm_power_off_prepare) {
+> +		dev_warn(pfuze_chip->dev, "pm_power_off_prepare is already registere=
+d.\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	if (syspm_pfuze_chip) {
+> +		dev_warn(pfuze_chip->dev, "syspm_pfuze_chip is already set.\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	syspm_pfuze_chip =3D pfuze_chip;
+> +	pm_power_off_prepare =3D pfuze_power_off_prepare;
+> +
+> +	return 0;
+> +}
+> +
+>  static int pfuze_identify(struct pfuze_chip *pfuze_chip)
+>  {
+>  	unsigned int value;
+> @@ -659,6 +736,20 @@ static int pfuze100_regulator_probe(struct i2c_cli=
+ent *client,
+>  		}
+>  	}
+> =20
+> +	if (of_property_read_bool(client->dev.of_node,
+> +				  "fsl,pmic-stby-poweroff"))
+> +		return pfuze_power_off_prepare_init(pfuze_chip);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pfuze100_regulator_remove(struct i2c_client *client)
+> +{
+> +	if (syspm_pfuze_chip) {
+> +		syspm_pfuze_chip =3D NULL;
+> +		pm_power_off_prepare =3D NULL;
+> +	}
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -669,6 +760,7 @@ static struct i2c_driver pfuze_driver =3D {
+>  		.of_match_table =3D pfuze_dt_ids,
+>  	},
+>  	.probe =3D pfuze100_regulator_probe,
+> +	.remove =3D pfuze100_regulator_remove,
+>  };
+>  module_i2c_driver(pfuze_driver);
+> =20
+>=20
 
 
-On 12.06.2018 21:41, Rob Herring wrote:
-> On Fri, Jun 01, 2018 at 08:58:19AM +0200, Oleksij Rempel wrote:
->> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->> ---
->>  .../bindings/mailbox/imx-mailbox.txt          | 35 ++++++++++++++++++=
-+
->>  1 file changed, 35 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/imx-mail=
-box.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt=
- b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
->> new file mode 100644
->> index 000000000000..a45604b33039
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
->> @@ -0,0 +1,35 @@
->> +i.MX Messaging Unit
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> +
->> +The i.MX Messaging Unit (MU) contains two register sets: "A" and "B".=
- In most cases
->> +they are accessible from all Processor Units. On one hand, at least f=
-or mailbox functionality,
->> +it makes no difference which application or processor is using which =
-set of the MU. On
->=20
-> Please wrap lines correctly (<80).
->=20
->> +other hand, the register sets for each of the MU parts are not identi=
-cal.
->> +
->> +Required properties:
->> +- compatible :	Shell be one of:
->> +                    "fsl,imx7s-mu-a" and "fsl,imx7s-mu-b" for i.MX7S =
-or i.MX7D
->> +- reg : 	physical base address of the mailbox and length of
->=20
-> Mix of space and tab.
->=20
->> +		memory mapped region.
->> +- #mbox-cells:	Common mailbox binding property to identify the number=
+--ebaSKat60fCA9TqMPHx77ey6XsIur2bCf--
 
->> +		of cells required for the mailbox specifier. Should be 1.
->> +- interrupts :	interrupt number. The interrupt specifier format
->> +		depends on the interrupt controller parent.
->=20
-> Just need to say how many interrupts and what they are if more than 1.
->=20
->> +- clocks     :  phandle to the input clock.
->> +
->> +Example:
->> +	mu0a: mu@30aa0000 {
->=20
-> mailbox@...
->=20
->> +		compatible =3D "fsl,imx7s-mu-a";
->> +		reg =3D <0x30aa0000 0x28>;
->> +		interrupts =3D <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks =3D <&clks IMX7D_MU_ROOT_CLK>;
->> +		#mbox-cells =3D <1>;
->> +	};
->> +
->> +	mu0b: mu@30ab0000 {
->=20
-> mailbox@...
->=20
->> +		compatible =3D "fsl,imx7s-mu-b";
->> +		reg =3D <0x30ab0000 0x28>;
->> +		interrupts =3D <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks =3D <&clks IMX7D_MU_ROOT_CLK>;
->> +		#mbox-cells =3D <1>;
->> +	};
-
-thx. will fix it.
-
-
---UARG5G5UM8s9o4uOrIrWHpGcmIMxuDahX--
-
---xuj5q6BFURq7uLv6iHKz5G9mUEdcWpaMa
+--PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlshByIACgkQdQOiSHVI
-77TSrAf/ZVVYcY2pqsC4A1YzKZkWOHH6zki7Wfw6McNGevfuZRCOmfseQdpvONOr
-ILtjM6xjDNt8MhDYiijzf6nWOuBbLFqOgrXIp/pMDamDJLqfwy5hjFyq7L5GjXN4
-s9sgRxfQiZyMQO2/XFRzUvMFz6pxI20a6lgtm67jTJ9relCtijG6VtooVdOZHrKC
-xuSo+60nUIiPRWlrlqF02bTWy/uF25Z4NCDxKe+PFa37P/MLhyBy6Ecx/fVMalo9
-0slZXPkQ0e0aPyHHriLZaMEyYZKRBWgJJFg1NtGCvpfPNiUxbAnkA9RX07BmImFi
-HtSwtFD94Y2K8KXD/flzVnBywrkS6A==
-=tuHO
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlshB/UACgkQdQOiSHVI
+77TuZAgAtvxSvuq8V8Sv8A3kPzH5oxmZVqSxDGgjskOHCS4rZ6AAcw7zCxBC8xcH
+wrtXLKhetE1PmBn3qP78U3gS/VMdVdXuGV7qItRrprlmgO45cJ4EJ2fYVIMijHb2
+K4q3GPZZJhgwRd3s/Fs3JVZneWYWnPtqEbQeAxro+iJ1oPSr1foHmqQAJpkaWhN0
+CnSyDGHD9JER8p+KFg8BsUb3c5ypw/C0WPD0gjQLlPhID2fkgylpFuuFpWzngl4B
+v34Uh9Z51aKoXxLpOcVaSnp7UFX5ME7HVQjFsAkqi2Xq08oq3nFg1zc+e+9Jz8t3
+v79GIIzFPLIsasLHTd0vWCT0veApLQ==
+=yIkj
 -----END PGP SIGNATURE-----
 
---xuj5q6BFURq7uLv6iHKz5G9mUEdcWpaMa--
-
-
---===============8290693526165266376==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8290693526165266376==--
+--PAdCPQPW3BM1XfBSmjcmXXJJqHNDNxnVP--
