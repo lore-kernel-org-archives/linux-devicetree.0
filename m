@@ -1,120 +1,50 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 04/27] dt-bindings: display: sunxi-drm:
- Add TCON TOP description
-Date: Wed, 13 Jun 2018 09:34:56 +0200
-Message-ID: <20180613073456.jk72zw4rt4ysjco7@flea>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
- <20180612200036.21483-5-jernej.skrabec@siol.net>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 26/28] drm/mediatek: add DPI1/DSI1/DSI2/DSI3 in comp_init
+Date: Wed, 13 Jun 2018 15:35:05 +0800
+Message-ID: <1528875305.30263.14.camel@mtksdaap41>
+References: <1528687580-549-1-git-send-email-stu.hsieh@mediatek.com>
+ <1528687580-549-27-git-send-email-stu.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="uzd22rhmxyob4kzr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIMSQPMQKGQEWUMIALI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180612200036.21483-5-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1528687580-549-27-git-send-email-stu.hsieh@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stu Hsieh <stu.hsieh@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---uzd22rhmxyob4kzr
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-Thanks for working on this!
-
-On Tue, Jun 12, 2018 at 10:00:13PM +0200, Jernej Skrabec wrote:
-> TCON TOP main purpose is to configure whole display pipeline. It
-> determines relationships between mixers and TCONs, selects source TCON
-> for HDMI, muxes LCD and TV encoder GPIO output, selects TV encoder
-> clock source and contains additional TV TCON and DSI gates.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  .../bindings/display/sunxi/sun4i-drm.txt      | 45 +++++++++++++++++++
->  include/dt-bindings/clock/sun8i-tcon-top.h    | 11 +++++
->  2 files changed, 56 insertions(+)
->  create mode 100644 include/dt-bindings/clock/sun8i-tcon-top.h
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> index 3346c1e2a7a0..ef64c589a4b3 100644
-> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> @@ -187,6 +187,51 @@ And on the A23, A31, A31s and A33, you need one more clock line:
->     - 'lvds-alt': An alternative clock source, separate from the TCON channel 0
->                   clock, that can be used to drive the LVDS clock
->  
-> +TCON TOP
-> +--------
-> +
-> +TCON TOPs main purpose is to configure whole display pipeline. It determines
-> +relationships between mixers and TCONs, selects source TCON for HDMI, muxes
-> +LCD and TV encoder GPIO output, selects TV encoder clock source and contains
-> +additional TV TCON and DSI gates.
-> +
-> +It allows display pipeline to be configured in very different ways:
-> +
-> +                             / LCD0/LVDS0
-> +                 / TCON-LCD0
-> +                 |           \ MIPI DSI
-> + mixer0          |
-> +        \        / TCON-LCD1 - LCD1/LVDS1
-> +         TCON-TOP
-> +        /        \ TCON-TV0 - TVE0/RGB
-> + mixer1          |          \
-> +                 |           TCON-TOP - HDMI
-> +                 |          /
-> +                 \ TCON-TV1 - TVE1/RGB
-> +
-> +Note that both TCON TOP references same physical unit.
-> +
-> +Required properties:
-> +  - compatible: value must be one of:
-> +    * allwinner,sun8i-r40-tcon-top
-> +  - reg: base address and size of the memory-mapped region.
-> +  - clocks: phandle to the clocks feeding the TCON TOP
-> +    * bus: TCON TOP interface clock
-> +  - clock-names: clock name mentioned above
-> +  - resets: phandle to the reset line driving the DRC
-
-s/DRC/TCON TOP/ ?
-
-> +    * rst: TCON TOP reset line
-
-Remaining consistent with the clock name would be great
-
-> +  - reset-names: reset name mentioned above
-> +  - #clock-cells : must contain 1
-
-An example would be nice here
-
-> +- ports: A ports node with endpoint definitions as defined in
-> +    Documentation/devicetree/bindings/media/video-interfaces.txt. The first port
-> +    should be the input for mixer0 mux. The second should be the output for that
-> +    mux. Third port should be input for mixer1 mux. Fourth port should be output
-> +    for mixer1 mux. Fifth port should be input for HDMI mux. Sixth port should
-> +    be output for it. All output endpoints should have reg property with the id
-> +    of the target TCON. All ports should have only one enpoint connected to
-
-                                                          ^ endpoint
-
-I guess it would me more readable if you were to make it a bullet
-list, but this works for me otherwise.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---uzd22rhmxyob4kzr--
+SGksIFN0dToKCk9uIE1vbiwgMjAxOC0wNi0xMSBhdCAxMToyNiArMDgwMCwgU3R1IEhzaWVoIHdy
+b3RlOgo+IFRoaXMgcGF0Y2ggYWRkIGNvbXBvbmVudHMgRFBJMS9EU0kxL0RTSTIvRFNJMyBpbiBj
+b21wX2luaXQuCj4gQmVjYXVzZSB0aGUgc29tZSBwYXJhbWV0ZXIgZm9yIHRoZXNlIGNvbXBvbmVu
+dHMgaW5pdGlhbGl6ZWQKPiBpbiB0aGVpciBkcml2ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogU3R1
+IEhzaWVoIDxzdHUuaHNpZWhAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIHwgNCArKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0
+IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZGRwX2NvbXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cF9jb21wLmMKPiBpbmRleCAyMmY0YzcyZmE3ODUuLmZmOTc0ZDgyYTRhNiAxMDA2NDQKPiAtLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+IEBAIC0yNzgsNyArMjc4
+LDExIEBAIGludCBtdGtfZGRwX2NvbXBfaW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbm9kZSwKPiAgCj4gIAlpZiAoY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0JM
+UyB8fAo+ICAJICAgIGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EUEkwIHx8Cj4gKwkgICAgY29t
+cF9pZCA9PSBERFBfQ09NUE9ORU5UX0RQSTEgfHwKCldoeSBub3QgbW92ZSB0aGlzIG1vZGlmaWNh
+dGlvbiB0byB0aGUgcGF0Y2ggJ2FkZCBjb21wb25lbnQgRFBJMSc/Cgo+ICAJICAgIGNvbXBfaWQg
+PT0gRERQX0NPTVBPTkVOVF9EU0kwIHx8Cj4gKwkgICAgY29tcF9pZCA9PSBERFBfQ09NUE9ORU5U
+X0RTSTEgfHwKPiArCSAgICBjb21wX2lkID09IEREUF9DT01QT05FTlRfRFNJMiB8fAoKV2h5IG5v
+dCBtb3ZlIHRoaXMgbW9kaWZpY2F0aW9uIHRvIHRoZSBwYXRjaCAnYWRkIGNvbXBvbmVudCBEU0ky
+Jz8KCj4gKwkgICAgY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0RTSTMgfHwKCldoeSBub3QgbW92
+ZSB0aGlzIG1vZGlmaWNhdGlvbiB0byB0aGUgcGF0Y2ggJ2FkZCBjb21wb25lbnQgRFNJMyc/CgpS
+ZWdhcmRzLApDSwoKPiAgCSAgICBjb21wX2lkID09IEREUF9DT01QT05FTlRfUFdNMCkgewo+ICAJ
+CWNvbXAtPnJlZ3MgPSBOVUxMOwo+ICAJCWNvbXAtPmNsayA9IE5VTEw7CgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
