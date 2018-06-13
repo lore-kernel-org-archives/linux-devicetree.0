@@ -1,36 +1,33 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: [PATCH v6 4/4] MAINTAINERS: Add entry for the Qualcomm BMS
-Date: Wed, 13 Jun 2018 17:06:25 +0100
-Message-ID: <20180613160643.12638-4-ctatlor97@gmail.com>
-References: <20180407135934.26122-1-ctatlor97@gmail.com>
- <20180613160643.12638-1-ctatlor97@gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v7 1/4] i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI
+ I2C controller
+Date: Wed, 13 Jun 2018 09:10:41 -0700
+Message-ID: <152890624119.16708.17950072340975001909@swboyd.mtv.corp.google.com>
+References: <1528823348-30532-1-git-send-email-kramasub@codeaurora.org>
+ <1528823348-30532-2-git-send-email-kramasub@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613160643.12638-1-ctatlor97@gmail.com>
+In-Reply-To: <1528823348-30532-2-git-send-email-kramasub@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, dianders@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Quoting Karthikeyan Ramasubramanian (2018-06-12 10:09:05)
+> This bus driver supports the GENI based i2c hardware controller in the
+> Qualcomm SOCs. The Qualcomm Generic Interface (GENI) is a programmable
+> module supporting a wide range of serial interfaces including I2C. The
+> driver supports FIFO mode and DMA mode of transfer and switches modes
+> dynamically depending on the size of the transfer.
+> =
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9c125f705f78..be485caf9313 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11646,6 +11646,12 @@ W:	http://wireless.kernel.org/en/users/Drivers/ath9k
- S:	Supported
- F:	drivers/net/wireless/ath/ath9k/
- 
-+QUALCOMM BATTERY MONITORING SYSTEM
-+M:	Craig Tatlor <ctatlor97@gmail.com>
-+L:	linux-pm@vger.kernel.org
-+S:	Maintained
-+F:	drivers/power/supply/qcom_bms.c
-+
- QUALCOMM CAMERA SUBSYSTEM DRIVER
- M:	Todor Tomov <todor.tomov@linaro.org>
- L:	linux-media@vger.kernel.org
--- 
-2.17.0
+> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> ---
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
