@@ -1,58 +1,71 @@
-From: Ryan Grachek <ryan@edited.us>
-Subject: Re: [PATCH] arm64: dts: hikey: Define wl1835 power capabilities
-Date: Wed, 13 Jun 2018 13:19:51 -0500
-Message-ID: <CAGoBSJqg0nzk-2UPcoZE7mJ2mykoD7wiO2YTPHw9RijZRHTCOw@mail.gmail.com>
-References: <20180613151305.17240-1-ryan@edited.us> <521dd38a-29b8-5670-4296-84b300921b3d@arm.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v2 5/6] soc: qcom: rpmh powerdomain driver
+Date: Wed, 13 Jun 2018 12:29:00 -0600
+Message-ID: <20180613182900.GB22824@codeaurora.org>
+References: <20180525100121.28214-1-rnayak@codeaurora.org>
+ <20180525100121.28214-6-rnayak@codeaurora.org>
+ <215deee5-6472-d587-9a90-f7158162ed82@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521dd38a-29b8-5670-4296-84b300921b3d@arm.com>
+Content-Disposition: inline
+In-Reply-To: <215deee5-6472-d587-9a90-f7158162ed82@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+To: David Collins <collinsd@codeaurora.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Valentin,
+On Fri, May 25 2018 at 19:08 -0600, David Collins wrote:
+>Hello Rajendra,
+>
+>On 05/25/2018 03:01 AM, Rajendra Nayak wrote:
+>> +
+>> +	to_active_sleep(pd, pd->corner, &this_corner, &this_sleep_corner);
+>> +
+>> +	if (peer && peer->enabled)
+>> +		to_active_sleep(peer, peer->corner, &peer_corner,
+>> +				&peer_sleep_corner);
+>> +
+>> +	active_corner = max(this_corner, peer_corner);
+>> +
+>> +	ret = rpmhpd_send_corner(pd, RPMH_ACTIVE_ONLY_STATE, active_corner);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	sleep_corner = max(this_sleep_corner, peer_sleep_corner);
+>> +
+>> +	return rpmhpd_send_corner(pd, RPMH_SLEEP_STATE, sleep_corner);
+>> +}
+>
+>This aggregation function as well as the rpmhpd_send_corner() calls below
+>are not sufficient for RPMh.  There are 3 states that must all be used:
+>RPMH_ACTIVE_ONLY_STATE, RPMH_WAKE_ONLY_STATE, and RPMH_SLEEP_STATE.  The
+>naming is somewhat confusing as rpmhpd is defining a different concept of
+>active-only.
+>
+>For power domains without active-only or peers, only
+>RPMH_ACTIVE_ONLY_STATE should be used.  This instructs RPMh to issue the
+>request immediately.
+>
+>For power domains with active-only, requests will need to be made for all
+>three.  active_corner would be sent for both RPMH_ACTIVE_ONLY_STATE (so
+>that the request takes effect immediately) and RPMH_WAKE_ONLY_STATE (so
+>that the request is inserted into the wake TCS).  sleep_corner would be
+>sent for RPMH_SLEEP_STATE (so that the request is inserted into the sleep
+>TCS).
+>
+>You can see how this is handled in the RPMh clock driver in patch [3].
+>
+>You may be able to get away with using only RPMH_SLEEP_STATE and
+>RPMH_ACTIVE_ONLY_STATE assuming that you issue the RPMH_SLEEP_STATE
+>request first due to the rpmh driver caching behavior added in the
+>cache_rpm_request() function in [4].  However, could you please confirm
+>with Lina that this usage will continue to work in the future?  I'm not
+>sure what guarantees are made at the rpmh API level.
+>
+We expect to cache all active values into wake if there was a sleep
+value already defined. Expect to continue this behavior in the future
+as well. But it would be safer for you to send sleep and wake votes in
+addition to active votes. It shouldn't add too much of an overhead.
 
-On Wed, Jun 13, 2018 at 12:34 PM, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
-> Hi,
->
-> On 13/06/18 16:13, Ryan Grachek wrote:
->> These properties are required for compatibility with runtime PM.
->> Without these properties, MMC host controller will not be aware
->> of power capabilities. When the wlcore driver attempts to power
->> on the device, it will erroneously fail with -EACCES.
->>
->
-> I don't have a hikey620 to test this, but the hikey960 is suffering from the
-> same issue (see [1]). I added these properties to the dwmmc2 node of the
-> hikey960 (see snippet) and wlan0 does show up. Would you mind sending a
-> similar patch for that board ?
->
-> Thanks !
->
-> Valentin
->
-> [1]: https://lkml.org/lkml/2018/6/12/930
->
-> --->8
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index 85aadf1b..c706f70 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -613,6 +613,8 @@
->         vmmc-supply = <&wlan_en>;
->         ti,non-removable;
->         non-removable;
-> +       cap-power-off-card;
-> +       keep-power-in-suspend;
->         #address-cells = <0x1>;
->         #size-cells = <0x0>;
->         status = "ok";
-
-Not a problem. The patch can be found here:
-https://patchwork.kernel.org/patch/10462767/
-
-Ryan
+-- Lina
