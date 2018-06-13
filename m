@@ -1,163 +1,74 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: document gpio-mt7621 bindings
-Date: Wed, 13 Jun 2018 18:23:09 +0200
-Message-ID: <CAMhs-H8GYut-7hopEb0Oe0DYz0sjSwcw_rQ4hzipu9LMz-zWFg@mail.gmail.com>
-References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
- <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
- <20180612205638.GA2404@rob-hp-laptop>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: [PATCH v7 0/6] Driver for at91 usart in spi mode
+Date: Wed, 13 Jun 2018 19:36:15 +0300
+Message-ID: <20180613163621.23995-1-radu.pirea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180612205638.GA2404@rob-hp-laptop>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, driverdev-devel@linuxdriverproject.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, NeilBrown <neil@brown.name>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Radu Pirea <radu.pirea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello,
 
-Thanks for your time in reviewing this.
+This is the second version of driver. I added a mfd driver which by
+default probes atmel_serial driver and if in dt is specified to probe
+the spi driver, then the spi-at91-usart driver will be probed. The
+compatible for atmel_serial is now the compatible for at91-usart mfd
+driver and compatilbe for atmel_serial driver was changed in order to
+keep the bindings for serial as they are.
 
-On Tue, Jun 12, 2018 at 10:56 PM, Rob Herring <robh@kernel.org> wrote:
-> On Sat, Jun 02, 2018 at 09:30:10AM +0200, Sergio Paracuellos wrote:
->> Add a devicetree binding documentation for the mt7621 driver.
->
-> Bindings are for h/w, not a driver.
+Changes in v7:
+- synced up  SPDIX license with module license
+- numbering of usart modes starts from 0 insteand of 1
 
-You are totally right, my english is not my best as you can see :-).
-I'll fix this
-for v2.
+Changes in v6:
+- removed unused compatible strings from serial and spi drivers
 
->
->> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->> Reviewed-by: NeilBrown <neil@brown.name>
->
-> Space              ^
->
+Changes in v5:
+- fixed usage of stdout-path property with atmel_serial driver
 
-Actually, this is deliberate, so it will not change.
+Changes in v4:
+- modified the spi driver to use cs gpio support form spi subsystem
+- fixed dma transfers for serial driver
+- squashed binding for spi and serial and moved them to mfd/atmel-usart.txt
 
->> ---
->>  .../bindings/gpio/mediatek,mt7621-gpio.txt         | 68 ++++++++++++++++++++++
->>  1 file changed, 68 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
->> new file mode 100644
->> index 0000000..30d8a02
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
->> @@ -0,0 +1,68 @@
->> +Mediatek SoC GPIO controller bindings
->> +
->> +The IP core used inside these SoCs has 3 banks of 32 GPIOs each.
->> +The registers of all the banks are interwoven inside one single IO range.
->> +We load one GPIO controller instance per bank. To make this possible
->> +we support 2 types of nodes. The parent node defines the memory I/O range and
->> +has 3 children each describing a single bank. Also the GPIO controller can receive
->> +interrupts on any of the GPIOs, either edge or level. It then interrupts the CPU
->> +using GIC INT12.
->> +
->> +Required properties for the top level node:
->> +- compatible:
->> +  - "mediatek,mt7621-gpio" for Mediatek controllers
->> +- reg : Physical base address and length of the controller's registers
->> +- interrupt-parent : phandle of the parent interrupt controller.
->> +- interrupts : Interrupt specifier for the controllers interrupt.
->> +- interrupt-controller : Mark the device node as an interrupt controller.
->> +- #interrupt-cells : Should be 2. The first cell defines the interrupt number.
->> +   The second cell bits[3:0] is used to specify trigger type as follows:
->> +     - 1 = low-to-high edge triggered.
->> +     - 2 = high-to-low edge triggered.
->> +     - 4 = active high level-sensitive.
->> +     - 8 = active low level-sensitive.
->
-> Just refer to the common definition.
+Changes in v3:
+- fixed spi slaves probing
 
-ok, thanks. I will.
+Changes in v2:
+- added at91-usart mfd driver
+- modified spi-at91-usart driver to work as mfd driver child
+- modified atmel_serial driver to work as mfd driver child
 
->
->> +
->> +
->> +Required properties for the GPIO bank node:
->> +- compatible:
->> +  - "mediatek,mt7621-gpio-bank" for Mediatek banks
->> +- #gpio-cells : Should be two. The first cell is the GPIO pin number and the
->
-> So interrupt numbers and gpio numbers are different? 0-95 and 3x 0-31
->
-> That doesn't seem ideal.
+Changes in v1:
+- added spi-at91-usart driver
 
-Yes, that's true. Actually this is one of the things that has been
-changed for v2.
+Radu Pirea (6):
+  MAINTAINERS: add at91 usart mfd driver
+  dt-bindings: add binding for atmel-usart in SPI mode
+  mfd: at91-usart: added mfd driver for usart
+  MAINTAINERS: add at91 usart spi driver
+  spi: at91-usart: add driver for at91-usart as spi
+  tty/serial: atmel: change the driver to work under at91-usart mfd
 
->
->> +   second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
->> +   Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
->> +- gpio-controller : Marks the device node as a GPIO controller.
->> +- reg : The id of the bank that the node describes.
->
-> I'd prefer to not have banks defined in DT. Do you have a variable
-> number or resources that are per bank? If not, then you don't need them.
+ .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
+ MAINTAINERS                                   |  16 +
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/at91-usart.c                      |  69 +++
+ drivers/spi/Kconfig                           |   9 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-at91-usart.c                  | 434 ++++++++++++++++++
+ drivers/tty/serial/Kconfig                    |   1 +
+ drivers/tty/serial/atmel_serial.c             |  42 +-
+ include/dt-bindings/mfd/at91-usart.h          |  17 +
+ 11 files changed, 607 insertions(+), 17 deletions(-)
+ rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
+ create mode 100644 drivers/mfd/at91-usart.c
+ create mode 100644 drivers/spi/spi-at91-usart.c
+ create mode 100644 include/dt-bindings/mfd/at91-usart.h
 
-Mmmm, That's what I understood from documentation:
-
-"Some system-on-chips (SoCs) use the concept of GPIO banks. ...
-Usually each such bank is
-exposed in the device tree as an individual gpio-controller node. ..."
-
-If this is not a good approach, could you please me point me out to a
-device tree example where
-the correct approach is being used?
-
-Thanks in advance.
-
-Best regards,
-    Sergio Paracuellos
->> +
->> +Example:
->> +     gpio@600 {
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +
->> +             compatible = "mediatek,mt7621-gpio";
->> +             reg = <0x600 0x100>;
->> +
->> +             interrupt-parent = <&gic>;
->> +             interrupts = <GIC_SHARED 12 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupt-controller;
->> +             #interrupt-cells = <2>;
->> +
->> +             gpio0: bank@0 {
->> +                     reg = <0>;
->> +                     compatible = "mediatek,mt7621-gpio-bank";
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +             };
->> +
->> +             gpio1: bank@1 {
->> +                     reg = <1>;
->> +                     compatible = "mediatek,mt7621-gpio-bank";
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +             };
->> +
->> +             gpio2: bank@2 {
->> +                     reg = <2>;
->> +                     compatible = "mediatek,mt7621-gpio-bank";
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +             };
->> +     };
->> --
->> 2.7.4
->>
+-- 
+2.17.1
