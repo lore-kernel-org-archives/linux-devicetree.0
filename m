@@ -1,76 +1,54 @@
-From: "Wu, Songjun" <songjun.wu@linux.intel.com>
-Subject: Re: [PATCH 7/7] tty: serial: lantiq: Add CCF support
-Date: Thu, 14 Jun 2018 14:38:06 +0800
-Message-ID: <0c62efdb-9a23-3514-352c-a9689aacc1a5@linux.intel.com>
-References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
- <20180612054034.4969-8-songjun.wu@linux.intel.com>
- <20180612223953.GA21621@rob-hp-laptop>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: RE: [EXTERNAL] Re: [PATCH] arm64: dts: hikey: Define wl1835 power
+   capabilities
+Date: Thu, 14 Jun 2018 06:40:05 +0000
+Message-ID: <ae036763950c4c9e80ceccc8c61e78dd@ti.com>
+References: <20180613151305.17240-1-ryan@edited.us>
+        <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
+ <87tvq6a577.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612223953.GA21621@rob-hp-laptop>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87tvq6a577.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Valentin Schneider <Valentin.Schneider-5wv7dgnIgG8@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> >> These properties are required for compatibility with runtime PM.
+> >> Without these properties, MMC host controller will not be aware
+> >> of power capabilities. When the wlcore driver attempts to power
+> >> on the device, it will erroneously fail with -EACCES.
+> >>
+> >> Signed-off-by: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>
+> >
+> > Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
+> > Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> > Wei Xu: This fixes a functional regression with wifi on the HiKey
+> > board that was introduced in 4.18-rc with commit 60f36637bbbd
+> > ("wlcore: sdio: allow pm to handle sdio power").
+> >
+> > Could you please be sure to queue this for the 4.18-rc ?
+>=20
+> Adding linux-wireless so that wireless folks are aware of this wlcore
+> regression fix as well.
+>=20
+Actually  "cap-power-off-card" is normally included with all .dts files sup=
+porting wilink=20
+So it should have been there from the start for this board as well.=20
+It probably worked without it due to the explicit call to mmc_power_restore=
+_host()
+that was there as an old workaround for trying to control the power explici=
+tly from the
+driver which was actually causing other failures on suspend/resume as the m=
+mc layer=20
+already power the module on resume.
+"keep-power-in-suspend" is needed in case of planning to use "WoWLAN":
+Iw phy0 wowlan enable....
 
-
-On 6/13/2018 6:39 AM, Rob Herring wrote:
-> On Tue, Jun 12, 2018 at 01:40:34PM +0800, Songjun Wu wrote:
->> Previous implementation uses platform-dependent API to get the clock.
->> Those functions are not available for other SoC which uses the same IP.
->> The CCF (Common Clock Framework) have an abstraction based APIs
->> for clock.
->> Change to use CCF APIs to get clock and rate.
->> So that different SoCs can use the same driver.
->> Clocks and clock-names are updated in device tree binding.
->>
->> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
->>
->> ---
->>
->>   .../devicetree/bindings/serial/lantiq_asc.txt      |  15 +++
-> Please split bindings to separate patch.
-Thanks.
-It will be split to two separate patches, one for bindings, the other 
-for code.
->>   drivers/tty/serial/Kconfig                         |   2 +-
->>   drivers/tty/serial/lantiq.c                        | 101 +++++++++++++++++----
->>   3 files changed, 98 insertions(+), 20 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.txt b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
->> index 3acbd309ab9d..608f0c87a4af 100644
->> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.txt
->> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
->> @@ -6,6 +6,10 @@ Required properties:
->>   - interrupts: the 3 (tx rx err) interrupt numbers. The interrupt specifier
->>     depends on the interrupt-parent interrupt controller.
->>   
->> +Optional properties:
->> +- clocks: Should contain frequency clock and gate clock
->> +- clock-names: Should be "freq" and "asc"
->> +
->>   Example:
->>   
->>   asc1: serial@e100c00 {
->> @@ -14,3 +18,14 @@ asc1: serial@e100c00 {
->>   	interrupt-parent = <&icu0>;
->>   	interrupts = <112 113 114>;
->>   };
->> +
->> +asc0: serial@600000 {
->> +	compatible = "lantiq,asc";
->> +	reg = <0x600000 0x100000>;
-> 1MB of address space? That wastes a lot of virtual space on 32-bit
-> systems. Just make the size the actual used range.
-The size of address space will be updated to the actual used range.
->> +	interrupt-parent = <&gic>;
->> +	interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
->> +	<GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
->> +	<GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
->> +	clocks = <&pll0aclk SSX4_CLK>, <&clkgate1 GATE_URT_CLK>;
->> +	clock-names = "freq", "asc";
->> +};
+Best Regards,
+Eyal
