@@ -1,153 +1,106 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v3 4/6] thermal: tsens: Add support for SDM845
-Date: Thu, 14 Jun 2018 17:55:06 +0300
-Message-ID: <CAP245DUMdusJpSWRQK9B8JexwJsDKbY8=7DVwxrFTL05ZY6d1w@mail.gmail.com>
-References: <cover.1528972165.git.amit.kucheria@linaro.org>
- <0cdd0957cf80c2f9921928755722a427c7309964.1528972165.git.amit.kucheria@linaro.org>
- <CAL_JsqLPKktGFH4X9gDgCFq70Uo6NvFx9-a0sR7fQU35NwZe1g@mail.gmail.com>
+From: Matt Sealey <Matt.Sealey@arm.com>
+Subject: RE: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph
+ bindings
+Date: Thu, 14 Jun 2018 15:04:52 +0000
+Message-ID: <HE1PR0802MB241249AB5A90012AA6EB5235EE7D0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
+References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
+ <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
+ <20180612204802.GA15817@rob-hp-laptop>
+ <a1c0749b-9c97-b45f-716f-a62ae07af278@arm.com>
+ <5448BBB7-93FE-400F-9D87-FABF5DE0539C@arm.com>
+ <c0d531ec-9201-bfd8-e6c3-9140698b0697@arm.com>
+ <HE1PR0802MB24127EC935B9AF6F82AB3B6EEE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
+ <075b99a1-2a29-f6dc-e9f2-99f895c27d35@arm.com>
+ <CANLsYkx9cjV-bWg7aLg-kJT7x7DtwTHdsYzzM8A3+cFFnu_mNg@mail.gmail.com>
+ <HE1PR0802MB24121F0EEF8D7D643BC391A1EE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
+ <5e013d65-9931-6b8d-ce7c-4333309d4ada@arm.com>
+ <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLPKktGFH4X9gDgCFq70Uo6NvFx9-a0sR7fQU35NwZe1g@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, David Brown <david.brown@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kees Cook <keescook@chromium.org>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Lists LAKML <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>, Suzuki Poulose <Suzuki.Poulose@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, John Horley <John.Horley@arm.com>, "mike.leach@linaro.org" <mike.leach@linaro.org>, "coresight@lists.linaro.org" <coresight@lists.linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the review.
-
-On Thu, Jun 14, 2018 at 5:21 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, Jun 14, 2018 at 4:43 AM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > SDM845 uses the TSENS v2 IP block
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 1 +
-> >  arch/arm64/boot/dts/qcom/msm8996.dtsi                    | 2 +-
-> >  drivers/thermal/qcom/tsens-v2.c                          | 9 ++++++++-
-> >  drivers/thermal/qcom/tsens.c                             | 3 +++
-> >  drivers/thermal/qcom/tsens.h                             | 5 ++++-
-> >  5 files changed, 17 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > index 06195e8..84da3db 100644
-> > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > @@ -5,6 +5,7 @@ Required properties:
-> >   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
-> >   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
-> >   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
-> > + - "qcom,tsens-v2"      : For any SoC with v2 version of the tsens IP
->
-> Stick with "qcom,sdm845-tsens". Though perhaps it should be
-> '"qcom,sdm845-tsens", "qcom,msm8996-tsens"' if there is compatibility.
-
-There are lots of (30+) SoC families that use v2 of the tsens IP. So
-we're talking about potentially 100s of platforms using the IP. This
-could become very unwieldy to deal with very quickly.
-
-The core functionality in tsens v2 remains the same (e.g. reading the
-temperature) and any differences could potentially be addressed with
-more specific DTs or preferably dynamically detected by probing the
-minor version of the HW version register.
-
-> >  - reg: Address range of the thermal registers
-> >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > index 6c8a857..28d4c08 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > @@ -460,7 +460,7 @@
-> >                 };
-> >
-> >                 tsens0: thermal-sensor@4a8000 {
-> > -                       compatible = "qcom,msm8996-tsens";
-> > +                       compatible = "qcom,msm8996-tsens", "qcom,tsens-v2";
->
-> There's no point to adding this now because you already have to
-> support "qcom,msm8996-tsens".
-
-Of course.
-
->
-> >                         reg = <0x4a9000 0x1000>, /* TM */
-> >                               <0x4a8000 0x1000>; /* SROT */
-> >                         #qcom,sensors = <13>;
-> > diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
-> > index c981a40..abc8f13 100644
-> > --- a/drivers/thermal/qcom/tsens-v2.c
-> > +++ b/drivers/thermal/qcom/tsens-v2.c
-> > @@ -69,8 +69,15 @@ static const struct tsens_ops ops_v2 = {
-> >         .get_temp       = get_temp_tsens_v2,
-> >  };
-> >
-> > +const struct tsens_data data_tsens_v2 = {
-> > +       .ops            = &ops_v2,
-> > +};
-> > +
-> > +/* Kept around for backward compatibility with old msm8996.dtsi.
-> > + * New platforms should use data_tsens_v2 if possible and define
-> > + * the #qcom,sensors property in DT.
->
-> Hum, I think this should just be implied by the compatible as it was.
-> If this was the *only* difference, then a property would be okay, but
-> as soon as you find some other difference you need yet another
-> property and have to do a DT update on all platforms.
-
-Perhaps I was needless wordy, but the only reason to keep data_8996
-around is the num_sensors bit below. Now that Bjorn's patch
-6d7c70d1cd65 ("thermal: qcom: tsens: Allow number of sensors to come
-from DT") has landed, that should be the default way to specify the
-number of sensors connected to each IP block.
-
-We want future DTs to simply use the qcom,tsens-v2 property instead of
-saying that they're all compatible with 8996. That will more truly
-reflect the HW (tsens v2) and the qcom,msm8996-tsens binding probably
-shouldn't have been added in the first place.
-
-> > + */
-> >  const struct tsens_data data_8996 = {
-> >         .num_sensors    = 13,
-> >         .ops            = &ops_v2,
-> >  };
-> > -
-> > diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-> > index 3440166c..a2c9bfa 100644
-> > --- a/drivers/thermal/qcom/tsens.c
-> > +++ b/drivers/thermal/qcom/tsens.c
-> > @@ -72,6 +72,9 @@ static const struct of_device_id tsens_table[] = {
-> >         }, {
-> >                 .compatible = "qcom,msm8996-tsens",
-> >                 .data = &data_8996,
-> > +       }, {
-> > +               .compatible = "qcom,tsens-v2",
-> > +               .data = &data_tsens_v2,
->
-> Why different data if 8996 is compatible with v2?
-
-See above.
-
-> >         },
-> >         {}
-> >  };
-> > diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-> > index dc56e1e..69212cb 100644
-> > --- a/drivers/thermal/qcom/tsens.h
-> > +++ b/drivers/thermal/qcom/tsens.h
-> > @@ -87,6 +87,9 @@ void compute_intercept_slope(struct tsens_device *, u32 *, u32 *, u32);
-> >  int init_common(struct tsens_device *);
-> >  int get_temp_common(struct tsens_device *, int, int *);
-> >
-> > -extern const struct tsens_data data_8916, data_8974, data_8960, data_8996;
-> > +/* TSENS v1 targets */
-> > +extern const struct tsens_data data_8916, data_8974, data_8960;
-> > +/* TSENS v2 targets */
-> > +extern const struct tsens_data data_8996, data_tsens_v2;
-> >
-> >  #endif /* __QCOM_TSENS_H__ */
-> > --
-> > 2.7.4
-> >
+SGkgUm9iLA0KDQpUbyB0YWtlIHRoaXMgaW4gYSBzb21ld2hhdCBkaWZmZXJlbnQgZGlyZWN0aW9u
+Li4uDQoNCj4gPiBObywgdGhlIGFib3ZlIGNvbW1lbnQgaXMgYWJvdXQgdXNpbmcgInVuaXQiICgg
+aWYgaXQgaXMgYSBzdGFuZGFyZA0KPiA+IHByb3BlcnR5IGZvciBzcGVjaWZ5aW5nIHNvbWV0aGlu
+ZyBzcGVjaWZpYyB0byBoYXJkd2FyZSkgaW5zdGVhZCBvZg0KPiA+ICJjb3Jlc2lnaHQsaHdpZCIu
+IEkgd291bGQgcHJlZmVyIHRvIHN0aWNrIHRvIHRoZSBEVCBncmFwaCBiaW5kaW5ncywNCj4gPiBi
+ZWNhdXNlIDoNCj4NCj4gInVuaXQiIGlzIG5vdCBhIHN0YW5kYXJkIHByb3BlcnR5IGFuZCBJIGRv
+bid0IGxpa2UgaXQgZWl0aGVyLg0KDQpGYWlyIGVub3VnaC4NCg0KPiBJZiB5b3UgaGF2ZSAiaW4t
+cG9ydHMiIGFuZCAib3V0LXBvcnRzIiBub2RlcywgdGhlbiB0aGF0IGdpdmVzIHlvdQ0KPiBkaXJl
+Y3Rpb24gYW5kIHlvdSBjYW4gdXNlIHJlZyBmb3IgdGhlICJoYXJkd2FyZSBwb3J0Ii4NCj4NCj4g
+aW4tcG9ydHMgew0KPiAgIHBvcnRAMCB7DQo+ICAgICByZWcgPSA8MD47DQo+ICAgICBlbmRwb2lu
+dCB7Li4ufTsNCj4gICB9Ow0KPiAgIHBvcnRAMSB7DQo+ICAgICByZWcgPSA8MT47DQo+ICAgICBl
+bmRwb2ludCB7Li4ufTsNCj4gICB9Ow0KPiB9Ow0KPiBvdXQtcG9ydHMgew0KPiAgIHBvcnRAMCB7
+DQo+ICAgICByZWcgPSA8MD47DQo+ICAgICBlbmRwb2ludCB7Li4ufTsNCj4gICB9Ow0KPiB9Ow0K
+Pg0KPiBJJ2xsIG5lZWQgdG8gY2hlY2ssIGJ1dCBkdGMgbWF5IG5lZWQgYW4gdXBkYXRlIHRvIG5v
+dCB3YXJuIGFib3V0IHRoaXMuDQoNCklmIHRoZSByZXF1aXJlbWVudCB0aGF0IHVuaXQtYWRkcmVz
+cyBhbmQgdGhlIGxvdyAjYWRkcmVzcy1jZWxscyBvZiByZWcNCm5vdyBiZWluZyBmb3JjZWQgYnkg
+YSB2YWxpZGF0aW9uIHRvb2wgaXMgc2NyZXdpbmcgdXMgb3ZlciBoZXJlLCB3ZSBjYW4ndA0KcmVh
+bGx5IGNoYW5nZSB0aGUgdG9vbDsgdGhhdCdzIGEgSUVFRSAxMjc1LTE5OTQgcmVxdWlyZW1lbnQg
+d2UnZCBiZQ0KaGFja2luZyBhcm91bmQuDQoNCkhlcmUncyBhIHRob3VnaHQgLSB3aHkgZG9uJ3Qg
+d2UgZGVmaW5lIHRoZSBwb3J0cyBpbiBlYWNoIGNvbXBvbmVudCBpbiBhDQpzZXBhcmF0ZSBncmFw
+aD8gRGVzY3JpYmluZyB0aGUgQVRCIHRvcG9sb2d5IGFzIGEgYnVzIHdpdGggYSBncmFwaCBzdHJ1
+Y3R1cmUNCmFuZCB0aGVuIGhhdmluZyB0aGUgY29tcG9uZW50cyBzaW1wbHkgcmVmZXJlbmNlIHRo
+ZSBwb3J0IG5vZGVzIHdvdWxkIG1ha2UNCml0IG11Y2ggZWFzaWVyIHRvIGRlc2lnbi4NCg0KUGFy
+dCBvZiB0aGUgcHJvYmxlbSBpcyB0cnlpbmcgdG8gZGVzY3JpYmUgYW4gQVRCIGJ1cyB2aWEgYSBj
+b21wb25lbnQgb24NCmFuIEFQQiBidXMuIFlvdSBsb3NlIGFsbCB0aGUgbmljZXRpZXMgb2YgZGVz
+Y3JpYmluZyBhIGJ1cyB3aXRoIGJ1cw0Kc3ViY29tcG9uZW50cy4gTGV0cyB0YWtlIHRoZSBBVEIg
+YnVzIG91dHNpZGUuLiBieSBkZXNjcmliaW5nIHRoZSBpbmdyZXNzDQphbmQgZWdyZXNzIG9mIHRo
+ZSBjb21wb25lbnQgeW91IGhhdmUgbm8gaWRlYSB3aGVyZSBpbiB0aGUgZ3JhcGggeW91IGFyZQ0K
+YXQgdGhlIHBvaW50IG9mIGVudHJ5ICh5b3UgY291bGQgc3RhcnQgcGFyc2luZyBhdCBhIGZ1bm5l
+bCwgd2hpY2ggbWVhbnMNCnRyYXZlbGxpbmcgYXJvdW5kIGxvb2tpbmcgZm9yIG90aGVyIHVuaXRz
+IHRoYXQgbWF0Y2ggb3RoZXIgY29tcGF0aWJsZXMpLg0KDQpJZiB0aGUgQ29yZVNpZ2h0IHN1YnN5
+c3RlbSBjb3VsZCBoYXZlIGEgZ3JhcGggcHJlLW1hZGUgb2YgdGhlIGZ1bGwNCnRvcG9sb2d5LCB0
+aGVuIHRoZSBjb21wb25lbnRzIGNhbiBwb2ludCB0byBob3cgdGhleSB3cmFwIHBhcnRzIG9mDQp0
+aGF0IHRvcG9sb2d5LiBZb3UgY2FuIGFsc28gZG8gYXdheSB3aXRoIHJpZGljdWxvdXMgbm9uLXBy
+b2dyYW1tYWJsZQ0KZnVubmVscyBhbmQgcmVwbGljYXRvciBub2Rlcywgc2luY2UgdGhlIHRyYWNl
+IGdyYXBoIHdvdWxkIGVuY2Fwc3VsYXRlDQp0aGF0IGluZm9ybWF0aW9uIHdpdGhvdXQgaGF2aW5n
+IHRvIGluc3RhbnRpYXRlIGEgc3R1YiBkcml2ZXIgZm9yIGl0Lg0KDQpUaGF0IGRvZXNuJ3Qgc29s
+dmUgJ3VuaXQnIG9yICd1bml0LWFkZHJlc3MnIG9yICdyZWcnIG9yIGFueXRoaW5nIGJ1dA0KaXQg
+d291bGQga2VlcCB1cyBpbiBncmFwaCBiaW5kaW5ncyBhbmQgYWJzdHJhY3QgdGhlIEFUQiB0b3Bv
+bG9neSBmcm9tDQp0aGUgY29tcG9uZW50cy4gT3RoZXIgZnVuIHN0dWZmOyBkZXNjcmliaW5nIGJy
+aWRnZSBjb21wb25lbnRzIGFuZCBidXMNCndpZHRocyB3aXRoaW4gdGhlIGdyYXBoIGNvdWxkIGdp
+dmUgYWJpbGl0aWVzIHRvIGRlc2NyaWJlIGJhbmR3aWR0aHMNCm92ZXIgZWFjaCB0cmFjZSBwYXRo
+Lg0KDQpJbiBhbnkgY2FzZSwgd2hhdCBoYXBwZW5zIHdoZW4geW91IGhhdmUgdG8gZGVjaWRlIHdo
+YXQgeW91ciBmdW5uZWwNCnBvcnQgcHJpb3JpdGllcyBhcmUsIHlvdSdsbCBoYXZlIHRvIGRlZmlu
+ZSBhIG5ldyBwcm9wZXJ0eSBmb3IgdGhhdCwNCmFuZCBpdCB3b24ndCBiZSAncmVnJy4NCg0KVHJ5
+aW5nIG5vdCB0byBhZGQgYW55dGhpbmcgdG8gdGhlIGdyYXBoIGJpbmRpbmdzIGlzIG9uZSB0aGlu
+ZyBidXQNCnRyeWluZyB0byBzaG9laG9ybiBpdCBpbiBlaXRoZXIgYnkgZG9pbmcgdGhhdCBvciBp
+bnZlbnRpbmcgd2hvbGx5DQpkZXZpY2Utc3BlY2lmaWMgcHJvcGVydGllcyBhcmUganVzdCBhcyBi
+YWQuDQoNClBlcmhhcHMgd2UgY2FuIHVzZSB0aGUgcGF0aEB1bml0LWFkZHJlc3M6YXJndW1lbnRz
+IDwtLSBwYXJhbWV0ZXJzIGhlcmUgdG8NCmFkZCBleHRyYSBpbmZvcm1hdGlvbiBhYm91dCB0aGUg
+cG9ydC4gJ215LWFyZ3MnIHdvdWxkIHB1bGwgaXQgb3V0IGluIEZvcnRoLA0KSSBkb24ndCBrbm93
+IGhvdyBGRFQgY29kZSBkZWFscyB3aXRoIGl0IChidXQgdGhlcmUgc2hvdWxkIGJlIHNvbWV0aGlu
+ZywNCnNpbmNlIHdlIHVzZSBpdCBmb3IgY29uc29sZSBkZWZpbml0aW9uIGluIC9jaG9zZW4pLiBU
+aGV5J3JlIGVudGlyZWx5DQpzcGVjaWZpYyB0byB0aGUgbm9kZSBpbiBxdWVzdGlvbiwgYnV0IG5v
+dCB1c2VkIGluIHBhdGggbWF0Y2hpbmcuDQoNCldoeSBjYW4ndCB3ZSBkZWNpZGUgb24gYSBncmFw
+aC1iaW5kaW5nIHVwZGF0ZSB0aGF0IGFsbG93cyBzcGVjaWZ5aW5nDQpzb21ldGhpbmcgc2ltcGxl
+IGFzIGEgZGVtdWx0aXBsZXhlciBvdXRwdXQgaW4gYSB3YXkgdGhlIGRyaXZlciBjYW4NCnVuZGVy
+c3RhbmQgYW5kIG1hcCB0byB0aGUgaGFyZHdhcmU/DQoNCj4gSWYgRFQgYmluZGluZ3MgY2FuIGJl
+IHJldXNlZCBmb3IgQUNQSSwgdGhhdCdzIGZpbmUNCg0KSG93ZXZlciBpbiBteSBvcGluaW9uIG5v
+dCB0aGUgcHJlZmVycmVkIHdheSB0byBkbyBpdC4uDQoNCj4gYW55IERUIGJpbmRpbmdzIHRvIGJl
+IGFjY2VwdGVkIHNpbXBseSBiZWNhdXNlIHRoZXkgbWF0Y2ggQUNQSQ0KPiBiaW5kaW5ncy4NCg0K
+SSdtIHN1cmUgQUNQSSBoYXMgY2FwYWJpbGl0eSBvZiBhIG11Y2ggY2xhc3NpZXIgd2F5IG9mIGRl
+c2NyaWJpbmcNCnRoaW5ncywgYnV0IEkgaGF2ZSBzb21lIGZlYXIgdGhhdCBpdCdzIGp1c3QgT0Yg
+YmluZGluZ3Mgc3R1ZmZlZCBpbg0KYSBfRFNELi4gRFQgYW5kIEFDUEkgaGF2ZSB0aGUgcmVzcG9u
+c2liaWxpdHkgb2Ygc2hvdWxkZXJpbmcgdGhlDQpidXJkZW4gb2YgZGVzY3JpYmluZyBoYXJkd2Fy
+ZS4gQW55IGF0dGVtcHRzIHRvIHRyeSBhbmQgbWFrZSBzb21lDQpjb21tb25hbGl0eSB0byBwcm9t
+b3RlIGJyZXZpdHkgb2YgTGludXggY29kZSBpcyB0b3RhbGx5IG91dCBvZiBzY29wZS4uDQoNCllv
+dSBjYW4gYWx3YXlzIGFic3RyYWN0IHdoYXRldmVyIGRlZmluaXRpb24gaW50byB3aGF0ZXZlciB0
+aGUgTGludXgNCmRyaXZlcnMgbmVlZCBhdCB0aGUgdGltZS4gVGhhdCdzIGtpbmQgb2YgdGhlIHBv
+aW50LiBMb2NraW5nIGluIHRvDQonaG93IGl0J3MgY3VycmVudGx5IGNvZGVkJyBpcyBzdGlmbGlu
+ZyB3aGVuIHJlYWxpemluZyB0aGUgZmlyc3QNCmF0dGVtcHQgZGlkbid0IGFjdHVhbGx5IGFkZXF1
+YXRlbHkgZG8gd2hhdCBpdCB3YXMgaW50ZW5kZWQuDQoNClRhLA0KTWF0dA0KSU1QT1JUQU5UIE5P
+VElDRTogVGhlIGNvbnRlbnRzIG9mIHRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUg
+Y29uZmlkZW50aWFsIGFuZCBtYXkgYWxzbyBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0
+aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRl
+bHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwg
+dXNlIGl0IGZvciBhbnkgcHVycG9zZSwgb3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24g
+aW4gYW55IG1lZGl1bS4gVGhhbmsgeW91Lg0K
