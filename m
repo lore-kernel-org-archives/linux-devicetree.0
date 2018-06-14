@@ -1,136 +1,187 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v3 02/12] PM / devfreq: Fix handling of min/max_freq == 0
-Date: Thu, 14 Jun 2018 12:47:02 -0700
-Message-ID: <20180614194712.102134-3-mka@chromium.org>
-References: <20180614194712.102134-1-mka@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180614194712.102134-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Matthias Kaehlcke <mka@chromium.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V2] ARM: dts: add Raspberry Pi Compute Module and IO board
+Date: Thu, 14 Jun 2018 21:50:04 +0200
+Message-ID: <1529005804-3065-1-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding the
-devfreq device") initializes df->min/max_freq with the min/max OPP when
-the device is added. Later commit f1d981eaecf8 ("PM / devfreq: Use the
-available min/max frequency") adds df->scaling_min/max_freq and the
-following to the frequency adjustment code:
+The Raspberry Pi Compute Module (CM1) is a SoM which contains a
+BCM2835 processor, 512 MB RAM and a 4 GB eMMC. There is also a carrier
+board which is called Compute Module IO Board.
 
-  max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
-
-With the current handling of min/max_freq this is incorrect:
-
-Even though df->max_freq is now initialized to a value != 0 user space
-can still set it to 0, in this case max_freq would be 0 instead of
-df->scaling_max_freq as intended. In consequence the frequency adjustment
-is not performed:
-
-  if (max_freq && freq > max_freq) {
-	freq = max_freq;
-
-To fix this set df->min/max freq to the min/max OPP in max/max_freq_store,
-when the user passes a value of 0. This also prevents df->max_freq from
-being set below the min OPP when df->min_freq is 0, and similar for
-min_freq. Since it is now guaranteed that df->min/max_freq can't be 0 the
-checks for this case can be removed.
-
-Fixes: f1d981eaecf8 ("PM / devfreq: Use the available min/max frequency")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
-Changes in v3:
-- none
 
-Changes in v2:
-- handle freq tables sorted in ascending and descending order in
-  min/max_freq_store()
-- use same order for conditional statements in min/max_freq_store()
+Changes in V2:
+- fix HDMI detect polarity
+- drop dsi1 which prevent vc4 from probing
 
- drivers/devfreq/devfreq.c | 42 ++++++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/Makefile                |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts | 88 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi    | 34 ++++++++++++
+ 3 files changed, 123 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
+ create mode 100644 arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 0057ef5b0a98..6f604f8b2b81 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -283,11 +283,11 @@ int update_devfreq(struct devfreq *devfreq)
- 	max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
- 	min_freq = MAX(devfreq->scaling_min_freq, devfreq->min_freq);
- 
--	if (min_freq && freq < min_freq) {
-+	if (freq < min_freq) {
- 		freq = min_freq;
- 		flags &= ~DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use GLB */
- 	}
--	if (max_freq && freq > max_freq) {
-+	if (freq > max_freq) {
- 		freq = max_freq;
- 		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
- 	}
-@@ -1122,18 +1122,27 @@ static ssize_t min_freq_store(struct device *dev, struct device_attribute *attr,
- {
- 	struct devfreq *df = to_devfreq(dev);
- 	unsigned long value;
-+	unsigned long *freq_table;
- 	int ret;
--	unsigned long max;
- 
- 	ret = sscanf(buf, "%lu", &value);
- 	if (ret != 1)
- 		return -EINVAL;
- 
- 	mutex_lock(&df->lock);
--	max = df->max_freq;
--	if (value && max && value > max) {
--		ret = -EINVAL;
--		goto unlock;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 37a3de7..07b306f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -73,6 +73,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-b-rev2.dtb \
+ 	bcm2835-rpi-b-plus.dtb \
+ 	bcm2835-rpi-a-plus.dtb \
++	bcm2835-rpi-cm1-io1.dtb \
+ 	bcm2836-rpi-2-b.dtb \
+ 	bcm2837-rpi-3-b.dtb \
+ 	bcm2837-rpi-3-b-plus.dtb \
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
+new file mode 100644
+index 0000000..4764a25
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++#include "bcm2835-rpi-cm1.dtsi"
++#include "bcm283x-rpi-usb-host.dtsi"
 +
-+	if (value) {
-+		if (value > df->max_freq) {
-+			ret = -EINVAL;
-+			goto unlock;
-+		}
-+	} else {
-+		freq_table = df->profile->freq_table;
-+		/* typical order is ascending, some drivers use descending */
-+		if (freq_table[0] < freq_table[df->profile->max_state - 1])
-+			value = freq_table[0];
-+		else
-+			value = freq_table[df->profile->max_state - 1];
- 	}
- 
- 	df->min_freq = value;
-@@ -1157,18 +1166,27 @@ static ssize_t max_freq_store(struct device *dev, struct device_attribute *attr,
- {
- 	struct devfreq *df = to_devfreq(dev);
- 	unsigned long value;
-+	unsigned long *freq_table;
- 	int ret;
--	unsigned long min;
- 
- 	ret = sscanf(buf, "%lu", &value);
- 	if (ret != 1)
- 		return -EINVAL;
- 
- 	mutex_lock(&df->lock);
--	min = df->min_freq;
--	if (value && min && value < min) {
--		ret = -EINVAL;
--		goto unlock;
++/ {
++	compatible = "raspberrypi,compute-module", "brcm,bcm2835";
++	model = "Raspberry Pi Compute Module IO board rev1";
++};
 +
-+	if (value) {
-+		if (value < df->min_freq) {
-+			ret = -EINVAL;
-+			goto unlock;
-+		}
-+	} else {
-+		freq_table = df->profile->freq_table;
-+		/* typical order is ascending, some drivers use descending */
-+		if (freq_table[0] < freq_table[df->profile->max_state - 1])
-+			value = freq_table[df->profile->max_state - 1];
-+		else
-+			value = freq_table[0];
- 	}
- 
- 	df->max_freq = value;
++&gpio {
++	/*
++	 * This is based on the official GPU firmware DT blob.
++	 *
++	 * Legend:
++	 * "NC" = not connected (no rail from the SoC)
++	 * "FOO" = GPIO line named "FOO" on the schematic
++	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
++	 */
++	gpio-line-names = "GPIO0",
++			  "GPIO1",
++			  "GPIO2",
++			  "GPIO3",
++			  "GPIO4",
++			  "GPIO5",
++			  "GPIO6",
++			  "GPIO7",
++			  "GPIO8",
++			  "GPIO9",
++			  "GPIO10",
++			  "GPIO11",
++			  "GPIO12",
++			  "GPIO13",
++			  "GPIO14",
++			  "GPIO15",
++			  "GPIO16",
++			  "GPIO17",
++			  "GPIO18",
++			  "GPIO19",
++			  "GPIO20",
++			  "GPIO21",
++			  "GPIO22",
++			  "GPIO23",
++			  "GPIO24",
++			  "GPIO25",
++			  "GPIO26",
++			  "GPIO27",
++			  "GPIO28",
++			  "GPIO29",
++			  "GPIO30",
++			  "GPIO31",
++			  "GPIO32",
++			  "GPIO33",
++			  "GPIO34",
++			  "GPIO35",
++			  "GPIO36",
++			  "GPIO37",
++			  "GPIO38",
++			  "GPIO39",
++			  "GPIO40",
++			  "GPIO41",
++			  "GPIO42",
++			  "GPIO43",
++			  "GPIO44",
++			  "GPIO45",
++			  "HDMI_HPD_N",
++			  /* Also used as ACT LED */
++			  "EMMC_EN_N",
++			  /* Used by eMMC */
++			  "SD_CLK_R",
++			  "SD_CMD_R",
++			  "SD_DATA0_R",
++			  "SD_DATA1_R",
++			  "SD_DATA2_R",
++			  "SD_DATA3_R";
++
++	pinctrl-0 = <&gpioout &alt0>;
++};
++
++&hdmi {
++	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio14>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi b/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
+new file mode 100644
+index 0000000..ef22c2d
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++#include "bcm2835.dtsi"
++#include "bcm2835-rpi.dtsi"
++
++/ {
++	leds {
++		act {
++			gpios = <&gpio 47 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	reg_3v3: fixed-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_1v8: fixed-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++};
++
++&sdhost {
++	non-removable;
++	vmmc-supply = <&reg_3v3>;
++	vqmmc-supply = <&reg_1v8>;
++};
 -- 
-2.18.0.rc1.242.g61856ae69a-goog
+2.7.4
