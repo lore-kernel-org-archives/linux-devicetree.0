@@ -1,39 +1,44 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] ARM: dts: BCM53573: Add architected timer
-Date: Thu, 14 Jun 2018 18:41:47 +0200
-Message-ID: <20180614164147.413-1-zajec5@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 17/27] bindings: nvmem/zii: Fix location of nvmem.txt
+Date: Thu, 14 Jun 2018 17:52:11 +0100
+Message-ID: <c6dd6c36-2b75-cc9e-ea9e-5ee70eb656e6@linaro.org>
+References: <cover.1528990947.git.mchehab+samsung@kernel.org>
+ <fcfc83951a2997c527126af1fdd6fb1e0acbe27d.1528990947.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fcfc83951a2997c527126af1fdd6fb1e0acbe27d.1528990947.git.mchehab+samsung@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKSXQncyBhIHN0YW5kYXJk
-IEFSTSBhcmNoaXRlY3RlZCB0aW1lciB0aGF0IHdhcyBzaW1wbHkgbWlzc2VkIHdoZW4KaW5pdGlh
-bGx5IGFkZGluZyB0aGlzIC5kdHNpIGZpbGUuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVj
-a2kgPHJhZmFsQG1pbGVja2kucGw+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmNtNTM1NzMuZHRz
-aSB8IDggKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKCmRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9iY201MzU3My5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-YmNtNTM1NzMuZHRzaQppbmRleCAxNjAwN2Q3MmMzNDYuLjQ1M2EyYTM3ZGFiZCAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNTM1NzMuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0
-cy9iY201MzU3My5kdHNpCkBAIC00OCw2ICs0OCwxNCBAQAogCQl9OwogCX07CiAKKwl0aW1lciB7
-CisJCWNvbXBhdGlibGUgPSAiYXJtLGFybXY3LXRpbWVyIjsKKwkJaW50ZXJydXB0cyA9IDxHSUNf
-UFBJIDEzIElSUV9UWVBFX0xFVkVMX0xPVz4sCisJCQkgICAgIDxHSUNfUFBJIDE0IElSUV9UWVBF
-X0xFVkVMX0xPVz4sCisJCQkgICAgIDxHSUNfUFBJIDExIElSUV9UWVBFX0xFVkVMX0xPVz4sCisJ
-CQkgICAgIDxHSUNfUFBJIDEwIElSUV9UWVBFX0xFVkVMX0xPVz47CisJfTsKKwogCWNsb2NrcyB7
-CiAJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCQkjc2l6ZS1jZWxscyA9IDwxPjsKLS0gCjIuMTMu
-NwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+
+
+On 14/06/18 17:09, Mauro Carvalho Chehab wrote:
+> The location pointed there is missing "bindings/" on its path.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+> ---
+>   Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> index d5e22fc67d66..0df79d9e07ec 100644
+> --- a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
+> @@ -18,7 +18,7 @@ Optional properties:
+>   Data cells:
+>   
+>   Data cells are child nodes of eerpom node, bindings for which are
+> -documented in Documentation/bindings/nvmem/nvmem.txt
+> +documented in Documentation/devicetree/bindings/nvmem/nvmem.txt
+>   
+>   Example:
+>   
+> 
