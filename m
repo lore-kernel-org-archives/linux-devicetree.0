@@ -1,101 +1,80 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH] devres: Add devm_of_iomap()
-Date: Thu, 14 Jun 2018 13:31:48 +1000
-Message-ID: <acf43685e55ff104ed3bf59d91264fdeec029cf2.camel@kernel.crashing.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 14 Jun 2018 13:19:42 +0900
+Message-ID: <20180614041941.4i2cadzoevujmzha@ninjato>
+References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
+ <20180330074751.25987-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="st33g2u2nspyzp4d"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180330074751.25987-2-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <gala>
 List-Id: devicetree@vger.kernel.org
 
-There are still quite a few cases where a device might want
-to get to a different node of the device-tree, obtain the
-resources and map them.
 
-This is generally open coded in drivers which is quite error prone
+--st33g2u2nspyzp4d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We have of_iomap() and of_io_request_and_map() but they both
-have shortcomings, such as not returning the size of the
-resource found (which can be useful) and not being "managed".
+Hi Boris,
 
-This adds a devm_of_iomap() that provides all of these and
-should probably replace uses of the above in most drivers.
+> +/**
+> + * struct i3c_priv_xfer - I3C SDR private transfer
+> + * @rnw: encodes the transfer direction. true for a read, false for a write
+> + * @len: transfer length in bytes of the transfer
+> + * @data: input/output buffer
+> + */
+> +struct i3c_priv_xfer {
+> +	bool rnw;
+> +	u16 len;
+> +	union {
+> +		void *in;
+> +		const void *out;
+> +	} data;
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- include/linux/device.h |  4 ++++
- lib/devres.c           | 36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+So, this is probably where most payloads end up?
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index beabdbc08420..1529775ecb36 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -686,6 +686,10 @@ extern void devm_free_pages(struct device *dev, unsigned long addr);
- 
- void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
- 
-+void __iomem *devm_of_iomap(struct device *dev,
-+			    struct device_node *node, int index,
-+			    resource_size_t *size);
-+
- /* allows to add/remove a custom action to devres stack */
- int devm_add_action(struct device *dev, void (*action)(void *), void *data);
- void devm_remove_action(struct device *dev, void (*action)(void *), void *data);
-diff --git a/lib/devres.c b/lib/devres.c
-index 78eca713b1d9..e320f80c1c4e 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -3,6 +3,7 @@
- #include <linux/io.h>
- #include <linux/gfp.h>
- #include <linux/export.h>
-+#include <linux/of_address.h>
- 
- void devm_ioremap_release(struct device *dev, void *res)
- {
-@@ -163,6 +164,41 @@ void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
- }
- EXPORT_SYMBOL(devm_ioremap_resource);
- 
-+/*
-+ * devm_of_iomap - Requests a resource and maps the memory mapped IO
-+ *		   for a given device_node managed by a given device
-+ *
-+ * Checks that a resource is a valid memory region, requests the memory
-+ * region and ioremaps it. All operations are managed and will be undone
-+ * on driver detach of the device.
-+ *
-+ * This is to be used when a device requests/maps resources described
-+ * by other device tree nodes (children or otherwise).
-+ *
-+ * @dev:	The device "managing" the resource
-+ * @node:       The device-tree node where the resource resides
-+ * @index:	index of the MMIO range in the "reg" property
-+ * @size:	Returns the size of the resource (pass NULL if not needed)
-+ * Returns a pointer to the requested and mapped memory or an ERR_PTR() encoded
-+ * error code on failure. Usage example:
-+ *
-+ *	base = devm_of_iomap(&pdev->dev, node, 0, NULL);
-+ *	if (IS_ERR(base))
-+ *		return PTR_ERR(base);
-+ */
-+void __iomem *devm_of_iomap(struct device *dev, struct device_node *node, int index,
-+			    resource_size_t *size)
-+{
-+	struct resource res;
-+
-+	if (of_address_to_resource(node, index, &res))
-+		return IOMEM_ERR_PTR(-EINVAL);
-+	if (size)
-+		*size = resource_size(&res);
-+	return devm_ioremap_resource(dev, &res);
-+}
-+EXPORT_SYMBOL(devm_of_iomap);
-+
- #ifdef CONFIG_HAS_IOPORT_MAP
- /*
-  * Generic iomap devres
+I didn't notice any sign of DMA in these patches, but given my
+experiences, DMA will come sooner or later. And in I2C, this was
+problematic because then a lot of drivers were in the wild getting their
+buffers from everywhere (stack!). We now have an opt-in approach to mark
+buffers as DMA-safe.
+
+I don't know if typical I3C transfers will be similar to I2C with
+usually small payloads where DMA usually makes not much sense. Yet, I
+think, that it might be a good idea to think about how this shall be
+handled with I3C right away. Maybe simply enforcing buffers to be
+DMA-safe. Or whatever.
+
+A clear rule on that might save you hazzle later.
+
+Regards,
+
+   Wolfram
+
+
+--st33g2u2nspyzp4d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsh7NkACgkQFA3kzBSg
+KbYaJQ//WvuZkJrJ/IluxoHlKtN048uYvkfLNZCpddYE5p7JfxrreeOyn/EMQYUX
+ftikOAIWzo93LpPAgeKqHTD6FCMgfUDfB7RWZFJeRuMLZ/cOdDbsTA0Y/1S76SEl
+LEXebvQYhHd3YJsqDDGmyhCoXGtf/1n7tEJ4ax4NdJVMx0QGXUWuAlQAs2QAzNYk
+BzDfHEIbKc9469T5naQrQIVoaJLUqLCXs2RBzRnMDr8hl7wRtMckq64U28CiTNuz
+Hu/yh7axdg0EIqy/famCHzsbfg8Z5GXig8PNEBG5fCf0vL4aMap+56siQHsP4UgV
+bQgcIPSxqWcYBy2YVU4aiaLUdSYsAs/qympVnrWwRa6Lfy1z/JxPIs+7bI6TSER4
+OlMhrTNEiyiZbP5uj4LF+JlmFwYthzxwM9/j8ae6ZMsry6nQ5VFTYyUjOSUis4bQ
+05xrq8eZ1LDI6Kex4S9kY9OaN0bDo2u8xZv5yVqvbJaJ8dsD7uul94oGJPlO2jGm
+rUErZxjH8Q3u3QeQIyyZWRZlX1dIv+feeLbjRXlPqcdQfPcjbrv98T6FsuYqttzs
+FpA6wa1kbUZCchsuaxCvZu+5ja3OkYieYJ4keQlvO3EVzGnl3b0rcrOoSktr4ONs
+yBoV6WvF7+a/c+2ldQvi3/qaVu350CbdLowLWvX5yIFWtCOSkGM=
+=ojn/
+-----END PGP SIGNATURE-----
+
+--st33g2u2nspyzp4d--
