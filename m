@@ -1,86 +1,76 @@
-From: "sayali" <sayalil@codeaurora.org>
-Subject: RE: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
-Date: Thu, 14 Jun 2018 17:03:27 +0530
-Message-ID: <000101d403d3$87210d20$95632760$@codeaurora.org>
-References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org> <1528455990-24572-2-git-send-email-sayalil@codeaurora.org> <20180612192636.GA31725@rob-hp-laptop>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 0/3] mtd: rawnand: denali: add new clocks and improve
+ setup_data_interface
+Date: Thu, 14 Jun 2018 13:38:08 +0200
+Message-ID: <20180614133808.31c99e11@bbrezillon>
+References: <1528953067-24324-1-git-send-email-yamada.masahiro@socionext.com>
+        <6557713.S7AzxIg9TS@blindfold>
+        <CAK7LNASoV9nHTFax1nD_8pvkEjTzXkFpDFRf_xuoOnPPf9K23A@mail.gmail.com>
+        <20180614093835.5c3bf426@bbrezillon>
+        <CAK7LNARfnTtESsVdUtvreLh50+awtL42nCLY9tHzbp2UN2kpBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612192636.GA31725@rob-hp-laptop>
-Content-Language: en-us
+In-Reply-To: <CAK7LNARfnTtESsVdUtvreLh50+awtL42nCLY9tHzbp2UN2kpBw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Rob Herring' <robh@kernel.org>
-Cc: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, linux-scsi@vger.kernel.org, 'Mark Rutland' <mark.rutland@arm.com>, 'Mathieu Malaterre' <malat@debian.org>, "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" <devicetree@vger.kernel.org>, 'open list' <linux-kernel@vger.kernel.org>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Brian Norris <computersforpeace@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Philipp Rosenberger <p.rosenberger@linutronix.de>, Richard Weinberger <richard@sigma-star.at>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Comment inline.
+On Thu, 14 Jun 2018 20:31:59 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-Thanks,
-Sayali
------Original Message-----
-From: Rob Herring [mailto:robh@kernel.org] 
-Sent: Wednesday, June 13, 2018 12:57 AM
-To: Sayali Lokhande <sayalil@codeaurora.org>
-Cc: subhashj@codeaurora.org; cang@codeaurora.org;
-vivek.gautam@codeaurora.org; rnayak@codeaurora.org; vinholikatti@gmail.com;
-jejb@linux.vnet.ibm.com; martin.petersen@oracle.com;
-asutoshd@codeaurora.org; evgreen@chromium.org; linux-scsi@vger.kernel.org;
-Mark Rutland <mark.rutland@arm.com>; Mathieu Malaterre <malat@debian.org>;
-open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-<devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock
-setting
-
-On Fri, Jun 08, 2018 at 04:36:28PM +0530, Sayali Lokhande wrote:
-> From: Subhash Jadavani <subhashj@codeaurora.org>
+> Hi Boris,
 > 
-> UFS host supplies the reference clock to UFS device and UFS device 
-> specification allows host to provide one of the 4 frequencies (19.2 
-> MHz,
-> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the 
-> device reference clock frequency setting in the device based on what 
-> frequency it is supplying to UFS device.
+> 2018-06-14 16:38 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+> > On Thu, 14 Jun 2018 16:29:59 +0900
+> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> >  
+> >> Hi Richard,
+> >>
+> >> 2018-06-14 16:25 GMT+09:00 Richard Weinberger <richard@sigma-star.at>:  
+> >> > Masahiro,
+> >> >
+> >> > Am Donnerstag, 14. Juni 2018, 07:11:04 CEST schrieb Masahiro Yamada:  
+> >> >>
+> >> >> The ->setup_data_interface() hook needs to know the clock frequency.
+> >> >> In fact, this IP needs three clocks, bus "which clock?" is really
+> >> >> confusing.  (It is not described in the DT-binding at all.)
+> >> >>
+> >> >> This series adds more clocks.  In the new binding, three clocks
+> >> >> are required: core clock, bus interface clock, ECC engine clock.
+> >> >>
+> >> >> This series also takes care of the backward compatibility by
+> >> >> providing hardcoded values in case the new clocks are missing.
+> >> >> So, existing DT should work.
+> >> >>
+> >> >>
+> >> >> Changes in v2:
+> >> >>   - Split patches into sensible chunks
+> >> >>
+> >> >> Masahiro Yamada (3):
+> >> >>   mtd: rawnand: denali_dt: use dev as a shorthand of &pdev->dev
+> >> >>   mtd: rawnand: denali_dt: add more clocks based on IP datasheet
+> >> >>   mtd: rawnand: denali: optimize timing parameters for data interface  
+> >> >
+> >> > This still means that we need to feed at least 2/3 and 3/3 into -stable to
+> >> > unbreak the driver.  
+> >>
+> >>
+> >> 3/3 is not mandatory.
+> >>
+> >> You can only back-port 1/3 and 2/3.  
+> >
+> > Well, patch 1 is not a fix, can we move it after patch 2 so that only
+> > patch 2 is flagged with the Fixes+Cc-stable tags?  
 > 
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
->  drivers/scsi/ufs/ufs.h                             |  9 ++++
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
->  drivers/scsi/ufs/ufshcd.c                          | 52
-++++++++++++++++++++++
->  drivers/scsi/ufs/ufshcd.h                          |  1 +
->  5 files changed, 93 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt 
-> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index c39dfef..4522434 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -41,6 +41,12 @@ Optional properties:
->  -lanes-per-direction	: number of lanes available per direction - either 1
-or 2.
->  			  Note that it is assume same number of lanes is
-used both
->  			  directions at once. If not specified, default is 2
-lanes per direction.
-> +- dev-ref-clk-freq	: Specify the device reference clock frequency, must
-be one of the following:
-> +			  0: 19.2 MHz
-> +			  1: 26 MHz
-> +			  2: 38.4 MHz
-> +			  3: 52 MHz
-> +			  Defaults to 26 MHz if not specified.
+> OK, will do that.
+> 
+> If you try to port this back to v4.14.*
+> you need to fix-up the file path
+> since the driver did not reside in the raw/ sub-directory at that time.
 
-I must have misunderstood your last response. I thought you could handle
-things without DT. If not, my question remains.
-[Sayali]: Ref clk frequency setting could vary from
-platfrom-to-platform(vendor specific). Hence we need to pass it via DT.
-	Currently in DT we do not set/mention any ref clk frequency
-parameter. Hence I have added one new DT entry to configure
-	required ref clk freq.
-
-Rob
+Yes I know :-/. We'll do that when we receive GKH's notification
+saying that the patch does not apply.
