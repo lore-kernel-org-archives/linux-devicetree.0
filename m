@@ -1,31 +1,33 @@
-Return-Path: <SRS0=/LF/=IT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:40584 "EHLO
+Return-Path: <SRS0=mOcJ=JA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:46554 "EHLO
         hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750718AbeFAI72 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 1 Jun 2018 04:59:28 -0400
+        by vger.kernel.org with ESMTP id S1752767AbeFNM3m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Jun 2018 08:29:42 -0400
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 0/2] Dongwoon dw9807
-Date: Fri,  1 Jun 2018 11:59:23 +0300
-Message-Id: <20180601085925.10107-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 0/2] Support rotation property for smia sensors
+Date: Thu, 14 Jun 2018 15:29:37 +0300
+Message-Id: <20180614122939.21257-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, bingbu.cao@linux.intel.com, tian.shu.qiu@linux.intel.com, rajmohan.mani@intel.com
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Just posting this after squashing the vcm-only bit to the compatible string.
+Hi folks,
 
-Alan Chiang (2):
-  media: dt-bindings: Add bindings for Dongwoon DW9807 voice coil
-  media: dw9807: Add dw9807 vcm driver
+This is an earlier patch "smiapp: Support the "upside-down" property"
+split into two -- the DT binding change and a driver change.
 
- .../bindings/media/i2c/dongwoon,dw9807.txt         |   9 +
- MAINTAINERS                                        |   7 +
- drivers/media/i2c/Kconfig                          |  10 +
- drivers/media/i2c/Makefile                         |   1 +
- drivers/media/i2c/dw9807.c                         | 329 +++++++++++++++++++++
- 5 files changed, 356 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
- create mode 100644 drivers/media/i2c/dw9807.c
+The only change is in DT bindings --- an added reference to
+video-interfaces.txt in rotation property documentation.
+
+Sakari Ailus (2):
+  dt-bindings: smia: Add "rotation" property
+  smiapp: Support the "rotation" property
+
+ .../devicetree/bindings/media/i2c/nokia,smia.txt         |  3 +++
+ drivers/media/i2c/smiapp/smiapp-core.c                   | 16 ++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
 -- 
 2.11.0
