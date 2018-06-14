@@ -1,111 +1,76 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v3 7/7] soc: qcom: rpmpd/rpmhpd: Add a max vote on all
- corners at init
-Date: Thu, 14 Jun 2018 12:05:55 +0530
-Message-ID: <f5014664-1639-c610-a50a-db66484428dc@codeaurora.org>
-References: <20180612044052.4402-1-rnayak@codeaurora.org>
- <20180612044052.4402-8-rnayak@codeaurora.org>
- <414598de-00a1-9ce7-3a7e-4a95fd1bd35d@codeaurora.org>
+From: "Wu, Songjun" <songjun.wu@linux.intel.com>
+Subject: Re: [PATCH 7/7] tty: serial: lantiq: Add CCF support
+Date: Thu, 14 Jun 2018 14:38:06 +0800
+Message-ID: <0c62efdb-9a23-3514-352c-a9689aacc1a5@linux.intel.com>
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+ <20180612054034.4969-8-songjun.wu@linux.intel.com>
+ <20180612223953.GA21621@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <414598de-00a1-9ce7-3a7e-4a95fd1bd35d@codeaurora.org>
+In-Reply-To: <20180612223953.GA21621@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 06/14/2018 03:58 AM, David Collins wrote:
-> Hello Rajendra,
-> 
-> On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
->> As we move from no clients/consumers in kernel voting on corners,
->> to *some* voting and some not voting, we might end up in a situation
->> where the clients which remove votes can adversly impact others
-> 
-> s/adversly/adversely/
-> 
->> who still don't have a way to vote.
+On 6/13/2018 6:39 AM, Rob Herring wrote:
+> On Tue, Jun 12, 2018 at 01:40:34PM +0800, Songjun Wu wrote:
+>> Previous implementation uses platform-dependent API to get the clock.
+>> Those functions are not available for other SoC which uses the same IP.
+>> The CCF (Common Clock Framework) have an abstraction based APIs
+>> for clock.
+>> Change to use CCF APIs to get clock and rate.
+>> So that different SoCs can use the same driver.
+>> Clocks and clock-names are updated in device tree binding.
 >>
->> To avoid this situation, have a max vote on all corners at init.
->> This should/can be removed once we have all clients moved to
->> be able to vote/unvote for themselves.
-> 
-> This change seems like a hack.  Do you intend for it to be merged and then
-> later reverted in Linus's tree?  Could it instead be implemented in a way
-> that does not require reverting and instead is enabled by some DT
-> property?  Alternatively, could this feature be added to the power domain
-> core since it is relatively generic?
-> 
-> 
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
+>>
 >> ---
->>  drivers/soc/qcom/rpmhpd.c | 12 +++++++++++-
->>  drivers/soc/qcom/rpmpd.c  |  9 +++++++++
->>  2 files changed, 20 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
->> index 7083ec1590ff..3c753d33aeee 100644
->> --- a/drivers/soc/qcom/rpmhpd.c
->> +++ b/drivers/soc/qcom/rpmhpd.c
->> @@ -329,7 +329,7 @@ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
->>  
->>  static int rpmhpd_probe(struct platform_device *pdev)
->>  {
->> -	int i, ret;
->> +	int i, ret, max_level;
->>  	size_t num;
->>  	struct genpd_onecell_data *data;
->>  	struct rpmhpd **rpmhpds;
->> @@ -390,6 +390,16 @@ static int rpmhpd_probe(struct platform_device *pdev)
->>  		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
->>  
->>  		data->domains[i] = &rpmhpds[i]->pd;
+>>   .../devicetree/bindings/serial/lantiq_asc.txt      |  15 +++
+> Please split bindings to separate patch.
+Thanks.
+It will be split to two separate patches, one for bindings, the other 
+for code.
+>>   drivers/tty/serial/Kconfig                         |   2 +-
+>>   drivers/tty/serial/lantiq.c                        | 101 +++++++++++++++++----
+>>   3 files changed, 98 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.txt b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
+>> index 3acbd309ab9d..608f0c87a4af 100644
+>> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.txt
+>> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
+>> @@ -6,6 +6,10 @@ Required properties:
+>>   - interrupts: the 3 (tx rx err) interrupt numbers. The interrupt specifier
+>>     depends on the interrupt-parent interrupt controller.
+>>   
+>> +Optional properties:
+>> +- clocks: Should contain frequency clock and gate clock
+>> +- clock-names: Should be "freq" and "asc"
 >> +
->> +		/*
->> +		 * Until we have all consumers voting on corners
->> +		 * just vote the max corner on all PDs
->> +		 * This should ideally be *removed* once we have
->> +		 * all (most) consumers being able to vote
->> +		 */
->> +		max_level = rpmhpds[i]->level_count - 1;
->> +		rpmhpd_set_performance(&rpmhpds[i]->pd, rpmhpds[i]->level[max_level]);
->> +		rpmhpd_power_on(&rpmhpds[i]->pd);
-> 
-> Clearly these calls will result in max level requests being sent for all
-> power domains at probe time.  However, it isn't clear that this will
-> actually help at runtime in these two cases:
-> 
-> 1. A consumer enables and then disables a power domain.
-> 	- It seems like the PD would just be disabled in this case.
-> 
-> 2. A consumer sets a non-max performance state of a power domain.
-> 	- It seems like the PD would just be set to the new lower
-> 	  performance state since the max vote isn't known to the
-> 	  PD core for aggregation purposes.
-
-Yes, you are right. I certainly did not seem to have thought through this enough.
-
-A need for something like this came up at a point where genpd could not deal with
-devices with multiple power domains. So the concern at that point was that if some
-consumers (which only need to vote on one corner) move to using this driver, while 
-some others (which need to vote on multiple corners) cannot, we would end up breaking
-them.
-
-That does not seem to be true anymore since we do have patches from Ulf which support
-having devices with multiple power domains attached which can be controlled individually.
-So if some consumer voting makes some others break, they should just be fixed and patched
-to vote as well. If all this gets handled centrally from within the clock drivers then we
-most likely won't even end up with a situation like this.
-
-I think I will just drop this one unless Stephen/Viresh still see an issue with some early
-voters breaking others.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+>>   Example:
+>>   
+>>   asc1: serial@e100c00 {
+>> @@ -14,3 +18,14 @@ asc1: serial@e100c00 {
+>>   	interrupt-parent = <&icu0>;
+>>   	interrupts = <112 113 114>;
+>>   };
+>> +
+>> +asc0: serial@600000 {
+>> +	compatible = "lantiq,asc";
+>> +	reg = <0x600000 0x100000>;
+> 1MB of address space? That wastes a lot of virtual space on 32-bit
+> systems. Just make the size the actual used range.
+The size of address space will be updated to the actual used range.
+>> +	interrupt-parent = <&gic>;
+>> +	interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
+>> +	<GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
+>> +	<GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
+>> +	clocks = <&pll0aclk SSX4_CLK>, <&clkgate1 GATE_URT_CLK>;
+>> +	clock-names = "freq", "asc";
+>> +};
