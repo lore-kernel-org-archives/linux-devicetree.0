@@ -1,11 +1,15 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2] ARM: dts: add Raspberry Pi Compute Module and IO board
-Date: Thu, 14 Jun 2018 21:50:04 +0200
-Message-ID: <1529005804-3065-1-git-send-email-stefan.wahren@i2se.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v8 02/10] firmware: xilinx: Add Zynqmp firmware driver
+Date: Thu, 14 Jun 2018 13:40:59 -0700
+Message-ID: <7cd908ac-a0cc-3fd0-702f-d36a4e325a68@infradead.org>
+References: <1529000862-11510-1-git-send-email-jollys@xilinx.com>
+ <1529000862-11510-3-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1529000862-11510-3-git-send-email-jollys@xilinx.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,173 +19,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi Compute Module (CM1) is a SoM which contains a
-BCM2835 processor, 512 MB RAM and a 4 GB eMMC. There is also a carrier
-board which is called Compute Module IO Board.
+On 06/14/2018 11:27 AM, Jolly Shah wrote:
+> From: Rajan Vaja <rajanv@xilinx.com>
+> 
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
+Hi,
 
-Changes in V2:
-- fix HDMI detect polarity
-- drop dsi1 which prevent vc4 from probing
+> diff --git a/drivers/firmware/xilinx/Kconfig b/drivers/firmware/xilinx/Kconfig
+> new file mode 100644
+> index 0000000..cce4e4f
+> --- /dev/null
+> +++ b/drivers/firmware/xilinx/Kconfig
+> @@ -0,0 +1,16 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Kconfig for Xilinx firmwares
+> +
+> +menu "Zynq MPSoC Firmware Drivers"
+> +	depends on ARCH_ZYNQMP
+> +
+> +config ZYNQMP_FIRMWARE
+> +	bool "Enable Xilinx Zynq MPSoC firmware interface"
+> +	help
+> +	  Firmware interface driver is used by different to
 
- arch/arm/boot/dts/Makefile                |  1 +
- arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts | 88 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi    | 34 ++++++++++++
- 3 files changed, 123 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
+used by different <what>?  Missing something there.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 37a3de7..07b306f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -73,6 +73,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-b-rev2.dtb \
- 	bcm2835-rpi-b-plus.dtb \
- 	bcm2835-rpi-a-plus.dtb \
-+	bcm2835-rpi-cm1-io1.dtb \
- 	bcm2836-rpi-2-b.dtb \
- 	bcm2837-rpi-3-b.dtb \
- 	bcm2837-rpi-3-b-plus.dtb \
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
-new file mode 100644
-index 0000000..4764a25
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+#include "bcm2835-rpi-cm1.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,compute-module", "brcm,bcm2835";
-+	model = "Raspberry Pi Compute Module IO board rev1";
-+};
-+
-+&gpio {
-+	/*
-+	 * This is based on the official GPU firmware DT blob.
-+	 *
-+	 * Legend:
-+	 * "NC" = not connected (no rail from the SoC)
-+	 * "FOO" = GPIO line named "FOO" on the schematic
-+	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
-+	 */
-+	gpio-line-names = "GPIO0",
-+			  "GPIO1",
-+			  "GPIO2",
-+			  "GPIO3",
-+			  "GPIO4",
-+			  "GPIO5",
-+			  "GPIO6",
-+			  "GPIO7",
-+			  "GPIO8",
-+			  "GPIO9",
-+			  "GPIO10",
-+			  "GPIO11",
-+			  "GPIO12",
-+			  "GPIO13",
-+			  "GPIO14",
-+			  "GPIO15",
-+			  "GPIO16",
-+			  "GPIO17",
-+			  "GPIO18",
-+			  "GPIO19",
-+			  "GPIO20",
-+			  "GPIO21",
-+			  "GPIO22",
-+			  "GPIO23",
-+			  "GPIO24",
-+			  "GPIO25",
-+			  "GPIO26",
-+			  "GPIO27",
-+			  "GPIO28",
-+			  "GPIO29",
-+			  "GPIO30",
-+			  "GPIO31",
-+			  "GPIO32",
-+			  "GPIO33",
-+			  "GPIO34",
-+			  "GPIO35",
-+			  "GPIO36",
-+			  "GPIO37",
-+			  "GPIO38",
-+			  "GPIO39",
-+			  "GPIO40",
-+			  "GPIO41",
-+			  "GPIO42",
-+			  "GPIO43",
-+			  "GPIO44",
-+			  "GPIO45",
-+			  "HDMI_HPD_N",
-+			  /* Also used as ACT LED */
-+			  "EMMC_EN_N",
-+			  /* Used by eMMC */
-+			  "SD_CLK_R",
-+			  "SD_CMD_R",
-+			  "SD_DATA0_R",
-+			  "SD_DATA1_R",
-+			  "SD_DATA2_R",
-+			  "SD_DATA3_R";
-+
-+	pinctrl-0 = <&gpioout &alt0>;
-+};
-+
-+&hdmi {
-+	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_gpio14>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi b/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
-new file mode 100644
-index 0000000..ef22c2d
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-rpi-cm1.dtsi
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+#include "bcm2835.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+
-+/ {
-+	leds {
-+		act {
-+			gpios = <&gpio 47 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	reg_3v3: fixed-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_1v8: fixed-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&sdhost {
-+	non-removable;
-+	vmmc-supply = <&reg_3v3>;
-+	vqmmc-supply = <&reg_1v8>;
-+};
+> +	  communicate with the firmware for various platform
+> +	  management services.
+> +	  Say yes to enable ZynqMP firmware interface driver.
+> +	  In doubt, say N
+
+	  If in doubt, say N.
+
+> +
+> +endmenu
+
+
 -- 
-2.7.4
+~Randy
