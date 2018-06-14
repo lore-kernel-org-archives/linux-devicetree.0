@@ -1,73 +1,169 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 14 Jun 2018 17:15:42 +0900
-Message-ID: <20180614081541.zlxu6ga47gdg42un@ninjato>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
- <20180330074751.25987-2-boris.brezillon@bootlin.com>
- <20180614041941.4i2cadzoevujmzha@ninjato>
- <20180614090758.17180594@bbrezillon>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: Re: [PATCH v7 3/6] mfd: at91-usart: added mfd driver for usart
+Date: Thu, 14 Jun 2018 11:22:25 +0300
+Message-ID: <1086330e-40e4-8d9b-50aa-1ae9bf48aa22@microchip.com>
+References: <20180613163621.23995-1-radu.pirea@microchip.com>
+ <20180613163621.23995-4-radu.pirea@microchip.com>
+ <20180614075849.dfiqwcu6rtzgpzq7@rfolt0960.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7unw2cj2dmujiusg"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180614090758.17180594@bbrezillon>
+In-Reply-To: <20180614075849.dfiqwcu6rtzgpzq7@rfolt0960.corp.atmel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <gala>
+To: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, lee.jones@linaro.org, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---7unw2cj2dmujiusg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
+On 06/14/2018 10:58 AM, Ludovic Desroches wrote:
+> On Wed, Jun 13, 2018 at 07:36:18PM +0300, Radu Pirea wrote:
+>> This mfd driver is just a wrapper over atmel_serial driver and
+>> spi-at91-usart driver. Selection of one of the drivers is based on a
+>> property from device tree. If the property is not specified, the default
+>> driver is atmel_serial.
+>>
+>> Signed-off-by: Radu Pirea <radu.pirea@microchip.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+>> ---
+>>   drivers/mfd/Kconfig      |  9 ++++++
+>>   drivers/mfd/Makefile     |  1 +
+>>   drivers/mfd/at91-usart.c | 69 ++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 79 insertions(+)
+>>   create mode 100644 drivers/mfd/at91-usart.c
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index b860eb5aa194..a886672b960d 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -99,6 +99,15 @@ config MFD_AAT2870_CORE
+>>   	  additional drivers must be enabled in order to use the
+>>   	  functionality of the device.
+>>   
+>> +config MFD_AT91_USART
+>> +	tristate "AT91 USART Driver"
+>> +	select MFD_CORE
+>> +	help
+>> +	  Select this to get support for AT91 USART IP. This is a wrapper
+>> +	  over at91-usart-serial driver and usart-spi-driver. Only one function
+>> +	  can be used at a time. The choice is done at boot time by the probe
+>> +	  function of this MFD driver according to a device tree property.
+>> +
+>>   config MFD_ATMEL_FLEXCOM
+>>   	tristate "Atmel Flexcom (Flexible Serial Communication Unit)"
+>>   	select MFD_CORE
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index d9d2cf0d32ef..db1332aa96db 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -185,6 +185,7 @@ obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
+>>   obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
+>>   obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
+>>   obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
+>> +obj-$(CONFIG_MFD_AT91_USART)	+= at91-usart.o
+>>   obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+= atmel-flexcom.o
+>>   obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
+>>   obj-$(CONFIG_MFD_ATMEL_SMC)	+= atmel-smc.o
+>> diff --git a/drivers/mfd/at91-usart.c b/drivers/mfd/at91-usart.c
+>> new file mode 100644
+>> index 000000000000..3014ce532644
+>> --- /dev/null
+>> +++ b/drivers/mfd/at91-usart.c
+>> @@ -0,0 +1,69 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Driver for AT91 USART
+>> + *
+>> + * Copyright (C) 2018 Microchip Technology
+>> + *
+>> + * Author: Radu Pirea <radu.pirea@microchip.com>
+>> + *
+>> + */
+>> +
+>> +#include <dt-bindings/mfd/at91-usart.h>
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/property.h>
+>> +
+>> +static struct mfd_cell at91_usart_spi_subdev = {
+>> +		.name = "at91_usart_spi",
+>> +		.of_compatible = "microchip,at91sam9g45-usart-spi",
+>> +	};
+>> +
+>> +static struct mfd_cell at91_usart_serial_subdev = {
+>> +		.name = "atmel_usart_serial",
+>> +		.of_compatible = "atmel,at91rm9200-usart-serial",
+>> +	};
+>> +
+>> +static int at91_usart_mode_probe(struct platform_device *pdev)
+>> +{
+>> +	struct mfd_cell cell;
+>> +	u32 opmode = AT91_USART_MODE_SERIAL;
+>> +
+>> +	device_property_read_u32(&pdev->dev, "atmel,usart-mode", &opmode);
+>> +
+>> +	switch (opmode) {
+>> +	case AT91_USART_MODE_SPI:
+>> +		cell = at91_usart_spi_subdev;
+>> +		break;
+>> +	case AT91_USART_MODE_SERIAL:
+>> +		cell = at91_usart_serial_subdev;
+>> +		break;
+>> +	default:
+>> +		break;
+> 
+> If there is an invalid opmode from the DT, you will pass a non initialized cell
+> to mfd_add_device().
+> 
+> Regards
+> 
+> Ludovic
 
-> > I don't know if typical I3C transfers will be similar to I2C with
-> > usually small payloads where DMA usually makes not much sense. Yet, I
-> > think, that it might be a good idea to think about how this shall be
-> > handled with I3C right away. Maybe simply enforcing buffers to be
-> > DMA-safe. Or whatever.
-> >=20
-> > A clear rule on that might save you hazzle later.
->=20
-> I completely agree. I'll clarify that and for people to pass DMA-able
-> buffers to this struct (just as the SPI framework does). Note that we
+Hi Ludovic,
 
-Ok, cool!
+Tnx. That's true. How is better to do if atmel,usart-mode has an invalid 
+value? To initialize cell with at91_usart_serial_subdev or to print an 
+error message and return -EINVAL?
 
-> don't really have a way to ensure that the buffer is actually
-> DMA-safe from the core, because this notion is architecture/SoC
-> dependent.
-
-True, we can't ensure it at the core. Still, a documented rule will make
-it clear that everything else is considered a bug. Much better than a
-gray area you have to deal with later.
-
-Kind regards,
-
-   Wolfram
-
-
---7unw2cj2dmujiusg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsiJC0ACgkQFA3kzBSg
-KbZEnQ//dFjlQ2ROtEDcAOlzSfstcuOOulEjtSAycl1EYPFpn+G0xs/n3rHqiZmP
-wmjHmKAmqNHSAmyUSjlqCmXirzruB8Rln7eCb1OUFZSEyp2hDh3VA73xJaEdFOFF
-EgyoyN1SchNgUxeEj08r3zBDv5KFPh6dCEgIQOwFRB299v4BD6xS+O2gvzgveWGW
-oUXd8l1qeVBC25/DbnlxT0iqC/1q0U+usrR/Eu2KInztK5ug9vQ43hTkJaZ+SbiI
-cmKv0AOWAhd3wAtg5oCmFuC8tzIW07uq+RsDiRpsc6BFwKtNCAbhI3cUAy3CCI17
-5iCIqlCremt3nYLPERYwhVT10pM7j75mYqOsO7VQDsomFEyMWKxTp6DyqgIgRBJO
-EG4+9/rmHKPdbSSiWZ3GpVf/MFcdNlzRkN0+lzml5juz/SLaeyBr6Jxh5VxCzRLI
-yOnXfvPMEGFEr8E45vaoeOqpgm3cb0ivC4pgJ/buPDHiVetGAWHzF96sT3xSXYv5
-8PlJDovgHEPwuXPXvtPlpkBndzls7dKvW+Gmyz2czQphwHo+C9ww/PhpY16zSZRk
-dZbZU4V7OFmjO9bWPj1jWpLEnoYlrGMziOuX43CsCNOjSQe6oMEdXFZw5QjB2SQ1
-eSn45yFoypMWEvTZtZyP+wvHKcnYm7VxEYQWy9QAtaWzkEe1fWk=
-=x3M4
------END PGP SIGNATURE-----
-
---7unw2cj2dmujiusg--
+Regards.
+Radu Pirea
+> 
+>> +	}
+>> +
+>> +	return devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_AUTO, &cell, 1,
+>> +			      NULL, 0, NULL);
+>> +}
+>> +
+>> +static const struct of_device_id at91_usart_mode_of_match[] = {
+>> +	{ .compatible = "atmel,at91rm9200-usart" },
+>> +	{ .compatible = "atmel,at91sam9260-usart" },
+>> +	{ /* sentinel */ }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, at91_flexcom_of_match);
+>> +
+>> +static struct platform_driver at91_usart_mfd = {
+>> +	.probe	= at91_usart_mode_probe,
+>> +	.driver	= {
+>> +		.name		= "at91_usart_mode",
+>> +		.of_match_table	= at91_usart_mode_of_match,
+>> +	},
+>> +};
+>> +
+>> +module_platform_driver(at91_usart_mfd);
+>> +
+>> +MODULE_AUTHOR("Radu Pirea <radu.pirea@microchip.com>");
+>> +MODULE_DESCRIPTION("AT91 USART MFD driver");
+>> +MODULE_LICENSE("GPL v2");
+>> -- 
+>> 2.17.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
