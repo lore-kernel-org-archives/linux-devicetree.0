@@ -1,33 +1,51 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6qdl-sabreauto: Add sensors
-Date: Thu, 14 Jun 2018 10:17:20 +0000
-Message-ID: <a20cc6a0c278cc2791c0bdfc30a79b022de396ef.camel@nxp.com>
-References: <b31ca3ff50566c193003614d0bbf5e0a0e95901c.1528390418.git.leonard.crestez@nxp.com>
-         <CAOMZO5Czf1bO7vJZ1UG46DyVhzApqS82GFw+NFm_HN5tjD=xoQ@mail.gmail.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2 4/5] thermal: tsens: Add support for SDM845
+Date: Thu, 14 Jun 2018 13:24:28 +0300
+Message-ID: <CAHLCerOn=_29CAx0sdmyxt62duWOb5LfUvrAcWf7bBsE8OR_1g@mail.gmail.com>
+References: <cover.1528799892.git.amit.kucheria@linaro.org>
+ <f048a97d1599a54aef3d00126a379f4e5c937057.1528799892.git.amit.kucheria@linaro.org>
+ <CAFp+6iEnep3ogEkdfmaSOn_2w+09huae2NOwBF1o7-vn3iQMCA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5Czf1bO7vJZ1UG46DyVhzApqS82GFw+NFm_HN5tjD=xoQ@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <D3AF7A53089C9641B7FE44997B20215E@eurprd04.prod.outlook.com>
+In-Reply-To: <CAFp+6iEnep3ogEkdfmaSOn_2w+09huae2NOwBF1o7-vn3iQMCA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Duan <fugang.duan@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "slongerbeam@gmail.com" <slongerbeam@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: open list <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE4LTA2LTA3IGF0IDE0OjA3IC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
-PiBIaSBMZW9uYXJkLA0KPiANCj4gT24gVGh1LCBKdW4gNywgMjAxOCBhdCAyOjAwIFBNLCBMZW9u
-YXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPiB3cm90ZToNCj4gDQo+ID4gKw0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlzbDI5MDIzQDQ0IHsNCj4gDQo+IEFjY29yZGlu
-ZyB0byBEZXZpY2V0cmVlIFNwZWNpZmljYXRpb24gdjAuMiBkb2N1bWVudDoNCj4gDQo+ICJUaGUg
-bmFtZSBvZiBhIG5vZGUgc2hvdWxkIGJlIHNvbWV3aGF0IGdlbmVyaWMsIHJlZmxlY3RpbmcgdGhl
-IGZ1bmN0aW9uDQo+IG9mIHRoZSBkZXZpY2UgYW5kIG5vdCBpdHMgcHJlY2lzZSBwcm9ncmFtbWlu
-ZyBtb2RlbC4iDQo+IA0KPiBTbyB5b3UgY291bGQgd3JpdGU6DQo+IA0KPiBsaWdodC1zZW5zb3JA
-NDQNCg0KT2ssIHdpbGwgZml4IGluIHYyLg0KDQpTaG91bGQgSSBhbHNvIGFzc2lnbiBhIGxhYmVs
-LCBsaWtlICJpc2wyOTAyMzogbGlnaHQtc2Vuc29yQDQ0Ij8gSQ0KY291bGRuJ3QgZmluZCBhbnkg
-cmVjb21tZW5kYXRpb24gb24gdGhpcy4NCg0KVGhlcmUgYXJlIG5vIGltbWVkaWF0ZSB1c2VzIGZv
-ciBhIGxhYmVsIGJ1dCB0aGlzIHByYWN0aWNlIGlzIHZlcnkNCmNvbW1vbi4gSGF2aW5nIGxhYmVs
-cyBhbGxvd3MgY3JlYXRpbmcgbWlub3IgYm9hcmQgdmFyaWFudHMgd2l0aCByZWR1Y2VkDQpjaHVy
-biBpbiB0aGUgYmFzZSBkdHMgc28gaXQgc2VlbXMgZ29vZC4NCg0KLS0NClJlZ2FyZHMsDQpMZW9u
-YXJk
+On Thu, Jun 14, 2018 at 9:48 AM, Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+> Hi Amit,
+>
+> On Tue, Jun 12, 2018 at 4:24 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>> SDM845 uses the TSENS v2 IP block
+>>
+>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> ---
+
+<snip>
+
+>> +
+>> +static const struct tsens_ops ops_sdm845 = {
+>> +       .init           = init_common,
+>> +       .get_temp       = get_temp_tsens_v2,
+>> +};
+>> +
+>> +const struct tsens_data data_sdm845 = {
+>
+> Just a minor nit. 'static' here?
+
+Thanks for the review.
+
+This file just went away in favour of a common tsens-v2.c that will
+support all v2 SoCs. I'll be sending out an updated patchset soon.
+
+>
+>> +       .ops            = &ops_sdm845,
+>> +};
+>
+> [snip]
+>
+> Thanks & Regards
+> Vivek
