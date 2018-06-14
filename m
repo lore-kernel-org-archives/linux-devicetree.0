@@ -1,35 +1,76 @@
-From: Bart Van Assche <Bart.VanAssche@wdc.com>
-Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
-Date: Thu, 14 Jun 2018 13:35:08 +0000
-Message-ID: <33eec86a35248e5b20f15bb568641b9affcc0a9b.camel@wdc.com>
-References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
-         <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
-         <20180612192636.GA31725@rob-hp-laptop>
-         <000101d403d3$87210d20$95632760$@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: pxa: add binding for pxa2xx-ac97
+	audio complex
+Date: Thu, 14 Jun 2018 14:48:01 +0100
+Message-ID: <20180614134801.GB9660@sirena.org.uk>
+References: <20180611202211.15501-1-robert.jarzmik@free.fr>
+ <20180612221359.GA26741@rob-hp-laptop>
+ <87y3fiqzp8.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <000101d403d3$87210d20$95632760$@codeaurora.org>
-Content-Language: en-US
-Content-ID: <A551DE8273E98545AF0E04BE130E4A66@namprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "sayalil@codeaurora.org" <sayalil@codeaurora.org>, "robh@kernel.org" <robh@kernel.org>
-Cc: "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "evgreen@chromium.org" <evgreen@chromium.org>, "cang@codeaurora.org" <cang@codeaurora.org>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>, "rnayak@codeaurora.org" <rnayak@codeaurora.org>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "malat@debian.org" <malat@debian.org>
+Content-Type: multipart/mixed; boundary="===============2269405716902198881=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <87y3fiqzp8.fsf@belgarion.home>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE4LTA2LTE0IGF0IDE3OjAzICswNTMwLCBzYXlhbGkgd3JvdGU6DQo+IENvbW1l
-bnQgaW5saW5lLg0KDQpIZWxsbyBTYXlhbGksDQoNClBsZWFzZSBkb24ndCB1c2UgaW5saW5lIHJl
-cGxpZXMuIFRoYXQgbWFrZXMgaXQgdmVyeSBoYXJkIHRvIGZvbGxvdyB0aGUNCmNvbnZlcnNhdGlv
-bi4gQlRXLCBpbiB0aGUgaGVhZGVycyBvZiB5b3VyIGUtbWFpbCBJIGZvdW5kIHRoZSBmb2xsb3dp
-bmc6DQoiWC1NYWlsZXI6IE1pY3Jvc29mdCBPdXRsb29rIDE2LjAiLiBQbGVhc2UgdXNlIGFub3Ro
-ZXIgZS1tYWlsIGNsaWVudCB0aGF0IGlzDQpiZXR0ZXIgc3VpdGVkIGZvciBjb2xsYWJvcmF0aW9u
-IG9uIG9wZW4gc291cmNlIG1haWxpbmcgbGlzdHMuIElmIG91dGdvaW5nDQplLW1haWxzIGhhdmUg
-dG8gcGFzcyB0aHJvdWdoIGFuIEV4Y2hhbmdlIHNlcnZlciwgdGhlIGZvbGxvd2luZyBlLW1haWwg
-Y2xpZW50cw0Kc3VwcG9ydCBFeGNoYW5nZSBzZXJ2ZXJzIGFuZCBhcmUgYmV0dGVyIHN1aXRlZCBm
-b3Igb3BlbiBzb3VyY2UgY29sbGFib3JhdGlvbjoNCiogRXZvbHV0aW9uIChMaW51eCBvbmx5KS4N
-CiogVGh1bmRlcmJpcmQgKyBFeFF1aWxsYSBwbHVnaW4uDQoqIElmIElNQVAgaGFzIGJlZW4gZW5h
-YmxlZCBvbiB0aGUgRXhjaGFuZ2Ugc2VydmVyIHRoYXQgeW91IGFyZSB1c2luZyB0aGVuDQogIHRo
-YXQgbWVhbnMgdGhhdCB5b3UgY2FuIGNob29zZSBmcm9tIHRoZSBtYW55IG9wZW4gc291cmNlIGUt
-bWFpbCBjbGllbnRzDQogIHRoYXQgc3VwcG9ydCBJTUFQLg0KDQpUaGFua3MsDQoNCkJhcnQuDQoN
-Cg0KDQo=
+
+--===============2269405716902198881==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+Content-Disposition: inline
+
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 13, 2018 at 09:00:19PM +0200, Robert Jarzmik wrote:
+> Rob Herring <robh@kernel.org> writes:
+> > On Mon, Jun 11, 2018 at 10:22:10PM +0200, Robert Jarzmik wrote:
+
+> >> +Required properties:
+> >> +  - compatible: "marvell,pxa2xx-ac97"
+
+> > Don't use wildcards in compatible strings. Though this is so old...
+
+> Yes, I could use pxa270-ac97.
+
+If you're going to do that then probably best to put in a compatible
+string for each SoC since they are actually meaningfully different, they
+seemed to manage to break something with each new revision.
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlsichAACgkQJNaLcl1U
+h9CZ2wf2P8RJc94KqSk0E9cc7WOEzkM/bBC3w1dEkqBlm9nNNSmsUj81RlRFHpR2
+BQztdPntC3jxepVMpyTIOGOJEhoYiIcT9yAbgoujIkaSSERjxKFyoDb00tTStjtg
+6SQhPUnFDga+eXUiUhmfv8oFr4dP4PlEup43xoVnHhwLY6oo31MOVhQPrzHPb1uA
+OgbYVEG8RqatEsuk649UQ8KBEHKkWE3QCmb6vL0yGcZ8GVuaUrRh19gDEpX1ea3P
+ydTB/0L4gd7kMsk7LH1iwzcaD/mv1ztkw8m3NcQq9+i6hd0CGOp1G+T7YINvtism
+GESrxQk8QMvL13owbaCShtGsg15A
+=gAJc
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
+
+--===============2269405716902198881==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2269405716902198881==--
