@@ -1,36 +1,52 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: [PATCH v7 4/4] MAINTAINERS: Add entry for the Qualcomm BMS
-Date: Thu, 14 Jun 2018 16:14:17 +0100
-Message-ID: <20180614151435.6471-4-ctatlor97@gmail.com>
-References: <20180407135934.26122-1-ctatlor97@gmail.com>
- <20180614151435.6471-1-ctatlor97@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180614151435.6471-1-ctatlor97@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v3 2/4] dt-bindings: sram: Rename A64 SRAM
+ controller compatible
+Date: Thu, 14 Jun 2018 23:35:46 +0800
+Message-ID: <20180614153548.9644-3-wens@csie.org>
+References: <20180614153548.9644-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBWUWRLMQKGQE66HBUTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180614153548.9644-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+The SRAM mapping controls on Allwinner SoCs is located in a block called
+"System Controls". This block also has registers for identifying the SoC,
+reading the state of an external boot-related pin, and on some newer SoCs,
+glue layer controls for the EMAC Ethernet controller.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9c125f705f78..be485caf9313 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11646,6 +11646,12 @@ W:	http://wireless.kernel.org/en/users/Drivers/ath9k
- S:	Supported
- F:	drivers/net/wireless/ath/ath9k/
+The A64 variant compatible is renamed to "allwinner,a64-system-control"
+to reflect this. The old A64 compatible is deprecated. So far we haven't
+seen any actual use of it.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sram/sunxi-sram.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+index d087f04a4d7f..9ef40e2e0a48 100644
+--- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
++++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+@@ -11,7 +11,8 @@ Controller Node
+ Required properties:
+ - compatible : should be:
+     - "allwinner,sun4i-a10-sram-controller"
+-    - "allwinner,sun50i-a64-sram-controller"
++    - "allwinner,sun50i-a64-sram-controller" (deprecated)
++    - "allwinner,sun50i-a64-system-control"
+ - reg : sram controller register offset + length
  
-+QUALCOMM BATTERY MONITORING SYSTEM
-+M:	Craig Tatlor <ctatlor97@gmail.com>
-+L:	linux-pm@vger.kernel.org
-+S:	Maintained
-+F:	drivers/power/supply/qcom_bms.c
-+
- QUALCOMM CAMERA SUBSYSTEM DRIVER
- M:	Todor Tomov <todor.tomov@linaro.org>
- L:	linux-media@vger.kernel.org
+ SRAM nodes
 -- 
-2.17.0
+2.17.1
