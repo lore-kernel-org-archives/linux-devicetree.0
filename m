@@ -1,92 +1,161 @@
-Return-Path: <SRS0=3bjE=I5=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Mon, 11 Jun 2018 14:44:05 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 04/15] usb: typec: add fwnode to tcpc
-Message-ID: <20180611114405.GH17155@kuha.fi.intel.com>
-References: <1527475967-15201-1-git-send-email-jun.li@nxp.com>
- <1527475967-15201-5-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=hSlk=JA=linux.intel.com=songjun.wu@kernel.org>
+Subject: Re: [PATCH 1/7] MIPS: dts: Add aliases node for lantiq danube serial
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+ <20180612054034.4969-2-songjun.wu@linux.intel.com>
+ <20180612222424.GA2197@rob-hp-laptop>
+From: "Wu, Songjun" <songjun.wu@linux.intel.com>
+Message-ID: <9fee8672-f518-eae5-e012-bb718106217b@linux.intel.com>
+Date: Thu, 14 Jun 2018 14:19:35 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1527475967-15201-5-git-send-email-jun.li@nxp.com>
-To: Li Jun <jun.li@nxp.com>
-Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, linux@roeck-us.net, cw00.choi@samsung.com, a.hajda@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, garsilva@embeddedor.com, gsomlo@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <20180612222424.GA2197@rob-hp-laptop>
+Content-Type: multipart/alternative;
+ boundary="------------7E657573CA43B7DE37B04C05"
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, May 28, 2018 at 10:52:36AM +0800, Li Jun wrote:
-> Add fwnode handle to get the fwnode so we can get typec configs
-> it contains.
-> 
-> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Li Jun <jun.li@nxp.com>
+This is a multi-part message in MIME format.
+--------------7E657573CA43B7DE37B04C05
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-> ---
->  drivers/staging/typec/tcpci.c | 7 +++++++
->  drivers/usb/typec/tcpm.c      | 1 +
->  include/linux/usb/tcpm.h      | 2 ++
->  3 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index dd29288..e59547a 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -10,6 +10,7 @@
->  #include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/usb/pd.h>
->  #include <linux/usb/tcpm.h>
-> @@ -474,6 +475,12 @@ static int tcpci_parse_config(struct tcpci *tcpci)
->  
->  	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
->  	tcpci->tcpc.config = &tcpci_tcpc_config;
-> +	tcpci->tcpc.fwnode = device_get_named_child_node(tcpci->dev,
-> +							 "connector");
-> +	if (!tcpci->tcpc.fwnode) {
-> +		dev_err(tcpci->dev, "Can't find connector node.\n");
-> +		return -EINVAL;
-> +	}
->  
->  	return 0;
->  }
-> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-> index 0ccd2ce..fcd22e8 100644
-> --- a/drivers/usb/typec/tcpm.c
-> +++ b/drivers/usb/typec/tcpm.c
-> @@ -4581,6 +4581,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
->  	else
->  		port->try_role = TYPEC_NO_PREFERRED_ROLE;
->  
-> +	port->typec_caps.fwnode = tcpc->fwnode;
->  	port->typec_caps.prefer_role = tcpc->config->default_role;
->  	port->typec_caps.type = tcpc->config->type;
->  	port->typec_caps.data = tcpc->config->data;
-> diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-> index b231b93..193920a 100644
-> --- a/include/linux/usb/tcpm.h
-> +++ b/include/linux/usb/tcpm.h
-> @@ -110,6 +110,7 @@ enum tcpc_mux_mode {
->  /**
->   * struct tcpc_dev - Port configuration and callback functions
->   * @config:	Pointer to port configuration
-> + * @fwnode:	Pointer to port fwnode
->   * @get_vbus:	Called to read current VBUS state
->   * @get_current_limit:
->   *		Optional; called by the tcpm core when configured as a snk
-> @@ -138,6 +139,7 @@ enum tcpc_mux_mode {
->   */
->  struct tcpc_dev {
->  	const struct tcpc_config *config;
-> +	struct fwnode_handle *fwnode;
->  
->  	int (*init)(struct tcpc_dev *dev);
->  	int (*get_vbus)(struct tcpc_dev *dev);
-> -- 
-> 2.7.4
 
+On 6/13/2018 6:24 AM, Rob Herring wrote:
+> On Tue, Jun 12, 2018 at 01:40:28PM +0800, Songjun Wu wrote:
+>> Previous implementation uses a hard-coded register value to check if
+>> the current serial entity is the console entity.
+>> Now the lantiq serial driver uses the aliases for the index of the
+>> serial port.
+>> The lantiq danube serial dts are updated with aliases to support this.
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
+>> ---
+>>
+>>   arch/mips/boot/dts/lantiq/danube.dtsi | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
+>> index 2dd950181f8a..7a9e15da6bd0 100644
+>> --- a/arch/mips/boot/dts/lantiq/danube.dtsi
+>> +++ b/arch/mips/boot/dts/lantiq/danube.dtsi
+>> @@ -4,6 +4,10 @@
+>>   	#size-cells = <1>;
+>>   	compatible = "lantiq,xway", "lantiq,danube";
+>>   
+>> +	aliases {
+>> +		serial0 = &asc1;
+>> +	};
+>> +
+>>   	cpus {
+>>   		cpu@0 {
+>>   			compatible = "mips,mips24Kc";
+>> @@ -74,7 +78,7 @@
+>>   			reg = <0xE100A00 0x100>;
+>>   		};
+>>   
+>> -		serial@E100C00 {
+>> +		asc1: serial@E100C00 {
+> Fix this to be lower case hex while you are at it.
+Thanks.
+All the upper case in unit-address and hex constants will be changed to 
+lower case according to the Linux conventions.
+>
+>>   			compatible = "lantiq,asc";
+>>   			reg = <0xE100C00 0x400>;
+>>   			interrupt-parent = <&icu0>;
+>> -- 
+>> 2.11.0
+>>
+
+
+--------------7E657573CA43B7DE37B04C05
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p><br>
+    </p>
+    <br>
+    <div class="moz-cite-prefix">On 6/13/2018 6:24 AM, Rob Herring
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:20180612222424.GA2197@rob-hp-laptop">
+      <pre wrap="">On Tue, Jun 12, 2018 at 01:40:28PM +0800, Songjun Wu wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">Previous implementation uses a hard-coded register value to check if
+the current serial entity is the console entity.
+Now the lantiq serial driver uses the aliases for the index of the
+serial port.
+The lantiq danube serial dts are updated with aliases to support this.
+
+Signed-off-by: Songjun Wu <a class="moz-txt-link-rfc2396E" href="mailto:songjun.wu@linux.intel.com">&lt;songjun.wu@linux.intel.com&gt;</a>
+---
+
+ arch/mips/boot/dts/lantiq/danube.dtsi | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
+index 2dd950181f8a..7a9e15da6bd0 100644
+--- a/arch/mips/boot/dts/lantiq/danube.dtsi
++++ b/arch/mips/boot/dts/lantiq/danube.dtsi
+@@ -4,6 +4,10 @@
+ 	#size-cells = &lt;1&gt;;
+ 	compatible = "lantiq,xway", "lantiq,danube";
+ 
++	aliases {
++		serial0 = &amp;asc1;
++	};
++
+ 	cpus {
+ 		cpu@0 {
+ 			compatible = "mips,mips24Kc";
+@@ -74,7 +78,7 @@
+ 			reg = &lt;0xE100A00 0x100&gt;;
+ 		};
+ 
+-		serial@E100C00 {
++		asc1: serial@E100C00 {
+</pre>
+      </blockquote>
+      <pre wrap="">
+Fix this to be lower case hex while you are at it.</pre>
+    </blockquote>
+    Thanks.<br>
+    All the <span class="fontstyle0">upper case in unit-address and hex
+      constants will be changed to lower case according to the Linux
+      conventions.</span><br style=" font-style: normal; font-variant:
+      normal; font-weight: normal; letter-spacing: normal; line-height:
+      normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px;
+      text-transform: none; white-space: normal; widows: 2;
+      word-spacing: 0px; -webkit-text-size-adjust: auto;
+      -webkit-text-stroke-width: 0px; ">
+    <blockquote type="cite"
+      cite="mid:20180612222424.GA2197@rob-hp-laptop">
+      <pre wrap="">
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap=""> 			compatible = "lantiq,asc";
+ 			reg = &lt;0xE100C00 0x400&gt;;
+ 			interrupt-parent = &lt;&amp;icu0&gt;;
 -- 
-heikki
+2.11.0
+
+</pre>
+      </blockquote>
+      <pre wrap="">
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------7E657573CA43B7DE37B04C05--
