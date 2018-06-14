@@ -1,146 +1,282 @@
-From: yixin zhu <yixin.zhu@linux.intel.com>
-Subject: Re: [PATCH 2/7] clk: intel: Add clock driver for GRX500 SoC
-Date: Thu, 14 Jun 2018 16:40:22 +0800
-Message-ID: <41163f48-ce5c-efae-2b6d-b93d75e422e5@linux.intel.com>
-References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
- <20180612054034.4969-3-songjun.wu@linux.intel.com>
- <20180612223725.GC2197@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Ben Whitten <ben.whitten@gmail.com>
+Subject: [PATCH 1/4] arm: dts: add support for Laird WB45N cpu module and DVK
+Date: Thu, 14 Jun 2018 09:51:54 +0100
+Message-ID: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612223725.GC2197@rob-hp-laptop>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Songjun Wu <songjun.wu@linux.intel.com>
-Cc: hua.ma@linux.intel.com, chuanhua.lei@linux.intel.com, linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: devicetree@vger.kernel.org
+Cc: Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+---
+ arch/arm/boot/dts/Makefile        |   3 +-
+ arch/arm/boot/dts/at91-wb45n.dts  |  66 +++++++++++++++
+ arch/arm/boot/dts/at91-wb45n.dtsi | 169 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 237 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/at91-wb45n.dts
+ create mode 100644 arch/arm/boot/dts/at91-wb45n.dtsi
 
-
-On 6/13/2018 6:37 AM, Rob Herring wrote:
-> On Tue, Jun 12, 2018 at 01:40:29PM +0800, Songjun Wu wrote:
->> From: Yixin Zhu <yixin.zhu@linux.intel.com>
->>
->> PLL of GRX500 provide clock to DDR, CPU, and peripherals as show below
->>
->>                   +---------+
->> 	    |--->| LCPLL3 0|--PCIe clk-->
->>     XO       |    +---------+
->> +-----------|
->>              |    +---------+
->>              |    |        3|--PAE clk-->
->>              |--->| PLL0B  2|--GSWIP clk-->
->>              |    |        1|--DDR clk-->DDR PHY clk-->
->>              |    |        0|--CPU1 clk--+   +-----+
->>              |    +---------+            |--->0    |
->>              |                               | MUX |--CPU clk-->
->>              |    +---------+            |--->1    |
->>              |    |        0|--CPU0 clk--+   +-----+
->>              |--->| PLLOA  1|--SSX4 clk-->
->>                   |        2|--NGI clk-->
->>                   |        3|--CBM clk-->
->>                   +---------+
->>
->> VCO of all PLLs of GRX500 is not supposed to be reprogrammed.
->> DDR PHY clock is created to show correct clock rate in software
->> point of view.
->> CPU clock of 1Ghz from PLL0B otherwise from PLL0A.
->> Signed-off-by: Yixin Zhu <yixin.zhu@linux.intel.com>
->>
->> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
-> 
-> Need a blank line before the SoB's and not one in the middle.
-Thanks.
-Blank line in the middle of sign-off will be removed.
-A new blank line will be added before SoB's.
-
-> 
->> ---
->>
->>   .../devicetree/bindings/clock/intel,grx500-clk.txt |  46 ++
-> 
-> Please split bindings to separate patch.
-> 
->>   drivers/clk/Kconfig                                |   1 +
->>   drivers/clk/Makefile                               |   1 +
->>   drivers/clk/intel/Kconfig                          |  21 +
->>   drivers/clk/intel/Makefile                         |   7 +
->>   drivers/clk/intel/clk-cgu-api.c                    | 676 +++++++++++++++++++++
->>   drivers/clk/intel/clk-cgu-api.h                    | 120 ++++
->>   drivers/clk/intel/clk-grx500.c                     | 236 +++++++
->>   include/dt-bindings/clock/intel,grx500-clk.h       |  61 ++
->>   9 files changed, 1169 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
->>   create mode 100644 drivers/clk/intel/Kconfig
->>   create mode 100644 drivers/clk/intel/Makefile
->>   create mode 100644 drivers/clk/intel/clk-cgu-api.c
->>   create mode 100644 drivers/clk/intel/clk-cgu-api.h
->>   create mode 100644 drivers/clk/intel/clk-grx500.c
->>   create mode 100644 include/dt-bindings/clock/intel,grx500-clk.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/intel,grx500-clk.txt b/Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
->> new file mode 100644
->> index 000000000000..dd761d900dc9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
->> @@ -0,0 +1,46 @@
->> +Device Tree Clock bindings for GRX500 PLL controller.
->> +
->> +This binding uses the common clock binding:
->> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +This GRX500 PLL controller provides the 5 main clock domain of the SoC: CPU/DDR, XBAR,
->> +Voice, WLAN, PCIe and gate clocks for HW modules.
->> +
->> +Required properties for osc clock node
->> +- compatible: Should be intel,grx500-xxx-clk
-> 
-> These would need to be enumerated with all possible values. However, see
-> below.
-All possible values will be listed.
-
-> 
->> +- reg: offset address of the controller memory area.
->> +- clocks: phandle of the external reference clock
->> +- #clock-cells: can be one or zero.
->> +- clock-output-names: Names of the output clocks.
->> +
->> +Example:
->> +	pll0aclk: pll0aclk {
->> +		#clock-cells = <1>;
->> +		compatible = "intel,grx500-pll0a-clk";
->> +		clocks = <&pll0a>;
->> +		reg = <0x8>;
->> +		clock-output-names = "cbmclk", "ngiclk", "ssx4clk", "cpu0clk";
->> +	};
->> +
->> +	cpuclk: cpuclk {
->> +		#clock-cells = <0>;
->> +		compatible = "intel,grx500-cpu-clk";
->> +		clocks = <&pll0aclk CPU0_CLK>, <&pll0bclk CPU1_CLK>;
->> +		reg = <0x8>;
->> +		clock-output-names = "cpu";
->> +	};
->> +
->> +Required properties for gate node:
->> +- compatible: Should be intel,grx500-gatex-clk
->> +- reg: offset address of the controller memory area.
->> +- #clock-cells: Should be <1>
->> +- clock-output-names: Names of the output clocks.
->> +
->> +Example:
->> +	clkgate0: clkgate0 {
->> +		#clock-cells = <1>;
->> +		compatible = "intel,grx500-gate0-clk";
->> +		reg = <0x114>;
->> +		clock-output-names = "gate_xbar0", "gate_xbar1", "gate_xbar2",
->> +		"gate_xbar3", "gate_xbar6", "gate_xbar7";
->> +	};
-> 
-> We generally don't do a clock node per clock or few clocks but rather 1
-> clock node per clock controller block. See any recent clock bindings.
-> 
-> Rob
-Do you mean only one example is needed per clock controller block?
-cpuclk is not needed in the document?
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7e24249..1ee94ee 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -42,7 +42,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+ 	at91sam9g25ek.dtb \
+ 	at91sam9g35ek.dtb \
+ 	at91sam9x25ek.dtb \
+-	at91sam9x35ek.dtb
++	at91sam9x35ek.dtb \
++	at91-wb45n.dtb
+ dtb-$(CONFIG_SOC_SAM_V7) += \
+ 	at91-kizbox2.dtb \
+ 	at91-nattis-2-natte-2.dtb \
+diff --git a/arch/arm/boot/dts/at91-wb45n.dts b/arch/arm/boot/dts/at91-wb45n.dts
+new file mode 100644
+index 0000000..4e88815
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-wb45n.dts
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-wb45n.dts - Device Tree file for WB45NBT board
++ *
++ *  Copyright (C) 2018 Laird
++ *
++*/
++/dts-v1/;
++#include "at91-wb45n.dtsi"
++
++/ {
++	model = "Laird Workgroup Bridge 45N - Atmel AT91SAM (dt)";
++	compatible = "laird,wb45n", "laird,wbxx", "atmel,at91sam9x5", "atmel,at91sam9";
++
++	ahb {
++		apb {
++			watchdog@fffffe40 {
++				status = "okay";
++			};
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		irqbtn@pb18 {
++			label = "IRQBTN";
++			linux,code = <99>;
++			gpios = <&pioB 18 GPIO_ACTIVE_LOW>;
++			gpio-key,wakeup = <1>;
++		};
++	};
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&mmc0 {
++	status = "okay";
++};
++
++&spi0 {
++	status = "okay";
++};
++
++&macb0 {
++	status = "okay";
++};
++
++&dbgu {
++	status = "okay";
++};
++
++&usart0 {
++	status = "okay";
++};
++
++&usart3 {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/at91-wb45n.dtsi b/arch/arm/boot/dts/at91-wb45n.dtsi
+new file mode 100644
+index 0000000..2fa58e2
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-wb45n.dtsi
+@@ -0,0 +1,169 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * at91-wb45n.dtsi - Device Tree file for WB45NBT board
++ *
++ *  Copyright (C) 2018 Laird
++ *
++ */
++
++#include "at91sam9g25.dtsi"
++
++/ {
++	model = "Laird Workgroup Bridge 45N - Atmel AT91SAM (dt)";
++	compatible = "laird,wb45n", "laird,wbxx", "atmel,at91sam9x5", "atmel,at91sam9";
++
++	chosen {
++		bootargs = "ubi.mtd=6 root=ubi0:rootfs rootfstype=ubifs rw";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x20000000 0x4000000>;
++	};
++
++	ahb {
++		apb {
++			shdwc@fffffe10 {
++				atmel,wakeup-mode = "low";
++			};
++
++			pinctrl@fffff400 {
++				usb2 {
++					pinctrl_board_usb2: usb2-board {
++						atmel,pins =
++							<AT91_PIOB 11 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;		/* PB11 gpio vbus sense, deglitch */
++					};
++				};
++			};
++
++			rstc@fffffe00 {
++				compatible = "atmel,sama5d3-rstc";
++			};
++
++		};
++	};
++
++	atheros {
++		compatible = "atheros,ath6kl";
++		atheros,board-id = "SD32";
++	};
++};
++
++&slow_xtal {
++	clock-frequency = <32768>;
++};
++
++&main_xtal {
++	clock-frequency = <12000000>;
++};
++
++&ebi {
++	status = "okay";
++	nand_controller: nand-controller {
++		pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb &pinctrl_nand_oe_we>;
++		pinctrl-names = "default";
++		status = "okay";
++
++		nand@3 {
++			reg = <0x3 0x0 0x800000>;
++			rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
++			cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
++			nand-bus-width = <8>;
++			nand-ecc-mode = "hw";
++			nand-ecc-strength = <4>;
++			nand-ecc-step-size = <512>;
++			nand-on-flash-bbt;
++			label = "atmel_nand";
++
++			partitions {
++				compatible = "fixed-partitions";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				at91bootstrap@0 {
++					label = "at91bs";
++					reg = <0x0 0x20000>;
++				};
++
++				uboot@20000 {
++					label = "u-boot";
++					reg = <0x20000 0x80000>;
++				};
++
++				ubootenv@a0000 {
++					label = "u-boot-env";
++					reg = <0xa0000 0x20000>;
++				};
++
++				ubootenv@c0000 {
++					label = "redund-env";
++					reg = <0xc0000 0x20000>;
++				};
++
++				kernel-a@e0000 {
++					label = "kernel-a";
++					reg = <0xe0000 0x280000>;
++				};
++
++				kernel-b@360000 {
++					label = "kernel-b";
++					reg = <0x360000 0x280000>;
++				};
++
++				rootfs-a@5e0000 {
++					label = "rootfs-a";
++					reg = <0x5e0000 0x2600000>;
++				};
++
++				rootfs-b@2be0000 {
++					label = "rootfs-b";
++					reg = <0x2be0000 0x2600000>;
++				};
++
++				user@51e0000 {
++					label = "user";
++					reg = <0x51e0000 0x2dc0000>;
++				};
++
++				logs@7fa0000 {
++					label = "logs";
++					reg = <0x7fa0000 0x60000>;
++				};
++
++			};
++		};
++	};
++};
++
++&usb0 {
++	num-ports = <2>;
++	atmel,vbus-gpio = <
++		&pioB 12 GPIO_ACTIVE_HIGH
++		&pioA 31 GPIO_ACTIVE_HIGH
++		>;
++	atmel,oc-gpio = <&pioB 13 GPIO_ACTIVE_LOW>;
++};
++
++&macb0 {
++	phy-mode = "rmii";
++};
++
++&spi0 {
++	cs-gpios = <&pioA 14 0>, <&pioA 7 0>, <0>, <0>;
++};
++
++&usb2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_board_usb2>;
++	atmel,vbus-gpio = <&pioB 11 GPIO_ACTIVE_HIGH>;
++};
++
++&mmc0 {
++	pinctrl-0 = <
++		&pinctrl_mmc0_slot0_clk_cmd_dat0
++		&pinctrl_mmc0_slot0_dat1_3>;
++	slot@0 {
++		reg = <0>;
++		bus-width = <4>;
++	};
++};
+-- 
+2.7.4
