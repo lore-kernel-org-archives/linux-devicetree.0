@@ -1,90 +1,93 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] arm64: dts: stingray: use NUM_SATA to configure number of
- sata ports
-Date: Wed, 13 Jun 2018 17:46:32 -0700
-Message-ID: <0b235716-516f-c32c-f520-f0d9411ac01e@gmail.com>
-References: <1526668446-20048-1-git-send-email-scott.branden@broadcom.com>
- <d35afa1f-e0fd-84f1-7d42-60595e22cc77@gmail.com>
- <395f1fe8-76f1-8310-d09e-63e25bca23d2@broadcom.com>
- <CAL_JsqJEFLXFf-Vq9c9XC41vBpisQwxkd06_v8Fmt6X=gp=2_g@mail.gmail.com>
- <f20222ea-47ac-ca05-a8d3-69f28932de94@gmail.com>
- <0bf3c57c-dac8-8ece-6b8a-3b4d024140fc@broadcom.com>
+From: cang@codeaurora.org
+Subject: Re: [PATCH v6 1/3] phy: Update PHY power control sequence
+Date: Thu, 14 Jun 2018 09:14:30 +0800
+Message-ID: <c891f513544f26eec480ebe91f257617@codeaurora.org>
+References: <20180529043751.10580-1-cang@codeaurora.org>
+ <20180529043751.10580-2-cang@codeaurora.org>
+ <261d2697-ed21-1562-0e6b-f9858108f2b4@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0bf3c57c-dac8-8ece-6b8a-3b4d024140fc@broadcom.com>
-Content-Language: en-US
+In-Reply-To: <261d2697-ed21-1562-0e6b-f9858108f2b4@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2018 01:18 PM, Scott Branden wrote:
-> Hi Rob,
-> 
-> Thanks for comment - reply inline.
+On 2018-06-12 19:34, Vivek Gautam wrote:
+> Hi Can,
 > 
 > 
-> On 18-06-13 12:31 PM, Florian Fainelli wrote:
->> On 06/12/2018 03:54 PM, Rob Herring wrote:
->>> On Thu, Jun 7, 2018 at 12:53 PM, Scott Branden
->>> <scott.branden@broadcom.com> wrote:
->>>> Hi Rob,
->>>>
->>>> Could you please kindly comment on change below.
->>>>
->>>> It allows board variants to be added easily via a simple define for
->>>> different number of SATA ports.
->>>>
->>>>
->>>>
->>>> On 18-06-04 09:22 AM, Florian Fainelli wrote:
->>>>> On 05/18/2018 11:34 AM, Scott Branden wrote:
->>>>>> Move remaining sata configuration to stingray-sata.dtsi and enable
->>>>>> ports based on NUM_SATA defined.
->>>>>> Now, all that needs to be done is define NUM_SATA per board.
->>>>> Rob could you review this and let us know if this approach is okay or
->>>>> not? Thank you!
->>>>>
->>>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->>>>>> ---
->>>>>> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>>> b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>>> index 8c68e0c..7f6d176 100644
->>>>>> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>>> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
->>>>>> @@ -43,7 +43,11 @@
->>>>>>                          interrupts = <GIC_SPI 321
->>>>>> IRQ_TYPE_LEVEL_HIGH>;
->>>>>>                          #address-cells = <1>;
->>>>>>                          #size-cells = <0>;
->>>>>> +#if (NUM_SATA > 0)
->>>>>> +                       status = "okay";
->>>>>> +#else
->>>>>>                          status = "disabled";
->>>>>> +#endif
->>> This only works if ports are contiguously enabled (0-N). You might not
->>> care, but it is not a pattern that works in general.
-> Correct - all board designs that include this dtsi file follow such
-> commonality (ie. design with SATA0 first, etc).  By having common board
-> designs it allows for commonality in dts files rather than duplicating
-> information everywhere.  If somebody designs a bizarro board they are
-> free to create their own dts file of course.
->>>   And I'm not a fan
->>> of C preprocessing in DT files in general beyond just defines for
->>> single numbers.
-> The use of a define to specify the number of SATA ports in the board
-> design meets our requirements of being able to maintain many boards.  We
-> need a method to specify the number of ports in the board design rather
-> than copying and pasting the information in many dts files.  If you have
-> an alternative upstreamable mechanism to manage the configuration of
-> many boards without copy and paste that would be ideal?
+> On 5/29/2018 10:07 AM, Can Guo wrote:
+>> All PHYs should be powered on before register configuration starts. 
+>> And
+>> only PCIe PHYs need an extra power control before deasserts reset 
+>> state.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c 
+>> b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> index 97ef942..f779b0f 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> @@ -982,6 +982,8 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp 
+>> *qmp)
+>>   	if (cfg->has_phy_com_ctrl)
+>>   		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>>   			     SW_PWRDN);
+>> +	else
+>> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+> 
+> No definition of 'pcs' in this function. You are doing that in the 
+> second patch.
+> But, we should add this definition here.
+> 
+> Also instead of having the change like this:
+> 
+> +	struct qmp_phy *qphy = qmp->phys[0];
+>  	void __iomem *serdes = qmp->serdes;
+> +	void __iomem *pcs = qphy->pcs;
+> 
+> Let's pass 'struct qmp_phy' to qcom_qmp_phy_com_init(), and then get
+> 'struct qcom_qmp' and 'void __iomem *pcs' from that.
+> 
+> So,
+> 
+> -static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+> +static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>  {
+> +       struct qcom_qmp *qmp = qphy->qmp;
+>         const struct qmp_phy_cfg *cfg = qmp->cfg;
+>         void __iomem *serdes = qmp->serdes;
+>         void __iomem *dp_com = qmp->dp_com;
+> +       void __iomem *pcs = qphy->pcs;
+> 
+> and
+> 
+> -       ret = qcom_qmp_phy_com_init(qmp);
+> +       ret = qcom_qmp_phy_com_init(qphy);
+> 
+> That looks cleaner than extracting from the 0th phys.
+> 
+> BRs
+> Vivek
 
-We had discussed this off-list, but I really think you should be having
-some sort of higher level scripting engine which is able to generate
-valid per-board DTS files and not have the kernel and its use of the C
-pre-processor attempt to solve your problems because a) it's the wrong
-place, and b) it is limited.
---
-Florian
+Sure Vivek
+
+>>     	if (cfg->has_phy_dp_com_ctrl) {
+>>   		qphy_setbits(dp_com, QPHY_V3_DP_COM_POWER_DOWN_CTRL,
+>> @@ -1127,7 +1129,8 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>>   	 * Pull out PHY from POWER DOWN state.
+>>   	 * This is active low enable signal to power-down PHY.
+>>   	 */
+>> -	qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+>> +	if (cfg->type == PHY_TYPE_PCIE)
+>> +		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+>>     	if (cfg->has_pwrdn_delay)
+>>   		usleep_range(cfg->pwrdn_delay_min, cfg->pwrdn_delay_max);
