@@ -1,101 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph bindings
-Date: Thu, 14 Jun 2018 07:59:33 -0600
-Message-ID: <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
- <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
- <20180612204802.GA15817@rob-hp-laptop> <a1c0749b-9c97-b45f-716f-a62ae07af278@arm.com>
- <5448BBB7-93FE-400F-9D87-FABF5DE0539C@arm.com> <c0d531ec-9201-bfd8-e6c3-9140698b0697@arm.com>
- <HE1PR0802MB24127EC935B9AF6F82AB3B6EEE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
- <075b99a1-2a29-f6dc-e9f2-99f895c27d35@arm.com> <CANLsYkx9cjV-bWg7aLg-kJT7x7DtwTHdsYzzM8A3+cFFnu_mNg@mail.gmail.com>
- <HE1PR0802MB24121F0EEF8D7D643BC391A1EE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
- <5e013d65-9931-6b8d-ce7c-4333309d4ada@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 2/4] power: supply: Add support for the Qualcomm
+ Battery Monitoring System
+Date: Thu, 14 Jun 2018 16:06:40 +0200
+Message-ID: <CACRpkdYzCN1cFBDwznO6p-US1B94+kbBcWmH-o-qxvXdvCCsiw@mail.gmail.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180613160643.12638-1-ctatlor97@gmail.com>
+ <20180613160643.12638-2-ctatlor97@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5e013d65-9931-6b8d-ce7c-4333309d4ada@arm.com>
+In-Reply-To: <20180613160643.12638-2-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Matt Sealey <Matt.Sealey@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, John Horley <John.Horley@arm.com>, "mike.leach@linaro.org" <mike.leach@linaro.org>, "coresight@lists.linaro.org" <coresight@lists.linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 2:53 AM, Suzuki K Poulose
-<Suzuki.Poulose@arm.com> wrote:
-> On 13/06/18 22:07, Matt Sealey wrote:
->>
->>
->>
->>> -----Original Message-----
->>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>
->>>> So, if the suggestion is to use an existing property "unit", I am fine
->>>> with it, if people agree to it.
->>>
->>>
->>> If we're going to have something sharply different than ACPI I prefer
->>> Rob's idea.
->
->
-> No, the above comment is about using "unit" ( if it is a standard property
-> for specifying something specific to hardware) instead of "coresight,hwid".
-> I would prefer to stick to the DT graph bindings, because :
+On Wed, Jun 13, 2018 at 6:06 PM, Craig Tatlor <ctatlor97@gmail.com> wrote:
 
-"unit" is not a standard property and I don't like it either.
-
+> This patch adds a driver for the BMS (Battery Monitoring System)
+> block of the PM8941 PMIC, it uses a lookup table defined in the
+> device tree to generate a capacity from the BMS supplied OCV, it
+> then amends the coulomb counter to that to increase the accuracy
+> of the estimated capacity.
 >
-> 1) The connections are bi-directional => Well, not necessarily
-> bi-directional
-> in terms of the data flow. But the connection information is critical. i.e,
-> we need information about both the end-points of a connection, which the DT
-> graph bindings solves.
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> ---
 >
-> All we are missing is a way for specifying the "hardware port" number and
-> the
-> direction of flow. I don't see why do we need to create something new just
-> for
-> these two properties for something that exists today and works reasonably
-> well
-> for the usecase.
+> * Changes from v5:
+>   Uses select for REGMAP_SPMI.
 
-If you have "in-ports" and "out-ports" nodes, then that gives you
-direction and you can use reg for the "hardware port".
+Looks very nice to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-in-ports {
-  port@0 {
-    reg = <0>;
-    endpoint {...};
-  };
-  port@1 {
-    reg = <1>;
-    endpoint {...};
-  };
-};
-out-ports {
-  port@0 {
-    reg = <0>;
-    endpoint {...};
-  };
-};
-
-I'll need to check, but dtc may need an update to not warn about this.
-
->
->>
->> What are you trying to say about being sharply different than ACPI?
->
->
-> The proposed Coresight ACPI draft bindings are based on the ACPI Graph
-> bindings
-> (just like the DT graph bindings and is compatible with it, in terms of the
-> APIs.
-> i.e, fwnode_graph_* operations work for both ACPI and DT  alike).
->
-> So, what Mathieu, in turn means is, if we depart from the DT Graph bindings,
-> which
-> I personally don't see any benefit in.
-
-If DT bindings can be reused for ACPI, that's fine, but don't expect
-any DT bindings to be accepted simply because they match ACPI
-bindings.
-
-Rob
+Yours,
+Linus Walleij
