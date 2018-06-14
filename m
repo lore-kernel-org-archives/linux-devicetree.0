@@ -1,198 +1,43 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 5/7] Bluetooth: Extend btuart driver for join more vendor
- devices
-Date: Thu, 14 Jun 2018 15:14:27 +0800
-Message-ID: <d6533f32224058cb3725e3c95ed969d49e6bcac6.1528960095.git.sean.wang@mediatek.com>
-References: <cover.1528960095.git.sean.wang@mediatek.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 1/2] arm64: dts: renesas: r8a77980: add
+ FCPVD/VSPD/DU/LVDS support
+Date: Thu, 14 Jun 2018 09:23:39 +0200
+Message-ID: <20180614072338.ti7pejilvbfqhegn@verge.net.au>
+References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
+ <1611fe94-07dd-fc8b-e94f-143e1ed26a17@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1528960095.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1611fe94-07dd-fc8b-e94f-143e1ed26a17@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Wed, Jun 13, 2018 at 11:11:27PM +0300, Sergei Shtylyov wrote:
+> Describe the interconnected FCPVD0, VSPD0, DU, and LVDS0 devices in the
+> R8A77980 device tree...
+> 
+> Based on the original (and large) patch by Vladimir Barinov.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> ---
+> Changes in version 3:
+> - merged in the VSPD/DU/LVDS patches, renamed the patch, and updated the patch
+>   description accordingly;
+> - fixed the VSPD0's "reg" property.
 
-Adding an independent btuart.h header allows these essential definitions
-can be reused in vendor driver. Also, struct btuart_vnd is extended with
-additional callbacks such as .init initializing vendor data, .shtudown,
-.recv and .send supporting SoC specific framing for that btuart can
-simply adapt to various Bluetooth uart-based devices.
-
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/bluetooth/btuart.c | 73 ++++++++++++++++++++++++----------------------
- drivers/bluetooth/btuart.h | 30 +++++++++++++++++++
- 2 files changed, 68 insertions(+), 35 deletions(-)
- create mode 100644 drivers/bluetooth/btuart.h
-
-diff --git a/drivers/bluetooth/btuart.c b/drivers/bluetooth/btuart.c
-index 03e980f..ab7f836 100644
---- a/drivers/bluetooth/btuart.c
-+++ b/drivers/bluetooth/btuart.c
-@@ -33,35 +33,11 @@
- #include <net/bluetooth/hci_core.h>
- 
- #include "h4_recv.h"
-+#include "btuart.h"
- #include "btbcm.h"
- 
- #define VERSION "1.0"
- 
--struct btuart_vnd {
--	const struct h4_recv_pkt *recv_pkts;
--	int recv_pkts_cnt;
--	unsigned int manufacturer;
--	int (*open)(struct hci_dev *hdev);
--	int (*close)(struct hci_dev *hdev);
--	int (*setup)(struct hci_dev *hdev);
--};
--
--struct btuart_dev {
--	struct hci_dev *hdev;
--	struct serdev_device *serdev;
--
--	struct work_struct tx_work;
--	unsigned long tx_state;
--	struct sk_buff_head txq;
--
--	struct sk_buff *rx_skb;
--
--	const struct btuart_vnd *vnd;
--};
--
--#define BTUART_TX_STATE_ACTIVE	1
--#define BTUART_TX_STATE_WAKEUP	2
--
- static void btuart_tx_work(struct work_struct *work)
- {
- 	struct btuart_dev *bdev = container_of(work, struct btuart_dev,
-@@ -187,13 +163,27 @@ static int btuart_setup(struct hci_dev *hdev)
- 	return 0;
- }
- 
-+static int btuart_shutdown(struct hci_dev *hdev)
-+{
-+	struct btuart_dev *bdev = hci_get_drvdata(hdev);
-+
-+	if (bdev->vnd->shutdown)
-+		return bdev->vnd->shutdown(hdev);
-+
-+	return 0;
-+}
-+
- static int btuart_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct btuart_dev *bdev = hci_get_drvdata(hdev);
- 
--	/* Prepend skb with frame type */
--	memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
--	skb_queue_tail(&bdev->txq, skb);
-+	if (bdev->vnd->send) {
-+		bdev->vnd->send(hdev, skb);
-+	} else {
-+		/* Prepend skb with frame type */
-+		memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
-+		skb_queue_tail(&bdev->txq, skb);
-+	}
- 
- 	btuart_tx_wakeup(bdev);
- 	return 0;
-@@ -204,14 +194,23 @@ static int btuart_receive_buf(struct serdev_device *serdev, const u8 *data,
- {
- 	struct btuart_dev *bdev = serdev_device_get_drvdata(serdev);
- 	const struct btuart_vnd *vnd = bdev->vnd;
-+	int err;
- 
--	bdev->rx_skb = h4_recv_buf(bdev->hdev, bdev->rx_skb, data, count,
--				   vnd->recv_pkts, vnd->recv_pkts_cnt);
--	if (IS_ERR(bdev->rx_skb)) {
--		int err = PTR_ERR(bdev->rx_skb);
--		bt_dev_err(bdev->hdev, "Frame reassembly failed (%d)", err);
--		bdev->rx_skb = NULL;
--		return err;
-+	if (bdev->vnd->recv) {
-+		err = bdev->vnd->recv(bdev->hdev, data, count);
-+		if (err < 0)
-+			return err;
-+	} else {
-+		bdev->rx_skb = h4_recv_buf(bdev->hdev, bdev->rx_skb,
-+					   data, count, vnd->recv_pkts,
-+					   vnd->recv_pkts_cnt);
-+		if (IS_ERR(bdev->rx_skb)) {
-+			err = PTR_ERR(bdev->rx_skb);
-+			bt_dev_err(bdev->hdev,
-+				   "Frame reassembly failed (%d)", err);
-+			bdev->rx_skb = NULL;
-+			return err;
-+		}
- 	}
- 
- 	bdev->hdev->stat.byte_rx += count;
-@@ -429,6 +428,9 @@ static int btuart_probe(struct serdev_device *serdev)
- 	if (!bdev->vnd)
- 		bdev->vnd = &default_vnd;
- 
-+	if (bdev->vnd->init)
-+		bdev->data = bdev->vnd->init(&serdev->dev);
-+
- 	bdev->serdev = serdev;
- 	serdev_device_set_drvdata(serdev, bdev);
- 
-@@ -460,6 +462,7 @@ static int btuart_probe(struct serdev_device *serdev)
- 	hdev->close = btuart_close;
- 	hdev->flush = btuart_flush;
- 	hdev->setup = btuart_setup;
-+	hdev->shutdown = btuart_shutdown;
- 	hdev->send  = btuart_send_frame;
- 	SET_HCIDEV_DEV(hdev, &serdev->dev);
- 
-diff --git a/drivers/bluetooth/btuart.h b/drivers/bluetooth/btuart.h
-new file mode 100644
-index 0000000..6c1fe31
---- /dev/null
-+++ b/drivers/bluetooth/btuart.h
-@@ -0,0 +1,30 @@
-+struct btuart_vnd {
-+	const struct h4_recv_pkt *recv_pkts;
-+	int recv_pkts_cnt;
-+	unsigned int manufacturer;
-+	void *(*init)(struct device *dev);
-+
-+	int (*open)(struct hci_dev *hdev);
-+	int (*close)(struct hci_dev *hdev);
-+	int (*setup)(struct hci_dev *hdev);
-+	int (*shutdown)(struct hci_dev *hdev);
-+	int (*send)(struct hci_dev *hdev, struct sk_buff *skb);
-+	int (*recv)(struct hci_dev *hdev, const u8 *data, size_t count);
-+};
-+
-+struct btuart_dev {
-+	struct hci_dev *hdev;
-+	struct serdev_device *serdev;
-+
-+	struct work_struct tx_work;
-+	unsigned long tx_state;
-+	struct sk_buff_head txq;
-+
-+	struct sk_buff *rx_skb;
-+
-+	const struct btuart_vnd *vnd;
-+	void *data;
-+};
-+
-+#define BTUART_TX_STATE_ACTIVE	1
-+#define BTUART_TX_STATE_WAKEUP	2
--- 
-2.7.4
+Thanks Sergei, applied.
