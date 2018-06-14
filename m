@@ -1,85 +1,111 @@
-From: ilia.lin@gmail.com
-Subject: [PATCH v13 5/8] dt-bindings: clk: qcom: Add bindings for CPU clock for msm8996
-Date: Thu, 14 Jun 2018 23:53:52 +0200
-Message-ID: <20180614215358.11264-6-ilia.lin@gmail.com>
-References: <20180614215358.11264-1-ilia.lin@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180614215358.11264-1-ilia.lin@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ilia.lin@gmail.com
-Cc: Ilia Lin <ilialin@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts: allwinner: a64: add SRAM
+ controller device tree node
+Date: Fri, 15 Jun 2018 07:09:09 +0800
+Message-ID: <5C14D945-0795-4100-86E2-6FBF04350715@aosc.io>
+References: <20180614153548.9644-1-wens@csie.org> <20180614153548.9644-5-wens@csie.org> <CAMty3ZARNpBOQKvS7knH8kWE2+bvjuJoAA4cFGZK8+GzTUQ5zA@mail.gmail.com> <2687631.x8iGEoiUx5@jernej-laptop>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBJXLRPMQKGQEXDOG6SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <2687631.x8iGEoiUx5@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ilia Lin <ilialin@codeaurora.org>
 
-Each of the CPU clusters (Power and Perf) on msm8996 are
-clocked via 2 PLLs, a primary and alternate. There are also
-2 Mux'es, a primary and secondary all connected together
-as shown below
 
-                             +-------+
-              XO             |       |
-          +------------------>0      |
-                             |       |
-                   PLL/2     | SMUX  +----+
-                     +------->1      |    |
-                     |       |       |    |
-                     |       +-------+    |    +-------+
-                     |                    +---->0      |
-                     |                         |       |
-+---------------+    |             +----------->1      | CPU clk
-|Primary PLL    +----+ PLL_EARLY   |           |       +------>
-|               +------+-----------+    +------>2 PMUX |
-+---------------+      |                |      |       |
-                       |   +------+     |   +-->3      |
-                       +--^+  ACD +-----+   |  +-------+
-+---------------+          +------+         |
-|Alt PLL        |                           |
-|               +---------------------------+
-+---------------+         PLL_EARLY
+=E4=BA=8E 2018=E5=B9=B46=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881:=
+27:21, "Jernej =C5=A0krabec" <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
+>Dne =C4=8Detrtek, 14. junij 2018 ob 19:09:56 CEST je Jagan Teki napisal(a)=
+:
+>> On Thu, Jun 14, 2018 at 9:05 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> > From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> >=20
+>> > Allwinner A64 has a SRAM controller, and in the device tree
+>currently
+>> > we have a syscon node to enable EMAC driver to access the EMAC
+>clock
+>> > register. As SRAM controller driver can now export regmap for this
+>> > register, replace the syscon node to the SRAM controller device
+>node,
+>> > and let EMAC driver to acquire its EMAC clock regmap.
+>> >=20
+>> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> > [wens-jdAy2FN1RRM@public.gmane.org: Updated compatible string]
+>> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> > ---
+>> >=20
+>> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19
+>+++++++++++++++++--
+>> >  1 file changed, 17 insertions(+), 2 deletions(-)
+>> >=20
+>> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> > b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
+>> > 1b2ef28c42bd..87968dafe1dc 100644
+>> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> > @@ -169,9 +169,24 @@
+>> >=20
+>> >                 ranges;
+>> >                =20
+>> >                 syscon: syscon@1c00000 {
+>> >=20
+>> > -                       compatible =3D
+>> > "allwinner,sun50i-a64-system-controller", -                       =20
+>    =20
+>> > "syscon";
+>> > +                       compatible =3D
+>> > "allwinner,sun50i-a64-system-control";
+>> >=20
+>> >                         reg =3D <0x01c00000 0x1000>;
+>> >=20
+>> > +                       #address-cells =3D <1>;
+>> > +                       #size-cells =3D <1>;
+>> > +                       ranges;
+>> > +
+>> > +                       sram_c: sram@18000 {
+>> > +                               compatible =3D "mmio-sram";
+>> > +                               reg =3D <0x00018000 0x28000>;
+>> > +                               #address-cells =3D <1>;
+>> > +                               #size-cells =3D <1>;
+>> > +                               ranges =3D <0 0x00018000 0x28000>;
+>> > +
+>> > +                               de2_sram: sram-section@0 {
+>>=20
+>> So, this can attach to display-engine node through allwinner,sram and
+>> add support to claim the sram on sun4i/sun4i_drv.c, correct?
+>
+>Actually, it has to be added to display_clocks node and claimed in
+>drivers/
+>clk/sunxi-ng/ccu-sun8i-de2.c
 
-The primary PLL is what drives the CPU clk, except for times
-when we are reprogramming the PLL itself (for rate changes) when
-we temporarily switch to an alternate PLL. A subsequent patch adds
-support to switch between primary and alternate PLL during rate
-changes.
+Sorry it's old practice.
 
-The primary PLL operates on a single VCO range, between 600MHz
-and 3GHz. However the CPUs do support OPPs with frequencies
-between 300MHz and 600MHz. In order to support running the CPUs
-at those frequencies we end up having to lock the PLL at twice
-the rate and drive the CPU clk via the PLL/2 output and SMUX.
+My new way is to add a bus driver which claims the SRAM.
 
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- Documentation/devicetree/bindings/clock/qcom,kryocc.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+>
+>Best regards,
+>Jernej
+>
+>
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,kryocc.txt b/Documentation/devicetree/bindings/clock/qcom,kryocc.txt
-new file mode 100644
-index 000000000000..8458783c5a1a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,kryocc.txt
-@@ -0,0 +1,17 @@
-+Qualcomm CPUSS clock controller for Kryo CPUs
-+----------------------------------------------------
-+
-+Required properties :
-+- compatible : shall contain only one of the following:
-+
-+			"qcom,msm8996-apcc"
-+
-+- reg : shall contain base register location and length
-+- #clock-cells : shall contain 1
-+
-+Example:
-+	kryocc: clock-controller@6400000 {
-+		compatible = "qcom,msm8996-apcc";
-+		reg = <0x6400000 0x90000>;
-+		#clock-cells = <1>;
-+	};
--- 
-2.11.0
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
