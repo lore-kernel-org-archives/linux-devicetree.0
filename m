@@ -1,224 +1,146 @@
-From: Vinod Koul <vinod.koul@linaro.org>
-Subject: Re: [PATCH v2] dmaengine: rcar-dmac: don't use DMAC error interrupt
-Date: Thu, 14 Jun 2018 14:04:25 +0530
-Message-ID: <20180614083425.GA25852@vkoul-mobl>
-References: <8736xrkrci.wl%kuninori.morimoto.gx@renesas.com>
+From: yixin zhu <yixin.zhu@linux.intel.com>
+Subject: Re: [PATCH 2/7] clk: intel: Add clock driver for GRX500 SoC
+Date: Thu, 14 Jun 2018 16:40:22 +0800
+Message-ID: <41163f48-ce5c-efae-2b6d-b93d75e422e5@linux.intel.com>
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+ <20180612054034.4969-3-songjun.wu@linux.intel.com>
+ <20180612223725.GC2197@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8736xrkrci.wl%kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <20180612223725.GC2197@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Dan Williams <dan.j.williams@intel.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran@ksquared.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Songjun Wu <songjun.wu@linux.intel.com>
+Cc: hua.ma@linux.intel.com, chuanhua.lei@linux.intel.com, linux-mips@linux-mips.org, qi-ming.wu@intel.com, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13-06-18, 08:49, Kuninori Morimoto wrote:
-> 
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> Current rcar-dmac is using DMAC error interrupt which will handle all
-> channel's error. But in this design, error handling itself will be
-> issue if user want to use virtualization, multi OS, etc.
-> This patch removes current DMAC error interrupt handling, and handle it
-> on each channel interrupt handler.
 
-So what happens when you are not in virtualization, multi OS..? Who
-handles this interrupt?
+
+On 6/13/2018 6:37 AM, Rob Herring wrote:
+> On Tue, Jun 12, 2018 at 01:40:29PM +0800, Songjun Wu wrote:
+>> From: Yixin Zhu <yixin.zhu@linux.intel.com>
+>>
+>> PLL of GRX500 provide clock to DDR, CPU, and peripherals as show below
+>>
+>>                   +---------+
+>> 	    |--->| LCPLL3 0|--PCIe clk-->
+>>     XO       |    +---------+
+>> +-----------|
+>>              |    +---------+
+>>              |    |        3|--PAE clk-->
+>>              |--->| PLL0B  2|--GSWIP clk-->
+>>              |    |        1|--DDR clk-->DDR PHY clk-->
+>>              |    |        0|--CPU1 clk--+   +-----+
+>>              |    +---------+            |--->0    |
+>>              |                               | MUX |--CPU clk-->
+>>              |    +---------+            |--->1    |
+>>              |    |        0|--CPU0 clk--+   +-----+
+>>              |--->| PLLOA  1|--SSX4 clk-->
+>>                   |        2|--NGI clk-->
+>>                   |        3|--CBM clk-->
+>>                   +---------+
+>>
+>> VCO of all PLLs of GRX500 is not supposed to be reprogrammed.
+>> DDR PHY clock is created to show correct clock rate in software
+>> point of view.
+>> CPU clock of 1Ghz from PLL0B otherwise from PLL0A.
+>> Signed-off-by: Yixin Zhu <yixin.zhu@linux.intel.com>
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
+> 
+> Need a blank line before the SoB's and not one in the middle.
+Thanks.
+Blank line in the middle of sign-off will be removed.
+A new blank line will be added before SoB's.
 
 > 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> [Kuninori: updated patch to adjust DMACHCR/DMAOR]
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Tested-by: Nguyen Viet Dung <nv-dung@jinso.co.jp>
-> ---
-> v1 -> v2
+>> ---
+>>
+>>   .../devicetree/bindings/clock/intel,grx500-clk.txt |  46 ++
 > 
->  - add [Kuninori: xxx] line on git log
->  - don't remove DT property
->  - tidyup rcar_dmac_isr_channel()
+> Please split bindings to separate patch.
 > 
->  .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |  1 +
->  drivers/dma/sh/rcar-dmac.c                         | 72 +++++++---------------
->  2 files changed, 23 insertions(+), 50 deletions(-)
+>>   drivers/clk/Kconfig                                |   1 +
+>>   drivers/clk/Makefile                               |   1 +
+>>   drivers/clk/intel/Kconfig                          |  21 +
+>>   drivers/clk/intel/Makefile                         |   7 +
+>>   drivers/clk/intel/clk-cgu-api.c                    | 676 +++++++++++++++++++++
+>>   drivers/clk/intel/clk-cgu-api.h                    | 120 ++++
+>>   drivers/clk/intel/clk-grx500.c                     | 236 +++++++
+>>   include/dt-bindings/clock/intel,grx500-clk.h       |  61 ++
+>>   9 files changed, 1169 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
+>>   create mode 100644 drivers/clk/intel/Kconfig
+>>   create mode 100644 drivers/clk/intel/Makefile
+>>   create mode 100644 drivers/clk/intel/clk-cgu-api.c
+>>   create mode 100644 drivers/clk/intel/clk-cgu-api.h
+>>   create mode 100644 drivers/clk/intel/clk-grx500.c
+>>   create mode 100644 include/dt-bindings/clock/intel,grx500-clk.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/intel,grx500-clk.txt b/Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
+>> new file mode 100644
+>> index 000000000000..dd761d900dc9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
+>> @@ -0,0 +1,46 @@
+>> +Device Tree Clock bindings for GRX500 PLL controller.
+>> +
+>> +This binding uses the common clock binding:
+>> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +This GRX500 PLL controller provides the 5 main clock domain of the SoC: CPU/DDR, XBAR,
+>> +Voice, WLAN, PCIe and gate clocks for HW modules.
+>> +
+>> +Required properties for osc clock node
+>> +- compatible: Should be intel,grx500-xxx-clk
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> index b1ba6395..b8e1c13 100644
-> --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-> @@ -38,6 +38,7 @@ Required Properties:
->  - interrupt-names: one entry for the error interrupt, named "error", plus one
->    entry per channel, named "ch%u", where %u is the channel number ranging from
->    zero to the number of channels minus one.
-> +  # "error" interrupt will be ignored, so far
->  
->  - clock-names: "fck" for the functional clock
->  - clocks: a list of phandle + clock-specifier pairs, one for each entry
-> diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-> index 2a2ccd9..279c930 100644
-> --- a/drivers/dma/sh/rcar-dmac.c
-> +++ b/drivers/dma/sh/rcar-dmac.c
-> @@ -431,7 +431,8 @@ static void rcar_dmac_chan_start_xfer(struct rcar_dmac_chan *chan)
->  		chcr |= RCAR_DMACHCR_DPM_DISABLED | RCAR_DMACHCR_IE;
->  	}
->  
-> -	rcar_dmac_chan_write(chan, RCAR_DMACHCR, chcr | RCAR_DMACHCR_DE);
-> +	rcar_dmac_chan_write(chan, RCAR_DMACHCR,
-> +			     chcr | RCAR_DMACHCR_DE | RCAR_DMACHCR_CAIE);
->  }
->  
->  static int rcar_dmac_init(struct rcar_dmac *dmac)
-> @@ -783,7 +784,8 @@ static void rcar_dmac_chan_halt(struct rcar_dmac_chan *chan)
->  	u32 chcr = rcar_dmac_chan_read(chan, RCAR_DMACHCR);
->  
->  	chcr &= ~(RCAR_DMACHCR_DSE | RCAR_DMACHCR_DSIE | RCAR_DMACHCR_IE |
-> -		  RCAR_DMACHCR_TE | RCAR_DMACHCR_DE);
-> +		  RCAR_DMACHCR_TE | RCAR_DMACHCR_DE |
-> +		  RCAR_DMACHCR_CAE | RCAR_DMACHCR_CAIE);
->  	rcar_dmac_chan_write(chan, RCAR_DMACHCR, chcr);
->  	rcar_dmac_chcr_de_barrier(chan);
->  }
-> @@ -812,12 +814,7 @@ static void rcar_dmac_chan_reinit(struct rcar_dmac_chan *chan)
->  	}
->  }
->  
-> -static void rcar_dmac_stop(struct rcar_dmac *dmac)
-> -{
-> -	rcar_dmac_write(dmac, RCAR_DMAOR, 0);
-> -}
-> -
-> -static void rcar_dmac_abort(struct rcar_dmac *dmac)
-> +static void rcar_dmac_stop_all_chan(struct rcar_dmac *dmac)
->  {
->  	unsigned int i;
->  
-> @@ -829,11 +826,10 @@ static void rcar_dmac_abort(struct rcar_dmac *dmac)
->  		spin_lock(&chan->lock);
->  		rcar_dmac_chan_halt(chan);
->  		spin_unlock(&chan->lock);
-> -
-> -		rcar_dmac_chan_reinit(chan);
->  	}
->  }
->  
-> +
->  /* -----------------------------------------------------------------------------
->   * Descriptors preparation
->   */
-> @@ -1522,11 +1518,18 @@ static irqreturn_t rcar_dmac_isr_channel(int irq, void *dev)
->  	u32 mask = RCAR_DMACHCR_DSE | RCAR_DMACHCR_TE;
->  	struct rcar_dmac_chan *chan = dev;
->  	irqreturn_t ret = IRQ_NONE;
-> +	bool reinit = false;
->  	u32 chcr;
->  
->  	spin_lock(&chan->lock);
->  
->  	chcr = rcar_dmac_chan_read(chan, RCAR_DMACHCR);
-> +	if (chcr & RCAR_DMACHCR_CAE) {
-> +		rcar_dmac_chan_halt(chan);
-> +		reinit = true;
-> +		goto spin_lock_end;
-> +	}
-> +
->  	if (chcr & RCAR_DMACHCR_TE)
->  		mask |= RCAR_DMACHCR_DE;
->  	rcar_dmac_chan_write(chan, RCAR_DMACHCR, chcr & ~mask);
-> @@ -1539,8 +1542,16 @@ static irqreturn_t rcar_dmac_isr_channel(int irq, void *dev)
->  	if (chcr & RCAR_DMACHCR_TE)
->  		ret |= rcar_dmac_isr_transfer_end(chan);
->  
-> +spin_lock_end:
->  	spin_unlock(&chan->lock);
->  
-> +	if (reinit) {
-> +		dev_err(chan->chan.device->dev, "Channel Address Error\n");
-> +
-> +		rcar_dmac_chan_reinit(chan);
-> +		ret = IRQ_HANDLED;
-> +	}
-> +
->  	return ret;
->  }
->  
-> @@ -1597,24 +1608,6 @@ static irqreturn_t rcar_dmac_isr_channel_thread(int irq, void *dev)
->  	return IRQ_HANDLED;
->  }
->  
-> -static irqreturn_t rcar_dmac_isr_error(int irq, void *data)
-> -{
-> -	struct rcar_dmac *dmac = data;
-> -
-> -	if (!(rcar_dmac_read(dmac, RCAR_DMAOR) & RCAR_DMAOR_AE))
-> -		return IRQ_NONE;
-> -
-> -	/*
-> -	 * An unrecoverable error occurred on an unknown channel. Halt the DMAC,
-> -	 * abort transfers on all channels, and reinitialize the DMAC.
-> -	 */
-> -	rcar_dmac_stop(dmac);
-> -	rcar_dmac_abort(dmac);
-> -	rcar_dmac_init(dmac);
-> -
-> -	return IRQ_HANDLED;
-> -}
-> -
->  /* -----------------------------------------------------------------------------
->   * OF xlate and channel filter
->   */
-> @@ -1784,8 +1777,6 @@ static int rcar_dmac_probe(struct platform_device *pdev)
->  	struct rcar_dmac *dmac;
->  	struct resource *mem;
->  	unsigned int i;
-> -	char *irqname;
-> -	int irq;
->  	int ret;
->  
->  	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
-> @@ -1824,17 +1815,6 @@ static int rcar_dmac_probe(struct platform_device *pdev)
->  	if (IS_ERR(dmac->iomem))
->  		return PTR_ERR(dmac->iomem);
->  
-> -	irq = platform_get_irq_byname(pdev, "error");
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "no error IRQ specified\n");
-> -		return -ENODEV;
-> -	}
-> -
-> -	irqname = devm_kasprintf(dmac->dev, GFP_KERNEL, "%s:error",
-> -				 dev_name(dmac->dev));
-> -	if (!irqname)
-> -		return -ENOMEM;
-> -
->  	/* Enable runtime PM and initialize the device. */
->  	pm_runtime_enable(&pdev->dev);
->  	ret = pm_runtime_get_sync(&pdev->dev);
-> @@ -1885,14 +1865,6 @@ static int rcar_dmac_probe(struct platform_device *pdev)
->  			goto error;
->  	}
->  
-> -	ret = devm_request_irq(&pdev->dev, irq, rcar_dmac_isr_error, 0,
-> -			       irqname, dmac);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "failed to request IRQ %u (%d)\n",
-> -			irq, ret);
-> -		return ret;
-> -	}
-> -
->  	/* Register the DMAC as a DMA provider for DT. */
->  	ret = of_dma_controller_register(pdev->dev.of_node, rcar_dmac_of_xlate,
->  					 NULL);
-> @@ -1932,7 +1904,7 @@ static void rcar_dmac_shutdown(struct platform_device *pdev)
->  {
->  	struct rcar_dmac *dmac = platform_get_drvdata(pdev);
->  
-> -	rcar_dmac_stop(dmac);
-> +	rcar_dmac_stop_all_chan(dmac);
->  }
->  
->  static const struct of_device_id rcar_dmac_of_ids[] = {
-> -- 
-> 1.9.1
+> These would need to be enumerated with all possible values. However, see
+> below.
+All possible values will be listed.
 
--- 
-~Vinod
+> 
+>> +- reg: offset address of the controller memory area.
+>> +- clocks: phandle of the external reference clock
+>> +- #clock-cells: can be one or zero.
+>> +- clock-output-names: Names of the output clocks.
+>> +
+>> +Example:
+>> +	pll0aclk: pll0aclk {
+>> +		#clock-cells = <1>;
+>> +		compatible = "intel,grx500-pll0a-clk";
+>> +		clocks = <&pll0a>;
+>> +		reg = <0x8>;
+>> +		clock-output-names = "cbmclk", "ngiclk", "ssx4clk", "cpu0clk";
+>> +	};
+>> +
+>> +	cpuclk: cpuclk {
+>> +		#clock-cells = <0>;
+>> +		compatible = "intel,grx500-cpu-clk";
+>> +		clocks = <&pll0aclk CPU0_CLK>, <&pll0bclk CPU1_CLK>;
+>> +		reg = <0x8>;
+>> +		clock-output-names = "cpu";
+>> +	};
+>> +
+>> +Required properties for gate node:
+>> +- compatible: Should be intel,grx500-gatex-clk
+>> +- reg: offset address of the controller memory area.
+>> +- #clock-cells: Should be <1>
+>> +- clock-output-names: Names of the output clocks.
+>> +
+>> +Example:
+>> +	clkgate0: clkgate0 {
+>> +		#clock-cells = <1>;
+>> +		compatible = "intel,grx500-gate0-clk";
+>> +		reg = <0x114>;
+>> +		clock-output-names = "gate_xbar0", "gate_xbar1", "gate_xbar2",
+>> +		"gate_xbar3", "gate_xbar6", "gate_xbar7";
+>> +	};
+> 
+> We generally don't do a clock node per clock or few clocks but rather 1
+> clock node per clock controller block. See any recent clock bindings.
+> 
+> Rob
+Do you mean only one example is needed per clock controller block?
+cpuclk is not needed in the document?
