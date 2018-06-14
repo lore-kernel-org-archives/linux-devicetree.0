@@ -1,154 +1,680 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Thu, 14 Jun 2018 08:04:35 -0500
-Message-ID: <20180614130435.j2bmzam6corrjylx@kahuna>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
- <20180607233853.p7iw7nlxxuyi66og@kahuna>
- <20180614123805.GF112168@atomide.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH 4/4] arm: dts: add support for Laird SOM60 module and DVK
+ boards
+Date: Thu, 14 Jun 2018 15:14:24 +0200
+Message-ID: <e1f730ca-da21-1756-b781-b6552fb28101@microchip.com>
+References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
+ <1528966340-23216-4-git-send-email-ben.whitten@lairdtech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180614123805.GF112168@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Vignesh R <vigneshr@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated
- list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528966340-23216-4-git-send-email-ben.whitten@lairdtech.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ben Whitten <ben.whitten@gmail.com>, devicetree@vger.kernel.org
+Cc: Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12:38-20180614, Tony Lindgren wrote:
-> Some comments on the ranges below.
-
-Thanks for reviewing in detail (I understand we are in the middle of
-merge window, so thanks for the extra effort).
-
+On 14/06/2018 at 10:51, Ben Whitten wrote:
+> Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+> ---
+>   arch/arm/boot/dts/Makefile                    |   3 +-
+>   arch/arm/boot/dts/at91-dvk_som60.dts          |  95 +++++++++++
+>   arch/arm/boot/dts/at91-dvk_su60_somc.dtsi     | 159 ++++++++++++++++++
+>   arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi |  96 +++++++++++
+>   arch/arm/boot/dts/at91-som60.dtsi             | 229 ++++++++++++++++++++++++++
+>   5 files changed, 581 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/arm/boot/dts/at91-dvk_som60.dts
+>   create mode 100644 arch/arm/boot/dts/at91-dvk_su60_somc.dtsi
+>   create mode 100644 arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi
+>   create mode 100644 arch/arm/boot/dts/at91-som60.dtsi
 > 
-> * Nishanth Menon <nm@ti.com> [180607 16:41]:
-> > +	soc0: soc0 {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 486ab59..4d3d9ca 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -63,7 +63,8 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
+>   	at91-sama5d4ek.dtb \
+>   	at91-vinco.dtb \
+
+About where you added dtbs...
+
+>   	at91-wb50n.dtb \
+> -	at91-gatwick.dtb
+> +	at91-gatwick.dtb \
+> +	at91-dvk_som60.dtb
+
+1/ As they are based on sama5d3, I would like to see them between 
+"at91-sama5d2_xplained.dtb" and "sama5d31ek.dtb"
+2/ within this range, please sort all these 4 alphabetically
+3/ don't laugh at me, I try to deal with our historical way of "sorting" 
+entries in this Makefile for AT91... ;-)
+
+BTW, I realize now that your "at91-wb45n.dtb" entry from patch 1 should 
+go just after the "at91-kizboxmini.dts" (alphabetical order in 
+at91sam9x5 "location").
+
+
+>   dtb-$(CONFIG_ARCH_ATLAS6) += \
+>   	atlas6-evb.dtb
+>   dtb-$(CONFIG_ARCH_ATLAS7) += \
+> diff --git a/arch/arm/boot/dts/at91-dvk_som60.dts b/arch/arm/boot/dts/at91-dvk_som60.dts
+> new file mode 100644
+> index 0000000..ededd5b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-dvk_som60.dts
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-dvk_som60.dts - Device Tree file for the DVK SOM60 board
+> + *
+> + *  Copyright (C) 2018 Laird,
+> + *		  2018 Ben Whitten <ben.whitten@lairdtech.com>
+> + *
+> + */
+> +/dts-v1/;
+> +#include "at91-som60.dtsi"
+> +#include "at91-dvk_su60_somc.dtsi"
+> +#include "at91-dvk_su60_somc_lcm.dtsi"
+> +
+> +/ {
+> +	model = "Laird DVK SOM60";
+> +	compatible = "laird,dvk-som60", "laird,som60", "atmel,sama5d36", "atmel,sama5d3", "atmel,sama5";
+> +
+> +	chosen {
+> +		stdout-path = &dbgu;
+> +		tick-timer = &pit;
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	status = "okay";
+> +};
+> +
+> +&spi0 {
+> +	status = "okay";
+> +};
+> +
+> +&ssc0 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +};
+> +
+> +&usart1 {
+> +	status = "okay";
+> +};
+> +
+> +&usart2 {
+> +	status = "okay";
+> +};
+> +
+> +&usart3 {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&dbgu {
+> +	status = "okay";
+> +};
+> +
+> +&pit {
+> +	status = "okay";
+> +};
+> +
+> +&adc0 {
+> +	status = "okay";
+> +};
+> +
+> +&can1 {
+> +	status = "okay";
+> +};
+> +
+> +&macb0 {
+> +	status = "okay";
+> +};
+> +
+> +&macb1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +};
+> +
+> +&usb1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb2 {
+> +	status = "okay";
+> +};
+> +
+> diff --git a/arch/arm/boot/dts/at91-dvk_su60_somc.dtsi b/arch/arm/boot/dts/at91-dvk_su60_somc.dtsi
+> new file mode 100644
+> index 0000000..6031c2f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-dvk_su60_somc.dtsi
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-dvk_su60_somc.dtsi - Device Tree file for the DVK SOM60 base board
+> + *
+> + *  Copyright (C) 2018 Laird,
+> + *		  2018 Ben Whitten <ben.whitten@lairdtech.com>
+> + *
+> + */
+> +
+> +/ {
+> +	sound {
+> +		compatible = "atmel,asoc-wm8904";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pck2_as_audio_mck>;
+> +
+> +		atmel,model = "wm8904 @ DVK-SOM60";
+> +		atmel,audio-routing =
+> +			"Headphone Jack", "HPOUTL",
+> +			"Headphone Jack", "HPOUTR",
+> +			"IN2L", "Line In Jack",
+> +			"IN2R", "Line In Jack",
+> +			"Mic", "MICBIAS",
+> +			"IN1L", "Mic";
+> +
+> +		atmel,ssc-controller = <&ssc0>;
+> +		atmel,audio-codec = <&wm8904>;
+> +
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	status = "okay";
+> +
+> +	pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3 &pinctrl_mmc0_cd>;
+> +	slot@0 {
+> +		bus-width = <4>;
+> +		cd-gpios = <&pioE 31 GPIO_ACTIVE_HIGH>;
+> +		cd-inverted;
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	status = "okay";
+> +
+> +	/* spi0.0: 4M Flash Macronix MX25R4035FM1IL0 */
+> +	spi-flash@0 {
+> +		compatible = "mxicy,mx25u4035", "jedec,spi-nor";
+> +		spi-max-frequency = <33000000>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&ssc0 {
+> +	atmel,clk-from-rk-pin;
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	wm8904: wm8904@1a {
+> +		compatible = "wlf,wm8904";
+> +		reg = <0x1a>;
+> +		clocks = <&pck2>;
+> +		clock-names = "mclk";
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +
+> +	eeprom@87 {
+> +		compatible = "giantec,24c32";
+
+It must work, however...
+
+I read in recent patches on dts directory that :
+
+"We now require all at24 users to use the "atmel,<model>" fallback in 
+device tree for different manufacturers."
+
+Moreover, I don't see giantec in the vendor prefix list.
+
+
+> +		reg = <87>;
+> +		pagesize = <32>;
+> +	};
+> +};
+> +
+> +&usart1 {
+> +	status = "okay";
+> +};
+> +
+> +&usart2 {
+> +	status = "okay";
+> +};
+> +
+> +&usart3 {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&dbgu {
+> +	status = "okay";
+> +};
+> +
+> +&pit {
+> +	status = "okay";
+> +};
+> +
+> +&adc0 {
+> +	status = "okay";
+> +};
+> +
+> +&can1 {
+> +	status = "okay";
+> +};
+> +
+> +&macb0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +
+> +	ethernet-phy@7 {
+> +		reg = <7>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_geth_int>;
+> +		interrupt-parent = <&pioB>;
+> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> +		txen-skew-ps = <800>;
+> +		txc-skew-ps = <3000>;
+> +		rxdv-skew-ps = <400>;
+> +		rxc-skew-ps = <3000>;
+> +		rxd0-skew-ps = <400>;
+> +		rxd1-skew-ps = <400>;
+> +		rxd2-skew-ps = <400>;
+> +		rxd3-skew-ps = <400>;
+> +	};
+> +};
+> +
+> +&macb1 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +
+> +	ethernet-phy@1 {
+> +		reg = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_eth_int>;
+> +		interrupt-parent = <&pioC>;
+> +		interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
+> +	};
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +};
+> +
+> +&usb1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb2 {
+> +	status = "okay";
+> +};
+> +
+> diff --git a/arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi b/arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi
+> new file mode 100644
+> index 0000000..d98c644
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi
+> @@ -0,0 +1,96 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-dvk_su60_somc_lcm.dtsi - Device Tree file for the DVK SOM60 LCD board
+> + *
+> + *  Copyright (C) 2018 Laird,
+> + *		  2018 Ben Whitten <ben.whitten@lairdtech.com>
+> + *
+> + */
+> +
+> +/ {
+> +	ahb {
+> +		apb {
+> +			pinctrl@fffff200 {
+> +				board {
+> +					pinctrl_lcd_ctp_int: lcd_ctp_int {
+> +						 atmel,pins =
+> +							 <AT91_PIOC 28 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&hlcdc_pwm 0 50000 0>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+> +	};
+> +
+> +	panel: panel {
+> +		/* Actually Winstar WF70GTIAGDNG0 */
+> +		compatible = "innolux,at070tn92", "simple-panel";
+> +		backlight = <&backlight>;
+> +		power-supply = <&vcc_lcd_reg>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "okay";
+> +
+> +		port@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +
+> +			panel_input: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&hlcdc_panel_output>;
+> +			};
+> +		};
+> +	};
+> +
+> +	vcc_lcd_reg: fixedregulator_lcd {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VCC LCM";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +
+> +	ft5426@56 {
+> +		/* Actually FT5426 */
+> +		compatible = "edt,edt-ft5406";
+> +		reg = <56>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_lcd_ctp_int>;
+> +
+> +		interrupt-parent = <&pioC>;
+> +		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <480>;
+> +	};
+> +};
+> +
+> +&hlcdc {
+> +	status = "okay";
+> +
+> +	hlcdc-display-controller {
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
+> +
+> +		port@0 {
+> +			hlcdc_panel_output: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&panel_input>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/at91-som60.dtsi b/arch/arm/boot/dts/at91-som60.dtsi
+> new file mode 100644
+> index 0000000..1843284
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-som60.dtsi
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-som60.dtsi - Device Tree file for the SOM60 module
+> + *
+> + *  Copyright (C) 2018 Laird,
+> + *		  2018 Ben Whitten <ben.whitten@lairdtech.com>
+> + *
+> + */
+> +#include "sama5d36.dtsi"
+> +
+> +/ {
+> +	model = "Laird SOM60";
+> +	compatible = "laird,som60", "atmel,sama5d36", "atmel,sama5d3", "atmel,sama5";
+> +
+> +	chosen {
+> +		stdout-path = &dbgu;
+> +	};
+> +
+> +	memory {
+> +		reg = <0x20000000 0x8000000>;
+> +	};
+> +
+> +	clocks {
+> +		slow_xtal {
+> +			clock-frequency = <32768>;
+> +		};
+> +
+> +		main_xtal {
+> +			clock-frequency = <12000000>;
+> +		};
+> +	};
+> +
+> +	ahb {
+> +		apb {
+> +			pinctrl@fffff200 {
+> +				board {
+> +					pinctrl_mmc0_cd: mmc0_cd {
+> +						atmel,pins =
+> +							<AT91_PIOE 31 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
+> +					};
+> +
+> +					pinctrl_mmc0_en: mmc0_en {
+> +						atmel,pins =
+> +							<AT91_PIOE 30 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+> +					};
+> +
+> +					pinctrl_nand0_wp: nand0_wp {
+> +						atmel,pins =
+> +							<AT91_PIOE 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
+> +					};
+> +
+> +					pinctrl_usb_vbus: usb_vbus {
+> +						atmel,pins =
+> +							<AT91_PIOE 20 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>; /* Conflicts with USART2_SCK */
+> +					};
+> +
+> +					pinctrl_usart2_sck: usart2_sck {
+> +						atmel,pins =
+> +							<AT91_PIOE 20 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* Conflicts with USB_VBUS */
+> +					};
+> +
+> +					pinctrl_usb_oc: usb_oc {
+> +						atmel,pins =
+> +							<AT91_PIOE 15 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* Conflicts with USART3_SCK */
+> +					};
+> +
+> +					pinctrl_usart3_sck: usart3_sck {
+> +						atmel,pins =
+> +							<AT91_PIOE 15 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* Conflicts with USB_OC */
+> +					};
+> +
+> +					pinctrl_usba_vbus: usba_vbus {
+> +					   atmel,pins =
+> +							<AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
+> +					};
+> +
+> +					pinctrl_geth_int: geth_int {
+> +						atmel,pins =
+> +							<AT91_PIOB 25 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* Conflicts with USART1_SCK */
+> +					};
+> +
+> +					pinctrl_usart1_sck: usart1_sck {
+> +						atmel,pins =
+> +							<AT91_PIOB 25 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* Conflicts with GETH_INT */
+> +					};
+> +
+> +					pinctrl_eth_int: eth_int {
+> +						atmel,pins =
+> +							<AT91_PIOC 10 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
+> +					};
+> +
+> +					pinctrl_pck2_as_audio_mck: pck2_as_audio_mck {
+> +						atmel,pins =
+> +							<AT91_PIOC 15 AT91_PERIPH_B AT91_PINCTRL_NONE>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	slot@0 {
+> +		reg = <0>;
+> +		bus-width = <8>;
+> +	};
+> +};
+> +
+> +&mmc1 {
+> +	status = "okay";
+> +	slot@0 {
+> +		reg = <0>;
+> +		bus-width = <4>;
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	cs-gpios = <&pioD 13 0>, <0>, <0>, <0>;
+> +};
+> +
+> +&usart0 {
+> +	atmel,use-dma-rx;
+> +	atmel,use-dma-tx;
+> +	status = "okay";
+> +	pinctrl-0 = <&pinctrl_usart0 &pinctrl_usart0_rts_cts>;
+> +};
+> +
+> +&usart1 {
+> +	pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
+> +};
+> +
+> +&usart2 {
+> +	pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rts_cts>;
+> +};
+> +
+> +&usart3 {
+> +	pinctrl-0 = <&pinctrl_usart3 &pinctrl_usart3_rts_cts>;
+> +};
+> +
+> +&adc0 {
+> +	pinctrl-0 = <
+> +		&pinctrl_adc0_adtrg
+> +		&pinctrl_adc0_ad0
+> +		&pinctrl_adc0_ad1
+> +		&pinctrl_adc0_ad2
+> +		&pinctrl_adc0_ad3
+> +		&pinctrl_adc0_ad4
+> +		&pinctrl_adc0_ad5
+> +		>;
+> +};
+> +
+> +&macb0 {
+> +	phy-mode = "rgmii";
+> +};
+> +
+> +&macb1 {
+> +	phy-mode = "rmii";
+> +};
+> +
+> +
+> +&ebi {
+> +	pinctrl-0 = <&pinctrl_ebi_nand_addr>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +};
+> +
+> +&nand_controller {
+> +	status = "okay";
+> +
+> +	nand: nand@3 {
+> +		reg = <0x3 0x0 0x2>;
+> +		atmel,rb = <0>;
+> +		nand-bus-width = <8>;
+> +		nand-ecc-mode = "hw";
+> +		nand-ecc-strength = <8>;
+> +		nand-ecc-step-size = <512>;
+> +		nand-on-flash-bbt;
+> +		label = "atmel_nand";
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			ubootspl@0 {
+> +				label = "u-boot-spl";
+> +				reg = <0x0 0x20000>;
+> +			};
+> +
+> +			uboot@20000 {
+> +				label = "u-boot";
+> +				reg = <0x20000 0x80000>;
+> +			};
+> +
+> +			ubootenv@a0000 {
+> +				label = "u-boot-env";
+> +				reg = <0xa0000 0x20000>;
+> +			};
+> +
+> +			ubootenv@c0000 {
+> +				label = "u-boot-env";
+> +				reg = <0xc0000 0x20000>;
+> +			};
+> +
+> +			ubi@e0000 {
+> +				label = "ubi";
+> +				reg = <0xe0000 0xfe00000>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&usb0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usba_vbus>;
+> +	atmel,vbus-gpio = <&pioC 14 GPIO_ACTIVE_HIGH>;
+> +};
+> +
+> +&usb1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usb_vbus &pinctrl_usb_oc>;
+> +	num-ports = <3>;
+> +	atmel,vbus-gpio = <0
+> +		&pioE 20 GPIO_ACTIVE_HIGH
+> +		0>;
+> +	atmel,oc-gpio = <0
+> +		&pioE 15 GPIO_ACTIVE_LOW
+> +		0>;
+> +};
 > 
-> I suggest you leave out the soc0, that's not real. Just make
-
-Why is that so, on a more complex board representation with multiple
-SoCs, this is a clear node indicating what the main SoC is in the final
-dtb representation.
-
-> the cbass@0 the top level interconnect. It can then provide
-> ranges to mcu interconnect which can provide ranges to the wkup
-> interconnect. So just model it after what's in the hardware :)
-
-That might blow up things quite a bit - it is like the comment in:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/dra7.dtsi#n141
-
-The trees are pretty deep with many interconnections (example main does
-have direct connections to wkup as well, which is simplified off in
-top level diagram) - basically it is not a direct one dimensional
-relationship. But then, the same is the case for other SoCs..
-
-we can represent NAVSS as a bus segment as well.
-
-> 
-> I found the following ranges based on a quick look at the TRM,
-> they could be split further if needed for power domains for
-> genpd for example.
-
-genpd is not really an issue, since it is handled in system firmware and
-OSes dont have a visibility into the permitted ranges that the OS is
-allowed to use.
-
-I think it is just how accurate a representation is it worth.
-
-> 
-> main covers
-> 0x0000000000 - 0x5402000000
-> 
-> main provides at least the following ranges for mcu
-> 0x0028380000 - 0x002bc00000
-> 0x0040080000 - 0x0041c80000
-> 0x0045100000 - 0x0045180000
-> 0x0045600000 - 0x0045640000
-> 0x0045810000 - 0x0045860000
-> 0x0045950000 - 0x0045950400
-> 0x0045a50000 - 0x0045a50400
-> 0x0045b04000 - 0x0045b06400
-> 0x0045d10000 - 0x0045d24000
-> 0x0046000000 - 0x0060000000
-> 0x0400000000 - 0x0800000000
-> 0x4c3c020000 - 0x4c3c030000
-> 0x4c3e000000 - 0x4c3e040000
-> 0x5400000000 - 0x5402000000
-> 
-> then mcu provides the following ranges for wkup
-> 0x0042000000 - 0x0044410020
-> 0x0045000000 - 0x0045030000
-> 0x0045080000 - 0x00450a0000
-> 0x0045808000 - 0x0045808800
-> 0x0045b00000 - 0x0045b02400
-> 
-> This based on looking at "figure 1-1. device top-level
-> block diagram" and the memory map in TRM.
-
-Thanks for researching. I did debate something like:
-
->From A53 view, a more accurate view might be  - from an interconnect
-view of the world (still simplified - i have ignored the sub bus
-segments in the representations below):
-
-msmc {
-	navss_main {
-		cbass_main{
-			cbass_mcu {
-				navss_mcu {
-				};
-				cbass_wkup{
-				};
-			};
-		};
-	};
-};
-
->From R5 view, the view will be very different ofcourse:
-view of the world (still simplified):
-
-cbass_mcu {
-	navss_mcu {
-	};
-	cbass_wkup{
-	};
-	cbass_main{
-		navss_main {
-			msmc {
-			};
-		};
-	};
-};
 
 
-Do we really need this level of representation, I am not sure I had seen
-this detailed a representation in other aarch64 SoCs (I am sure they are
-as complex as TI SoCs as well).
-
-I am trying to understand the direction and logic why we'd want to have
-such a detailed representation.
-
-A more flatter representation of just the main segments allow for dts
-reuse between r5 and a53 as well (but that is minor).
-
-
-Thoughts?
 -- 
-Regards,
-Nishanth Menon
+Nicolas Ferre
