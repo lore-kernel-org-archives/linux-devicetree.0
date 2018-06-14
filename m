@@ -1,36 +1,64 @@
-Return-Path: <SRS0=die6=IX=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: watchdog: renesas-wdt: Add support for the R8A77990 wdt
-Date: Tue,  5 Jun 2018 19:18:33 +0200
-Message-Id: <1528219113-29014-1-git-send-email-geert+renesas@glider.be>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=mOcJ=JA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:46558 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1754885AbeFNM3n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 14 Jun 2018 08:29:43 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 2/2] smiapp: Support the "rotation" property
+Date: Thu, 14 Jun 2018 15:29:39 +0300
+Message-Id: <20180614122939.21257-3-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180614122939.21257-1-sakari.ailus@linux.intel.com>
+References: <20180614122939.21257-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
+Use the "rotation" property to tell that the sensor is mounted upside
+down. This reverses the behaviour of the VFLIP and HFLIP controls as well
+as the pixel order.
 
-Document support for the Watchdog Timer (WDT) Controller in the Renesas
-R-Car E3 (R8A77990) SoC.
-
-No driver update is needed.
-
-Signed-off-by: Masaharu Hayakawa <masaharu.hayakawa.ry@renesas.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 ---
- Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/smiapp/smiapp-core.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-index f24d802b8056f6c6..5d47a262474cfe0e 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-@@ -16,6 +16,7 @@ Required properties:
- 	         - "renesas,r8a7796-wdt" (R-Car M3-W)
- 		 - "renesas,r8a77965-wdt" (R-Car M3-N)
- 	         - "renesas,r8a77970-wdt" (R-Car V3M)
-+	         - "renesas,r8a77990-wdt" (R-Car E3)
- 	         - "renesas,r8a77995-wdt" (R-Car D3)
- 	         - "renesas,r7s72100-wdt" (RZ/A1)
- 		The generic compatible string must be:
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index e1f8208581aa..e9e0f21efc2a 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -2764,6 +2764,7 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
+ 	struct v4l2_fwnode_endpoint *bus_cfg;
+ 	struct fwnode_handle *ep;
+ 	struct fwnode_handle *fwnode = dev_fwnode(dev);
++	u32 rotation;
+ 	int i;
+ 	int rval;
+ 
+@@ -2800,6 +2801,21 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
+ 
+ 	dev_dbg(dev, "lanes %u\n", hwcfg->lanes);
+ 
++	rval = fwnode_property_read_u32(fwnode, "rotation", &rotation);
++	if (!rval) {
++		switch (rotation) {
++		case 180:
++			hwcfg->module_board_orient =
++				SMIAPP_MODULE_BOARD_ORIENT_180;
++			/* Fall through */
++		case 0:
++			break;
++		default:
++			dev_err(dev, "invalid rotation %u\n", rotation);
++			goto out_err;
++		}
++	}
++
+ 	/* NVM size is not mandatory */
+ 	fwnode_property_read_u32(fwnode, "nokia,nvm-size", &hwcfg->nvm_size);
+ 
 -- 
-2.7.4
+2.11.0
+
