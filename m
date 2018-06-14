@@ -1,202 +1,154 @@
-From: Sayali Lokhande <sayalil@codeaurora.org>
-Subject: [PATCH V3 1/3] scsi: ufs: set the device reference clock setting
-Date: Thu, 14 Jun 2018 18:33:50 +0530
-Message-ID: <1528981432-23065-2-git-send-email-sayalil@codeaurora.org>
-References: <1528981432-23065-1-git-send-email-sayalil@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528981432-23065-1-git-send-email-sayalil@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, asutoshd@codeaurora.org, evgreen@chromium.org, riteshh@codeaurora.org
-Cc: linux-scsi@vger.kernel.org, Sayali Lokhande <sayalil@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
+Date: Thu, 14 Jun 2018 08:04:35 -0500
+Message-ID: <20180614130435.j2bmzam6corrjylx@kahuna>
+References: <20180605060510.32473-1-nm@ti.com>
+ <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
+ <20180607233853.p7iw7nlxxuyi66og@kahuna>
+ <20180614123805.GF112168@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180614123805.GF112168@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Vignesh R <vigneshr@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated
+ list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
+On 12:38-20180614, Tony Lindgren wrote:
+> Some comments on the ranges below.
 
-UFS host supplies the reference clock to UFS device and UFS device
-specification allows host to provide one of the 4 frequencies (19.2 MHz,
-26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
-device reference clock frequency setting in the device based on what
-frequency it is supplying to UFS device.
+Thanks for reviewing in detail (I understand we are in the middle of
+merge window, so thanks for the extra effort).
 
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
----
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
- drivers/scsi/ufs/ufs.h                             |  9 ++++
- drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
- drivers/scsi/ufs/ufshcd.c                          | 52 ++++++++++++++++++++++
- drivers/scsi/ufs/ufshcd.h                          |  1 +
- 5 files changed, 93 insertions(+)
+> 
+> * Nishanth Menon <nm@ti.com> [180607 16:41]:
+> > +	soc0: soc0 {
+> > +		compatible = "simple-bus";
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		ranges;
+> 
+> I suggest you leave out the soc0, that's not real. Just make
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index c39dfef..4522434 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -41,6 +41,12 @@ Optional properties:
- -lanes-per-direction	: number of lanes available per direction - either 1 or 2.
- 			  Note that it is assume same number of lanes is used both
- 			  directions at once. If not specified, default is 2 lanes per direction.
-+- dev-ref-clk-freq	: Specify the device reference clock frequency, must be one of the following:
-+			  0: 19.2 MHz
-+			  1: 26 MHz
-+			  2: 38.4 MHz
-+			  3: 52 MHz
-+			  Defaults to 26 MHz if not specified.
- 
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-@@ -66,4 +72,5 @@ Example:
- 		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
- 		phys = <&ufsphy1>;
- 		phy-names = "ufsphy";
-+		dev-ref-clk-freq = <0>; /* reference clock freq: 19.2 MHz */
- 	};
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 14e5bf7..e15deb0 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -378,6 +378,15 @@ enum query_opcode {
- 	UPIU_QUERY_OPCODE_TOGGLE_FLAG	= 0x8,
- };
- 
-+/* bRefClkFreq attribute values */
-+enum ref_clk_freq {
-+	REF_CLK_FREQ_19_2_MHZ	= 0x0,
-+	REF_CLK_FREQ_26_MHZ	= 0x1,
-+	REF_CLK_FREQ_38_4_MHZ	= 0x2,
-+	REF_CLK_FREQ_52_MHZ	= 0x3,
-+	REF_CLK_FREQ_MAX	= REF_CLK_FREQ_52_MHZ,
-+};
-+
- /* Query response result code */
- enum {
- 	QUERY_RESULT_SUCCESS                    = 0x00,
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index e82bde0..6c877f3 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -221,6 +221,28 @@ static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
- 	return err;
- }
- 
-+static void ufshcd_parse_dev_ref_clk_freq(struct ufs_hba *hba)
-+{
-+	struct device *dev = hba->dev;
-+	struct device_node *np = dev->of_node;
-+	int ret;
-+
-+	if (!np)
-+		return;
-+
-+	ret = of_property_read_u32(np, "dev-ref-clk-freq",
-+				   &hba->dev_ref_clk_freq);
-+	if (ret ||
-+	    (hba->dev_ref_clk_freq < 0) ||
-+	    (hba->dev_ref_clk_freq > REF_CLK_FREQ_52_MHZ)) {
-+		dev_err(hba->dev,
-+		"%s: invalid ref_clk setting = %d, set to default\n",
-+		__func__, hba->dev_ref_clk_freq);
-+		/* default setting */
-+		hba->dev_ref_clk_freq = REF_CLK_FREQ_26_MHZ;
-+	}
-+}
-+
- #ifdef CONFIG_PM
- /**
-  * ufshcd_pltfrm_suspend - suspend power management function
-@@ -343,6 +365,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	ufshcd_parse_dev_ref_clk_freq(hba);
-+
- 	ufshcd_init_lanes_per_dir(hba);
- 
- 	err = ufshcd_init(hba, mmio_base, irq);
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index c5b1bf1..4abc7ae 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6297,6 +6297,53 @@ static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
- }
- 
- /**
-+ * ufshcd_set_dev_ref_clk - set the device bRefClkFreq
-+ * @hba: per-adapter instance
-+ *
-+ * Read the current value of the bRefClkFreq attribute from device and update it
-+ * if host is supplying different reference clock frequency than one mentioned
-+ * in bRefClkFreq attribute.
-+ *
-+ * Returns zero on success, non-zero error value on failure.
-+ */
-+static int ufshcd_set_dev_ref_clk(struct ufs_hba *hba)
-+{
-+	int err = 0;
-+	int ref_clk = -1;
-+	static const char * const ref_clk_freqs[] = {"19.2 MHz", "26 MHz",
-+						     "38.4 MHz", "52 MHz"};
-+
-+	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-+			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0, &ref_clk);
-+
-+	if (err) {
-+		dev_err(hba->dev, "%s: failed reading bRefClkFreq. err = %d\n",
-+			 __func__, err);
-+		goto out;
-+	}
-+
-+	if (ref_clk == hba->dev_ref_clk_freq)
-+		goto out; /* nothing to update */
-+
-+	err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_WRITE_ATTR,
-+			QUERY_ATTR_IDN_REF_CLK_FREQ, 0, 0,
-+			&hba->dev_ref_clk_freq);
-+
-+	if (err)
-+		dev_err(hba->dev, "%s: bRefClkFreq setting to %s failed\n",
-+			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-+	/*
-+	 * It is good to print this out here to debug any later failures
-+	 * related to gear switch.
-+	 */
-+	dev_dbg(hba->dev, "%s: bRefClkFreq setting to %s succeeded\n",
-+			__func__, ref_clk_freqs[hba->dev_ref_clk_freq]);
-+
-+out:
-+	return err;
-+}
-+
-+/**
-  * ufshcd_probe_hba - probe hba to detect device and initialize
-  * @hba: per-adapter instance
-  *
-@@ -6361,6 +6408,11 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 			"%s: Failed getting max supported power mode\n",
- 			__func__);
- 	} else {
-+		/*
-+		 * Set the right value to bRefClkFreq before attempting to
-+		 * switch to HS gears.
-+		 */
-+		ufshcd_set_dev_ref_clk(hba);
- 		ret = ufshcd_config_pwr_mode(hba, &hba->max_pwr_info.info);
- 		if (ret) {
- 			dev_err(hba->dev, "%s: Failed setting power mode, err = %d\n",
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 8110dcd..b026ad8 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -548,6 +548,7 @@ struct ufs_hba {
- 	void *priv;
- 	unsigned int irq;
- 	bool is_irq_enabled;
-+	u32 dev_ref_clk_freq;
- 
- 	/* Interrupt aggregation support is broken */
- 	#define UFSHCD_QUIRK_BROKEN_INTR_AGGR			0x1
+Why is that so, on a more complex board representation with multiple
+SoCs, this is a clear node indicating what the main SoC is in the final
+dtb representation.
+
+> the cbass@0 the top level interconnect. It can then provide
+> ranges to mcu interconnect which can provide ranges to the wkup
+> interconnect. So just model it after what's in the hardware :)
+
+That might blow up things quite a bit - it is like the comment in:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/dra7.dtsi#n141
+
+The trees are pretty deep with many interconnections (example main does
+have direct connections to wkup as well, which is simplified off in
+top level diagram) - basically it is not a direct one dimensional
+relationship. But then, the same is the case for other SoCs..
+
+we can represent NAVSS as a bus segment as well.
+
+> 
+> I found the following ranges based on a quick look at the TRM,
+> they could be split further if needed for power domains for
+> genpd for example.
+
+genpd is not really an issue, since it is handled in system firmware and
+OSes dont have a visibility into the permitted ranges that the OS is
+allowed to use.
+
+I think it is just how accurate a representation is it worth.
+
+> 
+> main covers
+> 0x0000000000 - 0x5402000000
+> 
+> main provides at least the following ranges for mcu
+> 0x0028380000 - 0x002bc00000
+> 0x0040080000 - 0x0041c80000
+> 0x0045100000 - 0x0045180000
+> 0x0045600000 - 0x0045640000
+> 0x0045810000 - 0x0045860000
+> 0x0045950000 - 0x0045950400
+> 0x0045a50000 - 0x0045a50400
+> 0x0045b04000 - 0x0045b06400
+> 0x0045d10000 - 0x0045d24000
+> 0x0046000000 - 0x0060000000
+> 0x0400000000 - 0x0800000000
+> 0x4c3c020000 - 0x4c3c030000
+> 0x4c3e000000 - 0x4c3e040000
+> 0x5400000000 - 0x5402000000
+> 
+> then mcu provides the following ranges for wkup
+> 0x0042000000 - 0x0044410020
+> 0x0045000000 - 0x0045030000
+> 0x0045080000 - 0x00450a0000
+> 0x0045808000 - 0x0045808800
+> 0x0045b00000 - 0x0045b02400
+> 
+> This based on looking at "figure 1-1. device top-level
+> block diagram" and the memory map in TRM.
+
+Thanks for researching. I did debate something like:
+
+>From A53 view, a more accurate view might be  - from an interconnect
+view of the world (still simplified - i have ignored the sub bus
+segments in the representations below):
+
+msmc {
+	navss_main {
+		cbass_main{
+			cbass_mcu {
+				navss_mcu {
+				};
+				cbass_wkup{
+				};
+			};
+		};
+	};
+};
+
+>From R5 view, the view will be very different ofcourse:
+view of the world (still simplified):
+
+cbass_mcu {
+	navss_mcu {
+	};
+	cbass_wkup{
+	};
+	cbass_main{
+		navss_main {
+			msmc {
+			};
+		};
+	};
+};
+
+
+Do we really need this level of representation, I am not sure I had seen
+this detailed a representation in other aarch64 SoCs (I am sure they are
+as complex as TI SoCs as well).
+
+I am trying to understand the direction and logic why we'd want to have
+such a detailed representation.
+
+A more flatter representation of just the main segments allow for dts
+reuse between r5 and a53 as well (but that is minor).
+
+
+Thoughts?
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+Nishanth Menon
