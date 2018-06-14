@@ -1,56 +1,63 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 3/6] DTS: gta04: add uart2 child node for w2sg0004 GPS
- receiver
-Date: Thu, 14 Jun 2018 21:44:38 +0200
-Message-ID: <20180614194428.GA17808@amd>
-References: <cover.1525340143.git.hns@goldelico.com>
- <9ebb28aed589aca8e9b5bc5c910f1d2f0d62669d.1525340143.git.hns@goldelico.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v3 00/12] Add throttler driver for non-thermal throttling
+Date: Thu, 14 Jun 2018 12:47:00 -0700
+Message-ID: <20180614194712.102134-1-mka@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9ebb28aed589aca8e9b5bc5c910f1d2f0d62669d.1525340143.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Johan Hovold <johan@kernel.org>, afd@ti.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kevin Hilman <khilman@baylibre.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, David Lechner <david@lechnology.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+This series adds the throttler driver, for non-thermal throttling of
+CPUs and devfreq devices. A use case for non-thermal throttling could
+be the detection of a high battery discharge voltage, close to the
+over-current protection (OCP) limit of the battery.
 
---vGgW1X5XWziG23Ko
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To support throttling of devfreq devices the series introduces the
+concept of a devfreq policy and the DEVFREQ_ADJUST notifier (similar
+to CPUFREQ_ADJUST). Further it includes some related devfreq bugfixes
+and improvements that change some of the code that is also touched
+by the policy changes.
 
-On Thu 2018-05-03 11:35:48, H. Nikolaus Schaller wrote:
-> GTA04 has a W2SG0004 module connected to UART2 of the OMAP3
-> processor. A GPIO can pulse the on/off toggle switch.
->=20
-> Note that there is no WAKEUP output from the W2SG0004,
-> hence we can't use the generic SirfStar binding.
->=20
-> The VSIM regulator is used to power on/off the LNA of an
-> external active GPS antenna so that a driver can turn the
-> LNA off if GPS is not needed to save battery energy.
+Matthias Kaehlcke (12):
+  PM / devfreq: Init user limits from OPP limits, not viceversa
+  PM / devfreq: Fix handling of min/max_freq == 0
+  PM / devfreq: Don't adjust to user limits in governors
+  PM / devfreq: Add struct devfreq_policy
+  PM / devfreg: Add support for policy notifiers
+  PM / devfreq: Make update_devfreq() public
+  PM / devfreq: export devfreq_class
+  cpufreq: Add stub for cpufreq_update_policy()
+  dt-bindings: PM / OPP: add opp-throttlers property
+  misc: throttler: Add core support for non-thermal throttling
+  misc: throttler: Add Chrome OS EC throttler
+  mfd: cros_ec: Add throttler sub-device
 
-This reads as if you did low->high->low to turn GPS on, then
-low->high->low to turn GPS off again. Is that correct?
+ Documentation/devicetree/bindings/opp/opp.txt |   3 +
+ MAINTAINERS                                   |   7 +
+ drivers/devfreq/devfreq.c                     | 222 +++---
+ drivers/devfreq/governor.h                    |   6 +-
+ drivers/devfreq/governor_passive.c            |   4 +-
+ drivers/devfreq/governor_performance.c        |   5 +-
+ drivers/devfreq/governor_powersave.c          |   2 +-
+ drivers/devfreq/governor_simpleondemand.c     |  12 +-
+ drivers/devfreq/governor_userspace.c          |  16 +-
+ drivers/mfd/cros_ec.c                         |  16 +
+ drivers/misc/Kconfig                          |   1 +
+ drivers/misc/Makefile                         |   1 +
+ drivers/misc/throttler/Kconfig                |  33 +
+ drivers/misc/throttler/Makefile               |   2 +
+ drivers/misc/throttler/core.c                 | 687 ++++++++++++++++++
+ drivers/misc/throttler/cros_ec_throttler.c    | 109 +++
+ include/linux/cpufreq.h                       |   1 +
+ include/linux/devfreq.h                       | 113 ++-
+ include/linux/throttler.h                     |  21 +
+ 19 files changed, 1136 insertions(+), 125 deletions(-)
+ create mode 100644 drivers/misc/throttler/Kconfig
+ create mode 100644 drivers/misc/throttler/Makefile
+ create mode 100644 drivers/misc/throttler/core.c
+ create mode 100644 drivers/misc/throttler/cros_ec_throttler.c
+ create mode 100644 include/linux/throttler.h
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---vGgW1X5XWziG23Ko
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlsixaYACgkQMOfwapXb+vIR+QCdEaJCgNlT/StRfo2wpu6IL5DZ
-f5oAnRk0pf0CnytX6uUjiTwnFyuk9B9F
-=NzCb
------END PGP SIGNATURE-----
-
---vGgW1X5XWziG23Ko--
+-- 
+2.18.0.rc1.242.g61856ae69a-goog
