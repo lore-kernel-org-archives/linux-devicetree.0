@@ -1,135 +1,120 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 00/27] Add support for R40 HDMI pipeline
-Date: Thu, 14 Jun 2018 22:46:46 +0530
-Message-ID: <CAMty3ZBt33q9HWm7n3SrON_Y51g+bsQNfoHajCCVzuKZLGHkjw@mail.gmail.com>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
- <CAMty3ZC-Edg5XJQpqEuwLbSFzmam3zP3zUPak4K7ypyT2+arAg@mail.gmail.com> <2742773.k39D243pH3@jernej-laptop>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH linux-next v5 07/13] dt-bindings: mfd: Add a document for
+ PECI client mfd
+Date: Thu, 14 Jun 2018 10:25:37 -0700
+Message-ID: <2b5bbf01-8c9c-bb06-4559-00dae61d95de@linux.intel.com>
+References: <20180601182216.23894-1-jae.hyun.yoo@linux.intel.com>
+ <20180613061637.GI5278@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBAGGRLMQKGQEEWPMZVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2742773.k39D243pH3@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180613061637.GI5278@dell>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 8:04 PM, Jernej =C5=A0krabec <jernej.skrabec@siol.n=
-et> wrote:
-> Dne =C4=8Detrtek, 14. junij 2018 ob 09:12:41 CEST je Jagan Teki napisal(a=
-):
->> On Wed, Jun 13, 2018 at 1:30 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org=
->
-> wrote:
->> > This series adds support for R40 HDMI pipeline. It is a bit special
->> > than other already supported pipelines because it has additional unit
->> > called TCON TOP responsible for relationship configuration between
->> > mixers, TCONs and HDMI. Additionally, it has additional gates for DSI
->> > and TV TCONs, TV encoder clock settings and pin muxing between LCD
->> > and TV encoders.
->> >
->> > However, it seems that TCON TOP will become a norm, since newer
->> > Allwinner SoCs like H6 also have this unit.
->> >
->> > I tested different possible configurations:
->> > - mixer0 <> TCON-TV0 <> HDMI
->> > - mixer0 <> TCON-TV1 <> HDMI
->> > - mixer1 <> TCON-TV0 <> HDMI
->> > - mixer1 <> TCON-TV1 <> HDMI
->> >
->> > Please review.
->> >
->> > Best regards,
->> > Jernej
->> >
->> > Changes from v1:
->> > - Split DT bindings patch and updated description
->> > - Split HDMI PHY patch
->> > - Move header file from TCON TOP patch to dt bindings patch
->> > - Added Rob reviewed-by tag
->> > - Used clk_hw_register_gate() instead of custom gate registration code
->> > - Reworked TCON TOP to be part of of-graph. Because of that, a lot of
->> >
->> >   new patches were added.
->> >
->> > - Droped mixer index quirk patch
->> > - Reworked TCON support for TCON TOP
->> > - Updated commit messages
->> >
->> > Jernej Skrabec (27):
->> >   clk: sunxi-ng: r40: Add minimal rate for video PLLs
->> >   clk: sunxi-ng: r40: Allow setting parent rate to display related
->> >
->> >     clocks
->> >
->> >   clk: sunxi-ng: r40: Export video PLLs
->> >   dt-bindings: display: sunxi-drm: Add TCON TOP description
->> >   drm/sun4i: Add TCON TOP driver
->> >   drm/sun4i: Fix releasing node when enumerating enpoints
->> >   drm/sun4i: Split out code for enumerating endpoints in output port
->> >   drm/sun4i: Add support for traversing graph with TCON TOP
->> >   drm/sun4i: Don't skip TCONs if they don't have channel 0
->> >   dt-bindings: display: sun4i-drm: Add R40 TV TCON description
->> >   drm/sun4i: tcon: Add support for tcon-top gate
->> >   drm/sun4i: tcon: Generalize engine search algorithm
->> >   drm/sun4i: Don't check for LVDS and RGB when TCON has only ch1
->> >   drm/sun4i: Don't check for panel or bridge on TV TCONs
->> >   drm/sun4i: Add support for R40 TV TCON
->> >   dt-bindings: display: sun4i-drm: Add R40 mixer compatibles
->> >   drm/sun4i: Add support for R40 mixers
->> >   dt-bindings: display: sun4i-drm: Add description of A64 HDMI PHY
->> >   drm/sun4i: Enable DW HDMI PHY clock
->> >   drm/sun4i: Don't change clock bits in DW HDMI PHY driver
->> >   drm/sun4i: DW HDMI PHY: Add support for second PLL
->> >   drm/sun4i: Add support for second clock parent to DW HDMI PHY clk
->> >
->> >     driver
->> >
->> >   drm/sun4i: Add support for A64 HDMI PHY
->> >   drm: of: Export drm_crtc_port_mask()
->> >   drm/sun4i: DW HDMI: Expand algorithm for possible crtcs
->> >   ARM: dts: sun8i: r40: Add HDMI pipeline
->> >   ARM: dts: sun8i: r40: Enable HDMI output on BananaPi M2 Ultra
+Thanks for the review. Please check my answers inline.
+
+On 6/12/2018 11:16 PM, Lee Jones wrote:
+> All s/mfd/MFD/
+> 
+
+Got it. Will fix it.
+
+>> This commit adds a dt-bindings document for PECI client multi-function
+>> device.
+> 
+> Multi-Function Device
+> 
+
+Will fix it.
+
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> Cc: Andrew Jeffery <andrew@aj.id.au>
+>> Cc: James Feist <james.feist@linux.intel.com>
+>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+>> Cc: Joel Stanley <joel@jms.id.au>
+>> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mfd/peci-client.txt   | 23 +++++++++++++++++++
+>>   1 file changed, 23 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/peci-client.txt
 >>
->> Tested whole series on top of linux-next.
->>
->> Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->
-> Thanks!
+>> diff --git a/Documentation/devicetree/bindings/mfd/peci-client.txt b/Documentation/devicetree/bindings/mfd/peci-client.txt
+>> new file mode 100644
+>> index 000000000000..4eb8f6bb6ca4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/peci-client.txt
+>> @@ -0,0 +1,23 @@
+>> +* Intel PECI client bindings
+> 
+> Now it the time to expand on what a "PECI client" is.
+> 
 
-I've V40 board, which is same as R40. I'm able to detect the HDMI but
-seems edid not detecting properly.
+Okay, I'll add more description about the "PECI client".
 
-[    0.983007] sun4i-drm display-engine: bound 1100000.mixer (ops 0xc074a80=
-c)
-[    0.999043] sun4i-drm display-engine: bound 1200000.mixer (ops 0xc074a80=
-c)
-[    1.006229] sun4i-drm display-engine: bound 1c70000.tcon-top (ops 0xc074=
-e2ac)
-[    1.013609] sun4i-drm display-engine: bound 1c73000.lcd-controller
-(ops 0xc0747a28)
-[    1.053988] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller
-v1.32a with HDCP (sun8i_dw_hdmi_phy)
-[    1.063913] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI
-I2C bus driver
-[    1.071683] sun4i-drm display-engine: bound 1ee0000.hdmi (ops 0xc074a298=
-)
-[    1.078484] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    1.085098] [drm] No driver support for vblank timestamp query.
-[    1.091055] [drm] Cannot find any crtc or sizes
-[    1.095995] [drm] Initialized sun4i-drm 1.0.0 20150629 for
-display-engine on minor 0
+>> +Required properties:
+>> +- compatible : Should be "intel,peci-client", "simple-mfd".
+>> +- reg        : Should contain address of a client CPU. Address range of CPU
+>> +	       clients is starting from 0x30 based on PECI specification.
+> 
+> s/is starting/start/
+> 
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Will change it to "Address range of CPU clients starts from ...".
+
+>> +Example:
+>> +	peci-bus@0 {
+> 
+> 0?
+> 
+
+Because the actual reg value of the peci bus is reg = <0x0 0x60> but
+anyway it's an example.
+
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+> 
+> No 'reg' property?
+> 
+
+This is the actual peci bus node which is a parent of this MFD node:
+	peci0: peci-bus@0 {
+		compatible = "aspeed,ast2500-peci";
+		reg = <0x0 0x60>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		interrupts = <15>;
+		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
+		resets = <&syscon ASPEED_RESET_PECI>;
+		clock-frequency = <24000000>;
+		msg-timing = <1>;
+		addr-timing = <1>;
+		rd-sampling-point = <8>;
+		cmd-timeout-ms = <1000>;
+	};
+
+>> +		< more properties >
+> 
+> Remove this.
+> 
+
+I dropped all other properties into < more properties > because I want
+to show the #address-cells and #size-cells to state its sub-nodes
+should have a single unique reg value. Should I remove this line or the
+whole parent node?
+
+>> +		peci-client@30 {
+>> +			compatible = "intel,peci-client", "simple-mfd";
+>> +			reg = <0x30>;
+>> +		};
+>> +
+>> +		peci-client@31 {
+>> +			compatible = "intel,peci-client", "simple-mfd";
+>> +			reg = <0x31>;
+>> +		};
+>> +	};
+> 
