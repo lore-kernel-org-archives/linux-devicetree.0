@@ -1,288 +1,48 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v8 05/10] firmware: xilinx: Add clock APIs
-Date: Thu, 14 Jun 2018 11:27:37 -0700
-Message-ID: <1529000862-11510-6-git-send-email-jollys@xilinx.com>
-References: <1529000862-11510-1-git-send-email-jollys@xilinx.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v7 10/10] drivers: clk: Add ZynqMP clock driver
+Date: Thu, 14 Jun 2018 18:30:03 +0000
+Message-ID: <SN1PR02MB3758971F60A9800642B16F95B87D0@SN1PR02MB3758.namprd02.prod.outlook.com>
+References: <1527713725-1086-1-git-send-email-jollys@xilinx.com>
+ <1527713725-1086-11-git-send-email-jollys@xilinx.com>
+ <c042fd9b-85cb-f0d3-101c-f78f3dc4fc44@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529000862-11510-1-git-send-email-jollys@xilinx.com>
+In-Reply-To: <c042fd9b-85cb-f0d3-101c-f78f3dc4fc44@infradead.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Randy Dunlap <rdunlap@infradead.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tejas Patel <TEJASP@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajanv@xilinx.com>
-
-Add clock APIs to control clocks through firmware
-interface.
-
-Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
----
- drivers/firmware/xilinx/zynqmp.c     | 186 ++++++++++++++++++++++++++++++++++-
- include/linux/firmware/xlnx-zynqmp.h |  30 ++++++
- 2 files changed, 214 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 86d9bb8..c764d6e 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -269,14 +269,196 @@ static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
-  */
- static int zynqmp_pm_query_data(struct zynqmp_pm_query_data qdata, u32 *out)
- {
--	return zynqmp_pm_invoke_fn(PM_QUERY_DATA, qdata.qid, qdata.arg1,
--				   qdata.arg2, qdata.arg3, out);
-+	int ret;
-+
-+	ret = zynqmp_pm_invoke_fn(PM_QUERY_DATA, qdata.qid, qdata.arg1,
-+				  qdata.arg2, qdata.arg3, out);
-+
-+	/*
-+	 * For clock name query, all bytes in SMC response are clock name
-+	 * characters and return code is always success. For invalid clocks,
-+	 * clock name bytes would be 0s.
-+	 */
-+	return qdata.qid == PM_QID_CLOCK_GET_NAME ? 0 : ret;
-+}
-+
-+/**
-+ * zynqmp_pm_clock_enable() - Enable the clock for given id
-+ * @clock_id:	ID of the clock to be enabled
-+ *
-+ * This function is used by master to enable the clock
-+ * including peripherals and PLL clocks.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_enable(u32 clock_id)
-+{
-+	return zynqmp_pm_invoke_fn(PM_CLOCK_ENABLE, clock_id, 0, 0, 0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_clock_disable() - Disable the clock for given id
-+ * @clock_id:	ID of the clock to be disable
-+ *
-+ * This function is used by master to disable the clock
-+ * including peripherals and PLL clocks.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_disable(u32 clock_id)
-+{
-+	return zynqmp_pm_invoke_fn(PM_CLOCK_DISABLE, clock_id, 0, 0, 0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_clock_getstate() - Get the clock state for given id
-+ * @clock_id:	ID of the clock to be queried
-+ * @state:	1/0 (Enabled/Disabled)
-+ *
-+ * This function is used by master to get the state of clock
-+ * including peripherals and PLL clocks.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_getstate(u32 clock_id, u32 *state)
-+{
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	int ret;
-+
-+	ret = zynqmp_pm_invoke_fn(PM_CLOCK_GETSTATE, clock_id, 0,
-+				  0, 0, ret_payload);
-+	*state = ret_payload[1];
-+
-+	return ret;
-+}
-+
-+/**
-+ * zynqmp_pm_clock_setdivider() - Set the clock divider for given id
-+ * @clock_id:	ID of the clock
-+ * @divider:	divider value
-+ *
-+ * This function is used by master to set divider for any clock
-+ * to achieve desired rate.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_setdivider(u32 clock_id, u32 divider)
-+{
-+	return zynqmp_pm_invoke_fn(PM_CLOCK_SETDIVIDER, clock_id, divider,
-+				   0, 0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_clock_getdivider() - Get the clock divider for given id
-+ * @clock_id:	ID of the clock
-+ * @divider:	divider value
-+ *
-+ * This function is used by master to get divider values
-+ * for any clock.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_getdivider(u32 clock_id, u32 *divider)
-+{
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	int ret;
-+
-+	ret = zynqmp_pm_invoke_fn(PM_CLOCK_GETDIVIDER, clock_id, 0,
-+				  0, 0, ret_payload);
-+	*divider = ret_payload[1];
-+
-+	return ret;
-+}
-+
-+/**
-+ * zynqmp_pm_clock_setrate() - Set the clock rate for given id
-+ * @clock_id:	ID of the clock
-+ * @rate:	rate value in hz
-+ *
-+ * This function is used by master to set rate for any clock.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_setrate(u32 clock_id, u64 rate)
-+{
-+	return zynqmp_pm_invoke_fn(PM_CLOCK_SETRATE, clock_id,
-+				   rate & 0xFFFFFFFF,
-+				   (rate >> 32) & 0xFFFFFFFF,
-+				   0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_clock_getrate() - Get the clock rate for given id
-+ * @clock_id:	ID of the clock
-+ * @rate:	rate value in hz
-+ *
-+ * This function is used by master to get rate
-+ * for any clock.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_getrate(u32 clock_id, u64 *rate)
-+{
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	int ret;
-+
-+	ret = zynqmp_pm_invoke_fn(PM_CLOCK_GETRATE, clock_id, 0,
-+				  0, 0, ret_payload);
-+	*rate = ((u64)ret_payload[2] << 32) | ret_payload[1];
-+
-+	return ret;
-+}
-+
-+/**
-+ * zynqmp_pm_clock_setparent() - Set the clock parent for given id
-+ * @clock_id:	ID of the clock
-+ * @parent_id:	parent id
-+ *
-+ * This function is used by master to set parent for any clock.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_setparent(u32 clock_id, u32 parent_id)
-+{
-+	return zynqmp_pm_invoke_fn(PM_CLOCK_SETPARENT, clock_id,
-+				   parent_id, 0, 0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_clock_getparent() - Get the clock parent for given id
-+ * @clock_id:	ID of the clock
-+ * @parent_id:	parent id
-+ *
-+ * This function is used by master to get parent index
-+ * for any clock.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
-+{
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	int ret;
-+
-+	ret = zynqmp_pm_invoke_fn(PM_CLOCK_GETPARENT, clock_id, 0,
-+				  0, 0, ret_payload);
-+	*parent_id = ret_payload[1];
-+
-+	return ret;
- }
- 
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.ioctl = zynqmp_pm_ioctl,
- 	.query_data = zynqmp_pm_query_data,
-+	.clock_enable = zynqmp_pm_clock_enable,
-+	.clock_disable = zynqmp_pm_clock_disable,
-+	.clock_getstate = zynqmp_pm_clock_getstate,
-+	.clock_setdivider = zynqmp_pm_clock_setdivider,
-+	.clock_getdivider = zynqmp_pm_clock_getdivider,
-+	.clock_setrate = zynqmp_pm_clock_setrate,
-+	.clock_getrate = zynqmp_pm_clock_getrate,
-+	.clock_setparent = zynqmp_pm_clock_setparent,
-+	.clock_getparent = zynqmp_pm_clock_getparent,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 354385d..29fb352 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -36,6 +36,15 @@ enum pm_api_id {
- 	PM_GET_API_VERSION = 1,
- 	PM_IOCTL = 34,
- 	PM_QUERY_DATA,
-+	PM_CLOCK_ENABLE,
-+	PM_CLOCK_DISABLE,
-+	PM_CLOCK_GETSTATE,
-+	PM_CLOCK_SETDIVIDER,
-+	PM_CLOCK_GETDIVIDER,
-+	PM_CLOCK_SETRATE,
-+	PM_CLOCK_GETRATE,
-+	PM_CLOCK_SETPARENT,
-+	PM_CLOCK_GETPARENT,
- };
- 
- /* PMU-FW return status codes */
-@@ -49,8 +58,20 @@ enum pm_ret_status {
- 	XST_PM_ABORT_SUSPEND,
- };
- 
-+enum pm_ioctl_id {
-+	IOCTL_SET_PLL_FRAC_MODE = 8,
-+	IOCTL_GET_PLL_FRAC_MODE,
-+	IOCTL_SET_PLL_FRAC_DATA,
-+	IOCTL_GET_PLL_FRAC_DATA,
-+};
-+
- enum pm_query_id {
- 	PM_QID_INVALID,
-+	PM_QID_CLOCK_GET_NAME,
-+	PM_QID_CLOCK_GET_TOPOLOGY,
-+	PM_QID_CLOCK_GET_FIXEDFACTOR_PARAMS,
-+	PM_QID_CLOCK_GET_PARENTS,
-+	PM_QID_CLOCK_GET_ATTRIBUTES,
- };
- 
- /**
-@@ -71,6 +92,15 @@ struct zynqmp_eemi_ops {
- 	int (*get_api_version)(u32 *version);
- 	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
- 	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
-+	int (*clock_enable)(u32 clock_id);
-+	int (*clock_disable)(u32 clock_id);
-+	int (*clock_getstate)(u32 clock_id, u32 *state);
-+	int (*clock_setdivider)(u32 clock_id, u32 divider);
-+	int (*clock_getdivider)(u32 clock_id, u32 *divider);
-+	int (*clock_setrate)(u32 clock_id, u64 rate);
-+	int (*clock_getrate)(u32 clock_id, u64 *rate);
-+	int (*clock_setparent)(u32 clock_id, u32 parent_id);
-+	int (*clock_getparent)(u32 clock_id, u32 *parent_id);
- };
- 
- #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
--- 
-2.7.4
+SGkgUmFuZHksDQoNClRoYW5rcyBmb3IgcmV2aWV3LA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+IEZyb206IFJhbmR5IER1bmxhcCBbbWFpbHRvOnJkdW5sYXBAaW5mcmFkZWFkLm9y
+Z10NCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgMzAsIDIwMTggMjoxOCBQTQ0KPiBUbzogSm9sbHkg
+U2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+OyBhcmQuYmllc2hldXZlbEBsaW5hcm8ub3JnOw0KPiBt
+aW5nb0BrZXJuZWwub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgbWF0dEBjb2RlYmx1
+ZXByaW50LmNvLnVrOw0KPiBzdWRlZXAuaG9sbGFAYXJtLmNvbTsgaGthbGx3ZWl0MUBnbWFpbC5j
+b207IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsg
+bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207DQo+IHNib3lkQGNvZGVhdXJvcmEub3JnOyBtaWNoYWwu
+c2ltZWtAeGlsaW54LmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJt
+LmNvbTsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZw0KPiBDYzogUmFqYW4gVmFqYSA8UkFKQU5W
+QHhpbGlueC5jb20+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBU
+ZWphcyBQYXRlbA0KPiA8VEVKQVNQQHhpbGlueC5jb20+OyBTaHViaHJhanlvdGkgRGF0dGEgPHNo
+dWJocmFqQHhpbGlueC5jb20+OyBKb2xseSBTaGFoDQo+IDxKT0xMWVNAeGlsaW54LmNvbT4NCj4g
+U3ViamVjdDogUmU6IFtQQVRDSCB2NyAxMC8xMF0gZHJpdmVyczogY2xrOiBBZGQgWnlucU1QIGNs
+b2NrIGRyaXZlcg0KPiANCj4gT24gMDUvMzAvMjAxOCAwMTo1NSBQTSwgSm9sbHkgU2hhaCB3cm90
+ZToNCj4gPiBGcm9tOiBKb2xseSBTaGFoIDxqb2xseS5zaGFoQHhpbGlueC5jb20+DQo+IA0KPiAN
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvenlucW1wL0tjb25maWcgYi9kcml2ZXJzL2Ns
+ay96eW5xbXAvS2NvbmZpZw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAu
+LmZlODE1ZjcNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvenlucW1w
+L0tjb25maWcNCj4gPiBAQCAtMCwwICsxLDExIEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50
+aWZpZXI6IEdQTC0yLjANCj4gPiArDQo+ID4gK2NvbmZpZyBDT01NT05fQ0xLX1pZTlFNUA0KPiA+
+ICsJYm9vbCAiU3VwcG9ydCBmb3IgWGlsaW54IFp5bnFNUCBVbHRyYXNjYWxlKyBjbG9jayBjb250
+cm9sbGVycyINCj4gPiArCWRlcGVuZHMgb24gT0YNCj4gPiArCWRlcGVuZHMgb24gQVJDSF9aWU5R
+TVAgfHwgQ09NUElMRV9URVNUDQo+ID4gKwlkZXBlbmRzIG9uIFpZTlFNUF9GSVJNV0FSRQ0KPiA+
+ICsJaGVscA0KPiA+ICsJICBTdXBwb3J0IGZvciB0aGUgWnlucW1wIFVsdHJhc2NhbGUgY2xvY2sg
+Y29udHJvbGxlci4NCj4gPiArCSAgSXQgaGFzIGEgZGVwZW5kZW5jeSBvbiB0aGUgUE1VIGZpcm13
+YXJlLg0KPiA+ICsJICBTYXkgWSBpZiB5b3Ugd2FudCB0byBzdXBwb3J0IGNsb2NrIHN1cHBvcnQN
+Cj4gDQo+IAkgIFNheSBZIGlmIHlvdSB3YW50IHRvIGluY2x1ZGUgY2xvY2sgc3VwcG9ydC4NCj4g
+DQoJRml4ZWQgaW4gdjgNCg0KPiANCj4gLS0NCj4gflJhbmR5DQo=
