@@ -1,44 +1,65 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 17/27] bindings: nvmem/zii: Fix location of nvmem.txt
-Date: Thu, 14 Jun 2018 17:52:11 +0100
-Message-ID: <c6dd6c36-2b75-cc9e-ea9e-5ee70eb656e6@linaro.org>
-References: <cover.1528990947.git.mchehab+samsung@kernel.org>
- <fcfc83951a2997c527126af1fdd6fb1e0acbe27d.1528990947.git.mchehab+samsung@kernel.org>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts: allwinner: a64: add SRAM
+ controller device tree node
+Date: Thu, 14 Jun 2018 22:39:56 +0530
+Message-ID: <CAMty3ZARNpBOQKvS7knH8kWE2+bvjuJoAA4cFGZK8+GzTUQ5zA@mail.gmail.com>
+References: <20180614153548.9644-1-wens@csie.org> <20180614153548.9644-5-wens@csie.org>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fcfc83951a2997c527126af1fdd6fb1e0acbe27d.1528990947.git.mchehab+samsung@kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBZOCRLMQKGQEHAG3W4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180614153548.9644-5-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 14/06/18 17:09, Mauro Carvalho Chehab wrote:
-> The location pointed there is missing "bindings/" on its path.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
+On Thu, Jun 14, 2018 at 9:05 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>
+> Allwinner A64 has a SRAM controller, and in the device tree currently
+> we have a syscon node to enable EMAC driver to access the EMAC clock
+> register. As SRAM controller driver can now export regmap for this
+> register, replace the syscon node to the SRAM controller device node,
+> and let EMAC driver to acquire its EMAC clock regmap.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> [wens-jdAy2FN1RRM@public.gmane.org: Updated compatible string]
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->   Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-> index d5e22fc67d66..0df79d9e07ec 100644
-> --- a/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/zii,rave-sp-eeprom.txt
-> @@ -18,7 +18,7 @@ Optional properties:
->   Data cells:
->   
->   Data cells are child nodes of eerpom node, bindings for which are
-> -documented in Documentation/bindings/nvmem/nvmem.txt
-> +documented in Documentation/devicetree/bindings/nvmem/nvmem.txt
->   
->   Example:
->   
-> 
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 1b2ef28c42bd..87968dafe1dc 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -169,9 +169,24 @@
+>                 ranges;
+>
+>                 syscon: syscon@1c00000 {
+> -                       compatible = "allwinner,sun50i-a64-system-controller",
+> -                               "syscon";
+> +                       compatible = "allwinner,sun50i-a64-system-control";
+>                         reg = <0x01c00000 0x1000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges;
+> +
+> +                       sram_c: sram@18000 {
+> +                               compatible = "mmio-sram";
+> +                               reg = <0x00018000 0x28000>;
+> +                               #address-cells = <1>;
+> +                               #size-cells = <1>;
+> +                               ranges = <0 0x00018000 0x28000>;
+> +
+> +                               de2_sram: sram-section@0 {
+
+So, this can attach to display-engine node through allwinner,sram and
+add support to claim the sram on sun4i/sun4i_drv.c, correct?
