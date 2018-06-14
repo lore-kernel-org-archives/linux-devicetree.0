@@ -1,35 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 2/4] power: supply: Add support for the Qualcomm
- Battery Monitoring System
-Date: Thu, 14 Jun 2018 16:06:40 +0200
-Message-ID: <CACRpkdYzCN1cFBDwznO6p-US1B94+kbBcWmH-o-qxvXdvCCsiw@mail.gmail.com>
-References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180613160643.12638-1-ctatlor97@gmail.com>
- <20180613160643.12638-2-ctatlor97@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/7] clk: intel: Add clock driver for GRX500 SoC
+Date: Thu, 14 Jun 2018 08:09:14 -0600
+Message-ID: <CAL_JsqJVcKPexrVrnGnr-zga1n6n00nYdUmKZWOz2VQJ7BV-oA@mail.gmail.com>
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+ <20180612054034.4969-3-songjun.wu@linux.intel.com> <20180612223725.GC2197@rob-hp-laptop>
+ <41163f48-ce5c-efae-2b6d-b93d75e422e5@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613160643.12638-2-ctatlor97@gmail.com>
+In-Reply-To: <41163f48-ce5c-efae-2b6d-b93d75e422e5@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: yixin zhu <yixin.zhu@linux.intel.com>
+Cc: Songjun Wu <songjun.wu@linux.intel.com>, hua.ma@linux.intel.com, chuanhua.lei@linux.intel.com, Linux-MIPS <linux-mips@linux-mips.org>, qi-ming.wu@intel.com, linux-clk <linux-clk@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 6:06 PM, Craig Tatlor <ctatlor97@gmail.com> wrote:
-
-> This patch adds a driver for the BMS (Battery Monitoring System)
-> block of the PM8941 PMIC, it uses a lookup table defined in the
-> device tree to generate a capacity from the BMS supplied OCV, it
-> then amends the coulomb counter to that to increase the accuracy
-> of the estimated capacity.
+On Thu, Jun 14, 2018 at 2:40 AM, yixin zhu <yixin.zhu@linux.intel.com> wrote:
 >
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-> ---
 >
-> * Changes from v5:
->   Uses select for REGMAP_SPMI.
+> On 6/13/2018 6:37 AM, Rob Herring wrote:
+>>
+>> On Tue, Jun 12, 2018 at 01:40:29PM +0800, Songjun Wu wrote:
+>>>
+>>> From: Yixin Zhu <yixin.zhu@linux.intel.com>
+>>>
+>>> PLL of GRX500 provide clock to DDR, CPU, and peripherals as show below
 
-Looks very nice to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+[...]
 
-Yours,
-Linus Walleij
+>>> +Example:
+>>> +       clkgate0: clkgate0 {
+>>> +               #clock-cells = <1>;
+>>> +               compatible = "intel,grx500-gate0-clk";
+>>> +               reg = <0x114>;
+>>> +               clock-output-names = "gate_xbar0", "gate_xbar1",
+>>> "gate_xbar2",
+>>> +               "gate_xbar3", "gate_xbar6", "gate_xbar7";
+>>> +       };
+>>
+>>
+>> We generally don't do a clock node per clock or few clocks but rather 1
+>> clock node per clock controller block. See any recent clock bindings.
+>>
+>> Rob
+>
+> Do you mean only one example is needed per clock controller block?
+> cpuclk is not needed in the document?
+
+No, I mean generally we have 1 DT node for the h/w block with all the
+clock control registers rather than nodes with a single register and 1
+or a couple of clocks. Sometimes the clock registers are mixed with
+other functions which complicates things a bit. But I can't tell that
+here because you haven't documented what's in the rest of the register
+space.
+
+Rob
