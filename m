@@ -1,44 +1,62 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: dts: renesas: condor/v3hsk: specify Ethernet
- PHY IRQs
-Date: Thu, 14 Jun 2018 09:20:00 +0200
-Message-ID: <20180614071959.z6mt55lfqptb7hmg@verge.net.au>
-References: <4acc208e-c593-1e8a-00ca-fc9a5574074e@cogentembedded.com>
- <42861d8f-3570-03b9-987c-bb15fa92a9c7@cogentembedded.com>
- <9d6f18ad-47d1-eb81-1a86-d124ca03e1c9@cogentembedded.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 0/3] mtd: rawnand: denali: add new clocks and improve
+ setup_data_interface
+Date: Thu, 14 Jun 2018 09:38:35 +0200
+Message-ID: <20180614093835.5c3bf426@bbrezillon>
+References: <1528953067-24324-1-git-send-email-yamada.masahiro@socionext.com>
+        <6557713.S7AzxIg9TS@blindfold>
+        <CAK7LNASoV9nHTFax1nD_8pvkEjTzXkFpDFRf_xuoOnPPf9K23A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <9d6f18ad-47d1-eb81-1a86-d124ca03e1c9@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNASoV9nHTFax1nD_8pvkEjTzXkFpDFRf_xuoOnPPf9K23A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Richard Weinberger <richard@sigma-star.at>, linux-mtd <linux-mtd@lists.infradead.org>, Philipp Rosenberger <p.rosenberger@linutronix.de>, Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 07:44:02PM +0300, Sergei Shtylyov wrote:
-> On 06/13/2018 07:42 PM, Sergei Shtylyov wrote:
-> 
-> > Specify Ethernet PHY IRQs in the Condor/V3HSK board device trees, now that
-> > we have the GPIO support (previously phylib had  to resort to polling).
-> > 
-> > Based on the original (and large) patch by Vladimir Barinov.
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > ---
-> 
->    Forgot to add the the patch is against the 'renesas-devel-20180613-v4.17' tag.
-> 
+On Thu, 14 Jun 2018 16:29:59 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-Thanks Sergei, applied.
+> Hi Richard,
+> 
+> 2018-06-14 16:25 GMT+09:00 Richard Weinberger <richard@sigma-star.at>:
+> > Masahiro,
+> >
+> > Am Donnerstag, 14. Juni 2018, 07:11:04 CEST schrieb Masahiro Yamada:  
+> >>
+> >> The ->setup_data_interface() hook needs to know the clock frequency.
+> >> In fact, this IP needs three clocks, bus "which clock?" is really
+> >> confusing.  (It is not described in the DT-binding at all.)
+> >>
+> >> This series adds more clocks.  In the new binding, three clocks
+> >> are required: core clock, bus interface clock, ECC engine clock.
+> >>
+> >> This series also takes care of the backward compatibility by
+> >> providing hardcoded values in case the new clocks are missing.
+> >> So, existing DT should work.
+> >>
+> >>
+> >> Changes in v2:
+> >>   - Split patches into sensible chunks
+> >>
+> >> Masahiro Yamada (3):
+> >>   mtd: rawnand: denali_dt: use dev as a shorthand of &pdev->dev
+> >>   mtd: rawnand: denali_dt: add more clocks based on IP datasheet
+> >>   mtd: rawnand: denali: optimize timing parameters for data interface  
+> >
+> > This still means that we need to feed at least 2/3 and 3/3 into -stable to
+> > unbreak the driver.  
+> 
+> 
+> 3/3 is not mandatory.
+> 
+> You can only back-port 1/3 and 2/3.
+
+Well, patch 1 is not a fix, can we move it after patch 2 so that only
+patch 2 is flagged with the Fixes+Cc-stable tags?
+
+Thanks,
+
+Boris
