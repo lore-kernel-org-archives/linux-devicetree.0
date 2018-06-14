@@ -1,44 +1,118 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v1] ARM: dts: imx6sx: fix irq for pcie bridge
-Date: Thu, 14 Jun 2018 11:45:27 +0200
-Message-ID: <20180614094527.25905-1-o.rempel@pengutronix.de>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/4] arm: dts: add support for Laird WB50N cpu module and
+ DVK
+Date: Thu, 14 Jun 2018 11:50:41 +0200
+Message-ID: <20180614095041.GW10521@piout.net>
+References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
+ <1528966340-23216-2-git-send-email-ben.whitten@lairdtech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1528966340-23216-2-git-send-email-ben.whitten@lairdtech.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ben Whitten <ben.whitten@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: devicetree@vger.kernel.org, Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Without this patch MSI interrupts are not routed from Intel
-i350 PCIe adapter.
+On 14/06/2018 09:51:55+0100, Ben Whitten wrote:
+> Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+> ---
+>  arch/arm/boot/dts/Makefile        |   3 +-
+>  arch/arm/boot/dts/at91-wb50n.dts  | 116 ++++++++++++++++++++++
+>  arch/arm/boot/dts/at91-wb50n.dtsi | 202 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 320 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/at91-wb50n.dts
+>  create mode 100644 arch/arm/boot/dts/at91-wb50n.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 1ee94ee..fd5f8a6 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -61,7 +61,8 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
+>  	at91-sama5d4_ma5d4evk.dtb \
+>  	at91-sama5d4_xplained.dtb \
+>  	at91-sama5d4ek.dtb \
+> -	at91-vinco.dtb
+> +	at91-vinco.dtb \
+> +	at91-wb50n.dtb
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I know we have been bad at this but this should be
+at91-<soc>-<board>.dtb so at91-sama5d31-wb50n.dtb
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 49c7205b8db8..77fdad65e2bb 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -1351,7 +1351,7 @@
- 			ranges = <0x81000000 0 0          0x08f80000 0 0x00010000 /* downstream I/O */
- 				  0x82000000 0 0x08000000 0x08000000 0 0x00f00000>; /* non-prefetchable memory */
- 			num-lanes = <1>;
--			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
+>  dtb-$(CONFIG_ARCH_ATLAS6) += \
+>  	atlas6-evb.dtb
+>  dtb-$(CONFIG_ARCH_ATLAS7) += \
+> diff --git a/arch/arm/boot/dts/at91-wb50n.dts b/arch/arm/boot/dts/at91-wb50n.dts
+> new file mode 100644
+> index 0000000..ee4f823
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-wb50n.dts
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-wb50n.dts - Device Tree file for wb50n evaluation board
+> + *
+> + *  Copyright (C) 2018 Laird
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +#include "at91-wb50n.dtsi"
+> +
+> +/ {
+> +	model = "Laird Workgroup Bridge 50N - Atmel SAMA5D";
+> +	compatible = "laird,wb50n", "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
+> +
+> +	ahb {
+> +		apb {
+> +			watchdog@fffffe40 {
+
+I don't mind if you want to have a preparation patch adding the
+necessary labels in the soc dtsi so you don't have to reproduce the
+ahb/apb hierarchy here.
+
+> +	ahb {
+> +		apb {
+> +			pinctrl@fffff200 {
+
+Ditto
+
+> +				board {
+> +					pinctrl_mmc0_cd: mmc0_cd {
+> +						atmel,pins = <AT91_PIOC 26 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PC26 GPIO with pullup deglitch */
+> +					};
+> +
+> +					pinctrl_usba_vbus: usba_vbus {
+> +						atmel,pins = <AT91_PIOB 13 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* PB13 GPIO with deglitch */
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&slow_osc {
+> +	atmel,osc-bypass;
+> +};
+
+After the clock binding rework, this will have to be moved to the pmc
+node (the rework is not posted, this is just to remind me that this will
+have to be done).
+
+> +
+> +&usart1_clk {
+> +	atmel,clk-output-range = <0 132000000>;
+> +};
+
+The datasheet explicitly states that 66 MHz is the maximum allowed
+frequency for the USART. Note that the new binding will not allow you to
+do that.
+
+However, I see the table disappeared from the latest datasheet. Maybe
+Nicolas can comment on that?
+
 -- 
-2.17.1
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
