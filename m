@@ -1,33 +1,39 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM53573: Add architected timer
-Date: Thu, 14 Jun 2018 16:09:25 -0700
-Message-ID: <20180614230925.18183-1-f.fainelli@gmail.com>
-References: <20180614164147.413-1-zajec5@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Fri, 15 Jun 2018 09:50:54 +1000
+Message-ID: <3312487e2b61b8c2f265d210d14bbed8681a9ecc.camel@kernel.crashing.org>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+         <CAMuHMdVixknUDYZUHafCqNY02z=T-WC2s+Qh6GkpejmoJU0fuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180614164147.413-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bcm-kernel-feedback-list@broadcom.com, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVixknUDYZUHafCqNY02z=T-WC2s+Qh6GkpejmoJU0fuQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAxNCBKdW4gMjAxOCAxODo0MTo0NyArMDIwMCwgUmFmYcWCIE1pxYJlY2tpIDx6YWpl
-YzVAZ21haWwuY29tPiB3cm90ZToKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
-a2kucGw+Cj4gCj4gSXQncyBhIHN0YW5kYXJkIEFSTSBhcmNoaXRlY3RlZCB0aW1lciB0aGF0IHdh
-cyBzaW1wbHkgbWlzc2VkIHdoZW4KPiBpbml0aWFsbHkgYWRkaW5nIHRoaXMgLmR0c2kgZmlsZS4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4g
-LS0tCgpBcHBsaWVkIHRvIGRldmljZXRyZWUvbmV4dCwgdGhhbmtzIQotLQpGbG9yaWFuCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+On Thu, 2018-06-14 at 10:27 +0200, Geert Uytterhoeven wrote:
+> > --- a/include/linux/of_address.h
+> > +++ b/include/linux/of_address.h
+> > @@ -40,6 +40,11 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+> >   void __iomem *of_io_request_and_map(struct device_node *device,
+> >                                      int index, const char *name);
+> > 
+> > +/* Request and map, wrapper on devm_ioremap_resource */
+> > +extern void __iomem *devm_of_iomap(struct device *dev,
+> > +                                  struct device_node *node, int index,
+> > +                                  resource_size_t *size);
+> > +
+> >   /* Extract an address from a device, returns the region size and
+> >    * the address space flags too. The PCI version uses a BAR number
+> >    * instead of an absolute index
+> 
+> Do you need a dummy for !CONFIG_OF_ADDRESS, to aid compile-testing?
+
+I didn't think so, as of_address_to_resource() already has a dummy, so
+it should build fine.
+
+Cheers,
+Ben.
