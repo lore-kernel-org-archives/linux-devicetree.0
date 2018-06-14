@@ -1,118 +1,44 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/4] arm: dts: add support for Laird WB50N cpu module and
- DVK
-Date: Thu, 14 Jun 2018 11:50:41 +0200
-Message-ID: <20180614095041.GW10521@piout.net>
-References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
- <1528966340-23216-2-git-send-email-ben.whitten@lairdtech.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/7] MIPS: dts: Add aliases node for lantiq danube serial
+Date: Thu, 14 Jun 2018 12:03:38 +0200
+Message-ID: <CAK8P3a1=CBahrEE2uDRfdrSi=ALc5LBED1=KbLbLa40c9H8dmQ@mail.gmail.com>
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com> <20180612054034.4969-2-songjun.wu@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528966340-23216-2-git-send-email-ben.whitten@lairdtech.com>
+In-Reply-To: <20180612054034.4969-2-songjun.wu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Whitten <ben.whitten@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: devicetree@vger.kernel.org, Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Songjun Wu <songjun.wu@linux.intel.com>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, qi-ming.wu@intel.com, linux-clk <linux-clk@vger.kernel.org>, linux-serial@vger.kernel.org, DTML <devicetree@vger.kernel.org>, James Hogan <jhogan@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/06/2018 09:51:55+0100, Ben Whitten wrote:
-> Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+On Tue, Jun 12, 2018 at 7:40 AM, Songjun Wu <songjun.wu@linux.intel.com> wrote:
+> Previous implementation uses a hard-coded register value to check if
+> the current serial entity is the console entity.
+> Now the lantiq serial driver uses the aliases for the index of the
+> serial port.
+> The lantiq danube serial dts are updated with aliases to support this.
+>
+> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
 > ---
->  arch/arm/boot/dts/Makefile        |   3 +-
->  arch/arm/boot/dts/at91-wb50n.dts  | 116 ++++++++++++++++++++++
->  arch/arm/boot/dts/at91-wb50n.dtsi | 202 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 320 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/at91-wb50n.dts
->  create mode 100644 arch/arm/boot/dts/at91-wb50n.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 1ee94ee..fd5f8a6 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -61,7 +61,8 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
->  	at91-sama5d4_ma5d4evk.dtb \
->  	at91-sama5d4_xplained.dtb \
->  	at91-sama5d4ek.dtb \
-> -	at91-vinco.dtb
-> +	at91-vinco.dtb \
-> +	at91-wb50n.dtb
-
-I know we have been bad at this but this should be
-at91-<soc>-<board>.dtb so at91-sama5d31-wb50n.dtb
-
->  dtb-$(CONFIG_ARCH_ATLAS6) += \
->  	atlas6-evb.dtb
->  dtb-$(CONFIG_ARCH_ATLAS7) += \
-> diff --git a/arch/arm/boot/dts/at91-wb50n.dts b/arch/arm/boot/dts/at91-wb50n.dts
-> new file mode 100644
-> index 0000000..ee4f823
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-wb50n.dts
-> @@ -0,0 +1,116 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * at91-wb50n.dts - Device Tree file for wb50n evaluation board
-> + *
-> + *  Copyright (C) 2018 Laird
-> + *
-> + */
+>
+>  arch/mips/boot/dts/lantiq/danube.dtsi | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
+> index 2dd950181f8a..7a9e15da6bd0 100644
+> --- a/arch/mips/boot/dts/lantiq/danube.dtsi
+> +++ b/arch/mips/boot/dts/lantiq/danube.dtsi
+> @@ -4,6 +4,10 @@
+>         #size-cells = <1>;
+>         compatible = "lantiq,xway", "lantiq,danube";
+>
+> +       aliases {
+> +               serial0 = &asc1;
+> +       };
 > +
-> +/dts-v1/;
-> +#include "at91-wb50n.dtsi"
-> +
-> +/ {
-> +	model = "Laird Workgroup Bridge 50N - Atmel SAMA5D";
-> +	compatible = "laird,wb50n", "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
-> +
-> +	ahb {
-> +		apb {
-> +			watchdog@fffffe40 {
 
-I don't mind if you want to have a preparation patch adding the
-necessary labels in the soc dtsi so you don't have to reproduce the
-ahb/apb hierarchy here.
+You generally want the aliases to be part of the board specific file,
+not every board numbers their serial ports in the same way.
 
-> +	ahb {
-> +		apb {
-> +			pinctrl@fffff200 {
-
-Ditto
-
-> +				board {
-> +					pinctrl_mmc0_cd: mmc0_cd {
-> +						atmel,pins = <AT91_PIOC 26 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PC26 GPIO with pullup deglitch */
-> +					};
-> +
-> +					pinctrl_usba_vbus: usba_vbus {
-> +						atmel,pins = <AT91_PIOB 13 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* PB13 GPIO with deglitch */
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&slow_osc {
-> +	atmel,osc-bypass;
-> +};
-
-After the clock binding rework, this will have to be moved to the pmc
-node (the rework is not posted, this is just to remind me that this will
-have to be done).
-
-> +
-> +&usart1_clk {
-> +	atmel,clk-output-range = <0 132000000>;
-> +};
-
-The datasheet explicitly states that 66 MHz is the maximum allowed
-frequency for the USART. Note that the new binding will not allow you to
-do that.
-
-However, I see the table disappeared from the latest datasheet. Maybe
-Nicolas can comment on that?
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+       Arnd
