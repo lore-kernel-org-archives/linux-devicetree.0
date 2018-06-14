@@ -1,65 +1,64 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH v1 4/4] mailbox: Add support for i.MX7D messaging unit
-Date: Thu, 14 Jun 2018 16:23:36 +0800
-Message-ID: <CAA+hA=TjExQ7B3Px2HBHSejexBcXE_b93=8h8uihUkKDD9fpFw@mail.gmail.com>
-References: <20180601065821.28234-1-o.rempel@pengutronix.de>
- <20180601065821.28234-5-o.rempel@pengutronix.de>
- <CAA+hA=RpoRXUK+jB18F4OeYE9PG73SDa_NLYeN5Q2G3B1bC-JA@mail.gmail.com>
- <20180613124850.w3bzerkpkbql6ite@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Thu, 14 Jun 2018 10:27:47 +0200
+Message-ID: <CAMuHMdVixknUDYZUHafCqNY02z=T-WC2s+Qh6GkpejmoJU0fuQ@mail.gmail.com>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180613124850.w3bzerkpkbql6ite@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+Hi Ben,
 
-On Wed, Jun 13, 2018 at 8:48 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Wed, Jun 13, 2018 at 08:21:10PM +0800, Dong Aisheng wrote:
->> Hi Oleksij,
->>
->> On Fri, Jun 1, 2018 at 2:58 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->> > The Mailbox controller is able to send messages (up to 4 32 bit words)
->> > between the endpoints.
->>
->> Could we really be able to send up to 4 42bit words with this driver?
->>
->> It looks to me the current Mailbox framework is more designed for share mem
->> transfer which does not fit i.MX MU well.
->
-> The mailbox framework just defines channels and messages. A message is a
-> void * which may contain arbitrary data or even no data at all; some
-> drivers simply ignore the message pointer, so in fact they act as a
-> doorbell unit only.
->
-> There's nothing about shared memory in the mailbox framework, but of
-> course you can combine a mailbox driver and shared memory to a remote
-> message mechanism. That could be done with the i.MX MU aswell and would
-> indeed be a good match for the hardware.
->
+(the "m68k" later in the thread caught my attention ;-)
 
-Yes, you're right. My earlier reply is less accurate.
-It seems the actual data type is interpreted by the underlying MU driver.
-
-Regards
-Dong Aisheng
-
-> Sascha
+On Tue, Jun 12, 2018 at 2:02 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> There are still quite a few cases where a device might want to get to a
+> different node of the device-tree, obtain the resources and map them.
 >
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Drivers doing that currently open code the whole thing, which is error
+> proe.
+>
+> We have of_iomap() and of_io_request_and_map() but they both have shortcomings,
+> such as not returning the size of the resource found (which can be necessary)
+> and not being "managed".
+>
+> This adds a devm_of_iomap() that provides all of these and should probably
+> replace uses of the above in most drivers.
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+
+Thanks for your patch!
+
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -40,6 +40,11 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+>  void __iomem *of_io_request_and_map(struct device_node *device,
+>                                     int index, const char *name);
+>
+> +/* Request and map, wrapper on devm_ioremap_resource */
+> +extern void __iomem *devm_of_iomap(struct device *dev,
+> +                                  struct device_node *node, int index,
+> +                                  resource_size_t *size);
+> +
+>  /* Extract an address from a device, returns the region size and
+>   * the address space flags too. The PCI version uses a BAR number
+>   * instead of an absolute index
+
+Do you need a dummy for !CONFIG_OF_ADDRESS, to aid compile-testing?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
