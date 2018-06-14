@@ -1,69 +1,319 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Thu, 14 Jun 2018 05:38:05 -0700
-Message-ID: <20180614123805.GF112168@atomide.com>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
- <20180607233853.p7iw7nlxxuyi66og@kahuna>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH 1/4] arm: dts: add support for Laird WB45N cpu module and
+ DVK
+Date: Thu, 14 Jun 2018 14:52:25 +0200
+Message-ID: <03f0f635-3fc2-085b-20e0-e1fcaa9e8062@microchip.com>
+References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180607233853.p7iw7nlxxuyi66og@kahuna>
+In-Reply-To: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
+To: Ben Whitten <ben.whitten@gmail.com>, devicetree@vger.kernel.org
+Cc: Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 14/06/2018 at 10:51, Ben Whitten wrote:
+> Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+> ---
+>   arch/arm/boot/dts/Makefile        |   3 +-
+>   arch/arm/boot/dts/at91-wb45n.dts  |  66 +++++++++++++++
+>   arch/arm/boot/dts/at91-wb45n.dtsi | 169 ++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 237 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/arm/boot/dts/at91-wb45n.dts
+>   create mode 100644 arch/arm/boot/dts/at91-wb45n.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 7e24249..1ee94ee 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -42,7 +42,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+>   	at91sam9g25ek.dtb \
+>   	at91sam9g35ek.dtb \
+>   	at91sam9x25ek.dtb \
+> -	at91sam9x35ek.dtb
+> +	at91sam9x35ek.dtb \
+> +	at91-wb45n.dtb
+>   dtb-$(CONFIG_SOC_SAM_V7) += \
+>   	at91-kizbox2.dtb \
+>   	at91-nattis-2-natte-2.dtb \
+> diff --git a/arch/arm/boot/dts/at91-wb45n.dts b/arch/arm/boot/dts/at91-wb45n.dts
+> new file mode 100644
+> index 0000000..4e88815
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-wb45n.dts
+> @@ -0,0 +1,66 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-wb45n.dts - Device Tree file for WB45NBT board
+> + *
+> + *  Copyright (C) 2018 Laird
+> + *
+> +*/
+> +/dts-v1/;
+> +#include "at91-wb45n.dtsi"
+> +
+> +/ {
+> +	model = "Laird Workgroup Bridge 45N - Atmel AT91SAM (dt)";
+> +	compatible = "laird,wb45n", "laird,wbxx", "atmel,at91sam9x5", "atmel,at91sam9";
 
-Some comments on the ranges below.
+"laird" prefix must be added to 
+Documentation/devicetree/bindings/vendor-prefixes.txt before using it: 
+you can do a little patch as a first patch of this series.
+Otherwise it will trigger a warning message while running 
+scripts/checkpatch.pl on top of your patch.
 
-* Nishanth Menon <nm@ti.com> [180607 16:41]:
-> +	soc0: soc0 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
 
-I suggest you leave out the soc0, that's not real. Just make
-the cbass@0 the top level interconnect. It can then provide
-ranges to mcu interconnect which can provide ranges to the wkup
-interconnect. So just model it after what's in the hardware :)
+> +
+> +	ahb {
+> +		apb {
+> +			watchdog@fffffe40 {
+> +				status = "okay";
+> +			};
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		irqbtn@pb18 {
 
-I found the following ranges based on a quick look at the TRM,
-they could be split further if needed for power domains for
-genpd for example.
+I'm not sure that the @pb18 can be used like this. This address 
+extension must be used in a "reg" property in the node. dtc used with 
+warning switch on might trigger an error for this.
 
-main covers
-0x0000000000 - 0x5402000000
+> +			label = "IRQBTN";
+> +			linux,code = <99>;
+> +			gpios = <&pioB 18 GPIO_ACTIVE_LOW>;
+> +			gpio-key,wakeup = <1>;
+> +		};
+> +	};
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	status = "okay";
+> +};
+> +
+> +&spi0 {
+> +	status = "okay";
+> +};
+> +
+> +&macb0 {
+> +	status = "okay";
+> +};
+> +
+> +&dbgu {
+> +	status = "okay";
+> +};
+> +
+> +&usart0 {
+> +	status = "okay";
+> +};
+> +
+> +&usart3 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/at91-wb45n.dtsi b/arch/arm/boot/dts/at91-wb45n.dtsi
+> new file mode 100644
+> index 0000000..2fa58e2
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-wb45n.dtsi
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * at91-wb45n.dtsi - Device Tree file for WB45NBT board
+> + *
+> + *  Copyright (C) 2018 Laird
+> + *
+> + */
+> +
+> +#include "at91sam9g25.dtsi"
+> +
+> +/ {
+> +	model = "Laird Workgroup Bridge 45N - Atmel AT91SAM (dt)";
+> +	compatible = "laird,wb45n", "laird,wbxx", "atmel,at91sam9x5", "atmel,at91sam9";
+> +
+> +	chosen {
+> +		bootargs = "ubi.mtd=6 root=ubi0:rootfs rootfstype=ubifs rw";
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x20000000 0x4000000>;
+> +	};
+> +
+> +	ahb {
+> +		apb {
+> +			shdwc@fffffe10 {
 
-main provides at least the following ranges for mcu
-0x0028380000 - 0x002bc00000
-0x0040080000 - 0x0041c80000
-0x0045100000 - 0x0045180000
-0x0045600000 - 0x0045640000
-0x0045810000 - 0x0045860000
-0x0045950000 - 0x0045950400
-0x0045a50000 - 0x0045a50400
-0x0045b04000 - 0x0045b06400
-0x0045d10000 - 0x0045d24000
-0x0046000000 - 0x0060000000
-0x0400000000 - 0x0800000000
-0x4c3c020000 - 0x4c3c030000
-0x4c3e000000 - 0x4c3e040000
-0x5400000000 - 0x5402000000
+I would advice you to take exactly the node name:
+"shutdown-controller@fffffe10"; Anyway, it will go away after you use 
+the label notation as advised by Alexandre.
 
-then mcu provides the following ranges for wkup
-0x0042000000 - 0x0044410020
-0x0045000000 - 0x0045030000
-0x0045080000 - 0x00450a0000
-0x0045808000 - 0x0045808800
-0x0045b00000 - 0x0045b02400
+> +				atmel,wakeup-mode = "low";
+> +			};
+> +
+> +			pinctrl@fffff400 {
+> +				usb2 {
+> +					pinctrl_board_usb2: usb2-board {
+> +						atmel,pins =
+> +							<AT91_PIOB 11 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;		/* PB11 gpio vbus sense, deglitch */
+> +					};
+> +				};
+> +			};
+> +
+> +			rstc@fffffe00 {
+> +				compatible = "atmel,sama5d3-rstc";
+> +			};
 
-This based on looking at "figure 1-1. device top-level
-block diagram" and the memory map in TRM.
+I don't think this node is needed.
 
-Regards,
+> +
+> +		};
+> +	};
+> +
+> +	atheros {
+> +		compatible = "atheros,ath6kl";
+> +		atheros,board-id = "SD32";
+> +	};
+> +};
+> +
+> +&slow_xtal {
+> +	clock-frequency = <32768>;
+> +};
+> +
+> +&main_xtal {
+> +	clock-frequency = <12000000>;
+> +};
+> +
+> +&ebi {
+> +	status = "okay";
+> +	nand_controller: nand-controller {
+> +		pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb &pinctrl_nand_oe_we>;
+> +		pinctrl-names = "default";
+> +		status = "okay";
+> +
+> +		nand@3 {
+> +			reg = <0x3 0x0 0x800000>;
+> +			rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
+> +			cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
+> +			nand-bus-width = <8>;
+> +			nand-ecc-mode = "hw";
+> +			nand-ecc-strength = <4>;
+> +			nand-ecc-step-size = <512>;
+> +			nand-on-flash-bbt;
+> +			label = "atmel_nand";
+> +
+> +			partitions {
+> +				compatible = "fixed-partitions";
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +
+> +				at91bootstrap@0 {
+> +					label = "at91bs";
+> +					reg = <0x0 0x20000>;
+> +				};
+> +
+> +				uboot@20000 {
+> +					label = "u-boot";
+> +					reg = <0x20000 0x80000>;
+> +				};
+> +
+> +				ubootenv@a0000 {
+> +					label = "u-boot-env";
+> +					reg = <0xa0000 0x20000>;
+> +				};
+> +
+> +				ubootenv@c0000 {
+> +					label = "redund-env";
+> +					reg = <0xc0000 0x20000>;
+> +				};
+> +
+> +				kernel-a@e0000 {
+> +					label = "kernel-a";
+> +					reg = <0xe0000 0x280000>;
+> +				};
+> +
+> +				kernel-b@360000 {
+> +					label = "kernel-b";
+> +					reg = <0x360000 0x280000>;
+> +				};
+> +
+> +				rootfs-a@5e0000 {
+> +					label = "rootfs-a";
+> +					reg = <0x5e0000 0x2600000>;
+> +				};
+> +
+> +				rootfs-b@2be0000 {
+> +					label = "rootfs-b";
+> +					reg = <0x2be0000 0x2600000>;
+> +				};
+> +
+> +				user@51e0000 {
+> +					label = "user";
+> +					reg = <0x51e0000 0x2dc0000>;
+> +				};
+> +
+> +				logs@7fa0000 {
+> +					label = "logs";
+> +					reg = <0x7fa0000 0x60000>;
+> +				};
+> +
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&usb0 {
 
-Tony
+This must be &usb1 label, isn't it?
+Because you are referring to ohci binding I suspect (found by having a 
+look at: atmel,oc-gpio property...).
+
+> +	num-ports = <2>;
+> +	atmel,vbus-gpio = <
+> +		&pioB 12 GPIO_ACTIVE_HIGH
+> +		&pioA 31 GPIO_ACTIVE_HIGH
+> +		>;
+> +	atmel,oc-gpio = <&pioB 13 GPIO_ACTIVE_LOW>;
+> +};
+> +
+> +&macb0 {
+> +	phy-mode = "rmii";
+> +};
+> +
+> +&spi0 {
+> +	cs-gpios = <&pioA 14 0>, <&pioA 7 0>, <0>, <0>;
+> +};
+> +
+> +&usb2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_board_usb2>;
+> +	atmel,vbus-gpio = <&pioB 11 GPIO_ACTIVE_HIGH>;
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-0 = <
+> +		&pinctrl_mmc0_slot0_clk_cmd_dat0
+> +		&pinctrl_mmc0_slot0_dat1_3>;
+> +	slot@0 {
+> +		reg = <0>;
+> +		bus-width = <4>;
+> +	};
+> +};
+> 
+
+
+-- 
+Nicolas Ferre
