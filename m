@@ -1,59 +1,146 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v3 22/27] devicetree: fix some bindings file names
-Date: Thu, 14 Jun 2018 13:09:07 -0300
-Message-ID: <e45cdc9550ce822dcbde805a12a2e1e444e926ba.1528990947.git.mchehab+samsung@kernel.org>
-References: <cover.1528990947.git.mchehab+samsung@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1528990947.git.mchehab+samsung@kernel.org>
-In-Reply-To: <cover.1528990947.git.mchehab+samsung@kernel.org>
-References: <cover.1528990947.git.mchehab+samsung@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/3] net: dsa: Add DT bindings for Vitesse VSC73xx
+ switches
+Date: Thu, 14 Jun 2018 09:09:27 -0700
+Message-ID: <680f6108-2e3e-5c6b-522e-2c2c5709dbb8__18871.9070087702$1528992773$gmane$org@gmail.com>
+References: <20180614123534.8063-1-linus.walleij@linaro.org>
+ <20180614123534.8063-2-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180614123534.8063-2-linus.walleij@linaro.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc: netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There were some file movements that changed the location for
-some DT bindings. Fix them with:
-	scripts/documentation-file-ref-check --fix
 
-After manually checking if the new file makes sense.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/devicetree/bindings/power/supply/ab8500/btemp.txt | 2 +-
- .../devicetree/bindings/power/supply/ab8500/chargalg.txt        | 2 +-
- .../devicetree/bindings/power/supply/ab8500/charger.txt         | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On 06/14/2018 05:35 AM, Linus Walleij wrote:
+> This adds the device tree bindings for the Vitesse VSC73xx
+> switches. We also add the vendor name for Vitesse.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../bindings/net/dsa/vitesse,vsc73xx.txt      | 81 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>  2 files changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+> new file mode 100644
+> index 000000000000..474cdba5fa37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+> @@ -0,0 +1,81 @@
+> +Vitess VSC73xx Switches
+> +=======================
+> +
+> +This defines device tree bindings for the Vitesse VSC73xx switch chips.
+> +The Vitesse company has been acquired by Microsemi and Microsemi in turn
+> +acquired by Microchip but retains this vendor branding.
+> +
+> +The currently supported switch chips are:
+> +Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
+> +Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
+> +Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
+> +Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
+> +
+> +The device tree node is an SPI device so it must reside inside a SPI bus
+> +device tree node, see spi/spi-bus.txt
+> +
+> +Required properties:
+> +
+> +- compatible: must be exactly one of:
+> +	"vitesse,vsc7385"
+> +	"vitesse,vsc7388"
+> +	"vitesse,vsc7395"
+> +	"vitesse,vsc7398"
+> +- gpio-controller: indicates that this switch is also a GPIO controller,
+> +  see gpio/
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ab8500/btemp.txt b/Documentation/devicetree/bindings/power/supply/ab8500/btemp.txt
-index 0ba1bcc7f33a..f181e46d8e07 100644
---- a/Documentation/devicetree/bindings/power/supply/ab8500/btemp.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ab8500/btemp.txt
-@@ -13,4 +13,4 @@ Required Properties:
- 	};
- 
- For information on battery specific node, Ref:
--Documentation/devicetree/bindings/power_supply/ab8500/fg.txt
-+Documentation/devicetree/bindings/power/supply/ab8500/fg.txt
-diff --git a/Documentation/devicetree/bindings/power/supply/ab8500/chargalg.txt b/Documentation/devicetree/bindings/power/supply/ab8500/chargalg.txt
-index ef5328371122..56636f927203 100644
---- a/Documentation/devicetree/bindings/power/supply/ab8500/chargalg.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ab8500/chargalg.txt
-@@ -13,4 +13,4 @@ ab8500_chargalg {
- };
- 
- For information on battery specific node, Ref:
--Documentation/devicetree/bindings/power_supply/ab8500/fg.txt
-+Documentation/devicetree/bindings/power/supply/ab8500/fg.txt
-diff --git a/Documentation/devicetree/bindings/power/supply/ab8500/charger.txt b/Documentation/devicetree/bindings/power/supply/ab8500/charger.txt
-index 6bdbb08ea9e0..24ada03e07b4 100644
---- a/Documentation/devicetree/bindings/power/supply/ab8500/charger.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ab8500/charger.txt
-@@ -22,4 +22,4 @@ Required Properties:
- 	};
- 
- For information on battery specific node, Ref:
--Documentation/devicetree/bindings/power_supply/ab8500/fg.txt
-+Documentation/devicetree/bindings/power/supply/ab8500/fg.txt
+Missing reference here?
+
+> +- #gpio-cells: this must be set to <2> and indicates that we are a twocell
+> +  GPIO controller.
+
+Should you also reference the standard binding here to interpret what
+those two cells mean?
+
+Other than that:
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+> +
+> +Optional properties:
+> +
+> +- reset-gpios: a handle to a GPIO line that can issue reset of the chip.
+> +  It should be tagged as active low.
+> +
+> +Required subnodes:
+> +
+> +See net/dsa/dsa.txt for a list of additional required and optional properties
+> +and subnodes of DSA switches.
+> +
+> +Examples:
+> +
+> +switch@0 {
+> +	compatible = "vitesse,vsc7395";
+> +	reg = <0>;
+> +	/* Specified for 2.5 MHz or below */
+> +	spi-max-frequency = <2500000>;
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +			label = "lan1";
+> +		};
+> +		port@1 {
+> +			reg = <1>;
+> +			label = "lan2";
+> +		};
+> +		port@2 {
+> +			reg = <2>;
+> +			label = "lan3";
+> +		};
+> +		port@3 {
+> +			reg = <3>;
+> +			label = "lan4";
+> +		};
+> +		vsc: port@6 {
+> +			reg = <6>;
+> +			label = "cpu";
+> +			ethernet = <&gmac1>;
+> +			phy-mode = "rgmii";
+> +			fixed-link {
+> +				speed = <1000>;
+> +				full-duplex;
+> +				pause;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index b5f978a4cac6..e8473894700c 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -385,6 +385,7 @@ v3	V3 Semiconductor
+>  variscite	Variscite Ltd.
+>  via	VIA Technologies, Inc.
+>  virtio	Virtual I/O Device Specification, developed by the OASIS consortium
+> +vitesse	Vitesse Semiconductor Corporation
+>  vivante	Vivante Corporation
+>  vocore VoCore Studio
+>  voipac	Voipac Technologies s.r.o.
+> 
+
 -- 
-2.17.1
+Florian
