@@ -1,94 +1,89 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 2/7] serdev: add dev_pm_domain_attach|detach()
-Date: Thu, 14 Jun 2018 10:58:22 +0200
-Message-ID: <CAPDyKFqVpfhJf3R3jbXtjGgXf+0pg=9dgALBnxM_bSyBQrQQDQ@mail.gmail.com>
-References: <cover.1528960095.git.sean.wang@mediatek.com> <e338118bb6b9f560560887eb974eb250a6c89984.1528960095.git.sean.wang@mediatek.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v10 0/7] i2c: Add FSI-attached I2C master algorithm
+Date: Thu, 14 Jun 2018 12:05:38 +0300
+Message-ID: <CAHp75Vd9Y5VNVZZxB3-tOiUuC2peE7skBGMgv9nGxCBH178bTg@mail.gmail.com>
+References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e338118bb6b9f560560887eb974eb250a6c89984.1528960095.git.sean.wang@mediatek.com>
+In-Reply-To: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Jun 2018 at 09:14, <sean.wang@mediatek.com> wrote:
+On Wed, Jun 13, 2018 at 10:36 PM, Eddie James
+<eajames@linux.vnet.ibm.com> wrote:
+> This series adds an algorithm for an I2C master physically located on an FSI
+> slave device. The I2C master has multiple ports, each of which may be connected
+> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
 >
-> From: Sean Wang <sean.wang@mediatek.com>
+> Due to the multi-port nature of the I2C master, the driver instantiates a new
+> I2C adapter for each port connected to a slave. The connected ports should be
+> defined in the device tree under the I2C master device.
 >
-> In order to open up the required power gate before any operation can be
-> effectively performed over the serial bus between CPU and serdev, it's
-> clearly essential to add common attach functions for PM domains to serdev
-> at the probe phase.
->
-> Similarly, the relevant dettach function for the PM domains should be
-> properly and reversely added at the remove phase.
->
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: linux-serial@vger.kernel.org
-> ---
->  drivers/tty/serdev/core.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index df93b72..c93d8ee 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -13,6 +13,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/serdev.h>
->  #include <linux/slab.h>
->
-> @@ -330,8 +331,16 @@ EXPORT_SYMBOL_GPL(serdev_device_set_tiocm);
->  static int serdev_drv_probe(struct device *dev)
->  {
->         const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
-> +       int ret;
-> +
-> +       ret = dev_pm_domain_attach(dev, true);
-> +       if (ret != -EPROBE_DEFER) {
 
->From 4.18 rc1 via commit 919b7308fcc4, dev_pm_domain_attach() will
-return better error codes.
+You missed to include tag I gave
 
-I suggest to change the above error path to:
-if (ret)
-     return ret;
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Then continue with the probing below.
+be careful next time.
 
-> +               ret = sdrv->probe(to_serdev_device(dev));
-> +               if (ret)
-> +                       dev_pm_domain_detach(dev, true);
-> +       }
+> Changes since v9
+>  - Switch the status masks to use a combination of bits rather than directly
+>    coding the value
+>  - Remove the interrupt mask definition as it was unused
+>  - Fixed return value of master_xfer function (return number of xfrs, not 0)
 >
-> -       return sdrv->probe(to_serdev_device(dev));
-> +       return ret;
->  }
+> Changes since v8
+>  - Drop unecessary else statements
+>  - Use i++ instead of ++i
+>  - Use kzalloc/kfree instead of devm_kzalloc/devm_kfree for port structure
+>  - Drop the list_empty check in remove
 >
->  static int serdev_drv_remove(struct device *dev)
-> @@ -339,6 +348,9 @@ static int serdev_drv_remove(struct device *dev)
->         const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
->         if (sdrv->remove)
->                 sdrv->remove(to_serdev_device(dev));
-> +
-> +       dev_pm_domain_detach(dev, true);
-> +
->         return 0;
->  }
+> Changes since v7
+>  - Fix grammer in Kconfig (a -> an)
+>  - Change I2C registers to use BIT and GENMASK
+>  - Remove custom macros and use FIELD_PREP and FIELD_GET
+>  - Fix a few unecessary initializations and "return rc" that are always zero
+>  - Clean up the read/write fifo functions a bit
+>  - Few other clean-up items
+>
+> Changes since v6
+>  - Remove spinlock for reset functionality; it's unecessary and doesn't work
+>    with the latest FSI core.
+>  - Use a mutex instead of a semaphore, and don't wait for timeout to get the
+>    lock.
+>  - Use usleeps instead of schedule_timeout; it's not worth the overhead when
+>    the wait should be very short in between sending the command and receiving
+>    the response.
+>
+> Changes since v5
+>  - Fix reset functionality and do a reset after every transfer failure
+>
+> Eddie James (7):
+>   dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
+>   i2c: Add FSI-attached I2C master algorithm
+>   i2c: fsi: Add port structures
+>   i2c: fsi: Add abort and hardware reset procedures
+>   i2c: fsi: Add transfer implementation
+>   i2c: fsi: Add I2C master locking
+>   i2c: fsi: Add bus recovery
+>
+>  Documentation/devicetree/bindings/i2c/i2c-fsi.txt |  40 ++
+>  drivers/i2c/busses/Kconfig                        |  11 +
+>  drivers/i2c/busses/Makefile                       |   1 +
+>  drivers/i2c/busses/i2c-fsi.c                      | 727 ++++++++++++++++++++++
+>  4 files changed, 779 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
+>  create mode 100644 drivers/i2c/busses/i2c-fsi.c
 >
 > --
-> 2.7.4
+> 1.8.3.1
 >
 
-Otherwise, this makes sense to me!
 
-Kind regards
-Uffe
+
+-- 
+With Best Regards,
+Andy Shevchenko
