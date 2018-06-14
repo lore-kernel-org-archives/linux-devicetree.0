@@ -1,118 +1,105 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v5 1/3] of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
-Date: Thu, 14 Jun 2018 15:59:16 -0500
-Message-ID: <CANk1AXSvgHMWidmb+6k6paTdpj9HfSoyKoiMgLxH=8SoC-4qnw@mail.gmail.com>
-References: <1520208889-3908-1-git-send-email-frowand.list@gmail.com>
- <1520208889-3908-2-git-send-email-frowand.list@gmail.com> <CANk1AXQZ6ax5j9QOrLZA9qT2xGpiU0BQLxAmKQFEqSb6NrbeRQ@mail.gmail.com>
- <CANk1AXSvVD5x7TKQV_HZm=9Lzeymm5H3p7DZPiAc-RRRxdAOZg@mail.gmail.com> <b8c7cd9e-a841-a4b7-2366-6f08328b2b8f@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: ilia.lin@gmail.com
+Subject: [PATCH v13 0/8] Clock for CPU scaling support for msm8996
+Date: Thu, 14 Jun 2018 23:53:47 +0200
+Message-ID: <20180614215358.11264-1-ilia.lin@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b8c7cd9e-a841-a4b7-2366-6f08328b2b8f@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, cpandya@codeaurora.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>
+To: ilia.lin@gmail.com
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Ilia Lin <ilialin@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 4:47 PM, Frank Rowand <frowand.list@gmail.com> wrot=
-e:
-> On 06/13/18 07:42, Alan Tull wrote:
->> On Tue, Jun 12, 2018 at 1:16 PM, Alan Tull <atull@kernel.org> wrote:
->>> On Sun, Mar 4, 2018 at 6:14 PM,  <frowand.list@gmail.com> wrote:
->>>
->>> Hi Frank,
->>>
->>> I'm investigating a refcount use-after-free warning that happens after
->>> overlays are applied, removed, reapplied a few (typically three) times
->>> (see below).  This is new in v4.17, didn't happen in v4.16.  As I was
->>> investigating I found that rebuilding the phandle_cache after overlays
->>> are applied or removed seems to help.
->>
->> I was probably wrong about this.  The more I look at the phandle_cache c=
-ode,
->> the more it looks looks good and straightforward.  Probably disabling
->> phandle_cache is 'fixing' things through some weird side effect.  I'll
->> keep investigating.  Sorry for the noise.
->
-> I suspect that you have found an issue, even if it is not the cause of
-> the refcount issue.  I noted in a reply to v4 of the patch:
->
->   >> +static void of_populate_phandle_cache(void)
->   >> +{
->   >> +=C3=82 =C3=82 =C3=82  unsigned long flags;
->   >> +=C3=82 =C3=82 =C3=82  u32 cache_entries;
->   >> +=C3=82 =C3=82 =C3=82  struct device_node *np;
->   >> +=C3=82 =C3=82 =C3=82  u32 phandles =3D 0;
->   >> +
->   >> +=C3=82 =C3=82 =C3=82  raw_spin_lock_irqsave(&devtree_lock, flags);
->   >> +
->   >> +=C3=82 =C3=82 =C3=82  kfree(phandle_cache);
->   >
->   > I couldn't understood this. Everything else looks good to me.
->
->   I will be adding a call to of_populate_phandle_cache() from the
->   devicetree overlay code.  I put the kfree here so that the previous
->   cache memory is freed when a new cache is created.
->
->   Adding the call from the overlay code is not done in this
->   series because I have a patch series modifying overlays and
->   I do not want to create a conflict or ordering between that
->   series and that patch.  The lack of the call from overlay
->   code means that overlay code will gain some of the overhead
->   reduction from this patch, but possibly not the entire reduction.
->
-> Sorry I'm not giving a link to the archive of this message - I have
-> a class I have to go to so I don't have enough time to find it.
+From: Ilia Lin <ilia.lin@gmail.com>
 
-I understand, that's cool.  I've found the email chain, thanks for
-pointing me to it!
+[v13]
+ * Rebased
 
->  The
-> email was
->
->   Subject: Re: [PATCH v3] of: cache phandle nodes to reduce cost of
->   of_find_node_by_phandle()
->   Date: Fri, 16 Feb 2018 14:20:22 -0800
->   Message-ID: <46d5fc76-33e3-d54a-26b8-e9bb8332924d@gmail.com>
->
-> Quickly looking at the current code, I don't see the overlay patch
-> that I mentioned.  I have to dig into what happened to that.
->
-> Leaving a phandle from an overlay in the phandle cache after the
-> overlay is removed would clearly be a bug.
+[v12]
+ * Addressed the kbuild fail on arm architecture
 
-Yes that's totally it, when I get a match of a phandle and the np
-address is stale, then comes the kernel warning.
+[v11]
+ * Split the series into domains
 
-I added more debug code to print out the results of looking up dynamic
-nodes only (nodes > the highest node added when the cache was
-originally built).  Also I added debug code to also force the lookup
-code to go back and look up dynamic nodes the slow, uncached way so I
-could see if it got the correct np address.  I'm unloading and
-reloading an overlay, so sometimes the new np (after the overlay was
-removed and reapplied) is at the same address, but sometimes it isn't
-and then I get the kernel warning.  Just for entertainment value, here
-is my prints of the np from the cache and the correct np that' at a
-different address.  The '88' is the phandle, after that is the np
-address, then the np=3D<full_name>.  Note also the corruption in the
-cached node's full_name
+[v9]
+ * Addressed comments from Viresh and Russel about the error handling
 
-OF: of_find_node_by_phandle line 1108 found dynamic node in cache 88
-ee518680 np=3D/soc/base_fpga_region/\300\252~\356ze_controller@0x100000450
+[v8]
+ * Reordered the patch series into 4 groups
+ * Addressed comments from Amit about the comments and commit messages
+ * Addressed comments from Amit and Viresh about the resourses deallocation
 
-OF: of_find_node_by_phandle line 1119 found the slow way: 88 eeaf2d00
-np=3D/soc/base_fpga_region/freeze_controller@0x100000450
+[v7]
+ * Addressed comments from Viresh about resourses deallocation and DT compatible
 
-I'm just scratching my head and wondering: should we be zeroing out
-some things in memory after an overlay is removed?  Then this bug
-would led to a pointer that would have thrown an oops.
+[v6]
+ * Addressed comments from Viresh about:
+  ** Comments style
+  ** Kconfig bool instead of tristate
+  ** DT and documentation style
+  ** Resourses deallocation on an error
+  ** Typos
 
-If it's useful for you, next week I can send a cleaned up version of
-my patch that rebuilds the cache after overlays are applied or
-removed.
+[v5]
+ * Rebased
+ * Addressed comments from Bjorn about SPDX style, functions and parameters naming
+ * Addressed comments from Viresh DT properties and style, comments style, resourses deallocation, documentation placement
+ * Addressed comments from Sricharan about unnessesary include
+ * Addressed comments from Nicolas
+ * Addressed comments from Rob about the commit messages and acks
+ * Addressed comments from Mark
 
-Alan
+[v4]
+ * Adressed all comments from Stephen
+ * Added CPU regulator support
+ * Added qcom-cpufreq-kryo driver
 
->
-> -Frank
+[v3]
+ * Rebased on top of the latest PLL driver changes
+ * Addressed comment from Rob Herring for bindings
+
+[v2]
+ * Addressed comments from Rob Herring for bindings
+ * Addressed comments from Mark Rutland for memory barrier
+ * Addressed comments from Julien Thierry for clock reenabling condition
+ * Tuned the HW configuration for clock frequencies below 600MHz
+
+SOC (1/15):
+Extracts the kryo l2 accessors driver from the QCOM PMU driver
+
+Clocks (2/15-9/15):
+This series adds support for the CPU clocks on msm8996 devices.
+The driver uses the existing PLL drivers and is required to control
+the CPU frequency scaling on the MSM8996.
+
+Ilia Lin (5):
+soc: qcom: Separate kryo l2 accessors from PMU driver
+clk: Use devm_ in the register fixed factor clock
+clk: qcom: Add CPU clock driver for msm8996
+dt-bindings: clk: qcom: Add bindings for CPU clock for msm8996
+clk: qcom: Add ACD path to CPU clock driver for msm8996
+
+Rajendra Nayak (3):
+clk: qcom: Make clk_alpha_pll_configure available to modules
+clk: qcom: cpu-8996: Add support to switch to alternate PLL
+clk: qcom: cpu-8996: Add support to switch below 600Mhz
+
+.../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+drivers/clk/clk-fixed-factor.c                     |   2 +-
+drivers/clk/qcom/Kconfig                           |  10 +
+drivers/clk/qcom/Makefile                          |   1 +
+drivers/clk/qcom/clk-alpha-pll.c                   |   1 +
+drivers/clk/qcom/clk-alpha-pll.h                   |   6 +
+drivers/clk/qcom/clk-cpu-8996.c                    | 510 +++++++++++++++++++++
+drivers/perf/Kconfig                               |   1 +
+drivers/perf/qcom_l2_pmu.c                         |  90 +---
+drivers/soc/qcom/Kconfig                           |   3 +
+drivers/soc/qcom/Makefile                          |   1 +
+drivers/soc/qcom/kryo-l2-accessors.c               |  56 +++
+include/soc/qcom/kryo-l2-accessors.h               |  12 +
+13 files changed, 643 insertions(+), 67 deletions(-)
+create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
+create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+
+-- 
+2.11.0
