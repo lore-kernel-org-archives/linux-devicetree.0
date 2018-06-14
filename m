@@ -1,135 +1,219 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH 2/4] arm: dts: add support for Laird WB50N cpu module and
- DVK
-Date: Thu, 14 Jun 2018 13:47:50 +0200
-Message-ID: <6f434031-19b9-bd3f-1e9f-e1b862a50d40@microchip.com>
-References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
- <1528966340-23216-2-git-send-email-ben.whitten@lairdtech.com>
- <20180614095041.GW10521@piout.net>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v1 2/5] dt-bindings: clock: renesas,r9a06g032-pinctrl:
+ documentation
+Date: Thu, 14 Jun 2018 14:04:46 +0200
+Message-ID: <20180614120446.GA12638@w540>
+References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com>
+ <1528974029-29617-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180614095041.GW10521@piout.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1528974029-29617-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ben Whitten <ben.whitten@gmail.com>
-Cc: devicetree@vger.kernel.org, Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Michel Pollet <michel.pollet@bp.renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/06/2018 at 11:50, Alexandre Belloni wrote:
-> On 14/06/2018 09:51:55+0100, Ben Whitten wrote:
->> Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
->> ---
->>   arch/arm/boot/dts/Makefile        |   3 +-
->>   arch/arm/boot/dts/at91-wb50n.dts  | 116 ++++++++++++++++++++++
->>   arch/arm/boot/dts/at91-wb50n.dtsi | 202 ++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 320 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/arm/boot/dts/at91-wb50n.dts
->>   create mode 100644 arch/arm/boot/dts/at91-wb50n.dtsi
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 1ee94ee..fd5f8a6 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -61,7 +61,8 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
->>   	at91-sama5d4_ma5d4evk.dtb \
->>   	at91-sama5d4_xplained.dtb \
->>   	at91-sama5d4ek.dtb \
->> -	at91-vinco.dtb
->> +	at91-vinco.dtb \
->> +	at91-wb50n.dtb
-> 
-> I know we have been bad at this but this should be
-> at91-<soc>-<board>.dtb so at91-sama5d31-wb50n.dtb
 
-See new message by Alexandre.
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Actually, the current convention is explained here:
-https://elixir.bootlin.com/linux/latest/source/Documentation/arm/Microchip/README#L159
+Hi Michel,
 
->>   dtb-$(CONFIG_ARCH_ATLAS6) += \
->>   	atlas6-evb.dtb
->>   dtb-$(CONFIG_ARCH_ATLAS7) += \
->> diff --git a/arch/arm/boot/dts/at91-wb50n.dts b/arch/arm/boot/dts/at91-wb50n.dts
->> new file mode 100644
->> index 0000000..ee4f823
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/at91-wb50n.dts
->> @@ -0,0 +1,116 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * at91-wb50n.dts - Device Tree file for wb50n evaluation board
->> + *
->> + *  Copyright (C) 2018 Laird
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +#include "at91-wb50n.dtsi"
->> +
->> +/ {
->> +	model = "Laird Workgroup Bridge 50N - Atmel SAMA5D";
->> +	compatible = "laird,wb50n", "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
->> +
->> +	ahb {
->> +		apb {
->> +			watchdog@fffffe40 {
-> 
-> I don't mind if you want to have a preparation patch adding the
-> necessary labels in the soc dtsi so you don't have to reproduce the
-> ahb/apb hierarchy here.
+On Thu, Jun 14, 2018 at 12:00:18PM +0100, Michel Pollet wrote:
+> The Renesas R9A06G032 PINCTRL node description.
+>
+> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
+> ---
+>  .../bindings/pinctrl/renesas,r9a06g032-pinctrl.txt | 124 +++++++++++++++=
+++++++
+>  1 file changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,r9a=
+06g032-pinctrl.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-=
+pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-p=
+inctrl.txt
+> new file mode 100644
+> index 0000000..f63696f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-pinctrl=
+=2Etxt
+> @@ -0,0 +1,124 @@
+> +Renesas RZ/A1 combined Pin and GPIO controller
+> +
+> +The Renesas SoCs of the RZ/A1 family feature a combined Pin and GPIO con=
+troller,
+> +named "Ports" in the hardware reference manual.
+> +Pin multiplexing and GPIO configuration is performed on a per-pin basis
+> +writing configuration values to per-port register sets.
+> +Each "port" features up to 16 pins, each of them configurable for GPIO
+> +function (port mode) or in alternate function mode.
+> +Up to 8 different alternate function modes exist for each single pin.
 
-I agree: +1
+This is a plain copy of the RZ/A1 pin controller documentation.
+I don't know RZ/N devices and cannot tell if it applies here too, but
+this needs an s/A1/N at the least.
 
->> +	ahb {
->> +		apb {
->> +			pinctrl@fffff200 {
-> 
-> Ditto
-> 
->> +				board {
->> +					pinctrl_mmc0_cd: mmc0_cd {
->> +						atmel,pins = <AT91_PIOC 26 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PC26 GPIO with pullup deglitch */
->> +					};
->> +
->> +					pinctrl_usba_vbus: usba_vbus {
->> +						atmel,pins = <AT91_PIOB 13 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>; /* PB13 GPIO with deglitch */
->> +					};
->> +				};
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&slow_osc {
->> +	atmel,osc-bypass;
->> +};
-> 
-> After the clock binding rework, this will have to be moved to the pmc
-> node (the rework is not posted, this is just to remind me that this will
-> have to be done).
-> 
->> +
->> +&usart1_clk {
->> +	atmel,clk-output-range = <0 132000000>;
->> +};
-> 
-> The datasheet explicitly states that 66 MHz is the maximum allowed
-> frequency for the USART. Note that the new binding will not allow you to
-> do that.
-> 
-> However, I see the table disappeared from the latest datasheet. Maybe
-> Nicolas can comment on that?
+=46rom a very superficial look at the proposed bindings and pinctrl
+driver, I wonder if the rza1 pinctrl driver could be expanded and re-used.
+Have you considered that before starting one from scratch?
 
-You're right, 66 MHz is the maximum frequency for all USART and UART on 
-this sama5d3 SoC.
+Thanks
+   j
 
-The disappearing of this table is a bug in the latest datasheet. I can 
-see that the one "11121B–ATARM–08-Mar-13" still have it. I report this 
-issue to the team in charge of datasheets (it will be certainly fixed 
-for next release of this document).
+> +
+> +Pin controller node
+> +-------------------
+> +
+> +Required properties:
+> +  - compatible: should be:
+> +    - "renesas,r9a05g032-pinctrl"
+> +  - reg
+> +    address base and length of the memory area where the pin controller
+> +    hardware is mapped to.
+> +
+> +Example:
+> +	pinctrl: pinctrl@40067000 {
+> +		compatible =3D "renesas,r9a06g032-pinctrl";
+> +		reg =3D <0x40067000 0x1000>, <0x51000000 0x800>;
+> +		clocks =3D <&sysctrl R9A06G032_HCLK_PINCONFIG>;
+> +		clock-names =3D "bus";
+> +		status =3D "okay";
+> +	};
+> +
+> +
+> +Sub-nodes
+> +---------
+> +  The child nodes of the pin controller node describe a pin multiplexing
+> +  group that can be used by driver nodes.
+> +
+> +  A pin multiplexing sub-node describes how to configure a set of
+> +  (or a single) pin in some desired alternate function mode.
+> +  A single sub-node may define several pin configurations.
+> +
+> +  The allowed generic formats for a pin multiplexing sub-node are the
+> +  following ones:
+> +
+> +  Client sub-nodes shall refer to pin multiplexing sub-nodes using the p=
+handle
+> +  of the most external one.
+> +
+> +  Eg.
+> +
+> +  client-1 {
+> +      ...
+> +      pinctrl-0 =3D <&node-1>;
+> +      ...
+> +  };
+> +
+> +  client-2 {
+> +      ...
+> +      pinctrl-0 =3D <&node-2>;
+> +      ...
+> +  };
+> +
+> +  Required properties:
+> +    - renesas,rzn1-pinctrl:
+> +      Array of integers representing each 'pin' and it's configuration.
+> +
+> +      A 'pin number' does not correspond 1:1 to the hardware manual noti=
+on of
+> +      PL_GPIO directly. Numbers 0...169 are PL_GPIOs, however there is a=
+lso two
+> +      extra 170 and 171 that corresponds to the MDIO0 and MDIO1 bus conf=
+ig.
+> +
+> +      A 'function' also does not correspond 1:1 to the hardware manual. =
+There
+> +      are 2 levels of pin muxing, Level 1, level 2 -- to this are added =
+the
+> +      MDIO configurations.
+> +
+> +      Helper macros to ease assembling the pin index and function identi=
+fier
+> +      are provided by the pin controller header file at:
+> +      <include/dt-bindings/pinctrl/r9a06g032-pinctrl.h>
+> +
+> +Example #1:
+> +  A simple case configuring only the function for a given 'pin' works as=
+ follow:
+> +	#include <include/dt-bindings/pinctrl/r9a06g032-pinctrl.h>
+> +	&pinctrl {
+> +		pinsuart0: pinsuart0 {
+> +			renesas,rzn1-pinmux-ids =3D <
+> +				RZN1_MUX(103, UART0_I)	/* UART0_TXD */
+> +				RZN1_MUX(104, UART0_I)	/* UART0_RXD */
+> +			>;
+> +		};
+> +	};
+> +
+> +	&uart0 {
+> +		status =3D "okay";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinsuart0>;
+> +	};
+> +  Note that in this case the other functions of the pins are not changed.
+> +
+> +Example #2:
+> +  Here we also set the pullups on the RXD pin:
+> +	&pinctrl {
+> +		pinsuart0: pinsuart0 {
+> +			renesas,rzn1-pinmux-ids =3D <
+> +				RZN1_MUX(103, UART0_I)	/* UART0_TXD */
+> +				RZN1_MUX_PUP(104, UART0_I)	/* UART0_RXD */
+> +			>;
+> +		};
+> +	};
+> +  There are many alternative macros to set the pullup/down/none and the =
+drive
+> +  strenght in the r9a06g032-pinctrl.h header file.
+> +
+> +Example #3:
+> +  The Soc has two configurable MDIO muxes, these can also be configured
+> +  with this interface using the 'special' MDIO constants:
+> +
+> +	&pinctrl {
+> +		mdio_mux: mdiomux {
+> +			renesas,rzn1-pinmux-ids =3D <
+> +				RZN1_MUX(RZN1_MDIO_BUS0, RZN1_FUNC_MDIO_MUX_MAC0)
+> +				RZN1_MUX(RZN1_MDIO_BUS1, RZN1_FUNC_MDIO_MUX_SWITCH)
+> +			>;
+> +		};
+> +	};
+> +  Clearly the pull/up/none and drive constants will be ignored, even if
+> +  specified.
+> +
+> +Note that Renesas provides an extensive webapp that can generates a devi=
+ce tree
+> +file for your board. See their website for this part number for details.
+> --
+> 2.7.4
+>
 
-Best regards,
--- 
-Nicolas Ferre
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbIlneAAoJEHI0Bo8WoVY85sgQAJiDP5mkkYI6iC1UbmmPI8R2
+krwaCfjZUXwwc3jyd13/gn4GzF1qbR54QbwXaJjB2QPdDFu0v6ZiXoBFXUIoW6Tp
+2Dvy/lKzEuuEa8nthcVeG1QZGpWqAcrN4iBFCohHY9j371l9VmuO85af/mZMEVd7
+hv85D4/OQDQ7+flkrmLpj012LuF//wvCgwH+pAKseaJlx4QC2aRpjvtUJytWxNmX
+DUscN/gDl9KY4KgzYfR18jwIxoQEZzFJ8HHdqmcuZPkTAY1dVPTn1pVCrcwfqgc+
+Ift9yyiwa/dC0pPgVgqXa9O7kWXAvfSa/zk06cYM7Ua9LZb8Urj/lg7wb5RpACql
+Nin3VNezp85RkyfM2Bm/X9QfZazU/pEDa1IOaPU/Yrx5skdlIb+F1gZ/OFp+1Yoh
+wZQwuofHoaEVDbf/I3iQkdev14nnBzAl25fVLc9nxOL2HpaU2/3mK7szx431jI/z
+VQi7zLsZwrm6yqLFbV9yzLHmm1wyHhpMCk+eAawvunYGOcULTylAuMjuJfYFoL+U
+PT9LDr0zeosPOtqnXmN/PjyQTzL7hiJJbrA+LEhpsZbG3bTaJdqesIYYAEl0SrvI
+S6jo7naCNhLhC/3VmdzG55P/fWBQN3+8JPegBjdzuLfzdAl3VlxhspkGbtic2/Rd
+QZKW60zD2c16nr0y0H/U
+=I9lS
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
