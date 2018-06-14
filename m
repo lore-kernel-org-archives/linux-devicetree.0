@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v3 6/6] arm64: dts: sdm845: Add tsens nodes
-Date: Thu, 14 Jun 2018 13:43:16 +0300
-Message-ID: <448cdc793c6ac83ab6d0ba2a6bef00036ad20801.1528972165.git.amit.kucheria@linaro.org>
+Subject: [PATCH v3 2/6] dt: qcom: 8996: thermal: Move to DT initialisation
+Date: Thu, 14 Jun 2018 13:43:12 +0300
+Message-ID: <e451a4dc1c885921c66da63549a720805c287a6a.1528972165.git.amit.kucheria@linaro.org>
 References: <cover.1528972165.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1528972165.git.amit.kucheria@linaro.org>
@@ -14,40 +14,42 @@ Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro
         AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SDM845 has two tsens blocks, one with 13 sensors and the other with 8
-sensors.
+We also split up the regmap address space into two, one for the TM
+registers, the other for the SROT registers. This was required to deal with
+different address offsets for the TM and SROT registers across different
+SoC families.
+
+Since tsens-common.c/init_common() currently only registers one address
+space, the order is important (TM before SROT). This is OK since the code
+doesn't really use the SROT functionality yet.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index cdaabeb..7dd59b4 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -221,6 +221,22 @@
- 			#interrupt-cells = <2>;
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 8c7f9ca..6c8a857 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -461,7 +461,17 @@
  
-+		tsens0: tsens@c222000 {
-+			compatible = "qcom,tsens-v2";
-+			reg = <0xc263000 0x1ff>, /* TM */
-+			      <0xc222000 0x1ff>; /* SROT */
+ 		tsens0: thermal-sensor@4a8000 {
+ 			compatible = "qcom,msm8996-tsens";
+-			reg = <0x4a8000 0x2000>;
++			reg = <0x4a9000 0x1000>, /* TM */
++			      <0x4a8000 0x1000>; /* SROT */
 +			#qcom,sensors = <13>;
 +			#thermal-sensor-cells = <1>;
 +		};
 +
-+		tsens1: tsens@c223000 {
-+			compatible = "qcom,tsens-v2";
-+			reg = <0xc265000 0x1ff>, /* TM */
-+			      <0xc223000 0x1ff>; /* SROT */
++		tsens1: thermal-sensor@4ac000 {
++			compatible = "qcom,msm8996-tsens";
++			reg = <0x4ad000 0x1000>, /* TM */
++			      <0x4ac000 0x1000>; /* SROT */
 +			#qcom,sensors = <8>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0xc440000 0x1100>,
+ 			#thermal-sensor-cells = <1>;
+ 		};
+ 
 -- 
 2.7.4
