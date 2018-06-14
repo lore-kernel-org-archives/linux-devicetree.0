@@ -1,17 +1,18 @@
 From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH 2/2] dt-bindings: document gpio-mt7621 bindings
-Date: Thu, 14 Jun 2018 16:14:53 +0200
-Message-ID: <CACRpkdb034f2hZkoPenTurdULeUPuqPxNVE_Mr609ngrfx4Q=g@mail.gmail.com>
+Date: Thu, 14 Jun 2018 16:17:33 +0200
+Message-ID: <CACRpkda+tOYEnAgskbNkMXNoFkGo+unV4RcheZn2mJnEHQsYyQ@mail.gmail.com>
 References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
  <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
  <20180612205638.GA2404@rob-hp-laptop>
  <CAMhs-H8GYut-7hopEb0Oe0DYz0sjSwcw_rQ4hzipu9LMz-zWFg@mail.gmail.com>
  <CAL_Jsq+0bnEmE2n-O3a7ecSXOsjTfZD3AqJDQunO6xzUF_W-=A@mail.gmail.com>
+ <20180614044539.GA8681@foobar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAL_Jsq+0bnEmE2n-O3a7ecSXOsjTfZD3AqJDQunO6xzUF_W-=A@mail.gmail.com>
+In-Reply-To: <20180614044539.GA8681@foobar>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -21,42 +22,32 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, driverdev-devel@linuxdriverproject.org, Sergio Paracuellos <sergio.paracuellos@gmail.com>, NeilBrown <neil@brown.name>
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, driverdev-devel@linuxdriverproject.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 9:28 PM, Rob Herring <robh@kernel.org> wrote:
+On Thu, Jun 14, 2018 at 6:45 AM, Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
 
->> "Some system-on-chips (SoCs) use the concept of GPIO banks. ...
->> Usually each such bank is
->> exposed in the device tree as an individual gpio-controller node. ..."
+> Ok, so... does the following single node sounds acceptable?
 >
-> This should be conditioned on being able to divide up the registers by
-> bank which seems like you can't. Or there's the case like the DW GPIO
-> block and the number of banks is configurable.
+> gpio: gpio@600 {
+>   #gpio-cells = <2>;
+>   #interrupt-cells = <2>;
+>   compatible = "mediatek,mt7621-gpio";
+>   gpio-controller;
+>   interrupt-controller;
+>   reg = <0x600 0x60>;
+>   interrupt-parent = <&gic>;
+>   interrupts = <GIC_SHARED 12 IRQ_TYPE_LEVEL_HIGH>;
+>   mediatek,gpio-bank-widths = <32 32 32>;
 
-If it is possible to create one device per bank I usually prefer that
-approach, as it also (often) makes it possible to use the
-generic GPIO library, i.e. the hardware abstraction start to
-share more with other GPIO controllers.
+Why would you need this? It is pretty obvious from the
+compatible string isn't it? Just use that to tell that
+"aha, it is mediatek,mt7321-gpio, so it has 3x32 GPIOs
+indexed from 0..95".
 
->> If this is not a good approach, could you please me point me out to a
->> device tree example where
->> the correct approach is being used?
->
-> I'm not sure offhand. There are lots of examples of single nodes I'm
-> sure. Which ones have banks I haven't a clue. IIRC, there were some
-> cases where the bank # was part of the GPIO cells, but I seem to
-> recall Linus prefers not having 3 cells.
-
-I don't like 3 cells, stuff is complicated enough as it is already.
-
-Better in that case to concatenate the offsets and instead of
-having an extra cell 0, 1 and offsets 0-31, 0-31
-have two cells and offsets 0-63.
-
-My reasoning is that since it is represented by a single device
-we are indexing into that one device from 0-n.
+No need of overspecifying stuff.
 
 Yours,
 Linus Walleij
