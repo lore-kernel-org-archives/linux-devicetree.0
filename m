@@ -1,219 +1,131 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v1 2/5] dt-bindings: clock: renesas,r9a06g032-pinctrl:
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: RE: [PATCH v1 2/5] dt-bindings: clock: renesas,r9a06g032-pinctrl:
  documentation
-Date: Thu, 14 Jun 2018 14:04:46 +0200
-Message-ID: <20180614120446.GA12638@w540>
+Date: Thu, 14 Jun 2018 12:10:28 +0000
+Message-ID: <OSBPR01MB2054FBD2836B478B83D96C9CD27D0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
 References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com>
  <1528974029-29617-3-git-send-email-michel.pollet@bp.renesas.com>
+ <20180614120446.GA12638@w540>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528974029-29617-3-git-send-email-michel.pollet@bp.renesas.com>
+In-Reply-To: <20180614120446.GA12638@w540>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Michel,
-
-On Thu, Jun 14, 2018 at 12:00:18PM +0100, Michel Pollet wrote:
-> The Renesas R9A06G032 PINCTRL node description.
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> ---
->  .../bindings/pinctrl/renesas,r9a06g032-pinctrl.txt | 124 +++++++++++++++=
-++++++
->  1 file changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,r9a=
-06g032-pinctrl.txt
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-=
-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-p=
-inctrl.txt
-> new file mode 100644
-> index 0000000..f63696f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-pinctrl=
-=2Etxt
-> @@ -0,0 +1,124 @@
-> +Renesas RZ/A1 combined Pin and GPIO controller
-> +
-> +The Renesas SoCs of the RZ/A1 family feature a combined Pin and GPIO con=
-troller,
-> +named "Ports" in the hardware reference manual.
-> +Pin multiplexing and GPIO configuration is performed on a per-pin basis
-> +writing configuration values to per-port register sets.
-> +Each "port" features up to 16 pins, each of them configurable for GPIO
-> +function (port mode) or in alternate function mode.
-> +Up to 8 different alternate function modes exist for each single pin.
-
-This is a plain copy of the RZ/A1 pin controller documentation.
-I don't know RZ/N devices and cannot tell if it applies here too, but
-this needs an s/A1/N at the least.
-
-=46rom a very superficial look at the proposed bindings and pinctrl
-driver, I wonder if the rza1 pinctrl driver could be expanded and re-used.
-Have you considered that before starting one from scratch?
-
-Thanks
-   j
-
-> +
-> +Pin controller node
-> +-------------------
-> +
-> +Required properties:
-> +  - compatible: should be:
-> +    - "renesas,r9a05g032-pinctrl"
-> +  - reg
-> +    address base and length of the memory area where the pin controller
-> +    hardware is mapped to.
-> +
-> +Example:
-> +	pinctrl: pinctrl@40067000 {
-> +		compatible =3D "renesas,r9a06g032-pinctrl";
-> +		reg =3D <0x40067000 0x1000>, <0x51000000 0x800>;
-> +		clocks =3D <&sysctrl R9A06G032_HCLK_PINCONFIG>;
-> +		clock-names =3D "bus";
-> +		status =3D "okay";
-> +	};
-> +
-> +
-> +Sub-nodes
-> +---------
-> +  The child nodes of the pin controller node describe a pin multiplexing
-> +  group that can be used by driver nodes.
-> +
-> +  A pin multiplexing sub-node describes how to configure a set of
-> +  (or a single) pin in some desired alternate function mode.
-> +  A single sub-node may define several pin configurations.
-> +
-> +  The allowed generic formats for a pin multiplexing sub-node are the
-> +  following ones:
-> +
-> +  Client sub-nodes shall refer to pin multiplexing sub-nodes using the p=
-handle
-> +  of the most external one.
-> +
-> +  Eg.
-> +
-> +  client-1 {
-> +      ...
-> +      pinctrl-0 =3D <&node-1>;
-> +      ...
-> +  };
-> +
-> +  client-2 {
-> +      ...
-> +      pinctrl-0 =3D <&node-2>;
-> +      ...
-> +  };
-> +
-> +  Required properties:
-> +    - renesas,rzn1-pinctrl:
-> +      Array of integers representing each 'pin' and it's configuration.
-> +
-> +      A 'pin number' does not correspond 1:1 to the hardware manual noti=
-on of
-> +      PL_GPIO directly. Numbers 0...169 are PL_GPIOs, however there is a=
-lso two
-> +      extra 170 and 171 that corresponds to the MDIO0 and MDIO1 bus conf=
-ig.
-> +
-> +      A 'function' also does not correspond 1:1 to the hardware manual. =
-There
-> +      are 2 levels of pin muxing, Level 1, level 2 -- to this are added =
-the
-> +      MDIO configurations.
-> +
-> +      Helper macros to ease assembling the pin index and function identi=
-fier
-> +      are provided by the pin controller header file at:
-> +      <include/dt-bindings/pinctrl/r9a06g032-pinctrl.h>
-> +
-> +Example #1:
-> +  A simple case configuring only the function for a given 'pin' works as=
- follow:
-> +	#include <include/dt-bindings/pinctrl/r9a06g032-pinctrl.h>
-> +	&pinctrl {
-> +		pinsuart0: pinsuart0 {
-> +			renesas,rzn1-pinmux-ids =3D <
-> +				RZN1_MUX(103, UART0_I)	/* UART0_TXD */
-> +				RZN1_MUX(104, UART0_I)	/* UART0_RXD */
-> +			>;
-> +		};
-> +	};
-> +
-> +	&uart0 {
-> +		status =3D "okay";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinsuart0>;
-> +	};
-> +  Note that in this case the other functions of the pins are not changed.
-> +
-> +Example #2:
-> +  Here we also set the pullups on the RXD pin:
-> +	&pinctrl {
-> +		pinsuart0: pinsuart0 {
-> +			renesas,rzn1-pinmux-ids =3D <
-> +				RZN1_MUX(103, UART0_I)	/* UART0_TXD */
-> +				RZN1_MUX_PUP(104, UART0_I)	/* UART0_RXD */
-> +			>;
-> +		};
-> +	};
-> +  There are many alternative macros to set the pullup/down/none and the =
-drive
-> +  strenght in the r9a06g032-pinctrl.h header file.
-> +
-> +Example #3:
-> +  The Soc has two configurable MDIO muxes, these can also be configured
-> +  with this interface using the 'special' MDIO constants:
-> +
-> +	&pinctrl {
-> +		mdio_mux: mdiomux {
-> +			renesas,rzn1-pinmux-ids =3D <
-> +				RZN1_MUX(RZN1_MDIO_BUS0, RZN1_FUNC_MDIO_MUX_MAC0)
-> +				RZN1_MUX(RZN1_MDIO_BUS1, RZN1_FUNC_MDIO_MUX_SWITCH)
-> +			>;
-> +		};
-> +	};
-> +  Clearly the pull/up/none and drive constants will be ignored, even if
-> +  specified.
-> +
-> +Note that Renesas provides an extensive webapp that can generates a devi=
-ce tree
-> +file for your board. See their website for this part number for details.
-> --
-> 2.7.4
->
-
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbIlneAAoJEHI0Bo8WoVY85sgQAJiDP5mkkYI6iC1UbmmPI8R2
-krwaCfjZUXwwc3jyd13/gn4GzF1qbR54QbwXaJjB2QPdDFu0v6ZiXoBFXUIoW6Tp
-2Dvy/lKzEuuEa8nthcVeG1QZGpWqAcrN4iBFCohHY9j371l9VmuO85af/mZMEVd7
-hv85D4/OQDQ7+flkrmLpj012LuF//wvCgwH+pAKseaJlx4QC2aRpjvtUJytWxNmX
-DUscN/gDl9KY4KgzYfR18jwIxoQEZzFJ8HHdqmcuZPkTAY1dVPTn1pVCrcwfqgc+
-Ift9yyiwa/dC0pPgVgqXa9O7kWXAvfSa/zk06cYM7Ua9LZb8Urj/lg7wb5RpACql
-Nin3VNezp85RkyfM2Bm/X9QfZazU/pEDa1IOaPU/Yrx5skdlIb+F1gZ/OFp+1Yoh
-wZQwuofHoaEVDbf/I3iQkdev14nnBzAl25fVLc9nxOL2HpaU2/3mK7szx431jI/z
-VQi7zLsZwrm6yqLFbV9yzLHmm1wyHhpMCk+eAawvunYGOcULTylAuMjuJfYFoL+U
-PT9LDr0zeosPOtqnXmN/PjyQTzL7hiJJbrA+LEhpsZbG3bTaJdqesIYYAEl0SrvI
-S6jo7naCNhLhC/3VmdzG55P/fWBQN3+8JPegBjdzuLfzdAl3VlxhspkGbtic2/Rd
-QZKW60zD2c16nr0y0H/U
-=I9lS
------END PGP SIGNATURE-----
-
---KsGdsel6WgEHnImy--
+SGkgSmFjb3BvLA0KDQpPbiAxNCBKdW5lIDIwMTggMTM6MDUsIEphY29wbyB3cm90ZToNCj4gSGkg
+TWljaGVsLA0KPg0KPiBPbiBUaHUsIEp1biAxNCwgMjAxOCBhdCAxMjowMDoxOFBNICswMTAwLCBN
+aWNoZWwgUG9sbGV0IHdyb3RlOg0KPiA+IFRoZSBSZW5lc2FzIFI5QTA2RzAzMiBQSU5DVFJMIG5v
+ZGUgZGVzY3JpcHRpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaWNoZWwgUG9sbGV0IDxt
+aWNoZWwucG9sbGV0QGJwLnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3Mv
+cGluY3RybC9yZW5lc2FzLHI5YTA2ZzAzMi1waW5jdHJsLnR4dCB8IDEyNA0KPiA+ICsrKysrKysr
+KysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTI0IGluc2VydGlvbnMoKykNCj4g
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BpbmN0cmwvcmVuZXNhcyxyOWEwNmcwMzItcGluY3RybC50eA0KPiA+IHQNCj4gPg0KPiA+
+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5j
+dHJsL3JlbmVzYXMscjlhMDZnMDMyLXBpbmN0cmwuDQo+ID4gdHh0DQo+ID4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZW5lc2FzLHI5YTA2ZzAzMi1waW5jdHJs
+Lg0KPiA+IHR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4u
+ZjYzNjk2Zg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZW5lc2FzLHI5YTA2ZzAzMi1waW5jDQo+ID4gKysrIHRy
+bC50eHQNCj4gPiBAQCAtMCwwICsxLDEyNCBAQA0KPiA+ICtSZW5lc2FzIFJaL0ExIGNvbWJpbmVk
+IFBpbiBhbmQgR1BJTyBjb250cm9sbGVyDQo+ID4gKw0KPiA+ICtUaGUgUmVuZXNhcyBTb0NzIG9m
+IHRoZSBSWi9BMSBmYW1pbHkgZmVhdHVyZSBhIGNvbWJpbmVkIFBpbiBhbmQgR1BJTw0KPiA+ICtj
+b250cm9sbGVyLCBuYW1lZCAiUG9ydHMiIGluIHRoZSBoYXJkd2FyZSByZWZlcmVuY2UgbWFudWFs
+Lg0KPiA+ICtQaW4gbXVsdGlwbGV4aW5nIGFuZCBHUElPIGNvbmZpZ3VyYXRpb24gaXMgcGVyZm9y
+bWVkIG9uIGEgcGVyLXBpbg0KPiA+ICtiYXNpcyB3cml0aW5nIGNvbmZpZ3VyYXRpb24gdmFsdWVz
+IHRvIHBlci1wb3J0IHJlZ2lzdGVyIHNldHMuDQo+ID4gK0VhY2ggInBvcnQiIGZlYXR1cmVzIHVw
+IHRvIDE2IHBpbnMsIGVhY2ggb2YgdGhlbSBjb25maWd1cmFibGUgZm9yDQo+ID4gK0dQSU8gZnVu
+Y3Rpb24gKHBvcnQgbW9kZSkgb3IgaW4gYWx0ZXJuYXRlIGZ1bmN0aW9uIG1vZGUuDQo+ID4gK1Vw
+IHRvIDggZGlmZmVyZW50IGFsdGVybmF0ZSBmdW5jdGlvbiBtb2RlcyBleGlzdCBmb3IgZWFjaCBz
+aW5nbGUgcGluLg0KPg0KPiBUaGlzIGlzIGEgcGxhaW4gY29weSBvZiB0aGUgUlovQTEgcGluIGNv
+bnRyb2xsZXIgZG9jdW1lbnRhdGlvbi4NCj4gSSBkb24ndCBrbm93IFJaL04gZGV2aWNlcyBhbmQg
+Y2Fubm90IHRlbGwgaWYgaXQgYXBwbGllcyBoZXJlIHRvbywgYnV0IHRoaXMgbmVlZHMNCj4gYW4g
+cy9BMS9OIGF0IHRoZSBsZWFzdC4NCj4NCj4gRnJvbSBhIHZlcnkgc3VwZXJmaWNpYWwgbG9vayBh
+dCB0aGUgcHJvcG9zZWQgYmluZGluZ3MgYW5kIHBpbmN0cmwgZHJpdmVyLCBJDQo+IHdvbmRlciBp
+ZiB0aGUgcnphMSBwaW5jdHJsIGRyaXZlciBjb3VsZCBiZSBleHBhbmRlZCBhbmQgcmUtdXNlZC4N
+Cj4gSGF2ZSB5b3UgY29uc2lkZXJlZCB0aGF0IGJlZm9yZSBzdGFydGluZyBvbmUgZnJvbSBzY3Jh
+dGNoPw0KDQpTb3JyeSBpdCdzIGp1c3QgdGhlIHN0YXJ0IG9mIHRoZSBkb2N1bWVudGF0aW9uIHdo
+aWNoIEkgd3JvbmdseSBjdXQvcGFzdGVkIC0tIHRoZQ0KcmVzdCBpcyBjb21wbGV0ZWx5IGRpZmZl
+cmVudDsgdGhlIG9ubHkgcmVhc29uIEExIGlzIG1lbnRpb25lZCBoZXJlIGlzIHRoYXQgSSB1c2Vk
+DQp0aGF0IGZpbGUgYXMgYSB0ZW1wbGF0ZSBmb3IgdGhlIGhlYWRlci9zZWN0aW9ucyBldGMuLi4g
+U29tZWhvdyB0aGUgdGl0bGUrYmx1cmINCndlbnQgdW5lZGl0ZWQhDQoNCkFuZCBubywgaW4gdGVy
+bXMgb2YgZnVuY3Rpb25hbGl0aWVzLCB0aGV5IGFyZSBjb21wbGV0ZWx5IGRpZmZlcmVudCBJUHMu
+DQoNCk1pY2hlbA0KDQo+DQo+IFRoYW5rcw0KPiAgICBqDQo+DQo+ID4gKw0KPiA+ICtQaW4gY29u
+dHJvbGxlciBub2RlDQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiArDQo+ID4gK1JlcXVp
+cmVkIHByb3BlcnRpZXM6DQo+ID4gKyAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmU6DQo+ID4gKyAg
+ICAtICJyZW5lc2FzLHI5YTA1ZzAzMi1waW5jdHJsIg0KPiA+ICsgIC0gcmVnDQo+ID4gKyAgICBh
+ZGRyZXNzIGJhc2UgYW5kIGxlbmd0aCBvZiB0aGUgbWVtb3J5IGFyZWEgd2hlcmUgdGhlIHBpbiBj
+b250cm9sbGVyDQo+ID4gKyAgICBoYXJkd2FyZSBpcyBtYXBwZWQgdG8uDQo+ID4gKw0KPiA+ICtF
+eGFtcGxlOg0KPiA+ICtwaW5jdHJsOiBwaW5jdHJsQDQwMDY3MDAwIHsNCj4gPiArY29tcGF0aWJs
+ZSA9ICJyZW5lc2FzLHI5YTA2ZzAzMi1waW5jdHJsIjsNCj4gPiArcmVnID0gPDB4NDAwNjcwMDAg
+MHgxMDAwPiwgPDB4NTEwMDAwMDAgMHg4MDA+Ow0KPiA+ICtjbG9ja3MgPSA8JnN5c2N0cmwgUjlB
+MDZHMDMyX0hDTEtfUElOQ09ORklHPjsNCj4gPiArY2xvY2stbmFtZXMgPSAiYnVzIjsNCj4gPiAr
+c3RhdHVzID0gIm9rYXkiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArDQo+ID4gK1N1Yi1ub2Rlcw0K
+PiA+ICstLS0tLS0tLS0NCj4gPiArICBUaGUgY2hpbGQgbm9kZXMgb2YgdGhlIHBpbiBjb250cm9s
+bGVyIG5vZGUgZGVzY3JpYmUgYSBwaW4NCj4gPiArbXVsdGlwbGV4aW5nDQo+ID4gKyAgZ3JvdXAg
+dGhhdCBjYW4gYmUgdXNlZCBieSBkcml2ZXIgbm9kZXMuDQo+ID4gKw0KPiA+ICsgIEEgcGluIG11
+bHRpcGxleGluZyBzdWItbm9kZSBkZXNjcmliZXMgaG93IHRvIGNvbmZpZ3VyZSBhIHNldCBvZg0K
+PiA+ICsgKG9yIGEgc2luZ2xlKSBwaW4gaW4gc29tZSBkZXNpcmVkIGFsdGVybmF0ZSBmdW5jdGlv
+biBtb2RlLg0KPiA+ICsgIEEgc2luZ2xlIHN1Yi1ub2RlIG1heSBkZWZpbmUgc2V2ZXJhbCBwaW4g
+Y29uZmlndXJhdGlvbnMuDQo+ID4gKw0KPiA+ICsgIFRoZSBhbGxvd2VkIGdlbmVyaWMgZm9ybWF0
+cyBmb3IgYSBwaW4gbXVsdGlwbGV4aW5nIHN1Yi1ub2RlIGFyZSB0aGUNCj4gPiArIGZvbGxvd2lu
+ZyBvbmVzOg0KPiA+ICsNCj4gPiArICBDbGllbnQgc3ViLW5vZGVzIHNoYWxsIHJlZmVyIHRvIHBp
+biBtdWx0aXBsZXhpbmcgc3ViLW5vZGVzIHVzaW5nDQo+ID4gKyB0aGUgcGhhbmRsZSAgb2YgdGhl
+IG1vc3QgZXh0ZXJuYWwgb25lLg0KPiA+ICsNCj4gPiArICBFZy4NCj4gPiArDQo+ID4gKyAgY2xp
+ZW50LTEgew0KPiA+ICsgICAgICAuLi4NCj4gPiArICAgICAgcGluY3RybC0wID0gPCZub2RlLTE+
+Ow0KPiA+ICsgICAgICAuLi4NCj4gPiArICB9Ow0KPiA+ICsNCj4gPiArICBjbGllbnQtMiB7DQo+
+ID4gKyAgICAgIC4uLg0KPiA+ICsgICAgICBwaW5jdHJsLTAgPSA8Jm5vZGUtMj47DQo+ID4gKyAg
+ICAgIC4uLg0KPiA+ICsgIH07DQo+ID4gKw0KPiA+ICsgIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+
+ID4gKyAgICAtIHJlbmVzYXMscnpuMS1waW5jdHJsOg0KPiA+ICsgICAgICBBcnJheSBvZiBpbnRl
+Z2VycyByZXByZXNlbnRpbmcgZWFjaCAncGluJyBhbmQgaXQncyBjb25maWd1cmF0aW9uLg0KPiA+
+ICsNCj4gPiArICAgICAgQSAncGluIG51bWJlcicgZG9lcyBub3QgY29ycmVzcG9uZCAxOjEgdG8g
+dGhlIGhhcmR3YXJlIG1hbnVhbCBub3Rpb24NCj4gb2YNCj4gPiArICAgICAgUExfR1BJTyBkaXJl
+Y3RseS4gTnVtYmVycyAwLi4uMTY5IGFyZSBQTF9HUElPcywgaG93ZXZlciB0aGVyZSBpcyBhbHNv
+DQo+IHR3bw0KPiA+ICsgICAgICBleHRyYSAxNzAgYW5kIDE3MSB0aGF0IGNvcnJlc3BvbmRzIHRv
+IHRoZSBNRElPMCBhbmQgTURJTzEgYnVzDQo+IGNvbmZpZy4NCj4gPiArDQo+ID4gKyAgICAgIEEg
+J2Z1bmN0aW9uJyBhbHNvIGRvZXMgbm90IGNvcnJlc3BvbmQgMToxIHRvIHRoZSBoYXJkd2FyZSBt
+YW51YWwuDQo+IFRoZXJlDQo+ID4gKyAgICAgIGFyZSAyIGxldmVscyBvZiBwaW4gbXV4aW5nLCBM
+ZXZlbCAxLCBsZXZlbCAyIC0tIHRvIHRoaXMgYXJlIGFkZGVkIHRoZQ0KPiA+ICsgICAgICBNRElP
+IGNvbmZpZ3VyYXRpb25zLg0KPiA+ICsNCj4gPiArICAgICAgSGVscGVyIG1hY3JvcyB0byBlYXNl
+IGFzc2VtYmxpbmcgdGhlIHBpbiBpbmRleCBhbmQgZnVuY3Rpb24gaWRlbnRpZmllcg0KPiA+ICsg
+ICAgICBhcmUgcHJvdmlkZWQgYnkgdGhlIHBpbiBjb250cm9sbGVyIGhlYWRlciBmaWxlIGF0Og0K
+PiA+ICsgICAgICA8aW5jbHVkZS9kdC1iaW5kaW5ncy9waW5jdHJsL3I5YTA2ZzAzMi1waW5jdHJs
+Lmg+DQo+ID4gKw0KPiA+ICtFeGFtcGxlICMxOg0KPiA+ICsgIEEgc2ltcGxlIGNhc2UgY29uZmln
+dXJpbmcgb25seSB0aGUgZnVuY3Rpb24gZm9yIGEgZ2l2ZW4gJ3Bpbicgd29ya3MgYXMNCj4gZm9s
+bG93Og0KPiA+ICsjaW5jbHVkZSA8aW5jbHVkZS9kdC1iaW5kaW5ncy9waW5jdHJsL3I5YTA2ZzAz
+Mi1waW5jdHJsLmg+DQo+ID4gKyZwaW5jdHJsIHsNCj4gPiArcGluc3VhcnQwOiBwaW5zdWFydDAg
+ew0KPiA+ICtyZW5lc2FzLHJ6bjEtcGlubXV4LWlkcyA9IDwNCj4gPiArUlpOMV9NVVgoMTAzLCBV
+QVJUMF9JKS8qDQo+IFVBUlQwX1RYRCAqLw0KPiA+ICtSWk4xX01VWCgxMDQsIFVBUlQwX0kpLyoN
+Cj4gVUFSVDBfUlhEICovDQo+ID4gKz47DQo+ID4gK307DQo+ID4gK307DQo+ID4gKw0KPiA+ICsm
+dWFydDAgew0KPiA+ICtzdGF0dXMgPSAib2theSI7DQo+ID4gK3BpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCI7DQo+ID4gK3BpbmN0cmwtMCA9IDwmcGluc3VhcnQwPjsNCj4gPiArfTsNCj4gPiArICBO
+b3RlIHRoYXQgaW4gdGhpcyBjYXNlIHRoZSBvdGhlciBmdW5jdGlvbnMgb2YgdGhlIHBpbnMgYXJl
+IG5vdCBjaGFuZ2VkLg0KPiA+ICsNCj4gPiArRXhhbXBsZSAjMjoNCj4gPiArICBIZXJlIHdlIGFs
+c28gc2V0IHRoZSBwdWxsdXBzIG9uIHRoZSBSWEQgcGluOg0KPiA+ICsmcGluY3RybCB7DQo+ID4g
+K3BpbnN1YXJ0MDogcGluc3VhcnQwIHsNCj4gPiArcmVuZXNhcyxyem4xLXBpbm11eC1pZHMgPSA8
+DQo+ID4gK1JaTjFfTVVYKDEwMywgVUFSVDBfSSkvKg0KPiBVQVJUMF9UWEQgKi8NCj4gPiArUlpO
+MV9NVVhfUFVQKDEwNCwgVUFSVDBfSSkvKg0KPiBVQVJUMF9SWEQgKi8NCj4gPiArPjsNCj4gPiAr
+fTsNCj4gPiArfTsNCj4gPiArICBUaGVyZSBhcmUgbWFueSBhbHRlcm5hdGl2ZSBtYWNyb3MgdG8g
+c2V0IHRoZSBwdWxsdXAvZG93bi9ub25lIGFuZA0KPiA+ICt0aGUgZHJpdmUNCj4gPiArICBzdHJl
+bmdodCBpbiB0aGUgcjlhMDZnMDMyLXBpbmN0cmwuaCBoZWFkZXIgZmlsZS4NCj4gPiArDQo+ID4g
+K0V4YW1wbGUgIzM6DQo+ID4gKyAgVGhlIFNvYyBoYXMgdHdvIGNvbmZpZ3VyYWJsZSBNRElPIG11
+eGVzLCB0aGVzZSBjYW4gYWxzbyBiZQ0KPiA+ICtjb25maWd1cmVkDQo+ID4gKyAgd2l0aCB0aGlz
+IGludGVyZmFjZSB1c2luZyB0aGUgJ3NwZWNpYWwnIE1ESU8gY29uc3RhbnRzOg0KPiA+ICsNCj4g
+PiArJnBpbmN0cmwgew0KPiA+ICttZGlvX211eDogbWRpb211eCB7DQo+ID4gK3JlbmVzYXMscnpu
+MS1waW5tdXgtaWRzID0gPA0KPiA+ICtSWk4xX01VWChSWk4xX01ESU9fQlVTMCwNCj4gUlpOMV9G
+VU5DX01ESU9fTVVYX01BQzApDQo+ID4gK1JaTjFfTVVYKFJaTjFfTURJT19CVVMxLA0KPiBSWk4x
+X0ZVTkNfTURJT19NVVhfU1dJVENIKQ0KPiA+ICs+Ow0KPiA+ICt9Ow0KPiA+ICt9Ow0KPiA+ICsg
+IENsZWFybHkgdGhlIHB1bGwvdXAvbm9uZSBhbmQgZHJpdmUgY29uc3RhbnRzIHdpbGwgYmUgaWdu
+b3JlZCwgZXZlbg0KPiA+ICtpZg0KPiA+ICsgIHNwZWNpZmllZC4NCj4gPiArDQo+ID4gK05vdGUg
+dGhhdCBSZW5lc2FzIHByb3ZpZGVzIGFuIGV4dGVuc2l2ZSB3ZWJhcHAgdGhhdCBjYW4gZ2VuZXJh
+dGVzIGENCj4gPiArZGV2aWNlIHRyZWUgZmlsZSBmb3IgeW91ciBib2FyZC4gU2VlIHRoZWlyIHdl
+YnNpdGUgZm9yIHRoaXMgcGFydCBudW1iZXIgZm9yDQo+IGRldGFpbHMuDQo+ID4gLS0NCj4gPiAy
+LjcuNA0KPiA+DQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1l
+YWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVG
+SCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8u
+IDA0NTg2NzA5Lg0K
