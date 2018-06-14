@@ -1,32 +1,124 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v1 2/5] dt-bindings: clock: renesas,r9a06g032-pinctrl:
- documentation
-Date: Thu, 14 Jun 2018 12:17:49 +0000
-Message-ID: <TY1PR01MB1562D22174BA4043858DFF248A7D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528974029-29617-3-git-send-email-michel.pollet@bp.renesas.com>
- <20180614120446.GA12638@w540>
- <OSBPR01MB2054FBD2836B478B83D96C9CD27D0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <OSBPR01MB2054FBD2836B478B83D96C9CD27D0@OSBPR01MB2054.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>, jacopo mondi <jacopo@jmondi.org>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/3] net: dsa: Add DT bindings for Vitesse VSC73xx switches
+Date: Thu, 14 Jun 2018 14:35:32 +0200
+Message-ID: <20180614123534.8063-2-linus.walleij@linaro.org>
+References: <20180614123534.8063-1-linus.walleij@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180614123534.8063-1-linus.walleij@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Gabor Juhos <juhosg@openwrt.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1cnNkYXksIEp1bmUgMTQsIDIwMTgsIE1pY2hlbCBQb2xsZXQgd3JvdGU6DQo+ID4gRnJv
-bSBhIHZlcnkgc3VwZXJmaWNpYWwgbG9vayBhdCB0aGUgcHJvcG9zZWQgYmluZGluZ3MgYW5kIHBp
-bmN0cmwgZHJpdmVyLA0KPiBJDQo+ID4gd29uZGVyIGlmIHRoZSByemExIHBpbmN0cmwgZHJpdmVy
-IGNvdWxkIGJlIGV4cGFuZGVkIGFuZCByZS11c2VkLg0KPiA+IEhhdmUgeW91IGNvbnNpZGVyZWQg
-dGhhdCBiZWZvcmUgc3RhcnRpbmcgb25lIGZyb20gc2NyYXRjaD8NCj4gDQo+IFNvcnJ5IGl0J3Mg
-anVzdCB0aGUgc3RhcnQgb2YgdGhlIGRvY3VtZW50YXRpb24gd2hpY2ggSSB3cm9uZ2x5IGN1dC9w
-YXN0ZWQNCj4gLS0gdGhlDQo+IHJlc3QgaXMgY29tcGxldGVseSBkaWZmZXJlbnQ7IHRoZSBvbmx5
-IHJlYXNvbiBBMSBpcyBtZW50aW9uZWQgaGVyZSBpcyB0aGF0DQo+IEkgdXNlZA0KPiB0aGF0IGZp
-bGUgYXMgYSB0ZW1wbGF0ZSBmb3IgdGhlIGhlYWRlci9zZWN0aW9ucyBldGMuLi4gU29tZWhvdyB0
-aGUNCj4gdGl0bGUrYmx1cmINCj4gd2VudCB1bmVkaXRlZCENCg0KUGhldyENCg0KSSBjYW4ndCBz
-dGFuZCB0aGF0IHBpbmN0cmwgSFcgaW4gUlovQTEuDQoNCkkgaG9wZSBubyBvdGhlciBTb0MgZGVz
-aWduIHRlYW0gdXNlcyB0aGF0IHRoaW5nIGFnYWluLg0KDQoNCkNocmlzDQoNCg==
+This adds the device tree bindings for the Vitesse VSC73xx
+switches. We also add the vendor name for Vitesse.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ .../bindings/net/dsa/vitesse,vsc73xx.txt      | 81 +++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+ 2 files changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+
+diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+new file mode 100644
+index 000000000000..474cdba5fa37
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+@@ -0,0 +1,81 @@
++Vitess VSC73xx Switches
++=======================
++
++This defines device tree bindings for the Vitesse VSC73xx switch chips.
++The Vitesse company has been acquired by Microsemi and Microsemi in turn
++acquired by Microchip but retains this vendor branding.
++
++The currently supported switch chips are:
++Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
++Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
++Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
++Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
++
++The device tree node is an SPI device so it must reside inside a SPI bus
++device tree node, see spi/spi-bus.txt
++
++Required properties:
++
++- compatible: must be exactly one of:
++	"vitesse,vsc7385"
++	"vitesse,vsc7388"
++	"vitesse,vsc7395"
++	"vitesse,vsc7398"
++- gpio-controller: indicates that this switch is also a GPIO controller,
++  see gpio/
++- #gpio-cells: this must be set to <2> and indicates that we are a twocell
++  GPIO controller.
++
++Optional properties:
++
++- reset-gpios: a handle to a GPIO line that can issue reset of the chip.
++  It should be tagged as active low.
++
++Required subnodes:
++
++See net/dsa/dsa.txt for a list of additional required and optional properties
++and subnodes of DSA switches.
++
++Examples:
++
++switch@0 {
++	compatible = "vitesse,vsc7395";
++	reg = <0>;
++	/* Specified for 2.5 MHz or below */
++	spi-max-frequency = <2500000>;
++	gpio-controller;
++	#gpio-cells = <2>;
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			label = "lan1";
++		};
++		port@1 {
++			reg = <1>;
++			label = "lan2";
++		};
++		port@2 {
++			reg = <2>;
++			label = "lan3";
++		};
++		port@3 {
++			reg = <3>;
++			label = "lan4";
++		};
++		vsc: port@6 {
++			reg = <6>;
++			label = "cpu";
++			ethernet = <&gmac1>;
++			phy-mode = "rgmii";
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++				pause;
++			};
++		};
++	};
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b5f978a4cac6..e8473894700c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -385,6 +385,7 @@ v3	V3 Semiconductor
+ variscite	Variscite Ltd.
+ via	VIA Technologies, Inc.
+ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
++vitesse	Vitesse Semiconductor Corporation
+ vivante	Vivante Corporation
+ vocore VoCore Studio
+ voipac	Voipac Technologies s.r.o.
+-- 
+2.17.1
