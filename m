@@ -1,96 +1,92 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: mt7622: fix a kernel panic when pio don't work
- as EINT controller
-Date: Thu, 14 Jun 2018 16:24:24 +0200
-Message-ID: <CACRpkdaipxgMbUHSA-UFQ3De9AGSKE2jCBU5_SaFJS7M0=eygQ@mail.gmail.com>
-References: <6615b85997509d659358d33eab2d280e235b8659.1528966092.git.sean.wang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
+Date: Thu, 14 Jun 2018 08:29:20 -0600
+Message-ID: <CAL_JsqLsdEGEjPo8yh5dGoGWTes41QxUiJ4NN0Q9qsgLBaTpjw@mail.gmail.com>
+References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
+ <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
+ <20180612192636.GA31725@rob-hp-laptop> <000101d403d3$87210d20$95632760$@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6615b85997509d659358d33eab2d280e235b8659.1528966092.git.sean.wang@mediatek.com>
+In-Reply-To: <000101d403d3$87210d20$95632760$@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, stable <stable@vger.kernel.org>
+To: sayali <sayalil@codeaurora.org>
+Cc: Subhash Jadavani <subhashj@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, asutoshd@codeaurora.org, Evan Green <evgreen@chromium.org>, linux-scsi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 10:55 AM,  <sean.wang@mediatek.com> wrote:
-
-> From: Sean Wang <sean.wang@mediatek.com>
+On Thu, Jun 14, 2018 at 5:33 AM, sayali <sayalil@codeaurora.org> wrote:
+> Comment inline.
 >
-> The function, external interrupt controller, is made as an optional to
-> mt7622 pinctrl. But if we don't want pio behaves as an external interrupt
-> controller, it would lead to hw->eint not be created properly and then
-> will cause 'kernel NULL pointer' issue when gpiochip try to call .to_irq
-> or .set_config. To fix it, check hw->eint before accessing the member.
+> Thanks,
+> Sayali
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Wednesday, June 13, 2018 12:57 AM
+> To: Sayali Lokhande <sayalil@codeaurora.org>
+> Cc: subhashj@codeaurora.org; cang@codeaurora.org;
+> vivek.gautam@codeaurora.org; rnayak@codeaurora.org; vinholikatti@gmail.com;
+> jejb@linux.vnet.ibm.com; martin.petersen@oracle.com;
+> asutoshd@codeaurora.org; evgreen@chromium.org; linux-scsi@vger.kernel.org;
+> Mark Rutland <mark.rutland@arm.com>; Mathieu Malaterre <malat@debian.org>;
+> open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> <devicetree@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock
+> setting
 >
-> [    1.339494] Unable to handle kernel NULL pointer dereference at virtual
->                address 00000010
-> [    1.347857] Mem abort info:
-> [    1.350742]   ESR = 0x96000005
-> [    1.353905]   Exception class = DABT (current EL), IL = 32 bits
-> [    1.360024]   SET = 0, FnV = 0
-> [    1.363185]   EA = 0, S1PTW = 0
-> [    1.366431] Data abort info:
-> [    1.369405]   ISV = 0, ISS = 0x00000005
-> [    1.373363]   CM = 0, WnR = 0
-> [    1.376437] [0000000000000010] user address but active_mm is swapper
-> [    1.383005] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> [    1.388748] Modules linked in:
-> [    1.391897] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.16.0-rc1+ #344
-> [    1.398625] Hardware name: MediaTek MT7622 RFB1 board (DT)
-> [    1.404279] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> [    1.409221] pc : mtk_eint_find_irq+0x8/0x24
-> [    1.413532] lr : mtk_gpio_to_irq+0x20/0x28
-> [    1.417749] sp : ffffff800801baf0
-> [    1.421161] x29: ffffff800801baf0 x28: ffffff8008792f40
-> [    1.426637] x27: ffffff800886b000 x26: ffffff8008615620
-> [    1.432113] x25: ffffffc00e4dbdc8 x24: ffffff80087b8000
-> [    1.437589] x23: ffffffc00325a000 x22: ffffffc00325a010
-> [    1.443066] x21: ffffffc0033dec18 x20: 00000000ffffffea
-> [    1.448542] x19: ffffffc00e4db800 x18: 0000000000000130
-> [    1.454018] x17: 000000000000000e x16: 0000000000000007
-> [    1.459494] x15: ffffff80085ee000 x14: 0000000000000001
-> [    1.464970] x13: 0000000000000001 x12: 0000000000000010
-> [    1.470446] x11: 0101010101010101 x10: 0000000000000880
-> [    1.475922] x9 : ffffff800801b990 x8 : ffffffc0030688e0
-> [    1.481399] x7 : ffffff80080c0660 x6 : ffffffc00e4dbbb0
-> [    1.486875] x5 : 0000000000000000 x4 : 0000000000000000
-> [    1.492351] x3 : ffffff80082a92f4 x2 : 00000000fffffffa
-> [    1.497826] x1 : 0000000000000051 x0 : 0000000000000000
-> [    1.503305] Process swapper/0 (pid: 1, stack limit = 0x0000000054e053bd)
-> [    1.510210] Call trace:
-> [    1.512727]  mtk_eint_find_irq+0x8/0x24
-> [    1.516677]  mtk_gpio_to_irq+0x20/0x28
-> [    1.520539]  gpiod_to_irq+0x48/0x60
-> [    1.524135]  mmc_gpiod_request_cd_irq+0x3c/0xc4
-> [    1.528804]  mmc_start_host+0x6c/0x8c
-> [    1.532575]  mmc_add_host+0x58/0x7c
-> [    1.536168]  msdc_drv_probe+0x4fc/0x67c
-> [    1.540121]  platform_drv_probe+0x58/0xa4
-> [    1.544251]  driver_probe_device+0x204/0x44c
-> [    1.548649]  __driver_attach+0x84/0xf8
-> [    1.552512]  bus_for_each_dev+0x68/0xa0
-> [    1.556461]  driver_attach+0x20/0x28
-> [    1.560142]  bus_add_driver+0xec/0x240
-> [    1.564002]  driver_register+0x98/0xe4
-> [    1.567863]  __platform_driver_register+0x48/0x50
-> [    1.572711]  mt_msdc_driver_init+0x18/0x20
-> [    1.576932]  do_one_initcall+0x98/0x130
-> [    1.580886]  kernel_init_freeable+0x13c/0x1d4
-> [    1.585375]  kernel_init+0x10/0xf8
-> [    1.588879]  ret_from_fork+0x10/0x18
-> [    1.592564] Code: a8c67bfd d65f03c0 a9bf7bfd 910003fd (f9400800)
-> [    1.598849] ---[ end trace 4bbcb7bc30e98492 ]---
-> [    1.603677] Kernel panic - not syncing: Attempted to kill init!
->                exitcode=0x0000000b
-> [    1.603677]
+> On Fri, Jun 08, 2018 at 04:36:28PM +0530, Sayali Lokhande wrote:
+>> From: Subhash Jadavani <subhashj@codeaurora.org>
+>>
+>> UFS host supplies the reference clock to UFS device and UFS device
+>> specification allows host to provide one of the 4 frequencies (19.2
+>> MHz,
+>> 26 MHz, 38.4 MHz, 52 MHz) for reference clock. Host should set the
+>> device reference clock frequency setting in the device based on what
+>> frequency it is supplying to UFS device.
+>>
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  7 +++
+>>  drivers/scsi/ufs/ufs.h                             |  9 ++++
+>>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 24 ++++++++++
+>>  drivers/scsi/ufs/ufshcd.c                          | 52
+> ++++++++++++++++++++++
+>>  drivers/scsi/ufs/ufshcd.h                          |  1 +
+>>  5 files changed, 93 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> index c39dfef..4522434 100644
+>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> @@ -41,6 +41,12 @@ Optional properties:
+>>  -lanes-per-direction : number of lanes available per direction - either 1
+> or 2.
+>>                         Note that it is assume same number of lanes is
+> used both
+>>                         directions at once. If not specified, default is 2
+> lanes per direction.
+>> +- dev-ref-clk-freq   : Specify the device reference clock frequency, must
+> be one of the following:
+>> +                       0: 19.2 MHz
+>> +                       1: 26 MHz
+>> +                       2: 38.4 MHz
+>> +                       3: 52 MHz
+>> +                       Defaults to 26 MHz if not specified.
 >
-> cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: stable@vger.kernel.org
-> Fixes: e6dabd38d8e7 ("pinctrl: mediatek: add EINT support to MT7622 SoC")
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> I must have misunderstood your last response. I thought you could handle
+> things without DT. If not, my question remains.
+> [Sayali]: Ref clk frequency setting could vary from
+> platfrom-to-platform(vendor specific). Hence we need to pass it via DT.
+>         Currently in DT we do not set/mention any ref clk frequency
+> parameter. Hence I have added one new DT entry to configure
+>         required ref clk freq.
 
-Patch applied for fixes.
+The clocks property contains "ref_clk". Is that not the same clock?
+Why can't you read what that frequency is? Or you need to be able to
+change it to a specific frequency? These all look like typical
+oscillator frequencies, so I wouldn't expect you could change them
+(other than divide by 2 maybe).
 
-Yours,
-Linus Walleij
+Rob
