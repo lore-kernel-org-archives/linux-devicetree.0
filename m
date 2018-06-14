@@ -1,80 +1,101 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 14 Jun 2018 13:19:42 +0900
-Message-ID: <20180614041941.4i2cadzoevujmzha@ninjato>
-References: <20180330074751.25987-1-boris.brezillon@bootlin.com>
- <20180330074751.25987-2-boris.brezillon@bootlin.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: document gpio-mt7621 bindings
+Date: Thu, 14 Jun 2018 06:45:39 +0200
+Message-ID: <20180614044539.GA8681@foobar>
+References: <1527924610-13135-1-git-send-email-sergio.paracuellos@gmail.com>
+ <1527924610-13135-3-git-send-email-sergio.paracuellos@gmail.com>
+ <20180612205638.GA2404@rob-hp-laptop>
+ <CAMhs-H8GYut-7hopEb0Oe0DYz0sjSwcw_rQ4hzipu9LMz-zWFg@mail.gmail.com>
+ <CAL_Jsq+0bnEmE2n-O3a7ecSXOsjTfZD3AqJDQunO6xzUF_W-=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="st33g2u2nspyzp4d"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20180330074751.25987-2-boris.brezillon@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <gala>
+In-Reply-To: <CAL_Jsq+0bnEmE2n-O3a7ecSXOsjTfZD3AqJDQunO6xzUF_W-=A@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, driverdev-devel@linuxdriverproject.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 13, 2018 at 01:28:35PM -0600, Rob Herring wrote:
+> On Wed, Jun 13, 2018 at 10:23 AM, Sergio Paracuellos
+> <sergio.paracuellos@gmail.com> wrote:
+> > Hi Rob,
+> >
+> > Thanks for your time in reviewing this.
+> >
+> > On Tue, Jun 12, 2018 at 10:56 PM, Rob Herring <robh@kernel.org> wrote:
+> >> On Sat, Jun 02, 2018 at 09:30:10AM +0200, Sergio Paracuellos wrote:
+> >>> Add a devicetree binding documentation for the mt7621 driver.
+> >>
+> 
+> >>> +   second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
+> >>> +   Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+> >>> +- gpio-controller : Marks the device node as a GPIO controller.
+> >>> +- reg : The id of the bank that the node describes.
+> >>
+> >> I'd prefer to not have banks defined in DT. Do you have a variable
+> >> number or resources that are per bank? If not, then you don't need them.
+> >
+> > Mmmm, That's what I understood from documentation:
+> >
+> > "Some system-on-chips (SoCs) use the concept of GPIO banks. ...
+> > Usually each such bank is
+> > exposed in the device tree as an individual gpio-controller node. ..."
+> 
+> This should be conditioned on being able to divide up the registers by
+> bank which seems like you can't. Or there's the case like the DW GPIO
+> block and the number of banks is configurable.
 
---st33g2u2nspyzp4d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I see. Thanks for clarifing this.
 
-Hi Boris,
+> 
+> > If this is not a good approach, could you please me point me out to a
+> > device tree example where
+> > the correct approach is being used?
+> 
+> I'm not sure offhand. There are lots of examples of single nodes I'm
+> sure. Which ones have banks I haven't a clue. IIRC, there were some
+> cases where the bank # was part of the GPIO cells, but I seem to
+> recall Linus prefers not having 3 cells.
 
-> +/**
-> + * struct i3c_priv_xfer - I3C SDR private transfer
-> + * @rnw: encodes the transfer direction. true for a read, false for a write
-> + * @len: transfer length in bytes of the transfer
-> + * @data: input/output buffer
-> + */
-> +struct i3c_priv_xfer {
-> +	bool rnw;
-> +	u16 len;
-> +	union {
-> +		void *in;
-> +		const void *out;
-> +	} data;
+Ok, so... does the following single node sounds acceptable?
 
-So, this is probably where most payloads end up?
+gpio: gpio@600 {
+  #gpio-cells = <2>;
+  #interrupt-cells = <2>;
+  compatible = "mediatek,mt7621-gpio";
+  gpio-controller;
+  interrupt-controller;
+  reg = <0x600 0x60>;
+  interrupt-parent = <&gic>;
+  interrupts = <GIC_SHARED 12 IRQ_TYPE_LEVEL_HIGH>;
+  mediatek,gpio-bank-widths = <32 32 32>;
+}
 
-I didn't notice any sign of DMA in these patches, but given my
-experiences, DMA will come sooner or later. And in I2C, this was
-problematic because then a lot of drivers were in the wild getting their
-buffers from everywhere (stack!). We now have an opt-in approach to mark
-buffers as DMA-safe.
+Changing definition for "reg" and adding a new one for 
+"mediatek,gpio-bank-widths" as follows:
 
-I don't know if typical I3C transfers will be similar to I2C with
-usually small payloads where DMA usually makes not much sense. Yet, I
-think, that it might be a good idea to think about how this shall be
-handled with I3C right away. Maybe simply enforcing buffers to be
-DMA-safe. Or whatever.
+reg: 
+  Define the base and range of the address space containing
+  the mediatek GPIO controller registers
 
-A clear rule on that might save you hazzle later.
+mediatek,gpio-bank-widths:
+  Number of GPIO lines for each bank.  Number of elements must
+  correspond to number of banks suggested by the 'reg' property.
 
-Regards,
+Thanks in advance.
+> 
+> Rob
 
-   Wolfram
-
-
---st33g2u2nspyzp4d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlsh7NkACgkQFA3kzBSg
-KbYaJQ//WvuZkJrJ/IluxoHlKtN048uYvkfLNZCpddYE5p7JfxrreeOyn/EMQYUX
-ftikOAIWzo93LpPAgeKqHTD6FCMgfUDfB7RWZFJeRuMLZ/cOdDbsTA0Y/1S76SEl
-LEXebvQYhHd3YJsqDDGmyhCoXGtf/1n7tEJ4ax4NdJVMx0QGXUWuAlQAs2QAzNYk
-BzDfHEIbKc9469T5naQrQIVoaJLUqLCXs2RBzRnMDr8hl7wRtMckq64U28CiTNuz
-Hu/yh7axdg0EIqy/famCHzsbfg8Z5GXig8PNEBG5fCf0vL4aMap+56siQHsP4UgV
-bQgcIPSxqWcYBy2YVU4aiaLUdSYsAs/qympVnrWwRa6Lfy1z/JxPIs+7bI6TSER4
-OlMhrTNEiyiZbP5uj4LF+JlmFwYthzxwM9/j8ae6ZMsry6nQ5VFTYyUjOSUis4bQ
-05xrq8eZ1LDI6Kex4S9kY9OaN0bDo2u8xZv5yVqvbJaJ8dsD7uul94oGJPlO2jGm
-rUErZxjH8Q3u3QeQIyyZWRZlX1dIv+feeLbjRXlPqcdQfPcjbrv98T6FsuYqttzs
-FpA6wa1kbUZCchsuaxCvZu+5ja3OkYieYJ4keQlvO3EVzGnl3b0rcrOoSktr4ONs
-yBoV6WvF7+a/c+2ldQvi3/qaVu350CbdLowLWvX5yIFWtCOSkGM=
-=ojn/
------END PGP SIGNATURE-----
-
---st33g2u2nspyzp4d--
+Best regards,
+    Sergio Paracuellos
