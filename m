@@ -1,367 +1,533 @@
 From: ilia.lin@gmail.com
-Subject: [PATCH v13 1/8] soc: qcom: Separate kryo l2 accessors from PMU driver
-Date: Thu, 14 Jun 2018 23:53:48 +0200
-Message-ID: <20180614215358.11264-2-ilia.lin@gmail.com>
+Subject: [PATCH v13 4/8] clk: qcom: Add CPU clock driver for msm8996
+Date: Thu, 14 Jun 2018 23:53:51 +0200
+Message-ID: <20180614215358.11264-5-ilia.lin@gmail.com>
 References: <20180614215358.11264-1-ilia.lin@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180614215358.11264-1-ilia.lin@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: ilia.lin@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ilia Lin <ilialin@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Ilia Lin <ilialin@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Ilia Lin <ilialin@codeaurora.org>
 
-The driver provides kernel level API for other drivers
-to access the MSM8996 L2 cache registers.
-Separating the L2 access code from the PMU driver and
-making it public to allow other drivers use it.
-The accesses must be separated with a single spinlock,
-maintained in this driver.
+Each of the CPU clusters (Power and Perf) on msm8996 are
+clocked via 2 PLLs, a primary and alternate. There are also
+2 Mux'es, a primary and secondary all connected together
+as shown below
 
+                             +-------+
+              XO             |       |
+          +------------------>0      |
+                             |       |
+                   PLL/2     | SMUX  +----+
+                     +------->1      |    |
+                     |       |       |    |
+                     |       +-------+    |    +-------+
+                     |                    +---->0      |
+                     |                         |       |
++---------------+    |             +----------->1      | CPU clk
+|Primary PLL    +----+ PLL_EARLY   |           |       +------>
+|               +------+-----------+    +------>2 PMUX |
++---------------+      |                |      |       |
+                       |   +------+     |   +-->3      |
+                       +--^+  ACD +-----+   |  +-------+
++---------------+          +------+         |
+|Alt PLL        |                           |
+|               +---------------------------+
++---------------+         PLL_EARLY
+
+The primary PLL is what drives the CPU clk, except for times
+when we are reprogramming the PLL itself (for rate changes) when
+we temporarily switch to an alternate PLL. A subsequent patch adds
+support to switch between primary and alternate PLL during rate
+changes.
+
+The primary PLL operates on a single VCO range, between 600MHz
+and 3GHz. However the CPUs do support OPPs with frequencies
+between 300MHz and 600MHz. In order to support running the CPUs
+at those frequencies we end up having to lock the PLL at twice
+the rate and drive the CPU clk via the PLL/2 output and SMUX.
+
+So for frequencies above 600MHz we follow the following path
+ Primary PLL --> PLL_EARLY --> PMUX(1) --> CPU clk
+and for frequencies between 300MHz and 600MHz we follow
+ Primary PLL --> PLL/2 --> SMUX(1) --> PMUX(0) --> CPU clk
+Support for this is added in a subsequent patch as well.
+
+ACD stands for Adaptive Clock Distribution and is used to
+detect voltage droops.
+
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/perf/Kconfig                 |  1 +
- drivers/perf/qcom_l2_pmu.c           | 90 ++++++++++--------------------------
- drivers/soc/qcom/Kconfig             |  3 ++
- drivers/soc/qcom/Makefile            |  1 +
- drivers/soc/qcom/kryo-l2-accessors.c | 56 ++++++++++++++++++++++
- include/soc/qcom/kryo-l2-accessors.h | 12 +++++
- 6 files changed, 97 insertions(+), 66 deletions(-)
- create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
- create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+ drivers/clk/qcom/Kconfig         |  10 +
+ drivers/clk/qcom/Makefile        |   1 +
+ drivers/clk/qcom/clk-alpha-pll.h |   6 +
+ drivers/clk/qcom/clk-cpu-8996.c  | 403 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 420 insertions(+)
+ create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
 
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index 08ebaf7cca8b..5c3f07cd79f4 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -71,6 +71,7 @@ config HISI_PMU
- config QCOM_L2_PMU
- 	bool "Qualcomm Technologies L2-cache PMU"
- 	depends on ARCH_QCOM && ARM64 && ACPI
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 9c3480dcc38a..fe01df59f923 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -33,6 +33,16 @@ config QCOM_CLK_APCS_MSM8916
+ 	  Say Y if you want to support CPU frequency scaling on devices
+ 	  such as msm8916.
+ 
++config QCOM_CLK_APCC_MSM8996
++	tristate "MSM8996 CPU Clock Controller"
++	depends on ARM64
++	depends on COMMON_CLK_QCOM
 +	select QCOM_KRYO_L2_ACCESSORS
- 	  help
- 	  Provides support for the L2 cache performance monitor unit (PMU)
- 	  in Qualcomm Technologies processors.
-diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index 842135cf35a3..cc31f5162942 100644
---- a/drivers/perf/qcom_l2_pmu.c
-+++ b/drivers/perf/qcom_l2_pmu.c
-@@ -31,6 +31,7 @@
- #include <asm/barrier.h>
- #include <asm/local64.h>
- #include <asm/sysreg.h>
-+#include <soc/qcom/kryo-l2-accessors.h>
- 
- #define MAX_L2_CTRS             9
- 
-@@ -87,8 +88,6 @@
- #define L2_COUNTER_RELOAD       BIT_ULL(31)
- #define L2_CYCLE_COUNTER_RELOAD BIT_ULL(63)
- 
--#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
--#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
- 
- #define reg_idx(reg, i)         (((i) * IA_L2_REG_OFFSET) + reg##_BASE)
- 
-@@ -107,48 +106,7 @@
- #define L2_EVENT_STREX                     0x421
- #define L2_EVENT_CLREX                     0x422
- 
--static DEFINE_RAW_SPINLOCK(l2_access_lock);
- 
--/**
-- * set_l2_indirect_reg: write value to an L2 register
-- * @reg: Address of L2 register.
-- * @value: Value to be written to register.
-- *
-- * Use architecturally required barriers for ordering between system register
-- * accesses
-- */
--static void set_l2_indirect_reg(u64 reg, u64 val)
--{
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&l2_access_lock, flags);
--	write_sysreg_s(reg, L2CPUSRSELR_EL1);
--	isb();
--	write_sysreg_s(val, L2CPUSRDR_EL1);
--	isb();
--	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
--}
--
--/**
-- * get_l2_indirect_reg: read an L2 register value
-- * @reg: Address of L2 register.
-- *
-- * Use architecturally required barriers for ordering between system register
-- * accesses
-- */
--static u64 get_l2_indirect_reg(u64 reg)
--{
--	u64 val;
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&l2_access_lock, flags);
--	write_sysreg_s(reg, L2CPUSRSELR_EL1);
--	isb();
--	val = read_sysreg_s(L2CPUSRDR_EL1);
--	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
--
--	return val;
--}
- 
- struct cluster_pmu;
- 
-@@ -219,28 +177,28 @@ static inline struct cluster_pmu *get_cluster_pmu(
- static void cluster_pmu_reset(void)
- {
- 	/* Reset all counters */
--	set_l2_indirect_reg(L2PMCR, L2PMCR_RESET_ALL);
--	set_l2_indirect_reg(L2PMCNTENCLR, l2_counter_present_mask);
--	set_l2_indirect_reg(L2PMINTENCLR, l2_counter_present_mask);
--	set_l2_indirect_reg(L2PMOVSCLR, l2_counter_present_mask);
-+	kryo_l2_set_indirect_reg(L2PMCR, L2PMCR_RESET_ALL);
-+	kryo_l2_set_indirect_reg(L2PMCNTENCLR, l2_counter_present_mask);
-+	kryo_l2_set_indirect_reg(L2PMINTENCLR, l2_counter_present_mask);
-+	kryo_l2_set_indirect_reg(L2PMOVSCLR, l2_counter_present_mask);
- }
- 
- static inline void cluster_pmu_enable(void)
- {
--	set_l2_indirect_reg(L2PMCR, L2PMCR_COUNTERS_ENABLE);
-+	kryo_l2_set_indirect_reg(L2PMCR, L2PMCR_COUNTERS_ENABLE);
- }
- 
- static inline void cluster_pmu_disable(void)
- {
--	set_l2_indirect_reg(L2PMCR, L2PMCR_COUNTERS_DISABLE);
-+	kryo_l2_set_indirect_reg(L2PMCR, L2PMCR_COUNTERS_DISABLE);
- }
- 
- static inline void cluster_pmu_counter_set_value(u32 idx, u64 value)
- {
- 	if (idx == l2_cycle_ctr_idx)
--		set_l2_indirect_reg(L2PMCCNTR, value);
-+		kryo_l2_set_indirect_reg(L2PMCCNTR, value);
- 	else
--		set_l2_indirect_reg(reg_idx(IA_L2PMXEVCNTR, idx), value);
-+		kryo_l2_set_indirect_reg(reg_idx(IA_L2PMXEVCNTR, idx), value);
- }
- 
- static inline u64 cluster_pmu_counter_get_value(u32 idx)
-@@ -248,46 +206,46 @@ static inline u64 cluster_pmu_counter_get_value(u32 idx)
- 	u64 value;
- 
- 	if (idx == l2_cycle_ctr_idx)
--		value = get_l2_indirect_reg(L2PMCCNTR);
-+		value = kryo_l2_get_indirect_reg(L2PMCCNTR);
- 	else
--		value = get_l2_indirect_reg(reg_idx(IA_L2PMXEVCNTR, idx));
-+		value = kryo_l2_get_indirect_reg(reg_idx(IA_L2PMXEVCNTR, idx));
- 
- 	return value;
- }
- 
- static inline void cluster_pmu_counter_enable(u32 idx)
- {
--	set_l2_indirect_reg(L2PMCNTENSET, idx_to_reg_bit(idx));
-+	kryo_l2_set_indirect_reg(L2PMCNTENSET, idx_to_reg_bit(idx));
- }
- 
- static inline void cluster_pmu_counter_disable(u32 idx)
- {
--	set_l2_indirect_reg(L2PMCNTENCLR, idx_to_reg_bit(idx));
-+	kryo_l2_set_indirect_reg(L2PMCNTENCLR, idx_to_reg_bit(idx));
- }
- 
- static inline void cluster_pmu_counter_enable_interrupt(u32 idx)
- {
--	set_l2_indirect_reg(L2PMINTENSET, idx_to_reg_bit(idx));
-+	kryo_l2_set_indirect_reg(L2PMINTENSET, idx_to_reg_bit(idx));
- }
- 
- static inline void cluster_pmu_counter_disable_interrupt(u32 idx)
- {
--	set_l2_indirect_reg(L2PMINTENCLR, idx_to_reg_bit(idx));
-+	kryo_l2_set_indirect_reg(L2PMINTENCLR, idx_to_reg_bit(idx));
- }
- 
- static inline void cluster_pmu_set_evccntcr(u32 val)
- {
--	set_l2_indirect_reg(L2PMCCNTCR, val);
-+	kryo_l2_set_indirect_reg(L2PMCCNTCR, val);
- }
- 
- static inline void cluster_pmu_set_evcntcr(u32 ctr, u32 val)
- {
--	set_l2_indirect_reg(reg_idx(IA_L2PMXEVCNTCR, ctr), val);
-+	kryo_l2_set_indirect_reg(reg_idx(IA_L2PMXEVCNTCR, ctr), val);
- }
- 
- static inline void cluster_pmu_set_evtyper(u32 ctr, u32 val)
- {
--	set_l2_indirect_reg(reg_idx(IA_L2PMXEVTYPER, ctr), val);
-+	kryo_l2_set_indirect_reg(reg_idx(IA_L2PMXEVTYPER, ctr), val);
- }
- 
- static void cluster_pmu_set_resr(struct cluster_pmu *cluster,
-@@ -303,11 +261,11 @@ static void cluster_pmu_set_resr(struct cluster_pmu *cluster,
- 
- 	spin_lock_irqsave(&cluster->pmu_lock, flags);
- 
--	resr_val = get_l2_indirect_reg(L2PMRESR);
-+	resr_val = kryo_l2_get_indirect_reg(L2PMRESR);
- 	resr_val &= ~(L2PMRESR_GROUP_MASK << shift);
- 	resr_val |= field;
- 	resr_val |= L2PMRESR_EN;
--	set_l2_indirect_reg(L2PMRESR, resr_val);
-+	kryo_l2_set_indirect_reg(L2PMRESR, resr_val);
- 
- 	spin_unlock_irqrestore(&cluster->pmu_lock, flags);
- }
-@@ -323,14 +281,14 @@ static inline void cluster_pmu_set_evfilter_sys_mode(u32 ctr)
- 		   L2PMXEVFILTER_ORGFILTER_IDINDEP |
- 		   L2PMXEVFILTER_ORGFILTER_ALL;
- 
--	set_l2_indirect_reg(reg_idx(IA_L2PMXEVFILTER, ctr), val);
-+	kryo_l2_set_indirect_reg(reg_idx(IA_L2PMXEVFILTER, ctr), val);
- }
- 
- static inline u32 cluster_pmu_getreset_ovsr(void)
- {
--	u32 result = get_l2_indirect_reg(L2PMOVSSET);
-+	u32 result = kryo_l2_get_indirect_reg(L2PMOVSSET);
- 
--	set_l2_indirect_reg(L2PMOVSCLR, result);
-+	kryo_l2_set_indirect_reg(L2PMOVSCLR, result);
- 	return result;
- }
- 
-@@ -783,7 +741,7 @@ static int get_num_counters(void)
- {
- 	int val;
- 
--	val = get_l2_indirect_reg(L2PMCR);
-+	val = kryo_l2_get_indirect_reg(L2PMCR);
- 
- 	/*
- 	 * Read number of counters from L2PMCR and add 1
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 9dc02f390ba3..e97a9e6d4232 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -39,6 +39,9 @@ config QCOM_GSBI
-           functions for connecting the underlying serial UART, SPI, and I2C
-           devices to the output pins.
- 
-+config QCOM_KRYO_L2_ACCESSORS
-+       bool
++	help
++	  Support for the CPU clock controller on msm8996 devices.
++	  Say Y if you want to support CPU clock scaling using CPUfreq
++	  drivers for dyanmic power management.
 +
- config QCOM_MDT_LOADER
- 	tristate
- 	select QCOM_SCM
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index 19dcf957cb3a..18545b1dd161 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
- obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
- obj-$(CONFIG_QCOM_APR) += apr.o
-+obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
-diff --git a/drivers/soc/qcom/kryo-l2-accessors.c b/drivers/soc/qcom/kryo-l2-accessors.c
+ config QCOM_CLK_RPM
+ 	tristate "RPM based Clock Controller"
+ 	depends on COMMON_CLK_QCOM && MFD_QCOM_RPM
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 762c01137c2f..d142778f6e92 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
+ obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
+ obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
+ obj-$(CONFIG_QCOM_CLK_APCS_MSM8916) += apcs-msm8916.o
++obj-$(CONFIG_QCOM_CLK_APCC_MSM8996) += clk-cpu-8996.o
+ obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
+ obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
+ obj-$(CONFIG_SDM_GCC_845) += gcc-sdm845.o
+diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
+index f981b486c468..9ce2a32f30ab 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.h
++++ b/drivers/clk/qcom/clk-alpha-pll.h
+@@ -50,6 +50,12 @@ struct pll_vco {
+ 	u32 val;
+ };
+ 
++#define VCO(a, b, c) { \
++	.val = a,\
++	.min_freq = b,\
++	.max_freq = c,\
++}
++
+ /**
+  * struct clk_alpha_pll - phase locked loop (PLL)
+  * @offset: base address of registers
+diff --git a/drivers/clk/qcom/clk-cpu-8996.c b/drivers/clk/qcom/clk-cpu-8996.c
 new file mode 100644
-index 000000000000..75fd07a5a886
+index 000000000000..d92cad93af20
 --- /dev/null
-+++ b/drivers/soc/qcom/kryo-l2-accessors.c
-@@ -0,0 +1,56 @@
++++ b/drivers/clk/qcom/clk-cpu-8996.c
+@@ -0,0 +1,403 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
 + */
 +
-+#include <linux/spinlock.h>
-+#include <asm/sysreg.h>
-+#include <soc/qcom/kryo-l2-accessors.h>
-+
-+#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
-+#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
-+
-+static DEFINE_RAW_SPINLOCK(l2_access_lock);
-+
-+/**
-+ * kryo_l2_set_indirect_reg() - write value to an L2 register
-+ * @reg: Address of L2 register.
-+ * @value: Value to be written to register.
-+ *
-+ * Use architecturally required barriers for ordering between system register
-+ * accesses, and system registers with respect to device memory
-+ */
-+void kryo_l2_set_indirect_reg(u64 reg, u64 val)
-+{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&l2_access_lock, flags);
-+	write_sysreg_s(reg, L2CPUSRSELR_EL1);
-+	isb();
-+	write_sysreg_s(val, L2CPUSRDR_EL1);
-+	isb();
-+	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
-+}
-+EXPORT_SYMBOL(kryo_l2_set_indirect_reg);
-+
-+/**
-+ * kryo_l2_get_indirect_reg() - read an L2 register value
-+ * @reg: Address of L2 register.
-+ *
-+ * Use architecturally required barriers for ordering between system register
-+ * accesses, and system registers with respect to device memory
-+ */
-+u64 kryo_l2_get_indirect_reg(u64 reg)
-+{
-+	u64 val;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&l2_access_lock, flags);
-+	write_sysreg_s(reg, L2CPUSRSELR_EL1);
-+	isb();
-+	val = read_sysreg_s(L2CPUSRDR_EL1);
-+	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(kryo_l2_get_indirect_reg);
-diff --git a/include/soc/qcom/kryo-l2-accessors.h b/include/soc/qcom/kryo-l2-accessors.h
-new file mode 100644
-index 000000000000..673c5344afe3
---- /dev/null
-+++ b/include/soc/qcom/kryo-l2-accessors.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Each of the CPU clusters (Power and Perf) on msm8996 are
++ * clocked via 2 PLLs, a primary and alternate. There are also
++ * 2 Mux'es, a primary and secondary all connected together
++ * as shown below
++ *
++ *                              +-------+
++ *               XO             |       |
++ *           +------------------>0      |
++ *                              |       |
++ *                    PLL/2     | SMUX  +----+
++ *                      +------->1      |    |
++ *                      |       |       |    |
++ *                      |       +-------+    |    +-------+
++ *                      |                    +---->0      |
++ *                      |                         |       |
++ * +---------------+    |             +----------->1      | CPU clk
++ * |Primary PLL    +----+ PLL_EARLY   |           |       +------>
++ * |               +------+-----------+    +------>2 PMUX |
++ * +---------------+      |                |      |       |
++ *                        |   +------+     |   +-->3      |
++ *                        +--^+  ACD +-----+   |  +-------+
++ * +---------------+          +------+         |
++ * |Alt PLL        |                           |
++ * |               +---------------------------+
++ * +---------------+         PLL_EARLY
++ *
++ * The primary PLL is what drives the CPU clk, except for times
++ * when we are reprogramming the PLL itself (for rate changes) when
++ * we temporarily switch to an alternate PLL. A subsequent patch adds
++ * support to switch between primary and alternate PLL during rate
++ * changes.
++ *
++ * The primary PLL operates on a single VCO range, between 600MHz
++ * and 3GHz. However the CPUs do support OPPs with frequencies
++ * between 300MHz and 600MHz. In order to support running the CPUs
++ * at those frequencies we end up having to lock the PLL at twice
++ * the rate and drive the CPU clk via the PLL/2 output and SMUX.
++ *
++ * So for frequencies above 600MHz we follow the following path
++ *  Primary PLL --> PLL_EARLY --> PMUX(1) --> CPU clk
++ * and for frequencies between 300MHz and 600MHz we follow
++ *  Primary PLL --> PLL/2 --> SMUX(1) --> PMUX(0) --> CPU clk
++ * Support for this is added in a subsequent patch as well.
++ *
++ * ACD stands for Adaptive Clock Distribution and is used to
++ * detect voltage droops.
 + */
 +
-+#ifndef __SOC_ARCH_QCOM_KRYO_L2_ACCESSORS_H
-+#define __SOC_ARCH_QCOM_KRYO_L2_ACCESSORS_H
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+void kryo_l2_set_indirect_reg(u64 reg, u64 val);
-+u64 kryo_l2_get_indirect_reg(u64 reg);
++#include "clk-alpha-pll.h"
++#include "clk-regmap.h"
 +
-+#endif
++enum _pmux_input {
++	DIV_2_INDEX = 0,
++	PLL_INDEX,
++	ACD_INDEX,
++	ALT_INDEX,
++	NUM_OF_PMUX_INPUTS
++};
++
++static const u8 prim_pll_regs[PLL_OFF_MAX_REGS] = {
++       [PLL_OFF_L_VAL] = 0x04,
++       [PLL_OFF_ALPHA_VAL] = 0x08,
++       [PLL_OFF_USER_CTL] = 0x10,
++       [PLL_OFF_CONFIG_CTL] = 0x18,
++       [PLL_OFF_CONFIG_CTL_U] = 0x1c,
++       [PLL_OFF_TEST_CTL] = 0x20,
++       [PLL_OFF_TEST_CTL_U] = 0x24,
++       [PLL_OFF_STATUS] = 0x28,
++};
++
++static const u8 alt_pll_regs[PLL_OFF_MAX_REGS] = {
++       [PLL_OFF_L_VAL] = 0x04,
++       [PLL_OFF_ALPHA_VAL] = 0x08,
++       [PLL_OFF_ALPHA_VAL_U] = 0x0c,
++       [PLL_OFF_USER_CTL] = 0x10,
++       [PLL_OFF_USER_CTL_U] = 0x14,
++       [PLL_OFF_CONFIG_CTL] = 0x18,
++       [PLL_OFF_TEST_CTL] = 0x20,
++       [PLL_OFF_TEST_CTL_U] = 0x24,
++       [PLL_OFF_STATUS] = 0x28,
++};
++
++/* PLLs */
++
++static const struct alpha_pll_config hfpll_config = {
++	.l = 60,
++	.config_ctl_val = 0x200d4828,
++	.config_ctl_hi_val = 0x006,
++	.pre_div_mask = BIT(12),
++	.post_div_mask = 0x3 << 8,
++	.main_output_mask = BIT(0),
++	.early_output_mask = BIT(3),
++};
++
++static struct clk_alpha_pll perfcl_pll = {
++	.offset = 0x80000,
++	.regs = prim_pll_regs,
++	.flags = SUPPORTS_DYNAMIC_UPDATE | SUPPORTS_FSM_MODE,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "perfcl_pll",
++		.parent_names = (const char *[]){ "xo" },
++		.num_parents = 1,
++		.ops = &clk_alpha_pll_huayra_ops,
++	},
++};
++
++static struct clk_alpha_pll pwrcl_pll = {
++	.offset = 0x0,
++	.regs = prim_pll_regs,
++	.flags = SUPPORTS_DYNAMIC_UPDATE | SUPPORTS_FSM_MODE,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "pwrcl_pll",
++		.parent_names = (const char *[]){ "xo" },
++		.num_parents = 1,
++		.ops = &clk_alpha_pll_huayra_ops,
++	},
++};
++
++static const struct pll_vco alt_pll_vco_modes[] = {
++	VCO(3,  250000000,  500000000),
++	VCO(2,  500000000,  750000000),
++	VCO(1,  750000000, 1000000000),
++	VCO(0, 1000000000, 2150400000),
++};
++
++static const struct alpha_pll_config altpll_config = {
++	.l = 16,
++	.vco_val = 0x3 << 20,
++	.vco_mask = 0x3 << 20,
++	.config_ctl_val = 0x4001051b,
++	.post_div_mask = 0x3 << 8,
++	.post_div_val = 0x1,
++	.main_output_mask = BIT(0),
++	.early_output_mask = BIT(3),
++};
++
++static struct clk_alpha_pll perfcl_alt_pll = {
++	.offset = 0x80100,
++	.regs = alt_pll_regs,
++	.vco_table = alt_pll_vco_modes,
++	.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
++	.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
++	.clkr.hw.init = &(struct clk_init_data) {
++		.name = "perfcl_alt_pll",
++		.parent_names = (const char *[]){ "xo" },
++		.num_parents = 1,
++		.ops = &clk_alpha_pll_hwfsm_ops,
++	},
++};
++
++static struct clk_alpha_pll pwrcl_alt_pll = {
++	.offset = 0x100,
++	.regs = alt_pll_regs,
++	.vco_table = alt_pll_vco_modes,
++	.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
++	.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
++	.clkr.hw.init = &(struct clk_init_data) {
++		.name = "pwrcl_alt_pll",
++		.parent_names = (const char *[]){ "xo" },
++		.num_parents = 1,
++		.ops = &clk_alpha_pll_hwfsm_ops,
++	},
++};
++
++/* Mux'es */
++
++struct clk_cpu_8996_mux {
++	u32	reg;
++	u8	shift;
++	u8	width;
++	struct clk_hw	*pll;
++	struct clk_regmap clkr;
++};
++
++static inline
++struct clk_cpu_8996_mux *to_clk_cpu_8996_mux_hw(struct clk_hw *hw)
++{
++	return container_of(to_clk_regmap(hw), struct clk_cpu_8996_mux, clkr);
++}
++
++static u8 clk_cpu_8996_mux_get_parent(struct clk_hw *hw)
++{
++	u32 val;
++	struct clk_regmap *clkr = to_clk_regmap(hw);
++	struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
++	u32 mask = (u32)GENMASK(cpuclk->width - 1, 0);
++
++	regmap_read(clkr->regmap, cpuclk->reg, &val);
++	val >>= (u32)(cpuclk->shift);
++
++	return (u8)(val & mask);
++}
++
++static int clk_cpu_8996_mux_set_parent(struct clk_hw *hw, u8 index)
++{
++	u32 val;
++	struct clk_regmap *clkr = to_clk_regmap(hw);
++	struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
++	unsigned int mask = GENMASK(cpuclk->width + cpuclk->shift - 1,
++				    cpuclk->shift);
++
++	val = (u32)index;
++	val <<= (u32)(cpuclk->shift);
++
++	return regmap_update_bits(clkr->regmap, cpuclk->reg, mask, val);
++}
++
++static int
++clk_cpu_8996_mux_determine_rate(struct clk_hw *hw, struct clk_rate_request *req)
++{
++	struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_hw(hw);
++	struct clk_hw *parent = cpuclk->pll;
++
++	req->best_parent_rate = clk_hw_round_rate(parent, req->rate);
++	req->best_parent_hw = parent;
++
++	return 0;
++}
++
++const struct clk_ops clk_cpu_8996_mux_ops = {
++	.set_parent = clk_cpu_8996_mux_set_parent,
++	.get_parent = clk_cpu_8996_mux_get_parent,
++	.determine_rate = clk_cpu_8996_mux_determine_rate,
++};
++
++static struct clk_cpu_8996_mux pwrcl_smux = {
++	.reg = 0x40,
++	.shift = 2,
++	.width = 2,
++	.clkr.hw.init = &(struct clk_init_data) {
++		.name = "pwrcl_smux",
++		.parent_names = (const char *[]){
++			"xo",
++			"pwrcl_pll_main",
++		},
++		.num_parents = 2,
++		.ops = &clk_cpu_8996_mux_ops,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_cpu_8996_mux perfcl_smux = {
++	.reg = 0x80040,
++	.shift = 2,
++	.width = 2,
++	.clkr.hw.init = &(struct clk_init_data) {
++		.name = "perfcl_smux",
++		.parent_names = (const char *[]){
++			"xo",
++			"perfcl_pll_main",
++		},
++		.num_parents = 2,
++		.ops = &clk_cpu_8996_mux_ops,
++		.flags = CLK_SET_RATE_PARENT,
++	},
++};
++
++static struct clk_cpu_8996_mux pwrcl_pmux = {
++	.reg = 0x40,
++	.shift = 0,
++	.width = 2,
++	.pll = &pwrcl_pll.clkr.hw,
++	.clkr.hw.init = &(struct clk_init_data) {
++		.name = "pwrcl_pmux",
++		.parent_names = (const char *[]){
++			"pwrcl_smux",
++			"pwrcl_pll",
++			"pwrcl_pll_acd",
++			"pwrcl_alt_pll",
++		},
++		.num_parents = 4,
++		.ops = &clk_cpu_8996_mux_ops,
++		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++	},
++};
++
++static struct clk_cpu_8996_mux perfcl_pmux = {
++	.reg = 0x80040,
++	.shift = 0,
++	.width = 2,
++	.pll = &perfcl_pll.clkr.hw,
++	.clkr.hw.init = &(struct clk_init_data) {
++		.name = "perfcl_pmux",
++		.parent_names = (const char *[]){
++			"perfcl_smux",
++			"perfcl_pll",
++			"perfcl_pll_acd",
++			"perfcl_alt_pll",
++		},
++		.num_parents = 4,
++		.ops = &clk_cpu_8996_mux_ops,
++		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++	},
++};
++
++static const struct regmap_config cpu_msm8996_regmap_config = {
++	.reg_bits		= 32,
++	.reg_stride		= 4,
++	.val_bits		= 32,
++	.max_register		= 0x80210,
++	.fast_io		= true,
++	.val_format_endian	= REGMAP_ENDIAN_LITTLE,
++};
++
++struct clk_regmap *clks[] = {
++	&perfcl_pll.clkr,
++	&pwrcl_pll.clkr,
++	&perfcl_alt_pll.clkr,
++	&pwrcl_alt_pll.clkr,
++	&perfcl_smux.clkr,
++	&pwrcl_smux.clkr,
++	&perfcl_pmux.clkr,
++	&pwrcl_pmux.clkr,
++};
++
++static int
++qcom_cpu_clk_msm8996_register_clks(struct device *dev, struct regmap *regmap)
++{
++	int i, ret;
++
++	perfcl_smux.pll = clk_hw_register_fixed_factor(dev, "perfcl_pll_main",
++						       "perfcl_pll",
++						   CLK_SET_RATE_PARENT, 1, 2);
++
++	pwrcl_smux.pll = clk_hw_register_fixed_factor(dev, "pwrcl_pll_main",
++						      "pwrcl_pll",
++						   CLK_SET_RATE_PARENT, 1, 2);
++
++	for (i = 0; i < ARRAY_SIZE(clks); i++) {
++		ret = devm_clk_register_regmap(dev, clks[i]);
++		if (ret)
++			return ret;
++	}
++
++	clk_alpha_pll_configure(&perfcl_pll, regmap, &hfpll_config);
++	clk_alpha_pll_configure(&pwrcl_pll, regmap, &hfpll_config);
++	clk_alpha_pll_configure(&perfcl_alt_pll, regmap, &altpll_config);
++	clk_alpha_pll_configure(&pwrcl_alt_pll, regmap, &altpll_config);
++
++	return ret;
++}
++
++static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
++{
++	int ret;
++	void __iomem *base;
++	struct resource *res;
++	struct regmap *regmap;
++	struct clk_hw_onecell_data *data;
++	struct device *dev = &pdev->dev;
++
++	data = devm_kzalloc(dev, sizeof(*data) + 2 * sizeof(struct clk_hw *),
++			    GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	regmap = devm_regmap_init_mmio(dev, base, &cpu_msm8996_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	ret = qcom_cpu_clk_msm8996_register_clks(dev, regmap);
++	if (ret)
++		return ret;
++
++	data->hws[0] = &pwrcl_pmux.clkr.hw;
++	data->hws[1] = &perfcl_pmux.clkr.hw;
++	data->num = 2;
++
++	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, data);
++}
++
++static const struct of_device_id qcom_cpu_clk_msm8996_match_table[] = {
++	{ .compatible = "qcom,msm8996-apcc" },
++	{}
++};
++
++static struct platform_driver qcom_cpu_clk_msm8996_driver = {
++	.probe = qcom_cpu_clk_msm8996_driver_probe,
++	.driver = {
++		.name = "qcom-msm8996-apcc",
++		.of_match_table = qcom_cpu_clk_msm8996_match_table,
++	},
++};
++module_platform_driver(qcom_cpu_clk_msm8996_driver);
++
++MODULE_ALIAS("platform:msm8996-apcc");
++MODULE_DESCRIPTION("QCOM MSM8996 CPU Clock Driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.11.0
