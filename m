@@ -1,89 +1,52 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v10 0/7] i2c: Add FSI-attached I2C master algorithm
-Date: Thu, 14 Jun 2018 12:05:38 +0300
-Message-ID: <CAHp75Vd9Y5VNVZZxB3-tOiUuC2peE7skBGMgv9nGxCBH178bTg@mail.gmail.com>
-References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/4] arm: dts: add support for Laird WB45N cpu module and
+ DVK
+Date: Thu, 14 Jun 2018 11:07:33 +0200
+Message-ID: <20180614090733.GV10521@piout.net>
+References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Peter Rosin <peda@axentia.se>
+To: Ben Whitten <ben.whitten@gmail.com>
+Cc: devicetree@vger.kernel.org, Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 10:36 PM, Eddie James
-<eajames@linux.vnet.ibm.com> wrote:
-> This series adds an algorithm for an I2C master physically located on an FSI
-> slave device. The I2C master has multiple ports, each of which may be connected
-> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
->
-> Due to the multi-port nature of the I2C master, the driver instantiates a new
-> I2C adapter for each port connected to a slave. The connected ports should be
-> defined in the device tree under the I2C master device.
->
+Hi,
 
-You missed to include tag I gave
+On 14/06/2018 09:51:54+0100, Ben Whitten wrote:
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+This need a proper commit message. Maybe you can also add a link to the
+technical brief for the platform?
 
-be careful next time.
+> Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+> ---
+>  arch/arm/boot/dts/Makefile        |   3 +-
+>  arch/arm/boot/dts/at91-wb45n.dts  |  66 +++++++++++++++
+>  arch/arm/boot/dts/at91-wb45n.dtsi | 169 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 237 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/at91-wb45n.dts
+>  create mode 100644 arch/arm/boot/dts/at91-wb45n.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 7e24249..1ee94ee 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -42,7 +42,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+>  	at91sam9g25ek.dtb \
+>  	at91sam9g35ek.dtb \
+>  	at91sam9x25ek.dtb \
+> -	at91sam9x35ek.dtb
+> +	at91sam9x35ek.dtb \
+> +	at91-wb45n.dtb
 
-> Changes since v9
->  - Switch the status masks to use a combination of bits rather than directly
->    coding the value
->  - Remove the interrupt mask definition as it was unused
->  - Fixed return value of master_xfer function (return number of xfrs, not 0)
->
-> Changes since v8
->  - Drop unecessary else statements
->  - Use i++ instead of ++i
->  - Use kzalloc/kfree instead of devm_kzalloc/devm_kfree for port structure
->  - Drop the list_empty check in remove
->
-> Changes since v7
->  - Fix grammer in Kconfig (a -> an)
->  - Change I2C registers to use BIT and GENMASK
->  - Remove custom macros and use FIELD_PREP and FIELD_GET
->  - Fix a few unecessary initializations and "return rc" that are always zero
->  - Clean up the read/write fifo functions a bit
->  - Few other clean-up items
->
-> Changes since v6
->  - Remove spinlock for reset functionality; it's unecessary and doesn't work
->    with the latest FSI core.
->  - Use a mutex instead of a semaphore, and don't wait for timeout to get the
->    lock.
->  - Use usleeps instead of schedule_timeout; it's not worth the overhead when
->    the wait should be very short in between sending the command and receiving
->    the response.
->
-> Changes since v5
->  - Fix reset functionality and do a reset after every transfer failure
->
-> Eddie James (7):
->   dt-bindings: i2c: Add FSI-attached I2C master dt binding documentation
->   i2c: Add FSI-attached I2C master algorithm
->   i2c: fsi: Add port structures
->   i2c: fsi: Add abort and hardware reset procedures
->   i2c: fsi: Add transfer implementation
->   i2c: fsi: Add I2C master locking
->   i2c: fsi: Add bus recovery
->
->  Documentation/devicetree/bindings/i2c/i2c-fsi.txt |  40 ++
->  drivers/i2c/busses/Kconfig                        |  11 +
->  drivers/i2c/busses/Makefile                       |   1 +
->  drivers/i2c/busses/i2c-fsi.c                      | 727 ++++++++++++++++++++++
->  4 files changed, 779 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
->  create mode 100644 drivers/i2c/busses/i2c-fsi.c
->
-> --
-> 1.8.3.1
->
-
+The proper name for the file is <soc>-board.dtb so this should be
+at91sam9g25-wb45n.dtb.
 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
