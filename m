@@ -1,124 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/3] net: dsa: Add DT bindings for Vitesse VSC73xx switches
-Date: Thu, 14 Jun 2018 14:35:32 +0200
-Message-ID: <20180614123534.8063-2-linus.walleij@linaro.org>
-References: <20180614123534.8063-1-linus.walleij@linaro.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180614123534.8063-1-linus.walleij@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Gabor Juhos <juhosg@openwrt.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
+Date: Thu, 14 Jun 2018 05:38:05 -0700
+Message-ID: <20180614123805.GF112168@atomide.com>
+References: <20180605060510.32473-1-nm@ti.com>
+ <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
+ <20180607233853.p7iw7nlxxuyi66og@kahuna>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180607233853.p7iw7nlxxuyi66og@kahuna>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Vitesse VSC73xx
-switches. We also add the vendor name for Vitesse.
+Hi,
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../bindings/net/dsa/vitesse,vsc73xx.txt      | 81 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt   |  1 +
- 2 files changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+Some comments on the ranges below.
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-new file mode 100644
-index 000000000000..474cdba5fa37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
-@@ -0,0 +1,81 @@
-+Vitess VSC73xx Switches
-+=======================
-+
-+This defines device tree bindings for the Vitesse VSC73xx switch chips.
-+The Vitesse company has been acquired by Microsemi and Microsemi in turn
-+acquired by Microchip but retains this vendor branding.
-+
-+The currently supported switch chips are:
-+Vitesse VSC7385 SparX-G5 5+1-port Integrated Gigabit Ethernet Switch
-+Vitesse VSC7388 SparX-G8 8-port Integrated Gigabit Ethernet Switch
-+Vitesse VSC7395 SparX-G5e 5+1-port Integrated Gigabit Ethernet Switch
-+Vitesse VSC7398 SparX-G8e 8-port Integrated Gigabit Ethernet Switch
-+
-+The device tree node is an SPI device so it must reside inside a SPI bus
-+device tree node, see spi/spi-bus.txt
-+
-+Required properties:
-+
-+- compatible: must be exactly one of:
-+	"vitesse,vsc7385"
-+	"vitesse,vsc7388"
-+	"vitesse,vsc7395"
-+	"vitesse,vsc7398"
-+- gpio-controller: indicates that this switch is also a GPIO controller,
-+  see gpio/
-+- #gpio-cells: this must be set to <2> and indicates that we are a twocell
-+  GPIO controller.
-+
-+Optional properties:
-+
-+- reset-gpios: a handle to a GPIO line that can issue reset of the chip.
-+  It should be tagged as active low.
-+
-+Required subnodes:
-+
-+See net/dsa/dsa.txt for a list of additional required and optional properties
-+and subnodes of DSA switches.
-+
-+Examples:
-+
-+switch@0 {
-+	compatible = "vitesse,vsc7395";
-+	reg = <0>;
-+	/* Specified for 2.5 MHz or below */
-+	spi-max-frequency = <2500000>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			label = "lan1";
-+		};
-+		port@1 {
-+			reg = <1>;
-+			label = "lan2";
-+		};
-+		port@2 {
-+			reg = <2>;
-+			label = "lan3";
-+		};
-+		port@3 {
-+			reg = <3>;
-+			label = "lan4";
-+		};
-+		vsc: port@6 {
-+			reg = <6>;
-+			label = "cpu";
-+			ethernet = <&gmac1>;
-+			phy-mode = "rgmii";
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+				pause;
-+			};
-+		};
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index b5f978a4cac6..e8473894700c 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -385,6 +385,7 @@ v3	V3 Semiconductor
- variscite	Variscite Ltd.
- via	VIA Technologies, Inc.
- virtio	Virtual I/O Device Specification, developed by the OASIS consortium
-+vitesse	Vitesse Semiconductor Corporation
- vivante	Vivante Corporation
- vocore VoCore Studio
- voipac	Voipac Technologies s.r.o.
--- 
-2.17.1
+* Nishanth Menon <nm@ti.com> [180607 16:41]:
+> +	soc0: soc0 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+
+I suggest you leave out the soc0, that's not real. Just make
+the cbass@0 the top level interconnect. It can then provide
+ranges to mcu interconnect which can provide ranges to the wkup
+interconnect. So just model it after what's in the hardware :)
+
+I found the following ranges based on a quick look at the TRM,
+they could be split further if needed for power domains for
+genpd for example.
+
+main covers
+0x0000000000 - 0x5402000000
+
+main provides at least the following ranges for mcu
+0x0028380000 - 0x002bc00000
+0x0040080000 - 0x0041c80000
+0x0045100000 - 0x0045180000
+0x0045600000 - 0x0045640000
+0x0045810000 - 0x0045860000
+0x0045950000 - 0x0045950400
+0x0045a50000 - 0x0045a50400
+0x0045b04000 - 0x0045b06400
+0x0045d10000 - 0x0045d24000
+0x0046000000 - 0x0060000000
+0x0400000000 - 0x0800000000
+0x4c3c020000 - 0x4c3c030000
+0x4c3e000000 - 0x4c3e040000
+0x5400000000 - 0x5402000000
+
+then mcu provides the following ranges for wkup
+0x0042000000 - 0x0044410020
+0x0045000000 - 0x0045030000
+0x0045080000 - 0x00450a0000
+0x0045808000 - 0x0045808800
+0x0045b00000 - 0x0045b02400
+
+This based on looking at "figure 1-1. device top-level
+block diagram" and the memory map in TRM.
+
+Regards,
+
+Tony
