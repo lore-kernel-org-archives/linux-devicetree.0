@@ -1,133 +1,135 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 1/4] soc: sunxi: export a regmap for EMAC
- clock reg on A64
-Date: Thu, 14 Jun 2018 23:35:45 +0800
-Message-ID: <20180614153548.9644-2-wens@csie.org>
-References: <20180614153548.9644-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v3 11/14] media: platform: Add Sunxi-Cedrus VPU decoder
+ driver
+Date: Thu, 14 Jun 2018 17:39:53 +0200
+Message-ID: <042923c4f378f3e134bf490d5f6a650173984411.camel@bootlin.com>
+References: <20180507124500.20434-1-paul.kocialkowski@bootlin.com>
+         <20180507124500.20434-12-paul.kocialkowski@bootlin.com>
+         <20180507154201.4vz3y6j7u7kzfud6@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBWUWRLMQKGQE66HBUTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180614153548.9644-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-purauuQLG3hCGT6AarW3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180507154201.4vz3y6j7u7kzfud6@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yanni
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-The A64 SRAM controller memory zone has a EMAC clock register, which is
-needed by the Ethernet MAC driver (dwmac-sun8i).
+--=-purauuQLG3hCGT6AarW3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Export a regmap for this register on A64.
+Hi,
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-[wens-jdAy2FN1RRM@public.gmane.org: export whole address range with only EMAC register
-		accessible and drop regmap name]
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
----
- drivers/soc/sunxi/sunxi_sram.c | 57 ++++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 2 deletions(-)
+On Mon, 2018-05-07 at 17:42 +0200, Maxime Ripard wrote:
+> On Mon, May 07, 2018 at 02:44:57PM +0200, Paul Kocialkowski wrote:
+> > +#define SYSCON_SRAM_CTRL_REG0	0x0
+> > +#define SYSCON_SRAM_C1_MAP_VE	0x7fffffff
+>=20
+> This isn't needed anymore
 
-diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
-index 882be5ed7e84..eec7fc6e9f66 100644
---- a/drivers/soc/sunxi/sunxi_sram.c
-+++ b/drivers/soc/sunxi/sunxi_sram.c
-@@ -17,6 +17,7 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- 
- #include <linux/soc/sunxi/sunxi_sram.h>
- 
-@@ -281,13 +282,51 @@ int sunxi_sram_release(struct device *dev)
- }
- EXPORT_SYMBOL(sunxi_sram_release);
- 
-+struct sunxi_sramc_variant {
-+	bool has_emac_clock;
-+};
-+
-+static const struct sunxi_sramc_variant sun4i_a10_sramc_variant = {
-+	/* Nothing special */
-+};
-+
-+static const struct sunxi_sramc_variant sun50i_a64_sramc_variant = {
-+	.has_emac_clock = true,
-+};
-+
-+#define SUNXI_SRAM_EMAC_CLOCK_REG	0x30
-+static bool sunxi_sram_regmap_accessible_reg(struct device *dev,
-+					     unsigned int reg)
-+{
-+	if (reg == SUNXI_SRAM_EMAC_CLOCK_REG)
-+		return true;
-+	return false;
-+}
-+
-+static struct regmap_config sunxi_sram_emac_clock_regmap = {
-+	.reg_bits       = 32,
-+	.val_bits       = 32,
-+	.reg_stride     = 4,
-+	/* last defined register */
-+	.max_register   = SUNXI_SRAM_EMAC_CLOCK_REG,
-+	/* other devices have no business accessing other registers */
-+	.readable_reg	= sunxi_sram_regmap_accessible_reg,
-+	.writeable_reg	= sunxi_sram_regmap_accessible_reg,
-+};
-+
- static int sunxi_sram_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
- 	struct dentry *d;
-+	struct regmap *emac_clock;
-+	const struct sunxi_sramc_variant *variant;
- 
- 	sram_dev = &pdev->dev;
- 
-+	variant = of_device_get_match_data(&pdev->dev);
-+	if (!variant)
-+		return -EINVAL;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
-@@ -300,12 +339,26 @@ static int sunxi_sram_probe(struct platform_device *pdev)
- 	if (!d)
- 		return -ENOMEM;
- 
-+	if (variant->has_emac_clock) {
-+		emac_clock = devm_regmap_init_mmio(&pdev->dev, base,
-+						   &sunxi_sram_emac_clock_regmap);
-+
-+		if (IS_ERR(emac_clock))
-+			return PTR_ERR(emac_clock);
-+	}
-+
- 	return 0;
- }
- 
- static const struct of_device_id sunxi_sram_dt_match[] = {
--	{ .compatible = "allwinner,sun4i-a10-sram-controller" },
--	{ .compatible = "allwinner,sun50i-a64-sram-controller" },
-+	{
-+		.compatible = "allwinner,sun4i-a10-sram-controller",
-+		.data = &sun4i_a10_sramc_variant,
-+	},
-+	{
-+		.compatible = "allwinner,sun50i-a64-sram-controller",
-+		.data = &sun50i_a64_sramc_variant,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sunxi_sram_dt_match);
--- 
-2.17.1
+Will do in the next revision.
+
+> > +	dev->ahb_clk =3D devm_clk_get(dev->dev, "ahb");
+> > +	if (IS_ERR(dev->ahb_clk)) {
+> > +		dev_err(dev->dev, "failed to get ahb clock\n");
+> > +		return PTR_ERR(dev->ahb_clk);
+> > +	}
+> > +	dev->mod_clk =3D devm_clk_get(dev->dev, "mod");
+> > +	if (IS_ERR(dev->mod_clk)) {
+> > +		dev_err(dev->dev, "failed to get mod clock\n");
+> > +		return PTR_ERR(dev->mod_clk);
+> > +	}
+> > +	dev->ram_clk =3D devm_clk_get(dev->dev, "ram");
+> > +	if (IS_ERR(dev->ram_clk)) {
+> > +		dev_err(dev->dev, "failed to get ram clock\n");
+> > +		return PTR_ERR(dev->ram_clk);
+> > +	}
+>=20
+> Please add some blank lines between those blocks
+
+Yes, looks much better that way!
+
+> > +	dev->rstc =3D devm_reset_control_get(dev->dev, NULL);
+>=20
+> You're not checking the error code here
+
+Good catch.
+
+> > +	dev->syscon =3D syscon_regmap_lookup_by_phandle(dev->dev->of_node,
+> > +						      "syscon");
+> > +	if (IS_ERR(dev->syscon)) {
+> > +		dev->syscon =3D NULL;
+> > +	} else {
+> > +		regmap_write_bits(dev->syscon, SYSCON_SRAM_CTRL_REG0,
+> > +				  SYSCON_SRAM_C1_MAP_VE,
+> > +				  SYSCON_SRAM_C1_MAP_VE);
+> > +	}
+>=20
+> You don't need the syscon part anymore either
+
+Correct.
+
+> > +	ret =3D clk_prepare_enable(dev->ahb_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "could not enable ahb clock\n");
+> > +		return -EFAULT;
+> > +	}
+> > +	ret =3D clk_prepare_enable(dev->mod_clk);
+> > +	if (ret) {
+> > +		clk_disable_unprepare(dev->ahb_clk);
+> > +		dev_err(dev->dev, "could not enable mod clock\n");
+> > +		return -EFAULT;
+> > +	}
+> > +	ret =3D clk_prepare_enable(dev->ram_clk);
+> > +	if (ret) {
+> > +		clk_disable_unprepare(dev->mod_clk);
+> > +		clk_disable_unprepare(dev->ahb_clk);
+> > +		dev_err(dev->dev, "could not enable ram clock\n");
+> > +		return -EFAULT;
+> > +	}
+> > +
+> > +	ret =3D reset_control_reset(dev->rstc);
+> > +	if (ret) {
+> > +		clk_disable_unprepare(dev->ram_clk);
+> > +		clk_disable_unprepare(dev->mod_clk);
+> > +		clk_disable_unprepare(dev->ahb_clk);
+> > +		dev_err(dev->dev, "could not reset device\n");
+> > +		return -EFAULT;
+>=20
+> labels would simplify this greatly, and you should also release the
+> sram and the memory region here.
+
+I'll definitely do a sweep and add labels/gotos for this before
+submitting the nexr revision.
+
+Thanks for the review!
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-purauuQLG3hCGT6AarW3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAlsijEkACgkQ3cLmz3+f
+v9Hydgf+OIPRQvVyBsgSEBIz2maSQGarde+mFPAqwKmSDz1v9JtVd7poVe3mGkrM
+uPiPJJhWhZtvH8Ph/3LasSdsA/pq1vpzBlZ5pJd4RMOLvV6WyIduAgBIqsNQrK+R
+cV7v5GpeDnC1mooMhUdCHzjWOLdAy5GurwIALKCbKiFAuU5azIz9NIZU19kqqSve
+D5CrdVrjzZWQc9eqc0KL/tbCD7/gy9f+CNdpvPbZTr4r3NcRRGBqX0Cd1pVLoz0f
+SNL77ACWlOIZEYTNw426ke3FfaYDNgls5dkIBaraucRnLcMpVJlRD9Kfg/Jwbi7F
+K8CYo+pM9uKmGxQV18wOpHPUic35Lw==
+=TaaQ
+-----END PGP SIGNATURE-----
+
+--=-purauuQLG3hCGT6AarW3--
