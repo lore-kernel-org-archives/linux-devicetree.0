@@ -1,63 +1,116 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph
- bindings
-Date: Thu, 14 Jun 2018 09:53:46 +0100
-Message-ID: <5e013d65-9931-6b8d-ce7c-4333309d4ada@arm.com>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
- <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
- <20180612204802.GA15817@rob-hp-laptop>
- <a1c0749b-9c97-b45f-716f-a62ae07af278@arm.com>
- <5448BBB7-93FE-400F-9D87-FABF5DE0539C@arm.com>
- <c0d531ec-9201-bfd8-e6c3-9140698b0697@arm.com>
- <HE1PR0802MB24127EC935B9AF6F82AB3B6EEE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
- <075b99a1-2a29-f6dc-e9f2-99f895c27d35@arm.com>
- <CANLsYkx9cjV-bWg7aLg-kJT7x7DtwTHdsYzzM8A3+cFFnu_mNg@mail.gmail.com>
- <HE1PR0802MB24121F0EEF8D7D643BC391A1EE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH] pinctrl: mt7622: fix a kernel panic when pio don't work as EINT controller
+Date: Thu, 14 Jun 2018 16:55:49 +0800
+Message-ID: <6615b85997509d659358d33eab2d280e235b8659.1528966092.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <HE1PR0802MB24121F0EEF8D7D643BC391A1EE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Sealey <Matt.Sealey@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, John Horley <John.Horley@arm.com>, "mike.leach@linaro.org" <mike.leach@linaro.org>, "coresight@lists.linaro.org" <coresight@lists.linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Kevin Hilman <khilman@baylibre.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/18 22:07, Matt Sealey wrote:
-> 
-> 
->> -----Original Message-----
->> From: Mathieu Poirier <mathieu.poirier@linaro.org>
->>
->>> So, if the suggestion is to use an existing property "unit", I am fine
->>> with it, if people agree to it.
->>
->> If we're going to have something sharply different than ACPI I prefer
->> Rob's idea.
+From: Sean Wang <sean.wang@mediatek.com>
 
-No, the above comment is about using "unit" ( if it is a standard property
-for specifying something specific to hardware) instead of "coresight,hwid".
-I would prefer to stick to the DT graph bindings, because :
+The function, external interrupt controller, is made as an optional to
+mt7622 pinctrl. But if we don't want pio behaves as an external interrupt
+controller, it would lead to hw->eint not be created properly and then
+will cause 'kernel NULL pointer' issue when gpiochip try to call .to_irq
+or .set_config. To fix it, check hw->eint before accessing the member.
 
-1) The connections are bi-directional => Well, not necessarily bi-directional
-in terms of the data flow. But the connection information is critical. i.e,
-we need information about both the end-points of a connection, which the DT
-graph bindings solves.
+[    1.339494] Unable to handle kernel NULL pointer dereference at virtual
+	       address 00000010
+[    1.347857] Mem abort info:
+[    1.350742]   ESR = 0x96000005
+[    1.353905]   Exception class = DABT (current EL), IL = 32 bits
+[    1.360024]   SET = 0, FnV = 0
+[    1.363185]   EA = 0, S1PTW = 0
+[    1.366431] Data abort info:
+[    1.369405]   ISV = 0, ISS = 0x00000005
+[    1.373363]   CM = 0, WnR = 0
+[    1.376437] [0000000000000010] user address but active_mm is swapper
+[    1.383005] Internal error: Oops: 96000005 [#1] PREEMPT SMP
+[    1.388748] Modules linked in:
+[    1.391897] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.16.0-rc1+ #344
+[    1.398625] Hardware name: MediaTek MT7622 RFB1 board (DT)
+[    1.404279] pstate: 80000005 (Nzcv daif -PAN -UAO)
+[    1.409221] pc : mtk_eint_find_irq+0x8/0x24
+[    1.413532] lr : mtk_gpio_to_irq+0x20/0x28
+[    1.417749] sp : ffffff800801baf0
+[    1.421161] x29: ffffff800801baf0 x28: ffffff8008792f40
+[    1.426637] x27: ffffff800886b000 x26: ffffff8008615620
+[    1.432113] x25: ffffffc00e4dbdc8 x24: ffffff80087b8000
+[    1.437589] x23: ffffffc00325a000 x22: ffffffc00325a010
+[    1.443066] x21: ffffffc0033dec18 x20: 00000000ffffffea
+[    1.448542] x19: ffffffc00e4db800 x18: 0000000000000130
+[    1.454018] x17: 000000000000000e x16: 0000000000000007
+[    1.459494] x15: ffffff80085ee000 x14: 0000000000000001
+[    1.464970] x13: 0000000000000001 x12: 0000000000000010
+[    1.470446] x11: 0101010101010101 x10: 0000000000000880
+[    1.475922] x9 : ffffff800801b990 x8 : ffffffc0030688e0
+[    1.481399] x7 : ffffff80080c0660 x6 : ffffffc00e4dbbb0
+[    1.486875] x5 : 0000000000000000 x4 : 0000000000000000
+[    1.492351] x3 : ffffff80082a92f4 x2 : 00000000fffffffa
+[    1.497826] x1 : 0000000000000051 x0 : 0000000000000000
+[    1.503305] Process swapper/0 (pid: 1, stack limit = 0x0000000054e053bd)
+[    1.510210] Call trace:
+[    1.512727]  mtk_eint_find_irq+0x8/0x24
+[    1.516677]  mtk_gpio_to_irq+0x20/0x28
+[    1.520539]  gpiod_to_irq+0x48/0x60
+[    1.524135]  mmc_gpiod_request_cd_irq+0x3c/0xc4
+[    1.528804]  mmc_start_host+0x6c/0x8c
+[    1.532575]  mmc_add_host+0x58/0x7c
+[    1.536168]  msdc_drv_probe+0x4fc/0x67c
+[    1.540121]  platform_drv_probe+0x58/0xa4
+[    1.544251]  driver_probe_device+0x204/0x44c
+[    1.548649]  __driver_attach+0x84/0xf8
+[    1.552512]  bus_for_each_dev+0x68/0xa0
+[    1.556461]  driver_attach+0x20/0x28
+[    1.560142]  bus_add_driver+0xec/0x240
+[    1.564002]  driver_register+0x98/0xe4
+[    1.567863]  __platform_driver_register+0x48/0x50
+[    1.572711]  mt_msdc_driver_init+0x18/0x20
+[    1.576932]  do_one_initcall+0x98/0x130
+[    1.580886]  kernel_init_freeable+0x13c/0x1d4
+[    1.585375]  kernel_init+0x10/0xf8
+[    1.588879]  ret_from_fork+0x10/0x18
+[    1.592564] Code: a8c67bfd d65f03c0 a9bf7bfd 910003fd (f9400800)
+[    1.598849] ---[ end trace 4bbcb7bc30e98492 ]---
+[    1.603677] Kernel panic - not syncing: Attempted to kill init!
+	       exitcode=0x0000000b
+[    1.603677]
 
-All we are missing is a way for specifying the "hardware port" number and the
-direction of flow. I don't see why do we need to create something new just for
-these two properties for something that exists today and works reasonably well
-for the usecase.
+cc: Kevin Hilman <khilman@baylibre.com>
+Cc: stable@vger.kernel.org
+Fixes: e6dabd38d8e7 ("pinctrl: mediatek: add EINT support to MT7622 SoC")
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ drivers/pinctrl/mediatek/pinctrl-mt7622.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> 
-> What are you trying to say about being sharply different than ACPI?
-
-The proposed Coresight ACPI draft bindings are based on the ACPI Graph bindings
-(just like the DT graph bindings and is compatible with it, in terms of the APIs.
-i.e, fwnode_graph_* operations work for both ACPI and DT  alike).
-
-So, what Mathieu, in turn means is, if we depart from the DT Graph bindings, which
-I personally don't see any benefit in.
-
-Suzuki
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7622.c b/drivers/pinctrl/mediatek/pinctrl-mt7622.c
+index ad6da11..e3f1ab2 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt7622.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt7622.c
+@@ -1459,6 +1459,9 @@ static int mtk_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+ 	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+ 	unsigned long eint_n;
+ 
++	if (!hw->eint)
++		return -ENOTSUPP;
++
+ 	eint_n = offset;
+ 
+ 	return mtk_eint_find_irq(hw->eint, eint_n);
+@@ -1471,7 +1474,8 @@ static int mtk_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+ 	unsigned long eint_n;
+ 	u32 debounce;
+ 
+-	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
++	if (!hw->eint ||
++	    pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
+ 		return -ENOTSUPP;
+ 
+ 	debounce = pinconf_to_config_argument(config);
+-- 
+2.7.4
