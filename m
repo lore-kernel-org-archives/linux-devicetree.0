@@ -1,105 +1,38 @@
 From: ilia.lin@gmail.com
-Subject: [PATCH v13 0/8] Clock for CPU scaling support for msm8996
-Date: Thu, 14 Jun 2018 23:53:47 +0200
-Message-ID: <20180614215358.11264-1-ilia.lin@gmail.com>
+Subject: [PATCH v13 2/8] clk: qcom: Make clk_alpha_pll_configure available to modules
+Date: Thu, 14 Jun 2018 23:53:49 +0200
+Message-ID: <20180614215358.11264-3-ilia.lin@gmail.com>
+References: <20180614215358.11264-1-ilia.lin@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180614215358.11264-1-ilia.lin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ilia.lin@gmail.com
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Ilia Lin <ilialin@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Ilia Lin <ilialin@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ilia Lin <ilia.lin@gmail.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-[v13]
- * Rebased
+Allow clk_alpha_pll_configure to be called from loadable
+kernel modules.
 
-[v12]
- * Addressed the kbuild fail on arm architecture
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ drivers/clk/qcom/clk-alpha-pll.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-[v11]
- * Split the series into domains
-
-[v9]
- * Addressed comments from Viresh and Russel about the error handling
-
-[v8]
- * Reordered the patch series into 4 groups
- * Addressed comments from Amit about the comments and commit messages
- * Addressed comments from Amit and Viresh about the resourses deallocation
-
-[v7]
- * Addressed comments from Viresh about resourses deallocation and DT compatible
-
-[v6]
- * Addressed comments from Viresh about:
-  ** Comments style
-  ** Kconfig bool instead of tristate
-  ** DT and documentation style
-  ** Resourses deallocation on an error
-  ** Typos
-
-[v5]
- * Rebased
- * Addressed comments from Bjorn about SPDX style, functions and parameters naming
- * Addressed comments from Viresh DT properties and style, comments style, resourses deallocation, documentation placement
- * Addressed comments from Sricharan about unnessesary include
- * Addressed comments from Nicolas
- * Addressed comments from Rob about the commit messages and acks
- * Addressed comments from Mark
-
-[v4]
- * Adressed all comments from Stephen
- * Added CPU regulator support
- * Added qcom-cpufreq-kryo driver
-
-[v3]
- * Rebased on top of the latest PLL driver changes
- * Addressed comment from Rob Herring for bindings
-
-[v2]
- * Addressed comments from Rob Herring for bindings
- * Addressed comments from Mark Rutland for memory barrier
- * Addressed comments from Julien Thierry for clock reenabling condition
- * Tuned the HW configuration for clock frequencies below 600MHz
-
-SOC (1/15):
-Extracts the kryo l2 accessors driver from the QCOM PMU driver
-
-Clocks (2/15-9/15):
-This series adds support for the CPU clocks on msm8996 devices.
-The driver uses the existing PLL drivers and is required to control
-the CPU frequency scaling on the MSM8996.
-
-Ilia Lin (5):
-soc: qcom: Separate kryo l2 accessors from PMU driver
-clk: Use devm_ in the register fixed factor clock
-clk: qcom: Add CPU clock driver for msm8996
-dt-bindings: clk: qcom: Add bindings for CPU clock for msm8996
-clk: qcom: Add ACD path to CPU clock driver for msm8996
-
-Rajendra Nayak (3):
-clk: qcom: Make clk_alpha_pll_configure available to modules
-clk: qcom: cpu-8996: Add support to switch to alternate PLL
-clk: qcom: cpu-8996: Add support to switch below 600Mhz
-
-.../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
-drivers/clk/clk-fixed-factor.c                     |   2 +-
-drivers/clk/qcom/Kconfig                           |  10 +
-drivers/clk/qcom/Makefile                          |   1 +
-drivers/clk/qcom/clk-alpha-pll.c                   |   1 +
-drivers/clk/qcom/clk-alpha-pll.h                   |   6 +
-drivers/clk/qcom/clk-cpu-8996.c                    | 510 +++++++++++++++++++++
-drivers/perf/Kconfig                               |   1 +
-drivers/perf/qcom_l2_pmu.c                         |  90 +---
-drivers/soc/qcom/Kconfig                           |   3 +
-drivers/soc/qcom/Makefile                          |   1 +
-drivers/soc/qcom/kryo-l2-accessors.c               |  56 +++
-include/soc/qcom/kryo-l2-accessors.h               |  12 +
-13 files changed, 643 insertions(+), 67 deletions(-)
-create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
-create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
-create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
-create mode 100644 include/soc/qcom/kryo-l2-accessors.h
-
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index 3c49a60072f1..a43f80ac94a4 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -228,6 +228,7 @@ void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+ 	if (pll->flags & SUPPORTS_FSM_MODE)
+ 		qcom_pll_set_fsm_mode(regmap, PLL_MODE(pll), 6, 0);
+ }
++EXPORT_SYMBOL_GPL(clk_alpha_pll_configure);
+ 
+ static int clk_alpha_pll_hwfsm_enable(struct clk_hw *hw)
+ {
 -- 
 2.11.0
