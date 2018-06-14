@@ -1,53 +1,57 @@
-From: Michel Pollet <michel.pollet@bp.renesas.com>
-Subject: [PATCH v1 5/5] ARM: dts: Renesas RZN1D-DB Board: Add UART0 pinmux node
-Date: Thu, 14 Jun 2018 12:00:21 +0100
-Message-ID: <1528974029-29617-6-git-send-email-michel.pollet@bp.renesas.com>
-References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/4] arm: dts: add support for Laird WB45N cpu module and
+ DVK
+Date: Thu, 14 Jun 2018 13:24:16 +0200
+Message-ID: <20180614112416.GY10521@piout.net>
+References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
+ <20180614090733.GV10521@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com>
+Content-Disposition: inline
+In-Reply-To: <20180614090733.GV10521@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
-Cc: phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Michel Pollet <michel.pollet@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ben Whitten <ben.whitten@gmail.com>
+Cc: devicetree@vger.kernel.org, Ben Whitten <ben.whitten@lairdtech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the necessary nodes to add pin configuration for the UART0
-of that board.
+On 14/06/2018 11:07:33+0200, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 14/06/2018 09:51:54+0100, Ben Whitten wrote:
+> 
+> This need a proper commit message. Maybe you can also add a link to the
+> technical brief for the platform?
+> 
+> > Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+> > ---
+> >  arch/arm/boot/dts/Makefile        |   3 +-
+> >  arch/arm/boot/dts/at91-wb45n.dts  |  66 +++++++++++++++
+> >  arch/arm/boot/dts/at91-wb45n.dtsi | 169 ++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 237 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/arm/boot/dts/at91-wb45n.dts
+> >  create mode 100644 arch/arm/boot/dts/at91-wb45n.dtsi
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 7e24249..1ee94ee 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -42,7 +42,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+> >  	at91sam9g25ek.dtb \
+> >  	at91sam9g35ek.dtb \
+> >  	at91sam9x25ek.dtb \
+> > -	at91sam9x35ek.dtb
+> > +	at91sam9x35ek.dtb \
+> > +	at91-wb45n.dtb
+> 
+> The proper name for the file is <soc>-board.dtb so this should be
+> at91sam9g25-wb45n.dtb.
+> 
 
-Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
----
- arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Nicolas tells me that the name was right, please disregard my comment
+(also on the other patches).
 
-diff --git a/arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts b/arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts
-index 4e57ae2..039ec2e 100644
---- a/arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts
-+++ b/arch/arm/boot/dts/r9a06g032-rzn1d400-db.dts
-@@ -8,6 +8,8 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/pinctrl/r9a06g032-pinctrl.h>
-+
- #include "r9a06g032.dtsi"
- 
- / {
-@@ -23,6 +25,17 @@
- 	};
- };
- 
-+&pinctrl {
-+	pinsuart0: pinsuart0 {
-+		renesas,rzn1-pinmux-ids = <
-+			RZN1_MUX(103, UART0_I)	/* UART0_TXD */
-+			RZN1_MUX(104, UART0_I)	/* UART0_RXD */
-+		>;
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinsuart0>;
- };
 -- 
-2.7.4
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
