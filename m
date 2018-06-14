@@ -1,325 +1,50 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: condor/v3hsk: add
- DU/LVDS/HDMI support
-Date: Thu, 14 Jun 2018 09:24:27 +0200
-Message-ID: <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
-References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
- <c78f1228-afb0-54cf-5d9e-5c812b678de3@cogentembedded.com>
+From: Richard Weinberger <richard@sigma-star.at>
+Subject: Re: [PATCH v2 0/3] mtd: rawnand: denali: add new clocks and improve setup_data_interface
+Date: Thu, 14 Jun 2018 09:25:19 +0200
+Message-ID: <6557713.S7AzxIg9TS@blindfold>
+References: <1528953067-24324-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <c78f1228-afb0-54cf-5d9e-5c812b678de3@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1528953067-24324-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, Philipp Rosenberger <p.rosenberger@linutronix.de>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 11:12:40PM +0300, Sergei Shtylyov wrote:
-> Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
-> nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
-> Analog Devices ADV7511W HDMI transmitter...
-> 
-> Based on the original (and large) patch by Vladimir Barinov.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> Changes in version 2:
-> - added the V3HSK DT update, reworded the description, renamed the patch;
-> - added a space between the HDMI node name and a brace.
-> 
->  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 +++++++++++++++++++++
->  arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  120 ++++++++++++++++++++++++
+Masahiro,
 
-Laurent, could you review this?
+Am Donnerstag, 14. Juni 2018, 07:11:04 CEST schrieb Masahiro Yamada:
+> 
+> The ->setup_data_interface() hook needs to know the clock frequency.
+> In fact, this IP needs three clocks, bus "which clock?" is really
+> confusing.  (It is not described in the DT-binding at all.)
+> 
+> This series adds more clocks.  In the new binding, three clocks
+> are required: core clock, bus interface clock, ECC engine clock.
+> 
+> This series also takes care of the backward compatibility by
+> providing hardcoded values in case the new clocks are missing.
+> So, existing DT should work.
+> 
+> 
+> Changes in v2:
+>   - Split patches into sensible chunks
+> 
+> Masahiro Yamada (3):
+>   mtd: rawnand: denali_dt: use dev as a shorthand of &pdev->dev
+>   mtd: rawnand: denali_dt: add more clocks based on IP datasheet
+>   mtd: rawnand: denali: optimize timing parameters for data interface
 
->  2 files changed, 226 insertions(+)
-> 
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> @@ -45,6 +45,56 @@
->  		regulator-boot-on;
->  		regulator-always-on;
->  	};
-> +
-> +	d1_8v: regulator-2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "D1.8V";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
-> +	hdmi-out {
-> +		compatible = "hdmi-connector";
-> +		type = "a";
-> +
-> +		port {
-> +			hdmi_con: endpoint {
-> +				remote-endpoint = <&adv7511_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	lvds-decoder {
-> +		compatible = "thine,thc63lvd1024";
-> +		vcc-supply = <&d3_3v>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				thc63lvd1024_in: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				thc63lvd1024_out: endpoint {
-> +					remote-endpoint = <&adv7511_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	x1_clk: x1-clock {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <148500000>;
-> +	};
->  };
->  
->  &avb {
-> @@ -74,6 +124,13 @@
->  	};
->  };
->  
-> +&du {
-> +	clocks = <&cpg CPG_MOD 724>,
-> +		 <&x1_clk>;
-> +	clock-names = "du.0", "dclkin.0";
-> +	status = "okay";
-> +};
-> +
->  &extal_clk {
->  	clock-frequency = <16666666>;
->  };
-> @@ -102,6 +159,55 @@
->  		gpio-controller;
->  		#gpio-cells = <2>;
->  	};
-> +
-> +	hdmi@39 {
-> +		compatible = "adi,adv7511w";
-> +		reg = <0x39>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-> +		avdd-supply = <&d1_8v>;
-> +		dvdd-supply = <&d1_8v>;
-> +		pvdd-supply = <&d1_8v>;
-> +		bgvdd-supply = <&d1_8v>;
-> +		dvdd-3v-supply = <&d3_3v>;
-> +
-> +		adi,input-depth = <8>;
-> +		adi,input-colorspace = "rgb";
-> +		adi,input-clock = "1x";
-> +		adi,input-style = <1>;
-> +		adi,input-justification = "evenly";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				adv7511_in: endpoint {
-> +					remote-endpoint = <&thc63lvd1024_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				adv7511_out: endpoint {
-> +					remote-endpoint = <&hdmi_con>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&lvds0 {
-> +	status = "okay";
-> +
-> +	ports {
-> +		port@1 {
-> +			lvds0_out: endpoint {
-> +				remote-endpoint = <&thc63lvd1024_in>;
-> +			};
-> +		};
-> +	};
->  };
->  
->  &mmc0 {
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
-> @@ -27,6 +27,63 @@
->  		/* first 128MB is reserved for secure area. */
->  		reg = <0 0x48000000 0 0x78000000>;
->  	};
-> +
-> +	hdmi-out {
-> +		compatible = "hdmi-connector";
-> +		type = "a";
-> +
-> +		port {
-> +			hdmi_con: endpoint {
-> +				remote-endpoint = <&adv7511_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	lvds-decoder {
-> +		compatible = "thine,thc63lvd1024";
-> +		vcc-supply = <&vcc3v3_d5>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				thc63lvd1024_in: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				thc63lvd1024_out: endpoint {
-> +					remote-endpoint = <&adv7511_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	vcc1v8_d4: regulator-0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC1V8_D4";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
-> +	vcc3v3_d5: regulator-1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC3V3_D5";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&du {
-> +	status = "okay";
->  };
->  
->  &extal_clk {
-> @@ -53,6 +110,64 @@
->  	};
->  };
->  
-> +&lvds0 {
-> +	status = "okay";
-> +
-> +	ports {
-> +		port@1 {
-> +			lvds0_out: endpoint {
-> +				remote-endpoint = <&thc63lvd1024_in>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	pinctrl-0 = <&i2c0_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +
-> +	hdmi@39 {
-> +		compatible = "adi,adv7511w";
-> +		#sound-dai-cells = <0>;
-> +		reg = <0x39>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-> +		avdd-supply = <&vcc1v8_d4>;
-> +		dvdd-supply = <&vcc1v8_d4>;
-> +		pvdd-supply = <&vcc1v8_d4>;
-> +		bgvdd-supply = <&vcc1v8_d4>;
-> +		dvdd-3v-supply = <&vcc3v3_d5>;
-> +
-> +		adi,input-depth = <8>;
-> +		adi,input-colorspace = "rgb";
-> +		adi,input-clock = "1x";
-> +		adi,input-style = <1>;
-> +		adi,input-justification = "evenly";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				adv7511_in: endpoint {
-> +					remote-endpoint = <&thc63lvd1024_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				adv7511_out: endpoint {
-> +					remote-endpoint = <&hdmi_con>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
->  &pfc {
->  	gether_pins: gether {
->  		groups = "gether_mdio_a", "gether_rgmii",
-> @@ -60,6 +175,11 @@
->  		function = "gether";
->  	};
->  
-> +	i2c0_pins: i2c0 {
-> +		groups = "i2c0";
-> +		function = "i2c0";
-> +	};
-> +
->  	scif0_pins: scif0 {
->  		groups = "scif0_data";
->  		function = "scif0";
-> 
+This still means that we need to feed at least 2/3 and 3/3 into -stable to
+unbreak the driver.
+I'd really prefer a single self-hosting fix that can go into -stable and then
+patches on top of the fix can prettify the driver.
+
+Thanks,
+//richard
+
+-- 
+sigma star gmbh - Eduard-Bodem-Gasse 6 - 6020 Innsbruck - Austria
+ATU66964118 - FN 374287y
