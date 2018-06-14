@@ -1,51 +1,34 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v1] ARM: dts: imx6sx: fix irq for pcie bridge
-Date: Thu, 14 Jun 2018 12:28:42 +0200
-Message-ID: <1528972122.21021.38.camel@pengutronix.de>
-References: <20180614094527.25905-1-o.rempel@pengutronix.de>
+From: kbuild test robot <fengguang.wu@intel.com>
+Subject: [RFC PATCH] clk: qcom: gcc_lpass_sway_clk can be static
+Date: Thu, 14 Jun 2018 18:38:11 +0800
+Message-ID: <20180614103811.GA29920@lkp-sb05>
+References: <1528961943-12506-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180614094527.25905-1-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1528961943-12506-3-git-send-email-tdas@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh@kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rohit Kumar <rohitkr@codeaurora.org>, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgZGVuIDE0LjA2LjIwMTgsIDExOjQ1ICswMjAwIHNjaHJpZWIgT2xla3Np
-aiBSZW1wZWw6Cj4gV2l0aG91dCB0aGlzIHBhdGNoIE1TSSBpbnRlcnJ1cHRzIGFyZSBub3Qgcm91
-dGVkIGZyb20gSW50ZWwKPiBpMzUwIFBDSWUgYWRhcHRlci4KClRoaXMgaGFzIG5vdGhpbmcgdG8g
-ZG8gd2l0aCB0aGUgYXR0YWNoZWQgZW5kcG9pbnQgZGV2aWNlLCBzbyB0aGUgY29tbWl0Cm1lc3Nh
-Z2Ugc2hvdWxkIHJlYWQgc29tZXRoaW5nIGxpa2U6CgpVc2UgdGhlIGNvcnJlY3QgSVJRIGxpbmUg
-Zm9yIHRoZSBNU0kgY29udHJvbGxlciBpbiB0aGUgUENJZSBob3N0CmNvbnRyb2xsZXIuIEFwcGFy
-ZW50bHkgYSBkaWZmZXJlbnQgSVJRIGxpbmUgaXMgdXNlZCBjb21wYXJlZCB0byBvdGhlcgppLk1Y
-NiB2YXJpYW50cy4gV2l0aG91dCB0aGlzIGNoYW5nZSBNU0kgSVJRcyBhcmVuJ3QgcHJvcGVybHkg
-cHJvcGFnYXRlZAp0byB0aGUgdGhlIHVwc3RyZWFtIGludGVycnVwdCBjb250cm9sbGVyLgoKV2l0
-aCB0aGlzIGZpeGVkOgpSZXZpZXdlZC1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9u
-aXguZGU+Cgo+ID4gU2lnbmVkLW9mZi1ieTogT2xla3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1
-dHJvbml4LmRlPgo+IC0tLQo+IMKgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2kgfCAyICst
-Cj4gwqAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnN4LmR0c2kgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg2c3guZHRzaQo+IGluZGV4IDQ5YzcyMDViOGRiOC4uNzdmZGFkNjVlMmJiIDEwMDY0
-NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC5kdHNpCj4gKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnN4LmR0c2kKPiBAQCAtMTM1MSw3ICsxMzUxLDcgQEAKPiA+IMKgCQkJcmFu
-Z2VzID0gPDB4ODEwMDAwMDAgMCAwwqDCoMKgwqDCoMKgwqDCoMKgwqAweDA4ZjgwMDAwIDAgMHgw
-MDAxMDAwMCAvKiBkb3duc3RyZWFtIEkvTyAqLwo+ID4gwqAJCQkJwqDCoDB4ODIwMDAwMDAgMCAw
-eDA4MDAwMDAwIDB4MDgwMDAwMDAgMCAweDAwZjAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBt
-ZW1vcnkgKi8KPiA+IMKgCQkJbnVtLWxhbmVzID0gPDE+Owo+ID4gLQkJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSAxMjMgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiArCQkJaW50ZXJydXB0cyA9IDxH
-SUNfU1BJIDEyMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+IMKgCQkJaW50ZXJydXB0LW5hbWVz
-ID0gIm1zaSI7Cj4gPiDCoAkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gPiDCoAkJCWludGVy
-cnVwdC1tYXAtbWFzayA9IDwwIDAgMCAweDc+OwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+Fixes: 035d2520712d ("clk: qcom: Add lpass clock controller driver for SDM845")
+Signed-off-by: kbuild test robot <fengguang.wu@intel.com>
+---
+ lpasscc-sdm845.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/qcom/lpasscc-sdm845.c b/drivers/clk/qcom/lpasscc-sdm845.c
+index d04a4c8..5b9ad76 100644
+--- a/drivers/clk/qcom/lpasscc-sdm845.c
++++ b/drivers/clk/qcom/lpasscc-sdm845.c
+@@ -29,7 +29,7 @@ static struct clk_branch gcc_lpass_q6_axi_clk = {
+ 	},
+ };
+ 
+-struct clk_branch gcc_lpass_sway_clk = {
++static struct clk_branch gcc_lpass_sway_clk = {
+ 	.halt_reg = 0x8,
+ 	.halt_check = BRANCH_HALT,
+ 	.clkr = {
