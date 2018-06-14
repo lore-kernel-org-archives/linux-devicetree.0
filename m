@@ -1,89 +1,87 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 00/27] Add support for R40 HDMI pipeline
-Date: Thu, 14 Jun 2018 12:42:41 +0530
-Message-ID: <CAMty3ZC-Edg5XJQpqEuwLbSFzmam3zP3zUPak4K7ypyT2+arAg@mail.gmail.com>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v3 0/7] add support for Bluetooth on MT7622 SoC
+Date: Thu, 14 Jun 2018 15:14:22 +0800
+Message-ID: <cover.1528960095.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB2VKRDMQKGQEZMI3EMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180612200036.21483-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 13, 2018 at 1:30 AM, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> This series adds support for R40 HDMI pipeline. It is a bit special
-> than other already supported pipelines because it has additional unit
-> called TCON TOP responsible for relationship configuration between
-> mixers, TCONs and HDMI. Additionally, it has additional gates for DSI
-> and TV TCONs, TV encoder clock settings and pin muxing between LCD
-> and TV encoders.
->
-> However, it seems that TCON TOP will become a norm, since newer
-> Allwinner SoCs like H6 also have this unit.
->
-> I tested different possible configurations:
-> - mixer0 <> TCON-TV0 <> HDMI
-> - mixer0 <> TCON-TV1 <> HDMI
-> - mixer1 <> TCON-TV0 <> HDMI
-> - mixer1 <> TCON-TV1 <> HDMI
->
-> Please review.
->
-> Best regards,
-> Jernej
->
-> Changes from v1:
-> - Split DT bindings patch and updated description
-> - Split HDMI PHY patch
-> - Move header file from TCON TOP patch to dt bindings patch
-> - Added Rob reviewed-by tag
-> - Used clk_hw_register_gate() instead of custom gate registration code
-> - Reworked TCON TOP to be part of of-graph. Because of that, a lot of
->   new patches were added.
-> - Droped mixer index quirk patch
-> - Reworked TCON support for TCON TOP
-> - Updated commit messages
->
-> Jernej Skrabec (27):
->   clk: sunxi-ng: r40: Add minimal rate for video PLLs
->   clk: sunxi-ng: r40: Allow setting parent rate to display related
->     clocks
->   clk: sunxi-ng: r40: Export video PLLs
->   dt-bindings: display: sunxi-drm: Add TCON TOP description
->   drm/sun4i: Add TCON TOP driver
->   drm/sun4i: Fix releasing node when enumerating enpoints
->   drm/sun4i: Split out code for enumerating endpoints in output port
->   drm/sun4i: Add support for traversing graph with TCON TOP
->   drm/sun4i: Don't skip TCONs if they don't have channel 0
->   dt-bindings: display: sun4i-drm: Add R40 TV TCON description
->   drm/sun4i: tcon: Add support for tcon-top gate
->   drm/sun4i: tcon: Generalize engine search algorithm
->   drm/sun4i: Don't check for LVDS and RGB when TCON has only ch1
->   drm/sun4i: Don't check for panel or bridge on TV TCONs
->   drm/sun4i: Add support for R40 TV TCON
->   dt-bindings: display: sun4i-drm: Add R40 mixer compatibles
->   drm/sun4i: Add support for R40 mixers
->   dt-bindings: display: sun4i-drm: Add description of A64 HDMI PHY
->   drm/sun4i: Enable DW HDMI PHY clock
->   drm/sun4i: Don't change clock bits in DW HDMI PHY driver
->   drm/sun4i: DW HDMI PHY: Add support for second PLL
->   drm/sun4i: Add support for second clock parent to DW HDMI PHY clk
->     driver
->   drm/sun4i: Add support for A64 HDMI PHY
->   drm: of: Export drm_crtc_port_mask()
->   drm/sun4i: DW HDMI: Expand algorithm for possible crtcs
->   ARM: dts: sun8i: r40: Add HDMI pipeline
->   ARM: dts: sun8i: r40: Enable HDMI output on BananaPi M2 Ultra
+From: Sean Wang <sean.wang@mediatek.com>
 
-Tested whole series on top of linux-next.
+v3 and changes since v2
+* all changes happen on patch 6
+ - fix up SPDX license style for btmtkuart.h.
+ - change firmware download from in ACL data to in HCI commands
+   and then remove unused mtk_acl_wmt_sync and related code.
+ - add a workaround replacing bad vendor event id 0xe4 with 0xff every
+   vendor should use.
+ - add a sanity check for mtk_hci_wmt_sync to verifying if
+   input parameters are valid.
+ - add an atomic_inc(&bdev->hdev->cmd_cnt) for __hci_cmd_sync_ev.
+ - be changed to use firmware with a header called mt7622pr2h.bin.
 
-Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+v2 and changes since v1
+ - Dropped patches already being applied
+ - Rewirte the whole driver using btuart [1], and add slight extension
+   of btuart to fit into btmtkuart driver. Beware that [1] is also pulled
+   into one part of the series for avoiding any breakage when the patchset
+   is being compiled.
+
+[1] btuart 
+	https://www.spinics.net/lists/linux-bluetooth/msg74918.html
+
+v1:
+
+Hi,
+
+This patchset introduces built-in Bluetooth support on MT7622 SoC.
+And, it should be simple to make an extension to support other
+MediaTek SoCs with adjusting a few of changes on the initialization
+sequence of the device.
+
+Before the main driver is being introduced, a few of things about
+power-domain management should be re-worked for serdev core and MediaTek
+SCPSYS to allow the Bluetooth to properly power up.
+
+Patch 2: add a generic way attaching power domain to serdev
+Patch 3 and 4: add cleanups with reuse APIs from Linux core
+Patch 5: fix a limitation about power enablement Bluetooth depends on
+Patch 1, 6 and 7: the major part of adding Bluetooth support to MT7622
+	
+	Sean
+
+Marcel Holtmann (1):
+  Bluetooth: Add new serdev based driver for UART attached controllers
+
+Sean Wang (6):
+  dt-bindings: net: bluetooth: Add mediatek-bluetooth
+  serdev: add dev_pm_domain_attach|detach()
+  Bluetooth: Add new quirk for non-persistent setup settings
+  Bluetooth: Extend btuart driver for join more vendor devices
+  Bluetooth: mediatek: Add protocol support for MediaTek serial devices
+  MAINTAINERS: add an entry for MediaTek Bluetooth driver
+
+ .../devicetree/bindings/net/mediatek-bluetooth.txt |  35 ++
+ MAINTAINERS                                        |   8 +
+ drivers/bluetooth/Kconfig                          |  23 +
+ drivers/bluetooth/Makefile                         |   3 +
+ drivers/bluetooth/btmtkuart.c                      | 355 ++++++++++++++
+ drivers/bluetooth/btmtkuart.h                      | 119 +++++
+ drivers/bluetooth/btuart.c                         | 527 +++++++++++++++++++++
+ drivers/bluetooth/btuart.h                         |  30 ++
+ drivers/tty/serdev/core.c                          |  14 +-
+ include/net/bluetooth/hci.h                        |   9 +
+ net/bluetooth/hci_core.c                           |   3 +-
+ 11 files changed, 1124 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+ create mode 100644 drivers/bluetooth/btmtkuart.c
+ create mode 100644 drivers/bluetooth/btmtkuart.h
+ create mode 100644 drivers/bluetooth/btuart.c
+ create mode 100644 drivers/bluetooth/btuart.h
+
+-- 
+2.7.4
