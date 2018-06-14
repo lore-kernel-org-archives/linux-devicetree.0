@@ -1,54 +1,83 @@
-From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Subject: RE: [EXTERNAL] Re: [PATCH] arm64: dts: hikey: Define wl1835 power
-   capabilities
-Date: Thu, 14 Jun 2018 06:40:05 +0000
-Message-ID: <ae036763950c4c9e80ceccc8c61e78dd@ti.com>
-References: <20180613151305.17240-1-ryan@edited.us>
-        <CANcMJZASEDRxaXwdG96nNeEDPrDm_ap5MjhXonEcg=yHZ8F=qg@mail.gmail.com>
- <87tvq6a577.fsf@kamboji.qca.qualcomm.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v2 4/5] thermal: tsens: Add support for SDM845
+Date: Thu, 14 Jun 2018 12:18:47 +0530
+Message-ID: <CAFp+6iEnep3ogEkdfmaSOn_2w+09huae2NOwBF1o7-vn3iQMCA@mail.gmail.com>
+References: <cover.1528799892.git.amit.kucheria@linaro.org> <f048a97d1599a54aef3d00126a379f4e5c937057.1528799892.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87tvq6a577.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
-Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Valentin Schneider <Valentin.Schneider-5wv7dgnIgG8@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f048a97d1599a54aef3d00126a379f4e5c937057.1528799892.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, edubezval@gmail.com, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> >> These properties are required for compatibility with runtime PM.
-> >> Without these properties, MMC host controller will not be aware
-> >> of power capabilities. When the wlcore driver attempts to power
-> >> on the device, it will erroneously fail with -EACCES.
-> >>
-> >> Signed-off-by: Ryan Grachek <ryan-JnT2LfGw4MD1P9xLtpHBDw@public.gmane.org>
-> >
-> > Fixes: 60f36637bbbd ("wlcore: sdio: allow pm to handle sdio power")
-> > Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > Wei Xu: This fixes a functional regression with wifi on the HiKey
-> > board that was introduced in 4.18-rc with commit 60f36637bbbd
-> > ("wlcore: sdio: allow pm to handle sdio power").
-> >
-> > Could you please be sure to queue this for the 4.18-rc ?
->=20
-> Adding linux-wireless so that wireless folks are aware of this wlcore
-> regression fix as well.
->=20
-Actually  "cap-power-off-card" is normally included with all .dts files sup=
-porting wilink=20
-So it should have been there from the start for this board as well.=20
-It probably worked without it due to the explicit call to mmc_power_restore=
-_host()
-that was there as an old workaround for trying to control the power explici=
-tly from the
-driver which was actually causing other failures on suspend/resume as the m=
-mc layer=20
-already power the module on resume.
-"keep-power-in-suspend" is needed in case of planning to use "WoWLAN":
-Iw phy0 wowlan enable....
+Hi Amit,
 
-Best Regards,
-Eyal
+On Tue, Jun 12, 2018 at 4:24 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> SDM845 uses the TSENS v2 IP block
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.txt |  1 +
+>  drivers/thermal/qcom/Makefile                            |  2 +-
+>  drivers/thermal/qcom/tsens-sdm845.c                      | 15 +++++++++++++++
+>  drivers/thermal/qcom/tsens.c                             |  3 +++
+>  drivers/thermal/qcom/tsens.h                             |  5 ++++-
+>  5 files changed, 24 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/thermal/qcom/tsens-sdm845.c
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> index 292ed89..8652499 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>   - "qcom,msm8916-tsens" : For 8916 Family of SoCs
+>   - "qcom,msm8974-tsens" : For 8974 Family of SoCs
+>   - "qcom,msm8996-tsens" : For 8996 Family of SoCs
+> + - "qcom,sdm845-tsens"  : For SDM845 Family of SoCs
+>
+>  - reg: Address range of the thermal registers
+>  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> diff --git a/drivers/thermal/qcom/Makefile b/drivers/thermal/qcom/Makefile
+> index 2cc2193..dc9f169 100644
+> --- a/drivers/thermal/qcom/Makefile
+> +++ b/drivers/thermal/qcom/Makefile
+> @@ -1,2 +1,2 @@
+>  obj-$(CONFIG_QCOM_TSENS)       += qcom_tsens.o
+> -qcom_tsens-y                   += tsens.o tsens-common.o tsens-8916.o tsens-8974.o tsens-8960.o tsens-8996.o
+> +qcom_tsens-y                   += tsens.o tsens-common.o tsens-8916.o tsens-8974.o tsens-8960.o tsens-8996.o tsens-sdm845.o
+> diff --git a/drivers/thermal/qcom/tsens-sdm845.c b/drivers/thermal/qcom/tsens-sdm845.c
+> new file mode 100644
+> index 0000000..a647265
+> --- /dev/null
+> +++ b/drivers/thermal/qcom/tsens-sdm845.c
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, Linaro Limited
+> + */
+> +
+> +#include "tsens.h"
+> +
+> +static const struct tsens_ops ops_sdm845 = {
+> +       .init           = init_common,
+> +       .get_temp       = get_temp_tsens_v2,
+> +};
+> +
+> +const struct tsens_data data_sdm845 = {
+
+Just a minor nit. 'static' here?
+
+> +       .ops            = &ops_sdm845,
+> +};
+
+[snip]
+
+Thanks & Regards
+Vivek
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
