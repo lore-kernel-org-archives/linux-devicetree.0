@@ -1,120 +1,90 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH linux-next v5 07/13] dt-bindings: mfd: Add a document for
- PECI client mfd
-Date: Thu, 14 Jun 2018 10:25:37 -0700
-Message-ID: <2b5bbf01-8c9c-bb06-4559-00dae61d95de@linux.intel.com>
-References: <20180601182216.23894-1-jae.hyun.yoo@linux.intel.com>
- <20180613061637.GI5278@dell>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts: allwinner: a64: add SRAM
+ controller device tree node
+Date: Thu, 14 Jun 2018 19:27:21 +0200
+Message-ID: <2687631.x8iGEoiUx5@jernej-laptop>
+References: <20180614153548.9644-1-wens@csie.org> <20180614153548.9644-5-wens@csie.org> <CAMty3ZARNpBOQKvS7knH8kWE2+bvjuJoAA4cFGZK8+GzTUQ5zA@mail.gmail.com>
+Reply-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180613061637.GI5278@dell>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDP4JJM5QYGRBO6LRLMQKGQEVMSW5PI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZARNpBOQKvS7knH8kWE2+bvjuJoAA4cFGZK8+GzTUQ5zA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review. Please check my answers inline.
+Dne =C4=8Detrtek, 14. junij 2018 ob 19:09:56 CEST je Jagan Teki napisal(a):
+> On Thu, Jun 14, 2018 at 9:05 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >=20
+> > Allwinner A64 has a SRAM controller, and in the device tree currently
+> > we have a syscon node to enable EMAC driver to access the EMAC clock
+> > register. As SRAM controller driver can now export regmap for this
+> > register, replace the syscon node to the SRAM controller device node,
+> > and let EMAC driver to acquire its EMAC clock regmap.
+> >=20
+> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > [wens-jdAy2FN1RRM@public.gmane.org: Updated compatible string]
+> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > ---
+> >=20
+> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19 +++++++++++++++++--
+> >  1 file changed, 17 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
+> > 1b2ef28c42bd..87968dafe1dc 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > @@ -169,9 +169,24 @@
+> >=20
+> >                 ranges;
+> >                =20
+> >                 syscon: syscon@1c00000 {
+> >=20
+> > -                       compatible =3D
+> > "allwinner,sun50i-a64-system-controller", -                            =
+ =20
+> > "syscon";
+> > +                       compatible =3D
+> > "allwinner,sun50i-a64-system-control";
+> >=20
+> >                         reg =3D <0x01c00000 0x1000>;
+> >=20
+> > +                       #address-cells =3D <1>;
+> > +                       #size-cells =3D <1>;
+> > +                       ranges;
+> > +
+> > +                       sram_c: sram@18000 {
+> > +                               compatible =3D "mmio-sram";
+> > +                               reg =3D <0x00018000 0x28000>;
+> > +                               #address-cells =3D <1>;
+> > +                               #size-cells =3D <1>;
+> > +                               ranges =3D <0 0x00018000 0x28000>;
+> > +
+> > +                               de2_sram: sram-section@0 {
+>=20
+> So, this can attach to display-engine node through allwinner,sram and
+> add support to claim the sram on sun4i/sun4i_drv.c, correct?
 
-On 6/12/2018 11:16 PM, Lee Jones wrote:
-> All s/mfd/MFD/
-> 
+Actually, it has to be added to display_clocks node and claimed in drivers/
+clk/sunxi-ng/ccu-sun8i-de2.c
 
-Got it. Will fix it.
+Best regards,
+Jernej
 
->> This commit adds a dt-bindings document for PECI client multi-function
->> device.
-> 
-> Multi-Function Device
-> 
 
-Will fix it.
-
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> Cc: Andrew Jeffery <andrew@aj.id.au>
->> Cc: James Feist <james.feist@linux.intel.com>
->> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->> Cc: Joel Stanley <joel@jms.id.au>
->> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
->> ---
->>   .../devicetree/bindings/mfd/peci-client.txt   | 23 +++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/peci-client.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/peci-client.txt b/Documentation/devicetree/bindings/mfd/peci-client.txt
->> new file mode 100644
->> index 000000000000..4eb8f6bb6ca4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/peci-client.txt
->> @@ -0,0 +1,23 @@
->> +* Intel PECI client bindings
-> 
-> Now it the time to expand on what a "PECI client" is.
-> 
-
-Okay, I'll add more description about the "PECI client".
-
->> +Required properties:
->> +- compatible : Should be "intel,peci-client", "simple-mfd".
->> +- reg        : Should contain address of a client CPU. Address range of CPU
->> +	       clients is starting from 0x30 based on PECI specification.
-> 
-> s/is starting/start/
-> 
-
-Will change it to "Address range of CPU clients starts from ...".
-
->> +Example:
->> +	peci-bus@0 {
-> 
-> 0?
-> 
-
-Because the actual reg value of the peci bus is reg = <0x0 0x60> but
-anyway it's an example.
-
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
-> 
-> No 'reg' property?
-> 
-
-This is the actual peci bus node which is a parent of this MFD node:
-	peci0: peci-bus@0 {
-		compatible = "aspeed,ast2500-peci";
-		reg = <0x0 0x60>;
-		#address-cells = <1>;
-		#size-cells = <0>;
-		interrupts = <15>;
-		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
-		resets = <&syscon ASPEED_RESET_PECI>;
-		clock-frequency = <24000000>;
-		msg-timing = <1>;
-		addr-timing = <1>;
-		rd-sampling-point = <8>;
-		cmd-timeout-ms = <1000>;
-	};
-
->> +		< more properties >
-> 
-> Remove this.
-> 
-
-I dropped all other properties into < more properties > because I want
-to show the #address-cells and #size-cells to state its sub-nodes
-should have a single unique reg value. Should I remove this line or the
-whole parent node?
-
->> +		peci-client@30 {
->> +			compatible = "intel,peci-client", "simple-mfd";
->> +			reg = <0x30>;
->> +		};
->> +
->> +		peci-client@31 {
->> +			compatible = "intel,peci-client", "simple-mfd";
->> +			reg = <0x31>;
->> +		};
->> +	};
-> 
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
