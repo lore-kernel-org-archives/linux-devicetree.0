@@ -1,106 +1,51 @@
-From: Matt Sealey <Matt.Sealey@arm.com>
-Subject: RE: [RFC PATCH 6/8] dts: coresight: Clean up the device tree graph
- bindings
-Date: Thu, 14 Jun 2018 15:04:52 +0000
-Message-ID: <HE1PR0802MB241249AB5A90012AA6EB5235EE7D0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
-References: <1527858967-16047-1-git-send-email-suzuki.poulose@arm.com>
- <1527858967-16047-7-git-send-email-suzuki.poulose@arm.com>
- <20180612204802.GA15817@rob-hp-laptop>
- <a1c0749b-9c97-b45f-716f-a62ae07af278@arm.com>
- <5448BBB7-93FE-400F-9D87-FABF5DE0539C@arm.com>
- <c0d531ec-9201-bfd8-e6c3-9140698b0697@arm.com>
- <HE1PR0802MB24127EC935B9AF6F82AB3B6EEE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
- <075b99a1-2a29-f6dc-e9f2-99f895c27d35@arm.com>
- <CANLsYkx9cjV-bWg7aLg-kJT7x7DtwTHdsYzzM8A3+cFFnu_mNg@mail.gmail.com>
- <HE1PR0802MB24121F0EEF8D7D643BC391A1EE7E0@HE1PR0802MB2412.eurprd08.prod.outlook.com>
- <5e013d65-9931-6b8d-ce7c-4333309d4ada@arm.com>
- <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Craig Tatlor <ctatlor97@gmail.com>
+Subject: [PATCH v7 1/4] fixp-arith: add a linear interpolation function
+Date: Thu, 14 Jun 2018 16:14:14 +0100
+Message-ID: <20180614151435.6471-1-ctatlor97@gmail.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+0kExVY33kdDoR6bAxbr2VzRUzW2j0k+2wmv4CSNVnpQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180407135934.26122-1-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, John Horley <John.Horley@arm.com>, "mike.leach@linaro.org" <mike.leach@linaro.org>, "coresight@lists.linaro.org" <coresight@lists.linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUbyB0YWtlIHRoaXMgaW4gYSBzb21ld2hhdCBkaWZmZXJlbnQgZGlyZWN0aW9u
-Li4uDQoNCj4gPiBObywgdGhlIGFib3ZlIGNvbW1lbnQgaXMgYWJvdXQgdXNpbmcgInVuaXQiICgg
-aWYgaXQgaXMgYSBzdGFuZGFyZA0KPiA+IHByb3BlcnR5IGZvciBzcGVjaWZ5aW5nIHNvbWV0aGlu
-ZyBzcGVjaWZpYyB0byBoYXJkd2FyZSkgaW5zdGVhZCBvZg0KPiA+ICJjb3Jlc2lnaHQsaHdpZCIu
-IEkgd291bGQgcHJlZmVyIHRvIHN0aWNrIHRvIHRoZSBEVCBncmFwaCBiaW5kaW5ncywNCj4gPiBi
-ZWNhdXNlIDoNCj4NCj4gInVuaXQiIGlzIG5vdCBhIHN0YW5kYXJkIHByb3BlcnR5IGFuZCBJIGRv
-bid0IGxpa2UgaXQgZWl0aGVyLg0KDQpGYWlyIGVub3VnaC4NCg0KPiBJZiB5b3UgaGF2ZSAiaW4t
-cG9ydHMiIGFuZCAib3V0LXBvcnRzIiBub2RlcywgdGhlbiB0aGF0IGdpdmVzIHlvdQ0KPiBkaXJl
-Y3Rpb24gYW5kIHlvdSBjYW4gdXNlIHJlZyBmb3IgdGhlICJoYXJkd2FyZSBwb3J0Ii4NCj4NCj4g
-aW4tcG9ydHMgew0KPiAgIHBvcnRAMCB7DQo+ICAgICByZWcgPSA8MD47DQo+ICAgICBlbmRwb2lu
-dCB7Li4ufTsNCj4gICB9Ow0KPiAgIHBvcnRAMSB7DQo+ICAgICByZWcgPSA8MT47DQo+ICAgICBl
-bmRwb2ludCB7Li4ufTsNCj4gICB9Ow0KPiB9Ow0KPiBvdXQtcG9ydHMgew0KPiAgIHBvcnRAMCB7
-DQo+ICAgICByZWcgPSA8MD47DQo+ICAgICBlbmRwb2ludCB7Li4ufTsNCj4gICB9Ow0KPiB9Ow0K
-Pg0KPiBJJ2xsIG5lZWQgdG8gY2hlY2ssIGJ1dCBkdGMgbWF5IG5lZWQgYW4gdXBkYXRlIHRvIG5v
-dCB3YXJuIGFib3V0IHRoaXMuDQoNCklmIHRoZSByZXF1aXJlbWVudCB0aGF0IHVuaXQtYWRkcmVz
-cyBhbmQgdGhlIGxvdyAjYWRkcmVzcy1jZWxscyBvZiByZWcNCm5vdyBiZWluZyBmb3JjZWQgYnkg
-YSB2YWxpZGF0aW9uIHRvb2wgaXMgc2NyZXdpbmcgdXMgb3ZlciBoZXJlLCB3ZSBjYW4ndA0KcmVh
-bGx5IGNoYW5nZSB0aGUgdG9vbDsgdGhhdCdzIGEgSUVFRSAxMjc1LTE5OTQgcmVxdWlyZW1lbnQg
-d2UnZCBiZQ0KaGFja2luZyBhcm91bmQuDQoNCkhlcmUncyBhIHRob3VnaHQgLSB3aHkgZG9uJ3Qg
-d2UgZGVmaW5lIHRoZSBwb3J0cyBpbiBlYWNoIGNvbXBvbmVudCBpbiBhDQpzZXBhcmF0ZSBncmFw
-aD8gRGVzY3JpYmluZyB0aGUgQVRCIHRvcG9sb2d5IGFzIGEgYnVzIHdpdGggYSBncmFwaCBzdHJ1
-Y3R1cmUNCmFuZCB0aGVuIGhhdmluZyB0aGUgY29tcG9uZW50cyBzaW1wbHkgcmVmZXJlbmNlIHRo
-ZSBwb3J0IG5vZGVzIHdvdWxkIG1ha2UNCml0IG11Y2ggZWFzaWVyIHRvIGRlc2lnbi4NCg0KUGFy
-dCBvZiB0aGUgcHJvYmxlbSBpcyB0cnlpbmcgdG8gZGVzY3JpYmUgYW4gQVRCIGJ1cyB2aWEgYSBj
-b21wb25lbnQgb24NCmFuIEFQQiBidXMuIFlvdSBsb3NlIGFsbCB0aGUgbmljZXRpZXMgb2YgZGVz
-Y3JpYmluZyBhIGJ1cyB3aXRoIGJ1cw0Kc3ViY29tcG9uZW50cy4gTGV0cyB0YWtlIHRoZSBBVEIg
-YnVzIG91dHNpZGUuLiBieSBkZXNjcmliaW5nIHRoZSBpbmdyZXNzDQphbmQgZWdyZXNzIG9mIHRo
-ZSBjb21wb25lbnQgeW91IGhhdmUgbm8gaWRlYSB3aGVyZSBpbiB0aGUgZ3JhcGggeW91IGFyZQ0K
-YXQgdGhlIHBvaW50IG9mIGVudHJ5ICh5b3UgY291bGQgc3RhcnQgcGFyc2luZyBhdCBhIGZ1bm5l
-bCwgd2hpY2ggbWVhbnMNCnRyYXZlbGxpbmcgYXJvdW5kIGxvb2tpbmcgZm9yIG90aGVyIHVuaXRz
-IHRoYXQgbWF0Y2ggb3RoZXIgY29tcGF0aWJsZXMpLg0KDQpJZiB0aGUgQ29yZVNpZ2h0IHN1YnN5
-c3RlbSBjb3VsZCBoYXZlIGEgZ3JhcGggcHJlLW1hZGUgb2YgdGhlIGZ1bGwNCnRvcG9sb2d5LCB0
-aGVuIHRoZSBjb21wb25lbnRzIGNhbiBwb2ludCB0byBob3cgdGhleSB3cmFwIHBhcnRzIG9mDQp0
-aGF0IHRvcG9sb2d5LiBZb3UgY2FuIGFsc28gZG8gYXdheSB3aXRoIHJpZGljdWxvdXMgbm9uLXBy
-b2dyYW1tYWJsZQ0KZnVubmVscyBhbmQgcmVwbGljYXRvciBub2Rlcywgc2luY2UgdGhlIHRyYWNl
-IGdyYXBoIHdvdWxkIGVuY2Fwc3VsYXRlDQp0aGF0IGluZm9ybWF0aW9uIHdpdGhvdXQgaGF2aW5n
-IHRvIGluc3RhbnRpYXRlIGEgc3R1YiBkcml2ZXIgZm9yIGl0Lg0KDQpUaGF0IGRvZXNuJ3Qgc29s
-dmUgJ3VuaXQnIG9yICd1bml0LWFkZHJlc3MnIG9yICdyZWcnIG9yIGFueXRoaW5nIGJ1dA0KaXQg
-d291bGQga2VlcCB1cyBpbiBncmFwaCBiaW5kaW5ncyBhbmQgYWJzdHJhY3QgdGhlIEFUQiB0b3Bv
-bG9neSBmcm9tDQp0aGUgY29tcG9uZW50cy4gT3RoZXIgZnVuIHN0dWZmOyBkZXNjcmliaW5nIGJy
-aWRnZSBjb21wb25lbnRzIGFuZCBidXMNCndpZHRocyB3aXRoaW4gdGhlIGdyYXBoIGNvdWxkIGdp
-dmUgYWJpbGl0aWVzIHRvIGRlc2NyaWJlIGJhbmR3aWR0aHMNCm92ZXIgZWFjaCB0cmFjZSBwYXRo
-Lg0KDQpJbiBhbnkgY2FzZSwgd2hhdCBoYXBwZW5zIHdoZW4geW91IGhhdmUgdG8gZGVjaWRlIHdo
-YXQgeW91ciBmdW5uZWwNCnBvcnQgcHJpb3JpdGllcyBhcmUsIHlvdSdsbCBoYXZlIHRvIGRlZmlu
-ZSBhIG5ldyBwcm9wZXJ0eSBmb3IgdGhhdCwNCmFuZCBpdCB3b24ndCBiZSAncmVnJy4NCg0KVHJ5
-aW5nIG5vdCB0byBhZGQgYW55dGhpbmcgdG8gdGhlIGdyYXBoIGJpbmRpbmdzIGlzIG9uZSB0aGlu
-ZyBidXQNCnRyeWluZyB0byBzaG9laG9ybiBpdCBpbiBlaXRoZXIgYnkgZG9pbmcgdGhhdCBvciBp
-bnZlbnRpbmcgd2hvbGx5DQpkZXZpY2Utc3BlY2lmaWMgcHJvcGVydGllcyBhcmUganVzdCBhcyBi
-YWQuDQoNClBlcmhhcHMgd2UgY2FuIHVzZSB0aGUgcGF0aEB1bml0LWFkZHJlc3M6YXJndW1lbnRz
-IDwtLSBwYXJhbWV0ZXJzIGhlcmUgdG8NCmFkZCBleHRyYSBpbmZvcm1hdGlvbiBhYm91dCB0aGUg
-cG9ydC4gJ215LWFyZ3MnIHdvdWxkIHB1bGwgaXQgb3V0IGluIEZvcnRoLA0KSSBkb24ndCBrbm93
-IGhvdyBGRFQgY29kZSBkZWFscyB3aXRoIGl0IChidXQgdGhlcmUgc2hvdWxkIGJlIHNvbWV0aGlu
-ZywNCnNpbmNlIHdlIHVzZSBpdCBmb3IgY29uc29sZSBkZWZpbml0aW9uIGluIC9jaG9zZW4pLiBU
-aGV5J3JlIGVudGlyZWx5DQpzcGVjaWZpYyB0byB0aGUgbm9kZSBpbiBxdWVzdGlvbiwgYnV0IG5v
-dCB1c2VkIGluIHBhdGggbWF0Y2hpbmcuDQoNCldoeSBjYW4ndCB3ZSBkZWNpZGUgb24gYSBncmFw
-aC1iaW5kaW5nIHVwZGF0ZSB0aGF0IGFsbG93cyBzcGVjaWZ5aW5nDQpzb21ldGhpbmcgc2ltcGxl
-IGFzIGEgZGVtdWx0aXBsZXhlciBvdXRwdXQgaW4gYSB3YXkgdGhlIGRyaXZlciBjYW4NCnVuZGVy
-c3RhbmQgYW5kIG1hcCB0byB0aGUgaGFyZHdhcmU/DQoNCj4gSWYgRFQgYmluZGluZ3MgY2FuIGJl
-IHJldXNlZCBmb3IgQUNQSSwgdGhhdCdzIGZpbmUNCg0KSG93ZXZlciBpbiBteSBvcGluaW9uIG5v
-dCB0aGUgcHJlZmVycmVkIHdheSB0byBkbyBpdC4uDQoNCj4gYW55IERUIGJpbmRpbmdzIHRvIGJl
-IGFjY2VwdGVkIHNpbXBseSBiZWNhdXNlIHRoZXkgbWF0Y2ggQUNQSQ0KPiBiaW5kaW5ncy4NCg0K
-SSdtIHN1cmUgQUNQSSBoYXMgY2FwYWJpbGl0eSBvZiBhIG11Y2ggY2xhc3NpZXIgd2F5IG9mIGRl
-c2NyaWJpbmcNCnRoaW5ncywgYnV0IEkgaGF2ZSBzb21lIGZlYXIgdGhhdCBpdCdzIGp1c3QgT0Yg
-YmluZGluZ3Mgc3R1ZmZlZCBpbg0KYSBfRFNELi4gRFQgYW5kIEFDUEkgaGF2ZSB0aGUgcmVzcG9u
-c2liaWxpdHkgb2Ygc2hvdWxkZXJpbmcgdGhlDQpidXJkZW4gb2YgZGVzY3JpYmluZyBoYXJkd2Fy
-ZS4gQW55IGF0dGVtcHRzIHRvIHRyeSBhbmQgbWFrZSBzb21lDQpjb21tb25hbGl0eSB0byBwcm9t
-b3RlIGJyZXZpdHkgb2YgTGludXggY29kZSBpcyB0b3RhbGx5IG91dCBvZiBzY29wZS4uDQoNCllv
-dSBjYW4gYWx3YXlzIGFic3RyYWN0IHdoYXRldmVyIGRlZmluaXRpb24gaW50byB3aGF0ZXZlciB0
-aGUgTGludXgNCmRyaXZlcnMgbmVlZCBhdCB0aGUgdGltZS4gVGhhdCdzIGtpbmQgb2YgdGhlIHBv
-aW50LiBMb2NraW5nIGluIHRvDQonaG93IGl0J3MgY3VycmVudGx5IGNvZGVkJyBpcyBzdGlmbGlu
-ZyB3aGVuIHJlYWxpemluZyB0aGUgZmlyc3QNCmF0dGVtcHQgZGlkbid0IGFjdHVhbGx5IGFkZXF1
-YXRlbHkgZG8gd2hhdCBpdCB3YXMgaW50ZW5kZWQuDQoNClRhLA0KTWF0dA0KSU1QT1JUQU5UIE5P
-VElDRTogVGhlIGNvbnRlbnRzIG9mIHRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUg
-Y29uZmlkZW50aWFsIGFuZCBtYXkgYWxzbyBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0
-aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRl
-bHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwg
-dXNlIGl0IGZvciBhbnkgcHVycG9zZSwgb3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24g
-aW4gYW55IG1lZGl1bS4gVGhhbmsgeW91Lg0K
+Adds a function to interpolate against two points,
+this is carried arount as a helper function by tons of drivers.
+
+Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ include/linux/fixp-arith.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/include/linux/fixp-arith.h b/include/linux/fixp-arith.h
+index d4686fe1cac7..b9e2bb59a734 100644
+--- a/include/linux/fixp-arith.h
++++ b/include/linux/fixp-arith.h
+@@ -153,4 +153,24 @@ static inline s32 fixp_sin32_rad(u32 radians, u32 twopi)
+ #define fixp_cos32_rad(rad, twopi)	\
+ 	fixp_sin32_rad(rad + twopi / 4, twopi)
+ 
++
++/**
++ * fixp_linear_interpolate() - interpolates a value from two known points
++ *
++ * @x0: x value of point 0
++ * @y0: y value of point 0
++ * @x1: x value of point 1
++ * @y1: y value of point 1
++ * @x: the linear interpolant
++ */
++static inline int fixp_linear_interpolate(int x0, int y0, int x1, int y1, int x)
++{
++	if (y0 == y1 || x == x0)
++		return y0;
++	if (x1 == x0 || x == x1)
++		return y1;
++
++	return y0 + ((y1 - y0) * (x - x0) / (x1 - x0));
++}
++
+ #endif
+-- 
+2.17.0
