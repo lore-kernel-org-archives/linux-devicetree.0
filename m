@@ -1,45 +1,34 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 2/3] fbdev: mxsfb: Return ENODEV on missing display node
-Date: Fri, 15 Jun 2018 22:43:43 +0300
-Message-ID: <31ca6156a1b36c8ca2811d60e28c6128e988d5d4.1529091248.git.leonard.crestez@nxp.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Fri, 15 Jun 2018 16:47:48 -0300
+Message-ID: <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
 References: <cover.1529091248.git.leonard.crestez@nxp.com>
+ <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1529091248.git.leonard.crestez@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Marco Franchi <marcofrk@gmail.com>, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Leonard Crestez <leonard.crestez@nxp.com>, Stefan Agner <stefan@agner.ch>
+Cc: Marek Vasut <marex@denx.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Marco Franchi <marcofrk@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-When this driver encounters drm-style bindings it returns -ENOENT and
-this reports a probe error. Make it return -ENODEV to signal an explicit
-rejection instead.
-
-This allows peaceful coexistence between the DRM_MXSFB and FB_MXS config
-options.
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- drivers/video/fbdev/mxsfb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/video/fbdev/mxsfb.c b/drivers/video/fbdev/mxsfb.c
-index 12c8bd1d24d5..9ec8882d7b3d 100644
---- a/drivers/video/fbdev/mxsfb.c
-+++ b/drivers/video/fbdev/mxsfb.c
-@@ -736,11 +736,11 @@ static int mxsfb_init_fbinfo_dt(struct fb_info *fb_info,
- 	int ret;
- 
- 	display_np = of_parse_phandle(np, "display", 0);
- 	if (!display_np) {
- 		dev_err(dev, "failed to find display phandle\n");
--		return -ENOENT;
-+		return -ENODEV;
- 	}
- 
- 	ret = of_property_read_u32(display_np, "bus-width", &width);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to get property bus-width\n");
--- 
-2.17.1
+SGkgTGVvbmFyZCwKCk9uIEZyaSwgSnVuIDE1LCAyMDE4IGF0IDQ6NDMgUE0sIExlb25hcmQgQ3Jl
+c3Rlego8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+IHdyb3RlOgo+IFRoZSBGQkRFViBkcml2ZXIg
+dXNlcyB0aGUgc2FtZSBuYW1lIGFuZCBib3RoIGNhbid0IGJlIHJlZ2lzdGVyZWQgYXQgdGhlCj4g
+c2FtZSB0aW1lLiBGaXggdGhpcyBieSByZW5hbWluZyB0aGUgZHJtIGRyaXZlciB0byBteHNmYi1k
+cm0KPgo+IFNpZ25lZC1vZmYtYnk6IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54
+cC5jb20+CgpTdGVmYW4gc2VudCB0aGUgc2FtZSBwYXRjaCBhIGZldyBkYXlzIGFnbzoKaHR0cHM6
+Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzE3OTQ4OS5odG1sCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
