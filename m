@@ -1,61 +1,151 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller
- / system control
-Date: Fri, 15 Jun 2018 11:14:13 +0200
-Message-ID: <20180615091413.pbdtrpa7txe6i4ee@flea>
-References: <20180614153548.9644-1-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 6/7] soc: qcom: Add RPMh Power domain driver
+Date: Fri, 15 Jun 2018 11:25:22 +0200
+Message-ID: <CAPDyKFrz=+nnLS+YnrSKzo_UXVgKLoTvH5XQL1o_EV5u3zvw9g@mail.gmail.com>
+References: <20180612044052.4402-1-rnayak@codeaurora.org> <20180612044052.4402-7-rnayak@codeaurora.org>
+ <d438946d-3d6f-4436-27c7-3eae4559ec53@codeaurora.org> <f6b166ee-538f-c8b7-3be5-57c20a599d47@codeaurora.org>
+ <bd8999bd-a3ae-b7e2-a805-b31d38571ec6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="daslumcfzfyunu4u"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4EGR3MQKGQEEQNTI2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180614153548.9644-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bd8999bd-a3ae-b7e2-a805-b31d38571ec6@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+David, Rajendra,
 
---daslumcfzfyunu4u
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On 14 June 2018 at 20:17, David Collins <collinsd@codeaurora.org> wrote:
+> Hello Rajendra,
+>
+> On 06/13/2018 11:54 PM, Rajendra Nayak wrote:
+>> On 06/14/2018 06:02 AM, David Collins wrote:
+>>> On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
+> ...
+>>>> +static int rpmhpd_power_off(struct generic_pm_domain *domain)
+>>>> +{
+>>>> +   struct rpmhpd *pd = domain_to_rpmhpd(domain);
+>>>> +   int ret = 0;
+>>>> +
+>>>> +   mutex_lock(&rpmhpd_lock);
+>>>> +
+>>>> +   if (pd->level[0] == 0)
+>>>> +           ret = rpmhpd_aggregate_corner(pd, 0);
+>>>
+>>> I'm not sure that we want to have the 'pd->level[0] == 0' check,
+>>> especially when considering aggregation with the peer pd.  I understand
+>>> its intention to try to keep enable state and level setting orthogonal.
+>>> However, as it stands now, the final request sent to hardware would differ
+>>> depending upon the order of calls.  Consider the following example.
+>>>
+>>> Initial state:
+>>> pd->level[0] == 0
+>>> pd->corner = 5, pd->enabled = true, pd->active_only = false
+>>> pd->peer->corner = 7, pd->peer->enabled = true, pd->peer->active_only = true
+>>>
+>>> Outstanding requests:
+>>> RPMH_ACTIVE_ONLY_STATE = 7, RPMH_WAKE_ONLY_STATE = 7, RPMH_SLEEP_STATE = 5
+>>>
+>>> Case A:
+>>>      1. set pd->corner = 6
+>>>              --> new value request: RPMH_SLEEP_STATE = 6
+>>>              --> duplicate value requests: RPMH_ACTIVE_ONLY_STATE = 7,
+>>>                      RPMH_WAKE_ONLY_STATE = 7
+>>>      2. power_off pd->peer
+>>>              --> no requests
+>>
+>> I am not sure why there would be no requests, since we do end up aggregating
+>> with pd->peer->corner = 0.
+>> So the final state would be
+>>
+>> RPMH_ACTIVE_ONLY_STATE = max(6, 0) = 6
+>> RPMH_WAKE_ONLY_STATE = 6
+>> RPMH_SLEEP_STATE = max(6, 0) = 6
+>
+> Argh, my example was ruined by a one character typo.  I meant to have:
+>
+>         Initial state:
+>         pd->level[0] != 0
+>
+>
+>>>
+>>>      Final state:
+>>>      RPMH_ACTIVE_ONLY_STATE = 7
+>>>      RPMH_WAKE_ONLY_STATE = 7
+>>>      RPMH_SLEEP_STATE = 6
+>>>
+>>> Case B:
+>>>      1. power_off pd->peer
+>>>              --> no requests
+>>
+>> Here it would be again be aggregation based on pd->peer->corner = 0
+>> so,
+>> RPMH_ACTIVE_ONLY_STATE = max(5, 0) = 5
+>> RPMH_WAKE_ONLY_STATE = 5
+>> RPMH_SLEEP_STATE = max(5, 0) = 5
+>>
+>>>      2. set pd->corner = 6
+>>>              --> new value requests: RPMH_ACTIVE_ONLY_STATE = 6,
+>>>                     RPMH_WAKE_ONLY_STATE = 6, RPMH_SLEEP_STATE = 6
+>>>
+>>>      Final state:
+>>>      RPMH_ACTIVE_ONLY_STATE = 6
+>>>      RPMH_WAKE_ONLY_STATE = 6
+>>>      RPMH_SLEEP_STATE = 6
+>>
+>> correct,
+>> RPMH_ACTIVE_ONLY_STATE = max(6, 0) = 6
+>> RPMH_WAKE_ONLY_STATE = 6
+>> RPMH_SLEEP_STATE = max(6, 0) = 6
+>>
+>>>
+>>> Without the check, Linux would vote for the lowest supported level when
+>>> power_off is called.  This seems semantically reasonable given that the
+>>> consumer is ok with the power domain going fully off and that would be the
+>>> closest that we can get.
+>>
+>> So are you suggesting I replace
+>>
+>>>> +   if (pd->level[0] == 0)
+>>>> +           ret = rpmhpd_aggregate_corner(pd, 0);
+>>
+>> with
+>>
+>>>> +   ret = rpmhpd_aggregate_corner(pd, pd->level[0]);
+>
+> Yes, this is the modification that I'm requesting.
+>
+>
+>> I can see what you said above makes sense but if its
+>>> Initial state:
+>>> pd->level[0] != 0
+>>
+>> Was that what you meant?
+>
+> Yes.
 
-On Thu, Jun 14, 2018 at 11:35:44PM +0800, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> This series is the remaining A64 syscon changes from the R40 DWMAC
-> series. The series aligns how the A64 system control exports a regmap
-> for the sun8i DWMAC driver to access with what we've done for the R40.
-> 
-> Originally the A64 used the generic syscon for this bit of hardware.
-> But this block also contains mapping bits for the onboard SRAM, used
-> by various peripherals, and other vendor specific bits we may use in
-> the future. It is by no means generic. And we already have a device
-> tree binding and driver for the SRAM part.
-> 
-> The first patch make the SRAM control device export a regmap, exposing
-> a single EMAC control register, for the DWMAC driver to consume.
-> 
-> The second and third patches rename the A64 compatible string to read
-> "system control", which is what the block is named in the user manual.
-> 
-> The last patch fixes up the device node, and also adds the lone mappable
-> SRAM block, which is needed by the Display Engine.
+Apologize for jumping into the discussion.
 
-For the serie:
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+I have a couple of ideas, that may simplify/improve things related to the above.
 
-Maxime
+1) Would it be easier if genpd calls ->set_performance_state(0) before
+it is about to call the ->power_off() callback? Actually Viresh wanted
+that from the start, but I thought it was useless.
 
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---daslumcfzfyunu4u--
+2) When device are becoming runtime suspended, the ->runtime_suspend()
+callback of genpd is invoked (genpd_runtime_suspend()). However, in
+there we don't care to re-evaluate the votes on the performance level,
+but instead rely on the corresponding driver for the device to drop
+the vote. I think it would be a good idea of managing this internally
+in genpd instead, thus, depending on if the aggregated vote can be
+decreased we should call  ->set_performance_state(new-vote). Of
+course, once the device get runtime resumed, the votes needs to be
+restored for the device.
+
+What do you think?
+
+[...]
+
+Kind regards
+Uffe
