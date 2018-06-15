@@ -1,47 +1,49 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH v3] PCI: mediatek: Add system pm support for MT2712
-Date: Fri, 15 Jun 2018 10:47:55 +0800
-Message-ID: <1529030875.28160.10.camel@mhfsdcap03>
-References: <1527822270-30280-1-git-send-email-honghui.zhang@mediatek.com>
-         <CAHp75VeBTmC=3nJ-t+OO9bp0mzJuTYsGBwi8fokT16bu2nE9RA@mail.gmail.com>
-         <1527850145.28160.6.camel@mhfsdcap03>
-         <CAHp75VcEp2kFO4hncvMS4Dh1AzvoFbrps7+FLmdk0RLyNTHz7g@mail.gmail.com>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v10 0/5] Add suppport for sn65dsi86 bridge chip
+ and Innolux 2k edp panel
+Date: Fri, 15 Jun 2018 08:19:49 +0530
+Message-ID: <1529030994-10090-1-git-send-email-spanda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcEp2kFO4hncvMS4Dh1AzvoFbrps7+FLmdk0RLyNTHz7g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Arnd Bergmann <arnd.bergmann@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, yingjoe.chen@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-06-01 at 13:52 +0300, Andy Shevchenko wrote:
-> On Fri, Jun 1, 2018 at 1:49 PM, Honghui Zhang
-> <honghui.zhang@mediatek.com> wrote:
-> > On Fri, 2018-06-01 at 13:17 +0300, Andy Shevchenko wrote:
-> >> On Fri, Jun 1, 2018 at 6:04 AM,  <honghui.zhang@mediatek.com> wrote:
-> >> > From: Honghui Zhang <honghui.zhang@mediatek.com>
-> >>
-> >> > +#ifdef CONFIG_PM_SLEEP
-> >> > +static int mtk_pcie_suspend_noirq(struct device *dev)
-> >>
-> >> __maybe_unused
-> >>
-> >
-> > Hi, Andy, thanks for your review.
-> > Bjorn had point this out that at:
-> > https://www.spinics.net/lists/arm-kernel/msg656774.html
-> 
-> Nice, one more maintainer with strong opinion here.
-> 
-> Arnd, that's what I mentioned as a split in opinions earlier.
-> Any new developer or even existing contributor would be now really
-> confusing since maintainers asked for two different approaches on the
-> same matter.
-> 
-
-Hi, Arnd, Do you have any comments about this patch? Sorry I missed the
-previous discussion about which should be used for this approach.
-
-thanks.
+Q2hhbmdlcyBpbiBjdXJyZW50IHBhdGNoc2V0OgogLSBVc2UgcHJlc2VuY2Ugb2YgcmVmY2xrIHRv
+IGRldGVybWluZSBpZiBjb250aW51b3VzIGRzaSBjbG9jayBpcyByZXF1aXJlZCBvciBub3QuCiAt
+IFVwZGF0ZSBtZWRpYS92aWRlby1pbnRlcmZhY2UudHh0IGRvY3VtZW50YXRpbyBmb3IgRFNJIGFu
+ZCBEUCBpbnRlcmZhY2UuCgpTYW5kZWVwIFBhbmRhICg1KToKICBkcm0vYnJpZGdlOiBhZGQgc3Vw
+cG9ydCBmb3Igc242NWRzaTg2IGJyaWRnZSBkcml2ZXIKICBkdC1iaW5kaW5nczogZHJtL2JyaWRn
+ZTogRG9jdW1lbnQgc242NWRzaTg2IGJyaWRnZSBiaW5kaW5ncwogIGR0LWJpbmRpbmdzOiBtZWRp
+YTogZXh0ZW5kIGludGVyZmFjZSBkb2N1bWVudGF0aW9uIGZvciBEU0kgYW5kIERQCiAgZHJtL3Bh
+bmVsOiBhZGQgSW5ub2x1eCBUVjEyM1dBTSBwYW5lbCBkcml2ZXIgc3VwcG9ydAogIGR0LWJpbmRp
+bmdzOiBkcm0vcGFuZWw6IERvY3VtZW50IElubm9sdXggVFYxMjNXQU0gcGFuZWwgYmluZGluZ3MK
+CiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCAgICAgICB8ICA4
+NyArKysKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgsdHYxMjN3YW0udHh0ICAg
+IHwgIDIwICsKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMu
+dHh0IHwgIDEwICstCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAg
+ICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAg
+ICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5j
+ICAgICAgICAgICAgICB8IDY5MyArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgIDI3ICsKIDcgZmlsZXMgY2hh
+bmdlZCwgODQzIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHNu
+NjVkc2k4Ni50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dAogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktc242NWRzaTg2LmMKCi0tIApUaGUgUXVh
+bGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVy
+b3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
+bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
