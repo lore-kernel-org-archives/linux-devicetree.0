@@ -1,60 +1,69 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v11 5/5] dt-bindings: drm/panel: Document
- Innolux TV123WAM panel bindings
-Date: Fri, 15 Jun 2018 12:13:43 +0530
-Message-ID: <1529045023-32165-6-git-send-email-spanda@codeaurora.org>
-References: <1529045023-32165-1-git-send-email-spanda@codeaurora.org>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
+Date: Fri, 15 Jun 2018 16:52:02 +1000
+Message-ID: <c564d222f0b566dc12b3e64baf93bc48702ad8da.camel@kernel.crashing.org>
+References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
+         <CAMuHMdVixknUDYZUHafCqNY02z=T-WC2s+Qh6GkpejmoJU0fuQ@mail.gmail.com>
+         <3312487e2b61b8c2f265d210d14bbed8681a9ecc.camel@kernel.crashing.org>
+         <CAMuHMdWPQPZxvG6JhGGqsqYpzp74PgABDjMKVCBetKSAnLqhkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1529045023-32165-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWPQPZxvG6JhGGqsqYpzp74PgABDjMKVCBetKSAnLqhkw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SW5ub2x1eCBUVjEyM1dBTSBpcyBhIDEyLjMiIGVEUCBkaXNwbGF5IHBhbmVsIHdpdGgKMjE2MHgx
-NDQwIHJlc29sdXRpb24sIHdoaWNoIGNhbiBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCnBhbmVsIGRy
-aXZlci4KCkNoYW5nZXMgaW4gdjE6CiAtIE1ha2UgdXNlIG9mIHNpbXBsZSBwYW5lbCBkcml2ZXIg
-aW5zdGVhZCBvZiBjcmVhdGluZwogICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNlYW4g
-UGF1bCkuCiAtIENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUg
-cGF0Y2gKICAgYXMgZG9uZSBieSBvdGhlciBleGlzdGluZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMu
-CgpDaGFuZ2VzIGluIHYyOgogLSBTZXBhcmF0ZSBkcml2ZXIgY2hhbmdlIGZyb20gZHQtYmluZGlu
-ZyBkb2N1bWVudGF0aW9uIChSb2IgSGVycmluZykuCiAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9t
-IHNpbXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KICAgdGhpcyBwYW5l
-bCAoUm9iIEhlcnJpbmcpLgoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
-ZGVhdXJvcmEub3JnPgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4K
-LS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCAgICAg
-IHwgMjAgKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2Ft
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lu
-bm9sdXgsdHYxMjN3YW0udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmE5
-YjM1MjYKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dApAQCAtMCwwICsxLDIwIEBACitJ
-bm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5jaCBlRFAgMksgZGlzcGxheSBwYW5lbAorCitUaGlzIGJp
-bmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2gg
-aXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgorCitS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImlubm9sdXgsdHYx
-MjN3YW0iCistIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2
-b2x0YWdlCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGVuYWJsZS1ncGlvczogR1BJTyBwaW4g
-dG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCistIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0
-aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworRXhhbXBsZToKKwlw
-YW5lbF9lZHA6IHBhbmVsLWVkcCB7CisJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCx0djEyM3dhbSI7
-CisJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElPX0FDVElWRV9MT1c+OworCQlwb3dl
-ci1zdXBwbHkgPSA8JnBtODkxNl9sMj47CisJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwl9
-OwotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9m
-IHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUg
-UHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-RnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Fri, 2018-06-15 at 08:16 +0200, Geert Uytterhoeven wrote:
+> Hi Ben,
+> 
+> On Fri, Jun 15, 2018 at 1:51 AM Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+> > On Thu, 2018-06-14 at 10:27 +0200, Geert Uytterhoeven wrote:
+> > > > --- a/include/linux/of_address.h
+> > > > +++ b/include/linux/of_address.h
+> > > > @@ -40,6 +40,11 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
+> > > >   void __iomem *of_io_request_and_map(struct device_node *device,
+> > > >                                      int index, const char *name);
+> > > > 
+> > > > +/* Request and map, wrapper on devm_ioremap_resource */
+> > > > +extern void __iomem *devm_of_iomap(struct device *dev,
+> > > > +                                  struct device_node *node, int index,
+> > > > +                                  resource_size_t *size);
+> > > > +
+> > > >   /* Extract an address from a device, returns the region size and
+> > > >    * the address space flags too. The PCI version uses a BAR number
+> > > >    * instead of an absolute index
+> > > 
+> > > Do you need a dummy for !CONFIG_OF_ADDRESS, to aid compile-testing?
+> > 
+> > I didn't think so, as of_address_to_resource() already has a dummy, so
+> > it should build fine.
+> 
+> That dummy doesn't matter, as drivers/of/address won't be built if
+> !CONFIG_OF_ADDRESS anyway.
+
+Right but:
+
+ - I moved it to lib/devres.c in my respun patch (because otherwise
+sparc won't get it)
+
+ - The dummy is in include/linux/of_address.h, so devm_of_ioremap will
+compile fine either way.
+
+> I mean for compile-testing users of devm_of_iomap().
+> 
+> And according to kbuild test robot <lkp@intel.com>:
+> 
+> > > (.text+0x1882): undefined reference to `devm_ioremap_resource'
+> 
+> devm_ioremap_resource() has no dummy for !HAS_IOMEM and
+> OF_ADDRESS depends on !SPARC && (HAS_IOMEM || UML),
+> bypassing the HAS_IOMEM check on UML.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
