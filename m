@@ -1,303 +1,116 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v1 2/5] dt-bindings: clock: renesas,r9a06g032-pinctrl:
- documentation
-Date: Fri, 15 Jun 2018 10:40:52 +0200
-Message-ID: <20180615084052.GB12638@w540>
-References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com>
- <1528974029-29617-3-git-send-email-michel.pollet@bp.renesas.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 04/27] dt-bindings: display:
+ sunxi-drm: Add TCON TOP description
+Date: Fri, 15 Jun 2018 10:45:42 +0200
+Message-ID: <20180615084542.slp3ma4krrj744do@flea>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net>
+ <20180612200036.21483-5-jernej.skrabec@siol.net>
+ <20180613073456.jk72zw4rt4ysjco7@flea>
+ <2481282.yoIGH2ksVh@jernej-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528974029-29617-3-git-send-email-michel.pollet@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michel Pollet <michel.pollet@bp.renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, phil.edworthy@renesas.com, Michel Pollet <buserror+upstream@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============2062593239=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2481282.yoIGH2ksVh@jernej-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, wens@csie.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---ftEhullJWpWg/VHq
-Content-Type: text/plain; charset=utf-8
+--===============2062593239==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uehqhgocot3w3pij"
 Content-Disposition: inline
 
-Hi again Michel,
 
-On Thu, Jun 14, 2018 at 12:00:18PM +0100, Michel Pollet wrote:
-> The Renesas R9A06G032 PINCTRL node description.
->
-> Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
-> ---
->  .../bindings/pinctrl/renesas,r9a06g032-pinctrl.txt | 124 +++++++++++++++++++++
->  1 file changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-pinctrl.txt
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-pinctrl.txt
-> new file mode 100644
-> index 0000000..f63696f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a06g032-pinctrl.txt
-> @@ -0,0 +1,124 @@
-> +Renesas RZ/A1 combined Pin and GPIO controller
-> +
-> +The Renesas SoCs of the RZ/A1 family feature a combined Pin and GPIO controller,
-> +named "Ports" in the hardware reference manual.
-> +Pin multiplexing and GPIO configuration is performed on a per-pin basis
-> +writing configuration values to per-port register sets.
-> +Each "port" features up to 16 pins, each of them configurable for GPIO
-> +function (port mode) or in alternate function mode.
-> +Up to 8 different alternate function modes exist for each single pin.
+--uehqhgocot3w3pij
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Apart from the above part that should be re-worked, and the
-s/clock/pinctrl in the patch subject, I have some more comments on the
-proposed bindings.
+On Wed, Jun 13, 2018 at 06:03:21PM +0200, Jernej =C5=A0krabec wrote:
+> > > +Required properties:
+> > > +  - compatible: value must be one of:
+> > > +    * allwinner,sun8i-r40-tcon-top
+> > > +  - reg: base address and size of the memory-mapped region.
+> > > +  - clocks: phandle to the clocks feeding the TCON TOP
+> > > +    * bus: TCON TOP interface clock
+> > > +  - clock-names: clock name mentioned above
+> > > +  - resets: phandle to the reset line driving the DRC
+> >=20
+> > s/DRC/TCON TOP/ ?
+>=20
+> Yes, copy & paste issue
+>=20
+> >=20
+> > > +    * rst: TCON TOP reset line
+> >=20
+> > Remaining consistent with the clock name would be great
+>=20
+> You mean "ahb"? I noticed that most other nodes with reset lines don't ha=
+ve a=20
+> name associated. Maybe I could just drop it and use first specified reset?
 
-> +
-> +Pin controller node
-> +-------------------
-> +
-> +Required properties:
-> +  - compatible: should be:
-> +    - "renesas,r9a05g032-pinctrl"
-> +  - reg
-> +    address base and length of the memory area where the pin controller
-> +    hardware is mapped to.
-> +
-> +Example:
-> +	pinctrl: pinctrl@40067000 {
-> +		compatible = "renesas,r9a06g032-pinctrl";
-> +		reg = <0x40067000 0x1000>, <0x51000000 0x800>;
-> +		clocks = <&sysctrl R9A06G032_HCLK_PINCONFIG>;
-> +		clock-names = "bus";
-> +		status = "okay";
-> +	};
-> +
-> +
-> +Sub-nodes
-> +---------
-> +  The child nodes of the pin controller node describe a pin multiplexing
-> +  group that can be used by driver nodes.
-> +
+It's called bus in the binding, but yes. And yeah, we can drop the
+name as well.
 
-s/driver nodes/device nodes/ ?
+> >=20
+> > > +  - reset-names: reset name mentioned above
+> > > +  - #clock-cells : must contain 1
+> >=20
+> > An example would be nice here
+>=20
+> You mean node example? with ports? In the past, Rob was against examples=
+=20
+> unless really necessary. Node from R40 DTSI can serve as an example.
 
-> +  A pin multiplexing sub-node describes how to configure a set of
-> +  (or a single) pin in some desired alternate function mode.
-> +  A single sub-node may define several pin configurations.
-> +
+Ok.
 
-That's fine, even if it's a repetition of what is described in the
-generic pinctrl bindings (pinctrl-bindings.txt)
+Maxime
 
-> +  The allowed generic formats for a pin multiplexing sub-node are the
-> +  following ones:
-> +
-> +  Client sub-nodes shall refer to pin multiplexing sub-nodes using the phandle
-> +  of the most external one.
-> +
-> +  Eg.
-> +
-> +  client-1 {
-> +      ...
-> +      pinctrl-0 = <&node-1>;
-> +      ...
-> +  };
-> +
-> +  client-2 {
-> +      ...
-> +      pinctrl-0 = <&node-2>;
-> +      ...
-> +  };
-> +
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-That's not necessary imho. Just refer to the generic pinctrl bindings
-documentation. Or are there differences I am missing here?
-
-> +  Required properties:
-> +    - renesas,rzn1-pinctrl:
-> +      Array of integers representing each 'pin' and it's configuration.
-> +
-
-Why a custom property? When upstreaming the rz/a1 infamous pinctrl
-driver, we extended the generic bindings with the 'pinxmux' property
-that allows to specify an array of (pin id + mux) 'pinmux groups', as reported
-in the generic bindings documentation:
-
-----------------------------------------------------------------------------
-For hardware where pin multiplexing configurations have to be specified for
-each single pin the number of required sub-nodes containing "pin" and
-"function" properties can quickly escalate and become hard to write and
-maintain.
-
-For cases like this, the pin controller driver may use the pinmux helper
-property, where the pin identifier is provided with mux configuration settings
-in a pinmux group. A pinmux group consists of the pin identifier and mux
-settings represented as a single integer or an array of integers.
-
-The pinmux property accepts an array of pinmux groups, each of them describing
-a single pin multiplexing configuration.
-
-pincontroller {
-	state_0_node_a {
-		pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
-	};
-};
-
-Each individual pin controller driver bindings documentation shall specify
-how pin IDs and pin multiplexing configuration are defined and assembled
-together in a pinmux group.
------------------------------------------------------------------------------
-
-Do you think too it applies to your use case?
-
-> +      A 'pin number' does not correspond 1:1 to the hardware manual notion of
-> +      PL_GPIO directly. Numbers 0...169 are PL_GPIOs, however there is also two
-> +      extra 170 and 171 that corresponds to the MDIO0 and MDIO1 bus config.
-> +
-> +      A 'function' also does not correspond 1:1 to the hardware manual. There
-> +      are 2 levels of pin muxing, Level 1, level 2 -- to this are added the
-> +      MDIO configurations.
-> +
-> +      Helper macros to ease assembling the pin index and function identifier
-> +      are provided by the pin controller header file at:
-> +      <include/dt-bindings/pinctrl/r9a06g032-pinctrl.h>
-
-This part is good and represent what the generic bindings refers to
-with:
-
-Each individual pin controller driver bindings documentation shall specify
-how pin IDs and pin multiplexing configuration are defined and assembled
-together in a pinmux group.
-
-> +
-> +Example #1:
-> +  A simple case configuring only the function for a given 'pin' works as follow:
-> +	#include <include/dt-bindings/pinctrl/r9a06g032-pinctrl.h>
-> +	&pinctrl {
-> +		pinsuart0: pinsuart0 {
-> +			renesas,rzn1-pinmux-ids = <
-> +				RZN1_MUX(103, UART0_I)	/* UART0_TXD */
-> +				RZN1_MUX(104, UART0_I)	/* UART0_RXD */
-> +			>;
-> +		};
-> +	};
-
-That would be like
-
-	&pinctrl {
-		pinsuart0: pinsuart0 {
-			pinmux = < RZN1_MUX(103, UART0_I),	/* UART0_TXD */
-				   RZN1_MUX(104, UART0_I)	/* UART0_RXD */
-			>;
-		};
-	};
-
-> +
-> +	&uart0 {
-> +		status = "okay";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinsuart0>;
-> +	};
-
-just report the pinmux node, no need for the client in the example.
-It's standard stuff.
-
-> +  Note that in this case the other functions of the pins are not changed.
-
-What 'other functions'? The pin configuration as in pull up/down etc?
-
-> +
-> +Example #2:
-> +  Here we also set the pullups on the RXD pin:
-> +	&pinctrl {
-> +		pinsuart0: pinsuart0 {
-> +			renesas,rzn1-pinmux-ids = <
-> +				RZN1_MUX(103, UART0_I)	/* UART0_TXD */
-> +				RZN1_MUX_PUP(104, UART0_I)	/* UART0_RXD */
-> +			>;
-> +		};
-> +	};
-
-I recall we used to upstream pin configuration along with pixmuxing,
-as you're doing here and it didn't end well. I suggest to use the standard
-properties where possible, in this case 'bias-pull-up'.
-
-I think it should look like this:
-
-	&pinctrl {
-		pinsuart0: pinsuart0 {
-                        pinsuart_rx {
-                                /* UART0_TXD */
-                                pinmux = <RZN1_MUX(103, UART0_I)>;
-                        };
-                        pinsuart_tx {
-                                /* UART0_TXD with pull-up */
-                                pinmux = <RZN1_MUX(104, UART0_I)>;
-                                bias-pull-up;
-
-                        };
-		};
-	};
-
-        &uart0 {
-                pinctrl-0 = <&pinsuart0>;
-                ...
-        };
-
-Then in your driver you should parse pin configuration properties as
-collected by the pinctrl core and apply them where appropriate.
-
-> +  There are many alternative macros to set the pullup/down/none and the drive
-> +  strenght in the r9a06g032-pinctrl.h header file.
-> +
-> +Example #3:
-> +  The Soc has two configurable MDIO muxes, these can also be configured
-> +  with this interface using the 'special' MDIO constants:
-> +
-> +	&pinctrl {
-> +		mdio_mux: mdiomux {
-> +			renesas,rzn1-pinmux-ids = <
-> +				RZN1_MUX(RZN1_MDIO_BUS0, RZN1_FUNC_MDIO_MUX_MAC0)
-> +				RZN1_MUX(RZN1_MDIO_BUS1, RZN1_FUNC_MDIO_MUX_SWITCH)
-> +			>;
-> +		};
-> +	};
-> +  Clearly the pull/up/none and drive constants will be ignored, even if
-> +  specified.
-> +
-> +Note that Renesas provides an extensive webapp that can generates a device tree
-> +file for your board. See their website for this part number for details.
-
-Imho this shouldn't be mentioned here, and autogeneration of device
-tree files with a custom proprietary tool shouldn't be encouraged at
-all, at least not from the device bindings.
-
-Thanks
-   j
-
-> --
-> 2.7.4
->
-
---ftEhullJWpWg/VHq
+--uehqhgocot3w3pij
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBAgAGBQJbI3uUAAoJEHI0Bo8WoVY8UbEQALmCefHjqk967t1IhSxoiHpZ
-uJfiwyURnpSYWTsoy81FacDIvxSwLzhMgmo6N/dK8FPJNwUitvDa6g6AXZ2HZm76
-/vp+2NArvbAjvciKpHWgnGSLqpGr8wZbKN8LGGuYLb5woFEPgzCDDw9xlWx3ZhcZ
-m6F+FrgOMz16B9b20MXSyXiPFEhS1HDtO2VKmFVMlCY7zbGLRvYmbYRacOsWKJDP
-UqS7/ivNMvlTC7JTXw9YO7meM9yMErbYxSsPPGUMGzLtyHYP1eQjJ+78UmaOgjtP
-u+IarIN1dlNAUbCnOlvKb3mObXK6NW1TRnebrr7Z+QbvGeseiMXt2yjEHQ5bP8Sa
-S3vgTw5BYgT6bm4I5n6n86Y6jr7hpEvNa4c8k4NxlxCVt0Gte6Tz9kJM8RpbyQLd
-VqzMv5+Ovfbr58VJiA3zZ2wFrNKwLvbeKdUWHpydnXdltymx6BjlEx97nUALnTbX
-K6Lm8qW/c354WSys15bZ6V+AYO36MlXIKizqGdSbLtQE7LF/+8mpjc3CPB1v7b3m
-eyaNlcz2vNWEP0nFAY5Jb3k04Qp52wt93MHc1pyG3lmKuZMh7NAsO/GcCnHOyyEZ
-PlBz2xFfEhzpnfBLuUQjOGNBH+/f65mUB+I3FCM5mmbB2Xu4L0Uyd4uHKslq3C/m
-O2VeBNo76KzmsqWt+vvb
-=fy28
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlsjfLUACgkQ0rTAlCFN
+r3Q+JQ/8C12cz1mDx1+BF4O9IZ2xfHWa/0ZHDDOVTxwRujGMDvmwMT7fUaJJTtl6
+dBLUQAyGq/reCzTyHu2LgpduQ4BcGADTybfdOXAa9uED0I0/dfm6YjK4XlOFt8vs
+q2KgSWCs0xddgw7/L/KzoN71E9IMv93sEd/f9HAxv6bfysrROJbtB5itaEvT+NcL
+VbFd2lb5E6W3FJOxaVsjQFI1wT7fBP1pL3E796oY2ZSJWoiHTXiQ2tbRkfTM1PQz
+KPv0XT2RD8A6/x+lUDo6RaQQJpZeFIwcZQJ1V4cJRXJLh20s0XtRga53Bcph2V8O
+uRHQ/uPK4nG7ReT17ld6ofFF7PUDqh6ilJEf/RFd2mjVb/ob36iS2JCd2BORuhu+
+C6ZX9SO73CSqVPJQmgfMiI9yUZ8WHg4LCletyN97SQijhMPiSE/AD73Xj9XVRaBD
+2xVtUW3S7O1CDRambj7HxpfDWzxuShs0leTev46fBuzrHZTmJ4kLd50zSJIr0+cD
+MD9ccJdOiK8cF8tDUYJlY81fI9j3ZtoEvbMZv3/yndSfHvm1ops97GGo2oCTGkMO
+W6hA78jPMrWd/tDIJHEuWQu5AlTw6ZuZ0elcfHeXIThSS8SeeR52xfvb2s0/w+Wf
+NXZdaeqei7Wg3hucgDsPcWt4BXSbkgHAlF7Xx4nOvr/9RHjmyF0=
+=74NE
 -----END PGP SIGNATURE-----
 
---ftEhullJWpWg/VHq--
+--uehqhgocot3w3pij--
+
+--===============2062593239==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2062593239==--
