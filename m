@@ -1,84 +1,122 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 20/27] drm/sun4i: Don't change clock bits
- in DW HDMI PHY driver
-Date: Fri, 15 Jun 2018 18:44:33 +0200
-Message-ID: <8789732.RJMkczUIGD@jernej-laptop>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net> <20180612200036.21483-21-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Oleksandr Shamray <oleksandrs@mellanox.com>
+Subject: [patch v26 3/4] Documentation: jtag: Add bindings for Aspeed SoC 24xx
+ and 25xx families JTAG master driver
+Date: Fri, 15 Jun 2018 19:45:22 +0300
+Message-ID: <1529081123-30873-4-git-send-email-oleksandrs@mellanox.com>
+References: <1529081123-30873-1-git-send-email-oleksandrs@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDP4JJM5QYGRBNG2R7MQKGQEES3BCSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180612200036.21483-21-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1529081123-30873-1-git-send-email-oleksandrs@mellanox.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: system-sw-low-level@mellanox.com, devicetree@vger.kernel.org, jiri@resnulli.us, vadimp@mellanox.com, linux-api@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, openocd-devel-owner@lists.sourceforge.net, robh+dt@kernel.org, joel@jms.id.au, linux-serial@vger.kernel.org, Oleksandr Shamray <oleksandrs@mellanox.com>, tklauser@distanz.ch, mchehab@kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dne torek, 12. junij 2018 ob 22:00:29 CEST je Jernej Skrabec napisal(a):
-> DW HDMI PHY driver and PHY clock driver share same registers. Make sure
-> that DW HDMI PHY setup code doesn't change any clock related bits and
-> set them to 0 during initialization.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h  |  2 +-
->  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 12 +++++++++++-
->  2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 79154f0f674a..3ba71aff92fc
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> @@ -98,7 +98,7 @@
->  #define SUN8I_HDMI_PHY_PLL_CFG1_LDO2_EN		BIT(29)
->  #define SUN8I_HDMI_PHY_PLL_CFG1_LDO1_EN		BIT(28)
->  #define SUN8I_HDMI_PHY_PLL_CFG1_HV_IS_33	BIT(27)
-> -#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL	BIT(26)
-> +#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK	BIT(26)
->  #define SUN8I_HDMI_PHY_PLL_CFG1_PLLEN		BIT(25)
->  #define SUN8I_HDMI_PHY_PLL_CFG1_LDO_VSET(x)	((x) << 22)
->  #define SUN8I_HDMI_PHY_PLL_CFG1_UNKNOWN(x)	((x) << 20)
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-> b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c index 966688f04741..cd07ceb71601
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-> @@ -183,7 +183,13 @@ static int sun8i_hdmi_phy_config_h3(struct dw_hdmi
-> *hdmi, regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_ANA_CFG1_REG,
->  			   SUN8I_HDMI_PHY_ANA_CFG1_TXEN_MASK, 0);
-> 
-> -	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, pll_cfg1_init);
-> +	/*
-> +	 * NOTE: We have to be careful not to overwrite PHY parent
-> +	 * clock selection bit and clock divider.
-> +	 */
-> +	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG,
-> +			   (u32)~SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL_MSK,
-> +			   pll_cfg1_init);
->  	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_PLL_CFG2_REG,
->  			   (u32)~SUN8I_HDMI_PHY_PLL_CFG2_PREDIV_MSK,
->  			   pll_cfg2_init);
-> @@ -352,6 +358,10 @@ static void sun8i_hdmi_phy_init_h3(struct
-> sun8i_hdmi_phy *phy) SUN8I_HDMI_PHY_ANA_CFG3_SCLEN |
->  			   SUN8I_HDMI_PHY_ANA_CFG3_SDAEN);
-> 
-> +	/* reset PLL clock configuration */
-> +	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG1_REG, 0);
-> +	regmap_write(phy->regs, SUN8I_HDMI_PHY_PLL_CFG2_REG, 0);
-> +
+It has been tested on Mellanox system with BMC equipped with
+Aspeed 2520 SoC for programming CPLD devices.
 
-For some reason, this change breaks HDMI on H3. Clearing only PLL parent 
-selection bit works ok, though. I'll fix it in next revision.
+Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v21->v22
+v20->v21
+v19->v20
+v18->v19
 
-Best regards,
-Jernej
+v17->v18
+v16->v17
+v15->v16
+Comments pointed by Joel Stanley <joel.stan@gmail.com>
+- change clocks = <&clk_apb> to proper clocks = <&syscon ASPEED_CLK_APB>
+- add reset descriptions in bndings file
 
->  	/* set HW control of CEC pins */
->  	regmap_write(phy->regs, SUN8I_HDMI_PHY_CEC_REG, 0);
+v14->v15
+v13->v14
+v12->v13
+v11->v12
+v10->v11
+v9->v10
+v8->v9
+v7->v8
+Comments pointed by pointed by Joel Stanley <joel.stan@gmail.com>
+- Change compatible string to ast2400 and ast2000
+
+V6->v7
+Comments pointed by Tobias Klauser <tklauser@distanz.ch>
+ - Fix spell "Doccumentation" -> "Documentation"
+
+v5->v6
+Comments pointed by Tobias Klauser <tklauser@distanz.ch>
+- Small nit: s/documentation/Documentation/
+
+v4->v5
+
+V3->v4
+Comments pointed by Rob Herring <robh@kernel.org>
+- delete unnecessary "status" and "reg-shift" descriptions in
+  bndings file
+
+v2->v3
+Comments pointed by Rob Herring <robh@kernel.org>
+- split Aspeed jtag driver and binding to sepatrate patches
+- delete unnecessary "status" and "reg-shift" descriptions in
+  bndings file
+---
+ .../devicetree/bindings/jtag/aspeed-jtag.txt       |   22 ++++++++++++++++++++
+ MAINTAINERS                                        |    1 +
+ 2 files changed, 23 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/jtag/aspeed-jtag.txt
+
+diff --git a/Documentation/devicetree/bindings/jtag/aspeed-jtag.txt b/Documentation/devicetree/bindings/jtag/aspeed-jtag.txt
+new file mode 100644
+index 0000000..7c36eb6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/jtag/aspeed-jtag.txt
+@@ -0,0 +1,22 @@
++Aspeed JTAG driver for ast2400 and ast2500 SoC
++
++Required properties:
++- compatible:		Should be one of
++      - "aspeed,ast2400-jtag"
++      - "aspeed,ast2500-jtag"
++- reg			contains the offset and length of the JTAG memory
++			region
++- clocks		root clock of bus, should reference the APB
++			clock in the second cell
++- resets		phandle to reset controller with the reset number in
++			the second cell
++- interrupts		should contain JTAG controller interrupt
++
++Example:
++jtag: jtag@1e6e4000 {
++	compatible = "aspeed,ast2500-jtag";
++	reg = <0x1e6e4000 0x1c>;
++	clocks = <&syscon ASPEED_CLK_APB>;
++	resets = <&syscon ASPEED_RESET_JTAG_MASTER>;
++	interrupts = <43>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7b8b2c..a5e5f75 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7617,6 +7617,7 @@ S:	Maintained
+ F:	include/linux/jtag.h
+ F:	include/uapi/linux/jtag.h
+ F:	drivers/jtag/
++F:	Documentation/devicetree/bindings/jtag/
+ 
+ K10TEMP HARDWARE MONITORING DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+-- 
+1.7.1
