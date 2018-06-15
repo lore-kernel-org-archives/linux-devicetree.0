@@ -1,44 +1,92 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
-Date: Fri, 15 Jun 2018 18:05:50 -0300
-Message-ID: <CAOMZO5BnOpaCzK1Sq=CUPaO6Yh8bE6v=8dmN5pxTKpwqjM1Qfw@mail.gmail.com>
-References: <cover.1529091248.git.leonard.crestez@nxp.com>
- <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
- <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
- <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v3 01/12] PM / devfreq: Init user limits from OPP limits,
+ not viceversa
+Date: Fri, 15 Jun 2018 14:06:21 -0700
+Message-ID: <20180615210619.GA249892@rodete-desktop-imager.corp.google.com>
+References: <20180614194712.102134-1-mka@chromium.org>
+ <20180614194712.102134-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180614194712.102134-2-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMTUsIDIwMTggYXQgNTo1OCBQTSwgTGVvbmFyZCBDcmVzdGV6CjxsZW9uYXJk
-LmNyZXN0ZXpAbnhwLmNvbT4gd3JvdGU6Cgo+IEluIHRoYXQgdGhyZWFkIHRoZXJlIGlzIGEgcHJv
-cG9zYWwgZm9yIHJlbW92aW5nIHRoZSBvbGQgZmJkZXYvbXhzZmIKPiBkcml2ZXIgZW50aXJlbHku
-Cj4KPiBUaGF0IHdvdWxkIGJyZWFrIG9sZCBEVEJzLCBpc24ndCB0aGlzIGdlbmVyYWxseSBjb25z
-aWRlcmVkIGJhZD8gQWxzbywKPiBhcmUgd2Ugc3VyZSB0aGUgcmVtb3ZhbCBvZiBmYmRldi9teHNm
-YiB3b3VsZG4ndCBsb3NlIGFueSBmZWF0dXJlcz8KClllcywgSSBhbHNvIHRoaW5rIHdlIHNob3Vs
-ZCBub3QgYnJlYWsgb2xkIGR0YidzLgoKPiBXaGF0IG15IHNlcmllcyBkb2VzIGlzIG1ha2UgYm90
-aCBkcml2ZXJzIHdvcmsgd2l0aCB0aGUgc2FtZSBrZXJuZWwKPiBpbWFnZSBhbmQgdHVybnMgdGhl
-IGNob2ljZSBpbnRvIGEgYm9hcmQtbGV2ZWwgZHRiIGRlY2lzaW9uLiBTdXBwb3J0aW5nCj4gZXZl
-cnl0aGluZyBhdCBvbmNlIHNlZW1zIGRlc2lyYWJsZSB0byBtZSBhbmQgaXQgYWxsb3dzIGZvciBh
-IHZlcnkKPiBzbW9vdGggdXBncmFkZSBwYXRoLgo+Cj4gVGhlIG9sZCBkcml2ZXIgY291bGQgYmUg
-cmVtb3ZlZCBsYXRlciwgYWZ0ZXIgYWxsIHVzZXJzIGFyZSBjb252ZXJ0ZWQuCgpBZ3JlZWQuCgpN
-YXliZSB0aGUgbXhzIGZiZGV2IGRyaXZlciBuZWVkcyB0byB3YXJuIHVzZXJzIHNheWluZyB0aGF0
-IHRoYXQgdGhlCmRyaXZlciBpcyBkZXByZWNhdGVkIGFuZCB0aGUgYmluZGluZ3MgbmVlZCB0byBi
-ZSB1cGRhdGVkIHRvIHRoZSBEUk0KYmluZGluZ3Mgc3R5bGUuCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On Thu, Jun 14, 2018 at 12:47:01PM -0700, Matthias Kaehlcke wrote:
+> Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding
+> the devfreq device") introduced the initialization of the user
+> limits min/max_freq from the lowest/highest available OPPs. Later
+> commit f1d981eaecf8 ("PM / devfreq: Use the available min/max
+> frequency") added scaling_min/max_freq, which actually represent
+> the frequencies of the lowest/highest available OPP. scaling_min/
+> max_freq are initialized with the values from min/max_freq, which
+> is totally correct in the context, but a bit awkward to read.
+> 
+> Swap the initialization and assign scaling_min/max_freq with the
+> OPP freqs and then the user limts min/max_freq with scaling_min/
+> max_freq.
+> 
+> Needless to say that this change is a NOP, intended to improve
+> readability.
+> ---
+
+BTW, putting the '---' here means that stuff below it usually gets
+dropped when applied (e.g., with git-am). So it'll drop your
+Signed-off-by and Reviewed-by. Not a huge problem if the maintainers
+look out for that.
+
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+
+> 
+> Changes in v3:
+> - none
+> 
+> Changes in v2:
+> - added 'Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>' tag
+> 
+>  drivers/devfreq/devfreq.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index fe2af6aa88fc..0057ef5b0a98 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -604,21 +604,21 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>  		mutex_lock(&devfreq->lock);
+>  	}
+>  
+> -	devfreq->min_freq = find_available_min_freq(devfreq);
+> -	if (!devfreq->min_freq) {
+> +	devfreq->scaling_min_freq = find_available_min_freq(devfreq);
+> +	if (!devfreq->scaling_min_freq) {
+>  		mutex_unlock(&devfreq->lock);
+>  		err = -EINVAL;
+>  		goto err_dev;
+>  	}
+> -	devfreq->scaling_min_freq = devfreq->min_freq;
+> +	devfreq->min_freq = devfreq->scaling_min_freq;
+>  
+> -	devfreq->max_freq = find_available_max_freq(devfreq);
+> -	if (!devfreq->max_freq) {
+> +	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
+> +	if (!devfreq->scaling_max_freq) {
+>  		mutex_unlock(&devfreq->lock);
+>  		err = -EINVAL;
+>  		goto err_dev;
+>  	}
+> -	devfreq->scaling_max_freq = devfreq->max_freq;
+> +	devfreq->max_freq = devfreq->scaling_max_freq;
+>  
+>  	dev_set_name(&devfreq->dev, "devfreq%d",
+>  				atomic_inc_return(&devfreq_no));
+> -- 
+> 2.18.0.rc1.242.g61856ae69a-goog
+> 
