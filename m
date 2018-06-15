@@ -1,68 +1,95 @@
-Return-Path: <SRS0=mOcJ=JA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-it0-f68.google.com ([209.85.214.68]:39879 "EHLO
-        mail-it0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1755348AbeFNVt1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 14 Jun 2018 17:49:27 -0400
-From: Adam Ford <aford173@gmail.com>
-Subject: [RFC] ARM: dts: OMAP36xx: Convert OPP table to v2
-Date: Thu, 14 Jun 2018 16:49:14 -0500
-Message-Id: <20180614214914.11748-1-aford173@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>
+Return-Path: <SRS0=ekay=JB=nxp.com=wen.he_1@kernel.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v6 1/7] dmaengine: fsldma: Replace DMA_IN/OUT by FSL_DMA_IN/OUT
+Date: Fri, 15 Jun 2018 18:22:30 +0800
+Message-Id: <20180615102236.32859-1-wen.he_1@nxp.com>
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Replace the OPP table with a version compatible with
-operating-points-v2-ti-cpu.  A future patch will hopefully
-enable the OPP1G table.
+This patch implement a standard macro call functions is
+used to NXP dma drivers.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+change in v6:
+	- no
 
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 6fb23ada1f64..9c5ab5e06902 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -19,18 +19,33 @@
- 	};
+ drivers/dma/fsldma.c |   16 ++++++++--------
+ drivers/dma/fsldma.h |    4 ++--
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+index 3eaece8..75479d6 100644
+--- a/drivers/dma/fsldma.c
++++ b/drivers/dma/fsldma.c
+@@ -53,42 +53,42 @@
  
- 	cpus {
--		/* OMAP3630/OMAP37xx 'standard device' variants OPP50 to OPP130 */
- 		cpu: cpu@0 {
--			operating-points = <
--				/* kHz    uV */
--				300000  1012500
--				600000  1200000
--				800000  1325000
--			>;
-+			operating-points-v2 = <&cpu0_opp_table>;
- 			clock-latency = <300000>; /* From legacy driver */
- 		};
- 	};
+ static void set_sr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->sr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->sr, val, 32);
+ }
  
-+	/* OMAP3630/OMAP37xx 'standard device' variants OPP50 to OPP130 */
-+	cpu0_opp_table: opp_table0 {
-+		compatible = "operating-points-v2-ti-cpu";
-+		syscon = <&scm_conf>;
-+
-+		opp50-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-microvolt = <1012500>;
-+		};
-+		opp100-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <1200000>;
-+			opp-microamp =  <0>;
-+		};
-+		opp130-800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-microvolt = <1325000>;
-+			opp-microamp =  <0>;
-+		};
-+	};
-+
- 	ocp@68000000 {
- 		uart4: serial@49042000 {
- 			compatible = "ti,omap3-uart";
+ static u32 get_sr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->sr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->sr, 32);
+ }
+ 
+ static void set_mr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->mr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->mr, val, 32);
+ }
+ 
+ static u32 get_mr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->mr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->mr, 32);
+ }
+ 
+ static void set_cdar(struct fsldma_chan *chan, dma_addr_t addr)
+ {
+-	DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
++	FSL_DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
+ }
+ 
+ static dma_addr_t get_cdar(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
++	return FSL_DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
+ }
+ 
+ static void set_bcr(struct fsldma_chan *chan, u32 val)
+ {
+-	DMA_OUT(chan, &chan->regs->bcr, val, 32);
++	FSL_DMA_OUT(chan, &chan->regs->bcr, val, 32);
+ }
+ 
+ static u32 get_bcr(struct fsldma_chan *chan)
+ {
+-	return DMA_IN(chan, &chan->regs->bcr, 32);
++	return FSL_DMA_IN(chan, &chan->regs->bcr, 32);
+ }
+ 
+ /*
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 4787d48..6dc0039 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -223,10 +223,10 @@ static void out_le64(u64 __iomem *addr, u64 val)
+ }
+ #endif
+ 
+-#define DMA_IN(fsl_chan, addr, width)					\
++#define FSL_DMA_IN(fsl_chan, addr, width)				\
+ 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+ 			in_be##width(addr) : in_le##width(addr))
+-#define DMA_OUT(fsl_chan, addr, val, width)				\
++#define FSL_DMA_OUT(fsl_chan, addr, val, width)			\
+ 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+ 			out_be##width(addr, val) : out_le##width(addr, val))
+ 
 -- 
-2.17.1
-
+1.7.1
