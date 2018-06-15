@@ -1,12 +1,12 @@
 Return-Path: <SRS0=Z3/K=JB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from inva020.nxp.com ([92.121.34.13]:43667 "EHLO inva020.nxp.com"
+Received: from inva020.nxp.com ([92.121.34.13]:43641 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S936215AbeFOKYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 15 Jun 2018 06:24:24 -0400
+        id S936230AbeFOKYT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Jun 2018 06:24:19 -0400
 From: Wen He <wen.he_1@nxp.com>
-Subject: [v6 4/7] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA controller bindings
-Date: Fri, 15 Jun 2018 18:22:33 +0800
-Message-Id: <20180615102236.32859-4-wen.he_1@nxp.com>
+Subject: [v6 2/7] dmaengine: fsldma: Adding macro FSL_DMA_IN/OUT implement for ARM platform
+Date: Fri, 15 Jun 2018 18:22:31 +0800
+Message-Id: <20180615102236.32859-2-wen.he_1@nxp.com>
 In-Reply-To: <20180615102236.32859-1-wen.he_1@nxp.com>
 References: <20180615102236.32859-1-wen.he_1@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
@@ -14,63 +14,95 @@ To: vkoul@kernel.org, dmaengine@vger.kernel.org
 Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Document the devicetree bindings for NXP Layerscape qDMA controller
-which could be found on NXP QorIQ Layerscape SoCs.
+This patch add the macro FSL_DMA_IN/OUT implement for ARM platform.
 
 Signed-off-by: Wen He <wen.he_1@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/dma/fsl-qdma.txt |   41 ++++++++++++++++++++
- 1 files changed, 41 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+ drivers/dma/fsldma.h |   57 +++++++++++++++++++++++++++++++++----------------
+ 1 files changed, 38 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-new file mode 100644
-index 0000000..99b3d74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
-@@ -0,0 +1,41 @@
-+NXP Layerscape SoC qDMA Controller
-+==================================
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 6dc0039..1dc64c9 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -196,39 +196,58 @@ struct fsldma_chan {
+ #define to_fsl_desc(lh) container_of(lh, struct fsl_desc_sw, node)
+ #define tx_to_fsl_desc(tx) container_of(tx, struct fsl_desc_sw, async_tx)
+ 
++#ifdef	CONFIG_PPC
++#define fsl_ioread32(p)		in_le32(p)
++#define fsl_ioread32be(p)	in_be32(p)
++#define fsl_iowrite32(v, p)	out_le32(p, v)
++#define fsl_iowrite32be(v, p)	out_be32(p, v)
 +
-+This device follows the generic DMA bindings defined in dma/dma.txt.
+ #ifndef __powerpc64__
+-static u64 in_be64(const u64 __iomem *addr)
++static u64 fsl_ioread64(const u64 __iomem *addr)
+ {
+-	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
+-		(in_be32((u32 __iomem *)addr + 1));
++	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
++		(in_le32((u32 __iomem *)addr));
+ }
+ 
+-static void out_be64(u64 __iomem *addr, u64 val)
++static void fsl_iowrite64(u64 val, u64 __iomem *addr)
+ {
+-	out_be32((u32 __iomem *)addr, val >> 32);
+-	out_be32((u32 __iomem *)addr + 1, (u32)val);
++	out_le32((u32 __iomem *)addr + 1, val >> 32);
++	out_le32((u32 __iomem *)addr, (u32)val);
+ }
+ 
+-/* There is no asm instructions for 64 bits reverse loads and stores */
+-static u64 in_le64(const u64 __iomem *addr)
++static u64 fsl_ioread64be(const u64 __iomem *addr)
+ {
+-	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
+-		(in_le32((u32 __iomem *)addr));
++	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
++		(in_be32((u32 __iomem *)addr + 1));
+ }
+ 
+-static void out_le64(u64 __iomem *addr, u64 val)
++static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
+ {
+-	out_le32((u32 __iomem *)addr + 1, val >> 32);
+-	out_le32((u32 __iomem *)addr, (u32)val);
++	out_be32((u32 __iomem *)addr, val >> 32);
++	out_be32((u32 __iomem *)addr + 1, (u32)val);
+ }
+ #endif
++#endif
+ 
+-#define FSL_DMA_IN(fsl_chan, addr, width)				\
+-		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+-			in_be##width(addr) : in_le##width(addr))
+-#define FSL_DMA_OUT(fsl_chan, addr, val, width)			\
+-		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
+-			out_be##width(addr, val) : out_le##width(addr, val))
++#if defined(CONFIG_ARM64) || defined(CONFIG_ARM)
++#define fsl_ioread32(p)		ioread32(p)
++#define fsl_ioread32be(p)	ioread32be(p)
++#define fsl_iowrite32(v, p)	iowrite32(v, p)
++#define fsl_iowrite32be(v, p)	iowrite32be(v, p)
++#define fsl_ioread64(p)		ioread64(p)
++#define fsl_ioread64be(p)	ioread64be(p)
++#define fsl_iowrite64(v, p)	iowrite64(v, p)
++#define fsl_iowrite64be(v, p)	iowrite64be(v, p)
++#endif
 +
-+Required properties:
++#define FSL_DMA_IN(fsl_dma, addr, width)			\
++		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?	\
++			fsl_ioread##width##be(addr) : fsl_ioread##width(addr))
 +
-+- compatible:		Must be one of
-+			 "fsl,ls1021a-qdma": for LS1021A Board
-+			 "fsl,ls1043a-qdma": for ls1043A Board
-+			 "fsl,ls1046a-qdma": for ls1046A Board
-+- reg:			Should contain the register's base address and length.
-+- interrupts:		Should contain a reference to the interrupt used by this
-+			device.
-+- interrupt-names:	Should contain interrupt names:
-+			 "qdma-error": the error interrupt
-+			 "qdma-queue": the queue interrupt
-+- fsl,queues:		Should contain number of queues supported.
-+
-+Optional properties:
-+
-+- dma-channels:		Number of DMA channels supported by the controller.
-+- big-endian:		If present registers and hardware scatter/gather descriptors
-+			of the qDMA are implemented in big endian mode, otherwise in little
-+			mode.
-+
-+Examples:
-+
-+	qdma: dma-controller@8390000 {
-+		compatible = "fsl,ls1021a-qdma";
-+		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
-+		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
-+		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "qdma-error", "qdma-queue";
-+		dma-channels = <8>;
-+		queues = <2>;
-+		big-endian;
-+	};
-+
-+DMA clients must use the format described in dma/dma.txt file.
++#define FSL_DMA_OUT(fsl_dma, addr, val, width)			\
++		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?	\
++			fsl_iowrite##width##be(val, addr) : fsl_iowrite	\
++		##width(val, addr))
+ 
+ #define DMA_TO_CPU(fsl_chan, d, width)					\
+ 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
 -- 
 1.7.1
 
