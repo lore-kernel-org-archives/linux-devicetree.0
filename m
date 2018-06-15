@@ -1,84 +1,197 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [RFC PATCH 3/6] serial: 8250_omap: Add support for AM654 UART
- controller
-Date: Fri, 15 Jun 2018 22:47:53 +0530
-Message-ID: <8c553dcc-e352-6e69-e08c-4e6237555ea7@ti.com>
-References: <20180605060125.9518-1-nm@ti.com>
- <20180605060125.9518-4-nm@ti.com> <20180612210640.GA20728@rob-hp-laptop>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
+ bindings
+Date: Fri, 15 Jun 2018 23:01:58 +0530
+Message-ID: <c456625c-e61c-b07e-b355-478813d9a182@codeaurora.org>
+References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
+ <1528801355-18719-2-git-send-email-tdas@codeaurora.org>
+ <0f3f0223-3539-dc66-5300-8f30d827445d@arm.com>
+ <7abb2da6-c130-117a-5404-d07bb132d915@codeaurora.org>
+ <f57f2708-28bb-dcdd-8b93-d41ade10fa18@arm.com>
+ <bc6dc152-7def-fc1d-4535-11a44fd64310@codeaurora.org>
+ <a01f2528-f696-3819-73eb-e321d2256b85@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180612210640.GA20728@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a01f2528-f696-3819-73eb-e321d2256b85@arm.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Wednesday 13 June 2018 02:36 AM, Rob Herring wrote:
-> On Tue, Jun 05, 2018 at 01:01:22AM -0500, Nishanth Menon wrote:
->> AM654 uses a UART controller that is compatible (partially) with
->> existing 8250 UART, however, has a few differences with respect to DMA
->> support and control paths. Introduce a base definition that allows us
->> to build up the differences in follow on patches.
->>
->> Cc: Sekhar Nori <nsekhar@ti.com>
->> Cc: Vignesh R <vigneshr@ti.com>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->>  Documentation/devicetree/bindings/serial/omap_serial.txt | 1 +
->>  drivers/tty/serial/8250/8250_omap.c                      | 1 +
->>  2 files changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
->> index 4b0f05adb228..c35d5ece1156 100644
->> --- a/Documentation/devicetree/bindings/serial/omap_serial.txt
->> +++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
->> @@ -1,6 +1,7 @@
->>  OMAP UART controller
->>  
->>  Required properties:
->> +- compatible : should be "ti,am654-uart" for AM654 controllers
+
+On 6/15/2018 6:53 PM, Sudeep Holla wrote:
 > 
-> Not compatible with any existing TI 8250 UARTs?
+> 
+> On 14/06/18 19:24, Taniya Das wrote:
+>> Hello Sudeep,
+>>
+>> Thanks for your comments.
+>>
+>> On 6/14/2018 4:17 PM, Sudeep Holla wrote:
+>>>
+>>>
+>>> On 13/06/18 19:13, Taniya Das wrote:
+>>>> Hello Sudeep,
+>>>>
+>>>> Thanks for review comments.
+>>>>
+>>>> On 6/13/2018 4:56 PM, Sudeep Holla wrote:
+>>>>>
+>>>>>
+>>>
+>>> [...]
+>>>
+>>>>> You are bit inconsistent on the wordings. Some places you refer this as
+>>>>> hardware engine. If so, please drop all references to firmware/FW. If
+>>>>> it's firmware then update accordingly.
+>>>>>
+>>>>
+>>>> It is a hardware engine which has a firmware to take care of the
+>>>> managing the frequency request from OS. That is reason to refer it as a
+>>>> firmware.
+>>>>
+>>>
+>>> Yes I did guess that initially, but I failed to understand when
+>>> different bindings were posted to deal with devfreq and cpufreq with the
+>>> same firmware. Ideally if it's the firmware you are talking to, place
+>>> all these under /firmware node and align all those with single binding.
+>>>
+>>
+>> The OS is not aware of the firmware and OS only knows about the hardware
+>> engine and has to put forward it's request to the hardware engine using
+>> the "Perf" state register in both devfreq & cpufreq. So would it be
+>> still required to put under the /firmware node?
+>>
+> 
+> Ah ok, then remove any references to firmware other than stating its
+> presence in the introduction. E.g. you have "Add cpufreq firmware device
+> bindings ...". So this is definitely not firmware binding. You are just
+> presenting the h/w as is and you need to deal with change of firmware in
+> DT and OS agnostic way.
+> 
 
-Curious on why you asked about this. Are you suggesting why not:
+Sure Sudeep, I will update the references of firmware.
 
-"ti,<new-soc>-uart", "ti,<old-soc>-uart"
+>>> Is there anything else that this firmware deals with ? If so all those
+>>> need to be put in one place.
+>>>
+>>
+>> We deal only with the CPU frequency and L3 frequency(devfreq).
+>>
+> 
+> OK
+> 
+>>>>>> +Properties:
+>>>>>> +- compatible
+>>>>>> +    Usage:        required
+>>>>>> +    Value type:    <string>
+>>>>>> +    Definition:    must be "qcom,cpufreq-fw".
+>>>>>> +
+>>>>>> +* Property qcom,freq-domain
+>>>>>> +Devices supporting freq-domain must set their "qcom,freq-domain"
+>>>>>> property with
+>>>>>> +phandle to a freq_domain_table in their DT node.
+>>>>>> +
+>>>>>> +* Frequency Domain Table Node
+>>>>>> +
+>>>>>> +This describes the frequency domain belonging to a device.
+>>>>>> +This node can have following properties:
+>>>>>> +
+>>>>>> +- reg
+>>>>>> +    Usage:        required
+>>>>>> +    Value type:    <prop-encoded-array>
+>>>>>> +    Definition:    Addresses and sizes for the memory of the perf
+>>>>>> +            , lut and enable bases.
+>>>>>> +            perf - indicates the base address for the desired
+>>>>>> +            performance state to be set.
+>>>>>> +            lut - indicates the look up table base address for the
+>>>>>> +            cpufreq    driver to read frequencies.
+>>>>>> +            enable - indicates the enable register for firmware.
+>>>>>
+>>>>>
+>>>>> You still didn't answer my earlier question.
+>>>>>
+>>>>> OS might touch one or 2 registers in lots of IP blocks. I am not sure
+>>>>> why those are any different from these. Are you trying to align with
+>>>>> any
+>>>>> other bindings or specification. Are you trying to make this binding
+>>>>> generic here ? I understand if it was trying to generalize the firmware
+>>>>> interface, but you also state it's a hardware engine. So I fail to see
+>>>>> the need for such specificity here. Why not define the whole IP block
+>>>>> and the driver knows where to access these specific ones as they are
+>>>>> specific to this hardware block. In that way if you decide to add more
+>>>>> data, it's extensible easily without the need for patching DT.
+>>>>>
+>>>>
+>>>> Sorry Sudeep I missed replying to your earlier query.
+>>>> The High level OS(HLOS) would require to access only these specific
+>>>> registers from this IP block and just mapping the whole block(huge
+>>>> region) is unnecessary from the OS point of View. As of now it is a
+>>>> generic binding for all using this IP block to manage frequency
+>>>> requests. The OS would only have to know the frequencies supported i.e
+>>>> to read the lookup table registers and put across the OS request using
+>>>> the performance state register.
+>>>>
+>>>
+>>> I am not sure if you need to defining bindings to save OSPM IO mapping.
+>>> In-fact you may be adding more mapping unnecessarily. The mappings are
+>>> page aligned and spiting the registers and mapping them individually may
+>>> result in more mappings.
+>>>
+>>> I just need to know the rational for such specific choice of registers.
+>>> I assume it's aligned to some other standard specifications like CPPC
+>>> though not identical.
+>>>
+>>
+>> I am not sure of the query but there is no other register that the OS is
+>> required to use other than the ones defined here.
+>>
+> 
+> The point is ever IP on the SoC may have 100s to 1000s of registers that
+> may or may not be used by OS. That's about to the OS to decide and you
+> just need to provide the hardware view to anyone using the device tree.
+> It *should not* _just_ represent what you think OS(Linux in particular)
+> "for now"
+> 
+>>>>> Eg. Suppose you need some information on power curve for EAS energy
+>>>>> model, I really hate to update DT for that or even do a mix with DT
+>>>>> just
+>>>>> because f/w is no longer modifiable.
+>>>>>
+>>>>
+>>>> For now we are safe.
+>>>>
+>>>
+>>> What do you mean by that ?
+>>
+>> I meant here was currently there is no such known case where the f/w is
+>> no longer modifiable and we need to extend device tree bindings.
+>>
+>>> It should be easily extensible is what I am
+>>> trying to say. You can add more info and alter the information in the
+>>> driver with compatibles if you keep the register info as minimum as
+>>> possible. For now, you have enable, set and lut registers. What if you
+>>> want to provide power numbers ?
+>>>
+>>
+>> Yes I do understand the intent of mapping the whole register space, but
+>> as per the HW specs these 3 registers would be the only ones required
+>> for now. I do not think this hardware engine has any information on the
+>> power numbers.
+>>
+> 
+> That's fine. So on this platform DT, will you list only the registers
+> touched by the OS for all the IP ? I am sure that will not be the case.
+> 
 
-or you are asking why introduce "ti,<new-soc>-uart" unless there is
-clear demonstrable need for using it in driver code.
+Yes, registers list those would be touched by OS only.
 
-In general, I think "ti,<new-soc>-uart", "ti,<old-soc>-uart" in
-device-tree (and by extension in binding document) is better even in
-there are no _known_ incompatibilities at the time of initial driver
-submission. The reason is silicon integration and process differences
-many times spill over into driver.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-Of course, the idea is not to go postal and create a new compatible for
-every pin-compatible part number that gets created, but probably a new
-compatible should be created for a new silicon die.
-
-We have just started introducing support for this SoC, and since it
-reuses many IPs, this question is likely to come up again.
-
-In this particular case though, Nishanth is perfectly right in not saying
-
-compatible : should be "ti,am654-uart", "ti,omap4-uart"
-
-Because we *know* UART DMA integration is different and a match against
-omap4 would result in non-working UART once DMA is enabled by default.
-
-Thanks,
-Sekhar
+--
