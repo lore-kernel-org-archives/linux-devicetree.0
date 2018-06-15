@@ -1,44 +1,37 @@
-From: valdis.kletnieks@vt.edu
-Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
-Date: Fri, 15 Jun 2018 16:53:22 -0400
-Message-ID: <204056.1529096002@turing-police.cc.vt.edu>
-References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org> <1528455990-24572-2-git-send-email-sayalil@codeaurora.org> <20180612192636.GA31725@rob-hp-laptop> <000101d403d3$87210d20$95632760$@codeaurora.org> <33eec86a35248e5b20f15bb568641b9affcc0a9b.camel@wdc.com> <95985.1529095054@turing-police.cc.vt.edu>
- <347237a7f32b79aa516aa285700396052a69ccf8.camel@wdc.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Fri, 15 Jun 2018 20:58:06 +0000
+Message-ID: <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+References: <cover.1529091248.git.leonard.crestez@nxp.com>
+         <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
+         <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1529096002_2750P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <347237a7f32b79aa516aa285700396052a69ccf8.camel@wdc.com>
+In-Reply-To: <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <4F6F90A1F6B40E47B9E906E5E6560708@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bart Van Assche <Bart.VanAssche@wdc.com>
-Cc: "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>, "sayalil@codeaurora.org" <sayalil@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "evgreen@chromium.org" <evgreen@chromium.org>, "cang@codeaurora.org" <cang@codeaurora.org>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>, "rnayak@codeaurora.org" <rnayak@codeaurora.org>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>
+To: "festevam@gmail.com" <festevam@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "marex@denx.de" <marex@denx.de>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
---==_Exmh_1529096002_2750P
-Content-Type: text/plain; charset=us-ascii
-
-On Fri, 15 Jun 2018 20:42:41 -0000, Bart Van Assche said:
-
-> In case I wasn't clear enough: I was referring to replying inline
-> *without* quoting the original message. That makes a conversation
-> *really* hard to follow.
-
-So if there's no quoted message, what is the inline reply inlined into? :)
-
---==_Exmh_1529096002_2750P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.8.0 04/21/2017
-
-iQEVAwUBWyQnQo0DS38y7CIcAQLUugf9HP7oqsNf4LxT+jwE1u8GwM4nUyCmM3zH
-jBGKb3y5G26hTo0fQHaaZ9mfSI3vA08K+br5MB0npQkueETbS8qOAq+xwak+Hd97
-owOSUyl11r+UcKfkA9n88nLQHI7UblXRjEGypi97gYy/XXZ41mprJUs8kR6ap/Tx
-CzVwGVFr/N0NJTtZItT4LhlyOF5i1PO559rdYfLnoyeTbYrUqFn8Vti6z5DK6AoS
-3M7iVa4whRW9qSHkQUJIUoy6nYJekrPWctyVs8a0edg5r6lavS1bUyYgViKRWeNl
-xxrE1Ip3U1qr6PcMv6k1a/6LFt/JdZjxABsk32bbaqY6W7j2XifqrQ==
-=vOHf
------END PGP SIGNATURE-----
-
---==_Exmh_1529096002_2750P--
+T24gRnJpLCAyMDE4LTA2LTE1IGF0IDE2OjQ3IC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
+DQo+IE9uIEZyaSwgSnVuIDE1LCAyMDE4IGF0IDQ6NDMgUE0sIExlb25hcmQgQ3Jlc3Rleg0KPiA8
+bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+IHdyb3RlOg0KPiA+IFRoZSBGQkRFViBkcml2ZXIgdXNl
+cyB0aGUgc2FtZSBuYW1lIGFuZCBib3RoIGNhbid0IGJlIHJlZ2lzdGVyZWQgYXQgdGhlDQo+ID4g
+c2FtZSB0aW1lLiBGaXggdGhpcyBieSByZW5hbWluZyB0aGUgZHJtIGRyaXZlciB0byBteHNmYi1k
+cm0NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jl
+c3RlekBueHAuY29tPg0KPiANCj4gU3RlZmFuIHNlbnQgdGhlIHNhbWUgcGF0Y2ggYSBmZXcgZGF5
+cyBhZ286DQo+IGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzE3OTQ4
+OS5odG1sDQoNCkluIHRoYXQgdGhyZWFkIHRoZXJlIGlzIGEgcHJvcG9zYWwgZm9yIHJlbW92aW5n
+IHRoZSBvbGQgZmJkZXYvbXhzZmINCmRyaXZlciBlbnRpcmVseS4NCg0KVGhhdCB3b3VsZCBicmVh
+ayBvbGQgRFRCcywgaXNuJ3QgdGhpcyBnZW5lcmFsbHkgY29uc2lkZXJlZCBiYWQ/IEFsc28sDQph
+cmUgd2Ugc3VyZSB0aGUgcmVtb3ZhbCBvZiBmYmRldi9teHNmYiB3b3VsZG4ndCBsb3NlIGFueSBm
+ZWF0dXJlcz8NCg0KV2hhdCBteSBzZXJpZXMgZG9lcyBpcyBtYWtlIGJvdGggZHJpdmVycyB3b3Jr
+IHdpdGggdGhlIHNhbWUga2VybmVsDQppbWFnZSBhbmQgdHVybnMgdGhlIGNob2ljZSBpbnRvIGEg
+Ym9hcmQtbGV2ZWwgZHRiIGRlY2lzaW9uLiBTdXBwb3J0aW5nDQpldmVyeXRoaW5nIGF0IG9uY2Ug
+c2VlbXMgZGVzaXJhYmxlIHRvIG1lIGFuZCBpdCBhbGxvd3MgZm9yIGEgdmVyeQ0Kc21vb3RoIHVw
+Z3JhZGUgcGF0aC4NCg0KVGhlIG9sZCBkcml2ZXIgY291bGQgYmUgcmVtb3ZlZCBsYXRlciwgYWZ0
+ZXIgYWxsIHVzZXJzIGFyZSBjb252ZXJ0ZWQuDQoNCi0tDQpSZWdhcmRzLA0KTGVvbmFyZA==
