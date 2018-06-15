@@ -1,60 +1,149 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v10 5/5] dt-bindings: drm/panel: Document
- Innolux TV123WAM panel bindings
-Date: Fri, 15 Jun 2018 08:19:54 +0530
-Message-ID: <1529030994-10090-6-git-send-email-spanda@codeaurora.org>
-References: <1529030994-10090-1-git-send-email-spanda@codeaurora.org>
+From: Vijay Viswanath <vviswana@codeaurora.org>
+Subject: Re: [PATCH V2 2/4] mmc: sdhci-msm: Add msm version specific ops and
+ data structures
+Date: Fri, 15 Jun 2018 10:26:45 +0530
+Message-ID: <a6458995-a9ba-341e-425d-2092461d9626@codeaurora.org>
+References: <1527587561-27448-1-git-send-email-vviswana@codeaurora.org>
+ <1527587561-27448-3-git-send-email-vviswana@codeaurora.org>
+ <152884658650.16708.8327586252448186103@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1529030994-10090-1-git-send-email-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <152884658650.16708.8327586252448186103@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>, adrian.hunter@intel.com, mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SW5ub2x1eCBUVjEyM1dBTSBpcyBhIDEyLjMiIGVEUCBkaXNwbGF5IHBhbmVsIHdpdGgKMjE2MHgx
-NDQwIHJlc29sdXRpb24sIHdoaWNoIGNhbiBiZSBzdXBwb3J0ZWQgYnkgc2ltcGxlCnBhbmVsIGRy
-aXZlci4KCkNoYW5nZXMgaW4gdjE6CiAtIE1ha2UgdXNlIG9mIHNpbXBsZSBwYW5lbCBkcml2ZXIg
-aW5zdGVhZCBvZiBjcmVhdGluZwogICBhIG5ldyBkcml2ZXIgZm9yIHRoaXMgcGFuZWwgKFNlYW4g
-UGF1bCkuCiAtIENvbWJpbmUgZHQtYmluZGluZyBhbmQgZHJpdmVyIGNoYW5nZXMgaW50byBvbmUg
-cGF0Y2gKICAgYXMgZG9uZSBieSBvdGhlciBleGlzdGluZyBwYW5lbCBzdXBwb3J0IGNoYW5nZXMu
-CgpDaGFuZ2VzIGluIHYyOgogLSBTZXBhcmF0ZSBkcml2ZXIgY2hhbmdlIGZyb20gZHQtYmluZGlu
-ZyBkb2N1bWVudGF0aW9uIChSb2IgSGVycmluZykuCiAtIEFkZCB0aGUgcHJvcGVydGllcyBmcm9t
-IHNpbXBsZS1wYW5lbCBiaW5kaW5nIHRoYXQgYXJlIGFwcGxpY2FibGUgdG8KICAgdGhpcyBwYW5l
-bCAoUm9iIEhlcnJpbmcpLgoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8c3BhbmRhQGNv
-ZGVhdXJvcmEub3JnPgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4K
-LS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dCAgICAg
-IHwgMjAgKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvaW5ub2x1eCx0djEyM3dhbS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2Ft
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lu
-bm9sdXgsdHYxMjN3YW0udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmE5
-YjM1MjYKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHR2MTIzd2FtLnR4dApAQCAtMCwwICsxLDIwIEBACitJ
-bm5vbHV4IFRWMTIzV0FNIDEyLjMgaW5jaCBlRFAgMksgZGlzcGxheSBwYW5lbAorCitUaGlzIGJp
-bmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2gg
-aXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgorCitS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImlubm9sdXgsdHYx
-MjN3YW0iCistIHBvd2VyLXN1cHBseTogcmVndWxhdG9yIHRvIHByb3ZpZGUgdGhlIHN1cHBseSB2
-b2x0YWdlCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGVuYWJsZS1ncGlvczogR1BJTyBwaW4g
-dG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVsCistIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0
-aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworRXhhbXBsZToKKwlw
-YW5lbF9lZHA6IHBhbmVsLWVkcCB7CisJCWNvbXBhdGlibGUgPSAiaW5ub2x1eCx0djEyM3dhbSI7
-CisJCWVuYWJsZS1ncGlvcyA9IDwmbXNtZ3BpbyAzMSBHUElPX0FDVElWRV9MT1c+OworCQlwb3dl
-ci1zdXBwbHkgPSA8JnBtODkxNl9sMj47CisJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKKwl9
-OwotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9m
-IHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUg
-UHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-RnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+Hi Stephen,
+
+On 6/13/2018 5:06 AM, Stephen Boyd wrote:
+> Quoting Vijay Viswanath (2018-05-29 02:52:39)
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>> index 4050c99..2a66aa0 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -226,6 +226,24 @@ struct sdhci_msm_offset {
+>>          .core_ddr_config_2 = 0x1bc,
+>>   };
+>>   
+>> +struct sdhci_msm_variant_ops {
+>> +       u8 (*msm_readb_relaxed)(struct sdhci_host *host, u32 offset);
+>> +       u32 (*msm_readl_relaxed)(struct sdhci_host *host, u32 offset);
+>> +       void (*msm_writeb_relaxed)(u8 val, struct sdhci_host *host, u32 offset);
+>> +       void (*msm_writel_relaxed)(u32 val, struct sdhci_host *host,
+>> +                       u32 offset);
+>> +};
+>> +
+>> +/*
+>> + * From V5, register spaces have changed. Wrap this info in a structure
+>> + * and choose the data_structure based on version info mentioned in DT.
+>> + */
+> 
+> This is sort of odd. Usually we have a read/write function that swizzles
+> based on register variants, and that's contained with that function. Now
+> it's the other way.
+> 
+>> +struct sdhci_msm_variant_info {
+>> +       bool mci_removed;
+>> +       const struct sdhci_msm_variant_ops *var_ops;
+>> +       const struct sdhci_msm_offset *offset;
+>> +};
+>> +
+>>   struct sdhci_msm_host {
+>>          struct platform_device *pdev;
+>>          void __iomem *core_mem; /* MSM SDCC mapped address */
+>> @@ -245,8 +263,45 @@ struct sdhci_msm_host {
+>>          wait_queue_head_t pwr_irq_wait;
+>>          bool pwr_irq_flag;
+>>          u32 caps_0;
+>> +       bool mci_removed;
+>> +       const struct sdhci_msm_variant_ops *var_ops;
+>> +       const struct sdhci_msm_offset *offset;
+>>   };
+>>   
+>> +/*
+>> + * APIs to read/write to vendor specific registers which were there in the
+>> + * core_mem region before MCI was removed.
+>> + */
+>> +static u32 sdhci_msm_mci_variant_readl_relaxed(struct sdhci_host *host,
+>> +               u32 offset)
+>> +{
+>> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +       return readl_relaxed(msm_host->core_mem + offset);
+> 
+> Is core_mem assigned in the new hardware? Maybe that needs to be
+> 'repurposed' for vendor specific registers on v5 and renamed to
+> something like msm_host::vendor_base or something like that.
+> 
+
+There is no core_mem in the new hardware. We can assign hc_mem address 
+to core_mem variable (if SDCC5) and do away with the need of special 
+read/write functions, but I feel thats a bad approach and misleading.
+
+>> +}
+>> +
+>> +static u32 sdhci_msm_v5_variant_readl_relaxed(struct sdhci_host *host,
+>> +               u32 offset)
+>> +{
+>> +       return readl_relaxed(host->ioaddr + offset);
+>> +}
+>> +
+>> +static void sdhci_msm_mci_variant_writel_relaxed(u32 val,
+>> +               struct sdhci_host *host, u32 offset)
+>> +{
+>> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +       writel_relaxed(val, msm_host->core_mem + offset);
+>> +}
+>> +
+>> +static void sdhci_msm_v5_variant_writel_relaxed(u32 val,
+>> +               struct sdhci_host *host, u32 offset)
+>> +{
+>> +       writel_relaxed(val, host->ioaddr + offset);
+>> +}
+>> +
+>>   static unsigned int msm_get_clock_rate_for_bus_mode(struct sdhci_host *host,
+>>                                                      unsigned int clock)
+>>   {
+>> @@ -1481,6 +1536,28 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>>          pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>>   }
+>>   
+>> +static const struct sdhci_msm_variant_ops mci_var_ops = {
+>> +       .msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>> +       .msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+>> +};
+>> +
+>> +static const struct sdhci_msm_variant_ops v5_var_ops = {
+>> +       .msm_readl_relaxed = sdhci_msm_v5_variant_readl_relaxed,
+>> +       .msm_writel_relaxed = sdhci_msm_v5_variant_writel_relaxed,
+>> +};
+>> +
+>> +static const struct sdhci_msm_variant_info sdhci_msm_mci_var = {
+>> +       .mci_removed = 0,
+> 
+> Please use true and false instead of 0 and 1 when the type is bool.
+>
+
+Will do
+
+>> +       .var_ops = &mci_var_ops,
+>> +       .offset = &sdhci_msm_mci_offset,
+>> +};
+>> +
+>> +static const struct sdhci_msm_variant_info sdhci_msm_v5_var = {
+>> +       .mci_removed = 1,
+>> +       .var_ops = &v5_var_ops,
+>> +       .offset = &sdhci_msm_v5_offset,
+>> +};
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
