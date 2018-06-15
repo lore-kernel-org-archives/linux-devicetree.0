@@ -1,183 +1,43 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based on IP
- datasheet
-Date: Fri, 15 Jun 2018 10:18:50 +0900
-Message-ID: <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, "linux-stable #4 . 14+" <stable@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Marek Vasut <marek.vasut@gmail.com>
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v3 0/4] clk: rockchip: support clock controller for px30 SoC
+Date: Fri, 15 Jun 2018 10:16:47 +0800
+Message-ID: <1529029011-15021-1-git-send-email-zhangqing@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, cl@rock-chips.com, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-According to the Denali User's Guide, this IP needs three clocks:
+Change in V3:
+[PATCH v3 1/4]: Correct description
+[PATCH v3 2/4]: Use an SPDX tag instead.
+[PATCH v3 3/4]: Use an SPDX tag instead,
+		parent_rate might overflow and fix it.
+		fix up the checkpatch warning.
+		add more CMPOSITE_xxx_HALFdiv.
 
- - clk: controller core clock
+Change in V2:
+[PATCH v2 2/4]: modify the Author name
+[PATCH v2 3/4]: provide a bit more explanation for commit message
 
- - clk_x: bus interface clock
+Elaine Zhang (4):
+  dt-bindings: add bindings for px30 clock controller
+  clk: rockchip: add dt-binding header for px30
+  clk: rockchip: add support for half divider
+  clk: rockchip: add clock controller for px30
 
- - ecc_clk: clock at which ECC circuitry is run
+ .../bindings/clock/rockchip,px30-cru.txt           |   66 ++
+ drivers/clk/rockchip/Makefile                      |    2 +
+ drivers/clk/rockchip/clk-half-divider.c            |  231 +++++
+ drivers/clk/rockchip/clk-px30.c                    | 1080 ++++++++++++++++++++
+ drivers/clk/rockchip/clk.c                         |   10 +
+ drivers/clk/rockchip/clk.h                         |  126 ++-
+ include/dt-bindings/clock/px30-cru.h               |  389 +++++++
+ 7 files changed, 1903 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,px30-cru.txt
+ create mode 100644 drivers/clk/rockchip/clk-half-divider.c
+ create mode 100644 drivers/clk/rockchip/clk-px30.c
+ create mode 100644 include/dt-bindings/clock/px30-cru.h
 
-Currently, denali_dt.c requires a single anonymous clock and its
-frequency.  However, the driver needs to get the frequency of "clk_x"
-not "clk".  This is confusing because people tend to assume the
-anonymous clock means the core clock.  In fact, I got a report of
-SOCFPGA breakage because the timing parameters are calculated based
-on a wrong frequency.
-
-Instead of the cheesy implementation, the clocks in the real hardware
-should be represented in the driver and the DT-binding.
-
-However, adding new clocks would break the existing platforms.  For the
-backward compatibility, the driver still accepts a single clock just as
-before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
-This is fine for existing DT of Socionext UniPhier, and also fixes the
-issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
-the bus interface clock.
-
-Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
-Cc: linux-stable <stable@vger.kernel.org> #4.14+
-Reported-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v3:
-  - Change the patch order so that the bug-fix one comes the first
-
-Changes in v2:
-  - Split patches into sensible chunks
-
- .../devicetree/bindings/mtd/denali-nand.txt        |  5 +++
- drivers/mtd/nand/raw/denali_dt.c                   | 49 ++++++++++++++++++++--
- 2 files changed, 50 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index 0ee8edb..f33da87 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -8,6 +8,9 @@ Required properties:
-   - reg : should contain registers location and length for data and reg.
-   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
-   - interrupts : The interrupt number.
-+  - clocks: should contain phandle of the controller core clock, the bus
-+    interface clock, and the ECC circuit clock.
-+  - clock-names: should contain "nand", "nand_x", "ecc"
- 
- Optional properties:
-   - nand-ecc-step-size: see nand.txt for details.  If present, the value must be
-@@ -31,5 +34,7 @@ nand: nand@ff900000 {
- 	compatible = "altr,socfpga-denali-nand";
- 	reg = <0xff900000 0x20>, <0xffb80000 0x1000>;
- 	reg-names = "nand_data", "denali_reg";
-+	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
-+	clock-names = "nand", "nand_x", "ecc";
- 	interrupts = <0 144 4>;
- };
-diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
-index cfd33e6..ce6239d 100644
---- a/drivers/mtd/nand/raw/denali_dt.c
-+++ b/drivers/mtd/nand/raw/denali_dt.c
-@@ -27,7 +27,9 @@
- 
- struct denali_dt {
- 	struct denali_nand_info	denali;
--	struct clk		*clk;
-+	struct clk *clk;	/* core clock */
-+	struct clk *clk_x;	/* bus interface clock */
-+	struct clk *clk_ecc;	/* ECC circuit clock */
- };
- 
- struct denali_dt_data {
-@@ -114,24 +116,61 @@ static int denali_dt_probe(struct platform_device *pdev)
- 	if (IS_ERR(denali->host))
- 		return PTR_ERR(denali->host);
- 
--	dt->clk = devm_clk_get(&pdev->dev, NULL);
-+	/*
-+	 * A single anonymous clock is supported for the backward compatibility.
-+	 * New platforms should support all the named clocks.
-+	 */
-+	dt->clk = devm_clk_get(&pdev->dev, "nand");
-+	if (IS_ERR(dt->clk))
-+		dt->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(dt->clk)) {
- 		dev_err(&pdev->dev, "no clk available\n");
- 		return PTR_ERR(dt->clk);
- 	}
-+
-+	dt->clk_x = devm_clk_get(&pdev->dev, "nand_x");
-+	if (IS_ERR(dt->clk_x))
-+		dt->clk_x = NULL;
-+
-+	dt->clk_ecc = devm_clk_get(&pdev->dev, "ecc");
-+	if (IS_ERR(dt->clk_ecc))
-+		dt->clk_ecc = NULL;
-+
- 	ret = clk_prepare_enable(dt->clk);
- 	if (ret)
- 		return ret;
- 
--	denali->clk_x_rate = clk_get_rate(dt->clk);
-+	ret = clk_prepare_enable(dt->clk_x);
-+	if (ret)
-+		goto out_disable_clk;
-+
-+	ret = clk_prepare_enable(dt->clk_ecc);
-+	if (ret)
-+		goto out_disable_clk_x;
-+
-+	if (dt->clk_x) {
-+		denali->clk_x_rate = clk_get_rate(dt->clk_x);
-+	} else {
-+		/*
-+		 * Hardcode the clock rates for the backward compatibility.
-+		 * This works for both SOCFPGA and UniPhier.
-+		 */
-+		dev_notice(&pdev->dev,
-+			   "necessary clock is missing. default clock rates are used.\n");
-+		denali->clk_x_rate = 200000000;
-+	}
- 
- 	ret = denali_init(denali);
- 	if (ret)
--		goto out_disable_clk;
-+		goto out_disable_clk_ecc;
- 
- 	platform_set_drvdata(pdev, dt);
- 	return 0;
- 
-+out_disable_clk_ecc:
-+	clk_disable_unprepare(dt->clk_ecc);
-+out_disable_clk_x:
-+	clk_disable_unprepare(dt->clk_x);
- out_disable_clk:
- 	clk_disable_unprepare(dt->clk);
- 
-@@ -143,6 +182,8 @@ static int denali_dt_remove(struct platform_device *pdev)
- 	struct denali_dt *dt = platform_get_drvdata(pdev);
- 
- 	denali_remove(&dt->denali);
-+	clk_disable_unprepare(dt->clk_ecc);
-+	clk_disable_unprepare(dt->clk_x);
- 	clk_disable_unprepare(dt->clk);
- 
- 	return 0;
 -- 
-2.7.4
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+1.9.1
