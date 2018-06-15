@@ -1,37 +1,34 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
-Date: Fri, 15 Jun 2018 20:58:06 +0000
-Message-ID: <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
-References: <cover.1529091248.git.leonard.crestez@nxp.com>
-         <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
-         <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+From: Bart Van Assche <Bart.VanAssche@wdc.com>
+Subject: Re: [PATCH V2 1/3] scsi: ufs: set the device reference clock setting
+Date: Fri, 15 Jun 2018 20:58:49 +0000
+Message-ID: <a097db0b6a48533ceb6d45f1857e7068c905369c.camel@wdc.com>
+References: <1528455990-24572-1-git-send-email-sayalil@codeaurora.org>
+         <1528455990-24572-2-git-send-email-sayalil@codeaurora.org>
+         <20180612192636.GA31725@rob-hp-laptop>
+         <000101d403d3$87210d20$95632760$@codeaurora.org>
+         <33eec86a35248e5b20f15bb568641b9affcc0a9b.camel@wdc.com>
+         <95985.1529095054@turing-police.cc.vt.edu>
+         <347237a7f32b79aa516aa285700396052a69ccf8.camel@wdc.com>
+         <204056.1529096002@turing-police.cc.vt.edu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+In-Reply-To: <204056.1529096002@turing-police.cc.vt.edu>
 Content-Language: en-US
-Content-ID: <4F6F90A1F6B40E47B9E906E5E6560708@eurprd04.prod.outlook.com>
+Content-ID: <DD7FF7FFAD4D2C4BB71EF952B7EB00D6@namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "marex@denx.de" <marex@denx.de>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: "valdis.kletnieks@vt.edu" <valdis.kletnieks@vt.edu>
+Cc: "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>, "sayalil@codeaurora.org" <sayalil@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "evgreen@chromium.org" <evgreen@chromium.org>, "cang@codeaurora.org" <cang@codeaurora.org>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>, "rnayak@codeaurora.org" <rnayak@codeaurora.org>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE4LTA2LTE1IGF0IDE2OjQ3IC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
-DQo+IE9uIEZyaSwgSnVuIDE1LCAyMDE4IGF0IDQ6NDMgUE0sIExlb25hcmQgQ3Jlc3Rleg0KPiA8
-bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+IHdyb3RlOg0KPiA+IFRoZSBGQkRFViBkcml2ZXIgdXNl
-cyB0aGUgc2FtZSBuYW1lIGFuZCBib3RoIGNhbid0IGJlIHJlZ2lzdGVyZWQgYXQgdGhlDQo+ID4g
-c2FtZSB0aW1lLiBGaXggdGhpcyBieSByZW5hbWluZyB0aGUgZHJtIGRyaXZlciB0byBteHNmYi1k
-cm0NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jl
-c3RlekBueHAuY29tPg0KPiANCj4gU3RlZmFuIHNlbnQgdGhlIHNhbWUgcGF0Y2ggYSBmZXcgZGF5
-cyBhZ286DQo+IGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzE3OTQ4
-OS5odG1sDQoNCkluIHRoYXQgdGhyZWFkIHRoZXJlIGlzIGEgcHJvcG9zYWwgZm9yIHJlbW92aW5n
-IHRoZSBvbGQgZmJkZXYvbXhzZmINCmRyaXZlciBlbnRpcmVseS4NCg0KVGhhdCB3b3VsZCBicmVh
-ayBvbGQgRFRCcywgaXNuJ3QgdGhpcyBnZW5lcmFsbHkgY29uc2lkZXJlZCBiYWQ/IEFsc28sDQph
-cmUgd2Ugc3VyZSB0aGUgcmVtb3ZhbCBvZiBmYmRldi9teHNmYiB3b3VsZG4ndCBsb3NlIGFueSBm
-ZWF0dXJlcz8NCg0KV2hhdCBteSBzZXJpZXMgZG9lcyBpcyBtYWtlIGJvdGggZHJpdmVycyB3b3Jr
-IHdpdGggdGhlIHNhbWUga2VybmVsDQppbWFnZSBhbmQgdHVybnMgdGhlIGNob2ljZSBpbnRvIGEg
-Ym9hcmQtbGV2ZWwgZHRiIGRlY2lzaW9uLiBTdXBwb3J0aW5nDQpldmVyeXRoaW5nIGF0IG9uY2Ug
-c2VlbXMgZGVzaXJhYmxlIHRvIG1lIGFuZCBpdCBhbGxvd3MgZm9yIGEgdmVyeQ0Kc21vb3RoIHVw
-Z3JhZGUgcGF0aC4NCg0KVGhlIG9sZCBkcml2ZXIgY291bGQgYmUgcmVtb3ZlZCBsYXRlciwgYWZ0
-ZXIgYWxsIHVzZXJzIGFyZSBjb252ZXJ0ZWQuDQoNCi0tDQpSZWdhcmRzLA0KTGVvbmFyZA==
+T24gRnJpLCAyMDE4LTA2LTE1IGF0IDE2OjUzIC0wNDAwLCB2YWxkaXMua2xldG5pZWtzQHZ0LmVk
+dSB3cm90ZToNCj4gT24gRnJpLCAxNSBKdW4gMjAxOCAyMDo0Mjo0MSAtMDAwMCwgQmFydCBWYW4g
+QXNzY2hlIHNhaWQ6DQo+ID4gSW4gY2FzZSBJIHdhc24ndCBjbGVhciBlbm91Z2g6IEkgd2FzIHJl
+ZmVycmluZyB0byByZXBseWluZyBpbmxpbmUNCj4gPiAqd2l0aG91dCogcXVvdGluZyB0aGUgb3Jp
+Z2luYWwgbWVzc2FnZS4gVGhhdCBtYWtlcyBhIGNvbnZlcnNhdGlvbg0KPiA+ICpyZWFsbHkqIGhh
+cmQgdG8gZm9sbG93Lg0KPiANCj4gU28gaWYgdGhlcmUncyBubyBxdW90ZWQgbWVzc2FnZSwgd2hh
+dCBpcyB0aGUgaW5saW5lIHJlcGx5IGlubGluZWQgaW50bz8gOikNCg0KSSB3YXMgcmVmZXJyaW5n
+IHRvIHF1b3Rpbmcgd2l0aG91dCBpbmRlbnRpbmcgdGhlIHF1b3RlIHdpdGggIj4gIi4gVGhhdA0K
+c2hvdWxkIGFscmVhZHkgaGF2ZSBiZWVuIGNsZWFyIGlmIHlvdSBoYWQgYSBsb29rIGF0IHRoZSBt
+ZXNzYWdlIEkgY29tcGxhaW5lZA0KYWJvdXQuDQoNCkJhcnQuDQoNCg0KDQo=
