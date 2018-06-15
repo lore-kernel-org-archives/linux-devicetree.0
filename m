@@ -1,163 +1,61 @@
-From: Ben Whitten <Ben.Whitten@lairdtech.com>
-Subject: RE: [PATCH 1/4] arm: dts: add support for Laird WB45N cpu module and
- DVK
-Date: Fri, 15 Jun 2018 10:01:49 +0000
-Message-ID: <BY1PR02MB1114728E5FF0709137B4224FE77C0@BY1PR02MB1114.namprd02.prod.outlook.com>
-References: <1528966340-23216-1-git-send-email-ben.whitten@lairdtech.com>
- <03f0f635-3fc2-085b-20e0-e1fcaa9e8062@microchip.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v2 0/4] add mailbox support for i.MX7D
+Date: Fri, 15 Jun 2018 11:51:03 +0200
+Message-ID: <20180615095107.24610-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <03f0f635-3fc2-085b-20e0-e1fcaa9e8062@microchip.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Ben Whitten <ben.whitten@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: devicetree@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiBPbiAxNC8wNi8yMDE4IGF0IDEwOjUxLCBCZW4gV2hpdHRlbiB3cm90ZToNCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBCZW4gV2hpdHRlbiA8YmVuLndoaXR0ZW5AbGFpcmR0ZWNoLmNvbT4NCj4gPiAtLS0N
-Cj4gPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICB8ICAgMyArLQ0KPiA+ICAg
-YXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS13YjQ1bi5kdHMgIHwgIDY2ICsrKysrKysrKysrKysrKw0K
-PiA+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS13YjQ1bi5kdHNpIHwgMTY5DQo+ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gICAzIGZpbGVzIGNoYW5nZWQsIDIz
-NyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
-YXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS13YjQ1bi5kdHMNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBhcmNoL2FybS9ib290L2R0cy9hdDkxLXdiNDVuLmR0c2kNCj4gPg0KPiA+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxl
-DQo+ID4gaW5kZXggN2UyNDI0OS4uMWVlOTRlZSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlDQo+
-ID4gQEAgLTQyLDcgKzQyLDggQEAgZHRiLSQoQ09ORklHX1NPQ19BVDkxU0FNOSkgKz0gXA0KPiA+
-ICAgCWF0OTFzYW05ZzI1ZWsuZHRiIFwNCj4gPiAgIAlhdDkxc2FtOWczNWVrLmR0YiBcDQo+ID4g
-ICAJYXQ5MXNhbTl4MjVlay5kdGIgXA0KPiA+IC0JYXQ5MXNhbTl4MzVlay5kdGINCj4gPiArCWF0
-OTFzYW05eDM1ZWsuZHRiIFwNCj4gPiArCWF0OTEtd2I0NW4uZHRiDQo+ID4gICBkdGItJChDT05G
-SUdfU09DX1NBTV9WNykgKz0gXA0KPiA+ICAgCWF0OTEta2l6Ym94Mi5kdGIgXA0KPiA+ICAgCWF0
-OTEtbmF0dGlzLTItbmF0dGUtMi5kdGIgXA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy9hdDkxLXdiNDVuLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtDQo+IHdiNDVuLmR0
-cw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNGU4ODgxNQ0K
-PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hdDkxLXdiNDVu
-LmR0cw0KPiA+IEBAIC0wLDAgKzEsNjYgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZp
-ZXI6IEdQTC0yLjANCj4gPiArLyoNCj4gPiArICogYXQ5MS13YjQ1bi5kdHMgLSBEZXZpY2UgVHJl
-ZSBmaWxlIGZvciBXQjQ1TkJUIGJvYXJkDQo+ID4gKyAqDQo+ID4gKyAqICBDb3B5cmlnaHQgKEMp
-IDIwMTggTGFpcmQNCj4gPiArICoNCj4gPiArKi8NCj4gPiArL2R0cy12MS87DQo+ID4gKyNpbmNs
-dWRlICJhdDkxLXdiNDVuLmR0c2kiDQo+ID4gKw0KPiA+ICsvIHsNCj4gPiArCW1vZGVsID0gIkxh
-aXJkIFdvcmtncm91cCBCcmlkZ2UgNDVOIC0gQXRtZWwgQVQ5MVNBTSAoZHQpIjsNCj4gPiArCWNv
-bXBhdGlibGUgPSAibGFpcmQsd2I0NW4iLCAibGFpcmQsd2J4eCIsICJhdG1lbCxhdDkxc2FtOXg1
-IiwNCj4gImF0bWVsLGF0OTFzYW05IjsNCj4gDQo+ICJsYWlyZCIgcHJlZml4IG11c3QgYmUgYWRk
-ZWQgdG8NCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhl
-cy50eHQgYmVmb3JlIHVzaW5nIGl0Og0KPiB5b3UgY2FuIGRvIGEgbGl0dGxlIHBhdGNoIGFzIGEg
-Zmlyc3QgcGF0Y2ggb2YgdGhpcyBzZXJpZXMuDQo+IE90aGVyd2lzZSBpdCB3aWxsIHRyaWdnZXIg
-YSB3YXJuaW5nIG1lc3NhZ2Ugd2hpbGUgcnVubmluZw0KPiBzY3JpcHRzL2NoZWNrcGF0Y2gucGwg
-b24gdG9wIG9mIHlvdXIgcGF0Y2guDQo+IA0KPiANCj4gPiArDQo+ID4gKwlhaGIgew0KPiA+ICsJ
-CWFwYiB7DQo+ID4gKwkJCXdhdGNoZG9nQGZmZmZmZTQwIHsNCj4gPiArCQkJCXN0YXR1cyA9ICJv
-a2F5IjsNCj4gPiArCQkJfTsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlncGlv
-X2tleXMgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzIjsNCj4gPiArCQkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiArCQlpcnFidG5A
-cGIxOCB7DQo+IA0KPiBJJ20gbm90IHN1cmUgdGhhdCB0aGUgQHBiMTggY2FuIGJlIHVzZWQgbGlr
-ZSB0aGlzLiBUaGlzIGFkZHJlc3MNCj4gZXh0ZW5zaW9uIG11c3QgYmUgdXNlZCBpbiBhICJyZWci
-IHByb3BlcnR5IGluIHRoZSBub2RlLiBkdGMgdXNlZCB3aXRoDQo+IHdhcm5pbmcgc3dpdGNoIG9u
-IG1pZ2h0IHRyaWdnZXIgYW4gZXJyb3IgZm9yIHRoaXMuDQo+IA0KPiA+ICsJCQlsYWJlbCA9ICJJ
-UlFCVE4iOw0KPiA+ICsJCQlsaW51eCxjb2RlID0gPDk5PjsNCj4gPiArCQkJZ3Bpb3MgPSA8JnBp
-b0IgMTggR1BJT19BQ1RJVkVfTE9XPjsNCj4gPiArCQkJZ3Bpby1rZXksd2FrZXVwID0gPDE+Ow0K
-PiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJnVzYjAgew0KPiA+ICsJ
-c3RhdHVzID0gIm9rYXkiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJm1tYzAgew0KPiA+ICsJc3Rh
-dHVzID0gIm9rYXkiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJnNwaTAgew0KPiA+ICsJc3RhdHVz
-ID0gIm9rYXkiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJm1hY2IwIHsNCj4gPiArCXN0YXR1cyA9
-ICJva2F5IjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZkYmd1IHsNCj4gPiArCXN0YXR1cyA9ICJv
-a2F5IjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZ1c2FydDAgew0KPiA+ICsJc3RhdHVzID0gIm9r
-YXkiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJnVzYXJ0MyB7DQo+ID4gKwlzdGF0dXMgPSAib2th
-eSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmaTJjMSB7DQo+ID4gKwlzdGF0dXMgPSAib2theSI7
-DQo+ID4gK307DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtd2I0NW4u
-ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtDQo+IHdiNDVuLmR0c2kNCj4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjJmYTU4ZTINCj4gPiAtLS0gL2Rldi9u
-dWxsDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS13YjQ1bi5kdHNpDQo+ID4gQEAg
-LTAsMCArMSwxNjkgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAN
-Cj4gPiArLyoNCj4gPiArICogYXQ5MS13YjQ1bi5kdHNpIC0gRGV2aWNlIFRyZWUgZmlsZSBmb3Ig
-V0I0NU5CVCBib2FyZA0KPiA+ICsgKg0KPiA+ICsgKiAgQ29weXJpZ2h0IChDKSAyMDE4IExhaXJk
-DQo+ID4gKyAqDQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgImF0OTFzYW05ZzI1LmR0
-c2kiDQo+ID4gKw0KPiA+ICsvIHsNCj4gPiArCW1vZGVsID0gIkxhaXJkIFdvcmtncm91cCBCcmlk
-Z2UgNDVOIC0gQXRtZWwgQVQ5MVNBTSAoZHQpIjsNCj4gPiArCWNvbXBhdGlibGUgPSAibGFpcmQs
-d2I0NW4iLCAibGFpcmQsd2J4eCIsICJhdG1lbCxhdDkxc2FtOXg1IiwNCj4gImF0bWVsLGF0OTFz
-YW05IjsNCj4gPiArDQo+ID4gKwljaG9zZW4gew0KPiA+ICsJCWJvb3RhcmdzID0gInViaS5tdGQ9
-NiByb290PXViaTA6cm9vdGZzIHJvb3Rmc3R5cGU9dWJpZnMNCj4gcnciOw0KPiA+ICsJCXN0ZG91
-dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOw0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwltZW1v
-cnkgew0KPiA+ICsJCXJlZyA9IDwweDIwMDAwMDAwIDB4NDAwMDAwMD47DQo+ID4gKwl9Ow0KPiA+
-ICsNCj4gPiArCWFoYiB7DQo+ID4gKwkJYXBiIHsNCj4gPiArCQkJc2hkd2NAZmZmZmZlMTAgew0K
-PiANCj4gSSB3b3VsZCBhZHZpY2UgeW91IHRvIHRha2UgZXhhY3RseSB0aGUgbm9kZSBuYW1lOg0K
-PiAic2h1dGRvd24tY29udHJvbGxlckBmZmZmZmUxMCI7IEFueXdheSwgaXQgd2lsbCBnbyBhd2F5
-IGFmdGVyIHlvdSB1c2UNCj4gdGhlIGxhYmVsIG5vdGF0aW9uIGFzIGFkdmlzZWQgYnkgQWxleGFu
-ZHJlLg0KPiANCj4gPiArCQkJCWF0bWVsLHdha2V1cC1tb2RlID0gImxvdyI7DQo+ID4gKwkJCX07
-DQo+ID4gKw0KPiA+ICsJCQlwaW5jdHJsQGZmZmZmNDAwIHsNCj4gPiArCQkJCXVzYjIgew0KPiA+
-ICsJCQkJCXBpbmN0cmxfYm9hcmRfdXNiMjogdXNiMi1ib2FyZCB7DQo+ID4gKwkJCQkJCWF0bWVs
-LHBpbnMgPQ0KPiA+ICsJCQkJCQkJPEFUOTFfUElPQiAxMQ0KPiBBVDkxX1BFUklQSF9HUElPIEFU
-OTFfUElOQ1RSTF9ERUdMSVRDSD47CQkvKiBQQjExIGdwaW8NCj4gdmJ1cyBzZW5zZSwgZGVnbGl0
-Y2ggKi8NCj4gPiArCQkJCQl9Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsNCj4gPiArDQo+ID4g
-KwkJCXJzdGNAZmZmZmZlMDAgew0KPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJhdG1lbCxzYW1hNWQz
-LXJzdGMiOw0KPiA+ICsJCQl9Ow0KPiANCj4gSSBkb24ndCB0aGluayB0aGlzIG5vZGUgaXMgbmVl
-ZGVkLg0KDQpJIGR1ZyB0aHJvdWdoIG91ciBvbGQgY29kZSByZXZpZXdzIGFuZCBmb3VuZCB0aGlz
-IG1lc3NhZ2UgcmVsYXRpbmcgdG8gdGVzdGluZw0KcmVib290IG92ZXIgc2V2ZXJhbCB0aG91c2Fu
-ZCB0aW1lcyBpbiBvdXIgdGVzdGJlZDoNCkFmdGVyIHRoZSBzbG93IGNsb2NrIGhhcyBiZWVuIGVu
-YWJsZWQgb24gdGhlIHJlc2V0IGNvbnRyb2xsZXIgdmlhIHVwc3RyZWFtDQpjaGFuZ2VzLCB0aGUg
-ZHJhbSBkaXNhYmxlIGFjY2VzcyBhbmQgcG93ZXIgZG93biBjb2RlIGlzIGNhdXNpbmcgdGhlIFNB
-TTlHMjUNCnRvIGhhbmcgb2NjYXNpb25hbGx5IG9uIHJlYm9vdC4gIFVzaW5nIHRoZSBzaW1wbGUg
-cmVzZXQgZnVuY3Rpb24gcHJvdmlkZWQNCmZvciBTQU1BNUQzIGluc3RlYWQuDQoNClNvIGl0IGFw
-cGVhcnMgdG8gYmUgYSB3b3JrYXJvdW5kIGZvciBhIGJ1ZyB0aGF0IGV4aXN0ZWQgfjIgeWVhcnMg
-YWdvLCBtYXkgc3RpbGwgYmUNCnJlbGV2YW50IGFzIHRoZXJlIGhhdmVuJ3QgYmVlbiBtYW55IGNo
-YW5nZXMgdG8gdGhlIHJlc2V0IGNvZGUgaW4gdGhhdCB0aW1lLg0KDQo+ID4gKw0KPiA+ICsJCX07
-DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCWF0aGVyb3Mgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAi
-YXRoZXJvcyxhdGg2a2wiOw0KPiA+ICsJCWF0aGVyb3MsYm9hcmQtaWQgPSAiU0QzMiI7DQo+ID4g
-Kwl9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJnNsb3dfeHRhbCB7DQo+ID4gKwljbG9jay1mcmVx
-dWVuY3kgPSA8MzI3Njg+Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJm1haW5feHRhbCB7DQo+ID4g
-KwljbG9jay1mcmVxdWVuY3kgPSA8MTIwMDAwMDA+Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJmVi
-aSB7DQo+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gKwluYW5kX2NvbnRyb2xsZXI6IG5hbmQt
-Y29udHJvbGxlciB7DQo+ID4gKwkJcGluY3RybC0wID0gPCZwaW5jdHJsX25hbmRfY3MgJnBpbmN0
-cmxfbmFuZF9yYg0KPiAmcGluY3RybF9uYW5kX29lX3dlPjsNCj4gPiArCQlwaW5jdHJsLW5hbWVz
-ID0gImRlZmF1bHQiOw0KPiA+ICsJCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArDQo+ID4gKwkJbmFu
-ZEAzIHsNCj4gPiArCQkJcmVnID0gPDB4MyAweDAgMHg4MDAwMDA+Ow0KPiA+ICsJCQlyYi1ncGlv
-cyA9IDwmcGlvRCA1IEdQSU9fQUNUSVZFX0hJR0g+Ow0KPiA+ICsJCQljcy1ncGlvcyA9IDwmcGlv
-RCA0IEdQSU9fQUNUSVZFX0hJR0g+Ow0KPiA+ICsJCQluYW5kLWJ1cy13aWR0aCA9IDw4PjsNCj4g
-PiArCQkJbmFuZC1lY2MtbW9kZSA9ICJodyI7DQo+ID4gKwkJCW5hbmQtZWNjLXN0cmVuZ3RoID0g
-PDQ+Ow0KPiA+ICsJCQluYW5kLWVjYy1zdGVwLXNpemUgPSA8NTEyPjsNCj4gPiArCQkJbmFuZC1v
-bi1mbGFzaC1iYnQ7DQo+ID4gKwkJCWxhYmVsID0gImF0bWVsX25hbmQiOw0KPiA+ICsNCj4gPiAr
-CQkJcGFydGl0aW9ucyB7DQo+ID4gKwkJCQljb21wYXRpYmxlID0gImZpeGVkLXBhcnRpdGlvbnMi
-Ow0KPiA+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJCQkjc2l6ZS1jZWxscyA9
-IDwxPjsNCj4gPiArDQo+ID4gKwkJCQlhdDkxYm9vdHN0cmFwQDAgew0KPiA+ICsJCQkJCWxhYmVs
-ID0gImF0OTFicyI7DQo+ID4gKwkJCQkJcmVnID0gPDB4MCAweDIwMDAwPjsNCj4gPiArCQkJCX07
-DQo+ID4gKw0KPiA+ICsJCQkJdWJvb3RAMjAwMDAgew0KPiA+ICsJCQkJCWxhYmVsID0gInUtYm9v
-dCI7DQo+ID4gKwkJCQkJcmVnID0gPDB4MjAwMDAgMHg4MDAwMD47DQo+ID4gKwkJCQl9Ow0KPiA+
-ICsNCj4gPiArCQkJCXVib290ZW52QGEwMDAwIHsNCj4gPiArCQkJCQlsYWJlbCA9ICJ1LWJvb3Qt
-ZW52IjsNCj4gPiArCQkJCQlyZWcgPSA8MHhhMDAwMCAweDIwMDAwPjsNCj4gPiArCQkJCX07DQo+
-ID4gKw0KPiA+ICsJCQkJdWJvb3RlbnZAYzAwMDAgew0KPiA+ICsJCQkJCWxhYmVsID0gInJlZHVu
-ZC1lbnYiOw0KPiA+ICsJCQkJCXJlZyA9IDwweGMwMDAwIDB4MjAwMDA+Ow0KPiA+ICsJCQkJfTsN
-Cj4gPiArDQo+ID4gKwkJCQlrZXJuZWwtYUBlMDAwMCB7DQo+ID4gKwkJCQkJbGFiZWwgPSAia2Vy
-bmVsLWEiOw0KPiA+ICsJCQkJCXJlZyA9IDwweGUwMDAwIDB4MjgwMDAwPjsNCj4gPiArCQkJCX07
-DQo+ID4gKw0KPiA+ICsJCQkJa2VybmVsLWJAMzYwMDAwIHsNCj4gPiArCQkJCQlsYWJlbCA9ICJr
-ZXJuZWwtYiI7DQo+ID4gKwkJCQkJcmVnID0gPDB4MzYwMDAwIDB4MjgwMDAwPjsNCj4gPiArCQkJ
-CX07DQo+ID4gKw0KPiA+ICsJCQkJcm9vdGZzLWFANWUwMDAwIHsNCj4gPiArCQkJCQlsYWJlbCA9
-ICJyb290ZnMtYSI7DQo+ID4gKwkJCQkJcmVnID0gPDB4NWUwMDAwIDB4MjYwMDAwMD47DQo+ID4g
-KwkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJCXJvb3Rmcy1iQDJiZTAwMDAgew0KPiA+ICsJCQkJCWxh
-YmVsID0gInJvb3Rmcy1iIjsNCj4gPiArCQkJCQlyZWcgPSA8MHgyYmUwMDAwIDB4MjYwMDAwMD47
-DQo+ID4gKwkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJCXVzZXJANTFlMDAwMCB7DQo+ID4gKwkJCQkJ
-bGFiZWwgPSAidXNlciI7DQo+ID4gKwkJCQkJcmVnID0gPDB4NTFlMDAwMCAweDJkYzAwMDA+Ow0K
-PiA+ICsJCQkJfTsNCj4gPiArDQo+ID4gKwkJCQlsb2dzQDdmYTAwMDAgew0KPiA+ICsJCQkJCWxh
-YmVsID0gImxvZ3MiOw0KPiA+ICsJCQkJCXJlZyA9IDwweDdmYTAwMDAgMHg2MDAwMD47DQo+ID4g
-KwkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJfTsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiArfTsN
-Cj4gPiArDQo+ID4gKyZ1c2IwIHsNCj4gDQo+IFRoaXMgbXVzdCBiZSAmdXNiMSBsYWJlbCwgaXNu
-J3QgaXQ/DQo+IEJlY2F1c2UgeW91IGFyZSByZWZlcnJpbmcgdG8gb2hjaSBiaW5kaW5nIEkgc3Vz
-cGVjdCAoZm91bmQgYnkgaGF2aW5nIGENCj4gbG9vayBhdDogYXRtZWwsb2MtZ3BpbyBwcm9wZXJ0
-eS4uLikuDQoNCkkgYmVsaWV2ZSB1c2IwIGlzIGNvcnJlY3QsIGFzIHRoaXMgaXMgYSBhdDkxc2Ft
-OXg1IHBhcnQsIHRoZSBub2RlIGluIGR0c2kgaXMgLW9oY2kuDQpzYW1hNWQzIGlzIHVzYjEgZm9y
-IC1vaGNpLg0KDQo+ID4gKwludW0tcG9ydHMgPSA8Mj47DQo+ID4gKwlhdG1lbCx2YnVzLWdwaW8g
-PSA8DQo+ID4gKwkJJnBpb0IgMTIgR1BJT19BQ1RJVkVfSElHSA0KPiA+ICsJCSZwaW9BIDMxIEdQ
-SU9fQUNUSVZFX0hJR0gNCj4gPiArCQk+Ow0KPiA+ICsJYXRtZWwsb2MtZ3BpbyA9IDwmcGlvQiAx
-MyBHUElPX0FDVElWRV9MT1c+Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJm1hY2IwIHsNCj4gPiAr
-CXBoeS1tb2RlID0gInJtaWkiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJnNwaTAgew0KPiA+ICsJ
-Y3MtZ3Bpb3MgPSA8JnBpb0EgMTQgMD4sIDwmcGlvQSA3IDA+LCA8MD4sIDwwPjsNCj4gPiArfTsN
-Cj4gPiArDQo+ID4gKyZ1c2IyIHsNCj4gPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+
-ID4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfYm9hcmRfdXNiMj47DQo+ID4gKwlhdG1lbCx2YnVz
-LWdwaW8gPSA8JnBpb0IgMTEgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gK307DQo+ID4gKw0KPiA+
-ICsmbW1jMCB7DQo+ID4gKwlwaW5jdHJsLTAgPSA8DQo+ID4gKwkJJnBpbmN0cmxfbW1jMF9zbG90
-MF9jbGtfY21kX2RhdDANCj4gPiArCQkmcGluY3RybF9tbWMwX3Nsb3QwX2RhdDFfMz47DQo+ID4g
-KwlzbG90QDAgew0KPiA+ICsJCXJlZyA9IDwwPjsNCj4gPiArCQlidXMtd2lkdGggPSA8ND47DQo+
-ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+DQo+IA0KPiANCj4gLS0NCj4gTmljb2xhcyBGZXJyZQ0K
+20180615 changes v2:
+- DT: use mailbox@ instead of mu@
+- DT: change interrupts description
+- clk: use imx_clk_gate4 instead of imx_clk_gate2
+- imx-mailbox: remove last_tx_done support
+- imx-mailbox: fix module description 
+
+This patches are providing support for mailbox (Messaging Unit)
+for i.MX7D.
+Functionality was tested on PHYTEC phyBOARD-Zeta i.MX7D with
+Linux running on all cores: ARM Cortex-A7 and ARM Cortex-M4.
+
+Both parts of i.MX messaging Unit are visible for all CPUs available
+on i.MX7D. Communication worked independent of MU side in combination
+with CPU. For example MU-A used on ARM Cortex-A7 and MU-B used on ARM Cortex-M4
+or other ways around.
+
+The question to NXP developers: are there are limitations or
+recommendations about MU vs CPU combination? The i.MX7D documentation
+talks about "Processor A" and "Processor B". It is not quite clear what
+processor it actually is (A7 or M4).
+
+Oleksij Rempel (4):
+  clk: imx7d: add IMX7D_MU_ROOT_CLK
+  dt-bindings: mailbox: provide imx-mailbox documentation
+  ARM: dts: imx7s: add i.MX7 messaging unit support
+  mailbox: Add support for i.MX7D messaging unit
+
+ .../bindings/mailbox/imx-mailbox.txt          |  35 +++
+ arch/arm/boot/dts/imx7s.dtsi                  |  18 ++
+ drivers/clk/imx/clk-imx7d.c                   |   1 +
+ drivers/mailbox/Kconfig                       |   6 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/imx-mailbox.c                 | 288 ++++++++++++++++++
+ 6 files changed, 350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+ create mode 100644 drivers/mailbox/imx-mailbox.c
+
+-- 
+2.17.1
