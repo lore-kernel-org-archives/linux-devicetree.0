@@ -1,73 +1,99 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Fri, 15 Jun 2018 19:08:14 +0530
-Message-ID: <a69fcb7a-f7a1-481b-8a02-1da7d1e20671@ti.com>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
- <20180607233853.p7iw7nlxxuyi66og@kahuna>
- <20180614123805.GF112168@atomide.com>
- <20180614130435.j2bmzam6corrjylx@kahuna>
- <20180615050108.GG112168@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Ben Whitten <ben.whitten@gmail.com>
+Subject: [PATCH v2 2/6] arm: dts: at91: add labels to soc dtsi for derivative boards
+Date: Fri, 15 Jun 2018 14:40:51 +0100
+Message-ID: <1529070055-18701-2-git-send-email-ben.whitten@lairdtech.com>
+References: <1529070055-18701-1-git-send-email-ben.whitten@lairdtech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180615050108.GG112168@atomide.com>
-Content-Language: en-US
+In-Reply-To: <1529070055-18701-1-git-send-email-ben.whitten@lairdtech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Vignesh R <vigneshr@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@microchip.com, Ben Whitten <ben.whitten@lairdtech.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+This adds labels to commonly used device-tree nodes so that derivative
+boards can avoid ahb/apb hierarchy.
 
-On Friday 15 June 2018 10:31 AM, Tony Lindgren wrote:
-> * Nishanth Menon <nm@ti.com> [180614 13:07]:
->> On 12:38-20180614, Tony Lindgren wrote:
+Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
+---
+ arch/arm/boot/dts/at91sam9x5.dtsi | 8 ++++----
+ arch/arm/boot/dts/sama5d3.dtsi    | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
->> From A53 view, a more accurate view might be  - from an interconnect
->> view of the world (still simplified - i have ignored the sub bus
->> segments in the representations below):
->>
->> msmc {
->> 	navss_main {
->> 		cbass_main{
->> 			cbass_mcu {
->> 				navss_mcu {
->> 				};
->> 				cbass_wkup{
->> 				};
->> 			};
->> 		};
->> 	};
->> };
->>
->> From R5 view, the view will be very different ofcourse:
->> view of the world (still simplified):
->>
->> cbass_mcu {
->> 	navss_mcu {
->> 	};
->> 	cbass_wkup{
->> 	};
->> 	cbass_main{
->> 		navss_main {
->> 			msmc {
->> 			};
->> 		};
->> 	};
->> };
-> 
-> Well if we follow the hardware representation of the interconnects,
-> it should not matter from which processor view you're looking at things.
-> There are just different ranges provided.
-
-AFAIK, the root node needs to have the CPU which is using the DT. So,
-the hierarchy will change based on CPU view (if we describe it fully).
-
-How well we can reuse individual interconnect segments is something I
-have to think about / experiment. Will have to be wary of any "short
-paths" or "cross connections".
-
-Thanks,
-Sekhar
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index a3c3c31..11c0ef1 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -389,13 +389,13 @@
+ 				};
+ 			};
+ 
+-			rstc@fffffe00 {
++			reset_controller: rstc@fffffe00 {
+ 				compatible = "atmel,at91sam9g45-rstc";
+ 				reg = <0xfffffe00 0x10>;
+ 				clocks = <&clk32k>;
+ 			};
+ 
+-			shdwc@fffffe10 {
++			shutdown_controller: shdwc@fffffe10 {
+ 				compatible = "atmel,at91sam9x5-shdwc";
+ 				reg = <0xfffffe10 0x10>;
+ 				clocks = <&clk32k>;
+@@ -470,7 +470,7 @@
+ 				clock-names = "dma_clk";
+ 			};
+ 
+-			pinctrl@fffff400 {
++			pinctrl: pinctrl@fffff400 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
+@@ -1206,7 +1206,7 @@
+ 				};
+ 			};
+ 
+-			watchdog@fffffe40 {
++			watchdog: watchdog@fffffe40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffe40 0x10>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index eae5e1e..1408fa4 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -494,7 +494,7 @@
+ 				atmel,external-irqs = <47>;
+ 			};
+ 
+-			pinctrl@fffff200 {
++			pinctrl: pinctrl@fffff200 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				compatible = "atmel,sama5d3-pinctrl", "atmel,at91sam9x5-pinctrl", "simple-bus";
+@@ -1340,13 +1340,13 @@
+ 				};
+ 			};
+ 
+-			rstc@fffffe00 {
++			reset_controller: rstc@fffffe00 {
+ 				compatible = "atmel,sama5d3-rstc", "atmel,at91sam9g45-rstc";
+ 				reg = <0xfffffe00 0x10>;
+ 				clocks = <&clk32k>;
+ 			};
+ 
+-			shutdown-controller@fffffe10 {
++			shutdown_controller: shutdown-controller@fffffe10 {
+ 				compatible = "atmel,at91sam9x5-shdwc";
+ 				reg = <0xfffffe10 0x10>;
+ 				clocks = <&clk32k>;
+@@ -1359,7 +1359,7 @@
+ 				clocks = <&mck>;
+ 			};
+ 
+-			watchdog@fffffe40 {
++			watchdog: watchdog@fffffe40 {
+ 				compatible = "atmel,at91sam9260-wdt";
+ 				reg = <0xfffffe40 0x10>;
+ 				interrupts = <4 IRQ_TYPE_LEVEL_HIGH 7>;
+-- 
+2.7.4
