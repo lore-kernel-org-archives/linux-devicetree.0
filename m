@@ -1,132 +1,47 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v11 3/5] dt-bindings: drm/bridge: Document sn65dsi86
- bridge bindings
-Date: Fri, 15 Jun 2018 09:23:55 +0200
-Message-ID: <20180615072358eucas1p1464548f55b93fcae965c910eac3682c7~4RItPpm7O2588525885eucas1p1B@eucas1p1.samsung.com>
-References: <1529045023-32165-1-git-send-email-spanda@codeaurora.org>
- <CGME20180615065909epcas1p4ac3a1c5144f1b813dc4d45d869fe717c@epcas1p4.samsung.com>
- <1529045023-32165-4-git-send-email-spanda@codeaurora.org>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v2] ARM: dts: imx6sx: fix irq for pcie bridge
+Date: Fri, 15 Jun 2018 09:41:29 +0200
+Message-ID: <20180615074129.16931-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529045023-32165-4-git-send-email-spanda@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sandeep Panda <spanda@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: hoegsberg@chromium.org, chandanu@codeaurora.org, ryadav@codeaurora.org, abhinavk@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTUuMDYuMjAxOCAwODo0MywgU2FuZGVlcCBQYW5kYSB3cm90ZToKPiBEb2N1bWVudCB0aGUg
-YmluZGluZ3MgdXNlZCBmb3IgdGhlIHNuNjVkc2k4NiBEU0kgdG8gZURQIGJyaWRnZS4KPgo+IENo
-YW5nZXMgaW4gdjE6Cj4gIC0gUmVwaHJhc2UgdGhlIGR0LWJpbmRpbmcgZGVzY3JpcHRpb25zIHRv
-IGJlIG1vcmUgaW5saW5lIHdpdGggZXhpc3RpbmcKPiAgICBiaW5kaW5ncyAoQW5kcnplaiBIYWpk
-YSkuCj4gIC0gQWRkIG1pc3NpbmcgZHQtYmluZGluZyB0aGF0IGFyZSBwYXJzZWQgYnkgY29ycmVz
-cG9uZGluZyBkcml2ZXIKPiAgICAoQW5kcnplaiBIYWpkYSkuCj4KPiBDaGFuZ2VzIGluIHYyOgo+
-ICAtIFJlbW92ZSBlZHAgcGFuZWwgc3BlY2lmaWMgZHQtYmluZGluZyBlbnRyaWVzLiBPbmx5IGtl
-ZXAgYnJpZGdlCj4gICAgc3BlY2lmaWMgZW50cmllcyAoU2VhbiBQYXVsKS4KPiAgLSBSZW1vdmUg
-Y3VzdG9tLW1vZGVzIGR0IGVudHJ5IHNpbmNlIGl0cyB1c2FnZSBpcyByZW1vdmVkIGZyb20gZHJp
-dmVyIGFsc28gKFNlYW4gUGF1bCkuCj4gIC0gUmVtb3ZlIGlzLXBsdWdnYWJsZSBkdCBlbnRyeSBz
-aW5jZSB0aGlzIHdpbGwgbm90IGJlIG5lZWRlZCBhbnltb3JlIChTZWFuIFBhdWwpLgo+Cj4gQ2hh
-bmdlcyBpbiB2MzoKPiAgLSBSZW1vdmUgaXJxLWdwaW8gZHQgZW50cnkgYW5kIGluc3RlYWQgcG9w
-dWxhdGUgaXMgYW4gaW50ZXJydXB0Cj4gICAgcHJvcGVydHkgKFJvYiBIZXJyaW5nKS4KPgo+IENo
-YW5nZXMgaW4gdjQ6Cj4gIC0gQWRkIGxpbmsgdG8gYnJpZGdlIGNoaXAgZGF0YXNoZWV0IChTdGVw
-aGVuIEJveWQpCj4gIC0gQWRkIHZwbGwgYW5kIHZjYyByZWd1bGF0b3Igc3VwcGx5IGJpbmRpbmdz
-IChTdGVwaGVuIEJveWQpCj4gIC0gQWRkIHJlZiBjbGsgb3B0aW9uYWwgZHQgYmluZGluZyAoU3Rl
-cGhlbiBCb3lkKQo+ICAtIEFkZCBncGlvLWNvbnRyb2xsZXIgb3B0aW9uYWwgZHQgYmluZGluZyAo
-U3RlcGhlbiBCb3lkKQo+Cj4gQ2hhbmdlcyBpbiB2NToKPiAgLSBVc2UgY2xvY2sgcHJvcGVydHkg
-dG8gc3BlY2lmeSB0aGUgaW5wdXQgcmVmY2xrIChTdGVwaGVuIEJveWQpLgo+ICAtIFVwZGF0ZSBn
-cGlvIGNlbGwgYW5kIHB3bSBjZWxsIG51bWJlcnMgKFN0ZXBoZW4gQm95ZCkuCj4KPiBDaGFuZ2Vz
-IGluIHY2Ogo+ICAtIEFkZCBwcm9wZXJ0eSB0byBtZW50aW9uIHRoZSBsYW5lIG1hcHBpbmcgc2No
-ZW1lIGFuZCBwb2xhcml0eSBpbnZlcnNpb24KPiAgICAoU3RlcGhlbiBCb3lkKS4KPgo+IENoYW5n
-ZXMgaW4gdjc6Cj4gIC0gRGV0YWlsIGRlc2NyaXB0aW9uIG9mIGxhbmUgbWFwcGluZyBzY2hlbWUg
-ZHQgcHJvcGVydHkgKEFuZHJ6ZWoKPiAgICBIYWpkYS8gUm9iIEhlcnJpbmcpLgo+ICAtIFJlbW92
-ZWQgSERQIGdwaW8gYmluZGluZywgc2luY2UgdGhlIGJyaWRnZSB1c2VzIElSUSBzaWduYWwgdG8K
-PiAgICBkZXRlcm1pbmUgSFBELCBhbmQgSVJRIHByb3BlcnR5IGlzIGFscmVhZHkgZG9jdW1lbnRl
-ZCBpbiBiaW5kaW5nLgo+Cj4gQ2hhbmdlcyBpbiB2ODoKPiAgLSBSZW1vdmVkIHVubmVjZXNzYXJ5
-IGV4cGxhbmF0aW9uIG9mIGxhbmUgbWFwcGluZyBhbmQgcG9sYXJpdHkgZHQKPiAgICBwcm9wZXJ0
-eSwgc2luY2UgdGhlc2UgYXJlIGFscmVhZHkgZXhwbGFpbmVkIGluIG1lZGlhL3ZpZGVvLWludGVy
-ZmFjZQo+ICAgIGR0IGJpbmlkbmcgKFJvYiBIZXJyaW5nKS4KPgo+IENoYW5nZXMgaW4gdjk6Cj4g
-IC0gQXZvaWQgcHV0dGluZyByZS1kZWZpbml0aW9uIG9mIGxhbmUgbWFwcGluZyBhbmQgcG9sYXJp
-dHkgZHQgYmluZGluZwo+ICAgIChSb2IgSGVycmluZykuCj4KPiBTaWduZWQtb2ZmLWJ5OiBTYW5k
-ZWVwIFBhbmRhIDxzcGFuZGFAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0ICAgICAgIHwgODcgKysrKysrKysrKysrKysr
-KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgODcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L3RpLHNuNjVkc2k4Ni50eHQKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksc242NWRzaTg2LnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxzbjY1ZHNpODYudHh0Cj4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi41MDdlZmJiCj4gLS0tIC9kZXYv
-bnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS90aSxzbjY1ZHNpODYudHh0Cj4gQEAgLTAsMCArMSw4NyBAQAo+ICtTTjY1RFNJODYgRFNJ
-IHRvIGVEUCBicmlkZ2UgY2hpcAo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+
-ICsKPiArVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMgU042NURTSTg2
-IGJyaWRnZS4KPiAraHR0cDovL3d3dy50aS5jb20vZ2VuZXJhbC9kb2NzL2xpdC9nZXRsaXRlcmF0
-dXJlLnRzcD9nZW5lcmljUGFydE51bWJlcj1zbjY1ZHNpODYmZmlsZVR5cGU9cGRmCj4gKwo+ICtS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLHNuNjVkc2k4
-NiIKPiArLSByZWc6IGkyYyBhZGRyZXNzIG9mIHRoZSBjaGlwLCAweDJkIGFzIHBlciBkYXRhc2hl
-ZXQKPiArLSBlbmFibGUtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBm
-b3IgYnJpZGdlX2VuIHBpbiAoYWN0aXZlIGhpZ2gpCj4gKwo+ICstIHZjY2lvLXN1cHBseTogQSAx
-LjhWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgZGlnaXRhbCBJT3MuCj4gKy0gdnBsbC1zdXBw
-bHk6IEEgMS44ViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIGRpc3BsYXlwb3J0IFBMTC4KPiAr
-LSB2Y2NhLXN1cHBseTogQSAxLjJWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgYW5hbG9nIGNp
-cmN1aXRzLgo+ICstIHZjYy1zdXBwbHk6IEEgMS4yViBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhl
-IGRpZ2l0YWwgY29yZS4KClNpbmNlIHRoZXJlIGFyZSBvbmx5IHR3byB2b2x0YWdlIGxldmVscyAo
-MS44IGFuZCAxLjIpIGFuZCBwb3dlciBvbi9vZmYKc2VxdWVuY2UgZG9lcyBub3QgcmVxdWlyZSBz
-cGVjaWZpYyBvcmRlciBJIGd1ZXNzIHlvdSBjb3VsZCBtZXJnZQpzdXBwbGllcyB3aXRoIHRoZSBz
-YW1lIGxldmVsLCBidXQgdGhpcyBpcyBqdXN0IGFuIGlkZWEsIHVwIHRvIHlvdS4KRm9yIGV4YW1w
-bGUgeW91IGNhbiBkcm9wIChvciBtYWtlIG9wdGlvbmFsKSB2cGxsLXN1cHBseSBhbmQgdmNjYS1z
-dXBwbHkuCj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICstIGludGVycnVwdHM6IFNwZWNp
-ZmllciBmb3IgdGhlIFNONjVEU0k4NiBpbnRlcnJ1cHQgbGluZS4KCm9yIGludGVycnVwdHMtZXh0
-ZW5kZWQKCj4gKwo+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIHRoZSBJMkMgY29udHJvbGxl
-ciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCj4gKwo+ICstIGdwaW8tY29udHJvbGxlcjogTWFy
-a3MgdGhlIGRldmljZSBoYXMgYSBHUElPIGNvbnRyb2xsZXIuCj4gKy0gI2dwaW8tY2VsbHMgICAg
-OiBTaG91bGQgYmUgdHdvLiBUaGUgZmlyc3QgY2VsbCBpcyB0aGUgcGluIG51bWJlciBhbmQKPiAr
-ICAgICAgICAgICAgICAgICAgIHRoZSBzZWNvbmQgY2VsbCBpcyB1c2VkIHRvIHNwZWNpZnkgZmxh
-Z3MuCj4gKyAgICAgICAgICAgICAgICAgICBTZWUgLi4vLi4vZ3Bpby9ncGlvLnR4dCBmb3IgbW9y
-ZSBpbmZvcm1hdGlvbi4KPiArLSAjcHdtLWNlbGxzIDogU2hvdWxkIGJlIG9uZS4gU2VlIC4uLy4u
-L3B3bS9wd20udHh0IGZvciBkZXNjcmlwdGlvbiBvZgo+ICsgICAgICAgICAgICAgICB0aGUgY2Vs
-bCBmb3JtYXRzLgo+ICsKPiArLSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJyZWZjbGsiCj4gKy0g
-Y2xvY2tzOiBTcGVjaWZpY2F0aW9uIGZvciBpbnB1dCByZWZlcmVuY2UgY2xvY2suIFRoZSByZWZl
-cmVuY2UKPiArCSAgY2xvY2sgcmF0ZSBtdXN0IGJlIDEyIE1IeiwgMTkuMiBNSHosIDI2IE1Ieiwg
-MjcgTUh6IG9yIDM4LjQgTUh6Lgo+ICsKPiArLSBkYXRhLWxhbmVzOiBTZWUgLi4vLi4vbWVkaWEv
-dmlkZW8taW50ZXJmYWNlLnR4dAo+ICstIGxhbmUtcG9sYXJpdGllczogU2VlIC4uLy4uL21lZGlh
-L3ZpZGVvLWludGVyZmFjZS50eHQKCkVpdGhlciB5b3Ugc2hvdWxkIGRlc2NyaWJlIHdoaWNoIHBv
-cnQgdGhlc2UgcHJvcGVydGllcyBhcmUgcmVsYXRlZCB0bywKZWl0aGVyIHB1dCB0aGVtIGludG8g
-ZW5kcG9pbnQgbm9kZS4gQWNjb3JkaW5nIHRvCi4vLi4vbWVkaWEvdmlkZW8taW50ZXJmYWNlLnR4
-dCBvbmx5IHRoZSBsYXR0ZXIgaXMgY29ycmVjdC4KCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiAr
-VGhpcyBkZXZpY2UgaGFzIHR3byB2aWRlbyBwb3J0cy4gVGhlaXIgY29ubmVjdGlvbnMgYXJlIG1v
-ZGVsbGVkIHVzaW5nIHRoZQo+ICtPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiArCj4gKy0gVmlkZW8gcG9y
-dCAwIGZvciBEU0kgaW5wdXQKPiArLSBWaWRlbyBwb3J0IDEgZm9yIGVEUCBvdXRwdXQKPiArCj4g
-K0V4YW1wbGUKPiArLS0tLS0tLQo+ICsKPiArZWRwLWJyaWRnZUAyZCB7Cj4gKwljb21wYXRpYmxl
-ID0gInRpLHNuNjVkc2k4NiI7Cj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNl
-bGxzID0gPDA+Owo+ICsJcmVnID0gPDB4MmQ+Owo+ICsKPiArCWVuYWJsZS1ncGlvcyA9IDwmbXNt
-Z3BpbyAzMyBHUElPX0FDVElWRV9ISUdIPjsKPiArCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8z
-PjsKPiArCWludGVycnVwdHMgPSA8NCBJUlFfVFlQRV9FREdFX0ZBTExJTkc+OwoKSW4gY2FzZSBv
-ZiBub24tZGVmYXVsdCBpbnRlcnJ1cHQgcGFyZW50IGludGVycnVwdHMtZXh0ZW5kZWQgaXMgbW9y
-ZQpjb21wYWN0L2NvbnZlbmllbnQgLSB5b3UgY2FuIGRyb3AgaW50ZXJydXB0LXBhcmVudCBwcm9w
-ZXJ0eToKwqDCoMKgIGludGVycnVwdHMtZXh0ZW5kZWQgPcKgIDwmZ3BpbzMgNCBJUlFfVFlQRV9F
-REdFX0ZBTExJTkc+OwoKPiArCj4gKwl2Y2Npby1zdXBwbHkgPSA8JnBtODkxNl9sMTc+Owo+ICsJ
-dmNjYS1zdXBwbHkgPSA8JnBtODkxNl9sNj47Cj4gKwl2cGxsLXN1cHBseSA9IDwmcG04OTE2X2wx
-Nz47Cj4gKwl2Y2Mtc3VwcGx5ID0gPCZwbTg5MTZfbDY+Owo+ICsKPiArCWNsb2NrLW5hbWVzID0g
-InJlZmNsayI7Cj4gKwljbG9ja3MgPSA8JmlucHV0X3JlZmNsaz47Cj4gKwo+ICsJZGF0YS1sYW5l
-cyA9IDwyIDEgMyAwPjsKPiArCWxhbmUtcG9sYXJpdGllcyA9IDwwIDEgMCAxPjsKCkFuZCB0aGlz
-IHNob3VsZCBiZSBmaXhlZCBhcyB3ZWxsLgoKPiArCj4gKwlwb3J0cyB7Cj4gKwkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCXBvcnRAMCB7Cj4g
-KwkJCXJlZyA9IDwwPjsKPiArCj4gKwkJCWVkcF9icmlkZ2VfaW46IGVuZHBvaW50IHsKPiArCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwkJ
-cG9ydEAxIHsKPiArCQkJcmVnID0gPDE+Owo+ICsKPiArCQkJZWRwX2JyaWRnZV9vdXQ6IGVuZHBv
-aW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX3BhbmVsX2luPjsKPiArCQkJfTsK
-PiArCQl9Owo+ICsJfTsKPiArfQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+Use the correct IRQ line for the MSI controller in the PCIe host
+controller. Apparently a different IRQ line is used compared to other
+i.MX6 variants. Without this change MSI IRQs aren't properly propagated
+to the upstream interrupt controller.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6sx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 49c7205b8db8..77fdad65e2bb 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -1351,7 +1351,7 @@
+ 			ranges = <0x81000000 0 0          0x08f80000 0 0x00010000 /* downstream I/O */
+ 				  0x82000000 0 0x08000000 0x08000000 0 0x00f00000>; /* non-prefetchable memory */
+ 			num-lanes = <1>;
+-			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+-- 
+2.17.1
