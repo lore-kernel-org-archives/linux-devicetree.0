@@ -1,61 +1,55 @@
-Return-Path: <SRS0=5+Be=JG=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v3 0/5] leds: add devicetree functionality to lltc,lt3593 driver
-Date: Wed, 20 Jun 2018 22:12:58 +0200
-Message-Id: <20180620201303.6272-1-daniel@zonque.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=Z3/K=JB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from inva020.nxp.com ([92.121.34.13]:43672 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S965553AbeFOKY0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Jun 2018 06:24:26 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v6 5/7] arm64: dts: ls1043a: add qdma device tree nodes
+Date: Fri, 15 Jun 2018 18:22:34 +0800
+Message-Id: <20180615102236.32859-5-wen.he_1@nxp.com>
+In-Reply-To: <20180615102236.32859-1-wen.he_1@nxp.com>
+References: <20180615102236.32859-1-wen.he_1@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This is v3 of the series that brings devicetree support for the
-lltc,lt3593 LED driver.
+add the qDMA device tree nodes for LS1043A devices.
 
-Before this series, the driver supported controlling multiple LEDs
-through an array in the platform data. IOW, a single instance of the
-driver was able to control multiple hardware chips.
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+change in v6:
+	- no
 
-This series changes that, and requires a distinct platform device to
-be set up for each of them, if a board has multiple of these hardware
-chips. The reason is that in DT, nodes should represent hardware, and
-it's much cleaner this way.
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
-As stated earlier in the thread for v1, the driver currently only has
-one user in mainline (the Raumfeld platform) which is soon to be
-replaced by a devicetree file. This user only uses one LED via pdata, so
-the change mentioned above does not cause a regression.
-
-Once the platform is fully ported to DT, I'll send another patch that
-removes pdata handling from this driver completely, but it's kept around
-as legacy bridge for now.
-
-
-Changelog:
-
-v2 → v3:
-
-* Fixed a typo in the commit log of 1/5
-* Rebased onto 4.18-rc1
-
-v1 → v2:
-
-* Moved LED-specific properties into a sub-node in DT, as requested by
-  Jacek Anaszewski.
-
-
-Daniel Mack (5):
-  dt-bindings: leds: Add bindings for lltc,lt3593
-  leds: lt3593: merge functions and clean up code
-  leds: lt3593: switch to gpiod interface
-  leds: lt3593: Add device tree probing glue
-  leds: lt3593: update email address
-
- .../devicetree/bindings/leds/leds-lt3593.txt  |  35 ++++
- drivers/leds/leds-lt3593.c                    | 175 +++++++++++-------
- 2 files changed, 142 insertions(+), 68 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 1109f22..48f9165 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -673,6 +673,21 @@
+ 			dma-coherent;
+ 		};
+ 
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1043a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
++				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue";
++			dma-channels = <8>;
++			fsl,queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++			big-endian;
++		};
++
+ 		msi1: msi-controller1@1571000 {
+ 			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1571000 0x0 0x8>;
 -- 
-2.17.1
+1.7.1
+
