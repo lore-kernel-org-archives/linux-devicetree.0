@@ -1,69 +1,66 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] drivers/of: Add devm_of_iomap()
-Date: Fri, 15 Jun 2018 16:52:02 +1000
-Message-ID: <c564d222f0b566dc12b3e64baf93bc48702ad8da.camel@kernel.crashing.org>
-References: <23be2945b593a36d8fa1970bb579389c0f892a3e.camel@kernel.crashing.org>
-         <CAMuHMdVixknUDYZUHafCqNY02z=T-WC2s+Qh6GkpejmoJU0fuQ@mail.gmail.com>
-         <3312487e2b61b8c2f265d210d14bbed8681a9ecc.camel@kernel.crashing.org>
-         <CAMuHMdWPQPZxvG6JhGGqsqYpzp74PgABDjMKVCBetKSAnLqhkw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: iio: Add Spreadtrum SC27XX PMICs ADC controller documentation
+Date: Fri, 15 Jun 2018 15:03:35 +0800
+Message-ID: <9b6743bb6782041b7fec9ed0e166faf2b6456de4.1529040864.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWPQPZxvG6JhGGqsqYpzp74PgABDjMKVCBetKSAnLqhkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: baolin.wang@linaro.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-06-15 at 08:16 +0200, Geert Uytterhoeven wrote:
-> Hi Ben,
-> 
-> On Fri, Jun 15, 2018 at 1:51 AM Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> > On Thu, 2018-06-14 at 10:27 +0200, Geert Uytterhoeven wrote:
-> > > > --- a/include/linux/of_address.h
-> > > > +++ b/include/linux/of_address.h
-> > > > @@ -40,6 +40,11 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
-> > > >   void __iomem *of_io_request_and_map(struct device_node *device,
-> > > >                                      int index, const char *name);
-> > > > 
-> > > > +/* Request and map, wrapper on devm_ioremap_resource */
-> > > > +extern void __iomem *devm_of_iomap(struct device *dev,
-> > > > +                                  struct device_node *node, int index,
-> > > > +                                  resource_size_t *size);
-> > > > +
-> > > >   /* Extract an address from a device, returns the region size and
-> > > >    * the address space flags too. The PCI version uses a BAR number
-> > > >    * instead of an absolute index
-> > > 
-> > > Do you need a dummy for !CONFIG_OF_ADDRESS, to aid compile-testing?
-> > 
-> > I didn't think so, as of_address_to_resource() already has a dummy, so
-> > it should build fine.
-> 
-> That dummy doesn't matter, as drivers/of/address won't be built if
-> !CONFIG_OF_ADDRESS anyway.
+This patch adds the binding documentation for Spreadtrum SC27XX series
+PMICs ADC controller device.
 
-Right but:
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes since v1:
+ - No updates.
+---
+ .../bindings/iio/adc/sprd,sc27xx-adc.txt           |   36 ++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
 
- - I moved it to lib/devres.c in my respun patch (because otherwise
-sparc won't get it)
-
- - The dummy is in include/linux/of_address.h, so devm_of_ioremap will
-compile fine either way.
-
-> I mean for compile-testing users of devm_of_iomap().
-> 
-> And according to kbuild test robot <lkp@intel.com>:
-> 
-> > > (.text+0x1882): undefined reference to `devm_ioremap_resource'
-> 
-> devm_ioremap_resource() has no dummy for !HAS_IOMEM and
-> OF_ADDRESS depends on !SPARC && (HAS_IOMEM || UML),
-> bypassing the HAS_IOMEM check on UML.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+diff --git a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+new file mode 100644
+index 0000000..8aad960
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
+@@ -0,0 +1,36 @@
++Spreadtrum SC27XX series PMICs ADC binding
++
++Required properties:
++- compatible: Should be one of the following.
++	"sprd,sc2720-adc"
++	"sprd,sc2721-adc"
++	"sprd,sc2723-adc"
++	"sprd,sc2730-adc"
++	"sprd,sc2731-adc"
++- reg: The address offset of ADC controller.
++- interrupt-parent: The interrupt controller.
++- interrupts: The interrupt number for the ADC device.
++- #io-channel-cells: Number of cells in an IIO specifier.
++- hwlocks: Reference to a phandle of a hwlock provider node.
++
++Example:
++
++	sc2731_pmic: pmic@0 {
++		compatible = "sprd,sc2731";
++		reg = <0>;
++		spi-max-frequency = <26000000>;
++		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pmic_adc: adc@480 {
++			compatible = "sprd,sc2731-adc";
++			reg = <0x480>;
++			interrupt-parent = <&sc2731_pmic>;
++			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++			#io-channel-cells = <1>;
++			hwlocks = <&hwlock 4>;
++		};
++	};
+-- 
+1.7.9.5
