@@ -1,280 +1,60 @@
-From: Ben Whitten <ben.whitten@gmail.com>
-Subject: [PATCH v2 3/6] arm: dts: add support for Laird WB45N cpu module and DVK
-Date: Fri, 15 Jun 2018 14:40:52 +0100
-Message-ID: <1529070055-18701-3-git-send-email-ben.whitten@lairdtech.com>
-References: <1529070055-18701-1-git-send-email-ben.whitten@lairdtech.com>
+From: "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
+Subject: Re: [PATCH v5] Input: add bu21029 touch driver
+Date: Fri, 15 Jun 2018 14:26:19 +0000
+Message-ID: <df1d4c275c554533944cc17cec7e93ed@de.bosch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529070055-18701-1-git-send-email-ben.whitten@lairdtech.com>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@microchip.com, Ben Whitten <ben.whitten@lairdtech.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hs@denx.de" <hs@denx.de>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "D_ZHU Yi (BT-FIR/ENG1-Zhu)" <D_Yi.Zhu5@cn.bosch.com>, "ZHANG Kevin (BT-FIR/ENG1-Zhu)" <Kevin.Zhang3@cn.bosch.com>, Zhu Yi <zhuyi882004@126.com>, "Jonas Mark (BT-FIR/ENG1)" <Mark.Jonas@de.bosch.com>, "RUAN Tingquan (BT-FIR/ENG1-Zhu)" <Tingquan.Ruan@cn.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for Lairds combo CPU module, featuring on board
-Atheros wifi, CSR Bluetooth radio and, Atmel CPU.
-https://www.lairdtech.com/products/wb45nbt
+Hi Dmitry,
 
-Signed-off-by: Ben Whitten <ben.whitten@lairdtech.com>
----
- arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/at91-wb45n.dts  |  64 +++++++++++++++
- arch/arm/boot/dts/at91-wb45n.dtsi | 165 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 230 insertions(+)
- create mode 100644 arch/arm/boot/dts/at91-wb45n.dts
- create mode 100644 arch/arm/boot/dts/at91-wb45n.dtsi
+> > > > [PATCH v5] Input: add bu21029 touch driver
+> > > >
+> > > > Add Rohm BU21029 resistive touch panel controller support with I2C
+> > > > interface.
+> > >
+> > > Is the patch ready to be pushed upstream? Is there anything I still n=
+eed to do?
+> >
+> > I would like to kindly remind you of the BU21029 touch screen driver.
+> > Could you please forward it to the mainline kernel?
+>=20
+> Sorry for the delay. Could you please tell me if the patch below (shoudl
+> apply on top of your v5 version) works?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e24249..04604d2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -38,6 +38,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	at91-ariettag25.dtb \
- 	at91-cosino_mega2560.dtb \
- 	at91-kizboxmini.dtb \
-+	at91-wb45n.dtb \
- 	at91sam9g15ek.dtb \
- 	at91sam9g25ek.dtb \
- 	at91sam9g35ek.dtb \
-diff --git a/arch/arm/boot/dts/at91-wb45n.dts b/arch/arm/boot/dts/at91-wb45n.dts
-new file mode 100644
-index 0000000..64ce150
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-wb45n.dts
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * at91-wb45n.dts - Device Tree file for WB45NBT board
-+ *
-+ *  Copyright (C) 2018 Laird
-+ *
-+*/
-+/dts-v1/;
-+#include "at91-wb45n.dtsi"
-+
-+/ {
-+	model = "Laird Workgroup Bridge 45N - Atmel AT91SAM (dt)";
-+	compatible = "laird,wb45n", "laird,wbxx", "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		irqbtn@18 {
-+			reg = <18>;
-+			label = "IRQBTN";
-+			linux,code = <99>;
-+			gpios = <&pioB 18 GPIO_ACTIVE_LOW>;
-+			gpio-key,wakeup = <1>;
-+		};
-+	};
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	status = "okay";
-+};
-+
-+&macb0 {
-+	status = "okay";
-+};
-+
-+&dbgu {
-+	status = "okay";
-+};
-+
-+&usart0 {
-+	status = "okay";
-+};
-+
-+&usart3 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-wb45n.dtsi b/arch/arm/boot/dts/at91-wb45n.dtsi
-new file mode 100644
-index 0000000..ebe61a2
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-wb45n.dtsi
-@@ -0,0 +1,165 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * at91-wb45n.dtsi - Device Tree file for WB45NBT board
-+ *
-+ *  Copyright (C) 2018 Laird
-+ *
-+ */
-+
-+#include "at91sam9g25.dtsi"
-+
-+/ {
-+	model = "Laird Workgroup Bridge 45N - Atmel AT91SAM (dt)";
-+	compatible = "laird,wb45n", "laird,wbxx", "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	chosen {
-+		bootargs = "ubi.mtd=6 root=ubi0:rootfs rootfstype=ubifs rw";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0x20000000 0x4000000>;
-+	};
-+
-+	atheros {
-+		compatible = "atheros,ath6kl";
-+		atheros,board-id = "SD32";
-+	};
-+};
-+
-+&reset_controller {
-+	compatible = "atmel,sama5d3-rstc";
-+};
-+
-+&shutdown_controller {
-+	atmel,wakeup-mode = "low";
-+};
-+
-+&slow_xtal {
-+	clock-frequency = <32768>;
-+};
-+
-+&main_xtal {
-+	clock-frequency = <12000000>;
-+};
-+
-+&ebi {
-+	status = "okay";
-+	nand_controller: nand-controller {
-+		pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb &pinctrl_nand_oe_we>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+
-+		nand@3 {
-+			reg = <0x3 0x0 0x800000>;
-+			rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+			cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+			nand-bus-width = <8>;
-+			nand-ecc-mode = "hw";
-+			nand-ecc-strength = <4>;
-+			nand-ecc-step-size = <512>;
-+			nand-on-flash-bbt;
-+			label = "atmel_nand";
-+
-+			partitions {
-+				compatible = "fixed-partitions";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				at91bootstrap@0 {
-+					label = "at91bs";
-+					reg = <0x0 0x20000>;
-+				};
-+
-+				uboot@20000 {
-+					label = "u-boot";
-+					reg = <0x20000 0x80000>;
-+				};
-+
-+				ubootenv@a0000 {
-+					label = "u-boot-env";
-+					reg = <0xa0000 0x20000>;
-+				};
-+
-+				ubootenv@c0000 {
-+					label = "redund-env";
-+					reg = <0xc0000 0x20000>;
-+				};
-+
-+				kernel-a@e0000 {
-+					label = "kernel-a";
-+					reg = <0xe0000 0x280000>;
-+				};
-+
-+				kernel-b@360000 {
-+					label = "kernel-b";
-+					reg = <0x360000 0x280000>;
-+				};
-+
-+				rootfs-a@5e0000 {
-+					label = "rootfs-a";
-+					reg = <0x5e0000 0x2600000>;
-+				};
-+
-+				rootfs-b@2be0000 {
-+					label = "rootfs-b";
-+					reg = <0x2be0000 0x2600000>;
-+				};
-+
-+				user@51e0000 {
-+					label = "user";
-+					reg = <0x51e0000 0x2dc0000>;
-+				};
-+
-+				logs@7fa0000 {
-+					label = "logs";
-+					reg = <0x7fa0000 0x60000>;
-+				};
-+
-+			};
-+		};
-+	};
-+};
-+
-+&usb0 {
-+	num-ports = <2>;
-+	atmel,vbus-gpio = <
-+		&pioB 12 GPIO_ACTIVE_HIGH
-+		&pioA 31 GPIO_ACTIVE_HIGH
-+		>;
-+	atmel,oc-gpio = <&pioB 13 GPIO_ACTIVE_LOW>;
-+};
-+
-+&macb0 {
-+	phy-mode = "rmii";
-+};
-+
-+&spi0 {
-+	cs-gpios = <&pioA 14 0>, <&pioA 7 0>, <0>, <0>;
-+};
-+
-+&usb2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_board_usb2>;
-+	atmel,vbus-gpio = <&pioB 11 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&mmc0 {
-+	pinctrl-0 = <
-+		&pinctrl_mmc0_slot0_clk_cmd_dat0
-+		&pinctrl_mmc0_slot0_dat1_3>;
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <4>;
-+	};
-+};
-+
-+&pinctrl {
-+	usb2 {
-+		pinctrl_board_usb2: usb2-board {
-+			atmel,pins =
-+				<AT91_PIOB 11 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;		/* PB11 gpio vbus sense, deglitch */
-+		};
-+	};
-+};
-+
--- 
-2.7.4
+Yes, the patch works. We applied and compiled it with 4.14 and
+4.17-rc3. We tested on our hardware with 4.14.
+
+Only for 4.14 an #include <linux/regulator/consumer.h> was missing. I
+Guess the API changed here a little in the meantime.
+
+Because we do not have a controllable power supply on our board we see
+the following complaint. But I think it is intentional and ok, right?
+
+	[    1.715963] bu21029 0-0040: 0-0040 supply vdd not found, using dummy re=
+gulator
+	[    1.723806] input: bu21029 as /devices/soc0/soc/2100000.aips-bus/21a000=
+0.i2c/i2c-0/0-0040/input/input0=20
+
+> + - vdd-supply              : power supply for the controoler
+
+There is a typo in controller.
+
+What's the next step?
+
+Greetings,
+Mark
+
+Building Technologies, Panel Software Fire (BT-FIR/ENG1)=20
+Bosch Sicherheitssysteme GmbH | Postfach 11 11 | 85626 Grasbrunn | GERMANY =
+| www.boschsecurity.com
+
+Sitz: Stuttgart, Registergericht: Amtsgericht Stuttgart HRB 23118=20
+Aufsichtsratsvorsitzender: Stefan Hartung; Gesch=E4ftsf=FChrung: Gert van I=
+peren, Andreas Bartz, Thomas Quante, Bernhard Schuster
