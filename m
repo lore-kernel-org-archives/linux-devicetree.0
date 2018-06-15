@@ -1,7 +1,7 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Enable DRM_MXSFB
-Date: Fri, 15 Jun 2018 22:43:44 +0300
-Message-ID: <e7e902fd04097a4a5c15440a63d0acc87e28e37f.1529091248.git.leonard.crestez@nxp.com>
+Subject: [PATCH 2/3] fbdev: mxsfb: Return ENODEV on missing display node
+Date: Fri, 15 Jun 2018 22:43:43 +0300
+Message-ID: <31ca6156a1b36c8ca2811d60e28c6128e988d5d4.1529091248.git.leonard.crestez@nxp.com>
 References: <cover.1529091248.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,34 @@ To: Fabio Estevam <fabio.estevam@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Marco Franchi <marcofrk@gmail.com>, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Multiple boards have drm-style bindings on imx lcdif nodes, enable the
-driver so that they work by default.
+When this driver encounters drm-style bindings it returns -ENOENT and
+this reports a probe error. Make it return -ENODEV to signal an explicit
+rejection instead.
 
-Also enable DRM_PANEL_SEIKO_43WVF1G, it is one of the supported display
-attachments for imx development boards.
+This allows peaceful coexistence between the DRM_MXSFB and FB_MXS config
+options.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/video/fbdev/mxsfb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index f70507ab91ee..dd0f64da2243 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -256,18 +256,20 @@ CONFIG_VIDEO_ADV7180=m
- CONFIG_VIDEO_OV5640=m
- CONFIG_IMX_IPUV3_CORE=y
- CONFIG_DRM=y
- CONFIG_DRM_PANEL_LVDS=y
- CONFIG_DRM_PANEL_SIMPLE=y
-+CONFIG_DRM_PANEL_SEIKO_43WVF1G=y
- CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
- CONFIG_DRM_DW_HDMI_CEC=y
- CONFIG_DRM_IMX=y
- CONFIG_DRM_IMX_PARALLEL_DISPLAY=y
- CONFIG_DRM_IMX_TVE=y
- CONFIG_DRM_IMX_LDB=y
- CONFIG_DRM_IMX_HDMI=y
- CONFIG_DRM_ETNAVIV=y
-+CONFIG_DRM_MXSFB=y
- CONFIG_FB_MXS=y
- CONFIG_LCD_CLASS_DEVICE=y
- CONFIG_LCD_L4F00242T03=y
- CONFIG_LCD_PLATFORM=y
- CONFIG_BACKLIGHT_PWM=y
+diff --git a/drivers/video/fbdev/mxsfb.c b/drivers/video/fbdev/mxsfb.c
+index 12c8bd1d24d5..9ec8882d7b3d 100644
+--- a/drivers/video/fbdev/mxsfb.c
++++ b/drivers/video/fbdev/mxsfb.c
+@@ -736,11 +736,11 @@ static int mxsfb_init_fbinfo_dt(struct fb_info *fb_info,
+ 	int ret;
+ 
+ 	display_np = of_parse_phandle(np, "display", 0);
+ 	if (!display_np) {
+ 		dev_err(dev, "failed to find display phandle\n");
+-		return -ENOENT;
++		return -ENODEV;
+ 	}
+ 
+ 	ret = of_property_read_u32(display_np, "bus-width", &width);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to get property bus-width\n");
 -- 
 2.17.1
