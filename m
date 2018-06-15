@@ -1,34 +1,54 @@
-Return-Path: <SRS0=fTn5=JD=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 4/5] input: touchscreen: eeti: fix link to documentation in header
-Date: Sun, 17 Jun 2018 13:46:58 +0200
-Message-Id: <20180617114659.367-4-daniel@zonque.org>
-In-Reply-To: <20180617114659.367-1-daniel@zonque.org>
-References: <20180617114659.367-1-daniel@zonque.org>
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=Z3/K=JB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from inva020.nxp.com ([92.121.34.13]:43727 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S965521AbeFOKYb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Jun 2018 06:24:31 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v6 7/7] arm: dts: ls1021a: add qdma device tree nodes
+Date: Fri, 15 Jun 2018 18:22:36 +0800
+Message-Id: <20180615102236.32859-7-wen.he_1@nxp.com>
+In-Reply-To: <20180615102236.32859-1-wen.he_1@nxp.com>
+References: <20180615102236.32859-1-wen.he_1@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Keep this up-to-date in case anybody need to dive into the documentation
-again.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+add the qDMA device tree nodes for LS1021A devices.
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- drivers/input/touchscreen/eeti_ts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+change in v6:
+	- no
 
-diff --git a/drivers/input/touchscreen/eeti_ts.c b/drivers/input/touchscreen/eeti_ts.c
-index e7fade1a895c..0c1092fb4955 100644
---- a/drivers/input/touchscreen/eeti_ts.c
-+++ b/drivers/input/touchscreen/eeti_ts.c
-@@ -3,7 +3,7 @@
-  *   Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
-  *
-  * See EETI's software guide for the protocol specification:
-- *   http://home.eeti.com.tw/web20/eg/guide.htm
-+ *   http://home.eeti.com.tw/documentation.html
-  *
-  * Based on migor_ts.c
-  *   Copyright (c) 2008 Magnus Damm
+ arch/arm/boot/dts/ls1021a.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index c55d479..061c839 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -571,6 +571,21 @@
+ 				 <&clockgen 4 1>;
+ 		};
+ 
++		qdma: dma-controller@8390000 {
++			compatible = "fsl,ls1021a-qdma";
++			reg = <0x0 0x8398000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8399000 0x0 0x1000>, /* Status regs */
++				<0x0 0x839a000 0x0 0x2000>; /* Block regs */
++			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue";
++			dma-channels = <8>;
++			fsl,queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++			big-endian;
++		};
++
+ 		dcu: dcu@2ce0000 {
+ 			compatible = "fsl,ls1021a-dcu";
+ 			reg = <0x0 0x2ce0000 0x0 0x10000>;
 -- 
-2.17.1
+1.7.1
+
