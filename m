@@ -1,70 +1,119 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ FW
- bindings
-Date: Fri, 15 Jun 2018 14:27:15 +0100
-Message-ID: <ce75662b-20ee-a879-5004-57d6cc2c29a5@arm.com>
-References: <1528801355-18719-1-git-send-email-tdas@codeaurora.org>
- <1528801355-18719-2-git-send-email-tdas@codeaurora.org>
- <0f3f0223-3539-dc66-5300-8f30d827445d@arm.com>
- <7abb2da6-c130-117a-5404-d07bb132d915@codeaurora.org>
- <f57f2708-28bb-dcdd-8b93-d41ade10fa18@arm.com>
- <bc6dc152-7def-fc1d-4535-11a44fd64310@codeaurora.org>
- <CAHLCerMCM1qf1MJ3bz+ZwBQMjshKSCWKXjHCiuqxJTDBdauamQ@mail.gmail.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v6 0/4] mfd/regulator/clk/input: bd71837: ROHM BD71837 PMIC
+ driver
+Date: Fri, 15 Jun 2018 16:27:43 +0300
+Message-ID: <cover.1529067662.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHLCerMCM1qf1MJ3bz+ZwBQMjshKSCWKXjHCiuqxJTDBdauamQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@verdurent.com>, Taniya Das <tdas@codeaurora.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
+Patch series adding support for ROHM BD71837 PMIC.
 
+BD71837 is a programmable Power Management IC for powering single-core,
+dual-core, and quad-core SoC’s such as NXP-i.MX 8M. It is optimized for
+low BOM cost and compact solution footprint. It integrates 8 buck
+regulators and 7 LDO’s to provide all the power rails required by the
+SoC and the commonly used peripherals.
 
-On 15/06/18 12:59, Amit Kucheria wrote:
-> On Thu, Jun 14, 2018 at 9:24 PM, Taniya Das <tdas@codeaurora.org> wrote:
-> 
+Rewgulator part is already applied. This is reduced set of patches
+containing the MFD part, clock gate for 32.768 KHz clock buffer, input
+driver for power button and device-tree bindings for MFD.
 
-[...]
+Changelog v6
+- Added power-key input driver
+Based on feedback from Rob Herring and Stephen Boyd
+- Added link to datasheet
+- Removed interrupt-controller from DT and fixed binding document
+- clk styling fixes
+- remove clkdev usage
+- add clk bindings to MFD documentation
+- removed clk binding document
 
->>
->> Yes I do understand the intent of mapping the whole register space, but as
->> per the HW specs these 3 registers would be the only ones required for now.
->> I do not think this hardware engine has any information on the power
->> numbers.
-> 
-> "For now" - I think this is exactly the point that Sudeep is trying to make.
-> 
-> A future version of the HW engine, or more likely, a firmware
-> revision, will make more functionality available. Say, this needs
-> access to another register or two. This will require changing the DT
-> bindings. Instead, if you map the entire address space, you can just
-> add offsets to the new registers.
-> 
-> So in this case, I think you should define the following addresses
-> (size 0x1400) for the two frequency domains
-> 
-> 0x17d43000, 0x1400 (power cluster)
-> 0x17d45800, 0x1400 (perf cluster)
-> 
-> And in the driver simply add offsets as follows:
-> 
-> #define ENABLE_OFFSET               0x0
-> #define LUT_OFFSET                      0x110
-> #define PERF_DESIRED_OFFSET 0x920
-> 
-> This will allow you add any new registers in the future w/o modifying
-> the DT binding and reduce qcom_cpu_resources_init() to a handful of
-> lines since you no longer need so many OF string matches, and
-> devm_ioremap()s.
-> 
+Changelog v5
+- dropped regulator patches which are already applied to Mark's tree
+Based on feedback from Rob Herring and Stephen Boyd
+- mfd bindings: explain why this can be interrupt-controller
+- mfd bindings: describe interrupts better
+- mfd bindings: require one cell interrupt specifier
+- mfd bindings: use generic node names in example
+- mfd driver:   ack masked interrupt once at init
+- clk bindings: use generic node names in example
+- clk driver:   use devm
+- clk driver:   use of_clk_add_hw_provider
+- clk driver:   change severity of print and how prints are emitted at
+                probe error path.
+- clk driver:   dropped forward declared functions
+- clk configs:  drop unnecessary dependencies
+- clk driver:   other styling issues
+- mfd/clk DT:   drop clk node.
 
-Thanks Amit for such nice and detailed explanation. I was lazy to write
-in such details, but was hoping Taniya to understand the point. Anyways
-thanks again for doing this.
+Changelog v4
+- remove mutex from regulator state check as core prevents simultaneous
+  accesses
+- allow voltage change for bucks 1 to 4 when regulator is enabled
+- fix indentiation problems
+- properly correct SPDX comments
+
+Changelog v3
+- kill unused variable
+- kill unused definitions
+- use REGMAP_IRQ_REG
+
+Changelog v2
+Based on feedback from Mark Brown
+- Squashed code and buildfile changes to same patch
+- Fixed some styling issues
+- Changed SPDX comments to CPP style
+- Error out if voltage is changed when regulator is enabled instead of
+  Disabling the regulator for duration of change
+- Use devm_regulator_register
+- Remove compatible usage from regulators - use parent dev for config
+- Add a note about using regulator-boot-on for BUCK6 and 7
+- fixed warnings from kbuild test robot
+
+patch 1:
+        MFD driver and definitions bringing interrupt support and
+        enabling clk and regulator subsystems.
+patch 2:
+        MFD driver DT bindings
+patch 3:
+        clock driver for BD71837 clock output
+patch 4:
+        power button driver for power button connected to BD71837
+
+This patch series is based on for-mfd-next
+
+---
+
+Matti Vaittinen (4):
+  mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+  mfd: bd71837: Devicetree bindings for ROHM BD71837 PMIC
+  clk: bd71837: Add driver for BD71837 PMIC clock
+  input/power: Add driver for BD71837/BD71847 PMIC power button
+
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |  67 ++++
+ drivers/clk/Kconfig                                |   6 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-bd71837.c                          | 145 ++++++++
+ drivers/input/misc/Kconfig                         |  10 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/bd718xx-pwrkey.c                |  90 +++++
+ drivers/mfd/Kconfig                                |  13 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bd71837.c                              | 249 ++++++++++++++
+ include/linux/mfd/bd71837.h                        | 370 +++++++++++++++++++++
+ 11 files changed, 953 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 drivers/clk/clk-bd71837.c
+ create mode 100644 drivers/input/misc/bd718xx-pwrkey.c
+ create mode 100644 drivers/mfd/bd71837.c
+ create mode 100644 include/linux/mfd/bd71837.h
 
 -- 
-Regards,
-Sudeep
+2.14.3
