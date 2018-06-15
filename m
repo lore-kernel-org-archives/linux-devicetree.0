@@ -1,98 +1,76 @@
-Return-Path: <SRS0=oUNg=JE=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 3/5] leds: lt3593: switch to gpiod interface
-Date: Mon, 18 Jun 2018 21:42:59 +0200
-Message-Id: <20180618194301.5667-4-daniel@zonque.org>
-In-Reply-To: <20180618194301.5667-1-daniel@zonque.org>
-References: <20180618194301.5667-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=Z3/K=JB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from inva020.nxp.com ([92.121.34.13]:43667 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S936215AbeFOKYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Jun 2018 06:24:24 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v6 4/7] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA controller bindings
+Date: Fri, 15 Jun 2018 18:22:33 +0800
+Message-Id: <20180615102236.32859-4-wen.he_1@nxp.com>
+In-Reply-To: <20180615102236.32859-1-wen.he_1@nxp.com>
+References: <20180615102236.32859-1-wen.he_1@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Clean up the code a bit and transition over to the gpiod based interface.
+Document the devicetree bindings for NXP Layerscape qDMA controller
+which could be found on NXP QorIQ Layerscape SoCs.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/leds/leds-lt3593.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/dma/fsl-qdma.txt |   41 ++++++++++++++++++++
+ 1 files changed, 41 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index 1a3dc347db21..a096ee64cbbb 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -21,12 +21,13 @@
- #include <linux/leds.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
- 
- struct lt3593_led_data {
- 	struct led_classdev cdev;
--	unsigned gpio;
-+	struct gpio_desc *gpiod;
- };
- 
- static int lt3593_led_set(struct led_classdev *led_cdev,
-@@ -46,25 +47,25 @@ static int lt3593_led_set(struct led_classdev *led_cdev,
- 	 */
- 
- 	if (value == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		return 0;
- 	}
- 
- 	pulses = 32 - (value * 32) / 255;
- 
- 	if (pulses == 0) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		mdelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		return 0;
- 	}
- 
--	gpio_set_value_cansleep(led_dat->gpio, 1);
-+	gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 
- 	while (pulses--) {
--		gpio_set_value_cansleep(led_dat->gpio, 0);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 0);
- 		udelay(1);
--		gpio_set_value_cansleep(led_dat->gpio, 1);
-+		gpiod_set_value_cansleep(led_dat->gpiod, 1);
- 		udelay(1);
- 	}
- 
-@@ -85,15 +86,8 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (!led_data)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (!gpio_is_valid(template->gpio)) {
--		dev_info(dev, "skipping unavailable LT3593 LED at gpio "
--			 "%d (%s)\n", template->gpio, template->name);
--		return ERR_PTR(-EINVAL);
--	}
--
- 	led_data->cdev.name = template->name;
- 	led_data->cdev.default_trigger = template->default_trigger;
--	led_data->gpio = template->gpio;
- 	led_data->cdev.brightness_set_blocking = lt3593_led_set;
- 
- 	state = (template->default_state == LEDS_GPIO_DEFSTATE_ON);
-@@ -108,6 +102,10 @@ static struct lt3593_led_data *lt3593_led_probe_pdata(struct device *dev)
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-+	led_data->gpiod = gpio_to_desc(template->gpio);
-+	if (!led_data->gpiod)
-+		return ERR_PTR(-EPROBE_DEFER);
+diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+new file mode 100644
+index 0000000..99b3d74
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+@@ -0,0 +1,41 @@
++NXP Layerscape SoC qDMA Controller
++==================================
 +
- 	ret = devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
++This device follows the generic DMA bindings defined in dma/dma.txt.
++
++Required properties:
++
++- compatible:		Must be one of
++			 "fsl,ls1021a-qdma": for LS1021A Board
++			 "fsl,ls1043a-qdma": for ls1043A Board
++			 "fsl,ls1046a-qdma": for ls1046A Board
++- reg:			Should contain the register's base address and length.
++- interrupts:		Should contain a reference to the interrupt used by this
++			device.
++- interrupt-names:	Should contain interrupt names:
++			 "qdma-error": the error interrupt
++			 "qdma-queue": the queue interrupt
++- fsl,queues:		Should contain number of queues supported.
++
++Optional properties:
++
++- dma-channels:		Number of DMA channels supported by the controller.
++- big-endian:		If present registers and hardware scatter/gather descriptors
++			of the qDMA are implemented in big endian mode, otherwise in little
++			mode.
++
++Examples:
++
++	qdma: dma-controller@8390000 {
++		compatible = "fsl,ls1021a-qdma";
++		reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
++		       0x0 0x839a000 0x0 0x2000>; /* Block registers */
++		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "qdma-error", "qdma-queue";
++		dma-channels = <8>;
++		queues = <2>;
++		big-endian;
++	};
++
++DMA clients must use the format described in dma/dma.txt file.
 -- 
-2.17.1
+1.7.1
+
