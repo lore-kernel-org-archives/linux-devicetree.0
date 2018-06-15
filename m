@@ -1,124 +1,55 @@
-Return-Path: <SRS0=RyeN=I5=st.com=hugues.fruchet@kernel.org>
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH 2/2] media: ov5640: add support of module orientation
-Date: Mon, 11 Jun 2018 11:29:17 +0200
-Message-ID: <1528709357-7251-3-git-send-email-hugues.fruchet@st.com>
-In-Reply-To: <1528709357-7251-1-git-send-email-hugues.fruchet@st.com>
-References: <1528709357-7251-1-git-send-email-hugues.fruchet@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, "Hugues Fruchet  <hugues.fruchet@st.com>, Benjamin Gaignard" <benjamin.gaignard@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=Z3/K=JB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from inva020.nxp.com ([92.121.34.13]:43693 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S965553AbeFOKY2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 15 Jun 2018 06:24:28 -0400
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v6 6/7] arm64: dts: ls1046a: add qdma device tree nodes
+Date: Fri, 15 Jun 2018 18:22:35 +0800
+Message-Id: <20180615102236.32859-6-wen.he_1@nxp.com>
+In-Reply-To: <20180615102236.32859-1-wen.he_1@nxp.com>
+References: <20180615102236.32859-1-wen.he_1@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add support of module being physically mounted upside down.
-In this case, mirror and flip are enabled to fix captured images
-orientation.
+add the qDMA device tree nodes for LS1046A devices.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- .../devicetree/bindings/media/i2c/ov5640.txt       |  3 +++
- drivers/media/i2c/ov5640.c                         | 28 ++++++++++++++++++++--
- 2 files changed, 29 insertions(+), 2 deletions(-)
+change in v6:
+	- no
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-index 8e36da0..f76eb7e 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-@@ -13,6 +13,8 @@ Optional Properties:
- 	       This is an active low signal to the OV5640.
- - powerdown-gpios: reference to the GPIO connected to the powerdown pin,
- 		   if any. This is an active high signal to the OV5640.
-+- rotation: integer property; valid values are 0 (sensor mounted upright)
-+	    and 180 (sensor mounted upside down).
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 136ebfa..27988e2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -597,6 +597,21 @@
+ 				 <&clockgen 4 1>;
+ 		};
  
- The device node must contain one 'port' child node for its digital output
- video port, in accordance with the video interface bindings defined in
-@@ -51,6 +53,7 @@ Examples:
- 		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
- 		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
- 		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-+		rotation = <180>;
- 
- 		port {
- 			/* MIPI CSI-2 bus endpoint */
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 41039e5..5529b14 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -215,6 +215,7 @@ struct ov5640_dev {
- 	struct regulator_bulk_data supplies[OV5640_NUM_SUPPLIES];
- 	struct gpio_desc *reset_gpio;
- 	struct gpio_desc *pwdn_gpio;
-+	bool   upside_down;
- 
- 	/* lock to protect all members below */
- 	struct mutex lock;
-@@ -2222,6 +2223,8 @@ static int ov5640_set_ctrl_light_freq(struct ov5640_dev *sensor, int value)
- static int ov5640_set_ctrl_hflip(struct ov5640_dev *sensor, int value)
- {
- 	/*
-+	 * If sensor is mounted upside down, mirror logic is inversed.
-+	 *
- 	 * Sensor is a BSI (Back Side Illuminated) one,
- 	 * so image captured is physically mirrored.
- 	 * This is why mirror logic is inversed in
-@@ -2235,11 +2238,14 @@ static int ov5640_set_ctrl_hflip(struct ov5640_dev *sensor, int value)
- 	 */
- 	return ov5640_mod_reg(sensor, OV5640_REG_TIMING_TC_REG21,
- 			      BIT(2) | BIT(1),
--			      (!value) ? (BIT(2) | BIT(1)) : 0);
-+			      (!(value ^ sensor->upside_down)) ?
-+			      (BIT(2) | BIT(1)) : 0);
- }
- 
- static int ov5640_set_ctrl_vflip(struct ov5640_dev *sensor, int value)
- {
-+	/* If sensor is mounted upside down, flip logic is inversed */
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1046a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
++				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue";
++			dma-channels = <8>;
++			fsl,queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++			big-endian;
++		};
 +
- 	/*
- 	 * TIMING TC REG20:
- 	 * - [2]:	ISP vflip
-@@ -2247,7 +2253,8 @@ static int ov5640_set_ctrl_vflip(struct ov5640_dev *sensor, int value)
- 	 */
- 	return ov5640_mod_reg(sensor, OV5640_REG_TIMING_TC_REG20,
- 			      BIT(2) | BIT(1),
--			      value ? (BIT(2) | BIT(1)) : 0);
-+			      (value ^ sensor->upside_down) ?
-+			      (BIT(2) | BIT(1)) : 0);
- }
- 
- static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
-@@ -2625,6 +2632,7 @@ static int ov5640_probe(struct i2c_client *client,
- 	struct fwnode_handle *endpoint;
- 	struct ov5640_dev *sensor;
- 	struct v4l2_mbus_framefmt *fmt;
-+	u32 rotation;
- 	int ret;
- 
- 	sensor = devm_kzalloc(dev, sizeof(*sensor), GFP_KERNEL);
-@@ -2650,6 +2658,22 @@ static int ov5640_probe(struct i2c_client *client,
- 
- 	sensor->ae_target = 52;
- 
-+	/* optional indication of physical rotation of sensor */
-+	ret = fwnode_property_read_u32(of_fwnode_handle(client->dev.of_node),
-+				       "rotation", &rotation);
-+	if (!ret) {
-+		switch (rotation) {
-+		case 180:
-+			sensor->upside_down = true;
-+			/* fall through */
-+		case 0:
-+			break;
-+		default:
-+			dev_warn(dev, "%u degrees rotation is not supported, ignoring...\n",
-+				 rotation);
-+		}
-+	}
-+
- 	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
- 						  NULL);
- 	if (!endpoint) {
+ 		usb0: usb@2f00000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0x2f00000 0x0 0x10000>;
 -- 
-1.9.1
+1.7.1
+
