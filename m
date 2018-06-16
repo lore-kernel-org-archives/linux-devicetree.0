@@ -1,187 +1,90 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 6/7] soc: qcom: Add RPMh Power domain driver
-Date: Sat, 16 Jun 2018 14:13:31 +0200
-Message-ID: <CAPDyKFq-OVH1qVgK3MQ0NQwcBEvpBFmP-eGmSgPsKKqr0Jw7zw@mail.gmail.com>
-References: <20180612044052.4402-1-rnayak@codeaurora.org> <20180612044052.4402-7-rnayak@codeaurora.org>
- <d438946d-3d6f-4436-27c7-3eae4559ec53@codeaurora.org> <f6b166ee-538f-c8b7-3be5-57c20a599d47@codeaurora.org>
- <bd8999bd-a3ae-b7e2-a805-b31d38571ec6@codeaurora.org> <CAPDyKFrz=+nnLS+YnrSKzo_UXVgKLoTvH5XQL1o_EV5u3zvw9g@mail.gmail.com>
- <9193c5c7-78a9-f57c-4529-2346ddaafc13@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9193c5c7-78a9-f57c-4529-2346ddaafc13@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v7 3/6] DTS: gta04: add uart2 child node for w2sg0004 GPS
+ receiver
+Date: Sat, 16 Jun 2018 17:37:59 +0200
+Message-ID: <23B66F6C-83A1-4666-A4E1-D127C6E3446B@goldelico.com>
+References: <cover.1525340143.git.hns@goldelico.com>
+ <9ebb28aed589aca8e9b5bc5c910f1d2f0d62669d.1525340143.git.hns@goldelico.com>
+ <20180614194428.GA17808@amd>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180614194428.GA17808@amd>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pyra-handheld.com, Johan Hovold <johan@kernel.org>, "Andrew F. Davis" <afd@ti.com>, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, letux-kernel@openphoenux.org, Thierry Reding <treding@nvidia.com>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15 June 2018 at 23:46, David Collins <collinsd@codeaurora.org> wrote:
-> Hello Ulf,
->
-> On 06/15/2018 02:25 AM, Ulf Hansson wrote:
->> On 14 June 2018 at 20:17, David Collins <collinsd@codeaurora.org> wrote:
->>> On 06/13/2018 11:54 PM, Rajendra Nayak wrote:
->>>> On 06/14/2018 06:02 AM, David Collins wrote:
->>>>> On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
->>> ...
->>>>>> +static int rpmhpd_power_off(struct generic_pm_domain *domain)
->>>>>> +{
->>>>>> +   struct rpmhpd *pd = domain_to_rpmhpd(domain);
->>>>>> +   int ret = 0;
->>>>>> +
->>>>>> +   mutex_lock(&rpmhpd_lock);
->>>>>> +
->>>>>> +   if (pd->level[0] == 0)
->>>>>> +           ret = rpmhpd_aggregate_corner(pd, 0);
->>>>>
->>>>> I'm not sure that we want to have the 'pd->level[0] == 0' check,
->>>>> especially when considering aggregation with the peer pd.  I understand
->>>>> its intention to try to keep enable state and level setting orthogonal.
->>>>> However, as it stands now, the final request sent to hardware would differ
->>>>> depending upon the order of calls.  Consider the following example.
->>>>>
->>>>> Initial state:
->>>>> pd->level[0] == 0
->>>>> pd->corner = 5, pd->enabled = true, pd->active_only = false
->>>>> pd->peer->corner = 7, pd->peer->enabled = true, pd->peer->active_only = true
->>>>>
->>>>> Outstanding requests:
->>>>> RPMH_ACTIVE_ONLY_STATE = 7, RPMH_WAKE_ONLY_STATE = 7, RPMH_SLEEP_STATE = 5
->>>>>
->>>>> Case A:
->>>>>      1. set pd->corner = 6
->>>>>              --> new value request: RPMH_SLEEP_STATE = 6
->>>>>              --> duplicate value requests: RPMH_ACTIVE_ONLY_STATE = 7,
->>>>>                      RPMH_WAKE_ONLY_STATE = 7
->>>>>      2. power_off pd->peer
->>>>>              --> no requests
->>>>
->>>> I am not sure why there would be no requests, since we do end up aggregating
->>>> with pd->peer->corner = 0.
->>>> So the final state would be
->>>>
->>>> RPMH_ACTIVE_ONLY_STATE = max(6, 0) = 6
->>>> RPMH_WAKE_ONLY_STATE = 6
->>>> RPMH_SLEEP_STATE = max(6, 0) = 6
->>>
->>> Argh, my example was ruined by a one character typo.  I meant to have:
->>>
->>>         Initial state:
->>>         pd->level[0] != 0
->>>
->>>
->>>>>
->>>>>      Final state:
->>>>>      RPMH_ACTIVE_ONLY_STATE = 7
->>>>>      RPMH_WAKE_ONLY_STATE = 7
->>>>>      RPMH_SLEEP_STATE = 6
->>>>>
->>>>> Case B:
->>>>>      1. power_off pd->peer
->>>>>              --> no requests
->>>>
->>>> Here it would be again be aggregation based on pd->peer->corner = 0
->>>> so,
->>>> RPMH_ACTIVE_ONLY_STATE = max(5, 0) = 5
->>>> RPMH_WAKE_ONLY_STATE = 5
->>>> RPMH_SLEEP_STATE = max(5, 0) = 5
->>>>
->>>>>      2. set pd->corner = 6
->>>>>              --> new value requests: RPMH_ACTIVE_ONLY_STATE = 6,
->>>>>                     RPMH_WAKE_ONLY_STATE = 6, RPMH_SLEEP_STATE = 6
->>>>>
->>>>>      Final state:
->>>>>      RPMH_ACTIVE_ONLY_STATE = 6
->>>>>      RPMH_WAKE_ONLY_STATE = 6
->>>>>      RPMH_SLEEP_STATE = 6
->>>>
->>>> correct,
->>>> RPMH_ACTIVE_ONLY_STATE = max(6, 0) = 6
->>>> RPMH_WAKE_ONLY_STATE = 6
->>>> RPMH_SLEEP_STATE = max(6, 0) = 6
->>>>
->>>>>
->>>>> Without the check, Linux would vote for the lowest supported level when
->>>>> power_off is called.  This seems semantically reasonable given that the
->>>>> consumer is ok with the power domain going fully off and that would be the
->>>>> closest that we can get.
->>>>
->>>> So are you suggesting I replace
->>>>
->>>>>> +   if (pd->level[0] == 0)
->>>>>> +           ret = rpmhpd_aggregate_corner(pd, 0);
->>>>
->>>> with
->>>>
->>>>>> +   ret = rpmhpd_aggregate_corner(pd, pd->level[0]);
->>>
->>> Yes, this is the modification that I'm requesting.
->>>
->>>
->>>> I can see what you said above makes sense but if its
->>>>> Initial state:
->>>>> pd->level[0] != 0
->>>>
->>>> Was that what you meant?
->>>
->>> Yes.
->>
->> Apologize for jumping into the discussion.
->>
->> I have a couple of ideas, that may simplify/improve things related to the above.
->>
->> 1) Would it be easier if genpd calls ->set_performance_state(0) before
->> it is about to call the ->power_off() callback? Actually Viresh wanted
->> that from the start, but I thought it was useless.
->
-> This sounds like a relatively reasonable thing to do that falls in line
-> with the semantics of the API.  It would also necessitate genpd
-> aggregating performance state requests again when ->power_on() is called
-> so that ->set_performance_state() can be called with an appropriate value.
->
-> I think that the issue that I identified above should be solved outright
-> within the rpmhpd driver though.  It is a bug in the RPMh-specific active
-> + sleep vs active-only aggregation logic.
->
-> The feature you are describing here seems more like a power optimization
-> that would help in the case of consumer disabling the power domain without
-> scaling down the performance level for a power domain that does not
-> support enable/disable.
+Hi Pavel,
 
-Right. Seems like this isn't needed then.
+> Am 14.06.2018 um 21:44 schrieb Pavel Machek <pavel@ucw.cz>:
+> 
+> On Thu 2018-05-03 11:35:48, H. Nikolaus Schaller wrote:
+>> GTA04 has a W2SG0004 module connected to UART2 of the OMAP3
+>> processor. A GPIO can pulse the on/off toggle switch.
+>> 
+>> Note that there is no WAKEUP output from the W2SG0004,
+>> hence we can't use the generic SirfStar binding.
+>> 
+>> The VSIM regulator is used to power on/off the LNA of an
+>> external active GPS antenna so that a driver can turn the
+>> LNA off if GPS is not needed to save battery energy.
+> 
+> This reads as if you did low->high->low to turn GPS on, then
+> low->high->low to turn GPS off again. Is that correct?
 
-The genpd driver can just implement the callbacks instead.
+Yes, it controls a toggle switch inside the gps module.
 
->
-> Would this behavior in genpd be implemented per power domain or per consumer?
->
->
->> 2) When device are becoming runtime suspended, the ->runtime_suspend()
->> callback of genpd is invoked (genpd_runtime_suspend()). However, in
->> there we don't care to re-evaluate the votes on the performance level,
->> but instead rely on the corresponding driver for the device to drop
->> the vote. I think it would be a good idea of managing this internally
->> in genpd instead, thus, depending on if the aggregated vote can be
->> decreased we should call  ->set_performance_state(new-vote). Of
->> course, once the device get runtime resumed, the votes needs to be
->> restored for the device.
->
-> This feature sounds a little risky.  Is it really safe for all cases for
-> the genpd framework to unilaterally make these kind of decisions for
-> consumers?  Could there be any interdependencies between resources that
-> consumers need to enforce that would not be possible if genpd handled
-> power state reduction automatically (for example two power domains with a
-> sequencing requirement between them)?
+Data sheet (page 5, table 1):
 
-In regards to resource/device dependencies, those needs to be properly
-manged anyway when using runtime PM. For that we have mechanism for
-dealing with parent-childs and the so called device links for
-functional dependencies.
+	http://download.goldelico.com/gta04-hardware/Datasheets/W2SG0004_Datasheet_Rev1.81.pdf
 
-For sequencing, that may be an issue, as currently we don't propagate
-performance states hierarchically inside genpd. I know Viresh is
-looking at addressing this, so perhaps we should come back to this
-within that context instead.
+Well, it says it wants a "Low going pulse (two RTC ticks), for power save".
+So this indicates "high->low->high" and the chip responds on an unspecified edge.
 
-Kind regards
-Uffe
+If I speculate about the logic behind this, I think there was the concept of a
+push-button at the navigator's console of a vessel (button is connected through
+a single long wire and grounded at the console) to turn the receiver on or off.
+
+Now the question is which edge turns it on or of. Pushing or releasing the button?
+high->low or low->high? There is no hint in the data sheet.
+
+If we assume it has not been changed in the w2sg0084i, we can look at page 9, figure 3
+
+	https://www.mouser.com/ds/2/437/W2SG0084i_Datasheet_Rev1%2061-1114.pdf
+
+to find that a rising edge changes the power state.
+
+Experiments with manually controlling the w2sg0004 through /sys/class/gpio have
+confirmed that that the rising edge is relevant.
+
+Now on power-on there seems to be a special rule. If the on/off line is
+permanently grounded (i.e. low), the module will turn on automatically at
+power-on. So there is no need for any edge.
+
+But since we don't want the module to be turned on at power-on (while U-Boot
+is running) we have code there to initialize the gpio line to high.
+
+Unfortunately you have not cited the code of the patch, so let me add it back:
+
+> +		/* GPIO_145: trigger for on/off-impulse for w2sg0004 */
+> +		enable-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
+
+So there it is described as GPIO_ACTIVE_HIGH.
+
+This might seem to contradict the data sheet which talks about a low going pulse,
+but better reflects the active low->high edge.
+
+I hope this answers your question completely.
+
+BR and thanks,
+Nikolaus
