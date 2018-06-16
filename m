@@ -1,90 +1,72 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v7 3/6] DTS: gta04: add uart2 child node for w2sg0004 GPS
- receiver
-Date: Sat, 16 Jun 2018 17:37:59 +0200
-Message-ID: <23B66F6C-83A1-4666-A4E1-D127C6E3446B@goldelico.com>
-References: <cover.1525340143.git.hns@goldelico.com>
- <9ebb28aed589aca8e9b5bc5c910f1d2f0d62669d.1525340143.git.hns@goldelico.com>
- <20180614194428.GA17808@amd>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: dac: Add docs for AD5758 DAC
+Date: Sat, 16 Jun 2018 18:49:07 +0100
+Message-ID: <20180616184907.5831c24a@archlinux>
+References: <1528377065-647-1-git-send-email-stefan.popa@analog.com>
+        <CACRpkda5T-nUMoJKUUUDmC_MvQPs=ZP3W3ZwkgfpjozxtrHuoQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180614194428.GA17808@amd>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pyra-handheld.com, Johan Hovold <johan@kernel.org>, "Andrew F. Davis" <afd@ti.com>, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, letux-kernel@openphoenux.org, Thierry Reding <treding@nvidia.com>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Jonathan Cameron <jic23@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda5T-nUMoJKUUUDmC_MvQPs=ZP3W3ZwkgfpjozxtrHuoQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stefan Popa <stefan.popa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Mon, 11 Jun 2018 10:42:35 +0200
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> Am 14.06.2018 um 21:44 schrieb Pavel Machek <pavel@ucw.cz>:
+> On Thu, Jun 7, 2018 at 3:11 PM, Stefan Popa <stefan.popa@analog.com> wrote:
 > 
-> On Thu 2018-05-03 11:35:48, H. Nikolaus Schaller wrote:
->> GTA04 has a W2SG0004 module connected to UART2 of the OMAP3
->> processor. A GPIO can pulse the on/off toggle switch.
->> 
->> Note that there is no WAKEUP output from the W2SG0004,
->> hence we can't use the generic SirfStar binding.
->> 
->> The VSIM regulator is used to power on/off the LNA of an
->> external active GPS antenna so that a driver can turn the
->> LNA off if GPS is not needed to save battery energy.
+> > + - adi,slew: Array of slewrate settings should contain 3 fields:
+> > +       1: Should be either 0 or 1 in order to enable or disable slewrate.  
 > 
-> This reads as if you did low->high->low to turn GPS on, then
-> low->high->low to turn GPS off again. Is that correct?
+> We have a standard binding in pin control for "slew-rate".
+> 
+> It doesn't have a unit today though.
+> 
+> > +       2: Slew rate clock:
+> > +               Valid values for the slew rate update frequency [Hz]:
+> > +               * 240000
+> > +               * 200000
+> > +               * 150000
+> > +               * 128000
+> > +               * 64000
+> > +               * 32000
+> > +               * 16000
+> > +               * 8000
+> > +               * 4000
+> > +               * 2000
+> > +               * 1000
+> > +               * 512
+> > +               * 256
+> > +               * 128
+> > +               * 64
+> > +               * 16
+> > +       3: Slew rate step:
+> > +               Defines by how much the output value changes at each update.
+> > +               Valid values for the step size LSBs:
+> > +               * 4
+> > +               * 12
+> > +               * 64
+> > +               * 120
+> > +               * 256
+> > +               * 500
+> > +               * 1820
+> > +               * 2048  
+> 
+> This is pretty idiomatic and just encodes the configuration fields from the
+> hardware into the device tree.
+> 
+> The normal slew rate unit is Volts per microsecond.
+> 
+> I get the feeling that we could define that simply, and then calculate
+> the slew rate clock and step using that to find the best match for
+> a certain slew rate.
+> 
+> Yours,
+> Linus Walleij
+Agreed. A single value would be nice if possible.
 
-Yes, it controls a toggle switch inside the gps module.
-
-Data sheet (page 5, table 1):
-
-	http://download.goldelico.com/gta04-hardware/Datasheets/W2SG0004_Datasheet_Rev1.81.pdf
-
-Well, it says it wants a "Low going pulse (two RTC ticks), for power save".
-So this indicates "high->low->high" and the chip responds on an unspecified edge.
-
-If I speculate about the logic behind this, I think there was the concept of a
-push-button at the navigator's console of a vessel (button is connected through
-a single long wire and grounded at the console) to turn the receiver on or off.
-
-Now the question is which edge turns it on or of. Pushing or releasing the button?
-high->low or low->high? There is no hint in the data sheet.
-
-If we assume it has not been changed in the w2sg0084i, we can look at page 9, figure 3
-
-	https://www.mouser.com/ds/2/437/W2SG0084i_Datasheet_Rev1%2061-1114.pdf
-
-to find that a rising edge changes the power state.
-
-Experiments with manually controlling the w2sg0004 through /sys/class/gpio have
-confirmed that that the rising edge is relevant.
-
-Now on power-on there seems to be a special rule. If the on/off line is
-permanently grounded (i.e. low), the module will turn on automatically at
-power-on. So there is no need for any edge.
-
-But since we don't want the module to be turned on at power-on (while U-Boot
-is running) we have code there to initialize the gpio line to high.
-
-Unfortunately you have not cited the code of the patch, so let me add it back:
-
-> +		/* GPIO_145: trigger for on/off-impulse for w2sg0004 */
-> +		enable-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
-
-So there it is described as GPIO_ACTIVE_HIGH.
-
-This might seem to contradict the data sheet which talks about a low going pulse,
-but better reflects the active low->high edge.
-
-I hope this answers your question completely.
-
-BR and thanks,
-Nikolaus
+J
