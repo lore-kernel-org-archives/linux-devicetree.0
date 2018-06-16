@@ -1,168 +1,187 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v2 11/27] drm/sun4i: tcon: Add support
- for tcon-top gate
-Date: Sat, 16 Jun 2018 13:48:38 +0800
-Message-ID: <CAGb2v66Tv7876_heSve0zb+vWfz9kbwbrU8NjnpTwUHm6xOKJQ@mail.gmail.com>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
- <2948115.KggauuSURZ@jernej-laptop> <CAGb2v66UFRKRF4_zbm8nQJYoOHb-iLbiU_0iYWep=WNiQDftMQ@mail.gmail.com>
- <3871160.F3Km1rQkUz@jernej-laptop>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 6/7] soc: qcom: Add RPMh Power domain driver
+Date: Sat, 16 Jun 2018 14:13:31 +0200
+Message-ID: <CAPDyKFq-OVH1qVgK3MQ0NQwcBEvpBFmP-eGmSgPsKKqr0Jw7zw@mail.gmail.com>
+References: <20180612044052.4402-1-rnayak@codeaurora.org> <20180612044052.4402-7-rnayak@codeaurora.org>
+ <d438946d-3d6f-4436-27c7-3eae4559ec53@codeaurora.org> <f6b166ee-538f-c8b7-3be5-57c20a599d47@codeaurora.org>
+ <bd8999bd-a3ae-b7e2-a805-b31d38571ec6@codeaurora.org> <CAPDyKFrz=+nnLS+YnrSKzo_UXVgKLoTvH5XQL1o_EV5u3zvw9g@mail.gmail.com>
+ <9193c5c7-78a9-f57c-4529-2346ddaafc13@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBTOJSLMQKGQEY7JS6EQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3871160.F3Km1rQkUz@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9193c5c7-78a9-f57c-4529-2346ddaafc13@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 16, 2018 at 1:33 AM, Jernej =C5=A0krabec <jernej.skrabec@siol.n=
-et> wrote:
-> Dne petek, 15. junij 2018 ob 19:13:17 CEST je Chen-Yu Tsai napisal(a):
->> On Sat, Jun 16, 2018 at 12:41 AM, Jernej =C5=A0krabec
->>
->> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
->> > Hi,
->> >
->> > Dne petek, 15. junij 2018 ob 10:31:10 CEST je Maxime Ripard napisal(a)=
-:
->> >> Hi,
->> >>
->> >> On Tue, Jun 12, 2018 at 10:00:20PM +0200, Jernej Skrabec wrote:
->> >> > TV TCONs connected to TCON TOP have to enable additional gate in or=
-der
->> >> > to work.
->> >> >
->> >> > Add support for such TCONs.
->> >> >
->> >> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
->> >> > ---
->> >> >
->> >> >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 11 +++++++++++
->> >> >  drivers/gpu/drm/sun4i/sun4i_tcon.h |  4 ++++
->> >> >  2 files changed, 15 insertions(+)
->> >> >
->> >> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> >> > b/drivers/gpu/drm/sun4i/sun4i_tcon.c index 08747fc3ee71..0afb5a94a4=
-14
->> >> > 100644
->> >> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> >> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> >> > @@ -688,6 +688,16 @@ static int sun4i_tcon_init_clocks(struct devic=
-e
->> >> > *dev,
->> >> >
->> >> >             dev_err(dev, "Couldn't get the TCON bus clock\n");
->> >> >             return PTR_ERR(tcon->clk);
->> >> >
->> >> >     }
->> >> >
->> >> > +
->> >> > +   if (tcon->quirks->has_tcon_top_gate) {
->> >> > +           tcon->top_clk =3D devm_clk_get(dev, "tcon-top");
->> >> > +           if (IS_ERR(tcon->top_clk)) {
->> >> > +                   dev_err(dev, "Couldn't get the TCON TOP bus
->> >> > clock\n");
->> >> > +                   return PTR_ERR(tcon->top_clk);
->> >> > +           }
->> >> > +           clk_prepare_enable(tcon->top_clk);
->> >> > +   }
->> >> > +
->> >>
->> >> Is it required for the TCON itself to operate, or does the TCON
->> >> requires the TCON TOP, which in turn requires that clock to be
->> >> functional?
->> >>
->> >> I find it quite odd to have a clock that isn't meant for a particular
->> >> device to actually be wired to another device. I'm not saying this
->> >> isn't the case, but it would be a first.
->> >
->> > Documentation doesn't say much about that gate. I did few tests and TC=
-ON
->> > registers can be read and written even if TCON TOP TV TCON gate is
->> > disabled. However, there is no image, as expected.
->>
->> The R40 manual does include it in the diagram, on page 504. There's also=
- a
->> mux to select whether the clock comes directly from the CCU or the TV
->> encoder (a feedback mode?). I assume this is the gate you are referring =
-to
->> here, in which case it is not a bus clock, but rather the TCON module or
->> channel clock, strangely routed.
->>
->> > More interestingly, I enabled test pattern directly in TCON to elimina=
-te
->> > influence of the mixer. As soon as I disabled that gate, test pattern =
-on
->> > HDMI screen was gone, which suggest that this gate influences somethin=
-g
->> > inside TCON.
->> >
->> > Another test I did was that I moved enable/disable gate code to
->> > sun4i_tcon_channel_set_status() and it worked just as well.
->> >
->> > I'll ask AW engineer what that gate actually does, but from what I saw=
-, I
->> > would say that most appropriate location to enable/disable TCON TOP TV
->> > TCON
->> > gate is TCON driver. Alternatively, TCON TOP driver could check if any=
- TV
->> > TCON is in use and enable appropriate gate. However, that doesn't soun=
-d
->> > right to me for some reason.
->>
->> If what I said above it true, then yes, the appropriate location to enab=
-le
->> it is the TCON driver, but moreover, the representation of the clock tre=
-e
->> should be fixed such that the TCON takes the clock from the TCON TOP as =
-its
->> channel/ module clock instead. That way you don't need this patch, but
->> you'd add another for all the clock routing.
+On 15 June 2018 at 23:46, David Collins <collinsd@codeaurora.org> wrote:
+> Hello Ulf,
 >
-> Can you be more specific? I not sure what you mean here.
+> On 06/15/2018 02:25 AM, Ulf Hansson wrote:
+>> On 14 June 2018 at 20:17, David Collins <collinsd@codeaurora.org> wrote:
+>>> On 06/13/2018 11:54 PM, Rajendra Nayak wrote:
+>>>> On 06/14/2018 06:02 AM, David Collins wrote:
+>>>>> On 06/11/2018 09:40 PM, Rajendra Nayak wrote:
+>>> ...
+>>>>>> +static int rpmhpd_power_off(struct generic_pm_domain *domain)
+>>>>>> +{
+>>>>>> +   struct rpmhpd *pd = domain_to_rpmhpd(domain);
+>>>>>> +   int ret = 0;
+>>>>>> +
+>>>>>> +   mutex_lock(&rpmhpd_lock);
+>>>>>> +
+>>>>>> +   if (pd->level[0] == 0)
+>>>>>> +           ret = rpmhpd_aggregate_corner(pd, 0);
+>>>>>
+>>>>> I'm not sure that we want to have the 'pd->level[0] == 0' check,
+>>>>> especially when considering aggregation with the peer pd.  I understand
+>>>>> its intention to try to keep enable state and level setting orthogonal.
+>>>>> However, as it stands now, the final request sent to hardware would differ
+>>>>> depending upon the order of calls.  Consider the following example.
+>>>>>
+>>>>> Initial state:
+>>>>> pd->level[0] == 0
+>>>>> pd->corner = 5, pd->enabled = true, pd->active_only = false
+>>>>> pd->peer->corner = 7, pd->peer->enabled = true, pd->peer->active_only = true
+>>>>>
+>>>>> Outstanding requests:
+>>>>> RPMH_ACTIVE_ONLY_STATE = 7, RPMH_WAKE_ONLY_STATE = 7, RPMH_SLEEP_STATE = 5
+>>>>>
+>>>>> Case A:
+>>>>>      1. set pd->corner = 6
+>>>>>              --> new value request: RPMH_SLEEP_STATE = 6
+>>>>>              --> duplicate value requests: RPMH_ACTIVE_ONLY_STATE = 7,
+>>>>>                      RPMH_WAKE_ONLY_STATE = 7
+>>>>>      2. power_off pd->peer
+>>>>>              --> no requests
+>>>>
+>>>> I am not sure why there would be no requests, since we do end up aggregating
+>>>> with pd->peer->corner = 0.
+>>>> So the final state would be
+>>>>
+>>>> RPMH_ACTIVE_ONLY_STATE = max(6, 0) = 6
+>>>> RPMH_WAKE_ONLY_STATE = 6
+>>>> RPMH_SLEEP_STATE = max(6, 0) = 6
+>>>
+>>> Argh, my example was ruined by a one character typo.  I meant to have:
+>>>
+>>>         Initial state:
+>>>         pd->level[0] != 0
+>>>
+>>>
+>>>>>
+>>>>>      Final state:
+>>>>>      RPMH_ACTIVE_ONLY_STATE = 7
+>>>>>      RPMH_WAKE_ONLY_STATE = 7
+>>>>>      RPMH_SLEEP_STATE = 6
+>>>>>
+>>>>> Case B:
+>>>>>      1. power_off pd->peer
+>>>>>              --> no requests
+>>>>
+>>>> Here it would be again be aggregation based on pd->peer->corner = 0
+>>>> so,
+>>>> RPMH_ACTIVE_ONLY_STATE = max(5, 0) = 5
+>>>> RPMH_WAKE_ONLY_STATE = 5
+>>>> RPMH_SLEEP_STATE = max(5, 0) = 5
+>>>>
+>>>>>      2. set pd->corner = 6
+>>>>>              --> new value requests: RPMH_ACTIVE_ONLY_STATE = 6,
+>>>>>                     RPMH_WAKE_ONLY_STATE = 6, RPMH_SLEEP_STATE = 6
+>>>>>
+>>>>>      Final state:
+>>>>>      RPMH_ACTIVE_ONLY_STATE = 6
+>>>>>      RPMH_WAKE_ONLY_STATE = 6
+>>>>>      RPMH_SLEEP_STATE = 6
+>>>>
+>>>> correct,
+>>>> RPMH_ACTIVE_ONLY_STATE = max(6, 0) = 6
+>>>> RPMH_WAKE_ONLY_STATE = 6
+>>>> RPMH_SLEEP_STATE = max(6, 0) = 6
+>>>>
+>>>>>
+>>>>> Without the check, Linux would vote for the lowest supported level when
+>>>>> power_off is called.  This seems semantically reasonable given that the
+>>>>> consumer is ok with the power domain going fully off and that would be the
+>>>>> closest that we can get.
+>>>>
+>>>> So are you suggesting I replace
+>>>>
+>>>>>> +   if (pd->level[0] == 0)
+>>>>>> +           ret = rpmhpd_aggregate_corner(pd, 0);
+>>>>
+>>>> with
+>>>>
+>>>>>> +   ret = rpmhpd_aggregate_corner(pd, pd->level[0]);
+>>>
+>>> Yes, this is the modification that I'm requesting.
+>>>
+>>>
+>>>> I can see what you said above makes sense but if its
+>>>>> Initial state:
+>>>>> pd->level[0] != 0
+>>>>
+>>>> Was that what you meant?
+>>>
+>>> Yes.
+>>
+>> Apologize for jumping into the discussion.
+>>
+>> I have a couple of ideas, that may simplify/improve things related to the above.
+>>
+>> 1) Would it be easier if genpd calls ->set_performance_state(0) before
+>> it is about to call the ->power_off() callback? Actually Viresh wanted
+>> that from the start, but I thought it was useless.
+>
+> This sounds like a relatively reasonable thing to do that falls in line
+> with the semantics of the API.  It would also necessitate genpd
+> aggregating performance state requests again when ->power_on() is called
+> so that ->set_performance_state() can be called with an appropriate value.
+>
+> I think that the issue that I identified above should be solved outright
+> within the rpmhpd driver though.  It is a bug in the RPMh-specific active
+> + sleep vs active-only aggregation logic.
+>
+> The feature you are describing here seems more like a power optimization
+> that would help in the case of consumer disabling the power domain without
+> scaling down the performance level for a power domain that does not
+> support enable/disable.
 
-For clock related properties in the device tree:
+Right. Seems like this isn't needed then.
 
-&tcon_top {
-    clocks =3D <&ccu CLK_BUS_TCON_TOP>,
-             <&ccu CLK_TCON_TV0>,
-             <&tve0>,
-             <&ccu CLK_TCON_TV1>,
-             <&tve1>;
-    clock-names =3D "bus", "tcon-tv0", "tve0", "tcon-tv1", "tve1";
-    clock-output-names =3D "tcon-top-tv0", "tcon-top-tv1";
-};
+The genpd driver can just implement the callbacks instead.
 
-&tcon_tv0 {
-    clocks =3D <&ccu CLK_BUS_TCON_TV0>, <&tcon_top 0>'
-    clock-names =3D "ahb", "tcon-ch1";
-};
+>
+> Would this behavior in genpd be implemented per power domain or per consumer?
+>
+>
+>> 2) When device are becoming runtime suspended, the ->runtime_suspend()
+>> callback of genpd is invoked (genpd_runtime_suspend()). However, in
+>> there we don't care to re-evaluate the votes on the performance level,
+>> but instead rely on the corresponding driver for the device to drop
+>> the vote. I think it would be a good idea of managing this internally
+>> in genpd instead, thus, depending on if the aggregated vote can be
+>> decreased we should call  ->set_performance_state(new-vote). Of
+>> course, once the device get runtime resumed, the votes needs to be
+>> restored for the device.
+>
+> This feature sounds a little risky.  Is it really safe for all cases for
+> the genpd framework to unilaterally make these kind of decisions for
+> consumers?  Could there be any interdependencies between resources that
+> consumers need to enforce that would not be possible if genpd handled
+> power state reduction automatically (for example two power domains with a
+> sequencing requirement between them)?
 
-A diagram would look like:
+In regards to resource/device dependencies, those needs to be properly
+manged anyway when using runtime PM. For that we have mechanism for
+dealing with parent-childs and the so called device links for
+functional dependencies.
 
-                   | This part is TCON TOP |
-                   v                       v
-CCU CLK_TCON_TV0 --|----\                  |
-                   |     mux ---- gate ----|-- TCON_TV0
-TVE0 --------------|----/                  |
+For sequencing, that may be an issue, as currently we don't propagate
+performance states hierarchically inside genpd. I know Viresh is
+looking at addressing this, so perhaps we should come back to this
+within that context instead.
 
-And the same goes for TCON_TV1 and TVE1.
-
-The user manual is a bit lacking on how TVE outputs a clock though.
-
-ChenYu
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Kind regards
+Uffe
