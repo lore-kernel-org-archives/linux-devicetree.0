@@ -1,11 +1,13 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2] ARM: dts: am437x: make edt-ft5x06 a wakeup source
-Date: Sun, 17 Jun 2018 13:53:09 +0200
-Message-ID: <20180617115309.1341-1-daniel@zonque.org>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V2 2/4] dt-bindings: arm: fsl: add mu binding doc
+Date: Sun, 17 Jun 2018 20:49:47 +0800
+Message-ID: <1529239789-26849-3-git-send-email-aisheng.dong@nxp.com>
+References: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1529239789-26849-1-git-send-email-aisheng.dong@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,22 +17,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
-Cc: devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, dongas86@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHRvdWNoc2NyZWVuIGRyaXZlciBubyBsb25nZXIgY29uZmlndXJlcyB0aGUgZGV2aWNlIGFz
-IHdha2V1cCBzb3VyY2UgYnkKZGVmYXVsdC4gQSAid2FrZXVwLXNvdXJjZSIgcHJvcGVydHkgaXMg
-bmVlZGVkLgoKU2lnbmVkLW9mZi1ieTogRGFuaWVsIE1hY2sgPGRhbmllbEB6b25xdWUub3JnPgot
-LS0KdjEg4oaSIHYyOiBhbWVuZGVkIHN1YmplY3QgdG8gbm90IG1lbnRpb24gaW14NiBhbnltb3Jl
-CgogYXJjaC9hcm0vYm9vdC9kdHMvYW00Mzd4LXNrLWV2bS5kdHMgfCAyICsrCiAxIGZpbGUgY2hh
-bmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYW00
-Mzd4LXNrLWV2bS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9hbTQzN3gtc2stZXZtLmR0cwppbmRl
-eCA0NDAzNTFhZDBiODAuLmQ0YmUzZmQwYjZmNCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvYW00Mzd4LXNrLWV2bS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYW00Mzd4LXNrLWV2
-bS5kdHMKQEAgLTYxMCw2ICs2MTAsOCBAQAogCiAJCXRvdWNoc2NyZWVuLXNpemUteCA9IDw0ODA+
-OwogCQl0b3VjaHNjcmVlbi1zaXplLXkgPSA8MjcyPjsKKworCQl3YWtldXAtc291cmNlOwogCX07
-CiAKIAl0bHYzMjBhaWMzMTA2OiB0bHYzMjBhaWMzMTA2QDFiIHsKLS0gCjIuMTcuMQoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+The Messaging Unit module enables two processors within
+the SoC to communicate and coordinate by passing messages
+(e.g. data, status and control) through the MU interface.
+
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+v1->v2:
+ * typo fixes
+ * remove status property
+ * remove imx6&7 compatible string which may be added later for
+   the generic mailbox binding
+
+Note: Because MU used by SCU is not implemented as a mailbox driver,
+Instead, they're provided in library calls to gain higher performance.
+Futhermore, SCU MU has only one channel. But the binding doc claims
+(Change to allow 0?)
+So we did not follow the mailbox binding.
+
+For the generic mailbox driver binding way, it may be added later.
+---
+ .../devicetree/bindings/arm/freescale/fsl,mu.txt   | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+new file mode 100644
+index 0000000..c37aa1d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,mu.txt
+@@ -0,0 +1,32 @@
++NXP i.MX Messaging Unit (MU)
++--------------------------------------------------------------------
++
++The Messaging Unit module enables two processors within the SoC to
++communicate and coordinate by passing messages (e.g. data, status
++and control) through the MU interface. The MU also provides the ability
++for one processor to signal the other processor using interrupts.
++
++Because the MU manages the messaging between processors, the MU uses
++different clocks (from each side of the different peripheral buses).
++Therefore, the MU must synchronize the accesses from one side to the
++other. The MU accomplishes synchronization using two sets of matching
++registers (Processor A-facing, Processor B-facing).
++
++Messaging Unit Device Node:
++=============================
++
++Required properties:
++-------------------
++- compatible :	should be "fsl,<chip>-mu", the supported chips include
++		imx8qxp, imx8qm.
++- reg :		Should contain the registers location and length
++- interrupts :	Interrupt number. The interrupt specifier format depends
++		on the interrupt controller parent.
++
++Examples:
++--------
++lsio_mu0: mu@5d1b0000 {
++	compatible = "fsl,imx8qxp-mu";
++	reg = <0x0 0x5d1b0000 0x0 0x10000>;
++	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
++};
+-- 
+2.7.4
