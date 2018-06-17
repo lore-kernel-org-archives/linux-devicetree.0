@@ -1,33 +1,40 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/4] ARM: dts: imx6qdl-wandboard: remove regulators
- bus node
-Date: Sun, 17 Jun 2018 15:31:49 +0800
-Message-ID: <20180617073148.GQ16091@dragon>
-References: <20180529062021.3154-1-akurz@blala.de>
- <20180529062021.3154-2-akurz@blala.de>
+From: Jiri Pirko <jiri@resnulli.us>
+Subject: Re: [PATCH 1/3] net: dsa: Add DT bindings for Vitesse VSC73xx
+ switches
+Date: Sun, 17 Jun 2018 09:40:39 +0200
+Message-ID: <20180617074039.GB2141@nanopsycho>
+References: <20180614123534.8063-1-linus.walleij@linaro.org>
+ <20180614123534.8063-2-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180529062021.3154-2-akurz@blala.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Kurz <akurz@blala.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180614123534.8063-2-linus.walleij@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, openwrt-devel@lists.openwrt.org, LEDE Development List <lede-dev@lists.infradead.org>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 29, 2018 at 06:20:18AM +0000, Alexander Kurz wrote:
-> To match the convention, move all regulator-fixed nodes directly into
-> the root node.
-> 
-> Signed-off-by: Alexander Kurz <akurz@blala.de>
+Thu, Jun 14, 2018 at 02:35:32PM CEST, linus.walleij@linaro.org wrote:
+>This adds the device tree bindings for the Vitesse VSC73xx
+>switches. We also add the vendor name for Vitesse.
+>
+>Cc: devicetree@vger.kernel.org
+>Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>---
+> .../bindings/net/dsa/vitesse,vsc73xx.txt      | 81 +++++++++++++++++++
+> .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+> 2 files changed, 82 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+>
+>diff --git a/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+>new file mode 100644
+>index 000000000000..474cdba5fa37
+>--- /dev/null
+>+++ b/Documentation/devicetree/bindings/net/dsa/vitesse,vsc73xx.txt
+>@@ -0,0 +1,81 @@
+>+Vitess VSC73xx Switches
 
-Applied all, thanks.
+s/Vitess/Vitesse/
+
+[...]
