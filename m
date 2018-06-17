@@ -1,37 +1,44 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 10/15] arm: dts: rk3288: Add missing cooling device properties for CPUs
-Date: Sun, 17 Jun 2018 16:47:57 +0200
-Message-ID: <2717295.dpLKm0oEe9@phil>
-References: <cover.1527244200.git.viresh.kumar@linaro.org> <11f16618dc965a7996976a2bca040cd87d1961d2.1527244201.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 1/8] dt: bindings: tegra20-emc: Document interrupt property
+Date: Sun, 17 Jun 2018 17:55:32 +0300
+Message-ID: <20180617145539.4758-2-digetx@gmail.com>
+References: <20180617145539.4758-1-digetx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11f16618dc965a7996976a2bca040cd87d1961d2.1527244201.git.viresh.kumar@linaro.org>
+In-Reply-To: <20180617145539.4758-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: arm@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, ionela.voinescu@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>, chris.redpath@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 25. Mai 2018, 12:31:56 CEST schrieb Viresh Kumar:
-> The cooling device properties, like "#cooling-cells" and
-> "dynamic-power-coefficient", should either be present for all the CPUs
-> of a cluster or none. If these are present only for a subset of CPUs of
-> a cluster then things will start falling apart as soon as the CPUs are
-> brought online in a different order. For example, this will happen
-> because the operating system looks for such properties in the CPU node
-> it is trying to bring up, so that it can register a cooling device.
-> 
-> Add such missing properties.
-> 
-> Fix other missing properties (clocks, OPP, clock latency) as well to
-> make it all work.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+EMC has a dedicated interrupt that is used to notify about completion of
+HW operations. Document the interrupt property.
 
-applied for 4.19, after adapting the patch to the opp-v2 conversion
-I Cc'ed you on [for your reference].
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+---
+ .../devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt        | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-Thanks
-Heiko
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
+index 4c33b29dc660..a6fe401d0d48 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt
+@@ -10,6 +10,7 @@ Properties:
+   and chosen using the ramcode board selector. If omitted, only one
+   set of tables can be present and said tables will be used
+   irrespective of ram-code configuration.
++- interrupts : Should contain EMC General interrupt.
+ 
+ Child device nodes describe the memory settings for different configurations and clock rates.
+ 
+@@ -20,6 +21,7 @@ Example:
+ 		#size-cells = < 0 >;
+ 		compatible = "nvidia,tegra20-emc";
+ 		reg = <0x7000f4000 0x200>;
++		interrupts = <0 78 0x04>;
+ 	}
+ 
+ 
+-- 
+2.17.1
