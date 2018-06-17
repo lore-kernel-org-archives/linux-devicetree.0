@@ -1,104 +1,62 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v3] Input: add bu21029 touch driver
-Date: Mon, 18 Jun 2018 03:19:26 +0800
-Message-ID: <201806180153.010oE5tw%fengguang.wu@intel.com>
-References: <1526048528-3613-1-git-send-email-mark.jonas@de.bosch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v5 1/6] mtd: rawnand: add Reed-Solomon error correction algorithm
+Date: Sun, 17 Jun 2018 22:46:00 +0200
+Message-ID: <20180617204605.4648-2-stefan@agner.ch>
+References: <20180617204605.4648-1-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1526048528-3613-1-git-send-email-mark.jonas@de.bosch.com>
+In-Reply-To: <20180617204605.4648-1-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hs@denx.de, Zhu Yi <yi.zhu5@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>
+To: boris.brezillon@bootlin.com, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com
+Cc: dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhu,
+Add Reed-Solomon (RS) to the enumeration of ECC algorithms.
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on v4.17-rc4]
-[also build test WARNING on next-20180615]
-[cannot apply to input/next]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Mark-Jonas/Input-add-bu21029-touch-driver/20180512-091305
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/input/touchscreen/bu21029_ts.c:293:13: sparse: restricted __be16 degrades to integer
-
-vim +293 drivers/input/touchscreen/bu21029_ts.c
-
-   262	
-   263	static int bu21029_start_chip(struct input_dev *dev)
-   264	{
-   265		struct bu21029_ts_data *bu21029 = input_get_drvdata(dev);
-   266		struct i2c_client *i2c = bu21029->client;
-   267		struct {
-   268			u8 reg;
-   269			u8 value;
-   270		} init_table[] = {
-   271			{BU21029_CFR0_REG, CFR0_VALUE},
-   272			{BU21029_CFR1_REG, CFR1_VALUE},
-   273			{BU21029_CFR2_REG, CFR2_VALUE},
-   274			{BU21029_CFR3_REG, CFR3_VALUE},
-   275			{BU21029_LDO_REG,  LDO_VALUE}
-   276		};
-   277		int error, i;
-   278		u16 hwid;
-   279	
-   280		/* take chip out of reset */
-   281		gpiod_set_value_cansleep(bu21029->reset_gpios, 0);
-   282		mdelay(START_DELAY_MS);
-   283	
-   284		error = i2c_smbus_read_i2c_block_data(i2c,
-   285						      BU21029_HWID_REG,
-   286						      2,
-   287						      (u8 *)&hwid);
-   288		if (error < 0) {
-   289			dev_err(&i2c->dev, "failed to read HW ID\n");
-   290			goto out;
-   291		}
-   292	
- > 293		if (cpu_to_be16(hwid) != SUPPORTED_HWID) {
-   294			dev_err(&i2c->dev, "unsupported HW ID 0x%x\n", hwid);
-   295			error = -ENODEV;
-   296			goto out;
-   297		}
-   298	
-   299		for (i = 0; i < ARRAY_SIZE(init_table); ++i) {
-   300			error = i2c_smbus_write_byte_data(i2c,
-   301							  init_table[i].reg,
-   302							  init_table[i].value);
-   303			if (error < 0) {
-   304				dev_err(&i2c->dev,
-   305					"failed to write 0x%x to register 0x%x\n",
-   306					init_table[i].value,
-   307					init_table[i].reg);
-   308				goto out;
-   309			}
-   310		}
-   311	
-   312		error = i2c_smbus_write_byte(i2c, BU21029_AUTOSCAN);
-   313		if (error < 0) {
-   314			dev_err(&i2c->dev, "failed to start autoscan\n");
-   315			goto out;
-   316		}
-   317	
-   318		enable_irq(bu21029->client->irq);
-   319		return 0;
-   320	
-   321	out:
-   322		bu21029_stop_chip(dev);
-   323		return error;
-   324	}
-   325	
-
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ Documentation/devicetree/bindings/mtd/nand.txt | 2 +-
+ drivers/mtd/nand/raw/nand_base.c               | 1 +
+ include/linux/mtd/rawnand.h                    | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+index 8bb11d809429d..eaef8c657aa5c 100644
+--- a/Documentation/devicetree/bindings/mtd/nand.txt
++++ b/Documentation/devicetree/bindings/mtd/nand.txt
+@@ -25,7 +25,7 @@ Optional NAND chip properties:
+ 		  Deprecated values:
+ 		  "soft_bch": use "soft" and nand-ecc-algo instead
+ - nand-ecc-algo: string, algorithm of NAND ECC.
+-		 Supported values are: "hamming", "bch".
++		 Valid values are: "hamming", "bch", "rs".
+ - nand-bus-width : 8 or 16 bus width if not present 8
+ - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+ 
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+index 10c4f9919850c..47e9cb9063da4 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -5777,6 +5777,7 @@ static int of_get_nand_ecc_mode(struct device_node *np)
+ static const char * const nand_ecc_algos[] = {
+ 	[NAND_ECC_HAMMING]	= "hamming",
+ 	[NAND_ECC_BCH]		= "bch",
++	[NAND_ECC_RS]		= "rs",
+ };
+ 
+ static int of_get_nand_ecc_algo(struct device_node *np)
+diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+index 3e8ec3b8a39c7..2d9cb7acbc3d8 100644
+--- a/include/linux/mtd/rawnand.h
++++ b/include/linux/mtd/rawnand.h
+@@ -121,6 +121,7 @@ enum nand_ecc_algo {
+ 	NAND_ECC_UNKNOWN,
+ 	NAND_ECC_HAMMING,
+ 	NAND_ECC_BCH,
++	NAND_ECC_RS,
+ };
+ 
+ /*
+-- 
+2.17.1
