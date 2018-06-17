@@ -1,59 +1,113 @@
-From: David Lechner <david@lechnology.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v11_00/27]_ARM:_davinci:_convert_to_common_clo?=
- =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
-Date: Sun, 17 Jun 2018 10:48:47 -0500
-Message-ID: <89b599d3-c43a-255f-8da6-9bea6cf53a5d@lechnology.com>
-References: <20180518164829.27052-1-david@lechnology.com>
- <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: frowand.list@gmail.com
+Subject: [RFC PATCH] of: overlay: update phandle cache on overlay apply and remove
+Date: Sun, 17 Jun 2018 09:03:36 -0700
+Message-ID: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+From: Frank Rowand <frank.rowand@sony.com>
 
-On 05/22/2018 04:38 AM, Sekhar Nori wrote:
-> Hi David,
-> 
-> On Friday 18 May 2018 10:18 PM, David Lechner wrote:
->> This series converts mach-davinci to use the common clock framework.
->>
->> The series works like this, the first 3 patches fix some issues with the clock
->> drivers that have already been accepted into the mainline kernel.
->>
->> Then, starting with "ARM: davinci: pass clock as parameter to
->> davinci_timer_init()", we get the mach code ready for the switch by adding the
->> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
->> around the legacy clocks so that we can switch easily between the old and the
->> new.
->>
->> "ARM: davinci: switch to common clock framework" actually flips the switch
->> to start using the new clock drivers. Then the next 8 patches remove all
->> of the old clock code.
->>
->> The final four patches add device tree clock support to the one SoC that
->> supports it.
->>
->> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
->> board file).
-> 
-> If you do end up sending a v12, you can leave out the mach-davinci
-> portions unless there are any changes you need to make. I will pick them
-> up from this series once the driver dependencies are merged.
-> 
-> I do hope the drivers/clk/* changes can be merged from v4.18.
-> 
-> Thanks,
-> Sekhar
-> 
+A comment in the review of the patch adding the phandle cache said that
+the cache would have to be updated when modules are applied and removed.
+This patch implements the cache updates.
 
-Are you going to pick up the arch patches from this series now that
-the 4.18 merge window is closed?
+Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
+Reported-by: Alan Tull <atull@kernel.org>
+Suggested-by: Alan Tull <atull@kernel.org>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
 
-All of the clk patches landed in 4.18.
+Compiles for one configuration.
+NOT boot tested.
+Not run through my normal process to check for new warnings, etc.
+
+It is late, I'm tired, my brain is fuzzy.  I need to review this more to have
+any confidence in it.  But I wanted to get a version out for Alan to see (and
+test if he wants).
+
+ drivers/of/base.c       |  6 +++---
+ drivers/of/of_private.h |  2 ++
+ drivers/of/overlay.c    | 12 ++++++++++++
+ 3 files changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 848f549164cd..466e3c8582f0 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -102,7 +102,7 @@ static u32 phandle_cache_mask;
+  *   - the phandle lookup overhead reduction provided by the cache
+  *     will likely be less
+  */
+-static void of_populate_phandle_cache(void)
++void of_populate_phandle_cache(void)
+ {
+ 	unsigned long flags;
+ 	u32 cache_entries;
+@@ -134,8 +134,7 @@ static void of_populate_phandle_cache(void)
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ }
+ 
+-#ifndef CONFIG_MODULES
+-static int __init of_free_phandle_cache(void)
++int of_free_phandle_cache(void)
+ {
+ 	unsigned long flags;
+ 
+@@ -148,6 +147,7 @@ static int __init of_free_phandle_cache(void)
+ 
+ 	return 0;
+ }
++#if !defined(CONFIG_MODULES)
+ late_initcall_sync(of_free_phandle_cache);
+ #endif
+ 
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 891d780c076a..216175d11d3d 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -79,6 +79,8 @@ int of_resolve_phandles(struct device_node *tree);
+ #if defined(CONFIG_OF_OVERLAY)
+ void of_overlay_mutex_lock(void);
+ void of_overlay_mutex_unlock(void);
++int of_free_phandle_cache(void);
++void of_populate_phandle_cache(void);
+ #else
+ static inline void of_overlay_mutex_lock(void) {};
+ static inline void of_overlay_mutex_unlock(void) {};
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 7baa53e5b1d7..3f76e58fbec4 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -804,6 +804,8 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
+ 		goto err_free_overlay_changeset;
+ 	}
+ 
++	of_populate_phandle_cache();
++
+ 	ret = __of_changeset_apply_notify(&ovcs->cset);
+ 	if (ret)
+ 		pr_err("overlay changeset entry notify error %d\n", ret);
+@@ -1046,8 +1048,18 @@ int of_overlay_remove(int *ovcs_id)
+ 
+ 	list_del(&ovcs->ovcs_list);
+ 
++	/*
++	 * Empty and disable phandle cache.  Must empty here so that
++	 * changeset notifiers do not use stale cache entry for a removed
++	 * phandle.
++	 */
++	of_free_phandle_cache();
++
+ 	ret_apply = 0;
+ 	ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
++
++	of_populate_phandle_cache();
++
+ 	if (ret) {
+ 		if (ret_apply)
+ 			devicetree_state_flags |= DTSF_REVERT_FAIL;
+-- 
+Frank Rowand <frank.rowand@sony.com>
