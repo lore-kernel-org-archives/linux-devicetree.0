@@ -1,33 +1,59 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 5/8] ARM: dts: tegra20: Add clock entry to External Memory Controller
-Date: Sun, 17 Jun 2018 17:55:36 +0300
-Message-ID: <20180617145539.4758-6-digetx@gmail.com>
-References: <20180617145539.4758-1-digetx@gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v11_00/27]_ARM:_davinci:_convert_to_common_clo?=
+ =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
+Date: Sun, 17 Jun 2018 10:48:47 -0500
+Message-ID: <89b599d3-c43a-255f-8da6-9bea6cf53a5d@lechnology.com>
+References: <20180518164829.27052-1-david@lechnology.com>
+ <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180617145539.4758-1-digetx@gmail.com>
+In-Reply-To: <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add clock entry into the EMC DT node.
+Hi Sekhar,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/boot/dts/tegra20.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+On 05/22/2018 04:38 AM, Sekhar Nori wrote:
+> Hi David,
+> 
+> On Friday 18 May 2018 10:18 PM, David Lechner wrote:
+>> This series converts mach-davinci to use the common clock framework.
+>>
+>> The series works like this, the first 3 patches fix some issues with the clock
+>> drivers that have already been accepted into the mainline kernel.
+>>
+>> Then, starting with "ARM: davinci: pass clock as parameter to
+>> davinci_timer_init()", we get the mach code ready for the switch by adding the
+>> code needed for the new clock drivers and adding #ifndef CONFIG_COMMON_CLK
+>> around the legacy clocks so that we can switch easily between the old and the
+>> new.
+>>
+>> "ARM: davinci: switch to common clock framework" actually flips the switch
+>> to start using the new clock drivers. Then the next 8 patches remove all
+>> of the old clock code.
+>>
+>> The final four patches add device tree clock support to the one SoC that
+>> supports it.
+>>
+>> This series has been tested on TI OMAP-L138 LCDK (both device tree and legacy
+>> board file).
+> 
+> If you do end up sending a v12, you can leave out the mach-davinci
+> portions unless there are any changes you need to make. I will pick them
+> up from this series once the driver dependencies are merged.
+> 
+> I do hope the drivers/clk/* changes can be merged from v4.18.
+> 
+> Thanks,
+> Sekhar
+> 
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 3cd3cb28cfd9..877e41fe87cf 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -610,6 +610,7 @@
- 		compatible = "nvidia,tegra20-emc";
- 		reg = <0x7000f400 0x200>;
- 		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA20_CLK_EMC>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
--- 
-2.17.1
+Are you going to pick up the arch patches from this series now that
+the 4.18 merge window is closed?
+
+All of the clk patches landed in 4.18.
