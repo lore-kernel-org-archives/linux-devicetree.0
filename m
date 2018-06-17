@@ -1,113 +1,157 @@
-From: frowand.list@gmail.com
-Subject: [RFC PATCH] of: overlay: update phandle cache on overlay apply and remove
-Date: Sun, 17 Jun 2018 09:03:36 -0700
-Message-ID: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v4 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
+ controller driver
+Date: Sun, 17 Jun 2018 18:57:33 +0200
+Message-ID: <0be3de74809d0ebe32a808eebfd61dcd@agner.ch>
+References: <20180611205224.23340-1-stefan@agner.ch>
+ <20180611205224.23340-5-stefan@agner.ch> <2945591.o6hPPARSMh@dimapc>
+ <fd15fcac50d25281fa8f7d97a738bf6a@agner.ch>
+ <20180612101319.528da20c@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180612101319.528da20c@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+On 12.06.2018 10:13, Boris Brezillon wrote:
+> On Tue, 12 Jun 2018 10:02:12 +0200
+> Stefan Agner <stefan@agner.ch> wrote:
+> 
+>> >> +static int tegra_nand_read_page_hwecc(struct mtd_info *mtd,
+>> >> +				      struct nand_chip *chip,
+>> >> +				      uint8_t *buf, int oob_required, int page)
+>> >> +{
+>> >> +	struct tegra_nand_controller *ctrl = to_tegra_ctrl(chip->controller);
+>> >> +	struct tegra_nand_chip *nand = to_tegra_chip(chip);
+>> >> +	void *oob_buf = oob_required ? chip->oob_poi : 0;
+>> >> +	u32 dec_stat, max_corr_cnt;
+>> >> +	unsigned long fail_sec_flag;
+>> >> +	int ret;
+>> >> +
+>> >> +	tegra_nand_hw_ecc(ctrl, chip, true);
+>> >> +	ret = tegra_nand_page_xfer(mtd, chip, buf, oob_buf, nand->tag.length,
+>> >> +				   page, true);
+>> >> +	tegra_nand_hw_ecc(ctrl, chip, false);
+>> >> +	if (ret)
+>> >> +		return ret;
+>> >> +
+>> >> +	/* No correctable or un-correctable errors, page must have 0 bitflips */
+>> >> +	if (!ctrl->last_read_error)
+>> >> +		return 0;
+>> >> +
+>> >> +	/*
+>> >> +	 * Correctable or un-correctable errors occurred. Use DEC_STAT_BUF
+>> >> +	 * which contains information for all ECC selections.
+>> >> +	 *
+>> >> +	 * Note that since we do not use Command Queues DEC_RESULT does not
+>> >> +	 * state the number of pages we can read from the DEC_STAT_BUF. But
+>> >> +	 * since CORRFAIL_ERR did occur during page read we do have a valid
+>> >> +	 * result in DEC_STAT_BUF.
+>> >> +	 */
+>> >> +	ctrl->last_read_error = false;
+>> >> +	dec_stat = readl_relaxed(ctrl->regs + DEC_STAT_BUF);
+>> >> +
+>> >> +	fail_sec_flag = (dec_stat & DEC_STAT_BUF_FAIL_SEC_FLAG_MASK) >>
+>> >> +			DEC_STAT_BUF_FAIL_SEC_FLAG_SHIFT;
+>> >> +
+>> >> +	max_corr_cnt = (dec_stat & DEC_STAT_BUF_MAX_CORR_CNT_MASK) >>
+>> >> +		       DEC_STAT_BUF_MAX_CORR_CNT_SHIFT;
+>> >> +
+>> >> +	if (fail_sec_flag) {
+>> >> +		int bit, max_bitflips = 0;
+>> >> +
+>> >> +		/*
+>> >> +		 * Check if all sectors in a page failed. If only some failed
+>> >> +		 * its definitly not an erased page and we can return error
+>> >> +		 * stats right away.
+>> >> +		 *
+>> >> +		 * E.g. controller might return fail_sec_flag with 0x4, which
+>> >> +		 * would mean only the third sector failed to correct.
+> 
+> That works because you have NAND_NO_SUBPAGE_WRITE set (i.e. no partial
+> page programming), probably something you should state here.
+> 
 
-A comment in the review of the patch adding the phandle cache said that
-the cache would have to be updated when modules are applied and removed.
-This patch implements the cache updates.
+Ok, will add a note.
 
-Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
-Reported-by: Alan Tull <atull@kernel.org>
-Suggested-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
+>> >> +		 */
+>> >> +		if (fail_sec_flag ^ GENMASK(chip->ecc.steps - 1, 0)) {
+>> >> +			mtd->ecc_stats.failed += hweight8(fail_sec_flag);
+>> >> +			return max_corr_cnt;
+>> >> +		}
+>> >> +
+>> >> +		/*
+>> >> +		 * All sectors failed to correct, but the ECC isn't smart
+>> >> +		 * enough to figure out if a page is really completely erased.
+>> >> +		 * We check the read data here to figure out if it's a
+>> >> +		 * legitimate ECC error or only an erased page.
+>> >> +		 */
+>> >> +		for_each_set_bit(bit, &fail_sec_flag, chip->ecc.steps) {
+>> >> +			u8 *data = buf + (chip->ecc.size * bit);
+>> >> +
+>> >> +			ret = nand_check_erased_ecc_chunk(data, chip->ecc.size,
+>> >> +							  NULL, 0,
+> 
+> You should also check that the ECC bytes are 0xff here, otherwise you
+> won't detect corruption of pages almost filled 0xff but with a few bits
+> set to 0.
+> 
+> When you use nand_check_erased_ecc_chunk(), it's important to always
+> pass the data along with its associated ECC bytes.
+> 
 
-Compiles for one configuration.
-NOT boot tested.
-Not run through my normal process to check for new warnings, etc.
+Hm, I see this is important in case bitflips accumulate in OOB area
+only.
 
-It is late, I'm tired, my brain is fuzzy.  I need to review this more to have
-any confidence in it.  But I wanted to get a version out for Alan to see (and
-test if he wants).
+>> >> +							  NULL, 0,
+> 
+> If you support writing extra OOB bytes, you should also pass them here.
+> 
 
- drivers/of/base.c       |  6 +++---
- drivers/of/of_private.h |  2 ++
- drivers/of/overlay.c    | 12 ++++++++++++
- 3 files changed, 17 insertions(+), 3 deletions(-)
+I see. OOB bytes handled together with the last subpage.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 848f549164cd..466e3c8582f0 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -102,7 +102,7 @@ static u32 phandle_cache_mask;
-  *   - the phandle lookup overhead reduction provided by the cache
-  *     will likely be less
-  */
--static void of_populate_phandle_cache(void)
-+void of_populate_phandle_cache(void)
- {
- 	unsigned long flags;
- 	u32 cache_entries;
-@@ -134,8 +134,7 @@ static void of_populate_phandle_cache(void)
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- }
- 
--#ifndef CONFIG_MODULES
--static int __init of_free_phandle_cache(void)
-+int of_free_phandle_cache(void)
- {
- 	unsigned long flags;
- 
-@@ -148,6 +147,7 @@ static int __init of_free_phandle_cache(void)
- 
- 	return 0;
- }
-+#if !defined(CONFIG_MODULES)
- late_initcall_sync(of_free_phandle_cache);
- #endif
- 
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 891d780c076a..216175d11d3d 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -79,6 +79,8 @@ int of_resolve_phandles(struct device_node *tree);
- #if defined(CONFIG_OF_OVERLAY)
- void of_overlay_mutex_lock(void);
- void of_overlay_mutex_unlock(void);
-+int of_free_phandle_cache(void);
-+void of_populate_phandle_cache(void);
- #else
- static inline void of_overlay_mutex_lock(void) {};
- static inline void of_overlay_mutex_unlock(void) {};
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 7baa53e5b1d7..3f76e58fbec4 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -804,6 +804,8 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
- 		goto err_free_overlay_changeset;
- 	}
- 
-+	of_populate_phandle_cache();
-+
- 	ret = __of_changeset_apply_notify(&ovcs->cset);
- 	if (ret)
- 		pr_err("overlay changeset entry notify error %d\n", ret);
-@@ -1046,8 +1048,18 @@ int of_overlay_remove(int *ovcs_id)
- 
- 	list_del(&ovcs->ovcs_list);
- 
-+	/*
-+	 * Empty and disable phandle cache.  Must empty here so that
-+	 * changeset notifiers do not use stale cache entry for a removed
-+	 * phandle.
-+	 */
-+	of_free_phandle_cache();
-+
- 	ret_apply = 0;
- 	ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
-+
-+	of_populate_phandle_cache();
-+
- 	if (ret) {
- 		if (ret_apply)
- 			devicetree_state_flags |= DTSF_REVERT_FAIL;
--- 
-Frank Rowand <frank.rowand@sony.com>
+>> >> +							  chip->ecc.strength);
+>> >> +			if (ret < 0)
+>> >> +				mtd->ecc_stats.failed++;
+>> >> +			else
+>> >> +				max_bitflips = max(ret, max_bitflips);
+
+I guess I should also increment ecc_stats.corrected here.
+
+Is it correct that I increment for every step?
+
+So if I have an ECC strength of 16, an empty page could have 8 bitflips
+in the first step, and 12 in the second, I would increment
+mtd->ecc_stats.corrected by 20 but return 12 (maximum number of bitflips
+per step)?
+
+--
+Stefan
+
+>> >> +		}
+>> >> +
+>> >> +		return max_t(unsigned int, max_corr_cnt, max_bitflips);
+>> >> +	} else {
+>> >> +		int corr_sec_flag;
+>> >> +
+>> >> +		corr_sec_flag = (dec_stat & DEC_STAT_BUF_CORR_SEC_FLAG_MASK) >>
+>> >> +				DEC_STAT_BUF_CORR_SEC_FLAG_SHIFT;
+>> >> +
+>> >> +		/*
+>> >> +		 * The value returned in the register is the maximum of
+>> >> +		 * bitflips encountered in any of the ECC regions. As there is
+>> >> +		 * no way to get the number of bitflips in a specific regions
+>> >> +		 * we are not able to deliver correct stats but instead
+>> >> +		 * overestimate the number of corrected bitflips by assuming
+>> >> +		 * that all regions where errors have been corrected
+>> >> +		 * encountered the maximum number of bitflips.
+>> >> +		 */
+>> >> +		mtd->ecc_stats.corrected += max_corr_cnt * hweight8(corr_sec_flag);
+>> >> +
+>> >> +		return max_corr_cnt;
+>> >> +	}
+>> >> +
