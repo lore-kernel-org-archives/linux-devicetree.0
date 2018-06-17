@@ -1,157 +1,104 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 4/6] mtd: rawnand: add NVIDIA Tegra NAND Flash
- controller driver
-Date: Sun, 17 Jun 2018 18:57:33 +0200
-Message-ID: <0be3de74809d0ebe32a808eebfd61dcd@agner.ch>
-References: <20180611205224.23340-1-stefan@agner.ch>
- <20180611205224.23340-5-stefan@agner.ch> <2945591.o6hPPARSMh@dimapc>
- <fd15fcac50d25281fa8f7d97a738bf6a@agner.ch>
- <20180612101319.528da20c@bbrezillon>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3] Input: add bu21029 touch driver
+Date: Mon, 18 Jun 2018 03:19:26 +0800
+Message-ID: <201806180153.010oE5tw%fengguang.wu@intel.com>
+References: <1526048528-3613-1-git-send-email-mark.jonas@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180612101319.528da20c@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <1526048528-3613-1-git-send-email-mark.jonas@de.bosch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Dmitry Osipenko <digetx@gmail.com>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kbuild-all@01.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hs@denx.de, Zhu Yi <yi.zhu5@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12.06.2018 10:13, Boris Brezillon wrote:
-> On Tue, 12 Jun 2018 10:02:12 +0200
-> Stefan Agner <stefan@agner.ch> wrote:
-> 
->> >> +static int tegra_nand_read_page_hwecc(struct mtd_info *mtd,
->> >> +				      struct nand_chip *chip,
->> >> +				      uint8_t *buf, int oob_required, int page)
->> >> +{
->> >> +	struct tegra_nand_controller *ctrl = to_tegra_ctrl(chip->controller);
->> >> +	struct tegra_nand_chip *nand = to_tegra_chip(chip);
->> >> +	void *oob_buf = oob_required ? chip->oob_poi : 0;
->> >> +	u32 dec_stat, max_corr_cnt;
->> >> +	unsigned long fail_sec_flag;
->> >> +	int ret;
->> >> +
->> >> +	tegra_nand_hw_ecc(ctrl, chip, true);
->> >> +	ret = tegra_nand_page_xfer(mtd, chip, buf, oob_buf, nand->tag.length,
->> >> +				   page, true);
->> >> +	tegra_nand_hw_ecc(ctrl, chip, false);
->> >> +	if (ret)
->> >> +		return ret;
->> >> +
->> >> +	/* No correctable or un-correctable errors, page must have 0 bitflips */
->> >> +	if (!ctrl->last_read_error)
->> >> +		return 0;
->> >> +
->> >> +	/*
->> >> +	 * Correctable or un-correctable errors occurred. Use DEC_STAT_BUF
->> >> +	 * which contains information for all ECC selections.
->> >> +	 *
->> >> +	 * Note that since we do not use Command Queues DEC_RESULT does not
->> >> +	 * state the number of pages we can read from the DEC_STAT_BUF. But
->> >> +	 * since CORRFAIL_ERR did occur during page read we do have a valid
->> >> +	 * result in DEC_STAT_BUF.
->> >> +	 */
->> >> +	ctrl->last_read_error = false;
->> >> +	dec_stat = readl_relaxed(ctrl->regs + DEC_STAT_BUF);
->> >> +
->> >> +	fail_sec_flag = (dec_stat & DEC_STAT_BUF_FAIL_SEC_FLAG_MASK) >>
->> >> +			DEC_STAT_BUF_FAIL_SEC_FLAG_SHIFT;
->> >> +
->> >> +	max_corr_cnt = (dec_stat & DEC_STAT_BUF_MAX_CORR_CNT_MASK) >>
->> >> +		       DEC_STAT_BUF_MAX_CORR_CNT_SHIFT;
->> >> +
->> >> +	if (fail_sec_flag) {
->> >> +		int bit, max_bitflips = 0;
->> >> +
->> >> +		/*
->> >> +		 * Check if all sectors in a page failed. If only some failed
->> >> +		 * its definitly not an erased page and we can return error
->> >> +		 * stats right away.
->> >> +		 *
->> >> +		 * E.g. controller might return fail_sec_flag with 0x4, which
->> >> +		 * would mean only the third sector failed to correct.
-> 
-> That works because you have NAND_NO_SUBPAGE_WRITE set (i.e. no partial
-> page programming), probably something you should state here.
-> 
+Hi Zhu,
 
-Ok, will add a note.
+Thank you for the patch! Perhaps something to improve:
 
->> >> +		 */
->> >> +		if (fail_sec_flag ^ GENMASK(chip->ecc.steps - 1, 0)) {
->> >> +			mtd->ecc_stats.failed += hweight8(fail_sec_flag);
->> >> +			return max_corr_cnt;
->> >> +		}
->> >> +
->> >> +		/*
->> >> +		 * All sectors failed to correct, but the ECC isn't smart
->> >> +		 * enough to figure out if a page is really completely erased.
->> >> +		 * We check the read data here to figure out if it's a
->> >> +		 * legitimate ECC error or only an erased page.
->> >> +		 */
->> >> +		for_each_set_bit(bit, &fail_sec_flag, chip->ecc.steps) {
->> >> +			u8 *data = buf + (chip->ecc.size * bit);
->> >> +
->> >> +			ret = nand_check_erased_ecc_chunk(data, chip->ecc.size,
->> >> +							  NULL, 0,
-> 
-> You should also check that the ECC bytes are 0xff here, otherwise you
-> won't detect corruption of pages almost filled 0xff but with a few bits
-> set to 0.
-> 
-> When you use nand_check_erased_ecc_chunk(), it's important to always
-> pass the data along with its associated ECC bytes.
-> 
+[auto build test WARNING on v4.17-rc4]
+[also build test WARNING on next-20180615]
+[cannot apply to input/next]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Hm, I see this is important in case bitflips accumulate in OOB area
-only.
+url:    https://github.com/0day-ci/linux/commits/Mark-Jonas/Input-add-bu21029-touch-driver/20180512-091305
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
->> >> +							  NULL, 0,
-> 
-> If you support writing extra OOB bytes, you should also pass them here.
-> 
 
-I see. OOB bytes handled together with the last subpage.
+sparse warnings: (new ones prefixed by >>)
 
->> >> +							  chip->ecc.strength);
->> >> +			if (ret < 0)
->> >> +				mtd->ecc_stats.failed++;
->> >> +			else
->> >> +				max_bitflips = max(ret, max_bitflips);
+>> drivers/input/touchscreen/bu21029_ts.c:293:13: sparse: restricted __be16 degrades to integer
 
-I guess I should also increment ecc_stats.corrected here.
+vim +293 drivers/input/touchscreen/bu21029_ts.c
 
-Is it correct that I increment for every step?
+   262	
+   263	static int bu21029_start_chip(struct input_dev *dev)
+   264	{
+   265		struct bu21029_ts_data *bu21029 = input_get_drvdata(dev);
+   266		struct i2c_client *i2c = bu21029->client;
+   267		struct {
+   268			u8 reg;
+   269			u8 value;
+   270		} init_table[] = {
+   271			{BU21029_CFR0_REG, CFR0_VALUE},
+   272			{BU21029_CFR1_REG, CFR1_VALUE},
+   273			{BU21029_CFR2_REG, CFR2_VALUE},
+   274			{BU21029_CFR3_REG, CFR3_VALUE},
+   275			{BU21029_LDO_REG,  LDO_VALUE}
+   276		};
+   277		int error, i;
+   278		u16 hwid;
+   279	
+   280		/* take chip out of reset */
+   281		gpiod_set_value_cansleep(bu21029->reset_gpios, 0);
+   282		mdelay(START_DELAY_MS);
+   283	
+   284		error = i2c_smbus_read_i2c_block_data(i2c,
+   285						      BU21029_HWID_REG,
+   286						      2,
+   287						      (u8 *)&hwid);
+   288		if (error < 0) {
+   289			dev_err(&i2c->dev, "failed to read HW ID\n");
+   290			goto out;
+   291		}
+   292	
+ > 293		if (cpu_to_be16(hwid) != SUPPORTED_HWID) {
+   294			dev_err(&i2c->dev, "unsupported HW ID 0x%x\n", hwid);
+   295			error = -ENODEV;
+   296			goto out;
+   297		}
+   298	
+   299		for (i = 0; i < ARRAY_SIZE(init_table); ++i) {
+   300			error = i2c_smbus_write_byte_data(i2c,
+   301							  init_table[i].reg,
+   302							  init_table[i].value);
+   303			if (error < 0) {
+   304				dev_err(&i2c->dev,
+   305					"failed to write 0x%x to register 0x%x\n",
+   306					init_table[i].value,
+   307					init_table[i].reg);
+   308				goto out;
+   309			}
+   310		}
+   311	
+   312		error = i2c_smbus_write_byte(i2c, BU21029_AUTOSCAN);
+   313		if (error < 0) {
+   314			dev_err(&i2c->dev, "failed to start autoscan\n");
+   315			goto out;
+   316		}
+   317	
+   318		enable_irq(bu21029->client->irq);
+   319		return 0;
+   320	
+   321	out:
+   322		bu21029_stop_chip(dev);
+   323		return error;
+   324	}
+   325	
 
-So if I have an ECC strength of 16, an empty page could have 8 bitflips
-in the first step, and 12 in the second, I would increment
-mtd->ecc_stats.corrected by 20 but return 12 (maximum number of bitflips
-per step)?
-
---
-Stefan
-
->> >> +		}
->> >> +
->> >> +		return max_t(unsigned int, max_corr_cnt, max_bitflips);
->> >> +	} else {
->> >> +		int corr_sec_flag;
->> >> +
->> >> +		corr_sec_flag = (dec_stat & DEC_STAT_BUF_CORR_SEC_FLAG_MASK) >>
->> >> +				DEC_STAT_BUF_CORR_SEC_FLAG_SHIFT;
->> >> +
->> >> +		/*
->> >> +		 * The value returned in the register is the maximum of
->> >> +		 * bitflips encountered in any of the ECC regions. As there is
->> >> +		 * no way to get the number of bitflips in a specific regions
->> >> +		 * we are not able to deliver correct stats but instead
->> >> +		 * overestimate the number of corrected bitflips by assuming
->> >> +		 * that all regions where errors have been corrected
->> >> +		 * encountered the maximum number of bitflips.
->> >> +		 */
->> >> +		mtd->ecc_stats.corrected += max_corr_cnt * hweight8(corr_sec_flag);
->> >> +
->> >> +		return max_corr_cnt;
->> >> +	}
->> >> +
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
