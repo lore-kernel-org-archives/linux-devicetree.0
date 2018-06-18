@@ -1,68 +1,79 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based
- on IP datasheet
-Date: Mon, 18 Jun 2018 09:46:36 +0200
-Message-ID: <20180618094636.0e40c518@bbrezillon>
-References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
-        <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
-        <5816516.AqyscFuYxX@blindfold>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 2/5] RFC: eeprom: at24: Allow passing gpiodesc from pdata
+Date: Mon, 18 Jun 2018 09:45:53 +0200
+Message-ID: <20180618074556.6944-3-linus.walleij@linaro.org>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <5816516.AqyscFuYxX@blindfold>
-Sender: stable-owner@vger.kernel.org
-To: Richard Weinberger <richard@nod.at>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-kbuild@vger.kernel.org, "linux-stable #4 . 14+" <stable@vger.kernel.org>, devicetree@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>Miquel Raynal <miquel.raynal@bootlin.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180618074556.6944-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dev@lists.96boards.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jun 2018 09:09:02 +0200
-Richard Weinberger <richard@nod.at> wrote:
+This makes it possible to pass an initialized GPIO descriptor
+to the driver through platform data.
 
-> Am Freitag, 15. Juni 2018, 03:18:50 CEST schrieb Masahiro Yamada:
-> > According to the Denali User's Guide, this IP needs three clocks:
-> > 
-> >  - clk: controller core clock
-> > 
-> >  - clk_x: bus interface clock
-> > 
-> >  - ecc_clk: clock at which ECC circuitry is run
-> > 
-> > Currently, denali_dt.c requires a single anonymous clock and its
-> > frequency.  However, the driver needs to get the frequency of "clk_x"
-> > not "clk".  This is confusing because people tend to assume the
-> > anonymous clock means the core clock.  In fact, I got a report of
-> > SOCFPGA breakage because the timing parameters are calculated based
-> > on a wrong frequency.
-> > 
-> > Instead of the cheesy implementation, the clocks in the real hardware
-> > should be represented in the driver and the DT-binding.
-> > 
-> > However, adding new clocks would break the existing platforms.  For the
-> > backward compatibility, the driver still accepts a single clock just as
-> > before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
-> > This is fine for existing DT of Socionext UniPhier, and also fixes the
-> > issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
-> > the bus interface clock.
-> > 
-> > Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
-> > Cc: linux-stable <stable@vger.kernel.org> #4.14+
-> > Reported-by: Richard Weinberger <richard@nod.at>
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>  
-> 
-> Reviewed-by: Richard Weinberger <richard@nod.at>
+This is useful when we are dealing with EEPROMs on expansion
+boards where the GPIO has to be looked up indirectly using a
+connector abstraction (several systems using the same
+connector) so the machine descriptor tables cannot be used
+to associate the descriptor with the device and we then want
+to pass this descriptor on to the EEPROM driver this way
+instead.
 
-Maybe a
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/misc/eeprom/at24.c         | 6 +++++-
+ include/linux/platform_data/at24.h | 2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-Tested-by: Richard Weinberger <richard@nod.at>
-
-?
-
-> Reported-by: Philipp Rosenberger <p.rosenberger@linutronix.de>
-
-Should I replace your Reported-by by this one or simply add it?
-
-Miquel, I'll take this patch in mtd/fixes, and let you take the 2
-others in nand/next. That means you'll have to back merge v4.18-rc2
-into the nand/next tree, or base your tree on v4.18-rc2 instead of
-v4.18-rc1.
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index f5cc517d1131..d577cdbe221e 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -662,7 +662,11 @@ static int at24_probe(struct i2c_client *client)
+ 	at24->client[0].client = client;
+ 	at24->client[0].regmap = regmap;
+ 
+-	at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
++	if (pdata.wp_gpiod)
++		at24->wp_gpio = pdata.wp_gpiod;
++	else
++		at24->wp_gpio =
++			devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(at24->wp_gpio))
+ 		return PTR_ERR(at24->wp_gpio);
+ 
+diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
+index 63507ff464ee..5606fb2ef76c 100644
+--- a/include/linux/platform_data/at24.h
++++ b/include/linux/platform_data/at24.h
+@@ -11,6 +11,7 @@
+ #include <linux/types.h>
+ #include <linux/nvmem-consumer.h>
+ #include <linux/bitops.h>
++#include <linux/gpio/consumer.h>
+ 
+ /**
+  * struct at24_platform_data - data to set up at24 (generic eeprom) driver
+@@ -55,6 +56,7 @@ struct at24_platform_data {
+ 
+ 	void		(*setup)(struct nvmem_device *nvmem, void *context);
+ 	void		*context;
++	struct gpio_desc *wp_gpiod;
+ };
+ 
+ #endif /* _LINUX_AT24_H */
+-- 
+2.17.0
