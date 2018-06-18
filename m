@@ -1,146 +1,89 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash
- support
-Date: Mon, 18 Jun 2018 13:59:35 +0200
-Message-ID: <20180618135935.5a41ec6f@bbrezillon>
-References: <20180617204605.4648-1-stefan@agner.ch>
-        <20180618115806.7be25499@bbrezillon>
-        <95279b61ce2630c1276669359b163933@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: pxa: add binding for pxa2xx-ac97 audio complex" to the asoc tree
+Date: Mon, 18 Jun 2018 12:59:44 +0100
+Message-ID: <E1fUsoy-0008OD-95@debutante>
+References: <20180617105001.17784-1-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <95279b61ce2630c1276669359b163933@agner.ch>
+In-Reply-To: <20180617105001.17784-1-robert.jarzmik@free.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+The patch
 
-On Mon, 18 Jun 2018 12:51:52 +0200
-Stefan Agner <stefan@agner.ch> wrote:
+   ASoC: pxa: add binding for pxa2xx-ac97 audio complex
 
-> On 18.06.2018 11:58, Boris Brezillon wrote:
-> > On Sun, 17 Jun 2018 22:45:59 +0200
-> > Stefan Agner <stefan@agner.ch> wrote:
-> >   
-> >> Changes definitly calm down, most noteably probably the changes
-> >> around checking whether a page is empty if the stack reports ECC
-> >> errors.. I verified the code using raw nandwrites with OOB to
-> >> simulate an empty page which has some bits flipped in the OOB area,
-> >> everthing seems to work as I would expect it.
-> >>
-> >> For now I do not check extra OOB bytes since those are at variable
-> >> locations depending on algorithm.  
-> > 
-> > Hm, if you expose them as free OOB bytes, you should also check them,
-> > otherwise you might end up with corrupted data without noticing it. Note
-> > that, depending on whether those free OOB bytes are ECC-protected or
-> > not, you should change the way you do the check:
-> > 
-> > - non-protected OOB bytes: all bytes should be 0xff (no bitflips
-> >   allowed)
-> > - data+free OOB bytes protected by the same ECC bytes: you should pass
-> >   the free OOB bytes buffer to nand_check_erased_ecc_chunk() along with
-> >   the data and ECC buffers
-> > - free OOB bytes have their own ECC bytes: call
-> >   nand_check_erased_ecc_chunk() separately and pass it the ECC + free
-> >   OOB buffers.  
-> 
-> This graphic taken from the public Tegra 2 Technical Reference Manual is
-> quite useful:
-> https://imgur.com/a/0Hqzbkc
+has been applied to the asoc tree at
 
-Thanks for sharing this doc.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> 
-> Tegra basically has all of the above, which makes the whole business
-> really tricky...
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-I'm not sure. Are "Skip bytes" protected by "main data parity bytes"?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-AFAICT, you have "Tag bytes" that fall in case #3 and "Remaining spare
-bytes" that fall in case #1. If "Skip bytes" are protected by the "main
-data parity bytes", then it falls in case #2, otherwise it probably
-goes in case #1.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> 
-> I am not sure if we really could do variant 1, non-protected OOB, but
-> since we have the option of protected OOB, we probably anyway would do
-> that.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-That's up to you, but in this case, you should not declare those bytes
-as free (didn't check what is currently done in the driver).
+Thanks,
+Mark
 
-> 
-> RS/Hamming implements variant 3.
+>From e2b35e468c89000cf3b8b5beb63fd73dfa8a5435 Mon Sep 17 00:00:00 2001
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Date: Sun, 17 Jun 2018 12:50:00 +0200
+Subject: [PATCH] ASoC: pxa: add binding for pxa2xx-ac97 audio complex
 
-It seems to be a mix of #1 and #3, but I'm not sure (see above).
+This adds a binding for the Marvell PXA audio complex, available in
+pxa2xx and pxa3xx variants.
 
-> 
-> BCH implements variant 2.
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/marvell,pxa2xx-ac97.txt    | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt
 
-I'd say it's a mix of #1 (skip + remaining bytes) and #2(tag bytes).
-
-> OOB is protected with the last data buffer.
-
-That would be weird, but maybe you're right. HW ECC engine usually
-split the OOB area in X portions, X being the number of ECC steps needed
-to cover a NAND page, and then have ECC bytes cover a sub-portion of
-data+OOB.
-
-For example, for a NAND page of 2k with 64 bytes of OOB, and assuming
-the ECC step is 512bytes, you usually have something like:
-
-[512(data)+8(protected-oob)+8(ecc)] x 4
-
-> 
-> So this would require a algorithm depending implementation, which is
-> probably not a big deal.
-
-True.
-
-> 
-> But there is one more issue with BCH: Only if extra data are actually
-> transferred, tag space is actually allocated. If no tag bytes are
-> transferred, parity follows immediately skip bytes. As far as I know the
-> MTD stacks OOB layout assumes that is always the same layout, no matter
-> whether we write extra OOB data or not. For the Tegra NAND controller
-> this would mean that we have to always transfer tag bytes and therefor
-> penalize the use case we are most interested in (which is no extra OOB
-> bytes, since UBI does not make use of it)...
-
-Hm, given the amount of tag bytes I don't think you'll have a huge
-penalty, so I'd recommend always sending those bytes. Alternatively,
-you could decide that you never want to have those tag bytes and expose
-none of them.
-
-> 
-> Furthermore I realized that testing is not easily possible since
-> nandwrite with --oob seems not to make use of "oob_required" in the main
-> page write but issues a separate OOB write command. I did not found a
-> way to issue a write from user space which sets oob_required...
-
-Maybe it's time to patch those tools. The ioctl exists, so it's just a
-matter of using it in nandwrite/mtd-utils.
-
-> 
-> Due to all this I rather prefer to not implement extra OOB support at
-> this point.
-
-I'm fine with that, but that means no JFFS2 support, as I think JFFS2
-wants to place some of its metadata in the OOB area. Also, I fear it
-will be a mess to add support for that kind of things without breaking
-existing setup afterwards, so, by taking this decision you're pretty
-much saying that this controller will never expose free OOB bytes.
-That's not a problem from my PoV, but I want you to be aware of that.
-
-> 
-> How do I do this properly? Set mtd_ooblayout_ops.free to NULL?
-
-Just implement a dummy function that returns -ERANGE.
-
-Regards,
-
-Boris
+diff --git a/Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt b/Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt
+new file mode 100644
+index 000000000000..2ea85d5be6a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt
+@@ -0,0 +1,27 @@
++Marvell PXA2xx audio complex
++
++This descriptions matches the AC97 controller found in pxa2xx and pxa3xx series.
++
++Required properties:
++  - compatible: should be one of the following:
++    "marvell,pxa250-ac97"
++    "marvell,pxa270-ac97"
++    "marvell,pxa300-ac97"
++  - reg: device MMIO address space
++  - interrupts: single interrupt generated by AC97 IP
++  - clocks: input clock of the AC97 IP, refer to clock-bindings.txt
++
++Optional properties:
++  - pinctrl-names, pinctrl-0: refer to pinctrl-bindings.txt
++  - reset-gpios: gpio used for AC97 reset, refer to gpio.txt
++
++Example:
++	ac97: sound@40500000 {
++		compatible = "marvell,pxa250-ac97";
++		reg = < 0x40500000 0x1000 >;
++		interrupts = <14>;
++		reset-gpios = <&gpio 113 GPIO_ACTIVE_HIGH>;
++		#sound-dai-cells = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = < &pmux_ac97_default >;
++	};
+-- 
+2.17.1
