@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/5] RFC: eeprom: at24: Allow passing gpiodesc from pdata
-Date: Mon, 18 Jun 2018 09:45:53 +0200
-Message-ID: <20180618074556.6944-3-linus.walleij@linaro.org>
+Subject: [PATCH 5/5] RFC: ARM64: dts: Add Low-Speed Connector to ZCU100
+Date: Mon, 18 Jun 2018 09:45:56 +0200
+Message-ID: <20180618074556.6944-6-linus.walleij@linaro.org>
 References: <20180618074556.6944-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,59 +21,65 @@ To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dev@lists.
 Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This makes it possible to pass an initialized GPIO descriptor
-to the driver through platform data.
+This adds the low-speed connector to the ZCU100 rev C device
+tree (also known as the Ultra96 board).
 
-This is useful when we are dealing with EEPROMs on expansion
-boards where the GPIO has to be looked up indirectly using a
-connector abstraction (several systems using the same
-connector) so the machine descriptor tables cannot be used
-to associate the descriptor with the device and we then want
-to pass this descriptor on to the EEPROM driver this way
-instead.
+This is a proof-of-concept only, showing how it is possible
+to populate a Secure96 board using the other patches in the
+series.
+
+If you comment out or delete the board {} node, you can
+populate/depopulate the board from sysfs instead.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/misc/eeprom/at24.c         | 6 +++++-
- include/linux/platform_data/at24.h | 2 ++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    | 27 +++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index f5cc517d1131..d577cdbe221e 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -662,7 +662,11 @@ static int at24_probe(struct i2c_client *client)
- 	at24->client[0].client = client;
- 	at24->client[0].regmap = regmap;
- 
--	at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
-+	if (pdata.wp_gpiod)
-+		at24->wp_gpio = pdata.wp_gpiod;
-+	else
-+		at24->wp_gpio =
-+			devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
- 	if (IS_ERR(at24->wp_gpio))
- 		return PTR_ERR(at24->wp_gpio);
- 
-diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
-index 63507ff464ee..5606fb2ef76c 100644
---- a/include/linux/platform_data/at24.h
-+++ b/include/linux/platform_data/at24.h
-@@ -11,6 +11,7 @@
- #include <linux/types.h>
- #include <linux/nvmem-consumer.h>
- #include <linux/bitops.h>
-+#include <linux/gpio/consumer.h>
- 
- /**
-  * struct at24_platform_data - data to set up at24 (generic eeprom) driver
-@@ -55,6 +56,7 @@ struct at24_platform_data {
- 
- 	void		(*setup)(struct nvmem_device *nvmem, void *context);
- 	void		*context;
-+	struct gpio_desc *wp_gpiod;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+index d62276e0e0a9..fc30497f248d 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+@@ -110,6 +110,28 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
+ 	};
++
++	lscon: connector {
++		compatible = "96boards,low-speed-connector";
++		i2c0 = <&i2csw_0>;
++		i2c1 = <&i2csw_1>;
++		spi = <&spi0>;
++		gpios = <&gpio 36 GPIO_ACTIVE_HIGH>, /* GPIO-A */
++		        <&gpio 37 GPIO_ACTIVE_HIGH>, /* GPIO-B */
++			<&gpio 39 GPIO_ACTIVE_HIGH>, /* GPIO-C */
++			<&gpio 40 GPIO_ACTIVE_HIGH>, /* GPIO-D */
++			<&gpio 44 GPIO_ACTIVE_HIGH>, /* GPIO-E */
++			<&gpio 45 GPIO_ACTIVE_HIGH>, /* GPIO-F */
++			<&gpio 78 GPIO_ACTIVE_HIGH>, /* GPIO-G */
++			<&gpio 79 GPIO_ACTIVE_HIGH>, /* GPIO-H */
++			<&gpio 80 GPIO_ACTIVE_HIGH>, /* GPIO-I */
++			<&gpio 81 GPIO_ACTIVE_HIGH>, /* GPIO-J */
++			<&gpio 82 GPIO_ACTIVE_HIGH>, /* GPIO-K */
++			<&gpio 83 GPIO_ACTIVE_HIGH>; /* GPIO-L */
++		board {
++			compatible = "96boards,secure96";
++		};
++	};
  };
  
- #endif /* _LINUX_AT24_H */
+ &dcc {
+@@ -134,8 +156,9 @@
+ 			  "USB1_DIR", "USB1_DATA2", "USB1_NXT", "USB1_DATA0", "USB1_DATA1",
+ 			  "USB1_STP", "USB1_DATA3", "USB1_DATA4", "USB1_DATA5", "USB1_DATA6",
+ 			  "USB_DATA7", "WLAN_IRQ", "PMIC_IRQ", /* MIO end and EMIO start */
+-			  "", "",
+-			  "", "", "", "", "", "", "", "", "", "",
++			  "GPIO-G", "GPIO-H",
++			  "GPIO-I", "GPIO-J", "GPIO-K", "GPIO-L",
++			  "", "", "", "", "", "",
+ 			  "", "", "", "", "", "", "", "", "", "",
+ 			  "", "", "", "", "", "", "", "", "", "",
+ 			  "", "", "", "", "", "", "", "", "", "",
 -- 
 2.17.0
