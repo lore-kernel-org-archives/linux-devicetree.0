@@ -1,64 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v3 0/4] backlight: pwm_bl: support linear
- interpolation and brightness to human eye
-Date: Mon, 18 Jun 2018 07:20:05 +0100
-Message-ID: <20180618062005.GE31141@dell>
-References: <20180409083333.1249-1-enric.balletbo@collabora.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] dt-bindings: Fix unbalanced quotation marks
+Date: Mon, 18 Jun 2018 09:06:53 +0200
+Message-ID: <CAJKOXPcAVovxU2mHSbkAG0axutFbd=_92bNdd2P_CnQGmhAfCg@mail.gmail.com>
+References: <20180617143127.11421-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180409083333.1249-1-enric.balletbo@collabora.com>
+In-Reply-To: <20180617143127.11421-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Madalin Bucur <madalin.bucur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 09 Apr 2018, Enric Balletbo i Serra wrote:
+On Sun, Jun 17, 2018 at 4:31 PM, Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
+> Multiple binding documents have various forms of unbalanced quotation
+> marks. Fix them.
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> ---
+>
+> Should I split this patch so that different parts can go through differen=
+t trees?
+> ---
+>  .../devicetree/bindings/arm/samsung/samsung-boards.txt          | 2 +-
+>  .../devicetree/bindings/gpio/nintendo,hollywood-gpio.txt        | 2 +-
+>  Documentation/devicetree/bindings/input/touchscreen/hideep.txt  | 2 +-
+>  .../bindings/interrupt-controller/nvidia,tegra20-ictlr.txt      | 2 +-
+>  .../devicetree/bindings/interrupt-controller/st,stm32-exti.txt  | 2 +-
+>  Documentation/devicetree/bindings/mips/brcm/soc.txt             | 2 +-
+>  Documentation/devicetree/bindings/net/fsl-fman.txt              | 2 +-
+>  Documentation/devicetree/bindings/power/power_domain.txt        | 2 +-
+>  Documentation/devicetree/bindings/regulator/tps65090.txt        | 2 +-
+>  Documentation/devicetree/bindings/reset/st,sti-softreset.txt    | 2 +-
+>  Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt    | 2 +-
+>  Documentation/devicetree/bindings/sound/qcom,apq8096.txt        | 2 +-
+>  12 files changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards=
+.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> index bdadc3da9556..6970f30a3770 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> @@ -66,7 +66,7 @@ Required root node properties:
+>         - "insignal,arndale-octa" - for Exynos5420-based Insignal Arndale
+>                                     Octa board.
+>         - "insignal,origen"       - for Exynos4210-based Insignal Origen =
+board.
+> -       - "insignal,origen4412    - for Exynos4412-based Insignal Origen =
+board.
+> +       - "insignal,origen4412"   - for Exynos4412-based Insignal Origen =
+board.
+>
 
-> Dear all,
-> 
-> This series is a third patchset (resend )integrating the requested
-> changes.
-> 
-> The first and second patch what tries to solve is the problem of
-> granularity for high resolution PWMs. The idea is simple interpolate
-> between 2 brightness values so we can have a high PWM duty cycle (a
-> 16 bits PWM is up to 65535 possible steps) without having to list
-> out every possible value in the dts. I think that this patch is
-> required to not break backward compatibility, to be more flexible and
-> also extend the functionality to be able to use high resolution PWM
-> with enough steps to have a good UI experience in userspace.
-> 
-> The thirth and fourth patch is a bit more ambicious, the idea is let
-> decide the driver the brightness-levels required in function of the PWM
-> resolution. To do this create a brightness-levels table filled with the
-> CIE 1931 algorithm values to convert brightness to PWM duty cycle.
-> 
-> More detailed info is available in the commit message of every patch.
-> 
-> Both functionalities were tested on a Samsung Chromebook Plus (that has
-> a 16 bits PWM) and a SL50 device (with a 8 bits PWM)
-> 
-> Waiting for your feedback.
-> 
-> Best regards
-> 
-> Enric Balletbo i Serra (4):
->   backlight: pwm_bl: linear interpolation between brightness-levels
->   dt-bindings: pwm-backlight: add a num-interpolation-steps property.
->   backlight: pwm_bl: compute brightness of LED linearly to human eye.
->   dt-bindings: pwm-backlight: move brightness-levels to optional.
-> 
->  .../bindings/leds/backlight/pwm-backlight.txt      |  34 ++-
->  drivers/video/backlight/pwm_bl.c                   | 232 +++++++++++++++++++--
->  2 files changed, 246 insertions(+), 20 deletions(-)
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-All applied for v4.18, thanks.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Krzysztof
