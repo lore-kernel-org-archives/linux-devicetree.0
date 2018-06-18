@@ -1,53 +1,74 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller
- / system control
-Date: Mon, 18 Jun 2018 10:11:20 +0800
-Message-ID: <CAGb2v64Ar+rOgiXbjtRrQojHUZteLa9N7OwM3XY7ZcpS87Qpmw@mail.gmail.com>
-References: <20180614153548.9644-1-wens@csie.org> <20180615091413.pbdtrpa7txe6i4ee@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v11_00/27]_ARM:_davinci:_convert_to_common_clo?=
+ =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
+Date: Mon, 18 Jun 2018 10:17:09 +0530
+Message-ID: <513d20f6-da4f-1e3e-7d11-4a0f1193b13d@ti.com>
+References: <20180518164829.27052-1-david@lechnology.com>
+ <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
+ <89b599d3-c43a-255f-8da6-9bea6cf53a5d@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBYFJTTMQKGQEB5IOQTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180615091413.pbdtrpa7txe6i4ee@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <89b599d3-c43a-255f-8da6-9bea6cf53a5d@lechnology.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 15, 2018 at 5:14 PM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Thu, Jun 14, 2018 at 11:35:44PM +0800, Chen-Yu Tsai wrote:
->> Hi,
->>
->> This series is the remaining A64 syscon changes from the R40 DWMAC
->> series. The series aligns how the A64 system control exports a regmap
->> for the sun8i DWMAC driver to access with what we've done for the R40.
->>
->> Originally the A64 used the generic syscon for this bit of hardware.
->> But this block also contains mapping bits for the onboard SRAM, used
->> by various peripherals, and other vendor specific bits we may use in
->> the future. It is by no means generic. And we already have a device
->> tree binding and driver for the SRAM part.
->>
->> The first patch make the SRAM control device export a regmap, exposing
->> a single EMAC control register, for the DWMAC driver to consume.
->>
->> The second and third patches rename the A64 compatible string to read
->> "system control", which is what the block is named in the user manual.
->>
->> The last patch fixes up the device node, and also adds the lone mappable
->> SRAM block, which is needed by the Display Engine.
->
-> For the serie:
-> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Hi David,
 
-Cool. I'll apply them once you've rebased and pushed out any patches you
-queued up during the merge window.
+On Sunday 17 June 2018 09:18 PM, David Lechner wrote:
+> Hi Sekhar,
+> 
+> On 05/22/2018 04:38 AM, Sekhar Nori wrote:
+>> Hi David,
+>>
+>> On Friday 18 May 2018 10:18 PM, David Lechner wrote:
+>>> This series converts mach-davinci to use the common clock framework.
+>>>
+>>> The series works like this, the first 3 patches fix some issues with
+>>> the clock
+>>> drivers that have already been accepted into the mainline kernel.
+>>>
+>>> Then, starting with "ARM: davinci: pass clock as parameter to
+>>> davinci_timer_init()", we get the mach code ready for the switch by
+>>> adding the
+>>> code needed for the new clock drivers and adding #ifndef
+>>> CONFIG_COMMON_CLK
+>>> around the legacy clocks so that we can switch easily between the old
+>>> and the
+>>> new.
+>>>
+>>> "ARM: davinci: switch to common clock framework" actually flips the
+>>> switch
+>>> to start using the new clock drivers. Then the next 8 patches remove all
+>>> of the old clock code.
+>>>
+>>> The final four patches add device tree clock support to the one SoC that
+>>> supports it.
+>>>
+>>> This series has been tested on TI OMAP-L138 LCDK (both device tree
+>>> and legacy
+>>> board file).
+>>
+>> If you do end up sending a v12, you can leave out the mach-davinci
+>> portions unless there are any changes you need to make. I will pick them
+>> up from this series once the driver dependencies are merged.
+>>
+>> I do hope the drivers/clk/* changes can be merged from v4.18.
+>>
+>> Thanks,
+>> Sekhar
+>>
+> 
+> Are you going to pick up the arch patches from this series now that
+> the 4.18 merge window is closed?
+> 
+> All of the clk patches landed in 4.18.
 
-ChenYu
+yes!
+
+Thanks,
+Sekhar
