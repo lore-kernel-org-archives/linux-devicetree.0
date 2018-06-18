@@ -1,131 +1,102 @@
-Return-Path: <SRS0=5+Be=JG=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v3 4/5] leds: lt3593: Add device tree probing glue
-Date: Wed, 20 Jun 2018 22:13:02 +0200
-Message-Id: <20180620201303.6272-5-daniel@zonque.org>
-In-Reply-To: <20180620201303.6272-1-daniel@zonque.org>
-References: <20180620201303.6272-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=17fZ=JE=st.com=hugues.fruchet@kernel.org>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v2 3/3] media: ov5640: add support of module orientation
+Date: Mon, 18 Jun 2018 12:29:19 +0200
+Message-ID: <1529317759-28657-4-git-send-email-hugues.fruchet@st.com>
+In-Reply-To: <1529317759-28657-1-git-send-email-hugues.fruchet@st.com>
+References: <1529317759-28657-1-git-send-email-hugues.fruchet@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, "Hugues Fruchet  <hugues.fruchet@st.com>, Benjamin Gaignard" <benjamin.gaignard@linaro.org>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The binding details are described in an earlier commit that adds the
-documentation.
+Add support of module being physically mounted upside down.
+In this case, mirror and flip are enabled to fix captured images
+orientation.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- drivers/leds/leds-lt3593.c | 74 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ drivers/media/i2c/ov5640.c | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index a7bc1fab6584..e45c26588799 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -24,8 +24,11 @@
- #include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <uapi/linux/uleds.h>
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 41039e5..5529b14 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -215,6 +215,7 @@ struct ov5640_dev {
+ 	struct regulator_bulk_data supplies[OV5640_NUM_SUPPLIES];
+ 	struct gpio_desc *reset_gpio;
+ 	struct gpio_desc *pwdn_gpio;
++	bool   upside_down;
  
- struct lt3593_led_data {
-+	char name[LED_MAX_NAME_SIZE];
- 	struct led_classdev cdev;
- 	struct gpio_desc *gpiod;
- };
-@@ -120,22 +123,93 @@ static int lt3593_led_probe(struct platform_device *pdev)
+ 	/* lock to protect all members below */
+ 	struct mutex lock;
+@@ -2222,6 +2223,8 @@ static int ov5640_set_ctrl_light_freq(struct ov5640_dev *sensor, int value)
+ static int ov5640_set_ctrl_hflip(struct ov5640_dev *sensor, int value)
  {
- 	struct device *dev = &pdev->dev;
- 	struct lt3593_led_data *led_data;
-+	struct fwnode_handle *child;
-+	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
-+	enum gpiod_flags flags = GPIOD_OUT_LOW;
-+	const char *tmp;
+ 	/*
++	 * If sensor is mounted upside down, mirror logic is inversed.
++	 *
+ 	 * Sensor is a BSI (Back Side Illuminated) one,
+ 	 * so image captured is physically mirrored.
+ 	 * This is why mirror logic is inversed in
+@@ -2235,11 +2238,14 @@ static int ov5640_set_ctrl_hflip(struct ov5640_dev *sensor, int value)
+ 	 */
+ 	return ov5640_mod_reg(sensor, OV5640_REG_TIMING_TC_REG21,
+ 			      BIT(2) | BIT(1),
+-			      (!value) ? (BIT(2) | BIT(1)) : 0);
++			      (!(value ^ sensor->upside_down)) ?
++			      (BIT(2) | BIT(1)) : 0);
+ }
  
- 	if (dev_get_platdata(dev)) {
- 		led_data = lt3593_led_probe_pdata(dev);
- 		if (IS_ERR(led_data))
- 			return PTR_ERR(led_data);
+ static int ov5640_set_ctrl_vflip(struct ov5640_dev *sensor, int value)
+ {
++	/* If sensor is mounted upside down, flip logic is inversed */
 +
-+		goto out;
-+	}
-+
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	led_data = devm_kzalloc(dev, sizeof(*led_data), GFP_KERNEL);
-+	if (!led_data)
-+		return -ENOMEM;
-+
-+	if (device_get_child_node_count(dev) != 1) {
-+		dev_err(dev, "Device must have exactly one LED sub-node.");
-+		return -EINVAL;
- 	}
+ 	/*
+ 	 * TIMING TC REG20:
+ 	 * - [2]:	ISP vflip
+@@ -2247,7 +2253,8 @@ static int ov5640_set_ctrl_vflip(struct ov5640_dev *sensor, int value)
+ 	 */
+ 	return ov5640_mod_reg(sensor, OV5640_REG_TIMING_TC_REG20,
+ 			      BIT(2) | BIT(1),
+-			      value ? (BIT(2) | BIT(1)) : 0);
++			      (value ^ sensor->upside_down) ?
++			      (BIT(2) | BIT(1)) : 0);
+ }
  
-+	child = device_get_next_child_node(dev, NULL);
-+
-+	ret = fwnode_property_read_string(child, "label", &tmp);
-+	if (ret < 0)
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593::");
-+	else
-+		snprintf(led_data->name, sizeof(led_data->name),
-+			 "lt3593:%s", tmp);
-+
-+	fwnode_property_read_string(child, "linux,default-trigger",
-+				    &led_data->cdev.default_trigger);
-+
-+	if (!fwnode_property_read_string(child, "default-state", &tmp)) {
-+		if (!strcmp(tmp, "keep")) {
-+			state = LEDS_GPIO_DEFSTATE_KEEP;
-+			flags = GPIOD_ASIS;
-+		} else if (!strcmp(tmp, "on")) {
-+			state = LEDS_GPIO_DEFSTATE_ON;
-+			flags = GPIOD_OUT_HIGH;
+ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+@@ -2625,6 +2632,7 @@ static int ov5640_probe(struct i2c_client *client,
+ 	struct fwnode_handle *endpoint;
+ 	struct ov5640_dev *sensor;
+ 	struct v4l2_mbus_framefmt *fmt;
++	u32 rotation;
+ 	int ret;
+ 
+ 	sensor = devm_kzalloc(dev, sizeof(*sensor), GFP_KERNEL);
+@@ -2650,6 +2658,22 @@ static int ov5640_probe(struct i2c_client *client,
+ 
+ 	sensor->ae_target = 52;
+ 
++	/* optional indication of physical rotation of sensor */
++	ret = fwnode_property_read_u32(of_fwnode_handle(client->dev.of_node),
++				       "rotation", &rotation);
++	if (!ret) {
++		switch (rotation) {
++		case 180:
++			sensor->upside_down = true;
++			/* fall through */
++		case 0:
++			break;
++		default:
++			dev_warn(dev, "%u degrees rotation is not supported, ignoring...\n",
++				 rotation);
 +		}
 +	}
 +
-+	led_data->gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
-+							   flags,
-+							   led_data->name);
-+	if (IS_ERR(led_data->gpiod)) {
-+		fwnode_handle_put(child);
-+		return PTR_ERR(led_data->gpiod);
-+	}
-+
-+	led_data->cdev.name = led_data->name;
-+	led_data->cdev.brightness_set_blocking = lt3593_led_set;
-+	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
-+
-+	ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	if (ret < 0) {
-+		fwnode_handle_put(child);
-+		return ret;
-+	}
-+
-+	led_data->cdev.dev->of_node = dev->of_node;
-+
-+out:
- 	platform_set_drvdata(pdev, led_data);
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_lt3593_leds_match[] = {
-+	{ .compatible = "lltc,lt3593", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_lt3593_leds_match);
-+#endif
-+
- static struct platform_driver lt3593_led_driver = {
- 	.probe		= lt3593_led_probe,
- 	.driver		= {
- 		.name	= "leds-lt3593",
-+		.of_match_table = of_match_ptr(of_lt3593_leds_match),
- 	},
- };
- 
+ 	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+ 						  NULL);
+ 	if (!endpoint) {
 -- 
-2.17.1
+1.9.1
