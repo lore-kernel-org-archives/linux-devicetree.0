@@ -1,55 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 0/2] Add R8A77980/Condor PCIe support
-Date: Mon, 18 Jun 2018 19:16:47 +0300
-Message-ID: <cfa599bd-d244-0032-490b-553f7870d07c@cogentembedded.com>
-References: <b37d458c-071a-833a-2057-be8a07c880be@cogentembedded.com>
- <20180618093623.s33bkiptazxem463@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180618093623.s33bkiptazxem463@verge.net.au>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Piotr Bugalski <bugalski.piotr@gmail.com>
+Subject: [RFC PATCH 0/2] New QuadSPI driver for Atmel SAMA5D2
+Date: Mon, 18 Jun 2018 18:21:22 +0200
+Message-ID: <20180618162124.21749-1-bugalski.piotr@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Piotr Bugalski <bugalski.piotr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2018 12:36 PM, Simon Horman wrote:
+Hello,
 
->> Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
->> 'renesas-devel-20180614v2-v4.17' tag. We're adding the R8A77980 PCIe related
->> device nodes and then enable PCIe on the Condor board. These patches depend
->> on the R8A77980 PCIe PHY driver support in order to work properly. Note that
->> in case the PCIe PHY driver is not enabled, the kernel will BUG() due to I/O
->> space page leak in the PCIe driver...
-> 
-> Is that problem specific to the presence of PCIe nodes for
-> condor/r8a77980
+Atmel SAMA5D2 is equipped with two QSPI interfaces. These interfaces can
+work as in SPI-compatible mode or use two / four lines to improve
+communication speed. At the moment there is QSPI driver strongly tied to
+NOR-flash memory and MTD subsystem.
+Intention of this change is to provide new driver which will not be tied
+to MTD and allows using QSPI with NAND-flash memory or other peripherals
+New spi-mem API provides abstraction layer which can disconnect QSPI
+from MTD. This driver doesn't support regular SPI interface, it should
+be used with spi-mem interface only.
+Unfortunately SAMA5D2 hardware by default supports only NOR-flash
+memory. It allows 24- and 32-bit addressing while NAND-flash requires
+16-bit long. To workaround hardware limitation driver is a bit more
+complicated.
 
-   The nodes are safe unless they are enabled, so the Condor patch may be
-deferred untl I fix the PCI code.
-> condor/r8a77980 or is it also true of other (R-Car) boards where
-> PCIe is enabled?
+Request to spi-mem contains three fiels: opcode (command), address,
+dummy bytes. SAMA5D2 QSPI hardware supports opcode, address, dummy and
+option byte where address field can only be 24- or 32- bytes long.
+Handling 8-bits long addresses is done using option field. For 16-bits
+address behaviour depends of number of requested dummy bits. If there
+are 8 or more dummy cycles, address is shifted and sent with first dummy
+byte. Otherwise opcode is disabled and first byte of address contains
+command opcode (works only if opcode and address use the same buswidth).
+The limitation is when 16-bit address is used without enough dummy
+cycles and opcode is using different buswidth than address. Other modes
+are supported with described workaround.
 
-   The leak happens every time the driver fails to probe later than
-pci_remap_iospace() is called but the BUG_ON() is only triggered by rhe 2nd try
-with EPROBE_DEFER returned previously.
+It looks like hardware has some limitation in performance. The same issue
+exists in current QSPI driver (MTD/nor-flash) and soft-pack (bare-metal
+library from Atmel). Without using DMA read speed is much worse than
+maximum bandwidth (efficiency 30-40%). Any help with performance
+improvement is highly welcome, especially for NAND-flash memories which
+offers higher capacity than NOR-flash used with previous driver.
 
-> Regardless, it sounds like these patches expose a kernel bug.
-> Is it being fixed?
+Best Regards,
+Piotr
 
-   I'm working on a fix (which embraces several PCI drivers)...
+Piotr Bugalski (2):
+  spi: Add QuadSPI driver for Atmel SAMA5D2
+  dt-bindings: spi: QuadSPI driver for Atmel SAMA5D2 documentation
 
->> [1/2] arm64: dts: renesas: r8a77980: add PCIe support
->> [2/2] arm64: dts: renesas: condor: add PCIe support
+ .../devicetree/bindings/spi/spi_atmel-qspi.txt     |  41 ++
+ drivers/spi/Kconfig                                |   9 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-atmel-qspi.c                       | 480 +++++++++++++++++++++
+ 4 files changed, 531 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel-qspi.txt
+ create mode 100644 drivers/spi/spi-atmel-qspi.c
 
-WBR, Sergei
+-- 
+2.11.0
