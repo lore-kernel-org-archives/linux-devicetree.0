@@ -1,130 +1,53 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [RFC PATCH] of: overlay: update phandle cache on overlay apply
- and remove
-Date: Sun, 17 Jun 2018 16:32:20 -0500
-Message-ID: <CANk1AXTh_jpqSp4WpqRc4t4XfTr5Qt18fXUBZyqAHgWnuPeD1w@mail.gmail.com>
-References: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller
+ / system control
+Date: Mon, 18 Jun 2018 10:11:20 +0800
+Message-ID: <CAGb2v64Ar+rOgiXbjtRrQojHUZteLa9N7OwM3XY7ZcpS87Qpmw@mail.gmail.com>
+References: <20180614153548.9644-1-wens@csie.org> <20180615091413.pbdtrpa7txe6i4ee@flea>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBYFJTTMQKGQEB5IOQTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180615091413.pbdtrpa7txe6i4ee@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 17, 2018 at 11:03 AM,  <frowand.list@gmail.com> wrote:
+On Fri, Jun 15, 2018 at 5:14 PM, Maxime Ripard
+<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Thu, Jun 14, 2018 at 11:35:44PM +0800, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> This series is the remaining A64 syscon changes from the R40 DWMAC
+>> series. The series aligns how the A64 system control exports a regmap
+>> for the sun8i DWMAC driver to access with what we've done for the R40.
+>>
+>> Originally the A64 used the generic syscon for this bit of hardware.
+>> But this block also contains mapping bits for the onboard SRAM, used
+>> by various peripherals, and other vendor specific bits we may use in
+>> the future. It is by no means generic. And we already have a device
+>> tree binding and driver for the SRAM part.
+>>
+>> The first patch make the SRAM control device export a regmap, exposing
+>> a single EMAC control register, for the DWMAC driver to consume.
+>>
+>> The second and third patches rename the A64 compatible string to read
+>> "system control", which is what the block is named in the user manual.
+>>
+>> The last patch fixes up the device node, and also adds the lone mappable
+>> SRAM block, which is needed by the Display Engine.
+>
+> For the serie:
+> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-Hi Frank,
+Cool. I'll apply them once you've rebased and pushed out any patches you
+queued up during the merge window.
 
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> A comment in the review of the patch adding the phandle cache said that
-> the cache would have to be updated when modules are applied and removed.
-> This patch implements the cache updates.
->
-> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
-> Reported-by: Alan Tull <atull@kernel.org>
-> Suggested-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->
-> Compiles for one configuration.
-> NOT boot tested.
-> Not run through my normal process to check for new warnings, etc.
->
-> It is late, I'm tired, my brain is fuzzy.  I need to review this more to have
-> any confidence in it.  But I wanted to get a version out for Alan to see (and
-> test if he wants).
-
-Thanks for the very fast response!  Monday I'll be able to test it and
-review it.
-
-Thanks,
-Alan
-
->
->  drivers/of/base.c       |  6 +++---
->  drivers/of/of_private.h |  2 ++
->  drivers/of/overlay.c    | 12 ++++++++++++
->  3 files changed, 17 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 848f549164cd..466e3c8582f0 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -102,7 +102,7 @@ static u32 phandle_cache_mask;
->   *   - the phandle lookup overhead reduction provided by the cache
->   *     will likely be less
->   */
-> -static void of_populate_phandle_cache(void)
-> +void of_populate_phandle_cache(void)
->  {
->         unsigned long flags;
->         u32 cache_entries;
-> @@ -134,8 +134,7 @@ static void of_populate_phandle_cache(void)
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  }
->
-> -#ifndef CONFIG_MODULES
-> -static int __init of_free_phandle_cache(void)
-> +int of_free_phandle_cache(void)
->  {
->         unsigned long flags;
->
-> @@ -148,6 +147,7 @@ static int __init of_free_phandle_cache(void)
->
->         return 0;
->  }
-> +#if !defined(CONFIG_MODULES)
->  late_initcall_sync(of_free_phandle_cache);
->  #endif
->
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index 891d780c076a..216175d11d3d 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -79,6 +79,8 @@ int of_resolve_phandles(struct device_node *tree);
->  #if defined(CONFIG_OF_OVERLAY)
->  void of_overlay_mutex_lock(void);
->  void of_overlay_mutex_unlock(void);
-> +int of_free_phandle_cache(void);
-> +void of_populate_phandle_cache(void);
->  #else
->  static inline void of_overlay_mutex_lock(void) {};
->  static inline void of_overlay_mutex_unlock(void) {};
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 7baa53e5b1d7..3f76e58fbec4 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -804,6 +804,8 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
->                 goto err_free_overlay_changeset;
->         }
->
-> +       of_populate_phandle_cache();
-> +
->         ret = __of_changeset_apply_notify(&ovcs->cset);
->         if (ret)
->                 pr_err("overlay changeset entry notify error %d\n", ret);
-> @@ -1046,8 +1048,18 @@ int of_overlay_remove(int *ovcs_id)
->
->         list_del(&ovcs->ovcs_list);
->
-> +       /*
-> +        * Empty and disable phandle cache.  Must empty here so that
-> +        * changeset notifiers do not use stale cache entry for a removed
-> +        * phandle.
-> +        */
-> +       of_free_phandle_cache();
-> +
->         ret_apply = 0;
->         ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
-> +
-> +       of_populate_phandle_cache();
-> +
->         if (ret) {
->                 if (ret_apply)
->                         devicetree_state_flags |= DTSF_REVERT_FAIL;
-> --
-> Frank Rowand <frank.rowand@sony.com>
->
+ChenYu
