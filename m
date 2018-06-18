@@ -1,65 +1,174 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 2/2] clk: qcom: Add lpass clock controller
- driver for SDM845
-Date: Mon, 18 Jun 2018 17:40:11 +0300
-Message-ID: <20180618144011.v5uwk4lkiuynggl3@mwanda>
-References: <1528961943-12506-3-git-send-email-tdas@codeaurora.org>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v2 00/27] Add support for R40 HDMI pipeline
+Date: Mon, 18 Jun 2018 16:43:56 +0200
+Message-ID: <15787507.kzqBcLUy0z@jernej-laptop>
+References: <20180612200036.21483-1-jernej.skrabec@siol.net> <5084905.C41JrL457O@jernej-laptop> <CAMty3ZB9f_HrbJDjbAEPvf4UhcEhDm8hCaB8yq-yeVkFbtSTTg@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kbuild-bounces@lists.01.org>
-Content-Disposition: inline
-In-Reply-To: <1528961943-12506-3-git-send-email-tdas@codeaurora.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/kbuild/>
-List-Post: <mailto:kbuild@lists.01.org>
-List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=subscribe>
-Errors-To: kbuild-bounces@lists.01.org
-Sender: "kbuild" <kbuild-bounces@lists.01.org>
-To: kbuild@01.org
-Cc: Taniya Das <tdas@codeaurora.org>, robh@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Amit Nischal <anischal@codeaurora.org>, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rohit Kumar <rohitkr@codeaurora.org>, kbuild-all@01.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB6EKT7MQKGQEUDTOIXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZB9f_HrbJDjbAEPvf4UhcEhDm8hCaB8yq-yeVkFbtSTTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Taniya,
+Dne ponedeljek, 18. junij 2018 ob 14:58:02 CEST je Jagan Teki napisal(a):
+> On Thu, Jun 14, 2018 at 10:59 PM, Jernej =C5=A0krabec
+>=20
+> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+> > Dne =C4=8Detrtek, 14. junij 2018 ob 19:16:46 CEST je Jagan Teki napisal=
+(a):
+> >> On Thu, Jun 14, 2018 at 8:04 PM, Jernej =C5=A0krabec <jernej.skrabec@s=
+iol.net>
+> >=20
+> > wrote:
+> >> > Dne =C4=8Detrtek, 14. junij 2018 ob 09:12:41 CEST je Jagan Teki napi=
+sal(a):
+> >> >> On Wed, Jun 13, 2018 at 1:30 AM, Jernej Skrabec
+> >> >> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> >> >=20
+> >> > wrote:
+> >> >> > This series adds support for R40 HDMI pipeline. It is a bit speci=
+al
+> >> >> > than other already supported pipelines because it has additional
+> >> >> > unit
+> >> >> > called TCON TOP responsible for relationship configuration betwee=
+n
+> >> >> > mixers, TCONs and HDMI. Additionally, it has additional gates for
+> >> >> > DSI
+> >> >> > and TV TCONs, TV encoder clock settings and pin muxing between LC=
+D
+> >> >> > and TV encoders.
+> >> >> >=20
+> >> >> > However, it seems that TCON TOP will become a norm, since newer
+> >> >> > Allwinner SoCs like H6 also have this unit.
+> >> >> >=20
+> >> >> > I tested different possible configurations:
+> >> >> > - mixer0 <> TCON-TV0 <> HDMI
+> >> >> > - mixer0 <> TCON-TV1 <> HDMI
+> >> >> > - mixer1 <> TCON-TV0 <> HDMI
+> >> >> > - mixer1 <> TCON-TV1 <> HDMI
+> >> >> >=20
+> >> >> > Please review.
+> >> >> >=20
+> >> >> > Best regards,
+> >> >> > Jernej
+> >> >> >=20
+> >> >> > Changes from v1:
+> >> >> > - Split DT bindings patch and updated description
+> >> >> > - Split HDMI PHY patch
+> >> >> > - Move header file from TCON TOP patch to dt bindings patch
+> >> >> > - Added Rob reviewed-by tag
+> >> >> > - Used clk_hw_register_gate() instead of custom gate registration
+> >> >> > code
+> >> >> > - Reworked TCON TOP to be part of of-graph. Because of that, a lo=
+t
+> >> >> > of
+> >> >> >=20
+> >> >> >   new patches were added.
+> >> >> >=20
+> >> >> > - Droped mixer index quirk patch
+> >> >> > - Reworked TCON support for TCON TOP
+> >> >> > - Updated commit messages
+> >> >> >=20
+> >> >> > Jernej Skrabec (27):
+> >> >> >   clk: sunxi-ng: r40: Add minimal rate for video PLLs
+> >> >> >   clk: sunxi-ng: r40: Allow setting parent rate to display relate=
+d
+> >> >> >  =20
+> >> >> >     clocks
+> >> >> >  =20
+> >> >> >   clk: sunxi-ng: r40: Export video PLLs
+> >> >> >   dt-bindings: display: sunxi-drm: Add TCON TOP description
+> >> >> >   drm/sun4i: Add TCON TOP driver
+> >> >> >   drm/sun4i: Fix releasing node when enumerating enpoints
+> >> >> >   drm/sun4i: Split out code for enumerating endpoints in output p=
+ort
+> >> >> >   drm/sun4i: Add support for traversing graph with TCON TOP
+> >> >> >   drm/sun4i: Don't skip TCONs if they don't have channel 0
+> >> >> >   dt-bindings: display: sun4i-drm: Add R40 TV TCON description
+> >> >> >   drm/sun4i: tcon: Add support for tcon-top gate
+> >> >> >   drm/sun4i: tcon: Generalize engine search algorithm
+> >> >> >   drm/sun4i: Don't check for LVDS and RGB when TCON has only ch1
+> >> >> >   drm/sun4i: Don't check for panel or bridge on TV TCONs
+> >> >> >   drm/sun4i: Add support for R40 TV TCON
+> >> >> >   dt-bindings: display: sun4i-drm: Add R40 mixer compatibles
+> >> >> >   drm/sun4i: Add support for R40 mixers
+> >> >> >   dt-bindings: display: sun4i-drm: Add description of A64 HDMI PH=
+Y
+> >> >> >   drm/sun4i: Enable DW HDMI PHY clock
+> >> >> >   drm/sun4i: Don't change clock bits in DW HDMI PHY driver
+> >> >> >   drm/sun4i: DW HDMI PHY: Add support for second PLL
+> >> >> >   drm/sun4i: Add support for second clock parent to DW HDMI PHY c=
+lk
+> >> >> >  =20
+> >> >> >     driver
+> >> >> >  =20
+> >> >> >   drm/sun4i: Add support for A64 HDMI PHY
+> >> >> >   drm: of: Export drm_crtc_port_mask()
+> >> >> >   drm/sun4i: DW HDMI: Expand algorithm for possible crtcs
+> >> >> >   ARM: dts: sun8i: r40: Add HDMI pipeline
+> >> >> >   ARM: dts: sun8i: r40: Enable HDMI output on BananaPi M2 Ultra
+> >> >>=20
+> >> >> Tested whole series on top of linux-next.
+> >> >>=20
+> >> >> Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> >> >=20
+> >> > Thanks!
+> >>=20
+> >> I've V40 board, which is same as R40. I'm able to detect the HDMI but
+> >> seems edid not detecting properly.
+> >>=20
+> >> [    0.983007] sun4i-drm display-engine: bound 1100000.mixer (ops
+> >> 0xc074a80c) [    0.999043] sun4i-drm display-engine: bound 1200000.mix=
+er
+> >> (ops 0xc074a80c) [    1.006229] sun4i-drm display-engine: bound
+> >> 1c70000.tcon-top (ops 0xc074e2ac) [    1.013609] sun4i-drm
+> >> display-engine:
+> >> bound 1c73000.lcd-controller (ops 0xc0747a28)
+> >> [    1.053988] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller
+> >> v1.32a with HDCP (sun8i_dw_hdmi_phy)
+> >> [    1.063913] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI
+> >> I2C bus driver
+> >> [    1.071683] sun4i-drm display-engine: bound 1ee0000.hdmi (ops
+> >> 0xc074a298) [    1.078484] [drm] Supports vblank timestamp caching Rev=
+ 2
+> >> (21.10.2013). [    1.085098] [drm] No driver support for vblank
+> >> timestamp query. [ 1.091055] [drm] Cannot find any crtc or sizes
+> >> [    1.095995] [drm] Initialized sun4i-drm 1.0.0 20150629 for
+> >> display-engine on minor 0
+> >=20
+> > This seems like DT issue. Can you post somewhere your V40 DTSI (if it i=
+s
+> > different to R40) and board DTS?
+>=20
+> same dtsi shared between r40 and v40, here is board dts support for HDMI[=
+1]
+>=20
+> [1] https://paste.ubuntu.com/p/wqVz38BHrM/
 
-Thank you for the patch! Perhaps something to improve:
+This patch looks like exactly the same as mine for BananaPi M2U, so there=
+=20
+should be no issues.
 
-url:    https://github.com/0day-ci/linux/commits/Taniya-Das/Add-support-for-LPASS-clock-controller-for-SDM845/20180614-155144
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+What about VCC-HDMI? Is powered? Can you measure it to check?
 
-smatch warnings:
-drivers/clk/qcom/lpasscc-sdm845.c:197 lpass_clocks_sdm845_probe() warn: passing zero to 'PTR_ERR'
+Best regards,
+Jernej
 
-# https://github.com/0day-ci/linux/commit/035d2520712de752be68d10a37650b65b6aee154
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 035d2520712de752be68d10a37650b65b6aee154
-vim +/PTR_ERR +197 drivers/clk/qcom/lpasscc-sdm845.c
 
-035d2520 Taniya Das 2018-06-14  179  
-035d2520 Taniya Das 2018-06-14  180  static int lpass_clocks_sdm845_probe(struct platform_device *pdev,
-035d2520 Taniya Das 2018-06-14  181  				     struct device_node *np,
-035d2520 Taniya Das 2018-06-14  182  				     const struct qcom_cc_desc *desc)
-035d2520 Taniya Das 2018-06-14  183  {
-035d2520 Taniya Das 2018-06-14  184  	struct regmap *regmap;
-035d2520 Taniya Das 2018-06-14  185  	struct resource res;
-035d2520 Taniya Das 2018-06-14  186  	void __iomem *base;
-035d2520 Taniya Das 2018-06-14  187  
-035d2520 Taniya Das 2018-06-14  188  	if (of_address_to_resource(np, 0, &res))
-035d2520 Taniya Das 2018-06-14  189  		return -ENOMEM;
-035d2520 Taniya Das 2018-06-14  190  
-035d2520 Taniya Das 2018-06-14  191  	base = devm_ioremap(&pdev->dev, res.start, resource_size(&res));
-035d2520 Taniya Das 2018-06-14  192  	if (IS_ERR(base))
-035d2520 Taniya Das 2018-06-14  193  		return -ENOMEM;
-035d2520 Taniya Das 2018-06-14  194  
-035d2520 Taniya Das 2018-06-14  195  	regmap = devm_regmap_init_mmio(&pdev->dev, base, desc->config);
-035d2520 Taniya Das 2018-06-14  196  	if (!regmap)
-035d2520 Taniya Das 2018-06-14 @197  		return PTR_ERR(regmap);
-                                                       ^^^^^^^^^^^^^^^
-035d2520 Taniya Das 2018-06-14  198  
-035d2520 Taniya Das 2018-06-14  199  	return qcom_cc_really_probe(pdev, desc, regmap);
-035d2520 Taniya Das 2018-06-14  200  }
-035d2520 Taniya Das 2018-06-14  201  
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
