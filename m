@@ -1,60 +1,229 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 0/5] Renesas R9A06G032 PINCTRL Driver
-Date: Mon, 18 Jun 2018 10:57:18 +0200
-Message-ID: <CAMuHMdVL-00gb7ZfgNGr8-VawFUpg+iY5mpPF6UZPfjFqM1_jg@mail.gmail.com>
-References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com> <CACRpkdbX0R+ipasLfZi80yf2OBU0TuDT-0KoUJBvrQz3Zj6eFQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v2 3/3] thermal: broadcom: Add Stingray thermal driver
+Date: Mon, 18 Jun 2018 14:01:19 +0530
+Message-ID: <1529310679-13482-4-git-send-email-srinath.mannam@broadcom.com>
+References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbX0R+ipasLfZi80yf2OBU0TuDT-0KoUJBvrQz3Zj6eFQ@mail.gmail.com>
+In-Reply-To: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <damm+renesas@opensource.se>
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+From: Pramod Kumar <pramod.kumar@broadcom.com>
 
-On Mon, Jun 18, 2018 at 10:46 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Jun 14, 2018 at 1:00 PM, Michel Pollet
-> <michel.pollet@bp.renesas.com> wrote:
->
-> > *WARNING* -- this requires:
-> > + R9A06G032 base patch v9
-> > + R9A06G032 SMP patch v5
->
-> Is that required for the pin controller itself (compile-time dependence)
-> or is it required to boot the system (run-time dependence)?
+Adds stingray thermal driver to monitor six
+thermal zones temperature and trips at critical temperature.
 
-Obviously the last 3 patches in the series touch the DTS, so they depend
-on the base patch adding the DTS files.
+Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
+---
+ drivers/thermal/Kconfig               |   3 +-
+ drivers/thermal/broadcom/Kconfig      |   9 ++
+ drivers/thermal/broadcom/Makefile     |   1 +
+ drivers/thermal/broadcom/sr-thermal.c | 151 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 163 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/thermal/broadcom/sr-thermal.c
 
-> We can merge support for pin control ahead, that's fine.
-
-The actual pinctrl driver can indeed be merged separately.
-
-> > This implements the pinctrl driver for the R9A06G032.
->
-> Geert Uytterhoeven and Laurent Pinchart maintains the Renesas pin
-> controllers, and this one is for some reason a totally new one in
-> drivers/pinctrl/pinctrl-r9a06g032.c
->
-> Is it totally different from the other "great old ones" in the SuperH-PFC
-> series or is there some other reason why it was done like this?
-
-Yes it is, cfr. drivers/pinctrl/pinctrl-rza1.c, which lives outside sh-pfc, too.
-
-Of course I can take it through my sh-pfc tree, once the rough edges have been
-removed.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 8297988..26d39d4 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -416,7 +416,8 @@ config MTK_THERMAL
+ 	  controller present in Mediatek SoCs
+ 
+ menu "Broadcom thermal drivers"
+-depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
++depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM_IPROC || \
++		COMPILE_TEST
+ source "drivers/thermal/broadcom/Kconfig"
+ endmenu
+ 
+diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
+index c106a15..dc9a9bd 100644
+--- a/drivers/thermal/broadcom/Kconfig
++++ b/drivers/thermal/broadcom/Kconfig
+@@ -22,3 +22,12 @@ config BCM_NS_THERMAL
+ 	  BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU (Device
+ 	  Management Unit) block with a thermal sensor that allows checking CPU
+ 	  temperature.
++
++config BCM_SR_THERMAL
++	tristate "Stingray thermal driver"
++	depends on ARCH_BCM_IPROC || COMPILE_TEST
++	default ARCH_BCM_IPROC
++	help
++	  Support for the Stingray family of SoCs. Its different blocks like
++	  iHost, CRMU and NITRO has thermal sensor that allows checking its
++	  temperature.
+diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
+index fae10ec..79df69e 100644
+--- a/drivers/thermal/broadcom/Makefile
++++ b/drivers/thermal/broadcom/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_BCM2835_THERMAL)		+= bcm2835_thermal.o
+ obj-$(CONFIG_BRCMSTB_THERMAL)		+= brcmstb_thermal.o
+ obj-$(CONFIG_BCM_NS_THERMAL)		+= ns-thermal.o
++obj-$(CONFIG_BCM_SR_THERMAL)		+= sr-thermal.o
+diff --git a/drivers/thermal/broadcom/sr-thermal.c b/drivers/thermal/broadcom/sr-thermal.c
+new file mode 100644
+index 0000000..362dcda
+--- /dev/null
++++ b/drivers/thermal/broadcom/sr-thermal.c
+@@ -0,0 +1,151 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2018 Broadcom
++ */
++
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/thermal.h>
++
++#define TMON_CRIT_TEMP 105000 /* temp in millidegree C */
++
++struct sr_thermal {
++	struct thermal_zone_device *tz;
++	struct device *dev;
++	void __iomem *regs;
++	unsigned int crit_temp;
++};
++
++static int sr_get_temp(struct thermal_zone_device *tz, int *temp)
++{
++	struct sr_thermal *sr_thermal = tz->devdata;
++
++	*temp = readl(sr_thermal->regs);
++
++	return 0;
++}
++
++static int sr_get_trip_type(struct thermal_zone_device *tz, int trip,
++					enum thermal_trip_type *type)
++{
++	struct sr_thermal *sr_thermal = tz->devdata;
++
++	switch (trip) {
++	case 0:
++		*type = THERMAL_TRIP_CRITICAL;
++		break;
++	default:
++		dev_dbg(sr_thermal->dev,
++			"Driver does not support more than 1 trip point\n");
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static int sr_get_trip_temp(struct thermal_zone_device *tz, int trip, int *temp)
++{
++	struct sr_thermal *sr_thermal = tz->devdata;
++
++	switch (trip) {
++	case 0:
++		*temp = sr_thermal->crit_temp;
++		break;
++	default:
++		dev_dbg(sr_thermal->dev,
++			"Driver does not support more than 1 trip point\n");
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static int sr_set_trip_temp(struct thermal_zone_device *tz, int trip, int temp)
++{
++	struct sr_thermal *sr_thermal = tz->devdata;
++
++	switch (trip) {
++	case 0:
++		/*
++		 * Allow the user to change critical temperature
++		 * as per their requirement, could be for debug
++		 * purpose, even if it's more than the recommended
++		 * critical temperature.
++		 */
++		sr_thermal->crit_temp = temp;
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static struct thermal_zone_device_ops sr_thermal_ops = {
++	.get_temp = sr_get_temp,
++	.get_trip_type = sr_get_trip_type,
++	.get_trip_temp = sr_get_trip_temp,
++	.set_trip_temp = sr_set_trip_temp,
++};
++
++static int sr_thermal_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct sr_thermal *sr_thermal;
++	struct resource *res;
++
++	sr_thermal = devm_kzalloc(dev, sizeof(*sr_thermal), GFP_KERNEL);
++	if (!sr_thermal)
++		return -ENOMEM;
++	sr_thermal->dev = dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	sr_thermal->regs = (void __iomem *)devm_memremap(&pdev->dev, res->start,
++					 resource_size(res), MEMREMAP_WB);
++	if (IS_ERR(sr_thermal->regs)) {
++		dev_err(dev, "failed to get io address\n");
++		return PTR_ERR(sr_thermal->regs);
++	}
++
++	/* initialize tmon value to 0 */
++	writel(0, sr_thermal->regs);
++	sr_thermal->crit_temp = TMON_CRIT_TEMP;
++
++	sr_thermal->tz = thermal_zone_device_register(dev_name(dev), 1, 1,
++							 sr_thermal,
++							 &sr_thermal_ops,
++							 NULL, 1000, 1000);
++	if (IS_ERR(sr_thermal->tz))
++		return PTR_ERR(sr_thermal->tz);
++
++	platform_set_drvdata(pdev, sr_thermal);
++
++	return 0;
++}
++
++static int sr_thermal_remove(struct platform_device *pdev)
++{
++	struct sr_thermal *sr_thermal = platform_get_drvdata(pdev);
++
++	thermal_zone_device_unregister(sr_thermal->tz);
++
++	return 0;
++}
++
++static const struct of_device_id sr_thermal_of_match[] = {
++	{ .compatible = "brcm,sr-thermal", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, sr_thermal_of_match);
++
++static struct platform_driver sr_thermal_driver = {
++	.probe		= sr_thermal_probe,
++	.remove		= sr_thermal_remove,
++	.driver = {
++		.name = "sr-thermal",
++		.of_match_table = sr_thermal_of_match,
++	},
++};
++module_platform_driver(sr_thermal_driver);
++
++MODULE_AUTHOR("Pramod Kumar <pramod.kumar@broadcom.com>");
++MODULE_DESCRIPTION("Stingray thermal driver");
++MODULE_LICENSE("GPL v2");
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
