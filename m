@@ -1,52 +1,58 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v3 02/12] PM / devfreq: Fix handling of min/max_freq == 0
-Date: Mon, 18 Jun 2018 13:12:41 -0700
-Message-ID: <20180618201239.GA153862@rodete-desktop-imager.corp.google.com>
-References: <20180614194712.102134-1-mka@chromium.org>
- <20180614194712.102134-3-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/2] arm64: dts: sdm845: Add rpmh-rsc node
+Date: Mon, 18 Jun 2018 13:56:15 -0700
+Message-ID: <20180618205616.102750-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180614194712.102134-3-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>
+To: andy.gross@linaro.org
+Cc: sboyd@kernel.org, tdas@codeaurora.org, rplsssn@codeaurora.org, ilina@codeaurora.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This adds the rpmh-rsc node to sdm845 based on the examples in the
+bindings.
 
-On Thu, Jun 14, 2018 at 12:47:02PM -0700, Matthias Kaehlcke wrote:
-> Commit ab8f58ad72c4 ("PM / devfreq: Set min/max_freq when adding the
-> devfreq device") initializes df->min/max_freq with the min/max OPP when
-> the device is added. Later commit f1d981eaecf8 ("PM / devfreq: Use the
-> available min/max frequency") adds df->scaling_min/max_freq and the
-> following to the frequency adjustment code:
-> 
->   max_freq = MIN(devfreq->scaling_max_freq, devfreq->max_freq);
-> 
-> With the current handling of min/max_freq this is incorrect:
-> 
-> Even though df->max_freq is now initialized to a value != 0 user space
-> can still set it to 0, in this case max_freq would be 0 instead of
-> df->scaling_max_freq as intended. In consequence the frequency adjustment
-> is not performed:
-> 
->   if (max_freq && freq > max_freq) {
-> 	freq = max_freq;
-> 
-> To fix this set df->min/max freq to the min/max OPP in max/max_freq_store,
-> when the user passes a value of 0. This also prevents df->max_freq from
-> being set below the min OPP when df->min_freq is 0, and similar for
-> min_freq. Since it is now guaranteed that df->min/max_freq can't be 0 the
-> checks for this case can be removed.
-> 
-> Fixes: f1d981eaecf8 ("PM / devfreq: Use the available min/max frequency")
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-FWIW, I've reviewed patches 1-9 (the core devfreq bugfixes and features,
-and a small cpufreq helper fixup), and they seem pretty clear and good
-to me, aside from a minor error in the current subject
-(s/devfreg/devfreq/). So:
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index cd308b84bed7..19b006293d3b 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -7,6 +7,7 @@
+ 
+ #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -984,6 +985,24 @@
+ 			#mbox-cells = <1>;
+ 		};
+ 
++		apps_rsc: rsc@179c0000 {
++			label = "apps_rsc";
++			compatible = "qcom,rpmh-rsc";
++			reg = <0x179c0000 0x10000>,
++			      <0x179d0000 0x10000>,
++			      <0x179e0000 0x10000>;
++			reg-names = "drv-0", "drv-1", "drv-2";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,tcs-offset = <0xd00>;
++			qcom,drv-id = <2>;
++			qcom,tcs-config = <SLEEP_TCS   3>,
++					  <WAKE_TCS    3>,
++					  <ACTIVE_TCS  2>,
++					  <CONTROL_TCS 1>;
++		};
++
+ 		intc: interrupt-controller@17a00000 {
+ 			compatible = "arm,gic-v3";
+ 			#address-cells = <1>;
+-- 
+2.18.0.rc1.244.gcf134e6275-goog
