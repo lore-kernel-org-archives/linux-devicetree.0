@@ -1,32 +1,129 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/5] Fix Cygnus, NS2, Stingray interrupt type
-Date: Mon, 18 Jun 2018 09:48:18 -0700
-Message-ID: <ac955f7d-6770-63a1-db85-024b0ee0b8af@gmail.com>
-References: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [RFC PATCH] of: overlay: update phandle cache on overlay apply
+ and remove
+Date: Mon, 18 Jun 2018 11:50:11 -0500
+Message-ID: <CANk1AXTh3dR7peT_3fz==EDk0oxd2UZEEooPn6zTrpJ+=NJT_A@mail.gmail.com>
+References: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
-Content-Language: en-US
+In-Reply-To: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>, linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2018 01:21 PM, Ray Jui wrote:
-> This patch series fixes incorrect interrupt types for I2C and PCIe in DT
-> for Broadcom Cygnus, NS2, and Stingray SoCs
-> 
-> This patch series is based off v4.17 and is available on GIHUB:
-> repo: https://github.com/Broadcom/arm64-linux.git
-> branch: cygnus-ns2-dt-irq-type-fix-v1
+On Sun, Jun 17, 2018 at 11:03 AM,  <frowand.list@gmail.com> wrote:
 
-Series applied to:
+Hi Frank,
 
-- 1&2: devicetree/fixes
-- 3-5: devicetree-arm64/fixes
+Thanks again for the fast response while traveling.  The RFC looks
+good in my testing and review.
 
-Thanks Ray.
--- 
-Florian
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> A comment in the review of the patch adding the phandle cache said that
+> the cache would have to be updated when modules are applied and removed.
+> This patch implements the cache updates.
+>
+> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
+> Reported-by: Alan Tull <atull@kernel.org>
+> Suggested-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Tested-by: Alan Tull <atull@kernel.org>
+Reviewed-by: Alan Tull <atull@kernel.org>
+
+> ---
+>
+> Compiles for one configuration.
+> NOT boot tested.
+> Not run through my normal process to check for new warnings, etc.
+>
+> It is late, I'm tired, my brain is fuzzy.  I need to review this more to have
+> any confidence in it.  But I wanted to get a version out for Alan to see (and
+> test if he wants).
+>
+>  drivers/of/base.c       |  6 +++---
+>  drivers/of/of_private.h |  2 ++
+>  drivers/of/overlay.c    | 12 ++++++++++++
+>  3 files changed, 17 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 848f549164cd..466e3c8582f0 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -102,7 +102,7 @@ static u32 phandle_cache_mask;
+>   *   - the phandle lookup overhead reduction provided by the cache
+>   *     will likely be less
+>   */
+> -static void of_populate_phandle_cache(void)
+> +void of_populate_phandle_cache(void)
+>  {
+>         unsigned long flags;
+>         u32 cache_entries;
+> @@ -134,8 +134,7 @@ static void of_populate_phandle_cache(void)
+>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  }
+>
+> -#ifndef CONFIG_MODULES
+> -static int __init of_free_phandle_cache(void)
+> +int of_free_phandle_cache(void)
+>  {
+>         unsigned long flags;
+>
+> @@ -148,6 +147,7 @@ static int __init of_free_phandle_cache(void)
+>
+>         return 0;
+>  }
+> +#if !defined(CONFIG_MODULES)
+>  late_initcall_sync(of_free_phandle_cache);
+>  #endif
+>
+> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> index 891d780c076a..216175d11d3d 100644
+> --- a/drivers/of/of_private.h
+> +++ b/drivers/of/of_private.h
+> @@ -79,6 +79,8 @@ int of_resolve_phandles(struct device_node *tree);
+>  #if defined(CONFIG_OF_OVERLAY)
+>  void of_overlay_mutex_lock(void);
+>  void of_overlay_mutex_unlock(void);
+> +int of_free_phandle_cache(void);
+> +void of_populate_phandle_cache(void);
+>  #else
+>  static inline void of_overlay_mutex_lock(void) {};
+>  static inline void of_overlay_mutex_unlock(void) {};
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 7baa53e5b1d7..3f76e58fbec4 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -804,6 +804,8 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
+>                 goto err_free_overlay_changeset;
+>         }
+>
+> +       of_populate_phandle_cache();
+> +
+>         ret = __of_changeset_apply_notify(&ovcs->cset);
+>         if (ret)
+>                 pr_err("overlay changeset entry notify error %d\n", ret);
+> @@ -1046,8 +1048,18 @@ int of_overlay_remove(int *ovcs_id)
+>
+>         list_del(&ovcs->ovcs_list);
+>
+> +       /*
+> +        * Empty and disable phandle cache.  Must empty here so that
+> +        * changeset notifiers do not use stale cache entry for a removed
+> +        * phandle.
+> +        */
+> +       of_free_phandle_cache();
+> +
+>         ret_apply = 0;
+>         ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
+> +
+> +       of_populate_phandle_cache();
+> +
+>         if (ret) {
+>                 if (ret_apply)
+>                         devicetree_state_flags |= DTSF_REVERT_FAIL;
+> --
+> Frank Rowand <frank.rowand@sony.com>
+>
