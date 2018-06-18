@@ -1,78 +1,68 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based
- on IP datasheet
-Date: Mon, 18 Jun 2018 14:18:00 +0200
-Message-ID: <20180618141800.2b8b9721@xps13>
-References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com>
-        <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
-        <5816516.AqyscFuYxX@blindfold>
-        <20180618094636.0e40c518@bbrezillon>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
+Date: Mon, 18 Jun 2018 14:21:19 +0200
+Message-ID: <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180618094636.0e40c518@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-kbuild@vger.kernel.org, "linux-stable #4 . 14+" <stable@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180618074556.6944-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Mon, Jun 18, 2018 at 9:45 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> This is a proposal for how to handle the non-discoverable
+> 96boards plug-in expansion boards called "mezzanines" in the
+> Linux kernel. It is a working RFC series meant for discussion
+> at the moment.
+>
+> The RFC was done on the brand new Ultra96 board from Xilinx
+> with a Secure96 mezzanine expansion board. The main part
+> is in patch 4, the rest is enabling and examples.
+>
+> The code can be obtained from here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=ultra96
+>
+> You can for example probably augment the DTS file for any
+> upstream-supported 96board and get the Secure96 going with
+> it with minor efforts.
 
-On Mon, 18 Jun 2018 09:46:36 +0200, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
+Hi Linus,
 
-> On Mon, 18 Jun 2018 09:09:02 +0200
-> Richard Weinberger <richard@nod.at> wrote:
-> 
-> > Am Freitag, 15. Juni 2018, 03:18:50 CEST schrieb Masahiro Yamada:  
-> > > According to the Denali User's Guide, this IP needs three clocks:
-> > > 
-> > >  - clk: controller core clock
-> > > 
-> > >  - clk_x: bus interface clock
-> > > 
-> > >  - ecc_clk: clock at which ECC circuitry is run
-> > > 
-> > > Currently, denali_dt.c requires a single anonymous clock and its
-> > > frequency.  However, the driver needs to get the frequency of "clk_x"
-> > > not "clk".  This is confusing because people tend to assume the
-> > > anonymous clock means the core clock.  In fact, I got a report of
-> > > SOCFPGA breakage because the timing parameters are calculated based
-> > > on a wrong frequency.
-> > > 
-> > > Instead of the cheesy implementation, the clocks in the real hardware
-> > > should be represented in the driver and the DT-binding.
-> > > 
-> > > However, adding new clocks would break the existing platforms.  For the
-> > > backward compatibility, the driver still accepts a single clock just as
-> > > before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
-> > > This is fine for existing DT of Socionext UniPhier, and also fixes the
-> > > issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
-> > > the bus interface clock.
-> > > 
-> > > Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
-> > > Cc: linux-stable <stable@vger.kernel.org> #4.14+
-> > > Reported-by: Richard Weinberger <richard@nod.at>
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>    
-> > 
-> > Reviewed-by: Richard Weinberger <richard@nod.at>  
-> 
-> Maybe a
-> 
-> Tested-by: Richard Weinberger <richard@nod.at>
-> 
-> ?
-> 
-> > Reported-by: Philipp Rosenberger <p.rosenberger@linutronix.de>  
-> 
-> Should I replace your Reported-by by this one or simply add it?
-> 
-> Miquel, I'll take this patch in mtd/fixes, and let you take the 2
-> others in nand/next. That means you'll have to back merge v4.18-rc2
-> into the nand/next tree, or base your tree on v4.18-rc2 instead of
-> v4.18-rc1.
+Thanks for your work on solving this long-standing problem. I've just
+read through your patches briefly and have a few thoughts:
 
-Sure.
+- I really like the idea of having C code deal with the mezzanine
+  connector itself, acting as an intermediate to tie a number of
+  boards to a number of add-on cards, this seems much simpler than
+  trying to do everything with overlays or one of the other more
+  generic mechanisms.
 
-Miquèl
+- I don't like the idea of having the bus driver contain a list of possible
+  add-ons, this seems to go against our usual driver model. What
+  I think we want instead is to make the connector itself a proper
+  bus_type, to allow drivers to register against it as loadable modules,
+  and devices (maybe limited to one device) being created as probed
+  from DT or some other method as you describe.
+
+- You export symbols in the mezzanine_* namespace, which I think
+   is a bit too generic and should perhaps contain something related
+   to  96boards in its name to make it less ambiguous. I suspect we
+   would add a number of further connectors for hats, capes, lures etc,
+   which could all be described as mezzanines. One open question
+   is how we structure the commonality between the various
+   connectors, but we can defer that until we have more than one
+   or two of them.
+
+          Arnd
