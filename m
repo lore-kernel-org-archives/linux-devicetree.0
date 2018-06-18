@@ -1,18 +1,18 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.16 016/279] MIPS: dts: Boston: Fix PCI bus dtc warnings:
-Date: Mon, 18 Jun 2018 10:10:01 +0200
-Message-ID: <20180618080609.481222337@linuxfoundation.org>
-References: <20180618080608.851973560@linuxfoundation.org>
+Subject: [PATCH 4.14 012/189] MIPS: dts: Boston: Fix PCI bus dtc warnings:
+Date: Mon, 18 Jun 2018 10:11:48 +0200
+Message-ID: <20180618081209.724660998@linuxfoundation.org>
+References: <20180618081209.254234434@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180618080608.851973560@linuxfoundation.org>
+In-Reply-To: <20180618081209.254234434@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Matt Redfearn <matt.redfearn@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-4.16-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
