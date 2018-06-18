@@ -1,54 +1,154 @@
-Return-Path: <SRS0=bntt=JN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0086.outbound.protection.outlook.com ([104.47.0.86]:50463
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932104AbeF0ADI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 26 Jun 2018 20:03:08 -0400
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v8 08/14] staging: typec: tcpci: use IS_ERR() instead of PTR_ERR_OR_ZERO()
-Date: Wed, 27 Jun 2018 07:45:26 +0800
-Message-Id: <1530056732-9640-9-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-References: <1530056732-9640-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, jun.li@nxp.com, cw00.choi@samsung.com, shufan_lee@richtek.com, peter.chen@nxp.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <SRS0=Mmip=JE=linaro.org=vinod.koul@kernel.org>
+From: Vinod Koul <vinod.koul@linaro.org>
+Subject: [PATCH 2/5] power: reset: qcom-pon: Add Qcom PON driver
+Date: Mon, 18 Jun 2018 20:05:45 +0530
+Message-Id: <20180618143548.29900-3-vkoul@kernel.org>
+In-Reply-To: <20180618143548.29900-1-vkoul@kernel.org>
+References: <20180618143548.29900-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-As tcpm_register_port() and tcpci_register_port() never return
-NULL and NULL is not a success in this case, use IS_ERR() to check
-the return value of both.
+Add support Qualcomm PM8xxx PON which is responsible for reboot
+mode support.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Li Jun <jun.li@nxp.com>
+Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/staging/typec/tcpci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/power/reset/Kconfig    |  8 ++++
+ drivers/power/reset/Makefile   |  1 +
+ drivers/power/reset/qcom-pon.c | 91 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 100 insertions(+)
+ create mode 100644 drivers/power/reset/qcom-pon.c
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 076498a..b63f147 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -509,7 +509,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
- 		return ERR_PTR(err);
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index df58fc878b3e..1572b2d3ad3d 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -104,6 +104,14 @@ config POWER_RESET_MSM
+ 	help
+ 	  Power off and restart support for Qualcomm boards.
  
- 	tcpci->port = tcpm_register_port(tcpci->dev, &tcpci->tcpc);
--	if (PTR_ERR_OR_ZERO(tcpci->port))
-+	if (IS_ERR(tcpci->port))
- 		return ERR_CAST(tcpci->port);
- 
- 	return tcpci;
-@@ -551,7 +551,7 @@ static int tcpci_probe(struct i2c_client *client,
- 		return err;
- 
- 	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
--	if (PTR_ERR_OR_ZERO(chip->tcpci))
-+	if (IS_ERR(chip->tcpci))
- 		return PTR_ERR(chip->tcpci);
- 
- 	i2c_set_clientdata(client, chip);
++config POWER_RESET_QCOM_PON
++	bool "Qualcomm power-on driver"
++	depends on ARCH_QCOM
++	depends on MFD_SPMI_PMIC
++	select REBOOT_MODE
++	help
++	  Power On support for Qualcomm boards.
++
+ config POWER_RESET_OCELOT_RESET
+ 	bool "Microsemi Ocelot reset driver"
+ 	depends on MSCC_OCELOT || COMPILE_TEST
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index 7778c7485cf1..0aebee954ac1 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+ obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
+ obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
+ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
++obj-$(CONFIG_POWER_RESET_QCOM_PON) += qcom-pon.o
+ obj-$(CONFIG_POWER_RESET_OCELOT_RESET) += ocelot-reset.o
+ obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
+ obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
+diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
+new file mode 100644
+index 000000000000..0c4caaa7e88f
+--- /dev/null
++++ b/drivers/power/reset/qcom-pon.c
+@@ -0,0 +1,91 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017-18 Linaro Limited
++
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/reboot.h>
++#include <linux/reboot-mode.h>
++#include <linux/regmap.h>
++
++#define PON_SOFT_RB_SPARE		0x8f
++
++struct pm8916_pon {
++	struct device *dev;
++	struct regmap *regmap;
++	u32 baseaddr;
++	struct reboot_mode_driver reboot_mode;
++};
++
++static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
++				    unsigned int magic)
++{
++	struct pm8916_pon *pon = container_of
++			(reboot, struct pm8916_pon, reboot_mode);
++	int ret;
++
++	ret = regmap_update_bits(pon->regmap,
++				 pon->baseaddr + PON_SOFT_RB_SPARE,
++				 0xfc, magic << 2);
++	if (ret < 0)
++		dev_err(pon->dev, "update reboot mode bits failed\n");
++
++	return ret;
++}
++
++static int pm8916_pon_probe(struct platform_device *pdev)
++{
++	struct pm8916_pon *pon;
++	int error;
++
++	pon = devm_kzalloc(&pdev->dev, sizeof(*pon), GFP_KERNEL);
++	if (!pon)
++		return -ENOMEM;
++
++	pon->dev = &pdev->dev;
++
++	pon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!pon->regmap) {
++		dev_err(&pdev->dev, "failed to locate regmap\n");
++		return -ENODEV;
++	}
++
++	error = of_property_read_u32(pdev->dev.of_node, "reg",
++				     &pon->baseaddr);
++	if (error)
++		return error;
++
++	pon->reboot_mode.dev = &pdev->dev;
++	pon->reboot_mode.write = pm8916_reboot_mode_write;
++	error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
++	if (error) {
++		dev_err(&pdev->dev, "can't register reboot mode\n");
++		return error;
++	}
++
++	platform_set_drvdata(pdev, pon);
++
++	return devm_of_platform_populate(&pdev->dev);
++}
++
++static const struct of_device_id pm8916_pon_id_table[] = {
++	{ .compatible = "qcom,pm8916-pon" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
++
++static struct platform_driver pm8916_pon_driver = {
++	.probe = pm8916_pon_probe,
++	.driver = {
++		.name = "pm8916-pon",
++		.of_match_table = of_match_ptr(pm8916_pon_id_table),
++	},
++};
++module_platform_driver(pm8916_pon_driver);
++
++MODULE_DESCRIPTION("pm8916 Power On driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
-
+2.14.4
