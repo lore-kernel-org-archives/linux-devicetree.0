@@ -1,62 +1,104 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/7] MIPS: dts: Add aliases node for lantiq danube serial
-Date: Mon, 18 Jun 2018 12:59:24 +0200
-Message-ID: <CAK8P3a0WVxHU98zjY6d8jN0bDtwabFkrbcxr3a7xRkxSjD2ZLg@mail.gmail.com>
-References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
- <20180612054034.4969-2-songjun.wu@linux.intel.com> <CAK8P3a1=CBahrEE2uDRfdrSi=ALc5LBED1=KbLbLa40c9H8dmQ@mail.gmail.com>
- <539411c1-82b7-cf76-71cf-d50f3303f50f@linux.intel.com>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: Re: [PATCH v2 07/10] dt-bindings: tc358754: add DT bindings
+Date: Mon, 18 Jun 2018 13:07:42 +0200
+Message-ID: <20180618110747eucas1p10c2b7eeb6cddaf1e598566fd8e18f92a~5PH-IUgeY2317323173eucas1p1m@eucas1p1.samsung.com>
+References: <1527682561-1386-1-git-send-email-m.purski@samsung.com>
+        <CGME20180530121627eucas1p1c8daf24d7c95e9e8b04a523d4662dfd9@eucas1p1.samsung.com>
+        <1527682561-1386-8-git-send-email-m.purski@samsung.com>
+        <6047372.VZe6FOdiCA@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <539411c1-82b7-cf76-71cf-d50f3303f50f@linux.intel.com>
+In-Reply-To: <6047372.VZe6FOdiCA@avalon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Wu, Songjun" <songjun.wu@linux.intel.com>
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, qi-ming.wu@intel.com, linux-clk <linux-clk@vger.kernel.org>, linux-serial@vger.kernel.org, DTML <devicetree@vger.kernel.org>, James Hogan <jhogan@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 18, 2018 at 11:42 AM, Wu, Songjun
-<songjun.wu@linux.intel.com> wrote:
-> On 6/14/2018 6:03 PM, Arnd Bergmann wrote:
->>
->> On Tue, Jun 12, 2018 at 7:40 AM, Songjun Wu <songjun.wu@linux.intel.com>
->> wrote:
->>>
->>> Previous implementation uses a hard-coded register value to check if
->>> the current serial entity is the console entity.
->>> Now the lantiq serial driver uses the aliases for the index of the
->>> serial port.
->>> The lantiq danube serial dts are updated with aliases to support this.
->>>
->>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
->>> ---
->>>
->>>   arch/mips/boot/dts/lantiq/danube.dtsi | 6 +++++-
->>>   1 file changed, 5 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi
->>> b/arch/mips/boot/dts/lantiq/danube.dtsi
->>> index 2dd950181f8a..7a9e15da6bd0 100644
->>> --- a/arch/mips/boot/dts/lantiq/danube.dtsi
->>> +++ b/arch/mips/boot/dts/lantiq/danube.dtsi
->>> @@ -4,6 +4,10 @@
->>>          #size-cells = <1>;
->>>          compatible = "lantiq,xway", "lantiq,danube";
->>>
->>> +       aliases {
->>> +               serial0 = &asc1;
->>> +       };
->>> +
->>
->> You generally want the aliases to be part of the board specific file,
->> not every board numbers their serial ports in the same way.
->>
->
-> In this chip only asc1 can be used as console,  so serial0 is defined in
-> chip specific file.
 
-This was a more general comment about 'aliases' being board specific
-in principle (though we've had exceptions in the past). Even if there
-is only one uart on the chip, I'd recommend following the same
-conventions as the other chips that have more than one uart.
+On 05/30/2018 02:36 PM, Laurent Pinchart wrote:
+> Hi Maciej,
+> 
+> On Wednesday, 30 May 2018 15:15:58 EEST Maciej Purski wrote:
+>> From: Andrzej Hajda <a.hajda@samsung.com>
+>>
+>> The patch adds bindings to Toshiba DSI/LVDS bridge TC358764.
+>> Bindings describe power supplies, reset gpio and video interfaces.
+>>
+>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+>> ---
+>>   .../bindings/display/bridge/toshiba,tc358764.txt   | 37 +++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
+>> b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt new
+>> file mode 100644
+>> index 0000000..6eda14f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
+>> @@ -0,0 +1,37 @@
+>> +TC358764 MIPI-DSI to LVDS panel bridge
+>> +
+>> +Required properties:
+>> +  - compatible: "toshiba,tc358764"
+>> +  - reg: the virtual channel number of a DSI peripheral
+>> +  - vddc-supply: core voltage supply, 1.2V
+>> +  - vddio-supply: I/O voltage supply, 1.8V or 3.3V
+>> +  - vddlvds-supply: LVDS1/2 voltage supply, 3.3V
+>> +  - reset-gpios: a GPIO spec for the reset pin
+>> +
+>> +The device node can contain zero to two 'port' child nodes, each with one
+>> +child 'endpoint' node, according to the bindings defined in [1].
+>> +The following are properties specific to those nodes.
+>> +
+>> +port:
+>> +  - reg: (required) can be 0 for DSI port or 1 for LVDS port;
+>> +
+>> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> 
+> Could you please take the comments I made on v1 into account when you'll post
+> v3 ?
+> 
 
-       Arnd
+For now I'm going to stick with the old convention and make port 0 optional,
+when the bridge is a DSI child and LVDS port 1 mandatory.
+
+The current policy does not seem to have been changed. There's a quiet new binding,
+which follows the old convention:
+Documentation/devicetree/bindings/connector/usb-connector.txt
+
+If you can find an example of new bindings, which follow your convention and you
+convince Rob, then I'll be completely okay with it and I'll change it the way
+you propose.
+
+
+>> +Example:
+>> +
+>> +	bridge@0 {
+>> +		reg = <0>;
+>> +		compatible = "toshiba,tc358764";
+>> +		vddc-supply = <&vcc_1v2_reg>;
+>> +		vddio-supply = <&vcc_1v8_reg>;
+>> +		vddlvds-supply = <&vcc_3v3_reg>;
+>> +		reset-gpios = <&gpd1 6 GPIO_ACTIVE_LOW>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		port@1 {
+>> +			reg = <1>;
+>> +			lvds_ep: endpoint {
+>> +				remote-endpoint = <&panel_ep>;
+>> +			};
+>> +		};
+>> +	};
+> 
+> 
+
+Best regards,
+
+Maciej Purski
