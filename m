@@ -1,13 +1,13 @@
 From: Mark Brown <broonie@kernel.org>
 Subject: Applied "regulator: pfuze100: add pfuze3001 support" to the regulator tree
-Date: Mon, 18 Jun 2018 13:01:05 +0100
-Message-ID: <E1fUsqH-0000YP-CG@debutante>
-References: <1529063093-19582-3-git-send-email-stefan.wahren@i2se.com>
+Date: Mon, 18 Jun 2018 13:01:07 +0100
+Message-ID: <E1fUsqJ-0000ZX-Hp@debutante>
+References: <1529063093-19582-2-git-send-email-stefan.wahren@i2se.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529063093-19582-3-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <1529063093-19582-2-git-send-email-stefan.wahren@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Robin Gong <yibin.gong@nxp.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orgRobin Gong <yibin.gong@nxp.com>linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orglinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
@@ -37,240 +37,117 @@ to this mail.
 Thanks,
 Mark
 
->From 297101ab85841319aac2c7843ca755d650c1964f Mon Sep 17 00:00:00 2001
+>From 5986f83efab0435918e58416f89a5d82adc11f5d Mon Sep 17 00:00:00 2001
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Date: Fri, 15 Jun 2018 13:44:53 +0200
+Date: Fri, 15 Jun 2018 13:44:52 +0200
 Subject: [PATCH] regulator: pfuze100: add pfuze3001 support
 
-This extends the pfuze100 driver with pfuze3001 support.
+This patch extends binding according to support the pfuze3001 chip.
 
-Latest datasheet:
-https://www.nxp.com/docs/en/data-sheet/PF3001.pdf
-
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/Kconfig              |  4 +-
- drivers/regulator/pfuze100-regulator.c | 78 +++++++++++++++++++++++---
- include/linux/regulator/pfuze100.h     | 11 ++++
- 3 files changed, 84 insertions(+), 9 deletions(-)
+ .../bindings/regulator/pfuze100.txt           | 77 ++++++++++++++++++-
+ 1 file changed, 76 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 5dbccf5f3037..2964eaea94c0 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -633,12 +633,12 @@ config REGULATOR_PCF50633
- 	 on PCF50633
+diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+index f0ada3b14d70..672c939045ff 100644
+--- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
++++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+@@ -1,7 +1,7 @@
+ PFUZE100 family of regulators
  
- config REGULATOR_PFUZE100
--	tristate "Freescale PFUZE100/200/3000 regulator driver"
-+	tristate "Freescale PFUZE100/200/3000/3001 regulator driver"
- 	depends on I2C
- 	select REGMAP_I2C
- 	help
- 	  Say y here to support the regulators found on the Freescale
--	  PFUZE100/200/3000 PMIC.
-+	  PFUZE100/200/3000/3001 PMIC.
+ Required properties:
+-- compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000"
++- compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000", "fsl,pfuze3001"
+ - reg: I2C slave address
  
- config REGULATOR_PV88060
- 	tristate "Powerventure Semiconductor PV88060 regulator"
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index 8d9dbcc775ea..32f9af7f87c4 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -44,7 +44,7 @@
- #define PFUZE100_VGEN5VOL	0x70
- #define PFUZE100_VGEN6VOL	0x71
+ Required child node:
+@@ -16,6 +16,8 @@ Required child node:
+   sw1ab,sw2,sw3a,sw3b,swbst,vsnvs,vrefddr,vgen1~vgen6,coin
+   --PFUZE3000
+   sw1a,sw1b,sw2,sw3,swbst,vsnvs,vrefddr,vldo1,vldo2,vccsd,v33,vldo3,vldo4
++  --PFUZE3001
++  sw1,sw2,sw3,vsnvs,vldo1,vldo2,vccsd,v33,vldo3,vldo4
  
--enum chips { PFUZE100, PFUZE200, PFUZE3000 = 3 };
-+enum chips { PFUZE100, PFUZE200, PFUZE3000 = 3, PFUZE3001 = 0x31, };
+ Each regulator is defined using the standard binding for regulators.
  
- struct pfuze_regulator {
- 	struct regulator_desc desc;
-@@ -92,6 +92,7 @@ static const struct i2c_device_id pfuze_device_id[] = {
- 	{.name = "pfuze100", .driver_data = PFUZE100},
- 	{.name = "pfuze200", .driver_data = PFUZE200},
- 	{.name = "pfuze3000", .driver_data = PFUZE3000},
-+	{.name = "pfuze3001", .driver_data = PFUZE3001},
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, pfuze_device_id);
-@@ -100,6 +101,7 @@ static const struct of_device_id pfuze_dt_ids[] = {
- 	{ .compatible = "fsl,pfuze100", .data = (void *)PFUZE100},
- 	{ .compatible = "fsl,pfuze200", .data = (void *)PFUZE200},
- 	{ .compatible = "fsl,pfuze3000", .data = (void *)PFUZE3000},
-+	{ .compatible = "fsl,pfuze3001", .data = (void *)PFUZE3001},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pfuze_dt_ids);
-@@ -108,10 +110,28 @@ static int pfuze100_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- {
- 	struct pfuze_chip *pfuze100 = rdev_get_drvdata(rdev);
- 	int id = rdev_get_id(rdev);
-+	bool reg_has_ramp_delay;
- 	unsigned int ramp_bits;
- 	int ret;
- 
--	if (id < PFUZE100_SWBST) {
-+	switch (pfuze100->chip_id) {
-+	case PFUZE3001:
-+		/* no dynamic voltage scaling for PF3001 */
-+		reg_has_ramp_delay = false;
-+		break;
-+	case PFUZE3000:
-+		reg_has_ramp_delay = (id < PFUZE3000_SWBST);
-+		break;
-+	case PFUZE200:
-+		reg_has_ramp_delay = (id < PFUZE200_SWBST);
-+		break;
-+	case PFUZE100:
-+	default:
-+		reg_has_ramp_delay = (id < PFUZE100_SWBST);
-+		break;
-+	}
+@@ -303,3 +305,76 @@ Example 3: PFUZE3000
+ 			};
+ 		};
+ 	};
 +
-+	if (reg_has_ramp_delay) {
- 		ramp_delay = 12500 / ramp_delay;
- 		ramp_bits = (ramp_delay >> 1) - (ramp_delay >> 3);
- 		ret = regmap_update_bits(pfuze100->regmap,
-@@ -119,8 +139,9 @@ static int pfuze100_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- 					 0xc0, ramp_bits << 6);
- 		if (ret < 0)
- 			dev_err(pfuze100->dev, "ramp failed, err %d\n", ret);
--	} else
-+	} else {
- 		ret = -EACCES;
-+	}
- 
- 	return ret;
- }
-@@ -361,6 +382,19 @@ static struct pfuze_regulator pfuze3000_regulators[] = {
- 	PFUZE100_VGEN_REG(PFUZE3000, VLDO4, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
- };
- 
-+static struct pfuze_regulator pfuze3001_regulators[] = {
-+	PFUZE100_SWB_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
-+	PFUZE100_SWB_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW3_REG(PFUZE3001, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
-+	PFUZE100_SWB_REG(PFUZE3001, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
-+	PFUZE100_VGEN_REG(PFUZE3001, VLDO1, PFUZE100_VGEN1VOL, 1800000, 3300000, 100000),
-+	PFUZE100_VGEN_REG(PFUZE3001, VLDO2, PFUZE100_VGEN2VOL, 800000, 1550000, 50000),
-+	PFUZE3000_VCC_REG(PFUZE3001, VCCSD, PFUZE100_VGEN3VOL, 2850000, 3300000, 150000),
-+	PFUZE3000_VCC_REG(PFUZE3001, V33, PFUZE100_VGEN4VOL, 2850000, 3300000, 150000),
-+	PFUZE100_VGEN_REG(PFUZE3001, VLDO3, PFUZE100_VGEN5VOL, 1800000, 3300000, 100000),
-+	PFUZE100_VGEN_REG(PFUZE3001, VLDO4, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
-+};
++Example 4: PFUZE 3001
 +
- #ifdef CONFIG_OF
- /* PFUZE100 */
- static struct of_regulator_match pfuze100_matches[] = {
-@@ -418,6 +452,21 @@ static struct of_regulator_match pfuze3000_matches[] = {
- 	{ .name = "vldo4",	},
- };
- 
-+/* PFUZE3001 */
-+static struct of_regulator_match pfuze3001_matches[] = {
++	pfuze3001: pmic@8 {
++		compatible = "fsl,pfuze3001";
++		reg = <0x08>;
 +
-+	{ .name = "sw1",	},
-+	{ .name = "sw2",	},
-+	{ .name = "sw3",	},
-+	{ .name = "vsnvs",	},
-+	{ .name = "vldo1",	},
-+	{ .name = "vldo2",	},
-+	{ .name = "vccsd",	},
-+	{ .name = "v33",	},
-+	{ .name = "vldo3",	},
-+	{ .name = "vldo4",	},
-+};
++		regulators {
++			sw1_reg: sw1 {
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
 +
- static struct of_regulator_match *pfuze_matches;
- 
- static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
-@@ -437,6 +486,11 @@ static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
- 	}
- 
- 	switch (chip->chip_id) {
-+	case PFUZE3001:
-+		pfuze_matches = pfuze3001_matches;
-+		ret = of_regulator_match(dev, parent, pfuze3001_matches,
-+					 ARRAY_SIZE(pfuze3001_matches));
-+		break;
- 	case PFUZE3000:
- 		pfuze_matches = pfuze3000_matches;
- 		ret = of_regulator_match(dev, parent, pfuze3000_matches,
-@@ -508,7 +562,8 @@ static int pfuze_identify(struct pfuze_chip *pfuze_chip)
- 		 */
- 		dev_info(pfuze_chip->dev, "Assuming misprogrammed ID=0x8");
- 	} else if ((value & 0x0f) != pfuze_chip->chip_id &&
--		   (value & 0xf0) >> 4 != pfuze_chip->chip_id) {
-+		   (value & 0xf0) >> 4 != pfuze_chip->chip_id &&
-+		   (value != pfuze_chip->chip_id)) {
- 		/* device id NOT match with your setting */
- 		dev_warn(pfuze_chip->dev, "Illegal ID: %x\n", value);
- 		return -ENODEV;
-@@ -588,6 +643,13 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 
- 	/* use the right regulators after identify the right device */
- 	switch (pfuze_chip->chip_id) {
-+	case PFUZE3001:
-+		pfuze_chip->pfuze_regulators = pfuze3001_regulators;
-+		regulator_num = ARRAY_SIZE(pfuze3001_regulators);
-+		sw_check_start = PFUZE3001_SW2;
-+		sw_check_end = PFUZE3001_SW2;
-+		sw_hi = 1 << 3;
-+		break;
- 	case PFUZE3000:
- 		pfuze_chip->pfuze_regulators = pfuze3000_regulators;
- 		regulator_num = ARRAY_SIZE(pfuze3000_regulators);
-@@ -611,7 +673,8 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 	}
- 	dev_info(&client->dev, "pfuze%s found.\n",
- 		(pfuze_chip->chip_id == PFUZE100) ? "100" :
--		((pfuze_chip->chip_id == PFUZE200) ? "200" : "3000"));
-+		(((pfuze_chip->chip_id == PFUZE200) ? "200" :
-+		((pfuze_chip->chip_id == PFUZE3000) ? "3000" : "3001"))));
- 
- 	memcpy(pfuze_chip->regulator_descs, pfuze_chip->pfuze_regulators,
- 		sizeof(pfuze_chip->regulator_descs));
-@@ -636,7 +699,8 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 		if (i >= sw_check_start && i <= sw_check_end) {
- 			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
- 			if (val & sw_hi) {
--				if (pfuze_chip->chip_id == PFUZE3000) {
-+				if (pfuze_chip->chip_id == PFUZE3000 ||
-+					pfuze_chip->chip_id == PFUZE3001) {
- 					desc->volt_table = pfuze3000_sw2hi;
- 					desc->n_voltages = ARRAY_SIZE(pfuze3000_sw2hi);
- 				} else {
-@@ -675,5 +739,5 @@ static struct i2c_driver pfuze_driver = {
- module_i2c_driver(pfuze_driver);
- 
- MODULE_AUTHOR("Robin Gong <b38343@freescale.com>");
--MODULE_DESCRIPTION("Regulator Driver for Freescale PFUZE100/200/3000 PMIC");
-+MODULE_DESCRIPTION("Regulator Driver for Freescale PFUZE100/200/3000/3001 PMIC");
- MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/regulator/pfuze100.h b/include/linux/regulator/pfuze100.h
-index e0ccf46f66cf..cb5aecd40f07 100644
---- a/include/linux/regulator/pfuze100.h
-+++ b/include/linux/regulator/pfuze100.h
-@@ -64,6 +64,17 @@
- #define PFUZE3000_VLDO3		11
- #define PFUZE3000_VLDO4		12
- 
-+#define PFUZE3001_SW1		0
-+#define PFUZE3001_SW2		1
-+#define PFUZE3001_SW3		2
-+#define PFUZE3001_VSNVS		3
-+#define PFUZE3001_VLDO1		4
-+#define PFUZE3001_VLDO2		5
-+#define PFUZE3001_VCCSD		6
-+#define PFUZE3001_V33		7
-+#define PFUZE3001_VLDO3		8
-+#define PFUZE3001_VLDO4		9
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1500000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
 +
- struct regulator_init_data;
- 
- struct pfuze_regulator_platform_data {
++			sw3_reg: sw3 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1650000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vldo1 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vldo2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen3_reg: vccsd {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: v33 {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vldo4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
 -- 
 2.17.1
