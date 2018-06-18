@@ -1,22 +1,32 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM5301x: Fix i2c controller interrupt type
-Date: Mon, 18 Jun 2018 09:37:17 -0700
-Message-ID: <20180618163717.27294-1-f.fainelli@gmail.com>
-References: <20180611225340.12733-1-f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/5] Fix Cygnus, NS2, Stingray interrupt type
+Date: Mon, 18 Jun 2018 09:48:18 -0700
+Message-ID: <ac955f7d-6770-63a1-db85-024b0ee0b8af@gmail.com>
+References: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180611225340.12733-1-f.fainelli@gmail.com>
+In-Reply-To: <1528834891-17807-1-git-send-email-ray.jui@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@infradead.org
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>, Jon Mason <jonmason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Ray Jui <ray.jui@broadcom.com>, linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Jun 2018 15:53:40 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> The i2c controller should be using IRQ_TYPE_LEVEL_HIGH, fix that.
+On 06/12/2018 01:21 PM, Ray Jui wrote:
+> This patch series fixes incorrect interrupt types for I2C and PCIe in DT
+> for Broadcom Cygnus, NS2, and Stingray SoCs
 > 
-> Fixes: bb097e3e0045 ("ARM: dts: BCM5301X: Add I2C support to the DT")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+> This patch series is based off v4.17 and is available on GIHUB:
+> repo: https://github.com/Broadcom/arm64-linux.git
+> branch: cygnus-ns2-dt-irq-type-fix-v1
 
-Applied to devicetree/fixes, thanks!
---
+Series applied to:
+
+- 1&2: devicetree/fixes
+- 3-5: devicetree-arm64/fixes
+
+Thanks Ray.
+-- 
 Florian
