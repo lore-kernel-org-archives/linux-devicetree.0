@@ -1,73 +1,79 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 012/189] MIPS: dts: Boston: Fix PCI bus dtc warnings:
-Date: Mon, 18 Jun 2018 10:11:48 +0200
-Message-ID: <20180618081209.724660998@linuxfoundation.org>
-References: <20180618081209.254234434@linuxfoundation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Mon, 18 Jun 2018 14:01:17 +0530
+Message-ID: <1529310679-13482-2-git-send-email-srinath.mannam@broadcom.com>
+References: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180618081209.254234434@linuxfoundation.org>
+In-Reply-To: <1529310679-13482-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Matt Redfearn <matt.redfearn@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, Sasha Levin <alexander.levin@microsoft.com>
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+From: Pramod Kumar <pramod.kumar@broadcom.com>
 
-------------------
+Add binding document for supported thermal implementation
+in Stingray.
 
-From: Matt Redfearn <matt.redfearn@mips.com>
-
-[ Upstream commit 2c2bf522ed8cbfaac666f7dc65cfd38de2b89f0f ]
-
-dtc recently (v1.4.4-8-g756ffc4f52f6) added PCI bus checks. Fix the
-warnings now emitted:
-
-arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@10000000: missing bus-range for PCI bridge
-arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@12000000: missing bus-range for PCI bridge
-arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@14000000: missing bus-range for PCI bridge
-
-Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Patchwork: https://patchwork.linux-mips.org/patch/19070/
-Signed-off-by: James Hogan <jhogan@kernel.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
- arch/mips/boot/dts/img/boston.dts |    6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
 
---- a/arch/mips/boot/dts/img/boston.dts
-+++ b/arch/mips/boot/dts/img/boston.dts
-@@ -51,6 +51,8 @@
- 		ranges = <0x02000000 0 0x40000000
- 			  0x40000000 0 0x40000000>;
- 
-+		bus-range = <0x00 0xff>;
+diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+new file mode 100644
+index 0000000..33f9e11
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+@@ -0,0 +1,45 @@
++* Broadcom Stingray Thermal
 +
- 		interrupt-map-mask = <0 0 0 7>;
- 		interrupt-map = <0 0 0 1 &pci0_intc 1>,
- 				<0 0 0 2 &pci0_intc 2>,
-@@ -79,6 +81,8 @@
- 		ranges = <0x02000000 0 0x20000000
- 			  0x20000000 0 0x20000000>;
- 
-+		bus-range = <0x00 0xff>;
++This binding describes thermal sensors that is part of Stingray SoCs.
 +
- 		interrupt-map-mask = <0 0 0 7>;
- 		interrupt-map = <0 0 0 1 &pci1_intc 1>,
- 				<0 0 0 2 &pci1_intc 2>,
-@@ -107,6 +111,8 @@
- 		ranges = <0x02000000 0 0x16000000
- 			  0x16000000 0 0x100000>;
- 
-+		bus-range = <0x00 0xff>;
++Required properties:
++- compatible : Must be "brcm,sr-thermal"
++- reg : memory where tmon data will be available.
 +
- 		interrupt-map-mask = <0 0 0 7>;
- 		interrupt-map = <0 0 0 1 &pci2_intc 1>,
- 				<0 0 0 2 &pci2_intc 2>,
++Example:
++	tmons {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		tmon_ihost0: thermal@8f100000 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100000 0x4>;
++		};
++
++		tmon_ihost1: thermal@8f100004 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100004 0x4>;
++		};
++
++		tmon_ihost2: thermal@8f100008 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100008 0x4>;
++		};
++
++		tmon_ihost3: thermal@8f10000c {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f10000c 0x4>;
++		};
++
++		tmon_crmu: thermal@8f100010 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100010 0x4>;
++		};
++
++		tmon_nitro: thermal@8f100014 {
++			compatible = "brcm,sr-thermal";
++			reg = <0x8f100014 0x4>;
++		};
++	};
+-- 
+2.7.4
