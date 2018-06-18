@@ -1,91 +1,73 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
-Date: Mon, 18 Jun 2018 10:13:16 +0200
-Message-ID: <85308177b3679d1103feee7a2b6e5879@agner.ch>
-References: <cover.1529091248.git.leonard.crestez@nxp.com>
- <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
- <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
- <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
- <638457fd-85da-8fec-d146-517c43f71813@denx.de>
- <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
- <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
- <20180618074320.GS3438@phenom.ffwll.local>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.16 016/279] MIPS: dts: Boston: Fix PCI bus dtc warnings:
+Date: Mon, 18 Jun 2018 10:10:01 +0200
+Message-ID: <20180618080609.481222337@linuxfoundation.org>
+References: <20180618080608.851973560@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180618074320.GS3438@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Vasut <marek.vasut@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: marex@denx.de, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, marcofrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180618080608.851973560@linuxfoundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Matt Redfearn <matt.redfearn@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTguMDYuMjAxOCAwOTo0MywgRGFuaWVsIFZldHRlciB3cm90ZToKPiBPbiBTYXQsIEp1biAx
-NiwgMjAxOCBhdCAwMTozMjo0NEFNICswMjAwLCBNYXJlayBWYXN1dCB3cm90ZToKPj4gT24gMDYv
-MTYvMjAxOCAxMjo0MiBBTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+PiA+IE9uIEZyaSwgMjAx
-OC0wNi0xNSBhdCAyMzozNiArMDIwMCwgTWFyZWsgVmFzdXQgd3JvdGU6Cj4+ID4+IE9uIDA2LzE1
-LzIwMTggMTA6NTggUE0sIExlb25hcmQgQ3Jlc3RleiB3cm90ZToKPj4gPj4+IE9uIEZyaSwgMjAx
-OC0wNi0xNSBhdCAxNjo0NyAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPj4gPj4+PiBPbiBG
-cmksIEp1biAxNSwgMjAxOCBhdCA0OjQzIFBNLCBMZW9uYXJkIENyZXN0ZXoKPj4gPj4+PiA8bGVv
-bmFyZC5jcmVzdGV6QG54cC5jb20+IHdyb3RlOgo+PiA+Cj4+ID4+Pj4+IFRoZSBGQkRFViBkcml2
-ZXIgdXNlcyB0aGUgc2FtZSBuYW1lIGFuZCBib3RoIGNhbid0IGJlIHJlZ2lzdGVyZWQgYXQgdGhl
-Cj4+ID4+Pj4+IHNhbWUgdGltZS4gRml4IHRoaXMgYnkgcmVuYW1pbmcgdGhlIGRybSBkcml2ZXIg
-dG8gbXhzZmItZHJtCj4+ID4+Pj4KPj4gPj4+PiBTdGVmYW4gc2VudCB0aGUgc2FtZSBwYXRjaCBh
-IGZldyBkYXlzIGFnbzoKPj4gPj4+Cj4+ID4+PiBJbiB0aGF0IHRocmVhZCB0aGVyZSBpcyBhIHBy
-b3Bvc2FsIGZvciByZW1vdmluZyB0aGUgb2xkIGZiZGV2L214c2ZiCj4+ID4+PiBkcml2ZXIgZW50
-aXJlbHkuCj4+ID4+Pgo+PiA+Pj4gVGhhdCB3b3VsZCBicmVhayBvbGQgRFRCcywgaXNuJ3QgdGhp
-cyBnZW5lcmFsbHkgY29uc2lkZXJlZCBiYWQ/IEFsc28sCj4+ID4+PiBhcmUgd2Ugc3VyZSB0aGUg
-cmVtb3ZhbCBvZiBmYmRldi9teHNmYiB3b3VsZG4ndCBsb3NlIGFueSBmZWF0dXJlcz8KPj4gPj4+
-Cj4+ID4+PiBXaGF0IG15IHNlcmllcyBkb2VzIGlzIG1ha2UgYm90aCBkcml2ZXJzIHdvcmsgd2l0
-aCB0aGUgc2FtZSBrZXJuZWwKPj4gPj4+IGltYWdlIGFuZCB0dXJucyB0aGUgY2hvaWNlIGludG8g
-YSBib2FyZC1sZXZlbCBkdGIgZGVjaXNpb24uIFN1cHBvcnRpbmcKPj4gPj4+IGV2ZXJ5dGhpbmcg
-YXQgb25jZSBzZWVtcyBkZXNpcmFibGUgdG8gbWUgYW5kIGl0IGFsbG93cyBmb3IgYSB2ZXJ5Cj4+
-ID4+PiBzbW9vdGggdXBncmFkZSBwYXRoLgo+PiA+Pgo+PiA+PiBIYXZpbmcgdHdvIGRyaXZlcnMg
-aW4gdGhlIGtlcm5lbCB3aXRoIGRpZmZlcmVudCBzZXQgb2YgYnVncyBpcyBhbHdheXMgYmFkLgo+
-PiA+Pgo+PiA+Pj4gVGhlIG9sZCBkcml2ZXIgY291bGQgYmUgcmVtb3ZlZCBsYXRlciwgYWZ0ZXIg
-YWxsIHVzZXJzIGFyZSBjb252ZXJ0ZWQuCj4+ID4+Cj4+ID4+IEJvdGggZHJpdmVycyB3ZXJlIGlu
-IGZvciBsb25nIGVub3VnaCBhbHJlYWR5LiBBbmQgbGV0J3MgYmUgcmVhbGlzdGljLAo+PiA+PiBo
-b3cgbWFueSBNWDIzL01YMjggdXNlcnMgb2Ygb2xkIERUcyB3aXRoIG5ldyBrZXJuZWxzIGFyZSB0
-aGVyZSB3aG8KPj4gPj4gY2Fubm90IHVwZGF0ZSB0aGUgRFQgYXMgd2VsbCA/Cj4+ID4KPj4gPiBH
-cmVwcGluZyBmb3IgImRpc3BsYXkgPSIgaW4gYXJjaC9hcm0vYm9vdC9kdHMvaW14KiBJIHNlZSB0
-aGF0IG9sZAo+PiA+IGJpbmRpbmdzIGFyZSBhbHNvIHVzZWQgYnkgM3JkLXBhcnR5IGJvYXJkcyBm
-b3IgaW14Ni83Ogo+PiA+ICAqIGlteDZzeC1uaXRyb2dlbjZzeAo+PiA+ICAqIGlteDZ1bC1nZWFt
-Cj4+ID4gICogaW14NnVsLWlzaW90Cj4+ID4gICogaW14NnVsLW9wb3M2dWxkZXYKPj4gPiAgKiBp
-bXg2dWwtcGljby1ob2JiaXQKPj4gPiAgKiBpbXg2dWwtdHg2dWwKPj4gPiAgKiBpbXg3ZC1uaXRy
-b2dlbjcKPj4KPj4gRXIsIHllcywgYSBoYW5kZnVsIG9mIGJvYXJkcyB3aGljaCBjb3VsZCBiZSB1
-cGRhdGVkIDopCj4+Cj4+ID4gQ29udmVydGluZyBldmVyeXRoaW5nIG1pZ2h0IGJlIHF1aXRlIGEg
-Yml0IG9mIHdvcmssIGFuZCBleHBsaWNpdGx5Cj4+ID4gc3VwcG9ydGluZyBvbGQgYmluZGluZ3Mg
-aXMgYWxzbyB3b3JrLgo+Pgo+PiBEb2VzIGFkZGluZyBzdXBwb3J0IGZvciBvbGQgYmluZGluZ3Mg
-anVzdGlmeSB0aGUgZWZmb3J0IGludmVzdGVkID8gSQo+PiBkb3VidCBzbywgaXQgb25seSBhZGRz
-IG1vcmUgY29kZSB0byBtYWludGFpbi4KPj4KPj4gPiBJdCBpcyB2ZXJ5IGNvbmZ1c2luZyB0aGF0
-IHRoZXJlIGlzIGEgd2hvbGUgc2V0IG9mIGRpc3BsYXlzIGZvciBpbXg2LzcKPj4gPiB3aGljaCBh
-cmUgc3VwcG9ydGVkIGJ5IHVwc3RyZWFtIGJ1dCBvbmx5IHdpdGggYSBub24tZGVmYXVsdCBjb25m
-aWcuCj4+ID4gV2hpbGUgaXQgaXMgZXh0cmVtZWx5IGNvbW1vbiBpbiB0aGUgZW1iZWRkZWQgZmll
-bGQgdG8gaGF2ZSBjdXN0b20KPj4gPiBjb25maWdzIHRoZSBkZWZhdWx0IG9uZSBpbiB0aGUga2Vy
-bmVsIHNob3VsZCB0cnkgdG8gImp1c3Qgd29yayIuCj4+ID4KPj4gPiBDb3VsZG4ndCB0aGlzIHBh
-dGNoIHNlcmllcyBiZSBjb25zaWRlcmVkIGEgYnVnZml4PyBJdCB3YXMgYWxzbwo+PiA+IHN1cnBy
-aXNpbmdseSBzbWFsbC4KPj4KPj4gSSB0aGluayBpdCdzIGp1c3QgYSB3b3JrYXJvdW5kIHdoaWNo
-IGFsbG93cyB5b3UgdG8gcG9zdHBvbmUgdGhlIHJlYWwKPj4gZml4LCBhbmQgSSBkb24ndCBsaWtl
-IHRoYXQuCj4gCj4gWWVhaCBhZ3JlZWQsIGltbyB0aGUgcHJvcGVyIGZpeCBoZXJlIHdvdWxkIGJl
-IHRvIGVpdGhlciB1cGRhdGUgdGhlIGR0cyBmb3IKPiB0aGUgYWZmZWN0ZWQgYm9hcmRzIGFuZC9v
-ciBtYWtlIG14c2ZiIGFjY2VwdCB0aGUgb2xkIGR0IGJpbmRpbmdzIGZvcgo+IGJhY2t3YXJkcyBj
-b21wYXQuIEFydGlmaWNpYWxseSBleHRlbmRpbmcgdGhlIGxpZmUgb2YgdGhlIGZiZGV2IGRyaXZl
-cnMKPiBzZWVtcyBzaWxseS4KCldlIHNob3VsZG4ndCBoYXZlIG1lcmdlZCBhIERSTSBkcml2ZXIg
-d2l0aCBhIGRyaXZlciBuYW1lIHdoaWNoIGNvbmZsaWN0cwp3aXRoIGFuIGV4aXN0aW5nIGRyaXZl
-ci4uLiBJZiBhbnl0aGluZywgdGhpcyBpcyBhcnRpZmljaWFsbHkgc2hvcnRlbmluZwp0aGUgbGlm
-ZXRpbWUgb2YgdGhlIGZiZGV2IGRyaXZlciA6LSkKCkFnYWluLCBJIGFtIG9rIHdpdGggcmVtb3Zp
-bmcgdGhlIGRyaXZlci4gSSBqdXN0IHRoaW5rIGl0IGlzIHNpbGx5IHRvIGRvCml0IGp1c3QgYmVj
-YXVzZSBvZiB0aGUgY29uZmxpY3RpbmcgZHJpdmVyIG5hbWUuCgpNYXliZSBTYXNjaGEsIG9yaWdp
-bmFsIGF1dGhvciBvZiB0aGUgbXhzIGZiZGV2IGRyaXZlciBoYXMgYW4gb3BpbmlvbiBvbgp0aGlz
-PwoKLS0KU3RlZmFuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+4.16-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: Matt Redfearn <matt.redfearn@mips.com>
+
+[ Upstream commit 2c2bf522ed8cbfaac666f7dc65cfd38de2b89f0f ]
+
+dtc recently (v1.4.4-8-g756ffc4f52f6) added PCI bus checks. Fix the
+warnings now emitted:
+
+arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@10000000: missing bus-range for PCI bridge
+arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@12000000: missing bus-range for PCI bridge
+arch/mips/boot/dts/img/boston.dtb: Warning (pci_bridge): /pci@14000000: missing bus-range for PCI bridge
+
+Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org
+Patchwork: https://patchwork.linux-mips.org/patch/19070/
+Signed-off-by: James Hogan <jhogan@kernel.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/mips/boot/dts/img/boston.dts |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/arch/mips/boot/dts/img/boston.dts
++++ b/arch/mips/boot/dts/img/boston.dts
+@@ -51,6 +51,8 @@
+ 		ranges = <0x02000000 0 0x40000000
+ 			  0x40000000 0 0x40000000>;
+ 
++		bus-range = <0x00 0xff>;
++
+ 		interrupt-map-mask = <0 0 0 7>;
+ 		interrupt-map = <0 0 0 1 &pci0_intc 1>,
+ 				<0 0 0 2 &pci0_intc 2>,
+@@ -79,6 +81,8 @@
+ 		ranges = <0x02000000 0 0x20000000
+ 			  0x20000000 0 0x20000000>;
+ 
++		bus-range = <0x00 0xff>;
++
+ 		interrupt-map-mask = <0 0 0 7>;
+ 		interrupt-map = <0 0 0 1 &pci1_intc 1>,
+ 				<0 0 0 2 &pci1_intc 2>,
+@@ -107,6 +111,8 @@
+ 		ranges = <0x02000000 0 0x16000000
+ 			  0x16000000 0 0x100000>;
+ 
++		bus-range = <0x00 0xff>;
++
+ 		interrupt-map-mask = <0 0 0 7>;
+ 		interrupt-map = <0 0 0 1 &pci2_intc 1>,
+ 				<0 0 0 2 &pci2_intc 2>,
