@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 01/19] dt-bindings: sram: sunxi: Add A13,
- A20 and A33 SRAM controller bindings
-Date: Mon, 18 Jun 2018 18:02:50 +0200
-Message-ID: <20180618160250.ik44c3gcbdxylmyd@flea>
+Subject: Re: [PATCH v4 04/19] dt-bindings: sram: sunxi: Add A20
+ binding for the C1 SRAM region
+Date: Mon, 18 Jun 2018 18:04:01 +0200
+Message-ID: <20180618160401.c6aqkeh6suime7xb@flea>
 References: <20180618145843.14631-1-paul.kocialkowski@bootlin.com>
- <20180618145843.14631-2-paul.kocialkowski@bootlin.com>
+ <20180618145843.14631-5-paul.kocialkowski@bootlin.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dhcros4rwsnjx5pm"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXFPT7MQKGQEHO7MXNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="4nxzqk2qbkg4dawg"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEVQT7MQKGQE5SDOM4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180618145843.14631-2-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180618145843.14631-5-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,32 +24,31 @@ Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 List-Id: devicetree@vger.kernel.org
 
 
---dhcros4rwsnjx5pm
+--4nxzqk2qbkg4dawg
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Jun 18, 2018 at 04:58:25PM +0200, Paul Kocialkowski wrote:
-> This introduces dedicated bindings for the SRAM controllers found on the
-> A13, A20 and A33 sunxi platforms.
+1;5202;0c
+On Mon, Jun 18, 2018 at 04:58:28PM +0200, Paul Kocialkowski wrote:
+> This introduces a dedicated binding for the C1 SRAM region for the A20
+> sunxi platform.
 > 
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-
-Explaining why you need to add these new compatibles would be great.
-
+> 
 > diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> index d087f04a4d7f..19cc0b892672 100644
+> index ddc82cbd7f4d..221fa7b42c18 100644
 > --- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
 > +++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> @@ -11,6 +11,9 @@ Controller Node
->  Required properties:
->  - compatible : should be:
->      - "allwinner,sun4i-a10-sram-controller"
-> +    - "allwinner,sun5i-a13-sram-controller"
-> +    - "allwinner,sun7i-a20-sram-controller"
-> +    - "allwinner,sun8i-a33-sram-controller"
+> @@ -35,6 +35,9 @@ The valid sections compatible for A10 are:
+>  The valid sections compatible for A13 are:
+>      - allwinner,sun5i-a13-sram-c1
+>  
+> +The valid sections compatible for A20 are:
+> +    - allwinner,sun7i-a20-sram-c1
 
-And I think Chen-Yu asked you to rename this compatible to
--system-controller for the previous iteration?
+Same thing here, there's more supported SRAM than that. And maybe we
+should just merge everything into the first patch? This looks like the
+same commit over and over again.
 
 Maxime
 
@@ -57,4 +56,4 @@ Maxime
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
---dhcros4rwsnjx5pm--
+--4nxzqk2qbkg4dawg--
