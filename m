@@ -1,204 +1,122 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 0/5] RFC: Mezzanine handling for 96boards
-Date: Mon, 18 Jun 2018 09:45:51 +0200
-Message-ID: <20180618074556.6944-1-linus.walleij@linaro.org>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Mon, 18 Jun 2018 13:23:22 +0530
+Message-ID: <CABe79T5Mk+40860kXhnMaB6j5wV3ALRfVxe2ZTQRjJyBs38M5g@mail.gmail.com>
+References: <1527486084-4636-1-git-send-email-srinath.mannam@broadcom.com>
+ <1527486084-4636-2-git-send-email-srinath.mannam@broadcom.com>
+ <20180531164820.GA23074@rob-hp-laptop> <CABe79T7=LK=PgaftQeCRE8kmMMztFBNeJ4cdnZhv8ULDO=6+Jw@mail.gmail.com>
+ <CAL_JsqJsGouQjWAu01fR4LpwanKbSj1d_CvyPXyMBe2vVBHqdw@mail.gmail.com> <CABe79T7gGJ1mcBV4W9nFy1ZyBL4sFpB+DFJjgpLgOtRJGjJbpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dev@lists.96boards.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABe79T7gGJ1mcBV4W9nFy1ZyBL4sFpB+DFJjgpLgOtRJGjJbpw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a proposal for how to handle the non-discoverable
-96boards plug-in expansion boards called "mezzanines" in the
-Linux kernel. It is a working RFC series meant for discussion
-at the moment.
+Hi,
 
-The RFC was done on the brand new Ultra96 board from Xilinx
-with a Secure96 mezzanine expansion board. The main part
-is in patch 4, the rest is enabling and examples.
+Please let me know if you have any comments to this patch.
+If not can you please accept this patch.
 
-The code can be obtained from here:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=ultra96
+Regards,
+Srinath.
 
-You can for example probably augment the DTS file for any
-upstream-supported 96board and get the Secure96 going with
-it with minor efforts.
-
-TODO:
-
-- Proper device tree bindings for the connector, for now
-  look at the example.
-
-- Discuss whether to actually do this or just take it all and
-  flush it down the drain because the community doesn't like
-  it. I'm not one of those especially infatuated with my own code,
-  I always stay by the old programming project management mantra
-  to calculate to make one version and throw it away as stepping
-  stone to a good final design.
-
-- Placement: putting this in drivers/bus is just an example.
-  drivers/platform/96boards-mezzanines is fine too, maybe better?
-
-- I am especially curious about input from Andy and Mika from
-  the Intel/ACPI camp on what they have seen for non-discoverable
-  plug-in boards. Does this problem even exist in the Intel
-  world, or not...
-
-Background:
-
-- These boards connect on a custom connector on this family
-  of boards. The relationship is many-to-many with the connector
-  as nexus. The electronic standard for the connector is specified:
-  https://github.com/96boards/documentation/blob/master/Specifications/96Boards-CE-Specification.pdf
-  Example mezzanines:
-  https://www.96boards.org/documentation/mezzanine/
-
-- These boards have siblings on other platforms, the problem
-  scope is similar with BeagleBone "capes":
-  https://beagleboard.org/capes
-  Raspberry Pi expansion boards:
-  https://www.abelectronics.co.uk/products/18/raspberry-pi-expansion-boards
-  Intel Edison, Galileo, Joule also have expansion boards.
-
-Idea: add a driver for the connector itself and tie it in to
-the device tree with a compatible string. Since the boards
-are non-discoverable two mechanisms are provided to discover
-them:
-
-- Add a very simple device tree node with just a compatible
-  string for the board in the node. This will be simple to
-  add from e.g. a boot loader or as an overlay from userspace.
-
-  board {
-        compatible = "96boards,secure96";
-  };
-
-
-- Echo 1 > boardname into a sysfs file to populate the
-  board and echo 0 > boardname to depopulate it. This
-  makes it easy to even switch out expansion boards at
-  runtime, if allowed by the electronics.
-
-  > cd /sys/devices/platform/connector
-  > echo 1 > secure96
-  lscon connector: called mezzanine_store on secure96
-  lscon connector: populate secure96
-  at24 1-0050: 2048 byte 24c128 EEPROM, writable, 128 bytes/write
-  atmel-ecc 1-0060: configuration zone is unlocked
-  tpm_tis_spi spi0.0: 2.0 TPM (device-id 0x1B, rev-id 16)
-  (...)
-
-What this patch set does not do:
-
-- It does not use device tree or ACPI DSDT or any other
-  hardware decription language to model the contents of the
-  board per se. Instead the boards buses are populated
-  directly with platform devices.
-
-Predictable complaints about this design:
-
-Q: This is not device tree overlays. Why is it not device
-   tree overlays?
-
-A1: Right tool for the job, overlays are complex and the
-    plan to get it in place seems to be spanning years, this
-    is a few devices on simple busses and it works today.
-    Using this approach I can already work on shaping up
-    drivers for the mezzanine board devices as proved by:
-    https://marc.info/?l=linux-crypto-vger&m=152820660120590&w=2
-    https://marc.info/?l=linux-crypto-vger&m=152820662820595&w=2
-    (...)
-
-    I can work on drivers for the chips on the
-    Secure96 mezzanine board. It's just an example of
-    what the mezzanine community can do.
-    Now they are hacking around in userspace instead of
-    doing/reusing kernel drivers for their stuff:
-    https://github.com/jbech-linaro/secure96
-
-    This way we can bring developers for these components
-    into the kernel community instead of telling them to
-    wait for some big infrastructure that comes later
-    before they can contribute their stuff.
-
-A2: Overlays does not solve the problem if the system runs
-    ACPI, and what about if the same connector[s] appear
-    on a server board, servers use ACPI. Also notice
-    that Intel have development boards with non-discoverable
-    expansion boards as well. They just will not use
-    device tree.
-
-A3: Overlays is Big Upfront Design.
-    https://en.wikipedia.org/wiki/Big_Design_Up_Front
-    This way of designing things is associated with the
-    (pejorative term) "waterfall model" which is out of
-    fashion as a way of doing development. I think I am not
-    the only one slightly annoyed by the fact that device
-    tree overlays is now starting to look like a very
-    big very upfront design. It's just not possible to get
-    something up and running in small iterative steps with
-    device tree overlays. Instead huge efforts are
-    required and it involves major possible showstoppers
-    and uncertain outcome as indicated by Frank's TODO:
-    https://elinux.org/Frank's_Evolving_Overlay_Thoughts
-
-    This appears also in our work process documents:
-    Documentation/process/4.Coding.rst
-    "experience has shown that excessive or premature
-     abstraction can be just as harmful as premature
-     optimization.  Abstraction should be used to the level
-     required and no further."
-
-So for that reason, or other predictable statements such
-as "you're reinventing board files", I'd like to have an
-open discussion on how to actually support these boards
-with the mainline kernel and work on device drivers common
-with other systems now, and not in 2020 when they are already
-obsolete.
-
-Yeah it is a bit controversial, but what we are doing right
-now for non-discoverable expansion boards isn't working
-in my opinion, so I have to throw something out there,
-and this is it.
-
-Linus Walleij (5):
-  RFC: gpio: Add API to explicitly name a consumer
-  RFC: eeprom: at24: Allow passing gpiodesc from pdata
-  RFC: spi: Make of_find_spi_device_by_node() available
-  RFC: bus: 96boards Low-Speed Connector
-  RFC: ARM64: dts: Add Low-Speed Connector to ZCU100
-
- .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    |  27 +-
- .../96boards-ls-connector.c                   | 307 ++++++++++++++++++
- .../96boards-mezzanines/96boards-mezzanines.h |  46 +++
- .../96boards-mezzanines/96boards-secure96.c   | 249 ++++++++++++++
- drivers/bus/96boards-mezzanines/Kconfig       |  36 ++
- drivers/bus/96boards-mezzanines/Makefile      |   6 +
- drivers/bus/Kconfig                           |   2 +
- drivers/bus/Makefile                          |   4 +-
- drivers/gpio/gpiolib.c                        |  13 +
- drivers/misc/eeprom/at24.c                    |   6 +-
- drivers/spi/spi.c                             |  33 +-
- include/linux/gpio/consumer.h                 |   7 +
- include/linux/platform_data/at24.h            |   2 +
- include/linux/spi/spi.h                       |   4 +
- 14 files changed, 723 insertions(+), 19 deletions(-)
- create mode 100644 drivers/bus/96boards-mezzanines/96boards-ls-connector.c
- create mode 100644 drivers/bus/96boards-mezzanines/96boards-mezzanines.h
- create mode 100644 drivers/bus/96boards-mezzanines/96boards-secure96.c
- create mode 100644 drivers/bus/96boards-mezzanines/Kconfig
- create mode 100644 drivers/bus/96boards-mezzanines/Makefile
-
--- 
-2.17.0
+On Mon, Jun 4, 2018 at 11:36 AM, Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+> Hi Rob Herring,
+>
+> Please find my comments in line..
+>
+> On Fri, Jun 1, 2018 at 7:59 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Jun 1, 2018 at 3:51 AM, Srinath Mannam
+>> <srinath.mannam@broadcom.com> wrote:
+>>> Hi Rob Herring,
+>>>
+>>> Thank you for the review.
+>>> Please find my answers inline..
+>>>
+>>> On Thu, May 31, 2018 at 10:18 PM, Rob Herring <robh@kernel.org> wrote:
+>>>> On Mon, May 28, 2018 at 11:11:22AM +0530, Srinath Mannam wrote:
+>>>>> From: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>>>
+>>>>> Add binding document for supported thermal implementation
+>>>>> in Stingray.
+>>>>>
+>>>>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>>>> Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>>>>> ---
+>>>>>  .../bindings/thermal/brcm,sr-thermal.txt           | 45 ++++++++++++++++++++++
+>>>>>  1 file changed, 45 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..33f9e11
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>>> @@ -0,0 +1,45 @@
+>>>>> +* Broadcom Stingray Thermal
+>>>>> +
+>>>>> +This binding describes thermal sensors that is part of Stingray SoCs.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible : Must be "brcm,sr-thermal"
+>>>>> +- reg : memory where tmon data will be available.
+>>>>
+>>>> What type of memory is this?
+>>> This is shared memory(cache-able) which is shared between two micro controllers.
+>>
+>> What else is in this shared memory? You should probably be
+>> representing that as a whole somewhere in DT.
+> Nothing else except 4 byte memory containing temperature value of one
+> thermal zone.
+> At present we configured 6 thermal zones. So six separate 4byte
+> memories provided in
+> shared memory.
+>>
+>>> One micro controller update temperature of all thermal zones in this
+>>> shared memory.
+>>> thermal driver running on another micro controller monitors
+>>> temperature data of all thermal zones.
+>>>>
+>>>>> +
+>>>>> +Example:
+>>>>> +     tmons {
+>>>>> +             compatible = "simple-bus";
+>>>>> +             #address-cells = <1>;
+>>>>> +             #size-cells = <1>;
+>>>>> +             ranges;
+>>>>> +
+>>>>> +             tmon_ihost0: thermal@8f100000 {
+>>>>> +                     compatible = "brcm,sr-thermal";
+>>>>> +                     reg = <0x8f100000 0x4>;
+>>>>> +             };
+>>>>
+>>>> Convince me that you need a node per register. This can all be
+>>>> accomplished with a single node and either a single reg entry or a
+>>>> series of reg entries.
+>>>>
+>>> In our system we have 6 different thermal zones. each node belongs to
+>>> one thermal zone.
+>>> thermal driver detects each node as separate thermal zone and monitors
+>>> separately.
+>>> register entry is only 4byte memory which contains the temperature
+>>> value of respective thermal zone.
+>>> Based on requirement we can increase or decrease the number thermal
+>>> zones need to monitor.
+>>
+>> Still, all this can be accomplished with a single node. Having a node
+>> per register in DT doesn't scale.
+> Our approach is like we have individual controllers have one driver
+> with multiple DT nodes.
+> In coming future we will add more thermal zones based on our
+> requirement. then we can just
+> add new DT node, instead of having driver changes.
+> With this approach we can configure each thermal zone at different trip values.
+> So we must have all thermal zones are independent.
+>>
+>> Rob
