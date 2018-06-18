@@ -1,38 +1,42 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 4/8] dt-bindings: display: rockchip: update DSI
- controller
-Date: Mon, 18 Jun 2018 12:30:16 +0200
-Message-ID: <3301808.xq2J82yV26@phil>
-References: <20180618102806.15650-1-heiko@sntech.de>
- <20180618102806.15650-5-heiko@sntech.de>
+Subject: Re: [PATCH v3 2/2] phy: add Rockchip Innosilicon hdmi phy
+Date: Mon, 18 Jun 2018 12:39:49 +0200
+Message-ID: <1563215.WSxSIARL2o@phil>
+References: <20180514135711.19519-1-heiko@sntech.de>
+ <20180514135711.19519-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180618102806.15650-5-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180514135711.19519-2-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kishon@ti.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-QW0gTW9udGFnLCAxOC4gSnVuaSAyMDE4LCAxMjoyODowMiBDRVNUIHNjaHJpZWIgSGVpa28gU3R1
-ZWJuZXI6Cj4gRnJvbTogTmlja2V5IFlhbmcgPG5pY2tleS55YW5nQHJvY2stY2hpcHMuY29tPgo+
-IAo+IFRoaXMgcGF0Y2ggdXBkYXRlIGRlc2NyaWJlIHBhbmVsL3BvcnQgbGlua3MsIGluY2x1ZGlu
-Zwo+IHVuaXQgYWRkcmVzc2VzIGluIGRvY3VtZW50YXRpb24gb2YgZGV2aWNlIHRyZWUgYmluZGlu
-Z3MKPiBmb3IgdGhlIHJvY2tjaGlwIERTSSBjb250cm9sbGVyIGJhc2VkIG9uIHRoZSBTeW5vcHN5
-cwo+IERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyLgo+IAo+IFNpZ25lZC1vZmYt
-Ynk6IE5pY2tleSBZYW5nIDxuaWNrZXkueWFuZ0Byb2NrLWNoaXBzLmNvbT4KPiBSZXZpZXdlZC1i
-eTogQnJpYW4gTm9ycmlzIDxicmlhbm5vcnJpc0BjaHJvbWl1bS5vcmc+Cj4gU2lnbmVkLW9mZi1i
-eTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KCmZvcmdvdCB0byBjYXJyeSBvdmVy
-IHRoZQpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCmZyb20gdjEu
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Kishon,
+
+Am Montag, 14. Mai 2018, 15:57:11 CEST schrieb Heiko Stuebner:
+> From: Zheng Yang <zhengyang@rock-chips.com>
+> 
+> Add a driver for the Innosilicon hdmi phy used on rk3228/rk3229
+> and rk3328 socs from Rockchip.
+> 
+> Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> Tested-by: Robin Murphy <robin.murphy@arm.com>
+
+could you possibly take a look at this phy patch?
+It would be really nice to get it into 4.19 or so ;-)
+
+
+Thanks
+Heiko
