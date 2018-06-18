@@ -1,74 +1,34 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: =?UTF-8?Q?Re:_[PATCH_v11_00/27]_ARM:_davinci:_convert_to_common_clo?=
- =?UTF-8?B?Y2sgZnJhbWV3b3Jr4oCL?=
-Date: Mon, 18 Jun 2018 10:17:09 +0530
-Message-ID: <513d20f6-da4f-1e3e-7d11-4a0f1193b13d@ti.com>
-References: <20180518164829.27052-1-david@lechnology.com>
- <850a0ec9-53aa-02a5-ecbd-e068b13b2764@ti.com>
- <89b599d3-c43a-255f-8da6-9bea6cf53a5d@lechnology.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v10 0/7] i2c: Add FSI-attached I2C master algorithm
+Date: Mon, 18 Jun 2018 14:23:11 +0930
+Message-ID: <CACPK8XcA7RmerPbK_5pCh_NJQqZ_5pAVD4najW9e4rf1FYL4SQ@mail.gmail.com>
+References: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <89b599d3-c43a-255f-8da6-9bea6cf53a5d@lechnology.com>
-Content-Language: en-US
+In-Reply-To: <1528918579-27602-1-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-i2c@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On 14 June 2018 at 05:06, Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> This series adds an algorithm for an I2C master physically located on an FSI
+> slave device. The I2C master has multiple ports, each of which may be connected
+> to an I2C slave. Access to the I2C master registers is achieved over FSI bus.
+>
+> Due to the multi-port nature of the I2C master, the driver instantiates a new
+> I2C adapter for each port connected to a slave. The connected ports should be
+> defined in the device tree under the I2C master device.
 
-On Sunday 17 June 2018 09:18 PM, David Lechner wrote:
-> Hi Sekhar,
-> 
-> On 05/22/2018 04:38 AM, Sekhar Nori wrote:
->> Hi David,
->>
->> On Friday 18 May 2018 10:18 PM, David Lechner wrote:
->>> This series converts mach-davinci to use the common clock framework.
->>>
->>> The series works like this, the first 3 patches fix some issues with
->>> the clock
->>> drivers that have already been accepted into the mainline kernel.
->>>
->>> Then, starting with "ARM: davinci: pass clock as parameter to
->>> davinci_timer_init()", we get the mach code ready for the switch by
->>> adding the
->>> code needed for the new clock drivers and adding #ifndef
->>> CONFIG_COMMON_CLK
->>> around the legacy clocks so that we can switch easily between the old
->>> and the
->>> new.
->>>
->>> "ARM: davinci: switch to common clock framework" actually flips the
->>> switch
->>> to start using the new clock drivers. Then the next 8 patches remove all
->>> of the old clock code.
->>>
->>> The final four patches add device tree clock support to the one SoC that
->>> supports it.
->>>
->>> This series has been tested on TI OMAP-L138 LCDK (both device tree
->>> and legacy
->>> board file).
->>
->> If you do end up sending a v12, you can leave out the mach-davinci
->> portions unless there are any changes you need to make. I will pick them
->> up from this series once the driver dependencies are merged.
->>
->> I do hope the drivers/clk/* changes can be merged from v4.18.
->>
->> Thanks,
->> Sekhar
->>
-> 
-> Are you going to pick up the arch patches from this series now that
-> the 4.18 merge window is closed?
-> 
-> All of the clk patches landed in 4.18.
+Looks good Eddie. I had a read over what you have, and I would be
+happy to see this merged in 4.19.
 
-yes!
+Reviewed-By: Joel Stanley <joel@jms.id.au>
 
-Thanks,
-Sekhar
+Also, I have merged this into the 4.17 based openbmc tree for testing
+while we wait for it to be merged upstream.
+
+Cheers,
+
+Joel
