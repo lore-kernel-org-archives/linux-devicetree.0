@@ -1,42 +1,87 @@
-Return-Path: <SRS0=Uw7E=JF=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: gpio: pca953x: Document interrupts, update example
-Date: Tue, 19 Jun 2018 19:24:41 +0200
-Message-Id: <20180619172441.20416-1-geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=TZTW=JE=gmail.com=jacek.anaszewski@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: leds: Add bindings for lltc,lt3593
+References: <20180618194301.5667-1-daniel@zonque.org>
+ <20180618194301.5667-2-daniel@zonque.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <b517c1cf-9e08-ce8a-4aa4-eb1695e12dfc@gmail.com>
+Date: Mon, 18 Jun 2018 22:08:50 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180618194301.5667-2-daniel@zonque.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Daniel Mack <daniel@zonque.org>, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The device can optionally supply an interrupt, hence document that.
+Hi Daniel,
 
-Add required GPIO properties to the example (extracted from a patch by
-Wolfram Sang).
+Thanks for the update.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 3 +++
- 1 file changed, 3 insertions(+)
+On 06/18/2018 09:42 PM, Daniel Mack wrote:
+> This patch add the bindings document for LT3593 LED drivers.
+> The binding is kept consistent with other LED driver bindings in that it
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-index 88f22866550750f9..4e3c550e319ad2e0 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
-@@ -37,6 +37,7 @@ Required properties:
-  - #interrupt-cells: if to be used as interrupt expander.
- 
- Optional properties:
-+ - interrupts: interrupt specifier for the device's interrupt output.
-  - reset-gpios: GPIO specification for the RESET input. This is an
- 		active low signal to the PCA953x.
-  - vcc-supply:	power supply regulator.
-@@ -49,6 +50,8 @@ Example:
- 		reg = <0x20>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_pca9505>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
- 	};
+And the consistency is the main goal here indeed. Thanks.
+
+> stores all the LED-specific properties in its own subnode. As the hardware
+> only supports once channel, there can consequently only be one sub-node.
+
+s/once/one/
+
+I can fix it by myself when committing, provided there will be no
+other objections to this patch.
+
+> 
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> ---
+>   .../devicetree/bindings/leds/leds-lt3593.txt  | 35 +++++++++++++++++++
+>   1 file changed, 35 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lt3593.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lt3593.txt b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
+> new file mode 100644
+> index 000000000000..9e7f308404f8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lt3593.txt
+> @@ -0,0 +1,35 @@
+> +Bindings for Linear Technologies LT3593 LED controller
+> +
+> +Required properties:
+> +- compatible:	Should be "lltc,lt3593".
+> +
+> +The hardware supports only one LED. The properties of this LED are
+> +configured in a sub-node in the device node.
+> +
+> +Required sub-node properties:
+> +- gpios:	A handle to the GPIO that is connected to the 'CTRL'
+> +		pin of the chip.
+> +
+> +Optional sub-node properties:
+> +- label:	A label for the LED. If none is given, the LED will be
+> +		named "lt3595::".
+> +- linux,default-trigger: The default trigger for the LED.
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +- default-state:	The initial state of the LED.
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +
+> +If multiple chips of this type are found in a design, each one needs to
+> +be handled by its own device node.
+> +
+> +Example:
+> +
+> +led-controller {
+> +	compatible = "lltc,lt3593";
+> +
+> +	led {
+> +		label = "white:backlight";
+> +		gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
+> +		default-state = "on";
+> +	};
+> +};
+> +
+> 
+
 -- 
-2.17.1
+Best regards,
+Jacek Anaszewski
