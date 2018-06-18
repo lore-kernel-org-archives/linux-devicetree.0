@@ -1,129 +1,88 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [RFC PATCH] of: overlay: update phandle cache on overlay apply
- and remove
-Date: Mon, 18 Jun 2018 11:50:11 -0500
-Message-ID: <CANk1AXTh3dR7peT_3fz==EDk0oxd2UZEEooPn6zTrpJ+=NJT_A@mail.gmail.com>
-References: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH linux-next v5 07/13] dt-bindings: mfd: Add a document for
+ PECI client mfd
+Date: Mon, 18 Jun 2018 10:11:58 -0700
+Message-ID: <fa5a5714-f363-93df-4314-a140eb85747a@linux.intel.com>
+References: <20180601182216.23894-1-jae.hyun.yoo@linux.intel.com>
+ <20180613061637.GI5278@dell>
+ <2b5bbf01-8c9c-bb06-4559-00dae61d95de@linux.intel.com>
+ <20180618060306.GD31141@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529251416-14814-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20180618060306.GD31141@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 17, 2018 at 11:03 AM,  <frowand.list@gmail.com> wrote:
+On 6/17/2018 11:03 PM, Lee Jones wrote:
+> On Thu, 14 Jun 2018, Jae Hyun Yoo wrote:
+> 
+> [...]
+> 
+>>>> +Example:
+>>>> +	peci-bus@0 {
+>>>
+>>> 0?
+>>>
+>>
+>> Because the actual reg value of the peci bus is reg = <0x0 0x60> but
+>> anyway it's an example.
+>>
+>>>> +		#address-cells = <1>;
+>>>> +		#size-cells = <0>;
+>>>
+>>> No 'reg' property?
+> 
+> 0 is fine, but you really should have a 'reg' property.
+> 
 
-Hi Frank,
+Okay, I'll add reg setting example.
 
-Thanks again for the fast response while traveling.  The RFC looks
-good in my testing and review.
+>> This is the actual peci bus node which is a parent of this MFD node:
+>> 	peci0: peci-bus@0 {
+>> 		compatible = "aspeed,ast2500-peci";
+>> 		reg = <0x0 0x60>;
+>> 		#address-cells = <1>;
+>> 		#size-cells = <0>;
+>> 		interrupts = <15>;
+>> 		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
+>> 		resets = <&syscon ASPEED_RESET_PECI>;
+>> 		clock-frequency = <24000000>;
+>> 		msg-timing = <1>;
+>> 		addr-timing = <1>;
+>> 		rd-sampling-point = <8>;
+>> 		cmd-timeout-ms = <1000>;
+>> 	};
+>>
+>>>> +		< more properties >
+>>>
+>>> Remove this.
+>>
+>> I dropped all other properties into < more properties > because I want
+>> to show the #address-cells and #size-cells to state its sub-nodes
+>> should have a single unique reg value. Should I remove this line or the
+>> whole parent node?
+> 
+> Just drop the properties which are unimportant for the example.  You
+> do not need to replace them with anything, especially with a non-DT
+> compliant string.
+> 
 
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> A comment in the review of the patch adding the phandle cache said that
-> the cache would have to be updated when modules are applied and removed.
-> This patch implements the cache updates.
->
-> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
-> Reported-by: Alan Tull <atull@kernel.org>
-> Suggested-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Tested-by: Alan Tull <atull@kernel.org>
-Reviewed-by: Alan Tull <atull@kernel.org>
+Okay, I'll fix it. Thanks a lot!
 
-> ---
->
-> Compiles for one configuration.
-> NOT boot tested.
-> Not run through my normal process to check for new warnings, etc.
->
-> It is late, I'm tired, my brain is fuzzy.  I need to review this more to have
-> any confidence in it.  But I wanted to get a version out for Alan to see (and
-> test if he wants).
->
->  drivers/of/base.c       |  6 +++---
->  drivers/of/of_private.h |  2 ++
->  drivers/of/overlay.c    | 12 ++++++++++++
->  3 files changed, 17 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 848f549164cd..466e3c8582f0 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -102,7 +102,7 @@ static u32 phandle_cache_mask;
->   *   - the phandle lookup overhead reduction provided by the cache
->   *     will likely be less
->   */
-> -static void of_populate_phandle_cache(void)
-> +void of_populate_phandle_cache(void)
->  {
->         unsigned long flags;
->         u32 cache_entries;
-> @@ -134,8 +134,7 @@ static void of_populate_phandle_cache(void)
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  }
->
-> -#ifndef CONFIG_MODULES
-> -static int __init of_free_phandle_cache(void)
-> +int of_free_phandle_cache(void)
->  {
->         unsigned long flags;
->
-> @@ -148,6 +147,7 @@ static int __init of_free_phandle_cache(void)
->
->         return 0;
->  }
-> +#if !defined(CONFIG_MODULES)
->  late_initcall_sync(of_free_phandle_cache);
->  #endif
->
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index 891d780c076a..216175d11d3d 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -79,6 +79,8 @@ int of_resolve_phandles(struct device_node *tree);
->  #if defined(CONFIG_OF_OVERLAY)
->  void of_overlay_mutex_lock(void);
->  void of_overlay_mutex_unlock(void);
-> +int of_free_phandle_cache(void);
-> +void of_populate_phandle_cache(void);
->  #else
->  static inline void of_overlay_mutex_lock(void) {};
->  static inline void of_overlay_mutex_unlock(void) {};
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 7baa53e5b1d7..3f76e58fbec4 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -804,6 +804,8 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
->                 goto err_free_overlay_changeset;
->         }
->
-> +       of_populate_phandle_cache();
-> +
->         ret = __of_changeset_apply_notify(&ovcs->cset);
->         if (ret)
->                 pr_err("overlay changeset entry notify error %d\n", ret);
-> @@ -1046,8 +1048,18 @@ int of_overlay_remove(int *ovcs_id)
->
->         list_del(&ovcs->ovcs_list);
->
-> +       /*
-> +        * Empty and disable phandle cache.  Must empty here so that
-> +        * changeset notifiers do not use stale cache entry for a removed
-> +        * phandle.
-> +        */
-> +       of_free_phandle_cache();
-> +
->         ret_apply = 0;
->         ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
-> +
-> +       of_populate_phandle_cache();
-> +
->         if (ret) {
->                 if (ret_apply)
->                         devicetree_state_flags |= DTSF_REVERT_FAIL;
-> --
-> Frank Rowand <frank.rowand@sony.com>
->
+>>>> +		peci-client@30 {
+>>>> +			compatible = "intel,peci-client", "simple-mfd";
+>>>> +			reg = <0x30>;
+>>>> +		};
+>>>> +
+>>>> +		peci-client@31 {
+>>>> +			compatible = "intel,peci-client", "simple-mfd";
+>>>> +			reg = <0x31>;
+>>>> +		};
+>>>> +	};
+>>>
+> 
