@@ -1,83 +1,98 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
-Date: Mon, 18 Jun 2018 09:43:20 +0200
-Message-ID: <20180618074320.GS3438@phenom.ffwll.local>
-References: <cover.1529091248.git.leonard.crestez@nxp.com>
- <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
- <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
- <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
- <638457fd-85da-8fec-d146-517c43f71813@denx.de>
- <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
- <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/5] RFC: gpio: Add API to explicitly name a consumer
+Date: Mon, 18 Jun 2018 09:45:52 +0200
+Message-ID: <20180618074556.6944-2-linus.walleij@linaro.org>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180618074556.6944-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dev@lists.96boards.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKdW4gMTYsIDIwMTggYXQgMDE6MzI6NDRBTSArMDIwMCwgTWFyZWsgVmFzdXQgd3Jv
-dGU6Cj4gT24gMDYvMTYvMjAxOCAxMjo0MiBBTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+ID4g
-T24gRnJpLCAyMDE4LTA2LTE1IGF0IDIzOjM2ICswMjAwLCBNYXJlayBWYXN1dCB3cm90ZToKPiA+
-PiBPbiAwNi8xNS8yMDE4IDEwOjU4IFBNLCBMZW9uYXJkIENyZXN0ZXogd3JvdGU6Cj4gPj4+IE9u
-IEZyaSwgMjAxOC0wNi0xNSBhdCAxNjo0NyAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiA+
-Pj4+IE9uIEZyaSwgSnVuIDE1LCAyMDE4IGF0IDQ6NDMgUE0sIExlb25hcmQgQ3Jlc3Rlego+ID4+
-Pj4gPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPiB3cm90ZToKPiA+IAo+ID4+Pj4+IFRoZSBGQkRF
-ViBkcml2ZXIgdXNlcyB0aGUgc2FtZSBuYW1lIGFuZCBib3RoIGNhbid0IGJlIHJlZ2lzdGVyZWQg
-YXQgdGhlCj4gPj4+Pj4gc2FtZSB0aW1lLiBGaXggdGhpcyBieSByZW5hbWluZyB0aGUgZHJtIGRy
-aXZlciB0byBteHNmYi1kcm0KPiA+Pj4+Cj4gPj4+PiBTdGVmYW4gc2VudCB0aGUgc2FtZSBwYXRj
-aCBhIGZldyBkYXlzIGFnbzoKPiA+Pj4KPiA+Pj4gSW4gdGhhdCB0aHJlYWQgdGhlcmUgaXMgYSBw
-cm9wb3NhbCBmb3IgcmVtb3ZpbmcgdGhlIG9sZCBmYmRldi9teHNmYgo+ID4+PiBkcml2ZXIgZW50
-aXJlbHkuCj4gPj4+Cj4gPj4+IFRoYXQgd291bGQgYnJlYWsgb2xkIERUQnMsIGlzbid0IHRoaXMg
-Z2VuZXJhbGx5IGNvbnNpZGVyZWQgYmFkPyBBbHNvLAo+ID4+PiBhcmUgd2Ugc3VyZSB0aGUgcmVt
-b3ZhbCBvZiBmYmRldi9teHNmYiB3b3VsZG4ndCBsb3NlIGFueSBmZWF0dXJlcz8KPiA+Pj4KPiA+
-Pj4gV2hhdCBteSBzZXJpZXMgZG9lcyBpcyBtYWtlIGJvdGggZHJpdmVycyB3b3JrIHdpdGggdGhl
-IHNhbWUga2VybmVsCj4gPj4+IGltYWdlIGFuZCB0dXJucyB0aGUgY2hvaWNlIGludG8gYSBib2Fy
-ZC1sZXZlbCBkdGIgZGVjaXNpb24uIFN1cHBvcnRpbmcKPiA+Pj4gZXZlcnl0aGluZyBhdCBvbmNl
-IHNlZW1zIGRlc2lyYWJsZSB0byBtZSBhbmQgaXQgYWxsb3dzIGZvciBhIHZlcnkKPiA+Pj4gc21v
-b3RoIHVwZ3JhZGUgcGF0aC4KPiA+Pgo+ID4+IEhhdmluZyB0d28gZHJpdmVycyBpbiB0aGUga2Vy
-bmVsIHdpdGggZGlmZmVyZW50IHNldCBvZiBidWdzIGlzIGFsd2F5cyBiYWQuCj4gPj4KPiA+Pj4g
-VGhlIG9sZCBkcml2ZXIgY291bGQgYmUgcmVtb3ZlZCBsYXRlciwgYWZ0ZXIgYWxsIHVzZXJzIGFy
-ZSBjb252ZXJ0ZWQuCj4gPj4KPiA+PiBCb3RoIGRyaXZlcnMgd2VyZSBpbiBmb3IgbG9uZyBlbm91
-Z2ggYWxyZWFkeS4gQW5kIGxldCdzIGJlIHJlYWxpc3RpYywKPiA+PiBob3cgbWFueSBNWDIzL01Y
-MjggdXNlcnMgb2Ygb2xkIERUcyB3aXRoIG5ldyBrZXJuZWxzIGFyZSB0aGVyZSB3aG8KPiA+PiBj
-YW5ub3QgdXBkYXRlIHRoZSBEVCBhcyB3ZWxsID8KPiA+IAo+ID4gR3JlcHBpbmcgZm9yICJkaXNw
-bGF5ID0iIGluIGFyY2gvYXJtL2Jvb3QvZHRzL2lteCogSSBzZWUgdGhhdCBvbGQKPiA+IGJpbmRp
-bmdzIGFyZSBhbHNvIHVzZWQgYnkgM3JkLXBhcnR5IGJvYXJkcyBmb3IgaW14Ni83Ogo+ID4gICog
-aW14NnN4LW5pdHJvZ2VuNnN4Cj4gPiAgKiBpbXg2dWwtZ2VhbQo+ID4gICogaW14NnVsLWlzaW90
-Cj4gPiAgKiBpbXg2dWwtb3BvczZ1bGRldgo+ID4gICogaW14NnVsLXBpY28taG9iYml0Cj4gPiAg
-KiBpbXg2dWwtdHg2dWwKPiA+ICAqIGlteDdkLW5pdHJvZ2VuNwo+IAo+IEVyLCB5ZXMsIGEgaGFu
-ZGZ1bCBvZiBib2FyZHMgd2hpY2ggY291bGQgYmUgdXBkYXRlZCA6KQo+IAo+ID4gQ29udmVydGlu
-ZyBldmVyeXRoaW5nIG1pZ2h0IGJlIHF1aXRlIGEgYml0IG9mIHdvcmssIGFuZCBleHBsaWNpdGx5
-Cj4gPiBzdXBwb3J0aW5nIG9sZCBiaW5kaW5ncyBpcyBhbHNvIHdvcmsuCj4gCj4gRG9lcyBhZGRp
-bmcgc3VwcG9ydCBmb3Igb2xkIGJpbmRpbmdzIGp1c3RpZnkgdGhlIGVmZm9ydCBpbnZlc3RlZCA/
-IEkKPiBkb3VidCBzbywgaXQgb25seSBhZGRzIG1vcmUgY29kZSB0byBtYWludGFpbi4KPiAKPiA+
-IEl0IGlzIHZlcnkgY29uZnVzaW5nIHRoYXQgdGhlcmUgaXMgYSB3aG9sZSBzZXQgb2YgZGlzcGxh
-eXMgZm9yIGlteDYvNwo+ID4gd2hpY2ggYXJlIHN1cHBvcnRlZCBieSB1cHN0cmVhbSBidXQgb25s
-eSB3aXRoIGEgbm9uLWRlZmF1bHQgY29uZmlnLgo+ID4gV2hpbGUgaXQgaXMgZXh0cmVtZWx5IGNv
-bW1vbiBpbiB0aGUgZW1iZWRkZWQgZmllbGQgdG8gaGF2ZSBjdXN0b20KPiA+IGNvbmZpZ3MgdGhl
-IGRlZmF1bHQgb25lIGluIHRoZSBrZXJuZWwgc2hvdWxkIHRyeSB0byAianVzdCB3b3JrIi4KPiA+
-IAo+ID4gQ291bGRuJ3QgdGhpcyBwYXRjaCBzZXJpZXMgYmUgY29uc2lkZXJlZCBhIGJ1Z2ZpeD8g
-SXQgd2FzIGFsc28KPiA+IHN1cnByaXNpbmdseSBzbWFsbC4KPiAKPiBJIHRoaW5rIGl0J3MganVz
-dCBhIHdvcmthcm91bmQgd2hpY2ggYWxsb3dzIHlvdSB0byBwb3N0cG9uZSB0aGUgcmVhbAo+IGZp
-eCwgYW5kIEkgZG9uJ3QgbGlrZSB0aGF0LgoKWWVhaCBhZ3JlZWQsIGltbyB0aGUgcHJvcGVyIGZp
-eCBoZXJlIHdvdWxkIGJlIHRvIGVpdGhlciB1cGRhdGUgdGhlIGR0cyBmb3IKdGhlIGFmZmVjdGVk
-IGJvYXJkcyBhbmQvb3IgbWFrZSBteHNmYiBhY2NlcHQgdGhlIG9sZCBkdCBiaW5kaW5ncyBmb3IK
-YmFja3dhcmRzIGNvbXBhdC4gQXJ0aWZpY2lhbGx5IGV4dGVuZGluZyB0aGUgbGlmZSBvZiB0aGUg
-ZmJkZXYgZHJpdmVycwpzZWVtcyBzaWxseS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0
-d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The GPIO (descriptor) API registers a "label" naming what is
+currently using the GPIO line. Typically this is taken from
+things like the device tree node, so "reset-gpios" will result
+in he line being labeled "reset".
+
+The technical effect is pretty much zero: the use is for
+debug and introspection, such as "lsgpio" and debugfs files.
+
+However sometimes the user want this cuddly feeling of
+listing all GPIO lines and seeing exactly what they are for
+and it gives a very fulfilling sense of control. Especially
+in the cases when the device tree node doesn't provide a
+good name, or anonymous GPIO lines assigned just to
+"gpios" in the device tree because the usage is implicit.
+
+For these cases it may be nice to be able to label the
+line directly and explicitly.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpiolib.c        | 13 +++++++++++++
+ include/linux/gpio/consumer.h |  7 +++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e11a3bb03820..c6f77e806cb8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3193,6 +3193,19 @@ int gpiod_cansleep(const struct gpio_desc *desc)
+ }
+ EXPORT_SYMBOL_GPL(gpiod_cansleep);
+ 
++/**
++ * gpiod_set_consumer_name() - set the consumer name for the descriptor
++ * @desc: gpio to set the consumer name on
++ * @name: the new consumer name
++ */
++void gpiod_set_consumer_name(struct gpio_desc *desc, const char *name)
++{
++	VALIDATE_DESC_VOID(desc);
++	/* Just overwrite whatever the previous name was */
++	desc->label = name;
++}
++EXPORT_SYMBOL_GPL(gpiod_set_consumer_name);
++
+ /**
+  * gpiod_to_irq() - return the IRQ corresponding to a GPIO
+  * @desc: gpio whose IRQ will be returned (already requested)
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 243112c7fa7d..e8aaf34dd65d 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -145,6 +145,7 @@ int gpiod_is_active_low(const struct gpio_desc *desc);
+ int gpiod_cansleep(const struct gpio_desc *desc);
+ 
+ int gpiod_to_irq(const struct gpio_desc *desc);
++void gpiod_set_consumer_name(struct gpio_desc *desc, const char *name);
+ 
+ /* Convert between the old gpio_ and new gpiod_ interfaces */
+ struct gpio_desc *gpio_to_desc(unsigned gpio);
+@@ -467,6 +468,12 @@ static inline int gpiod_to_irq(const struct gpio_desc *desc)
+ 	return -EINVAL;
+ }
+ 
++static inline void gpiod_set_consumer_name(struct gpio_desc *desc, const char *name)
++{
++	/* GPIO can never have been requested */
++	WARN_ON(1);
++}
++
+ static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
+ {
+ 	return ERR_PTR(-EINVAL);
+-- 
+2.17.0
