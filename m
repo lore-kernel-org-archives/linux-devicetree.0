@@ -1,71 +1,83 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller
- / system control
-Date: Mon, 18 Jun 2018 09:34:25 +0200
-Message-ID: <20180618073425.ce2dkipuvrtbqela@flea>
-References: <20180614153548.9644-1-wens@csie.org>
- <20180615091413.pbdtrpa7txe6i4ee@flea>
- <CAGb2v64Ar+rOgiXbjtRrQojHUZteLa9N7OwM3XY7ZcpS87Qpmw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/3] drm: mxsfb: Change driver.name to mxsfb-drm
+Date: Mon, 18 Jun 2018 09:43:20 +0200
+Message-ID: <20180618074320.GS3438@phenom.ffwll.local>
+References: <cover.1529091248.git.leonard.crestez@nxp.com>
+ <47ea7572011735b68a8a70f0e11bdf00cb2fd86a.1529091248.git.leonard.crestez@nxp.com>
+ <CAOMZO5B8i0gN+rCq-yPrd112NkwJWTxYCtsLVeLhD1JLRuX6EQ@mail.gmail.com>
+ <07be6d9a85b6be655fc2b084be81d8bf9715b57a.camel@nxp.com>
+ <638457fd-85da-8fec-d146-517c43f71813@denx.de>
+ <b3fa74c5110b45e5992920485749869ab1f7ebce.camel@nxp.com>
+ <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="muhfg4g4774nkcmb"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDOBTXMQKGQEQSYEY6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v64Ar+rOgiXbjtRrQojHUZteLa9N7OwM3XY7ZcpS87Qpmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <6995fa4b-47a9-887b-5e4f-4284ca6a2c79@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "marcofrk@gmail.com" <marcofrk@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
---muhfg4g4774nkcmb
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Jun 18, 2018 at 10:11:20AM +0800, Chen-Yu Tsai wrote:
-> On Fri, Jun 15, 2018 at 5:14 PM, Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Thu, Jun 14, 2018 at 11:35:44PM +0800, Chen-Yu Tsai wrote:
-> >> Hi,
-> >>
-> >> This series is the remaining A64 syscon changes from the R40 DWMAC
-> >> series. The series aligns how the A64 system control exports a regmap
-> >> for the sun8i DWMAC driver to access with what we've done for the R40.
-> >>
-> >> Originally the A64 used the generic syscon for this bit of hardware.
-> >> But this block also contains mapping bits for the onboard SRAM, used
-> >> by various peripherals, and other vendor specific bits we may use in
-> >> the future. It is by no means generic. And we already have a device
-> >> tree binding and driver for the SRAM part.
-> >>
-> >> The first patch make the SRAM control device export a regmap, exposing
-> >> a single EMAC control register, for the DWMAC driver to consume.
-> >>
-> >> The second and third patches rename the A64 compatible string to read
-> >> "system control", which is what the block is named in the user manual.
-> >>
-> >> The last patch fixes up the device node, and also adds the lone mappable
-> >> SRAM block, which is needed by the Display Engine.
-> >
-> > For the serie:
-> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> 
-> Cool. I'll apply them once you've rebased and pushed out any patches you
-> queued up during the merge window.
-
-All should be pushed now, feel free to apply them :)
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---muhfg4g4774nkcmb--
+T24gU2F0LCBKdW4gMTYsIDIwMTggYXQgMDE6MzI6NDRBTSArMDIwMCwgTWFyZWsgVmFzdXQgd3Jv
+dGU6Cj4gT24gMDYvMTYvMjAxOCAxMjo0MiBBTSwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOgo+ID4g
+T24gRnJpLCAyMDE4LTA2LTE1IGF0IDIzOjM2ICswMjAwLCBNYXJlayBWYXN1dCB3cm90ZToKPiA+
+PiBPbiAwNi8xNS8yMDE4IDEwOjU4IFBNLCBMZW9uYXJkIENyZXN0ZXogd3JvdGU6Cj4gPj4+IE9u
+IEZyaSwgMjAxOC0wNi0xNSBhdCAxNjo0NyAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiA+
+Pj4+IE9uIEZyaSwgSnVuIDE1LCAyMDE4IGF0IDQ6NDMgUE0sIExlb25hcmQgQ3Jlc3Rlego+ID4+
+Pj4gPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPiB3cm90ZToKPiA+IAo+ID4+Pj4+IFRoZSBGQkRF
+ViBkcml2ZXIgdXNlcyB0aGUgc2FtZSBuYW1lIGFuZCBib3RoIGNhbid0IGJlIHJlZ2lzdGVyZWQg
+YXQgdGhlCj4gPj4+Pj4gc2FtZSB0aW1lLiBGaXggdGhpcyBieSByZW5hbWluZyB0aGUgZHJtIGRy
+aXZlciB0byBteHNmYi1kcm0KPiA+Pj4+Cj4gPj4+PiBTdGVmYW4gc2VudCB0aGUgc2FtZSBwYXRj
+aCBhIGZldyBkYXlzIGFnbzoKPiA+Pj4KPiA+Pj4gSW4gdGhhdCB0aHJlYWQgdGhlcmUgaXMgYSBw
+cm9wb3NhbCBmb3IgcmVtb3ZpbmcgdGhlIG9sZCBmYmRldi9teHNmYgo+ID4+PiBkcml2ZXIgZW50
+aXJlbHkuCj4gPj4+Cj4gPj4+IFRoYXQgd291bGQgYnJlYWsgb2xkIERUQnMsIGlzbid0IHRoaXMg
+Z2VuZXJhbGx5IGNvbnNpZGVyZWQgYmFkPyBBbHNvLAo+ID4+PiBhcmUgd2Ugc3VyZSB0aGUgcmVt
+b3ZhbCBvZiBmYmRldi9teHNmYiB3b3VsZG4ndCBsb3NlIGFueSBmZWF0dXJlcz8KPiA+Pj4KPiA+
+Pj4gV2hhdCBteSBzZXJpZXMgZG9lcyBpcyBtYWtlIGJvdGggZHJpdmVycyB3b3JrIHdpdGggdGhl
+IHNhbWUga2VybmVsCj4gPj4+IGltYWdlIGFuZCB0dXJucyB0aGUgY2hvaWNlIGludG8gYSBib2Fy
+ZC1sZXZlbCBkdGIgZGVjaXNpb24uIFN1cHBvcnRpbmcKPiA+Pj4gZXZlcnl0aGluZyBhdCBvbmNl
+IHNlZW1zIGRlc2lyYWJsZSB0byBtZSBhbmQgaXQgYWxsb3dzIGZvciBhIHZlcnkKPiA+Pj4gc21v
+b3RoIHVwZ3JhZGUgcGF0aC4KPiA+Pgo+ID4+IEhhdmluZyB0d28gZHJpdmVycyBpbiB0aGUga2Vy
+bmVsIHdpdGggZGlmZmVyZW50IHNldCBvZiBidWdzIGlzIGFsd2F5cyBiYWQuCj4gPj4KPiA+Pj4g
+VGhlIG9sZCBkcml2ZXIgY291bGQgYmUgcmVtb3ZlZCBsYXRlciwgYWZ0ZXIgYWxsIHVzZXJzIGFy
+ZSBjb252ZXJ0ZWQuCj4gPj4KPiA+PiBCb3RoIGRyaXZlcnMgd2VyZSBpbiBmb3IgbG9uZyBlbm91
+Z2ggYWxyZWFkeS4gQW5kIGxldCdzIGJlIHJlYWxpc3RpYywKPiA+PiBob3cgbWFueSBNWDIzL01Y
+MjggdXNlcnMgb2Ygb2xkIERUcyB3aXRoIG5ldyBrZXJuZWxzIGFyZSB0aGVyZSB3aG8KPiA+PiBj
+YW5ub3QgdXBkYXRlIHRoZSBEVCBhcyB3ZWxsID8KPiA+IAo+ID4gR3JlcHBpbmcgZm9yICJkaXNw
+bGF5ID0iIGluIGFyY2gvYXJtL2Jvb3QvZHRzL2lteCogSSBzZWUgdGhhdCBvbGQKPiA+IGJpbmRp
+bmdzIGFyZSBhbHNvIHVzZWQgYnkgM3JkLXBhcnR5IGJvYXJkcyBmb3IgaW14Ni83Ogo+ID4gICog
+aW14NnN4LW5pdHJvZ2VuNnN4Cj4gPiAgKiBpbXg2dWwtZ2VhbQo+ID4gICogaW14NnVsLWlzaW90
+Cj4gPiAgKiBpbXg2dWwtb3BvczZ1bGRldgo+ID4gICogaW14NnVsLXBpY28taG9iYml0Cj4gPiAg
+KiBpbXg2dWwtdHg2dWwKPiA+ICAqIGlteDdkLW5pdHJvZ2VuNwo+IAo+IEVyLCB5ZXMsIGEgaGFu
+ZGZ1bCBvZiBib2FyZHMgd2hpY2ggY291bGQgYmUgdXBkYXRlZCA6KQo+IAo+ID4gQ29udmVydGlu
+ZyBldmVyeXRoaW5nIG1pZ2h0IGJlIHF1aXRlIGEgYml0IG9mIHdvcmssIGFuZCBleHBsaWNpdGx5
+Cj4gPiBzdXBwb3J0aW5nIG9sZCBiaW5kaW5ncyBpcyBhbHNvIHdvcmsuCj4gCj4gRG9lcyBhZGRp
+bmcgc3VwcG9ydCBmb3Igb2xkIGJpbmRpbmdzIGp1c3RpZnkgdGhlIGVmZm9ydCBpbnZlc3RlZCA/
+IEkKPiBkb3VidCBzbywgaXQgb25seSBhZGRzIG1vcmUgY29kZSB0byBtYWludGFpbi4KPiAKPiA+
+IEl0IGlzIHZlcnkgY29uZnVzaW5nIHRoYXQgdGhlcmUgaXMgYSB3aG9sZSBzZXQgb2YgZGlzcGxh
+eXMgZm9yIGlteDYvNwo+ID4gd2hpY2ggYXJlIHN1cHBvcnRlZCBieSB1cHN0cmVhbSBidXQgb25s
+eSB3aXRoIGEgbm9uLWRlZmF1bHQgY29uZmlnLgo+ID4gV2hpbGUgaXQgaXMgZXh0cmVtZWx5IGNv
+bW1vbiBpbiB0aGUgZW1iZWRkZWQgZmllbGQgdG8gaGF2ZSBjdXN0b20KPiA+IGNvbmZpZ3MgdGhl
+IGRlZmF1bHQgb25lIGluIHRoZSBrZXJuZWwgc2hvdWxkIHRyeSB0byAianVzdCB3b3JrIi4KPiA+
+IAo+ID4gQ291bGRuJ3QgdGhpcyBwYXRjaCBzZXJpZXMgYmUgY29uc2lkZXJlZCBhIGJ1Z2ZpeD8g
+SXQgd2FzIGFsc28KPiA+IHN1cnByaXNpbmdseSBzbWFsbC4KPiAKPiBJIHRoaW5rIGl0J3MganVz
+dCBhIHdvcmthcm91bmQgd2hpY2ggYWxsb3dzIHlvdSB0byBwb3N0cG9uZSB0aGUgcmVhbAo+IGZp
+eCwgYW5kIEkgZG9uJ3QgbGlrZSB0aGF0LgoKWWVhaCBhZ3JlZWQsIGltbyB0aGUgcHJvcGVyIGZp
+eCBoZXJlIHdvdWxkIGJlIHRvIGVpdGhlciB1cGRhdGUgdGhlIGR0cyBmb3IKdGhlIGFmZmVjdGVk
+IGJvYXJkcyBhbmQvb3IgbWFrZSBteHNmYiBhY2NlcHQgdGhlIG9sZCBkdCBiaW5kaW5ncyBmb3IK
+YmFja3dhcmRzIGNvbXBhdC4gQXJ0aWZpY2lhbGx5IGV4dGVuZGluZyB0aGUgbGlmZSBvZiB0aGUg
+ZmJkZXYgZHJpdmVycwpzZWVtcyBzaWxseS4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0
+d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
