@@ -1,51 +1,55 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 01/19] dt-bindings: sram: sunxi: Add A13,
- A20 and A33 SRAM controller bindings
-Date: Tue, 19 Jun 2018 00:09:25 +0800
-Message-ID: <CAGb2v67bh4EJ3Xci3S01FhKztYc=h3bw=Ry5phhJrHdt4b=_4Q@mail.gmail.com>
-References: <20180618145843.14631-1-paul.kocialkowski@bootlin.com>
- <20180618145843.14631-2-paul.kocialkowski@bootlin.com> <20180618160250.ik44c3gcbdxylmyd@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 0/2] Add R8A77980/Condor PCIe support
+Date: Mon, 18 Jun 2018 19:16:47 +0300
+Message-ID: <cfa599bd-d244-0032-490b-553f7870d07c@cogentembedded.com>
+References: <b37d458c-071a-833a-2057-be8a07c880be@cogentembedded.com>
+ <20180618093623.s33bkiptazxem463@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBTVST7MQKGQEEP5RA7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180618160250.ik44c3gcbdxylmyd@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij@li>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180618093623.s33bkiptazxem463@verge.net.au>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 19, 2018 at 12:02 AM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Mon, Jun 18, 2018 at 04:58:25PM +0200, Paul Kocialkowski wrote:
->> This introduces dedicated bindings for the SRAM controllers found on the
->> A13, A20 and A33 sunxi platforms.
->>
->> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
->
-> Explaining why you need to add these new compatibles would be great.
->
->> diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
->> index d087f04a4d7f..19cc0b892672 100644
->> --- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
->> +++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
->> @@ -11,6 +11,9 @@ Controller Node
->>  Required properties:
->>  - compatible : should be:
->>      - "allwinner,sun4i-a10-sram-controller"
->> +    - "allwinner,sun5i-a13-sram-controller"
->> +    - "allwinner,sun7i-a20-sram-controller"
->> +    - "allwinner,sun8i-a33-sram-controller"
->
-> And I think Chen-Yu asked you to rename this compatible to
-> -system-controller for the previous iteration?
+On 06/18/2018 12:36 PM, Simon Horman wrote:
 
--system-control. It's not an actual controller, just a bunch of registers.
+>> Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+>> 'renesas-devel-20180614v2-v4.17' tag. We're adding the R8A77980 PCIe related
+>> device nodes and then enable PCIe on the Condor board. These patches depend
+>> on the R8A77980 PCIe PHY driver support in order to work properly. Note that
+>> in case the PCIe PHY driver is not enabled, the kernel will BUG() due to I/O
+>> space page leak in the PCIe driver...
+> 
+> Is that problem specific to the presence of PCIe nodes for
+> condor/r8a77980
 
-ChenYu
+   The nodes are safe unless they are enabled, so the Condor patch may be
+deferred untl I fix the PCI code.
+> condor/r8a77980 or is it also true of other (R-Car) boards where
+> PCIe is enabled?
+
+   The leak happens every time the driver fails to probe later than
+pci_remap_iospace() is called but the BUG_ON() is only triggered by rhe 2nd try
+with EPROBE_DEFER returned previously.
+
+> Regardless, it sounds like these patches expose a kernel bug.
+> Is it being fixed?
+
+   I'm working on a fix (which embraces several PCI drivers)...
+
+>> [1/2] arm64: dts: renesas: r8a77980: add PCIe support
+>> [2/2] arm64: dts: renesas: condor: add PCIe support
+
+WBR, Sergei
