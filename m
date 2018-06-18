@@ -1,175 +1,89 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v5 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash support
-Date: Mon, 18 Jun 2018 16:11:54 +0200
-Message-ID: <40244fa25ef2d90a750bf8044d46c845@agner.ch>
-References: <20180617204605.4648-1-stefan@agner.ch>
- <20180618115806.7be25499@bbrezillon>
- <95279b61ce2630c1276669359b163933@agner.ch>
- <20180618135935.5a41ec6f@bbrezillon>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v5 0/5] ASoC: add driver for Atmel I2S
+	controller
+Date: Mon, 18 Jun 2018 17:12:34 +0300
+Message-ID: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180618135935.5a41ec6f@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, nicolas.ferre@microchip.com, boris.brezillon@bootlin.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, broonie@kernel.org, sboyd@kernel.org
+Cc: Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+This is a rework of Cyrille's patches named:
+[PATCH v3 0/2] ASoC: add driver for Atmel I2S controller
+https://lkml.org/lkml/2015/9/29/454
 
-On 18.06.2018 13:59, Boris Brezillon wrote:
-> Hi Stefan,
-> 
-> On Mon, 18 Jun 2018 12:51:52 +0200
-> Stefan Agner <stefan@agner.ch> wrote:
-> 
->> On 18.06.2018 11:58, Boris Brezillon wrote:
->> > On Sun, 17 Jun 2018 22:45:59 +0200
->> > Stefan Agner <stefan@agner.ch> wrote:
->> >
->> >> Changes definitly calm down, most noteably probably the changes
->> >> around checking whether a page is empty if the stack reports ECC
->> >> errors.. I verified the code using raw nandwrites with OOB to
->> >> simulate an empty page which has some bits flipped in the OOB area,
->> >> everthing seems to work as I would expect it.
->> >>
->> >> For now I do not check extra OOB bytes since those are at variable
->> >> locations depending on algorithm.
->> >
->> > Hm, if you expose them as free OOB bytes, you should also check them,
->> > otherwise you might end up with corrupted data without noticing it. Note
->> > that, depending on whether those free OOB bytes are ECC-protected or
->> > not, you should change the way you do the check:
->> >
->> > - non-protected OOB bytes: all bytes should be 0xff (no bitflips
->> >   allowed)
->> > - data+free OOB bytes protected by the same ECC bytes: you should pass
->> >   the free OOB bytes buffer to nand_check_erased_ecc_chunk() along with
->> >   the data and ECC buffers
->> > - free OOB bytes have their own ECC bytes: call
->> >   nand_check_erased_ecc_chunk() separately and pass it the ECC + free
->> >   OOB buffers.
->>
->> This graphic taken from the public Tegra 2 Technical Reference Manual is
->> quite useful:
->> https://imgur.com/a/0Hqzbkc
-> 
-> Thanks for sharing this doc.
-> 
->>
->> Tegra basically has all of the above, which makes the whole business
->> really tricky...
-> 
-> I'm not sure. Are "Skip bytes" protected by "main data parity bytes"?
-> 
-> AFAICT, you have "Tag bytes" that fall in case #3 and "Remaining spare
-> bytes" that fall in case #1. If "Skip bytes" are protected by the "main
-> data parity bytes", then it falls in case #2, otherwise it probably
-> goes in case #1.
-> 
+This is the version 5 of the series, and addresses the received feedback
+on the mailing lists.
 
-Skip bytes are not protected. I think they are mainly meant to skip the
-bad block marker. Only 4, 8, 12 or 16 bytes are supported.
+This series applies on top of clk-next branch of clk/linux.git.
 
->>
->> I am not sure if we really could do variant 1, non-protected OOB, but
->> since we have the option of protected OOB, we probably anyway would do
->> that.
-> 
-> That's up to you, but in this case, you should not declare those bytes
-> as free (didn't check what is currently done in the driver).
-> 
->>
->> RS/Hamming implements variant 3.
-> 
-> It seems to be a mix of #1 and #3, but I'm not sure (see above).
-> 
->>
->> BCH implements variant 2.
-> 
-> I'd say it's a mix of #1 (skip + remaining bytes) and #2(tag bytes).
-> 
->> OOB is protected with the last data buffer.
-> 
-> That would be weird, but maybe you're right. HW ECC engine usually
-> split the OOB area in X portions, X being the number of ECC steps needed
-> to cover a NAND page, and then have ECC bytes cover a sub-portion of
-> data+OOB.
-> 
-> For example, for a NAND page of 2k with 64 bytes of OOB, and assuming
-> the ECC step is 512bytes, you usually have something like:
-> 
-> [512(data)+8(protected-oob)+8(ecc)] x 4
-> 
+Based on received feedback, I created a mux clock driver to select the I2S
+clock source, that also includes proper devicetree bindings and nodes.
+Also, I added the I2S nodes in sama5d2's devicetree, with the missing
+pin muxing for the second I2S controller.
 
-The TRM explicitly states so:
+Alexandre Belloni plans to change the at91 fine grained clock nodes and
+he recommended to leave the bindings for this clock driver in the same
+(wrong) manner, so he could fix them all at once.
 
-"BCH mode Error correction
-- Error correction with involving spare only transfers is not supported.
-ECC calculation of last sub-page includes tag data in spare area.
-- Error correction with Main only transfers is supported.
-- Maximum possible length of Tag data size is 252 bytes."
+This series of patches adds support to the new Atmel I2S controller
+embedded on sama5d2 SoCs.
 
+ChangeLog
 
->>
->> So this would require a algorithm depending implementation, which is
->> probably not a big deal.
-> 
-> True.
-> 
->>
->> But there is one more issue with BCH: Only if extra data are actually
->> transferred, tag space is actually allocated. If no tag bytes are
->> transferred, parity follows immediately skip bytes. As far as I know the
->> MTD stacks OOB layout assumes that is always the same layout, no matter
->> whether we write extra OOB data or not. For the Tegra NAND controller
->> this would mean that we have to always transfer tag bytes and therefor
->> penalize the use case we are most interested in (which is no extra OOB
->> bytes, since UBI does not make use of it)...
-> 
-> Hm, given the amount of tag bytes I don't think you'll have a huge
-> penalty, so I'd recommend always sending those bytes. Alternatively,
-> you could decide that you never want to have those tag bytes and expose
-> none of them.
-> 
->>
->> Furthermore I realized that testing is not easily possible since
->> nandwrite with --oob seems not to make use of "oob_required" in the main
->> page write but issues a separate OOB write command. I did not found a
->> way to issue a write from user space which sets oob_required...
-> 
-> Maybe it's time to patch those tools. The ioctl exists, so it's just a
-> matter of using it in nandwrite/mtd-utils.
-> 
->>
->> Due to all this I rather prefer to not implement extra OOB support at
->> this point.
-> 
-> I'm fine with that, but that means no JFFS2 support, as I think JFFS2
-> wants to place some of its metadata in the OOB area. Also, I fear it
-> will be a mess to add support for that kind of things without breaking
-> existing setup afterwards, so, by taking this decision you're pretty
-> much saying that this controller will never expose free OOB bytes.
-> That's not a problem from my PoV, but I want you to be aware of that.
-> 
+v4 -> v5
+ - removed patches:
+   [PATCH v4 4/7] ASoC: atmel-i2s: dt-bindings: add DT bindings for I2S controller
+   [PATCH v4 5/7] ASoC: atmel-i2s: add driver for the new Atmel I2S controller
+   from this series since they were applied to the asoc tree at:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
+ - addressed comments received on the mux clock;
 
-We already operate without extra OOB byte support in our downstream BSP.
-I'd rather have a easy upgrade path today...
+v3 -> v4
+ - as suggested by Rob Herring:
+   - added a clock mux driver for I2S's clock control bit;
+   - more precise description of I2S's devicetree bindings;
+   - removed SoC and internal detalls from bindings;
+ - addressed comments from Mark Brown;
+ - added devicetree nodes and pin muxing for I2S;
 
-Another issue I just realized: The boot ROM only supports BCH without
-tag bytes... So at least the boot loader has to be written without tag
-bytes.
+v2 -> v3
+ - fix the coding style, add some more comments and add a section dedicated
+  to sama5d2 SoCs in the DT binding documentation as suggested by Mark
+  Brown.
 
->>
->> How do I do this properly? Set mtd_ooblayout_ops.free to NULL?
-> 
-> Just implement a dummy function that returns -ERANGE.
-> 
+v1 -> v2
+ - initialize dev->dev before calling dev->caps->mck_init()
 
-Ok, I will go with this then.
+Codrin Ciubotariu (3):
+  dt-bindings: clk: at91: add an I2S mux clock
+  clk: at91: add I2S clock mux driver
+  ARM: dts: at91: sama5d2: add I2S clock muxing nodes
 
-Also, thanks for all your valuable feedback, really appreciated!
+Cyrille Pitchen (2):
+  ARM: dts: at91: sama5d2: add nodes for I2S controllers
+  ARM: dts: at91: sama5d2 Xplained: add pin muxing for I2S
 
---
-Stefan
+ .../devicetree/bindings/clock/at91-clock.txt  |  35 ++++++
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts   |  28 +++++
+ arch/arm/boot/dts/sama5d2.dtsi                |  52 ++++++++
+ arch/arm/mach-at91/Kconfig                    |   4 +
+ drivers/clk/at91/Makefile                     |   1 +
+ drivers/clk/at91/clk-i2s-mux.c                | 116 ++++++++++++++++++
+ 6 files changed, 236 insertions(+)
+ create mode 100644 drivers/clk/at91/clk-i2s-mux.c
+
+-- 
+2.17.1
