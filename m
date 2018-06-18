@@ -1,51 +1,71 @@
-From: Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH v3 1/3] mtd: rawnand: denali_dt: add more clocks based on IP datasheet
-Date: Mon, 18 Jun 2018 09:09:02 +0200
-Message-ID: <5816516.AqyscFuYxX@blindfold>
-References: <1529025532-22087-1-git-send-email-yamada.masahiro@socionext.com> <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller
+ / system control
+Date: Mon, 18 Jun 2018 09:34:25 +0200
+Message-ID: <20180618073425.ce2dkipuvrtbqela@flea>
+References: <20180614153548.9644-1-wens@csie.org>
+ <20180615091413.pbdtrpa7txe6i4ee@flea>
+ <CAGb2v64Ar+rOgiXbjtRrQojHUZteLa9N7OwM3XY7ZcpS87Qpmw@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1529025532-22087-2-git-send-email-yamada.masahiro@socionext.com>
-Sender: stable-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-kbuild@vger.kernel.org, "linux-stable #4 . 14+" <stable@vger.kernel.org>, devicetree@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="muhfg4g4774nkcmb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDOBTXMQKGQEQSYEY6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64Ar+rOgiXbjtRrQojHUZteLa9N7OwM3XY7ZcpS87Qpmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 15. Juni 2018, 03:18:50 CEST schrieb Masahiro Yamada:
-> According to the Denali User's Guide, this IP needs three clocks:
-> 
->  - clk: controller core clock
-> 
->  - clk_x: bus interface clock
-> 
->  - ecc_clk: clock at which ECC circuitry is run
-> 
-> Currently, denali_dt.c requires a single anonymous clock and its
-> frequency.  However, the driver needs to get the frequency of "clk_x"
-> not "clk".  This is confusing because people tend to assume the
-> anonymous clock means the core clock.  In fact, I got a report of
-> SOCFPGA breakage because the timing parameters are calculated based
-> on a wrong frequency.
-> 
-> Instead of the cheesy implementation, the clocks in the real hardware
-> should be represented in the driver and the DT-binding.
-> 
-> However, adding new clocks would break the existing platforms.  For the
-> backward compatibility, the driver still accepts a single clock just as
-> before.  If clk_x is missing, clk_x_rate is set to a hardcoded value.
-> This is fine for existing DT of Socionext UniPhier, and also fixes the
-> issue of Altera (Intel) SOCFPGA because both platforms use 200 MHz for
-> the bus interface clock.
-> 
-> Fixes: 1bb88666775e ("mtd: nand: denali: handle timing parameters by setup_data_interface()")
-> Cc: linux-stable <stable@vger.kernel.org> #4.14+
-> Reported-by: Richard Weinberger <richard@nod.at>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Reviewed-by: Richard Weinberger <richard@nod.at>
-Reported-by: Philipp Rosenberger <p.rosenberger@linutronix.de>
+--muhfg4g4774nkcmb
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Thanks,
-//richard
+On Mon, Jun 18, 2018 at 10:11:20AM +0800, Chen-Yu Tsai wrote:
+> On Fri, Jun 15, 2018 at 5:14 PM, Maxime Ripard
+> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > On Thu, Jun 14, 2018 at 11:35:44PM +0800, Chen-Yu Tsai wrote:
+> >> Hi,
+> >>
+> >> This series is the remaining A64 syscon changes from the R40 DWMAC
+> >> series. The series aligns how the A64 system control exports a regmap
+> >> for the sun8i DWMAC driver to access with what we've done for the R40.
+> >>
+> >> Originally the A64 used the generic syscon for this bit of hardware.
+> >> But this block also contains mapping bits for the onboard SRAM, used
+> >> by various peripherals, and other vendor specific bits we may use in
+> >> the future. It is by no means generic. And we already have a device
+> >> tree binding and driver for the SRAM part.
+> >>
+> >> The first patch make the SRAM control device export a regmap, exposing
+> >> a single EMAC control register, for the DWMAC driver to consume.
+> >>
+> >> The second and third patches rename the A64 compatible string to read
+> >> "system control", which is what the block is named in the user manual.
+> >>
+> >> The last patch fixes up the device node, and also adds the lone mappable
+> >> SRAM block, which is needed by the Display Engine.
+> >
+> > For the serie:
+> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> 
+> Cool. I'll apply them once you've rebased and pushed out any patches you
+> queued up during the merge window.
+
+All should be pushed now, feel free to apply them :)
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--muhfg4g4774nkcmb--
