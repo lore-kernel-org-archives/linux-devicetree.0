@@ -1,94 +1,71 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: Re: [PATCH v2 07/10] dt-bindings: tc358754: add DT bindings
-Date: Mon, 18 Jun 2018 13:23:54 +0200
-Message-ID: <20180618112356eucas1p1096192ad9dc12c84a3a4beda554b7c44~5PWFYOHzV2540325403eucas1p1m@eucas1p1.samsung.com>
-References: <1527682561-1386-1-git-send-email-m.purski@samsung.com>
-        <CGME20180530121627eucas1p1c8daf24d7c95e9e8b04a523d4662dfd9@eucas1p1.samsung.com>
-        <1527682561-1386-8-git-send-email-m.purski@samsung.com>
-        <20180531040211.GA23051@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 4/7] tty: serial: lantiq: Always use readl()/writel()
+Date: Mon, 18 Jun 2018 13:52:12 +0200
+Message-ID: <CAK8P3a3Zgtk56RAuP=J=-F9VPLxCu=vyGRFpTdBjtnWbOX+4KQ@mail.gmail.com>
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+ <20180612054034.4969-5-songjun.wu@linux.intel.com> <CAK8P3a0K6qezHLcjkeq0zd+iQJQc_qbT2JhtZGrCNRT495sUvQ@mail.gmail.com>
+ <f992c920-7e57-8099-b13c-f3651c0d1594@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180531040211.GA23051@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <f992c920-7e57-8099-b13c-f3651c0d1594@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: "Wu, Songjun" <songjun.wu@linux.intel.com>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, qi-ming.wu@intel.com, linux-clk <linux-clk@vger.kernel.org>, linux-serial@vger.kernel.org, DTML <devicetree@vger.kernel.org>, James Hogan <jhogan@kernel.org>, Jiri Slaby <jslaby@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 05/31/2018 06:02 AM, Rob Herring wrote:
-> On Wed, May 30, 2018 at 02:15:58PM +0200, Maciej Purski wrote:
->> From: Andrzej Hajda <a.hajda@samsung.com>
+On Mon, Jun 18, 2018 at 11:39 AM, Wu, Songjun
+<songjun.wu@linux.intel.com> wrote:
+>
+>
+> On 6/14/2018 6:07 PM, Arnd Bergmann wrote:
 >>
->> The patch adds bindings to Toshiba DSI/LVDS bridge TC358764.
->> Bindings describe power supplies, reset gpio and video interfaces.
+>> On Tue, Jun 12, 2018 at 7:40 AM, Songjun Wu <songjun.wu@linux.intel.com>
+>> wrote:
+>>>
+>>> Previous implementation uses platform-dependent functions
+>>> ltq_w32()/ltq_r32() to access registers. Those functions are not
+>>> available for other SoC which uses the same IP.
+>>> Change to OS provided readl()/writel() and readb()/writeb(), so
+>>> that different SoCs can use the same driver.
+>>>
+>>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
 >>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Signed-off-by: Maciej Purski <m.purski@samsung.com>
->> ---
->>   .../bindings/display/bridge/toshiba,tc358764.txt   | 37 ++++++++++++++++++++++
->>   1 file changed, 37 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
+>> Are there any big-endian machines using this driver? The original
+>> definition
+>> of ltq_r32() uses non-byteswapping __raw_readl() etc, which suggests
+>> that the registers might be wired up in a way that matches the CPU
+>> endianess (this is usally a bad idea in hardware design, but nothing
+>> we can influence in the OS).
 >>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
->> new file mode 100644
->> index 0000000..6eda14f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358764.txt
->> @@ -0,0 +1,37 @@
->> +TC358764 MIPI-DSI to LVDS panel bridge
->> +
->> +Required properties:
->> +  - compatible: "toshiba,tc358764"
->> +  - reg: the virtual channel number of a DSI peripheral
->> +  - vddc-supply: core voltage supply, 1.2V
->> +  - vddio-supply: I/O voltage supply, 1.8V or 3.3V
->> +  - vddlvds-supply: LVDS1/2 voltage supply, 3.3V
->> +  - reset-gpios: a GPIO spec for the reset pin
->> +
->> +The device node can contain zero to two 'port' child nodes, each with one
-> 
-> How would 0 ports be valid?
-> 
+>> When you change it to readl(), that will breaks all machines that rely
+>> on the old behavior on big-endian kernels.
+>
+> It will not break existing big-endian SoC as SWAP_IO_SPACE is disabled.
+>
+> Disable SWAP_IO_SPACE will not impact ltq_r32 as it uses non-byte swapping
+> __raw_readl() and it makes readl work in big-endian kernel too.
+>
+> The old Lantiq platform enable SWAP_IO_SPACE to support PCI as it's a
+> little-endian bus plus PCI TX/RX swap enable impacted both data and control
+> path.
 
-I'll fix this. In my opinion the output LVDS port should be mandatory
-and the input DSI port should be optional, as the bridge might be a DSI
-child node. According to documentation, the bridge can also be I2C controlled.
-In this case, it should contain a DSI input port and LVDS output port.
+Right, I see now what you mean. I was getting confused by how MIPS
+defines the __raw_* accessors differently from other big-endian
+architectures when CONFIG_SWAP_IO_SPACE is disabled.
 
+I suppose this just means you can't use any PCI drivers using __raw_
+accessors or memcpy_fromio(), but your patch to the serial driver is fine.
 
->> +child 'endpoint' node, according to the bindings defined in [1].
->> +The following are properties specific to those nodes.
->> +
->> +port:
->> +  - reg: (required) can be 0 for DSI port or 1 for LVDS port;
->> +
->> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +
->> +	bridge@0 {
->> +		reg = <0>;
->> +		compatible = "toshiba,tc358764";
->> +		vddc-supply = <&vcc_1v2_reg>;
->> +		vddio-supply = <&vcc_1v8_reg>;
->> +		vddlvds-supply = <&vcc_3v3_reg>;
->> +		reset-gpios = <&gpd1 6 GPIO_ACTIVE_LOW>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		port@1 {
->> +			reg = <1>;
->> +			lvds_ep: endpoint {
->> +				remote-endpoint = <&panel_ep>;
->> +			};
->> +		};
->> +	};
->> -- 
->> 2.7.4
->>
-> 
-> 
-> 
+> Alternatively PCI device driver has to do endian swap, It is better to let
+> PCI device driver to do endian swap instead because SWAP_IO_SPACE is global
+> wide macro.
+> Once we set it, other peripheral such as USB has to change its register
+> access as well
+
+I'm not entirely sure what you mean here, I would assume that aiming for
+maximum compatibility with existing drivers would be the main goal here.
+The USB platform drivers can already deal with being compiled for either
+(or both) endianess.
+
+      Arnd
