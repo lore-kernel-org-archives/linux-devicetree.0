@@ -1,96 +1,47 @@
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v5 5/5] ARM: dts: at91: sama5d2 Xplained: add
-	pin muxing for I2S
-Date: Mon, 18 Jun 2018 17:12:39 +0300
-Message-ID: <20180618141239.10892-6-codrin.ciubotariu@microchip.com>
-References: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
+Date: Mon, 18 Jun 2018 16:15:29 +0200
+Message-ID: <CAK8P3a3f6=APcwKERWA4owv7j_gFEqo1tmFtUtVeP82do-QhDg@mail.gmail.com>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+ <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+ <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180618141239.10892-1-codrin.ciubotariu@microchip.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, nicolas.ferre@microchip.com, boris.brezillon@bootlin.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, broonie@kernel.org, sboyd@kernel.org
-Cc: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Cristian.Birsan@microchip.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, dev@lists.96boards.org, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+On Mon, Jun 18, 2018 at 3:22 PM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On 18 June 2018 at 14:21, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Mon, Jun 18, 2018 at 9:45 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Also, given that we can (and do) already describe topologies involving
+> mezzanines by ignoring the connector altogether (which is not entirely
+> unreasonable given the fact that we [as Linaro/96boards] dropped the
+> ball on this one and did not mandate discoverability for mezzanines).
+> So ideally, DTs can be expressed such that older kernels can still use
+> those peripherals.
 
-This patch sets the pin muxing for the I2S controllers
+Not sure. Modeling the connector as a device with its own driver does
+seem like a significant advantage, which to me weighs more than backward
+compatibility with old kernels. We can clearly always describe the devices
+behind the connector individually and ignore the connector on old kernels
+and we should still allow running DT files that work with the old kernels
+on new kernels, but I don't see running new DT files on old kernels as
+essential in this case. Many platforms don't actually care about that case
+at all today (but some do of course).
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-[codrin.ciubotariu@microchip.com: added pin muxing for the second
-controller]
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
-
-Changes in v5:
-	- Previous name was:
-	  [PATCH v4 7/7] ARM: dts: at91: sama5d2 Xplained: add pin muxing for I2S
-
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 28 +++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index e4bbb7e0f793..03917312dec1 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -281,6 +281,11 @@
- 				status = "okay";
- 			};
- 
-+			i2s0: i2s@f8050000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_i2s0_default>;
-+			};
-+
- 			can0: can@f8054000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_can0_default>;
-@@ -424,6 +429,24 @@
- 					bias-disable;
- 				};
- 
-+				pinctrl_i2s0_default: i2s0_default {
-+					pinmux = <PIN_PC1__I2SC0_CK>,
-+						 <PIN_PC2__I2SC0_MCK>,
-+						 <PIN_PC3__I2SC0_WS>,
-+						 <PIN_PC4__I2SC0_DI0>,
-+						 <PIN_PC5__I2SC0_DO0>;
-+					bias-disable;
-+				};
-+
-+				pinctrl_i2s1_default: i2s1_default {
-+					pinmux = <PIN_PA15__I2SC1_CK>,
-+						 <PIN_PA14__I2SC1_MCK>,
-+						 <PIN_PA16__I2SC1_WS>,
-+						 <PIN_PA17__I2SC1_DI0>,
-+						 <PIN_PA18__I2SC1_DO0>;
-+					bias-disable;
-+				};
-+
- 				pinctrl_key_gpio_default: key_gpio_default {
- 					pinmux = <PIN_PB9__GPIO>;
- 					bias-pull-up;
-@@ -546,6 +569,11 @@
- 				status = "okay";
- 			};
- 
-+			i2s1: i2s@fc04c000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_i2s1_default>;
-+			};
-+
- 			can1: can@fc050000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_can1_default>;
--- 
-2.17.1
+      Arnd
