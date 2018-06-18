@@ -1,47 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/2] Add R8A77980/Condor PCIe support
-Date: Mon, 18 Jun 2018 11:36:23 +0200
-Message-ID: <20180618093623.s33bkiptazxem463@verge.net.au>
-References: <b37d458c-071a-833a-2057-be8a07c880be@cogentembedded.com>
+From: "Wu, Songjun" <songjun.wu@linux.intel.com>
+Subject: Re: [PATCH 4/7] tty: serial: lantiq: Always use readl()/writel()
+Date: Mon, 18 Jun 2018 17:39:53 +0800
+Message-ID: <f992c920-7e57-8099-b13c-f3651c0d1594@linux.intel.com>
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+ <20180612054034.4969-5-songjun.wu@linux.intel.com>
+ <CAK8P3a0K6qezHLcjkeq0zd+iQJQc_qbT2JhtZGrCNRT495sUvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <b37d458c-071a-833a-2057-be8a07c880be@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0K6qezHLcjkeq0zd+iQJQc_qbT2JhtZGrCNRT495sUvQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, qi-ming.wu@intel.com, linux-clk <linux-clk@vger.kernel.org>, linux-serial@vger.kernel.org, DTML <devicetree@vger.kernel.org>, James Hogan <jhogan@kernel.org>, Jiri Slaby <jslaby@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 10:16:32PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-20180614v2-v4.17' tag. We're adding the R8A77980 PCIe related
-> device nodes and then enable PCIe on the Condor board. These patches depend
-> on the R8A77980 PCIe PHY driver support in order to work properly. Note that
-> in case the PCIe PHY driver is not enabled, the kernel will BUG() due to I/O
-> space page leak in the PCIe driver...
 
-Is that problem specific to the presence of PCIe nodes for
-condor/r8a77980 or is it also true of other (R-Car) boards where
-PCIe is enabled?
 
-Regardless, it sounds like these patches expose a kernel bug.
-Is it being fixed?
+On 6/14/2018 6:07 PM, Arnd Bergmann wrote:
+> On Tue, Jun 12, 2018 at 7:40 AM, Songjun Wu <songjun.wu@linux.intel.com> wrote:
+>> Previous implementation uses platform-dependent functions
+>> ltq_w32()/ltq_r32() to access registers. Those functions are not
+>> available for other SoC which uses the same IP.
+>> Change to OS provided readl()/writel() and readb()/writeb(), so
+>> that different SoCs can use the same driver.
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
+> Are there any big-endian machines using this driver? The original definition
+> of ltq_r32() uses non-byteswapping __raw_readl() etc, which suggests
+> that the registers might be wired up in a way that matches the CPU
+> endianess (this is usally a bad idea in hardware design, but nothing
+> we can influence in the OS).
+>
+> When you change it to readl(), that will breaks all machines that rely
+> on the old behavior on big-endian kernels.
+>
+>        Arnd
+It will not break existing big-endian SoC as SWAP_IO_SPACE is disabled.
 
-> 
-> [1/2] arm64: dts: renesas: r8a77980: add PCIe support
-> [2/2] arm64: dts: renesas: condor: add PCIe support
-> 
-> WBR, Sergei
-> 
+Disable SWAP_IO_SPACE will not impact ltq_r32 as it uses non-byte 
+swapping __raw_readl() and it makes readl work in big-endian kernel too.
+
+The old Lantiq platform enable SWAP_IO_SPACE to support PCI as it's a 
+little-endian bus plus PCI TX/RX swap enable impacted both data and 
+control path.
+Alternatively PCI device driver has to do endian swap, It is better to 
+let PCI device driver to do endian swap instead because SWAP_IO_SPACE is 
+global wide macro.
+Once we set it, other peripheral such as USB has to change its register 
+access as well
