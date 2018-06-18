@@ -1,99 +1,60 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: mailbox: provide imx-mailbox
- documentation
-Date: Mon, 18 Jun 2018 08:53:37 +0000
-Message-ID: <9d436d3a9c534b0c7af339aa13e91c1293a55503.camel@nxp.com>
-References: <20180615095107.24610-1-o.rempel@pengutronix.de>
- <20180615095107.24610-3-o.rempel@pengutronix.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v1 0/5] Renesas R9A06G032 PINCTRL Driver
+Date: Mon, 18 Jun 2018 10:57:18 +0200
+Message-ID: <CAMuHMdVL-00gb7ZfgNGr8-VawFUpg+iY5mpPF6UZPfjFqM1_jg@mail.gmail.com>
+References: <1528974029-29617-1-git-send-email-michel.pollet@bp.renesas.com> <CACRpkdbX0R+ipasLfZi80yf2OBU0TuDT-0KoUJBvrQz3Zj6eFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180615095107.24610-3-o.rempel@pengutronix.de>
-Content-Language: en-US
-Content-ID: <D902CB9D086365419955058186AFF66A@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbX0R+ipasLfZi80yf2OBU0TuDT-0KoUJBvrQz3Zj6eFQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Michel Pollet <buserror+upstream@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Magnus Damm <damm+renesas@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-06-15 at 11:51 +0200, Oleksij Rempel wrote:
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  .../bindings/mailbox/imx-mailbox.txt          | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
+Hi Linus,
 
-A recent patch was posted which adds a similar but different binding
-for the MU on 8qm/8qxp SOCs:
+On Mon, Jun 18, 2018 at 10:46 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Jun 14, 2018 at 1:00 PM, Michel Pollet
+> <michel.pollet@bp.renesas.com> wrote:
+>
+> > *WARNING* -- this requires:
+> > + R9A06G032 base patch v9
+> > + R9A06G032 SMP patch v5
+>
+> Is that required for the pin controller itself (compile-time dependence)
+> or is it required to boot the system (run-time dependence)?
 
-https://patchwork.kernel.org/patch/10468885/
+Obviously the last 3 patches in the series touch the DTS, so they depend
+on the base patch adding the DTS files.
 
-Looking at manuals side-by-side the hardware seems to be the same so
-there should be a single binding. Right?
+> We can merge support for pin control ahead, that's fine.
 
-That series I pointed to uses the MU to implement a communication with
-a special "SCU" core which runs NXP firmware for handling details like
-power management. However imx8 socs also have other MUs and M4 cores
-for customers to use pretty exactly like they would on 7d.
+The actual pinctrl driver can indeed be merged separately.
 
-The hardware exposes a very generic interface and my impression is that
- drivers for the MU are actually highly specific to what is on the
-other side of the MU. For example your driver code seems to be mapping
-the 4 MU registers to separate "channels" but for SCU messages are
-written in all registers in a round-robin way.
+> > This implements the pinctrl driver for the R9A06G032.
+>
+> Geert Uytterhoeven and Laurent Pinchart maintains the Renesas pin
+> controllers, and this one is for some reason a totally new one in
+> drivers/pinctrl/pinctrl-r9a06g032.c
+>
+> Is it totally different from the other "great old ones" in the SuperH-PFC
+> series or is there some other reason why it was done like this?
 
-Shouldn't your MU-using driver be a separate node which references the
-MU by phandle? Like in this patch:
+Yes it is, cfr. drivers/pinctrl/pinctrl-rza1.c, which lives outside sh-pfc, too.
 
-https://patchwork.kernel.org/patch/10468887/
+Of course I can take it through my sh-pfc tree, once the rough edges have been
+removed.
 
-> diff --git a/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
-> new file mode 100644
-> index 000000000000..1577b86f1206
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/imx-mailbox.txt
-> @@ -0,0 +1,35 @@
-> +i.MX Messaging Unit
-> +===================
-> +
-> +The i.MX Messaging Unit (MU) contains two register sets: "A" and "B". In most
-> +cases they are accessible from all Processor Units. On one hand, at least for
-> +mailbox functionality, it makes no difference which application or processor is
-> +using which set of the MU. On other hand, the register sets for each of the MU
-> +parts are not identical.
-> +
-> +Required properties:
-> +- compatible :	Shell be one of:
-> +                    "fsl,imx7s-mu-a" and "fsl,imx7s-mu-b" for i.MX7S or i.MX7D
-> +- reg :		physical base address of the mailbox and length of
-> +		memory mapped region.
-> +- #mbox-cells:	Common mailbox binding property to identify the number
-> +		of cells required for the mailbox specifier. Should be 1.
-> +- interrupts :	The interrupt number
-> +- clocks     :  phandle to the input clock.
-> +
-> +Example:
-> +	mu0a: mailbox@30aa0000 {
-> +		compatible = "fsl,imx7s-mu-a";
-> +		reg = <0x30aa0000 0x28>;
-> +		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clks IMX7D_MU_ROOT_CLK>;
-> +		#mbox-cells = <1>;
-> +	};
-> +
-> +	mu0b: mailbox@30ab0000 {
-> +		compatible = "fsl,imx7s-mu-b";
-> +		reg = <0x30ab0000 0x28>;
-> +		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clks IMX7D_MU_ROOT_CLK>;
-> +		#mbox-cells = <1>;
-> +	};
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
