@@ -1,174 +1,184 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v2 00/27] Add support for R40 HDMI pipeline
-Date: Mon, 18 Jun 2018 16:43:56 +0200
-Message-ID: <15787507.kzqBcLUy0z@jernej-laptop>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net> <5084905.C41JrL457O@jernej-laptop> <CAMty3ZB9f_HrbJDjbAEPvf4UhcEhDm8hCaB8yq-yeVkFbtSTTg@mail.gmail.com>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 00/19] Sunxi-Cedrus driver for the Allwinner
+ Video Engine, using media requests
+Date: Mon, 18 Jun 2018 16:58:24 +0200
+Message-ID: <20180618145843.14631-1-paul.kocialkowski@bootlin.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB6EKT7MQKGQEUDTOIXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRB64RT7MQKGQEK4MJAEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZB9f_HrbJDjbAEPvf4UhcEhDm8hCaB8yq-yeVkFbtSTTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dne ponedeljek, 18. junij 2018 ob 14:58:02 CEST je Jagan Teki napisal(a):
-> On Thu, Jun 14, 2018 at 10:59 PM, Jernej =C5=A0krabec
->=20
-> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> > Dne =C4=8Detrtek, 14. junij 2018 ob 19:16:46 CEST je Jagan Teki napisal=
-(a):
-> >> On Thu, Jun 14, 2018 at 8:04 PM, Jernej =C5=A0krabec <jernej.skrabec@s=
-iol.net>
-> >=20
-> > wrote:
-> >> > Dne =C4=8Detrtek, 14. junij 2018 ob 09:12:41 CEST je Jagan Teki napi=
-sal(a):
-> >> >> On Wed, Jun 13, 2018 at 1:30 AM, Jernej Skrabec
-> >> >> <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> >> >=20
-> >> > wrote:
-> >> >> > This series adds support for R40 HDMI pipeline. It is a bit speci=
-al
-> >> >> > than other already supported pipelines because it has additional
-> >> >> > unit
-> >> >> > called TCON TOP responsible for relationship configuration betwee=
-n
-> >> >> > mixers, TCONs and HDMI. Additionally, it has additional gates for
-> >> >> > DSI
-> >> >> > and TV TCONs, TV encoder clock settings and pin muxing between LC=
-D
-> >> >> > and TV encoders.
-> >> >> >=20
-> >> >> > However, it seems that TCON TOP will become a norm, since newer
-> >> >> > Allwinner SoCs like H6 also have this unit.
-> >> >> >=20
-> >> >> > I tested different possible configurations:
-> >> >> > - mixer0 <> TCON-TV0 <> HDMI
-> >> >> > - mixer0 <> TCON-TV1 <> HDMI
-> >> >> > - mixer1 <> TCON-TV0 <> HDMI
-> >> >> > - mixer1 <> TCON-TV1 <> HDMI
-> >> >> >=20
-> >> >> > Please review.
-> >> >> >=20
-> >> >> > Best regards,
-> >> >> > Jernej
-> >> >> >=20
-> >> >> > Changes from v1:
-> >> >> > - Split DT bindings patch and updated description
-> >> >> > - Split HDMI PHY patch
-> >> >> > - Move header file from TCON TOP patch to dt bindings patch
-> >> >> > - Added Rob reviewed-by tag
-> >> >> > - Used clk_hw_register_gate() instead of custom gate registration
-> >> >> > code
-> >> >> > - Reworked TCON TOP to be part of of-graph. Because of that, a lo=
-t
-> >> >> > of
-> >> >> >=20
-> >> >> >   new patches were added.
-> >> >> >=20
-> >> >> > - Droped mixer index quirk patch
-> >> >> > - Reworked TCON support for TCON TOP
-> >> >> > - Updated commit messages
-> >> >> >=20
-> >> >> > Jernej Skrabec (27):
-> >> >> >   clk: sunxi-ng: r40: Add minimal rate for video PLLs
-> >> >> >   clk: sunxi-ng: r40: Allow setting parent rate to display relate=
-d
-> >> >> >  =20
-> >> >> >     clocks
-> >> >> >  =20
-> >> >> >   clk: sunxi-ng: r40: Export video PLLs
-> >> >> >   dt-bindings: display: sunxi-drm: Add TCON TOP description
-> >> >> >   drm/sun4i: Add TCON TOP driver
-> >> >> >   drm/sun4i: Fix releasing node when enumerating enpoints
-> >> >> >   drm/sun4i: Split out code for enumerating endpoints in output p=
-ort
-> >> >> >   drm/sun4i: Add support for traversing graph with TCON TOP
-> >> >> >   drm/sun4i: Don't skip TCONs if they don't have channel 0
-> >> >> >   dt-bindings: display: sun4i-drm: Add R40 TV TCON description
-> >> >> >   drm/sun4i: tcon: Add support for tcon-top gate
-> >> >> >   drm/sun4i: tcon: Generalize engine search algorithm
-> >> >> >   drm/sun4i: Don't check for LVDS and RGB when TCON has only ch1
-> >> >> >   drm/sun4i: Don't check for panel or bridge on TV TCONs
-> >> >> >   drm/sun4i: Add support for R40 TV TCON
-> >> >> >   dt-bindings: display: sun4i-drm: Add R40 mixer compatibles
-> >> >> >   drm/sun4i: Add support for R40 mixers
-> >> >> >   dt-bindings: display: sun4i-drm: Add description of A64 HDMI PH=
-Y
-> >> >> >   drm/sun4i: Enable DW HDMI PHY clock
-> >> >> >   drm/sun4i: Don't change clock bits in DW HDMI PHY driver
-> >> >> >   drm/sun4i: DW HDMI PHY: Add support for second PLL
-> >> >> >   drm/sun4i: Add support for second clock parent to DW HDMI PHY c=
-lk
-> >> >> >  =20
-> >> >> >     driver
-> >> >> >  =20
-> >> >> >   drm/sun4i: Add support for A64 HDMI PHY
-> >> >> >   drm: of: Export drm_crtc_port_mask()
-> >> >> >   drm/sun4i: DW HDMI: Expand algorithm for possible crtcs
-> >> >> >   ARM: dts: sun8i: r40: Add HDMI pipeline
-> >> >> >   ARM: dts: sun8i: r40: Enable HDMI output on BananaPi M2 Ultra
-> >> >>=20
-> >> >> Tested whole series on top of linux-next.
-> >> >>=20
-> >> >> Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> >> >=20
-> >> > Thanks!
-> >>=20
-> >> I've V40 board, which is same as R40. I'm able to detect the HDMI but
-> >> seems edid not detecting properly.
-> >>=20
-> >> [    0.983007] sun4i-drm display-engine: bound 1100000.mixer (ops
-> >> 0xc074a80c) [    0.999043] sun4i-drm display-engine: bound 1200000.mix=
-er
-> >> (ops 0xc074a80c) [    1.006229] sun4i-drm display-engine: bound
-> >> 1c70000.tcon-top (ops 0xc074e2ac) [    1.013609] sun4i-drm
-> >> display-engine:
-> >> bound 1c73000.lcd-controller (ops 0xc0747a28)
-> >> [    1.053988] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller
-> >> v1.32a with HDCP (sun8i_dw_hdmi_phy)
-> >> [    1.063913] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI
-> >> I2C bus driver
-> >> [    1.071683] sun4i-drm display-engine: bound 1ee0000.hdmi (ops
-> >> 0xc074a298) [    1.078484] [drm] Supports vblank timestamp caching Rev=
- 2
-> >> (21.10.2013). [    1.085098] [drm] No driver support for vblank
-> >> timestamp query. [ 1.091055] [drm] Cannot find any crtc or sizes
-> >> [    1.095995] [drm] Initialized sun4i-drm 1.0.0 20150629 for
-> >> display-engine on minor 0
-> >=20
-> > This seems like DT issue. Can you post somewhere your V40 DTSI (if it i=
-s
-> > different to R40) and board DTS?
->=20
-> same dtsi shared between r40 and v40, here is board dts support for HDMI[=
-1]
->=20
-> [1] https://paste.ubuntu.com/p/wqVz38BHrM/
+This is the fourth iteration of the updated Sunxi-Cedrus driver,
+that supports the Video Engine found in most Allwinner SoCs, starting
+with the A10. It was tested on the A13, A20 and A33.
 
-This patch looks like exactly the same as mine for BananaPi M2U, so there=
-=20
-should be no issues.
+The initial version of this driver[0] was originally written and
+submitted by Florent Revest using a previous version of the request API
+that is necessary to provide coherency between controls and the buffers
+they apply to.
 
-What about VCC-HDMI? Is powered? Can you measure it to check?
+The driver was adapted to use the latest version of the media request
+API[1], as submitted by Hand Verkuil. Media request API support is a
+hard requirement for the Sunxi-Cedrus driver.
 
-Best regards,
-Jernej
+The driver itself currently only supports MPEG2 and more codecs will be
+added to the driver eventually. The output frames provided by the
+Video Engine are in a multi-planar 32x32-tiled YUV format, with a plane
+for luminance (Y) and a plane for chrominance (UV). A specific format is
+introduced in the V4L2 API to describe it.
 
+This implementation is based on the significant work that was conducted
+by various members of the linux-sunxi community for understanding and
+documenting the Video Engine's innards.
 
+Remaining tasks:
+* verifying that the defined PCT types apply as-is to all MPEG formats;
+* cleaning up register descriptions and documenting the fields used;
+* testing on more platforms.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Changes since v3:
+* updated to version 15 of the media request API;
+* got rid of untested MPEG1 support;
+* added definitons for picture coding types;
+* added documentation about MPEG2 slice header fields;
+* added documentation about MPEG2 slice format;
+* added documentation about the MB32 NV12 format;
+* added MPEG2 slice header validation;
+* removed the assigned-clocks property;
+* reworked and fixed error paths;
+* harmonized debug prints, with v4l2 helpers when applicable;
+* checked the series through checkpatch;
+* switched to SPDX license headers;
+* renamed MPEG2 frame header to slice header for consistency and clarity;
+* removed A20 SRAM compatible from the driver's list.
+
+Changes since v2:
+* updated to version 13 of the media request API;
+* integrated various changes from Maxime Ripard;
+* reworked memory reservation to use CMA, dynamic allocation and allow
+  DMABUF;
+* removed reserved memory binding since the CMA pool is the default one
+  (and allow ENODEV in the driver, for that use case);
+* added SRAM controller support for the SRAM region used by the VE;
+* updated the device-tree bindings the for SRAM region;
+* added per-platform bindings;
+* added A13 support;
+* renamed VE node name and label;
+* fixed Florent's authorship for the MPEG2 headers;
+* added a MAINTAINERS entry.
+
+Changes since v1:
+* use the latest version of the request API for Hans Verkuil;
+* added media controller support and dependency
+* renamed v4l2 format to the more explicit V4L2_PIX_FMT_MB32_NV12;
+* reworked bindings documentation;
+* moved driver to drivers/media/platforms/sunxi/cedrus to pair with
+  incoming CSI support ;
+* added a workqueue and lists to schedule buffer completion, since it
+  cannot be done in interrupt context;
+* split mpeg2 support into a setup and a trigger function to avoid race
+  condition;
+* split video-related ops to a dedicated sunxi_cedrus_video file;
+* cleaned up the included headers for each file;
+* used device PFN offset instead of subtracting PHYS_BASE;
+* used reset_control_reset instead of assert+deassert;
+* put the device in reset when removing driver;
+* changed dt bindings to use the last 96 Mib of the first 256 MiB of
+  DRAM;
+* made it clear in the mpeg frame header structure that forward and
+  backward indexes are used as reference frames for motion vectors;
+* lots of small cosmetic and consistency changes, including naming
+  harmonization and headers text rework.
+
+Cheers!
+
+[0]: https://patchwork.kernel.org/patch/9299073/
+[1]: https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=reqv15
+
+Maxime Ripard (4):
+  drivers: soc: sunxi: Add support for the C1 SRAM region
+  ARM: sun5i: Add support for the C1 SRAM region with the SRAM
+    controller
+  ARM: sun7i-a20: Add support for the C1 SRAM region with the SRAM
+    controller
+  ARM: sun8i-a33: Add SRAM controller node and C1 SRAM region
+
+Paul Kocialkowski (15):
+  dt-bindings: sram: sunxi: Add A13, A20 and A33 SRAM controller
+    bindings
+  dt-bindings: sram: sunxi: Add A10 binding for the C1 SRAM region
+  dt-bindings: sram: sunxi: Add A13 binding for the C1 SRAM region
+  dt-bindings: sram: sunxi: Add A20 binding for the C1 SRAM region
+  dt-bindings: sram: sunxi: Add A33 binding for the C1 SRAM region
+  drivers: soc: sunxi: Add dedicated compatibles for the A13 and A33
+  ARM: dts: sun5i: Use dedicated SRAM controller compatible
+  ARM: dts: sun7i-a20: Also use dedicated SRAM controller compatible
+  media: v4l: Add definitions for MPEG2 slice format and header metadata
+  media: v4l: Add definition for Allwinner's MB32-tiled NV12 format
+  dt-bindings: media: Document bindings for the Sunxi-Cedrus VPU driver
+  media: platform: Add Sunxi-Cedrus VPU decoder driver
+  ARM: dts: sun5i: Add Video Engine and reserved memory nodes
+  ARM: dts: sun7i-a20: Add Video Engine and reserved memory nodes
+  ARM: dts: sun8i-a33: Add Video Engine and reserved memory nodes
+
+ .../bindings/media/sunxi-cedrus.txt           |  53 ++
+ .../devicetree/bindings/sram/sunxi-sram.txt   |  13 +
+ .../media/uapi/v4l/extended-controls.rst      |  73 +++
+ .../media/uapi/v4l/pixfmt-compressed.rst      |   5 +
+ .../media/uapi/v4l/pixfmt-reserved.rst        |  15 +-
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/sun5i.dtsi                  |  44 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi              |  45 +-
+ arch/arm/boot/dts/sun8i-a33.dtsi              |  51 ++
+ drivers/media/platform/Kconfig                |   2 +
+ drivers/media/platform/Makefile               |   1 +
+ drivers/media/platform/sunxi/Kconfig          |  15 +
+ drivers/media/platform/sunxi/Makefile         |   1 +
+ drivers/media/platform/sunxi/cedrus/Kconfig   |  13 +
+ drivers/media/platform/sunxi/cedrus/Makefile  |   3 +
+ drivers/media/platform/sunxi/cedrus/cedrus.c  | 327 ++++++++++++
+ drivers/media/platform/sunxi/cedrus/cedrus.h  | 117 ++++
+ .../media/platform/sunxi/cedrus/cedrus_dec.c  | 170 ++++++
+ .../media/platform/sunxi/cedrus/cedrus_dec.h  |  27 +
+ .../media/platform/sunxi/cedrus/cedrus_hw.c   | 262 +++++++++
+ .../media/platform/sunxi/cedrus/cedrus_hw.h   |  30 ++
+ .../platform/sunxi/cedrus/cedrus_mpeg2.c      | 146 +++++
+ .../platform/sunxi/cedrus/cedrus_mpeg2.h      |  24 +
+ .../media/platform/sunxi/cedrus/cedrus_regs.h | 167 ++++++
+ .../platform/sunxi/cedrus/cedrus_video.c      | 502 ++++++++++++++++++
+ .../platform/sunxi/cedrus/cedrus_video.h      |  23 +
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  44 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
+ drivers/soc/sunxi/sunxi_sram.c                |  12 +
+ include/uapi/linux/v4l2-controls.h            |  30 ++
+ include/uapi/linux/videodev2.h                |   4 +
+ 31 files changed, 2225 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/sunxi-cedrus.txt
+ create mode 100644 drivers/media/platform/sunxi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/cedrus/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/cedrus/Makefile
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_dec.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_dec.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_hw.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_hw.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_mpeg2.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_mpeg2.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_regs.h
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_video.c
+ create mode 100644 drivers/media/platform/sunxi/cedrus/cedrus_video.h
+
+-- 
+2.17.0
