@@ -1,153 +1,84 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 00/27] Add support for R40 HDMI pipeline
-Date: Mon, 18 Jun 2018 18:28:02 +0530
-Message-ID: <CAMty3ZB9f_HrbJDjbAEPvf4UhcEhDm8hCaB8yq-yeVkFbtSTTg@mail.gmail.com>
-References: <20180612200036.21483-1-jernej.skrabec@siol.net>
- <2742773.k39D243pH3@jernej-laptop> <CAMty3ZBt33q9HWm7n3SrON_Y51g+bsQNfoHajCCVzuKZLGHkjw@mail.gmail.com>
- <5084905.C41JrL457O@jernej-laptop>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 0/5] RFC: Mezzanine handling for 96boards
+Date: Mon, 18 Jun 2018 15:22:01 +0200
+Message-ID: <CAKv+Gu-gAkfRsEUOc=iyxi6Twvg9cbvWNqNHRS2HzUDZg8xUhg@mail.gmail.com>
+References: <20180618074556.6944-1-linus.walleij@linaro.org>
+ <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBW6YT3MQKGQEQWQTBXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5084905.C41JrL457O@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a2KqoX-squhGc8TBuJ==8xxELsuy-H+c1+C7Fu7Z4OjDA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, dev@lists.96boards.org, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 14, 2018 at 10:59 PM, Jernej =C5=A0krabec
-<jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Dne =C4=8Detrtek, 14. junij 2018 ob 19:16:46 CEST je Jagan Teki napisal(a=
-):
->> On Thu, Jun 14, 2018 at 8:04 PM, Jernej =C5=A0krabec <jernej.skrabec@sio=
-l.net>
-> wrote:
->> > Dne =C4=8Detrtek, 14. junij 2018 ob 09:12:41 CEST je Jagan Teki napisa=
-l(a):
->> >> On Wed, Jun 13, 2018 at 1:30 AM, Jernej Skrabec <jernej.skrabec@siol.=
-net>
->> >
->> > wrote:
->> >> > This series adds support for R40 HDMI pipeline. It is a bit special
->> >> > than other already supported pipelines because it has additional un=
-it
->> >> > called TCON TOP responsible for relationship configuration between
->> >> > mixers, TCONs and HDMI. Additionally, it has additional gates for D=
-SI
->> >> > and TV TCONs, TV encoder clock settings and pin muxing between LCD
->> >> > and TV encoders.
->> >> >
->> >> > However, it seems that TCON TOP will become a norm, since newer
->> >> > Allwinner SoCs like H6 also have this unit.
->> >> >
->> >> > I tested different possible configurations:
->> >> > - mixer0 <> TCON-TV0 <> HDMI
->> >> > - mixer0 <> TCON-TV1 <> HDMI
->> >> > - mixer1 <> TCON-TV0 <> HDMI
->> >> > - mixer1 <> TCON-TV1 <> HDMI
->> >> >
->> >> > Please review.
->> >> >
->> >> > Best regards,
->> >> > Jernej
->> >> >
->> >> > Changes from v1:
->> >> > - Split DT bindings patch and updated description
->> >> > - Split HDMI PHY patch
->> >> > - Move header file from TCON TOP patch to dt bindings patch
->> >> > - Added Rob reviewed-by tag
->> >> > - Used clk_hw_register_gate() instead of custom gate registration c=
-ode
->> >> > - Reworked TCON TOP to be part of of-graph. Because of that, a lot =
-of
->> >> >
->> >> >   new patches were added.
->> >> >
->> >> > - Droped mixer index quirk patch
->> >> > - Reworked TCON support for TCON TOP
->> >> > - Updated commit messages
->> >> >
->> >> > Jernej Skrabec (27):
->> >> >   clk: sunxi-ng: r40: Add minimal rate for video PLLs
->> >> >   clk: sunxi-ng: r40: Allow setting parent rate to display related
->> >> >
->> >> >     clocks
->> >> >
->> >> >   clk: sunxi-ng: r40: Export video PLLs
->> >> >   dt-bindings: display: sunxi-drm: Add TCON TOP description
->> >> >   drm/sun4i: Add TCON TOP driver
->> >> >   drm/sun4i: Fix releasing node when enumerating enpoints
->> >> >   drm/sun4i: Split out code for enumerating endpoints in output por=
-t
->> >> >   drm/sun4i: Add support for traversing graph with TCON TOP
->> >> >   drm/sun4i: Don't skip TCONs if they don't have channel 0
->> >> >   dt-bindings: display: sun4i-drm: Add R40 TV TCON description
->> >> >   drm/sun4i: tcon: Add support for tcon-top gate
->> >> >   drm/sun4i: tcon: Generalize engine search algorithm
->> >> >   drm/sun4i: Don't check for LVDS and RGB when TCON has only ch1
->> >> >   drm/sun4i: Don't check for panel or bridge on TV TCONs
->> >> >   drm/sun4i: Add support for R40 TV TCON
->> >> >   dt-bindings: display: sun4i-drm: Add R40 mixer compatibles
->> >> >   drm/sun4i: Add support for R40 mixers
->> >> >   dt-bindings: display: sun4i-drm: Add description of A64 HDMI PHY
->> >> >   drm/sun4i: Enable DW HDMI PHY clock
->> >> >   drm/sun4i: Don't change clock bits in DW HDMI PHY driver
->> >> >   drm/sun4i: DW HDMI PHY: Add support for second PLL
->> >> >   drm/sun4i: Add support for second clock parent to DW HDMI PHY clk
->> >> >
->> >> >     driver
->> >> >
->> >> >   drm/sun4i: Add support for A64 HDMI PHY
->> >> >   drm: of: Export drm_crtc_port_mask()
->> >> >   drm/sun4i: DW HDMI: Expand algorithm for possible crtcs
->> >> >   ARM: dts: sun8i: r40: Add HDMI pipeline
->> >> >   ARM: dts: sun8i: r40: Enable HDMI output on BananaPi M2 Ultra
->> >>
->> >> Tested whole series on top of linux-next.
->> >>
->> >> Tested-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> >
->> > Thanks!
+On 18 June 2018 at 14:21, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, Jun 18, 2018 at 9:45 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> This is a proposal for how to handle the non-discoverable
+>> 96boards plug-in expansion boards called "mezzanines" in the
+>> Linux kernel. It is a working RFC series meant for discussion
+>> at the moment.
 >>
->> I've V40 board, which is same as R40. I'm able to detect the HDMI but
->> seems edid not detecting properly.
+>> The RFC was done on the brand new Ultra96 board from Xilinx
+>> with a Secure96 mezzanine expansion board. The main part
+>> is in patch 4, the rest is enabling and examples.
 >>
->> [    0.983007] sun4i-drm display-engine: bound 1100000.mixer (ops
->> 0xc074a80c) [    0.999043] sun4i-drm display-engine: bound 1200000.mixer
->> (ops 0xc074a80c) [    1.006229] sun4i-drm display-engine: bound
->> 1c70000.tcon-top (ops 0xc074e2ac) [    1.013609] sun4i-drm display-engin=
-e:
->> bound 1c73000.lcd-controller (ops 0xc0747a28)
->> [    1.053988] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX controller
->> v1.32a with HDCP (sun8i_dw_hdmi_phy)
->> [    1.063913] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare HDMI
->> I2C bus driver
->> [    1.071683] sun4i-drm display-engine: bound 1ee0000.hdmi (ops 0xc074a=
-298)
->> [    1.078484] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013=
-).
->> [    1.085098] [drm] No driver support for vblank timestamp query. [
->> 1.091055] [drm] Cannot find any crtc or sizes
->> [    1.095995] [drm] Initialized sun4i-drm 1.0.0 20150629 for
->> display-engine on minor 0
+>> The code can be obtained from here:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=ultra96
+>>
+>> You can for example probably augment the DTS file for any
+>> upstream-supported 96board and get the Secure96 going with
+>> it with minor efforts.
 >
-> This seems like DT issue. Can you post somewhere your V40 DTSI (if it is
-> different to R40) and board DTS?
+> Hi Linus,
+>
+> Thanks for your work on solving this long-standing problem. I've just
+> read through your patches briefly and have a few thoughts:
+>
+> - I really like the idea of having C code deal with the mezzanine
+>   connector itself, acting as an intermediate to tie a number of
+>   boards to a number of add-on cards, this seems much simpler than
+>   trying to do everything with overlays or one of the other more
+>   generic mechanisms.
+>
+> - I don't like the idea of having the bus driver contain a list of possible
+>   add-ons, this seems to go against our usual driver model. What
+>   I think we want instead is to make the connector itself a proper
+>   bus_type, to allow drivers to register against it as loadable modules,
+>   and devices (maybe limited to one device) being created as probed
+>   from DT or some other method as you describe.
+>
+> - You export symbols in the mezzanine_* namespace, which I think
+>    is a bit too generic and should perhaps contain something related
+>    to  96boards in its name to make it less ambiguous. I suspect we
+>    would add a number of further connectors for hats, capes, lures etc,
+>    which could all be described as mezzanines. One open question
+>    is how we structure the commonality between the various
+>    connectors, but we can defer that until we have more than one
+>    or two of them.
+>
 
-same dtsi shared between r40 and v40, here is board dts support for HDMI[1]
+Hello all,
 
-[1] https://paste.ubuntu.com/p/wqVz38BHrM/
+We should also consider firmware use of the mezzanines. For instance,
+the Secure96 has a RNG which UEFI may want to use so the early boot
+code can access is for KASLR. It also has a TPM, which should not be
+reset/reinitialized/etc by the OS if we want to make meaningful use of
+it.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Also, given that we can (and do) already describe topologies involving
+mezzanines by ignoring the connector altogether (which is not entirely
+unreasonable given the fact that we [as Linaro/96boards] dropped the
+ball on this one and did not mandate discoverability for mezzanines).
+So ideally, DTs can be expressed such that older kernels can still use
+those peripherals.
