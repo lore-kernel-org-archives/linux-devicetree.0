@@ -1,112 +1,62 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 4/6] dts: bindings: Document device tree binding for CATU
-Date: Mon, 18 Jun 2018 11:56:17 +0100
-Message-ID: <1529319379-17895-5-git-send-email-suzuki.poulose@arm.com>
-References: <1529319379-17895-1-git-send-email-suzuki.poulose@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/7] MIPS: dts: Add aliases node for lantiq danube serial
+Date: Mon, 18 Jun 2018 12:59:24 +0200
+Message-ID: <CAK8P3a0WVxHU98zjY6d8jN0bDtwabFkrbcxr3a7xRkxSjD2ZLg@mail.gmail.com>
+References: <20180612054034.4969-1-songjun.wu@linux.intel.com>
+ <20180612054034.4969-2-songjun.wu@linux.intel.com> <CAK8P3a1=CBahrEE2uDRfdrSi=ALc5LBED1=KbLbLa40c9H8dmQ@mail.gmail.com>
+ <539411c1-82b7-cf76-71cf-d50f3303f50f@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529319379-17895-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <539411c1-82b7-cf76-71cf-d50f3303f50f@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, devicetree@vger.kernel.org, frowand.list@gmail.com, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: "Wu, Songjun" <songjun.wu@linux.intel.com>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@intel.com, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, qi-ming.wu@intel.com, linux-clk <linux-clk@vger.kernel.org>, linux-serial@vger.kernel.org, DTML <devicetree@vger.kernel.org>, James Hogan <jhogan@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Document CATU device-tree bindings. CATU augments the TMC-ETR
-by providing an improved Scatter Gather mechanism for streaming
-trace data to non-contiguous system RAM pages.
+On Mon, Jun 18, 2018 at 11:42 AM, Wu, Songjun
+<songjun.wu@linux.intel.com> wrote:
+> On 6/14/2018 6:03 PM, Arnd Bergmann wrote:
+>>
+>> On Tue, Jun 12, 2018 at 7:40 AM, Songjun Wu <songjun.wu@linux.intel.com>
+>> wrote:
+>>>
+>>> Previous implementation uses a hard-coded register value to check if
+>>> the current serial entity is the console entity.
+>>> Now the lantiq serial driver uses the aliases for the index of the
+>>> serial port.
+>>> The lantiq danube serial dts are updated with aliases to support this.
+>>>
+>>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
+>>> ---
+>>>
+>>>   arch/mips/boot/dts/lantiq/danube.dtsi | 6 +++++-
+>>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi
+>>> b/arch/mips/boot/dts/lantiq/danube.dtsi
+>>> index 2dd950181f8a..7a9e15da6bd0 100644
+>>> --- a/arch/mips/boot/dts/lantiq/danube.dtsi
+>>> +++ b/arch/mips/boot/dts/lantiq/danube.dtsi
+>>> @@ -4,6 +4,10 @@
+>>>          #size-cells = <1>;
+>>>          compatible = "lantiq,xway", "lantiq,danube";
+>>>
+>>> +       aliases {
+>>> +               serial0 = &asc1;
+>>> +       };
+>>> +
+>>
+>> You generally want the aliases to be part of the board specific file,
+>> not every board numbers their serial ports in the same way.
+>>
+>
+> In this chip only asc1 can be used as console,  so serial0 is defined in
+> chip specific file.
 
-Cc: devicetree@vger.kernel.org
-Cc: frowand.list@gmail.com
-Cc: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- .../devicetree/bindings/arm/coresight.txt          | 53 ++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+This was a more general comment about 'aliases' being board specific
+in principle (though we've had exceptions in the past). Even if there
+is only one uart on the chip, I'd recommend following the same
+conventions as the other chips that have more than one uart.
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 9aa30a1..5d1ad09 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -39,6 +39,8 @@ its hardware characteristcs.
- 
- 		- System Trace Macrocell:
- 			"arm,coresight-stm", "arm,primecell"; [1]
-+		- Coresight Address Translation Unit (CATU)
-+			"arm,coresight-catu", "arm,primecell";
- 
- 	* reg: physical base address and length of the register
- 	  set(s) of the component.
-@@ -90,6 +92,10 @@ its hardware characteristcs.
- 	* arm,scatter-gather: boolean. Indicates that the TMC-ETR can safely
- 	  use the SG mode on this system.
- 
-+* Optional property for CATU :
-+	* interrupts : Exactly one SPI may be listed for reporting the address
-+	  error
-+
- Example:
- 
- 1. Sinks
-@@ -121,6 +127,35 @@ Example:
- 		};
- 	};
- 
-+	etr@20070000 {
-+		compatible = "arm,coresight-tmc", "arm,primecell";
-+		reg = <0 0x20070000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* input port */
-+			port@0 {
-+				reg =  <0>;
-+				etr_in_port: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&replicator2_out_port0>;
-+				};
-+			};
-+
-+			/* CATU link represented by output port */
-+			port@1 {
-+				reg = <1>;
-+				etr_out_port: endpoint {
-+					remote-endpoint = <&catu_in_port>;
-+				};
-+			};
-+		};
-+	};
-+
- 2. Links
- 	replicator {
- 		/* non-configurable replicators don't show up on the
-@@ -250,5 +285,23 @@ Example:
- 		};
- 	};
- 
-+5. CATU
-+
-+	catu@207e0000 {
-+		compatible = "arm,coresight-catu", "arm,primecell";
-+		reg = <0 0x207e0000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+
-+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+		port {
-+			catu_in_port: endpoint {
-+				slave-mode;
-+				remote-endpoint = <&etr_out_port>;
-+			};
-+		};
-+	};
-+
- [1]. There is currently two version of STM: STM32 and STM500.  Both
- have the same HW interface and as such don't need an explicit binding name.
--- 
-2.7.4
+       Arnd
