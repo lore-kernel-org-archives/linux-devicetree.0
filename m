@@ -1,111 +1,48 @@
-Return-Path: <SRS0=fTn5=JD=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 4/5] leds: lt3593: Add device tree probing glue
-Date: Sun, 17 Jun 2018 13:49:28 +0200
-Message-Id: <20180617114929.719-4-daniel@zonque.org>
-In-Reply-To: <20180617114929.719-1-daniel@zonque.org>
-References: <20180617114929.719-1-daniel@zonque.org>
-To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=kL7t=JE=gmail.com=mazziesaccount@kernel.org>
+MIME-Version: 1.0
+References: <cover.1529067662.git.matti.vaittinen@fi.rohmeurope.com> <69915265bbff5c729bcd4ffd4ffdba8d24582068.1529067662.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <69915265bbff5c729bcd4ffd4ffdba8d24582068.1529067662.git.matti.vaittinen@fi.rohmeurope.com>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+Date: Mon, 18 Jun 2018 17:10:11 +0300
+Message-ID: <CANhJrGOhGJLtL5Gm6JS++YPis0pSdEDSKNb4CiQ7igYqR4K46g@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] clk: bd71837: Add driver for BD71837 PMIC clock
+Content-Type: multipart/alternative; boundary="0000000000005f1ce1056eeb2072"
+To: "Vaittinen, Matti" <matti.vaittinen@fi.rohmeurope.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, arnd@arndb.de, dmitry.torokhov@gmail.com, sre@kernel.org, chenjh@rock-chips.com, andrew.smirnov@gmail.com, linus.walleij@linaro.org, kstewart@linuxfoundation.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-ID: <devicetree@vger.kernel.org>
 
-The binding details are described in an earlier commit that adds the
-documentation.
+--0000000000005f1ce1056eeb2072
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- drivers/leds/leds-lt3593.c | 56 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+> +       c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
+> +               return -ENOMEM;
+> +
+>
 
-diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
-index a096ee64cbbb..44b57e7059dd 100644
---- a/drivers/leds/leds-lt3593.c
-+++ b/drivers/leds/leds-lt3593.c
-@@ -24,6 +24,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- 
- struct lt3593_led_data {
- 	struct led_classdev cdev;
-@@ -120,22 +121,77 @@ static int lt3593_led_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct lt3593_led_data *led_data;
-+	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
-+	enum gpiod_flags flags = GPIOD_OUT_LOW;
-+	const char *tmp;
- 
- 	if (dev_get_platdata(dev)) {
- 		led_data = lt3593_led_probe_pdata(dev);
- 		if (IS_ERR(led_data))
- 			return PTR_ERR(led_data);
-+
-+		goto out;
-+	}
-+
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	led_data = devm_kzalloc(dev, sizeof(*led_data), GFP_KERNEL);
-+	if (!led_data)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_string(dev->of_node, "label",
-+				      &led_data->cdev.name);
-+	if (ret < 0) {
-+		dev_err(dev, "Unable to read label from child node\n");
-+		return -EINVAL;
- 	}
- 
-+	of_property_read_string(dev->of_node, "linux,default-trigger",
-+				&led_data->cdev.default_trigger);
-+
-+	if (!of_property_read_string(dev->of_node, "default-state", &tmp)) {
-+		if (!strcmp(tmp, "keep")) {
-+			state = LEDS_GPIO_DEFSTATE_KEEP;
-+			flags = GPIOD_ASIS;
-+		} else if (!strcmp(tmp, "on")) {
-+			state = LEDS_GPIO_DEFSTATE_ON;
-+			flags = GPIOD_OUT_HIGH;
-+		}
-+	}
-+
-+	led_data->gpiod = devm_gpiod_get(dev, NULL, flags);
-+	if (IS_ERR(led_data->gpiod))
-+		return PTR_ERR(led_data->gpiod);
-+
-+	led_data->cdev.brightness_set_blocking = lt3593_led_set;
-+	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
-+
-+	ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	led_data->cdev.dev->of_node = dev->of_node;
-+
-+out:
- 	platform_set_drvdata(pdev, led_data);
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_lt3593_leds_match[] = {
-+	{ .compatible = "lltc,lt3593", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_lt3593_leds_match);
-+#endif
-+
- static struct platform_driver lt3593_led_driver = {
- 	.probe		= lt3593_led_probe,
- 	.driver		= {
- 		.name	= "leds-lt3593",
-+		.of_match_table = of_match_ptr(of_lt3593_leds_match),
- 	},
- };
- 
--- 
-2.17.1
+> Please ignore this patch. I have merge errors here like dropping the if
+> here. I'll send new one at least for clk tomorrow.
+
+
+Br. Matti Vaittinen
+
+--0000000000005f1ce1056eeb2072
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto"><div><div class=3D"gmail_quote"><div dir=3D"ltr">=C2=A0</=
+div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-lef=
+t:1px #ccc solid;padding-left:1ex">
++=C2=A0 =C2=A0 =C2=A0 =C2=A0c =3D devm_kzalloc(&amp;pdev-&gt;dev, sizeof(*c=
+), GFP_KERNEL);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOMEM;<br>
++<br>
+</blockquote><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;b=
+order-left:1px #ccc solid;padding-left:1ex"><br></blockquote><blockquote cl=
+ass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;p=
+adding-left:1ex">Please ignore this patch. I have merge errors here like dr=
+opping the if here. I&#39;ll send new one at least for clk tomorrow.</block=
+quote></div></div><div dir=3D"auto"><br></div><div dir=3D"auto">Br. Matti V=
+aittinen=C2=A0</div><div dir=3D"auto"><br></div><div dir=3D"auto"><br></div=
+><div dir=3D"auto"></div></div>
+
+--0000000000005f1ce1056eeb2072--
