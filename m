@@ -1,51 +1,131 @@
-Return-Path: <SRS0=QZ+J=IY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relmlor1.renesas.com ([210.160.252.171]:31369 "EHLO
-        relmlie4.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S932239AbeFFG5C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 6 Jun 2018 02:57:02 -0400
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 1/4] arm64: dts: renesas: r8a77990: add usb2_phy device node
-Date: Wed,  6 Jun 2018 15:56:08 +0900
-Message-Id: <1528268171-19276-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1528268171-19276-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=oUNg=JE=zonque.org=daniel@kernel.org>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 4/5] leds: lt3593: Add device tree probing glue
+Date: Mon, 18 Jun 2018 21:43:00 +0200
+Message-Id: <20180618194301.5667-5-daniel@zonque.org>
+In-Reply-To: <20180618194301.5667-1-daniel@zonque.org>
+References: <20180618194301.5667-1-daniel@zonque.org>
+To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds USB2.0 phy device node for r8a77990.
+The binding details are described in an earlier commit that adds the
+documentation.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77990.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/leds/leds-lt3593.c | 74 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-index be4f519..121c4a0 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -248,6 +248,18 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
+index a096ee64cbbb..b9a907e9d321 100644
+--- a/drivers/leds/leds-lt3593.c
++++ b/drivers/leds/leds-lt3593.c
+@@ -24,8 +24,11 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <uapi/linux/uleds.h>
  
-+		usb2_phy0: usb-phy@ee080200 {
-+			compatible = "renesas,usb2-phy-r8a77990",
-+				     "renesas,rcar-gen3-usb2-phy";
-+			reg = <0 0xee080200 0 0x700>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 703>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
+ struct lt3593_led_data {
++	char name[LED_MAX_NAME_SIZE];
+ 	struct led_classdev cdev;
+ 	struct gpio_desc *gpiod;
+ };
+@@ -120,22 +123,93 @@ static int lt3593_led_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct lt3593_led_data *led_data;
++	struct fwnode_handle *child;
++	int ret, state = LEDS_GPIO_DEFSTATE_OFF;
++	enum gpiod_flags flags = GPIOD_OUT_LOW;
++	const char *tmp;
+ 
+ 	if (dev_get_platdata(dev)) {
+ 		led_data = lt3593_led_probe_pdata(dev);
+ 		if (IS_ERR(led_data))
+ 			return PTR_ERR(led_data);
 +
- 		gic: interrupt-controller@f1010000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
++		goto out;
++	}
++
++	if (!dev->of_node)
++		return -ENODEV;
++
++	led_data = devm_kzalloc(dev, sizeof(*led_data), GFP_KERNEL);
++	if (!led_data)
++		return -ENOMEM;
++
++	if (device_get_child_node_count(dev) != 1) {
++		dev_err(dev, "Device must have exactly one LED sub-node.");
++		return -EINVAL;
++	}
++
++	child = device_get_next_child_node(dev, NULL);
++
++	ret = fwnode_property_read_string(child, "label", &tmp);
++	if (ret < 0)
++		snprintf(led_data->name, sizeof(led_data->name),
++			 "lt3593::");
++	else
++		snprintf(led_data->name, sizeof(led_data->name),
++			 "lt3593:%s", tmp);
++
++	fwnode_property_read_string(child, "linux,default-trigger",
++				    &led_data->cdev.default_trigger);
++
++	if (!fwnode_property_read_string(child, "default-state", &tmp)) {
++		if (!strcmp(tmp, "keep")) {
++			state = LEDS_GPIO_DEFSTATE_KEEP;
++			flags = GPIOD_ASIS;
++		} else if (!strcmp(tmp, "on")) {
++			state = LEDS_GPIO_DEFSTATE_ON;
++			flags = GPIOD_OUT_HIGH;
++		}
+ 	}
+ 
++	led_data->gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
++							   flags,
++							   led_data->name);
++	if (IS_ERR(led_data->gpiod)) {
++		fwnode_handle_put(child);
++		return PTR_ERR(led_data->gpiod);
++	}
++
++	led_data->cdev.name = led_data->name;
++	led_data->cdev.brightness_set_blocking = lt3593_led_set;
++	led_data->cdev.brightness = state ? LED_FULL : LED_OFF;
++
++	ret = devm_led_classdev_register(dev, &led_data->cdev);
++	if (ret < 0) {
++		fwnode_handle_put(child);
++		return ret;
++	}
++
++	led_data->cdev.dev->of_node = dev->of_node;
++
++out:
+ 	platform_set_drvdata(pdev, led_data);
+ 
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id of_lt3593_leds_match[] = {
++	{ .compatible = "lltc,lt3593", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_lt3593_leds_match);
++#endif
++
+ static struct platform_driver lt3593_led_driver = {
+ 	.probe		= lt3593_led_probe,
+ 	.driver		= {
+ 		.name	= "leds-lt3593",
++		.of_match_table = of_match_ptr(of_lt3593_leds_match),
+ 	},
+ };
+ 
 -- 
-1.9.1
-
+2.17.1
