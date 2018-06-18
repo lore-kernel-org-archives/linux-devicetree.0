@@ -1,36 +1,22 @@
-From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH] ARM: dts: imx6: RIoTboard Add chosen stdout-path property
-Date: Mon, 18 Jun 2018 17:42:57 +0200
-Message-ID: <20180618154257.16919-1-manu@freebsd.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6: RIoTboard Add chosen stdout-path property
+Date: Mon, 18 Jun 2018 12:47:10 -0300
+Message-ID: <CAOMZO5Bt+7FGT4Xk7HZdVjukNsG=eY5-P+9Qnig6h-cQSJvOvA@mail.gmail.com>
+References: <20180618154257.16919-1-manu@freebsd.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180618154257.16919-1-manu@freebsd.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
+To: Emmanuel Vadot <manu@freebsd.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The RIoTboard debug uart is connected to serial1.
-Add a chosen property in the DTS so OS knows what serial port to use for
-the console.
+On Mon, Jun 18, 2018 at 12:42 PM, Emmanuel Vadot <manu@freebsd.org> wrote:
+> The RIoTboard debug uart is connected to serial1.
+> Add a chosen property in the DTS so OS knows what serial port to use for
+> the console.
+>
+> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
- arch/arm/boot/dts/imx6dl-riotboard.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-index 2e98c92adff7..315d2ae6fa45 100644
---- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-@@ -19,6 +19,10 @@
- 		reg = <0x10000000 0x40000000>;
- 	};
- 
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+	};
-+
- 	regulators {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
--- 
-2.17.0
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
