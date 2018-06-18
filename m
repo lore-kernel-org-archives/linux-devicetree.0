@@ -1,82 +1,61 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH linux-next v5 07/13] dt-bindings: mfd: Add a document for
- PECI client mfd
-Date: Mon, 18 Jun 2018 07:03:06 +0100
-Message-ID: <20180618060306.GD31141@dell>
-References: <20180601182216.23894-1-jae.hyun.yoo@linux.intel.com>
- <20180613061637.GI5278@dell>
- <2b5bbf01-8c9c-bb06-4559-00dae61d95de@linux.intel.com>
+Subject: Re: [RESEND PATCH v3 0/4] backlight: pwm_bl: support linear
+ interpolation and brightness to human eye
+Date: Mon, 18 Jun 2018 07:20:05 +0100
+Message-ID: <20180618062005.GE31141@dell>
+References: <20180409083333.1249-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2b5bbf01-8c9c-bb06-4559-00dae61d95de@linux.intel.com>
+In-Reply-To: <20180409083333.1249-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Vernon Mauery <vernon.mauery@linux.intel.com>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Jun 2018, Jae Hyun Yoo wrote:
+On Mon, 09 Apr 2018, Enric Balletbo i Serra wrote:
 
-[...]
-
-> > > +Example:
-> > > +	peci-bus@0 {
-> > 
-> > 0?
-> > 
+> Dear all,
 > 
-> Because the actual reg value of the peci bus is reg = <0x0 0x60> but
-> anyway it's an example.
+> This series is a third patchset (resend )integrating the requested
+> changes.
 > 
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;
-> > 
-> > No 'reg' property?
-
-0 is fine, but you really should have a 'reg' property.
-
-> This is the actual peci bus node which is a parent of this MFD node:
-> 	peci0: peci-bus@0 {
-> 		compatible = "aspeed,ast2500-peci";
-> 		reg = <0x0 0x60>;
-> 		#address-cells = <1>;
-> 		#size-cells = <0>;
-> 		interrupts = <15>;
-> 		clocks = <&syscon ASPEED_CLK_GATE_REFCLK>;
-> 		resets = <&syscon ASPEED_RESET_PECI>;
-> 		clock-frequency = <24000000>;
-> 		msg-timing = <1>;
-> 		addr-timing = <1>;
-> 		rd-sampling-point = <8>;
-> 		cmd-timeout-ms = <1000>;
-> 	};
+> The first and second patch what tries to solve is the problem of
+> granularity for high resolution PWMs. The idea is simple interpolate
+> between 2 brightness values so we can have a high PWM duty cycle (a
+> 16 bits PWM is up to 65535 possible steps) without having to list
+> out every possible value in the dts. I think that this patch is
+> required to not break backward compatibility, to be more flexible and
+> also extend the functionality to be able to use high resolution PWM
+> with enough steps to have a good UI experience in userspace.
 > 
-> > > +		< more properties >
-> > 
-> > Remove this.
+> The thirth and fourth patch is a bit more ambicious, the idea is let
+> decide the driver the brightness-levels required in function of the PWM
+> resolution. To do this create a brightness-levels table filled with the
+> CIE 1931 algorithm values to convert brightness to PWM duty cycle.
 > 
-> I dropped all other properties into < more properties > because I want
-> to show the #address-cells and #size-cells to state its sub-nodes
-> should have a single unique reg value. Should I remove this line or the
-> whole parent node?
+> More detailed info is available in the commit message of every patch.
+> 
+> Both functionalities were tested on a Samsung Chromebook Plus (that has
+> a 16 bits PWM) and a SL50 device (with a 8 bits PWM)
+> 
+> Waiting for your feedback.
+> 
+> Best regards
+> 
+> Enric Balletbo i Serra (4):
+>   backlight: pwm_bl: linear interpolation between brightness-levels
+>   dt-bindings: pwm-backlight: add a num-interpolation-steps property.
+>   backlight: pwm_bl: compute brightness of LED linearly to human eye.
+>   dt-bindings: pwm-backlight: move brightness-levels to optional.
+> 
+>  .../bindings/leds/backlight/pwm-backlight.txt      |  34 ++-
+>  drivers/video/backlight/pwm_bl.c                   | 232 +++++++++++++++++++--
+>  2 files changed, 246 insertions(+), 20 deletions(-)
 
-Just drop the properties which are unimportant for the example.  You
-do not need to replace them with anything, especially with a non-DT
-compliant string.
-
-> > > +		peci-client@30 {
-> > > +			compatible = "intel,peci-client", "simple-mfd";
-> > > +			reg = <0x30>;
-> > > +		};
-> > > +
-> > > +		peci-client@31 {
-> > > +			compatible = "intel,peci-client", "simple-mfd";
-> > > +			reg = <0x31>;
-> > > +		};
-> > > +	};
-> > 
+All applied for v4.18, thanks.
 
 -- 
 Lee Jones [李琼斯]
