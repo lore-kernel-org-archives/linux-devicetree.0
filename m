@@ -1,13 +1,13 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 10/19] ARM: sun5i: Add support for the C1
- SRAM region with the SRAM controller
-Date: Mon, 18 Jun 2018 16:58:34 +0200
-Message-ID: <20180618145843.14631-11-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v4 06/19] drivers: soc: sunxi: Add support for
+ the C1 SRAM region
+Date: Mon, 18 Jun 2018 16:58:30 +0200
+Message-ID: <20180618145843.14631-7-paul.kocialkowski@bootlin.com>
 References: <20180618145843.14631-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBA4ST7MQKGQEL76PKZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBAMST7MQKGQEUOQ7BRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180618145843.14631-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,37 +22,44 @@ List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-This adds support for the C1 SRAM region (to be used with the SRAM
-controller driver) for sun5i-based platforms. The region is shared
-between the Video Engine and the CPU.
+This introduces support for the SRAM C1 section, that is controlled by
+the system controller. This SRAM area can be muxed either to the CPU
+or the Video Engine, that needs this area to store various tables (e.g.
+the Huffman VLD decoding tables).
+
+This only supports devices with the same layout as the A10 (which also
+includes the A13, A20, A33 and other SoCs).
 
 Signed-off-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 72433f38b4e4..6fa9e28edc59 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -135,6 +135,20 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
+index 882be5ed7e84..74cb81f37bd6 100644
+--- a/drivers/soc/sunxi/sunxi_sram.c
++++ b/drivers/soc/sunxi/sunxi_sram.c
+@@ -63,6 +63,12 @@ static struct sunxi_sram_desc sun4i_a10_sram_a3_a4 = {
+ 				  SUNXI_SRAM_MAP(1, 1, "emac")),
+ };
  
-+			sram_c: sram@1d00000 {
-+				compatible = "mmio-sram";
-+				reg = <0x01d00000 0xd00000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x01d00000 0xd00000>;
++static struct sunxi_sram_desc sun4i_a10_sram_c1 = {
++	.data	= SUNXI_SRAM_DATA("C1", 0x0, 0x0, 31,
++				  SUNXI_SRAM_MAP(0, 0, "cpu"),
++				  SUNXI_SRAM_MAP(0x7fffffff, 1, "ve")),
++};
 +
-+				ve_sram: sram-section@0 {
-+					compatible = "allwinner,sun5i-a13-sram-c1",
-+						     "allwinner,sun4i-a10-sram-c1";
-+					reg = <0x000000 0x80000>;
-+				};
-+			};
-+
- 			sram_d: sram@10000 {
- 				compatible = "mmio-sram";
- 				reg = <0x00010000 0x1000>;
+ static struct sunxi_sram_desc sun4i_a10_sram_d = {
+ 	.data	= SUNXI_SRAM_DATA("D", 0x4, 0x0, 1,
+ 				  SUNXI_SRAM_MAP(0, 0, "cpu"),
+@@ -80,6 +86,10 @@ static const struct of_device_id sunxi_sram_dt_ids[] = {
+ 		.compatible	= "allwinner,sun4i-a10-sram-a3-a4",
+ 		.data		= &sun4i_a10_sram_a3_a4.data,
+ 	},
++	{
++		.compatible	= "allwinner,sun4i-a10-sram-c1",
++		.data		= &sun4i_a10_sram_c1.data,
++	},
+ 	{
+ 		.compatible	= "allwinner,sun4i-a10-sram-d",
+ 		.data		= &sun4i_a10_sram_d.data,
 -- 
 2.17.0
