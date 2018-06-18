@@ -1,37 +1,42 @@
-Return-Path: <SRS0=1b4G=JP=zonque.org=daniel@kernel.org>
+Return-Path: <SRS0=oUNg=JE=zonque.org=daniel@kernel.org>
 From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 0/7] mmc: pxamci: cleanups and minor DT tweaks
-Date: Fri, 29 Jun 2018 16:47:31 +0200
-Message-Id: <20180629144738.446-1-daniel@zonque.org>
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: robert.jarzmik@free.fr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Subject: [PATCH v2 5/5] leds: lt3593: update email address
+Date: Mon, 18 Jun 2018 21:43:01 +0200
+Message-Id: <20180618194301.5667-6-daniel@zonque.org>
+In-Reply-To: <20180618194301.5667-1-daniel@zonque.org>
+References: <20180618194301.5667-1-daniel@zonque.org>
+To: jacek.anaszewski@gmail.com, robh+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Here is a series of small patches for pxamci that do some cleanups.
+Update the email address in the module information and in the header.
 
-The pxa tree has a patch for 4.19 [1] that this series builds upon,
-so if possible, we'd like to let this series go through Robert's tree
-after it has been reviewed. If that's not okay for the mmc folks,
-teh series has to wait until 4.20-rc1.
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ drivers/leds/leds-lt3593.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[1] https://github.com/rjarzmik/linux/commit/6b3348f9e6e
-
-
-Thanks,
-Daniel
-
-Daniel Mack (7):
-  mmc: pxamci: remove irq from private context
-  mmc: pxamci: remove dma resources from private context
-  mmc: pxamci: remove dead code from pxamci_remove()
-  mmc: pxamci: fix indenting
-  mmc: pxamci: call mmc_of_parse()
-  mmc: pxamci: remove pxa-mmc,gpio-power from devicetree bindings
-  mmc: pxamci: let mmc core handle regulators
-
- .../devicetree/bindings/mmc/pxa-mmc.txt       |   1 -
- drivers/mmc/host/pxamci.c                     | 111 ++++++++----------
- 2 files changed, 47 insertions(+), 65 deletions(-)
-
+diff --git a/drivers/leds/leds-lt3593.c b/drivers/leds/leds-lt3593.c
+index b9a907e9d321..b38782103e4e 100644
+--- a/drivers/leds/leds-lt3593.c
++++ b/drivers/leds/leds-lt3593.c
+@@ -3,7 +3,7 @@
+  *
+  * See the datasheet at http://cds.linear.com/docs/Datasheet/3593f.pdf
+  *
+- * Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
++ * Copyright (c) 2009,2018 Daniel Mack <daniel@zonque.org>
+  *
+  * Based on leds-gpio.c,
+  *
+@@ -215,7 +215,7 @@ static struct platform_driver lt3593_led_driver = {
+ 
+ module_platform_driver(lt3593_led_driver);
+ 
+-MODULE_AUTHOR("Daniel Mack <daniel@caiaq.de>");
++MODULE_AUTHOR("Daniel Mack <daniel@zonque.org>");
+ MODULE_DESCRIPTION("LED driver for LT3593 controllers");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("platform:leds-lt3593");
 -- 
 2.17.1
