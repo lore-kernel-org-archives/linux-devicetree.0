@@ -1,155 +1,112 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v5 0/6] mtd: rawnand: add NVIDIA Tegra NAND flash support
-Date: Mon, 18 Jun 2018 12:51:52 +0200
-Message-ID: <95279b61ce2630c1276669359b163933@agner.ch>
-References: <20180617204605.4648-1-stefan@agner.ch>
- <20180618115806.7be25499@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 4/6] dts: bindings: Document device tree binding for CATU
+Date: Mon, 18 Jun 2018 11:56:17 +0100
+Message-ID: <1529319379-17895-5-git-send-email-suzuki.poulose@arm.com>
+References: <1529319379-17895-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180618115806.7be25499@bbrezillon>
+In-Reply-To: <1529319379-17895-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, dev@lynxeye.de, miquel.raynal@bootlin.com, richard@nod.at, marcel@ziswiler.com, krzk@kernel.org, digetx@gmail.com, benjamin.lindqvist@endian.se, jonathanh@nvidia.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mirza.krak@gmail.com, gaireg@gaireg.de, linux-mtd@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, devicetree@vger.kernel.org, frowand.list@gmail.com, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18.06.2018 11:58, Boris Brezillon wrote:
-> On Sun, 17 Jun 2018 22:45:59 +0200
-> Stefan Agner <stefan@agner.ch> wrote:
-> 
->> Changes definitly calm down, most noteably probably the changes
->> around checking whether a page is empty if the stack reports ECC
->> errors.. I verified the code using raw nandwrites with OOB to
->> simulate an empty page which has some bits flipped in the OOB area,
->> everthing seems to work as I would expect it.
->>
->> For now I do not check extra OOB bytes since those are at variable
->> locations depending on algorithm.
-> 
-> Hm, if you expose them as free OOB bytes, you should also check them,
-> otherwise you might end up with corrupted data without noticing it. Note
-> that, depending on whether those free OOB bytes are ECC-protected or
-> not, you should change the way you do the check:
-> 
-> - non-protected OOB bytes: all bytes should be 0xff (no bitflips
->   allowed)
-> - data+free OOB bytes protected by the same ECC bytes: you should pass
->   the free OOB bytes buffer to nand_check_erased_ecc_chunk() along with
->   the data and ECC buffers
-> - free OOB bytes have their own ECC bytes: call
->   nand_check_erased_ecc_chunk() separately and pass it the ECC + free
->   OOB buffers.
+Document CATU device-tree bindings. CATU augments the TMC-ETR
+by providing an improved Scatter Gather mechanism for streaming
+trace data to non-contiguous system RAM pages.
 
-This graphic taken from the public Tegra 2 Technical Reference Manual is
-quite useful:
-https://imgur.com/a/0Hqzbkc
+Cc: devicetree@vger.kernel.org
+Cc: frowand.list@gmail.com
+Cc: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ .../devicetree/bindings/arm/coresight.txt          | 53 ++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-Tegra basically has all of the above, which makes the whole business
-really tricky...
-
-I am not sure if we really could do variant 1, non-protected OOB, but
-since we have the option of protected OOB, we probably anyway would do
-that.
-
-RS/Hamming implements variant 3.
-
-BCH implements variant 2. OOB is protected with the last data buffer.
-
-So this would require a algorithm depending implementation, which is
-probably not a big deal.
-
-But there is one more issue with BCH: Only if extra data are actually
-transferred, tag space is actually allocated. If no tag bytes are
-transferred, parity follows immediately skip bytes. As far as I know the
-MTD stacks OOB layout assumes that is always the same layout, no matter
-whether we write extra OOB data or not. For the Tegra NAND controller
-this would mean that we have to always transfer tag bytes and therefor
-penalize the use case we are most interested in (which is no extra OOB
-bytes, since UBI does not make use of it)...
-
-Furthermore I realized that testing is not easily possible since
-nandwrite with --oob seems not to make use of "oob_required" in the main
-page write but issues a separate OOB write command. I did not found a
-way to issue a write from user space which sets oob_required...
-
-Due to all this I rather prefer to not implement extra OOB support at
-this point.
-
-How do I do this properly? Set mtd_ooblayout_ops.free to NULL?
-
---
-Stefan
-
-> 
->>
->> --
->> Stefan
->>
->> Changes since v1:
->> - Split controller and NAND chip structure
->> - Add BCH support
->> - Allow to select algorithm and strength using device tree
->> - Improve HW ECC error reporting and use DEC_STATUS_BUF only
->> - Use SPDX license identifier
->> - Use per algorithm mtd_ooblayout_ops
->> - Use setup_data_interface callback for NAND timing configuration
->>
->> Changes since v2:
->> - Set clock rate using assigned-clocks
->> - Use BIT() macro
->> - Fix and improve timing calculation
->> - Improve ECC error handling
->> - Store OOB layout for tag area in Tegra chip structure
->> - Update/fix bindings
->> - Use more specific variable names (replace "value")
->> - Introduce nand-is-boot-medium
->> - Choose sensible ECC strenght automatically
->> - Use wait_for_completion_timeout
->> - Print register dump on completion timeout
->> - Unify tegra_nand_(read|write)_page in tegra_nand_page_xfer
->>
->> Changes since v3:
->> - Implement tegra_nand_(read|write)_raw using DMA
->> - Implement tegra_nand_(read|write)_oob using DMA
->> - Name registers according to Tegra 2 Technical Reference Manual (v02p)
->> - Use wait_for_completion_io_timeout to account for IO
->> - Get chip select id from device tree reg property
->> - Clear interrupts and reinit wait queues in case command/DMA times out
->> - Set default MTD name after nand_set_flash_node
->> - Move MODULE_DEVICE_TABLE after declaration of tegra_nand_of_match
->> - Make (rs|bch)_strength static
->>
->> Changes since v4:
->> - Pass OOB area to nand_check_erased_ecc_chunk
->> - Pass algorithm specific bits_per_step to tegra_nand_get_strength
->> - Store ECC layout in chip structure
->> - Fix pointer assignment (use NULL)
->> - Removed obsolete header delay.h
->> - Fixed newlines
->> - Use non-_io variant of wait_for_completion_timeout
->>
->> Lucas Stach (1):
->>   ARM: dts: tegra: add Tegra20 NAND flash controller node
->>
->> Stefan Agner (5):
->>   mtd: rawnand: add Reed-Solomon error correction algorithm
->>   mtd: rawnand: add an option to specify NAND chip as a boot device
->>   mtd: rawnand: tegra: add devicetree binding
->>   mtd: rawnand: add NVIDIA Tegra NAND Flash controller driver
->>   ARM: dts: tegra: enable NAND flash on Colibri T20
->>
->>  .../devicetree/bindings/mtd/nand.txt          |    6 +-
->>  .../bindings/mtd/nvidia-tegra20-nand.txt      |   64 +
->>  MAINTAINERS                                   |    7 +
->>  arch/arm/boot/dts/tegra20-colibri-512.dtsi    |   16 +
->>  arch/arm/boot/dts/tegra20.dtsi                |   15 +
->>  drivers/mtd/nand/raw/Kconfig                  |    6 +
->>  drivers/mtd/nand/raw/Makefile                 |    1 +
->>  drivers/mtd/nand/raw/nand_base.c              |    4 +
->>  drivers/mtd/nand/raw/tegra_nand.c             | 1268 +++++++++++++++++
->>  include/linux/mtd/rawnand.h                   |    7 +
->>  10 files changed, 1393 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia-tegra20-nand.txt
->>  create mode 100644 drivers/mtd/nand/raw/tegra_nand.c
->>
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index 9aa30a1..5d1ad09 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -39,6 +39,8 @@ its hardware characteristcs.
+ 
+ 		- System Trace Macrocell:
+ 			"arm,coresight-stm", "arm,primecell"; [1]
++		- Coresight Address Translation Unit (CATU)
++			"arm,coresight-catu", "arm,primecell";
+ 
+ 	* reg: physical base address and length of the register
+ 	  set(s) of the component.
+@@ -90,6 +92,10 @@ its hardware characteristcs.
+ 	* arm,scatter-gather: boolean. Indicates that the TMC-ETR can safely
+ 	  use the SG mode on this system.
+ 
++* Optional property for CATU :
++	* interrupts : Exactly one SPI may be listed for reporting the address
++	  error
++
+ Example:
+ 
+ 1. Sinks
+@@ -121,6 +127,35 @@ Example:
+ 		};
+ 	};
+ 
++	etr@20070000 {
++		compatible = "arm,coresight-tmc", "arm,primecell";
++		reg = <0 0x20070000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* input port */
++			port@0 {
++				reg =  <0>;
++				etr_in_port: endpoint {
++					slave-mode;
++					remote-endpoint = <&replicator2_out_port0>;
++				};
++			};
++
++			/* CATU link represented by output port */
++			port@1 {
++				reg = <1>;
++				etr_out_port: endpoint {
++					remote-endpoint = <&catu_in_port>;
++				};
++			};
++		};
++	};
++
+ 2. Links
+ 	replicator {
+ 		/* non-configurable replicators don't show up on the
+@@ -250,5 +285,23 @@ Example:
+ 		};
+ 	};
+ 
++5. CATU
++
++	catu@207e0000 {
++		compatible = "arm,coresight-catu", "arm,primecell";
++		reg = <0 0x207e0000 0 0x1000>;
++
++		clocks = <&oscclk6a>;
++		clock-names = "apb_pclk";
++
++		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++		port {
++			catu_in_port: endpoint {
++				slave-mode;
++				remote-endpoint = <&etr_out_port>;
++			};
++		};
++	};
++
+ [1]. There is currently two version of STM: STM32 and STM500.  Both
+ have the same HW interface and as such don't need an explicit binding name.
+-- 
+2.7.4
