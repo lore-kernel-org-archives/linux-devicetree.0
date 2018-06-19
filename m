@@ -1,216 +1,102 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v12 02/10] dt-bindings: introduce RPMH RSC bindings for
- Qualcomm SoCs
-Date: Tue, 19 Jun 2018 15:51:11 -0700
-Message-ID: <20180619225111.GD15126@tuxbook-pro>
-References: <1529413893-5520-1-git-send-email-rplsssn@codeaurora.org>
- <1529413893-5520-3-git-send-email-rplsssn@codeaurora.org>
+Subject: Re: [PATCH V3 1/7] backlight: qcom-wled: Rename pm8941-wled.c to
+ qcom-wled.c
+Date: Tue, 19 Jun 2018 15:54:21 -0700
+Message-ID: <20180619225421.GE15126@tuxbook-pro>
+References: <1529406822-15379-1-git-send-email-kgunda@codeaurora.org>
+ <1529406822-15379-2-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1529413893-5520-3-git-send-email-rplsssn@codeaurora.org>
+In-Reply-To: <1529406822-15379-2-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Raju P L S S S N <rplsssn@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 19 Jun 06:11 PDT 2018, Raju P L S S S N wrote:
+On Tue 19 Jun 04:13 PDT 2018, Kiran Gunda wrote:
 
-> From: Lina Iyer <ilina@codeaurora.org>
+> pm8941-wled.c driver is supporting the WLED peripheral
+> on pm8941. Rename it to qcom-wled.c so that it can support
+> WLED on multiple PMICs.
 > 
-> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
-> driver. The driver is used for communicating resource state requests for
-> shared resources.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> [rplsssn@codeaurora.org: minor order correction for TCS type]
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 
-In accordance with section 11 of
-Documentation/process/submitting-patches.rst you must to add your
-Signed-off-by tag at the end of this list.
+Please carry any tags acquired when reposting patches without changes
+and please add a "Changes since v???:" list below the --- to expedite
+the review process.
 
-Same on patch 3.
+
+This is still 
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
 
 > ---
-> Changes in v8:
-> 	- Describe IRQ for all DRVs
+>  .../bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt}    | 2 +-
+>  drivers/video/backlight/Kconfig                                   | 8 ++++----
+>  drivers/video/backlight/Makefile                                  | 2 +-
+>  drivers/video/backlight/{pm8941-wled.c => qcom-wled.c}            | 0
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+>  rename Documentation/devicetree/bindings/leds/backlight/{pm8941-wled.txt => qcom-wled.txt} (95%)
+>  rename drivers/video/backlight/{pm8941-wled.c => qcom-wled.c} (100%)
 > 
-> Changes in v7:
-> 	- Fix example
-> 
-> Changes in v6:
-> 	- Address comments from Stephen Boyd
-> 
-> Changes in v3:
-> 	- Move to soc/qcom
-> 	- Amend text per Stephen's suggestions
-> 
-> Changes in v2:
-> 	- Amend text to describe the registers in reg property
-> 	- Add reg-names for the registers
-> 	- Update examples to use GIC_SPI in interrupts instead of 0
-> 	- Rephrase incorrect description
-> 
-> Changes in v3:
-> 	- Fix unwanted capitalization
-> 	- Remove clients from the examples, this doc does not describe
-> 	  them
-> 	- Rephrase introductory paragraph
-> 	- Remove hardware specifics from DT bindings
-> ---
->  .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      | 137 +++++++++++++++++++++
->  1 file changed, 137 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> new file mode 100644
-> index 0000000..9b86d1e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> @@ -0,0 +1,137 @@
-> +RPMH RSC:
-> +------------
-> +
-> +Resource Power Manager Hardened (RPMH) is the mechanism for communicating with
-> +the hardened resource accelerators on Qualcomm SoCs. Requests to the resources
-> +can be written to the Trigger Command Set (TCS)  registers and using a (addr,
-> +val) pair and triggered. Messages in the TCS are then sent in sequence over an
-> +internal bus.
-> +
-> +The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
-> +(Resource State Coordinator a.k.a RSC) that can handle multiple sleep and
-> +active/wake resource requests. Multiple such DRVs can exist in a SoC and can
-> +be written to from Linux. The structure of each DRV follows the same template
-> +with a few variations that are captured by the properties here.
-> +
-> +A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
-> +have powered off to facilitate idle power saving. TCS could be classified as -
-> +
-> +	ACTIVE  /* Triggered by Linux */
-> +	SLEEP   /* Triggered by F/W */
-> +	WAKE    /* Triggered by F/W */
-> +	CONTROL /* Triggered by F/W */
-> +
-> +The order in which they are described in the DT, should match the hardware
-> +configuration.
-> +
-> +Requests can be made for the state of a resource, when the subsystem is active
-> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
-> +will be an aggregate of the sleep votes from each of those subsystems. Clients
-> +may request a sleep value for their shared resources in addition to the active
-> +mode requests.
-> +
-> +Properties:
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Should be "qcom,rpmh-rsc".
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: The first register specifies the base address of the
-> +		    DRV(s). The number of DRVs in the dependent on the RSC.
-> +	            The tcs-offset specifies the start address of the
-> +	            TCS in the DRVs.
-> +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Maps the register specified in the reg property. Must be
-> +	            "drv-0", "drv-1", "drv-2" etc and "tcs-offset". The
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-interrupt>
-> +	Definition: The interrupt that trips when a message complete/response
-> +	           is received for this DRV from the accelerators.
-> +
-> +- qcom,drv-id:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: The id of the DRV in the RSC block that will be used by
-> +		    this controller.
-> +
-> +- qcom,tcs-config:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: The tuple defining the configuration of TCS.
-> +	            Must have 2 cells which describe each TCS type.
-> +	            <type number_of_tcs>.
-> +	            The order of the TCS must match the hardware
-> +	            configuration.
-> +	- Cell #1 (TCS Type): TCS types to be specified -
-> +	            ACTIVE_TCS
-> +	            SLEEP_TCS
-> +	            WAKE_TCS
-> +	            CONTROL_TCS
-> +	- Cell #2 (Number of TCS): <u32>
-> +
-> +- label:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: Name for the RSC. The name would be used in trace logs.
-> +
-> +Drivers that want to use the RSC to communicate with RPMH must specify their
-> +bindings as child nodes of the RSC controllers they wish to communicate with.
-> +
-> +Example 1:
-> +
-> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
-> +register offsets for DRV2 start at 0D00, the register calculations are like
-> +this -
-> +DRV0: 0x179C0000
-> +DRV2: 0x179C0000 + 0x10000 = 0x179D0000
-> +DRV2: 0x179C0000 + 0x10000 * 2 = 0x179E0000
-> +TCS-OFFSET: 0xD00
-> +
-> +	apps_rsc: rsc@179c0000 {
-> +		label = "apps_rsc";
-> +		compatible = "qcom,rpmh-rsc";
-> +		reg = <0x179c0000 0x10000>,
-> +		      <0x179d0000 0x10000>,
-> +		      <0x179e0000 0x10000>;
-> +		reg-names = "drv-0", "drv-1", "drv-2";
-> +		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +		qcom,tcs-offset = <0xd00>;
-> +		qcom,drv-id = <2>;
-> +		qcom,tcs-config = <ACTIVE_TCS  2>,
-> +				  <SLEEP_TCS   3>,
-> +				  <WAKE_TCS    3>,
-> +				  <CONTROL_TCS 1>;
-> +	};
-> +
-> +Example 2:
-> +
-> +For a TCS whose RSC base address is 0xAF20000 and is at DRV id of 0, the
-> +register offsets for DRV0 start at 01C00, the register calculations are like
-> +this -
-> +DRV0: 0xAF20000
-> +TCS-OFFSET: 0x1C00
-> +
-> +	disp_rsc: rsc@af20000 {
-> +		label = "disp_rsc";
-> +		compatible = "qcom,rpmh-rsc";
-> +		reg = <0xaf20000 0x10000>;
-> +		reg-names = "drv-0";
-> +		interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
-> +		qcom,tcs-offset = <0x1c00>;
-> +		qcom,drv-id = <0>;
-> +		qcom,tcs-config = <ACTIVE_TCS  0>,
-> +				  <SLEEP_TCS   1>,
-> +				  <WAKE_TCS    1>,
-> +				  <CONTROL_TCS 0>;
-> +	};
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> similarity index 95%
+> rename from Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+> rename to Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> index e5b294d..fb39e32 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> @@ -1,4 +1,4 @@
+> -Binding for Qualcomm PM8941 WLED driver
+> +Binding for Qualcomm Technologies, Inc. WLED driver
+>  
+>  Required properties:
+>  - compatible: should be "qcom,pm8941-wled"
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 4e1d2ad..8c095e3 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -299,12 +299,12 @@ config BACKLIGHT_TOSA
+>  	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+>  	  for its backlight
+>  
+> -config BACKLIGHT_PM8941_WLED
+> -	tristate "Qualcomm PM8941 WLED Driver"
+> +config BACKLIGHT_QCOM_WLED
+> +	tristate "Qualcomm PMIC WLED Driver"
+>  	select REGMAP
+>  	help
+> -	  If you have the Qualcomm PM8941, say Y to enable a driver for the
+> -	  WLED block.
+> +	  If you have the Qualcomm PMIC, say Y to enable a driver for the
+> +	  WLED block. Currently it supports PM8941 and PMI8998.
+>  
+>  config BACKLIGHT_SAHARA
+>  	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
+> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+> index 5e28f01..6fd76ef 100644
+> --- a/drivers/video/backlight/Makefile
+> +++ b/drivers/video/backlight/Makefile
+> @@ -49,8 +49,8 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+= omap1_bl.o
+>  obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
+>  obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
+>  obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
+> -obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
+>  obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
+> +obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
+>  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
+>  obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+>  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+> diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/qcom-wled.c
+> similarity index 100%
+> rename from drivers/video/backlight/pm8941-wled.c
+> rename to drivers/video/backlight/qcom-wled.c
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>  a Linux Foundation Collaborative Project
 > 
