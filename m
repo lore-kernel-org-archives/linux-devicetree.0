@@ -1,58 +1,95 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCHv2 8/9] ARM: dts: keystone-k2g: add DSS node
-Date: Tue, 19 Jun 2018 10:09:50 +0300
-Message-ID: <6d22a705-d052-3bb2-a840-5c068d8f4a70@ti.com>
-References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
- <20180618132242.8673-9-tomi.valkeinen@ti.com>
- <20180619061908.GV112168@atomide.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: Remove unneeded DSI and DECON
+ address/size cells in Exynos5433
+Date: Tue, 19 Jun 2018 09:25:59 +0200
+Message-ID: <20180619072601eucas1p27e2b081429ed54e6df8a5794ef0f150b~5fvopvw1v0712907129eucas1p2R@eucas1p2.samsung.com>
+References: <20180618174216.24801-1-krzk@kernel.org>
+        <CGME20180618174318epcas1p4a79e7e7328d3b604efc3084e323421d7@epcas1p4.samsung.com>
+        <20180618174216.24801-2-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180619061908.GV112168@atomide.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180618174216.24801-2-krzk@kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTkvMDYvMTggMDk6MTksIFRvbnkgTGluZGdyZW4gd3JvdGU6Cj4gKiBUb21pIFZhbGtlaW5l
-biA8dG9taS52YWxrZWluZW5AdGkuY29tPiBbMTgwNjE4IDEzOjI2XToKPj4gQWRkIERTUyBub2Rl
-IHRvIGsyZy5kdHNpLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtlaW5lbiA8dG9taS52
-YWxrZWluZW5AdGkuY29tPgo+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gLS0t
-Cj4+ICBhcmNoL2FybS9ib290L2R0cy9rZXlzdG9uZS1rMmcuZHRzaSB8IDIxICsrKysrKysrKysr
-KysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykKPj4KPj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLWsyZy5kdHNpIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMva2V5c3RvbmUtazJnLmR0c2kKPj4gaW5kZXggZGE3OGMwMDM0NDI3Li5kNzYxZmU3
-ZDQ2ZTcgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLWsyZy5kdHNp
-Cj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2tleXN0b25lLWsyZy5kdHNpCj4+IEBAIC02MDks
-NSArNjA5LDI2IEBACj4+ICAJCQlyZWcgPSA8MHgyMTAxMDAwMCAweDIwMD47Cj4+ICAJCQlpbnRl
-cnJ1cHRzID0gPEdJQ19TUEkgMTIzIElSUV9UWVBFX0VER0VfUklTSU5HPjsKPj4gIAkJfTsKPj4g
-Kwo+PiArCQlkc3M6IGRzc0AwMjU0MDAwMCB7Cj4+ICsJCQljb21wYXRpYmxlID0gInRpLGsyZy1k
-c3MiOwo+PiArCj4+ICsJCQlyZWcgPSA8MHgwMjU0MDAwMCAweDQwMD4sCj4+ICsJCQkgICAgICA8
-MHgwMjU1MDAwMCAweDEwMDA+LAo+PiArCQkJICAgICAgPDB4MDI1NTcwMDAgMHgxMDAwPiwKPj4g
-KwkJCSAgICAgIDwweDAyNTVhODAwIDB4MTAwPiwKPj4gKwkJCSAgICAgIDwweDAyNTVhYzAwIDB4
-MTAwPjsKPj4gKwo+PiArCQkJcmVnLW5hbWVzID0gImNmZyIsICJjb21tb24iLCAidmlkMSIsICJv
-dnIxIiwgInZwMSI7Cj4gCj4gQ2FuIHlvdSBwbGVhc2UgY2hlY2sgdG8gbWFrZSBzdXJlIHRoZXNl
-IGFyZSBub3QgbXVsdGlwbGUKPiBzZXBhcmF0ZSBkZXZpY2VzPwo+IAo+IElmIHRoZXkgYXJlLCBm
-bHVzaGluZyBwb3N0ZWQgd3JpdGUgdG8gb25lIGRldmljZSB3aWxsIG5vdCBmbHVzaAo+IGFueXRo
-aW5nIHRvIHRoZSBvdGhlciBkZXZpY2VzLiBBbmQgdGhhdCBjYW4gbGVhZCB0byB2ZXJ5IGhhcmQK
-PiB0byB0cmFjayBkb3duIG15c3RlcmlvdXMgYnVncy4KCkkgZG9uJ3Qgc2VlIGFueXRoaW5nIGhp
-bnRpbmcgdGhhdCB0aGV5IHdvdWxkIGJlIHNlcGFyYXRlIGRldmljZXMsIGFuZCBpdAp3b3VsZG4n
-dCByZWFsbHkgbWFrZSBzZW5zZSB0byBtZSBlaXRoZXIuIFRoZXkncmUgaW50ZWdyYWwgcGFydHMg
-b2YgdGhlCkRJU1BDLiBJIGNhbiBzZWUgYSBzaW5nbGUgcG9ydCBmb3IgcmVnaXN0ZXIgYWNjZXNz
-LCBhbmQgYSBzaW5nbGUgcG9ydApmb3IgdGhlIHBpeGVsIGRhdGEgRE1BLgoKIFRvbWkKCi0tIApU
-ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
-aW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2ls
-ZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On 18.06.2018 19:42, Krzysztof Kozlowski wrote:
+> The decon, decon_tv and dsi nodes have only one child port so
+> address/size mappings are not necessary.  This fixes DTC warnings like:
+>
+>     Warning (graph_child_address): /soc/decon@13800000/ports:
+>         graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
+
+DECON nodes according to documentation have only one port so it is OK.
+DSI has two ports, but since on all Exynos platforms DSI panels/bridges
+are subnodes of ExynosDSI the 2nd port is not used.
+So if there will be a platform with DSI panel/bridge controlled via I2C,
+it should be reverted., but this is theoretical problem.
+
+
+
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+ --
+Regards
+Andrzej
+
+
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi |  6 +-----
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi            | 12 ++----------
+>  2 files changed, 3 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> index a1e3194b7483..0a15ee513f5c 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> @@ -321,11 +321,7 @@
+>  	status = "okay";
+>  
+>  	ports {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		port@0 {
+> -			reg = <0>;
+> +		port {
+>  			tv_to_hdmi: endpoint {
+>  				remote-endpoint = <&hdmi_to_tv>;
+>  			};
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> index 3a9b4c4b9c63..e4367fd39120 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -850,11 +850,7 @@
+>  			iommu-names = "m0", "m1";
+>  
+>  			ports {
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> -
+> -				port@0 {
+> -					reg = <0>;
+> +				port {
+>  					decon_to_mic: endpoint {
+>  						remote-endpoint =
+>  							<&mic_to_decon>;
+> @@ -914,11 +910,7 @@
+>  			#size-cells = <0>;
+>  
+>  			ports {
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> -
+> -				port@0 {
+> -					reg = <0>;
+> +				port {
+>  					dsi_to_mic: endpoint {
+>  						remote-endpoint = <&mic_to_dsi>;
+>  					};
